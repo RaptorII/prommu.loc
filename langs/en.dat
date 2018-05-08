@@ -1,0 +1,132 @@
+AL_APPEND	Append
+AL_BACK	Back
+AL_CANCEL	Cancel
+AL_CREATE	Create
+AL_DNM	Does not matter
+AL_DOWNLOAD	Download
+AL_EDIT	edit
+AL_EMAIL	Email
+AL_INSERT	Insert
+AL_MECH-CONS	Consultant
+AL_MECH-DEGUSTA	Degustation
+AL_MECH-DISTR	Distribution of leaflets
+AL_MECH-EX	Exhibitions / Presentations
+AL_MECH-GWP	GWP
+AL_MECH-HORECA	HoReCa
+AL_MECH-SAMPLIN	Sampling
+AL_NO	No
+AL_PHONE	Phone
+AL_REVIEW	Review
+AL_SAVE	Save
+AL_SEARCH	Search
+AL_SHUT-OFF	Shut off
+AL_YES	Yes
+ANEM_ADV	Advertising Agency
+ANEM_AVERAGE	Average
+ANEM_BIRTH	Date of birth
+ANEM_CONFIRM	Confirm
+ANEM_EDUCATION	Education
+ANEM_ELEMENTARY	Elementary
+ANEM_ERR-CONFIRM	Passwords do not match
+ANEM_ERR-EMAIL	Incorrect email
+ANEM_ERR-LOGIN	Enter a username
+ANEM_ERR-USER	This user already exists
+ANEM_ERR_ADV	Select Advertising Agency
+ANEM_ERR_BIRTH	Enter your date of birth
+ANEM_ERR_CITY	Enter the region / city
+ANEM_ERR_EDU	Enter your school / university
+ANEM_ERR_EDU_TYPE	Select the type of education
+ANEM_ERR_FIRSTN	Enter the name
+ANEM_ERR_LASTN	Enter the last name
+ANEM_ERR_NETWORK	Data transfer error!
+ANEM_ERR_PASSW	Enter Password
+ANEM_ERR_PHONE	Enter your phone number
+ANEM_ERR_SURN	Enter first name
+ANEM_EX-ADV	example: Adv. Iskra
+ANEM_EX-CITY	examle: Kiev
+ANEM_EX-EDUCATION	example: the University. Shevchenko. faculty of Journalism
+ANEM_EX-FN	example: Ivan
+ANEM_EX-INTEREST	example: tennis, pool
+ANEM_EX-LN	example: Petrov
+ANEM_EX-SN	example: Fedorovich
+ANEM_FEMALE	Female
+ANEM_FN	First Name
+ANEM_HIGH	High
+ANEM_INTEREST	Interest
+ANEM_JOIN	Join
+ANEM_LN	Last Name
+ANEM_LOGIN	Login
+ANEM_MALE	Male
+ANEM_PAN2	Personal information:
+ANEM_PASSW	Password
+ANEM_PASSW-NEW	New password
+ANEM_PASSW-OLD	Old password
+ANEM_PHOTO	Photo
+ANEM_PROFILE	Profile
+ANEM_REGADV	Register Advertising Agency
+ANEM_REGION	Region
+ANEM_SEX	Sex
+ANEM_SN	SurName
+ANEM_TITLE	Employer Registration Form
+LKPR_ACT-NAME	action name
+LKPR_ADD-ADV	Add agency
+LKPR_ADS-AGENCY	ADS. agency
+LKPR_ADV	Advertising agencies
+LKPR_CRT-VACANCY	Create vacancy
+LKPR_DATE-PUBLIC	date of publication
+LKPR_ENTER	enter the name
+LKPR_JOIN	join
+LKPR_MECH	mechanics
+LKPR_PAY	payment per hour
+LKPR_SEARCH-ADV	Search agencies
+LKPR_SEARCH-RES	Search results
+LKPR_TERMS	terms of the action
+LKPR_TITLE	Private office
+MS_ACTIVATE1	Congratulations, you've got an account
+MS_ACTIVATE2	to enter the private office
+MS_ACTIVATE3	To activate the password - you send an email to
+MS_ACTIVATE4	Open the email and click the link
+RES_ABOUT	About Me
+RES_AGE	Age
+RES_BIRTH	date of birth
+RES_CONV	Convenient schedule (time)
+RES_DRESS	Dress size
+RES_EXP	Experience in promo
+RES_EXP-MECH	Experience in the mechanics
+RES_FLANG	Foreign Language
+RES_HBOOK	The presence of honey books
+RES_HEIGHT	Height cm
+RES_HPAY	Min. hourly pay
+RES_LANG-LEVEL	Language level
+RES_METRO	The nearest metro station
+RES_MON-FRI	Mon-Fri
+RES_ORGBOOK	The organization issued the book
+RES_READY-WORK	Mechanics which are ready to work
+RES_SAT-SUN	Sat-Sun
+RES_STREET	Willingness to work in the winter on the street
+RES_TITLE	Resume
+SREM_AGE	Age (from - to):
+SREM_AGE2	Age
+SREM_ANY	Any
+SREM_CITY	City
+SREM_DATE	Date of placement
+SREM_DRESS	Dress size:
+SREM_EX-CITY	Kiev
+SREM_EXPERIENCE	Experience:
+SREM_FEMALE	F.
+SREM_FILTER	Filter your search
+SREM_FIO	LFS
+SREM_HBOOK	Having health books:
+SREM_HEIGHT	Height cm
+SREM_MALE	M.
+SREM_MECH	Мechanics
+SREM_PAYMENT	Payment per hour
+SREM_RES	Search results
+SREM_SEX	Sex
+SREM_TITLE	Search Resumes
+VAC_ADV	Advertising agency
+VAC_SHOW	View job
+VR_ACT	Stock name
+VR_RESP	responses
+VR_TITLE	Views and responses
+VR_VISITS	visits

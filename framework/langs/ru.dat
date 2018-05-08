@@ -1,0 +1,132 @@
+AL_APPEND	Добавить
+AL_BACK	Назад
+AL_CANCEL	Отмена
+AL_CREATE	Создать
+AL_DNM	Не важно
+AL_DOWNLOAD	Загрузить
+AL_EDIT	редактировать
+AL_EMAIL	Е-майл
+AL_INSERT	Вставить
+AL_MECH-CONS	Консультант
+AL_MECH-DEGUSTA	Дегустация
+AL_MECH-DISTR	Раздача листовок
+AL_MECH-EX	Выставки/Презентации
+AL_MECH-GWP	ПЗП
+AL_MECH-HORECA	HoReCa
+AL_MECH-SAMPLIN	Сэмплинг
+AL_NO	Нет
+AL_PHONE	Телефон
+AL_REVIEW	Просмотр
+AL_SAVE	Сохранить
+AL_SEARCH	Искать
+AL_SHUT-OFF	Отключить
+AL_YES	Есть
+ANEM_ADV	Рекламное агенство
+ANEM_AVERAGE	Среднее
+ANEM_BIRTH	День рождения
+ANEM_CONFIRM	Повтор пароля
+ANEM_EDUCATION	Образование
+ANEM_ELEMENTARY	Начальное
+ANEM_ERR-CONFIRM	Пароли не совпадают
+ANEM_ERR-EMAIL	Некорректный email
+ANEM_ERR-LOGIN	Введите логин
+ANEM_ERR-USER	Такой пользователь уже существует
+ANEM_ERR_ADV	Выбeрите Рекламное Агентство
+ANEM_ERR_BIRTH	Введите дату рождения
+ANEM_ERR_CITY	Введите регион / город
+ANEM_ERR_EDU	Укажите учебное заведение
+ANEM_ERR_EDU_TYPE	Выберите тип образования
+ANEM_ERR_FIRSTN	Введите имя
+ANEM_ERR_LASTN	Введите фамилию
+ANEM_ERR_NETWORK	Ошибка передачи данных!
+ANEM_ERR_PASSW	Введите пароль
+ANEM_ERR_PHONE	Введите телефон
+ANEM_ERR_SURN	Введите отчество
+ANEM_EX-ADV	пример: РА Iskra
+ANEM_EX-CITY	пример: Киев
+ANEM_EX-EDUCATION	пример: Университет им. Шевченко. Факультет журналистики
+ANEM_EX-FN	пример: Иван
+ANEM_EX-INTEREST	пример: теннис, бассейн
+ANEM_EX-LN	пример: Петров
+ANEM_EX-SN	пример: Федорович
+ANEM_FEMALE	Женский
+ANEM_FN	Имя
+ANEM_HIGH	Высшее
+ANEM_INTEREST	Интересы/Увлечения
+ANEM_JOIN	Присоединиться
+ANEM_LN	Фамилия
+ANEM_LOGIN	Логин
+ANEM_MALE	Мужской
+ANEM_PAN2	Личные данные:
+ANEM_PASSW	Пароль
+ANEM_PASSW-NEW	Новый пароль
+ANEM_PASSW-OLD	Старый пароль
+ANEM_PHOTO	Фото
+ANEM_PROFILE	Профайл
+ANEM_REGADV	Зарегистрировать Рекламное Агентство
+ANEM_REGION	Регион
+ANEM_SEX	Пол
+ANEM_SN	Отчество
+ANEM_TITLE	Форма регистрации работодателя
+LKPR_ACT-NAME	название акции
+LKPR_ADD-ADV	Добавить агентство
+LKPR_ADS-AGENCY	рекл. агентство
+LKPR_ADV	Рекламные агентства
+LKPR_CRT-VACANCY	Создать вакансию
+LKPR_DATE-PUBLIC	дата публикации
+LKPR_ENTER	Введите название
+LKPR_JOIN	присоединить
+LKPR_MECH	механика
+LKPR_PAY	оплата в час
+LKPR_SEARCH-ADV	Поиск агентства
+LKPR_SEARCH-RES	Результаты поиска
+LKPR_TERMS	сроки акции
+LKPR_TITLE	Личный кабинет
+MS_ACTIVATE1	Поздравляем, вы получили аккаунт
+MS_ACTIVATE2	для входа в личный кабинет
+MS_ACTIVATE3	Для активации пароля - вам отправлено письмо на адрес
+MS_ACTIVATE4	Откройте письмо и перейдите по ссылке
+RES_ABOUT	О себе
+RES_AGE	Возраст
+RES_BIRTH	Дата рождения
+RES_CONV	Удобный график работы (время)
+RES_DRESS	Размер одежды
+RES_EXP	Опыт работы в промо
+RES_EXP-MECH	Опыт работы на механиках
+RES_FLANG	Иностранный язык
+RES_HBOOK	Наличие мед. книжки
+RES_HEIGHT	Рост см
+RES_HPAY	Мин. почасовая оплата
+RES_LANG-LEVEL	Уровень языка
+RES_METRO	Ближайшая станция метро
+RES_MON-FRI	Пн-Пт
+RES_ORGBOOK	Организация выдавшая книжку
+RES_READY-WORK	Механики на которых готовы работать
+RES_SAT-SUN	Сб-Вс
+RES_STREET	Готовность работать в зимнее время на улице
+RES_TITLE	Резюме
+SREM_AGE	Возраст (от - до):
+SREM_AGE2	Возраст
+SREM_ANY	Любой
+SREM_CITY	Город
+SREM_DATE	Дата размещения
+SREM_DRESS	Размер одежды:
+SREM_EX-CITY	Киев
+SREM_EXPERIENCE	Опыт работы:
+SREM_FEMALE	Ж.
+SREM_FILTER	Фильтр поиска
+SREM_FIO	ФИО
+SREM_HBOOK	Наличие мед. книжки:
+SREM_HEIGHT	Рост см
+SREM_MALE	М.
+SREM_MECH	Механика
+SREM_PAYMENT	Оплата в час
+SREM_RES	Результаты поиска
+SREM_SEX	Пол
+SREM_TITLE	Поиск резюме
+VAC_ADV	Рекламное агентство
+VAC_SHOW	Просмотр вакансии
+VR_ACT	Название акции
+VR_RESP	откликов
+VR_TITLE	Просмотры и отклики
+VR_VISITS	просмотров

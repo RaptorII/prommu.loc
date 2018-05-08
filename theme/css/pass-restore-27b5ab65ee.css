@@ -1,0 +1,13 @@
+#DiContent .field-hor { display: flex; align-items: center; margin-bottom: 10px; }
+
+#DiContent .field-hor b { margin-right: 10px; font-size: 14px; }
+
+#DiContent .field-hor input { font-family: Roboto-Regular, verdana, arial; }
+
+#DiContent .new-pass-form form .field-hor b { display: block; width: 100px; }
+
+#DiContent .new-pass-form form .field-hor input { width: 190px; }
+
+#DiContent .new-pass-form form div.btn { text-align: left; }
+
+#DiContent .new-pass-form form div.btn button { margin-left: 110px; }

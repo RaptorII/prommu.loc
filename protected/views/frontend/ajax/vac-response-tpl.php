@@ -1,0 +1,1 @@
+<div class="message"><?= $viData['message'] ?></div>

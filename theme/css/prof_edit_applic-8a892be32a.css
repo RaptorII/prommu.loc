@@ -1,0 +1,150 @@
+#DiContent .page-applicant-profile-edit .row > div { margin-top: 0; }
+
+#DiContent .page-applicant-profile-edit select { width: 320px; }
+
+@media (min-width: 768px) { #DiContent .page-applicant-profile-edit select { width: 220px; } }
+
+@media (min-width: 992px) { #DiContent .page-applicant-profile-edit select { width: 293px; } }
+
+@media (min-width: 1200px) { #DiContent .page-applicant-profile-edit select { width: 262px; } }
+
+#DiContent .page-applicant-profile-edit .c-logo img { width: 100%; }
+
+#DiContent .page-applicant-profile-edit .c-logo img:not(.no-zoom) { cursor: zoom-in; }
+
+#DiContent .page-applicant-profile-edit .c-logo ._fio { margin: 10px 0; font-size: 14px; font-weight: bold; text-transform: uppercase; }
+
+#DiContent .page-applicant-profile-edit .c-logo ._more-photo { position: relative; float: left; margin: 0 20px 20px 0; width: 250px; overflow: hidden; }
+
+#DiContent .page-applicant-profile-edit .c-logo ._more-photo:hover ._controls { bottom: 0; }
+
+#DiContent .page-applicant-profile-edit .c-logo ._more-photo.-main img { border: 2px solid #ff6500; }
+
+#DiContent .page-applicant-profile-edit .c-logo ._controls { position: absolute; bottom: -42px; width: 100%; text-align: center; background: rgba(200, 200, 200, 0.6); transition: bottom .5s; }
+
+#DiContent .page-applicant-profile-edit .c-logo ._controls a { display: inline-block; width: 32px; height: 32px; margin: 5px 5px 0; background: transparent url(/theme/pic/ico-form.png) 0 -673px no-repeat; cursor: pointer; transition: none; }
+
+#DiContent .page-applicant-profile-edit .c-logo ._controls a:hover { background-position: 0 -705px; }
+
+#DiContent .page-applicant-profile-edit .c-logo ._controls ._delete { background-position: 0  -609px; }
+
+#DiContent .page-applicant-profile-edit .c-logo ._controls ._delete:hover { background-position: 0 -641px; }
+
+#DiContent .page-applicant-profile-edit .datepicker, #DiContent .page-applicant-profile-edit .dropdown-menu { z-index: 10000 !important; }
+
+#DiContent .page-applicant-profile-edit .right-box { text-align: right; }
+
+#DiContent .page-applicant-profile-edit .company-logo .btn-send-msg { margin-bottom: 40px; }
+
+#DiContent .page-applicant-profile-edit .company-logo-wrapp { margin-top: 40px; }
+
+#DiContent .page-applicant-profile-edit .user-menu { display: block; padding: 0; border: 2px solid #212121; list-style: none; }
+
+#DiContent .page-applicant-profile-edit .user-menu a { display: block; padding: 5px; text-transform: uppercase; color: #212121; }
+
+#DiContent .page-applicant-profile-edit .user-menu a:hover { background: #abb820; }
+
+#DiContent .page-applicant-profile-edit .header { margin-top: 40px; }
+
+#DiContent .page-applicant-profile-edit .header h2 { margin-top: -9px 0; font-size: 14px; }
+
+#DiContent .page-applicant-profile-edit .avatar { margin: 20px auto 0 auto; width: 226px; text-align: center; }
+
+#DiContent .page-applicant-profile-edit .avatar img { width: 100%; }
+
+#DiContent .page-applicant-profile-edit #BtnUploadPhoto { margin-top: 10px; text-align: center; }
+
+#DiContent .page-applicant-profile-edit #BtnUploadPhoto a { display: inline-block; padding: 5px 15px; }
+
+#DiContent .page-applicant-profile-edit .ava-social { display: none; margin-bottom: 30px; min-height: 30px; }
+
+#DiContent .page-applicant-profile-edit .ava-social b { float: left; padding-right: 10px; line-height: 30px; }
+
+#DiContent .page-applicant-profile-edit .ava-social .fb, #DiContent .page-applicant-profile-edit .ava-social .vk { display: block; width: 30px; height: 29px; float: left; margin-right: 10px; background: transparent url(/theme/pic/ico-form.png) 0 -290px no-repeat; }
+
+#DiContent .page-applicant-profile-edit .ava-social .vk { background: transparent url(/theme/pic/ico-form.png) 0 -319px no-repeat; }
+
+#DiContent .page-applicant-profile-edit label, #DiContent .page-applicant-profile-edit .label-box { display: block; margin-bottom: 15px; }
+
+#DiContent .page-applicant-profile-edit label.radio-box { margin-right: 10px; }
+
+#DiContent .page-applicant-profile-edit .dropb-data { font-weight: normal; }
+
+#DiContent .page-applicant-profile-edit .birthday select { width: auto; }
+
+#DiContent .page-applicant-profile-edit .payment-level-tmpl { display: none; }
+
+#DiContent .page-applicant-profile-edit .custom-dolj, #DiContent .page-applicant-profile-edit #LMetroMosk, #DiContent .page-applicant-profile-edit #LMetroPiter, #DiContent .page-applicant-profile-edit .custom-dolj-exp, #DiContent .page-applicant-profile-edit .langs-level-tmlp { display: none; }
+
+#DiContent .page-applicant-profile-edit .price-level { margin-bottom: 15px; }
+
+#DiContent .page-applicant-profile-edit .price-level b { display: block; }
+
+#DiContent .page-applicant-profile-edit .price-level .name { margin-bottom: 5px; width: 99%; }
+
+#DiContent .page-applicant-profile-edit .payment, #DiContent .page-applicant-profile-edit .hwm { display: block; float: left; margin-right: 2px; width: 49%; height: 25px; }
+
+#DiContent .page-applicant-profile-edit #EdCountry { display: none; color: #777; }
+
+#DiContent .page-applicant-profile-edit #BtnAddCity { margin-top: 6px; }
+
+#DiContent .page-applicant-profile-edit #DiCityTmplate { display: none; }
+
+#DiContent .page-applicant-profile-edit .city-block { position: relative; padding-top: 20px; }
+
+#DiContent .page-applicant-profile-edit .city-block .border { margin: 0 auto 32px; width: 75%; border-top: 1px solid #dadada; }
+
+#DiContent .page-applicant-profile-edit .city-block .btn-close { position: absolute; right: 44px; top: 26px; }
+
+#DiContent .page-applicant-profile-edit .city-block .btn-close a { display: block; position: absolute; width: 30px; height: 29px; background: transparent url(/theme/pic/ico-form.png) 0 -464px no-repeat; transition: none; }
+
+#DiContent .page-applicant-profile-edit .city-block .btn-close a:hover { background-position: 0 -58px; }
+
+#DiContent .page-applicant-profile-edit .city-block .day-tpl { display: none; }
+
+#DiContent .page-applicant-profile-edit .city-box .dropdown { display: none; position: absolute; padding-bottom: 14px; background: #F7F7F7; border: 1px solid silver; border-radius: 2px; z-index: 9998; }
+
+#DiContent .page-applicant-profile-edit .city-box .title { height: 23px; }
+
+#DiContent .page-applicant-profile-edit .city-box .close { position: absolute; right: 7px; top: 5px; font-family: Verdana,Tahoma,Arial; font-size: 14px; }
+
+#DiContent .page-applicant-profile-edit .city-box .choices { max-height: 150px; overflow: auto; }
+
+#DiContent .page-applicant-profile-edit .city-box .item { display: block; padding: 3px 10px; color: #212121; border: 1px solid #F7F7F7; }
+
+#DiContent .page-applicant-profile-edit .city-box .item:hover { background: #abb820; color: #fff; }
+
+#DiContent .page-applicant-profile-edit #LMetro { display: none; }
+
+#DiContent .page-applicant-profile-edit .tpl2 .pv { margin-bottom: 2px; }
+
+#DiContent .page-applicant-profile-edit .tpl2 i { display: inline-block; width: 100px; text-align: right; font-style: normal; }
+
+#DiContent .page-applicant-profile-edit .tpl2 .payment2 { width: 50px; height: 25px; }
+
+#DiContent .page-applicant-profile-edit .exp-lvl .name { margin-bottom: 5px; }
+
+#DiContent .page-applicant-profile-edit .week-day label:first-of-type { text-transform: none; }
+
+#DiContent .page-applicant-profile-edit .week-day label { display: inline-block; margin: 0 10px 5px 0; text-transform: uppercase; }
+
+#DiContent .page-applicant-profile-edit .week-day input { width: 50px; text-align: center; }
+
+#DiContent .page-applicant-profile-edit .week-day .right-box { display: inline-block; width: 120px; }
+
+#DiContent .page-applicant-profile-edit #Maboutmself { height: 120px; }
+
+#DiContent .page-applicant-profile-edit .btn-update, #DiContent .page-applicant-profile-edit .btn-save { margin-top: 40px; text-align: center; }
+
+#DiContent .page-applicant-profile-edit .btn-update button, #DiContent .page-applicant-profile-edit .btn-save button { padding: 5px 25px; width: auto; }
+
+#DiContent .page-applicant-profile-edit .btn-save { text-align: right; }
+
+#DiContent .page-applicant-profile-edit .hidden-ni { display: none; }
+
+/*
+*
+* 24.08.17
+*
+*/
+#DiContent .file-upload.empty{ border: 2px solid #f11717; }

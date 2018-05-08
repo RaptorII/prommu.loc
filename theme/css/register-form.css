@@ -1,0 +1,431 @@
+/*
+  register forms
+ */
+@font-face {
+    font-family: 'LatoMedium';
+    src: url(../fonts/Lato-Medium.eot);
+    src: local('LatoMedium'), url(../fonts/Lato-Medium.ttf), url(../fonts/Lato-Medium.woff), url(../fonts/Lato-Medium.woff2);
+}
+@font-face {
+    font-family: 'LatoRegular';
+    src: url(../fonts/Lato-Regular.eot);
+    src: local('LatoRegular'), url(../fonts/Lato-Regular.ttf), url(../fonts/Lato-Regular.woff), url(../fonts/Lato-Regular.woff2);
+}
+@font-face {
+    font-family: 'LatoThin';
+    src: url(../fonts/Lato-Thin.eot);
+    src: local('LatoThin'), url(../fonts/Lato-Thin.ttf), url(../fonts/Lato-Thin.woff), url(../fonts/Lato-Thin.woff2);
+}
+@font-face {
+    font-family: 'LatoLight';
+    src: url(../fonts/Lato-Light.eot);
+    src: local('LatoLight'), url(../fonts/Lato-Light.ttf), url(../fonts/Lato-Light.woff), url(../fonts/Lato-Light.woff2);
+}
+
+.register__reg-header{
+    position: relative;
+    border-bottom: 1px solid #c8c8c8;
+    margin: 0 0 48px;
+    text-align: left;
+}
+.employer .register__reg-header{
+    min-height: 160px;
+    padding-left: 225px;
+}
+.competitor .register__reg-header{
+    min-height: 185px;
+    padding-left: 270px;
+}
+.employer .reg-header__pic{
+    width: 155px;
+    height: 160px;
+    position: absolute;
+    left: 70px;
+    bottom: 0;
+    background: url("../pic/register-form/r-reg-logo.jpg") no-repeat;
+}
+.competitor .reg-header__pic{
+    width: 135px;
+    height: 185px;
+    position: absolute;
+    left: 70px;
+    bottom: -6px;
+    background: url("../pic/register-form/s-reg-logo.jpg") no-repeat;
+}
+.reg-header__text{
+    display: inline-block;
+    margin: 100px 0 30px;
+}
+.competitor .reg-header__text{ margin: 124px 0 30px; }
+.reg-header__text.competitor{ margin-left: 62px;}
+.reg-header__title{
+    text-transform: uppercase;
+    margin: 0;
+    display: inline;
+    font-size: 28px;
+    font-family: 'LatoMedium', Calibri, Arial, sans-serif;
+    color: #444649;
+    padding: 0 50px;
+}
+#DiContent .register__reg-header h1.reg-header__title{ font-weight: normal; }
+.reg-header__point{
+    font-size: 50px;
+    display: inline-block;
+    line-height: 30px;
+    vertical-align: bottom;
+}
+.reg-header__point.orange{ color: #ff6500; }
+.reg-header__point.green{ color: #abb820; }
+.register__preview{
+    color: #444649;
+    font-size: 16px;
+    font-family: 'LatoMedium', Calibri, Arial, sans-serif;
+    padding-bottom: 40px;
+    display: block;
+}
+/***********/
+#DiContent .register__reg-form{
+    text-align: justify;
+    padding: 0 54px 50px 70px;
+}
+/***********/
+#DiContent .register__reg-social{
+    padding: 0 45px 50px;
+    text-align: left;
+    border-left: 1px solid #c8c8c8;
+}
+.reg-social__link{
+    font-size: 16px;
+    display: block;
+    height: 56px;
+    padding-left: 78px;
+    margin-bottom: 10px;
+    background: url("../pic/register-form/reg-social.png") 0 0 no-repeat;
+}
+.reg-social__link:last-child{ margin-bottom: 0; }
+#DiContent .register__reg-social .reg-social__link{
+    color: #abb820;
+    text-decoration: underline;
+    display: inline-block;
+    font-size: 16px;
+    font-family: 'LatoLight', Calibri, Arial, sans-serif;
+}
+#DiContent .register__reg-social .reg-social__link:hover{ color: #abb820; }
+.reg-social__link span{ line-height: 56px; }
+.reg-social__link.fb{ background-position: 0 0; }
+.reg-social__link.vk{ background-position: 0 -56px; }
+.reg-social__link.ml{ background-position: 0 -112px; }
+.reg-social__link.od{ background-position: 0 -168px; }
+.reg-social__link.go{ background-position: 0 -224px; }
+.reg-social__link.in{ background-position: 0 -280px; }
+#DiContent .register__reg-social .reg-social__link.disable{
+    filter: grayscale(100%);
+    cursor: no-drop;
+    color: #878787;
+}
+#DiContent .register__reg-form .reg-form__input{
+    height: 39px;
+    background-color: #ffffff;
+    padding: 0px 20px;
+    border: 1px solid #c8c8c8;
+    border-radius: 2px;
+    outline:none;
+    font-family: 'LatoRegular', Calibri, Arial, sans-serif;
+    font-size: 14px;
+}
+.reg-form__input::-webkit-input-placeholder{ color:#cfcfcf; }
+.reg-form__input::-moz-placeholder{color:#cfcfcf;}
+.reg-form__input:-moz-placeholder{color:#cfcfcf;}
+.reg-form__input:-ms-input-placeholder{color:#cfcfcf;}
+#DiContent .register__reg-form .reg-form__label{
+    margin: 0 0 24px;
+    padding-left: 46px;
+    position: relative;
+}
+#DiContent .register__reg-form .reg-form__label .red{
+    position: absolute;
+    top: -15px;
+    left: 46px;
+}
+.employer .reg-form__label{ background: url("../pic/register-form/r-reg-form-icons.png") 0 0 no-repeat; }
+.reg-form__label.emp1{ background-position: 0 8px; }
+.reg-form__label.emp2{ background-position: 0 -29px; }
+.reg-form__label.emp3{ background-position: 0 -73px; }
+.reg-form__label.emp4{ background-position: 0 -114px; }
+.competitor .reg-form__label{ background: url("../pic/register-form/s-reg-form-icons.png") 0 0 no-repeat; }
+.reg-form__label.com1{
+    background-position: 0 7px;
+    width: 60%;
+    float: left;
+}
+.reg-form__label.com2{
+    background-position: -27px 0;
+    width: 40%;
+    float: left;
+}
+#DiContent .register__reg-form .reg-form__label.com2{ padding-left: 28px; }
+.reg-form__label.com3{ background-position: 0 -29px; }
+.reg-form__label.com4{
+    background-position: 0 -191px;
+    width: 60%;
+    float: left;
+}
+#DiContent .register__reg-form .reg-form__label.com4{ padding: 7px 0 7px 46px; }
+#DiContent .register__reg-form .reg-form__label.com5{ padding: 7px 0 7px 34px; }
+.reg-form__label.com5{
+    background-position: 0 -151px;
+    width: 40%;
+    float: left;
+}
+.reg-form__label.com6{ background-position: 0 -73px; }
+.reg-form__label.com7{ background-position: 0 -114px; }
+.reg-form__label-name{ padding-right: 11px; }
+#DiContent .reg-form__label .reg-form__label-radio{
+    width: 59px;
+    height: 25px;
+    display: inline-block;
+    position: relative;
+    margin: 0;
+    padding: 4px 0px 0 35px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+.reg-form__label-name,
+#DiContent .reg-form__label .reg-form__label-radio{
+    font-size: 14px;
+    font-family: 'LatoRegular', Calibri, Arial, sans-serif;   
+}
+#DiContent .reg-form__label.com5 .reg-form__label-radio{ width: 50px; }
+.reg-form__radio{
+    height: 25px;
+    width: 25px;
+    background: none;
+    border: 1px solid #c8c8c8;
+    border-radius: 2px;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+.reg-form__radio span{
+    width: 11px;
+    height: 11px;
+    margin: 6px;
+    display: block;
+}
+#DiContent .reg-form__label-radio input{ display: none }
+#DiContent .reg-form__label-radio input:checked + .reg-form__radio span{
+    background: #abb820;
+}
+.reg-form__radio:hover span{ background-color: #e6e6e6; }
+#DiContent .register__reg-form button.reg-form__btn{
+    font-size: 16px;
+    font-family: 'LatoRegular', Calibri, Arial, sans-serif;
+    line-height: 18px;
+    padding: 13px 35px;
+}
+#DiContent .register__reg-form .reg-form__description{
+    font-size: 12px;
+    color: #868686;
+    font-family: 'LatoLight', Calibri, Arial, sans-serif;
+}
+#DiContent .register__reg-form .reg-form__description a{
+    text-decoration: underline;
+    color: #868686;
+}
+#DiContent .register__reg-form .reg-form__description a:hover{ color:#abb820; }
+.mob-visible{ display: none; }
+#DiContent.page-register .btn-reg button:focus{ outline: none; }
+.reg-social__link-block{ width: 1px; }
+#DiContent.page-register .message.red{ padding: 0 0 20px 0; }
+#DiContent.page-register .register__preview a{
+    color: #444649;
+    text-decoration: underline;
+}
+#DiContent.page-register .register__preview a:hover{ color:#abb820; }
+#DiContent.page-register .register__preview a:focus{ outline: none; }
+.register-fb__email{
+    -webkit-transition: box-shadow .3s ease-out;
+    -moz-transition: box-shadow .3s ease-out;
+    -o-transition: box-shadow .3s ease-out;
+    transition: box-shadow .3s ease-out;
+}
+.register-fb__email:focus{ outline: none }
+#DiContent .register-fb__email.error{
+    box-shadow: inset 0px 0px 3px red;
+    border: 1px solid red;
+}
+/*
+media
+ */
+@media (max-width: 1199px){
+    .reg-header__title{ padding: 0 30px; }
+}
+@media (max-width: 991px){
+    #DiContent .container,
+    .reg-form__label.com4,
+    .reg-form__label.com5{
+        width: 100%;
+    }
+    #DiContent .register__reg-form .reg-form__label.com5{ padding: 7px 0 7px 46px; }
+    /*
+    .competitor .reg-header__text{ margin: 94px 0 30px; }
+    .employer .reg-header__text{ margin: 69px 0 30px; }
+    */
+    .med-hidden{ display: none; }
+}
+@media (max-width: 767px){
+    #DiContent .container{
+        width: 100%;
+        max-width: inherit;
+    }
+    .register__reg-header{
+        margin: 0 0 30px;
+        padding-left: 43%;
+    }
+    #DiContent.page-register .register-wrapp{ padding: 0 30px; }
+    .employer .register__reg-header{
+        padding-left: 43%;
+        min-width: 195px;
+    }
+    .employer .reg-header__pic{ 
+        left: 40px;
+        z-index: 1; 
+    }
+    .reg-header__text{
+        margin: 60px 0 30px;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+    }
+    .reg-header__title{ padding: 0 18px; }
+    .mob-hidden{ display: none; }
+    .mob-visible{ display: inline-block; }
+    .register__reg-form .register__preview{
+        padding: 0 38px 25px;
+        border-bottom: 1px solid #c8c8c8;
+        margin-bottom: 45px;
+        font-size: 24px;
+    }
+    #DiContent .register__reg-form{
+        padding: 0 0 48px;
+        margin-bottom: 40px;
+        border-bottom: 1px solid #c8c8c8;
+    }
+    #F1registerEmpl{
+        padding: 0 38px;
+        margin: 0;
+    }
+    #DiContent .register__reg-form .reg-form__input{ font-size: 20px; }
+    .reg-form__input::-webkit-input-placeholder{ color:#525252; }
+    .reg-form__input::-moz-placeholder{color:#525252;}
+    .reg-form__input:-moz-placeholder{color:#525252;}
+    .reg-form__input:-ms-input-placeholder{color:#525252;}
+    #DiContent.page-register .btn-reg.btn-reg button{ 
+        font-size: 26px;
+        line-height: 24px;
+        width: 100%;
+        max-width: 380px; 
+    }
+    /*
+     new
+    */
+    #DiContent.page-register .btn-reg.btn-reg button{
+        max-width: 350px; 
+        font-size: 20px;
+        line-height: 14px;
+    }
+    /*
+    *
+    */
+    #DiContent .register__reg-form .reg-form__description{
+        padding: 0 38px;
+        display: inline-block;
+        font-size: 18px;
+        line-height: 22px;
+    }
+    #DiContent .register__reg-social{
+        padding: 0 0 50px;
+        border: none;
+    }
+    .register__reg-social .register__preview{
+    padding-bottom: 60px;
+    font-size: 24px;
+    max-width: 300px;
+    margin: 0 auto;
+    }
+    .reg-social__link{
+        width: 56px;
+        margin: 0;
+        padding: 0;
+    }
+    .reg-social__link-block{
+        display: flex;
+        justify-content: space-between;
+    }
+    .reg-social__link-block{ width: inherit; }
+    .competitor .reg-header__pic{ left: 40px; }
+    .competitor .register__reg-header{ padding-left: 40%; }
+    .reg-form__label.com1,
+    .reg-form__label.com2{ width: 50%; }
+    #DiContent.page-register .message.red{ padding: 0 38px 20px 38px; }
+}
+@media (max-width: 500px){
+    .employer .register__reg-header{ padding: 0 0 160px; }
+    .employer .reg-header__pic{
+        left: calc(50% - 80px);
+        width: 100%;
+        max-width: 155px;
+    }
+    .competitor .reg-header__pic{
+         left: calc(50% - 68px);
+         width: 100%;
+         max-width: 135px;
+     }
+    .reg-header__text,
+    .competitor .reg-header__text{
+        margin: 0 0 30px;
+    }
+    .register__reg-form .register__preview{
+        word-break: break-all;
+        padding: 0 0 25px;
+    }
+    #F1registerEmpl{ padding: 0px; }
+    #DiContent.page-register .btn-reg button.reg-form__btn{
+        width: 100%;
+        padding: 20px 10px;
+        font-size: 20px;
+    }
+    /*
+    * new
+    */
+    #DiContent.page-register .btn-reg button.reg-form__btn{
+        padding: 17px 10px;
+        font-size: 18px;
+    }
+    /*
+    *
+    */
+    .reg-social__link-block{ display: block; }
+    #DiContent .register__reg-social .reg-social__link{
+        width: 50%;
+        margin-bottom: 10px;
+        float: left;
+    }
+    .reg-social__link.fb{ background-position: 50% 0; }
+    .reg-social__link.vk{ background-position: 50% -56px; }
+    .reg-social__link.ml{ background-position: 50% -112px; }
+    .reg-social__link.od{ background-position: 50% -168px; }
+    .reg-social__link.go{ background-position: 50% -224px; }
+    .reg-social__link.in{ background-position: 50% -280px; }
+    #DiContent .register__reg-form .reg-form__description{ 
+        padding: 0; 
+        word-break: break-all;
+    }
+    .competitor .register__reg-header{ padding: 0 0 185px; }
+    .reg-form__label-name{
+        font-size: 20px;
+        line-height: 25px;
+        vertical-align: bottom;
+    }
+    #DiContent.page-register .message.red{ padding: 0 0 20px 0; }
+}

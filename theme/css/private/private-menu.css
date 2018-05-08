@@ -1,0 +1,199 @@
+#DiContent .row.mt20 .submenu-block{ margin: 0 }
+.personal-acc__menu{
+    width: 100%;
+    display: block;
+    border-bottom: 1px solid #212121;
+}
+#DiContent .pa__menu-link{
+    display: block;
+    vertical-align: middle;
+    text-align: center;
+    text-transform: uppercase;
+    color: #212121;
+    position: relative;
+    padding: 5px 3px;
+    font-family: RobotoCondensed-Regular, verdana, arial;
+}
+#DiContent .applicant.pa__menu-link.active,
+#DiContent .applicant.pa__menu-link:hover,
+#DiContent .employer.pa__menu-link.active,
+#DiContent .employer.pa__menu-link:hover{ color: #abb820 }
+.pa__menu-link:before,
+.pa__menu-link:after{
+    content: '';
+    height: inherit;
+    margin: 0;
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    background-color: #DEDEDE;
+    border: none;
+}
+.pa__menu-link:before{
+    right: 100%;     
+    left: -1px;
+}
+.pa__menu-link:after{
+    right: -1px;     
+    left: 100%;
+}
+.personal-acc__menu-icon{
+    position: relative;
+    display: block;
+    left: -17px;
+}
+.pa__menu-item{ 
+    display: table;
+    width: 100%;
+}
+.pa__menu-item-icon,
+.pa__menu-item-text{ 
+    display: table-cell;
+    vertical-align: middle;
+}
+.pa__menu-item-icon{ width: 18px }
+.pa__menu-link i{
+    display: block;
+    width: 15px;
+    height: 12px;
+    position: relative;
+    text-align: center;
+}
+.pa__menu-link i:before,
+.pa__menu-link i:after{
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: url(/theme/pic/private/private-menu-sprite.png) 0 0 no-repeat;
+    -webkit-transition: opacity .3s ease-out;
+    -moz-transition: opacity .3s ease-out;
+    -o-transition: opacity .3s ease-out;
+    transition: opacity .3s ease-out;
+}
+.pa__menu-link i:before{ opacity: 1 }
+.pa__menu-link i:after{ opacity: 0 }
+.pa__menu-link.active i:before{ opacity: 0 }
+.pa__menu-link:hover i:before{ opacity: 0 }
+.pa__menu-link.active i:after{ opacity: 1 }
+.pa__menu-link:hover i:after{ opacity: 1 }
+/*
+.pa__menu-link.applicant:nth-child(1) i:before{ background-position: 0 0px }
+.pa__menu-link.applicant:nth-child(1) i:after{ background-position: 0 -12px }
+.pa__menu-link.applicant:nth-child(2) i:before{ background-position: 0 -24px }
+.pa__menu-link.applicant:nth-child(2) i:after{ background-position: 0 -36px }
+.pa__menu-link.applicant:nth-child(3) i:before{ background-position: 0 -48px }
+.pa__menu-link.applicant:nth-child(3) i:after{ background-position: 0 -60px }
+.pa__menu-link.applicant:nth-child(4) i:before{ background-position: 0 -144px }
+.pa__menu-link.applicant:nth-child(4) i:after{ background-position: 0 -156px }
+.pa__menu-link.applicant:nth-child(5) i:before{ background-position: 0 -72px }
+.pa__menu-link.applicant:nth-child(5) i:after{ background-position: 0 -84px }
+.pa__menu-link.applicant:nth-child(6) i:before{ background-position: 0 -96px }
+.pa__menu-link.applicant:nth-child(6) i:after{ background-position: 0 -108px }
+.pa__menu-link.applicant:nth-child(7) i:before{ background-position: 0 -120px }
+.pa__menu-link.applicant:nth-child(7) i:after{ background-position: 0 -132px }
+
+.pa__menu-link.employer:nth-child(1) i:before{ background-position: 0 0px }
+.pa__menu-link.employer:nth-child(1) i:after{ background-position: 0 -12px }
+.pa__menu-link.employer:nth-child(2) i:before{ background-position: 0 -24px }
+.pa__menu-link.employer:nth-child(2) i:after{ background-position: 0 -36px }
+.pa__menu-link.employer:nth-child(3) i:before{ background-position: 0 -264px }
+.pa__menu-link.employer:nth-child(3) i:after{ background-position: 0 -276px }
+.pa__menu-link.employer:nth-child(4) i:before{ background-position: 0 -168px }
+.pa__menu-link.employer:nth-child(4) i:after{ background-position: 0 -180px }
+.pa__menu-link.employer:nth-child(5) i:before{ background-position: 0 -216px }
+.pa__menu-link.employer:nth-child(5) i:after{ background-position: 0 -228px }
+.pa__menu-link.employer:nth-child(6) i:before{ background-position: 0 -192px }
+.pa__menu-link.employer:nth-child(6) i:after{ background-position: 0 -204px }
+.pa__menu-link.employer:nth-child(7) i:before{ background-position: 0 -144px }
+.pa__menu-link.employer:nth-child(7) i:after{ background-position: 0 -156px }
+.pa__menu-link.employer:nth-child(8) i:before{ background-position: 0 -120px }
+.pa__menu-link.employer:nth-child(8) i:after{ background-position: 0 -132px }
+.pa__menu-link.employer:nth-child(9) i:before{ background-position: 0 -240px }
+.pa__menu-link.employer:nth-child(9) i:after{ background-position: 0 -252px }
+*/
+.pa__menu-20.applicant i:before{ background-position: 0 0px }
+.pa__menu-20.applicant i:after{ background-position: 0 -12px }
+.pa__menu-75.applicant i:before{ background-position: 0 -24px }
+.pa__menu-75.applicant i:after{ background-position: 0 -36px }
+.pa__menu-23.applicant i:before{ background-position: 0 -48px }
+.pa__menu-23.applicant i:after{ background-position: 0 -60px }
+.pa__menu-78.applicant i:before{ background-position: 0 -144px }
+.pa__menu-78.applicant i:after{ background-position: 0 -156px }
+.pa__menu-21.applicant i:before{ background-position: 0 -72px }
+.pa__menu-21.applicant i:after{ background-position: 0 -84px }
+.pa__menu-22.applicant i:before{ background-position: 0 -96px }
+.pa__menu-22.applicant i:after{ background-position: 0 -108px }
+.pa__menu-25.applicant i:before{ background-position: 0 -120px }
+.pa__menu-25.applicant i:after{ background-position: 0 -132px }
+.pa__menu-80.applicant i:before{ background-position: 0 -288px }
+.pa__menu-80.applicant i:after{ background-position: 0 -300px }
+
+.pa__menu-15.employer i:before{ background-position: 0 0px }
+.pa__menu-15.employer i:after{ background-position: 0 -12px }
+.pa__menu-76.employer i:before{ background-position: 0 -24px }
+.pa__menu-76.employer i:after{ background-position: 0 -36px }
+.pa__menu-16.employer i:before{ background-position: 0 -264px }
+.pa__menu-16.employer i:after{ background-position: 0 -276px }
+.pa__menu-17.employer i:before{ background-position: 0 -168px }
+.pa__menu-17.employer i:after{ background-position: 0 -180px }
+.pa__menu-18.employer i:before{ background-position: 0 -216px }
+.pa__menu-18.employer i:after{ background-position: 0 -228px }
+.pa__menu-14.employer i:before{ background-position: 0 -192px }
+.pa__menu-14.employer i:after{ background-position: 0 -204px }
+.pa__menu-79.employer i:before{ background-position: 0 -144px }
+.pa__menu-79.employer i:after{ background-position: 0 -156px }
+.pa__menu-19.employer i:before{ background-position: 0 -120px }
+.pa__menu-19.employer i:after{ background-position: 0 -132px }
+.pa__menu-27.employer i:before{ background-position: 0 -240px }
+.pa__menu-27.employer i:after{ background-position: 0 -252px }
+.pa__menu-81.employer i:before{ background-position: 0 -288px }
+.pa__menu-81.employer i:after{ background-position: 0 -300px }
+/*  */
+#DiContent .analytics-link{
+    line-height: 27px;
+    display: inline-block;
+    vertical-align: bottom;
+    color: #abb820;
+    font-size: 16px;
+    padding: 0 5px 0 35px;
+    font-family: RobotoCondensedBold, RobotoCondensedRegular, verdana, arial;
+    position: relative;
+    display: none;
+}
+#DiContent .analytics-link:hover{ color: #abb820 }
+#DiContent .analytics-link:before{
+    content: '';
+    width: 22px;
+    height: 15px;
+    position: absolute;
+    top: 6px;
+    left: 5px;
+    background: url(/theme/pic/analytics/analytics-link.png) no-repeat;
+}
+/*
+*   MEDIA
+*/
+@media(min-width:768px){
+    .personal-acc__menu{ 
+        display:table;
+    }
+    #DiContent .pa__menu-link{ 
+        display:table-cell;
+        padding: 10px 3px;
+    }
+    .pa__menu-link:after{
+        top: 8px;
+        bottom: 8px;
+    }
+    .pa__menu-link:before,
+    .pa__menu-link:last-child:after{ display: none }
+}
+@media (min-width: 1200px){
+    .pa__menu-item-icon{ width: 30px }
+    .pa__menu-link i{ margin: 0 auto }
+    .pa__menu-item-text{ text-align: left } 
+}

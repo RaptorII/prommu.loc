@@ -1,0 +1,53 @@
+/*
+*	POPAP
+*/
+#DiSiteWrapp #DiContent #MWwrapper .mw-win.dark-ver {
+	background: #5aad17;
+	background: -moz-linear-gradient(-45deg, #5aad17 0%, #0f4801 100%);
+	background: -webkit-linear-gradient(-45deg, #5aad17 0%,#0f4801 100%);
+	background: linear-gradient(135deg, #5aad17 0%,#0f4801 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5aad17', endColorstr='#0f4801',GradientType=1 );
+	padding: 50px;
+	border: none;
+	color: #FFFFFF;
+	text-transform: uppercase;
+	font-size: 18px;
+	max-width: 400px;
+	width: 100%;
+	text-align: center;
+	margin-left: -200px!important;
+}
+#DiSiteWrapp #DiContent #MWwrapper .mw-close {
+	width: 29px;
+	height: 29px;
+	background: none;
+	border: 1px solid #FFFFFF;
+	border-radius: 15px;
+	top: 10px;
+	right: 10px;
+}
+#DiSiteWrapp #DiContent #MWwrapper .mw-close:before {
+	content: '\2716';
+	line-height: 28px;
+	display: block;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0;
+	bottom: 0;
+	color: #FFFFFF;
+	font-size: 18px;
+	text-align: center;
+	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+}
+.without-chats{
+	text-align: center;
+	margin: 50px 0 70px;
+	font-size: 20px;
+}
+@media (max-width: 767px){
+	#DiSiteWrapp #DiContent #MWwrapper .mw-win.dark-ver{
+		width: 350px !important;
+		margin-left: -175px !important;
+	}
+}

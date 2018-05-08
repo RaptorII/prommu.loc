@@ -1,0 +1,76 @@
+a:6:{s:6:"config";a:4:{s:10:"phpVersion";s:6:"5.6.21";s:10:"yiiVersion";s:6:"1.1.17";s:11:"application";a:4:{s:3:"yii";s:6:"1.1.17";s:4:"name";s:10:"prommu.com";s:8:"timezone";s:13:"Europe/Moscow";s:5:"debug";b:0;}s:3:"php";a:4:{s:7:"version";s:6:"5.6.21";s:6:"xdebug";b:0;s:3:"apc";b:0;s:8:"memcache";b:0;}}s:7:"request";a:13:{s:7:"flashes";a:0:{}s:10:"statusCode";i:500;s:14:"requestHeaders";a:10:{s:4:"Host";s:10:"prommu.com";s:10:"Connection";s:10:"keep-alive";s:13:"Cache-Control";s:9:"max-age=0";s:6:"Accept";s:3:"*/*";s:16:"X-Requested-With";s:14:"XMLHttpRequest";s:10:"User-Agent";s:110:"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36";s:7:"Referer";s:30:"http://prommu.com/site/sitemap";s:15:"Accept-Encoding";s:19:"gzip, deflate, sdch";s:15:"Accept-Language";s:35:"ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4";s:6:"Cookie";s:285:"_ym_uid=1474965290848740583; PHPSESSID=4tu3n00gsufkng4rbog58m4ld5; prommu=eyJ1aWQiOm51bGwsInRva2VuIjoiMDQ5NjQwMGM0NDJjNmQ4ZWVkNzMxOWIyZjRjYjEwNWUiLCJleHB0aW1lIjoxNDc1MTQyNTAyLCJyZW1lbWJlciI6IiJ9; _ym_isad=1; _gat_UA-25440798-13=1; _ga=GA1.2.1204112061.1474965290; _ym_visorc_23945542=w";}s:15:"responseHeaders";a:5:{s:12:"X-Powered-By";s:10:"PHP/5.6.21";s:7:"Expires";s:29:"Thu, 19 Nov 1981 08:52:00 GMT";s:13:"Cache-Control";s:62:"no-store, no-cache, must-revalidate, post-check=0, pre-check=0";s:6:"Pragma";s:8:"no-cache";s:12:"Content-type";s:24:"text/html; charset=UTF-8";}s:5:"route";s:27:"ajnotify/getusernewcomments";s:6:"action";s:46:"AjnotifyController::actionGetusernewcomments()";s:12:"actionParams";a:0:{}s:6:"SERVER";a:32:{s:15:"REDIRECT_STATUS";s:3:"200";s:9:"HTTP_HOST";s:10:"prommu.com";s:15:"HTTP_CONNECTION";s:10:"keep-alive";s:18:"HTTP_CACHE_CONTROL";s:9:"max-age=0";s:11:"HTTP_ACCEPT";s:3:"*/*";s:21:"HTTP_X_REQUESTED_WITH";s:14:"XMLHttpRequest";s:15:"HTTP_USER_AGENT";s:110:"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36";s:12:"HTTP_REFERER";s:30:"http://prommu.com/site/sitemap";s:20:"HTTP_ACCEPT_ENCODING";s:19:"gzip, deflate, sdch";s:20:"HTTP_ACCEPT_LANGUAGE";s:35:"ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4";s:11:"HTTP_COOKIE";s:285:"_ym_uid=1474965290848740583; PHPSESSID=4tu3n00gsufkng4rbog58m4ld5; prommu=eyJ1aWQiOm51bGwsInRva2VuIjoiMDQ5NjQwMGM0NDJjNmQ4ZWVkNzMxOWIyZjRjYjEwNWUiLCJleHB0aW1lIjoxNDc1MTQyNTAyLCJyZW1lbWJlciI6IiJ9; _ym_isad=1; _gat_UA-25440798-13=1; _ga=GA1.2.1204112061.1474965290; _ym_visorc_23945542=w";s:4:"PATH";s:29:"/sbin:/usr/sbin:/bin:/usr/bin";s:16:"SERVER_SIGNATURE";s:71:"<address>Apache/2.2.15 (CentOS) Server at prommu.com Port 80</address>
+";s:15:"SERVER_SOFTWARE";s:22:"Apache/2.2.15 (CentOS)";s:11:"SERVER_NAME";s:10:"prommu.com";s:11:"SERVER_ADDR";s:13:"92.63.111.184";s:11:"SERVER_PORT";s:2:"80";s:11:"REMOTE_ADDR";s:14:"87.244.155.106";s:13:"DOCUMENT_ROOT";s:13:"/var/www/html";s:12:"SERVER_ADMIN";s:14:"root@localhost";s:15:"SCRIPT_FILENAME";s:23:"/var/www/html/index.php";s:11:"REMOTE_PORT";s:5:"64120";s:12:"REDIRECT_URL";s:28:"/ajnotify/getusernewcomments";s:17:"GATEWAY_INTERFACE";s:7:"CGI/1.1";s:15:"SERVER_PROTOCOL";s:8:"HTTP/1.1";s:14:"REQUEST_METHOD";s:3:"GET";s:12:"QUERY_STRING";s:0:"";s:11:"REQUEST_URI";s:28:"/ajnotify/getusernewcomments";s:11:"SCRIPT_NAME";s:10:"/index.php";s:8:"PHP_SELF";s:10:"/index.php";s:18:"REQUEST_TIME_FLOAT";d:1475130691.592;s:12:"REQUEST_TIME";i:1475130691;}s:3:"GET";a:0:{}s:4:"POST";a:0:{}s:6:"COOKIE";a:7:{s:7:"_ym_uid";s:19:"1474965290848740583";s:9:"PHPSESSID";s:26:"4tu3n00gsufkng4rbog58m4ld5";s:6:"prommu";s:120:"eyJ1aWQiOm51bGwsInRva2VuIjoiMDQ5NjQwMGM0NDJjNmQ4ZWVkNzMxOWIyZjRjYjEwNWUiLCJleHB0aW1lIjoxNDc1MTQyNTAyLCJyZW1lbWJlciI6IiJ9";s:8:"_ym_isad";s:1:"1";s:19:"_gat_UA-25440798-13";s:1:"1";s:3:"_ga";s:27:"GA1.2.1204112061.1474965290";s:19:"_ym_visorc_23945542";s:1:"w";}s:5:"FILES";a:0:{}s:7:"SESSION";a:2:{s:4:"lang";s:2:"ru";s:10:"au_us_type";i:0;}}s:3:"log";a:1:{s:8:"messages";a:2:{i:0;a:4:{i:0;s:587:"Не удалось выполнить CDbCommand::fetchColumn(): SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 7. Выполнявшийся SQL-запрос: SELECT COUNT(m.id) cou
+                FROM comments mm
+                INNER JOIN employer m ON mm.id_empl = m.id
+                WHERE mm.iseorp = 1
+                  AND mm.processed = 0
+                  AND mm.isactive = 1
+                  AND mm.id_promo =  .";i:1;s:5:"error";i:2;s:20:"system.db.CDbCommand";i:3;d:1475130691.609854;}i:1;a:4:{i:0;s:1864:"exception 'CDbException' with message 'CDbCommand не удалось исполнить SQL-запрос: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 7' in /var/www/html/framework/db/CDbCommand.php:543
+Stack trace:
+#0 /var/www/html/framework/db/CDbCommand.php(433): CDbCommand->queryInternal('fetchColumn', 0, Array)
+#1 /var/www/html/protected/models/PushChecker.php(77): CDbCommand->queryScalar()
+#2 /var/www/html/protected/controllers/frontend/AjnotifyController.php(46): PushChecker->getNewUerComments()
+#3 /var/www/html/framework/web/actions/CInlineAction.php(49): AjnotifyController->actionGetusernewcomments()
+#4 /var/www/html/framework/web/CController.php(308): CInlineAction->runWithParams(Array)
+#5 /var/www/html/framework/web/CController.php(286): CController->runAction(Object(CInlineAction))
+#6 /var/www/html/framework/web/CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#7 /var/www/html/framework/web/CWebApplication.php(282): CController->run('getusernewcomme...')
+#8 /var/www/html/framework/web/CWebApplication.php(141): CWebApplication->runController('ajnotify/getuse...')
+#9 /var/www/html/framework/base/CApplication.php(185): CWebApplication->processRequest()
+#10 /var/www/html/protected/behaviors/WebApplicationEndBehavior.php(23): CApplication->run()
+#11 [internal function]: WebApplicationEndBehavior->runEnd('frontend')
+#12 /var/www/html/framework/base/CComponent.php(261): call_user_func_array(Array, Array)
+#13 /var/www/html/index.php(31): CComponent->__call('runEnd', Array)
+#14 /var/www/html/index.php(31): CWebApplication->runEnd('frontend')
+#15 {main}
+REQUEST_URI=/ajnotify/getusernewcomments
+HTTP_REFERER=http://prommu.com/site/sitemap
+---";i:1;s:5:"error";i:2;s:22:"exception.CDbException";i:3;d:1475130691.6100459;}}}s:9:"profiling";a:3:{s:6:"memory";i:2303160;s:4:"time";d:0.022804021835327148;s:8:"messages";a:8:{i:0;a:4:{i:0;s:190:"begin:system.db.CDbCommand.query(SELECT `id_user` AS `id`, `date_login`
+FROM `user_work`
+WHERE (uid=:uid) AND (token=:token). Bound with :uid=NULL, :token='0496400c442c6d8eed7319b2f4cb105e')";i:1;s:7:"profile";i:2;s:26:"system.db.CDbCommand.query";i:3;d:1475130691.6059151;}i:1;a:4:{i:0;s:188:"end:system.db.CDbCommand.query(SELECT `id_user` AS `id`, `date_login`
+FROM `user_work`
+WHERE (uid=:uid) AND (token=:token). Bound with :uid=NULL, :token='0496400c442c6d8eed7319b2f4cb105e')";i:1;s:7:"profile";i:2;s:26:"system.db.CDbCommand.query";i:3;d:1475130691.608789;}i:2;a:4:{i:0;s:305:"begin:system.db.CDbCommand.query(SELECT COUNT(m.id) cou
+                FROM comments mm
+                INNER JOIN employer m ON mm.id_empl = m.id
+                WHERE mm.iseorp = 1
+                  AND mm.processed = 0
+                  AND mm.isactive = 1
+                  AND mm.id_promo =  )";i:1;s:7:"profile";i:2;s:26:"system.db.CDbCommand.query";i:3;d:1475130691.6093121;}i:3;a:4:{i:0;s:303:"end:system.db.CDbCommand.query(SELECT COUNT(m.id) cou
+                FROM comments mm
+                INNER JOIN employer m ON mm.id_empl = m.id
+                WHERE mm.iseorp = 1
+                  AND mm.processed = 0
+                  AND mm.isactive = 1
+                  AND mm.id_promo =  )";i:1;s:7:"profile";i:2;s:26:"system.db.CDbCommand.query";i:3;d:1475130691.6094971;}i:4;a:4:{i:0;s:190:"begin:system.db.CDbCommand.query(SELECT `id_user` AS `id`, `date_login`
+FROM `user_work`
+WHERE (uid=:uid) AND (token=:token). Bound with :uid=NULL, :token='0496400c442c6d8eed7319b2f4cb105e')";i:1;s:7:"profile";i:2;s:26:"system.db.CDbCommand.query";i:3;d:1475130691.6107011;}i:5;a:4:{i:0;s:188:"end:system.db.CDbCommand.query(SELECT `id_user` AS `id`, `date_login`
+FROM `user_work`
+WHERE (uid=:uid) AND (token=:token). Bound with :uid=NULL, :token='0496400c442c6d8eed7319b2f4cb105e')";i:1;s:7:"profile";i:2;s:26:"system.db.CDbCommand.query";i:3;d:1475130691.6109259;}i:6;a:4:{i:0;s:190:"begin:system.db.CDbCommand.query(SELECT `id_user` AS `id`, `date_login`
+FROM `user_work`
+WHERE (uid=:uid) AND (token=:token). Bound with :uid=NULL, :token='0496400c442c6d8eed7319b2f4cb105e')";i:1;s:7:"profile";i:2;s:26:"system.db.CDbCommand.query";i:3;d:1475130691.6110971;}i:7;a:4:{i:0;s:188:"end:system.db.CDbCommand.query(SELECT `id_user` AS `id`, `date_login`
+FROM `user_work`
+WHERE (uid=:uid) AND (token=:token). Bound with :uid=NULL, :token='0496400c442c6d8eed7319b2f4cb105e')";i:1;s:7:"profile";i:2;s:26:"system.db.CDbCommand.query";i:3;d:1475130691.6143291;}}}s:2:"db";a:2:{s:8:"messages";a:8:{i:0;a:4:{i:0;s:190:"begin:system.db.CDbCommand.query(SELECT `id_user` AS `id`, `date_login`
+FROM `user_work`
+WHERE (uid=:uid) AND (token=:token). Bound with :uid=NULL, :token='0496400c442c6d8eed7319b2f4cb105e')";i:1;s:7:"profile";i:2;s:26:"system.db.CDbCommand.query";i:3;d:1475130691.6059151;}i:1;a:4:{i:0;s:188:"end:system.db.CDbCommand.query(SELECT `id_user` AS `id`, `date_login`
+FROM `user_work`
+WHERE (uid=:uid) AND (token=:token). Bound with :uid=NULL, :token='0496400c442c6d8eed7319b2f4cb105e')";i:1;s:7:"profile";i:2;s:26:"system.db.CDbCommand.query";i:3;d:1475130691.608789;}i:2;a:4:{i:0;s:305:"begin:system.db.CDbCommand.query(SELECT COUNT(m.id) cou
+                FROM comments mm
+                INNER JOIN employer m ON mm.id_empl = m.id
+                WHERE mm.iseorp = 1
+                  AND mm.processed = 0
+                  AND mm.isactive = 1
+                  AND mm.id_promo =  )";i:1;s:7:"profile";i:2;s:26:"system.db.CDbCommand.query";i:3;d:1475130691.6093121;}i:3;a:4:{i:0;s:303:"end:system.db.CDbCommand.query(SELECT COUNT(m.id) cou
+                FROM comments mm
+                INNER JOIN employer m ON mm.id_empl = m.id
+                WHERE mm.iseorp = 1
+                  AND mm.processed = 0
+                  AND mm.isactive = 1
+                  AND mm.id_promo =  )";i:1;s:7:"profile";i:2;s:26:"system.db.CDbCommand.query";i:3;d:1475130691.6094971;}i:4;a:4:{i:0;s:190:"begin:system.db.CDbCommand.query(SELECT `id_user` AS `id`, `date_login`
+FROM `user_work`
+WHERE (uid=:uid) AND (token=:token). Bound with :uid=NULL, :token='0496400c442c6d8eed7319b2f4cb105e')";i:1;s:7:"profile";i:2;s:26:"system.db.CDbCommand.query";i:3;d:1475130691.6107011;}i:5;a:4:{i:0;s:188:"end:system.db.CDbCommand.query(SELECT `id_user` AS `id`, `date_login`
+FROM `user_work`
+WHERE (uid=:uid) AND (token=:token). Bound with :uid=NULL, :token='0496400c442c6d8eed7319b2f4cb105e')";i:1;s:7:"profile";i:2;s:26:"system.db.CDbCommand.query";i:3;d:1475130691.6109259;}i:6;a:4:{i:0;s:190:"begin:system.db.CDbCommand.query(SELECT `id_user` AS `id`, `date_login`
+FROM `user_work`
+WHERE (uid=:uid) AND (token=:token). Bound with :uid=NULL, :token='0496400c442c6d8eed7319b2f4cb105e')";i:1;s:7:"profile";i:2;s:26:"system.db.CDbCommand.query";i:3;d:1475130691.6110971;}i:7;a:4:{i:0;s:188:"end:system.db.CDbCommand.query(SELECT `id_user` AS `id`, `date_login`
+FROM `user_work`
+WHERE (uid=:uid) AND (token=:token). Bound with :uid=NULL, :token='0496400c442c6d8eed7319b2f4cb105e')";i:1;s:7:"profile";i:2;s:26:"system.db.CDbCommand.query";i:3;d:1475130691.6143291;}}s:11:"connections";a:1:{s:2:"db";a:4:{s:5:"class";s:13:"CDbConnection";s:6:"driver";s:5:"mysql";s:6:"server";s:6:"5.1.73";s:4:"info";s:145:"Uptime: 18912087  Threads: 1  Questions: 4319458  Slow queries: 0  Opens: 127226  Flush tables: 1  Open tables: 64  Queries per second avg: 0.228";}}}s:7:"summary";a:7:{s:3:"tag";s:13:"57ecb5439147f";s:3:"url";s:45:"http://prommu.com/ajnotify/getusernewcomments";s:4:"ajax";b:1;s:6:"method";s:3:"GET";s:4:"code";i:500;s:2:"ip";s:14:"87.244.155.106";s:4:"time";i:1475130691;}}

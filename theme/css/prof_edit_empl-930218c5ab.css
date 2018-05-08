@@ -1,0 +1,103 @@
+#DiContent .page-employer-profile-edit .container { margin-top: 20px; }
+
+#DiContent .page-employer-profile-edit .row > div { margin-top: 0; }
+
+#DiContent .page-employer-profile-edit select { width: 320px; }
+
+@media (min-width: 768px) { #DiContent .page-employer-profile-edit select { width: 220px; } }
+
+@media (min-width: 992px) { #DiContent .page-employer-profile-edit select { width: 293px; } }
+
+@media (min-width: 1200px) { #DiContent .page-employer-profile-edit select { width: 262px; } }
+
+#DiContent .page-employer-profile-edit .datepicker, #DiContent .page-employer-profile-edit .dropdown-menu { z-index: 10000 !important; }
+
+#DiContent .page-employer-profile-edit .right-box { text-align: right; }
+
+#DiContent .page-employer-profile-edit .company-logo .btn-send-msg { margin-bottom: 40px; }
+
+#DiContent .page-employer-profile-edit .company-logo-wrapp { margin-top: 40px; }
+
+#DiContent .page-employer-profile-edit .header { margin-top: 40px; }
+
+#DiContent .page-employer-profile-edit .header h2 { margin-top: -13px; font-size: 14px; }
+
+#DiContent .page-employer-profile-edit .avatar { margin-top: 20px; text-align: center; }
+
+#DiContent .page-employer-profile-edit .avatar img { width: 226px; height: 221px; }
+
+#DiContent .page-employer-profile-edit #BtnUploadPhoto, #DiContent .page-employer-profile-edit #BtnAddUser, #DiContent .page-employer-profile-edit #BtnDelUser { margin-top: 10px; }
+
+#DiContent .page-employer-profile-edit #BtnUploadPhoto a, #DiContent .page-employer-profile-edit #BtnAddUser a, #DiContent .page-employer-profile-edit #BtnDelUser a { font-size: 10px; }
+
+#DiContent .page-employer-profile-edit .ava-social { margin-bottom: 30px; min-height: 30px; }
+
+#DiContent .page-employer-profile-edit .ava-social b { float: left; padding-right: 10px; line-height: 30px; }
+
+#DiContent .page-employer-profile-edit .ava-social .fb, #DiContent .page-employer-profile-edit .ava-social .vk { display: block; width: 30px; height: 29px; float: left; margin-right: 10px; background: transparent url(/theme/pic/ico-form.png) 0 -290px no-repeat; }
+
+#DiContent .page-employer-profile-edit .ava-social .vk { background: transparent url(/theme/pic/ico-form.png) 0 -319px no-repeat; }
+
+#DiContent .page-employer-profile-edit label, #DiContent .page-employer-profile-edit .label-box { display: block; margin-bottom: 15px; }
+
+#DiContent .page-employer-profile-edit #CityBLock select { width: 320px; }
+
+@media (min-width: 768px) { #DiContent .page-employer-profile-edit #CityBLock select { width: 220px; } }
+
+@media (min-width: 992px) { #DiContent .page-employer-profile-edit #CityBLock select { width: 258px; } }
+
+@media (min-width: 1200px) { #DiContent .page-employer-profile-edit #CityBLock select { width: 227px; } }
+
+#DiContent .page-employer-profile-edit .add-city-block { display: inline-block; position: relative; width: 30px; height: 29px; margin-left: 5px; }
+
+#DiContent .page-employer-profile-edit .add-city-block label { margin: 0; }
+
+#DiContent .page-employer-profile-edit .add-city-block input { width: 235px; }
+
+#DiContent .page-employer-profile-edit .add-city-block .add-city { display: inline-block; width: 30px; height: 29px; background: transparent url(/theme/pic/ico-form.png) 0 0 no-repeat; transition: none; }
+
+#DiContent .page-employer-profile-edit .add-city-block .add-city.opened { background-position: 0 -29px; }
+
+#DiContent .page-employer-profile-edit .add-city-block .ok { display: inline-block; width: 30px; height: 29px; background: transparent url(/theme/pic/ico-form.png) 0 -87px no-repeat; vertical-align: bottom; transition: none; }
+
+#DiContent .page-employer-profile-edit .add-city-block .dropdown-block { display: none; position: absolute; margin: 0 0 0 -245px; width: 280px; padding: 5px; background: #fff; border-radius: 5px; border: 1px solid silver; z-index: 9997; }
+
+#DiContent .page-employer-profile-edit .add-city-block .dropdown { display: none; padding-bottom: 14px; width: 270px; background: #F7F7F7; border: 1px solid silver; border-radius: 2px; z-index: 9998; }
+
+#DiContent .page-employer-profile-edit .add-city-block .title { margin: 3px 0 0 5px; height: 23px; }
+
+#DiContent .page-employer-profile-edit .add-city-block .close { position: absolute; right: 7px; top: 5px; font-family: Verdana,Tahoma,Arial; font-size: 14px; }
+
+#DiContent .page-employer-profile-edit .add-city-block .choices { max-height: 150px; overflow: auto; }
+
+#DiContent .page-employer-profile-edit .add-city-block .item { display: block; padding: 3px 10px; color: #212121; border: 1px solid #F7F7F7; }
+
+#DiContent .page-employer-profile-edit .add-city-block .item:hover { background: #abb820; color: #fff; }
+
+#DiContent .page-employer-profile-edit #BtnAddUser { float: right; margin-top: 0; }
+
+@media (min-width: 992px) { #DiContent .page-employer-profile-edit #BtnAddUser { float: none; } }
+
+#DiContent .page-employer-profile-edit #BtnAddUser a { margin-top: 0; }
+
+#DiContent .page-employer-profile-edit #BtnDelUser { margin-top: 0; }
+
+#DiContent .page-employer-profile-edit #BtnDelUser a { margin-top: 0; padding: 0 5px; font-size: 8px; }
+
+#DiContent .page-employer-profile-edit .users-block { position: relative; margin-top: 20px; font-family: RobotoCondensed-Regular, verdana, arial; }
+
+#DiContent .page-employer-profile-edit .users-block b { font-size: 18px; color: #abb820; }
+
+@media (min-width: 992px) { #DiContent .page-employer-profile-edit .users-block b { display: block; position: absolute; left: 0; top: 0; } }
+
+#DiContent .page-employer-profile-edit .users-block table { width: 100%; }
+
+#DiContent .page-employer-profile-edit .users-block th { padding: 3px 3px; font-weight: normal; vertical-align: bottom; }
+
+#DiContent .page-employer-profile-edit .users-block td { padding: 3px 3px; font-weight: bold; vertical-align: top; }
+
+#DiContent .page-employer-profile-edit .btn-update { margin-top: 40px; text-align: center; }
+
+#DiContent .page-employer-profile-edit .btn-update button { padding: 5px 25px; width: auto; }
+
+#DiContent .page-employer-profile-edit .hidden-ni { display: none; }

@@ -1,0 +1,654 @@
+<?php  
+Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl.'/js/ajaxfileupload.js', CClientScript::POS_HEAD);
+Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl.'/js/jsform.js', CClientScript::POS_HEAD);
+echo CHtml::form('','post',array('enctype'=>'multipart/form-data'));
+?>
+<div class="mymenu">
+<ul class="dropdown dropdown-horizontal">
+<li class="active"><a href="/site/resume">Резюме</a></li>
+<li><a href="/site/Photo">Мои фото</a></li>
+</ul>
+</div>
+
+<div id="container_demo" >
+  <div id="wrapper">
+  <h1>Резюме</h1>
+  <div class="pan1" style="height:870px">
+  
+  <p>
+    <label for="height" >Рост см * </label><span class="err" id="height_err"></span>
+    <input type="text" name="height" id="height" placeholder="172" class="number" style="width:40px;"/>    
+  </p>
+
+  <p>
+    <label for="firstname">Размер одежды * </label><span class="err" id="size_err"></span><br/>
+      40(xs)<input type="radio" name="size" value="1" >&nbsp;&nbsp;
+      42(s)<input type="radio" name="size" value="2" >&nbsp;&nbsp;
+      44(m)<input type="radio" name="size" value="4" >&nbsp;&nbsp;
+      46(l)<input type="radio" name="size" value="8" >&nbsp;&nbsp;
+      48(xl)<input type="radio" name="size" value="16" >
+
+  </p>
+
+   <p>
+     <label for="ch_work_1">Удобный график работы (время)* &nbsp;&nbsp;</label><span class="err" id="err_time"></span><br/>
+     <table style="width:320px">
+     <tr>
+        <td><label for="twd_start" data-icon="s">Пн-Пт начало * </label><span class="err" id="twd_start_err"></span>
+            <input type="text" name="twd_start" id="twd_start"  placeholder="9.00" style="width:40px;" class="number"/></td>
+        <td><label for="twd_end" data-icon="s">Пн-Пт конец * </label><span class="err" id="twd_end_err"></span>
+            <input type="text" name="twd_end" id="twd_end"  placeholder="18.00" style="width:40px;" class="number"/><td/>
+    </tr>
+     <tr>
+        <td><label for="twe_start" data-icon="s">Сб-Вс начало * </label><span class="err" id="twe_start_err"></span>
+            <input type="text" name="twe_start" id="twe_start" placeholder="11.00" style="width:40px;" class="number"/></td>
+        <td><label for="twe_end" data-icon="s">Сб-Вс конец * </label><span class="err" id="twe_end_err"></span>
+            <input type="text" name="twe_end" id="twe_end" placeholder="20.00" style="width:40px;" class="number"/><td/>
+    </tr>
+    </table>    
+  </p>
+
+  <p>
+    <div style="float:right;"><label for="ismed">Наличие мед. книжки * </label><span class="err" id="ismed_err"></span><br/>
+      Да<input type="radio" name="ismed" value="1" onchange="medLogic()">
+      Нет<input type="radio" name="ismed" checked value="2" onchange="medLogic()">
+    </div><div class="clear"></div>
+  </p>
+  <p id="med_block" style="display:none">
+    <label for="med" >Организация выдавшая книжку * </label><span class="err" id="med_err"></span><br/>
+    <input type="text" name="med" id="med" placeholder="пример: ООО «Дезсервис»" />    
+  </p>
+
+  <hr>
+
+  <p>
+    <label for="city" data-icon="a">Город * </label><span class="err" id="city_err"></span>
+      <input type="text" name="city" id="city" placeholder="пример: Киев" />          
+  </p>
+
+  <p>
+    <label for="metro">Ближайшая ст. метро * </label><span class="err" id="metro_err"></span><br/>
+      <select multiple id="metro" name="metro" onchange="formValidate()"></select><br/>
+      <a href="#" onclick="disableMetro(); return false;">Отменить все</a>
+  </p>
+
+  <p>
+    <div style="float:right;"><label for="isexpirience">Есть опыт работы в промо? * </label><span class="err" id="isexpirience_err"></span><br/>
+      Да<input type="radio" name="isexpirience" value="1" onchange="mechLogic()">
+      Нет<input type="radio" name="isexpirience" value="2" onchange="mechLogic()">
+    </div><div class="clear"></div>
+  </p>
+
+</div><!-- pan1 -->  
+      
+  <div class="reg_title1">Анкета:</div>
+  <div class="reg_title2">Анкета (продолжение):</div>
+
+
+
+<div class="pan2" style="height:870px">
+<p id="mech_block" style="display:none;">
+     <label for="ch_mech_1">На каких механиках работали? * &nbsp;&nbsp;</label><span class="err" id="mech_err"></span><br/>
+     <input type="checkbox" id="ch_mech_1" value="1" name="mech" class="mech"/>Раздача листовок<br/>
+     <input type="checkbox" id="ch_mech_2" value="2" name="mech" class="mech"/>Сэмплинг<br/>
+     <input type="checkbox" id="ch_mech_3" value="3" name="mech" class="mech"/>Дегустация<br/>
+     <input type="checkbox" id="ch_mech_4" value="4" name="mech" class="mech"/>Выстаки/Презентации<br/>
+     <input type="checkbox" id="ch_mech_5" value="5" name="mech" class="mech"/>HoReCa<br/>
+     <input type="checkbox" id="ch_mech_6" value="6" name="mech" class="mech"/>ПЗП<br/>
+     <input type="checkbox" id="ch_mech_7" value="7" name="mech" class="mech"/>Консультант<br/>
+  </p>
+<hr>
+   <p>
+    <label for="language" >Иностранный язык * </label><span class="err" id="language_err"></span>
+    <SELECT id="language" name="language">
+    <OPTION VALUE="--">No speak (Не владею)</OPTION>
+    <OPTION VALUE="en">English (Английский)</OPTION>
+    <OPTION VALUE="de">Deutsch (Немецкий)</OPTION>
+    <OPTION VALUE="fr">French (Французкий)</OPTION>
+    <OPTION VALUE="pl">Polski (Польский)</OPTION>
+    <OPTION VALUE="zh">Chinese (Китайский)</OPTION>
+    <OPTION VALUE="ja">Japanese (Японский)</OPTION>
+    <OPTION VALUE="ko">Korean (Корейский)</OPTION>
+    <OPTION VALUE="tu">Turkish (Турецкий)</OPTION>
+    </SELECT>
+  </p>
+
+  <p>
+    <label for="lang_level" >Уровень языка * </label><span class="err" id="lang_level_err"></span>
+    <SELECT id="lang_level" name="lang_level">
+    <OPTION VALUE="0">No speak (Не владею)</OPTION>
+    <OPTION VALUE="1">Beginner, Elementary</OPTION>
+    <OPTION VALUE="2">Pre-Intermediate</OPTION>
+    <OPTION VALUE="3">Intermediate</OPTION>
+    <OPTION VALUE="4">Upper-Intermediate</OPTION>
+    <OPTION VALUE="5">Advanced</OPTION>
+    <OPTION VALUE="6">Proficiency </OPTION>
+    </SELECT>
+  </p>
+
+ <p style="display:none">
+  <label for="birthday" data-icon="f">Дата рождения</label>
+      <?php
+    	  echo $this->widget('zii.widgets.jui.CJuiDatePicker', array('model'=>$model, 'attribute'=>'access_time','language'=>'ru', 'id'=>'birthday'), true);
+    	?>
+      <span class="err"></span>
+  </p>
+
+  <p>
+    <label for="hpay" >Ваша минимальная почас. оплата * </label><span class="err" id="hpay_err"></span>
+    <input type="text" name="hpay" id="hpay" placeholder="10.00" class="number" style="width:40px;"/>    
+  </p>
+  
+  <p>
+    <div style="float:right;"><label for="iswinter">Готовность работать в зимнее время на улице? * </label><span class="err" id="iswinter_err"></span><br/>
+      Да<input type="radio" name="iswinter" value="1">
+      Нет<input type="radio" name="iswinter" value="2">
+    </div><div class="clear"></div>
+  </p>
+
+  <p>
+     <label for="ch_ready_work_1">Механики на которых готовы работать * &nbsp;&nbsp;</label><span class="err" id="ready_work_err"></span><br/>
+     <input type="checkbox" id="ch_ready_work_1" value="1" name="ready_work" class="mech"/>Раздача листовок<br/>
+     <input type="checkbox" id="ch_ready_work_2" value="2" name="ready_work" class="mech"/>Сэмплинг<br/>
+     <input type="checkbox" id="ch_ready_work_3" value="3" name="ready_work" class="mech"/>Дегустация<br/>
+     <input type="checkbox" id="ch_ready_work_4" value="4" name="ready_work" class="mech"/>Выстаки/Презентации<br/>
+     <input type="checkbox" id="ch_ready_work_5" value="5" name="ready_work" class="mech"/>HoReCa<br/>
+     <input type="checkbox" id="ch_ready_work_6" value="6" name="ready_work" class="mech"/>ПЗП<br/>
+     <input type="checkbox" id="ch_ready_work_7" value="7" name="ready_work" class="mech"/>Консультант<br/>     
+  </p>
+
+  <hr>
+  
+  <p>
+      <label for="interests" data-icon="f">О себе (личные качества) * </label><span class="err" id="aboutme_err"></span><br/>
+      <textarea name="aboutme" id="aboutme" placeholder="пример: не пью, не курю ..." style="height:150px;"></textarea>
+  </p>
+
+  <p>
+    <label for="email" data-icon="e">Е-майл * </label><span class="err" id="email_err"></span>
+    <input type="text" name="email" id="email" placeholder="пример: sergey78@mail.com"  class="asci_only"/>    
+  </p>
+
+</div><!-- pan2 end -->
+
+  <div class="clear"></div>
+  
+</div><!-- wrapper end -->
+</div><!-- container end -->
+
+  <div class="clear"></div>
+<br/><br/>
+   	<div class="btn_panel">
+			<a href='/site/page/about' class='btn small' style="float:right; padding:0px;" id='btn_cancel_form' >Отмена</a>
+      <a href='#' class='btn small' style="float:right; padding:0px;" id='btn_save_form' onclick="Save();">Сохранить</a>
+ 	</div>
+
+   
+<?php echo CHtml::endForm(); ?>
+
+<script type="text/javascript">
+
+var dataForm;
+var run_parse=false; // flag of parse form
+var photo = '';
+var objForm = (
+  {"total_err":0,"param":""},
+  [
+	{
+	"name":"height",
+	"value":"",
+  "tp":0,
+	"validate":1,  
+	"errmess": "введите рост"
+  },  
+	{
+	"name":"size",
+	"value":"",
+  "tp":1,
+  "validate":1,
+	"errmess": "выберите размер"
+  },  
+	{
+	"name":"twd_start",
+	"value":"",
+  "tp":0,
+	"validate":1,
+	"errmess": "?"
+  },  
+	{
+	"name":"twd_end",
+	"value":"",
+  "tp":0,
+	"validate":1,
+	"errmess": "?"
+  },
+  {  
+	"name":"twe_start",
+	"value":"",
+  "tp":0,
+	"validate":1,
+	"errmess": "?"
+  },  
+	{
+	"name":"twe_end",
+	"value":"",
+  "tp":0,
+	"validate":1,
+	"errmess": "?"
+  },
+	{
+	"name":"ismed",
+	"value":"",
+  "tp":1,
+	"validate":1,
+	"errmess": "?"
+  },
+	{
+	"name":"med",
+	"value":"",
+  "tp":0,
+	"validate":0,
+	"errmess": "Введите название"
+  },    
+	{
+	"name":"city",
+	"value":"",
+  "tp":0,
+	"validate":1,
+	"errmess": "Введите город"
+  },    
+	{
+	"name":"metro",
+	"value":"",
+  "tp":5,
+	"validate":0,
+	"errmess": "Выберите метро"
+  },
+	{
+	"name":"isexpirience",
+	"value":"",
+  "tp":1,
+	"validate":1,
+	"errmess": "?"
+  },
+  {
+	"name":"mech",
+	"value":"",
+  "tp":2,
+	"validate":1,
+	"errmess": "Выберите механику"
+  },
+  {
+	"name":"email",
+	"value":"",
+  "tp":0,
+	"validate":1,
+	"errmess": "Введите email"
+  },
+  {
+	"name":"hpay",
+	"value":"",
+  "tp":0,
+	"validate":1,
+	"errmess": "Введите оплату"
+  },
+  {
+	"name":"iswinter",
+	"value":"",
+  "tp":1,
+	"validate":1,
+	"errmess": "?"
+  },
+  {
+	"name":"ready_work",
+	"value":"",
+  "tp":2,
+	"validate":1,
+	"errmess": "?"
+  },
+  {
+	"name":"aboutme",
+	"value":"",
+  "tp":0,
+	"validate":1,
+	"errmess": "Заполните это поле"
+  },
+  {
+	"name":"language",
+	"value":"",
+  "tp":4,
+	"validate":1,
+	"errmess": "Выберите язык"
+  },
+  {
+	"name":"lang_level",
+	"value":"",
+  "tp":4,
+	"validate":1,
+	"errmess": "Выберите уровень"
+  }  
+]);
+
+function medLogic()
+{
+  var val = $("input[name=ismed]:checked").val();
+  var idx = 0;
+  // check index
+    for(var i=0; i<objForm.length;i++)
+    {
+      if(objForm[i].name=='med') {
+          idx = i;
+          break;
+      }
+    }
+
+  if(val=='1') {
+    $("#med_block").show();
+    objForm[idx].validate=1;
+    $("#med").attr("onchange","formValidate()");    
+  } else {
+    $("#med_block").hide();
+    objForm[idx].validate=0;
+    $("#med").removeAttr("onchange");
+  }
+  
+  //pause(100);
+  formValidate();
+}
+
+function mechLogic()
+{
+  var val = $("input[name=isexpirience]:checked").val();
+  var idx = 0;
+  // check index
+    for(var i=0; i<objForm.length;i++)
+    {
+      if(objForm[i].name=='mech') {
+          idx = i;
+          break;
+      }
+    }
+
+  if(val=='1') {
+    $("#mech_block").show();
+    objForm[idx].validate=1;
+    //$("#mech").attr("onchange","formValidate()");    
+  } else {
+    $("#mech_block").hide();
+    objForm[idx].validate=0;
+    //$("#med").removeAttr("onchange");
+  }
+  
+  //pause(100);
+  formValidate();
+}
+
+function disableMetro()
+{
+  //$("#metro :selected").removeAttr("selected");
+  $('#metro').children().removeProp('selected');
+   setValueObjForm('metro',"");
+}
+
+function test()
+{
+  //var sel = $("#metro option:selected").val();
+  
+  var sel = []; 
+  $('#metro :selected').each(function(i, selected){ 
+  sel[i] = $(selected).val(); 
+  });
+  
+  console.log(sel);
+}
+
+function Save()
+{
+  if(objForm.total_err==0)
+  {
+    var val = objForm.param+"photo:"+photo;
+    console.log("[save] token:"+token);
+    if(token!=undefined)
+    {
+        // Update
+      var xen = encript(val,token);
+      link = site_url+"?cmd=UPDATE_RESUME_PROMO&mode=3&uid="+uid+"&value="+xen+"&callback=?";
+			jsonp(link, function (data) {
+        if(data.value>0)
+        {
+          showPopUp("Сообщение", "Данные успешно обновлены");          
+        } else {
+          showPopUp("Ошибка сети", "Запрос не принят! Ошибка сети, либо данные некорректны");
+        } 
+      });
+    } 
+    else
+    {
+      //ShowAuth();
+      showPopUp('Нет ключа авторизации','пожалуйста залогиньтесь');
+    }
+
+  }		
+}
+
+
+// .... load metro list
+function getListMetro(id)
+{
+		link = site_url+"?cmd=GET_METRO_LIST&mode=1&id="+id+"&callback=?";
+			jsonp(link, function (data) { 
+        //alert(data.message+", ip="+ip);
+        if(data!=undefined)
+        {
+          showListMetro(data);
+        }
+      });
+}
+
+function showListMetro(data)
+{
+  var html = [];
+  for(var i=0; i<data.length; i++)
+  {
+      html.push('<OPTION VALUE="',data[i].id,'">',data[i].name,'</OPTION>');
+  }
+  $("#metro").html(html.join(''));
+  if(run_parse) {run_parse=false;parseForm(dataForm);}
+}
+
+function getForm_Resume() {
+  if(!!uid)
+  {
+			link = site_url+"?cmd=GET_RESUME_PROMO&value=&uid="+uid+"&callback=?";
+			jsonp(link, function (data) {
+        dataForm = data;
+        // Load Metro List;
+        getListMetro(data.id_city);
+        //parseForm(data);
+      });
+   }		
+}
+
+
+function parseForm(data) {
+  $("#height").val(data.height);
+  setValueObjForm('height',data.height);
+  
+  $('[name=size][value="' + data.size + '"]').attr('checked',true);
+  setValueObjForm('size',data.size);  
+  
+  $("#twd_start").val(data.work_twd_start);
+  setValueObjForm('twd_start',data.work_twd_start);  
+  
+  $("#twd_end").val(data.work_twd_end);
+  setValueObjForm('twd_end',data.work_twd_end);
+  
+  $("#twe_start").val(data.work_twe_start);
+  setValueObjForm('twe_start',data.work_twe_start);
+  
+  $("#twe_end").val(data.work_twe_end);
+  setValueObjForm('twe_end',data.work_twe_end);
+  
+  
+  $('[name=ismed]').removeAttr('checked');
+  if(data.id_medical=='0' || data.id_medical=='null')
+  {
+      setValueObjForm('ismed',2);
+      $('[name=ismed][value="2"]').attr('checked',true);
+  } else {
+      setValueObjForm('ismed',1);
+      $('[name=ismed][value="1"]').attr('checked',true);
+      $("#med").val(data.med);
+      $("#med_block").show();  
+  }
+  
+  
+  // METRO
+  for(var i=0; i<data.metro.length; i++)
+  {
+     $("#metro>option[value='"+data.metro[i]+"']").attr("selected", "selected");
+  }
+  
+    
+  setValueObjForm('isexpirience',parseInt(data.isexpirience));
+  var k = parseInt(data.isexpirience);
+  if(k==0) k=2; // 0 - No, 1 -Yes
+  else k=1;
+  $('[name=isexpirience]').removeAttr('checked');
+  $('[name=isexpirience][value="'+k+'"]').attr('checked',true);
+  
+  var mh = parseInt(data.mech);
+  setValueObjForm('mech',mh);
+  if(k==1)
+  {
+    // Show Mech
+    $("#mech_block").show();
+    var arr_mech = DecodeToBiteN(mh);
+    $('[name=mech]').removeAttr('checked');
+    for(var i=0; i<arr_mech.length; i++) 
+    {
+      $('[name=mech][value="'+arr_mech[i]+'"]').attr('checked',true);
+    }
+  }
+  
+  $('#language [value="'+data.language+'"]').attr('selected',true);
+  setValueObjForm('language',data.language);
+  
+  $('#lang_level [value="'+data.lang_level+'"]').attr('selected',true);
+  setValueObjForm('lang_level',data.lang_level);
+  
+  $('#hpay').val(data.hpay);
+  setValueObjForm('hpay',data.hpay);
+  
+  k = parseInt(data.iswinter);
+  if(k==0) k=2; // 0 - No, 1 -Yes
+  else k=1;
+  $('[name=iswinter]').removeAttr('checked');
+  $('[name=iswinter][value="'+k+'"]').attr('checked',true);
+  
+  // ReadyWork
+  mh = parseInt(data.ready_work);
+  setValueObjForm('ready_work',mh);
+  var iVal = DecodeToBiteN(mh);
+  $('[name=ready_work]').removeAttr('checked');
+  for(var i=0; i<iVal.length; i++) 
+  {
+    $('[name=ready_work][value="'+iVal[i]+'"]').attr('checked',true);
+  }
+
+  var s = urldecode(data.aboutme);
+  $('#aboutme').val(s);
+  setValueObjForm('aboutme',s);
+  
+  s = urldecode(data.email);
+  $('#email').val(s);
+  setValueObjForm('email',s);
+  
+  s = urldecode(data.city);
+  $("#city").val(s);
+  setValueObjForm('city',s);
+  
+  if(data.photo=="")
+      $("#photo").attr({src:"/images/man.png"});
+  else
+  {      
+      if(data.photo.substring(0,1)=='!') {
+        $("#photo").attr({src:"http://"+data.photo.substring(1)});
+      }
+      else {
+        $("#photo").attr({src:"/content/"+data.photo});      
+      }
+      photo = data.photo;
+  }
+  
+  formValidate();
+}
+
+
+	function ajaxFileUpload()
+	{
+		$("#loading")
+		.ajaxStart(function(){
+			$(this).show();
+		})
+		.ajaxComplete(function(){
+			$(this).hide();
+		});
+
+		$.ajaxFileUpload
+		(
+			{
+				url:'/uploads/doajaxfileupload.php',
+				secureuri:false,
+				fileElementId:'fileToUpload',
+				dataType: 'json',
+				data:{name:'logan', id:'id'},
+				success: function (data, status)
+				{
+					if(typeof(data.error) != 'undefined')
+					{
+						if(data.error != '')
+						{
+							alert(data.error);
+						}else
+						{
+							//alert(data.msg);
+							$('#msg').html(data.msg);
+              photo = data.name;
+              $('#photo').attr("src","/content/"+data.name);
+						}
+					}
+				},
+				error: function (data, status, e)
+				{
+					alert(e);
+				}
+			}
+		)
+
+		return false;
+	}
+  
+  
+$(function() {	
+  $("#city").autocomplete({
+    source: function(request,response) {
+		var link = site_url+"?cmd=GET_CITY_LIST&mode=1&filter="+request.term+"&callback=?";
+			jsonp(link, function (data) { 
+        response($.map(data, function(item) {
+            return {
+              label: item.name,
+              value: item.name,
+              id: item.id
+            }
+          })); 
+        });
+    },
+    minLength: 1,
+    select: function(event,ui) {
+      getListMetro(ui.item.id);
+    }
+  });
+});
+
+</script>

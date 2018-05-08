@@ -1,0 +1,719 @@
+<?php
+
+class SiteController extends AppController
+{
+    function __construct($id,$module=null)
+    {
+        parent::__construct($id,$module);
+        // set lang
+        $lang = Yii::app()->session['lang'];
+        if (empty($lang)) {
+            $lang = 'ru';
+            Yii::app()->session['lang'] = 'ru';
+        }
+
+        // проверка авторизации
+        $this->doAuth();
+    }
+
+
+    /**
+     * Declares class-based actions.
+     */
+    public function actions()
+    {
+        return array(
+            'captcha' => array(
+                'class' => 'CCaptchaAction',
+                'backColor' => 0xFFFFFF,
+            ),
+
+            'page' => array(
+                'class' => 'CViewAction',
+            ),
+        );
+    }
+
+    /**
+     * This is the default 'index' action that is invoked
+     * when an action is not explicitly requested by users.
+     */
+    public function actionIndex()
+    {
+	$time = 'L00.' . microtime(true);
+        unset(Yii::app()->request->cookies['city']);
+        $arCities = Yii::app()->db->createCommand()// ищем города для поля поиска
+            ->select('c.id_city id, c.name, c.region, c.id_co cntry')
+            ->from('city c')
+            ->order('name')
+            ->limit(10000)
+            ->queryAll();
+        
+        if(in_array(Share::$UserProfile->type, [2,3])){// определение города юзера
+            $arRes = Yii::app()->db->createCommand()
+                ->select('uc.id_city id, c.region, c.name')
+                ->from('user_city uc')
+                ->join('city c', 'uc.id_city=c.id_city')
+                ->where('uc.id_user=:idus', array(':idus' => Share::$UserProfile->id))
+                ->queryAll();
+
+            $cnt = 0;
+            foreach ($arRes as $c)// если все города ЛО - то редирект на СПБ
+                if($c['region']==MainConfig::$SUBDOMAIN_CITY_ID_SPB) $cnt++;
+
+            if($cnt==count($arRes)){
+                $url = 'Location: ' . MainConfig::$SUBDOMAIN_URL_SPB . str_replace('#ID#', Share::$UserProfile->id, MainConfig::$SUBDOMAIN_REDIRECT);
+                header($url);
+                exit();
+            }
+
+            $cityId = $arRes[0]['id'];
+            Yii::app()->request->cookies['city'] = new CHttpCookie('city', $cityId);
+        }
+        elseif(!isset(Yii::app()->request->cookies['city']->value)){// определяем гостя
+            $geo = new Geo(); 
+            $city = $geo->get_value('city');
+            switch ($geo->get_value('country')){
+                case 'UA': $cntry=2; break;
+                case 'BY': $cntry=3; break;
+                case 'RU':
+                  default: $cntry=1; break;
+            };
+
+            foreach ($arCities as $k => $c){
+                if($city==$c['name'] && $cntry==$c['cntry']){
+                    $cityId = $c['id'];
+                    Yii::app()->request->cookies['city'] = new CHttpCookie('city', $cityId);
+                }
+            }
+        }
+
+        Share::$isHomePage = 1;
+        $Vacancy = new Vacancy();
+        $Vacancy->chkVacsEnds();   
+        $model = new PagesContent;
+        $news = new News;
+        $articles = new Articles;
+        $action = ContentPlus::getActionID();
+        $lang = Yii::app()->session['lang'];
+
+        $data['content'] = $content = $model->getPageContent('about', $lang);
+        $data['vacancies'] = $model->getVacanies($lang);
+        $data['vacs'] = $model->getVacaniesAppointments($lang);
+        $data['applicants'] = $model->getApplicants($lang);
+        $data['companies'] = $model->getCompanies($lang);
+        $data['news'] = $news->getNews();
+        $data['articles'] = $articles->getArticles();
+        $data['couArt'] = $articles->getArticlesCount();
+
+        $this->render(
+            'index', 
+            array(
+                'content' => $data, 
+                'auth_soc' => 0, 
+                'action' => $action,
+                'arCities' => $arCities,
+                'cityId' => $cityId
+            )
+        );
+    }
+
+    /**
+     * Displays the login page
+     * @deprecated
+     */
+    public function actionLogin()
+    {
+        $model = new LoginForm;
+        echo "LOGIN";
+        die;
+        // if it is ajax validation request
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'login-form') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
+        if (isset($_POST['LoginForm'])) {
+            $model->attributes = $_POST['LoginForm'];
+            if ($model->validate() && $model->login())
+                $this->redirect(Yii::app()->user->returnUrl);
+        }
+    }
+
+    /**
+     * @deprecated
+     * Logs out the current user and redirect to homepage.
+     */
+    public function actionLogoutDepr()
+    {
+        Yii::app()->user->logout();
+        Yii::app()->request->cookies->clear();
+        $this->redirect(Yii::app()->homeUrl);
+    }
+
+
+    public function actionPage()
+    {
+        $action = ContentPlus::getActionID();
+        if ($action != '') {
+            if($action=='help' || $action=='support' || $action=='students'){
+                throw new CHttpException(404, 'Error');
+            }
+            elseif($action=='work-for-students'){
+                $view = MainConfig::$VIEWS_WORK_FOR_STUDENTS;
+                $this->render($view, array(), array(
+                    'htmlTitle' => 'Работа и вакансии для студентов в Москве без опыта работы, свободный график',
+                    'pageMetaDesription' => 'Временная работа для студентов в Москве. Свежие вакансии с свободным графиком и без опыта работы.'
+                ) );
+            }
+            else{
+                $model = new PagesContent;
+                $lang = Yii::app()->session['lang'];
+                $content = $model->getPageContent($action, $lang);
+                $title = $content['name'];
+                $this->breadcrumbs = array($title => array(MainConfig::$PAGE_PAGES . DS . $content['link']));
+                $this->render(MainConfig::$VIEWS_DB_PAGES, array('content' => $content), array('pageTitle' => $title));
+            }
+        }
+        else
+            $this->render('error');
+    }
+
+
+    public function actionPhoto()
+    {
+        if (isset($_POST['op'])) {
+            if ($_POST['op'] != '') {
+                $id = intval($_POST['id']);
+                $op = $_POST['op'];
+                if ($op == 'DEL') {
+                    $res = Yii::app()->db->createCommand()
+                        ->select("id, photo")
+                        ->from('photo')
+                        ->where("id = :id", array(':id' => $id))
+                        ->queryRow();
+                    $path = $_SERVER['DOCUMENT_ROOT'] . '/content/' . $res['photo'];
+                    try
+                    {
+                        if (file_exists($path)) {
+                            unlink($_SERVER['DOCUMENT_ROOT'] . '/content/' . $res['photo']);
+                            if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/content/thumbs/' . $res['photo']))
+                                unlink($_SERVER['DOCUMENT_ROOT'] . '/content/thumbs/' . $res['photo']);
+                            // delete from DB
+                            $res = Yii::app()->db->createCommand()
+                                ->delete('photo', 'id=:id', array(':id' => $id));
+                        }
+                    } catch (Exception $e) {
+                    }
+                } else if ($op == 'ADD') {
+                    $uid = Share::getUserID();
+                    $photo_name = $_POST['photo_name'];
+                    Yii::app()->db->createCommand()
+                        ->insert('photo', array(
+                        'photo' => $photo_name,
+                        'id_user' => $uid,
+                    ));
+                }
+            }
+        }
+        $this->render('register/form_photo');
+    }
+
+
+    public function actionSearchEmpl()
+    {
+        if(Yii::app()->request->isAjaxRequest){
+            if(Yii::app()->getRequest()->isPostRequest){
+                $SearchEmpl = (new SearchEmpl());
+                $data = $SearchEmpl->searchFilterData();
+                $this->renderPartial(MainConfig::$VIEWS_SEARCH_EMPL_AJAX_FILTER, array('viData' => $data), false, true);                
+            }
+            else{
+                if(
+                    (!isset($_GET['cities']) && !isset($_GET['cotype']))||
+                    (sizeof($_GET['cities'])==1 && $_GET['cities'][0]==1307 && !isset($_GET['cotype']))
+                )// for SEO MOSCOW
+                    $seo = (new Seo)->exist(MainConfig::$PAGE_SEARCH_EMPL);
+
+                $SearchEmpl = (new SearchEmpl());
+                $arCount = $SearchEmpl->searchEmployersCount();
+
+                if(!empty($_GET) && sizeof($arCount)){
+                    $id = isset($_GET['cities'][0]) ? $_GET['cities'][0] : 0;
+                    if($id!=MainConfig::$SUBDOMAIN_CITY_ID_SPB)
+                    	Yii::app()->request->cookies['srch_e_city'] = new CHttpCookie('srch_e_city', $id);
+                    Yii::app()->request->cookies['srch_e_res'] = new CHttpCookie('srch_e_res', 0);
+                }
+
+                $pages = new CPagination(sizeof($arCount));
+                $pages->pageSize = MainConfig::$DEF_PAGE_LIMIT;
+                $pages->applyLimit($SearchEmpl);
+                $data = $SearchEmpl->getEmployers(1);
+                $data['count'] = $arCount;
+
+                $this->renderPartial(
+                    MainConfig::$VIEWS_SEARCH_EMPL_AJAX_BLOCK,
+                    array(
+                        'viData' => $data, 
+                        'pages' => $pages,
+                        'seo' => $seo
+                    ), 
+                    false, 
+                    true
+                );
+            }
+        }
+        else{
+            $this->setBreadcrumbs($title = "Поиск работодателей", MainConfig::$PAGE_SEARCH_EMPL);
+
+			$SearchEmpl = (new SearchEmpl());
+			$data['filter'] = $SearchEmpl->searchEmplForFilter(); // данные для фильтра
+            //
+            //  КУКИ
+            // для редиректа, если в выбранном ранее городе нет резлультата 0 - данных нет, 1 - есть
+            if(!isset(Yii::app()->request->cookies['srch_e_res']->value))
+                Yii::app()->request->cookies['srch_e_res'] = new CHttpCookie('srch_e_res', 0);
+            $cooHCRes = Yii::app()->request->cookies['srch_e_res']->value;
+            // город для фильтра 0 - нет города, >0 - id города
+            if(!isset(Yii::app()->request->cookies['srch_e_city']->value)){ 
+                $cooCity = Yii::app()->request->cookies['city']->value;
+                Yii::app()->request->cookies['srch_e_city'] = new CHttpCookie('srch_e_city', 0);
+                foreach($data['filter']['cities'] as $id => $city)
+                    if($cooCity==$city['seo']){// ищем ID города из куки
+                    	if($id!=MainConfig::$SUBDOMAIN_CITY_ID_SPB)
+                        	Yii::app()->request->cookies['srch_e_city'] = new CHttpCookie('srch_e_city', $id);
+                        break;
+                    }
+            }
+            $cooHCity = Yii::app()->request->cookies['srch_e_city']->value;
+            //
+            //  РЕДИРЕКТЫ
+            //
+            if($cooHCity && empty($_GET) && $cooHCRes!=1){ // переход на выбранный город
+                $this->redirect(MainConfig::$PAGE_SEARCH_EMPL . '?cities[]=' . $cooHCity);
+                exit();
+            }
+
+            $arCount = $SearchEmpl->searchEmployersCount(); // кол-во найденных
+            // 
+			if($cooHCity==$_GET['cities'][0] && sizeof($_GET['cities'])==1 && !sizeof($arCount)){ 
+				Yii::app()->request->cookies['srch_e_res'] = new CHttpCookie('srch_e_res', 1);
+				$this->redirect(MainConfig::$PAGE_SEARCH_EMPL);
+				exit();
+			}
+            //записываем выбранный город
+            if(!empty($_GET) && sizeof($arCount)){
+                $id = isset($_GET['cities'][0]) ? $_GET['cities'][0] : 0;
+                if($id!=MainConfig::$SUBDOMAIN_CITY_ID_SPB)
+                	Yii::app()->request->cookies['srch_e_city'] = new CHttpCookie('srch_e_city', $id);
+                Yii::app()->request->cookies['srch_e_res'] = new CHttpCookie('srch_e_res', 0);
+            }
+
+			$pages = new CPagination(sizeof($arCount));
+			$pages->pageSize = MainConfig::$DEF_PAGE_LIMIT;
+			$pages->applyLimit($SearchEmpl);
+			$data = array_merge($SearchEmpl->getEmployers(1), $data);
+
+            if( 
+                (sizeof($_GET['cities'])==1 && $_GET['cities'][0]==1307) || 
+                (!isset($_GET['cities']) && !isset($_GET['cotype'])) 
+            ){// for SEO MOSCOW
+                $seo = (new Seo)->exist(MainConfig::$PAGE_SEARCH_EMPL);
+                $title = $seo['meta_title'];
+                $h1 = $seo['seo_h1'];
+            }    
+
+            $this->render($this->ViewModel->pageSearchEmpl,
+                    array('viData' => $data, 
+                        'pages' => $pages,
+                        'count' => sizeof($arCount),
+                        'seo' => $seo
+                    ),
+                    array(
+						'htmlTitle' => $title,
+						'pageTitle' => '<h1>' . ($h1 ? $h1 : $title) .'</h1>'
+                    )
+                );
+        }
+    }
+
+
+
+
+    public function actionAnkety()
+    {
+	$time = 'L00.' . microtime(true);
+
+        $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
+	$time .= 'L01.' . microtime(true).'-ID-'.$id;
+        if(!empty($id))
+        {
+            if( $id < 1 ) 
+                $this->redirect(MainConfig::$PAGE_LOGIN);
+
+            if( $id == Share::$UserProfile->id ) 
+                $this->redirect($this->createUrl(MainConfig::$PAGE_PROFILE));
+
+            $Profile = (new ProfileFactory())->makeProfile(array('id' => $id));
+
+            if( $Profile instanceof UserProfile )
+            {
+                $data = $Profile->getProfileDataView();
+                $page = $Profile->viewTpl;
+		$time .= 'L02.' . microtime(true);
+            }
+            else
+            {
+               $data = array('error' => 1, "message" => "Пользователь не найден");
+               throw new CHttpException(404, 'Error'); 
+            } // endif
+
+            // проверка на мой профиль
+            $flagOwnProfile = $id == Share::$UserProfile->id;
+
+            Yii::app()->getClientScript()->registerCssFile("/jslib/magnific-popup/magnific-popup-min.css");
+            Yii::app()->getClientScript()->registerScriptFile("/jslib/magnific-popup/jquery.magnific-popup.min.js", CClientScript::POS_END);
+
+            $strBreadcrumb = '';
+            if( $Profile->type == 2 ){
+                $strBreadcrumb = $fio = array_values($data['userInfo']['userAttribs'])[0]['firstname'] . ' ' . array_values($data['userInfo']['userAttribs'])[0]['lastname'];
+                $strBreadcrumb = 'Профиль соискателя - ' . $strBreadcrumb;
+                $this->setBreadcrumbs($title = "Поиск соискателей", MainConfig::$PAGE_SEARCH_PROMO);
+		$time .= 'L03.' . microtime(true);
+            }
+            if( $Profile->type == 3 ){
+                $Termostat = new Termostat();
+                $Termostat->setTermostat($id, Share::$UserProfile->id ? Share::$UserProfile->id : 0, 'empl' );
+
+                $strBreadcrumb = $data['userInfo']['name'];
+                $strBreadcrumb = 'Профиль работодателя - ' . $strBreadcrumb;
+                $this->setBreadcrumbs("Поиск работодателей", MainConfig::$PAGE_SEARCH_EMPL);            
+		$time .= 'L04.' . microtime(true);
+            }
+            if(strlen($strBreadcrumb) > 0){
+                $strBreadcrumb = html_entity_decode($strBreadcrumb);
+                $this->setBreadcrumbsEx(array($strBreadcrumb, MainConfig::$PAGE_PROFILE_COMMON . DS . $id)); 
+            }    
+            $this->ViewModel->setViewData('pageTitle', '<h1>' . $strBreadcrumb . '</h1>');
+
+            $this->render('../' . MainConfig::$DIR_VIEWS_USER . DS . $page,
+                    array('viData' => $data,
+                            'idus' => $id,
+                            'flagOwnProfile' => $flagOwnProfile,
+                            'Profile' => $Profile,
+                        ),
+                    array('pageTitle' => $s1)
+                );
+        }
+        elseif($id==='0'){
+            throw new CHttpException(404, 'Error'); 
+        }
+        else
+        {
+            if(
+                !empty($_GET['qs']) ||
+                sizeof($_GET['cities']) ||
+                sizeof($_GET['posts'])>1 || 
+                isset($_GET['sm']) || isset($_GET['sf']) || 
+                isset($_GET['mb']) || isset($_GET['avto']) || isset($_GET['smart']) || 
+                isset($_GET['cardPrommu']) || isset($_GET['card'])
+            ) // remove from index
+                Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
+
+            if(!isset(Yii::app()->request->cookies['srch_a_view']->value))
+                Yii::app()->request->cookies['srch_a_view'] = new CHttpCookie('srch_a_view', 'list');
+
+            if(Yii::app()->request->isAjaxRequest){
+                if(isset($_GET['view'])){
+                    Yii::app()->request->cookies['srch_a_view'] = new CHttpCookie('srch_a_view', $_GET['view']);
+                }
+
+                $SearchPromo = (new SearchPromo());
+
+                if(!empty($_GET)){
+                    $seo = $SearchPromo->getPromoSeo($_GET, MainConfig::$PAGE_SEARCH_PROMO, 1307); // Moscow ID  
+                    $seo['url'] = $SearchPromo->buildPrettyUrl($_GET);
+                }         
+
+                $count = $SearchPromo->searchPromosCount();
+
+                //записываем выбранный город
+                if(!empty($_GET) && $count){
+                    $id = isset($_GET['cities'][0]) ? $_GET['cities'][0] : 0;
+                    if($id!=MainConfig::$SUBDOMAIN_CITY_ID_SPB)
+                    	Yii::app()->request->cookies['srch_a_city'] = new CHttpCookie('srch_a_city', $id);
+                    Yii::app()->request->cookies['srch_a_res'] = new CHttpCookie('srch_a_res', 0);
+                }
+
+                $pages=new CPagination($count);
+                $pages->pageSize = 21;
+                $pages->applyLimit($SearchPromo);
+                $data = $SearchPromo->getPromos();
+
+
+                $this->renderPartial(
+                    MainConfig::$VIEWS_SEARCH_PROMO_AJAX,
+                    array(
+                        'viData' => $data, 
+                        'pages' => $pages,
+                        'count' => $count,
+                        'seo' => $seo
+                    ), 
+                    false, 
+                    true
+                );
+		$time .= 'L05.' . microtime(true);
+            }
+            else{
+                $this->setBreadcrumbs($title = "Поиск соискателей", MainConfig::$PAGE_SEARCH_PROMO);
+
+                $SearchPromo = (new SearchPromo());
+                // build pretty URL
+                if(!(MOBILE_DEVICE && !SHOW_APP_MESS)){ // optimization for mobile devices
+                    if(!isset($_GET['seo_builded2']) && sizeof($_GET))
+                    {
+                        $url = $SearchPromo->buildPrettyUrl($_GET);
+                        $this->redirect($url);
+                        exit();
+                    }
+                    // search Cities
+                    $Q1 = Yii::app()->db->createCommand()
+                        ->select('t.id_city id, t.name, t.seo_url')
+                        ->from('city t')
+                        ->limit(10000);
+                    $arCities = $Q1->queryAll();
+                    //
+                    //  КУКИ
+                    // для редиректа, если ранее выбран город  1 - данных нет, 0 - есть
+                    if(!isset(Yii::app()->request->cookies['srch_a_res']->value))
+                        Yii::app()->request->cookies['srch_a_res'] = new CHttpCookie('srch_a_res', 0);
+                    $cooHCRes = Yii::app()->request->cookies['srch_a_res']->value;
+                    // город для фильтра 0 - нет города, >0 - id города
+                    if(!isset(Yii::app()->request->cookies['srch_a_city']->value)){ 
+                        $cooCity = Yii::app()->request->cookies['city']->value;
+                        Yii::app()->request->cookies['srch_a_city'] = new CHttpCookie('srch_a_city', 0);
+                        foreach ($arCities as $k => $city)
+                            if($cooCity==$city['seo_url']){
+                            	if($id!=MainConfig::$SUBDOMAIN_CITY_ID_SPB)
+                                	Yii::app()->request->cookies['srch_a_city'] = new CHttpCookie('srch_a_city', $id);
+                                $cityName = $city['name'];
+                                $cityId = $city['id'];
+                                break;
+                            }
+                    }
+                    $cooHCity = Yii::app()->request->cookies['srch_a_city']->value;
+		    $time .= 'L06.' . microtime(true);
+                    //
+                    //  РЕДИРЕКТЫ
+                    // 
+    				if($cooHCity && empty($_GET) && $cooHCRes!=1){ // переход на выбранный город
+    					$_GET['cities'][] =  $cooHCity;
+    					$url = $SearchPromo->buildPrettyUrl($_GET);
+    					$this->redirect($url);
+					$time .= 'L07.' . microtime(true);
+    					exit();
+    				}
+
+                    $count = $SearchPromo->searchPromosCount();
+                    // переход на общую, если в выбранном городе нет данных
+    				if($cooHCity==$_GET['cities'][0] && sizeof($_GET['cities'])==1 && !$count){ 
+    					Yii::app()->request->cookies['srch_a_res'] = new CHttpCookie('srch_a_res', 1);
+    					$this->redirect(MainConfig::$PAGE_SEARCH_PROMO);
+					$time .= 'L08.' . microtime(true);
+    					exit();
+    				}
+                    //записываем выбранный город
+                    if(!empty($_GET) && $count){
+			$time .= 'L09.' . microtime(true);
+
+                        $id = isset($_GET['cities'][0]) ? $_GET['cities'][0] : 0;
+                        if($id!=MainConfig::$SUBDOMAIN_CITY_ID_SPB)
+                        	Yii::app()->request->cookies['srch_a_city'] = new CHttpCookie('srch_a_city', $id);
+                        Yii::app()->request->cookies['srch_a_res'] = new CHttpCookie('srch_a_res', 0);
+			$time .= 'L10.' . microtime(true);
+                    }
+			$time .= 'L11.' . microtime(true);
+
+    				$seo = $SearchPromo->getPromoSeo($_GET, MainConfig::$PAGE_SEARCH_PROMO, 1307); // Moscow ID    
+    				if(is_array($seo)){
+    					$title = $seo['meta_title'];
+    					$h1 = $seo['seo_h1'];
+    				}
+                   $time .= 'L12.' . microtime(true);
+
+
+                    $pages=new CPagination($count);
+                    $pages->pageSize = 21;
+                    $pages->applyLimit($SearchPromo);
+                    $data = $SearchPromo->getPromos();
+
+		    $time .= 'L13.' . microtime(true);
+
+                    $Api = new Api();
+                    $post = $Api->kew();
+                }
+
+		$time .= 'L14.' . microtime(true);
+		if (MainConfig::$DEBUG_TIMER)
+                   Yii::app()->request->cookies['ankety_timers'] = new CHttpCookie('ankety_timers', $time);
+
+
+                $this->render($this->ViewModel->pageSearchPromo,
+                        array(
+                            'viData' => $data, 
+                            'pages' => $pages,
+                            'datas' => $post,
+                            'count' => $count,
+                            'arCities' => $arCities,
+                            'cityName' => $cityName,
+                            'cityId' => $cityId,
+                            'seo' => $seo
+                        ),
+                        array(
+	                        'htmlTitle' => $title,
+	                        'pageTitle' => '<h1>' . ($h1 ? $h1 : $title) .'</h1>'
+                        )
+                    );
+            }
+        }
+    }
+
+
+    public function actionResponseEmpl()
+    {
+        $this->render('response/empl');
+    }
+
+    public function actionResponsePromo()
+    {
+        $this->render('response/promo');
+    }
+
+    public function actionRating()
+    {
+        $this->render('rating/view');
+    }
+
+    /**
+     * @deprecated
+     */
+    public function actionRatingEmpl()
+    {
+        $this->render('rating/empl');
+    }
+
+    public function actionRatingPromo()
+    {
+        $this->render('rating/promo');
+    }
+
+
+
+    public function actionSitepage()
+    {
+        if (isset($_GET['uid'])) {
+            $uid = $_GET['uid'];
+            $uid = str_replace('/','',$uid);
+            $res = Yii::app()->db->createCommand()
+                ->select("u.id_user, r.id_ra")
+                ->rightJoin('ra r', 'r.id_user = u.id_user')
+                ->from('user_work u')
+                ->where('uid = :uid', array(':uid' => $uid))
+                ->queryRow();
+            $id = $res['id_ra'];
+
+            $model = RaContent::model()->findByPk($id);
+            if (!isset($model->content)) $model = new RaContent;
+            if (isset($_POST['RaContent'])) {
+                $model->attributes = $_POST['RaContent'];
+                $model->id_ra = $id;
+                $model->save();
+            }
+            $this->render('pages/form', array('id' => $id, 'model' => $model));
+        } else {
+            $this->actionIndex();
+        }
+    }
+
+
+    public function actionPromofullTest()
+    {
+        $model = new Promo();
+        $data = $model->getPromoFull(0, 10); 
+        $this->render('test/promo', array('data' => $data));
+    }
+
+
+
+    public function actionVacancy()
+    {
+        $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
+        
+        if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('mess') ){
+            $res = (new VacDiscuss())->postMessage();
+            if(!$res['error'] )
+                $this->redirect("/vacancy/$id" . '#tabs');
+        }
+
+        if(empty($id)){
+            $tmp = explode('/', $_SERVER['REQUEST_URI']);
+            if(sizeof($tmp)==3){
+                $id = (int)$tmp[2];
+                if(!$id && sizeof($_GET)==3 && $_GET['sex']==3)
+                    throw new CHttpException(404, 'Error');
+            }
+        }
+        else{
+            $this->redirect(MainConfig::$PAGE_SEARCH_VAC);
+        }
+
+
+        if(!empty($id))
+        {
+            $Termostat = new Termostat();
+            $Termostat->setTermostat($id, Share::$UserProfile->id ? Share::$UserProfile->id : 0, 'vacancy' );
+            if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('mess') )
+            {
+                $res = (new VacDiscuss())->postMessage();
+                if( $res['error'] )
+                {
+
+                }
+                else
+                {
+                    $this->redirect("/vacancy/$id" . '#tabs');
+                } // endif
+            } // endif
+
+
+            if(strpos($_SERVER['REQUEST_URI'], 'site/vacancy/') > -1)
+            {
+                header('Location: '.str_replace('site/vacancy/', 'vacancy/', $_SERVER['REQUEST_URI']));
+                exit();
+            }
+
+            $vac = (new Vacancy())->getVacancyView($id);
+
+            if(sizeof($vac['vac']['city'])==1 && array_key_exists(MainConfig::$SUBDOMAIN_CITY_ID_SPB, $vac['vac']['city'])){
+            	// if vacancy from SPB
+            	header("Location: " . MainConfig::$SUBDOMAIN_URL_SPB . MainConfig::$PAGE_VACANCY . DS . $id);
+            }
+
+            if(isset($vac['error']) && $vac['error'] == 1)
+            {
+                throw new CHttpException(404, 'Error'); 
+            }
+
+            $this->setBreadcrumbs($title = "Поиск вакансий", MainConfig::$PAGE_SEARCH_VAC);
+
+            if(Share::$UserProfile->type==3 && $vac['vac']['idus']==Share::$UserProfile->id){
+                Yii::app()->session['editVacId'] = $id;  
+            }
+
+            $view = $this->ViewModel->pageVacancy;
+
+            if(Yii::app()->getRequest()->getParam('info')){
+                !in_array(Share::$UserProfile->type, [2,3]) && $this->redirect(MainConfig::$PAGE_LOGIN);
+                switch(Yii::app()->getRequest()->getParam('info')){
+                    case 'resp': $view = MainConfig::$VIEWS_VAC_TAB_RESP; break;
+                    case 'refuse': $view = MainConfig::$VIEWS_VAC_TAB_REFUSE; break;

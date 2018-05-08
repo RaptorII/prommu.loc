@@ -1,0 +1,76 @@
+.gear:before,
+.cube:before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 13px;
+}
+.gear:before {
+    height: 26px;
+    width: 26px;
+    background-image: url(/images/gear.png);
+}
+.cube:before {
+    height: 28px;
+    width: 25px;
+    background-image: url(/images/cube.png);
+}
+.additionally {
+    padding: 0;
+}
+.additionally__item {
+    list-style-type: "-";
+    list-style-position: inside;
+}
+.inline-block-list_left-col,
+.inline-block-list_right-col {
+    display: block;
+    float: right;
+    width: calc(50% - 50px);
+}
+.inline-block-list_left-col {
+    float: left;
+}
+.popup-item_RK {
+    width: 100%;
+}
+.file-upload_RK {
+    background-image: url(/images/rk-mask.jpg);
+}
+.center-text_RK {
+    clear: both;
+    padding: 15px 0;
+}
+.bag_RK:before {
+    top: -4px;
+}
+.cabinet__description_RK {
+    max-width: 845px;
+}
+/*
+*
+*
+*
+*/
+.file-upload_RK.empty{ border: 2px solid #f11717; }
+@media screen and (max-width: 1200px){
+    .cabinet_display-block{ padding-right: 15px; }
+    .inline-block-list{ padding: 0 15px; }
+    .inline-block-list_right-col,
+    .inline-block-list_left-col{ width: 48%; }
+}
+@media screen and (min-width: 992px) and (max-width: 1200px){
+
+}
+@media screen and (min-width: 769px) and (max-width: 992px){
+
+}
+@media screen and (max-width: 768px){
+    .inline-block-list_right-col,
+    .inline-block-list_left-col{ width: 100%; }
+    .cabinet_display-block{ padding-right: 5px; }
+    #DiContent select{ width: 265px; }
+    .table-row__header{ width: inherit; }
+    .content-header-box,
+    .content-menu-box{ margin: 0; }
+}

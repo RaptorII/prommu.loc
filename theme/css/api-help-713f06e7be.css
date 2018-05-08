@@ -1,0 +1,23 @@
+#DiContent.page-api_help .api-cards { width: 100%; }
+
+#DiContent.page-api_help .api-cards td, #DiContent.page-api_help .api-cards th { padding: 3px 5px; border: 1px solid #000; vertical-align: top; }
+
+#DiContent.page-api_help .api-cards td { width: 50%; }
+
+#DiContent.page-api_help .api-cards td div { margin-bottom: 10px; }
+
+#DiContent.page-api_help .api-cards th { color: #fff; background: #17365D; text-align: left; }
+
+#DiContent.page-api_help .api-cards th span { color: #fff200; }
+
+#DiContent.page-api_help .api-cards .example { color: #ff462d; }
+
+#DiContent.page-api_help .api-cards .comment { color: #17365D; font-style: italic; }
+
+#DiContent.page-api_help .api-cards .ret-examples { font-size: 11px; }
+
+#DiContent.page-api_help .api-cards .ret-examples pre { display: none; font-size: 11px; white-space: pre-wrap; }
+
+#DiContent .error-code { margin-bottom: 3px; }
+
+#DiContent .error-code span { display: inline-block; width: 50px; }

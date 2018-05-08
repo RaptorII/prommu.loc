@@ -1,0 +1,438 @@
+/*
+*	prommu card page
+*/
+#DiContent .container{
+	max-width: 640px;
+}
+#DiContent .container .row.mt20{ display: none; }
+/*
+*
+*/
+#DiContent .pr-card__left-img{
+	width: 97%;
+	height: 495px;
+	margin: 0 -15px;
+	background: url(/theme/pic/services-page/prommu-card-left-bg.jpg) 0% 10% no-repeat;
+	background-size: contain;
+}
+.pr-card__title{
+	text-align: center;
+	color: #636363;
+	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+	font-size: 24px;
+}
+.pr-card__hr{
+	width: 170px;
+	margin: 10px auto 30px; 
+	border-top: 4px solid #ABB837;
+}
+.pr-card__form-select-block{
+	width: 100%;
+	position: relative;
+	margin-bottom: 22px;
+}
+.pr-card__form-select-block.date{ 
+	width: 33.33%;
+	float: left;
+}
+.pr-card__form-select-block:before{
+	content: '';
+	width: 8px;
+	height: 5px;
+	position: absolute;
+	top: 15px;
+	right: 12px;
+	background: url(/theme/pic/register-popup-page/registr_popup_arrow_icon.png) no-repeat;
+	z-index: 0;
+}
+#DiContent #F1cardOrder .pr-card__form-input{
+	width: 100%;
+	height: 35px;
+	padding: 0 15px;
+	background-color: transparent;
+	border: 1px solid #EBEBEB;
+	font-size: 14px;
+	color: #646464;
+	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+}
+#DiContent #F1cardOrder .pr-card__form-input.error{ border: 1px solid red; }
+#DiContent #F1cardOrder .pr-card__form-textarea{
+	min-height: 130px;
+	padding: 10px 15px;
+	resize: none;
+	margin-bottom: 8px;
+}
+#DiContent .pr-card__form-input:focus{ outline: none; }
+#DiContent .pr-card__form-select{ 
+	padding: 0 30px 0 15px;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	position: relative;
+	z-index: 1;
+	cursor: pointer;
+}
+.pr-card__form-label{
+	width: 100%;
+	margin-bottom: 22px;
+    display: inline-block;
+    position: relative;
+}
+.pr-card__form-label:before{
+	content: attr(data-info);
+	position: absolute;
+	top: -15px;
+	left: 0;
+	font-size: 12px;
+	color: #646464;
+	font-family: 'Roboto-Regular', Calibri, Arial, sans-serif;
+	opacity: 0;
+	-webkit-transition: opacity .2s ease-out;
+	-moz-transition: opacity .2s ease-out;
+	-o-transition: opacity .2s ease-out;
+	transition: opacity .2s ease-out;
+}
+.pr-card__form-label.focus:before{ opacity: 1; }
+.pr-card__form-btn{
+	width: 100%;
+	background-color: #ABB837;
+	color: #FFFFFF;
+	text-align: center;
+	padding: 8px 0;
+	margin-bottom: 22px;
+	cursor: pointer;
+	position: relative;
+    z-index: 1;
+}
+.pr-card__form-btn:before{
+	content: "";
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: #ff8300;
+	-webkit-transform: scaleX(0);
+	transform: scaleX(0);
+	-webkit-transform-origin: 0 50%;
+	transform-origin: 0 50%;
+	-webkit-transition-property: transform;
+	transition-property: transform;
+	-webkit-transition-duration: 0.3s;
+	transition-duration: 0.3s;
+	-webkit-transition-timing-function: ease-out;
+	transition-timing-function: ease-out;
+}
+.pr-card__form-btn:hover:before{
+	-webkit-transform: scaleX(1);
+	transform: scaleX(1);
+}
+#DiContent .pr-card__upload-title{
+	color: #646464;
+	text-transform: uppercase;
+	font-family: 'RobotoCondensedBold', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+	margin: 0 0 20px; 
+}
+.pr-card__upload-text{
+	color: #646464;
+	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+	margin: 0 0 20px; 
+}
+.pr-card__upload-btn{
+	width: 175px;
+	height: 35px;
+	text-transform: uppercase;
+	color: #646464;
+	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+	display: inline-block;
+	border: 1px solid #EBEBEB;
+	font-size: 14px;
+	text-align: center;
+	-webkit-transition: all .3s ease-out;
+	-moz-transition: all .3s ease-out;
+	-o-transition: all .3s ease-out;
+	transition: all .3s ease-out;
+	background-color: transparent;
+	margin-bottom: 33px;
+}
+.pr-card__upload-btn:focus{ outline: none; }
+.pr-card__upload-btn:hover{
+	color: #FFFFFF;
+	background-color: #ABB837;
+}
+.pr-card__btn{
+	width: 100%;
+	max-width: 445px;
+	padding: 8px 0;
+	margin: 0 auto 40px;
+	display: block;
+	background-color: #FF8300;
+	color: #FFFFFF;
+	text-align: center;
+	cursor: pointer;
+	position: relative;
+    z-index: 1;
+}
+.pr-card__btn.off{ cursor: no-drop; }
+.pr-card__btn:before{
+	content: "";
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: #ABB837;
+	-webkit-transform: scaleX(1);
+	transform: scaleX(1);
+	-webkit-transform-origin: 0 50%;
+	transform-origin: 0 50%;
+	-webkit-transition-property: transform;
+	transition-property: transform;
+	-webkit-transition-duration: 0.3s;
+	transition-duration: 0.3s;
+	-webkit-transition-timing-function: ease-out;
+	transition-timing-function: ease-out;
+}
+.pr-card__btn.off:before{
+	-webkit-transform: scaleX(0);
+	transform: scaleX(0);
+}
+.pr-card__upload,
+.pr-card__form{
+	width: 100%;
+	max-width: 445px;
+	margin: 0 auto;
+	position: relative;
+}
+/*		Bottom		*/
+.pr-card__bottom-hr{
+	width: 100%;
+	margin: 0px;
+	border-top: 2px solid #ABB837;
+}
+.pr-card__bottom{
+	width: 100%;
+	padding: 0 0 20px;
+}
+#DiContent .pr-card__bottom-img{
+	height: 250px;
+	padding: 0;
+	margin-bottom: 15px;
+	background: url(/theme/pic/services-page/prommu-card.jpg) 50% 50% no-repeat;
+	background-size: contain;
+}
+#DiContent .pr-card__bottom-descr{ padding: 0; }
+#DiContent .pr-card__bottom-title{
+	font-family: 'RobotoCondensedBold', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+	text-transform: uppercase;
+	text-align: center;
+	font-size: 20px;
+	color: #646464;
+}
+.pr-card__bottom .pr-card__bottom-hr{ margin: 15px 0; }
+.pr-card__bottom-text{
+	font-family: 'RobotoCondensedLight', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+	font-size: 20px;
+	color: #646464;
+	text-align: justify;
+}
+.pr-card__bottom-epilog{
+	font-family: 'RobotoCondensedLight', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+	color: #646464;
+	font-size: 15px;
+	margin-top: 30px;
+	text-align: justify;
+}
+/*
+*	calendar
+*/
+.pr-card__calendar{
+	/*width: 250px;*/
+	width: 100%;
+	padding: 10px;
+	margin: 0 auto 22px;
+	border: 1px solid #EBEBEB;
+}
+.pr-card__calendar.error{ border: 1px solid red; }
+.pr-card__calendar-label{
+	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+	color: #646464;
+	display: inline-block;
+	/*margin-bottom: 5px;*/
+	margin-bottom: 15px;
+}
+.pr-card__calendar-result{
+	float: right;
+	text-align: right;
+	display: inline-block;
+	color: #FF8300;
+	margin-bottom: 5px;
+	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+}
+.pr-card__calendar-table .pr-card__form-select-block{ 
+	margin: 0 0 10px;
+	min-width: 163px;
+}
+.pr-card__calendar-table{
+	width: 100%;
+	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+	font-size: 14px;
+	text-align: center;
+	color: #646464;
+}
+.pr-card__calendar-table{
+	width: 100%;
+	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+	font-size: 14px;
+	text-align: center;
+	color: #646464;
+}
+.pr-card__calendar-table thead tr:first-child td:first-child{ width: 71%; }
+.pr-card__calendar-table thead tr:first-child td:last-child{ width: 29%; }
+.pr-card__calendar-table thead td{ vertical-align: top; }
+.pr-card__calendar-table thead tr:last-child td,
+.pr-card__calendar-table tbody td{ 
+	height: 40px;
+	vertical-align: middle;
+}
+.pr-card__calendar-table tbody .day{ cursor: pointer }
+.pr-card__calendar-table tbody td:nth-child(n+6){ color: #ff8300 }
+.pr-card__calendar-table .day.today,
+.pr-card__calendar-table .day.today:hover{ 
+	background-color: #abb820; 
+	color: #FFFFFF;
+}
+.pr-card__calendar-table .day.select,
+.pr-card__calendar-table .day.select:hover{ 
+	background-color: #ff8300; 
+	color: #FFFFFF;
+}
+.pr-card__calendar-table .day:hover{ background-color: #e6e6e6; }
+.pr-card__calendar-table .empty:hover{ 
+	background-color: transparent;
+	cursor: default;
+}
+.pr-card__calendar-table .past:hover{
+	background-color: red;
+	cursor: no-drop;
+}
+#DiContent.page-services #pr-card-mes.-green{
+	margin: 0;
+	color: #FFFFFF!important;
+	text-transform: uppercase;
+}
+/*
+*       push popup switches
+*/
+#DiContent .pr-card__form-select-block.type{
+	width: 100%;
+	padding-left: 180px;
+	position: absolute;
+	top: 0
+	right: 0;
+	z-index: 0;
+}
+.pr-card__checkbox{
+	width: 170px;
+	position: relative;
+	display: inline-block;
+	vertical-align: middle;
+	float: left;
+	margin-bottom: 22px;
+	z-index: 1;
+}
+.pr-card__checkbox input{
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.pr-card__checkbox-label{
+	display: block;
+	cursor: pointer;
+}
+body #MWwrapper .pr-card__checkbox .pr-card__checkbox-label{
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	position: relative;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+	margin: 0;
+}
+.pr-card__checkbox-switch{ 
+	position: relative; 
+	height: 35px;
+	-webkit-flex: 0 0 140px;
+	-ms-flex: 0 0 140px;
+	flex: 0 0 140px;
+	-webkit-transition: background-color 0.3s cubic-bezier(0, 1, 0.5, 1);
+	transition: background-color 0.3s cubic-bezier(0, 1, 0.5, 1);
+	background: #FF8300;
+}
+.pr-card__checkbox-switch:after{
+	content: attr(data-unchecked);
+	position: absolute;
+	z-index: 5;
+	text-transform: uppercase;
+	text-align: center;
+	background: #FFFFFF;
+	-webkit-transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0);
+	-webkit-transition: -webkit-transform 0.3s cubic-bezier(0, 1, 0.5, 1);
+	transition: transform 0.3s cubic-bezier(0, 1, 0.5, 1);
+	color: #FF8300;
+	top: 3px;
+	left: 3px;
+	width: 81px;
+	line-height: 29px;
+	font-size: 12px;
+}
+.pr-card__checkbox-switch:before{
+    color: rgba(255, 255, 255, 0.5);
+    left: 82px;
+    font-size: 12px;
+    line-height: 33px;
+    width: 82px;
+    padding: 0 12px;
+}
+.pr-card__checkbox input:checked ~ .pr-card__checkbox-label .pr-card__checkbox-switch:after{ content: attr(data-checked); }
+.pr-card__checkbox input:checked ~ .pr-card__checkbox-label .pr-card__checkbox-switch{ background-color: #a0bb00; }
+.pr-card__checkbox input:checked ~ .pr-card__checkbox-label .pr-card__checkbox-switch:after{ color: #a0bb00; }
+.pr-card__checkbox input:checked ~ .pr-card__checkbox-label .pr-card__checkbox-switch:after{
+    -webkit-transform: translate3d(82px, 0, 0);
+    transform: translate3d(82px, 0, 0);
+}
+/*
+*		MEDIA
+*/
+@media (min-width: 768px){
+	.pr-card__bottom{ padding: 50px 45px 70px; }
+	#DiContent .pr-card__bottom-descr{ padding: 0 25px; }
+	#DiContent .pr-card__bottom-title{ font-size: 24px; }
+	.pr-card__bottom .pr-card__bottom-hr{ margin: 30px 0; }
+	.pr-card__bottom-epilog{ margin-top: 60px; }
+	.pr-card__bottom-text{ 
+		font-size: 24px; 
+		text-align: left;
+	}
+	#DiContent .pr-card__bottom-img{ 
+		padding: 0 25px; 
+		margin-bottom: 0;
+	}
+	#DiContent .container{ max-width: initial; }
+	#DiContent .container .row.mt20{ display: block; }
+}
+@media (min-width: 992px){
+	.pr-card__title{
+		margin-top: 30px;
+		font-size: 30px;
+	}
+}

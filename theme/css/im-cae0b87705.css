@@ -1,0 +1,123 @@
+body.l-im-chat #DiFooter { display: none; }
+
+body.l-im-chat #DiContent { padding-bottom: 0; }
+
+#DiContent.page-im { font-family: RobotoCondensed-Regular, verdana, arial; }
+
+#DiContent.page-im #LCBtheme, #DiContent.page-im #LEdTheme { width: 250px; }
+
+@media (min-width: 768px) { #DiContent.page-im #LCBtheme, #DiContent.page-im #LEdTheme { width: 350px; } }
+
+#DiContent.page-im .mess-block { display: table-row; position: relative; width: 100%; height: 100%; }
+
+#DiContent.page-im .mess-block-inner { position: relative; height: 100%; }
+
+#DiContent.page-im #DiChatWrapp { display: table; width: 100%; table-layout: fixed; }
+
+#DiContent.page-im #DiMessagesWrapp { position: absolute; top: 0; bottom: 0; width: 100%; padding: 0 10px 10px 10px; border: 1px solid silver; overflow: auto; }
+
+#DiContent.page-im #DiMessagesInner { position: relative; }
+
+#DiContent.page-im #DiMessages { position: absolute; bottom: 0; padding-top: 10px; width: 100%; }
+
+#DiContent.page-im .nomess { padding-top: 40px; font-size: 13px; text-align: center; }
+
+#DiContent.page-im .tmpl { display: none; }
+
+#DiContent.page-im .new-mess { position: relative; margin: 50px 0 30px; height: 0; border-top: 1px solid #e3e3e3; }
+
+#DiContent.page-im .new-mess div { position: absolute; margin-top: -12px; width: 100%; text-align: center; }
+
+#DiContent.page-im .new-mess b { display: inline-block; padding: 0 20px; font-weight: normal; font-size: 12px; background: #fff; }
+
+#DiContent.page-im .prev-mess { margin-bottom: 20px; text-align: center; }
+
+#DiContent.page-im .prev-mess a { font-size: 12px; }
+
+#DiContent.page-im .mess-box { margin-bottom: 30px; vertical-align: bottom; }
+
+#DiContent.page-im .mess-box.-new .mess { border: 1px solid #212121; }
+
+#DiContent.page-im .mess-box .mess { width: 90%; padding: 10px; border-radius: 3px; background: #ccdb30; }
+
+#DiContent.page-im .mess-box .mess .fio { margin-right: 10px; }
+
+#DiContent.page-im .mess-box .files { margin-top: 10px; }
+
+#DiContent.page-im .mess-box .files .-files { margin-bottom: 10px; }
+
+#DiContent.page-im .mess-box .files .-files a { float: left; clear: left; }
+
+#DiContent.page-im .mess-box .files .-images a { display: inline-block; margin-right: 5px; /*min-width: 150px; min-height: 150px;*/ }
+
+#DiContent.page-im .mess-to .mess { margin-left: 10%; background: #dce57e; }
+
+#DiContent.page-im .mess-to .right { text-align: right; }
+
+#DiContent.page-im .message-box { display: table-row; position: relative; }
+
+#DiContent.page-im .message-box .box-bar-td { border: 1px solid silver; background: #F7F7F7; font-family: "Times New Roman"; }
+
+#DiContent.page-im .message-box .box-bar-td .butt { float: left; display: block; width: 24px; height: 24px; margin: 5px; line-height: 24px; text-align: center; font-style: italic; font-size: 20px; color: #212121; }
+
+#DiContent.page-im .message-box .message { padding: 5px; background: #f2f2f2; }
+
+#DiContent.page-im .message-box .message textarea { width: 100%; height: 52px; padding: 5px; background: #fff; }
+
+#DiContent.page-im .message-box .message .go { margin-top: 5px; padding-right: 2px; text-align: left; }
+
+#DiContent.page-im .message-box .message .go button { float: right; margin: 0; }
+
+#DiContent.page-im .message-box .message #DiButtonPanel { position: relative; margin-right: 120px; }
+
+#DiContent.page-im .message-box .message > div { border: 0 !important; }
+
+#DiContent.page-im .message-box .message .nicEdit-main { margin: 0 !important; padding: 4px; width: 100% !important; border: 1px solid #e3e3e3 !important; background: #fff; }
+
+#DiContent.page-im .message-box .message .nicEdit-main:focus { outline: none; }
+
+#DiContent.page-im .message-box .message .nicEdit-panelContain { width: auto !important; border: 0 !important; background: none !important; }
+
+#DiContent.page-im .message-box .message .nicEdit-button { background-image: url("/jslib/nicedit/nicEditorIcons.gif") !important; }
+
+#DiContent.page-im .message-box .add-panel { display: block; position: absolute; left: 60px; top: 50%; margin-top: -11px; font-size: 14px; }
+
+#DiContent.page-im .message-box .divider { display: inline-block; position: relative; margin: 0 10px; height: 5px; }
+
+#DiContent.page-im .message-box .divider::before { content: ' '; display: block; position: absolute; width: 1px; height: 20px; left: 0; top: -8px; background: linear-gradient(to bottom, #999999 0, #666666 50%, #999999 100%); }
+
+#DiContent.page-im .message-box .attach-file { display: inline-block; vertical-align: middle; }
+
+#DiContent.page-im .message-box .attach-file::before { background-position: 0 -640px; }
+
+#DiContent.page-im .message-box .attach-file span { border-bottom: 1px solid #e3e3e3; font-size: 11px; }
+
+@media (min-width: 768px) { #DiContent.page-im .message-box .attach-file span { font-size: 14px; } }
+
+#DiContent.page-im #F2upload h2 { font-size: 20px; }
+
+#DiContent.page-im #F2upload #UplImg { display: none; }
+
+#DiContent.page-im #F2upload .loading-block { height: 20px; }
+
+#DiContent.page-im #F2upload .loading-ico { display: none; }
+
+#DiContent.page-im #F3uploaded { display: none; }
+
+#DiContent.page-im #F3uploaded h3 { font-size: 14px; }
+
+#DiContent.page-im #F3uploaded .attached-file { float: left; position: relative; margin-bottom: 10px; padding-left: 23px; clear: left; }
+
+#DiContent.page-im #F3uploaded .attached-file .uni-delete { display: block; position: absolute; width: 12px; height: 12px; left: 0; top: 5px; background: transparent url(/theme/pic/tmp/close.png) 0 0 no-repeat; cursor: pointer; }
+
+#DiContent.page-im #F3uploaded .attached-file .uni-delete:hover { background: transparent url(/theme/pic/tmp/close-h.png) 0 0 no-repeat; }
+
+#DiContent.page-im #F3uploaded .attached-image { float: left; position: relative; margin: 0 5px 20px 0; }
+
+#DiContent.page-im #F3uploaded .attached-image .uni-delete { display: block; position: absolute; width: 30px; height: 29px; right: 0; top: 0; background: transparent url(/theme/pic/ico-form.png) 0 -464px no-repeat; cursor: pointer; }
+
+#DiContent.page-im #F3uploaded .attached-image .uni-delete:hover { background-position: 0 -58px; }
+
+#DiContent.page-im #F3uploaded .attached-image .uni-img-link { display: block; max-width: 100px; max-height: 100px; }
+
+#DiContent.page-im #F3uploaded .attached-image .uni-img-link img { width: 100%; }

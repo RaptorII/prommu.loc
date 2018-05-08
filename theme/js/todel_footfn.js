@@ -1,0 +1,1 @@
+function setLang(o){$.ajax({type:"GET",url:"/ajax/SetLang?lang="+o,cache:!1,dataType:"text",success:function(o){console.info(o),window.location=""},error:function(o){console.error("Download error!")}})}

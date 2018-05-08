@@ -1,0 +1,15 @@
+.repeat-sending{
+	display: none;
+	color: #abb820;
+	text-align: center;
+	cursor: pointer;
+}
+.repeat-sending:hover{ text-decoration: underline }
+#DiContent .btn-orange-sm-wr button{ margin: 10px 0 }
+#get-code-form button:focus,
+#get-code-form input:focus{ outline: none }
+#get-code-form{
+	max-width: 350px;
+	margin: 0 auto;
+}
+#get-code-form input#code-field{ width: 100% }
