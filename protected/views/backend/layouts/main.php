@@ -25,15 +25,15 @@
  ?>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="language" content="en" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="language" content="en" />
   <?php
     if( $_SERVER['SERVER_NAME'] == 'prommu.dev')  $icon = "fav-loc.ico";
     elseif( $_SERVER['SERVER_NAME'] == 'dev.prommu.com')  $icon = "fav-dev.ico";
     else $icon = "favicon.ico";
   ?>
   <link rel="shortcut icon" href="/<?= $icon ?>" type="image/x-icon">
-	<link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl;?>/bootstrap/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl;?>/bootstrap/css/bootstrap.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
   <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/dist/css/AdminLTE.min.css">
@@ -45,9 +45,14 @@
   <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/plugins/datepicker/datepicker3.css">
   <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/plugins/daterangepicker/daterangepicker.css">
   <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+  <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css">
   <script src="<?php echo Yii::app()->request->baseUrl; ?>/plugins/jQuery/jquery-2.2.3.min.js"></script>
-	<script language="JavaScript" src="/js/topmenu_bo.js"></script>
-	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
+  <script language="JavaScript" src="/js/topmenu_bo.js"></script>
+  <?php
+    $title = CHtml::encode($this->pageTitle);
+    $title = $title=='prommu.com' ? 'Администрирование PROMMU' : $title;
+  ?>
+  <title><?php echo $title; ?></title>
 </head>
 <body class="skin-blue sidebar-mini sidebar-collapse">
 <div class="wrapper">
@@ -331,99 +336,345 @@
       <!-- /.search form -->
 
       <!-- Sidebar Menu -->
+      <?php
+        $hUrl = Yii::app()->homeUrl . $this->id . '/';
+        $curId = $this->action->id;
+
+echo "<pre style='display:none'>";
+print_r($curId); 
+echo "</pre>";
+      ?>
+
+
       <ul class="sidebar-menu">
         <li class="header">НАВИГАТОР</li>
-        <li class="treeview">
+        <?php
+        // users
+        ?>
+        <?php 
+          $enable = in_array($curId, ['users','empl','wait','PromoEdit','EmplEdit','analytic','analyticspb']);
+          $enableA = in_array($curId, ['users','PromoEdit']);
+          $enableA = (in_array($curId, ['wait','analytic','analyticspb']) && $_GET['type']==2) ? true : $enableA;
+          $enableE = in_array($curId, ['empl','EmplEdit']);
+          $enableE = (in_array($curId, ['wait','analytic','analyticspb'])  && $_GET['type']==3) ? true : $enableE;
+        ?>
+        <li class="treeview<?=$enable ? ' active' : ''?>">
+          <a href="#">
+            <i class="glyphicon glyphicon-registration-mark"></i>
+            <span>Регистрации</span>
+            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+          </a>
+          <ul class="treeview-menu<?=$enable ? ' menu-open' : ''?>"<?=!$enable ? ' style="display:none"' : ''?>>
+            <li class="treeview <?=($enableA?'active':'')?>">
+              <a href="#">
+                <i class="glyphicon glyphicon-user"></i>
+                <span>Соискатели</span>
+              <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+              </a>
+              <ul class="treeview-menu<?=$enableA ? ' menu-open' : ''?>"<?=!$enableA ? ' style="display:none"' : ''?>>
+                <li class="<?=(in_array($curId,['users','PromoEdit'])?'active':'')?>">
+                  <a href="<?=$hUrl?>users">
+                    <i class="glyphicon glyphicon-ok-circle"></i>
+                    <span>Зарегистрированные</span>
+                  </a>
+                </li>
+                <li class="<?=($curId=='wait' && $_GET['type']==2?'active':'')?>">
+                  <a href="<?=$hUrl?>wait?type=2">
+                    <i class="glyphicon glyphicon-hourglass"></i>
+                    <span>Брошенные</span>
+                  </a>
+                </li>
+                <li class="<?=($curId=='analytic' && $_GET['type']==2?'active':'')?>">
+                  <a href="<?=$hUrl?>analytic?type=2">
+                    <i class="glyphicon glyphicon-text-background"></i>
+                    <span>Аналитика</span>
+                  </a>
+                </li>
+                <li class="<?=($curId=='analyticspb' && $_GET['type']==2?'active':'')?>">
+                  <a href="<?=$hUrl?>analyticspb?type=2">
+                    <i class="glyphicon glyphicon-text-background"></i>
+                    <span>Аналитика spb</span>
+                  </a>
+                </li>
+                <li class="">
+                  <a href="#" onclick="alert('Страница в разработке'); return false">
+                    <i class="glyphicon glyphicon-thumbs-up"></i>
+                    <span>Оценка персонала</span>
+                  </a>
+                </li>
+                <li class="">
+                  <a href="#" onclick="alert('Страница в разработке'); return false">
+                    <i class="glyphicon glyphicon-heart"></i>
+                    <span>Отзывы</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="<?=($enableE?'active':'')?>">
+              <a href="#">
+                <i class="glyphicon glyphicon-briefcase"></i>
+                <span>Работодатели</span>
+              <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+              </a>
+              <ul class="treeview-menu<?=$enableE ? ' menu-open' : ''?>"<?=!$enableE ? ' style="display:none"' : ''?>>
+                <li class="<?=(in_array($curId,['empl','EmplEdit'])?'active':'')?>">
+                  <a href="<?=$hUrl?>empl">
+                    <i class="glyphicon glyphicon-ok-circle"></i>
+                    <span>Зарегистрированные</span>
+                  </a>
+                </li>
+                <li class="<?=($curId=='wait' && $_GET['type']==3?'active':'')?>">
+                  <a href="<?=$hUrl?>wait?type=3">
+                    <i class="glyphicon glyphicon-hourglass"></i>
+                    <span>Брошенные</span>
+                  </a>
+                </li>
+                <li class="<?=($curId=='analytic' && $_GET['type']==3?'active':'')?>">
+                  <a href="<?=$hUrl?>analytic?type=3">
+                    <i class="glyphicon glyphicon-text-background"></i>
+                    <span>Аналитика</span>
+                  </a>
+                </li>
+                <li class="<?=($curId=='analyticspb' && $_GET['type']==3?'active':'')?>">
+                  <a href="<?=$hUrl?>analyticspb?type=3">
+                    <i class="glyphicon glyphicon-text-background"></i>
+                    <span>Аналитика spb</span>
+                  </a>
+                </li>
+                <li class="">
+                  <a href="#" onclick="alert('Страница в разработке'); return false">
+                    <i class="glyphicon glyphicon-thumbs-up"></i>
+                    <span>Оценка персонала</span>
+                  </a>
+                </li>
+                <li class="">
+                  <a href="#" onclick="alert('Страница в разработке'); return false">
+                    <i class="glyphicon glyphicon-heart"></i>
+                    <span>Отзывы</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <?php
+        // vacancies
+        ?>
+        <?php 
+          $enable = in_array($curId, ['vacancy','vacancymail','VacancyEdit']);
+          $enable = ($curId=='vacancy' && $_GET['seo']==1) ? false : $enable;
+        ?>
+        <li class="treeview<?=$enable ? ' active' : ''?>">
           <a href="#">
             <i class="fa fa-pie-chart"></i>
             <span>Вакансии</span>
-            <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
+            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
           </a>
-          <ul class="treeview-menu" style="display: none;">
-            <li><a href="<?php echo Yii::app()->homeUrl?>site/vacancy"><i class="fa fa-circle-o"></i> Действующие</a></li>
-            <li><a href="<?php echo Yii::app()->homeUrl?>site/vacancymail"><i class="fa fa-circle-o"></i>Брошенные</a></li>
+          <ul class="treeview-menu<?=$enable ? ' menu-open' : ''?>"<?=!$enable ? ' style="display:none"' : ''?>>
+            <li class="<?=($curId=='vacancy'?'active':'')?>">
+              <a href="<?=$hUrl?>vacancy">
+                <i class="glyphicon glyphicon-ok-circle"></i>
+                <span>Действующие</span>
+              </a>
+            </li>
+            <li class="<?=($curId=='vacancymail'?'active':'')?>">
+              <a href="<?=$hUrl?>vacancymail">
+                <i class="glyphicon glyphicon-hourglass"></i>
+                <span>Брошенные</span>
+              </a>
+            </li>
           </ul>
         </li>
-          <li class="treeview">
+        <?php
+        // services
+        ?>
+        <?php $enable = in_array($curId, ['services','servicess','cards','medcards']) ?>
+        <li class="treeview<?=$enable ? ' active' : ''?>">
           <a href="#">
-            <i class="fa fa-file-code-o"></i>
-            <span>Соискатели</span>
-            <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
-          </a>
-          <ul class="treeview-menu" style="display: none;">
-            <li><a href="<?php echo Yii::app()->homeUrl?>site/users"><i class="fa fa-circle-o"></i> Зарегистрированные</a></li>
-            <li><a href="<?php echo Yii::app()->homeUrl?>site/wait"><i class="fa fa-circle-o"></i>Брошенные</a></li>
-          </ul>
-        </li>
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-file-code-o"></i>
-            <span>Работодатели</span>
-            <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
-          </a>
-          <ul class="treeview-menu" style="display: none;">
-            <li><a href="<?php echo Yii::app()->homeUrl?>site/empl"><i class="fa fa-circle-o"></i> Зарегистрированные</a></li>
-            <li><a href="<?php echo Yii::app()->homeUrl?>site/wait"><i class="fa fa-circle-o"></i>Брошенные</a></li>
-          </ul>
-        </li>
-         
-    
-        <li><a href="<?php echo Yii::app()->homeUrl?>site/feedback"><i class="fa fa-share-alt"></i> <span>Обратная связь</span></a></li>
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-forumbee"></i>
-            <span>Статьи</span>
-            <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
-          </a>
-          <ul class="treeview-menu" style="display: none;">
-            <li><a href="<?php echo Yii::app()->homeUrl?>site/articlespages"><i class="fa fa-circle-o"></i> Статьи</a></li>
-            <li><a href="<?php echo Yii::app()->homeUrl?>site/newspages"><i class="fa fa-circle-o"></i>Новости</a></li>
-          </ul>
-        </li>
-         <li><a href="<?php echo Yii::app()->homeUrl?>seo"><i class="fa fa-share-alt"></i> <span>SEO модуль</span></a></li>
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-share-alt"></i>
-            <span>Аналитика</span>
-            <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
-          </a>
-          <ul class="treeview-menu" style="display: none;">
-            <li><a href="<?php echo Yii::app()->homeUrl?>site/analytic"><i class="fa fa-circle-o"></i> PROMMU.COM</a></li>
-            <li><a href="<?php echo Yii::app()->homeUrl?>site/analyticspb"><i class="fa fa-circle-o"></i>SPB.PROMMU.COM</a></li>
-          </ul>
-        </li>
-        <li><a href="<?php echo Yii::app()->homeUrl?>site/cards"><i class="fa fa-credit-card"></i> <span>PROMMU Карта</span></a></li>
-         <li><a href="<?php echo Yii::app()->homeUrl?>site/medcards"><i class="fa fa-credit-card"></i> <span> PROMMU мед.книга</span></a></li>
-         <li class="treeview">
-          <a href="#">
-            <i class="fa fa-file-code-o"></i>
+            <i class="glyphicon glyphicon-shopping-cart"></i>
             <span>Услуги</span>
-            <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
+            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
           </a>
-          <ul class="treeview-menu" style="display: none;">
-            <li><a href="<?php echo Yii::app()->homeUrl?>site/services"><i class="fa fa-circle-o"></i> Премиум/СМС</a></li>
-            <li><a href="<?php echo Yii::app()->homeUrl?>site/servicess"><i class="fa fa-circle-o"></i>Аутстаффинг/Аутсорс</a></li>
+          <ul class="treeview-menu<?=$enable ? ' menu-open' : ''?>"<?=!$enable ? ' style="display:none"' : ''?>>
+            <li class="<?=($curId=='services'&&$_GET['type']=='vacancy' ? 'active' : '')?>">
+              <a href="<?=$hUrl?>services?type=vacancy">
+                <i class="glyphicon glyphicon-star-empty"></i>
+                <span>Премиум</span>
+              </a>
+            </li>
+            <li class="<?=($curId=='services'&&$_GET['type']=='email' ? 'active' : '')?>">
+              <a href="<?=$hUrl?>services?type=email">
+                <i class="glyphicon">@</i>
+                <span>Электронная почта</span>
+              </a>
+            </li>
+            <li class="<?=($curId=='services'&&$_GET['type']=='push' ? 'active' : '')?>">
+              <a href="<?=$hUrl?>services?type=push">
+                <i class="glyphicon glyphicon-comment"></i>
+                <span>PUSH уведомления</span>
+              </a>
+            </li>
+            <li class="<?=($curId=='services'&&$_GET['type']=='sms' ? 'active' : '')?>">
+              <a href="<?=$hUrl?>services?type=sms">
+                <i class="glyphicon glyphicon-envelope"></i>
+                <span>SMS информирование</span>
+              </a>
+            </li>
+            <li class="<?//=($curId=='vacancymail'?'active':'')?>">
+              <a href="#" onclick="alert('Страница в разработке'); return false">
+                <i class="glyphicon glyphicon-bullhorn"></i>
+                <span>Соцсети</span>
+              </a>
+            </li>
+            <li class="<?//=($curId=='vacancymail'?'active':'')?>">
+              <a href="#" onclick="alert('Страница в разработке'); return false">
+                <i class="glyphicon glyphicon-globe"></i>
+                <span>Геолокация</span>
+              </a>
+            </li>
+            <li class="<?=($curId=='servicess'&&$_GET['type']=='outsourcing' ? 'active' : '')?>">
+              <a href="<?=$hUrl?>servicess?type=outsourcing">
+                <i class="glyphicon glyphicon-check"></i>
+                <span>Аутсорсинг</span>
+              </a>
+            </li>
+            <li class="<?=($curId=='servicess'&&$_GET['type']=='outstaffing' ? 'active' : '')?>">
+              <a href="<?=$hUrl?>servicess?type=outstaffing">
+                <i class="glyphicon glyphicon-edit"></i>
+                <span>Аутстаффинг</span>
+              </a>
+            </li>
+            <li class="<?=($curId=='cards'?'active':'')?>">
+              <a href="<?php echo $hUrl?>cards">
+                <i class="glyphicon glyphicon-credit-card"></i>
+                <span>Карта Prommu</span>
+              </a>
+            </li>
+            <li class="<?=($curId=='medcards'?'active':'')?>">
+              <a href="<?php echo $hUrl?>medcards">
+                <i class="glyphicon glyphicon-plus-sign"></i>
+                <span>Мед. книга</span>
+              </a>
+            </li>
+            <li class="<?//=($curId=='vacancymail'?'active':'')?>">
+              <a href="#" onclick="alert('Страница в разработке'); return false">
+                <i class="glyphicon glyphicon-cog"></i>
+                <span>API</span>
+              </a>
+            </li>
           </ul>
         </li>
-         <li><a href="<?php echo Yii::app()->homeUrl?>site/admin"><i class="fa fa-share-alt"></i> <span>Администраторы</span></a></li>
-         <li><a href="<?php echo Yii::app()->homeUrl?>site/monitoring"><i class="fa fa-share-alt"></i> <span>Мониторинг</span></a></li>
-         <li><a href="<?php echo Yii::app()->homeUrl?>site/vacancy?seo=1#"><i class="fa fa-share-alt"></i> <span>SEO мониторинг</span></a></li>
- 
-      
-       
-
+        <?php
+        // СЕО
+        ?>
+        <?php
+          $enable = in_array($curId, ['articlespages','seo']);
+          $enable = ($curId=='vacancy' && $_GET['seo']==1) ? true : $enable;
+          $enable = ($curId=='PageUpdate' && $_GET['pagetype']=='articles') ? true : $enable;
+        ?>
+        <li class="treeview<?=$enable ? ' active' : ''?>">
+          <a href="#">
+            <i class="glyphicon glyphicon-copyright-mark"></i>
+            <span>СЕО</span>
+            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+          </a>
+          <ul class="treeview-menu<?=$enable ? ' menu-open' : ''?>"<?=!$enable ? ' style="display:none"' : ''?>>
+            <li class="<?=($curId=='vacancy'&&$_GET['seo']==1?'active':'')?>">
+              <a href="<?=$hUrl?>vacancy?seo=1">
+                <i class="glyphicon glyphicon-list-alt"></i>
+                <span>SEO мониторинг</span>
+              </a>
+            </li>
+            <li class="<?=(($curId=='articlespages'||($curId=='PageUpdate'&&$_GET['pagetype']=='articles')) ? 'active' : '')?>">
+              <a href="<?=$hUrl?>articlespages">
+                <i class="glyphicon glyphicon-duplicate"></i>
+                <span>Статьи</span>
+              </a>
+            </li>
+            <li class="<?=($curId=='seo'?'active':'')?>">
+              <a href="<?=$hUrl?>seo">
+                <i class="glyphicon glyphicon-filter"></i>
+                <span>SEO фильтр</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <?php
+        // feedback
+        ?>
+        <li class="<?=(in_array($curId, ['feedback','mail'])?'active':'')?>">
+          <a href="<?=$hUrl?>feedback">
+            <i class="glyphicon glyphicon-earphone"></i> 
+            <span>Обратная связь</span>
+          </a>
+        </li>
+        <?php
+        // monitoring
+        ?>
+        <li class="<?=($curId=='monitoring'?'active':'')?>">
+          <a href="<?=$hUrl?>monitoring">
+            <i class="glyphicon glyphicon-scale"></i>
+            <span>Мониторинг работы API Zabbix</span>
+          </a>
+        </li>
+        <?php
+        // additionally
+        ?>
+        <?php
+          $enable = in_array($curId, ['newspages','admin','AdminEdit']); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          $enable = ($curId=='PageUpdate' && in_array($_GET['pagetype'],['news','about'])) ? true : $enable;
+        ?>
+        <li class="treeview<?=$enable ? ' active' : ''?>">
+          <a href="#">
+            <i class="glyphicon glyphicon-plus"></i>
+            <span>Дополнительно</span>
+            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+          </a>
+          <ul class="treeview-menu<?=$enable ? ' menu-open' : ''?>"<?=!$enable ? ' style="display:none"' : ''?>>
+            <li class="<?=(($curId=='PageUpdate' && $_GET['pagetype']=='about') ? 'active' : '')?>">
+              <a href="<?=$hUrl?>PageUpdate/7?lang=ru&pagetype=about">
+                <i class="glyphicon glyphicon-file"></i>
+                <span>О нас</span>
+              </a>
+            </li>
+            <li class="<?//=($curId=='vacancy'?'active':'')?>">
+              <a href="#" onclick="alert('Страница в разработке'); return false">
+                <i class="glyphicon glyphicon-file"></i>
+                <span>Работа для студентов</span>
+              </a>
+            </li>
+            <li class="<?//=($curId=='vacancy'?'active':'')?>">
+              <a href="#" onclick="alert('Страница в разработке'); return false">
+                <i class="glyphicon glyphicon-file"></i>
+                <span>Работодателям</span>
+              </a>
+            </li>
+            <li class="<?//=($curId=='vacancy'?'active':'')?>">
+              <a href="#" onclick="alert('Страница в разработке'); return false">
+                <i class="glyphicon glyphicon-file"></i>
+                <span>Соискателям</span>
+              </a>
+            </li>
+            <li class="<?=(($curId=='newspages'||($curId=='PageUpdate'&&$_GET['pagetype']=='news')) ? 'active' : '')?>">
+              <a href="<?=$hUrl?>newspages">
+                <i class="glyphicon glyphicon-flash"></i>
+                <span>Новости</span>
+              </a>
+            </li>
+            <li class="<?//=($curId=='vacancy'?'active':'')?>">
+              <a href="#" onclick="alert('Страница в разработке') return false">
+                <i class="glyphicon glyphicon-file"></i>
+                <span>ФАК</span>
+              </a>
+            </li>
+            <li class="<?=(in_array($curId,['admin','AdminEdit'])?'active':'')?>">
+              <a href="<?=$hUrl?>admin">
+                <i class="glyphicon glyphicon-sunglasses"></i>
+                <span>Администраторы</span>
+              </a>
+            </li>   
+          </ul>
+        </li>
       </ul>
       <!-- /.sidebar-menu -->
     </section>

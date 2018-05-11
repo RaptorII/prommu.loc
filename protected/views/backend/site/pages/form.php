@@ -1,8 +1,13 @@
 <?php
 if($pagetype=='news') {
+	$this->setPageTitle('Редактирование новости');
     echo '<h3><i>Редактирование новости</i></h3>';
 } elseif($pagetype=='articles'){
+	$this->setPageTitle('Редактирование статьи');
 	echo '<h3><i>Редактирование статьи</i></h3>';
+} elseif($pagetype=='about'){
+	$this->setPageTitle('Редактирование страницы "О нас"');
+	echo '<h3><i>Редактирование страницы "О нас"</i></h3>';
 }else {
     echo '<h3><i>Настройка страницы сайта</i></h3>';
 }

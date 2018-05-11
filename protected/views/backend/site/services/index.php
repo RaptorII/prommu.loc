@@ -167,13 +167,16 @@ function ShowServ($type,$consult, $control, $rezident, $nrezident, $advertising)
 
 }
 
-function ShowType($vac)
+function ShowType($type)
 { 
-  if($vac == 'vacancy'){
-    return 'Премиум вакансия';
+  switch ($type) {
+    case 'vacancy': $name = 'Премиум вакансия'; break;
+    case 'email': $name = 'EMAIL'; break;
+    case 'push': $name = 'PUSH'; break;
+    case 'sms': $name = 'SMS'; break;
   }
-  else return 'Смс оповещение';
 
+  return $name;
 }
 
 

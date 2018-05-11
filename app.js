@@ -107,7 +107,7 @@ if (window.location.protocol === 'https:' &&
 
 } else {
     if (window.location.protocol !== 'https:') {
-        showError('Is not from HTTPS');
+        //showError('Is not from HTTPS');
     } else if (!('Notification' in window)) {
         showError('Notification not supported');
     } else if (!('serviceWorker' in navigator)) {
@@ -119,7 +119,7 @@ if (window.location.protocol === 'https:' &&
     } else if (!('postMessage' in window)) {
         showError('postMessage not supported');
     }
-
+/*
     console.warn('This browser does not support desktop notification.');
     console.log('Is HTTPS', window.location.protocol === 'https:');
     console.log('Support Notification', 'Notification' in window);
@@ -127,7 +127,7 @@ if (window.location.protocol === 'https:' &&
     console.log('Support LocalStorage', 'localStorage' in window);
     console.log('Support fetch', 'fetch' in window);
     console.log('Support postMessage', 'postMessage' in window);
-
+*/
     // updateUIForPushPermissionRequired();
 }
 
