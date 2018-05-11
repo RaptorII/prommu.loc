@@ -50,9 +50,14 @@
 
 		public function getTermostatServices($user, $arDates){
 
+			$t1 = strtotime($arDates['bdate']);
+			$t2 = strtotime($arDates['edate']) + 60*60*24;
+			$bdate = date("Y",$t1) . '-' . date("m",$t1) . '-' . date("d",$t1);
+			$edate = date("Y",$t2) . '-' . date("m",$t2) . '-' . date("d",$t2);
+
 			$sql = "SELECT s.type, s.name, s.sum
 	            FROM service_cloud s
-	            WHERE s.id_user = {$user} AND s.status = 1 AND s.date between '{$arDates['bdate']}' AND '{$arDates['edate']}' 
+	            WHERE s.id_user = {$user} AND s.status = 1 AND s.date between TIMESTAMP('{$bdate}') AND TIMESTAMP('{$edate}') 
 	            ";
 	        $res = Yii::app()->db->createCommand($sql)->queryAll();
 
@@ -64,10 +69,8 @@
 
 	        $res[0] = $res;
 	        $res[1] = $ress;
-	        	if($res == ''){
-	        		return '0';
-	        	}
-	     		else return $res;
+
+	        return $res;
 		}
 
 		public function getTermostatCount($idvac){

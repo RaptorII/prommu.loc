@@ -10,10 +10,12 @@
 	$Termostat = new Termostat();
 	$services = $Termostat->getTermostatServices(Share::$UserProfile->id, $arDates);
 	$rest = [];
-	$rest['outsource'] = 0;
+	$rest['outsourcing'] = 0;
 	$rest['outstaffing'] = 0;
 	$rest['vacancy'] = 0;
 	$rest['sms'] = 0;
+	$rest['push'] = 0;
+	$rest['email'] = 0;
 
 	foreach ($services[0] as $key => $val) {
 		if($val['type'] == "sms"){
@@ -22,12 +24,17 @@
 		if($val['type'] == 'vacancy'){
 			$rest['vacancy']++;
 		}
-
+		if($val['type'] == "push"){
+			$rest['push']++;
+		}
+		if($val['type'] == "email"){
+			$rest['email']++;
+		}
 	}
 
 	foreach ($services[1] as $key => $val) {
-		if($val['type'] == "outsource"){
-			$rest['outsource']++;
+		if($val['type'] == "outsourcing"){
+			$rest['outsourcing']++;
 		}
 		
 		if($val['type'] == 'outstaffing'){
@@ -35,8 +42,7 @@
 		}
 		
 	}
-
-	$restsum = $rest['sms'] + $rest['vacancy'] + $rest['outstaffing'] + $rest['outsource'];
+	$restsum = $rest['sms'] + $rest['vacancy'] + $rest['outstaffing'] + $rest['outsourcing'] + $rest['push'] + $rest['email'];
 //
 // Employer
 //
@@ -85,47 +91,31 @@
 			<div class="col-xs-12 col-sm-8 pa__list">
 				<div class="pa-list__title">Используемые услуги</div>
 				<div class="pa-service__list">
-					<div class="pa-service__item">
-						<span class="pa-service__item-name premium">Премиум-вакансии</span>
-						<span class="pa-service__item-cnt">Количество использований: <span><?=$rest['vacancy']?></span></span>
-					</div>
-					<!-- <div class="pa-service__item">
-						<span class="pa-service__item-name share">Приглашение персонала на акции</span>
-						<span class="pa-service__item-cnt">Количество использований: <span>4</span></span>
-					</div> -->
-					<!-- <div class="pa-service__item">
-						<span class="pa-service__item-name">Push-уведомления</span>
-						<span class="pa-service__item-cnt">Количество использований: <span>4</span></span>
-					</div>
-					<div class="pa-service__item">
-						<span class="pa-service__item-name">Дублирование вакансий в группы соц. сетей Prommu</span>
-						<span class="pa-service__item-cnt">Количество использований: <span>4</span></span>
-					</div> -->
-					<div class="pa-service__item">
-						<span class="pa-service__item-name share">СМС-информирование персонала</span>
-						<span class="pa-service__item-cnt">Количество использований: <span><?=$rest['sms'] ?></span></span>
-					</div>
-					<!-- <div class="pa-service__item">
-						<span class="pa-service__item-name geo">Геолокация</span>
-						<span class="pa-service__item-cnt">Количество использований: <span>4</span></span>
-					</div> -->
-					<div class="pa-service__item">
-						<span class="pa-service__item-name outsource">Личный менеджер и аутсорсинг персонала</span>
-						<span class="pa-service__item-cnt">Количество использований: <span><?=$rest['outsource'] ?></span></span>
-					</div>
-					<div class="pa-service__item">
-						<span class="pa-service__item-name oustaff">Аутстаффинг персонала</span>
-						<span class="pa-service__item-cnt">Количество использований: <span><?=$rest['outstaffing']?></span></span>
-					</div>
-					<!-- <div class="pa-service__item">
-						<span class="pa-service__item-name card">Получение корпоративной карты Prommu</span>
-						<span class="pa-service__item-cnt">Количество использований: <span>4</span></span>
-					</div>
-					<div class="pa-service__item">
-						<span class="pa-service__item-name api">Получение API-ключа</span>
-						<span class="pa-service__item-cnt">Количество использований: <span>4</span></span>
-					</div> -->
-				</div>
+							<div class="pa-service__item">
+								<span class="pa-service__item-name premium">Премиум-вакансии</span>
+								<span class="pa-service__item-cnt">Количество использований: <span><?=$rest['vacancy']?></span></span>
+							</div>
+							<div class="pa-service__item">
+								<span class="pa-service__item-name email">Электронная почта</span>
+								<span class="pa-service__item-cnt">Количество использований: <span><?=$rest['email']?></span></span>
+							</div>
+							<div class="pa-service__item">
+								<span class="pa-service__item-name push">PUSH уведомления</span>
+								<span class="pa-service__item-cnt">Количество использований: <span><?=$rest['push']?></span></span>
+							</div>
+							<div class="pa-service__item">
+								<span class="pa-service__item-name sms">SMS информирование</span>
+								<span class="pa-service__item-cnt">Количество использований: <span><?=$rest['sms']?></span></span>
+							</div>
+							<div class="pa-service__item">
+								<span class="pa-service__item-name outsource">Личный менеджер и аутсорсинг персонала</span>
+								<span class="pa-service__item-cnt">Количество использований: <span><?=$rest['outsourcing'] ?></span></span>
+							</div>
+							<div class="pa-service__item">
+								<span class="pa-service__item-name oustaff">Аутстаффинг персонала</span>
+								<span class="pa-service__item-cnt">Количество использований: <span><?=$rest['outstaffing']?></span></span>
+							</div>
+						</div>
 			</div>
 		</div>
 	</div>
