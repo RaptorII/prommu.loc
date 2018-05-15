@@ -136,7 +136,7 @@ return array(
                 'vacancies' => 'vacancies/index',
                 //'promo' => 'site/ankety',
                 // отдельные страницы
-                '<action:(rabotodatel|soiskatelyam|razrabotchikam|regulations|work-for-students)>' => 'site/page/<action>',
+                '<action:(razrabotchikam|regulations|work-for-students)>' => 'site/page/<action>',
                 // для разделов со страницами
                 '<page:(services|articles|ideas)>/<id:[\w-]+>' => 'site/<page>',
                 '<page:about>/<section:[\w-]+>' => 'site/<page>',
