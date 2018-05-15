@@ -6,10 +6,6 @@
     $this->ViewModel->setViewData('pageTitle', '<h1>' . $viData['meta_title'] . '</h1>');
     // устанавливаем description
     Yii::app()->clientScript->registerMetaTag($viData['meta_description'], 'description');
-
-echo "<pre style='display:none'>";
-print_r($viData); 
-echo "</pre>";
 ?>
 <div class="row">
     <div class="col-xs-12 page-empl__content">
