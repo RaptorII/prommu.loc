@@ -135,11 +135,7 @@ class SiteController extends AppController
                 throw new CHttpException(404, 'Error');
             }
             elseif($action=='work-for-students'){
-                $view = MainConfig::$VIEWS_WORK_FOR_STUDENTS;
-                $this->render($view, array(), array(
-                    'htmlTitle' => 'Работа и вакансии для студентов в Москве без опыта работы, свободный график',
-                    'pageMetaDesription' => 'Временная работа для студентов в Москве. Свежие вакансии с свободным графиком и без опыта работы.'
-                ) );
+                $this->render(MainConfig::$VIEWS_WORK_FOR_STUDENTS, array(), array());
             }
             else{
                 $model = new PagesContent;
@@ -1308,32 +1304,24 @@ class SiteController extends AppController
             }
             if($section == 'prom')
             {
-                $title = "Информация для соискателей";
-                $this->setBreadcrumbsEx(array($title, MainConfig::$PAGE_PROMO_INFO));
+                $model = new PagesContent;
+                $lang = Yii::app()->session['lang'];
+                $data = $model->getPageContent($section, Yii::app()->session['lang']);
                 $this->render(
                     MainConfig::$VIEWS_PROMO_INFO, 
                     array('viData' => $data),
-                    array(
-                        'pageTitle' => '<h1>'.$title.'</h1>', 
-                        'htmlTitle' => $title,
-                        'pageMetaDesription' => 'Если вы ищете работу в сфере BTL услуг то портал Prommu.com  то что вам нужно. На нашем сайте вы найдете множество вакансий.'
-                    )
+                    array()
                 );
             }
             elseif($section == 'empl')
             {
-                $faq = new Faq();
-                $data = $faq->getFaq();
-                $title = "Информация для работодателей";
-                $this->setBreadcrumbsEx(array($title, MainConfig::$PAGE_EMPL_INFO));
+                $model = new PagesContent;
+                $lang = Yii::app()->session['lang'];
+                $data = $model->getPageContent($section, Yii::app()->session['lang']);
                 $this->render(
                     MainConfig::$VIEWS_EMPL_INFO, 
                     array('viData' => $data),
-                    array(
-                        'pageTitle' => '<h1>'.$title.'</h1>', 
-                        'htmlTitle' => $title,
-                        'pageMetaDesription' => 'Информация для работодателей о портале Prommu.com. Перечень преимуществ по поиску сотрудников на  сайте позволит быстро найти необходимую кандидатуру.'
-                    )
+                    array()
                 );
             }
             elseif($section == 'faqv')

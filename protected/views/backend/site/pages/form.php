@@ -1,8 +1,13 @@
 <?php
 if($pagetype=='news') {
+	$this->setPageTitle('Редактирование новости');
     echo '<h3><i>Редактирование новости</i></h3>';
 } elseif($pagetype=='articles'){
+	$this->setPageTitle('Редактирование статьи');
 	echo '<h3><i>Редактирование статьи</i></h3>';
+} elseif($pagetype=='about'){
+	$this->setPageTitle('Редактирование страницы "О нас"');
+	echo '<h3><i>Редактирование страницы "О нас"</i></h3>';
 }else {
     echo '<h3><i>Настройка страницы сайта</i></h3>';
 }
@@ -79,36 +84,27 @@ echo '</div></div>';
 echo CHtml::hiddenField('PagesContent[img]', $result->img, array('class'=>'form-control', 'id'=>'fimg', 'style'=>'width:700px;'));
 ?>
 <!-- Uploader -->
-  <div class="control-group">
-      <label class="control-label">Изображение</label>
-	    <div class="controls input-append">
-<img id="loading" src="/images/loading.gif" style="display:none;">
-
-		<table cellpadding="0" cellspacing="0" class="tableForm">
-
-		<thead>
-			<tr>
-				<th>Выберите изображение</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>
-				<input id="fileToUpload" type="file" name="fileToUpload" />
-			</td></tr>
-
-		</tbody>
-			<tfoot>
-				<tr>
-					<td><button class="btn" id="buttonUpload" onclick="return ajaxFileUpload();">Загрузить</button></td>
-				</tr>				
-			</tfoot>
-
-	</table>  
+<?php if(in_array($pagetype, ['about','prom','empl'])): ?>
+	<input type="hidden" name="fileToUpload" value="">
+<?php else: ?>
+	<div class="control-group">
+		<label class="control-label">Изображение</label>
+		<div class="controls input-append">
+			<img id="loading" src="/images/loading.gif" style="display:none;">
+			<table cellpadding="0" cellspacing="0" class="tableForm">
+				<thead><tr><th>Выберите изображение</th></tr></thead>
+				<tbody><tr><td><input id="fileToUpload" type="file" name="fileToUpload" /></td></tr></tbody>
+				<tfoot>
+					<tr>
+						<td><button class="btn" id="buttonUpload" onclick="return ajaxFileUpload();">Загрузить</button></td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+		<div id="msg" class="alert alert-message span6 offset4"></div>
+		<img id="img_page" src="/images/<?php echo $pagetype.'/'.$result->img; ?>" class="span6 offset4"/>
 	</div>
-	<div id="msg" class="alert alert-message span6 offset4"></div>
-      <img id="img_page" src="/images/<?php echo $pagetype.'/'.$result->img; ?>" class="span6 offset4"/>
-	</div>
+<?php endif; ?>
 <?php
 echo '<div class="control-group">
       <label class="control-label">Дата публикации</label>

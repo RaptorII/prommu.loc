@@ -1,0 +1,22 @@
+.main-sidebar .treeview .glyphicon,
+.sidebar-menu>li>a>.fa{
+	line-height: 20px;
+}
+.sidebar-menu .treeview-menu .treeview-menu{ padding-left: 10px; }
+.main-sidebar, .left-side{ width: 250px }
+.content-wrapper, .right-side, .main-footer{ margin-left: 250px; }
+@media (max-width: 767px){
+	.main-sidebar, .left-side {
+		-webkit-transform: translate(-250px, 0);
+		-ms-transform: translate(-250px, 0);
+		-o-transform: translate(-250px, 0);
+		transform: translate(-250px, 0);
+	}
+}
+@media (min-width: 768px){
+	.sidebar-mini.sidebar-collapse .sidebar-menu>li:hover>a>span:not(.pull-right-container),
+	.sidebar-mini.sidebar-collapse .sidebar-menu>li:hover>.treeview-menu{
+		width: initial;
+		min-width: 200px;
+	}
+}

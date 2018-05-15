@@ -90,8 +90,8 @@ class Seo extends CActiveRecord
                         'meta_title' => $data['meta_title'],
                         'meta_description' => $data['meta_description'],
                         'meta_keywords' => $data['meta_keywords'],
-                        'mdseo_h1' => $data['seo_h1'],
-                        'mrdate' => date("Y-m-d h-i-s"),
+                        'seo_h1' => $data['seo_h1'],
+                        'mdate' => date("Y-m-d h-i-s"),
                     ), 'id = :id', array(':id' => $data['id']));
         
 
