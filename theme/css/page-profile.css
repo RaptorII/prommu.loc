@@ -206,9 +206,10 @@
 }
 .upp__img-block-main{
 	min-width: 180px;
+	max-width: 296px;
 	text-align: center;
 	position: relative;
-	margin: 0 5px;
+	margin: 0 auto;
 	border-radius: 50%;
 	border: 2px solid #CBD880;
 	overflow: hidden;

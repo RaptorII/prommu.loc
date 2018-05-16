@@ -49,7 +49,9 @@
 .advantages,
 .articles-news,
 .how-block__item .vacancy>br{display:none;}
-#DiContent#DiContent{padding:0 12px;}
+#DiContent#DiContent{padding:0 12px 180px;}
+#DiSiteWrapp{ height:initial }
+#DiFooter{ min-width:350px }
 #DiContent .container{padding:0 15px;max-width:inherit;}
 #DiContent .header.h-indent.first h2{padding:0 0 45px;margin:0 18px 40px;border-bottom:1px solid #d7d7d7;}
 #DiContent .header.h-indent span{padding:0px;}

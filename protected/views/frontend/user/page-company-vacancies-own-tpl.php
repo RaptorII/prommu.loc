@@ -101,6 +101,7 @@
                   <?php endif; ?>
                   <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=sms"?>" class="evl-vacancies__sms">Произвести СМС рассылку</a>
                   <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=email"?>" class="evl-vacancies__email">Произвести EMAIL рассылку</a>
+                  <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=push"?>" class="evl-vacancies__push">PUSH уведомления</a>
                   <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=outsourcing"?>" class="evl-vacancies__atsrc">Аутсорсинг</a>
                   <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=outstaffing"?>" class="evl-vacancies__outstf">Аутстаффинг</a>
                 </div> 

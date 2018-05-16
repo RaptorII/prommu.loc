@@ -167,27 +167,27 @@
 						<div class="pa-service__list">
 							<div class="pa-service__item">
 								<span class="pa-service__item-name premium">Премиум-вакансии</span>
-								<span class="pa-service__item-cnt">Количество использований: <span><?=$rest['vacancy']?></span></span>
+								<span class="pa-service__item-cnt"><span>Количество использований: </span><b><?=$rest['vacancy']?></b></span>
 							</div>
 							<div class="pa-service__item">
 								<span class="pa-service__item-name email">Электронная почта</span>
-								<span class="pa-service__item-cnt">Количество использований: <span><?=$rest['email']?></span></span>
+								<span class="pa-service__item-cnt"><span>Количество использований: </span><b><?=$rest['email']?></b></span>
 							</div>
 							<div class="pa-service__item">
 								<span class="pa-service__item-name push">PUSH уведомления</span>
-								<span class="pa-service__item-cnt">Количество использований: <span><?=$rest['push']?></span></span>
+								<span class="pa-service__item-cnt"><span>Количество использований: </span><b><?=$rest['push']?></b></span>
 							</div>
 							<div class="pa-service__item">
 								<span class="pa-service__item-name sms">SMS информирование</span>
-								<span class="pa-service__item-cnt">Количество использований: <span><?=$rest['sms']?></span></span>
+								<span class="pa-service__item-cnt"><span>Количество использований: </span><b><?=$rest['sms']?></b></span>
 							</div>
 							<div class="pa-service__item">
 								<span class="pa-service__item-name outsource">Личный менеджер и аутсорсинг персонала</span>
-								<span class="pa-service__item-cnt">Количество использований: <span><?=$rest['outsourcing'] ?></span></span>
+								<span class="pa-service__item-cnt"><span>Количество использований: </span><b><?=$rest['outsourcing'] ?></b></span>
 							</div>
 							<div class="pa-service__item">
 								<span class="pa-service__item-name oustaff">Аутстаффинг персонала</span>
-								<span class="pa-service__item-cnt">Количество использований: <span><?=$rest['outstaffing']?></span></span>
+								<span class="pa-service__item-cnt"><span>Количество использований: </span><b><?=$rest['outstaffing']?></b></span>
 							</div>
 						</div>
 					</div>
@@ -200,9 +200,9 @@
 						<div class="pa-count__title">ВСЕГО ПРОСМОТРОВ</div>
 						<div class="pa-count__num"><?= $counts?></div>
 					</div>
-					<div class="col-xs-12 col-sm-8 pa__list">
+					<div class="col-xs-12 col-sm-8 pa__list hidden-xs hidden-sm hidden-md">
 						<div class="pa-list__title">Статистика просмотров</div>
-						<div class="pa__graph-block hidden-xs hidden-sm hidden-md" id="pa-chart"></div>
+						<div class="pa__graph-block" id="pa-chart"></div>
 					</div>
 				</div>
 			</div>

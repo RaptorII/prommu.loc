@@ -298,7 +298,7 @@
 	display: block;
 	color: transparent;
 	text-align: center;
-	background: #ff8300 url(/theme/pic/vacancy/vac-list-service-sprite.png) no-repeat;
+	background: #ff8300 url(/theme/pic/vacancy/vac-list-service-sprite.png) 0 -264px no-repeat;
 	cursor: pointer;
 	line-height: 14px;
 	border-radius: 5px;
@@ -425,6 +425,7 @@
 .evl__service-popup .evl-vacancies__email:before{ background-position: 0 -231px }
 .evl__service-popup .evl-vacancies__atsrc:before{ background-position: 0 -165px }
 .evl__service-popup .evl-vacancies__outstf:before{ background-position: 0 -198px }
+.evl__service-popup .evl-vacancies__push:before{ background-position: 1px -300px }
 #DiContent #MWwrapper .mw-win.dark-ver .header{
 	margin: 0;
 	border: none;

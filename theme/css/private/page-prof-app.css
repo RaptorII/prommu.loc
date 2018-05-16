@@ -6,7 +6,7 @@
 	width: 100%;
 	max-width: 810px;
 	margin: 25px auto 0;
-	padding: 0 15px;
+	padding: 0;
 	color: #343434;
 	font-family: RobotoCondensedRegular, RobotoRegular, verdana, arial;
 	display: table;
@@ -322,17 +322,9 @@
 	color: #343434;
 	font-family: RobotoCondensedRegular, RobotoRegular, verdana, arial;
 }
-.ppp__checkboxes{
-	margin: 24px 0 10px;
-}
-.ppp__attr-block1{
-	width: 30%;
-	float: left
-}
-.ppp__attr-block2{
-	width: 70%;
-	float: left;
-}
+.ppp__checkboxes{ margin: 24px 0 10px }
+.ppp__attr-block1,
+.ppp__attr-block2{ width: 100% }
 .ppp__checkbox{
 	padding-right: 34px;
 	margin-bottom: 22px;
@@ -342,6 +334,11 @@
 	font-size: 14px;
 	color: #343434;
 	font-family: RobotoCondensedBold, RobotoCondensedRegular, verdana, arial;
+}
+.ppp__attr-block1 .ppp__checkbox,
+.ppp__attr-block2 .ppp__checkbox{
+	float: none;
+	display: block;
 }
 .ppp__checkbox:after{
 	content: '';
@@ -804,6 +801,20 @@ a.upp__project-info{ width: 65px }
 	}
 	#DiTop #DiContent .user-profile-page{ margin: 40px auto 0 }
 	.ppp__clear-two{ clear: both } 
+	.ppp__attr-block1{
+		width: 30%;
+		float: left
+	}
+	.ppp__attr-block2{
+		width: 70%;
+		float: left;
+	}
+	.ppp__attr-block1 .ppp__checkbox,
+	.ppp__attr-block2 .ppp__checkbox{
+		float: right;
+		display: initial;
+	}
+	#DiTop #DiContent .private-profile-page{ padding:0 15px }
 }
 @media (min-width: 992px){
 	.ppp__module{ padding-right: 100px }

@@ -40,5 +40,12 @@
 		<input type="hidden" name="vacancy" value="<?=Yii::app()->getRequest()->getParam('id')?>">
 	</form>
 <?php endif; ?>
-
+<?php
+//	push invitation
+?>
+<?php if($viData['service']=='push'): ?>
+	<form action="<?=MainConfig::$PAGE_SERVICES_PUSH?>" method="POST" id="order-form">
+		<input type="hidden" name="vacancy" value="<?=Yii::app()->getRequest()->getParam('id')?>">
+	</form>
+<?php endif; ?>
 <script type="text/javascript">$(function(){ $('#order-form').submit() })</script>

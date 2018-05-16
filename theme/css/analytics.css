@@ -17,8 +17,7 @@
 }
 .pa-filter__field{
 	margin: 10px 0;
-	padding-right: 10px;
-	display: inline-block;
+	display: block;
 }
 .pa-filter__name{
 	padding-right: 10px;
@@ -26,7 +25,7 @@
 	font-family: RobotoRegular, RobotoRegular, verdana, arial; 
 }
 .pa-filter__date{
-	width: 144px;
+	width: 100%;
 	height: 37px;
 	display: inline-block;
 	border: 1px solid #ffffff;
@@ -39,12 +38,9 @@
 	vertical-align: middle;
 }
 .pa-filter__bdate,
-.pa-filter__edate{
-	display: inline-block;
-	position: relative;
-}
+.pa-filter__edate{ position: relative; }
 #DiContent .page-analytics .pa-filter__select{
-	width: 216px;
+	width: 100%;
 	height: 37px;
 	background: transparent;
 	border: 1px solid #ffffff;
@@ -211,6 +207,9 @@
 .pa-service__item-name.oustaff:before{ background-position: 0 -200px }
 .pa-service__item-name.card:before{ background-position: 0 -245px }
 .pa-service__item-name.api:before{ background-position: 0 -295px }
+.pa-service__item-name.email:before{ background-position: 0 -351px }
+.pa-service__item-name.push:before{ background-position: 0 -411px }
+.pa-service__item-name.sms:before{ background-position: 0 -469px }
 .pa-service__item-cnt{
 	display: table-cell;
 	font-size: 16px;
@@ -218,10 +217,12 @@
 	text-align: right;
 	font-family: RobotoCondensedRegular, verdana, arial;
 }
-.pa-service__item-cnt span{ 
+.pa-service__item-cnt b{ 
 	color: #ff6500;
+	font-weight: normal;
 	font-family: RobotoCondensedRegular, verdana, arial;
 }
+.pa-service__item-cnt span{ display:none }
 /*	*/
 .pa__graph-block{
 	padding: 20px 15px 20px 15px;
@@ -419,6 +420,22 @@
 /*
 *		MEDIA
 */
+@media screen and (min-width: 450px){
+	.pa-filter__bdate,
+	.pa-filter__edate{ display: inline-block }
+	.pa-filter__date{ width:144px }
+	#DiContent .page-analytics .pa-filter__select{ width: 216px }
+}
+@media screen and (min-width: 768px){
+	.pa-service__item-cnt span{ 
+		display:inline;
+		white-space: nowrap;
+	}
+	.pa-filter__field{
+		padding-right: 10px;
+		display: inline-block;
+	}
+}
 @media screen and (min-width: 992px){
 	.pa-count__list{ width: 50% }
 	.pa__filter{ display: table }
