@@ -47,7 +47,7 @@
 				<div class="idea__comment">
 					<?php if(!$viData['is_guest']): ?>
 						<div class="idea__set-rating active">
-							<span class="idea__set-r-name">Проголосовать:</span>
+							<span class="idea__set-r-name hidden-xs">Проголосовать:</span>
 							<div class="idea__set-rpos js-g-hashint" title="Поддерживаю"><?=$viData['posrating']?></div>
 							<div class="idea__set-rneg js-g-hashint" title="Не поддерживаю"><?=$viData['negrating']?></div>
 						</div>

@@ -188,7 +188,7 @@
 	margin-right: 15px;
 }
 .ideas-sort__right{ 
-	max-width: 158px;
+	width: 158px;
 	margin: 15px 0 0 0;
 }
 .ideas__select span{
@@ -341,7 +341,7 @@
 		margin-left: 15px;
 	}
 	.ideas-sort__right{
-		max-width: initial;
+		width: initial;
 		margin: 0;
 	}
 	.ideas__sort{ flex-direction: row }

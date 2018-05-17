@@ -8,9 +8,9 @@ class Ideas
     public function getIdeas()
     {
         $name = Yii::app()->getRequest()->getParam('q');
-
         $status = Yii::app()->getRequest()->getParam('status');
         $type = Yii::app()->getRequest()->getParam('type');
+        $sort = Yii::app()->getRequest()->getParam('sort');
         $filter = "";
 
         if(!empty($name)) {
@@ -23,7 +23,15 @@ class Ideas
         if(!empty($type)) {
             $filter.= " AND i.type = $type";
         }
-        $order = 'i.crdate DESC';
+        switch ($sort) {
+            case 1: $order = 'posrating DESC'; break; // по рейтингу
+            case 2: $order = 'negrating DESC'; break; // по антирейтингу
+            case 4: $order = 'i.crdate ASC'; break; // по самой ранней дате
+            case 5: $order = 'i.crdate DESC'; break; // просмотры !!!!!!!!!!!!!
+            case 6: $order = 'comments DESC'; break; // комментарии
+            case 3:
+            default: $order = 'i.crdate DESC'; break; // по последнейдате
+        }
 
         $count = $this->getIdeasCnt($filter);
         $pages = new CPagination($count);
@@ -208,14 +216,14 @@ class Ideas
         $pages = new CPagination($count);
         $pages->pageSize = 3; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         $pages->applyLimit($this);
-        $sort = ($type==2 ? 'ASC' : 'DESC');
+        $order = ($type==2 ? 'ASC' : 'DESC');
 
         $sql = "SELECT ai.id_user, ai.rating, DATE_FORMAT(ai.date_rating, '%d.%m.%Y') date_rating, 
                     ai.comment, DATE_FORMAT(ai.date_comment, '%d.%m.%Y %T') date_comment, ai.isread,
                     ai.email, ai.notification
                 FROM ideas_attrib ai
                 WHERE ai.id = $id
-                ORDER BY ai.date_comment {$sort}
+                ORDER BY ai.date_comment {$order}
                 LIMIT {$this->offset}, {$this->limit}";
         /** @var $res CDbCommand */
         $rest = Yii::app()->db->createCommand($sql);

@@ -53,11 +53,10 @@ $(function(){
 	},500);	
   });
   // голосование
-  $('.idea__item-rpos, .idea__item-rneg').click(function(){
-	var self = this,
-		main = this.parentNode,
-		cnt = $(this).text(),
-		rate = $(this).hasClass('idea__item-rpos') ? 1 : 2;
+  $('#ideas-content').on('click','.idea__item-rpos, .idea__item-rneg',function(e){
+	var main = e.target.parentNode,
+		cnt = $(e.target).text(),
+		rate = $(e.target).hasClass('idea__item-rpos') ? 1 : 2;
 
 	if($(main).hasClass('active')) {
 		$.ajax({
@@ -76,7 +75,7 @@ $(function(){
 					showPopup('Ваш голос принят','');
 					$(main).removeClass('active');
 					cnt = +cnt + 1;
-					$(self).text(cnt);
+					$(e.target).text(cnt);
 				}
 			}
 		});
