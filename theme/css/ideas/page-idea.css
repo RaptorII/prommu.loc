@@ -184,7 +184,10 @@
 	height: 64px;
 	border-radius: 50%;
 }
-.idea__item-info{ width: 90% }
+.idea__item-info{
+	width: 90%;
+	padding-top: 5px;
+}
 .idea__item-rpos,
 .idea__item-rneg{
 	min-width: 65px;
@@ -199,6 +202,11 @@
 .idea__item-rneg{
 	margin-top: 9px;
 	background: #dc1e1e url(/theme/pic/ideas/ideas-list-sprite.png) 7px -130px no-repeat;
+}
+.idea__item-rating{
+	position: absolute;
+	left: 18px;
+	top: 85px;
 }
 .idea__item-rating.active *{ cursor:pointer }
 #ideas-content .idea__item-name{
@@ -224,7 +232,6 @@
 	vertical-align: top;
 	margin: 6px 0px;
 	background: url(/theme/pic/ideas/ideas-list-sprite.png) no-repeat;
-	cursor: pointer;
 }
 .idea__item-type.idea{ background-position: 0 0 }
 .idea__item-type.error{ background-position: 0 -26px }
@@ -259,6 +266,7 @@
 	margin-bottom: 5px;
 }
 .idea__comment{
+	min-height: 40px;
 	display: flex;
 	align-items: flex-start;
 	flex-wrap: wrap;
@@ -393,6 +401,11 @@
 	color: #b5b5b5;
 	margin-bottom: 7px;
 }
+#comment-list .idea__comment-name a{
+	font-size: 12px;
+	color: #b5b5b5;	
+}
+#comment-list .idea__comment-name a:hover{ text-decoration: underline }
 #comment-form{
 	width: 100%;
 	display: flex;
@@ -475,6 +488,38 @@
     text-align: center;
     font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 }
+.without__comments{
+	background: #ffffff;
+	padding: 10px 18px;
+	text-align: center;
+	font-size: 18px;
+}
+.comments__module{ position: relative }
+.ideas__pagination{
+	background: #ffffff;
+	padding: 10px 5px 5px;
+	margin-top: 15px;
+}
+#DiContent .paging-wrapp{ margin:0 }
+.idea__status{
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	left: 140px;
+	font-size: 10px;
+	color: #ffffff;	
+	padding: 0 5px;
+	min-width: 100px;
+	text-align: center;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+	height: 14px;
+	white-space: nowrap;
+}
+.idea__status.start{ background: #9ed46e }
+.idea__status.work{ background: #71b1ea }
+.idea__status.end{ background: #abb92a }
+.idea__status.decl{ background: #ff1e1e }
 /*
 *	MEDIA
 */

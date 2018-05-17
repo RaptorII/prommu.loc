@@ -1,7 +1,11 @@
 'use strict'
 $(function(){
-	var arSelects = $('.ideas__select');
+	var arSelects = $('.ideas__select'),
+		ideaId = $('.idea__item')[0],
+		currentPage = 1;
 
+	if(ideaId!==undefined)
+		ideaId = ideaId.dataset.id;
 	// открываем селекты
 	$('.ideas__select').click(function(e){
 		var name = $(this).find('span')[0],
@@ -62,19 +66,33 @@ $(function(){
 	});
 	// отправляем коммент
 	$('#add-comment').click(function(e){
+		e.preventDefault();
 		var text = this.previousElementSibling;
 
 		if(!text.value.length) {
 			$(text).addClass('error');
+			return false;
 		}
-		else {
-			$('#comment-form').fadeOut();
-			$('.idea__set-comment').fadeIn();
-			showPopup('Комментарий отправлен','Комментарий успешно отправлен и в ближайшее время появится на сайте');
-			// Отправка коммента
-			$(text).removeClass('error').val();
-		}
-		e.preventDefault();//!!!!!!!!!!!!!!
+		$.ajax({
+			type: 'POST',
+			url: '/ajax/setideaattrib',
+			data: { id:ideaId, comment:text.value },
+			dataType: 'json',
+			success: function(res){
+				if(res==='error') {
+					showPopup('Вы уже проголосовали','');
+				}
+				else if(res==='guest') {
+					showPopup('Вы не авторизованы','Для добавления комментария необходимо авторизоваться!');
+				}
+				else{
+					$('#comment-form').fadeOut();
+					$('.idea__set-comment').fadeIn();
+					showPopup('Комментарий отправлен','Комментарий успешно отправлен и в ближайшее время появится на сайте');
+					$(text).removeClass('error').val('');
+				}
+			}
+		})
 	});
 	// голосование
 	$('.idea__set-rpos, .idea__item-rpos').click(function(){ setRating('rpos',this) });
@@ -90,26 +108,73 @@ $(function(){
   }
   //
   function setRating(pos, e) {
-	var main1 = $('.idea__item-rating'),
-		main2 = $('.idea__set-rating'),
-		cnt = $(e).text();
+	var main1 = document.querySelector('.idea__item-rating'),
+		main2 = document.querySelector('.idea__set-rating'),
+		cnt = $(e).text(),
+		rate = pos==='rpos' ? 1 : 2; 
 
 	if($(main1).hasClass('active') && $(main2).hasClass('active')){
-		showPopup('Ваш голос принят','');
-		$(main1).removeClass('active');
-		$(main2).removeClass('active');
-		cnt = +cnt + 1;
-		$('.idea__set-'+pos).text(cnt);
-		$('.idea__item-'+pos).text(cnt);
+		$.ajax({
+			type: 'POST',
+			url: '/ajax/setideaattrib',
+			data: { id:ideaId, rating:rate },
+			dataType: 'json',
+			success: function(res){
+				if(res==='error') {
+					showPopup('Вы уже проголосовали','');
+				}
+				else if(res==='guest') {
+					showPopup('Вы не авторизованы','Для голосования необходимо авторизоваться!');
+				}
+				else{
+					showPopup('Ваш голос принят','');
+					$(main1).removeClass('active');
+					$(main2).removeClass('active');
+					cnt = +cnt + 1;
+					$('.idea__set-'+pos).text(cnt);
+					$('.idea__item-'+pos).text(cnt);
+				}
+			}
+		})
 	}
 	else{
 		showPopup('Вы уже проголосовали','');
 	}
   }
+  // подгрузка данных при перелистывании
+  $('#comment-list').on('click', '.paging-wrapp a', function(e){
+  	var li = $(e.target).closest('li');
+  	e.preventDefault();
+  	if($(li).hasClass('previous'))
+  		currentPage--;
+  	if($(li).hasClass('page'))
+  		currentPage = $(e.target).text();
+  	if($(li).hasClass('next'))
+  		currentPage++;
+
+  	setFilter(currentPage);
+  });
   //
   function setFilter() {
+  	var $content = $('#comment-list'),
+  		$form = $('#comments-sort'),
+  		params = $form.serializeArray(),
+  		idea = $('[name="idea"]').val();
+
+  	if(arguments.length)
+  		params.push({name:'page',value:arguments[0]})
+
+
 	$('#ideas-veil').show();
-	confirm('Здесь подтянуться данные');
-	$('#ideas-veil').hide();
+
+	$.ajax({
+		type: 'GET',
+		url: '/ideas/'+idea,
+		data: params,
+		success: function(res){
+			$content.html(res);
+			$('#ideas-veil').hide();
+		}
+	});
   };
 });

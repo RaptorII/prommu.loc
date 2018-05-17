@@ -34,7 +34,7 @@ class MainConfig
     public static $DIR_VIEWS_SITE = 'site';
     public static $DIR_VIEWS_USER = 'user';
 
-    public static $SITE = 'dev.prommu.com';
+    public static $SITE = 'prommu.com';
 
     public static $VIEWS_COMM_CONTENT_TPL = 'commontmpls/comm-content-tpl';
     public static $VIEWS_COMM_PAGES_TPL = 'comm-pages-tpl';
@@ -228,4 +228,6 @@ class MainConfig
     public static $VIEW_IDEA_NEW = 'ideas/page-idea-new-view';
     public static $PAGE_IDEAS_LIST = '/ideas';
     public static $PAGE_IDEA_NEW = '/ideas/new';
+    public static $VIEW_IDEAS_AJAX_FILTER = 'ideas/page-list-ajax';
+    public static $VIEW_IDEAS_COMMENTS_AJAX_ORDER = 'ideas/page-comments-ajax';
 }

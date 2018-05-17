@@ -1821,31 +1821,65 @@ class SiteController extends AppController
     */
     public function actionIdeas()
     {
+        $model = new Ideas;
         $view = MainConfig::$VIEW_IDEAS_LIST;
         $id = Yii::app()->getRequest()->getParam('id');
-        $title = 'Идеи и предложения';
-        $this->setBreadcrumbsEx(array($title, MainConfig::$PAGE_IDEAS_LIST));
-        if(strlen($id)>0){
-            if($id=='new' && in_array(Share::$UserProfile->type, [2,3])){ // новая заявка
+
+        if(
+            Yii::app()->getRequest()->getParam('new-idea') 
+            && 
+            in_array(Share::$UserProfile->type, [2,3])
+            ) { // создание идеи
+            $model->setIdeas();
+            Yii::app()->user->setFlash(
+                'success', 
+                array(
+                    'event' => 'new',
+                    'type' => Yii::app()->getRequest()->getParam('type')
+                )
+            );
+            $this->redirect(MainConfig::$PAGE_IDEAS_LIST);
+            exit;
+        }
+        if(Yii::app()->getRequest()->getParam('filter-ideas')) { // фильтр идей
+            $this->renderPartial(
+                MainConfig::$VIEW_IDEAS_AJAX_FILTER, 
+                array('viData' => $model->getIdeas()), 
+                false,
+                true
+            );
+            exit;
+        }
+        if(strlen($id)>0) {
+            if($id=='new' && in_array(Share::$UserProfile->type, [2,3])) { // новая заявка
                 $view = MainConfig::$VIEW_IDEA_NEW;
-                $title = 'Добавить идею/предложение';
-                $this->setBreadcrumbsEx(array($title, MainConfig::$PAGE_IDEA_NEW));
+                $data['types'] = $model->getTypes();
             }
-            elseif($id>0){ // существующая заявка
+            elseif($id>0) { // существующая заявка
                 $view = MainConfig::$VIEW_IDEA;
-                $title = '!!! НАЗВАНИЕ !!!';
-                $this->setBreadcrumbsEx(array($title, MainConfig::$PAGE_IDEAS_LIST . DS . $id));
+                $data = $model->getIdea($id);
+                if(!sizeof($data)) {
+                    $this->redirect(MainConfig::$PAGE_IDEAS_LIST);
+                    exit;
+                }
+                if(Yii::app()->getRequest()->getParam('sort-comments')) {
+                    $this->renderPartial(
+                        MainConfig::$VIEW_IDEAS_COMMENTS_AJAX_ORDER, 
+                        array('viData' => $model->getIdea($id)), 
+                        false,
+                        true
+                    );
+                    exit;
+                }
             }
             else{
                 $this->redirect(MainConfig::$PAGE_IDEAS_LIST);
                 exit;
             }
         }
-
-        $this->render(
-            $view, 
-            array('viData' => 1),
-            array('pageTitle'=>'<h1>'.$title.'</h1>', 'htmlTitle'=>$title)
-        );
+        else{
+            $data = $model->getIdeas();
+        }
+        $this->render($view, array('viData' => $data));
     }
 }

@@ -809,4 +809,23 @@ class AjaxController extends AppController
             echo CJSON::encode(Share::$UserProfile->saveSettings(Share::$UserProfile->id));
         }
     }
+    /*
+    *
+    */
+    public function actionSetideaattrib()
+    {
+        if( in_array(Share::$UserProfile->type, [2,3]) )
+        {
+            $model = new Ideas;
+            if(Yii::app()->getRequest()->getParam('rating')){
+                echo CJSON::encode($model->setRating());
+            }
+            if(Yii::app()->getRequest()->getParam('comment')){
+                echo CJSON::encode($model->setComment());
+            }
+        }
+        else{
+            echo CJSON::encode('guest');
+        }
+    }
 }
