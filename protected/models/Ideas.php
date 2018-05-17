@@ -35,7 +35,7 @@ class Ideas
 
         $count = $this->getIdeasCnt($filter);
         $pages = new CPagination($count);
-        $pages->pageSize = 3; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        $pages->pageSize = 3; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         $pages->applyLimit($this);
 
         $sql = "SELECT (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.comment IS NOT NULL AND ai.id = i.id) comments,
