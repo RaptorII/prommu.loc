@@ -23,7 +23,6 @@
 	});
 </script>
 <?php 
-	echo CHtml::form('/admin/site/UserUpdate?id=0', 'POST', array("id" => "form"));
 	$this->widget('zii.widgets.grid.CGridView', array(
 		'id'=>'dvgrid',
 		'dataProvider'=>$model->search(),
@@ -34,6 +33,7 @@
 			'style'=>'padding: 10px;'
 		),
 		'filter' => $model,
+		'enablePagination' => true,
 		'columns'=>array(
 			array(
 				'header' => 'ID',

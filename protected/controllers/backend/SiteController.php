@@ -1582,7 +1582,7 @@ class SiteController extends Controller
         }
     }
     /*
-    *
+    *  страница РАБОТА ДЛЯ СТУДЕНТОВ
     */
     public function actionForstudents()
     {
@@ -1611,15 +1611,19 @@ class SiteController extends Controller
         }
     }
     /*
-    *   элемент FAQ
+    *   элемент IDEA
     */
     public function actionIdeaedit($id)
     {
         if(self::isAuth() && $id>0 && is_numeric($id)) {
             $model = new Ideas();
-            if(Yii::app()->getRequest()->isPostRequest){
-                //$model->changeFaqItem($id);
-               // $this->redirect('/admin/site/faq');
+            if(Yii::app()->getRequest()->getParam('event')=='idea'){
+                $model->changeIdea($id);
+                $this->redirect('/admin/site/ideas');
+            }
+            if(Yii::app()->getRequest()->getParam('event')=='comment'){
+                $model->setComment(1);
+                $this->redirect('/admin/site/ideas');
             }
             else{
                 $data = $model->getIdeaForAdmin($id);
@@ -1627,6 +1631,17 @@ class SiteController extends Controller
                 $this->render('ideas/item', array('data' => $data, 'id'=>$id));               
             }
 
+        }
+    }
+    /*
+    *   удалить элемент IDEA
+    */
+    public function actionIdeaDelete($id)
+    {
+        if(self::isAuth() && $id>0 && is_numeric($id)) {
+            $model = new Ideas;
+            $model->deleteIdea($id);
+            $this->redirect('/admin/site/faq');
         }
     }
 }

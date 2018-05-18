@@ -1,7 +1,32 @@
 <?php
 
-class Ideas
+class Ideas extends ARModel
 {
+    public function tableName()
+    {
+        return 'ideas';
+    }
+    /*
+    *       admin faq list
+    */
+    public function search()
+    {
+        $criteria=new CDbCriteria;
+
+        $criteria->compare('id',$this->id,true);
+        $criteria->compare('name',$this->name, true);
+        $criteria->compare('type',$this->type, true);
+        $criteria->compare('status',$this->status,true);
+        $criteria->compare('crdate',$this->crdate,true);
+        $criteria->compare('mdate',$this->mdate,true);
+        $criteria->compare('ismoder',$this->ismoder,true);
+
+        return new CActiveDataProvider($this, array(
+            'criteria'=>$criteria,
+            'pagination' => array('pageSize' => 50,),
+            'sort' => ['defaultOrder'=>'ismoder asc'],
+        ));
+    }
     /*
     *       Получить все идеи (с фильтром)
     */
@@ -157,17 +182,18 @@ class Ideas
     /*
     *       Добавление комментария к идее
     */
-    public function setComment()
+    public function setComment($isAdmin=0)
     {
         $comment = Yii::app()->getRequest()->getParam('comment');
         $idea = Yii::app()->getRequest()->getParam('id');
-        $id = Share::$UserProfile->id;
+        $id = $isAdmin ? 0 : Share::$UserProfile->id;
+        $userType = $isAdmin ? 1 : Share::$UserProfile->type;
 
         $res = Yii::app()->db->createCommand()
                     ->insert('ideas_attrib', array(
                         'id' => $idea,
                         'id_user' => $id,
-                        'usertype' => Share::$UserProfile->type,
+                        'usertype' => $userType,
                         'comment' => $comment,
                         'date_comment' => date("Y-m-d H-i-s")
                     ));
@@ -262,7 +288,7 @@ class Ideas
             foreach($arTemp as $user) {
                 $res['users'][$user['id']] = $this->drawUpUser($user);
             }
-
+            $res['users'][0] = $this->getAdminData(); // админ
         }
 
         return array_merge(
@@ -342,6 +368,140 @@ class Ideas
             3 => array('class' => 'end',    'idea' => 'Завершено',      'sort' => 'Завершенные'),
             4 => array('class' => 'decl',   'idea' => 'Отклонено',      'sort' => 'Отклоненные'),
         );
+    }
+    /*
+    *  Забираем идею для админки
+    */
+    public function getIdeaForAdmin($id)
+    {
+        $sql = "SELECT (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.comment IS NOT NULL AND ai.id = i.id) comments,
+        (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.rating = 1 AND ai.id = i.id) posrating,
+        (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.rating = 2 AND ai.id = i.id) negrating, 
+            i.id, i.name, i.text, i.type, DATE_FORMAT(i.crdate, '%d.%m.%Y') crdate, 
+           DATE_FORMAT(i.mdate, '%d.%m.%Y') mdate, i.status, i.id_user, i.usertype, i.ismoder
+                FROM ideas i
+                WHERE i.id = $id";
+        /** @var $res CDbCommand */
+        $res = Yii::app()->db->createCommand($sql);
+        $res = $res->queryRow();
+
+        $idus = $res['id_user'];
+        if($res['usertype'] == 2) {
+            $sql = "SELECT u.id_user id, u.status type, r.photo, 
+                r.firstname, r.lastname, u.is_online, r.isman
+                FROM resume r
+                INNER JOIN user u ON r.id_user = u.id_user
+                WHERE r.id_user = $idus";
+            $arTemp = Yii::app()->db->createCommand($sql)->queryRow();
+            $res['author'] = $this->drawUpUser($arTemp);
+        } 
+        elseif($res['usertype'] == 3) {
+            $sql = "SELECT u.id_user id, u.status type, 
+                r.logo, r.name, r.lastname, u.is_online
+                FROM employer r
+                INNER JOIN user u ON r.id_user = u.id_user
+                WHERE r.id_user = $idus";
+            $arTemp = Yii::app()->db->createCommand($sql)->queryRow();
+            $res['author'] = $this->drawUpUser($arTemp);
+        }
+
+        $sql = "SELECT ai.id_user, ai.rating, DATE_FORMAT(ai.date_rating, '%d.%m.%Y') date_rating, 
+                    ai.comment, DATE_FORMAT(ai.date_comment, '%d.%m.%Y %T') date_comment, ai.isread,
+                    ai.email, ai.notification
+                FROM ideas_attrib ai
+                WHERE ai.id = $id
+                ORDER BY ai.date_comment DESC";
+        /** @var $res CDbCommand */
+        $rest = Yii::app()->db->createCommand($sql);
+        $res['attrib'] = $rest->queryAll();
+
+        $arId = array();
+        $res['arr_comments'] = array();
+        foreach($res['attrib'] as $key => $attr){
+            if(!empty($attr['comment'])){
+                $res['arr_comments'][] = $attr;
+                $arId[] = $attr['id_user'];
+            }
+        }
+
+        $res['users'] = array();
+        if(sizeof($arId)){
+            $arId = implode(',', $arId);
+            $sql = "SELECT u.id_user id, u.status type, r.photo, 
+                r.firstname, r.lastname, u.is_online, r.isman
+                FROM resume r
+                INNER JOIN user u ON r.id_user = u.id_user
+                WHERE r.id_user IN({$arId})";
+                $arTemp = Yii::app()->db->createCommand($sql)->queryAll();
+
+            foreach($arTemp as $user) {
+                $res['users'][$user['id']] = $this->drawUpUser($user);
+            }
+
+            $sql = "SELECT u.id_user id, u.status type, r.logo, 
+                r.name, u.is_online
+                FROM employer r
+                INNER JOIN user u ON r.id_user = u.id_user
+                WHERE r.id_user IN({$arId})";
+                $arTemp = Yii::app()->db->createCommand($sql)->queryAll();
+
+            foreach($arTemp as $user) {
+                $res['users'][$user['id']] = $this->drawUpUser($user);
+            }
+            $res['users'][0] = $this->getAdminData(); // админ
+        }
+
+        return array_merge(
+            $res, 
+            array(
+                'types' => $this->GetTypes(),
+                'statuses' => $this->getStatuses()
+            )
+        );
+    }
+    /*
+    *   изменение идеи
+    */
+    public function changeIdea($id)
+    {
+        Yii::app()->db->createCommand()
+                ->update(
+                    'ideas', 
+                    array(
+                        'name' => $_POST['name'],
+                        'text' => $_POST['text'],
+                        'type' => $_POST['type'],
+                        'status' => $_POST['status'],
+                        'mdate' => date("Y-m-d H-i-s"),
+                        'ismoder' => $_POST['ismoder']
+                    ),
+                    'id=:id', 
+                    array(':id'=>$id)
+            );
+    }
+    /*
+    *   удаление идеи
+    */
+    public function deleteIdea($id) 
+    {
+        $attrib = Yii::app()->db->createCommand()
+            ->delete('ideas_attrib','id=:id', array(':id'=>$id));
+        $idea = Yii::app()->db->createCommand()
+            ->delete('ideas','id=:id', array(':id'=>$id));
+    }
+    /*
+    *   Добавления пользователя Администратор
+    */
+    private function getAdminData() 
+    {
+        return array(
+                    'id' => 0,
+                    'type' => 1,
+                    'name' => 'Администрация',
+                    'src' => '/images/prommu.jpg',
+                    'profile' => 'javascript:void(0)',
+                    'is_online' => 0
+                );
     }
 }
 

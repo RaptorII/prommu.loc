@@ -621,7 +621,7 @@ echo "</pre>";
         // additionally
         ?>
         <?php
-          $enable = in_array($curId, ['newspages','admin','AdminEdit','faqedit','forstudents']); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          $enable = in_array($curId, ['newspages','admin','AdminEdit','faqedit','forstudents']); 
           $enable = ($curId=='PageUpdate' && in_array($_GET['pagetype'],['news','about','prom','empl'])) ? true : $enable;
         ?>
         <li class="treeview<?=$enable ? ' active' : ''?>">
@@ -674,6 +674,15 @@ echo "</pre>";
               </a>
             </li>   
           </ul>
+        </li>
+        <?php
+        // ideas
+        ?>
+        <li class="<?=($curId=='ideas'?'active':'')?>">
+          <a href="<?=$hUrl?>ideas">
+            <i class="glyphicon glyphicon-leaf"></i>
+            <span>Идеи</span>
+          </a>
         </li>
       </ul>
       <!-- /.sidebar-menu -->
