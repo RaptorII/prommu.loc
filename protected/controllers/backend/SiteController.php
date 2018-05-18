@@ -1227,17 +1227,17 @@ class SiteController extends Controller
             $this->render('access');
             return;
         } 
-        if(self::isAuth()) {
+            if(self::isAuth()) {
+            $api = new Api();
+            $api->ideas();
             $model = new Analytic;
             $model->unsetAttributes();  // clear any default values
             $model->search();
             $model->active=1;
-            $title = 'Аналитика Prommu';
-            if(isset($_GET['type'])) {
-                $title = $_GET['type']==2 ? 'Аналитика соискателей' : 'Аналитика работодателей';
-                $model->type=$_GET['type'];
-            }
-            $this->setPageTitle($title);
+            $model->subdomen=0;
+            $model->name != 'NO ACTIVE';
+            
+            
             $this->render('analytic/index', array('model'=>$model));
         }
     }
@@ -1595,6 +1595,38 @@ class SiteController extends Controller
             $data = $model->exist('/work-for-students');
             $this->setPageTitle('Работа для студентов');
             $this->render('pages/for-students', array('data' => $data));
+        }
+    }
+    /*
+    *   IDEAS
+    */
+    public function actionIdeas()
+    {
+        if(self::isAuth()) {
+            $model = new Ideas();
+            $model->unsetAttributes();
+            $model->search();
+            $this->setPageTitle('Список идей и предложений');
+            $this->render('ideas/list', array('model' => $model));
+        }
+    }
+    /*
+    *   элемент FAQ
+    */
+    public function actionIdeaedit($id)
+    {
+        if(self::isAuth() && $id>0 && is_numeric($id)) {
+            $model = new Ideas();
+            if(Yii::app()->getRequest()->isPostRequest){
+                //$model->changeFaqItem($id);
+               // $this->redirect('/admin/site/faq');
+            }
+            else{
+                $data = $model->getIdeaForAdmin($id);
+                $this->setPageTitle('Редактировать идею/предложение');
+                $this->render('ideas/item', array('data' => $data, 'id'=>$id));               
+            }
+
         }
     }
 }

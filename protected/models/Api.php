@@ -71,6 +71,8 @@ class Api
                 case 'apivk' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->apiVK(); break;
                 case 'log' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testLog(); break;
                 case 'tect' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->teSt(); break;
+                case 'ideas' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->ideas(); break;
+                 
                 
 
                 default: throw new ExceptionApi('No such method', 1001);
@@ -94,12 +96,101 @@ class Api
         return $data;
     }
 
+    public function ideas(){
+         $data = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('analytic')
+            ->order("id_us desc")
+            ->offset(0)
+            ->limit(1000)
+            ->queryAll();
+
+            for($i = 0; $i < count($data); $i ++){
+                for($j =0 ; $j <count($data); $j ++){
+                    if($data[$i]['id_us'] == $data[$j]['id_us']){
+                     
+                          if($data[$j]['id_us'] == $data[$i]['id_us'] && $data[$j]['id'] != $data[$i]['id']){
+                                if($data[$i]['name'] == "" || $data[$i]['name'] == "NO ACTIVE") { 
+                                   
+                                     $res = Yii::app()->db->createCommand()
+                                    ->update('analytic', array(
+                                            'referer' => $data[$i]['referer'],
+                                            'canal' => $data[$i]['canal'],
+                                            'campaign' => $data[$i]['campaign'],
+                                            'content' => $data[$i]['content'], 
+                                            'keywords' => $data[$i]['keywords'],
+                                            'point' => $data[$i]['point'], 
+                                            'transition' => $data[$i]['transition'],
+                                            'last_referer' => $data[$i]['last_referer'],
+                                    ), 'id_us=:id_us', array(':id_us' => $data[$j]['id_us']));
+                                $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$i]['id']));
+                                } elseif($data[$i]['name'] ==  $data[$j]['name']){
+                                    if($data[$i]['id'] < $data[$j]['id']){
+                                         $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$i]['id']));
+                                    } else  $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$j]['id']));
+                                }
+                            }
+                          
+                            // $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$i]['id']));
+                         
+                        // $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$j]['id']));
+                    }
+                }
+            }
+
+            // return $data;
+    }
+
     public function teSt(){
        
-        $Vacancy = new Vacancy();
-        $res = $Vacancy->getVacancyData(1928);
+         $name = Yii::app()->getRequest()->getParam('name');
+        $sql = "SELECT  r.firstname
+                    FROM resume r
+                    WHERE r.isman = 1";
+                $result = Yii::app()->db->createCommand($sql)->queryAll();
 
-        return $res['vac']['comment'];
+        $sql = "SELECT  r.firstname
+                    FROM resume r
+                    WHERE r.isman = 0";
+                $results = Yii::app()->db->createCommand($sql)->queryAll();
+
+                $sex= 0;
+                $sexs= 0;
+                    $count = count($result);
+                     $counts = count($results);
+                      echo "Поиск по базе мужчин <br/>";
+                   for($i = 0; $i < $count; $i++){
+                        
+                        if(strpos($result[$i]['firstname'], $name) !== false) {
+                            echo $result[$i]['firstname']."-".$name."<br/>";
+                            $sex++;
+               
+                        }
+                        
+                    }
+                    echo "Поиск по базе женщин <br/>";
+                    for($i = 0; $i < $counts; $i++){
+                        
+                        if(strpos($results[$i]['firstname'], $name) !== false) {
+                            echo $results[$i]['firstname']."-".$name."<br/>";
+                            $sexs++;
+               
+                        }
+                        
+                    }
+
+                if($sexs < $sex){
+                   $var =  100 - ($sexs/$sex);
+                    $sex = "C вероятностью $var % - мужчина";
+                } elseif($sex < $sexs) {
+                     $var =  100 - ($sex/$sexs);
+                    $sex = "C вероятностью $var %  - женщина";
+                }
+                elseif($sex == 0 && $sexs == 0) {
+                   
+                    $sex = "Не могу определить... Ты случайно не $name ? ";
+                }
+        echo "<p style='font-size:40px; font-family:Roboto Condensed'>$sex</p>";
 
     }
 
@@ -250,14 +341,14 @@ class Api
                 $j = 0;
         for($i = $log; $i < count($section)-1; $i ++) {
             //@prommubag
-            if(strpos($section[$i], "404") === false){
+            if(strpos($section[$i], "404") === false || strpos($section[$i], "CDbCommandBuilder") === false){
             
                 $items[$j] = $section[$i];
                 $module = explode("/var", $items[$j]);
                 $dat = explode("[", $items[$j]);
                 $text = "Что-то сломалось, ".$dat[0]." ".$module[1]." детальное описание ошибки - https://prommu.com/admin/site/monitoring";
-             $sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=$text";
-                       file_get_contents($sendto);
+             // $sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=$text";
+             //           file_get_contents($sendto);
                        $j++;
             } else unset($section[$i]);  
             
@@ -730,7 +821,7 @@ class Api
             ->select("*")
             ->from('analytic')
             ->where('active=:active AND date >:date AND subdomen=:domen', array(':active' => 1, ':date'=> $yester, ':domen'=>$domen))
-            ->order("id desc")
+            ->order("id_us desc")
             ->queryAll();
             
          }
@@ -738,8 +829,9 @@ class Api
              $data = Yii::app()->db->createCommand()
             ->select("*")
             ->from('analytic')
-            ->where('active=:active AND (date BETWEEN :date AND :bdate) AND subdomen=:domen', array(':active' => 1, ':date'=> $date, 'bdate'=> $bdate, 'domen'=>$domen))
-            ->order("id desc")
+            ->where('active=:active AND (date BETWEEN :date AND :bdate) AND subdomen=:domen AND name!=:name', array(':active' => 1, ':date'=> $date, 'bdate'=> $bdate, 'domen'=>$domen, 'name'=>'NO ACTIVE'))
+            ->order("id_us desc")
+            ->group("id_us")
             ->queryAll();
          }
         
@@ -792,10 +884,13 @@ class Api
             ->join('user usr', 'usr.id_user=e.id_user')
             ->where('e.id_user=:id_user', array(':id_user' => $id_user))
             ->queryAll();
-            $firstname = $user[0]['firstname'];
-            $lastname = $user[0]['lastname'];
-            $email = $user[0]['email'];
-            $fio = "$firstname ".$lastname;
+            if($user[0]){
+                $firstname = $user[0]['firstname'];
+                $lastname = $user[0]['lastname'];
+                $email = $user[0]['email'];
+                $fio = "$firstname ".$lastname;
+                $ana = 1;
+            } else $ana = 0;
 
             
             }
@@ -810,10 +905,16 @@ class Api
             ->join('user usr', 'usr.id_user=e.id_user')
             ->where('e.id_user=:id_user', array(':id_user' => $id_user))
             ->queryAll();
-            $email = $user[0]['email'];
-            $fio = $user[0]['name']." ".$user[0]['firstname']." ".$user[0]['lastname'];
-            $types = "Работодатель";
-            }
+             if($user[0]){
+                $email = $user[0]['email'];
+                $fio = $user[0]['name']." ".$user[0]['firstname']." ".$user[0]['lastname'];
+                $types = "Работодатель";
+                $ana = 1;
+            } else $ana = 0;
+
+            } 
+
+            if($ana){
             $csv_file .= '<td>'.$b.$row["id_us"].$b_end.
                 '</td><td>'.$b.$fio.$b_end.
                 '</td><td>'.$b.$types.$b_end.
@@ -828,6 +929,7 @@ class Api
                 // '</td><td>'.$b.$row["last_referer"].$b_end.
                 // '</td><td>'.$b.$row["date"].$b_end.
                 '</td></tr>';
+            }
         }
 
         $csv_file .='</table>';
@@ -977,7 +1079,7 @@ public function vac(){
         
     }
 
-	public function getTopics()
+    public function getTopics()
     {
     $error = '-101';
     try
@@ -1065,7 +1167,7 @@ public function vac(){
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         
         foreach ($config as $keys => $values) {
-        	$arrCon[] = $values;
+            $arrCon[] = $values;
         }
         Yii::app()->db->createCommand()
             ->delete('push_config', 'id=:id', array(':id' => $idus));
@@ -1083,27 +1185,27 @@ public function vac(){
                 ->delete('user_topics', array('and', 'id=:id', 'vac=:vac'), array(':id' => $idus, ':vac' => $value1));
                }
              }
-  		
+        
        foreach ($topic as $key => $value) {
-       		foreach ($value as $key1 => $value1) {
-       			$arr[] = $value1;
-       		}
+            foreach ($value as $key1 => $value1) {
+                $arr[] = $value1;
+            }
        }
 
        $count = count($arr);
 
        for($i = 0; $i< $count; $i++){
-       		if($i % 2){
-       			$arrCity[] = $arr[$i];
-       		}
-       		else{
-       			$arrVac[] = $arr[$i];
-       			}
-   		}
+            if($i % 2){
+                $arrCity[] = $arr[$i];
+            }
+            else{
+                $arrVac[] = $arr[$i];
+                }
+        }
 
         for($i = 0; $i < count($arrCity); $i++ )
         {
-        	 Yii::app()->db->createCommand()
+             Yii::app()->db->createCommand()
                 ->insert('user_topics', array(
                     'id' => $idus,
                     'vac' => $arrVac[$i],
@@ -1112,9 +1214,9 @@ public function vac(){
             }
             Yii::app()->db->createCommand()
                 ->reset();
-        	Yii::app()->db->createCommand()
+            Yii::app()->db->createCommand()
                     ->insert('push_config', array(
-                    	'id' => $idus,
+                        'id' => $idus,
                         'new_mess' => $arrCon[0],
                         'new_rate' => $arrCon[1],
                         'new_invite' => $arrCon[2],
@@ -1213,6 +1315,13 @@ public function vac(){
                 $link = "https://prommu.com/user/im";
                 break;
 
+             case 'vacancy':
+
+                $message = "Работодатель приглашает на вакансию";
+                $title = "Новое приглашение";
+                $link = "https://prommu.com/vacancy";
+                break;
+
             case 'invite':
                 $message = "Вы получили новый отклик на вакансию";
                 $title = "Новый отклик";
@@ -1285,6 +1394,107 @@ public function vac(){
         return $response;
     
     }
+
+     public function getPushApi($token, $type, $text, $link)
+    {
+        $url = 'https://fcm.googleapis.com/fcm/send';
+        $YOUR_API_KEY = 'AAAAxOfjHmg:APA91bGljNykiRurhAUchhCEnZ6puyL5IrBw0pbIsV9aR0rXI1_gPmkSmpgMgtBtWBezsQtecDSGjBozqQIYskPc5ZmsRKwYwMz91uDkPrQcR_FgXz0mj5L_j5Z2IW7Dm35_JSOFVSoo'; // Server key
+        $YOUR_TOKEN_ID = $token; // Client token id
+
+
+   
+        $request_headers = [
+            'Content-Type: application/json',
+            'Authorization: key=' . $YOUR_API_KEY,
+        ];
+        switch ($type) {
+            case 'mess':
+
+                $message = "Вы получили новое сообщение на сервисе";
+                $title = "Новое сообщение";
+                $link = "https://prommu.com/user/im";
+                break;
+
+             case 'vacancy':
+
+                $message = "Работодатель приглашает на вакансию";
+                $title = "Новое приглашение";
+                $link = $link;
+                break;
+
+            case 'invite':
+                $message = "Вы получили новый отклик на вакансию";
+                $title = "Новый отклик";
+                $link = "https://prommu.com/user/responses";
+                break;
+
+            case 'respond':
+                $message = "Вы получили новое приглашение на вакансию";
+                $title = "Новое приглашение";
+                $link = "https://prommu.com/user/responses";
+                break;
+
+            case 'rate':
+                $message = "Вы получили новый отзыв на сервисе";
+                $title = "Новый отзыв";
+                $link = "https://prommu.com/rate";
+                break;
+
+            case 'workonday':
+                $message = "До начала работы на вакансии остался один день";
+                $title = "Остался день";
+                $link = "https://prommu.com";
+                break;
+
+            case 'vacmoder':
+                $message = "Ваша вакансия прошла модерацию на сервисе";
+                $title = "Вакансия опубликована";
+                $link = "https://prommu.com";
+                break;
+
+            case 'workoffday':
+                $message = "До окончания действия вакансии остался один день";
+                $title = "Остался день";
+                $link = "https://prommu.com";
+                break;
+            case 'NicolaDay':
+                $message = "Prommu поздравляет пользователей с Днем святого Николая!";
+                $title = "С праздником!";
+                $link = "https://prommu.com";
+                break;
+
+            default:
+                # code...
+                break;
+        }
+    
+        $request_body = [
+            'to' => $YOUR_TOKEN_ID,
+            'notification' => [
+                'title' => $title,
+                'body' => $message,
+                'icon' => 'https://prommu.com/images/logo.png',
+                'click_action' => $link,
+            ],
+        ];
+    
+        $fields = json_encode($request_body);
+    
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $request_headers);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return $response;
+    
+    }
+
 
 
 
@@ -1779,7 +1989,7 @@ public function vac(){
 
             if( $retRa == 3) 
             {
-            	$sql = "SELECT r.id
+                $sql = "SELECT r.id
                 FROM resume r
                 WHERE r.id_user = {$id}";
                 $res = Yii::app()->db->createCommand($sql);
@@ -1857,20 +2067,20 @@ public function vac(){
             $sql = "SELECT r.status
             FROM user r
             WHERE r.id_user = {$idus}";
-        	$res= Yii::app()->db->createCommand($sql)->queryScalar();
-        	if($res==3){
-        	$Response = new ResponsesEmpl($profile);
-        	$data = $Response->setResponseStatus(compact('idres', 'idus', 'status'));
-    		}
-    		elseif($res==2) {
-        	$res = (new Vacancy($profile))->getVacancyView($idvac)['response'];
+            $res= Yii::app()->db->createCommand($sql)->queryScalar();
+            if($res==3){
+            $Response = new ResponsesEmpl($profile);
+            $data = $Response->setResponseStatus(compact('idres', 'idus', 'status'));
+            }
+            elseif($res==2) {
+            $res = (new Vacancy($profile))->getVacancyView($idvac)['response'];
             if( (int)$res['response'] != 1 ) throw new ExceptionApi($res['message'], -104);
 
             $Response = new ResponsesApplic($profile);
             $data = $Response->setVacationResponse(compact('idvac'));
             if( (int)$data['error'] > 0 ) throw new ExceptionApi($data['message'], -104);
 
-    		}
+            }
 
         } catch (Exception $e)
         {
@@ -2650,11 +2860,11 @@ public function vac(){
             'title' => 'Prommu',
             'body' => 'Новое сообщение',
             'click_action' => 'NEW_PUSH_ACTION',
-     		);
-     		$datas = array(
-        	'action' => 'new_message',
-        	'chat_id' => $chat,
-     		); 
+            );
+            $datas = array(
+            'action' => 'new_message',
+            'chat_id' => $chat,
+            ); 
             $figaro = compact('ids', 'chat', 'datas', 'message');
             $service = $this->getPush($figaro);
         }
@@ -2740,11 +2950,11 @@ public function vac(){
             'title' => 'Prommu',
             'body' => 'Новое сообщение',
             'click_action' => 'NEW_PUSH_ACTION',
-     		);
-     		$datas = array(
-        	'action' => 'new_message',
-        	'chat_id' => $chat,
-     		); 
+            );
+            $datas = array(
+            'action' => 'new_message',
+            'chat_id' => $chat,
+            ); 
             $figaro = compact('ids', 'chat', 'datas', 'message');
             $service = $this->getPush($figaro);
                 }
