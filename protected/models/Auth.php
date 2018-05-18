@@ -23,7 +23,7 @@ class Auth
         $smart = filter_var(Yii::app()->getRequest()->getParam('smart'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $campaign = filter_var(Yii::app()->getRequest()->getParam('campaign'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $content = filter_var(Yii::app()->getRequest()->getParam('content'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $keywords = filter_var(Yii::app()->getRequest()->getParam('keywords'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $keywords = Yii::app()->getRequest()->getParam('keywords');
         $point = filter_var(Yii::app()->getRequest()->getParam('point'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $last_referer = filter_var(Yii::app()->getRequest()->getParam('last_referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         ///ANALITYCS DATA 
@@ -45,12 +45,16 @@ class Auth
         $canal = $canal[0];
         
         $usu = Yii::app()->db->createCommand()
-                ->select("a.keywords")
+                ->select("a.keywords, a.point, a.last_referer")
                 ->from('analytic a')
                 ->where('id_us = :t', array(':t' => $idUs))
                 ->queryRow();
+        
         $keywords = $usu['keywords'];
         $keywords = $this->encoderSys($keywords);
+
+         $point = $usu['point'];
+         $last_referer = $usu['last_referer'];
 
          
 
@@ -117,6 +121,7 @@ class Auth
                         'transition' => $transition,
                         'last_referer' => $last_referer,
                         'admin' => $admin,
+                        'subdomen' => 0,
                     );
 
                      $res = Yii::app()->db->createCommand()
@@ -260,6 +265,7 @@ class Auth
                         'transition' => $transition,
                         'last_referer' => $last_referer,
                         'admin' => $admin,
+                        'subdomen' => 0,
                     );
 
                     $res = Yii::app()->db->createCommand()
@@ -327,22 +333,13 @@ class Auth
                 ->queryRow();
             $emails = $usData['email'];
 
-                if( $usData['status'] == 2 )
+                if( $usData['status'] == 2 && empty($usDataTest['id_user']))
                 {   $types = "Соискатель";
                     $message = "Ваш пользователь успешно активирован. Нажмите на кнопку ниже, чтобы перейти к форме заполнения данных. После того, как вы заполните все необходимые данные о себе - ваш профиль будет виден в общем списке соискателей и поиске на сайте, а также вы сможете откликаться на понравившиеся вакансии.";
                     $nam = $data->name ? $data->name : $data->fname;
                     $names = "$nam ".$data->lname;
 
-
-                }
-                else
-                {   $types ="Работодатель";
-                    $message = "Ваш пользователь успешно активирован. Нажмите на кнопку ниже, чтобы перейти к форме заполнения данных. После того, как вы заполните все необходимые данные о себе - ваш профиль будет виден в общем списке работодателей и поиске на сайте, а также вы сможете размещать вакансии.";
-                     $names = $data->name;
-                   
-                } // endif
-
-                 $messages = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден)
+                    $messages = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден)
                 <br/>
                 <br/>
                 Пользователь: <b>%s</b>, 
@@ -405,6 +402,81 @@ class Auth
             MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer);
         Share::sendmail("mk0630733719@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
 
+
+
+                }
+                elseif($usData['status'] == 3 && empty($usDataTest['id_user']))
+                {   $types ="Работодатель";
+                    $message = "Ваш пользователь успешно активирован. Нажмите на кнопку ниже, чтобы перейти к форме заполнения данных. После того, как вы заполните все необходимые данные о себе - ваш профиль будет виден в общем списке работодателей и поиске на сайте, а также вы сможете размещать вакансии.";
+                     $names = $data->name;
+
+                     $messages = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден)
+                <br/>
+                <br/>
+                Пользователь: <b>%s</b>, 
+                Тип:<b>%s</b>,
+                Имя:<b>%s</b>, Email: <b>%s</b>,
+                <br/>
+                ----------------------------------------------------------
+                <br/>
+                Тип трафика:<b>%s</b> 
+                <br/>
+                Источник: <b>%s</b> 
+                <br/>
+                Канал: <b>%s</b>  
+                <br/>
+                Кампания: <b>%s</b>  
+                <br/>
+                Контент: <b>%s</b>  
+                <br/>
+                Ключевые слова: <b>%s</b> 
+                <br/>
+                Точка входа: <b>%s</b> 
+                <br/>
+                Реферер: <b>%s</b> ",
+            MainConfig::$SITE, $idUs,$types,$names, $emails, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer);
+        $email[0] = "denisgresk@gmail.com";
+        $email[1] = "man.market2@gmail.com";
+        $email[2] = "susgresk@gmail.com";
+        $email[3] = "e.market.easss@gmail.com"; 
+        $email[4] = "code@code.code";
+        $email[5] = "manag_reports@euro-asian.ru";
+        $email[6] = "e.marketing@euro-asian.ru";
+        for($i = 0; $i <6; $i++){
+             Share::sendmail($email[$i], "Prommu: зарегистрирован новый пользователь", trim($messages));
+       
+        }
+         $message = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден) Требуется модерация администратора сайта!
+                <br/>
+                <br/>
+                Пользователь: <b>%s</b>,
+                Тип:<b>%s</b>,
+                Имя:<b>%s</b>,
+                <br/>
+                ----------------------------------------------------------
+                <br/>
+                Тип трафика:<b>%s</b> 
+                <br/>
+                Источник: <b>%s</b> 
+                <br/>
+                Канал: <b>%s</b>  
+                <br/>
+                Кампания: <b>%s</b>  
+                <br/>
+                Контент: <b>%s</b>  
+                <br/>
+                Ключевые слова: <b>%s</b> 
+                <br/>
+                Точка входа: <b>%s</b> 
+                <br/>
+                Реферер: <b>%s</b> ",
+            MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer);
+        Share::sendmail("mk0630733719@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
+
+                   
+                } // endif
+
+                 
                 return $link;
 
             } else {
@@ -430,21 +502,24 @@ class Auth
     }
 
     public function SexOnder($lastname){
-        $sql = "SELECT DISTINCT  r.firstname
+       
+        $sql = "SELECT  r.firstname
                     FROM resume r
                     WHERE r.isman = 1";
                 $result = Yii::app()->db->createCommand($sql)->queryAll();
-
+                $sex= 0;
                     $count = count($result);
                    for($i = 0; $i < $count; $i++){
                         
-                        if($lastname == $result[$i]['firstname']) {
-                            $sex = 1;
-                            break;
+                        if(strpos($result[$i]['firstname'], $lastname) !== false) {
+                            $sex++;
+               
                         }
-                        else $sex = 0;
+                        
                     }
-
+                if($sex > 0){
+                    $sex = 1;
+                } else $sex = 0;
                         return $sex;
     }
 
@@ -1273,32 +1348,32 @@ class Auth
             return array('error' => 1, 'message' => 'Пользователь с таким email адресом уже есть', 'inputData' => $inData['inputData']);
         } // endif
 
-		/*$recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
-		if(!empty($recaptcha))
-		{
-			$google_url="https://www.google.com/recaptcha/api/siteverify";
-			$secret='6Lf2oE0UAAAAAPkKWuPxJl0cuH7tOM2OoVW5k6yH';
-			$ip=$_SERVER['REMOTE_ADDR'];
-			$url=$google_url."?secret=".$secret."&response=".$recaptcha."&remoteip=".$ip;
-			//
-			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_URL, $url);
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($curl, CURLOPT_TIMEOUT, 10);
-			curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.16) Gecko/20110319 Firefox/3.6.16");
-			$res = curl_exec($curl);
-			curl_close($curl);
-			//
-			$res = json_decode($res, true);//reCaptcha введена
-			if(!$res['success']) // wrong captcha
-			{
-				return array('error' => 1, 'message' => 'Вы допустили ошибку при прохождении проверки "Я не робот"', 'inputData' => $inData['inputData']);
-			}
-		}
-		else
-		{
-			return array('error' => 1, 'message' => 'Необходимо пройти проверку "Я не робот"', 'inputData' => $inData['inputData']);
-		}*/
+        /*$recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
+        if(!empty($recaptcha))
+        {
+            $google_url="https://www.google.com/recaptcha/api/siteverify";
+            $secret='6Lf2oE0UAAAAAPkKWuPxJl0cuH7tOM2OoVW5k6yH';
+            $ip=$_SERVER['REMOTE_ADDR'];
+            $url=$google_url."?secret=".$secret."&response=".$recaptcha."&remoteip=".$ip;
+            //
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+            curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.16) Gecko/20110319 Firefox/3.6.16");
+            $res = curl_exec($curl);
+            curl_close($curl);
+            //
+            $res = json_decode($res, true);//reCaptcha введена
+            if(!$res['success']) // wrong captcha
+            {
+                return array('error' => 1, 'message' => 'Вы допустили ошибку при прохождении проверки "Я не робот"', 'inputData' => $inData['inputData']);
+            }
+        }
+        else
+        {
+            return array('error' => 1, 'message' => 'Необходимо пройти проверку "Я не робот"', 'inputData' => $inData['inputData']);
+        }*/
 
         // пользователь уже есть
         if($idUs)
@@ -1417,6 +1492,7 @@ class Auth
                         'point' => $point, 
                         'last_referer' => $last_referer,
                         'active' => 0,
+                        'subdomen' => 0,
                     );
 
         $res = Yii::app()->db->createCommand()
@@ -1424,7 +1500,7 @@ class Auth
                         
         if( $inData['type'] == 2 )
         {
-            $link  = 'https://prommu.com' . MainConfig::$PAGE_ACTIVATE . '/?t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&sex=".$sex."&smart=".$smart."&last_referer=".$last_referer."&admin=".$admin;
+            $link  = 'https://prommu.com' . MainConfig::$PAGE_ACTIVATE . '/?t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin."&sex=".$sex."&smart=".$smart;
             $message = '<p style="font-size:16px">Наш портал <b>Prommu.com</b> позволяет найти работу в России и странах СНГ совершенно бесплатно.</p>'
             .'<br/>'
             .'<p style=" margin-bottom: 0px;font-size:16px">Мы предлагаем временную работу и интересную подработку по следующим вакансиям:</p>'
@@ -1462,11 +1538,11 @@ class Auth
                 .'<p style="font-size:16px;"> Ваш логин для входа на портал:'.$inData['inputData']['email']
                 .'<br/>Ваш пароль для входа на портал:'.$inData['inputData']['pass'].'</p>'
             .'</div>';
-        	Share::sendmail($inData['inputData']['email'], "Prommu.com. Подтверждение регистрации на портале поиска временной работы!", $message);
+            Share::sendmail($inData['inputData']['email'], "Prommu.com. Подтверждение регистрации на портале поиска временной работы!", $message);
         }
         else
         {
-			$link = 'https://prommu.com' . MainConfig::$PAGE_ACTIVATE . '/?t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin;
+            $link = 'https://prommu.com' . MainConfig::$PAGE_ACTIVATE . '/?t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin;
             $message = '<p style="font-size:16px;">Наш портал <b>Prommu.com</b> позволяет найти квалифицированный персонал в России и странах СНГ совершенно бесплатно.</p>'
             .'<br/>'
             .'<p style=" margin-bottom: 0px;font-size:16px;">На нашем портале вы сможете разместить вакансии и найти сотрудников по следующим направлениям:</p>'
@@ -1504,7 +1580,7 @@ class Auth
                 .'<p style="font-size:16px;">Ваш логин для входа на портал:'.$inData['inputData']['email']
                 .'<br/>Ваш пароль для входа на портал:'.$inData['inputData']['pass'].'</p>'
             .'</div>';
-        	Share::sendmail($inData['inputData']['email'], " Prommu.com. Подтверждение регистрации на портале поиска персонала!", $message);
+            Share::sendmail($inData['inputData']['email'], " Prommu.com. Подтверждение регистрации на портале поиска персонала!", $message);
         } // endif
         
 
@@ -1646,6 +1722,26 @@ class Auth
             'dt_create' => date('Y-m-d H:i:s'),
         ));
 
+        $analytData = array('id_us' => $idUs,
+                        'name' => $data['fname']." ".$data['lname'],
+                        'date' =>  date('Y-m-d H:i:s'),
+                        'type' => 3,
+                        'referer' => $data['referer'],
+                        'canal' => $data['canal'],
+                        'campaign' => $data['campaign'],
+                        'content' => $data['content'], 
+                        'keywords' => $data['keywords'],
+                        'point' => $data['point'], 
+                        'transition' => $data['transition'],
+                        'last_referer' => $data['last_referer'],
+                        'admin' => 0,
+                        'subdomen' => 0,
+                    );
+
+
+                     $res = Yii::app()->db->createCommand()
+                        ->insert('analytic', $analytData);
+
         $link  = 'https://prommu.com' . MainConfig::$PAGE_ACTIVATE . '/?t=' . $token . "&uid=" . $idUs."&photos=".$data['photos']."&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
             
         } else {
@@ -1667,6 +1763,27 @@ class Auth
             'data' => json_encode($data),
             'dt_create' => date('Y-m-d H:i:s'),
         ));
+        
+         $analytData = array('id_us' => $idUs,
+                        'name' => $data['fname']." ".$data['lname'],
+                        'date' =>  date('Y-m-d H:i:s'),
+                        'type' => 2,
+                        'referer' => $data['referer'],
+                        'canal' => $data['canal'],
+                        'campaign' => $data['campaign'],
+                        'content' => $data['content'], 
+                        'keywords' => $data['keywords'],
+                        'point' => $data['point'], 
+                        'transition' => $data['transition'],
+                        'last_referer' => $data['last_referer'],
+                        'admin' => 0,
+                        'subdomen' => 0,
+                    );
+
+
+                     $res = Yii::app()->db->createCommand()
+                        ->insert('analytic', $analytData);
+
 
          if($data['gender'] == 'male' || $data['gender'] == 1 || $data['gender'] == 'MALE'){
             $sex = 1;

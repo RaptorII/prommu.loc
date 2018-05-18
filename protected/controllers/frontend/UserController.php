@@ -99,8 +99,7 @@ class UserController extends AppController
                 $api->teleProm($user, $unitpayId);
 
                 }
-            }
-            else {
+            } elseif($arr[2] == "vacancy") {
             for ($i = $count; $i > 0 ; $i --) { 
                 $name = $arr[$i];
 
@@ -116,6 +115,57 @@ class UserController extends AppController
                     'mdate' => date("Y-m-d"),
                 ), 'id=:id', array(':id' => $name));
 
+                }
+            } elseif($arr[2] == "email") {
+                for ($i = 3; $i < $count; $i ++) { 
+                 $name = $arr[1];
+                $user = $arr[$i];
+
+
+                $res = Yii::app()->db->createCommand()
+                ->update('service_cloud', array(
+                    'status'=> 1,
+                ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':user'=> $user));
+
+                $sql = "SELECT  e.title
+                FROM empl_vacations e
+                WHERE e.id = {$name}";
+                $vacancy = Yii::app()->db->createCommand($sql)->queryAll();
+
+             $sql = "SELECT  u.email, e.name, e.firstname, e.lastname 
+                FROM employer e
+                LEFT JOIN user u ON u.id_user = e.id_user
+                WHERE e.id_user = {$account}";
+            $empl = Yii::app()->db->createCommand($sql)->queryAll();
+
+            $sql = "SELECT  e.id, u.email, e.firstname, e.lastname 
+                FROM resume e
+                LEFT JOIN user u ON u.id_user = e.id_user
+                WHERE e.id_user = {$user}";
+            $resume = Yii::app()->db->createCommand($sql)->queryAll();
+
+            // $res = Yii::app()->db->createCommand()
+            //     ->insert('vacation_stat', array(
+            //         'id_vac' => $name,
+            //         'id_promo' => $resume[0]['id'],
+            //         'isresponse' => 2,
+            //         'status' => 4,
+            //         'date' => date("Y-m-d h-i-s")
+            //         ));
+
+            $message = '<p style="font-size:16px;"Работодатель'.$id_user.' '.$empl[0]['lastname'].' '.$empl[0]['firstname'].'<br/> </p>
+                    <br/>
+
+                <p style=" font-size:16px;">
+                 <br/>Компания: '.$empl[0]['name'].'<br/>
+              Приглашает на вакансию:  '.$name.' '.$vacancy[0]['title'].'<br/>
+              Ссылка на вакансию:  <a href="https://prommu.com/vacancy/'.$name.'">'.$vacancy[0]['title'].'</a><br/>
+
+                    <br/>';
+                    if(strpos($resume[0]['email'], "@") !== false){
+                        Share::sendmail($empl[0]['email'], "Prommu.com. Приглашение На Вакансию", $message);
+                        Share::sendmail('denisgresk@gmail.com', "Prommu.com. Приглашение На Вакансию", $message);
+                    }
                 }
             }
 
@@ -196,17 +246,21 @@ class UserController extends AppController
     }
 
     public function actionMessenger($cloud){
+        if($cloud == "") $cloud = $_GET;
 
-        $data['email'] = $cloud['email'];
-        $rando = rand(3333,9999);
-        if($data['email'] == "") $data['email'] = "$rando@prommu.com";
-        $data['name'] = $cloud['fname'].' '.$cloud['lname'];
-        $data['fname'] = $cloud['fname'];
-        $data['lname'] = $cloud['lname'];
-        $data['gender'] = $cloud['gender'];
-        $data['birthday'] = $cloud['birthday'];
-        $data['gender'] = $cloud['gender'];
-        $data['referer'] = "(none)";
+        $analyt = Yii::app()->request->cookies['sbjs_current'];
+        $analy = explode("|||", $analyt);
+        if(!empty($analyt)){
+            $data['referer'] = explode("=",$analy[2])[1];
+        $data['transition'] = explode("=",$analy[0])[1];
+        $data['canal'] = explode("=",$analy[1])[1];
+        $data['campaign'] = explode("=",$analy[3])[1];
+        $data['content'] = explode("=",$analy[4])[1];
+        $data['keywords'] = explode("=",$analy[5])[1];
+        $data['point'] = $_GET['point'];
+        $data['last_referer'] = $_GET['last_referer'];
+        } else {
+            $data['referer'] = "(none)";
         $data['transition'] = "(none)";
         $data['canal'] = "(none)";
         $data['campaign'] = "(none)";
@@ -214,6 +268,15 @@ class UserController extends AppController
         $data['keywords'] = "(none)";
         $data['point'] = "(none)";
         $data['last_referer'] = "(none)";
+        }
+        $data['email'] = $cloud['email'];
+        $data['name'] = $cloud['fname'].' '.$cloud['lname'];
+        $data['fname'] = $cloud['fname'];
+        $data['lname'] = $cloud['lname'];
+        $data['gender'] = $cloud['gender'];
+        $data['birthday'] = $cloud['birthday'];
+        $data['gender'] = $cloud['gender'];
+        
         $data['messenger'] = $cloud['id'];
         $data['photos'] = $cloud['photo'];
         $data['type'] = $cloud['type'];
@@ -224,6 +287,46 @@ class UserController extends AppController
         $this->redirect($register);
             
     }
+
+    public function actionMessnotemail(){
+        $data['email'] = $_GET['email'];
+        $data['fname'] = $_GET['fname'];
+        $data['lname'] = $_GET['lname'];
+        $data['name'] = $_GET['name'];
+        $data['gender'] = $_GET['gender'];
+        $data['birthday'] = $_GET['birthday'];
+        $data['gender'] = $_GET['gender'];
+        $data['messenger'] = $_GET['messenger'];
+        $data['photos'] = $_GET['photos'];
+        $data['type'] = $_GET['type'];
+        $data['referer'] = $_GET['referer'];
+        $data['transition'] = $_GET['transition'];
+        $data['canal'] = $_GET['canal'];
+        $data['campaign'] = $_GET['campaign'];
+        $data['content'] = $_GET['content'];
+        $data['keywords'] = $_GET['keywords'];
+        $data['point'] = $_GET['point'];
+        $data['last_referer'] = $_GET['last_referer'];
+        
+         $usData = Yii::app()->db->createCommand()
+             ->select("u.email, u.id_user, u.status")
+             ->from('user u')
+             ->where('u.email = :email', array(':email' => $data['email']))
+             ->queryRow();
+
+         if(!empty($usData)) {
+            $link  = 'https://prommu.com/message';
+            $this->redirect( $link);
+         } else {
+        
+          
+            $Auth = new Auth();
+            $register = $Auth->registerAuth($data);
+            $this->redirect($register);
+        }
+            
+    }
+
 
 
     public function actionLogin()
@@ -274,19 +377,26 @@ class UserController extends AppController
                                     $view = MainConfig::$VIEWS_REGISTER_FB;
                                     $data['photo'] = $pth; 
                                     $data['type'] = 3;
-                                    $this->actionMessenger($data);
+                                     $data[0] = $pth;  
+                                    if($data['email'] != ""){
+                                        $this->actionMessenger($data);
+                                    } else $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
 
                                 } else {
 
                                     $pth = $auth->loadLogo($eauth->getAttributes()['photo']);
                                     $view = MainConfig::$VIEWS_REGISTER_FB;
                                     $data['photo'] = $pth; 
+                                     $data[0] = $pth;  
                                     $data['type'] = 2;
-                                    $this->actionMessenger($data);
+                                    if($data['email'] != ""){
+                                        $this->actionMessenger($data);
+                                    } else $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
                                     
                                 }
-                            }
                                 $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
+                            }
+                                
                            }
                         }   
                         
@@ -471,6 +581,7 @@ class UserController extends AppController
         // applicant
         $getS = Yii::app()->getRequest()->getParam('s');
         $getP = Yii::app()->getRequest()->getParam('p');
+        
         if($getS == 2) 
         {
             $this->setPageTitle('Завершение регистрации');
@@ -514,33 +625,33 @@ class UserController extends AppController
      * Активация пользователя
      */
     public function actionActivate()
-	{
+    {
         $data = (new Auth())->activateUser();
         Share::$UserProfile->type<1 && $this->redirect($data); // no profile for guest
 
-		$isPopup = Yii::app()->getRequest()->getParam('npopup');
-		if($isPopup){
-			$gCity = Yii::app()->getRequest()->getParam('city');
-			$arRes = Yii::app()->db->createCommand()
-				->select('t.name, t.region')
-				->from('city t')
-				->where('t.id_co=1') // only RF!!!
-				->limit(10000);
-			$arCities = $arRes->queryAll();
+        $isPopup = Yii::app()->getRequest()->getParam('npopup');
+        if($isPopup){
+            $gCity = Yii::app()->getRequest()->getParam('city');
+            $arRes = Yii::app()->db->createCommand()
+                ->select('t.name, t.region')
+                ->from('city t')
+                ->where('t.id_co=1') // only RF!!!
+                ->limit(10000);
+            $arCities = $arRes->queryAll();
 
-			foreach ($arCities as $city){
-				// редирект для ленинградской области и СПБ
-				if($gCity==$city['name'] && $city['region']==MainConfig::$SUBDOMAIN_CITY_ID_SPB){
-					$arUrl = explode('?', $_SERVER['REQUEST_URI']);
-					$url = 'Location: ' . MainConfig::$SUBDOMAIN_URL_SPB
-						. str_replace('#ID#', Share::$UserProfile->id, MainConfig::$SUBDOMAIN_REDIRECT)
-						. substr($arUrl[0], 1) . DS . '?' . str_replace('&', ',', $arUrl[1]);
-					header($url);
-					exit;
-				}
-			}
-		}
-  	
+            foreach ($arCities as $city){
+                // редирект для ленинградской области и СПБ
+                if($gCity==$city['name'] && $city['region']==MainConfig::$SUBDOMAIN_CITY_ID_SPB){
+                    $arUrl = explode('?', $_SERVER['REQUEST_URI']);
+                    $url = 'Location: ' . MainConfig::$SUBDOMAIN_URL_SPB
+                        . str_replace('#ID#', Share::$UserProfile->id, MainConfig::$SUBDOMAIN_REDIRECT)
+                        . substr($arUrl[0], 1) . DS . '?' . str_replace('&', ',', $arUrl[1]);
+                    header($url);
+                    exit;
+                }
+            }
+        }
+    
         // save data
         if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('email') )
         {
@@ -916,9 +1027,77 @@ class UserController extends AppController
            $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$vac";
            $this->redirect($link);
 
-        }
-        elseif($_POST['vacanc']){
-            var_dump($_POST['vacanc']);
+        } elseif($_POST['vacemail']){
+          
+            $vac = $_POST['vacemail'];
+            $user = explode(",", $_POST['users']);
+            $account = $_POST['employer'];
+            $account.=".$vac.email";
+            $text = $_POST['vacemail'];
+            $count = count($user);
+            $type = "email";
+            $date = date("Y-m-d");
+            for($i = 0; $i < $count; $i ++) 
+            {
+                $admin = $_POST['employer'];
+                $use = $user[$i];
+                $sum = 1;
+                $postback = 0;
+                $status = 0;
+                $prommuOrder->serviceOrderEmail($admin,$sum, $status, $postback, $date ,$date, $vac, $type, $text, $use);
+                $summa+=$sum;
+            }
+            for($i = 0; $i < $count; $i ++) { 
+                $use = $user[$i];
+                $account.= ".$use";
+            }
+            $publi = "84661-fc398";
+           $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$vac";
+           $this->redirect($link);
+
+        } elseif($_POST['vacpush']){
+          
+            $vac = $_POST['vacpush'];
+            $user = explode(",", $_POST['users']);
+            $account = $_POST['employer'];
+            $account.=".$vac.email";
+            $text = $_POST['vacpush'];
+            $count = count($user);
+            $type = "push";
+            $date = date("Y-m-d h-i-s");
+            for($i = 0; $i < $count; $i ++) 
+            {
+                $admin = $_POST['employer'];
+                $use = $user[$i];
+                $sum = 1;
+                $postback = 0;
+                $status = 0;
+                $prommuOrder->serviceOrderEmail($admin,$sum, "1", $postback, $date ,$date, $vac, $type, $text, $use);
+                $summa+=$sum;
+                $ids =  $user[$i];
+                 $sql = "SELECT r.push
+                FROM user_push r
+                WHERE r.id = {$ids}";
+                $res = Yii::app()->db->createCommand($sql)->queryRow(); 
+
+                $link = "https://prommu.com/vacancy/$vac";
+                $text = "Работодатель приглашает на вакансию";
+
+
+                if($res) {
+                $type = "vacancy";
+                $api = new Api();
+                $api->getPushApi($res['push'], $type, $text, $link);
+            
+                }
+
+            }
+            Yii::app()->user->setFlash('success', array('event'=>'email'));
+            $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+             exit(); 
+
+        } elseif($_POST['vacanc']){
+           
 
             $from = $_POST['from'];
             $to = $_POST['to'];
