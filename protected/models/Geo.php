@@ -141,5 +141,43 @@ class Geo {
         $data['country'] = $country;
 
         return $data;
-    } 
+    }
+    /*
+    *   определение города по гео и БД
+    */
+    public function getCity($id){
+      if(isset($id)){
+          $city = Yii::app()->db->createCommand()
+            ->select('
+              c.id_city id,
+              c.name,
+              c.id_co country,
+              c.ismetro metro,
+              c.seo_url seo,
+              c.region
+            ')
+            ->from('city c')
+            ->where('c.id_city=:id', array(':id'=>$id))
+            ->queryRow();
+      }
+      else{
+          $data = $this->getUserGeo();
+          $city = Yii::app()->db->createCommand()
+            ->select('
+              c.id_city id,
+              c.name,
+              c.id_co country,
+              c.ismetro metro,
+              c.seo_url seo,
+              c.region
+            ')
+            ->from('city c')
+            ->where(
+              'c.name=:name AND c.id_co=:country',
+              array(':name'=>$data['city'], ':country'=>$data['country'])
+            )
+            ->queryRow();
+      }
+      return $city;
+    }
 }
