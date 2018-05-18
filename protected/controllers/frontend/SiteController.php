@@ -40,90 +40,75 @@ class SiteController extends AppController
      */
     public function actionIndex()
     {
-	$time = 'L00.' . microtime(true);
-        unset(Yii::app()->request->cookies['city']);
-        $arCities = Yii::app()->db->createCommand()// ищем города для поля поиска
-            ->select('c.id_city id, c.name, c.region, c.id_co cntry')
-            ->from('city c')
-            ->order('name')
-            ->limit(10000)
-            ->queryAll();
-        
-	$time .= 'L01.' . microtime(true);
-        if(in_array(Share::$UserProfile->type, [2,3])){// определение города юзера
-            $arRes = Yii::app()->db->createCommand()
-                ->select('uc.id_city id, c.region, c.name')
-                ->from('user_city uc')
-                ->join('city c', 'uc.id_city=c.id_city')
-                ->where('uc.id_user=:idus', array(':idus' => Share::$UserProfile->id))
-                ->queryAll();
+      //
+      $time = 'L00.' . microtime(true);
+      //
+      if(in_array(Share::$UserProfile->type, [2,3])){// определение города юзера
+        $arRes = Yii::app()->db->createCommand()
+          ->select('
+            uc.id_city id, 
+            c.region, c.name, 
+            c.id_co country,
+            c.ismetro metro,
+            c.seo_url seo
+          ')
+          ->from('user_city uc')
+          ->join('city c', 'uc.id_city=c.id_city')
+          ->where('uc.id_user=:idus', array(':idus' => Share::$UserProfile->id))
+          ->queryAll();
 
-	    $time .= 'L02.' . microtime(true);
-            $cnt = 0;
-            foreach ($arRes as $c)// если все города ЛО - то редирект на СПБ
-                if($c['region']==MainConfig::$SUBDOMAIN_CITY_ID_SPB) $cnt++;
+        $cnt = 0;
+        foreach ($arRes as $c)// если все города ЛО - то редирект на СПБ
+          if($c['region']==MainConfig::$SUBDOMAIN_CITY_ID_SPB)
+            $cnt++;
 
-            if($cnt==count($arRes)){
-                $url = 'Location: ' . MainConfig::$SUBDOMAIN_URL_SPB . str_replace('#ID#', Share::$UserProfile->id, MainConfig::$SUBDOMAIN_REDIRECT);
-                header($url);
-                exit();
-            }
-
-            $cityId = $arRes[0]['id'];
-            Yii::app()->request->cookies['city'] = new CHttpCookie('city', $cityId);
-	    $time .= 'L03.' . microtime(true);
+        if($cnt==count($arRes)){
+          $url = 'Location: ' 
+            . MainConfig::$SUBDOMAIN_URL_SPB 
+            . str_replace('#ID#', Share::$UserProfile->id, MainConfig::$SUBDOMAIN_REDIRECT);
+          header($url);
+          exit();
         }
-        elseif(!isset(Yii::app()->request->cookies['city']->value)){// определяем гостя
-	    $time .= 'L04.' . microtime(true);
-            $geo = new Geo(); 
-            $city = $geo->get_value('city');
-            switch ($geo->get_value('country')){
-                case 'UA': $cntry=2; break;
-                case 'BY': $cntry=3; break;
-                case 'RU':
-                  default: $cntry=1; break;
-            };
 
-            foreach ($arCities as $k => $c){
-                if($city==$c['name'] && $cntry==$c['cntry']){
-                    $cityId = $c['id'];
-                    Yii::app()->request->cookies['city'] = new CHttpCookie('city', $cityId);
-                }
-            }
-        }
-	$time .= 'L05.' . microtime(true);
-        Share::$isHomePage = 1;
-        $Vacancy = new Vacancy();
-        $Vacancy->chkVacsEnds();   
-        $model = new PagesContent;
-        $news = new News;
-        $articles = new Articles;
-        $action = ContentPlus::getActionID();
-        $lang = Yii::app()->session['lang'];
+        Yii::app()->request->cookies['city'] = new CHttpCookie('city', $arRes[0]['id']);
+        $city = $arRes[0];
+        //
+        $time .= 'L01.' . microtime(true);
+        //
+      }
+      else{ // определяем гостя
+        $geo = new Geo();
+        $city = $geo->getCity(Yii::app()->request->cookies['city']->value);
+        Yii::app()->request->cookies['city'] = new CHttpCookie('city', $city['id']);
+        //
+        $time .= 'L01.' . microtime(true);
+        //
+      }
 
-        $data['content'] = $content = $model->getPageContent('about', $lang);
-        $data['vacancies'] = $model->getVacanies($lang);
-        $data['vacs'] = $model->getVacaniesAppointments($lang);
-        $data['applicants'] = $model->getApplicants($lang);
-        $data['companies'] = $model->getCompanies($lang);
-        $data['news'] = $news->getNews();
-        $data['articles'] = $articles->getArticles();
-        $data['couArt'] = $articles->getArticlesCount();
+      Share::$isHomePage = 1;
+      $Vacancy = new Vacancy();
+      $Vacancy->chkVacsEnds();   
+      $model = new PagesContent;
+      $news = new News;
+      $articles = new Articles;
+      $action = ContentPlus::getActionID();
+      $lang = Yii::app()->session['lang'];
 
-	$time .= 'L06.' . microtime(true);
-	if (MainConfig::$DEBUG_TIMER)
-                  Yii::app()->request->cookies['index_timers'] = new CHttpCookie('index_timers', $time);
-
-        $this->render(
-            'index', 
-            array(
-                'content' => $data, 
-                'auth_soc' => 0, 
-                'action' => $action,
-                'arCities' => $arCities,
-                'cityId' => $cityId
-            )
-        );
+      $data['content'] = $content = $model->getPageContent('about', $lang);
+      $data['vacancies'] = $model->getVacanies($lang);
+      $data['vacs'] = $model->getVacaniesAppointments($lang);
+      $data['applicants'] = $model->getApplicants($lang);
+      $data['companies'] = $model->getCompanies($lang);
+      $data['news'] = $news->getNews();
+      $data['articles'] = $articles->getArticles();
+      $data['couArt'] = $articles->getArticlesCount();
+      //
+      $time .= 'L02.' . microtime(true);
+      //
+      if (MainConfig::$DEBUG_TIMER)
+        Yii::app()->request->cookies['index_timers'] = new CHttpCookie('index_timers', $time);
+      //
+      $this->render('index', array('content' => $data, 'city'=>$city));
     }
 
 

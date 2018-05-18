@@ -378,42 +378,45 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12 footer__module footer__menu-soc" style="">
-                            <div class="col-xs-12 col-sm-5 footer__small-menu">
-                                <div class="menu footer-menu__anket-vac">
-									<?php if(Share::$UserProfile->type==3): ?>
-										<a href="<?=MainConfig::$PAGE_VACPUB?>" class="footer__small-menu-link"><ins>Опубликовать вакансию</ins></a>
-									<?php endif; ?>
-									<?php if(!in_array(Share::$UserProfile->type, [2,3])): ?>
-	                                    <a href="<?=MainConfig::$PAGE_REGISTER?>?p=1" class="footer__small-menu-link"><ins>Разместить анкету</ins></a><br/>
-	                                    <a href="<?=MainConfig::$PAGE_REGISTER?>?p=2" class="footer__small-menu-link"><ins>Опубликовать вакансию</ins></a>
-									<?php endif; ?>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-sm-7 footer__big-menu">
-                                <div class="menu footer-menu__full-menu">
-                                    <a href="/vacancy" rel="nofollow" class="footer__big-menu-link"><ins>Вакансии</ins></a>
-                                    <a href="/ankety" rel="nofollow" class="footer__big-menu-link"><ins>Анкеты</ins></a>
-                                    <a href="/services" rel="nofollow" class="footer__big-menu-link"><ins>Наши услуги</ins></a>
-                                    <a href="/about" rel="nofollow" class="footer__big-menu-link"><ins>О нас</ins></a>
-                                    <a href="/about/news" rel="nofollow" class="footer__big-menu-link"><ins>Полезные статьи</ins></a>
-                                    <a href="/feedback" rel="nofollow" class="footer__big-menu-link"><ins>Связаться с нами</ins></a>
-                                    <a href="/map" class="footer__big-menu-link"><ins>Карта сайта</ins></a>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <a href="<?=MainConfig::$LINK_TO_PLAYMARKET?>" rel="nofollow" class="app-bottom-link" target="_blank"></a>
-                                <div class="social footer__social">
-                                    <p class="footer__social-text">Присоединяйтесь к нам: </p>
-                                    <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icons fb js-g-hashint" title="Facebook" target="_blank"><b></b><i></i></a>
-                                    <a href="<?=MainConfig::$PROMMU_VKONTAKTE?>" rel="nofollow" class="icons vk js-g-hashint" title="Vkontakte" target="_blank"><b></b><i></i></a>
-                                    <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" rel="nofollow" class="icons tl js-g-hashint" title="Telegram" target="_blank"><b></b><i></i></a>
-                                </div>
-                                <div class="footer__m-social">
-                                    <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icons fb" title="Facebook" target="_blank"></a>
-                                    <a href="<?=MainConfig::$PROMMU_VKONTAKTE?>" rel="nofollow" class="icons vk" title="Vkontakte" target="_blank"></a>
-                                    <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" rel="nofollow" class="icons tl" title="Telegram" target="_blank"></a>
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
+                        	<div class="row">
+	                            <div class="col-xs-12 col-sm-4 footer__small-menu">
+	                                <div class="menu footer-menu__anket-vac">
+										<?php if(Share::$UserProfile->type==3): ?>
+											<a href="<?=MainConfig::$PAGE_VACPUB?>" class="footer__small-menu-link"><ins>Опубликовать вакансию</ins></a>
+										<?php endif; ?>
+										<?php if(!in_array(Share::$UserProfile->type, [2,3])): ?>
+		                                    <a href="<?=MainConfig::$PAGE_REGISTER?>?p=1" class="footer__small-menu-link"><ins>Разместить анкету</ins></a><br/>
+		                                    <a href="<?=MainConfig::$PAGE_REGISTER?>?p=2" class="footer__small-menu-link"><ins>Опубликовать вакансию</ins></a>
+										<?php endif; ?>
+	                                </div>
+	                            </div>
+	                            <div class="col-xs-12 col-sm-8 footer__big-menu">
+	                                <div class="menu footer-menu__full-menu">
+	                                    <a href="/vacancy" rel="nofollow" class="footer__big-menu-link"><ins>Вакансии</ins></a>
+	                                    <a href="/ankety" rel="nofollow" class="footer__big-menu-link"><ins>Анкеты</ins></a>
+	                                    <a href="/services" rel="nofollow" class="footer__big-menu-link"><ins>Наши услуги</ins></a>
+	                                    <a href="/about" rel="nofollow" class="footer__big-menu-link"><ins>О нас</ins></a>
+	                                    <a href="/about/news" rel="nofollow" class="footer__big-menu-link"><ins>Полезные статьи</ins></a>
+	                                    <a href="/feedback" rel="nofollow" class="footer__big-menu-link"><ins>Связаться с нами</ins></a>
+	                                    <a href="/map" class="footer__big-menu-link"><ins>Карта сайта</ins></a>
+	                                    <a href="<?=MainConfig::$PAGE_IDEAS_LIST?>" class="footer__big-menu-link"><ins>Идеи/Обсуждения</ins></a>
+	                                    <div class="clearfix"></div>
+	                                </div>
+	                                <a href="<?=MainConfig::$LINK_TO_PLAYMARKET?>" rel="nofollow" class="app-bottom-link" target="_blank"></a>
+	                                <div class="social footer__social">
+	                                    <p class="footer__social-text">Присоединяйтесь к нам: </p>
+	                                    <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icons fb js-g-hashint" title="Facebook" target="_blank"><b></b><i></i></a>
+	                                    <a href="<?=MainConfig::$PROMMU_VKONTAKTE?>" rel="nofollow" class="icons vk js-g-hashint" title="Vkontakte" target="_blank"><b></b><i></i></a>
+	                                    <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" rel="nofollow" class="icons tl js-g-hashint" title="Telegram" target="_blank"><b></b><i></i></a>
+	                                </div>
+	                                <div class="footer__m-social">
+	                                    <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icons fb" title="Facebook" target="_blank"></a>
+	                                    <a href="<?=MainConfig::$PROMMU_VKONTAKTE?>" rel="nofollow" class="icons vk" title="Vkontakte" target="_blank"></a>
+	                                    <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" rel="nofollow" class="icons tl" title="Telegram" target="_blank"></a>
+	                                </div>
+	                            </div>
+	                            <div class="clearfix"></div>
+	                        </div>
                         </div>
                         <div class="col-md-12 footer__module">
                             <div class="footer__cities">

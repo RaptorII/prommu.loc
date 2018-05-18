@@ -18,22 +18,16 @@
 			if($flash['type']==1)
 				$name = 'Заявка-идея';
 			if($flash['type']==2)
-				$name = 'Заявка-идея';
+				$name = 'Заявка-вопрос';
 			if($flash['type']==3)
-				$name = 'Заявка-идея';
+				$name = 'Заявка-ошибка';
 
 			$mess = array(
 				'header' => $name . ' создана',
-				'mess' => $name . ' успешно создана и в скором времени появится на сайте'
+				'mess' => $name . ' успешно создана. После прохождения модерации она появится на сайте. После появления мы оповестим Вас'
 			);
 		}
 	}
-
-/*
-	echo "<pre>";
-	print_r($viData); 
-	echo "</pre>";	
-*/
 ?>
 <script type="text/javascript">
 	<?php if(is_array($mess)): ?>var messNewIdea = <?=json_encode($mess)?>;<?php endif; ?>

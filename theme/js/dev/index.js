@@ -1385,12 +1385,6 @@ var IndServ = (function () {
             $("#DiEmpl1Slider").owlCarousel(props);
         } */
         //
-        //   multiple city select
-        //
-        if (G_PAGE == 'index') {
-            $(document).ready(function(e){  $(".templatingSelect2").select2(); });
-        }
-        //
         //  change search category
         //
         $('.search-category').click(function(e){ 
