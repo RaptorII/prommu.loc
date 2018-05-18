@@ -125,4 +125,59 @@ class Geo {
         return (bool)filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
     }
 
+    /*
+    *   самодельная функция
+    */
+    public function getUserGeo(){
+        $data = $this->get_data(true);
+        $country = '';
+        switch ($data['country']) {
+            case 'RU': $country = 1; break;
+            case 'UA': $country = 2; break;
+            case 'BY': $country = 3; break;
+            case 'KZ': $country = 4; break;   
+            default: $country = 1; break;
+        }
+        $data['country'] = $country;
+
+        return $data;
+    }
+    /*
+    *   определение города по гео и БД
+    */
+    public function getCity($id){
+      if(isset($id)){
+          $city = Yii::app()->db->createCommand()
+            ->select('
+              c.id_city id,
+              c.name,
+              c.id_co country,
+              c.ismetro metro,
+              c.seo_url seo,
+              c.region
+            ')
+            ->from('city c')
+            ->where('c.id_city=:id', array(':id'=>$id))
+            ->queryRow();
+      }
+      else{
+          $data = $this->getUserGeo();
+          $city = Yii::app()->db->createCommand()
+            ->select('
+              c.id_city id,
+              c.name,
+              c.id_co country,
+              c.ismetro metro,
+              c.seo_url seo,
+              c.region
+            ')
+            ->from('city c')
+            ->where(
+              'c.name=:name AND c.id_co=:country',
+              array(':name'=>$data['city'], ':country'=>$data['country'])
+            )
+            ->queryRow();
+      }
+      return $city;
+    }
 }
