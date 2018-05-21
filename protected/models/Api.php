@@ -130,15 +130,10 @@ class Api
                                     } else  $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$j]['id']));
                                 }
                             }
-                          
-                            // $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$i]['id']));
-                         
-                        // $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$j]['id']));
                     }
                 }
             }
 
-            // return $data;
     }
 
     public function teSt(){
