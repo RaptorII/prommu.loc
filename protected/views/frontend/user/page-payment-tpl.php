@@ -1,6 +1,6 @@
 <?php
-	define("PREMIUM_PRICE", 1);	// временные константы цен
-	define('SMS_SERVICE_PRICE', 1);
+	define("PREMIUM_PRICE", 300);	// временные константы цен
+	define('SMS_SERVICE_PRICE', 3);
 ?>
 <div class="row">
 	<div class="col-xs-12 payment">
