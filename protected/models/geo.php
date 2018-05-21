@@ -1,6 +1,6 @@
 <?php
 
-class Geo {
+class Geos {
 
     var $ip;
     var $charset = 'utf-8';
