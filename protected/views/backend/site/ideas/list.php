@@ -24,9 +24,6 @@
 	});
 </script>
 <?php 
-	$arTypes = $model->getTypes();
-	$arStatuses = $model->getStatuses();
-
 	$this->widget('zii.widgets.grid.CGridView', array(
 		'id'=>'dvgrid',
 		'dataProvider'=>$model->search(),
@@ -97,22 +94,15 @@
 	));
 
 	function getIdeaType($t){ 
-		$arr = array(
-			1 => array('class' => 'idea',       'idea' => 'Идея',   'sort' => 'Идеи'),
-			2 => array('class' => 'error',      'idea' => 'Ошибка', 'sort' => 'Ошибки'),
-			3 => array('class' => 'question',   'idea' => 'Вопрос', 'sort' => 'Вопросы'),
-		);
-		return $arr[$t]['idea'];
+		$model = new Ideas;
+		$arr = $model->getParams();
+		return $arr['types'][$t]['idea'];
 	};
 
 	function getIdeaStatus($t){ 
-		$arr = array(
-            1 => array('class' => 'start',  'idea' => 'На рассмотрении','sort' => 'На рассмотрении'),
-            2 => array('class' => 'work',   'idea' => 'В работе',       'sort' => 'В работе'),
-            3 => array('class' => 'end',    'idea' => 'Завершено',      'sort' => 'Завершенные'),
-            4 => array('class' => 'decl',   'idea' => 'Отклонено',      'sort' => 'Отклоненные'),
-		);
-		return $arr[$t]['idea'];
+		$model = new Ideas;
+		$arr = $model->getParams();
+		return $arr['statuses'][$t]['idea'];
 	};
 
 	function getIdeaDate($d){ 

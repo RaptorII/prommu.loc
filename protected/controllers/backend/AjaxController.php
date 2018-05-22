@@ -365,4 +365,19 @@ class AjaxController extends CController {
         $html = $model->ConvertListToHtml($data);
         echo $html;
     }
+    /*
+    *   Изменение комментария идеи
+    */
+    public function actionChangeIdeaComment()
+    {
+      $id = Yii::app()->getRequest()->getParam('id');
+      $event = Yii::app()->getRequest()->getParam('event');
+      $model = new Ideas;
+      if($event=='del') {
+        echo $model->deleteComment($id);
+      }
+      if($event=='hidden') {
+        echo $model->changeVisComment($id);
+      }
+    }
 }

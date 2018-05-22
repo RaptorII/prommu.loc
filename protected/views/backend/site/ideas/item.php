@@ -6,8 +6,11 @@
 	echo CHtml::form('','post',array('class'=>'form-horizontal'));
 		echo '<div class="control-group">Дата создания: ' . $data['crdate'] . '</div>';
 		echo '<div class="control-group">Дата модерации: ' . $data['mdate'] . '</div>';
-		$link = getProfile($data['author']['type'], $data['author']['id']);
-		echo '<div class="control-group">Автор: <a href="' . $link . '" target="_blank">' . $data['author']['name'] . '</a></div>';
+		$author = $data['users'][$data['id_user']];
+		$link = getProfile($author['type'], $author['id']);
+		echo '<div class="control-group">Автор: <a href="' . $link . '" target="_blank">' . $author['name'] . '</a></div>';
+		echo '<div><span class="glyphicon glyphicon-thumbs-up"></span> ' . $data['posrating'];
+		echo '<div><span class="glyphicon glyphicon-thumbs-down"></span> ' . $data['negrating'];
 		//
 		echo '<div class="control-group">
 			<label class="control-label">Проверено</label>
@@ -41,7 +44,7 @@
 				echo '</div>
 		</div>';
 		//
-		echo '<div class="control-group">
+		echo '<div class="row"><div class="col-xs-12 col-md-3"><div class="control-group">
 			<label class="control-label">Тип</label>
 				<div class="controls input-append">';
 					$arTypes = array();
@@ -56,9 +59,9 @@
 					);
 					echo '  <span class="add-on"><i class="icon-tag"></i></span>';
 				echo '</div>
-		</div>';
+		</div></div>';
 		//
-		echo '<div class="control-group">
+		echo '<div class="col-xs-12 col-md-3"><div class="control-group">
 			<label class="control-label">Статус</label>
 				<div class="controls input-append">';
 					$arStatuses = array();
@@ -73,7 +76,7 @@
 					);
 					echo '  <span class="add-on"><i class="icon-tag"></i></span>';
 				echo '</div>
-		</div>';
+		</div></div><div class="hidden-xs hidden-sm col-md-6"></div></div>';
 		//
 		echo '<div class="control-group">';
 		echo '<div style="float:right;  display:inline;">';
@@ -83,16 +86,23 @@
 		echo '</div></div>';
 		echo CHtml::hiddenField('event' , 'idea', array());
 	echo CHtml::endForm();
+
+
+
 	echo '<br/><br/><br/><h4>Комментарии</h4>';
-	if(sizeof($data['arr_comments'])){
-		echo '<table class="comment-table"><thead><th>Автор<th>Комментарий<th>Дата комментария<tbody>';
-		foreach ($data['arr_comments'] as $item){
+	if(sizeof($data['comments'])){
+		echo '<table class="comment-table"><thead><th>ID<th>Автор<th>Комментарий'
+			. '<th>Дата комментария<th>Видимость<th>Удалить<tbody>';
+		foreach ($data['comments'] as $item){
 			$author = $data['users'][$item['id_user']];
-			echo '<tr><td><a href="' 
+			echo '<tr data-id="' . $item['id'] . '"><td>' . $item['id'] . '<td><a href="' 
 				. getProfile($author['type'],$author['id']) 
 				. '" target="_blank">' . $author['name'] . '</a>' 
 				. '<td>' . $item['comment']
-				. '<td>' . $item['date_comment'];
+				. '<td>' . $item['date_comment']
+				. '<td class="text-center">' . getIdeaIsModer($item['hidden'],$item['id'])
+				. '<td class="text-center"><span class="glyphicon glyphicon-trash remove-comment" data-id="' 
+				. $item['id'] . '" title="Удалить"></span>';
 		}
 		echo "</table>";
 	}
@@ -127,13 +137,80 @@ echo "</div><br/><br/>"; ?>
 
 		return $link;
 	}
-
+	function getIdeaIsModer($h, $id){
+		$icon = $h ? 'remove text-danger' : 'ok text-success';
+		$title = $h ? 'Не отображается' : 'Отображается';
+		return '<span class="glyphicon glyphicon-' . $icon . ' hide-comment" title="' . $title . '" data-id="' . $id . '"></span>';
+	}
 ?>
 <script type="text/javascript">
 	'use strict'
 	jQuery(function($){
 		$('#btn_cancel').click(function(){
 			$(location).attr('href','/admin/site/ideas');
+		});
+		// удаление коммента
+		$('.remove-comment').click(function(){
+			var id = this.dataset.id,
+				arComments = $('.comment-table tbody tr'),
+				arParams = [];
+
+			arParams.push({name:'event',value:'del'});
+			arParams.push({name:'id',value:id});
+
+			var query = confirm("Вы действительно хотите удалить комментарий ID = '"+id+"' ?");
+			if(query) {
+				$.ajax({
+					type: 'GET',
+					url: '/admin/ajax/changeIdeaComment',
+					data: arParams,
+					success: function(res){
+						if(res=='1'){
+							alert('Удалено');
+							for (var i=0; i<arComments.length; i++) {
+								if(arComments[i].dataset.id===id) {
+									$(arComments[i]).remove();
+									break;
+								}
+							}
+						}
+						else
+							alert('Произошла ошибка');
+					}
+				});
+			}
+		});
+		// изменение коммента
+		$('.hide-comment').click(function(){
+			var id = this.dataset.id,
+				$it = $(this),
+				arParams = [];
+
+			arParams.push({name:'event',value:'hidden'});
+			arParams.push({name:'id',value:id});
+
+			$.ajax({
+				type: 'GET',
+				url: '/admin/ajax/changeIdeaComment',
+				data: arParams,
+				success: function(res){
+					if(res=='1'){
+						alert('Изменено');
+						if($it.hasClass('glyphicon-ok')) {
+							$it.removeClass('glyphicon-ok text-success')
+								.addClass('glyphicon-remove text-danger')
+								.attr('title','Не отображается');
+						}
+						else{
+							$it.removeClass('glyphicon-remove text-danger')
+								.addClass('glyphicon-ok text-success')
+								.attr('title','Отображается');
+						}
+					}
+					else
+						alert('Произошла ошибка');
+				}
+			});
 		});
 	});
 </script>
@@ -148,9 +225,17 @@ echo "</div><br/><br/>"; ?>
 		border: 1px solid #f4f4f4;
 	}
 	.comment-table th:nth-child(1),
-	.comment-table td:nth-child(1){ width: 20% }
+	.comment-table td:nth-child(1){ width: 4% }
 	.comment-table th:nth-child(2),
-	.comment-table td:nth-child(2){ width: 80% }
+	.comment-table td:nth-child(2){ width: 15% }
 	.comment-table th:nth-child(3),
+	.comment-table td:nth-child(3){ width: 65% }
+	.comment-table th:nth-child(4),
 	.comment-table td:nth-child(4){ width: 10% }
+	.comment-table th:nth-child(5),
+	.comment-table td:nth-child(5){ width: 3% }
+	.comment-table th:nth-child(6),
+	.comment-table td:nth-child(6){ width: 3% }
+	.remove-comment,
+	.hide-comment{ cursor:pointer; }
 </style>

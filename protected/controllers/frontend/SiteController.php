@@ -1838,7 +1838,7 @@ class SiteController extends AppController
         if(strlen($id)>0) {
             if($id=='new' && in_array(Share::$UserProfile->type, [2,3])) { // новая заявка
                 $view = MainConfig::$VIEW_IDEA_NEW;
-                $data['types'] = $model->getTypes();
+                $data = $model->getParams();
             }
             elseif($id>0) { // существующая заявка
                 $view = MainConfig::$VIEW_IDEA;

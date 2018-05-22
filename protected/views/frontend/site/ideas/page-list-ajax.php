@@ -1,13 +1,14 @@
 <?php if(sizeof($viData['ideas'])): ?>
 	<?php foreach ($viData['ideas'] as $item): ?>
+		<?php $user = $viData['users'][$item['id_user']]; ?>
 		<div class="idea__item">
 			<div class="idea__status <?=$viData['statuses'][$item['status']]['class']?>"><?=$viData['statuses'][$item['status']]['idea']?></div>
 			<div class="idea__item-logo">
-				<?php if($item['author']['is_online']): ?>
+				<?php if($user['is_online']): ?>
 					<b class="js-g-hashint" title="В сети"></b>
 				<?php endif; ?>
-				<a href="<?=$item['author']['profile']?>">
-					<img src="<?=$item['author']['src']?>" alt="<?=$item['author']['name']?>">
+				<a href="<?=$user['profile']?>">
+					<img src="<?=$user['src']?>" alt="<?=$user['name']?>">
 				</a>
 			</div>
 			<div class="idea__item-info">
@@ -16,14 +17,14 @@
 					<a href="<?=$item['link']?>" class="idea__item-name"><?=$item['name']?></a>
 				</div>
 				<div class="idea__item-bottom">
-					<a href="<?=$item['author']['profile']?>" class="idea__item-author"><?=$item['author']['name']?></a>
+					<a href="<?=$user['profile']?>" class="idea__item-author"><?=$user['name']?></a>
 					<b>•</b>
 					<span><?=$item['crdate']?></span>
 					<b>•</b>
 					<span class="idea__item-comments"><?=$item['comments']?></span>
 				</div>
 			</div>
-			<div class="idea__item-rating active" data-id="<?=$item['id']?>">
+			<div class="idea__item-rating<?=(!$viData['is_guest']?' active':'')?>" data-id="<?=$item['id']?>">
 				<div class="idea__item-rpos js-g-hashint" title="Поддерживаю"><?=$item['posrating']?></div>
 				<div class="idea__item-rneg js-g-hashint" title="Не поддерживаю"><?=$item['negrating']?></div>
 			</div>

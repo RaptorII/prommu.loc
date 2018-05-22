@@ -11,7 +11,7 @@
 	// breadcrumbs
 	$this->setBreadcrumbsEx(array($viData['name'], MainConfig::$PAGE_IDEAS_LIST . DS . $viData['id']));
 
-	$author = $viData['author'];
+	$author = $viData['users'][$viData['id_user']];
 ?>
 <div class="row">
 	<div class="col-xs-12">
@@ -35,10 +35,10 @@
 							<b>•</b>
 							<span><?=$viData['crdate']?></span>
 							<b>•</b>
-							<span class="idea__item-comments"><?=$viData['comments']?></span>
+							<span class="idea__item-comments"><?=$viData['comments_cnt']?></span>
 						</div>
 					</div>
-					<div class="idea__item-rating active">
+					<div class="idea__item-rating<?=(!$viData['is_guest']?' active':'')?>">
 						<div class="idea__item-rpos js-g-hashint" title="Поддерживаю"><?=$viData['posrating']?></div>
 						<div class="idea__item-rneg js-g-hashint" title="Не поддерживаю"><?=$viData['negrating']?></div>
 					</div>
@@ -60,7 +60,7 @@
 				</div>
 				<div class="comments__module">
 					<div id="ideas-veil"></div>			
-						<?php if(sizeof($viData['arr_comments'])): ?>
+						<?php if(sizeof($viData['comments'])): ?>
 							<div class="idea__comment-sort">
 								<div class="idea__comment-cnt">Комментарии (<?=$viData['comments_cnt']?>)</div>
 								<form id="comments-sort">
@@ -78,7 +78,7 @@
 								</form>
 							</div>
 							<div id="comment-list">
-								<?php foreach ($viData['arr_comments'] as $cmnt): ?>
+								<?php foreach ($viData['comments'] as $cmnt): ?>
 									<?php $user = $viData['users'][$cmnt['id_user']]; ?>
 									<div class="idea__comment-item">
 										<div class="idea__item-logo">

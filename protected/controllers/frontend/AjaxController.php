@@ -825,7 +825,7 @@ class AjaxController extends AppController
             }
         }
         else{
-            echo CJSON::encode('guest');
+            echo CJSON::encode(array('type'=>'guest'));
         }
     }
 }

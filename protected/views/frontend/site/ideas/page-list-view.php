@@ -18,9 +18,9 @@
 			if($flash['type']==1)
 				$name = 'Заявка-идея';
 			if($flash['type']==2)
-				$name = 'Заявка-вопрос';
-			if($flash['type']==3)
 				$name = 'Заявка-ошибка';
+			if($flash['type']==3)
+				$name = 'Заявка-вопрос';
 
 			$mess = array(
 				'header' => $name . ' создана',
@@ -41,7 +41,7 @@
 					<input type="text" name="q" placeholder="Поиск Идеи / Предложения">
 					<?php if(!$viData['is_guest']): ?>
 						<a href="<?=MainConfig::$PAGE_IDEA_NEW?>" class="ideas__btn"><b class="glyphicon glyphicon-plus"></b> Добавить идею/Предложение</a>
-					<?php endif; ?>			
+					<?php endif; ?>
 				</div>
 				<div class="ideas__sort">
 					<div class="ideas-sort__left" id="sort-type">
@@ -85,14 +85,15 @@
 			<div class="ideas__module">
 				<div id="ideas-content">
 					<?php foreach ($viData['ideas'] as $item): ?>
+						<?php $user = $viData['users'][$item['id_user']]; ?>
 						<div class="idea__item">
 							<div class="idea__status <?=$viData['statuses'][$item['status']]['class']?>"><?=$viData['statuses'][$item['status']]['idea']?></div>
 							<div class="idea__item-logo">
-								<?php if($item['author']['is_online']): ?>
+								<?php if($user['is_online']): ?>
 									<b class="js-g-hashint" title="В сети"></b>
 								<?php endif; ?>
-								<a href="<?=$item['author']['profile']?>">
-									<img src="<?=$item['author']['src']?>" alt="<?=$item['author']['name']?>">
+								<a href="<?=$user['profile']?>">
+									<img src="<?=$user['src']?>" alt="<?=$user['name']?>">
 								</a>
 							</div>
 							<div class="idea__item-info">
@@ -101,20 +102,20 @@
 									<a href="<?=$item['link']?>" class="idea__item-name"><?=$item['name']?></a>
 								</div>
 								<div class="idea__item-bottom">
-									<a href="<?=$item['author']['profile']?>" class="idea__item-author"><?=$item['author']['name']?></a>
+									<a href="<?=$user['profile']?>" class="idea__item-author"><?=$user['name']?></a>
 									<b>•</b>
 									<span><?=$item['crdate']?></span>
 									<b>•</b>
 									<span class="idea__item-comments"><?=$item['comments']?></span>
 								</div>
 							</div>
-							<div class="idea__item-rating active" data-id="<?=$item['id']?>">
+							<div class="idea__item-rating<?=(!$viData['is_guest']?' active':'')?>" data-id="<?=$item['id']?>">
 								<div class="idea__item-rpos js-g-hashint" title="Поддерживаю"><?=$item['posrating']?></div>
 								<div class="idea__item-rneg js-g-hashint" title="Не поддерживаю"><?=$item['negrating']?></div>
 							</div>
 						</div>
 					<?php endforeach ?>
-					<div class="ideas__pagination">
+					<div class="ideas__pagination<?=($viData['ideas_cnt'] <= $viData['pages']->pageSize ? ' hide' : '')?>">
 						<?php
 							// display pagination
 							$this->widget('CLinkPager', array(
@@ -131,7 +132,12 @@
 				</div>
 			</div>
 		<?php else: ?>
-			<p class="text-center ideas__null">Активных заявок пока нет</p>
+			<p class="text-center ideas__null">Активных заявок пока нет
+			<br/>
+			<?php if(!$viData['is_guest']): ?>
+				<a href="<?=MainConfig::$PAGE_IDEA_NEW?>" class="ideas__btn">Добавить идею/Предложение</a>
+			<?php endif; ?>
+			</p>
 		<?php endif; ?>
 	</div>
 </div>

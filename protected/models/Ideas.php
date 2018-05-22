@@ -2,13 +2,14 @@
 
 class Ideas extends ARModel
 {
+    public $IDEAS_IN_PAGE = 20;
+    public $COMMENTS_IN_PAGE = 20;
+
     public function tableName()
     {
         return 'ideas';
     }
-    /*
-    *       admin faq list
-    */
+
     public function search()
     {
         $criteria=new CDbCriteria;
@@ -24,8 +25,35 @@ class Ideas extends ARModel
         return new CActiveDataProvider($this, array(
             'criteria'=>$criteria,
             'pagination' => array('pageSize' => 50,),
-            'sort' => ['defaultOrder'=>'ismoder asc'],
+            'sort' => ['defaultOrder'=>'crdate desc'],
         ));
+    }
+    /*
+    *       Вспомогательный массив типов и статусов
+    */
+    public function getParams()
+    {
+        return array(
+            'types' => array(
+                1 => array('class' => 'idea',       'idea' => 'Идея',   'sort' => 'Идеи'),
+                2 => array('class' => 'error',      'idea' => 'Ошибка', 'sort' => 'Ошибки'),
+                3 => array('class' => 'question',   'idea' => 'Вопрос', 'sort' => 'Вопросы')
+            ),
+            'statuses' => array(
+                1 => array('class' => 'start',  'idea' => 'На рассмотрении','sort' => 'На рассмотрении'),
+                2 => array('class' => 'work',   'idea' => 'В работе',       'sort' => 'В работе'),
+                3 => array('class' => 'end',    'idea' => 'Завершено',      'sort' => 'Завершенные'),
+                4 => array('class' => 'decl',   'idea' => 'Отклонено',      'sort' => 'Отклоненные'),
+            )
+        );
+    }
+    /*
+    *       Считаем все идеи
+    */
+    private function getIdeasCnt($filter){
+        $sql = "SELECT COUNT(DISTINCT i.id) FROM ideas i WHERE i.ismoder = 1 {$filter}";
+        $res = Yii::app()->db->createCommand($sql);
+        return $res->queryScalar();
     }
     /*
     *       Получить все идеи (с фильтром)
@@ -58,71 +86,130 @@ class Ideas extends ARModel
             default: $order = 'i.crdate DESC'; break; // по последнейдате
         }
 
-        $count = $this->getIdeasCnt($filter);
-        $pages = new CPagination($count);
-        $pages->pageSize = 3; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        $pages->applyLimit($this);
+        $res['ideas_cnt'] = $this->getIdeasCnt($filter);
+        $res['pages'] = new CPagination($res['ideas_cnt']);
+        $res['pages']->pageSize = $this->IDEAS_IN_PAGE;
+        $res['pages']->applyLimit($this);
 
-        $sql = "SELECT (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.comment IS NOT NULL AND ai.id = i.id) comments,
-           (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.rating = 1 AND ai.id = i.id) posrating,
-           (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.rating = 2 AND ai.id = i.id) negrating,
+        $sql = "SELECT 
+            (SELECT COUNT(id) 
+                FROM ideas_attrib ai 
+                WHERE ai.comment IS NOT NULL AND ai.id_idea = i.id AND ai.hidden=0) comments,
+           (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.rating = 1 AND ai.id_idea = i.id) posrating,
+           (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.rating = 2 AND ai.id_idea = i.id) negrating,
            i.id, i.name, i.text, i.type, DATE_FORMAT(i.crdate, '%d.%m.%Y') crdate, 
-           DATE_FORMAT(i.mdate, '%d.%m.%Y') mdate, i.status, i.id_user, i.usertype
+           DATE_FORMAT(i.mdate, '%d.%m.%Y') mdate, i.status, i.id_user
                 FROM ideas i
                 WHERE i.ismoder = 1 $filter
                 ORDER BY {$order}
                 LIMIT {$this->offset}, {$this->limit}";
         /** @var $res CDbCommand */
+        $res['ideas'] = Yii::app()->db->createCommand($sql)->queryAll();
+
+        $arUserIdies = array();
+        $arIdeasIdies = array();
+        foreach ($res['ideas'] as &$item){
+            $arUserIdies[] = $item['id_user'];
+            $arIdeasIdies[] = $item['id'];
+            $item['link'] = MainConfig::$PAGE_IDEAS_LIST . DS . $item['id'];
+        } 
+        unset($item);
+
+        $res['users'] = $this->getUsers($arUserIdies);
+        $res['is_guest'] = !in_array(Share::$UserProfile->type, [2,3]);
+        $res = array_merge($res, $this->getParams());
+
+        return $res;
+    }
+    /*
+    *       Получение отдельной идеи с комментариями (с фильтром)
+    */
+    public function getIdea($id)
+    {
+        $type = Yii::app()->getRequest()->getParam('type');
+
+        $sql = "SELECT 
+            (SELECT COUNT(id) 
+                FROM ideas_attrib ai 
+                WHERE ai.comment IS NOT NULL AND ai.id_idea = i.id AND ai.hidden=0) comments_cnt,
+            (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.rating = 1 AND ai.id_idea = i.id) posrating,
+            (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.rating = 2 AND ai.id_idea = i.id) negrating, 
+            i.id, i.name, i.text, i.type, DATE_FORMAT(i.crdate, '%d.%m.%Y') crdate, 
+           DATE_FORMAT(i.mdate, '%d.%m.%Y') mdate, i.status, i.id_user
+                FROM ideas i
+                WHERE i.id = $id";
+        /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);
-        $res = $res->queryAll();
+        $res = $res->queryRow();
 
+        $res['pages'] = new CPagination($res['comments_cnt']);
+        $res['pages']->pageSize = $this->COMMENTS_IN_PAGE;
+        $res['pages']->applyLimit($this);
+        $order = ($type==2 ? 'ASC' : 'DESC');
 
-
-        for($i = 0; $i < count($res); $i ++){
-            $id = $res[$i]['id'];
-            $idus = $res[$i]['id_user'];
-            $res[$i]['link'] = MainConfig::$PAGE_IDEAS_LIST . DS . $res[$i]['id'];
-            if($res[$i]['usertype'] == 2){
-                $sql = "SELECT u.id_user id, u.status type, r.photo, 
-                    r.firstname, r.lastname, u.is_online, r.isman
-                    FROM resume r
-                    INNER JOIN user u ON r.id_user = u.id_user
-                    WHERE r.id_user = $idus";
-                $arTemp = Yii::app()->db->createCommand($sql)->queryRow();
-                $res[$i]['author'] = $this->drawUpUser($arTemp);
-
-            } elseif($res[$i]['usertype'] == 3){
-                $sql = "SELECT u.id_user id, u.status type, 
-                    r.logo, r.name, u.is_online
-                    FROM employer r
-                    INNER JOIN user u ON r.id_user = u.id_user
-                    WHERE r.id_user = $idus";
-                $arTemp = Yii::app()->db->createCommand($sql)->queryRow();
-                $res[$i]['author'] = $this->drawUpUser($arTemp);
-            }
-            
-            $sql = "SELECT  ai.id_user, ai.rating, DATE_FORMAT(ai.date_rating, '%d.%m.%Y') date_rating, 
-                    ai.comment, DATE_FORMAT(ai.date_comment, '%d.%m.%Y') date_comment, ai.isread,
-                    ai.email, ai.notification
+        $sql = "SELECT ai.id_user, ai.rating, DATE_FORMAT(ai.date_rating, '%d.%m.%Y') date_rating, 
+                    ai.comment, DATE_FORMAT(ai.date_comment, '%d.%m.%Y %T') date_comment, ai.isread,
+                    ai.email, ai.notification, ai.hidden
                 FROM ideas_attrib ai
-                WHERE ai.id = $id
-                ORDER BY ai.id";
-            /** @var $res CDbCommand */
-            $rest = Yii::app()->db->createCommand($sql);
-            $res[$i]['attrib'] = $rest->queryAll();
+                WHERE ai.id_idea = $id AND ai.comment IS NOT NULL AND ai.hidden = 0
+                ORDER BY ai.date_comment {$order}
+                LIMIT {$this->offset}, {$this->limit}";
+        /** @var $res CDbCommand */
+        $rest = Yii::app()->db->createCommand($sql);
+        $res['attrib'] = $rest->queryAll();
+
+        $arUserIdies = array();
+        $arUserIdies[] = $res['id_user'];
+        $res['comments'] = array();
+        foreach($res['attrib'] as $key => $attr){
+            if(!empty($attr['comment']) && $attr['hidden']==0){
+                $res['comments'][] = $attr;
+                $arUserIdies[] = $attr['id_user'];
+            }
         }
-        $arResult = array(
-                'ideas' => $res,
-                'types' => $this->GetTypes(),
-                'statuses' => $this->getStatuses(),
-                'is_guest' => !in_array(Share::$UserProfile->type, [2,3]),
-                'pages' => $pages,
-                'ideas_cnt' => $count
-            );
-       
 
-        return $arResult;
+        $res['users'] = $this->getUsers($arUserIdies);
+        $res['is_guest'] = !in_array(Share::$UserProfile->type, [2,3]);
+        $res = array_merge($res, $this->getParams());
 
+        return $res;
+    }
+    /*
+    *       Забираем идею для админки
+    */
+    public function getIdeaForAdmin($id)
+    {
+        $sql = "SELECT 
+            (SELECT COUNT(id) 
+                FROM ideas_attrib ai 
+                WHERE ai.comment IS NOT NULL AND ai.id_idea = i.id AND ai.hidden=0) comments_cnt,
+            (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.rating = 1 AND ai.id_idea = i.id) posrating,
+            (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.rating = 2 AND ai.id_idea = i.id) negrating, 
+            i.id, i.name, i.text, i.type, DATE_FORMAT(i.crdate, '%d.%m.%Y') crdate, 
+            DATE_FORMAT(i.mdate, '%d.%m.%Y') mdate, i.status, i.id_user, i.ismoder
+            FROM ideas i
+            WHERE i.id = $id";
+
+        $res = Yii::app()->db->createCommand($sql)->queryRow();
+
+        $sql = "SELECT ai.id, ai.id_user, ai.comment, ai.hidden,
+                    DATE_FORMAT(ai.date_comment, '%d.%m.%Y %T') date_comment 
+                FROM ideas_attrib ai
+                WHERE ai.comment IS NOT NULL AND ai.id_idea = $id
+                ORDER BY ai.date_comment DESC";
+
+        $res['comments'] = Yii::app()->db->createCommand($sql)->queryAll();
+
+        $arUserIdies = array();
+        $arUserIdies[] = $res['id_user'];
+        foreach($res['comments'] as $key => $attr){
+            $arUserIdies[] = $attr['id_user'];
+        }
+
+        $res['users'] = $this->getUsers($arUserIdies);
+        $res = array_merge($res, $this->getParams());
+
+        return $res;
     }
     /*
     *       Создание идеи
@@ -140,12 +227,88 @@ class Ideas extends ARModel
                         'type' => $type,
                         'text' => $text,
                         'id_user' => $id,
-                        'usertype' => Share::$UserProfile->type,
                         'crdate' => date("Y-m-d H-i-s"),
                         'ismoder' => 0,
                         'status' => 1
                     ));
 
+    }
+    /*
+    *       Изменение идеи
+    */
+    public function changeIdea($id)
+    {
+        Yii::app()->db->createCommand()
+                ->update(
+                    'ideas', 
+                    array(
+                        'name' => $_POST['name'],
+                        'text' => $_POST['text'],
+                        'type' => $_POST['type'],
+                        'status' => $_POST['status'],
+                        'mdate' => date("Y-m-d H-i-s"),
+                        'ismoder' => $_POST['ismoder']
+                    ),
+                    'id=:id', 
+                    array(':id'=>$id)
+            );
+    }
+    /*
+    *       Удаление идеи
+    */
+    public function deleteIdea($id) 
+    {
+        $attrib = Yii::app()->db->createCommand()
+            ->delete('ideas_attrib','id_idea=:id', array(':id'=>$id));
+        $idea = Yii::app()->db->createCommand()
+            ->delete('ideas','id=:id', array(':id'=>$id));
+    }
+    /*
+    *       Добавление комментария к идее
+    */
+    public function setComment($isAdmin=0)
+    {
+        $comment = Yii::app()->getRequest()->getParam('comment');
+        $idea = Yii::app()->getRequest()->getParam('id');
+        $id = $isAdmin ? 0 : Share::$UserProfile->id;
+
+        $res = Yii::app()->db->createCommand()
+                    ->insert('ideas_attrib', array(
+                        'id_idea' => $idea,
+                        'id_user' => $id,
+                        'comment' => $comment,
+                        'date_comment' => date("Y-m-d H-i-s"),
+                        'hidden' => $id ? 1 : 0
+                    ));
+
+        return $res;
+    }
+    /*
+    *       Изменить видимость комментария
+    */
+    public function changeVisComment($id) 
+    {
+        $res = Yii::app()->db->createCommand()
+                ->select('ia.hidden')
+                ->from('ideas_attrib ia')
+                ->where('ia.id=:id', array(':id' => $id))
+                ->queryRow();    
+
+        return Yii::app()->db->createCommand()
+            ->update(
+                'ideas_attrib', 
+                array('hidden' => !$res['hidden']),
+                'id=:id', 
+                array(':id'=>$id)
+            );
+    }
+    /*
+    *       Удаление комментария
+    */
+    public function deleteComment($id) 
+    {
+        return Yii::app()->db->createCommand()
+            ->delete('ideas_attrib','id=:id', array(':id'=>$id));
     }
     /*
     *       Добавление голоса за идею
@@ -156,157 +319,84 @@ class Ideas extends ARModel
         $idea = Yii::app()->getRequest()->getParam('id');
         $id = Share::$UserProfile->id;
 
-        $sql = "SELECT  ai.id_user, ai.rating, ai.date_rating, ai.comment, ai.date_comment, ai.isread,
-                           ai.email, ai.notification
-                    FROM ideas_attrib ai
-                    WHERE ai.id_user = $id AND ai.id = $idea AND ai.rating <> 0
-                    ORDER BY ai.id";
-            /** @var $res CDbCommand */
-        $rest = Yii::app()->db->createCommand($sql);
-        $rest = $rest->queryAll();
-        if(!empty($rest)){
-            return "error";
+        $sql = "SELECT ai.id, ai.rating
+            FROM ideas_attrib ai
+            WHERE ai.id_user = $id AND ai.id_idea = $idea AND ai.rating <> 0";
+        $res = Yii::app()->db->createCommand($sql)->queryRow();
+
+        if(isset($res['id'])) {
+            Yii::app()->db->createCommand()
+                ->delete('ideas_attrib','id=:id', array(':id'=>$res['id']));
+            $arResult = array(
+                    'type' => $res['rating']==1 ? 'rempos' : 'remneg',
+                    'mess' => $res['rating']==1
+                        ? 'Ваш положительный голос был удален'
+                        : 'Ваш отрицательный голос был удален'
+                );
         } else {
+            $arResult = array(
+                    'type' => 'create',
+                    'mess' => 'Спасибо, что приняли участие в голосовании'
+                );
             $res = Yii::app()->db->createCommand()
                     ->insert('ideas_attrib', array(
-                        'id' => $idea,
+                        'id_idea' => $idea,
                         'id_user' => $id,
-                        'usertype' => Share::$UserProfile->type,
                         'rating' => $rating,
-                        'date_rating' => date("Y-m-d H-i-s")
-                    ));
-            return $res;
+                        'date_rating' => date("Y-m-d H-i-s"),
+                        'hidden' => 0,
+                    ));  
         }
-
+        return $arResult;
     }
     /*
-    *       Добавление комментария к идее
+    *       Получение инфы о пользователях
     */
-    public function setComment($isAdmin=0)
+    private function getUsers($arIdies)
     {
-        $comment = Yii::app()->getRequest()->getParam('comment');
-        $idea = Yii::app()->getRequest()->getParam('id');
-        $id = $isAdmin ? 0 : Share::$UserProfile->id;
-        $userType = $isAdmin ? 1 : Share::$UserProfile->type;
+        $arResult = array();
 
-        $res = Yii::app()->db->createCommand()
-                    ->insert('ideas_attrib', array(
-                        'id' => $idea,
-                        'id_user' => $id,
-                        'usertype' => $userType,
-                        'comment' => $comment,
-                        'date_comment' => date("Y-m-d H-i-s")
-                    ));
-
-        return $res;
-    }
-    /*
-    *       Получение отдельной идеи с комментариями (с фильтром)
-    */
-    public function getIdea($id)
-    {
-        $type = Yii::app()->getRequest()->getParam('type');
-
-        $sql = "SELECT (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.comment IS NOT NULL AND ai.id = i.id) comments,
-        (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.rating = 1 AND ai.id = i.id) posrating,
-        (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.rating = 2 AND ai.id = i.id) negrating, 
-            i.id, i.name, i.text, i.type, DATE_FORMAT(i.crdate, '%d.%m.%Y') crdate, 
-           DATE_FORMAT(i.mdate, '%d.%m.%Y') mdate, i.status, i.id_user, i.usertype
-                FROM ideas i
-                WHERE i.id = $id";
-        /** @var $res CDbCommand */
-        $res = Yii::app()->db->createCommand($sql);
-        $res = $res->queryRow();
-
-        $idus = $res['id_user'];
-        if($res['usertype'] == 2) {
+        if(sizeof($arIdies)){
+            $arIdies = array_unique($arIdies);
+            $strId = implode(',', $arIdies);
             $sql = "SELECT u.id_user id, u.status type, r.photo, 
                 r.firstname, r.lastname, u.is_online, r.isman
                 FROM resume r
                 INNER JOIN user u ON r.id_user = u.id_user
-                WHERE r.id_user = $idus";
-            $arTemp = Yii::app()->db->createCommand($sql)->queryRow();
-            $res['author'] = $this->drawUpUser($arTemp);
-        } 
-        elseif($res['usertype'] == 3) {
-            $sql = "SELECT u.id_user id, u.status type, 
-                r.logo, r.name, r.lastname, u.is_online
-                FROM employer r
-                INNER JOIN user u ON r.id_user = u.id_user
-                WHERE r.id_user = $idus";
-            $arTemp = Yii::app()->db->createCommand($sql)->queryRow();
-            $res['author'] = $this->drawUpUser($arTemp);
-        }
+                WHERE r.id_user IN({$strId})";
+                $arApps = Yii::app()->db->createCommand($sql)->queryAll();
 
-        $count = $this->getIdeaCommentsCnt($id);
-        $pages = new CPagination($count);
-        $pages->pageSize = 3; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        $pages->applyLimit($this);
-        $order = ($type==2 ? 'ASC' : 'DESC');
-
-        $sql = "SELECT ai.id_user, ai.rating, DATE_FORMAT(ai.date_rating, '%d.%m.%Y') date_rating, 
-                    ai.comment, DATE_FORMAT(ai.date_comment, '%d.%m.%Y %T') date_comment, ai.isread,
-                    ai.email, ai.notification
-                FROM ideas_attrib ai
-                WHERE ai.id = $id
-                ORDER BY ai.date_comment {$order}
-                LIMIT {$this->offset}, {$this->limit}";
-        /** @var $res CDbCommand */
-        $rest = Yii::app()->db->createCommand($sql);
-        $res['attrib'] = $rest->queryAll();
-
-        $arId = array();
-        $res['arr_comments'] = array();
-        foreach($res['attrib'] as $key => $attr){
-            if(!empty($attr['comment'])){
-                $res['arr_comments'][] = $attr;
-                $arId[] = $attr['id_user'];
-            }
-        }
-
-        $res['users'] = array();
-        if(sizeof($arId)){
-            $arId = implode(',', $arId);
-            $sql = "SELECT u.id_user id, u.status type, r.photo, 
-                r.firstname, r.lastname, u.is_online, r.isman
-                FROM resume r
-                INNER JOIN user u ON r.id_user = u.id_user
-                WHERE r.id_user IN({$arId})";
-                $arTemp = Yii::app()->db->createCommand($sql)->queryAll();
-
-            foreach($arTemp as $user) {
-                $res['users'][$user['id']] = $this->drawUpUser($user);
+            foreach($arApps as $user) {
+                $arResult[$user['id']] = $this->drawUpUser($user);
             }
 
             $sql = "SELECT u.id_user id, u.status type, r.logo, 
                 r.name, u.is_online
                 FROM employer r
                 INNER JOIN user u ON r.id_user = u.id_user
-                WHERE r.id_user IN({$arId})";
-                $arTemp = Yii::app()->db->createCommand($sql)->queryAll();
+                WHERE r.id_user IN({$strId})";
+                $arEmps = Yii::app()->db->createCommand($sql)->queryAll();
 
-            foreach($arTemp as $user) {
-                $res['users'][$user['id']] = $this->drawUpUser($user);
+            foreach($arEmps as $user) {
+                $arResult[$user['id']] = $this->drawUpUser($user);
             }
-            $res['users'][0] = $this->getAdminData(); // админ
+            $arResult[0] = array( // admin
+                    'id' => 0,
+                    'type' => 1,
+                    'name' => 'Администрация',
+                    'src' => '/images/prommu.jpg',
+                    'profile' => 'javascript:void(0)',
+                    'is_online' => 0
+                );       
         }
 
-        return array_merge(
-            $res, 
-            array(
-                'comments_cnt' => $count,
-                'pages' => $pages,
-                'types' => $this->GetTypes(),
-                'statuses' => $this->getStatuses(),
-                'is_guest' => !in_array(Share::$UserProfile->type, [2,3])
-            )
-        );
-
+        return $arResult;
     }
     /*
-    *   формирование массива пользователя
+    *       Формирование массива пользователей
     */
-    private function drawUpUser($arr){
+    private function drawUpUser($arr)
+    {
         $arRes = array();
         if($arr['type']==2){
             $arRes['id'] = $arr['id'];
@@ -330,182 +420,5 @@ class Ideas extends ARModel
         }
         return $arRes;
     }
-    /*
-    *   считаем все идеи
-    */
-    private function getIdeasCnt($filter){
-        $sql = "SELECT COUNT(DISTINCT i.id) FROM ideas i WHERE i.ismoder = 1 {$filter}";
-        $res = Yii::app()->db->createCommand($sql);
-        return $res->queryScalar();
-    }
-    /*
-    *   считаем все комменты идеи
-    */
-    private function getIdeaCommentsCnt($id){
-        $sql = "SELECT COUNT(ai.id) FROM ideas_attrib ai WHERE ai.id = $id";
-        $res = Yii::app()->db->createCommand($sql);
-        return $res->queryScalar();
-    }
-    /*
-    *   Вспомогательный массив типов
-    */
-    public function getTypes()
-    {
-        return array(
-            1 => array('class' => 'idea',       'idea' => 'Идея',   'sort' => 'Идеи'),
-            2 => array('class' => 'error',      'idea' => 'Ошибка', 'sort' => 'Ошибки'),
-            3 => array('class' => 'question',   'idea' => 'Вопрос', 'sort' => 'Вопросы'),
-        );
-    }
-    /*
-    *   Вспомогательный массив статусов
-    */
-    public function getStatuses()
-    {
-        return array(
-            1 => array('class' => 'start',  'idea' => 'На рассмотрении','sort' => 'На рассмотрении'),
-            2 => array('class' => 'work',   'idea' => 'В работе',       'sort' => 'В работе'),
-            3 => array('class' => 'end',    'idea' => 'Завершено',      'sort' => 'Завершенные'),
-            4 => array('class' => 'decl',   'idea' => 'Отклонено',      'sort' => 'Отклоненные'),
-        );
-    }
-    /*
-    *  Забираем идею для админки
-    */
-    public function getIdeaForAdmin($id)
-    {
-        $sql = "SELECT (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.comment IS NOT NULL AND ai.id = i.id) comments,
-        (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.rating = 1 AND ai.id = i.id) posrating,
-        (SELECT COUNT(id) FROM ideas_attrib ai WHERE ai.rating = 2 AND ai.id = i.id) negrating, 
-            i.id, i.name, i.text, i.type, DATE_FORMAT(i.crdate, '%d.%m.%Y') crdate, 
-           DATE_FORMAT(i.mdate, '%d.%m.%Y') mdate, i.status, i.id_user, i.usertype, i.ismoder
-                FROM ideas i
-                WHERE i.id = $id";
-        /** @var $res CDbCommand */
-        $res = Yii::app()->db->createCommand($sql);
-        $res = $res->queryRow();
-
-        $idus = $res['id_user'];
-        if($res['usertype'] == 2) {
-            $sql = "SELECT u.id_user id, u.status type, r.photo, 
-                r.firstname, r.lastname, u.is_online, r.isman
-                FROM resume r
-                INNER JOIN user u ON r.id_user = u.id_user
-                WHERE r.id_user = $idus";
-            $arTemp = Yii::app()->db->createCommand($sql)->queryRow();
-            $res['author'] = $this->drawUpUser($arTemp);
-        } 
-        elseif($res['usertype'] == 3) {
-            $sql = "SELECT u.id_user id, u.status type, 
-                r.logo, r.name, r.lastname, u.is_online
-                FROM employer r
-                INNER JOIN user u ON r.id_user = u.id_user
-                WHERE r.id_user = $idus";
-            $arTemp = Yii::app()->db->createCommand($sql)->queryRow();
-            $res['author'] = $this->drawUpUser($arTemp);
-        }
-
-        $sql = "SELECT ai.id_user, ai.rating, DATE_FORMAT(ai.date_rating, '%d.%m.%Y') date_rating, 
-                    ai.comment, DATE_FORMAT(ai.date_comment, '%d.%m.%Y %T') date_comment, ai.isread,
-                    ai.email, ai.notification
-                FROM ideas_attrib ai
-                WHERE ai.id = $id
-                ORDER BY ai.date_comment DESC";
-        /** @var $res CDbCommand */
-        $rest = Yii::app()->db->createCommand($sql);
-        $res['attrib'] = $rest->queryAll();
-
-        $arId = array();
-        $res['arr_comments'] = array();
-        foreach($res['attrib'] as $key => $attr){
-            if(!empty($attr['comment'])){
-                $res['arr_comments'][] = $attr;
-                $arId[] = $attr['id_user'];
-            }
-        }
-
-        $res['users'] = array();
-        if(sizeof($arId)){
-            $arId = implode(',', $arId);
-            $sql = "SELECT u.id_user id, u.status type, r.photo, 
-                r.firstname, r.lastname, u.is_online, r.isman
-                FROM resume r
-                INNER JOIN user u ON r.id_user = u.id_user
-                WHERE r.id_user IN({$arId})";
-                $arTemp = Yii::app()->db->createCommand($sql)->queryAll();
-
-            foreach($arTemp as $user) {
-                $res['users'][$user['id']] = $this->drawUpUser($user);
-            }
-
-            $sql = "SELECT u.id_user id, u.status type, r.logo, 
-                r.name, u.is_online
-                FROM employer r
-                INNER JOIN user u ON r.id_user = u.id_user
-                WHERE r.id_user IN({$arId})";
-                $arTemp = Yii::app()->db->createCommand($sql)->queryAll();
-
-            foreach($arTemp as $user) {
-                $res['users'][$user['id']] = $this->drawUpUser($user);
-            }
-            $res['users'][0] = $this->getAdminData(); // админ
-        }
-
-        return array_merge(
-            $res, 
-            array(
-                'types' => $this->GetTypes(),
-                'statuses' => $this->getStatuses()
-            )
-        );
-    }
-    /*
-    *   изменение идеи
-    */
-    public function changeIdea($id)
-    {
-        Yii::app()->db->createCommand()
-                ->update(
-                    'ideas', 
-                    array(
-                        'name' => $_POST['name'],
-                        'text' => $_POST['text'],
-                        'type' => $_POST['type'],
-                        'status' => $_POST['status'],
-                        'mdate' => date("Y-m-d H-i-s"),
-                        'ismoder' => $_POST['ismoder']
-                    ),
-                    'id=:id', 
-                    array(':id'=>$id)
-            );
-    }
-    /*
-    *   удаление идеи
-    */
-    public function deleteIdea($id) 
-    {
-        $attrib = Yii::app()->db->createCommand()
-            ->delete('ideas_attrib','id=:id', array(':id'=>$id));
-        $idea = Yii::app()->db->createCommand()
-            ->delete('ideas','id=:id', array(':id'=>$id));
-    }
-    /*
-    *   Добавления пользователя Администратор
-    */
-    private function getAdminData() 
-    {
-        return array(
-                    'id' => 0,
-                    'type' => 1,
-                    'name' => 'Администрация',
-                    'src' => '/images/prommu.jpg',
-                    'profile' => 'javascript:void(0)',
-                    'is_online' => 0
-                );
-    }
 }
-
-
-
-
 ?>
