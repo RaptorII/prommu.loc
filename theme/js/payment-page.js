@@ -184,12 +184,11 @@ var Payment = (function (){
         }
         $(parent).find('.payment-period').text(ending(dayCount[i]));
         $(parent).find('.payment-period-inp').val(dayCount[i]);
-
         allDayCount = 0;
         for(var i=0; i<index; i++){ allDayCount+=dayCount[i] }
         $('#payment-period').text(ending(allDayCount));
         if(allDayCount){
-          str = price + ' * ' + vacCount + ' * ' + allDayCount + ' = ' + price*vacCount*allDayCount + 'руб';
+          str = price + ' * ' + allDayCount + ' = ' + price*allDayCount + 'руб'; 
           $('#payment-result').text(str);
         }
       }

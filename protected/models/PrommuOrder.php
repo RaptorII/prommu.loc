@@ -15,27 +15,22 @@ class PrommuOrder {
     }
     //Определение цены использования услуги
      public function servicePrice($user, $service){
-       
-      
+
         $sql = "SELECT r.id_user, r.type
             FROM service_cloud r
             WHERE r.id_user = $user AND r.status = 1 AND r.type = '$service'";
         $result = Yii::app()->db->createCommand($sql)->queryAll();
-
         $sql = "SELECT first, second, type, service
             FROM service_price 
             WHERE service = '$service'";
         $results = Yii::app()->db->createCommand($sql)->queryRow();
 
-        for($i = 0; $i < count($result); $i ++) {
-   
-            if($result[$i]['type'] == $service){
-               $price = $results['second'];
-            } else $price = $results['first'];
+        if(sizeof($result)) {
+            return $results['second'];
         }
-
-        return $price;
-
+        else{
+           return $results['first']; 
+        }
     }
     
     public function serviceOrderSms($id_user,$sum, $status, $postback, $from, $to, $name,$type, $text, $id){

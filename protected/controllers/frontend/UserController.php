@@ -1133,10 +1133,12 @@ class UserController extends AppController
      
             $result = $vac->VacMech($mech);
 
-        $data = $_POST['sms'];
-        $data['sms'] = 1;
-        $view = MainConfig::$PAGE_PAYMENT_VIEW;
-        $this->render($view, array('viData' => $data, 'User' => $result), array('nobc' => '1'));
+            $data = $_POST['sms'];
+            $data['sms'] = 1;
+            //$model = new PrommuOrder;
+            //$data['price'] = $model->servicePrice(Share::$UserProfile->id,'sms'); 
+            $view = MainConfig::$PAGE_PAYMENT_VIEW;
+            $this->render($view, array('viData' => $data, 'User' => $result), array('nobc' => '1'));
         }
         else {      // premium
             $data = array(
@@ -1155,6 +1157,8 @@ class UserController extends AppController
             );
             //$data = $_POST['vacancy'];
             //$data['premium'] = 1;
+            $model = new PrommuOrder;
+            $data['price'] = $model->servicePrice(Share::$UserProfile->id,'vacancy'); 
             $view = MainConfig::$PAGE_PAYMENT_VIEW;
             $this->render($view, array('viData' => $data),  array( 'htmlTitle' => $title ));
         }

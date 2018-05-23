@@ -1,7 +1,3 @@
-<?php
-	define("PREMIUM_PRICE", 300);	// временные константы цен
-	define('SMS_SERVICE_PRICE', 3);
-?>
 <div class="row">
 	<div class="col-xs-12 payment">
 		<h1 class="payment__title">Оплата услуг PROMMU</h1>
@@ -70,7 +66,7 @@
 				<span class="payment-form__type-name">РЕЗУЛЬТАТ</span>		
 				<table class="payment-form__table">
 					<tbody>
-						<tr><td>Стоимость услуги</td><td><span id="payment-price"><?=PREMIUM_PRICE?></span> руб/день</td>
+						<tr><td>Стоимость услуги</td><td><span id="payment-price"><?=$viData['price']?></span> руб/день</td>
 						</tr>
 						<tr><td>Выбраных вакансий</td><td id="payment-count"><?=count($viData['vacancies'])?></td></tr>
 						<tr><td>Итоговый период работы услуги </td><td id="payment-period">0 дней</td></tr>
@@ -79,7 +75,7 @@
 				</table>
 			<?php endif; ?>
 			<?if($viData['service']=='sms'):?>
-				<?php $result = $viData['app_count'] * $viData['mes_count'] * SMS_SERVICE_PRICE; ?>
+				<?php $result = $viData['app_count'] * $viData['mes_count'] * $viData['price']; ?>
 				<span id="payment-result"><?=$result?>рублей</span>			
 			<?endif;?>
 			<span class="payment-form__type-name">тип плательщика</span>

@@ -1041,13 +1041,17 @@ class SiteController extends AppController
                             break;
                         case 40:    // push
                             if($type_us==3){
-                                if(Yii::app()->getRequest()->getParam('users') && Yii::app()->getRequest()->getParam('vacancy')){
-                                    Yii::app()->user->setFlash('success', array('event'=>'email'));
-                                    $this->redirect(DS . MainConfig::$PAGE_SERVICES);
-                                    exit();                                    
-                                }
                                 if(Yii::app()->getRequest()->getParam('users')){
-                                    $view = MainConfig::$VIEWS_SERVICE_PUSH_VIEW;
+                                    $model = new PrommuOrder;
+                                    $data['price'] = $model->servicePrice(Share::$UserProfile->id,'push'); 
+                                    if($data['price']>0){
+                                        $view = MainConfig::$VIEWS_SERVICE_PUSH_VIEW;
+                                    }
+                                    else{
+                                        Yii::app()->user->setFlash('success', array('event'=>'email'));
+                                        $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+                                        exit();
+                                    }
                                 }
                                 elseif(Yii::app()->request->isAjaxRequest){
                                     $this->renderPartial(
@@ -1069,57 +1073,25 @@ class SiteController extends AppController
                             break;
                         case 46:    // sms
                             if($type_us==3){
-                                $session = Yii::app()->session;
                                 if(Yii::app()->getRequest()->getParam('workers')){
+                                    $model = new PrommuOrder;
+                                    $data['price'] = $model->servicePrice(Share::$UserProfile->id,'sms');
                                     $view = MainConfig::$VIEWS_SERVICE_SMS_VIEW;
-                                    $data['vacancy'] = $session['vacancy'];
-                                    $session->remove('vacancy');
-                                    $data['app_count'] = Yii::app()->getRequest()->getParam('workers-count');
-                                    $data['step'] = 3;
                                 }
                                 elseif(Yii::app()->request->isAjaxRequest){
-                                    $SearchPromo = (new SearchPromo());
-                                    $data['cities'] = Yii::app()->db->cache(86400)->createCommand()
-                                        ->select('t.id_city id, t.name')
-                                        ->from('city t')
-                                        ->limit(10000)
-                                        ->queryAll();
-                                    $data['app_count'] = $SearchPromo->searchPromosCount();
-                                    $data['pages'] = new CPagination($data['app_count']);
-                                    $data['pages']->pageSize = 51;
-                                    $data['pages']->applyLimit($SearchPromo);
-                                    $data['workers'] = $SearchPromo->getPromos();
-                                    $data['step'] = 2;   
                                     $this->renderPartial(
                                         MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
-                                        array('viData' => $data, 'id' => $id), 
+                                        array('viData' => (new Services())->getFilteredPromos()), 
                                         false, 
                                         true
                                     );
-
                                 }
                                 else{
                                     $view = MainConfig::$VIEWS_SERVICE_SMS_VIEW;
-                                    $vac = new Vacancy();
-                                    $data = $vac->getVacanciesPrem();
-                                    if(Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('vacancy'))  
-                                        $session['vacancy'] = Yii::app()->getRequest()->getParam('vacancy');
-                                    if(Yii::app()->getRequest()->getParam('vacancy') || Yii::app()->getRequest()->getParam('step')==2){
-                                        $SearchPromo = (new SearchPromo());
-                                        unset($data); 
-                                        $data['cities'] = Yii::app()->db->cache(86400)->createCommand()
-                                            ->select('t.id_city id, t.name')
-                                            ->from('city t')
-                                            ->limit(10000)
-                                            ->queryAll();
-                                        $data['app_count'] = $SearchPromo->searchPromosCount();
-                                        $data['pages'] = new CPagination($data['app_count']);
-                                        $data['pages']->pageSize = 51;
-                                        $data['pages']->applyLimit($SearchPromo);
-                                        $data['workers'] = $SearchPromo->getPromos();
-                                        $data['step'] = 2;
-                                    }
-                                }
+                                    $data = (Yii::app()->getRequest()->getParam('vacancy') 
+                                        ? (new Services())->prepareFilterData()
+                                        : (new Vacancy())->getModerVacs());
+                                } 
                             }
                             else{
                                 $view = MainConfig::$VIEWS_SERVICE_VIEW; 
@@ -1167,7 +1139,7 @@ class SiteController extends AppController
                         case 41:    // duplication
                             if($type_us==3){
                                 $data = (new Vacancy())->postToSocialService();
-                                if(isset($data['vacs'])){
+                                if(isset($data['vacs']) || isset($data['price'])){
                                     $view = MainConfig::$VIEWS_SERVICE_DUPLICATION;
                                 }
                                 else{
@@ -1184,7 +1156,16 @@ class SiteController extends AppController
                         case 214:    // email
                             if($type_us==3){
                                 if(Yii::app()->getRequest()->getParam('users') && Yii::app()->getRequest()->getParam('vacancy')){
-                                    var_dump($_POST);
+                                    $model = new PrommuOrder;
+                                    $data['price'] = $model->servicePrice(Share::$UserProfile->id,'email');
+                                    if($data['price']>0){
+                                        $view = MainConfig::$VIEWS_SERVICE_EMAIL;
+                                    }
+                                    else{
+                                        Yii::app()->user->setFlash('success', array('event'=>'email'));
+                                        $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+                                        exit();
+                                    } 
                                    
                             //         $message = sprintf("Уважаемый %s, работодатель <a href='%s'>%s</a> приглашает Вас на вакансию №%s <a href='%s'>%s</a>. Оплата за работу %s .
                             //             <br />

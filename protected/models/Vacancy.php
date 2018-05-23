@@ -2459,6 +2459,11 @@ WHERE id_vac = {$inVacId}";
 
         if(Yii::app()->getRequest()->isPostRequest){
             $arSoc = Yii::app()->getRequest()->getParam('soc');
+            $order = new PrommuOrder;
+            $price = $order->servicePrice($idus,'repost');
+            if($price>0){
+                return array('price' => $price, 'arReposts' => $arSoc);
+            }
 
             foreach($arSoc as $idvac => $soc){
                 if(isset($arRes[$idvac])){

@@ -2,10 +2,10 @@
 Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . '/theme/css/services/services-sms-page.css');
 Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . '/theme/js/services/services-sms-page.js', CClientScript::POS_END);
 
-if(!isset($viData['step'])):?>
+if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 	<div class="row">
 		<div class="col-xs-12 sms-service">
-			<?php if( $viData['vacs'] ): ?>
+			<?php if(sizeof($viData['vacs'])): ?>
 				<h2 class="sms-service__title">ВЫБЕРИТЕ ВАКАНСИЮ ДЛЯ СМС ИНФОРМИРОВАНИЯ!</h2>
 				<form action="" method="POST">
 					<div class="smss-vacancies__list">
@@ -14,7 +14,7 @@ if(!isset($viData['step'])):?>
 							<div class="smss-vacancies__item-bg">
 								<span class="smss-vacancies__item-title"><?=$val['title'] ?></span>
 							</div>
-							<input type="checkbox" name="vacancy" value="<?=$val['id']?>" class="smss-vacancies__item-input">
+							<input type="radio" name="vacancy" value="<?=$val['id']?>" class="smss-vacancies__item-input">
 						</label>			
 					<?php endforeach; ?>
 					</div>
@@ -32,16 +32,18 @@ if(!isset($viData['step'])):?>
 *		Выбор соискателей
 */
 ?>
-<?php elseif($viData['step']==2): ?>
+<?php elseif(!Yii::app()->getRequest()->getParam('workers')): ?>
 	<?
-		Yii::app()->getClientScript()->registerCssFile("/theme/css/select2.min.css");
-		Yii::app()->getClientScript()->registerScriptFile('/theme/js/select2.min.js', CClientScript::POS_END);
+		//    Выбор соискателей
+		//
+
 		$viData['app_idies'] = array();
 		foreach ($viData['workers']['promos'] as $key => $idus)
 			$viData['app_idies'][] = intval($idus['id_user']);	
 	?>
 	<script type="text/javascript">
 		var arIdies = <?=json_encode($viData['app_idies'])?>;
+		var arSelectCity = <?=json_encode($viData['workers']['city'])?>;
 		var AJAX_GET_PROMO = "<?=MainConfig::$PAGE_SERVICES_SMS?>";	
 	</script>
 	<div class='row'>
@@ -52,21 +54,53 @@ if(!isset($viData['step'])):?>
 		?>
 		<div class="smss__veil"></div>
 		<div class='col-xs-12 col-sm-4 col-md-3'>
-			<form action="" id="F1Filter" method="get">
+			<div class="filter__vis hidden-sm hidden-md hidden-lg hidden-xl">ФИЛЬТР</div>
+			<form action="" id="promo-filter" method="get">
 				<div class='filter'>
-					<div class='smss__filter-block filter-cities'>
-						<div class='smss__filter-name opened'>Город</div>
-						<div class='smss__filter-content opened'>
-							<select class='templatingSelect2'  multiple='multiple' name='cities[]' id="ank-srch-cities">
-								<?php foreach ($viData['cities'] as $city): ?>
-									<option value='<?=$city['id']?>'><?=$city['name']?></option>
-								<?php endforeach;?>
-							</select>
+					<div class='filter__item-block filter-cities'>
+						<div class='filter__item-name opened'>Город</div>
+						<div class='filter__item-content opened'>
+    						<div class="fav__select-cities" id="multyselect-cities"></div>
 						</div>
 					</div>
-					<div class='smss__filter-block filter-sex'>
-						<div class='smss__filter-name opened'>Пол</div>
-						<div class='smss__filter-content opened'>
+					<div class='filter__item filter-posts'>
+						<div class='filter__item-name opened'>Должность</div>
+						<div class='filter__item-content opened'>
+							<div class='right-box'>
+								<?php
+								$sel = 0;
+								foreach($viData['workers']['posts'] as $p)
+									if($p['selected']) $sel++;
+								?>
+								<input name='posts-all' type='checkbox' id="f-all-posts" class="filter__chbox-inp"<?=sizeof($viData['workers']['posts'])==$sel ?' checked':''?>>
+								<label class='filter__chbox-lab' for="f-all-posts">Выбрать все / снять все</label>
+								<?php foreach($viData['workers']['posts'] as $p): ?>
+									<input name='posts[]' value="<?=$p['id']?>" type='checkbox' id="f-post-<?=$p['id']?>" class="filter__chbox-inp" <?=$p['selected'] ? 'checked' : ''?>>
+									<label class='filter__chbox-lab' for="f-post-<?=$p['id']?>"><?=$p['name']?></label>
+								<?php endforeach; ?>
+							</div>
+							<span class="more-posts">Показать все</span>
+						</div>
+					</div>
+					<div class='filter__item filter-age'>
+						<div class='filter__item-name opened'>Возраст</div>
+						<div class='filter__item-content opened'>
+							<div class="filter__age">
+								<label>
+									<span>от</span>
+									<input name=af type='text' value="<?=$_POST['af']?>">
+								</label>
+								<label>
+									<span>до</span>
+									<input name='at' type='text' value="<?=$_POST['at']?>">
+								</label> 
+								<div class="filter__age-btn">ОК</div>
+							</div>
+						</div>
+					</div>
+					<div class='filter__item-block filter-sex'>
+						<div class='filter__item-name opened'>Пол</div>
+						<div class='filter__item-content opened'>
 							<div class='right-box'>
 								<input name='sm' type='checkbox' value='1' class="smss__checkbox-input" id="psa-sex-m">
 								<label class="smss__checkbox-label" for="psa-sex-m">Мужской</label>
@@ -75,16 +109,20 @@ if(!isset($viData['step'])):?>
 							</div>
 						</div>
 					</div>
-					<div class='smss__filter-block filter-additional'>
-						<div class='smss__filter-name opened'>Дополнительно</div>
-						<div class='smss__filter-content opened'>
+					<div class='filter__item-block filter-additional'>
+						<div class='filter__item-name opened'>Дополнительно</div>
+						<div class='filter__item-content opened'>
 							<div class='right-box'>
-								<input name='mb' type='checkbox' value='1' class="smss__checkbox-input" id="psa-med">
-								<label class="smss__checkbox-label" for="psa-med">Наличие медкнижки</label>
-								<input name='avto' type='checkbox' value='1' class="smss__checkbox-input" id="psa-auto">
-								<label class="smss__checkbox-label" for="psa-auto">Наличие автомобиля</label>
-								<input name='smart' type='checkbox' value='1' class="smss__checkbox-input" id="psa-smart">
-								<label class="smss__checkbox-label" for="psa-smart">Наличие смартфона</label>
+								<input name='mb' type='checkbox' value='1' class="filter__chbox-inp" id="f-med"<?=($_POST['mb']?' checked':'')?>>
+								<label class="filter__chbox-lab" for="f-med">Наличие медкнижки</label>
+								<input name='avto' type='checkbox' value='1' class="filter__chbox-inp" id="f-auto"<?=($_POST['avto']?' checked':'')?>>
+								<label class="filter__chbox-lab" for="f-auto">Наличие автомобиля</label>
+								<input name='smart' type='checkbox' value='1' class="filter__chbox-inp" id="f-smart"<?=($_POST['smart']?' checked':'')?>>
+								<label class="filter__chbox-lab" for="f-smart">Наличие смартфона</label>
+								<input name='cardPrommu' type='checkbox' value='1' class="filter__chbox-inp" id="f-pcard"<?=($_POST['cardPrommu']?' checked':'')?>>
+								<label class="filter__chbox-lab" for="f-pcard">Банковская карта Prommu</label>
+								<input name='card' type='checkbox' value='1' class="filter__chbox-inp" id="f-card"<?=($_POST['card']?' checked':'')?>>
+								<label class="filter__chbox-lab" for="f-card">Банковская карта</label>
 							</div>
 						</div>
 					</div>
@@ -118,6 +156,7 @@ if(!isset($viData['step'])):?>
 					<input type="hidden" name="workers" id="mess-workers">
 					<input type="hidden" name="workers-count" id="mess-wcount-inp" value="0">
 					<input type="hidden" name="sms-count" id="mess-mcount-inp" value="1">
+					<input type="hidden" name="vacancy" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
 				</form>
 			</div>
 			<div id="content">
@@ -165,7 +204,7 @@ if(!isset($viData['step'])):?>
 							<?$i++;?>
 						<?endforeach?>
 					<?else:?>
-						Нет подходящих соискателей
+						<div class="col-xs-12">Нет подходящих соискателей</div>
 					<?endif;?>
 				</div>
 				<br>
@@ -190,11 +229,8 @@ if(!isset($viData['step'])):?>
 *		Выбор соискателей
 */
 ?>
-<?php elseif($viData['step']==3): ?>
-	<?php 
-		$appCount = Yii::app()->getRequest()->getParam('workers-count'); 
-		define('SMS_SERVICE_PRICE', '10');
-	?>
+<?php else: ?>
+	<?php $appCount = Yii::app()->getRequest()->getParam('workers-count'); ?>
 	<div class="row">
 		<div class="col-xs-12 sms-service">
 			<form action="<?=MainConfig::$PAGE_PAYMENT?>" method="POST" class="smss__result-form">
@@ -206,13 +242,13 @@ if(!isset($viData['step'])):?>
 					</tr>
 					<tr>
 						<td>Стоимость отправки одного сообщения</td>
-						<td><?=SMS_SERVICE_PRICE?>руб</td>
+						<td><?=$viData['price']?>руб</td>
 					</tr>
 				</table>
-				<?$result = $appCount * SMS_SERVICE_PRICE;?>
-				<span class="smss-result__result"><?echo $appCount . ' * ' . SMS_SERVICE_PRICE . ' = ' . $result . 'рублей'?></span>
+				<?$result = $appCount * $viData['price'];?>
+				<span class="smss-result__result"><?echo $appCount . ' * ' . $viData['price'] . ' = ' . $result . 'рублей'?></span>
 				<button class="smss-result__btn">Перейти к оплате</button>
-				<input type="hidden" name="vacsms" value="<?=$viData['vacancy']?>">
+				<input type="hidden" name="vacsms" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
 				<input type="hidden" name="app_count" value="<?=$appCount?>">
 				<input type="hidden" name="user" value="<?=Yii::app()->getRequest()->getParam('workers')?>">
 				<input type="hidden" name="text" value="<?=Yii::app()->getRequest()->getParam('message')?>">

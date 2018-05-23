@@ -211,10 +211,7 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 //		Выбор соискателей
 ?>
 <?php else: ?>
-	<?php 
-		$appCount = Yii::app()->getRequest()->getParam('users-cnt'); 
-		define('SMS_SERVICE_PRICE', '10');
-	?>
+	<?php $appCount = Yii::app()->getRequest()->getParam('users-cnt'); ?>
 	<div class="row">
 		<div class="col-xs-12 sms-service">
 			<form action="<?=MainConfig::$PAGE_PAYMENT?>" method="POST" class="smss__result-form">
@@ -226,11 +223,11 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 					</tr>
 					<tr>
 						<td>Стоимость отправки одного сообщения</td>
-						<td><?=SMS_SERVICE_PRICE?>руб</td>
+						<td><?=$viData['price']?>руб</td>
 					</tr>
 				</table>
-				<?$result = $appCount * SMS_SERVICE_PRICE;?>
-				<span class="smss-result__result"><?echo $appCount . ' * ' . SMS_SERVICE_PRICE . ' = ' . $result . 'рублей'?></span>
+				<?$result = $appCount * $viData['price'];?>
+				<span class="smss-result__result"><?echo $appCount . ' * ' . $viData['price'] . ' = ' . $result . 'рублей'?></span>
 				<button class="smss-result__btn">Перейти к оплате</button>
 				<input type="hidden" name="vacancy" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
 				<input type="hidden" name="users-cnt" value="<?=$appCount?>">
