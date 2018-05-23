@@ -1237,7 +1237,12 @@ class SiteController extends Controller
             $model->subdomen=0;
             $model->name != 'NO ACTIVE';
             
-            
+            $title = 'Аналитика Prommu';
+            if(isset($_GET['type'])) {
+                $title = $_GET['type']==2 ? 'Аналитика соискателей' : 'Аналитика работодателей';
+                $model->type=$_GET['type'];
+            }
+            $this->setPageTitle($title);            
             $this->render('analytic/index', array('model'=>$model));
         }
     }
