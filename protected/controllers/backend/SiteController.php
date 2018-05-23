@@ -1227,49 +1227,27 @@ class SiteController extends Controller
             $this->render('access');
             return;
         } 
-            if(self::isAuth()) {
+        if(self::isAuth()) {
             $api = new Api();
             $api->ideas();
             $model = new Analytic;
             $model->unsetAttributes();  // clear any default values
             $model->search();
             $model->active=1;
-            $model->subdomen=0;
             $model->name != 'NO ACTIVE';
-            
-            $title = 'Аналитика Prommu';
-            if(isset($_GET['type'])) {
-                $title = $_GET['type']==2 ? 'Аналитика соискателей' : 'Аналитика работодателей';
-                $model->type=$_GET['type'];
+            $title = 'Аналитика';
+            if($_GET['subdomen']=='0') {
+                $title = 'Аналитика Prommu';
+                $model->subdomen=$_GET['subdomen'];
+            }
+            if($_GET['subdomen']=='1') {
+                $title = 'Аналитика SPB';
+                $model->subdomen=$_GET['subdomen'];
             }
             $this->setPageTitle($title);            
             $this->render('analytic/index', array('model'=>$model));
         }
     }
-
-    public function actionAnalyticSpb()
-    {
-
-        if(strpos($this->user_access, "Аналитика") === false) {
-            $this->render('access');
-            return;
-        } 
-        if(self::isAuth()) {
-            $model = new Analytic;
-            $model->unsetAttributes();  // clear any default values
-            $model->search();
-            $model->active=1;
-            $model->subdomen=1;
-            $title = 'Аналитика SPB Prommu';
-            if(isset($_GET['type'])) {
-                $title = $_GET['type']==2 ? 'Аналитика SPB соискателей' : 'Аналитика SPB работодателей';
-                $model->type=$_GET['type'];
-            }
-            $this->setPageTitle($title);
-            $this->render('analytic/index', array('model'=>$model));
-        }
-    }
-
 
     public function actionServicess()
     {

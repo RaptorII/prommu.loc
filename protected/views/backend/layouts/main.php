@@ -339,121 +339,81 @@
       <?php
         $hUrl = Yii::app()->homeUrl . $this->id . '/';
         $curId = $this->action->id;
-
-echo "<pre style='display:none'>";
-print_r($curId); 
-echo "</pre>";
       ?>
-
-
       <ul class="sidebar-menu">
         <li class="header">НАВИГАТОР</li>
         <?php
         // users
         ?>
         <?php 
-          $enable = in_array($curId, ['users','empl','wait','PromoEdit','EmplEdit','analytic','analyticspb']);
           $enableA = in_array($curId, ['users','PromoEdit']);
-          $enableA = (in_array($curId, ['wait','analytic','analyticspb']) && $_GET['type']==2) ? true : $enableA;
+          $enableA = ($curId=='wait' && $_GET['type']==2) ? true : $enableA;
           $enableE = in_array($curId, ['empl','EmplEdit']);
-          $enableE = (in_array($curId, ['wait','analytic','analyticspb'])  && $_GET['type']==3) ? true : $enableE;
+          $enableE = ($curId=='wait'  && $_GET['type']==3) ? true : $enableE;
         ?>
-        <li class="treeview<?=$enable ? ' active' : ''?>">
+        <li class="treeview <?=($enableA?'active':'')?>">
           <a href="#">
-            <i class="glyphicon glyphicon-registration-mark"></i>
-            <span>Регистрации</span>
-            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+            <i class="glyphicon glyphicon-user"></i>
+            <span>Соискатели</span>
+          <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
           </a>
-          <ul class="treeview-menu<?=$enable ? ' menu-open' : ''?>"<?=!$enable ? ' style="display:none"' : ''?>>
-            <li class="treeview <?=($enableA?'active':'')?>">
-              <a href="#">
-                <i class="glyphicon glyphicon-user"></i>
-                <span>Соискатели</span>
-              <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+          <ul class="treeview-menu<?=$enableA ? ' menu-open' : ''?>"<?=!$enableA ? ' style="display:none"' : ''?>>
+            <li class="<?=(in_array($curId,['users','PromoEdit'])?'active':'')?>">
+              <a href="<?=$hUrl?>users">
+                <i class="glyphicon glyphicon-ok-circle"></i>
+                <span>Зарегистрированные</span>
               </a>
-              <ul class="treeview-menu<?=$enableA ? ' menu-open' : ''?>"<?=!$enableA ? ' style="display:none"' : ''?>>
-                <li class="<?=(in_array($curId,['users','PromoEdit'])?'active':'')?>">
-                  <a href="<?=$hUrl?>users">
-                    <i class="glyphicon glyphicon-ok-circle"></i>
-                    <span>Зарегистрированные</span>
-                  </a>
-                </li>
-                <li class="<?=($curId=='wait' && $_GET['type']==2?'active':'')?>">
-                  <a href="<?=$hUrl?>wait?type=2">
-                    <i class="glyphicon glyphicon-hourglass"></i>
-                    <span>Брошенные</span>
-                  </a>
-                </li>
-                <li class="<?=($curId=='analytic' && $_GET['type']==2?'active':'')?>">
-                  <a href="<?=$hUrl?>analytic?type=2">
-                    <i class="glyphicon glyphicon-text-background"></i>
-                    <span>Аналитика</span>
-                  </a>
-                </li>
-                <li class="<?=($curId=='analyticspb' && $_GET['type']==2?'active':'')?>">
-                  <a href="<?=$hUrl?>analyticspb?type=2">
-                    <i class="glyphicon glyphicon-text-background"></i>
-                    <span>Аналитика spb</span>
-                  </a>
-                </li>
-                <li class="">
-                  <a href="#" onclick="alert('Страница в разработке'); return false">
-                    <i class="glyphicon glyphicon-thumbs-up"></i>
-                    <span>Оценка персонала</span>
-                  </a>
-                </li>
-                <li class="">
-                  <a href="#" onclick="alert('Страница в разработке'); return false">
-                    <i class="glyphicon glyphicon-heart"></i>
-                    <span>Отзывы</span>
-                  </a>
-                </li>
-              </ul>
             </li>
-            <li class="<?=($enableE?'active':'')?>">
-              <a href="#">
-                <i class="glyphicon glyphicon-briefcase"></i>
-                <span>Работодатели</span>
-              <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+            <li class="<?=($curId=='wait' && $_GET['type']==2?'active':'')?>">
+              <a href="<?=$hUrl?>wait?type=2">
+                <i class="glyphicon glyphicon-hourglass"></i>
+                <span>Брошенные</span>
               </a>
-              <ul class="treeview-menu<?=$enableE ? ' menu-open' : ''?>"<?=!$enableE ? ' style="display:none"' : ''?>>
-                <li class="<?=(in_array($curId,['empl','EmplEdit'])?'active':'')?>">
-                  <a href="<?=$hUrl?>empl">
-                    <i class="glyphicon glyphicon-ok-circle"></i>
-                    <span>Зарегистрированные</span>
-                  </a>
-                </li>
-                <li class="<?=($curId=='wait' && $_GET['type']==3?'active':'')?>">
-                  <a href="<?=$hUrl?>wait?type=3">
-                    <i class="glyphicon glyphicon-hourglass"></i>
-                    <span>Брошенные</span>
-                  </a>
-                </li>
-                <li class="<?=($curId=='analytic' && $_GET['type']==3?'active':'')?>">
-                  <a href="<?=$hUrl?>analytic?type=3">
-                    <i class="glyphicon glyphicon-text-background"></i>
-                    <span>Аналитика</span>
-                  </a>
-                </li>
-                <li class="<?=($curId=='analyticspb' && $_GET['type']==3?'active':'')?>">
-                  <a href="<?=$hUrl?>analyticspb?type=3">
-                    <i class="glyphicon glyphicon-text-background"></i>
-                    <span>Аналитика spb</span>
-                  </a>
-                </li>
-                <li class="">
-                  <a href="#" onclick="alert('Страница в разработке'); return false">
-                    <i class="glyphicon glyphicon-thumbs-up"></i>
-                    <span>Оценка персонала</span>
-                  </a>
-                </li>
-                <li class="">
-                  <a href="#" onclick="alert('Страница в разработке'); return false">
-                    <i class="glyphicon glyphicon-heart"></i>
-                    <span>Отзывы</span>
-                  </a>
-                </li>
-              </ul>
+            </li>
+            <li class="">
+              <a href="#" onclick="alert('Страница в разработке'); return false">
+                <i class="glyphicon glyphicon-thumbs-up"></i>
+                <span>Оценка персонала</span>
+              </a>
+            </li>
+            <li class="">
+              <a href="#" onclick="alert('Страница в разработке'); return false">
+                <i class="glyphicon glyphicon-heart"></i>
+                <span>Отзывы</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="<?=($enableE?'active':'')?>">
+          <a href="#">
+            <i class="glyphicon glyphicon-briefcase"></i>
+            <span>Работодатели</span>
+          <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+          </a>
+          <ul class="treeview-menu<?=$enableE ? ' menu-open' : ''?>"<?=!$enableE ? ' style="display:none"' : ''?>>
+            <li class="<?=(in_array($curId,['empl','EmplEdit'])?'active':'')?>">
+              <a href="<?=$hUrl?>empl">
+                <i class="glyphicon glyphicon-ok-circle"></i>
+                <span>Зарегистрированные</span>
+              </a>
+            </li>
+            <li class="<?=($curId=='wait' && $_GET['type']==3?'active':'')?>">
+              <a href="<?=$hUrl?>wait?type=3">
+                <i class="glyphicon glyphicon-hourglass"></i>
+                <span>Брошенные</span>
+              </a>
+            </li>
+            <li class="">
+              <a href="#" onclick="alert('Страница в разработке'); return false">
+                <i class="glyphicon glyphicon-thumbs-up"></i>
+                <span>Оценка персонала</span>
+              </a>
+            </li>
+            <li class="">
+              <a href="#" onclick="alert('Страница в разработке'); return false">
+                <i class="glyphicon glyphicon-heart"></i>
+                <span>Отзывы</span>
+              </a>
             </li>
           </ul>
         </li>
@@ -560,6 +520,39 @@ echo "</pre>";
               <a href="#" onclick="alert('Страница в разработке'); return false">
                 <i class="glyphicon glyphicon-cog"></i>
                 <span>API</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <?php
+        // ANALYTIC
+        ?>
+        <?php
+          $enable = $curId=='analytic';
+        ?>
+        <li class="treeview<?=$enable ? ' active' : ''?>">
+          <a href="#">
+            <i class="glyphicon glyphicon-text-background"></i>
+            <span>Аналитика</span>
+            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+          </a>
+          <ul class="treeview-menu<?=$enable ? ' menu-open' : ''?>"<?=!$enable ? ' style="display:none"' : ''?>>
+            <li class="<?=($curId=='analytic'&&$_GET['subdomen']==''?'active':'')?>">
+              <a href="<?=$hUrl?>analytic?subdomen=">
+                <i class="glyphicon glyphicon-text-background"></i>
+                <span>Общая</span>
+              </a>
+            </li>
+            <li class="<?=($curId=='analytic'&&$_GET['subdomen']=='0'?'active':'')?>">
+              <a href="<?=$hUrl?>analytic?subdomen=0">
+                <i class="glyphicon glyphicon-text-background"></i>
+                <span>PROMMU</span>
+              </a>
+            </li>
+            <li class="<?=($curId=='analytic'&&$_GET['subdomen']=='1'?'active':'')?>">
+              <a href="<?=$hUrl?>analytic?subdomen=1">
+                <i class="glyphicon glyphicon-text-background"></i>
+                <span>SPB.PROMMU</span>
               </a>
             </li>
           </ul>
