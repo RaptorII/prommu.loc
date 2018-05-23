@@ -1537,7 +1537,25 @@ class SiteController extends AppController
             $point = $_GET['point'];
             $last_referer = $_GET['last_referer'];
 
-            
+            $analytData = array('id_us' => $_GET['id'],
+                        'name' => 'NO ACTIVE',
+                        'date' =>  date('Y-m-d H:i:s'),
+                        'type' => $res['type'],
+                        'referer' => $referer,
+                        'canal' => $canal,
+                        'campaign' => $campaign,
+                        'content' => $content, 
+                        'keywords' => $keywords,
+                        'point' => $point, 
+                        'transition' => $transition,
+                        'last_referer' => $last_referer,
+                        'admin' => 0,
+                        'subdomen' => 0,
+                    );
+
+
+            $res = Yii::app()->db->createCommand()
+                        ->insert('analytic', $analytData);
             
             $link  = 'https://prommu.com' . MainConfig::$PAGE_ACTIVATE . '/?t=' . $token . "&uid=" . $_GET['id'].'&phone=1&referer='.$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;;
             $this->redirect( $link);
