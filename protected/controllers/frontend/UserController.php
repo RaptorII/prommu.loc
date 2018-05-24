@@ -1105,6 +1105,8 @@ class UserController extends AppController
             $count = count($user);
             $type = "push";
             $date = date("Y-m-d h-i-s");
+            $sum = $prommuOrder->servicePrice($_POST['employer'], "push");
+            if($sum > 0){
             for($i = 0; $i < $count; $i ++) 
             {
                 $admin = $_POST['employer'];
@@ -1116,17 +1118,29 @@ class UserController extends AppController
                 $summa+=$sum;
 
             }
-           
-            if($summa = 0){
-             Yii::app()->user->setFlash('success', array('event'=>'email'));
+            $publi = "84661-fc398";
+               $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$vac";
+               $this->redirect($link);
+            } else {
+                for($i = 0; $i < $count; $i ++) 
+                {
+                $admin = $_POST['employer'];
+                $use = $user[$i];
+                $sum = $prommuOrder->servicePrice($_POST['employer'], "push");
+                $postback = 0;
+                $status = 0;
+                $prommuOrder->serviceOrderEmail($admin,$sum, "1", $postback, $date ,$date, $vac, $type, $text, $use);
+                $summa+=$sum;
+
+                }
+                 Yii::app()->user->setFlash('success', array('event'=>'email'));
              
                $link = "https://prommu.com/services";
                $this->redirect($link);
-            } else {
-               $publi = "84661-fc398";
-               $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$vac";
-               $this->redirect($link);
+            
+            
             }
+           
            
 
         } elseif($_POST['vacanc']){
