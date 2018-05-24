@@ -143,7 +143,7 @@
           <button type="submit" class="workers-form-btn off" id="workers-btn">сформировать PUSH уведомления</button>
           <input type="hidden" name="users" id="mess-workers">
           <input type="hidden" name="users-cnt" id="mess-wcount-inp" value="0">
-          <input type="hidden" name="vacancy" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
+          <input type="hidden" name="vacpush" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
           <?php if($viData['price']==0): ?>
             <input type="hidden" name="employer" value="<?=Share::$UserProfile->id?>">
             <input type="hidden" name="service" value="push">           
@@ -238,7 +238,7 @@
         <?$result = $appCount * $viData['price'];?>
         <span class="smss-result__result"><?echo $appCount . ' * ' . $viData['price'] . ' = ' . $result . 'рублей'?></span>
         <button class="smss-result__btn">Перейти к оплате</button>
-        <input type="hidden" name="vacancy" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
+        <input type="hidden" name="vacpush" value="<?=Yii::app()->getRequest()->getParam('vacpush')?>">
         <input type="hidden" name="users-cnt" value="<?=$appCount?>">
         <input type="hidden" name="users" value="<?=Yii::app()->getRequest()->getParam('users')?>">
         <input type="hidden" name="employer" value="<?=Share::$UserProfile->id?>">
