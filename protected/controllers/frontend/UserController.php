@@ -1104,19 +1104,19 @@ class UserController extends AppController
                 $use = $user[$i];
                           $sql = "SELECT  e.title
                 FROM empl_vacations e
-                WHERE e.id = {$vac}";
+                WHERE e.id = $vac";
                 $vacancy = Yii::app()->db->createCommand($sql)->queryAll();
 
              $sql = "SELECT  u.email, e.name, e.firstname, e.lastname 
                 FROM employer e
                 LEFT JOIN user u ON u.id_user = e.id_user
-                WHERE e.id_user = { $admin}";
+                WHERE e.id_user = $admin";
             $empl = Yii::app()->db->createCommand($sql)->queryAll();
 
             $sql = "SELECT  e.id, u.email, e.firstname, e.lastname 
                 FROM resume e
                 LEFT JOIN user u ON u.id_user = e.id_user
-                WHERE e.id_user = {$use}";
+                WHERE e.id_user = $use";
             $resume = Yii::app()->db->createCommand($sql)->queryAll();
 
             $message = '<p style="font-size:16px;"Работодатель'.$admin.' '.$empl[0]['lastname'].' '.$empl[0]['firstname'].'<br/> </p>
