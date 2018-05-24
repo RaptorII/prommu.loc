@@ -1082,7 +1082,7 @@ class UserController extends AppController
                 $sum = 1;
                 $postback = 0;
                 $status = 0;
-                $prommuOrder->serviceOrderEmail($admin,$sum, "1", $postback, $date ,$date, $vac, $type, $text, $use);
+                $prommuOrder->serviceOrderEmail($admin,$sum, "0", $postback, $date ,$date, $vac, $type, $text, $use);
                 $summa+=$sum;
                 $ids =  $user[$i];
                  $sql = "SELECT r.push
@@ -1103,8 +1103,9 @@ class UserController extends AppController
 
             }
             Yii::app()->user->setFlash('success', array('event'=>'email'));
-            $this->redirect(DS . MainConfig::$PAGE_SERVICES);
-             exit(); 
+            $publi = "84661-fc398";
+           $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$vac";
+           $this->redirect($link);
 
         } elseif($_POST['vacanc']){
            
