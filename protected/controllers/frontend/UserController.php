@@ -137,11 +137,24 @@ class UserController extends AppController
             for ($i = $count; $i > 0 ; $i --) { 
                 $name = $arr[$i];
 
-                 $res = Yii::app()->db->createCommand()
+                $res = Yii::app()->db->createCommand()
                 ->update('service_cloud', array(
                     'status'=> 1,
-                ), 'id_user=:id_user AND name=:name', array(':id_user' => "$account", ':name' => "$name"));
+                ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':user'=> $user));
+                
+                $link = "https://prommu.com/vacancy/$user";
+                $text = "Работодатель приглашает на вакансию";
 
+                $sql = "SELECT r.push
+                FROM user_push r
+                WHERE r.id = {$user}";
+                $res = Yii::app()->db->createCommand($sql)->queryRow(); 
+                if($res) {
+                $type = "vacancy";
+                $api = new Api();
+                $api->getPushApi($res['push'], $type, $text, $link);
+            
+                }
                 }
             } elseif($arr[2] == "email") {
                 for ($i = 3; $i < $count; $i ++) { 
@@ -1101,22 +1114,6 @@ class UserController extends AppController
                 $status = 0;
                 $prommuOrder->serviceOrderEmail($admin,$sum, "0", $postback, $date ,$date, $vac, $type, $text, $use);
                 $summa+=$sum;
-                $ids =  $user[$i];
-                 $sql = "SELECT r.push
-                FROM user_push r
-                WHERE r.id = {$ids}";
-                $res = Yii::app()->db->createCommand($sql)->queryRow(); 
-
-                $link = "https://prommu.com/vacancy/$vac";
-                $text = "Работодатель приглашает на вакансию";
-
-
-                if($res) {
-                $type = "vacancy";
-                $api = new Api();
-                $api->getPushApi($res['push'], $type, $text, $link);
-            
-                }
 
             }
             Yii::app()->user->setFlash('success', array('event'=>'email'));
