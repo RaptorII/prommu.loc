@@ -116,6 +116,16 @@ class UserController extends AppController
                 ), 'id=:id', array(':id' => $name));
 
                 }
+            } elseif($arr[2] == "push") {
+            for ($i = $count; $i > 0 ; $i --) { 
+                $name = $arr[$i];
+
+                 $res = Yii::app()->db->createCommand()
+                ->update('service_cloud', array(
+                    'status'=> 1,
+                ), 'id_user=:id_user AND name=:name', array(':id_user' => "$account", ':name' => "$name"));
+
+                }
             } elseif($arr[2] == "email") {
                 for ($i = 3; $i < $count; $i ++) { 
                  $name = $arr[1];
