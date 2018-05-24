@@ -1151,8 +1151,33 @@ class UserController extends AppController
            $publi = "84661-fc398";
            $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$summa";
            $this->redirect($link);
-        }
-        elseif($_POST['sms']) {
+        } elseif($_POST['vacrepost']){
+          
+            $vac = $_POST['vacrepost'];
+            $user = explode(",", $_POST['network']);
+            $account = $_POST['employer'];
+            $account.=".$vac.repost";
+            $text = $_POST['vacrepost'];
+            $count = count($user);
+            $type = "push";
+            $date = date("Y-m-d h-i-s");
+            for($i = 0; $i < $count; $i ++) 
+            {
+                $admin = $_POST['employer'];
+                $use = $user[$i];
+                $sum = $prommuOrder->servicePrice($_POST['employer'], "repost");
+                $postback = 0;
+                $status = 0;
+                $prommuOrder->serviceOrderEmail($admin,$sum, "0", $postback, $date ,$date, $vac, $type, $text, $use);
+                $summa+=$sum;
+
+            }
+         
+            $publi = "84661-fc398";
+           $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$vac";
+           $this->redirect($link);
+
+        }elseif($_POST['sms']) {
             $vac = new Vacancy();
             $vac = $vac->getVacancyInfo($_POST['sms'][0]);
             $mech = $vac[0]['id_attr'];
