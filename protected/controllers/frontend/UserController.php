@@ -1102,7 +1102,11 @@ class UserController extends AppController
                 {
                  $admin = $_POST['employer'];
                 $use = $user[$i];
-                          $sql = "SELECT  e.title
+                 $postback = 0;
+                $status = 0;
+                $prommuOrder->serviceOrderEmail($admin,$sum, $status, $postback, $date ,$date, $vac, $type, $text, $use);
+                
+            $sql = "SELECT  e.title
                 FROM empl_vacations e
                 WHERE e.id = $vac";
                 $vacancy = Yii::app()->db->createCommand($sql)->queryAll();
