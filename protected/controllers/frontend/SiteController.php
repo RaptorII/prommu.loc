@@ -1041,17 +1041,10 @@ class SiteController extends AppController
                             break;
                         case 40:    // push
                             if($type_us==3){
-                                if(Yii::app()->getRequest()->getParam('users')){
-                                    $model = new PrommuOrder;
-                                    $data['price'] = $model->servicePrice(Share::$UserProfile->id,'push'); 
-                                    if($data['price']>0){
-                                        $view = MainConfig::$VIEWS_SERVICE_PUSH_VIEW;
-                                    }
-                                    else{
-                                        Yii::app()->user->setFlash('success', array('event'=>'email'));
-                                        $this->redirect(DS . MainConfig::$PAGE_SERVICES);
-                                        exit();
-                                    }
+                                $model = new PrommuOrder;
+                                $data['price'] = $model->servicePrice(Share::$UserProfile->id,'push');
+                                if(Yii::app()->getRequest()->getParam('users') && $data['price']>0){
+                                    $view = MainConfig::$VIEWS_SERVICE_PUSH_VIEW;
                                 }
                                 elseif(Yii::app()->request->isAjaxRequest){
                                     $this->renderPartial(
@@ -1063,9 +1056,10 @@ class SiteController extends AppController
                                 }
                                 else{
                                     $view = MainConfig::$VIEWS_SERVICE_PUSH_VIEW;
-                                    $data = (Yii::app()->getRequest()->getParam('vacancy') 
+                                    $data2 = (Yii::app()->getRequest()->getParam('vacancy') 
                                         ? (new Services())->prepareFilterData()
                                         : (new Vacancy())->getModerVacs());
+                                    $data = array_merge($data,$data2);
                                 }
                             }
                             else
