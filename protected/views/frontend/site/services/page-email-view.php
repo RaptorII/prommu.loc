@@ -138,6 +138,7 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 					</div>
 					<button type="submit" class="workers-form-btn off" id="workers-btn">Отправить приглашение</button>
 					<input type="hidden" name="users" id="mess-workers">
+					<input type="hidden" name="employer" value="<?=Share::$UserProfile->id?>">
 					<input type="hidden" name="users-cnt" id="mess-wcount-inp" value="0">
 					<input type="hidden" name="vacemail" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
 				</form>
