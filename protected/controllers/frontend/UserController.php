@@ -1053,7 +1053,7 @@ class UserController extends AppController
             {
                 $admin = $_POST['account'];
                 $use = $user[$i];
-                $sum = $prommuOrder->servicePrice();
+                $sum = $prommuOrder->servicePrice($_POST['account'], "sms");
                 $postback = 0;
                 $status = 0;
                 $prommuOrder->serviceOrderSms($admin,$sum, $status, $postback, $date ,$date, $vac, $type, $text, $use);
@@ -1081,7 +1081,7 @@ class UserController extends AppController
             {
                 $admin = $_POST['employer'];
                 $use = $user[$i];
-                $sum = $prommuOrder->servicePrice();
+                $sum = $prommuOrder->servicePrice($_POST['account'], "email");
                 $postback = 0;
                 $status = 0;
                 $prommuOrder->serviceOrderEmail($admin,$sum, $status, $postback, $date ,$date, $vac, $type, $text, $use);
@@ -1109,7 +1109,7 @@ class UserController extends AppController
             {
                 $admin = $_POST['employer'];
                 $use = $user[$i];
-                $sum = $prommuOrder->servicePrice();
+                $sum = $prommuOrder->servicePrice($_POST['account'], "push");
                 $postback = 0;
                 $status = 0;
                 $prommuOrder->serviceOrderEmail($admin,$sum, "0", $postback, $date ,$date, $vac, $type, $text, $use);
@@ -1135,7 +1135,7 @@ class UserController extends AppController
             for($i = 0; $i < $count; $i ++) 
             {
                 $date =  (strtotime ($to[$i])- strtotime ($from[$i]))/(60*60*24);
-                $sums = $prommuOrder->servicePrice();
+                $sums = $prommuOrder->servicePrice($_POST['account'], "vacancy");
                 $sum = $date * $sums;
                 $postback = 0;
                 $status = 0;
