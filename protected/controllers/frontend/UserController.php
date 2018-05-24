@@ -50,8 +50,25 @@ class UserController extends AppController
                     'key'=> $unitpayId,
                 ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':user' => $user));
                 }
-            }
-            else {
+            }elseif($arr[2] == "push"){
+                for ($i = $count; $i > 2 ; $i --) { 
+                $name = $arr[1];
+                $user = $arr[$i];
+               $res = Yii::app()->db->createCommand()
+                ->update('service_cloud', array(
+                    'key'=> $unitpayId,
+                ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':user' => $user));
+                }
+            } elseif($arr[2] == "email"){
+                for ($i = $count; $i > 2 ; $i --) { 
+                $name = $arr[1];
+                $user = $arr[$i];
+               $res = Yii::app()->db->createCommand()
+                ->update('service_cloud', array(
+                    'key'=> $unitpayId,
+                ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':user' => $user));
+                }
+            } else {
 
             for ($i = $count; $i > 0 ; $i --) { 
                 $name = $arr[$i];
