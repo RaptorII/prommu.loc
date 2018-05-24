@@ -1077,8 +1077,10 @@ class UserController extends AppController
             $count = count($user);
             $type = "email";
             $date = date("Y-m-d");
-            for($i = 0; $i < $count; $i ++) 
-            {
+            $sum = $prommuOrder->servicePrice($_POST['employer'], "email");
+            if($sum > 0){
+                for($i = 0; $i < $count; $i ++) 
+                {
                 $admin = $_POST['employer'];
                 $use = $user[$i];
                 $sum = $prommuOrder->servicePrice($_POST['employer'], "email");
@@ -1086,14 +1088,55 @@ class UserController extends AppController
                 $status = 0;
                 $prommuOrder->serviceOrderEmail($admin,$sum, $status, $postback, $date ,$date, $vac, $type, $text, $use);
                 $summa+=$sum;
-            }
-            for($i = 0; $i < $count; $i ++) { 
-                $use = $user[$i];
-                $account.= ".$use";
-            }
-            $publi = "84661-fc398";
-           $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$vac";
-           $this->redirect($link);
+                }
+                for($i = 0; $i < $count; $i ++) { 
+                    $use = $user[$i];
+                    $account.= ".$use";
+                }
+                $publi = "84661-fc398";
+               $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$vac";
+                $this->redirect($link);
+           } else {
+          
+               for($i = 0; $i < $count; $i ++) 
+                {
+                          $sql = "SELECT  e.title
+                FROM empl_vacations e
+                WHERE e.id = {$name}";
+                $vacancy = Yii::app()->db->createCommand($sql)->queryAll();
+
+             $sql = "SELECT  u.email, e.name, e.firstname, e.lastname 
+                FROM employer e
+                LEFT JOIN user u ON u.id_user = e.id_user
+                WHERE e.id_user = { $admin}";
+            $empl = Yii::app()->db->createCommand($sql)->queryAll();
+
+            $sql = "SELECT  e.id, u.email, e.firstname, e.lastname 
+                FROM resume e
+                LEFT JOIN user u ON u.id_user = e.id_user
+                WHERE e.id_user = {$user}";
+            $resume = Yii::app()->db->createCommand($sql)->queryAll();
+
+            $message = '<p style="font-size:16px;"Работодатель'.$admin.' '.$empl[0]['lastname'].' '.$empl[0]['firstname'].'<br/> </p>
+                    <br/>
+
+                <p style=" font-size:16px;">
+                 <br/>Компания: '.$empl[0]['name'].'<br/>
+              Приглашает на вакансию:  '.$name.' '.$vacancy[0]['title'].'<br/>
+              Ссылка на вакансию:  <a href="https://prommu.com/vacancy/'.$name.'">'.$vacancy[0]['title'].'</a><br/>
+
+                    <br/>';
+                    if(strpos($resume[0]['email'], "@") !== false){
+                        Share::sendmail($empl[0]['email'], "Prommu.com. Приглашение На Вакансию", $message);
+                        Share::sendmail('denisgresk@gmail.com', "Prommu.com. Приглашение На Вакансию", $message);
+                    }
+                }
+                Yii::app()->user->setFlash('success', array('event'=>'email'));
+             
+               $link = "https://prommu.com/services";
+               $this->redirect($link);
+                
+            } 
 
         } elseif($_POST['vacpush']){
           
@@ -1133,7 +1176,7 @@ class UserController extends AppController
                 $summa+=$sum;
 
                 }
-                 Yii::app()->user->setFlash('success', array('event'=>'email'));
+                 Yii::app()->user->setFlash('success', array('event'=>'push'));
              
                $link = "https://prommu.com/services";
                $this->redirect($link);
