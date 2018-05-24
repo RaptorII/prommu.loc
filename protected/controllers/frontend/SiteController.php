@@ -1152,14 +1152,14 @@ class SiteController extends AppController
                                 if(Yii::app()->getRequest()->getParam('users') && Yii::app()->getRequest()->getParam('vacancy')){
                                     $model = new PrommuOrder;
                                     $data['price'] = $model->servicePrice(Share::$UserProfile->id,'email');
-                                    if($data['price']>0){
+                                    //if($data['price']>0){
                                         $view = MainConfig::$VIEWS_SERVICE_EMAIL;
-                                    }
-                                    else{
-                                        Yii::app()->user->setFlash('success', array('event'=>'email'));
-                                        $this->redirect(DS . MainConfig::$PAGE_SERVICES);
-                                        exit();
-                                    } 
+                                    //}
+                                   // else{
+                                     //   Yii::app()->user->setFlash('success', array('event'=>'email'));
+                                     //   $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+                                      //  exit();
+                                    //} 
                                    
                             //         $message = sprintf("Уважаемый %s, работодатель <a href='%s'>%s</a> приглашает Вас на вакансию №%s <a href='%s'>%s</a>. Оплата за работу %s .
                             //             <br />
