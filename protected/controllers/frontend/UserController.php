@@ -1100,7 +1100,7 @@ class UserController extends AppController
             $vac = $_POST['vacpush'];
             $user = explode(",", $_POST['users']);
             $account = $_POST['employer'];
-            $account.=".$vac.email";
+            $account.=".$vac.push";
             $text = $_POST['vacpush'];
             $count = count($user);
             $type = "push";
