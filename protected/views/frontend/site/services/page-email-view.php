@@ -6,7 +6,7 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 		<div class="col-xs-12">
 			<?php if(sizeof($viData['vacs'])): ?>
 				<h2 class="service__title">ВЫБЕРИТЕ ВАКАНСИЮ ДЛЯ ИНФОРМИРОВАНИЯ ПО EMAIL!</h2>
-				<form action="" method="POST">
+				<form action="/user/payment" method="POST">
 					<div class="service__vac-list">
 					<?php foreach ($viData['vacs'] as $key => $val): ?>
 						<label class="service-vac__item">
@@ -229,7 +229,7 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 				<?$result = $appCount * $viData['price'];?>
 				<span class="smss-result__result"><?echo $appCount . ' * ' . $viData['price'] . ' = ' . $result . 'рублей'?></span>
 				<button class="smss-result__btn">Перейти к оплате</button>
-				<input type="hidden" name="vacancy" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
+				<input type="hidden" name="vacemail" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
 				<input type="hidden" name="users-cnt" value="<?=$appCount?>">
 				<input type="hidden" name="users" value="<?=Yii::app()->getRequest()->getParam('users')?>">
 				<input type="hidden" name="employer" value="<?=Share::$UserProfile->id?>">
