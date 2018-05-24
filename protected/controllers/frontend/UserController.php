@@ -1116,10 +1116,18 @@ class UserController extends AppController
                 $summa+=$sum;
 
             }
-            Yii::app()->user->setFlash('success', array('event'=>'email'));
-            $publi = "84661-fc398";
-           $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$vac";
-           $this->redirect($link);
+           
+            if($summa = 0){
+             Yii::app()->user->setFlash('success', array('event'=>'email'));
+             
+               $link = "https://prommu.com/services";
+               $this->redirect($link);
+            } else {
+               $publi = "84661-fc398";
+               $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$vac";
+               $this->redirect($link);
+            }
+           
 
         } elseif($_POST['vacanc']){
            
