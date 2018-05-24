@@ -1,7 +1,7 @@
 <?php
   Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/theme/css/services/page-push.css');
   Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/services/page-push.js', CClientScript::POS_END);
-  if(!Yii::app()->getRequest()->getParam('vacancy')):
+  if(!Yii::app()->getRequest()->getParam('vacancy') && !Yii::app()->getRequest()->getParam('vacpush')):
   //
   //  Выбор вакансии
   //
@@ -21,7 +21,6 @@
             </label>      
           <?php endforeach; ?>
           </div>
-          <input type="hidden" name="vacancy" id="vacancy">
           <button class="service__btn" id="vac-btn">Выбрать персонал для PUSH уведомления</button>
         </form> 
       <?php else: ?>
