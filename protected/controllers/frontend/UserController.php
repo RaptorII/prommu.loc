@@ -1040,7 +1040,7 @@ class UserController extends AppController
 
         $prommuOrder = new PrommuOrder();
         if($_POST['vacsms']){
-          
+            
             $vac = $_POST['vacsms'];
             $user = explode(",", $_POST['user']);
             $account = $_POST['account'];
@@ -1053,7 +1053,7 @@ class UserController extends AppController
             {
                 $admin = $_POST['account'];
                 $use = $user[$i];
-                $sum = 1;
+                $sum = $prommuOrder->servicePrice();
                 $postback = 0;
                 $status = 0;
                 $prommuOrder->serviceOrderSms($admin,$sum, $status, $postback, $date ,$date, $vac, $type, $text, $use);
@@ -1081,7 +1081,7 @@ class UserController extends AppController
             {
                 $admin = $_POST['employer'];
                 $use = $user[$i];
-                $sum = 1;
+                $sum = $prommuOrder->servicePrice();
                 $postback = 0;
                 $status = 0;
                 $prommuOrder->serviceOrderEmail($admin,$sum, $status, $postback, $date ,$date, $vac, $type, $text, $use);
@@ -1109,7 +1109,7 @@ class UserController extends AppController
             {
                 $admin = $_POST['employer'];
                 $use = $user[$i];
-                $sum = 1;
+                $sum = $prommuOrder->servicePrice();
                 $postback = 0;
                 $status = 0;
                 $prommuOrder->serviceOrderEmail($admin,$sum, "0", $postback, $date ,$date, $vac, $type, $text, $use);
@@ -1135,7 +1135,8 @@ class UserController extends AppController
             for($i = 0; $i < $count; $i ++) 
             {
                 $date =  (strtotime ($to[$i])- strtotime ($from[$i]))/(60*60*24);
-                $sum = $date * 300;
+                $sums = $prommuOrder->servicePrice();
+                $sum = $date * $sums;
                 $postback = 0;
                 $status = 0;
                 $prommuOrder->serviceOrder($account,$sum, $status, $postback, $from[$i], $to[$i], $name[$i], $type);
