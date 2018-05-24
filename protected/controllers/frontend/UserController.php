@@ -1103,7 +1103,7 @@ class UserController extends AppController
                  $admin = $_POST['employer'];
                 $use = $user[$i];
                  $postback = 0;
-                $status = 0;
+                $status = 1;
                 $prommuOrder->serviceOrderEmail($admin,$sum, $status, $postback, $date ,$date, $vac, $type, $text, $use);
                 
             $sql = "SELECT  e.title
