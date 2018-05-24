@@ -1,14 +1,46 @@
 <?php
-if($pagetype=='news') {
-	$this->setPageTitle('Редактирование новости');
-    echo '<h3><i>Редактирование новости</i></h3>';
-} elseif($pagetype=='articles'){
-	$this->setPageTitle('Редактирование статьи');
+if($pagetype=='news')
+{
+	$title = 'Редактирование новости ' . $id;
+	$this->setPageTitle($title);
+	$this->breadcrumbs = array(
+		'Дополнительно'=>array('sect?p=add'),
+		'Управление новостями'=>array('newspages'),
+		'1'=>$title
+	); 
+    echo '<h3><i>'.$title.'</i></h3>';
+} 
+elseif($pagetype=='articles')
+{
+	$title = 'Редактирование статьи '.$id;
+	$this->setPageTitle($title);
+	$this->breadcrumbs = array(
+		'СЕО'=>array('sect?p=seo'),
+		'Управление статьями'=>array('articlespages'),
+		'1'=>$title
+	); 
 	echo '<h3><i>Редактирование статьи</i></h3>';
-} elseif($pagetype=='about'){
+} 
+elseif($pagetype=='about')
+{
 	$this->setPageTitle('Редактирование страницы "О нас"');
+	$this->breadcrumbs = array('Дополнительно'=>array('sect?p=add'),'1'=>'О нас'); 
 	echo '<h3><i>Редактирование страницы "О нас"</i></h3>';
-}else {
+} 
+elseif($pagetype=='empl')
+{
+	$this->setPageTitle('Редактирование страницы "Работодателям"');
+	$this->breadcrumbs = array('Дополнительно'=>array('sect?p=add'),'1'=>'Работодателям'); 
+	echo '<h3><i>Редактирование страницы "Работодателям"</i></h3>';
+} 
+elseif($pagetype=='prom')
+{
+	$this->setPageTitle('Редактирование страницы "Соискателям"');
+	$this->breadcrumbs = array('Дополнительно'=>array('sect?p=add'),'1'=>'Соискателям'); 
+	echo '<h3><i>Редактирование страницы "Соискателям"</i></h3>';
+}
+else 
+{
     echo '<h3><i>Настройка страницы сайта</i></h3>';
 }
 echo '<div class="content">';

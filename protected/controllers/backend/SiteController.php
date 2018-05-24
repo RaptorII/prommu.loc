@@ -221,7 +221,9 @@ class SiteController extends Controller
             return;
         } 
         if(self::isAuth()){
-            $this->setPageTitle('Управление статьями');
+            $title = 'Управление статьями';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('СЕО'=>array('sect?p=seo'),'1'=>$title); 
             $this->render('pages/artsview',array('model'=>$model,'id'=>$id));
         }
         //self::isAuth(array('pages/view',array('model'=>$model, 'id'=>$id)));
@@ -236,7 +238,9 @@ class SiteController extends Controller
             return;
         } 
         if(self::isAuth()){
-            $this->setPageTitle('Управление новостями');
+            $title = 'Управление новостями';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('Дополнительно'=>array('sect?p=add'),'1'=>$title); 
             $this->render('pages/newsview',array('model'=>$model,'id'=>$id));
         }
         //self::isAuth(array('pages/view',array('model'=>$model, 'id'=>$id)));
@@ -314,7 +318,9 @@ class SiteController extends Controller
             if(isset($_GET['Employer'])){
                 $model->attributes=$_GET['Employer'];
             }
-            $this->setPageTitle('Активные работодатели');
+            $title = 'Зарегистрированные';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('Работодатели' => array('sect?p=emp'), '1'=>$title);
             $this->render('users/viewempl',array('model'=>$model));
         }
 
@@ -341,7 +347,9 @@ class SiteController extends Controller
             // if(isset($_GET['Employer'])){
             //     $model->attributes=$_GET['Employer'];
             // }
-            $this->setPageTitle('Список администраторов');
+            $title = 'Администраторы';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('Дополнительно'=>array('sect?p=add'),'1'=>$title); 
             $this->render('admin/view', array('model'=>$model));
         }
 
@@ -367,6 +375,13 @@ class SiteController extends Controller
 
             // --- вывод формы
             $data = $model->getAdmin($id);
+            $title = "Редактирование администратора '" . $data['login'] . "'";
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array(
+                'Дополнительно'=>array('sect?p=add'),
+                'Администраторы'=>array('admin'),
+                '1'=>$title
+            ); 
             $this->render('admin/adminform', array('id'=>$id, 'data'=>$data));
         }
     }
@@ -394,24 +409,25 @@ class SiteController extends Controller
     {
         if(self::isAuth()) {
             if(strpos($this->user_access, "Мониторинг") === false) {
-            $this->render('access');
-            return;
-        }
+                $this->render('access');
+                return;
+            }
         
-        $section = file_get_contents('https://prommu.com/protected/runtime/application.log');
-        $section = explode("---", $section);
-        $j = 0;
-        for($i = 0; $i < count($section); $i ++) {
-            if(strpos($section[$i], "rss") === false){
-                $items[$j] = $section[$i];
-                $j++;
-            } else unset($section[$i]);  
-            
-        }
+            $section = file_get_contents('https://prommu.com/protected/runtime/application.log');
+            $section = explode("---", $section);
+            $j = 0;
+            for($i = 0; $i < count($section); $i ++) {
+                if(strpos($section[$i], "rss") === false){
+                    $items[$j] = $section[$i];
+                    $j++;
+                } else unset($section[$i]);  
+                
+            }
 
-       
-        if($section == "") $section = "Проблем не обнаружено";
-            $this->setPageTitle('Мониторинг ошибок сайта');
+            if($section == "") $section = "Проблем не обнаружено";
+            $title = 'Мониторинг ошибок сайта';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array($title);
             $this->render('stat/view', array('items'=>$items));
         }
     }
@@ -517,11 +533,15 @@ class SiteController extends Controller
                 $model->attributes=$_GET['Vacancy'];
             }
             if($_GET['seo']){ 
-                $this->setPageTitle('СЕО мониторинг вакансий');
+                $title = 'Мониторинг вакансий';
+                $this->setPageTitle($title);
+                $this->breadcrumbs = array('СЕО'=>array('sect?p=seo'), '1'=>$title,);
                 $this->render('vacancy/vacancy', array('model'=>$model));
             }
             else{
-                $this->setPageTitle('Действующие вакансии');
+                $title = 'Действующие';
+                $this->setPageTitle($title);
+                $this->breadcrumbs = array('Вакансии'=>array('sect?p=vac'), '1'=>$title,);
                 $this->render('vacancy/view', array('model'=>$model));
             }
         }           
@@ -561,7 +581,9 @@ class SiteController extends Controller
             if(isset($_GET['Vacancy'])){
                 $model->attributes=$_GET['Vacancy'];
             }
-            $this->setPageTitle('Брошенные вакансии');
+            $title = 'Брошенные';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('Вакансии'=>array('sect?p=vac'), '1'=>$title,);
             $this->render('vacancy/mail', array('model'=>$model));
         }           
     
@@ -647,7 +669,9 @@ class SiteController extends Controller
             if(isset($_GET['User'])){
                 $model->attributes=$_GET['User'];
             }
-            $this->setPageTitle('Заказ карты PROMMU');
+            $title = 'Заказ карты PROMMU';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('Услуги'=>array('sect?p=service'),'1'=>$title);
             $this->render('users/cardsview', array('model'=>$model));
         }
 
@@ -665,6 +689,13 @@ class SiteController extends Controller
 
             // --- вывод формы
         $data = $model->getCard($id);
+        $title = "Редактирование заказа " . $id;
+        $this->setPageTitle($title);
+        $this->breadcrumbs = array(
+            'Услуги'=>array('sect?p=service'),
+            'Заказ карты PROMMU'=>array('cards'),
+            '1'=>$title
+        ); 
         $this->render('users/cardform', array('id'=>$id, 'data'=>$data));
 
     }
@@ -682,7 +713,9 @@ class SiteController extends Controller
             if(isset($_GET['User'])){
                 $model->attributes=$_GET['User'];
             }
-            $this->setPageTitle('Заказ медицинской карты');
+            $title = 'Заказ медкниги';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('Услуги'=>array('sect?p=service'),'1'=>$title);
             $this->render('users/medcardsview', array('model'=>$model));
         }
 
@@ -700,6 +733,13 @@ class SiteController extends Controller
 
             // --- вывод формы
         $data = $model->getCard($id);
+        $title = "Редактирование заказа " . $id;
+        $this->setPageTitle($title);
+        $this->breadcrumbs = array(
+            'Услуги'=>array('sect?p=service'),
+            'Заказ медкниги'=>array('medcards'),
+            '1'=>$title
+        ); 
         $this->render('users/medcardform', array('id'=>$id, 'data'=>$data));
 
     }
@@ -871,7 +911,13 @@ class SiteController extends Controller
 
             // --- вывод формы
             $data = $model->getUser($id);
-            $this->setPageTitle('Редактировать профиль соискателя');
+            $title = 'Профиль соискателя';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array(
+                'Соискатели' => array('sect?p=app'), 
+                'Зарегистрированные'=>array('users'),
+                '1'=>$title
+            );
             $this->render('users/promoform', array('id'=>$id, 'data'=>$data));
         }
     }
@@ -906,16 +952,28 @@ class SiteController extends Controller
                 }
                 $model->updateVacancy($_POST['Vacancy'], $id);
 
-            $model->unsetAttributes();  // clear any default values
-            $model->searchvac();
-            $model->status=1;
-            $this->render('vacancy/view', array('model'=>$model));
+                $model->unsetAttributes();  // clear any default values
+                $model->searchvac();
+                $model->status=1;
+                $this->render('vacancy/view', array('model'=>$model));
 
             }
             else{
             // --- вывод формы
-            $data = $model->getVacancyData($id);
-            $this->setPageTitle('Редактирование вакансии');
+                $data = $model->getVacancyData($id);
+                $title = 'Редактирование вакансии '.$id;
+                $this->setPageTitle($title);
+                $this->breadcrumbs = $data['vac']['status'] != 0
+                ? array(
+                    'Вакансии'=>array('sect?p=vac'),
+                    'Действующие'=>array('vacancy'), 
+                    '1'=>$title,
+                )
+                : array(
+                    'Вакансии'=>array('sect?p=vac'),
+                    'Брошенные'=>array('vacancymail'), 
+                    '1'=>$title,
+                );
             $this->render('vacancy/vacancyform', array('id'=>$id, 'data'=>$data));
         }
         }
@@ -1063,7 +1121,14 @@ class SiteController extends Controller
 
             // --- вывод формы
             $data = $model->getUserEmpl($id);
-            $this->setPageTitle('Редактирование профиля работодателя');
+            $title = 'Профиль работодателя';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array(
+                'Работодатели' => array('sect?p=emp'), 
+                'Зарегистрированные'=>array('empl'),
+                '1'=>$title
+            );
+
             $this->render('users/emplform', array('id'=>$id, 'data'=>$data));
         }
     }
@@ -1179,7 +1244,14 @@ class SiteController extends Controller
             $model->unsetAttributes();
             $title = 'Брошенные регистрации';
             if(isset($_GET['type'])) {
-                $title = $_GET['type']==2 ? 'Брошенные соискателий' : 'Брошенные работодатели';
+                if($_GET['type']==2){
+                    $title = 'Брошенные';
+                    $this->breadcrumbs = array('Соискатели' => array('sect?p=app'), '1'=>$title);
+                }
+                else{
+                    $title = 'Брошенные';
+                    $this->breadcrumbs = array('Работодатели' => array('sect?p=emp'), '1'=>$title);
+                }
                 $model->status=$_GET['type'];
             }
             $this->setPageTitle($title);
@@ -1211,7 +1283,9 @@ class SiteController extends Controller
                 $this->render('users/promo', array('model'=>$model));
             }
             else{
-                $this->setPageTitle('Активные соискатели');
+                $title = 'Зарегистрированные';
+                $this->breadcrumbs = array('Соискатели' => array('sect?p=app'), '1'=>$title);
+                $this->setPageTitle($title);
                 $this->render('users/view', array('model'=>$model));
             }
 
@@ -1235,16 +1309,20 @@ class SiteController extends Controller
             $model->search();
             $model->active=1;
             $model->name != 'NO ACTIVE';
-            $title = 'Аналитика';
+            $title = 'Общая аналитика';
+            $brdcrmbs = 'Общая';
             if($_GET['subdomen']=='0') {
                 $title = 'Аналитика Prommu';
+                $brdcrmbs = 'Prommu';
                 $model->subdomen=$_GET['subdomen'];
             }
             if($_GET['subdomen']=='1') {
                 $title = 'Аналитика SPB';
+                $brdcrmbs = 'SPB';
                 $model->subdomen=$_GET['subdomen'];
             }
-            $this->setPageTitle($title);            
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('Аналитика'=>array('sect?p=analytic'),'1'=>$brdcrmbs);          
             $this->render('analytic/index', array('model'=>$model));
         }
     }
@@ -1266,6 +1344,7 @@ class SiteController extends Controller
                 $model->type=$_GET['type'];
             }
             $this->setPageTitle($title);
+            $this->breadcrumbs = array('Услуги'=>array('sect?p=service'),'1'=>$title);
             $this->render('services/serv', array('model'=>$model));
         }
     }
@@ -1288,10 +1367,12 @@ class SiteController extends Controller
                     case 'sms': $title = 'СМС приглашения'; break;
                     case 'push': $title = 'PUSH приглашения'; break;
                     case 'email': $title = 'EMAIL приглашения'; break;
+                    case 'repost': $title = 'Публикации в соцсетях'; break;
                 }
                 $model->type=$_GET['type'];
             }
             $this->setPageTitle($title);
+            $this->breadcrumbs = array('Услуги'=>array('sect?p=service'),'1'=>$title);
             $this->render('services/index', array('model'=>$model));
         }
     }
@@ -1311,7 +1392,9 @@ class SiteController extends Controller
             // if(isset($_GET['FeedbackTre'])){
             //  $model->attributes=$_GET['Feedback'];
             // }
-            $this->setPageTitle('Обратная связь');
+            $title = 'Обратная связь';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array($title);
             $this->render('feedback/index', array('model'=>$model));
         }
 
@@ -1329,8 +1412,9 @@ class SiteController extends Controller
         }
             $model = new Feedback();
             $data = $model->getDatas($id);
-
-            $this->setPageTitle('Чат обратной связи');
+            $title = 'Ответ на обращение';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('Обратная связь'=>array('feedback'),'1'=>$title);
             $this->render('feedback/mail', array('id'=>$id, 'data'=>$data));
     }
 
@@ -1443,7 +1527,8 @@ class SiteController extends Controller
             $this->render('seo/seos', array('model' => $model));
         }
         else{
-            $this->setPageTitle('SEO фильтр');
+            $this->setPageTitle('Редактирование СЕО');
+            $this->breadcrumbs = array('СЕО'=>array('sect?p=seo'),'1'=>'Фильтр');
             $this->render('seo/list', array('model' => $model));
         } 
     }
@@ -1530,7 +1615,10 @@ class SiteController extends Controller
             $model = new Faq();
             $model->unsetAttributes();  // clear any default values
             $model->search();
-            $this->setPageTitle('Список FAQ');
+            $title = 'Список елементов FAQ';
+            $brdcrmbs = 'FAQ';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('Дополнительно'=>array('sect?p=add'),'1'=>$brdcrmbs); 
             $this->render('faq/list', array('model' => $model));
         }
     }
@@ -1547,7 +1635,13 @@ class SiteController extends Controller
             }
             else{
                 $data = $model->getFaqItem($id);
-                $this->setPageTitle('Редактировать элемент FAQа');
+                $title = 'Редактирование элемента '.$id;
+                $this->setPageTitle($title);
+                $this->breadcrumbs = array(
+                    'Дополнительно'=>array('sect?p=add'),
+                    'FAQ'=>array('faq'),
+                    '1'=>$title
+                ); 
                 $this->render('faq/item', array('data' => $data, 'id'=>$id));               
             }
 
@@ -1576,7 +1670,9 @@ class SiteController extends Controller
                Yii::app()->user->setFlash('success',[]);
             }
             $data = $model->exist('/work-for-students');
-            $this->setPageTitle('Работа для студентов');
+            $title = 'Работа для студентов';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('Дополнительно'=>array('sect?p=add'),'1'=>$title); 
             $this->render('pages/for-students', array('data' => $data));
         }
     }
@@ -1589,7 +1685,9 @@ class SiteController extends Controller
             $model = new Ideas();
             $model->unsetAttributes();
             $model->search();
-            $this->setPageTitle('Список идей и предложений');
+            $title = 'Идеи и предложения';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array($title);
             $this->render('ideas/list', array('model' => $model));
         }
     }
@@ -1610,7 +1708,9 @@ class SiteController extends Controller
             }
             else{
                 $data = $model->getIdeaForAdmin($id);
-                $this->setPageTitle('Редактировать идею/предложение');
+                $title = 'Редактирование идеи/предложения '.$id;
+                $this->setPageTitle($title);
+                $this->breadcrumbs = array('Идеи и предложения'=>array('ideas'),'1'=>$title); 
                 $this->render('ideas/item', array('data' => $data, 'id'=>$id));               
             }
 
@@ -1625,6 +1725,15 @@ class SiteController extends Controller
             $model = new Ideas;
             $model->deleteIdea($id);
             $this->redirect('/admin/site/faq');
+        }
+    }
+    /*
+    *   промежуточный раздел
+    */
+    public function actionSect()
+    {
+        if(self::isAuth()) {
+            $this->render('section', array()); 
         }
     }
 }

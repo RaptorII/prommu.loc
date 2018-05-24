@@ -124,7 +124,7 @@ class CBreadcrumbs extends CWidget
 			$count++;
 			if(is_string($label) || is_array($url))
 				$links[]=strtr($this->activeLinkTemplate,array(
-					'{url}'=>'https://prommu.com'.CHtml::normalizeUrl($url),
+					'{url}'=>'http://dev.prommu.com'.CHtml::normalizeUrl($url),
 					'{label}'=>$this->encodeLabel ? CHtml::encode($label) : $label,
 					'{count}'=>$count,
 				));

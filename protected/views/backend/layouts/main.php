@@ -337,7 +337,7 @@
 
       <!-- Sidebar Menu -->
       <?php
-        $hUrl = Yii::app()->homeUrl . $this->id . '/';
+        $hUrl = Yii::app()->homeUrl;
         $curId = $this->action->id;
       ?>
       <ul class="sidebar-menu">
@@ -348,8 +348,10 @@
         <?php 
           $enableA = in_array($curId, ['users','PromoEdit']);
           $enableA = ($curId=='wait' && $_GET['type']==2) ? true : $enableA;
+          $enableA = ($curId=='sect' && $_GET['p']=='app') ? true : $enableA;
           $enableE = in_array($curId, ['empl','EmplEdit']);
           $enableE = ($curId=='wait'  && $_GET['type']==3) ? true : $enableE;
+          $enableE = ($curId=='sect'  && $_GET['p']=='emp') ? true : $enableE;
         ?>
         <li class="treeview <?=($enableA?'active':'')?>">
           <a href="#">
@@ -423,6 +425,7 @@
         <?php 
           $enable = in_array($curId, ['vacancy','vacancymail','VacancyEdit']);
           $enable = ($curId=='vacancy' && $_GET['seo']==1) ? false : $enable;
+          $enable = ($curId=='sect' && $_GET['p']=='vac') ? true : $enable;
         ?>
         <li class="treeview<?=$enable ? ' active' : ''?>">
           <a href="#">
@@ -448,7 +451,10 @@
         <?php
         // services
         ?>
-        <?php $enable = in_array($curId, ['services','servicess','cards','medcards']) ?>
+        <?php 
+          $enable = in_array($curId, ['services','servicess','cards','CardEdit','medcards','MedCardEdit']);
+          $enable = ($curId=='sect' && $_GET['p']=='service') ? true : $enable;
+        ?>
         <li class="treeview<?=$enable ? ' active' : ''?>">
           <a href="#">
             <i class="glyphicon glyphicon-shopping-cart"></i>
@@ -480,8 +486,8 @@
                 <span>SMS информирование</span>
               </a>
             </li>
-            <li class="<?//=($curId=='vacancymail'?'active':'')?>">
-              <a href="#" onclick="alert('Страница в разработке'); return false">
+            <li class="<?=($curId=='services'&&$_GET['type']=='repost' ? 'active' : '')?>">
+              <a href="<?=$hUrl?>services?type=repost">
                 <i class="glyphicon glyphicon-bullhorn"></i>
                 <span>Соцсети</span>
               </a>
@@ -504,14 +510,14 @@
                 <span>Аутстаффинг</span>
               </a>
             </li>
-            <li class="<?=($curId=='cards'?'active':'')?>">
-              <a href="<?php echo $hUrl?>cards">
+            <li class="<?=(in_array($curId,['cards','CardEdit'])?'active':'')?>">
+              <a href="<?=$hUrl?>cards">
                 <i class="glyphicon glyphicon-credit-card"></i>
                 <span>Карта Prommu</span>
               </a>
             </li>
-            <li class="<?=($curId=='medcards'?'active':'')?>">
-              <a href="<?php echo $hUrl?>medcards">
+            <li class="<?=(in_array($curId,['medcards','MedCardEdit'])?'active':'')?>">
+              <a href="<?=$hUrl?>medcards">
                 <i class="glyphicon glyphicon-plus-sign"></i>
                 <span>Мед. книга</span>
               </a>
@@ -529,6 +535,7 @@
         ?>
         <?php
           $enable = $curId=='analytic';
+          $enable = ($curId=='sect' && $_GET['p']=='analytic') ? true : $enable;
         ?>
         <li class="treeview<?=$enable ? ' active' : ''?>">
           <a href="#">
@@ -564,6 +571,7 @@
           $enable = in_array($curId, ['articlespages','seo']);
           $enable = ($curId=='vacancy' && $_GET['seo']==1) ? true : $enable;
           $enable = ($curId=='PageUpdate' && $_GET['pagetype']=='articles') ? true : $enable;
+          $enable = ($curId=='sect' && $_GET['p']=='seo') ? true : $enable;
         ?>
         <li class="treeview<?=$enable ? ' active' : ''?>">
           <a href="#">
@@ -614,8 +622,9 @@
         // additionally
         ?>
         <?php
-          $enable = in_array($curId, ['newspages','admin','AdminEdit','faqedit','forstudents']); 
+          $enable = in_array($curId, ['newspages','admin','AdminEdit','faq','faqedit','forstudents']); 
           $enable = ($curId=='PageUpdate' && in_array($_GET['pagetype'],['news','about','prom','empl'])) ? true : $enable;
+          $enable = ($curId=='sect' && $_GET['p']=='add') ? true : $enable;
         ?>
         <li class="treeview<?=$enable ? ' active' : ''?>">
           <a href="#">
@@ -657,7 +666,7 @@
             <li class="<?=(in_array($curId,['faq','faqedit'])?'active':'')?>">
               <a href="<?=$hUrl?>faq">
                 <i class="glyphicon glyphicon-info-sign"></i>
-                <span>ФАК</span>
+                <span>FAQ</span>
               </a>
             </li>
             <li class="<?=(in_array($curId,['admin','AdminEdit'])?'active':'')?>">
@@ -671,10 +680,10 @@
         <?php
         // ideas
         ?>
-        <li class="<?=($curId=='ideas'?'active':'')?>">
+        <li class="<?=(in_array($curId, ['ideas','ideaedit'])?'active':'')?>">
           <a href="<?=$hUrl?>ideas">
             <i class="glyphicon glyphicon-leaf"></i>
-            <span>Идеи</span>
+            <span>Идеи/Предложения</span>
           </a>
         </li>
       </ul>
@@ -687,19 +696,37 @@
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>
-      
-        <small>Система управления PROMMU AD.TAB version 1.0</small>
-      </h1>
-      <!-- <ol class="breadcrumb">pro
-        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-        <li class="active">Here</li>
-      </ol> -->
-      
-          
-     
+      <div class="content-header__block">
+        <?php 
+          if( Yii::app()->controller->route !== 'site/index' )
+            $this->breadcrumbs = array_merge(
+                array(Yii::t('zii','Главная')=>Yii::app()->homeUrl), 
+                $this->breadcrumbs
+              );
+
+          $this->widget(
+            'zii.widgets.CBreadcrumbs', 
+            array(
+              "links" => $this->breadcrumbs,
+              "homeLink" => false,
+              "tagName" => "div",
+              "separator" => " &gt; ",
+              "activeLinkTemplate" => "<span><a rel='nofollow' title='{label}' href='{url}'><span>{label}</span></a></span>", 
+              "inactiveLinkTemplate" => "<span>{label}</span>"
+            )
+          );
+        ?>
+        <h1><small>PROMMU AD.TAB version 1.0</small></h1>
+      </div>
     </section>
 
+<?php 
+/*
+  echo "<pre>";
+  print_r(Yii::app()->controller->route); 
+  echo "</pre>";
+  */
+?>
     <!-- Main content -->
     <section class="content">
     
