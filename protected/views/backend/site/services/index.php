@@ -86,9 +86,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
                         
                     ),
                   array(
-                        'header' => 'Номер транзакции',
+                        'header' => 'Репост',
                         'name' => 'key',
-                        'value' => '$data->key',
+                        'value' => '$data->user',
                         'type' => 'raw',
                         
                     ),
