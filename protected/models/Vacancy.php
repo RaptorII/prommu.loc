@@ -2293,7 +2293,7 @@ WHERE id_vac = {$inVacId}";
                                  'vk_link' => "https://vk.com/wall-8777665_".$data['response']['post_id']
                             ), 'id = :id', array(':id' => $id));
                             
-             $res = Yii::app()->db->createCommand()
+            Yii::app()->db->createCommand()
                         ->insert('service_cloud', array('id_user' => Share::$UserProfile->id,
                                 'name' => $id,
                                 'type' => "repost", 
@@ -2316,7 +2316,7 @@ WHERE id_vac = {$inVacId}";
                             ->update('empl_vacations', array(
                                  'tl_link' => "https://t.me/prommucom",
                             ), 'id = :id', array(':id' => $id));
-                 $res = Yii::app()->db->createCommand()
+                 Yii::app()->db->createCommand()
                         ->insert('service_cloud', array('id_user' => Share::$UserProfile->id,
                                 'name' => $id,
                                 'type' => "repost", 
@@ -2350,15 +2350,7 @@ WHERE id_vac = {$inVacId}";
                                      'fb_link' => "https://www.facebook.com/prommucom/".$output['id'],
                                 ), 'id = :id', array(':id' => $id));
             
-            curl_close($ch);
-        }
-        // записываем результат репоста
-        $res = Yii::app()->db->createCommand()
-            ->update('empl_vacations', array(
-                'repost' => $repost,
-            ), 'id = :id', array(':id' => $id));
-            
-             $res = Yii::app()->db->createCommand()
+            Yii::app()->db->createCommand()
                         ->insert('service_cloud', array('id_user' => Share::$UserProfile->id,
                                 'name' => $id,
                                 'type' => "repost", 
@@ -2369,6 +2361,17 @@ WHERE id_vac = {$inVacId}";
                                 'text' => $text,
                                 'user' => "fb"
                             ));
+                            
+            
+            curl_close($ch);
+        }
+        // записываем результат репоста
+        $res = Yii::app()->db->createCommand()
+            ->update('empl_vacations', array(
+                'repost' => $repost,
+            ), 'id = :id', array(':id' => $id));
+            
+              
                             
     }
     public function getSeсtionsVacCount()
