@@ -2292,6 +2292,18 @@ WHERE id_vac = {$inVacId}";
                             ->update('empl_vacations', array(
                                  'vk_link' => "https://vk.com/wall-8777665_".$data['response']['post_id']
                             ), 'id = :id', array(':id' => $id));
+                            
+             $res = Yii::app()->db->createCommand()
+                        ->insert('service_cloud', array('id_user' => Share::$UserProfile->id,
+                                'name' => $id,
+                                'type' => "repost", 
+                                'bdate' => date("Y-m-d"),
+                                'edate' => date("Y-m-d"),
+                                'status' => 1,
+                                'sum' => 0,
+                                'text' => $text,
+                                'user' => "vk"
+                            ));
         } 
 
         if(substr($repost, 2,1)=='1' && empty($result[0]['tl_link'])) {
@@ -2304,6 +2316,17 @@ WHERE id_vac = {$inVacId}";
                             ->update('empl_vacations', array(
                                  'tl_link' => "https://t.me/prommucom",
                             ), 'id = :id', array(':id' => $id));
+                 $res = Yii::app()->db->createCommand()
+                        ->insert('service_cloud', array('id_user' => Share::$UserProfile->id,
+                                'name' => $id,
+                                'type' => "repost", 
+                                'bdate' => date("Y-m-d"),
+                                'edate' => date("Y-m-d"),
+                                'status' => 1,
+                                'sum' => 0,
+                                'text' => $text,
+                                'user' => "telegram"
+                            ));
 
         } 
 
@@ -2334,6 +2357,19 @@ WHERE id_vac = {$inVacId}";
             ->update('empl_vacations', array(
                 'repost' => $repost,
             ), 'id = :id', array(':id' => $id));
+            
+             $res = Yii::app()->db->createCommand()
+                        ->insert('service_cloud', array('id_user' => Share::$UserProfile->id,
+                                'name' => $id,
+                                'type' => "repost", 
+                                'bdate' => date("Y-m-d"),
+                                'edate' => date("Y-m-d"),
+                                'status' => 1,
+                                'sum' => 0,
+                                'text' => $text,
+                                'user' => "fb"
+                            ));
+                            
     }
     public function getSeсtionsVacCount()
     {
