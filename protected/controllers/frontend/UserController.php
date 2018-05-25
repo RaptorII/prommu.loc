@@ -1395,18 +1395,6 @@ class UserController extends AppController
                 'email' => $resultat[0]['email'],
                 'crdate' => date("Y-m-d"),
                 'chat' => $resu['idtm'] ));
-            
-              Yii::app()->db->createCommand()
-                        ->insert('service_cloud', array('id_user' => $id,
-                                'name' => $id,
-                                'type' => "api", 
-                                'bdate' => date("Y-m-d h-i-s"),
-                                'edate' => date("Y-m-d h-i-s"),
-                                'status' => 1,
-                                'sum' => 0,
-                                'text' => "Запрос на выгрузку API",
-                                'user' => "api"
-                            ));
                             
         }
 
@@ -1423,7 +1411,10 @@ class UserController extends AppController
             $figaro = compact('message', 'new', 'idus','idTm');
             $resu = $Im->sendUserMessages($figaro);
             
-             Yii::app()->db->createCommand()
+            
+                            
+        }
+         Yii::app()->db->createCommand()
                         ->insert('service_cloud', array('id_user' => $id,
                                 'name' => $id,
                                 'type' => "api", 
@@ -1435,7 +1426,6 @@ class UserController extends AppController
                                 'user' => "api"
                             ));
                             
-        }
             Yii::app()->user->setFlash('Message', array('mess'=>'Ваша заявка на формирование запроса команд API сформирована. Все нужные команды Вы сможете взять из сформировавшегося окна диалогов. Также в нём можно будет задать вопросы администратору по возникшим техническим вопросам'));
             $this->redirect("https://prommu.com/user/im");
 
