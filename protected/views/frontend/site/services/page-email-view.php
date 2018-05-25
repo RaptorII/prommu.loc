@@ -228,7 +228,7 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 					</tr>
 				</table>
 				<?$result = $appCount * $viData['price'];?>
-				<span class="smss-result__result"><?echo $appCount . ' * ' . $viData['price'] . ' = ' . $result . 'рублей'?></span>
+				<span class="smss-result__result"><?echo $appCount . ' * ' . $viData['price'] . ' = ' . $result . 'рублей'?></span></br>
 				<span class="smss-result__result">Работодатель приглашает на вакансию <a href="https://prommu.com/vacancy/<?=Yii::app()->getRequest()->getParam('vacancy')?>">https://prommu.com/vacancy/<?=Yii::app()->getRequest()->getParam('vacancy')?></a></span>
 				<button class="smss-result__btn">Перейти к оплате</button>
 				<input type="hidden" name="vacemail" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
