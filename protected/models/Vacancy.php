@@ -2301,7 +2301,7 @@ WHERE id_vac = {$inVacId}";
                                 'edate' => date("Y-m-d"),
                                 'status' => 1,
                                 'sum' => 0,
-                                'text' => $text,
+                                'text' => "vk",
                                 'user' => "vk"
                             ));
         } 
@@ -2324,7 +2324,7 @@ WHERE id_vac = {$inVacId}";
                                 'edate' => date("Y-m-d"),
                                 'status' => 1,
                                 'sum' => 0,
-                                'text' => $text,
+                                'text' => "telegram",
                                 'user' => "telegram"
                             ));
 
@@ -2358,7 +2358,7 @@ WHERE id_vac = {$inVacId}";
                                 'edate' => date("Y-m-d"),
                                 'status' => 1,
                                 'sum' => 0,
-                                'text' => $text,
+                                'text' => "telegram",
                                 'user' => "fb"
                             ));
                             
