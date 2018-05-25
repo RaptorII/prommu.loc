@@ -127,7 +127,7 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 		<div class='col-xs-12 col-sm-8 col-md-9 sms-service'>
 			<div class='view-radio clearfix'>
 				<h1 class="main-h1">Выбрать персонал для EMAIL информирования</h1>
-				<form action="/user/payment" method="POST" id="workers-form">
+				<form action="" method="POST" id="workers-form">
 					<span class="workers-form__cnt">Выбрано получателей: <span id="mess-wcount">0</span></span>
 					<div class="service__switch">
 						<span class="service__switch-name">Выбрать всех</span>
@@ -140,7 +140,7 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 					<input type="hidden" name="users" id="mess-workers">
 					<input type="hidden" name="employer" value="<?=Share::$UserProfile->id?>">
 					<input type="hidden" name="users-cnt" id="mess-wcount-inp" value="0">
-					<input type="hidden" name="vacemail" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
+					<input type="hidden" name="vacancy" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
 				</form>
 			</div>
 			<div id="promo-content">
