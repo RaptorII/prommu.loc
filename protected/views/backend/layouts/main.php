@@ -522,8 +522,8 @@
                 <span>Мед. книга</span>
               </a>
             </li>
-            <li class="<?//=($curId=='vacancymail'?'active':'')?>">
-              <a href="#" onclick="alert('Страница в разработке'); return false">
+            <li class="<?=($curId=='servicess'&&$_GET['type']=='api' ? 'active' : '')?>">
+              <a href="<?=$hUrl?>servicess?type=api">
                 <i class="glyphicon glyphicon-cog"></i>
                 <span>API</span>
               </a>
