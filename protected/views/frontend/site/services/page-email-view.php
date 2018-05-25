@@ -227,7 +227,7 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 						<td><?=$viData['price']?>руб</td>
 					</tr>
 					<tr>
-						<td>Работодатель приглашает на вакансию <a href="https://prommu.com/vacancy/<?=Yii::app()->getRequest()->getParam('vacancy')?>">https://prommu.com/vacancy/<?=Yii::app()->getRequest()->getParam('vacancy')?></a></td>
+						<td>Работодатель <?=Share::$UserProfile->exInfo->name?> приглашает на вакансию <a href="https://prommu.com/vacancy/<?=Yii::app()->getRequest()->getParam('vacancy')?>">https://prommu.com/vacancy/<?=Yii::app()->getRequest()->getParam('vacancy')?></a></td>
 					</tr>
 				</table>
 				<?$result = $appCount * $viData['price'];?>
