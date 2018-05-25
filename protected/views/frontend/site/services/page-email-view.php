@@ -216,6 +216,7 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 	<div class="row">
 		<div class="col-xs-12 sms-service">
 			<form action="<?=MainConfig::$PAGE_PAYMENT?>" method="POST" class="smss__result-form">
+			<h1 class="smss-result__title">ТЕКСТ РАССЫЛКИ</h1>
 			<span class="smss-result__result" style="font-size:23px">Работодатель <?=Share::$UserProfile->exInfo->name?> приглашает на вакансию <a href="https://prommu.com/vacancy/<?=Yii::app()->getRequest()->getParam('vacancy')?>">https://prommu.com/vacancy/<?=Yii::app()->getRequest()->getParam('vacancy')?></a></span></br>
 				<h1 class="smss-result__title">РАСЧЕТ СТОИМОСТИ УСЛУГИ</h1>
 				<table class="smss-result__table">
