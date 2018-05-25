@@ -1147,49 +1147,11 @@ class SiteController extends AppController
                         case 213:    // medical
                             $view = MainConfig::$VIEWS_SERVICE_MEDICAL;
                             break;
-                        case 214:    // email
-                            if($type_us==3){
-                                if(Yii::app()->getRequest()->getParam('users') && Yii::app()->getRequest()->getParam('vacancy')){
-                                    $model = new PrommuOrder;
-                                    $data['price'] = $model->servicePrice(Share::$UserProfile->id,'email');
-                                    if($data['price']>0){
-                                        $view = MainConfig::$VIEWS_SERVICE_EMAIL;
-                                    }
-                                    else{
-                                       Yii::app()->user->setFlash('success', array('event'=>'email'));
-                                       $this->redirect(DS . MainConfig::$PAGE_SERVICES);
-                                        exit();
-                                    } 
-                                   
-                            //         $message = sprintf("Уважаемый %s, работодатель <a href='%s'>%s</a> приглашает Вас на вакансию №%s <a href='%s'>%s</a>. Оплата за работу %s .
-                            //             <br />
-                            //             <br />
-                            //            Более подробно с предложение можно ознакомиться перейдя <a href='%s'>по ссылке</a>.",
-                            //            'Тест Соискатель',
-                            //             'https://' . MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS .'23',
-                            //             'Тест Работодатель',
-                            //            '223',
-                            //             'https://prommu.com/vacancy/1927',
-                            //             'Вакансия Тест',
-                            //             '223/руб.час',
-                            //             'https://prommu.com/vacancy/1927'
-                            //         );
-                            // $email[0] = "denisgresk@gmail.com";
-                            // $email[1] = "denisgresk@gmail.com";
-                            // $email[2] = "denisgresk@gmail.com";
-                            // for($i = 0; $i <3; $i++){
-                            //    Share::sendmail($email[$i], "Prommu.com Приглашение на вакансию № 1927", $message);
-                           
-                            // }
-                                    /*
-
-                                            Отправляем приглашения пользователям
-                                    */
-                                    // Yii::app()->user->setFlash('success', array('event'=>'email'));
-                                    // $this->redirect(DS . MainConfig::$PAGE_SERVICES);
-                                    // exit();
-                                }
-                                if(Yii::app()->getRequest()->getParam('users')){
+                        case 214:  
+                        if($type_us==3){
+                                $model = new PrommuOrder;
+                                $data['price'] = $model->servicePrice(Share::$UserProfile->id,'email');
+                                if(Yii::app()->getRequest()->getParam('users') && $data['price']>0){
                                     $view = MainConfig::$VIEWS_SERVICE_EMAIL;
                                 }
                                 elseif(Yii::app()->request->isAjaxRequest){
@@ -1202,14 +1164,16 @@ class SiteController extends AppController
                                 }
                                 else{
                                     $view = MainConfig::$VIEWS_SERVICE_EMAIL;
-                                    $data = (Yii::app()->getRequest()->getParam('vacancy') 
+                                    $data2 = (Yii::app()->getRequest()->getParam('vacancy') 
                                         ? (new Services())->prepareFilterData()
                                         : (new Vacancy())->getModerVacs());
+                                    $data = array_merge($data,$data2);
                                 }
                             }
                             else
                                 $view = MainConfig::$VIEWS_SERVICE_VIEW;  
                             break;
+                           
                         default:
                             $view = MainConfig::$VIEWS_SERVICE_VIEW;
                             break;
