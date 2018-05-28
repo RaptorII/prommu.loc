@@ -93,10 +93,17 @@ class Comment extends ARModel
 
     public function ChangeModer($id, $st)
     {
-        Yii::app()->db->createCommand()
-            ->update('comments', array(
-                'isactive ' => $st,
-            ), 'id=:id', array(':id' => $id));
+         $sql = "UPDATE comments 
+                INNER JOIN (
+                  SELECT mm.id
+                  FROM comments mm
+                  WHERE mm.id = {$id} 
+                ) t1 ON comments.id = t1.id
+                SET isactive = {$st} ";
+
+        /** @var $res CDbCommand */
+        $res = Yii::app()->db->createCommand($sql);
+        
     }
 
  
