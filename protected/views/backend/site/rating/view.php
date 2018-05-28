@@ -1,241 +1,155 @@
-<?php
-$grp=1;
-if(isset($_GET['grp'])) {
-    $grp = $_GET['grp'];
+<img style="padding-top: : -24px; padding-left: 44%;" src="/admin/logo-sm.png">
+<h3 class="box-title">Отзывы</h3>
+<style type="text/css">
+    .label-important {
+        background: #dd4b39;
+    }
+    input {
+    border: #ecf0f5;
+    width: 94px;
 }
-$grp_txt = array('', 'Работодатели', 'Промоутеры');
+</style>
 
-echo '<h3><i>Редактирование Рейтинга : '.$grp_txt[$grp].'</i></h3>';
-?>
-<a href="/admin/site/rating?grp=1">Работодатели</a>&nbsp;&nbsp;<a href="/admin/site/rating?grp=2">Промоутеры</a>
-<div class="modal hide fade" id="Modal" tabindex="-1" role="dialog">
-    <div class="modal-header">
-        <h3 id="edit_title">Редактирование</h3>
-    </div>
-    <div class="modal-body">
-        <p>
-            <label for="ename">Название</label>
+<?php
+echo CHtml::form('/admin/site/UserUpdate?id=0', 'POST', array("id" => "form", "name"=> "form"));
+echo '<input type="hidden" id="curr_status" name="curr_status">';
+echo '<input type="hidden" id="curr_id" name="curr_id">';
+$this->widget('zii.widgets.grid.CGridView', array(
+    'id' => 'dvgrid',
+    'dataProvider' => $model->search(),
+     'itemsCssClass' => 'table table-bordered table-hover dataTable',
+    'htmlOptions'=>array('class'=>'table table-hover', 'name'=>'my-grid', 'style'=>    'padding: 10px;'),
+    'filter' => $model,
+    'enablePagination' => true,
+    'columns' => array(
+     
+           array(
+            'header'=>'id',
+            'name' => 'id',
+            'value' => '$data->id',
+            'type' => 'html',
+        ),
+        array(
+            'header'=>'Дата',
+            'name' => 'crdate',
+            'value' => '$data->crdate',
+            'type' => 'html',
+            'filter' => '',
+            
+        ),
+        array(
+            'header'=>'Работодатель',
+            'name' => 'id_empl',
+            'value' => 'ShowName($data->id_empl, 3)',
+            'type' => 'html',
+            'filter' => '',
+        ),
+        array(
+            'header'=>'Соискатель',
+            'name' => 'id_promo',
+            'value' => 'ShowName($data->id_promo, 2)',
+            'type' => 'html',
+            'filter' => '',
+        ),
+         array(
+            'header'=>'Отзыв',
+            'name' => 'message',
+            'value' => '$data->message',
+            'type' => 'html',
+            'filter' => '',
+        ),
+         array(
+            'header'=>'Выставлен',
+            'name' => 'iseorp',
+            'value' => 'ShowIseorp($data->iseorp)',
+            'type' => 'html',
+            'filter' => '',
+        ),
+        array(
+            'header'=>'Позитивный',
+            'name' => 'isneg',
+            'value' => 'ShowStatus($data->id, $data->isneg, 0)',
+            'type' => 'html',
+            'filter' => '',
+        ),
+        array(
+            'header'=>'Отображается',
+            'name' => 'isactive',
+            'value' => 'ShowStatus($data->id, $data->isactive,1)',
+            'type' => 'raw',
+            'filter' => '',
+            'htmlOptions' => array('style' => 'width: 50px; text-align: center;', 'class' => 'sorting')
+        ),
+    )));
 
-        <div class="controls input-append">
-            <input type="text" name="ename" id="ename" class="admform span6"><span class="add-on"><i
-                    class="icon-tag"></i></span>
+echo CHtml::submitButton('Создать',array("class"=>"btn btn-success","id"=>"btn_submit", "style"=>"visibility:hidden"));
 
-            <p>
-                <label>Баллы</label>
-
-            <div class="btn-group" data-toggle="buttons">
-                <?php
-                for ($i = 1; $i <= 10; $i++) {
-                    echo '<label class="btn btn-default">';
-                    echo '<input name="radioGroup" id="pt' . $i . '" value="' . $i . '" type="radio">' . $i;
-                    echo '</label>';
-                }
-                ?>
-            </div>
-        </p>
-    </div>
-    </p>
-</div>
-<div class="modal-footer">
-    <button class="btn btn-warning" data-dismiss="modal">Закрыть</button>
-    <button class="btn btn-success" data-dismiss="modal" onclick='EditForm()'>Сохранить</button>
-</div>
-<input type="hidden" id="pkid"/>
-</div>
-
-<div class="span11">
-    <?php
-    $criteria = new CDbCriteria();
-    $criteria->compare('grp',$grp);
-    $criteria->condition = "grp = ".$grp;
-    $pagination = array('pageSize' => 20,);
-
-    $dataProvider = new CActiveDataProvider('PointRating', array('criteria' => $criteria, 'pagination' => $pagination,));
-
-    //print_r($dataProvider); die;
-    $this->widget('zii.widgets.grid.CGridView', array(
-        'id' => 'my-grid',
-        'dataProvider' => $dataProvider, //$model->search(),
-        //'filter' => $model,
-        'htmlOptions' => array('class' => 'table table-hover'),
-        'columns' => array(
-            array(
-                'name' => 'id',
-                'value' => '$data->id',
-                'type' => 'html',
-                'htmlOptions' => array('style' => 'width: 50px; text-align: center;'),
-                'filter' => '',
-            ),
-
-            array(
-                'name' => 'value',
-                'type' => 'raw',
-                'value' => 'ShowPoint($data->value, $data->id)',
-                //'value' => 'CHtml::link($data->value, array("ctrl/act"))',
-                'htmlOptions' => array('style' => 'width: 70px;'),
-                'filter' => '',
-            ),
-
-            array(
-                'name' => 'descr',
-                'value' => 'ShowName($data->descr, $data->id, $data->value)',
-                //'value'=> 'CHtml::button($data->name, array("onclick"=>"open_pop_up(\"#pop-up\");edt(".$data->id_city.")", "id"=>"btn_".$data->id_city, "style"=>"width:100%"))',
-                'type' => 'raw',
-                'id' => '$data->id',
-                'htmlOptions' => array('class' => 'm_element'),
-            ),
-
-        )));
-
-    function ShowName($name, $id, $point)
-    {
-        return '<a href="#Modal" id="btn_' . $id . '" data-toggle="modal" onclick="javascript:edt(' . $id . ',' . $point . ')">' . $name . '</a>';
-    }
-
-    function ShowPoint($val, $id)
-    {
-        return '<span id="val_' . $id . '">'. $val .'</span>';
-    }
-
-    ?>
-    <a href='#Modal' data-toggle="modal" class='btn' id='btn_add' style='width:50px' onclick="edt(0,0);">Создать</a>
-</div>
-<script type="text/javascript">
-    var grp = <?echo $grp?>;
-    function Cancel() {
-        $("#editform").hide();
-        $('#btn_add').show();
-    }
-
-    function ShowForm(id) {
-        $('#btn_add').hide();
-        $('#editform').show();
-    }
-
-    function SaveForm(id) {
-        // validate
-        var valid = true;
-        if (isEmpty($('#name_ru').val())) {
-            valid = false;
-            $('#name_ru').attr({style: "background:#ff90c0;"});
-        }
-        else
-            $('#name_ru').attr({style: "background:#fff;"});
-
-
-        if (isEmpty($('#name_en').val())) {
-            valid = false;
-            $('#name_en').attr({style: "background:#ff90c0;"});
-        }
-        else
-            $('#name_en').attr({style: "background:#fff;"});
-
-        if (valid) {
-            $("#btn_add").attr("disabled", "true");
-            var address = "/admin/ajax/AddCity";
-            $.ajax({
-                type: 'GET',
-                url: address + '?name_ru=' + $("#name_ru").val() + '&name_en=' + $("#name_en").val(),
-                cache: false,
-                dataType: 'text',
-                success: function (data) {
-                    $("#menu_edit").html(data);
-                    document.location.href = '';
-                },
-                error: function (data) {
-                    alert("Download error!");
-                    $("#btn_add").attr("disabled", "false");
-                }
-            });
-
-        }
+function ShowStatus($id, $ismoder, $type)
+{
+    if($type == 1){
+        $status = ['не отображается','отображается'];
+        $st_ico = ["label-warning", "label-success"];
+    } else {
+        $status = ['позитивный','негативный'];
+        $st_ico = [ "label-success", "label-warning"];
 
     }
-
-
-    function isEmpty(obj) {
-        if (typeof obj == 'undefined' || obj === null || obj === '') return true;
-        if (typeof obj == 'number' && isNaN(obj)) return true;
-        if (obj instanceof Date && isNaN(Number(obj))) return true;
-        return false;
+   
+    $html = 
+    '<div class="dropdown">
+    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  title="статус: ' . $status[$ismoder] . '">
+    <span class="label ' . $st_ico[$ismoder] . '">'.$status[$ismoder].'</span>
+    <span class="caret"></span>
+    </button>';
+    $html .= '<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">';
+    for ($i = 0; $i < 2; $i++) {
+        $html .= '<li ><a href = "#" onclick = "doStatusModer(' . $id . ', ' . $i . ')" ><span class="label ' . $st_ico[$i] . '"><i class="icon-star icon-white"></i></span> ' . $status[$i] . '</a></li >';
     }
+    $html .= '</ul></div>';
+    return $html;
+}
 
 
-    function edt(id, point) {
-        if (id == 0) {
-            // Insert mode
-            $("#ename").val("");
-            $("#pkid").val(0);
-            $("#edit_title").text("Добавить");
-            $('input[type=radio][value=1]').attr('checked', 'checked')
+
+function ShowName($id,$type)
+{
+        if($type == 2){
+            $sql = "SELECT r.firstname, r.lastname, r.id_user FROM resume r WHERE r.id = {$id}";
+            $res =  Yii::app()->db->createCommand($sql)->queryRow();
+            $id_user = $res['id_user'];
+            return "<a href='https://prommu.com/admin/site/PromoEdit/$id_user'>".$res['firstname'].$res['lastname']."</a>";
         }
         else {
-            // Edit mode
-            var name = $("#btn_" + id).text();
-            $("#ename").val(name);
-            $("#pkid").val(id);
-            $("#edit_title").text("Редактирование");
-            $('input[type=radio]').attr('checked', false);
-            $('input[type=radio][value=' + point + ']').attr('checked', 'checked')
+             $sql = "SELECT e.name, e.id_user FROM employer e WHERE e.id = {$id}";
+             $res =  Yii::app()->db->createCommand($sql)->queryRow();
+             $id_user = $res['id_user'];
+             return "<a href='https://prommu.com/admin/site/EmplEdit/$id_user'>".$res['name']."</a>";
         }
+    
+}
+
+function ShowIseorp($id) {
+    if($id == 0) {
+        return "Работодателем";
+    } else return "Соискателем";
+   
+}
+
+
+function ShowEdit($id) {
+    return  '<button type="button" class="btn btn-default"><a href="/admin/site/PromoEdit/' . $id . '">Редактировать</a></button> ';
+}
+echo CHtml::endForm();
+?>
+
+<script type="text/javascript">
+
+
+    function doStatusModer(id, st) {
+        $("#curr_status").val(st);
+        $("#form").attr("action", "/admin/site/CommentModer/" + id);
+        $("#btn_submit").click();
     }
 
-    function EditForm() {
-        var id = $("#pkid").val();
-        var val = $('input[name="radioGroup"]:checked').val();
-        var address = "/admin/ajax/EditRating";
-        if (id == 0) address = "/admin/ajax/AddRating";
-
-        $.ajax({
-            type: 'GET',
-            url: address + '?name=' + $("#ename").val() + '&id=' + id + '&val=' + val + '&grp=' + grp,
-            cache: false,
-            dataType: 'text',
-            success: function (data) {
-                if (id > 0) {
-                    $("#btn_" + id).text($("#ename").val());
-                    $("#btn_" + id).attr('onclick','edt('+id+','+val+')');
-                    $("#val_" + id).text(val);
-                    $("#ename").val('');
-                    edt(id, val);
-                }
-                else {
-                    location.href = "";
-                }
-            },
-            error: function (data) {
-                alert("Download error!");
-            }
-        });
-
-    }
-
-    $(document).ready(function () {
-
-        jQuery.fn.center_pop_up = function () {
-            this.css('position', 'absolute');
-            this.css('top', ($(window).height() - this.height()) / 2 + $(window).scrollTop() + 'px');
-            this.css('left', ($(window).width() - this.width()) / 2 + $(window).scrollLeft() + 'px');
-        }
-
-    });
-
-    function setShow(id, element) {
-        var address = "/admin.php/ajax/SetActiveCity";
-
-        $.ajax({
-            type: 'GET',
-            url: address + '?id=' + id,
-            cache: false,
-            dataType: 'text',
-            success: function (data) {
-                element.setAttribute('class', 'isblocked_' + data);
-            },
-            error: function (data) {
-                alert("Download error!");
-            }
-        });
-
-    }
-
+  
 </script>
