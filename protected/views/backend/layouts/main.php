@@ -373,8 +373,8 @@
               </a>
             </li>
 
-             <li class="<?=($curId=='rating' && $_GET['type']==1?'active':'')?>">
-              <a href="<?=$hUrl?>rating?type=1">
+             <li class="<?=($curId=='comments' && $_GET['type']==1?'active':'')?>">
+              <a href="<?=$hUrl?>comments?type=1">
                 <i class="glyphicon glyphicon-heart"></i>
                 <span>Отзывы</span>
               </a>
@@ -400,8 +400,8 @@
                 <span>Брошенные</span>
               </a>
             </li>
-            <li class="<?=($curId=='rating' && $_GET['type']==0?'active':'')?>">
-              <a href="<?=$hUrl?>rating?type=0">
+            <li class="<?=($curId=='comments' && $_GET['type']==0?'active':'')?>">
+              <a href="<?=$hUrl?>comments?type=0">
                 <i class="glyphicon glyphicon-heart"></i>
                 <span>Отзывы</span>
               </a>
