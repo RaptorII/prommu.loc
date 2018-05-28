@@ -373,7 +373,9 @@ class User extends CActiveRecord
 		$result['attr']=$arr_at;
     	return $result;
 	}
-
+	/*
+	*
+	*/
 	public function getUser($id)
 	{
 		$result = Yii::app()->db->createCommand()
