@@ -211,6 +211,42 @@ class SiteController extends Controller
         //self::isAuth(array('pages/form',array('model'=>$model, 'id'=>$id)));
 
     }
+    
+    public function actionComments()
+    {
+    
+        if(self::isAuth()) { 
+
+            $model = new Comment;
+            $model->unsetAttributes(); 
+            $model->search();
+            $model->iseorp=$GET['type'];
+         
+            $title = 'Отзывы';
+            $this->setPageTitle($title);
+           
+            $this->render('comments/view', array('model'=>$model));
+
+        }
+    } 
+
+    public function actionCommentModer($id)
+    {
+       // if($this->user_access != 1) {
+          //  $this->render('access');
+          //  return;
+       // }
+       if(self::isAuth()) {
+           $model = new Comment;
+           $curr_status = intval($_POST['curr_status']);
+           $model->ChangeModer($id, $curr_status);
+           $model->unsetAttributes();  // clear any default values
+           $model->search();
+
+           $this->render('comments/view', array('model'=>$model));
+       }
+   }
+   
 
     public function actionArticlesPages()
     {
