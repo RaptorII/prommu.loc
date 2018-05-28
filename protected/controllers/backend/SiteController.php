@@ -225,7 +225,7 @@ class SiteController extends Controller
             $title = 'Отзывы';
             $this->setPageTitle($title);
            
-            $this->render('comments/view', array('model'=>$model));
+            $this->render('rating/view', array('model'=>$model));
 
         }
     } 
@@ -243,7 +243,7 @@ class SiteController extends Controller
            $model->unsetAttributes();  // clear any default values
            $model->search();
 
-           $this->render('comments/view', array('model'=>$model));
+           $this->render('rating/view', array('model'=>$model));
        }
    }
    
