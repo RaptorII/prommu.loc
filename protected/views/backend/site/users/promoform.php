@@ -3,7 +3,7 @@ Yii::app()->getClientScript()->registerCssFile('/admin/css/app-profile.css');
 Yii::app()->getClientScript()->registerCoreScript('jquery');
 Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl.'/js/ajaxfileupload.js', CClientScript::POS_HEAD);
 
-echo "<pre>";
+echo "<pre style='display:none'>";
 print_r($data); 
 echo "</pre>";
 
@@ -274,7 +274,7 @@ echo '<div role="tabpanel" class="tab-pane fade active in" id="tab_profile">';
                     foreach($data['user_metros'] as $idMetro => $metro)
                         if($metro['idcity']==$city['id'])
                             $arMetroes[] = $metro['name'];
-                    echo '<b>Метро: </b><span>' . '1'/*implode(', ', $arMetroes)*/ . '</span><br/>';   
+                    echo '<b>Метро: </b><span>' . implode(', ', $arMetroes) . '</span><br/>';   
                 }         
             }
             echo '<b>Дни недели: </b><br/>';
@@ -383,7 +383,7 @@ echo '<div role="tabpanel" class="tab-pane fade active in" id="tab_profile">';
         . '<label class="control-label">Иностранные языки</label>'
             . CHtml::textArea(
                 'User[lang]', 
-                1,//implode(', ', $data['attr']['lang']), 
+                is_array($data['attr']['lang']) ? implode(', ', $data['attr']['lang']) : '', 
                 array('class'=>'form-control','disabled'=>true)
             )
         . '</div>';
