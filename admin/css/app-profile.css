@@ -1,0 +1,77 @@
+.small-bl{
+    max-width: 300px;
+}
+.medium-bl{
+    max-width: 500px;
+}
+#birthday{
+    border-color: #d2d6de;
+    display: block;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+.d-flex{
+    display: flex;
+}
+h4{
+    font-size: 18px;
+}
+.user__moder .control-group *{ vertical-align: top; }
+#User_ismoder{ margin-right: 5px; }
+.user__logo img{
+    width: 100%;
+    height: auto;
+    max-width: 200px;
+    display: block;
+    margin: 0 auto;
+}
+#User_isblocked label{ display: inline }
+#tablist{
+    background-color: #222d32;
+
+}
+#tablist li{
+
+}
+#tablist a{
+    font-weight: bold;
+    color: #b8c7ce;
+    border-left: 3px solid transparent;      
+}
+#tablist .active a,
+#tablist a:hover{
+    color: #fff;
+    background: #1e282c;
+    border-left-color: #3c8dbc;
+}
+.photos__item img{
+    display: block;
+    width: 100%;
+    margin-bottom: 15px;
+}
+.post_item,
+.loc_item,
+.job_item{
+    padding: 15px;
+    border: 1px solid #cccccc;
+    margin-bottom: 15px;
+}
+.loc_item b{
+	min-width: 30px;
+	padding-right: 5px;
+	display: inline-block;
+	
+}
+.user_years{
+	padding: 35px 0 0 10px;
+	display: block;
+}

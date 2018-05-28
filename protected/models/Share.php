@@ -665,4 +665,16 @@ class Share
         }
         else return false;
     }
+
+
+
+    public static function endingYears($num)
+    {
+        $num = (int)$num;  
+        if ($num < 21 && $num > 4) return 'лет';
+        $num = $num%10;
+        if ($num == 1) return 'год';
+        if ($num > 1 && $num < 5) return 'года';
+        return 'лет';
+    }
 }

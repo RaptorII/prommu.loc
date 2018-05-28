@@ -683,4 +683,71 @@ class Seo extends CActiveRecord
     {
         $command = Yii::app()->db->createCommand()->delete('seo', 'id=:id', array(':id'=>$id));
     }
+
+
+    /*
+    *   @param array $arParams(
+    *       'firstname' - string,
+    *       'lastname' - string,
+    *       'cities' - array('name', 'region'),
+    *       'posts' - array('isshow', 'val', 'pay', 'pay_type'),
+    *       'isman' - boolean,
+    *       'years' - string
+    *   ) 
+    */
+    public static function getMetaForApp($arParams)
+    {
+        $arCities = array();
+        $arVacancies = array();
+        $arWages = array();
+        $cities = '';
+        $vacancies = '';
+        $wage = '';
+        $fio = $arParams['firstname'] . ' ' . $arParams['lastname'];
+
+        foreach($arParams['cities'] as $city)
+            isset($city) && $arCities[] = $city['name'] . '(е)'; // города
+
+        foreach($arParams['posts'] as $pos){
+            if(!$pos['isshow']){
+                $arVacancies[] = $pos['val']; // вакансии
+                $pos['pay']>0
+                ? $arWages[] = $pos['pay'] . $pos['pay_type'] // зарплата
+                : $arWages[] = 'оплата по договоренности'; // зп 
+            }
+        }
+
+        $arCities = array_unique($arCities);
+        $arVacancies = array_unique($arVacancies);
+        $arWages = array_unique($arWages);
+        sort($arCities);
+        sort($arVacancies);
+        sort($arWages);
+        if(sizeof($arCities)>0){
+          $cities = 'в ' . join(', ', $arCities) . ',';
+        }
+        if(sizeof($arVacancies)>0)
+          $vacancies = ' ' . join(', ', $arVacancies) . ', ';
+
+        if(sizeof($arWages)>0)
+          $wage = ' ' . join(', ', $arWages) . ', ';
+
+        $sex = $arParams['isman'] ? 'мужской' : 'женский'; // пол
+        $site = 
+        $title = 'Резюме' . $vacancies 
+            . $cities . ' - поиск сотрудников на ' 
+            . Subdomain::getSubdomain($arParams['cities'])['name'];
+
+        $description = "Резюме:" . $vacancies 
+            . $cities . $wage . " Возраст: " 
+            . $arParams['years'] . ", Пол: " . $sex;
+
+        $description = preg_replace("/\s{2,}/", " ", $description);
+
+
+        return array(
+                'meta_title' => $title,
+                'meta_description' => $description
+            );
+    }
 }

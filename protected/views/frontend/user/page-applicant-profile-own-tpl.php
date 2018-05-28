@@ -40,76 +40,29 @@
   // Установка метаданных и заголовка
   //
   if(!$flagOwnProfile){
-    function ending($num){
-        $num = (int)$num;  
-        if ($num < 21 && $num > 4) return 'лет';
-        $num = $num%10;
-        if ($num == 1) return 'год';
-        if ($num > 1 && $num < 5) return 'года';
-        return 'лет';
-    }
-
-    $arCities = array();
-    $arVacancies = array();
-    $arWages = array();
-    $cities = '';
-    $vacancies = '';
-    $wage = '';
-    $fio = array_values($viData['userInfo']['userAttribs'])[0]['firstname'] . ' ' . array_values($viData['userInfo']['userAttribs'])[0]['lastname'];
-
-    foreach($viData['userInfo']['userCities'][2] as $city){
-      if(isset($city) && !empty($city)){
-        $arCities[] = $city . '(е), '; // города
-      }
-    }
-    foreach(current($viData['userInfo']['userDolj']) as $pos){
-      if(!$pos['isshow']){
-        $arVacancies[] = $pos['val']; // вакансии
-        $pos['pay']>0
-        ? $arWages[] = $pos['pay'] . $pos['pay_type'] // зарплата
-        : $arWages[] = 'оплата по договоренности'; // зп 
-      }
-    }
-    $arCities = array_unique($arCities);
-    $arVacancies = array_unique($arVacancies);
-    $arWages = array_unique($arWages);
-    sort($arCities);
-    sort($arVacancies);
-    sort($arWages);
-    if(sizeof($arCities)>0){
-      $cities = 'в ' . join(', ', $arCities);
-    }
-    if(sizeof($arVacancies)>0){
-      $vacancies = ' ' . join(', ', $arVacancies) . ', ';
-    }
-    if(sizeof($arWages)>0){
-      $wage = ' ' . join(', ', $arWages) . ', ';
-    }
-
-    $years = date('Y') -  date('Y', strtotime(array_values($viData['userInfo']['userAttribs'])[0]['bday'])); // возраст
-    $years .= ' ' . ending($years); 
-    $sex = array_values($viData['userInfo']['userAttribs'])[0]['isman'] ? 'мужской' : 'женский'; // пол
-    $strRes = "Резюме" . $vacancies . $cities . " - поиск сотрудников на Prommu.com";
+    $arSeoParams = array(
+      'firstname' => $attr['firstname'],
+      'lastname' => $attr['lastname'],
+      'cities' => current($info['userCities']),
+      'posts' => current($info['userDolj']),
+      'isman' => $attr['isman'],
+      'years' => Share::endingYears($attr['bday'])
+    );
+    $arSeo = Seo::getMetaForApp($arSeoParams);    
 
     // закрываем от индексации
     if($attr['index'] || $viData['profileEffect']<40){
       Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
     }
     // устанавливаем title
-    if(!empty($attr['meta_title'])){
-      $this->pageTitle = $attr['meta_title'];
-    }
-    else{
-      $this->pageTitle = preg_replace("/\s{2,}/"," ",$strRes);
-    }
+    if(empty($attr['meta_title']))
+      $attr['meta_title'] = $arSeo['meta_title'];
+    $this->pageTitle = $attr['meta_title'];
+
     // устанавливаем description
-    if(!empty($attr['meta_description'])){
-      Yii::app()->clientScript->registerMetaTag($attr['meta_description'], 'description');
-    }
-    else{
-      $strRes = "Резюме:" . $vacancies . $cities . $wage . " Возраст: " . $years . ", Пол: " . $sex;
-      Yii::app()->clientScript->registerMetaTag(preg_replace("/\s{2,}/"," ",$strRes), 'description');
-    }
+    if(empty($attr['meta_description']))
+      $attr['meta_description'] = $arSeo['meta_description'];
+    Yii::app()->clientScript->registerMetaTag($attr['meta_description'], 'description');
   }
 
   $rt = $rate;
@@ -561,11 +514,11 @@
         <div class="ppp__subtitle">Не заполнено</div>
       <? endif; ?>
     </div>
-	<div class='center-box'>
-		<?php if( $flagOwnProfile ): ?>
-			<a class='ppp__btn' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>' style="max-width:250px;margin:0 auto 10px">Редактировать профиль</a>
-		<?php endif; ?>
-	</div>
+  <div class='center-box'>
+    <?php if( $flagOwnProfile ): ?>
+      <a class='ppp__btn' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>' style="max-width:250px;margin:0 auto 10px">Редактировать профиль</a>
+    <?php endif; ?>
+  </div>
   </div>
 </div>
   <?/*

@@ -1242,7 +1242,14 @@ class UserProfileApplic extends UserProfile
 
         foreach ($res as $key => $val):
             $cityPrint[$val['id']] = $val['name'];
-            $city[$val['id']] = array('id' => $val['id'], 'name' => $val['name'], 'ismetro' => $val['ismetro'], 'street' => $val['street'], 'addinfo' => $val['addinfo'], );
+            $city[$val['id']] = array(
+                'id' => $val['id'], 
+                'name' => $val['name'], 
+                'ismetro' => $val['ismetro'],
+                'street' => $val['street'], 
+                'addinfo' => $val['addinfo'],
+                'region' => $val['region']
+            );
         endforeach;
 
         $data['userCities'] = array($city, array('id' => $res[0]['id_co'], 'name' => $res[0]['coname']), $cityPrint);

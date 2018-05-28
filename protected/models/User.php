@@ -377,14 +377,57 @@ class User extends CActiveRecord
 	public function getUser($id)
 	{
 		$result = Yii::app()->db->createCommand()
-    			->select("u.id_user,r.meta_title, r.meta_h1, r.meta_description, r.index, u.login, u.passw, u.email, u.access_time, u.status, u.isblocked, u.ismoder,r.comment,
-    			r.firstname,r.photo,  r.lastname, DATE_FORMAT(r.birthday,'%d.%m.%Y') as birthday, r.ismed, r.ishasavto,
-    			r.isman, r.aboutme")
-			->leftjoin('resume r', 'r.id_user=u.id_user')
+    			->select("u.id_user,r.meta_title, r.meta_h1, 
+    				r.meta_description, r.index, u.login, 
+    				u.passw, u.email, u.access_time, r.id, 
+    				u.status, u.isblocked, u.ismoder,
+    				r.comment, r.firstname,r.photo, r.lastname, 
+    				DATE_FORMAT(r.birthday,'%d.%m.%Y') as birthday, 
+    				r.ismed, r.ishasavto, r.isman, r.aboutme,
+    				r.smart, r.card, r.cardPrommu")
+				->leftjoin('resume r', 'r.id_user=u.id_user')
     			->from('user u')
 		    	->where('u.id_user=:id', array(':id'=>$id))
 		    	->queryRow();
 
+		$result['src'] = '/' . MainConfig::$PATH_APPLIC_LOGO 
+			. '/' . ($result['photo'] ? $result['photo'] . '400.jpg' : ($result['isman']
+			? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F));
+		$result['years'] = date('Y') -  date('Y', strtotime($result['birthday']));
+		$result['years'] .= ' ' . Share::endingYears($result['years']); // возраст
+		//
+        // справочник характиристики пользователя
+        $sql = "SELECT d.id, d.id_par idpar, d.type, d.name 
+        	FROM user_attr_dict d 
+        	WHERE d.id_par IN(11,12,13,14,15,16,69) 
+        	ORDER BY idpar, id";
+        $arAppNames = Yii::app()->db->createCommand($sql)->queryAll();
+        $arAppear = array(
+        	11=>'hcolor',
+        	12=>'hlen',
+        	13=>'ycolor',
+        	14=>'chest',
+        	15=>'waist',
+        	16=>'thigh',
+        	69=>'edu'
+        );
+        $res = array();
+        foreach ($arAppNames as $item)
+        	$res[$item['id']] = $item['name'];
+        $arAppNames = $res;
+        //
+        // языки словаря
+        $sql = "SELECT d.id, d.name
+                FROM user_attr_dict d 
+                WHERE d.id_par = 40
+                ORDER BY name";
+        $arLangs = Yii::app()->db->createCommand($sql)->queryAll();
+        $res = array();
+        foreach ($arLangs as $item)
+        	$res[$item['id']] = $item['name'];
+        $arLangs = $res;
+        //
+        // свойства
 		$attr = Yii::app()->db->createCommand()
 			->select("*")
 			->from('user_attribs')
@@ -393,10 +436,186 @@ class User extends CActiveRecord
 		$arr_at = [];
 		foreach($attr as $at) {
 			if(!empty($at['key'])) {
-				$arr_at[$at['key']] = $at['val'];
+				if(in_array($at['key'], $arAppear))
+					$arr_at[$at['key']] = $arAppNames[$at['id_attr']];
+				else
+					$arr_at[$at['key']] = $at['val'];
+			}
+			elseif(array_key_exists($at['id_attr'], $arLangs)) {
+				$arr_at['lang'][$at['id_attr']] = $arLangs[$at['id_attr']];
 			}
 		}
 		$result['attr']=$arr_at;
+		//
+		// photo
+		$result['photos'] = Yii::app()->db->createCommand()
+			->select("p.id, p.photo")
+			->from('resume r')
+			->leftjoin('user_photos p', 'p.id_promo = r.id')
+			->where('p.id_user=:id', array(':id'=>$id))
+			->queryAll();
+
+		if(sizeof($result['photos'])){
+			foreach($result['photos'] as $key => &$item){
+				$item['photo'] = '/' . MainConfig::$PATH_APPLIC_LOGO 
+					. '/' . $item['photo'] . '400.jpg';			
+			}
+			unset($item);
+		}
+		else{
+			$result['photos'] = array();
+		}
+		//
+        // должности, отработанные и желаемые
+        $sql = "SELECT r.id, um.isshow, 
+        		um.pay, um.pay_type pt,
+        		um.pay_type, um.id_attr, 
+        		um.mech, d1.name pname,
+        		d.name val, d.id idpost
+            FROM resume r
+            INNER JOIN user_mech um ON um.id_us = r.id_user
+            LEFT JOIN user_attr_dict d1 ON d1.id = um.id_attr
+            INNER JOIN user_attr_dict d ON d.id = um.id_mech 
+            WHERE r.id_user = {$id}
+            ORDER BY um.isshow, val";
+        $res = Yii::app()->db->createCommand($sql)->queryAll();
+
+        $exp = array();
+        foreach ($res as $key => $val)
+        {
+            if( $val['pay_type'] == 1 ) $res[$key]['pay_type'] ='руб/неделю';
+            elseif( $val['pay_type'] == 2 ) $res[$key]['pay_type'] ='руб/месяц';
+            else $res[$key]['pay_type'] ='руб/час';
+
+            if( $val['isshow'] ) $exp[] = $val['val'];
+        } // end foreach
+        $result['user_posts'] = $res;
+
+		$result['posts'] = array();
+		foreach($result['user_posts'] as $post){
+			$result['posts'][$post['idpost']]['val'] = $post['val'];
+			if(!$post['isshow']){
+				$result['posts'][$post['idpost']]['pay'] = $post['pay']>0 
+				? round($post['pay']) 
+				: '';
+				$result['posts'][$post['idpost']]['pt'] = !$post['pt']
+				? 'Час'
+				: ($post['pt']>1 ? 'Месяц' : 'Неделю');
+			}
+			if($post['isshow'])
+				$result['posts'][$post['idpost']]['pname'] = $post['pname'];
+		}
+		//
+        // read cities
+        $sql = "SELECT ci.id_city id, ci.name, 
+        	co.id_co, co.name coname, 
+        	ci.ismetro, ci.region
+            FROM user_city uc
+            LEFT JOIN city ci ON uc.id_city = ci.id_city
+            LEFT JOIN country co ON co.id_co = ci.id_co
+            WHERE uc.id_user = {$id}";
+        $res = Yii::app()->db->createCommand($sql)->queryAll();
+
+        $result['user_cities'] = array();
+        foreach ($res as $key => $val)
+        {
+            $cityPrint[$val['id']] = $val['name'];
+            $result['user_cities'][$val['id']] = array(
+            	'id' => $val['id'], 
+            	'name' => $val['name'], 
+            	'ismetro' => $val['ismetro'], 
+            	'region' => $val['region']
+            );
+        }
+        //
+        // read metro
+        $sql = "SELECT m.id, m.id_city idcity, m.name FROM user_metro um
+                LEFT JOIN metro m ON um.id_metro = m.id
+                WHERE um.id_us = {$id} ORDER BY name";
+        $res = Yii::app()->db->createCommand($sql)->queryAll();
+        foreach ($res as $key => $val):
+            $metro[$val['id']] = array('idcity' => $val['idcity'], 'name' => $val['name']);
+        endforeach;
+        $result['user_metros'] = $metro;
+        //
+        // read week times
+        $dayNames = array('Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс');
+        $sql = "SELECT t.id_city idcity, t.wday, t.timeb, t.timee FROM user_wtime t WHERE t.id_us = {$id}";
+        $wdays = array();
+        $res = Yii::app()->db->createCommand($sql)->queryAll();
+        foreach ($res as $key => $val):
+            $val['wdayName'] = $dayNames[$val['wday']-1];
+            $h = floor($val['timeb'] / 60);
+            $m = $val['timeb'] - $h * 60;
+            $val['timeb'] = sprintf('%d:%02d', $h, $m);
+            $h = floor($val['timee'] / 60);
+            $m = $val['timee'] - $h * 60;
+            $val['timee'] = sprintf('%d:%02d', $h, $m);
+            $wdays[$val['idcity']][$val['wday']] = $val;
+        endforeach;
+        $result['worktime'] = $wdays;
+        $result['days'] = array(
+        	1=>'ПН', 
+        	2=>'ВТ',
+        	3=>'СР', 
+        	4=>'ЧВ', 
+        	5=>'ПТ', 
+        	6=>'СБ', 
+        	7=>'ВС'
+        );
+        //
+		// last jobs
+        $jobFilter = Vacancy::getScopesCustom(Vacancy::$SCOPE_APPLIC_WORKING, 'vs');
+
+        $sql = "SELECT v.id, v.title, 
+        		DATE_FORMAT(v.crdate, '%d.%m.%Y') crdate, 
+        		DATE_FORMAT(v.remdate, '%d.%m.%Y') remdate,
+        		e.id_user idus, e.name
+            FROM empl_vacations v
+            INNER JOIN vacation_stat vs ON vs.id_vac = v.id 
+            INNER JOIN employer e ON e.id_user = v.id_user
+            WHERE vs.id_promo = {$result['id']} AND {$jobFilter}
+            ORDER BY v.id DESC
+            LIMIT 9";
+        $res = Yii::app()->db->createCommand($sql)->queryAll();
+        foreach ($res as $key => $job) {
+        	$result['jobs'][$key] = $job;
+			$result['jobs'][$key]['link'] = '/admin/site/VacancyEdit/' . $job['id'];
+			$result['jobs'][$key]['empl'] = '/admin/site/EmplEdit/' . $job['idus'];
+        }
+
+        $sql = "SELECT COUNT(vs.id) cou
+			FROM empl_vacations v
+			INNER JOIN vacation_stat vs ON vs.id_vac = v.id 
+			WHERE vs.id_promo = {$result['id']} AND {$jobFilter}";
+        $res = Yii::app()->db->createCommand($sql)->queryScalar();
+        $result['jobs_cnt'] = $res;
+        //
+        //	SEO
+        //
+		$arSeoParams = array(
+			'firstname' => $result['firstname'],
+			'lastname' => $result['lastname'],
+			'cities' => $result['user_cities'],
+			'posts' => $result['user_posts'],
+			'isman' => $result['isman'],
+			'years' => $result['years']
+		);
+		$arSeo = Seo::getMetaForApp($arSeoParams);
+
+		// устанавливаем title
+		if(empty($result['meta_title']))
+		  $result['meta_title'] = $arSeo['meta_title'];
+
+		// устанавливаем description
+		if(empty($result['meta_description']))
+			$result['meta_description'] = $arSeo['meta_description'];
+
+        /*
+        // считываем опыт
+        $sql = "SELECT d.id, d.type, d.name FROM user_attr_dict d WHERE d.id_par = 31 ORDER BY id";
+        $result['expir'] = Yii::app()->db->createCommand($sql)->queryAll();
+		*/
     	return $result;
 	}
 
