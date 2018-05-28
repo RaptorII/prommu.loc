@@ -643,22 +643,7 @@ class SiteController extends Controller
     }
 
 
-    public function actionRating()
-    {
-        // if($this->user_access != 1) {
-        //     $this->render('access');
-        //     return;
-        // }
-        if(self::isAuth()) {
-            $model = new PointRating();
-            $model->unsetAttributes();  // clear any default values
-            if(isset($_GET['Rating'])){
-                $model->attributes=$_GET['Rating'];
-            }
 
-            $this->render('rating/view', array('model'=>$model));
-        }
-    }
   
   public function actionUniversity()
     {
