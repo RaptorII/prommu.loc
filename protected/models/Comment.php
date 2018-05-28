@@ -103,6 +103,7 @@ class Comment extends ARModel
 
         /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);
+        $res->execute();
         
     }
 
