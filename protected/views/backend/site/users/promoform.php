@@ -3,6 +3,10 @@ Yii::app()->getClientScript()->registerCssFile('/admin/css/app-profile.css');
 Yii::app()->getClientScript()->registerCoreScript('jquery');
 Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl.'/js/ajaxfileupload.js', CClientScript::POS_HEAD);
 
+echo "<pre>";
+print_r($data); 
+echo "</pre>";
+
 echo '<div class="row"><div class="col-xs-12"><div class="row">';
     echo '<div class="col-xs-12 col-sm-3 col-md-2">'
             . '<ul class="nav user__menu" role="tablist" id="tablist">'
