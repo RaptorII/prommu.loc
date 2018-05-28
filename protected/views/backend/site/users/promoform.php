@@ -270,7 +270,7 @@ echo '<div role="tabpanel" class="tab-pane fade active in" id="tab_profile">';
                     foreach($data['user_metros'] as $idMetro => $metro)
                         if($metro['idcity']==$city['id'])
                             $arMetroes[] = $metro['name'];
-                   // echo '<b>Метро: </b><span>' . implode(', ', $arMetroes) . '</span><br/>';   
+                    echo '<b>Метро: </b><span>' . implode(', ', $arMetroes) . '</span><br/>';   
                 }         
             }
             echo '<b>Дни недели: </b><br/>';
@@ -379,7 +379,7 @@ echo '<div role="tabpanel" class="tab-pane fade active in" id="tab_profile">';
         . '<label class="control-label">Иностранные языки</label>'
             . CHtml::textArea(
                 'User[lang]', 
-                implode(', ', $data['attr']['lang']), 
+                //implode(', ', $data['attr']['lang']), 
                 array('class'=>'form-control','disabled'=>true)
             )
         . '</div>';
