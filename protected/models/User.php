@@ -402,18 +402,7 @@ class User extends CActiveRecord
 			$result['photos'] = array();
 		}
 
-
-
-
-
-
-
-
-
-
-        //$limit = $this->limit > 0 ? "LIMIT {$this->offset}, {$this->limit}" : '';
 		$arIdies = array();
-
         // читаем вакансии
         $sql = "SELECT v.id, v.title, v.status, v.count, 
         			v.vk_link, v.fb_link, v.tl_link, 
@@ -495,13 +484,20 @@ class User extends CActiveRecord
 
         if(sizeof($arIdies)){
         	$strId = implode(',', $arIdies);
-            $sql = "SELECT COUNT(v.id) cnt, v.id
+            $sql = "SELECT v.id id_vac, vs.id_promo, 
+            		vs.id id_resp, r.firstname, r.lastname, 
+            		vs.isresponse, vs.status, r.id_user
                 FROM empl_vacations v 
                 LEFT JOIN vacation_stat vs ON vs.id_vac = v.id
-                WHERE vs.isresponse = 2 AND (v.id IN({$strId}))";
+                LEFT JOIN resume r ON r.id = vs.id_promo
+                WHERE (v.id IN({$strId}))";
             $result['responses'] = Yii::app()->db->createCommand($sql)->queryAll();
-
-   	
+            foreach ($result['responses'] as &$r)
+            	if(!empty($r['firstname'])){
+            		$r['profile'] = '/admin/PromoEdit/' . $r['id_user'];
+            		$r['name'] = $r['firstname'] . ' ' . $r['lastname'];
+            	}
+            unset($r);
         }
 
     	return $result;

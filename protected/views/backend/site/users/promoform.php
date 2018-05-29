@@ -494,7 +494,7 @@ echo '<div role="tabpanel" class="tab-pane fade" id="tab_photo">';
         }        
     }
     else{
-        echo '<p>У соискателя нет загруженных фото</p>';
+        echo '<div class="col-xs-12">У соискателя нет загруженных фото</div>';
     }
     echo '</div>';
 echo '</div>';
@@ -502,11 +502,10 @@ echo '</div>';
 *       POSITIONS
 */
 echo '<div role="tabpanel" class="tab-pane fade" id="tab_vacs">';
-    echo '<h3>Отработанные вакансии</h3><div class="row">';
+    echo '<h3>Отработанные вакансии: ' . $data['jobs_cnt'] . '</h3><div class="row">';
     if($data['jobs_cnt']>0)
     {
-        echo '<div class="col-xs-12">Отработанных проектов: ' . $data['jobs_cnt'] . '</div>'
-            . '<div class="col-xs-12">';
+        echo '<div class="col-xs-12">';
         foreach ($data['jobs'] as $job)
         {
             echo '<div class="job_item">' 
@@ -541,25 +540,6 @@ echo '</div></div>';
     echo '</div>';
 echo '</div>';
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <script>
     function Del(key)
     {
