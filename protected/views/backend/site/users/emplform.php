@@ -279,23 +279,48 @@ echo '<div role="tabpanel" class="tab-pane fade in" id="tab_archive">';
                 . '<b>Заголовок: </b><a target="_blank" href="' . $item['link'] . '" target="_blank">' . $item['title'] . '</a><br/>'
                 . '<b>Откликов: </b><span>' . $item['isresp'][1] . '</span><br/>'
                 . '<b>Просмотров: </b><span>' . $data['analytic'][$item['id']] . '</span><br/>';
-            $approv = $resp = $aside = $reject = $refuse = '';
-            foreach ($data['responses'] as $resp){
-                if($resp['id_vac']!=$item['id'])
+
+            $arTemp = array();
+            foreach ($data['responses'] as $r){
+                if($r['id_vac']!=$item['id'])
                     continue;
-                if($resp['status']==5)
-                    $approv .= '<a target="_blank" href="' . $resp['profile'] . '" target="_blank">' . $item['name'] . '</a> ';
+                if(!empty($r['name'])){
+                    if( $r['status'] == 1)  // Отложенные
+                        $arTemp['aside'][] = '<a target="_blank" href="' 
+                            . $r['profile'] . '" target="_blank">' . $r['name'] . '</a> '; 
+
+                    elseif( $r['status'] == 3 && $r['isresponse'] == 2 ) // Отказавшиеся
+                        $arTemp['refuse'][] = '<a target="_blank" href="' 
+                            . $r['profile'] . '" target="_blank">' . $r['name'] . '</a> ';
+
+                    elseif( $r['status'] == 3 ) // Отклоненные
+                        $arTemp['reject'][] = '<a target="_blank" href="' 
+                            . $r['profile'] . '" target="_blank">' . $r['name'] . '</a> ';
+
+                    elseif( $r['status'] == 5 ) // Утвержденные
+                        $arTemp['approv'][] = '<a target="_blank" href="' 
+                            . $r['profile'] . '" target="_blank">' . $r['name'] . '</a> ';
+
+                    elseif( in_array($r['status'], [0,2,4,6,7]) ) // Откликнувшиеся
+                        $arTemp['resp'][] = '<a target="_blank" href="' 
+                            . $r['profile'] . '" target="_blank">' . $r['name'] . '</a> ';                   
+                }  
             }
-            if(!empty($approv))
-                echo '<b>Утвержденные: </b>' . $approv . '<br/>';
-            if(!empty($resp))
-                echo '<b>Откликнувшиеся: </b>' . '<br/>';
-            if(!empty($aside))
-                echo '<b>Отложенные: </b>' . '<br/>';
-            if(!empty($reject))
-                echo '<b>Отклоненные: </b>' . '<br/>';
-            if(!empty($refuse))
-                echo '<b>Отказавшиеся: </b>' . '<br/>';
+            if(isset($arTemp['approv']))
+                echo '<b>Утвержденные: </b>' . implode(', ', $arTemp['approv']) . '<br/>';
+
+            if(!empty($arTemp['resp']))
+                echo '<b>Откликнувшиеся: </b>' . implode(', ', $arTemp['resp']) . '<br/>';
+
+            if(!empty($arTemp['aside']))
+                echo '<b>Отложенные: </b>' . implode(', ', $arTemp['aside']) . '<br/>';
+
+            if(!empty($arTemp['reject']))
+                echo '<b>Отклоненные: </b>' . implode(', ', $arTemp['reject']) . '<br/>';
+
+            if(!empty($arTemp['refuse']))
+                echo '<b>Отказавшиеся: </b>' . implode(', ', $arTemp['refuse']) . '<br/>';
+            unset($arTemp);
 
             echo '</div></div>';
         }        
@@ -303,14 +328,6 @@ echo '<div role="tabpanel" class="tab-pane fade in" id="tab_archive">';
     else{
         echo '<div class="col-xs-12">У работодателя нет активных вакансий</div>';
     }
-
-
-
-echo '<pre>';
-print_r($data['responses']);
-echo '</pre>';
-
-
     echo '</div>';
 echo '</div>';
             /*
