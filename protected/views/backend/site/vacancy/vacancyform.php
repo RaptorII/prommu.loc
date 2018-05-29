@@ -2,10 +2,15 @@
 Yii::app()->getClientScript()->registerCoreScript('jquery');
 Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl.'/js/ajaxfileupload.js', CClientScript::POS_HEAD);
 
+echo "<pre style='display:none'>";
+print_r($data); 
+echo "</pre>";
+
 echo CHtml::form($id,'post',array('enctype'=>'multipart/form-data', 'class'=>'form-horizontal'));
-echo '<div class="col-md-12">';
-    echo '<div class="col-md-6">
-        <h3>Редактирование вакансии '.$data['vac']['id'].'</h3><br/>';
+echo '<div class="row">';
+echo '<div class="col-xs-12">';
+    echo '<div class="col-xs-12 col-md-6">';
+        echo '<h3>Редактирование вакансии '.$data['vac']['id'].'</h3><br/>';
         echo '<h4 style="font-size: 40px;font-weight: 100;">ОСНОВНАЯ ИНФОРМАЦИЯ</h4>';
 
         echo '<div class="control-group">
@@ -84,7 +89,7 @@ echo '<div class="col-md-12">';
     *
     *
     */
-    echo '<div class="col-md-6">';
+    echo '<div class="col-xs-12 col-md-6">';
         echo '<h3>'.$data['vac']['title'].'</h3><br/>';
         echo '<h4 style="font-size: 40px;font-weight: 100;">ПОЛ</h4>';
 
@@ -214,6 +219,7 @@ echo '<div class="col-md-12">';
         //echo CHtml::tag('input',array("id"=>"btn_cancel", "type"=>"button", "value"=>"Отмена", "class"=>"btn btn-warning"));
         echo '</div></div>';
     echo '</div>';
+echo '</div>';
 echo '</div>';
 echo CHtml::endForm();
 ?>
