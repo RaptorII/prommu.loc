@@ -1474,9 +1474,9 @@ class Auth
 
         $sex = $inData['inputData']['sex'];
         $smart = $inData['inputData']['smart'];
-        if($smart) {
-         $sex = $this->SexOnder($inData['inputData']['name']); 
-        }
+        // if($smart) {
+        //  // $sex = $this->SexOnder($inData['inputData']['name']); 
+        // }
 
 
         $analytData = array('id_us' => $idUs,
