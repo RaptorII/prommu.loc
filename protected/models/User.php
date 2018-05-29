@@ -317,6 +317,7 @@ class User extends CActiveRecord
 			Yii::app()->db->createCommand()
 			->update('employer', array(
 				'name' => $data['name'],
+				'type' => $data['type'],
 				'firstname' => $data['firstname'],
 				'lastname' => $data['lastname'],
 				'position' => $data['post'],
@@ -348,16 +349,24 @@ class User extends CActiveRecord
     			->queryAll();
     	return $result;
 	}
-
+	/*
+	*
+	*/
 	public function getUserEmpl($id)
 	{
 		$result = Yii::app()->db->createCommand()
-    			->select("u.id_user, u.login, u.passw, u.email, u.access_time, u.status, u.isblocked, u.ismoder,
-    			r.firstname,r.logo, r.lastname, r.name, r.type, r.city")
+    		->select("r.id, u.id_user, u.login, u.passw, 
+    			u.email, u.access_time, u.status, 
+    			u.isblocked, u.ismoder, r.firstname,
+    			r.logo, r.lastname, r.name, r.type, r.city"
+    		)
 			->leftjoin('employer r', 'r.id_user=u.id_user')
-    			->from('user u')
-		    	->where('u.id_user=:id', array(':id'=>$id))
-		    	->queryRow();
+    		->from('user u')
+		    ->where('u.id_user=:id', array(':id'=>$id))
+		    ->queryRow();
+
+		$result['src'] = '/' . MainConfig::$PATH_EMPL_LOGO . '/' 
+			. (!$result['logo'] ? 'logo.png' : $result['logo'] . '100.jpg');
 
 		$attr = Yii::app()->db->createCommand()
 			->select("*")
@@ -371,6 +380,130 @@ class User extends CActiveRecord
 			}
 		}
 		$result['attr']=$arr_at;
+		//
+		// photo
+		$result['photos'] = Yii::app()->db->createCommand()
+			->select("p.id, p.photo")
+			->from('employer r')
+			->leftjoin('user_photos p', 'p.id_empl = r.id')
+			->where('r.id=:id', array(':id'=>$result['id']))
+			->queryAll();
+
+		if(sizeof($result['photos'])){
+			foreach($result['photos'] as &$item){
+                $item['orig'] = '/' . MainConfig::$PATH_EMPL_LOGO 
+                	. '/' . $item['photo'] . '000.jpg';	
+				$item['photo'] = '/' . MainConfig::$PATH_EMPL_LOGO 
+                	. '/' . $item['photo'] . '400.jpg';
+			}
+			unset($item);
+		}
+		else{
+			$result['photos'] = array();
+		}
+
+
+
+
+
+
+
+
+
+
+        //$limit = $this->limit > 0 ? "LIMIT {$this->offset}, {$this->limit}" : '';
+		$arIdies = array();
+
+        // читаем вакансии
+        $sql = "SELECT v.id, v.title, v.status, v.count, 
+        			v.vk_link, v.fb_link, v.tl_link, 
+        			DATE_FORMAT(v.crdate, '%d.%m.%Y') crdate, 
+        			DATE_FORMAT(v.remdate, '%d.%m.%Y') remdate, 
+        			t.bdate, t.edate, vs.id_promo, 
+        			v.ispremium, v.repost, v.ismoder, 
+        			vs.isresponse + 1 isresp
+	            FROM empl_vacations v
+	            INNER JOIN ( 
+	            	SELECT v.id 
+	            	FROM empl_vacations v 
+	            	WHERE v.id_user = {$id} 
+	            	ORDER BY v.id DESC
+	            ) t1 ON t1.id = v.id 
+	            LEFT JOIN vacation_stat vs ON vs.id_vac = v.id 
+	            LEFT JOIN empl_locations l ON v.id = l.id_vac 
+	            LEFT JOIN emplv_loc_times t ON l.id = t.id_loc
+	            LEFT JOIN employer e ON e.id_user = v.id_user
+	            WHERE v.id_user = {$id}
+	            AND (v.status = 1)
+	            ORDER BY v.id DESC";
+        
+        $res = Yii::app()->db->createCommand($sql)->queryAll();
+        foreach ($res as $key => $val)
+        {
+        	$arIdies[] = $val['id'];
+            $Termostat = new Termostat();
+            $result['analytic'][$val['id']] = $Termostat->getTermostatCount($val['id']);
+
+            if( !isset($result['vacancies'][$val['id']]) ) 
+            	$result['vacancies'][$val['id']] = array_merge(
+            		$val, 
+            		array('isresp' => array($val['count'],0)
+            	)
+            );
+            if( $val['isresp'] ) 
+            	$result['vacancies'][$val['id']]['isresp'][$val['isresp']-1]++;
+            $result['vacancies'][$val['id']]['link'] = '/admin/VacancyEdit/' . $val['id'];
+        }
+        //
+        // читаем архив
+        $sql = "SELECT v.id, v.title, v.status, v.count, 
+        			DATE_FORMAT(v.crdate, '%d.%m.%Y') crdate, 
+        			DATE_FORMAT(v.remdate, '%d.%m.%Y') remdate, 
+        			vs.id_promo, vs.isresponse + 1 isresp
+	            FROM empl_vacations v
+	            INNER JOIN (
+	            	SELECT v.id 
+	            	FROM empl_vacations v 
+	            	WHERE v.id_user = {$id} 
+	            	ORDER BY v.id DESC
+	            ) t1 ON t1.id = v.id 
+	            LEFT JOIN vacation_stat vs ON vs.id_vac = v.id 
+	            LEFT JOIN employer e ON e.id_user = v.id_user
+	            WHERE v.id_user = {$id}
+	            AND (v.status = 0 OR vs.status in (6,7))
+	            ORDER BY v.id DESC";
+        
+        $res = Yii::app()->db->createCommand($sql)->queryAll();
+        foreach ($res as $key => $val)
+        {
+        	$arIdies[] = $val['id'];
+            $Termostat = new Termostat();
+            $result['analytic'][$val['id']] = $Termostat->getTermostatCount($val['id']);
+
+            if( !isset($result['vacancies_arch'][$val['id']]) ) 
+            	$result['vacancies_arch'][$val['id']] = array_merge(
+            		$val, 
+            		array('isresp' => array($val['count'],0)
+            	)
+            );
+            if( $val['isresp'] ) 
+            	$result['vacancies_arch'][$val['id']]['isresp'][$val['isresp']-1]++;
+            $result['vacancies_arch'][$val['id']]['link'] = '/admin/VacancyEdit/' . $val['id'];
+        }
+
+        $result['responses'] = array();
+
+        if(sizeof($arIdies)){
+        	$strId = implode(',', $arIdies);
+            $sql = "SELECT COUNT(v.id) cnt, v.id
+                FROM empl_vacations v 
+                LEFT JOIN vacation_stat vs ON vs.id_vac = v.id
+                WHERE vs.isresponse = 2 AND (v.id IN({$strId}))";
+            $result['responses'] = Yii::app()->db->createCommand($sql)->queryAll();
+
+   	
+        }
+
     	return $result;
 	}
 	/*
@@ -459,6 +592,8 @@ class User extends CActiveRecord
 
 		if(sizeof($result['photos'])){
 			foreach($result['photos'] as $key => &$item){
+				$item['orig'] = '/' . MainConfig::$PATH_APPLIC_LOGO 
+					. '/' . $item['photo'] . '000.jpg';	
 				$item['photo'] = '/' . MainConfig::$PATH_APPLIC_LOGO 
 					. '/' . $item['photo'] . '400.jpg';			
 			}

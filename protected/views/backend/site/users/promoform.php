@@ -2,12 +2,19 @@
 Yii::app()->getClientScript()->registerCssFile('/admin/css/app-profile.css');
 Yii::app()->getClientScript()->registerCoreScript('jquery');
 Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl.'/js/ajaxfileupload.js', CClientScript::POS_HEAD);
+// Magnific Popup
+Yii::app()->getClientScript()->registerCssFile('/jslib/magnific-popup/magnific-popup-min.css');
+Yii::app()->getClientScript()->registerScriptFile('/jslib/magnific-popup/jquery.magnific-popup.min.js', CClientScript::POS_END);
 
 echo "<pre style='display:none'>";
 print_r($data); 
 echo "</pre>";
 
-echo '<div class="row"><div class="col-xs-12"><div class="row">';
+echo '<div class="row">';
+echo '<div class="col-xs-12 col-sm-9 col-sm-offset-3 col-md-6 col-md-offset-2">'
+    . '<h2>Редактирование соискателя #' . $data['id_user'] . '</h2>'
+    . '</div>';
+echo '<div class="col-xs-12"><div class="row">';
     echo '<div class="col-xs-12 col-sm-3 col-md-2">'
             . '<ul class="nav user__menu" role="tablist" id="tablist">'
                 . '<li class="active"><a href="#tab_profile" aria-controls="tab_profile" role="tab" data-toggle="tab">Общее</a></li>'
@@ -23,7 +30,7 @@ echo '<div class="row"><div class="col-xs-12"><div class="row">';
 *       TAB PROFILE 
 */
 echo '<div role="tabpanel" class="tab-pane fade active in" id="tab_profile">';
-    echo '<h3>Редактирование соискателя #'.$data['id_user'].'</h3>';
+    echo '<h3>Общее</h3>';
     echo '<div class="row"><div class="col-xs-12 col-sm-6 user__logo">'
             . CHtml::image($data['src'])
         . '</div><div class="col-xs-12 col-sm-6 user__moder">'
@@ -474,24 +481,28 @@ echo '</div>';
 *       PHOTOS
 */
 echo '<div role="tabpanel" class="tab-pane fade" id="tab_photo">';
-    echo '<div class="row"><div class="col-xs-12 photos">';
+    echo '<h3>Фото</h3><div class="row photo-list">';
     if(sizeof($data['photos']))
     {
         foreach ($data['photos'] as $key => $item)
         {
-            echo '<div class="col-xs-12 col-sm-6 col-md-4 photos__item">' 
-                . CHtml::image($item['photo']) . '</div>';
+            echo '<div class="col-xs-12 col-sm-6 col-md-4 photos__item">'
+                . '<a class="photos__item-link" href="' . $item['orig'] . '">' 
+                . CHtml::image($item['photo'])
+                . '</a>'
+                . '</div>';
         }        
     }
     else{
         echo '<p>У соискателя нет загруженных фото</p>';
     }
-echo '</div></div></div>';
+    echo '</div>';
+echo '</div>';
 /*
 *       POSITIONS
 */
 echo '<div role="tabpanel" class="tab-pane fade" id="tab_vacs">';
-    echo '<div class="row">';
+    echo '<h3>Отработанные вакансии</h3><div class="row">';
     if($data['jobs_cnt']>0)
     {
         echo '<div class="col-xs-12">Отработанных проектов: ' . $data['jobs_cnt'] . '</div>'
@@ -524,7 +535,7 @@ echo '</div></div>';
                     )
                 )
                 . '&nbsp;&nbsp;'
-                . '<a href="/admin/site/Users" class="btn btn-warning" id="btn_cancel">Отмена</a>';
+                . '<a href="/admin/users" class="btn btn-warning" id="btn_cancel">Отмена</a>';
             echo '</div>';
         echo CHtml::endForm();
     echo '</div>';
@@ -625,4 +636,20 @@ echo '</div>';
         return false;
 
     }
+
+    $(function(){
+        $('.photo-list').magnificPopup({
+            delegate: '.photos__item-link',
+            type: 'image',
+            gallery: {
+                enabled: true,
+                preload: [0, 2],
+                navigateByImgClick: true,
+                arrowMarkup: '<button title="%title%" type="button" class="mfp-arrow mfp-arrow-%dir%"></button>',
+                tPrev: '',
+                tNext: '',
+                tCounter: '<span class="mfp-counter">%curr% / %total%</span>'
+            }
+        });
+    });
 </script>
