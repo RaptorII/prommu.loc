@@ -806,4 +806,20 @@ class Seo extends CActiveRecord
                 'meta_description' => $description
             );
     }
+
+    /*
+    *       Ajax изменения СЕО параметров страницы
+    */
+    public function changeSeoParams($id,$param,$value)
+    {
+        if(isset($id) && isset($param)){
+            return Yii::app()->db->createCommand()
+                    ->update('seo', array( 
+                        $param => $value,
+                        'mdate' => date("Y-m-d h-i-s"),
+                    ), 'id = :id', array(':id' => $id));
+        }
+        else
+            return false;
+    }
 }

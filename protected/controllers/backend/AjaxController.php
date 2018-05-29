@@ -380,4 +380,15 @@ class AjaxController extends CController {
         echo $model->changeVisComment($id);
       }
     }
+    /*
+    *   Изменения СЕО параметра страницы 
+    */
+    public function actionChangePageSeoParam()
+    {
+      $id = Yii::app()->getRequest()->getParam('id');
+      $param = Yii::app()->getRequest()->getParam('param');
+      $value = Yii::app()->getRequest()->getParam('value');
+      $model = new Seo;
+      echo $model->changeSeoParams($id, $param, $value);
+    }
 }

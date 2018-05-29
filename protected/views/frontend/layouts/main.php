@@ -150,6 +150,11 @@
             var G_SITE = '<?= MainConfig::$SITE ?>';
         </script>
     <?php endif; ?>
+    <?php 		//		SEO NOINDEX
+    	$arSeo = (new Seo)->exist($curUrl);
+    	if(isset($arSeo['id']) && !$arSeo['index'])
+    		Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
+    ?>
 </head>
 <body class="<?= $this->ViewModel->getViewData('addBodyClass') ?>">
     <?php if(MOBILE_DEVICE && !SHOW_APP_MESS): // mob device without show message ?>

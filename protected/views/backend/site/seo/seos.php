@@ -22,7 +22,7 @@
 	<input type="hidden" id="pkid" />
 </div>
 
-<div class="span11">
+<div class="span11" id="seo-content">
 	<?php
 	$criteria = new CDbCriteria();
 	$pagination = array('pageSize'=>20,);
@@ -35,8 +35,8 @@
 		'id'=>'my-grid',
 		'dataProvider'=>$model->search(),
 		'filter'=>$model,
-		 'itemsCssClass' => 'table table-bordered table-hover dataTable',
-    'htmlOptions'=>array('class'=>'table table-hover', 'name'=>'my-grid', 'style'=>    'padding: 10px;'),
+		'itemsCssClass' => 'table table-bordered table-hover dataTable',
+    	'htmlOptions'=>array('class'=>'table table-hover', 'name'=>'my-grid', 'style'=>'padding: 10px;'),
 		'columns'=>array
 		(
 			array
@@ -74,9 +74,9 @@
 			array
 			(
 				'name' => 'Отображение',
-				'value' => 'ShowIndex($data->url)',
+				'value' => 'getIndex($data->index,$data->id)',
 				'type' => 'html',
-				'htmlOptions'=>array('style'=>'text-align: left;'),
+				'htmlOptions'=>array('style'=>'text-align: center;'),
 				'filter'=>'',
 			),
 	
@@ -118,26 +118,6 @@ function ShowType($id){
 
 }
 
-function ShowIndex($id){
-	if(strpos($id, 'ankety') !== false) {
-		return "<span class='label label-success'><i class='icon-star icon-white'></i></span>index";
-	}
-	elseif(strpos($id, 'vacancy') !== false) {
-		return "<span class='label label-success'><i class='icon-star icon-white'></i></span>index";
-	}
-	elseif(strpos($id, 'services') !== false) {
-		return "<span class='label label-success'><i class='icon-star icon-white'></i></span>index";
-	}
-	elseif(strpos($id, 'news') !== false) {
-		return "<span class='label label-success'><i class='icon-star icon-white'></i></span>index";
-	}
-	elseif(strpos($id, 'searchempl') !== false) {
-		return "<span class='label label-warning'><i class='icon-star icon-white'></i></span>no index";
-	}
-    
-
-}
-
 function ShowEdit($id) {
     return  '<button type="button" class="btn btn-default"><a href="/admin/site/seoEdit/' . $id . '">Редактировать</a></button> ';
 }
@@ -157,6 +137,15 @@ function ShowUrl($id){
 		return '<a href="#Modal" id="btn_'.$id.'" data-toggle="modal" onclick="javascript:edt('.$id.')">'.$name.'</a>';
 	}
 
+	function getIndex($i, $id){
+		$icon = !$i ? 'remove text-danger' : 'ok text-success';
+		$title = !$i ? 'Не индексируется' : 'Индексируется';
+		return '<span class="glyphicon glyphicon-' 
+			. $icon . ' index-page" title="' 
+			. $title . '"><i class="hide">' 
+			. $id . '</i><b class="hide">' 
+			. $i . '</b></span>';
+	}
 	?>
 
 	<a href="<?php echo Yii::app()->createUrl('site/seoAdd'); ?>" class="btn" id="btn_add">Добавить URL</a>
@@ -276,7 +265,40 @@ $(document).ready(function(){
 		this.css('top', ($(window).height() - this.height()) / 2+$(window).scrollTop() + 'px');
 		this.css('left', ($(window).width() - this.width()) / 2+$(window).scrollLeft() + 'px');
 	}
+	// изменение коммента
+	$('#seo-content').on('click','.index-page',function(){
+		var self = this,
+			id = $(self).find('i').text(),
+			index = +($(self).find('b').text()) ? 0 : 1,
+			arParams = [];
 
+			arParams.push({name:'param',value:'index'});
+			arParams.push({name:'id',value:id});
+			arParams.push({name:'value',value:index});
+
+		$.ajax({
+			type: 'GET',
+			url: '/admin/ajax/changePageSeoParam',
+			data: arParams,
+			success: function(res){
+				if(res=='1'){
+					alert('Изменено');
+					if($(self).hasClass('glyphicon-ok')) {
+						$(self).removeClass('glyphicon-ok text-success')
+							.addClass('glyphicon-remove text-danger')
+							.attr('title','Не индексируется');
+					}
+					else{
+						$(self).removeClass('glyphicon-remove text-danger')
+							.addClass('glyphicon-ok text-success')
+							.attr('title','Индексируется');
+					}
+				}
+				else
+					alert('Произошла ошибка');
+			}
+		});
+	});
 });
 
 function setShow(id, element)
@@ -299,3 +321,6 @@ function setShow(id, element)
 }
 
 </script>
+<style type="text/css">
+	.index-page{ cursor: pointer }
+</style>
