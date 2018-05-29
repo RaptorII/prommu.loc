@@ -184,7 +184,7 @@ class Auth
                     $pid+1;
 
 
-                    $sex = $this->SexOnder(ucfirst($data->fname ? $data->fname : $data->name ));
+                  //  $sex = $this->SexOnder(ucfirst($data->fname ? $data->fname : $data->name ));
                     $insData = array('id_user' => $usData['id_user'],
                         'firstname' => ucfirst($data->fname ? $data->fname : $data->name ),
                         'lastname' =>  ucfirst($data->lname),
