@@ -78,6 +78,7 @@ class Seo extends CActiveRecord
             'meta_keywords' => $data['meta_keywords'],
             'seo_h1' => $data['seo_h1'],
             'crdate' => date("Y-m-d h-i-s"),
+            'index' => 0,
         ));
     }
 
@@ -92,6 +93,7 @@ class Seo extends CActiveRecord
                         'meta_keywords' => $data['meta_keywords'],
                         'seo_h1' => $data['seo_h1'],
                         'mdate' => date("Y-m-d h-i-s"),
+                        'index' => $data['index'],
                     ), 'id = :id', array(':id' => $data['id']));
         
 
@@ -130,7 +132,7 @@ class Seo extends CActiveRecord
             // array('ishide', 'numerical', 'integerOnly' => true),
             array('meta_title, meta_description, seo_h1', 'length', 'max' => 500),
             array('meta_keywords','safe'),
-            array('url, meta_title, meta_description, meta_keywords, seo_h1', 'safe', 'on' => 'search'),
+            array('url, index, meta_title, meta_description, meta_keywords, seo_h1', 'safe', 'on' => 'search'),
         );
     }
 
@@ -157,7 +159,8 @@ class Seo extends CActiveRecord
             'meta_title' => 'Title',
             'meta_description' => 'Description',
             'meta_keywords' => 'Keywords',
-            'seo_h1' => 'Seo H1'
+            'seo_h1' => 'Seo H1',
+            'index' => 'Index'
         );
     }
 
@@ -179,6 +182,7 @@ class Seo extends CActiveRecord
         $criteria->compare('seo_h1', $this->seo_h1,true);
         $criteria->compare('mdate', $this->seo_h1,true);
         $criteria->compare('crdate', $this->seo_h1,true);
+        $criteria->compare('index', $this->index,true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
