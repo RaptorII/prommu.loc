@@ -542,7 +542,7 @@ public function rules()
                        DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
                        e.ismed, e.isavto, e.contacts, e.agefrom, e.ageto, e.status, e.vk_link, e.fb_link, e.tl_link,
                        DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
-                  , c1.id ecid, c1.id_city, c2.name AS ciname, c1.citycu, c2.ismetro
+                  , c1.id ecid, c1.id_city, c2.name AS ciname, c1.citycu, c2.ismetro, c2.region
                   , DATE_FORMAT(c1.bdate, '%d.%m.%Y') cbdate
                   , DATE_FORMAT(c1.edate, '%d.%m.%Y') cedate 
                   , ea.id_attr
@@ -578,7 +578,7 @@ public function rules()
             foreach ($res as $key => $val)
             {
                 if( !isset($data['vac'][0])) $data['vac'][0] = array('city' => array(), 'post' => array(), 'metroes' => array(), 'hasmetro' => array(), 'location' => array());
-                $data['vac'][0]['city'][$val['id_city']] = array($val['id_city'] ? $val['ciname'] : $val['citycu'], $val['cbdate'], $val['cedate'], $val['ecid'], $val['id_city']);
+                $data['vac'][0]['city'][$val['id_city']] = array($val['id_city'] ? $val['ciname'] : $val['citycu'], $val['cbdate'], $val['cedate'], $val['ecid'], $val['id_city'], 'region'=>$val['region']);
                 if( $val['ismetro'] ) $data['vac'][0]['hasmetro'][$val['id_city']] = 1;
                 $data['vac'][0]['post'][$val['id_attr']] = $val['pname'];
 
@@ -636,7 +636,22 @@ public function rules()
 
             // получаем данные для вкладок
             $data['vacResponses'] = $this->getTabsData($inIdVac, $data['vac']['idus'], $data['response']['status']);
+            //
+            //      META
+            //
+            $arSeo = Seo::getMetaForVac($data['vac']);
 
+            // устанавливаем title
+            if(empty($data['vac']['meta_title']))
+                $data['vac']['meta_title'] = $arSeo['meta_title'];
+
+            // устанавливаем h1
+            if(empty($data['vac']['meta_h1']))
+                $data['vac']['meta_h1'] = $arSeo['meta_h1'];
+
+            // устанавливаем description
+            if(empty($data['vac']['meta_description']))
+                $data['vac']['meta_description'] = $arSeo['meta_description'];
         }
         else
         {

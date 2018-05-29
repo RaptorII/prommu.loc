@@ -754,4 +754,56 @@ class Seo extends CActiveRecord
                 'meta_description' => $description
             );
     }
+    /*
+    *   @param array $arParams(
+    *       'post' - array(),
+    *       'city' - array(),
+    *       'istemp' - boolean,
+    *       'shour' - float,
+    *       'sweek' - float,
+    *       'smonth' - float,
+    *       'svisit' - float,
+    *       'isman' - boolean,
+    *       'iswoman' - boolean,
+    *       'agefrom' - int,
+    *       'ageto' - int,
+    *       'coname' - string,
+    *   ) 
+    */
+    public static function getMetaForVac($arParams)
+    {
+        $cityName = current($arParams['city'])[0];
+        $vacancies = strtolower(join(', ', $arParams['post'])); // вакансия(и)
+        $city = ' в ' . $cityName . '(е) '; // город для заголовка
+        $employ = $arParams['istemp'] ? 'Постоянная' : 'Временная';// вид занятости
+        if( $arParams['shour'] > 0 ) $wage = $arParams['shour'] . ' руб/час' ;
+        elseif( $arParams['sweek'] > 0 ) $wage = $arParams['sweek'] . ' руб/неделю' ;
+        elseif( $arParams['smonth'] > 0 ) $wage = $arParams['smonth'] . ' руб/мес' ;
+        elseif( $arParams['svisit'] > 0 ) $wage = $arParams['svisit'] . ' руб/посещение' ;
+        else $wage = 'по договоренности';   // зп
+        $sex = ($arParams['isman'] ? 'юноши' : '')
+            . ($arParams['isman'] && $arParams['iswoman'] ? ', ' : '')
+            . ($arParams['iswoman'] ? 'девушки' : ''); // пол
+        $years = '';
+        if($arParams['agefrom'] || $arParams['ageto']){
+            $years = ($arParams['agefrom'] ? 'от ' . $arParams['agefrom'] : '')
+                . ($arParams['ageto'] ? ' до ' . $arParams['ageto'] : '') 
+                . 'лет';    // возраст
+        }
+        $h1 = 'Вакансия - ' . $vacancies . ' - оплата ' . $wage;
+        $title = 'Вакансия ' . $vacancies . $city . ' - поиск работы на '
+            . Subdomain::getSubdomain($arParams['city'])['name'];
+
+        $description = $employ . ' вакансия от ' 
+            . htmlspecialchars_decode(trim($arParams['coname'])) 
+            . ': ' . htmlspecialchars_decode($vacancies) . ', ' 
+            . $cityName . ', ' . $wage . ', Возраст: ' 
+            . $years . ', Пол: ' . $sex;
+
+        return array(
+                'meta_h1' => $h1,
+                'meta_title' => $title,
+                'meta_description' => $description
+            );
+    }
 }

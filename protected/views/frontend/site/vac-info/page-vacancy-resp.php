@@ -5,17 +5,14 @@
     //
     // Установка метаданных и заголовка
     //
-    $vacancies = strtolower(join(', ', $viData['vac']['post'])); // вакансия(и)
-    $city = ' в ' . current($viData['vac']['city'])[0] . '(е) '; // город для заголовка
-    $employ = $viData['vac']['istemp'] ? 'Постоянная' : 'Временная';// вид занятости
-    if( $viData['vac']['shour'] > 0 ) $wage = $viData['vac']['shour'] . ' руб/час' ;
-    elseif( $viData['vac']['sweek'] > 0 ) $wage = $viData['vac']['sweek'] . ' руб/неделю' ;
-    elseif( $viData['vac']['smonth'] > 0 ) $wage = $viData['vac']['smonth'] . ' руб/мес' ;
-    elseif( $viData['vac']['svisit'] > 0 ) $wage = $viData['vac']['svisit'] . ' руб/посещение' ;
-    else $wage = 'по договоренности';   // зп
+    // закрываем от индексации
+    if($viData['vac']['index'])
+        Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
+    // устанавливаем h1
+    $this->ViewModel->setViewData('pageTitle', '<h1>' . $viData['vac']['meta_h1'] . '</h1>');
+    // устанавливаем description
+    Yii::app()->clientScript->registerMetaTag($viData['vac']['meta_description'], 'description');
 
-    $strBreadcrumb = 'Вакансия - ' . $vacancies . ' - оплата ' . $wage;
-    // SET META, TITLE, BREADCRUMBS
     $info = Yii::app()->getRequest()->getParam('info');
     switch($info){
         case 'resp': $title="Откликнувшиеся на вакансию"; break; // откликнувшиеся
@@ -23,9 +20,10 @@
         case 'aside': $title="Отложенные заявки"; break;   // отложенные
         case 'refuse': $title="Отказавшиеся от предложения"; break;   // Отказавшиеся
         case 'approv': $title="Утвержденные на вакансию"; break;   // Утвержденные
+        default: $title=$viData['vac']['meta_title'];
     }
     $this->pageTitle = $title;
-    $this->setBreadcrumbsEx(array($strBreadcrumb, $_SERVER['REDIRECT_URL']));
+    $this->setBreadcrumbsEx(array($viData['vac']['meta_h1'], $_SERVER['REDIRECT_URL']));
     $this->setBreadcrumbsEx(array($title, $_SERVER['REQUEST_URI']));
     //
     $arResp = $viData['vacResponses'];

@@ -20,54 +20,19 @@
     //
     // Установка метаданных и заголовка
     //
-    $vacancies = strtolower(join(', ', $viData['vac']['post'])); // вакансия(и)
-    $city = ' в ' . current($viData['vac']['city'])[0] . '(е) '; // город для заголовка
-    $employ = $viData['vac']['istemp'] ? 'Постоянная' : 'Временная';// вид занятости
-    if( $viData['vac']['shour'] > 0 ) $wage = $viData['vac']['shour'] . ' руб/час' ;
-    elseif( $viData['vac']['sweek'] > 0 ) $wage = $viData['vac']['sweek'] . ' руб/неделю' ;
-    elseif( $viData['vac']['smonth'] > 0 ) $wage = $viData['vac']['smonth'] . ' руб/мес' ;
-    elseif( $viData['vac']['svisit'] > 0 ) $wage = $viData['vac']['svisit'] . ' руб/посещение' ;
-    else $wage = 'по договоренности';   // зп
-    $sex = ($viData['vac']['isman'] ? 'юноши' : '')
-        . ($viData['vac']['isman'] && $viData['vac']['iswoman'] ? ', ' : '')
-        . ($viData['vac']['iswoman'] ? 'девушки' : ''); // пол
-    $years = '';
-    if($viData['vac']['agefrom'] || $viData['vac']['ageto']){
-        $years = ($viData['vac']['agefrom'] ? 'от ' . $viData['vac']['agefrom'] : '')
-            . ($viData['vac']['ageto'] ? ' до ' . $viData['vac']['ageto'] : '') 
-            . 'лет';    // возраст
-    }
-    $strBreadcrumb = 'Вакансия - ' . $vacancies . ' - оплата ' . $wage;
-    $strTitleH1 = '<h1>' . $strBreadcrumb . '</h1>';
-
-
     // закрываем от индексации
-    if($viData['vac']['index']){
+    if($viData['vac']['index'])
         Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
-    }
     // устанавливаем title
-    if(!empty($viData['vac']['meta_title'])){
-        $this->pageTitle = $viData['vac']['meta_title'];
-    }
-    else{
-        $this->pageTitle = "Вакансия " . $vacancies . $city . " - поиск работы на Prommu.com";
-    }
+    $this->pageTitle = $viData['vac']['meta_title'];
     // устанавливаем h1
-    if(!empty($viData['vac']['meta_h1'])){
-        $this->ViewModel->setViewData('pageTitle', '<h1>' . $viData['vac']['meta_h1'] . '</h1>');
-        $this->setBreadcrumbsEx(array($viData['vac']['meta_h1'], $_SERVER['REQUEST_URI']));
-    }
-    else{
-        $this->ViewModel->setViewData('pageTitle', $strTitleH1);
-        $this->setBreadcrumbsEx(array($strBreadcrumb, $_SERVER['REQUEST_URI']));
-    }
+    $this->ViewModel->setViewData('pageTitle', '<h1>' . $viData['vac']['meta_h1'] . '</h1>');
+    // хлебные крошки
+    $this->setBreadcrumbsEx(array($viData['vac']['meta_h1'], $_SERVER['REQUEST_URI']));
     // устанавливаем description
-    if(!empty($viData['vac']['meta_description'])){
-        Yii::app()->clientScript->registerMetaTag($viData['vac']['meta_description'], 'description');
-    }
-    else{
-        Yii::app()->clientScript->registerMetaTag($employ . " вакансия от " . htmlspecialchars_decode(trim($viData['vac']['coname'])) . ": " . htmlspecialchars_decode($vacancies) . ", " . current($viData['vac']['city'])[0] . ", " . $wage . ", Возраст: " . $years . ", Пол: " . $sex, 'description');
-    }
+    Yii::app()->clientScript->registerMetaTag($viData['vac']['meta_description'], 'description');
+
+
     ?>    
     <script type="text/javascript">$(function(){ G_VARS.idVac = '<?= $viData['vac']['id'] ?>'; })</script>
      <?php if( Share::$UserProfile->type == 2 ){
