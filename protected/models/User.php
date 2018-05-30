@@ -314,6 +314,15 @@ class User extends CActiveRecord
 			$content = str_replace('#COMPANY#', $data['name'], $content);
 
 			$result = Share::sendmail($data['email'], "Prommu: Аккаунт Менеджер", $content);
+
+			Yii::app()->db->createCommand()
+				->update(
+					'employer', 
+					array('accountmail' => 1), 
+					'id_user=:id_user', 
+					array(':id_user' => $id)
+				);
+
 			return array(
 				'error'=>0,
 				'sendmail'=>1,
