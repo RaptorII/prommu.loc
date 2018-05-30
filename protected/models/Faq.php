@@ -24,11 +24,12 @@ class Faq extends CActiveRecord
         $criteria->compare('question',$this->question, true);
         $criteria->compare('theme',$this->theme,true);
         $criteria->compare('type',$this->type, true);
+        $criteria->compare('sort',$this->sort, true);
 
         return new CActiveDataProvider($this, array(
             'criteria'=>$criteria,
             'pagination' => array('pageSize' => 50,),
-            'sort' => ['defaultOrder'=>'id asc'],
+            'sort' => ['defaultOrder'=>'sort asc'],
         ));
     }
 	/*
@@ -37,7 +38,8 @@ class Faq extends CActiveRecord
 	public function getFaq()
     {
         $sql = "SELECT f.id, f.answer, f.question, f.theme, f.type
-            FROM faq_api f";
+            FROM faq_api f
+            ORDER BY sort asc";
         /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);
         $res = $res->queryAll();
@@ -74,11 +76,27 @@ class Faq extends CActiveRecord
 						'question'=>$_POST['question'],
 						'answer'=>$_POST['answer'],
 						'theme'=>$_POST['theme'],
-						'type'=>$_POST['type']
+						'type'=>$_POST['type'],
+						'sort'=>$_POST['sort']
 					),
 					'id=:id', 
 					array(':id'=>$id)
 			);
+	}
+	/*
+	*	add faq item
+	*/
+	public function addFaqItem(){
+		$result = Yii::app()->db->createCommand()
+					->insert('faq_api', array(
+						'question'=>$_POST['question'],
+						'answer'=>$_POST['answer'],
+						'theme'=>$_POST['theme'],
+						'type'=>$_POST['type'],
+						'sort'=>$_POST['sort']
+					)
+				);
+        return $result;
 	}
 }
 

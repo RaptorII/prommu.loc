@@ -1683,6 +1683,29 @@ class SiteController extends Controller
         }
     }
     /*
+    *   добавить элемент FAQ
+    */
+    public function actionAddfaq()
+    {
+        if(self::isAuth()) {
+            $model = new Faq();
+            if(Yii::app()->getRequest()->isPostRequest){
+                $model->addFaqItem();
+                $this->redirect('/admin/site/faq');
+            }
+            else{
+                $title = 'Добавление элемента FAQ';
+                $this->setPageTitle($title);
+                $this->breadcrumbs = array(
+                    'Дополнительно'=>array('sect?p=add'),
+                    'FAQ'=>array('faq'),
+                    '1'=>$title
+                );
+                $this->render('faq/item');
+            }
+        }
+    }
+    /*
     *   удалить элемент FAQ
     */
     public function actionFaqDelete($id)

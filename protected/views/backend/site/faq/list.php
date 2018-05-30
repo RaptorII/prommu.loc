@@ -1,4 +1,3 @@
-<h3>Управление списком FAQ</h3>
 <style type="text/css">
 	input {
 		border: #ecf0f5;
@@ -10,6 +9,8 @@
 	.dataTable tr:hover *{
 		color: #3c8dbc;	
 	}
+	h3{ padding: 0 10px }
+	.btn.btn-info{ margin-left: 10px }
 </style>
 <script type="text/javascript">
 	'use strict'
@@ -22,6 +23,8 @@
 		});
 	});
 </script>
+<h3>Управление списком FAQ</h3>
+<a href="/admin/addfaq" class="btn btn-info">Создать</a>
 <?php 
 	$this->widget('zii.widgets.grid.CGridView', array(
 		'id'=>'dvgrid',
@@ -58,6 +61,14 @@
 				'name' => 'theme',
 				'value' => '$data->theme',
 				'type' => 'raw',
+			),
+			array(
+				'header' => 'Сортировка',
+				'name' => 'sort',
+				'value' => '$data->sort',
+				'type' => 'html',
+				'filter' => '',
+				'htmlOptions'=>array('style'=>'text-align:center'),
 			),
 			array(
 				'class'=>'CButtonColumn',

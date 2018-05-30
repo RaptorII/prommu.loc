@@ -1,4 +1,10 @@
-<h3>Редактирование элемента '<?=$id?>'</h3>
+<?php $isNewFaq = !isset($id);
+
+
+
+?>
+
+<h3><?php echo $this->getPageTitle(); ?></h3>
 <?php
 	echo '<div class="content">';
 	Yii::app()->getClientScript()->registerCoreScript('jquery');
@@ -41,11 +47,23 @@
 		</div>';
 		//
 		echo '<div class="control-group">
+			<label class="control-label">Сортировка</label>
+				<div class="controls input-append">';
+					echo CHtml::textField(
+						'sort', 
+						$data['sort'], 
+						array('class'=>'form-control', 'style'=>'max-width:100px;')
+					);
+					echo '  <span class="add-on"><i class="icon-tag"></i></span>';
+				echo '</div>
+		</div>';
+		//
+		echo '<div class="control-group">
 			<label class="control-label">Тип</label>
 				<div class="controls input-append">';
 					echo CHtml::radioButtonList(
 						'type',
-						$data['type'],
+						($isNewFaq ? '1' : $data['type']),
 						array('1'=>'Соискатель', '2'=>'Работодатель'),
 						array()
 					);
@@ -67,6 +85,10 @@
 		jQuery(function($){
 			$('#btn_cancel').click(function(){
 				$(location).attr('href','/admin/site/faq');
+			});
+			$('#sort').on('input',function(){
+				var val = $(this).val().replace(/\D+/g,'');
+				$(this).val(val);
 			});
 		});
 	</script>
