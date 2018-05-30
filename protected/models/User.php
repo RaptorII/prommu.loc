@@ -306,11 +306,11 @@ class User extends CActiveRecord
 		){
 			$content = file_get_contents(Yii::app()->basePath . "/views/mails/private-manager.html");
 			$content = str_replace('#EMPLOYER#', $data['firstname'].' '.$data['lastname'], $content);
-			$content = str_replace('#MANAGER#', "Сергей", $content);
-			$content = str_replace('#MANAGER_FIO#', "Белов Сергей", $content);
+			$content = str_replace('#MANAGER#', "Светлана", $content);
+			$content = str_replace('#MANAGER_FIO#', "Гусева Светлана", $content);
 			$content = str_replace('#PHONE#', "+74996535185", $content);
 			$content = str_replace('#PHONE_MOB#', "+74996535185", $content);
-			$content = str_replace('#EMAIL#',"account_manager@prommu.com", $content);
+			$content = str_replace('#EMAIL#',"account_manager1@prommu.com", $content);
 			$content = str_replace('#COMPANY#', $data['name'], $content);
 
 			$result = Share::sendmail($data['email'], "Prommu: Аккаунт Менеджер", $content);
