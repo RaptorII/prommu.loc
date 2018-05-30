@@ -307,9 +307,13 @@ class User extends CActiveRecord
 				'date_login' => date('Y-m-d H:i:s'),
 			), 'id_user=:id_user', array(':id_user' => $id));
 			
-				
-		 $content = file_get_contents(Yii::app()->basePath . "/views/mails/private-manager.html");
-                  $content = str_replace('#EMPLOYER#', Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname, $content);
+			  
+	}
+	
+	if(strpos($data['email'], "@") !== false && $data['accountmail'] != 1){
+	
+	 $content = file_get_contents(Yii::app()->basePath . "/views/mails/private-manager.html");
+                  $content = str_replace('#EMPLOYER#', $data['firstname'].' '.$data['lastname'], $content);
                   $content = str_replace('#MANAGER#', "Сергей", $content);
                  $content = str_replace('#MANAGER_FIO#', "Белов Сергей", $content);
                  $content = str_replace('#PHONE#', "+74996535185", $content);
@@ -318,7 +322,7 @@ class User extends CActiveRecord
                  $content = str_replace('#COMPANY#', $data['name'], $content);
       
               Share::sendmail($data['email'], "Prommu: Аккаунт Менеджер", $content);
-			  
+	
 	}
 		
 		Yii::app()->db->createCommand()
