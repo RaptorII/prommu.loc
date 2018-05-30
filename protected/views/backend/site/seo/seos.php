@@ -1,8 +1,8 @@
+<img style="padding-top:-24px; padding-left: 44%;" src="/admin/logo-sm.png">
 <h3 class="box-title">SEO утилита - Страницы </h3>
-
-<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="http://prommu.com/admin/site/vacancy?seo=1#">Вакансии</a>
-<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="http://prommu.com/admin/seo?seo=1" >Страницы сайта</a>
-<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="http://prommu.com/admin/site/users?seo=1" >Анкеты</a>
+<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="/admin/vacancy?seo=1">Вакансии</a>
+<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="/admin/seo?seo=1" >Страницы сайта</a>
+<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="/admin/users?seo=1" >Анкеты</a>
 <div class="modal hide fade" id="Modal" tabindex="-1" role="dialog">
 	<div class="modal-header">
 		<h3 id="edit_title">Редактирование</h3>

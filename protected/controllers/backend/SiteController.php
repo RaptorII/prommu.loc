@@ -220,13 +220,16 @@ class SiteController extends Controller
             $model = new Comment;
             $model->unsetAttributes(); 
             $model->search();
-            $model->iseorp=$GET['type'];
+            $model->iseorp=$_GET['type'];
          
             $title = 'Отзывы';
+            if($_GET['type']=='1')
+                $this->breadcrumbs = array('Соискатели' => array('sect?p=app'), '1'=>$title);
+            if($_GET['type']=='0')
+                $this->breadcrumbs = array('Работодатели' => array('sect?p=emp'), '1'=>$title);
             $this->setPageTitle($title);
-           
-            $this->render('rating/view', array('model'=>$model));
 
+            $this->render('rating/view', array('model'=>$model));
         }
     } 
 
@@ -569,7 +572,7 @@ class SiteController extends Controller
                 $model->attributes=$_GET['Vacancy'];
             }
             if($_GET['seo']){ 
-                $title = 'Мониторинг вакансий';
+                $title = 'Вакансии';
                 $this->setPageTitle($title);
                 $this->breadcrumbs = array('СЕО'=>array('sect?p=seo'), '1'=>$title,);
                 $this->render('vacancy/vacancy', array('model'=>$model));
@@ -1301,6 +1304,9 @@ class SiteController extends Controller
             }
             
             if($_GET['seo']){
+                $title = 'Соискатели';
+                $this->setPageTitle($title);
+                $this->breadcrumbs = array('СЕО' => array('sect?p=seo'), '1'=>$title);
                 $this->render('users/promo', array('model'=>$model));
             }
             else{
@@ -1361,7 +1367,12 @@ class SiteController extends Controller
             $model->search();
             $title = 'Услуги';
             if(isset($_GET['type'])) {
-                $title = $_GET['type']=='outstaffing' ? 'Заказ аутстаффинга' : 'Заказ аутсорсинга';
+                switch ($_GET['type']) {
+                    case 'outstaffing': $title = 'Заказ аутстаффинга'; break;
+                    case 'outsourcing': $title = 'Заказ аутсорсинга'; break;
+                    case 'api': $title = 'Заказ API'; break;
+
+                }
                 $model->type=$_GET['type'];
             }
             $this->setPageTitle($title);
@@ -1544,7 +1555,10 @@ class SiteController extends Controller
         } 
         $model = new Seo('search');
         $model->unsetAttributes();
-         if($_GET['seo']){
+        if($_GET['seo']){
+            $title = 'Страницы сайта';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('СЕО'=>array('sect?p=seo'),'1'=>$title);
             $this->render('seo/seos', array('model' => $model));
         }
         else{

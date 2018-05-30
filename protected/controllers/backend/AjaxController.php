@@ -391,4 +391,21 @@ class AjaxController extends CController {
       $model = new Seo;
       echo $model->changeSeoParams($id, $param, $value);
     }
+    /*
+    *   ОТправление письма работодателю от менеджера
+    */
+    public function actionSendPrivateManagerMail()
+    {
+      $id = Yii::app()->getRequest()->getParam('id');
+      $param = Yii::app()->getRequest()->getParam('param');
+      if($param=='accountmail'){
+        $model = new User;
+        $data = $model->getUserEmpl($id);
+        $data['send-private-manager-mail'] = true;
+        $result = $model->updateEmployer($data, $id);
+        echo CJSON::encode($result);
+      }
+      else
+        echo CJSON::encode(array('error'=>1,'sendmail'=>0));
+    }
 }

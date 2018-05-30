@@ -9,9 +9,9 @@
 }
 </style>
 <h3 class="box-title">SEO утилита - Анкеты </h3>
-<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="http://prommu.com/admin/site/vacancy?seo=1#">Вакансии</a>
-<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="http://prommu.com/admin/seo?seo=1" >Страницы сайта</a>
-<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="http://prommu.com/admin/site/users?seo=1" >Анкеты</a>
+<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="/admin/vacancy?seo=1">Вакансии</a>
+<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="/admin/seo?seo=1" >Страницы сайта</a>
+<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="/admin/users?seo=1" >Анкеты</a>
 <?php
 echo CHtml::form('/admin/site/UserUpdate?id=0', 'POST', array("id" => "form"));
 echo '<input type="hidden" id="curr_status" name="curr_status">';

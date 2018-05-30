@@ -5,9 +5,10 @@
         background: #dd4b39;
     }
     input {
-    border: #ecf0f5;
-    width: 60px;
-}
+        border: #ecf0f5;
+        width: 60px;
+    }
+    .manager.glyphicon-envelope{ cursor:pointer }
 </style>
 <a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="#" target="_blank" onclick="export_send()">Экспорт в Excell</a>
 <a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="#" target="" onclick="export_delete()">Покончить с ними</a>
@@ -119,11 +120,20 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type' => 'raw',
             'filter' => '',
         ),
-
+      array(
+            'name' => 'Письмо менеджера',
+            'value' => 'getManagerMail($data->accountmail, $data->id)',
+            'type' => 'html',
+            'htmlOptions' => array('style' => 'text-align:center;vertical-align:middle'),
+            'filter' => '',
+        ),      
 
 )));
 
 echo CHtml::submitButton('Создать',array("class"=>"btn btn-success","id"=>"btn_submit", "style"=>"visibility:hidden"));
+echo CHtml::endForm();
+
+
 
 function ShowLogo($photo)
 {   
@@ -220,7 +230,13 @@ function ShowStatus($id_user, $ismoder)
 function ShowEdit($id) {
     return  '<a href="/admin/site/EmplEdit/' . $id . '" type="button" class="btn btn-default">Редактировать</a> ';
 }
-echo CHtml::endForm();
+function getManagerMail($e, $id){
+    $icon = !$e ? 'envelope text-info' : 'ok text-success';
+    $title = !$e ? 'Отправить' : 'Отправлено';
+    return '<span class="glyphicon glyphicon-' . $icon 
+        . ' manager" title="' . $title . '"><i class="hide">' . $id . '</i></span>';
+}
+
 ?>
 
 <script type="text/javascript">
@@ -255,4 +271,39 @@ echo CHtml::endForm();
         document.forms['form'].action = "/admin/site/DeleteEmpl";
         document.forms['form'].submit();
     }
+    /*
+    *
+    */
+    // отправить письмо менеджера
+    $('#form').on('click','.manager', function(){
+        var self = this,
+            id = $(self).find('i').text(),
+            arParams = [];
+
+        arParams.push({name:'param',value:'accountmail'});
+        arParams.push({name:'id',value:id});
+
+        if($(self).hasClass('glyphicon-ok')){
+            alert('Письмо уже отправлялось');
+            return false;
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: '/admin/ajax/sendPrivateManagerMail',
+            data: arParams,
+            dataType: 'json',
+            success: function(r){
+                console.log(r);
+                if(r.error==0 && r.sendmail==1){
+                    alert('Письмо отправлено работодателю');
+                    $(self).removeClass('glyphicon-envelope text-info')
+                        .addClass('glyphicon-ok text-success')
+                        .attr('title','Отправлено');
+                }
+                else
+                    alert('При отправке произошла ошибка попробуйте еще раз');
+            }
+        })
+    });
 </script>

@@ -296,68 +296,71 @@ class User extends CActiveRecord
 
 	public function updateEmployer($data, $id) {
 		if(empty($id) || $id<=0) return null;
-
-		// Update table user_attribs
-		if(isset($data['email'])) {
-		$res = Yii::app()->db->createCommand()
-			->update('user', array(
-				'email' => $data['email'],
-				'ismoder' => $data['ismoder'],
-				'isblocked' => $data['isblocked'],
-				'date_login' => date('Y-m-d H:i:s'),
-			), 'id_user=:id_user', array(':id_user' => $id));
-			
-			  
-	}
 	
-	if(strpos($data['email'], "@") !== false && $data['accountmail'] != 1){
-	
-	 $content = file_get_contents(Yii::app()->basePath . "/views/mails/private-manager.html");
-                  $content = str_replace('#EMPLOYER#', $data['firstname'].' '.$data['lastname'], $content);
-                  $content = str_replace('#MANAGER#', "Сергей", $content);
-                 $content = str_replace('#MANAGER_FIO#', "Белов Сергей", $content);
-                 $content = str_replace('#PHONE#', "+74996535185", $content);
-                 $content = str_replace('#PHONE_MOB#', "+74996535185", $content);
-                 $content = str_replace('#EMAIL#',"account_manager@prommu.com", $content);
-                 $content = str_replace('#COMPANY#', $data['name'], $content);
-      
-              Share::sendmail($data['email'], "Prommu: Аккаунт Менеджер", $content);
-	
-	}
-		
-		Yii::app()->db->createCommand()
-			->update('user', array(
-				'ismoder' => $data['ismoder'],
-				'isblocked' => $data['isblocked'],
-			), 'id_user=:id_user', array(':id_user' => $id));
+		if(
+			isset($data['send-private-manager-mail'])
+			&&
+			strpos($data['email'], "@") !== false 
+			&& 
+			$data['accountmail'] != 1
+		){
+			$content = file_get_contents(Yii::app()->basePath . "/views/mails/private-manager.html");
+			$content = str_replace('#EMPLOYER#', $data['firstname'].' '.$data['lastname'], $content);
+			$content = str_replace('#MANAGER#', "Сергей", $content);
+			$content = str_replace('#MANAGER_FIO#', "Белов Сергей", $content);
+			$content = str_replace('#PHONE#', "+74996535185", $content);
+			$content = str_replace('#PHONE_MOB#', "+74996535185", $content);
+			$content = str_replace('#EMAIL#',"account_manager@prommu.com", $content);
+			$content = str_replace('#COMPANY#', $data['name'], $content);
 
-			Yii::app()->db->createCommand()
-			->update('employer', array(
-				'name' => $data['name'],
-				'type' => $data['type'],
-				'firstname' => $data['firstname'],
-				'lastname' => $data['lastname'],
-				'position' => $data['post'],
-				'ismoder' => $data['ismoder'],
-				'isblocked' => $data['isblocked'],
-				'city' => $data['city'],
-				), 'id_user=:id_user', array(':id_user' => $id));
-		
-
-		$attr = array();	
-		// $attr['post'] = $data['post'];
-		
-		
-		foreach($attr as $key=>$val) {
-			Yii::app()->db->createCommand()
-				->update('user_attribs', array(
-					'val' => $val,
-				), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
+			$result = Share::sendmail($data['email'], "Prommu: Аккаунт Менеджер", $content);
+			return array(
+				'error'=>0,
+				'sendmail'=>1,
+				'result'=>$result
+			);
 		}
-		
-		
-				
-	
+		else{
+			// Update table user_attribs
+			if(isset($data['email'])) {
+				$res = Yii::app()->db->createCommand()
+					->update('user', array(
+						'email' => $data['email'],
+						'ismoder' => $data['ismoder'],
+						'isblocked' => $data['isblocked'],
+						'date_login' => date('Y-m-d H:i:s'),
+					), 'id_user=:id_user', array(':id_user' => $id));
+			}
+			Yii::app()->db->createCommand()
+				->update('user', array(
+					'ismoder' => $data['ismoder'],
+					'isblocked' => $data['isblocked'],
+				), 'id_user=:id_user', array(':id_user' => $id));
+
+			Yii::app()->db->createCommand()
+				->update('employer', array(
+					'name' => $data['name'],
+					'type' => $data['type'],
+					'firstname' => $data['firstname'],
+					'lastname' => $data['lastname'],
+					'position' => $data['post'],
+					'ismoder' => $data['ismoder'],
+					'isblocked' => $data['isblocked'],
+					'city' => $data['city'],
+					), 'id_user=:id_user', array(':id_user' => $id));
+			
+
+			$attr = array();	
+			// $attr['post'] = $data['post'];
+			
+			foreach($attr as $key=>$val) {
+				Yii::app()->db->createCommand()
+					->update('user_attribs', array(
+						'val' => $val,
+					), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
+			}
+			return array('error'=>0,'sendmail'=>0);
+		}
 	}
 
 	public function getUsers($type)

@@ -21,7 +21,13 @@
    $modelR = new Employer;
    $modelR = $modelR->getEmplAdmin();
    $counR = count($modelR);// clear any default values
-     
+    
+
+/*
+echo "<pre>";
+print_r($_SERVER); 
+echo "</pre>"; 
+*/
  ?>
 <html>
 <head>
@@ -348,9 +354,11 @@
         <?php 
           $enableA = in_array($curId, ['users','PromoEdit']);
           $enableA = ($curId=='wait' && $_GET['type']==2) ? true : $enableA;
+          $enableA = ($curId=='comments' && $_GET['type']==1) ? true : $enableA;
           $enableA = ($curId=='sect' && $_GET['p']=='app') ? true : $enableA;
           $enableE = in_array($curId, ['empl','EmplEdit']);
           $enableE = ($curId=='wait'  && $_GET['type']==3) ? true : $enableE;
+          $enableE = ($curId=='comments'  && $_GET['type']=='0') ? true : $enableE;
           $enableE = ($curId=='sect'  && $_GET['p']=='emp') ? true : $enableE;
         ?>
         <li class="treeview <?=($enableA?'active':'')?>">

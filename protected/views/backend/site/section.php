@@ -46,13 +46,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="#" onclick="alert('Страница в разработке'); return false">
-					<i class="glyphicon glyphicon-thumbs-up"></i>
-					<span>Оценка персонала</span>
-				</a>
-			</li>
-			<li>
-				<a href="#" onclick="alert('Страница в разработке'); return false">
+				<a href="<?=$hUrl?>comments?type=1">
 					<i class="glyphicon glyphicon-heart"></i>
 					<span>Отзывы</span>
 				</a>
@@ -73,13 +67,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="#" onclick="alert('Страница в разработке'); return false">
-					<i class="glyphicon glyphicon-thumbs-up"></i>
-					<span>Оценка персонала</span>
-				</a>
-			</li>
-			<li>
-				<a href="#" onclick="alert('Страница в разработке'); return false">
+				<a href="<?=$hUrl?>comments?type=0">
 					<i class="glyphicon glyphicon-heart"></i>
 					<span>Отзывы</span>
 				</a>
@@ -163,7 +151,7 @@
 				</a>
 			</li>
 			<li>
-				<a href="#" onclick="alert('Страница в разработке'); return false">
+				<a href="<?=$hUrl?>servicess?type=api">
 					<i class="glyphicon glyphicon-cog"></i>
 					<span>API</span>
 				</a>
