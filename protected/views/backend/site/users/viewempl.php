@@ -122,7 +122,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
       array(
             'name' => 'Письмо менеджера',
-            'value' => 'getManagerMail($data->accountmail, $data->id)',
+            'value' => 'getManagerMail($data->accountmail, $data->id_user)',
             'type' => 'html',
             'htmlOptions' => array('style' => 'text-align:center;vertical-align:middle'),
             'filter' => '',
