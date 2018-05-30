@@ -306,6 +306,19 @@ class User extends CActiveRecord
 				'isblocked' => $data['isblocked'],
 				'date_login' => date('Y-m-d H:i:s'),
 			), 'id_user=:id_user', array(':id_user' => $id));
+			
+				
+		 $content = file_get_contents(Yii::app()->basePath . "/views/mails/private-manager.html");
+                  $content = str_replace('#EMPLOYER#', Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname, $content);
+                  $content = str_replace('#MANAGER#', "Сергей", $content);
+                 $content = str_replace('#MANAGER_FIO#', "Белов Сергей", $content);
+                 $content = str_replace('#PHONE#', "+74996535185", $content);
+                 $content = str_replace('#PHONE_MOB#', "+74996535185", $content);
+                 $content = str_replace('#EMAIL#',"account_manager@prommu.com", $content);
+                 $content = str_replace('#COMPANY#', $data['name'], $content);
+      
+              Share::sendmail($data['email'], "Prommu: Аккаунт Менеджер", $content);
+			  
 	}
 		
 		Yii::app()->db->createCommand()
@@ -338,16 +351,9 @@ class User extends CActiveRecord
 				), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
 		}
 		
-		 $content = file_get_contents(Yii::app()->basePath . "/views/mails/private-manager.html");
-                  $content = str_replace('#EMPLOYER#', Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname, $content);
-                  $content = str_replace('#MANAGER#', "Сергей", $content);
-                 $content = str_replace('#MANAGER_FIO#', "Белов Сергей", $content);
-                 $content = str_replace('#PHONE#', "+74996535185", $content);
-                 $content = str_replace('#PHONE_MOB#', "+74996535185", $content);
-                 $content = str_replace('#EMAIL#',"account_manager@prommu.com", $content);
-                 $content = str_replace('#COMPANY#', $data['name'], $content);
-      
-              Share::sendmail($data['name'], "Prommu: Аккаунт Менеджер", $content);
+		
+				
+	
 	}
 
 	public function getUsers($type)
