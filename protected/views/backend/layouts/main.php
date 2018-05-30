@@ -619,7 +619,7 @@ echo "</pre>";
         // additionally
         ?>
         <?php
-          $enable = in_array($curId, ['newspages','admin','AdminEdit','faq','faqedit','forstudents']); 
+          $enable = in_array($curId, ['newspages','admin','AdminEdit','faq','faqedit','forstudents','addfaq']); 
           $enable = ($curId=='PageUpdate' && in_array($_GET['pagetype'],['news','about','prom','empl'])) ? true : $enable;
           $enable = ($curId=='sect' && $_GET['p']=='add') ? true : $enable;
         ?>
@@ -660,7 +660,7 @@ echo "</pre>";
                 <span>Новости</span>
               </a>
             </li>
-            <li class="<?=(in_array($curId,['faq','faqedit'])?'active':'')?>">
+            <li class="<?=(in_array($curId,['faq','faqedit','addfaq'])?'active':'')?>">
               <a href="<?=$hUrl?>faq">
                 <i class="glyphicon glyphicon-info-sign"></i>
                 <span>FAQ</span>
