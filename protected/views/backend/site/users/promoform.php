@@ -102,7 +102,7 @@ echo '<div role="tabpanel" class="tab-pane fade active in" id="tab_profile">';
     echo '<div class="control-group">'
         . '<label class="control-label">Пол</label><div class="controls input-append">'
         . CHtml::radioButtonList(
-                'isman',
+                'User[isman]',
                 $data['isman'],
                 array('1'=>'Парень','0'=>'Девушка'),
                 array()

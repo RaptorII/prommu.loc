@@ -269,7 +269,7 @@ class User extends CActiveRecord
 				'status' => 2,
 				'isblocked' => $data['isblocked'],
 			), 'id_user=:id_user', array(':id_user' => $id));
-	var_dump($data);
+
 // 		//Основная информация
 		Yii::app()->db->createCommand()
 			->update('resume', array(
