@@ -281,7 +281,7 @@ class User extends CActiveRecord
 				'isman' => $data['isman'],
 				'ismoder' => $data['ismoder'],
 				'isblocked' => $data['isblocked'],
-				'isman' => $data['sex'],
+				'isman' => $data['isman'],
 				'aboutme'=> $data['aboutme'],
 				'index'=> $data['index'],
 				'meta_title'=> $data['meta_title'],
