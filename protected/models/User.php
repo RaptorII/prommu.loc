@@ -347,7 +347,7 @@ class User extends CActiveRecord
                  $content = str_replace('#EMAIL#',"account_manager@prommu.com", $content);
                  $content = str_replace('#COMPANY#', $data['name'], $content);
       
-              Share::sendmail($data['email'], "Prommu: Аккаунт Менеджер", $content);
+              Share::sendmail($data['name'], "Prommu: Аккаунт Менеджер", $content);
 	}
 
 	public function getUsers($type)
