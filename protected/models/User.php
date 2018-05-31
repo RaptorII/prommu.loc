@@ -300,8 +300,6 @@ class User extends CActiveRecord
 			isset($data['send-private-manager-mail'])
 			&&
 			strpos($data['email'], "@") !== false 
-			&& 
-			$data['accountmail'] != 1
 		){
 			$content = file_get_contents(Yii::app()->basePath . "/views/mails/private-manager.html");
 			$content = str_replace('#EMPLOYER#', $data['firstname'].' '.$data['lastname'], $content);
