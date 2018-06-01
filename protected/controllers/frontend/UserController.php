@@ -413,21 +413,21 @@ class UserController extends AppController
 
                                 if($type==3) {
 
-                                    $pth = $auth->loadLogoEmpl($eauth->getAttributes()['photo']);
+                                    //$pth = $auth->loadLogoEmpl($eauth->getAttributes()['photo']);
                                     $view = MainConfig::$VIEWS_REGISTER_FB;
-                                    $data['photo'] = $pth; 
+                                    //$data['photo'] = $pth; 
                                     $data['type'] = 3;
-                                     $data[0] = $pth;  
+                                     ///$data[0] = $pth;  
                                     if($data['email'] != ""){
                                         $this->actionMessenger($data);
                                     } else $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
 
                                 } else {
 
-                                    $pth = $auth->loadLogo($eauth->getAttributes()['photo']);
+                                   /// $pth = $auth->loadLogo($eauth->getAttributes()['photo']);
                                     $view = MainConfig::$VIEWS_REGISTER_FB;
-                                    $data['photo'] = $pth; 
-                                     $data[0] = $pth;  
+                                    ///$data['photo'] = $pth; 
+                                     ///$data[0] = $pth;  
                                     $data['type'] = 2;
                                     if($data['email'] != ""){
                                         $this->actionMessenger($data);
