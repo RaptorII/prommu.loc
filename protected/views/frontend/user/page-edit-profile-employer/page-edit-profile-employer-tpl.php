@@ -318,12 +318,12 @@
       <div class="rp-content1__block">
         <form action="#" class='js-form register-popup-form' id="popup-form">
           <p class="rp-content1__descr">Для того, чтобы ваши вакансии увидели все соискатели, а также , чтобы самостоятельно начать приглашать соискателей необходимо заполнить обязательные данные о вашей компании</p>
-          <?if($_GET['photos'] == ''):?>
+          <?//if($_GET['photos'] == ''):?>
             <div class="rp-content1__logo">
               <span class="rp-content1__logo-img">
                 <img src="/theme/pic/register-popup-page/register_popup_r_logo.png" id="company-img">
               </span>
-              <span class="rp-content1__logo-text">Добавление логотипа повысит узнаваемость бренда среди соискателей</span>
+              <span class="rp-content1__logo-text">Добавление логотипа повысит узнаваемость бренда среди соискателей<span class="rp-content1__warning">Добавляйте пожалуйста логотип своей компании или личные фото. В случае несоответствия фотографий Вы не сможете пройти модерацию! Спасибо за понимание!</span></span>
               <input type="hidden" name="logo" id="HiLogo" class="required-inp"/>
             </div>
             <div class="rp-content1__btn-block" id="load-img-module">        
@@ -331,7 +331,7 @@
               <div class="rp-btn-block__webcam js-g-hashint" id="btn-get-snapshot" title="Сделать снимок"></div>
               <div class="clearfix"></div>
             </div>
-          <?endif;?>
+          <?//endif;?>
          
           <div class="rp-content1__inputs">
             <input type="text" name="phone" value="<?=$attr[1]['phone']?>" id="phone-code" class="required-inp">

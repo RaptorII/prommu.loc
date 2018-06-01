@@ -324,7 +324,7 @@ class Auth
 
                 $this->AuthorizeNet(['id' => $usData['id_user']]);
 
-                $link = "https://prommu.com/user/activate/?uid=".$usData['id_user']."&sex=".$sex."&smart=".$smart."&birthday=".$birthday."&photos=".$photos;
+                $link = 'http://' . $_SERVER['HTTP_HOST'] . "/user/activate/?uid=".$usData['id_user']."&sex=".$sex."&smart=".$smart."&birthday=".$birthday."&photos=".$photos;
 
                 $usData = Yii::app()->db->createCommand()
                 ->select("u.email, u.status")
@@ -1500,7 +1500,7 @@ class Auth
                         
         if( $inData['type'] == 2 )
         {
-            $link  = 'https://prommu.com' . MainConfig::$PAGE_ACTIVATE . '/?t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin."&sex=".$sex."&smart=".$smart;
+            $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin."&sex=".$sex."&smart=".$smart;
             $message = '<p style="font-size:16px">Наш портал <b>Prommu.com</b> позволяет найти работу в России и странах СНГ совершенно бесплатно.</p>'
             .'<br/>'
             .'<p style=" margin-bottom: 0px;font-size:16px">Мы предлагаем временную работу и интересную подработку по следующим вакансиям:</p>'
@@ -1542,7 +1542,7 @@ class Auth
         }
         else
         {
-            $link = 'https://prommu.com' . MainConfig::$PAGE_ACTIVATE . '/?t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin;
+            $link = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin;
             $message = '<p style="font-size:16px;">Наш портал <b>Prommu.com</b> позволяет найти квалифицированный персонал в России и странах СНГ совершенно бесплатно.</p>'
             .'<br/>'
             .'<p style=" margin-bottom: 0px;font-size:16px;">На нашем портале вы сможете разместить вакансии и найти сотрудников по следующим направлениям:</p>'
@@ -1698,7 +1698,7 @@ class Auth
 
 
 
-             $link  = 'https://prommu.com' . MainConfig::$PAGE_ACTIVATE . "/?&uid=" .$id."&birthday=".$birthday."&photos=".$data['photos']."&smart=1&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
+             $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . "/?&uid=" .$id."&birthday=".$birthday."&photos=".$data['photos']."&smart=1&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
                 return $link;
             } else {// endif
 
@@ -1742,7 +1742,7 @@ class Auth
                      $res = Yii::app()->db->createCommand()
                         ->insert('analytic', $analytData);
 
-        $link  = 'https://prommu.com' . MainConfig::$PAGE_ACTIVATE . '/?t=' . $token . "&uid=" . $idUs."&photos=".$data['photos']."&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
+        $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?t=' . $token . "&uid=" . $idUs."&photos=".$data['photos']."&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
             
         } else {
 
@@ -1848,7 +1848,7 @@ class Auth
         //       }
 
 
-        $link  = 'https://prommu.com' . MainConfig::$PAGE_ACTIVATE . '/?t=' . $token . "&uid=" . $idUs."&sex=".$sex."&birthday=".$birthday."&photos=".$data['photos']."&smart=1&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
+        $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?t=' . $token . "&uid=" . $idUs."&sex=".$sex."&birthday=".$birthday."&photos=".$data['photos']."&smart=1&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
 
 
 

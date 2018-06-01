@@ -102,6 +102,11 @@
     padding-left: 25px;
     padding-top: 2px;
 }
+.rp-content1__warning{
+    display: inline-block;
+    color: #F44336;
+    margin: 5px 0;
+}
 .rp-content1__inputs{ 
     margin-bottom: 20px; 
     position: relative;

@@ -119,6 +119,7 @@
 .reg-social__link.go{ background-position: 0 -224px; }
 .reg-social__link.in{ background-position: 0 -280px; }
 #DiContent .register__reg-social .reg-social__link.disable{
+    -webkit-filter: grayscale(100%);
     filter: grayscale(100%);
     cursor: no-drop;
     color: #878787;

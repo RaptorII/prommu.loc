@@ -88,7 +88,13 @@
 */
 .photo-pages__btn-block{
     width: 100%;
-    margin: 30px 0 35px;
+    margin: 0 0 35px;
+}
+.photo-pages__alert{
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: center;
+    font-family: RobotoCondensed-Regular, verdana, arial;
 }
 .photo-pages__btn-block.single .photo-pages__load{ width: 100% }
 .photo-pages__btn-block.single .photo-pages__webcam{ display: none }

@@ -109,6 +109,11 @@
     padding-left: 25px;
     padding-right: 25px;
 }
+.rp-content1__warning{
+    display: inline-block;
+    color: #F44336;
+    margin: 5px 0;
+}
 .rp-content1__inputs{ 
     max-width: 250px;
     margin: 0 auto;

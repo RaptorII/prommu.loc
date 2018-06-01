@@ -7,6 +7,7 @@
         <a href="<?= MainConfig::$PAGE_EDIT_PROFILE ?>" class="photo-pages__btn-back">&lt вернуться к редактированию профиля</a>
     </div>
     <?php if( count($viData['userPhotos']) < MainConfig::$EMPLOYER_MAX_PHOTOS ): ?>
+        <p class="photo-pages__alert">Добавляйте пожалуйста логотип своей компании или личные фото. В случае несоответствия фотографий Вы не сможете пройти модерацию! Спасибо за понимание!</p>
         <div class="photo-pages__btn-block" id="load-img-module">
             <div class="photo-pages__load" id="btn-load-image">Загрузить фото</div>
             <div class="photo-pages__webcam" id="btn-get-snapshot">Сделать снимок</div>
