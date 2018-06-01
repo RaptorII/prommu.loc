@@ -22,7 +22,7 @@
                                     ->update('user', array(
                                             'analytday' => $arDates['day'],
 											'analyttime' => $arDates['time']   
-                                    ), 'id_user=:id_us', array(':id_us' => $user);
+                                    ), 'id_user=:id_us', array(':id_us' => $user));
 			
 		}
 
