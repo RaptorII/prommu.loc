@@ -15,6 +15,16 @@
 	        	}
 	     		else return $res;
 		}
+		
+		public function setUserDataTime($user,$arDates){
+			
+				$res = Yii::app()->db->createCommand()
+                                    ->update('user', array(
+                                            'analytday' => $arDates['day'],
+											'analyttime' => $arDates['time']   
+                                    ), 'id_user=:id_us', array(':id_us' => $user);
+			
+		}
 
 		public function getPromoResponse($user, $response, $status, $arDates){
 
