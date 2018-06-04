@@ -246,6 +246,33 @@
 						<label for="p-services"></label>
 						<div class="set-ntf__pnt-name">Уведомление по Услугам (по действиям)</div>
 					</div>
+					<div class="settings-notif__point">
+						<input type="checkbox" name="analytic" id="e-analytic"<?=($set->analytic=='on'?' checked':'')?>/>
+						<label for="e-analytic"></label>
+						<div class="set-ntf__pnt-name">Подписка на аналитику своего профиля</div>
+						<div class="settings-notif__analytic" id="analytic" style="<?=($set->analytic=='on'?'':'display:none')?>">
+							<div class="sn__analytic-days">
+								<input type="radio" name="day" value="1" id="day-mon"<?=(in_array($set->day, [0,1])?' checked':'')?>/>
+								<label for="day-mon">Пн</label>
+								<input type="radio" name="day" value="2" id="day-tue"<?=($set->day==2 ? ' checked' : '')?>/>
+								<label for="day-tue">Вт</label>
+								<input type="radio" name="day" value="3" id="day-wen"<?=($set->day==3 ? ' checked' : '')?>/>
+								<label for="day-wen">Ср</label>
+								<input type="radio" name="day" value="4" id="day-thu"<?=($set->day==4 ? ' checked' : '')?>/>
+								<label for="day-thu">Чв</label>
+								<input type="radio" name="day" value="5" id="day-fri"<?=($set->day==5 ? ' checked' : '')?>/>
+								<label for="day-fri">Пт</label>
+								<input type="radio" name="day" value="6" id="day-sat"<?=($set->day==6 ? ' checked' : '')?>/>
+								<label for="day-sat">Сб</label>
+								<input type="radio" name="day" value="7" id="day-san"<?=($set->day==7 ? ' checked' : '')?>/>
+								<label for="day-san">Вс</label>
+							</div>
+							<div class="sn__analytic-time">
+								<label for="time">Время</label>
+								<input type="text" name="time" id="time" value="<? echo $time?>">
+							</div>
+						</div>
+					</div>
 				<?php else: ?>
 					<div class="settings-notif__point">
 						<div class="set-ntf__push js-g-hashint" title="Десктоп уведомления"></div>
