@@ -1442,17 +1442,20 @@ class UserController extends AppController
     {
         in_array(Share::$UserProfile->type, [2,3]) || $this->redirect(MainConfig::$PAGE_LOGIN);
 
+        $idus = Share::$UserProfile->id;
+
        if($_POST['save']){
         $cloudSett = json_encode($_POST);
          $result = Yii::app()->db->createCommand()
                 ->update('user', array(
                     'setting' => $cloudSett
-                ), 'id_user=:id', array(':id' => Share::$UserProfile->id));
+                ), 'id_user=:id', array(':id' => $idus));
+        (new Termostat)->setUserDataTime($idus, $_POST, $_POST['analytic']);
         if(Share::$UserProfile->type == 2)
         $result = Yii::app()->db->createCommand()
                 ->update('resume', array(
                     'isman' => $_POST['sex'],
-                ), 'id_user=:id', array(':id' => Share::$UserProfile->id));
+                ), 'id_user=:id', array(':id' => $idus));
             }
 
 
@@ -1464,7 +1467,7 @@ class UserController extends AppController
             ->select('a.val phone, u.email, u.confirmEmail, u.confirmPhone, u.setting')
             ->from('user u')
             ->leftJoin('user_attribs a', 'a.id_us=u.id_user AND a.id_attr=1')
-            ->where('u.id_user=:id_user', array(':id_user' => Share::$UserProfile->id))
+            ->where('u.id_user=:id_user', array(':id_user' => $idus))
             ->queryRow();
         $data['setting'] = json_decode($data['setting']);
 

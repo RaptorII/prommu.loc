@@ -537,6 +537,60 @@
 	margin: 5px 7px 5px 0;
 }
 /*
+*
+*/
+#DiContent #analytic label{
+	position: relative;
+	right: initial;
+}
+#DiContent #analytic .sn__analytic-days label{
+	position: relative;
+	right: initial;
+	line-height: 30px;
+	display: inline-block;
+	width: initial;
+	padding-right: 30px;
+	margin-right: 5px;
+}
+#analytic .sn__analytic-days label:before{
+	content: '';
+	width: 13px;
+	height: 13px;
+	position: absolute;
+	top: 9px;
+	right: 10px;
+	border: 1px solid #cecece;
+	border-radius: 1px
+}
+#analytic .sn__analytic-days label:after{
+	content: '';
+	width: 9px;
+	height: 9px;
+	position: absolute;
+	top: 11px;
+	right: 12px;
+	border-radius: 1px;
+	background: #abb92a;
+	-webkit-transition: all .3s ease-out;
+	-moz-transition: all .3s ease-out;
+	-o-transition: all .3s ease-out;
+	transition: all .3s ease-out;
+}
+#analytic input + label:after{ opacity: 0 }
+#analytic input:checked + label:after { opacity:1 }
+#analytic div{ display: inline-block; }
+#DiContent #analytic .sn__analytic-time label{
+	display: inline-block;
+	line-height: 30px;
+}
+#analytic .sn__analytic-time input{
+	text-align: center;
+	display: inline-block;
+	width: 50px;
+	border: 1px solid #cecece;
+}
+#DiContent .sn__analytic-time input:focus{ outline:none }
+/*
 *		MEDIA
 */
 @media (min-width: 768px){

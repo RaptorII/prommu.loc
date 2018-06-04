@@ -16,14 +16,30 @@
 	     		else return $res;
 		}
 		
-		public function setUserDataTime($user,$arDates){
-			
-				$res = Yii::app()->db->createCommand()
-                                    ->update('user', array(
-                                            'analytday' => $arDates['day'],
-											'analyttime' => $arDates['time']   
-                                    ), 'id_user=:id_us', array(':id_us' => $user));
-			
+		public function setUserDataTime($user, $arDates, $analytic){
+
+			$day = 0;
+			$time = '0000-00-00 00:00:00';
+			if(isset($analytic)){
+				$day = $arDates['day'];
+				$arTime = explode(':', $arDates['time']);
+				for($i=0; $n=sizeof($arTime), $i<$n; $i++)
+					$arTime[$i] = str_pad($arTime[$i], 2, "0", STR_PAD_LEFT);
+
+				$time = '0000-00-00 ' . implode(':', $arTime) . ':00';
+			}
+
+			echo $time;
+
+			$res = Yii::app()->db->createCommand()
+				->update(
+					'user', 
+					array('analytday' => $day, 'analyttime' => $time),
+					'id_user=:id_us', 
+					array(':id_us' => $user)
+				);
+
+			return $res;
 		}
 
 		public function getPromoResponse($user, $response, $status, $arDates){

@@ -14,6 +14,25 @@ $(function(){
 	var eConfirm = $('#email-inp').hasClass('confirm') ? true : false;
 	var pConfirm = $('#phone-inp').hasClass('confirm') ? true : false;
 
+	$('#time').mask('99:99');
+	$('#time').change(function(){
+		var val = $(this).val();
+
+		if(val.length<5){
+			$(this).val('00:00');
+			return false;
+		}
+
+		var arVals = val.split(':'),
+			h = Number(getNum(arVals[0])),
+			m = Number(getNum(arVals[1]));
+
+		if(h>23) h = 23;
+		if(m>59) m = 59;
+
+		$(this).val(h+':'+m);
+	});
+
 	$('#s-p-phone').mask('+7(999) 999-99-99');
 	//
 	//	БЛОК ОСНОВНЫЕ
@@ -331,6 +350,17 @@ $(function(){
 			saveData({ 'oldpsw':oldPsw, 'newpsw':newPsw});
 	});
 	//
+	//
+	$('#e-analytic').change(function(){
+
+		if($(this).is(':checked')){
+			$('#analytic').fadeIn();
+		}
+		else{
+			$('#analytic').fadeOut();
+		}
+	});
+	//
 	$('#settings-save').click(function(e){
 	/*	var errors = true;
 		e.preventDefault();
@@ -488,4 +518,5 @@ $(function(){
 		if(cntFalse==arPInputs.length)
 			$('#s-n-push').prop('checked',false);
 	});
+	function getNum(value){ return value.replace(/\D+/g,'') }
 });
