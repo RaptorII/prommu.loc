@@ -1542,4 +1542,49 @@ class UserController extends AppController
         $url = $page ? (DS . MainConfig::$PAGE_VACANCIES) : (MainConfig::$PAGE_VACANCY . DS . $id);
         $this->redirect($url);
     }
+    /*
+    *   Мои проекты
+    */
+    public function actionProjects()
+    {
+        Share::$UserProfile->type <> 3 && $this->redirect(MainConfig::$PAGE_INDEX);
+
+        $id = Yii::app()->getRequest()->getParam('id');
+
+
+        $view = MainConfig::$VIEW_PROJECT_LIST;
+        $data = 1;
+
+        if(strlen($id)>0) {
+            if($id=='new') { // новый проект
+                $view = MainConfig::$VIEW_PROJECT_NEW;
+                $data = 1;
+            }
+            elseif($id>0) { // существующий
+                $view = MainConfig::$VIEW_PROJECT_ITEM;
+                $data = 1;
+                /*if(!sizeof($data)) {
+                    $this->redirect(MainConfig::$PAGE_IDEAS_LIST);
+                    exit;
+                }
+                if(Yii::app()->getRequest()->getParam('sort-comments')) {
+                    $this->renderPartial(
+                        MainConfig::$VIEW_IDEAS_COMMENTS_AJAX_ORDER, 
+                        array('viData' => $model->getIdea($id)), 
+                        false,
+                        true
+                    );
+                    exit;
+                }*/
+            }
+            else{
+                $this->redirect(MainConfig::$PAGE_PROJECT_LIST);
+                exit;
+            }
+        }
+
+        //$this->setBreadcrumbs($title = 'Мои проекты', MainConfig::$PAGE_PROFILE);
+        //$this->setPageTitle($title);
+        $this->render($view, $data);
+    }   
 }

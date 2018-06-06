@@ -142,6 +142,8 @@ return array(
                 '<page:about>/<section:[\w-]+>' => 'site/<page>',
                 '<page:about>/<section:[\w-]+>/<id:[\w-]+>' => 'site/<page>',
                 'imfiles' => 'site/imfiles',
+                // projects
+                '<controller:user>/<action:projects>/<id:[\w-]+>' => '<controller>/<action>',
                 // все action с цифрами на общий контроллер
                 '<action>/<id:\d+>' => 'site/<action>',
                 // для всех страниц

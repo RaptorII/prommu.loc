@@ -230,4 +230,11 @@ class MainConfig
     public static $PAGE_IDEA_NEW = '/ideas/new';
     public static $VIEW_IDEAS_AJAX_FILTER = 'ideas/page-list-ajax';
     public static $VIEW_IDEAS_COMMENTS_AJAX_ORDER = 'ideas/page-comments-ajax';
+    /* PROJECTS */
+    public static $VIEW_PROJECT_LIST = 'projects/list';
+    public static $VIEW_PROJECT_ITEM = 'projects/item';
+    public static $VIEW_PROJECT_NEW = 'projects/new';
+
+    public static $PAGE_PROJECT_LIST = '/user/projects';
+    public static $PAGE_PROJECT_NEW = '/user/projects/new';
 }

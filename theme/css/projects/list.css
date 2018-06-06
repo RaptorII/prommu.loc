@@ -1,0 +1,55 @@
+#DiContent .content-block{ margin: 0 }
+.projects,
+.projects *{ font-family: RobotoCondensed-Regular, verdana, arial; }
+.projects .projects__title{
+	margin: 25px 0 30px;
+	text-align: center;
+	font-size: 24px;
+}
+.projects__list{ margin-bottom: 30px }
+.projects__item{
+	display: block;
+	padding: 15px 60px;
+	margin-bottom: 5px;
+	font-size: 22px;
+	background: #f5f5f5;
+}
+.projects__btn{ text-align: right; }
+#DiContent .projects__btn a{
+	width: 100%;
+	display: inline-block;
+	line-height: 33px;
+	color: #ffffff;
+	text-align: center;
+	background: #ff8300;
+	position: relative;
+	z-index: 0;
+}
+.projects__btn a:before{
+	content: "";
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: #abb820;
+	-webkit-transform: scaleX(0);
+	transform: scaleX(0);
+	-webkit-transform-origin: 0 50%;
+	transform-origin: 0 50%;
+	-webkit-transition: all ease-out .3s;
+	-moz-transition: all ease-out .3s;
+	-o-transition: all ease-out .3s;
+	transition: all ease-out .3s;
+}
+.projects__btn a:hover:before{
+	-webkit-transform: scaleX(1);
+	transform: scaleX(1);
+}
+/*
+*		MEDIA
+*/
+@media screen and (min-width: 768px){
+	#DiContent .projects__btn a{ max-width: 170px }
+}

@@ -1,0 +1,430 @@
+#DiContent .content-block{ margin: 0 }
+.project,
+.project *{ font-family: RobotoCondensed-Regular, verdana, arial; }
+#DiContent .project input:focus,
+#DiContent .project button:focus{ outline: none }
+.project [type='text']::-webkit-input-placeholder{ color: #cecece; }
+.project [type='text']::-moz-placeholder{ color: #cecece; }
+.project [type='text']:-moz-placeholder{ color: #cecece; }
+.project [type='text']:-ms-input-placeholder{ color: #cecece; }
+#DiContent .project [type='text']{
+	width: 100%;
+	height: 30px;
+	background: #ffffff;
+	border: 1px solid #cecece;
+	-webkit-transition: all ease-out .3s;
+	-moz-transition: all ease-out .3s;
+	-o-transition: all ease-out .3s;
+	transition: all ease-out .3s;
+}
+#DiContent .project [type='text'].error{
+	border: 1px solid red;
+	box-shadow: 0px 0px 5px 0px red;
+}
+.project__tabs{
+	display: flex;
+	flex-wrap: wrap;
+	padding: 10px 0;
+	text-align: center;
+}
+.project__tabs a{ padding: 0 10px; }
+#DiContent .project__tabs a{
+	width: 50%;
+	display: block;
+	padding: 5px 10px;
+	color: #212121;
+}
+#DiContent .project__tabs a:hover,
+#DiContent .project__tabs a.active{
+	color: #abb820;
+	text-decoration: underline;
+}
+.bg_veil{
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background: #000;
+	opacity: .5;
+	z-index: 100000;
+	display: none;
+}
+/*
+*		MAIN
+*/
+.project__xls{
+	padding: 25px 15px 5px;
+	background: #f5f5f5;
+	text-align: center;
+	margin-bottom: 10px;
+}
+#DiContent .project__xls a{
+	display: inline-block;
+	padding: 0 20px 20px 0;
+	text-decoration: underline;
+	background: url(/theme/pic/projects/xls-icon.png) top right no-repeat;
+}
+#DiContent .project__title{
+	padding: 0 0 15px;
+	margin: 0;
+	text-align: center;
+	font-size: 24px;
+	text-transform: uppercase;
+}
+#DiContent .project__title span{ color: #abb820 }
+/*		*/
+.project__program{ width: 100% }
+.project__program td{
+	border-top: 1px solid #cecece;
+	vertical-align: top;
+}
+.project__program td:nth-child(1){ width: 11% }
+.project__program td:nth-child(2){ width: 23% }
+.project__program td:nth-child(3){ width: 29% }
+.project__program td:nth-child(4){ width: 37% }
+.program__city{
+	padding: 45px 15px;
+	text-align: center;
+	font-size: 24px;
+	
+}
+.program__cell{
+	padding: 0 10px;
+	margin: 10px 0;
+	font-size: 18px;
+}
+.program__cell.green-name{ color: #abb820 }
+.program__cell.border{ border-right: 1px solid #cecece }
+.program__cell.user{
+	display: flex;
+	justify-content: space-between;
+}
+.program__cell-user img{
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	vertical-align: middle;
+}
+.program__cell-user span{
+	vertical-align: middle;
+}
+#DiContent .program__cell.user a>span,
+#DiContent .program__cell-period a>span{
+	font-size: 16px;
+	text-decoration: underline;
+	line-height: 24px;
+}
+#DiContent .program__cell.user a>b, 
+#DiContent .program__cell-period a>b{ font-size: 12px }
+.program__cell-period{
+	display: flex;
+	justify-content: space-around;
+	font-size: 16px;
+}
+.program__cell-tiem{ color: #aaaaaa }
+.program__form{
+	width: 100%;
+	max-width: 250px;
+}
+#DiContent .program__form input{
+	margin-bottom: 10px;
+	padding: 0 15px;
+	font-size: 14px;
+	height: 26px;
+}
+.program__form .program__time{
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: nowrap;
+}
+#DiContent .project .program__time .program__input{
+	width: 48%;
+	margin: 0;
+}
+.program__btns{
+	padding: 24px 0 78px;
+	text-align: right;
+}
+#DiContent .program__btns .program__save-btn{
+	width: 135px;
+	margin-left: 10px;
+	text-align: center;
+	display: inline-block;
+	line-height: 33px;
+	color: #fff;
+	font-size: 16px;
+	background: #ff8300;
+	vertical-align: middle;
+	position: relative;
+	z-index: 0;
+	cursor: pointer;
+}
+.program__save-btn:before{
+	content: "";
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: #abb820;
+	-webkit-transform: scaleX(0);
+	transform: scaleX(0);
+	-webkit-transform-origin: 0 50%;
+	transform-origin: 0 50%;
+	-webkit-transition: all ease-out .3s;
+	-moz-transition: all ease-out .3s;
+	-o-transition: all ease-out .3s;
+	transition: all ease-out .3s;
+}
+.program__save-btn:hover:before{
+	-webkit-transform: scaleX(1);
+	transform: scaleX(1);
+}
+#DiContent .program__btns .program__add-btn{
+	width: 160px;
+	display: inline-block;
+	text-align: center;
+	border: 1px solid #abb92a;
+	color: #abb92a;
+	cursor: pointer;
+	line-height: 31px;
+	vertical-align: top;
+	-webkit-transition: all ease-out .3s;
+	-moz-transition: all ease-out .3s;
+	-o-transition: all ease-out .3s;
+	transition: all ease-out .3s;
+}
+#DiContent .program__btns .program__add-btn:hover{
+	background: #abb92a;
+	color: #ffffff;
+}
+.program__item:nth-child(n+2){
+	border-top: 3px solid #000000;
+}
+.program__input{
+	position: relative;
+}
+.program__input:after{
+	content: '\25bc';
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 5px;
+	line-height: 30px;
+	font-size: 12px;
+}
+/*
+*		PERSONAL
+*/
+#DiContent .personal__title{
+	padding: 20px 0 25px;
+	border-top: 1px solid #cecece;
+}
+.personal__item{
+	width: 100%;
+	padding: 0 20px 70px;
+}
+.personal__item img{
+	width: 175px;
+	height: 175px;
+	display: block;
+	margin: 0 auto 10px;
+	border-radius: 50%;
+}
+.personal__item-name{
+	font-size: 24px;
+	text-align: center;
+	padding-bottom: 10px;
+}
+.personal__item-add{
+	font-size: 16px;
+	text-align: center;
+}
+.personal__item-add a{
+	padding-right: 20px;
+	background: url(/theme/pic/projects/map-locator.png) right no-repeat;
+}
+.personal__item-city{
+	text-align: center;
+	padding-top: 5px;
+	color: #9f9f9f;
+	font-size: 16px;
+}
+.personal__map{
+	width: 800px;
+	height: 565px;
+	position: absolute;
+	top: 10px;
+	margin-left: 50%;
+	left: -400px;
+	background: #abb92a;
+	z-index: 100001;
+	overflow: hidden;
+	display: none;
+}
+.personal__map-header{
+	color: #ffffff;
+	padding: 6px 30px;
+	font-size: 24px;
+	position: relative;
+	font-family: RobotoCondensed-Regular, verdana, arial;
+}
+.personal__map-header span{
+	line-height: 28px;
+	display: block;
+}
+.personal__map-header b{
+	width: 18px;
+	height: 18px;
+	display: block;
+	position: absolute;
+	top: 11px;
+	right: 11px;
+	background: url(/theme/pic/projects/close.png) no-repeat;
+	cursor: pointer;
+}
+/*
+*		ADRESSES
+*/
+.project__addr-header{
+	padding: 10px 15px 5px;
+	background: #f5f5f5;
+	text-align: center;
+	flex-wrap: wrap;
+}
+#DiContent .project__addr-header a{
+	display: inline-block;
+	padding: 0 20px 0px 0;
+	text-decoration: underline;
+	background: url(/theme/pic/projects/xls-icon.png) top right no-repeat;
+	margin: 0 15px 7px 0;
+}
+.project__addr-filter div{
+	display: flex;
+	align-items: center;
+	padding-bottom: 15px;
+	position: relative;
+	justify-content: flex-end;
+}
+.project__addr-filter div:after{
+	content: '\25bc';
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 5px;
+	line-height: 26px;
+	font-size: 12px;
+}
+#DiContent .project__addr-filter label{
+	padding: 0 10px;
+	font-size: 14px;
+	white-space: nowrap;
+}
+#DiContent .project__addr-header .project__addr-filter input{
+	max-width: 170px;
+	height: 26px;
+	padding: 0 20px 0 10px;
+}
+#DiContent .project__addr-header input.addr__filter-date{ max-width: 90px }
+/*		*/
+#DiContent .address__item-title{
+	margin: 0;
+	font-size: 24px;
+	text-transform: uppercase;
+	text-align: center;
+	padding: 30px 15px 35px;
+}
+.addr__table{
+	width: 100%;
+}
+.addr__table th{
+	background: #abb92a;
+	color: #ffffff;
+	padding: 5px 0;
+	font-weight: normal;
+	border-left: 1px solid #dedede;
+	border-right: 1px solid #dedede;
+}
+.addr__table td{ border-bottom: 1px solid #dedede }
+.addr__table td:nth-child(1){ width: 28% }
+.addr__table td:nth-child(2){ width: 26% }
+.addr__table td:nth-child(3){ width: 20% }
+.addr__table td:nth-child(4){ width: 13% }
+.addr__table td:nth-child(5){ width: 13% }
+.addr__table-cell{
+	padding: 0 10px;
+	margin: 10px 0;
+	font-size: 18px;
+}
+.addr__table-cell.border{ border-right: 1px solid #dedede }
+#DiContent .addr__table-cell a{ text-decoration: underline }
+.addresses__btns{
+	padding: 24px 0 78px;
+	text-align: right;
+}
+#DiContent .addresses__btns .addr__save-btn{
+	width: 135px;
+	margin-left: 10px;
+	text-align: center;
+	display: inline-block;
+	line-height: 33px;
+	color: #fff;
+	font-size: 16px;
+	background: #ff8300;
+	vertical-align: middle;
+	position: relative;
+	z-index: 0;
+	cursor: pointer;
+}
+.addr__save-btn:before{
+	content: "";
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: #abb820;
+	-webkit-transform: scaleX(0);
+	transform: scaleX(0);
+	-webkit-transform-origin: 0 50%;
+	transform-origin: 0 50%;
+	-webkit-transition: all ease-out .3s;
+	-moz-transition: all ease-out .3s;
+	-o-transition: all ease-out .3s;
+	transition: all ease-out .3s;
+}
+.addr__save-btn:hover:before{
+	-webkit-transform: scaleX(1);
+	transform: scaleX(1);
+}
+/*
+*		MEDIA
+*/
+@media screen and (min-width: 550px){
+	#DiContent .project__tabs a{ width: 33.33% }
+	.project__addr-filter{
+		display: flex;
+		justify-content: flex-end;
+		align-items: flex-end;
+	}
+}
+@media screen and (min-width: 768px){
+	.project__tabs{ padding: 20px 0; }
+	#DiContent .project__tabs a{ width: 25% }
+	#DiContent .project__xls a:last-child{ padding-left: 50px }
+	.project__xls{ margin-bottom: 30px }
+	#DiContent .project__title{ padding: 0 0 35px }
+	#DiContent .personal__title{ padding: 40px 0 50px }
+	.project__addr-header{ display: flex }
+	.project__addr-xls{ width: 45% }
+	.project__addr-filter{ width: 55% }
+	.project__addr-xls{ text-align: left }
+
+}
+@media screen and (min-width: 992px){
+	.project__tabs{ display: block }
+	#DiContent .project__tabs a{ display: initial }
+}
