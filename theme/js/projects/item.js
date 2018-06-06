@@ -16,7 +16,7 @@ jQuery(function($){
 			.closest('.personal__item')
 			.find('.personal__item-name').text();
 
-		$('.personal__map-header').text(name);
+		$('.personal__map-header span').text(name);
 		$('.bg_veil').fadeIn();
 		$('.personal__map').fadeIn();
 	}

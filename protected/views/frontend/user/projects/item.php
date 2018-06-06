@@ -253,7 +253,7 @@ echo "</pre>";
 			//
 			?>
 			<?php elseif($s=='time'): ?>
-			<div class="project__module">3</div>
+			<div class="project__module">???</div>
 			<?php 
 			//
 			//
@@ -352,28 +352,28 @@ echo "</pre>";
 			//
 			?>
 			<?php elseif($s=='control'): ?>
-			<div class="project__module">5</div>
+			<div class="project__module">Макет 3.1 и 3.2</div>
 			<?php 
 			//
 			//
 			//
 			?>
 			<?php elseif($s=='route'): ?>
-			<div class="project__module">6</div>
+			<div class="project__module">Макет 6.1 и 6.2</div>
 			<?php 
 			//
 			//
 			//
 			?>
 			<?php elseif($s=='tasks'): ?>
-			<div class="project__module">7</div>
+			<div class="project__module">Макет 7.1 и 7.2</div>
 			<?php 
 			//
 			//
 			//
 			?>
 			<?php elseif($s=='report'): ?>
-			<div class="project__module">8</div>
+			<div class="project__module">???</div>
 			<?php endif; ?>
 		</div>
 	</div>
