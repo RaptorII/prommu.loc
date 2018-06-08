@@ -346,7 +346,7 @@ public function rules()
             LEFT JOIN vacation_stat vs ON vs.id_vac = v.id 
             LEFT JOIN employer e ON e.id_user = v.id_user
             WHERE v.id_user = {$idus}
-            AND (v.status = 0 OR vs.status in (6,7))
+            AND (v.status = 0 )
             ORDER BY v.id DESC
             ";
         
