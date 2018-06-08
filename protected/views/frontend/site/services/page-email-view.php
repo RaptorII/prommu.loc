@@ -128,6 +128,9 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 			<div class='view-radio clearfix'>
 				<h1 class="main-h1">Выбрать персонал для EMAIL информирования</h1>
 				<form action="" method="POST" id="workers-form">
+					<?php if($viData['price']!=0 && $viData['price']<1): ?>
+						<div class="price-warning">Стоимость отправки сообщения для одного соискателя составляет <b><?=$viData['price']?> руб.</b><br/>Сумма минимальной платежной операции - <b>1 руб.</b></div>
+					<?php endif; ?>
 					<span class="workers-form__cnt">Выбрано получателей: <span id="mess-wcount">0</span></span>
 					<div class="service__switch">
 						<span class="service__switch-name">Выбрать всех</span>
@@ -226,11 +229,16 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 					</tr>
 					<tr>
 						<td>Стоимость отправки одного сообщения</td>
-						<td><?=$viData['price']?>руб</td>
+						<td><?=$viData['price']?> руб.</td>
+					</tr>
+					<tr>
+						<td>Сумма минимальной платежной операции</td>
+						<td>1 руб.</td>
 					</tr>
 				</table>
-				<?$result = $appCount * $viData['price'];?>
-				<span class="smss-result__result"><?echo $appCount . ' * ' . $viData['price'] . ' = ' . $result . 'рублей'?></span></br>
+				<?php $result = $appCount * $viData['price'];?>
+				<?php $result = $result<1 ? 1 : $result;?>
+				<span class="smss-result__result"><?echo $appCount . ' * ' . $viData['price'] . ' = ' . $result . ' руб.'?></span></br>
 				<button class="smss-result__btn">Перейти к оплате</button>
 				<input type="hidden" name="vacemail" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
 				<input type="hidden" name="users-cnt" value="<?=$appCount?>">

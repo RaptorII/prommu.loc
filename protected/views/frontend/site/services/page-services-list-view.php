@@ -115,7 +115,7 @@ if(!(MOBILE_DEVICE && !SHOW_APP_MESS)): // optimization ?>
 			$(function(){
 				if(arSuccessMess.event==='social')
 					var itm = $('.repost-to-social-form').clone();
-				else if(arSuccessMess.event==='email')
+				else if(arSuccessMess.event==='email' || arSuccessMess.event==='push')
 					var itm = $('.email-invitation-form').clone();
 				else
 					var itm = $('.services-finish-form').clone();

@@ -163,7 +163,7 @@
 <?
 /*
 *
-*   REPOST TO SOCIAL
+*   EMAIL AND PUSH
 *
 */
 ?>

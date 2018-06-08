@@ -865,3 +865,13 @@ input:checked + .filter__chbox-lab:after{
     border-bottom:initial;
     border-top:15px solid #abb820;
 }
+/*
+*
+*/
+.price-warning{
+    width: 100%;
+    text-align: left;
+    line-height: 20px;
+    margin-bottom: 10px;
+    color: red;
+}

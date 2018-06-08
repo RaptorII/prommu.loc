@@ -29,8 +29,6 @@
 				$time = '0000-00-00 ' . implode(':', $arTime) . ':00';
 			}
 
-			echo $time;
-
 			$res = Yii::app()->db->createCommand()
 				->update(
 					'user', 

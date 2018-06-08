@@ -217,6 +217,22 @@ $(function(){
   $content.on('change', '.promo_inp', function(){
     $('#mess-wcount-inp').val()==0 ? $cntW.addClass('error') : $cntW.removeClass('error');
   });
+  // вкладки фильтра
+  $('.filter__item-name').click(function(){
+    var $it = $(this);
+    if($it.hasClass('opened')){
+      $it.siblings('.filter__item-content').slideUp(200);
+      setTimeout(function(){
+        $it.removeClass('opened');
+        $it.siblings('.filter__item-content').removeClass('opened');
+      },200);
+    }
+    else{
+      $it.addClass('opened');
+      $it.siblings('.filter__item-content').slideDown(500);
+      $it.siblings('.filter__item-content').addClass('opened');
+    }
+  });
   //
   //
   // функция проверки заполненности текстового поля
