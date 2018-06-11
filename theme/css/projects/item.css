@@ -2,12 +2,19 @@
 .project,
 .project *{ font-family: RobotoCondensed-Regular, verdana, arial; }
 #DiContent .project input:focus,
-#DiContent .project button:focus{ outline: none }
+#DiContent .project button:focus,
+#DiContent .project textarea:focus
+{ outline: none }
 .project [type='text']::-webkit-input-placeholder{ color: #cecece; }
 .project [type='text']::-moz-placeholder{ color: #cecece; }
 .project [type='text']:-moz-placeholder{ color: #cecece; }
 .project [type='text']:-ms-input-placeholder{ color: #cecece; }
-#DiContent .project [type='text']{
+.project textarea::-webkit-input-placeholder{ color: #cecece; }
+.project textarea::-moz-placeholder{ color: #cecece; }
+.project textarea:-moz-placeholder{ color: #cecece; }
+.project textarea:-ms-input-placeholder{ color: #cecece; }
+#DiContent .project [type='text'],
+#DiContent .project textarea{
 	width: 100%;
 	height: 30px;
 	background: #ffffff;
@@ -803,19 +810,272 @@
 	width: 100%;
 }
 /*
+*		TASKS
+*/
+.project__tasks-filter{
+	padding: 20px 15px 10px;
+	background: #f5f5f5;
+	text-align: center;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.project__tasks-filter .tasks__header-city,
+.project__tasks-filter .tasks__header-date div{
+	display: flex;
+	position: relative;
+	padding-bottom: 10px;
+	align-items: center;
+}
+.tasks__header-city:after,
+.tasks__header-date div:after{
+	content: '\25bc';
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 5px;
+	line-height: 26px;
+	font-size: 12px
+}
+#DiContent .project__tasks-filter label{
+	min-width: 70px;
+	padding: 0 10px;
+	font-size: 14px;
+	white-space: nowrap;
+}
+#DiContent .project__module .project__tasks-filter input{
+	width: 170px;
+	height: 26px;
+	padding: 0 20px 0 10px;
+}
+/*		*/
+.task__item{ margin-bottom: 30px }
+#DiContent .task__item-title{
+	margin: 0;
+	font-size: 24px;
+	text-transform: uppercase;
+	text-align: center;
+	padding: 30px 15px 35px;
+	font-weight: normal;
+}
+.task__item-title span{ color: #abb92a }
+.task__table{ width: 100% }
+.task__table th{
+	background: #abb92a;
+	color: #ffffff;
+	padding: 5px 0;
+	font-weight: normal;
+	border-left: 1px solid #dedede;
+	border-right: 1px solid #dedede;
+}
+.task__table td{ border-bottom: 1px solid #dedede }
+.task__table-user img{
+	width: 76px;
+	height: 76px;
+	display: inline-block;
+	border-radius: 50%;
+	margin-right: 20px;
+}
+.task__table-user span{
+	display: inline-block;
+	color: #abb92a;
+	text-decoration: underline;
+	vertical-align: middle;
+}
+.task__table tr:nth-child(1) td:nth-child(2),
+.task__table tr:nth-child(2) td:nth-child(1){ width: 19% }
+.task__table tr:nth-child(1) td:nth-child(3),
+.task__table tr:nth-child(2) td:nth-child(2){ width: 25% }
+.task__table tr:nth-child(1) td:nth-child(4),
+.task__table tr:nth-child(2) td:nth-child(3){ width: 11% }
+.task__table tr:nth-child(1) td:nth-child(5),
+.task__table tr:nth-child(2) td:nth-child(4){ width: 21% }
+.task__table td[rowspan="3"]{ width: 24% }
+.task__table-cell{
+	padding: 0 10px;
+	margin: 10px 0;
+	font-size: 18px;
+}
+.task__table-cell.border{ border-left: 1px solid #dedede }
+#DiContent .task__table-cell a{ text-decoration: underline }
+.task__table-index{
+	display: flex;
+	justify-content: space-between;
+}
+.task__table-index b{
+	width: 20px;
+	height: 20px;
+	background: url(/theme/pic/projects/map-locator.png) right no-repeat;
+	cursor: pointer;
+}
+.task__table-cnt{
+	display: flex;
+	justify-content: space-around;
+}
+#DiContent .task__table-cnt a{ 
+	font-size: 14px;
+	line-height: 25px;
+}
+#DiContent .task__table-watch{ color: #a4b0b9 }
+/*		*/
+.task__single{
+	display: flex;
+	width: 100%;
+	margin: 20px 0;
+	flex-wrap: wrap;
+}
+.task__single-logo{ width: 100% }
+.task__single-logo img{
+	width: 175px;
+	height: 175px;
+	display: block;
+	border-radius: 50%;
+	margin: 0 auto 30px;
+}
+.task__single-info{ 
+	width: 100%;
+	margin-bottom: 25px;
+}
+#DiContent .task__single-title{
+	margin: 0 0 20px;
+	font-size: 24px;
+	font-weight: normal;
+}
+.task__single-table{ 
+	width: 100%;
+	margin-bottom: 30px;
+}
+.task__single-table tr:nth-child(1) td:nth-child(2),
+.task__single-table tr:nth-child(2) td:nth-child(1){ width: 20% }
+.task__single-table tr:nth-child(1) td:nth-child(3),
+.task__single-table tr:nth-child(2) td:nth-child(2){ width: 10% }
+.task__single-table tr:nth-child(1) td:nth-child(4),
+.task__single-table tr:nth-child(2) td:nth-child(3){ width: 21% }
+.task__single-table tr:nth-child(1) td:nth-child(5),
+.task__single-table tr:nth-child(2) td:nth-child(4){ width: 22% }
+.task__single-table td[rowspan="3"]{ width: 27% }
+
+.task__single-user{
+	margin: 10px 0;
+	padding-right: 10px;
+	border-right: 1px solid #dedede;
+}
+.task__user-name{
+	font-size: 22px;
+	padding-bottom: 30px;
+}
+.task__user-index{
+	color: #abb92a;
+	font-size: 20px;
+}
+.task__user-date{
+	font-size: 18px;
+	color: #9a9a9a;
+}
+.task-single__cell{ padding: 0 10px }
+#DiContent .task-single__cell input{ display: none }
+#DiContent .task-single__cell label{
+	font-size: 18px;
+	display: block;
+	padding-left: 20px;
+	position: relative;
+	cursor: pointer;
+}
+.task-single__cell label:before{
+	content: '';
+	width: 13px;
+	height: 13px;
+	display: block;
+	position: absolute;
+	top: 6px;
+	left: 0;
+	border: 1px solid #212121;
+	border-radius: 50%;
+}
+.task-single__cell label:after{
+	content: '';
+	width: 9px;
+	height: 9px;
+	display: block;
+	position: absolute;
+	top: 8px;
+	left: 2px;
+	background: transparent;
+	border-radius: 50%;	
+	-webkit-transition: all .3s ease-out;
+	-moz-transition: all .3s ease-out;
+	-o-transition: all .3s ease-out;
+	transition: all .3s ease-out;
+}
+.task-single__cell input:checked + label:after{
+	background: #212121;
+}
+#DiContent .task-single__cell a{ 
+	font-size: 16px;
+	text-decoration: underline;
+	color: #abb92a;
+}
+#DiContent .task-single__cell .task-single__double{ color: #a4b0b9 }
+#DiContent .task__single-info textarea{
+	height: 115px;
+	padding: 15px 25px;
+	margin-bottom: 35px;
+	font-size: 18px;
+	resize: none;
+}
+#DiContent .task__single-info-btn{ text-align: right }
+#DiContent .task__single-info-btn a{
+	width: 180px;
+	text-align: center;
+	display: inline-block;
+	line-height: 33px;
+	color: #fff;
+	font-size: 16px;
+	background: #ff8300;
+	vertical-align: middle;
+	position: relative;
+	z-index: 0;
+	cursor: pointer;
+}
+.task__single-info-btn a:before{
+	content: "";
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: #abb820;
+	-webkit-transform: scaleX(0);
+	transform: scaleX(0);
+	-webkit-transform-origin: 0 50%;
+	transform-origin: 0 50%;
+	-webkit-transition: all ease-out .3s;
+	-moz-transition: all ease-out .3s;
+	-o-transition: all ease-out .3s;
+	transition: all ease-out .3s;
+}
+.task__single-info-btn a:hover:before{
+	-webkit-transform: scaleX(1);
+	transform: scaleX(1);
+}
+/*
 *		MEDIA
 */
 @media screen and (min-width: 550px){
 	#DiContent .project__tabs a{ width: 33.33% }
 	.project__geo-filter .geo__header-date,
 	.project__addr-filter .addr__header-date,
-	.project__route-filter .route__header-date{
+	.project__route-filter .route__header-date,
+	.project__tasks-filter .tasks__header-date{
 		display: flex;
 		flex-wrap: nowrap;
 	}
 	#DiContent .project__geo-filter .geo__header-date input,
 	#DiContent .project__addr-filter .addr__header-date input,
-	#DiContent .project__route-filter .route__header-date input{ width: 90px }
+	#DiContent .project__route-filter .route__header-date input,
+	#DiContent .project__tasks-filter .tasks__header-date input
+	{ width: 90px }
 }
 @media screen and (min-width: 768px){
 	.project__tabs{ padding: 20px 0; }
@@ -832,8 +1092,12 @@
 	.project__addr-xls{ width: 45% }
 	.project__addr-filter{ width: 55% }
 	.project__addr-xls{ text-align: left }
-	.project__geo-filter .geo__header-city{ margin-right: 50px }
-	#DiContent .project__geo-filter label{ min-width: initial }
+	.project__geo-filter .geo__header-city,
+	.project__tasks-filter .tasks__header-city
+	{ margin-right: 50px }
+	#DiContent .project__geo-filter label,
+	#DiContent .project__tasks-filter label
+	{ min-width: initial }
 	.geo-item__cart-data{ flex-wrap: nowrap }
 	.geo-item__cart-data img{ margin: 0 30px 0 0 }
 	.geo-item__cart-border{
@@ -849,6 +1113,14 @@
 		justify-content: space-between;
 	}
 	.geo-item__cart-cur{ text-align: right; }
+	.task__single{
+		margin: 35px 0;
+		flex-wrap: nowrap;
+	}
+	.task__single-logo img{ margin: 30px 30px 30px 0 }
+	.task__single-logo{ width: 205px }
+	.task__single-info{ width: 90% }
+	#DiContent .task__single-title{ margin: 0 0 40px }
 }
 @media screen and (min-width: 992px){
 	.project__tabs{ display: block }
