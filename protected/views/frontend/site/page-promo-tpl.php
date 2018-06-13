@@ -1,11 +1,11 @@
 <?php
     // устанавливаем title
-    $this->pageTitle = $content['meta_title'];
-    $this->setBreadcrumbsEx(array($content['meta_title'], MainConfig::$PAGE_PROMO_INFO));
+    $this->pageTitle = $viData['meta_title'];
+    $this->setBreadcrumbsEx(array($viData['meta_title'], MainConfig::$PAGE_PROMO_INFO));
     // устанавливаем h1
-    $this->ViewModel->setViewData('pageTitle', '<h1>' . $content['meta_title'] . '</h1>');
+    $this->ViewModel->setViewData('pageTitle', '<h1>' . $viData['meta_title'] . '</h1>');
     // устанавливаем description
-    Yii::app()->clientScript->registerMetaTag($content['meta_description'], 'description');
+    Yii::app()->clientScript->registerMetaTag($viData['meta_description'], 'description');
 ?>
 <div class="row">
     <div class="col-xs-12 page-prom__content">
@@ -14,6 +14,6 @@
                 <div class="btn-wrapp"><a href="https://prommu.com/user/register?p=1" class="btn-big-swipe hvr-sweep-to-right">найти<br/>вакансию</a></div>
             <?php endif; ?>
         </div>
-        <?php echo $content['html']; ?>
+        <?php echo $viData['html']; ?>
     </div>
 </div>
