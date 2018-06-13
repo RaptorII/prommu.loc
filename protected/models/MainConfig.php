@@ -231,7 +231,8 @@ class MainConfig
     public static $VIEW_IDEAS_AJAX_FILTER = 'ideas/page-list-ajax';
     public static $VIEW_IDEAS_COMMENTS_AJAX_ORDER = 'ideas/page-comments-ajax';
     /* PROJECTS */
-    public static $VIEW_PROJECT_LIST = 'projects/list';
+    public static $VIEW_EMP_PROJECT_LIST = 'projects/emp-list';
+    public static $VIEW_APP_PROJECT_LIST = 'projects/app-list';
     public static $VIEW_PROJECT_ITEM = 'projects/item';
     public static $VIEW_PROJECT_NEW = 'projects/new';
 

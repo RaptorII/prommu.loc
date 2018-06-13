@@ -1547,12 +1547,14 @@ class UserController extends AppController
     */
     public function actionProjects()
     {
-        Share::$UserProfile->type <> 3 && $this->redirect(MainConfig::$PAGE_INDEX);
+        $type = Share::$UserProfile->type;
+        !in_array($type, [2,3]) && $this->redirect(MainConfig::$PAGE_INDEX);
 
         $id = Yii::app()->getRequest()->getParam('id');
+        $view = $type==3 
+            ? MainConfig::$VIEW_EMP_PROJECT_LIST 
+            : MainConfig::$VIEW_APP_PROJECT_LIST;
 
-
-        $view = MainConfig::$VIEW_PROJECT_LIST;
         $data = 1;
 
         if(strlen($id)>0) {

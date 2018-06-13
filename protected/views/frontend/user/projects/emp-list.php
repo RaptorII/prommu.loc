@@ -1,6 +1,6 @@
 <?php
 	$bUrl = Yii::app()->baseUrl;
-	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/list.css');
+	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/emp-list.css');
 ?>
 <div class="row projects">
 	<div class="col-xs-12">
