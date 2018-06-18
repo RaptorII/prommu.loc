@@ -134,7 +134,7 @@
                                 <?php endif; ?>
                                 <a href="<?= MainConfig::$PAGE_IM . '?new=' . $val['idusr'] ?>" class="responses__btn">Написать сообщение</a>
                                 <?php if(in_array($s, [6,7]) && !$val['id_vac']): ?>
-                                    <a href="<?=MainConfig::$PAGE_SETRATE . DS . $val['id'] . DS . $val['idusr']?>" class="responses__btn">Оставить отзыв</a>
+                                    <a href="<?=MainConfig::$PAGE_REVIEWS//MainConfig::$PAGE_SETRATE . DS . $val['id'] . DS . $val['idusr']?>" class="responses__btn">Оставить отзыв</a>
                                 <?php endif; ?>
                             </td>
                         </tr>
