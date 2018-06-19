@@ -551,6 +551,7 @@ class Promo extends ARModel
             ) t1 ON t1.id = r.id
             
             LEFT JOIN user_city uc ON r.id_user = uc.id_user
+            LEFT JOIN user_attribs ua ON r.id_user = ua.id_us
             LEFT JOIN city ci ON ci.id_city = uc.id_city
             LEFT JOIN user_metro um ON um.id_us = r.id_user
             LEFT JOIN metro m ON m.id = um.id_metro
