@@ -161,6 +161,8 @@ class SearchPromo extends Model
         if(Yii::app()->getRequest()->getParam('posts') || $inProps['filter']['posts'] ) $data['posts'] = $inProps['filter']['posts'] ?: Yii::app()->getRequest()->getParam('posts');
         // sex
         if( Yii::app()->getRequest()->getParam('sm') || $inProps['filter']['sm']  ) $data['sm'] = $inProps['filter']['sm'] ?: Yii::app()->getRequest()->getParam('sm');
+        if( Yii::app()->getRequest()->getParam('ph') || $inProps['filter']['ph']  ) $data['ph'] = $inProps['filter']['ph'] ?: Yii::app()->getRequest()->getParam('ph');
+
         if( Yii::app()->getRequest()->getParam('sf') || $inProps['filter']['sf']  ) $data['sf'] = $inProps['filter']['sf'] ?: Yii::app()->getRequest()->getParam('sf');
         // medbook n avto
         if( Yii::app()->getRequest()->getParam('mb') || $inProps['filter']['mb']  ) $data['mb'] = $inProps['filter']['mb'] ?: Yii::app()->getRequest()->getParam('mb');
@@ -196,6 +198,11 @@ class SearchPromo extends Model
         if( !empty($data['cities']) )
         {
             $filter[] = 'uc.id_city IN ('.join(',',$data['cities']).')';
+        }
+
+        if( !empty($data['ph']) )
+        {
+            $filter[] = 'ua.key = mob AND ua.val <> 0';
         }
 
         // posts
