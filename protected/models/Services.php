@@ -281,7 +281,9 @@ class Services extends Model
         $arRes['pages'] = new CPagination($arRes['app_count']);
         $arRes['pages']->pageSize = 51;
         $arRes['pages']->applyLimit($SearchPromo);
-        $arRes['workers'] = $SearchPromo->getPromos();
+         $ph = $filter['ph'] ?: null;
+            $filter = ['filter' => compact('ph')];
+        $arRes['workers'] = $SearchPromo->getPromos(0, $filter);
         return $arRes;    	
     }
 }
