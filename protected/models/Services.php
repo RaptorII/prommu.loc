@@ -277,12 +277,12 @@ class Services extends Model
     public function getFilteredPromos(){
 		$arRes = array();
         $SearchPromo = new SearchPromo();
-        $arRes['app_count'] = $SearchPromo->searchPromosCount();
+        $ph = $filter['ph'] ?: null;
+        $filter = ['filter' => compact('ph')];
+        $arRes['app_count'] = $SearchPromo->searchPromosCount($filter);
         $arRes['pages'] = new CPagination($arRes['app_count']);
         $arRes['pages']->pageSize = 51;
         $arRes['pages']->applyLimit($SearchPromo);
-         $ph = $filter['ph'] ?: null;
-            $filter = ['filter' => compact('ph')];
         $arRes['workers'] = $SearchPromo->getPromos(0, $filter);
         return $arRes;    	
     }
