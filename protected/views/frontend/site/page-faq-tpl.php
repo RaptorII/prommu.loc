@@ -1,16 +1,18 @@
-<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
-    <link media="screen" href="/css/faq/demo.css" type="text/css" rel="stylesheet" />
-    <link rel="stylesheet" href="/css/faq/style.css">
-    <script src="js/faq/modernizr.js"></script>
+<?php
+    $bUrl = Yii::app()->baseUrl;
+    Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/faq.css');
+    Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/modernizr.js', CClientScript::POS_END);
+    Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/faq.js', CClientScript::POS_END);
+?>
 <div id="controls">
 <section class="cd-faq">
 
  <ul class="cd-faq-categories">
  <?php if( Share::$UserProfile->exInfo->status != 3 || Share::$UserProfile->exInfo->status == 0  ): ?>
-        <li><a class="selected" href="#promo">Соискатель</a></li>
+        <li><a class="selected" href="#promo"><b>Соискатель</b></a></li>
          <? endif;?>
         <?php if( Share::$UserProfile->exInfo->status != 2 || Share::$UserProfile->exInfo->status == 0  ): ?>
-        <li><a href="#empl">Работодатель</a></li>
+        <li><a href="#empl"><b>Работодатель</b></a></li>
     <? endif;?>
     </ul> 
     <div class="cd-faq-items">
@@ -50,5 +52,3 @@
     </div>
     <a href="#0" class="cd-close-panel">Закрыть</a>
 </section>
-<script src="/js/faq/jquery.mobile.custom.min.js"></script>
-<script src="/js/faq/main.js"></script>

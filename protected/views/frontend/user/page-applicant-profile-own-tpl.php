@@ -207,14 +207,17 @@
     ?>
     <?php if( $flagOwnProfile ): ?>
       <div class="ppp__rating">
-        <span class="ppp__subtitle">Общий рейтинг</span> 
-        <ul class="ppp__star-block">
-          <?php
-            for($i=1; $i<=5; $i++):
-              if($i>$stars):?><li></li><?else:?><li class="full"></li><?endif;?>
-          <?php endfor; ?>
-        </ul> 
-        <span class="ppp__subtitle"><?=$rate?> из 100 баллов</span>
+        <div class="ppp__rating-block">
+          <p>Как считается рейтинг</p>
+          <span class="ppp__subtitle">Общий рейтинг</span> 
+          <ul class="ppp__star-block">
+            <?php
+              for($i=1; $i<=5; $i++):
+                if($i>$stars):?><li></li><?else:?><li class="full"></li><?endif;?>
+            <?php endfor; ?>
+          </ul> 
+          <span class="ppp__subtitle"><?=$rate?> из 100 баллов</span>          
+        </div>
         <hr class="ppp__line">
         <table class="upp__table">
           <tbody>

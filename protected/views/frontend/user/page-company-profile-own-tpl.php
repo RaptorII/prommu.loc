@@ -1,4 +1,4 @@
-<meta name="robots" content="noindex">
+<meta name="robots" content="noindex,nofollow">
 <?php 
   Yii::app()->getClientScript()->registerCssFile('/theme/css/page-profile.css'); 
   Yii::app()->getClientScript()->registerScriptFile("/theme/js/private/page-prof-emp.js", CClientScript::POS_END);
@@ -140,27 +140,31 @@
   ?>
   <div class='col-xs-12 col-sm-8 col-lg-9 ppe__content'>
     <h2 class="upp__title"><?=$viData['userInfo']['name']?></h2>
-    <span class="upp__subtitle">Общий рейтинг</span> 
-    <ul class="upp__star-block">
-      <?php
-
-        $rt = $result;
-        $stars = 0;
-        if($rt > 0 && $rt <= 20)
-          $stars = 1;
-        elseif($rt > 20 && $rt <= 40)
-          $stars = 2;
-        elseif($rt > 40 && $rt <= 60)
-          $stars = 3;
-        elseif($rt > 60 && $rt <= 80)
-          $stars = 4;
-        elseif($rt > 80 && $rt <= 100)
-          $stars = 5;
-        for($i=1; $i<=5; $i++):
-          if($i>$stars):?><li></li><?else:?><li class="full"></li><?endif;?>
-        <?php endfor; ?>
-    </ul>     
-    <span class="upp__subtitle"><?=$result?> из 100 баллов</span><br/>
+    <div class="upp__rating-block">
+      <?php if(Share::$UserProfile->type==3): ?>
+        <p>Как считается рейтинг</p>
+      <?php endif; ?>
+      <span class="upp__subtitle">Общий рейтинг</span> 
+      <ul class="upp__star-block">
+        <?php
+          $rt = $result;
+          $stars = 0;
+          if($rt > 0 && $rt <= 20)
+            $stars = 1;
+          elseif($rt > 20 && $rt <= 40)
+            $stars = 2;
+          elseif($rt > 40 && $rt <= 60)
+            $stars = 3;
+          elseif($rt > 60 && $rt <= 80)
+            $stars = 4;
+          elseif($rt > 80 && $rt <= 100)
+            $stars = 5;
+          for($i=1; $i<=5; $i++):
+            if($i>$stars):?><li></li><?else:?><li class="full"></li><?endif;?>
+          <?php endfor; ?>
+      </ul>     
+      <span class="upp__subtitle"><?=$result?> из 100 баллов</span><br/>
+    </div>
  <!--    <span class="upp__subtitle">(2/2)  - email, (2/2) - подтвержденный телефон, (<?=$logo?>/2) - логотип компании, (<?=$web?>/2) - сайт компании, (2/7) - 10 месяцев на сайте, (<?=$vacancy ?>/10) - опубликованные вакансии,  (<?=$comment?>/25) - отзывы, (<?=$rates?>/50) - оценки рейтинга</span> -->
     <hr class="upp__line">
     <table class="upp__table">

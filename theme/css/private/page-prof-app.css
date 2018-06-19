@@ -921,3 +921,56 @@ a.upp__project-info{ width: 65px }
 	font-size: 18px;
 	text-align: center;
 }
+#MWwrapper form.text-left{ text-align:left }
+#MWwrapper form.text-left ul{
+	margin: 0;
+	padding-left: 0px;
+	list-style: none;
+}
+/*
+*
+*/
+.ppp__rating-block{ 
+	position: relative;
+	display: inline-block;
+}
+.ppp__rating-block p{
+	width: 140px;
+	position: absolute;
+	top: 30px;
+	right: 25%;
+	padding: 7px;
+	margin: 0;
+	background-color: #abb820;
+	color: #ffffff;
+	font-weight: normal;
+	text-align: center;
+	line-height: 14px;
+	border: 1px solid #ffffff;
+	border-radius: 5px;
+	z-index: 2;
+	display: none;
+	font-size: 12px;
+	font-family: RobotoCondensed-Regular,verdana,arial;
+	text-transform: none;
+	text-decoration: underline;
+	cursor: pointer;
+}
+.ppp__rating-block p:before{
+	border-bottom: 10px solid #ffffff;
+	top: -11px;
+}
+.ppp__rating-block p:after{
+	border-bottom: 10px solid #abb820;
+	top: -10px;
+}
+.ppp__rating-block p:before,
+.ppp__rating-block p:after{
+	content: '';
+	width: 0;
+	height: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	position: absolute;
+	right: 60px;
+}
