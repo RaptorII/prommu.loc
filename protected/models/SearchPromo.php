@@ -103,6 +103,7 @@ class SearchPromo extends Model
         $posts = Yii::app()->getRequest()->getParam('posts');
         $sm = Yii::app()->getRequest()->getParam('sm');
         $sf = Yii::app()->getRequest()->getParam('sf');
+        $ph = Yii::app()->getRequest()->getParam('ph');
         $mb = Yii::app()->getRequest()->getParam('mb');
         $avto = Yii::app()->getRequest()->getParam('avto');
         $smart = Yii::app()->getRequest()->getParam('smart');
