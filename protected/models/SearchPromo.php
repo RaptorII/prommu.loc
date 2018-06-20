@@ -79,9 +79,9 @@ class SearchPromo extends Model
                 FROM resume r
                 INNER JOIN user u ON u.id_user = r.id_user AND u.ismoder = 1 AND u.isblocked = 0 
 
-                INNER JOIN user_city uc ON r.id_user = uc.id_user  AND !(uc.id_city IN({$strCities}))
                 {$filter['table']}
                 INNER JOIN user_mech a ON a.id_us = r.id_user
+                LEFT JOIN user_attribs ua ON ua.id_us = r.id_user
                 {$filter['filter']}
                 ORDER BY r.id DESC ";
         /** @var $res CDbCommand */
