@@ -327,15 +327,6 @@ class SearchRule extends CBaseUrlRule {
                 continue;
             }
             
-            if($v == 'ph')
-            {
-                $templateUrlParams['others']++;
-                $outData['ph'] = array(
-                    'raw' => $v,
-                    'param' => 'ph=1'
-                );
-                continue;
-            }
             
             if($v == 'cardprommu')
             {
