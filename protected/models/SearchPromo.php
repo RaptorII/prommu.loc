@@ -82,6 +82,7 @@ class SearchPromo extends Model
                 INNER JOIN user_city uc ON r.id_user = uc.id_user  AND !(uc.id_city IN({$strCities}))
                 {$filter['table']}
                 INNER JOIN user_mech a ON a.id_us = r.id_user
+                LEFT JOIN user_attribs ON u.id_us = r.id_user
                 {$filter['filter']}
                 ORDER BY r.id DESC ";
         /** @var $res CDbCommand */
