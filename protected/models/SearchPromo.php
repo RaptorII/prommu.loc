@@ -81,7 +81,7 @@ class SearchPromo extends Model
 
                 {$filter['table']}
                 INNER JOIN user_mech a ON a.id_us = r.id_user
-                LEFT JOIN user_attribs ua ON ua.id_us = r.id_user
+
                 {$filter['filter']}
                 ORDER BY r.id DESC ";
         /** @var $res CDbCommand */
