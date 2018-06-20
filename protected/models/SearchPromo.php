@@ -204,7 +204,7 @@ class SearchPromo extends Model
 
         if( !empty($data['ph']) )
         {
-            $filter[] = 'ua.key = mob AND ua.val <> 0';
+            $filter[] = "ua.key = 'mob' AND ua.val <> 0";
         }
 
         // posts
