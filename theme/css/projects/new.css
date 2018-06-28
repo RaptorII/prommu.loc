@@ -71,6 +71,7 @@
 	line-height: 33px;
 	color: #fff;
 	font-size: 16px;
+	text-align: center;
 	background: #ff8300;
 	vertical-align: middle;
 	position: relative;
@@ -109,11 +110,13 @@
 	width: 70px;
 	min-width: 70px;
 	height: 30px;
-	line-height: 30px;
 	margin-left: 5px;
 	background: #abb820;
+	font-size: 14px;
+	line-height: 30px;
 	color: #ffffff;
 	text-align: center;
+	cursor: pointer;
 	position: relative;
 	z-index: 0;
 }
@@ -147,9 +150,16 @@
 	text-decoration: underline;
 	background: url(/theme/pic/projects/xls-icon.png) right no-repeat;
 }
+#add-xls-name{
+	padding: 10px 15px;
+	color: #abb820;
+	font-weight: bold;
+	display: none;
+}
 /*
 *		INDEX
 */
+#index.project__module{ display: none }
 #DiContent .project__title{
 	text-transform: uppercase;
 	font-size: 24px;
@@ -161,17 +171,14 @@
 	color: #abb92a;
 }
 .project__body{
-	max-width: 600px;
-	margin: 0 auto 30px;
-	padding: 20px 0 5px;
-	background: #f5f5f5;
-}
-.project__index-row{
 	width: 100%;
+	max-width: 600px;
 	display: flex;
-	padding: 0 10px;
 	justify-content: space-between;
 	flex-wrap: wrap;
+	margin: 0 auto;
+	padding: 20px 10px 5px;
+	background: #f5f5f5;
 }
 .project__index-col{
 	width: 100%;
@@ -181,6 +188,7 @@
 	padding: 0 0 20px;
 	justify-content: space-between;
 }
+.project__index-col.empty{ padding: 0 }
 #DiContent .project__index-col label{
 	font-size: 14px;
 	padding: 5px 5px 5px 0;
@@ -216,7 +224,16 @@
 	background: #abb92a;
 	color: #ffffff;
 }
-#DiContent .project__index-period input{ max-width: 100px; }
+.project__index-period span{ 
+	width: 100%;
+	max-width: 100px;
+	height: 30px;
+	background: #ffffff;
+	border: 1px solid #cecece;
+	cursor: pointer;
+	line-height: 30px;
+	padding: 0 5px;
+}
 .project__period-btn{
 	width: 100%;
 	height: 30px;
@@ -228,19 +245,21 @@
 	margin-bottom: 30px;
 	text-align: center;
 }
-#DiContent .project__all-btns a{
+#DiContent .project__all-btns a,
+#DiContent .project__all-btns span{
 	max-width: 300px;
 	line-height: 31px;
 	vertical-align: middle;
 	display: inline-block;
 	text-align: center;
 	font-size: 16px;
-	-webkit-transition: all ease-out .3s;
-	-moz-transition: all ease-out .3s;
-	-o-transition: all ease-out .3s;
-	transition: all ease-out .3s;
+	cursor: pointer;
+	-webkit-transition: background ease-out .3s;
+	-moz-transition: background ease-out .3s;
+	-o-transition: background ease-out .3s;
+	transition: background ease-out .3s;
 }
-#DiContent .project__index-btns a{ width: 48% }
+#DiContent .project__index-btns span{ width: 48% }
 #DiContent .project__index-btns .project__btn-green{
 	background: #abb820;
 	color: #ffffff;
@@ -259,9 +278,138 @@
 	border: 1px solid #ff8300;
 	color: #ffffff;	
 }
+.project__index-arrow,
+.project__index-pen,
+.city-field, .metro-field{ position: relative }
+.project__index-arrow:after,
+.project__index-pen:after{
+	position: absolute;
+	top: 0;
+	right: 5px;
+	display: block;
+	line-height: 30px;
+	font-size: 12px;
+	z-index: 0;
+}
+.project__index-arrow:after{ content: '\25bc' }
+.project__index-pen:after{
+    content: '';
+    background: url(/theme/pic/projects/pencil.png);
+    width: 10px;
+    height: 10px;
+    top: 10px;
+}
+.select-list{
+	max-height: 300px;
+	overflow-y: auto;
+	padding: 0;
+	margin: 0;
+	border-top: none;
+	list-style: none;
+	background-color: rgba(52, 52, 52, 0.6);
+	position: absolute;
+	top: 100%;
+	left: -1px;
+	right: -1px;
+	z-index: 2;
+	font-family: RobotoCondensed-Regular, verdana, arial;
+	font-size: 14px;
+	color: #FFFFFF;
+}
+.select-list li{
+	width: 100%;
+	line-height: 30px;
+	padding: 3px 6px;
+	cursor: pointer;
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	transition: all 0.3s ease-out;
+}
+.select-list li:hover{ background-color: rgba(255,255,255,0.2) }
+.city-field, .metro-field{
+	width: 100%;
+	max-width: 250px;
+	background: #ffffff;
+	border: 1px solid #cecece;
+	cursor: text;
+}
+.city-field{ padding-right: 25px }
+#DiContent #index .city-field input{
+	height: 28px;
+	border: none;
+	background: transparent;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+}
+#DiContent #index .metro-field input{
+    height: 24px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    margin: 2px 0 2px 6px;
+}
+.city-field.load:after, .metro-field.load:after{
+	content: '';
+	width: 20px;
+	height: 20px;
+	top: 5px;
+	right: 3px;
+	background: url(/theme/pic/loading1.gif) no-repeat;
+	background-size: cover;
+}
+.city-select, .metro-select li:not([data-id="0"]){
+	display: inline-block;
+	padding: 3px 20px 3px 5px;
+	margin: 2px 0 2px 6px;
+	background-color: rgba(52, 52, 52, 0.6);
+	color: #fff;
+	line-height: 18px;
+	border-radius: 5px;
+	position: relative;
+}
+.metro-select li[data-id="0"]{ width: 10px }
+
+.metro-select{
+	display: flex;
+	flex-direction: row;
+	justify-content: start;
+	flex-wrap: wrap;
+	margin: 0px;
+	padding: 0px 25px 0 0;
+    list-style: none;
+}
+.city-select b, .metro-select b{
+	width: 19px;
+	height: 19px;
+	display: block;
+	position: absolute;
+	top: 2px;
+	right: 0;
+	font-style: normal;
+	text-align: center;
+	cursor: pointer;
+}
+.city-select b:before, .metro-select b:before{
+	content: '\2716';
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	line-height: 20px;
+}
+#DiContent .project__index-time input{ 
+	text-align: center;
+	padding: 0 16px 0 6px;
+}
 /*
 *		invitation
 */
+#invitation.project__module{ display: none }
 .project__body.project__body-invite{ max-width: 550px }
 .invitation-item{
 	display: flex;
@@ -282,6 +430,122 @@
 	margin: 0 0 15px;
 }
 /*
+*		POPUP
+*/
+#DiSiteWrapp #DiContent #MWwrapper .mw-win.dark-ver{ 
+	width: 350px;
+	left: -175px; 
+}
+#DiSiteWrapp #DiContent #MWwrapper .mw-win.dark-ver{
+	background: #5aad17;
+	background: -moz-linear-gradient(-45deg, #5aad17 0%, #0f4801 100%);
+	background: -webkit-linear-gradient(-45deg, #5aad17 0%,#0f4801 100%);
+	background: linear-gradient(135deg, #5aad17 0%,#0f4801 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5aad17', endColorstr='#0f4801',GradientType=1 );
+	padding: 40px;
+	border: none;
+    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+    color: #FFFFFF;
+}
+#DiSiteWrapp #DiContent #MWwrapper .header{
+	border: none;
+	margin: 0;
+	font-size: 24px;
+	font-weight: normal;
+}
+#DiSiteWrapp #DiContent #MWwrapper .header div{
+	padding: 0 0 10px;
+	position: static;
+	background: transparent;
+	font-size: 24px;
+	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+	font-weight: normal;
+}
+#DiSiteWrapp #DiContent #MWwrapper .mw-close{
+    width: 29px;
+    height: 29px;
+    background: none;
+    border: 1px solid #FFFFFF;
+    border-radius: 15px;
+    top: 11px;
+    right: 11px;
+}
+#DiSiteWrapp #DiContent #MWwrapper .mw-close:before{
+    content: 'X';
+    width: 28px;
+    line-height: 28px;
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    color: #FFFFFF;
+    font-size: 18px;
+    text-align: center;
+    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+}
+#MWwrapper form{ 
+	font-size: 18px;
+	text-align: center;
+}
+/*
+*	calendar
+*/
+.calendar{
+	width: 100%;
+	min-width: 180px;
+	padding: 10px;
+	position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(52, 52, 52, 0.6);
+    z-index: 2;
+    display: none;
+}
+.calendar table{ 
+	width: 100%;
+	cursor: default;
+}
+.calendar table td{
+	padding: initial;
+	text-align: center;
+	color: #FFFFFF;
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	transition: all 0.3s ease-out;
+}
+.calendar tbody td:nth-child(n+6){ color: #ff8300 }
+.calendar td.day:hover{ background-color: rgba(255,255,255,0.2) }
+.calendar tbody td.today,
+.calendar tbody td.today:hover{ 
+	color: #FFFFFF;
+	background-color: rgba(171, 184, 32, 0.5);
+}
+.calendar tbody td.select,
+.calendar tbody td.select:hover{ 
+	color: #FFFFFF;
+	background-color: rgba(255, 131, 0, 0.5);
+}
+.calendar td.nofit:hover{
+    background-color: rgba(255, 0, 0, 0.5);
+    cursor: no-drop;
+}
+.calendar td.day,
+.calendar td.mleft,
+.calendar td.mright{ cursor: pointer }
+.calendar b{
+	color: #FFFFFF;
+	background-color: red;
+	position: absolute;
+	top: -5px;
+	line-height: normal;
+	right: 0;
+	left: 0;
+	text-align: center;
+	z-index: 2;
+	display: none;
+}
+/*
 *		MEDIA
 */
 @media screen and (min-width: 768px){
@@ -292,7 +556,8 @@
 	#DiContent .project__tabs a{ display: initial }
 	.project__name{ margin-bottom: 40px }
 	.project__opt{ width: 50% }
-	.project__opt-row{ padding: 0 60px 20px }
+	.project__opt-row,
+	#add-xls-name{ padding: 0 60px 20px }
 	.project__opt-row:first-child{ padding-top: 15px }
 	.project__opt-row span{ font-size:18px }
 	#DiContent .project__opt-row .project__opt-btn{ 
@@ -304,12 +569,12 @@
 	#DiContent .project__index-time label{ padding: 5px 5px 5px 0; }
 	#DiContent .project__index-time input{ min-width: 50px }
 	.project__body{ max-width: initial; }
-	#DiContent .project__index-btns a{
+	#index .project__all-btns a,
+	#index .project__all-btns span{
 		width: 145px;
-		margin-right: 10px;
+		margin-left: 10px;
 	}
 	.project__index-btns{
-		margin-bottom: 0;
 		display: inline-block;
 		text-align: right;
 	}
@@ -322,6 +587,11 @@
 		width: initial;
 		margin: 0 10px 0 0;
 	}
+	.project__index-period .project__index-pen:after{ display: none }
+	#DiContent .project__index-time input{ 
+		text-align: left;
+		padding: 0 3px;
+	}
 }
 @media screen and (min-width: 992px){
 	#DiContent .project__opt-row .project__opt-btn{ 
@@ -331,6 +601,13 @@
 	.project__lbl-xs{ min-width: 40px }
 	.project__lbl-sm{ min-width: 50px }
 	.project__lbl-lg{ min-width: 100px }
-	.project__index-row{ padding: 0 20px }
+	.project__body{ padding: 20px 20px 5px }
 	.project__index-col{ width: 28% }
+	.project__index-period .project__index-pen:after{ display: block }
+}
+@media screen and (min-width: 1200px){
+	#DiContent .project__index-time input{ 
+		text-align: center;
+		padding: 0 16px 0 6px;
+	}
 }

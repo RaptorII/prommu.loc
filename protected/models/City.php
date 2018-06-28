@@ -758,4 +758,24 @@ class City extends CActiveRecord
             return array('error' => 100, 'message' => 'Локация изменена');
         }
     }
+    /*
+    *   
+    */
+    public function getMetroList($id_city, $filter, $select)
+    {
+        $filter = urldecode($filter);
+        if(empty($select))
+            $select = '0';
+
+        $sql = "SELECT m.id, m.name 
+            FROM metro m
+            WHERE m.name like '%{$filter}%' 
+                AND m.id_city = {$id_city} 
+                AND m.id NOT IN({$select})
+            LIMIT 10";
+        $res = Yii::app()->db->createCommand($sql);
+        $res = $res->queryAll();
+
+        return $res;
+    }
 }

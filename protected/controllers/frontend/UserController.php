@@ -1551,14 +1551,19 @@ class UserController extends AppController
         !in_array($type, [2,3]) && $this->redirect(MainConfig::$PAGE_INDEX);
 
         $id = Yii::app()->getRequest()->getParam('id');
+        $idus = Share::$UserProfile->id;
         $view = $type==3 
             ? MainConfig::$VIEW_EMP_PROJECT_LIST 
             : MainConfig::$VIEW_APP_PROJECT_LIST;
 
-        $data = 1;
-
         if(strlen($id)>0) {
             if($id=='new') { // новый проект
+                $xls = Yii::app()->getRequest()->getParam('get_xls');
+                if($xls==1){
+                    $file = Yii::app()->baseUrl.'/uploads/address_program.xls';
+                    return Yii::app()->getRequest()->sendFile($file);
+                }
+                
                 $view = MainConfig::$VIEW_PROJECT_NEW;
                 $data = 1;
             }
@@ -1585,8 +1590,10 @@ class UserController extends AppController
             }
         }
 
+        $model = new Projects;
+        $data = $model->getProjects($idus, $type);
         //$this->setBreadcrumbs($title = 'Мои проекты', MainConfig::$PAGE_PROFILE);
         //$this->setPageTitle($title);
-        $this->render($view, $data);
+        $this->render($view, array('viData' => $data));
     }   
 }

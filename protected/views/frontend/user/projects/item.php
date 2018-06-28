@@ -19,9 +19,6 @@ echo "</pre>";
 			<a href="?s=staff" class="<?=$s=='staff'?'active':''?>">
 				<b>ПЕРСОНАЛ</b>
 			</a>
-			<a href="?s=time" class="<?=$s=='time'?'active':''?>">
-				<b>ДАТА И ВРЕМЯ РАБОТЫ</b>
-			</a>
 			<a href="?s=index" class="<?=$s=='index'?'active':''?>">
 				<b>АДРЕСНАЯ ПРОГРАММА</b>
 			</a>
@@ -247,13 +244,6 @@ echo "</pre>";
 					</div>
 				</div>
 			</div>
-			<?php 
-			//
-			//
-			//
-			?>
-			<?php elseif($s=='time'): ?>
-			<div class="project__module">???</div>
 			<?php 
 			//
 			//

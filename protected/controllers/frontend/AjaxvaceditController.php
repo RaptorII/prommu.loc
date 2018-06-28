@@ -50,6 +50,22 @@ class AjaxVacEditController extends AppController
         Yii::app()->end();
     }
 
+    /*
+    *
+    */
+    public function actionVeGetMetros()
+    {
+        $id = Yii::app()->getRequest()->getParam('id');
+        $filter = Yii::app()->getRequest()->getParam('query');
+        $select = Yii::app()->getRequest()->getParam('select');
+        $res = (new City)->getMetroList($id, $filter, $select);
+
+        if(!$res)
+            $res['error'] = true;
+
+        echo CJSON::encode($res);
+        Yii::app()->end();        
+    }
 
 
     /**
