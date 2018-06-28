@@ -1590,8 +1590,8 @@ class UserController extends AppController
             }
         }
 
-        $model = new Projects;
-        $data = $model->getProjects($idus, $type);
+        //$model = new Projects;
+        //$data = $model->getProjects($idus, $type);
         //$this->setBreadcrumbs($title = 'Мои проекты', MainConfig::$PAGE_PROFILE);
         //$this->setPageTitle($title);
         $this->render($view, array('viData' => $data));
