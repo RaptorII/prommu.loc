@@ -318,7 +318,6 @@ class UserController extends AppController
         $data['gender'] = $cloud['gender'];
         
         $data['messenger'] = $cloud['id'];
-        $data['photos'] = $cloud['photo'];
         $data['type'] = $cloud['type'];
         $email =  $cloud['email'];
         
@@ -337,7 +336,6 @@ class UserController extends AppController
         $data['birthday'] = $_GET['birthday'];
         $data['gender'] = $_GET['gender'];
         $data['messenger'] = $_GET['messenger'];
-        $data['photos'] = $_GET['photos'];
         $data['type'] = $_GET['type'];
         $data['referer'] = $_GET['referer'];
         $data['transition'] = $_GET['transition'];
@@ -355,7 +353,7 @@ class UserController extends AppController
              ->queryRow();
 
          if(!empty($usData)) {
-            $link  = 'https://prommu.com/message';
+            $link  = Subdomain::getUrl() . '/message';
             $this->redirect( $link);
          } else {
         
@@ -407,7 +405,7 @@ class UserController extends AppController
                             ->where('u.email = :email', array(':email' => $data['email']))
                             ->queryRow();
                             if(!empty($usData)) {
-                                $link  = 'https://prommu.com/message';
+                                $link  = Subdomain::getUrl() . '/message';
                                 $this->redirect( $link);
                             } else {
 
@@ -477,27 +475,7 @@ class UserController extends AppController
         // no profile for guest
         !in_array(Share::$UserProfile->type, [2,3]) && $this->redirect(MainConfig::$PAGE_LOGIN);
 
-        // редирект для Ленинградской области и СПБ
-        $arRes = Yii::app()->db->createCommand()
-            ->select('uc.id_city, c.region')
-            ->from('user_city uc')
-            ->join('city c', 'uc.id_city=c.id_city')
-            ->where('id_user=:id_user', array(':id_user' => Share::$UserProfile->id))
-            ->queryAll();
-
-        $countCity = 0;
-        foreach ($arRes as $city)
-            if($city['region']==MainConfig::$SUBDOMAIN_CITY_ID_SPB)
-                $countCity++;
-
-        if(count($arRes)==$countCity && $countCity>0){ // редирект только если все города ЛО
-            $arUrl = explode('?', $_SERVER['REQUEST_URI']);
-            $url = 'Location: ' . MainConfig::$SUBDOMAIN_URL_SPB
-                . str_replace('#ID#', Share::$UserProfile->id, MainConfig::$SUBDOMAIN_REDIRECT)
-                . substr($arUrl[0], 1) . DS . '?' . str_replace('&', ',', $arUrl[1]);
-            header($url);
-            exit();            
-        }
+        Subdomain::profileRedirect(Share::$UserProfile->id);
 
         // Magnific Popup
         Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/jslib/magnific-popup/magnific-popup-min.css');
@@ -671,25 +649,8 @@ class UserController extends AppController
 
         $isPopup = Yii::app()->getRequest()->getParam('npopup');
         if($isPopup){
-            $gCity = Yii::app()->getRequest()->getParam('city');
-            $arRes = Yii::app()->db->createCommand()
-                ->select('t.name, t.region')
-                ->from('city t')
-                ->where('t.id_co=1') // only RF!!!
-                ->limit(10000);
-            $arCities = $arRes->queryAll();
-
-            foreach ($arCities as $city){
-                // редирект для ленинградской области и СПБ
-                if($gCity==$city['name'] && $city['region']==MainConfig::$SUBDOMAIN_CITY_ID_SPB){
-                    $arUrl = explode('?', $_SERVER['REQUEST_URI']);
-                    $url = 'Location: ' . MainConfig::$SUBDOMAIN_URL_SPB
-                        . str_replace('#ID#', Share::$UserProfile->id, MainConfig::$SUBDOMAIN_REDIRECT)
-                        . substr($arUrl[0], 1) . DS . '?' . str_replace('&', ',', $arUrl[1]);
-                    header($url);
-                    exit;
-                }
-            }
+            $city = Yii::app()->getRequest()->getParam('city');
+            Subdomain::popupRedirect($city,Share::$UserProfile->id);
         }
     
         // save data
@@ -1563,9 +1524,22 @@ class UserController extends AppController
                     $file = Yii::app()->baseUrl.'/uploads/address_program.xls';
                     return Yii::app()->getRequest()->sendFile($file);
                 }
+                elseif(Yii::app()->request->isAjaxRequest){
+                    $this->renderPartial(
+                        MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
+                        array('viData' => (new Services())->getFilteredPromos()), 
+                        false, 
+                        true
+                    );
+                }
+                else{
+                    $data = (new Services())->getFilteredPromos();
+                }
+
+
+
                 
                 $view = MainConfig::$VIEW_PROJECT_NEW;
-                $data = 1;
             }
             elseif($id>0) { // существующий
                 $view = MainConfig::$VIEW_PROJECT_ITEM;

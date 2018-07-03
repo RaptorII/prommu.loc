@@ -502,19 +502,7 @@ class Promo extends ARModel
 
     public function getApplicantsSearchpromo($inParams)
     {
-        // Leningrad region only
-        $arRes = Yii::app()->db->createCommand()
-            ->select('c.id_city id')
-            ->from('city c')
-            ->where('c.region=:region', array(':region' => MainConfig::$SUBDOMAIN_CITY_ID_SPB))
-            ->limit(10000)
-            ->queryAll();
-
-        $arCities = array();
-        foreach ($arRes as $city)
-            array_push($arCities, $city['id']);
-        $strCities = implode(',', $arCities);
-
+        $strCities = Subdomain::getCitiesIdies(true);
         $sql = "SELECT r.id,
                r.id_user,
                r.id_rating,
@@ -551,7 +539,6 @@ class Promo extends ARModel
             ) t1 ON t1.id = r.id
             
             LEFT JOIN user_city uc ON r.id_user = uc.id_user
-            LEFT JOIN user_attribs ua ON r.id_user = ua.id_us
             LEFT JOIN city ci ON ci.id_city = uc.id_city
             LEFT JOIN user_metro um ON um.id_us = r.id_user
             LEFT JOIN metro m ON m.id = um.id_metro
@@ -582,21 +569,8 @@ class Promo extends ARModel
 
     private function getApplicantsIndexPage()
     {
-        // Leningrad region only
-        $arRes = Yii::app()->db->createCommand()
-            ->select('c.id_city id')
-            ->from('city c')
-            ->where('c.region=:region', array(':region' => MainConfig::$SUBDOMAIN_CITY_ID_SPB))
-            ->limit(10000)
-            ->queryAll();
-
-        $arCities = array();
-        foreach ($arRes as $city)
-            array_push($arCities, $city['id']);
-        $strCities = implode(',', $arCities);
-
+        $strCities = Subdomain::getCitiesIdies(true);
         $filter = Promo::mergeScopes(['scope' => Promo::$SCOPE_HAS_PHOTO, 'alias' => 'r']);
-
         $sql = "SELECT DISTINCT r.id, u.is_online, r.id_user idus, r.photo, r.firstname, r.lastname, r.isman, DATE_FORMAT(r.birthday,'%d.%m.%Y') as birthday,
                 cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate, r.rate, r.rate_neg, photo,
                 (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 1 AND mm.id_promo = r.id) comment_count
@@ -608,6 +582,9 @@ class Promo extends ARModel
             ORDER BY avg_rate DESC, id DESC
             LIMIT 6";
         $result = Yii::app()->db->createCommand($sql)->queryAll();
+
+        if(!sizeof($result))
+            return false;
 
         $arIdies = array();
         foreach ($result as $i => $item){

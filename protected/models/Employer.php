@@ -368,6 +368,9 @@ class Employer extends ARModel
         $result = Yii::app()->db->createCommand($sql)
         ->queryAll();
 
+        if(!sizeof($result))
+            return false;
+
         $arIdies = array();
         foreach ($result as $i => $item){
             $arIdies[] = $item['idus'];

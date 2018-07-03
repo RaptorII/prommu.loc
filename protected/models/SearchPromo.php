@@ -60,28 +60,16 @@ class SearchPromo extends Model
 
     public function searchPromosCount()
     {
-        // Leningrad region only
-        $arRes = Yii::app()->db->createCommand()
-            ->select('c.id_city id')
-            ->from('city c')
-            ->where('c.region=:region', array(':region' => MainConfig::$SUBDOMAIN_CITY_ID_SPB))
-            ->limit(10000)
-            ->queryAll();
-
-        $arCities = array();
-        foreach ($arRes as $city)
-            array_push($arCities, $city['id']);
-        $strCities = implode(',', $arCities);
-
+        $strCities = Subdomain::getCitiesIdies(true);
         $filter = $this->renderSQLFilter();
 
         $sql = "SELECT COUNT(DISTINCT r.id)
                 FROM resume r
                 INNER JOIN user u ON u.id_user = r.id_user AND u.ismoder = 1 AND u.isblocked = 0 
 
+                INNER JOIN user_city uc ON r.id_user = uc.id_user  AND !(uc.id_city IN({$strCities}))
                 {$filter['table']}
                 INNER JOIN user_mech a ON a.id_us = r.id_user
-
                 {$filter['filter']}
                 ORDER BY r.id DESC ";
         /** @var $res CDbCommand */
@@ -269,18 +257,7 @@ class SearchPromo extends Model
         $limit = $this->limit;
         $offset = $this->offset;
 
-        // Leningrad region only
-        $arRes = Yii::app()->db->createCommand()
-            ->select('c.id_city id')
-            ->from('city c')
-            ->where('c.region=:region', array(':region' => MainConfig::$SUBDOMAIN_CITY_ID_SPB))
-            ->limit(10000)
-            ->queryAll();
-
-        $arCities = array();
-        foreach ($arRes as $city)
-            array_push($arCities, $city['id']);
-        $strCities = implode(',', $arCities);
+        $strCities = Subdomain::getCitiesIdies(true);
 
         try
         {
@@ -645,7 +622,8 @@ class SearchPromo extends Model
         }
         $url = (sizeof($data['cities'])>1 || sizeof($data['posts'])>1 ? '' : $base . $url);
 
-        $seo = Yii::app()->db->createCommand('SELECT * FROM seo WHERE url = "'.$url.'"')->queryRow();
+        $table = Subdomain::getSeoTable();
+        $seo = Yii::app()->db->createCommand('SELECT * FROM ' . $table . ' WHERE url = "'.$url.'"')->queryRow();
 
         return $seo;
     }

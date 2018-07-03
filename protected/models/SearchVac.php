@@ -67,19 +67,7 @@ class SearchVac extends Model
     // получение кол-ва вакансий
     public function searchVacationsCount($props = [])
     {
-        // Leningrad region only
-        $arRes = Yii::app()->db->createCommand()
-            ->select('c.id_city id')
-            ->from('city c')
-            ->where('c.region=:region', array(':region' => MainConfig::$SUBDOMAIN_CITY_ID_SPB))
-            ->limit(10000)
-            ->queryAll();
-
-        $arCities = array();
-        foreach ($arRes as $city)
-            array_push($arCities, $city['id']);
-        $strCities = implode(',', $arCities);
-
+        $strCities = Subdomain::getCitiesIdies(true);
         $filter = $props['filter'] ?: [];
         $filter = $this->renderSQLFilter(['filter' => $filter]);
 
@@ -571,7 +559,8 @@ class SearchVac extends Model
         }
         $url = (sizeof($data['cities'])>1 || sizeof($data['post'])>1 ? '' : $base . $url);
 
-        $seo = Yii::app()->db->createCommand('SELECT * FROM seo WHERE url = "'.$url.'"')->queryRow();
+        $table = Subdomain::getSeoTable();
+        $seo = Yii::app()->db->createCommand('SELECT * FROM ' . $table . ' WHERE url = "'.$url.'"')->queryRow();
 
         return $seo;
     }

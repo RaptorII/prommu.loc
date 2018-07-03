@@ -2599,32 +2599,33 @@ public function vac(){
      */
    public function authUser()
     {
-         $id = Yii::app()->getRequest()->getParam('id');
+        $id = Yii::app()->getRequest()->getParam('id');
         $str = Yii::app()->getRequest()->getParam('url');
         $code = Yii::app()->getRequest()->getParam('code');
         $str = explode(',', $str);
         $strk = '';
-       if(count($str) != 1) {
-         for($i = 0; $i <count($str); $i ++ ) {
+        if(count($str) != 1) {
+            for($i = 0; $i <count($str); $i ++ ) {
                 if($i < (count($str) - 1)) {
                     $strk.= $str[$i].'&'; 
                 }
                 else {
                     $strk.= $str[$i]; 
                 }      
-        }
-       } 
-       else {
-
-         for($i = 0; $i <count($str); $i ++ ) {
+            }
+        } 
+        else {
+            for($i = 0; $i <count($str); $i ++ ) {
                 $strk.= $str[$i];       
+            }
         }
-       }
-        if($code = "prommucomWd126wdn"){
-        $Auth = new Auth();
-        $Auth->Authorize(['id' => $id]);
-       header("Location: https://prommu.com/$strk");
-   }
+
+        if($code == "prommucomWd126wdn"){ // !!!!!!!!!!!!! Здесь стояло присвоение
+            $Auth = new Auth();
+            $res = $Auth->Authorize(['id' => $id]);
+
+            header("Location: " . Subdomain::getUrl() . "/$strk");
+        }
     }
 
 

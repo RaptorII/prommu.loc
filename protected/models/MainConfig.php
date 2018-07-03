@@ -207,11 +207,6 @@ class MainConfig
     public static $VIEWS_SETTINGS = 'page-settings-view-tpl';
     public static $PAGE_SETTINGS = '/user/settings';
 
-    /* subdomains */
-    public static $SUBDOMAIN_CITY_ID_SPB = 1838;
-    public static $SUBDOMAIN_URL_SPB = 'https://spb.prommu.com';
-    public static $SUBDOMAIN_REDIRECT = '/api.auth_user/?id=#ID#&code=prommucomWd126wdn&url=';
-
     public static $PAGE_VACDELETE = 'user/vacdelete';
     public static $DEBUG_TIMER = true;
 

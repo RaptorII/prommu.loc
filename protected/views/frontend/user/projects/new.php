@@ -1,171 +1,349 @@
 <?php
 	$bUrl = Yii::app()->baseUrl;
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/new.css');
+	Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/phone-codes/style.css');
+	Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/phone-codes/projects.js', CClientScript::POS_END);
 	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/new.js', CClientScript::POS_END);
 ?>
 <div class="row project">
 	<div class="col-xs-12">
 		<form action="" method="POST" id="new-project">
-			<div class="project__tabs">
-				<?/*
-				<a href="#" data-href="project-1">ПЕРСОНАЛ</a>
-				<a href="#" data-href="index">АДРЕСНАЯ ПРОГРАММА</a>
-				<a href="#" data-href="project-2">КОНТРОЛЬ ПЕРСОНАЛА</a>
-				<a href="#" data-href="project-3">ЗАДАЧИ</a>
-				*/?>
+			<div id="main" class="project__module">
+				<div class="project__name">
+					<input type="text" name="name" placeholder="*Введите название проекта" autocomplete="off" id="project-name">
+				</div>
+				<div class="project__block">
+					<div class="project__opt">
+						<div class="project__opt-row">
+							<span>Добавить адресную программу</span>
+							<span class="project__opt-btn" data-event="index">Выбрать</span>
+						</div>
+						<div class="project__opt-row">
+							<span>Добавить адресную программу через XLS</span>
+							<span class="project__opt-btn" id="add-xls">Выбрать</span>
+
+							<input type="file" name="xls" id="add-xls-inp">
+						</div>
+						<div id="add-xls-name"></div>
+						<div class="project__opt-row">
+							<a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_PROJECT_NEW . '?get_xls=1')?>" class="project__opt-xls">Скачать пример адреной программы</a>
+						</div>
+					</div>
+					<div class="project__opt">
+						<div class="project__opt-row">
+							<span>Добавить новый персонал на проект</span>
+							<span class="project__opt-btn" data-event="addition">Выбрать</span>
+						</div>
+						<div class="project__opt-row">
+							<span>Пригласить персонал на проект</span>
+							<span class="project__opt-btn" data-event="invitation">Выбрать</span>
+						</div>
+					</div>
+				</div>
+				<div class="project__all-btns">
+					<div class="project__main-btn" data-page="main">
+						<span class="save-btn" id="save-project">СОХРАНИТЬ</span>
+					</div>
+				</div>
 			</div>
-			<div id="content">
-				<div id="main" class="project__module">
-					<div class="project__name">
-						<input type="text" name="name" placeholder="*Введите название проекта" autocomplete="off" id="project-name">
+			<?php
+			//
+			?>
+			<div id="index" class="project__module" data-country="1">
+				<h2 class="project__title">ДОБАВИТЬ АДРЕСНУЮ ПРОГРАММУ В ПРОЕКТ <span></span></h2>
+				<div class="project__body" data-city="">
+					<div class="project__index-col">
+						<label class="project__lbl-sm"><b>Город</b></label>
+						<div class="city-field project__index-arrow">
+							<span class="city-select"></span>
+							<input type="text" name="c" class="city-inp" autocomplete="off">
+							<ul class="select-list"></ul>
+							<input type="hidden" name="city[]" value="">
+						</div>
 					</div>
-					<div class="project__block">
-						<div class="project__opt">
-							<div class="project__opt-row">
-								<span>Добавить адресную программу</span>
-								<span class="project__opt-btn" data-event="index">Выбрать</span>
-							</div>
-							<div class="project__opt-row">
-								<span>Добавить адресную программу через XLS</span>
-								<span class="project__opt-btn" id="add-xls">Выбрать</span>
+					<div class="project__index-col project__index-pen loc-part">
+						<label class="project__lbl-lg"><b>Адрес ТТ</b></label>
+						<input type="text" name="tt-index[]">
+					</div>
+					<div class="project__index-col project__index-pen loc-part">
+						<label><b>Название ТТ</b></label>
+						<input type="text" name="tt-name[]">
+					</div>
 
-								<input type="file" name="xls" id="add-xls-inp">
+					<div class="project__index-col">
+						<div class="project__index-period">
+							<div class="project__index-arrow period-item">
+								<label class="project__lbl-sm"><b>Дата</b></label>
+								<span></span>
+								<div class="calendar" data-type="bdate">
+									<table>
+										<thead>
+										<tr>
+											<td class="mleft">‹
+											<td colspan="5" class="mname">
+											<td class="mright">›
+										</tr>
+										<tr>
+											<td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
+										</tr>
+										<tbody></tbody>
+									</table>
+								</div>
+								<input type="hidden" name="date-from[]">
 							</div>
-							<div id="add-xls-name"></div>
-							<div class="project__opt-row">
-								<a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_PROJECT_NEW . '?get_xls=1')?>" class="project__opt-xls">Скачать пример адреной программы</a>
-							</div>
-						</div>
-						<div class="project__opt">
-							<div class="project__opt-row">
-								<span>Добавить новый персонал на проект</span>
-								<span class="project__opt-btn" data-event="addition">Выбрать</span>
-							</div>
-							<div class="project__opt-row">
-								<span>Пригласить персонал на проект</span>
-								<span class="project__opt-btn" data-event="invitation">Выбрать</span>
+							<div class="project__index-arrow period-item">
+								<label class="project__lbl-xs"><b>по</b></label>
+								<span></span>
+								<div class="calendar" data-type="edate">
+									<table>
+										<thead>
+										<tr>
+											<td class="mleft">‹
+											<td colspan="5" class="mname">
+											<td class="mright">›
+										</tr>
+										<tr>
+											<td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
+										</tr>
+										<tbody></tbody>
+									</table>
+								</div>
+								<input type="hidden" name="date-to[]">
 							</div>
 						</div>
 					</div>
-					<div class="project__all-btns">
-						<div class="project__main-btn" data-page="main">
-							<span class="save-btn" id="save-project">СОХРАНИТЬ</span>
+					<div class="project__index-col">
+						<div class="project__index-period project__index-time">
+							<div class="project__index-pen">
+								<label class="project__lbl-lg"><b>Время работы</b></label>
+								<input type="text" name="time-from[]" class="time-inp">
+							</div>
+							<div class="project__index-pen">
+								<label><b>по</b></label>
+								<input type="text" name="time-to[]" class="time-inp">
+							</div>
+						</div>
+					</div>
+					<div class="project__index-col">
+						<div class="project__period-btn">
+							<span class="add-period-btn">Добавить период</span>
 						</div>
 					</div>
 				</div>
-				<div id="index" class="project__module" data-country="1">
-					<h2 class="project__title"><b>добавить адресную программу</b></h2>
-					<div class="project__body" data-city="">
-						<div class="project__index-col">
-							<label class="project__lbl-sm"><b>Город</b></label>
-							<div class="city-field project__index-arrow">
-								<span class="city-select"></span>
-								<input type="text" name="c" class="city-inp" autocomplete="off">
-								<ul class="select-list"></ul>
-								<input type="hidden" name="city[]" value="">
-							</div>
-						</div>
-						<div class="project__index-col project__index-pen loc-part">
-							<label class="project__lbl-lg"><b>Адрес ТТ</b></label>
-							<input type="text" name="tt-index[]">
-						</div>
-						<div class="project__index-col project__index-pen loc-part">
-							<label><b>Название ТТ</b></label>
-							<input type="text" name="tt-name[]">
-						</div>
-
-						<div class="project__index-col">
-							<div class="project__index-period">
-								<div class="project__index-arrow period-item">
-									<label class="project__lbl-sm"><b>Дата</b></label>
-									<span></span>
-									<div class="calendar" data-type="bdate">
-										<table>
-											<thead>
-											<tr>
-												<td class="mleft">‹
-												<td colspan="5" class="mname">
-												<td class="mright">›
-											</tr>
-											<tr>
-												<td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
-											</tr>
-											<tbody></tbody>
-										</table>
-									</div>
-									<input type="hidden" name="date-from[]">
-								</div>
-								<div class="project__index-arrow period-item">
-									<label class="project__lbl-xs"><b>по</b></label>
-									<span></span>
-									<div class="calendar" data-type="edate">
-										<table>
-											<thead>
-											<tr>
-												<td class="mleft">‹
-												<td colspan="5" class="mname">
-												<td class="mright">›
-											</tr>
-											<tr>
-												<td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
-											</tr>
-											<tbody></tbody>
-										</table>
-									</div>
-									<input type="hidden" name="date-to[]">
-								</div>
-							</div>
-						</div>
-						<div class="project__index-col">
-							<div class="project__index-period project__index-time">
-								<div class="project__index-pen">
-									<label class="project__lbl-lg"><b>Время работы</b></label>
-									<input type="text" name="time-from[]" class="time-inp">
-								</div>
-								<div class="project__index-pen">
-									<label><b>по</b></label>
-									<input type="text" name="time-to[]" class="time-inp">
-								</div>
-							</div>
-						</div>
-						<div class="project__index-col">
-							<div class="project__period-btn">
-								<span class="add-period-btn">Добавить период</span>
-							</div>
-						</div>
+				<div class="project__all-btns">
+					<div class="project__index-btns">
+						<span class="project__btn-green add-loc-btn">ДОБАВИТЬ ЕЩЕ ТТ</span>
+						<span class="project__btn-white" id="add-city-btn">ДОБАВИТЬ ГОРОД</span>
 					</div>
-					<div class="project__all-btns">
-						<div class="project__index-btns">
-							<span class="project__btn-green add-loc-btn">ДОБАВИТЬ ЕЩЕ ТТ</span>
-							<span class="project__btn-white" id="add-city-btn">ДОБАВИТЬ ГОРОД</span>
-						</div>
-						<span class="save-btn" id="save-index">СОХРАНИТЬ</span>
+					<span class="save-btn" id="save-index">СОХРАНИТЬ</span>
+				</div>
+			</div>
+			<?php
+			//
+			?>
+			<div id="invitation" class="project__module">
+				<h2 class="project__title">ПРИГЛАСИТЬ В ПРОЕКТ <span></span></h2>
+				<div class="project__body project__body-invite invitation-item" data-id="0">
+					<div>
+						<input type="text" name="inv-name[0][]" placeholder="Имя" class="invite-inp name">
+					</div>
+					<div>
+						<input type="text" name="inv-sname[0][]" placeholder="Фамилия" class="invite-inp sname">
+					</div>
+					<div>
+						<input type="text" name="inv-phone[0][]" placeholder="Телефон" class="invite-inp phone">
+					</div>
+					<div>
+						<input type="text" name="inv-email[0][]" placeholder="E-mail" class="invite-inp email">
 					</div>
 				</div>
-				<div id="invitation" class="project__module">
-					<h2 class="project__title">ПРИГЛАСИТЬ В ПРОЕКТ <span>«мерчендайзинг»</span></h2>
-					<div class="project__body project__body-invite">
-						<div class="invitation-item">
-							<label>
-								<input type="text" name="invite-name[]" placeholder="Имя">
-							</label>
-							<label>
-								<input type="text" name="invite-surname[]" placeholder="Фамилия">
-							</label>
-							<label>
-								<input type="text" name="invite-phone[]" placeholder="Телефон">
-							</label>
-							<label>
-								<input type="text" name="invite-email[]" placeholder="E-mail">
-							</label>
-						</div>
+				<div class="project__all-btns">
+					<div class="project__invite-btns">
+						<span class="project__btn-white" id="add-prsnl-btn" data-event="main">+ДОБАВИТЬ ЕЩЕ ПЕРСОНАЛ</span>
+						<span class="save-btn" id="save-prsnl-btn" data-event="main">СОХРАНИТЬ</span>
 					</div>
-					<div class="project__all-btns">
-						<div class="project__invite-btns">
-							<a href="#" class="project__btn-white">+ДОБАВИТЬ ЕЩЕ ПЕРСОНАЛ</a>
-							<a href="#" class="save-btn">СОХРАНИТЬ</a>
+				</div>
+			</div>
+
+			<?php
+			//
+			?>
+			<div id="addition" class="project__module">
+				<h2 class="project__title">ДОБАВИТЬ НОВЫЙ ПЕРСОНАЛ НА ПРОЕКТ <span></span></h2>
+				  <?php
+				    $viData['app_idies'] = array();
+				    foreach ($viData['workers']['promos'] as $key => $idus)
+				    	$viData['app_idies'][] = intval($idus['id_user']);
+				  ?>
+				  <script type="text/javascript">
+				    var arIdies = <?=json_encode($viData['app_idies'])?>;
+				    var AJAX_GET_PROMO = "<?=MainConfig::$PAGE_SERVICES_PUSH?>";
+				  </script>
+				  <div class='row'>
+				    <? //		FILTER 		?>
+				    <div class="filter__veil"></div>
+				    <div class='col-xs-12 col-sm-4 col-md-3'>
+				      <div class="filter__vis hidden-sm hidden-md hidden-lg hidden-xl">ФИЛЬТР</div>
+				      <div id="promo-filter">
+				        <div class='filter'>
+				          <div class='filter__item filter-cities'>
+				            <div class='filter__item-name opened'>Город</div>
+				            <div class='filter__item-content opened'>
+				                <div class="fav__select-cities" id="filter-city">
+									<ul class="filter-city-select">
+										<li data-id="0">
+											<input type="text" name="fc" class="city-inp" autocomplete="off">
+										</li>
+									</ul>
+									<ul class="select-list"></ul>
+				                </div>
+				            </div>
+				          </div>
+				          <div class='filter__item filter-posts'>
+				            <div class='filter__item-name opened'>Должность</div>
+				            <div class='filter__item-content opened'>
+				              <div class='right-box'>
+				                <?php
+				                $sel = 0;
+				                foreach($viData['workers']['posts'] as $p)
+				                  if($p['selected']) $sel++;
+				                ?>
+				                <input name='posts-all' type='checkbox' id="f-all-posts" class="filter__chbox-inp"<?=sizeof($viData['workers']['posts'])==$sel ?' checked':''?>>
+				                <label class='filter__chbox-lab' for="f-all-posts">Выбрать все / снять все</label>
+				                <?php foreach($viData['workers']['posts'] as $p): ?>
+				                  <input name='posts[]' value="<?=$p['id']?>" type='checkbox' id="f-post-<?=$p['id']?>" class="filter__chbox-inp" <?=$p['selected'] ? 'checked' : ''?>>
+				                  <label class='filter__chbox-lab' for="f-post-<?=$p['id']?>"><?=$p['name']?></label>
+				                <?php endforeach; ?>
+				              </div>
+				              <span class="more-posts">Показать все</span>
+				            </div>
+				          </div>
+				          <div class='filter__item filter-age'>
+				            <div class='filter__item-name opened'>Возраст</div>
+				            <div class='filter__item-content opened'>
+				              <div class="filter__age">
+				                <label>
+				                  <span>от</span>
+				                  <input name=af type='text' value="<?=$_POST['af']?>">
+				                </label>
+				                <label>
+				                  <span>до</span>
+				                  <input name='at' type='text' value="<?=$_POST['at']?>">
+				                </label> 
+				                <div class="filter__age-btn">ОК</div>
+				              </div>
+				            </div>
+				          </div>
+				          <div class='filter__item filter-sex'>
+				            <div class='filter__item-name opened'>Пол</div>
+				            <div class='filter__item-content opened'>
+				              <div class='right-box'>
+				                <input name='sm' type='checkbox' value='1' class="filter__chbox-inp" id="f-male"<?=($_POST['sm']?' checked':'')?>>
+				                <label class="filter__chbox-lab" for="f-male">Мужской</label>
+				                <input name='sf' type='checkbox' value='1' class="filter__chbox-inp" id="f-female"<?=($_POST['sf']?' checked':'')?>>
+				                <label class="filter__chbox-lab" for="f-female">Женский</label>
+				              </div>
+				            </div>
+				          </div>
+				          <div class='filter__item filter-additional'>
+				            <div class='filter__item-name opened'>Дополнительно</div>
+				            <div class='filter__item-content opened'>
+				              <div class='right-box'>
+				                <input name='mb' type='checkbox' value='1' class="filter__chbox-inp" id="f-med"<?=($_POST['mb']?' checked':'')?>>
+				                <label class="filter__chbox-lab" for="f-med">Наличие медкнижки</label>
+				                <input name='avto' type='checkbox' value='1' class="filter__chbox-inp" id="f-auto"<?=($_POST['avto']?' checked':'')?>>
+				                <label class="filter__chbox-lab" for="f-auto">Наличие автомобиля</label>
+				                <input name='smart' type='checkbox' value='1' class="filter__chbox-inp" id="f-smart"<?=($_POST['smart']?' checked':'')?>>
+				                <label class="filter__chbox-lab" for="f-smart">Наличие смартфона</label>
+				                <input name='cardPrommu' type='checkbox' value='1' class="filter__chbox-inp" id="f-pcard"<?=($_POST['cardPrommu']?' checked':'')?>>
+				                <label class="filter__chbox-lab" for="f-pcard">Банковская карта Prommu</label>
+				                <input name='card' type='checkbox' value='1' class="filter__chbox-inp" id="f-card"<?=($_POST['card']?' checked':'')?>>
+				                <label class="filter__chbox-lab" for="f-card">Банковская карта</label>
+				              </div>
+				            </div>
+				          </div>
+				          </div>
+				      </div>
+				    </div>
+				    <?php //    CONTENT 		?>
+				    <div class='col-xs-12 col-sm-8 col-md-9'>
+						<div id="workers-form">
+							<span class="workers-form__cnt">Выбрано соискателей: <span id="mess-wcount">0</span></span>
+							<div class="service__switch">
+								<span class="service__switch-name">Выбрать всех</span>
+								<input type="checkbox" name="ntf-push" id="all-workers" value="1"/>
+								<label for="all-workers">
+									<span data-enable="вкл." data-disable="выкл."></span>
+								</label>
+							</div>
+							<span class="workers-form-btn off" id="workers-btn" data-event="main">СОХРАНИТЬ</span>
+							<input type="hidden" name="users" id="mess-workers">
+							<input type="hidden" name="users-cnt" id="mess-wcount-inp" value="0">
 						</div>
-					</div>
+				      <div id="promo-content">
+				        <div class='questionnaire'>
+				          <div>
+				            <?=$this->ViewModel->declOfNum($viData['app_count'], array('Найдена', 'Найдено', 'Найдено'))?>
+				            <b><?=$viData['app_count']?></b>
+				            <?=$this->ViewModel->declOfNum($viData['app_count'], array('Анкета', 'Анкеты', 'Анкет'))?>
+				          </div>
+				        </div>
+				        <div class='row vacancy table-view'>
+				          <?if( $viData['workers']['promo'] ):?>
+				            <?$i=1;?>
+				            <?foreach ($viData['workers']['promo'] as $item):?>
+				              <div class='col-xs-12 col-sm-6 col-md-4'>
+				                <?
+				                  $G_NOLIKES = 1;
+				                  $G_ALT = 'Соискатель ' . $item['firstname'] . ' ' . $item['lastname'] . ' prommu.com';
+				                  $G_LOGO_LINK = MainConfig::$PAGE_PROFILE_COMMON . DS . $item['id_user'];
+				                  if($item['sex'] === '1'){
+				                    $G_LOGO_SRC = DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!$item['photo'] ? MainConfig::$DEF_LOGO : $item['photo'] . '400.jpg');
+				                  }
+				                  else 
+				                    $G_LOGO_SRC = DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!$item['photo'] ? MainConfig::$DEF_LOGO_F : $item['photo'] . '400.jpg');
+				                  $G_COMP_FIO = $item['firstname'] . ' ' . $item['lastname'] . ', ' . $item['age'];
+				                  $G_RATE_POS = $item['rate'];
+				                  $G_RATE_NEG = $item['rate_neg'];
+				                  $G_COMMENTS_POS = $item['comm'];
+				                  $G_COMMENTS_NEG = $item['commneg'];
+				                  $G_TMPL_PH1 = '';
+				                  if( $item['ishasavto'] === '1' ) $G_TMPL_PH1 = "<div class='ico ico-avto js-g-hashint' title='Есть автомобиль'></div>";
+				                  if( $item['ismed'] === '1' ) $G_TMPL_PH1 .= '<div class="ico ico-med js-g-hashint" title="Есть медкнижка"></div>';
+				                  $G_TMPL_PH1 = "<div class='med-avto'>{$G_TMPL_PH1}</div>";
+				                  include $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user' . DS . MainConfig::$VIEWS_COMM_LOGO_TPL . ".php";
+				                ?>
+				                <input type="checkbox" name="promo[]" value="<?=$item['id_user']?>" class="promo_inp" id="promo<?=$item['id_user']?>">
+				                <label class="smss-promo__label" for="promo<?=$item['id_user']?>"></label>
+				              </div>
+				              <?if($i % 2 == 0):?>
+				                <div class="clear visible-sm"></div>
+				              <?endif?>
+				              <?if( $i % 3 == 0 ):?>
+				                <div class="clear visible-md visible-lg"></div>
+				              <?endif?>
+				              <?$i++;?>
+				            <?endforeach?>
+				          <?else:?>
+				            <div class="col-xs-12">Нет подходящих соискателей</div>
+				          <?endif;?>
+				        </div>
+				        <br>
+				        <br>
+				        <div class='paging-wrapp hidden-xs'>
+				        <?php
+				          $this->widget('CLinkPager', array(
+				              'pages' => $viData['pages'],
+				              'htmlOptions' => array('class' => 'paging-wrapp'),
+				              'firstPageLabel' => '1',
+				              'prevPageLabel' => 'Назад',
+				              'nextPageLabel' => 'Вперед',
+				              'header' => ''
+				            )
+				          )?>
+				        </div>
+				      </div>
+				    </div>
 				</div>
 			</div>
 		</form>
@@ -346,4 +524,20 @@
 </div>
 <div class="hidden" id="item-col">
 	<div class="project__index-col empty"></div>
+</div>
+<div class="hidden" id="invitation-content">
+	<div class="project__body project__body-invite invitation-item" data-id="">
+		<div>
+			<input type="text" name="" placeholder="Имя" class="invite-inp name">
+		</div>
+		<div>
+			<input type="text" name="" placeholder="Фамилия" class="invite-inp sname">
+		</div>
+		<div>
+			<input type="text" name="" placeholder="Телефон" class="invite-inp phone">
+		</div>
+		<div>
+			<input type="text" name="" placeholder="E-mail" class="invite-inp email">
+		</div>
+	</div>
 </div>

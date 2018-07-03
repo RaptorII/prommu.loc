@@ -757,11 +757,30 @@ class Auth
 
         $passMd5 = $inParams['passmd5'] ?: md5($passw);
 
-        $user = User::model()->find(array(
+        $user = 0;
+        if($usId>0) {
+            $user = User::model()->find(array(
+                'select' => 'id_user, status, passw, isblocked',
+                'condition' => "id_user = :idus",
+                'params'=>array(':idus' => $usId),
+            ));
+        }
+        else {
+            $user = User::model()->find(array(
+                'select' => 'id_user, status, passw, isblocked',
+                'condition' => "email = :email OR login = :email",
+                'params'=>array(':email' => $login),
+            ));            
+        }
+
+        /*
+            $user = User::model()->find(array(
                 'select' => 'id_user, status, passw, isblocked',
                 'condition' => "email = :email OR id_user = :idus OR login = :email",
                 'params'=>array(':email' => $login, ':idus' => $usId),
             ));
+        */
+            
          //'condition' => "email = :email OR id_user = :idus OR login = :login",
                 //'params'=>array(':email' => $login, ':idus' => $usId, ':login' => $login),
 //        $sql = "select id_user, status, email, passw from user where email = '$login' and passw = md5('$passw') OR id_user = {$usId} limit 1;";
