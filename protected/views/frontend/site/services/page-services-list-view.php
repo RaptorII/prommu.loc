@@ -82,7 +82,7 @@ if(!(MOBILE_DEVICE && !SHOW_APP_MESS)): // optimization ?>
 					</a>
 				</div>
 				<div class="services__item">
-					<a href="javascript:void(0)<?//=MainConfig::$PAGE_SERVICES_CARD_PROMMU?>" class="services__item-block" data-disable="1">
+					<a href="<?//javascript:void(0)?><?=MainConfig::$PAGE_SERVICES_CARD_PROMMU?>" class="services__item-block" <?//data-disable="1"?>>
 						<span class="services__item-circle">
 							<span class="services__item-name">Корпоративная<br>карта "Промму"</span>
 							<span class="services__item-img ico9"></span>
@@ -148,7 +148,7 @@ if(!(MOBILE_DEVICE && !SHOW_APP_MESS)): // optimization ?>
 					</a>
 				</div>
 				<div class="services__item">
-					<a href="javascript:void(0)<?//=MainConfig::$PAGE_SERVICES_CARD_PROMMU?>" class="services__item-block" data-disable="1">
+					<a href="<?//javascript:void(0)?><?=MainConfig::$PAGE_SERVICES_CARD_PROMMU?>" class="services__item-block" <?//data-disable="1"?>>
 						<span class="services__item-circle">
 							<span class="services__item-name">Корпоративная<br>карта "Промму"</span>
 							<span class="services__item-img ico13"></span>
