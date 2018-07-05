@@ -280,6 +280,15 @@ var ProjectPage = (function () {
                 case 'bad-phone':
                     body = 'Неправильное количество символов в телефоне';  
                     break;
+                case 'city-del':
+                    body = 'Невозможно удалить единственный город';  
+                    break;
+                case 'loc-del':
+                    body = 'Невозможно удалить единственную ТТ города';  
+                    break;
+                case 'period-del':
+                    body = 'Невозможно удалить единственный период ТТ';  
+                    break;
                 default: break;  
             }
         }
@@ -295,11 +304,11 @@ var ProjectPage = (function () {
                     break;
                 case 'add-period':
                     body = 'Перед добавлением нового периода необходимо '
-                        + 'заполнить все поля у существующих периодов';  
+                        + 'заполнить все пустые поля';  
                     break;
                 case 'add-tt':
                     body = 'Перед добавлением ТТ необходимо '
-                        + 'заполнить все поля у существующих ТТ';  
+                        + 'заполнить все пустые поля';  
                     break;
                 case 'add-notif':
                     body = 'Перед добавлением нового приглашения необходимо '
@@ -307,6 +316,9 @@ var ProjectPage = (function () {
                     break;
                 case 'addition':
                     body = 'Не было выбрано ни одного соискателя';  
+                    break;
+                case 'save-program':
+                    body = 'Перед сохранение необходимо заполнить все поля';  
                     break;
                 default: break;  
             }            
@@ -338,12 +350,14 @@ var ProjectAddIndexProg = (function () {
 
         self.Project = project;
 
-        $('#save-index').click(function(){
-            let params = $('#new-project').serializeArray();
-            console.log(params);
-        });
+        $('#save-index').click( function(){ self.saveProgram(this) });
         $('#index').on('click', '.add-loc-btn', function(){ self.addLocation(this) });
         $('#index').on('click', '.add-period-btn', function() { self.addPeriod(this) });
+        $('#index').on(
+            'click',
+            '.city-del,.loc-del,.period-del',
+            function(){ self.removeElement(this) }
+        );
         // работа с городами
         $('#index').on('input', '.city-inp', function() { self.inputCity(this) });
         $('#index').on('focus', '.city-inp', function() { self.focusCity(this) });
@@ -379,14 +393,16 @@ var ProjectAddIndexProg = (function () {
     ProjectAddIndexProg.prototype.addCity = function () {
         let self = this,
             arCities = $('#index .city-item'),
-            newCity = $('#city-content').html(),
-            empty = self.checkFields(arCities);
+            content = $('#city-content').html(),
+            empty = self.checkFields();
 
         if (!empty) {
-            $(arCities[arCities.length-1]).after(newCity);
-            newCity = $('#index .city-item:eq(-1)');
-            $(newCity).append($('#loc-content').html());
-            let arTime = $('#index .city-item:eq(-1)').find('.time-inp');
+            $(arCities[arCities.length-1]).after(content);
+            content = $('#index .city-item:eq(-1)');
+            $(content).append($('#loc-content').html());
+            content = $(content).find('.loc-item:eq(-1)');
+            $(content).append($('#period-content').html());
+            let arTime = $(content).find('.time-inp');
             $(arTime).mask('99:99');
         }
         else
@@ -486,27 +502,64 @@ var ProjectAddIndexProg = (function () {
                     let v = select.text();
                     inpText.val(v).hide();
                     select.show();
-                    list.fadeOut();
                 }
                 else { // ввод нового города
                     let v = $(e).text();
+
                     main.dataset.city = data.id;
                     input.val(data.id);
                     inpText.val(v).hide();
                     select.html(v+'<b></b>').show();
-                    list.fadeOut();
 
                     if(data.metro==='1' && !$(main).find('.metro-item').length) {
                         let mContent = $('#metro-content').html(),
                             arRows = $(main).find('.loc-item .project__index-row');
 
-                        for (var i = 0, n = arRows.length; i < n; i++)
+                        for (var i = 0, n = arRows.length; i < n; i++) { 
                             $(arRows[i]).prepend(mContent);
+                            /*let loc = $(arRows[i]).closest('.loc-item')[0],
+                                inp = $(arRows[i]).find('input')[0],
+                                name = '[' + data.id + '][' + loc.dataset.id + ']';
+                            $(inp).attr('name','metro' + name);*/
+                        }
                     }
                     else if($(main).find('.metro-item').length) {
                         $(main).find('.metro-item').remove();
                     }
+                    //
+                    let arLocs = $(main).find('.loc-item'),
+                        arPers = $(main).find('.period-item'),
+                        name = '';
+
+                    for (let i = 0, n = arLocs.length; i < n; i++) {
+                        let idL = arLocs[i].dataset.id,
+                            arLocInp = $(arLocs[i]).find('.loc-field input');
+
+                        name = '[' + data.id + '][' + idL + ']';
+                        if(data.metro==='1') {
+                            $(arLocInp[1]).attr('name','metro' + name);
+                            $(arLocInp[2]).attr('name','lindex' + name);
+                            $(arLocInp[3]).attr('name','lname' + name);
+                        }
+                        else {
+                            $(arLocInp[0]).attr('name','lindex' + name);
+                            $(arLocInp[1]).attr('name','lname' + name);                           
+                        }
+
+                        for (let i = 0, n = arPers.length; i < n; i++) {
+                            let idP = arPers[i].dataset.id,
+                                arPerInp = $(arPers[i]).find('input');
+
+                            name += '[' + idP + ']';
+                            $(arPerInp[0]).attr('name','bdate' + name);
+                            $(arPerInp[1]).attr('name','edate' + name);
+                            $(arPerInp[2]).attr('name','btime' + name);
+                            $(arPerInp[3]).attr('name','etime' + name);
+                        }
+                    }
+
                 }
+                list.fadeOut();
             }
             else{
                 let main = $e.is('.city-field') ? e : $e.closest('.city-field')[0];
@@ -660,21 +713,46 @@ var ProjectAddIndexProg = (function () {
     ProjectAddIndexProg.prototype.addLocation = function (e) {
         let self = this,
             main = $(e).closest('.city-item')[0],
+            idC = main.dataset.city,
             arLoc = $(main).find('.loc-item'),
             newLoc = $('#loc-content').html(),
             newPeriod = $('#period-content').html(),
-            empty = self.checkFields(arLoc);
+            empty = self.checkFields(),
+            arLocInp, arPerInp, row, arTime, idL;
 
         if (!empty) {
             $(main).append(newLoc);
-            newLoc = $(main).find('.loc-item:eq(-1)');
+            idL = arLoc[arLoc.length-1].dataset.id;
+            idL = Number(idL)+1;
+            arLoc = $(main).find('.loc-item')
+            newLoc = arLoc[arLoc.length-1];
+            newLoc.dataset.id = idL;
+            name = '[' + idC + '][' + idL + ']';
+
             if($(main).find('.metro-item').length) {// если есть метро
-                let row = $(newLoc).find('.project__index-row:eq(0)'),
-                    newMetro = $('#metro-content').html();
-                $(row).prepend(newMetro);
+                row = $(newLoc).find('.loc-field');
+                $(row).prepend($('#metro-content').html());
+                arLocInp = $(newLoc).find('.loc-field input');
+                $(arLocInp[1]).attr('name','metro' + name);
+                $(arLocInp[2]).attr('name','lindex' + name);
+                $(arLocInp[3]).attr('name','lname' + name);
+
+            }
+            else {
+                arLocInp = $(newLoc).find('.loc-field input');
+                $(arLocInp[0]).attr('name','lindex' + name);
+                $(arLocInp[1]).attr('name','lname' + name);
             }
             $(newLoc).append(newPeriod);
-            let arTime = $(newLoc).find('.time-inp');
+            arPerInp = $(newLoc).find('.period-item input');
+
+            name += '[0]';
+            $(arPerInp[0]).attr('name','bdate' + name);
+            $(arPerInp[1]).attr('name','edate' + name);
+            $(arPerInp[2]).attr('name','btime' + name);
+            $(arPerInp[3]).attr('name','etime' + name);
+
+            arTime = $(newLoc).find('.time-inp');
             $(arTime).mask('99:99');
         }
         else
@@ -860,17 +938,26 @@ var ProjectAddIndexProg = (function () {
     //      Добавление периода
     ProjectAddIndexProg.prototype.addPeriod = function (e) {
         let self = this,
-            empty = false,
+            empty = self.checkFields(),
             main = $(e).closest('.loc-item')[0],
-            arInputs = $(main).find('.period-item input'),
-            newPeriod = $('#period-content').html();
-
-        for (let i = 0, l = arInputs.length; i < l; i++)
-            if( !arInputs[i].value.length )
-                    empty = true;
+            idL = main.dataset.id,
+            city = $(e).closest('.city-item')[0],
+            idC = city.dataset.city,
+            newPeriod = $('#period-content').html(),
+            arPerInp, arPers, idP, name;
 
         if(!empty) {
             $(main).append(newPeriod);
+            arPers = $(main).find('.period-item');
+            idP = arPers[arPers.length-2].dataset.id;
+            idP = (Number(idP)+1);
+            arPers[arPers.length-1].dataset.id = idP;
+            arPerInp = $(arPers[arPers.length-1]).find('input');
+            name = '[' + idC + '][' + idL + '][' + idP + ']';
+            $(arPerInp[0]).attr('name','bdate' + name);
+            $(arPerInp[1]).attr('name','edate' + name);
+            $(arPerInp[2]).attr('name','btime' + name);
+            $(arPerInp[3]).attr('name','etime' + name);
             $(main).find('.time-inp').mask('99:99');
         }
         else 
@@ -908,11 +995,13 @@ var ProjectAddIndexProg = (function () {
         if(isNaN(arT1[0]) || isNaN(arT1[1]) || isNaN(arT2[0]) || isNaN(arT2[1]))
             return false;
 
-        if( (arT1[0] > arT2[0]) || (arT1[1] > arT2[1]) ) {
-            self.Project.showPopup('error', 'time');
-            $(arTimes[t]).val('');
-        }
-        if( (arT1[0] == arT2[0]) && (arT1[1] == arT2[1]) ) {
+        if( 
+            (arT1[0] > arT2[0]) 
+            || 
+            ( (arT1[0] == arT2[0]) && (arT1[1] > arT2[1]) )
+            ||
+            ( (arT1[0] == arT2[0]) && (arT1[1] == arT2[1]) )
+        ) {
             self.Project.showPopup('error', 'time');
             $(arTimes[t]).val('');
         }
@@ -924,8 +1013,9 @@ var ProjectAddIndexProg = (function () {
         $(e).val(arT[0] + ':' + arT[1]);
     }
     //      Проверка заполненности полей
-    ProjectAddIndexProg.prototype.checkFields = function (arr) {
-        let empty = false;
+    ProjectAddIndexProg.prototype.checkFields = function () {
+        let arr = $('#index .city-item'),
+            empty = false;
 
         for (let i = 0, l = arr.length; i < l; i++) {
             let arInputs = $(arr[i]).find('input');
@@ -936,9 +1026,50 @@ var ProjectAddIndexProg = (function () {
                     empty = true;
             }
         }
-        //empty = false;
         return empty;
     }
+    //      удаление элементов
+    ProjectAddIndexProg.prototype.removeElement = function (e) {
+        let self = this,
+            $e = $(e),
+            error = -1,
+            arErr = ['city-del','loc-del','period-del'],
+            arItems, item, main;
+
+        if($e.hasClass('city-del')) {
+            arItems = $('#index .city-item');
+            item = $e.closest('.city-item')[0];
+            error = arItems.length>1 ? -1 : 0;
+        }
+        else if($e.hasClass('loc-del')) {
+            main = $e.closest('.city-item')[0]
+            arItems = $(main).find('.loc-item');
+            item = $e.closest('.loc-item')[0];
+            error = arItems.length>1 ? -1 : 1;
+        }
+        else if($e.hasClass('period-del')) {
+            main = $e.closest('.loc-item')[0]
+            arItems = $(main).find('.period-item');
+            item = $e.closest('.period-item')[0];
+            error = arItems.length>1 ? -1 : 2;         
+        }
+
+        if(error>=0)
+            self.Project.showPopup('error',arErr[error]);
+        else {
+            $(item).fadeOut();
+            setTimeout(function(){ $(item).remove() },500);
+        }
+    }
+    // сохранение программы
+    ProjectAddIndexProg.prototype.saveProgram = function (e) {
+        let self = this;
+
+        !self.checkFields() 
+        ? self.Project.showModule(e)
+        : self.Project.showPopup('notif','save-program');
+    }
+    
     return ProjectAddIndexProg;
 }());
 /*

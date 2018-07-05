@@ -51,91 +51,90 @@
 			?>
 			<div id="index" class="project__module" data-country="1">
 				<h2 class="project__title">ДОБАВИТЬ АДРЕСНУЮ ПРОГРАММУ В ПРОЕКТ <span></span></h2>
-				<div class="project__body" data-city="">
-					<div class="project__index-col">
-						<label class="project__lbl-sm"><b>Город</b></label>
-						<div class="city-field project__index-arrow">
-							<span class="city-select"></span>
-							<input type="text" name="c" class="city-inp" autocomplete="off">
-							<ul class="select-list"></ul>
-							<input type="hidden" name="city[]" value="">
-						</div>
-					</div>
-					<div class="project__index-col project__index-pen loc-part">
-						<label class="project__lbl-lg"><b>Адрес ТТ</b></label>
-						<input type="text" name="tt-index[]">
-					</div>
-					<div class="project__index-col project__index-pen loc-part">
-						<label><b>Название ТТ</b></label>
-						<input type="text" name="tt-name[]">
-					</div>
-
-					<div class="project__index-col">
-						<div class="project__index-period">
-							<div class="project__index-arrow period-item">
-								<label class="project__lbl-sm"><b>Дата</b></label>
-								<span></span>
-								<div class="calendar" data-type="bdate">
-									<table>
-										<thead>
-										<tr>
-											<td class="mleft">‹
-											<td colspan="5" class="mname">
-											<td class="mright">›
-										</tr>
-										<tr>
-											<td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
-										</tr>
-										<tbody></tbody>
-									</table>
-								</div>
-								<input type="hidden" name="date-from[]">
-							</div>
-							<div class="project__index-arrow period-item">
-								<label class="project__lbl-xs"><b>по</b></label>
-								<span></span>
-								<div class="calendar" data-type="edate">
-									<table>
-										<thead>
-										<tr>
-											<td class="mleft">‹
-											<td colspan="5" class="mname">
-											<td class="mright">›
-										</tr>
-										<tr>
-											<td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
-										</tr>
-										<tbody></tbody>
-									</table>
-								</div>
-								<input type="hidden" name="date-to[]">
+				<div class="project__index">
+					<div class="city-item" data-city="">
+						<span class="project__index-name">Город</span>
+						<span class="city-del">&#10006</span>
+						<span class="add-loc-btn">Добавить еще ТТ</span>
+						<div class="project__index-row">
+							<label class="project__index-lbl">Город</label>
+							<div class="city-field project__index-arrow">
+								<span class="city-select"></span>
+								<input type="text" name="c" class="city-inp" autocomplete="off">
+								<ul class="select-list"></ul>
+								<input type="hidden" name="city[]" value="">
 							</div>
 						</div>
-					</div>
-					<div class="project__index-col">
-						<div class="project__index-period project__index-time">
-							<div class="project__index-pen">
-								<label class="project__lbl-lg"><b>Время работы</b></label>
-								<input type="text" name="time-from[]" class="time-inp">
-							</div>
-							<div class="project__index-pen">
-								<label><b>по</b></label>
-								<input type="text" name="time-to[]" class="time-inp">
-							</div>
-						</div>
-					</div>
-					<div class="project__index-col">
-						<div class="project__period-btn">
+						<div class="loc-item" data-id="0">
+							<span class="project__index-name">Локация</span>
+							<span class="loc-del">&#10006</span>
 							<span class="add-period-btn">Добавить период</span>
+							<div class="project__index-row loc-field">
+								<div class="project__index-pen">
+									<label class="project__index-lbl">Адрес ТТ</label>
+									<input type="text" name="lindex" autocomplete="off">
+								</div>
+								<div class="project__index-pen">
+									<label class="project__index-lbl">Название ТТ</label>
+									<input type="text" name="lname" autocomplete="off">
+								</div>
+							</div>
+							<div class="period-item" data-id="0">
+								<span class="project__index-name">Период</span>
+								<span class="period-del">&#10006</span>
+								<div class="period-field">
+									<label class="project__index-lbl">Дата</label>
+									<span></span>
+									<div class="calendar" data-type="bdate">
+										<table>
+											<thead>
+											<tr>
+												<td class="mleft">‹
+												<td colspan="5" class="mname">
+												<td class="mright">›
+											</tr>
+											<tr>
+												<td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
+											</tr>
+											<tbody></tbody>
+										</table>
+									</div>
+									<input type="hidden" name="bdate">
+								</div>
+								<div class="period-field">
+									<label class="project__index-lbl">по</label>
+									<span></span>
+									<div class="calendar" data-type="edate">
+										<table>
+											<thead>
+											<tr>
+												<td class="mleft">‹
+												<td colspan="5" class="mname">
+												<td class="mright">›
+											</tr>
+											<tr>
+												<td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
+											</tr>
+											<tbody></tbody>
+										</table>
+									</div>
+									<input type="hidden" name="edate">
+								</div>
+								<div class="project__index-pen time-item">
+									<label class="project__index-lbl">Время работы</label>
+									<input type="text" name="btime" class="time-inp">
+								</div>
+								<div class="project__index-pen time-item">
+									<label class="project__index-lbl">по</label>
+									<input type="text" name="etime" class="time-inp">
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 				<div class="project__all-btns">
-					<div class="project__index-btns">
-						<span class="project__btn-green add-loc-btn">ДОБАВИТЬ ЕЩЕ ТТ</span>
-						<span class="project__btn-white" id="add-city-btn">ДОБАВИТЬ ГОРОД</span>
-					</div>
-					<span class="save-btn" id="save-index">СОХРАНИТЬ</span>
+					<span class="project__btn-white" id="add-city-btn">ДОБАВИТЬ ГОРОД</span>
+					<span class="save-btn" id="save-index" data-event="main">СОХРАНИТЬ</span>
 				</div>
 			</div>
 			<?php
@@ -164,7 +163,6 @@
 					</div>
 				</div>
 			</div>
-
 			<?php
 			//
 			?>
@@ -357,14 +355,12 @@
 */
 ?>
 <div class="hidden" id="city-content">
-	<div class="project__all-btns">
-		<div class="project__index-btns">
-			<span class="project__btn-green add-loc-btn">ДОБАВИТЬ ЕЩЕ ТТ</span>
-		</div>
-	</div>
-	<div class="project__body" data-city="">
-		<div class="project__index-col">
-			<label class="project__lbl-sm"><b>Город</b></label>
+	<div class="city-item" data-city="">
+		<span class="project__index-name">Город</span>
+		<span class="city-del">&#10006</span>
+		<span class="add-loc-btn">Добавить еще ТТ</span>
+		<div class="project__index-row">
+			<label class="project__index-lbl">Город</label>
 			<div class="city-field project__index-arrow">
 				<span class="city-select"></span>
 				<input type="text" name="c" class="city-inp" autocomplete="off">
@@ -372,145 +368,80 @@
 				<input type="hidden" name="city[]" value="">
 			</div>
 		</div>
-		<div class="project__index-col project__index-pen loc-part">
-			<label class="project__lbl-lg"><b>Адрес ТТ</b></label>
-			<input type="text" name="tt-index[]">
-		</div>
-		<div class="project__index-col project__index-pen loc-part">
-			<label><b>Название ТТ</b></label>
-			<input type="text" name="tt-name[]">
-		</div>
-
-		<div class="project__index-col">
-			<div class="project__index-period">
-				<div class="project__index-arrow period-item">
-					<label class="project__lbl-sm"><b>Дата</b></label>
-					<span></span>
-					<div class="calendar" data-type="bdate">
-						<table>
-							<thead>
-							<tr>
-								<td class="mleft">‹
-								<td colspan="5" class="mname">
-								<td class="mright">›
-							</tr>
-							<tr>
-								<td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
-							</tr>
-							<tbody></tbody>
-						</table>
-					</div>
-					<input type="hidden" name="date-from[]">
-				</div>
-				<div class="project__index-arrow period-item">
-					<label class="project__lbl-xs"><b>по</b></label>
-					<span></span>
-					<div class="calendar" data-type="edate">
-						<table>
-							<thead>
-							<tr>
-								<td class="mleft">‹
-								<td colspan="5" class="mname">
-								<td class="mright">›
-							</tr>
-							<tr>
-								<td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
-							</tr>
-							<tbody></tbody>
-						</table>
-					</div>
-					<input type="hidden" name="date-to[]">
-				</div>
-			</div>
-		</div>
-		<div class="project__index-col">
-			<div class="project__index-period project__index-time">
-				<div class="project__index-pen">
-					<label class="project__lbl-lg"><b>Время работы</b></label>
-					<input type="text" name="time-from[]" class="time-inp">
-				</div>
-				<div class="project__index-pen">
-					<label><b>по</b></label>
-					<input type="text" name="time-to[]" class="time-inp">
-				</div>
-			</div>
-		</div>
-		<div class="project__index-col">
-			<div class="project__period-btn">
-				<span class="add-period-btn">Добавить период</span>
-			</div>
-		</div>
 	</div>
 </div>
 <div class="hidden" id="loc-content">
-	<div class="project__index-col project__index-pen loc-part">
-		<label class="project__lbl-lg"><b>Адрес ТТ</b></label>
-		<input type="text" name="tt-index[]">
-	</div>
-	<div class="project__index-col project__index-pen loc-part">
-		<label><b>Название ТТ</b></label>
-		<input type="text" name="tt-name[]">
-	</div>
-</div>
-<div class="hidden" id="period-content">
-	<div class="project__index-col">
-		<div class="project__index-period">
-			<div class="project__index-arrow period-item">
-				<label class="project__lbl-sm"><b>Дата</b></label>
-				<span></span>
-				<div class="calendar" data-type="bdate">
-					<table>
-						<thead>
-						<tr>
-							<td class="mleft">‹
-							<td colspan="5" class="mname">
-							<td class="mright">›
-						</tr>
-						<tr>
-							<td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
-						</tr>
-						<tbody></tbody>
-					</table>
-				</div>
-				<input type="hidden" name="date-from[]">
+	<div class="loc-item" data-id="0">
+		<span class="loc-del">&#10006</span>
+		<span class="project__index-name">Локация</span>
+		<span class="add-period-btn">Добавить период</span>
+		<div class="project__index-row loc-field">
+			<div class="project__index-pen">
+				<label class="project__index-lbl">Адрес ТТ</label>
+				<input type="text" name="lindex" autocomplete="off">
 			</div>
-			<div class="project__index-arrow period-item">
-				<label class="project__lbl-xs"><b>по</b></label>
-				<span></span>
-				<div class="calendar" data-type="edate">
-					<table>
-						<thead>
-						<tr>
-							<td class="mleft">‹
-							<td colspan="5" class="mname">
-							<td class="mright">›
-						</tr>
-						<tr>
-							<td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
-						</tr>
-						<tbody></tbody>
-					</table>
-				</div>
-				<input type="hidden" name="date-to[]">
+			<div class="project__index-pen">
+				<label class="project__index-lbl">Название ТТ</label>
+				<input type="text" name="lname" autocomplete="off">
 			</div>
 		</div>
 	</div>
-	<div class="project__index-col">
-		<div class="project__index-period project__index-time">
-			<div class="project__index-pen">
-				<label class="project__lbl-lg"><b>Время работы</b></label>
-				<input type="text" name="time-from[]" class="time-inp">
+</div>
+<div class="hidden" id="period-content">
+	<div class="period-item" data-id="0">
+		<span class="period-del">&#10006</span>
+		<span class="project__index-name">Период</span>
+		<div class="period-field">
+			<label class="project__index-lbl">Дата</label>
+			<span></span>
+			<div class="calendar" data-type="bdate">
+				<table>
+					<thead>
+					<tr>
+						<td class="mleft">‹
+						<td colspan="5" class="mname">
+						<td class="mright">›
+					</tr>
+					<tr>
+						<td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
+					</tr>
+					<tbody></tbody>
+				</table>
 			</div>
-			<div class="project__index-pen">
-				<label><b>по</b></label>
-				<input type="text" name="time-to[]" class="time-inp">
+			<input type="hidden" name="bdate">
+		</div>
+		<div class="period-field">
+			<label class="project__index-lbl">по</label>
+			<span></span>
+			<div class="calendar" data-type="edate">
+				<table>
+					<thead>
+					<tr>
+						<td class="mleft">‹
+						<td colspan="5" class="mname">
+						<td class="mright">›
+					</tr>
+					<tr>
+						<td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
+					</tr>
+					<tbody></tbody>
+				</table>
 			</div>
+			<input type="hidden" name="edate">
+		</div>
+		<div class="project__index-pen time-item">
+			<label class="project__index-lbl">Время работы</label>
+			<input type="text" name="btime" class="time-inp">
+		</div>
+		<div class="project__index-pen time-item">
+			<label class="project__index-lbl">по</label>
+			<input type="text" name="etime" class="time-inp">
 		</div>
 	</div>
 </div>
 <div class="hidden" id="metro-content">
-	<div class="project__index-col metro-item">
-		<label class="project__lbl-sm"><b>Метро</b></label>
+	<div class="metro-item">
+		<label class="project__index-lbl">Метро</label>
 		<div class="metro-field project__index-arrow">
 			<ul class="metro-select">
 				<li data-id="0">
@@ -518,12 +449,9 @@
 				</li>
 			</ul>
 			<ul class="select-list"></ul>
-			<input type="hidden" name="metro[]" value="">
+			<input type="hidden" name="metro" value="">
 		</div>
 	</div>
-</div>
-<div class="hidden" id="item-col">
-	<div class="project__index-col empty"></div>
 </div>
 <div class="hidden" id="invitation-content">
 	<div class="project__body project__body-invite invitation-item" data-id="">

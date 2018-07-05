@@ -21,26 +21,6 @@
 	border: 1px solid red;
 	box-shadow: 0px 0px 5px 0px red;
 }
-/*
-.project__tabs{
-	padding: 10px 0;
-	margin-bottom: 20px;
-	text-align: center;
-	border-bottom: 1px solid #cecece;
-}
-.project__tabs a{
-	padding: 0 10px;
-}
-#DiContent .project__tabs a{ 
-	display: block;
-	padding: 5px 10px;
-	color: #212121;
-}
-#DiContent .project__tabs a:hover,
-#DiContent .project__tabs a.active{
-	color: #abb820;
-	text-decoration: underline;
-}*/
 .project__name{
 	margin-bottom: 20px
 }
@@ -209,12 +189,17 @@
 }
 .project__index-time>div:first-child{ width: 60% }
 .project__index-time>div:last-child{ width: 35% }
-.add-period-btn{
-	width: 145px;
+.add-period-btn,
+.add-loc-btn{
+	width: 100%;
+	max-width: 140px;
+	position: absolute;
+	bottom: -28px;
+	right: -1px;
 	display: inline-block;
 	text-align: center;
-	border: 1px solid #abb92a;
-	color: #abb92a;
+	background: #abb92a;
+	color: #ffffff;
 	line-height: 28px;
 	cursor: pointer;
 	-webkit-transition: all ease-out .3s;
@@ -222,9 +207,9 @@
 	-o-transition: all ease-out .3s;
 	transition: all ease-out .3s;
 }
-.add-period-btn:hover{
-	background: #abb92a;
-	color: #ffffff;
+.add-period-btn:hover,
+.add-loc-btn:hover{
+	background: #ff8300;
 }
 .project__index-period span{ 
 	width: 100%;
@@ -272,6 +257,7 @@
 	border: 1px solid #ff8300;
 }
 #DiContent .project__all-btns .project__btn-white{
+	padding: 0 5px;
 	border: 1px solid #abb820;
 	color: #abb820;
 }
@@ -338,9 +324,10 @@
 }
 .city-field{ padding-right: 25px }
 #DiContent #index .city-field input{
-	height: 28px;
+	height: 30px;
 	border: none;
 	background: transparent;
+	padding: 0 20px 0 15px;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -609,16 +596,122 @@
 	display: none;
 }
 /*
+*
+*/
+.project__index{
+	width: 100%;
+	max-width: 600px;
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	margin: 0 auto;
+	padding: 25px 10px;
+	background: #f5f5f5;
+}
+.project__index-row{
+	width: 100%;
+	display: flex;
+	margin-bottom: 15px;
+}
+.city-item, .loc-item, .period-item{
+	width: 100%;
+	padding: 25px 25px 10px 10px;
+	margin-bottom: 43px;
+	border: 1px solid #abb820;
+	display: flex;
+	flex-wrap: wrap;
+	position: relative;
+}
+.period-item{
+	justify-content: space-between;
+	margin-bottom: 15px;
+}
+.loc-item .project__index-pen, .metro-item{
+	display: flex;
+}
+.loc-item>.project__index-row .project__index-pen:first-child,
+.metro-item:first-child{
+	margin-left: 0;
+}
+#index .loc-item .project__index-pen input{
+	padding: 0 20px 0 15px;
+}
+#index .project__index-lbl{
+	padding: 5px 15px 5px 0;
+	font-size: 14px;
+	font-weight: bold;
+	white-space: nowrap;
+}
+.city-del, .loc-del, .period-del{
+	position: absolute;
+	right: 0;
+	top: 0;
+	font-size: 20px;
+	width: 25px;
+	height: 25px;
+	line-height: 25px;
+	text-align: center;
+	cursor: pointer;
+	font-weight: bold;
+	color: #c3c3c3;
+}
+.city-del:hover,
+.loc-del:hover,
+.period-del:hover{ color: red }
+.period-field span {
+	width: 100px;
+	max-width: 100px;
+	height: 30px;
+	text-align: center;
+	background: #ffffff;
+	border: 1px solid #cecece;
+	cursor: pointer;
+	line-height: 30px;
+	padding: 0 5px;
+}
+.period-field{
+	display: flex;
+	position: relative;
+}
+.period-item .period-field,
+.period-item .project__index-pen{ 
+	width: 100%;
+	margin-bottom: 15px;
+}
+#index .period-item .project__index-pen{
+	display: flex;
+	justify-content: space-between;
+}
+#index .period-item .project__index-pen input{
+	width: 75px;
+	text-align: center;
+}
+.project__index-name{
+	position: absolute;
+	top: 0;
+	left: 5px;
+	font-size: 12px;
+	color: #c3c3c3;
+}
+.project__index-row.loc-field{
+	flex-wrap: wrap;
+}
+.loc-item>.project__index-row .project__index-pen, .metro-item{
+	max-width: 300px;
+	width: 100%;
+	margin-bottom: 15px;
+}
+/*
 *		MEDIA
 */
-@media screen and (min-width: 768px){
-	/*
-	.project__tabs{ 
-		padding: 20px 0;
-		margin-bottom: 30px;
+@media screen and (min-width: 550px) {
+	.period-item .period-field,
+	.period-item .project__index-pen{ 
+		width: 50%;
+		padding-left: 15px;
 	}
-	#DiContent .project__tabs a{ display: initial }
-	*/
+}
+@media screen and (min-width: 768px){
 	.project__name{ margin-bottom: 40px }
 	.project__opt{ width: 50% }
 	.project__opt-row,
@@ -664,6 +757,17 @@
 	}
 	#DiContent .project__invite-btns .save-btn{ margin-left: 10px }
 	.project__body.project__body-invite{ padding: 20px 35px 5px }
+
+	.project__index { max-width: initial }
+	.loc-item>.project__index-row .project__index-pen, .metro-item{
+		width: 30%;
+		margin: 0 0 0 5%;
+	}
+	.project__index-row.loc-field{ flex-wrap: nowrap }
+	.city-item, .loc-item, .period-item{ padding: 25px 25px 10px }
+	.period-item .period-field,
+	.period-item .project__index-pen{ width: initial }
+	.period-item .period-field:nth-child(2){ padding-left: 0 }
 }
 @media screen and (min-width: 992px){
 	#DiContent .project__opt-row .project__opt-btn{ 
@@ -676,6 +780,8 @@
 	.project__body{ padding: 20px 20px 5px }
 	.project__index-col{ width: 28% }
 	.project__index-period .project__index-pen:after{ display: block }
+
+	.project__index { padding: 25px 25px 10px }
 }
 @media screen and (min-width: 1200px){
 	#DiContent .project__index-time input{ 
@@ -683,21 +789,6 @@
 		padding: 0 16px 0 6px;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 *
 *   select ankety page
