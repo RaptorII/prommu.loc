@@ -576,6 +576,9 @@ class Share
      */
     public static function sendmail($inMail, $inSubj, $inMess, $addParams = array())
     {
+        if(!filter_var($inMail, FILTER_VALIDATE_EMAIL)) // !!! проверка формата почты
+            return false;
+        
         if( isset($addParams['From']) ) $from = $addParams['From'];
         else $from = array('auto-mailer@prommu.com' => 'Prommu.com');
 
