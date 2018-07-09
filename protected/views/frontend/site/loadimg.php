@@ -13,7 +13,7 @@
 		if(in_array($_FILES['image']['type'], $types)) {
 		$image = $_FILES['image'] ['name'];
 		$text = $_POST['text'];
-		$target = "theme/pic/loadimg/".basename($image);
+		$target = "/images/applic/tmp/".basename($image);
 		$sql = "INSERT INTO images (name, text) VALUES ('$image','$text')";
 		mysqli_query($connect_db, $sql);
 		move_uploaded_file($_FILES['image']['tmp_name'],$target);
@@ -37,8 +37,8 @@
 	while ($row = mysqli_fetch_array($result)) {
 		echo "<div class='content'>";
 		echo "<div class='icon'>";
-		echo "<a href='theme/pic/loadimg/".$row['name']."' target=_blank>";
-		echo "<img src='theme/pic/loadimg/".$row['name']."' >";
+		echo "<a href='/images/applic/tmp/".$row['name']."' target=_blank>";
+		echo "<img src='/images/applic/tmp/".$row['name']."' >";
 		echo "</a>";
 		echo "</div>";
 		echo "<p>".$row['text']."</p>";
