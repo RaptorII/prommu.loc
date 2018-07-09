@@ -1785,4 +1785,15 @@ class SiteController extends AppController
         }
         $this->render($view, array('viData' => $data));
     }
+
+
+    /**
+    *   Дамшевич
+    */
+    public function actionLoadimg()
+    {
+        $title = 'Загрузка картинок';
+        $this->setBreadcrumbs($title);
+        $this->render($this->ViewModel->pageLoadimg, array('htmlTitle' => $title));
+    }
 }

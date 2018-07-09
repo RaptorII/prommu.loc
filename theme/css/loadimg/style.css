@@ -1,0 +1,38 @@
+/*
+*		loadimg page
+*/
+.loadimg {
+	width: 100%;
+}
+.row-loadimg {
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+}
+.form {
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+		margin-bottom: 40px;
+}
+.form-text {
+	width: 300px !important;
+}
+.content {
+    -ms-flex: 0 0 16.666667%;
+    flex: 0 0 16.666667%;
+    max-width: 16.666667%;
+		margin-bottom: 40px;
+}
+.icon {
+	width: 100px;
+	height: 100px;
+}
+.icon img {
+	width: 100%;
+	height: 100%;
+}
+.icon p {
+	text-align: center;
+}
