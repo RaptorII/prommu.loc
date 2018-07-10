@@ -2,59 +2,90 @@
 
 class Subdomain
 {
-	public static $CITY_ID = 1307; // MOSCOW
 	public static $MAIN_SITE = 'https://prommu.com';
 	public static $MAIN_SEND_FILE_URL = '/ajax/AcceptFileFromSubdomain';
 	public static $MAIN_DEL_FILE_URL = '/ajax/DelThroughSubdomain';
 	public static $MAIN_SITE_ROOT = '/var/www/html'; // для загрузки файлов на домен
 	public static $REDIRECT = '/api.auth_user/?id=#ID#&code=prommucomWd126wdn&url=';
+	/*
+	*		Получить ID текущего сайта
+	*/
+	public static function getId()
+	{
+		$str = 'https://' . $_SERVER['HTTP_HOST'];
+		$res = Yii::app()->db->createCommand()
+			->select('id')
+			->from('subdomains')
+			->where(array('like', 'url', $str))
+			->queryRow();
+		return $res['id'];
+	}
+	/*
+	*		Получаем ID всех субдоменов (кроме домена)
+	*/
+	public static function getIdies()
+	{
+		$sql = Yii::app()->db->createCommand()
+			->select('id')
+			->from('subdomains')
+			->where('id<>:id',array(':id'=>1307))
+			->queryAll();
 
-	public static $SUBDOMAINS = array(
-			1838, 	// SPB
-			1449 	// Novosibirsk
-		);
+		$arRes = array();
+		foreach ($sql as $d)
+			$arRes[] = $d['id'];
 
-	public static $SITES = array(
-			1307 => array(
-					'seo' => 'seo',
-					'url' => 'https://prommu.com',
-					'meta' => 'Prommu.com',
-					'label' => 'Сервис №1 в поиске временной работы и персонала для BTL и Event-мероприятий',
-					'city' => 'Москва'
-				),
-			1838 => array(
-					'seo' => 'seo_spb',
-					'url' => 'https://spb.prommu.com',
-					'meta' => 'Spb.prommu.com',
-					'label' => 'Сервис №1 в поиске временной работы и персонала для BTL и Event-мероприятий в Санкт-Петербурге',
-					'city' => 'Санкт-Петербург'
-				),
-			1449 => array(
-					'seo' => 'seo_novosibirsk',
-					'url' => 'https://novosibirsk.prommu.com',
-					'meta' => 'Novosibirsk.prommu.com',
-					'label' => 'Сервис №1 в поиске временной работы и персонала для BTL и Event-мероприятий в Новосибирске',
-					'city' => 'Новосибирск'
-				)
-		);
+		return $arRes;
+	}
+	/*
+	*		Получаем всю инфу по сайтам
+	*/
+	public static function getData($without=false)
+	{
+		$arRes = array();
+
+		if($without)
+		{
+			$str = 'https://' . $_SERVER['HTTP_HOST'];
+			$sql = Yii::app()->db->createCommand()
+				->select('*')
+				->from('subdomains')
+				->where(array('not like', 'url', $str))
+				->queryAll();
+		}
+		else
+		{
+			$sql = Yii::app()->db->createCommand()
+				->select('*')
+				->from('subdomains')
+				->queryAll();
+		}
+		
+		foreach ($sql as $d)
+			$arRes[$d['id']] = $d;
+
+		return $arRes;
+	}
 	/*
 	*		Определяем название для МЕТА
 	*/
 	public static function getSubdomain($arCities)
 	{
-		$arCnt = array_fill_keys(self::$SUBDOMAINS, 0);
+		$arSub = self::getData();
+		$arId = self::getIdies();
+		$arCnt = array_fill_keys($arId, 0);
 		foreach ($arCities as $c)
-			if(in_array($c['region'], self::$SUBDOMAINS))
+			if(in_array($c['region'], $arId))
 				$arCnt[$c['region']]++;
 
 		foreach ($arCnt as $id => $cnt)
 			if($cnt==count($arCities))
 				return array(
-					'name' => self::$SITES[$id]['meta']
+					'name' => $arSub[$id]['meta']
 				);
 
 		return array(
-			'name' => self::$SITES[1307]['meta']
+			'name' => $arSub[1307]['meta']
 		);
 	}
 	/*
@@ -64,6 +95,8 @@ class Subdomain
 	*/
 	public static function getCity($typeUs, $idus)
 	{
+		$arId = self::getIdies();
+		$sId = self::getId();
 		if(in_array($typeUs, [2,3])){ // определение города юзера
 			$arRes = Yii::app()->db->createCommand()
 				->select('
@@ -78,12 +111,12 @@ class Subdomain
 				->where('uc.id_user=:idus', array(':idus' => $idus))
 				->queryAll();
 
-			$arCnt = array_fill_keys(self::$SUBDOMAINS, 0);
+			$arCnt = array_fill_keys($arId, 0);
 			foreach ($arRes as $c)
-				if(in_array($c['region'], self::$SUBDOMAINS))
+				if(in_array($c['region'], $arId))
 					$arCnt[$c['region']]++;
 
-			if(!$arCnt[self::$CITY_ID]){ // Редиректим только если вообще нет городов субдомена
+			if(!$arCnt[$sId]){ // Редиректим только если вообще нет городов субдомена
 				foreach ($arCnt as $id => $cnt)
 					if($cnt>0 && $cnt==sizeof($arRes))
 						self::setRedirect($idus, $id);
@@ -105,6 +138,8 @@ class Subdomain
 	*/
 	public static function profileRedirect($idus)
 	{
+		$arId = self::getIdies();
+		$sId = self::getId();
 		$arRes = Yii::app()->db->createCommand()
 			->select('uc.id_city, c.region')
 			->from('user_city uc')
@@ -113,12 +148,12 @@ class Subdomain
 			->queryAll();
 
 
-		$arCnt = array_fill_keys(self::$SUBDOMAINS, 0);
+		$arCnt = array_fill_keys($arId, 0);
 		foreach ($arRes as $c)
-			if(in_array($c['region'], self::$SUBDOMAINS))
+			if(in_array($c['region'], $arId))
 				$arCnt[$c['region']]++;
 
-		if(!$arCnt[self::$CITY_ID]){ // Редиректим только если вообще нет городов субдомена
+		if(!$arCnt[$sId]){ // Редиректим только если вообще нет городов субдомена
 			foreach ($arCnt as $id => $cnt) 
 				if($cnt>0 && $cnt==sizeof($arRes))
 					self::setRedirect($idus, $id, true);
@@ -131,6 +166,8 @@ class Subdomain
 	*
 	*/
 	public static function popupRedirect($city, $idus){
+		$arId = self::getIdies();
+		$sId = self::getId();
 		$arRes = Yii::app()->db->createCommand()
 			->select('t.name, t.region')
 			->from('city t')
@@ -139,9 +176,9 @@ class Subdomain
 		$arCities = $arRes->queryAll();
 
 		foreach ($arCities as $c)
-			if($city==$c['name'] && $c['region']!=self::$CITY_ID) {
+			if($city==$c['name'] && $c['region']!=$sId) {
 				// редирект если выбраный город не относится к региону субдомена
-				$site = in_array($c['region'], self::$SUBDOMAINS) ? $c['region'] : 1307;
+				$site = in_array($c['region'], $arId) ? $c['region'] : 1307;
 				self::setRedirect($idus, $site, true);
 			}
 	}
@@ -150,12 +187,14 @@ class Subdomain
 	*/
 	public static function getCitiesIdies($main = false)
 	{
+		$arId = self::getIdies();
+		$sId = self::getId();
 		$arRes = array();
 		if($main) {
 			$arRes = Yii::app()->db->createCommand()
 				->select('c.id_city id')
 				->from('city c')
-				->where(array('in', 'c.region', self::$SUBDOMAINS) )
+				->where(array('in', 'c.region', $arId) )
 				->limit(10000)
 				->queryAll();
 		}
@@ -163,7 +202,7 @@ class Subdomain
 			$arRes = Yii::app()->db->createCommand()
 				->select('c.id_city id')
 				->from('city c')
-				->where('c.region=:region', array(':region' => self::$CITY_ID))
+				->where('c.region=:region', array(':region' => $sId))
 				->limit(10000)
 				->queryAll();
 		}
@@ -179,9 +218,11 @@ class Subdomain
 	*		Выполняем редирект
 	*/
 	public static function setRedirect($idus, $id, $hasParams=false) {
-		if($id!=self::$CITY_ID) {
+		$sId = self::getId();
+		if($id!=$sId) {
+			$arSub = self::getData();
 			$url = 'Location: ' 
-				. self::$SITES[$id]['url'] 
+				. $arSub[$id]['url'] 
 				. str_replace('#ID#', $idus, self::$REDIRECT);
 
 			if($hasParams) {
@@ -200,28 +241,66 @@ class Subdomain
 	*/
 	public static function getSeoTable()
 	{
-		return self::$SITES[self::$CITY_ID]['seo'];
+		$str = 'https://' . $_SERVER['HTTP_HOST'];
+		$res = Yii::app()->db->createCommand()
+			->select('seo')
+			->from('subdomains')
+			->where(array('like', 'url', $str))
+			->queryRow();
+		if(!isset($res['seo']))
+			$res['seo'] = 'seo';
+
+		return $res['seo'];
 	}
 	/*
 	*
 	*/
 	public static function getLabel()
 	{
-		return self::$SITES[self::$CITY_ID]['label'];
+		$str = 'https://' . $_SERVER['HTTP_HOST'];
+		$res = Yii::app()->db->createCommand()
+			->select('seo')
+			->from('subdomains')
+			->where(array('like', 'url', $str))
+			->queryRow();
+		return $res['label'];
 	}
 	/*
 	*
 	*/
 	public static function getUrl()
 	{
-		return self::$SITES[self::$CITY_ID]['url'];
+		$str = 'https://' . $_SERVER['HTTP_HOST'];
+		$res = Yii::app()->db->createCommand()
+			->select('seo')
+			->from('subdomains')
+			->where(array('like', 'url', $str))
+			->queryRow();
+		return $res['url'];
 	}
 	/*
 	*
 	*/
 	public static function getName()
 	{
-		return self::$SITES[self::$CITY_ID]['meta'];
+		$str = 'https://' . $_SERVER['HTTP_HOST'];
+		$res = Yii::app()->db->createCommand()
+			->select('seo')
+			->from('subdomains')
+			->where(array('like', 'url', $str))
+			->queryRow();
+		return $res['meta'];
+	}
+	/*
+	*		редиректим гостя
+	*/
+	public static function guestRedirect($type) {
+		$sId = self::getId();
+		if($sId!=1307 && $type!=2 && $type!=3) {
+			$url = 'Location: ' . self::$MAIN_SITE . $_SERVER['REDIRECT_URL'];
+			header($url);
+			exit();
+		}
 	}
 }
 

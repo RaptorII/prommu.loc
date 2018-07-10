@@ -428,6 +428,12 @@
                             <div class="footer__cities">
                                 <div class="footer__cities-name">Работа в других городах: </div>
                                 <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                                <?php /*
+                                	$arSites = Subdomain::getData(true);
+                                	foreach ($arSites as $id => $site):
+                                ?><a href="<?=$site['url']?>" class="footer__cities-link"><?=$site['city']?></a> <?php 
+									endforeach; 
+								*/?>
                             </div>
                             <div class="col-md-5 col-sm-6">
                                 <div class="menu">

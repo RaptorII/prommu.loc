@@ -41,9 +41,9 @@ class UploadLogo extends Model
                     $flag = 1;
                     $message = "Изображение превышает размер в 4500х4500 пикселей";
                 }
-                elseif( $imgProps[0] < 500 || $imgProps[1] < 500 ){
+                elseif( $imgProps[0] < 480 || $imgProps[1] < 480 ){
                     $flag = 1;
-                    $message = "Минимальное разрешение изображения - 500x500 пикселей";
+                    $message = "Минимальное разрешение изображения - 480x480 пикселей";
                 }
                 else
                 {
@@ -110,9 +110,9 @@ class UploadLogo extends Model
                     $flag = 1;
                     $message = "Изображение превышает размер в 4500х4500 пикселей";
                 }
-                elseif( $imgProps[0] < 500 || $imgProps[1] < 500 ){
+                elseif( $imgProps[0] < 480 || $imgProps[1] < 480 ){
                     $flag = 1;
-                    $message = "Минимальное разрешение изображения - 500x500 пикселей";
+                    $message = "Минимальное разрешение изображения - 480x480 пикселей";
                 }
                 else
                 {
@@ -191,9 +191,9 @@ class UploadLogo extends Model
                     $flag = 1;
                     $message = "Изображение превышает размер в 4500х4500 пикселей";
                 }
-                elseif( $imgProps[0] < 500 || $imgProps[1] < 500 ){
+                elseif( $imgProps[0] < 480 || $imgProps[1] < 480 ){
                     $flag = 1;
-                    $message = "Минимальное разрешение изображения - 500x500 пикселей";
+                    $message = "Минимальное разрешение изображения - 480x480 пикселей";
                 }
                 else
                 {
@@ -642,8 +642,8 @@ class UploadLogo extends Model
                 if( $imgProps[0] > 4500 || $imgProps[1] > 4500 ){
                     $arRes = array('error' => 1, 'message' => 'Изображение превышает размер в 4500х4500 пикселей');
                 }
-                elseif( $imgProps[0] < 500 || $imgProps[1] < 500 ){
-                    $arRes = array('error' => 1, 'message' => 'Минимальное разрешение изображения - 500x500 пикселей');
+                elseif( $imgProps[0] < 480 || $imgProps[1] < 480 ){
+                    $arRes = array('error' => 1, 'message' => 'Минимальное разрешение изображения - 480x480 пикселей');
                 }
                 else{
                     Yii::app()->session['uplLogo'] = array('path' => "/images/{$this->imgPath}/tmp/", 'file' => $fn);
@@ -653,5 +653,28 @@ class UploadLogo extends Model
         }
         return $arRes;
     }
-
+    /*
+    *   отправка файла на prommu.com
+    */
+    private function sendToDomain($sPath, $rPath){
+        $post = http_build_query(
+            array(
+                'path'=> $rPath, // путь на втором сервере
+                'img' => base64_encode(file_get_contents($sPath)) // отпровляемый файл
+            )
+        );
+        //опции контекста
+        $options = array('http' =>
+            array(
+                'method'  => 'POST',
+                'header'  => 'Content-type: application/x-www-form-urlencoded',
+                'content' => $post
+            )
+        );
+        //отправляем файл на второй сервер и получаем его ответ
+        $url = Subdomain::$MAIN_SITE . Subdomain::$MAIN_SEND_FILE_URL;
+        $context = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
+        return $result;
+    }
 }
