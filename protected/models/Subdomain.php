@@ -259,7 +259,7 @@ class Subdomain
 	{
 		$str = 'https://' . $_SERVER['HTTP_HOST'];
 		$res = Yii::app()->db->createCommand()
-			->select('seo')
+			->select('label')
 			->from('subdomains')
 			->where(array('like', 'url', $str))
 			->queryRow();
@@ -272,7 +272,7 @@ class Subdomain
 	{
 		$str = 'https://' . $_SERVER['HTTP_HOST'];
 		$res = Yii::app()->db->createCommand()
-			->select('seo')
+			->select('url')
 			->from('subdomains')
 			->where(array('like', 'url', $str))
 			->queryRow();
@@ -285,7 +285,7 @@ class Subdomain
 	{
 		$str = 'https://' . $_SERVER['HTTP_HOST'];
 		$res = Yii::app()->db->createCommand()
-			->select('seo')
+			->select('meta')
 			->from('subdomains')
 			->where(array('like', 'url', $str))
 			->queryRow();
