@@ -28,8 +28,6 @@ class ViewModel
     public $pageCardprommu;
     public $addContentClass;
 
-    public $pageLoadimg;
-
     private $viewData = [];
 
 
@@ -43,8 +41,6 @@ class ViewModel
         $this->pageMessages = MainConfig::$VIEWS_USER_CHATS;
         $this->pageFeedback = MainConfig::$VIEWS_FEEDBACK;
         $this->pageCardprommu = MainConfig::$VIEWS_CARD_PROMMU;
-
-        $this->pageLoadimg = MainConfig::$VIEWS_LOADIMG;
     }
 
 

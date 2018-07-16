@@ -40,7 +40,11 @@
 		
 	<div class="table table-bordered table-hover dataTable">
       	<label class="control-label">Отображение текста</label>
-		<?php echo CHtml::textArea('data[meta_keywords]', $item['meta_keywords'], array('class'=>'form-control')); ?>
+		<?php echo CHtml::textArea(
+			'data[meta_keywords]', 
+			$item['meta_keywords'], 
+			array('class'=>'form-control','style'=>'min-height:400px')
+		); ?>
 	</div>
 	
 	<?php 
@@ -51,7 +55,7 @@
     }
 	echo '<div class="control-group">
       <label class="control-label">Редактирование текста</label>
-	    <div class="controls" style="width:100%">';
+	    <div class="controls" style="width:100%;margin-bottom:30px">';
 $this->widget('application.extensions.ckeditor.CKEditor', array(
 'model'=>$model,
 'attribute'=>'meta_keywords',
@@ -95,6 +99,8 @@ echo '</div></div>';
 		display: table-cell;
 		width: 775px;
 	}
-
+	#cke_contents_Seo_meta_keywords{
+		min-height: 400px
+	}
 	input-prepend
 </style>

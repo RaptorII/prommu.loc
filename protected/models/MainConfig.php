@@ -233,6 +233,4 @@ class MainConfig
 
     public static $PAGE_PROJECT_LIST = '/user/projects';
     public static $PAGE_PROJECT_NEW = '/user/projects/new';
-
-    public static $VIEWS_LOADIMG = 'loadimg';
 }
