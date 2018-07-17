@@ -16,6 +16,7 @@
     </style>
 <?php endif; ?>
 <head>
+    <?php Yii::app()->getClientScript()->registerCssFile($baseUrl.'/theme/css/footer.css'); ?>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <?php if(MOBILE_DEVICE): //mob device ?>
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -45,13 +46,13 @@
         	$arOptimizPages = array(DS, MainConfig::$PAGE_WORK_FOR_STUDENTS, MainConfig::$PAGE_SEARCH_EMPL, MainConfig::$PAGE_VACANCY, MainConfig::$PAGE_SEARCH_PROMO, DS.MainConfig::$PAGE_SERVICES);
         	// array with optimization
             Yii::app()->getClientScript()->registerScriptFile($baseURL . '/theme/js/dist/libs.js', $curUrl==MainConfig::$PAGE_SEARCH_PROMO
-            	? CClientScript::POS_HEAD 
+            	? CClientScript::POS_HEAD
             	: CClientScript::POS_HEAD);
-            Yii::app()->getClientScript()->registerScriptFile($baseURL . '/jslib/sourcebuster.min.js', in_array($curUrl,$arOptimizPages) 
-            	? CClientScript::POS_END 
+            Yii::app()->getClientScript()->registerScriptFile($baseURL . '/jslib/sourcebuster.min.js', in_array($curUrl,$arOptimizPages)
+            	? CClientScript::POS_END
             	: CClientScript::POS_HEAD);
-            Yii::app()->getClientScript()->registerScriptFile($baseURL . '/theme/js/dev/index.min.js', in_array($curUrl,$arOptimizPages) 
-            	? CClientScript::POS_END 
+            Yii::app()->getClientScript()->registerScriptFile($baseURL . '/theme/js/dev/index.min.js', in_array($curUrl,$arOptimizPages)
+            	? CClientScript::POS_END
             	: CClientScript::POS_BEGIN);
 
             if(!in_array($curUrl, $arOptimizPages)){
@@ -61,6 +62,7 @@
                 Yii::app()->getClientScript()->registerCssFile($baseUrl.'/theme/css/main-page.css');
                 Yii::app()->getClientScript()->registerScriptFile($baseURL . '/theme/js/dist/jquery.maskedinput.min.js', CClientScript::POS_HEAD);
                 Yii::app()->getClientScript()->registerScriptFile($baseURL . '/theme/js/select2.min.js', CClientScript::POS_HEAD);
+
             }
 
             //Yii::app()->getClientScript()->registerScriptFile($baseURL . '/theme/js/counters.min.js', CClientScript::POS_END);
@@ -68,8 +70,8 @@
             if( ($action = $this->action->getId()) == 'profile' && Share::$UserProfile->type == 3 )
 
                 $action = 'company-profile-own';
-            $G_PAGE = isset($this->ViewModel->getViewData()->pageKind) 
-            ? $this->ViewModel->getViewData()->pageKind 
+            $G_PAGE = isset($this->ViewModel->getViewData()->pageKind)
+            ? $this->ViewModel->getViewData()->pageKind
             : $action;
 
             $setup = ContentPlus::getActionInfo('ModSite');
@@ -81,7 +83,7 @@
             {
                 $result = false;
                 foreach ($res as $row)
-                    if ($row['parent_id'] == $id) 
+                    if ($row['parent_id'] == $id)
                         $result = true;
 
                 return $result;
@@ -104,7 +106,7 @@
                 if( Yii::app()->session['au_us_type'] < 2 ){
                     if($_SERVER['REQUEST_URI'] != MainConfig::$PAGE_LOGIN){
                         echo '<li class="item top-menu-wr__login-level"><a href="' . MainConfig::$PAGE_LOGIN . '">Вход</a></li>';
-                    }           
+                    }
                     echo '<li class="item top-menu-wr__login-level"><a href="' . Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2')) . '">Регистрация работодателя</a></li>';
                     echo '<li class="item top-menu-wr__login-level"><a href="' . Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1')) . '">Регистрация соискателя</a></li>';
                 }
@@ -188,9 +190,9 @@
                                             </div>
                                         </div>
                                 <?php else: ?>
-                                    <div class="small-menu"> 
+                                    <div class="small-menu">
                                         <div class="small-menu__list">
-                                            <?php 
+                                            <?php
                                                 $link = MainConfig::$PAGE_RESPONSES;
                                                 if(Share::$UserProfile->type==3){
                                                 	$notif = (new Employer())->getNotifications();
@@ -200,8 +202,8 @@
                                                 	$notif = (new Promo())->getNotifications();
 													$vacCnt = $notif['countResponse'] + $notif['countPlus'] + $notif['countMinus'] + $notif['dateStart'] + $notif['newVac'] + $notif['tommorowStart'];
                                                 }
-                                                $vacClass = $curUrl==$link ? ' current' : '';	
-                                                $vacClass .= $vacCnt ? ' active' : '';						
+                                                $vacClass = $curUrl==$link ? ' current' : '';
+                                                $vacClass .= $vacCnt ? ' active' : '';
                                             ?>
                                             <div class="small-menu__item vacancy<?=$vacClass?>" id="sm-vac-cnt">
                                                 <a href="<?=$link?>">
@@ -265,7 +267,7 @@
 	                                                        	<? $link =  "/user/responses/?vacancy=".$notif['vacancyStart'];?>
 	                                                        	<li><a href="<?=$link?>" class="active"><span>Старт работы по утвержденной вакансии сегодня</span><i><?=$notif['dateStart']?></i></a></li>
 	                                                        <?php endif; ?>
-	                                                    <?php endif; ?>   
+	                                                    <?php endif; ?>
                                                     <?php endif; ?>
                                                 </ul>
                                             </div>
@@ -293,12 +295,12 @@
                                         </div>
                                         <div class="small-menu__profile">
                                             <?php $user = Yii::app()->session['au_us_data']; ?>
-                                            <a class="small-menu__username" href="<?=MainConfig::$PAGE_PROFILE?>" data-id="<?=$user->id?>"><span><?php 
+                                            <a class="small-menu__username" href="<?=MainConfig::$PAGE_PROFILE?>" data-id="<?=$user->id?>"><span><?php
                                                 if($user->firstname || $user->lastname):
                                                     echo $user->firstname . ' ' . $user->lastname;
                                                 else:
                                                     echo $user->name;
-                                                endif; 
+                                                endif;
                                             ?></span></a>
                                             <a class="small-menu__btn" href="<?=MainConfig::$PAGE_LOGOUT?>"><b>ВЫХОД</b></a>
                                         </div>
@@ -363,13 +365,13 @@
                     </div>
                 </div>
                 <script>
-                    $(document).ready(function(){ 
-                        $('.top-menu-wr__sandwich').click(function(){ 
+                    $(document).ready(function(){
+                        $('.top-menu-wr__sandwich').click(function(){
                             $(this).hasClass('active')
                             ? $('.top-menu-wr__menu').fadeOut()
                             : $('.top-menu-wr__menu').fadeIn();
                             $(this).toggleClass('active');
-                            
+
                         })
                     })
                 </script>
@@ -378,49 +380,84 @@
                     else { include_once __DIR__ . '/../' . MainConfig::$VIEWS_COMM_CONTENT_TPL . '.php'; } // endif
                 ?>
             </div>
-            
+
             <div id="DiFooter">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-12 footer__module footer__menu-soc" style="">
+                      <!--Header of footer-->
+                      <div class="col-xs-12">
+                          <a class="logo" href="/"></a>
+                          <div id="description">
+                              <?php if($_SERVER['REDIRECT_URL'] == ''):?>
+                                  <h1 style="line-height: 19px;  font-weight: 300; font-family: 'Lato', Calibri, Arial, sans-serif; text-transform: initial; font-size: 14px;">Сервис №1 в поиске временной работы и персонала для BTL и Event-мероприятий</h1>
+                              <?php else: ?>
+                                  <noindex>Сервис №1 в поиске временной работы и персонала для BTL и Event-мероприятий</noindex>
+                              <?php endif;?>
+                          </div>
+                          <div class="enter">
+                            <a class="feedback" href="/feedback">Обратная связь</a>
+                            <a href="<?= MainConfig::$PAGE_LOGIN ?>" class="enter__login enter__link" data-toggle="modal">Вход</a>
+                            <div class="enter__register">
+                              <a href="#reg_select" class="enter__register-link enter__link" onclick="ClearCookie()" data-toggle="modal">Регистрация <i></i></a>
+                              <ul>
+                                <li><a href="<?= Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2')) ?>" class="items">Я работодатель</a></li>
+                                <li><a href="<?= Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1')) ?>" class="items">Я ищу работу</a></li>
+                              </ul>
+                            </div>
+                          </div>
+                      </div>
+                      <!--Content of footer-->
+                      <div class="col-md-12 footer__module footer__menu-soc" style="">
                         	<div class="row">
-	                            <div class="col-xs-12 col-sm-4 footer__small-menu">
-	                                <div class="menu footer-menu__anket-vac">
-										<?php if(Share::$UserProfile->type==3): ?>
-											<a href="<?=MainConfig::$PAGE_VACPUB?>" class="footer__small-menu-link"><ins>Опубликовать вакансию</ins></a>
-										<?php endif; ?>
-										<?php if(!in_array(Share::$UserProfile->type, [2,3])): ?>
-		                                    <a href="<?=MainConfig::$PAGE_REGISTER?>?p=1" class="footer__small-menu-link"><ins>Разместить анкету</ins></a><br/>
-		                                    <a href="<?=MainConfig::$PAGE_REGISTER?>?p=2" class="footer__small-menu-link"><ins>Опубликовать вакансию</ins></a>
-										<?php endif; ?>
-	                                </div>
-	                            </div>
-	                            <div class="col-xs-12 col-sm-8 footer__big-menu">
-	                                <div class="menu footer-menu__full-menu">
-	                                    <a href="/vacancy" rel="nofollow" class="footer__big-menu-link"><ins>Вакансии</ins></a>
-	                                    <a href="/ankety" rel="nofollow" class="footer__big-menu-link"><ins>Анкеты</ins></a>
-	                                    <a href="/services" rel="nofollow" class="footer__big-menu-link"><ins>Наши услуги</ins></a>
-	                                    <a href="/about" rel="nofollow" class="footer__big-menu-link"><ins>О нас</ins></a>
-	                                    <a href="/about/news" rel="nofollow" class="footer__big-menu-link"><ins>Полезные статьи</ins></a>
-	                                    <a href="/feedback" rel="nofollow" class="footer__big-menu-link"><ins>Связаться с нами</ins></a>
-	                                    <a href="/map" class="footer__big-menu-link"><ins>Карта сайта</ins></a>
-	                                    <a href="<?=MainConfig::$PAGE_IDEAS_LIST?>" class="footer__big-menu-link"><ins>Идеи/Обсуждения</ins></a>
-	                                    <a href="<?=MainConfig::$PAGE_FAQ?>" class="footer__big-menu-link"><ins>FAQ</ins></a>
+	                            <div class="col-md-6 footer__big-menu">
+	                                <div class="menu footer-menu__full-menu row">
+                                      <div class="col-xs-3">
+                                        <a href="/vacancy" rel="nofollow" class="footer__big-menu-link"><ins>Вакансии</ins></a>
+                                      </div>
+                                      <div class="col-xs-3">
+                                        <a href="/ankety" rel="nofollow" class="footer__big-menu-link"><ins>Анкеты</ins></a>
+                                      </div>
+	                                    <div class="col-xs-3">
+                                        <a href="/services" rel="nofollow" class="footer__big-menu-link"><ins>Наши услуги</ins></a>
+                                      </div>
+	                                    <div class="col-xs-3">
+                                        <a href="/about" rel="nofollow" class="footer__big-menu-link"><ins>О нас</ins></a>
+                                      </div>
+	                                    <div class="col-xs-3">
+                                        <a href="/about/news" rel="nofollow" class="footer__big-menu-link"><ins>Полезные статьи</ins></a>
+                                      </div>
+	                                    <div class="col-xs-3">
+                                        <a href="/feedback" rel="nofollow" class="footer__big-menu-link"><ins>Связаться с нами</ins></a>
+                                      </div>
+	                                    <div class="col-xs-3">
+                                        <a href="/map" class="footer__big-menu-link"><ins>Карта сайта</ins></a>
+                                      </div>
+	                                    <div class="col-xs-3">
+                                        <a href="<?=MainConfig::$PAGE_IDEAS_LIST?>" class="footer__big-menu-link"><ins>Идеи/Обсуждения</ins></a>
+                                      </div>
+	                                    <div class="col-xs-3">
+                                        <a href="<?=MainConfig::$PAGE_FAQ?>" class="footer__big-menu-link"><ins>FAQ</ins></a>
+                                      </div>
 	                                    <div class="clearfix"></div>
 	                                </div>
-	                                <a href="<?=MainConfig::$LINK_TO_PLAYMARKET?>" rel="nofollow" class="app-bottom-link" target="_blank"></a>
-	                                <div class="social footer__social">
-	                                    <p class="footer__social-text">Присоединяйтесь к нам: </p>
-	                                    <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icons fb js-g-hashint" title="Facebook" target="_blank"><b></b><i></i></a>
-	                                    <a href="<?=MainConfig::$PROMMU_VKONTAKTE?>" rel="nofollow" class="icons vk js-g-hashint" title="Vkontakte" target="_blank"><b></b><i></i></a>
-	                                    <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" rel="nofollow" class="icons tl js-g-hashint" title="Telegram" target="_blank"><b></b><i></i></a>
-	                                </div>
-	                                <div class="footer__m-social">
-	                                    <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icons fb" title="Facebook" target="_blank"></a>
-	                                    <a href="<?=MainConfig::$PROMMU_VKONTAKTE?>" rel="nofollow" class="icons vk" title="Vkontakte" target="_blank"></a>
-	                                    <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" rel="nofollow" class="icons tl" title="Telegram" target="_blank"></a>
-	                                </div>
 	                            </div>
+                              <div class="col-md-4 footer__download">
+                                <a href="<?=MainConfig::$LINK_TO_PLAYMARKET?>" rel="nofollow" class="app-bottom-link" target="_blank"></a>
+                              </div>
+                              <div class="col-md-2">
+                                <div class="social footer__social">
+                                    <p class="footer__social-text">Присоединяйтесь к нам: </p>
+                                    <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icons fb js-g-hashint" title="Facebook" target="_blank"><b></b><i></i></a>
+                                    <a href="<?=MainConfig::$PROMMU_VKONTAKTE?>" rel="nofollow" class="icons vk js-g-hashint" title="Vkontakte" target="_blank"><b></b><i></i></a>
+                                    <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" rel="nofollow" class="icons tl js-g-hashint" title="Telegram" target="_blank"><b></b><i></i></a>
+                                </div>
+                                <div class="footer__m-social">
+                                    <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icons fb" title="Facebook" target="_blank"></a>
+                                    <a href="<?=MainConfig::$PROMMU_VKONTAKTE?>" rel="nofollow" class="icons vk" title="Vkontakte" target="_blank"></a>
+                                    <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" rel="nofollow" class="icons tl" title="Telegram" target="_blank"></a>
+                                </div>
+                              </div>
+
 	                            <div class="clearfix"></div>
 	                        </div>
                         </div>
@@ -431,8 +468,8 @@
                                 <?php /*
                                 	$arSites = Subdomain::getData(true);
                                 	foreach ($arSites as $id => $site):
-                                ?><a href="<?=$site['url']?>" class="footer__cities-link"><?=$site['city']?></a> <?php 
-									endforeach; 
+                                ?><a href="<?=$site['url']?>" class="footer__cities-link"><?=$site['city']?></a> <?php
+									endforeach;
 								*/?>
                             </div>
                             <div class="col-md-5 col-sm-6">
@@ -446,7 +483,7 @@
                     </div>
                 </div>
             </div>
-        </div>    
+        </div>
     <?php endif; ?>
 	<script>
 		(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -502,7 +539,7 @@
 	</noscript>
 </body>
 </html>
-<?  
+<?
  $sql = "SELECT odate, id_user
          FROM user
          WHERE is_online = 1";
@@ -510,7 +547,7 @@
 
 $count = count($users);
 
-for ($i=0; $i < $count ; $i++) { 
+for ($i=0; $i < $count ; $i++) {
 	$to_time = strtotime(date("Y-m-d h-i-s"));
  $from_time = $users[$i]['odate'];
  $odate =  round(abs($to_time - $from_time) / 60,2);
@@ -521,7 +558,7 @@ for ($i=0; $i < $count ; $i++) {
             ->update('user', array(
     	'is_online' => 0,),
 		'id_user=:id', array(':id'=>$users[$i]['id_user']));
-        
+
     }
     else {
 
@@ -541,7 +578,6 @@ if( Share::$UserProfile->id) {
     		'odate'=>date("Y-m-d h-i-s"),
     		'is_online' => 1,),
 			'id_user=:id', array(':id'=>Share::$UserProfile->id));
-  
+
 }
 ?>
-

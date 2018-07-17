@@ -1,0 +1,203 @@
+/*Header of footer*/
+#DiFooter .logo {
+    display: block;
+    float: left;
+    width: 98px;
+    height: 37px;
+    background: url(/theme/pic/logo-footer-xs.png) 0 4px no-repeat;
+}
+#DiFooter #description {
+  display: inline-block;
+  margin-left: 15px;
+  margin-top: 0;
+}
+#DiFooter .feedback {
+  background-color: #ff9900;
+  line-height: 30px;
+  border: 2px solid #ff9900;
+  padding-left: 25px;
+  padding-right: 25px;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-right: 125px;
+  top: 39px;
+  border-radius: 5px;
+}
+#DiFooter .enter {
+    position: absolute;
+    right: 15px;
+    top: 39px;
+    border: 2px solid #fff;
+    z-index: 100;
+}
+
+#DiFooter .enter__login {
+    width: 81px;
+}
+#DiFooter .enter__link {
+    display: inline-block;
+    line-height: 30px;
+    font-size: 12px;
+    color: #fff;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: none;
+    transition: .3s all;
+    border-radius: 5px;
+}
+#DiFooter a {
+    color: #abb92a;
+}
+#DiFooter .enter__register {
+    display: inline-block;
+    position: relative;
+    border-left: 1px solid #fff;
+    border-radius: 5px;
+}
+#DiFooter .enter__register-link {
+    width: 133px;
+}
+#DiFooter .enter__link {
+    display: inline-block;
+    line-height: 30px;
+    font-size: 12px;
+    color: #fff;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: none;
+    transition: .3s all;
+}
+#DiFooter .enter__link:hover {
+    background: #abb820;
+    transition: .3s all;
+}
+#DiFooter a {
+    color: #ffffff;
+}
+#DiFooter .enter__register i {
+    display: inline-block;
+    position: relative;
+    margin: 0 0 -1px;
+    width: 11px;
+    height: 10px;
+    background: url(/theme/pic/ico-tri.png) no-repeat;
+}
+#DiFooter .enter ul {
+    display: none;
+    position: absolute;
+    padding: 0;
+    right: 0;
+    width: 133px;
+    background: #e3e3e3;
+    list-style: none;
+}
+#DiFooter .enter ul {
+    display: none;
+    position: absolute;
+    padding: 0;
+    right: 0;
+    width: 133px;
+    background: #e3e3e3;
+    list-style: none;
+}
+#DiFooter .enter__register a.items {
+    display: block;
+    padding: 0 6px;
+    line-height: 25px;
+    font-size: 14px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #ffffff;
+    text-align: center;
+    transition: .3s all;
+}
+#DiFooter .enter__register a.items:hover {
+    background: #d0dc54;
+    transition: .3s all;
+}
+#DiFooter .enter__register:hover ul {
+    display: block;
+}
+
+
+/*Content of footer*/
+
+
+
+
+@media (min-width: 768px) {
+/*Header of footer*/
+  #DiFooter .logo{
+    margin-top: 20px;
+    width: 142px;
+    height: 40px;
+    background: url(/theme/pic/logo-footer-sm.png) 0 0px no-repeat;
+  }
+  #DiFooter .feedback {
+    top:26px;
+  }
+  #DiFooter .enter {
+    top: 26px;
+    border: 0;
+  }
+  #DiFooter .enter__link {
+    border: 2px solid #abb820;
+    color: #abb92a;
+  }
+  #DiFooter .enter__register:hover {
+    background: #e3e3e3;
+  }
+  #DiFooter .enter__register a:hover {
+    background: #e3e3e3;
+    border-color: #e3e3e3;
+  }
+
+  #DiFooter .enter__login {
+    margin-right: 5px;
+  }
+  #DiFooter .enter ul, #DiFooter .enter__register {
+    background: #abb820;
+  }
+  #DiFooter .enter__link {
+      border: 2px solid #abb820;
+      color: #ffffff;
+  }
+  #DiFooter .enter__login:hover, #DiFooter .enter__register a {
+    color: #fff;
+  }
+  #DiFooter .enter__register i {
+      display: none;
+  }
+  #DiFooter .enter ul, #DiFooter .enter__register {
+      background: #abb820;
+  }
+  #DiFooter .enter__register a.items {
+      color: #fff;
+      line-height: 27px;
+  }
+  #DiFooter .enter__register a.items:hover {
+    background: #838d18;
+  }
+
+/*Content of footer*/
+.app-bottom-link {
+    margin: 0;
+    position: relative;
+    bottom: 0;
+    right: 0;
+  }
+
+}
+
+@media (min-width: 992px) {
+  .app-bottom-link {
+    top: 0;
+    right: 0;
+    bottom: initial;
+  }
+  #DiFooter .social {
+    position: relative;
+    margin: 0;
+
+  }
+}
