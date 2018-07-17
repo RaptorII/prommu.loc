@@ -839,7 +839,7 @@ $(function(){
     $(this).closest('.erv__label-half').removeClass('focus');
   });
   //  события поля заголовок
-  $('#rv-vac-title').on('keyup', function(){
+  $('#rv-vac-title').on('input', function(){
     var val = $(this).val();
     if(val.length>titleLen) 
       $(this).val(val.substr(0,titleLen));
@@ -1657,4 +1657,39 @@ $(function(){
         }
       }
   }
+  /*
+  *     Изменение заголовка
+  */
+  var $titleInput = $('.erv__label-title input'),
+      firstTitle = $titleInput.val();
+
+  $('.erv__title').click(function(){
+    $('.erv__label-title').css({display:'inline-block'});
+    $titleInput.val('').focus().val(firstTitle);
+    $(this).hide();
+  });
+  $('.erv__label-title input').on('blur',function(){
+    var t = $titleInput.val();
+    if(t==='') {
+      $titleInput.val(firstTitle);
+    }
+    else {
+      $('.erv__title').text(t);
+      firstTitle = t;
+    }
+    $('.erv__label-title').hide();
+    $('.erv__title').show();
+  });
+  /*
+  *     скроллинг к блоку
+  */
+  $('.erv__salary').click(function(){
+    var b = $('.erv__label.erv__salary');
+    $('html, body').animate({ scrollTop: $(b).offset().top-50 }, 1000);
+  });
+  $('.erv__publ-date').click(function(){
+    var b = $('#city-module');
+    $('html, body').animate({ scrollTop: $(b).offset().top-40 }, 1000);
+  });
+  
 });

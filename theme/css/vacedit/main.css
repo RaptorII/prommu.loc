@@ -1292,3 +1292,57 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
     margin-bottom: 25px;
 }
 .evl__chat{ text-transform: uppercase }
+/*
+*
+*/
+.erv__label-title{
+	width: 100%;
+	max-width: 475px;
+	margin: 0;
+	padding: 0 0 20px 0;
+	font-size: 24px;
+	color: #ABB837;
+	display: none;
+}
+#DiContent .erv__label-title .erv__input{
+	height: 33px;
+	padding: 0 25px 0 10px;
+	font-size: 24px;
+	color: #ABB837;
+	text-transform: uppercase;
+	border-color: transparent;
+}
+#DiContent .erv__label-title .erv__input:focus{
+	border-color: #EBEBEB;
+}
+.erv__title{
+	width: 100%;
+	max-width: 475px;
+	margin: 0;
+	padding: 4px 25px 23px 11px;
+	display: block;
+	position: relative;
+	cursor: pointer;
+	word-wrap: break-word;
+}
+.erv__salary, .erv__publ-date{
+	padding-right: 25px;
+	position: relative;
+}
+.erv__salary:after,
+.erv__publ-date:after,
+.erv__title:after{
+	content: '';
+	width: 25px;
+	height: 25px;
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	background: url(/theme/pic/pencil.png) no-repeat;
+	background-size: contain;
+	cursor: pointer;
+}
+.erv__salary:after,
+.erv__publ-date:after{ width: 20px }
+.erv__title:after{ top: 5px }

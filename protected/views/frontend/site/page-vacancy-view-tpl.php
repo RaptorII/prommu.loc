@@ -130,6 +130,12 @@
                     </div>
                 </div>
                 <div class='col-xs-12 col-sm-8 col-lg-9'>
+                    <?
+                    //  Название
+                    ?>
+                    <label class="erv__label erv__label-title" data-info="Заголовок вакансии * (не более 70 символов)">
+                        <input type="text" name="vacancy-title" class="erv__input" placeholder="Заголовок вакансии *" id="rv-vac-title" value="<?=$viData['vac']['title']?>">
+                    </label>
                     <h1 class="erv__title"><?=$viData['vac']['title']?></h1>
                     <?php if( $flagEdit && !$viData['vac']['status'] ): ?>
                         <span class="erv__not-publ">Вакансия не опубликована</span>
@@ -186,12 +192,6 @@
                     <div class="erv__subtitle erv__subtitle-who"><h2>Какой специалист нужен и с какими параметрами?</h2></div>
                     <div class="erv__module">
                         <a href="<?= MainConfig::$PAGE_VACANCY_EDIT . DS . $viData['vac']['id'] ?>?bl=1" class="erv__module-reg js-g-hashint" title="Править данные"></a>
-                        <?
-                        //  Название
-                        ?>
-                        <label class="erv__label" data-info="Заголовок вакансии * (не более 70 символов)">
-                            <input type="text" name="vacancy-title" class="erv__input erv__required" placeholder="Заголовок вакансии *" id="rv-vac-title" value="<?=$viData['vac']['title']?>">
-                        </label>
                         <?
                         //  Должности
                         ?>
