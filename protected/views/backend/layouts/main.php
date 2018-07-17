@@ -22,12 +22,10 @@
    $modelR = $modelR->getEmplAdmin();
    $counR = count($modelR);// clear any default values
     
+  $arIdeas = (new Ideas)->getCntForAdmin();
 
-/*
-echo "<pre>";
-print_r($_SERVER); 
-echo "</pre>"; 
-*/
+  $hUrl = Yii::app()->homeUrl;
+  $curId = $this->action->id;
  ?>
 <html>
 <head>
@@ -259,6 +257,21 @@ echo "</pre>";
               <? endfor;?>
             </ul>
           </li>
+          <li class="dropdown user user-menu">
+            <!-- Menu Toggle Button -->
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+             <span class="label label-danger"><?=($arIdeas['ideas']+$arIdeas['comments'])?></span>
+              <span class="hidden-xs">Идеи</span>
+            </a>
+            <ul class="dropdown-menu">
+              <li style="padding:0px;height:auto;" class="user-header">
+                <a style="white-space:unset;background-color:#e1e3e9;text-align:left" href="<?=$hUrl?>ideas" rel="tooltip" data-placement="top">Идеи: (<?=$arIdeas['ideas']?>)</a>
+              </li>
+              <li style="padding:0px;height:auto;" class="user-header">
+                <a style=" white-space:unset;background-color:#e1e3e9;text-align:left" href="<?=$hUrl?>ideas" rel="tooltip" data-placement="top">Комментарии: (<?=$arIdeas['comments']?>)</a>
+              </li>
+            </ul>
+          </li>
           <!-- User Account Menu -->
           <li class="dropdown user user-menu">
             <!-- Menu Toggle Button -->
@@ -329,23 +342,8 @@ echo "</pre>";
         </div>
       </div>
 
-      <!-- search form (Optional) -->
-      <!-- <form action="#" method="get" class="sidebar-form">
-        <div class="input-group">
-          <input type="text" name="q" class="form-control" placeholder="Search...">
-              <span class="input-group-btn">
-                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-                </button>
-              </span>
-        </div>
-      </form> -->
-      <!-- /.search form -->
-
       <!-- Sidebar Menu -->
-      <?php
-        $hUrl = Yii::app()->homeUrl;
-        $curId = $this->action->id;
-      ?>
+
       <ul class="sidebar-menu">
         <li class="header">НАВИГАТОР</li>
         <?php

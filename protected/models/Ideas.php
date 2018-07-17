@@ -212,6 +212,21 @@ class Ideas extends ARModel
         return $res;
     }
     /*
+    *
+    */
+    public function getCntForAdmin()
+    {
+        $sql = "SELECT COUNT(DISTINCT id) FROM ideas WHERE ismoder = 0 {$filter}";
+        $cnt1 = Yii::app()->db->createCommand($sql)->queryScalar();
+
+        $sql = "SELECT COUNT(DISTINCT id)
+                    FROM ideas_attrib 
+                    WHERE comment IS NOT NULL AND hidden=1";
+        $cnt2 = Yii::app()->db->createCommand($sql)->queryScalar();
+
+        return array('ideas'=>$cnt1, 'comments'=>$cnt2);
+    }   
+    /*
     *       Создание идеи
     */
     public function setIdeas()

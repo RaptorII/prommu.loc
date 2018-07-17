@@ -80,6 +80,12 @@
 				'type' => 'raw',
 			),
 			array(
+				'name' => 'Скрытые комментарии',
+				'value' => 'getIdeaCmntsCnt($data->id)',
+				'type' => 'raw',
+				'filter' => ''
+			),
+			array(
 				'class'=>'CButtonColumn',
 				'deleteConfirmation'=>"js:'Запись ID = '+$(this).parent().parent().children(':first-child').text()+' будет удалена! Продолжить?'",
 				'template' => '{delete}',
@@ -107,6 +113,13 @@
 
 	function getIdeaDate($d){ 
 		return DateTime::createFromFormat('Y-m-d H:i:s', $d)->format('d.m.y H:i');
+	};
+
+	function getIdeaCmntsCnt($id){ 
+		$sql = "SELECT COUNT(DISTINCT id)
+				FROM ideas_attrib 
+				WHERE comment IS NOT NULL AND hidden=1 AND id_idea={$id}";
+        return Yii::app()->db->createCommand($sql)->queryScalar();
 	};
 
 	function getIdeaIsModer($t){
