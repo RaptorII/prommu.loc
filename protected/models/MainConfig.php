@@ -141,8 +141,8 @@ class MainConfig
 
     /* SERVIES */
     public static $PAGE_SERVICES_PREMIUM = '/services/premium-vacancy';
-    public static $PAGE_SERVICES_SHARES = '/services/#';  
-    public static $PAGE_SERVICES_PUSH = '/services/push-notification';  
+    public static $PAGE_SERVICES_SHARES = '/services/#';
+    public static $PAGE_SERVICES_PUSH = '/services/push-notification';
     public static $PAGE_SERVICES_SOCIAL = '/services/publication-vacancy-social-net';
     public static $PAGE_SERVICES_SMS = '/services/sms-informing-staff';
     public static $PAGE_SERVICES_GEO = '/services/geolocation-staff';
@@ -162,7 +162,7 @@ class MainConfig
     public static $VIEWS_SERVICE_OUTSOURCING_VIEW = 'services/page-outsourcing-view';
     public static $VIEWS_SERVICE_API_VIEW = 'services/page-api-view';
     public static $VIEWS_SERVICE_MEDICAL = 'services/page-medical-view';
-    public static $VIEWS_SERVICE_DUPLICATION = 'services/page-social-view';  
+    public static $VIEWS_SERVICE_DUPLICATION = 'services/page-social-view';
     public static $VIEWS_SERVICE_EMAIL = 'services/page-email-view';
     public static $VIEWS_CARD_PROMMU = 'services/page-card-view';
     /* SMS SERVICE PROMO AJAX */
@@ -179,7 +179,7 @@ class MainConfig
     /* REVIEWS/RATING */
     public static $PAGE_REVIEWS = '/user/reviews';
     public static $PAGE_REVIEWS_VIEW = 'page-reviews-tpl';
-    
+
     /* ANALYTIC VIEW*/
     public static $VIEWS_ANALYTIC = 'page-analytic-tpl';
 
@@ -189,9 +189,10 @@ class MainConfig
     public static $VIEWS_SEARCH_PROMO_AJAX = 'promo-search/promo-search-block';
     public static $VIEWS_API_PROMO_AJAX = 'promo-search/api-promo-search';
     /* SEARCHEMPL AJAX BLOCK */
-    public static $VIEWS_SEARCH_EMPL_AJAX_BLOCK = 'empl-search/empl-search-block'; 
-    public static $VIEWS_SEARCH_EMPL_AJAX_FILTER = 'empl-search/empl-search-filter'; 
-    public static $LINK_TO_PLAYMARKET = 'https://play.google.com/store/apps/details?id=com.prommu.mobile'; 
+    public static $VIEWS_SEARCH_EMPL_AJAX_BLOCK = 'empl-search/empl-search-block';
+    public static $VIEWS_SEARCH_EMPL_AJAX_FILTER = 'empl-search/empl-search-filter';
+    public static $LINK_TO_PLAYMARKET = 'https://play.google.com/store/apps/details?id=com.prommu.mobile';
+    public static $LINK_TO_APP_STORE = '/'; 
     /* VACANTION VIEW FOR TABS */
     public static $VIEWS_VAC_TAB_RESP = 'vac-info/page-vacancy-resp';
     public static $VIEWS_VAC_TAB_REFUSE = 'vac-info/page-vacancy-refuse';

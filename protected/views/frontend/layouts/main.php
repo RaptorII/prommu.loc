@@ -409,8 +409,8 @@
                       <!--Content of footer-->
                       <div class="col-md-12 footer__module footer__menu-soc" style="">
                         	<div class="row">
-	                            <div class="col-md-6 footer__big-menu">
-	                                <div class="menu footer-menu__full-menu row">
+	                            <div class="col-md-6 footer__big-menu pd25">
+	                                <div class="menu row">
                                       <div class="col-xs-3">
                                         <a href="/vacancy" rel="nofollow" class="footer__big-menu-link"><ins>Вакансии</ins></a>
                                       </div>
@@ -441,10 +441,15 @@
 	                                    <div class="clearfix"></div>
 	                                </div>
 	                            </div>
-                              <div class="col-md-4 footer__download">
-                                <a href="<?=MainConfig::$LINK_TO_PLAYMARKET?>" rel="nofollow" class="app-bottom-link" target="_blank"></a>
+                              <div class="col-md-4 footer__download pd25">
+                                <p>Скачать в:</p>
+                                <div class="app-links">
+                                  <a href="<?=MainConfig::$LINK_TO_PLAYMARKET?>" rel="nofollow" class="app-bottom-link" target="_blank"></a>
+                                  <a href="<?=MainConfig::$LINK_TO_APP_STORE?>" rel="nofollow" class="appstore-bottom-link" target="_blank"></a>
+                                </div>
+
                               </div>
-                              <div class="col-md-2">
+                              <div class="col-md-2 pd25">
                                 <div class="social footer__social">
                                     <p class="footer__social-text">Присоединяйтесь к нам: </p>
                                     <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icons fb js-g-hashint" title="Facebook" target="_blank"><b></b><i></i></a>
@@ -457,28 +462,62 @@
                                     <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" rel="nofollow" class="icons tl" title="Telegram" target="_blank"></a>
                                 </div>
                               </div>
-
 	                            <div class="clearfix"></div>
 	                        </div>
                         </div>
-                        <div class="col-md-12 footer__module">
+                        <!--Tegs-->
+                        <div class="col-md-12 footer__module row">
                             <div class="footer__cities">
-                                <div class="footer__cities-name">Работа в других городах: </div>
-                                <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
-                                <?php /*
-                                	$arSites = Subdomain::getData(true);
-                                	foreach ($arSites as $id => $site):
-                                ?><a href="<?=$site['url']?>" class="footer__cities-link"><?=$site['city']?></a> <?php
-									endforeach;
-								*/?>
+                              <a href="/" class="footer__cities-link">Работа в других городах</a>
                             </div>
-                            <div class="col-md-5 col-sm-6">
-                                <div class="menu">
-                                    <!--noindex--><p class="footer__slogan">(c) PROMMU <br><span>-</span> Сервис №1 в поиске временной работы и персонала для BTL и Event-мероприятий, 2018</p><!--/noindex-->
-                                </div>
+                            <div class=" footer__cities">
+                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
                             </div>
-                            <div class="col-md-7 col-sm-12">
+                            <div class=" footer__cities">
+                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
                             </div>
+                            <div class=" footer__cities">
+                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                            </div>
+                            <div class=" footer__cities">
+                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                            </div>
+                            <div class=" footer__cities">
+                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                            </div>
+                            <div class=" footer__cities">
+                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                            </div>
+                            <div class=" footer__cities">
+                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                            </div>
+                            <div class=" footer__cities">
+                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                            </div>
+                            <div class=" footer__cities">
+                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                            </div>
+                            <div class=" footer__cities">
+                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                            </div>
+                            <div class=" footer__cities">
+                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                            </div>
+                            <div class=" footer__cities">
+                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                            </div>
+
+                            <?php /*
+                              $arSites = Subdomain::getData(true);
+                              foreach ($arSites as $id => $site):
+                              ?><a href="<?=$site['url']?>" class="footer__cities-link"><?=$site['city']?></a> <?php
+                              endforeach;
+                            */?>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="menu">
+                            <!--noindex--><p class="footer__slogan">(c) PROMMU <br><span>-</span> Сервис №1 в поиске временной работы и персонала для BTL и Event-мероприятий, 2018</p><!--/noindex-->
+                          </div>
                         </div>
                     </div>
                 </div>
