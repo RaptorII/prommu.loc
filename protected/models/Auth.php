@@ -324,7 +324,7 @@ class Auth
 
                 $this->AuthorizeNet(['id' => $usData['id_user']]);
 
-                $link = 'http://' . $_SERVER['HTTP_HOST'] . "/user/activate/?uid=".$usData['id_user']."&sex=".$sex."&smart=".$smart."&birthday=".$birthday."&photos=".$photos;
+                $link = 'http://' . $_SERVER['HTTP_HOST'] . "/user/activate/?type=$type&uid=".$usData['id_user']."&sex=".$sex."&smart=".$smart."&birthday=".$birthday."&photos=".$photos;
 
                 $usData = Yii::app()->db->createCommand()
                 ->select("u.email, u.status")
