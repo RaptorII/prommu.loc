@@ -408,6 +408,44 @@
                       </div>
                     </div>
                 </div>
+                <style type="text/css">
+                	.test__block{ position: relative; }
+                	.test__block:before{
+                		content: '';
+                		width: 50%;
+                		background-color: #2b2b2b;
+                		display: block;
+                		position: absolute;
+                		top: 0;
+                		bottom: 0;
+                		left: 0;
+                		z-index: 0;
+                	}
+                	.test__block .container{
+                		display: flex;
+                	}
+                	.test__block-grey{
+                		width: 80%;
+						background-color: #2b2b2b;
+						border-radius: 0 10px 10px 0;
+                	}
+                	.test__block-social{
+                		width: 20%;
+                	}
+                </style>
+                <div class="test__block">
+                	<div class="container">
+		             	<div class="test__block-grey">
+		            		<div class="test__block-menu">МЕНЮ</div>
+		            		<div class="test__block-load">СКАЧАТЬ</div>
+		            	</div>
+		            	<div class="test__block-social">
+		            		<div class="test__block-links">Присоединяйтесь</div>
+		            	</div>
+                	</div>
+                </div>
+
+
                 <div id="footer-content" class="">
                 <script type="text/javascript">
                   $(window).ready(function(){
