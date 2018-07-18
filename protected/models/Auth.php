@@ -1867,7 +1867,7 @@ class Auth
         //       }
 
 
-        $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=2&t=' . $token . "&uid=" . $idUs."&sex=".$sex."&birthday=".$birthday."&photos=".$data['photos']."&smart=1&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer";
+        $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=2&t=' . $token . "&uid=" . $idUs."&sex=".$sex."&birthday=".$birthday."&photos=".$data['photos']."&smart=1&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
 
 
 
