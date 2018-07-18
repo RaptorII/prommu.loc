@@ -408,96 +408,53 @@
                       </div>
                     </div>
                 </div>
-                <style type="text/css">
-                	.test__block{ position: relative; }
-                	.test__block:before{
-                		content: '';
-                		width: 50%;
-                		background-color: #2b2b2b;
-                		display: block;
-                		position: absolute;
-                		top: 0;
-                		bottom: 0;
-                		left: 0;
-                		z-index: 0;
-                	}
-                	.test__block .container{
-                		display: flex;
-                	}
-                	.test__block-grey{
-                		width: 80%;
-						background-color: #2b2b2b;
-						border-radius: 0 10px 10px 0;
-                	}
-                	.test__block-social{
-                		width: 20%;
-                	}
-                </style>
-                <div class="test__block">
-                	<div class="container">
-		             	<div class="test__block-grey">
-		            		<div class="test__block-menu">МЕНЮ</div>
-		            		<div class="test__block-load">СКАЧАТЬ</div>
-		            	</div>
-		            	<div class="test__block-social">
-		            		<div class="test__block-links">Присоединяйтесь</div>
-		            	</div>
-                	</div>
-                </div>
-
-
                 <div id="footer-content" class="">
-                <script type="text/javascript">
-                  $(window).ready(function(){
-                  $mr = $(".container").css('marginRight');
-                  $("#footer-content .pd-script").css("paddingRight", $mr);
-                  $("#footer-content .footer__big-menu .menu").css("paddingLeft", $mr);
-                  });
-                </script>
-                  <div class="row pd-script">
-                    <!--Content of footer-->
-                            <div class="col-xs-12 col-sm-7 col-lg-6 footer__big-menu">
-                                <div class="menu row">
-                                    <div class="col-sm-6 col-lg-2">
-                                      <a href="/vacancy" rel="nofollow" class="footer__big-menu-link"><ins>Вакансии</ins></a>
-                                      <a href="/ankety" rel="nofollow" class="footer__big-menu-link"><ins>Анкеты</ins></a>
-                                      <a href="/searchempl" rel="nofollow" class="footer__big-menu-link"><ins>Компании</ins></a>
-                                    </div>
-                                    <div class="col-sm-6 col-lg-4">
-                                      <a href="/work-for-students" rel="nofollow" class="footer__big-menu-link"><ins>Работа для студентов</ins></a>
-                                      <a href="/services" rel="nofollow" class="footer__big-menu-link"><ins>Услуги</ins></a>
-                                      <a href="<?=MainConfig::$PAGE_IDEAS_LIST?>" class="footer__big-menu-link"><ins>Идеи и предложения</ins></a>
-                                    </div>
-                                    <div class="col-sm-6 col-lg-2">
-                                      <a href="/about" rel="nofollow" class="footer__big-menu-link"><ins>О нас</ins></a>
-                                      <a href="<?=MainConfig::$PAGE_FAQ?>" class="footer__big-menu-link"><ins>FAQ</ins></a>
-                                      <a href="/about/news" rel="nofollow" class="footer__big-menu-link"><ins>Новости</ins></a>
-                                    </div>
-                                    <div class="col-sm-6 col-lg-4">
-                                      <a href="/about/news" rel="nofollow" class="footer__big-menu-link"><ins>Полезные статьи</ins></a>
-                                      <a href="/map" class="footer__big-menu-link"><ins>Карта сайта</ins></a>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
-                            <div class="col-xs-5 col-sm-3 col-lg-4 footer__download">
-                              <p>Скачать в:</p>
-                              <div class="app-links">
-                                <a href="<?=MainConfig::$LINK_TO_PLAYMARKET?>" rel="nofollow" class="app-bottom-link" target="_blank"></a>
-                                <a href="<?=MainConfig::$LINK_TO_APP_STORE?>" rel="nofollow" class="appstore-bottom-link" target="_blank"></a>
-                              </div>
-                            </div>
-                            <div class="col-xs-7 col-sm-2 col-lg-2 join-us">
-                              <div class="social footer__social">
-                                  <p class="footer__social-text">Присоединяйтесь к нам: </p>
-                                  <div class="social_icons">
-                                    <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icon fb" title="Facebook" target="_blank"><b></b><i></i></a>
-                                    <a href="<?=MainConfig::$PROMMU_VKONTAKTE?>" rel="nofollow" class="icon vk" title="Vkontakte" target="_blank"><b></b><i></i></a>
-                                    <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" rel="nofollow" class="icon tl" title="Telegram" target="_blank"><b></b><i></i></a>
+                  <div class="container">
+                    <div class="row">
+                      <!--Content of footer-->
+                              <div class="col-xs-12 col-sm-7 col-lg-6 footer__big-menu">
+                                  <div class="menu row">
+                                      <div class="col-sm-6 col-lg-2">
+                                        <a href="/vacancy" rel="nofollow" class="footer__big-menu-link"><ins>Вакансии</ins></a>
+                                        <a href="/ankety" rel="nofollow" class="footer__big-menu-link"><ins>Анкеты</ins></a>
+                                        <a href="/searchempl" rel="nofollow" class="footer__big-menu-link"><ins>Компании</ins></a>
+                                      </div>
+                                      <div class="col-sm-6 col-lg-4">
+                                        <a href="/work-for-students" rel="nofollow" class="footer__big-menu-link"><ins>Работа для студентов</ins></a>
+                                        <a href="/services" rel="nofollow" class="footer__big-menu-link"><ins>Услуги</ins></a>
+                                        <a href="<?=MainConfig::$PAGE_IDEAS_LIST?>" class="footer__big-menu-link"><ins>Идеи и предложения</ins></a>
+                                      </div>
+                                      <div class="col-sm-6 col-lg-2">
+                                        <a href="/about" rel="nofollow" class="footer__big-menu-link"><ins>О нас</ins></a>
+                                        <a href="<?=MainConfig::$PAGE_FAQ?>" class="footer__big-menu-link"><ins>FAQ</ins></a>
+                                        <a href="/about/news" rel="nofollow" class="footer__big-menu-link"><ins>Новости</ins></a>
+                                      </div>
+                                      <div class="col-sm-6 col-lg-4">
+                                        <a href="/about/news" rel="nofollow" class="footer__big-menu-link"><ins>Полезные статьи</ins></a>
+                                        <a href="/map" class="footer__big-menu-link"><ins>Карта сайта</ins></a>
+                                      </div>
+                                      <div class="clearfix"></div>
                                   </div>
                               </div>
-                            </div>
-                            <div class="clearfix"></div>
+                              <div class="col-xs-5 col-sm-3 col-lg-4 footer__download">
+                                <p>Скачать в:</p>
+                                <div class="app-links">
+                                  <a href="<?=MainConfig::$LINK_TO_PLAYMARKET?>" rel="nofollow" class="app-bottom-link" target="_blank"></a>
+                                  <a href="<?=MainConfig::$LINK_TO_APP_STORE?>" rel="nofollow" class="appstore-bottom-link" target="_blank"></a>
+                                </div>
+                              </div>
+                              <div class="col-xs-7 col-sm-2 col-lg-2 join-us">
+                                <div class="social footer__social">
+                                    <p class="footer__social-text">Присоединяйтесь к нам: </p>
+                                    <div class="social_icons">
+                                      <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icon fb" title="Facebook" target="_blank"><b></b><i></i></a>
+                                      <a href="<?=MainConfig::$PROMMU_VKONTAKTE?>" rel="nofollow" class="icon vk" title="Vkontakte" target="_blank"><b></b><i></i></a>
+                                      <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" rel="nofollow" class="icon tl" title="Telegram" target="_blank"><b></b><i></i></a>
+                                    </div>
+                                </div>
+                              </div>
+                              <div class="clearfix"></div>
+                    </div>
                   </div>
                 </div>
                 <div id="footer-tegs" class="container">

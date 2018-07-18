@@ -118,6 +118,7 @@
 /*Content of footer*/
 #footer-content {
   padding: 0 15px;
+  position: relative;
 }
 
 #DiFooter .menu a {
@@ -133,6 +134,7 @@
   background-color: #2b2b2b;
   padding-top: 20px;
   padding-bottom: 10px;
+  padding-left: 0;
 }
 #footer-content .footer__big-menu .menu{
   margin-left: 0;
@@ -319,13 +321,27 @@
   }
 
 /*Content of footer*/
-#footer-content .pd-script {
+#footer-content .row {
   display:flex !important;
   display: -ms-flexbox !important;
   margin-right: 0;
 }
+#footer-content:before{
+  content: '';
+  width: 50%;
+  background-color: #2b2b2b;
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+}
   #DiFooter .menu {
     margin-top: 0;
+  }
+  .footer__big-menu .menu {
+    text-align: left !important;
   }
 .app-bottom-link {
   bottom: 0;
@@ -373,6 +389,10 @@
 
   .footer__cities {
       left: 0%;
+  }
+  .join-us {
+    padding-left: 0;
+    padding-right: 0;
   }
   .app-links {
     display: inline-block;
