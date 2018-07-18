@@ -407,41 +407,33 @@
                           </div>
                       </div>
                       <!--Content of footer-->
-                      <div class="col-md-12 footer__module footer__menu-soc" style="">
+                      <div id="footer-content" class="col-md-12 footer__module footer__menu-soc" style="">
                         	<div class="row">
-	                            <div class="col-md-6 footer__big-menu pd25">
+	                            <div class="col-md-6 footer__big-menu">
 	                                <div class="menu row">
-                                      <div class="col-xs-3">
+                                      <div class="col-xs-12 col-lg-4">
                                         <a href="/vacancy" rel="nofollow" class="footer__big-menu-link"><ins>Вакансии</ins></a>
-                                      </div>
-                                      <div class="col-xs-3">
                                         <a href="/ankety" rel="nofollow" class="footer__big-menu-link"><ins>Анкеты</ins></a>
+                                        <a href="/searchempl" rel="nofollow" class="footer__big-menu-link"><ins>Компании</ins></a>
                                       </div>
-	                                    <div class="col-xs-3">
-                                        <a href="/services" rel="nofollow" class="footer__big-menu-link"><ins>Наши услуги</ins></a>
+	                                    <div class="col-xs-12 col-lg-5">
+                                        <a href="/work-for-students" rel="nofollow" class="footer__big-menu-link"><ins>Работа для студентов</ins></a>
+                                        <a href="/services" rel="nofollow" class="footer__big-menu-link"><ins>Услуги</ins></a>
+                                        <a href="<?=MainConfig::$PAGE_IDEAS_LIST?>" class="footer__big-menu-link"><ins>Идеи и предложения</ins></a>
                                       </div>
-	                                    <div class="col-xs-3">
+	                                    <div class="col-xs-12 col-lg-3">
                                         <a href="/about" rel="nofollow" class="footer__big-menu-link"><ins>О нас</ins></a>
-                                      </div>
-	                                    <div class="col-xs-3">
-                                        <a href="/about/news" rel="nofollow" class="footer__big-menu-link"><ins>Полезные статьи</ins></a>
-                                      </div>
-	                                    <div class="col-xs-3">
-                                        <a href="/feedback" rel="nofollow" class="footer__big-menu-link"><ins>Связаться с нами</ins></a>
-                                      </div>
-	                                    <div class="col-xs-3">
-                                        <a href="/map" class="footer__big-menu-link"><ins>Карта сайта</ins></a>
-                                      </div>
-	                                    <div class="col-xs-3">
-                                        <a href="<?=MainConfig::$PAGE_IDEAS_LIST?>" class="footer__big-menu-link"><ins>Идеи/Обсуждения</ins></a>
-                                      </div>
-	                                    <div class="col-xs-3">
                                         <a href="<?=MainConfig::$PAGE_FAQ?>" class="footer__big-menu-link"><ins>FAQ</ins></a>
+                                        <a href="/about/news" rel="nofollow" class="footer__big-menu-link"><ins>Новости</ins></a>
+                                      </div>
+	                                    <div class="col-xs-12 col-lg-4">
+                                        <a href="/about/news" rel="nofollow" class="footer__big-menu-link"><ins>Полезные статьи</ins></a>
+                                        <a href="/map" class="footer__big-menu-link"><ins>Карта сайта</ins></a>
                                       </div>
 	                                    <div class="clearfix"></div>
 	                                </div>
 	                            </div>
-                              <div class="col-md-4 footer__download pd25">
+                              <div class="col-md-4 footer__download">
                                 <p>Скачать в:</p>
                                 <div class="app-links">
                                   <a href="<?=MainConfig::$LINK_TO_PLAYMARKET?>" rel="nofollow" class="app-bottom-link" target="_blank"></a>
@@ -449,12 +441,15 @@
                                 </div>
 
                               </div>
-                              <div class="col-md-2 pd25">
+                              <div class="col-md-2 join-us">
                                 <div class="social footer__social">
                                     <p class="footer__social-text">Присоединяйтесь к нам: </p>
-                                    <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icons fb js-g-hashint" title="Facebook" target="_blank"><b></b><i></i></a>
-                                    <a href="<?=MainConfig::$PROMMU_VKONTAKTE?>" rel="nofollow" class="icons vk js-g-hashint" title="Vkontakte" target="_blank"><b></b><i></i></a>
-                                    <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" rel="nofollow" class="icons tl js-g-hashint" title="Telegram" target="_blank"><b></b><i></i></a>
+                                    <div class="social_icons">
+                                      <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icons fb js-g-hashint" title="Facebook" target="_blank"><b></b><i></i></a>
+                                      <a href="<?=MainConfig::$PROMMU_VKONTAKTE?>" rel="nofollow" class="icons vk js-g-hashint" title="Vkontakte" target="_blank"><b></b><i></i></a>
+                                      <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" rel="nofollow" class="icons tl js-g-hashint" title="Telegram" target="_blank"><b></b><i></i></a>
+                                    </div>
+
                                 </div>
                                 <div class="footer__m-social">
                                     <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icons fb" title="Facebook" target="_blank"></a>
@@ -466,47 +461,61 @@
 	                        </div>
                         </div>
                         <!--Tegs-->
-                        <div class="col-md-12 footer__module row">
+                        <div id="footer-tags" class="col-md-12 footer__module">
                             <div class="footer__cities">
-                              <a href="/" class="footer__cities-link">Работа в других городах</a>
+                              <a href="#" class="footer__cities-link">Работа в других городах</a>
+                            </div>
+                            <div class=" footer__cities">
+                              <a href="#" class="footer__cities-link">Москва</a>
                             </div>
                             <div class=" footer__cities">
                               <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
                             </div>
                             <div class=" footer__cities">
-                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                              <a href="#" class="footer__cities-link">Новосибирск</a>
                             </div>
                             <div class=" footer__cities">
-                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                              <a href="#" class="footer__cities-link">Екатеринбург</a>
                             </div>
                             <div class=" footer__cities">
-                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                              <a href="#" class="footer__cities-link">Нижний Новгород</a>
                             </div>
                             <div class=" footer__cities">
-                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                              <a href="#" class="footer__cities-link">Казань</a>
                             </div>
                             <div class=" footer__cities">
-                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                              <a href="#" class="footer__cities-link">Челябинск</a>
                             </div>
                             <div class=" footer__cities">
-                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                              <a href="#" class="footer__cities-link">Ростов-на-Дону</a>
                             </div>
                             <div class=" footer__cities">
-                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                              <a href="#" class="footer__cities-link">Уфа</a>
                             </div>
                             <div class=" footer__cities">
-                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                              <a href="#" class="footer__cities-link">Красноярск</a>
                             </div>
                             <div class=" footer__cities">
-                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                              <a href="#" class="footer__cities-link">Пермь</a>
                             </div>
                             <div class=" footer__cities">
-                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                              <a href="#" class="footer__cities-link">Воронеж</a>
                             </div>
                             <div class=" footer__cities">
-                              <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
+                              <a href="#" class="footer__cities-link">Волгоград</a>
                             </div>
-
+                            <div class=" footer__cities">
+                              <a href="#" class="footer__cities-link">Краснодар</a>
+                            </div>
+                            <div class=" footer__cities">
+                              <a href="#" class="footer__cities-link">Саратов</a>
+                            </div>
+                            <div class=" footer__cities">
+                              <a href="#" class="footer__cities-link">Тюмень</a>
+                            </div>
+                            <div class=" footer__cities">
+                              <a href="#" class="footer__cities-link">Самара</a>
+                            </div>
                             <?php /*
                               $arSites = Subdomain::getData(true);
                               foreach ($arSites as $id => $site):
@@ -514,9 +523,11 @@
                               endforeach;
                             */?>
                         </div>
+
                         <div class="col-md-12">
+                          <div class="line"></div>
                           <div class="menu">
-                            <!--noindex--><p class="footer__slogan">(c) PROMMU <br><span>-</span> Сервис №1 в поиске временной работы и персонала для BTL и Event-мероприятий, 2018</p><!--/noindex-->
+                            <!--noindex--><p class="footer__slogan">&copy; PROMMU <br><span>-</span> Сервис №1 в поиске временной работы и персонала для BTL и Event-мероприятий, 2018</p><!--/noindex-->
                           </div>
                         </div>
                     </div>
