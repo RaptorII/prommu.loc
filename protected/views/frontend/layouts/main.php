@@ -460,60 +460,24 @@
                 <div id="footer-tegs" class="container">
                     <!--Tegs-->
                     <div class="row footer__module">
-                        <div class="footer__cities">
                           <a href="#" class="footer__cities-link">Работа в других городах</a>
-                        </div>
-                        <div class=" footer__cities">
                           <a href="#" class="footer__cities-link">Москва</a>
-                        </div>
-                        <div class=" footer__cities">
                           <a href="https://spb.prommu.com/" class="footer__cities-link">Санкт-Петербург</a>
-                        </div>
-                        <div class=" footer__cities">
                           <a href="#" class="footer__cities-link">Новосибирск</a>
-                        </div>
-                        <div class=" footer__cities">
                           <a href="#" class="footer__cities-link">Екатеринбург</a>
-                        </div>
-                        <div class=" footer__cities">
                           <a href="#" class="footer__cities-link">Нижний Новгород</a>
-                        </div>
-                        <div class=" footer__cities">
                           <a href="#" class="footer__cities-link">Казань</a>
-                        </div>
-                        <div class=" footer__cities">
                           <a href="#" class="footer__cities-link">Челябинск</a>
-                        </div>
-                        <div class=" footer__cities">
                           <a href="#" class="footer__cities-link">Ростов-на-Дону</a>
-                        </div>
-                        <div class=" footer__cities">
                           <a href="#" class="footer__cities-link">Уфа</a>
-                        </div>
-                        <div class=" footer__cities">
                           <a href="#" class="footer__cities-link">Красноярск</a>
-                        </div>
-                        <div class=" footer__cities">
                           <a href="#" class="footer__cities-link">Пермь</a>
-                        </div>
-                        <div class=" footer__cities">
                           <a href="#" class="footer__cities-link">Воронеж</a>
-                        </div>
-                        <div class=" footer__cities">
                           <a href="#" class="footer__cities-link">Волгоград</a>
-                        </div>
-                        <div class=" footer__cities">
                           <a href="#" class="footer__cities-link">Краснодар</a>
-                        </div>
-                        <div class=" footer__cities">
                           <a href="#" class="footer__cities-link">Саратов</a>
-                        </div>
-                        <div class=" footer__cities">
                           <a href="#" class="footer__cities-link">Тюмень</a>
-                        </div>
-                        <div class=" footer__cities">
                           <a href="#" class="footer__cities-link">Самара</a>
-                        </div>
 
                         <?php /*
                           $arSites = Subdomain::getData(true);

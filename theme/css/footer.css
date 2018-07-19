@@ -133,7 +133,7 @@
 #footer-content .footer__big-menu {
   background-color: #2b2b2b;
   padding-top: 20px;
-  padding-bottom: 10px;
+  padding-bottom: 20px;
   padding-left: 0;
 }
 #footer-content .footer__big-menu .menu{
@@ -142,15 +142,23 @@
 }
 #footer-content .footer__download {
   text-align: center;
-  padding-top: 25px;
-  padding-bottom: 25px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.footer__download p {
+  font-family: RobotoCondensed-Regular, verdana, arial;
+  font-size: 18px;
 }
 #DiFooter .footer__social {
   display: block;
 }
 .join-us {
-  padding-top: 25px;
-  padding-bottom: 25px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.join-us p {
+  font-family: RobotoCondensed-Regular, verdana, arial;
+  font-size: 18px;
 }
 .app-links {
   display: block;
@@ -184,6 +192,7 @@
   position: relative;
   margin: 0;
 }
+
 .social_icons {
   margin-left: auto;
   margin-right: auto;
@@ -215,24 +224,28 @@
   -ms-flex-pack: justify!important;
   justify-content: space-between!important;
   margin-bottom: 5px;
-  max-height: 128px;
+  max-height: 80px;
   overflow-y: hidden;
   margin-top: 24px;
   margin-bottom: 24px;
 }
 
-.footer__cities {
-    text-align: center;
-    margin-bottom: 12px;
-    background-color: #2b2b2b;
-    padding: 15px 28px;
-    border-radius: 10px;
-    float: left;
-    margin-right: 10px;
-    margin-left: 0px;
+#footer-tegs .footer__cities-link {
+  font-family: RobotoCondensed-Regular;
+  font-size: 14px !important;
+  color: #989898 !important;
+  text-align: center;
+  background-color: #2b2b2b;
+  padding: 0 28px;
+  line-height: 34px;
+  border-radius: 5px;
+  float: left;
+  margin: 0 auto 12px;
 }
-.footer__cities:hover {
+#footer-tegs .footer__cities-link:hover {
   background-color: #abb92a;
+  color: #ffffff !important;
+
 }
 #DiFooter .footer__cities a {
     text-decoration: none;
@@ -240,7 +253,7 @@
 }
 
 #copyright .footer__slogan {
-  font-family: RobotoCondensed-Regular, verdana, arial;
+  font-family: RobotoCondensed-Regular;
   font-size: 18px;
   text-align: center;
   padding-top: 25px;
@@ -249,6 +262,7 @@
 }
 #copyright p {
   margin-bottom: 0;
+  padding: 0 15px;
 }
 #DiFooter {
   padding-bottom: 0;
@@ -343,6 +357,10 @@
   .footer__big-menu .menu {
     text-align: left !important;
   }
+.footer__big-menu-link {
+  font-family: RobotoCondensedLight;
+  font-size: 18px !important;
+}
 .app-bottom-link {
   bottom: 0;
   right: 0;
@@ -368,6 +386,9 @@
   #footer-head #description {
     display: inline-block;
     margin-left: 15px;
+    margin-top: 20px;
+  }
+  #footer-head #description h1 {
     margin-top: 0;
   }
   .app-bottom-link {
@@ -385,6 +406,9 @@
 @media (min-width: 1200px) {
   #footer-head .feedback {
     margin-right: 8vw;
+  }
+  .footer__big-menu-link {
+    white-space: nowrap;
   }
 
   .footer__cities {
