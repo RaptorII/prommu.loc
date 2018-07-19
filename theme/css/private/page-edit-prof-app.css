@@ -117,6 +117,11 @@
 	border-top: 1px solid #D8DEA2;
 	border-bottom: 1px solid #D8DEA2;
 	list-style: none;
+	background-color: #ffffff;
+}
+.epa__logo-name-list.fixed{
+	position: fixed;
+	top: 15px;
 }
 .epa__logo-name{
 	padding-left: 20px;
@@ -966,6 +971,7 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 		display: table-cell;
 		padding-right: 20px;
 		vertical-align: top;
+		position: relative;
 	}
 	.epa__content-data{
 		display: table-cell;

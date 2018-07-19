@@ -195,6 +195,8 @@
 .sv__checkbox-attr-item.med:after{ background-position: 7px 0px }
 .sv__checkbox-attr-item.auto:after{ background-position: 7px -34px }
 .sv__checkbox-attr-item.smart:after{ background-position: 7px -68px }
+.sv__checkbox-attr-item.pcard:after{ background-position: 3px -138px }
+.sv__checkbox-attr-item.card:after{ background-position: 3px -174px }
 .sv__textblock-title{
 	padding-left: 30px;
 	margin: 20px 0 15px;
@@ -235,6 +237,7 @@
 .sv__textblock-text{
 	padding: 12px 15px;
 	border: 1px solid #ABB837;
+	word-wrap: break-word;
 }
 #DiContent .single-vacancy__data .btn-orange-fix-wr a{
 	width: 100%;

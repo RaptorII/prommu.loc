@@ -11,7 +11,7 @@
     <div class="col-xs-12 page-empl__content">
         <div class="img-01 page-empl__img">
             <?php if( Share::$UserProfile->type != 2 ): ?>
-                <div class="btn-wrapp btn-orange-fix-wr"><a href="<?= Share::$UserProfile->type == 3 ? MainConfig::$PAGE_VACPUB : MainConfig::$PAGE_REGISTER ?>" class="hvr-sweep-to-right">опубликовать<br/>вакансию</a></div>
+                <div class="btn-wrapp btn-orange-fix-wr"><a href="<?= Share::$UserProfile->type == 3 ? MainConfig::$PAGE_VACPUB : MainConfig::$PAGE_REGISTER .'?p=2' ?>" class="hvr-sweep-to-right">опубликовать<br/>вакансию</a></div>
             <?php endif; ?>
         </div>
         <?php echo $viData['html']; ?>

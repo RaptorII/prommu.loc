@@ -452,6 +452,12 @@ class SearchPromo extends Model
             $url[] = 'cardprommu';
             $cnt++;
         }
+        // pages
+        if(isset($data['page']))
+        {
+            $url[] = 'page='.$data['page'];
+            $cnt++;
+        }
 
         if(!$cnt) $str = '/ankety';
         elseif($cnt==1) $str = '/ankety/';

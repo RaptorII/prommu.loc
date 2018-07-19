@@ -1220,4 +1220,19 @@ jQuery(function($){
 			}
 		}
 	}
+	//
+	//
+	// управляем позицией блока содержания
+	var posContentList = $('.epa__logo-name-list').offset().top - 15;
+	$(window).on('resize scroll',scrollContentList);
+	scrollContentList();
+	function scrollContentList() {
+		(
+			$(document).scrollTop() > posContentList
+			&&
+			$(window).width() > 750
+		)
+		? $('.epa__logo-name-list').addClass('fixed')
+		: $('.epa__logo-name-list').removeClass('fixed');
+	}
 });

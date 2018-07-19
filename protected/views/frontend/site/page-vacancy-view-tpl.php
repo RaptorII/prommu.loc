@@ -863,6 +863,12 @@
                     <?php if($vacancy['smart']): ?>
                         <div class="sv__checkbox-attr-item smart">Смартфон</div>
                     <?php endif; ?>
+                    <?php if($vacancy['cardPrommu']): ?>
+                        <div class="sv__checkbox-attr-item pcard">Банк. карта Prommu</div>
+                    <?php endif; ?>
+                    <?php if($vacancy['card']): ?>
+                        <div class="sv__checkbox-attr-item card">Банк. карта</div>
+                    <?php endif; ?>
                     <div class="clearfix"></div>
                 </div>
 

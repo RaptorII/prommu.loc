@@ -663,62 +663,64 @@ public function rules()
 
     public function updateVacancy($data, $id)
     {
-    		if(empty($data['ismoder'])) $data['ismoder'] = 0;
-    		    $res = Yii::app()->db->createCommand()
-                ->update('empl_vacations', $data
-                    ,'id = :id', array(':id' => $id) );
-             $vac = $this->getVacancyInfo($id);
-            if($data['ismoder'] == "100" ){
-            $vac = $this->getVacancyInfo($id);
-              $message = sprintf("Ув. %s. 
-                            <br />
-                            <br />
-                            Ваша вакансия «%s» прошла модерацию и опубликована на сервисе PROMMU.COM
-                            <br />
-                            <br />
-                            Сообщаем Вам что информацию по данным вакансии можете корректировать исходя из возникших ситуаций и задач.
-                            <br />
-                            Ссылка на Вашу вакансию: <a href='https://%3$01s'>%s</a>
-                            <br />
-                            <br />
-                            Преимущества размещения вакансии на сервисе ПРОММУ:
-                            <ol>
-                              <li>Большая база проверенного персонала</li>
-                              <li>Система отзывов и рейтинга персонала</li>
-                              <li>Размещение вакансии происходит с подсказками и с возможностью учесть все мелочи по вакансии (избежание дополнительных утомительных вопросов)</li>
-                              <li>Push оповещения персонала персонала подходящего под указанные параметры в вакансии</li>
-                              <li>Обсуждение вакансии на сервисе онлайн со всеми отобранными соискателями (всех кого отобрали позже – смогут прочесть все ранее написанные сообщения)</li>
-                              <li>Отбирать и Отклонять кандидатов на вакансию в 1 клик</li>
-                              <li>И много других преимуществ, которые Вы ощутите работая на нашем сервисе</li>
-                              <li>Легких, прибыльных и удачных Вам проектов.</li>
-                            </ol>
-                            Если у Вас возникли сложности или есть дополнительные вопросы обращайтесь сюда <a href='mailto:%4$01s'>%s</a> мы максимально быстро дадим ответ",
-                        $vac[0]['name'],
-                        $vac[0]['title'],
-                        MainConfig::$SITE . MainConfig::$PAGE_VACANCY . "/" . $id,
-                        "https://prommu.com/feedback"
-                    );
+        if(!isset($data['index']))
+            $data['index'] = 0;
+		if(empty($data['ismoder'])) $data['ismoder'] = 0;
+		    $res = Yii::app()->db->createCommand()
+            ->update('empl_vacations', $data
+                ,'id = :id', array(':id' => $id) );
+         $vac = $this->getVacancyInfo($id);
+        if($data['ismoder'] == "100" ){
+        $vac = $this->getVacancyInfo($id);
+          $message = sprintf("Ув. %s. 
+                        <br />
+                        <br />
+                        Ваша вакансия «%s» прошла модерацию и опубликована на сервисе PROMMU.COM
+                        <br />
+                        <br />
+                        Сообщаем Вам что информацию по данным вакансии можете корректировать исходя из возникших ситуаций и задач.
+                        <br />
+                        Ссылка на Вашу вакансию: <a href='https://%3$01s'>%s</a>
+                        <br />
+                        <br />
+                        Преимущества размещения вакансии на сервисе ПРОММУ:
+                        <ol>
+                          <li>Большая база проверенного персонала</li>
+                          <li>Система отзывов и рейтинга персонала</li>
+                          <li>Размещение вакансии происходит с подсказками и с возможностью учесть все мелочи по вакансии (избежание дополнительных утомительных вопросов)</li>
+                          <li>Push оповещения персонала персонала подходящего под указанные параметры в вакансии</li>
+                          <li>Обсуждение вакансии на сервисе онлайн со всеми отобранными соискателями (всех кого отобрали позже – смогут прочесть все ранее написанные сообщения)</li>
+                          <li>Отбирать и Отклонять кандидатов на вакансию в 1 клик</li>
+                          <li>И много других преимуществ, которые Вы ощутите работая на нашем сервисе</li>
+                          <li>Легких, прибыльных и удачных Вам проектов.</li>
+                        </ol>
+                        Если у Вас возникли сложности или есть дополнительные вопросы обращайтесь сюда <a href='mailto:%4$01s'>%s</a> мы максимально быстро дадим ответ",
+                    $vac[0]['name'],
+                    $vac[0]['title'],
+                    MainConfig::$SITE . MainConfig::$PAGE_VACANCY . "/" . $id,
+                    "https://prommu.com/feedback"
+                );
 
-                    Share::sendmail($vac[0]['email'], "Prommu.com. Вакансия прошла модерацию", $message);
+                Share::sendmail($vac[0]['email'], "Prommu.com. Вакансия прошла модерацию", $message);
 
-            $this->VkRepost($id, $vac[0]['repost']);
+        $this->VkRepost($id, $vac[0]['repost']);
 
-            $ids = $vac[0]['id_user'];
-          
-            $sql = "SELECT r.push
-            FROM user_push r
-            WHERE r.id = {$ids}";
-            $res = Yii::app()->db->createCommand($sql)->queryRow(); 
+        $ids = $vac[0]['id_user'];
+      
+        $sql = "SELECT r.push
+        FROM user_push r
+        WHERE r.id = {$ids}";
+        $res = Yii::app()->db->createCommand($sql)->queryRow(); 
 
 
 
-            if($res) {
-                $type = "vacmoder";
-                $api = new Api();
-                $api->getPush($res['push'], $type);
-            
-                    }
+        if($res) {
+            $type = "vacmoder";
+            $api = new Api();
+            $api->getPush($res['push'], $type);
+        
                 }
+            }
 
             
     }

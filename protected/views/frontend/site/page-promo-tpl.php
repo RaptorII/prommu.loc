@@ -11,7 +11,7 @@
     <div class="col-xs-12 page-prom__content">
         <div class="img-02 page-prom__img">
             <?php if( Share::$UserProfile->type != 3 ): ?>
-                <div class="btn-wrapp"><a href="https://prommu.com/user/register?p=1" class="btn-big-swipe hvr-sweep-to-right">найти<br/>вакансию</a></div>
+                <div class="btn-wrapp"><a href="<?= Share::$UserProfile->type == 2 ? MainConfig::$PAGE_VACANCY : MainConfig::$PAGE_REGISTER .'?p=1' ?>" class="btn-big-swipe hvr-sweep-to-right">найти<br/>вакансию</a></div>
             <?php endif; ?>
         </div>
         <?php echo $viData['html']; ?>
