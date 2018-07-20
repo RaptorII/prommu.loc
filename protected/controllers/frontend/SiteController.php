@@ -328,16 +328,6 @@ class SiteController extends AppController
         }
         else
         {
-            if(
-                !empty($_GET['qs']) ||
-                sizeof($_GET['cities']) ||
-                sizeof($_GET['posts'])>1 || 
-                isset($_GET['sm']) || isset($_GET['sf']) || 
-                isset($_GET['mb']) || isset($_GET['avto']) || isset($_GET['smart']) || 
-                isset($_GET['cardPrommu']) || isset($_GET['card'])
-            ) // remove from index
-                Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
-
             if(!isset(Yii::app()->request->cookies['srch_a_view']->value))
                 Yii::app()->request->cookies['srch_a_view'] = new CHttpCookie('srch_a_view', 'list');
 
@@ -602,14 +592,15 @@ class SiteController extends AppController
 
             $vac = (new Vacancy())->getVacancyView($id);
             // if vacancy from subdomains
-            if(sizeof($vac['vac']['city'])==1) {
+            /*if(sizeof($vac['vac']['city'])==1) {
                 $arSID = Subdomain::getIdies();
                 foreach ($vac['vac']['city'] as $id => $c)
                     if(in_array($id, $arSID)) {
-                        header("Location: " . $id . MainConfig::$PAGE_VACANCY . DS . $id);
+                        $arSub = Subdomain::getData(true);
+                        header("Location: " . $arSub[$id]['url'] . MainConfig::$PAGE_VACANCY . DS . $id);
                         exit();
                     }
-            }
+            }*/
 
             if(isset($vac['error']) && $vac['error'] == 1)
             {
@@ -620,6 +611,15 @@ class SiteController extends AppController
 
             if(Share::$UserProfile->type==3 && $vac['vac']['idus']==Share::$UserProfile->id){
                 Yii::app()->session['editVacId'] = $id;  
+            }
+
+            // закрываем вакансии, в которых больше одного города
+            if(
+                //(sizeof($vac['vac']['city'])>1 && array_key_exists(Subdomain::getId(), $vac['vac']['city']))
+                //||
+                (sizeof($vac['vac']['city'])==1 && !array_key_exists(Subdomain::getId(), $vac['vac']['city']))
+            ){
+                Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
             }
 
             $view = $this->ViewModel->pageVacancy;
@@ -636,22 +636,6 @@ class SiteController extends AppController
         }
         else
         {
-            if(
-                sizeof($_GET['post'])>1 || 
-                sizeof($_GET['cities']) || 
-                (isset($_GET['bt']) && $_GET['bt']!=3) ||
-                isset($_GET['sphf']) || isset($_GET['spht']) || 
-                isset($_GET['spwf']) || isset($_GET['spwt']) || 
-                isset($_GET['spmf']) || isset($_GET['spmt']) || 
-                isset($_GET['spvf']) || isset($_GET['spvt']) || 
-                (isset($_GET['sex']) && $_GET['sex']!=3) ||
-                isset($_GET['af']) || isset($_GET['at']) ||
-                isset($_GET['smart']) || isset($_GET['pcard']) || isset($_GET['bcard'])
-            ) // remove from index
-                Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
-
-
-
             if(!isset(Yii::app()->request->cookies['vacancies_page_view']->value))
                 Yii::app()->request->cookies['vacancies_page_view'] = new CHttpCookie('vacancies_page_view', 'list');
 

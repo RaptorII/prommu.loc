@@ -28,7 +28,7 @@ class Employer extends ARModel
             array('id, status, isblocked', 'numerical', 'integerOnly'=>true),
             array('name, firstname,lastname, city, admin', 'length', 'max'=>64),
             // array('email','email'),
-            array('id, name,accountmail, firstname, city, lastname, logo, type, crdate, ismoder, isblocked, admin', 'safe', 'on'=>'search'),
+            array('id, name, firstname, city, lastname, logo, type, crdate, ismoder, isblocked, admin', 'safe', 'on'=>'search'),
         );
 
     }
@@ -185,7 +185,6 @@ class Employer extends ARModel
         $criteria->compare('isblocked',$this->isblocked, true);
         $criteria->compare('mdate',$this->mdate, true);
         $criteria->compare('admin',$this->admin, true);
-        $criteria->compare('accountmail',$this->accountmail, true);
         return new CActiveDataProvider('Employer', array(
             'criteria'=>$criteria,
             'pagination' => array('pageSize' => 100,),

@@ -67,19 +67,20 @@ class SearchVac extends Model
     // получение кол-ва вакансий
     public function searchVacationsCount($props = [])
     {
-        $strCities = Subdomain::getCitiesIdies(true);
+        //$strCities = Subdomain::getCitiesIdies(true); // ID всех городов существующих СУБДОМЕНОВ
         $filter = $props['filter'] ?: [];
         $filter = $this->renderSQLFilter(['filter' => $filter]);
 
         $sql = "SELECT COUNT(DISTINCT e.id)
-            FROM empl_vacations e
-              INNER JOIN empl_city c ON c.id_vac = e.id 
-              {$filter['table']}
-            INNER JOIN empl_attribs ea ON ea.id_vac = e.id  
-              {$filter['filter']}
-             AND e.status = 1 AND e.ismoder = 100  AND !(c.id_city IN({$strCities}))
-              ORDER BY e.ispremium DESC, e.id DESC ";
-        /** @var $res CDbCommand */
+                FROM empl_vacations e
+                INNER JOIN empl_city c ON c.id_vac = e.id 
+                {$filter['table']}
+                INNER JOIN empl_attribs ea ON ea.id_vac = e.id  
+                {$filter['filter']}
+                AND e.status = 1 AND e.ismoder = 100  
+                /*AND !(c.id_city IN({$strCities}))*/ 
+                ORDER BY e.ispremium DESC, e.id DESC ";
+
         $res = Yii::app()->db->createCommand($sql);
 
         return $res->queryScalar();
@@ -251,6 +252,7 @@ class SearchVac extends Model
         $url = array();
         $this->updateSeoValues();
         $cnt = 0;
+        $hasPost = false;
 
         // должности
         if(isset($data['post']) && is_array($data['post']) && sizeof($data['post']))
@@ -266,6 +268,7 @@ class SearchVac extends Model
             }
             if(sizeof($posts))
                 $url[] = implode(',', $posts);
+            $hasPost = true;
         }
 
         // города
@@ -373,8 +376,8 @@ class SearchVac extends Model
         }
         
         if(!$cnt) $str = '/vacancy';
-        elseif($cnt==1) $str = '/vacancy/';
-        elseif($cnt>1) $str = '/vacancy/?';
+        elseif($cnt==1 && $hasPost) $str = '/vacancy/';
+        else $str = '/vacancy/?';
 
         return $str . implode('/', $url);
     }
