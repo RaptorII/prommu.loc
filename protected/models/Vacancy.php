@@ -346,7 +346,7 @@ public function rules()
             LEFT JOIN vacation_stat vs ON vs.id_vac = v.id 
             LEFT JOIN employer e ON e.id_user = v.id_user
             WHERE v.id_user = {$idus}
-            AND (v.status = 0 )
+            AND (v.status = 0 OR vs.status in (6,7))
             ORDER BY v.id DESC
             ";
         
@@ -663,62 +663,64 @@ public function rules()
 
     public function updateVacancy($data, $id)
     {
-    		if(empty($data['ismoder'])) $data['ismoder'] = 0;
-    		    $res = Yii::app()->db->createCommand()
-                ->update('empl_vacations', $data
-                    ,'id = :id', array(':id' => $id) );
-             $vac = $this->getVacancyInfo($id);
-            if($data['ismoder'] == "100" ){
-            $vac = $this->getVacancyInfo($id);
-              $message = sprintf("Ув. %s. 
-                            <br />
-                            <br />
-                            Ваша вакансия «%s» прошла модерацию и опубликована на сервисе PROMMU.COM
-                            <br />
-                            <br />
-                            Сообщаем Вам что информацию по данным вакансии можете корректировать исходя из возникших ситуаций и задач.
-                            <br />
-                            Ссылка на Вашу вакансию: <a href='https://%3$01s'>%s</a>
-                            <br />
-                            <br />
-                            Преимущества размещения вакансии на сервисе ПРОММУ:
-                            <ol>
-                              <li>Большая база проверенного персонала</li>
-                              <li>Система отзывов и рейтинга персонала</li>
-                              <li>Размещение вакансии происходит с подсказками и с возможностью учесть все мелочи по вакансии (избежание дополнительных утомительных вопросов)</li>
-                              <li>Push оповещения персонала персонала подходящего под указанные параметры в вакансии</li>
-                              <li>Обсуждение вакансии на сервисе онлайн со всеми отобранными соискателями (всех кого отобрали позже – смогут прочесть все ранее написанные сообщения)</li>
-                              <li>Отбирать и Отклонять кандидатов на вакансию в 1 клик</li>
-                              <li>И много других преимуществ, которые Вы ощутите работая на нашем сервисе</li>
-                              <li>Легких, прибыльных и удачных Вам проектов.</li>
-                            </ol>
-                            Если у Вас возникли сложности или есть дополнительные вопросы обращайтесь сюда <a href='mailto:%4$01s'>%s</a> мы максимально быстро дадим ответ",
-                        $vac[0]['name'],
-                        $vac[0]['title'],
-                        MainConfig::$SITE . MainConfig::$PAGE_VACANCY . "/" . $id,
-                        "https://prommu.com/feedback"
-                    );
+        if(!isset($data['index']))
+            $data['index'] = 0;
+		if(empty($data['ismoder'])) $data['ismoder'] = 0;
+		    $res = Yii::app()->db->createCommand()
+            ->update('empl_vacations', $data
+                ,'id = :id', array(':id' => $id) );
+         $vac = $this->getVacancyInfo($id);
+        if($data['ismoder'] == "100" ){
+        $vac = $this->getVacancyInfo($id);
+          $message = sprintf("Ув. %s. 
+                        <br />
+                        <br />
+                        Ваша вакансия «%s» прошла модерацию и опубликована на сервисе PROMMU.COM
+                        <br />
+                        <br />
+                        Сообщаем Вам что информацию по данным вакансии можете корректировать исходя из возникших ситуаций и задач.
+                        <br />
+                        Ссылка на Вашу вакансию: <a href='https://%3$01s'>%s</a>
+                        <br />
+                        <br />
+                        Преимущества размещения вакансии на сервисе ПРОММУ:
+                        <ol>
+                          <li>Большая база проверенного персонала</li>
+                          <li>Система отзывов и рейтинга персонала</li>
+                          <li>Размещение вакансии происходит с подсказками и с возможностью учесть все мелочи по вакансии (избежание дополнительных утомительных вопросов)</li>
+                          <li>Push оповещения персонала персонала подходящего под указанные параметры в вакансии</li>
+                          <li>Обсуждение вакансии на сервисе онлайн со всеми отобранными соискателями (всех кого отобрали позже – смогут прочесть все ранее написанные сообщения)</li>
+                          <li>Отбирать и Отклонять кандидатов на вакансию в 1 клик</li>
+                          <li>И много других преимуществ, которые Вы ощутите работая на нашем сервисе</li>
+                          <li>Легких, прибыльных и удачных Вам проектов.</li>
+                        </ol>
+                        Если у Вас возникли сложности или есть дополнительные вопросы обращайтесь сюда <a href='mailto:%4$01s'>%s</a> мы максимально быстро дадим ответ",
+                    $vac[0]['name'],
+                    $vac[0]['title'],
+                    MainConfig::$SITE . MainConfig::$PAGE_VACANCY . "/" . $id,
+                    "https://prommu.com/feedback"
+                );
 
-                    Share::sendmail($vac[0]['email'], "Prommu.com. Вакансия прошла модерацию", $message);
+                Share::sendmail($vac[0]['email'], "Prommu.com. Вакансия прошла модерацию", $message);
 
-            $this->VkRepost($id, $vac[0]['repost']);
+        $this->VkRepost($id, $vac[0]['repost']);
 
-            $ids = $vac[0]['id_user'];
-          
-            $sql = "SELECT r.push
-            FROM user_push r
-            WHERE r.id = {$ids}";
-            $res = Yii::app()->db->createCommand($sql)->queryRow(); 
+        $ids = $vac[0]['id_user'];
+      
+        $sql = "SELECT r.push
+        FROM user_push r
+        WHERE r.id = {$ids}";
+        $res = Yii::app()->db->createCommand($sql)->queryRow(); 
 
 
 
-            if($res) {
-                $type = "vacmoder";
-                $api = new Api();
-                $api->getPush($res['push'], $type);
-            
-                    }
+        if($res) {
+            $type = "vacmoder";
+            $api = new Api();
+            $api->getPush($res['push'], $type);
+        
                 }
+            }
 
             
     }
@@ -2002,7 +2004,7 @@ WHERE id_vac = {$inVacId}";
 
     public function getVacancySearchemplPage($inParams)
     {
-        $strCities = Subdomain::getCitiesIdies(true);
+        //$strCities = Subdomain::getCitiesIdies(true);
         $filter = $inParams['filter'];
         $limit = (int)$inParams['limit'] > 0 ? "LIMIT {$inParams['offset']}, {$inParams['limit']}" : '';
         $sql = "SELECT e.id, e.ispremium, e.title, e.requirements, e.duties, e.conditions, e.istemp,
@@ -2023,7 +2025,7 @@ WHERE id_vac = {$inVacId}";
             INNER JOIN (
               SELECT DISTINCT e.id
               FROM empl_vacations e
-              INNER JOIN empl_city c ON c.id_vac = e.id  AND !(c.id_city IN({$strCities}))
+              INNER JOIN empl_city c ON c.id_vac = e.id  /*AND !(c.id_city IN({$strCities}))*/
               INNER JOIN user u ON e.id_user = u.id_user 
               INNER JOIN empl_attribs ea ON ea.id_vac = e.id
               {$filter['table']}
@@ -2099,7 +2101,7 @@ WHERE id_vac = {$inVacId}";
 
     private function getVacanciesIndexPage()
     {
-        $strCities = Subdomain::getCitiesIdies(true);
+        //$strCities = Subdomain::getCitiesIdies(true);
         $sql = "SELECT e.id, e.ispremium, e.istemp,
               DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
               e.shour,
@@ -2117,7 +2119,7 @@ WHERE id_vac = {$inVacId}";
             INNER JOIN (
               SELECT DISTINCT e.id
               FROM empl_vacations e
-              INNER JOIN empl_city c ON c.id_vac = e.id AND !(c.id_city IN ({$strCities}))
+              INNER JOIN empl_city c ON c.id_vac = e.id /*AND !(c.id_city IN ({$strCities}))*/
               INNER JOIN empl_attribs ea ON ea.id_vac = e.id
               INNER JOIN user u ON e.id_user = u.id_user
               WHERE e.status = 1
@@ -2127,7 +2129,7 @@ WHERE id_vac = {$inVacId}";
             ) t1 ON t1.id = e.id
             
             LEFT JOIN empl_city c1 ON c1.id_vac = e.id 
-            LEFT JOIN city c2 ON c2.id_city = c1.id_city  AND !(c2.region IN ({$strCities}))
+            LEFT JOIN city c2 ON c2.id_city = c1.id_city  /*AND !(c2.region IN ({$strCities}))*/
             JOIN empl_attribs ea ON ea.id_vac = e.id
             JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
             JOIN employer em ON em.id_user = e.id_user
@@ -2167,7 +2169,7 @@ WHERE id_vac = {$inVacId}";
     public function VkRepost($id, $repost){
 
         $result = $this->getVacancyInfo($id);
-
+        $id_user = $result[0]['id_user'];
         if($result[0]['isman'] && !$result[0]['iswoman']) {
                 $male = "Юноши";
             }elseif($result[0]['iswoman'] && !$result[0]['isman']){
@@ -2251,9 +2253,12 @@ WHERE id_vac = {$inVacId}";
         $idvac = $result[0]['id'];
         $linki = "https://prommu.com/vacancy/$idvac";
         $post = $result[0]['pname'];
+        $city = $result[0]['ciname'];
 
         $message =
                "🔥 Требуется: $post 🔥
+               
+                Город: $city
                 
                 Пол: $male
 
@@ -2298,7 +2303,7 @@ WHERE id_vac = {$inVacId}";
                             ), 'id = :id', array(':id' => $id));
                             
             Yii::app()->db->createCommand()
-                        ->insert('service_cloud', array('id_user' => Share::$UserProfile->id,
+                        ->insert('service_cloud', array('id_user' => $id_user,
                                 'name' => $id,
                                 'type' => "repost", 
                                 'bdate' => date("Y-m-d h-i-s"),
@@ -2312,7 +2317,7 @@ WHERE id_vac = {$inVacId}";
 
         if(substr($repost, 2,1)=='1' && empty($result[0]['tl_link'])) {
             $message =
-               "Опубликована вакансия $title\n\n🔥Требуется: $post\n\n👥Пол: $male\n\n 👫Возраст: $age\n\n 💰Оплата: $coast \n\n⏰Сроки оплаты: после окончания проекта\n\n👔Требования: • $requirements\n\n📝Условия: • $conditions\n\n💼Обязанности: • $duties\n\n👇ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ 👇\n\n👌Cсылка: $linki";
+               "Опубликована вакансия $title\n\n🔥Требуется: $post\n\n 🔥Город: $city\n\n  👥Пол: $male\n\n 👫Возраст: $age\n\n 💰Оплата: $coast \n\n⏰Сроки оплаты: после окончания проекта\n\n👔Требования: • $requirements\n\n📝Условия: • $conditions\n\n💼Обязанности: • $duties\n\n👇ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ 👇\n\n👌Cсылка: $linki";
 
             $sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?parse_mode=HTML&chat_id=@prommucom&text=".urlencode($message)."&disable_web_page_preview=true";
             file_get_contents($sendto);
@@ -2321,7 +2326,7 @@ WHERE id_vac = {$inVacId}";
                                  'tl_link' => "https://t.me/prommucom",
                             ), 'id = :id', array(':id' => $id));
                  Yii::app()->db->createCommand()
-                        ->insert('service_cloud', array('id_user' => Share::$UserProfile->id,
+                        ->insert('service_cloud', array('id_user' => $id_user,
                                 'name' => $id,
                                 'type' => "repost", 
                                 'bdate' => date("Y-m-d h-i-s"),
@@ -2355,7 +2360,7 @@ WHERE id_vac = {$inVacId}";
                                 ), 'id = :id', array(':id' => $id));
             
             Yii::app()->db->createCommand()
-                        ->insert('service_cloud', array('id_user' => Share::$UserProfile->id,
+                        ->insert('service_cloud', array('id_user' => $id_user,
                                 'name' => $id,
                                 'type' => "repost", 
                                 'bdate' => date("Y-m-d h-i-s"),

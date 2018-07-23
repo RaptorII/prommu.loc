@@ -247,6 +247,18 @@ class SearchRule extends CBaseUrlRule {
                     continue;
                 }
             }
+
+            // pages
+            if(strpos($v, 'page') === 0)
+            {
+                $templateUrlParams['others']++;
+
+                $outData['page'] = array(
+                    'raw' => $v,
+                    'param' => 'page='.str_replace('page=', '', $v)
+                );
+                continue;
+            }
         }
 
         //if(sizeof($outData))
@@ -440,6 +452,18 @@ class SearchRule extends CBaseUrlRule {
                     $templateUrlParams['cities'][] = $city['name'];
                     continue;
                 }
+            }
+
+            // pages
+            if(strpos($v, 'page') === 0)
+            {
+                $templateUrlParams['others']++;
+
+                $outData['page'] = array(
+                    'raw' => $v,
+                    'param' => 'page='.str_replace('page=', '', $v)
+                );
+                continue;
             }
         }
 

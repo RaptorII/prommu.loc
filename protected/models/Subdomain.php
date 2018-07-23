@@ -7,16 +7,16 @@ class Subdomain
 	public static $MAIN_DEL_FILE_URL = '/ajax/DelThroughSubdomain';
 	public static $MAIN_SITE_ROOT = '/var/www/html'; // для загрузки файлов на домен
 	public static $REDIRECT = '/api.auth_user/?id=#ID#&code=prommucomWd126wdn&url=';
+	public static $HOST = 'https://prommu.com';
 	/*
 	*		Получить ID текущего сайта
 	*/
 	public static function getId()
 	{
-		$str = 'https://' . $_SERVER['HTTP_HOST'];
 		$res = Yii::app()->db->createCommand()
 			->select('id')
 			->from('subdomains')
-			->where(array('like', 'url', $str))
+			->where(array('like', 'url', self::$HOST))
 			->queryRow();
 		return $res['id'];
 	}
@@ -46,11 +46,10 @@ class Subdomain
 
 		if($without)
 		{
-			$str = 'https://' . $_SERVER['HTTP_HOST'];
 			$sql = Yii::app()->db->createCommand()
 				->select('*')
 				->from('subdomains')
-				->where(array('not like', 'url', $str))
+				->where(array('not like', 'url', self::$HOST))
 				->queryAll();
 		}
 		else
@@ -166,6 +165,8 @@ class Subdomain
 	*
 	*/
 	public static function popupRedirect($city, $idus){
+		$city = urldecode($city);
+		$city = urldecode($city);
 		$arId = self::getIdies();
 		$sId = self::getId();
 		$arRes = Yii::app()->db->createCommand()
@@ -218,7 +219,7 @@ class Subdomain
 	*		Выполняем редирект
 	*/
 	public static function setRedirect($idus, $id, $hasParams=false) {
-		$sId = self::getId();
+		/*$sId = self::getId();
 		if($id!=$sId) {
 			$arSub = self::getData();
 			$url = 'Location: ' 
@@ -234,18 +235,17 @@ class Subdomain
 			}
 			header($url);
 			exit();
-		}
+		}*/
 	}
 	/*
 	*		Получаем название SEO таблицы
 	*/
 	public static function getSeoTable()
 	{
-		$str = 'https://' . $_SERVER['HTTP_HOST'];
 		$res = Yii::app()->db->createCommand()
 			->select('seo')
 			->from('subdomains')
-			->where(array('like', 'url', $str))
+			->where(array('like', 'url', self::$HOST))
 			->queryRow();
 		if(!isset($res['seo']))
 			$res['seo'] = 'seo';
@@ -257,11 +257,10 @@ class Subdomain
 	*/
 	public static function getLabel()
 	{
-		$str = 'https://' . $_SERVER['HTTP_HOST'];
 		$res = Yii::app()->db->createCommand()
 			->select('label')
 			->from('subdomains')
-			->where(array('like', 'url', $str))
+			->where(array('like', 'url', self::$HOST))
 			->queryRow();
 		return $res['label'];
 	}
@@ -270,11 +269,10 @@ class Subdomain
 	*/
 	public static function getUrl()
 	{
-		$str = 'https://' . $_SERVER['HTTP_HOST'];
 		$res = Yii::app()->db->createCommand()
 			->select('url')
 			->from('subdomains')
-			->where(array('like', 'url', $str))
+			->where(array('like', 'url', self::$HOST))
 			->queryRow();
 		return $res['url'];
 	}
@@ -283,11 +281,10 @@ class Subdomain
 	*/
 	public static function getName()
 	{
-		$str = 'https://' . $_SERVER['HTTP_HOST'];
 		$res = Yii::app()->db->createCommand()
 			->select('meta')
 			->from('subdomains')
-			->where(array('like', 'url', $str))
+			->where(array('like', 'url', self::$HOST))
 			->queryRow();
 		return $res['meta'];
 	}
@@ -295,12 +292,12 @@ class Subdomain
 	*		редиректим гостя
 	*/
 	public static function guestRedirect($type) {
-		$sId = self::getId();
+		/*$sId = self::getId();
 		if($sId!=1307 && $type!=2 && $type!=3) {
 			$url = 'Location: ' . self::$MAIN_SITE . $_SERVER['REDIRECT_URL'];
 			header($url);
 			exit();
-		}
+		}*/
 	}
 }
 

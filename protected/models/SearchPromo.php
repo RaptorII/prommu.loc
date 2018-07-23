@@ -60,17 +60,18 @@ class SearchPromo extends Model
 
     public function searchPromosCount()
     {
-        $strCities = Subdomain::getCitiesIdies(true);
+        //$strCities = Subdomain::getCitiesIdies(true); // ID всех городов существующих СУБДОМЕНОВ
         $filter = $this->renderSQLFilter();
 
         $sql = "SELECT COUNT(DISTINCT r.id)
                 FROM resume r
-                INNER JOIN user u ON u.id_user = r.id_user AND u.ismoder = 1 AND u.isblocked = 0 
-
-                INNER JOIN user_city uc ON r.id_user = uc.id_user  AND !(uc.id_city IN({$strCities}))
-                {$filter['table']}
+                INNER JOIN user u ON u.id_user = r.id_user 
+                    AND u.ismoder = 1 AND u.isblocked = 0 
+                INNER JOIN user_city uc ON r.id_user = uc.id_user  
+                   /* AND !(uc.id_city IN({$strCities}))*/
+                    {$filter['table']}
                 INNER JOIN user_mech a ON a.id_us = r.id_user
-                {$filter['filter']}
+                    {$filter['filter']}
                 ORDER BY r.id DESC ";
         /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);
@@ -257,7 +258,7 @@ class SearchPromo extends Model
         $limit = $this->limit;
         $offset = $this->offset;
 
-        $strCities = Subdomain::getCitiesIdies(true);
+        //$strCities = Subdomain::getCitiesIdies(true); // ID всех городов существующих СУБДОМЕНОВ
 
         try
         {
@@ -272,8 +273,10 @@ class SearchPromo extends Model
             INNER JOIN (
                 SELECT DISTINCT r.id
                 FROM resume r
-                INNER JOIN user u ON u.id_user = r.id_user AND u.ismoder = 1 AND u.isblocked = 0
-                INNER JOIN user_city uc ON r.id_user = uc.id_user AND !(uc.id_city IN({$strCities}))
+                INNER JOIN user u ON u.id_user = r.id_user 
+                    AND u.ismoder = 1 AND u.isblocked = 0
+                INNER JOIN user_city uc ON r.id_user = uc.id_user 
+                /*    AND !(uc.id_city IN({$strCities}))*/
                 {$filter['table']}
                 INNER JOIN user_mech a ON a.id_us = r.id_user
                 {$filter['filter']}
@@ -344,6 +347,7 @@ class SearchPromo extends Model
         $url = array();
         // $this->updateSeoValues();
         $cnt = 0;
+        $hasPost = false;
 
         // должности
         if(isset($data['posts']) && is_array($data['posts']) && sizeof($data['posts']))
@@ -359,6 +363,7 @@ class SearchPromo extends Model
             }
             if(sizeof($posts))
                 $url[] = implode(',', $posts);
+            $hasPost = true;
         }
 
         // города
@@ -452,10 +457,16 @@ class SearchPromo extends Model
             $url[] = 'cardprommu';
             $cnt++;
         }
+        // pages
+        if(isset($data['page']))
+        {
+            $url[] = 'page='.$data['page'];
+            $cnt++;
+        }
 
         if(!$cnt) $str = '/ankety';
-        elseif($cnt==1) $str = '/ankety/';
-        elseif($cnt>1) $str = '/ankety/?';
+        elseif($cnt==1 && $hasPost) $str = '/ankety/';
+        else $str = '/ankety/?';
 
         return $str . implode('/', $url);
     }

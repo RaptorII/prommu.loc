@@ -95,13 +95,12 @@ $(function(){
     bShowCityList = true;
     clearTimeout(cityTimer);
     cityTimer = setTimeout(function(){
-      var val = $input.val().charAt(0).toUpperCase() + $input.val().slice(1).toLowerCase(),
+      setFirstUpper('#city-input');
+      var val = $input.val(),
           piece = $input.val().toLowerCase(),
           main = $input.closest('span'),
           content = '',
           arCities = [];
-
-      $input.val(val); //  город с большой буквы
 
       if(val===''){ // если ничего не введено
         $(main).addClass('load'); // показываем загрузку
@@ -166,8 +165,9 @@ $(function(){
   //  закрываем список городов
   $(document).click(function(e){
 	if(!$('#city-input').is(e.target) && !$(e.target).closest('#city-list').length){
+    setFirstUpper('#city-input');
 		var $input = $('#city-input'),
-			val = $input.val().charAt(0).toUpperCase() + $input.val().slice(1).toLowerCase(),
+			val = $input.val(),
 			piece = $input.val().toLowerCase();
 
 		$.ajax({
@@ -180,6 +180,7 @@ $(function(){
 					if(this.value.toLowerCase()===piece && this.data!=='man'){ // если введен именно город полностью
 						remEr('#city-input');
 						$input.val(val);
+            setFirstUpper('#city-input');
 						errCity = false;
 					}
 				});
@@ -346,5 +347,18 @@ $(function(){
   function checkFieldEasy(e){
     if($(e).val()=='' || $(e).val()==null) return false;
     else return true;
+  }
+  //      правильный ввод названия города
+  function setFirstUpper(e) {
+    var split = $(e).val().split(' ');
+
+    for(var i=0, len=split.length; i<len; i++)
+        split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
+    $(e).val(split.join(' '));
+
+    split = $(e).val().split('-');
+    for(var i=0, len=split.length; i<len; i++)
+        split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
+    $(e).val(split.join('-'));
   }
 });

@@ -20,6 +20,8 @@
     $arCities = $Q1->queryAll();
     $arCitiesJS = array();
     $cityId = 0;
+    $_GET['city'] = urldecode($_GET['city']);
+    $_GET['city'] = urldecode($_GET['city']);
     foreach ($arCities as $key => $c){
       if($_GET['city'] == $c['name']){
         $cityId = $c['id'];
@@ -64,7 +66,8 @@
           $attrAll[1]['phone-code'] = $c['phone'];
     }
     else if($_GET['phone']){  // пошли через попап
-      $phone = $_GET['phone'];
+      $phone = urldecode($_GET['phone']);
+      $phone = urldecode($phone);
       $attrAll[1]['phone-code'] = $_GET['__phone_prefix'];
     }    
     //  email
@@ -359,6 +362,7 @@
           <input name="invite" value="2" type="hidden">
           <input name="mess" value="2" type="hidden">
           <input name="workday" value="2" type="hidden">
+          <input type="hidden" name="npopup" value="1">
         </form>
       </div>
     </div>

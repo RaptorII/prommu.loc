@@ -67,19 +67,20 @@ class SearchVac extends Model
     // получение кол-ва вакансий
     public function searchVacationsCount($props = [])
     {
-        $strCities = Subdomain::getCitiesIdies(true);
+        //$strCities = Subdomain::getCitiesIdies(true); // ID всех городов существующих СУБДОМЕНОВ
         $filter = $props['filter'] ?: [];
         $filter = $this->renderSQLFilter(['filter' => $filter]);
 
         $sql = "SELECT COUNT(DISTINCT e.id)
-            FROM empl_vacations e
-              INNER JOIN empl_city c ON c.id_vac = e.id 
-              {$filter['table']}
-            INNER JOIN empl_attribs ea ON ea.id_vac = e.id  
-              {$filter['filter']}
-             AND e.status = 1 AND e.ismoder = 100  AND !(c.id_city IN({$strCities}))
-              ORDER BY e.ispremium DESC, e.id DESC ";
-        /** @var $res CDbCommand */
+                FROM empl_vacations e
+                INNER JOIN empl_city c ON c.id_vac = e.id 
+                {$filter['table']}
+                INNER JOIN empl_attribs ea ON ea.id_vac = e.id  
+                {$filter['filter']}
+                AND e.status = 1 AND e.ismoder = 100  
+                /*AND !(c.id_city IN({$strCities}))*/ 
+                ORDER BY e.ispremium DESC, e.id DESC ";
+
         $res = Yii::app()->db->createCommand($sql);
 
         return $res->queryScalar();
@@ -251,6 +252,7 @@ class SearchVac extends Model
         $url = array();
         $this->updateSeoValues();
         $cnt = 0;
+        $hasPost = false;
 
         // должности
         if(isset($data['post']) && is_array($data['post']) && sizeof($data['post']))
@@ -266,6 +268,7 @@ class SearchVac extends Model
             }
             if(sizeof($posts))
                 $url[] = implode(',', $posts);
+            $hasPost = true;
         }
 
         // города
@@ -365,11 +368,16 @@ class SearchVac extends Model
             $url[] = 'card';
             $cnt++;
         }
-
+        // pages
+        if(isset($data['page']))
+        {
+            $url[] = 'page='.$data['page'];
+            $cnt++;
+        }
         
         if(!$cnt) $str = '/vacancy';
-        elseif($cnt==1) $str = '/vacancy/';
-        elseif($cnt>1) $str = '/vacancy/?';
+        elseif($cnt==1 && $hasPost) $str = '/vacancy/';
+        else $str = '/vacancy/?';
 
         return $str . implode('/', $url);
     }
@@ -414,13 +422,9 @@ class SearchVac extends Model
         // addmetro
         if( filter_var(Yii::app()->getRequest()->getParam('addmetro'), FILTER_SANITIZE_NUMBER_INT) ) $data['metro'] = 1;
 
-
-
         // create filter string
         $filter = [];
         $table = [];
-
-//        $filterStr = "bdate <= now() AND (e.istemp = 0 AND edate >= now() OR e.istemp = 1)";
 
         // QS
         if( !empty($data['qs']) ) {
@@ -464,8 +468,12 @@ class SearchVac extends Model
             $filter[] = "e.{$field} = 1";
         }
         // age
-        if( isset($data['ageFrom']) ) $filter[] = "e.agefrom >= {$data['ageFrom']}";
-        if( isset($data['ageTo']) ) $filter[] = "e.ageto <= {$data['ageTo']}";
+        if( isset($data['ageFrom']) ) 
+            $filter[] = "e.agefrom >= {$data['ageFrom']}";
+        if( isset($data['ageTo']) ) {
+            $filter[] = "e.agefrom <= {$data['ageTo']}";
+            $filter[] = "e.ageto <= {$data['ageTo']}";
+        }
 
         // salary
         if( isset($data['salHourF']) ) $filter[] = "e.shour >= {$data['salHourF']}";
@@ -477,19 +485,7 @@ class SearchVac extends Model
         if( isset($data['salVisitF']) ) $filter[] = "e.svisit >= {$data['salVisitF']}";
         if( isset($data['salVisitT']) ) $filter[] = "e.svisit <= {$data['salVisitT']}";
 
-
-        // metro
-//        if( isset($data['metro']) )
-//        {
-//            $addMetro = 'LEFT JOIN empl_metro m ON m.id_vac = e.id LEFT JOIN metro m1 ON m1.id = m.id_metro';
-//            $metroField = ", m1.id mid,  m1.name mname";
-//        }
-
-        // $filter[] = Vacancy::getScopesCustom(Vacancy::$SCOPE_ACTIVE_N_MODER, 'e');
-        // $filter[] = Vacancy::getScopesCustom(Vacancy::$SCOPE_ACTUAL, 'e');
-
         $filter = count($filter) ? 'WHERE ' . join(' and ', $filter) : '';
-
 
         $filterData['table'] = join(' \n', $table);
         $filterData['filter'] = $filter;

@@ -30,7 +30,9 @@
     ->from('city t')
     ->limit(10000);
   $arCities = $Q1->queryAll();
-  $arTemp = array();     
+  $arTemp = array();
+  $_GET['city'] = urldecode($_GET['city']);
+  $_GET['city'] = urldecode($_GET['city']);
   foreach ($arCities as $city){
     if($_GET['city'] == $city['name']){
       $arUserCities[$city['id']] = $city;
@@ -126,7 +128,8 @@
 
   }
   else if($_GET['phone']){  // пошли через попап
-    $attr['phone'] = $_GET['phone'];
+    $attr['phone'] = urldecode($_GET['phone']);
+    $attr['phone'] = urldecode($_GET['phone']);
     $attr['phone-code'] = $_GET['__phone_prefix'];
   }
   //  email
