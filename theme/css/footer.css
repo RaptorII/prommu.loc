@@ -12,9 +12,9 @@
 }
 
 #footer-head .feedback {
-  background-color: #ff9900;
+  background-color: #f68000;
   line-height: 30px;
-  border: 2px solid #ff9900;
+  border: 2px solid #f68000;
   padding-left: 25px;
   padding-right: 25px;
   text-transform: uppercase;
@@ -123,7 +123,7 @@
 
 #DiFooter .menu a {
   padding: 0;
-  margin-bottom: 20px;
+  margin-bottom: 13px;
   display:block;
   font-size: 15px;
   text-decoration: none;
@@ -133,7 +133,7 @@
 #footer-content .footer__big-menu {
   background-color: #2b2b2b;
   padding-top: 20px;
-  padding-bottom: 20px;
+  padding-bottom: 8px;
   padding-left: 0;
 }
 #footer-content .footer__big-menu .menu{
@@ -159,6 +159,7 @@
 .join-us p {
   font-family: RobotoCondensed-Regular, verdana, arial;
   font-size: 18px;
+  margin-bottom: 18px;
 }
 .app-links {
   display: block;
@@ -167,8 +168,8 @@
   float: none;
 }
 .appstore-bottom-link {
-    width: 149px;
-    height: 45px;
+    width: 132px;
+    height: 43px;
     background: url(/theme/pic/app-store.png) no-repeat;
     display: block;
     position: relative;
@@ -179,6 +180,8 @@
   position: relative;
   background: url(/theme/pic/google-play.png) no-repeat;
   margin: 0 auto;
+  width: 132px;
+  height: 43px;
 }
 .app-bottom-link:before {
   display: none;
@@ -284,9 +287,9 @@
     background: url(/theme/pic/logo-footer-sm.png) 0 0px no-repeat;
   }
   #footer-head .feedback {
-    background-color: #ff9900;
+    background-color: #f68000;
     line-height: 30px;
-    border: 2px solid #ff9900;
+    border: 2px solid #f68000;
     padding-left: 25px;
     padding-right: 25px;
     text-transform: uppercase;
@@ -360,6 +363,8 @@
 .footer__big-menu-link {
   font-family: RobotoCondensedLight;
   font-size: 18px !important;
+  text-decoration: underline !important;
+  text-decoration-skip-ink: none !important;
 }
 .app-bottom-link {
   bottom: 0;
@@ -414,7 +419,11 @@
   .footer__cities {
       left: 0%;
   }
+  #footer-content .footer__download {
+    width: 30% !important;
+  }
   .join-us {
+    width: 20% !important;
     padding-left: 0;
     padding-right: 0;
   }
@@ -424,6 +433,7 @@
   }
   .social_icons .icon {
     display:inline-block;
+    margin: 0 3%;
   }
   .app-links a{
     float: left;
