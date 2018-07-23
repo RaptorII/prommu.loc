@@ -219,7 +219,7 @@ class Subdomain
 	*		Выполняем редирект
 	*/
 	public static function setRedirect($idus, $id, $hasParams=false) {
-		$sId = self::getId();
+		/*$sId = self::getId();
 		if($id!=$sId) {
 			$arSub = self::getData();
 			$url = 'Location: ' 
@@ -235,7 +235,7 @@ class Subdomain
 			}
 			header($url);
 			exit();
-		}
+		}*/
 	}
 	/*
 	*		Получаем название SEO таблицы
@@ -292,12 +292,12 @@ class Subdomain
 	*		редиректим гостя
 	*/
 	public static function guestRedirect($type) {
-		$sId = self::getId();
+		/*$sId = self::getId();
 		if($sId!=1307 && $type!=2 && $type!=3) {
 			$url = 'Location: ' . self::$MAIN_SITE . $_SERVER['REDIRECT_URL'];
 			header($url);
 			exit();
-		}
+		}*/
 	}
 }
 
