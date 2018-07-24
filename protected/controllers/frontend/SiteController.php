@@ -384,6 +384,12 @@ class SiteController extends AppController
 		$time .= 'L05.' . microtime(true);
             }
             else{
+                Subdomain::filterRedirect(
+                    $_GET['cities'],
+                    Share::$UserProfile->id,
+                    Share::$UserProfile->type
+                );
+                
                 $this->setBreadcrumbs($title = "Поиск соискателей", MainConfig::$PAGE_SEARCH_PROMO);
 
                 $SearchPromo = (new SearchPromo());
@@ -672,6 +678,11 @@ class SiteController extends AppController
                 $pages->pageSize = 24;
                 $pages->applyLimit($SearchVac);
                 $data = $SearchVac->getVacations();
+                $redirectUrl = Subdomain::ajaxFilterRedirect(
+                        $_GET['cities'],
+                        Share::$UserProfile->id,
+                        Share::$UserProfile->type
+                    );
 
                 $this->renderPartial(
                     MainConfig::$VIEWS_SEARCH_VAC_AJAX,
@@ -679,13 +690,20 @@ class SiteController extends AppController
                         'viData' => $data, 
                         'pages' => $pages,
                         'count' => $count,
-                        'seo' => $seo
+                        'seo' => $seo,
+                        'redirect' => $redirectUrl
                     ), 
                     false, 
                     true
                 );
             }
             else{
+                Subdomain::filterRedirect(
+                    $_GET['cities'],
+                    Share::$UserProfile->id,
+                    Share::$UserProfile->type
+                );
+
                 if($_SERVER['REQUEST_URI'] == '/vacancy/about')
                     throw new CHttpException(404, 'Error');
                 $this->setBreadcrumbs($title = "Поиск вакансий", MainConfig::$PAGE_SEARCH_VAC);
