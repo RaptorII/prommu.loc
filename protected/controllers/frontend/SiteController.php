@@ -314,6 +314,16 @@ class SiteController extends AppController
             }    
             $this->ViewModel->setViewData('pageTitle', '<h1>' . $strBreadcrumb . '</h1>');
 
+            // индексируем только в списке нет ни единого города субдомена
+            $arCities = Subdomain::getCitiesIdies(true, 'arr'); // все города регионов всех субдоменов(кроме МО)
+            $noIndex = false;
+            foreach ($arCities as $idCity)
+                if(array_key_exists($idCity, $data['userInfo']['userCities'][2]))
+                    $noIndex = true;
+
+            if($noIndex)
+                Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
+
             $this->render('../' . MainConfig::$DIR_VIEWS_USER . DS . $page,
                     array('viData' => $data,
                             'idus' => $id,
@@ -613,14 +623,15 @@ class SiteController extends AppController
                 Yii::app()->session['editVacId'] = $id;  
             }
 
-            // закрываем вакансии, в которых больше одного города
-            if(
-                //(sizeof($vac['vac']['city'])>1 && array_key_exists(Subdomain::getId(), $vac['vac']['city']))
-                //||
-                (sizeof($vac['vac']['city'])==1 && !array_key_exists(Subdomain::getId(), $vac['vac']['city']))
-            ){
+            // индексируем только в списке нет ни единого города субдомена
+            $arCities = Subdomain::getCitiesIdies(true, 'arr'); // все города регионов всех субдоменов(кроме МО)
+            $noIndex = false;
+            foreach ($arCities as $idCity)
+                if(array_key_exists($idCity, $vac['vac']['city']))
+                    $noIndex = true;
+
+            if($noIndex)
                 Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
-            }
 
             $view = $this->ViewModel->pageVacancy;
 

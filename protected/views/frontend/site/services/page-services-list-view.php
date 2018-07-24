@@ -167,6 +167,16 @@ if(!(MOBILE_DEVICE && !SHOW_APP_MESS)): // optimization ?>
   			</div> 
 		</div>
 	</div>
+	<?php if(Yii::app()->user->hasFlash('success')): ?>
+		<script type="text/javascript">
+			var arSuccessMess = <?=json_encode(Yii::app()->user->getFlash('success'))?>;
+			$(function(){
+				var itm = $('.services-finish-form').clone();
+				itm.toggleClass('services-form tmpl');
+				ModalWindow.open({ content: itm, action: { active: 0 }, additionalStyle:'dark-ver' });
+			});
+		</script>
+	<?php endif ?>
 <?php endif ?>
 
 
