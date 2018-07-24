@@ -6,7 +6,7 @@
 	$s = $_GET['s'];
 /*
 echo "<pre>";
-print_r($_SERVER); 
+print_r($_SERVER);
 echo "</pre>";
 */
 ?>
@@ -36,7 +36,7 @@ echo "</pre>";
 			</a>
 		</div>
 		<div id="content">
-			<?php 
+			<?php
 			//
 			//
 			//
@@ -46,7 +46,7 @@ echo "</pre>";
 				<div class="project__xls">
 					<a href="#" id="add-program">Добавить адресную программу</a>
 					<input type="file" name="xls" class="hide" accept="xls">
-					<a href="#">Скачать пример для добавления</a>
+					<a href="/uploads/example.xls" download>Скачать пример для добавления</a>
 				</div>
 				<h1 class="project__title">ПРОЕКТ: <span>МЕРЧЕНДАЙЗИНГ</span></h1>
 				<table class="project__program">
@@ -193,7 +193,7 @@ echo "</pre>";
 					</tbody>
 				</table>
 			</div>
-			<?php 
+			<?php
 			//
 			//
 			//
@@ -244,7 +244,7 @@ echo "</pre>";
 					</div>
 				</div>
 			</div>
-			<?php 
+			<?php
 			//
 			//
 			//
@@ -336,9 +336,9 @@ echo "</pre>";
 				</div>
 				<div class="addresses__btns">
 					<a href="#" class="addr__save-btn">Добавить</a>
-				</div>	
+				</div>
 			</div>
-			<?php 
+			<?php
 			//
 			//
 			//
@@ -537,9 +537,9 @@ echo "</pre>";
 							</tr>
 						</tbody>
 					</table>
-				</div>	
+				</div>
 			</div>
-			<?php 
+			<?php
 			//
 			//
 			//
@@ -665,7 +665,7 @@ echo "</pre>";
 					<a href="#" class="route__watch-btn">СМОТРЕТЬ МАРШРУТ</a>
 				</div>
 			</div>
-			<?php 
+			<?php
 			//
 			//
 			//
@@ -1043,7 +1043,7 @@ echo "</pre>";
 					</div>
 				</div>
 			</div>
-			<?php 
+			<?php
 			//
 			//
 			//

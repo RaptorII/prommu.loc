@@ -26,7 +26,8 @@
 						</div>
 						<div id="add-xls-name"></div>
 						<div class="project__opt-row">
-							<a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_PROJECT_NEW . '?get_xls=1')?>" class="project__opt-xls">Скачать пример адреной программы</a>
+							<a href="/uploads/example.xls<?php // Yii::app()->createUrl(MainConfig::$PAGE_PROJECT_NEW . '?get_xls=1')?>" download class="project__opt-xls">
+								Скачать пример адреной программы</a>
 						</div>
 					</div>
 					<div class="project__opt">
@@ -227,7 +228,7 @@
 				                <label>
 				                  <span>до</span>
 				                  <input name='at' type='text' value="<?=$_POST['at']?>">
-				                </label> 
+				                </label>
 				                <div class="filter__age-btn">ОК</div>
 				              </div>
 				            </div>
@@ -298,7 +299,7 @@
 				                  if($item['sex'] === '1'){
 				                    $G_LOGO_SRC = DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!$item['photo'] ? MainConfig::$DEF_LOGO : $item['photo'] . '400.jpg');
 				                  }
-				                  else 
+				                  else
 				                    $G_LOGO_SRC = DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!$item['photo'] ? MainConfig::$DEF_LOGO_F : $item['photo'] . '400.jpg');
 				                  $G_COMP_FIO = $item['firstname'] . ' ' . $item['lastname'] . ', ' . $item['age'];
 				                  $G_RATE_POS = $item['rate'];

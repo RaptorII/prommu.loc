@@ -42,7 +42,7 @@ class UserController extends AppController
             $account = $arr[0];
             $count = count($arr);
             if($arr[2] == "sms"){
-                for ($i = $count; $i > 2 ; $i --) { 
+                for ($i = $count; $i > 2 ; $i --) {
                 $name = $arr[1];
                 $user = $arr[$i];
                $res = Yii::app()->db->createCommand()
@@ -51,7 +51,7 @@ class UserController extends AppController
                 ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':user' => $user));
                 }
             }elseif($arr[2] == "push"){
-                for ($i = $count; $i > 2 ; $i --) { 
+                for ($i = $count; $i > 2 ; $i --) {
                 $name = $arr[1];
                 $user = $arr[$i];
                $res = Yii::app()->db->createCommand()
@@ -60,7 +60,7 @@ class UserController extends AppController
                 ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':user' => $user));
                 }
             } elseif($arr[2] == "email"){
-                for ($i = $count; $i > 2 ; $i --) { 
+                for ($i = $count; $i > 2 ; $i --) {
                 $name = $arr[1];
                 $user = $arr[$i];
                $res = Yii::app()->db->createCommand()
@@ -70,7 +70,7 @@ class UserController extends AppController
                 }
             } else {
 
-            for ($i = $count; $i > 0 ; $i --) { 
+            for ($i = $count; $i > 0 ; $i --) {
                 $name = $arr[$i];
                $res = Yii::app()->db->createCommand()
                 ->update('service_cloud', array(
@@ -78,7 +78,7 @@ class UserController extends AppController
                 ), 'id_user=:id_user AND name=:name', array(':id_user' => "$account", ':name' => "$name"));
                 }
             }
-        
+
         }
         if($method == "pay"){
             $unitpayId = $_GET['params']['unitpayId'];
@@ -88,7 +88,7 @@ class UserController extends AppController
             $count = count($arr);
 
              $sql = "SELECT ru.email
-            FROM user ru 
+            FROM user ru
             WHERE ru.id_user = {$account}";
         /** @var $res CDbCommand */
             $res = Yii::app()->db->createCommand($sql);
@@ -100,11 +100,11 @@ class UserController extends AppController
                   $content = str_replace('#SERVICENAME#', "успешно подключена", $content);
                  $content = str_replace('#SERVICEACTION#', "и отображается во вкладке услуги" , $content);
                  $content = str_replace('#SERVICELINK#', "https://prommu.com/services", $content);
-      
+
               Share::sendmail($rest['email'], "Prommu.com. Действие по услугам", $content);
 
             if($arr[2] == "sms"){
-                for ($i = 3; $i < $count; $i ++) { 
+                for ($i = 3; $i < $count; $i ++) {
                 $name = $arr[1];
                 $user = $arr[$i];
                $res = Yii::app()->db->createCommand()
@@ -117,7 +117,7 @@ class UserController extends AppController
 
                 }
             } elseif($arr[2] == "vacancy") {
-            for ($i = $count; $i > 0 ; $i --) { 
+            for ($i = $count; $i > 0 ; $i --) {
                 $name = $arr[$i];
 
                  $res = Yii::app()->db->createCommand()
@@ -134,30 +134,30 @@ class UserController extends AppController
 
                 }
             } elseif($arr[2] == "push") {
-            for ($i = $count; $i > 0 ; $i --) { 
+            for ($i = $count; $i > 0 ; $i --) {
                 $name = $arr[$i];
 
                 $res = Yii::app()->db->createCommand()
                 ->update('service_cloud', array(
                     'status'=> 1,
                 ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':user'=> $user));
-                
+
                 $link = "https://prommu.com/vacancy/$user";
                 $text = "Работодатель приглашает на вакансию";
 
                 $sql = "SELECT r.push
                 FROM user_push r
                 WHERE r.id = {$user}";
-                $res = Yii::app()->db->createCommand($sql)->queryRow(); 
+                $res = Yii::app()->db->createCommand($sql)->queryRow();
                 if($res) {
                 $type = "vacancy";
                 $api = new Api();
                 $api->getPushApi($res['push'], $type, $text, $link);
-            
+
                 }
                 }
             } elseif($arr[2] == "email") {
-                for ($i = 3; $i < $count; $i ++) { 
+                for ($i = 3; $i < $count; $i ++) {
                  $name = $arr[1];
                 $user = $arr[$i];
 
@@ -172,13 +172,13 @@ class UserController extends AppController
                 WHERE e.id = {$name}";
                 $vacancy = Yii::app()->db->createCommand($sql)->queryAll();
 
-             $sql = "SELECT  u.email, e.name, e.firstname, e.lastname 
+             $sql = "SELECT  u.email, e.name, e.firstname, e.lastname
                 FROM employer e
                 LEFT JOIN user u ON u.id_user = e.id_user
                 WHERE e.id_user = {$account}";
             $empl = Yii::app()->db->createCommand($sql)->queryAll();
 
-            $sql = "SELECT  e.id, u.email, e.firstname, e.lastname 
+            $sql = "SELECT  e.id, u.email, e.firstname, e.lastname
                 FROM resume e
                 LEFT JOIN user u ON u.id_user = e.id_user
                 WHERE e.id_user = {$user}";
@@ -218,7 +218,7 @@ class UserController extends AppController
 
 
     public function actionPush(){
-        
+
        $id = Share::$UserProfile->id;
        $invite = $_POST['invite'] ? $_POST['invite'] : $_GET['invite'];
        $respond = $_POST['respond'] ? $_POST['respond'] : $_GET['respond'];;
@@ -245,7 +245,7 @@ class UserController extends AppController
         if(empty($workday)){
             $workday = 0;
         }
-        
+
         $sql = "SELECT r.id
             FROM push_config r
             WHERE r.id = {$id}";
@@ -274,15 +274,15 @@ class UserController extends AppController
 
         $this->redirect("https://prommu.com/services/push-notification");
 
-    }        
-    
+    }
+
     public function actionAnalytic(){
 
         $vac = new Vacancy();
         $data = $vac->getVacanciesPrem();
         $view = MainConfig::$VIEWS_ANALYTIC;
-        $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));   
-       
+        $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
+
     }
 
     public function actionMessenger($cloud){
@@ -316,15 +316,15 @@ class UserController extends AppController
         $data['gender'] = $cloud['gender'];
         $data['birthday'] = $cloud['birthday'];
         $data['gender'] = $cloud['gender'];
-        
+
         $data['messenger'] = $cloud['id'];
         $data['type'] = $cloud['type'];
         $email =  $cloud['email'];
-        
+
         $Auth = new Auth();
         $register = $Auth->registerAuth($data);
         $this->redirect($register);
-            
+
     }
 
     public function actionMessnotemail(){
@@ -345,7 +345,7 @@ class UserController extends AppController
         $data['keywords'] = $_GET['keywords'];
         $data['point'] = $_GET['point'];
         $data['last_referer'] = $_GET['last_referer'];
-        
+
          $usData = Yii::app()->db->createCommand()
              ->select("u.email, u.id_user, u.status")
              ->from('user u')
@@ -356,13 +356,13 @@ class UserController extends AppController
             $link  = Subdomain::getUrl() . '/message';
             $this->redirect( $link);
          } else {
-        
-          
+
+
             $Auth = new Auth();
             $register = $Auth->registerAuth($data);
             $this->redirect($register);
         }
-            
+
     }
 
 
@@ -370,7 +370,7 @@ class UserController extends AppController
     public function actionLogin()
     {
         $serviceName = Yii::app()->request->getQuery('service');
-        $type =  Yii::app()->request->getQuery('type');                
+        $type =  Yii::app()->request->getQuery('type');
 
         if (isset($serviceName)) {
 
@@ -381,8 +381,8 @@ class UserController extends AppController
 
             try {
                 if ($eauth->authenticate()) {
-                    
-                    // var_dump($eauth->getAttributes());//$eauth->getIsAuthenticated(), 
+
+                    // var_dump($eauth->getAttributes());//$eauth->getIsAuthenticated(),
                     $identity = new EAuthUserIdentity($eauth);
 
                     // successful authentication
@@ -413,9 +413,9 @@ class UserController extends AppController
 
                                     //$pth = $auth->loadLogoEmpl($eauth->getAttributes()['photo']);
                                     $view = MainConfig::$VIEWS_REGISTER_FB;
-                                    //$data['photo'] = $pth; 
+                                    //$data['photo'] = $pth;
                                     $data['type'] = 3;
-                                     ///$data[0] = $pth;  
+                                     ///$data[0] = $pth;
                                     if($data['email'] != ""){
                                         $this->actionMessenger($data);
                                     } else $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
@@ -424,21 +424,21 @@ class UserController extends AppController
 
                                    /// $pth = $auth->loadLogo($eauth->getAttributes()['photo']);
                                     $view = MainConfig::$VIEWS_REGISTER_FB;
-                                    ///$data['photo'] = $pth; 
-                                     ///$data[0] = $pth;  
+                                    ///$data['photo'] = $pth;
+                                     ///$data[0] = $pth;
                                     $data['type'] = 2;
                                     if($data['email'] != ""){
                                         $this->actionMessenger($data);
                                     } else $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
-                                    
+
                                 }
                                 $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
                             }
-                                
+
                            }
-                        }   
-                        
-                        
+                        }
+
+
                     }
                     else {
                         // close popup window and redirect to cancelUrl
@@ -463,8 +463,8 @@ class UserController extends AppController
         if( Share::$UserProfile->type == 2 || Share::$UserProfile->type == 3 ) $this->redirect(MainConfig::$PAGE_PROFILE);
         else{
             $this->setBreadcrumbs($title = 'Авторизация', MainConfig::$PAGE_LOGIN);
-            $this->setPageTitle($title); 
-            $this->render(MainConfig::$VIEWS_LOGIN, null, array('nobc' => 1)); 
+            $this->setPageTitle($title);
+            $this->render(MainConfig::$VIEWS_LOGIN, null, array('nobc' => 1));
         }
     }
 
@@ -546,7 +546,7 @@ class UserController extends AppController
         else{
             if(Yii::app()->getRequest()->getParam('ep')){
                 Yii::app()->getClientScript()->registerCssFile("/" . MainConfig::$PATH_CSS . DS . Share::$cssAsset['prof_edit_applic.css']);
-                //Yii::app()->getClientScript()->registerScriptFile("/theme/js/dev/pages/prof_edit_applic.js", CClientScript::POS_END);           
+                //Yii::app()->getClientScript()->registerScriptFile("/theme/js/dev/pages/prof_edit_applic.js", CClientScript::POS_END);
             }
         }
 
@@ -599,21 +599,21 @@ class UserController extends AppController
         // applicant
         $getS = Yii::app()->getRequest()->getParam('s');
         $getP = Yii::app()->getRequest()->getParam('p');
-        
-        if($getS == 2) 
+
+        if($getS == 2)
         {
             $this->setPageTitle('Завершение регистрации');
             $this->render(MainConfig::$VIEWS_REGISTER_COMPLETE, ['type' => $getS], array('nobc' => '1'));
-        } 
-        else 
-        {           
+        }
+        else
+        {
             if($getP=='' || $getP=='1' || $getP=='2')
             {
                 $this->proccessRegister();
             }
             else
             {
-                throw new CHttpException(404, 'Error'); 
+                throw new CHttpException(404, 'Error');
             }
         }
     }
@@ -652,16 +652,16 @@ class UserController extends AppController
             $city = Yii::app()->getRequest()->getParam('city');
             Subdomain::popupRedirect($city,Share::$UserProfile->id);
         }
-    
+
         // save data
         if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('email') )
         {
             $res = Share::$UserProfile->saveProfileData();
             if(!$res['err']) $this->redirect(MainConfig::$PAGE_PROFILE);
         }
-        
+
         $this->setBreadcrumbsEx(
-            array('Мой профиль', MainConfig::$PAGE_PROFILE), 
+            array('Мой профиль', MainConfig::$PAGE_PROFILE),
             array($title = 'Редактирование профиля', MainConfig::$PAGE_EDIT_PROFILE)
         );
         $this->setPageTitle('Регистрация успешно завершена');
@@ -712,11 +712,11 @@ class UserController extends AppController
         $this->setBreadcrumbs($title = 'Публикация вакансии', MainConfig::$PAGE_VACPUB);
         $this->render($this->ViewModel->pageVacpub,
                 array(
-                    'viData' => (new Vacancy())->getVacPubFormData(), 
+                    'viData' => (new Vacancy())->getVacPubFormData(),
                     'IS_PUBDATA' => 1
                 ),
                 array('htmlTitle' => $title)
-            );    
+            );
     }
 
 
@@ -733,7 +733,7 @@ class UserController extends AppController
         } else {
             Yii::app()->user->setFlash('Message', array('type' => '-green', 'message' => $res['message']));
             $this->redirect(MainConfig::$PAGE_VACANCY . DS . $res['id']);
-        } 
+        }
     }
 
 
@@ -753,7 +753,7 @@ class UserController extends AppController
             }
 
         $Vacancy = new Vacancy();
-       
+
         $arCount = $Vacancy->getSeсtionsVacCount()['cnt'];
         $pages = new CPagination($arCount['vac']);
         $pages->pageSize = MainConfig::$DEF_PAGE_LIMIT;
@@ -938,16 +938,16 @@ class UserController extends AppController
         in_array(Share::$UserProfile->type, [2,3]) || $this->redirect(MainConfig::$PAGE_LOGIN);
 
         $title = 'Добавить Рейтинг/Отзыв';
-        //$this->setBreadcrumbs($title,$this->ViewModel->pageSetRate);  
+        //$this->setBreadcrumbs($title,$this->ViewModel->pageSetRate);
         Yii::app()->getClientScript()->registerCssFile('/theme/css/private/page-setrate.css');
         Yii::app()->getClientScript()->registerScriptFile('/theme/js/private/page-setrate.js', CClientScript::POS_END);
         $Responses = Share::$UserProfile->makeResponse();
 
         if( Yii::app()->getRequest()->isPostRequest )
-        {  
+        {
             $res = $Responses->saveRateData();
 
-        } 
+        }
         else {
 
             if(Share::$UserProfile->type == 3){
@@ -964,10 +964,10 @@ class UserController extends AppController
             $data = $Responses->loadRatingPageDatas($id, $idUs);
 
         }
-        
+
         }
 
-        
+
         $this->render($this->ViewModel->pageSetRate,
                 array('viData' => $Responses->setRate(), 'data' => $data),
 
@@ -989,19 +989,19 @@ class UserController extends AppController
 
         $title = 'Оплата услуг PROMMU';
         $this->setBreadcrumbsEx(
-            array('Мой профиль', MainConfig::$PAGE_PROFILE), 
+            array('Мой профиль', MainConfig::$PAGE_PROFILE),
             array($title = 'Оплата услуг', MainConfig::$PAGE_PAYMENT)
         );
         $this->ViewModel->addContentClass('page-payment');
         Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/theme/css/page-payment.css');
         Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/payment-page.js', CClientScript::POS_END);
         if(!Yii::app()->getRequest()->isPostRequest){
-            throw new CHttpException(404, 'Error'); 
+            throw new CHttpException(404, 'Error');
         }
 
         $prommuOrder = new PrommuOrder();
         if($_POST['vacsms']){
-            
+
             $vac = $_POST['vacsms'];
             $user = explode(",", $_POST['user']);
             $account = $_POST['account'];
@@ -1010,7 +1010,7 @@ class UserController extends AppController
             $count = count($user);
             $type = "sms";
             $date = date("Y-m-d");
-            for($i = 0; $i < $count; $i ++) 
+            for($i = 0; $i < $count; $i ++)
             {
                 $admin = $_POST['account'];
                 $use = $user[$i];
@@ -1020,7 +1020,7 @@ class UserController extends AppController
                 $prommuOrder->serviceOrderSms($admin,$sum, $status, $postback, $date ,$date, $vac, $type, $text, $use);
                 $summa+=$sum;
             }
-            for($i = 0; $i < $count; $i ++) { 
+            for($i = 0; $i < $count; $i ++) {
                 $use = $user[$i];
                 $account.= ".$use";
             }
@@ -1029,7 +1029,7 @@ class UserController extends AppController
            $this->redirect($link);
 
         } elseif($_POST['vacemail']){
-          
+
             $vac = $_POST['vacemail'];
             $user = explode(",", $_POST['users']);
             $account = $_POST['employer'];
@@ -1040,7 +1040,7 @@ class UserController extends AppController
             $date = date("Y-m-d");
             $sum = $prommuOrder->servicePrice($_POST['employer'], "email");
             if($sum > 0){
-                for($i = 0; $i < $count; $i ++) 
+                for($i = 0; $i < $count; $i ++)
                 {
                 $admin = $_POST['employer'];
                 $use = $user[$i];
@@ -1050,7 +1050,7 @@ class UserController extends AppController
                 $prommuOrder->serviceOrderEmail($admin,$sum, $status, $postback, $date ,$date, $vac, $type, $text, $use);
                 $summa+=$sum;
                 }
-                for($i = 0; $i < $count; $i ++) { 
+                for($i = 0; $i < $count; $i ++) {
                     $use = $user[$i];
                     $account.= ".$use";
                 }
@@ -1058,27 +1058,27 @@ class UserController extends AppController
                $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$vac";
                 $this->redirect($link);
            } else {
-          
-               for($i = 0; $i < $count; $i ++) 
+
+               for($i = 0; $i < $count; $i ++)
                 {
                  $admin = $_POST['employer'];
                 $use = $user[$i];
                  $postback = 0;
                 $status = 1;
                 $prommuOrder->serviceOrderEmail($admin,$sum, $status, $postback, $date ,$date, $vac, $type, $text, $use);
-                
+
             $sql = "SELECT  e.title
                 FROM empl_vacations e
                 WHERE e.id = $vac";
                 $vacancy = Yii::app()->db->createCommand($sql)->queryAll();
 
-             $sql = "SELECT  u.email, e.name, e.firstname, e.lastname 
+             $sql = "SELECT  u.email, e.name, e.firstname, e.lastname
                 FROM employer e
                 LEFT JOIN user u ON u.id_user = e.id_user
                 WHERE e.id_user = $admin";
             $empl = Yii::app()->db->createCommand($sql)->queryAll();
 
-            $sql = "SELECT  e.id, u.email, e.firstname, e.lastname 
+            $sql = "SELECT  e.id, u.email, e.firstname, e.lastname
                 FROM resume e
                 LEFT JOIN user u ON u.id_user = e.id_user
                 WHERE e.id_user = $use";
@@ -1099,14 +1099,14 @@ class UserController extends AppController
                     }
                 }
                 Yii::app()->user->setFlash('success', array('event'=>'email'));
-             
+
                $link = "https://prommu.com/services";
                $this->redirect($link);
-                
-            } 
+
+            }
 
         } elseif($_POST['vacpush']){
-          
+
             $vac = $_POST['vacpush'];
             $user = explode(",", $_POST['users']);
             $account = $_POST['employer'];
@@ -1117,7 +1117,7 @@ class UserController extends AppController
             $date = date("Y-m-d h-i-s");
             $sum = $prommuOrder->servicePrice($_POST['employer'], "push");
             if($sum > 0){
-            for($i = 0; $i < $count; $i ++) 
+            for($i = 0; $i < $count; $i ++)
             {
                 $admin = $_POST['employer'];
                 $use = $user[$i];
@@ -1132,7 +1132,7 @@ class UserController extends AppController
                $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$vac";
                $this->redirect($link);
             } else {
-                for($i = 0; $i < $count; $i ++) 
+                for($i = 0; $i < $count; $i ++)
                 {
                 $admin = $_POST['employer'];
                 $use = $user[$i];
@@ -1144,17 +1144,17 @@ class UserController extends AppController
 
                 }
                  Yii::app()->user->setFlash('success', array('event'=>'push'));
-             
+
                $link = "https://prommu.com/services";
                $this->redirect($link);
-            
-            
+
+
             }
-           
-           
+
+
 
         } elseif($_POST['vacanc']){
-           
+
 
             $from = $_POST['from'];
             $to = $_POST['to'];
@@ -1164,7 +1164,7 @@ class UserController extends AppController
             $type = "vacancy";
             $count = count($name);
 
-            for($i = 0; $i < $count; $i ++) 
+            for($i = 0; $i < $count; $i ++)
             {
                 $date =  (strtotime ($to[$i])- strtotime ($from[$i]))/(60*60*24);
                 $sums = $prommuOrder->servicePrice($_POST['employer'], "vacancy");
@@ -1175,7 +1175,7 @@ class UserController extends AppController
                 $summa+=$date;
             }
            $date = 0;
-            for($i = 0; $i < $count; $i ++) { 
+            for($i = 0; $i < $count; $i ++) {
                 $vac = $name[$i];
                 $account.= ".$vac";
             }
@@ -1184,7 +1184,7 @@ class UserController extends AppController
            $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$summa";
            $this->redirect($link);
         } elseif($_POST['vacrepost']){
-          
+
             $vac = $_POST['vacrepost'];
             $user = explode(",", $_POST['network']);
             $account = $_POST['employer'];
@@ -1193,7 +1193,7 @@ class UserController extends AppController
             $count = count($user);
             $type = "push";
             $date = date("Y-m-d h-i-s");
-            for($i = 0; $i < $count; $i ++) 
+            for($i = 0; $i < $count; $i ++)
             {
                 $admin = $_POST['employer'];
                 $use = $user[$i];
@@ -1204,7 +1204,7 @@ class UserController extends AppController
                 $summa+=$sum;
 
             }
-         
+
             $publi = "84661-fc398";
            $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$vac";
            $this->redirect($link);
@@ -1213,13 +1213,13 @@ class UserController extends AppController
             $vac = new Vacancy();
             $vac = $vac->getVacancyInfo($_POST['sms'][0]);
             $mech = $vac[0]['id_attr'];
-     
+
             $result = $vac->VacMech($mech);
 
             $data = $_POST['sms'];
             $data['sms'] = 1;
             //$model = new PrommuOrder;
-            //$data['price'] = $model->servicePrice(Share::$UserProfile->id,'sms'); 
+            //$data['price'] = $model->servicePrice(Share::$UserProfile->id,'sms');
             $view = MainConfig::$PAGE_PAYMENT_VIEW;
             $this->render($view, array('viData' => $data, 'User' => $result), array('nobc' => '1'));
         }
@@ -1241,7 +1241,7 @@ class UserController extends AppController
             //$data = $_POST['vacancy'];
             //$data['premium'] = 1;
             $model = new PrommuOrder;
-            $data['price'] = $model->servicePrice(Share::$UserProfile->id,'vacancy'); 
+            $data['price'] = $model->servicePrice(Share::$UserProfile->id,'vacancy');
             $view = MainConfig::$PAGE_PAYMENT_VIEW;
             $this->render($view, array('viData' => $data),  array( 'htmlTitle' => $title ));
         }
@@ -1262,7 +1262,7 @@ class UserController extends AppController
 
         if(Share::$UserProfile->type==2)
             $title = 'Оценка работодателей';
-        else 
+        else
             $title = 'Оценка персонала';
 
         $this->setBreadcrumbs($title, MainConfig::$PAGE_REVIEWS_VIEW);
@@ -1296,7 +1296,7 @@ class UserController extends AppController
             'count' => $count,
             'countView' => $countView,
             'countResponse' => $countResponse,
-            'countInvite' => $countInvite, 
+            'countInvite' => $countInvite,
             'countProject'=> $countProject,
             'arDates' => $arDates
         );
@@ -1310,17 +1310,17 @@ class UserController extends AppController
             Yii::app()->getClientScript()->registerScriptFile('/theme/js/analytics.js', CClientScript::POS_END);
             $title = 'Аналитика';
             $this->setBreadcrumbs($title, MainConfig::$PAGE_ANALYTICS);
-            $this->render(MainConfig::$VIEWS_ANALYTICS, $arResult, array('htmlTitle' => $title));            
+            $this->render(MainConfig::$VIEWS_ANALYTICS, $arResult, array('htmlTitle' => $title));
         }
     }
 
     public function actionApi()
-    {       
+    {
         $api = $_GET['api'];
         $id = Share::$UserProfile->id;
         $name = Share::$UserProfile->fio;
-     
-          $sql = "SELECT  u.email 
+
+          $sql = "SELECT  u.email
                 FROM employer e
                 LEFT JOIN user u ON u.id_user = e.id_user
                 WHERE e.id_user = {$id}";
@@ -1337,11 +1337,11 @@ class UserController extends AppController
         // var_dump($data[0]['id']);
         if(!$data[0]['id']){
             if($api == 1 || $api == 2){
-        $texts = "Здравствуйте, я PROMMU BOT. Метод https://prommu.com/api.promo_search подготовлен. Документация выгружена в файл по ссылке https://prommu.com/api-help#PROMO_SEARCH. 
+        $texts = "Здравствуйте, я PROMMU BOT. Метод https://prommu.com/api.promo_search подготовлен. Документация выгружена в файл по ссылке https://prommu.com/api-help#PROMO_SEARCH.
             При использовании API ресурсами сервиса PROMMU вы соглашаетесь с пользовательским соглашением и принимаете условия использования https://prommu.com/api-private";
             $message = $texts;
             $new = $id;
-            
+
             $idTm = $theme;
             $Im = new ImApplic();
             $figaro = compact('message', 'new', 'idus','idTm', 'theme');
@@ -1356,29 +1356,29 @@ class UserController extends AppController
                 'email' => $resultat[0]['email'],
                 'crdate' => date("Y-m-d"),
                 'chat' => $resu['idtm'] ));
-                            
+
         }
 
         }
         else {
 
-             $texts = " Метод https://prommu.com/api.promo_search подготовлен. Документация выгружена в файл по ссылке https://prommu.com/api-help#PROMO_SEARCH. 
+             $texts = " Метод https://prommu.com/api.promo_search подготовлен. Документация выгружена в файл по ссылке https://prommu.com/api-help#PROMO_SEARCH.
             При использовании API ресурсами сервиса PROMMU вы соглашаетесь с пользовательским соглашением и принимаете условия использования https://prommu.com/api-private";
             $message = $texts;
             $new = 0;
-            
+
             $idTm = $data[0]['id'];
             $Im = new ImApplic();
             $figaro = compact('message', 'new', 'idus','idTm');
             $resu = $Im->sendUserMessages($figaro);
-            
-            
-                            
+
+
+
         }
          Yii::app()->db->createCommand()
                         ->insert('service_cloud', array('id_user' => $id,
                                 'name' => $id,
-                                'type' => "api", 
+                                'type' => "api",
                                 'bdate' => date("Y-m-d h-i-s"),
                                 'edate' => date("Y-m-d h-i-s"),
                                 'status' => 1,
@@ -1386,13 +1386,13 @@ class UserController extends AppController
                                 'text' => "Запрос на выгрузку API",
                                 'user' => "api"
                             ));
-                            
+
             Yii::app()->user->setFlash('Message', array('mess'=>'Ваша заявка на формирование запроса команд API сформирована. Все нужные команды Вы сможете взять из сформировавшегося окна диалогов. Также в нём можно будет задать вопросы администратору по возникшим техническим вопросам'));
             $this->redirect("https://prommu.com/user/im");
 
 
 
-          
+
 
 
     }
@@ -1458,12 +1458,12 @@ class UserController extends AppController
         $res = (new Vacancy())->vacDelete();
         if( $res['error'] < 0 ) {
             $this->redirect(MainConfig::$PAGE_INDEX);
-        } 
+        }
         else {
             Yii::app()->user->setFlash('Message', array('type' => '-green', 'message' => $res['message']));
             $url = DS . ($page ? MainConfig::$PAGE_VACANCIES : MainConfig::$PAGE_VACARHIVE);
             $this->redirect($url);
-        } 
+        }
     }
     /*
     *
@@ -1482,7 +1482,7 @@ class UserController extends AppController
             'count' => $count,
             'countView' => $countView,
             'countResponse' => $countResponse,
-            'countInvite' => $countInvite, 
+            'countInvite' => $countInvite,
             'countProject'=> $countProject,
             'arDates' => $arDates
         );
@@ -1513,22 +1513,23 @@ class UserController extends AppController
 
         $id = Yii::app()->getRequest()->getParam('id');
         $idus = Share::$UserProfile->id;
-        $view = $type==3 
-            ? MainConfig::$VIEW_EMP_PROJECT_LIST 
+        $view = $type==3
+            ? MainConfig::$VIEW_EMP_PROJECT_LIST
             : MainConfig::$VIEW_APP_PROJECT_LIST;
 
         if(strlen($id)>0) {
             if($id=='new') { // новый проект
+
                 $xls = Yii::app()->getRequest()->getParam('get_xls');
                 if($xls==1){
-                    $file = Yii::app()->baseUrl.'/uploads/address_program.xls';
-                    return Yii::app()->getRequest()->sendFile($file);
+                    //$file = Yii::app()->baseUrl.'/uploads/address_program.xls';
+                    //return Yii::app()->getRequest()->sendFile($file);
                 }
                 elseif(Yii::app()->request->isAjaxRequest){
                     $this->renderPartial(
                         MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
-                        array('viData' => (new Services())->getFilteredPromos()), 
-                        false, 
+                        array('viData' => (new Services())->getFilteredPromos()),
+                        false,
                         true
                     );
                 }
@@ -1538,7 +1539,7 @@ class UserController extends AppController
 
 
 
-                
+
                 $view = MainConfig::$VIEW_PROJECT_NEW;
             }
             elseif($id>0) { // существующий
@@ -1550,8 +1551,8 @@ class UserController extends AppController
                 }
                 if(Yii::app()->getRequest()->getParam('sort-comments')) {
                     $this->renderPartial(
-                        MainConfig::$VIEW_IDEAS_COMMENTS_AJAX_ORDER, 
-                        array('viData' => $model->getIdea($id)), 
+                        MainConfig::$VIEW_IDEAS_COMMENTS_AJAX_ORDER,
+                        array('viData' => $model->getIdea($id)),
                         false,
                         true
                     );
@@ -1569,5 +1570,5 @@ class UserController extends AppController
         //$this->setBreadcrumbs($title = 'Мои проекты', MainConfig::$PAGE_PROFILE);
         //$this->setPageTitle($title);
         $this->render($view, array('viData' => $data));
-    }   
+    }
 }
