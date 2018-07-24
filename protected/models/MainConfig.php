@@ -192,7 +192,7 @@ class MainConfig
     public static $VIEWS_SEARCH_EMPL_AJAX_BLOCK = 'empl-search/empl-search-block';
     public static $VIEWS_SEARCH_EMPL_AJAX_FILTER = 'empl-search/empl-search-filter';
     public static $LINK_TO_PLAYMARKET = 'https://play.google.com/store/apps/details?id=com.prommu.mobile';
-    public static $LINK_TO_APP_STORE = '/'; 
+    public static $LINK_TO_APP_STORE = '/';
     /* VACANTION VIEW FOR TABS */
     public static $VIEWS_VAC_TAB_RESP = 'vac-info/page-vacancy-resp';
     public static $VIEWS_VAC_TAB_REFUSE = 'vac-info/page-vacancy-refuse';
