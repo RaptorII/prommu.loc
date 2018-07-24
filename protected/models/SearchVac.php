@@ -264,11 +264,11 @@ class SearchVac extends Model
                 if($post && $post['comment']){
                     $posts[] = $post['comment'];
                     $cnt++;
+                    $hasPost = true;
                 }
             }
             if(sizeof($posts))
                 $url[] = implode(',', $posts);
-            $hasPost = true;
         }
 
         // города

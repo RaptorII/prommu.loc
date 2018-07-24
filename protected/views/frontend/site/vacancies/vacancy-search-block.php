@@ -1,5 +1,8 @@
 <? $cookieView = Yii::app()->request->cookies['vacancies_page_view']->value; ?>
-<script type="text/javascript">var arSeo = <?=json_encode($seo)?></script>
+<script type="text/javascript">
+    var arSeo = <?=json_encode($seo)?>;
+    var redirect = "<?=$redirect?>";
+</script>
 <?php if( !count($viData['vacs']) ): ?>
     <div class="psv__nothing">Нет подходящих вакансий</div>
 <?php else: ?>

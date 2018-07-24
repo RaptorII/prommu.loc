@@ -314,6 +314,16 @@ class SiteController extends AppController
             }    
             $this->ViewModel->setViewData('pageTitle', '<h1>' . $strBreadcrumb . '</h1>');
 
+            // индексируем только в списке нет ни единого города субдомена
+            $arCities = Subdomain::getCitiesIdies(true, 'arr'); // все города регионов всех субдоменов(кроме МО)
+            $noIndex = false;
+            foreach ($arCities as $idCity)
+                if(array_key_exists($idCity, $data['userInfo']['userCities'][2]))
+                    $noIndex = true;
+
+            if($noIndex)
+                Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
+
             $this->render('../' . MainConfig::$DIR_VIEWS_USER . DS . $page,
                     array('viData' => $data,
                             'idus' => $id,
@@ -374,6 +384,12 @@ class SiteController extends AppController
 		$time .= 'L05.' . microtime(true);
             }
             else{
+                Subdomain::filterRedirect(
+                    $_GET['cities'],
+                    Share::$UserProfile->id,
+                    Share::$UserProfile->type
+                );
+
                 $this->setBreadcrumbs($title = "Поиск соискателей", MainConfig::$PAGE_SEARCH_PROMO);
 
                 $SearchPromo = (new SearchPromo());
@@ -613,14 +629,15 @@ class SiteController extends AppController
                 Yii::app()->session['editVacId'] = $id;  
             }
 
-            // закрываем вакансии, в которых больше одного города
-            if(
-                //(sizeof($vac['vac']['city'])>1 && array_key_exists(Subdomain::getId(), $vac['vac']['city']))
-                //||
-                (sizeof($vac['vac']['city'])==1 && !array_key_exists(Subdomain::getId(), $vac['vac']['city']))
-            ){
+            // индексируем только в списке нет ни единого города субдомена
+            $arCities = Subdomain::getCitiesIdies(true, 'arr'); // все города регионов всех субдоменов(кроме МО)
+            $noIndex = false;
+            foreach ($arCities as $idCity)
+                if(array_key_exists($idCity, $vac['vac']['city']))
+                    $noIndex = true;
+
+            if($noIndex)
                 Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
-            }
 
             $view = $this->ViewModel->pageVacancy;
 
@@ -661,6 +678,11 @@ class SiteController extends AppController
                 $pages->pageSize = 24;
                 $pages->applyLimit($SearchVac);
                 $data = $SearchVac->getVacations();
+                $redirectUrl = Subdomain::ajaxFilterRedirect(
+                        $_GET['cities'],
+                        Share::$UserProfile->id,
+                        Share::$UserProfile->type
+                    );
 
                 $this->renderPartial(
                     MainConfig::$VIEWS_SEARCH_VAC_AJAX,
@@ -668,13 +690,20 @@ class SiteController extends AppController
                         'viData' => $data, 
                         'pages' => $pages,
                         'count' => $count,
-                        'seo' => $seo
+                        'seo' => $seo,
+                        'redirect' => $redirectUrl
                     ), 
                     false, 
                     true
                 );
             }
             else{
+                Subdomain::filterRedirect(
+                    $_GET['cities'],
+                    Share::$UserProfile->id,
+                    Share::$UserProfile->type
+                );
+
                 if($_SERVER['REQUEST_URI'] == '/vacancy/about')
                     throw new CHttpException(404, 'Error');
                 $this->setBreadcrumbs($title = "Поиск вакансий", MainConfig::$PAGE_SEARCH_VAC);
@@ -1787,5 +1816,12 @@ class SiteController extends AppController
             $data = $model->getIdeas();
         }
         $this->render($view, array('viData' => $data));
+    }
+    /*
+    *
+    */
+    public function actionOthercities()
+    {
+        $this->render(MainConfig::$VIEW_OTHERCITIES, array());
     }
 }

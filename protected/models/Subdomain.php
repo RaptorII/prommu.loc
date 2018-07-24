@@ -7,7 +7,7 @@ class Subdomain
 	public static $MAIN_DEL_FILE_URL = '/ajax/DelThroughSubdomain';
 	public static $MAIN_SITE_ROOT = '/var/www/html'; // для загрузки файлов на домен
 	public static $REDIRECT = '/api.auth_user/?id=#ID#&code=prommucomWd126wdn&url=';
-	public static $HOST = 'https://prommu.com';
+	public static $HOST = 'https://dev.prommu.com';
 	/*
 	*		Получить ID текущего сайта
 	*/
@@ -164,7 +164,8 @@ class Subdomain
 	/*
 	*
 	*/
-	public static function popupRedirect($city, $idus){
+	public static function popupRedirect($city, $idus)
+	{
 		$city = urldecode($city);
 		$city = urldecode($city);
 		$arId = self::getIdies();
@@ -184,9 +185,45 @@ class Subdomain
 			}
 	}
 	/*
+	*		редирект страниц с фильтром при переходе на страницу
+	*/
+	public static function filterRedirect($arC, $idus, $type)
+	{
+		if(sizeof($arC)) {
+			$arId = self::getIdies();
+			$arId[] = 1307;
+			$arCnt = array_fill_keys($arId, 0);
+			$arRes = Yii::app()->db->createCommand()
+				->select('c.region')
+				->from('city c')
+				->where(array('in', 'c.id_city', $arC))
+				->limit(10000);
+			$arCities = $arRes->queryAll();
+
+			if(!sizeof($arCities))
+				return false;
+
+			foreach ($arCities as $c)
+				if(in_array($c['region'], $arId))
+					$arCnt[$c['region']]++;
+
+			foreach ($arCnt as $id => $cnt) 
+				if($cnt>0 && $cnt==sizeof($arC)) {
+					if(in_array($type, [2,3]))
+						self::setRedirect($idus, $id, true);
+					else {
+						$arData = self::getData(true);
+						$url = 'Location: ' . $arData[$id]['url'] . $_SERVER['REQUEST_URI'];
+						header($url);
+						exit();
+					}	
+				}
+		}
+	}
+	/*
 	*		Получаем ID городов региона субдомена в виде строки
 	*/
-	public static function getCitiesIdies($main = false)
+	public static function getCitiesIdies($main = false, $type = 'str')
 	{
 		$arId = self::getIdies();
 		$sId = self::getId();
@@ -211,15 +248,19 @@ class Subdomain
 		$arCities = array();
 		foreach ($arRes as $city)
 			array_push($arCities, $city['id']);
-		$strCities = implode(',', $arCities);
-
-		return $strCities;
+		if($type=='str') {
+			$strCities = implode(',', $arCities);
+			return $strCities;
+		}
+		else {
+			return $arCities;
+		}
 	}
 	/*
 	*		Выполняем редирект
 	*/
 	public static function setRedirect($idus, $id, $hasParams=false) {
-		/*$sId = self::getId();
+		$sId = self::getId();
 		if($id!=$sId) {
 			$arSub = self::getData();
 			$url = 'Location: ' 
@@ -233,9 +274,9 @@ class Subdomain
 					$url .= DS . '?' . str_replace('&', ',', $arUrl[1]);
 				}
 			}
-			header($url);
-			exit();
-		}*/
+			//header($url); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			//exit();
+		}
 	}
 	/*
 	*		Получаем название SEO таблицы
@@ -292,13 +333,58 @@ class Subdomain
 	*		редиректим гостя
 	*/
 	public static function guestRedirect($type) {
-		/*$sId = self::getId();
+		$sId = self::getId();
 		if($sId!=1307 && $type!=2 && $type!=3) {
-			$url = 'Location: ' . self::$MAIN_SITE . $_SERVER['REDIRECT_URL'];
-			header($url);
-			exit();
-		}*/
+			$url = 'Location: ' . self::$MAIN_SITE . $_SERVER['REQUEST_URI'];
+			//header($url);  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			//exit();
+		}
 	}
-}
+	/*
+	*		создание урла для редиректа на страницах с фильтром
+	*/
+	public static function ajaxFilterRedirect($arC, $idus, $type)
+	{
+		$url = '';
+		if(sizeof($arC)) {
+			$arId = self::getIdies();
+			$arId[] = 1307;
+			$arCnt = array_fill_keys($arId, 0);
+			$arRes = Yii::app()->db->createCommand()
+				->select('c.region')
+				->from('city c')
+				->where(array('in', 'c.id_city', $arC))
+				->limit(10000);
+			$arCities = $arRes->queryAll();
 
+			if(!sizeof($arCities))
+				return false;
+
+			foreach ($arCities as $c)
+				if(in_array($c['region'], $arId))
+					$arCnt[$c['region']]++;
+
+			$arData = self::getData(true);
+			$sId = self::getId();
+			foreach ($arCnt as $id => $cnt) 
+				if($cnt>0 && $cnt==sizeof($arC) && $id!=$sId) {
+					if(in_array($type, [2,3])) {
+						$url = $arData[$id]['url'] . str_replace('#ID#', $idus, self::$REDIRECT);
+						$arUrl = explode('?', $_SERVER['REQUEST_URI']);
+						$url .= substr($arUrl[0], 1); 
+						if(strlen($arUrl[1])>0)
+							$url .= DS . '?' . str_replace('&', ',', $arUrl[1]);
+					}
+					else {
+						$url = $arData[$id]['url'] . $_SERVER['REQUEST_URI'];	
+					}	
+				}
+		}
+		if(strlen($url))
+			$url = urldecode($url);
+
+		return $url;
+	}
+
+}
 ?>
