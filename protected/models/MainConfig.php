@@ -234,4 +234,7 @@ class MainConfig
 
     public static $PAGE_PROJECT_LIST = '/user/projects';
     public static $PAGE_PROJECT_NEW = '/user/projects/new';
+
+    public static $VIEW_OTHERCITIES = 'page-cities-view';
+    public static $PAGE_OTHERCITIES = '/othercities';
 }

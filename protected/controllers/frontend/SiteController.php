@@ -389,7 +389,7 @@ class SiteController extends AppController
                     Share::$UserProfile->id,
                     Share::$UserProfile->type
                 );
-                
+
                 $this->setBreadcrumbs($title = "Поиск соискателей", MainConfig::$PAGE_SEARCH_PROMO);
 
                 $SearchPromo = (new SearchPromo());
@@ -1816,5 +1816,12 @@ class SiteController extends AppController
             $data = $model->getIdeas();
         }
         $this->render($view, array('viData' => $data));
+    }
+    /*
+    *
+    */
+    public function actionOthercities()
+    {
+        $this->render(MainConfig::$VIEW_OTHERCITIES, array());
     }
 }
