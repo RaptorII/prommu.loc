@@ -31,19 +31,21 @@ var phoneCode = {
 
     _loadData : function(){
         var self = this;
+        countryRequesting = $.getJSON('/theme/js/phone-codes/countries.json', {})
+            .done(function(json) {
+                self.data = json;
+                countryCache = self.data;
+                self._initSelector();
+            })
+            .fail(function(xhr, status, error) {
+                //alert(status + ' ' + error);
+                self.data = countries;
+                countryCache = self.data;
+                self._initSelector();
+            });
+        /*
         if(!countryCache && !countryRequesting) {
-            countryRequesting = $.getJSON('/theme/js/phone-codes/countries.json', {})
-                .done(function(json) {
-                    self.data = json;
-                    countryCache = self.data;
-                    self._initSelector();
-                })
-                .fail(function(xhr, status, error) {
-                    //alert(status + ' ' + error);
-                    self.data = countries;
-                    countryCache = self.data;
-                    self._initSelector();
-                });
+
         }
         else if(countryCache) {
             this.data = countryCache;
@@ -56,6 +58,7 @@ var phoneCode = {
                 self._initSelector();
             });
         }
+        */
     },
 
     _initSelector: function() {

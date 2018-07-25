@@ -18,7 +18,7 @@ var ProjectPage = (function () {
         $('.project__opt-btn').click(function() { self.showModule(this) });
         $('#add-xls-inp').change(function() { self.checkFormatFile(this) });
         $('#project-name').on('input', self.checkProjectName);
-        
+
         ProjectAddIndexProg.init(self); //  Страница добавления адресной программы
         ProjectAddPersonal.init(self);  //  Страница добавления персонала
 
@@ -26,7 +26,7 @@ var ProjectPage = (function () {
         //      Страница приглашения персонала
         //
         //      события нажатия кнопок
-        $('#add-prsnl-btn,#save-prsnl-btn').click(function(){ 
+              $('#add-prsnl-btn,#save-prsnl-btn').click(function(){
             self.checkInvitations(this)
         });
         //      события заполнения полей
@@ -118,6 +118,7 @@ var ProjectPage = (function () {
     //
     //      Проверка по нажатии кнопок
     ProjectPage.prototype.checkInvitations = function (e) {
+
         let self = this,
             arInputs = $('#invitation input'),
             save = $(e).hasClass('save-btn') ? true : false,
@@ -125,8 +126,8 @@ var ProjectPage = (function () {
 
         for (var i = 0, n = arInputs.length; i < n; i++) {
             if(
-                !$(arInputs[i]).hasClass('country-phone-search') 
-                && 
+                !$(arInputs[i]).hasClass('country-phone-search')
+                &&
                 !arInputs[i].value.length
             ) {
                 empty = true;
@@ -138,7 +139,7 @@ var ProjectPage = (function () {
                     $(arInputs[i]).val('');
                     empty = true;
                     break;
-                }  
+                }
             }
         }
         empty = false;
@@ -154,6 +155,8 @@ var ProjectPage = (function () {
                 id = Number(arInv[arInv.length-1].dataset.id) + 1;
 
             $(arInv[arInv.length-1]).after(html);
+            $(arInv[arInv.length-1]).attr('data-id',id); //Присвоение data-id для новых invitation-item
+
             arInputs = $(arInv[arInv.length-1]).find('.invite-inp');
 
             $(arInputs[0]).attr('name','inv-name['+id+'][]');
@@ -163,18 +166,20 @@ var ProjectPage = (function () {
 
             let p = $(arInv[arInv.length-1]).find('.invite-inp.phone');
             //console.log(p);
-
+            //$('#add-prsnl-btn').text(p);
             window.phoneCode.element = $(arInv[arInv.length-1]).find('.invite-inp.phone');
             window.phoneCode._create();
             $(arInv[arInv.length-1])
                 .find('[type="hidden"]')
                 .attr('name','prfx-phone['+id+'][]');
             self.arOldPhones[id] = '';
+
         }
         else
             save
             ? self.showPopup('error', 'save-notif')
             : self.showPopup('notif', 'add-notif');
+
     }
     //
     ProjectPage.prototype.inputInvitation = function (item,event) {
@@ -208,7 +213,7 @@ var ProjectPage = (function () {
                     phoneLen = 9;
                     if(self.keyCode==8){ //backspace
                         if($.inArray(l,[8,6,4,3,1])>=0)
-                           nV = self.arOldPhones[id].slice(0, -1); 
+                           nV = self.arOldPhones[id].slice(0, -1);
                         if($.inArray(l,[7,5,2])>=0)
                             nV = self.arOldPhones[id].slice(0, -2);
                     }
@@ -228,7 +233,7 @@ var ProjectPage = (function () {
                     phoneLen = 10;
                     if(self.keyCode==8){ //backspace
                         if($.inArray(l,[9,7,5,4,2,1])>=0)
-                           nV = self.arOldPhones[id].slice(0, -1); 
+                           nV = self.arOldPhones[id].slice(0, -1);
                         if($.inArray(l,[8,6,3])>=0)
                             nV = self.arOldPhones[id].slice(0, -2);
                     }
@@ -265,63 +270,63 @@ var ProjectPage = (function () {
         if(event=='error') {
             header = 'Ошибка';
             switch(type) {
-                case 'xls':     
-                    body = 'Формат файла должен быть "xls" или "xlsx". Выберите подходящий файл!';  
+                case 'xls':
+                    body = 'Формат файла должен быть "xls" или "xlsx". Выберите подходящий файл!';
                     break;
 				case 'time':
-                    body = 'Неправильно задано время работы';  
+                    body = 'Неправильно задано время работы';
                     break;
                 case 'save-notif':
-                    body = 'Необходимо заполнить все поля в приглашении';  
+                    body = 'Необходимо заполнить все поля в приглашении';
                     break;
                 case 'bad-email':
-                    body = 'Email не соответствует общепринятому формату';  
+                    body = 'Email не соответствует общепринятому формату';
                     break;
                 case 'bad-phone':
-                    body = 'Неправильное количество символов в телефоне';  
+                    body = 'Неправильное количество символов в телефоне';
                     break;
                 case 'city-del':
-                    body = 'Невозможно удалить единственный город';  
+                    body = 'Невозможно удалить единственный город';
                     break;
                 case 'loc-del':
-                    body = 'Невозможно удалить единственную ТТ города';  
+                    body = 'Невозможно удалить единственную ТТ города';
                     break;
                 case 'period-del':
-                    body = 'Невозможно удалить единственный период ТТ';  
+                    body = 'Невозможно удалить единственный период ТТ';
                     break;
-                default: break;  
+                default: break;
             }
         }
         if(event=='notif') {
             header = 'Предупреждение';
             switch(type) {
                 case 'name':
-                    body = 'Для продолжения необходимо ввести название проекта';  
+                    body = 'Для продолжения необходимо ввести название проекта';
                     break;
                 case 'add-city':
                     body = 'Перед добавлением нового города необходимо '
-                        + 'заполнить все поля у существующих городов';  
+                        + 'заполнить все поля у существующих городов';
                     break;
                 case 'add-period':
                     body = 'Перед добавлением нового периода необходимо '
-                        + 'заполнить все пустые поля';  
+                        + 'заполнить все пустые поля';
                     break;
                 case 'add-tt':
                     body = 'Перед добавлением ТТ необходимо '
-                        + 'заполнить все пустые поля';  
+                        + 'заполнить все пустые поля';
                     break;
                 case 'add-notif':
                     body = 'Перед добавлением нового приглашения необходимо '
-                        + 'корректно заполнить все поля в существующих'; 
+                        + 'корректно заполнить все поля в существующих';
                     break;
                 case 'addition':
-                    body = 'Не было выбрано ни одного соискателя';  
+                    body = 'Не было выбрано ни одного соискателя';
                     break;
                 case 'save-program':
-                    body = 'Перед сохранение необходимо заполнить все поля';  
+                    body = 'Перед сохранение необходимо заполнить все поля';
                     break;
-                default: break;  
-            }            
+                default: break;
+            }
         }
 
         let html = "<form data-header='" + header + "'>" + body + "</form>";
@@ -365,7 +370,7 @@ var ProjectAddIndexProg = (function () {
         // работаем с метро
         $('#index').on('input','.metro-inp',function(){ self.inputMetros(this) });
         $('#index').on('focus','.metro-inp',function(){ self.focusMetro(this) });
-        $('#index').on('click','.metro-select',function(e){ 
+        $('#index').on('click','.metro-select',function(e){
             if(!$(e.target).is('b'))
                 $(e.target).find('.metro-inp').focus();
         });
@@ -433,14 +438,14 @@ var ProjectAddIndexProg = (function () {
             list = $e.siblings('.select-list')[0],
             main = $e.closest('.city-field')[0],
             mainCity = $e.closest('.city-item')[0],
-            idcity = Number(mainCity.dataset.city), 
+            idcity = Number(mainCity.dataset.city),
             piece = val.toLowerCase(),
             content = '',
             params = 'query=' + val + '&idco=' + self.Project.idCo;
-        
+
         self.getSelectedCities();
         $(main).addClass('load'); // загрузка началась
-        
+
         $.ajax({
             type: 'POST',
             url: MainConfig.AJAX_GET_VE_GET_CITIES,
@@ -456,16 +461,16 @@ var ProjectAddIndexProg = (function () {
 
                     if(
                         ( $.inArray(id, self.arIdCities)<0 || id==idcity )
-                        && 
+                        &&
                         item.value.toLowerCase().indexOf(piece) >= 0
                     ){ // собираем список
-                        content += '<li data-id="' 
-                            + item.data + '" data-metro="' + item.ismetro 
+                        content += '<li data-id="'
+                            + item.data + '" data-metro="' + item.ismetro
                             + '">' + item.value + '</li>';
                     }
                 }
-                content 
-                ? $(list).html(content).fadeIn() 
+                content
+                ? $(list).html(content).fadeIn()
                 : $(list).html('<li class="emp">Список пуст</li>').fadeIn();
                 $(main).removeClass('load'); // загрузка завершена
             }
@@ -515,7 +520,7 @@ var ProjectAddIndexProg = (function () {
                         let mContent = $('#metro-content').html(),
                             arRows = $(main).find('.loc-item .project__index-row');
 
-                        for (var i = 0, n = arRows.length; i < n; i++) { 
+                        for (var i = 0, n = arRows.length; i < n; i++) {
                             $(arRows[i]).prepend(mContent);
                             /*let loc = $(arRows[i]).closest('.loc-item')[0],
                                 inp = $(arRows[i]).find('input')[0],
@@ -543,7 +548,7 @@ var ProjectAddIndexProg = (function () {
                         }
                         else {
                             $(arLocInp[0]).attr('name','lindex' + name);
-                            $(arLocInp[1]).attr('name','lname' + name);                           
+                            $(arLocInp[1]).attr('name','lname' + name);
                         }
 
                         for (let i = 0, n = arPers.length; i < n; i++) {
@@ -640,7 +645,7 @@ var ProjectAddIndexProg = (function () {
             content = '';
 
         $(main).addClass('load'); // загрузка началась
-        
+
         $.ajax({
             type: 'POST',
             url: '/ajaxvacedit/vegetmetros/',
@@ -649,11 +654,11 @@ var ProjectAddIndexProg = (function () {
             success: function(metros) {
                 if(metros.error!==true)
                     for (let i in metros)
-                        content += '<li data-id="' + metros[i].id + '">' 
+                        content += '<li data-id="' + metros[i].id + '">'
                             + metros[i].name + '</li>';
 
-                content 
-                ? $(list).html(content).fadeIn() 
+                content
+                ? $(list).html(content).fadeIn()
                 : $(list).html('<li class="emp">Список пуст</li>').fadeIn();
                 $(main).removeClass('load'); // загрузка завершена
             }
@@ -688,8 +693,8 @@ var ProjectAddIndexProg = (function () {
                 arMetros.push(e.dataset.id);
                 $(input).val(arMetros);
                 inpText.val('').css({width:'5px'});
-                $(select).find('[data-id="0"]').before('<li data-id="' 
-                    + e.dataset.id + '">' + name 
+                $(select).find('[data-id="0"]').before('<li data-id="'
+                    + e.dataset.id + '">' + name
                     + '<b></b></li>');
                 list.fadeOut();
             }
@@ -820,10 +825,10 @@ var ProjectAddIndexProg = (function () {
             else if(begDate==='' && self.diffDate(newDate,endDate)==0)
                 content += ' select'; // обозначаем выделенные дни
             else if(
-                endDate>0 && begDate>0 
-                && 
-                self.diffDate(newDate,begDate)>=0 
-                && 
+                endDate>0 && begDate>0
+                &&
+                self.diffDate(newDate,begDate)>=0
+                &&
                 self.diffDate(newDate,endDate)<=0
             )
                 content += ' select'; // обозначаем выделенные дни
@@ -872,8 +877,8 @@ var ProjectAddIndexProg = (function () {
             return false;
 
         $(calendar).fadeOut();
-        res = ('0' + Number($(day).text())).slice(-2) + '.' 
-            + ('0' + (Number(data.month) + 1)).slice(-2) 
+        res = ('0' + Number($(day).text())).slice(-2) + '.'
+            + ('0' + (Number(data.month) + 1)).slice(-2)
             + '.' + data.year;
 
         $(output).text(res);
@@ -888,7 +893,7 @@ var ProjectAddIndexProg = (function () {
     }
     //      форматируем в формат даты
     ProjectAddIndexProg.prototype.getDateFromData = function (date) {
-        let arDate = date.split('.'), 
+        let arDate = date.split('.'),
             obj = new Date(
                 Number(arDate[2]),
                 Number(arDate[1]-1),
@@ -960,7 +965,7 @@ var ProjectAddIndexProg = (function () {
             $(arPerInp[3]).attr('name','etime' + name);
             $(main).find('.time-inp').mask('99:99');
         }
-        else 
+        else
             self.Project.showPopup('notif', 'add-period');
     }
     //      Проверка времени
@@ -995,9 +1000,9 @@ var ProjectAddIndexProg = (function () {
         if(isNaN(arT1[0]) || isNaN(arT1[1]) || isNaN(arT2[0]) || isNaN(arT2[1]))
             return false;
 
-        if( 
-            (arT1[0] > arT2[0]) 
-            || 
+        if(
+            (arT1[0] > arT2[0])
+            ||
             ( (arT1[0] == arT2[0]) && (arT1[1] > arT2[1]) )
             ||
             ( (arT1[0] == arT2[0]) && (arT1[1] == arT2[1]) )
@@ -1019,7 +1024,7 @@ var ProjectAddIndexProg = (function () {
 
         for (let i = 0, l = arr.length; i < l; i++) {
             let arInputs = $(arr[i]).find('input');
-    
+
             for (let j = 0, n = arInputs.length; j < n; j++) {
                 let name = $(arInputs[j]).attr('name');
                 if ($.inArray(name, ['c','m'])<0 && !arInputs[j].value.length)
@@ -1051,7 +1056,7 @@ var ProjectAddIndexProg = (function () {
             main = $e.closest('.loc-item')[0]
             arItems = $(main).find('.period-item');
             item = $e.closest('.period-item')[0];
-            error = arItems.length>1 ? -1 : 2;         
+            error = arItems.length>1 ? -1 : 2;
         }
 
         if(error>=0)
@@ -1065,11 +1070,11 @@ var ProjectAddIndexProg = (function () {
     ProjectAddIndexProg.prototype.saveProgram = function (e) {
         let self = this;
 
-        !self.checkFields() 
+        !self.checkFields()
         ? self.Project.showModule(e)
         : self.Project.showPopup('notif','save-program');
     }
-    
+
     return ProjectAddIndexProg;
 }());
 /*
@@ -1080,7 +1085,7 @@ var ProjectAddIndexProg = (function () {
 var ProjectAddPersonal = (function () {
     ProjectAddPersonal.prototype.Project = [];
     ProjectAddPersonal.prototype.arSelectIdies = [];
-    
+
     function ProjectAddPersonal() {
         var self = this;
         ProjectAddPersonal.winObj = self;
@@ -1093,7 +1098,7 @@ var ProjectAddPersonal = (function () {
         self.Project = project;
 
         //      просмотреть все вакансии
-        $('.more-posts').click(function(){ 
+        $('.more-posts').click(function(){
             $(this.parentNode).css({height:'initial'});
             $(this).remove();
         });
@@ -1111,8 +1116,8 @@ var ProjectAddPersonal = (function () {
         // подгрузка данных для возраста
         $('.filter__age-btn').click(function(){ self.getAppsAjax() });
         // подгрузка данных при перелистывании
-        $('#promo-content').on('click', '.paging-wrapp a', function(e){ 
-            self.getAppsAjax(e) 
+        $('#promo-content').on('click', '.paging-wrapp a', function(e){
+            self.getAppsAjax(e)
         })
         .on('change', '.promo_inp', function(){ //  выбор работников
             self.addWorkers(this)
@@ -1120,7 +1125,7 @@ var ProjectAddPersonal = (function () {
         $('#all-workers').change(function(){ self.addWorkers(this) }); //  выбрать всех
         $('#filter-city').on('input','.city-inp',function(){ self.inputFilterCity(this) });
         $('#filter-city').on('focus','.city-inp',function(){ self.focusFilterCity(this) });
-        $('#filter-city').on('click','.filter-city-select',function(e){ 
+        $('#filter-city').on('click','.filter-city-select',function(e){
             if(!$(e.target).is('b'))
                 $(e.target).find('.city-inp').focus();
         });
@@ -1135,11 +1140,11 @@ var ProjectAddPersonal = (function () {
 
         if($(e).is(arCheckbox[0])) {
             for (var i=1; i<arCheckbox.length; i++)
-                $(e).is(':checked') 
-                ? $(arCheckbox[i]).prop('checked',true) 
-                : $(arCheckbox[i]).prop('checked',false);     
+                $(e).is(':checked')
+                ? $(arCheckbox[i]).prop('checked',true)
+                : $(arCheckbox[i]).prop('checked',false);
         }
-        setTimeout( self.getAppsAjax(), 300); 
+        setTimeout( self.getAppsAjax(), 300);
     }
     ProjectAddPersonal.prototype.getAppsAjax = function (e) {
         let params = '',
@@ -1174,11 +1179,11 @@ var ProjectAddPersonal = (function () {
             success: function(res){
                 $content.html(res);
                 if(e){   // постраничное обновление
-                    $('html, body').animate({ 
+                    $('html, body').animate({
                         scrollTop: $content.offset().top - 100 },
                         700
                     );//прокручиваем к заголовку
-                    $.each($content.find('.promo_inp'), function(){ 
+                    $.each($content.find('.promo_inp'), function(){
                         var id = Number($(this).val());
                         if($.inArray(id,self.arSelectIdies)>=0 || $('#all-workers').is(':checked'))
                             $(this).prop('checked',true);
@@ -1186,28 +1191,28 @@ var ProjectAddPersonal = (function () {
                 }
                 else{
                     self.arSelectIdies = [];
-                    $('#mess-workers').val(self.arSelectIdies);     
+                    $('#mess-workers').val(self.arSelectIdies);
                     $('#mess-wcount').html(0);
                     $('#mess-wcount-inp').val(0);
                     $('#all-workers').prop('checked',false);
                 }
                 $('.filter__veil').hide();
             }
-        });       
+        });
     }
     //      Прячем фильтр для моб. разрешения
     ProjectAddPersonal.prototype.visibilityFilter = function (event) {
         if(event=='click') {
-            $('.filter__vis').hasClass('active') 
-                ? $('#promo-filter').fadeOut() 
+            $('.filter__vis').hasClass('active')
+                ? $('#promo-filter').fadeOut()
                 : $('#promo-filter').fadeIn();
             $('.filter__vis').toggleClass('active');
         }
         else {
             if($(window).width() < '768')
-                $('.filter__vis').hasClass('active') 
-                    ? $('#promo-filter').show() 
-                    : $('#promo-filter').hide(); 
+                $('.filter__vis').hasClass('active')
+                    ? $('#promo-filter').show()
+                    : $('#promo-filter').hide();
             else
                 $('#promo-filter').show();
         }
@@ -1226,7 +1231,7 @@ var ProjectAddPersonal = (function () {
             $e.addClass('opened');
             $e.siblings('.filter__item-content').slideDown(500);
             $e.siblings('.filter__item-content').addClass('opened');
-        }     
+        }
     }
     //      Выбор соискателей при добавлении
     ProjectAddPersonal.prototype.addWorkers = function (e) {
@@ -1251,7 +1256,7 @@ var ProjectAddPersonal = (function () {
                 // записуем выбраный ID
                 if($.inArray(id, self.arSelectIdies)<0){ self.arSelectIdies.push(id) };
                 if(self.arSelectIdies.length == arIdies.length) // arIdies берем с вьюхи
-                $('#all-workers').prop('checked',true);  
+                $('#all-workers').prop('checked',true);
             }
             else {
                 // убираем ID
@@ -1298,7 +1303,7 @@ var ProjectAddPersonal = (function () {
                 arIdCities.push($(arInputs[i]).val());
 
         $(main).addClass('load'); // загрузка началась
-        
+
         $.ajax({
             type: 'POST',
             url: MainConfig.AJAX_GET_VE_GET_CITIES,
@@ -1313,19 +1318,19 @@ var ProjectAddPersonal = (function () {
                         break;
 
                     if(
-                        $.inArray(id, arIdCities)<0 
-                        && 
+                        $.inArray(id, arIdCities)<0
+                        &&
                         item.value.toLowerCase().indexOf(piece) >= 0
                     ){ // собираем список
-                        content += '<li data-id="' 
-                            + item.data + '" data-metro="' + item.ismetro 
+                        content += '<li data-id="'
+                            + item.data + '" data-metro="' + item.ismetro
                             + '">' + item.value + '</li>';
                     }
                 }
-                content 
-                ? $(list).html(content).fadeIn() 
+                content
+                ? $(list).html(content).fadeIn()
                 : $(list).html('<li class="emp">Список пуст</li>').fadeIn();
-                
+
                 $(main).removeClass('load'); // загрузка завершена
             }
         });
@@ -1349,15 +1354,15 @@ var ProjectAddPersonal = (function () {
 
                 inpText.val('').css({width:'5px'});
                 $(select).find('[data-id="0"]').before(
-                    '<li>' + $e.text() + '<b></b>' + 
-                    '<input name="cities[]" type="hidden" value="' + 
+                    '<li>' + $e.text() + '<b></b>' +
+                    '<input name="cities[]" type="hidden" value="' +
                     e.dataset.id + '"/></li>');
                 list.fadeOut();
-                setTimeout( self.getAppsAjax(), 300); 
+                setTimeout( self.getAppsAjax(), 300);
             }
             else if($e.is('.filter-city-select b')) { // удаление выбранного метро из списка
                 $e.closest('li').remove();
-                setTimeout( self.getAppsAjax(), 300); 
+                setTimeout( self.getAppsAjax(), 300);
             }
         }
     }
