@@ -7,16 +7,6 @@
       <div class="clearfix"></div>
     </div>
   </div>
-  <div class='pse__filter-block filter-cities'>
-    <div class='pse__filter-name opened'>Город</div>
-    <div class='pse__filter-content opened'>
-      <select class='multiple' id='pse-cities' multiple='multiple' name='cities[]'>
-        <?php foreach ($viData['cities'] as $id => $val): ?>
-            <option value="<?=$id?>" <?=(in_array($id, $viData['get']['cities']) ? 'selected' : '')?>><?= $val['name'] ?></option>
-        <?php endforeach; ?>
-      </select>
-    </div>
-  </div>
   <?php if(sizeof($viData['cotype'])>0): ?>
     <div class='pse__filter-block filter-type'>
         <div class='pse__filter-name opened'>Тип работодателя</div>

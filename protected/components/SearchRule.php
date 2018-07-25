@@ -244,6 +244,7 @@ class SearchRule extends CBaseUrlRule {
                         'param' => 'cities[]='.$city['id']
                     );
                     $templateUrlParams['cities'][] = $city['name'];
+                    $templateUrlParams['city'][] = $city['name'];
                     continue;
                 }
             }

@@ -207,8 +207,9 @@ class Subdomain
 				if(in_array($c['region'], $arId))
 					$arCnt[$c['region']]++;
 
+			$sId = self::getId();
 			foreach ($arCnt as $id => $cnt) 
-				if($cnt>0 && $cnt==sizeof($arC)) {
+				if($cnt>0 && $cnt==sizeof($arC) && $id!=$sId) {
 					if(in_array($type, [2,3]))
 						self::setRedirect($idus, $id, true);
 					else {
@@ -274,8 +275,8 @@ class Subdomain
 					$url .= DS . '?' . str_replace('&', ',', $arUrl[1]);
 				}
 			}
-			//header($url); !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			//exit();
+			header($url);
+			exit();
 		}
 	}
 	/*
@@ -336,8 +337,8 @@ class Subdomain
 		$sId = self::getId();
 		if($sId!=1307 && $type!=2 && $type!=3) {
 			$url = 'Location: ' . self::$MAIN_SITE . $_SERVER['REQUEST_URI'];
-			//header($url);  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			//exit();
+			header($url);
+			exit();
 		}
 	}
 	/*
