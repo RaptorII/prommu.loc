@@ -1,6 +1,8 @@
 <? $cookieView = Yii::app()->request->cookies['srch_a_view']->value; ?>
-
-<script type="text/javascript">var arSeo = <?=json_encode($seo);?></script>
+<script type="text/javascript">
+    var arSeo = <?=json_encode($seo)?>;
+    var redirect = "<?=$redirect?>";
+</script>
 <?php if( !count($viData['promo']) ): ?>
     <div class="psa__nothing">Нет подходящих соискателей</div>
 <?php else: ?>
@@ -39,7 +41,7 @@
                                         <?php endif; ?>
                                         <?php if($val['is_online']): ?>
                                             <span class="promo-list__item-onl"><span>В сети</span></span>
-                                        <?php endif; ?>
+                                        <?php endif; ?> 
                                     </a>
                                 </div>
                             </div>

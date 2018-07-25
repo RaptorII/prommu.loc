@@ -1,6 +1,7 @@
 <script type="text/javascript">
   var arSeo = <?=json_encode($seo)?>;
   var arNewData = <?=json_encode($viData['count'])?>;
+  var redirect = "<?=$redirect?>";
 </script>
 <?php if( !count($viData['empls']) ): ?>
   <div class="pse__nothing">Нет подходящих компаний</div>
