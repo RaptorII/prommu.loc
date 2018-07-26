@@ -156,15 +156,16 @@ return array(
         ),
         // uncomment the following to use a MySQL database
 
-         'db' => array(
-            'connectionString' => 'mysql:host=localhost;dbname=promo_test2',
+           'db' => array(
+            'connectionString' => 'mysql:host=localhost;dbname=promo',
             'emulatePrepare' => true,
-            'username' => 'promo',
-            'password' => 'WuuqA3n8e0',
+            'username' => 'root',
+            'password' => 'WWFf57EfyY4fcaFh',
             'charset' => 'utf8',
             'enableProfiling' => true,
             'enableParamLogging' => true,
         ),
+		
 
         'errorHandler' => array(
             // use 'site/error' action to display errors
