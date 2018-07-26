@@ -1564,6 +1564,27 @@ class UserController extends AppController
                 exit;
             }
         }
+/*
+
+*/
+        if($_GET['s']=='staff') {
+          $view = 'projects/staff';
+        }
+        if($_GET['s']=='index') {
+          $view = 'projects/index';
+        }
+        if($_GET['s']=='geo') {
+          $view = 'projects/geo';
+        }
+        if($_GET['s']=='route') {
+          $view = 'projects/route';
+        }
+        if($_GET['s']=='tasks') {
+          $view = 'projects/tasks';
+        }        
+        if($_GET['s']=='report') {
+          $view = 'projects/report';
+        }
 
         //$model = new Projects;
         //$data = $model->getProjects($idus, $type);
