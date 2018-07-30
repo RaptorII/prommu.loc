@@ -1,5 +1,10 @@
 $(function(){
 	var curDate = new Date();
+		
+	$.each($('.sv__data-calendar'), function() {
+		if(arLoc[this.dataset.id] == null)
+			$(this).hide();
+	});
 	//
 	//	Событие календаря
 	//

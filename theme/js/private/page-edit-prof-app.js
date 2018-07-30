@@ -6,7 +6,6 @@ jQuery(function($){
 		periodMask = 'С 99 до 99',
 		curDate = new Date(),
 		curYear = curDate.getFullYear(),
-		curMonth = curDate.getMonth(),
 		curDay = Number(curDate.getDate()),
 		bYear = Number($('#epa-byear').val()),
 		bMonth = Number($('#epa-bmonth').val())-1,
@@ -29,6 +28,7 @@ jQuery(function($){
 		confirmEmail = $('#conf-email').hasClass('complete') ? true : false;
 		confirmPhone = $('#conf-phone').hasClass('complete') ? true : false;
 
+	curDate.setFullYear(curYear-14); // ограничение по возрасту от 14 лет
 	// прокрутка по содержанию
 	$('.epa__logo-name').click(function(){
 		var num = $(this).index();

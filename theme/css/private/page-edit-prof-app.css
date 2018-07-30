@@ -293,6 +293,14 @@
 	display: none;
 	border: 1px solid transparent;
 }
+.epa__calendar:before{
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	display: block;
+}
 .epa__calendar.error{ 
 	box-shadow: 0px 0px 3px red;
 	border: 1px solid red;
