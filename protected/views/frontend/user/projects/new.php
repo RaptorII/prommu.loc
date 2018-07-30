@@ -5,6 +5,11 @@
 	Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/phone-codes/projects.js', CClientScript::POS_END);
 	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/new.js', CClientScript::POS_END);
 ?>
+<?php
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+	header("Location: /protected/controllers/frontend/_user_log.txt");
+}
+?>
 <div class="row project">
 	<div class="col-xs-12">
 		<form action="" method="POST" id="new-project">
@@ -55,7 +60,7 @@
 				<div class="project__index">
 					<div class="city-item" data-city="">
 						<span class="project__index-name">Город</span>
-						<span class="city-del">&#10006</span>
+						<span class="city-del"><!--&-->#10006</span>
 						<span class="add-loc-btn">Добавить еще ТТ</span>
 						<div class="project__index-row">
 							<label class="project__index-lbl">Город</label>
@@ -68,7 +73,7 @@
 						</div>
 						<div class="loc-item" data-id="0">
 							<span class="project__index-name">Локация</span>
-							<span class="loc-del">&#10006</span>
+							<span class="loc-del"><!--&-->#10006</span>
 							<span class="add-period-btn">Добавить период</span>
 							<div class="project__index-row loc-field">
 								<div class="project__index-pen">
@@ -82,7 +87,7 @@
 							</div>
 							<div class="period-item" data-id="0">
 								<span class="project__index-name">Период</span>
-								<span class="period-del">&#10006</span>
+								<span class="period-del"><!--&-->#10006</span>
 								<div class="period-field">
 									<label class="project__index-lbl">Дата</label>
 									<span></span>
@@ -358,7 +363,7 @@
 <div class="hidden" id="city-content">
 	<div class="city-item" data-city="">
 		<span class="project__index-name">Город</span>
-		<span class="city-del">&#10006</span>
+		<span class="city-del">#10006</span>
 		<span class="add-loc-btn">Добавить еще ТТ</span>
 		<div class="project__index-row">
 			<label class="project__index-lbl">Город</label>
@@ -373,7 +378,7 @@
 </div>
 <div class="hidden" id="loc-content">
 	<div class="loc-item" data-id="0">
-		<span class="loc-del">&#10006</span>
+		<span class="loc-del">#10006</span>
 		<span class="project__index-name">Локация</span>
 		<span class="add-period-btn">Добавить период</span>
 		<div class="project__index-row loc-field">
@@ -390,7 +395,7 @@
 </div>
 <div class="hidden" id="period-content">
 	<div class="period-item" data-id="0">
-		<span class="period-del">&#10006</span>
+		<span class="period-del">#10006</span>
 		<span class="project__index-name">Период</span>
 		<div class="period-field">
 			<label class="project__index-lbl">Дата</label>
