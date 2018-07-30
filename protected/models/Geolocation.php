@@ -52,7 +52,8 @@ class Geolocation extends ARModel {
         return $res;
 
 	}
-
+        
+    
 	/* Запись точек работы на вакансии */
 	public function setGeoStatistics() 
 	{
@@ -77,6 +78,30 @@ class Geolocation extends ARModel {
                         'lat' => $lat,
                         'lon' => $lon,
                         'radius' => $radius,
+                        'id_city' => $id_city,
+                        'address' => $address,
+                    ));
+
+	}
+        
+        
+    public function createProject() 
+	{
+
+        $id_vac = Yii::app()->getRequest()->getParam('id_vac');
+        $date_begin =  Yii::app()->getRequest()->getParam('date_begin');
+        $date_end = Yii::app()->getRequest()->getParam('date_end');
+        $time_begin = Yii::app()->getRequest()->getParam('time_begin');
+        $time_end = Yii::app()->getRequest()->getParam('time_end');
+        $id_city = Yii::app()->getRequest()->getParam('id_city');
+        $address = Yii::app()->getRequest()->getParam('address');
+
+        $res = Yii::app()->db->createCommand()
+                ->insert('projects', array('id_vac' => $id_vac,
+                        'date_begin' => $date_begin,
+                        'date_end' => $date_end,
+                        'time_begin' => $time_begin,
+                        'time_end' => $time_end,
                         'id_city' => $id_city,
                         'address' => $address,
                     ));

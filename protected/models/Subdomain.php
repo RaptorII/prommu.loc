@@ -5,9 +5,9 @@ class Subdomain
 	public static $MAIN_SITE = 'https://prommu.com';
 	public static $MAIN_SEND_FILE_URL = '/ajax/AcceptFileFromSubdomain';
 	public static $MAIN_DEL_FILE_URL = '/ajax/DelThroughSubdomain';
-	public static $MAIN_SITE_ROOT = '/var/www/html'; // для загрузки файлов на домен
+	public static $MAIN_SITE_ROOT = '/var/www/prommu'; // для загрузки файлов на домен
 	public static $REDIRECT = '/api.auth_user/?id=#ID#&code=prommucomWd126wdn&url=';
-	public static $HOST = 'https://dev.prommu.com';
+	public static $HOST = 'https://prommu.com';
 	/*
 	*		Получить ID текущего сайта
 	*/

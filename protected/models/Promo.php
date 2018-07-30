@@ -502,7 +502,6 @@ class Promo extends ARModel
 
     public function getApplicantsSearchpromo($inParams)
     {
-        //$strCities = Subdomain::getCitiesIdies(true); // ID всех городов существующих СУБДОМЕНОВ
         $sql = "SELECT r.id,
                r.id_user,
                r.id_rating,
@@ -532,7 +531,6 @@ class Promo extends ARModel
                 INNER JOIN user u ON u.id_user = r.id_user 
                     AND u.ismoder = 1 AND u.isblocked = 0
                 INNER JOIN user_city uc ON r.id_user = uc.id_user 
-                  /*  AND !(uc.id_city IN({$strCities}))*/
                 {$inParams['table']}
                 INNER JOIN user_mech a ON a.id_us = r.id_user
                 {$inParams['filter']}

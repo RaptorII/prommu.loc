@@ -166,11 +166,8 @@ class SiteController extends AppController
                 $pages->applyLimit($SearchEmpl);
                 $data = $SearchEmpl->getEmployers(1);
                 $data['count'] = $arCount;
-                $redirectUrl = Subdomain::ajaxFilterRedirect(
-                        $_GET['cities'],
-                        Share::$UserProfile->id,
-                        Share::$UserProfile->type
-                    );
+                //$redirectUrl = Subdomain::ajaxFilterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
+                $redirectUrl = '';
 
                 $this->renderPartial(
                     MainConfig::$VIEWS_SEARCH_EMPL_AJAX_BLOCK,
@@ -186,11 +183,7 @@ class SiteController extends AppController
             }
         }
         else{
-            Subdomain::filterRedirect(
-                $_GET['cities'],
-                Share::$UserProfile->id,
-                Share::$UserProfile->type
-            );
+            //Subdomain::filterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
 
             $this->setBreadcrumbs($title = "Поиск работодателей", MainConfig::$PAGE_SEARCH_EMPL);
 
@@ -325,15 +318,11 @@ class SiteController extends AppController
                 $this->setBreadcrumbsEx(array($strBreadcrumb, MainConfig::$PAGE_PROFILE_COMMON . DS . $id)); 
             }    
             $this->ViewModel->setViewData('pageTitle', '<h1>' . $strBreadcrumb . '</h1>');
-
-            // индексируем только в списке нет ни единого города субдомена
-            $arCities = Subdomain::getCitiesIdies(true, 'arr'); // все города регионов всех субдоменов(кроме МО)
-            $noIndex = false;
-            foreach ($arCities as $idCity)
-                if(array_key_exists($idCity, $data['userInfo']['userCities'][2]))
-                    $noIndex = true;
-
-            if($noIndex)
+            // индексируем только города субдомена
+            $arCities = Subdomain::getCitiesIdies(false, 'arr');
+            reset($data['userInfo']['userCities'][0]);
+            $idCity = key($data['userInfo']['userCities'][0]);
+            if($idCity>0 && !in_array($idCity, $arCities))
                 Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
 
             $this->render('../' . MainConfig::$DIR_VIEWS_USER . DS . $page,
@@ -380,11 +369,8 @@ class SiteController extends AppController
                 $pages->pageSize = 21;
                 $pages->applyLimit($SearchPromo);
                 $data = $SearchPromo->getPromos();
-                $redirectUrl = Subdomain::ajaxFilterRedirect(
-                        $_GET['cities'],
-                        Share::$UserProfile->id,
-                        Share::$UserProfile->type
-                    );
+                //$redirectUrl = Subdomain::ajaxFilterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
+                $redirectUrl = '';
 
                 $this->renderPartial(
                     MainConfig::$VIEWS_SEARCH_PROMO_AJAX,
@@ -401,11 +387,7 @@ class SiteController extends AppController
         $time .= 'L05.' . microtime(true);
             }
             else{
-                Subdomain::filterRedirect(
-                    $_GET['cities'],
-                    Share::$UserProfile->id,
-                    Share::$UserProfile->type
-                );
+                //Subdomain::filterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
 
                 $this->setBreadcrumbs($title = "Поиск соискателей", MainConfig::$PAGE_SEARCH_PROMO);
 
@@ -635,15 +617,13 @@ class SiteController extends AppController
                 Yii::app()->session['editVacId'] = $id;  
             }
 
-            // индексируем только в списке нет ни единого города субдомена
-            $arCities = Subdomain::getCitiesIdies(true, 'arr'); // все города регионов всех субдоменов(кроме МО)
-            $noIndex = false;
-            foreach ($arCities as $idCity)
-                if(array_key_exists($idCity, $vac['vac']['city']))
-                    $noIndex = true;
-
-            if($noIndex)
-                Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
+            // индексируем только если владелец вакансии с этого региона
+            $arCities = Subdomain::getCitiesIdies(false, 'arr');
+            $res = Yii::app()->db->createCommand()
+                ->select('id_city')
+                ->from('user_city')
+                ->where('id_user=:id',array(':id'=>$vac['vac']['idus']))
+                ->queryRow();
 
             $view = $this->ViewModel->pageVacancy;
 
@@ -684,11 +664,8 @@ class SiteController extends AppController
                 $pages->pageSize = 24;
                 $pages->applyLimit($SearchVac);
                 $data = $SearchVac->getVacations();
-                $redirectUrl = Subdomain::ajaxFilterRedirect(
-                        $_GET['cities'],
-                        Share::$UserProfile->id,
-                        Share::$UserProfile->type
-                    );
+                //$redirectUrl = Subdomain::ajaxFilterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
+                $redirectUrl = '';
 
                 $this->renderPartial(
                     MainConfig::$VIEWS_SEARCH_VAC_AJAX,
@@ -704,11 +681,7 @@ class SiteController extends AppController
                 );
             }
             else{
-                Subdomain::filterRedirect(
-                    $_GET['cities'],
-                    Share::$UserProfile->id,
-                    Share::$UserProfile->type
-                );
+                //Subdomain::filterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
 
                 if($_SERVER['REQUEST_URI'] == '/vacancy/about')
                     throw new CHttpException(404, 'Error');

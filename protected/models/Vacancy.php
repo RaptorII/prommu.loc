@@ -2004,7 +2004,6 @@ WHERE id_vac = {$inVacId}";
 
     public function getVacancySearchemplPage($inParams)
     {
-        //$strCities = Subdomain::getCitiesIdies(true);
         $filter = $inParams['filter'];
         $limit = (int)$inParams['limit'] > 0 ? "LIMIT {$inParams['offset']}, {$inParams['limit']}" : '';
         $sql = "SELECT e.id, e.ispremium, e.title, e.requirements, e.duties, e.conditions, e.istemp,
@@ -2025,7 +2024,7 @@ WHERE id_vac = {$inVacId}";
             INNER JOIN (
               SELECT DISTINCT e.id
               FROM empl_vacations e
-              INNER JOIN empl_city c ON c.id_vac = e.id  /*AND !(c.id_city IN({$strCities}))*/
+              INNER JOIN empl_city c ON c.id_vac = e.id 
               INNER JOIN user u ON e.id_user = u.id_user 
               INNER JOIN empl_attribs ea ON ea.id_vac = e.id
               {$filter['table']}
