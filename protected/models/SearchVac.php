@@ -67,7 +67,6 @@ class SearchVac extends Model
     // получение кол-ва вакансий
     public function searchVacationsCount($props = [])
     {
-        //$strCities = Subdomain::getCitiesIdies(true); // ID всех городов существующих СУБДОМЕНОВ
         $filter = $props['filter'] ?: [];
         $filter = $this->renderSQLFilter(['filter' => $filter]);
 
@@ -78,7 +77,6 @@ class SearchVac extends Model
                 INNER JOIN empl_attribs ea ON ea.id_vac = e.id  
                 {$filter['filter']}
                 AND e.status = 1 AND e.ismoder = 100  
-                /*AND !(c.id_city IN({$strCities}))*/ 
                 ORDER BY e.ispremium DESC, e.id DESC ";
 
         $res = Yii::app()->db->createCommand($sql);
@@ -432,7 +430,10 @@ class SearchVac extends Model
         }
 
         // city filter
-        if( !empty($data['cities']) ) $filter[] = "c.id_city IN (".join(',',$data['cities']).')';
+        if( !empty($data['cities']) ) 
+            $filter[] = "c.id_city IN (".join(',',$data['cities']).')';
+        else
+            $filter[] = "c.id_city IN (".Subdomain::getCitiesIdies().')';
 
         if( !empty($data['smart']) )
         {

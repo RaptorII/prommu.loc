@@ -60,7 +60,6 @@ class SearchPromo extends Model
 
     public function searchPromosCount()
     {
-        //$strCities = Subdomain::getCitiesIdies(true); // ID всех городов существующих СУБДОМЕНОВ
         $filter = $this->renderSQLFilter();
 
         $sql = "SELECT COUNT(DISTINCT r.id)
@@ -68,7 +67,6 @@ class SearchPromo extends Model
                 INNER JOIN user u ON u.id_user = r.id_user 
                     AND u.ismoder = 1 AND u.isblocked = 0 
                 INNER JOIN user_city uc ON r.id_user = uc.id_user  
-                   /* AND !(uc.id_city IN({$strCities}))*/
                     {$filter['table']}
                 INNER JOIN user_mech a ON a.id_us = r.id_user
                     {$filter['filter']}
@@ -189,6 +187,10 @@ class SearchPromo extends Model
         {
             $filter[] = 'uc.id_city IN ('.join(',',$data['cities']).')';
         }
+        else
+        {
+            $filter[] = 'uc.id_city IN ('.Subdomain::getCitiesIdies().')';
+        }
 
         if( !empty($data['ph']) )
         {
@@ -258,8 +260,6 @@ class SearchPromo extends Model
         $limit = $this->limit;
         $offset = $this->offset;
 
-        //$strCities = Subdomain::getCitiesIdies(true); // ID всех городов существующих СУБДОМЕНОВ
-
         try
         {
             $res = (new Promo())->getApplicantsQueries(array('page' => 'searchpromo', 'table' => $filter['table'], 'filter' => $filter['filter'], 'offset' => $offset, 'limit' => $limit));
@@ -276,7 +276,6 @@ class SearchPromo extends Model
                 INNER JOIN user u ON u.id_user = r.id_user 
                     AND u.ismoder = 1 AND u.isblocked = 0
                 INNER JOIN user_city uc ON r.id_user = uc.id_user 
-                /*    AND !(uc.id_city IN({$strCities}))*/
                 {$filter['table']}
                 INNER JOIN user_mech a ON a.id_us = r.id_user
                 {$filter['filter']}
