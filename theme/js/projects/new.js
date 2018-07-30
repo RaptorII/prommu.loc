@@ -1396,6 +1396,7 @@ $(document).ready(function () {
         var code = this.dataset.phone;
         var co = this.dataset.co;
         $(this).parent().prev().html('<img src="/theme/pic/phone-codes/blank.gif" class="flag flag-'+ co +'"><span>+'+ code+'</span>');
+        $(this).parent().parent().siblings('input[type=hidden]').val(code);
     });
   });
 });
