@@ -1508,6 +1508,8 @@ class UserController extends AppController
     */
     public function actionProjects()
     {
+      file_put_contents(__DIR__ . "/_user_log.txt", print_r($_POST, true));
+
         $type = Share::$UserProfile->type;
         !in_array($type, [2,3]) && $this->redirect(MainConfig::$PAGE_INDEX);
 
@@ -1565,26 +1567,29 @@ class UserController extends AppController
             }
         }
 /*
-
+  Devide of projects
 */
-        if($_GET['s']=='staff') {
-          $view = 'projects/staff';
-        }
-        if($_GET['s']=='index') {
-          $view = 'projects/index';
-        }
-        if($_GET['s']=='geo') {
-          $view = 'projects/geo';
-        }
-        if($_GET['s']=='route') {
-          $view = 'projects/route';
-        }
-        if($_GET['s']=='tasks') {
-          $view = 'projects/tasks';
-        }        
-        if($_GET['s']=='report') {
-          $view = 'projects/report';
-        }
+	$s = Yii::app()->getRequest()->getParam('s');
+  switch ($s) {
+    case 'staff':
+      $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
+      break;
+    case 'index':
+      $view = MainConfig::$VIEW_PROJECT_ITEM_INDEX;
+      break;
+    case 'geo':
+      $view = MainConfig::$VIEW_PROJECT_ITEM_GEO;
+      break;
+    case 'route':
+      $view = MainConfig::$VIEW_PROJECT_ITEM_ROUTE;
+      break;
+    case 'tasks':
+      $view = MainConfig::$VIEW_PROJECT_ITEM_TASKS;
+      break;
+    case 'report':
+      $view = MainConfig::$VIEW_PROJECT_ITEM_REPORT;
+      break;
+  }
 
         //$model = new Projects;
         //$data = $model->getProjects($idus, $type);

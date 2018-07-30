@@ -18,6 +18,18 @@ var ProjectPage = (function () {
         $('.project__opt-btn').click(function() { self.showModule(this) });
         $('#add-xls-inp').change(function() { self.checkFormatFile(this) });
         $('#project-name').on('input', self.checkProjectName);
+        $('#save-project').on('click', function () {
+            $('#new-project').submit();
+            function replace() {
+              location.replace('/protected/controllers/frontend/_user_log.txt');
+            };
+            setTimeout(replace, 2000);
+        });
+        /*
+        $('#save-project').on('click', function () {
+          console.log($('#new-project').serializeArray());
+        });
+*/
 
         ProjectAddIndexProg.init(self); //  Страница добавления адресной программы
         ProjectAddPersonal.init(self);  //  Страница добавления персонала
@@ -46,6 +58,7 @@ var ProjectPage = (function () {
     };
     //      Проверка готовности для создания проекта
     ProjectPage.prototype.checkErrors = function () {
+
         let nameInp = $('#project-name'),
             name = $(nameInp).val();
 
