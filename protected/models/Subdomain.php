@@ -215,8 +215,8 @@ class Subdomain
 					else {
 						$arData = self::getData(true);
 						$url = 'Location: ' . $arData[$id]['url'] . $_SERVER['REQUEST_URI'];
-						header($url);
-						exit();
+						//header($url);
+						//exit();
 					}	
 				}
 		}
@@ -275,8 +275,8 @@ class Subdomain
 					$url .= DS . '?' . str_replace('&', ',', $arUrl[1]);
 				}
 			}
-			header($url);
-			exit();
+			//header($url);
+			//exit();
 		}
 	}
 	/*
@@ -337,8 +337,8 @@ class Subdomain
 		$sId = self::getId();
 		if($sId!=1307 && $type!=2 && $type!=3) {
 			$url = 'Location: ' . self::$MAIN_SITE . $_SERVER['REQUEST_URI'];
-			header($url);
-			exit();
+			//header($url);
+			//exit();
 		}
 	}
 	/*
