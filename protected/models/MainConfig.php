@@ -232,6 +232,14 @@ class MainConfig
     public static $VIEW_PROJECT_ITEM = 'projects/item';
     public static $VIEW_PROJECT_NEW = 'projects/new';
 
+    public static $VIEW_PROJECT_ITEM_STAFF = 'projects/staff';
+    public static $VIEW_PROJECT_ITEM_INDEX = 'projects/index';
+    public static $VIEW_PROJECT_ITEM_GEO = 'projects/geo';
+    public static $VIEW_PROJECT_ITEM_ROUTE = 'projects/route';
+    public static $VIEW_PROJECT_ITEM_TASKS = 'projects/tasks';
+    public static $VIEW_PROJECT_ITEM_REPORT = 'projects/report';
+
+
     public static $PAGE_PROJECT_LIST = '/user/projects';
     public static $PAGE_PROJECT_NEW = '/user/projects/new';
 
