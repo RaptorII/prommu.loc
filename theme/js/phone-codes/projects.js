@@ -66,6 +66,7 @@ var phoneCode = {
         var selector = this.container.find('.country-phone-selected');
         var selected = null;
         var self = this;
+        /*
         var searchInput = $('<input type="text" class="country-phone-search" value="">');
         $(searchInput).appendTo(options);
         var searchLabel = $('<label class="country-phone-search-label">Введите страну</label>');
@@ -116,7 +117,7 @@ var phoneCode = {
                 return false;
             }
         });
-
+        */
         for(var i = 0; i < this.data.length; i++) {
             if(i == 0) {
                 selected = this.data[i];
@@ -146,6 +147,7 @@ var phoneCode = {
             this.container.find('.country-phone-selected')
                 .html('<img src="/theme/pic/phone-codes/blank.gif" class="flag flag-'+ selected.co +'"><span>+'+ selected.ph+'</span>');
         }
+        /*
         $(selector).bind('click', function(e){
             self._toggleSelector();
         });
@@ -153,13 +155,14 @@ var phoneCode = {
             self.setElementSelected(this);
             self._toggleSelector();
         });
+        */
         $(options).hover(function(){
             if(self.hideTimeout) {
                 window.clearTimeout(self.hideTimeout);
             }
         }, function(){
             var select = this;
-            self.hideTimeout = window.setTimeout(self._mouseOverHide, 1000, select, self);
+            //self.hideTimeout = window.setTimeout(self._mouseOverHide, 1000, select, self);
         });
 
         this._initInput();
@@ -260,8 +263,8 @@ var phoneCode = {
         var options = this.container.find('.country-phone-options');
         if($(options).is(':visible')) {
             $(options).hide('fast');
-            $(options).find('.country-phone-search').val('').blur();
-            this.element.focus();
+            //$(options).find('.country-phone-search').val('').blur();
+            //this.element.focus();
             this.suggestCountry('');
         }
         else {

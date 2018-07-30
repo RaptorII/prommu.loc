@@ -1382,3 +1382,17 @@ var ProjectAddPersonal = (function () {
 $(document).ready(function () {
 	new ProjectPage();
 });
+
+
+
+
+$(document).ready(function () {
+  $("#invitation").on('click','.country-phone-selector',function(){
+    $(this).find('.country-phone-options').toggle();
+    $(this).on('click', '.country-phone-option', function () {
+        var code = this.dataset.phone;
+        var co = this.dataset.co;
+        $(this).parent().prev().html('<img src="/theme/pic/phone-codes/blank.gif" class="flag flag-'+ co +'"><span>+'+ code+'</span>');
+    });
+  });
+});
