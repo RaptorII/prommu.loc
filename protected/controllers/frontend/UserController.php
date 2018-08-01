@@ -23,7 +23,7 @@ class UserController extends AppController
         );
     }
     
-      public function dump(){
+      public function actionDump(){
         var_dump($_POST);
       }
 
