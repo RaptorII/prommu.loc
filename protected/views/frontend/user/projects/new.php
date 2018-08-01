@@ -1,4 +1,11 @@
 <?php
+    $title = 'Создание нового проекта';
+    $this->setBreadcrumbsEx(
+        array('Мои проекты', MainConfig::$PAGE_PROJECT_LIST),
+        array($title, MainConfig::$PAGE_PROJECT_NEW)
+    );
+    $this->setPageTitle($title);
+
 	$bUrl = Yii::app()->baseUrl;
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/new.css');
 	Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/phone-codes/style.css');

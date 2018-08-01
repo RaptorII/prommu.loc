@@ -171,64 +171,6 @@ div.calendar:after{ content: '' }
 	width: 150px;
 }
 /*
-*		POPUP
-*/
-#DiSiteWrapp #DiContent #MWwrapper .mw-win.dark-ver{ 
-	width: 350px;
-	left: -175px; 
-}
-#DiSiteWrapp #DiContent #MWwrapper .mw-win.dark-ver{
-	background: #5aad17;
-	background: -moz-linear-gradient(-45deg, #5aad17 0%, #0f4801 100%);
-	background: -webkit-linear-gradient(-45deg, #5aad17 0%,#0f4801 100%);
-	background: linear-gradient(135deg, #5aad17 0%,#0f4801 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5aad17', endColorstr='#0f4801',GradientType=1 );
-	padding: 40px;
-	border: none;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-    color: #FFFFFF;
-}
-#DiSiteWrapp #DiContent #MWwrapper .header{
-	border: none;
-	margin: 0;
-	font-size: 24px;
-	font-weight: normal;
-}
-#DiSiteWrapp #DiContent #MWwrapper .header div{
-	padding: 0 0 10px;
-	position: static;
-	background: transparent;
-	font-size: 24px;
-	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-	font-weight: normal;
-}
-#DiSiteWrapp #DiContent #MWwrapper .mw-close{
-    width: 29px;
-    height: 29px;
-    background: none;
-    border: 1px solid #FFFFFF;
-    border-radius: 15px;
-    top: 11px;
-    right: 11px;
-}
-#DiSiteWrapp #DiContent #MWwrapper .mw-close:before{
-    content: 'X';
-    width: 28px;
-    line-height: 28px;
-    display: block;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    color: #FFFFFF;
-    font-size: 18px;
-    text-align: center;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-}
-#MWwrapper form{ 
-	font-size: 18px;
-	text-align: center;
-}
-/*
 *		MEDIA
 */
 @media (min-width: 768px) {

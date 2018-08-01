@@ -1,4 +1,7 @@
 <?php
+    $title = 'Мои проекты';
+    $this->setBreadcrumbs($title, MainConfig::$PAGE_PROJECT_LIST);
+    $this->setPageTitle($title);
 	$bUrl = Yii::app()->baseUrl;
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/emp-list.css');
 ?>

@@ -172,7 +172,7 @@ $arProgram = array(
           <span class="address__item-change">
             <span>изменить</span>
             <ul>
-              <li><a href="<? echo 'address-change?s=index&p=' . $idProject . '&city=' . $id . '&loc=new' ?>">добавить локацию</a></li>
+              <li><a href="<? echo 'address-change?city=' . $id . '&loc=new' ?>">добавить локацию</a></li>
               <li data-id="<?=$id?>" class="delcity">удалить город</li>
             </ul>
           </span>
@@ -214,7 +214,7 @@ $arProgram = array(
                 </div></td>
                 <td>
                   <div class="addr__table-cell text-center">
-                    <a href="<? echo 'address-change?s=index&p=' . $idProject . '&city=' . $id . '&loc=' . $idloc ?>">изменить</a>
+                    <a href="<? echo 'address-change?city=' . $id . '&loc=' . $idloc ?>">изменить</a>
                   </div>
                 </td>
               </tr>
@@ -284,6 +284,6 @@ $arProgram = array(
     */?>
   </div>
   <div class="addresses__btns">
-    <a href="<? echo 'address-change?s=index&p=1&city=new' ?>" class="addr__save-btn">Добавить город</a>
+    <a href="<? echo 'address-change?city=new' ?>" class="addr__save-btn">Добавить город</a>
   </div>
 </div>

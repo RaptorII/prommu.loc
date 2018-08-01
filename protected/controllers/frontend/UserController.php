@@ -1521,13 +1521,7 @@ class UserController extends AppController
 
         if(strlen($id)>0) {
             if($id=='new') { // новый проект
-
-                $xls = Yii::app()->getRequest()->getParam('get_xls');
-                if($xls==1){
-                    //$file = Yii::app()->baseUrl.'/uploads/address_program.xls';
-                    //return Yii::app()->getRequest()->sendFile($file);
-                }
-                elseif(Yii::app()->request->isAjaxRequest){
+                if(Yii::app()->request->isAjaxRequest) {
                     $this->renderPartial(
                         MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
                         array('viData' => (new Services())->getFilteredPromos()),
@@ -1535,61 +1529,39 @@ class UserController extends AppController
                         true
                     );
                 }
-                else{
+                else {
                     $data = (new Services())->getFilteredPromos();
                 }
-
-
-
-
                 $view = MainConfig::$VIEW_PROJECT_NEW;
             }
-            elseif($id=='address-change') {
-                $view = 'projects/address-change';
-            }
             elseif($id>0) { // существующий
-                $view = MainConfig::$VIEW_PROJECT_ITEM;
-                $data = 1;
-
-                /*
-                  Devide of projects
-                */
-                    $s = Yii::app()->getRequest()->getParam('s');
-                  switch ($s) {
+                switch (Yii::app()->getRequest()->getParam('section')) {
                     case 'staff':
-                      $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
-                      break;
+                        $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
+                        break;
                     case 'index':
-                      $view = MainConfig::$VIEW_PROJECT_ITEM_INDEX;
-                      break;
+                        $view = MainConfig::$VIEW_PROJECT_ITEM_INDEX;
+                        break;
                     case 'geo':
-                      $view = MainConfig::$VIEW_PROJECT_ITEM_GEO;
-                      break;
+                        $view = MainConfig::$VIEW_PROJECT_ITEM_GEO;
+                        break;
                     case 'route':
-                      $view = MainConfig::$VIEW_PROJECT_ITEM_ROUTE;
-                      break;
+                        $view = MainConfig::$VIEW_PROJECT_ITEM_ROUTE;
+                        break;
                     case 'tasks':
-                      $view = MainConfig::$VIEW_PROJECT_ITEM_TASKS;
-                      break;
+                        $view = MainConfig::$VIEW_PROJECT_ITEM_TASKS;
+                        break;
                     case 'report':
-                      $view = MainConfig::$VIEW_PROJECT_ITEM_REPORT;
-                      break;
-                  }
-
-
-                /*if(!sizeof($data)) {
-                    $this->redirect(MainConfig::$PAGE_IDEAS_LIST);
-                    exit;
+                        $view = MainConfig::$VIEW_PROJECT_ITEM_REPORT;
+                        break;
+                    case 'address-change':
+                        $view = 'projects/address-change';
+                        break;
+                    default:
+                        $view = MainConfig::$VIEW_PROJECT_ITEM;
+                        break;
                 }
-                if(Yii::app()->getRequest()->getParam('sort-comments')) {
-                    $this->renderPartial(
-                        MainConfig::$VIEW_IDEAS_COMMENTS_AJAX_ORDER,
-                        array('viData' => $model->getIdea($id)),
-                        false,
-                        true
-                    );
-                    exit;
-                }*/
+                $data = 1;
             }
             else{
                 $this->redirect(MainConfig::$PAGE_PROJECT_LIST);
