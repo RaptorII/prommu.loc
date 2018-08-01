@@ -22,6 +22,10 @@ class UserController extends AppController
             ),
         );
     }
+    
+      public function dump(){
+        var_dump($_POST);
+      }
 
       public function actionOutstaffing(){
         $order = new PrommuOrder();
