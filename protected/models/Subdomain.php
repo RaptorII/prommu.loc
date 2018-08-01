@@ -18,7 +18,7 @@ class Subdomain
 			->from('subdomains')
 			->where(array('like', 'url', self::$HOST))
 			->queryRow();
-		return $res['id'];
+		return 1307;//$res['id'];
 	}
 	/*
 	*		Получаем ID всех субдоменов (кроме домена)
