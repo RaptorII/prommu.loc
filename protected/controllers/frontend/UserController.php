@@ -875,7 +875,14 @@ class UserController extends AppController
 
         $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
         $idto = filter_var(Yii::app()->getRequest()->getParam('new'), FILTER_SANITIZE_NUMBER_INT);
-
+        if($idto){
+            if(Share::$UserProfile->type == 2) {
+                $Mess = new ImApplic();
+            } else {
+                $Mess = new ImEmpl();
+            }
+           $result = $Mess->accessMessage($idto);
+        }
         // chat model
         //echo memory_get_usage() ;
         $Im =  Share::$UserProfile->makeChat();
@@ -887,7 +894,7 @@ class UserController extends AppController
 
 
         // читаем чат
-        if( isset($_GET['id']) || isset($_GET['new']) )
+         if( isset($_GET['id'])  || isset($_GET['new']) && $result['user']['ismoder'] == 1 && $idto == $result['new']['id'])
         {
             $data = $Im->getMessViewData($id, $idto);
             $view = $this->ViewModel->pageMessView;
