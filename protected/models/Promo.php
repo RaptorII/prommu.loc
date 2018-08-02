@@ -569,7 +569,7 @@ class Promo extends ARModel
 
     private function getApplicantsIndexPage()
     {
-        //$strCities = Subdomain::getCitiesIdies(true);
+        $strCities = Subdomain::getCitiesIdies();
         $filter = Promo::mergeScopes(['scope' => Promo::$SCOPE_HAS_PHOTO, 'alias' => 'r']);
         $sql = "SELECT DISTINCT r.id, u.is_online, r.id_user idus, r.photo, r.firstname, r.lastname, r.isman, DATE_FORMAT(r.birthday,'%d.%m.%Y') as birthday,
                 cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate, r.rate, r.rate_neg, photo,
@@ -577,7 +577,7 @@ class Promo extends ARModel
             FROM resume r
             INNER JOIN user_mech m ON r.id_user = m.id_us
             INNER JOIN user_city ci ON r.id_user = ci.id_user 
-             /*   AND !(ci.id_city IN({$strCities}))*/
+                AND ci.id_city IN({$strCities})
             INNER JOIN user u ON r.id_user = u.id_user 
                 AND u.ismoder = 1 AND (u.isblocked = 0)
             WHERE r.birthday IS NOT NULL AND {$filter}

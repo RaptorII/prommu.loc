@@ -355,12 +355,16 @@ class Employer extends ARModel
 
     private function getEmployersIndexPage()
     {
+        $strCities = Subdomain::getCitiesIdies();
         $sql = "SELECT r.id, r.id_user idus, u.is_online, name , r.logo, r.rate, r.rate_neg
                 , cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate
                 , (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.id_promo = r.id) comment_count
                 
             FROM employer r
-            INNER JOIN user u ON u.id_user = r.id_user AND u.ismoder = 1 AND u.isblocked = 0
+            INNER JOIN user u ON u.id_user = r.id_user 
+                AND u.ismoder = 1 AND u.isblocked = 0
+            INNER JOIN user_city ci ON r.id_user = ci.id_user 
+                AND ci.id_city IN({$strCities})
             WHERE " . Employer::getScopesCustom(Employer::$SCOPE_HAS_LOGO, 'r') . "
             ORDER BY avg_rate DESC
             LIMIT 6";
