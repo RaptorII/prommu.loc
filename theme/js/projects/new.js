@@ -46,7 +46,8 @@ var ProjectPage = (function () {
     };
     //      Проверка готовности для создания проекта
     ProjectPage.prototype.checkErrors = function () {
-        $('#new-project').submit(); //dump
+        //$('#new-project').submit(); //dump
+        console.log($('#new-project').serializeArray());
         let nameInp = $('#project-name'),
             name = $(nameInp).val();
 
@@ -81,14 +82,13 @@ var ProjectPage = (function () {
             data = e.dataset.event,
             arBlocks = $('.project__module'),
             name = self.checkProjectName();
-return false;
+
         if(data==undefined)
             return false;
 
         if(!name){
-            
-            return false;
             MainProject.showPopup('notif','name');
+            return false;
         }
 
         for (let i = 0, n = arBlocks.length; i<n; i++) {
@@ -1020,7 +1020,13 @@ var ProjectAddIndexProg = (function () {
     ProjectAddIndexProg.prototype.saveProgram = function (e) {
         let self = this;
 
-console.log($('#new-project').serializeArray());
+        let arr = $('#new-project').serializeArray(),
+            str = '';
+
+        for (var i=0; i < arr.length; i++) {
+           str += arr[i]['name'] + ' : ' + arr[i]['value'] + '\n';
+        }
+        console.log(str);
         /*!self.checkFields()
         ? self.Project.showModule(e)
         : MainProject.showPopup('notif','save-program');*/
