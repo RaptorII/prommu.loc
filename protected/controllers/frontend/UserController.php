@@ -882,7 +882,9 @@ class UserController extends AppController
                 $Mess = new ImEmpl();
             }
            $result = $Mess->accessMessage($idto);
+           var_dump($result);
         }
+        
         // chat model
         //echo memory_get_usage() ;
         $Im =  Share::$UserProfile->makeChat();
