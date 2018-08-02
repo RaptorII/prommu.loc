@@ -1,7 +1,5 @@
 'use strict'
 var ProjectPage = (function () {
-    ProjectPage.prototype.bAjaxTimer = false;
-    ProjectPage.prototype.idCo = $('#index').data('country');
     ProjectPage.prototype.arOldPhones = [];
     ProjectPage.prototype.keyCode = 0;
 
@@ -68,7 +66,7 @@ var ProjectPage = (function () {
             arExt = $inp.val().match(/\\([^\\]+)\.([^\.]+)$/);
 
         if(arExt[2]!=='xls' && arExt[2]!=='xlsx'){
-            self.showPopup('error','xls');
+            MainProject.showPopup('error','xls');
             self.addXlsFile;
             $inp.val('');
             $name.text('').hide();
@@ -83,13 +81,14 @@ var ProjectPage = (function () {
             data = e.dataset.event,
             arBlocks = $('.project__module'),
             name = self.checkProjectName();
-
+return false;
         if(data==undefined)
             return false;
 
         if(!name){
-            self.showPopup('notif','name');
+            
             return false;
+            MainProject.showPopup('notif','name');
         }
 
         for (let i = 0, n = arBlocks.length; i<n; i++) {
@@ -180,8 +179,8 @@ var ProjectPage = (function () {
         }
         else
             save
-            ? self.showPopup('error', 'save-notif')
-            : self.showPopup('notif', 'add-notif');
+            ? MainProject.showPopup('error', 'save-notif')
+            : MainProject.showPopup('notif', 'add-notif');
 
     }
     //
@@ -199,7 +198,7 @@ var ProjectPage = (function () {
         if (event=='focusout' && $e.hasClass('email') && v!=='') {
             let ePattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i;
             if(!ePattern.test(v)) {
-                self.showPopup('error', 'bad-email');
+                MainProject.showPopup('error', 'bad-email');
                 $e.val('');
                 return false;
             }
@@ -258,83 +257,11 @@ var ProjectPage = (function () {
             }
             if (event==='focusout') {
                 if(code.length==3) phoneLen = 9;
-                if(l<phoneLen) self.showPopup('error', 'bad-phone');
+                if(l<phoneLen) MainProject.showPopup('error', 'bad-phone');
             }
         }
     }
-    //
-    //      ADDITIONAL
-    //
-    //      Вывод ошибок
-    ProjectPage.prototype.showPopup = function (event, type) {
-        let header = '',
-            body = '';
 
-        if(event=='error') {
-            header = 'Ошибка';
-            switch(type) {
-                case 'xls':
-                    body = 'Формат файла должен быть "xls" или "xlsx". Выберите подходящий файл!';
-                    break;
-				case 'time':
-                    body = 'Неправильно задано время работы';
-                    break;
-                case 'save-notif':
-                    body = 'Необходимо заполнить все поля в приглашении';
-                    break;
-                case 'bad-email':
-                    body = 'Email не соответствует общепринятому формату';
-                    break;
-                case 'bad-phone':
-                    body = 'Неправильное количество символов в телефоне';
-                    break;
-                case 'city-del':
-                    body = 'Невозможно удалить единственный город';
-                    break;
-                case 'loc-del':
-                    body = 'Невозможно удалить единственную ТТ города';
-                    break;
-                case 'period-del':
-                    body = 'Невозможно удалить единственный период ТТ';
-                    break;
-                default: break;
-            }
-        }
-        if(event=='notif') {
-            header = 'Предупреждение';
-            switch(type) {
-                case 'name':
-                    body = 'Для продолжения необходимо ввести название проекта';
-                    break;
-                case 'add-city':
-                    body = 'Перед добавлением нового города необходимо '
-                        + 'заполнить все поля у существующих городов';
-                    break;
-                case 'add-period':
-                    body = 'Перед добавлением нового периода необходимо '
-                        + 'заполнить все пустые поля';
-                    break;
-                case 'add-tt':
-                    body = 'Перед добавлением ТТ необходимо '
-                        + 'заполнить все пустые поля';
-                    break;
-                case 'add-notif':
-                    body = 'Перед добавлением нового приглашения необходимо '
-                        + 'корректно заполнить все поля в существующих';
-                    break;
-                case 'addition':
-                    body = 'Не было выбрано ни одного соискателя';
-                    break;
-                case 'save-program':
-                    body = 'Перед сохранение необходимо заполнить все поля';
-                    break;
-                default: break;
-            }
-        }
-
-        let html = "<form data-header='" + header + "'>" + body + "</form>";
-        ModalWindow.open({ content: html, action: { active: 0 }, additionalStyle:'dark-ver' });
-    }
     return ProjectPage;
 }());
 /*
@@ -400,31 +327,36 @@ var ProjectAddIndexProg = (function () {
     //      добавление города
     ProjectAddIndexProg.prototype.addCity = function () {
         let self = this,
-            arCities = $('#index .city-item'),
-            content = $('#city-content').html(),
-            empty = self.checkFields();
+          arCities = $('#index .city-item'),
+          content = $('#city-content').html(),
+          empty = self.checkFields(),
+          arIdies = self.getNewId(),
+          arTime;
 
         if (!empty) {
-            $(arCities[arCities.length-1]).after(content);
-            content = $('#index .city-item:eq(-1)');
-            $(content).append($('#loc-content').html());
-            content = $(content).find('.loc-item:eq(-1)');
-            $(content).append($('#period-content').html());
-            let arTime = $(content).find('.time-inp');
-            $(arTime).mask('99:99');
+          $(arCities[arCities.length-1]).after(content);
+          content = $('#index .city-item:eq(-1)');
+          $(content).append($('#loc-content').html());
+          content = $(content).find('.loc-item:eq(-1)')[0];
+          content.dataset.id = arIdies.location;
+          $(content).append($('#period-content').html());
+          content = $(content).find('.period-item')[0];
+          content.dataset.id = arIdies.period;
+          arTime = $(content).find('.time-inp');
+          $(arTime).mask('99:99');
         }
         else
-            self.Project.showPopup('notif', 'add-city');
+          MainProject.showPopup('notif', 'add-city');
     }
     //      ввод города
     ProjectAddIndexProg.prototype.inputCity = function (e) {
         let self = this,
             val = $(e).val();
 
-        clearTimeout(self.Project.bAjaxTimer);
+        clearTimeout(MainProject.bAjaxTimer);
         self.setFirstUpper(e);
 
-        self.Project.bAjaxTimer = setTimeout(function(){ self.getAjaxCities(val, e) },1000);
+        MainProject.bAjaxTimer = setTimeout(function(){ self.getAjaxCities(val, e) },1000);
     }
     //      фокус поля города
     ProjectAddIndexProg.prototype.focusCity = function (e) {
@@ -444,7 +376,7 @@ var ProjectAddIndexProg = (function () {
             idcity = Number(mainCity.dataset.city),
             piece = val.toLowerCase(),
             content = '',
-            params = 'query=' + val + '&idco=' + self.Project.idCo;
+            params = 'query=' + val + '&idco=' + MainProject.idCo;
 
         self.getSelectedCities();
         $(main).addClass('load'); // загрузка началась
@@ -625,8 +557,8 @@ var ProjectAddIndexProg = (function () {
             val = $(e).val();
 
         $(e).css({width:(val.length * 10 + 5)+'px'});
-        clearTimeout(self.Project.bAjaxTimer);
-        self.Project.bAjaxTimer = setTimeout(function(){ self.getAjaxMetros(val, e) },1000);
+        clearTimeout(MainProject.bAjaxTimer);
+        MainProject.bAjaxTimer = setTimeout(function(){ self.getAjaxMetros(val, e) },1000);
     }
     //      фокус поля метро
     ProjectAddIndexProg.prototype.focusMetro = function (e) {
@@ -720,51 +652,49 @@ var ProjectAddIndexProg = (function () {
     //      добавление локации
     ProjectAddIndexProg.prototype.addLocation = function (e) {
         let self = this,
-            main = $(e).closest('.city-item')[0],
-            idC = main.dataset.city,
-            arLoc = $(main).find('.loc-item'),
-            newLoc = $('#loc-content').html(),
-            newPeriod = $('#period-content').html(),
-            empty = self.checkFields(),
-            arLocInp, arPerInp, row, arTime, idL;
+          main = $(e).closest('.city-item')[0],
+          idC = main.dataset.city,
+          arLoc = $(main).find('.loc-item'),
+          newLoc = $('#loc-content').html(),
+          newPeriod = $('#period-content').html(),
+          empty = self.checkFields(),
+          arIdies = self.getNewId(),
+          arLocInp, arPerInp, row, arTime;
 
         if (!empty) {
-            $(main).append(newLoc);
-            idL = arLoc[arLoc.length-1].dataset.id;
-            idL = Number(idL)+1;
-            arLoc = $(main).find('.loc-item')
-            newLoc = arLoc[arLoc.length-1];
-            newLoc.dataset.id = idL;
-            name = '[' + idC + '][' + idL + ']';
+          $(main).append(newLoc);
+          arLoc = $(main).find('.loc-item')
+          newLoc = arLoc[arLoc.length-1];
+          newLoc.dataset.id = arIdies.location;
+          name = '[' + idC + '][' + arIdies.location + ']';
 
-            if($(main).find('.metro-item').length) {// если есть метро
-                row = $(newLoc).find('.loc-field');
-                $(row).prepend($('#metro-content').html());
-                arLocInp = $(newLoc).find('.loc-field input');
-                $(arLocInp[1]).attr('name','metro' + name);
-                $(arLocInp[2]).attr('name','lindex' + name);
-                $(arLocInp[3]).attr('name','lname' + name);
+          if($(main).find('.metro-item').length) {// если есть метро
+            row = $(newLoc).find('.loc-field');
+            $(row).prepend($('#metro-content').html());
+            arLocInp = $(newLoc).find('.loc-field input');
+            $(arLocInp[1]).attr('name','metro' + name);
+            $(arLocInp[2]).attr('name','lindex' + name);
+            $(arLocInp[3]).attr('name','lname' + name);
+          }
+          else {
+            arLocInp = $(newLoc).find('.loc-field input');
+            $(arLocInp[0]).attr('name','lindex' + name);
+            $(arLocInp[1]).attr('name','lname' + name);
+          }
+          $(newLoc).append(newPeriod);
+          arPerInp = $(newLoc).find('.period-item input');
 
-            }
-            else {
-                arLocInp = $(newLoc).find('.loc-field input');
-                $(arLocInp[0]).attr('name','lindex' + name);
-                $(arLocInp[1]).attr('name','lname' + name);
-            }
-            $(newLoc).append(newPeriod);
-            arPerInp = $(newLoc).find('.period-item input');
+          name += '[' + arIdies.period + ']';
+          $(arPerInp[0]).attr('name','bdate' + name);
+          $(arPerInp[1]).attr('name','edate' + name);
+          $(arPerInp[2]).attr('name','btime' + name);
+          $(arPerInp[3]).attr('name','etime' + name);
 
-            name += '[0]';
-            $(arPerInp[0]).attr('name','bdate' + name);
-            $(arPerInp[1]).attr('name','edate' + name);
-            $(arPerInp[2]).attr('name','btime' + name);
-            $(arPerInp[3]).attr('name','etime' + name);
-
-            arTime = $(newLoc).find('.time-inp');
-            $(arTime).mask('99:99');
+          arTime = $(newLoc).find('.time-inp');
+          $(arTime).mask('99:99');
         }
         else
-            self.Project.showPopup('notif', 'add-tt');
+          MainProject.showPopup('notif', 'add-tt');
     }
     //
     //      ДАТА
@@ -952,16 +882,15 @@ var ProjectAddIndexProg = (function () {
             city = $(e).closest('.city-item')[0],
             idC = city.dataset.city,
             newPeriod = $('#period-content').html(),
-            arPerInp, arPers, idP, name;
+            arIdies = self.getNewId(),
+            arPerInp, arPers, name;
 
         if(!empty) {
             $(main).append(newPeriod);
             arPers = $(main).find('.period-item');
-            idP = arPers[arPers.length-2].dataset.id;
-            idP = (Number(idP)+1);
-            arPers[arPers.length-1].dataset.id = idP;
+            arPers[arPers.length-1].dataset.id = arIdies.period;
             arPerInp = $(arPers[arPers.length-1]).find('input');
-            name = '[' + idC + '][' + idL + '][' + idP + ']';
+            name = '[' + idC + '][' + idL + '][' + arIdies.period + ']';
             $(arPerInp[0]).attr('name','bdate' + name);
             $(arPerInp[1]).attr('name','edate' + name);
             $(arPerInp[2]).attr('name','btime' + name);
@@ -969,7 +898,7 @@ var ProjectAddIndexProg = (function () {
             $(main).find('.time-inp').mask('99:99');
         }
         else
-            self.Project.showPopup('notif', 'add-period');
+            MainProject.showPopup('notif', 'add-period');
     }
     //      Проверка времени
     ProjectAddIndexProg.prototype.checkTime = function (e) {
@@ -1010,7 +939,7 @@ var ProjectAddIndexProg = (function () {
             ||
             ( (arT1[0] == arT2[0]) && (arT1[1] == arT2[1]) )
         ) {
-            self.Project.showPopup('error', 'time');
+            MainProject.showPopup('error', 'time');
             $(arTimes[t]).val('');
         }
     }
@@ -1038,46 +967,85 @@ var ProjectAddIndexProg = (function () {
     }
     //      удаление элементов
     ProjectAddIndexProg.prototype.removeElement = function (e) {
-        let self = this,
-            $e = $(e),
-            error = -1,
-            arErr = ['city-del','loc-del','period-del'],
-            arItems, item, main;
+      let self = this,
+          $e = $(e),
+          error = -1,
+          query = true,
+          arErr = ['city-del','loc-del','period-del'],
+          arItems, item, main;
 
-        if($e.hasClass('city-del')) {
-            arItems = $('#index .city-item');
-            item = $e.closest('.city-item')[0];
-            error = arItems.length>1 ? -1 : 0;
-        }
-        else if($e.hasClass('loc-del')) {
-            main = $e.closest('.city-item')[0]
-            arItems = $(main).find('.loc-item');
-            item = $e.closest('.loc-item')[0];
-            error = arItems.length>1 ? -1 : 1;
-        }
-        else if($e.hasClass('period-del')) {
-            main = $e.closest('.loc-item')[0]
-            arItems = $(main).find('.period-item');
-            item = $e.closest('.period-item')[0];
-            error = arItems.length>1 ? -1 : 2;
-        }
+      if($e.hasClass('city-del')) {
+          arItems = $('#index .city-item');
+          item = $e.closest('.city-item')[0];
+          if(arItems.length>1) {
+            error = -1;
+            query = confirm('Будет удален город и все связанные данные.\n'
+              +'Вы действительно хотите это сделать?');
+          }
+          else error = 0;
+      }
+      else if($e.hasClass('loc-del')) {
+          main = $e.closest('.city-item')[0]
+          arItems = $(main).find('.loc-item');
+          item = $e.closest('.loc-item')[0];
+          if(arItems.length>1) {
+            error = -1;
+            query = confirm('Будет удалена ТТ и все связанные данные.\n'
+              +'Вы действительно хотите это сделать?');
+          }
+          else error = 1;
+      }
+      else if($e.hasClass('period-del')) {
+          main = $e.closest('.loc-item')[0]
+          arItems = $(main).find('.period-item');
+          item = $e.closest('.period-item')[0];
+          if(arItems.length>1) {
+            error = -1;
+            query = confirm('Будет удален период.\n'
+              +'Вы действительно хотите это сделать?');
+          }
+          else error = 2;
+      }
 
-        if(error>=0)
-            self.Project.showPopup('error',arErr[error]);
-        else {
-            $(item).fadeOut();
-            setTimeout(function(){ $(item).remove() },500);
-        }
+      if(!query)
+        return false;
+      if(error>=0)
+          MainProject.showPopup('error',arErr[error]);
+      else {
+          $(item).fadeOut();
+          setTimeout(function(){ $(item).remove() },500);
+      }
     }
     // сохранение программы
     ProjectAddIndexProg.prototype.saveProgram = function (e) {
         let self = this;
 
-        !self.checkFields()
+console.log($('#new-project').serializeArray());
+        /*!self.checkFields()
         ? self.Project.showModule(e)
-        : self.Project.showPopup('notif','save-program');
+        : MainProject.showPopup('notif','save-program');*/
     }
+    //    получаем уникальные ID
+    ProjectAddIndexProg.prototype.getNewId = function () {
+        let arR = [], arT = [], r = (9999 - 1000 + 1);
 
+        $.each($('#index .loc-item'), function(){
+          arT.push(this.dataset.id);  
+        });
+        do {
+          arR.location = Math.floor(Math.random() * r) + 1000;
+        } while ($.inArray(arR.location,arT)>=0);
+
+        arT = [];
+
+        $.each($('#index .period-item'), function(){
+          arT.push(this.dataset.id);  
+        });
+        do {
+          arR.period = Math.floor(Math.random() * r) + 1000;
+        } while ($.inArray(arR.period,arT)>=0);
+        return arR;
+    }
     return ProjectAddIndexProg;
 }());
 /*
@@ -1278,8 +1246,8 @@ var ProjectAddPersonal = (function () {
             val = $(e).val();
 
         $(e).css({width:(val.length * 10 + 5)+'px'});
-        clearTimeout(self.bAjaxTimer);
-        self.bAjaxTimer = setTimeout(function(){ self.getAjaxFilterCities(val, e) },1000);
+        clearTimeout(MainProject.bAjaxTimer);
+        MainProject.bAjaxTimer = setTimeout(function(){ self.getAjaxFilterCities(val, e) },1000);
     }
     //      фокус поля города в фильтре
     ProjectAddPersonal.prototype.focusFilterCity = function (e) {
@@ -1296,7 +1264,7 @@ var ProjectAddPersonal = (function () {
             main = $e.closest('.filter-city-select')[0],
             list = $(main).siblings('.select-list')[0],
             arInputs = $('.filter-city-select').find('[type="hidden"]'),
-            params = 'query=' + val + '&idco=' + self.Project.idCo,
+            params = 'query=' + val + '&idco=' + MainProject.idCo,
             piece = val.toLowerCase(),
             arIdCities = [],
             content = '';
@@ -1375,7 +1343,7 @@ var ProjectAddPersonal = (function () {
         if($('#mess-workers').val()!=='')
             this.Project.showModule(btn);
         else
-            this.Project.showPopup('notif','addition');
+            MainProject.showPopup('notif','addition');
     }
     return ProjectAddPersonal;
 }());

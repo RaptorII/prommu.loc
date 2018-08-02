@@ -207,6 +207,7 @@
 				<div class="project__all-btns">
 					<span class="project__btn-white" id="add-city-btn">ДОБАВИТЬ ГОРОД</span>
 					<span class="save-btn" id="save-index" data-event="main">СОХРАНИТЬ</span>
+					<a class="save-btn" href="<?=MainConfig::$PAGE_PROJECT_LIST . '/' . Yii::app()->getRequest()->getParam('id')?>">НАЗАД</a>
 				</div>
 			</div>
 			<input type="hidden" name="project" value="<?=Yii::app()->getRequest()->getParam('id')?>">

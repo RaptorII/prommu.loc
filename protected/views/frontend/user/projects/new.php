@@ -9,6 +9,7 @@
 	$bUrl = Yii::app()->baseUrl;
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/new.css');
 	Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/phone-codes/style.css');
+	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
 	Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/phone-codes/projects.js', CClientScript::POS_END);
 	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/new.js', CClientScript::POS_END);
 ?>

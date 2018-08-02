@@ -229,7 +229,7 @@ class MainConfig
     /* PROJECTS */
     public static $VIEW_EMP_PROJECT_LIST = 'projects/emp-list';
     public static $VIEW_APP_PROJECT_LIST = 'projects/app-list';
-    public static $VIEW_PROJECT_ITEM = 'projects/item';
+    public static $VIEW_PROJECT_ITEM = 'projects/project-base';
     public static $VIEW_PROJECT_NEW = 'projects/new';
 
     public static $VIEW_PROJECT_ITEM_STAFF = 'projects/project-staff';

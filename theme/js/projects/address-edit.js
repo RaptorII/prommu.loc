@@ -54,15 +54,20 @@ var AddressEdit = (function () {
     let self = this,
       arCities = $('#index .city-item'),
       content = $('#city-content').html(),
-      empty = self.checkFields();
+      empty = self.checkFields(),
+      arIdies = self.getNewId(),
+      arTime;
 
     if (!empty) {
       $(arCities[arCities.length-1]).after(content);
       content = $('#index .city-item:eq(-1)');
       $(content).append($('#loc-content').html());
-      content = $(content).find('.loc-item:eq(-1)');
+      content = $(content).find('.loc-item:eq(-1)')[0];
+      content.dataset.id = arIdies.location;
       $(content).append($('#period-content').html());
-      let arTime = $(content).find('.time-inp');
+      content = $(content).find('.period-item')[0];
+      content.dataset.id = arIdies.period;
+      arTime = $(content).find('.time-inp');
       $(arTime).mask('99:99');
     }
     else
@@ -245,179 +250,177 @@ var AddressEdit = (function () {
     }
   }
   //      правильный ввод названия города
-    AddressEdit.prototype.setFirstUpper = function (e) {
-        let split = $(e).val().split(' ');
+  AddressEdit.prototype.setFirstUpper = function (e) {
+    let split = $(e).val().split(' ');
 
-        for(let i=0, len=split.length; i<len; i++)
-            split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
-        $(e).val(split.join(' '));
+    for(let i=0, len=split.length; i<len; i++)
+      split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
+    $(e).val(split.join(' '));
 
-        split = $(e).val().split('-');
-        for(let i=0, len=split.length; i<len; i++)
-            split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
-        $(e).val(split.join('-'));
-    }
-    //       получить выбранные города
-    AddressEdit.prototype.getSelectedCities = function () {
-        let self = this;
+    split = $(e).val().split('-');
+    for(let i=0, len=split.length; i<len; i++)
+      split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
+    $(e).val(split.join('-'));
+  }
+  //       получить выбранные города
+  AddressEdit.prototype.getSelectedCities = function () {
+    let self = this;
 
-        self.arIdCities = [];
+    self.arIdCities = [];
 
-        $.each($('#index .city-item'), function(){
-            if(this.dataset.city!=='')
-                self.arIdCities.push(Number(this.dataset.city));
-        });
-    }
-    //
-    //      МЕТРО
-    //
-    //      Ввод метро
-    AddressEdit.prototype.inputMetros = function (e) {
-      let self = this,
-        val = $(e).val();
+    $.each($('#index .city-item'), function(){
+      if(this.dataset.city!=='')
+        self.arIdCities.push(Number(this.dataset.city));
+    });
+  }
+  //
+  //      МЕТРО
+  //
+  //      Ввод метро
+  AddressEdit.prototype.inputMetros = function (e) {
+    let self = this,
+      val = $(e).val();
 
-      $(e).css({width:(val.length * 10 + 5)+'px'});
-      clearTimeout(MainProject.bAjaxTimer);
-      MainProject.bAjaxTimer = setTimeout(function(){ self.getAjaxMetros(val, e) },1000);
-    }
-    //      фокус поля метро
-    AddressEdit.prototype.focusMetro = function (e) {
-      let self = this,
-        val = $(e).val();
-      $(e).val('').val(val);
-      self.getAjaxMetros(val, e);
-    };
-    //      запрос списка метро
-    AddressEdit.prototype.getAjaxMetros = function (val, e) {
-      let self = this,
-        $e = $(e),
-        main = $e.closest('.metro-field')[0],
-        mainCity = $e.closest('.city-item')[0],
-        list = $(main).find('.select-list')[0],
-        input = $(main).find('[type="hidden"]')[0],
-        idcity = Number(mainCity.dataset.city),
-        params = 'id=' + idcity + '&query=' + val + '&select=' + $(input).val(),
-        content = '';
+    $(e).css({width:(val.length * 10 + 5)+'px'});
+    clearTimeout(MainProject.bAjaxTimer);
+    MainProject.bAjaxTimer = setTimeout(function(){ self.getAjaxMetros(val, e) },1000);
+  }
+  //      фокус поля метро
+  AddressEdit.prototype.focusMetro = function (e) {
+    let self = this,
+      val = $(e).val();
+    $(e).val('').val(val);
+    self.getAjaxMetros(val, e);
+  };
+  //      запрос списка метро
+  AddressEdit.prototype.getAjaxMetros = function (val, e) {
+    let self = this,
+      $e = $(e),
+      main = $e.closest('.metro-field')[0],
+      mainCity = $e.closest('.city-item')[0],
+      list = $(main).find('.select-list')[0],
+      input = $(main).find('[type="hidden"]')[0],
+      idcity = Number(mainCity.dataset.city),
+      params = 'id=' + idcity + '&query=' + val + '&select=' + $(input).val(),
+      content = '';
 
-      $(main).addClass('load'); // загрузка началась
+    $(main).addClass('load'); // загрузка началась
 
-      $.ajax({
-        type: 'POST',
-        url: '/ajaxvacedit/vegetmetros/',
-        data: params,
-        dataType: 'json',
-        success: function(metros) {
-          if(metros.error!==true)
-            for (let i in metros)
-              content += '<li data-id="' + metros[i].id + '">'
-                + metros[i].name + '</li>';
+    $.ajax({
+      type: 'POST',
+      url: '/ajaxvacedit/vegetmetros/',
+      data: params,
+      dataType: 'json',
+      success: function(metros) {
+        if(metros.error!==true)
+          for (let i in metros)
+            content += '<li data-id="' + metros[i].id + '">'
+              + metros[i].name + '</li>';
 
-          content
-          ? $(list).html(content).fadeIn()
-          : $(list).html('<li class="emp">Список пуст</li>').fadeIn();
-          $(main).removeClass('load'); // загрузка завершена
-        }
-      });
-    }
-    //      Установка метро
-    AddressEdit.prototype.checkMetro = function (e) {
-      let self = this,
-        $e = $(e),
-        arMetros = $('#index .metro-field');
-
-      if( !$e.closest('.metro-field').length && !$e.is('.metro-field') ) {
-        for(let i=0; i<arMetros.length; i++){ // закрываем списки без фокуса
-          let cInput = $(arMetros[i]).find('.metro-inp'),
-            cList = $(arMetros[i]).find('.select-list');
-
-          cInput.val('').css({width:'5px'});
-          cList.fadeOut();
-        }
+        content
+        ? $(list).html(content).fadeIn()
+        : $(list).html('<li class="emp">Список пуст</li>').fadeIn();
+        $(main).removeClass('load'); // загрузка завершена
       }
-      else{ // клик по объектам списка
-        if( $e.is('.select-list li') && !$e.hasClass('emp') ) { // выбираем из списка
-          let main = $e.closest('.metro-item')[0],
-            select = $(main).find('.metro-select'),
-            inpText = $(main).find('.metro-inp'),
-            list = $(main).find('.select-list'),
-            input = $(main).find('[type="hidden"]'),
-            name = $(e).text(),
-            v = $(input).val(),
-            arMetros = v.length ? v.split(',') : [];
+    });
+  }
+  //      Установка метро
+  AddressEdit.prototype.checkMetro = function (e) {
+    let self = this,
+      $e = $(e),
+      arMetros = $('#index .metro-field');
 
-          arMetros.push(e.dataset.id);
-          $(input).val(arMetros);
-          inpText.val('').css({width:'5px'});
-          $(select).find('[data-id="0"]').before('<li data-id="'
-            + e.dataset.id + '">' + name
-            + '<b></b></li>');
-          list.fadeOut();
-        }
-        else if($e.is('.metro-select b')) { // удаление выбранного метро из списка
-          let main = $e.closest('.metro-item')[0],
-            input = $(main).find('[type="hidden"]'),
-            name = $(e).text(),
-            metro = $e.closest('li')[0],
-            arMetros = $(input).val().split(',');
+    if( !$e.closest('.metro-field').length && !$e.is('.metro-field') ) {
+      for(let i=0; i<arMetros.length; i++){ // закрываем списки без фокуса
+        let cInput = $(arMetros[i]).find('.metro-inp'),
+          cList = $(arMetros[i]).find('.select-list');
 
-          arMetros.splice(arMetros.indexOf(metro.dataset.id),1);
-          $(input).val(arMetros);
-          $(metro).remove();
-        }
+        cInput.val('').css({width:'5px'});
+        cList.fadeOut();
       }
     }
-    //
-    //      ЛОКАЦИИ
-    //
-    //      добавление локации
-    AddressEdit.prototype.addLocation = function (e) {
-        let self = this,
-            main = $(e).closest('.city-item')[0],
-            idC = main.dataset.city,
-            arLoc = $(main).find('.loc-item'),
-            newLoc = $('#loc-content').html(),
-            newPeriod = $('#period-content').html(),
-            empty = self.checkFields(),
-            arLocInp, arPerInp, row, arTime, idL;
+    else{ // клик по объектам списка
+      if( $e.is('.select-list li') && !$e.hasClass('emp') ) { // выбираем из списка
+        let main = $e.closest('.metro-item')[0],
+          select = $(main).find('.metro-select'),
+          inpText = $(main).find('.metro-inp'),
+          list = $(main).find('.select-list'),
+          input = $(main).find('[type="hidden"]'),
+          name = $(e).text(),
+          v = $(input).val(),
+          arMetros = v.length ? v.split(',') : [];
 
-        if (!empty) {
-            $(main).append(newLoc);
-            idL = arLoc[arLoc.length-1].dataset.id;
-            idL = Number(idL)+1;
-            arLoc = $(main).find('.loc-item')
-            newLoc = arLoc[arLoc.length-1];
-            newLoc.dataset.id = idL;
-            name = '[' + idC + '][' + idL + ']';
+        arMetros.push(e.dataset.id);
+        $(input).val(arMetros);
+        inpText.val('').css({width:'5px'});
+        $(select).find('[data-id="0"]').before('<li data-id="'
+          + e.dataset.id + '">' + name
+          + '<b></b></li>');
+        list.fadeOut();
+      }
+      else if($e.is('.metro-select b')) { // удаление выбранного метро из списка
+        let main = $e.closest('.metro-item')[0],
+          input = $(main).find('[type="hidden"]'),
+          name = $(e).text(),
+          metro = $e.closest('li')[0],
+          arMetros = $(input).val().split(',');
 
-            if($(main).find('.metro-item').length) {// если есть метро
-                row = $(newLoc).find('.loc-field');
-                $(row).prepend($('#metro-content').html());
-                arLocInp = $(newLoc).find('.loc-field input');
-                $(arLocInp[1]).attr('name','metro' + name);
-                $(arLocInp[2]).attr('name','lindex' + name);
-                $(arLocInp[3]).attr('name','lname' + name);
-
-            }
-            else {
-                arLocInp = $(newLoc).find('.loc-field input');
-                $(arLocInp[0]).attr('name','lindex' + name);
-                $(arLocInp[1]).attr('name','lname' + name);
-            }
-            $(newLoc).append(newPeriod);
-            arPerInp = $(newLoc).find('.period-item input');
-
-            name += '[0]';
-            $(arPerInp[0]).attr('name','bdate' + name);
-            $(arPerInp[1]).attr('name','edate' + name);
-            $(arPerInp[2]).attr('name','btime' + name);
-            $(arPerInp[3]).attr('name','etime' + name);
-
-            arTime = $(newLoc).find('.time-inp');
-            $(arTime).mask('99:99');
-        }
-        else
-            MainProject.showPopup('notif', 'add-tt');
+        arMetros.splice(arMetros.indexOf(metro.dataset.id),1);
+        $(input).val(arMetros);
+        $(metro).remove();
+      }
     }
+  }
+  //
+  //      ЛОКАЦИИ
+  //
+  //      добавление локации
+  AddressEdit.prototype.addLocation = function (e) {
+    let self = this,
+      main = $(e).closest('.city-item')[0],
+      idC = main.dataset.city,
+      arLoc = $(main).find('.loc-item'),
+      newLoc = $('#loc-content').html(),
+      newPeriod = $('#period-content').html(),
+      empty = self.checkFields(),
+      arIdies = self.getNewId(),
+      arLocInp, arPerInp, row, arTime;
+
+    if (!empty) {
+      $(main).append(newLoc);
+      arLoc = $(main).find('.loc-item')
+      newLoc = arLoc[arLoc.length-1];
+      newLoc.dataset.id = arIdies.location;
+      name = '[' + idC + '][' + arIdies.location + ']';
+
+      if($(main).find('.metro-item').length) {// если есть метро
+        row = $(newLoc).find('.loc-field');
+        $(row).prepend($('#metro-content').html());
+        arLocInp = $(newLoc).find('.loc-field input');
+        $(arLocInp[1]).attr('name','metro' + name);
+        $(arLocInp[2]).attr('name','lindex' + name);
+        $(arLocInp[3]).attr('name','lname' + name);
+      }
+      else {
+        arLocInp = $(newLoc).find('.loc-field input');
+        $(arLocInp[0]).attr('name','lindex' + name);
+        $(arLocInp[1]).attr('name','lname' + name);
+      }
+      $(newLoc).append(newPeriod);
+      arPerInp = $(newLoc).find('.period-item input');
+
+      name += '[' + arIdies.period + ']';
+      $(arPerInp[0]).attr('name','bdate' + name);
+      $(arPerInp[1]).attr('name','edate' + name);
+      $(arPerInp[2]).attr('name','btime' + name);
+      $(arPerInp[3]).attr('name','etime' + name);
+
+      arTime = $(newLoc).find('.time-inp');
+      $(arTime).mask('99:99');
+    }
+    else
+      MainProject.showPopup('notif', 'add-tt');
+  }
     //
     //      ДАТА
     //
@@ -604,16 +607,15 @@ var AddressEdit = (function () {
             city = $(e).closest('.city-item')[0],
             idC = city.dataset.city,
             newPeriod = $('#period-content').html(),
-            arPerInp, arPers, idP, name;
+            arIdies = self.getNewId(),
+            arPerInp, arPers, name;
 
         if(!empty) {
             $(main).append(newPeriod);
             arPers = $(main).find('.period-item');
-            idP = arPers[arPers.length-2].dataset.id;
-            idP = (Number(idP)+1);
-            arPers[arPers.length-1].dataset.id = idP;
+            arPers[arPers.length-1].dataset.id = arIdies.period;
             arPerInp = $(arPers[arPers.length-1]).find('input');
-            name = '[' + idC + '][' + idL + '][' + idP + ']';
+            name = '[' + idC + '][' + idL + '][' + arIdies.period + ']';
             $(arPerInp[0]).attr('name','bdate' + name);
             $(arPerInp[1]).attr('name','edate' + name);
             $(arPerInp[2]).attr('name','btime' + name);
@@ -693,27 +695,45 @@ var AddressEdit = (function () {
       let self = this,
           $e = $(e),
           error = -1,
+          query = true,
           arErr = ['city-del','loc-del','period-del'],
           arItems, item, main;
 
       if($e.hasClass('city-del')) {
           arItems = $('#index .city-item');
           item = $e.closest('.city-item')[0];
-          error = arItems.length>1 ? -1 : 0;
+          if(arItems.length>1) {
+            error = -1;
+            query = confirm('Будет удален город и все связанные данные.\n'
+              +'Вы действительно хотите это сделать?');
+          }
+          else error = 0;
       }
       else if($e.hasClass('loc-del')) {
           main = $e.closest('.city-item')[0]
           arItems = $(main).find('.loc-item');
           item = $e.closest('.loc-item')[0];
-          error = arItems.length>1 ? -1 : 1;
+          if(arItems.length>1) {
+            error = -1;
+            query = confirm('Будет удалена ТТ и все связанные данные.\n'
+              +'Вы действительно хотите это сделать?');
+          }
+          else error = 1;
       }
       else if($e.hasClass('period-del')) {
           main = $e.closest('.loc-item')[0]
           arItems = $(main).find('.period-item');
           item = $e.closest('.period-item')[0];
-          error = arItems.length>1 ? -1 : 2;
+          if(arItems.length>1) {
+            error = -1;
+            query = confirm('Будет удален период.\n'
+              +'Вы действительно хотите это сделать?');
+          }
+          else error = 2;
       }
 
+      if(!query)
+        return false;
       if(error>=0)
           MainProject.showPopup('error',arErr[error]);
       else {
@@ -725,38 +745,55 @@ var AddressEdit = (function () {
     AddressEdit.prototype.saveProgram = function (e) {
         let self = this;
 
-        console.log($('#new-project').serializeArray());
-/*
         !self.checkFields()
         ? $('#new-project').submit()
         : MainProject.showPopup('notif','save-program');
-
-        */
     }
-    //
-   	AddressEdit.prototype.scrollToBlock = function (e) {
-      let scrollElem;
-      if(getParams.city==='new') {
-      	$('#add-city-btn').click();
-      	scrollElem = $('#index .city-item:eq(-1)');
-      }
-      else {
-      	scrollElem = $('#index [data-city='+getParams.city+']');
-      }
-      if(undefined!=getParams.loc) {
-      	if(getParams.loc==='new') {
-      		$('[data-city='+getParams.city+'] .add-loc-btn').click();
-      		scrollElem = $('[data-city='+getParams.city+'] .loc-item:eq(-1)');
-      	}
-      	else {
-      		scrollElem = $('[data-city='+getParams.city+'] .loc-item[data-id='+getParams.loc+']');
-      	}
-      }
- 			if($(scrollElem).is('*'))
-      	$('html, body').animate({ scrollTop: scrollElem.offset().top - 25 },1000);
-   	}
+  //
+ 	AddressEdit.prototype.scrollToBlock = function (e) {
+    let scrollElem;
+    if(getParams.city==='new') {
+    	$('#add-city-btn').click();
+    	scrollElem = $('#index .city-item:eq(-1)');
+    }
+    else {
+    	scrollElem = $('#index [data-city='+getParams.city+']');
+    }
+    if(undefined!=getParams.loc) {
+    	if(getParams.loc==='new') {
+    		$('[data-city='+getParams.city+'] .add-loc-btn').click();
+    		scrollElem = $('[data-city='+getParams.city+'] .loc-item:eq(-1)');
+    	}
+    	else {
+    		scrollElem = $('[data-city='+getParams.city+'] .loc-item[data-id='+getParams.loc+']');
+    	}
+    }
+			if($(scrollElem).is('*'))
+    	$('html, body').animate({ scrollTop: scrollElem.offset().top - 25 },1000);
+ 	}
+  //    получаем уникальные ID
+  AddressEdit.prototype.getNewId = function () {
+    let arR = [], arT = [], r = (9999 - 1000 + 1);
+
+    $.each($('#index .loc-item'), function(){
+      arT.push(this.dataset.id);  
+    });
+    do {
+      arR.location = Math.floor(Math.random() * r) + 1000;
+    } while ($.inArray(arR.location,arT)>=0);
+
+    arT = [];
+
+    $.each($('#index .period-item'), function(){
+      arT.push(this.dataset.id);  
+    });
+    do {
+      arR.period = Math.floor(Math.random() * r) + 1000;
+    } while ($.inArray(arR.period,arT)>=0);
+    return arR;
+  }
 	//
-    return AddressEdit;
+  return AddressEdit;
 }());
 /*
 *
