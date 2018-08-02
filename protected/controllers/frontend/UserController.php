@@ -910,7 +910,7 @@ class UserController extends AppController
         {
             // results per page
             $pages=new CPagination($Im->getChatsCounts(Share::$UserProfile->id));
-            $pages->pageSize = 10;
+            $pages->pageSize = 5;
             $pages->applyLimit($Im);
 
             $data = $Im->getChatsVac();
@@ -921,7 +921,7 @@ class UserController extends AppController
         {
             // results per page
             $pages=new CPagination($Im->getChatsCount(Share::$UserProfile->id));
-            $pages->pageSize = 10;
+            $pages->pageSize = 5;
             $pages->applyLimit($Im);
 
             $data = $Im->getChats();
