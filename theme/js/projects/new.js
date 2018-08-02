@@ -46,7 +46,7 @@ var ProjectPage = (function () {
     };
     //      Проверка готовности для создания проекта
     ProjectPage.prototype.checkErrors = function () {
-        //$('#new-project').submit(); //dump
+        $('#new-project').submit(); //dump
         console.log($('#new-project').serializeArray());
         let nameInp = $('#project-name'),
             name = $(nameInp).val();
@@ -1020,16 +1020,9 @@ var ProjectAddIndexProg = (function () {
     ProjectAddIndexProg.prototype.saveProgram = function (e) {
         let self = this;
 
-        let arr = $('#new-project').serializeArray(),
-            str = '';
-
-        for (var i=0; i < arr.length; i++) {
-           str += arr[i]['name'] + ' : ' + arr[i]['value'] + '\n';
-        }
-        console.log(str);
-        /*!self.checkFields()
+        !self.checkFields()
         ? self.Project.showModule(e)
-        : MainProject.showPopup('notif','save-program');*/
+        : MainProject.showPopup('notif','save-program');
     }
     //    получаем уникальные ID
     ProjectAddIndexProg.prototype.getNewId = function () {
