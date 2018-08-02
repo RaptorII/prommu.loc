@@ -708,8 +708,8 @@ var ProjectAddIndexProg = (function () {
                     metro = $e.closest('li')[0],
                     arMetros = $(input).val().split(',');
 
-                arMetros.pop(arMetros.indexOf(metro.dataset.id));
-                $(input).val(arMetros.join(','));
+                arMetros.splice(arMetros.indexOf(metro.dataset.id),1);
+                $(input).val(arMetros);
                 $(metro).remove();
             }
         }

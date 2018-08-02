@@ -458,13 +458,15 @@
                 </div>
                 <div id="footer-tegs" class="container">
                     <!--Tegs-->
-                    <div class="row footer__module">
-                        <a href="<?=MainConfig::$PAGE_OTHERCITIES?>" class="footer__cities-link">Работа в других городах</a>
-                        <?php  
+                    <div class="row footer__module" style="display: block">
+                        <a href="<?=MainConfig::$PAGE_OTHERCITIES?>" class="footer__cities-link" style="margin-right:15px">Работа в других городах</a>
+                        <a href="https://spb.prommu.com" class="footer__cities-link" style="margin-right:15px">Санкт-Петербург</a>
+                        <a href="https://novosibirsk.prommu.com" class="footer__cities-link" style="margin-right:15px">Новосибирск</a>
+                        <?php  /*
                           $arSites = Subdomain::getData(true);
                           foreach ($arSites as $id => $site):
                           ?><a href="<?=MainConfig::$PAGE_OTHERCITIES//=$site['url']?>" class="footer__cities-link"><?=$site['city']?></a> <?php
-                          endforeach; 
+                          endforeach; */
                         ?>
                     </div>
                 </div>

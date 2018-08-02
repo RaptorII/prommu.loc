@@ -1561,8 +1561,8 @@ class UserController extends AppController
                     case 'report':
                         $view = MainConfig::$VIEW_PROJECT_ITEM_REPORT;
                         break;
-                    case 'address-change':
-                        $view = 'projects/address-change';
+                    case 'address-edit':
+                        $view = MainConfig::$VIEW_PROJECT_ITEM_ADR_CHANGE;
                         break;
                     default:
                         $view = MainConfig::$VIEW_PROJECT_ITEM;

@@ -15,7 +15,7 @@
 
 <div class="row project">
 	<div class="col-xs-12">
-		<form action="/user/procreate" method="POST" id="new-project">
+		<form action="" method="POST" id="new-project">
 			<div id="main" class="project__module">
 				<div class="project__name">
 					<input type="text" name="name" placeholder="*Введите название проекта" autocomplete="off" id="project-name">
