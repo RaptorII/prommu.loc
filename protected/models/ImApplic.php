@@ -46,8 +46,8 @@ class ImApplic extends Im
         return $data;
     }
     
-    public function accessMessage($idto){
-       
+public function accessMessage($idto){
+  
             $result['user'] = Yii::app()->db->createCommand()
             ->select("u.ismoder,u.isblocked")
             ->from('user u')
@@ -56,12 +56,11 @@ class ImApplic extends Im
 
             if($idto){
                 $result['new'] = Yii::app()->db->createCommand()
-                ->select("r.id")
-                ->from('resume r')
-                ->where('r.id=:st', array(':st'=>$idto))
+                ->select("e.id")
+                ->from('employer e')
+                ->where('e.id=:st', array(':st'=>$idto))
                 ->queryRow();
-            }   
-       
+            }
 
         return $result;
     }
