@@ -45,7 +45,26 @@ class ImApplic extends Im
 
         return $data;
     }
+    
+    public function accessMessage($idto){
+       
+            $result['user'] = Yii::app()->db->createCommand()
+            ->select("u.ismoder,u.isblocked")
+            ->from('user u')
+            ->where('u.id_user=:st', array(':st'=>Share::$UserProfile->id))
+            ->queryRow();
 
+            if($idto){
+                $result['new'] = Yii::app()->db->createCommand()
+                ->select("r.id")
+                ->from('resume r')
+                ->where('r.id=:st', array(':st'=>$idto))
+                ->queryRow();
+            }   
+       
+
+        return $result;
+    }
 
      public function getMessCount($inIdTm, $inUsId)
     {
