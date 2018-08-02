@@ -23,8 +23,11 @@ class UserController extends AppController
         );
     }
     
-      public function actionDump(){
-        var_dump($_POST);
+      public function actionProCreate() 
+        $project = new Project();
+        $result = $project->createProject($_POST);
+        $this->redirect("https://prommu.com/user/projects/new");
+
       }
 
       public function actionOutstaffing(){
