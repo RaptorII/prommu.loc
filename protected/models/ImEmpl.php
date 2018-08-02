@@ -225,9 +225,17 @@ class ImEmpl extends Im
         $Profile = $inProps['profile'] ?: $this->Profile ?: Share::$UserProfile;
         $id = $inProps['idus'] ?: $Profile->id;
 
+            $sql = "SELECT *
+                FROM vacation_stat s
+                INNER JOIN resume r ON s.id_promo = r.id
+                INNER JOIN empl_vacations ev ON ev.id_user = e.id_user
+                INNER JOIN employer e ON e.id_user = {$id}
+                WHERE s.id_promo = {$new}";
+                $res = Yii::app()->db->createCommand($sql);
+                $Q1 = $res->queryRow();
 
         // добавляем новый чат
-        if( $new > 0 )
+        if( $new > 0 && $Q1)
         {
             $idusp = $new;
 
