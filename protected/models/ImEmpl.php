@@ -12,7 +12,7 @@ class ImEmpl extends Im
      */
     public function getChats()
     {
-        $limit = 5;
+        $limit = 10;
         $offset = $this->offset;
         $id = $this->Profile->id;
 
