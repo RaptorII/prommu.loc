@@ -250,7 +250,7 @@ var IndexProgram = (function () {
     		if(query) {
 		        $.ajax({
 		            type: 'POST',
-		            url: '/ajax/123', //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		            url: '/ajax/123', //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		            data: 'project=' + self.ID + '&city=' + id,
 		            dataType: 'json',
 		            success: function(r) {

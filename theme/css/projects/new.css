@@ -151,6 +151,7 @@
 }
 .project__title span{
 	color: #abb92a;
+	word-break: break-word;
 }
 .project__body{
 	width: 100%;
@@ -432,6 +433,7 @@
 	max-width: 550px;
 	padding: 20px 0 5px;
 	margin-bottom: 10px;
+	position: relative;
 }
 #DiContent .invitation-item > div{
 	width: 50%;
@@ -642,7 +644,7 @@
 	font-weight: bold;
 	white-space: nowrap;
 }
-.city-del, .loc-del, .period-del{
+.city-del, .loc-del, .period-del, .invitation-del{
 	position: absolute;
 	right: 0;
 	top: 0;
@@ -657,7 +659,8 @@
 }
 .city-del:hover,
 .loc-del:hover,
-.period-del:hover{ color: red }
+.period-del:hover,
+.invitation-del:hover{ color: red }
 .period-field span {
 	width: 100px;
 	max-width: 100px;

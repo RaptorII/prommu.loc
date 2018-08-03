@@ -2,8 +2,7 @@ var countryCache;
 var countryRequesting = false;
 var phoneCode = {
     data: [],
-    container: null,
-    prefixField: null,
+    containers: [],
     searchTimeout: null,
     suggestTimeout: null,
     hideTimeout: null,
@@ -14,38 +13,35 @@ var phoneCode = {
     },
 
     _create: function() {
-        this._loadData();
+        this.element = $('#invitation .invite-inp.phone:eq(-1)');
         this.element.wrap('<div class="country-phone">');
         var container = this.element.parent('.country-phone');
         var selector = $('<div class="country-phone-selector"><div class="country-phone-selected"></div><div class="country-phone-options"></div></div>');
         $(selector).prependTo(container);
 
         var prefixName = this.options.prefix ?
-            this.options.prefix : 'prfx-phone[0][]';
+            this.options.prefix : 'prfx-phone[0]';
         var hidden = $('<input type="hidden" name="'+ prefixName +'" value="'+ this.options.default_prefix +'">');
         $(hidden).appendTo(container);
-
-        this.container = container;
-        this.prefixField = hidden;
+        this.containers.push(container[0]);
+        this._loadData();
     },
 
     _loadData : function(){
         var self = this;
-        countryRequesting = $.getJSON('/theme/js/phone-codes/countries.json', {})
-            .done(function(json) {
-                self.data = json;
-                countryCache = self.data;
-                self._initSelector();
-            })
-            .fail(function(xhr, status, error) {
-                //alert(status + ' ' + error);
-                self.data = countries;
-                countryCache = self.data;
-                self._initSelector();
-            });
-        /*
         if(!countryCache && !countryRequesting) {
-
+            countryRequesting = $.getJSON('/theme/js/phone-codes/countries.json', {})
+                .done(function(json) {
+                    self.data = json;
+                    countryCache = self.data;
+                    self._initSelector();
+                })
+                .fail(function(xhr, status, error) {
+                    //alert(status + ' ' + error);
+                    self.data = countries;
+                    countryCache = self.data;
+                    self._initSelector();
+                });
         }
         else if(countryCache) {
             this.data = countryCache;
@@ -57,19 +53,20 @@ var phoneCode = {
                 countryCache = self.data;
                 self._initSelector();
             });
-        }
-        */
+        }     
     },
 
     _initSelector: function() {
-        var options = this.container.find('.country-phone-options');
-        var selector = this.container.find('.country-phone-selected');
+        var last = $(this.containers).last();
+        var options = last.find('.country-phone-options');
+        var selector = last.find('.country-phone-selected');
         var selected = null;
         var self = this;
-        /*
+
         var searchInput = $('<input type="text" class="country-phone-search" value="">');
         $(searchInput).appendTo(options);
         var searchLabel = $('<label class="country-phone-search-label">Введите страну</label>');
+
         $(searchLabel).on('click',function(){
             $(this).hide();
             $(searchInput).focus();
@@ -83,7 +80,7 @@ var phoneCode = {
             var ev = e;
             self.suggestTimeout = window.setTimeout(function(){
                 var text = $(input).val().toLowerCase();
-                self.suggestCountry(text);
+                self.suggestCountry(e, text);
                 if(ev.keyCode == 40) {
                     self._moveSuggestDown(options);
                 }
@@ -95,7 +92,7 @@ var phoneCode = {
                     if(hovered.length) {
                         if(!$(hovered).hasClass('country-phone-search')) {
                             self.setElementSelected(hovered);
-                            self._toggleSelector();
+                            self._toggleSelector(e);
                         }
                     }
                     ev.stopPropagation();
@@ -117,7 +114,7 @@ var phoneCode = {
                 return false;
             }
         });
-        */
+        
         for(var i = 0; i < this.data.length; i++) {
             if(i == 0) {
                 selected = this.data[i];
@@ -144,33 +141,34 @@ var phoneCode = {
             }
         }
         if(selected) {
-            this.container.find('.country-phone-selected')
+            last.find('.country-phone-selected')
                 .html('<img src="/theme/pic/phone-codes/blank.gif" class="flag flag-'+ selected.co +'"><span>+'+ selected.ph+'</span>');
         }
-        /*
+        
         $(selector).bind('click', function(e){
-            self._toggleSelector();
+            self._toggleSelector(e);
         });
-        $(options).find('.country-phone-option').bind('click', function(){
+        $(options).find('.country-phone-option').bind('click', function(e){
             self.setElementSelected(this);
-            self._toggleSelector();
+            self._toggleSelector(e);
         });
-        */
-        $(options).hover(function(){
+        
+        $(options).hover(function(e){
             if(self.hideTimeout) {
                 window.clearTimeout(self.hideTimeout);
             }
         }, function(){
             var select = this;
-            //self.hideTimeout = window.setTimeout(self._mouseOverHide, 1000, select, self);
+            self.hideTimeout = window.setTimeout(self._mouseOverHide, 1000, select, self);
         });
 
         this._initInput();
     },
 
     _mouseOverHide: function(select, self) {
-        if(self.container) {
-            var searchInput = self.container.find('.country-phone-search');
+        if(self.containers.length) {
+            var main = $(select).closest('.country-phone');
+            var searchInput = $(main).find('.country-phone-search');
             if(!$(searchInput).is(':focus')) {
                 $(select).hide();
             }
@@ -181,6 +179,8 @@ var phoneCode = {
     },
 
     _moveSuggestDown: function(options) {
+        var main = $(select).closest('.country-phone');
+        var searchInput = $(main).find('.country-phone-search');
         var select = null;
         var hovered = $(options).find('.hovered:visible');
         if(hovered.length) {
@@ -228,9 +228,12 @@ var phoneCode = {
         }
     },
 
-    suggestCountry: function(text, checkCode) {
-        var options = this.container.find('.country-phone-options');
-        var self = this;
+    suggestCountry: function(e, text, checkCode) {
+        var self = this,
+            main = $(e.target).closest('.country-phone'),
+            options = $(main).find('.country-phone-options'),
+            hidden = $(main).find('[type="hidden"]');
+
         $(options).find('.country-phone-option').each(function(){
             if(text) {
                 if(text == 'россия') {
@@ -241,7 +244,7 @@ var phoneCode = {
                     $(this).show();
                     if(checkCode && checkCode != undefined) {
                         var code = $(this).data('phone');
-                        var selCode = self.prefixField.val();
+                        var selCode = $(hidden).val();
                         if(selCode == code) {
                             self.setElementSelected(this);
                         }
@@ -259,13 +262,16 @@ var phoneCode = {
         });
     },
 
-    _toggleSelector: function(){
-        var options = this.container.find('.country-phone-options');
+    _toggleSelector: function(e){
+        var main = $(e.target).closest('.country-phone'),
+            options = $(main).find('.country-phone-options'),
+            element = $(main).find('.invite-inp');
+
         if($(options).is(':visible')) {
             $(options).hide('fast');
-            //$(options).find('.country-phone-search').val('').blur();
-            //this.element.focus();
-            this.suggestCountry('');
+            $(options).find('.country-phone-search').val('').blur();
+            element.focus();
+            this.suggestCountry(e,'');
         }
         else {
             $(options).show('fast');
@@ -277,12 +283,18 @@ var phoneCode = {
     },
 
     setElementSelected: function(el) {
-        var selector = this.container.find('.country-phone-selected');
-        var code = $(el).data('phone');
-        var sel = $(el).find('img').clone();
+        var main = $(el).closest('.country-phone'),
+            selector = $(main).find('.country-phone-selected'),
+            element = $(main).find('.invite-inp'),
+            hidden = $(main).find('[type="hidden"]'),
+            code = $(el).data('phone'),
+            sel = $(el).find('img').clone();
+
         $(selector).empty().append(sel).append('<span>+'+code+'</span>');
-        this.prefixField.val(code);
-        this.element.val('');
+
+        $(hidden).val(code);
+        $(element).val('');
+
         return code;
     },
 
@@ -297,7 +309,7 @@ var phoneCode = {
                 }
                 var input = this;
                 window.setTimeout(function(){
-                    var found = self.searchCountryCode(code);
+                    var found = self.searchCountryCode(this.element, code);
                     if(found) {
                         text = $(input).val();
                         text = text.replace('+' + found, '');
@@ -316,7 +328,7 @@ var phoneCode = {
         if(text.length > 1 && text[0] == '+') {
             for(var i = 6; i >= 1; i--) {
                 var code = text.substring(1, i);
-                var found = self.searchCountryCode(code);
+                var found = self.searchCountryCode(this.element, code);
                 if(found) {
                     text = this.element.val();
                     text = text.replace('+' + found, '');
@@ -330,8 +342,8 @@ var phoneCode = {
         }
     },
 
-    searchCountryCode: function(code) {
-        var options = this.container.find('.country-phone-options');
+    searchCountryCode: function(el, code) {
+        var options = $(el).find('.country-phone-options');
         var search = code;
         var self = this;
         var found = false;

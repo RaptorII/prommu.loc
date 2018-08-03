@@ -16,9 +16,11 @@ var ProjectPage = (function () {
         $('.project__opt-btn').click(function() { self.showModule(this) });
         $('#add-xls-inp').change(function() { self.checkFormatFile(this) });
         $('#project-name').on('input', self.checkProjectName);
-
-
-
+        $('#new-project').on(
+            'click',
+            '.city-del,.loc-del,.period-del,.invitation-del',
+            function(){ self.removeElement(this) }
+        );
         ProjectAddIndexProg.init(self); //  Страница добавления адресной программы
         ProjectAddPersonal.init(self);  //  Страница добавления персонала
 
@@ -26,11 +28,10 @@ var ProjectPage = (function () {
         //      Страница приглашения персонала
         //
         //      события нажатия кнопок
-              $('#add-prsnl-btn,#save-prsnl-btn').click(function(){
+        $('#add-prsnl-btn,#save-prsnl-btn').click(function(){ 
             self.checkInvitations(this)
         });
         //      события заполнения полей
-        window.phoneCode.element = $('#invitation .invite-inp.phone');
         window.phoneCode._create();
         self.arOldPhones[0] = '';
         $(document).keydown(function(e){ self.keyCode = e.keyCode }); // ловим код клавиши
@@ -46,13 +47,53 @@ var ProjectPage = (function () {
     };
     //      Проверка готовности для создания проекта
     ProjectPage.prototype.checkErrors = function () {
-        $('#new-project').submit(); //dump
-        console.log($('#new-project').serializeArray());
         let nameInp = $('#project-name'),
             name = $(nameInp).val();
 
-        if(name.length<1){
+        if(name.length<1) {
             $(nameInp).addClass('error');
+        }
+        else {
+            let arP = $('#index .city-item'),
+                arI = $('#invitation input'),
+                empAddrProg = false,
+                empAddrFile = !$('#add-xls-inp').val().length,
+                empUsersSelect = !Number($('#mess-wcount-inp').val()),
+                empUsersInvite = false;
+
+            for (let i = 0, l = arP.length; i < l; i++) {
+                let arInputs = $(arP[i]).find('input');
+
+                for (let j = 0, n = arInputs.length; j < n; j++) {
+                    let name = $(arInputs[j]).attr('name');
+                    if ($.inArray(name, ['c','m'])<0 && !arInputs[j].value.length)
+                        empAddrProg = true;
+                }
+            }
+            for (var i = 0, n = arI.length; i < n; i++) {
+                if(
+                    !$(arI[i]).hasClass('country-phone-search')
+                    &&
+                    !arI[i].value.length
+                ) {
+                    empUsersInvite = true;
+                    break;
+                }
+            }
+
+            if((empAddrProg && empAddrFile) && (empUsersSelect && empUsersInvite)) {
+                MainProject.showPopup('error','full-in-create');
+                return false;
+            }
+            else if(empAddrProg && empAddrFile) {
+                MainProject.showPopup('error','addr-in-create');
+                return false;
+            }
+            else if(empUsersSelect && empUsersInvite) {
+                MainProject.showPopup('error','users-in-create');
+                return false;
+            }
+            else $('#new-project').submit();
         }
     }
     //      Выбор файла для адресной программы
@@ -109,12 +150,73 @@ var ProjectPage = (function () {
         }
         else{
             $it.removeClass('error');
+            val = val.substring(0, 70);
+            $it.val(val);
             for (let i = 0, n = arTitles.length; i < n; i++)
                 $(arTitles[i]).text('«' + val + '»');
             return true;
         }
     }
+    //      удаление элементов
+    ProjectPage.prototype.removeElement = function (e) {
+      let $e = $(e),
+          error = -1,
+          query = true,
+          arErr = ['city-del','loc-del','period-del','invitation-del'],
+          arItems, item, main;
 
+      if($e.hasClass('city-del')) {
+          arItems = $('#index .city-item');
+          item = $e.closest('.city-item')[0];
+          if(arItems.length>1) {
+            error = -1;
+            query = confirm('Будет удален город и все связанные данные.\n'
+              +'Вы действительно хотите это сделать?');
+          }
+          else error = 0;
+      }
+      else if($e.hasClass('loc-del')) {
+          main = $e.closest('.city-item')[0]
+          arItems = $(main).find('.loc-item');
+          item = $e.closest('.loc-item')[0];
+          if(arItems.length>1) {
+            error = -1;
+            query = confirm('Будет удалена ТТ и все связанные данные.\n'
+              +'Вы действительно хотите это сделать?');
+          }
+          else error = 1;
+      }
+      else if($e.hasClass('period-del')) {
+          main = $e.closest('.loc-item')[0]
+          arItems = $(main).find('.period-item');
+          item = $e.closest('.period-item')[0];
+          if(arItems.length>1) {
+            error = -1;
+            query = confirm('Будет удален период.\n'
+              +'Вы действительно хотите это сделать?');
+          }
+          else error = 2;
+      }
+      else if($e.hasClass('invitation-del')) {
+          arItems = $('#invitation .invitation-item');
+          item = $e.closest('.invitation-item')[0];
+          if(arItems.length>1) {
+            error = -1;
+            query = confirm('Будут удалены данные контакта.\n'
+              +'Вы действительно хотите это сделать?');
+          }
+          else error = 3;
+      }
+
+      if(!query)
+        return false;
+      if(error>=0)
+          MainProject.showPopup('error',arErr[error]);
+      else {
+          $(item).fadeOut();
+          setTimeout(function(){ $(item).remove() },500);
+      }
+    }
     //
     //      ПРИГЛАШЕНИЕ НА ВАКАНСИЮ
     //
@@ -144,7 +246,6 @@ var ProjectPage = (function () {
                 }
             }
         }
-        empty = false;
         if (!empty) {
             if(save) {
                 self.showModule(e);
@@ -161,21 +262,17 @@ var ProjectPage = (function () {
 
             arInputs = $(arInv[arInv.length-1]).find('.invite-inp');
 
-            $(arInputs[0]).attr('name','inv-name['+id+'][]');
-            $(arInputs[1]).attr('name','inv-sname['+id+'][]');
-            $(arInputs[2]).attr('name','inv-phone['+id+'][]');
-            $(arInputs[3]).attr('name','inv-email['+id+'][]');
+            $(arInputs[0]).attr('name','inv-name['+id+']');
+            $(arInputs[1]).attr('name','inv-sname['+id+']');
+            $(arInputs[2]).attr('name','inv-phone['+id+']');
+            $(arInputs[3]).attr('name','inv-email['+id+']');
 
             let p = $(arInv[arInv.length-1]).find('.invite-inp.phone');
-            //console.log(p);
-            //$('#add-prsnl-btn').text(p);
-            window.phoneCode.element = $(arInv[arInv.length-1]).find('.invite-inp.phone');
             window.phoneCode._create();
             $(arInv[arInv.length-1])
                 .find('[type="hidden"]')
-                .attr('name','prfx-phone['+id+'][]');
+                .attr('name','prfx-phone['+id+']');
             self.arOldPhones[id] = '';
-
         }
         else
             save
@@ -288,11 +385,6 @@ var ProjectAddIndexProg = (function () {
         $('#save-index').click( function(){ self.saveProgram(this) });
         $('#index').on('click', '.add-loc-btn', function(){ self.addLocation(this) });
         $('#index').on('click', '.add-period-btn', function() { self.addPeriod(this) });
-        $('#index').on(
-            'click',
-            '.city-del,.loc-del,.period-del',
-            function(){ self.removeElement(this) }
-        );
         // работа с городами
         $('#index').on('input', '.city-inp', function() { self.inputCity(this) });
         $('#index').on('focus', '.city-inp', function() { self.focusCity(this) });
@@ -965,57 +1057,6 @@ var ProjectAddIndexProg = (function () {
         }
         return empty;
     }
-    //      удаление элементов
-    ProjectAddIndexProg.prototype.removeElement = function (e) {
-      let self = this,
-          $e = $(e),
-          error = -1,
-          query = true,
-          arErr = ['city-del','loc-del','period-del'],
-          arItems, item, main;
-
-      if($e.hasClass('city-del')) {
-          arItems = $('#index .city-item');
-          item = $e.closest('.city-item')[0];
-          if(arItems.length>1) {
-            error = -1;
-            query = confirm('Будет удален город и все связанные данные.\n'
-              +'Вы действительно хотите это сделать?');
-          }
-          else error = 0;
-      }
-      else if($e.hasClass('loc-del')) {
-          main = $e.closest('.city-item')[0]
-          arItems = $(main).find('.loc-item');
-          item = $e.closest('.loc-item')[0];
-          if(arItems.length>1) {
-            error = -1;
-            query = confirm('Будет удалена ТТ и все связанные данные.\n'
-              +'Вы действительно хотите это сделать?');
-          }
-          else error = 1;
-      }
-      else if($e.hasClass('period-del')) {
-          main = $e.closest('.loc-item')[0]
-          arItems = $(main).find('.period-item');
-          item = $e.closest('.period-item')[0];
-          if(arItems.length>1) {
-            error = -1;
-            query = confirm('Будет удален период.\n'
-              +'Вы действительно хотите это сделать?');
-          }
-          else error = 2;
-      }
-
-      if(!query)
-        return false;
-      if(error>=0)
-          MainProject.showPopup('error',arErr[error]);
-      else {
-          $(item).fadeOut();
-          setTimeout(function(){ $(item).remove() },500);
-      }
-    }
     // сохранение программы
     ProjectAddIndexProg.prototype.saveProgram = function (e) {
         let self = this;
@@ -1351,19 +1392,4 @@ var ProjectAddPersonal = (function () {
 */
 $(document).ready(function () {
 	new ProjectPage();
-});
-
-
-
-
-$(document).ready(function () {
-  $("#invitation").on('click','.country-phone-selector',function(){
-    $(this).find('.country-phone-options').toggle();
-    $(this).on('click', '.country-phone-option', function () {
-        var code = this.dataset.phone;
-        var co = this.dataset.co;
-        $(this).parent().prev().html('<img src="/theme/pic/phone-codes/blank.gif" class="flag flag-'+ co +'"><span>+'+ code+'</span>');
-        $(this).parent().parent().siblings('input[type=hidden]').val(code);
-    });
-  });
 });

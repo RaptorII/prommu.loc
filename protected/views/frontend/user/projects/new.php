@@ -153,17 +153,18 @@
 			<div id="invitation" class="project__module">
 				<h2 class="project__title">ПРИГЛАСИТЬ В ПРОЕКТ <span></span></h2>
 				<div class="project__body project__body-invite invitation-item" data-id="0">
+					<span class="invitation-del">&#10006</span>
 					<div>
-						<input type="text" name="inv-name[0][]" placeholder="Имя" class="invite-inp name">
+						<input type="text" name="inv-name[0]" placeholder="Имя" class="invite-inp name">
 					</div>
 					<div>
-						<input type="text" name="inv-sname[0][]" placeholder="Фамилия" class="invite-inp sname">
+						<input type="text" name="inv-sname[0]" placeholder="Фамилия" class="invite-inp sname">
 					</div>
 					<div>
-						<input type="text" name="inv-phone[0][]" placeholder="Телефон" class="invite-inp phone">
+						<input type="text" name="inv-phone[0]" placeholder="Телефон" class="invite-inp phone">
 					</div>
 					<div>
-						<input type="text" name="inv-email[0][]" placeholder="E-mail" class="invite-inp email">
+						<input type="text" name="inv-email[0]" placeholder="E-mail" class="invite-inp email">
 					</div>
 				</div>
 				<div class="project__all-btns">
@@ -465,6 +466,7 @@
 </div>
 <div class="hidden" id="invitation-content">
 	<div class="project__body project__body-invite invitation-item" data-id="">
+		<span class="invitation-del">&#10006</span>
 		<div>
 			<input type="text" name="" placeholder="Имя" class="invite-inp name">
 		</div>
