@@ -89,6 +89,9 @@ class Services extends Model
 
         $message = sprintf("На сайте <a href='http://%s'>http://%1$01s</a> Заказ  услуг
                 <br/>
+                 <br/>
+                Услуга: <b>%s</b>  
+                <br/>
                 <br/>
                 Пользователь: <b>%s</b>  
                 <br/>
@@ -116,7 +119,7 @@ class Services extends Model
                 Реферер: <b>%s</b>
                 <br/>
                 Roistat: <b>%s</b>  ",
-            MainConfig::$SITE, $fio, $tel, $email, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $roistat);
+            MainConfig::$SITE,$id, $fio, $tel, $email, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $roistat);
 
        $email[0] = "web.dev@prommu.ru";
         $email[1] = "man.market2@gmail.com";
