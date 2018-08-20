@@ -1388,30 +1388,50 @@ class Api
                 a.transition, a.ip, a.client")
             ->from('employer e')
             ->join('user usr', 'usr.id_user=e.id_user')
-            ->join('analityc a', 'a.id_us=usr.id_user')
             ->where('e.id_user=:id_user', array(':id_user' => $id_user))
             ->queryAll();
-             if($user[0]){
+
+             $analyt = Yii::app()->db->createCommand()
+            ->select(" a.content, a.keywords, a.campaign, a.canal,
+                a.transition, a.ip, a.client")
+            ->from('analytic a')
+            ->join('user usr', 'usr.id_user=a.id_user')
+            ->where('a.id_user=:id_user', array(':id_user' => $id_user))
+            ->queryAll();
+
+             if($user[0] && $analyt[0]){
                 $email = $user[0]['email'];
                 $fio = $user[0]['name']." ".$user[0]['firstname']." ".$user[0]['lastname'];
                 $types = "Работодатель";
                 $ana = 1;
-                $keywords = $user[0]['keywords'];
-                $content = $user[0]['content'];
-                $campaign = $user[0]['campaign'];
-                $canal = $user[0]['canal'];
-                $transition = $user[0]['transition'];
-                $ip = $user[0]['client'];
+                $keywords = $analyt[0]['keywords'];
+                $content = $analyt[0]['content'];
+                $campaign = $analyt[0]['campaign'];
+                $canal = $analyt[0]['canal'];
+                $transition = $analyt[0]['transition'];
+                $ip = $analyt[0]['client'];
+
+                $keywords = $this->encoderSys($keywords);
+                $transition = explode(",", $transition)[0];
+            } elseif ($user[0]) {
+                $email = $user[0]['email'];
+                $fio = $user[0]['name']." ".$user[0]['firstname']." ".$user[0]['lastname'];
+                $types = "Работодатель";
+                $ana = 1;
+                $keywords = '(none)';
+                $content = '(none)';
+                $campaign = '(none)';
+                $canal = '(none)';
+                $transition = '(none)';
+                $ip = '(none)';
             } else $ana = 0;
 
 
 
             if($ana){
-            $keywords = $this->encoderSys($keywords);
             $date1 = explode(" ",$row["date"])[0];
             $time1 = explode(" ",$row["date"])[1];
             $canal = explode(",", $canal)[0];
-            $transition = explode(",", $transition)[0];
             $day = explode("-", $date1)[2];
             $month = explode("-", $date1)[1];
             $year = explode("-", $date1)[0];
