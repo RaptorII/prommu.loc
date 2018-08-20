@@ -1192,6 +1192,20 @@ class Api
             '</td><td style="color:red; background:#E0E0E0">Client ID'.
 
 '</td></tr>';
+
+        switch ($domen) {
+            case '0':
+                 $domen = 'https://prommu.com';
+                 break;
+
+            case '1':
+                 $domen = 'https://spb.prommu.com';
+                 break;
+             
+             default:
+                 # code...
+                 break;
+         }
         
         foreach ($data as $row) {
             $csv_file .= '<tr>';
@@ -1228,6 +1242,8 @@ class Api
            
 
             } 
+
+
 
             if($ana){
             $keywords = $this->encoderSys($row['keywords']);
