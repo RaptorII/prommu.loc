@@ -994,7 +994,20 @@ class Api
             ->order("crdate desc")
             ->queryAll();
          }
-        
+            
+         switch ($domen) {
+            case '0':
+                 $domen = 'https://prommu.com';
+                 break;
+
+            case '1':
+                 $domen = 'https://spb.prommu.com';
+                 break;
+             
+             default:
+                 # code...
+                 break;
+         }
 
 
         $csv_file = '<table border="1">
@@ -1230,11 +1243,11 @@ class Api
                 '</td><td>'.$b.$month.$b_end.
                 '</td><td>'.$b.$year.$b_end.
                 '</td><td>'.$b.$domen.$b_end.
-                '</td><td>'.$b.' '.$b_end.
+                '</td><td>'.$b.'(none)'.$b_end.
                 '</td><td>'.$b.$fio.$b_end.
                 '</td><td>'.$b.$types.$b_end.
                 '</td><td>'.$b.$type_feed.$b_end.
-                '</td><td>'.$b.$email.$b_end.
+                '</td><td>'.$b.'(none)'.$b_end.
                 '</td><td>'.$b.$email.$b_end.
                 '</td><td>'.$b.$transition.$b_end.
                 '</td><td>'.$b.$canal.$b_end.
