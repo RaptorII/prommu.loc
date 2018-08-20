@@ -1443,7 +1443,7 @@ class Api
                 '</td><td>'.$b.$fio.$b_end.
                 '</td><td>'.$b.$types.$b_end.
                 '</td><td>'.$b.$type_feed.$b_end.
-                '</td><td>'.$b.$row['tel'].$b_end.
+                '</td><td>'.$b.'(none)'.$b_end.
                 '</td><td>'.$b.$email.$b_end.
                 '</td><td>'.$b.$transition.$b_end.
                 '</td><td>'.$b.$canal.$b_end.
