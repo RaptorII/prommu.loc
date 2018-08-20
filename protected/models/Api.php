@@ -1379,14 +1379,16 @@ class Api
             $csv_file .= '<tr>';
             $b = "";
             $b_end = "";
-            
+
             $type_feed = 'заказ услуг';           
            
             $id_user = $row['id_user'];
             $user = Yii::app()->db->createCommand()
-            ->select("e.name, e.firstname, e.lastname, usr.email")
+            ->select("e.name, e.firstname, e.lastname, usr.email, a.content, a.keywords, a.campaign, a.canal,
+                a.transition, a.ip, a.client")
             ->from('employer e')
             ->join('user usr', 'usr.id_user=e.id_user')
+            ->join('analityc a', 'a.id_us=usr.id_user')
             ->where('e.id_user=:id_user', array(':id_user' => $id_user))
             ->queryAll();
              if($user[0]){
@@ -1394,16 +1396,22 @@ class Api
                 $fio = $user[0]['name']." ".$user[0]['firstname']." ".$user[0]['lastname'];
                 $types = "Работодатель";
                 $ana = 1;
+                $keywords = $user[0]['keywords'];
+                $content = $user[0]['content'];
+                $campaign = $user[0]['campaign'];
+                $canal = $user[0]['canal'];
+                $transition = $user[0]['transition'];
+                $ip = $user[0]['client'];
             } else $ana = 0;
 
 
 
             if($ana){
-            $keywords = $this->encoderSys($row['keywords']);
-            $date1 = explode(" ",$row["crdate"])[0];
-            $time1 = explode(" ",$row["crdate"])[1];
+            $keywords = $this->encoderSys($keywords);
+            $date1 = explode(" ",$row["date"])[0];
+            $time1 = explode(" ",$row["date"])[1];
             $canal = explode(",", $row["canal"])[0];
-            $transition = explode(",", $row["transition"])[0];
+            $transition = explode(",", $transition)[0];
             $day = explode("-", $date1)[2];
             $month = explode("-", $date1)[1];
             $year = explode("-", $date1)[0];
@@ -1420,11 +1428,11 @@ class Api
                 '</td><td>'.$b.$email.$b_end.
                 '</td><td>'.$b.$transition.$b_end.
                 '</td><td>'.$b.$canal.$b_end.
-                '</td><td>'.$b.$row["campaign"].$b_end.
-                '</td><td>'.$b.$row["content"].$b_end.
+                '</td><td>'.$b.$campaign.$b_end.
+                '</td><td>'.$b.$content.$b_end.
                 '</td><td>'.$b.$keywords.$b_end.
-                '</td><td>'.$b.$row["ip"].$b_end.
-                '</td><td>'.$b.$row["client"].$b_end.
+                '</td><td>'.$b.$ip.$b_end.
+                '</td><td>'.$b.$client.$b_end.
                 // '</td><td>'.$b.$row["last_referer"].$b_end.
                 // '</td><td>'.$b.$row["date"].$b_end.
                 '</td></tr>';
