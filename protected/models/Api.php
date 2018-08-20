@@ -1394,7 +1394,7 @@ class Api
             ->select(" a.content, a.keywords, a.campaign, a.canal,
                 a.transition, a.ip, a.client")
             ->from('analytic a')
-            ->join('user usr', 'usr.id_user=a.id_user')
+            ->join('user usr', 'usr.id_user=a.id_us')
             ->where('a.id_user=:id_user', array(':id_user' => $id_user))
             ->queryAll();
 
