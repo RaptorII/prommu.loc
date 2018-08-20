@@ -1090,8 +1090,8 @@ class Api
                 '</td><td>'.$b.$row["campaign"].$b_end.
                 '</td><td>'.$b.$row["content"].$b_end.
                 '</td><td>'.$b.$row["keywords"].$b_end.
-                '</td><td>'.$b.$row["date"].$b_end.
-                '</td><td>'.$b.$row["point"].$b_end.
+                '</td><td>'.$b.$row["ip"].$b_end.
+                '</td><td>'.$b.$row["client"].$b_end.
                 // '</td><td>'.$b.$row["last_referer"].$b_end.
                 // '</td><td>'.$b.$row["date"].$b_end.
                 '</td></tr>';
