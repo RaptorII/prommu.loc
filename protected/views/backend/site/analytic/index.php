@@ -28,6 +28,15 @@ if($title == '/admin/site/analyticspb') $domen = 1;
 <input type="hidden" name="domen" value="<?=$_GET['subdomen']; ?>">
 <button style='padding: 10px;background: #00c0ef;color: #f4f4f4'; type="submit">Экспорт</button>
 </form>
+
+<form action="/api.export_auto" method="GET">
+Выгрузка от
+<input type="date" name="date">
+по
+<input type="date" name="bdate">
+<input type="hidden" name="domen" value="<?=$_GET['subdomen']; ?>">
+<button style='padding: 10px;background: #00c0ef;color: #f4f4f4'; type="submit">Автоматическая выгрузка (ну почти...)</button>
+</form>
 <? 
 
  $data = Yii::app()->db->createCommand()
