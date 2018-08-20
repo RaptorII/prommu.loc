@@ -24,6 +24,7 @@ class Project extends ARModel
         $cloud = [];
         $project = time().rand(11111,99999);
         ///Обработка адресной программы
+
          for($i = 0; $i < count($props['city']); $i++){
             for($j = 0; $j < count($props['lindex'][$props['city'][$i]]); $j ++){
                 for($s = 0; $s < count($props['bdate'][$props['city'][$i]][$j]); $s ++){
@@ -64,8 +65,26 @@ class Project extends ARModel
                         ->insert('project_user', array(
                             'project' => $project,
                             'user' => $users[$i],
+                            'firstname' => 'firstname',
+                            'lastname' => 'lastname',
+                            'email' => 'email',
+                            'phone' => 'phone'
                         ));
                     }
+        }
+
+        for($i = 0; $i < count($props['inv-name']); $i ++){
+          
+            $res = Yii::app()->db->createCommand()
+                        ->insert('project_user', array(
+                            'project' => $project,
+                            'user' => rand(1111,3334),
+                            'firstname' => $props['inv-name'][$i],
+                            'lastname' => $props['inv-sname'][$i],
+                            'email' => $props['inv-email'][$i],
+                            'phone' => $props['prfx-phone'][$i].$props['inv-phone'][$i],
+                        ));
+                    
         }
 
          return $cloud;
