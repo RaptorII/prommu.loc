@@ -87,7 +87,7 @@ class Project extends ARModel
                     
         }
 
-         return $cloud;
+         return $project;
     }
 
     private function saveCities($props)
