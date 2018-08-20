@@ -5,7 +5,9 @@
 	$bUrl = Yii::app()->baseUrl;
 	$data = array(
     'projects' => array(
-      'id' => 2323));
+      'id' => 2323
+      )
+    );
 
 	$projects = $data['projects'];
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/emp-list.css');
