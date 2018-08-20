@@ -1384,8 +1384,7 @@ class Api
            
             $id_user = $row['id_user'];
             $user = Yii::app()->db->createCommand()
-            ->select("e.name, e.firstname, e.lastname, usr.email, a.content, a.keywords, a.campaign, a.canal,
-                a.transition, a.ip, a.client")
+            ->select("e.name, e.firstname, e.lastname, usr.email")
             ->from('employer e')
             ->join('user usr', 'usr.id_user=e.id_user')
             ->where('e.id_user=:id_user', array(':id_user' => $id_user))
