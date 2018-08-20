@@ -1037,7 +1037,7 @@ class Api
             $csv_file .= '<tr>';
             $b = "";
             $b_end = "";
-
+            $domen = 'https://prommu.com';
 
             $type_feed = 'регистрация';
             if($row['type'] == 2){
@@ -1193,26 +1193,13 @@ class Api
 
 '</td></tr>';
 
-        switch ($domen) {
-            case '0':
-                 $domen = 'https://prommu.com';
-                 break;
-
-            case '1':
-                 $domen = 'https://spb.prommu.com';
-                 break;
-             
-             default:
-                 # code...
-                 break;
-         }
         
         foreach ($data as $row) {
             $csv_file .= '<tr>';
             $b = "";
             $b_end = "";
 
-
+            $domen = 'https://prommu.com';
             $type_feed = 'обратная связь';
 
 
@@ -1361,26 +1348,13 @@ class Api
 
 '</td></tr>';
 
-        switch ($domen) {
-            case '0':
-                 $domen = 'https://prommu.com';
-                 break;
-
-            case '1':
-                 $domen = 'https://spb.prommu.com';
-                 break;
-             
-             default:
-                 # code...
-                 break;
-         }
         
         foreach ($data as $row) {
             $csv_file .= '<tr>';
             $b = "";
             $b_end = "";
-
-            $type_feed = 'заказ услуг';           
+            $domen = 'https://prommu.com';
+            $type_feed = 'заказ услуг '.$row['type'];           
            
             $id_user = $row['id_user'];
             $user = Yii::app()->db->createCommand()
@@ -1441,7 +1415,7 @@ class Api
                 '</td><td>'.$b.$month.$b_end.
                 '</td><td>'.$b.$year.$b_end.
                 '</td><td>'.$b.$domen.$b_end.
-                '</td><td>'.$b.'(none)'.$b_end.
+                '</td><td>'.$b.$id_user.$b_end.
                 '</td><td>'.$b.$fio.$b_end.
                 '</td><td>'.$b.$types.$b_end.
                 '</td><td>'.$b.$type_feed.$b_end.
