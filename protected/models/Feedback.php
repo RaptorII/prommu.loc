@@ -123,7 +123,7 @@ class Feedback extends Model
 
         if(!$arErrors){
 	        if($autotype == 2) {
-	            $texts = "Добрый день, уважаемый $name. Ваш вопрос '$text' на рассмотрении";
+	            $texts = "Добрый день, $name. Ваш вопрос '$text' на рассмотрении";
 	            $message = $texts;
 	            $new = $id;
 	            $idus = 1766;
@@ -133,7 +133,7 @@ class Feedback extends Model
 	            $resu = $Im->sendUserMessages($figaro);
 	        }
 	        if($autotype == 3) {
-	            $texts = "Добрый день, уважаемый $name. Ваш вопрос '$text' на рассмотрении";
+	            $texts = "Добрый день, $name. Ваш вопрос '$text' на рассмотрении";
 	            $message = $texts;
 	            $new = $id;
 	            $idus = 2054;
@@ -143,6 +143,10 @@ class Feedback extends Model
 	            $resu = $Im->sendUserMessages($figaro);
 
 	        }
+	        
+	        $texs = "Пользователь $name оставил обращение по обратной связи: $text. Необходима модерация https://prommu.com/admin/feedback";
+            $sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=$texs";
+            file_get_contents($sendto);
 
 	        if(!empty($resu['idtm'])){
 	            $res = Yii::app()->db->createCommand()
@@ -153,7 +157,14 @@ class Feedback extends Model
 	                'text' => $text,
 	                'email' => $emails,
 	                'crdate' => date("Y-m-d"),
-	                'chat' => $resu['idtm']           ));
+	                'chat' => $resu['idtm'],
+	                'referer' => $referer,
+	                'last_referer' => $last_referer,
+	                'point' => $point,
+	                'keywords' => $keywords,
+	                'canal' => $canal, 
+	                'campaign' => $campaign,
+	                'transition' => $transition));
 	        }
 	        else 
 	            $res = Yii::app()->db->createCommand()
@@ -163,7 +174,14 @@ class Feedback extends Model
 	                'theme' => $theme,
 	                'text' => $text,
 	                'email' => $emails,
-	                'crdate' => date("Y-m-d H:i:s"),));
+	                'crdate' => date("Y-m-d H:i:s"),
+	            	'referer' => $referer,
+	                'last_referer' => $last_referer,
+	                'point' => $point,
+	                'keywords' => $keywords,
+	                'canal' => $canal, 
+	                'campaign' => $campaign,
+	                'transition' => $transition));
 
 	        $message = '<p style="font-size:16px;text-align: center">Здравствуйте'.$name.'</p>
 	                    <br/>
