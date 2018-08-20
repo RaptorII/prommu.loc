@@ -84,7 +84,14 @@ class Services extends Model
                 'tel' => $tel,
                 'email' => $email,
                 'crdate' => date("Y-m-d H:i:s"),
-            ));
+                'content' => $content,
+                'referer' => $referer,
+	            'last_referer' => $last_referer,
+	            'point' => $point,
+	            'keywords' => $keywords,
+	            'canal' => $canal, 
+	            'campaign' => $campaign,
+	            'transition' => $transition));
 
 
         $message = sprintf("На сайте <a href='http://%s'>http://%1$01s</a> Заказ  услуг
