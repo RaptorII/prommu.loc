@@ -1098,6 +1098,154 @@ class Api
             }
         }
 
+
+        $csv_file .='</table>';
+        $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/analyt_de.xls'; // название файла
+        $file = fopen($file_name,"w"); // открываем файл для записи, если его нет, то создаем его в текущей папке, где расположен скрипт
+
+
+        fwrite($file,trim($csv_file)); // записываем в файл строки
+        fclose($file); // закрываем файл
+
+       // задаем заголовки. то есть задаем всплывающее окошко, которое позволяет нам сохранить файл.
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Content-Description: File Transfer');
+        //header('Content-Type: text/csv');
+        //header('Content-Disposition: attachment; filename=export.csv;');
+        header('Content-Disposition: attachment; filename=analyt_prommu.xls');
+        header('Content-transfer-encoding: binary');
+        //header("content-type:application/csv;charset=ANSI");
+        header('Content-Type: text/html; charset=windows-1251');
+        header('Content-Type: application/x-unknown');
+        header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
+        //print "\xEF\xBB\xBF"; // UTF-8 BOM
+        readfile($file_name); // считываем файл
+
+        $this->exportAutomizeFeedback();
+
+    }
+
+    public function exportAutomizeFeedback(){
+
+         $date = filter_var(Yii::app()->getRequest()->getParam('date'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+         $bdate = filter_var(Yii::app()->getRequest()->getParam('bdate'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+         $domen = Yii::app()->getRequest()->getParam('domen');
+        //print_r($ids);
+         if($date == "week"){
+            $my_time = time() - 604800; 
+            $yester = date("Y-m-d", $my_time); 
+
+            $data = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('feedback')
+            ->where('crdate >:date', array(':date'=> $yester))
+            ->order("crdate desc")
+            ->queryAll();
+            
+         }
+         else {
+
+             $data = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('feedback')
+            ->where('(crdate BETWEEN :date AND :bdate)', array(':date'=> $date, 'bdate'=> $bdate))
+            ->order("crdate desc")
+            ->queryAll();
+         }
+        
+
+
+        $csv_file = '<table border="1">
+            <tr><td style="color:red; background:#E0E0E0">Время'.
+            '</td><td style="color:red; background:#E0E0E0">День'.
+            '</td><td style="color:red; background:#E0E0E0">Месяц'.
+            '</td><td style="color:red; background:#E0E0E0">Год'.
+            '</td><td style="color:red; background:#E0E0E0">Домен'.
+            '</td><td style="color:red; background:#E0E0E0">Идентификатор'.
+            '</td><td style="color:red; background:#E0E0E0">Пользователь'.
+            '</td><td style="color:red; background:#E0E0E0">Тип'.
+            '</td><td style="color:red; background:#E0E0E0">Тип заявки'.
+            '</td><td style="color:red; background:#E0E0E0">Телефон'.
+            '</td><td style="color:red; background:#E0E0E0">Email'.
+            '</td><td style="color:red; background:#E0E0E0">Источник'.
+            '</td><td style="color:red; background:#E0E0E0">Канал'.
+            '</td><td style="color:red; background:#E0E0E0">Кампания'.
+            '</td><td style="color:red; background:#E0E0E0">Контент'.
+            '</td><td style="color:red; background:#E0E0E0">Ключевое слово'.
+            '</td><td style="color:red; background:#E0E0E0">Площадка'.
+            '</td><td style="color:red; background:#E0E0E0">IP адрес'.
+            '</td><td style="color:red; background:#E0E0E0">Client ID'.
+
+'</td></tr>';
+        
+        foreach ($data as $row) {
+            $csv_file .= '<tr>';
+            $b = "";
+            $b_end = "";
+
+
+            $type_feed = 'обратная связь';
+            if($row['type'] == 2){
+
+                $name = $row['name'];
+                $email = $row['email'];
+                $fio = $row['name'];
+                $types = "Соискатель";
+                $ana = 1;
+
+            
+            } elseif($row['type'] == 3) {
+            
+                $name = $row['name'];
+                $email = $row['email'];
+                $fio = $row['name'];
+                $types = "Работодатель";
+                $ana = 1;
+    
+
+            } elseif($row['type'] == 0) {
+            
+                $name = $row['name'];
+                $email = $row['email'];
+                $fio = $row['name'];
+                $types = "Гость";
+                $ana = 1;
+           
+
+            } 
+
+            if($ana){
+            $date1 = explode(" ",$row["crdate"])[0];
+            $time1 = explode(" ",$row["crdate"])[1];
+            $day = explode("-", $date1)[2];
+            $month = explode("-", $date1)[1];
+            $year = explode("-", $date1)[0];
+            $csv_file .= '<td>'.$b.$time1.$b_end.
+                '</td><td>'.$b.$day.$b_end.
+                '</td><td>'.$b.$month.$b_end.
+                '</td><td>'.$b.$year.$b_end.
+                '</td><td>'.$b.$domen.$b_end.
+                '</td><td>'.$b.' '.$b_end.
+                '</td><td>'.$b.$fio.$b_end.
+                '</td><td>'.$b.$types.$b_end.
+                '</td><td>'.$b.$type_feed.$b_end.
+                '</td><td>'.$b.$email.$b_end.
+                '</td><td>'.$b.$email.$b_end.
+                '</td><td>'.$b.$row["transition"].$b_end.
+                '</td><td>'.$b.$row["canal"].$b_end.
+                '</td><td>'.$b.$row["campaign"].$b_end.
+                '</td><td>'.$b.$row["content"].$b_end.
+                '</td><td>'.$b.$row["keywords"].$b_end.
+                '</td><td>'.$b.$row["ip"].$b_end.
+                '</td><td>'.$b.$row["client"].$b_end.
+                // '</td><td>'.$b.$row["last_referer"].$b_end.
+                // '</td><td>'.$b.$row["date"].$b_end.
+                '</td></tr>';
+            }
+        }
+
         $csv_file .='</table>';
         $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/analyt_de.xls'; // название файла
         $file = fopen($file_name,"w"); // открываем файл для записи, если его нет, то создаем его в текущей папке, где расположен скрипт
