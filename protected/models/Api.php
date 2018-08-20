@@ -1321,8 +1321,8 @@ class Api
             $data = Yii::app()->db->createCommand()
             ->select("*")
             ->from('service_cloud')
-            ->where('crdate >:date', array(':date'=> $yester))
-            ->order("crdate desc")
+            ->where('date >:date', array(':date'=> $yester))
+            ->order("date desc")
             ->queryAll();
             
          }
@@ -1331,8 +1331,8 @@ class Api
              $data = Yii::app()->db->createCommand()
             ->select("*")
             ->from('service_cloud')
-            ->where('(crdate BETWEEN :date AND :bdate)', array(':date'=> $date, 'bdate'=> $bdate))
-            ->order("crdate desc")
+            ->where('(date BETWEEN :date AND :bdate)', array(':date'=> $date, 'bdate'=> $bdate))
+            ->order("date desc")
             ->queryAll();
          }
         
