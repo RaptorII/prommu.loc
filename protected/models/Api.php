@@ -1391,11 +1391,11 @@ class Api
             ->queryAll();
 
              $analyt = Yii::app()->db->createCommand()
-            ->select(" a.content, a.keywords, a.campaign, a.canal,
+            ->select("a.content, a.keywords, a.campaign, a.canal,
                 a.transition, a.ip, a.client")
             ->from('analytic a')
             ->join('user usr', 'usr.id_user=a.id_us')
-            ->where('a.id_user=:id_user', array(':id_user' => $id_user))
+            ->where('a.id_us=:id_user', array(':id_user' => $id_user))
             ->queryAll();
 
              if($user[0] && $analyt[0]){
