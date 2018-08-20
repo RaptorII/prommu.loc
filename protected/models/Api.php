@@ -1410,7 +1410,7 @@ class Api
             $keywords = $this->encoderSys($keywords);
             $date1 = explode(" ",$row["date"])[0];
             $time1 = explode(" ",$row["date"])[1];
-            $canal = explode(",", $row["canal"])[0];
+            $canal = explode(",", $canal)[0];
             $transition = explode(",", $transition)[0];
             $day = explode("-", $date1)[2];
             $month = explode("-", $date1)[1];
