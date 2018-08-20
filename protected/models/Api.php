@@ -1020,81 +1020,83 @@ class Api
 
 '</td></tr>';
         
-        // foreach ($data as $row) {
+        foreach ($data as $row) {
+            $csv_file .= '<tr>';
+            $b = "";
+            $b_end = "";
 
 
-        //     $csv_file .= '<tr>';
-        //     $b = "";
-        //     $b_end = "";
-        //     // if ($row["k"]==0) {
-        //     //     $b = '<b>';
-        //     //     $b_end = '</b>';
-        //     // }
-        //     if($row['type'] == 2){
-        //         $types = "Соискатель";
-        //         $id_user = $row['id_us'];
-        //         $user = Yii::app()->db->createCommand()
-        //     ->select("e.firstname, e.lastname, usr.email")
-        //     ->from('resume e')
-        //     ->join('user usr', 'usr.id_user=e.id_user')
-        //     ->where('e.id_user=:id_user', array(':id_user' => $id_user))
-        //     ->queryAll();
-        //     if($user[0]){
-        //         $firstname = $user[0]['firstname'];
-        //         $lastname = $user[0]['lastname'];
-        //         $email = $user[0]['email'];
-        //         $fio = "$firstname ".$lastname;
-        //         $ana = 1;
-        //     } else $ana = 0;
+            $type_feed = 'регистрация';
+            if($row['type'] == 2){
+                $types = "Соискатель";
+                $id_user = $row['id_us'];
+
+                $user = Yii::app()->db->createCommand()
+                ->select("e.firstname, e.lastname, usr.email")
+                ->from('resume e')
+                ->join('user usr', 'usr.id_user=e.id_user')
+                ->where('e.id_user=:id_user', array(':id_user' => $id_user))
+                ->queryAll();
+
+                if($user[0]) {
+                    $firstname = $user[0]['firstname'];
+                    $lastname = $user[0]['lastname'];
+                    $email = $user[0]['email'];
+                    $fio = "$firstname ".$lastname;
+                    $ana = 1;
+                } else $ana = 0;
 
             
-        //     }
-        //     elseif($row['type'] == 3){
+            } elseif($row['type'] == 3) {
             
-        //     $name = $row['name'];
-            
-        //     $id_user = $row['id_us'];
-        //         $user = Yii::app()->db->createCommand()
-        //     ->select("e.name, e.firstname, e.lastname, usr.email")
-        //     ->from('employer e')
-        //     ->join('user usr', 'usr.id_user=e.id_user')
-        //     ->where('e.id_user=:id_user', array(':id_user' => $id_user))
-        //     ->queryAll();
-        //      if($user[0]){
-        //         $email = $user[0]['email'];
-        //         $fio = $user[0]['name']." ".$user[0]['firstname']." ".$user[0]['lastname'];
-        //         $types = "Работодатель";
-        //         $ana = 1;
-        //     } else $ana = 0;
+                $name = $row['name'];
+                $id_user = $row['id_us'];
 
-        //     } 
+                $user = Yii::app()->db->createCommand()
+                ->select("e.name, e.firstname, e.lastname, usr.email")
+                ->from('employer e')
+                ->join('user usr', 'usr.id_user=e.id_user')
+                ->where('e.id_user=:id_user', array(':id_user' => $id_user))
+                ->queryAll();
 
-        //     if($ana){
-        //     $csv_file .= '<td>'.$b.$row["id_us"].$b_end.
-        //         '</td><td>'.$b.$fio.$b_end.
-        //         '</td><td>'.$b.$types.$b_end.
-        //         '</td><td>'.$b.$row["transition"].$b_end.
-        //         '</td><td>'.$b.$row["canal"].$b_end.
-        //         '</td><td>'.$b.$row["campaign"].$b_end.
-        //         '</td><td>'.$b.$row["content"].$b_end.
-        //         '</td><td>'.$b.$row["keywords"].$b_end.
-        //         '</td><td>'.$b.$email.$b_end.
-        //         '</td><td>'.$b.$row["date"].$b_end.
-        //         '</td><td>'.$b.$row["point"].$b_end.
-        //         '</td><td>'.$b.$row["date"].$b_end.
-        //         '</td><td>'.$b.$row["date"].$b_end.
-        //         '</td><td>'.$b.$row["date"].$b_end.
-        //         '</td><td>'.$b.$row["date"].$b_end.
-        //         '</td><td>'.$b.$row["date"].$b_end.
-        //         '</td><td>'.$b.$row["date"].$b_end.
-        //         '</td><td>'.$b.$row["date"].$b_end.
-        //         '</td><td>'.$b.$row["date"].$b_end.
-        //         '</td><td>'.$b.$row["date"].$b_end.
-        //         // '</td><td>'.$b.$row["last_referer"].$b_end.
-        //         // '</td><td>'.$b.$row["date"].$b_end.
-        //         '</td></tr>';
-        //     }
-        // }
+                 if($user[0]) {
+                    $email = $user[0]['email'];
+                    $fio = $user[0]['name']." ".$user[0]['firstname']." ".$user[0]['lastname'];
+                    $types = "Работодатель";
+                    $ana = 1;
+                } else $ana = 0;
+
+            } 
+
+            if($ana){
+            $date1 = explode(" ",$row["date"])[0];
+            $time1 = explode(" ",$row["date"])[1];
+            $day = explode("-", $date1)[2];
+            $month = explode("-", $date1)[1];
+            $year = explode("-", $date1)[0];
+            $csv_file .= '<td>'.$b.$time1.$b_end.
+                '</td><td>'.$b.$day.$b_end.
+                '</td><td>'.$b.$month.$b_end.
+                '</td><td>'.$b.$year.$b_end.
+                '</td><td>'.$b.$domen.$b_end.
+                '</td><td>'.$b.$id_user.$b_end.
+                '</td><td>'.$b.$fio.$b_end.
+                '</td><td>'.$b.$types.$b_end.
+                '</td><td>'.$b.$type_feed.$b_end.
+                '</td><td>'.$b.$email.$b_end.
+                '</td><td>'.$b.$email.$b_end.
+                '</td><td>'.$b.$row["transition"].$b_end.
+                '</td><td>'.$b.$row["canal"].$b_end.
+                '</td><td>'.$b.$row["campaign"].$b_end.
+                '</td><td>'.$b.$row["content"].$b_end.
+                '</td><td>'.$b.$row["keywords"].$b_end.
+                '</td><td>'.$b.$row["date"].$b_end.
+                '</td><td>'.$b.$row["point"].$b_end.
+                // '</td><td>'.$b.$row["last_referer"].$b_end.
+                // '</td><td>'.$b.$row["date"].$b_end.
+                '</td></tr>';
+            }
+        }
 
         $csv_file .='</table>';
         $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/analyt_de.xls'; // название файла
