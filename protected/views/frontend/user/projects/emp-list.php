@@ -3,8 +3,8 @@
     $this->setBreadcrumbs($title, MainConfig::$PAGE_PROJECT_LIST);
     $this->setPageTitle($title);
 	$bUrl = Yii::app()->baseUrl;
-	$data['projects'] = array(
-    0 => array(
+	$data = array(
+    'projects' => array(
       'id' => 2323));
 
 	$projects = $data['projects'];
