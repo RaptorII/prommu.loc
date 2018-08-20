@@ -1408,7 +1408,8 @@ class Api
                 $campaign = $analyt[0]['campaign'];
                 $canal = $analyt[0]['canal'];
                 $transition = $analyt[0]['transition'];
-                $ip = $analyt[0]['client'];
+                $client = $analyt[0]['client'];
+                $ip = $analyt[0]['ip'];
 
                 $keywords = $this->encoderSys($keywords);
                 $transition = explode(",", $transition)[0];
@@ -1422,6 +1423,7 @@ class Api
                 $campaign = '(none)';
                 $canal = '(none)';
                 $transition = '(none)';
+                $client = '(none)';
                 $ip = '(none)';
             } else $ana = 0;
 
