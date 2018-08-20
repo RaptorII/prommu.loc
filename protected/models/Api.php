@@ -1217,9 +1217,10 @@ class Api
             } 
 
             if($ana){
-            $keywords = $this->encoderSys($row["keywords"]);
             $date1 = explode(" ",$row["crdate"])[0];
             $time1 = explode(" ",$row["crdate"])[1];
+            $canal = explode(",", $row["canal"])[0];
+            $transition = explode(",", $row["transition"])[0];
             $day = explode("-", $date1)[2];
             $month = explode("-", $date1)[1];
             $year = explode("-", $date1)[0];
@@ -1234,11 +1235,11 @@ class Api
                 '</td><td>'.$b.$type_feed.$b_end.
                 '</td><td>'.$b.$email.$b_end.
                 '</td><td>'.$b.$email.$b_end.
-                '</td><td>'.$b.$row["transition"].$b_end.
-                '</td><td>'.$b.$row["canal"].$b_end.
+                '</td><td>'.$b.$transition.$b_end.
+                '</td><td>'.$b.$canal.$b_end.
                 '</td><td>'.$b.$row["campaign"].$b_end.
                 '</td><td>'.$b.$row["content"].$b_end.
-                '</td><td>'.$b.$keywords.$b_end.
+                '</td><td>'.$b.$row["keywords"].$b_end.
                 '</td><td>'.$b.$row["ip"].$b_end.
                 '</td><td>'.$b.$row["client"].$b_end.
                 // '</td><td>'.$b.$row["last_referer"].$b_end.
@@ -1273,61 +1274,6 @@ class Api
 
     }
 
-    public function encoderSys($eco){
-        
-        $eco = urldecode($eco);
-        $eco = $this->json_fix_cyr($eco);
-        return $eco;
-
-    }
-
-    function json_fix_cyr($json_str) {
-         $cyr_chars = array (
-        '\u0430' => 'а', '\u0410' => 'А',
-        '\u0431' => 'б', '\u0411' => 'Б',
-        '\u0432' => 'в', '\u0412' => 'В',
-        '\u0433' => 'г', '\u0413' => 'Г',
-        '\u0434' => 'д', '\u0414' => 'Д',
-        '\u0435' => 'е', '\u0415' => 'Е',
-        '\u0451' => 'ё', '\u0401' => 'Ё',
-        '\u0436' => 'ж', '\u0416' => 'Ж',
-        '\u0437' => 'з', '\u0417' => 'З',
-        '\u0438' => 'и', '\u0418' => 'И',
-        '\u0439' => 'й', '\u0419' => 'Й',
-        '\u043a' => 'к', '\u041a' => 'К',
-        '\u043b' => 'л', '\u041b' => 'Л',
-        '\u043c' => 'м', '\u041c' => 'М',
-        '\u043d' => 'н', '\u041d' => 'Н',
-        '\u043e' => 'о', '\u041e' => 'О',
-        '\u043f' => 'п', '\u041f' => 'П',
-        '\u0440' => 'р', '\u0420' => 'Р',
-        '\u0441' => 'с', '\u0421' => 'С',
-        '\u0442' => 'т', '\u0422' => 'Т',
-        '\u0443' => 'у', '\u0423' => 'У',
-        '\u0444' => 'ф', '\u0424' => 'Ф',
-        '\u0445' => 'х', '\u0425' => 'Х',
-        '\u0446' => 'ц', '\u0426' => 'Ц',
-        '\u0447' => 'ч', '\u0427' => 'Ч',
-        '\u0448' => 'ш', '\u0428' => 'Ш',
-        '\u0449' => 'щ', '\u0429' => 'Щ',
-        '\u044a' => 'ъ', '\u042a' => 'Ъ',
-        '\u044b' => 'ы', '\u042b' => 'Ы',
-        '\u044c' => 'ь', '\u042c' => 'Ь',
-        '\u044d' => 'э', '\u042d' => 'Э',
-        '\u044e' => 'ю', '\u042e' => 'Ю',
-        '\u044f' => 'я', '\u042f' => 'Я',
- 
-        '\r' => '',
-        '\n' => '<br />',
-        '\t' => ''
-    );
- 
-        foreach ($cyr_chars as $cyr_char_key => $cyr_char) {
-            $json_str = str_replace($cyr_char_key, $cyr_char, $json_str);
-        }
-        return $json_str;
-    }
-    
 public function vac(){
         $eco = Yii::app()->getRequest()->getParam('name');
       
