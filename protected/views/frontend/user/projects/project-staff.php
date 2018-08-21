@@ -5,7 +5,7 @@ $arPromo = array(
     0 =>array(
         'image'=>'/images/applic/20180503073112204100.jpg',
         'ttlink'=>'',
-        'name'=>'Denis Gresko',
+        'name'=>'Денис Гресько',
         'city'=>'Moskow'
     ),
     1 =>array(
