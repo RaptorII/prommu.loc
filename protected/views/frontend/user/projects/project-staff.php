@@ -27,6 +27,9 @@ $arPromo = array(
         'city'=>'Moskow'
     )
 );
+
+
+
 ?>
 
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
