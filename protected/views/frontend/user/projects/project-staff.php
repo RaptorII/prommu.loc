@@ -5,13 +5,13 @@ $arPromo = array(
     0 =>array(
         'image'=>'/images/applic/20180503073112204100.jpg',
         'ttlink'=>'',
-        'name'=>'Денис Гресько',
+        'name'=>'Джон Смит',
         'city'=>'Moskow'
     ),
     1 =>array(
         'image'=>'/images/applic/20180503073112204100.jpg',
         'ttlink'=>'',
-        'name'=>'Дмитрий Деревянко',
+        'name'=>'Джон Смит',
         'city'=>'Moskow'
     ),
     2 =>array(
