@@ -17,9 +17,15 @@ $arPromo = array(
                 2 =>array(
                     'image'=>'/images/applic/20180428142455264100.jpg', 
                     'ttlink'=>'',
-                    'name'=>'Denis Gresko',
+                    'name'=>'Sasha Meet',
                     'city'=>'Moskow'
                 ), 
+                3 =>array(
+                    'image'=>'/images/applic/20180428142455264100.jpg', 
+                    'ttlink'=>'',
+                    'name'=>'Sasha Meet',
+                    'city'=>'Moskow'
+                )
             );
 
 ?>
