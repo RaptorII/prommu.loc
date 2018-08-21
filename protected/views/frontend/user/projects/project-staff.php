@@ -28,8 +28,6 @@ $arPromo = array(
     )
 );
 
-
-
 ?>
 
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
