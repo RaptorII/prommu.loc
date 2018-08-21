@@ -6,7 +6,7 @@ var MainProject = {
         let header = '',
             body = '';
 
-        if(event=='error') {
+        if(event==='error') {
             header = 'Ошибка';
             switch(type) {
                 case 'xls':
@@ -47,10 +47,19 @@ var MainProject = {
                 case 'users-in-create':
                     body = 'Для проекта требуется добавить или пригласить персонал';
                     break;
+                case 'onecity':
+                    body = 'Невозможно удалить из проекта единственный город';
+                    break;
+                case 'onelocation':
+                    body = 'Невозможно удалить единственную локацию в городе';
+                    break;
+                case 'oneperiod':
+                    body = 'Невозможно удалить единственный период в ТТ';
+                    break;
                 default: break;
             }
         }
-        if(event=='notif') {
+        if(event==='notif') {
             header = 'Предупреждение';
             switch(type) {
                 case 'name':
@@ -77,6 +86,21 @@ var MainProject = {
                     break;
                 case 'save-program':
                     body = 'Перед сохранение необходимо заполнить все поля';
+                    break;
+                default: break;
+            }
+        }
+        if(event==='success') {
+            header = 'Оповещение';
+            switch(type) {
+                case 'delcity':
+                    body = 'Город успешно удален';
+                    break;
+                case 'delloc':
+                    body = 'ТТ успешно удалена';
+                    break;
+                case 'delperiod':
+                    body = 'Период успешно удален';
                     break;
                 default: break;
             }

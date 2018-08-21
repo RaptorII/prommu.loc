@@ -1,0 +1,108 @@
+.program__city{ text-transform: uppercase }
+.program__cell-period{ flex-wrap: wrap }
+.project__program td:nth-child(1){ width: 13% }
+.project__program td:nth-child(2){ width: 15% }
+.project__program td:nth-child(3){ width: 19% }
+.project__program td:nth-child(4){ width: 20% }
+.project__program td:nth-child(5){ width: 33% }
+.address__item-change{
+	cursor: pointer;
+	position: relative;
+	display: inline-block;
+	margin-left: 10px;
+	text-transform: none;
+	line-height: 24px;
+}
+.address__item-change span {
+    color: #abb820;
+    font-size: 18px;
+}
+.address__item-change.period span{ font-size: 14px }
+.address__item-change ul {
+	list-style: none;
+	display: none;
+	position: absolute;
+	top: 26px;
+	left: -3px;
+	margin: 0;
+	padding: 0;
+	border-radius: 2px;
+	border: 1px solid #fff;
+	z-index: 2;
+}
+.address__item-change.period ul {
+	top: 22px;
+	left: -10px;
+}
+.address__item-change li,
+#DiContent .address__item-change li a {
+	color: #ffffff;
+	text-decoration: none;
+}
+.address__item-change li {
+	padding: 0 10px;
+	background: #abb92a;
+	font-size: 14px;
+	white-space: nowrap;
+	line-height: 24px;
+}
+.address__item-change li,
+#DiContent .address__item-change li a {
+	color: #ffffff;
+	text-decoration: none;
+}
+.address__item-change:hover span { text-decoration: underline }
+.address__item-change:hover ul { display: block }
+.address__item-change li:hover { background: #b9c733 }
+.program__cell.user{ display: block }
+.program__cell-user{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+/*		*/
+.program__select-user { 
+	position: relative;
+	display: inline-block;
+}
+.program__cell-user>span{
+	line-height: 22px;
+	display: inline-block;
+	padding: 0 5px;
+}
+.program-select-user__title{
+	height: 24px;
+	display: inline-block;
+	font-size: 16px;
+	line-height: 24px;
+	color: #abb820;
+	cursor: pointer;
+}
+.program-select-user__title *{ display: inline-block }
+.program-select-user__title span{ text-decoration: underline }
+.program__select-user ul{
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	position: absolute;
+	top: 24px;
+	left: 0;
+	border-radius: 2px;
+	border: 1px solid #fff;
+	z-index: 2;
+	display: none;
+}
+.program__select-user li{
+	background-color: #abb92a;
+	padding: 3px 10px;
+	white-space: nowrap;
+	cursor: pointer;
+	color: #fff;
+}
+.program__select-user li:hover { background: #b9c733 }
+.program__select-user img{
+	background: #fff;
+	border-radius: 50%;
+	border: 1px solid #fff;
+}
+.program__select-user:hover ul{ display: block }

@@ -1574,6 +1574,9 @@ class UserController extends AppController
                     case 'address-edit':
                         $view = MainConfig::$VIEW_PROJECT_ITEM_ADR_CHANGE;
                         break;
+                    case 'users-select':
+                        $view = 'projects/project-users-select';
+                        break;
                     default:
                         $view = MainConfig::$VIEW_PROJECT_ITEM;
                         break;

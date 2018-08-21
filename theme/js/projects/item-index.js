@@ -22,7 +22,11 @@ var IndexProgram = (function () {
         $('#filter-form').on('click', '.mright', function(){ self.changeMonth(this,1) });
         $('#filter-form').on('click', '.calendar .day', function(e){ self.checkDate(e.target) });
         // удаление города
-        $('.addresses').on('click', '.delcity', function(e){ self.delCity(e.target) });
+        $('.addresses').on(
+            'click', 
+            '.delcity,.delloc', 
+            function(e){ self.ajaxDelIndex(e.target) 
+        });
         // обрабатываем клики
         $(document).on('click', function(e) {
             self.checkCity(e.target);
@@ -235,23 +239,32 @@ var IndexProgram = (function () {
         }
     }
     //
-    IndexProgram.prototype.delCity = function (e) {
-    	let self = this,
-    		arCities = $('.address__item'),
-    		main = $(e).closest('.address__item')[0],
-    		id = e.dataset.id,
-    		query;
+    IndexProgram.prototype.ajaxDelIndex = function (e) {
+    	let self = this, 
+            id = e.dataset.id,
+            main = $(e).closest('.address__item')[0],
+            item = $(e).hasClass('delcity') ? 'c' : 'l',
+            query = item==='c'
+                ? 'Будет удален город и все связанные данные.\nВы действительно хотите это сделать?'
+                : 'Будет удалена ТТ и все связанные данные.\nВы действительно хотите это сделать?',
+            arItems = item==='c'
+                ? $('.address__item')
+                : $(main).find('.loc-item');
 
-    	if(arCities.length==1)
-    		self.showPopup('onecity');
+        if(item==='l')
+            main = $(e).closest('.loc-item')[0];
+
+    	if(arItems.length==1) {
+            item==='c'
+            ? MainProject.showPopup('error','onecity')
+            : MainProject.showPopup('error','onelocation');
+        }
     	else {
-    		query = confirm('Будет удален город и все связанные данные.\n'
-    			+'Вы действительно хотите это сделать?');
-    		if(query) {
+    		if(confirm(query)) {
 		        $.ajax({
 		            type: 'POST',
 		            url: '/ajax/123', //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		            data: 'project=' + self.ID + '&city=' + id,
+		            data: 'project=' + self.ID + (item==='c' ? '&city=' : '&location=') + id,
 		            dataType: 'json',
 		            success: function(r) {
 
@@ -259,30 +272,13 @@ var IndexProgram = (function () {
 		            complete: function() {
 		            	$(main).fadeOut();
 		            	setTimeout(function(){ $(main).remove() },500);
-		            	self.showPopup('delcity');
+                        item==='c'
+                        ? MainProject.showPopup('success','delcity')
+		            	: MainProject.showPopup('success','delloc');
 		            }
 		        });
     		}
     	}
-    }
-    //      Вывод ошибок
-    IndexProgram.prototype.showPopup = function (event) {
-        let header = '',
-            body = '';
-
-        switch(event) {
-            case 'onecity':
-				header = 'Ошибка';
-				body = 'Невозможно удалить из проекта единственный город!';
-                break;
-            case 'delcity':
-				header = 'Оповещение';
-				body = 'Город успешно удален';
-                break;
-        }
-
-        let html = "<form data-header='" + header + "'>" + body + "</form>";
-        ModalWindow.open({ content: html, action: { active: 0 }, additionalStyle:'dark-ver' });
     }
     //
     return IndexProgram;

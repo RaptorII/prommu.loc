@@ -102,7 +102,7 @@
 	font-size: 18px;
 }
 .program__cell.green-name{ color: #abb820 }
-.program__cell.border{ border-right: 1px solid #cecece }
+.program__cell.border{ border-left: 1px solid #cecece }
 .program__cell.user{
 	display: flex;
 	justify-content: space-between;
@@ -372,7 +372,7 @@
 	margin: 10px 0;
 	font-size: 18px;
 }
-.addr__table-cell.border{ border-right: 1px solid #dedede }
+.addr__table-cell.border{ border-left: 1px solid #dedede }
 #DiContent .addr__table-cell a{ text-decoration: underline }
 .addresses__btns{
 	padding: 24px 0 78px;

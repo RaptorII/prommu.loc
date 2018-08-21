@@ -146,7 +146,6 @@ div.calendar:after{ content: '' }
     font-size: 18px;
 }
 .address__item-change ul{
-	width: 120px;
 	list-style: none;
 	display: none;
 	position: absolute;
@@ -156,10 +155,24 @@ div.calendar:after{ content: '' }
 	padding: 0;
 	border-radius: 2px;
 	border: 1px solid #fff;
+	z-index: 2;
 }
-.address__item-change li{ background: #abb92a }
+.address__item-change.loc ul{
+	right: 0;
+	left: inherit;
+}
+.address__item-change li{
+	padding: 0 10px;
+	background: #abb92a;
+	font-size: 14px;
+	white-space: nowrap;
+	line-height: 24px;
+}
 .address__item-change li,
-#DiContent .address__item-change li a{ color: #ffffff }
+#DiContent .address__item-change li a{ 
+	color: #ffffff;
+	text-decoration: none;
+}
 .address__item-change li:hover{ background: #b9c733 }
 .address__item-change:hover span{ text-decoration: underline }
 .address__item-change:hover ul{ display: block }

@@ -1,34 +1,252 @@
 <?php
 	$bUrl = Yii::app()->baseUrl;
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
-	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item.js', CClientScript::POS_END);
+	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-base.css');
+  Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
+	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item-base.js', CClientScript::POS_END);
 
-	$s = $_GET['s'];
-/*
-echo "<pre>";
-print_r($_SERVER);
-echo "</pre>";
-*/
+  $projectName = 'Мерчендайзинг';
+  $arProgram = array(
+    1307 => array(
+      'name' => 'Москва',
+      'id' => 1307,
+      'metro' => 1,
+      'locations' => array(
+        1 => array(
+          'id' => 1,
+          'name' => 'АТБ1',
+          'index' => 'ул. Исполкомовская 123',
+          'metro' => array(
+            1 => 'Авиамоторная',
+            2 => 'Автозаводская (Замоскворецкая линия)',
+            4 => 'Алексеевская'
+          ),
+          'periods' => array(
+            1 => array(
+              'id' => 1,
+              'bdate' => '07.02.18',
+              'edate' => '08.02.18',
+              'btime' => '14:00',
+              'etime' => '16:00'
+            ),
+            2 => array(
+              'id' => 2,
+              'bdate' => '20.02.18',
+              'edate' => '22.02.18',
+              'btime' => '09:00',
+              'etime' => '18:00'
+            )
+          )
+        ),
+        2 => array(
+          'id' => 2,
+          'name' => 'АТБ2',
+          'index' => 'ул. Исполкомовская 777',
+          'metro' => array(
+            4 => 'Алексеевская'
+          ),
+          'periods' => array(
+            3 => array(
+              'id' => 3,
+              'bdate' => '01.08.18',
+              'edate' => '01.08.18',
+              'btime' => '12:00',
+              'etime' => '13:00'
+            )
+          )
+        )
+      )
+    ),
+    2582 => array(
+      'name' => 'Донецк',
+      'id' => 2582,
+      'metro' => 0,
+      'locations' => array(
+        3 => array(
+          'id' => 3,
+          'name' => 'АТБ3',
+          'index' => 'ул. Исполкомовская 999',
+          'metro' => array(),
+          'periods' => array(
+            4 => array(
+              'id' => 4,
+              'bdate' => '07.02.18',
+              'edate' => '08.02.18',
+              'btime' => '14:00',
+              'etime' => '16:00'
+            ),
+            5 => array(
+              'id' => 5,
+              'bdate' => '20.02.18',
+              'edate' => '22.02.18',
+              'btime' => '09:00',
+              'etime' => '18:00'
+            )
+          )
+        ),      
+      )
+    )
+  );
+  $arUsers = array(
+		1 => array(
+			'id' => 1,
+			'name' => 'Шишкина Виктория',
+			'logo' => ''
+		),
+		2 => array(
+			'id' => 2,
+			'name' => 'Ибадулаев Павел',
+			'logo' => ''
+		),
+		3 => array(
+			'id' => 3,
+			'name' => 'Немич Константин',
+			'logo' => ''
+		),
+		4 => array(
+			'id' => 4,
+			'name' => 'Простова Ольга',
+			'logo' => ''
+		),
+		5 => array(
+			'id' => 5,
+			'name' => 'Александр Примак',
+			'logo' => ''
+		)
+  );
 ?>
+<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
+<? print_r($arProgram); ?>
+</pre>
 <div class="row project">
 	<div class="col-xs-12">
 		<div class="project__tabs">
 			<? require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/projects/project-nav.php'; ?>
 		</div>
 		<div id="content">
-			<?php
-			//
-			//
-			//
-			?>
-			<?php if(!isset($s) || empty($s)): ?>
 			<div class="project__module">
 				<div class="project__xls">
 					<a href="#" id="add-program">Добавить адресную программу</a>
 					<input type="file" name="xls" class="hide" accept="xls">
 					<a href="/uploads/example.xls" download>Скачать пример для добавления</a>
 				</div>
-				<h1 class="project__title">ПРОЕКТ: <span>МЕРЧЕНДАЙЗИНГ</span></h1>
+				<h1 class="project__title">ПРОЕКТ: <span><?=$projectName?></span></h1>
+				<table class="project__program">
+					<tbody>
+						<? foreach ($arProgram as $id => $arCity): ?>
+							<tr class="program__item" data-city="<?=$id?>">
+								<td colspan="5">
+									<div class="program__city border">
+										<b><?=$arCity['name']?></b>
+										<span class="address__item-change">
+											<span>изменить</span>
+											<ul>
+												<li><a href="<? echo $_GET['id'] . '/address-edit?city=' . $id ?>">изменить</a></li>
+												<li data-id="<?=$id?>" class="delcity">удалить</li>
+											</ul>
+										</span>
+									</div>
+								</td>
+							</tr>
+							<? foreach ($arCity['locations'] as $idloc => $arLoc): ?>
+								<tr class="loc-item" data-city="<?=$id?>">
+									<td>
+										<div class="program__cell green-name"><?=$arLoc['name']?></div>
+									</td>
+									<td <?=(empty($arCity['metro'])?'colspan="2"':'')?>>
+										<div class="program__cell border"><?=$arLoc['index']?></div>
+									</td>
+									<? if(!empty($arCity['metro'])): ?>
+										<td>
+											<div class="program__cell border"><? echo join(',</br>', $arLoc['metro']) ?></div>
+										</td>
+									<? endif; ?>
+									<td>
+										<div class="program__cell border user">
+											<? /* ?>
+											<div class="program__cell-users">
+												<div class="program__cell-user">
+													<img src="/theme/pic/projects/user-logo.png">
+													<span>Александр Примак</span>
+													<a href="#"><span>Изменить</span></a>
+												</div>
+											</div>
+											<? */ ?>
+
+											<? foreach ($arLoc['periods'] as $idper => $arPer): ?>
+												<div class="program__select-user" data-period="<?=$idper?>">
+													<span class="program-select-user__title">
+														<span>Выбрать персонал </span>
+														<b>&#9660</b>
+													</span>
+													<ul>
+														<li>
+															<img src="/theme/pic/projects/user-logo.png">
+															<span>Шишкина Виктория</span>
+														</li>
+														<li>
+															<img src="/theme/pic/projects/user-logo.png">
+															<span>Ибадулаев Павел</span>
+														</li>
+														<li>
+															<img src="/theme/pic/projects/user-logo.png">
+															<span>Немич Константин</span>
+														</li>
+														<li>
+															<img src="/theme/pic/projects/user-logo.png">
+															<span>Простова Ольга</span>
+														</li>
+														<li>
+															<img src="/theme/pic/projects/user-logo.png">
+															<span>Александр Примак</span>
+														</li>
+													</ul>
+												</div><br data-period="<?=$idper?>">
+											<? endforeach; ?>
+										</div>
+									</td>
+									<td class="period-data">
+										<div class="program__cell border">
+											<? foreach ($arLoc['periods'] as $idper => $arPer): ?>
+												<div class="program__cell-period" data-period="<?=$idper?>">
+													<span><? echo $arPer['bdate'] . ' до ' . $arPer['edate'] ?></span>
+													<span class="program__cell-tiem"><? echo $arPer['btime'] . ' - ' . $arPer['etime'] ?></span>
+													<span class="address__item-change period">
+														<span>изменить</span>
+														<ul>
+															<li><a href="<? echo $_GET['id'] . '/address-edit?city=' . $id . '&per=' . $idper ?>">изменить</a></li>
+															<li data-id="<?=$idper?>" class="delperiod">удалить</li>
+														</ul>
+													</span>
+												</div>
+											<? endforeach; ?>
+										</div>
+									</td>
+								</tr>
+							<? endforeach; ?>
+							<tr data-city="<?=$id?>">
+								<td colspan="5">
+									<div class="program__btns">
+										<a href="#" class="program__add-btn">+ ДОБАВИТЬ ПЕРИОД</a>
+										<a href="#" class="program__save-btn">СОХРАНИТЬ</a>
+									</div>
+								</td>
+							</tr>
+						<? endforeach; ?>
+					</tbody>
+				</table>
+				<input type="hidden" name="project" class="project-inp" value="<?=$_GET['id']?>">
+
+
+
+
+<?
+/*
+?>
+
+</br></br></br></br></br></br></br></br></br></br></br>
+</br></br></br></br></br></br></br></br></br></br></br>
+Пустая верстка
 				<table class="project__program">
 					<tbody>
 						<tr class="program__item">
@@ -102,11 +320,80 @@ echo "</pre>";
 						<?
 						//
 						?>
-			
+						<tr class="program__item">
+							<td colspan="4">
+								<div class="program__city border">РОСТОВ</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="program__cell green-name border">АТБ1</div>
+							</td>
+							<td>
+								<div class="program__cell border">ул. Пирогова 23</div>
+							</td>
+							<td>
+								<div class="program__cell border user">
+									<div class="program__cell-user">
+										<img src="/theme/pic/projects/user-logo.png">
+										<span>Александр Примак</span>
+									</div>
+									<a href="#"><span>Изменить</span></a>
+								</div>
+							</td>
+							<td>
+								<div class="program__cell program__cell-period">
+									<span>06.02.2018 до 07.02.2018</span>
+									<span class="program__cell-tiem">12:00 - 14:00</span>
+									<a href="#"><span>Изменить</span></a>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="program__cell green-name border">АТБ1</div>
+							</td>
+							<td>
+								<div class="program__cell border">ул. Паторжинского 23/4</div>
+							</td>
+							<td>
+								<div class="program__cell border user">
+									<a href="#"><span>Выбрать персонал </span><b>&#9660</b></a>
+								</div>
+							</td>
+							<td>
+								<div class="program__cell program__form">
+									<div class="program__input">
+										<input type="text" name="bdate[]" placeholder="Дата начала работ">
+									</div>
+									<div class="program__input">
+										<input type="text" name="edate[]" placeholder="Дата окончания работ">
+									</div>
+									<div class="program__time">
+										<div class="program__input">
+											<input type="text" name="btime[]" placeholder="Время с">
+										</div>
+										<div class="program__input">
+											<input type="text" name="etime[]" placeholder="Время до">
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="4">
+								<div class="program__btns">
+									<a href="#" class="program__add-btn">+ ДОБАВИТЬ ПЕРИОД</a>
+									<a href="#" class="program__save-btn">СОХРАНИТЬ</a>
+								</div>
+							</td>
+						</tr>
 					</tbody>
 				</table>
+<?
+*/
+?>
 			</div>
-			<?php endif; ?>
 		</div>
 	</div>
 </div>

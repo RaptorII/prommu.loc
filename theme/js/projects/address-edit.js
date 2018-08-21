@@ -768,7 +768,10 @@ var AddressEdit = (function () {
     		scrollElem = $('[data-city='+getParams.city+'] .loc-item[data-id='+getParams.loc+']');
     	}
     }
-			if($(scrollElem).is('*'))
+    if(undefined!=getParams.per) {
+      scrollElem = $('[data-city='+getParams.city+'] .period-item[data-id='+getParams.per+']');
+    }
+		if($(scrollElem).is('*'))
     	$('html, body').animate({ scrollTop: scrollElem.offset().top - 25 },1000);
  	}
   //    получаем уникальные ID

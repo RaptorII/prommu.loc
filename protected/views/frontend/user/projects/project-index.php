@@ -2,6 +2,7 @@
   $bUrl = Yii::app()->baseUrl;
   Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
   Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-index.css');
+  Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
   Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item-index.js', CClientScript::POS_END);
 
   $bDate = '07.02.18';
@@ -172,8 +173,8 @@
           <span class="address__item-change">
             <span>изменить</span>
             <ul>
-              <li><a href="<? echo 'address-edit?city=' . $id . '&loc=new' ?>">добавить локацию</a></li>
-              <li data-id="<?=$id?>" class="delcity">удалить город</li>
+              <li><a href="<? echo 'address-edit?city=' . $id ?>">изменить</a></li>
+              <li data-id="<?=$id?>" class="delcity">удалить</li>
             </ul>
           </span>
         </h2>
@@ -190,9 +191,9 @@
           </thead>
           <tbody>
             <? foreach ($arCity['locations'] as $idloc => $arLoc): ?>
-              <tr>
+              <tr class="loc-item">
                 <td>
-                  <div class="addr__table-cell border"><?=$arLoc['name']?></div>
+                  <div class="addr__table-cell"><?=$arLoc['name']?></div>
                 </td>
                 <td>
                   <div class="addr__table-cell border"><?=$arLoc['index']?></div>
@@ -213,8 +214,14 @@
                   ?> 
                 </div></td>
                 <td>
-                  <div class="addr__table-cell text-center">
-                    <a href="<? echo 'address-edit?city=' . $id . '&loc=' . $idloc ?>">изменить</a>
+                  <div class="addr__table-cell border text-center">
+                    <span class="address__item-change loc">
+                      <span>изменить</span>
+                      <ul>
+                        <li><a href="<? echo 'address-edit?city=' . $id . '&loc=' . $idloc?>">изменить</a></li>
+                        <li data-id="<?=$idloc?>" class="delloc">удалить</li>
+                      </ul>
+                    </span>
                   </div>
                 </td>
               </tr>
