@@ -50,8 +50,10 @@ $arPromo = array(
 <div class="project__module">
 
     <div class="project__xls">
-        <a href="#" id="add-program">Добавить персонал на проект</a>
-        <input type="file" name="person_xls" class="hide" accept="xls">
+        <!--<label for="person_xls_add">-->
+            <a href="#" id="add-program">Добавить персонал на проект</a>
+        <!--</label>-->
+        <input id="person_xls_add" type="file" name="person_xls" class="hide" accept="xls">
         <a href="/uploads/example.xls" download>Скачать пример для добавления</a>
     </div>
 
