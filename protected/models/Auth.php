@@ -34,6 +34,7 @@ class Auth
         $client =  Yii::app()->getRequest()->getParam('client');
         $client = substr($client, 5, 100);
         $pm =  Yii::app()->getRequest()->getParam('pm');
+        if($pm == '') $pm = '(none)';
         
         ///DOUBLE NULL
         $transition = explode(",", $transition);
@@ -1336,6 +1337,7 @@ class Auth
         $pm = Yii::app()->getRequest()->getParam('pm_source');
         if($pm == '') $pm = '(none)';
         $client = Yii::app()->getRequest()->getParam('client');
+        $client = substr($client, 5, 100);
 
         if( $idUs && $res['isblocked'] != 2 )
         {
