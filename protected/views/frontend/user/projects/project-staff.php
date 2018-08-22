@@ -6,25 +6,29 @@ $arPromo = array(
         'image'=>'/images/applic/20180503073112204100.jpg',
         'ttlink'=>'',
         'name'=>'Джон Смит',
-        'city'=>'Moskow'
+        'city'=>'Moskow',
+        'status' => 1
     ),
     1 =>array(
         'image'=>'/images/applic/20180503073112204100.jpg',
         'ttlink'=>'',
         'name'=>'Джон Смит',
-        'city'=>'Moskow'
+        'city'=>'Moskow',
+        'status' => 0
     ),
     2 =>array(
         'image'=>'/images/applic/20180428142455264100.jpg',
         'ttlink'=>'',
         'name'=>'Sasha Meet',
-        'city'=>'Moskow'
+        'city'=>'Moskow',
+        'status' => 1
     ),
     3 =>array(
         'image'=>'/images/applic/20180428142455264100.jpg',
         'ttlink'=>'',
         'name'=>'Sasha Meet',
-        'city'=>'Moskow'
+        'city'=>'Moskow',
+        'status' => 1
     )
 );
 
@@ -44,12 +48,21 @@ $arPromo = array(
 </div>
 
 <div class="project__module">
+
+    <div class="project__xls">
+        <a href="#" id="add-program">Добавить персонал на проект</a>
+        <input type="file" name="person_xls" class="hide" accept="xls">
+        <a href="/uploads/example.xls" download>Скачать пример для добавления</a>
+    </div>
+
     <h1 class="project__title personal__title">ПЕРСОНАЛ</h1>
     <div class="row">
     <? for($i = 0; $i < count($arPromo); $i ++): ?>
         <div class="col-xs-12 col-sm-4 col-md-3">
               <div class="personal__item">
-                    <img src="<?=$arPromo[$i]['image']; ?>">
+
+                    <img class="<?=($arPromo[$i]['status'] == 0) ? 'personal__deact' : '';?>" src="<?=$arPromo[$i]['image']; ?>">
+
                     <div class="personal__item-name"><?=$arPromo[$i]['name']; ?></div>
                     <div class="personal__item-add">
                         <a href="<?=$arPromo[$i]['ttlink']; ?>">Закрепленные адреса</a>
