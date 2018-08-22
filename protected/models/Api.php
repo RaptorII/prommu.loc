@@ -98,7 +98,7 @@ class Api
         return $data;
     }
     
-    public function getProject(){
+    public function geoProject(){
         $idus = Yii::app()->getRequest()->getParam('idus');
         $result = Yii::app()->db->createCommand()
             ->select("*")
