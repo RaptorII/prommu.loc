@@ -1051,15 +1051,42 @@ class Api
                 ->from('resume e')
                 ->join('user usr', 'usr.id_user=e.id_user')
                 ->where('e.id_user=:id_user', array(':id_user' => $id_user))
-                ->queryAll();
+                ->queryRow();
 
-                if($user[0]) {
-                    $firstname = $user[0]['firstname'];
-                    $lastname = $user[0]['lastname'];
-                    $email = $user[0]['email'];
+                if($user['email']) {
+                    $firstname = $user['firstname'];
+                    $lastname = $user['lastname'];
+                    $email = $user['email'];
                     $fio = "$firstname ".$lastname;
                     $ana = 1;
-                } else $ana = 0;
+
+                    $date1 = explode(" ",$row["date"])[0];
+                    $time1 = explode(" ",$row["date"])[1];
+                    $day = explode("-", $date1)[2];
+                    $month = explode("-", $date1)[1];
+                    $year = explode("-", $date1)[0];
+                    $csv_file .= '<td>'.$b.$time1.$b_end.
+                    '</td><td>'.$b.$day.$b_end.
+                    '</td><td>'.$b.$month.$b_end.
+                    '</td><td>'.$b.$year.$b_end.
+                    '</td><td>'.$b.$domen.$b_end.
+                    '</td><td>'.$b.$id_user.$b_end.
+                    '</td><td>'.$b.$fio.$b_end.
+                    '</td><td>'.$b.$types.$b_end.
+                    '</td><td>'.$b.$type_feed.$b_end.
+                    '</td><td>'.$b.$email.$b_end.
+                    '</td><td>'.$b.$email.$b_end.
+                    '</td><td>'.$b.$row["transition"].$b_end.
+                    '</td><td>'.$b.$row["canal"].$b_end.
+                    '</td><td>'.$b.$row["campaign"].$b_end.
+                    '</td><td>'.$b.$row["content"].$b_end.
+                    '</td><td>'.$b.$row["keywords"].$b_end.
+                    '</td><td>'.$b.$row["source"].$b_end.
+                    '</td><td>'.$b.$row["ip"].$b_end.
+                    '</td><td>'.$b.$row["client"].$b_end.
+                    '</td></tr>';
+
+                } 
 
             
             } elseif($row['type'] == 3) {
@@ -1072,45 +1099,44 @@ class Api
                 ->from('employer e')
                 ->join('user usr', 'usr.id_user=e.id_user')
                 ->where('e.id_user=:id_user', array(':id_user' => $id_user))
-                ->queryAll();
+                ->queryRow();
 
-                 if($user[0]) {
-                    $email = $user[0]['email'];
-                    $fio = $user[0]['name']." ".$user[0]['firstname']." ".$user[0]['lastname'];
+                 if($user['email']) {
+                    $email = $user['email'];
+                    $fio = $user['name']." ".$user['firstname']." ".$user['lastname'];
                     $types = "Работодатель";
                     $ana = 1;
-                } else $ana = 0;
+
+                    $date1 = explode(" ",$row["date"])[0];
+                    $time1 = explode(" ",$row["date"])[1];
+                    $day = explode("-", $date1)[2];
+                    $month = explode("-", $date1)[1];
+                    $year = explode("-", $date1)[0];
+                    $csv_file .= '<td>'.$b.$time1.$b_end.
+                    '</td><td>'.$b.$day.$b_end.
+                    '</td><td>'.$b.$month.$b_end.
+                    '</td><td>'.$b.$year.$b_end.
+                    '</td><td>'.$b.$domen.$b_end.
+                    '</td><td>'.$b.$id_user.$b_end.
+                    '</td><td>'.$b.$fio.$b_end.
+                    '</td><td>'.$b.$types.$b_end.
+                    '</td><td>'.$b.$type_feed.$b_end.
+                    '</td><td>'.$b.$email.$b_end.
+                    '</td><td>'.$b.$email.$b_end.
+                    '</td><td>'.$b.$row["transition"].$b_end.
+                    '</td><td>'.$b.$row["canal"].$b_end.
+                    '</td><td>'.$b.$row["campaign"].$b_end.
+                    '</td><td>'.$b.$row["content"].$b_end.
+                    '</td><td>'.$b.$row["keywords"].$b_end.
+                    '</td><td>'.$b.$row["source"].$b_end.
+                    '</td><td>'.$b.$row["ip"].$b_end.
+                    '</td><td>'.$b.$row["client"].$b_end.
+                    // '</td><td>'.$b.$row["date"].$b_end.
+                    '</td></tr>';
+                } 
 
             } 
 
-            if($ana){
-            $date1 = explode(" ",$row["date"])[0];
-            $time1 = explode(" ",$row["date"])[1];
-            $day = explode("-", $date1)[2];
-            $month = explode("-", $date1)[1];
-            $year = explode("-", $date1)[0];
-            $csv_file .= '<td>'.$b.$time1.$b_end.
-                '</td><td>'.$b.$day.$b_end.
-                '</td><td>'.$b.$month.$b_end.
-                '</td><td>'.$b.$year.$b_end.
-                '</td><td>'.$b.$domen.$b_end.
-                '</td><td>'.$b.$id_user.$b_end.
-                '</td><td>'.$b.$fio.$b_end.
-                '</td><td>'.$b.$types.$b_end.
-                '</td><td>'.$b.$type_feed.$b_end.
-                '</td><td>'.$b.$email.$b_end.
-                '</td><td>'.$b.$email.$b_end.
-                '</td><td>'.$b.$row["transition"].$b_end.
-                '</td><td>'.$b.$row["canal"].$b_end.
-                '</td><td>'.$b.$row["campaign"].$b_end.
-                '</td><td>'.$b.$row["content"].$b_end.
-                '</td><td>'.$b.$row["keywords"].$b_end.
-                '</td><td>'.$b.$row["source"].$b_end.
-                '</td><td>'.$b.$row["ip"].$b_end.
-                '</td><td>'.$b.$row["client"].$b_end.
-                // '</td><td>'.$b.$row["date"].$b_end.
-                '</td></tr>';
-            }
         }
 
 
