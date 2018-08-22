@@ -1554,6 +1554,7 @@ class UserController extends AppController
             elseif($id>0) { // существующий
                 switch (Yii::app()->getRequest()->getParam('section')) {
                     case 'staff':
+                        $data = (new Services())->getFilteredPromos();
                         $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
                         break;
                     case 'index':
@@ -1582,7 +1583,7 @@ class UserController extends AppController
                         $view = MainConfig::$VIEW_PROJECT_ITEM;
                         break;
                 }
-                $data = 1;
+               // $data = 1;
             }
             else{
                  

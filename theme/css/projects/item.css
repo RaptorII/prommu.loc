@@ -71,6 +71,7 @@
 	padding: 0 20px 20px 0;
 	text-decoration: underline;
 	background: url(/theme/pic/projects/xls-icon.png) top right no-repeat;
+	font-family: RobotoCondensed-Regular, verdana, arial;
 }
 #DiContent .project__title{
 	padding: 0 0 15px;
