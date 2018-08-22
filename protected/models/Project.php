@@ -134,6 +134,13 @@ class Project extends ARModel
             
         return $result;
     }
+    
+    public function getProject($project){
+        $data['location'] = $this->getAdresProgramm($project);
+        $data['user'] = $this->getProjectPromo($project);
+        
+        return $data;
+    }
 
     public function exportProjectCSV()
     {
