@@ -85,6 +85,22 @@
 	display: flex;
 	padding: 10px 15px;
 	justify-content: space-between;
+	position: relative;
+}
+.project__opt-row.disable:before{
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(245, 245, 245, .8);
+	z-index: 1;
+	-webkit-transition: all ease-out .3s;
+	-moz-transition: all ease-out .3s;
+	-o-transition: all ease-out .3s;
+	transition: all ease-out .3s;
 }
 .project__opt-row span{ font-size: 16px }
 #DiContent .project__opt-row .project__opt-btn{

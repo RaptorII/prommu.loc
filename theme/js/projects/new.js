@@ -115,6 +115,7 @@ var ProjectPage = (function () {
         }
         else{
             $name.text(arExt[1] + '.' + arExt[2]).show();
+            $('[data-btn="index"]').addClass('disable');
         }
     }
     //      показать нужный модуль
@@ -1061,9 +1062,13 @@ var ProjectAddIndexProg = (function () {
     ProjectAddIndexProg.prototype.saveProgram = function (e) {
         let self = this;
 
-        !self.checkFields()
-        ? self.Project.showModule(e)
-        : MainProject.showPopup('notif','save-program');
+        if(!self.checkFields()) {
+            self.Project.showModule(e);
+            $('[data-btn="xls"]').addClass('disable');
+        }
+        else {
+            MainProject.showPopup('notif','save-program');
+        }
     }
     //    получаем уникальные ID
     ProjectAddIndexProg.prototype.getNewId = function () {

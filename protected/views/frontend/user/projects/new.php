@@ -23,20 +23,19 @@
 				</div>
 				<div class="project__block">
 					<div class="project__opt">
-						<div class="project__opt-row">
+						<div class="project__opt-row" data-btn="index">
 							<span>Добавить адресную программу</span>
 							<span class="project__opt-btn" data-event="index">Выбрать</span>
 						</div>
-						<div class="project__opt-row">
+						<div class="project__opt-row" data-btn="xls">
 							<span>Добавить адресную программу через XLS</span>
 							<span class="project__opt-btn" id="add-xls">Выбрать</span>
 
 							<input type="file" name="xls" id="add-xls-inp">
 						</div>
 						<div id="add-xls-name"></div>
-						<div class="project__opt-row">
-							<a href="/uploads/example.xls<?php // Yii::app()->createUrl(MainConfig::$PAGE_PROJECT_NEW . '?get_xls=1')?>" download class="project__opt-xls">
-								Скачать пример адреной программы</a>
+						<div class="project__opt-row" data-btn="xls">
+							<a href="/uploads/example.xls" download class="project__opt-xls">Скачать пример адресной программы</a>
 						</div>
 					</div>
 					<div class="project__opt">
