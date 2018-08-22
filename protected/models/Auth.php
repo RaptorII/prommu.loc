@@ -32,7 +32,7 @@ class Auth
         $photos = filter_var(Yii::app()->getRequest()->getParam('photos'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $ip =  Yii::app()->getRequest()->getParam('ip');
         $client =  Yii::app()->getRequest()->getParam('client');
-        $client = substr($client, 5, 100);
+        $client = substr($client, 6, 100);
         $pm =  Yii::app()->getRequest()->getParam('pm');
         if($pm == '') $pm = '(none)';
         
@@ -1337,7 +1337,7 @@ class Auth
         $pm = Yii::app()->getRequest()->getParam('pm_source');
         if($pm == '') $pm = '(none)';
         $client = Yii::app()->getRequest()->getParam('client');
-        $client = substr($client, 5, 100);
+        $client = substr($client, 6, 100);
 
         if( $idUs && $res['isblocked'] != 2 )
         {
