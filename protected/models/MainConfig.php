@@ -34,7 +34,7 @@ class MainConfig
     public static $DIR_VIEWS_SITE = 'site';
     public static $DIR_VIEWS_USER = 'user';
 
-    public static $SITE = 'prommu.com';
+    public static $SITE = 'dev.prommu.com';
 
     public static $VIEWS_COMM_CONTENT_TPL = 'commontmpls/comm-content-tpl';
     public static $VIEWS_COMM_PAGES_TPL = 'comm-pages-tpl';
