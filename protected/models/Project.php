@@ -24,7 +24,14 @@ class Project extends ARModel
         $cloud = [];
         $project = time().rand(11111,99999);
         ///Обработка адресной программы
-
+        
+        $res = Yii::app()->db->createCommand()
+                        ->insert('project', array(
+                            'project' => $project,
+                            'id_user' => $idus,
+                            'name' => $props['name'],
+                        ));
+        
          for($i = 0; $i < count($props['city']); $i++){
             for($j = 0; $j < count($props['lindex'][$props['city'][$i]]); $j ++){
                 for($s = 0; $s < count($props['bdate'][$props['city'][$i]][$j]); $s ++){
@@ -117,26 +124,20 @@ class Project extends ARModel
 
     }
 
-        /**
-     * Добавление персонала
-     * @param array $props
-     */
-    public function addResume($props = []){
+    
+
+
+    public function getProjectEmployer(){
+        $idus = Share::$UserProfile->id;
+        $result = Yii::app()->db->createCommand()
+            ->select("e.id_user, e.name, e.type, e.firstname, e.lastname")
+            ->from('employer e')
+            //->where('`id_user`=:id_user', array(':id_user' => $id_user))
+            //->limit(1)
+            ->order('e.id_user desc')
+            ->queryAll();
         
-      
-         $cloud['resume'] = $props;
-
-         $res = Yii::app()->db->createCommand()
-                ->update('project', $cloud);
-       
-
     }
-    
-
-    
-
-
-
 
     public function exportProjectCSV()
     {
