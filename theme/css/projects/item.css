@@ -153,6 +153,17 @@
 	padding: 24px 0 78px;
 	text-align: right;
 }
+
+
+.project__control-panel .program__btns{
+	padding:0;
+	margin-bottom: 15px;
+}
+
+#DiContent project__control-panel .program__btns .program__add-btn.program__add-btn{
+	width:185px;
+}
+
 #DiContent .program__btns .program__save-btn{
 	width: 135px;
 	margin-left: 10px;
@@ -191,6 +202,13 @@
 }
 #DiContent .program__btns .program__add-btn{
 	width: 160px;
+}
+#DiContent .program__btns .control__add-btn{
+	width: 185px;
+}
+#DiContent .program__btns .program__add-btn,
+#DiContent .program__btns .control__add-btn
+{
 	display: inline-block;
 	text-align: center;
 	border: 1px solid #abb92a;
@@ -203,7 +221,9 @@
 	-o-transition: all ease-out .3s;
 	transition: all ease-out .3s;
 }
-#DiContent .program__btns .program__add-btn:hover{
+
+#DiContent .program__btns .program__add-btn:hover,
+#DiContent .program__btns .control__add-btn:hover{
 	background: #abb92a;
 	color: #ffffff;
 }
