@@ -30,6 +30,7 @@ class Project extends ARModel
                             'project' => $project,
                             'id_user' => $idus,
                             'name' => $props['name'],
+                            'crdate' => date('Y-m-d h-i-s')
                         ));
         
          for($i = 0; $i < count($props['city']); $i++){
@@ -97,46 +98,16 @@ class Project extends ARModel
          return $project;
     }
 
-    private function saveCities($props)
-    {
-        $idcity = $_POST['idcity'];
-        unset($_POST['id_city'][0]);
-        $bdate = date('Y-m-d', strtotime(Yii::app()->getRequest()->getParam('cibdate')));//date("Y-m-d");
-        $edate = date('Y-m-d', strtotime(Yii::app()->getRequest()->getParam('ciedate')));//date("Y-m-d");
-
-         Yii::app()->db->createCommand()->delete('project_city', 'id=:id', array(':idvac' => $inVacId));
-       foreach ($idcity as $key => $val)
-       {
-             $res = Yii::app()->db->createCommand()
-                        ->insert('project_city', array(
-                            'id_vac' => $inVacId,
-                            'id_city' => $val,
-                            'bdate' => $bdate,
-                            'edate' => $edate,
-                            'btime' => $bdate,
-                            'etime' => $edate,
-                        ));
-
-            $id_city = $val;
-        } // endif
-
-        return "1307";
-
-    }
-
-    
-
 
     public function getProjectEmployer(){
         $idus = Share::$UserProfile->id;
         $result = Yii::app()->db->createCommand()
-            ->select("e.id_user, e.name, e.type, e.firstname, e.lastname")
-            ->from('employer e')
-            //->where('`id_user`=:id_user', array(':id_user' => $id_user))
-            //->limit(1)
-            ->order('e.id_user desc')
+            ->select("*")
+            ->from('project p')
+            ->order('p.crdate desc')
             ->queryAll();
-        
+            
+        return $result;
     }
 
     public function exportProjectCSV()
