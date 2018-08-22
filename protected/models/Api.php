@@ -146,7 +146,7 @@ class Api
                                             'transition' => $data[$i]['transition'],
                                             'last_referer' => $data[$i]['last_referer'],
                                     ), 'id_us=:id_us', array(':id_us' => $data[$j]['id_us']));
-                                $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$i]['id']));
+                                // $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$i]['id']));
                                 } elseif($data[$i]['name'] ==  $data[$j]['name']){
                                     // if($data[$i]['id'] < $data[$j]['id']){
                                     //    //  $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$i]['id']));
