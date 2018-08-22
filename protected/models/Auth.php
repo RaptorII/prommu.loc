@@ -125,6 +125,9 @@ class Auth
                         'last_referer' => $last_referer,
                         'admin' => $admin,
                         'subdomen' => 0,
+                        'client' => $client,
+                        'ip' => $ip,
+                        'source' => $pm
                     );
 
                      $res = Yii::app()->db->createCommand()
@@ -215,6 +218,9 @@ class Auth
                         'last_referer' => $last_referer,
                         'admin' => $admin,
                         'subdomen' => 0,
+                        'client' => $client,
+                        'ip' => $ip,
+                        'source' => $pm
                     );
 
                     $res = Yii::app()->db->createCommand()
@@ -1402,6 +1408,9 @@ class Auth
                         'last_referer' => $last_referer,
                         'active' => 0,
                         'subdomen' => 0,
+                        'client' => $client,
+                        'ip' => $ip,
+                        'source' => $pm
                     );
 
         $res = Yii::app()->db->createCommand()
@@ -1648,6 +1657,9 @@ class Auth
                         'active' => 0,
                         'admin' => 0,
                         'subdomen' => 0,
+                        'client' => $client,
+                        'ip' => $ip,
+                        'source' => $pm
                     );
 
 
@@ -1691,6 +1703,9 @@ class Auth
                         'active' => 0,
                         'admin' => 0,
                         'subdomen' => 0,
+                        'client' => $client,
+                        'ip' => $ip,
+                        'source' => $pm
                     );
 
 
