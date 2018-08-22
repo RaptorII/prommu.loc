@@ -980,19 +980,21 @@ class Api
             $yester = date("Y-m-d", $my_time); 
               $data = Yii::app()->db->createCommand()
             ->select("*")
-            ->from('analytic')
-            ->where('active=:active AND date >:date AND subdomen=:domen', array(':active' => 1, ':date'=> $yester, ':domen'=>$domen))
-            ->order("id_us desc")
+            ->from('analytic a')
+            ->join('user usr', 'usr.id_user=a.id_us')
+            ->where('a.active=:active AND a.date >:date AND a.subdomen=:domen', array(':active' => 1, ':date'=> $yester, ':domen'=>$domen))
+            ->order("a.id_us desc")
             ->queryAll();
             
          }
          else {
              $data = Yii::app()->db->createCommand()
             ->select("*")
-            ->from('analytic')
-            ->where('active=:active AND (date BETWEEN :date AND :bdate) AND subdomen=:domen AND name!=:name', array(':active' => 1, ':date'=> $date, 'bdate'=> $bdate, 'domen'=>$domen, 'name'=>'NO ACTIVE'))
-            ->order("id_us desc")
-            ->group("id_us")
+            ->from('analytic a')
+            ->join('user usr', 'usr.id_user=a.id_us')
+            ->where('a.active=:active AND (a.date BETWEEN :date AND :bdate) AND a.subdomen=:domen AND a.name!=:name', array(':active' => 1, ':date'=> $date, 'bdate'=> $bdate, 'domen'=>$domen, 'name'=>'NO ACTIVE'))
+            ->order("a.id_us desc")
+            ->group("a.id_us")
             ->queryAll();
 
          }
