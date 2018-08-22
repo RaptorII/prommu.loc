@@ -94,6 +94,11 @@
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
 <? print_r($arProgram); ?>
 </pre>
+
+<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
+<? print_r($viData); ?>
+</pre>
+
 <div class="filter__veil"></div>
 <div class="row project">
 	<div class="col-xs-12">
