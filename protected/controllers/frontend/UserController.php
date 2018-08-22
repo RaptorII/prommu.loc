@@ -1536,7 +1536,7 @@ class UserController extends AppController
             : MainConfig::$VIEW_APP_PROJECT_LIST;
             
         $model = new Project();
-        if(strlen($id)>0) {
+    
             if($id=='new') { // новый проект
                 if(Yii::app()->request->isAjaxRequest) {
                     $this->renderPartial(
@@ -1589,7 +1589,7 @@ class UserController extends AppController
                 $data = $model->getProjectEmployer();
                 file_put_contents(__DIR__ . "/_user_log.txt", print_r($data, true));
             }
-        }
+        
 
 
         //$model = new Projects;
