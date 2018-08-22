@@ -122,6 +122,13 @@ class Api
             ->queryAll();
 
             for($i = 0; $i < count($data); $i ++){
+                if($data[$i]['canal'] == 'yandex' ||$data[$i]['canal'] == 'google' ) {
+                    $res = Yii::app()->db->createCommand()
+                                    ->update('analytic', array(
+                                            'canal' => $data[$i]['transition'],
+                                            'transition' => $data[$i]['canal'],
+                                    ), 'id=:id', array(':id' => $data[$i]['id']));
+                }
                 for($j =0 ; $j <count($data); $j ++){
                     if($data[$i]['id_us'] == $data[$j]['id_us']){
                      
@@ -142,7 +149,7 @@ class Api
                                 $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$i]['id']));
                                 } elseif($data[$i]['name'] ==  $data[$j]['name']){
                                     // if($data[$i]['id'] < $data[$j]['id']){
-                                    //      $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$i]['id']));
+                                    //    //  $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$i]['id']));
                                     // } else  $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$j]['id']));
                                 }
                             }
