@@ -56,6 +56,7 @@ $arPromo = array(
         <a href="/uploads/example.xls" download>Скачать пример для добавления</a>
     </div>
 
+
     <div class="project__control-panel">
         <div class="program__btns control__buttons">
             <a href="#" id="control__add-btn" class="control__add-btn">+ ДОБАВИТЬ ПЕРСОНАЛ</a>
