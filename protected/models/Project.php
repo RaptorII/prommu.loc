@@ -24,7 +24,15 @@ class Project extends ARModel
         $cloud = [];
         $project = time().rand(11111,99999);
         ///Обработка адресной программы
-
+        $idus = Share::$UserProfile->id;
+        $res = Yii::app()->db->createCommand()
+                        ->insert('project', array(
+                            'project' => $project,
+                            'id_user' => $idus,
+                            'name' => $props['name'],
+                            'crdate' => date('Y-m-d h-i-s')
+                        ));
+        
          for($i = 0; $i < count($props['city']); $i++){
             for($j = 0; $j < count($props['lindex'][$props['city'][$i]]); $j ++){
                 for($s = 0; $s < count($props['bdate'][$props['city'][$i]][$j]); $s ++){
@@ -90,53 +98,18 @@ class Project extends ARModel
          return $project;
     }
 
-    private function saveCities($props)
-    {
-        $idcity = $_POST['idcity'];
-        unset($_POST['id_city'][0]);
-        $bdate = date('Y-m-d', strtotime(Yii::app()->getRequest()->getParam('cibdate')));//date("Y-m-d");
-        $edate = date('Y-m-d', strtotime(Yii::app()->getRequest()->getParam('ciedate')));//date("Y-m-d");
 
-         Yii::app()->db->createCommand()->delete('project_city', 'id=:id', array(':idvac' => $inVacId));
-       foreach ($idcity as $key => $val)
-       {
-             $res = Yii::app()->db->createCommand()
-                        ->insert('project_city', array(
-                            'id_vac' => $inVacId,
-                            'id_city' => $val,
-                            'bdate' => $bdate,
-                            'edate' => $edate,
-                            'btime' => $bdate,
-                            'etime' => $edate,
-                        ));
-
-            $id_city = $val;
-        } // endif
-
-        return "1307";
-
+    public function getProjectEmployer(){
+        $idus = Share::$UserProfile->id;
+         $result = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('project p')
+            ->where('p.id_user = :idus', array(':idus' =>$idus))
+            ->order('p.crdate desc')
+            ->queryAll();
+            
+        return $result;
     }
-
-        /**
-     * Добавление персонала
-     * @param array $props
-     */
-    public function addResume($props = []){
-        
-      
-         $cloud['resume'] = $props;
-
-         $res = Yii::app()->db->createCommand()
-                ->update('project', $cloud);
-       
-
-    }
-    
-
-    
-
-
-
 
     public function exportProjectCSV()
     {

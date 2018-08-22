@@ -24,10 +24,9 @@ class UserController extends AppController
     }
     
       public function actionProCreate(){
-          var_dump($_POST);
-        // $project = new Project();
-        // $result = $project->createProject($_POST);
-        // $this->redirect("http://dev.prommu.com/user/projects/new");
+        $project = new Project();
+        $result = $project->createProject($_POST);
+        $this->redirect("http://dev.prommu.com/user/projects");
 
       }
 
@@ -1535,8 +1534,9 @@ class UserController extends AppController
         $view = $type==3
             ? MainConfig::$VIEW_EMP_PROJECT_LIST
             : MainConfig::$VIEW_APP_PROJECT_LIST;
-
-        if(strlen($id)>0) {
+            
+        $model = new Project();
+    
             if($id=='new') { // новый проект
                 if(Yii::app()->request->isAjaxRequest) {
                     $this->renderPartial(
@@ -1584,10 +1584,11 @@ class UserController extends AppController
                 $data = 1;
             }
             else{
-                $this->redirect(MainConfig::$PAGE_PROJECT_LIST);
-                exit;
+                 
+                $view = MainConfig::$VIEW_EMP_PROJECT_LIST;
+                $data = $model->getProjectEmployer();
             }
-        }
+        
 
 
         //$model = new Projects;
