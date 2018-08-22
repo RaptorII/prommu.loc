@@ -24,7 +24,7 @@ class Project extends ARModel
         $cloud = [];
         $project = time().rand(11111,99999);
         ///Обработка адресной программы
-        
+        $idus = Share::$UserProfile->id;
         $res = Yii::app()->db->createCommand()
                         ->insert('project', array(
                             'project' => $project,
