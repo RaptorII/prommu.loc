@@ -1053,7 +1053,7 @@ class Api
                 ->where('e.id_user=:id_user', array(':id_user' => $id_user))
                 ->queryRow();
 
-                if($user['email']) {
+                if($user['firstname']) {
                     $firstname = $user['firstname'];
                     $lastname = $user['lastname'];
                     $email = $user['email'];
@@ -1101,7 +1101,7 @@ class Api
                 ->where('e.id_user=:id_user', array(':id_user' => $id_user))
                 ->queryRow();
 
-                 if($user['email']) {
+                 if($user['name']) {
                     $email = $user['email'];
                     $fio = $user['name']." ".$user['firstname']." ".$user['lastname'];
                     $types = "Работодатель";
