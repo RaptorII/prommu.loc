@@ -60,49 +60,23 @@
 	justify-content: space-between;
 	align-items: center;
 }
-/*		*/
-.program__select-user { 
-	position: relative;
-	display: inline-block;
+.xls-popup{
+	font-size: 16px;	
 }
-.program__cell-user>span{
-	line-height: 22px;
-	display: inline-block;
-	padding: 0 5px;
-}
-.program-select-user__title{
-	height: 24px;
-	display: inline-block;
+.xls-popup-btn{
+	width: 135px;
+	line-height: 33px;
+	color: #fff;
 	font-size: 16px;
-	line-height: 24px;
-	color: #abb820;
+	text-align: center;
+	background: #ff8300;
+	vertical-align: middle;
+	position: relative;
+	z-index: 0;
 	cursor: pointer;
+	margin: 15px auto 0;
 }
-.program-select-user__title *{ display: inline-block }
-.program-select-user__title span{ text-decoration: underline }
-.program__select-user ul{
-	padding: 0;
-	margin: 0;
-	list-style: none;
-	position: absolute;
-	top: 24px;
-	left: 0;
-	border-radius: 2px;
-	border: 1px solid #fff;
-	z-index: 2;
+.xls-popup-err{
+	color: #ff8b8b;
 	display: none;
 }
-.program__select-user li{
-	background-color: #abb92a;
-	padding: 3px 10px;
-	white-space: nowrap;
-	cursor: pointer;
-	color: #fff;
-}
-.program__select-user li:hover { background: #b9c733 }
-.program__select-user img{
-	background: #fff;
-	border-radius: 50%;
-	border: 1px solid #fff;
-}
-.program__select-user:hover ul{ display: block }

@@ -8,6 +8,12 @@ var BaseProgram = (function () {
 
 	BaseProgram.prototype.init = function () {
   	let self = this;
+    //
+    $('#add-xls').click(self.addXlsFile);
+    $('body').on('click','.xls-popup-btn',function(){
+      $('#add-xls-inp').click();
+    });
+    $('#add-xls-inp').change(function() { self.checkFormatFile(this) });
     // удаление элементов
     $('.project__program').on(
         'click', 
@@ -53,6 +59,35 @@ var BaseProgram = (function () {
           }
         });
       }
+    }
+  }
+  //
+  BaseProgram.prototype.addXlsFile = function () {
+    confirm('Здесь выгрузится файл адресной программы');
+    let html = "<div class='xls-popup' data-header='Изменение программы'>"+
+      "1) Необходимо открыть скачаный файл<br>"+
+      "2) Исправить существующие данные, либо добавить новые<br>"+
+      "3) Загрузить измененный файл<br>"+
+      '<span class="xls-popup-err">Формат файла должен быть "xls" или "xlsx". Выберите подходящий файл!</span>'+
+      "<div class='xls-popup-btn'>ЗАГРУЗИТЬ</div>"+
+      "</div>";
+
+    ModalWindow.open({ content: html, action: { active: 0 }, additionalStyle:'dark-ver' });
+  }
+  //      Проверка формата файла .XLS .XLSX
+  BaseProgram.prototype.checkFormatFile = function () {
+    let self = this,
+      $inp = $('#add-xls-inp'),
+      $name = $('#add-xls-name'),
+      arExt = $inp.val().match(/\\([^\\]+)\.([^\.]+)$/);
+
+    if(arExt[2]!=='xls' && arExt[2]!=='xlsx'){
+      $inp.val('');
+      $('.xls-popup-err').show();
+    }
+    else{
+      $('.xls-popup-err').hide();
+      $('#base-form').submit();
     }
   }
   //

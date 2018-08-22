@@ -1,0 +1,41 @@
+#select-form, #select-form *{ font-family: RobotoCondensed-Regular, verdana, arial; }
+#select-form b{ font-size: 16px }
+.index-table{
+
+}
+.index-table td{ padding: 3px 5px }
+#select-form .users-select__list input{ display: none }
+.users-select__item{ margin-bottom: 20px }
+.users-select__item img {
+    width: 175px;
+    height: 175px;
+    display: block;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+}
+.users-select__item span{
+	display: block;
+	font-size: 24px;
+	text-align: center;
+}
+.users-select__list label{
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 10px;
+	bottom: 20px;
+	right: 10px;
+	cursor: pointer;
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	transition: all 0.3s ease-out;
+}
+.users-select__list input:checked + label{
+	background-color: rgba(171, 184, 32, 0.7);
+	opacity: 1;
+}
+.users-select__list input + label{
+	background: rgba(171, 184, 32, 0) url(/theme/pic/services-page/api-select-icon.png) 50% 50% no-repeat;
+	opacity: 0;
+}

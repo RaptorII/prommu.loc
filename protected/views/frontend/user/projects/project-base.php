@@ -2,7 +2,7 @@
 	$bUrl = Yii::app()->baseUrl;
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-base.css');
-  Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
+	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
 	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item-base.js', CClientScript::POS_END);
 
   $projectName = 'Мерчендайзинг';
@@ -87,33 +87,6 @@
       )
     )
   );
-  $arUsers = array(
-		1 => array(
-			'id' => 1,
-			'name' => 'Шишкина Виктория',
-			'logo' => ''
-		),
-		2 => array(
-			'id' => 2,
-			'name' => 'Ибадулаев Павел',
-			'logo' => ''
-		),
-		3 => array(
-			'id' => 3,
-			'name' => 'Немич Константин',
-			'logo' => ''
-		),
-		4 => array(
-			'id' => 4,
-			'name' => 'Простова Ольга',
-			'logo' => ''
-		),
-		5 => array(
-			'id' => 5,
-			'name' => 'Александр Примак',
-			'logo' => ''
-		)
-  );
 ?>
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
 <? print_r($arProgram); ?>
@@ -126,9 +99,8 @@
 		<div id="content">
 			<div class="project__module">
 				<div class="project__xls">
-					<a href="#" id="add-program">Добавить адресную программу</a>
-					<input type="file" name="xls" class="hide" accept="xls">
-					<a href="/uploads/example.xls" download>Скачать пример для добавления</a>
+					<a href="javascript:void(0)" id="add-xls">Изменить адресную программу</a>
+					<a href="/uploads/prommu_example.xls" download>Скачать пример для добавления</a>
 				</div>
 				<h1 class="project__title">ПРОЕКТ: <span><?=$projectName?></span></h1>
 				<table class="project__program">
@@ -175,33 +147,11 @@
 
 											<? foreach ($arLoc['periods'] as $idper => $arPer): ?>
 												<div class="program__select-user" data-period="<?=$idper?>">
-													<span class="program-select-user__title">
+													<a href="<? echo $_GET['id'] . '/users-select?period=' . $idper ?>" class="program-select-user__title">
 														<span>Выбрать персонал </span>
 														<b>&#9660</b>
-													</span>
-													<ul>
-														<li>
-															<img src="/theme/pic/projects/user-logo.png">
-															<span>Шишкина Виктория</span>
-														</li>
-														<li>
-															<img src="/theme/pic/projects/user-logo.png">
-															<span>Ибадулаев Павел</span>
-														</li>
-														<li>
-															<img src="/theme/pic/projects/user-logo.png">
-															<span>Немич Константин</span>
-														</li>
-														<li>
-															<img src="/theme/pic/projects/user-logo.png">
-															<span>Простова Ольга</span>
-														</li>
-														<li>
-															<img src="/theme/pic/projects/user-logo.png">
-															<span>Александр Примак</span>
-														</li>
-													</ul>
-												</div><br data-period="<?=$idper?>">
+													</a>
+												</div>
 											<? endforeach; ?>
 										</div>
 									</td>
@@ -224,6 +174,9 @@
 									</td>
 								</tr>
 							<? endforeach; ?>
+							<?
+							/*
+							?>
 							<tr data-city="<?=$id?>">
 								<td colspan="5">
 									<div class="program__btns">
@@ -232,171 +185,23 @@
 									</div>
 								</td>
 							</tr>
+							<?
+							*/
+							?>
 						<? endforeach; ?>
 					</tbody>
 				</table>
-				<input type="hidden" name="project" class="project-inp" value="<?=$_GET['id']?>">
-
-
-
-
-<?
-/*
-?>
-
-</br></br></br></br></br></br></br></br></br></br></br>
-</br></br></br></br></br></br></br></br></br></br></br>
-Пустая верстка
-				<table class="project__program">
-					<tbody>
-						<tr class="program__item">
-							<td colspan="4">
-								<div class="program__city border">МОСКВА</div>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div class="program__cell green-name border">АТБ1</div>
-							</td>
-							<td>
-								<div class="program__cell border">ул. Пирогова 23</div>
-							</td>
-							<td>
-								<div class="program__cell border user">
-									<div class="program__cell-user">
-										<img src="/theme/pic/projects/user-logo.png">
-										<span>Александр Примак</span>
-									</div>
-									<a href="#"><span>Изменить</span></a>
-								</div>
-							</td>
-							<td>
-								<div class="program__cell program__cell-period">
-									<span>06.02.2018 до 07.02.2018</span>
-									<span class="program__cell-tiem">12:00 - 14:00</span>
-									<a href="#"><span>Изменить</span></a>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div class="program__cell green-name border">АТБ1</div>
-							</td>
-							<td>
-								<div class="program__cell border">ул. Паторжинского 23/4</div>
-							</td>
-							<td>
-								<div class="program__cell border user">
-									<a href="#"><span>Выбрать персонал </span><b>&#9660</b></a>
-								</div>
-							</td>
-							<td>
-								<div class="program__cell program__form">
-									<div class="program__input">
-										<input type="text" name="bdate[]" placeholder="Дата начала работ">
-									</div>
-									<div class="program__input">
-										<input type="text" name="edate[]" placeholder="Дата окончания работ">
-									</div>
-									<div class="program__time">
-										<div class="program__input">
-											<input type="text" name="btime[]" placeholder="Время с">
-										</div>
-										<div class="program__input">
-											<input type="text" name="etime[]" placeholder="Время до">
-										</div>
-									</div>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="4">
-								<div class="program__btns">
-									<a href="#" class="program__add-btn">+ ДОБАВИТЬ ПЕРИОД</a>
-									<a href="#" class="program__save-btn">СОХРАНИТЬ</a>
-								</div>
-							</td>
-						</tr>
-						<?
-						//
-						?>
-						<tr class="program__item">
-							<td colspan="4">
-								<div class="program__city border">РОСТОВ</div>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div class="program__cell green-name border">АТБ1</div>
-							</td>
-							<td>
-								<div class="program__cell border">ул. Пирогова 23</div>
-							</td>
-							<td>
-								<div class="program__cell border user">
-									<div class="program__cell-user">
-										<img src="/theme/pic/projects/user-logo.png">
-										<span>Александр Примак</span>
-									</div>
-									<a href="#"><span>Изменить</span></a>
-								</div>
-							</td>
-							<td>
-								<div class="program__cell program__cell-period">
-									<span>06.02.2018 до 07.02.2018</span>
-									<span class="program__cell-tiem">12:00 - 14:00</span>
-									<a href="#"><span>Изменить</span></a>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div class="program__cell green-name border">АТБ1</div>
-							</td>
-							<td>
-								<div class="program__cell border">ул. Паторжинского 23/4</div>
-							</td>
-							<td>
-								<div class="program__cell border user">
-									<a href="#"><span>Выбрать персонал </span><b>&#9660</b></a>
-								</div>
-							</td>
-							<td>
-								<div class="program__cell program__form">
-									<div class="program__input">
-										<input type="text" name="bdate[]" placeholder="Дата начала работ">
-									</div>
-									<div class="program__input">
-										<input type="text" name="edate[]" placeholder="Дата окончания работ">
-									</div>
-									<div class="program__time">
-										<div class="program__input">
-											<input type="text" name="btime[]" placeholder="Время с">
-										</div>
-										<div class="program__input">
-											<input type="text" name="etime[]" placeholder="Время до">
-										</div>
-									</div>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="4">
-								<div class="program__btns">
-									<a href="#" class="program__add-btn">+ ДОБАВИТЬ ПЕРИОД</a>
-									<a href="#" class="program__save-btn">СОХРАНИТЬ</a>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-<?
-*/
-?>
+				<form action="" method="POST" id="base-form">
+					<input type="hidden" name="project" class="project-inp" value="<?=$_GET['id']?>">
+					<input type="file" name="xls" id="add-xls-inp" class="hide">
+				</form>
 			</div>
 		</div>
 	</div>
 </div>
+<?
+/*
+?>
 <div class="bg_veil"></div>
 <div class="personal__map">
 	<div class="personal__map-header">
@@ -407,3 +212,6 @@
 		<img src="/theme/pic/projects/temp-map.jpg">
 	</div>
 </div>
+<?
+*/
+?>
