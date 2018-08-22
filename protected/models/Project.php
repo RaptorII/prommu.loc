@@ -101,10 +101,10 @@ class Project extends ARModel
 
     public function getProjectEmployer(){
         $idus = Share::$UserProfile->id;
-        $result = Yii::app()->db->createCommand()
+         $result = Yii::app()->db->createCommand()
             ->select("*")
             ->from('project p')
-            -where("p.id_user = $idus")
+            ->where('p.id_user = :idus', array(':idus' =>$idus))
             ->order('p.crdate desc')
             ->queryAll();
             
