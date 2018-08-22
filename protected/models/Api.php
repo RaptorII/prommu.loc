@@ -73,6 +73,7 @@ class Api
                 case 'tect' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->teSt(); break;
                 case 'ideas' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->ideas(); break;
                 case 'export_auto' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->exportAutomize(); break;
+                case 'geo_project' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->geoProject(); break;
                  
                 
 
@@ -95,6 +96,20 @@ class Api
         } // endtry
 
         return $data;
+    }
+    
+    public function getProject(){
+        $idus = Yii::app()->getRequest()->getParam('idus');
+        $result = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('project p')
+            -where("p.id_user = $idus")
+            ->order('p.crdate desc')
+            ->queryAll();
+        
+        return $result;
+         
+         
     }
 
     public function ideas(){
