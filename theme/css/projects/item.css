@@ -205,7 +205,8 @@
 	width: 160px;
 }
 #DiContent .program__btns .control__add-btn{
-	width: 185px;
+	min-width: 185px;
+	padding: 0 10px 0 10px;
 }
 #DiContent .program__btns .program__add-btn,
 #DiContent .program__btns .control__add-btn
