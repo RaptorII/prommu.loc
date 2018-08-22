@@ -332,7 +332,7 @@ class Auth
         $email[5] = "manag_reports@euro-asian.ru";
         $email[6] = "e.marketing@euro-asian.ru";
         for($i = 0; $i <6; $i++){
-             Share::sendmail($email[$i], "Prommu: зарегистрирован новый пользователь", trim($messages));
+             Share::sendmail($email[$i], "Dev.Prommu: зарегистрирован новый пользователь", trim($messages));
        
         }
          $message = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден) Требуется модерация администратора сайта!
@@ -366,7 +366,7 @@ class Auth
                 <br/>
                 Площадка: <b>%s</b>",
             MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
-        Share::sendmail("mk0630733719@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
+        Share::sendmail("mk0630733719@gmail.com", "Dev.Prommu: зарегистрирован новый пользователь", trim($messages));
 
 
 
@@ -415,7 +415,7 @@ class Auth
         $email[5] = "manag_reports@euro-asian.ru";
         $email[6] = "e.marketing@euro-asian.ru";
         for($i = 0; $i <6; $i++){
-             Share::sendmail($email[$i], "Prommu: зарегистрирован новый пользователь", trim($messages));
+             Share::sendmail($email[$i], "Dev.Prommu: зарегистрирован новый пользователь", trim($messages));
        
         }
          $message = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден) Требуется модерация администратора сайта!
@@ -449,7 +449,7 @@ class Auth
                 <br/>
                 Площадка: <b>%s</b>",
             MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client,$pm);
-        Share::sendmail("mk0630733719@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
+        Share::sendmail("mk0630733719@gmail.com", "Dev.Prommu: зарегистрирован новый пользователь", trim($messages));
 
                    
                 } // endif
@@ -1456,7 +1456,7 @@ class Auth
                 .'<p style="font-size:16px;"> Ваш логин для входа на портал:'.$inData['inputData']['email']
                 .'<br/>Ваш пароль для входа на портал:'.$inData['inputData']['pass'].'</p>'
             .'</div>';
-            Share::sendmail($inData['inputData']['email'], "Prommu.com. Подтверждение регистрации на портале поиска временной работы!", $message);
+            Share::sendmail($inData['inputData']['email'], "Dev.Prommu.com. Подтверждение регистрации на портале поиска временной работы!", $message);
         }
         else
         {
@@ -1498,7 +1498,7 @@ class Auth
                 .'<p style="font-size:16px;">Ваш логин для входа на портал:'.$inData['inputData']['email']
                 .'<br/>Ваш пароль для входа на портал:'.$inData['inputData']['pass'].'</p>'
             .'</div>';
-            Share::sendmail($inData['inputData']['email'], " Prommu.com. Подтверждение регистрации на портале поиска персонала!", $message);
+            Share::sendmail($inData['inputData']['email'], " Dev.Prommu.com. Подтверждение регистрации на портале поиска персонала!", $message);
         } // endif
         
 
