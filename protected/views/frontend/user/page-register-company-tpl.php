@@ -92,6 +92,9 @@
                 <input type="hidden" class="point" name="point" value="">
                 <input type="hidden" class="last_referer" name="last_referer" value="">
                 <input type="hidden" class="admin" name="admin" value="<?= $admin; ?>">
+                <input type="hidden" name="ip" value="<?=$_SERVER['HTTP_X_FORWARDED_FOR']?>"/>
+                <input type="hidden" name="pm_source" value="<?=$_COOKIE["pm_source"];?>"/>
+                <input type="hidden" name="client" value="<?=$_COOKIE["_ga"];?>"/>
             </form>
             <span class="reg-form__description">
                 Нажав кнопку зарегистрироваться, я тем самым подтверждаю, что принимаю
