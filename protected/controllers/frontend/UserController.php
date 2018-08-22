@@ -1585,9 +1585,8 @@ class UserController extends AppController
             }
             else{
                  
-                $view = MainConfig::$PAGE_PROJECT_LIST;
+                $view = MainConfig::$VIEW_EMP_PROJECT_LIST;
                 $data = $model->getProjectEmployer();
-                file_put_contents(__DIR__ . "/_user_log.txt", print_r($data, true));
             }
         
 
