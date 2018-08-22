@@ -104,6 +104,7 @@ class Project extends ARModel
         $result = Yii::app()->db->createCommand()
             ->select("*")
             ->from('project p')
+            -where("p.id_user = $idus")
             ->order('p.crdate desc')
             ->queryAll();
             
