@@ -984,13 +984,6 @@ class Api
             ->where('active=:active AND date >:date AND subdomen=:domen', array(':active' => 1, ':date'=> $yester, ':domen'=>$domen))
             ->order("id_us desc")
             ->queryAll();
-
-            $feedback = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('feedback')
-            ->where('crdate >:date', array(':date'=> $yester))
-            ->order("crdate desc")
-            ->queryAll();
             
          }
          else {
@@ -1002,12 +995,6 @@ class Api
             ->group("id_us")
             ->queryAll();
 
-             $feedback = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('feedback')
-            ->where('(crdate BETWEEN :date AND :bdate)', array(':date'=> $date, 'bdate'=> $bdate))
-            ->order("crdate desc")
-            ->queryAll();
          }
             
          switch ($domen) {
