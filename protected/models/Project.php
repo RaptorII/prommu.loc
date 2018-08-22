@@ -113,11 +113,23 @@ class Project extends ARModel
     
     public function getAdresProgramm($project){
      
-         $result = Yii::app()->db->createCommand()
+        $result = Yii::app()->db->createCommand()
             ->select("*")
             ->from('project_city pc')
             ->where('pc.project = :project', array(':project' =>$project))
             ->order('pc.bdate desc')
+            ->queryAll();
+            
+        return $result;
+    }
+    
+    public function getProjectPromo($project){
+     
+        $result = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('project_user pu')
+            ->where('pu.project = :project', array(':project' =>$project))
+            ->order('pu.user desc')
             ->queryAll();
             
         return $result;
