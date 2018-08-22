@@ -158,7 +158,7 @@ return array(
         // uncomment the following to use a MySQL database
 
            'db' => array(
-            'connectionString' => 'mysql:host=localhost;dbname=promo',
+            'connectionString' => 'mysql:host=localhost;dbname=promo_dev',
             'emulatePrepare' => true,
             'username' => 'root',
             'password' => 'WWFf57EfyY4fcaFh',
