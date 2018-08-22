@@ -4,6 +4,7 @@
     header('Content-Type: text/html; charset=utf-8');
     $baseUrl = Yii::app()->baseUrl;
     $curUrl = Yii::app()->request->requestUri;
+    setcookie ("pm_source", $_GET['pm_source']);
 ?>
 <?php if(!(MOBILE_DEVICE && !SHOW_APP_MESS)): ?>
     <style type="text/css">
