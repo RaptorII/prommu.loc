@@ -30,6 +30,9 @@ class Auth
         $type = filter_var(Yii::app()->getRequest()->getParam('type'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $birthday = filter_var(Yii::app()->getRequest()->getParam('birthday'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $photos = filter_var(Yii::app()->getRequest()->getParam('photos'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $ip =  Yii::app()->getRequest()->getParam('ip');
+        $client =  Yii::app()->getRequest()->getParam('client');
+        $pm =  Yii::app()->getRequest()->getParam('pm');
         
         ///DOUBLE NULL
         $transition = explode(",", $transition);
@@ -146,32 +149,6 @@ class Auth
                     } // endif
 
 
-                //     $res = Yii::app()->db->createCommand()
-                //     ->insert('employer_company', array(
-                //         'id' => $pid,
-                //         'name' => $data->name,
-                //         'webSite' => 'prommu.com',
-                //         'city_id' => 1307,
-                //         'company_type_id' => 102,
-                //     ));
-
-                //     $res = Yii::app()->db->createCommand()
-                //     ->insert('employer_api', array(
-                //         'id' => $pid,
-                //         'vacancy' => 0,
-                //         'company_id' => $pid,
-                //         'post_id' => 112,
-                //         'user_id' => $usData['id_user'],
-                //     ));
-
-                //      $res = Yii::app()->db->createCommand()
-                // ->update('user_api', array(
-                //     'firstname' => ucfirst($data->fname ? $data->fname : $data->name ),
-                //    'lastname' =>  ucfirst($data->lname),
-                // ), 'id=:id', array(':id' => $usData['id_user']));
-            
-
-
                 // соискатель
                 } elseif ($usData['status'] == 2 && empty($usDataTest['id_user']))
                 {   
@@ -201,35 +178,7 @@ class Auth
                         $male = 'MALE';
                     }
                     else $male = 'FEMALE';
-
-
-
-                //     $res = Yii::app()->db->createCommand()
-                // ->update('user_api', array(
-                //     'firstname' => ucfirst($data->fname ? $data->fname : $data->name ),
-                //    'lastname' =>  ucfirst($data->lname),
-                // ), 'id=:id', array(':id' => $usData['id_user']));
-
-                //     $res = Yii::app()->db->createCommand()
-                //     ->insert('promo', array(
-                //         'id' => $pid,
-                //         'sex' => $male,
-                //         'birthday' => date("Y-m-d"),
-                //         'car_exists' => false,
-                //         'med_cert_exists' => false, 
-                //         'about' => ' ',
-                //         'user_id' => $usData['id_user'],
-                //         'pay' => ' '
-                //     ));
-
-                //     $res = Yii::app()->db->createCommand()
-                //     ->insert('promo_target_vacancy', array(
-                //         'promo_id' => $pid,
-                //         'rate' => 0,
-                //         'city_id' => 1307,
-                //         'post_id' => 111, ));
-                    
-                    
+                                     
 
                     if($data->photos) {
                          $insData = array('id_user' => $usData['id_user'],
@@ -324,8 +273,7 @@ class Auth
 
                 $this->AuthorizeNet(['id' => $usData['id_user']]);
 
-                $link = 'http://' . $_SERVER['HTTP_HOST'] . "/user/activate/?type=$type&uid=".$usData['id_user']."&sex=".$sex."&smart=".$smart."&birthday=".$birthday."&photos=".$photos;
-
+                $link = 'https://' . $_SERVER['HTTP_HOST'] . "/user/activate/?type=$type&uid=".$usData['id_user']."&sex=".$sex."&smart=".$smart."&birthday=".$birthday."&photos=".$photos."&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
                 $usData = Yii::app()->db->createCommand()
                 ->select("u.email, u.status")
                 ->from('user u')
@@ -362,8 +310,14 @@ class Auth
                 <br/>
                 Точка входа: <b>%s</b> 
                 <br/>
-                Реферер: <b>%s</b> ",
-            MainConfig::$SITE, $idUs,$types,$names, $emails, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer);
+                Реферер: <b>%s</b>
+                <br/>
+                IP: <b>%s</b>
+                 <br/>
+                GA: <b>%s</b>
+                 <br/>
+                Площадка: <b>%s</b>",
+            MainConfig::$SITE, $idUs,$types,$names, $emails, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
         $email[0] = "denisgresk@gmail.com";
         $email[1] = "man.market2@gmail.com";
         $email[2] = "susgresk@gmail.com";
@@ -398,8 +352,14 @@ class Auth
                 <br/>
                 Точка входа: <b>%s</b> 
                 <br/>
-                Реферер: <b>%s</b> ",
-            MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer);
+                Реферер: <b>%s</b> 
+                <br/>
+                IP: <b>%s</b>
+                <br/>
+                GA: <b>%s</b>
+                <br/>
+                Площадка: <b>%s</b>",
+            MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
         Share::sendmail("mk0630733719@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
 
 
@@ -433,8 +393,14 @@ class Auth
                 <br/>
                 Точка входа: <b>%s</b> 
                 <br/>
-                Реферер: <b>%s</b> ",
-            MainConfig::$SITE, $idUs,$types,$names, $emails, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer);
+                Реферер: <b>%s</b>
+                <br/>
+                IP: <b>%s</b>
+                <br/>
+                GA: <b>%s</b>
+                <br/>
+                Площадка: <b>%s</b>",
+            MainConfig::$SITE, $idUs,$types,$names, $emails, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
         $email[0] = "denisgresk@gmail.com";
         $email[1] = "man.market2@gmail.com";
         $email[2] = "susgresk@gmail.com";
@@ -469,8 +435,14 @@ class Auth
                 <br/>
                 Точка входа: <b>%s</b> 
                 <br/>
-                Реферер: <b>%s</b> ",
-            MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer);
+                Реферер: <b>%s</b>
+                <br/>
+                IP: <b>%s</b>
+                <br/>
+                GA: <b>%s</b>
+                <br/>
+                Площадка: <b>%s</b>",
+            MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client,$pm);
         Share::sendmail("mk0630733719@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
 
                    
@@ -780,7 +752,7 @@ class Auth
                 'params'=>array(':email' => $login, ':idus' => $usId),
             ));
         */
-            
+
          //'condition' => "email = :email OR id_user = :idus OR login = :login",
                 //'params'=>array(':email' => $login, ':idus' => $usId, ':login' => $login),
 //        $sql = "select id_user, status, email, passw from user where email = '$login' and passw = md5('$passw') OR id_user = {$usId} limit 1;";
@@ -812,7 +784,6 @@ class Auth
         // BM: Generate TOKEN
         $token = md5($login . date("d.m.Y") . $passMd5 . rand(100000,1000000));
         $uid = md5($user->id_user);
-
         $usRes = Yii::app()->db->createCommand()
             ->select("u.id_user id, u.login, u.email, u.status, u.isblocked, u.statuses
                 , w.id wid
@@ -834,7 +805,6 @@ class Auth
             ->where('u.id_user=:id_user', array(':id_user' => $user->id_user))
             ->queryRow();
 
-
         if ($usRes['wid'] > 0)
         {
             $res = Yii::app()->db->createCommand()
@@ -854,7 +824,6 @@ class Auth
 
 
         $usData = (object)$usRes;
-
         $this->saveAuthData(array('uid' => $uid,
                     'token' => $token,
                     'type' => $usData->status,
@@ -1362,37 +1331,14 @@ class Auth
         $keywords = filter_var(Yii::app()->getRequest()->getParam('keywords'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $point = filter_var(Yii::app()->getRequest()->getParam('point'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $last_referer = filter_var(Yii::app()->getRequest()->getParam('last_referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $ip = Yii::app()->getRequest()->getParam('ip');
+        $pm = Yii::app()->getRequest()->getParam('pm_source');
+        $client = Yii::app()->getRequest()->getParam('client');
+
         if( $idUs && $res['isblocked'] != 2 )
         {
             return array('error' => 1, 'message' => 'Пользователь с таким email адресом уже есть', 'inputData' => $inData['inputData']);
         } // endif
-
-        /*$recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
-        if(!empty($recaptcha))
-        {
-            $google_url="https://www.google.com/recaptcha/api/siteverify";
-            $secret='6Lf2oE0UAAAAAPkKWuPxJl0cuH7tOM2OoVW5k6yH';
-            $ip=$_SERVER['REMOTE_ADDR'];
-            $url=$google_url."?secret=".$secret."&response=".$recaptcha."&remoteip=".$ip;
-            //
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($curl, CURLOPT_TIMEOUT, 10);
-            curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.16) Gecko/20110319 Firefox/3.6.16");
-            $res = curl_exec($curl);
-            curl_close($curl);
-            //
-            $res = json_decode($res, true);//reCaptcha введена
-            if(!$res['success']) // wrong captcha
-            {
-                return array('error' => 1, 'message' => 'Вы допустили ошибку при прохождении проверки "Я не робот"', 'inputData' => $inData['inputData']);
-            }
-        }
-        else
-        {
-            return array('error' => 1, 'message' => 'Необходимо пройти проверку "Я не робот"', 'inputData' => $inData['inputData']);
-        }*/
 
         // пользователь уже есть
         if($idUs)
@@ -1422,64 +1368,6 @@ class Auth
         $password = $inData['inputData']['pass'];
 
         } // endif
-         if( $inData['type'] == 2 )
-        {
-            
-            // $salt = '$2a$10$'.substr(str_replace('+', '.', base64_encode(pack('N4', mt_rand(), mt_rand(), mt_rand(),mt_rand()))), 0, 22) . '$';
-
-            $token = crypt( $password, $salt);
-
-           // $token = Yii::$app->getSecurity()->generatePasswordHash($token);
-            // $res = Yii::app()->db->createCommand()
-            //     ->insert('user_api', array(
-            //         'password' => $token,
-            //         'id' => $idUs,
-            //         'firstName' => $inData['inputData']['firstname'],
-            //         'messages' => 0,
-            //         'negative' => 0,
-            //         'positive' => 0,
-            //         'invites'  => 0,
-            //         'date' => date('Y-m-d H:i:s'),
-            //         'lastName' =>$inData['inputData']['name'].$inData['inputData']['lastname'],
-            //         'email' => $inData['inputData']['email'],
-            //         'phone' => 2304,
-            //     ));
-
-            $idApi = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()') ->queryScalar();
-            // $res = Yii::app()->db->createCommand()
-            //     ->insert('_user_role', array(
-            //         'user_id' => $idApi,
-            //         'role_id' => 1,
-            //         ));
-        }
-        else {
-             // $salt = '$2a$10$'.substr(str_replace('+', '.', base64_encode(pack('N4', mt_rand(), mt_rand(), mt_rand(),mt_rand()))), 0, 22) . '$';
-
-            $token = crypt( $password, $salt);
-
-            // $res = Yii::app()->db->createCommand()
-            //     ->insert('user_api', array(
-            //         'password' => $token,
-            //         'id' => $idUs,
-            //         'firstName' => $inData['inputData']['name'].$inData['inputData']['firstname'],
-            //         'messages' => 0,
-            //         'negative' => 0,
-            //         'positive' => 0,
-            //         'invites'  => 0,
-            //         'date' => date('Y-m-d H:i:s'),
-            //         'lastName' =>$inData['inputData']['name'].$inData['inputData']['lastname'],
-            //         'email' => $inData['inputData']['email'],
-            //         'phone' => 2304,
-            //     ));
-            $idApi = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()') ->queryScalar();
-            // $res = Yii::app()->db->createCommand()
-            //     ->insert('_user_role', array(
-            //         'user_id' => $idApi,
-            //         'role_id' => 2,
-            //         ));
-
-
-        }
         // Generate TOKEN
 
         $token = md5($inData['inputData']['email'] . date("d.m.Y H:i:s") . md5($inData['inputData']['pass']));
@@ -1519,7 +1407,7 @@ class Auth
                         
         if( $inData['type'] == 2 )
         {
-            $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=2&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin."&sex=".$sex."&smart=".$smart;
+            $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=2&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin."&sex=".$sex."&smart=".$smart."&ip=".$ip."&client=".$client."&pm=".$pm;
             $message = '<p style="font-size:16px">Наш портал <b>Prommu.com</b> позволяет найти работу в России и странах СНГ совершенно бесплатно.</p>'
             .'<br/>'
             .'<p style=" margin-bottom: 0px;font-size:16px">Мы предлагаем временную работу и интересную подработку по следующим вакансиям:</p>'
@@ -1561,7 +1449,7 @@ class Auth
         }
         else
         {
-            $link = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=3&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin;
+            $link = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=3&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin."&ip=".$ip."&client=".$client."&pm=".$pm;
             $message = '<p style="font-size:16px;">Наш портал <b>Prommu.com</b> позволяет найти квалифицированный персонал в России и странах СНГ совершенно бесплатно.</p>'
             .'<br/>'
             .'<p style=" margin-bottom: 0px;font-size:16px;">На нашем портале вы сможете разместить вакансии и найти сотрудников по следующим направлениям:</p>'
@@ -1696,6 +1584,8 @@ class Auth
         $keywords = $data['keywords'];
         $point = $data['point'];
         $last_referer = $data['last_referer'];
+        $client = $data['client'];
+        $ip = $data['ip'];
 
         ///ANALITYCS DATA
 
@@ -1717,7 +1607,7 @@ class Auth
 
 
 
-             $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . "/?type=2&uid=" .$id."&birthday=".$birthday."&photos=".$data['photos']."&smart=1&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
+             $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . "/?&uid=" .$id."&birthday=".$birthday."&smart=1&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer."&ip=".$ip."&client=".$client;
                 return $link;
             } else {// endif
 
@@ -1753,6 +1643,7 @@ class Auth
                         'point' => $data['point'], 
                         'transition' => $data['transition'],
                         'last_referer' => $data['last_referer'],
+                        'active' => 0,
                         'admin' => 0,
                         'subdomen' => 0,
                     );
@@ -1761,7 +1652,7 @@ class Auth
                      $res = Yii::app()->db->createCommand()
                         ->insert('analytic', $analytData);
 
-        $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=3&t=' . $token . "&uid=" . $idUs."&photos=".$data['photos']."&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
+        $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=3&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer."&ip=".$ip."&client=".$client;
             
         } else {
 
@@ -1795,6 +1686,7 @@ class Auth
                         'point' => $data['point'], 
                         'transition' => $data['transition'],
                         'last_referer' => $data['last_referer'],
+                        'active' => 0,
                         'admin' => 0,
                         'subdomen' => 0,
                     );
@@ -1810,64 +1702,7 @@ class Auth
         else $sex = 0; $smart = 1;
 
 
-        // if($data['type'] == 3) {
-        //          $salt = '$2a$10$'.substr(str_replace('+', '.', base64_encode(pack('N4', mt_rand(), mt_rand(), mt_rand(),mt_rand()))), 0, 22) . '$';
-
-        //     $tokens = crypt( $pass, $salt);
-        //     $res = Yii::app()->db->createCommand()
-        //         ->insert('user_api', array(
-        //             'password' => $tokens,
-        //             'id' => $uid,
-        //             'firstName' => 'Prommu',
-        //             'messages' => 0,
-        //             'negative' => 0,
-        //             'positive' => 0,
-        //             'invites'  => 0,
-        //             'date' => date('Y-m-d H:i:s'),
-        //             'lastName' => 'Prommu',
-        //             'email' => $email,
-        //             'phone' => 2304,
-        //         ));
-        //     $idApi = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()') ->queryScalar();
-        //     $res = Yii::app()->db->createCommand()
-        //         ->insert('_user_role', array(
-        //             'user_id' => $idApi,
-        //             'role_id' => 2,
-        //             ));
-
-        //       }
-        //       else{
-
-        //         $salt = '$2a$10$'.substr(str_replace('+', '.', base64_encode(pack('N4', mt_rand(), mt_rand(), mt_rand(),mt_rand()))), 0, 22) . '$';
-
-        //     $tokens = crypt( $pass, $salt);
-
-        //    // $token = Yii::$app->getSecurity()->generatePasswordHash($token);
-        //     $res = Yii::app()->db->createCommand()
-        //         ->insert('user_api', array(
-        //             'password' => $tokens,
-        //             'id' => $idUs,
-        //             'firstName' => 'Prommu',
-        //             'messages' => 0,
-        //             'negative' => 0,
-        //             'positive' => 0,
-        //             'invites'  => 0,
-        //             'date' => date('Y-m-d H:i:s'),
-        //             'lastName' => 'Prommu',
-        //             'email' => $email,
-        //             'phone' => 2304,
-        //         ));
-
-        //     $idApi = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()') ->queryScalar();
-        //     $res = Yii::app()->db->createCommand()
-        //         ->insert('_user_role', array(
-        //             'user_id' => $idApi,
-        //             'role_id' => 1,
-        //             ));
-        //       }
-
-
-        $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=2&t=' . $token . "&uid=" . $idUs."&sex=".$sex."&birthday=".$birthday."&photos=".$data['photos']."&smart=1&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
+        $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=2&t=' . $token . "&uid=" . $idUs."&sex=".$sex."&birthday=".$birthday."&smart=1&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer."&ip=".$ip."&client=".$client;
 
 
 
