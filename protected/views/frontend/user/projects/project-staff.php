@@ -48,7 +48,6 @@ $arPromo = array(
 </div>
 
 <div class="project__module">
-
     <div class="project__xls">
         <!--<label for="person_xls_add">-->
             <a href="#" id="add-program">Добавить персонал на проект</a>
