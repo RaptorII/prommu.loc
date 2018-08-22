@@ -3,7 +3,6 @@
     $this->setBreadcrumbs($title, MainConfig::$PAGE_PROJECT_LIST);
     $this->setPageTitle($title);
 	$bUrl = Yii::app()->baseUrl;
-    var_dump($viData);
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/emp-list.css');
 ?>
 <div class="row projects">
