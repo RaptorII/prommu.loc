@@ -35,17 +35,16 @@ class Project extends ARModel
     
         //*Обрабатываем входящие данные
             for($i = 0; $i < count($props['city']); $i++){
-                
+                $cloud['city'][$i] = $props['city'][$i];
                 $j = 0;
                 foreach($props['lindex'][$props['city'][$i]] as $key => $value){
-                    $props['lindex'][$props['city'][$i]][$j] = $value;
-                    unset($props['lindex'][$props['city'][$i]][$key]);
+                    $cloud['lindex'][$props['city'][$i]][$j] = $value;
                     $j++;
                 }
 
                 $k = 0;
                 foreach($props['lname'][$props['city'][$i]] as $key => $value){
-                    $props['lname'][$props['city'][$i]][$k] = $value;
+                    $cloud['lname'][$props['city'][$i]][$k] = $value;
                     $k++;
                 }
                 
@@ -53,7 +52,7 @@ class Project extends ARModel
                 $j = 0;
                 foreach($props['bdate'][$props['city'][$i]] as $key => $value){
                     foreach($props['bdate'][$props['city'][$i]][$key] as $keys => $values){
-                        $props['bdate'][$props['city'][$i]][$j][$s] = $values;
+                        $cloud['bdate'][$props['city'][$i]][$j][$s] = $values;
                         
                         $s++;
                     }
@@ -64,7 +63,7 @@ class Project extends ARModel
                 $j = 0;
                 foreach($props['edate'][$props['city'][$i]] as $key => $value){
                     foreach($props['edate'][$props['city'][$i]][$key] as $keys => $values){
-                        $props['edate'][$props['city'][$i]][$j][$s] = $values;
+                        $cloud['edate'][$props['city'][$i]][$j][$s] = $values;
                         $s++;
                     }
                     $j++;
@@ -74,7 +73,7 @@ class Project extends ARModel
                 $j = 0;
                 foreach($props['btime'][$props['city'][$i]] as $key => $value){
                     foreach($props['btime'][$props['city'][$i]][$key] as $keys => $values){
-                        $props['btime'][$props['city'][$i]][$j][$s] = $values;
+                        $cloud['btime'][$props['city'][$i]][$j][$s] = $values;
                         $s++;
                     }
                     $j++;
@@ -84,7 +83,7 @@ class Project extends ARModel
                 $j = 0;
                 foreach($props['etime'][$props['city'][$i]] as $key => $value){
                     foreach($props['etime'][$props['city'][$i]][$key] as $keys => $values){
-                        $props['etime'][$props['city'][$i]][$j][$s] = $values;
+                        $cloud['etime'][$props['city'][$i]][$j][$s] = $values;
                         $s++;
                     }
                     $j++;
@@ -95,19 +94,19 @@ class Project extends ARModel
        
         //*
         $k = 0;
-         for($i = 0; $i < count($props['city']); $i++){
-            for($j = 0; $j < count($props['lindex'][$props['city'][$i]]); $j ++){
-                for($s = 0; $s < count($props['bdate'][$props['city'][$i]][$j]); $s ++){
+         for($i = 0; $i < count($cloud['city']); $i++){
+            for($j = 0; $j < count($cloud['lindex'][$cloud['city'][$i]]); $j ++){
+                for($s = 0; $s < count($cloud['bdate'][$cloud['city'][$i]][$j]); $s ++){
                     $title = $props['name'];
                     
 
-                    $cloud[$k]['city'] = $props['city'][$i];
-                    $cloud[$k]['lindex'] = $props['lindex'][$props['city'][$i]][$j];
-                    $cloud[$k]['lname'] = $props['lname'][$props['city'][$i]][$j];
-                    $cloud[$k]['bdate'] = $props['bdate'][$props['city'][$i]][$j][$s];
-                    $cloud[$k]['edate'] = $props['edate'][$props['city'][$i]][$j][$s];
-                    $cloud[$k]['btime'] = $props['btime'][$props['city'][$i]][$j][$s];
-                    $cloud[$k]['etime'] = $props['etime'][$props['city'][$i]][$j][$s];
+                    $clouds[$k]['city'] = $cloud['city'][$i];
+                    $clouds[$k]['lindex'] = $cloud['lindex'][$cloud['city'][$i]][$j];
+                    $clouds[$k]['lname'] = $cloud['lname'][$cloud['city'][$i]][$j];
+                    $clouds[$k]['bdate'] = $cloud['bdate'][$cloud['city'][$i]][$j][$s];
+                    $clouds[$k]['edate'] = $cloud['edate'][$cloud['city'][$i]][$j][$s];
+                    $clouds[$k]['btime'] = $cloud['btime'][$cloud['city'][$i]][$j][$s];
+                    $clouds[$k]['etime'] = $cloud['etime'][$cloud['city'][$i]][$j][$s];
     
                     // if($cloud[$s]['city']){
                     // $res = Yii::app()->db->createCommand()
