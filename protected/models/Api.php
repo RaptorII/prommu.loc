@@ -103,8 +103,7 @@ class Api
             ->select("*")
             ->from('analytic')
             ->order("id desc")
-            ->offset(5000)
-            ->limit(10000)
+            ->where('canal = :canal', array(':canal' =>'yandex'))
             ->queryAll();
 
             for($i = 0; $i < count($data); $i ++){
