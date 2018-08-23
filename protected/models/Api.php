@@ -1077,7 +1077,7 @@ class Api
                                    
                 }
 
-                if(strpos("cpc", $row["canal"]) !== false) {
+                if(strpos($row["canal"], "cpc") !== false) {
                     $row["canal"] = explode(" ", $row["canal"])[0];
                                    
                 }
