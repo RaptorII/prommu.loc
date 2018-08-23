@@ -24,7 +24,9 @@ class UserController extends AppController
     }
     
       public function actionProCreate(){
-        var_dump($_POST);
+        
+        $dum = "<pre style='height:100px;cursor:pointer' onclick='$(this).css({height:'inherit'})'><? print_r($_POST); ?></pre>";
+        echo $dum;
         // $project = new Project();
         // $result = $project->createProject($_POST);
         // $this->redirect("http://dev.prommu.com/user/projects");
