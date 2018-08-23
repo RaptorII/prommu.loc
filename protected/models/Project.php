@@ -112,20 +112,20 @@ class Project extends ARModel
                     $clouds[$k]['btime'] = $cloud['btime'][$cloud['city'][$i]][$j][$s];
                     $clouds[$k]['etime'] = $cloud['etime'][$cloud['city'][$i]][$j][$s];
     
-                    // if($cloud[$s]['city']){
-                    // $res = Yii::app()->db->createCommand()
-                    //     ->insert('project_city', array(
-                    //         'project' => $project,
-                    //         'title' => $title,
-                    //         'adres' => $cloud[$s]['lindex'],
-                    //         'name' => $cloud[$s]['lname'],
-                    //         'id_city' => $props['city'][$i],
-                    //         'bdate' => $cloud[$s]['bdate'],
-                    //         'edate' => $cloud[$s]['edate'],
-                    //         'btime' => $cloud[$s]['btime'],
-                    //         'etime' => $cloud[$s]['etime'],
-                    //     ));
-                    // }
+                    if($cloud[$s]['city']){
+                    $res = Yii::app()->db->createCommand()
+                        ->insert('project_city', array(
+                            'project' => $project,
+                            'title' => $title,
+                            'adres' => $clouds[$k]['lindex'],
+                            'name' => $clouds[$k]['lname'],
+                            'id_city' => $cloud['city'][$i],
+                            'bdate' => $clouds[$k]['bdate'],
+                            'edate' => $clouds[$k]['edate'],
+                            'btime' => $clouds[$k]['btime'],
+                            'etime' => $clouds[$k]['etime'],
+                        ));
+                    }
                     $k++;
                 }
 
