@@ -42,13 +42,14 @@ $arPromo = array(
 
 ?>
 
-<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
+<? /*<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
 <? print_r($arPromo); ?>
 </pre>
 
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
 <? print_r($_POST); ?>
-</pre>
+</pre>*/
+?>
 
 <div class="row project">
     <div class="col-xs-12">
