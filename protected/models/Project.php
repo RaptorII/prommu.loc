@@ -91,41 +91,43 @@ class Project extends ARModel
                 
             }
         
-        return $props;
+       
         //*
+        $k = 0;
          for($i = 0; $i < count($props['city']); $i++){
             for($j = 0; $j < count($props['lindex'][$props['city'][$i]]); $j ++){
                 for($s = 0; $s < count($props['bdate'][$props['city'][$i]][$j]); $s ++){
                     $title = $props['name'];
                     
 
-                    $cloud[$s]['city'] = $props['city'][$i];
-                    $cloud[$s]['lindex'] = $props['lindex'][$props['city'][$i]][$j];
-                    $cloud[$s]['lname'] = $props['lname'][$props['city'][$i]][$j];
-                    $cloud[$s]['bdate'] = $props['bdate'][$props['city'][$i]][$j][$s];
-                    $cloud[$s]['edate'] = $props['edate'][$props['city'][$i]][$j][$s];
-                    $cloud[$s]['btime'] = $props['btime'][$props['city'][$i]][$j][$s];
-                    $cloud[$s]['etime'] = $props['etime'][$props['city'][$i]][$j][$s];
+                    $cloud[$k]['city'] = $props['city'][$i];
+                    $cloud[$k]['lindex'] = $props['lindex'][$props['city'][$i]][$j];
+                    $cloud[$k]['lname'] = $props['lname'][$props['city'][$i]][$j];
+                    $cloud[$k]['bdate'] = $props['bdate'][$props['city'][$i]][$j][$s];
+                    $cloud[$k]['edate'] = $props['edate'][$props['city'][$i]][$j][$s];
+                    $cloud[$k]['btime'] = $props['btime'][$props['city'][$i]][$j][$s];
+                    $cloud[$k]['etime'] = $props['etime'][$props['city'][$i]][$j][$s];
     
-                    if($cloud[$s]['city']){
-                    $res = Yii::app()->db->createCommand()
-                        ->insert('project_city', array(
-                            'project' => $project,
-                            'title' => $title,
-                            'adres' => $cloud[$s]['lindex'],
-                            'name' => $cloud[$s]['lname'],
-                            'id_city' => $props['city'][$i],
-                            'bdate' => $cloud[$s]['bdate'],
-                            'edate' => $cloud[$s]['edate'],
-                            'btime' => $cloud[$s]['btime'],
-                            'etime' => $cloud[$s]['etime'],
-                        ));
-                    }
+                    // if($cloud[$s]['city']){
+                    // $res = Yii::app()->db->createCommand()
+                    //     ->insert('project_city', array(
+                    //         'project' => $project,
+                    //         'title' => $title,
+                    //         'adres' => $cloud[$s]['lindex'],
+                    //         'name' => $cloud[$s]['lname'],
+                    //         'id_city' => $props['city'][$i],
+                    //         'bdate' => $cloud[$s]['bdate'],
+                    //         'edate' => $cloud[$s]['edate'],
+                    //         'btime' => $cloud[$s]['btime'],
+                    //         'etime' => $cloud[$s]['etime'],
+                    //     ));
+                    // }
+                    $k++;
                 }
 
             }
         }
-
+     return $cloud;
         $users = explode(',', $props['users']);
 
         for($i = 0; $i < count($users); $i ++){
