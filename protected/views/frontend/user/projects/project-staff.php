@@ -72,7 +72,7 @@ $arPromo = array(
             <div class="program__btns control__buttons">
                 <span id="control__new-personal" class="control__add-btn">+ ПРИГЛАСИТЬ ПЕРСОНАЛ</span>
                 <span id="control__add-personal" class="control__add-btn">+ ДОБАВИТЬ ПЕРСОНАЛ</span>
-                <input type="submit" id="control__save-btn" class="program__save-btn" value="СОХРАНИТЬ">
+                <button type="submit" id="control__save-btn" class="program__save-btn">СОХРАНИТЬ</button>
             </div>
         </div>
 
@@ -245,7 +245,7 @@ $arPromo = array(
                             <span data-enable="вкл." data-disable="выкл."></span>
                         </label>
                     </div>
-                    <span class="workers-form-btn off" id="workers-btn">НАЗАД</span>
+                    <span class="workers-form-btn off" id="workers-btn">СОХРАНИТЬ</span>
                     <input type="hidden" name="users" id="mess-workers">
                     <input type="hidden" name="users-cnt" id="mess-wcount-inp" value="0">
                 </div>
