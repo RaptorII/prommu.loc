@@ -1076,6 +1076,11 @@ class Api
                     $row['transition'] = $row['canal']; 
                                    
                 }
+
+                if(strpos("cpc", $row["canal"]) !== false) {
+                    $row["canal"] = explode(" ", $row["canal"])[0];
+                                   
+                }
                 if($user['firstname']) {
                     $firstname = $user['firstname'];
                     $lastname = $user['lastname'];
