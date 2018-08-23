@@ -103,8 +103,8 @@ class Api
             ->select("*")
             ->from('analytic')
             ->order("id desc")
-            ->offset(0)
-            ->limit(1000)
+            ->offset(5000)
+            ->limit(10000)
             ->queryAll();
 
             for($i = 0; $i < count($data); $i ++){
