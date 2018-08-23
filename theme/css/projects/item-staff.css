@@ -24,7 +24,7 @@
 .control__buttons #control__save-btn{
     border: none;
     outline: none;
-    line-height: 31px;
+    line-height: 31px!important;
 }
 
 .project__xls #add-program {
