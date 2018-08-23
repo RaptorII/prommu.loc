@@ -92,7 +92,6 @@ class Project extends ARModel
             }
         
         //*
-        return $props;
          for($i = 0; $i < count($props['city']); $i++){
             for($j = 0; $j < count($props['lindex'][$props['city'][$i]]); $j ++){
                 for($s = 0; $s < count($props['bdate'][$props['city'][$i]][$j]); $s ++){
