@@ -39,6 +39,7 @@ class Project extends ARModel
                 $j = 0;
                 foreach($props['lindex'][$props['city'][$i]] as $key => $value){
                     $props['lindex'][$props['city'][$i]][$j] = $value;
+                    unset($props['lindex'][$props['city'][$i]][$key]);
                     $j++;
                 }
 
