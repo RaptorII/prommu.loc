@@ -25,3 +25,21 @@
     border: none;
     outline: none;
 }
+
+.project__xls #add-program {
+    display: inline-block;
+    padding: 0 20px 20px 0;
+    text-decoration: underline;
+    background: url(/theme/pic/projects/xls-icon.png) top right no-repeat;
+    font-family: RobotoCondensed-Regular, verdana, arial;
+    color: #abb820;
+    text-decoration: none;
+    transition: .3s all;
+    font-size: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.project__xls #add-program:hover{
+    color:#ff6500;
+}

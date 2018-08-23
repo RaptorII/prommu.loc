@@ -57,11 +57,11 @@ $arPromo = array(
         </div>
     </div>
 </div>
-<form action="/" method="POST" id="update-person">
+<form action="" method="POST" id="update-person">
     <div id="main" class="project__module">
         <div class="project__xls">
             <!--<label for="person_xls_add">-->
-            <a href="#" id="add-program">Добавить персонал на проект</a>
+            <label for="person_xls_add" id="add-program">Добавить персонал на проект</label>
             <!--</label>-->
             <input id="person_xls_add" type="file" name="person_xls" class="hide" accept="xls">
             <a href="/uploads/example.xls" download>Скачать пример для добавления</a>
