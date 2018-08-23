@@ -1070,7 +1070,12 @@ class Api
                 ->join('user usr', 'usr.id_user=e.id_user')
                 ->where('e.id_user=:id_user', array(':id_user' => $id_user))
                 ->queryRow();
-
+                if($row["canal"] == 'yandex' || $row["canal"] == 'google'  || $row["canal"] == 'facebook' ) {
+                    $row["canal"] = $row['referer'];
+                    $row["referer"] = $row['transition'];
+                    $row['transition'] = $row['canal']; 
+                                   
+                }
                 if($user['firstname']) {
                     $firstname = $user['firstname'];
                     $lastname = $user['lastname'];
@@ -1194,12 +1199,6 @@ class Api
                     // $row["keywords"] = $data['keywords'];
                 }
 
-                if($row["canal"] == 'yandex' || $row["canal"] == 'google' ) {
-                    $row["canal"] = $row['referer'];
-                    $row["referer"] = $row['transition'];
-                    $row['transition'] = $row['canal']; 
-                                   
-                }
 
                
 
