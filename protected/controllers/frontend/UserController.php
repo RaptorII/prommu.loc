@@ -44,6 +44,7 @@ class UserController extends AppController
                 foreach($props['bdate'][$props['city'][$i]] as $key => $value){
                     foreach($props['bdate'][$props['city'][$i]][$key] as $keys => $values){
                         $props['bdate'][$props['city'][$i]][$j][$s] = $values;
+                        unset($props['bdate'][$props['city'][$i]][$key]);
                         $s++;
                     }
                     $j++;
@@ -54,6 +55,7 @@ class UserController extends AppController
                 foreach($props['edate'][$props['city'][$i]] as $key => $value){
                     foreach($props['edate'][$props['city'][$i]][$key] as $keys => $values){
                         $props['edate'][$props['city'][$i]][$j][$s] = $values;
+                        unset($props['edate'][$props['city'][$i]][$key]);
                         $s++;
                     }
                     $j++;
@@ -64,6 +66,7 @@ class UserController extends AppController
                 foreach($props['btime'][$props['city'][$i]] as $key => $value){
                     foreach($props['btime'][$props['city'][$i]][$key] as $keys => $values){
                         $props['btime'][$props['city'][$i]][$j][$s] = $values;
+                        unset($props['btime'][$props['city'][$i]][$key]);
                         $s++;
                     }
                     $j++;
@@ -74,6 +77,7 @@ class UserController extends AppController
                 foreach($props['etime'][$props['city'][$i]] as $key => $value){
                     foreach($props['etime'][$props['city'][$i]][$key] as $keys => $values){
                         $props['etime'][$props['city'][$i]][$j][$s] = $values;
+                        unset($props['etime'][$props['city'][$i]][$key]);
                         $s++;
                     }
                     $j++;
