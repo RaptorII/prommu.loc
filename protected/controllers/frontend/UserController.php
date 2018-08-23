@@ -27,8 +27,7 @@ class UserController extends AppController
    
         $project = new Project();
         $result = $project->createProject($_POST);
-        var_dump($result);
-        // $this->redirect("http://dev.prommu.com/user/projects");
+        $this->redirect("http://dev.prommu.com/user/projects");
 
       }
 
