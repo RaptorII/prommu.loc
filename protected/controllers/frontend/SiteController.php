@@ -700,12 +700,12 @@ class SiteController extends AppController
                     exit();
                 }
                 // cities for select
-                $Q1 = Yii::app()->db->createCommand()
+                /*$Q1 = Yii::app()->db->createCommand()
                     ->select('t.id_city id, t.name, t.seo_url')
                     ->from('city t')
                     ->where("t.id_co = 1")
                     ->limit(10000);
-                $arCities = $Q1->queryAll();
+                $arCities = $Q1->queryAll();*/
                 //
                 //  КУКИ
                 // для редиректа, если в ранее выбран город  1 - данных нет, 0 - есть
@@ -772,7 +772,7 @@ class SiteController extends AppController
                         'viData' => $data,
                         'pages' => $pages, 
                         'count' => $count,
-                        'arCities' => $arCities,
+                        //'arCities' => $arCities,
                         'cityName' => $cityName,
                         'cityId' => $cityId,
                         'seo' => $seo

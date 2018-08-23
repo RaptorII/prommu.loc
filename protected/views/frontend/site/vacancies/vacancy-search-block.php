@@ -28,13 +28,15 @@
                     <div class="psv-list__content">
                         <a href="<?= MainConfig::$PAGE_VACANCY . DS . $vac['id'] ?>" class="psv-list__title">
                             <?= $vac['posts'] ? join(', ', $vac['posts']) : '' ?>
-                            <?php if( $vac['shour'] > 0 || $vac['sweek'] > 0 || $vac['smonth'] > 0 ): ?>
+                            <?php if( $vac['shour'] > 0 || $vac['sweek'] > 0 || $vac['smonth'] > 0 || $vac['svisit'] > 0 ): ?>
                                 <?php if($vac['shour'] > 0): ?>
                                     - <span class="payment"><?=$vac['shour'] . ' руб/час'?></span>
                                 <?php elseif($vac['sweek'] > 0): ?>
                                     - <span class="payment"><?=$vac['sweek'] . ' руб/неделю'?></span>
                                 <?php elseif($vac['smonth'] > 0): ?>
                                     - <span class="payment"><?=$vac['smonth'] . ' руб/мес'?></span>
+                                <?php elseif($vac['svisit'] > 0): ?>
+                                    - <span class="payment"><?=$vac['svisit'] . ' руб/посещение'?></span>
                                 <?php endif; ?>
                             <?php endif; ?>
                         </a>
@@ -95,14 +97,16 @@
             <?php $cnt=1; ?>
             <?php foreach($viData['vacs'] as $key => $vac): ?>
                 <div class="col-xs-12 col-sm-6 col-md-4 psv__table-item">
-                    <a href="<?= MainConfig::$PAGE_VACANCY . DS . $vac['id'] ?>" class="psv-table__title <?=($vac['ispremium']?'psv-table__title-premium':'')?> js-g-hashint" title="Премиум вакансия"><?php 
-                        if( $vac['shour'] > 0 || $vac['sweek'] > 0 || $vac['smonth'] > 0 ){
+                    <a href="<?= MainConfig::$PAGE_VACANCY . DS . $vac['id'] ?>" class="psv-table__title<?=($vac['ispremium']?' psv-table__title-premium js-g-hashint" title="Премиум вакансия"':'"')?>><?php 
+                        if( $vac['shour'] > 0 || $vac['sweek'] > 0 || $vac['smonth'] > 0 || $vac['svisit'] > 0 ){
                             if($vac['shour'] > 0)
                                 echo join(', ', $vac['posts']) . " - " . $vac['shour'] . ' руб/час';
                             elseif($vac['sweek'] > 0)
                                 echo join(', ', $vac['posts']) . " - " . $vac['sweek'] . ' руб/неделю';
                             elseif($vac['smonth'] > 0)
                                 echo join(', ', $vac['posts']) . " - " . $vac['smonth'] . ' руб/мес';
+                            elseif($vac['svisit'] > 0)
+                                echo join(', ', $vac['posts']) . " - " . $vac['svisit'] . ' руб/посещение';
                         }?>
                     </a>
                     <div class="psv__table-block <?=($vac['ispremium']?'psv__table-premium':'')?>">
@@ -176,14 +180,16 @@
             <?php $cnt=1; ?>
             <?php foreach($viData['vacs'] as $key => $vac): ?>
                 <div class="col-xs-12 col-sm-6 col-md-4 psv__table-item">
-                    <a href="<?= MainConfig::$PAGE_VACANCY . DS . $vac['id'] ?>" class="psv-table__title <?=($vac['ispremium']?'psv-table__title-premium':'')?> js-g-hashint" title="Премиум вакансия"><?php 
-                        if( $vac['shour'] > 0 || $vac['sweek'] > 0 || $vac['smonth'] > 0 ){
+                    <a href="<?= MainConfig::$PAGE_VACANCY . DS . $vac['id'] ?>" class="psv-table__title<?=($vac['ispremium']?' psv-table__title-premium js-g-hashint" title="Премиум вакансия"':'"')?>><?php 
+                        if( $vac['shour'] > 0 || $vac['sweek'] > 0 || $vac['smonth'] > 0 || $vac['svisit'] > 0 ){
                             if($vac['shour'] > 0)
                                 echo join(', ', $vac['posts']) . " - " . $vac['shour'] . ' руб/час';
                             elseif($vac['sweek'] > 0)
                                 echo join(', ', $vac['posts']) . " - " . $vac['sweek'] . ' руб/неделю';
                             elseif($vac['smonth'] > 0)
                                 echo join(', ', $vac['posts']) . " - " . $vac['smonth'] . ' руб/мес';
+                            elseif($vac['svisit'] > 0)
+                                echo join(', ', $vac['posts']) . " - " . $vac['svisit'] . ' руб/посещение';
                         }?>
                     </a>
                     <div class="psv__table-block <?=($vac['ispremium']?'psv__table-premium':'')?>">

@@ -2011,6 +2011,7 @@ WHERE id_vac = {$inVacId}";
                    e.shour,
                    e.sweek,
                    e.smonth,
+                   e.svisit,
                    e.isman,
                    e.smart,
                    e.iswoman,
