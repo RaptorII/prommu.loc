@@ -99,15 +99,24 @@ class Api
     }
     
     public function geoProject(){
-        $idus = Yii::app()->getRequest()->getParam('idus');
-        $result = Yii::app()->db->createCommand()
+       $data = Yii::app()->db->createCommand()
             ->select("*")
-            ->from('project p')
-            ->where('p.id_user = :idus', array(':idus' =>$idus))
-            ->order('p.crdate desc')
+            ->from('analytic')
+            ->order("id desc")
+            ->offset(0)
+            ->limit(1000)
             ->queryAll();
-        
-        return $result;
+
+            for($i = 0; $i < count($data); $i ++){
+                if($data[$i]['canal'] == 'yandex' || $data[$i]['canal'] == 'google' ) {
+                    $res = Yii::app()->db->createCommand()
+                                    ->update('analytic', array(
+                                            'canal' => $data[$i]['referer'],
+                                            'referer' => $data[$i]['transition'],
+                                            'transition' => $data[$i]['canal'],
+                                    ), 'id=:id', array(':id' => $data[$i]['id']));
+                }
+            }
          
          
     }
