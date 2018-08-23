@@ -39,6 +39,7 @@ class Project extends ARModel
                 $j = 0;
                 foreach($props['lindex'][$props['city'][$i]] as $key => $value){
                     $props['lindex'][$props['city'][$i]][$j] = $value;
+                    unset($props['lindex'][$props['city'][$i]][$key]);
                     $j++;
                 }
 
@@ -53,7 +54,7 @@ class Project extends ARModel
                 foreach($props['bdate'][$props['city'][$i]] as $key => $value){
                     foreach($props['bdate'][$props['city'][$i]][$key] as $keys => $values){
                         $props['bdate'][$props['city'][$i]][$j][$s] = $values;
-                        unset($props['bdate'][$props['city'][$i]][$key][$keys]);
+                        
                         $s++;
                     }
                     $j++;
@@ -64,8 +65,6 @@ class Project extends ARModel
                 foreach($props['edate'][$props['city'][$i]] as $key => $value){
                     foreach($props['edate'][$props['city'][$i]][$key] as $keys => $values){
                         $props['edate'][$props['city'][$i]][$j][$s] = $values;
-                        unset($props['edate'][$props['city'][$i]][$key]);
-                        unset($props['edate'][$props['city'][$i]][$key][$keys]);
                         $s++;
                     }
                     $j++;
@@ -76,7 +75,6 @@ class Project extends ARModel
                 foreach($props['btime'][$props['city'][$i]] as $key => $value){
                     foreach($props['btime'][$props['city'][$i]][$key] as $keys => $values){
                         $props['btime'][$props['city'][$i]][$j][$s] = $values;
-                        unset($props['btime'][$props['city'][$i]][$key]);
                         $s++;
                     }
                     $j++;
@@ -87,7 +85,6 @@ class Project extends ARModel
                 foreach($props['etime'][$props['city'][$i]] as $key => $value){
                     foreach($props['etime'][$props['city'][$i]][$key] as $keys => $values){
                         $props['etime'][$props['city'][$i]][$j][$s] = $values;
-                        unset($props['etime'][$props['city'][$i]][$key]);
                         $s++;
                     }
                     $j++;
