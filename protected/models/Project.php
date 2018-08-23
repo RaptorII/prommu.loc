@@ -51,6 +51,7 @@ class Project extends ARModel
                 $s = 0;
                 $j = 0;
                 foreach($props['bdate'][$props['city'][$i]] as $key => $value){
+                    $s = 0;
                     foreach($props['bdate'][$props['city'][$i]][$key] as $keys => $values){
                         $cloud['bdate'][$props['city'][$i]][$j][$s] = $values;
                         
@@ -59,9 +60,10 @@ class Project extends ARModel
                     $j++;
                 }
                 
-                $s = 0;
+          
                 $j = 0;
                 foreach($props['edate'][$props['city'][$i]] as $key => $value){
+                    $s = 0;
                     foreach($props['edate'][$props['city'][$i]][$key] as $keys => $values){
                         $cloud['edate'][$props['city'][$i]][$j][$s] = $values;
                         $s++;
@@ -72,6 +74,7 @@ class Project extends ARModel
                 $s = 0;
                 $j = 0;
                 foreach($props['btime'][$props['city'][$i]] as $key => $value){
+                    $s = 0;
                     foreach($props['btime'][$props['city'][$i]][$key] as $keys => $values){
                         $cloud['btime'][$props['city'][$i]][$j][$s] = $values;
                         $s++;
@@ -82,6 +85,7 @@ class Project extends ARModel
                 $s = 0;
                 $j = 0;
                 foreach($props['etime'][$props['city'][$i]] as $key => $value){
+                    $s = 0;
                     foreach($props['etime'][$props['city'][$i]][$key] as $keys => $values){
                         $cloud['etime'][$props['city'][$i]][$j][$s] = $values;
                         $s++;
