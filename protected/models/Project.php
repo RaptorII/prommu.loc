@@ -39,6 +39,7 @@ class Project extends ARModel
                 $j = 0;
                 foreach($props['lindex'][$props['city'][$i]] as $key => $value){
                     $props['lindex'][$props['city'][$i]][$j] = $value;
+                    
                     $j++;
                 }
 
@@ -53,6 +54,7 @@ class Project extends ARModel
                 foreach($props['bdate'][$props['city'][$i]] as $key => $value){
                     foreach($props['bdate'][$props['city'][$i]][$key] as $keys => $values){
                         $props['bdate'][$props['city'][$i]][$j][$s] = $values;
+                        unset($props['bdate'][$props['city'][$i]][$key]);
                         $s++;
                     }
                     $j++;
@@ -63,6 +65,7 @@ class Project extends ARModel
                 foreach($props['edate'][$props['city'][$i]] as $key => $value){
                     foreach($props['edate'][$props['city'][$i]][$key] as $keys => $values){
                         $props['edate'][$props['city'][$i]][$j][$s] = $values;
+                        unset($props['edate'][$props['city'][$i]][$key]);
                         $s++;
                     }
                     $j++;
