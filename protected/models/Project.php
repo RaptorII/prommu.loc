@@ -34,12 +34,11 @@ class Project extends ARModel
                         ));
     
         //*Обрабатываем входящие данные
-            for($i = 0; $i < count($props['city']); $i++){
+for($i = 0; $i < count($props['city']); $i++){
                 
                 $j = 0;
                 foreach($props['lindex'][$props['city'][$i]] as $key => $value){
                     $props['lindex'][$props['city'][$i]][$j] = $value;
-                    
                     $j++;
                 }
 
@@ -76,6 +75,7 @@ class Project extends ARModel
                 foreach($props['btime'][$props['city'][$i]] as $key => $value){
                     foreach($props['btime'][$props['city'][$i]][$key] as $keys => $values){
                         $props['btime'][$props['city'][$i]][$j][$s] = $values;
+                        unset($props['btime'][$props['city'][$i]][$key]);
                         $s++;
                     }
                     $j++;
@@ -86,14 +86,13 @@ class Project extends ARModel
                 foreach($props['etime'][$props['city'][$i]] as $key => $value){
                     foreach($props['etime'][$props['city'][$i]][$key] as $keys => $values){
                         $props['etime'][$props['city'][$i]][$j][$s] = $values;
+                        unset($props['etime'][$props['city'][$i]][$key]);
                         $s++;
                     }
                     $j++;
                 }
                 
-                
             }
-
         
         //*
         
