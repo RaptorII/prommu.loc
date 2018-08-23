@@ -39,12 +39,14 @@ class Project extends ARModel
                 $j = 0;
                 foreach($props['lindex'][$props['city'][$i]] as $key => $value){
                     $props['lindex'][$props['city'][$i]][$j] = $value;
+                    unset($props['lindex'][$props['city'][$i]][$key]);
                     $j++;
                 }
 
                 $k = 0;
                 foreach($props['lname'][$props['city'][$i]] as $key => $value){
                     $props['lname'][$props['city'][$i]][$k] = $value;
+                    unset($props['lname'][$props['city'][$i]][$key]);
                     $k++;
                 }
                 
@@ -106,7 +108,7 @@ class Project extends ARModel
                     $cloud[$s]['edate'] = $props['edate'][$props['city'][$i]][$j][$s];
                     $cloud[$s]['btime'] = $props['btime'][$props['city'][$i]][$j][$s];
                     $cloud[$s]['etime'] = $props['etime'][$props['city'][$i]][$j][$s];
-
+    
                     // if($cloud[$s]['city']){
                     // $res = Yii::app()->db->createCommand()
                     //     ->insert('project_city', array(
