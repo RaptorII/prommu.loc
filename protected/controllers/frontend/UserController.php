@@ -42,7 +42,7 @@ class UserController extends AppController
                 $s = 0;
                 $j = 0;
                 foreach($props['bdate'][$props['city'][$i]] as $key => $value){
-                    foreach($props['bdate'][$props['city'][$i]][$value] as $keys => $values){
+                    foreach($props['bdate'][$props['city'][$i]][$key] as $keys => $values){
                         $props['bdate'][$props['city'][$i]][$j][$s] = $values;
                         $s++;
                     }
@@ -52,7 +52,7 @@ class UserController extends AppController
                 $s = 0;
                 $j = 0;
                 foreach($props['edate'][$props['city'][$i]] as $key => $value){
-                    foreach($props['edate'][$props['city'][$i]][$value] as $keys => $values){
+                    foreach($props['edate'][$props['city'][$i]][$key] as $keys => $values){
                         $props['edate'][$props['city'][$i]][$j][$s] = $values;
                         $s++;
                     }
@@ -62,7 +62,7 @@ class UserController extends AppController
                 $s = 0;
                 $j = 0;
                 foreach($props['btime'][$props['city'][$i]] as $key => $value){
-                    foreach($props['btime'][$props['city'][$i]][$value] as $keys => $values){
+                    foreach($props['btime'][$props['city'][$i]][$key] as $keys => $values){
                         $props['btime'][$props['city'][$i]][$j][$s] = $values;
                         $s++;
                     }
@@ -72,7 +72,7 @@ class UserController extends AppController
                 $s = 0;
                 $j = 0;
                 foreach($props['etime'][$props['city'][$i]] as $key => $value){
-                    foreach($props['etime'][$props['city'][$i]][$value] as $keys => $values){
+                    foreach($props['etime'][$props['city'][$i]][$key] as $keys => $values){
                         $props['etime'][$props['city'][$i]][$j][$s] = $values;
                         $s++;
                     }
