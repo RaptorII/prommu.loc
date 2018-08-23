@@ -194,11 +194,11 @@ class Employer extends ARModel
 
     public function deleteEmployer($cloud){
         foreach ($cloud as $key => $value) {
-            Yii::app()->db->createCommand()->delete('user', 'id_user = :id_user', array(':id_user' => $value));
+            // Yii::app()->db->createCommand()->delete('user', 'id_user = :id_user', array(':id_user' => $value));
 
-            Yii::app()->db->createCommand()->delete('employer', 'id_user = :id_user', array(':id_user' => $value));
+            // Yii::app()->db->createCommand()->delete('employer', 'id_user = :id_user', array(':id_user' => $value));
 
-            Yii::app()->db->createCommand()->delete('empl_vacations', 'id_user = :id_user', array(':id_user' => $value));
+            // Yii::app()->db->createCommand()->delete('empl_vacations', 'id_user = :id_user', array(':id_user' => $value));
         }
     }
 
