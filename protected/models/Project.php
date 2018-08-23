@@ -32,11 +32,72 @@ class Project extends ARModel
                             'name' => $props['name'],
                             'crdate' => date('Y-m-d h-i-s')
                         ));
+    
+        //*Обрабатываем входящие данные
+            for($i = 0; $i < count($props['city']); $i++){
+                
+                $j = 0;
+                foreach($props['lindex'][$props['city'][$i]] as $key => $value){
+                    $props['lindex'][$props['city'][$i]][$j] = $value;
+                    $j++;
+                }
+                
+                $k = 0;
+                foreach($props['lname'][$props['city'][$i]] as $key => $value){
+                    $props['lname'][$props['city'][$i]][$k] = $value;
+                    $k++;
+                }
+                
+                $s = 0;
+                $j = 0;
+                foreach($props['bdate'][$props['city'][$i]] as $key => $value){
+                    foreach($props['bdate'][$props['city'][$i]][$value] as $keys => $values){
+                        $props['bdate'][$props['city'][$i]][$j][$s] = $values;
+                        $s++;
+                    }
+                    $j++;
+                }
+                
+                $s = 0;
+                $j = 0;
+                foreach($props['edate'][$props['city'][$i]] as $key => $value){
+                    foreach($props['edate'][$props['city'][$i]][$value] as $keys => $values){
+                        $props['edate'][$props['city'][$i]][$j][$s] = $values;
+                        $s++;
+                    }
+                    $j++;
+                }
+                
+                $s = 0;
+                $j = 0;
+                foreach($props['btime'][$props['city'][$i]] as $key => $value){
+                    foreach($props['btime'][$props['city'][$i]][$value] as $keys => $values){
+                        $props['btime'][$props['city'][$i]][$j][$s] = $values;
+                        $s++;
+                    }
+                    $j++;
+                }
+                
+                $s = 0;
+                $j = 0;
+                foreach($props['etime'][$props['city'][$i]] as $key => $value){
+                    foreach($props['etime'][$props['city'][$i]][$value] as $keys => $values){
+                        $props['etime'][$props['city'][$i]][$j][$s] = $values;
+                        $s++;
+                    }
+                    $j++;
+                }
+                
+                
+            }
+        
+        //*
         
          for($i = 0; $i < count($props['city']); $i++){
             for($j = 0; $j < count($props['lindex'][$props['city'][$i]]); $j ++){
                 for($s = 0; $s < count($props['bdate'][$props['city'][$i]][$j]); $s ++){
                     $title = $props['name'];
+                    
 
                     $cloud[$s]['city'] = $props['city'][$i];
                     $cloud[$s]['lindex'] = $props['lindex'][$props['city'][$i]][$j];
