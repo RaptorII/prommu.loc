@@ -106,20 +106,20 @@ class Project extends ARModel
                     $cloud[$s]['btime'] = $props['btime'][$props['city'][$i]][$j][$s];
                     $cloud[$s]['etime'] = $props['etime'][$props['city'][$i]][$j][$s];
     
-                    // if($cloud[$s]['city']){
-                    // $res = Yii::app()->db->createCommand()
-                    //     ->insert('project_city', array(
-                    //         'project' => $project,
-                    //         'title' => $title,
-                    //         'adres' => $cloud[$s]['lindex'],
-                    //         'name' => $cloud[$s]['lname'],
-                    //         'id_city' => $props['city'][$i],
-                    //         'bdate' => $cloud[$s]['bdate'],
-                    //         'edate' => $cloud[$s]['edate'],
-                    //         'btime' => $cloud[$s]['btime'],
-                    //         'etime' => $cloud[$s]['etime'],
-                    //     ));
-                    // }
+                    if($cloud[$s]['city']){
+                    $res = Yii::app()->db->createCommand()
+                        ->insert('project_city', array(
+                            'project' => $project,
+                            'title' => $title,
+                            'adres' => $cloud[$s]['lindex'],
+                            'name' => $cloud[$s]['lname'],
+                            'id_city' => $props['city'][$i],
+                            'bdate' => $cloud[$s]['bdate'],
+                            'edate' => $cloud[$s]['edate'],
+                            'btime' => $cloud[$s]['btime'],
+                            'etime' => $cloud[$s]['etime'],
+                        ));
+                    }
                 }
 
             }
@@ -127,33 +127,33 @@ class Project extends ARModel
 
         $users = explode(',', $props['users']);
 
-        // for($i = 0; $i < count($users); $i ++){
-        //     if($users[$i]){
-        //     $res = Yii::app()->db->createCommand()
-        //                 ->insert('project_user', array(
-        //                     'project' => $project,
-        //                     'user' => $users[$i],
-        //                     'firstname' => 'firstname',
-        //                     'lastname' => 'lastname',
-        //                     'email' => 'email',
-        //                     'phone' => 'phone'
-        //                 ));
-        //             }
-        // }
+        for($i = 0; $i < count($users); $i ++){
+            if($users[$i]){
+            $res = Yii::app()->db->createCommand()
+                        ->insert('project_user', array(
+                            'project' => $project,
+                            'user' => $users[$i],
+                            'firstname' => 'firstname',
+                            'lastname' => 'lastname',
+                            'email' => 'email',
+                            'phone' => 'phone'
+                        ));
+                    }
+        }
 
-        // for($i = 0; $i < count($props['inv-name']); $i ++){
+        for($i = 0; $i < count($props['inv-name']); $i ++){
           
-        //     $res = Yii::app()->db->createCommand()
-        //                 ->insert('project_user', array(
-        //                     'project' => $project,
-        //                     'user' => rand(1111,3334),
-        //                     'firstname' => $props['inv-name'][$i],
-        //                     'lastname' => $props['inv-sname'][$i],
-        //                     'email' => $props['inv-email'][$i],
-        //                     'phone' => $props['prfx-phone'][$i].$props['inv-phone'][$i],
-        //                 ));
+            $res = Yii::app()->db->createCommand()
+                        ->insert('project_user', array(
+                            'project' => $project,
+                            'user' => rand(1111,3334),
+                            'firstname' => $props['inv-name'][$i],
+                            'lastname' => $props['inv-sname'][$i],
+                            'email' => $props['inv-email'][$i],
+                            'phone' => $props['prfx-phone'][$i].$props['inv-phone'][$i],
+                        ));
                     
-        // }
+        }
 
          return $cloud;
     }
