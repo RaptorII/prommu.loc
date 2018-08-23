@@ -112,7 +112,7 @@ class Project extends ARModel
                     $clouds[$k]['btime'] = $cloud['btime'][$cloud['city'][$i]][$j][$s];
                     $clouds[$k]['etime'] = $cloud['etime'][$cloud['city'][$i]][$j][$s];
     
-                    if($cloud[$s]['city']){
+                    if($clouds[$k]['city']){
                     $res = Yii::app()->db->createCommand()
                         ->insert('project_city', array(
                             'project' => $project,
