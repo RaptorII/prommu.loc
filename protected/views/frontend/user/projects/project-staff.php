@@ -2,8 +2,11 @@
 //$bUrl = Yii::app()->baseUrl;
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/phone-codes/projects.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/get-personal.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/new.css');
+Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/phone-codes/style.css');
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-staff.css');
 
 $arPromo = array(
     0 => array(
@@ -65,7 +68,7 @@ $arPromo = array(
             <div class="program__btns control__buttons">
                 <span id="control__new-personal" class="control__add-btn">+ ПРИГЛАСИТЬ ПЕРСОНАЛ</span>
                 <span id="control__add-personal" class="control__add-btn">+ ДОБАВИТЬ ПЕРСОНАЛ</span>
-                <a href="#" id="control__save-btn" class="program__save-btn">СОХРАНИТЬ</a>
+                <input type="submit" id="control__save-btn" class="program__save-btn" value="СОХРАНИТЬ">
             </div>
         </div>
 
@@ -310,7 +313,7 @@ $arPromo = array(
     </div>
 
     <div id="invitation" class="project__module">
-        <h2 class="project__title">ПРИГЛАСИТЬ В ПРОЕКТ <span></span></h2>
+        <h2 class="project__title">ПРИГЛАСИТЬ В ПРОЕКТ </h2>
         <div class="project__body project__body-invite invitation-item" data-id="0">
             <span class="invitation-del">&#10006</span>
             <div>
@@ -330,7 +333,28 @@ $arPromo = array(
             <div class="project__invite-btns">
                 <span class="project__btn-white" id="add-prsnl-btn" data-event="main">+ДОБАВИТЬ ЕЩЕ ПЕРСОНАЛ</span>
                 <span class="save-btn" id="save-prsnl-btn" data-event="main">СОХРАНИТЬ</span>
+                <span class="save-btn" id="save-prsnl-cancel">ОТМЕНИТЬ</span>
             </div>
         </div>
     </div>
 </form>
+
+
+
+<div class="hidden" id="invitation-content">
+    <div class="project__body project__body-invite invitation-item" data-id="">
+        <span class="invitation-del">&#10006</span>
+        <div>
+            <input type="text" name="" placeholder="Имя" class="invite-inp name">
+        </div>
+        <div>
+            <input type="text" name="" placeholder="Фамилия" class="invite-inp sname">
+        </div>
+        <div>
+            <input type="text" name="" placeholder="Телефон" class="invite-inp phone">
+        </div>
+        <div>
+            <input type="text" name="" placeholder="E-mail" class="invite-inp email">
+        </div>
+    </div>
+</div>

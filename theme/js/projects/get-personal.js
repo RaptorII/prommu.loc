@@ -6,6 +6,9 @@ var ProjectAddPersonal = (function () {
     //ProjectAddPersonal.prototype.Project = [];
     ProjectAddPersonal.prototype.arSelectIdies = [];
 
+    ProjectAddPersonal.prototype.arOldPhones = [];
+    ProjectAddPersonal.prototype.keyCode = 0;
+
     function ProjectAddPersonal() {
         this.init();
         //var self = this;
@@ -15,6 +18,13 @@ var ProjectAddPersonal = (function () {
         let self = this;
 
         //self.Project = project;
+
+
+        $("#invitation").on( "click", ".invitation-del", function() {
+            self.removeElement(this);
+        });
+
+        $('#invitation #save-prsnl-cancel').click(function(){ self.deleteElement(this) });
 
         //      просмотреть все вакансии
         $('.more-posts').click(function(){
@@ -26,10 +36,17 @@ var ProjectAddPersonal = (function () {
         $('#workers-btn').click(function(){
             $('#addition').css({display:'none'});
             $('#main').css({display:'block'});
+            $('#invitation').css({display:'none'});
         });
         $('#control__add-personal').click(function(){
             $('#addition').css({display:'block'});
             $('#main').css({display:'none'});
+            $('#invitation').css({display:'none'});
+        });
+        $('#control__new-personal').click(function(){
+            $('#addition').css({display:'none'});
+            $('#main').css({display:'none'});
+            $('#invitation').css({display:'block'});
         });
 
 
@@ -64,6 +81,62 @@ var ProjectAddPersonal = (function () {
         $('#workers-btn').click(function(){ self.checkAddition() });
         // закрытие списка городов
         $(document).on('click', function(e) { self.checkFilterCity(e.target) });
+
+        $('#add-prsnl-btn,#save-prsnl-btn').click(function(){
+            self.checkInvitations(this)
+        });
+        window.phoneCode._create();
+        self.arOldPhones[0] = '';
+        $(document).keydown(function(e){ self.keyCode = e.keyCode }); // ловим код клавиши
+        $('#invitation').on(
+            'input',
+            '.invite-inp.name,.invite-inp.sname,.invite-inp.phone',
+            function(e){ self.inputInvitation(this,e.type) }
+        ).on(
+            'blur',
+            '.invite-inp.email,.invite-inp.phone',
+            function(e){ self.inputInvitation(this,e.type) }
+        );
+    }
+    ProjectAddPersonal.prototype.deleteElement = function (e) {
+        $("#invitation .invitation-item").each(function() {
+            if($(this).data('id')!=0){
+                $(this).remove();
+            }
+            else{
+                $(this).find("input[type='text']").val('');
+            }
+        });
+        $('#addition').css({display:'none'});
+        $('#main').css({display:'block'});
+        $('#invitation').css({display:'none'});
+    }
+    ProjectAddPersonal.prototype.removeElement = function (e) {
+        let $e = $(e),
+            error = -1,
+            query = true,
+            arErr = ['city-del','loc-del','period-del','invitation-del'],
+            arItems, item, main;
+
+        if($e.hasClass('invitation-del')) {
+            arItems = $('#invitation .invitation-item');
+            item = $e.closest('.invitation-item')[0];
+            if(arItems.length>1) {
+                error = -1;
+                query = confirm('Будут удалены данные контакта.\n'
+                    +'Вы действительно хотите это сделать?');
+            }
+            else error = 3;
+        }
+
+        if(!query)
+            return false;
+        if(error>=0)
+            MainProject.showPopup('error',arErr[error]);
+        else {
+            $(item).fadeOut();
+            setTimeout(function(){ $(item).remove() },500);
+        }
     }
     //      устанавливаем выбрть все/снять все для вакансий
     ProjectAddPersonal.prototype.changeSelPosts = function (e) {
@@ -78,6 +151,149 @@ var ProjectAddPersonal = (function () {
         }
         setTimeout( self.getAppsAjax(), 300);
     }
+
+    ProjectAddPersonal.prototype.inputInvitation = function (item,event) {
+        let self = this,
+            $e = $(item),
+            v = $e.val(),
+            id = $e.closest('.invitation-item')[0].dataset.id;
+
+        if ($e.hasClass('name') || $e.hasClass('sname')) {
+            v = v.replace(/[^а-яА-ЯїЇєЄіІёЁ ]/g,'');
+            v = v.charAt(0).toUpperCase() + v.slice(1);
+            $e.val(v);
+        }
+        if (event=='focusout' && $e.hasClass('email') && v!=='') {
+            let ePattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i;
+            if(!ePattern.test(v)) {
+                MainProject.showPopup('error', 'bad-email');
+                $e.val('');
+                return false;
+            }
+        }
+        if ($e.hasClass('phone') && v!=='') {
+            v = v.replace(/\D+/g,'');
+            let nV = '',
+                code = item.nextElementSibling.value,
+                l = v.length,
+                phoneLen = 10;
+
+            if (event==='input') {
+                if(code.length==3){ // UKR
+                    phoneLen = 9;
+                    if(self.keyCode==8){ //backspace
+                        if($.inArray(l,[8,6,4,3,1])>=0)
+                            nV = self.arOldPhones[id].slice(0, -1);
+                        if($.inArray(l,[7,5,2])>=0)
+                            nV = self.arOldPhones[id].slice(0, -2);
+                    }
+                    else{
+                        if(l>=1) nV = '(' + v.slice(0,1);
+                        if(l>=2) nV += v.slice(1,2) + ')';
+                        if(l>=3) nV += v.slice(2,3);
+                        if(l>=4) nV += v.slice(3,4);
+                        if(l>=5) nV += v.slice(4,5) + '-';
+                        if(l>=6) nV += v.slice(5,6);
+                        if(l>=7) nV += v.slice(6,7) + '-';
+                        if(l>=8) nV += v.slice(7,8);
+                        if(l>=9) nV += v.slice(8,9);
+                    }
+                }
+                if(code.length==1){ // RF
+                    phoneLen = 10;
+                    if(self.keyCode==8){ //backspace
+                        if($.inArray(l,[9,7,5,4,2,1])>=0)
+                            nV = self.arOldPhones[id].slice(0, -1);
+                        if($.inArray(l,[8,6,3])>=0)
+                            nV = self.arOldPhones[id].slice(0, -2);
+                    }
+                    else{
+                        if(l>=1) nV = '(' + v.slice(0,1);
+                        if(l>=2) nV += v.slice(1,2);
+                        if(l>=3) nV += v.slice(2,3) + ')';
+                        if(l>=4) nV += v.slice(3,4);
+                        if(l>=5) nV += v.slice(4,5);
+                        if(l>=6) nV += v.slice(5,6) + '-';
+                        if(l>=7) nV += v.slice(6,7);
+                        if(l>=8) nV += v.slice(7,8) + '-';
+                        if(l>=9) nV += v.slice(8,9);
+                        if(l>=10) nV += v.slice(9,10);
+                    }
+                }
+                self.arOldPhones[id] = nV;
+                $e.val('').val(nV);
+            }
+            if (event==='focusout') {
+                if(code.length==3) phoneLen = 9;
+                if(l<phoneLen) MainProject.showPopup('error', 'bad-phone');
+            }
+        }
+    }
+
+
+    ProjectAddPersonal.prototype.checkInvitations = function (e) {
+
+        let self = this,
+            arInputs = $('#invitation input'),
+            save = $(e).hasClass('save-btn') ? true : false,
+            empty = false;
+
+        for (var i = 0, n = arInputs.length; i < n; i++) {
+            if(
+                !$(arInputs[i]).hasClass('country-phone-search')
+                &&
+                !arInputs[i].value.length
+            ) {
+                empty = true;
+                break;
+            }
+            if($(arInputs[i]).hasClass('email')) {
+                let ePattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i;
+                if(!ePattern.test($(arInputs[i]).val())) {
+                    $(arInputs[i]).val('');
+                    empty = true;
+                    break;
+                }
+            }
+        }
+        if (!empty) {
+            if(save) {
+                //self.showModule(e);
+                $('#addition').css({display:'none'});
+                $('#main').css({display:'block'});
+                $('#invitation').css({display:'none'});
+                return true;
+            }
+
+            let html = $('#invitation-content').html(),
+                main = document.getElementById('invitation'),
+                arInv = main.getElementsByClassName('invitation-item'),
+                id = Number(arInv[arInv.length-1].dataset.id) + 1;
+
+            $(arInv[arInv.length-1]).after(html);
+            $(arInv[arInv.length-1]).attr('data-id',id); //Присвоение data-id для новых invitation-item
+
+            arInputs = $(arInv[arInv.length-1]).find('.invite-inp');
+
+            $(arInputs[0]).attr('name','inv-name['+id+']');
+            $(arInputs[1]).attr('name','inv-sname['+id+']');
+            $(arInputs[2]).attr('name','inv-phone['+id+']');
+            $(arInputs[3]).attr('name','inv-email['+id+']');
+
+            let p = $(arInv[arInv.length-1]).find('.invite-inp.phone');
+            window.phoneCode._create();
+            $(arInv[arInv.length-1])
+                .find('[type="hidden"]')
+                .attr('name','prfx-phone['+id+']');
+            self.arOldPhones[id] = '';
+        }
+        else
+            save
+                ? MainProject.showPopup('error', 'save-notif')
+                : MainProject.showPopup('notif', 'add-notif');
+
+    }
+
     ProjectAddPersonal.prototype.getAppsAjax = function (e) {
         let params = '',
             $content = $('#promo-content'),

@@ -1,0 +1,27 @@
+#DiContent #invitation [type='text']{
+    width: 100%;
+    height: 30px;
+    background: #ffffff;
+    border: 1px solid #cecece;
+    -webkit-transition: all ease-out .3s;
+    -moz-transition: all ease-out .3s;
+    -o-transition: all ease-out .3s;
+    transition: all ease-out .3s;
+    font-size: 14px;
+    outline: none;
+}
+#DiContent #invitation [type='text'].error{
+    border: 1px solid red;
+    box-shadow: 0px 0px 5px 0px red;
+}
+
+#DiContent #invitation .invite-inp.phone{
+    border: none;
+    padding: 0 0 0 3px;
+    line-height: 30px;
+}
+
+.control__buttons .control__save-btn{
+    border: none;
+    outline: none;
+}
