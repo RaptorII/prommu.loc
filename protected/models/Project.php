@@ -131,7 +131,6 @@ class Project extends ARModel
 
             }
         }
-     return $clouds;
         $users = explode(',', $props['users']);
 
         for($i = 0; $i < count($users); $i ++){
