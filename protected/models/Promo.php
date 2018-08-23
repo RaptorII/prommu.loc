@@ -189,13 +189,13 @@ class Promo extends ARModel
 
     public function deletePromo($cloud){
         foreach ($cloud as $key => $value) {
-            Yii::app()->db->createCommand()->delete('user', 'id_user = :id_user', array(':id_user' => $value));
+            // Yii::app()->db->createCommand()->delete('user', 'id_user = :id_user', array(':id_user' => $value));
 
-            Yii::app()->db->createCommand()->delete('resume', 'id_user = :id_user', array(':id_user' => $value));
+            // Yii::app()->db->createCommand()->delete('resume', 'id_user = :id_user', array(':id_user' => $value));
 
-            Yii::app()->db->createCommand()->delete('user_photos', 'id_user = :id_user', array(':id_user' => $value));
+            // Yii::app()->db->createCommand()->delete('user_photos', 'id_user = :id_user', array(':id_user' => $value));
 
-            Yii::app()->db->createCommand()->delete('user_wtime', 'id_us = :id_user', array(':id_user' => $value));
+            // Yii::app()->db->createCommand()->delete('user_wtime', 'id_us = :id_user', array(':id_user' => $value));
         }
     }
 
