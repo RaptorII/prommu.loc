@@ -1,5 +1,6 @@
 <?php
 //$bUrl = Yii::app()->baseUrl;
+$request = Yii::app()->request;
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/phone-codes/projects.js', CClientScript::POS_END);
@@ -7,35 +8,44 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/ge
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/new.css');
 Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/phone-codes/style.css');
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-staff.css');
+$projectId = $request->getParam('id');
 
 $arPromo = array(
     0 => array(
+        'id' => '142',
         'image' => '/images/applic/20180503073112204100.jpg',
         'ttlink' => '',
         'name' => 'Джон Смит',
         'city' => 'Moskow',
-        'status' => 1
+        'active' => 1,
+        'fix_addr' =>1
     ),
     1 => array(
+        'id' => '234',
         'image' => '/images/applic/20180503073112204100.jpg',
         'ttlink' => '',
         'name' => 'Джон Смит',
         'city' => 'Moskow',
-        'status' => 0
+        'active' => 0,
+        'fix_addr' =>0
     ),
     2 => array(
+        'id' => '212',
         'image' => '/images/applic/20180428142455264100.jpg',
         'ttlink' => '',
         'name' => 'Sasha Meet',
         'city' => 'Moskow',
-        'status' => 1
+        'active' => 1,
+        'fix_addr' =>1
     ),
     3 => array(
+        'id' => '452',
         'image' => '/images/applic/20180428142455264100.jpg',
         'ttlink' => '',
         'name' => 'Sasha Meet',
         'city' => 'Moskow',
-        'status' => 1
+        'active' => 1,
+        'fix_addr' =>0
     )
 );
 
@@ -43,11 +53,15 @@ $arPromo = array(
 ?>
 
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($arPromo); ?>
+<? print_r($viData); ?>
 </pre>
 
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
 <? print_r($_POST); ?>
+</pre>
+
+<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
+<? print_r($_GET); ?>
 </pre>
 
 <div class="row project">
@@ -78,54 +92,33 @@ $arPromo = array(
 
         <h1 class="project__title personal__title">ПЕРСОНАЛ</h1>
         <div class="row">
-            <? for ($i = 0; $i < count($arPromo); $i++): ?>
+            <? foreach($arPromo as $key => $value): ?>
                 <div class="col-xs-12 col-sm-4 col-md-3">
                     <div class="personal__item">
 
-                        <img class="<?= ($arPromo[$i]['status'] == 0) ? 'personal__deact' : ''; ?>"
-                             src="<?= $arPromo[$i]['image']; ?>">
+                        <img class="<?= ($value['active'] == 0) ? 'personal__deact' : ''; ?>"
+                             src="<?= $value['image']; ?>">
 
-                        <div class="personal__item-name"><?= $arPromo[$i]['name']; ?></div>
+                        <div class="personal__item-name"><?= $value['name']; ?></div>
                         <div class="personal__item-add">
-                            <a href="<?= $arPromo[$i]['ttlink']; ?>">Закрепленные адреса</a>
+                            <?if($value['fix_addr']==1):?>
+                                <a href="/user/projects/<?=$projectId?>/route/<?= $value['id']; ?>">
+                                    Закрепленные адреса
+                                </a>
+                            <?endif;?>
                         </div>
-                        <div class="personal__item-city"><?= $arPromo[$i]['city']; ?></div>
+                        <div class="personal__item-city"><?= $value['city']; ?></div>
                     </div>
                 </div>
-            <? endfor; ?>
-            <!--<div class="col-xs-12 col-sm-4 col-md-3">-->
-            <!--  <div class="personal__item">-->
-            <!--    <img src="/images/applic/20180503073112204100.jpg">-->
-            <!--    <div class="personal__item-name">Ибадулаев Павел</div>-->
-            <!--    <div class="personal__item-add">-->
-            <!--      <a href="#">Закрепленные адреса</a>-->
-            <!--    </div>-->
-            <!--    <div class="personal__item-city">Москва</div>-->
-            <!--  </div>-->
-            <!--</div>-->
-            <!--<div class="col-xs-12 col-sm-4 col-md-3">-->
-            <!--  <div class="personal__item">-->
-            <!--    <img src="/images/applic/20180430140946442100.jpg">-->
-            <!--    <div class="personal__item-name">Немич Константин</div>-->
-            <!--    <div class="personal__item-add">-->
-            <!--      <a href="#">Закрепленные адреса</a>-->
-            <!--    </div>-->
-            <!--    <div class="personal__item-city">Новгород</div>-->
-            <!--  </div>-->
-            <!--</div>-->
-            <!--<div class="col-xs-12 col-sm-4 col-md-3">-->
-            <!--  <div class="personal__item">-->
-            <!--    <img src="/images/applic/20180428142455264100.jpg">-->
-            <!--    <div class="personal__item-name">Простова Ольга</div>-->
-            <!--    <div class="personal__item-add">-->
-            <!--      <a href="#">Закрепленные адреса</a>-->
-            <!--    </div>-->
-            <!--    <div class="personal__item-city">Рыбинск</div>-->
-            <!--  </div>-->
-            <!--</div>-->
+            <? endforeach;?>
         </div>
     </div>
 
+
+
+
+
+    <?/****************************Скрытые блоки приглашения персонала****************************/?>
     <div id="addition" class="project__module">
         <h2 class="project__title">ДОБАВИТЬ НОВЫЙ ПЕРСОНАЛ НА ПРОЕКТ </h2>
         <?php
