@@ -105,14 +105,14 @@ class Api
 
         echo "<table>";
         
-        foreach( $sheet_array as $row ) {
-            echo "<tr>";
-            foreach( $row as $column )
-                echo "<td>$column</td>";
-            echo "</tr>";
-        }
+        // foreach( $sheet_array as $row ) {
+        //     echo "<tr>";
+        //     foreach( $row as $column )
+        //         echo "<td>$column</td>";
+        //     echo "</tr>";
+        // }
         
-        echo "</table>";
+        // echo "</table>";
     }
     
 
