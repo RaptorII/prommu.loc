@@ -1085,7 +1085,7 @@ class Api
                 ->where('e.id_user=:id_user', array(':id_user' => $id_user))
                 ->queryRow();
             
-                if($user['firstname']) {
+                
                     $firstname = $user['firstname'];
                     $lastname = $user['lastname'];
                     $email = $user['email'];
@@ -1121,7 +1121,7 @@ class Api
                     '</td></tr>';
 
 
-                } 
+                
                 // else {
                 //     // $user = Yii::app()->db->createCommand()
                 //     // ->select("ua.data")
@@ -1158,7 +1158,7 @@ class Api
                 ->where('e.id_user=:id_user', array(':id_user' => $id_user))
                 ->queryRow();
 
-                 if($user['name']) {
+                 
                     $email = $user['email'];
                     $fio = $user['name']." ".$user['firstname']." ".$user['lastname'];
                     $types = "Работодатель";
@@ -1191,7 +1191,7 @@ class Api
                     '</td><td>'.$b.$row["client"].$b_end.
                     '</td><td>'.$b.$status.$b_end.
                     '</td></tr>';
-                } 
+                
                 // else {
                 //     // $user = Yii::app()->db->createCommand()
                 //     // ->select("ua.data")
