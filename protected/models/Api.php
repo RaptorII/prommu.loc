@@ -102,8 +102,8 @@ class Api
     public function excelget(){
         
         $sheet_array = Yii::app()->yexcel->readActiveSheet('https://dev.prommu.com/uploads/prommu_example.xls');
-
-        echo "<table>";
+        return $sheet_array;
+        // echo "<table>";
         
         // foreach( $sheet_array as $row ) {
         //     echo "<tr>";
