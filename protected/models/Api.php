@@ -114,16 +114,16 @@ class Api
 
         $location = [];
         foreach( $sheet_array as $row ) {
-            if (!(isset($row[$city])) ||
-            !(isset($row[$location])) ||
-            !(isset($row[$street])) ||
-            !(isset($row[$home])) ||
-            !(isset($row[$build]))||
-            !(isset($row[$str]))||
-            !(isset($row[$date]))||
-            !(isset($row[$time]))) {
-                return false;
-            }
+            // if (!(isset($row[$city])) ||
+            // !(isset($row[$location])) ||
+            // !(isset($row[$street])) ||
+            // !(isset($row[$home])) ||
+            // !(isset($row[$build]))||
+            // !(isset($row[$str]))||
+            // !(isset($row[$date]))||
+            // !(isset($row[$time]))) {
+            //     return false;
+            // }
 
             $location[] = [
                     'name' => $row[$location],
