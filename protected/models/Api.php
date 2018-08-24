@@ -115,6 +115,21 @@ class Api
         $location = [];
 
         var_dump($sheet_array);
+
+        for($i = 1; $i < count($sheet_array); $i++){
+           
+
+                $location[] = [
+                    'name' =>  $sheet_array[$i]['B'],
+                    'adres' =>  $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'],
+                    'id_city' =>  $sheet_array[$i]['A'],
+                    'bdate' =>  $sheet_array[$i]['G'],
+                    'edate' =>  $sheet_array[$i]['G'],
+                    'btime' =>  $sheet_array[$i]['H'],
+                    'etime' =>  $sheet_array[$i]['H'],
+                ];
+        }
+
         // foreach( $sheet_array as $row ) {
         //     if (!(isset($row[$city])) ||
         //     !(isset($row[$location])) ||
@@ -139,7 +154,7 @@ class Api
             
         // }
 
-        // return $location;
+        return $location;
 
     }
     
