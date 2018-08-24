@@ -1088,6 +1088,7 @@ class Api
                     $email = $user['email'];
                     $fio = "$firstname ".$lastname;
                     $ana = 1;
+                    $status = 'активен';
 
                      $date1 = explode(" ",$row["date"])[0];
                     $time1 = explode(" ",$row["date"])[1];
@@ -1113,8 +1114,9 @@ class Api
                     '</td><td>'.$b.$row["source"].$b_end.
                     '</td><td>'.$b.$row["ip"].$b_end.
                     '</td><td>'.$b.$row["client"].$b_end.
-                    '</td><td>'.$b.'активен'.$b_end.
+                    '</td><td>'.$b.$status.$b_end.
                     '</td></tr>';
+
 
                 } else {
                     // $user = Yii::app()->db->createCommand()
@@ -1157,6 +1159,7 @@ class Api
                     $fio = $user['name']." ".$user['firstname']." ".$user['lastname'];
                     $types = "Работодатель";
                     $ana = 1;
+                    $status = 'активен';
 
                      $date1 = explode(" ",$row["date"])[0];
                     $time1 = explode(" ",$row["date"])[1];
@@ -1182,7 +1185,7 @@ class Api
                     '</td><td>'.$b.$row["source"].$b_end.
                     '</td><td>'.$b.$row["ip"].$b_end.
                     '</td><td>'.$b.$row["client"].$b_end.
-                    '</td><td>'.$b.'активен'.$b_end.
+                    '</td><td>'.$b.$status.$b_end.
                     '</td></tr>';
                 } else {
                     // $user = Yii::app()->db->createCommand()
