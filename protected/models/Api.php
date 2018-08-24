@@ -1077,7 +1077,7 @@ class Api
                 $attribs = Yii::app()->db->createCommand()
                         ->select("ua.val")
                         ->from('user_attribs ua')
-                        ->where('ua.key=:key AND ua.id_user = :id_user', array(':key' => 'mob', ':id_user' => $row['id_us']))
+                        ->where('ua.key=:key AND ua.id_us = :id_user', array(':key' => 'mob', ':id_user' => $row['id_us']))
                         ->queryRow();
                 $phone = $attribs['val'];
 
