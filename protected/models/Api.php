@@ -102,16 +102,43 @@ class Api
     public function excelget(){
         Yii::import('ext.yexcel.Yexcel');
         $sheet_array = Yii::app()->yexcel->readActiveSheet('/var/www/dev.prommu/uploads/prommu_example.xls');
-        echo "<table>";
-        
+        //Заголовки
+        $city = "Город";
+        $location = "Локация";
+        $street = "Улица";
+        $home = "Дом";
+        $build = "Здание";
+        $str = "Строение";
+        $date = "Дата работы";
+        $time = "Время работы";
+
+        $location = [];
         foreach( $sheet_array as $row ) {
-            echo "<tr>";
-            foreach( $row as $column )
-                echo "<td>$column</td>";
-            echo "</tr>";
+            if (!(isset($row[$city])) ||
+            !(isset($row[$location])) ||
+            !(isset($row[$street])) ||
+            !(isset($row[$home])) ||
+            !(isset($row[$build]))||
+            !(isset($row[$str]))||
+            !(isset($row[$date]))||
+            !(isset($row[$time]))) {
+                return false;
+            }
+
+            $location[] = [
+                    'name' => $row[$location],
+                    'adres' => $row[$street].' '.$row[$home].' '.$row[$build].' '.$row[$str],
+                    'id_city' => $row[$city],
+                    'bdate' => $row[$date],
+                    'edate' => $row[$date],
+                    'btime' => $row[$time],
+                    'etime' => $row[$time],
+                ];
+            
         }
-        
-        echo "</table>";
+
+        return $location;
+
     }
     
 
