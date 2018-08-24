@@ -1093,6 +1093,20 @@ class Api
                     $ana = 1;
                     $status = 'активен';
 
+                    if($user['email'] == ''){
+                        $user = Yii::app()->db->createCommand()
+                        ->select("ua.data")
+                        ->from('user_activate ua')
+                        ->where('ua.id_user=:id_user', array(':id_user' => $id_user))
+                        ->queryRow();
+
+                        $data = json_decode($user['data'], true);
+                        $firstname = $this->encoderSys($data['firstname']);
+                        $lastname = $this->encoderSys($data['lastname']);
+                        $fio = "$firstname ".$lastname; 
+                        $email = $this->encoderSys($data['email']);
+                    }
+
                      $date1 = explode(" ",$row["date"])[0];
                     $time1 = explode(" ",$row["date"])[1];
                     $day = explode("-", $date1)[2];
@@ -1121,31 +1135,6 @@ class Api
                     '</td></tr>';
 
 
-                
-                // else {
-                //     // $user = Yii::app()->db->createCommand()
-                //     // ->select("ua.data")
-                //     // ->from('user_activate ua')
-                //     // ->where('ua.id_user=:id_user', array(':id_user' => $id_user))
-                //     // ->queryRow();
-
-                //     // $data = json_decode($user['data'], true);
-                //     // $firstname = $this->encoderSys($data['firstname']);
-                //     // $lastname = $this->encoderSys($data['lastname']);
-                //     // $fio = "$firstname ".$lastname; 
-                //     // $email = $this->encoderSys($data['email']);
-                //     // $row["transition"] = $data['transition'];
-                //     // $row["canal"] = $data['canal'];
-                //     // $row["content"] = $data['content'];
-                //     // $row["campaign"] = $data['campaign'];
-                //     // $row["ip"] = $data['ip'];
-                //     // $row["client"] = $data['client'];
-                //     // $row["source"] = $data['source'];
-                //     // $row["keywords"] = $data['keywords'];
-
-                // }
-
-            
             } elseif($row['type'] == 3) {
             
                 $name = $row['name'];
@@ -1165,7 +1154,22 @@ class Api
                     $ana = 1;
                     $status = 'активен';
 
-                     $date1 = explode(" ",$row["date"])[0];
+                    if($email == ''){
+                        $user = Yii::app()->db->createCommand()
+                        ->select("ua.data")
+                        ->from('user_activate ua')
+                        ->where('ua.id_user=:id_user', array(':id_user' => $id_user))
+                        ->queryRow();
+                        $status = 'не активен';
+                        $data = json_decode($user['data'], true);
+                        $firstname = $this->encoderSys($data['firstname']);
+                        $lastname = $this->encoderSys($data['lastname']);
+                        $name = $this->encoderSys($data['name']);
+                        $fio = $name." ".$firstname." ".$lastname;
+                        $email = $data['email'];
+                     
+                    }
+                    $date1 = explode(" ",$row["date"])[0];
                     $time1 = explode(" ",$row["date"])[1];
                     $day = explode("-", $date1)[2];
                     $month = explode("-", $date1)[1];
