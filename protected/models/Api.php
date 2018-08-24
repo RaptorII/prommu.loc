@@ -113,31 +113,33 @@ class Api
         $time = "Время работы";
 
         $location = [];
-        foreach( $sheet_array as $row ) {
-            // if (!(isset($row[$city])) ||
-            // !(isset($row[$location])) ||
-            // !(isset($row[$street])) ||
-            // !(isset($row[$home])) ||
-            // !(isset($row[$build]))||
-            // !(isset($row[$str]))||
-            // !(isset($row[$date]))||
-            // !(isset($row[$time]))) {
-            //     return false;
-            // }
 
-            $location[] = [
-                    'name' => $row[$location],
-                    'adres' => $row[$street].' '.$row[$home].' '.$row[$build].' '.$row[$str],
-                    'id_city' => $row[$city],
-                    'bdate' => $row[$date],
-                    'edate' => $row[$date],
-                    'btime' => $row[$time],
-                    'etime' => $row[$time],
-                ];
+        var_dump($sheet_array);
+        // foreach( $sheet_array as $row ) {
+        //     if (!(isset($row[$city])) ||
+        //     !(isset($row[$location])) ||
+        //     !(isset($row[$street])) ||
+        //     !(isset($row[$home])) ||
+        //     !(isset($row[$build]))||
+        //     !(isset($row[$str]))||
+        //     !(isset($row[$date]))||
+        //     !(isset($row[$time]))) {
+        //         return false;
+        //     }
+
+        //     $location[] = [
+        //             'name' => $row[$location],
+        //             'adres' => $row[$street].' '.$row[$home].' '.$row[$build].' '.$row[$str],
+        //             'id_city' => $row[$city],
+        //             'bdate' => $row[$date],
+        //             'edate' => $row[$date],
+        //             'btime' => $row[$time],
+        //             'etime' => $row[$time],
+        //         ];
             
-        }
+        // }
 
-        return $location;
+        // return $location;
 
     }
     
