@@ -154,7 +154,7 @@ class Api
             
         // }
 
-        return $location;
+        var_dump($location);
 
     }
     
