@@ -1328,7 +1328,7 @@ var ProjectAddPersonal = (function () {
             success: function(r) {
                 for (let i in r.suggestions) {
                     let item = r.suggestions[i],
-                        id = +item.data;
+                        id = item.data;
 
                     if(isNaN(item.data))
                         break;

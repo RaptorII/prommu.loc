@@ -47,6 +47,11 @@
 	-webkit-transform: scaleX(1);
 	transform: scaleX(1);
 }
+.projects__btn.empty{ 
+	text-align: center;
+	font-size: 16px;
+	text-transform: uppercase;
+}
 /*
 *		MEDIA
 */
