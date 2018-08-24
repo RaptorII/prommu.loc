@@ -113,8 +113,8 @@ class Api
         $time = "Время работы";
 
         $location = [];
-
-        for($i = 2; $i < count($sheet_array); $i++){
+        var_dump($sheet_array);
+        for($i = 1; $i < count($sheet_array); $i++){
            
 
                 $location[] = [
