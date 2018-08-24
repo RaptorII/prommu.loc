@@ -90,7 +90,7 @@ class Api
             {
                 case -1001 : $message = 'No such API method'; break;
                 case -1003 : $message = 'Wrong header'; break;
-                default: $code= 1002; $message = 'some api error';
+                default: $code= 1002; $message = $e->getMessage();
             }
 
             $data = ['error' => $code, 'message' => $message];
