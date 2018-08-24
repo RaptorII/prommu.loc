@@ -1099,6 +1099,7 @@ class Api
                         ->from('user_activate ua')
                         ->where('ua.id_user=:id_user', array(':id_user' => $id_user))
                         ->queryRow();
+                        $status = 'не активен';
 
                         $data = json_decode($user['data'], true);
                         $firstname = $this->encoderSys($data['firstname']);
