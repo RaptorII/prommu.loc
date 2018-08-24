@@ -7,8 +7,8 @@
 
   $bDate = '07.02.18';
   $bDateFull = '07.02.2018';
-  $eDate = '01.08.18';
-  $eDateFull = '01.08.2018';
+  $eDate = '01.10.18';
+  $eDateFull = '01.10.2018';
   $arProgram = array(
     1307 => array(
       'name' => 'Москва',

@@ -1,8 +1,99 @@
 <?php
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item.js', CClientScript::POS_END);
-?>
+	$bUrl = Yii::app()->baseUrl;
+	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
+	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-geo.css');
+	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item-geo.js', CClientScript::POS_END);
 
+  $bDate = '07.02.18';
+  $bDateFull = '07.02.2018';
+  $eDate = '01.10.18';
+  $eDateFull = '01.10.2018';
+  $arProgram = array(
+    1307 => array(
+      'name' => 'Москва',
+      'id' => 1307,
+      'metro' => 1,
+      'locations' => array(
+        1 => array(
+          'id' => 1,
+          'name' => 'АТБ1',
+          'index' => 'ул. Исполкомовская 123',
+          'metro' => array(
+            1 => 'Авиамоторная',
+            2 => 'Автозаводская (Замоскворецкая линия)',
+            4 => 'Алексеевская'
+          ),
+          'periods' => array(
+            1 => array(
+              'id' => 1,
+              'bdate' => '07.02.18',
+              'edate' => '08.02.18',
+              'btime' => '14:00',
+              'etime' => '16:00'
+            ),
+            2 => array(
+              'id' => 2,
+              'bdate' => '20.02.18',
+              'edate' => '22.02.18',
+              'btime' => '09:00',
+              'etime' => '18:00'
+            )
+          )
+        ),
+        2 => array(
+          'id' => 2,
+          'name' => 'АТБ2',
+          'index' => 'ул. Исполкомовская 777',
+          'metro' => array(
+            4 => 'Алексеевская'
+          ),
+          'periods' => array(
+            3 => array(
+              'id' => 3,
+              'bdate' => '01.08.18',
+              'edate' => '01.08.18',
+              'btime' => '12:00',
+              'etime' => '13:00'
+            )
+          )
+        )
+      )
+    ),
+    2582 => array(
+      'name' => 'Донецк',
+      'id' => 2582,
+      'metro' => 0,
+      'locations' => array(
+        3 => array(
+          'id' => 3,
+          'name' => 'АТБ3',
+          'index' => 'ул. Исполкомовская 999',
+          'metro' => array(),
+          'periods' => array(
+            4 => array(
+              'id' => 4,
+              'bdate' => '07.02.18',
+              'edate' => '08.02.18',
+              'btime' => '14:00',
+              'etime' => '16:00'
+            ),
+            5 => array(
+              'id' => 5,
+              'bdate' => '20.02.18',
+              'edate' => '22.02.18',
+              'btime' => '09:00',
+              'etime' => '18:00'
+            )
+          )
+        ),      
+      )
+    )
+  );
+?>
+<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
+<? print_r($arProgram); ?>
+</pre>
+<div class="filter__veil"></div>
 <div class="row project">
 	<div class="col-xs-12">
 		<div class="project__tabs">
@@ -10,25 +101,70 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/it
     </div>
   </div>
 </div>
-
+<?
+//
+?>
 <div class="project__module">
-  <div class="project__geo-filter">
+  <form action="" class="project__geo-filter" id="filter-form">
     <div class="geo__header-city">
       <label>Город</label>
-      <input type="text" name="city">
+      <div class="city-filter">
+        <span class="city-filter__select">Все</span>
+        <ul class="city-list">
+          <li data-id="0">Все</li>
+          <? foreach ($arProgram as $id => $arCity)
+            echo '<li data-id="' . $id . '">' . $arCity['name'] . '</li>';
+          ?>
+        </ul>
+        <input type="hidden" name="city" class="city-input" value="0">      	
+      </div>
     </div>
     <div class="geo__header-date">
-      <div>
-        <label>Дата с</label>
-        <input type="text" name="bdate">
-      </div>
-      <div>
-        <label>По</label>
-        <input type="text" name="edate">
-      </div>
+			<div class="calendar-filter">
+				<label>Дата с</label>
+				<span><?=$bDate?></span>
+				<div class="calendar" data-type="bdate">
+					<table>
+						<thead>
+						<tr>
+							<td class="mleft">‹
+							<td colspan="5" class="mname">
+							<td class="mright">›
+						</tr>
+						<tr>
+							<td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
+						</tr>
+						<tbody></tbody>
+					</table>
+				</div>
+				<input type="hidden" name="bdate" value="<?=$bDateFull?>">
+			</div>
+			<div class="calendar-filter">
+				<label>По</label>
+				<span><?=$eDate?></span>
+				<div class="calendar" data-type="edate">
+					<table>
+						<thead>
+						<tr>
+							<td class="mleft">‹
+							<td colspan="5" class="mname">
+							<td class="mright">›
+						</tr>
+						<tr>
+							<td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс
+						</tr>
+						<tbody></tbody>
+					</table>
+				</div>
+				<input type="hidden" name="edate" value="<?=$eDateFull?>">
+			</div>
     </div>
-  </div>
-  <div class="project__geo-list">
+    <input type="hidden" name="project" value="<?=Yii::app()->getRequest()->getParam('id')?>" class="project-inp">
+  </form>
+  <?
+  //
+  ?>
+  <div class="project__geo-list" id="geo-list">
     <div class="project__geo-item">
       <h2 class="geo__item-title">город: <span>Москва</span></h2>
       <table class="geo__item-table">
@@ -133,11 +269,11 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/it
         <div class="geo-item__cart-filter">
           <div class="geo-item__filter-date">
             <label>Дата с</label>
-            <input type="text" name="bdate" placeholder="<?=date('d.m.y')?>">
+            <input type="text" name="fbdate" placeholder="<?=date('d.m.y')?>">
           </div>
           <div class="geo-item__filter-date">
             <label>По</label>
-            <input type="text" name="edate" placeholder="<?=date('d.m.y')?>">
+            <input type="text" name="fedate" placeholder="<?=date('d.m.y')?>">
           </div>
         </div>
 

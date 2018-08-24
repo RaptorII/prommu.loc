@@ -1,0 +1,120 @@
+.project__module, .project__module *{ font-family: RobotoCondensed-Regular, verdana, arial }
+.project__geo-filter .city-filter{
+	width: 170px;
+	height: 26px;
+	padding: 0 20px 0 10px;
+	border: 1px solid silver;
+	border-radius: 1px;
+	background: #ffffff;
+	line-height: 26px;
+	text-align: left;
+	cursor: pointer;
+	position: relative;
+}
+.city-filter .city-list {
+	width: 170px;
+	max-height: 300px;
+	overflow-y: auto;
+	padding: 0;
+	margin: 0;
+	border-top: none;
+	list-style: none;
+	background-color: rgba(52, 52, 52, 0.6);
+	position: absolute;
+	top: 100%;
+	right: -1px;
+	z-index: 2;
+	font-family: RobotoCondensed-Regular, verdana, arial;
+	font-size: 14px;
+	color: #FFFFFF;
+	text-align: left;
+	display: none;
+}
+.city-list li {
+	width: 100%;
+	line-height: 30px;
+	padding: 3px 6px;
+	cursor: pointer;
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	transition: all 0.3s ease-out;
+}
+/*
+*	calendar
+*/
+.calendar-filter>span{
+	width: 170px;
+	height: 26px;
+	padding: 0 20px 0 10px;
+	line-height: 26px;
+	background: #ffffff;
+	border: 1px solid silver;
+	border-radius: 1px;
+	cursor: pointer;
+}
+#filter-form .calendar-filter .calendar{
+	width: 100%;
+	min-width: 180px;
+	padding: 10px;
+	position: absolute;
+	top: 0px;
+	right: -45px;
+	background-color: rgba(52, 52, 52, 0.6);
+	z-index: 2;
+	display: none;
+	margin: 0;
+}
+div.calendar:after{ content: '' }
+.calendar table{ 
+	width: 100%;
+	cursor: default;
+}
+.calendar table td{
+	padding: initial;
+	text-align: center;
+	color: #FFFFFF;
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	transition: all 0.3s ease-out;
+}
+.calendar tbody td:nth-child(n+6){ color: #ff8300 }
+.calendar td.day:hover{ background-color: rgba(255,255,255,0.2) }
+.calendar tbody td.today,
+.calendar tbody td.today:hover{ 
+	color: #FFFFFF;
+	background-color: rgba(171, 184, 32, 0.5);
+}
+.calendar tbody td.select,
+.calendar tbody td.select:hover{ 
+	color: #FFFFFF;
+	background-color: rgba(255, 131, 0, 0.5);
+}
+.calendar td.nofit:hover{
+    background-color: rgba(255, 0, 0, 0.5);
+    cursor: no-drop;
+}
+.calendar td.day,
+.calendar td.mleft,
+.calendar td.mright{ cursor: pointer }
+.calendar b{
+	color: #FFFFFF;
+	background-color: red;
+	position: absolute;
+	top: -5px;
+	line-height: normal;
+	right: 0;
+	left: 0;
+	text-align: center;
+	z-index: 2;
+	display: none;
+}
+/*
+*		MEDIA
+*/
+@media (min-width: 768px) {
+	.calendar-filter>span{
+		width: 90px;
+	}
+}
