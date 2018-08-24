@@ -74,6 +74,7 @@ class Api
                 case 'ideas' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->ideas(); break;
                 case 'export_auto' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->exportAutomize(); break;
                 case 'geo_project' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->geoProject(); break;
+                case 'excel' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->excelget(); break;
                  
                 
 
@@ -96,6 +97,22 @@ class Api
         } // endtry
 
         return $data;
+    }
+    
+    public function excelget(){
+        
+        $sheet_array = Yii::app()->yexcel->readActiveSheet('https://dev.prommu.com/uploads/prommu_example.xls');
+
+        echo "<table>";
+        
+        foreach( $sheet_array as $row ) {
+            echo "<tr>";
+            foreach( $row as $column )
+                echo "<td>$column</td>";
+            echo "</tr>";
+        }
+        
+        echo "</table>";
     }
     
     public function geoProject(){
