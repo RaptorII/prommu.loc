@@ -1049,6 +1049,7 @@ class Api
             '</td><td style="color:red; background:#E0E0E0">Площадка'.
             '</td><td style="color:red; background:#E0E0E0">IP адрес'.
             '</td><td style="color:red; background:#E0E0E0">Client ID'.
+            '</td><td style="color:red; background:#E0E0E0">Статус'.
 
 '</td></tr>';
         
@@ -1112,6 +1113,7 @@ class Api
                     '</td><td>'.$b.$row["source"].$b_end.
                     '</td><td>'.$b.$row["ip"].$b_end.
                     '</td><td>'.$b.$row["client"].$b_end.
+                    '</td><td>'.$b.'активен'.$b_end.
                     '</td></tr>';
 
                 } else {
@@ -1180,6 +1182,7 @@ class Api
                     '</td><td>'.$b.$row["source"].$b_end.
                     '</td><td>'.$b.$row["ip"].$b_end.
                     '</td><td>'.$b.$row["client"].$b_end.
+                    '</td><td>'.$b.'активен'.$b_end.
                     '</td></tr>';
                 } else {
                     // $user = Yii::app()->db->createCommand()
