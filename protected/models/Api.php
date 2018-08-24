@@ -1079,7 +1079,7 @@ class Api
                 $id_user = $row['id_us'];
 
                 $user = Yii::app()->db->createCommand()
-                ->select("e.firstname, e.lastname, usr.email")
+                ->select("e.firstname, e.lastname, usr.email, e.date_public ")
                 ->from('resume e')
                 ->join('user usr', 'usr.id_user=e.id_user')
                 ->where('e.id_user=:id_user', array(':id_user' => $id_user))
@@ -1108,8 +1108,8 @@ class Api
                         $email = $this->encoderSys($data['email']);
                     }
 
-                     $date1 = explode(" ",$row["date"])[0];
-                    $time1 = explode(" ",$row["date"])[1];
+                    $date1 = explode(" ",$user['date_public'])[0];
+                    $time1 = explode(" ",$user['date_public'])[1];
                     $day = explode("-", $date1)[2];
                     $month = explode("-", $date1)[1];
                     $year = explode("-", $date1)[0];
@@ -1142,7 +1142,7 @@ class Api
                 $id_user = $row['id_us'];
 
                 $user = Yii::app()->db->createCommand()
-                ->select("e.name, e.firstname, e.lastname, usr.email")
+                ->select("e.name, e.firstname, e.lastname, usr.email, e.crdate")
                 ->from('employer e')
                 ->join('user usr', 'usr.id_user=e.id_user')
                 ->where('e.id_user=:id_user', array(':id_user' => $id_user))
@@ -1170,8 +1170,8 @@ class Api
                         $email = $data['email'];
                      
                     }
-                    $date1 = explode(" ",$row["date"])[0];
-                    $time1 = explode(" ",$row["date"])[1];
+                    $date1 = explode(" ",$user["crdate"])[0];
+                    $time1 = explode(" ",$user["crdate"])[1];
                     $day = explode("-", $date1)[2];
                     $month = explode("-", $date1)[1];
                     $year = explode("-", $date1)[0];
