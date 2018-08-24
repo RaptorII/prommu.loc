@@ -145,6 +145,7 @@ return array(
                 // projects
                 '<controller:user>/<action:projects>/<id:[\w-]+>' => '<controller>/<action>',
                 '<controller:user>/<action:projects>/<id:[\w-]+>/<section:[\w-]+>' => '<controller>/<action>',
+                '<controller:user>/<action:projects>/<id:[\w-]+>/<section:route>/<user_id:\d+>' => '<controller>/<action>',
                 // все action с цифрами на общий контроллер
                 '<action>/<id:\d+>' => 'site/<action>',
                 // для всех страниц
