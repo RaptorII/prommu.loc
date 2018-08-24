@@ -1074,6 +1074,13 @@ class Api
                                    
                 }
 
+                $attribs = Yii::app()->db->createCommand()
+                        ->select("ua.val")
+                        ->from('user_attribs ua')
+                        ->where('ua.key=:key AND ua.id_user = :id_user', array(':key' => 'mob', ':id_user' => $row['id_us']))
+                        ->queryRow();
+                $phone = $attribs['val'];
+
             if($row['type'] == 2){
                 $types = "Соискатель";
                 $id_user = $row['id_us'];
@@ -1122,7 +1129,7 @@ class Api
                     '</td><td>'.$b.$fio.$b_end.
                     '</td><td>'.$b.$types.$b_end.
                     '</td><td>'.$b.$type_feed.$b_end.
-                    '</td><td>'.$b.$email.$b_end.
+                    '</td><td>'.$b.$phone.$b_end.
                     '</td><td>'.$b.$email.$b_end.
                     '</td><td>'.$b.$row["transition"].$b_end.
                     '</td><td>'.$b.$row["canal"].$b_end.
@@ -1148,7 +1155,7 @@ class Api
                 ->where('e.id_user=:id_user', array(':id_user' => $id_user))
                 ->queryRow();
 
-                 
+
                     $email = $user['email'];
                     $fio = $user['name']." ".$user['firstname']." ".$user['lastname'];
                     $types = "Работодатель";
@@ -1161,6 +1168,8 @@ class Api
                         ->from('user_activate ua')
                         ->where('ua.id_user=:id_user', array(':id_user' => $id_user))
                         ->queryRow();
+
+
                         $status = 'не активен';
                         $data = json_decode($user['data'], true);
                         $firstname = $this->encoderSys($data['firstname']);
@@ -1184,7 +1193,7 @@ class Api
                     '</td><td>'.$b.$fio.$b_end.
                     '</td><td>'.$b.$types.$b_end.
                     '</td><td>'.$b.$type_feed.$b_end.
-                    '</td><td>'.$b.$email.$b_end.
+                    '</td><td>'.$b.$phone.$b_end.
                     '</td><td>'.$b.$email.$b_end.
                     '</td><td>'.$b.$row["transition"].$b_end.
                     '</td><td>'.$b.$row["canal"].$b_end.
