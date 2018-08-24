@@ -51,6 +51,9 @@ return array(
       		'timeout'=>10*365*24*60*60,
 		],
     ),
+    'yexcel' => array(
+        'class' => 'ext.yexcel.Yexcel'
+    ),
     'eauth' => array(
        'class' => 'ext.eauth.EAuth',
             'popup' => false, 
