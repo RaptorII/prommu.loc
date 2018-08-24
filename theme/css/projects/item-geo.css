@@ -40,6 +40,7 @@
 	-o-transition: all 0.3s ease-out;
 	transition: all 0.3s ease-out;
 }
+.geo-item__cart-data img{ min-width: 175px }
 /*
 *	calendar
 */
@@ -110,6 +111,17 @@ div.calendar:after{ content: '' }
 	z-index: 2;
 	display: none;
 }
+/*		*/
+.user__header-date{
+	text-align: right;
+}
+.user__header-date .calendar-filter{
+	padding-left: 10px;
+	position: relative;
+	font-size: 14px;
+	display: inline-block;
+}
+#filter-form .user__header-date .calendar{ right: -5px }
 /*
 *		MEDIA
 */

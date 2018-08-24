@@ -51,6 +51,7 @@ var GeoProgram = (function () {
 		setTimeout(function(){
 			$('.filter__veil').show();
 			$('#geo-list').html('Здесь будут отфильтрованные данные с сервера');
+			$('#user-data').html('Здесь будут отфильтрованные данные с сервера');
 			console.log(data);
 		},500);
 		setTimeout(function(){ $('.filter__veil').hide(); },1000);
