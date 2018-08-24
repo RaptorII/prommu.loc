@@ -1,0 +1,65 @@
+/*** Created by Stanislav on 24.08.2018.*/
+
+#DiContent .prommu__universal-filter *{
+    width:100%;
+    font-family: RobotoCondensed-Regular, verdana, arial;
+}
+
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__text,
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__select{
+    height: 26px;
+    display: block;
+    padding: 0 20px 0 10px;
+    background: #ffffff;
+    border: 1px solid silver;
+    border-radius: 1px;
+    line-height: 26px;
+    text-align: left;
+    outline:none;
+}
+
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__select {
+    cursor: pointer;
+}
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__select:after{
+    content: '\25bc';
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 5px;
+    line-height: 26px;
+    font-size: 12px;
+}
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__item-data{
+    position: relative;
+}
+
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__ul-hidden{
+    overflow-y: auto;
+    padding: 0;
+    margin: 0;
+    border-top: none;
+    list-style: none;
+    background-color: rgba(52, 52, 52, 0.6);
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 2;
+    font-size: 14px;
+    color: #FFFFFF;
+    text-align: left;
+}
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__ul-hidden{
+    display: none;
+}
+
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__li-hidden{
+    width: 100%;
+    line-height: 30px;
+    padding: 3px 6px;
+    cursor: pointer;
+}
+
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__li-hidden:hover {
+    background-color: rgba(255,255,255,0.2);
+}

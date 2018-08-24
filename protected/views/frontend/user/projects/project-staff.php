@@ -8,6 +8,12 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/ge
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/new.css');
 Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/phone-codes/style.css');
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-staff.css');
+
+/***********UNIVARSAL FILTER************/
+Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/universal-filter.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-filter.css');
+/***********UNIVARSAL FILTER************/
+
 $projectId = $request->getParam('id');
 
 $arPromo = array(
@@ -48,8 +54,6 @@ $arPromo = array(
         'fix_addr' =>0
     )
 );
-
-
 ?>
 
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
@@ -80,6 +84,128 @@ $arPromo = array(
             <input id="person_xls_add" type="file" name="person_xls" class="hide" accept="xls">
             <a href="/uploads/example.xls" download>Скачать пример для добавления</a>
         </div>
+
+
+        <?
+        $arFilterData=[
+            0=>[
+                'NAME' => 'Имя',
+                'TYPE' => 'text',
+                'INPUT_NAME' =>'first_name',
+                'DATA' => [],
+                'DATA_DEFAULT' => 'Стас',
+                'PLACEHOLDER' => ''
+            ],
+            1=>[
+                'NAME' => 'Фамилия',
+                'TYPE' => 'text',
+                'INPUT_NAME' =>'second_name',
+                'DATA' => [],
+                'DATA_DEFAULT' => 'Кузовов',
+                'PLACEHOLDER' => ''
+            ],
+            2=>[
+                'NAME' => 'Статус',
+                'TYPE' => 'select',
+                'INPUT_NAME' =>'status',
+                'DATA' => [
+                    0 =>[
+                        'title' => 'Подтверждено',
+                        'id' => '1'
+                        ],
+                    1 =>[
+                        'title' => 'Не подтверждено',
+                        'id' => '0'
+                        ],
+                    2 =>[
+                        'title' => 'Все',
+                        'id' => '2'
+                    ]
+                ],
+                'DATA_DEFAULT' => '2'
+            ],
+            3=>[
+                'NAME' => 'Привязка к адресу',
+                'TYPE' => 'select',
+                'INPUT_NAME' =>'address',
+                'DATA' => [
+                    0 =>[
+                        'title' => 'Привязан',
+                        'id' => '1'
+                    ],
+                    1 =>[
+                        'title' => 'Не привязан',
+                        'id' => '0'
+                    ],
+                    2 =>[
+                        'title' => 'Все',
+                        'id' => '2'
+                    ]
+                ],
+                'DATA_DEFAULT' => '1'
+            ]
+        ];
+        ?>
+        <div class="prommu__universal-filter">
+            <?foreach ($arFilterData as $key => $value):?>
+                <?switch ($value['TYPE']):
+                    case 'text':
+                        ?>
+                        <div data-type="<?=$value['TYPE']?>" data-id="<?=$key?>" class="u-filter__item u-filter__item-<?=$key?>">
+                            <div class="u-filter__item-title">
+                                <?=$value['NAME'];?>
+                            </div>
+                            <div class="u-filter__item-data">
+                                <input
+                                    placeholder="<?=$value['PLACEHOLDER']?>"
+                                    class="u-filter__text"
+                                    type="text"
+                                    name="<?=$value['INPUT_NAME'];?>"
+                                />
+                                <input
+                                    type="hidden"
+                                    class="u-filter__hidden-default"
+                                    value="<?=$value['DATA_DEFAULT']?>"
+                                />
+                            </div>
+                        </div>
+                        <?
+                        break;
+                    case 'select':
+                        ?>
+                        <div data-type="<?=$value['TYPE']?>" data-id="<?=$key?>" class="u-filter__item u-filter__item-<?=$key?>">
+                            <div class="u-filter__item-title">
+                                <?=$value['NAME'];?>
+                            </div>
+                            <div class="u-filter__item-data">
+                                <span class="u-filter__select"></span>
+                                <ul class="u-filter__ul-hidden">
+                                    <?foreach ($value['DATA'] as $d_key => $d_value):?>
+                                        <li class="u-filter__li-hidden" data-id="<?=$d_value['id'];?>"><?=$d_value['title'];?></li>
+                                    <?endforeach;?>
+                                </ul>
+                                <input
+                                    type="hidden"
+                                    name="<?=$value['INPUT_NAME']?>"
+                                    class="u-filter__hidden-data"
+                                    value="<?=$value['DATA_DEFAULT']?>"
+                                />
+                                <input
+                                    type="hidden"
+                                    class="u-filter__hidden-default"
+                                    value="<?=$value['DATA_DEFAULT']?>"
+                                />
+                            </div>
+                        </div>
+                        <?
+                        break;
+
+
+                endswitch;?>
+            <?endforeach;?>
+        </div>
+
+
 
 
         <div class="project__control-panel">
