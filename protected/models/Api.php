@@ -113,8 +113,10 @@ class Api
         $time = "Время работы";
 
         $location = [];
+
         var_dump($sheet_array);
-        for($i = 1; $i < count($sheet_array); $i++){
+
+        for($i = 1; $i < count($sheet_array)+1 $i++){
            
 
                 $location[] = [
@@ -152,7 +154,7 @@ class Api
             
         // }
 
-        var_dump($location);
+        return $location;
 
     }
     
