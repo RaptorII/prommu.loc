@@ -1093,7 +1093,7 @@ class Api
                     $ana = 1;
                     $status = 'активен';
 
-                    if($user['email'] == ''){
+                    if(empty($email)){
                         $user = Yii::app()->db->createCommand()
                         ->select("ua.data")
                         ->from('user_activate ua')
@@ -1154,7 +1154,7 @@ class Api
                     $ana = 1;
                     $status = 'активен';
 
-                    if($email == ''){
+                    if(empty($email)){
                         $user = Yii::app()->db->createCommand()
                         ->select("ua.data")
                         ->from('user_activate ua')
