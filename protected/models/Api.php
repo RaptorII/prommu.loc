@@ -115,27 +115,6 @@ class Api
         echo "</table>";
     }
     
-    public function geoProject(){
-       $data = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('analytic')
-            ->order("id desc")
-            ->where('canal = :canal', array(':canal' =>'yandex'))
-            ->queryAll();
-
-            for($i = 0; $i < count($data); $i ++){
-                if($data[$i]['canal'] == 'yandex' || $data[$i]['canal'] == 'google' ) {
-                    $res = Yii::app()->db->createCommand()
-                                    ->update('analytic', array(
-                                            'canal' => $data[$i]['referer'],
-                                            'referer' => $data[$i]['transition'],
-                                            'transition' => $data[$i]['canal'],
-                                    ), 'id=:id', array(':id' => $data[$i]['id']));
-                }
-            }
-         
-         
-    }
 
     public function ideas(){
          $data = Yii::app()->db->createCommand()
