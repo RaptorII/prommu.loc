@@ -116,7 +116,7 @@ class Api
 
         var_dump($sheet_array);
 
-        for($i = 1; $i < count($sheet_array)+1 $i++){
+        for($i = 1; $i < count($sheet_array)+1; $i++){
            
 
                 $location[] = [
