@@ -1188,53 +1188,53 @@ class Api
                     '</td><td>'.$b.$status.$b_end.
                     '</td></tr>';
                 } else {
-                    $user = Yii::app()->db->createCommand()
-                    ->select("ua.data")
-                    ->from('user_activate ua')
-                    ->where('ua.id_user=:id_user', array(':id_user' => $id_user))
-                    ->queryRow();
-                    $status = 'не активен';
-                    $data = json_decode($user['data'], true);
-                    $firstname = $this->encoderSys($data['firstname']);
-                    $lastname = $this->encoderSys($data['lastname']);
-                    $name = $this->encoderSys($data['name']);
-                    $fio = $name." ".$firstname." ".$lastname;
-                    $email = $data['email'];
-                    $row["transition"] = $data['transition'];
-                    $row["canal"] = $data['canal'];
-                    $row["content"] = $data['content'];
-                    $row["campaign"] = $data['campaign'];
-                    $row["ip"] = $data['ip'];
-                    $row["client"] = $data['client'];
-                    $row["source"] = $data['source'];
-                    $row["keywords"] = $data['keywords'];
+                    // $user = Yii::app()->db->createCommand()
+                    // ->select("ua.data")
+                    // ->from('user_activate ua')
+                    // ->where('ua.id_user=:id_user', array(':id_user' => $id_user))
+                    // ->queryRow();
+                    // $status = 'не активен';
+                    // $data = json_decode($user['data'], true);
+                    // $firstname = $this->encoderSys($data['firstname']);
+                    // $lastname = $this->encoderSys($data['lastname']);
+                    // $name = $this->encoderSys($data['name']);
+                    // $fio = $name." ".$firstname." ".$lastname;
+                    // $email = $data['email'];
+                    // $row["transition"] = $data['transition'];
+                    // $row["canal"] = $data['canal'];
+                    // $row["content"] = $data['content'];
+                    // $row["campaign"] = $data['campaign'];
+                    // $row["ip"] = $data['ip'];
+                    // $row["client"] = $data['client'];
+                    // $row["source"] = $data['source'];
+                    // $row["keywords"] = $data['keywords'];
 
-                    $date1 = explode(" ",$row["date"])[0];
-                    $time1 = explode(" ",$row["date"])[1];
-                    $day = explode("-", $date1)[2];
-                    $month = explode("-", $date1)[1];
-                    $year = explode("-", $date1)[0];
-                    $csv_file .= '<td>'.$b.$time1.$b_end.
-                    '</td><td>'.$b.$day.$b_end.
-                    '</td><td>'.$b.$month.$b_end.
-                    '</td><td>'.$b.$year.$b_end.
-                    '</td><td>'.$b.$domen.$b_end.
-                    '</td><td>'.$b.$id_user.$b_end.
-                    '</td><td>'.$b.$fio.$b_end.
-                    '</td><td>'.$b.$types.$b_end.
-                    '</td><td>'.$b.$type_feed.$b_end.
-                    '</td><td>'.$b.$email.$b_end.
-                    '</td><td>'.$b.$email.$b_end.
-                    '</td><td>'.$b.$row["transition"].$b_end.
-                    '</td><td>'.$b.$row["canal"].$b_end.
-                    '</td><td>'.$b.$row["campaign"].$b_end.
-                    '</td><td>'.$b.$row["content"].$b_end.
-                    '</td><td>'.$b.$row["keywords"].$b_end.
-                    '</td><td>'.$b.$row["source"].$b_end.
-                    '</td><td>'.$b.$row["ip"].$b_end.
-                    '</td><td>'.$b.$row["client"].$b_end.
-                    '</td><td>'.$b.$status.$b_end.
-                    '</td></tr>';
+                    // $date1 = explode(" ",$row["date"])[0];
+                    // $time1 = explode(" ",$row["date"])[1];
+                    // $day = explode("-", $date1)[2];
+                    // $month = explode("-", $date1)[1];
+                    // $year = explode("-", $date1)[0];
+                    // $csv_file .= '<td>'.$b.$time1.$b_end.
+                    // '</td><td>'.$b.$day.$b_end.
+                    // '</td><td>'.$b.$month.$b_end.
+                    // '</td><td>'.$b.$year.$b_end.
+                    // '</td><td>'.$b.$domen.$b_end.
+                    // '</td><td>'.$b.$id_user.$b_end.
+                    // '</td><td>'.$b.$fio.$b_end.
+                    // '</td><td>'.$b.$types.$b_end.
+                    // '</td><td>'.$b.$type_feed.$b_end.
+                    // '</td><td>'.$b.$email.$b_end.
+                    // '</td><td>'.$b.$email.$b_end.
+                    // '</td><td>'.$b.$row["transition"].$b_end.
+                    // '</td><td>'.$b.$row["canal"].$b_end.
+                    // '</td><td>'.$b.$row["campaign"].$b_end.
+                    // '</td><td>'.$b.$row["content"].$b_end.
+                    // '</td><td>'.$b.$row["keywords"].$b_end.
+                    // '</td><td>'.$b.$row["source"].$b_end.
+                    // '</td><td>'.$b.$row["ip"].$b_end.
+                    // '</td><td>'.$b.$row["client"].$b_end.
+                    // '</td><td>'.$b.$status.$b_end.
+                    // '</td></tr>';
                 }
 
 
