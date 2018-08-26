@@ -1036,7 +1036,7 @@ class Api
             ->select("*")
             ->from('analytic a')
             ->join('user usr', 'usr.id_user=a.id_us')
-            ->where('a.active=:active AND a.date >:date AND a.subdomen=:domen', array(':active' => 1, ':date'=> $yester, ':domen'=>$domen))
+            ->where('a.active=:active AND a.date >:date', array(':active' => 1, ':date'=> $yester))
             ->order("a.id_us desc")
             ->queryAll();
             
@@ -1046,26 +1046,13 @@ class Api
             ->select("*")
             ->from('analytic a')
             ->join('user usr', 'usr.id_user=a.id_us')
-            ->where('a.active=:active AND (a.date BETWEEN :date AND :bdate) AND a.subdomen=:domen AND a.name!=:name', array(':active' => 1, ':date'=> $date, 'bdate'=> $bdate, 'domen'=>$domen, 'name'=>'NO ACTIVE'))
+            ->where('a.active=:active AND (a.date BETWEEN :date AND :bdate)  AND a.name!=:name', array(':active' => 1, ':date'=> $date, 'bdate'=> $bdate, 'name'=>'NO ACTIVE'))
             ->order("a.id_us desc")
             ->group("a.id_us")
             ->queryAll();
 
          }
             
-         switch ($domen) {
-            case '0':
-                 $domen = 'https://prommu.com';
-                 break;
-
-            case '1':
-                 $domen = 'https://spb.prommu.com';
-                 break;
-             
-             default:
-                 # code...
-                 break;
-         }
 
 
         $csv_file = '<table border="1">
@@ -1097,9 +1084,22 @@ class Api
             $csv_file .= '<tr>';
             $b = "";
             $b_end = "";
-            $domen = 'https://prommu.com';
 
             $type_feed = 'регистрация';
+            
+            switch ($row['subdomen']) {
+            case '0':
+                 $domen = 'https://prommu.com';
+                 break;
+
+            case '1':
+                 $domen = 'https://spb.prommu.com';
+                 break;
+             
+             default:
+                 # code...
+                 break;
+            }
 
             if(strpos('yandex,yandex.ru,away.vk.com,google,facebook', $row['canal']) !== false) {
                     $row["canal"] = $row['referer'];
