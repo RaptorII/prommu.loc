@@ -123,36 +123,13 @@ class Api
                     'name' =>  $sheet_array[$i]['B'],
                     'adres' =>  $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'],
                     'id_city' =>  $sheet_array[$i]['A'],
-                    'bdate' =>  $sheet_array[$i]['G'],
-                    'edate' =>  $sheet_array[$i]['G'],
-                    'btime' =>  $sheet_array[$i]['H'],
-                    'etime' =>  $sheet_array[$i]['H'],
+                    'bdate' =>  explode("-", $sheet_array[$i]['G'])[0],
+                    'edate' =>  explode("-", $sheet_array[$i]['G'])[1],
+                    'btime' => explode("-", $sheet_array[$i]['H'])[0],
+                    'etime' =>  explode("-", $sheet_array[$i]['H'])[1],
                 ];
         }
 
-        // foreach( $sheet_array as $row ) {
-        //     if (!(isset($row[$city])) ||
-        //     !(isset($row[$location])) ||
-        //     !(isset($row[$street])) ||
-        //     !(isset($row[$home])) ||
-        //     !(isset($row[$build]))||
-        //     !(isset($row[$str]))||
-        //     !(isset($row[$date]))||
-        //     !(isset($row[$time]))) {
-        //         return false;
-        //     }
-
-        //     $location[] = [
-        //             'name' => $row[$location],
-        //             'adres' => $row[$street].' '.$row[$home].' '.$row[$build].' '.$row[$str],
-        //             'id_city' => $row[$city],
-        //             'bdate' => $row[$date],
-        //             'edate' => $row[$date],
-        //             'btime' => $row[$time],
-        //             'etime' => $row[$time],
-        //         ];
-            
-        // }
 
         return $location;
 
@@ -1086,7 +1063,7 @@ class Api
             $b_end = "";
 
             $type_feed = 'регистрация';
-            
+
             switch ($row['subdomen']) {
             case '0':
                  $domen = 'https://prommu.com';
