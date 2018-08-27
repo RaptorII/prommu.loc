@@ -312,8 +312,13 @@ class Project extends ARModel
             $b = "";
             $b_end = "";
 
-
-                    $csv_file .= '<td>'.$b.$row['id_city'].$b_end.
+                    $city = Yii::app()->db->createCommand()
+                    ->select('c.name')
+                    ->from('city c')
+                    ->where('c.id_city = :id_city', array(':id_city' =>$row['id_city']))
+                    ->queryRow();
+            
+                    $csv_file .= '<td>'.$b.$city['name'].$b_end.
                     '</td><td>'.$b.$row['name'].$b_end.
                     '</td><td>'.$b.$row['adres'].$b_end.
                     '</td><td>'.$b.$row['adres'].$b_end.
