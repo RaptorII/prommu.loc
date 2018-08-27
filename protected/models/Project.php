@@ -231,16 +231,14 @@ class Project extends ARModel
         var_dump($sheet_array);
 
         for($i = 1; $i < count($sheet_array)+1; $i++){
+            $city = Yii::app()->db->createCommand()
+                    ->select('c.id_city')
+                    ->from('city c')
+                    ->where('c.name = :name', array(':name' =>$sheet_array[$i]['A']))
+                    ->queryRow();
+                    
                 if($sheet_array[$i]['I'] != ''){
                     $point = $sheet_array[$i]['I'];
-                
-                    // $data = Yii::app()->db->createCommand()
-                    // ->select('pc.id, pc.name, pc.adres, pc.id_city, c.name city, pc.bdate, pc.edate, pc.btime, pc.etime, pc.project, pc.point')
-                    // ->from('project_city pc')
-                    // ->join('city c', 'c.id_city=pc.id_city')
-                    // ->where('pc.point = :point', array(':point' =>$project))
-                    // ->order('pc.bdate desc')
-                    // ->queryRow();
                     
                      Yii::app()->db->createCommand()
                         ->update('project_city', array(
@@ -248,7 +246,7 @@ class Project extends ARModel
                             'title' => $title,
                             'name' =>  $sheet_array[$i]['B'],
                             'adres' =>  $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'],
-                            'id_city' =>  $sheet_array[$i]['A'],
+                            'id_city' => $city['id_city'],
                             'bdate' =>  explode("-", $sheet_array[$i]['G'])[0],
                             'edate' =>  explode("-", $sheet_array[$i]['G'])[1],
                             'btime' => explode("-", $sheet_array[$i]['H'])[0],
@@ -262,7 +260,7 @@ class Project extends ARModel
                             'title' => $title,
                             'name' =>  $sheet_array[$i]['B'],
                             'adres' =>  $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'],
-                            'id_city' =>  $sheet_array[$i]['A'],
+                            'id_city' =>  $city['id_city'],
                             'bdate' =>  explode("-", $sheet_array[$i]['G'])[0],
                             'edate' =>  explode("-", $sheet_array[$i]['G'])[1],
                             'btime' => explode("-", $sheet_array[$i]['H'])[0],
