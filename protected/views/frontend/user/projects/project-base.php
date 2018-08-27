@@ -191,8 +191,9 @@
 						<? endforeach; ?>
 					</tbody>
 				</table>
-				<form action="" method="POST" id="base-form">
+				<form enctype="multipart/form-data" action="" method="POST" id="base-form">
 					<input type="hidden" name="project" class="project-inp" value="<?=$_GET['id']?>">
+					<input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
 					<input type="file" name="xls" id="add-xls-inp" class="hide">
 				</form>
 			</div>
