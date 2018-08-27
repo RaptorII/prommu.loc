@@ -1525,79 +1525,72 @@ class UserController extends AppController
     */
     public function actionProjects()
     {
-        //file_put_contents(__DIR__ . "/_user_log.txt", print_r($_POST, true));
-
         $type = Share::$UserProfile->type;
         !in_array($type, [2,3]) && $this->redirect(MainConfig::$PAGE_INDEX);
 
         $id = Yii::app()->getRequest()->getParam('id');
-        $idus = Share::$UserProfile->id;
         $view = $type==3
             ? MainConfig::$VIEW_EMP_PROJECT_LIST
             : MainConfig::$VIEW_APP_PROJECT_LIST;
             
         $model = new Project();
     
-            if($id=='new') { // новый проект
-                if(Yii::app()->request->isAjaxRequest) {
-                    $this->renderPartial(
-                        MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
-                        array('viData' => (new Services())->getFilteredPromos()),
-                        false,
-                        true
-                    );
-                }
-                else {
+        if($id=='new') { // новый проект
+            if(Yii::app()->request->isAjaxRequest) {
+                $this->renderPartial(
+                    MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
+                    array('viData' => (new Services())->getFilteredPromos()),
+                    false,
+                    true
+                );
+            }
+            else {
+                $data = (new Services())->getFilteredPromos();
+            }
+            $view = MainConfig::$VIEW_PROJECT_NEW;
+        }
+        elseif($id>0) { // существующий
+            if(!$model->hasAccess($id))
+                $this->redirect(MainConfig::$PAGE_PROJECT_LIST);
+
+            switch (Yii::app()->getRequest()->getParam('section')) {
+                case 'staff':
                     $data = (new Services())->getFilteredPromos();
-                }
-                $view = MainConfig::$VIEW_PROJECT_NEW;
+                    $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
+                    break;
+                case 'index':
+                    $data = $model->getProject();
+                    $view = MainConfig::$VIEW_PROJECT_ITEM_INDEX;
+                    break;
+                case 'geo':
+                    $view = MainConfig::$VIEW_PROJECT_ITEM_GEO;
+                    break;
+                case 'route':
+                    $view = MainConfig::$VIEW_PROJECT_ITEM_ROUTE;
+                    break;
+                case 'tasks':
+                    $view = MainConfig::$VIEW_PROJECT_ITEM_TASKS;
+                    break;
+                case 'report':
+                    $view = MainConfig::$VIEW_PROJECT_ITEM_REPORT;
+                    break;
+                case 'address-edit':
+                    $view = MainConfig::$VIEW_PROJECT_ITEM_ADR_CHANGE;
+                    break;
+                case 'users-select':
+                    $view = 'projects/project-users-select';
+                    break;
+                default:
+                    $data = $model->getProject($id);
+                    $view = MainConfig::$VIEW_PROJECT_ITEM;
+                    break;
             }
-            elseif($id>0) { // существующий
-                switch (Yii::app()->getRequest()->getParam('section')) {
-                    case 'staff':
-                        $data = (new Services())->getFilteredPromos();
-                        $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
-                        break;
-                    case 'index':
-                        $data = $model->getProject();
-                        $view = MainConfig::$VIEW_PROJECT_ITEM_INDEX;
-                        break;
-                    case 'geo':
-                        $view = MainConfig::$VIEW_PROJECT_ITEM_GEO;
-                        break;
-                    case 'route':
-                        $view = MainConfig::$VIEW_PROJECT_ITEM_ROUTE;
-                        break;
-                    case 'tasks':
-                        $view = MainConfig::$VIEW_PROJECT_ITEM_TASKS;
-                        break;
-                    case 'report':
-                        $view = MainConfig::$VIEW_PROJECT_ITEM_REPORT;
-                        break;
-                    case 'address-edit':
-                        $view = MainConfig::$VIEW_PROJECT_ITEM_ADR_CHANGE;
-                        break;
-                    case 'users-select':
-                        $view = 'projects/project-users-select';
-                        break;
-                    default:
-                        $view = MainConfig::$VIEW_PROJECT_ITEM;
-                        break;
-                }
-               // $data = 1;
-            }
-            else{
-                 
-                $view = MainConfig::$VIEW_EMP_PROJECT_LIST;
-                $data = $model->getProjectEmployer();
-            }
-        
+        }
+        else{         
+            $view = MainConfig::$VIEW_EMP_PROJECT_LIST;
+            $data = $model->getProjectEmployer();
+        }
 
-
-        //$model = new Projects;
-        //$data = $model->getProjects($idus, $type);
-        //$this->setBreadcrumbs($title = 'Мои проекты', MainConfig::$PAGE_PROFILE);
-        //$this->setPageTitle($title);
         $this->render($view, array('viData' => $data));
     }
 }

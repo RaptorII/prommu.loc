@@ -180,8 +180,9 @@ class Project extends ARModel
     public function getAdresProgramm($project){
      
         $result = Yii::app()->db->createCommand()
-            ->select("*")
+            ->select('pc.id, pc.name, pc.adres, pc.id_city, c.name city, pc.bdate, pc.edate, pc.btime, pc.etime')
             ->from('project_city pc')
+            ->join('city c', 'c.id_city=pc.id_city')
             ->where('pc.project = :project', array(':project' =>$project))
             ->order('pc.bdate desc')
             ->queryAll();
@@ -355,4 +356,25 @@ class Project extends ARModel
         readfile($file_name); // считываем файл
         //unlink($file_name); // удаляем файл. то есть когда вы сохраните файл на локальном компе, то после он удалится с сервера
     }
+
+    public function hasAccess($prj){
+        $idus = Share::$UserProfile->id;
+        $t = Share::$UserProfile->type;
+        if($t==3) {
+            $result = Yii::app()->db->createCommand()
+                ->select('id')
+                ->from('project')
+                ->where('id_user=:idus AND project=:prj', array(':idus'=>$idus,':prj'=>$prj))
+                ->queryAll();
+        }
+        else {
+            $result = Yii::app()->db->createCommand()
+                ->select('id')
+                ->from('project_user')
+                ->where('user=:idus AND project=:prj', array(':idus'=>$idus,':prj'=>$prj))
+                ->queryAll();
+        }
+            
+        return sizeof($result);
+    }  
 }
