@@ -327,5 +327,27 @@ class Project extends ARModel
         $this->exportAutomizeFeedback();
 
     }
+    
+        public function hasAccess($prj){
+        $idus = Share::$UserProfile->id;
+        $t = Share::$UserProfile->type;
+        if($t==3) {
+            $result = Yii::app()->db->createCommand()
+                ->select('id')
+                ->from('project')
+                ->where('id_user=:idus AND project=:prj', array(':idus'=>$idus,':prj'=>$prj))
+                ->queryAll();
+        }
+        else {
+            $result = Yii::app()->db->createCommand()
+                ->select('id')
+                ->from('project_user')
+                ->where('user=:idus AND project=:prj', array(':idus'=>$idus,':prj'=>$prj))
+                ->queryAll();
+        }
+            
+        return sizeof($result);
+    } 
+
 
 }
