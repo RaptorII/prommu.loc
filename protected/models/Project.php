@@ -225,7 +225,8 @@ class Project extends ARModel
         $str = "Строение";
         $date = "Дата работы";
         $time = "Время работы";
-
+        
+        var_dump($sheet_array);
         $location = [];
 
         for($i = 1; $i < count($sheet_array)+1; $i++){
