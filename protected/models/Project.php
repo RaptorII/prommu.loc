@@ -246,10 +246,10 @@ class Project extends ARModel
                             'name' =>  $sheet_array[$i]['B'],
                             'adres' =>  $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'],
                             'id_city' => $city['id_city'],
-                            'bdate' =>  explode("-", $sheet_array[$i]['G'])[0],
-                            'edate' =>  explode("-", $sheet_array[$i]['G'])[1],
-                            'btime' => explode("-", $sheet_array[$i]['H'])[0],
-                            'etime' =>  explode("-", $sheet_array[$i]['H'])[1],
+                            'btime' =>  explode("-", $sheet_array[$i]['G'])[0],
+                            'etime' =>  explode("-", $sheet_array[$i]['G'])[1],
+                            'bdate' => explode("-", $sheet_array[$i]['H'])[0],
+                            'edate' =>  explode("-", $sheet_array[$i]['H'])[1],
                      ), 'point = :point', array(':point' => $point));
                 
                 } else {
