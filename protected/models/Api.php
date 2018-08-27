@@ -100,6 +100,14 @@ class Api
     }
     
     public function excelget(){
+        
+        $project = new Project();
+        $project->exportProject('153535589399038');
+        
+        
+    }
+    
+    public function excelgets(){
         Yii::import('ext.yexcel.Yexcel');
         $sheet_array = Yii::app()->yexcel->readActiveSheet('/var/www/dev.prommu/uploads/prommu_example.xls');
         //Заголовки
