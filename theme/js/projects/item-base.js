@@ -9,7 +9,7 @@ var BaseProgram = (function () {
 	BaseProgram.prototype.init = function () {
   	let self = this;
     //
-    $('#add-xls').click(self.addXlsFile);
+    $('#add-xls').click(function(){ self.addXlsFile(this) });
     $('body').on('click','.xls-popup-btn',function(){
       $('#add-xls-inp').click();
     });
@@ -63,7 +63,8 @@ var BaseProgram = (function () {
   }
   //
   BaseProgram.prototype.addXlsFile = function () {
-    confirm('Здесь выгрузится файл адресной программы');
+    let self = this;
+
     let html = "<div class='xls-popup' data-header='Изменение программы'>"+
       "1) Необходимо открыть скачаный файл<br>"+
       "2) Исправить существующие данные, либо добавить новые<br>"+

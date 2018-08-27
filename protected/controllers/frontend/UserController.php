@@ -1593,4 +1593,13 @@ class UserController extends AppController
 
         $this->render($view, array('viData' => $data));
     }
+    /*
+    *       загрузка xls файла
+    */
+    public function actionUploadProjectXLS() {
+        $id = Yii::app()->getRequest()->getParam('id');
+        $model = new Project();
+        if($model->hasAccess($id))
+            $model->exportProject($id);
+    }
 }
