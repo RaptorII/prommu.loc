@@ -211,12 +211,12 @@ class Project extends ARModel
     }
     
     public function importProject($props){
-        Yii::import('ext.yexcel.Yexcel');
-        $link = $props['link'];
+         $link = $props['link'];
         $project = $props['project'];
         $title = $props['title'];
+        Yii::import('ext.yexcel.Yexcel');
         $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/dev.prommu/uploads/$link");
-        
+        var_dump($sheet_array);
         $city = "Город";
         $location = "Локация";
         $street = "Улица";
