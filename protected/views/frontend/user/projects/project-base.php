@@ -195,6 +195,7 @@
 					<input type="hidden" name="project" class="project-inp" value="<?=$_GET['id']?>">
 					<input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
 					<input type="file" name="xls" id="add-xls-inp" class="hide">
+					<input type="hidden" name="load-xls" value="1">
 				</form>
 			</div>
 		</div>

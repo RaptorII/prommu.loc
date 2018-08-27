@@ -1581,10 +1581,10 @@ class UserController extends AppController
                     $view = 'projects/project-users-select';
                     break;
                 default:
-                    $xls = Yii::app()->getRequest()->getParam('xls');
+                    $xls = Yii::app()->getRequest()->getParam('load-xls');
+
                     if(isset($xls)) {
-//$uploaddir = '/var/www//uploads/';
-$uploadfile = MainConfig::$DOC_ROOT . basename($_FILES['xls']['name']);
+                        $uploadfile = MainConfig::$DOC_ROOT . basename($_FILES['xls']['name']);
 
 echo '<pre>';
 if (move_uploaded_file($_FILES['xls']['tmp_name'], $uploadfile)) {
