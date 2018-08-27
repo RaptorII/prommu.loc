@@ -276,9 +276,8 @@ class Project extends ARModel
     
    public function exportProject($project){
         Yii::import('ext.yexcel.Yexcel');
-        $sheet_array = Yii::app()->yexcel->setActiveSheet();
-            
-        $data = Yii::app()->db->createCommand()
+        
+         $data = Yii::app()->db->createCommand()
             ->select('pc.id, pc.name, pc.adres, pc.id_city, c.name city, pc.bdate, pc.edate, pc.btime, pc.etime, pc.project, pc.point')
             ->from('project_city pc')
             ->join('city c', 'c.id_city=pc.id_city')
@@ -286,72 +285,76 @@ class Project extends ARModel
             ->order('pc.bdate desc')
             ->queryAll();
             
+        $sheet_array = Yii::app()->yexcel->setActiveSheet($data);
             
-        $csv_file = '<table border="1">
-            <tr><td style="color:red; background:#E0E0E0">Город'.
-            '</td><td style="color:red; background:#E0E0E0">Локация'.
-            '</td><td style="color:red; background:#E0E0E0">Улица'.
-            '</td><td style="color:red; background:#E0E0E0">Дом'.
-            '</td><td style="color:red; background:#E0E0E0">Здание'.
-            '</td><td style="color:red; background:#E0E0E0">Строение'.
-            '</td><td style="color:red; background:#E0E0E0">Дата работы'.
-            '</td><td style="color:red; background:#E0E0E0">Время работы'.
-            '</td><td style="color:red; background:#E0E0E0">Идентификатор'.
+       
             
-'</td></tr>';
+            
+//         $csv_file = '<table border="1">
+//             <tr><td style="color:red; background:#E0E0E0">Город'.
+//             '</td><td style="color:red; background:#E0E0E0">Локация'.
+//             '</td><td style="color:red; background:#E0E0E0">Улица'.
+//             '</td><td style="color:red; background:#E0E0E0">Дом'.
+//             '</td><td style="color:red; background:#E0E0E0">Здание'.
+//             '</td><td style="color:red; background:#E0E0E0">Строение'.
+//             '</td><td style="color:red; background:#E0E0E0">Дата работы'.
+//             '</td><td style="color:red; background:#E0E0E0">Время работы'.
+//             '</td><td style="color:red; background:#E0E0E0">Идентификатор'.
+            
+// '</td></tr>';
 
 
 
 
         
-        foreach ($data as $row) {
+//         foreach ($data as $row) {
 
-            $csv_file .= '<tr>';
-            $b = "";
-            $b_end = "";
+//             $csv_file .= '<tr>';
+//             $b = "";
+//             $b_end = "";
 
-                    $city = Yii::app()->db->createCommand()
-                    ->select('c.name')
-                    ->from('city c')
-                    ->where('c.id_city = :id_city', array(':id_city' =>$row['id_city']))
-                    ->queryRow();
+//                     $city = Yii::app()->db->createCommand()
+//                     ->select('c.name')
+//                     ->from('city c')
+//                     ->where('c.id_city = :id_city', array(':id_city' =>$row['id_city']))
+//                     ->queryRow();
             
-                    $csv_file .= '<td>'.$b.$city['name'].$b_end.
-                    '</td><td>'.$b.$row['name'].$b_end.
-                    '</td><td>'.$b.$row['adres'].$b_end.
-                    '</td><td>'.$b.$row['adres'].$b_end.
-                    '</td><td>'.$b.$row['adres'].$b_end.
-                    '</td><td>'.$b.$row['adres'].$b_end.
-                    '</td><td>'.$b.$row['bdate'].'-'.$row['edate'].$b_end.
-                    '</td><td>'.$b.$row['btime'].'-'.$row['etime'].$b_end.
-                    '</td><td>'.$b.$row['point'].$b_end.
-                    '</td></tr>';
+//                     $csv_file .= '<td>'.$b.$city['name'].$b_end.
+//                     '</td><td>'.$b.$row['name'].$b_end.
+//                     '</td><td>'.$b.$row['adres'].$b_end.
+//                     '</td><td>'.$b.$row['adres'].$b_end.
+//                     '</td><td>'.$b.$row['adres'].$b_end.
+//                     '</td><td>'.$b.$row['adres'].$b_end.
+//                     '</td><td>'.$b.$row['bdate'].'-'.$row['edate'].$b_end.
+//                     '</td><td>'.$b.$row['btime'].'-'.$row['etime'].$b_end.
+//                     '</td><td>'.$b.$row['point'].$b_end.
+//                     '</td></tr>';
 
-        }
+//         }
 
-         $csv_file .='</table>';
-        $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/project_export.xls'; // название файла
-        $file = fopen($file_name,"w"); // открываем файл для записи, если его нет, то создаем его в текущей папке, где расположен скрипт
+//          $csv_file .='</table>';
+//         $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/project_export.xls'; // название файла
+//         $file = fopen($file_name,"w"); // открываем файл для записи, если его нет, то создаем его в текущей папке, где расположен скрипт
 
 
-        fwrite($file,trim($csv_file)); // записываем в файл строки
-        fclose($file); // закрываем файл
+//         fwrite($file,trim($csv_file)); // записываем в файл строки
+//         fclose($file); // закрываем файл
 
       
-        header('Pragma: no-cache');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Content-Description: File Transfer');
-        //header('Content-Type: text/csv');
-        //header('Content-Disposition: attachment; filename=export.csv;');
-        header('Content-Disposition: attachment; filename=project_export.xls');
-        header('Content-transfer-encoding: binary');
-        //header("content-type:application/csv;charset=ANSI");
-        header('Content-Type: text/html; charset=windows-1251');
-        header('Content-Type: application/x-unknown');
-        header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
-        // print "\xEF\xBB\xBF"; // UTF-8 BOM
-        readfile($file_name); // считываем файл
+//         header('Pragma: no-cache');
+//         header('Expires: 0');
+//         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+//         header('Content-Description: File Transfer');
+//         //header('Content-Type: text/csv');
+//         //header('Content-Disposition: attachment; filename=export.csv;');
+//         header('Content-Disposition: attachment; filename=project_export.xls');
+//         header('Content-transfer-encoding: binary');
+//         //header("content-type:application/csv;charset=ANSI");
+//         header('Content-Type: text/html; charset=windows-1251');
+//         header('Content-Type: application/x-unknown');
+//         header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
+//         // print "\xEF\xBB\xBF"; // UTF-8 BOM
+//         readfile($file_name); // считываем файл
 
     }
     
