@@ -208,7 +208,50 @@ class Project extends ARModel
         
         return $data;
     }
+    
+    public function importProject($props){
+        Yii::import('ext.yexcel.Yexcel');
+        $link = $props['link'];
+        $project = $props['project'];
+        $title = $props['title'];
+        $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/dev.prommu/$link");
+        
+        $city = "Город";
+        $location = "Локация";
+        $street = "Улица";
+        $home = "Дом";
+        $build = "Здание";
+        $str = "Строение";
+        $date = "Дата работы";
+        $time = "Время работы";
 
+        $location = [];
+
+        var_dump($sheet_array);
+
+        for($i = 1; $i < count($sheet_array)+1; $i++){
+           
+                
+                 $res = Yii::app()->db->createCommand()
+                        ->insert('project_city', array(
+                            'project' => $project,
+                            'title' => $title,
+                            'name' =>  $sheet_array[$i]['B'],
+                            'adres' =>  $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'],
+                            'id_city' =>  $sheet_array[$i]['A'],
+                            'bdate' =>  explode("-", $sheet_array[$i]['G'])[0],
+                            'edate' =>  explode("-", $sheet_array[$i]['G'])[1],
+                            'btime' => explode("-", $sheet_array[$i]['H'])[0],
+                            'etime' =>  explode("-", $sheet_array[$i]['H'])[1],
+                        ));
+        }
+
+
+        return $location;
+    } 
+    
+    
+    
     public function exportProjectCSV()
     {
         $csv_file = ''; // создаем переменную, в которую записываем строки
