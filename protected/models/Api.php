@@ -152,42 +152,23 @@ class Api
             ->offset(0)
             ->limit(1000)
             ->queryAll();
-
             for($i = 0; $i < count($data); $i ++){
-                if($data[$i]['canal'] == 'yandex' ||$data[$i]['canal'] == 'google' ) {
-                    $res = Yii::app()->db->createCommand()
+                 if(strpos($data[$i]['keywords'], "спб") !== false  || strpos($data[$i]['keywords'], "Петербург") !== false){
+                     $res = Yii::app()->db->createCommand()
                                     ->update('analytic', array(
-                                            'canal' => $data[$i]['transition'],
-                                            'transition' => $data[$i]['canal'],
-                                    ), 'id=:id', array(':id' => $data[$i]['id']));
-                }
-                for($j =0 ; $j <count($data); $j ++){
-                    if($data[$i]['id_us'] == $data[$j]['id_us']){
-                     
-                          if($data[$j]['id_us'] == $data[$i]['id_us'] && $data[$j]['id'] != $data[$i]['id']){
-                                if($data[$i]['name'] == "" || $data[$i]['name'] == "NO ACTIVE") { 
-                                   
-                                     $res = Yii::app()->db->createCommand()
+                                           'subdomen' => 1,
+                                    ), 'id_us=:id_us', array(':id_us' => $data[$i]['id_us']));
+                 }
+
+                 if(strpos($data[$i]['point'], "spb") !== false ){
+                     $res = Yii::app()->db->createCommand()
                                     ->update('analytic', array(
-                                            'referer' => $data[$i]['referer'],
-                                            'canal' => $data[$i]['canal'],
-                                            'campaign' => $data[$i]['campaign'],
-                                            'content' => $data[$i]['content'], 
-                                            'keywords' => $data[$i]['keywords'],
-                                            'point' => $data[$i]['point'], 
-                                            'transition' => $data[$i]['transition'],
-                                            'last_referer' => $data[$i]['last_referer'],
-                                    ), 'id_us=:id_us', array(':id_us' => $data[$j]['id_us']));
-                                // $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$i]['id']));
-                                } elseif($data[$i]['name'] ==  $data[$j]['name']){
-                                    // if($data[$i]['id'] < $data[$j]['id']){
-                                    //    //  $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$i]['id']));
-                                    // } else  $res = Yii::app()->db->createCommand()->delete('analytic', 'id=:id', array(':id'=>$data[$j]['id']));
-                                }
-                            }
-                    }
-                }
+                                           'subdomen' => 1,
+                                    ), 'id_us=:id_us', array(':id_us' => $data[$i]['id_us']));
+                 }
+
             }
+
 
     }
 
