@@ -215,7 +215,7 @@ class Project extends ARModel
         $link = $props['link'];
         $project = $props['project'];
         $title = $props['title'];
-        $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/dev.prommu/$link");
+        $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/dev.prommu/uploads/$link");
         
         $city = "Город";
         $location = "Локация";
