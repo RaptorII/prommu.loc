@@ -275,8 +275,8 @@ class Project extends ARModel
     
     
    public function exportProject($project){
-
-
+        Yii::import('ext.yexcel.Yexcel');
+        $sheet_array = Yii::app()->yexcel->setActiveSheet();
             
         $data = Yii::app()->db->createCommand()
             ->select('pc.id, pc.name, pc.adres, pc.id_city, c.name city, pc.bdate, pc.edate, pc.btime, pc.etime, pc.project, pc.point')
