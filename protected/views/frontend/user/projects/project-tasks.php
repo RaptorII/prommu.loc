@@ -1,7 +1,86 @@
 <?php
+$request = Yii::app()->request;
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item.js', CClientScript::POS_END);
+/***********UNIVERSAL FILTER************/
+Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/universal-filter.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-filter.css');
+/***********UNIVERSAL FILTER************/
+
+$projectId = $request->getParam('id');
+$sectionId = $request->getParam('section');
 ?>
+
+<?
+$arFilterData = [
+    'ID' => $projectId, //Обязательное свойство!
+    'FILTER_ADDITIONAL_VALUE'=>[
+        'SECTION_ID' => $sectionId
+    ],
+    'FILTER_SETTINGS'=>[
+        0 => [
+            'NAME' => 'Имя',
+            'TYPE' => 'text',
+            'INPUT_NAME' => 'first_name',
+            'DATA' => [],
+            'DATA_DEFAULT' => 'Стас',
+            'PLACEHOLDER' => ''
+        ],
+        1 => [
+            'NAME' => 'Фамилия',
+            'TYPE' => 'text',
+            'INPUT_NAME' => 'second_name',
+            'DATA' => [],
+            'DATA_DEFAULT' => 'Кузовов',
+            'PLACEHOLDER' => ''
+        ],
+        2 => [
+            'NAME' => 'Статус',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'status',
+            'DATA' => [
+                0 => [
+                    'title' => 'Подтверждено',
+                    'id' => '1'
+                ],
+                1 => [
+                    'title' => 'Не подтверждено',
+                    'id' => '0'
+                ],
+                2 => [
+                    'title' => 'Все',
+                    'id' => '2'
+                ]
+            ],
+            'DATA_DEFAULT' => '1'
+        ],
+        3 => [
+            'NAME' => 'Привязка к адресу',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'address',
+            'DATA' => [
+                0 => [
+                    'title' => 'Привязан',
+                    'id' => '1'
+                ],
+                1 => [
+                    'title' => 'Не привязан',
+                    'id' => '0'
+                ],
+                2 => [
+                    'title' => 'Все',
+                    'id' => '2'
+                ]
+            ],
+            'DATA_DEFAULT' => '1'
+        ]
+    ]
+];
+?>
+
+<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
+<? print_r($_POST); ?>
+</pre>
 
 <div class="row project">
 	<div class="col-xs-12">

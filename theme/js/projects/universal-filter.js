@@ -20,7 +20,8 @@ let IndexUniversalFilter = (function () {
         });
         $('.prommu__universal-filter .u-filter__text').keypress(function ()
         {
-            setTimeout(function () {
+            clearTimeout(IndexUniversalFilter.AjaxTimer);
+            IndexUniversalFilter.AjaxTimer = setTimeout(function () {
                 self.ajaxSetParams();
             }, 1000); // время в мс
         });
