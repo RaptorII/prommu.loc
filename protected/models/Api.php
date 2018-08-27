@@ -178,7 +178,7 @@ class Api
             // $arr['resume'] = $rests;
 
             // return $arr;
-        $lines = file_get_contents('https://prommu.com/protected/models/11.txt');
+        $lines = file_get_contents('https://dev.prommu.com/protected/models/11.txt');
       
         $liness = explode("зарегистрирован новый пользователь", $lines);
         $count = count($liness);
