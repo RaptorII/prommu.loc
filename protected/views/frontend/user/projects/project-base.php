@@ -89,7 +89,7 @@
   );
 ?>
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($arProgram); ?>
+<? print_r($viData); ?>
 </pre>
 <div class="row project">
 	<div class="col-xs-12">
@@ -99,7 +99,7 @@
 		<div id="content">
 			<div class="project__module">
 				<div class="project__xls">
-					<a href="javascript:void(0)" id="add-xls">Изменить адресную программу</a>
+					<a href="/user/uploadprojectxls?id=<?=$_GET['id']?>" id="add-xls">Изменить адресную программу</a>
 					<a href="/uploads/prommu_example.xls" download>Скачать пример для добавления</a>
 				</div>
 				<h1 class="project__title">ПРОЕКТ: <span><?=$projectName?></span></h1>

@@ -90,7 +90,7 @@ class Api
             {
                 case -1001 : $message = 'No such API method'; break;
                 case -1003 : $message = 'Wrong header'; break;
-                default: $code= 1002; $message = 'some api error';
+                default: $code= 1002; $message = $e->getMessage();
             }
 
             $data = ['error' => $code, 'message' => $message];
@@ -100,19 +100,47 @@ class Api
     }
     
     public function excelget(){
-        echo "heloo";
-        // $sheet_array = Yii::app()->yexcel->readActiveSheet('https://dev.prommu.com/uploads/prommu_example.xls');
-        // return $sheet_array;
-        // echo "<table>";
         
-        // foreach( $sheet_array as $row ) {
-        //     echo "<tr>";
-        //     foreach( $row as $column )
-        //         echo "<td>$column</td>";
-        //     echo "</tr>";
-        // }
+        $project = new Project();
+        $project->exportProject('153535589399038');
         
-        // echo "</table>";
+        
+    }
+    
+    public function excelgets(){
+        Yii::import('ext.yexcel.Yexcel');
+        $sheet_array = Yii::app()->yexcel->readActiveSheet('/var/www/dev.prommu/uploads/prommu_example.xls');
+        //Заголовки
+        $city = "Город";
+        $location = "Локация";
+        $street = "Улица";
+        $home = "Дом";
+        $build = "Здание";
+        $str = "Строение";
+        $date = "Дата работы";
+        $time = "Время работы";
+
+        $location = [];
+
+        var_dump($sheet_array);
+
+        for($i = 1; $i < count($sheet_array)+1; $i++){
+           
+
+                $location[] = [
+                    'name' =>  $sheet_array[$i]['B'],
+                    'adres' =>  $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'],
+                    'id_city' =>  $sheet_array[$i]['A'],
+                    'bdate' =>  explode("-", $sheet_array[$i]['G'])[0],
+                    'edate' =>  explode("-", $sheet_array[$i]['G'])[1],
+                    'btime' => explode("-", $sheet_array[$i]['H'])[0],
+                    'etime' =>  explode("-", $sheet_array[$i]['H'])[1],
+                ];
+        }
+
+
+        return $location;
+
     }
     
 
@@ -993,7 +1021,7 @@ class Api
             ->select("*")
             ->from('analytic a')
             ->join('user usr', 'usr.id_user=a.id_us')
-            ->where('a.active=:active AND a.date >:date AND a.subdomen=:domen', array(':active' => 1, ':date'=> $yester, ':domen'=>$domen))
+            ->where('a.active=:active AND a.date >:date', array(':active' => 1, ':date'=> $yester))
             ->order("a.id_us desc")
             ->queryAll();
             
@@ -1003,26 +1031,13 @@ class Api
             ->select("*")
             ->from('analytic a')
             ->join('user usr', 'usr.id_user=a.id_us')
-            ->where('a.active=:active AND (a.date BETWEEN :date AND :bdate) AND a.subdomen=:domen AND a.name!=:name', array(':active' => 1, ':date'=> $date, 'bdate'=> $bdate, 'domen'=>$domen, 'name'=>'NO ACTIVE'))
+            ->where('a.active=:active AND (a.date BETWEEN :date AND :bdate)  AND a.name!=:name', array(':active' => 1, ':date'=> $date, 'bdate'=> $bdate, 'name'=>'NO ACTIVE'))
             ->order("a.id_us desc")
             ->group("a.id_us")
             ->queryAll();
 
          }
             
-         switch ($domen) {
-            case '0':
-                 $domen = 'https://prommu.com';
-                 break;
-
-            case '1':
-                 $domen = 'https://spb.prommu.com';
-                 break;
-             
-             default:
-                 # code...
-                 break;
-         }
 
 
         $csv_file = '<table border="1">
@@ -1054,9 +1069,22 @@ class Api
             $csv_file .= '<tr>';
             $b = "";
             $b_end = "";
-            $domen = 'https://prommu.com';
 
             $type_feed = 'регистрация';
+
+            switch ($row['subdomen']) {
+            case '0':
+                 $domen = 'https://prommu.com';
+                 break;
+
+            case '1':
+                 $domen = 'https://spb.prommu.com';
+                 break;
+             
+             default:
+                 # code...
+                 break;
+            }
 
             if(strpos('yandex,yandex.ru,away.vk.com,google,facebook', $row['canal']) !== false) {
                     $row["canal"] = $row['referer'];
