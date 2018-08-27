@@ -323,20 +323,20 @@ class Project extends ARModel
         fwrite($file,trim($csv_file)); // записываем в файл строки
         fclose($file); // закрываем файл
 
-       // задаем заголовки. то есть задаем всплывающее окошко, которое позволяет нам сохранить файл.
-        // header('Pragma: no-cache');
-        // header('Expires: 0');
-        // header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        // header('Content-Description: File Transfer');
-        // //header('Content-Type: text/csv');
-        // //header('Content-Disposition: attachment; filename=export.csv;');
-        // header('Content-Disposition: attachment; filename=project_export.xls');
-        // header('Content-transfer-encoding: binary');
-        // //header("content-type:application/csv;charset=ANSI");
-        // header('Content-Type: text/html; charset=windows-1251');
-        // header('Content-Type: application/x-unknown');
-        // header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
-        //print "\xEF\xBB\xBF"; // UTF-8 BOM
+      
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Content-Description: File Transfer');
+        //header('Content-Type: text/csv');
+        //header('Content-Disposition: attachment; filename=export.csv;');
+        header('Content-Disposition: attachment; filename=project_export.xls');
+        header('Content-transfer-encoding: binary');
+        //header("content-type:application/csv;charset=ANSI");
+        header('Content-Type: text/html; charset=windows-1251');
+        header('Content-Type: application/x-unknown');
+        header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
+        // print "\xEF\xBB\xBF"; // UTF-8 BOM
         readfile($file_name); // считываем файл
 
     }
