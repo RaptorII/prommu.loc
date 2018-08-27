@@ -216,7 +216,7 @@ class Project extends ARModel
         $title = $props['title'];
         Yii::import('ext.yexcel.Yexcel');
         $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/dev.prommu/uploads/$link");
-        var_dump($sheet_array);
+        
         $city = "Город";
         $location = "Локация";
         $street = "Улица";
@@ -226,7 +226,7 @@ class Project extends ARModel
         $date = "Дата работы";
         $time = "Время работы";
         
-        var_dump($sheet_array);
+        
         $location = [];
 
         for($i = 1; $i < count($sheet_array)+1; $i++){
