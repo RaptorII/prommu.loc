@@ -14,7 +14,6 @@
     border: 1px solid red;
     box-shadow: 0px 0px 5px 0px red;
 }
-
 #DiContent #invitation .invite-inp.phone{
     border: none;
     padding: 0 0 0 3px;
@@ -44,3 +43,112 @@
 .project__xls #add-program:hover{
     color:#ff6500;
 }
+
+.project__header{
+    background-color: #f5f5f5;
+    padding: 10px 15px 5px;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: nowrap;
+    margin-bottom:15px;
+}
+
+.project__header .project__header-xls{
+    width: 35%;
+    float: left;
+    overflow: hidden;
+    padding: 0px;
+    text-align: left;
+    margin-bottom:0px!important;
+    padding-top:5px;
+}
+.project__header .project__header-xls label{
+    padding-bottom: 0!important;
+    margin-bottom:7px;
+}
+.project__header .project__header-xls a{
+    padding-left:0!important;
+    padding-bottom: 0!important;
+    margin-bottom:7px;
+}
+.project__header  .project__header-filter{
+
+    width: 65%;
+    float: right;
+    text-align: center;
+}
+#control__save-btn, #control__add-personal, #control__new-personal{
+    margin-top:5px;
+}
+/************Верстка фильтра*************/
+#DiContent .prommu__universal-filter .u-filter__item{
+    /*float: left;*/
+    display: inline-block;
+    padding-top:5px;
+}
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__item-title{
+    display: inline;
+    padding-right: 10px;
+}
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__item-data{
+    display: inline-block;
+    width: 170px;
+}
+#DiContent .prommu__universal-filter .u-filter__item-0{
+    width:220px;
+}
+#DiContent .prommu__universal-filter .u-filter__item-1{
+    width:250px;
+}
+#DiContent .prommu__universal-filter .u-filter__item-2{
+    width:250px;
+}
+#DiContent .prommu__universal-filter .u-filter__item-3{
+    width:300px;
+}
+@media (max-width: 1000px) and (min-width: 581px){
+    .project__header .project__header-xls{
+        width:100%;
+        text-align:center;
+        float:none;
+    }
+    .project__header  .project__header-filter{
+        width:100%;
+        float:none;
+    }
+    .project__header {
+        flex-flow: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 580px){
+    .project__header {
+        flex-flow: column;
+        align-items: center;
+    }
+    .project__header .project__header-xls{
+        width:100%;
+        text-align:center;
+        float:none;
+    }
+    .project__header .u-filter__item{
+        width:100%!important;
+    }
+    #DiContent .prommu__universal-filter .u-filter__item .u-filter__item-data{
+        display: block;
+        width: 90%;
+        margin: 0 auto;
+    }
+    .project__header  .project__header-filter{
+        width:100%!important;
+        float:none;
+    }
+    #control__save-btn, #control__add-personal, #control__new-personal{
+        width:100%!important;
+    }
+    #control__save-btn{
+        margin-left:0!important;
+    }
+}
+
