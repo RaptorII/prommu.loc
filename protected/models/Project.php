@@ -124,6 +124,7 @@ class Project extends ARModel
                             'edate' => $clouds[$k]['edate'],
                             'btime' => $clouds[$k]['btime'],
                             'etime' => $clouds[$k]['etime'],
+                            'point' => $project.$k,
                         ));
                     }
                     $k++;
@@ -230,9 +231,32 @@ class Project extends ARModel
         var_dump($sheet_array);
 
         for($i = 1; $i < count($sheet_array)+1; $i++){
-           
+                if($sheet_array[$i]['I'] != ''){
+                    $point = $sheet_array[$i]['I'];
                 
-                 $res = Yii::app()->db->createCommand()
+                    // $data = Yii::app()->db->createCommand()
+                    // ->select('pc.id, pc.name, pc.adres, pc.id_city, c.name city, pc.bdate, pc.edate, pc.btime, pc.etime, pc.project, pc.point')
+                    // ->from('project_city pc')
+                    // ->join('city c', 'c.id_city=pc.id_city')
+                    // ->where('pc.point = :point', array(':point' =>$project))
+                    // ->order('pc.bdate desc')
+                    // ->queryRow();
+                    
+                     Yii::app()->db->createCommand()
+                        ->update('project_city', array(
+                            'project' => $project,
+                            'title' => $title,
+                            'name' =>  $sheet_array[$i]['B'],
+                            'adres' =>  $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'],
+                            'id_city' =>  $sheet_array[$i]['A'],
+                            'bdate' =>  explode("-", $sheet_array[$i]['G'])[0],
+                            'edate' =>  explode("-", $sheet_array[$i]['G'])[1],
+                            'btime' => explode("-", $sheet_array[$i]['H'])[0],
+                            'etime' =>  explode("-", $sheet_array[$i]['H'])[1],
+                     ), 'point = :point', array(':point' => $point));
+                
+                } else {
+                    $res = Yii::app()->db->createCommand()
                         ->insert('project_city', array(
                             'project' => $project,
                             'title' => $title,
@@ -243,7 +267,8 @@ class Project extends ARModel
                             'edate' =>  explode("-", $sheet_array[$i]['G'])[1],
                             'btime' => explode("-", $sheet_array[$i]['H'])[0],
                             'etime' =>  explode("-", $sheet_array[$i]['H'])[1],
-                        ));
+                        ));   
+                }
         }
 
 
@@ -294,7 +319,7 @@ class Project extends ARModel
                     '</td><td>'.$b.$row['adres'].$b_end.
                     '</td><td>'.$b.$row['bdate'].'-'.$row['edate'].$b_end.
                     '</td><td>'.$b.$row['btime'].'-'.$row['etime'].$b_end.
-                    '</td><td>'.$b.$row['project'].$b_end.
+                    '</td><td>'.$b.$row['point'].$b_end.
                     '</td></tr>';
 
         }
