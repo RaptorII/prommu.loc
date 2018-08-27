@@ -172,58 +172,85 @@ class Api
 
     }
 
-    public function teSt(){
-       
-         $name = Yii::app()->getRequest()->getParam('name');
-        $sql = "SELECT  r.firstname
-                    FROM resume r
-                    WHERE r.isman = 1";
-                $result = Yii::app()->db->createCommand($sql)->queryAll();
+ public function teSt(){
+      
+            // $arr['analyt'] = $rest;
+            // $arr['resume'] = $rests;
 
-        $sql = "SELECT  r.firstname
-                    FROM resume r
-                    WHERE r.isman = 0";
-                $results = Yii::app()->db->createCommand($sql)->queryAll();
+            // return $arr;
+        $lines = file_get_contents('https://prommu.com/protected/models/11.txt');
+      
+        $liness = explode("зарегистрирован новый пользователь", $lines);
+        $count = count($liness);
+        $linesss = $liness;
+        for($i = 0; $i < $count; $i ++) {
+           $user = explode("Пользователь:",  $linesss[$i]);
+           echo $users = explode(",",  $user[1])[0];
+           $name = explode("Имя:",  $linesss[$i]);
+           echo $names = explode(",",  $name[1])[0];
+           $ustype = explode("Тип:",  $linesss[$i]);
+           echo $ustypes = explode(",",  $ustype[1])[0];
+           if(strpos($ustype, "Соискатель") !== false) { $ustypes = 2;
+            } else $ustypes = 3;
+           $type =  explode("Тип трафика:",  $linesss[$i]);
+           $source = explode("Источник:",  $type[1]);
+           echo $sources = $source[0];
+           $canal = explode("Канал:",  $source[1]);
+           echo $referers = $canal[0];
+           $campaign = explode("Кампания:",  $canal[1]);
+           echo $canals = $campaign[0];
+           $content = explode("Контент:",  $campaign[1]);
+           echo $campaigns = $content[0];
+           $keywords = explode("Ключевые слова:",  $content[1]);
+           echo  $contents = $keywords[0];
+           $point = explode("Точка входа:",  $keywords[1]);
+           echo $keywordss = $point[0];
+           $last_referer = explode("Реферер:",  $point[1]);
+           echo $points = $last_referer[0];
+           $last_referers = explode("Реферер:",  $last_referer[1]);
+           $last_refererss = explode("С наилучшими", $last_referers[0]);
+           echo $last_referersss = $last_refererss[0];
 
-                $sex= 0;
-                $sexs= 0;
-                    $count = count($result);
-                     $counts = count($results);
-                      echo "Поиск по базе мужчин <br/>";
-                   for($i = 0; $i < $count; $i++){
-                        
-                        if(strpos($result[$i]['firstname'], $name) !== false) {
-                            echo $result[$i]['firstname']."-".$name."<br/>";
-                            $sex++;
-               
-                        }
-                        
-                    }
-                    echo "Поиск по базе женщин <br/>";
-                    for($i = 0; $i < $counts; $i++){
-                        
-                        if(strpos($results[$i]['firstname'], $name) !== false) {
-                            echo $results[$i]['firstname']."-".$name."<br/>";
-                            $sexs++;
-               
-                        }
-                        
-                    }
+           if($users != 0){
+            $sql = "SELECT r.id_us
+            FROM analytic r
+            WHERE r.id_us = {$users}";
+        	$red = Yii::app()->db->createCommand($sql);
+        	$log = $red->queryRow();
+            echo $log['id_us'];
+            if($log['id_us'] == $users) {
+            	  	echo "heee";
+            } else {
+          	
+                     $analytData = array('id_us' => $users,
+                        'name' => $names,
+                        'date' =>  date('Y-m-d H:i:s'),
+                        'type' => $ustypes,
+                        'referer' => $sources,
+                        'canal' => $canals,
+                        'campaign' => $campaigns,
+                        'content' => $contents, 
+                        'keywords' => $keywordss,
+                        'transition' => $referers,
+                        'point' => $points, 
+                        'last_referer' => $last_referersss,
+                        'active' => 1,
+                    );
 
-                if($sexs < $sex){
-                   $var =  100 - ($sexs/$sex);
-                    $sex = "C вероятностью $var % - мужчина";
-                } elseif($sex < $sexs) {
-                     $var =  100 - ($sex/$sexs);
-                    $sex = "C вероятностью $var %  - женщина";
-                }
-                elseif($sex == 0 && $sexs == 0) {
-                   
-                    $sex = "Не могу определить... Ты случайно не $name ? ";
-                }
-        echo "<p style='font-size:40px; font-family:Roboto Condensed'>$sex</p>";
+        		$res = Yii::app()->db->createCommand()
+                        ->insert('analytic', $analytData);
 
+
+        	}
+          }
+
+      		
+
+        }
+        
+   
     }
+
 
 
 
