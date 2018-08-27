@@ -211,12 +211,12 @@ class Project extends ARModel
     }
     
     public function importProject($props){
-        Yii::import('ext.yexcel.Yexcel');
-        $link = $props['link'];
+         $link = $props['link'];
         $project = $props['project'];
         $title = $props['title'];
-        $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/dev.prommu/$link");
-        
+        Yii::import('ext.yexcel.Yexcel');
+        $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/dev.prommu/uploads/$link");
+        var_dump($sheet_array);
         $city = "Город";
         $location = "Локация";
         $street = "Улица";
@@ -225,10 +225,9 @@ class Project extends ARModel
         $str = "Строение";
         $date = "Дата работы";
         $time = "Время работы";
-
-        $location = [];
-
+        
         var_dump($sheet_array);
+        $location = [];
 
         for($i = 1; $i < count($sheet_array)+1; $i++){
             $city = Yii::app()->db->createCommand()
@@ -288,7 +287,7 @@ class Project extends ARModel
             ->queryAll();
             
             
-         $csv_file = '<table border="1">
+        $csv_file = '<table border="1">
             <tr><td style="color:red; background:#E0E0E0">Город'.
             '</td><td style="color:red; background:#E0E0E0">Локация'.
             '</td><td style="color:red; background:#E0E0E0">Улица'.
@@ -298,9 +297,10 @@ class Project extends ARModel
             '</td><td style="color:red; background:#E0E0E0">Дата работы'.
             '</td><td style="color:red; background:#E0E0E0">Время работы'.
             '</td><td style="color:red; background:#E0E0E0">Идентификатор'.
-            '</td></tr>';
-
+            
 '</td></tr>';
+
+
 
 
         
@@ -329,8 +329,7 @@ class Project extends ARModel
 
         }
 
-
-        $csv_file .='</table>';
+         $csv_file .='</table>';
         $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/project_export.xls'; // название файла
         $file = fopen($file_name,"w"); // открываем файл для записи, если его нет, то создаем его в текущей папке, где расположен скрипт
 
@@ -338,7 +337,7 @@ class Project extends ARModel
         fwrite($file,trim($csv_file)); // записываем в файл строки
         fclose($file); // закрываем файл
 
-       // задаем заголовки. то есть задаем всплывающее окошко, которое позволяет нам сохранить файл.
+      
         header('Pragma: no-cache');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -351,12 +350,12 @@ class Project extends ARModel
         header('Content-Type: text/html; charset=windows-1251');
         header('Content-Type: application/x-unknown');
         header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
-        //print "\xEF\xBB\xBF"; // UTF-8 BOM
+        // print "\xEF\xBB\xBF"; // UTF-8 BOM
         readfile($file_name); // считываем файл
 
     }
     
-        public function hasAccess($prj){
+    public function hasAccess($prj){
         $idus = Share::$UserProfile->id;
         $t = Share::$UserProfile->type;
         if($t==3) {
