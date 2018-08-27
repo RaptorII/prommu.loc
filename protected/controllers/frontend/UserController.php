@@ -1582,18 +1582,19 @@ class UserController extends AppController
                     break;
                 default:
                     $xls = Yii::app()->getRequest()->getParam('load-xls');
-
+                    $data = $model->getProject($id);
+                    $view = MainConfig::$VIEW_PROJECT_ITEM;
                     if(isset($xls)) {
                         $name = $id . '.' . (end(explode('.', $_FILES['xls']['name'])));
                         $uploadfile = '/var/www/dev.prommu/uploads/' . $name;
                         if (move_uploaded_file($_FILES['xls']['tmp_name'], $uploadfile)) {
-                            //
-                            // обработка файла
-                            //
+                           $props['project'] = $id;
+                           $props['title'] = 'test';
+                           $props['link'] = $name;
+                           $model->importProject($props);
                         }
                     }
-                    $data = $model->getProject($id);
-                    $view = MainConfig::$VIEW_PROJECT_ITEM;
+                
                     break;
             }
         }
