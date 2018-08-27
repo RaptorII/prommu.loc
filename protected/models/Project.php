@@ -228,8 +228,6 @@ class Project extends ARModel
 
         $location = [];
 
-        var_dump($sheet_array);
-
         for($i = 1; $i < count($sheet_array)+1; $i++){
             $city = Yii::app()->db->createCommand()
                     ->select('c.id_city')
@@ -356,7 +354,7 @@ class Project extends ARModel
 
     }
     
-        public function hasAccess($prj){
+    public function hasAccess($prj){
         $idus = Share::$UserProfile->id;
         $t = Share::$UserProfile->type;
         if($t==3) {
