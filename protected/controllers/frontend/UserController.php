@@ -1584,7 +1584,7 @@ class UserController extends AppController
                     $xls = Yii::app()->getRequest()->getParam('load-xls');
 
                     if(isset($xls)) {
-                        $name = $id . (end(explode('.', $_FILES['xls']['name'])));
+                        $name = $id . '.' . (end(explode('.', $_FILES['xls']['name'])));
                         $uploadfile = '/var/www/dev.prommu/uploads/' . $name;
                         if (move_uploaded_file($_FILES['xls']['tmp_name'], $uploadfile)) {
                             //
