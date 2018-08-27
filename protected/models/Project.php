@@ -290,9 +290,7 @@ class Project extends ARModel
             ->queryAll();
             
             
-
-
-        $csv_file = '<table border="1">
+         $csv_file = '<table border="1">
             <tr><td style="color:red; background:#E0E0E0">Город'.
             '</td><td style="color:red; background:#E0E0E0">Локация'.
             '</td><td style="color:red; background:#E0E0E0">Улица'.
@@ -303,6 +301,10 @@ class Project extends ARModel
             '</td><td style="color:red; background:#E0E0E0">Время работы'.
             '</td><td style="color:red; background:#E0E0E0">Идентификатор'.
             '</td></tr>';
+
+'</td></tr>';
+
+
         
         foreach ($data as $row) {
 
@@ -348,8 +350,6 @@ class Project extends ARModel
         header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
         //print "\xEF\xBB\xBF"; // UTF-8 BOM
         readfile($file_name); // считываем файл
-
-        $this->exportAutomizeFeedback();
 
     }
     
