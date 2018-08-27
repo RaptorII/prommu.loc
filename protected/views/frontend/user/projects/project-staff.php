@@ -69,7 +69,7 @@ $arFilterData = [
             'TYPE' => 'text',
             'INPUT_NAME' => 'first_name',
             'DATA' => [],
-            'DATA_DEFAULT' => 'Стас',
+            'DATA_DEFAULT' => '',
             'PLACEHOLDER' => ''
         ],
         1 => [
@@ -77,7 +77,7 @@ $arFilterData = [
             'TYPE' => 'text',
             'INPUT_NAME' => 'second_name',
             'DATA' => [],
-            'DATA_DEFAULT' => 'Кузовов',
+            'DATA_DEFAULT' => '',
             'PLACEHOLDER' => ''
         ],
         2 => [
@@ -118,7 +118,7 @@ $arFilterData = [
                     'id' => '2'
                 ]
             ],
-            'DATA_DEFAULT' => '1'
+            'DATA_DEFAULT' => '2'
         ]
     ]
 ];
