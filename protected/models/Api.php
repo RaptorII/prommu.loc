@@ -179,7 +179,7 @@ class Api
 
             // return $arr;
         $lines = file_get_contents('https://dev.prommu.com/protected/models/11.txt');
-      
+        echo $lines;
         $liness = explode("зарегистрирован новый пользователь", $lines);
         $count = count($liness);
         $linesss = $liness;
