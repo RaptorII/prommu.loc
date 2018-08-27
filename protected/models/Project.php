@@ -286,7 +286,20 @@ class Project extends ARModel
             ->queryAll();
             
             
-         $csv_file = '';
+        $csv_file = '<table border="1">
+            <tr><td style="color:red; background:#E0E0E0">Город'.
+            '</td><td style="color:red; background:#E0E0E0">Локация'.
+            '</td><td style="color:red; background:#E0E0E0">Улица'.
+            '</td><td style="color:red; background:#E0E0E0">Дом'.
+            '</td><td style="color:red; background:#E0E0E0">Здание'.
+            '</td><td style="color:red; background:#E0E0E0">Строение'.
+            '</td><td style="color:red; background:#E0E0E0">Дата работы'.
+            '</td><td style="color:red; background:#E0E0E0">Время работы'.
+            '</td><td style="color:red; background:#E0E0E0">Идентификатор'.
+            
+'</td></tr>';
+
+
 
 
         
@@ -315,7 +328,7 @@ class Project extends ARModel
 
         }
 
-
+         $csv_file .='</table>';
         $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/project_export.xls'; // название файла
         $file = fopen($file_name,"w"); // открываем файл для записи, если его нет, то создаем его в текущей папке, где расположен скрипт
 
