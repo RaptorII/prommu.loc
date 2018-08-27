@@ -97,8 +97,10 @@ let IndexUniversalFilter = (function () {
             let name = $(this).attr("name");
             let value = $(this).val();
             if(name && name!='id'){
-                params+='&';
-                params+=name+'='+value;
+                if(value!==''){
+                    params+='&';
+                    params+=name+'='+value;
+                }
             }
             if(name=='id'){
                 mainParam+=name+'='+value;

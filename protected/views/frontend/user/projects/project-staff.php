@@ -119,6 +119,86 @@ $arFilterData = [
                 ]
             ],
             'DATA_DEFAULT' => '2'
+        ],
+        4 => [
+            'NAME' => 'Город',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'city',
+            'DATA' => [
+                0 => [
+                    'title' => 'Москва',
+                    'id' => '1'
+                ],
+                1 => [
+                    'title' => 'Санкт-Петербург',
+                    'id' => '0'
+                ],
+                2 => [
+                    'title' => 'Все',
+                    'id' => '2'
+                ]
+            ],
+            'DATA_DEFAULT' => '2'
+        ],
+        4 => [
+            'NAME' => 'Метро',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'metro',
+            'DATA' => [
+                0 => [
+                    'title' => 'Метро 1',
+                    'id' => '1'
+                ],
+                1 => [
+                    'title' => 'Метро 2',
+                    'id' => '0'
+                ],
+                2 => [
+                    'title' => 'Все',
+                    'id' => '2'
+                ]
+            ],
+            'DATA_DEFAULT' => '2'
+        ],
+        5 => [
+            'NAME' => 'Локация',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'location',
+            'DATA' => [
+                0 => [
+                    'title' => 'Локация 1',
+                    'id' => '1'
+                ],
+                1 => [
+                    'title' => 'Локация 2',
+                    'id' => '0'
+                ],
+                2 => [
+                    'title' => 'Все',
+                    'id' => '2'
+                ]
+            ],
+            'DATA_DEFAULT' => '2'
+        ],
+        6 => [
+            'NAME' => 'Метро',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'location',
+            'DATA' => [
+                0 => [
+                    'title' => 'Метро 1',
+                    'id' => '1'
+                ],
+                1 => [
+                    'title' => 'Метро 2',
+                    'id' => '0'
+                ],
+                2 => [
+                    'title' => 'Все',
+                    'id' => '2'
+                ]
+            ],
+            'DATA_DEFAULT' => '2'
         ]
     ]
 ];
