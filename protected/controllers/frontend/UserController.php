@@ -1584,18 +1584,13 @@ class UserController extends AppController
                     $xls = Yii::app()->getRequest()->getParam('load-xls');
 
                     if(isset($xls)) {
-                        $uploadfile = '/var/www/dev.prommu/' . basename($_FILES['xls']['name']);
-
-echo '<pre>';
-if (move_uploaded_file($_FILES['xls']['tmp_name'], $uploadfile)) {
-    echo "Файл корректен и был успешно загружен.\n";
-} else {
-    echo "Возможная атака с помощью файловой загрузки!\n";
-}
-
-echo 'Некоторая отладочная информация:';
-print_r($_FILES);
-print "</pre>";
+                        $name = $id . (end(explode('.', $_FILES['xls']['name'])));
+                        $uploadfile = '/var/www/dev.prommu/uploads/' . $name;
+                        if (move_uploaded_file($_FILES['xls']['tmp_name'], $uploadfile)) {
+                            //
+                            // обработка файла
+                            //
+                        }
                     }
                     $data = $model->getProject($id);
                     $view = MainConfig::$VIEW_PROJECT_ITEM;
