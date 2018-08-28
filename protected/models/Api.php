@@ -1167,7 +1167,7 @@ class Api
 
                     if(empty($email)){
                         $user = Yii::app()->db->createCommand()
-                        ->select("ua.data, ua.dt_create")
+                        ->select("ua.data, ua.dt_create, ua.status")
                         ->from('user_activate ua')
                         ->where('ua.id_user=:id_user', array(':id_user' => $id_user))
                         ->queryRow();
@@ -1176,6 +1176,9 @@ class Api
                         $data = json_decode($user['data'], true);
                         $firstname = $this->encoderSys($data['firstname']);
                         $lastname = $this->encoderSys($data['lastname']);
+                        if($user['status'] == 0){
+                            $lastname = $this->encoderSys($data['name']);
+                        }
                         $fio = "$firstname ".$lastname; 
                         $email = $this->encoderSys($data['email']);
                         $user['date_public'] = $user['dt_create'];
