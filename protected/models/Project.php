@@ -124,6 +124,7 @@ class Project extends ARModel
                             'edate' => date('Y-m-d', strtotime($clouds[$k]['edate'])),
                             'btime' => $clouds[$k]['btime'],
                             'etime' => $clouds[$k]['etime'],
+                            'metro' => 'none',
                             'point' => $k.''.rand(1111,9999),
                             'location' => $j
                         ));
