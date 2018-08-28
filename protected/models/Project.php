@@ -181,14 +181,26 @@ class Project extends ARModel
     public function getAdresProgramm($project){
      
         $result = Yii::app()->db->createCommand()
-            ->select('pc.id, pc.name, pc.adres, pc.id_city, c.name city, pc.bdate, pc.edate, pc.btime, pc.etime')
+            ->select('
+                pc.id, 
+                pc.name, 
+                pc.adres, 
+                pc.id_city, 
+                c.name city, 
+                pc.bdate, 
+                pc.edate,
+                pc.btime, 
+                pc.etime, 
+                pc.point,
+                c.ismetro'
+            )
             ->from('project_city pc')
             ->join('city c', 'c.id_city=pc.id_city')
             ->where('pc.project = :project', array(':project' =>$project))
             ->order('pc.bdate desc')
             ->queryAll();
             
-        return $result;
+        return $this->buildArray($result);
     }
     
     public function getProjectPromo($project){
@@ -204,7 +216,7 @@ class Project extends ARModel
     }
     
     public function getProject($project){
-        $data['location'] = $this->getAdresProgramm($project);
+        $data = $this->getAdresProgramm($project);
         $data['user'] = $this->getProjectPromo($project);
         
         return $data;
@@ -357,7 +369,9 @@ class Project extends ARModel
 //         readfile($file_name); // считываем файл
 
     }
-    
+    /*
+    *       Проверка доступа
+    */
     public function hasAccess($prj){
         $idus = Share::$UserProfile->id;
         $t = Share::$UserProfile->type;
@@ -377,7 +391,49 @@ class Project extends ARModel
         }
             
         return sizeof($result);
-    } 
+    }
+    /*
+    *       формирование массива адреса
+    */
+    public function buildArray($arr){
+        if(!count($arr))
+            return false;
+   
+        $arRes['bdate'] = $arr[0]['bdate'];
+        $arRes['edate'] = $arr[0]['edate'];
 
+        $arL = array();
+        foreach ($arr as $i) {
+            if(strtotime($i['bdate']) < strtotime($arRes['bdate']))
+                $arRes['bdate'] = $i['bdate'];
+            if(strtotime($i['edate']) > strtotime($arRes['edate']))
+                $arRes['edate'] = $i['edate'];
+            $arRes['cities'][$i['id_city']] = $i['city'];
+            $arL[$i['id_city']] = array(
+                'name' => $i['city'],
+                'id' => $i['id_city'],
+                'metro' => $i['ismetro']
+            );            
+        }
+        $arRes['bdate-short'] = DateTime::createFromFormat('d.m.Y', $arRes['bdate'])->format('d.m.y');
+        $arRes['edate-short'] = DateTime::createFromFormat('d.m.Y', $arRes['edate'])->format('d.m.y');
 
+        foreach ($arr as $i) {
+            $arT['id'] = $i['point'];
+            $arT['name'] = $i['name'];
+            $arT['index'] = $i['adres'];
+            $arT['metro'] = '';         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            $arT['periods'][$i['id']] = array(
+                'id' => $i['id'],
+                'bdate' => $i['bdate'],
+                'edate' => $i['edate'],
+                'btime' => $i['btime'],
+                'etime' => $i['etime']
+            );
+            $arL[$i['id_city']]['locations'][$i['point']] = $arT;
+        }
+        $arRes['location'] = $arL;
+
+        return $arRes;
+    }
 }
