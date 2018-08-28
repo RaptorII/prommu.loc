@@ -1561,6 +1561,15 @@ class UserController extends AppController
                 case 'index':
                     $data = $model->getProject($id);
                     $view = MainConfig::$VIEW_PROJECT_ITEM_INDEX;
+                    if(Yii::app()->request->isAjaxRequest) {
+                        $this->renderPartial(
+                            'projects/project-index-ajax',
+                            array('viData' => $data, 'project' => $id),
+                            false,
+                            true
+                        );
+                        return;
+                    }
                     break;
                 case 'geo':
                     $view = MainConfig::$VIEW_PROJECT_ITEM_GEO;

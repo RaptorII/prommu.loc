@@ -184,6 +184,26 @@ div.calendar:after{ content: '' }
 #DiContent .addresses__btns .addr__save-btn{
 	width: 150px;
 }
+.xls-popup{
+	font-size: 16px;	
+}
+.xls-popup-btn{
+	width: 135px;
+	line-height: 33px;
+	color: #fff;
+	font-size: 16px;
+	text-align: center;
+	background: #ff8300;
+	vertical-align: middle;
+	position: relative;
+	z-index: 0;
+	cursor: pointer;
+	margin: 15px auto 0;
+}
+.xls-popup-err{
+	color: #ff8b8b;
+	display: none;
+}
 /*
 *		MEDIA
 */

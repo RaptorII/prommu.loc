@@ -32,6 +32,12 @@ var IndexProgram = (function () {
             self.checkCity(e.target);
             self.closureCalendar(e.target);
         });
+        // загружаем новый xls
+        $('#add-xls').click(function(){ self.addXlsFile(this) });
+        $('body').on('click','.xls-popup-btn',function(){
+          $('#add-xls-inp').click();
+        });
+        $('#add-xls-inp').change(function() { self.checkFormatFile(this) });
     };
     //		Выбор города в фильтре
     IndexProgram.prototype.checkCity = function (e) {
@@ -52,14 +58,17 @@ var IndexProgram = (function () {
     }
     //		Фильтрация по параметрам
     IndexProgram.prototype.ajaxFilterList = function () {
-    	let data = $('#filter-form').serialize();
+  		$('.filter__veil').show();
 
-    	setTimeout(function(){
-    		$('.filter__veil').show();
-    		$('.addresses').html('Здесь будут отфильтрованные данные с сервера');
-    		console.log(data);
-    	},500);
-    	setTimeout(function(){ $('.filter__veil').hide(); },1000);
+      $.ajax({
+        type: 'GET',
+        url: window.location.pathname,
+        data: $('#filter-form').serialize(),
+        success: function(r) {
+          $('.addresses').html(r);
+          $('.filter__veil').hide();
+        },
+      });
     }
     //
     //      ДАТА
@@ -264,27 +273,56 @@ var IndexProgram = (function () {
         }
     	else {
     		if(confirm(query)) {
-		        $.ajax({
-		            type: 'POST',
-		            url: '/ajax/ChangeGeoProject',
-		            data: params,
-		            dataType: 'json',
-		            success: function(r) {
-                        console.log(r);
-                        if(!r) {
-                          MainProject.showPopup('error','server');
-                        }
-                        else {
-                            $(main).fadeOut();
-                            setTimeout(function(){ $(main).remove() },500);
-                            i==='c'
-                            ? MainProject.showPopup('success','delcity')
-                            : MainProject.showPopup('success','delloc');                            
-                        }
-		            },
-		        });
+	        $.ajax({
+            type: 'POST',
+            url: '/ajax/ChangeGeoProject',
+            data: params,
+            dataType: 'json',
+            success: function(r) {
+              if(!r) {
+                MainProject.showPopup('error','server');
+              }
+              else {
+                $(main).fadeOut();
+                setTimeout(function(){ $(main).remove() },500);
+                i==='c'
+                ? MainProject.showPopup('success','delcity')
+                : MainProject.showPopup('success','delloc');
+              }
+            },
+	        });
     		}
     	}
+    }
+    //
+    IndexProgram.prototype.addXlsFile = function () {
+      let self = this;
+
+      let html = "<div class='xls-popup' data-header='Изменение программы'>"+
+        "1) Необходимо открыть скачаный файл<br>"+
+        "2) Исправить существующие данные, либо добавить новые<br>"+
+        "3) Загрузить измененный файл<br>"+
+        '<span class="xls-popup-err">Формат файла должен быть "xls" или "xlsx". Выберите подходящий файл!</span>'+
+        "<div class='xls-popup-btn'>ЗАГРУЗИТЬ</div>"+
+        "</div>";
+
+      ModalWindow.open({ content: html, action: { active: 0 }, additionalStyle:'dark-ver' });
+    }
+    //      Проверка формата файла .XLS .XLSX
+    IndexProgram.prototype.checkFormatFile = function () {
+      let self = this,
+        $inp = $('#add-xls-inp'),
+        $name = $('#add-xls-name'),
+        arExt = $inp.val().match(/\\([^\\]+)\.([^\.]+)$/);
+
+      if(arExt[2]!=='xls' && arExt[2]!=='xlsx'){
+        $inp.val('');
+        $('.xls-popup-err').show();
+      }
+      else{
+        $('.xls-popup-err').hide();
+        $('#xls-form').submit();
+      }
     }
     //
     return IndexProgram;

@@ -14,10 +14,14 @@
 <div class="project__module">
   <div class="project__addr-header">
     <div class="project__addr-xls">
-      <a href="#">Изменить адресную программу</a>
-      <a href="#">Скачать существующую</a>
-      <a href="#">Добавить адресную программу</a>
-      <input type="file" name="xls" class="hide" accept="xls">
+      <a href="/user/uploadprojectxls?id=<?=$project?>" id="add-xls">Изменить адресную программу</a>
+      <a href="/uploads/prommu_example.xls" download>Скачать пример для добавления</a>
+      <form enctype="multipart/form-data" action="" method="POST" id="xls-form">
+        <input type="hidden" name="project" class="project-inp" value="<?=$project?>">
+        <input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
+        <input type="file" name="xls" id="add-xls-inp" class="hide">
+        <input type="hidden" name="load-xls" value="1">
+      </form>
     </div>
     <form class="project__addr-filter" id="filter-form">
       <div class="addr__header-city">

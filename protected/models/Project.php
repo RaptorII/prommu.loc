@@ -180,7 +180,21 @@ class Project extends ARModel
     }
     
     public function getAdresProgramm($project){
-     
+        $params = 'pc.project=:project';
+        $arParams = array(':project' =>$project);
+
+        $city = Yii::app()->getRequest()->getParam('city');
+        $bdate = Yii::app()->getRequest()->getParam('bdate');
+        $edate = Yii::app()->getRequest()->getParam('edate');
+        if($city>0) {
+            $params .= ' AND pc.id_city=:city';
+            $arParams[':city'] = $city;
+        }
+        if(isset($bdate) && isset($edate)) {
+            /*$params .= ' AND pc.bdate>:bdate AND pc.edate<:edate';
+            $arParams[':bdate'] = $bdate;           
+            $arParams[':edate'] = $edate;  */         
+        }
         $result = Yii::app()->db->createCommand()
             ->select('
                 pc.id, 
@@ -199,11 +213,11 @@ class Project extends ARModel
             )
             ->from('project_city pc')
             ->join('city c', 'c.id_city=pc.id_city')
-            ->where('pc.project = :project', array(':project' =>$project))
+            ->where($params, $arParams)
             ->order('pc.bdate desc')
             ->queryAll();
-            
-        return $this->buildArray($result);
+
+        return $this->buildArray($result); 
     }
     
     public function getProjectPromo($project){
