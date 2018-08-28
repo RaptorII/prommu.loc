@@ -75,7 +75,7 @@ class Api
                 case 'export_auto' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->exportAutomize(); break;
                 case 'geo_project' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->geoProject(); break;
                 case 'serchuse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->searchUse(); break;
-                case 'rateUse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rateUse(); break;
+                case 'rateuse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rateUse(); break;
                  
                 
 
