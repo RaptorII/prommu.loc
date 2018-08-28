@@ -402,14 +402,14 @@ class Project extends ARModel
         $arRes['bdate'] = $arr[0]['bdate'];
         $arRes['edate'] = $arr[0]['edate'];
 
-        $arL = array();
+        $arI = array();
         foreach ($arr as $i) {
             if(strtotime($i['bdate']) < strtotime($arRes['bdate']))
                 $arRes['bdate'] = $i['bdate'];
             if(strtotime($i['edate']) > strtotime($arRes['edate']))
                 $arRes['edate'] = $i['edate'];
             $arRes['cities'][$i['id_city']] = $i['city'];
-            $arL[$i['id_city']] = array(
+            $arI[$i['id_city']] = array(
                 'name' => $i['city'],
                 'id' => $i['id_city'],
                 'metro' => $i['ismetro']
@@ -419,20 +419,21 @@ class Project extends ARModel
         $arRes['edate-short'] = DateTime::createFromFormat('d.m.Y', $arRes['edate'])->format('d.m.y');
 
         foreach ($arr as $i) {
-            $arT['id'] = $i['point'];
-            $arT['name'] = $i['name'];
-            $arT['index'] = $i['adres'];
-            $arT['metro'] = '';         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            $arT['periods'][$i['id']] = array(
+            $arL['id'] = $i['point'];
+            $arL['name'] = $i['name'];
+            $arL['index'] = $i['adres'];
+            $arL['metro'] = '';         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            $arP = array(
                 'id' => $i['id'],
                 'bdate' => $i['bdate'],
                 'edate' => $i['edate'],
                 'btime' => $i['btime'],
                 'etime' => $i['etime']
             );
-            $arL[$i['id_city']]['locations'][$i['point']] = $arT;
+            $arI[$i['id_city']]['locations'][$i['point']] = $arL;
+            $arI[$i['id_city']]['locations'][$i['point']]['periods'][$i['id']] = $arP;
         }
-        $arRes['location'] = $arL;
+        $arRes['location'] = $arI;
 
         return $arRes;
     }
