@@ -1559,7 +1559,7 @@ class UserController extends AppController
                     $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
                     break;
                 case 'index':
-                    $data = $model->getProject();
+                    $data = $model->getProject($id);
                     $view = MainConfig::$VIEW_PROJECT_ITEM_INDEX;
                     break;
                 case 'geo':

@@ -241,21 +241,24 @@ var IndexProgram = (function () {
     //
     IndexProgram.prototype.ajaxDelIndex = function (e) {
     	let self = this, 
-            id = e.dataset.id,
             main = $(e).closest('.address__item')[0],
-            item = $(e).hasClass('delcity') ? 'c' : 'l',
-            query = item==='c'
-                ? 'Будет удален город и все связанные данные.\nВы действительно хотите это сделать?'
-                : 'Будет удалена ТТ и все связанные данные.\nВы действительно хотите это сделать?',
-            arItems = item==='c'
-                ? $('.address__item')
-                : $(main).find('.loc-item');
+            i = $(e).hasClass('delcity') ? 'c' : 'l',
+            query, arItems, params;
 
-        if(item==='l')
+        if(i==='c') {
+           query = 'Будет удален город и все связанные данные.\nВы действительно хотите это сделать?';
+           arItems = $('.address__item');
+           params = 'type=delete&project=' + self.ID + '&city=' + e.dataset.id;
+        }
+        else {
+            query = 'Будет удалена ТТ и все связанные данные.\nВы действительно хотите это сделать?';
+            arItems = $(main).find('.loc-item');
             main = $(e).closest('.loc-item')[0];
+            params = 'type=delete&project=' + self.ID + '&city=' + e.dataset.idcity + '&location=' + e.dataset.id;
+        }
 
     	if(arItems.length==1) {
-            item==='c'
+            i==='c'
             ? MainProject.showPopup('error','onecity')
             : MainProject.showPopup('error','onelocation');
         }
@@ -263,19 +266,22 @@ var IndexProgram = (function () {
     		if(confirm(query)) {
 		        $.ajax({
 		            type: 'POST',
-		            url: '/ajax/123', //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		            data: 'project=' + self.ID + (item==='c' ? '&city=' : '&location=') + id,
+		            url: '/ajax/ChangeGeoProject',
+		            data: params,
 		            dataType: 'json',
 		            success: function(r) {
-
+                        console.log(r);
+                        if(!r) {
+                          MainProject.showPopup('error','server');
+                        }
+                        else {
+                            $(main).fadeOut();
+                            setTimeout(function(){ $(main).remove() },500);
+                            i==='c'
+                            ? MainProject.showPopup('success','delcity')
+                            : MainProject.showPopup('success','delloc');                            
+                        }
 		            },
-		            complete: function() {
-		            	$(main).fadeOut();
-		            	setTimeout(function(){ $(main).remove() },500);
-                        item==='c'
-                        ? MainProject.showPopup('success','delcity')
-		            	: MainProject.showPopup('success','delloc');
-		            }
 		        });
     		}
     	}

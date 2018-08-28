@@ -11,7 +11,7 @@
 		<div id="content">
 			<div class="project__module">
 				<div class="project__xls">
-					<a href="/user/uploadprojectxls?id=<?=$_GET['id']?>" id="add-xls">Изменить адресную программу</a>
+					<a href="/user/uploadprojectxls?id=<?=$project?>" id="add-xls">Изменить адресную программу</a>
 					<a href="/uploads/prommu_example.xls" download>Скачать пример для добавления</a>
 				</div>
 				<h1 class="project__title">ПРОЕКТ: <span><?=$viData['title']?></span></h1>
@@ -25,7 +25,7 @@
 										<span class="address__item-change">
 											<span>изменить</span>
 											<ul>
-												<li><a href="<? echo $_GET['id'] . '/address-edit?city=' . $id ?>">изменить</a></li>
+												<li><a href="<? echo $project . '/address-edit?city=' . $id ?>">изменить</a></li>
 												<li data-id="<?=$id?>" class="delcity">удалить</li>
 											</ul>
 										</span>
@@ -59,7 +59,7 @@
 
 											<? foreach ($arLoc['periods'] as $idper => $arPer): ?>
 												<div class="program__select-user" data-period="<?=$idper?>">
-													<a href="<? echo $_GET['id'] . '/users-select?period=' . $idper ?>" class="program-select-user__title">
+													<a href="<? echo $project . '/users-select?period=' . $idper ?>" class="program-select-user__title">
 														<span>Выбрать персонал </span>
 														<b>&#9660</b>
 													</a>
@@ -76,7 +76,7 @@
 													<span class="address__item-change period">
 														<span>изменить</span>
 														<ul>
-															<li><a href="<? echo $_GET['id'] . '/address-edit?city=' . $id . '&per=' . $idper ?>">изменить</a></li>
+															<li><a href="<? echo $project . '/address-edit?city=' . $id . '&per=' . $idper ?>">изменить</a></li>
 															<li data-id="<?=$idper?>" class="delperiod">удалить</li>
 														</ul>
 													</span>
@@ -104,7 +104,7 @@
 					</tbody>
 				</table>
 				<form enctype="multipart/form-data" action="" method="POST" id="base-form">
-					<input type="hidden" name="project" class="project-inp" value="<?=$_GET['id']?>">
+					<input type="hidden" name="project" class="project-inp" value="<?=$project?>">
 					<input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
 					<input type="file" name="xls" id="add-xls-inp" class="hide">
 					<input type="hidden" name="load-xls" value="1">

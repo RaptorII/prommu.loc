@@ -456,7 +456,7 @@ class Project extends ARModel
         if(!$this->hasAccess($arr['project']))
             return 0;
         
-        if(isset($arr['point'])) {
+        if(array_key_exists('point',$arr)) {
             $result = Yii::app()->db->createCommand()
                 ->delete(
                     'project_city',
@@ -468,7 +468,7 @@ class Project extends ARModel
                 );
             return $result;
         }
-        if(isset($arr['location'])) {
+        if(array_key_exists('location',$arr)) {
             $result = Yii::app()->db->createCommand()
                 ->delete(
                     'project_city',
@@ -481,7 +481,7 @@ class Project extends ARModel
                 );
             return $result;
         }
-        if(isset($arr['city'])) {
+        if(array_key_exists('city',$arr)) {
             $result = Yii::app()->db->createCommand()
                 ->delete(
                     'project_city',

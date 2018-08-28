@@ -144,6 +144,7 @@ div.calendar:after{ content: '' }
 .address__item-change span{
     color: #abb820;
     font-size: 18px;
+    line-height: 26px;
 }
 .address__item-change ul{
 	list-style: none;
