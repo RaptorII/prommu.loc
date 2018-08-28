@@ -1112,12 +1112,12 @@ class Api
             $analyt = Yii::app()->db->createCommand()
             ->select("*")
             ->from('analytic a')
-            ->where('id_us=:id_us AND a.name!=:name', array(':id_us' => $datas['id_user'], 'name'=>'NO ACTIVE'))
+            ->where('id_us=:id_us AND a.name!=:name', array(':id_us' => $row['id_user'], 'name'=>'NO ACTIVE'))
             ->order("a.id_us desc")
             ->group("a.id_us")
             ->queryRow();
 
-            if($analyt['id_us'] == $datas['id_user']){
+            if($analyt['id_us'] == $row['id_user']){
                  switch ($analyt['subdomen']) {
             case '0':
                  $domen = 'https://prommu.com';
@@ -1148,7 +1148,7 @@ class Api
                 $attribs = Yii::app()->db->createCommand()
                         ->select("ua.val")
                         ->from('user_attribs ua')
-                        ->where('ua.key=:key AND ua.id_us = :id_user', array(':key' => 'mob', ':id_user' => $analyt['id_us']))
+                        ->where('ua.key=:key AND ua.id_us = :id_user', array(':key' => 'mob', ':id_user' => $row['id_user']))
                         ->queryRow();
                 $phone = $attribs['val'];
             } else {
@@ -1182,7 +1182,7 @@ class Api
                 $attribs = Yii::app()->db->createCommand()
                         ->select("ua.val")
                         ->from('user_attribs ua')
-                        ->where('ua.key=:key AND ua.id_us = :id_user', array(':key' => 'mob', ':id_user' => $datas['id_user']))
+                        ->where('ua.key=:key AND ua.id_us = :id_user', array(':key' => 'mob', ':id_user' => $row['id_user']))
                         ->queryRow();
                 $phone = $attribs['val'];
             }
@@ -1191,7 +1191,7 @@ class Api
 
             if($datas['type'] == 2){
                 $types = "Соискатель";
-                $id_user = $datas['id_us'];
+                $id_user = $row['id_user'];
 
                 $user = Yii::app()->db->createCommand()
                 ->select("e.firstname, e.lastname, usr.email, e.date_public ")
@@ -1254,7 +1254,7 @@ class Api
             } elseif($datas['type'] == 3) {
             
                 $name = $datas['name'];
-                $id_user = $datas['id_user'];
+                $id_user = $row['id_user'];
 
                 $user = Yii::app()->db->createCommand()
                 ->select("e.name, e.firstname, e.lastname, usr.email, e.crdate")
