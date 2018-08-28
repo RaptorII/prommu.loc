@@ -144,20 +144,19 @@ class Api
         $datess['edate'] = '2018-07-01';
         
         $Termostat = new Termostat();
-        $results['services'] = count($Termostat->getTermostatServices($id, $dates)[0]);
-        $results['service'] = count($Termostat->getTermostatServices($id, $dates)[0]);
-        $results['viewsYester'] = count($Termostat->getTermostatEmplCount($id, $dates));
-        $results['viewsTo'] = count($Termostat->getTermostatEmplCount($id, $datess));
-        $results['viewsUser'] = count($Termostat->getTermostatEmplUserCount($id, $datess));
-        $proc1 = 100/$results['viewsUser'];
-        $proc2 = 100/$results['viewsYester'];
-        $proc3 = 100/$results['viewsTo'];
-        $proc4 = 100/$results['service'];
-        $proc4 = 100/$results['services'];
-        $proc = $proc1+$proc2+$proc3+$proc4;
-        
+        $results['services'] = $Termostat->getTermostatServices($id, $dates)[0];
+        $results['service'] = $Termostat->getTermostatServices($id, $dates)[1];
+        $results['viewsYester'] = $Termostat->getTermostatEmplCount($id, $dates);
+        $results['viewsTo'] = $Termostat->getTermostatEmplCount($id, $datess);
+        $results['viewsUser'] = $Termostat->getTermostatEmplUserCount($id, $datess);
+        // $proc1 = ($results['viewsTo']+$results['viewsYester'])/2;
+        // $proc2 = 100/$results['viewsUser'];
+        // $proc3 = 1/$results['service'];
+        // $proc4 = 6/$results['services'];
+        // $proc = $proc1+$proc2+$proc3+$proc4;
+        var_dump($results);
         echo "Прежний рейтинг работодателя: $result (система рейтинга Prommu Rate )<br/> ";
-        echo "Прежний рейтинг работодателя: $result + $proc (система рейтинга Prommu Rate + Termostat )<br/> ";
+        // echo "Прежний рейтинг работодателя: $result + $proc ( services - $proc1, service - $proc2, proc3 - $proc3, proc4 - $proc4 ) (система рейтинга Prommu Rate + Termostat )<br/> ";
         
     }
     
@@ -310,13 +309,13 @@ class Api
             $sql = "SELECT r.id_us
             FROM analytic r
             WHERE r.id_us = {$users}";
-        	$red = Yii::app()->db->createCommand($sql);
-        	$log = $red->queryRow();
+            $red = Yii::app()->db->createCommand($sql);
+            $log = $red->queryRow();
             echo $log['id_us'];
             if($log['id_us'] == $users) {
-            	  	echo "heee";
+                    echo "heee";
             } else {
-          	
+            
                      $analytData = array('id_us' => $users,
                         'name' => $names,
                         'date' =>  date('Y-m-d H:i:s'),
@@ -332,14 +331,14 @@ class Api
                         'active' => 1,
                     );
 
-        		$res = Yii::app()->db->createCommand()
+                $res = Yii::app()->db->createCommand()
                         ->insert('analytic', $analytData);
 
 
-        	}
+            }
           }
 
-      		
+            
 
         }
         

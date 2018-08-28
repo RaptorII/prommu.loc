@@ -179,26 +179,28 @@ class Project extends ARModel
         return $result;
     }
     
-    public function getAdresProgramm($project){
+    public function getAdresProgramm($project, $filter=false){
         $params = 'pc.project=:project';
         $arParams = array(':project' =>$project);
 
-        $city = Yii::app()->getRequest()->getParam('city');
-        $bdate = Yii::app()->getRequest()->getParam('bdate');
-        $edate = Yii::app()->getRequest()->getParam('edate');
-        if($city>0) {
-            $params .= ' AND pc.id_city=:city';
-            $arParams[':city'] = $city;
+        if($filter) {
+            $city = Yii::app()->getRequest()->getParam('city');
+            $bdate = Yii::app()->getRequest()->getParam('bdate');
+            $edate = Yii::app()->getRequest()->getParam('edate');
+            if($city>0) {
+                $params .= ' AND pc.id_city=:city';
+                $arParams[':city'] = $city;
+            }
+            if(isset($bdate) && isset($edate)) {
+                $params .= ' AND pc.bdate>=:bdate AND pc.edate<=:edate';
+                $arParams[':bdate'] = date('Y-m-d', strtotime($bdate));
+                $arParams[':edate'] = date('Y-m-d', strtotime($edate));
+            }            
         }
-        if(isset($bdate) && isset($edate)) {
-            $params .= ' AND pc.bdate>=:bdate AND pc.edate<=:edate';
-            $arParams[':bdate'] = date('Y-m-d', strtotime($bdate));
-            $arParams[':edate'] = date('Y-m-d', strtotime($edate));
-        }
+
         $result = Yii::app()->db->createCommand()
-            ->select("
-                pc.id, 
-                pc.name, 
+            ->select(
+                "pc.name, 
                 pc.adres, 
                 pc.id_city, 
                 c.name city, 
@@ -507,5 +509,73 @@ class Project extends ARModel
                 );
             return $result;
         }
+    }
+    /*
+    *       Изменение адресной программы
+    */
+    public function setAdresProgramm($arPost) {
+        if(!$arPost['project'])
+            return false;
+
+        $arBD = Yii::app()->db->createCommand()
+            ->select("point,title")
+            ->from('project_city')
+            ->where('project=:project', array(':project' =>$arPost['project']))
+            ->queryAll();
+
+        $arOldP = $arNewP = $arRes = array();
+        $title = $arBD[0]['title'];
+        foreach ($arBD as $v)
+            $arOldP[] = $v['point'];
+
+        foreach ($arPost['city'] as $c) { // по городам
+            foreach ($arPost['bdate'][$c] as $l => $arLoc) { // по локациям
+                foreach ($arLoc as $p => $v) { // по точкам
+                    $arRes[$p] = array(
+                        'name' => $arPost['lname'][$c][$l],
+                        'adres' => $arPost['lindex'][$c][$l],
+                        'id_city' => $c,
+                        'bdate' => date('Y-m-d', strtotime($arPost['bdate'][$c][$l][$p])),
+                        'edate' => date('Y-m-d', strtotime($arPost['edate'][$c][$l][$p])),
+                        'btime' => $arPost['btime'][$c][$l][$p],
+                        'etime' => $arPost['etime'][$c][$l][$p],
+                        'project' => $arPost['project'],
+                        'point' => $p,
+                        'location' => $l,
+                        'title' => $title,
+                        //'metro' => $arPost['metro'][$c][$l] !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    );
+                    $arNewP[] = $p;
+                }       
+            }
+        }
+        
+        foreach ($arOldP as $p) 
+            if( !in_array($p, $arNewP) ) {  // удаляем отсутствующие
+                $res = Yii::app()->db->createCommand()
+                    ->delete(
+                        'project_city',
+                        'point=:pnt AND project=:prj', 
+                        array(':pnt'=>$p, ':prj'=>$arPost['project'])
+                    );
+            }
+
+        foreach ($arRes as $p => $arV) {
+            if( in_array($p, $arOldP) ) { // изменяем существующие
+                $res = Yii::app()->db->createCommand()
+                    ->update(
+                        'project_city',
+                        $arV,
+                        'point=:point',
+                        array(':point' => $new['point'])
+                    );    
+            }
+            else { // добавляем новые
+                $res = Yii::app()->db->createCommand()
+                    ->insert('project_city', $arV);
+            }
+        }
+
+        return $res;
     }
 }
