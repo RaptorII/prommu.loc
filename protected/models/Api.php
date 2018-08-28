@@ -119,7 +119,7 @@ class Api
             }
         }
         
-        return $data;
+      
         
     }
     
