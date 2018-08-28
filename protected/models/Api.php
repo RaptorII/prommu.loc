@@ -1071,6 +1071,7 @@ class Api
                $data = Yii::app()->db->createCommand()
             ->select("*")
             ->from('analytic a')
+            ->join('user usr', 'usr.id_user=a.id_us')
             ->where('a.active=:active AND (usr.crdate BETWEEN :date AND :bdate)  AND a.name!=:name', array(':active' => 1, ':date'=> $date, 'bdate'=> $bdate, 'name'=>'NO ACTIVE'))
             ->order("a.id_us desc")
             ->group("a.id_us")
