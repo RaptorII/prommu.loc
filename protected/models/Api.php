@@ -107,17 +107,19 @@ class Api
             ->from('user usr')
             ->where('usr.crdate  BETWEEN :date AND :bdate', array( ':date'=> $date, 'bdate'=> $bdate,))
             ->queryAll();
-        for($i = 0; $i < count($data); $i ++){
-            $datas = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('analityc a')
-            ->where('a.id_us =:id_us', array( ':id_us'=> $data[$i]['id_user']))
-            ->queryRow();
+        // for($i = 0; $i < count($data); $i ++){
+        //     $datas = Yii::app()->db->createCommand()
+        //     ->select("*")
+        //     ->from('analityc a')
+        //     ->where('a.id_us =:id_us', array( ':id_us'=> $data[$i]['id_user']))
+        //     ->queryRow();
             
-            if($datas['id_us'] != $data[$i]['id_user']){
-                echo 'trouble'.$data[$i]['id_user'].'<br/>';
-            }
-        }
+        //     if($datas['id_us'] != $data[$i]['id_user']){
+        //         echo 'trouble'.$data[$i]['id_user'].'<br/>';
+        //     }
+        // }
+        
+        return $data;
         
     }
     
