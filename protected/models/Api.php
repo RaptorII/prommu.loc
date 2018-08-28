@@ -74,7 +74,8 @@ class Api
                 case 'ideas' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->ideas(); break;
                 case 'export_auto' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->exportAutomize(); break;
                 case 'geo_project' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->geoProject(); break;
-                case 'excel' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->excelget(); break;
+                case 'serchuse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->searchUse(); break;
+                case 'rateuse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rateUse(); break;
                  
                 
 
@@ -99,11 +100,105 @@ class Api
         return $data;
     }
     
-    public function excelget(){
+    public function rateUse(){
+          
+   $id = Yii::app()->getRequest()->getParam('idus');
+      
+      $sql = "SELECT r.id, r.id_user idus,r.web, name , r.logo, r.rate, r.rate_neg
+                , cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate,
+                 (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.isneg = 0 AND mm.isactive = 1 AND mm.id_empl = r.id) commpos,
+                   (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.isneg = 1 AND mm.isactive = 1 AND mm.id_empl = r.id) commneg
+                , (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.id_promo = r.id) comment_count
+                   ,(SELECT COUNT(*) cou FROM empl_vacations v WHERE v.id_user = r.id_user AND v.status = 1 AND v.ismoder = 100) vaccount
+            FROM employer r
+            WHERE r.id_user = {$id}
+            ORDER BY avg_rate DESC
+            LIMIT 6";
+        $result = Yii::app()->db->createCommand($sql)
+        ->queryAll();
+
+        $rate = $result[0]['rate'] + $result[0]['rate_neg'];
+        $rating = $result[0]['commpos'] + $result[0]['commneg'];
+        $rates = ($rate/$rating) * 10;
+
+        if($result[0]['vaccount']){
+            $vacancy = 10;
+        }
+
+        if($result[0]['commpos'] - $result[0]['commneg'] > 0){
+            $comment = 25;
+        } 
+
+        if($result[0]['logo']){
+            $logo = 2;
+        }
+        if($result[0]['web']){
+            $web = 2;
+        }
+        $result = $web + $logo + $comment + $rates + $vacancy + 2 + 2;
         
-        $project = new Project();
-        $project->exportProject('153535589399038');
+        $dates['bdate'] = '2018-07-01';
+        $dates['edate'] = '2018-08-01';
         
+        $datess['bdate'] = '2018-06-01';
+        $datess['edate'] = '2018-07-01';
+        
+        $Termostat = new Termostat();
+        $results['services'] = count($Termostat->getTermostatServices($id, $dates)[0]);
+        $results['service'] = count($Termostat->getTermostatServices($id, $dates)[0]);
+        $results['viewsYester'] = count($Termostat->getTermostatEmplCount($id, $dates));
+        $results['viewsTo'] = count($Termostat->getTermostatEmplCount($id, $datess));
+        $results['viewsUser'] = count($Termostat->getTermostatEmplUserCount($id, $datess));
+        $proc1 = 100/$results['viewsUser'];
+        $proc2 = 100/$results['viewsYester'];
+        $proc3 = 100/$results['viewsTo'];
+        $proc4 = 100/$results['service'];
+        $proc4 = 100/$results['services'];
+        $proc = $proc1+$proc2+$proc3+$proc4;
+        
+        echo "Прежний рейтинг работодателя: $result (система рейтинга Prommu Rate )<br/> ";
+        echo "Прежний рейтинг работодателя: $result + $proc (система рейтинга Prommu Rate + Termostat )<br/> ";
+        
+    }
+    
+    public function searchUse(){
+        $date = '2018-08-01';
+        $bdate = '2018-08-24';
+        $data = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('user usr')
+            ->where('usr.crdate  BETWEEN :date AND :bdate', array( ':date'=> $date, 'bdate'=> $bdate,))
+            ->queryAll();
+        for($i = 0; $i < count($data); $i ++){
+            if($data[$i]['status'] == 2){
+                 $user = Yii::app()->db->createCommand()
+                ->select("*")
+                ->from('resume a')
+                ->where('a.id_user =:id_us', array( ':id_us'=> $data[$i]['id_user']))
+                ->queryRow();  
+            } else {
+                 $user = Yii::app()->db->createCommand()
+                ->select("*")
+                ->from('employer a')
+                ->where('a.id_user =:id_us', array( ':id_us'=> $data[$i]['id_user']))
+                ->queryRow();
+            }
+            
+            if($user['id_user'] == $data[$i]['id_user']){
+                 $datas = Yii::app()->db->createCommand()
+                ->select("*")
+                ->from('analytic a')
+                ->where('a.id_us =:id_us', array( ':id_us'=> $data[$i]['id_user']))
+                ->queryRow();
+                
+                if($datas['id_us'] != $data[$i]['id_user']){
+                echo $data[$i]['id_user'].'<br/>';
+            }
+            }
+            
+        }
+        
+      
         
     }
     
@@ -1029,21 +1124,20 @@ class Api
             ->select("*")
             ->from('analytic a')
             ->join('user usr', 'usr.id_user=a.id_us')
-            ->where('a.active=:active AND a.date >:date', array(':active' => 1, ':date'=> $yester))
+            ->where('a.active=:active AND usr.crdate >:date', array(':active' => 1, ':date'=> $yester))
             ->order("a.id_us desc")
             ->queryAll();
             
          }
          else {
-             $data = Yii::app()->db->createCommand()
+               $data = Yii::app()->db->createCommand()
             ->select("*")
             ->from('analytic a')
             ->join('user usr', 'usr.id_user=a.id_us')
-            ->where('a.active=:active AND (a.date BETWEEN :date AND :bdate)  AND a.name!=:name', array(':active' => 1, ':date'=> $date, 'bdate'=> $bdate, 'name'=>'NO ACTIVE'))
+            ->where('a.active=:active AND (usr.crdate BETWEEN :date AND :bdate)  AND a.name!=:name', array(':active' => 1, ':date'=> $date, 'bdate'=> $bdate, 'name'=>'NO ACTIVE'))
             ->order("a.id_us desc")
             ->group("a.id_us")
             ->queryAll();
-
          }
             
 
@@ -1073,7 +1167,8 @@ class Api
 '</td></tr>';
         
         foreach ($data as $row) {
-
+        
+            
             $csv_file .= '<tr>';
             $b = "";
             $b_end = "";
@@ -1105,6 +1200,7 @@ class Api
                     $row["canal"] = explode(" ", $row["canal"])[0];
                                    
                 }
+              
 
                 $attribs = Yii::app()->db->createCommand()
                         ->select("ua.val")
@@ -1134,7 +1230,7 @@ class Api
 
                     if(empty($email)){
                         $user = Yii::app()->db->createCommand()
-                        ->select("ua.data")
+                        ->select("ua.data, ua.dt_create, ua.status")
                         ->from('user_activate ua')
                         ->where('ua.id_user=:id_user', array(':id_user' => $id_user))
                         ->queryRow();
@@ -1143,8 +1239,12 @@ class Api
                         $data = json_decode($user['data'], true);
                         $firstname = $this->encoderSys($data['firstname']);
                         $lastname = $this->encoderSys($data['lastname']);
+                        if($user['status'] == 0){
+                            $lastname = $this->encoderSys($data['name']);
+                        }
                         $fio = "$firstname ".$lastname; 
                         $email = $this->encoderSys($data['email']);
+                        $user['date_public'] = $user['dt_create'];
                     }
 
                     $date1 = explode(" ",$user['date_public'])[0];
@@ -1196,7 +1296,7 @@ class Api
 
                     if(empty($email)){
                         $user = Yii::app()->db->createCommand()
-                        ->select("ua.data")
+                        ->select("ua.data, ua.dt_create")
                         ->from('user_activate ua')
                         ->where('ua.id_user=:id_user', array(':id_user' => $id_user))
                         ->queryRow();
@@ -1209,6 +1309,7 @@ class Api
                         $name = $this->encoderSys($data['name']);
                         $fio = $name." ".$firstname." ".$lastname;
                         $email = $data['email'];
+                        $user['crdate'] = $user['dt_create'];
                      
                     }
                     $date1 = explode(" ",$user["crdate"])[0];

@@ -56,6 +56,9 @@ var MainProject = {
                 case 'oneperiod':
                     body = 'Невозможно удалить единственный период в ТТ';
                     break;
+                case 'server':
+                    body = 'Произошла ошибка. Необходимо обновить страницу';
+                    break;
                 default: break;
             }
         }

@@ -1559,8 +1559,17 @@ class UserController extends AppController
                     $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
                     break;
                 case 'index':
-                    $data = $model->getProject();
+                    $data = $model->getProject($id);
                     $view = MainConfig::$VIEW_PROJECT_ITEM_INDEX;
+                    if(Yii::app()->request->isAjaxRequest) {
+                        $this->renderPartial(
+                            'projects/project-index-ajax',
+                            array('viData' => $data, 'project' => $id),
+                            false,
+                            true
+                        );
+                        return;
+                    }
                     break;
                 case 'geo':
                     $view = MainConfig::$VIEW_PROJECT_ITEM_GEO;
@@ -1603,7 +1612,7 @@ class UserController extends AppController
             $data = $model->getProjectEmployer();
         }
 
-        $this->render($view, array('viData' => $data));
+        $this->render($view, array('viData' => $data, 'project' => $id));
     }
     /*
     *       загрузка xls файла

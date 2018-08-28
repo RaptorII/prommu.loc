@@ -4,116 +4,24 @@
   Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-index.css');
   Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
   Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item-index.js', CClientScript::POS_END);
-
-  $bDate = '07.02.18';
-  $bDateFull = '07.02.2018';
-  $eDate = '01.10.18';
-  $eDateFull = '01.10.2018';
-  $arProgram = array(
-    1307 => array(
-      'name' => 'Москва',
-      'id' => 1307,
-      'metro' => 1,
-      'locations' => array(
-        1 => array(
-          'id' => 1,
-          'name' => 'АТБ1',
-          'index' => 'ул. Исполкомовская 123',
-          'metro' => array(
-            1 => 'Авиамоторная',
-            2 => 'Автозаводская (Замоскворецкая линия)',
-            4 => 'Алексеевская'
-          ),
-          'periods' => array(
-            1 => array(
-              'id' => 1,
-              'bdate' => '07.02.18',
-              'edate' => '08.02.18',
-              'btime' => '14:00',
-              'etime' => '16:00'
-            ),
-            2 => array(
-              'id' => 2,
-              'bdate' => '20.02.18',
-              'edate' => '22.02.18',
-              'btime' => '09:00',
-              'etime' => '18:00'
-            )
-          )
-        ),
-        2 => array(
-          'id' => 2,
-          'name' => 'АТБ2',
-          'index' => 'ул. Исполкомовская 777',
-          'metro' => array(
-            4 => 'Алексеевская'
-          ),
-          'periods' => array(
-            3 => array(
-              'id' => 3,
-              'bdate' => '01.08.18',
-              'edate' => '01.08.18',
-              'btime' => '12:00',
-              'etime' => '13:00'
-            )
-          )
-        )
-      )
-    ),
-    2582 => array(
-      'name' => 'Донецк',
-      'id' => 2582,
-      'metro' => 0,
-      'locations' => array(
-        3 => array(
-          'id' => 3,
-          'name' => 'АТБ3',
-          'index' => 'ул. Исполкомовская 999',
-          'metro' => array(),
-          'periods' => array(
-            4 => array(
-              'id' => 4,
-              'bdate' => '07.02.18',
-              'edate' => '08.02.18',
-              'btime' => '14:00',
-              'etime' => '16:00'
-            ),
-            5 => array(
-              'id' => 5,
-              'bdate' => '20.02.18',
-              'edate' => '22.02.18',
-              'btime' => '09:00',
-              'etime' => '18:00'
-            )
-          )
-        ),      
-      )
-    )
-  );
 ?>
-<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($arProgram); ?>
-</pre>
-
-<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($viData); ?>
-</pre>
-
 <div class="filter__veil"></div>
 <div class="row project">
 	<div class="col-xs-12">
-		<div class="project__tabs">
-      <? require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/projects/project-nav.php'; ?>
-    </div>
+  <? require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/projects/project-nav.php'; ?>
   </div>
 </div>
 <div class="project__module">
   <div class="project__addr-header">
     <div class="project__addr-xls">
-      <a href="#">Изменить адресную программу</a>
-      <a href="#">Скачать существующую</a>
-      <a href="#">Добавить адресную программу</a>
-      <input type="file" name="xls" class="hide" accept="xls">
+      <a href="/user/uploadprojectxls?id=<?=$project?>" id="add-xls">Изменить адресную программу</a>
+      <a href="/uploads/prommu_example.xls" download>Скачать пример для добавления</a>
+      <form enctype="multipart/form-data" action="" method="POST" id="xls-form">
+        <input type="hidden" name="project" class="project-inp" value="<?=$project?>">
+        <input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
+        <input type="file" name="xls" id="add-xls-inp" class="hide">
+        <input type="hidden" name="load-xls" value="1">
+      </form>
     </div>
     <form class="project__addr-filter" id="filter-form">
       <div class="addr__header-city">
@@ -121,8 +29,8 @@
         <span class="city-filter">Все</span>
         <ul class="city-list">
           <li data-id="0">Все</li>
-          <? foreach ($arProgram as $id => $arCity)
-            echo '<li data-id="' . $id . '">' . $arCity['name'] . '</li>';
+          <? foreach ($viData['cities'] as $id => $city)
+            echo '<li data-id="' . $id . '">' . $city . '</li>';
           ?>
         </ul>
         <input type="hidden" name="city" class="city-input" value="0">
@@ -130,7 +38,7 @@
       <div class="addr__header-date">
         <div class="calendar-filter">
           <label>Дата с</label>
-          <span><?=$bDate?></span>
+          <span><?=$viData['bdate-short']?></span>
           <div class="calendar" data-type="bdate">
             <table>
               <thead>
@@ -145,11 +53,11 @@
               <tbody></tbody>
             </table>
           </div>
-          <input type="hidden" name="bdate" value="<?=$bDateFull?>">
+          <input type="hidden" name="bdate" value="<?=$viData['bdate']?>">
         </div>
         <div class="calendar-filter">
           <label>По</label>
-          <span><?=$eDate?></span>
+          <span><?=$viData['edate-short']?></span>
           <div class="calendar" data-type="bdate">
             <table>
               <thead>
@@ -164,14 +72,14 @@
               <tbody></tbody>
             </table>
           </div>
-          <input type="hidden" name="edate" value="<?=$eDateFull?>">
+          <input type="hidden" name="edate" value="<?=$viData['edate']?>">
         </div>
       </div>
-      <input type="hidden" name="project" value="<?=Yii::app()->getRequest()->getParam('id')?>" class="project-inp">
+      <input type="hidden" name="project" value="<?=$project?>" class="project-inp">
     </form>
   </div>
   <div class="addresses">
-    <? foreach ($arProgram as $id => $arCity): ?>
+    <? foreach ($viData['location'] as $id => $arCity): ?>
       <div class="address__item">
         <h2 class="address__item-title">
           <b><?=$arCity['name']?></b>
@@ -224,7 +132,7 @@
                       <span>изменить</span>
                       <ul>
                         <li><a href="<? echo 'address-edit?city=' . $id . '&loc=' . $idloc?>">изменить</a></li>
-                        <li data-id="<?=$idloc?>" class="delloc">удалить</li>
+                        <li data-id="<?=$idloc?>" data-idcity="<?=$id?>" class="delloc">удалить</li>
                       </ul>
                     </span>
                   </div>
@@ -235,65 +143,6 @@
         </table>
       </div>
     <? endforeach; ?>
-    <?/*
-      <div class="address__item">
-        <h2 class="address__item-title">москва</h2>
-        <table class="addr__table">
-          <thead>
-            <tr>
-              <th>Название</th>
-              <th>Адрес</th>
-              <th>Дата</th>
-              <th>Время</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div class="addr__table-cell border">АТБ1</div>
-              </td>
-              <td>
-                <div class="addr__table-cell border">ул. Исполкомовская 123</div>
-              </td>
-              <td>
-                <div class="addr__table-cell border text-center">07.02.2018 – 08.02.2018</div>
-              </td>
-              <td>
-                <div class="addr__table-cell border text-center">14:00 – 16:00</div>
-              </td>
-              <td>
-                <div class="addr__table-cell text-center">
-                  <a href="#">изменить</a>
-                </div>
-              </td>
-            </tr>
-
-
-
-            <tr>
-              <td>
-                <div class="addr__table-cell border">АТБ1</div>
-              </td>
-              <td>
-                <div class="addr__table-cell border">ул. Исполкомовская 123</div>
-              </td>
-              <td>
-                <div class="addr__table-cell border text-center">07.02.2018 – 08.02.2018</div>
-              </td>
-              <td>
-                <div class="addr__table-cell border text-center">14:00 – 16:00</div>
-              </td>
-              <td>
-                <div class="addr__table-cell text-center">
-                  <a href="#">изменить</a>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    */?>
   </div>
   <div class="addresses__btns">
     <a href="<? echo 'address-edit?city=new' ?>" class="addr__save-btn">Добавить город</a>

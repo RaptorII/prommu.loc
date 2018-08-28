@@ -46,17 +46,21 @@ var BaseProgram = (function () {
       if(confirm(query)) {
         $.ajax({
           type: 'POST',
-          url: '/ajax/123', //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-          data: 'project=' + self.ID + (i==='c' ? '&city=' : '&period=') + id,
+          url: '/ajax/ChangeGeoProject',
+          data: 'type=delete&project=' + self.ID + (i==='c' ? '&city=' : '&point=') + id,
           dataType: 'json',
-          success: function(r) { },
-          complete: function() {
-            arDels.fadeOut();
-            setTimeout(function(){ arDels.remove() },500);
-            i==='c'
-            ? MainProject.showPopup('success','delcity')
-            : MainProject.showPopup('success','delperiod');
-          }
+          success: function(r) { 
+            if(!r) {
+              MainProject.showPopup('error','server');
+            }
+            else {
+              arDels.fadeOut();
+              setTimeout(function(){ arDels.remove() },500);
+              i==='c'
+              ? MainProject.showPopup('success','delcity')
+              : MainProject.showPopup('success','delperiod');             
+            }
+          },
         });
       }
     }
