@@ -25,13 +25,13 @@ let IndexUniversalFilter = (function () {
         });
         $('.prommu__universal-filter .u-filter__text').keypress(function ()
         {
-            //Проверяем иерархию фильтров
-
             //Аякс с задержкой
             clearTimeout(IndexUniversalFilter.AjaxTimer);
 
             IndexUniversalFilter.AjaxTimer = setTimeout(function () {
+                //Проверяем иерархию фильтров
                 self.hierarchyTracking();
+
                 self.ajaxSetParams();
             }, 700); // время в мс
         });
@@ -159,10 +159,10 @@ let IndexUniversalFilter = (function () {
             let parent__value_id = [];
             let data_buff = $(this).data('parent-value-id');
 
-            var d = ""+ data_buff;
+            let d = ""+ data_buff;
             if(d.indexOf(',')===1){
-                var mas = d.split(',');
-                $.each( mas, function(i, l){
+                let mas = d.split(',');
+                $.each(mas, function(i, l){
                     l = parseInt(l);
                     parent__value_id.push(l);
                 });
@@ -170,8 +170,6 @@ let IndexUniversalFilter = (function () {
             }else{
                 parent__value_id.push(data_buff);
             }
-            //let parent__value_id = $(this).data('parent-value-id').split(',');
-
             let type = $(this).data('type');
 
             if(parent_id>=0){
