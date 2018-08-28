@@ -74,7 +74,8 @@ class Api
                 case 'ideas' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->ideas(); break;
                 case 'export_auto' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->exportAutomize(); break;
                 case 'geo_project' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->geoProject(); break;
-                case 'excel' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->excelget(); break;
+                case 'serchuse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->searchUse(); break;
+                case 'rateUse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rateUse(); break;
                  
                 
 
@@ -99,7 +100,48 @@ class Api
         return $data;
     }
     
-    public function excelget(){
+    public function rateUse(){
+          
+   $id = Yii::app()->getRequest()->getParam('idus');
+      
+      $sql = "SELECT r.id, r.id_user idus,r.web, name , r.logo, r.rate, r.rate_neg
+                , cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate,
+                 (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.isneg = 0 AND mm.isactive = 1 AND mm.id_empl = r.id) commpos,
+                   (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.isneg = 1 AND mm.isactive = 1 AND mm.id_empl = r.id) commneg
+                , (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.id_promo = r.id) comment_count
+                   ,(SELECT COUNT(*) cou FROM empl_vacations v WHERE v.id_user = r.id_user AND v.status = 1 AND v.ismoder = 100) vaccount
+            FROM employer r
+            WHERE r.id_user = {$id}
+            ORDER BY avg_rate DESC
+            LIMIT 6";
+        $result = Yii::app()->db->createCommand($sql)
+        ->queryAll();
+
+        $rate = $result[0]['rate'] + $result[0]['rate_neg'];
+        $rating = $result[0]['commpos'] + $result[0]['commneg'];
+        $rates = ($rate/$rating) * 10;
+
+        if($result[0]['vaccount']){
+            $vacancy = 10;
+        }
+
+        if($result[0]['commpos'] - $result[0]['commneg'] > 0){
+            $comment = 25;
+        } 
+
+        if($result[0]['logo']){
+            $logo = 2;
+        }
+        if($result[0]['web']){
+            $web = 2;
+        }
+        $result = $web + $logo + $comment + $rates + $vacancy + 2 + 2;
+
+
+        return $result;
+    }
+    
+    public function searchUse(){
         $date = '2018-08-01';
         $bdate = '2018-08-24';
         $data = Yii::app()->db->createCommand()
