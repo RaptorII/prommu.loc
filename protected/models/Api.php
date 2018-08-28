@@ -140,10 +140,14 @@ class Api
         $dates['bdate'] = '2018-07-01';
         $dates['edate'] = '2018-08-01';
         
+        $datess['bdate'] = '2018-06-01';
+        $datess['edate'] = '2018-07-01';
+        
         $Termostat = new Termostat();
         $results['services'] = $Termostat->getTermostatServices($id, $dates)[0];
         $results['service'] = $Termostat->getTermostatServices($id, $dates)[0];
-        $results['views'] = $Termostat->getTermostatEmplCount($id, $dates);
+        $results['viewsYester'] = count($Termostat->getTermostatEmplCount($id, $dates));
+        $results['viewsTo'] = count($Termostat->getTermostatEmplCount($id, $datess));
 
         return $results;
     }
