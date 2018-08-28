@@ -154,7 +154,7 @@ class Api
         $proc3 = 100/$results['viewsTo'];
         $proc4 = 100/$results['service'];
         $proc4 = 100/$results['services'];
-        $proc = ($proc1+$proc2+$proc3+$proc4)/4;
+        $proc = $proc1+$proc2+$proc3+$proc4;
         
         echo "Прежний рейтинг работодателя: $result (система рейтинга Prommu Rate )<br/> ";
         echo "Прежний рейтинг работодателя: $result + $proc (система рейтинга Prommu Rate + Termostat )<br/> ";
