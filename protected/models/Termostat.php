@@ -62,7 +62,7 @@
 
 			$sql = "SELECT COUNT(*)
 	            FROM service_cloud s
-	            WHERE s.id_user = {$user} AND s.date between  '12.12.2017' AND  '26.12.2017'AND s.status = 1
+	            WHERE s.id_user = {$user} AND s.date between  '12.12.2017' AND  '31.12.2019'AND s.status = 1
 	            ";
 	        	$res = Yii::app()->db->createCommand($sql)->queryScalar();
 
@@ -112,7 +112,32 @@
 	     		else return $res;
 
 		}
+    
+        
+        public function getTermostatEmplUserCount($user, $arDates){
 
+			$t1 = strtotime($arDates['bdate']);
+			$t2 = strtotime($arDates['edate']);
+			$day = 60 * 60 * 24;
+			$days = ($t2 - $t1) / $day;
+			$curDay = $t1;
+
+			for($c=0; $c<=$days; $c++){ 
+				$date = date("Y",$curDay).'.'.date("m",$curDay).'.'.(date("d",$curDay));
+
+				$sql = "SELECT COUNT(*)
+					FROM termostat_analytic t
+					WHERE t.user = $user AND date(t.date) = '$date'
+					ORDER BY t.date ASC";
+				$res = Yii::app()->db->createCommand($sql)->queryScalar();
+
+				$arGraph[$c] = array(date('d.m.y',$curDay), (int)$res);
+				$curDay +=$day;
+			}
+
+			return $arGraph;
+		}
+		
 		public function getTermostatEmplCount($user, $arDates){
 
 			$t1 = strtotime($arDates['bdate']);
