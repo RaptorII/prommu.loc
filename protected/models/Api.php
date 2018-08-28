@@ -156,7 +156,7 @@ class Api
         $proc = $proc1+$proc2+$proc3+$proc4;
         
         echo "Прежний рейтинг работодателя: $result (система рейтинга Prommu Rate )<br/> ";
-        echo "Прежний рейтинг работодателя: $result + $proc (система рейтинга Prommu Rate + Termostat )<br/> ";
+        echo "Прежний рейтинг работодателя: $result + $proc ( proc1 - $proc1, proc2 - $proc2, proc3 - $proc3, proc4 - $proc4 ) (система рейтинга Prommu Rate + Termostat )<br/> ";
         
     }
     
