@@ -100,6 +100,8 @@ class Project extends ARModel
         $k = 0;
          for($i = 0; $i < count($cloud['city']); $i++){
             for($j = 0; $j < count($cloud['lindex'][$cloud['city'][$i]]); $j ++){
+                
+                $location = time().rand(1111,33333);
                 for($s = 0; $s < count($cloud['bdate'][$cloud['city'][$i]][$j]); $s ++){
                     $title = $props['name'];
                     
@@ -125,6 +127,7 @@ class Project extends ARModel
                             'btime' => $clouds[$k]['btime'],
                             'etime' => $clouds[$k]['etime'],
                             'point' => $k.''.rand(1111,9999),
+                            'location' => $location
                         ));
                     }
                     $k++;
