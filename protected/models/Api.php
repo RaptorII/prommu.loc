@@ -1178,6 +1178,7 @@ class Api
                         $lastname = $this->encoderSys($data['lastname']);
                         $fio = "$firstname ".$lastname; 
                         $email = $this->encoderSys($data['email']);
+                        $user['date_public'] = $user['dt_create'];
                     }
 
                     $date1 = explode(" ",$user['date_public'])[0];
@@ -1242,6 +1243,7 @@ class Api
                         $name = $this->encoderSys($data['name']);
                         $fio = $name." ".$firstname." ".$lastname;
                         $email = $data['email'];
+                        $user['crdate'] = $user['dt_create'];
                      
                     }
                     $date1 = explode(" ",$user["crdate"])[0];
