@@ -105,10 +105,19 @@ class Api
         $data = Yii::app()->db->createCommand()
             ->select("*")
             ->from('user usr')
-            ->join('analityc a', 'usr.id_user=a.id_us')
-            ->where('a.active=:active AND (usr.crdate  BETWEEN :date AND :bdate)', array(':active' => 1, ':date'=> $date, 'bdate'=> $bdate,))
+            ->where('usr.crdate  BETWEEN :date AND :bdate', array( ':date'=> $date, 'bdate'=> $bdate,))
             ->queryAll();
-        return $data;
+        for($i = 0; $i < count($data); $i ++){
+            $datas = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('analityc a')
+            ->where('a.id_us =:id_us', array( ':id_us'=> $data[$i]['id_user']))
+            ->queryRow();
+            
+            if($datas['id_us'] != $data[$i]['id_user']){
+                echo 'trouble'.$data[$i]['id_user'].'<br/>';
+            }
+        }
         
     }
     
