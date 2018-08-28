@@ -1529,9 +1529,6 @@ class UserController extends AppController
         !in_array($type, [2,3]) && $this->redirect(MainConfig::$PAGE_INDEX);
 
         $id = Yii::app()->getRequest()->getParam('id');
-        $view = $type==3
-            ? MainConfig::$VIEW_EMP_PROJECT_LIST
-            : MainConfig::$VIEW_APP_PROJECT_LIST;
             
         $model = new Project();
     
@@ -1559,9 +1556,8 @@ class UserController extends AppController
                     $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
                     break;
                 case 'index':
-                    $data = $model->getProject($id);
-                    $view = MainConfig::$VIEW_PROJECT_ITEM_INDEX;
                     if(Yii::app()->request->isAjaxRequest) {
+                        $data = $model->getAdresProgramm($id,true);
                         $this->renderPartial(
                             'projects/project-index-ajax',
                             array('viData' => $data, 'project' => $id),
@@ -1569,6 +1565,10 @@ class UserController extends AppController
                             true
                         );
                         return;
+                    }
+                    else {
+                        $data = $model->getAdresProgramm($id);
+                        $view = MainConfig::$VIEW_PROJECT_ITEM_INDEX;
                     }
                     break;
                 case 'geo':
@@ -1584,7 +1584,14 @@ class UserController extends AppController
                     $view = MainConfig::$VIEW_PROJECT_ITEM_REPORT;
                     break;
                 case 'address-edit':
-                    $view = MainConfig::$VIEW_PROJECT_ITEM_ADR_CHANGE;
+                    if( Yii::app()->getRequest()->isPostRequest) {
+                        $data = $model->setAdresProgramm($_POST);
+                        $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id.'/index');
+                    }
+                    else {
+                        $data = $model->getAdresProgramm($id);
+                        $view = MainConfig::$VIEW_PROJECT_ITEM_ADR_CHANGE;                        
+                    }
                     break;
                 case 'users-select':
                     $view = 'projects/project-users-select';
@@ -1607,9 +1614,11 @@ class UserController extends AppController
                     break;
             }
         }
-        else{         
-            $view = MainConfig::$VIEW_EMP_PROJECT_LIST;
+        else{
             $data = $model->getProjectEmployer();
+            $view = $type==3
+                ? MainConfig::$VIEW_EMP_PROJECT_LIST
+                : MainConfig::$VIEW_APP_PROJECT_LIST;
         }
 
         $this->render($view, array('viData' => $data, 'project' => $id));

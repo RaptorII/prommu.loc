@@ -1,95 +1,17 @@
-<?
+<?php
+  $this->setBreadcrumbsEx(
+    array('Мои проекты', MainConfig::$PAGE_PROJECT_LIST),
+    array($viData['title'], MainConfig::$PAGE_PROJECT_NEW),
+    array('АДРЕСНАЯ ПРОГРАММА', MainConfig::$PAGE_PROJECT_LIST . '/' .  $project . '/index')
+  );
+  $this->setPageTitle($viData['title']);
+
 	$bUrl = Yii::app()->baseUrl;
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/new.css');
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/address-edit.css');
 	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
 	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/address-edit.js', CClientScript::POS_END);
-
-	$arProgram = array(
-	  1307 => array(
-	    'name' => 'Москва',
-	    'id' => 1307,
-	    'metro' => 1,
-	    'locations' => array(
-	      1 => array(
-	        'id' => 1,
-	        'name' => 'АТБ1',
-	        'index' => 'ул. Исполкомовская 123',
-	        'metro' => array(
-	          1 => 'Авиамоторная',
-	          2 => 'Автозаводская (Замоскворецкая линия)',
-	          4 => 'Алексеевская'
-	        ),
-	        'periods' => array(
-	          1 => array(
-	            'id' => 1,
-	            'bdate' => '07.02.2018',
-	            'edate' => '08.02.2018',
-	            'btime' => '14:00',
-	            'etime' => '16:00'
-	          ),
-	          2 => array(
-	            'id' => 2,
-	            'bdate' => '20.02.2018',
-	            'edate' => '22.02.2018',
-	            'btime' => '09:00',
-	            'etime' => '18:00'
-	          )
-	        )
-	      ),
-	      2 => array(
-	        'id' => 2,
-	        'name' => 'АТБ2',
-	        'index' => 'ул. Исполкомовская 777',
-	        'metro' => array(
-	          4 => 'Алексеевская'
-	        ),
-	        'periods' => array(
-	          3 => array(
-	            'id' => 3,
-	            'bdate' => '01.08.2018',
-	            'edate' => '01.08.2018',
-	            'btime' => '12:00',
-	            'etime' => '13:00'
-	          )
-	        )
-	      )
-	    )
-	  ),
-	  2582 => array(
-	    'name' => 'Донецк',
-	    'id' => 2582,
-	    'metro' => 0,
-	    'locations' => array(
-	      3 => array(
-	        'id' => 3,
-	        'name' => 'АТБ3',
-	        'index' => 'ул. Исполкомовская 999',
-	        'metro' => array(),
-	        'periods' => array(
-	          4 => array(
-	            'id' => 4,
-	            'bdate' => '07.02.2018',
-	            'edate' => '08.02.2018',
-	            'btime' => '14:00',
-	            'etime' => '16:00'
-	          ),
-	          5 => array(
-	            'id' => 5,
-	            'bdate' => '20.02.2018',
-	            'edate' => '22.02.2018',
-	            'btime' => '09:00',
-	            'etime' => '18:00'
-	          )
-	        )
-	      ),      
-	    )
-	  )
-	);
 ?>
-<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($arProgram); ?>
-</pre>
 <script type="text/javascript">var getParams = <?=json_encode($_GET)?></script>
 <div class="row project">
 	<div class="col-xs-12">
@@ -100,7 +22,7 @@
 			<div id="index" class="project__module" data-country="1">
 				<h2 class="project__title">РЕДАКТИРОВАТЬ АДРЕСНУЮ ПРОГРАММУ<span></span></h2>
 				<div class="project__index">
-					<?php foreach ($arProgram as $idCity => $arCity): ?>
+					<?php foreach ($viData['location'] as $idCity => $arCity): ?>
 						<div class="city-item" data-city="<?=$idCity?>">
 							<span class="project__index-name">Город</span>
 							<span class="city-del">&#10006</span>
@@ -207,10 +129,10 @@
 				<div class="project__all-btns">
 					<span class="project__btn-white" id="add-city-btn">ДОБАВИТЬ ГОРОД</span>
 					<span class="save-btn" id="save-index" data-event="main">СОХРАНИТЬ</span>
-					<a class="save-btn" href="<?=MainConfig::$PAGE_PROJECT_LIST . '/' . Yii::app()->getRequest()->getParam('id')?>">НАЗАД</a>
+					<a class="save-btn" href="<?=MainConfig::$PAGE_PROJECT_LIST . '/' . $project . '/index'?>">НАЗАД</a>
 				</div>
 			</div>
-			<input type="hidden" name="project" value="<?=Yii::app()->getRequest()->getParam('id')?>">
+			<input type="hidden" name="project" value="<?=$project?>">
 		</form>
 	</div>
 </div>
