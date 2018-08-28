@@ -1071,7 +1071,6 @@ class Api
              $data = Yii::app()->db->createCommand()
             ->select("*")
             ->from('user_activate a')
-            ->join('user usr', 'usr.id_user=a.id_us')
             ->where('(a.dt_create BETWEEN :date AND :bdate)', array( ':date'=> $date, 'bdate'=> $bdate))
             ->order("a.id_user desc")
             ->group("a.id_user")
