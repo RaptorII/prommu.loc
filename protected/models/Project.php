@@ -191,25 +191,25 @@ class Project extends ARModel
             $arParams[':city'] = $city;
         }
         if(isset($bdate) && isset($edate)) {
-            /*$params .= ' AND pc.bdate>:bdate AND pc.edate<:edate';
-            $arParams[':bdate'] = $bdate;           
-            $arParams[':edate'] = $edate;  */         
+            $params .= ' AND pc.bdate>=:bdate AND pc.edate<=:edate';
+            $arParams[':bdate'] = DateTime::createFromFormat('d.m.Y', $bdate)->format('Y-m-d');
+            $arParams[':edate'] = DateTime::createFromFormat('d.m.Y', $edate)->format('Y-m-d');
         }
         $result = Yii::app()->db->createCommand()
-            ->select('
+            ->select("
                 pc.id, 
                 pc.name, 
                 pc.adres, 
                 pc.id_city, 
                 c.name city, 
                 c.ismetro,
-                pc.bdate, 
-                pc.edate,
+                DATE_FORMAT(pc.bdate, '%d.%m.%Y') bdate, 
+                DATE_FORMAT(pc.edate, '%d.%m.%Y') edate,
                 pc.btime, 
                 pc.etime, 
                 pc.point,
                 pc.location,
-                pc.title'
+                pc.title"
             )
             ->from('project_city pc')
             ->join('city c', 'c.id_city=pc.id_city')

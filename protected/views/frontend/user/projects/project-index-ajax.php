@@ -1,9 +1,4 @@
-<?
-echo "<pre>";
-print_r($viData); 
-echo "</pre>";
-?>
-<? /*foreach ($viData['location'] as $id => $arCity): ?>
+<? foreach ($viData['location'] as $id => $arCity): ?>
   <div class="address__item">
     <h2 class="address__item-title">
       <b><?=$arCity['name']?></b>
