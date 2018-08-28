@@ -1138,6 +1138,7 @@ class Api
                     $row["canal"] = explode(" ", $row["canal"])[0];
                                    
                 }
+                $row['transition'] = explode(" ", $row['transition'])[0];
 
                 $attribs = Yii::app()->db->createCommand()
                         ->select("ua.val")
