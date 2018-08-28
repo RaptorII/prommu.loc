@@ -149,10 +149,10 @@ class Api
         $results['viewsYester'] = count($Termostat->getTermostatEmplCount($id, $dates));
         $results['viewsTo'] = count($Termostat->getTermostatEmplCount($id, $datess));
         $results['viewsUser'] = count($Termostat->getTermostatEmplUserCount($id, $datess));
-        $proc1 = ($results['viewsUser']+$results['viewsYester'])/2;
-        $proc2 = 100/$results['viewsTo'];
-        $proc3 = 100/$results['service'];
-        $proc4 = 100/$results['services'];
+        $proc1 = ($results['viewsTo']+$results['viewsYester'])/2;
+        $proc2 = 100/$results['viewsUser'];
+        $proc3 = 1/$results['service'];
+        $proc4 = 6/$results['services'];
         $proc = $proc1+$proc2+$proc3+$proc4;
         
         echo "Прежний рейтинг работодателя: $result (система рейтинга Prommu Rate )<br/> ";
