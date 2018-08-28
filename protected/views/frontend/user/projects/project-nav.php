@@ -1,30 +1,29 @@
 <?php 
-    $title = 'Мои проекты';
-    $this->setBreadcrumbs($title, MainConfig::$PAGE_PROJECT_LIST);
-    //$this->setPageTitle($title);
-
-	$id = Yii::app()->getRequest()->getParam('id');
 	$s = Yii::app()->getRequest()->getParam('section');
-	$link = MainConfig::$PAGE_PROJECT_LIST . '/' .  $id;
+	if(!isset($s) || empty($s))
+		$s = 'main';
+	$link = MainConfig::$PAGE_PROJECT_LIST . '/' .  $project;
+	$arTabs = [
+		'main' => [ 'name' => 'ОСНОВНОЕ', 'link' => $link ],
+		'staff' => [ 'name' => 'ПЕРСОНАЛ', 'link' => $link . '/staff' ],
+		'index' => [ 'name' => 'АДРЕСНАЯ ПРОГРАММА', 'link' => $link . '/index' ],
+		'geo' => [ 'name' => 'ГЕОЛОКАЦИЯ', 'link' => $link . '/geo' ],
+		'route' => [ 'name' => 'МАРШРУТ ГЕО', 'link' => $link . '/route' ],
+		'tasks' => [ 'name' => 'ЗАДАНИЯ', 'link' => $link . '/tasks' ],
+		'report' => [ 'name' => 'ОТЧЕТЫ', 'link' => $link . '/report' ],
+	];
+
+  $this->setBreadcrumbsEx(
+    array('Мои проекты', MainConfig::$PAGE_PROJECT_LIST),
+    array($viData['title'], MainConfig::$PAGE_PROJECT_NEW),
+    array($arTabs[$s]['name'], $arTabs[$s]['link'])
+  );
+  $this->setPageTitle($viData['title']);
 ?>
-<a href="<? echo $link?>" class="<?=(!isset($s) || empty($s))?'active':''?>">
-	<b>ОСНОВНОЕ</b>
-</a>
-<a href="<? echo $link . '/staff'?>" class="<?=$s=='staff'?'active':''?>">
-	<b>ПЕРСОНАЛ</b>
-</a>
-<a href="<? echo $link . '/index'?>" class="<?=$s=='index'?'active':''?>">
-	<b>АДРЕСНАЯ ПРОГРАММА</b>
-</a>
-<a href="<? echo $link . '/geo'?>" class="<?=$s=='geo'?'active':''?>">
-	<b>ГЕОЛОКАЦИЯ</b>
-</a>
-<a href="<? echo $link . '/route'?>" class="<?=$s=='route'?'active':''?>">
-	<b>МАРШРУТ ГЕО</b>
-</a>
-<a href="<? echo $link . '/tasks'?>" class="<?=$s=='tasks'?'active':''?>">
-	<b>ЗАДАНИЯ</b>
-</a>
-<a href="<? echo $link . '/report'?>" class="<?=$s=='report'?'active':''?>">
-	<b>ОТЧЕТЫ</b>
-</a>
+<div class="project__tabs">
+	<?php foreach ($arTabs as $k => $item): ?>
+		<a href="<?=$item['link']?>" class="<?=($s==$k)?'active':''?>">
+			<b><?=$item['name']?></b>
+		</a>
+	<?php endforeach; ?>
+</div>

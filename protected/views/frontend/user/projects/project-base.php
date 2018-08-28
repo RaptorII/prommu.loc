@@ -4,24 +4,17 @@
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-base.css');
 	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
 	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item-base.js', CClientScript::POS_END);
-
-  $projectName = 'Мерчендайзинг';
 ?>
-<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($viData); ?>
-</pre>
 <div class="row project">
 	<div class="col-xs-12">
-		<div class="project__tabs">
-			<? require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/projects/project-nav.php'; ?>
-		</div>
+		<? require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/projects/project-nav.php'; ?>
 		<div id="content">
 			<div class="project__module">
 				<div class="project__xls">
 					<a href="/user/uploadprojectxls?id=<?=$_GET['id']?>" id="add-xls">Изменить адресную программу</a>
 					<a href="/uploads/prommu_example.xls" download>Скачать пример для добавления</a>
 				</div>
-				<h1 class="project__title">ПРОЕКТ: <span><?=$projectName?></span></h1>
+				<h1 class="project__title">ПРОЕКТ: <span><?=$viData['title']?></span></h1>
 				<table class="project__program">
 					<tbody>
 						<? foreach ($viData['location'] as $id => $arCity): ?>

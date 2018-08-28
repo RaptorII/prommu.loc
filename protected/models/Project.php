@@ -188,12 +188,14 @@ class Project extends ARModel
                 pc.adres, 
                 pc.id_city, 
                 c.name city, 
+                c.ismetro,
                 pc.bdate, 
                 pc.edate,
                 pc.btime, 
                 pc.etime, 
                 pc.point,
-                c.ismetro'
+                pc.location,
+                pc.title'
             )
             ->from('project_city pc')
             ->join('city c', 'c.id_city=pc.id_city')
@@ -400,8 +402,14 @@ class Project extends ARModel
         if(!count($arr))
             return false;
    
-        $arRes['bdate'] = $arr[0]['bdate'];
-        $arRes['edate'] = $arr[0]['edate'];
+        $arRes = array(
+            'title' => $arr[0]['title'],
+            'bdate' => $arr[0]['bdate'],
+            'edate' => $arr[0]['edate'],
+            'bdate-short' => $arr[0]['bdate'],
+            'edate-short' => $arr[0]['edate']
+        );
+
 
         $arI = array();
         foreach ($arr as $i) {
@@ -420,22 +428,70 @@ class Project extends ARModel
         $arRes['edate-short'] = DateTime::createFromFormat('d.m.Y', $arRes['edate'])->format('d.m.y');
 
         foreach ($arr as $i) {
-            $arL['id'] = $i['point'];
+            $arL = array();
+            $arL['id'] = $i['location'];
             $arL['name'] = $i['name'];
             $arL['index'] = $i['adres'];
             $arL['metro'] = '';         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            $arP = array(
-                'id' => $i['id'],
-                'bdate' => $i['bdate'],
-                'edate' => $i['edate'],
-                'btime' => $i['btime'],
-                'etime' => $i['etime']
-            );
-            $arI[$i['id_city']]['locations'][$i['point']] = $arL;
-            $arI[$i['id_city']]['locations'][$i['point']]['periods'][$i['id']] = $arP;
+            $arI[$i['id_city']]['locations'][$i['location']] = $arL;
+        }
+        
+        foreach ($arr as $i) {
+            $arP = array();
+            $arP['id'] = $i['point'];
+            $arP['bdate'] = $i['bdate'];
+            $arP['edate'] = $i['edate'];
+            $arP['btime'] = $i['btime'];
+            $arP['etime'] = $i['etime'];
+            $arI[$i['id_city']]['locations'][$i['location']]['periods'][$i['point']] = $arP;
         }
         $arRes['location'] = $arI;
 
         return $arRes;
+    }
+    /*
+    *       удаление элементов проекта
+    */
+    public function delLocation($arr){
+        if(!$this->hasAccess($arr['project']))
+            return 0;
+        
+        if(isset($arr['point'])) {
+            $result = Yii::app()->db->createCommand()
+                ->delete(
+                    'project_city',
+                    'point=:pnt AND project=:prj', 
+                    array(
+                        ':pnt'=>$arr['point'], 
+                        ':prj'=>$arr['project']
+                    )
+                );
+            return $result;
+        }
+        if(isset($arr['location'])) {
+            $result = Yii::app()->db->createCommand()
+                ->delete(
+                    'project_city',
+                    'location=:loc AND id_city=:city AND project=:prj', 
+                    array(
+                        ':loc'=>$arr['location'], 
+                        ':city'=>$arr['city'],
+                        ':prj'=>$arr['project']
+                    )
+                );
+            return $result;
+        }
+        if(isset($arr['city'])) {
+            $result = Yii::app()->db->createCommand()
+                ->delete(
+                    'project_city',
+                    'id_city=:city AND project=:prj', 
+                    array(
+                        ':city'=>$arr['city'], 
+                        ':prj'=>$arr['project']
+                    )
+                );
+            return $result;
+        }
     }
 }

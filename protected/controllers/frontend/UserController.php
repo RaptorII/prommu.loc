@@ -1603,7 +1603,7 @@ class UserController extends AppController
             $data = $model->getProjectEmployer();
         }
 
-        $this->render($view, array('viData' => $data));
+        $this->render($view, array('viData' => $data, 'project' => $id));
     }
     /*
     *       загрузка xls файла

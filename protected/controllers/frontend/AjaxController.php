@@ -828,4 +828,17 @@ class AjaxController extends AppController
             echo CJSON::encode(array('type'=>'guest'));
         }
     }
+    /*
+    *       удаление элемента локации на ГЕО проекте
+    */
+    public function actionChangeGeoProject()
+    {
+        $result = 0;
+        $type = Yii::app()->getRequest()->getParam('type');
+        $model = new Project();
+        if($type=='delete') {
+            $result = $model->delLocation($_POST);   
+        }
+        echo CJSON::encode($result); 
+    }
 }
