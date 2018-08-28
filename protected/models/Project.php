@@ -120,8 +120,8 @@ class Project extends ARModel
                             'adres' => $clouds[$k]['lindex'],
                             'name' => $clouds[$k]['lname'],
                             'id_city' => $cloud['city'][$i],
-                            'bdate' => $clouds[$k]['bdate'],
-                            'edate' => $clouds[$k]['edate'],
+                            'bdate' => date('Y-m-d', strtotime($clouds[$k]['bdate'])),
+                            'edate' => date('Y-m-d', strtotime($clouds[$k]['edate'])),
                             'btime' => $clouds[$k]['btime'],
                             'etime' => $clouds[$k]['etime'],
                             'point' => $k.''.rand(1111,9999),
@@ -192,8 +192,8 @@ class Project extends ARModel
         }
         if(isset($bdate) && isset($edate)) {
             $params .= ' AND pc.bdate>=:bdate AND pc.edate<=:edate';
-            $arParams[':bdate'] = DateTime::createFromFormat('d.m.Y', $bdate)->format('Y-m-d');
-            $arParams[':edate'] = DateTime::createFromFormat('d.m.Y', $edate)->format('Y-m-d');
+            $arParams[':bdate'] = date('Y-m-d', strtotime($bdate));
+            $arParams[':edate'] = date('Y-m-d', strtotime($edate));
         }
         $result = Yii::app()->db->createCommand()
             ->select("
