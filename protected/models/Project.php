@@ -106,6 +106,7 @@ class Project extends ARModel
 
                     $clouds[$k]['city'] = $cloud['city'][$i];
                     $clouds[$k]['lindex'] = $cloud['lindex'][$cloud['city'][$i]][$j];
+                    $clouds[$k]['metro'] = $cloud['metro'][$cloud['city'][$i]][$j] ? $cloud['metro'][$cloud['city'][$i]][$j] : '';
                     $clouds[$k]['lname'] = $cloud['lname'][$cloud['city'][$i]][$j];
                     $clouds[$k]['bdate'] = $cloud['bdate'][$cloud['city'][$i]][$j][$s];
                     $clouds[$k]['edate'] = $cloud['edate'][$cloud['city'][$i]][$j][$s];
@@ -124,6 +125,7 @@ class Project extends ARModel
                             'edate' => date('Y-m-d', strtotime($clouds[$k]['edate'])),
                             'btime' => $clouds[$k]['btime'],
                             'etime' => $clouds[$k]['etime'],
+                            'metro' => $clouds[$k]['metro'],
                             'point' => $k.''.rand(1111,9999),
                             'location' => $j
                         ));
