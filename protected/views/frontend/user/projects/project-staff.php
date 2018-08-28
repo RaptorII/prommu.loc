@@ -14,9 +14,6 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/un
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-filter.css');
 /***********UNIVERSAL FILTER************/
 
-$projectId = $request->getParam('id');
-$sectionId = $request->getParam('section');
-
 $arPromo = array(
     0 => array(
         'id' => '142',
@@ -58,6 +55,9 @@ $arPromo = array(
 ?>
 
 <?
+$projectId = $request->getParam('id');
+$sectionId = $request->getParam('section');
+
 $arFilterData = [
     'ID' => $projectId, //Обязательное свойство!
     'FILTER_ADDITIONAL_VALUE'=>[
@@ -70,7 +70,13 @@ $arFilterData = [
             'INPUT_NAME' => 'first_name',
             'DATA' => [],
             'DATA_DEFAULT' => '',
-            'PLACEHOLDER' => ''
+            'PLACEHOLDER' => '',
+            'CONDITION' =>[
+                'BLOCKED' => 'true',
+                'PARENT_ID' => '3',
+                'PARENT_VALUE' => '',
+                'PARENT_VALUE_ID' => '1'
+            ]
         ],
         1 => [
             'NAME' => 'Фамилия',
@@ -138,9 +144,71 @@ $arFilterData = [
                     'id' => '2'
                 ]
             ],
-            'DATA_DEFAULT' => '2'
+            'DATA_DEFAULT' => '2',
+            'CONDITION' =>[
+                'BLOCKED' => 'true',
+                'PARENT_ID' => '3',
+                'PARENT_VALUE' => '',
+                'PARENT_VALUE_ID' => '1'
+            ]
         ],
-        4 => [
+        5 => [
+            'NAME' => 'Название ТТ',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_name',
+            'DATA' => [
+                0 => [
+                    'title' => 'Название 1',
+                    'id' => '1'
+                ],
+                1 => [
+                    'title' => 'Название 2',
+                    'id' => '0'
+                ],
+                2 => [
+                    'title' => 'Все',
+                    'id' => '2'
+                ]
+            ],
+            'DATA_DEFAULT' => '2',
+            'CONDITION' =>[
+                'BLOCKED' => 'true',
+                'PARENT_ID' => '3',
+                'PARENT_VALUE' => '',
+                'PARENT_VALUE_ID' => '1'
+            ]
+        ],
+        6 => [
+            'NAME' => 'Адрес ТТ',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_location',
+            'DATA' => [
+                0 => [
+                    'title' => 'Адрес ТТ 1',
+                    'id' => '1'
+                ],
+                1 => [
+                    'title' => 'Адрес ТТ 2',
+                    'id' => '0'
+                ],
+                2 => [
+                    'title' => 'Адрес ТТ 3',
+                    'id' => '2'
+                ],
+                3 => [
+                    'title' => 'Все',
+                    'id' => '3'
+                ]
+            ],
+            'DATA_DEFAULT' => '2',
+            'CONDITION' =>[
+                'BLOCKED' => 'true',
+                'PARENT_ID' => '3',
+                'PARENT_VALUE' => '',
+                'PARENT_VALUE_ID' => '1'
+            ]
+        ],
+        7 => [
             'NAME' => 'Метро',
             'TYPE' => 'select',
             'INPUT_NAME' => 'metro',
@@ -158,47 +226,13 @@ $arFilterData = [
                     'id' => '2'
                 ]
             ],
-            'DATA_DEFAULT' => '2'
-        ],
-        5 => [
-            'NAME' => 'Локация',
-            'TYPE' => 'select',
-            'INPUT_NAME' => 'location',
-            'DATA' => [
-                0 => [
-                    'title' => 'Локация 1',
-                    'id' => '1'
-                ],
-                1 => [
-                    'title' => 'Локация 2',
-                    'id' => '0'
-                ],
-                2 => [
-                    'title' => 'Все',
-                    'id' => '2'
-                ]
-            ],
-            'DATA_DEFAULT' => '2'
-        ],
-        6 => [
-            'NAME' => 'Метро',
-            'TYPE' => 'select',
-            'INPUT_NAME' => 'location',
-            'DATA' => [
-                0 => [
-                    'title' => 'Метро 1',
-                    'id' => '1'
-                ],
-                1 => [
-                    'title' => 'Метро 2',
-                    'id' => '0'
-                ],
-                2 => [
-                    'title' => 'Все',
-                    'id' => '2'
-                ]
-            ],
-            'DATA_DEFAULT' => '2'
+            'DATA_DEFAULT' => '2',
+            'CONDITION' =>[
+                'BLOCKED' => 'true',
+                'PARENT_ID' => '0',
+                'PARENT_VALUE' => 'Stas',
+                'PARENT_VALUE_ID' => ''
+            ]
         ]
     ]
 ];
@@ -240,8 +274,12 @@ $arFilterData = [
                     <? switch ($value['TYPE']):
                         case 'text':
                             ?>
-                            <div data-type="<?= $value['TYPE'] ?>" data-id="<?= $key ?>"
-                                 class="u-filter__item u-filter__item-<?= $key ?>">
+                            <div data-type="<?= $value['TYPE'] ?>"
+                                 data-id="<?= $key ?>"
+                                 data-parent-id="<?=$value['CONDITION']['PARENT_ID']?>"
+                                 data-parent-value="<?=$value['CONDITION']['PARENT_VALUE']?>"
+                                 data-parent-value-id="<?=$value['CONDITION']['PARENT_VALUE_ID']?>"
+                                 class="u-filter__item u-filter__item-<?= $key ?>  <?=($value['CONDITION']['BLOCKED']) ? 'blocked':''?>">
                                 <div class="u-filter__item-title">
                                     <?= $value['NAME']; ?>
                                 </div>
@@ -263,8 +301,12 @@ $arFilterData = [
                             break;
                         case 'select':
                             ?>
-                            <div data-type="<?= $value['TYPE'] ?>" data-id="<?= $key ?>"
-                                 class="u-filter__item u-filter__item-<?= $key ?>">
+                            <div data-type="<?= $value['TYPE'] ?>"
+                                 data-id="<?= $key ?>"
+                                 data-parent-id="<?=$value['CONDITION']['PARENT_ID']?>"
+                                 data-parent-value="<?=$value['CONDITION']['PARENT_VALUE']?>"
+                                 data-parent-value-id="<?=$value['CONDITION']['PARENT_VALUE_ID']?>"
+                                 class="u-filter__item u-filter__item-<?= $key ?> <?=($value['CONDITION']['BLOCKED']) ? 'blocked':''?>">
                                 <div class="u-filter__item-title">
                                     <?= $value['NAME']; ?>
                                 </div>

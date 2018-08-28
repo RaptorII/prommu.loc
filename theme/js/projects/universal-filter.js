@@ -11,7 +11,11 @@ let IndexUniversalFilter = (function () {
         let self = this;
         $('.prommu__universal-filter').on('click', '.u-filter__select', function()
         {   let width = $(this).parent().width();
-            self.showHiddenUlContent(this, width);
+
+            let blocked = $(this).parent().parent().hasClass('blocked');
+            if(!blocked){
+                self.showHiddenUlContent(this, width);
+            }
         });
 
         $('.prommu__universal-filter').on('click', '.u-filter__li-hidden', function()
@@ -20,10 +24,13 @@ let IndexUniversalFilter = (function () {
         });
         $('.prommu__universal-filter .u-filter__text').keypress(function ()
         {
+            //Проверяем иерархию фильтров
+            self.hierarchyTracking();
+            //Аякс с задержкой
             clearTimeout(IndexUniversalFilter.AjaxTimer);
             IndexUniversalFilter.AjaxTimer = setTimeout(function () {
                 self.ajaxSetParams();
-            }, 1000); // ����� � ��
+            }, 1000); // время в мс
         });
 
 
@@ -31,8 +38,11 @@ let IndexUniversalFilter = (function () {
 
     };
 
-    /**������� �����������/������� ������� ����**/
+    /**Функция отображения/скрытия пунктов меню**/
     IndexUniversalFilter.prototype.showHiddenUlContent = function (e, width) {
+        let element = e;
+        $(element).parent().parent().parent().find('.u-filter__ul-hidden').fadeOut();
+
         let hiddenUl = e.nextElementSibling;
         $(hiddenUl).width(width);
         if($(hiddenUl).is(":visible")){
@@ -42,29 +52,43 @@ let IndexUniversalFilter = (function () {
         }
     };
 
-    /**������� ��������� Default �������� ��� �����**/
+    /**Функция установки Default значений для полей**/
     IndexUniversalFilter.prototype.setDefaultFilterProperties = function () {
         $('.prommu__universal-filter .u-filter__item').each(function () {
             let element = $(this);
             if(element.data('type')==="text"){
-                let content = element.find('.u-filter__hidden-default').val();
-                if(content){
-                    element.find('.u-filter__text').val(content);
+
+                /**Проверка блокировки**/
+                let blocked = element.hasClass('blocked');
+
+                if(blocked){
+                    element.find('.u-filter__text').prop('readonly', true);
+                }
+                else{
+                    /**если нет блокировки - устанавливаем default**/
+                    let content = element.find('.u-filter__hidden-default').val();
+                    if(content){
+                        element.find('.u-filter__text').val(content);
+                    }
                 }
             }
             if(element.data('type')==="select"){
-                let content = element.find('.u-filter__hidden-default').val();
-                if(content){
-                    let elements = element.find('.u-filter__ul-hidden .u-filter__li-hidden');
-                    elements.each(function () {
-                        if($(this).data('id')=== parseInt(content)){
-                            let e_value = $(this).text();
-                            let e_id = $(this).data('id');
+                /**Проверка блокировки**/
+                let blocked = element.hasClass('blocked');
+                if(!blocked) {
+                    let content = element.find('.u-filter__hidden-default').val();
+                    if(content){
+                        let elements = element.find('.u-filter__ul-hidden .u-filter__li-hidden');
+                        elements.each(function () {
+                            if($(this).data('id')=== parseInt(content)){
+                                let e_value = $(this).text();
+                                let e_id = $(this).data('id');
 
-                            element.find('.u-filter__select').text(e_value);
-                            element.find('.u-filter__hidden-data').val(e_id);
-                        }
-                    });
+                                element.find('.u-filter__select').text(e_value);
+                                element.find('.u-filter__hidden-data').val(e_id);
+                            }
+                        });
+                    }
                 }
             }
         })
@@ -75,14 +99,16 @@ let IndexUniversalFilter = (function () {
         let li = e;
         let id = $(li).data('id');
         let value = $(li).text();
-        /**������������� ������� input***/
+        /**Устанавливаем скрытый input***/
         $(li).parent().parent().find('.u-filter__hidden-data').val(id);
-        /******������������� value � span*******/
+        /******Устанавливаем value в span*******/
         $(li).parent().parent().find('.u-filter__select').text(value);
-        /******�������� ������ ul*******/
+        /******Скрываем список ul*******/
         $(li).parent().fadeOut();
 
-        //��������� Ajax
+        //Проверяем иерархию фильтров
+        this.hierarchyTracking();
+        //Запускаем Ajax
         this.ajaxSetParams();
     };
 
@@ -93,7 +119,7 @@ let IndexUniversalFilter = (function () {
 
         $('.prommu__universal-filter').find('input').each(function () {
 
-            //������������ ������� Get
+            //Формирование запроса Get
             let name = $(this).attr("name");
             let value = $(this).val();
             if(name && name!='id'){
@@ -121,8 +147,70 @@ let IndexUniversalFilter = (function () {
         }
     };
 
+    /**Функция отслеживания и контроля иерархии фильтров**/
+    IndexUniversalFilter.prototype.hierarchyTracking = function () {
+        $('.prommu__universal-filter .u-filter__item').each(function () {
+            let parent_id = $(this).data('parent-id');
+            let parent_value = $(this).data('parent-value');
+            let parent__value_id = $(this).data('parent-value-id');
 
-  return IndexUniversalFilter;
+            let type = $(this).data('type');
+
+            if(parent_id){
+                let parent = $(".u-filter__item[data-id='" + parent_id +"']");
+                let parent_type = parent.data('type');
+
+                if(parent_type==="text"){
+                    let value = parent.find('.u-filter__text').val();
+                    if(parent_value == value){
+                        $(this).removeClass('blocked');
+                        if(type==="text"){
+                            $(this).find('.u-filter__text').prop('readonly', false);
+                        }
+                    }
+                    else{
+                        if(!$(this).hasClass('blocked')){
+                            $(this).addClass('blocked');
+                            if(type==="text"){
+                                $(this).find('.u-filter__text').prop('readonly', true);
+                                $(this).find('.u-filter__text').val('');
+                            }
+                            if(type==="select"){
+                                $(this).find('.u-filter__hidden-data').val('');
+                                $(this).find('.u-filter__select').text('');
+                            }
+                        }
+                    }
+                }
+                if(parent_type==="select"){
+                    let value = parent.find('.u-filter__hidden-data').val();
+                    if(parent__value_id == value){
+                        $(this).removeClass('blocked');
+                        if(type==="text"){
+                            $(this).find('.u-filter__text').prop('readonly', false);
+                        }
+                    }
+                    else{
+                        if(!$(this).hasClass('blocked')){
+                            $(this).addClass('blocked');
+                            if(type==="text"){
+                                $(this).find('.u-filter__text').prop('readonly', true);
+                                $(this).find('.u-filter__text').val('');
+                            }
+                            if(type==="select"){
+                                $(this).find('.u-filter__hidden-data').val('');
+                                $(this).find('.u-filter__select').text('');
+                            }
+                        }
+                    }
+                }
+            }
+
+        });
+    };
+
+
+    return IndexUniversalFilter;
 }());
 
 $(document).ready(function () {

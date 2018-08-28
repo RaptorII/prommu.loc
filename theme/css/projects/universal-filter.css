@@ -66,3 +66,8 @@
 #DiContent .prommu__universal-filter input{
     width:100%;
 }
+
+#DiContent .prommu__universal-filter .u-filter__item.blocked .u-filter__text,
+#DiContent .prommu__universal-filter .u-filter__item.blocked .u-filter__select{
+    background: #d6d6d6;
+}
