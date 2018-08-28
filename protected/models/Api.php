@@ -136,9 +136,14 @@ class Api
             $web = 2;
         }
         $result = $web + $logo + $comment + $rates + $vacancy + 2 + 2;
+        
+        $dates['bdate'] = '2018-07-01';
+        $dates['edate'] = '2018-08-01';
+        
+        $Termostat = new Termostat();
+        $results = $Termostat->getTermostatServices($id, $dates);
 
-
-        return $result;
+        return $results;
     }
     
     public function searchUse(){
