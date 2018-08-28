@@ -1068,15 +1068,17 @@ class Api
             
          }
          else {
-             $data = Yii::app()->db->createCommand()
+               $data = Yii::app()->db->createCommand()
             ->select("*")
-            ->from('user_activate a')
-            ->where('(a.dt_create BETWEEN :date AND :bdate)', array( ':date'=> $date, 'bdate'=> $bdate))
-            ->order("a.id_user desc")
-            ->group("a.id_user")
+            ->from('analytic a')
+            ->where('a.active=:active AND (a.date BETWEEN :date AND :bdate)  AND a.name!=:name', array(':active' => 1, ':date'=> $date, 'bdate'=> $bdate, 'name'=>'NO ACTIVE'))
+            ->order("a.id_us desc")
+            ->group("a.id_us")
             ->queryAll();
          }
             
+
+
         $csv_file = '<table border="1">
             <tr><td style="color:red; background:#E0E0E0">Время'.
             '</td><td style="color:red; background:#E0E0E0">День'.
@@ -1102,23 +1104,15 @@ class Api
 '</td></tr>';
         
         foreach ($data as $row) {
-            $datas = json_decode($row['data'], true);
+        
+            
             $csv_file .= '<tr>';
             $b = "";
             $b_end = "";
 
             $type_feed = 'регистрация';
 
-            $analyt = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('analytic a')
-            ->where('id_us=:id_us AND a.name!=:name', array(':id_us' => $row['id_user'], 'name'=>'NO ACTIVE'))
-            ->order("a.id_us desc")
-            ->group("a.id_us")
-            ->queryRow();
-
-            if($analyt['id_us'] == $row['id_user']){
-                 switch ($analyt['subdomen']) {
+            switch ($row['subdomen']) {
             case '0':
                  $domen = 'https://prommu.com';
                  break;
@@ -1132,66 +1126,28 @@ class Api
                  break;
             }
 
-
-            if(strpos('yandex,yandex.ru,away.vk.com,google,facebook', $analyt['canal']) !== false) {
-                    $datas["canal"] = $analyt['referer'];
-                    $datas["referer"] = $analyt['transition'];
-                    $datas['transition'] = $analyt['canal']; 
+            if(strpos('yandex,yandex.ru,away.vk.com,google,facebook', $row['canal']) !== false) {
+                    $row["canal"] = $row['referer'];
+                    $row["referer"] = $row['transition'];
+                    $row['transition'] = $row['canal']; 
                                    
                 }
 
-                if(strpos($analyt["canal"], "cpc") !== false) {
-                    $datas["canal"] = explode(" ", $analyt["canal"])[0];
-                                   
-                }
-
-                $attribs = Yii::app()->db->createCommand()
-                        ->select("ua.val")
-                        ->from('user_attribs ua')
-                        ->where('ua.key=:key AND ua.id_us = :id_user', array(':key' => 'mob', ':id_user' => $row['id_user']))
-                        ->queryRow();
-                $phone = $attribs['val'];
-            } else {
-                 switch ($row['subdomen']) {
-            case '0':
-                 $domen = 'https://prommu.com';
-                 break;
-
-            case '1':
-                 $domen = 'https://spb.prommu.com';
-                 break;
-             
-             default:
-                 # code...
-                 break;
-            }
-
-
-            if(strpos('yandex,yandex.ru,away.vk.com,google,facebook', $datas['canal']) !== false) {
-                    $datas["canal"] = $datas['referer'];
-                    $datas["referer"] = $datas['transition'];
-                    $datas['transition'] = $datas['canal']; 
-                                   
-                }
-
-                if(strpos($datas["canal"], "cpc") !== false) {
-                    $datas["canal"] = explode(" ", $datas["canal"])[0];
+                if(strpos($row["canal"], "cpc") !== false) {
+                    $row["canal"] = explode(" ", $row["canal"])[0];
                                    
                 }
 
                 $attribs = Yii::app()->db->createCommand()
                         ->select("ua.val")
                         ->from('user_attribs ua')
-                        ->where('ua.key=:key AND ua.id_us = :id_user', array(':key' => 'mob', ':id_user' => $row['id_user']))
+                        ->where('ua.key=:key AND ua.id_us = :id_user', array(':key' => 'mob', ':id_user' => $row['id_us']))
                         ->queryRow();
                 $phone = $attribs['val'];
-            }
 
-           
-
-            if($datas['type'] == 2){
+            if($row['type'] == 2){
                 $types = "Соискатель";
-                $id_user = $row['id_user'];
+                $id_user = $row['id_us'];
 
                 $user = Yii::app()->db->createCommand()
                 ->select("e.firstname, e.lastname, usr.email, e.date_public ")
@@ -1239,22 +1195,22 @@ class Api
                     '</td><td>'.$b.$type_feed.$b_end.
                     '</td><td>'.$b.$phone.$b_end.
                     '</td><td>'.$b.$email.$b_end.
-                    '</td><td>'.$b.$datas["transition"].$b_end.
-                    '</td><td>'.$b.$datas["canal"].$b_end.
-                    '</td><td>'.$b.$datas["campaign"].$b_end.
-                    '</td><td>'.$b.$datas["content"].$b_end.
-                    '</td><td>'.$b.$datas["keywords"].$b_end.
-                    '</td><td>'.$b.$datas["source"].$b_end.
-                    '</td><td>'.$b.$datas["ip"].$b_end.
-                    '</td><td>'.$b.$datas["client"].$b_end.
+                    '</td><td>'.$b.$row["transition"].$b_end.
+                    '</td><td>'.$b.$row["canal"].$b_end.
+                    '</td><td>'.$b.$row["campaign"].$b_end.
+                    '</td><td>'.$b.$row["content"].$b_end.
+                    '</td><td>'.$b.$row["keywords"].$b_end.
+                    '</td><td>'.$b.$row["source"].$b_end.
+                    '</td><td>'.$b.$row["ip"].$b_end.
+                    '</td><td>'.$b.$row["client"].$b_end.
                     '</td><td>'.$b.$status.$b_end.
                     '</td></tr>';
 
 
-            } elseif($datas['type'] == 3) {
+            } elseif($row['type'] == 3) {
             
-                $name = $datas['name'];
-                $id_user = $row['id_user'];
+                $name = $row['name'];
+                $id_user = $row['id_us'];
 
                 $user = Yii::app()->db->createCommand()
                 ->select("e.name, e.firstname, e.lastname, usr.email, e.crdate")
@@ -1303,14 +1259,14 @@ class Api
                     '</td><td>'.$b.$type_feed.$b_end.
                     '</td><td>'.$b.$phone.$b_end.
                     '</td><td>'.$b.$email.$b_end.
-                    '</td><td>'.$b.$datas["transition"].$b_end.
-                    '</td><td>'.$b.$datas["canal"].$b_end.
-                    '</td><td>'.$b.$datas["campaign"].$b_end.
-                    '</td><td>'.$b.$datas["content"].$b_end.
-                    '</td><td>'.$b.$datas["keywords"].$b_end.
-                    '</td><td>'.$b.$datas["source"].$b_end.
-                    '</td><td>'.$b.$datas["ip"].$b_end.
-                    '</td><td>'.$b.$datas["client"].$b_end.
+                    '</td><td>'.$b.$row["transition"].$b_end.
+                    '</td><td>'.$b.$row["canal"].$b_end.
+                    '</td><td>'.$b.$row["campaign"].$b_end.
+                    '</td><td>'.$b.$row["content"].$b_end.
+                    '</td><td>'.$b.$row["keywords"].$b_end.
+                    '</td><td>'.$b.$row["source"].$b_end.
+                    '</td><td>'.$b.$row["ip"].$b_end.
+                    '</td><td>'.$b.$row["client"].$b_end.
                     '</td><td>'.$b.$status.$b_end.
                     '</td></tr>';
                 
