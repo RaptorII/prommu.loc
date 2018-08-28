@@ -145,12 +145,12 @@ class Api
         
         $Termostat = new Termostat();
         $results['services'] = count($Termostat->getTermostatServices($id, $dates)[0]);
-        $results['service'] = count($Termostat->getTermostatServices($id, $dates)[0]);
+        $results['service'] = count($Termostat->getTermostatServices($id, $dates)[1]);
         $results['viewsYester'] = count($Termostat->getTermostatEmplCount($id, $dates));
         $results['viewsTo'] = count($Termostat->getTermostatEmplCount($id, $datess));
-        $results['viewsUser'] = count($Termostat->getTermostatEmplUserCount($id, $datess));
+        // $results['viewsUser'] = count($Termostat->getTermostatEmplUserCount($id, $datess));
         $proc1 = ($results['viewsTo']+$results['viewsYester'])/2;
-        $proc2 = 100/$results['viewsUser'];
+        // $proc2 = 100/$results['viewsUser'];
         $proc3 = 1/$results['service'];
         $proc4 = 6/$results['services'];
         $proc = $proc1+$proc2+$proc3+$proc4;
