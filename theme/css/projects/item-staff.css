@@ -80,9 +80,9 @@
 #control__save-btn, #control__add-personal, #control__new-personal{
     margin-top:5px;
 }
-/************Верстка фильтра*************/
+/************Верстка фильтра*************
 #DiContent .prommu__universal-filter .u-filter__item{
-    /*float: left;*/
+
     display: inline-block;
     padding-top:5px;
 }
@@ -152,3 +152,4 @@
     }
 }
 
+*/

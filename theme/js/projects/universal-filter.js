@@ -6,6 +6,7 @@ let IndexUniversalFilter = (function () {
 
     function IndexUniversalFilter() {
         this.init();
+        this.hierarchyTracking();
     }
     IndexUniversalFilter.prototype.init = function () {
         let self = this;
@@ -25,12 +26,14 @@ let IndexUniversalFilter = (function () {
         $('.prommu__universal-filter .u-filter__text').keypress(function ()
         {
             //Проверяем иерархию фильтров
-            self.hierarchyTracking();
+
             //Аякс с задержкой
             clearTimeout(IndexUniversalFilter.AjaxTimer);
+
             IndexUniversalFilter.AjaxTimer = setTimeout(function () {
+                self.hierarchyTracking();
                 self.ajaxSetParams();
-            }, 1000); // время в мс
+            }, 700); // время в мс
         });
 
 
@@ -150,18 +153,34 @@ let IndexUniversalFilter = (function () {
     /**Функция отслеживания и контроля иерархии фильтров**/
     IndexUniversalFilter.prototype.hierarchyTracking = function () {
         $('.prommu__universal-filter .u-filter__item').each(function () {
-            let parent_id = $(this).data('parent-id');
+            let parent_id = parseInt($(this).data('parent-id'));
+
             let parent_value = $(this).data('parent-value');
-            let parent__value_id = $(this).data('parent-value-id');
+            let parent__value_id = [];
+            let data_buff = $(this).data('parent-value-id');
+
+            var d = ""+ data_buff;
+            if(d.indexOf(',')===1){
+                var mas = d.split(',');
+                $.each( mas, function(i, l){
+                    l = parseInt(l);
+                    parent__value_id.push(l);
+                });
+
+            }else{
+                parent__value_id.push(data_buff);
+            }
+            //let parent__value_id = $(this).data('parent-value-id').split(',');
 
             let type = $(this).data('type');
 
-            if(parent_id){
+            if(parent_id>=0){
                 let parent = $(".u-filter__item[data-id='" + parent_id +"']");
                 let parent_type = parent.data('type');
 
                 if(parent_type==="text"){
                     let value = parent.find('.u-filter__text').val();
+
                     if(parent_value == value){
                         $(this).removeClass('blocked');
                         if(type==="text"){
@@ -183,8 +202,8 @@ let IndexUniversalFilter = (function () {
                     }
                 }
                 if(parent_type==="select"){
-                    let value = parent.find('.u-filter__hidden-data').val();
-                    if(parent__value_id == value){
+                    let value = parseInt(parent.find('.u-filter__hidden-data').val());
+                    if(jQuery.inArray(value,parent__value_id)>=0){
                         $(this).removeClass('blocked');
                         if(type==="text"){
                             $(this).find('.u-filter__text').prop('readonly', false);

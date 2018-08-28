@@ -70,13 +70,7 @@ $arFilterData = [
             'INPUT_NAME' => 'first_name',
             'DATA' => [],
             'DATA_DEFAULT' => '',
-            'PLACEHOLDER' => '',
-            'CONDITION' =>[
-                'BLOCKED' => 'true',
-                'PARENT_ID' => '3',
-                'PARENT_VALUE' => '',
-                'PARENT_VALUE_ID' => '1'
-            ]
+            'PLACEHOLDER' => ''
         ],
         1 => [
             'NAME' => 'Фамилия',
@@ -149,7 +143,10 @@ $arFilterData = [
                 'BLOCKED' => 'true',
                 'PARENT_ID' => '3',
                 'PARENT_VALUE' => '',
-                'PARENT_VALUE_ID' => '1'
+                'PARENT_VALUE_ID' => [
+                    0 => '1',
+                    1 => '2'
+                ]
             ]
         ],
         5 => [
@@ -175,7 +172,10 @@ $arFilterData = [
                 'BLOCKED' => 'true',
                 'PARENT_ID' => '3',
                 'PARENT_VALUE' => '',
-                'PARENT_VALUE_ID' => '1'
+                'PARENT_VALUE_ID' => [
+                    0 => '1',
+                    1 => '2'
+                ]
             ]
         ],
         6 => [
@@ -205,7 +205,10 @@ $arFilterData = [
                 'BLOCKED' => 'true',
                 'PARENT_ID' => '3',
                 'PARENT_VALUE' => '',
-                'PARENT_VALUE_ID' => '1'
+                'PARENT_VALUE_ID' => [
+                    0 => '1',
+                    1 => '2'
+                ]
             ]
         ],
         7 => [
@@ -225,13 +228,6 @@ $arFilterData = [
                     'title' => 'Все',
                     'id' => '2'
                 ]
-            ],
-            'DATA_DEFAULT' => '2',
-            'CONDITION' =>[
-                'BLOCKED' => 'true',
-                'PARENT_ID' => '0',
-                'PARENT_VALUE' => 'Stas',
-                'PARENT_VALUE_ID' => ''
             ]
         ]
     ]
@@ -271,6 +267,21 @@ $arFilterData = [
 
             <div class="project__header-filter prommu__universal-filter">
                 <? foreach ($arFilterData['FILTER_SETTINGS'] as $key => $value): ?>
+
+                    <?
+                    if(count($value['CONDITION']['PARENT_VALUE_ID'])>1):
+                        for($i=0;$i<count($value['CONDITION']['PARENT_VALUE_ID']);$i++):
+                            if($i==0){
+                                $parentValueId = $value['CONDITION']['PARENT_VALUE_ID'][$i];
+                            }
+                            else{
+                                $parentValueId.=",".$value['CONDITION']['PARENT_VALUE_ID'][$i];
+                            }
+                        endfor;
+                    else:
+                        $parentValueId = $value['CONDITION']['PARENT_VALUE_ID'];
+                    endif;?>
+
                     <? switch ($value['TYPE']):
                         case 'text':
                             ?>
@@ -278,7 +289,7 @@ $arFilterData = [
                                  data-id="<?= $key ?>"
                                  data-parent-id="<?=$value['CONDITION']['PARENT_ID']?>"
                                  data-parent-value="<?=$value['CONDITION']['PARENT_VALUE']?>"
-                                 data-parent-value-id="<?=$value['CONDITION']['PARENT_VALUE_ID']?>"
+                                 data-parent-value-id="<?=$parentValueId?>"
                                  class="u-filter__item u-filter__item-<?= $key ?>  <?=($value['CONDITION']['BLOCKED']) ? 'blocked':''?>">
                                 <div class="u-filter__item-title">
                                     <?= $value['NAME']; ?>
@@ -305,7 +316,7 @@ $arFilterData = [
                                  data-id="<?= $key ?>"
                                  data-parent-id="<?=$value['CONDITION']['PARENT_ID']?>"
                                  data-parent-value="<?=$value['CONDITION']['PARENT_VALUE']?>"
-                                 data-parent-value-id="<?=$value['CONDITION']['PARENT_VALUE_ID']?>"
+                                 data-parent-value-id="<?=$parentValueId?>"
                                  class="u-filter__item u-filter__item-<?= $key ?> <?=($value['CONDITION']['BLOCKED']) ? 'blocked':''?>">
                                 <div class="u-filter__item-title">
                                     <?= $value['NAME']; ?>
