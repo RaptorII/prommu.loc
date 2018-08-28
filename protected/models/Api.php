@@ -1062,7 +1062,7 @@ class Api
             ->select("*")
             ->from('analytic a')
             ->join('user usr', 'usr.id_user=a.id_us')
-            ->where('a.active=:active AND a.date >:date', array(':active' => 1, ':date'=> $yester))
+            ->where('a.active=:active AND usr.crdate >:date', array(':active' => 1, ':date'=> $yester))
             ->order("a.id_us desc")
             ->queryAll();
             
@@ -1071,7 +1071,7 @@ class Api
                $data = Yii::app()->db->createCommand()
             ->select("*")
             ->from('analytic a')
-            ->where('a.active=:active AND (a.date BETWEEN :date AND :bdate)  AND a.name!=:name', array(':active' => 1, ':date'=> $date, 'bdate'=> $bdate, 'name'=>'NO ACTIVE'))
+            ->where('a.active=:active AND (usr.crdate BETWEEN :date AND :bdate)  AND a.name!=:name', array(':active' => 1, ':date'=> $date, 'bdate'=> $bdate, 'name'=>'NO ACTIVE'))
             ->order("a.id_us desc")
             ->group("a.id_us")
             ->queryAll();
