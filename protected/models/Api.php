@@ -144,12 +144,21 @@ class Api
         $datess['edate'] = '2018-07-01';
         
         $Termostat = new Termostat();
-        $results['services'] = $Termostat->getTermostatServices($id, $dates)[0];
-        $results['service'] = $Termostat->getTermostatServices($id, $dates)[0];
+        $results['services'] = count($Termostat->getTermostatServices($id, $dates)[0]);
+        $results['service'] = count($Termostat->getTermostatServices($id, $dates)[0]);
         $results['viewsYester'] = count($Termostat->getTermostatEmplCount($id, $dates));
         $results['viewsTo'] = count($Termostat->getTermostatEmplCount($id, $datess));
-
-        return $results;
+        $results['viewsUser'] = count($Termostat->getTermostatEmplUserCount($id, $datess));
+        $proc1 = 100/$results['viewsUser'];
+        $proc2 = 100/$results['viewsYester'];
+        $proc3 = 100/$results['viewsTo'];
+        $proc4 = 100/$results['service'];
+        $proc4 = 100/$results['services'];
+        $proc = ($proc1+$proc2+$proc3+$proc4)/4;
+        
+        echo "Прежний рейтинг работодателя: $result (система рейтинга Prommu Rate )<br/> ";
+        echo "Прежний рейтинг работодателя: $result + $proc (система рейтинга Prommu Rate + Termostat )<br/> ";
+        
     }
     
     public function searchUse(){
