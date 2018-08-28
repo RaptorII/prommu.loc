@@ -100,10 +100,15 @@ class Api
     }
     
     public function excelget(){
-        
-        $project = new Project();
-        $project->exportProject('153535589399038');
-        
+        $date = '2018-08-01';
+        $bdate = '2018-08-24';
+        $data = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('user usr')
+            ->join('analityc a', 'usr.id_user=a.id_us')
+            ->where('a.active=:active AND (usr.crdate  BETWEEN :date AND :bdate)', array(':active' => 1, ':date'=> $date, 'bdate'=> $bdate,))
+            ->queryAll();
+        return $data;
         
     }
     
