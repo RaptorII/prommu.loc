@@ -1167,7 +1167,7 @@ class Api
 
                     if(empty($email)){
                         $user = Yii::app()->db->createCommand()
-                        ->select("ua.data")
+                        ->select("ua.data, ua.dt_create")
                         ->from('user_activate ua')
                         ->where('ua.id_user=:id_user', array(':id_user' => $id_user))
                         ->queryRow();
@@ -1230,7 +1230,7 @@ class Api
 
                     if(empty($email)){
                         $user = Yii::app()->db->createCommand()
-                        ->select("ua.data")
+                        ->select("ua.data, ua.dt_create")
                         ->from('user_activate ua')
                         ->where('ua.id_user=:id_user', array(':id_user' => $id_user))
                         ->queryRow();
