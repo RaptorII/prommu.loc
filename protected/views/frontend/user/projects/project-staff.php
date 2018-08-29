@@ -604,7 +604,7 @@ $arFilterData = [
     <input type="hidden" name="project" class="project-inp" value="<?=$project?>">
     <input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
     <input type="file" name="xls" id="add-xls-inp" class="hide">
-    <input type="hidden" name="load-xls" value="1">
+    <input type="hidden" name="xls-users" value="1">
 </form>
 <div class="hidden" id="invitation-content">
     <div class="project__body project__body-invite invitation-item" data-id="">

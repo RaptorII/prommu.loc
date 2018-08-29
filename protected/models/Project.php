@@ -326,13 +326,18 @@ class Project extends ARModel
         
         $location = [];
 
-        for($i = 1; $i < count($sheet_array)+1; $i++){
-                    
-                if($sheet_array[$i]['E'] != ''){
+        for($i = 2; $i < count($sheet_array)+1; $i++){
+                 $data = Yii::app()->db->createCommand()
+                ->select('pc.id, pc.user, pc.status, pc.project, pc.firstname, pc.lastname, pc.email, pc.phone')
+                ->from('project_user pc')
+                ->where('pc.email = :email', array(':email' =>$sheet_array[$i]['C']))
+                ->order('pc.date desc')
+                ->queryRow();   
+                if($data['email']){
                     $point = $sheet_array[$i]['I'];
                     
                      Yii::app()->db->createCommand()
-                        ->update('project_city', array(
+                        ->update('project_user', array(
                             'project' => $project,
                             'user' => rand(111,333),
                             'firstname' =>  $sheet_array[$i]['A'],
@@ -363,7 +368,7 @@ class Project extends ARModel
         Yii::import('ext.yexcel.Yexcel');
         
          $data = Yii::app()->db->createCommand()
-            ->select('pc.id, pc.user, pc.status, pc.firstname, pc.lastname, pc.email, pc.phone')
+            ->select('pc.id, pc.user, pc.status, pc.project, pc.firstname, pc.lastname, pc.email, pc.phone')
             ->from('project_user pc')
             ->where('pc.project = :project', array(':project' =>$project))
             ->order('pc.date desc')
@@ -584,6 +589,8 @@ class Project extends ARModel
     public function getXLSFile() {
         $index = Yii::app()->getRequest()->getParam('xls-index');
         $users = Yii::app()->getRequest()->getParam('xls-users');
+        $id = Yii::app()->getRequest()->getParam('id');
+        
         if(isset($index)) {
             $name = $id . '.' . (end(explode('.', $_FILES['xls']['name'])));
             $uploadfile = '/var/www/dev.prommu/uploads/' . $name;
@@ -598,7 +605,10 @@ class Project extends ARModel
             $name = $id . '.' . (end(explode('.', $_FILES['xls']['name'])));
             $uploadfile = '/var/www/dev.prommu/uploads/' . $name;
             if (move_uploaded_file($_FILES['xls']['tmp_name'], $uploadfile)) {
-                // Обработка файла
+               $props['project'] = $id;
+               $props['title'] = 'test';
+               $props['link'] = $name;
+               $this->importUsers($props);
             }
         }
     }
