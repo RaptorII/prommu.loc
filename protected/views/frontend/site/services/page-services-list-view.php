@@ -1,11 +1,11 @@
 <?php 
 $baseUrl = Yii::app()->baseUrl;
-if(!(MOBILE_DEVICE && !SHOW_APP_MESS)): // optimization ?>
+//if(!(MOBILE_DEVICE && !SHOW_APP_MESS)): // optimization ?>
 	<?php		
 		Yii::app()->getClientScript()->registerCssFile($baseUrl . '/' . MainConfig::$PATH_CSS . '/' . Share::$cssAsset['modalwindow.css']);
 		Yii::app()->getClientScript()->registerScriptFile($baseURL . '/theme/js/dist/jquery.maskedinput.min.js', CClientScript::POS_END);
 	?>
-<?php endif; ?>
+<?php //endif; ?>
 <?php if(Share::$UserProfile->type == 3):?>
 	<?// РАБОТОДАТЕЛЬ ?>
 	<div class='row'>
@@ -181,7 +181,7 @@ if(!(MOBILE_DEVICE && !SHOW_APP_MESS)): // optimization ?>
 
 
 <?php if(Share::$UserProfile->type != 3 && Share::$UserProfile->type != 2): ?>
-	<?php if(!(MOBILE_DEVICE && !SHOW_APP_MESS)): // optimization ?>
+	<?php //if(!(MOBILE_DEVICE && !SHOW_APP_MESS)): // optimization ?>
 		<?php
 			Yii::app()->getClientScript()->registerScriptFile($baseURL . '/theme/js/modernizr.min.js', CClientScript::POS_END);
 			Yii::app()->getClientScript()->registerScriptFile($baseURL . '/theme/js/main.min.js', CClientScript::POS_END);
@@ -297,7 +297,10 @@ if(!(MOBILE_DEVICE && !SHOW_APP_MESS)): // optimization ?>
 				.serv__invita-btns .serv__invita-name{ display:none }
 			}
 		</style>	
-	<?php endif; ?>
+	<?php 
+		// если не моб устройство 
+		// endif; 
+	?>
 	<div class='row airSticky_stop-block'>
 		<div class='col-xs-12 col-sm-4 col-lg-3'>
 			<? require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/site/services/menu-for-guest.php'; ?>

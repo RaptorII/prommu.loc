@@ -1,6 +1,6 @@
 <?php 
 	$cookieView = Yii::app()->request->cookies['srch_a_view']->value; // вид, сохраненный в куках
-	if(!(MOBILE_DEVICE && !SHOW_APP_MESS)): 
+	//if(!(MOBILE_DEVICE && !SHOW_APP_MESS)): 
 ?>
 	<?php Yii::app()->getClientScript()->registerScriptFile('/theme/js/page-promo-search.min.js', CClientScript::POS_END); ?>
 	<style type="text/css">
@@ -12,7 +12,10 @@
 			@media (min-width:1200px){ #DiContent.page-ankety .list-view .company-logo-wrapp img{ width:220px; height:220px } }
 		.select-list{max-height:300px;overflow-y:auto;padding:0;margin:0;border-top:none;list-style:none;background-color:rgba(52,52,52,.6);position:absolute;top:100%;left:-1px;right:-1px;z-index:2;font-family:RobotoCondensed-Regular,verdana,arial;font-size:14px;color:#FFF}.select-list li{width:100%;line-height:30px;padding:3px 6px;cursor:pointer;-webkit-transition:all .3s ease-out;-moz-transition:all .3s ease-out;-o-transition:all .3s ease-out;transition:all .3s ease-out}.select-list li:hover{background-color:rgba(255,255,255,.2)}#filter-city{position:relative}#filter-city .select-list li{padding:0 15px;text-align:left}#DiContent #filter-city .filter-city-select input{padding:0;border:none;background:0 0;margin:2px 0 2px 6px;height:29px}#DiContent #filter-city .filter-city-select input:focus{outline:0}.filter-city-select.load:after{content:'';width:20px;height:20px;right:3px;background:url(/theme/pic/loading1.gif) no-repeat;background-size:cover;top:7px;position:absolute}.city-select,.filter-city-select li:not([data-id="0"]){display:inline-block;padding:3px 20px 3px 5px;margin:2px 0 2px 6px;background-color:rgba(52,52,52,.6);color:#fff;line-height:18px;border-radius:5px;position:relative}.filter-city-select li:not([data-id="0"]){line-height:23px}.filter-city-select li[data-id="0"]{width:10px}.filter-city-select{display:flex;flex-direction:row;justify-content:start;flex-wrap:wrap;margin:0;list-style:none;border:1px solid #EBEBEB;position:relative;padding:0 25px 0 15px}.city-select b,.filter-city-select b{width:19px;height:19px;display:block;position:absolute;top:2px;right:0;font-style:normal;text-align:center;cursor:pointer}.filter-city-select b{top:5px}.city-select b:before,.filter-city-select b:before{content:'\2716';display:block;position:absolute;top:0;right:0;bottom:0;left:0;line-height:20px}#DiContent .project__index-time input{text-align:center;padding:0 16px 0 6px}		
 	</style>
-<?php endif; ?>
+<?php 
+	// если не моб устройство
+	// endif; 
+?>
 <div class='row page-search-ankety'>
     <div class="psa__veil"></div>
     <div class="col-xs-12">

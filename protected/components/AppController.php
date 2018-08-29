@@ -51,11 +51,11 @@ class AppController extends CController
         require_once 'Mobile_Detect.php';// for PHP detect device type
         $detect = new Mobile_Detect;
         define('MOBILE_DEVICE', $detect->isMobile());
-
+/*
         if(!isset(Yii::app()->request->cookies['show_mob_mess']->value))
             Yii::app()->request->cookies['show_mob_mess'] = new CHttpCookie('show_mob_mess', 0);
         define('SHOW_APP_MESS', Yii::app()->request->cookies['show_mob_mess']->value);
-
+*/
         // set lang
         $lang = Yii::app()->session['lang'];
         if (empty($lang)) {
