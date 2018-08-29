@@ -311,6 +311,67 @@ class Project extends ARModel
         return $location;
     } 
     
+    public function importUsers($props){
+        $link = $props['link'];
+        $project = $props['project'];
+        $title = $props['title'];
+        Yii::import('ext.yexcel.Yexcel');
+        $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/dev.prommu/uploads/$link");
+        
+        $firstname = "Имя";
+        $lastname = "Фамилия";
+        $email = "Электронная почта";
+        $phone = "Телефон";
+        $phone = "Локации";
+        
+        $location = [];
+
+        for($i = 1; $i < count($sheet_array)+1; $i++){
+                    
+                if($sheet_array[$i]['E'] != ''){
+                    $point = $sheet_array[$i]['I'];
+                    
+                     Yii::app()->db->createCommand()
+                        ->update('project_city', array(
+                            'project' => $project,
+                            'user' => rand(111,333),
+                            'firstname' =>  $sheet_array[$i]['A'],
+                            'lastname' =>  $sheet_array[$i]['B'],
+                            'phone' =>  $sheet_array[$i]['D'],
+                            'point' => $sheet_array[$i]['E']
+                     ), 'email = :email', array(':email' => $sheet_array[$i]['C']));
+                
+                } else {
+                    $res = Yii::app()->db->createCommand()
+                        ->insert('project_user', array(
+                            'project' => $project,
+                            'user' => rand(111,333),
+                            'firstname' =>  $sheet_array[$i]['A'],
+                            'lastname' =>  $sheet_array[$i]['B'],
+                            'email' =>  $sheet_array[$i]['C'],
+                            'phone' =>  $sheet_array[$i]['D'],
+                        ));   
+                }
+        }
+
+
+        return $location;
+    } 
+    
+    
+    public function exportUsers($project){
+        Yii::import('ext.yexcel.Yexcel');
+        
+         $data = Yii::app()->db->createCommand()
+            ->select('pc.id, pc.user, pc.status, pc.firstname, pc.lastname, pc.email, pc.phone')
+            ->from('project_users pc')
+            ->where('pc.project = :project', array(':project' =>$project))
+            ->order('pc.date desc')
+            ->queryAll();
+            
+        $sheet_array = Yii::app()->yexcel->setActiveSheetUsers($data);
+            
+    }
     
     
    public function exportProject($project){
@@ -326,75 +387,6 @@ class Project extends ARModel
             
         $sheet_array = Yii::app()->yexcel->setActiveSheet($data);
             
-       
-            
-            
-//         $csv_file = '<table border="1">
-//             <tr><td style="color:red; background:#E0E0E0">Город'.
-//             '</td><td style="color:red; background:#E0E0E0">Локация'.
-//             '</td><td style="color:red; background:#E0E0E0">Улица'.
-//             '</td><td style="color:red; background:#E0E0E0">Дом'.
-//             '</td><td style="color:red; background:#E0E0E0">Здание'.
-//             '</td><td style="color:red; background:#E0E0E0">Строение'.
-//             '</td><td style="color:red; background:#E0E0E0">Дата работы'.
-//             '</td><td style="color:red; background:#E0E0E0">Время работы'.
-//             '</td><td style="color:red; background:#E0E0E0">Идентификатор'.
-            
-// '</td></tr>';
-
-
-
-
-        
-//         foreach ($data as $row) {
-
-//             $csv_file .= '<tr>';
-//             $b = "";
-//             $b_end = "";
-
-//                     $city = Yii::app()->db->createCommand()
-//                     ->select('c.name')
-//                     ->from('city c')
-//                     ->where('c.id_city = :id_city', array(':id_city' =>$row['id_city']))
-//                     ->queryRow();
-            
-//                     $csv_file .= '<td>'.$b.$city['name'].$b_end.
-//                     '</td><td>'.$b.$row['name'].$b_end.
-//                     '</td><td>'.$b.$row['adres'].$b_end.
-//                     '</td><td>'.$b.$row['adres'].$b_end.
-//                     '</td><td>'.$b.$row['adres'].$b_end.
-//                     '</td><td>'.$b.$row['adres'].$b_end.
-//                     '</td><td>'.$b.$row['bdate'].'-'.$row['edate'].$b_end.
-//                     '</td><td>'.$b.$row['btime'].'-'.$row['etime'].$b_end.
-//                     '</td><td>'.$b.$row['point'].$b_end.
-//                     '</td></tr>';
-
-//         }
-
-//          $csv_file .='</table>';
-//         $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/project_export.xls'; // название файла
-//         $file = fopen($file_name,"w"); // открываем файл для записи, если его нет, то создаем его в текущей папке, где расположен скрипт
-
-
-//         fwrite($file,trim($csv_file)); // записываем в файл строки
-//         fclose($file); // закрываем файл
-
-      
-//         header('Pragma: no-cache');
-//         header('Expires: 0');
-//         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-//         header('Content-Description: File Transfer');
-//         //header('Content-Type: text/csv');
-//         //header('Content-Disposition: attachment; filename=export.csv;');
-//         header('Content-Disposition: attachment; filename=project_export.xls');
-//         header('Content-transfer-encoding: binary');
-//         //header("content-type:application/csv;charset=ANSI");
-//         header('Content-Type: text/html; charset=windows-1251');
-//         header('Content-Type: application/x-unknown');
-//         header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
-//         // print "\xEF\xBB\xBF"; // UTF-8 BOM
-//         readfile($file_name); // считываем файл
-
     }
     /*
     *       Проверка доступа
