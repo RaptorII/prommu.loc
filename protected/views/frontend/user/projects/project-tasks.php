@@ -45,14 +45,16 @@ $arFilterData = [
             'TYPE' => 'calendar',
             'INPUT_NAME' => 'bdate',
             'DATA' => [],
-            'DATA_DEFAULT' => '25.08.2018'
+            'DATA_DEFAULT' => '25.08.2018',
+            'DATA_SHORT' => '25.08.18'
         ],
         2 => [
             'NAME' => 'По',
             'TYPE' => 'calendar',
             'INPUT_NAME' => 'edate',
             'DATA' => [],
-            'DATA_DEFAULT' => '30.08.2018'
+            'DATA_DEFAULT' => '30.08.2018',
+            'DATA_SHORT' => '30.08.18'
         ]
     ]
 ];
@@ -204,7 +206,7 @@ $arFilterData = [
                             <input
                                     type="hidden"
                                     class="u-filter__hidden-default"
-                                    value="<?= $value['DATA_DEFAULT'] ?>"
+                                    value="<?= $value['DATA_SHORT'] ?>"
                             />
                         </div>
                     </div>
