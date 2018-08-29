@@ -1627,7 +1627,7 @@ class UserController extends AppController
             $model->exportProject($id);
         }
         if($type=='users') {
-            // отправка XLS с персоналом
+           $model->exportUsers($id);
         }
     }
 }
