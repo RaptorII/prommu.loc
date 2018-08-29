@@ -364,7 +364,7 @@ class Project extends ARModel
         
          $data = Yii::app()->db->createCommand()
             ->select('pc.id, pc.user, pc.status, pc.firstname, pc.lastname, pc.email, pc.phone')
-            ->from('project_users pc')
+            ->from('project_user pc')
             ->where('pc.project = :project', array(':project' =>$project))
             ->order('pc.date desc')
             ->queryAll();
