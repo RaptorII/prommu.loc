@@ -598,7 +598,10 @@ class Project extends ARModel
             $name = $id . '.' . (end(explode('.', $_FILES['xls']['name'])));
             $uploadfile = '/var/www/dev.prommu/uploads/' . $name;
             if (move_uploaded_file($_FILES['xls']['tmp_name'], $uploadfile)) {
-                // Обработка файла
+               $props['project'] = $id;
+               $props['title'] = 'test';
+               $props['link'] = $name;
+               $this->importUsers($props);
             }
         }
     }
