@@ -584,6 +584,8 @@ class Project extends ARModel
     public function getXLSFile() {
         $index = Yii::app()->getRequest()->getParam('xls-index');
         $users = Yii::app()->getRequest()->getParam('xls-users');
+        $id = Yii::app()->getRequest()->getParam('id');
+        
         if(isset($index)) {
             $name = $id . '.' . (end(explode('.', $_FILES['xls']['name'])));
             $uploadfile = '/var/www/dev.prommu/uploads/' . $name;
