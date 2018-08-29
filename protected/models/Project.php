@@ -599,7 +599,7 @@ class Project extends ARModel
                $props['project'] = $id;
                $props['title'] = 'test';
                $props['link'] = $name;
-               $model->importProject($props);
+               $this->importProject($props);
             }
         }
         if(isset($users)) {
