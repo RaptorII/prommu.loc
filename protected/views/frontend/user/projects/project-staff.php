@@ -332,7 +332,7 @@ $arFilterData = [
 
                 <div class="project__header-xlscontainer">
                     <div class="project__header-xls project__xls">
-                        <a href="javascript:void(0)" class="project__header-addxls" id="add-program">Изменить текущий персонал</a>
+                        <a href="/user/uploadprojectxls?id=<?=$project?>&type=users" class="project__header-addxls" id="add-program">Изменить текущий персонал</a>
                         <a href="/uploads/promo_import.xls" download>Скачать пример для добавления</a>
                     </div>
                 </div>
