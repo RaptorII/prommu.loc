@@ -363,7 +363,7 @@ class Project extends ARModel
         Yii::import('ext.yexcel.Yexcel');
         
          $data = Yii::app()->db->createCommand()
-            ->select('pc.id, pc.user, pc.status, pc.firstname, pc.lastname, pc.email, pc.phone')
+            ->select('pc.id, pc.user, pc.status, pc.project, pc.firstname, pc.lastname, pc.email, pc.phone')
             ->from('project_user pc')
             ->where('pc.project = :project', array(':project' =>$project))
             ->order('pc.date desc')
