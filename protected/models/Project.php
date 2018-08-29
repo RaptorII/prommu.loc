@@ -589,7 +589,7 @@ class Project extends ARModel
     /*
     *       Получение XLS
     */
-    public function getXLSFile($type) {
+    public function getXLSFile() {
         $index = Yii::app()->getRequest()->getParam('xls-index');
         $users = Yii::app()->getRequest()->getParam('xls-users');
         if(isset($index)) {

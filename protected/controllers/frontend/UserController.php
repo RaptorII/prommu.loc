@@ -1553,7 +1553,7 @@ class UserController extends AppController
                 case 'staff':
                     $data = (new Services())->getFilteredPromos();
                     $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
-                    $model->getXLSFile($_GET);
+                    $model->getXLSFile();
                     break;
                 case 'index':
                     if(Yii::app()->request->isAjaxRequest) {
@@ -1569,7 +1569,7 @@ class UserController extends AppController
                     else {
                         $data = $model->getAdresProgramm($id);
                         $view = MainConfig::$VIEW_PROJECT_ITEM_INDEX;
-                        $model->getXLSFile($_GET);
+                        $model->getXLSFile();
                     }
                     break;
                 case 'geo':
@@ -1600,7 +1600,7 @@ class UserController extends AppController
                 default:
                     $data = $model->getProject($id);
                     $view = MainConfig::$VIEW_PROJECT_ITEM;
-                    $model->getXLSFile($_GET);
+                    $model->getXLSFile();
                     break;
             }
         }
