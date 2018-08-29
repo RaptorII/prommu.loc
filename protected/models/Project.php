@@ -332,7 +332,7 @@ class Project extends ARModel
                     $point = $sheet_array[$i]['I'];
                     
                      Yii::app()->db->createCommand()
-                        ->update('project_city', array(
+                        ->update('project_user', array(
                             'project' => $project,
                             'user' => rand(111,333),
                             'firstname' =>  $sheet_array[$i]['A'],
