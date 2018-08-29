@@ -327,8 +327,13 @@ class Project extends ARModel
         $location = [];
 
         for($i = 1; $i < count($sheet_array)+1; $i++){
-                    
-                if($sheet_array[$i]['E'] != ''){
+                 $data = Yii::app()->db->createCommand()
+                ->select('pc.id, pc.user, pc.status, pc.project, pc.firstname, pc.lastname, pc.email, pc.phone')
+                ->from('project_user pc')
+                ->where('pc.email = :email', array(':email' =>$sheet_array[$i]['C']))
+                ->order('pc.date desc')
+                ->queryRow();   
+                if($data['email']){
                     $point = $sheet_array[$i]['I'];
                     
                      Yii::app()->db->createCommand()
