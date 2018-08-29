@@ -238,19 +238,9 @@ $arFilterData = [
 <? print_r($viData); ?>
 </pre>
 
-<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($_POST); ?>
-</pre>
-
-<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($_GET); ?>
-</pre>
-
 <div class="row project">
     <div class="col-xs-12">
-        <div class="project__tabs">
-            <? require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/projects/project-nav.php'; ?>
-        </div>
+    <? require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/projects/project-nav.php'; ?>
     </div>
 </div>
 <form action="" method="POST" id="update-person">
@@ -342,11 +332,8 @@ $arFilterData = [
 
                 <div class="project__header-xlscontainer">
                     <div class="project__header-xls project__xls">
-                        <!--<label for="person_xls_add">-->
-                        <label for="person_xls_add" class="project__header-addxls" id="add-program">Добавить персонал на проект</label>
-                        <!--</label>-->
-                        <input id="person_xls_add" type="file" name="person_xls" class="hide" accept="xls">
-                        <a href="/uploads/example.xls" download>Скачать пример для добавления</a>
+                        <a href="javascript:void(0)" class="project__header-addxls" id="add-program">Изменить текущий персонал</a>
+                        <a href="/uploads/promo_import.xls" download>Скачать пример для добавления</a>
                     </div>
                 </div>
 
@@ -613,7 +600,12 @@ $arFilterData = [
     </div>
 </form>
 
-
+<form enctype="multipart/form-data" action="" method="POST" id="base-form">
+    <input type="hidden" name="project" class="project-inp" value="<?=$project?>">
+    <input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
+    <input type="file" name="xls" id="add-xls-inp" class="hide">
+    <input type="hidden" name="load-xls" value="1">
+</form>
 <div class="hidden" id="invitation-content">
     <div class="project__body project__body-invite invitation-item" data-id="">
         <span class="invitation-del">&#10006</span>

@@ -1553,6 +1553,7 @@ class UserController extends AppController
                 case 'staff':
                     $data = (new Services())->getFilteredPromos();
                     $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
+                    $model->getXLSFile($_GET);
                     break;
                 case 'index':
                     if(Yii::app()->request->isAjaxRequest) {
@@ -1568,6 +1569,7 @@ class UserController extends AppController
                     else {
                         $data = $model->getAdresProgramm($id);
                         $view = MainConfig::$VIEW_PROJECT_ITEM_INDEX;
+                        $model->getXLSFile($_GET);
                     }
                     break;
                 case 'geo':
@@ -1596,20 +1598,9 @@ class UserController extends AppController
                     $view = 'projects/project-users-select';
                     break;
                 default:
-                    $xls = Yii::app()->getRequest()->getParam('load-xls');
                     $data = $model->getProject($id);
                     $view = MainConfig::$VIEW_PROJECT_ITEM;
-                    if(isset($xls)) {
-                        $name = $id . '.' . (end(explode('.', $_FILES['xls']['name'])));
-                        $uploadfile = '/var/www/dev.prommu/uploads/' . $name;
-                        if (move_uploaded_file($_FILES['xls']['tmp_name'], $uploadfile)) {
-                           $props['project'] = $id;
-                           $props['title'] = 'test';
-                           $props['link'] = $name;
-                           $model->importProject($props);
-                        }
-                    }
-                
+                    $model->getXLSFile($_GET);
                     break;
             }
         }
@@ -1627,8 +1618,16 @@ class UserController extends AppController
     */
     public function actionUploadProjectXLS() {
         $id = Yii::app()->getRequest()->getParam('id');
+        $type = Yii::app()->getRequest()->getParam('type');
         $model = new Project();
-        if($model->hasAccess($id))
+        if(!$model->hasAccess($id))
+            return;
+
+        if($type=='index') {
             $model->exportProject($id);
+        }
+        if($type=='users') {
+            // отправка XLS с персоналом
+        }
     }
 }

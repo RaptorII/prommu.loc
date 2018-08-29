@@ -586,4 +586,28 @@ class Project extends ARModel
 
         return $res;
     }
+    /*
+    *       Получение XLS
+    */
+    public function getXLSFile($type) {
+        $index = Yii::app()->getRequest()->getParam('xls-index');
+        $users = Yii::app()->getRequest()->getParam('xls-users');
+        if(isset($index)) {
+            $name = $id . '.' . (end(explode('.', $_FILES['xls']['name'])));
+            $uploadfile = '/var/www/dev.prommu/uploads/' . $name;
+            if (move_uploaded_file($_FILES['xls']['tmp_name'], $uploadfile)) {
+               $props['project'] = $id;
+               $props['title'] = 'test';
+               $props['link'] = $name;
+               $model->importProject($props);
+            }
+        }
+        if(isset($users)) {
+            $name = $id . '.' . (end(explode('.', $_FILES['xls']['name'])));
+            $uploadfile = '/var/www/dev.prommu/uploads/' . $name;
+            if (move_uploaded_file($_FILES['xls']['tmp_name'], $uploadfile)) {
+                // Обработка файла
+            }
+        }
+    }
 }

@@ -11,7 +11,7 @@
 		<div id="content">
 			<div class="project__module">
 				<div class="project__xls">
-					<a href="/user/uploadprojectxls?id=<?=$project?>" id="add-xls">Изменить адресную программу</a>
+					<a href="/user/uploadprojectxls?id=<?=$project?>&type=index" id="add-xls">Изменить адресную программу</a>
 					<a href="/uploads/prommu_example.xls" download>Скачать пример для добавления</a>
 				</div>
 				<h1 class="project__title">ПРОЕКТ: <span><?=$viData['title']?></span></h1>
@@ -107,7 +107,7 @@
 					<input type="hidden" name="project" class="project-inp" value="<?=$project?>">
 					<input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
 					<input type="file" name="xls" id="add-xls-inp" class="hide">
-					<input type="hidden" name="load-xls" value="1">
+					<input type="hidden" name="xls-index" value="1">
 				</form>
 			</div>
 		</div>
