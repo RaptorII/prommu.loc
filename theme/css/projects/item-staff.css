@@ -48,14 +48,14 @@
     background-color: #f5f5f5;
     padding: 10px 15px 5px;
     box-sizing: border-box;
-    display: flex;
-    flex-wrap: nowrap;
+    /*display: flex;*/
+    /*flex-wrap: nowrap;*/
     margin-bottom:15px;
 }
 
 .project__header .project__header-xls{
-    width: 35%;
-    float: left;
+    width: 100%;
+    /*float: left;*/
     overflow: hidden;
     padding: 0px;
     text-align: left;
@@ -73,14 +73,79 @@
 }
 .project__header  .project__header-filter{
 
-    width: 65%;
-    float: right;
+    width: 100%;
+    /*float: right;*/
     text-align: center;
 }
 #control__save-btn, #control__add-personal, #control__new-personal{
     margin-top:5px;
 }
-/************¬ÂÒÚÍ‡ ÙËÎ¸Ú‡*************
+
+/************************************************************/
+#DiContent .prommu__universal-filter .u-filter__item{
+
+    display: flex;
+    padding-top: 5px;
+    width: 33.3333%;
+    margin-top: 10px;
+    align-items: center;
+}
+
+#DiContent .project__header  .project__header-filter{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.project__header-xlscontainer{
+    width:33.3333%!important;
+}
+.project__header .project__header-xls{
+    width: 225px!important;
+    overflow: hidden;
+    padding: 0px;
+    text-align: left;
+    margin-bottom: 0px!important;
+    padding-top: 5px;
+}
+
+
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__item-title{
+    display: inline-block;
+    width: 125px;
+    text-align: left;
+}
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__item-data{
+    display: inline-block;
+    width: 170px;
+}
+
+@media screen and (max-width:968px) {
+    #DiContent .prommu__universal-filter .u-filter__item{
+        width: 50%!important;
+    }
+    .project__header-xlscontainer{
+        width:100%!important;
+    }
+    .project__header .project__header-xls{
+        width:100%!important;
+    }
+    .project__header-xls{
+        text-align: center;
+        margin-top: 10px;
+    }
+    .project__xls #add-program{
+        width:225px!important;
+    }
+    #DiContent .project__xls a{
+        width:225px!important;
+    }
+    .project__header-xls{
+        text-align: center!important;
+    }
+}
+
+
+/************–í–µ—Ä—Å—Ç–∫–∞ —Ñ–∏–ª—å—Ç—Ä–∞*************
 #DiContent .prommu__universal-filter .u-filter__item{
 
     display: inline-block;

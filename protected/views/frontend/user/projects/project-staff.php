@@ -256,14 +256,6 @@ $arFilterData = [
 <form action="" method="POST" id="update-person">
     <div id="main" class="project__module">
         <div class="project__header">
-            <div class="project__header-xls project__xls">
-                <!--<label for="person_xls_add">-->
-                <label for="person_xls_add" class="project__header-addxls" id="add-program">Добавить персонал на проект</label>
-                <!--</label>-->
-                <input id="person_xls_add" type="file" name="person_xls" class="hide" accept="xls">
-                <a href="/uploads/example.xls" download>Скачать пример для добавления</a>
-            </div>
-
 
             <div class="project__header-filter prommu__universal-filter">
                 <? foreach ($arFilterData['FILTER_SETTINGS'] as $key => $value): ?>
@@ -346,6 +338,18 @@ $arFilterData = [
                             break;
                     endswitch; ?>
                 <? endforeach; ?>
+
+
+                <div class="project__header-xlscontainer">
+                    <div class="project__header-xls project__xls">
+                        <!--<label for="person_xls_add">-->
+                        <label for="person_xls_add" class="project__header-addxls" id="add-program">Добавить персонал на проект</label>
+                        <!--</label>-->
+                        <input id="person_xls_add" type="file" name="person_xls" class="hide" accept="xls">
+                        <a href="/uploads/example.xls" download>Скачать пример для добавления</a>
+                    </div>
+                </div>
+
 
                 <?if(isset($arFilterData['ID']) && !empty($arFilterData['ID'])):?>
                     <input type="hidden" name="id" value="<?=$arFilterData['ID']?>"/>
