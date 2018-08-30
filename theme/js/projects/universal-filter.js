@@ -13,6 +13,8 @@ let IndexUniversalFilter = (function () {
     }
     IndexUniversalFilter.prototype.init = function () {
         let self = this;
+
+
         $('.prommu__universal-filter').on('click', '.u-filter__select', function()
         {   let width = $(this).parent().width();
 

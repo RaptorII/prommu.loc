@@ -1,0 +1,36 @@
+.u-filter__item-0 {
+    width: 223px!important;
+    line-height: 26px;
+}
+
+.u-filter__item-0 {
+    margin-right: 60px;
+}
+.u-filter__item-1 {
+    width: 135px!important;
+    line-height: 26px;
+}
+.u-filter__item-2 {
+    width: 115px!important;
+    line-height: 26px;
+}
+.u-filter__item-2 {
+    margin-left:5px;
+}
+
+.u-filter__item-title{
+    display: inline;
+}
+
+.u-filter__item-data{
+    display: inline-block;
+    float: right;
+}
+.u-filter__item-0 .u-filter__item-data{
+    width: 170px!important;
+}
+.u-filter__item-1 .u-filter__item-data,
+.u-filter__item-2 .u-filter__item-data
+{
+    width: 90px!important;
+}

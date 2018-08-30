@@ -8,6 +8,7 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/univ
 /***********UNIVERSAL FILTER************/
 
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-geo.css');
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-tasks.css');
 ?>
 
 <?
@@ -73,24 +74,7 @@ $arFilterData = [
 </div>
 
 <div class="project__module">
-  <div class="project__tasks-filter">
-    <div class="tasks__header-city">
-      <label>Город</label>
-      <input type="text" name="city">
-    </div>
-    <div class="tasks__header-date">
-      <div>
-        <label>Дата с</label>
-        <input type="text" name="bdate">
-      </div>
-      <div>
-        <label>По</label>
-        <input type="text" name="edate">
-      </div>
-    </div>
-  </div>
-
-    <div class="project__header-filter prommu__universal-filter">
+    <div class="project__tasks-filter prommu__universal-filter">
         <? foreach ($arFilterData['FILTER_SETTINGS'] as $key => $value): ?>
 
             <?

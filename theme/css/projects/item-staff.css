@@ -162,10 +162,11 @@ u-filter__blockitem{
 }
 @media screen and (max-width:968px) {
     #DiContent .prommu__universal-filter .u-filter__item{
-        width: 50%!important;
+        width: 300px;
+        margin: 3px auto;
     }
     .u-filter__blockitem{
-        display:none;
+        display:none!important;
     }
 }
 
@@ -220,10 +221,7 @@ u-filter__blockitem{
     box-sizing: border-box;
     font-size: 16px;
     outline: none;
-}
-
-#DiContent .project__header  .project__header-filter{
-
+    text-align: center;
 }
 
 /************Верстка фильтра*************
