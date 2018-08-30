@@ -106,7 +106,7 @@ class Api
         $fames = Yii::app()->db->createCommand()
             ->select('lastname, firstname')
             ->from('resume')
-            ->where('lastname like :lastname OR fistname like :lastname', array(':lastname'=>$name))
+            ->where('lastname like :lastname OR firstname like :lastname', array(':lastname'=>$name))
             ->queryAll();
             
         return $fames;
