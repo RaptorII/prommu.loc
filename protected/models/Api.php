@@ -104,7 +104,7 @@ class Api
     public function bigbug(){
         $name = Yii::app()->getRequest()->getParam('firstorlastname');
         $namess = Yii::app()->getRequest()->getParam('firstandlastname');
-        if($names){
+        if($namess){
             $names = explode(" ", $namess)[0];
             $names1 = explode(" ", $namess)[1];
             $fames = Yii::app()->db->createCommand()
