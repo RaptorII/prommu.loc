@@ -73,14 +73,6 @@ $arFilterData = [
             'PLACEHOLDER' => ''
         ],
         1 => [
-            'NAME' => 'Фамилия',
-            'TYPE' => 'text',
-            'INPUT_NAME' => 'second_name',
-            'DATA' => [],
-            'DATA_DEFAULT' => '',
-            'PLACEHOLDER' => ''
-        ],
-        2 => [
             'NAME' => 'Статус',
             'TYPE' => 'select',
             'INPUT_NAME' => 'status',
@@ -100,27 +92,7 @@ $arFilterData = [
             ],
             'DATA_DEFAULT' => '1'
         ],
-        3 => [
-            'NAME' => 'Привязка к адресу',
-            'TYPE' => 'select',
-            'INPUT_NAME' => 'address',
-            'DATA' => [
-                0 => [
-                    'title' => 'Привязан',
-                    'id' => '1'
-                ],
-                1 => [
-                    'title' => 'Не привязан',
-                    'id' => '0'
-                ],
-                2 => [
-                    'title' => 'Все',
-                    'id' => '2'
-                ]
-            ],
-            'DATA_DEFAULT' => '2'
-        ],
-        4 => [
+        2 => [
             'NAME' => 'Город',
             'TYPE' => 'select',
             'INPUT_NAME' => 'city',
@@ -141,13 +113,41 @@ $arFilterData = [
             'DATA_DEFAULT' => '2',
             'CONDITION' =>[
                 'BLOCKED' => 'true',
-                'PARENT_ID' => '3',
+                'PARENT_ID' => '4',
                 'PARENT_VALUE' => '',
                 'PARENT_VALUE_ID' => [
                     0 => '1',
                     1 => '2'
                 ]
             ]
+        ],
+        3 => [
+            'NAME' => 'Фамилия',
+            'TYPE' => 'text',
+            'INPUT_NAME' => 'second_name',
+            'DATA' => [],
+            'DATA_DEFAULT' => '',
+            'PLACEHOLDER' => ''
+        ],
+        4 => [
+            'NAME' => 'Привязка к адресу',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'address',
+            'DATA' => [
+                0 => [
+                    'title' => 'Привязан',
+                    'id' => '1'
+                ],
+                1 => [
+                    'title' => 'Не привязан',
+                    'id' => '0'
+                ],
+                2 => [
+                    'title' => 'Все',
+                    'id' => '2'
+                ]
+            ],
+            'DATA_DEFAULT' => '2'
         ],
         5 => [
             'NAME' => 'Название ТТ',
@@ -170,7 +170,7 @@ $arFilterData = [
             'DATA_DEFAULT' => '2',
             'CONDITION' =>[
                 'BLOCKED' => 'true',
-                'PARENT_ID' => '3',
+                'PARENT_ID' => '4',
                 'PARENT_VALUE' => '',
                 'PARENT_VALUE_ID' => [
                     0 => '1',
@@ -179,6 +179,28 @@ $arFilterData = [
             ]
         ],
         6 => [
+            'TYPE' => 'block',
+        ],
+        7 => [
+            'NAME' => 'Метро',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'metro',
+            'DATA' => [
+                0 => [
+                    'title' => 'Метро 1',
+                    'id' => '1'
+                ],
+                1 => [
+                    'title' => 'Метро 2',
+                    'id' => '0'
+                ],
+                2 => [
+                    'title' => 'Все',
+                    'id' => '2'
+                ]
+            ]
+        ],
+        8 => [
             'NAME' => 'Адрес ТТ',
             'TYPE' => 'select',
             'INPUT_NAME' => 'tt_location',
@@ -203,30 +225,11 @@ $arFilterData = [
             'DATA_DEFAULT' => '2',
             'CONDITION' =>[
                 'BLOCKED' => 'true',
-                'PARENT_ID' => '3',
+                'PARENT_ID' => '4',
                 'PARENT_VALUE' => '',
                 'PARENT_VALUE_ID' => [
                     0 => '1',
                     1 => '2'
-                ]
-            ]
-        ],
-        7 => [
-            'NAME' => 'Метро',
-            'TYPE' => 'select',
-            'INPUT_NAME' => 'metro',
-            'DATA' => [
-                0 => [
-                    'title' => 'Метро 1',
-                    'id' => '1'
-                ],
-                1 => [
-                    'title' => 'Метро 2',
-                    'id' => '0'
-                ],
-                2 => [
-                    'title' => 'Все',
-                    'id' => '2'
                 ]
             ]
         ]
@@ -245,9 +248,11 @@ $arFilterData = [
 </div>
 <form action="" method="POST" id="update-person">
     <div id="main" class="project__module">
+        <input class="prommu__universal-filter__button" type="button" value="ФИЛЬТР"/>
         <div class="project__header">
+            <div class="project__header-filter prommu__universal-filter" style="display:none">
 
-            <div class="project__header-filter prommu__universal-filter">
+
                 <? foreach ($arFilterData['FILTER_SETTINGS'] as $key => $value): ?>
 
                     <?
@@ -326,16 +331,15 @@ $arFilterData = [
                             </div>
                             <?
                             break;
+                        case 'block':
+                            ?>
+                            <div data-type="<?= $value['TYPE'] ?>"
+                                 class="u-filter__item u-filter__item-<?= $key ?> u-filter__blockitem"></div>
+                            <?
+                            break;
                     endswitch; ?>
                 <? endforeach; ?>
 
-
-                <div class="project__header-xlscontainer">
-                    <div class="project__header-xls project__xls">
-                        <a href="/user/uploadprojectxls?id=<?=$project?>&type=users" class="project__header-addxls" id="add-program">Изменить текущий персонал</a>
-                        <a href="/uploads/promo_import.xls" download>Скачать пример для добавления</a>
-                    </div>
-                </div>
 
 
                 <?if(isset($arFilterData['ID']) && !empty($arFilterData['ID'])):?>
@@ -347,13 +351,29 @@ $arFilterData = [
                     <?endforeach;?>
                 <?endif;?>
             </div>
+
+            <div class="project__header-xlscontainer">
+                <div class="project__header-xls project__xls">
+                    <a href="/user/uploadprojectxls?id=<?=$project?>&type=users" class="project__header-addxls" id="add-program">Изменить текущий персонал</a>
+                    <a href="/uploads/promo_import.xls" download>Скачать пример для добавления</a>
+                </div>
+            </div>
+
         </div>
+
 
         <div class="project__control-panel">
             <div class="program__btns control__buttons">
-                <span id="control__new-personal" class="control__add-btn">+ ПРИГЛАСИТЬ ПЕРСОНАЛ</span>
-                <span id="control__add-personal" class="control__add-btn">+ ДОБАВИТЬ ПЕРСОНАЛ</span>
-                <button type="submit" id="control__save-btn" class="program__save-btn">СОХРАНИТЬ</button>
+
+                <span class="control__add-container">
+                    <span id="control__add-all" class="control__add-btn">+ ПЕРСОНАЛ</span>
+                    <ul class="control__add-ul">
+                        <li id="control__add-personal">добавить</li>
+                        <li id="control__new-personal">пригласить</li>
+                    </ul>
+                </span>
+
+                <button type="submit" id="control__save-btn" class="program__save-btn">ПРИМЕНИТЬ</button>
             </div>
         </div>
 

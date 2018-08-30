@@ -224,8 +224,8 @@
 	transition: all ease-out .3s;
 }
 
-#DiContent .program__btns .program__add-btn:hover,
-#DiContent .program__btns .control__add-btn:hover{
+/***#DiContent .program__btns .control__add-btn:hover**/
+#DiContent .program__btns .program__add-btn:hover{
 	background: #abb92a;
 	color: #ffffff;
 }

@@ -50,6 +50,15 @@ var ProjectAddPersonal = (function () {
         });
 
 
+        $('.prommu__universal-filter__button').click(function(){
+            if($('.project__header-filter').is(':visible')){
+                $('.project__header-filter').fadeOut();
+            }else{
+                $('.project__header-filter').fadeIn();
+            }
+        });
+
+
 
         //      устанавливаем выбрть все/снять все вакансии
         $('.filter-posts input').change(function(){ self.changeSelPosts(this) });

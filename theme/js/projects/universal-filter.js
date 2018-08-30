@@ -41,20 +41,31 @@ let IndexUniversalFilter = (function () {
 
 
         // работа с датами
-        self.bDate = self.getDateFromData(self.bDate);
-        self.eDate = self.getDateFromData(self.eDate);
-        $.each($('.calendar'), function(e,item) {
-            let v = item.nextElementSibling.value.split('.');
-            self.buildCalendar(item, Number(v[2]),Number(v[1]-1));
-        });
-        $('.prommu__universal-filter').on('click', '.calendar-filter span', function() { self.showCalendar(this) });
-        $('.prommu__universal-filter').on('click', '.mleft', function(){ self.changeMonth(this,-1) });
-        $('.prommu__universal-filter').on('click', '.mright', function(){ self.changeMonth(this,1) });
-        $('.prommu__universal-filter').on('click', '.calendar .day', function(e){ self.checkDate(e.target) });
-        // обрабатываем клики
-        $(document).on('click', function(e) {
-            self.closureCalendar(e.target);
-        });
+        if(self.bDate!=undefined && self.eDate!=undefined){
+
+            self.bDate = self.getDateFromData(self.bDate);
+            self.eDate = self.getDateFromData(self.eDate);
+            $.each($('.calendar'), function (e, item) {
+                let v = item.nextElementSibling.value.split('.');
+                self.buildCalendar(item, Number(v[2]), Number(v[1] - 1));
+            });
+            $('.prommu__universal-filter').on('click', '.calendar-filter span', function () {
+                self.showCalendar(this)
+            });
+            $('.prommu__universal-filter').on('click', '.mleft', function () {
+                self.changeMonth(this, -1)
+            });
+            $('.prommu__universal-filter').on('click', '.mright', function () {
+                self.changeMonth(this, 1)
+            });
+            $('.prommu__universal-filter').on('click', '.calendar .day', function (e) {
+                self.checkDate(e.target)
+            });
+            // обрабатываем клики
+            $(document).on('click', function (e) {
+                self.closureCalendar(e.target);
+            });
+        }
 
         self.setDefaultFilterProperties();
 
@@ -184,6 +195,9 @@ let IndexUniversalFilter = (function () {
     /**Функция отслеживания и контроля иерархии фильтров**/
     IndexUniversalFilter.prototype.hierarchyTracking = function () {
         $('.prommu__universal-filter .u-filter__item').each(function () {
+
+
+
             let parent_id = parseInt($(this).data('parent-id'));
 
             let parent_value = $(this).data('parent-value');
@@ -204,7 +218,11 @@ let IndexUniversalFilter = (function () {
             let type = $(this).data('type');
 
             if(parent_id>=0){
+
+
+
                 let parent = $(".u-filter__item[data-id='" + parent_id +"']");
+
                 let parent_type = parent.data('type');
 
                 if(parent_type==="text"){

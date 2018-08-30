@@ -77,9 +77,6 @@
     /*float: right;*/
     text-align: center;
 }
-#control__save-btn, #control__add-personal, #control__new-personal{
-    margin-top:5px;
-}
 
 /************************************************************/
 #DiContent .prommu__universal-filter .u-filter__item{
@@ -96,9 +93,6 @@
     flex-wrap: wrap;
 }
 
-.project__header-xlscontainer{
-    width:33.3333%!important;
-}
 .project__header .project__header-xls{
     width: 225px!important;
     overflow: hidden;
@@ -107,6 +101,29 @@
     margin-bottom: 0px!important;
     padding-top: 5px;
 }
+
+.project__header-xlscontainer{
+    width:100%!important;
+}
+.project__header .project__header-xls{
+    width:100%!important;
+}
+.project__header-xls{
+    text-align: center;
+    margin-top: 10px;
+}
+.project__xls #add-program{
+    width:225px!important;
+}
+#DiContent .project__xls a{
+    width:225px!important;
+}
+.project__header-xls{
+    text-align: center!important;
+}
+
+
+
 
 
 #DiContent .prommu__universal-filter .u-filter__item .u-filter__item-title{
@@ -140,31 +157,74 @@
     display: none;
 }
 
+u-filter__blockitem{
+    display:block;
+}
 @media screen and (max-width:968px) {
     #DiContent .prommu__universal-filter .u-filter__item{
         width: 50%!important;
     }
-    .project__header-xlscontainer{
-        width:100%!important;
-    }
-    .project__header .project__header-xls{
-        width:100%!important;
-    }
-    .project__header-xls{
-        text-align: center;
-        margin-top: 10px;
-    }
-    .project__xls #add-program{
-        width:225px!important;
-    }
-    #DiContent .project__xls a{
-        width:225px!important;
-    }
-    .project__header-xls{
-        text-align: center!important;
+    .u-filter__blockitem{
+        display:none;
     }
 }
 
+
+.control__add-container{
+    position: relative;
+    display: inline-block;
+    text-transform: none;
+    line-height: 30px;
+}
+
+.control__add-ul {
+    list-style: none;
+    display: none;
+    position: absolute;
+    top: 30px;
+    margin: 0;
+    padding: 0;
+    border-radius: 2px;
+    border: 1px solid #fff;
+    z-index: 2;
+    width:185px;
+    text-align: center;
+}
+.control__add-ul li{
+    padding: 0 10px;
+    background: #abb92a;
+    font-size: 14px;
+    /*white-space: nowrap;*/
+    line-height: 24px;
+    color: #ffffff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.control__add-ul li:hover {
+    background: #b9c733;
+}
+.control__add-container:hover > .control__add-ul{
+    display: block;
+}
+
+.prommu__universal-filter__button{
+    background: none;
+    border: none;
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #383838;
+    border-radius: 5px;
+    color: white;
+    box-sizing: border-box;
+    font-size: 16px;
+    outline: none;
+}
+
+#DiContent .project__header  .project__header-filter{
+
+}
 
 /************Верстка фильтра*************
 #DiContent .prommu__universal-filter .u-filter__item{
