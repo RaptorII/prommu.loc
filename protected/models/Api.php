@@ -76,6 +76,7 @@ class Api
                 case 'geo_project' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->geoProject(); break;
                 case 'serchuse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->searchUse(); break;
                 case 'rateuse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rateUse(); break;
+                case 'bigbug' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->bigbug(); break;
                  
                 
 
@@ -98,6 +99,18 @@ class Api
         } // endtry
 
         return $data;
+    }
+    
+    public function bigbug(){
+        $name = Yii::app()->getRequest()->getParam('firstorlastname');
+        $fames = Yii::app()->db->createCommand()
+            ->select('lastname, firstname')
+            ->from('resume')
+            ->where('lastname like :lastname OR fistname like :lastname', array(':lastname'=>$name))
+            ->queryAll();
+            
+        return $fames;
+        
     }
     
     public function rateUse(){
