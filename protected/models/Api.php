@@ -103,12 +103,33 @@ class Api
     
     public function bigbug(){
         $name = Yii::app()->getRequest()->getParam('firstorlastname');
+        $namess = Yii::app()->getRequest()->getParam('firstandlastname');
+        if($names){
+            $names = explode(" ", $namess)[0];
+            $names1 = explode(" ", $namess)[1];
+            $fames = Yii::app()->db->createCommand()
+            ->select('lastname, firstname')
+            ->from('resume')
+            ->where('lastname like :lastname OR lastname like :lastname1', array(':lastname'=>$names, 'lastname1' => $names1))
+            ->queryAll();
+            
+            for($i = 0; sizeof($fames); $i ++){
+                $fam = $fames[$i]['firstname'].' '.$fames[$i]['lastname'];
+                $fam1 = $fames[$i]['lastname'].' '.$fames[$i]['firstname'];
+                if($fam1 == $namess || $fam == $namess ){
+                    $arr[] = $fames[$i];
+                }
+                
+            }
+            return $arr;
+        } else {
         $fames = Yii::app()->db->createCommand()
             ->select('lastname, firstname')
             ->from('resume')
             ->where('lastname like :lastname OR firstname like :lastname', array(':lastname'=>$name))
             ->queryAll();
-            
+        }
+        
         return $fames;
         
     }
