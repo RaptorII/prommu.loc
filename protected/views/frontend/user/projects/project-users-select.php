@@ -54,7 +54,7 @@
 									id="user-<?=$user['id_user']?>"
 									<?=($user['status']&&($user['point']==$point))?'checked':''?>>
 								<label for="user-<?=$user['id_user']?>"></label>
-								<div class="users-select__item">
+								<div class="users-select__item <?=(!$user['status']?'disable':'')?>">
 									<img src="<?=$user['src']?>">
 									<span><?=$user['name']?></span>
 								</div>
