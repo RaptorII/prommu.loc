@@ -11,7 +11,7 @@ var SelectUsers = (function () {
     	let $form = $('#select-form'),
     		arParams = $form.serializeArray();
 
-    	arParams.length==2
+    	!arParams.length
     	? MainProject.showPopup('notif','addition')
     	: $form.submit();
     });

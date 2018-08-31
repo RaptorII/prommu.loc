@@ -339,7 +339,8 @@
 	border: 1px solid #cecece;
 	cursor: text;
 }
-.city-field{ padding-right: 25px }
+.city-field, .metro-field{ padding-right: 25px }
+#DiContent #index .metro-field input,
 #DiContent #index .city-field input{
 	height: 30px;
 	border: none;
@@ -355,7 +356,6 @@
 	padding: 0 15px;
 	text-align: left;
 }
-#DiContent #index .metro-field input,
 #DiContent #filter-city .filter-city-select input{
     height: 24px;
     padding: 0;
@@ -380,7 +380,7 @@
 	position: absolute;
 }
 .city-select,
-.metro-select li:not([data-id="0"]),
+.metro-select,
 .filter-city-select li:not([data-id="0"]){
 	display: inline-block;
 	padding: 3px 20px 3px 5px;
@@ -394,9 +394,7 @@
 .filter-city-select li:not([data-id="0"]){
 	line-height: 23px;
 }
-.metro-select li[data-id="0"],
 .filter-city-select li[data-id="0"]{ width: 10px }
-.metro-select,
 .filter-city-select{
 	display: flex;
 	flex-direction: row;

@@ -239,6 +239,7 @@ class MainConfig
     public static $VIEW_PROJECT_ITEM_TASKS = 'projects/project-tasks';
     public static $VIEW_PROJECT_ITEM_REPORT = 'projects/project-report';
     public static $VIEW_PROJECT_ITEM_ADR_CHANGE = 'projects/project-address-edit';
+    public static $VIEW_PROJECT_ITEM_PROMO_CHANGE = 'projects/project-users-select';
 
 
     public static $PAGE_PROJECT_LIST = '/user/projects';

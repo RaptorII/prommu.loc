@@ -39,3 +39,4 @@
 	background: rgba(171, 184, 32, 0) url(/theme/pic/services-page/api-select-icon.png) 50% 50% no-repeat;
 	opacity: 0;
 }
+#DiContent .project .project__title{ margin: 50px 0 45px }

@@ -1,8 +1,12 @@
 <?php
+	$pLink = MainConfig::$PAGE_PROJECT_LIST . '/' . $project;
   $this->setBreadcrumbsEx(
     array('Мои проекты', MainConfig::$PAGE_PROJECT_LIST),
-    array($viData['title'], MainConfig::$PAGE_PROJECT_NEW),
-    array('АДРЕСНАЯ ПРОГРАММА', MainConfig::$PAGE_PROJECT_LIST . '/' .  $project . '/index')
+    array($viData['title'], $pLink),
+    array(
+    	'РЕДАКТИРОВАТЬ АДРЕСНУЮ ПРОГРАММУ', 
+    	$pLink . '/address-edit'
+    )
   );
   $this->setPageTitle($viData['title']);
 
@@ -46,17 +50,19 @@
 											<div class="metro-item">
 												<label class="project__index-lbl">Метро</label>
 												<div class="metro-field project__index-arrow">
-													<ul class="metro-select">
+													<?php if(is_array($arLoc['metro'])): ?>
 														<?php foreach($arLoc['metro'] as $mId => $mName): ?>
-															<li data-id="<?=$mId?>"><?=$mName?><b></b></li>
+															<span class="metro-select"><?=$mName?></span>
+															<input type="text" name="m" class="metro-inp" autocomplete="off" value="<?=$mName?>">
+															<ul class="select-list"></ul>
+															<input type="hidden" name="<?='metro[' . $idCity . '][' . $idLoc . ']'?>" value="<?=$mId?>">
 														<?php endforeach; ?>
-														<li data-id="0">
-															<input type="text" name="m" class="metro-inp" autocomplete="off">
-														</li>
-													</ul>
-													<ul class="select-list"></ul>
-													<?php $arIdMetros = array_keys($arLoc['metro']); ?>
-													<input type="hidden" name="<?='metro[' . $idCity . '][' . $idLoc . ']'?>" value="<?=join(',',$arIdMetros)?>">
+													<?php else: ?>
+														<span class="metro-select"></span>
+														<input type="text" name="m" class="metro-inp" autocomplete="off" value="">
+														<ul class="select-list"></ul>
+														<input type="hidden" name="<?='metro[' . $idCity . '][' . $idLoc . ']'?>" value="<?=$mId?>">
+													<?php endif; ?>
 												</div>
 											</div>
 										<?php endif; ?>
@@ -232,11 +238,8 @@
 	<div class="metro-item">
 		<label class="project__index-lbl">Метро</label>
 		<div class="metro-field project__index-arrow">
-			<ul class="metro-select">
-				<li data-id="0">
-					<input type="text" name="m" class="metro-inp" autocomplete="off">
-				</li>
-			</ul>
+			<span class="metro-select"></span>
+			<input type="text" name="m" class="metro-inp" autocomplete="off">
 			<ul class="select-list"></ul>
 			<input type="hidden" name="metro" value="">
 		</div>

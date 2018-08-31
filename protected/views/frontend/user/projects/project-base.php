@@ -47,24 +47,30 @@
 									<? endif; ?>
 									<td>
 										<div class="program__cell border user">
-											<? /* ?>
-											<div class="program__cell-users">
-												<div class="program__cell-user">
-													<img src="/theme/pic/projects/user-logo.png">
-													<span>Александр Примак</span>
-													<a href="#"><span>Изменить</span></a>
-												</div>
-											</div>
-											<? */ ?>
-
-											<? foreach ($arLoc['periods'] as $idper => $arPer): ?>
+											<?php foreach ($arLoc['periods'] as $idper => $arPer):
+												$hasUsers = false;
+												foreach ($viData['users'] as $id_user => $user):
+													if($user['point']==$idper && isset($user['status'])): 
+														$hasUsers = true;
+														?>
+														<div class="program__cell-users">
+															<div class="program__cell-user">
+																<img src="<?=$user['src']?>">
+																<span><?=$user['name']?></span>
+																<a href="<? echo $project . '/users-select/' . $idper ?>"><span>Изменить</span></a>
+															</div>
+														</div>									
+												<?php endif;
+												endforeach; 
+												if(!$hasUsers): ?>
 												<div class="program__select-user" data-period="<?=$idper?>">
-													<a href="<? echo $project . '/users-select?period=' . $idper ?>" class="program-select-user__title">
+													<a href="<? echo $project . '/users-select/' . $idper ?>" class="program-select-user__title">
 														<span>Выбрать персонал </span>
 														<b>&#9660</b>
 													</a>
 												</div>
-											<? endforeach; ?>
+											<?php endif;
+												endforeach; ?>
 										</div>
 									</td>
 									<td class="period-data">
@@ -113,19 +119,3 @@
 		</div>
 	</div>
 </div>
-<?
-/*
-?>
-<div class="bg_veil"></div>
-<div class="personal__map">
-	<div class="personal__map-header">
-		<span>Простова Ольга</span>
-		<b></b>
-	</div>
-	<div class="personal__map-map">
-		<img src="/theme/pic/projects/temp-map.jpg">
-	</div>
-</div>
-<?
-*/
-?>

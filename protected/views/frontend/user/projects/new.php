@@ -198,12 +198,12 @@
 				            <div class='filter__item-name opened'>Город</div>
 				            <div class='filter__item-content opened'>
 				                <div class="fav__select-cities" id="filter-city">
-									<ul class="filter-city-select">
-										<li data-id="0">
-											<input type="text" name="fc" class="city-inp" autocomplete="off">
-										</li>
-									</ul>
-									<ul class="select-list"></ul>
+													<ul class="filter-city-select">
+														<li data-id="0">
+															<input type="text" name="fc" class="city-inp" autocomplete="off">
+														</li>
+													</ul>
+													<ul class="select-list"></ul>
 				                </div>
 				            </div>
 				          </div>
@@ -453,11 +453,8 @@
 	<div class="metro-item">
 		<label class="project__index-lbl">Метро</label>
 		<div class="metro-field project__index-arrow">
-			<ul class="metro-select">
-				<li data-id="0">
-					<input type="text" name="m" class="metro-inp" autocomplete="off">
-				</li>
-			</ul>
+			<span class="metro-select"></span>
+			<input type="text" name="m" class="metro-inp" autocomplete="off">
 			<ul class="select-list"></ul>
 			<input type="hidden" name="metro" value="">
 		</div>

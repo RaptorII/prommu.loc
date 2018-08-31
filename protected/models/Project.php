@@ -195,6 +195,7 @@ class Project extends ARModel
             $city = Yii::app()->getRequest()->getParam('city');
             $bdate = Yii::app()->getRequest()->getParam('bdate');
             $edate = Yii::app()->getRequest()->getParam('edate');
+            $point = Yii::app()->getRequest()->getParam('point');
             if($city>0) {
                 $params .= ' AND pc.id_city=:city';
                 $arParams[':city'] = $city;
@@ -203,7 +204,11 @@ class Project extends ARModel
                 $params .= ' AND pc.bdate>=:bdate AND pc.edate<=:edate';
                 $arParams[':bdate'] = date('Y-m-d', strtotime($bdate));
                 $arParams[':edate'] = date('Y-m-d', strtotime($edate));
-            }            
+            }
+            if($point>0) {
+                $params .= ' AND pc.point=:point';
+                $arParams[':point'] = $point;
+            }          
         }
 
         $result = Yii::app()->db->createCommand()
@@ -219,34 +224,128 @@ class Project extends ARModel
                 pc.etime, 
                 pc.point,
                 pc.location,
-                pc.title"
+                pc.title,
+                pc.metro id_metro,
+                m.name metro"
             )
             ->from('project_city pc')
-            ->join('city c', 'c.id_city=pc.id_city')
+            ->leftjoin('city c', 'c.id_city=pc.id_city')
+            ->leftjoin('metro m', 'm.id=pc.metro')
             ->where($params, $arParams)
             ->order('pc.bdate desc')
             ->queryAll();
 
-        return $this->buildArray($result); 
+        return $this->buildAdressArray($result); 
     }
     
-    public function getProjectPromo($project){
-     
-        $result = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('project_user pu')
-            ->where('pu.project = :project', array(':project' =>$project))
-            ->order('pu.user desc')
-            ->queryAll();
-            
-        return $result;
-    }
-    
-    public function getProject($project){
-        $data = $this->getAdresProgramm($project);
-        $data['user'] = $this->getProjectPromo($project);
+    public function getProjectPromo($prj){
+        $arT = array();
+        $sql = Yii::app()->db->createCommand()
+            ->select("u.user, u.status, u.firstname, u.lastname, u.point, u.date")
+            ->from('project_user u')
+            ->where('u.project = :prj', array(':prj' =>$prj))
+            ->order('u.user desc')
+            ->queryAll(); // поиск всех пользователей проекта
         
-        return $data;
+        if(!sizeof($sql))
+            return array('users' => array());
+        
+        foreach ($sql as $v) {
+            $arT['id1'][] = $v['user']; // собираем ID всех пользователей проекта
+            $arT['items1'][$v['user']] = $v;
+        }
+
+        $sql = Yii::app()->db->createCommand()
+            ->select(
+                "DISTINCT(r.id_user), 
+                r.firstname, 
+                r.lastname, 
+                r.photo, 
+                r.isman, 
+                u.is_online"
+            )
+            ->from('resume r')
+            ->leftjoin('user_city uc', 'uc.id_user=r.id_user')
+            ->leftjoin('city c', 'c.id_city=uc.id_city')
+            ->leftjoin('user_metro um', 'um.id_us=r.id_user')
+            ->leftjoin('metro m', 'm.id=um.id_metro')
+            ->join(
+                'user u', 
+                'u.id_user=r.id_user AND u.ismoder=1 AND u.isblocked=0'
+            )
+            ->where(array('in', 'r.id_user', $arT['id1']))
+            ->order('r.mdate desc')
+            ->queryAll(); // собираем всех пользователей с resume
+
+        foreach ($sql as $v) {
+            $arT['id2'][] = $v['id_user']; // собираем ID пользователей с resume
+            $arT['items2'][$v['id_user']] = $v;
+        }
+
+        $arT['cities'] = Yii::app()->db->createCommand()
+            ->select("uc.id_city, uc.id_user, c.name city")
+            ->from('user_city uc')
+            ->leftjoin('city c', 'c.id_city=uc.id_city')
+            ->where(array('in', 'uc.id_user', $arT['id2']))
+            ->queryAll();
+
+        $arT['metros'] = Yii::app()->db->createCommand()
+            ->select("um.id_us, m.id id_metro, m.name metro")
+            ->from('user_metro um')
+            ->leftjoin('metro m', 'm.id=um.id_metro')
+            ->where(array('in', 'um.id_us', $arT['id2']))
+            ->queryAll();
+
+        $arRes = array();
+        foreach ($arT['id1'] as $id) {
+            if(in_array($id, $arT['id2'])) { // зарегенный пользователь
+                $user = $arT['items2'][$id];
+                $arRes['users'][$id] = array(
+                    'id_user' => $user['id_user'],
+                    'name' => $user['lastname'] . ' ' . $user['firstname'],
+                    'src' => DS . MainConfig::$PATH_APPLIC_LOGO . DS 
+                        . ($user['photo'] 
+                            ? ($user['photo'] . '100.jpg')
+                            : ($user['isman'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F)
+                        ),
+                    'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $user['id_user'],
+                    'is_online' => $user['is_online'],
+                    'status' => $arT['items1'][$id]['status'],
+                    'point' => $arT['items1'][$id]['point'],
+                    'date' => $arT['items1'][$id]['date']
+                );
+            }
+            else {
+                $user = $arT['items1'][$id];
+                $arRes['users'][$id] = array(
+                    'id_user' => $user['user'],
+                    'name' => $user['lastname'] . ' ' . $user['firstname'],
+                    'src' => '/images/company/tmp/logo.png',
+                    'profile' => '',
+                    'is_online' => '',
+                    'status' => $user['status'],
+                    'point' => $user['point'],
+                    'date' => $user['date']
+                );                
+            }
+        }
+        foreach ($arT['id1'] as $id) {
+            foreach ($arT['cities'] as $c)
+                if($c['id_user']==$id)
+                    $arRes['users'][$id]['cities'][$c['id_city']] =  $c['city'];
+            foreach ($arT['metros'] as $m)
+                if($m['id_us']==$id)
+                    $arRes['users'][$id]['metros'][$m['id_metro']] =  $m['metro']; 
+        }
+
+        return $arRes;
+    }
+    
+    public function getProject($project, $filter=false){
+        return array_merge(
+                $this->getAdresProgramm($project,$filter),
+                $this->getProjectPromo($project)
+            );
     }
     
     public function importProject($props){
@@ -419,9 +518,9 @@ class Project extends ARModel
     /*
     *       формирование массива адреса
     */
-    public function buildArray($arr){
+    public function buildAdressArray($arr){
         if(!count($arr))
-            return false;
+            return array();
    
         $arRes = array(
             'title' => $arr[0]['title'],
@@ -453,7 +552,7 @@ class Project extends ARModel
             $arL['id'] = $i['location'];
             $arL['name'] = $i['name'];
             $arL['index'] = $i['adres'];
-            $arL['metro'] = '';         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            $arL['metro'][$i['id_metro']] = $i['metro'];
             $arI[$i['id_city']]['locations'][$i['location']] = $arL;
         }
         
@@ -473,7 +572,7 @@ class Project extends ARModel
     /*
     *       удаление элементов проекта
     */
-    public function delLocation($arr){
+    public function delLocation($arr) {
         if(!$this->hasAccess($arr['project']))
             return 0;
         
@@ -611,5 +710,68 @@ class Project extends ARModel
                $this->importUsers($props);
             }
         }
+    }
+    /*
+    *       Получаем значение точки
+    */
+    public function getPoint($arr) {
+        $point = Yii::app()->getRequest()->getParam('point');
+        $arr['point'] = array();
+        foreach ($arr['location'] as $id => $arCity)
+            foreach ($arCity['locations'] as $idloc => $arLoc)
+                foreach ($arLoc['periods'] as $idper => $arPer)
+                    if($point==$idper) {
+                        $arr['point'] = array(
+                            'id_city' => $id,
+                            'id_loc' => $idloc,
+                            'id_period' => $idper,
+                            'city' => $arCity['name'],
+                            'ismetro' => $arCity['metro'],
+                            'locname' => $arLoc['name'],
+                            'locindex' => $arLoc['index'],
+                            'metro' => join(',<br>',$arLoc['metro']),
+                            'date' => $arPer['bdate']==$arPer['edate'] 
+                                ? $arPer['bdate'] 
+                                : ('с ' . $arPer['bdate'] . ' по ' . $arPer['edate']),
+                            'time' => $arPer['btime'] . '-' . $arPer['etime']
+                        );
+                        break;
+                    }
+
+        return $arr;
+    }
+    /*
+    *       привязка пользователя к точке
+    */
+    public function setPromoToPoint($arr) {
+        if(!sizeof($arr['user']))
+            return false;
+
+        $prj = Yii::app()->getRequest()->getParam('id');
+        $point = Yii::app()->getRequest()->getParam('point');
+        $arS = Yii::app()->db->createCommand()
+            ->select('user')
+            ->from('project_user')
+            ->where('project=:prj', array(':prj'=>$prj))
+            ->queryAll();
+
+        foreach ($arS as $user)
+            if(!in_array($user['user'], $arr['user']))
+                Yii::app()->db->createCommand()
+                    ->update(
+                        'project_user',
+                        array('point' => '','status' => 0),
+                        'project=:prj AND user=:user',
+                        array(':prj' => $prj,':user' => $user['user'])
+                    );
+
+        foreach ($arr['user'] as $id)
+            Yii::app()->db->createCommand()
+                ->update(
+                    'project_user',
+                    array('point' => $point,'status' => 1),
+                    'project=:prj AND user=:user',
+                    array(':prj' => $prj,':user' => $id)
+                );
     }
 }

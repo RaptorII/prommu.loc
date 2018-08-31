@@ -1586,7 +1586,7 @@ class UserController extends AppController
                     break;
                 case 'address-edit':
                     if( Yii::app()->getRequest()->isPostRequest) {
-                        $data = $model->setAdresProgramm($_POST);
+                        $model->setAdresProgramm($_POST);
                         $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id.'/index');
                     }
                     else {
@@ -1595,7 +1595,15 @@ class UserController extends AppController
                     }
                     break;
                 case 'users-select':
-                    $view = 'projects/project-users-select';
+                    if( Yii::app()->getRequest()->isPostRequest) {
+                        $model->setPromoToPoint($_POST);
+                        $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id);
+                    }
+                    else {
+		                  $view = MainConfig::$VIEW_PROJECT_ITEM_PROMO_CHANGE;
+		                  $data = $model->getProject($id);
+		                  $data = $model->getPoint($data);                    	
+                    }
                     break;
                 default:
                     $data = $model->getProject($id);

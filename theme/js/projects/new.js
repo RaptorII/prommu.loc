@@ -393,10 +393,6 @@ var ProjectAddIndexProg = (function () {
         // работаем с метро
         $('#index').on('input','.metro-inp',function(){ self.inputMetros(this) });
         $('#index').on('focus','.metro-inp',function(){ self.focusMetro(this) });
-        $('#index').on('click','.metro-select',function(e){
-            if(!$(e.target).is('b'))
-                $(e.target).find('.metro-inp').focus();
-        });
         // работа с датами
         for (let i=0; i<arCalendars.length; i++)
             self.buildCalendar(arCalendars[i]);
@@ -649,7 +645,6 @@ var ProjectAddIndexProg = (function () {
         let self = this,
             val = $(e).val();
 
-        $(e).css({width:(val.length * 10 + 5)+'px'});
         clearTimeout(MainProject.bAjaxTimer);
         MainProject.bAjaxTimer = setTimeout(function(){ self.getAjaxMetros(val, e) },1000);
     }
@@ -669,7 +664,7 @@ var ProjectAddIndexProg = (function () {
             list = $(main).find('.select-list')[0],
             input = $(main).find('[type="hidden"]')[0],
             idcity = Number(mainCity.dataset.city),
-            params = 'id=' + idcity + '&query=' + val + '&select=' + $(input).val(),
+            params = 'id=' + idcity + '&query=' + val + '&select=',
             content = '';
 
         $(main).addClass('load'); // загрузка началась
@@ -700,42 +695,59 @@ var ProjectAddIndexProg = (function () {
 
         if( !$e.closest('.metro-field').length && !$e.is('.metro-field') ) {
             for(let i=0; i<arMetros.length; i++){ // закрываем списки без фокуса
-                let cInput = $(arMetros[i]).find('.metro-inp'),
-                    cList = $(arMetros[i]).find('.select-list');
+                let cSelect = $(arMetros[i]).find('.metro-select'),
+                    cInput = $(arMetros[i]).find('.metro-inp'),
+                    cList = $(arMetros[i]).find('.select-list'),
+                    v = $(cSelect).text();
 
-                cInput.val('').css({width:'5px'});
+                cSelect.text()==='' ? cSelect.hide() : cSelect.show();
+                cInput.val(v).hide();
                 cList.fadeOut();
             }
         }
         else{ // клик по объектам списка
-            if( $e.is('.select-list li') && !$e.hasClass('emp') ) { // выбираем из списка
+            if( $e.is('li') && !$e.hasClass('emp') ) { // выбираем из списка
                 let main = $e.closest('.metro-item')[0],
                     select = $(main).find('.metro-select'),
                     inpText = $(main).find('.metro-inp'),
                     list = $(main).find('.select-list'),
-                    input = $(main).find('[type="hidden"]'),
-                    name = $(e).text(),
-                    v = $(input).val(),
-                    arMetros = v.length ? v.split(',') : [];
+                    input = $(inpText).siblings('[type="hidden"]'),
+                    v = $(input).val();
 
-                arMetros.push(e.dataset.id);
-                $(input).val(arMetros);
-                inpText.val('').css({width:'5px'});
-                $(select).find('[data-id="0"]').before('<li data-id="'
-                    + e.dataset.id + '">' + name
-                    + '<b></b></li>');
+                if(v!=='' && v===e.dataset.id) {
+                    let v = select.text();
+                    inpText.val(v).hide();
+                    select.show();
+                }
+                else { // ввод нового города
+                    let v = $(e).text();
+
+                    input.val(e.dataset.id);
+                    inpText.val(v).hide();
+                    select.html(v+'<b></b>').show();
+                }
                 list.fadeOut();
             }
-            else if($e.is('.metro-select b')) { // удаление выбранного метро из списка
-                let main = $e.closest('.metro-item')[0],
-                    input = $(main).find('[type="hidden"]'),
-                    name = $(e).text(),
-                    metro = $e.closest('li')[0],
-                    arMetros = $(input).val().split(',');
+            else{
+                let main = $e.is('.metro-field') ? e : $e.closest('.metro-field')[0];
+                for(let i=0; i<arMetros.length; i++) { // закрываем списки без фокуса
+                    let cSelect = $(arMetros[i]).find('.metro-select'),
+                        cInput = $(arMetros[i]).find('.metro-inp'),
+                        cList = $(arMetros[i]).find('.select-list'),
+                        v = $(cSelect).text();
 
-                arMetros.splice(arMetros.indexOf(metro.dataset.id),1);
-                $(input).val(arMetros);
-                $(metro).remove();
+                    if( !$(arMetros[i]).is(main) ) {
+                        cSelect.show();
+                        cInput.val(v).hide();
+                        cList.fadeOut();
+                    }
+                    else{
+                        if( $e.is('b') )
+                            cInput.val('');
+                        cInput.show().focus();
+                        cSelect.hide();
+                    }
+                }
             }
         }
     }
