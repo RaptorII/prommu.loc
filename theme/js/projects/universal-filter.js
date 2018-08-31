@@ -186,13 +186,18 @@ let IndexUniversalFilter = (function () {
         let getRequest = mainParam +''+ params;
 
         if(getRequest) {
+
+            setTimeout(function () {
+                $('.filter__veil').hide();
+            }, 1000);
+
             $.ajax({
                 type: 'GET',
                 url: '/ajax/123', //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 data: getRequest,
                 dataType: 'json',
                 success: function (value) {
-                    $('.filter__veil').hide();
+
                 }
             });
         }
