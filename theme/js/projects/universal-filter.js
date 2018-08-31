@@ -166,6 +166,9 @@ let IndexUniversalFilter = (function () {
 
         $('.prommu__universal-filter').find('input').each(function () {
 
+            $('.filter__veil').show();
+
+
             //Формирование запроса Get
             let name = $(this).attr("name");
             let value = $(this).val();
@@ -189,6 +192,7 @@ let IndexUniversalFilter = (function () {
                 data: getRequest,
                 dataType: 'json',
                 success: function (value) {
+                    $('.filter__veil').hide();
                 }
             });
         }

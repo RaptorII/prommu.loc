@@ -60,10 +60,10 @@ $sectionId = $request->getParam('section');
 
 $arFilterData = [
     'ID' => $projectId, //Обязательное свойство!
-    'FILTER_ADDITIONAL_VALUE'=>[
+    'FILTER_ADDITIONAL_VALUE' => [
         'SECTION_ID' => $sectionId
     ],
-    'FILTER_SETTINGS'=>[
+    'FILTER_SETTINGS' => [
         0 => [
             'NAME' => 'Имя',
             'TYPE' => 'text',
@@ -111,7 +111,7 @@ $arFilterData = [
                 ]
             ],
             'DATA_DEFAULT' => '2',
-            'CONDITION' =>[
+            'CONDITION' => [
                 'BLOCKED' => 'true',
                 'PARENT_ID' => '4',
                 'PARENT_VALUE' => '',
@@ -168,7 +168,7 @@ $arFilterData = [
                 ]
             ],
             'DATA_DEFAULT' => '2',
-            'CONDITION' =>[
+            'CONDITION' => [
                 'BLOCKED' => 'true',
                 'PARENT_ID' => '4',
                 'PARENT_VALUE' => '',
@@ -182,23 +182,7 @@ $arFilterData = [
             'TYPE' => 'block',
         ],
         7 => [
-            'NAME' => 'Метро',
-            'TYPE' => 'select',
-            'INPUT_NAME' => 'metro',
-            'DATA' => [
-                0 => [
-                    'title' => 'Метро 1',
-                    'id' => '1'
-                ],
-                1 => [
-                    'title' => 'Метро 2',
-                    'id' => '0'
-                ],
-                2 => [
-                    'title' => 'Все',
-                    'id' => '2'
-                ]
-            ]
+            'TYPE' => 'block',
         ],
         8 => [
             'NAME' => 'Адрес ТТ',
@@ -223,13 +207,38 @@ $arFilterData = [
                 ]
             ],
             'DATA_DEFAULT' => '2',
-            'CONDITION' =>[
+            'CONDITION' => [
                 'BLOCKED' => 'true',
                 'PARENT_ID' => '4',
                 'PARENT_VALUE' => '',
                 'PARENT_VALUE_ID' => [
                     0 => '1',
                     1 => '2'
+                ]
+            ]
+        ],
+        9 => [
+            'TYPE' => 'block',
+        ],
+        10 => [
+            'TYPE' => 'block',
+        ],
+        11 => [
+            'NAME' => 'Метро',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'metro',
+            'DATA' => [
+                0 => [
+                    'title' => 'Метро 1',
+                    'id' => '1'
+                ],
+                1 => [
+                    'title' => 'Метро 2',
+                    'id' => '0'
+                ],
+                2 => [
+                    'title' => 'Все',
+                    'id' => '2'
                 ]
             ]
         ]
@@ -241,14 +250,22 @@ $arFilterData = [
 <? print_r($viData); ?>
 </pre>
 
+
 <div class="row project">
     <div class="col-xs-12">
-    <? require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/projects/project-nav.php'; ?>
+        <? require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/projects/project-nav.php'; ?>
     </div>
 </div>
+
+<div class="filter__veil"></div>
+
 <form action="" method="POST" id="update-person">
     <div id="main" class="project__module">
-        <input class="prommu__universal-filter__button" type="button" value="ФИЛЬТР"/>
+
+
+        <div class="prommu__universal-filter__buttoncontainer">
+            <span class="prommu__universal-filter__button">ФИЛЬТР ДЛЯ ПЕРСОНАЛА</span>
+        </div>
         <div class="project__header">
             <div class="project__header-filter prommu__universal-filter" style="display:none">
 
@@ -256,28 +273,27 @@ $arFilterData = [
                 <? foreach ($arFilterData['FILTER_SETTINGS'] as $key => $value): ?>
 
                     <?
-                    if(count($value['CONDITION']['PARENT_VALUE_ID'])>1):
-                        for($i=0;$i<count($value['CONDITION']['PARENT_VALUE_ID']);$i++):
-                            if($i==0){
+                    if (count($value['CONDITION']['PARENT_VALUE_ID']) > 1):
+                        for ($i = 0; $i < count($value['CONDITION']['PARENT_VALUE_ID']); $i++):
+                            if ($i == 0) {
                                 $parentValueId = $value['CONDITION']['PARENT_VALUE_ID'][$i];
-                            }
-                            else{
-                                $parentValueId.=",".$value['CONDITION']['PARENT_VALUE_ID'][$i];
+                            } else {
+                                $parentValueId .= "," . $value['CONDITION']['PARENT_VALUE_ID'][$i];
                             }
                         endfor;
                     else:
                         $parentValueId = $value['CONDITION']['PARENT_VALUE_ID'];
-                    endif;?>
+                    endif; ?>
 
                     <? switch ($value['TYPE']):
                         case 'text':
                             ?>
                             <div data-type="<?= $value['TYPE'] ?>"
                                  data-id="<?= $key ?>"
-                                 data-parent-id="<?=$value['CONDITION']['PARENT_ID']?>"
-                                 data-parent-value="<?=$value['CONDITION']['PARENT_VALUE']?>"
-                                 data-parent-value-id="<?=$parentValueId?>"
-                                 class="u-filter__item u-filter__item-<?= $key ?>  <?=($value['CONDITION']['BLOCKED']) ? 'blocked':''?>">
+                                 data-parent-id="<?= $value['CONDITION']['PARENT_ID'] ?>"
+                                 data-parent-value="<?= $value['CONDITION']['PARENT_VALUE'] ?>"
+                                 data-parent-value-id="<?= $parentValueId ?>"
+                                 class="u-filter__item u-filter__item-<?= $key ?>  <?= ($value['CONDITION']['BLOCKED']) ? 'blocked' : '' ?>">
                                 <div class="u-filter__item-title">
                                     <?= $value['NAME']; ?>
                                 </div>
@@ -301,20 +317,20 @@ $arFilterData = [
                             ?>
                             <div data-type="<?= $value['TYPE'] ?>"
                                  data-id="<?= $key ?>"
-                                 data-parent-id="<?=$value['CONDITION']['PARENT_ID']?>"
-                                 data-parent-value="<?=$value['CONDITION']['PARENT_VALUE']?>"
-                                 data-parent-value-id="<?=$parentValueId?>"
-                                 class="u-filter__item u-filter__item-<?= $key ?> <?=($value['CONDITION']['BLOCKED']) ? 'blocked':''?>">
+                                 data-parent-id="<?= $value['CONDITION']['PARENT_ID'] ?>"
+                                 data-parent-value="<?= $value['CONDITION']['PARENT_VALUE'] ?>"
+                                 data-parent-value-id="<?= $parentValueId ?>"
+                                 class="u-filter__item u-filter__item-<?= $key ?> <?= ($value['CONDITION']['BLOCKED']) ? 'blocked' : '' ?>">
                                 <div class="u-filter__item-title">
                                     <?= $value['NAME']; ?>
                                 </div>
                                 <div class="u-filter__item-data">
                                     <span class="u-filter__select"></span>
                                     <ul class="u-filter__ul-hidden">
-                                        <? foreach ($value['DATA'] as $d_key => $d_value):?>
+                                        <? foreach ($value['DATA'] as $d_key => $d_value): ?>
                                             <li class="u-filter__li-hidden"
                                                 data-id="<?= $d_value['id']; ?>"><?= $d_value['title']; ?></li>
-                                        <?endforeach; ?>
+                                        <? endforeach; ?>
                                     </ul>
                                     <input
                                             type="hidden"
@@ -342,38 +358,44 @@ $arFilterData = [
 
 
 
-                <?if(isset($arFilterData['ID']) && !empty($arFilterData['ID'])):?>
-                    <input type="hidden" name="id" value="<?=$arFilterData['ID']?>"/>
-                <?endif;?>
-                <?if(count($arFilterData['FILTER_ADDITIONAL_VALUE'])>0):?>
-                    <?foreach ($arFilterData['FILTER_ADDITIONAL_VALUE'] as $addKey => $addValue):?>
-                        <input type="hidden" name="<?=$addKey?>" value="<?=$addValue?>"/>
-                    <?endforeach;?>
-                <?endif;?>
+                <? if (isset($arFilterData['ID']) && !empty($arFilterData['ID'])): ?>
+                    <input type="hidden" name="id" value="<?= $arFilterData['ID'] ?>"/>
+                <? endif; ?>
+                <? if (count($arFilterData['FILTER_ADDITIONAL_VALUE']) > 0): ?>
+                    <? foreach ($arFilterData['FILTER_ADDITIONAL_VALUE'] as $addKey => $addValue): ?>
+                        <input type="hidden" name="<?= $addKey ?>" value="<?= $addValue ?>"/>
+                    <? endforeach; ?>
+                <? endif; ?>
             </div>
-
-            <div class="project__header-xlscontainer">
-                <div class="project__header-xls project__xls">
-                    <a href="/user/uploadprojectxls?id=<?=$project?>&type=users" class="project__header-addxls" id="add-program">Изменить текущий персонал</a>
-                    <a href="/uploads/promo_import.xls" download>Скачать пример для добавления</a>
-                </div>
-            </div>
-
         </div>
 
 
         <div class="project__control-panel">
+
+            <div class="project__header-xlscontainer">
+                <div class="project__header-xls project__xls">
+                    <a href="/user/uploadprojectxls?id=<?= $project ?>&type=users" class="project__header-addxls"
+                       id="add-program">Изменить текущий персонал</a>
+                    <a class="xlscontainer-child" href="/uploads/promo_import.xls" download>Скачать пример для добавления</a>
+                    <a href="/uploads/promo_import.xls" download>Скачать текущий персонал</a>
+                    <a class="xlscontainer-child" href="/user/uploadprojectxls?id=<?= $project ?>&type=users" class="project__header-addxls"
+                       id="add-program">Добавить новый персонал</a>
+
+
+                </div>
+            </div>
+
             <div class="program__btns control__buttons">
 
                 <span class="control__add-container">
-                    <span id="control__add-all" class="control__add-btn">+ ПЕРСОНАЛ</span>
+                    <span id="control__add-all" class="control__add-btn">+ ДОБАВИТЬ ПЕРСОНАЛ</span>
                     <ul class="control__add-ul">
-                        <li id="control__add-personal">добавить</li>
+                        <li id="control__add-personal">добавить из базы</li>
                         <li id="control__new-personal">пригласить</li>
                     </ul>
                 </span>
 
-                <button type="submit" id="control__save-btn" class="program__save-btn">ПРИМЕНИТЬ</button>
+                <? /*<button type="submit" id="control__save-btn" class="program__save-btn">ПРИМЕНИТЬ</button>*/ ?>
             </div>
         </div>
 
@@ -416,7 +438,7 @@ $arFilterData = [
         </script>
         <div class='row'>
             <? //		FILTER 		?>
-            <div class="filter__veil"></div>
+
             <div class='col-xs-12 col-sm-4 col-md-3'>
                 <div class="filter__vis hidden-sm hidden-md hidden-lg hidden-xl">ФИЛЬТР</div>
                 <div id="promo-filter">
@@ -621,8 +643,8 @@ $arFilterData = [
 </form>
 
 <form enctype="multipart/form-data" action="" method="POST" id="base-form">
-    <input type="hidden" name="project" class="project-inp" value="<?=$project?>">
-    <input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
+    <input type="hidden" name="project" class="project-inp" value="<?= $project ?>">
+    <input type="hidden" name="MAX_FILE_SIZE" value="5242880"/>
     <input type="file" name="xls" id="add-xls-inp" class="hide">
     <input type="hidden" name="xls-users" value="1">
 </form>

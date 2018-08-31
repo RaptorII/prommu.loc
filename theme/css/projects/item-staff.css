@@ -46,11 +46,12 @@
 
 .project__header{
     background-color: #f5f5f5;
-    padding: 10px 15px 5px;
+    padding: 0px 15px 0px;
     box-sizing: border-box;
-    /*display: flex;*/
-    /*flex-wrap: nowrap;*/
-    margin-bottom:15px;
+    /* display: flex; */
+    /* flex-wrap: nowrap; */
+    margin-bottom: 15px;
+    /* padding-bottom: 0px; */
 }
 
 .project__header .project__header-xls{
@@ -91,6 +92,11 @@
 #DiContent .project__header  .project__header-filter{
     display: flex;
     flex-wrap: wrap;
+    /* margin-bottom: 10px; */
+    padding-bottom: 15px;
+}
+.project__control-panel{
+    display: flow-root;
 }
 
 .project__header .project__header-xls{
@@ -103,23 +109,40 @@
 }
 
 .project__header-xlscontainer{
-    width:100%!important;
+    width:55%!important;
+    float:left;
+}
+.program__btns control__buttons{
+    width:40%;
+    float: right;
+}
+#DiContent .project__xls a:last-child{
+    padding: 0;
 }
 .project__header .project__header-xls{
     width:100%!important;
 }
 .project__header-xls{
-    text-align: center;
-    margin-top: 10px;
+    text-align: left;
 }
 .project__xls #add-program{
     width:225px!important;
 }
-#DiContent .project__xls a{
-    width:225px!important;
+
+.project__xls #add-program a{
+    text-align: left;
 }
-.project__header-xls{
-    text-align: center!important;
+#DiContent .project__xls a{
+    width:210px!important;
+    padding-bottom: 10px!important;
+}
+.project__xls{
+    background: none;
+    padding-top: 0px!important;
+    margin-bottom: 0px;!important;
+}
+.xlscontainer-child{
+    margin-left: 15px;
 }
 
 
@@ -167,6 +190,13 @@ u-filter__blockitem{
     }
     .u-filter__blockitem{
         display:none!important;
+    }
+
+    .project__header-xlscontainer{
+        width:100%!important;
+    }
+    .project__xls{
+        text-align:center!important;
     }
 }
 
@@ -222,6 +252,25 @@ u-filter__blockitem{
     font-size: 16px;
     outline: none;
     text-align: center;
+    cursor:pointer;
+}
+
+.content-block{
+    position: relative;
+}
+
+.prommu__universal-filter__button:after{
+    content: '\25bc';
+    display: block;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    line-height: 26px;
+    font-size: 12px;
+    color: white;
+}
+.prommu__universal-filter__buttoncontainer{
+    position: relative;
 }
 
 /************Верстка фильтра*************
