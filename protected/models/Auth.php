@@ -1340,7 +1340,7 @@ class Auth
         $ip = Yii::app()->getRequest()->getParam('ip');
         $pm = Yii::app()->getRequest()->getParam('pm_source');
         if($pm == '') $pm = '(none)';
-        $client = Yii::app()->getRequest()->getParam('client');
+        $client = Yii::app()->request->cookies['_ga'];
         $client = substr($client, 6, 100);
 
         if( $idUs && $res['isblocked'] != 2 )
