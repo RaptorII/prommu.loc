@@ -127,8 +127,8 @@ class Project extends ARModel
                             'adres' => $clouds[$k]['lindex'],
                             'name' => $clouds[$k]['lname'],
                             'id_city' => $cloud['city'][$i],
-                            'bdate' => date('Y-m-d', strtotime($clouds[$k]['bdate'])),
-                            'edate' => date('Y-m-d', strtotime($clouds[$k]['edate'])),
+                            'bdate' => date('Y.m.d', strtotime($clouds[$k]['bdate'])),
+                            'edate' => date('Y.m.d', strtotime($clouds[$k]['edate'])),
                             'btime' => $clouds[$k]['btime'],
                             'etime' => $clouds[$k]['etime'],
                             'metro' => $clouds[$k]['metro'],
@@ -202,8 +202,8 @@ class Project extends ARModel
             }
             if(isset($bdate) && isset($edate)) {
                 $params .= ' AND pc.bdate>=:bdate AND pc.edate<=:edate';
-                $arParams[':bdate'] = date('Y-m-d', strtotime($bdate));
-                $arParams[':edate'] = date('Y-m-d', strtotime($edate));
+                $arParams[':bdate'] = date('Y.m.d', strtotime($bdate));
+                $arParams[':edate'] = date('Y.m.d', strtotime($edate));
             }
             if($point>0) {
                 $params .= ' AND pc.point=:point';
