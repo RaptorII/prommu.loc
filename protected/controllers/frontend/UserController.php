@@ -1551,10 +1551,21 @@ class UserController extends AppController
 
             switch (Yii::app()->getRequest()->getParam('section')) {
                 case 'staff':
+                    $save = Yii::app()->getRequest()->getParam('save-users');
+                    if(isset($save)) {
+                        $model->setProjectPromo($_POST);
+                        $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id.'/staff');
+                    }
                     if(Yii::app()->request->isAjaxRequest) {
-                        $data = $model->getStaff($id);
+                        $gp = Yii::app()->getRequest()->getParam('get-promos');
+                        $data = (isset($gp)
+                            ? (new Services())->getFilteredPromos()
+                            : $model->getStaff($id));
+
                         $this->renderPartial(
-                            'projects/project-staff-ajax',
+                           isset($gp)
+                                ? 'projects/project-staff-add-ajax'
+                                : 'projects/project-staff-ajax',
                             array('viData' => $data, 'project' => $id),
                             false,
                             true
@@ -1562,7 +1573,6 @@ class UserController extends AppController
                         return;
                     }
                     else {
-                        //$data = (new Services())->getFilteredPromos();
                         $model->getXLSFile();
                         $data = $model->getStaff($id);
                         $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;

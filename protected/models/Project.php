@@ -288,6 +288,12 @@ class Project extends ARModel
     *       Персонал
     */
     public function getProjectPromo($filter){
+        $arRes = Yii::app()->db->createCommand()
+            ->select("name title")
+            ->from('project')
+            ->where('project=:prj', $filter['values'])
+            ->queryRow();
+
         $arT = array();
         $sql = Yii::app()->db->createCommand()
             ->select(
@@ -372,14 +378,14 @@ class Project extends ARModel
                 'metro' => $arT['metros'][$i]['metro']
             );
         }
-
         return $arRes;
     }
     
-    public function getProject($project, $filter=false){
+    public function getProject($project){
+        $filter = $this->getStaffFilter($prj);
         return array_merge(
-                $this->getAdresProgramm($project,$filter),
-                $this->getProjectPromo($project)
+                $this->getAdresProgramm($project),
+                $this->getProjectPromo($filter)
             );
     }
     
@@ -690,7 +696,7 @@ class Project extends ARModel
                         'point' => $p,
                         'location' => $l,
                         'title' => $title,
-                        //'metro' => $arPost['metro'][$c][$l] !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        'metro' => $arPost['metro'][$c][$l]
                     );
                     $arNewP[] = $p;
                 }       
@@ -829,5 +835,56 @@ class Project extends ARModel
         $arRes = $this->getProjectPromo($filter);
         $arRes['pages'] = $pagination;
         return $arRes;
+    }
+    /*
+    *       Добавление нового персонала
+    */
+    public function setProjectPromo($arPost) {
+        if(!$arPost['project'])
+            return false;
+
+        $sql = Yii::app()->db->createCommand()
+            ->select("user")
+            ->from('project_user')
+            ->where('project=:prj', array(':prj' =>$arPost['project']))
+            ->queryAll();
+
+        $arId = array();
+        for($i=0,$n=sizeof($sql); $i<$n; $i++)
+            $arId[] = $sql[$i]['user'];
+
+        if($arPost['users-cnt']>0) {
+            $arN = explode(',', $arPost['users']);
+
+            for($i=0,$n=sizeof($arN); $i<$n; $i++)
+                if(!in_array($arN[$i], $arId))
+                    $res = Yii::app()->db->createCommand()
+                        ->insert('project_user', array(
+                            'project' => $arPost['project'],
+                            'user' => $arN[$i],
+                            'firstname' => 'firstname',
+                            'lastname' => 'lastname',
+                            'email' => 'email',
+                            'phone' => 'phone',
+                            'point' => NULL
+                        ));           
+        }
+
+        for($i=0,$n=sizeof($arPost['inv-name']); $i<$n; $i++) {
+            $phone = $arPost['prfx-phone'][$i] . $arPost['inv-phone'][$i];
+            $id = 0;
+            do{ $id = rand(1111,3334); }while(in_array($id, $arId));
+            $res = Yii::app()->db->createCommand()
+                ->insert('project_user', array(
+                    'project' => $arPost['project'],
+                    'user' => $id,
+                    'firstname' => $arPost['inv-name'][$i],
+                    'lastname' => $arPost['inv-sname'][$i],
+                    'email' => $arPost['inv-email'][$i],
+                    'phone' => $phone,
+                    'point' => NULL
+                ));
+        }
+        return $res;
     }
 }
