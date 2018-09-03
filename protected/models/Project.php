@@ -409,6 +409,7 @@ class Project extends ARModel
                             'edate' =>  $edate,
                             'btime' => explode("-", $sheet_array[$i]['G'])[0],
                             'etime' =>  explode("-", $sheet_array[$i]['G'])[1],
+                            'point' => $i.''.rand(1111,9999),
                         ));   
                 }
         }
