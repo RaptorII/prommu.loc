@@ -373,9 +373,16 @@ class Project extends ARModel
                     ->from('city c')
                     ->where('c.name = :name', array(':name' =>$sheet_array[$i]['A']))
                     ->queryRow();
+                
+                $bdate = explode("-", $sheet_array[$i]['H'])[0];
+                $edate = explode("-", $sheet_array[$i]['H'])[1];
+                   
+                $bdate = str_replace(".", "-", $bdate);
+                $edate = str_replace(".", "-", $edate);
                     
                 if($sheet_array[$i]['I'] != ''){
                     $point = $sheet_array[$i]['I'];
+                    
                     
                      Yii::app()->db->createCommand()
                         ->update('project_city', array(
@@ -386,8 +393,8 @@ class Project extends ARModel
                             'id_city' => $city['id_city'],
                             'btime' =>  explode("-", $sheet_array[$i]['G'])[0],
                             'etime' =>  explode("-", $sheet_array[$i]['G'])[1],
-                            'bdate' => explode("-", $sheet_array[$i]['H'])[0],
-                            'edate' =>  explode("-", $sheet_array[$i]['H'])[1],
+                            'bdate' => $bdate,
+                            'edate' =>  $edate,
                      ), 'point = :point', array(':point' => $point));
                 
                 } else {
@@ -398,8 +405,8 @@ class Project extends ARModel
                             'name' =>  $sheet_array[$i]['B'],
                             'adres' =>  $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'],
                             'id_city' =>  $city['id_city'],
-                            'bdate' =>  explode("-", $sheet_array[$i]['G'])[0],
-                            'edate' =>  explode("-", $sheet_array[$i]['G'])[1],
+                            'bdate' =>  $bdate,
+                            'edate' =>  $edate,
                             'btime' => explode("-", $sheet_array[$i]['H'])[0],
                             'etime' =>  explode("-", $sheet_array[$i]['H'])[1],
                         ));   
