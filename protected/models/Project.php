@@ -407,8 +407,8 @@ class Project extends ARModel
                             'id_city' =>  $city['id_city'],
                             'bdate' =>  $bdate,
                             'edate' =>  $edate,
-                            'btime' => explode("-", $sheet_array[$i]['H'])[0],
-                            'etime' =>  explode("-", $sheet_array[$i]['H'])[1],
+                            'btime' => explode("-", $sheet_array[$i]['G'])[0],
+                            'etime' =>  explode("-", $sheet_array[$i]['G'])[1],
                         ));   
                 }
         }
