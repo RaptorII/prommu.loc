@@ -422,16 +422,21 @@ $arPromo = [
                     </div>
                     <div class="task__tasks-info">
                         <div class="task__tasks-title">
-                            <span class="task__name">Видеть заказ</span>
+                            <span class="task__name">Не выбрано</span>
+                            <ul class="task__hidden-ul">
+                                <li>1</li>
+                                <li>2</li>
+                                <li>3</li>
+                                <li>4</li>
+                                <li>5</li>
+                                <li>6</li>
+                            </ul>
                         </div>
 
                         <div class="task__tasks-buttons">
-                            <input type="button" class="task__tasks-button task__button-green task__button-upload"
-                                   value="Изменить"/>
-                            <input type="button" class="task__tasks-button task__button-grey task__button-alldate"
-                                   value="Дублироать на все даты"/>
-                            <input type="button" class="task__tasks-button task__button-green task__button-allpersons"
-                                   value="Дублироать задачу всем"/>
+                            <span class="task__tasks-button task__button-green task__button-upload">Изменить</span>
+                            <span class="task__tasks-button task__button-grey task__button-alldate">Дублироать на все даты</span>
+                            <span class="task__tasks-button task__button-green task__button-allpersons">Дублироать задачу всем</span>
                         </div>
                     </div>
                 </div>
@@ -449,7 +454,7 @@ $arPromo = [
 
                 <div class="task__single-info-btn">
                     <a href="#" class="task__add-task">ДОБАВИТЬ ЗАДАЧУ</a>
-                    <a href="#" class="task__add-update">СОХРАНИТЬ</a>
+                    <a href="#" class="task__add-update">ИЗМЕНИТЬ</a>
                 </div>
             </div>
             <?

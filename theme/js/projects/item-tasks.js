@@ -30,6 +30,40 @@ let IndexTasks = (function () {
             self.ajaxPushParams('UPDATE');
         });
 
+        $('.task__block').on('click', '.task__name', function()
+        {
+            self.showHiddenUlContent(this);
+        });
+
+        $('.task__block').on('click', '.task__hidden-ul li', function()
+        {
+            self.setValueFromLI(this);
+        });
+
+    };
+
+    IndexTasks.prototype.setValueFromLI = function (e) {
+        let li = e;
+        let value = $(li).text();
+        /**Устанавливаем скрытый input***/
+
+        /******Устанавливаем value в span*******/
+        $(li).closest('.task__block').find('.task__name').text(value);
+        /******Скрываем список ul*******/
+        $(li).parent().fadeOut();
+    };
+
+    /**Функция отображения/скрытия пунктов меню**/
+    IndexTasks.prototype.showHiddenUlContent = function (e) {
+        let element = e;
+        $(element).closest('.task__single-info').find('.task__hidden-ul').fadeOut();;
+
+        let hiddenUl = e.nextElementSibling;
+        if($(hiddenUl).is(":visible")){
+            $(hiddenUl).fadeOut();
+        }else{
+            $(hiddenUl).fadeIn();
+        }
     };
 
 
@@ -45,10 +79,10 @@ let IndexTasks = (function () {
         IndexTasks.prototype.task_location_id = parent.find('input[name="task_location_id"]');
     };
 
-    IndexTasks.prototype.ajaxPushParams = function (type) {
+    IndexTasks.prototype.ajaxPushParams = function () {
         if(IndexTasks.prototype.project_id){
             $.ajax({
-                type: type,
+                type: 'POST',
                 url: '/ajax/123', //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 data: {
                     task_title: IndexTasks.prototype.task_title,
