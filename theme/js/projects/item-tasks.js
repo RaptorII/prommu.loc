@@ -54,18 +54,18 @@ let IndexTasks = (function () {
 
         $('.task__block').on('click', '.task__add-update', function()
         {
-            let type1 = "setTaskInfo";
-            let data = self.setProperties(this, type1);
+            let type = "setTaskInfo";
+            let data = self.setProperties(this, type);
             self.ajaxPushParams(data, "POST");
         });
 
     };
 
-    IndexTasks.prototype.setProperties = function (e, type2) {
+    IndexTasks.prototype.setProperties = function (e, type) {
         let parent = $(e).closest('.task__block');
         let data = [];
 
-        switch (type2) {
+        switch (type) {
             case "getTaskInfo":
                 data = {
                     'task_id': $(parent).find('input[name="task_id"]').val(),
