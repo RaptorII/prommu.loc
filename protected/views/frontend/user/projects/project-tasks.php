@@ -485,12 +485,12 @@ $testArray = [
                         <div class="task__tasks-title">
                             <span class="task__name">Не выбрано</span>
                             <ul class="task__hidden-ul">
-                                <li>1</li>
-                                <li>2</li>
-                                <li>3</li>
-                                <li>4</li>
-                                <li>5</li>
-                                <li>6</li>
+                                <li data-task-id="1">Название задания 1</li>
+                                <li data-task-id="2">Название задания 2</li>
+                                <li data-task-id="3">Название задания 3</li>
+                                <li data-task-id="4">Название задания 4</li>
+                                <li data-task-id="5">Название задания 5</li>
+                                <li data-task-id="6">Название задания 6</li>
                             </ul>
                         </div>
 
@@ -506,11 +506,11 @@ $testArray = [
                 <textarea name="task_descr" class="task__info-descr" placeholder="Опишите задание..."></textarea>
 
                 <? /**********hiddens*************/ ?>
-                <input type="hidden" name="task_id" value="1">
-                <input type="hidden" name="person_id" value="2">
-                <input type="hidden" name="project_id" value="3">
-                <input type="hidden" name="task_date" value="4">
-                <input type="hidden" name="task_location_id" value="5">
+                <input class="task_id-hidden" type="hidden" name="task_id" value="0">
+                <input type="hidden" name="person_id" value="0">
+                <input type="hidden" name="project_id" value="0">
+                <input type="hidden" name="task_date" value="0">
+                <input type="hidden" name="task_location_id" value="0">
                 <? /**********hiddens*************/ ?>
 
                 <div class="task__single-info-btn">
