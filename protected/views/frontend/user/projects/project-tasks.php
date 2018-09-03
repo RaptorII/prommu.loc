@@ -70,10 +70,71 @@ $arPromo = [
 
         ]
 ];
+
+$testArray = [
+        0 =>[
+            'city' => 'Москва',
+            'firstname' => 'Виталий',
+            'lastname' => 'Бутырин',
+            'ttadres' => [
+                    0=>[
+                        'point' => 12323,
+                        'name' => 'АТБ1',
+                        'adres' => 'Центральная',
+                        'etime' => '13:00',
+                        'btime' => '14:00',
+                        'bdate' => '2018.09.03',
+                        'edate' => '2018.09.10',
+                        
+                    ],
+                    
+                    1=> [
+                        'point' => 15456,
+                        'name' => 'АТБ2',
+                        'adres' => 'Центральная33',
+                        'etime' => '15:30',
+                        'btime' => '16:00',
+                        'bdate' => '2018.09.13',
+                        'edate' => '2018.09.16',
+                    ]
+                
+                ]
+
+        ],
+        1 =>[
+            'city' => 'Харьков',
+            'firstname' => 'Максим',
+            'lastname' => 'Максимов',
+            'ttadres' => [
+                    0=>[
+                        'point' => 76876,
+                        'name' => 'АТБ1',
+                        'adres' => 'Центральная',
+                        'etime' => '13:00',
+                        'btime' => '14:00',
+                        'bdate' => '2018.09.03',
+                        'edate' => '2018.09.10',
+                        
+                    ],
+                    
+                    1=> [
+                        'point' => 435665,
+                        'name' => 'АТБ2',
+                        'adres' => 'Центральная33',
+                        'etime' => '15:30',
+                        'btime' => '16:00',
+                        'bdate' => '2018.09.13',
+                        'edate' => '2018.09.16',
+                    ]
+                
+                ]
+
+        ]
+];
 ?>
 
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($_POST); ?>
+<? print_r($testArray); ?>
 </pre>
 
 <div class="row project">
