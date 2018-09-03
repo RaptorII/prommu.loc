@@ -50,7 +50,7 @@
 											<?php foreach ($arLoc['periods'] as $idper => $arPer):
 												$hasUsers = false;
 												foreach ($viData['users'] as $id_user => $user):
-													if($user['point']==$idper && isset($user['status'])): 
+													if($user['point']==$idper /*&& isset($user['status'])*/): 
 														$hasUsers = true;
 														?>
 														<div class="program__cell-users">

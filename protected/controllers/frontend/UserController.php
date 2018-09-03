@@ -1554,7 +1554,7 @@ class UserController extends AppController
                     $save = Yii::app()->getRequest()->getParam('save-users');
                     if(isset($save)) {
                         $model->setProjectPromo($_POST);
-                        $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id.'/staff');
+                        //$this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id.'/staff');
                     }
                     if(Yii::app()->request->isAjaxRequest) {
                         $gp = Yii::app()->getRequest()->getParam('get-promos');

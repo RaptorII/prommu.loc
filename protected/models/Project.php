@@ -354,9 +354,9 @@ class Project extends ARModel
                     ),
                 'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $id,
                 'is_online' => $user['is_online'],
-                'status' => $arT['items1'][$id]['status'],
-                'point' => $arT['items1'][$id]['point'],
-                'date' => $arT['items1'][$id]['date']
+                'status' => $arT['items'][$id]['status'],
+                'point' => $arT['items'][$id]['point'],
+                'date' => $arT['items'][$id]['date']
             );
             foreach ($arT['cities'] as $c)
                 if($c['id_user']==$id)
@@ -382,7 +382,7 @@ class Project extends ARModel
     }
     
     public function getProject($project){
-        $filter = $this->getStaffFilter($prj);
+        $filter = $this->getStaffFilter($project);
         return array_merge(
                 $this->getAdresProgramm($project),
                 $this->getProjectPromo($filter)
@@ -804,21 +804,21 @@ class Project extends ARModel
             ->where('project=:prj', array(':prj'=>$prj))
             ->queryAll();
 
-        foreach ($arS as $user)
+        foreach ($arS as $user) // убираем отчеканых пользователей
             if(!in_array($user['user'], $arr['user']))
                 Yii::app()->db->createCommand()
                     ->update(
                         'project_user',
-                        array('point' => '','status' => 0),
+                        array('point' => NULL),
                         'project=:prj AND user=:user',
                         array(':prj' => $prj,':user' => $user['user'])
                     );
 
-        foreach ($arr['user'] as $id)
+        foreach ($arr['user'] as $id) // устанавливаем чекнутых
             Yii::app()->db->createCommand()
                 ->update(
                     'project_user',
-                    array('point' => $point,'status' => 1),
+                    array('point' => $point),
                     'project=:prj AND user=:user',
                     array(':prj' => $prj,':user' => $id)
                 );
@@ -852,25 +852,34 @@ class Project extends ARModel
         $arId = array();
         for($i=0,$n=sizeof($sql); $i<$n; $i++)
             $arId[] = $sql[$i]['user'];
+        
+        $arN = explode(',', $arPost['users']);
 
-        if($arPost['users-cnt']>0) {
-            $arN = explode(',', $arPost['users']);
-
-            for($i=0,$n=sizeof($arN); $i<$n; $i++)
-                if(!in_array($arN[$i], $arId))
-                    $res = Yii::app()->db->createCommand()
-                        ->insert('project_user', array(
-                            'project' => $arPost['project'],
-                            'user' => $arN[$i],
-                            'firstname' => 'firstname',
-                            'lastname' => 'lastname',
-                            'email' => 'email',
-                            'phone' => 'phone',
-                            'point' => NULL
-                        ));           
+        for($i=0,$n=sizeof($arN); $i<$n; $i++) {
+            if(!$arPost['users-cnt'])
+                break;
+            if(!in_array($arN[$i], $arId))
+                $res = Yii::app()->db->createCommand()
+                    ->insert('project_user', array(
+                        'project' => $arPost['project'],
+                        'user' => $arN[$i],
+                        'firstname' => 'firstname',
+                        'lastname' => 'lastname',
+                        'email' => 'email',
+                        'phone' => 'phone',
+                        'point' => NULL
+                    )); 
         }
 
+        if(!strlen(trim($arPost['inv-name'][0])))
+            return $res;
+
         for($i=0,$n=sizeof($arPost['inv-name']); $i<$n; $i++) {
+            $fname = trim($arPost['inv-name'][$i]);
+            $sname = trim($arPost['inv-sname'][$i]);
+            if(!strlen($fname) || !strlen($sname))
+                continue;
+
             $phone = $arPost['prfx-phone'][$i] . $arPost['inv-phone'][$i];
             $id = 0;
             do{ $id = rand(1111,3334); }while(in_array($id, $arId));
@@ -878,8 +887,8 @@ class Project extends ARModel
                 ->insert('project_user', array(
                     'project' => $arPost['project'],
                     'user' => $id,
-                    'firstname' => $arPost['inv-name'][$i],
-                    'lastname' => $arPost['inv-sname'][$i],
+                    'firstname' => $fname,
+                    'lastname' => $sname,
                     'email' => $arPost['inv-email'][$i],
                     'phone' => $phone,
                     'point' => NULL
