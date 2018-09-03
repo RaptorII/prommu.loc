@@ -127,8 +127,8 @@ class Project extends ARModel
                             'adres' => $clouds[$k]['lindex'],
                             'name' => $clouds[$k]['lname'],
                             'id_city' => $cloud['city'][$i],
-                            'bdate' => date('Y-m-d', strtotime($clouds[$k]['bdate'])),
-                            'edate' => date('Y-m-d', strtotime($clouds[$k]['edate'])),
+                            'bdate' => date('Y.m.d', strtotime($clouds[$k]['bdate'])),
+                            'edate' => date('Y.m.d', strtotime($clouds[$k]['edate'])),
                             'btime' => $clouds[$k]['btime'],
                             'etime' => $clouds[$k]['etime'],
                             'metro' => $clouds[$k]['metro'],
@@ -202,8 +202,8 @@ class Project extends ARModel
             }
             if(isset($bdate) && isset($edate)) {
                 $params .= ' AND pc.bdate>=:bdate AND pc.edate<=:edate';
-                $arParams[':bdate'] = date('Y-m-d', strtotime($bdate));
-                $arParams[':edate'] = date('Y-m-d', strtotime($edate));
+                $arParams[':bdate'] = date('Y.m.d', strtotime($bdate));
+                $arParams[':edate'] = date('Y.m.d', strtotime($edate));
             }
             if($point>0) {
                 $params .= ' AND pc.point=:point';
@@ -373,9 +373,16 @@ class Project extends ARModel
                     ->from('city c')
                     ->where('c.name = :name', array(':name' =>$sheet_array[$i]['A']))
                     ->queryRow();
+                
+                $bdate = explode("-", $sheet_array[$i]['H'])[0];
+                $edate = explode("-", $sheet_array[$i]['H'])[1];
+                   
+                $bdate = str_replace(".", "-", $bdate);
+                $edate = str_replace(".", "-", $edate);
                     
                 if($sheet_array[$i]['I'] != ''){
                     $point = $sheet_array[$i]['I'];
+                    
                     
                      Yii::app()->db->createCommand()
                         ->update('project_city', array(
@@ -386,8 +393,8 @@ class Project extends ARModel
                             'id_city' => $city['id_city'],
                             'btime' =>  explode("-", $sheet_array[$i]['G'])[0],
                             'etime' =>  explode("-", $sheet_array[$i]['G'])[1],
-                            'bdate' => explode("-", $sheet_array[$i]['H'])[0],
-                            'edate' =>  explode("-", $sheet_array[$i]['H'])[1],
+                            'bdate' => $bdate,
+                            'edate' =>  $edate,
                      ), 'point = :point', array(':point' => $point));
                 
                 } else {
@@ -398,10 +405,11 @@ class Project extends ARModel
                             'name' =>  $sheet_array[$i]['B'],
                             'adres' =>  $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'],
                             'id_city' =>  $city['id_city'],
-                            'bdate' =>  explode("-", $sheet_array[$i]['G'])[0],
-                            'edate' =>  explode("-", $sheet_array[$i]['G'])[1],
-                            'btime' => explode("-", $sheet_array[$i]['H'])[0],
-                            'etime' =>  explode("-", $sheet_array[$i]['H'])[1],
+                            'bdate' =>  $bdate,
+                            'edate' =>  $edate,
+                            'btime' => explode("-", $sheet_array[$i]['G'])[0],
+                            'etime' =>  explode("-", $sheet_array[$i]['G'])[1],
+                            'point' => $i.''.rand(1111,9999),
                         ));   
                 }
         }
