@@ -28,7 +28,7 @@ let IndexUniversalFilter = (function () {
         {
             self.setValueFromLI(this);
         });
-        $('.prommu__universal-filter .u-filter__text').keypress(function ()
+        $('.prommu__universal-filter .u-filter__text').on('input',function ()
         {
             //Аякс с задержкой
             clearTimeout(IndexUniversalFilter.AjaxTimer);
@@ -70,7 +70,11 @@ let IndexUniversalFilter = (function () {
         }
 
         self.setDefaultFilterProperties();
-
+        //      аякс постраничная навигация
+        $('#staff-content').on('click','.paging-wrapp a', function(e){
+            e.preventDefault();
+            self.ajaxSetParams(e.target);
+        });
     };
 
     /**Функция отображения/скрытия пунктов меню**/
@@ -160,7 +164,6 @@ let IndexUniversalFilter = (function () {
     };
 
     IndexUniversalFilter.prototype.ajaxSetParams = function () {
-
         let params = '';
         let mainParam='';
 
@@ -185,20 +188,21 @@ let IndexUniversalFilter = (function () {
 
         let getRequest = mainParam +''+ params;
 
+        if(arguments.length) {
+            let str = $(arguments[0]).attr('href');
+            
+            getRequest += str.slice(str.indexOf("&page="));
+        }
+
         if(getRequest) {
-
-            setTimeout(function () {
-                $('.filter__veil').hide();
-            }, 1000);
-
             $.ajax({
                 type: 'GET',
-                url: '/ajax/123', //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                url: window.location.pathname,
                 data: getRequest,
-                dataType: 'json',
-                success: function (value) {
-
-                }
+                success: function (r) {
+                    $('#staff-content').html(r);
+                    $('.filter__veil').hide();
+                },
             });
         }
     };
@@ -471,7 +475,6 @@ let IndexUniversalFilter = (function () {
 }());
 
 $(document).ready(function () {
-    console.log('Script here!');
     new IndexUniversalFilter();
 });
 

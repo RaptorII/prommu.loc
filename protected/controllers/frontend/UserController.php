@@ -1551,9 +1551,22 @@ class UserController extends AppController
 
             switch (Yii::app()->getRequest()->getParam('section')) {
                 case 'staff':
-                    $data = (new Services())->getFilteredPromos();
-                    $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
-                    $model->getXLSFile();
+                    if(Yii::app()->request->isAjaxRequest) {
+                        $data = $model->getStaff($id);
+                        $this->renderPartial(
+                            'projects/project-staff-ajax',
+                            array('viData' => $data, 'project' => $id),
+                            false,
+                            true
+                        );
+                        return;
+                    }
+                    else {
+                        //$data = (new Services())->getFilteredPromos();
+                        $model->getXLSFile();
+                        $data = $model->getStaff($id);
+                        $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
+                    }
                     break;
                 case 'index':
                     if(Yii::app()->request->isAjaxRequest) {

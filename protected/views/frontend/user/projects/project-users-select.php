@@ -47,6 +47,10 @@
 					<div class="row">
 						<? foreach ($viData['users'] as $user): ?>
 							<div class="col-xs-12 col-sm-4 col-md-3">
+								<div class="users-select__item <?=(!$user['point']?'disable':'')?>">
+									<img src="<?=$user['src']?>">
+									<span><?=$user['name']?></span>
+								</div>
 								<input 
 									type="checkbox" 
 									name="user[]" 
@@ -54,10 +58,6 @@
 									id="user-<?=$user['id_user']?>"
 									<?=($user['status']&&($user['point']==$point))?'checked':''?>>
 								<label for="user-<?=$user['id_user']?>"></label>
-								<div class="users-select__item <?=(!$user['status']?'disable':'')?>">
-									<img src="<?=$user['src']?>">
-									<span><?=$user['name']?></span>
-								</div>
 							</div>
 						<? endforeach; ?>
 					</div>

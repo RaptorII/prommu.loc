@@ -6,16 +6,15 @@
 
 class Project extends ARModel
 {
+    public $USERS_IN_PAGE = 20;
 
-
-
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'project';
-	}
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName()
+    {
+        return 'project';
+    }
 
 
 
@@ -152,7 +151,8 @@ class Project extends ARModel
                             'firstname' => 'firstname',
                             'lastname' => 'lastname',
                             'email' => 'email',
-                            'phone' => 'phone'
+                            'phone' => 'phone',
+                            'point' => NULL
                         ));
                     }
         }
@@ -167,6 +167,7 @@ class Project extends ARModel
                             'lastname' => $props['inv-sname'][$i],
                             'email' => $props['inv-email'][$i],
                             'phone' => $props['prfx-phone'][$i].$props['inv-phone'][$i],
+                            'point' => NULL
                         ));
                     
         }
@@ -237,105 +238,139 @@ class Project extends ARModel
 
         return $this->buildAdressArray($result); 
     }
-    
-    public function getProjectPromo($prj){
-        $arT = array();
+    /*
+    *       подсчет пользователей проекта
+    */
+    public function getProjectPromoCnt($filter) {
         $sql = Yii::app()->db->createCommand()
-            ->select("u.user, u.status, u.firstname, u.lastname, u.point, u.date")
-            ->from('project_user u')
-            ->where('u.project = :prj', array(':prj' =>$prj))
-            ->order('u.user desc')
-            ->queryAll(); // поиск всех пользователей проекта
-        
-        if(!sizeof($sql))
-            return array('users' => array());
-        
-        foreach ($sql as $v) {
-            $arT['id1'][] = $v['user']; // собираем ID всех пользователей проекта
-            $arT['items1'][$v['user']] = $v;
+            ->select("pu.id")
+            ->from('project_user pu')
+            ->leftjoin('resume r', 'r.id_user=pu.user')
+            ->leftjoin(
+                'user u', 
+                'u.id_user=pu.user AND u.ismoder=1 AND u.isblocked=0'
+            )
+            ->where($filter['conditions'], $filter['values'])
+            ->queryAll();
+        return sizeof($sql);
+    }
+    /*
+    *       Фильтр для персонала
+    */
+    public function getStaffFilter($prj) {
+        $arRes['conditions'] = 'pu.project = :prj';
+        $arRes['values'] = array(':prj' =>$prj);
+
+        $fname = Yii::app()->getRequest()->getParam('fname');
+        $lname = Yii::app()->getRequest()->getParam('lname');
+        $status = Yii::app()->getRequest()->getParam('status');
+        $point = Yii::app()->getRequest()->getParam('point');
+
+        if(!empty($fname)) {
+            $arRes['conditions'] .= " AND r.firstname LIKE '%".$fname."%'";
+        }
+        if(!empty($lname)) {
+            $arRes['conditions'] .= " AND r.lastname LIKE '%".$lname."%'";
+        }
+        if($status>0) {
+            $arRes['conditions'] .= " AND pu.status=:status";
+            $arRes['values'][':status'] = ($status==1 ? 1 : 0);
+        }
+        if($point>0) {
+            $point==1
+            ? $arRes['conditions'] .= " AND pu.point IS NOT NULL"
+            : $arRes['conditions'] .= " AND pu.point IS NULL";
         }
 
+        return $arRes;
+    }
+    /*
+    *       Персонал
+    */
+    public function getProjectPromo($filter){
+        $arT = array();
         $sql = Yii::app()->db->createCommand()
             ->select(
-                "DISTINCT(r.id_user), 
+                "pu.user, 
+                pu.status,
+                pu.point, 
+                pu.date,
+                pu.firstname fname,
+                pu.lastname lname,
                 r.firstname, 
-                r.lastname, 
-                r.photo, 
+                r.lastname,
+                r.photo,
                 r.isman, 
-                u.is_online"
-            )
-            ->from('resume r')
-            ->leftjoin('user_city uc', 'uc.id_user=r.id_user')
-            ->leftjoin('city c', 'c.id_city=uc.id_city')
-            ->leftjoin('user_metro um', 'um.id_us=r.id_user')
-            ->leftjoin('metro m', 'm.id=um.id_metro')
-            ->join(
+                u.is_online")
+            ->from('project_user pu')
+            ->leftjoin('resume r', 'r.id_user=pu.user')
+            ->leftjoin(
                 'user u', 
-                'u.id_user=r.id_user AND u.ismoder=1 AND u.isblocked=0'
+                'u.id_user=pu.user AND u.ismoder=1 AND u.isblocked=0'
             )
-            ->where(array('in', 'r.id_user', $arT['id1']))
-            ->order('r.mdate desc')
-            ->queryAll(); // собираем всех пользователей с resume
+            ->where($filter['conditions'], $filter['values'])
+            ->order('pu.user desc')
+            ->limit($this->limit)
+            ->offset($this->offset)
+            ->queryAll(); // поиск всех пользователей проекта
+
+        if(!sizeof($sql))
+            return array('users' => array());
 
         foreach ($sql as $v) {
-            $arT['id2'][] = $v['id_user']; // собираем ID пользователей с resume
-            $arT['items2'][$v['id_user']] = $v;
+            $arT['id'][] = $v['user']; // собираем ID всех пользователей проекта
+            $arT['items'][$v['user']] = $v;
         }
 
         $arT['cities'] = Yii::app()->db->createCommand()
-            ->select("uc.id_city, uc.id_user, c.name city")
+            ->select("uc.id_city, uc.id_user, c.name city, c.ismetro")
             ->from('user_city uc')
             ->leftjoin('city c', 'c.id_city=uc.id_city')
-            ->where(array('in', 'uc.id_user', $arT['id2']))
+            ->where(array('in', 'uc.id_user', $arT['id']))
             ->queryAll();
 
         $arT['metros'] = Yii::app()->db->createCommand()
             ->select("um.id_us, m.id id_metro, m.name metro")
             ->from('user_metro um')
             ->leftjoin('metro m', 'm.id=um.id_metro')
-            ->where(array('in', 'um.id_us', $arT['id2']))
+            ->where(array('in', 'um.id_us', $arT['id']))
             ->queryAll();
 
-        $arRes = array();
-        foreach ($arT['id1'] as $id) {
-            if(in_array($id, $arT['id2'])) { // зарегенный пользователь
-                $user = $arT['items2'][$id];
-                $arRes['users'][$id] = array(
-                    'id_user' => $user['id_user'],
-                    'name' => $user['lastname'] . ' ' . $user['firstname'],
-                    'src' => DS . MainConfig::$PATH_APPLIC_LOGO . DS 
-                        . ($user['photo'] 
-                            ? ($user['photo'] . '100.jpg')
-                            : ($user['isman'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F)
-                        ),
-                    'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $user['id_user'],
-                    'is_online' => $user['is_online'],
-                    'status' => $arT['items1'][$id]['status'],
-                    'point' => $arT['items1'][$id]['point'],
-                    'date' => $arT['items1'][$id]['date']
-                );
-            }
-            else {
-                $user = $arT['items1'][$id];
-                $arRes['users'][$id] = array(
-                    'id_user' => $user['user'],
-                    'name' => $user['lastname'] . ' ' . $user['firstname'],
-                    'src' => '/images/company/tmp/logo.png',
-                    'profile' => '',
-                    'is_online' => '',
-                    'status' => $user['status'],
-                    'point' => $user['point'],
-                    'date' => $user['date']
-                );                
-            }
-        }
-        foreach ($arT['id1'] as $id) {
+        foreach ($arT['items'] as $user) {
+            $id = $user['user'];
+            $arRes['users'][$id] = array(
+                'id_user' => $id,
+                'name' => $user['lastname'] . ' ' . $user['firstname'],
+                'src' => DS . MainConfig::$PATH_APPLIC_LOGO . DS 
+                    . ($user['photo'] 
+                        ? ($user['photo'] . '100.jpg')
+                        : ($user['isman'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F)
+                    ),
+                'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $id,
+                'is_online' => $user['is_online'],
+                'status' => $arT['items1'][$id]['status'],
+                'point' => $arT['items1'][$id]['point'],
+                'date' => $arT['items1'][$id]['date']
+            );
             foreach ($arT['cities'] as $c)
                 if($c['id_user']==$id)
                     $arRes['users'][$id]['cities'][$c['id_city']] =  $c['city'];
             foreach ($arT['metros'] as $m)
                 if($m['id_us']==$id)
-                    $arRes['users'][$id]['metros'][$m['id_metro']] =  $m['metro']; 
+                    $arRes['users'][$id]['metros'][$m['id_metro']] =  $m['metro'];
+        }
+        for ($i=0,$n=count($arT['cities']); $i<$n; $i++) {
+            $arRes['filter']['cities'][$arT['cities'][$i]['id_city']] = array(
+                'id' => $arT['cities'][$i]['id_city'],
+                'metro' => $arT['cities'][$i]['ismetro'],
+                'city' => $arT['cities'][$i]['city']
+            );
+        }
+        for ($i=0,$n=count($arT['metros']); $i<$n; $i++) {
+            $arRes['filter']['metros'][$arT['metros'][$i]['id_metro']] = array(
+                'id' => $arT['metros'][$i]['id_metro'],
+                'metro' => $arT['metros'][$i]['metro']
+            );
         }
 
         return $arRes;
@@ -781,5 +816,18 @@ class Project extends ARModel
                     'project=:prj AND user=:user',
                     array(':prj' => $prj,':user' => $id)
                 );
+    }
+    /*
+    *       страница Персонал
+    */
+    public function getStaff($prj) {
+        $filter = $this->getStaffFilter($prj);
+        $cnt = $this->getProjectPromoCnt($filter);
+        $pagination = new CPagination($cnt);
+        $pagination->pageSize = $this->USERS_IN_PAGE;
+        $pagination->applyLimit($this);
+        $arRes = $this->getProjectPromo($filter);
+        $arRes['pages'] = $pagination;
+        return $arRes;
     }
 }

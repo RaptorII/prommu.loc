@@ -1,73 +1,30 @@
 <?php
-//$bUrl = Yii::app()->baseUrl;
-$request = Yii::app()->request;
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/phone-codes/projects.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/get-personal.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/new.css');
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/phone-codes/style.css');
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-staff.css');
+    $pLink = MainConfig::$PAGE_PROJECT_LIST . '/' . $project;
+    $bUrl = Yii::app()->baseUrl;
 
-/***********UNIVERSAL FILTER************/
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/universal-filter.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-filter.css');
-/***********UNIVERSAL FILTER************/
+    Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
+    Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
+    Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/phone-codes/projects.js', CClientScript::POS_END);
+    Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/get-personal.js', CClientScript::POS_END);
+    Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/new.css');
+    Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/phone-codes/style.css');
+    Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-staff.css');
 
-$arPromo = array(
-    0 => array(
-        'id' => '142',
-        'image' => '/images/applic/20180503073112204100.jpg',
-        'ttlink' => '',
-        'name' => 'Джон Смит',
-        'city' => 'Moskow',
-        'active' => 1,
-        'fix_addr' => 1
-    ),
-    1 => array(
-        'id' => '234',
-        'image' => '/images/applic/20180503073112204100.jpg',
-        'ttlink' => '',
-        'name' => 'Джон Смит',
-        'city' => 'Moskow',
-        'active' => 0,
-        'fix_addr' => 0
-    ),
-    2 => array(
-        'id' => '212',
-        'image' => '/images/applic/20180428142455264100.jpg',
-        'ttlink' => '',
-        'name' => 'Sasha Meet',
-        'city' => 'Moskow',
-        'active' => 1,
-        'fix_addr' => 1
-    ),
-    3 => array(
-        'id' => '452',
-        'image' => '/images/applic/20180428142455264100.jpg',
-        'ttlink' => '',
-        'name' => 'Sasha Meet',
-        'city' => 'Moskow',
-        'active' => 1,
-        'fix_addr' => 0
-    )
-);
-?>
-
-<?
-$projectId = $request->getParam('id');
-$sectionId = $request->getParam('section');
+    /***********UNIVERSAL FILTER************/
+    Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/universal-filter.js', CClientScript::POS_END);
+    Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-filter.css');
+    /***********UNIVERSAL FILTER************/
 
 $arFilterData = [
-    'ID' => $projectId, //Обязательное свойство!
+    'ID' => $project, //Обязательное свойство!
     'FILTER_ADDITIONAL_VALUE' => [
-        'SECTION_ID' => $sectionId
+        'SECTION_ID' => Yii::app()->request->getParam('section')
     ],
     'FILTER_SETTINGS' => [
         0 => [
             'NAME' => 'Имя',
             'TYPE' => 'text',
-            'INPUT_NAME' => 'first_name',
+            'INPUT_NAME' => 'fname',
             'DATA' => [],
             'DATA_DEFAULT' => '',
             'PLACEHOLDER' => ''
@@ -78,19 +35,20 @@ $arFilterData = [
             'INPUT_NAME' => 'status',
             'DATA' => [
                 0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ],
+                1 => [
                     'title' => 'Подтверждено',
                     'id' => '1'
                 ],
-                1 => [
-                    'title' => 'Не подтверждено',
-                    'id' => '0'
-                ],
                 2 => [
-                    'title' => 'Все',
+                    'title' => 'Не подтверждено',
                     'id' => '2'
                 ]
+
             ],
-            'DATA_DEFAULT' => '1'
+            'DATA_DEFAULT' => '0'
         ],
         2 => [
             'NAME' => 'Город',
@@ -98,19 +56,11 @@ $arFilterData = [
             'INPUT_NAME' => 'city',
             'DATA' => [
                 0 => [
-                    'title' => 'Москва',
-                    'id' => '1'
-                ],
-                1 => [
-                    'title' => 'Санкт-Петербург',
-                    'id' => '0'
-                ],
-                2 => [
                     'title' => 'Все',
-                    'id' => '2'
+                    'id' => '0'
                 ]
             ],
-            'DATA_DEFAULT' => '2',
+            'DATA_DEFAULT' => '0',
             'CONDITION' => [
                 'BLOCKED' => 'true',
                 'PARENT_ID' => '4',
@@ -124,7 +74,7 @@ $arFilterData = [
         3 => [
             'NAME' => 'Фамилия',
             'TYPE' => 'text',
-            'INPUT_NAME' => 'second_name',
+            'INPUT_NAME' => 'lname',
             'DATA' => [],
             'DATA_DEFAULT' => '',
             'PLACEHOLDER' => ''
@@ -132,22 +82,22 @@ $arFilterData = [
         4 => [
             'NAME' => 'Привязка к адресу',
             'TYPE' => 'select',
-            'INPUT_NAME' => 'address',
+            'INPUT_NAME' => 'point',
             'DATA' => [
                 0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ],
+                1 => [
                     'title' => 'Привязан',
                     'id' => '1'
                 ],
-                1 => [
-                    'title' => 'Не привязан',
-                    'id' => '0'
-                ],
                 2 => [
-                    'title' => 'Все',
+                    'title' => 'Не привязан',
                     'id' => '2'
                 ]
             ],
-            'DATA_DEFAULT' => '2'
+            'DATA_DEFAULT' => '0'
         ],
         5 => [
             'NAME' => 'Название ТТ',
@@ -229,21 +179,17 @@ $arFilterData = [
             'INPUT_NAME' => 'metro',
             'DATA' => [
                 0 => [
-                    'title' => 'Метро 1',
-                    'id' => '1'
-                ],
-                1 => [
-                    'title' => 'Метро 2',
-                    'id' => '0'
-                ],
-                2 => [
                     'title' => 'Все',
-                    'id' => '2'
+                    'id' => '0'
                 ]
             ]
         ]
-    ]
+    ],
 ];
+foreach ($viData['filter']['cities'] as $id => $v)
+    $arFilterData['FILTER_SETTINGS'][2]['DATA'][$id] = ['title' => $v['city'],'id' => $id];
+foreach ($viData['filter']['metros'] as $id => $v)
+    $arFilterData['FILTER_SETTINGS'][11]['DATA'][$id] = ['title' => $v['metro'],'id' => $id];
 ?>
 
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
@@ -358,9 +304,9 @@ $arFilterData = [
 
 
 
-                <? if (isset($arFilterData['ID']) && !empty($arFilterData['ID'])): ?>
+                <? /*if (isset($arFilterData['ID']) && !empty($arFilterData['ID'])): ?>
                     <input type="hidden" name="id" value="<?= $arFilterData['ID'] ?>"/>
-                <? endif; ?>
+                <? endif;*/ ?>
                 <? if (count($arFilterData['FILTER_ADDITIONAL_VALUE']) > 0): ?>
                     <? foreach ($arFilterData['FILTER_ADDITIONAL_VALUE'] as $addKey => $addValue): ?>
                         <input type="hidden" name="<?= $addKey ?>" value="<?= $addValue ?>"/>
@@ -400,26 +346,8 @@ $arFilterData = [
         </div>
 
         <h1 class="project__title personal__title">ПЕРСОНАЛ</h1>
-        <div class="row">
-            <? foreach ($arPromo as $key => $value): ?>
-                <div class="col-xs-12 col-sm-4 col-md-3">
-                    <div class="personal__item">
-
-                        <img class="<?= ($value['active'] == 0) ? 'personal__deact' : ''; ?>"
-                             src="<?= $value['image']; ?>">
-
-                        <div class="personal__item-name"><?= $value['name']; ?></div>
-                        <div class="personal__item-add">
-                            <? if ($value['fix_addr'] == 1): ?>
-                                <a href="/user/projects/<?= $projectId ?>/route/<?= $value['id']; ?>">
-                                    Закрепленные адреса
-                                </a>
-                            <? endif; ?>
-                        </div>
-                        <div class="personal__item-city"><?= $value['city']; ?></div>
-                    </div>
-                </div>
-            <? endforeach; ?>
+        <div id="staff-content">
+            <?php require __DIR__ . '/project-staff-ajax.php'; ?>
         </div>
     </div>
 
