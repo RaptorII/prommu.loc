@@ -1,19 +1,19 @@
 <?php
-    $pLink = MainConfig::$PAGE_PROJECT_LIST . '/' . $project;
-    $bUrl = Yii::app()->baseUrl;
+$pLink = MainConfig::$PAGE_PROJECT_LIST . '/' . $project;
+$bUrl = Yii::app()->baseUrl;
 
-    Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
-    Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/phone-codes/projects.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/get-personal.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/new.css');
-    Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/phone-codes/style.css');
-    Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-staff.css');
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/phone-codes/projects.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/get-personal.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/new.css');
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/phone-codes/style.css');
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-staff.css');
 
-    /***********UNIVERSAL FILTER************/
-    Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/universal-filter.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-filter.css');
-    /***********UNIVERSAL FILTER************/
+/***********UNIVERSAL FILTER************/
+Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/universal-filter.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-filter.css');
+/***********UNIVERSAL FILTER************/
 
 $arFilterData = [
     'ID' => $project, //Обязательное свойство!
@@ -187,9 +187,9 @@ $arFilterData = [
     ],
 ];
 foreach ($viData['filter']['cities'] as $id => $v)
-    $arFilterData['FILTER_SETTINGS'][2]['DATA'][$id] = ['title' => $v['city'],'id' => $id];
+    $arFilterData['FILTER_SETTINGS'][2]['DATA'][$id] = ['title' => $v['city'], 'id' => $id];
 foreach ($viData['filter']['metros'] as $id => $v)
-    $arFilterData['FILTER_SETTINGS'][11]['DATA'][$id] = ['title' => $v['metro'],'id' => $id];
+    $arFilterData['FILTER_SETTINGS'][11]['DATA'][$id] = ['title' => $v['metro'], 'id' => $id];
 ?>
 
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
@@ -320,12 +320,36 @@ foreach ($viData['filter']['metros'] as $id => $v)
 
             <div class="project__header-xlscontainer">
                 <div class="project__header-xls project__xls">
+
+                    <? /*<a href="/uploads/promo_import.xls" download>Скачать текущий персонал</a>*/ ?>
+                    <a href="/uploads/promo_import.xls" download>
+                        Выгрузить добавленный персонал
+                    </a>
+
+                    <? /*<a href="/user/uploadprojectxls?id=<?= $project ?>&type=users" class="project__header-addxls"
+                       id="add-program">
+                            Изменить текущий персонал
+                    </a>*/ ?>
                     <a href="/user/uploadprojectxls?id=<?= $project ?>&type=users" class="project__header-addxls"
-                       id="add-program">Изменить текущий персонал</a>
-                    <a class="xlscontainer-child" href="/uploads/promo_import.xls" download>Скачать пример для добавления</a>
-                    <a href="/uploads/promo_import.xls" download>Скачать текущий персонал</a>
-                    <a class="xlscontainer-child" href="/user/uploadprojectxls?id=<?= $project ?>&type=users" class="project__header-addxls"
-                       id="add-program">Добавить новый персонал</a>
+                        id="add-program">Загрузить изменения по добавленному персоналу</a>
+
+                    <? /*<a class="xlscontainer-child" href="/uploads/promo_import.xls" download>
+                        Скачать пример для добавления
+                     </a>*/ ?>
+                    <a class="xlscontainer-child" href="/uploads/promo_import.xls" download>
+                        Выгрузить пример для добавления нового персонала
+                    </a>
+
+                    <? /*<a class="xlscontainer-child" href="/user/uploadprojectxls?id=<?= $project ?>&type=users"
+                       class="project__header-addxls"
+                       id="add-program">
+                        Добавить новый персонал
+                    </a>*/ ?>
+                    <a class="xlscontainer-child" href="/user/uploadprojectxls?id=<?= $project ?>&type=users"
+                       class="project__header-addxls"
+                       id="add-program">
+                        Загрузить новый персонал
+                    </a>
 
 
                 </div>

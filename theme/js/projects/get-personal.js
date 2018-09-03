@@ -53,8 +53,10 @@ var ProjectAddPersonal = (function () {
         $('.prommu__universal-filter__button').click(function(){
             if($('.project__header-filter').is(':visible')){
                 $('.project__header-filter').fadeOut();
+                $(this).removeClass('u-filter__close');
             }else{
                 $('.project__header-filter').fadeIn();
+                $(this).addClass('u-filter__close');
             }
         });
 

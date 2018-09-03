@@ -109,7 +109,7 @@
 }
 
 .project__header-xlscontainer{
-    width:55%!important;
+    width:80%!important;
     float:left;
 }
 .program__btns control__buttons{
@@ -133,7 +133,9 @@
     text-align: left;
 }
 #DiContent .project__xls a{
-    width:210px!important;
+    /*width:210px!important;/*
+     */
+    width:340px!important;
     padding-bottom: 10px!important;
 }
 .project__xls{
@@ -141,9 +143,11 @@
     padding-top: 0px!important;
     margin-bottom: 0px;!important;
 }
+
+/*
 .xlscontainer-child{
     margin-left: 15px;
-}
+}*/
 
 
 
@@ -206,6 +210,7 @@ u-filter__blockitem{
     display: inline-block;
     text-transform: none;
     line-height: 30px;
+    margin-top:8px;
 }
 
 .control__add-ul {
@@ -269,6 +274,15 @@ u-filter__blockitem{
     font-size: 12px;
     color: white;
 }
+
+.prommu__universal-filter__button.u-filter__close:after{
+    -webkit-transform: rotate(-180deg); //Chrome, Safari
+    -moz-transform: rotate(-180deg); //Firefox
+    -o-transform: rotate(-180deg); //Opera
+    -ms-transform: rotate(-180deg); //IE
+    transform: rotate(-180deg); //браузеры без префексов
+    }
+
 .prommu__universal-filter__buttoncontainer{
     position: relative;
 }
