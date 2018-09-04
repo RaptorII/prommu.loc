@@ -7,7 +7,7 @@
 ?>
 <div class="row project">
 	<div class="col-xs-12">
-		<? require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/projects/project-nav.php'; ?>
+		<? require __DIR__ . '/project-nav.php'; ?>
 		<div id="content">
 			<div class="project__module">
 				<div class="project__xls">
@@ -50,7 +50,7 @@
 											<?php foreach ($arLoc['periods'] as $idper => $arPer):
 												$hasUsers = false;
 												foreach ($viData['users'] as $id_user => $user):
-													if($user['point']==$idper && isset($user['status'])): 
+													if($user['point']==$idper /*&& isset($user['status'])*/): 
 														$hasUsers = true;
 														?>
 														<div class="program__cell-users">

@@ -52,7 +52,7 @@
 												<div class="metro-field project__index-arrow">
 													<?php if(is_array($arLoc['metro'])): ?>
 														<?php foreach($arLoc['metro'] as $mId => $mName): ?>
-															<span class="metro-select"><?=$mName?></span>
+															<span class="metro-select"><?=$mName?><b></b></span>
 															<input type="text" name="m" class="metro-inp" autocomplete="off" value="<?=$mName?>">
 															<ul class="select-list"></ul>
 															<input type="hidden" name="<?='metro[' . $idCity . '][' . $idLoc . ']'?>" value="<?=$mId?>">

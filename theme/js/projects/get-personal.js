@@ -27,7 +27,7 @@ var ProjectAddPersonal = (function () {
         $('#invitation #save-prsnl-cancel').click(function(){ self.deleteElement(this) });
 
         //      просмотреть все вакансии
-        $('.more-posts').click(function(){
+        $('#addition').on('click','.more-posts',function(){
             $(this.parentNode).css({height:'initial'});
             $(this).remove();
         });
@@ -38,8 +38,19 @@ var ProjectAddPersonal = (function () {
             $('#main').css({display:'block'});
             $('#invitation').css({display:'none'});
         });
-        $('#control__add-personal').click(function(){
-            $('#addition').css({display:'block'});
+        $('#control__add-personal').click(function(){ 
+            $('.filter__veil').show();
+            $.ajax({ // подтягиваем существующих пользователей
+                type: 'GET',
+                url: window.location.pathname,
+                data: 'get-promos=1',
+                success: function (r) {
+                    $('#addition').html(r);
+                    $('.filter__veil').hide();
+                    $('#addition').css({display:'block'});
+                    self.visibilityFilter('load');
+                },
+            });
             $('#main').css({display:'none'});
             $('#invitation').css({display:'none'});
         });
@@ -61,35 +72,44 @@ var ProjectAddPersonal = (function () {
         });
 
 
-
-        //      устанавливаем выбрть все/снять все вакансии
-        $('.filter-posts input').change(function(){ self.changeSelPosts(this) });
         //      прячем фильтр для моб. разрешения
-        $(window).on('load resize',function(){ self.visibilityFilter('load') });
-        $('.filter__vis').click(function(){ self.visibilityFilter('click') });
-        // вкладки фильтра
-        $('.filter__item-name').click(function(){ self.visibilityTab(this) });
-        // подгрузка данных для пола, и дополнительно
-        $('.filter-sex input, .filter-additional input').change(
-            function(){ setTimeout(self.getAppsAjax(), 300) }
-        );
-        // подгрузка данных для возраста
-        $('.filter__age-btn').click(function(){ self.getAppsAjax() });
-        // подгрузка данных при перелистывании
-        $('#promo-content').on('click', '.paging-wrapp a', function(e){
-            self.getAppsAjax(e)
+        $(window).on('resize',function(){ self.visibilityFilter('load') });
+        //      устанавливаем выбрть все/снять все вакансии
+        $('#addition').on('change','.filter-posts input', function(){ 
+            self.changeSelPosts(this) 
         })
-            .on('change', '.promo_inp', function(){ //  выбор работников
-                self.addWorkers(this)
-            });
-        $('#all-workers').change(function(){ self.addWorkers(this) }); //  выбрать всех
-        $('#filter-city').on('input','.city-inp',function(){ self.inputFilterCity(this) });
-        $('#filter-city').on('focus','.city-inp',function(){ self.focusFilterCity(this) });
-        $('#filter-city').on('click','.filter-city-select',function(e){
+        .on('click','.filter__vis',function(){ 
+            self.visibilityFilter('click')
+        })  
+        .on('click','.filter__item-name',function(){
+            self.visibilityTab(this) // вкладки фильтра
+        })     
+        .on('change','.filter-sex input',
+            // подгрузка данных для пола, и дополнительно
+            function(){ setTimeout(self.getAppsAjax(), 300) }     
+        )
+        .on('change','.filter-additional input',
+            function(){ setTimeout(self.getAppsAjax(), 300) }
+        )
+        .on('click','.filter__age-btn',
+            function(){ self.getAppsAjax()}  // подгрузка данных для возраста
+        )
+        .on('click', '.paging-wrapp a', 
+            function(e){ self.getAppsAjax(e) } // подгрузка данных при перелистывании
+        )
+        .on('change', '.promo_inp', 
+            function(){ self.addWorkers(this) } //  выбор работников
+        )
+        .on('change', '#all-workers', 
+            function(){ self.addWorkers(this) } //  выбрать всех
+        )
+        .on('input','#filter-city .city-inp',function(){ self.inputFilterCity(this) })
+        .on('focus','#filter-city .city-inp',function(){ self.focusFilterCity(this) })
+        .on('click','#filter-city .filter-city-select',function(e){
             if(!$(e.target).is('b'))
                 $(e.target).find('.city-inp').focus();
-        });
-        $('#workers-btn').click(function(){ self.checkAddition() });
+        })
+        .on('click','#workers-btn',function(){ self.checkAddition() });
         // закрытие списка городов
         $(document).on('click', function(e) { self.checkFilterCity(e.target) });
 
@@ -275,11 +295,8 @@ var ProjectAddPersonal = (function () {
         }
         if (!empty) {
             if(save) {
-                //self.showModule(e);
-                $('#addition').css({display:'none'});
-                $('#main').css({display:'block'});
-                $('#invitation').css({display:'none'});
-                return true;
+                $('#update-person').submit();
+                return;
             }
 
             let html = $('#invitation-content').html(),
@@ -535,7 +552,7 @@ var ProjectAddPersonal = (function () {
     ProjectAddPersonal.prototype.checkAddition = function () {
         let btn = document.querySelector('#workers-btn');
         if($('#mess-workers').val()!=='')
-            this.Project.showModule(btn);
+            $('#update-person').submit();
         else
             MainProject.showPopup('notif','addition');
     }
