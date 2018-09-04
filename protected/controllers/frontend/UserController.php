@@ -1551,13 +1551,34 @@ class UserController extends AppController
 
             switch (Yii::app()->getRequest()->getParam('section')) {
                 case 'staff':
-                    //$data = (new Services())->getFilteredPromos();
-                    $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
+                    $save = Yii::app()->getRequest()->getParam('save-users');
+                    if(isset($save)) {
+                        $model->setProjectPromo($_POST);
+                        $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id.'/staff');
+                    }
+                    if(Yii::app()->request->isAjaxRequest) {
+                        $gp = Yii::app()->getRequest()->getParam('get-promos');
+                        $data = (isset($gp)
+                            ? (new Services())->getFilteredPromos()
+                            : $model->getStaff($id));
+
+                        $this->renderPartial(
+                           isset($gp)
+                                ? 'projects/project-staff-add-ajax'
+                                : 'projects/project-staff-ajax',
+                            array('viData' => $data, 'project' => $id),
+                            false,
+                            true
+                        );
+                        return;
+                    }
                     $model->getXLSFile();
+                    $data = $model->getStaff($id);
+                    $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
                     break;
                 case 'index':
+                    $data = $model->getAdresProgramm($id);
                     if(Yii::app()->request->isAjaxRequest) {
-                        $data = $model->getAdresProgramm($id,true);
                         $this->renderPartial(
                             'projects/project-index-ajax',
                             array('viData' => $data, 'project' => $id),
@@ -1566,11 +1587,8 @@ class UserController extends AppController
                         );
                         return;
                     }
-                    else {
-                        $data = $model->getAdresProgramm($id);
-                        $view = MainConfig::$VIEW_PROJECT_ITEM_INDEX;
-                        $model->getXLSFile();
-                    }
+                    $view = MainConfig::$VIEW_PROJECT_ITEM_INDEX;
+                    $model->getXLSFile();
                     break;
                 case 'geo':
                     $view = MainConfig::$VIEW_PROJECT_ITEM_GEO;
@@ -1579,6 +1597,7 @@ class UserController extends AppController
                     $view = MainConfig::$VIEW_PROJECT_ITEM_ROUTE;
                     break;
                 case 'tasks':
+                    $data = $model->getTaskList($id);
                     $view = MainConfig::$VIEW_PROJECT_ITEM_TASKS;
                     break;
                 case 'report':
@@ -1589,21 +1608,32 @@ class UserController extends AppController
                         $model->setAdresProgramm($_POST);
                         $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id.'/index');
                     }
-                    else {
-                        $data = $model->getAdresProgramm($id);
-                        $view = MainConfig::$VIEW_PROJECT_ITEM_ADR_CHANGE;                        
-                    }
+                    $data = $model->getAdresProgramm($id);
+                    $view = MainConfig::$VIEW_PROJECT_ITEM_ADR_CHANGE;
                     break;
                 case 'users-select':
+                    if(Yii::app()->request->isAjaxRequest) {
+                        $data = $model->getStaff($id);
+                        $this->renderPartial(
+                            'projects/project-users-select-ajax',
+                            array('viData' => $data, 'project' => $id),
+                            false,
+                            true
+                        );
+                        return;
+                    }
+
                     if( Yii::app()->getRequest()->isPostRequest) {
                         $model->setPromoToPoint($_POST);
                         $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id);
                     }
-                    else {
-		                  $view = MainConfig::$VIEW_PROJECT_ITEM_PROMO_CHANGE;
-		                  $data = $model->getProject($id);
-		                  $data = $model->getPoint($data);                    	
-                    }
+                    $point = Yii::app()->getRequest()->getParam('point');
+                    if(!isset($point))
+                        $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id);
+
+                    $view = MainConfig::$VIEW_PROJECT_ITEM_PROMO_CHANGE;
+                    $data = $model->getStaff($id);
+                    $data['point'] = $model->getPoint($id,$point);
                     break;
                 default:
                     $data = $model->getProject($id);
