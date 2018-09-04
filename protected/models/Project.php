@@ -225,31 +225,42 @@ class Project extends ARModel
             
         return $result;
     }
-    
-    public function getAdresProgramm($project, $filter=false){
-        $params = 'pc.project=:project';
-        $arParams = array(':project' =>$project);
+    /*
+    *       Фильтр для Адресной программы
+    */
+    public function getIndexFilter($prj) {
+        $arRes['conditions'] = 'pc.project=:prj';
+        $arRes['values'] = array(':prj' =>$prj);
 
-        if($filter) {
-            $city = Yii::app()->getRequest()->getParam('city');
-            $bdate = Yii::app()->getRequest()->getParam('bdate');
-            $edate = Yii::app()->getRequest()->getParam('edate');
-            $point = Yii::app()->getRequest()->getParam('point');
-            if($city>0) {
-                $params .= ' AND pc.id_city=:city';
-                $arParams[':city'] = $city;
-            }
-            if(isset($bdate) && isset($edate)) {
-                $params .= ' AND pc.bdate>=:bdate AND pc.edate<=:edate';
-                $arParams[':bdate'] = date('Y.m.d', strtotime($bdate));
-                $arParams[':edate'] = date('Y.m.d', strtotime($edate));
-            }
-            if($point>0) {
-                $params .= ' AND pc.point=:point';
-                $arParams[':point'] = $point;
-            }          
+        $city = Yii::app()->getRequest()->getParam('city');
+        $bdate = Yii::app()->getRequest()->getParam('bdate');
+        $edate = Yii::app()->getRequest()->getParam('edate');
+        $point = Yii::app()->getRequest()->getParam('point');
+        $filter = Yii::app()->getRequest()->getParam('filter');
+
+        if(!isset($filter))
+            return $arRes;
+        if($city>0) {
+            $arRes['conditions'] .= ' AND pc.id_city=:city';
+            $arRes['values'][':city'] = $city;
+        }
+        if(isset($bdate) && isset($edate)) {
+            $arRes['conditions'] .= ' AND pc.bdate>=:bdate AND pc.edate<=:edate';
+            $arRes['values'][':bdate'] = date('Y.m.d', strtotime($bdate));
+            $arRes['values'][':edate'] = date('Y.m.d', strtotime($edate));
+        }
+        if($point>0) {
+            $arRes['conditions'] .= ' AND pc.point=:point';
+            $arRes['values'][':point'] = $point;
         }
 
+        return $arRes;
+    }
+    /*
+    *       Список Адресной программы
+    */
+    public function getAdresProgramm($project){
+        $filter = $this->getIndexFilter($project);
         $result = Yii::app()->db->createCommand()
             ->select(
                 "pc.name, 
@@ -270,7 +281,7 @@ class Project extends ARModel
             ->from('project_city pc')
             ->leftjoin('city c', 'c.id_city=pc.id_city')
             ->leftjoin('metro m', 'm.id=pc.metro')
-            ->where($params, $arParams)
+            ->where($filter['conditions'], $filter['values'])
             ->order('pc.bdate desc')
             ->queryAll();
 
@@ -279,7 +290,8 @@ class Project extends ARModel
     /*
     *       подсчет пользователей проекта
     */
-    public function getProjectPromoCnt($filter) {
+    public function getProjectPromoCnt($prj) {
+        $filter = $this->getStaffFilter($prj);
         $sql = Yii::app()->db->createCommand()
             ->select("pu.id")
             ->from('project_user pu')
@@ -303,7 +315,10 @@ class Project extends ARModel
         $lname = Yii::app()->getRequest()->getParam('lname');
         $status = Yii::app()->getRequest()->getParam('status');
         $point = Yii::app()->getRequest()->getParam('haspoint');
+        $filter = Yii::app()->getRequest()->getParam('filter');
 
+        if(!isset($filter))
+            return $arRes;
         if(!empty($fname)) {
             $arRes['conditions'] .= " AND r.firstname LIKE '%".$fname."%'";
         }
@@ -324,7 +339,8 @@ class Project extends ARModel
     /*
     *       Персонал
     */
-    public function getProjectPromo($filter){
+    public function getProjectPromo($prj){
+        $filter = $this->getStaffFilter($prj);
         $arRes = Yii::app()->db->createCommand()
             ->select("name title")
             ->from('project')
@@ -419,10 +435,9 @@ class Project extends ARModel
     }
     
     public function getProject($project){
-        $filter = $this->getStaffFilter($project);
         return array_merge(
                 $this->getAdresProgramm($project),
-                $this->getProjectPromo($filter)
+                $this->getProjectPromo($project)
             );
     }
     
@@ -880,12 +895,11 @@ class Project extends ARModel
     *       страница Персонал
     */
     public function getStaff($prj) {
-        $filter = $this->getStaffFilter($prj);
-        $cnt = $this->getProjectPromoCnt($filter);
+        $cnt = $this->getProjectPromoCnt($prj);
         $pagination = new CPagination($cnt);
         $pagination->pageSize = $this->USERS_IN_PAGE;
         $pagination->applyLimit($this);
-        $arRes = $this->getProjectPromo($filter);
+        $arRes = $this->getProjectPromo($prj);
         $arRes['pages'] = $pagination;
         return $arRes;
     }
@@ -948,5 +962,21 @@ class Project extends ARModel
                 ));
         }
         return $res;
+    }
+    /*
+    *       Список задач
+    */
+    public function getTaskList($prj) {
+        $arRes = array();
+        $sql = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('project_task')
+            ->where('project = :prj', array(':prj' =>$prj))
+            ->queryAll();
+
+        for($i=0,$n=sizeof($sql); $i<$n; $i++)
+            $arRes[$sql[$i]['point']][$sql[$i]['task']] = $sql[$i];
+
+        return $arRes;
     }
 }
