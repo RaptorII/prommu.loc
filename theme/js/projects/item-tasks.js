@@ -128,7 +128,7 @@ let IndexTasks = (function () {
                         'project_id': $(parent).find('input[name="project_id"]').val(),
                         'person_id': $(parent).find('input[name="person_id"]').val(),
                         'task_title': $(parent).find('input[name="task_title"]').val(),
-                        'task_descr': $(parent).find('input[name="task_descr"]').val(),
+                        'task_descr': $(parent).find('textarea[name="task_descr"]').val(),
                         'type': 'setTaskInfo'
                     };
                 }else{
@@ -167,7 +167,7 @@ let IndexTasks = (function () {
                         'project_id': $(parent).find('input[name="project_id"]').val(),
                         'person_id': $(parent).find('input[name="person_id"]').val(),
                         'task_title': $(parent).find('input[name="task_title"]').val(),
-                        'task_descr': $(parent).find('input[name="task_descr"]').val(),
+                        'task_descr': $(parent).find('textarea[name="task_descr"]').val(),
                         'type': 'addTaskAllDate'
                     };
                 }else{
