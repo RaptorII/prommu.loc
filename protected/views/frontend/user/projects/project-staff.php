@@ -82,7 +82,7 @@ $arFilterData = [
         4 => [
             'NAME' => 'Привязка к адресу',
             'TYPE' => 'select',
-            'INPUT_NAME' => 'point',
+            'INPUT_NAME' => 'haspoint',
             'DATA' => [
                 0 => [
                     'title' => 'Все',
@@ -193,7 +193,7 @@ foreach ($viData['filter']['metros'] as $id => $v)
 ?>
 <div class="row project">
     <div class="col-xs-12">
-        <? require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/projects/project-nav.php'; ?>
+        <? require __DIR__ . '/project-nav.php'; ?>
     </div>
 </div>
 

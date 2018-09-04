@@ -264,7 +264,7 @@ class Project extends ARModel
         $fname = Yii::app()->getRequest()->getParam('fname');
         $lname = Yii::app()->getRequest()->getParam('lname');
         $status = Yii::app()->getRequest()->getParam('status');
-        $point = Yii::app()->getRequest()->getParam('point');
+        $point = Yii::app()->getRequest()->getParam('haspoint');
 
         if(!empty($fname)) {
             $arRes['conditions'] .= " AND r.firstname LIKE '%".$fname."%'";
@@ -273,13 +273,12 @@ class Project extends ARModel
             $arRes['conditions'] .= " AND r.lastname LIKE '%".$lname."%'";
         }
         if($status>0) {
-            $arRes['conditions'] .= " AND pu.status=:status";
-            $arRes['values'][':status'] = ($status==1 ? 1 : 0);
+            $arRes['conditions'] .= " AND pu.status=" . ($status==1 ? 1 : 0);
         }
         if($point>0) {
-            $point==1
-            ? $arRes['conditions'] .= " AND pu.point IS NOT NULL"
-            : $arRes['conditions'] .= " AND pu.point IS NULL";
+            $arRes['conditions'] .= ($point==1
+                ? " AND pu.point IS NOT NULL"
+                : " AND pu.point IS NULL");
         }
 
         return $arRes;
@@ -763,31 +762,47 @@ class Project extends ARModel
     /*
     *       Получаем значение точки
     */
-    public function getPoint($arr) {
-        $point = Yii::app()->getRequest()->getParam('point');
-        $arr['point'] = array();
-        foreach ($arr['location'] as $id => $arCity)
-            foreach ($arCity['locations'] as $idloc => $arLoc)
-                foreach ($arLoc['periods'] as $idper => $arPer)
-                    if($point==$idper) {
-                        $arr['point'] = array(
-                            'id_city' => $id,
-                            'id_loc' => $idloc,
-                            'id_period' => $idper,
-                            'city' => $arCity['name'],
-                            'ismetro' => $arCity['metro'],
-                            'locname' => $arLoc['name'],
-                            'locindex' => $arLoc['index'],
-                            'metro' => join(',<br>',$arLoc['metro']),
-                            'date' => $arPer['bdate']==$arPer['edate'] 
-                                ? $arPer['bdate'] 
-                                : ('с ' . $arPer['bdate'] . ' по ' . $arPer['edate']),
-                            'time' => $arPer['btime'] . '-' . $arPer['etime']
-                        );
-                        break;
-                    }
+    public function getPoint($prj,$point) {
+        $sql = Yii::app()->db->createCommand()
+            ->select(
+                "pc.name,
+                pc.adres,
+                pc.id_city,
+                pc.metro id_metro,
+                DATE_FORMAT(pc.bdate, '%d.%m.%Y') bdate,
+                DATE_FORMAT(pc.edate, '%d.%m.%Y') edate,
+                pc.btime,
+                pc.etime,
+                pc.location,
+                c.name city, 
+                c.ismetro,
+                m.name metro"
+            )
+            ->from('project_city pc')
+            ->leftjoin('city c', 'c.id_city=pc.id_city')
+            ->leftjoin('metro m', 'm.id=pc.metro')
+            ->where(
+                'pc.project=:prj AND pc.point=:point', 
+                array(':prj'=>$prj, ':point'=>$point)
+            )
+            ->queryAll();
 
-        return $arr;
+        $arRes = array(
+            'id_city' => $sql[0]['id_city'],
+            'id_loc' => $sql[0]['location'],
+            'id_period' => $point,
+            'city' => $sql[0]['city'],
+            'ismetro' => $sql[0]['ismetro'],
+            'locname' => $sql[0]['name'],
+            'locindex' => $sql[0]['adres'],
+            'metro' => $sql[0]['metro'],
+            'date' => $sql[0]['bdate']==$sql[0]['edate']
+                ? $sql[0]['bdate']
+                : ('с ' . $sql[0]['bdate'] . ' по ' . $sql[0]['edate']),
+            'time' => $sql[0]['btime'] . '-' . $sql[0]['etime']
+        );
+
+        return $arRes;
     }
     /*
     *       привязка пользователя к точке
@@ -799,13 +814,13 @@ class Project extends ARModel
         $prj = Yii::app()->getRequest()->getParam('id');
         $point = Yii::app()->getRequest()->getParam('point');
         $arS = Yii::app()->db->createCommand()
-            ->select('user')
+            ->select('user, point')
             ->from('project_user')
             ->where('project=:prj', array(':prj'=>$prj))
             ->queryAll();
 
         foreach ($arS as $user) // убираем отчеканых пользователей
-            if(!in_array($user['user'], $arr['user']))
+            if(!in_array($user['user'], $arr['user']) && $user['point']==$point)
                 Yii::app()->db->createCommand()
                     ->update(
                         'project_user',

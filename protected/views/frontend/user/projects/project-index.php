@@ -8,7 +8,7 @@
 <div class="filter__veil"></div>
 <div class="row project">
 	<div class="col-xs-12">
-  <? require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/projects/project-nav.php'; ?>
+    <? require __DIR__ . '/project-nav.php'; ?>
   </div>
 </div>
 <div class="project__module">

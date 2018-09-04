@@ -7,7 +7,7 @@
 ?>
 <div class="row project">
 	<div class="col-xs-12">
-		<? require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/projects/project-nav.php'; ?>
+		<? require __DIR__ . '/project-nav.php'; ?>
 		<div id="content">
 			<div class="project__module">
 				<div class="project__xls">
