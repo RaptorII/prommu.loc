@@ -515,7 +515,9 @@ $testArray = [
 
                 <div class="task__single-info-btn">
                     <a href="#" class="task__add-task">ДОБАВИТЬ ЗАДАЧУ</a>
+
                     <a href="#" class="task__add-update">ИЗМЕНИТЬ</a>
+                    <a href="#" class="task__add-cancel">ОТМЕНИТЬ</a>
                 </div>
             </div>
             <?

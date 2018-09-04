@@ -135,9 +135,22 @@
 .task__tasks-title{
     position: relative;
 }
+.task__single-info-btn{
+    width: 100%;
+    display: flow-root;
+}
 
 #DiContent .task__single-info-btn a.task__add-update{
     display:none;
+}
+#DiContent .task__single-info-btn a.task__add-cancel{
+    display:none;
+    margin-right: 5px;
+}
+
+#DiContent .task__single-info-btn a{
+    display: block;
+    float: right;
 }
 
 .task__button-green:hover:before {
