@@ -1577,8 +1577,8 @@ class UserController extends AppController
                     $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
                     break;
                 case 'index':
+                    $data = $model->getAdresProgramm($id);
                     if(Yii::app()->request->isAjaxRequest) {
-                        $data = $model->getAdresProgramm($id,true);
                         $this->renderPartial(
                             'projects/project-index-ajax',
                             array('viData' => $data, 'project' => $id),
@@ -1587,7 +1587,6 @@ class UserController extends AppController
                         );
                         return;
                     }
-                    $data = $model->getAdresProgramm($id);
                     $view = MainConfig::$VIEW_PROJECT_ITEM_INDEX;
                     $model->getXLSFile();
                     break;
@@ -1598,6 +1597,7 @@ class UserController extends AppController
                     $view = MainConfig::$VIEW_PROJECT_ITEM_ROUTE;
                     break;
                 case 'tasks':
+                    $data = $model->getTaskList($id);
                     $view = MainConfig::$VIEW_PROJECT_ITEM_TASKS;
                     break;
                 case 'report':
