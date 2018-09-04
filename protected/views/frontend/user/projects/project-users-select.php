@@ -3,13 +3,13 @@
 	$point = Yii::app()->getRequest()->getParam('point');
   $this->setBreadcrumbsEx(
     array('Мои проекты', MainConfig::$PAGE_PROJECT_LIST),
-    array($viData['title'], $pLink),
+    array($viData['project']['name'], $pLink),
     array(
     	'ВЫБОР ПОЛЬЗОВАТЕЛЕЙ', 
     	$pLink . '/users-select' . '/' . $point
     )
   );
-  $this->setPageTitle($viData['title']);
+  $this->setPageTitle($viData['project']['name']);
 	$bUrl = Yii::app()->baseUrl;
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/users-select.css');
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/new.css');

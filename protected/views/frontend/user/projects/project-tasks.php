@@ -1,5 +1,5 @@
 <?php
-$request = Yii::app()->request;
+$bUrl = Yii::app()->baseUrl;
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item.js', CClientScript::POS_END);
 /***********UNIVERSAL FILTER************/
@@ -10,19 +10,12 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/univ
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-geo.css');
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-tasks.css');
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item-tasks.js', CClientScript::POS_END);
-?>
-
-<?
-$projectId = $request->getParam('id');
-$sectionId = $request->getParam('section');
 
 $arFilterData = [
     'STYLES' => 'project__tasks-filter',
     'HIDE' => false,
-    'ID' => $projectId, //Обязательное свойство!
-    'FILTER_ADDITIONAL_VALUE' => [
-        'SECTION_ID' => $sectionId
-    ],
+    'ID' => $project, //Обязательное свойство!
+    'FILTER_ADDITIONAL_VALUE' => ['filter'=>1],
     'FILTER_SETTINGS' => [
         0 => [
             'NAME' => 'Город',
@@ -133,7 +126,12 @@ $testArray = [
 
         ]
 ];
+
+
 ?>
+
+
+
 
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
 <? print_r($viData); ?>

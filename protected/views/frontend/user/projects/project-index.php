@@ -8,7 +8,7 @@
 <div class="filter__veil"></div>
 <div class="row project">
 	<div class="col-xs-12">
-    <? require __DIR__ . '/project-nav.php'; ?>
+    <? require __DIR__ . '/project-nav.php'; // Меню вкладок ?>
   </div>
 </div>
 <div class="project__module">
@@ -29,7 +29,7 @@
         <span class="city-filter">Все</span>
         <ul class="city-list">
           <li data-id="0">Все</li>
-          <? foreach ($viData['cities'] as $id => $city)
+          <? foreach ($viData['filter']['cities'] as $id => $city)
             echo '<li data-id="' . $id . '">' . $city . '</li>';
           ?>
         </ul>
@@ -38,7 +38,7 @@
       <div class="addr__header-date">
         <div class="calendar-filter">
           <label>Дата с</label>
-          <span><?=$viData['bdate-short']?></span>
+          <span><?=$viData['filter']['bdate-short']?></span>
           <div class="calendar" data-type="bdate">
             <table>
               <thead>
@@ -53,11 +53,11 @@
               <tbody></tbody>
             </table>
           </div>
-          <input type="hidden" name="bdate" value="<?=$viData['bdate']?>">
+          <input type="hidden" name="bdate" value="<?=$viData['filter']['bdate']?>">
         </div>
         <div class="calendar-filter">
           <label>По</label>
-          <span><?=$viData['edate-short']?></span>
+          <span><?=$viData['filter']['edate-short']?></span>
           <div class="calendar" data-type="bdate">
             <table>
               <thead>
@@ -72,10 +72,11 @@
               <tbody></tbody>
             </table>
           </div>
-          <input type="hidden" name="edate" value="<?=$viData['edate']?>">
+          <input type="hidden" name="edate" value="<?=$viData['filter']['edate']?>">
         </div>
       </div>
       <input type="hidden" name="project" value="<?=$project?>" class="project-inp">
+      <input type="hidden" name="filter" value="1">
     </form>
   </div>
   <div class="addresses">

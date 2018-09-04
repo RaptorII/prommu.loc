@@ -7,7 +7,7 @@
 ?>
 <div class="row project">
 	<div class="col-xs-12">
-		<? require __DIR__ . '/project-nav.php'; ?>
+		<? require __DIR__ . '/project-nav.php'; // Меню вкладок ?>
 		<div id="content">
 			<div class="project__module">
 				<div class="project__xls">

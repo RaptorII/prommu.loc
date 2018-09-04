@@ -1578,6 +1578,7 @@ class UserController extends AppController
                     break;
                 case 'index':
                     $data = $model->getAdresProgramm($id);
+                    $data['project'] = $model->getProjectData($id);
                     if(Yii::app()->request->isAjaxRequest) {
                         $this->renderPartial(
                             'projects/project-index-ajax',
@@ -1597,7 +1598,8 @@ class UserController extends AppController
                     $view = MainConfig::$VIEW_PROJECT_ITEM_ROUTE;
                     break;
                 case 'tasks':
-                    $data = $model->getTaskList($id);
+                    $data = $model->getProject($id);
+                    $data = $model->buildTaskArray($data);
                     $view = MainConfig::$VIEW_PROJECT_ITEM_TASKS;
                     break;
                 case 'report':
@@ -1609,6 +1611,7 @@ class UserController extends AppController
                         $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id.'/index');
                     }
                     $data = $model->getAdresProgramm($id);
+                    $data['project'] = $model->getProjectData($id);
                     $view = MainConfig::$VIEW_PROJECT_ITEM_ADR_CHANGE;
                     break;
                 case 'users-select':

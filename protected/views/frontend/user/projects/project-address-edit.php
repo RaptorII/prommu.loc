@@ -2,13 +2,13 @@
 	$pLink = MainConfig::$PAGE_PROJECT_LIST . '/' . $project;
   $this->setBreadcrumbsEx(
     array('Мои проекты', MainConfig::$PAGE_PROJECT_LIST),
-    array($viData['title'], $pLink),
+    array($viData['project']['name'], $pLink),
     array(
     	'РЕДАКТИРОВАТЬ АДРЕСНУЮ ПРОГРАММУ', 
     	$pLink . '/address-edit'
     )
   );
-  $this->setPageTitle($viData['title']);
+  $this->setPageTitle($viData['project']['name']);
 
 	$bUrl = Yii::app()->baseUrl;
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/new.css');
