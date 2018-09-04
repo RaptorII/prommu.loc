@@ -159,13 +159,14 @@ class Project extends ARModel
 
         for($i = 0; $i < count($props['inv-name']); $i ++){
           
-
+            $pass = rand(11111,99999);
             $data['access_time'] = date('Y-m-d H:i:s');
             $data['crdate'] = date('Y-m-d H:i:s');
             $data['mdate'] = date('Y-m-d H:i:s');
             $data['ismoder'] = '0';
             $data['isblocked'] = '0';
             $data['email'] = $props['inv-email'][$i];
+            $data['passw'] = md5($pass);
             $data['login'] = $props['prfx-phone'][$i].$props['inv-phone'][$i];
 
 
