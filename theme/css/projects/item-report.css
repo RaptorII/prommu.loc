@@ -1,0 +1,64 @@
+.report__table tr td:nth-child(1){
+    width:25%;
+    text-align: left;
+}
+.report__table tr td:nth-child(2){
+    width:10%!important;
+    text-align: center;
+}
+.report__table tr td:nth-child(3){
+    width:8%!important;
+    text-align: center;
+}
+.report__table tr td:nth-child(4){
+    width:8%!important;
+    text-align: center;
+}
+.report__table tr td:nth-child(5){
+    width:8%;
+    text-align: center;
+}
+.report__table tr td:nth-child(6){
+    width:8%;
+    text-align: center;
+}
+.report__table tr td:nth-child(7){
+    width:10%;
+    text-align: center;
+}
+.report__table tr td:nth-child(8){
+    width:10%;
+    text-align: center;
+}
+.report__table tr td:nth-child(9){
+    text-align: center;
+}
+.report__table tr td:nth-child(10){
+    text-align: center;
+}
+
+.report__info-main{
+    color:#abb820;
+}
+
+.js-g-hashint {
+    width: 20px;
+    height: 20px;
+    background: url(/theme/pic/projects/map-locator.png) right no-repeat;
+    cursor: pointer;
+    float: right;
+    margin-top: 2px;
+}
+
+.report__road-see {
+    font-size: 18px;
+    font-family: Roboto-Regular, verdana, arial;
+    color: #abb820;
+    width: 290px;
+    text-decoration: underline;
+    margin: 0 auto;
+}
+.report__road-container{
+    width:100%;
+    margin-top:15px;
+}
