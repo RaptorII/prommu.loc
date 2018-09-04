@@ -159,10 +159,47 @@ class Project extends ARModel
 
         for($i = 0; $i < count($props['inv-name']); $i ++){
           
+
+            $data['access_time'] = date('Y-m-d H:i:s');
+            $data['crdate'] = date('Y-m-d H:i:s');
+            $data['mdate'] = date('Y-m-d H:i:s');
+            $data['ismoder'] = '0';
+            $data['isblocked'] = '0';
+            $data['email'] = $props['inv-email'][$i];
+            $data['login'] = $props['prfx-phone'][$i].$props['inv-phone'][$i];
+
+
+            $res = Yii::app()->db->createCommand()
+                ->insert('user', $data);
+
+            $id_user = Yii::app()->db->createCommand("SELECT u.id_user FROM  user u WHERE u.id_user = (SELECT MAX(u.id_user)  FROM user u)")->queryScalar();
+       
+
+            $insData = array('id_user' => $id_user+1,
+                        'firstname' => $props['inv-name'][$i],
+                        'lastname' => $props['inv-sname'][$i],
+                        'isman' => 0,
+                        'smart' => 1,
+                        'date_public' => date('Y-m-d H:i:s'),
+                        'mdate' => date('Y-m-d H:i:s'),
+                        'birthday' => date("Y-m-d", strtotime('2002.09.10')),
+                    );
+
+            $res = Yii::app()->db->createCommand()
+                        ->insert('resume', $insData);
+
+            $pid = Yii::app()->db->createCommand("SELECT u.id  FROM  resume u WHERE u.id = (SELECT MAX(u.id)  FROM resume u)")->queryScalar();
+
+            $res = Yii::app()->db->createCommand()
+                        ->insert('user_city', array('id_user' => $id_user+1,
+                            'id_resume' => $pid+1,
+                                'id_city' => 1307,
+                            ));
+
             $res = Yii::app()->db->createCommand()
                         ->insert('project_user', array(
                             'project' => $project,
-                            'user' => rand(1111,3334),
+                            'user' => $id_user+1,
                             'firstname' => $props['inv-name'][$i],
                             'lastname' => $props['inv-sname'][$i],
                             'email' => $props['inv-email'][$i],
