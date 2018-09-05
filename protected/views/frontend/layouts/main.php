@@ -6,10 +6,7 @@
     $curUrl = Yii::app()->request->requestUri;
     setcookie ("pm_source", $_GET['pm_source']);
 ?>
-<script>
-    var cid = ga.getAll()[0];
-console.log(cid.get('clientId'));
-</script>
+
 <?php //if(!(MOBILE_DEVICE && !SHOW_APP_MESS)): ?>
     <style type="text/css">
         /*   /jslib/bootstrap/css/bootstrap.min.css   */
@@ -583,3 +580,7 @@ if( Share::$UserProfile->id) {
 
 }
 ?>
+<script>
+    var cid = ga.getAll()[0];
+console.log(cid.get('clientId'));
+</script>
