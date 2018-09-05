@@ -580,7 +580,3 @@ if( Share::$UserProfile->id) {
 
 }
 ?>
-<script>
-    var cid = ga.getAll()[0];
-console.log(cid.get('clientId'));
-</script>
