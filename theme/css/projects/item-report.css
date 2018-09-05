@@ -1,3 +1,6 @@
+.report__table{
+    margin-top:30px;
+}
 .report__table tr td:nth-child(1){
     width:25%;
     text-align: left;
@@ -57,8 +60,45 @@
     width: 290px;
     text-decoration: underline;
     margin: 0 auto;
+    cursor: pointer;
 }
 .report__road-container{
     width:100%;
     margin-top:15px;
+}
+
+
+.report__person{
+    font-size: 22px;
+    width: 300px;
+    margin: 0 auto;
+    margin-top: 30px;
+}
+.report__person-main{
+    width:100%;
+}
+.report__person-image{
+    width:200px;
+    height: 200px;
+    margin:0 auto;
+}
+.report__person-name{
+    text-align: center;
+    margin-top: 5px;
+}
+.report__person-please{
+    text-align: center;
+    margin-top: 10px;
+    border-top: 1px solid #dedede;
+}
+.report__person-date{
+    color:#abb820;
+}
+
+.report__person-image img{
+    border-radius: 50%;
+    display: block;
+    width: 100%;
+    height: initial;
+    max-height: 200px;
 }

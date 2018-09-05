@@ -17,7 +17,14 @@
         endif; ?>
 
         <? switch ($value['TYPE']):
-            case 'text':
+            case 'block':
+                ?>
+                <div data-type="<?= $value['TYPE'] ?>"
+                     class="u-filter__item u-filter__item-<?= $key ?> u-filter__blockitem">
+                </div>
+                <?
+                break;
+                case 'text':
                 ?>
                 <div data-type="<?= $value['TYPE'] ?>"
                      data-id="<?= $key ?>"
