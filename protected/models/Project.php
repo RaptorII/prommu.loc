@@ -144,10 +144,11 @@ class Project extends ARModel
 
         for($i = 0; $i < count($users); $i ++){
             if($users[$i]){
-                $sql = "SELECT DISTINCT r.id_user id, r.firstname, r.lastname, r.mdate, u.email 
+                $idus = $users[$i];
+                $sql = "SELECT r.id_user id, r.firstname, r.lastname, r.mdate, u.email 
                 FROM resume r
-                INNER JOIN user u ON r.id_user = u.id_user AND u.ismoder = 1
-                WHERE u.id_user = $users[$i]
+                INNER JOIN user u ON r.id_user = u.id_user
+                WHERE u.id_user = {$idus}
                 ORDER BY id DESC";
             /** @var $res CDbCommand */
             $res = Yii::app()->db->createCommand($sql)->queryRow();
@@ -156,9 +157,9 @@ class Project extends ARModel
                         ->insert('project_user', array(
                             'project' => $project,
                             'user' => $users[$i],
-                            'firstname' => $res[0]['firstname'],
-                            'lastname' =>  $res[0]['lastname'],
-                            'email' =>  $res[0]['email'],
+                            'firstname' => $res['firstname'],
+                            'lastname' =>  $res['lastname'],
+                            'email' =>  $res['email'],
                             'phone' => '',
                             'point' => NULL
                         ));
