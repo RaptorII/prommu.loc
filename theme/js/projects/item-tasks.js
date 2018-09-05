@@ -253,6 +253,5 @@ let IndexTasks = (function () {
 }());
 
 $(document).ready(function () {
-    console.log('IndexTasks script here!');
     new IndexTasks();
 });

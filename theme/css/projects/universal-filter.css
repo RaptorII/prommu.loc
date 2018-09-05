@@ -108,10 +108,11 @@
 }
 div.calendar:after{ content: '' }
 .calendar table{
-    width: 180px!important;
+    width: 100%;
     cursor: default;
 }
-.calendar table *{
+#DiContent .prommu__universal-filter .calendar table *{
+    width: initial;
     line-height: initial;
 }
 .calendar table td{
@@ -163,10 +164,6 @@ div.calendar:after{ content: '' }
     position: relative;
     font-size: 14px;
     display: inline-block;
-}
-.calendar *{
-    right: -5px;
-    width: inherit!important;
 }
 /*
 *		MEDIA
