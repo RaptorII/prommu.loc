@@ -80,3 +80,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })(window, document, 'script', 'cloud.roistat.com', '606e27a586fdb5bfa3a4d92809dec248');
 </script>
 
+<script>
+ga(function(tracker) {
+  var clientId = tracker.get('clientId');
+});
+console.log(clientId);
+</script>
