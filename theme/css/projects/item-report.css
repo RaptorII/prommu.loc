@@ -102,3 +102,103 @@
     height: initial;
     max-height: 200px;
 }
+
+.prommu__universal-filter {
+    display: flex;
+    flex-wrap: wrap;
+    /* margin-bottom: 10px; */
+    padding-bottom: 15px;
+}
+#DiContent .prommu__universal-filter .u-filter__item{
+    display: flex;
+    padding-top: 5px;
+    width: 33.3333%;
+    margin-top: 10px;
+    align-items: center;
+}
+
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__item-title{
+    display: inline-block;
+    width: 125px;
+    text-align: left;
+}
+
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__item-data{
+    display: inline-block;
+    width: 185px;
+}
+
+.project__header{
+    background-color: #f5f5f5;
+    padding: 0px 30px 0px;
+    box-sizing: border-box;
+}
+.project__header-xls{
+    background: none;
+    text-align:left;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+
+@media screen and (min-width: 993px) {
+    #DiContent .prommu__universal-filter .u-filter__item.u-filter__item-0 .u-filter__item-title {
+        width: 55px;
+    }
+
+    .u-filter__item-3 {
+        width: 135px !important;
+        line-height: 26px;
+    }
+
+    .u-filter__item-4 {
+        width: 100px !important;
+        line-height: 26px;
+    }
+
+    .u-filter__item-4 {
+        margin-left: 5px;
+    }
+
+    .u-filter__item-5 {
+        margin-left: 120px;
+    }
+
+    .u-filter__item-3 .u-filter__item-data,
+    .u-filter__item-4 .u-filter__item-data {
+        width: 90px !important;
+    }
+}
+
+@media screen and (max-width: 1200px){
+    .u-filter__item-5{
+        margin-left:53px;
+    }
+}
+
+@media screen and (max-width: 992px){
+    .u-filter__item{
+        width: 33.3333%!important;
+    }
+    .u-filter__item-5{
+        margin-left:0px;
+    }
+    #DiContent .prommu__universal-filter .u-filter__item{
+        width: 300px!important;
+        margin: 3px auto;
+    }
+    .u-filter__blockitem{
+        display:none!important;
+    }
+}
+/*
+@media (min-width: 992px){
+    .container {
+    width: 970px;
+    }
+}
+@media (min-width: 768px){
+    .container {
+        width: 750px;
+    }
+}
+*/
