@@ -193,7 +193,7 @@ foreach ($viData['filter']['metros'] as $id => $v)
 ?>
 <div class="row project">
     <div class="col-xs-12">
-        <? require __DIR__ . '/project-nav.php'; ?>
+        <? require __DIR__ . '/project-nav.php'; // Меню вкладок ?>
     </div>
 </div>
 
