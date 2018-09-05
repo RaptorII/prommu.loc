@@ -237,3 +237,13 @@
 .task__hidden-ul{
     display:none;
 }
+/*
+*
+*/
+.task__table-user{
+    display: flex;
+    align-items: center;
+}
+.task__table-user img{ min-width: 76px }
+#DiContent .prommu__universal-filter .u-filter__item{ margin-bottom: 10px }
+#DiContent .content-block{ position: relative }

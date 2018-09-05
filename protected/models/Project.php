@@ -1027,27 +1027,30 @@ class Project extends ARModel
     *       Формирование массива задач
     */
     public function buildTaskArray($arr) {
-        $arRes = array(
-            'project' => $arr['project'],
-            'filter' => $arr['filter'],
-            'users' => $arr['users']
-        );
-        $arU = array();
-        foreach ($arRes['users'] as $id => $v)
-            if(isset($v['point']))
-                $arU[strval($v['point'])][$v['id_user']] = $v;
+        $arRes['project'] = $arr['project'];
+        foreach ($arr['users'] as $id => $v)
+            if(isset($v['point'])) {
+                $arRes['users'][$v['point']][$v['id_user']] = $v;
+                $arRes['points_id'][] = $v['point'];
+            }
+
+        if(!sizeof($arRes['users'])) {
+            $arRes['items'] = array();
+            return $arRes;
+        }
 
         $day = 60*60*24;
         foreach ($arr['original'] as $v) {
-            if(!array_key_exists($v['point'], $arU))
+            if(!array_key_exists($v['point'], $arRes['users']))
                 continue;
+            $arRes['points'][] = $v;
             $bdate = strtotime($v['bdate']);
             $edate = strtotime($v['edate']);
             do{
                 $arRes['items'][$bdate][$v['id_city']]['date'] = date('d.m.Y',$bdate);
                 $arRes['items'][$bdate][$v['id_city']]['city'] = $v['city'];
                 $arT = array();
-                foreach ($arU[$v['point']] as $u) {
+                foreach ($arRes['users'][$v['point']] as $u) {
                     $arT[$u['id_user']] = array(
                         'name' => $v['name'],
                         'index' => $v['adres'],
@@ -1059,13 +1062,14 @@ class Project extends ARModel
                         'status' => $u['status']
                     );
                 }
-                $arRes['items'][$bdate][$v['id_city']]['points'][$v['point']]['users'] = $arT;
+                $arRes['items'][$bdate][$v['id_city']]['points'][$v['point']] = $arT;
 
                 $bdate += $day;
             }
             while($bdate < $edate);
         }
         ksort($arRes['items']);
+        $arRes['filter'] = $this->buildAdressArray($arRes['points'])['filter'];
 
         return $arRes;
     }

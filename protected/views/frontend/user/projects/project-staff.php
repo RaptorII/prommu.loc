@@ -265,7 +265,7 @@ foreach ($viData['filter']['metros'] as $id => $v)
         </div>
 
         <h1 class="project__title personal__title">ПЕРСОНАЛ</h1>
-        <div id="staff-content">
+        <div id="ajax-content">
             <?php require __DIR__ . '/project-staff-ajax.php'; ?>
         </div>
     </div>

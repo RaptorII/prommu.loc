@@ -1567,8 +1567,7 @@ class UserController extends AppController
                                 ? 'projects/project-staff-add-ajax'
                                 : 'projects/project-staff-ajax',
                             array('viData' => $data, 'project' => $id),
-                            false,
-                            true
+                            false, true
                         );
                         return;
                     }
@@ -1583,8 +1582,7 @@ class UserController extends AppController
                         $this->renderPartial(
                             'projects/project-index-ajax',
                             array('viData' => $data, 'project' => $id),
-                            false,
-                            true
+                            false, true
                         );
                         return;
                     }
@@ -1600,6 +1598,14 @@ class UserController extends AppController
                 case 'tasks':
                     $data = $model->getProject($id);
                     $data = $model->buildTaskArray($data);
+                    if(Yii::app()->request->isAjaxRequest) {
+                        $this->renderPartial(
+                            'projects/project-tasks-ajax',
+                            array('viData' => $data, 'project' => $id),
+                            false, true
+                        );
+                        return;
+                    }
                     $view = MainConfig::$VIEW_PROJECT_ITEM_TASKS;
                     break;
                 case 'report':
@@ -1620,8 +1626,7 @@ class UserController extends AppController
                         $this->renderPartial(
                             'projects/project-users-select-ajax',
                             array('viData' => $data, 'project' => $id),
-                            false,
-                            true
+                            false, true
                         );
                         return;
                     }

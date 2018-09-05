@@ -23,303 +23,59 @@ $arFilterData = [
             'INPUT_NAME' => 'city',
             'DATA' => [
                 0 => [
-                    'title' => 'Москва',
-                    'id' => '1'
-                ],
-                1 => [
-                    'title' => 'Санкт-Петербург',
-                    'id' => '0'
-                ],
-                2 => [
                     'title' => 'Все',
-                    'id' => '2'
+                    'id' => '0'
                 ]
             ],
-            'DATA_DEFAULT' => '2',
+            'DATA_DEFAULT' => '0',
         ],
         1 => [
             'NAME' => 'Дата с',
             'TYPE' => 'calendar',
             'INPUT_NAME' => 'bdate',
             'DATA' => [],
-            'DATA_DEFAULT' => '25.08.2018',
-            'DATA_SHORT' => '25.08.18'
+            'DATA_DEFAULT' => $viData['filter']['bdate'],
+            'DATA_SHORT' => $viData['filter']['bdate-short']
         ],
         2 => [
             'NAME' => 'По',
             'TYPE' => 'calendar',
             'INPUT_NAME' => 'edate',
             'DATA' => [],
-            'DATA_DEFAULT' => '30.08.2018',
-            'DATA_SHORT' => '30.08.18'
+            'DATA_DEFAULT' => $viData['filter']['edate'],
+            'DATA_SHORT' => $viData['filter']['edate-short']
         ]
     ]
 ];
-
-
-$arPromo = [
-        0 =>[
-
-        ],
-        1 =>[
-
-        ]
-];
-
-$testArray = [
-        0 =>[
-            'city' => 'Москва',
-            'firstname' => 'Виталий',
-            'lastname' => 'Бутырин',
-            'ttadres' => [
-                    0=>[
-                        'point' => 12323,
-                        'name' => 'АТБ1',
-                        'adres' => 'Центральная',
-                        'etime' => '13:00',
-                        'btime' => '14:00',
-                        'bdate' => '2018.09.03',
-                        'edate' => '2018.09.10',
-                        
-                    ],
-                    
-                    1=> [
-                        'point' => 15456,
-                        'name' => 'АТБ2',
-                        'adres' => 'Центральная33',
-                        'etime' => '15:30',
-                        'btime' => '16:00',
-                        'bdate' => '2018.09.13',
-                        'edate' => '2018.09.16',
-                    ]
-                
-                ]
-
-        ],
-        1 =>[
-            'city' => 'Харьков',
-            'firstname' => 'Максим',
-            'lastname' => 'Максимов',
-            'ttadres' => [
-                    0=>[
-                        'point' => 76876,
-                        'name' => 'АТБ1',
-                        'adres' => 'Центральная',
-                        'etime' => '13:00',
-                        'btime' => '14:00',
-                        'bdate' => '2018.09.03',
-                        'edate' => '2018.09.10',
-                        
-                    ],
-                    
-                    1=> [
-                        'point' => 435665,
-                        'name' => 'АТБ2',
-                        'adres' => 'Центральная33',
-                        'etime' => '15:30',
-                        'btime' => '16:00',
-                        'bdate' => '2018.09.13',
-                        'edate' => '2018.09.16',
-                    ]
-                
-                ]
-
-        ]
-];
-
-
+foreach ($viData['filter']['cities'] as $id => $city)
+  $arFilterData['FILTER_SETTINGS'][0]['DATA'][$id] = ['title'=>$city, 'id'=>$id];
 ?>
-
-
-
-
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
 <? print_r($viData); ?>
 </pre>
-
+<div class="filter__veil"></div>
 <div class="row project">
-    <div class="col-xs-12">
-        <? require __DIR__ . '/project-nav.php'; ?>
-    </div>
+	<div class="col-xs-12">
+		<? require __DIR__ . '/project-nav.php'; // Меню вкладок ?>
+	</div>
 </div>
-
 <div class="project__module">
-    <? require __DIR__ . '/filter.php'; // ФИЛЬТР ?>
-    <div class="tasks">
-        <div class="task__item">
-            <h2 class="task__item-title">Харьков <span>14.02.2018</span></h2>
-            <table class="task__table">
-                <thead>
-                <tr>
-                    <th>ФИО</th>
-                    <th>Название ТТ</th>
-                    <th>Адрес ТТ</th>
-                    <th>Дата</th>
-                    <th>Кол-во заданий</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td rowspan="3">
-                        <div class="task__table-cell task__table-user">
-                            <img src="/images/applic/20180503073112204100.jpg">
-                            <span>Дмитриев<br/>Николай</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border">АТБ1</div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border task__table-index">
-                            <span>ул. Пирогова 23</span>
-                            <b class="js-g-hashint" title="Посмотреть на карте"></b>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border text-center">14.02.2018</div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border task__table-cnt">
-                            <span>3</span>
-                            <a href="#" class="task__table-watch">посмотреть</a>
-                            <a href="#">добавить</a>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="task__table-cell border">ВАРУС</div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border task__table-index">
-                            <span>пр. Кирова 18</span>
-                            <b class="js-g-hashint" title="Посмотреть на карте"></b>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border text-center">14.02.2018</div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border task__table-cnt">
-                            <span>3</span>
-                            <a href="#" class="task__table-watch">посмотреть</a>
-                            <a href="#">добавить</a>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="task__table-cell border">СЕЛЬПО</div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border task__table-index">
-                            <span>ул. Строителей 4</span>
-                            <b class="js-g-hashint" title="Посмотреть на карте"></b>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border text-center">14.02.2018</div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border task__table-cnt">
-                            <span>3</span>
-                            <a href="#" class="task__table-watch">посмотреть</a>
-                            <a href="#">добавить</a>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <?
-        //
-        ?>
-        <div class="task__item">
-            <h2 class="task__item-title">Москва <span>15.02.2018</span></h2>
-            <table class="task__table">
-                <thead>
-                <tr>
-                    <th>ФИО</th>
-                    <th>Название ТТ</th>
-                    <th>Адрес ТТ</th>
-                    <th>Дата</th>
-                    <th>Кол-во заданий</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td rowspan="3">
-                        <div class="task__table-cell task__table-user">
-                            <img src="/images/applic/20180428142455264100.jpg">
-                            <span>Наталья<br/>Гуторова</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border">АТБ1</div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border task__table-index">
-                            <span>ул. Пирогова 23</span>
-                            <b class="js-g-hashint" title="Посмотреть на карте"></b>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border text-center">15.02.2018</div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border task__table-cnt">
-                            <span>3</span>
-                            <a href="#" class="task__table-watch">посмотреть</a>
-                            <a href="#">добавить</a>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="task__table-cell border">ВАРУС</div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border task__table-index">
-                            <span>пр. Кирова 18</span>
-                            <b class="js-g-hashint" title="Посмотреть на карте"></b>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border text-center">15.02.2018</div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border task__table-cnt">
-                            <span>3</span>
-                            <a href="#" class="task__table-watch">посмотреть</a>
-                            <a href="#">добавить</a>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="task__table-cell border">СЕЛЬПО</div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border task__table-index">
-                            <span>ул. Строителей 4</span>
-                            <b class="js-g-hashint" title="Посмотреть на карте"></b>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border text-center">15.02.2018</div>
-                    </td>
-                    <td>
-                        <div class="task__table-cell border task__table-cnt">
-                            <span>3</span>
-                            <a href="#" class="task__table-watch">посмотреть</a>
-                            <a href="#">добавить</a>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+	<? require __DIR__ . '/filter.php'; // ФИЛЬТР ?>
+	<div class="tasks" id="ajax-content">
+		<? require __DIR__ . '/project-tasks-ajax.php'; // СПИСОК ?>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
     <?
     //
     ?>
@@ -375,95 +131,6 @@ $testArray = [
 
                     <a href="#" class="task__add-update">ИЗМЕНИТЬ</a>
                     <a href="#" class="task__add-cancel">ОТМЕНИТЬ</a>
-                </div>
-            </div>
-            <?
-            //
-            ?>
-            <div class="task__block">
-                <h2 class="task__single-title">АТБ1</h2>
-                <table class="task__single-table">
-                    <tr>
-                        <td rowspan="3">
-                            <div class="task__single-user">
-                                <div class="task__user-name">Дмитриев Николай</div>
-                                <div class="task__user-index"><b>ул. Пирогова 147</b></div>
-                                <div class="task__user-date">14.08.2018</div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="task-single__cell">
-                                <input type="radio" name="task" id="task_1" checked>
-                                <label for="task_1">Видеть заказ</label>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="task-single__cell">
-                                <a href="#">изменить</a>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="task-single__cell">
-                                <a href="#" class="task-single__double">Дублироать на все даты</a>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="task-single__cell">
-                                <a href="#">Дублироать задачу всем</a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="task-single__cell">
-                                <input type="radio" name="task" id="task_2">
-                                <label for="task_2">Проверить ценник</label>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="task-single__cell">
-                                <a href="#">изменить</a>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="task-single__cell">
-                                <a href="#" class="task-single__double">Дублироать на все даты</a>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="task-single__cell">
-                                <a href="#">Дублироать задачу всем</a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="task-single__cell">
-                                <input type="radio" name="task" id="task_3">
-                                <label for="task_3">Сдать форму</label>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="task-single__cell">
-                                <a href="#">изменить</a>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="task-single__cell">
-                                <a href="#" class="task-single__double">Дублироать на все даты</a>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="task-single__cell">
-                                <a href="#">Дублироать задачу всем</a>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-                <input class="task__info-name" type="text" name="" placeholder="Название задания..."/>
-                <textarea class="task__info-descr" placeholder="Опишите задание..."></textarea>
-                <div class="task__single-info-btn">
-                    <a href="#">ДОБАВИТЬ ЗАДАЧУ</a>
                 </div>
             </div>
         </div>

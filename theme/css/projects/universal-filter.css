@@ -95,7 +95,8 @@
     cursor: pointer;
 }
 .calendar-filter .calendar{
-    width: 200px!important;
+    width: 100%;
+    min-width: 180px;
     padding: 10px;
     position: absolute;
     top: 0px;
@@ -109,6 +110,9 @@ div.calendar:after{ content: '' }
 .calendar table{
     width: 180px!important;
     cursor: default;
+}
+.calendar table *{
+    line-height: initial;
 }
 .calendar table td{
     padding: initial;

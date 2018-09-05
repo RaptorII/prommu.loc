@@ -116,7 +116,7 @@
 		<br>
 		<br>
 		<form action="" method="POST" id="select-form">
-			<div id="staff-content">
+			<div id="ajax-content">
 				<?php require __DIR__ . '/project-users-select-ajax.php'; ?>
 			</div>
 			<div class="project__all-btns">

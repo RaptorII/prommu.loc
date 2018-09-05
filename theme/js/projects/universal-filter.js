@@ -200,7 +200,7 @@ let IndexUniversalFilter = (function () {
                 url: window.location.pathname,
                 data: getRequest,
                 success: function (r) {
-                    $('#staff-content').html(r);
+                    $('#ajax-content').html(r);
                     $('.filter__veil').hide();
                 },
             });
