@@ -147,3 +147,181 @@
         <? endforeach; ?>
     <? endif; ?>
 </div>
+
+
+<?/*
+
+//Пример Массива на всякий случай
+
+$arFilterData = [
+    'ID' => $project, //Обязательное свойство!
+    'FILTER_ADDITIONAL_VALUE' => [
+        'SECTION_ID' => Yii::app()->request->getParam('section')
+    ],
+    'FILTER_SETTINGS' => [
+        0 => [
+            'NAME' => 'Имя',
+            'TYPE' => 'text',
+            'INPUT_NAME' => 'fname',
+            'DATA' => [],
+            'DATA_DEFAULT' => '',
+            'PLACEHOLDER' => ''
+        ],
+        1 => [
+            'NAME' => 'Статус',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'status',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ],
+                1 => [
+                    'title' => 'Подтверждено',
+                    'id' => '1'
+                ],
+                2 => [
+                    'title' => 'Не подтверждено',
+                    'id' => '2'
+                ]
+
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        2 => [
+            'NAME' => 'Город',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'city',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ]
+            ],
+            'DATA_DEFAULT' => '0',
+            'CONDITION' => [
+                'BLOCKED' => 'true',
+                'PARENT_ID' => '4',
+                'PARENT_VALUE' => '',
+                'PARENT_VALUE_ID' => [
+                    0 => '1',
+                    1 => '2'
+                ]
+            ]
+        ],
+        3 => [
+            'NAME' => 'Фамилия',
+            'TYPE' => 'text',
+            'INPUT_NAME' => 'lname',
+            'DATA' => [],
+            'DATA_DEFAULT' => '',
+            'PLACEHOLDER' => ''
+        ],
+        4 => [
+            'NAME' => 'Привязка к адресу',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'haspoint',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ],
+                1 => [
+                    'title' => 'Привязан',
+                    'id' => '1'
+                ],
+                2 => [
+                    'title' => 'Не привязан',
+                    'id' => '2'
+                ]
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        5 => [
+            'NAME' => 'Название ТТ',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_name',
+            'DATA' => [
+                0 => [
+                    'title' => 'Название 1',
+                    'id' => '1'
+                ],
+                1 => [
+                    'title' => 'Название 2',
+                    'id' => '0'
+                ],
+                2 => [
+                    'title' => 'Все',
+                    'id' => '2'
+                ]
+            ],
+            'DATA_DEFAULT' => '2',
+            'CONDITION' => [
+                'BLOCKED' => 'true',
+                'PARENT_ID' => '4',
+                'PARENT_VALUE' => '',
+                'PARENT_VALUE_ID' => [
+                    0 => '1',
+                    1 => '2'
+                ]
+            ]
+        ],
+        6 => [
+            'TYPE' => 'block',
+        ],
+        7 => [
+            'TYPE' => 'block',
+        ],
+        8 => [
+            'NAME' => 'Адрес ТТ',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_location',
+            'DATA' => [
+                0 => [
+                    'title' => 'Адрес ТТ 1',
+                    'id' => '1'
+                ],
+                1 => [
+                    'title' => 'Адрес ТТ 2',
+                    'id' => '0'
+                ],
+                2 => [
+                    'title' => 'Адрес ТТ 3',
+                    'id' => '2'
+                ],
+                3 => [
+                    'title' => 'Все',
+                    'id' => '3'
+                ]
+            ],
+            'DATA_DEFAULT' => '2',
+            'CONDITION' => [
+                'BLOCKED' => 'true',
+                'PARENT_ID' => '4',
+                'PARENT_VALUE' => '',
+                'PARENT_VALUE_ID' => [
+                    0 => '1',
+                    1 => '2'
+                ]
+            ]
+        ],
+        9 => [
+            'TYPE' => 'block',
+        ],
+        10 => [
+            'TYPE' => 'block',
+        ],
+        11 => [
+            'NAME' => 'Метро',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'metro',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ]
+            ]
+        ]
+    ],
+];
+?>
