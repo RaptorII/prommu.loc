@@ -97,7 +97,7 @@
                         <?= $value['NAME']; ?>
                     </div>
                     <div class="u-filter__item-data calendar-filter">
-                        <span class="u-filter__calendar"></span>
+                        <span class="u-filter__calendar"><?= $value['DATA_SHORT'] ?></span>
                         <div class="calendar u-filter__calendarbox" data-type="bdate">
                             <table>
                                 <thead>
@@ -124,11 +124,6 @@
                                 name="<?= $value['INPUT_NAME'] ?>"
                                 class="u-filter__hidden-data"
                                 value="<?= $value['DATA_DEFAULT'] ?>"
-                        />
-                        <input
-                                type="hidden"
-                                class="u-filter__hidden-default"
-                                value="<?= $value['DATA_SHORT'] ?>"
                         />
                     </div>
                 </div>

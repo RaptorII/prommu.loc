@@ -50,9 +50,6 @@
 								</div>
 							</td>
 						</tr>
-
-
-
 					<?php
 							endforeach;
 						endforeach;
@@ -65,5 +62,5 @@
 		endforeach;
 	?>
 <?php else: ?>
-	<p class="center">Не найдено локаций с выбранным персоналом</p>
+	<br><p class="center">Не найдено локаций с выбранным персоналом</p>
 <?php endif; ?>

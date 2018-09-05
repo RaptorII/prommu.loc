@@ -132,15 +132,15 @@ let IndexUniversalFilter = (function () {
             }
             if(element.data('type')==="calendar"){
                 /**Проверка блокировки**/
-                let blocked = element.hasClass('blocked');
+                /*let blocked = element.hasClass('blocked');
                 if(!blocked) {
                     let content = element.find('.u-filter__hidden-default').val();
                     if(content)
                     {
-                        element.find('.u-filter__calendar').text(content);
-                        element.find('.u-filter__hidden-data').val(content);
+                        //element.find('.u-filter__calendar').text(content);
+                        //element.find('.u-filter__hidden-data').val(content);
                     }
-                }
+                }*/
             }
         })
     };
