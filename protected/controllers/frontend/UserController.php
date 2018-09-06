@@ -1642,6 +1642,8 @@ class UserController extends AppController
                     $view = MainConfig::$VIEW_PROJECT_ITEM_PROMO_CHANGE;
                     $data = $model->getStaff($id);
                     $data['point'] = $model->getPoint($id,$point);
+                    if(empty($data['point']['id_city']))
+                        $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id);
                     break;
                 default:
                     $data = $model->getProject($id);

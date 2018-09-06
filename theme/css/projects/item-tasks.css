@@ -1,3 +1,4 @@
+.project__module, .project__module *{ font-family: RobotoCondensed-Regular, verdana, arial }
 .u-filter__item-0 {
     width: 223px!important;
     line-height: 26px;
@@ -67,7 +68,7 @@
     margin-top:10px;
 }
 .task__tasks-button{
-    display: inline-block!important;
+    display: block;
     text-align: center;
     cursor: pointer;
     line-height: 31px;
@@ -77,14 +78,14 @@
     -o-transition: all ease-out .3s;
     transition: all ease-out .3s;
     background: none;
-    outline:none;
+    outline: none;
     font-size: 17px;
-
-    width: 49%;
-    margin: 3px auto;
+    width: 48%;
+    margin: 3px 0;
+    float: left;
 }
 
-@media screen and (max-width: 994px){
+@media screen and (max-width: 991px){
     .task__tasks-button{
         width:100%;
     }
@@ -247,3 +248,30 @@
 .task__table-user img{ min-width: 76px }
 #DiContent .prommu__universal-filter .u-filter__item{ margin-bottom: 10px }
 #DiContent .content-block{ position: relative }
+
+#ajax-content .task__table td.user{ width: 20% }
+#ajax-content .task__table td.name{ width: 25% }
+#ajax-content .task__table td.index{ width: 25% }
+#ajax-content .task__table td.metro{ width: 20% }
+#ajax-content .task__table td.task{ width: 10% }
+.task__table-watch{
+    font-size: 14px;
+    line-height: 25px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.task__single{
+    display: none;
+    margin: 0;
+    padding: 20px 0;
+    border-top: 1px solid #cecece;
+}
+@media screen and (min-width: 768px){
+    .task__single{
+        padding: 35px 0;
+    }
+}
+@media screen and (min-width: 992px){
+    .task__tasks-button:nth-child(odd) { margin-right: 2% }
+    .task__tasks-button:nth-child(even) { margin-left: 2% }
+}

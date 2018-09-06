@@ -1058,6 +1058,7 @@ class Project extends ARModel
             do{
                 $arRes['items'][$bdate][$v['id_city']]['date'] = date('d.m.Y',$bdate);
                 $arRes['items'][$bdate][$v['id_city']]['city'] = $v['city'];
+                $arRes['items'][$bdate][$v['id_city']]['ismetro'] = $v['ismetro'];
                 $arT = array();
                 foreach ($arRes['users'][$v['point']] as $u) {
                     $arT[$u['id_user']] = array(
@@ -1068,7 +1069,8 @@ class Project extends ARModel
                         'etime' => $v['etime'],
                         'user' => $u['name'],
                         'src' => $u['src'],
-                        'status' => $u['status']
+                        'status' => $u['status'],
+                        'tasks' => array() // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     );
                 }
                 $arRes['items'][$bdate][$v['id_city']]['points'][$v['point']] = $arT;
