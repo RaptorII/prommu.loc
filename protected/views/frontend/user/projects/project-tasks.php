@@ -2,7 +2,8 @@
 $bUrl = Yii::app()->baseUrl;
 $pLink = MainConfig::$PAGE_PROJECT_LIST . '/' . $project;
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
+
 /***********UNIVERSAL FILTER************/
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/universal-filter.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-filter.css');
@@ -49,16 +50,13 @@ $arFilterData = [
 foreach ($viData['filter']['cities'] as $id => $city)
   $arFilterData['FILTER_SETTINGS'][0]['DATA'][$id] = ['title'=>$city, 'id'=>$id];
 ?>
-<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($viData); ?>
-</pre>
 <div class="filter__veil"></div>
 <div class="row project">
 	<div class="col-xs-12">
 		<? require __DIR__ . '/project-nav.php'; // Меню вкладок ?>
 	</div>
 </div>
-<div class="project__module">
+<div class="project__module" data-id="<?=$project?>">
 	<div class="tasks__list">
 		<? require __DIR__ . '/filter.php'; // ФИЛЬТР ?>
 		<div class="tasks" id="ajax-content">
@@ -67,7 +65,7 @@ foreach ($viData['filter']['cities'] as $id => $city)
   </div>
   <div class="users__list">
 	<?php
-		foreach ($viData['items'] as $arDate):
+		foreach ($viData['items'] as $unix => $arDate):
 			foreach ($arDate as $id_city => $arCity):
 				foreach ($arCity['points'] as $point => $arUsers): 
 					foreach ($arUsers as $id_user => $user): 
@@ -75,7 +73,7 @@ foreach ($viData['filter']['cities'] as $id => $city)
 	  <div 
 			class="task__single"
 			data-user="<?=$id_user?>"
-			data-date="<?=$date?>"
+			data-date="<?=$arCity['date']?>"
 			data-point="<?=$point?>"
 		>
 	    <div class="task__single-logo">
@@ -92,41 +90,44 @@ foreach ($viData['filter']['cities'] as $id => $city)
 	            <div class="task__user-date"><?=$arCity['date']?></div>
 	          </div>
 	          <div class="task__tasks-info">
-	            <div class="task__tasks-title">
-	              <span class="task__name">Не выбрано</span>
-	              <ul class="task__hidden-ul">
-	                <li data-task-id="1">Название задания 1</li>
-	                <li data-task-id="2">Название задания 2</li>
-	                <li data-task-id="3">Название задания 3</li>
-	                <li data-task-id="4">Название задания 4</li>
-	                <li data-task-id="5">Название задания 5</li>
-	                <li data-task-id="6">Название задания 6</li>
-	              </ul>
-	            </div>
+	          	<?php $tasks = sizeof($user['tasks']); ?>
+							<div class="task__tasks-title"<?=(!$tasks?' style="display:none"':'')?>>
+								<span class="task__name">Новое задание</span>
+								<ul class="task__hidden-ul">
+									<li data-id="new">Новое задание</li>
+									<? foreach ($user['tasks'] as $task): ?>
+										<li 
+											data-id="<?=$task['id']?>" 
+											data-text="<?=$task['text']?>"
+											><?=$task['name']?></li>
+									<? endforeach; ?>
+								</ul>
+							</div>
 
-	            <div class="task__tasks-buttons">
-	              <span class="task__tasks-button task__button-green task__button-upload">Изменить</span>
-	              <span class="task__tasks-button task__button-grey task__button-alldate">Дублироать на все даты</span>
-	              <span class="task__tasks-button task__button-green task__button-allpersons">Дублироать задачу всем</span>
-	            </div>
+							<div class="task__tasks-buttons">
+								<span class="task__tasks-button task__button-green task__button-change">Изменить</span>
+								<span class="task__tasks-button task__button-grey task__button-alldate">Дублироать на все даты</span>
+								<span class="task__tasks-button task__button-green task__button-users">Дублировать всем</span>
+								<span class="task__tasks-button task__button-red task__button-del">Удалить</span>
+							</div>
+	            <p class="task__empty"<?=($tasks?' style="display:none"':'')?>>Заданий нет</p>
 	          </div>
 	        </div>
 
-	        <input name="task_title" class="task__info-name" type="text" placeholder="Название задания..."/>
-	        <textarea name="task_descr" class="task__info-descr" placeholder="Опишите задание..."></textarea>
+	        <input name="title" class="task__info-name" type="text" placeholder="Название задания..."/>
+	        <textarea name="text" class="task__info-descr" placeholder="Опишите задание..."></textarea>
 
 	        <? /**********hiddens*************/ ?>
-	        <input class="task_id-hidden" type="hidden" name="task_id" value="0">
-	        <input type="hidden" name="person_id" value="0">
-	        <input type="hidden" name="project_id" value="0">
-	        <input type="hidden" name="task_date" value="0">
-	        <input type="hidden" name="task_location_id" value="0">
+	        <input type="hidden" name="project" value="<?=$project?>">
+	        <input class="task_id-hidden" type="hidden" name="task" value="new">
+	        <input type="hidden" name="user" value="<?=$id_user?>">
+	        <input type="hidden" name="date" value="<?=$unix?>">
+	        <input type="hidden" name="point" value="<?=$point?>">
 	        <? /**********hiddens*************/ ?>
 
 	        <div class="task__single-info-btn">
-	          <a href="#" class="task__add-task">ДОБАВИТЬ ЗАДАЧУ</a>
-	          <a href="#" class="task__add-update">ИЗМЕНИТЬ</a>
-	          <a href="#" class="task__add-cancel">ОТМЕНИТЬ</a>
+	        	<a href="<?=$pLink . '/tasks'?>" class="task__add-cancel">НАЗАД</a>
+	          <a href="javascript:void(0)" class="task__add-task">ДОБАВИТЬ ЗАДАНИЕ</a>
 	        </div>
 	      </div>
 	    </div>

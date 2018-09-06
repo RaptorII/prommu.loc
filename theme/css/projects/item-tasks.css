@@ -65,6 +65,7 @@
     padding-left: 10px;
 }
 .task__tasks-buttons{
+    display: none;
     margin-top:10px;
 }
 .task__tasks-button{
@@ -96,6 +97,7 @@
     color: #abb92a;
     position: relative;
 }
+.task__button-red:hover,
 .task__button-green:hover{
     color:white;
 }
@@ -104,8 +106,10 @@
     color: #a4b0b9;
     position: relative;
 }
-.task__button-green:hover{
-    color:white;
+.task__button-red{
+    border: 2px solid red;
+    color: red;
+    position: relative;  
 }
 
 
@@ -140,13 +144,8 @@
     width: 100%;
     display: flow-root;
 }
-
-#DiContent .task__single-info-btn a.task__add-update{
-    display:none;
-}
 #DiContent .task__single-info-btn a.task__add-cancel{
-    display:none;
-    margin-right: 5px;
+    margin-left: 5px;
 }
 
 #DiContent .task__single-info-btn a{
@@ -154,22 +153,18 @@
     float: right;
 }
 
-.task__button-green:hover:before {
-     transform: scaleX(1);
- }
-.task__button-grey:hover:before {
+.task__button-green:hover:before,
+.task__button-grey:hover:before,
+.task__button-red:hover:before{
     transform: scaleX(1);
 }
-
-.task__button-grey:hover {
+.task__button-grey:hover,
+.task__button-green:hover{
     color:white;
 }
-
-.task__button-green:hover {
-    color:white;
-}
-
-.task__button-green:before {
+.task__button-green:before,
+.task__button-grey:before,
+.task__button-red:before{
     content: "";
     position: absolute;
     z-index: -1;
@@ -177,7 +172,6 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: #abb820;
     -webkit-transform: scaleX(0);
     transform: scaleX(0);
     -webkit-transform-origin: 0 50%;
@@ -187,25 +181,9 @@
     -o-transition: all ease-out .3s;
     transition: all ease-out .3s;
 }
-
-.task__button-grey:before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: #a4b0b9;
-    -webkit-transform: scaleX(0);
-    transform: scaleX(0);
-    -webkit-transform-origin: 0 50%;
-    transform-origin: 0 50%;
-    -webkit-transition: all ease-out .3s;
-    -moz-transition: all ease-out .3s;
-    -o-transition: all ease-out .3s;
-    transition: all ease-out .3s;
-}
+.task__button-green:before{ background: #abb820 }
+.task__button-grey:before{ background: #a4b0b9 }
+.task__button-red:before{ background: red }
 
 .task__hidden-ul{
     width:100%;
@@ -265,6 +243,11 @@
     margin: 0;
     padding: 20px 0;
     border-top: 1px solid #cecece;
+}
+.task__empty{
+    padding-top: 30px;
+    text-align: center;
+    font-size: 18px;
 }
 @media screen and (min-width: 768px){
     .task__single{

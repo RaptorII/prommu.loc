@@ -978,7 +978,7 @@ class Project extends ARModel
             ->queryAll();
 
         for($i=0,$n=sizeof($sql); $i<$n; $i++)
-            $arRes[$sql[$i]['point']][$sql[$i]['task']] = $sql[$i];
+            $arRes[strtotime($sql[$i]['date'])][$sql[$i]['point']][$sql[$i]['user']][$sql[$i]['id']] = $sql[$i];
 
         return $arRes;
     }
@@ -1047,6 +1047,8 @@ class Project extends ARModel
             $arRes['items'] = array();
             return $arRes;
         }
+        $arTasks = $this->getTaskList($arr['project']['project']);
+
 
         $day = 60*60*24;
         foreach ($arr['original'] as $v) {
@@ -1070,17 +1072,180 @@ class Project extends ARModel
                         'user' => $u['name'],
                         'src' => $u['src'],
                         'status' => $u['status'],
-                        'tasks' => array() // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        'tasks' => $arTasks[$bdate][$v['point']][$u['id_user']]
                     );
                 }
                 $arRes['items'][$bdate][$v['id_city']]['points'][$v['point']] = $arT;
 
                 $bdate += $day;
             }
-            while($bdate < $edate);
+            while($bdate <= $edate);
         }
         ksort($arRes['items']);
         $arRes['filter'] = $this->buildAdressArray($arRes['points'])['filter'];
+
+        return $arRes;
+    }
+    /*
+    *       Изменение задач
+    */
+    public function changeTask($arr) {
+        $arRes = ['error' => 1, 'data' => []];
+        if(!$this->hasAccess($arr['project']))
+           return $arRes;
+
+        $arNew = array(
+            'project' => $arr['project'],
+            'user' => $arr['user'],
+            'point' => $arr['point'],
+            'name' => $arr['title'],
+            'text' => $arr['text'],
+            'date' => date('Y-m-d', $arr['date'])
+        );
+
+        switch ($arr['type']) {
+            case 'new-task': // создание нового задания
+                $sql = Yii::app()->db->createCommand()
+                    ->insert('project_task', $arNew);
+                if($sql) {
+                    $sql = Yii::app()->db->createCommand()
+                        ->select("MAX(id)")
+                        ->from('project_task')
+                        ->queryScalar();
+
+                    $arRes['error'] = 0;
+                    $arRes['data']['task'] = $sql;
+                }
+                break;
+            case 'change-task': // изменение существующего
+                $sql = Yii::app()->db->createCommand()
+                    ->update(
+                        'project_task', 
+                        $arNew, 
+                        'id = :id', 
+                        array(':id' => $arr['task'])
+                    );
+                if($sql) $arRes['error'] = 0;
+                break;
+            case 'all-dates-task': // дублирование на все даты точки
+                $sql = Yii::app()->db->createCommand()
+                    ->select("bdate, edate")
+                    ->from('project_city')
+                    ->where(
+                        'project=:prj AND point=:pnt',
+                        array(
+                            ':prj' => $arr['project'],
+                            ':pnt' => $arr['point']
+                        )
+                    )
+                    ->queryRow();
+                $day = 60*60*24;
+                $bdate = strtotime($sql['bdate']);
+                $edate = strtotime($sql['edate']);
+
+                $sql = Yii::app()->db->createCommand()
+                    ->select("*")
+                    ->from('project_task')
+                    ->where(
+                        'project=:prj AND point=:pnt AND user=:u',
+                        array(
+                            ':prj' => $arr['project'],
+                            ':pnt' => $arr['point'],
+                            ':u' => $arr['user']
+                        )
+                    )
+                    ->queryAll();
+
+                $arT = array();
+                foreach ($sql as $v)
+                   $arT[] = strtotime($v['date']);
+
+                do{
+                    $arNew['date'] = date('Y-m-d', $bdate);
+                    if(in_array($bdate, $arT)) {
+                        $sql = Yii::app()->db->createCommand()
+                            ->update(
+                                'project_task', 
+                                $arNew, 
+                                'project=:prj AND point=:pnt AND user=:u AND date=:d',
+                                array(
+                                    ':prj' => $arr['project'],
+                                    ':pnt' => $arr['point'],
+                                    ':u' => $arr['user'],
+                                    ':d' => $arNew['date']
+                                )
+                            );
+                        if($sql) $arRes['error'] = 0;
+                    }
+                    else {
+                        $sql = Yii::app()->db->createCommand()
+                            ->insert('project_task', $arNew);
+                        if($sql) $arRes['error'] = 0;                      
+                    }
+                    $bdate += $day;
+                }
+                while($bdate <= $edate);
+                break;
+            case 'all-users-task': // дублирование на всех привязанных пользователей
+                $sql = Yii::app()->db->createCommand()
+                    ->select("*")
+                    ->from('project_task')
+                    ->where(
+                        'project=:prj AND point=:pnt AND date=:d',
+                        array(
+                            ':prj' => $arr['project'],
+                            ':pnt' => $arr['point'],
+                            ':d' => date('Y-m-d', $arr['date'])
+                        )
+                    )
+                    ->queryAll();
+
+                $arU = array();
+                foreach ($sql as $v)
+                   $arU[] = $v['user'];
+
+                $sql = Yii::app()->db->createCommand()
+                    ->select("user")
+                    ->from('project_user')
+                    ->where(
+                        'project=:prj AND point=:pnt',
+                        array(
+                            ':prj' => $arr['project'],
+                            ':pnt' => $arr['point']
+                        )
+                    )
+                    ->queryAll();
+
+                foreach ($sql as $v) {
+                    $arNew['user'] = $v['user'];
+                    if(in_array($v['user'], $arU)) { 
+                        $sql = Yii::app()->db->createCommand()
+                            ->update(
+                                'project_task', 
+                                $arNew, 
+                                'project=:prj AND point=:pnt AND user=:u AND date=:d',
+                                array(
+                                    ':prj' => $arr['project'],
+                                    ':pnt' => $arr['point'],
+                                    ':u' => $arNew['user'],
+                                    ':d' => date('Y-m-d', $arr['date'])
+                                )
+                            );
+                        if($sql) $arRes['error'] = 0;
+                    }
+                    else {
+                        $sql = Yii::app()->db->createCommand()
+                            ->insert('project_task', $arNew);
+                        if($sql) $arRes['error'] = 0;                         
+                    }
+                }
+                break;
+            case 'delete-task': // изменение существующего
+                $sql = Yii::app()->db->createCommand()
+                    ->delete('project_task','id=:id', [':id'=>$arr['task']]);
+                if($sql) $arRes['error'] = 0; 
+                break;
+        }
 
         return $arRes;
     }

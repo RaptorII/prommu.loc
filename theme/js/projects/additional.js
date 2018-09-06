@@ -90,6 +90,12 @@ var MainProject = {
                 case 'save-program':
                     body = 'Перед сохранение необходимо заполнить все поля';
                     break;
+                case 'empty-fields':
+                    body = 'Необходимо заполнить поля';
+                    break;
+                case 'nochange':
+                    body = 'Значения в полях не менялись';
+                    break;
                 default: break;
             }
         }
@@ -104,6 +110,21 @@ var MainProject = {
                     break;
                 case 'delperiod':
                     body = 'Период успешно удален';
+                    break;
+                case 'new-task':
+                    body = 'Задание успешно создано';
+                    break;
+                case 'change-task':
+                    body = 'Задание успешно изменено';
+                    break;
+                case 'all-dates-task':
+                    body = 'Задание успешно продублировано на все даты точки';
+                    break;
+                case 'all-users-task':
+                    body = 'Задание успешно продублировано всему персоналу';
+                    break;
+                case 'delete-task':
+                    body = 'Задание успешно удалено';
                     break;
                 default: break;
             }

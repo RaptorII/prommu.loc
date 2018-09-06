@@ -835,10 +835,15 @@ class AjaxController extends AppController
     {
         $result = 0;
         $type = Yii::app()->getRequest()->getParam('type');
+        $data = Yii::app()->getRequest()->getParam('data');
+        $data = json_decode($data, true);
         $model = new Project();
-        if($type=='delete') {
+        if($type=='delete') { // удаление локаций
             $result = $model->delLocation($_POST);   
         }
-        echo CJSON::encode($result); 
+        else {
+            $result = $model->changeTask($data);
+        }
+        echo CJSON::encode($result);
     }
 }
