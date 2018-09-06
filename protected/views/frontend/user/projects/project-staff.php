@@ -66,8 +66,8 @@ $arFilterData = [
                 'PARENT_ID' => '4',
                 'PARENT_VALUE' => '',
                 'PARENT_VALUE_ID' => [
-                    0 => '1',
-                    1 => '2'
+                    0 => '0',
+                    1 => '1'
                 ]
             ]
         ],
@@ -120,11 +120,11 @@ $arFilterData = [
             'DATA_DEFAULT' => '2',
             'CONDITION' => [
                 'BLOCKED' => 'true',
-                'PARENT_ID' => '4',
+                'PARENT_ID' => '2',
                 'PARENT_VALUE' => '',
                 'PARENT_VALUE_ID' => [
-                    0 => '1',
-                    1 => '2'
+                    0 => '0',
+                    1 => '1'
                 ]
             ]
         ],
@@ -162,8 +162,8 @@ $arFilterData = [
                 'PARENT_ID' => '4',
                 'PARENT_VALUE' => '',
                 'PARENT_VALUE_ID' => [
-                    0 => '1',
-                    1 => '2'
+                    0 => '0',
+                    1 => '1'
                 ]
             ]
         ],
