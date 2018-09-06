@@ -75,6 +75,10 @@ let IndexUniversalFilter = (function () {
             e.preventDefault();
             self.ajaxSetParams(e.target);
         });
+
+        $(document).on('click', function (e) {
+            self.closureHiddenUlContent(e.target);
+        });
     };
 
     /**Функция отображения/скрытия пунктов меню**/
@@ -470,6 +474,11 @@ let IndexUniversalFilter = (function () {
         }
     };
 
+    IndexUniversalFilter.prototype.closureHiddenUlContent = function (e) {
+        if(!$(e).hasClass('u-filter__select') && !$(e).hasClass('u-filter__li-hidden')){
+            $('.u-filter__ul-hidden').fadeOut();
+        }
+    };
 
     return IndexUniversalFilter;
 }());
