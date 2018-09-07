@@ -183,12 +183,14 @@ class Project extends ARModel
                 ->insert('user', $data);
 
             $id_user = Yii::app()->db->createCommand("SELECT u.id_user FROM  user u WHERE u.id_user = (SELECT MAX(u.id_user)  FROM user u)")->queryScalar();
-       
-
+            
+            $Api = new Api();
+            $male = $Api->maleor($props['inv-name'][$i]);
+           
             $insData = array('id_user' => $id_user+1,
                         'firstname' => $props['inv-name'][$i],
                         'lastname' => $props['inv-sname'][$i],
-                        'isman' => 0,
+                        'isman' => $male['sex'],
                         'smart' => 1,
                         'date_public' => date('Y-m-d H:i:s'),
                         'mdate' => date('Y-m-d H:i:s'),
