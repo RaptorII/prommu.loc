@@ -101,8 +101,8 @@ class Api
         return $data;
     }
     
-    public function maleor(){
-        $name = Yii::app()->getRequest()->getParam('name');
+    public function maleor($names){
+        $name = $names ? $names :Yii::app()->getRequest()->getParam('name');
         $sql = "SELECT  r.firstname
                     FROM resume r
                     WHERE r.isman = 1";
