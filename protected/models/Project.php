@@ -131,7 +131,7 @@ class Project extends ARModel
                             'btime' => $clouds[$k]['btime'],
                             'etime' => $clouds[$k]['etime'],
                             'metro' => $clouds[$k]['metro'],
-                            'point' => $k.''.rand(1111,9999),
+                            'point' => ($k+1).''.rand(1111,9999),
                             'location' => $j
                         ));
                     }
