@@ -117,7 +117,7 @@ class Api
                 $sexs= 0;
                     $count = count($result);
                      $counts = count($results);
-                      echo "Поиск по базе мужчин <br/>";
+                    //   echo "Поиск по базе мужчин <br/>";
                    for($i = 0; $i < $count; $i++){
                         
                         if(strpos($result[$i]['firstname'], $name) !== false) {
@@ -127,7 +127,7 @@ class Api
                         }
                         
                     }
-                    echo "Поиск по базе женщин <br/>";
+                    // echo "Поиск по базе женщин <br/>";
                     for($i = 0; $i < $counts; $i++){
                         
                         if(strpos($results[$i]['firstname'], $name) !== false) {
