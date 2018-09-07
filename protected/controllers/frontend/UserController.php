@@ -26,7 +26,7 @@ class UserController extends AppController
       public function actionProCreate(){
         $project = new Project();
         $result = $project->createProject($_POST);
-        $this->redirect("http://dev.prommu.com/user/projects");
+        $this->redirect(MainConfig::$PAGE_PROJECT_LIST);
 
       }
 
@@ -1553,7 +1553,7 @@ class UserController extends AppController
                 case 'staff':
                     $save = Yii::app()->getRequest()->getParam('save-users');
                     if(isset($save)) {
-                        $model->setProjectPromo($_POST);
+                        $model->recordStaff($_POST, $id);
                         $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id.'/staff');
                     }
                     if(Yii::app()->request->isAjaxRequest) {
@@ -1613,7 +1613,7 @@ class UserController extends AppController
                     break;
                 case 'address-edit':
                     if( Yii::app()->getRequest()->isPostRequest) {
-                        $model->setAdresProgramm($_POST);
+                        $model->recordIndex($_POST, $id);
                         $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id.'/index');
                     }
                     $data = $model->getAdresProgramm($id);

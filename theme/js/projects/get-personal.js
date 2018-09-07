@@ -196,7 +196,7 @@ var ProjectAddPersonal = (function () {
             id = $e.closest('.invitation-item')[0].dataset.id;
 
         if ($e.hasClass('name') || $e.hasClass('sname')) {
-            v = v.replace(/[^а-яА-ЯїЇєЄіІёЁ ]/g,'');
+            v = v.replace(/[^а-яА-ЯїЇєЄіІёЁ-]/g,'');
             v = v.charAt(0).toUpperCase() + v.slice(1);
             $e.val(v);
         }
@@ -349,8 +349,8 @@ var ProjectAddPersonal = (function () {
         }
 
         if(e){  // прокрутка страниц
-            e.preventDefault();
-            params = e.target.href.slice(e.target.href.indexOf(AJAX_GET_PROMO) + 30);// вырезаем GET
+            e.preventDefault(); // для пагинации
+            params += e.target.href.slice(e.target.href.indexOf('page='));
         }
         $('.filter__veil').show(); // процесс загрузки
 

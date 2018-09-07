@@ -32,199 +32,170 @@ class Project extends ARModel
                             'crdate' => date('Y-m-d h-i-s')
                         ));
     
-        //*Обрабатываем входящие данные
-            for($i = 0; $i < count($props['city']); $i++){
-                $cloud['city'][$i] = $props['city'][$i];
-                $j = 0;
-                foreach($props['lindex'][$props['city'][$i]] as $key => $value){
-                    $cloud['lindex'][$props['city'][$i]][$j] = $value;
-                    $j++;
-                }
+        $this->recordIndex($props, $project, true);
+        $this->recordStaff($props, $project);
 
-                $k = 0;
-                foreach($props['lname'][$props['city'][$i]] as $key => $value){
-                    $cloud['lname'][$props['city'][$i]][$k] = $value;
-                    $k++;
-                }
-                
-                $k = 0;
-                foreach($props['metro'][$props['city'][$i]] as $key => $value){
-                    $cloud['metro'][$props['city'][$i]][$k] = $value;
-                    $k++;
-                }
-                
-                $s = 0;
-                $j = 0;
-                foreach($props['bdate'][$props['city'][$i]] as $key => $value){
-                    $s = 0;
-                    foreach($props['bdate'][$props['city'][$i]][$key] as $keys => $values){
-                        $cloud['bdate'][$props['city'][$i]][$j][$s] = $values;
-                        
-                        $s++;
-                    }
-                    $j++;
-                }
-                
-          
-                $j = 0;
-                foreach($props['edate'][$props['city'][$i]] as $key => $value){
-                    $s = 0;
-                    foreach($props['edate'][$props['city'][$i]][$key] as $keys => $values){
-                        $cloud['edate'][$props['city'][$i]][$j][$s] = $values;
-                        $s++;
-                    }
-                    $j++;
-                }
-                
-                $s = 0;
-                $j = 0;
-                foreach($props['btime'][$props['city'][$i]] as $key => $value){
-                    $s = 0;
-                    foreach($props['btime'][$props['city'][$i]][$key] as $keys => $values){
-                        $cloud['btime'][$props['city'][$i]][$j][$s] = $values;
-                        $s++;
-                    }
-                    $j++;
-                }
-                
-                $s = 0;
-                $j = 0;
-                foreach($props['etime'][$props['city'][$i]] as $key => $value){
-                    $s = 0;
-                    foreach($props['etime'][$props['city'][$i]][$key] as $keys => $values){
-                        $cloud['etime'][$props['city'][$i]][$j][$s] = $values;
-                        $s++;
-                    }
-                    $j++;
-                }
-                
-            }
-        
-       
-        //*
-        $k = 0;
-         for($i = 0; $i < count($cloud['city']); $i++){
-            for($j = 0; $j < count($cloud['lindex'][$cloud['city'][$i]]); $j ++){
-                for($s = 0; $s < count($cloud['bdate'][$cloud['city'][$i]][$j]); $s ++){
-                    $title = $props['name'];
-                    
+        return $cloud;
+    }
+    /*
+    *       Запись адресной программы
+    */
+    public function recordIndex($arr, $project, $isCreate=false) {
+        if(!$project)
+            return false;
 
-                    $clouds[$k]['city'] = $cloud['city'][$i];
-                    $clouds[$k]['lindex'] = $cloud['lindex'][$cloud['city'][$i]][$j];
-                    $clouds[$k]['metro'] = $cloud['metro'][$cloud['city'][$i]][$j];
-                    $clouds[$k]['lname'] = $cloud['lname'][$cloud['city'][$i]][$j];
-                    $clouds[$k]['bdate'] = $cloud['bdate'][$cloud['city'][$i]][$j][$s];
-                    $clouds[$k]['edate'] = $cloud['edate'][$cloud['city'][$i]][$j][$s];
-                    $clouds[$k]['btime'] = $cloud['btime'][$cloud['city'][$i]][$j][$s];
-                    $clouds[$k]['etime'] = $cloud['etime'][$cloud['city'][$i]][$j][$s];
-    
-                    if($clouds[$k]['city']){
-                    $res = Yii::app()->db->createCommand()
-                        ->insert('project_city', array(
-                            'project' => $project,
-                            'title' => $title,
-                            'adres' => $clouds[$k]['lindex'],
-                            'name' => $clouds[$k]['lname'],
-                            'id_city' => $cloud['city'][$i],
-                            'bdate' => date('Y.m.d', strtotime($clouds[$k]['bdate'])),
-                            'edate' => date('Y.m.d', strtotime($clouds[$k]['edate'])),
-                            'btime' => $clouds[$k]['btime'],
-                            'etime' => $clouds[$k]['etime'],
-                            'metro' => $clouds[$k]['metro'],
-                            'point' => ($k+1).''.rand(1111,9999),
-                            'location' => $j
-                        ));
-                    }
-                    $k++;
-                }
+        $arOldP = $arNewP = $arRes = array();
+        $lId = $pId = 0;
 
+        foreach ($arr['city'] as $c) { // по городам
+            foreach ($arr['bdate'][$c] as $l => $arLoc) { // по локациям
+                $lId++;
+                foreach ($arLoc as $p => $v) { // по точкам
+                    $pId++;
+                    $arRes[$p] = array(
+                        'name' => $arr['lname'][$c][$l],
+                        'adres' => $arr['lindex'][$c][$l],
+                        'id_city' => $c,
+                        'bdate' => date('Y-m-d', strtotime($arr['bdate'][$c][$l][$p])),
+                        'edate' => date('Y-m-d', strtotime($arr['edate'][$c][$l][$p])),
+                        'btime' => $arr['btime'][$c][$l][$p],
+                        'etime' => $arr['etime'][$c][$l][$p],
+                        'project' => $project,
+                        'point' => $isCreate ? ($pId.rand(1111,9999)) : $p,
+                        'location' => $isCreate ? $lId : $l,
+                        'metro' => $arr['metro'][$c][$l]
+                    );
+                    $arNewP[] = $p;
+                }     
             }
         }
-        $users = explode(',', $props['users']);
 
-        for($i = 0; $i < count($users); $i ++){
-            if($users[$i]){
-                $idus = $users[$i];
-                $sql = "SELECT r.id_user id, r.firstname, r.lastname, r.mdate, u.email 
+        // ищем существующие точки
+        $arBD = Yii::app()->db->createCommand()
+            ->select("point")
+            ->from('project_city')
+            ->where('project=:prj', array(':prj' =>$project))
+            ->queryAll();
+
+        foreach ($arBD as $v)
+            $arOldP[] = $v['point'];
+
+
+        foreach ($arOldP as $p) 
+            if( !in_array($p, $arNewP) ) {  // удаляем отсутствующие
+                Yii::app()->db->createCommand()
+                    ->delete(
+                        'project_city',
+                        'point=:pnt AND project=:prj', 
+                        array(':pnt'=>$p, ':prj'=>$project)
+                    );
+            }
+
+        foreach ($arRes as $p => $arV) {
+            if( in_array($p, $arOldP) ) { // изменяем существующие
+                Yii::app()->db->createCommand()
+                    ->update(
+                        'project_city',
+                        $arV,
+                        'point=:point',
+                        array(':point' => $new['point'])
+                    );    
+            }
+            else { // добавляем новые
+                Yii::app()->db->createCommand()
+                    ->insert('project_city', $arV);
+            }
+        }
+    }
+    /*
+    *       Запись новых пользователей
+    */
+    public function recordStaff($arr, $project) {
+        if(!$project)
+            return false;
+        $users = explode(',', $arr['users']);
+
+        if($arr['users-cnt']>0) { // персонал из БД
+            $sql = "SELECT r.id_user id, u.email 
                 FROM resume r
                 INNER JOIN user u ON r.id_user = u.id_user
-                WHERE u.id_user = {$idus}
-                ORDER BY id DESC";
-            /** @var $res CDbCommand */
-            $res = Yii::app()->db->createCommand($sql)->queryRow();
+                WHERE u.id_user IN({$arr['users']})";
+            $arU = Yii::app()->db->createCommand($sql)->queryAll();
 
-            $res = Yii::app()->db->createCommand()
-                        ->insert('project_user', array(
+            foreach ($arU as $user) {
+                Yii::app()->db->createCommand()
+                    ->insert('project_user', array(
                             'project' => $project,
-                            'user' => $users[$i],
-                            'firstname' => $res['firstname'],
-                            'lastname' =>  $res['lastname'],
-                            'email' =>  $res['email'],
-                            'phone' => '',
-                            'point' => NULL
+                            'user' => $user['id'],
+                            'email' =>  $user['email'],
+                            'phone' => ''
                         ));
-                    }
+            }
         }
 
-        for($i = 0; $i < count($props['inv-name']); $i ++){
-          
-            $pass = rand(11111,99999);
-            $data['access_time'] = date('Y-m-d H:i:s');
-            $data['crdate'] = date('Y-m-d H:i:s');
-            $data['mdate'] = date('Y-m-d H:i:s');
-            $data['ismoder'] = '0';
-            $data['isblocked'] = '0';
-            $data['email'] = $props['inv-email'][$i];
-            $data['passw'] = md5($pass);
-            $data['login'] = $props['prfx-phone'][$i].$props['inv-phone'][$i];
+        if(strlen(reset($arr['inv-name']))) { // приглашенный персонал
+            for($i = 0; $i < count($arr['inv-name']); $i ++){
+                $pass = rand(11111,99999);
+                $date = date('Y-m-d H:i:s');
+                Yii::app()->db->createCommand()
+                    ->insert('user', array(
+                            'access_time' => $date,
+                            'crdate' => $date,
+                            'mdate' => $date,
+                            'ismoder' => '0',
+                            'isblocked' => '0',
+                            'email' => $arr['inv-email'][$i],
+                            'passw' => md5($pass),
+                            'login' => $arr['prfx-phone'][$i].$arr['inv-phone'][$i]
+                        ));
+       
+                $id_user = Yii::app()->db->createCommand()
+                    ->select("MAX(id_user)")
+                    ->from('user')
+                    ->queryScalar();
 
+                $Api = new Api();
+                $male = $Api->maleor($arr['inv-name'][$i]);
+                if(!isset($male['sex']))
+                    $male['sex'] = 1;
 
-            $res = Yii::app()->db->createCommand()
-                ->insert('user', $data);
+                Yii::app()->db->createCommand()
+                    ->insert('resume', array(
+                            'id_user' => $id_user+1,
+                            'firstname' => $arr['inv-name'][$i],
+                            'lastname' => $arr['inv-sname'][$i],
+                            'isman' => $male['sex'],
+                            'smart' => 1,
+                            'date_public' => $date,
+                            'mdate' => $date,
+                            'birthday' => date("Y-m-d", strtotime('2002.09.10')),
+                        ));
 
-            $id_user = Yii::app()->db->createCommand("SELECT u.id_user FROM  user u WHERE u.id_user = (SELECT MAX(u.id_user)  FROM user u)")->queryScalar();
-            
-            $Api = new Api();
-            $male = $Api->maleor($props['inv-name'][$i]);
-           
-            $insData = array('id_user' => $id_user+1,
-                        'firstname' => $props['inv-name'][$i],
-                        'lastname' => $props['inv-sname'][$i],
-                        'isman' => $male['sex'],
-                        'smart' => 1,
-                        'date_public' => date('Y-m-d H:i:s'),
-                        'mdate' => date('Y-m-d H:i:s'),
-                        'birthday' => date("Y-m-d", strtotime('2002.09.10')),
-                    );
+                $pid = Yii::app()->db->createCommand()
+                    ->select("MAX(id)")
+                    ->from('resume')
+                    ->queryScalar();
 
-            $res = Yii::app()->db->createCommand()
-                        ->insert('resume', $insData);
-
-            $pid = Yii::app()->db->createCommand("SELECT u.id  FROM  resume u WHERE u.id = (SELECT MAX(u.id)  FROM resume u)")->queryScalar();
-
-            $res = Yii::app()->db->createCommand()
-                        ->insert('user_city', array('id_user' => $id_user+1,
+                Yii::app()->db->createCommand()
+                    ->insert('user_city', array(
+                            'id_user' => $id_user+1,
                             'id_resume' => $pid+1,
-                                'id_city' => 1307,
-                            ));
+                            'id_city' => Subdomain::getId()
+                        ));
 
-            $res = Yii::app()->db->createCommand()
-                        ->insert('project_user', array(
+                Yii::app()->db->createCommand()
+                    ->insert('project_user', array(
                             'project' => $project,
                             'user' => $id_user+1,
-                            'firstname' => $props['inv-name'][$i],
-                            'lastname' => $props['inv-sname'][$i],
-                            'email' => $props['inv-email'][$i],
-                            'phone' => $props['prfx-phone'][$i].$props['inv-phone'][$i],
-                            'point' => NULL
-                        ));
-                    
+                            'email' => $arr['inv-email'][$i],
+                            'phone' => $arr['prfx-phone'][$i].$arr['inv-phone'][$i]
+                        ));              
+            }
         }
-
-         return $cloud;
     }
-
-
+    /*
+    *       Проекты для Р
+    */
     public function getProjectEmployer(){
         $idus = Share::$UserProfile->id;
          $result = Yii::app()->db->createCommand()
@@ -281,11 +252,10 @@ class Project extends ARModel
                 c.ismetro,
                 DATE_FORMAT(pc.bdate, '%d.%m.%Y') bdate, 
                 DATE_FORMAT(pc.edate, '%d.%m.%Y') edate,
-                pc.btime, 
-                pc.etime, 
+                TIME_FORMAT(pc.btime, '%H:%i') btime, 
+                TIME_FORMAT(pc.etime, '%H:%i') etime,
                 pc.point,
                 pc.location,
-                pc.title,
                 pc.metro id_metro,
                 m.name metro"
             )
@@ -360,8 +330,6 @@ class Project extends ARModel
                 pu.status,
                 pu.point, 
                 pu.date,
-                pu.firstname fname,
-                pu.lastname lname,
                 r.firstname, 
                 r.lastname,
                 r.photo,
@@ -443,7 +411,6 @@ class Project extends ARModel
     public function importProject($props){
          $link = $props['link'];
         $project = $props['project'];
-        $title = $props['title'];
         Yii::import('ext.yexcel.Yexcel');
         $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/dev.prommu/uploads/$link");
         
@@ -479,7 +446,6 @@ class Project extends ARModel
                      Yii::app()->db->createCommand()
                         ->update('project_city', array(
                             'project' => $project,
-                            'title' => $title,
                             'name' =>  $sheet_array[$i]['B'],
                             'adres' =>  $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'],
                             'id_city' => $city['id_city'],
@@ -493,7 +459,6 @@ class Project extends ARModel
                     $res = Yii::app()->db->createCommand()
                         ->insert('project_city', array(
                             'project' => $project,
-                            'title' => $title,
                             'name' =>  $sheet_array[$i]['B'],
                             'adres' =>  $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'],
                             'id_city' =>  $city['id_city'],
@@ -513,7 +478,6 @@ class Project extends ARModel
     public function importUsers($props){
         $link = $props['link'];
         $project = $props['project'];
-        $title = $props['title'];
         Yii::import('ext.yexcel.Yexcel');
         $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/dev.prommu/uploads/$link");
         
@@ -721,74 +685,6 @@ class Project extends ARModel
         }
     }
     /*
-    *       Изменение адресной программы
-    */
-    public function setAdresProgramm($arPost) {
-        if(!$arPost['project'])
-            return false;
-
-        $arBD = Yii::app()->db->createCommand()
-            ->select("point,title")
-            ->from('project_city')
-            ->where('project=:project', array(':project' =>$arPost['project']))
-            ->queryAll();
-
-        $arOldP = $arNewP = $arRes = array();
-        $title = $arBD[0]['title'];
-        foreach ($arBD as $v)
-            $arOldP[] = $v['point'];
-
-        foreach ($arPost['city'] as $c) { // по городам
-            foreach ($arPost['bdate'][$c] as $l => $arLoc) { // по локациям
-                foreach ($arLoc as $p => $v) { // по точкам
-                    $arRes[$p] = array(
-                        'name' => $arPost['lname'][$c][$l],
-                        'adres' => $arPost['lindex'][$c][$l],
-                        'id_city' => $c,
-                        'bdate' => date('Y-m-d', strtotime($arPost['bdate'][$c][$l][$p])),
-                        'edate' => date('Y-m-d', strtotime($arPost['edate'][$c][$l][$p])),
-                        'btime' => $arPost['btime'][$c][$l][$p],
-                        'etime' => $arPost['etime'][$c][$l][$p],
-                        'project' => $arPost['project'],
-                        'point' => $p,
-                        'location' => $l,
-                        'title' => $title,
-                        'metro' => $arPost['metro'][$c][$l]
-                    );
-                    $arNewP[] = $p;
-                }       
-            }
-        }
-        
-        foreach ($arOldP as $p) 
-            if( !in_array($p, $arNewP) ) {  // удаляем отсутствующие
-                $res = Yii::app()->db->createCommand()
-                    ->delete(
-                        'project_city',
-                        'point=:pnt AND project=:prj', 
-                        array(':pnt'=>$p, ':prj'=>$arPost['project'])
-                    );
-            }
-
-        foreach ($arRes as $p => $arV) {
-            if( in_array($p, $arOldP) ) { // изменяем существующие
-                $res = Yii::app()->db->createCommand()
-                    ->update(
-                        'project_city',
-                        $arV,
-                        'point=:point',
-                        array(':point' => $new['point'])
-                    );    
-            }
-            else { // добавляем новые
-                $res = Yii::app()->db->createCommand()
-                    ->insert('project_city', $arV);
-            }
-        }
-
-        return $res;
-    }
-    /*
     *       Получение XLS
     */
     public function getXLSFile() {
@@ -829,8 +725,8 @@ class Project extends ARModel
                 pc.metro id_metro,
                 DATE_FORMAT(pc.bdate, '%d.%m.%Y') bdate,
                 DATE_FORMAT(pc.edate, '%d.%m.%Y') edate,
-                pc.btime,
-                pc.etime,
+                TIME_FORMAT(pc.btime, '%H:%i') btime,
+                TIME_FORMAT(pc.etime, '%H:%i') etime,
                 pc.location,
                 c.name city, 
                 c.ismetro,
@@ -907,66 +803,6 @@ class Project extends ARModel
         $arRes['project'] = $this->getProjectData($prj);
         $arRes['users'] = $this->getStaffProject($prj);
         return $arRes;
-    }
-    /*
-    *       Добавление нового персонала
-    */
-    public function setProjectPromo($arPost) {
-        if(!$arPost['project'])
-            return false;
-
-        $sql = Yii::app()->db->createCommand()
-            ->select("user")
-            ->from('project_user')
-            ->where('project=:prj', array(':prj' =>$arPost['project']))
-            ->queryAll();
-
-        $arId = array();
-        for($i=0,$n=sizeof($sql); $i<$n; $i++)
-            $arId[] = $sql[$i]['user'];
-        
-        $arN = explode(',', $arPost['users']);
-
-        for($i=0,$n=sizeof($arN); $i<$n; $i++) {
-            if(!$arPost['users-cnt'])
-                break;
-            if(!in_array($arN[$i], $arId))
-                $res = Yii::app()->db->createCommand()
-                    ->insert('project_user', array(
-                        'project' => $arPost['project'],
-                        'user' => $arN[$i],
-                        'firstname' => 'firstname',
-                        'lastname' => 'lastname',
-                        'email' => 'email',
-                        'phone' => 'phone',
-                        'point' => NULL
-                    )); 
-        }
-
-        if(!strlen(trim($arPost['inv-name'][0])))
-            return $res;
-
-        for($i=0,$n=sizeof($arPost['inv-name']); $i<$n; $i++) {
-            $fname = trim($arPost['inv-name'][$i]);
-            $sname = trim($arPost['inv-sname'][$i]);
-            if(!strlen($fname) || !strlen($sname))
-                continue;
-
-            $phone = $arPost['prfx-phone'][$i] . $arPost['inv-phone'][$i];
-            $id = 0;
-            do{ $id = rand(1111,9999); }while(in_array($id, $arId));
-            $res = Yii::app()->db->createCommand()
-                ->insert('project_user', array(
-                    'project' => $arPost['project'],
-                    'user' => $id,
-                    'firstname' => $fname,
-                    'lastname' => $sname,
-                    'email' => $arPost['inv-email'][$i],
-                    'phone' => $phone,
-                    'point' => NULL
-                ));
-        }
-        return $res;
     }
     /*
     *       Список задач
