@@ -7,36 +7,94 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/univ
 /***********UNIVERSAL FILTER************/
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-route.css');
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item-route.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile('https://code.jquery.com/ui/1.12.1/jquery-ui.js', CClientScript::POS_END);
 ?>
 
-<style>
-    #sortable { list-style-type: none; margin: 0; padding: 0; width: 450px; }
-    #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 4em; text-align: center; }
-</style>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script>
-    $( function() {
-        $( "#sortable" ).sortable();
-        $( "#sortable" ).disableSelection();
-    } );
-</script>
 
 
 
-<ul id="sortable">
-    <li class="ui-state-default">1</li>
-    <li class="ui-state-default">2</li>
-    <li class="ui-state-default">3</li>
-    <li class="ui-state-default">4</li>
-    <li class="ui-state-default">5</li>
-    <li class="ui-state-default">6</li>
-    <li class="ui-state-default">7</li>
-    <li class="ui-state-default">8</li>
-    <li class="ui-state-default">9</li>
-    <li class="ui-state-default">10</li>
-    <li class="ui-state-default">11</li>
-    <li class="ui-state-default">12</li>
-</ul>
+<table class="route__table route__table-sort">
+    <thead>
+    <tr>
+        <th>№</th>
+        <th>Название ТТ</th>
+        <th>Адрес ТТ</th>
+        <th>Статус посещения</th>
+        <th>Дата</th>
+    </tr>
+    </thead>
+    <tbody id="sortable">
+    <tr class="ui-state-default">
+        <td>
+            1
+        </td>
+        <td>
+            <div class="route__table-cell border">АТБ1</div>
+        </td>
+        <td>
+            <div class="route__table-cell border route__table-index">
+                <span>ул. Пирогова 23</span>
+                <b class="js-g-hashint" title="Посмотреть на карте"></b>
+            </div>
+        </td>
+        <td>
+            <div class="route__table-cell border route__table-status">
+                <span>2</span>
+                <a href="#">изменить</a>
+            </div>
+        </td>
+        <td>
+            <div class="route__table-cell border text-center">14.02.2018</div>
+        </td>
+    </tr>
+    <tr class="ui-state-default">
+        <td>
+            2
+        </td>
+        <td>
+            <div class="route__table-cell border">ВАРУС</div>
+        </td>
+        <td>
+            <div class="route__table-cell border route__table-index">
+                <span>пр. Кирова 18</span>
+                <b class="js-g-hashint" title="Посмотреть на карте"></b>
+            </div>
+        </td>
+        <td>
+            <div class="route__table-cell border route__table-status">
+                <span>1</span>
+                <a href="#">изменить</a>
+            </div>
+        </td>
+        <td>
+            <div class="route__table-cell border text-center">14.02.2018</div>
+        </td>
+    </tr>
+    <tr class="ui-state-default">
+        <td>
+            3
+        </td>
+        <td>
+            <div class="route__table-cell border">СЕЛЬПО</div>
+        </td>
+        <td>
+            <div class="route__table-cell border route__table-index">
+                <span>ул. Строителей 4</span>
+                <b class="js-g-hashint" title="Посмотреть на карте"></b>
+            </div>
+        </td>
+        <td>
+            <div class="route__table-cell border route__table-status">
+                <span>3</span>
+                <a href="#">изменить</a>
+            </div>
+        </td>
+        <td>
+            <div class="route__table-cell border text-center">14.02.2018</div>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
 <?
 $arFilterData = [
@@ -67,6 +125,48 @@ $arFilterData = [
             'DATA_DEFAULT' => '2',
         ],
         1 => [
+            'NAME' => 'Название ТТ',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_name',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ],
+                1 => [
+                    'title' => 'Название ТТ 1',
+                    'id' => '1'
+                ],
+                2 => [
+                    'title' => 'Название ТТ 2',
+                    'id' => '2'
+                ]
+
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        2 => [
+            'NAME' => 'Адрес ТТ',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_address',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ],
+                1 => [
+                    'title' => 'Алрес ТТ 1',
+                    'id' => '1'
+                ],
+                2 => [
+                    'title' => 'Алрес ТТ 2',
+                    'id' => '2'
+                ]
+
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        3 => [
             'NAME' => 'Дата с',
             'TYPE' => 'calendar',
             'INPUT_NAME' => 'bdate',
@@ -74,14 +174,35 @@ $arFilterData = [
             'DATA_DEFAULT' => "21.11.2018",
             'DATA_SHORT' => "21.11.18"
         ],
-        2 => [
+        4 => [
             'NAME' => 'По',
             'TYPE' => 'calendar',
             'INPUT_NAME' => 'edate',
             'DATA' => [],
             'DATA_DEFAULT' => "27.11.2018",
             'DATA_SHORT' => "27.11.18"
-        ]
+        ],
+        5 => [
+            'NAME' => 'Метро',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'metro',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ],
+                1 => [
+                    'title' => 'метро 1',
+                    'id' => '1'
+                ],
+                2 => [
+                    'title' => 'метро 2',
+                    'id' => '2'
+                ]
+
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
     ]
 ];
 ?>
