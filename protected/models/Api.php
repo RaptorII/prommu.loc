@@ -139,17 +139,17 @@ class Api
                     }
 
                 if($sexs < $sex){
-                   $var =  100 - ($sexs/$sex);
-                    $sex = "C вероятностью $var % - мужчина";
+                  $data['var']=  100 - ($sexs/$sex);
+                   $data['sex'] = '1';
                 } elseif($sex < $sexs) {
-                     $var =  100 - ($sex/$sexs);
-                    $sex = "C вероятностью $var %  - женщина";
+                     $data['var'] =  100 - ($sex/$sexs);
+                    $data['sex'] = '0';
                 }
                 elseif($sex == 0 && $sexs == 0) {
                    
                     $sex = "Не могу определить... Ты случайно не $name ? ";
                 }
-       return $var;
+       return $data;
 
         
     }
