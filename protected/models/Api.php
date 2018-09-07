@@ -77,6 +77,7 @@ class Api
                 case 'serchuse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->searchUse(); break;
                 case 'rateuse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rateUse(); break;
                 case 'maleor' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->maleor(); break;
+                case 'testpay' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testPay(); break;
                  
                 
 
@@ -101,6 +102,24 @@ class Api
         return $data;
     }
     
+    function getFormSignature($account, $desc, $sum, $secretKey) {
+        $hashStr = $account.'{up}'.$desc.'{up}'.$sum.'{up}'.$secretKey;
+        return hash('sha256', $hashStr);
+    }
+
+    
+    public function testPay(){
+         $publi = "84661-fc398";
+         $account = 14500;
+         $desc = 'testpay';
+         $sum = 100;
+         $secretKey = '56B61C8ED08-535F660B689-40C558A1CE';
+         $hash = $this->getFormSignature($account, $desc, $sum, $secretKey);
+         $link = "https://unitpay.ru/pay/$publi?sum=$sum&account=$account&desc=$desc&signature=$hash";
+         
+         header("Location: $link");
+           
+    }
     public function maleor($names){
         $name = $names ? $names :Yii::app()->getRequest()->getParam('name');
         $sql = "SELECT  r.firstname
