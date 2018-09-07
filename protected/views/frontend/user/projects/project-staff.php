@@ -102,7 +102,7 @@ $arFilterData = [
         5 => [
             'NAME' => 'Название ТТ',
             'TYPE' => 'select',
-            'INPUT_NAME' => 'lname',
+            'INPUT_NAME' => 'tt_name',
             'DATA' => [
                 0 => [
                     'title' => 'Все',
@@ -129,7 +129,7 @@ $arFilterData = [
         8 => [
             'NAME' => 'Адрес ТТ',
             'TYPE' => 'select',
-            'INPUT_NAME' => 'lindex',
+            'INPUT_NAME' => 'tt_index',
             'DATA' => [
                 0 => [
                     'title' => 'Все',
@@ -166,12 +166,12 @@ $arFilterData = [
         ]
     ],
 ];
-foreach ($viData['filter']['cities'] as $id => $city)
-    $arFilterData['FILTER_SETTINGS'][2]['DATA'][$id] = ['title' => $city, 'id' => $id];
-foreach ($viData['filter']['lname'] as $lname)
-    $arFilterData['FILTER_SETTINGS'][2]['DATA'][] = ['title' => $lname, 'id' => $lname];
-foreach ($viData['filter']['lindex'] as $lindex)
-    $arFilterData['FILTER_SETTINGS'][8]['DATA'][] = ['title' => $lindex, 'id' => $lindex];
+foreach ($viData['filter']['cities'] as $id => $c)
+    $arFilterData['FILTER_SETTINGS'][2]['DATA'][$id] = ['title' => $c['city'], 'id' => $id];
+foreach ($viData['filter']['tt_name'] as $n)
+    $arFilterData['FILTER_SETTINGS'][5]['DATA'][] = ['title' => $n, 'id' => $n];
+foreach ($viData['filter']['tt_index'] as $i)
+    $arFilterData['FILTER_SETTINGS'][8]['DATA'][] = ['title' => $i, 'id' => $i];
 foreach ($viData['filter']['metros'] as $id => $metro)
     $arFilterData['FILTER_SETTINGS'][11]['DATA'][$id] = ['title' => $metro, 'id' => $id];
 ?>

@@ -295,8 +295,8 @@ class Project extends ARModel
         $status = Yii::app()->getRequest()->getParam('status');
         $point = Yii::app()->getRequest()->getParam('haspoint');
         $city = Yii::app()->getRequest()->getParam('city');
-        $lname = Yii::app()->getRequest()->getParam('lname');
-        $lindex = Yii::app()->getRequest()->getParam('lindex');
+        $tname = Yii::app()->getRequest()->getParam('tt_name');
+        $tindex = Yii::app()->getRequest()->getParam('tt_index');
         $metro = Yii::app()->getRequest()->getParam('metro');
         $filter = Yii::app()->getRequest()->getParam('filter');
 
@@ -316,6 +316,20 @@ class Project extends ARModel
                 ? " AND pu.point IS NOT NULL"
                 : " AND pu.point IS NULL");
         }
+        if($city>0) {
+            $arRes['conditions'] .= " AND pc.id_city=:city";
+            $arRes['values'][':city'] = $city;
+        }
+        if(!empty($tname)) {
+            $arRes['conditions'] .= " AND pc.name LIKE '".$tname."'";
+        }
+        if(!empty($tindex)) {
+            $arRes['conditions'] .= " AND pc.adres LIKE '".$tindex."'";
+        }
+        if($metro>0) {
+            $arRes['conditions'] .= " AND pc.metro=:metro";
+            $arRes['values'][':metro'] = $metro;
+        }
 
         return $arRes;
     }
@@ -327,7 +341,7 @@ class Project extends ARModel
 
         $sql = Yii::app()->db->createCommand()
             ->select(
-                "DISTINCT(pu.user), 
+                "pu.user, 
                 pu.status,
                 pu.point, 
                 pu.date,
@@ -359,9 +373,9 @@ class Project extends ARModel
         foreach ($sql as $v) {
             $arRes['original'][$v['user']] = $v;
             if(!empty($v['lname']))
-                $arRes['filter']['lname'][] = $v['lname'];
+                $arRes['filter']['tt_name'][] = $v['lname'];
             if(!empty($v['lindex']))
-                $arRes['filter']['lindex'][] = $v['lindex'];
+                $arRes['filter']['tt_index'][] = $v['lindex'];
             if(!empty($v['id_city']))
                 $arRes['filter']['cities'][$v['id_city']] = array(
                     'city' => $v['city'],
@@ -370,8 +384,8 @@ class Project extends ARModel
             if(!empty($v['metro']))
                 $arRes['filter']['metros'][$v['id_metro']] = $v['metro'];
         }
-        $arRes['filter']['lname'] = array_unique($arRes['filter']['lname']);
-        $arRes['filter']['lindex'] = array_unique($arRes['filter']['lindex']);
+        $arRes['filter']['tt_name'] = array_unique($arRes['filter']['tt_name']);
+        $arRes['filter']['tt_index'] = array_unique($arRes['filter']['tt_index']);
 
         foreach ($arRes['original'] as $user) {
             $id = $user['user'];
