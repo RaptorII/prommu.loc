@@ -273,17 +273,15 @@ class Project extends ARModel
     */
     public function getStaffProjectCnt($prj) {
         $filter = $this->getStaffFilter($prj);
-        $sql = Yii::app()->db->createCommand()
-            ->select("pu.id")
+        return Yii::app()->db->createCommand()
+            ->select("COUNT(pu.id)")
             ->from('project_user pu')
             ->leftjoin('resume r', 'r.id_user=pu.user')
-            ->leftjoin(
-                'user u', 
-                'u.id_user=pu.user AND u.ismoder=1 AND u.isblocked=0'
-            )
+            ->leftjoin('project_city pc', 'pc.point=pu.point')
+            ->leftjoin('city c', 'c.id_city=pc.id_city')
+            ->leftjoin('metro m', 'm.id=pc.metro')
             ->where($filter['conditions'], $filter['values'])
-            ->queryAll();
-        return sizeof($sql);
+            ->queryScalar();
     }
     /*
     *       Фильтр для персонала
@@ -296,6 +294,10 @@ class Project extends ARModel
         $lname = Yii::app()->getRequest()->getParam('lname');
         $status = Yii::app()->getRequest()->getParam('status');
         $point = Yii::app()->getRequest()->getParam('haspoint');
+        $city = Yii::app()->getRequest()->getParam('city');
+        $lname = Yii::app()->getRequest()->getParam('lname');
+        $lindex = Yii::app()->getRequest()->getParam('lindex');
+        $metro = Yii::app()->getRequest()->getParam('metro');
         $filter = Yii::app()->getRequest()->getParam('filter');
 
         if(!isset($filter))
@@ -323,19 +325,28 @@ class Project extends ARModel
     public function getStaffProject($prj){
         $filter = $this->getStaffFilter($prj);
 
-        $arT = array();
         $sql = Yii::app()->db->createCommand()
             ->select(
-                "pu.user, 
+                "DISTINCT(pu.user), 
                 pu.status,
                 pu.point, 
                 pu.date,
                 r.firstname, 
                 r.lastname,
                 r.photo,
-                r.isman")
+                r.isman,
+                pc.name lname,
+                pc.adres lindex,
+                pc.id_city,
+                pc.metro id_metro,
+                c.name city,
+                c.ismetro ismetro,
+                m.name metro")
             ->from('project_user pu')
             ->leftjoin('resume r', 'r.id_user=pu.user')
+            ->leftjoin('project_city pc', 'pc.point=pu.point')
+            ->leftjoin('city c', 'c.id_city=pc.id_city')
+            ->leftjoin('metro m', 'm.id=pc.metro')
             ->where($filter['conditions'], $filter['values'])
             ->order('pu.user desc')
             ->limit($this->limit)
@@ -346,27 +357,26 @@ class Project extends ARModel
             return array();
 
         foreach ($sql as $v) {
-            $arT['id'][] = $v['user']; // собираем ID всех пользователей проекта
-            $arT['items'][$v['user']] = $v;
+            $arRes['original'][$v['user']] = $v;
+            if(!empty($v['lname']))
+                $arRes['filter']['lname'][] = $v['lname'];
+            if(!empty($v['lindex']))
+                $arRes['filter']['lindex'][] = $v['lindex'];
+            if(!empty($v['id_city']))
+                $arRes['filter']['cities'][$v['id_city']] = array(
+                    'city' => $v['city'],
+                    'ismetro' => $v['ismetro']
+                );
+            if(!empty($v['metro']))
+                $arRes['filter']['metros'][$v['id_metro']] = $v['metro'];
         }
+        $arRes['filter']['lname'] = array_unique($arRes['filter']['lname']);
+        $arRes['filter']['lindex'] = array_unique($arRes['filter']['lindex']);
 
-        $arT['cities'] = Yii::app()->db->createCommand()
-            ->select("uc.id_city, uc.id_user, c.name city, c.ismetro")
-            ->from('user_city uc')
-            ->leftjoin('city c', 'c.id_city=uc.id_city')
-            ->where(array('in', 'uc.id_user', $arT['id']))
-            ->queryAll();
-
-        $arT['metros'] = Yii::app()->db->createCommand()
-            ->select("um.id_us, m.id id_metro, m.name metro")
-            ->from('user_metro um')
-            ->leftjoin('metro m', 'm.id=um.id_metro')
-            ->where(array('in', 'um.id_us', $arT['id']))
-            ->queryAll();
-
-        foreach ($arT['items'] as $user) {
+        foreach ($arRes['original'] as $user) {
             $id = $user['user'];
-            $arRes[$id] = array(
+            $item = $arRes['original'][$id];
+            $arRes['users'][$id] = array(
                 'id_user' => $id,
                 'name' => $user['lastname'] . ' ' . $user['firstname'],
                 'src' => DS . MainConfig::$PATH_APPLIC_LOGO . DS 
@@ -374,29 +384,15 @@ class Project extends ARModel
                         ? ($user['photo'] . '100.jpg')
                         : ($user['isman'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F)
                     ),
-                'status' => $arT['items'][$id]['status'],
-                'point' => $arT['items'][$id]['point']
+                'status' => $item['status'],
+                'point' => $item['point'],
             );
-            foreach ($arT['cities'] as $c)
-                if($c['id_user']==$id)
-                    $arRes[$id]['cities'][$c['id_city']] =  $c['city'];
-            foreach ($arT['metros'] as $m)
-                if($m['id_us']==$id)
-                    $arRes[$id]['metros'][$m['id_metro']] =  $m['metro'];
+            if(!empty($item['id_city']))
+                $arRes['users'][$id]['cities'] = [$item['id_city'] => $item['city']];
+            if(!empty($item['id_metro']))
+                $arRes['users'][$id]['metros'] = [$item['id_metro'] => $item['metro']];
         }
-        /*for ($i=0,$n=count($arT['cities']); $i<$n; $i++) {
-            $arRes['filter']['cities'][$arT['cities'][$i]['id_city']] = array(
-                'id' => $arT['cities'][$i]['id_city'],
-                'metro' => $arT['cities'][$i]['ismetro'],
-                'city' => $arT['cities'][$i]['city']
-            );
-        }
-        for ($i=0,$n=count($arT['metros']); $i<$n; $i++) {
-            $arRes['filter']['metros'][$arT['metros'][$i]['id_metro']] = array(
-                'id' => $arT['metros'][$i]['id_metro'],
-                'metro' => $arT['metros'][$i]['metro']
-            );
-        }*/
+
         return $arRes;
     }
     
@@ -801,7 +797,7 @@ class Project extends ARModel
         $arRes['pages']->pageSize = $this->USERS_IN_PAGE;
         $arRes['pages']->applyLimit($this);
         $arRes['project'] = $this->getProjectData($prj);
-        $arRes['users'] = $this->getStaffProject($prj);
+        $arRes = array_merge($arRes, $this->getStaffProject($prj));
         return $arRes;
     }
     /*

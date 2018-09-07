@@ -1,9 +1,6 @@
 <?php
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item.js', CClientScript::POS_END);
-
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-report.css');
-
 /***********UNIVERSAL FILTER************/
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/universal-filter.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-filter.css');

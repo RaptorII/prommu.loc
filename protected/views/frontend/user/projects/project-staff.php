@@ -102,22 +102,14 @@ $arFilterData = [
         5 => [
             'NAME' => 'Название ТТ',
             'TYPE' => 'select',
-            'INPUT_NAME' => 'tt_name',
+            'INPUT_NAME' => 'lname',
             'DATA' => [
                 0 => [
-                    'title' => 'Название 1',
-                    'id' => '1'
-                ],
-                1 => [
-                    'title' => 'Название 2',
-                    'id' => '0'
-                ],
-                2 => [
                     'title' => 'Все',
-                    'id' => '2'
+                    'id' => '0'
                 ]
             ],
-            'DATA_DEFAULT' => '2',
+            'DATA_DEFAULT' => '0',
             'CONDITION' => [
                 'BLOCKED' => 'true',
                 'PARENT_ID' => '4',
@@ -137,26 +129,14 @@ $arFilterData = [
         8 => [
             'NAME' => 'Адрес ТТ',
             'TYPE' => 'select',
-            'INPUT_NAME' => 'tt_location',
+            'INPUT_NAME' => 'lindex',
             'DATA' => [
                 0 => [
-                    'title' => 'Адрес ТТ 1',
-                    'id' => '1'
-                ],
-                1 => [
-                    'title' => 'Адрес ТТ 2',
-                    'id' => '0'
-                ],
-                2 => [
-                    'title' => 'Адрес ТТ 3',
-                    'id' => '2'
-                ],
-                3 => [
                     'title' => 'Все',
-                    'id' => '3'
+                    'id' => '0'
                 ]
             ],
-            'DATA_DEFAULT' => '2',
+            'DATA_DEFAULT' => '0',
             'CONDITION' => [
                 'BLOCKED' => 'true',
                 'PARENT_ID' => '4',
@@ -186,11 +166,18 @@ $arFilterData = [
         ]
     ],
 ];
-foreach ($viData['filter']['cities'] as $id => $v)
-    $arFilterData['FILTER_SETTINGS'][2]['DATA'][$id] = ['title' => $v['city'], 'id' => $id];
-foreach ($viData['filter']['metros'] as $id => $v)
-    $arFilterData['FILTER_SETTINGS'][11]['DATA'][$id] = ['title' => $v['metro'], 'id' => $id];
+foreach ($viData['filter']['cities'] as $id => $city)
+    $arFilterData['FILTER_SETTINGS'][2]['DATA'][$id] = ['title' => $city, 'id' => $id];
+foreach ($viData['filter']['lname'] as $lname)
+    $arFilterData['FILTER_SETTINGS'][2]['DATA'][] = ['title' => $lname, 'id' => $lname];
+foreach ($viData['filter']['lindex'] as $lindex)
+    $arFilterData['FILTER_SETTINGS'][8]['DATA'][] = ['title' => $lindex, 'id' => $lindex];
+foreach ($viData['filter']['metros'] as $id => $metro)
+    $arFilterData['FILTER_SETTINGS'][11]['DATA'][$id] = ['title' => $metro, 'id' => $id];
 ?>
+<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
+<? print_r($viData['filter']); ?>
+</pre>
 <div class="row project">
     <div class="col-xs-12">
         <? require __DIR__ . '/project-nav.php'; // Меню вкладок ?>
