@@ -76,7 +76,7 @@ class Api
                 case 'geo_project' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->geoProject(); break;
                 case 'serchuse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->searchUse(); break;
                 case 'rateuse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rateUse(); break;
-                case 'bigbug' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->bigbug(); break;
+                case 'maleor' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->maleor(); break;
                  
                 
 
@@ -101,36 +101,56 @@ class Api
         return $data;
     }
     
-    public function bigbug(){
-        $name = Yii::app()->getRequest()->getParam('firstorlastname');
-        $namess = Yii::app()->getRequest()->getParam('firstandlastname');
-        if($namess){
-            $names = explode(" ", $namess)[0];
-            $names1 = explode(" ", $namess)[1];
-            $fames = Yii::app()->db->createCommand()
-            ->select('lastname, firstname')
-            ->from('resume')
-            ->where('lastname like :lastname OR lastname like :lastname1', array(':lastname'=>$names, 'lastname1' => $names1))
-            ->queryAll();
-            
-            for($i = 0; sizeof($fames); $i ++){
-                $fam = $fames[$i]['firstname'].' '.$fames[$i]['lastname'];
-                $fam1 = $fames[$i]['lastname'].' '.$fames[$i]['firstname'];
-                if($fam1 == $namess || $fam == $namess ){
-                    $arr[] = $fames[$i];
+    public function maleor($names){
+        $name = $names ? $names :Yii::app()->getRequest()->getParam('name');
+        $sql = "SELECT  r.firstname
+                    FROM resume r
+                    WHERE r.isman = 1";
+                $result = Yii::app()->db->createCommand($sql)->queryAll();
+
+        $sql = "SELECT  r.firstname
+                    FROM resume r
+                    WHERE r.isman = 0";
+                $results = Yii::app()->db->createCommand($sql)->queryAll();
+
+                $sex= 0;
+                $sexs= 0;
+                    $count = count($result);
+                     $counts = count($results);
+                    //   echo "Поиск по базе мужчин <br/>";
+                   for($i = 0; $i < $count; $i++){
+                        
+                        if(strpos($result[$i]['firstname'], $name) !== false) {
+                            //echo $result[$i]['firstname']."-".$name."<br/>";
+                            $sex++;
+               
+                        }
+                        
+                    }
+                    // echo "Поиск по базе женщин <br/>";
+                    for($i = 0; $i < $counts; $i++){
+                        
+                        if(strpos($results[$i]['firstname'], $name) !== false) {
+                           // echo $results[$i]['firstname']."-".$name."<br/>";
+                            $sexs++;
+               
+                        }
+                        
+                    }
+
+                if($sexs < $sex){
+                  $data['var']=  100 - ($sexs/$sex);
+                   $data['sex'] = '1';
+                } elseif($sex < $sexs) {
+                     $data['var'] =  100 - ($sex/$sexs);
+                    $data['sex'] = '0';
                 }
-                
-            }
-            return $arr;
-        } else {
-        $fames = Yii::app()->db->createCommand()
-            ->select('lastname, firstname')
-            ->from('resume')
-            ->where('lastname like :lastname OR firstname like :lastname', array(':lastname'=>$name))
-            ->queryAll();
-        }
-        
-        return $fames;
+                elseif($sex == 0 && $sexs == 0) {
+                   
+                    $sex = "Не могу определить... Ты случайно не $name ? ";
+                }
+       return $data;
+
         
     }
     

@@ -3,16 +3,6 @@
  */
 
 let IndexTasks = (function () {
-
-    IndexTasks.prototype.task_title;
-    IndexTasks.prototype.task_descr;
-    IndexTasks.prototype.person_id;
-    IndexTasks.prototype.task_id;
-    IndexTasks.prototype.project_id;
-    IndexTasks.prototype.task_date;
-    IndexTasks.prototype.task_location_id;
-
-
     function IndexTasks() {
         this.init();
     }
@@ -20,81 +10,49 @@ let IndexTasks = (function () {
     IndexTasks.prototype.init = function () {
         let self = this;
 
-
-        $('.task__block').on('click', '.task__name', function()
-        {
-            self.showHiddenUlContent(this);
-        });
-
-        $('.task__block').on('click', '.task__hidden-ul li', function()
-        {
-            self.setValueFromLI(this);
-        });
-
-
         /************Кнопки управления*********/
 
-        /**Запрос данных для изменения**/
-        $('.task__block').on('click', '.task__button-upload', function()
-        {
-            let type = "getTaskInfo";
-            let data = self.setProperties(this, type);
-            self.ajaxPushParams(data, "GET");
-
-
-            $(this).closest('.task__block').find('.task__add-task').css({"display":"none"});
-            $(this).closest('.task__block').find('.task__add-cancel').fadeIn();
-            $(this).closest('.task__block').find('.task__add-update').fadeIn();
-        });
-
-        /**Отправляем измененные данные на сервер кнопка Изменить**/
-        $('.task__block').on('click', '.task__add-update', function()
-        {
-            let type = "setTaskInfo";
-            let data = self.setProperties(this, type);
-            self.ajaxPushParams(data, "UPDATE");
-
-            $(this).closest('.task__block').find('.task__add-task').fadeIn();
-            $(this).closest('.task__block').find('.task__add-cancel').css({"display":"none"});
-            $(this).closest('.task__block').find('.task__add-update').css({"display":"none"});
-        });
-
         /**Добавить новую задачу**/
-        $('.task__block').on('click', '.task__add-task', function()
+        $('.task__block').on('click', '.task__add-task', function(e)
         {
-            let type = "addTaskNew";
-            let data = self.setProperties(this, type);
-            self.ajaxPushParams(data, "POST");
+            let data = self.setProperties(this, "new-task");
+            self.ajaxPushParams(data, "POST", this);
         });
-
+        /**Запрос данных для изменения**/
+        $('.task__block').on('click', '.task__button-change', function()
+        {
+            let data = self.setProperties(this, "change-task");
+            self.ajaxPushParams(data, "GET", this);
+        });
         /**Дублироать на все даты**/
         $('.task__block').on('click', '.task__button-alldate', function()
         {
-            let result = confirm("Дублироать на все даты. Вы уверены?");
+            let result = confirm("Вы действительно хотите продублировать задачу на весь период работ?");
             if(result){
-                let type = "addTaskAllDate";
-                let data = self.setProperties(this, type);
-                self.ajaxPushParams(data, "POST");
+                let data = self.setProperties(this, "all-dates-task");
+                self.ajaxPushParams(data, "POST", this);
             }
         });
-        /**Добавить новую задачу**/
-        $('.task__block').on('click', '.task__button-allpersons', function()
+        /**Добавить новую задачу для всех юзеров**/
+        $('.task__block').on('click', '.task__button-users', function()
         {
-            let result = confirm("Дублироать задачу всем. Вы уверены?");
+            let result = confirm("Вы действительно хотите продублировать задачу всему персоналу?");
             if(result){
-                let type = "addTaskAllPersons";
-                let data = self.setProperties(this, type);
-                self.ajaxPushParams(data, "POST");
+                let data = self.setProperties(this, "all-users-task");
+                self.ajaxPushParams(data, "POST", this);
+            }
+        });
+        /**Удалить задачу**/
+        $('.task__block').on('click', '.task__button-del', function(e)
+        {
+            let result = confirm("Вы действительно хотите удалить задачу?");
+            if(result){
+                let data = self.setProperties(this, "delete-task");
+                self.ajaxPushParams(data, "POST", this);
             }
         });
 
-        $('.task__block').on('click', '.task__add-cancel', function()
-        {
-            $(this).closest('.task__block').find('.task__add-task').fadeIn();
-            $(this).closest('.task__block').find('.task__add-cancel').css({"display":"none"});
-            $(this).closest('.task__block').find('.task__add-update').css({"display":"none"});
-        });
-
+        // Переход на страницу с задачами
         $('.tasks__list').on('click','.task__table-watch',function(){
             let arU = $('.task__single'),
                 user = this.dataset.user,
@@ -115,162 +73,153 @@ let IndexTasks = (function () {
                 else{
                     $(arU[i]).hide();
                 }
+            }
+        });
+        // Работаем с селектами
+        $(document).on('click', function(e) {
+            let $e = $(e.target),
+                data = e.target.dataset,
+                arList = $('.users__list .task__hidden-ul');
+
+
+            if(!$e.closest('.task__tasks-title').length) {
+                for(let i=0; i<arList.length; i++)
+                    $(arList[i]).fadeOut();  // закрываем все списки
+            }
+            if($e.is('.task__name')) { // закрываем все без фокуса
+                let list = e.target.nextElementSibling;
+                for(let i=0; i<arList.length; i++) {
+                    $(list).is(arList[i])
+                    ? $(arList[i]).fadeIn()
+                    : $(arList[i]).fadeOut();
+                }
+            }
+            if($e.is('.task__hidden-ul li')) { // выбираем из списка
+                let list = e.target.parentElement,
+                    parent = $e.closest('.task__block'),
+                    select = $e.text(),
+                    name = $(parent).find('.task__info-name'),
+                    text = $(parent).find('.task__info-descr'),
+                    buttons = $(parent).find('.task__tasks-buttons'),
+                    create = $(parent).find('.task__add-task');
+
+                for(let i=0; i<arList.length; i++)
+                    $(arList[i]).fadeOut();
+
+                $(parent).find('.task_id-hidden').val(data.id);
+                $(parent).find('.task__name').text(select);
+                if(data.id==='new') {
+                    $(name).val('');
+                    $(text).val('');
+                    $(buttons).fadeOut();
+                    $(create).show();
+                }
+                else {
+                    $(name).val(select);
+                    $(text).val(data.text);
+                    $(buttons).fadeIn();
+                    $(create).hide();
+                }
+
 
             }
-            console.log(this.dataset);
         });
     };
 
-    IndexTasks.prototype.alertPopup = function (text) {
-        console.log(text);
-    };
-
     IndexTasks.prototype.setProperties = function (e, type) {
-        let parent = $(e).closest('.task__block');
-        let data = [];
-        let error = false;
+        let parent = $(e).closest('.task__block'),
+            arInputs = $(parent).find('[type=hidden]'),
+            arLi = $(parent).find('.task__hidden-ul li'),
+            data = {'type' : type};
 
-        let task_id = $(parent).find('input[name="task_id"]').val();
+        for (let i=0; i<arInputs.length; i++)
+            data[$(arInputs[i]).attr('name')] = $(arInputs[i]).val();
+
+        data['title'] = $(parent).find('.task__info-name').val();
+        data['text'] = $(parent).find('.task__info-descr').val();
+
         switch (type) {
-            case "getTaskInfo":
-                if(task_id>0) {
-                    data = {
-                        'task_id': task_id,
-                        'project_id': $(parent).find('input[name="project_id"]').val(),
-                        'person_id': $(parent).find('input[name="person_id"]').val(),
-                        'type': 'getTaskInfo'
-                    };
-                }else{
-                    this.alertPopup("Задание не выбрано!");
-                    error = true;
-                }
+            case "change-task":         
+                for (let i=0; i<arLi.length; i++)
+                    if(
+                        arLi[i].dataset.id==data.task
+                        &&
+                        arLi[i].dataset.text===data.text 
+                        &&
+                        $(arLi[i]).text()===data.title 
+                        ) {
+                        MainProject.showPopup('notif','nochange');
+                        return false;
+                    }
                 break;
-            case "setTaskInfo":
-                if(task_id>0) {
-                    data = {
-                        'task_id': $(parent).find('input[name="task_id"]').val(),
-                        'project_id': $(parent).find('input[name="project_id"]').val(),
-                        'person_id': $(parent).find('input[name="person_id"]').val(),
-                        'task_title': $(parent).find('input[name="task_title"]').val(),
-                        'task_descr': $(parent).find('textarea[name="task_descr"]').val(),
-                        'type': 'setTaskInfo'
-                    };
-                }else{
-                    this.alertPopup("Задание не выбрано!");
-                    error = true;
-                }
-                break;
-            case "addTaskNew":
-
-                let titleElement =  $(parent).find('.task__info-name');
-                let descrElement = $(parent).find('.task__info-descr');
-
-                let title = $(titleElement).val();
-                let descr = $(descrElement).val();
-
-                if(descr!="" && title!="") {
-                    data = {
-                        'task_id': $(parent).find('input[name="task_id"]').val(),
-                        'project_id': $(parent).find('input[name="project_id"]').val(),
-                        'person_id': $(parent).find('input[name="person_id"]').val(),
-                        'task_title': title,
-                        'task_descr': descr,
-                        'type': 'addTaskNew'
-                    };
-                }
-                else{
-                    console.log(data);
-                    this.alertPopup("Поля не заполнены!");
-                    error = true;
-                }
-                break;
-            case "addTaskAllDate":
-                if(task_id>0) {
-                    data = {
-                        'task_id': $(parent).find('input[name="task_id"]').val(),
-                        'project_id': $(parent).find('input[name="project_id"]').val(),
-                        'person_id': $(parent).find('input[name="person_id"]').val(),
-                        'task_title': $(parent).find('input[name="task_title"]').val(),
-                        'task_descr': $(parent).find('textarea[name="task_descr"]').val(),
-                        'type': 'addTaskAllDate'
-                    };
-                }else{
-                    this.alertPopup("Задание не выбрано!");
-                    error = true;
-                }
-                break;
-            case "addTaskAllPersons":
-                if(task_id>0) {
-                    data = {
-                        'task_id': $(parent).find('input[name="task_id"]').val(),
-                        'project_id': $(parent).find('input[name="project_id"]').val(),
-                        'person_id': $(parent).find('input[name="person_id"]').val(),
-                        'task_title': $(parent).find('input[name="task_title"]').val(),
-                        'task_descr': $(parent).find('input[name="task_descr"]').val(),
-                        'type': 'addTaskAllPersons'
-                    };
-                }else{
-                    this.alertPopup("Задание не выбрано!");
-                    error = true;
+            case "new-task":
+                if(data['title']==="" || data['text']==="") {
+                    MainProject.showPopup('notif','empty-fields');
+                    return false;
                 }
                 break;
         }
-
-        if(error==false){
-            return data;
-        }
-        else{
-            return false;
-        }
-
+        return data;
     };
 
-    IndexTasks.prototype.setValueFromLI = function (e) {
-        let li = e;
-        let id = $(li).data('task-id');
-        let value = $(li).text();
-        /**Устанавливаем скрытый input***/
+    IndexTasks.prototype.ajaxPushParams = function (data, type, e) {
+        if(!data) return;
 
-        $(li).closest('.task__block').find('.task_id-hidden').val(id);
-        /******Устанавливаем value в span*******/
-        $(li).closest('.task__block').find('.task__name').text(value);
-        /******Скрываем список ul*******/
-        $(li).parent().fadeOut();
-    };
-
-    /**Функция отображения/скрытия пунктов меню**/
-    IndexTasks.prototype.showHiddenUlContent = function (e) {
-        let element = e;
-        $(element).closest('.task__single-info').find('.task__hidden-ul').fadeOut();;
-
-        let hiddenUl = e.nextElementSibling;
-        if($(hiddenUl).is(":visible")){
-            $(hiddenUl).fadeOut();
-        }else{
-            $(hiddenUl).fadeIn();
-        }
-    };
-
-    IndexTasks.prototype.ajaxPushParams = function (data, type) {
-        if(data) {
-            let jsonString = JSON.stringify(data);
-            console.log(jsonString);
-            $.ajax({
-                type: type,
-                url: '/ajax/123', //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                data: {
-                    data: jsonString
-                },
-                dataType: 'json',
-                success: function (value) {
-
+        $.ajax({
+            type: type,
+            url: '/ajax/ChangeGeoProject',
+            data: { data: JSON.stringify(data) },
+            dataType: 'json',
+            success: function (r){
+                if(r.error==1) {
+                    MainProject.showPopup('error','server');
+                    return;
                 }
-            });
-        }
-        else{
-            console.log("Пустые данные!");
-        }
+                if(data.type==='new-task') {
+                    MainProject.showPopup('success',data.type);
+                    let parent = $(e).closest('.task__block'),
+                        top = $(parent).find('.task__tasks-title');
 
+                    $(top).find('span').text(data.title);
+                    $(top).find('ul').append('<li data-id="'
+                        +r.data.task+'" data-text="'+data.text
+                        +'">'+data.title+'</li>');
+                    $(parent).find('.task_id-hidden').val(r.data.task);
+                    $(top).fadeIn();
+                    $(parent).find('.task__tasks-buttons').fadeIn();
+                    $(parent).find('.task__empty').hide();
+                    $('.task__add-task').hide();
+                }
+                if(data.type==='change-task' || data.type==='all-dates-task' || data.type==='all-users-task') {
+                    MainProject.showPopup('success',data.type);
+                    let parent = $(e).closest('.task__block'),
+                        top = $(parent).find('.task__tasks-title'),
+                        li = $(top).find('.task__hidden-ul [data-id='+data.task+']')[0];
+
+                    $(top).find('span').text(data.title);
+                    $(li).text(data.title);
+                    li.dataset.text = data.text;
+                }
+                if(data.type==='delete-task') {
+                    MainProject.showPopup('success',data.type);
+                    let parent = $(e).closest('.task__block'),
+                        top = $(parent).find('.task__tasks-title');
+                        arLi = $(top).find('.task__hidden-ul li');
+
+                    $(top).find('span').text('Новое задание');
+                    $(top).find('.task__hidden-ul [data-id='+data.task+']').remove();
+                    $(parent).find('.task_id-hidden').val('new');
+                    $(parent).find('.task__info-name').val('');
+                    $(parent).find('.task__info-descr').val('');
+                    $(parent).find('.task__tasks-buttons').fadeOut();
+                    $('.task__add-task').show();
+                    if(arLi.length==2) {
+                        $(top).hide();
+                        $(parent).find('.task__empty').fadeIn();
+                    }   
+                }                
+            }
+        });
     };
 
     return IndexTasks;

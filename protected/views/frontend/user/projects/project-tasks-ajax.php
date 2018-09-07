@@ -57,7 +57,7 @@
 									<span 
 										class="task__table-watch" 
 										data-user="<?=$id_user?>"
-										data-date="<?=$date?>"
+										data-date="<?=$arCity['date']?>"
 										data-point="<?=$point?>"
 										><?=($tasks?'изменить':'добавить')?></span>
 								</div>

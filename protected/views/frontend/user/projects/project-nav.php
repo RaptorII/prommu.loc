@@ -15,7 +15,7 @@
 
   $this->setBreadcrumbsEx(
     array('Мои проекты', MainConfig::$PAGE_PROJECT_LIST),
-    array($viData['project']['name'], MainConfig::$PAGE_PROJECT_NEW),
+    array($viData['project']['name'], $link),
     array($arTabs[$s]['name'], $arTabs[$s]['link'])
   );
   $this->setPageTitle($viData['project']['name']);
