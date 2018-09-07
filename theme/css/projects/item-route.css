@@ -96,3 +96,37 @@
 
 #sortable { list-style-type: none; margin: 0; padding: 0; width: 450px; }
 #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 4em; text-align: center; }
+.project__route-touch{
+    width: 40px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+    cursor:pointer;
+}
+.project__route-changer{
+    width:100%;
+    overflow: hidden;
+}
+.project__changer-buttons{
+    width: 10%;
+    float: left;
+    border-right: 1px solid #dedede;
+}
+.project__changer-content{
+    width:90%;
+    float: left;
+}
+
+.project__changer-button{
+    width:100%;
+    margin-bottom:5px;
+}
+
+
+.touch__arrow-bottom{
+    -moz-transform: rotate(-180deg); /* Äëÿ Firefox */
+    -ms-transform: rotate(-180deg); /* Äëÿ IE */
+    -webkit-transform: rotate(-180deg); /* Äëÿ Safari, Chrome, iOS */
+    -o-transform: rotate(-180deg); /* Äëÿ Opera */
+    transform: rotate(-180deg);
+}
