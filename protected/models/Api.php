@@ -121,7 +121,7 @@ class Api
                    for($i = 0; $i < $count; $i++){
                         
                         if(strpos($result[$i]['firstname'], $name) !== false) {
-                            echo $result[$i]['firstname']."-".$name."<br/>";
+                            //echo $result[$i]['firstname']."-".$name."<br/>";
                             $sex++;
                
                         }
@@ -131,7 +131,7 @@ class Api
                     for($i = 0; $i < $counts; $i++){
                         
                         if(strpos($results[$i]['firstname'], $name) !== false) {
-                            echo $results[$i]['firstname']."-".$name."<br/>";
+                           // echo $results[$i]['firstname']."-".$name."<br/>";
                             $sexs++;
                
                         }
