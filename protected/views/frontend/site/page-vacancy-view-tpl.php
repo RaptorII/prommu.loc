@@ -194,6 +194,10 @@
                         <a href="<?= MainConfig::$PAGE_VACANCY_EDIT . DS . $viData['vac']['id'] ?>?bl=1" class="erv__module-reg js-g-hashint" title="Править данные"></a>
                         <?
                         //  Должности
+echo "<pre>";
+print_r($viData['vac']); 
+echo "</pre>";
+                    
                         ?>
                         <div class="erv__label">
                             <div class="fav__select-posts">
