@@ -194,10 +194,6 @@
                         <a href="<?= MainConfig::$PAGE_VACANCY_EDIT . DS . $viData['vac']['id'] ?>?bl=1" class="erv__module-reg js-g-hashint" title="Править данные"></a>
                         <?
                         //  Должности
-echo "<pre>";
-print_r($viData['vac']); 
-echo "</pre>";
-                        
                         ?>
                         <div class="erv__label">
                             <div class="fav__select-posts">
@@ -210,7 +206,7 @@ echo "</pre>";
                                 <ul id="ev-posts-list">
                                     <li data-id="0">
                                         <input type="text" name="p">
-                                        <span id="add-new-vac" <?=(!empty($viData['vac']['postself'])?'style="display: none;"':'')?>>Новая должность</span>
+                                        <span id="add-new-vac" <?=(isset($viData['vac']['postself'])?'style="display: none;"':'')?>>Новая должность</span>
                                     </li>
                                 </ul>
                             </div>
