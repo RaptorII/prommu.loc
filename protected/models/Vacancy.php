@@ -821,7 +821,7 @@ public function rules()
 
 
         // языки словаря
-        $sql = "SELECT d.id, d.id_par idpar, d,postself, d.type, d.name , a.`key`, a.val
+        $sql = "SELECT d.id, d.id_par idpar, d.postself, d.type, d.name , a.`key`, a.val
                 FROM user_attr_dict d 
                 LEFT JOIN empl_attribs a ON a.id_attr = d.id AND a.id_vac = {$inVacData['idvac']}
                 WHERE d.id_par = 40
