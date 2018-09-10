@@ -210,11 +210,8 @@
                                     <li data-id="0">
                                         <input type="text" name="p">
                                         <span 
-                                            id="add-new-vac 1"
-                                            <? if(isset($viData['vac']['post-self']))
-                                                echo " style='display:none'";
-
-                                            ?>
+                                            id="add-new-vac"
+                                            <? if(!isset($viData['vac']['post-self'])) echo " style='display:none'";?>
                                             >Новая должность</span>
                                     </li>
                                 </ul>
