@@ -197,9 +197,9 @@
                         ?>
                         <div class="erv__label">
                             <div class="fav__select-posts">
-                                <span<? if(!empty($viData['vac']['post-self'])) echo " style='display:none'";?>>Должность *</span>
+                                <span<? if(sizeof($viData['vac']['post'])) echo " style='display:none'";?>>Должность *</span>
                                 <ul id="ev-posts-select">
-                                    <? if(isset($viData['vac']['post-self'])): ?>
+                                    <? if(!empty($viData['vac']['post-self'])): ?>
                                         <li data-id="new"><?=$viData['vac']['post-self']?><i></i><input type="hidden" name="post-self" value="<?=$viData['vac']['post-self']?>"></li>
                                     <? endif; ?>
                                     <?php foreach($viData['vac']['post'] as $k => $v): ?>
