@@ -216,7 +216,7 @@
                                 <ul id="ev-posts-list">
                                     <li data-id="0">
                                         <input type="text" name="p">
-                                        <span id="add-new-vac" <?//=(isset($viData['vac']['postself'])?'style="display: none;"':'')?>>Новая должность</span>
+                                        <span id="add-new-vac" <?=(isset($viData['vac']['postself'])?'style="display: none;"':'')?>>Новая должность</span>
                                     </li>
                                 </ul>
                             </div>
