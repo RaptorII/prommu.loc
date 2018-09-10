@@ -175,7 +175,7 @@ foreach ($viData['filter']['tt_name'] as $n)
 foreach ($viData['filter']['tt_index'] as $i)
     $arFilterData['FILTER_SETTINGS'][8]['DATA'][] = ['title' => $i, 'id' => $i];
 foreach ($viData['filter']['metros'] as $id => $metro) {
-    $arFilterData['FILTER_SETTINGS'][11]['DATA'][$id] = ['title' => $metro['metro'], 'id' => $id, ];
+    $arFilterData['FILTER_SETTINGS'][11]['DATA'][$id] = ['title' => $metro['metro'], 'id' => $metro['id'], 'DATA_VALUE_PARENT_ID' => $metro['id_city']];
 }
 ?>
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
