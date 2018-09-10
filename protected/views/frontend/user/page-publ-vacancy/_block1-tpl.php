@@ -29,6 +29,7 @@
                 </li>
             </ul>
         </div>
+        <input type="hidden" name="posts[3233]" value="aa">
     </div>
     <?
     //  Опыт работы
