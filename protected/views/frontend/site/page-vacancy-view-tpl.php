@@ -194,20 +194,18 @@
                         <a href="<?= MainConfig::$PAGE_VACANCY_EDIT . DS . $viData['vac']['id'] ?>?bl=1" class="erv__module-reg js-g-hashint" title="Править данные"></a>
                         <?
                         //  Должности
-echo "<pre>";
-print_r($viData['vac']); 
-echo "</pre>";
-                    
                         ?>
                         <div class="erv__label">
                             <div class="fav__select-posts">
                                 <span<? if(sizeof($viData['vac']['post'])) echo " style='display:none'";?>>Должность *</span>
                                 <ul id="ev-posts-select">
-                                    <? if($k==169): ?>
-                                        <li data-id="new"><?=$v?><i></i><input type="hidden" name="post-self" value="<?=$v?>"></li>
-                                    <? else: ?>
-                                        <li data-id="<?=$k?>"><?=$v?><i></i><input type="hidden" name="posts[]" value="<?=$k?>"></li>
-                                    <? endif; ?>
+                                    <?php foreach($viData['vac']['post'] as $k => $v): ?>
+                                        <? if($k==169): ?>
+                                            <li data-id="new"><?=$v?><i></i><input type="hidden" name="post-self" value="<?=$v?>"></li>
+                                        <? else: ?>
+                                            <li data-id="<?=$k?>"><?=$v?><i></i><input type="hidden" name="posts[]" value="<?=$k?>"></li>
+                                        <? endif; ?>
+                                    <?php endforeach; ?>
                                 </ul>
                                 <ul id="ev-posts-list">
                                     <li data-id="0">
