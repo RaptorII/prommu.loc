@@ -10,6 +10,10 @@
     </label>
     <?
     //  Должности
+echo "<pre>";
+print_r($viData['vac']); 
+echo "</pre>";
+
     ?>
     <div class="erv__label">
         <div class="fav__select-posts">
