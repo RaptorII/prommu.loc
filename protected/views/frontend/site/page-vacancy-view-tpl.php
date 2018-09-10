@@ -199,9 +199,11 @@
                             <div class="fav__select-posts">
                                 <span<? if(sizeof($viData['vac']['post'])) echo " style='display:none'";?>>Должность *</span>
                                 <ul id="ev-posts-select">
-                                    <?php foreach($viData['vac']['post'] as $k => $v): ?>
+                                    <? if($k==166): ?>
+                                        <li data-id="new"><?=$v?><i></i><input type="hidden" name="post-self" value="<?=$v?>"></li>
+                                    <? else: ?>
                                         <li data-id="<?=$k?>"><?=$v?><i></i><input type="hidden" name="posts[]" value="<?=$k?>"></li>
-                                    <?php endforeach; ?>
+                                    <? endif; ?>
                                 </ul>
                                 <ul id="ev-posts-list">
                                     <li data-id="0">
