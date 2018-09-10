@@ -1508,7 +1508,11 @@ public function rules()
 
 
             // prepare custom post
-            } else {
+            } 
+
+        } // end foreach
+
+        if($postSelf){
                 // search for same post
                 $res = Yii::app()->db->createCommand()
                     ->select('MAX(m.id) max, d.id , d.name')
@@ -1540,8 +1544,6 @@ public function rules()
 
                 if( $mId ) $insData[] = array('id_vac' => $inVacId, 'id_attr' => $mId, 'key' => $mId);
             } // endif
-
-        } // end foreach
 
 
         $sql = "DELETE empl_attribs FROM empl_attribs 
