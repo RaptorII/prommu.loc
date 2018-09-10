@@ -165,7 +165,13 @@ $arFilterData = [
                 ]
             ],
             'DATA_LI_VISIBLE' => '0',
-            'DATA_DEFAULT' => '0'
+            'DATA_DEFAULT' => '0',
+            'CONDITION' => [
+                'BLOCKED' => 'false',
+                'PARENT_ID' => '2',
+                'PARENT_VALUE' => '',
+                'PARENT_VALUE_ID' => []
+            ]
         ]
     ],
 ];
