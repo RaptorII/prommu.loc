@@ -1518,11 +1518,11 @@ public function rules()
                 $res = $res->queryRow();
 
 
-                // post exist
                 if( $res['id'] ) $mId = $res['id'];
                 // ins new post
                 else
                 {
+                    //запись своего варианта должности
                     $res = Yii::app()->db->createCommand()
                         ->insert('user_attr_dict', array(
                             'id_par' => '110',
