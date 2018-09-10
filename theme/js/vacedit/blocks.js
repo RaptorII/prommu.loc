@@ -38,89 +38,104 @@ $(function(){
 				$('#ev-posts-list input').focus();
 			}
 		});
-		$('#ev-posts-list input').bind('input focus blur', function(e){
-			var arResult = [],
-				content = '',
-				$pList = $('#ev-posts-list'),
-				placeholder = $('#ev-posts-select').siblings('span'),
-				val = $(this).val().charAt(0).toUpperCase() + $(this).val().slice(1).toLowerCase(),
-				piece = $(this).val().toLowerCase(),
-				showList = true;
+  $('#ev-posts-list input').bind('input focus blur', function(e){
+    var arResult = [],
+      content = '',
+      $pList = $('#ev-posts-list'),
+      placeholder = $('#ev-posts-select').siblings('span'),
+      val = $(this).val().charAt(0).toUpperCase() + $(this).val().slice(1).toLowerCase(),
+      piece = $(this).val().toLowerCase(),
+      showList = true;
 
-			arSelectId = GetSelectPosts();
-			$(this).val(val);
+    val = val.replace(/[^а-яА-ЯїЇєЄіІёЁ -]/g,'');
+    arSelectId = GetSelectPosts();
+    $(this).val(val);
 
-			if(arSelectId.length) $(placeholder).hide(); 
+    if(arSelectId.length) $(placeholder).hide(); 
+    if(e.type!=='blur'){
+      if(val===''){
+        $.each(arPosts, function(){ // список вакансий если ничего не введено
+          if($.inArray(this.id, arSelectId)<0)
+            content += '<li data-id="' + this.id + '">' + this.name + '</li>';
+        });
+      }
+      else{
+        $.each(arPosts, function(){ // список вакансий если что-то введено
+          word = this.name.toLowerCase();
+          if(word===piece){ // если введена именно вакансия полностью
+            addPost(this.id, this.name);
+            showList = false;
+          }
+          else if(word.indexOf(piece)>=0 && $.inArray(this.id, arSelectId)<0)
+            arResult.push( {'id':this.id, 'name':this.name} );
+        });
+        arResult.length>0
+        ? $.each(arResult, function(){ content += '<li data-id="' + this.id + '">' + this.name + '</li>' })         
+        : content = '<li class="emp">Список пуст</li>';
+      }
+      arList = $pList.find('li');
+      for(var i=0; i<arList.length; i++){
+        if(arList[i].dataset.id!='0')
+          $(arList[i]).remove();
+      }
+      $pList.append(content);
+      if(showList){
+        $pList.fadeIn();
+      }
+      else{
+        $pList.fadeOut();
+        $(this).val('');
+      }
+    }
+    else{ // если потерян фокус раньше времени
+      //$(this).val('');
+      GetSelectPosts().length ? $(placeholder).hide() : $(placeholder).show();
+      GetSelectPosts().length ? remErr('.fav__select-posts') : addErr('.fav__select-posts');
+    }
+  });
+  $(document).on('click', function(e){  // Закрываем список
+    var sList = '#ev-posts-select',
+      pList = '#ev-posts-list',
+      addV = '#add-new-vac';
 
-			if(e.type!=='blur'){
-				if(val===''){
-					$.each(arPosts, function(){ // список вакансий если ничего не введено
-						if($.inArray(this.id, arSelectId)<0)
-							content += '<li data-id="' + this.id + '">' + this.name + '</li>';
-					});
-				}
-				else{
-					$.each(arPosts, function(){ // список вакансий если что-то введено
-						word = this.name.toLowerCase();
-						if(word===piece){ // если введена именно вакансия полностью
-							addPost(this.id, this.name);
-							showList = false;
-						}
-						else if(word.indexOf(piece)>=0 && $.inArray(this.id, arSelectId)<0)
-							arResult.push( {'id':this.id, 'name':this.name} );
-					});
-					arResult.length>0
-					? $.each(arResult, function(){ content += '<li data-id="' + this.id + '">' + this.name + '</li>' })         
-					: content = '<li class="emp">Список пуст</li>';
-				}
-				arList = $pList.find('li');
-				for(var i=0; i<arList.length; i++){
-					if(arList[i].dataset.id!='0')
-						$(arList[i]).remove();
-				}
-				$pList.append(content);
-				if(showList){
-					$pList.fadeIn();
-				}
-				else{
-					$pList.fadeOut();
-					$(this).val('');
-				}
-			}
-			else{ // если потерян фокус раньше времени
-				$(this).val('');
-				GetSelectPosts().length ? $(placeholder).hide() : $(placeholder).show();
-				GetSelectPosts().length ? remErr('.fav__select-posts') : addErr('.fav__select-posts');
-			}
-		});
-		$(document).on('click', function(e){  // Закрываем список
-			var sList = '#ev-posts-select',
-				pList = '#ev-posts-list';
+    if($(e.target).is(pList+' li') && !$(e.target).hasClass('emp')){ // если кликнули по списку && если это не "Список пуст" && 
+      $(e.target).remove();
+      $(sList).siblings('span').hide();
+      addPost($(e.target).data('id'), $(e.target).text());
+      $(pList).fadeOut();
+    }
+    if($(e.target).is(sList+' i')){ // удаление выбраной должности из списка
+      var li = $(e.target).closest('li');
 
-			if($(e.target).is(pList+' li') && !$(e.target).hasClass('emp')){ // если кликнули по списку && если это не "Список пуст" && 
-				$(e.target).remove();
-				$(sList).siblings('span').hide();
-				addPost($(e.target).data('id'), $(e.target).text());
-				$(pList).fadeOut();
-			}
-			if($(e.target).is(sList+' i')){ // удаление выбраной должности из списка
-				$(e.target).closest('li').remove();
-				GetSelectPosts().length ? $('#ev-posts-select').siblings('span').hide() : $('#ev-posts-select').siblings('span').show();
-				GetSelectPosts().length ? remErr('.fav__select-posts') : addErr('.fav__select-posts');
-			}
-			if(!$(e.target).is(sList) && !$(e.target).closest(sList).length && !$(e.target).is(pList+' input'))
-				$(pList).fadeOut();
-		});
-	    // опыт
-	    $('#rv-expirience-list input').on('change', function(){
-	      var $this = $(this);
-	      if($this.is(':checked')){
-	        $('#rv-expirience').val($this.data('name'));
-	        $this.val()=='2' ? $('#rv-exinfo-label').fadeIn() : $('#rv-exinfo-label').fadeOut();
-	      }
-	      $('#rv-expirience-list').fadeOut();
-	      checkField('#rv-expirience');
-	    });
+      if($(li).find('[name="post-self"]').length)
+        $(addV).fadeIn();
+      $(li).remove();
+      GetSelectPosts().length ? $('#ev-posts-select').siblings('span').hide() : $('#ev-posts-select').siblings('span').show();
+      GetSelectPosts().length ? remErr('.fav__select-posts') : addErr('.fav__select-posts');
+    }
+    if($(e.target).is(addV)) {
+      var inp = $(addV).siblings('input'),
+          val = $(inp).val();
+      if(val.length<3) {
+        confirm('Некорректное название вакансии');
+      }
+      else if(val.length) {
+        $(sList).siblings('span').hide();
+        html = '<li data-id="new">' + val 
+          + '<i></i><input type="hidden" name="post-self" value="' 
+          + val + '"/></li>';
+        $('#ev-posts-select').append(html);
+        remErr('.fav__select-posts');
+        $(inp).val('');
+        $(pList).fadeOut();
+        $(addV).fadeOut();
+      }
+      else
+        confirm('Поле не должно быть пустым');
+    }
+    if(!$(e.target).is(addV) && !$(e.target).is(sList) && !$(e.target).closest(sList).length && !$(e.target).is(pList+' input'))
+      $(pList).fadeOut();
+  });
 	    // атрибуты
 	    $('#rv-hcolor-list input').on('change', function(){ checkSetAttr(this, 'hcolor') });
 	    $('#rv-hlen-list input').on('change', function(){ checkSetAttr(this, 'hlen') });

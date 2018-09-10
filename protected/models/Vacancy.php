@@ -1508,7 +1508,11 @@ public function rules()
 
 
             // prepare custom post
-            } else {
+            } 
+
+        } // end foreach
+
+        if($postSelf){
                 // search for same post
                 $res = Yii::app()->db->createCommand()
                     ->select('MAX(m.id) max, d.id , d.name')
@@ -1518,11 +1522,11 @@ public function rules()
                 $res = $res->queryRow();
 
 
-                // post exist
                 if( $res['id'] ) $mId = $res['id'];
                 // ins new post
                 else
                 {
+                    //запись своего варианта должности
                     $res = Yii::app()->db->createCommand()
                         ->insert('user_attr_dict', array(
                             'id_par' => '110',
@@ -1540,8 +1544,6 @@ public function rules()
 
                 if( $mId ) $insData[] = array('id_vac' => $inVacId, 'id_attr' => $mId, 'key' => $mId);
             } // endif
-
-        } // end foreach
 
 
         $sql = "DELETE empl_attribs FROM empl_attribs 

@@ -881,11 +881,11 @@ $(function(){
       piece = $(this).val().toLowerCase(),
       showList = true;
 
+    val = val.replace(/[^а-яА-ЯїЇєЄіІёЁ -]/g,'');
     arSelectId = GetSelectPosts();
     $(this).val(val);
 
     if(arSelectId.length) $(placeholder).hide(); 
-
     if(e.type!=='blur'){
       if(val===''){
         $.each(arPosts, function(){ // список вакансий если ничего не введено
@@ -922,14 +922,15 @@ $(function(){
       }
     }
     else{ // если потерян фокус раньше времени
-      $(this).val('');
+      //$(this).val('');
       GetSelectPosts().length ? $(placeholder).hide() : $(placeholder).show();
       GetSelectPosts().length ? remErr('.fav__select-posts') : addErr('.fav__select-posts');
     }
   });
   $(document).on('click', function(e){  // Закрываем список
     var sList = '#ev-posts-select',
-      pList = '#ev-posts-list';
+      pList = '#ev-posts-list',
+      addV = '#add-new-vac';
 
     if($(e.target).is(pList+' li') && !$(e.target).hasClass('emp')){ // если кликнули по списку && если это не "Список пуст" && 
       $(e.target).remove();
@@ -938,11 +939,35 @@ $(function(){
       $(pList).fadeOut();
     }
     if($(e.target).is(sList+' i')){ // удаление выбраной должности из списка
-      $(e.target).closest('li').remove();
+      var li = $(e.target).closest('li');
+
+      if($(li).find('[name="post-self"]').length)
+        $(addV).fadeIn();
+      $(li).remove();
       GetSelectPosts().length ? $('#ev-posts-select').siblings('span').hide() : $('#ev-posts-select').siblings('span').show();
       GetSelectPosts().length ? remErr('.fav__select-posts') : addErr('.fav__select-posts');
     }
-    if(!$(e.target).is(sList) && !$(e.target).closest(sList).length && !$(e.target).is(pList+' input'))
+    if($(e.target).is(addV)) {
+      var inp = $(addV).siblings('input'),
+          val = $(inp).val();
+      if(val.length<3) {
+        confirm('Некорректное название вакансии');
+      }
+      else if(val.length) {
+        $(sList).siblings('span').hide();
+        html = '<li data-id="new">' + val 
+          + '<i></i><input type="hidden" name="post-self" value="' 
+          + val + '"/></li>';
+        $('#ev-posts-select').append(html);
+        remErr('.fav__select-posts');
+        $(inp).val('');
+        $(pList).fadeOut();
+        $(addV).fadeOut();
+      }
+      else
+        confirm('Поле не должно быть пустым');
+    }
+    if(!$(e.target).is(addV) && !$(e.target).is(sList) && !$(e.target).closest(sList).length && !$(e.target).is(pList+' input'))
       $(pList).fadeOut();
   });
   // сроки оплаты

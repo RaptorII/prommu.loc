@@ -378,11 +378,17 @@ class Project extends ARModel
                 $arRes['filter']['tt_index'][] = $v['lindex'];
             if(!empty($v['id_city']))
                 $arRes['filter']['cities'][$v['id_city']] = array(
+                    'id_city' => $v['id_city'],
                     'city' => $v['city'],
                     'ismetro' => $v['ismetro']
                 );
             if(!empty($v['metro']))
-                $arRes['filter']['metros'][$v['id_metro']] = $v['metro'];
+                $arRes['filter']['metros'][$v['id_metro']] = array(
+                    'id' => $v['id_metro'],
+                    'metro' => $v['metro'],
+                    'id_city' => $v['id_city'],
+                    'city' => $v['city']
+                );
         }
         $arRes['filter']['tt_name'] = array_unique($arRes['filter']['tt_name']);
         $arRes['filter']['tt_index'] = array_unique($arRes['filter']['tt_index']);

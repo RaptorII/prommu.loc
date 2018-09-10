@@ -686,7 +686,10 @@ input:checked + .fav__label-checkbox:after{ content: '\2714'; }
 .cities-list li.emp{ cursor: no-drop }
 #av-posts-list li:hover,
 .cities-list li:hover{ background-color: rgba(255,255,255,0.2); }
-#av-posts-list li:first-child{ padding: 0 }
+#av-posts-list li:first-child{ 
+	padding: 0;
+	position: relative;
+}
 #av-posts-list li:first-child:hover{ background-color: transparent; }
 #DiContent .fav__select-posts #av-posts-list input{
 	height: 33px;
@@ -764,4 +767,28 @@ input:checked + .fav__label-checkbox:after{ content: '\2714'; }
 		width: 240px;
 		right: -270px;
 	}
+}
+/*
+*		10-09-2018
+*/
+#add-new-vac{
+	width: 130px;
+	line-height: 27px;
+	padding: 0 5px;
+	margin: 3px;
+	background-color: rgba(52, 52, 52, 0.6);
+	color: #fff;
+	text-align: center;
+	border-radius: 5px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	left: initial;
+	-webkit-transition: all .3s ease-out;
+	-moz-transition: all .3s ease-out;
+	-o-transition: all .3s ease-out;
+	transition: all .3s ease-out;
+}
+#add-new-vac:hover{
+	background-color: rgba(52, 52, 52, 0.5);
 }

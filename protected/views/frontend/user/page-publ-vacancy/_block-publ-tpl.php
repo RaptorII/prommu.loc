@@ -27,7 +27,12 @@
       <div class="fav__select-posts">
         <span>Должность *</span>
         <ul id="av-posts-select"></ul>
-        <ul id="av-posts-list"><li data-id="0"><input type="text" name="p" autocomplete="off"></li></ul>
+        <ul id="av-posts-list">
+          <li data-id="0">
+            <input type="text" name="p" autocomplete="off">
+            <span id="add-new-vac">Новая должность</span>
+          </li>
+        </ul>
       </div>
     </div>
     <?

@@ -347,6 +347,7 @@ $(function(){
         piece = $(this).val().toLowerCase(),
         showList = true;
 
+    val = val.replace(/[^а-яА-ЯїЇєЄіІёЁ -]/g,'');
     arSelectId = getSelectedPosts();
     $(this).val(val);
 
@@ -387,7 +388,7 @@ $(function(){
       }
     }
     else{ // если потерян фокус раньше времени
-      $(this).val('');
+     // $(this).val('');
       len = getSelectedPosts().length;
       len ? $(placeholder).hide() : $(placeholder).show();
       len ? remErr('.fav__select-posts') : addErr('.fav__select-posts');
@@ -395,7 +396,8 @@ $(function(){
   });
   $(document).on('click', function(e){  // Закрываем список
     var sList = '#av-posts-select',
-        pList = '#av-posts-list';
+        pList = '#av-posts-list',
+        addV = '#add-new-vac';
 
     if($(e.target).is(pList+' li') && !$(e.target).hasClass('emp')){ // если кликнули по списку && если это не "Список пуст" && 
       $(e.target).remove();
@@ -404,12 +406,36 @@ $(function(){
       $(pList).fadeOut();
     }
     if($(e.target).is(sList+' i')){ // удаление выбраной должности из списка
-      $(e.target).closest('li').remove();
+      var li = $(e.target).closest('li');
+
+      if($(li).find('[name="post-self"]').length)
+        $(addV).fadeIn();
+      $(li).remove();
       len = getSelectedPosts().length;
       len ? $('#av-posts-select').siblings('span').hide() : $('#av-posts-select').siblings('span').show();
       len ? remErr('.fav__select-posts') : addErr('.fav__select-posts');
     }
-    if(!$(e.target).is(sList) && !$(e.target).closest(sList).length && !$(e.target).is(pList+' input'))
+    if($(e.target).is(addV)) {
+      var inp = $(addV).siblings('input'),
+          val = $(inp).val();
+      if(val.length<3) {
+        confirm('Некорректное название вакансии');
+      }
+      else if(val.length) {
+        $(sList).siblings('span').hide();
+        html = '<li data-id="new">' + val 
+          + '<i></i><input type="hidden" name="post-self" value="' 
+          + val + '"/></li>';
+        $('#av-posts-select').append(html);
+        remErr('.fav__select-posts');
+        $(inp).val('');
+        $(pList).fadeOut();
+        $(addV).fadeOut();
+      }
+      else
+        confirm('Поле не должно быть пустым');
+    }
+    if(!$(e.target).is(addV) && !$(e.target).is(sList) && !$(e.target).closest(sList).length && !$(e.target).is(pList+' input'))
       $(pList).fadeOut();
   });
   /*
