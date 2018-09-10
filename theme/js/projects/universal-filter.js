@@ -9,7 +9,6 @@ let IndexUniversalFilter = (function () {
 
     function IndexUniversalFilter() {
         this.init();
-        this.hierarchyTracking();
     }
     IndexUniversalFilter.prototype.init = function () {
         let self = this;
@@ -69,6 +68,7 @@ let IndexUniversalFilter = (function () {
             });
         }
 
+        this.hierarchyTracking();
         self.setDefaultFilterProperties();
         //      аякс постраничная навигация
         $('#staff-content').on('click','.paging-wrapp a', function(e){
@@ -119,6 +119,7 @@ let IndexUniversalFilter = (function () {
                 /**Проверка блокировки**/
                 let blocked = element.hasClass('blocked');
                 if(!blocked) {
+
                     let content = element.find('.u-filter__hidden-default').val();
                     if(content){
                         let elements = element.find('.u-filter__ul-hidden .u-filter__li-hidden');
@@ -133,18 +134,6 @@ let IndexUniversalFilter = (function () {
                         });
                     }
                 }
-            }
-            if(element.data('type')==="calendar"){
-                /**Проверка блокировки**/
-                /*let blocked = element.hasClass('blocked');
-                if(!blocked) {
-                    let content = element.find('.u-filter__hidden-default').val();
-                    if(content)
-                    {
-                        //element.find('.u-filter__calendar').text(content);
-                        //element.find('.u-filter__hidden-data').val(content);
-                    }
-                }*/
             }
         })
     };

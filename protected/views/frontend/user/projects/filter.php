@@ -13,7 +13,7 @@
                 }
             endfor;
         else:
-            $parentValueId = $value['CONDITION']['PARENT_VALUE_ID'];
+            $parentValueId = $value['CONDITION']['PARENT_VALUE_ID'][0];
         endif; ?>
 
         <? switch ($value['TYPE']):

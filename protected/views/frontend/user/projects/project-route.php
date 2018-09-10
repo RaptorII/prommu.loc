@@ -116,7 +116,7 @@ $arFilterData = [
 
             ],
             'DATA_DEFAULT' => '0'
-        ],
+        ]
     ]
 ];
 ?>
