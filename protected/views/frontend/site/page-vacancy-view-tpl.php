@@ -197,7 +197,7 @@
                         ?>
                         <div class="erv__label">
                             <div class="fav__select-posts">
-                                <span<? if(sizeof($viData['vac']['post'])) echo " style='display:none'";?>>Должность *</span>
+                                <span<? if(!empty($viData['vac']['post-self'])) echo " style='display:none'";?>>Должность *</span>
                                 <ul id="ev-posts-select">
                                     <? if(isset($viData['vac']['post-self'])): ?>
                                         <li data-id="new"><?=$viData['vac']['post-self']?><i></i><input type="hidden" name="post-self" value="<?=$viData['vac']['post-self']?>"></li>
@@ -209,10 +209,7 @@
                                 <ul id="ev-posts-list">
                                     <li data-id="0">
                                         <input type="text" name="p">
-                                        <span 
-                                            id="add-new-vac"
-                                            <? if(!isset($viData['vac']['post-self'])) echo " style='display:none'";?>
-                                            >Новая должность</span>
+                                        <span id="add-new-vac" <?=(!empty($viData['vac']['post-self'])?'style="display: none;"':'')?>>Новая должность</span>
                                     </li>
                                 </ul>
                             </div>
