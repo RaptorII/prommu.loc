@@ -58,7 +58,8 @@
                      data-parent-id="<?= $value['CONDITION']['PARENT_ID'] ?>"
                      data-parent-value="<?= $value['CONDITION']['PARENT_VALUE'] ?>"
                      data-parent-value-id="<?= $parentValueId ?>"
-                     class="u-filter__item u-filter__item-<?= $key ?> <?= ($value['CONDITION']['BLOCKED']) ? 'blocked' : '' ?>">
+                     data-blocked="<?= $value['CONDITION']['BLOCKED'] ?>"
+                     class="u-filter__item u-filter__item-<?= $key ?> <?= ($value['CONDITION']['BLOCKED']=='true') ? 'blocked' : '' ?>">
                     <div class="u-filter__item-title">
                         <?= $value['NAME']; ?>
                     </div>
@@ -67,9 +68,16 @@
                         <ul class="u-filter__ul-hidden">
                             <? foreach ($value['DATA'] as $d_key => $d_value): ?>
                                 <li class="u-filter__li-hidden"
-                                    data-id="<?= $d_value['id']; ?>"><?= $d_value['title']; ?></li>
+                                    data-li-parent-value-id = "<?=$d_value['DATA_VALUE_PARENT_ID'];?>" data-id="<?= $d_value['id']; ?>"><?= $d_value['title']; ?></li>
                             <? endforeach; ?>
                         </ul>
+                        <input
+                                type="hidden"
+                                class="u-filter__li-visible"
+                                value="<?= $value['DATA_LI_VISIBLE'] ?>"
+                        />
+
+
                         <input
                                 type="hidden"
                                 name="<?= $value['INPUT_NAME'] ?>"
@@ -92,7 +100,7 @@
                      data-parent-id="<?= $value['CONDITION']['PARENT_ID'] ?>"
                      data-parent-value="<?= $value['CONDITION']['PARENT_VALUE'] ?>"
                      data-parent-value-id="<?= $parentValueId ?>"
-                     class="geo__header-date u-filter__item u-filter__item-<?= $key ?> <?= ($value['CONDITION']['BLOCKED']) ? 'blocked' : '' ?>">
+                     class="geo__header-date u-filter__item u-filter__item-<?= $key ?> <?= ($value['CONDITION']['BLOCKED']=='true') ? 'blocked' : '' ?>">
                     <div class="u-filter__item-title">
                         <?= $value['NAME']; ?>
                     </div>

@@ -103,19 +103,39 @@ $arFilterData = [
             'DATA' => [
                 0 => [
                     'title' => 'Все',
-                    'id' => '0'
+                    'id' => '0',
+                    'DATA_VALUE_PARENT_ID' => 'ALL'
                 ],
                 1 => [
                     'title' => 'метро 1',
-                    'id' => '1'
+                    'id' => '1',
+                    'DATA_VALUE_PARENT_ID' => '2'
                 ],
                 2 => [
                     'title' => 'метро 2',
-                    'id' => '2'
+                    'id' => '2',
+                    'DATA_VALUE_PARENT_ID' => '2'
+                ],
+                3 => [
+                    'title' => 'метро 3',
+                    'id' => '3',
+                    'DATA_VALUE_PARENT_ID' => '2'
+                ],
+                4 => [
+                    'title' => 'метро 4',
+                    'id' => '4',
+                    'DATA_VALUE_PARENT_ID' => '2'
                 ]
-
             ],
-            'DATA_DEFAULT' => '0'
+            'DATA_LI_VISIBLE' => '0',
+
+            'DATA_DEFAULT' => '0',
+            'CONDITION' => [
+                'BLOCKED' => 'false',
+                'PARENT_ID' => '2',
+                'PARENT_VALUE' => '',
+                'PARENT_VALUE_ID' => []
+            ]
         ]
     ]
 ];

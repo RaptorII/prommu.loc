@@ -32,6 +32,7 @@ let IndexUniversalFilter = (function () {
             //Аякс с задержкой
             clearTimeout(IndexUniversalFilter.AjaxTimer);
 
+            console.log(55555);
             IndexUniversalFilter.AjaxTimer = setTimeout(function () {
                 //Проверяем иерархию фильтров
                 self.hierarchyTracking();
@@ -203,12 +204,13 @@ let IndexUniversalFilter = (function () {
     /**Функция отслеживания и контроля иерархии фильтров**/
     IndexUniversalFilter.prototype.hierarchyTracking = function () {
         $('.prommu__universal-filter .u-filter__item').each(function () {
-
+            let self = this;
 
 
             let parent_id = parseInt($(this).data('parent-id'));
 
             let parent_value = $(this).data('parent-value');
+            let blocked_value = $(this).data('blocked');
             let parent__value_id = [];
             let data_buff = $(this).data('parent-value-id');
 
@@ -225,11 +227,12 @@ let IndexUniversalFilter = (function () {
             }
             let type = $(this).data('type');
 
-            if(parent_id>=0){
 
-
+            if(parent_id>=0 && blocked_value=="true"){
 
                 let parent = $(".u-filter__item[data-id='" + parent_id +"']");
+
+                console.log(parent);
 
                 let parent_type = parent.data('type');
 
@@ -258,6 +261,7 @@ let IndexUniversalFilter = (function () {
                 }
                 if(parent_type==="select"){
                     let value = parseInt(parent.find('.u-filter__hidden-data').val());
+
                     if(jQuery.inArray(value,parent__value_id)>=0){
                         $(this).removeClass('blocked');
                         if(type==="text"){
@@ -279,6 +283,46 @@ let IndexUniversalFilter = (function () {
                     }
                 }
             }
+
+
+            //скрываем li которые зависят от других полей
+            let parent_for_li = $(".u-filter__item[data-id='" + parent_id +"']");
+            let default_li_visible = parseInt($(self).find('.u-filter__li-visible').val());
+            if(parent_for_li){
+                let parent_type_for_li = parent_for_li.data('type');
+
+                if(parent_type_for_li==="select") {
+                    let value_for_li = parseInt(parent_for_li.find('.u-filter__hidden-data').val());
+                    $(self).find('.u-filter__li-hidden').each(function(){
+                        let li_parent_value_id = $(this).data('li-parent-value-id');
+                        if((li_parent_value_id>=0 && (li_parent_value_id== value_for_li || default_li_visible==value_for_li)) || li_parent_value_id=="ALL"){
+                            $(this).fadeIn();
+                            $(this).addClass('li-checker');
+                        }
+                        else{
+                            $(this).fadeOut();
+                            $(this).removeClass('li-checker');
+                        }
+                    })
+
+                    let li_counter = 0;
+                    $(self).find('.u-filter__li-hidden').each(function(){
+                        if( $(this).hasClass('li-checker')){
+                            li_counter++;
+                        }
+                    });
+
+                    console.log(li_counter);
+                    if(li_counter<=1){
+                        $(self).addClass('blocked');
+                        $(self).find('.u-filter__hidden-data').val('');
+                        $(self).find('.u-filter__select').text('');
+                    }else{
+                        $(self).removeClass('blocked');
+                    }
+                }
+            }
+
 
         });
     };
