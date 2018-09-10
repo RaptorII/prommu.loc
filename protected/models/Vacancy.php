@@ -1533,6 +1533,7 @@ public function rules()
                             'key' => $res['max'] + 1,
                             'ptype' => 3,
                             'name' => ucfirst($postSelf),
+                            'postself' => 1,
                         ));
 
                     if( $res )
