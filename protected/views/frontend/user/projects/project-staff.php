@@ -161,7 +161,7 @@ $arFilterData = [
                 0 => [
                     'title' => 'Все',
                     'id' => '0',
-                    'DATA_VALUE_PARENT_ID' => '0'
+                    'DATA_VALUE_PARENT_ID' => 'ALL'
                 ]
             ],
             'DATA_LI_VISIBLE' => '0',
