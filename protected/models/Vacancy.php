@@ -467,7 +467,7 @@ public function rules()
         $result = $this->getVacancyData($idvac);
         $result['posts'] = $this->getPost();
         
-        $sql = "SELECT d.id, d.id_par idpar, d.type, d.name FROM user_attr_dict d WHERE d.id_par IN(11,12,13,14,15,16, 131) ORDER BY idpar, id"; //,69,40
+        $sql = "SELECT d.id, d.id_par idpar, d.type, d.postself, d.name FROM user_attr_dict d WHERE d.id_par IN(11,12,13,14,15,16, 131) ORDER BY idpar, id"; //,69,40
         $result['userDictionaryAttrs'] = Yii::app()->db->createCommand($sql)->queryAll();
         $sql = "SELECT COUNT(*) FROM termostat_analytic t WHERE t.id = {$idvac} AND t.type='vacancy'";
         $result['views'] = Yii::app()->db->createCommand($sql)->queryScalar() + 1;
@@ -503,7 +503,7 @@ public function rules()
                    DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
               , c1.id_city, c2.name AS ciname, c1.citycu
               , ea.id_attr, em.id_user, em.name
-              , d.name AS pname
+              , d.name AS pname, d.postself
               , ifnull(em.logo, '') logo
             FROM empl_vacations e 
             LEFT JOIN empl_city c1 ON c1.id_vac = e.id 
@@ -546,7 +546,7 @@ public function rules()
                   , DATE_FORMAT(c1.bdate, '%d.%m.%Y') cbdate
                   , DATE_FORMAT(c1.edate, '%d.%m.%Y') cedate 
                   , ea.id_attr
-                  , d.name AS pname
+                  , d.name AS pname, d.postself
                   , m.id mid, m.name mname
                   , em.id eid, em.name coname, em.logo
                   , l.id lid, l.npp lnpp, l.name lname, l.addr, l.id_city lidcity, l.id_metros
@@ -821,7 +821,7 @@ public function rules()
 
 
         // языки словаря
-        $sql = "SELECT d.id, d.id_par idpar, d.type, d.name , a.`key`, a.val
+        $sql = "SELECT d.id, d.id_par idpar, d,postself, d.type, d.name , a.`key`, a.val
                 FROM user_attr_dict d 
                 LEFT JOIN empl_attribs a ON a.id_attr = d.id AND a.id_vac = {$inVacData['idvac']}
                 WHERE d.id_par = 40
@@ -853,7 +853,7 @@ public function rules()
 
 
         // характиристики вакансии из словаря
-        $sql = "SELECT d.id, d.id_par idpar, d.type, d.name FROM user_attr_dict d WHERE d.id_par IN(11,12,13,14,15,16, 131) ORDER BY idpar, id"; //,69,40
+        $sql = "SELECT d.id, d.id_par idpar, d.type, d.name, d.postself FROM user_attr_dict d WHERE d.id_par IN(11,12,13,14,15,16, 131) ORDER BY idpar, id"; //,69,40
         $data['userDictionaryAttrs'] = Yii::app()->db->createCommand($sql)->queryAll();
 
         // получаем город Работодатедя
@@ -886,7 +886,7 @@ public function rules()
                    DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
               , c1.id_city, c2.name AS ciname, c1.citycu
               , ea.id_attr
-              , d.name AS pname
+              , d.name AS pname, d.postself
               , ifnull(em.logo, '') logo
             FROM empl_vacations e 
             LEFT JOIN empl_city c1 ON c1.id_vac = e.id 
@@ -1533,6 +1533,7 @@ public function rules()
                             'key' => $res['max'] + 1,
                             'ptype' => 3,
                             'name' => ucfirst($postSelf),
+                            'postself' => 1,
                         ));
 
                     if( $res )
@@ -1602,7 +1603,7 @@ WHERE id_vac = {$inVacId}";
            $sql = "SELECT r.birthday, r.id
               , r.id_user, r.isman , r.ismed , r.ishasavto , r.aboutme , r.firstname , r.lastname , r.photo
               , a.val , a.id_attr
-              , d.name , d.type , d.id_par idpar , d.key
+              , d.name , d.type , d.id_par idpar , d.key, d.postself
               , u.email
             FROM resume r
             LEFT JOIN user u ON u.id_user = r.id_user
@@ -1746,7 +1747,7 @@ WHERE id_vac = {$inVacId}";
                    DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
               , c1.id_city, c2.name AS ciname, c1.citycu
               , ea.id_attr
-              , d.name AS pname
+              , d.name AS pname, d.postself
               , ifnull(em.logo, '') logo
             FROM empl_vacations e 
             LEFT JOIN empl_city c1 ON c1.id_vac = e.id 
@@ -1831,7 +1832,7 @@ WHERE id_vac = {$inVacId}";
         {
             $keys[] = "'" . $key . "'";
             $res = Yii::app()->db->createCommand()
-                ->select('d.id , d.type, d.key')
+                ->select('d.id , d.type, d.key, d.postself')
                 ->from('user_attr_dict d')
                 ->where('d.key = :key', array(':key' => $key))
                 ->queryRow();
@@ -1970,7 +1971,7 @@ WHERE id_vac = {$inVacId}";
      */
     public function getPost()
     {
-        $sql = "SELECT d.id, d.type, d.comment, d.name FROM user_attr_dict d WHERE d.id_par = 110 ORDER BY npp, name";
+        $sql = "SELECT d.id, d.type, d.comment, d.name, d.postself FROM user_attr_dict d WHERE d.id_par = 110 ORDER BY npp, name";
         $res = Yii::app()->db->createCommand($sql)->queryAll();
 
         return $res;
@@ -1980,9 +1981,9 @@ WHERE id_vac = {$inVacId}";
     {   
         $searchWord = filter_var(Yii::app()->getRequest()->getParam('search'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-        $sql = "SELECT d.id, d.type, d.comment, d.name
+        $sql = "SELECT d.id, d.type, d.comment, d.name, d.postself
             FROM (
-                  SELECT d.id, d.type, d.comment, d.name FROM user_attr_dict d
+                  SELECT d.id, d.type, d.comment, d.name, d.postself FROM user_attr_dict d
                     WHERE d.id_par = 110
                     AND d.name LIKE '{$searchWord}%' 
                   ORDER BY npp, name
