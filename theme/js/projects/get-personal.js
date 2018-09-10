@@ -129,7 +129,7 @@ var ProjectAddPersonal = (function () {
             function(e){ self.inputInvitation(this,e.type) }
         );
         //
-        $('#add-program').click(function(){ self.addXlsFile(this) });
+        $('.add-program').click(function(){ self.addXlsFile(this) });
         $('body').on('click','.xls-popup-btn',function(){
             $('#add-xls-inp').click();
         });
@@ -561,9 +561,7 @@ var ProjectAddPersonal = (function () {
         let self = this;
 
         let html = "<div class='xls-popup' data-header='Изменение персонала'>"+
-        "1) Необходимо открыть скачаный файл<br>"+
-        "2) Исправить существующие данные, либо добавить новые<br>"+
-        "3) Загрузить измененный файл<br>"+
+        "Загрузите измененный файл<br>"+
         '<span class="xls-popup-err">Формат файла должен быть "xls" или "xlsx". Выберите подходящий файл!</span>'+
         "<div class='xls-popup-btn'>ЗАГРУЗИТЬ</div>"+
         "</div>";

@@ -202,38 +202,10 @@ foreach ($viData['filter']['metros'] as $id => $metro)
 
             <div class="project__header-xlscontainer">
                 <div class="project__header-xls project__xls">
-
-                    <? /*<a href="/uploads/promo_import.xls" download>Скачать текущий персонал</a>*/ ?>
-                    <a href="/uploads/promo_import.xls" download>
-                        Выгрузить добавленный персонал
-                    </a>
-
-                    <? /*<a href="/user/uploadprojectxls?id=<?= $project ?>&type=users" class="project__header-addxls"
-                       id="add-program">
-                            Изменить текущий персонал
-                    </a>*/ ?>
-                    <a href="/user/uploadprojectxls?id=<?= $project ?>&type=users" class="project__header-addxls"
-                        id="add-program">Загрузить изменения по добавленному персоналу</a>
-
-                    <? /*<a class="xlscontainer-child" href="/uploads/promo_import.xls" download>
-                        Скачать пример для добавления
-                     </a>*/ ?>
-                    <a class="xlscontainer-child" href="/uploads/promo_import.xls" download>
-                        Выгрузить пример для добавления нового персонала
-                    </a>
-
-                    <? /*<a class="xlscontainer-child" href="/user/uploadprojectxls?id=<?= $project ?>&type=users"
-                       class="project__header-addxls"
-                       id="add-program">
-                        Добавить новый персонал
-                    </a>*/ ?>
-                    <a class="xlscontainer-child" href="/user/uploadprojectxls?id=<?= $project ?>&type=users"
-                       class="project__header-addxls"
-                       id="add-program">
-                        Загрузить новый персонал
-                    </a>
-
-
+                    <a href="/user/uploadprojectxls?id=<?= $project ?>&type=users" download>Выгрузить добавленный персонал</a>
+                    <a href="javascript:coid(0)" class="add-program">Загрузить изменения по добавленному персоналу</a>
+                    <a href="/uploads/promo_import.xls" download>Выгрузить пример для добавления нового персонала</a>
+                    <a href="javascript:coid(0)" class="add-program" >Загрузить новый персонал</a>
                 </div>
             </div>
 
