@@ -15,9 +15,6 @@
         <div class="fav__select-posts">
             <span<? if(sizeof($viData['vac']['post'])) echo " style='display:none'";?>>Должность *</span>
             <ul id="ev-posts-select">
-                <? if(isset($viData['vac']['post-self'])): ?>
-                    <li data-id="new"><?=$viData['vac']['post-self']?><i></i><input type="hidden" name="post-self" value="<?=$viData['vac']['post-self']?>"></li>
-                <? endif; ?>
                 <?php foreach($viData['vac']['post'] as $k => $v): ?>
                     <li data-id="<?=$k?>"><?=$v?><i></i><input type="hidden" name="posts[]" value="<?=$k?>"></li>
                 <?php endforeach; ?>
@@ -25,7 +22,7 @@
             <ul id="ev-posts-list">
                 <li data-id="0">
                     <input type="text" name="p">
-                    <span id="add-new-vac" <?=(isset($viData['vac']['post-self'])?'style="display:none"':'')?>>Новая должность</span>
+                    <span id="add-new-vac" <?=(isset($viData['vac']['postself'])?'style="display:none"':'')?>>Новая должность</span>
                 </li>
             </ul>
         </div>
