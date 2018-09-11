@@ -95,7 +95,7 @@
 .project__route-changer{
     width:940px;
     overflow: hidden;
-    margin:0 auto;
+    margin:30px auto;
 }
 .project__changer-buttons{
     width: 10%;
@@ -187,4 +187,8 @@
 }
 .route__table-item__number{
     position: relative;
+}
+
+.project__route-changer{
+    display:none;
 }

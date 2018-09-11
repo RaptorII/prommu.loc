@@ -26,10 +26,13 @@ let IndexRoute = (function () {
         });
 
         $('.route__button-change').click(function(){
-            $.fancybox.open({
-                src: "div.project__route-changer",
-                type: 'inline',
-            });
+            $('.project__route-changer').show();
+            $('.rout__main').hide();
+        });
+
+        $('.route__button-save').click(function(){
+            $('.project__route-changer').hide();
+            $('.rout__main').show();
         });
 
 
