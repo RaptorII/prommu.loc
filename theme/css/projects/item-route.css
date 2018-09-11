@@ -83,17 +83,6 @@
     background:none;
 }
 
-.route__table-sort tr td:nth-child(1){
-    width: 5%!important;
-    text-align: center;
-}
-.route__table-sort tr{
-    cursor:pointer;
-}
-.route__table-sort tr:hover{
-    background: #f5ff9c;
-}
-
 #sortable { list-style-type: none; margin: 0; padding: 0; width: 450px; }
 #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 4em; text-align: center; }
 .project__route-touch{
@@ -104,17 +93,14 @@
     cursor:pointer;
 }
 .project__route-changer{
-    width:100%;
+    width:940px;
     overflow: hidden;
+    margin:0 auto;
 }
 .project__changer-buttons{
     width: 10%;
     float: left;
     border-right: 1px solid #dedede;
-}
-.project__changer-content{
-    width:90%;
-    float: left;
 }
 
 .project__changer-button{
@@ -129,4 +115,76 @@
     -webkit-transform: rotate(-180deg); /* Äëÿ Safari, Chrome, iOS */
     -o-transform: rotate(-180deg); /* Äëÿ Opera */
     transform: rotate(-180deg);
+}
+
+
+.route__table-sort,.route__table-header, #sortable,.route__table-item{
+    width:846px;
+    overflow: hidden;
+}
+.project__changer-content{
+    width:846px;
+    float: left;
+}
+.route__table-item{
+    border-bottom: 1px solid #dedede;
+    border-radius:5px;
+}
+
+.route__table-item__number{
+    width:10%;
+    float: left;
+}
+.route__table-item__name{
+    width:45%;
+    float: left;
+}
+.route__table-item__address{
+    width:45%;
+    float: left;
+}
+.route__table-head{
+    background: #abb92a;
+    color: #ffffff;
+    padding: 5px 0;
+    font-weight: normal;
+    border-left: 1px solid #dedede;
+    border-right: 1px solid #dedede;
+    text-align: center;
+}
+.route__table-number{
+    text-align:center;
+}
+
+.route__table-item{
+    cursor: pointer;
+}
+.route__table-item:hover{
+    color:green;
+}
+
+.route__table-buttons{
+    text-align: center;
+    /* margin-top: 15px; */
+    overflow: hidden;
+    width: 100%;
+    padding-top: 15px;
+}
+
+.route__table-active .route__table-number:after{
+    content: '\2714';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 5px;
+    line-height: 26px;
+    font-size: 15px;
+    color: green;
+}
+.route__table-active{
+    border: 2px solid green;
+    box-sizing: border-box;
+}
+.route__table-item__number{
+    position: relative;
 }
