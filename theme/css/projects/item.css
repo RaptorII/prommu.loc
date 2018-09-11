@@ -110,9 +110,11 @@
 }
 .program__cell-user img{
 	width: 18px;
+	min-width: 18px;
 	height: 18px;
 	border-radius: 50%;
 	vertical-align: middle;
+	margin-right: 10px;
 }
 .program__cell-user span{
 	vertical-align: middle;
@@ -480,7 +482,7 @@
 	align-items: center;
 }
 .geo__header-city:after,
-.geo__header-date div:after{
+.geo__header-date .calendar-filter:after{
 	content: '\25bc';
 	display: block;
 	position: absolute;

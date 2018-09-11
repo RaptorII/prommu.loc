@@ -1,9 +1,9 @@
 <?php
-	$bUrl = Yii::app()->baseUrl;
-	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
-	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-base.css');
-	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
-	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item-base.js', CClientScript::POS_END);
+	$bUrl = Yii::app()->baseUrl . '/theme/';
+	Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/item.css');
+	Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/item-base.css');
+	Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/additional.js', CClientScript::POS_END);
+	Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/item-base.js', CClientScript::POS_END);
 ?>
 <div class="row project">
 	<div class="col-xs-12">
@@ -47,30 +47,33 @@
 									<? endif; ?>
 									<td>
 										<div class="program__cell border user">
-											<?php foreach ($arLoc['periods'] as $idper => $arPer):
-												$hasUsers = false;
+											<?php 
+											$arUsers = array();
+											foreach ($arLoc['periods'] as $idper => $arPer):
 												foreach ($viData['users'] as $id_user => $user):
-													if($user['point']==$idper /*&& isset($user['status'])*/): 
-														$hasUsers = true;
+													if(in_array($idper, $user['points'])):
+														$arUsers[$idper][] = $id_user;
 														?>
 														<div class="program__cell-users">
 															<div class="program__cell-user">
 																<img src="<?=$user['src']?>">
 																<span><?=$user['name']?></span>
-																<a href="<? echo $project . '/users-select/' . $idper ?>"><span>Изменить</span></a>
+																
 															</div>
 														</div>									
-												<?php endif;
-												endforeach; 
-												if(!$hasUsers): ?>
-												<div class="program__select-user" data-period="<?=$idper?>">
-													<a href="<? echo $project . '/users-select/' . $idper ?>" class="program-select-user__title">
-														<span>Выбрать персонал </span>
-														<b>&#9660</b>
-													</a>
-												</div>
-											<?php endif;
-												endforeach; ?>
+													<?php endif; ?>
+												<?php endforeach; ?>
+												<?php if(!sizeof($arUsers[$idper])): ?>
+													<div class="program__select-user" data-period="<?=$idper?>">
+														<a href="<? echo $project . '/users-select/' . $idper ?>" class="program-select-user__title">
+															<span>Выбрать персонал </span>
+															<b>&#9660</b>
+														</a>
+													</div>
+												<?php else: ?>
+													<a href="<? echo $project . '/users-select/' . $idper ?>"><span>Изменить</span></a>
+												<?php endif; ?>
+											<?php endforeach; ?>
 										</div>
 									</td>
 									<td class="period-data">
@@ -87,6 +90,7 @@
 														</ul>
 													</span>
 												</div>
+												<?php foreach ($arUsers[$idper] as $u){ echo "<br>"; } ?>
 											<? endforeach; ?>
 										</div>
 									</td>

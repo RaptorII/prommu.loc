@@ -1,5 +1,5 @@
 <?php if(sizeof($viData['users'])>0): ?>
-  <?php $point = Yii::app()->getRequest()->getParam('point') ?>
+  <? $point = Yii::app()->getRequest()->getParam('point'); ?>
   <div class="row">
     <div class="col-xs-12 users-select__list">
       <div class="row">
@@ -14,7 +14,7 @@
               name="user[]" 
               value="<?=$user['id_user']?>" 
               id="user-<?=$user['id_user']?>"
-              <?=($user['point']==$point)?'checked':''?>>
+              <?=(in_array($point, $user['points']))?'checked':''?>>
             <label for="user-<?=$user['id_user']?>"></label>
           </div>
         <? endforeach; ?>

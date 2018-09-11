@@ -1,23 +1,23 @@
 <?php
-	$pLink = MainConfig::$PAGE_PROJECT_LIST . '/' . $project;
-	$point = Yii::app()->getRequest()->getParam('point');
-  $this->setBreadcrumbsEx(
-    array('Мои проекты', MainConfig::$PAGE_PROJECT_LIST),
-    array($viData['project']['name'], $pLink),
-    array(
-    	'ВЫБОР ПОЛЬЗОВАТЕЛЕЙ', 
-    	$pLink . '/users-select' . '/' . $point
-    )
-  );
-  $this->setPageTitle($viData['project']['name']);
-	$bUrl = Yii::app()->baseUrl;
-	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/users-select.css');
-	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/new.css');
-	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
-	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/users-select.js', CClientScript::POS_END);
+    $pLink = MainConfig::$PAGE_PROJECT_LIST . '/' . $project;
+    $point = Yii::app()->getRequest()->getParam('point');
+    $this->setBreadcrumbsEx(
+        array('Мои проекты', MainConfig::$PAGE_PROJECT_LIST),
+        array($viData['project']['name'], $pLink),
+        array(
+            'ВЫБОР ПОЛЬЗОВАТЕЛЕЙ', 
+            $pLink . '/users-select' . '/' . $point
+        )
+    );
+    $this->setPageTitle($viData['project']['name']);
+	$bUrl = Yii::app()->baseUrl . '/theme/';
+	Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/users-select.css');
+	Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/new.css');
+	Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/additional.js', CClientScript::POS_END);
+	Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/users-select.js', CClientScript::POS_END);
 	/***********UNIVERSAL FILTER************/
-	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/universal-filter.js', CClientScript::POS_END);
-	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-filter.css');
+	Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/universal-filter.js', CClientScript::POS_END);
+	Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-filter.css');
 
 	$arFilterData = [
         'STYLES' => 'project__header-filter',

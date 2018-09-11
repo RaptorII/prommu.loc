@@ -274,10 +274,11 @@ class Project extends ARModel
     public function getStaffProjectCnt($prj) {
         $filter = $this->getStaffFilter($prj);
         return Yii::app()->db->createCommand()
-            ->select("COUNT(pu.id)")
+            ->select("COUNT(DISTINCT(pu.id))")
             ->from('project_user pu')
             ->leftjoin('resume r', 'r.id_user=pu.user')
-            ->leftjoin('project_city pc', 'pc.point=pu.point')
+            ->leftjoin('project_binding pb', 'pb.user=pu.user')
+            ->leftjoin('project_city pc', 'pc.point=pb.point')
             ->leftjoin('city c', 'c.id_city=pc.id_city')
             ->leftjoin('metro m', 'm.id=pc.metro')
             ->where($filter['conditions'], $filter['values'])
@@ -313,8 +314,8 @@ class Project extends ARModel
         }
         if($point>0) {
             $arRes['conditions'] .= ($point==1
-                ? " AND pu.point IS NOT NULL"
-                : " AND pu.point IS NULL");
+                ? " AND pb.point IS NOT NULL"
+                : " AND pb.point IS NULL");
         }
         if($city>0) {
             $arRes['conditions'] .= " AND pc.id_city=:city";
@@ -342,8 +343,7 @@ class Project extends ARModel
         $sql = Yii::app()->db->createCommand()
             ->select(
                 "pu.user, 
-                pu.status,
-                pu.point, 
+                pu.status, 
                 pu.date,
                 r.firstname, 
                 r.lastname,
@@ -353,12 +353,14 @@ class Project extends ARModel
                 pc.adres lindex,
                 pc.id_city,
                 pc.metro id_metro,
+                pb.point,
                 c.name city,
                 c.ismetro ismetro,
                 m.name metro")
             ->from('project_user pu')
             ->leftjoin('resume r', 'r.id_user=pu.user')
-            ->leftjoin('project_city pc', 'pc.point=pu.point')
+            ->leftjoin('project_binding pb', 'pb.user=pu.user')
+            ->leftjoin('project_city pc', 'pc.point=pb.point')
             ->leftjoin('city c', 'c.id_city=pc.id_city')
             ->leftjoin('metro m', 'm.id=pc.metro')
             ->where($filter['conditions'], $filter['values'])
@@ -371,7 +373,6 @@ class Project extends ARModel
             return array();
 
         foreach ($sql as $v) {
-            $arRes['original'][$v['user']] = $v;
             if(!empty($v['lname']))
                 $arRes['filter']['tt_name'][] = $v['lname'];
             if(!empty($v['lindex']))
@@ -393,24 +394,22 @@ class Project extends ARModel
         $arRes['filter']['tt_name'] = array_unique($arRes['filter']['tt_name']);
         $arRes['filter']['tt_index'] = array_unique($arRes['filter']['tt_index']);
 
-        foreach ($arRes['original'] as $user) {
-            $id = $user['user'];
-            $item = $arRes['original'][$id];
-            $arRes['users'][$id] = array(
-                'id_user' => $id,
-                'name' => $user['lastname'] . ' ' . $user['firstname'],
-                'src' => DS . MainConfig::$PATH_APPLIC_LOGO . DS 
-                    . ($user['photo'] 
-                        ? ($user['photo'] . '100.jpg')
-                        : ($user['isman'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F)
-                    ),
-                'status' => $item['status'],
-                'point' => $item['point'],
-            );
-            if(!empty($item['id_city']))
-                $arRes['users'][$id]['cities'] = [$item['id_city'] => $item['city']];
-            if(!empty($item['id_metro']))
-                $arRes['users'][$id]['metros'] = [$item['id_metro'] => $item['metro']];
+        foreach ($sql as $u) {
+            $id = $u['user'];
+            $arRes['users'][$id]['id_user'] = $id;
+            $arRes['users'][$id]['name'] = $u['lastname'] . ' ' . $u['firstname'];
+            $arRes['users'][$id]['src'] = DS . MainConfig::$PATH_APPLIC_LOGO . DS . 
+                ($u['photo'] 
+                    ? ($u['photo'] . '100.jpg')
+                    : ($u['isman'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F)
+                );
+            $arRes['users'][$id]['status'] = $u['status'];
+            if(!empty($u['point']))
+                $arRes['users'][$id]['points'][] = $u['point'];
+            if(!empty($u['id_city']))
+                $arRes['users'][$id]['cities'][$u['id_city']] = $u['city'];
+            if(!empty($u['id_metro']))
+                $arRes['users'][$id]['metros'][$u['id_metro']] = $u['metro'];
         }
 
         return $arRes;
@@ -522,7 +521,7 @@ class Project extends ARModel
                             'firstname' =>  $sheet_array[$i]['A'],
                             'lastname' =>  $sheet_array[$i]['B'],
                             'phone' =>  $sheet_array[$i]['D'],
-                            'point' => $sheet_array[$i]['E']
+                            //'point' => $sheet_array[$i]['E'] !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                      ), 'email = :email', array(':email' => $sheet_array[$i]['C']));
                 
                 } else {
@@ -783,30 +782,32 @@ class Project extends ARModel
 
         $prj = Yii::app()->getRequest()->getParam('id');
         $point = Yii::app()->getRequest()->getParam('point');
-        $arS = Yii::app()->db->createCommand()
-            ->select('user, point')
-            ->from('project_user')
-            ->where('project=:prj', array(':prj'=>$prj))
+
+        $sql = Yii::app()->db->createCommand()
+            ->select('*')
+            ->from('project_binding')
+            ->where(
+                'project=:prj AND point=:pnt', 
+                array(':prj'=>$prj,':pnt'=>$point)
+            )
             ->queryAll();
 
-        foreach ($arS as $user) // убираем отчеканых пользователей
-            if(!in_array($user['user'], $arr['user']) && $user['point']==$point)
+        $arUsers = array();
+        foreach ($sql as $b) { // убираем отчеканых пользователей
+            $arUsers[] = $b['user'];
+            if(!in_array($b['user'], $arr['user']))
                 Yii::app()->db->createCommand()
-                    ->update(
-                        'project_user',
-                        array('point' => NULL),
-                        'project=:prj AND user=:user',
-                        array(':prj' => $prj,':user' => $user['user'])
-                    );
-
-        foreach ($arr['user'] as $id) // устанавливаем чекнутых
-            Yii::app()->db->createCommand()
-                ->update(
-                    'project_user',
-                    array('point' => $point),
-                    'project=:prj AND user=:user',
-                    array(':prj' => $prj,':user' => $id)
-                );
+                    ->delete('project_binding','id=:id', [':id'=>$b['id']]);
+        }
+        foreach ($arr['user'] as $user) { // добавляем новых юзеров
+            if(!in_array($user, $arUsers))
+                Yii::app()->db->createCommand()
+                    ->insert('project_binding', array(
+                        'project' => $prj,
+                        'user' => $user,
+                        'point' => $point
+                    ));
+        }
     }
     /*
     *       страница Персонал
@@ -859,29 +860,29 @@ class Project extends ARModel
             ->select(
                 "pu.user, 
                 pu.status,
-                pu.point, 
+                pb.point, 
                 r.firstname, 
                 r.lastname,
                 r.photo,
                 r.isman")
             ->from('project_user pu')
             ->leftjoin('resume r', 'r.id_user=pu.user')
+            ->leftjoin('project_binding pb', 'pb.user=pu.user')
             ->where('pu.project=:prj', array(':prj'=>$prj))
             ->queryAll(); 
 
-        foreach ($sql as $user) {
-            $id = $user['user'];
-            $arRes[$id] = array(
-                'id_user' => $id,
-                'name' => $user['lastname'] . ' ' . $user['firstname'],
-                'src' => DS . MainConfig::$PATH_APPLIC_LOGO . DS 
-                    . ($user['photo'] 
-                        ? ($user['photo'] . '100.jpg')
-                        : ($user['isman'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F)
-                    ),
-                'status' => $user['status'],
-                'point' => $user['point']
-            );
+        foreach ($sql as $u) {
+            $id = $u['user'];
+            $arRes[$id]['id_user'] = $id;
+            $arRes[$id]['name'] = $u['lastname'] . ' ' . $u['firstname'];
+            $arRes[$id]['src'] = DS . MainConfig::$PATH_APPLIC_LOGO . DS . 
+                ($u['photo'] 
+                    ? ($u['photo'] . '100.jpg')
+                    : ($u['isman'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F)
+                );
+            $arRes[$id]['status'] = $u['status'];
+            if(!empty($u['point']))
+                $arRes[$id]['points'][] = $u['point'];
         }
 
         return $arRes;
@@ -890,53 +891,40 @@ class Project extends ARModel
     *       Формирование массива задач
     */
     public function buildTaskArray($arr) {
+        $arI = array();
+        
         $arRes['project'] = $arr['project'];
+        $arRes['tasks'] = $this->getTaskList($arr['project']['project']);
+
         foreach ($arr['users'] as $id => $v)
-            if(isset($v['point'])) {
-                $arRes['users'][$v['point']][$v['id_user']] = $v;
-                $arRes['points_id'][] = $v['point'];
-            }
+            if(sizeof($v['points'])>0)
+                $arRes['users'][$v['id_user']] = $v;
 
-        if(!sizeof($arRes['users'])) {
-            $arRes['items'] = array();
-            return $arRes;
-        }
-        $arTasks = $this->getTaskList($arr['project']['project']);
+        if(!sizeof($arRes['users']))
+            return array('items' => $arI);
 
+        foreach ($arr['original'] as $p) {
+            foreach ($arRes['users'] as $idus => $u) {
+                if(!in_array($p['point'], $u['points']))
+                    continue;
 
-        $day = 60*60*24;
-        foreach ($arr['original'] as $v) {
-            if(!array_key_exists($v['point'], $arRes['users']))
-                continue;
-            $arRes['points'][] = $v;
-            $bdate = strtotime($v['bdate']);
-            $edate = strtotime($v['edate']);
-            do{
-                $arRes['items'][$bdate][$v['id_city']]['date'] = date('d.m.Y',$bdate);
-                $arRes['items'][$bdate][$v['id_city']]['city'] = $v['city'];
-                $arRes['items'][$bdate][$v['id_city']]['ismetro'] = $v['ismetro'];
-                $arT = array();
-                foreach ($arRes['users'][$v['point']] as $u) {
-                    $arT[$u['id_user']] = array(
-                        'name' => $v['name'],
-                        'index' => $v['adres'],
-                        'metro' => $v['metro'],
-                        'btime' => $v['btime'],
-                        'etime' => $v['etime'],
-                        'user' => $u['name'],
-                        'src' => $u['src'],
-                        'status' => $u['status'],
-                        'tasks' => $arTasks[$bdate][$v['point']][$u['id_user']]
-                    );
+                $arRes['points'][$p['point']] = $p;
+                $c = $p['id_city'];
+                $date = strtotime($p['bdate']);
+                do{
+                    $arI[$date][$c]['date'] = date('d.m.Y',$date);
+                    $arI[$date][$c]['city'] = $p['city'];
+                    $arI[$date][$c]['ismetro'] = $p['ismetro'];
+                    $arI[$date][$c]['users'][$idus][] = $p['point'];
+                    $date += (60*60*24);
                 }
-                $arRes['items'][$bdate][$v['id_city']]['points'][$v['point']] = $arT;
-
-                $bdate += $day;
+                while($date <= strtotime($p['edate']));
             }
-            while($bdate <= $edate);
         }
-        ksort($arRes['items']);
-        $arRes['filter'] = $this->buildAdressArray($arRes['points'])['filter'];
+
+        ksort($arI);
+        $arRes['items'] = $arI;
+        $arRes['filter'] = $this->buildAdressArray($arr['original'])['filter'];
 
         return $arRes;
     }
@@ -1060,7 +1048,7 @@ class Project extends ARModel
 
                 $sql = Yii::app()->db->createCommand()
                     ->select("user")
-                    ->from('project_user')
+                    ->from('project_binding')
                     ->where(
                         'project=:prj AND point=:pnt',
                         array(

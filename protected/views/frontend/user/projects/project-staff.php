@@ -1,18 +1,18 @@
 <?php
 $pLink = MainConfig::$PAGE_PROJECT_LIST . '/' . $project;
-$bUrl = Yii::app()->baseUrl;
+$bUrl = Yii::app()->baseUrl . '/theme/';
 
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/phone-codes/projects.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/get-personal.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/new.css');
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/phone-codes/style.css');
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-staff.css');
+Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/item.css');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/additional.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/phone-codes/projects.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/get-personal.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/new.css');
+Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/phone-codes/style.css');
+Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/item-staff.css');
 
 /***********UNIVERSAL FILTER************/
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/universal-filter.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-filter.css');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/universal-filter.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-filter.css');
 /***********UNIVERSAL FILTER************/
 
 $arFilterData = [
@@ -185,13 +185,6 @@ foreach ($viData['filter']['metros'] as $id => $metro) {
     $arFilterData['FILTER_SETTINGS'][11]['DATA'][$id] = ['title' => $metro['metro'], 'id' => $metro['id'], 'DATA_VALUE_PARENT_ID' => $metro['id_city']];
 }
 ?>
-<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($viData['filter']); ?>
-</pre>
-
-<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($arFilterData); ?>
-</pre>
 <div class="row project">
     <div class="col-xs-12">
         <? require __DIR__ . '/project-nav.php'; // Меню вкладок ?>

@@ -1,15 +1,15 @@
 <?php
-$bUrl = Yii::app()->baseUrl;
-$pLink = MainConfig::$PAGE_PROJECT_LIST . '/' . $project;
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
+$bUrl = Yii::app()->baseUrl . '/theme/';
+$pLink = MainConfig::$PAGE_PROJECT_LIST . '/' . $project . '/tasks';
+Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/item.css');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/additional.js', CClientScript::POS_END);
 
 /***********UNIVERSAL FILTER************/
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/universal-filter.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-filter.css');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/universal-filter.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-filter.css');
 /***********UNIVERSAL FILTER************/
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-tasks.css');
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item-tasks.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/item-tasks.css');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/item-tasks.js', CClientScript::POS_END);
 
 $arFilterData = [
     'STYLES' => 'project__tasks-filter',
@@ -66,37 +66,39 @@ foreach ($viData['filter']['cities'] as $id => $city)
 		</div>
 		<div class="users__list">
 		<?php
-			foreach ($viData['items'] as $unix => $arDate):
-				foreach ($arDate as $id_city => $arCity):
-					foreach ($arCity['points'] as $point => $arUsers): 
-						foreach ($arUsers as $id_user => $user): 
+			foreach ($viData['items'] as $unix => $date):
+				foreach ($date as $city):
+					foreach ($city['users'] as $idus => $arPoints): 
+						foreach ($arPoints as $p): 
+							$user = $viData['users'][$idus];
+							$point = $viData['points'][$p];
 		?>
 		  <div 
 				class="task__single"
-				data-user="<?=$id_user?>"
-				data-date="<?=$arCity['date']?>"
-				data-point="<?=$point?>"
+				data-user="<?=$idus?>"
+				data-date="<?=$city['date']?>"
+				data-point="<?=$p?>"
 			>
 		    <div class="task__single-logo">
 		      <img src="<?=$user['src']?>">
 		    </div>
 		    <div class="task__single-info">
 		      <div class="task__block">
-		        <h2 class="task__single-title"><?=$user['name']?></h2>
+		        <h2 class="task__single-title"><?=$point['name']?></h2>
 		        <div class="task__single-table">
 
 		          <div class="task__single-user task__user-info">
-		            <div class="task__user-name"><?=$user['user']?></div>
-		            <div class="task__user-index"><b><?=$user['index']?></b></div>
-		            <div class="task__user-date"><?=$arCity['date']?></div>
+		            <div class="task__user-name"><?=$user['name']?></div>
+		            <div class="task__user-index"><b><?=$point['adres']?></b></div>
+		            <div class="task__user-date"><?=$city['date']?></div>
 		          </div>
 		          <div class="task__tasks-info">
-		          	<?php $tasks = sizeof($user['tasks']); ?>
+		          	<?php $tasks = sizeof($viData['tasks'][$d][$p][$idus]); ?>
 								<div class="task__tasks-title"<?=(!$tasks?' style="display:none"':'')?>>
 									<span class="task__name">Новое задание</span>
 									<ul class="task__hidden-ul">
 										<li data-id="new">Новое задание</li>
-										<? foreach ($user['tasks'] as $task): ?>
+										<? foreach ($viData['tasks'][$d][$p][$idus] as $task): ?>
 											<li 
 												data-id="<?=$task['id']?>" 
 												data-text="<?=$task['text']?>"
@@ -121,13 +123,13 @@ foreach ($viData['filter']['cities'] as $id => $city)
 		        <? /**********hiddens*************/ ?>
 		        <input type="hidden" name="project" value="<?=$project?>">
 		        <input class="task_id-hidden" type="hidden" name="task" value="new">
-		        <input type="hidden" name="user" value="<?=$id_user?>">
+		        <input type="hidden" name="user" value="<?=$idus?>">
 		        <input type="hidden" name="date" value="<?=$unix?>">
-		        <input type="hidden" name="point" value="<?=$point?>">
+		        <input type="hidden" name="point" value="<?=$p?>">
 		        <? /**********hiddens*************/ ?>
 
 		        <div class="task__single-info-btn">
-		        	<a href="<?=$pLink . '/tasks'?>" class="task__add-cancel">НАЗАД</a>
+		        	<a href="<?=$pLink?>" class="task__add-cancel">НАЗАД</a>
 		          <a href="javascript:void(0)" class="task__add-task">ДОБАВИТЬ ЗАДАНИЕ</a>
 		        </div>
 		      </div>
