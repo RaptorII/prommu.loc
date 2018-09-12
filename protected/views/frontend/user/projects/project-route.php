@@ -205,7 +205,7 @@ $arFilterData = [
                             <td>
                                 <div class="route__table-cell border route__table-status">
                                     <span>2</span>
-                                    <a href="#">изменить</a>
+                                    <a class="route__change-id" href="#">изменить</a>
                                 </div>
                             </td>
                             <td>
@@ -225,7 +225,7 @@ $arFilterData = [
                             <td>
                                 <div class="route__table-cell border route__table-status">
                                     <span>1</span>
-                                    <a href="#">изменить</a>
+                                    <a class="route__change-id" href="#">изменить</a>
                                 </div>
                             </td>
                             <td>
@@ -245,7 +245,7 @@ $arFilterData = [
                             <td>
                                 <div class="route__table-cell border route__table-status">
                                     <span>3</span>
-                                    <a href="#">изменить</a>
+                                    <a class="route__change-id" href="#">изменить</a>
                                 </div>
                             </td>
                             <td>
@@ -303,7 +303,7 @@ $arFilterData = [
                             <td>
                                 <div class="route__table-cell border route__table-status">
                                     <span>2</span>
-                                    <a href="#">изменить</a>
+                                    <a class="route__change-id" href="#">изменить</a>
                                 </div>
                             </td>
                             <td>
@@ -323,7 +323,7 @@ $arFilterData = [
                             <td>
                                 <div class="route__table-cell border route__table-status">
                                     <span>1</span>
-                                    <a href="#">изменить</a>
+                                    <a class="route__change-id" href="#">изменить</a>
                                 </div>
                             </td>
                             <td>
@@ -343,7 +343,7 @@ $arFilterData = [
                             <td>
                                 <div class="route__table-cell border route__table-status">
                                     <span>3</span>
-                                    <a href="#">изменить</a>
+                                    <a class="route__change-id" href="#">изменить</a>
                                 </div>
                             </td>
                             <td>
@@ -397,7 +397,7 @@ $arFilterData = [
                             <td>
                                 <div class="route__table-cell border route__table-status">
                                     <span>2</span>
-                                    <a href="#">изменить</a>
+                                    <a class="route__change-id" href="#">изменить</a>
                                 </div>
                             </td>
                             <td>
@@ -417,7 +417,7 @@ $arFilterData = [
                             <td>
                                 <div class="route__table-cell border route__table-status">
                                     <span>1</span>
-                                    <a href="#">изменить</a>
+                                    <a class="route__change-id" href="#">изменить</a>
                                 </div>
                             </td>
                             <td>
@@ -437,7 +437,7 @@ $arFilterData = [
                             <td>
                                 <div class="route__table-cell border route__table-status">
                                     <span>3</span>
-                                    <a href="#">изменить</a>
+                                    <a class="route__change-id" href="#">изменить</a>
                                 </div>
                             </td>
                             <td>

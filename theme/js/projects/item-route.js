@@ -25,7 +25,7 @@ let IndexRoute = (function () {
             $(this).addClass('route__table-active');
         });
 
-        $('.route__button-change').click(function(){
+        $('.route__button-change,.route__change-id').click(function(){
             $('.project__route-changer').show();
             $('.rout__main').hide();
         });
