@@ -751,7 +751,7 @@ public function rules()
             empty($u['photo']) ? array_push($arRes, $u) : array_unshift($arRes, $u);
         }
         // формируем html письма
-        $file = file_get_contents(__DIR__ . '\..\views\mails\after-moder-vac.php');
+        $file = file_get_contents(Yii::app()->basePath . '/views/mails/after-moder-vac.php');
         preg_match_all('/#LPLACE(.*?)#LPLACE|#CYCLE(.*?)#CYCLE/', $file, $matches);
 
         $listPlace = '';
