@@ -1227,7 +1227,7 @@ class SiteController extends Controller
         
         if(self::isAuth()) {
             $model = new Vacancy;
-            $model->updateVacancy($id, array('ismoder'=>$_POST['curr_status']));
+            $model->updateVacancy($id, array('cur_status'=>$_POST['curr_status']));
             $model->unsetAttributes();  // clear any default values
             $model->searchvac(); 
             $model->status=1;

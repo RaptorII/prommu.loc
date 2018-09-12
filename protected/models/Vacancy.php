@@ -663,10 +663,14 @@ public function rules()
 
     public function updateVacancy($id, $data)
     {
-        // сохранение вакансии
-        if(sizeof($data['Vacancy'])>0) {
-            $data['index'] = isset($data['index']) ? : 0;
-            $data['ismoder'] = empty($data['ismoder']) ? : 0;
+        if(isset($data['cur_status'])) {
+            $data['ismoder'] = $data['cur_status']==100 ? $data['cur_status'] : 0;
+            unset($data['cur_status']);            
+        }
+        else {
+            // сохранение вакансии
+            $data['index'] = (isset($data['index']) ? : 0);
+            $data['ismoder'] = (empty($data['ismoder']) ? 0 : $data['ismoder']);
         }
         Yii::app()->db->createCommand()
             ->update('empl_vacations', $data, 'id=:id', array(':id'=>$id));
