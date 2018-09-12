@@ -109,7 +109,7 @@ foreach ($viData['filter']['cities'] as $id => $city)
 
 								<div class="task__tasks-buttons">
 									<span class="task__tasks-button task__button-green task__button-change">Изменить</span>
-									<span class="task__tasks-button task__button-grey task__button-alldate">Дублироать на все даты</span>
+									<span class="task__tasks-button task__button-grey task__button-alldate">Дублировать на все даты</span>
 									<span class="task__tasks-button task__button-green task__button-users">Дублировать всем</span>
 									<span class="task__tasks-button task__button-red task__button-del">Удалить</span>
 								</div>
