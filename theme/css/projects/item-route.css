@@ -93,7 +93,7 @@
     cursor:pointer;
 }
 .project__route-changer{
-    width:940px;
+    width:100%;
     overflow: hidden;
     margin:30px auto;
 }
@@ -119,11 +119,11 @@
 
 
 .route__table-sort,.route__table-header, #sortable,.route__table-item{
-    width:846px;
+    width:100%;
     overflow: hidden;
 }
 .project__changer-content{
-    width:846px;
+    width:90%;
     float: left;
 }
 .route__table-item{
@@ -160,11 +160,13 @@
     cursor: pointer;
 }
 .route__table-item:hover{
-    color:green;
+    color:white;
+    background-color:#ff8300;
 }
 
+
 .route__table-buttons{
-    text-align: center;
+    /* text-align: center;*/
     /* margin-top: 15px; */
     overflow: hidden;
     width: 100%;
@@ -191,4 +193,23 @@
 
 .project__route-changer{
     display:none;
+}
+
+.route__item{
+    margin-bottom:5px;
+}
+
+.routes__map{
+    -webkit-transition: height 1s;
+    transition: height 1s;
+    height:0px;
+    margin-top:10px;
+}
+
+.route__item-box{
+    width:100%;
+    margin-bottom:30px;
+}
+.routes__btns{
+    padding:0;
 }

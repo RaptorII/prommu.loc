@@ -167,102 +167,299 @@ $arFilterData = [
         </div>
     </div>
 
-    <div id="#content_top"></div>
+    <div id="content_top"></div>
 
     <div class="rout__main">
         <div class="routes">
             <div class="route__item">
                 <h2 class="route__item-title">Харьков</h2>
-                <table class="route__table">
-                    <thead>
-                    <tr>
-                        <th>ФИО</th>
-                        <th>Название ТТ</th>
-                        <th>Адрес ТТ</th>
-                        <th>Статус посещения</th>
-                        <th>Дата</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td rowspan="3">
-                            <div class="route__table-cell route__table-user">
-                                <img src="/images/applic/20180503073112204100.jpg">
-                                <span>Дмитриев<br/>Николай</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="route__table-cell border">АТБ1</div>
-                        </td>
-                        <td>
-                            <div class="route__table-cell border route__table-index">
-                                <span>ул. Пирогова 23</span>
-                                <b class="js-g-hashint" title="Посмотреть на карте"></b>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="route__table-cell border route__table-status">
-                                <span>2</span>
-                                <a href="#">изменить</a>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="route__table-cell border text-center">14.02.2018</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="route__table-cell border">ВАРУС</div>
-                        </td>
-                        <td>
-                            <div class="route__table-cell border route__table-index">
-                                <span>пр. Кирова 18</span>
-                                <b class="js-g-hashint" title="Посмотреть на карте"></b>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="route__table-cell border route__table-status">
-                                <span>1</span>
-                                <a href="#">изменить</a>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="route__table-cell border text-center">14.02.2018</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="route__table-cell border">СЕЛЬПО</div>
-                        </td>
-                        <td>
-                            <div class="route__table-cell border route__table-index">
-                                <span>ул. Строителей 4</span>
-                                <b class="js-g-hashint" title="Посмотреть на карте"></b>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="route__table-cell border route__table-status">
-                                <span>3</span>
-                                <a href="#">изменить</a>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="route__table-cell border text-center">14.02.2018</div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+
+                <div class="route__item-box">
+                    <table class="route__table">
+                        <thead>
+                        <tr>
+                            <th>ФИО</th>
+                            <th>Название ТТ</th>
+                            <th>Адрес ТТ</th>
+                            <th>Статус посещения</th>
+                            <th>Дата</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td rowspan="3">
+                                <div class="route__table-cell route__table-user">
+                                    <img src="/images/applic/20180503073112204100.jpg">
+                                    <span>Дмитриев<br/>Николай</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border">АТБ1</div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-index">
+                                    <span>ул. Пирогова 23</span>
+                                    <b class="js-g-hashint" title="Посмотреть на карте"></b>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-status">
+                                    <span>2</span>
+                                    <a href="#">изменить</a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border text-center">14.02.2018</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="route__table-cell border">ВАРУС</div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-index">
+                                    <span>пр. Кирова 18</span>
+                                    <b class="js-g-hashint" title="Посмотреть на карте"></b>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-status">
+                                    <span>1</span>
+                                    <a href="#">изменить</a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border text-center">14.02.2018</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="route__table-cell border">СЕЛЬПО</div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-index">
+                                    <span>ул. Строителей 4</span>
+                                    <b class="js-g-hashint" title="Посмотреть на карте"></b>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-status">
+                                    <span>3</span>
+                                    <a href="#">изменить</a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border text-center">14.02.2018</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="routes__map">
+                        <div class="routes__map-city">Харьков</div>
+                        <div class="routes__map-map">
+                            <img src="/theme/pic/projects/temp-map-2.jpg">
+                        </div>
+                    </div>
+                    <div class="routes__btns">
+                        <a href="#content_top" class="route__watch-btn route__button-change">ИЗМЕНИТЬ</a>
+                        <span class="route__watch-btn route__button-map">СМОТРЕТЬ МАРШРУТ</span>
+                    </div>
+                </div>
+
             </div>
-        </div>
-        <div class="routes__map">
-            <div class="routes__map-city">Харьков</div>
-            <div class="routes__map-map">
-                <img src="/theme/pic/projects/temp-map-2.jpg">
+
+            <div class="route__item">
+                <h2 class="route__item-title">Москва</h2>
+
+                <div class="route__item-box">
+                    <table class="route__table">
+                        <thead>
+                        <tr>
+                            <th>ФИО</th>
+                            <th>Название ТТ</th>
+                            <th>Адрес ТТ</th>
+                            <th>Статус посещения</th>
+                            <th>Дата</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td rowspan="3">
+                                <div class="route__table-cell route__table-user">
+                                    <img src="/images/applic/20180503073112204100.jpg">
+                                    <span>Дмитриев<br/>Николай</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border">АТБ1</div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-index">
+                                    <span>ул. Пирогова 23</span>
+                                    <b class="js-g-hashint" title="Посмотреть на карте"></b>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-status">
+                                    <span>2</span>
+                                    <a href="#">изменить</a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border text-center">14.02.2018</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="route__table-cell border">ВАРУС</div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-index">
+                                    <span>пр. Кирова 18</span>
+                                    <b class="js-g-hashint" title="Посмотреть на карте"></b>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-status">
+                                    <span>1</span>
+                                    <a href="#">изменить</a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border text-center">14.02.2018</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="route__table-cell border">СЕЛЬПО</div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-index">
+                                    <span>ул. Строителей 4</span>
+                                    <b class="js-g-hashint" title="Посмотреть на карте"></b>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-status">
+                                    <span>3</span>
+                                    <a href="#">изменить</a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border text-center">14.02.2018</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="routes__map">
+                        <div class="routes__map-city">Москва</div>
+                        <div class="routes__map-map">
+                            <img src="/theme/pic/projects/temp-map-2.jpg">
+                        </div>
+                    </div>
+                    <div class="routes__btns">
+                        <a href="#content_top" class="route__watch-btn route__button-change">ИЗМЕНИТЬ</a>
+                        <span class="route__watch-btn route__button-map">СМОТРЕТЬ МАРШРУТ</span>
+                    </div>
+                </div>
+
+
+                <div class="route__item-box">
+                    <table class="route__table">
+                        <thead>
+                        <tr>
+                            <th>ФИО</th>
+                            <th>Название ТТ</th>
+                            <th>Адрес ТТ</th>
+                            <th>Статус посещения</th>
+                            <th>Дата</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td rowspan="3">
+                                <div class="route__table-cell route__table-user">
+                                    <img src="/images/applic/20180503073112204100.jpg">
+                                    <span>Дмитриев<br/>Николай</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border">АТБ1</div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-index">
+                                    <span>ул. Пирогова 23</span>
+                                    <b class="js-g-hashint" title="Посмотреть на карте"></b>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-status">
+                                    <span>2</span>
+                                    <a href="#">изменить</a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border text-center">15.02.2018</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="route__table-cell border">ВАРУС</div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-index">
+                                    <span>пр. Кирова 18</span>
+                                    <b class="js-g-hashint" title="Посмотреть на карте"></b>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-status">
+                                    <span>1</span>
+                                    <a href="#">изменить</a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border text-center">15.02.2018</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="route__table-cell border">СЕЛЬПО</div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-index">
+                                    <span>ул. Строителей 4</span>
+                                    <b class="js-g-hashint" title="Посмотреть на карте"></b>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border route__table-status">
+                                    <span>3</span>
+                                    <a href="#">изменить</a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="route__table-cell border text-center">15.02.2018</div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="routes__map">
+                        <div class="routes__map-city">Москва</div>
+                        <div class="routes__map-map">
+                            <img src="/theme/pic/projects/temp-map-2.jpg">
+                        </div>
+                    </div>
+                    <div class="routes__btns">
+                        <a href="#content_top" class="route__watch-btn route__button-change">ИЗМЕНИТЬ</a>
+                        <span class="route__watch-btn route__button-map">СМОТРЕТЬ МАРШРУТ</span>
+                    </div>
+                </div>
+
             </div>
-        </div>
-        <div class="routes__btns">
-            <a href="#" onclick="return false" class="route__watch-btn route__button-change">ИЗМЕНИТЬ</a>
-            <a href="#" class="route__watch-btn">СМОТРЕТЬ МАРШРУТ</a>
         </div>
     </div>
     <div class="project__route-changer">
@@ -275,7 +472,7 @@ $arFilterData = [
                 </div>
                 <div id="sortable">
 
-                    <div class="route__table-item">
+                    <div class="route__table-item" data-location="1">
                         <div class="route__table-item__number">
                             <div class="route__table-cell route__table-number">1</div>
                         </div>
@@ -289,7 +486,7 @@ $arFilterData = [
                         </div>
                     </div>
 
-                    <div class="route__table-item">
+                    <div class="route__table-item" data-location="2">
                         <div class="route__table-item__number">
                             <div class="route__table-cell route__table-number">2</div>
                         </div>
@@ -303,7 +500,7 @@ $arFilterData = [
                         </div>
                     </div>
 
-                    <div class="route__table-item">
+                    <div class="route__table-item" data-location="3">
                         <div class="route__table-item__number">
                             <div class="route__table-cell route__table-number">3</div>
                         </div>
@@ -317,7 +514,7 @@ $arFilterData = [
                         </div>
                     </div>
 
-                    <div class="route__table-item">
+                    <div class="route__table-item" data-location="4">
                         <div class="route__table-item__number">
                             <div class="route__table-cell route__table-number">4</div>
                         </div>
@@ -331,7 +528,7 @@ $arFilterData = [
                         </div>
                     </div>
 
-                    <div class="route__table-item">
+                    <div class="route__table-item" data-location="5">
                         <div class="route__table-item__number">
                             <div class="route__table-cell route__table-number">5</div>
                         </div>
@@ -366,7 +563,8 @@ $arFilterData = [
         </div>
 
         <div class="routes__btns route__table-buttons">
-            <a href="#" class="route__watch-btn route__button-save">СОХРАНИТЬ</a>
+            <span class="route__watch-btn route__button-save">СОХРАНИТЬ</span>
+            <span class="route__watch-btn route__button-cancel">ОТМЕНИТЬ</span>
         </div>
 
     </div>
