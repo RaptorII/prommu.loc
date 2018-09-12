@@ -974,7 +974,7 @@ class SiteController extends Controller
                 if($_POST['Vacancy']['ageto'] == 0) {
                     $_POST['Vacancy']['ageto'] == $_POST['Vacancy']['agefrom'];
                 }
-                $model->updateVacancy($_POST['Vacancy'], $id);
+                $model->updateVacancy($id, $_POST['Vacancy']);
 
                 $model->unsetAttributes();  // clear any default values
                 $model->searchvac();
@@ -1227,8 +1227,7 @@ class SiteController extends Controller
         
         if(self::isAuth()) {
             $model = new Vacancy;
-            $curr_status = $_POST['curr_status'];
-            $model->VacancyModer($id, $curr_status);
+            $model->updateVacancy($id, array('ismoder'=>$_POST['curr_status']));
             $model->unsetAttributes();  // clear any default values
             $model->searchvac(); 
             $model->status=1;

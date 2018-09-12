@@ -661,68 +661,142 @@ public function rules()
         return $data;
     }
 
-    public function updateVacancy($data, $id)
+    public function updateVacancy($id, $data)
     {
-        if(!isset($data['index']))
-            $data['index'] = 0;
-		if(empty($data['ismoder'])) $data['ismoder'] = 0;
-		    $res = Yii::app()->db->createCommand()
-            ->update('empl_vacations', $data
-                ,'id = :id', array(':id' => $id) );
-         $vac = $this->getVacancyInfo($id);
-        if($data['ismoder'] == "100" ){
-        $vac = $this->getVacancyInfo($id);
-          $message = sprintf("Ув. %s. 
-                        <br />
-                        <br />
-                        Ваша вакансия «%s» прошла модерацию и опубликована на сервисе PROMMU.COM
-                        <br />
-                        <br />
-                        Сообщаем Вам что информацию по данным вакансии можете корректировать исходя из возникших ситуаций и задач.
-                        <br />
-                        Ссылка на Вашу вакансию: <a href='https://%3$01s'>%s</a>
-                        <br />
-                        <br />
-                        Преимущества размещения вакансии на сервисе ПРОММУ:
-                        <ol>
-                          <li>Большая база проверенного персонала</li>
-                          <li>Система отзывов и рейтинга персонала</li>
-                          <li>Размещение вакансии происходит с подсказками и с возможностью учесть все мелочи по вакансии (избежание дополнительных утомительных вопросов)</li>
-                          <li>Push оповещения персонала персонала подходящего под указанные параметры в вакансии</li>
-                          <li>Обсуждение вакансии на сервисе онлайн со всеми отобранными соискателями (всех кого отобрали позже – смогут прочесть все ранее написанные сообщения)</li>
-                          <li>Отбирать и Отклонять кандидатов на вакансию в 1 клик</li>
-                          <li>И много других преимуществ, которые Вы ощутите работая на нашем сервисе</li>
-                          <li>Легких, прибыльных и удачных Вам проектов.</li>
-                        </ol>
-                        Если у Вас возникли сложности или есть дополнительные вопросы обращайтесь сюда <a href='mailto:%4$01s'>%s</a> мы максимально быстро дадим ответ",
-                    $vac[0]['name'],
-                    $vac[0]['title'],
-                    MainConfig::$SITE . MainConfig::$PAGE_VACANCY . "/" . $id,
-                    "https://prommu.com/feedback"
+        // сохранение вакансии
+        if(sizeof($data['Vacancy'])>0) {
+            $data['index'] = isset($data['index']) ? : 0;
+            $data['ismoder'] = empty($data['ismoder']) ? : 0;
+        }
+        Yii::app()->db->createCommand()
+            ->update('empl_vacations', $data, 'id=:id', array(':id'=>$id));
+
+        if($data['ismoder'] != "100" )
+            return;
+
+        // достаем данные вакансии
+        $arVac = Yii::app()->db->createCommand()
+            ->select('v.id, v.id_user, v.title, 
+                v.isman, v.iswoman, v.ismed, 
+                v.isavto, v.smart, v.card, 
+                v.cardPrommu, v.repost, 
+                e.name, u.email')
+            ->from('empl_vacations v')
+            ->leftJoin('employer e', 'e.id_user=v.id_user')
+            ->leftJoin('user u', 'u.id_user=v.id_user')
+            ->where('v.id=:id', array(':id' => $id))
+            ->queryRow();
+        // достаем города вакансии
+        $arVac['cities'] = Yii::app()->db->createCommand()
+            ->select('ec.id_city, c.id_co, c.name')
+            ->from('empl_city ec')
+            ->leftJoin('city c', 'c.id_city=ec.id_city')
+            ->where('ec.id_vac=:id', array(':id' => $id))
+            ->queryAll();
+        // достаем должности вакансии
+        $arVac['posts'] = Yii::app()->db->createCommand()
+            ->select('uad.id, uad.name')
+            ->from('empl_attribs ea')
+            ->leftJoin('user_attr_dict uad', 'uad.key=ea.key')
+            ->where('ea.id_vac=:id AND uad.id_par=110', array(':id' => $id))
+            ->queryAll();
+        // создаем параметры для фильтра
+        $host = Subdomain::$HOST;
+        $url = $host . MainConfig::$PAGE_SEARCH_PROMO . '?';
+        foreach ($arVac['cities'] as $c) {
+            $_POST['cities'][] = $c['id_city'];
+            $url .= 'cities[]=' . $c['id_city'] . '&';
+        }
+
+        foreach ($arVac['posts'] as $p) {
+            $_POST['posts'][] = $p['id'];
+            $url .= 'posts[]=' . $p['id'] . '&';
+        }
+        $_POST['sm'] = $arVac['isman'];
+        $_POST['sf'] = $arVac['iswoman'];
+        $_POST['mb'] = $arVac['ismed'];
+        $_POST['avto'] = $arVac['isavto'];
+        $_POST['smart'] = $arVac['smart'];
+        $_POST['card'] = $arVac['card'];
+        $_POST['cardPrommu'] = $arVac['cardPrommu'];
+
+        $url .= 'sm=' . $arVac['isman'] . '&'
+            . 'sf=' . $arVac['iswoman'] . '&'
+            . 'mb=' . $arVac['ismed'] . '&'
+            . 'avto=' . $arVac['isavto'] . '&'
+            . 'smart=' . $arVac['smart'] . '&'
+            . 'card=' . $arVac['card'] . '&'
+            . 'cardPrommu=' . $arVacInfo['cardPrommu'];
+        // ищем 10 соискателей, и сортируем, чтобы сначала вывести с фото
+        $sPromo = new SearchPromo();
+        $cnt = $sPromo->searchPromosCount();
+        $pages = new CPagination($cnt);
+        $pages->pageSize = 10;
+        $pages->applyLimit($sPromo);
+        $arr = $sPromo->getPromos(true)['promo'];
+
+        $arRes = array();
+        foreach ($arr as $u) {
+            $u['src'] = $host . '/' . MainConfig::$PATH_APPLIC_LOGO . '/' . 
+                ($u['photo'] 
+                    ? ($u['photo'] . '100.jpg')
+                    : ($u['isman'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F)
                 );
+            $u['link'] = $host . MainConfig::$PAGE_PROFILE_COMMON . '/' . $u['id_user'];
+            $u['name'] = trim($u['firstname'] . ' ' . $u['lastname']);
+            $datetime = new DateTime($u['birthday']);
+            $interval = $datetime->diff(new DateTime(date("Y-m-d")));
+            $u['years'] = $interval->format("%Y");
+            $u['years'] = $u['years'] . ' ' . Share::endingYears($u['years']);
+            empty($u['photo']) ? array_push($arRes, $u) : array_unshift($arRes, $u);
+        }
+        // формируем html письма
+        $file = file_get_contents(__DIR__ . '\..\views\mails\after-moder-vac.php');
+        preg_match_all('/#LPLACE(.*?)#LPLACE|#CYCLE(.*?)#CYCLE/', $file, $matches);
 
-                Share::sendmail($vac[0]['email'], "Prommu.com. Вакансия прошла модерацию", $message);
-
-        $this->VkRepost($id, $vac[0]['repost']);
-
-        $ids = $vac[0]['id_user'];
-      
-        $sql = "SELECT r.push
-        FROM user_push r
-        WHERE r.id = {$ids}";
-        $res = Yii::app()->db->createCommand($sql)->queryRow(); 
-
-
+        $listPlace = '';
+        if(sizeof($arRes)>=5) {
+            $list = '';
+            for ($i=0; $i<5; $i++) {
+                $e = $arRes[$i];
+                $list .= preg_replace(
+                    array('/#ALINK/','/#ASRC/','/#ANAME/','/#ACITY/','/#AYEARS/'), 
+                    array($e['link'],$e['src'],$e['name'],join(', ',$e['city']),$e['years']), 
+                    $matches[2][1]
+                );
+            }
+            $listPlace = preg_replace(
+                    array('/#LCONTENT/', '/#ANKETY/'), 
+                    array($list, $url), 
+                    $matches[1][0]
+                );
+        }
+        $arNeed = array('/#EMP/','/#VNAME/','/#VLINK/','/#CONTACT/');
+        $arRpls = array(
+                $arVac['name'],
+                $arVac['title'],
+                $host . MainConfig::$PAGE_VACANCY . "/" . $id,
+                $host . MainConfig::$PAGE_FEEDBACK
+            );
+        $file = preg_replace($arNeed, $arRpls, $file);
+        $file = str_replace($matches[0][0], $listPlace, $file);
+        $message = str_replace($matches[0][1], '', $file);
+        // письмо работодателю
+        Share::sendmail($arVac['email'], "Prommu.com. Вакансия прошла модерацию", $message);
+        // репостим
+        $this->VkRepost($id, $arVac['repost']);
+        // событие ПУШ
+        $res = Yii::app()->db->createCommand()
+            ->select("push")
+            ->from('user_push')
+            ->where('id=:id',array(':id'=>$arVac['id_user']))
+            ->queryRow();
 
         if($res) {
             $type = "vacmoder";
             $api = new Api();
             $api->getPush($res['push'], $type);
-        
-                }
-            }
-
-            
+        } 
     }
 
     public function ChangeModer($id, $st)
@@ -731,68 +805,6 @@ public function rules()
             ->update('empl_vacations', array(
                 'status' => $st,
             ), 'id=:id', array(':id' => $id));
-    }
-
-    public function VacancyModer($id, $sta)
-    {
-        Yii::app()->db->createCommand()
-            ->update('empl_vacations', array(
-                'ismoder' => $sta,
-            ), 'id=:id', array(':id' => $id));
-
-        if($sta == "100"){
-            $vac = $this->getVacancyInfo($id);
-              $message = sprintf("Ув. %s. 
-                            <br />
-                            <br />
-                            Ваша вакансия «%s» прошла модерацию и опубликована на сервисе PROMMU.COM
-                            <br />
-                            <br />
-                            Сообщаем Вам что информацию по данным вакансии можете корректировать исходя из возникших ситуаций и задач.
-                            <br />
-                            Ссылка на Вашу вакансию: <a href='https://%3$01s'>%s</a>
-                            <br />
-                            <br />
-                            Преимущества размещения вакансии на сервисе ПРОММУ:
-                            <ol>
-                              <li>Большая база проверенного персонала</li>
-                              <li>Система отзывов и рейтинга персонала</li>
-                              <li>Размещение вакансии происходит с подсказками и с возможностью учесть все мелочи по вакансии (избежание дополнительных утомительных вопросов)</li>
-                              <li>Push оповещения персонала персонала подходящего под указанные параметры в вакансии</li>
-                              <li>Обсуждение вакансии на сервисе онлайн со всеми отобранными соискателями (всех кого отобрали позже – смогут прочесть все ранее написанные сообщения)</li>
-                              <li>Отбирать и Отклонять кандидатов на вакансию в 1 клик</li>
-                              <li>И много других преимуществ, которые Вы ощутите работая на нашем сервисе</li>
-                              <li>Легких, прибыльных и удачных Вам проектов.</li>
-                            </ol>
-                            Если у Вас возникли сложности или есть дополнительные вопросы обращайтесь сюда <a href='mailto:%4$01s'>%s</a> мы максимально быстро дадим ответ",
-                        $vac[0]['name'],
-                        $vac[0]['title'],
-                        MainConfig::$SITE . MainConfig::$PAGE_VACANCY . "/" . $id,
-                        "https://prommu.com/feedback"
-                    );
-
-                    Share::sendmail($vac[0]['email'], "Prommu.com. Вакансия прошла модерацию", $message);
-
-            $this->VkRepost($id, $vac[0]['repost']);
-
-            $ids = $vac[0]['id_user'];
-          
-            $sql = "SELECT r.push
-            FROM user_push r
-            WHERE r.id = {$ids}";
-            $res = Yii::app()->db->createCommand($sql)->queryRow(); 
-
-
-
-            if($res) {
-                $type = "vacmoder";
-                $api = new Api();
-                $api->getPush($res['push'], $type);
-            
-                    }
-
-        }
-
     }
 
     private function getVacancyEditData($inVacData = array())
