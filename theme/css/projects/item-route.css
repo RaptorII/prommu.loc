@@ -125,6 +125,7 @@
 .project__changer-content{
     width:90%;
     float: left;
+    margin-bottom:25px;
 }
 .route__table-item{
     border-bottom: 1px solid #dedede;
@@ -200,10 +201,16 @@
 }
 
 .routes__map{
-    -webkit-transition: height 1s;
-    transition: height 1s;
+    -webkit-transition: all ease-out 1s;
+    -moz-transition: all ease-out 1s;
+    -o-transition: all ease-out 1s;
+    transition: all ease-out 1s;
     height:0px;
     margin-top:10px;
+}
+
+.map_active{
+    height: initial;
 }
 
 .route__item-box{

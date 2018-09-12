@@ -44,7 +44,18 @@ let IndexRoute = (function () {
             self.mapOpen(this);
         });
 
-
+        //меняем местами
+        $(".project__route-touch.touch__arrow-top").click(function(){
+            var pdiv = $(this).closest('.project__route-changer').find('.route__table-active');
+            pdiv.insertBefore(pdiv.prev());
+            return false
+        });
+        //меняем местами
+        $(".project__route-touch.touch__arrow-bottom").click(function(){
+            var pdiv = $(this).closest('.project__route-changer').find('.route__table-active');
+            pdiv.insertAfter(pdiv.next());
+            return false
+        });
     };
 
     IndexRoute.prototype.getSortData = function () {
@@ -59,7 +70,14 @@ let IndexRoute = (function () {
 
     IndexRoute.prototype.mapOpen = function (e) {
         let map = $(e).closest('.route__item-box').find('.routes__map');
-        map.css({'height':'auto'});
+        if(!map.hasClass('map_active')){
+            map.addClass('map_active');
+            $(e).html('СКРЫТЬ МАРШРУТ');
+        }
+        else{
+            map.removeClass('map_active');
+            $(e).html('СМОТРЕТЬ МАРШРУТ');
+        }
     };
 
     IndexRoute.prototype.ajaxPushParams = function (data, type) {
@@ -74,6 +92,9 @@ let IndexRoute = (function () {
                 location.reload();
             }
         });
+
+        $('.project__route-changer').hide();
+        $('.rout__main').show();
     };
     return IndexRoute;
 }());
