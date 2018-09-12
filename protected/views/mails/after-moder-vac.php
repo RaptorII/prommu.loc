@@ -1,4 +1,4 @@
-Ув. #EMP.<br/><br/>
+<tr><td>Ув. #EMP.<br/><br/>
 Ваша вакансия «#VNAME» прошла модерацию и опубликована на сервисе PROMMU.COM<br/><br/>
 Сообщаем Вам что информацию по данным вакансии можете корректировать исходя из возникших ситуаций и задач.<br/>
 Ссылка на Вашу вакансию: <a href='#VLINK'>#VNAME</a><br/><br/>
@@ -15,4 +15,5 @@
 	<li>Легких, прибыльных и удачных Вам проектов.</li>
 </ol>
 Если у Вас возникли сложности или есть дополнительные вопросы обращайтесь <a href='#CONTACT'>сюда</a>. Мы максимально быстро дадим ответ;
+</td></tr>
 #CYCLE<tr style="border-top:1px solid #f4f4f4"><td style="width:200px"><a href="#ALINK#"><img src="#ASRC" alt="#ANAME" style="width:169px;height:169px;border-radius:50%;border:2px solid #CBD880;margin:10px"></a><td><a href="#ALINK#">#ANAME</a><br/>#ACITY<br/>#AYEARS</tr>#CYCLE
