@@ -1590,6 +1590,8 @@ class UserController extends AppController
                     $model->getXLSFile();
                     break;
                 case 'geo':
+                    $data = $model->getProject($id);
+                    $data = $model->buildTaskArray($data);
                     $view = MainConfig::$VIEW_PROJECT_ITEM_GEO;
                     break;
                 case 'route':
