@@ -55,7 +55,7 @@
                             </td>
                             <td>
                                 <div class="geo__table-cell">
-                                    <a href="<? echo MainConfig::$PAGE_PROJECT_LIST . '/' . $project . '/geo/' . $keyUser ?>">подробнее</a>
+                                    <a href="<? echo MainConfig::$PAGE_PROJECT_LIST . '/' . $project . '/geo/' . $keyUser .'/'.$keyTimeStamp.'/' ?>">подробнее</a>
                                 </div>
                             </td>
                         </tr>

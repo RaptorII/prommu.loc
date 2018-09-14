@@ -1,6 +1,7 @@
 <?php
 $bUrl = Yii::app()->baseUrl;
 $idus = Yii::app()->getRequest()->getParam('user_id');
+$unixTime = Yii::app()->getRequest()->getParam('unix');
 $project = Yii::app()->getRequest()->getParam('id');
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-geo.css');
@@ -162,6 +163,7 @@ $viData['states'] = array(
                     <input type="hidden" name="city" class="city-input" value="0">
                 </div>
             </div>
+
             <div class="geo__header-date">
                 <div class="calendar-filter">
                     <label>Дата с</label>
@@ -224,12 +226,14 @@ $viData['states'] = array(
             <? require __DIR__ . '/project-geo-ajax.php'; // СПИСОК ?>
         </div>
     <?php else: ?>
-        <?$arUser = $viData['users'][$idus];?>
+        <?
+            $arUser = $viData['users'][$idus];
+        ?>
         <div class="geo__item-cart">
             <div class="geo-item__cart-data">
-                <img src="<?=$arUser['src']?>">
+                <img src="<?= $arUser['src'] ?>">
                 <div class="geo-item__cart-info">
-                    <form action="" class="geo-item__cart-filter" id="filter-form">
+                   <?/* <form action="" class="geo-item__cart-filter" id="filter-form">
                         <div class="geo__header-date user__header-date">
                             <div class="calendar-filter">
                                 <label>Дата с</label>
@@ -283,21 +287,21 @@ $viData['states'] = array(
                             </div>
                         </div>
                         <input type="hidden" name="project" value="<?= $project ?>" class="project-inp">
-                    </form>
+                    </form>*/?>
 
 
                     <div class="geo-item__cart-bl1">
-                        <div class="geo-item__cart-name"><?=$arUser['name']?></div>
+                        <div class="geo-item__cart-name"><?= $arUser['name'] ?></div>
                         <div class="geo-item__cart-border">
                             <div>
 
-                                <?if($arUser['status']!=0):?>
-                                <span class="geo__green">&#9679 активен</span>
-                                <?else:?>
-                                <span class="geo__red">&#9679 неактивен</span>
-                                <?endif;?>
+                                <? if ($arUser['status'] != 0): ?>
+                                    <span class="geo__green">&#9679 активен</span>
+                                <? else: ?>
+                                    <span class="geo__red">&#9679 неактивен</span>
+                                <? endif; ?>
                             </div>
-                            <div>Дата: 06.02.2018</div>
+                            <div>Дата: <?=$unixTime?></div>
                         </div>
                     </div>
 
@@ -322,39 +326,49 @@ $viData['states'] = array(
                 </div>
             </div>
             <div id="user-data">
-                <table class="geo__item-table geo-item__table-single">
-                    <thead>
-                    <tr>
-                        <th>Название</th>
-                        <th>Адрес</th>
-                        <th>План работ</th>
-                        <th>Факт работ</th>
-                        <th>Задачи по ТТ</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <div class="geo__table-cell">АТБ1</div>
-                        </td>
-                        <td>
-                            <div class="geo__table-cell geo__table-loc">
-                                <span>ул. Пирогова 23</span>
-                                <b class="js-g-hashint" title="Посмотреть на карте"></b>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="geo__table-cell">07.02.2018 14:00</div>
-                        </td>
-                        <td>
-                            <div class="geo__table-cell">07.02.2018 с 9:00 до 18:00</div>
-                        </td>
-                        <td>
-                            <div class="geo__table-cell">12</div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+
+                <? foreach ($viData['items'][$unixTime] as $keyUnix => $valueUnix): ?>
+                    <? if (isset($valueUnix['users'][$idus]) && !empty($valueUnix['users'][$idus])): ?>
+                        <h2 class="geo__item-title"><?= $valueUnix['city'] ?> <span><?= $valueUnix['date'] ?></span></h2>
+                        <table class="geo__item-table geo-item__table-single">
+                            <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th>Адрес</th>
+                                <th>План работ</th>
+                                <th>Факт работ</th>
+                                <th>Задачи по ТТ</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <? foreach ($valueUnix['users'][$idus] as $keyItem => $valueItem): ?>
+                            <tr>
+                                <td>
+                                    <div class="geo__table-cell"><?=$viData['points'][$valueItem]['name'];?></div>
+                                </td>
+                                <td>
+                                    <div class="geo__table-cell geo__table-loc">
+                                        <span><?=$viData['points'][$valueItem]['adres'];?></span>
+                                        <b class="js-g-hashint" title="Посмотреть на карте"></b>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="geo__table-cell">07.02.2018 14:00</div>
+                                </td>
+                                <td>
+                                    <div class="geo__table-cell">07.02.2018 с 9:00 до 18:00</div>
+                                </td>
+                                <td>
+                                    <div class="geo__table-cell">12</div>
+                                </td>
+                            </tr>
+                            <? endforeach; ?>
+
+                            </tbody>
+                        </table>
+                    <? endif; ?>
+                <? endforeach; ?>
             </div>
         </div>
     <?php endif; ?>
