@@ -126,7 +126,7 @@ class Api
             ->join('project_binding pb', 'pb.user=pc.user')
             ->join('project_city prc', 'prc.point=pb.point')
             ->where('pc.project = :project', array(':project' =>$project))
-            ->order('pb.point desc')
+            ->groupby('pc.user desc')
             ->queryAll();
         
         return $data;
