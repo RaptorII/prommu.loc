@@ -136,7 +136,7 @@ class Api
             ->where('pc.project = :project AND pc.user = :user', array(':project' =>$project, ':user' => $data[$i]['user']))
             ->queryAll();
             
-            $data[$i]['point'] = $datas;
+            $data[$i]['point'].= $datas[0]['name'].',';
         }
         
         return $data;
