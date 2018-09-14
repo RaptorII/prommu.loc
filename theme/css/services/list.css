@@ -1,0 +1,144 @@
+.services, .services *{ 
+	color: #212121;
+	font-family: RobotoCondensed-Regular, verdana, arial; 
+}
+.services{ margin-top: 15px }
+.services__item{
+	position: relative;
+	padding: 8px 0 20px;
+}
+.services__prev{}
+.services__detail{}
+.services__price{}
+.services__item-icon{
+	width: 58px;
+	height: 58px;
+	border-radius: 50%;
+	background: #abb92a url(/theme/pic/services-page/new-services-icons.png) no-repeat;
+	position: absolute;
+	top: -8px;
+	left: 15px;
+	z-index: 2;
+}
+.services__item-icon.premium-vacancy{ background-position: 0 -58px;  }
+.services__item-icon.invitations{ background-position: 0 -116px;  }
+.services__item-icon.geolocation-staff{ background-position: 0 -174px;  }
+.services__item-icon.personal-manager-outsourcing{ background-position: 0 -232px;  }
+.services__item-icon.outstaffing{ background-position: 0 -290px;  }
+.services__item-icon.prommu_card{ background-position: 0 -348px;  }
+.services__item-icon.medical-record{ background-position: 0 -406px;  }
+.services__item-icon.api-key-prommu{ background-position: 0 -464px;  }
+.services__item-label{
+	padding: 10px 15px 10px 57px;
+	margin-left: 8px;
+	margin-bottom: 13px;
+	background-color: #ededed;
+	font-size: 16px;
+	border-radius: 21px;
+	position: relative;
+	z-index: 1;
+}
+.services__item-label.upper{ text-transform: uppercase }
+.services__item-descr{
+	padding-left: 65px;
+	font-size: 14px;
+}
+#DiContent .services__detail a{
+	width: 120px;
+	display: block;
+	text-align: center;
+	font-size: 16px;
+	padding: 8px;
+	margin: 0 auto 5px;
+	border: 2px solid #abb92a;
+	border-radius: 21px;
+}
+#DiContent .services__detail a:hover{
+	background-color: #abb92a;
+	color: #ffffff;
+}
+.services__price-item{
+	font-size: 16px;
+	padding: 8px;
+	margin-bottom: 5px;
+	border: 1px solid #dedede;
+	border-radius: 21px;
+	text-align: center;
+}
+#DiContent .services__order a{
+	display: block;
+	text-align: center;
+	font-size: 16px;
+	color: #ffffff;
+	font-weight: bold;
+	padding: 8px;
+	margin-bottom: 5px;
+	border-radius: 21px;
+	background-color: #abb92a;
+	border: 2px solid #abb92a;
+}
+#DiContent .services__order a:hover{
+	background-color: #ffffff;
+	color: #abb92a;
+}
+/*
+*
+*/
+.services__item-sub{
+	padding: 8px 0 20px;
+}
+.services__sublevel{
+	padding-bottom: 20px;
+}
+.services__parent{
+	position: relative;
+	padding: 0 15px;
+}
+.services__sub-label{
+	padding: 10px 10px 10px 48px;
+	margin-bottom: 13px;
+	background-color: #ededed;
+	font-size: 14px;
+	text-align: center;
+	border-radius: 21px;
+	position: relative;
+	overflow: hidden;
+}
+.services__sub-label:before{
+	content: '';
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	background: #abb92a url(/theme/pic/services-page/new-services-icons.png) no-repeat;
+	position: absolute;
+	top: -3px;
+	left: 0;
+}
+.services__sub-label.email-invitation:before{ background-position: 0 -522px }
+.services__sub-label.push-notification:before{ background-position: 0 -570px }
+.services__sub-label.sms-informing-staff:before{ background-position: 0 -618px }
+.services__sub-label.publication-vacancy-social-net:before{ background-position: 0 -666px }
+.services__sub-descr{ padding-left: 10px; }
+.services__detail-sub, .services__order-sub{ margin-top: 55px; }
+/*
+*		Modal
+*/
+#DiContent #MWwrapper .mw-bg, #MWwrapper .mw-bg { display: none; position: fixed; left: 0; top: 0; right: 0; bottom: 0; background: #000; opacity: .5; z-index: 1000000; }
+#DiContent #MWwrapper .mw-win, #MWwrapper .mw-win { display: none; position: fixed; top: 50%; padding: 20px 40px; background: #fff; border: 1px solid silver; z-index: 1000000; }
+#DiContent #MWwrapper .mw-close, #MWwrapper .mw-close { display: block; position: absolute; width: 36px; height: 36px; right: -18px; top: -18px; background: transparent url(/theme/pic/ico-mw.png) -44px 0 no-repeat; }
+#DiContent #MWwrapper .mw-close i, #MWwrapper .mw-close i { display: block; width: 36px; height: 36px; background: transparent url(/theme/pic/ico-mw.png) 0px 0 no-repeat; opacity: 0; transition: opacity .5s; }
+#DiContent #MWwrapper .mw-close:hover i, #MWwrapper .mw-close:hover i { opacity: 1; }
+#DiContent #MWwrapper .header, #MWwrapper .header { position: relative; margin: 20px 0 0 0; width: 100%; border-top: 1px solid #abb820; text-align: center; }
+#DiContent #MWwrapper .header div, #MWwrapper .header div { display: inline-block; position: relative; top: -10px; padding: 0 15px; background: #fff; font-size: 14px; text-transform: uppercase; font-family: Roboto-Regular, verdana, arial; font-weight: bold; }
+#DiContent #MWwrapper .header2, #MWwrapper .header2 { margin: -5px 0 25px; font-size: 14px; text-transform: uppercase; color: #abb820; font-family: Roboto-Regular, verdana, arial; font-weight: bold; text-align: center; }
+#DiContent #MWwrapper .field-t2-hor, #MWwrapper .field-t2-hor { display: block; margin-bottom: 10px; font-family: Roboto-Regular, verdana, arial; }
+#DiContent #MWwrapper .field-t2-hor b, #MWwrapper .field-t2-hor b { display: inline-block; font-size: 14px; }
+#DiContent #MWwrapper .field-t2-hor input[type=text], #MWwrapper .field-t2-hor input[type=text] { padding: 3px 10px; font-size: 13px; font-family: Roboto-Regular; background: #fff; border-radius: 0; }
+#DiContent #MWwrapper .btn-white-green-2, #MWwrapper .btn-white-green-2 { text-align: center; }
+#DiContent #MWwrapper .btn-white-green-2 a, #DiContent #MWwrapper .btn-white-green-2 button, #MWwrapper .btn-white-green-2 a, #MWwrapper .btn-white-green-2 button { display: inline-block; padding: 5px 35px; background: #fff; border: 1px solid #abb820; color: #abb820; font-size: 14px; font-family: RobotoCondensed-Regular, verdana, arial; text-transform: uppercase; transition: background .5s, color .5s; }
+#DiContent #MWwrapper .btn-white-green-2 a:hover, #DiContent #MWwrapper .btn-white-green-2 button:hover, #MWwrapper .btn-white-green-2 a:hover, #MWwrapper .btn-white-green-2 button:hover { background: #abb820; color: #FFF; }
+#DiContent #MWwrapper .button-action, #MWwrapper .button-action { text-align: center; }
+#DiContent #MWwrapper .button-action button, #MWwrapper .button-action button { display: inline-block; margin: 20px 0 0; padding: 5px 15px; line-height: 16px; text-decoration: none; color: #212121; font-weight: bold; text-transform: uppercase; font-family: RobotoCondensed-Regular; border: 1px solid #212121; border-radius: 3px; font-size: 10px; text-align: center; transition: .3s all; background: #fff !important; font-size: 13px; }
+#DiContent #MWwrapper .button-action button:hover, #MWwrapper .button-action button:hover { color: #fff; background: #abb820 !important; }
+#DiContent #MWwrapper .loading, #MWwrapper .loading { display: block; position: absolute; margin: -26px 0 0 -26px; left: 50%; top: 50%; padding: 10px; border: 1px solid silver; border-radius: 5px; background: #fff; }
+#DiContent #MWwrapper .loading i, #MWwrapper .loading i { display: block; width: 32px; height: 32px; background: transparent url(/theme/pic/loading1.gif) 0 0 no-repeat; }

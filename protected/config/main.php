@@ -145,6 +145,7 @@ return array(
                 '<page:about>/<section:[\w-]+>' => 'site/<page>',
                 '<page:about>/<section:[\w-]+>/<id:[\w-]+>' => 'site/<page>',
                 'imfiles' => 'site/imfiles',
+                '<controller:user>/<action:services>/<id:[\w-]+>' => '<controller>/<action>',
                 // projects
                 '<controller:user>/<action:projects>/<id:[\w-]+>' => '<controller>/<action>',
                 '<controller:user>/<action:projects>/<id:[\w-]+>/<section:[\w-]+>' => '<controller>/<action>',

@@ -12,15 +12,23 @@ class Services extends Model
      */
     public function getServiceData($inLink, $inId = 0)
     {
+        $lang = Yii::app()->session['lang'];
+
         if( $inLink ) $where = "p.link = '{$inLink}'";
         else $where = "p.id = '{$inId}'";
 
-        $sql = "SELECT p.id
-              , pc.name, pc.html, pc.img, pc.imganons, pc.meta_title, pc.meta_description
+        $sql = "SELECT p.id, p.link, pc.name, 
+                pc.html, pc.img, pc.imganons, 
+                pc.meta_title, pc.meta_description
             FROM pages p
-            INNER JOIN pages_content pc ON p.id = pc.page_id AND pc.lang = 'ru'
+            INNER JOIN pages_content pc ON p.id = pc.page_id AND pc.lang = '{$lang}'
             WHERE {$where}";
-        return Yii::app()->db->createCommand($sql)->queryRow();
+        $data['service'] = Yii::app()->db->createCommand($sql)->queryRow();
+        // получаем должности
+        $sql = "SELECT m.id , m.`key` , m.name val FROM user_attr_dict m WHERE m.id_par = 110  ORDER BY val";
+        $data['posts'] = Yii::app()->db->createCommand($sql)->queryAll();
+
+        return $data;
     }
 
 
@@ -28,30 +36,32 @@ class Services extends Model
     /**
      * получаем все услуги
      */
-    public function getServices($inId = 0)
+    public function getServices()
     {
+        $data = array();
         $lang = Yii::app()->session['lang'];
 
-        $sql = "SELECT p.id, p.link
-              , pc.name, pc.anons, pc.html, pc.img, pc.imganons
+        $sql = "SELECT p.id, p.link, pc.name, pc.anons, 
+                pc.html, pc.img, pc.imganons
             FROM pages p
             INNER JOIN pages_content pc ON p.id = pc.page_id AND pc.lang = '{$lang}'
             WHERE p.group_id = 3 
             ORDER BY npp ";
         $res = Yii::app()->db->createCommand($sql)->queryAll();
-        foreach ($res as $key => $val)
-        {
-            $data[$val['id']] = $val;
-        } // end foreach
-        $data = array('services' => $data);
-
-
-        // получаем должности
-        $sql = "SELECT m.id , m.`key` , m.name val FROM user_attr_dict m WHERE m.id_par = 110  ORDER BY val";
-        $data['posts'] = Yii::app()->db->createCommand($sql)->queryAll();
 
         // получаем меню услуг
-        $data['menu'] = $this->getMenu($inId);
+        $menu = $this->getMenu();
+
+        foreach ($res as $s) {
+            $data['services'][$s['id']] = $s;
+            foreach ($menu as $m) {
+                $m['icon'] = str_replace('/services/', '', $m['link']);
+                if($m['icon']==$s['link'] || $m['icon']=='invitations') {
+                    $m['anons'] = $s['anons'];
+                    $data['menu'][$m['parent_id']][$m['id']] =  $m; 
+                }
+            }
+        }
 
         return $data;
     }
@@ -219,23 +229,13 @@ class Services extends Model
 
 
 
-    private function getMenu($inId)
+    private function getMenu()
     {
-//        $uri = Share::getModuleName();
         $lang = Share::getLangSelected();
-
         $menu = new Menu;
-        $res = $menu->getTreeDB(0, $lang, 2, 0); // главное верхнее меню
+        $res = $menu->getTreeDB(0, $lang, 2, 0);
 
-        // подготавливаем массив
-        $menu = array();
-        foreach ($res as $key => $val) {
-            if( $val['link'] == '#' ) $val['nolink'] = 1;
-            if( strpos($val['link'], $inId) !== false ) $val['active'] = true;
-            $menu[$val['parent_id']][] =  $val;
-        } // end foreach
-
-        return $menu;
+        return $res;
     }
     /*
     *   добываем анкеты для услуг
