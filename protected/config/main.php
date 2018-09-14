@@ -151,6 +151,7 @@ return array(
                 '<controller:user>/<action:projects>/<id:[\w-]+>/<section:[\w-]+>' => '<controller>/<action>',
                 '<controller:user>/<action:projects>/<id:[\w-]+>/<section:route>/<user_id:\d+>' => '<controller>/<action>',
                 '<controller:user>/<action:projects>/<id:[\w-]+>/<section:geo>/<user_id:\d+>' => '<controller>/<action>',
+                '<controller:user>/<action:projects>/<id:[\w-]+>/<section:geo>/<user_id:\d+>/<curdate:\d+>' => '<controller>/<action>',
                 '<controller:user>/<action:projects>/<id:[\w-]+>/<section:users-select>/<point:\d+>' => '<controller>/<action>',
                 // все action с цифрами на общий контроллер
                 '<action>/<id:\d+>' => 'site/<action>',
