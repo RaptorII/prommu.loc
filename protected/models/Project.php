@@ -545,7 +545,8 @@ class Project extends ARModel
     public function exportUsers($project){
         Yii::import('ext.yexcel.Yexcel');
         
-         $data = Yii::app()->db->createCommand()
+        $project = Yii::app()->getRequest()->getParam('project');
+           $data = Yii::app()->db->createCommand()
             ->select('pc.id, pc.user, pc.status, pc.project,  r.firstname, r.lastname, pc.email, pc.phone')
             ->from('project_user pc')
             ->join('resume r', 'r.id_user=pc.user')
@@ -559,6 +560,7 @@ class Project extends ARModel
             ->join('project_binding pb', 'pb.user=pc.user')
             ->join('project_city prc', 'prc.point=pb.point')
             ->where('pb.project = :project AND pb.user = :user', array(':project' =>$project, ':user' => $data[$i]['user']))
+            ->group('prc.name')
             ->queryAll();
             
             $data[$i]['point'] = $datas;
