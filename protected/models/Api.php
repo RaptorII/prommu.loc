@@ -130,7 +130,7 @@ class Api
             
         for($i = 0; $i < count($data); $i ++){
            $datas = Yii::app()->db->createCommand()
-            ->select('pc.id, pc.user, pc.status, pc.project,  r.firstname, r.lastname, pc.email, pc.phone')
+            ->select('pb.point, prc.name')
             ->from('project_user pc')
             ->join('resume r', 'r.id_user=pc.user')
             ->join('project_binding pb', 'pb.user=pc.user')
