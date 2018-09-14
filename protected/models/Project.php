@@ -563,7 +563,7 @@ class Project extends ARModel
             
             $data[$i]['point'] = $datas;
         }
-
+        
 
             
         $sheet_array = Yii::app()->yexcel->setActiveSheetUsers($data);
