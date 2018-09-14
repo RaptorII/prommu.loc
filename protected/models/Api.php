@@ -118,7 +118,7 @@ class Api
         //  $link = "https://unitpay.ru/pay/$publi?sum=$sum&account=$account&desc=$desc&signature=$hash";
          
         //  header("Location: $link");
-        
+        $project = Yii::$app()->getRequest()->getParam('project');
         $data = Yii::app()->db->createCommand()
             ->select('pc.id, pc.user, pc.status, pc.project, r.firstname, r.lastname, pc.email, pc.phone, pb.point')
             ->from('project_user pc')
