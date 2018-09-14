@@ -129,14 +129,17 @@ class Api
             ->queryAll();
             
         for($i = 0; $i < count($data); $i ++){
-            $data['point'][] = Yii::app()->db->createCommand()
-            ->select('prc.name, pb.point')
-            ->from('project_binding pb')
+           $datas = Yii::app()->db->createCommand()
+            ->select('pc.id, pc.user, pc.status, pc.project,  r.firstname, r.lastname, pc.email, pc.phone')
+            ->from('project_user pc')
+            ->join('resume r', 'r.id_user=pc.user')
+            ->join('project_binding pb', 'pb.user=pc.user')
             ->join('project_city prc', 'prc.point=pb.point')
-            ->where('pb.project = :project AND pb.user = :user', array(':project' =>$project, ':user' => $data[$i]['user']))
+            ->where('pc.project = :project AND pc.user = :user', array(':project' =>$project, ':user' => $data[$i]['user']))
             ->queryAll();
+            
+            $data['point'][$data[$i]['user']] = $datas;
         }
-        
         
         return $data;
            
