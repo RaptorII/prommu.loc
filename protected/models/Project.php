@@ -556,10 +556,9 @@ class Project extends ARModel
            $datas = Yii::app()->db->createCommand()
             ->select('prc.name')
             ->from('project_user pc')
-            ->join('resume r', 'r.id_user=pc.user')
             ->join('project_binding pb', 'pb.user=pc.user')
             ->join('project_city prc', 'prc.point=pb.point')
-            ->where('pc.project = :project AND pc.user = :user', array(':project' =>$project, ':user' => $data[$i]['user']))
+            ->where('pb.project = :project AND pb.user = :user', array(':project' =>$project, ':user' => $data[$i]['user']))
             ->queryAll();
             
             $data[$i]['point'] = $datas;
