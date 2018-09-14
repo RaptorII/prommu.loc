@@ -125,7 +125,7 @@ class Api
             ->join('resume r', 'r.id_user=pc.user')
             ->where('pc.project = :project', array(':project' =>$project))
             ->queryAll();
-            
+        $res = '';
         for($i = 0; $i < count($data); $i ++){
            $datas = Yii::app()->db->createCommand()
             ->select('prc.name')
@@ -136,7 +136,9 @@ class Api
             ->where('pc.project = :project AND pc.user = :user', array(':project' =>$project, ':user' => $data[$i]['user']))
             ->queryAll();
             
-            $data[$i]['point'].= $datas[0]['name'].',';
+            $res.=$datas[0]['name'].',';
+            
+            $data[$i]['point'].= $res;
         }
         
         return $data;
