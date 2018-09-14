@@ -221,84 +221,19 @@ $viData['states'] = array(
         ?>
 
         <div class="project__geo-list" id="geo-list">
-            <? foreach ($viData['items'] as $keyTimeStamp => $valueTimeStamp): ?>
-                <? foreach ($valueTimeStamp as $keyCity => $valueCity): ?>
-                    <div class="project__geo-item">
-                        <h2 class="geo__item-title"><?= $valueCity['city'] ?> <span><?= $valueCity['date'] ?></span>
-                        </h2>
-                        <table class="geo__item-table">
-                            <thead>
-                            <tr>
-                                <th>Сотрудник</th>
-                                <th>Статус</th>
-                                <th>Кол-во ТТ</th>
-                                <th>Старт работы</th>
-                                <th>Последнее место</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            <? foreach ($valueCity['users'] as $keyUser => $valueUser): ?>
-                                <tr>
-                                    <td>
-                                        <div class="geo__table-cell geo__table-user">
-
-                                            <img src="<?= $viData['users'][$keyUser]['src'] ?>">
-                                            <span><?= $viData['users'][$keyUser]['name'] ?></span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="geo__table-cell">
-                                            <? if ($viData['users'][$keyUser]['status'] != 0): ?>
-                                                <span class="geo__green">&#9679 активен</span>
-                                            <? else: ?>
-                                                <span class="geo__red">&#9679 неактивен</span>
-                                            <? endif; ?>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="geo__table-cell">
-                                            <?= count($valueUser) ?>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="geo__table-cell">
-                                            <span class="geo__green">начал</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="geo__table-cell">
-                                            <div class="geo__table-loc">
-                                                <span>АТБ1</span>
-                                                <b class="js-g-hashint" title="Посмотреть на карте"></b>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="geo__table-cell">
-                                            <a href="<? echo MainConfig::$PAGE_PROJECT_LIST . '/' . $project . '/geo/' . $keyUser ?>">подробнее</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <? endforeach; ?>
-
-                            </tbody>
-                        </table>
-                    </div>
-                <? endforeach; ?>
-            <? endforeach; ?>
+            <? require __DIR__ . '/project-geo-ajax.php'; // СПИСОК ?>
         </div>
     <?php else: ?>
+        <?$arUser = $viData['users'][$idus];?>
         <div class="geo__item-cart">
             <div class="geo-item__cart-data">
-                <img src="/images/applic/20180503073112204100.jpg">
+                <img src="<?=$arUser['src']?>">
                 <div class="geo-item__cart-info">
                     <form action="" class="geo-item__cart-filter" id="filter-form">
                         <div class="geo__header-date user__header-date">
                             <div class="calendar-filter">
                                 <label>Дата с</label>
-                                <span><?= $viData['dates']['bdate'] ?></span>
+                                <span><?= $viData['filter']['bdate-short'] ?></span>
                                 <div class="calendar" data-type="bdate">
                                     <table>
                                         <thead>
@@ -319,11 +254,11 @@ $viData['states'] = array(
                                         <tbody></tbody>
                                     </table>
                                 </div>
-                                <input type="hidden" name="bdate" value="<?= $viData['dates']['bdate-full'] ?>">
+                                <input type="hidden" name="bdate" value="<?= $viData['filter']['bdate'] ?>">
                             </div>
                             <div class="calendar-filter">
                                 <label>По</label>
-                                <span><?= $viData['dates']['edate'] ?></span>
+                                <span><?= $viData['filter']['edate-short'] ?></span>
                                 <div class="calendar" data-type="edate">
                                     <table>
                                         <thead>
@@ -344,20 +279,23 @@ $viData['states'] = array(
                                         <tbody></tbody>
                                     </table>
                                 </div>
-                                <input type="hidden" name="edate" value="<?= $viData['dates']['edate-full'] ?>">
+                                <input type="hidden" name="edate" value="<?= $viData['filter']['edate'] ?>">
                             </div>
                         </div>
-                        <input type="hidden" name="project" value="<?= $project ?>" class="project-inp">
                         <input type="hidden" name="project" value="<?= $project ?>" class="project-inp">
                     </form>
 
 
                     <div class="geo-item__cart-bl1">
-                        <div class="geo-item__cart-name">Ибадулаев Павел</div>
+                        <div class="geo-item__cart-name"><?=$arUser['name']?></div>
                         <div class="geo-item__cart-border">
                             <div>
-                                <span class="geo__green">&#9679 активен</span> / <span
-                                        class="geo__red">&#9679 неактивен</span>
+
+                                <?if($arUser['status']!=0):?>
+                                <span class="geo__green">&#9679 активен</span>
+                                <?else:?>
+                                <span class="geo__red">&#9679 неактивен</span>
+                                <?endif;?>
                             </div>
                             <div>Дата: 06.02.2018</div>
                         </div>
@@ -378,7 +316,7 @@ $viData['states'] = array(
                         </div>
                         <div class="geo-item__cart-cur">
                             <div><span>Сейчас в: АТБ1 </span><b></b></div>
-                            <a href="#" class="geo-item__route">Показаь маршрут передвижения</a>
+                            <a href="#" class="geo-item__route">Показать маршрут передвижения</a>
                         </div>
                     </div>
                 </div>
