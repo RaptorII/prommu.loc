@@ -1,51 +1,44 @@
-<? if($viData['service']['id']==42): // Условия использования сайта ?>
-  <?
-    $this->setBreadcrumbs($title = 'Условия использования сайта', MainConfig::$PAGE_ABOUT);
-    $this->pageTitle = $title;
-    $this->ViewModel->setViewData('pageTitle', '<h1>' . $title . '</h1>');
-  ?>
-  <div class='row'>
-    <div class='col-xs-12'>
-      <br /><div class='text'><?= $viData['service']['html'] ?></div><br />
+<?php 
+  $bUrl = Yii::app()->baseUrl;
+  Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/services/detail.css');
+  Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/dist/jquery.maskedinput.min.js', CClientScript::POS_END);
+  Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/services/list.js', CClientScript::POS_END);
+  $type = Share::$UserProfile->type;
+  $arApp = ['geolocation-staff','prommu_card','medical-record']; // то, что доступно соискателю
+?>
+<div class="row">
+  <div class="col-xs-12 service">
+    <div class="service__img <?=$viData['service']['link']?>">
+      <div class="service__title"><?=$viData['service']['name']?></div>
     </div>
+    <div class="service__price">
+      <div class="service__price-list">
+        <div class="service__price-item">
+          <b>100 руб./день</b><br>
+          <span>МСК и область</span>
+        </div>
+        <div class="service__price-item">
+          <b>100 руб./день</b><br>
+          <span>МСК и область</span>
+        </div>
+        <div class="service__price-item">
+          <b>100 руб./день</b><br>
+          <span>МСК и область</span>
+        </div>
+      </div>
+      <div 
+        class="order-service"
+        data-id="<?=$viData['service']['id']?>" 
+        data-type="<?=$viData['service']['link']?>"
+      >
+        <? if(in_array($type,[2,3]) && $viData['service']['link']!='geolocation-staff'): ?>
+          <a href="<?='/user/services/' . $viData['service']['link']?>" class="user">Заказать</a>
+        <? else: ?>
+          <a href="javascript:void(0)">Заказать</a>
+        <? endif; ?>
+      </div>
+    </div>
+    <div class="service__text"><? echo $viData['service']['html']; ?></div>
   </div>
-<? else: ?>
-  <link rel="stylesheet" href="/theme/css/reset.css"> <!-- CSS reset -->
-  <link rel="stylesheet" href="/theme/css/style.css"> <!-- Resource style -->
-  <script src="/theme/js/modernizr.js"></script> <!-- Modernizr -->
-  <script src="/theme/js/main.js"></script>
-  <?php
-    if($viData['service']['id']==213)
-      $this->ViewModel->setViewData('pageTitle', 'Заказать медкнижку');
-  ?>
-  <div class='row'>
-    <div class='col-xs-12 col-sm-4 col-lg-3'>
-      <? require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/site/services/menu-for-guest.php'; ?>
-    </div>
-    <div class='col-xs-12 col-sm-8 col-lg-9 service-content'>
-      <div class="headimg">
-        <img src="/images/servicesgr/<?= $viData['service']['img'] ?>" alt="">
-      </div>
-      <div class='text'>
-        <?= $viData['service']['html'] ?>
-      </div>
-      <br />
-
-      <?php $servid = $viData['service']['id']; if($servid != 36 && $servid != 39 ):?>
-        <?
-          $callPopup = $viData['service']['id'];
-          if($callPopup==40){
-            $callPopup = 'push';
-          }
-          if($callPopup==46){
-            $callPopup = 'sms';
-          }
-        ?>
-        <div class='order-btn btn-orange-sm-wr' data-id="<?=$callPopup?>">
-        <a href='javascript:void(0)' class="hvr-sweep-to-right">Заказать</a>
-      </div>
-    <?php endif ?>
-    </div>
-  </div>
-  <? require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/site/services/popups.php'; ?>
-<? endif; ?>
+</div>
+<? require __DIR__ . '/popups.php'; ?>

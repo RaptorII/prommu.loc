@@ -46,7 +46,7 @@ var GeoProgram = (function () {
 	}
 	//		Фильтрация по параметрам
 	GeoProgram.prototype.ajaxFilterList = function () {
-		let data = $('#filter-form').serialize();
+/*		let data = $('#filter-form').serialize();
 
 		setTimeout(function(){
 			$('.filter__veil').show();
@@ -55,6 +55,19 @@ var GeoProgram = (function () {
 			console.log(data);
 		},500);
 		setTimeout(function(){ $('.filter__veil').hide(); },1000);
+*/
+
+		$('.filter__veil').show();
+
+		$.ajax({
+			type: 'GET',
+			url: window.location.pathname,
+			data: $('#filter-form').serialize(),
+			success: function(r) {
+			$('#geo-list').html(r);
+			$('.filter__veil').hide();
+			},
+		});
 	}
 	//
 	//      ДАТА

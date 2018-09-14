@@ -1,0 +1,116 @@
+.service,
+.service *{
+	color: #212121;
+	font-family: RobotoCondensed-Regular, verdana, arial;
+	list-style: none;
+}
+.service__img{
+	width: 100%;
+	padding: 15px;
+	margin-bottom: 20px;
+	background-color: #abb92a;
+	border-radius: 15px;
+}
+.service__title{
+	max-width: 350px;
+	padding-top: 50px;
+	color: #ffffff;
+	font-size: 36px;
+	text-align: center;
+	text-transform: uppercase;
+	position: relative;
+}
+.service__title:before{
+	content: '';
+	height: 58px;
+	background: url(/theme/pic/services-page/new-services-icons.png) no-repeat;
+	background-position: center 0;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+}
+.premium-vacancy .service__title:before{ background-position: center -58px;  }
+.invitations .service__title:before{ background-position: center -116px;  }
+.geolocation-staff .service__title:before{ background-position: center -174px;  }
+.personal-manager-outsourcing .service__title:before{ background-position: center -232px;  }
+.outstaffing .service__title:before{ background-position: center -290px;  }
+.prommu_card .service__title:before{ background-position: center -348px;  }
+.medical-record .service__title:before{ background-position: center -406px;  }
+.api-key-prommu .service__title:before{ background-position: center -464px;  }
+.email-invitation .service__title:before{ background-position: center -522px }
+.push-notification .service__title:before{ background-position: center -570px }
+.sms-informing-staff .service__title:before{ background-position: center -618px }
+.publication-vacancy-social-net .service__title:before{ background-position: center -666px }
+.service__price{
+	width: 100%;
+	background-color: #f0f3f6;
+	border-radius: 15px;
+	margin-bottom: 20px;
+	padding: 10px 20px 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+}
+.service__text{ padding: 0 5px; }
+.service__text,
+.service__text *{
+	font-family: RobotoCondensed-Regular, verdana, arial !important;
+}
+.order-service{
+	width: 100%;
+}
+#DiContent .order-service a{
+	width: 100%;
+	display: block;
+	font-size: 18px;
+	padding: 11px 0;
+	margin-bottom: 10px;
+	text-align: center;
+	color: #f0f3f6;
+	background-color: #abb92a;
+	border: 2px solid #abb92a;
+	border-radius: 15px;
+}
+#DiContent .order-service a:hover{
+	background-color: #f0f3f6;
+	color: #abb92a;
+}
+.service__price-item{
+	display: inline-block;
+	background-color: #ee7e00;
+	padding: 3px 20px;
+	margin:  0 10px 10px;
+	text-align: center;
+	border-radius: 15px;
+}
+.service__price-item b{
+	font-size: 24px;
+	color: #ffffff;
+}
+.service__price-item span{
+	font-size: 18px;
+	color: #ffffff;
+}
+.service__price-list{ 
+	width: 100%;
+	text-align: center;
+}
+/*
+*			MEDIA
+*/
+@media (min-width: 768px){
+	.service__img{
+		min-height: 350px;
+		padding: 50px;
+	}
+	.order-service{ max-width: 190px }
+	.service__title{ 
+		margin-top: 25px;
+		font-size: 48px;
+	}
+	.service__price{ flex-wrap: nowrap }
+	.service__price-list{ width: initial }
+	.service__price-item{ margin:  0 20px 10px 0 }
+}

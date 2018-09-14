@@ -959,229 +959,66 @@ class SiteController extends AppController
     {
         Subdomain::guestRedirect(Share::$UserProfile->type);
         $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $Services = new Services();
+        $services = new Services();
         $title = 'Услуги портала Prommu.com';
-        $this->setBreadcrumbs($title, MainConfig::$PAGE_SERVICES);     
-        $cssPath = Yii::app()->baseUrl.'/theme/css/services/';
-        $jsPath = Yii::app()->baseUrl.'/theme/js/services/';
-        $type_us = Share::$UserProfile->type;
+        $this->setBreadcrumbs($title, MainConfig::$PAGE_SERVICES);
 
         if( $id )
         {
-            $data = $Services->getServiceData($id);
-            $data = array_merge(array('service' => $data), $Services->getServices($id));
-            if( $id == 'prommu_card' )
-            {
-                if( Yii::app()->getRequest()->getParam('save') )
-                {
-                    var_dump($_POST);
-                    $Services->orderPrommu();
-                    $this->redirect($this->createUrl(MainConfig::$PAGE_SERVICES, array('id'=>$id)));
-                }
-                else
-                {
+            $data = $services->getServiceData($id);
+            switch ($id){
+                case 'premium-vacancy':
+                case 'email-invitation':
+                case 'push-notification':
+                case 'sms-informing-staff':
+                case 'publication-vacancy-social-net':
+                case 'geolocation-staff':
+                case 'personal-manager-outsourcing':
+                case 'outstaffing':
+                case 'api-key-prommu':
+                    $view = MainConfig::$VIEWS_SERVICE_VIEW; 
+                    break;
+                case 'prommu_card':
+                    if( Yii::app()->getRequest()->getParam('save') ) {
+                        $services->orderPrommu();
+                        $this->redirect(MainConfig::$PAGE_SERVICES_CARD_PROMMU);
+                    }
                     $Upluni = new Uploaduni();
                     $data = array_merge($data, $Upluni->init());
-                } // endif
-                Yii::app()->getClientScript()->registerCssFile($cssPath . 'services-card-page.css');
-                Yii::app()->getClientScript()->registerScriptFile($jsPath . 'services-card-page.js', CClientScript::POS_END);
-
-                $view = $this->ViewModel->pageCardprommu;
-                $title = 'Получение корпоративной карты Prommu';
-                $this->setBreadcrumbsEx(array($title, MainConfig::$PAGE_SERVICES_CARD_PROMMU));
+                    $view = MainConfig::$VIEWS_CARD_PROMMU;
+                    break;
+                case 'medical-record':
+                    $view = MainConfig::$VIEWS_SERVICE_MEDICAL; 
+                    break;                   
+                default:
+                    throw new CHttpException(404, 'Error'); 
+                    break;
+            }        
+            if(strlen($data['service']['meta_title']) > 0){
+                $title = htmlspecialchars_decode($data['service']['meta_title']);
+                $this->setBreadcrumbsEx(array($title, $_SERVER['REQUEST_URI']));
             }
-            elseif($id == 'about') {
-                throw new CHttpException(404, 'Error'); 
-            }
-            elseif(sizeof($data['service']) && !empty($data['service'])){
-                if($type_us==2 || $type_us==3){//for registered user
-                    switch ($data['service']['id']){
-                        case 39:    // premium
-                            if($type_us==3){
-                                $view = MainConfig::$VIEWS_SERVICE_PREMIUM_VIEW;
-                                $vac = new Vacancy();
-                                $data = $vac->getVacanciesPrem();
-                                Yii::app()->getClientScript()->registerCssFile($cssPath . 'services-premium-page.css');
-                            }
-                            else{
-                                $view = MainConfig::$VIEWS_SERVICE_VIEW; 
-                            }
-                            break;
-                        case 40:    // push
-                            if($type_us==3){
-                                $model = new PrommuOrder;
-                                $data['price'] = $model->servicePrice(Share::$UserProfile->id,'push');
-                                if(Yii::app()->getRequest()->getParam('users') && $data['price']>0){
-                                    $view = MainConfig::$VIEWS_SERVICE_PUSH_VIEW;
-                                }
-                                elseif(Yii::app()->request->isAjaxRequest){
-                                    $this->renderPartial(
-                                        MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
-                                        array('viData' => (new Services())->getFilteredPromos()), 
-                                        false, 
-                                        true
-                                    );
-                                }
-                                else{
-                                    $view = MainConfig::$VIEWS_SERVICE_PUSH_VIEW;
-                                    $data2 = (Yii::app()->getRequest()->getParam('vacancy') 
-                                        ? (new Services())->prepareFilterData()
-                                        : (new Vacancy())->getModerVacs());
-                                    $data = array_merge($data,$data2);
-                                }
-                            }
-                            else
-                                $view = MainConfig::$VIEWS_SERVICE_VIEW;  
-                            break;
-                        case 46:    // sms
-                            if($type_us==3){
-                                if(Yii::app()->getRequest()->getParam('workers')){
-                                    $model = new PrommuOrder;
-                                    $data['price'] = $model->servicePrice(Share::$UserProfile->id,'sms');
-                                    $view = MainConfig::$VIEWS_SERVICE_SMS_VIEW;
-                                }
-                                elseif(Yii::app()->request->isAjaxRequest){
-                                    $this->renderPartial(
-                                        MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
-                                        array('viData' => (new Services())->getFilteredPromos()), 
-                                        false, 
-                                        true
-                                    );
-                                }
-                                else{
-                                    $view = MainConfig::$VIEWS_SERVICE_SMS_VIEW;
-                                    $data = (Yii::app()->getRequest()->getParam('vacancy') 
-                                        ? (new Services())->prepareFilterData()
-                                        : (new Vacancy())->getModerVacs());
-                                } 
-                            }
-                            else{
-                                $view = MainConfig::$VIEWS_SERVICE_VIEW; 
-                            }
-                            break;
-                        case 38:    // outstaffing
-                            if($type_us==3){
-                                $vac = new Vacancy();
-                                $data = $vac->getVacanciesPrem();
-                                $view = MainConfig::$VIEWS_SERVICE_OUTSTAFFING_VIEW;
-                                Yii::app()->getClientScript()->registerCssFile($cssPath . 'services-outstaffing-page.css');
-                                Yii::app()->getClientScript()->registerScriptFile($jsPath . 'services-outstaffing-page.js', CClientScript::POS_END);
-                            }
-                            else{
-                                $view = MainConfig::$VIEWS_SERVICE_VIEW; 
-                            }
-                            break;
-                        case 37:    // outsourcing
-                            if($type_us==3){
-                                $vac = new Vacancy();
-                                $data = $vac->getVacanciesPrem();
-                                $view = MainConfig::$VIEWS_SERVICE_OUTSOURCING_VIEW;
-                                Yii::app()->getClientScript()->registerCssFile($cssPath . 'services-outstaffing-page.css');
-                                Yii::app()->getClientScript()->registerScriptFile($jsPath . 'services-outstaffing-page.js', CClientScript::POS_END);
-                            }
-                            else{
-                                $view = MainConfig::$VIEWS_SERVICE_VIEW; 
-                            }
-                            break;
-                        case 50:    // api
-                            if($type_us==3){
-                                $view = MainConfig::$VIEWS_SERVICE_API_VIEW;
-                                Yii::app()->getClientScript()->registerCssFile($cssPath . 'services-api-page.css');
-                                Yii::app()->getClientScript()->registerScriptFile($jsPath . 'services-api-page.js', CClientScript::POS_END);
-                                //$data['commands'] = (new ApiHelp())->getHelpData();
-                                //$data['err-codes'] = (new ApiHelp())->getErrorCodes();
-                                if(Yii::app()->getRequest()->getParam('f-api')){
-
-                                }
-                            }
-                            else{
-                                $view = MainConfig::$VIEWS_SERVICE_VIEW; 
-                            }
-                            break;
-                        case 41:    // duplication
-                            if($type_us==3){
-                                $data = (new Vacancy())->postToSocialService();
-                                if(isset($data['vacs']) || isset($data['price'])){
-                                    $view = MainConfig::$VIEWS_SERVICE_DUPLICATION;
-                                }
-                                else{
-                                    $this->redirect(DS . MainConfig::$PAGE_SERVICES);
-                                    exit();
-                                }
-                            }
-                            else
-                                $view = MainConfig::$VIEWS_SERVICE_VIEW; 
-                            break;
-                        case 213:    // medical
-                            $view = MainConfig::$VIEWS_SERVICE_MEDICAL;
-                            break;
-                        case 214:  
-                        if($type_us==3){
-                                $model = new PrommuOrder;
-                                $data['price'] = $model->servicePrice(Share::$UserProfile->id,'email');
-                                if(Yii::app()->getRequest()->getParam('users') && $data['price']>0){
-                                    $view = MainConfig::$VIEWS_SERVICE_EMAIL;
-                                }
-                                elseif(Yii::app()->request->isAjaxRequest){
-                                    $this->renderPartial(
-                                        MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
-                                        array('viData' => (new Services())->getFilteredPromos()), 
-                                        false, 
-                                        true
-                                    );
-                                }
-                                else{
-                                    $view = MainConfig::$VIEWS_SERVICE_EMAIL;
-                                    $data2 = (Yii::app()->getRequest()->getParam('vacancy') 
-                                        ? (new Services())->prepareFilterData()
-                                        : (new Vacancy())->getModerVacs());
-                                    $data = array_merge($data,$data2);
-                                }
-                            }
-                            else
-                                $view = MainConfig::$VIEWS_SERVICE_VIEW;  
-                            break;
-                           
-                        default:
-                            $view = MainConfig::$VIEWS_SERVICE_VIEW;
-                            break;
-                    }
-                }
-                else{
-                    $view = MainConfig::$VIEWS_SERVICE_VIEW;
-                }
-                
-                if(strlen($data['service']['meta_title']) > 0){
-                    $title = htmlspecialchars_decode($data['service']['meta_title']);
-                    $this->setBreadcrumbsEx(array($title, $_SERVER['REQUEST_URI']));
-                }
-                if(strlen($data['service']['meta_description']) > 0){
-                    Yii::app()->clientScript->registerMetaTag(htmlspecialchars_decode($data['service']['meta_description']), 'description');
-                }
-
-            }
-            else{
-                throw new CHttpException(404, 'Error'); 
+            if(strlen($data['service']['meta_description']) > 0){
+                Yii::app()->clientScript->registerMetaTag(
+                    htmlspecialchars_decode($data['service']['meta_description']), 
+                    'description'
+                );
             }
         }
         else
         {
-            if($type_us==2 || $type_us==3){
-                Yii::app()->getClientScript()->registerCssFile($cssPath . 'services-page.css');
-            }
-            $data = $Services->getServices();
+            $data = $services->getServices();
             $view = MainConfig::$VIEWS_SERVICES;
         }
-        if(isset($view)){
-            $this->render(
-                $view, 
-                array('viData' => $data, 'id' => $id),
-                array(
-                    'pageTitle' => '<h1>'.$title.'</h1>', 
-                    'htmlTitle' => $title
-                )
-            );
-        };
+
+        $this->render(
+            $view, 
+            array('viData' => $data, 'id' => $id),
+            array(
+                'pageTitle' => '<h1>'.$title.'</h1>', 
+                'htmlTitle' => $title
+            )
+        );
     }
 
     public function actionAbout(){

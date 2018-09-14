@@ -1,3 +1,7 @@
+<?
+  Yii::app()->getClientScript()->registerCssFile('/theme/css/services/services-card-page.css');
+  Yii::app()->getClientScript()->registerScriptFile('/theme/js/services/services-card-page.js', CClientScript::POS_END);
+?>
 <?php if( $mess = Yii::app()->user->getFlash('Message') ): Yii::app()->user->setFlash('Message', '') ?>
     <div class="mess-box tmpl <?= $mess['type'] ?>" id="pr-card-mes"><?= $mess['message'] ?></div>
 <?php endif; ?>
@@ -29,19 +33,8 @@
   if(!empty($res['birthday']))
     $res['birthday'] = DateTime::createFromFormat('Y-m-d', $res['birthday'])->format('d.m.Y');
 ?>
-<link rel="stylesheet" href="/theme/css/reset.css"> <!-- CSS reset -->
-<link rel="stylesheet" href="/theme/css/style.css"> <!-- Resource style -->
-<script src="/theme/js/modernizr.js"></script> <!-- Modernizr -->
-<script src="/theme/js/main.js"></script> <!-- Resource jQuery -->
 <div class='row'>
-  <?if(!in_array($user['status'], [2,3])):?>
-    <div class="col-xs-12 col-sm-4 col-lg-3">   
-      <?require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/site/services/menu-for-guest.php';?>
-    </div>
-    <div class='col-xs-12 col-sm-8 col-lg-9 prommucard'>
-  <?else:?>
-    <div class='col-xs-12 prommucard'>
-  <?endif;?>
+  <div class='col-xs-12 prommucard'>
     <div class="container-fluid">
       <div class="row">
         <div class="hidden-xs hidden-sm col-md-4">
