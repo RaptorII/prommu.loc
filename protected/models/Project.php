@@ -549,10 +549,23 @@ class Project extends ARModel
             ->select('pc.id, pc.user, pc.status, pc.project,  r.firstname, r.lastname, pc.email, pc.phone')
             ->from('project_user pc')
             ->join('resume r', 'r.id_user=pc.user')
-            // ->join('project_binding pb', 'pb.user=pc.user')
-            // ->join('project_city prc', 'prc.point=pb.point')
             ->where('pc.project = :project', array(':project' =>$project))
             ->queryAll();
+        
+          for($i = 0; $i < count($data); $i ++){
+           $datas = Yii::app()->db->createCommand()
+            ->select('prc.name')
+            ->from('project_user pc')
+            ->join('resume r', 'r.id_user=pc.user')
+            ->join('project_binding pb', 'pb.user=pc.user')
+            ->join('project_city prc', 'prc.point=pb.point')
+            ->where('pc.project = :project AND pc.user = :user', array(':project' =>$project, ':user' => $data[$i]['user']))
+            ->queryAll();
+            
+            $data[$i]['point'] = $datas;
+        }
+
+
             
         $sheet_array = Yii::app()->yexcel->setActiveSheetUsers($data);
             
