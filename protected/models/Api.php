@@ -133,6 +133,7 @@ class Api
             ->join('project_binding pb', 'pb.user=pc.user')
             ->join('project_city prc', 'prc.point=pb.point')
             ->where('pb.project = :project AND pb.user = :user', array(':project' =>$project, ':user' => $data[$i]['user']))
+            ->group('prc.name')
             ->queryAll();
             
             $data[$i]['point'] = $datas;
