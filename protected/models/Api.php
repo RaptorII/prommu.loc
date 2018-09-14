@@ -109,15 +109,26 @@ class Api
 
     
     public function testPay(){
-         $publi = "84661-fc398";
-         $account = 14500;
-         $desc = 'testpay';
-         $sum = 100;
-         $secretKey = '56B61C8ED08-535F660B689-40C558A1CE';
-         $hash = $this->getFormSignature($account, $desc, $sum, $secretKey);
-         $link = "https://unitpay.ru/pay/$publi?sum=$sum&account=$account&desc=$desc&signature=$hash";
+        //  $publi = "84661-fc398";
+        //  $account = 14500;
+        //  $desc = 'testpay';
+        //  $sum = 100;
+        //  $secretKey = '56B61C8ED08-535F660B689-40C558A1CE';
+        //  $hash = $this->getFormSignature($account, $desc, $sum, $secretKey);
+        //  $link = "https://unitpay.ru/pay/$publi?sum=$sum&account=$account&desc=$desc&signature=$hash";
          
-         header("Location: $link");
+        //  header("Location: $link");
+        
+        $data = Yii::app()->db->createCommand()
+            ->select('pc.id, pc.user, pc.status, pc.project, r.firstname, r.lastname, pc.email, pc.phone, pb.point')
+            ->from('project_user pc')
+            ->join('resume r', 'r.id_user=pc.user')
+            ->join('project_binding pb', 'pb.user=pc.user')
+            ->where('pc.project = :project', array(':project' =>$project))
+            ->order('pc.date desc')
+            ->queryAll();
+        
+        return $data;
            
     }
     public function maleor($names){
