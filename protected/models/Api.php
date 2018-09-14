@@ -129,7 +129,7 @@ class Api
             ->queryAll();
             
         for($i = 0; $i < count($data); $i ++){
-            $data['point'] = Yii::app()->db->createCommand()
+            $data['point'][] = Yii::app()->db->createCommand()
             ->select('prc.name, pb.point')
             ->from('project_binding pb')
             ->join('project_city prc', 'prc.point=pb.point')
