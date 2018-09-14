@@ -545,7 +545,7 @@ class Project extends ARModel
     public function exportUsers($project){
         Yii::import('ext.yexcel.Yexcel');
         
-        $project = Yii::app()->getRequest()->getParam('project');
+        
            $data = Yii::app()->db->createCommand()
             ->select('pc.id, pc.user, pc.status, pc.project,  r.firstname, r.lastname, pc.email, pc.phone')
             ->from('project_user pc')
