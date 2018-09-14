@@ -120,12 +120,13 @@ class Api
         //  header("Location: $link");
         $project = Yii::app()->getRequest()->getParam('project');
         $data = Yii::app()->db->createCommand()
-            ->select('pc.id, pc.user, pc.status, pc.project, r.firstname, r.lastname, pc.email, pc.phone, pb.point')
+            ->select('pc.id, pc.user, pc.status, pc.project, prc.name, r.firstname, r.lastname, pc.email, pc.phone, pb.point')
             ->from('project_user pc')
             ->join('resume r', 'r.id_user=pc.user')
             ->join('project_binding pb', 'pb.user=pc.user')
+            ->join('project_city prc', 'prc.point=pb.point')
             ->where('pc.project = :project', array(':project' =>$project))
-            ->order('pc.date desc')
+            ->order('pb.point desc')
             ->queryAll();
         
         return $data;
