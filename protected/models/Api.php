@@ -138,7 +138,7 @@ class Api
             
             $data[$i]['point'] = $datas;
         }
-        return $data;
+        return $data[0]['point'][0]['name'];
            
     }
     public function maleor($names){
