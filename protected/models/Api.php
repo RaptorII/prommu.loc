@@ -128,12 +128,12 @@ class Api
             ->where('pc.project = :project', array(':project' =>$project))
             ->queryAll();
             
-        for($i =0; $i < count($data); $i ++){
+        for($i = 0; $i < count($data); $i ++){
             $data['point'] = Yii::app()->db->createCommand()
             ->select('prc.name, pb.point')
             ->from('project_binding pb')
             ->join('project_city prc', 'prc.point=pb.point')
-            ->where('pc.project = :project AND pb.user = :user', array(':project' =>$project, ':user' => $data[$i]['user']))
+            ->where('pb.project = :project AND pb.user = :user', array(':project' =>$project, ':user' => $data[$i]['user']))
             ->queryAll();
         }
         
