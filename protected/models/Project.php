@@ -546,10 +546,12 @@ class Project extends ARModel
         Yii::import('ext.yexcel.Yexcel');
         
          $data = Yii::app()->db->createCommand()
-            ->select('pc.id, pc.user, pc.status, pc.project, pc.firstname, pc.lastname, pc.email, pc.phone')
+            ->select('pc.id, pc.user, pc.status, pc.project,  r.firstname, r.lastname, pc.email, pc.phone')
             ->from('project_user pc')
+            ->join('resume r', 'r.id_user=pc.user')
+            // ->join('project_binding pb', 'pb.user=pc.user')
+            // ->join('project_city prc', 'prc.point=pb.point')
             ->where('pc.project = :project', array(':project' =>$project))
-            ->order('pc.date desc')
             ->queryAll();
             
         $sheet_array = Yii::app()->yexcel->setActiveSheetUsers($data);
