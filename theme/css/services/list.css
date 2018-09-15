@@ -9,7 +9,12 @@
 }
 .services__prev{}
 .services__detail{}
-.services__price{}
+.services__price,
+.services__order{ 
+	padding-left: 15px;
+	padding-right: 15px;
+	float: left;
+}
 .services__item-icon{
 	width: 58px;
 	height: 58px;
@@ -40,11 +45,11 @@
 }
 .services__item-label.upper{ text-transform: uppercase }
 .services__item-descr{
-	padding-left: 65px;
+	padding: 0 0 10px 65px;
 	font-size: 14px;
 }
 #DiContent .services__detail a{
-	width: 120px;
+	width: 100%;
 	display: block;
 	text-align: center;
 	font-size: 16px;
@@ -118,8 +123,31 @@
 .services__sub-label.push-notification:before{ background-position: 0 -570px }
 .services__sub-label.sms-informing-staff:before{ background-position: 0 -618px }
 .services__sub-label.publication-vacancy-social-net:before{ background-position: 0 -666px }
-.services__sub-descr{ padding-left: 10px; }
+.services__sub-descr{ padding: 0 0 10px 10px; }
 .services__detail-sub, .services__order-sub{ margin-top: 55px; }
+.services__price-order{ 
+	width: 100%;
+	float: left;
+}
+.services__price{ width: 100% }
+.services__order{ width: 100% }
+.services__sublevel .services__item-descr{ padding: 0 15px 10px 65px; }
+/*
+*		MEDIA
+*/
+@media (min-width: 768px) {
+	.services__price-order{ width: 50% }
+}
+@media (min-width: 992px) {
+	.services__parent,
+	.services__prev,
+	.services__sublevel .services__item-descr{ width: 32% }
+	.services__detail{ width: 21% }
+	.services__price-order{ width: 47% }
+	.services__price{ width: 60% }
+	.services__order{ width: 40% }
+	#DiContent .services__detail a{ width: 120px }
+}
 /*
 *		Modal
 */

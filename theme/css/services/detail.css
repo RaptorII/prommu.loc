@@ -9,10 +9,24 @@
 	padding: 15px;
 	margin-bottom: 20px;
 	background-color: #abb92a;
+	background-position: 50%;
+	background-size: cover;
 	border-radius: 15px;
 }
+.service__img.premium-vacancy{ background-image: url(/theme/pic/services-page/premium-vacancy.jpg) }
+.service__img.geolocation-staff{ background-image: url(/theme/pic/services-page/geolocation-staff.jpg) }
+.service__img.personal-manager-outsourcing{ background-image: url(/theme/pic/services-page/personal-manager-outsourcing.jpg) }
+.service__img.outstaffing{ background-image: url(/theme/pic/services-page/outstaffing.jpg) }
+.service__img.prommu_card{ background-image: url(/theme/pic/services-page/prommu_card.jpg) }
+.service__img.medical-record{ background-image: url(/theme/pic/services-page/medical-record.jpg) }
+.service__img.api-key-prommu{ background-image: url(/theme/pic/services-page/api-key-prommu.jpg) }
+.service__img.email-invitation{ background-image: url(/theme/pic/services-page/email-invitation.jpg) }
+.service__img.push-notification{ background-image: url(/theme/pic/services-page/push-notification.jpg) }
+.service__img.sms-informing-staff{ background-image: url(/theme/pic/services-page/sms-informing-staff.jpg) }
+.service__img.publication-vacancy-social-net{ background-image: url(/theme/pic/services-page/publication-vacancy-social-net.jpg) }
+
 .service__title{
-	max-width: 350px;
+	max-width: 420px;
 	padding-top: 50px;
 	color: #ffffff;
 	font-size: 36px;
@@ -20,6 +34,7 @@
 	text-transform: uppercase;
 	position: relative;
 }
+.service__title.small{ font-size: 30px; }
 .service__title:before{
 	content: '';
 	height: 58px;
@@ -31,17 +46,16 @@
 	right: 0px;
 }
 .premium-vacancy .service__title:before{ background-position: center -58px;  }
-.invitations .service__title:before{ background-position: center -116px;  }
 .geolocation-staff .service__title:before{ background-position: center -174px;  }
 .personal-manager-outsourcing .service__title:before{ background-position: center -232px;  }
 .outstaffing .service__title:before{ background-position: center -290px;  }
 .prommu_card .service__title:before{ background-position: center -348px;  }
 .medical-record .service__title:before{ background-position: center -406px;  }
 .api-key-prommu .service__title:before{ background-position: center -464px;  }
-.email-invitation .service__title:before{ background-position: center -522px }
-.push-notification .service__title:before{ background-position: center -570px }
-.sms-informing-staff .service__title:before{ background-position: center -618px }
-.publication-vacancy-social-net .service__title:before{ background-position: center -666px }
+.email-invitation .service__title:before{ background-position: center -714px }
+.push-notification .service__title:before{ background-position: center -772px }
+.sms-informing-staff .service__title:before{ background-position: center -830px }
+.publication-vacancy-social-net .service__title:before{ background-position: center -888px }
 .service__price{
 	width: 100%;
 	background-color: #f0f3f6;
@@ -103,13 +117,14 @@
 @media (min-width: 768px){
 	.service__img{
 		min-height: 350px;
-		padding: 50px;
+		padding: 50px 15px;
 	}
 	.order-service{ max-width: 190px }
 	.service__title{ 
 		margin-top: 25px;
 		font-size: 48px;
 	}
+	.service__title.small{ font-size: 40px; }
 	.service__price{ flex-wrap: nowrap }
 	.service__price-list{ width: initial }
 	.service__price-item{ margin:  0 20px 10px 0 }

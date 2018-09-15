@@ -4,12 +4,12 @@
   Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/dist/jquery.maskedinput.min.js', CClientScript::POS_END);
   Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/services/list.js', CClientScript::POS_END);
   $type = Share::$UserProfile->type;
-  $arApp = ['geolocation-staff','prommu_card','medical-record']; // то, что доступно соискателю
+  $cnt = iconv_strlen($viData['service']['name'],'UTF-8');
 ?>
 <div class="row">
   <div class="col-xs-12 service">
     <div class="service__img <?=$viData['service']['link']?>">
-      <div class="service__title"><?=$viData['service']['name']?></div>
+      <div class="service__title<?=($cnt>30?' small':'')?>"><?=$viData['service']['name']?></div>
     </div>
     <div class="service__price">
       <div class="service__price-list">
