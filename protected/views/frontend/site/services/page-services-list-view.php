@@ -187,7 +187,7 @@
 				<? // вывод второго уровня  ?>
 				<div class="row services__item-sub">
 					<div class="col-xs-12 col-sm-6 services__parent">
-						<div class="services__item-icon"></div>
+						<div class="services__item-icon <?=$m['icon']?>"></div>
 						<? $cnt = iconv_strlen($m['name'],'UTF-8'); ?>
 						<div class="services__item-label upper<?=($cnt>30?' small':'')?>"><?=$m['name']?></div>
 					</div>
