@@ -43,6 +43,7 @@
 	position: relative;
 	z-index: 1;
 }
+.services__item-label.small{ font-size: 14px }
 .services__item-label.upper{ text-transform: uppercase }
 .services__item-descr{
 	padding: 0 0 10px 65px;
