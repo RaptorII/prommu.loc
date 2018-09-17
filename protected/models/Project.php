@@ -880,9 +880,11 @@ class Project extends ARModel
                 r.firstname, 
                 r.lastname,
                 r.photo,
-                r.isman")
+                r.isman,
+                u.is_online")
             ->from('project_user pu')
             ->leftjoin('resume r', 'r.id_user=pu.user')
+            ->leftjoin('user u', 'u.id_user=pu.user')
             ->leftjoin('project_binding pb', 'pb.user=pu.user')
             ->where('pu.project=:prj', array(':prj'=>$prj))
             ->queryAll(); 
@@ -897,6 +899,7 @@ class Project extends ARModel
                     : ($u['isman'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F)
                 );
             $arRes[$id]['status'] = $u['status'];
+            $arRes[$id]['is_online'] = $u['is_online'];
             if(!empty($u['point']))
                 $arRes[$id]['points'][] = $u['point'];
         }

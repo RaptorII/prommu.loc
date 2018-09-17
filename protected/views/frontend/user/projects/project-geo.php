@@ -217,6 +217,7 @@ $viData['states'] = array(
                 </div>
             </div>
             <input type="hidden" name="project" value="<?= $project ?>" class="project-inp">
+            <input type="hidden" name="filter" value="1">
         </form>
         <?
         //
@@ -295,13 +296,13 @@ $viData['states'] = array(
                         <div class="geo-item__cart-border">
                             <div>
 
-                                <? if ($arUser['status'] != 0): ?>
+                                <? if ($arUser['is_online'] != 0): ?>
                                     <span class="geo__green">&#9679 активен</span>
                                 <? else: ?>
                                     <span class="geo__red">&#9679 неактивен</span>
                                 <? endif; ?>
                             </div>
-                            <div>Дата: <?=$unixTime?></div>
+                            <div>Дата: <?=date('d.m.Y',$unixTime)?></div>
                         </div>
                     </div>
 

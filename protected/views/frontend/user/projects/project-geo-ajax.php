@@ -28,7 +28,7 @@
                             </td>
                             <td>
                                 <div class="geo__table-cell">
-                                    <? if ($viData['users'][$keyUser]['status'] != 0): ?>
+                                    <? if ($viData['users'][$keyUser]['is_online'] != 0): ?>
                                         <span class="geo__green">&#9679 активен</span>
                                     <? else: ?>
                                         <span class="geo__red">&#9679 неактивен</span>
@@ -66,4 +66,6 @@
             </div>
         <? endforeach; ?>
     <? endforeach; ?>
+<? else: ?>
+    <br><p class="center">Не найдено локаций с выбранным персоналом</p>
 <? endif; ?>
