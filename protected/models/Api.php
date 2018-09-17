@@ -78,6 +78,7 @@ class Api
                 case 'rateuse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rateUse(); break;
                 case 'maleor' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->maleor(); break;
                 case 'testpay' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testPay(); break;
+                case 'services' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->services(); break;
                  
                 
 
@@ -102,6 +103,19 @@ class Api
         return $data;
     }
     
+    public function services(){
+         $period = Yii::app()->getRequest()->getParam('period');
+         $service = Yii::app()->getRequest()->getParam('service');
+         
+         $cost = 300;
+         $valute = 'RUB';
+         
+         $data['cost'] = $cost*$period;
+         $data['val'] = 'RUB';
+         return $data;
+    }
+
+
     function getFormSignature($account, $desc, $sum, $secretKey) {
         $hashStr = $account.'{up}'.$desc.'{up}'.$sum.'{up}'.$secretKey;
         return hash('sha256', $hashStr);
