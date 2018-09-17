@@ -6,8 +6,8 @@ $bUrl = Yii::app()->baseUrl;
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/app-list.css');
 ?>
     <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($viData); ?>
-</pre>
+        <? print_r($viData); ?>
+    </pre>
 
 
     <div class="row projects">
