@@ -1660,10 +1660,12 @@ class UserController extends AppController
                 default:
                     if($type==3) { // employer
                         $data = $model->getProject($id);
-                        $view = MainConfig::$VIEW_EMP_PROJECT_LIST;
+                        $view = MainConfig::$VIEW_PROJECT_ITEM;
                         $model->getXLSFile();
                     }
                     else {
+                        $data = $model->getProject($id);
+                        $data = $model->buildTaskArray($data);
                         $view = 'projects/project-app';
                     }
                     break;
