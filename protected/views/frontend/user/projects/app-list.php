@@ -25,8 +25,8 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/app-
                                <?=$value['name']?>
                             </div>
                             <div class="projects__item-control">
-                                <input class="projects__item-button item__submit" type="submit" value="Принять"/>
-                                <input class="projects__item-button item__cancel" type="submit" value="Отказаться"/>
+                                <a href="/user/projects/?project=<?=$value['project']?>&status=1" class="projects__item-button item__submit">Принять</a>
+                                <a href="/user/projects/?project=<?=$value['project']?>&status=-1" class="projects__item-button item__cancel">Отказаться</a>
                             </div>
                         </div>
                     <? endforeach; ?>
@@ -48,6 +48,10 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/app-
                         </div>
                     <? endforeach; ?>
                 </div>
+            <? else: ?>
+
+                <h1 class="projects__title">НЕТ ПРИНЯТЫХ ПРОЕКТОВ</h1>
+
             <? endif; ?>
 
         </div>

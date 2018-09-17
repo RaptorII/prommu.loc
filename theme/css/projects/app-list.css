@@ -151,7 +151,7 @@
 	text-align: right;
 }
 
-#DiContent input.projects__item-button{
+#DiContent a.projects__item-button{
 	display: inline;
 	padding: 5px 10px;
 	background: #ff6500;
@@ -167,7 +167,7 @@
 	font-size: 14px;
 }
 
-#DiContent input.projects__item-button:before {
+#DiContent a.projects__item-button:before {
 	content: "";
 	position: absolute;
 	z-index: -1;
