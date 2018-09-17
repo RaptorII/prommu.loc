@@ -1,11 +1,11 @@
-#DiContent .content-block{ margin: 0 }
+/*#DiContent .content-block{ margin: 0 }
 .project,
 .project *{ font-family: RobotoCondensed-Regular, verdana, arial; }
 #DiContent .project input:focus,
 #DiContent .project button:focus,
 #DiContent .project textarea:focus
 { outline: none }
-/*		*/
+
 .projects__table{
 	width: 100%;
 	margin: 50px 0;
@@ -99,3 +99,91 @@
 	border-right: 1px solid #cecece;
 }
 .projects__table .prj-table__item-body td:last-child{ border-right: none }
+*/
+
+.projects__title{
+	margin: 25px 0 30px;
+	text-align: center;
+	font-size: 24px;
+}
+.projects__list{
+	margin-bottom: 30px;
+}
+.projects__item{
+	display: block;
+	padding: 15px 60px;
+	margin-bottom: 5px;
+	font-size: 22px;
+	background: #f5f5f5;
+	overflow: hidden;
+}
+
+.projects__item-image{
+	width:8%;
+	float: left;
+	min-width:70px;
+}
+
+.projects__item-image img{
+	display: block;
+	width:90%;
+	min-width:50px;
+	height:inherit;
+	margin:0 auto;
+}
+
+.projects__item-name{
+	width:60%;
+	float: left;
+	margin-top:20px;
+	color: #abb820;
+	font-size: 22px;
+	line-height: 30px;
+	padding-left: 20px;
+}
+
+.projects__item-control{
+	width: 32%;
+	float: left;
+	margin-top: 20px;
+	text-align: right;
+}
+
+#DiContent input.projects__item-button{
+	display: inline;
+	padding: 5px 10px;
+	background: #ff6500;
+	border: none;
+	color: #FFFFFF;
+	text-transform: uppercase;
+	position: relative;
+	-webkit-transition: all 0.3s ease-out;
+	-moz-transition: all 0.3s ease-out;
+	-o-transition: all 0.3s ease-out;
+	transition: all 0.3s ease-out;
+	outline:none;
+	font-size: 14px;
+}
+
+#DiContent input.projects__item-button:before {
+	content: "";
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: #abb820;
+	-webkit-transform: scaleX(0);
+	transform: scaleX(0);
+	-webkit-transform-origin: 0 50%;
+	transform-origin: 0 50%;
+	-webkit-transition: all ease-out .3s;
+	-moz-transition: all ease-out .3s;
+	-o-transition: all ease-out .3s;
+	transition: all ease-out .3s;
+}
+
+.projects__item-full{
+	width:92%;
+}

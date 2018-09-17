@@ -1,13 +1,58 @@
 <?php
-    $title = 'Мои проекты';
-    $this->setBreadcrumbs($title, MainConfig::$PAGE_PROJECT_LIST);
-    $this->setPageTitle($title);
-	$bUrl = Yii::app()->baseUrl;
-	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/app-list.css');
+$title = 'Мои проекты';
+$this->setBreadcrumbs($title, MainConfig::$PAGE_PROJECT_LIST);
+$this->setPageTitle($title);
+$bUrl = Yii::app()->baseUrl;
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/app-list.css');
 ?>
-<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
+    <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
 <? print_r($viData); ?>
 </pre>
+
+
+    <div class="row projects">
+        <div class="col-xs-12">
+
+            <? if (count($viData['new-items']) > 0): ?>
+                <h1 class="projects__title">ПРИГЛАШЕНИЯ НА ПРОЕКТЫ</h1>
+                <div class="projects__list">
+                    <? foreach ($viData['new-items'] as $key => $value): ?>
+                        <div class="projects__item">
+                            <div class="projects__item-image">
+                                <a href="<?=$value['profile']?>" target="_blank"><img src="<?=$value['src']?>"/></a>
+                            </div>
+                            <div class="projects__item-name">
+                                <a target="_blank" href="<?=$value['link']?>"><?=$value['name']?></a>
+                            </div>
+                            <div class="projects__item-control">
+                                <input class="projects__item-button item__submit" type="submit" value="Принять"/>
+                                <input class="projects__item-button item__cancel" type="submit" value="Отказаться"/>
+                            </div>
+                        </div>
+                    <? endforeach; ?>
+                </div>
+            <? endif; ?>
+
+
+            <? if (count($viData['items']) > 0): ?>
+                <h1 class="projects__title">ПРОЕКТЫ</h1>
+                <div class="projects__list">
+                    <? foreach ($viData['items'] as $key => $value): ?>
+                        <div class="projects__item">
+                            <div class="projects__item-image">
+                                <a target="_blank" href="<?=$value['profile']?>" target="_blank"><img src="<?=$value['src']?>"/></a>
+                            </div>
+                            <div class="projects__item-name projects__item-full">
+                                <a href="<?=$value['link']?>"><?=$value['name']?></a>
+                            </div>
+                        </div>
+                    <? endforeach; ?>
+                </div>
+            <? endif; ?>
+
+        </div>
+    </div>
+<? /*
 <div class="row projects">
 	<div class="col-xs-12">
 		<table class="projects__table">
@@ -131,3 +176,5 @@
 		</table>
 	</div>
 </div>
+
+*/ ?>
