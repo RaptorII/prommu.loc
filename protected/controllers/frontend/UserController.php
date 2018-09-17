@@ -1665,10 +1665,14 @@ class UserController extends AppController
             }
         }
         else{
-            $data = $model->getProjectEmployer();
-            $view = $type==3
-                ? MainConfig::$VIEW_EMP_PROJECT_LIST
-                : MainConfig::$VIEW_APP_PROJECT_LIST;
+            if($type==3) { // employer
+                $data = $model->getProjectEmployer();
+                $view = MainConfig::$VIEW_EMP_PROJECT_LIST;
+            }
+            else {
+                $data = $model->getProjectApplicant();
+                $view = MainConfig::$VIEW_APP_PROJECT_LIST;
+            }
         }
 
         $this->render($view, array('viData' => $data, 'project' => $id));

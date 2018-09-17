@@ -197,15 +197,53 @@ class Project extends ARModel
     *       Проекты для Р
     */
     public function getProjectEmployer(){
-        $idus = Share::$UserProfile->id;
-         $result = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('project p')
-            ->where('p.id_user = :idus', array(':idus' =>$idus))
-            ->order('p.crdate desc')
-            ->queryAll();
-            
-        return $result;
+			$idus = Share::$UserProfile->id;
+			$result = Yii::app()->db->createCommand()
+				->select("*")
+				->from('project p')
+				->where('p.id_user = :idus', array(':idus' =>$idus))
+				->order('p.crdate desc')
+				->queryAll();
+
+			return $result;
+    }
+    /*
+    *
+    */
+    public function getProjectApplicant() {
+			$idus = Share::$UserProfile->id;
+			$sql = Yii::app()->db->createCommand()
+				->select("
+						p.project, 
+						p.name, 
+						p.id_user, 
+						p.crdate, 
+						pu.status, 
+						e.name emp,
+						e.logo
+					")
+				->from('project p')
+				->leftjoin('project_user pu', 'pu.project=p.project')
+				->leftjoin('employer e', 'e.id_user=p.id_user')
+				->where('pu.user = :idus', array(':idus' =>$idus))
+				->order('p.crdate desc')
+				->queryAll();
+
+			$arRes = array();
+			foreach ($sql as $v) {
+				$v['link'] = MainConfig::$PAGE_PROJECT_LIST . DS . $v['project'];
+        $v['src'] = DS . MainConfig::$PATH_EMPL_LOGO 
+          . DS . (!$v['logo'] ? 'logo.png' : $v['logo'] . '100.jpg');
+        $v['profile'] = MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user'];
+
+				switch ($v['status']) {
+					case '0': $arRes['new-items'][] = $v; break;
+					case '1': $arRes['items'][] = $v; break;
+					case '-1': $arRes['failures'][] = $v; break;
+				}
+			}
+
+			return $arRes;
     }
     /*
     *       Фильтр для Адресной программы
