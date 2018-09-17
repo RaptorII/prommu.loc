@@ -22,7 +22,7 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/app-
                                 <a href="<?=$value['profile']?>" target="_blank"><img src="<?=$value['src']?>"/></a>
                             </div>
                             <div class="projects__item-name">
-                                <a target="_blank" href="<?=$value['link']?>"><?=$value['name']?></a>
+                               <?=$value['name']?>
                             </div>
                             <div class="projects__item-control">
                                 <input class="projects__item-button item__submit" type="submit" value="Принять"/>

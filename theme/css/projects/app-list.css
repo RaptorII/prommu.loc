@@ -126,10 +126,12 @@
 
 .projects__item-image img{
 	display: block;
-	width:90%;
+	width:100%;
 	min-width:50px;
 	height:inherit;
 	margin:0 auto;
+	border-radius: 50%;
+	border: 1px solid #abb820;
 }
 
 .projects__item-name{
@@ -186,4 +188,28 @@
 
 .projects__item-full{
 	width:92%;
+}
+
+@media (min-width: 992px){
+	.projects__item-name{
+		width:50%;
+	}
+}
+
+@media (min-width: 768px){
+	.projects__item-name{
+		width: 53%;
+	}
+	.projects__item-control{
+		width: 35%;
+	}
+}
+@media (max-width: 767px){
+	.projects__item-name{
+		width: 87%;
+	}
+	.projects__item-control{
+		width: 100%;
+		text-align: center;
+	}
 }
