@@ -1658,9 +1658,14 @@ class UserController extends AppController
                         $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id);
                     break;
                 default:
-                    $data = $model->getProject($id);
-                    $view = MainConfig::$VIEW_PROJECT_ITEM;
-                    $model->getXLSFile();
+                    if($type==3) { // employer
+                        $data = $model->getProject($id);
+                        $view = MainConfig::$VIEW_EMP_PROJECT_LIST;
+                        $model->getXLSFile();
+                    }
+                    else {
+                        $view = 'projects/project-app';
+                    }
                     break;
             }
         }
