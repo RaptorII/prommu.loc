@@ -137,7 +137,19 @@ jQuery(function($){
 		$('#epa-str-language').val(arLang);
 	});
 	// события выбора вакансии
-	$('#epa-list-posts').on('change', 'input', function(){ checkPosts() });
+	$('#epa-list-posts').on('change', 'input', function(e){
+		var arInputs = $('#epa-list-posts [name="donjnost[]"]:checked');
+		// нельзя удалять послeднюю должность
+		if(!arInputs.length) {
+			var el = e.target.nextElementSibling;
+			confirm('Должна быть установлена хотя бы одна вакансия');
+			setTimeout(function(){ $(el).click() },10);
+			return false;
+		}
+		checkPosts();
+	});
+	//
+	$('.epa__post-detail').on('input', '[type=text]', function(){ checkField(this) });
 	// создать новую должнотсть
 	$('#epa-posts-add span').click(function(){
 		$('#epa-posts-add').hide();
@@ -410,7 +422,8 @@ jQuery(function($){
 			content = $('#add-day-period').html(),
 			idDay = $(this).val(),
 			dayName = $(this).data('day'),
-			idCity = main[0].dataset.idcity;
+			idCity = main[0].dataset.idcity,
+			prnt = $(this).closest('.epa__days-checkboxes');
 
 		if($(this).is(':checked')){
 			content = content.replace(/NEWDAY/g, idDay);
@@ -428,6 +441,14 @@ jQuery(function($){
 					$(this).remove(); 
 			});
 		}
+		var checked = false,
+				arL = $(prnt).find('.epa__checkbox');
+		$.each($(prnt).find('.epa__day-input'), function(){
+			if($(this).is(':checked')) checked = true;
+		});
+		checked
+		? $.each(arL, function(){ remErr(this) })
+		: $.each(arL, function(){ addErr(this) });
 	});
 	// удаление периода
 	$(cityM).on('click', '.epa__period-close', function(){
@@ -468,7 +489,10 @@ jQuery(function($){
 	$(cntctM).on('change','.epa__required',function(){ checkField(this)	});
 	$('#epa-mail').keyup(function(){ checkField(this) });
 	$('#epa-gmail').change(function(){ checkField(this)	});
-	$('[name="about-mself"]').on('keyup',function(){ checkField(this) });
+	$('#epa-gmail').change(function(){ checkField(this)	});
+	$('#epa-gmail').change(function(){ checkField(this)	});
+	$('.epa__education [type="radio"], .epa__language [type="checkbox"]')
+		.change(function(){ checkField(this) });
 	//
 	$('.epa__save-btn').click(function(e){
 		var epattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i,
@@ -499,8 +523,27 @@ jQuery(function($){
 						$.each($(cityM+' .epa__required'), function(){
 							if(!checkField(this)) errors = true; 
 						});
+						$.each($(cityM+' .epa__days-checkboxes'), function(){
+							var checked = false,
+									$p = $(this);
 
-						if(!checkField('[name="about-mself"]')) errors = true; 
+							$.each($p.find('.epa__day-input'), function(){ 
+								if($(this).is(':checked')) checked=true;
+							});
+							if(!checked) {
+								$.each($p.find('.epa__checkbox'), function(){ addErr(this) })
+								errors = true; 
+							}
+						});
+
+						if(!checkField('[name="about-mself"]')) errors = true;
+
+						if(!checkField($('[name="user-attribs[edu]"]'))) errors = true;
+						if(!checkField($('[name="langs[]"]'))) errors = true;
+						$.each($('.epa__post-detail .epa__required'), function(){
+							if(!checkField(this)) errors = true; 
+						});
+
 						checkPhone({'type':'input'});
 
 						var arErrors = $('.error');
@@ -554,8 +597,27 @@ jQuery(function($){
 			$.each($(cityM+' .epa__required'), function(){
 				if(!checkField(this)) errors = true; 
 			});
+			$.each($(cityM+' .epa__days-checkboxes'), function(){
+				var checked = false,
+						$p = $(this);
+
+				$.each($p.find('.epa__day-input'), function(){ 
+					if($(this).is(':checked')) checked=true;
+				});
+				if(!checked) {
+					$.each($p.find('.epa__checkbox'), function(){ addErr(this) })
+					errors = true; 
+				}
+			});
 
 			if(!checkField('[name="about-mself"]')) errors = true; 
+
+			if(!checkField($('[name="user-attribs[edu]"]'))) errors = true;
+			if(!checkField($('[name="langs[]"]'))) errors = true;
+			$.each($('.epa__post-detail .epa__required'), function(){
+				if(!checkField(this)) errors = true; 
+			});
+
 			checkPhone({'type':'input'});
 
 			var arErrors = $('.error');
@@ -977,6 +1039,18 @@ jQuery(function($){
 				res = addErr(label);
 			else
 				res = remErr(label);
+		}
+		else if($(label).hasClass('epa__education')) {
+			var selected = false;
+			$.each($(label).find('[type="radio"]'),
+				function(){ if(this.checked) selected = true; });
+			res = (!selected ? addErr(label) : remErr(label));
+		}
+		else if($(label).hasClass('epa__language')) {
+			var selected = false;
+			$.each($(label).find('[type="checkbox"]'),
+				function(){ if(this.checked) selected = true; });
+			res = (!selected ? addErr(label) : remErr(label));
 		}
 		else{
 			res = ((val=='' || val==null) ? addErr(label) : remErr(label));
