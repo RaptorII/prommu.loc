@@ -121,6 +121,10 @@
         $arPayment[$val['idpost']]['type'] = 'Час';
     }
   }
+
+echo "<pre>";
+print_r($viData['userInfo']['userDolj'][0]); 
+echo "</pre>";
 echo "<pre>";
 print_r($arPayment); 
 echo "</pre>";
