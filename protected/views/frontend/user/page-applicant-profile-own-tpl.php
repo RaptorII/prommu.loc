@@ -85,7 +85,11 @@
     $arPosts[$post['idpost']]['val'] = $post['val'];
     if(!$post['isshow']){
       $arPosts[$post['idpost']]['pay'] = $post['pay']>0 ? round($post['pay']) : '';
-      $arPosts[$post['idpost']]['pt'] = !$post['pt'] ? 'Час' : ($post['pt']>1 ? 'Месяц' : 'Неделю');
+      switch ($post['pt']) {
+        case 1: $arPosts[$post['idpost']]['pt'] = 'Неделя'; break;
+        case 2: $arPosts[$post['idpost']]['pt'] = 'Месяц'; break;
+        case 3: $arPosts[$post['idpost']]['pt'] = 'Посещение'; break;
+      }
     }
     if($post['isshow'])
       $arPosts[$post['idpost']]['pname'] = $post['pname'];
@@ -369,8 +373,9 @@
             <div class="ppp__post-item">
               <div class="ppp__post-name"><b>Должность: </b><span><?=$post['val']?></span></div>
               <div class="ppp__field ppp__post-field">
-                <span class="ppp__field-name">Ожидаемая оплата, руб:</span>
+                <span class="ppp__field-name">Ожидаемая оплата: </span>
                 <span class="ppp__field-val"><?=$post['pay']?></span>
+                <em>руб</em>
               </div>
               <div class="ppp__field ppp__post-field">
                 <span class="ppp__field-val"><?=$post['pt']?></span>

@@ -741,6 +741,12 @@ a.upp__project-info{ width: 65px }
 	height: inherit;
 	overflow: hidden;
 }
+.ppp__field.ppp__post-field em{
+	font-style: normal;
+	display: table-cell;
+	vertical-align: middle;
+	padding-left: 3px;
+}
 .ppp__field.ppp__post-exp{ min-height: 50px }
 .ppp__post-item .ppp__field-val{
 	padding: 7px 0;

@@ -940,7 +940,7 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	border-bottom: 5px solid transparent;
 	display: none;
 }
-#DiContent .edit-profile-applicant .epa__label.epa__select{ margin-bottom: 64px }
+/*#DiContent .edit-profile-applicant .epa__label.epa__select{ margin-bottom: 64px }*/
 /*
 *
 */
@@ -985,7 +985,7 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 		display: table-cell;
 		vertical-align: top;
 	}
-	#DiContent .edit-profile-applicant .epa__label.epa__select{ margin-bottom: 47px }
+	/*#DiContent .edit-profile-applicant .epa__label.epa__select{ margin-bottom: 47px }*/
 	.confirm-user{
 		text-align: center;
 		line-height: normal;
@@ -1362,3 +1362,16 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	box-shadow: none;
 }
 .country-phone-selector:hover{ background: transparent }
+/*
+*		17.09.18
+*/
+.epa__label-name em{
+	font-style: normal;
+	position: absolute;
+	right: 0;
+}
+#DiContent .epa__payment .epa__input{
+	padding-left: 120px;
+	padding-right: 22px;
+}
+.epa__payment .epa__label-name{ right: 5px }

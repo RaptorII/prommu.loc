@@ -111,8 +111,13 @@
   foreach ($viData['userInfo']['userDolj'][0] as $val){
     if($val['pay']>0){
       $arPayment[$val['idpost']]['pay'] = round($val['pay']);
-      $arPayment[$val['idpost']]['pt'] = $val['pt'];
-      $arPayment[$val['idpost']]['type'] = !$val['pt'] ? 'Час' : ($val['pt']>1 ? 'Месяц' : 'Неделю');
+      $arPayment[$val['idpost']]['pt'] = $val['pt'];             
+      $arPayment[$val['idpost']]['type'] = 'Час';
+      switch ($val['pt']) {
+        case 1: $arPayment[$val['idpost']]['type'] = 'Неделя'; break;
+        case 2: $arPayment[$val['idpost']]['type'] = 'Месяц'; break;
+        case 3: $arPayment[$val['idpost']]['type'] = 'Посещение'; break;
+      }
     }
   }
   // appearance
@@ -445,11 +450,11 @@
                     <div class="epa__post-name"><?=$post['newname']?></div>
                     <div class="epa__post-close"></div>
                     <label class="epa__label epa__payment">
-                      <span class="epa__label-name">Ожидаемая оплата, руб:</span>
-                      <input type="text" name="post[<?=$post['id']?>][payment]" value="<?=isset($arPayment[$post['id']]['pay']) ? $arPayment[$post['id']]['pay'] : ''?>" class="epa__input">
+                      <span class="epa__label-name">Ожидаемая оплата: <em>руб</em></span>
+                      <input type="text" name="post[<?=$post['id']?>][payment]" value="<?=isset($arPayment[$post['id']]['pay']) ? $arPayment[$post['id']]['pay'] : ''?>" class="epa__input epa__required" data-name="Ожидаемая оплата">
                     </label>
                     <label class="epa__label epa__select">
-                      <input type="text" name="epa-str-period" value="<?=!empty($arPayment[$post['id']]['type']) ? $arPayment[$post['id']]['type'] : 'Час'?>" class="epa__input epa__post-period" disabled>
+                      <input type="text" name="epa-str-period" value="<?=$arPayment[$post['id']]['type']?>" class="epa__input epa__post-period" disabled>
                       <div class="epa__label-veil epa__post-veil"></div>
                       <ul class="epa__select-list epa__post-list">
                           <i class="epa__select-list-icon epa__post-btn">OK</i>
@@ -464,6 +469,10 @@
                           <li>
                             <input type="radio" name="post[<?=$post['id']?>][hwm]" value="2" <?=$arPayment[$post['id']]['pt']==2 ? 'checked' : ''?>>
                             <label>Месяц</label>
+                          </li>
+                          <li>
+                            <input type="radio" name="post[<?=$post['id']?>][hwm]" value="3" <?=$arPayment[$post['id']]['pt']==3 ? 'checked' : ''?>>
+                            <label>Посещение</label>
                           </li>
                       </ul>
                     </label>
@@ -646,7 +655,7 @@
                   <i class="epa__select-list-icon">OK</i>
                   <?php foreach($arRes as $edu): ?>
                     <li>
-                      <input type="radio" name="user-attribs[edu]" value="<?=$edu['id']?>" id="epa-education-<?=$edu['id']?>" <?=$edu['checked']?>>
+                      <input type="radio" name="user-attribs[edu]" value="<?=$edu['id']?>" id="epa-education-<?=$edu['id']?>" data-name="Образование" <?=$edu['checked']?>>
                       <label for="epa-education-<?=$edu['id']?>"><?=$edu['name']?><b></b></label>
                     </li> 
                   <?php endforeach; ?>
@@ -671,7 +680,7 @@
                   <i class="epa__select-list-icon">OK</i>
                   <?php foreach($arRes as $lang): ?>
                     <li>
-                      <input type="checkbox" name="langs[]" value="<?=$lang['id']?>" id="epa-language-<?=$lang['id']?>" <?=$lang['checked']?>>
+                      <input type="checkbox" name="langs[]" value="<?=$lang['id']?>" id="epa-language-<?=$lang['id']?>" data-name="Иностранные языки" <?=$lang['checked']?>>
                       <label for="epa-language-<?=$lang['id']?>"><?=$lang['name']?><b></b></label>
                     </li> 
                   <?php endforeach; ?>
@@ -704,8 +713,8 @@
       <div class="epa__post-name">NEWNAME</div>
       <div class="epa__post-close"></div>
       <label class="epa__label epa__payment">
-        <span class="epa__label-name">Ожидаемая оплата, руб:</span>
-        <input type="text" name="post[NEWID][payment]" value="" class="epa__input">
+        <span class="epa__label-name">Ожидаемая оплата: <em>руб</em></span>
+        <input type="text" name="post[NEWID][payment]" value="" class="epa__input epa__required" data-name="Ожидаемая оплата">
       </label>
       <label class="epa__label epa__select">
         <input type="text" name="epa-str-period" value="Час" class="epa__input epa__post-period" disabled>
@@ -724,17 +733,21 @@
               <input type="radio" name="post[NEWID][hwm]" value="2">
               <label>Месяц</label>
             </li>
+            <li>
+              <input type="radio" name="post[NEWID][hwm]" value="3">
+              <label>Посещение</label>
+            </li>
         </ul>
       </label>
       <label class="epa__label epa__select epa__post-experience">
         <span class="epa__label-name">Опыт работы:</span>
-        <input type="text" name="epa-str-period" value="" class="epa__input epa__post-period" disabled>
+        <input type="text" name="epa-str-period" value="без опыта" class="epa__input epa__post-period" disabled>
         <div class="epa__label-veil epa__post-veil"></div>
         <ul class="epa__select-list epa__post-list">
             <i class="epa__select-list-icon epa__post-btn">OK</i>
             <?php foreach($viData['expir'] as $val): ?>
               <li>
-                <input type="radio" name="exp[NEWID][level]" value="<?=$val['id']?>">
+                <input type="radio" name="exp[NEWID][level]" value="<?=$val['id']?>" <?=($val['id']==32?'checked':'')?>>
                 <label><?=$val['name']?><b></b></label>
               </li>
             <?php endforeach; ?>
