@@ -121,6 +121,10 @@
         $arPayment[$val['idpost']]['type'] = 'Час';
     }
   }
+echo "<pre>";
+print_r($arPayment); 
+echo "</pre>";
+
   // appearance
   $arAppear = array(11=>'hcolor',12=>'hlen',13=>'ycolor',14=>'chest',15=>'waist',16=>'thigh');
   $arAppearName = array(11=>'Цвет волос',12=>'Длина волос',13=>'Цвет глаз',14=>'Размер груди',15=>'Объем талии',16=>'Объем бедер');
