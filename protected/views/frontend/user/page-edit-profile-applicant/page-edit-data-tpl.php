@@ -109,26 +109,16 @@
   }
   $arPayment = array();
   foreach ($viData['userInfo']['userDolj'][0] as $val){
-    if($val['pay']>0){
+    if($val['pay']>0)
       $arPayment[$val['idpost']]['pay'] = round($val['pay']);
-      $arPayment[$val['idpost']]['pt'] = $val['pt'];
-      switch ($val['pt']) {
-        case 1: $arPayment[$val['idpost']]['type'] = 'Неделя'; break;
-        case 2: $arPayment[$val['idpost']]['type'] = 'Месяц'; break;
-        case 3: $arPayment[$val['idpost']]['type'] = 'Посещение'; break;
-      }
-      if(!isset($val['pt']) || $val['pt']==0)
-        $arPayment[$val['idpost']]['type'] = 'Час';
+    $arPayment[$val['idpost']]['pt'] = $val['pt'];
+    switch ($val['pt']) {
+      case 0: $arPayment[$val['idpost']]['type'] = 'Час'; break;
+      case 1: $arPayment[$val['idpost']]['type'] = 'Неделя'; break;
+      case 2: $arPayment[$val['idpost']]['type'] = 'Месяц'; break;
+      case 3: $arPayment[$val['idpost']]['type'] = 'Посещение'; break;
     }
   }
-
-echo "<pre>";
-print_r($viData['userInfo']['userDolj'][0]); 
-echo "</pre>";
-echo "<pre>";
-print_r($arPayment); 
-echo "</pre>";
-
   // appearance
   $arAppear = array(11=>'hcolor',12=>'hlen',13=>'ycolor',14=>'chest',15=>'waist',16=>'thigh');
   $arAppearName = array(11=>'Цвет волос',12=>'Длина волос',13=>'Цвет глаз',14=>'Размер груди',15=>'Объем талии',16=>'Объем бедер');
