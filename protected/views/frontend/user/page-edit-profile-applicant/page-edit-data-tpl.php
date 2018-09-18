@@ -111,12 +111,12 @@
   foreach ($viData['userInfo']['userDolj'][0] as $val){
     if($val['pay']>0){
       $arPayment[$val['idpost']]['pay'] = round($val['pay']);
-      $arPayment[$val['idpost']]['pt'] = $val['pt'];             
-      $arPayment[$val['idpost']]['type'] = 'Час';
+      $arPayment[$val['idpost']]['pt'] = $val['pt'];
       switch ($val['pt']) {
         case 1: $arPayment[$val['idpost']]['type'] = 'Неделя'; break;
         case 2: $arPayment[$val['idpost']]['type'] = 'Месяц'; break;
         case 3: $arPayment[$val['idpost']]['type'] = 'Посещение'; break;
+        default: $arPayment[$val['idpost']]['type'] = 'Час'; break;
       }
     }
   }
@@ -478,15 +478,19 @@
                     </label>
                     <?php 
                       $arRes = array();
-                      $name = '';
+                      $name = 'без опыта';
+                      $checked = false;
                       foreach($viData['expir'] as $val){
                         $arRes[$val['id']] = $val;
                         $key = $this->ViewModel->isInArray($viData['userInfo']['userDolj'][0], 'id_attr', $val['id']);
                         if($key>0 && $viData['userInfo']['userDolj'][0][$key]['idpost']==$post['id']){
                           $arRes[$val['id']]['checked'] = 'checked';
                           $name = $val['name'];
+                          $checked = true;
                         }                        
                       }
+                      if(!$checked)
+                        $arRes[32]['checked'] = 'checked';
                     ?>           
                     <label class="epa__label epa__select epa__post-experience">
                       <span class="epa__label-name">Опыт работы:</span>
