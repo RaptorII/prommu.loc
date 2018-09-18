@@ -86,6 +86,7 @@
     if(!$post['isshow']){
       $arPosts[$post['idpost']]['pay'] = $post['pay']>0 ? round($post['pay']) : '';
       switch ($post['pt']) {
+        case 0: $arPosts[$post['idpost']]['pt'] = 'Час'; break;
         case 1: $arPosts[$post['idpost']]['pt'] = 'Неделя'; break;
         case 2: $arPosts[$post['idpost']]['pt'] = 'Месяц'; break;
         case 3: $arPosts[$post['idpost']]['pt'] = 'Посещение'; break;
