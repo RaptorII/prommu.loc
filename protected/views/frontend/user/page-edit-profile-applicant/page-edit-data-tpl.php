@@ -116,8 +116,9 @@
         case 1: $arPayment[$val['idpost']]['type'] = 'Неделя'; break;
         case 2: $arPayment[$val['idpost']]['type'] = 'Месяц'; break;
         case 3: $arPayment[$val['idpost']]['type'] = 'Посещение'; break;
-        default: $arPayment[$val['idpost']]['type'] = 'Час'; break;
       }
+      if(!isset($val['pt']) || $val['pt']==0)
+        $arPayment[$val['idpost']]['type'] = 'Час';
     }
   }
   // appearance
