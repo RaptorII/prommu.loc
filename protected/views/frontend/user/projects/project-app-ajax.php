@@ -60,7 +60,7 @@ if(sizeof($viData['items'])>0): ?>
                                             data-date="<?=$city['date']?>"
                                             data-point="<?=$p?>"
                                         >
-                                            Смотреть
+                                            подробнее
                                         </span>
                                         <?endif;?>
                                     </div>
