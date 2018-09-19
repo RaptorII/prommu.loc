@@ -1677,7 +1677,12 @@ class UserController extends AppController
                 $data = $model->getProjectEmployer();
                 $view = MainConfig::$VIEW_EMP_PROJECT_LIST;
             }
-            else {
+            if($type==2) { // app
+                $data = $model->changeAppStatus();
+                if($data['status']>0) // по согласию переход на проект
+                   $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$data['project']); 
+                if($data['status']<0) // по отказу обратно в список без параметров
+                    $this->redirect(MainConfig::$PAGE_PROJECT_LIST); 
                 $data = $model->getProjectApplicant();
                 $view = MainConfig::$VIEW_APP_PROJECT_LIST;
             }

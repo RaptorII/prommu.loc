@@ -652,7 +652,7 @@ class Project extends ARModel
                 ->where('id_user=:idus AND project=:prj', array(':idus'=>$idus,':prj'=>$prj))
                 ->queryAll();
         }
-        else {
+        if($t==2) {
             $result = Yii::app()->db->createCommand()
                 ->select('id')
                 ->from('project_user')
@@ -1204,5 +1204,29 @@ class Project extends ARModel
         }
 
         return $arRes;
+    }
+    /*
+    *
+    */
+    public function changeAppStatus() {
+        $arRes['project'] = Yii::app()->getRequest()->getParam('project');
+        $arRes['status'] = Yii::app()->getRequest()->getParam('status');
+        $idus = Share::$UserProfile->id;
+        $type = Share::$UserProfile->type;
+
+        if(!isset($arRes['project']) || !isset($arRes['status']) || $type!=2)
+            return array('status'=>0);
+
+        if(!$this->hasAccess($arRes['project']))
+            return array('status'=>0);
+
+        Yii::app()->db->createCommand()
+            ->update(
+                'project_user',
+                array('status'=>$arRes['status']),
+                'project=:prj AND user=:idus',
+                array(':prj'=>$arRes['project'], ':idus'=>$idus)
+            );
+        return $arRes;    
     }
 }
