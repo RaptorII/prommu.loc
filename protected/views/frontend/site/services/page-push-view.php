@@ -41,7 +41,7 @@
   <script type="text/javascript">
     var arIdies = <?=json_encode($viData['app_idies'])?>;
     var arSelectCity = <?=json_encode($viData['workers']['city'])?>;
-    var AJAX_GET_PROMO = "<?=MainConfig::$PAGE_SERVICES_PUSH?>";
+    var AJAX_GET_PROMO = "<?='/user'.MainConfig::$PAGE_SERVICES_PUSH?>";
   </script>
   <div class='row'>
     <?
