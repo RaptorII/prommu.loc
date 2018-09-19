@@ -31,9 +31,20 @@ class Auth
         $birthday = filter_var(Yii::app()->getRequest()->getParam('birthday'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $photos = filter_var(Yii::app()->getRequest()->getParam('photos'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $ip =  Yii::app()->getRequest()->getParam('ip');
-        $client =  Yii::app()->getRequest()->getParam('client');
-        $pm =  Yii::app()->getRequest()->getParam('pm');
+        $client = Yii::app()->request->cookies['_ga'];
+        $client = substr($client, 6, 100);
+        $client = Yii::app()->session['client'];
+         $pm = Yii::app()->getRequest()->getParam('pm');
+        if($pm == '') $pm = 'none';
         
+        $ips  = @$_SERVER['HTTP_CLIENT_IP'];
+        $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+        $remote  = @$_SERVER['REMOTE_ADDR'];
+        
+        if(filter_var($ips, FILTER_VALIDATE_IP)) $ip = $ips;
+        elseif(filter_var($forward, FILTER_VALIDATE_IP)) $ip = $forward;
+        else $ip = $remote;
+    
         ///DOUBLE NULL
         $transition = explode(",", $transition);
         $transition = $transition[0];
@@ -126,7 +137,7 @@ class Auth
                         'admin' => $admin,
                         'subdomen' => 0,
                         'client' => $client,
-                        'ip' => $ip,
+                        'ip' => $ip, 
                         'source' => $pm
                     );
 
@@ -219,7 +230,7 @@ class Auth
                         'admin' => $admin,
                         'subdomen' => 0,
                         'client' => $client,
-                        'ip' => $ip,
+                        'ip' => $ip, 
                         'source' => $pm
                     );
 
@@ -332,7 +343,7 @@ class Auth
         $email[5] = "manag_reports@euro-asian.ru";
         $email[6] = "e.marketing@euro-asian.ru";
         for($i = 0; $i <6; $i++){
-             Share::sendmail($email[$i], "Dev.Prommu: зарегистрирован новый пользователь", trim($messages));
+             Share::sendmail($email[$i], "Prommu: зарегистрирован новый пользователь", trim($messages));
        
         }
          $message = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден) Требуется модерация администратора сайта!
@@ -366,7 +377,7 @@ class Auth
                 <br/>
                 Площадка: <b>%s</b>",
             MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
-        Share::sendmail("mk0630733719@gmail.com", "Dev.Prommu: зарегистрирован новый пользователь", trim($messages));
+        Share::sendmail("mk0630733719@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
 
 
 
@@ -415,7 +426,7 @@ class Auth
         $email[5] = "manag_reports@euro-asian.ru";
         $email[6] = "e.marketing@euro-asian.ru";
         for($i = 0; $i <6; $i++){
-             Share::sendmail($email[$i], "Dev.Prommu: зарегистрирован новый пользователь", trim($messages));
+             Share::sendmail($email[$i], "Prommu: зарегистрирован новый пользователь", trim($messages));
        
         }
          $message = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден) Требуется модерация администратора сайта!
@@ -449,7 +460,7 @@ class Auth
                 <br/>
                 Площадка: <b>%s</b>",
             MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client,$pm);
-        Share::sendmail("mk0630733719@gmail.com", "Dev.Prommu: зарегистрирован новый пользователь", trim($messages));
+        Share::sendmail("mk0630733719@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
 
                    
                 } // endif
@@ -1339,8 +1350,8 @@ class Auth
         $last_referer = filter_var(Yii::app()->getRequest()->getParam('last_referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $ip = Yii::app()->getRequest()->getParam('ip');
         $pm = Yii::app()->getRequest()->getParam('pm_source');
-        if($pm == '') $pm = '(none)';
-        $client = Yii::app()->request->cookies['_ga'];
+        if($pm == '') $pm = 'none';
+        $client = Yii::app()->getRequest()->getParam('client');
         $client = substr($client, 6, 100);
 
         if( $idUs && $res['isblocked'] != 2 )
@@ -1409,7 +1420,7 @@ class Auth
                         'active' => 0,
                         'subdomen' => 0,
                         'client' => $client,
-                        'ip' => $ip,
+                        'ip' => $ip, 
                         'source' => $pm
                     );
 
@@ -1456,7 +1467,7 @@ class Auth
                 .'<p style="font-size:16px;"> Ваш логин для входа на портал:'.$inData['inputData']['email']
                 .'<br/>Ваш пароль для входа на портал:'.$inData['inputData']['pass'].'</p>'
             .'</div>';
-            Share::sendmail($inData['inputData']['email'], "Dev.Prommu.com. Подтверждение регистрации на портале поиска временной работы!", $message);
+            Share::sendmail($inData['inputData']['email'], "Prommu.com. Подтверждение регистрации на портале поиска временной работы!", $message);
         }
         else
         {
@@ -1498,7 +1509,7 @@ class Auth
                 .'<p style="font-size:16px;">Ваш логин для входа на портал:'.$inData['inputData']['email']
                 .'<br/>Ваш пароль для входа на портал:'.$inData['inputData']['pass'].'</p>'
             .'</div>';
-            Share::sendmail($inData['inputData']['email'], " Dev.Prommu.com. Подтверждение регистрации на портале поиска персонала!", $message);
+            Share::sendmail($inData['inputData']['email'], " Prommu.com. Подтверждение регистрации на портале поиска персонала!", $message);
         } // endif
         
 
@@ -1592,11 +1603,9 @@ class Auth
         $canal = $data['canal'];
         $campaign = $data['campaign'];
         $content = $data['content'];
-        $keywords = $data['keywords'];
+        $keywords = urldecode($data['keywords']);
         $point = $data['point'];
         $last_referer = $data['last_referer'];
-        $client = $data['client'];
-        $ip = $data['ip'];
 
         ///ANALITYCS DATA
 
@@ -1618,7 +1627,7 @@ class Auth
 
 
 
-             $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . "/?&uid=" .$id."&birthday=".$birthday."&smart=1&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer."&ip=".$ip."&client=".$client;
+             $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . "/?&uid=" .$id."&birthday=".$birthday."&smart=1&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
                 return $link;
             } else {// endif
 
@@ -1650,23 +1659,20 @@ class Auth
                         'canal' => $data['canal'],
                         'campaign' => $data['campaign'],
                         'content' => $data['content'], 
-                        'keywords' => $data['keywords'],
+                        'keywords' => urldecode($data['keywords']),
                         'point' => $data['point'], 
                         'transition' => $data['transition'],
                         'last_referer' => $data['last_referer'],
                         'active' => 0,
                         'admin' => 0,
-                        'subdomen' => 0,
-                        'client' => $client,
-                        'ip' => $ip,
-                        'source' => $pm
+                        'subdomen' => 0
                     );
 
 
                      $res = Yii::app()->db->createCommand()
                         ->insert('analytic', $analytData);
 
-        $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=3&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer."&ip=".$ip."&client=".$client;
+        $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=3&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
             
         } else {
 
@@ -1696,16 +1702,13 @@ class Auth
                         'canal' => $data['canal'],
                         'campaign' => $data['campaign'],
                         'content' => $data['content'], 
-                        'keywords' => $data['keywords'],
+                        'keywords' => urldecode($data['keywords']),
                         'point' => $data['point'], 
                         'transition' => $data['transition'],
                         'last_referer' => $data['last_referer'],
                         'active' => 0,
                         'admin' => 0,
-                        'subdomen' => 0,
-                        'client' => $client,
-                        'ip' => $ip,
-                        'source' => $pm
+                        'subdomen' => 0
                     );
 
 
@@ -1719,7 +1722,7 @@ class Auth
         else $sex = 0; $smart = 1;
 
 
-        $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=2&t=' . $token . "&uid=" . $idUs."&sex=".$sex."&birthday=".$birthday."&smart=1&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer."&ip=".$ip."&client=".$client;
+        $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=2&t=' . $token . "&uid=" . $idUs."&sex=".$sex."&birthday=".$birthday."&smart=1&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
 
 
 
