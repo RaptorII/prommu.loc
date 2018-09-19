@@ -1,6 +1,13 @@
 <?php
-    $cookieView = Yii::app()->request->cookies['vacancies_page_view']->value; // вид, сохраненный в куках 
-    //if(!(MOBILE_DEVICE && !SHOW_APP_MESS)):
+	$cookieView = Yii::app()->request->cookies['vacancies_page_view']->value; // вид, сохраненный в куках 
+
+	foreach ($viData['posts'] as $p)
+		if($p['postself'] && array_key_exists($p['id'], $_GET['post'])) {
+			Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
+			break;
+		}
+
+	//if(!(MOBILE_DEVICE && !SHOW_APP_MESS)):
 ?>
     <?php
         Yii::app()->getClientScript()->registerScriptFile('/theme/js/page-vac-search.min.js', CClientScript::POS_END);

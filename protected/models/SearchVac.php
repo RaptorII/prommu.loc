@@ -152,11 +152,7 @@ class SearchVac extends Model
      */
     public function getOccupations()
     {
-        $sql = "SELECT
-                    d.id,
-                    d.id_par,
-                    d.type,
-                    d.name
+        $sql = "SELECT d.id, d.id_par, d.type, d.name, d.postself
                 FROM
                     user_attr_dict d
                 WHERE
