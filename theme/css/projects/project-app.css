@@ -60,7 +60,6 @@
 }
 .task__tasks-info{
     width: 100%;
-    padding-left: 10px;
 }
 .task__tasks-buttons{
     display: none;
@@ -137,6 +136,9 @@
 }
 .task__tasks-title{
     position: relative;
+}
+.task__single-info{
+    width:100%!important;
 }
 .task__single-info-btn{
     width: 100%;
@@ -256,3 +258,8 @@
     .task__tasks-button:nth-child(odd) { margin-right: 2% }
     .task__tasks-button:nth-child(even) { margin-left: 2% }
 }
+
+.task__table-pointinfo td{
+    width:inherit!important;
+}
+.task__table-info td.descr{ width: 65% }
