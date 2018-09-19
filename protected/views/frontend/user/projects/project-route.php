@@ -258,7 +258,18 @@ $arFilterData = [
                     <div class="routes__map">
                         <div class="routes__map-city">Харьков</div>
                         <div class="routes__map-map">
-                            <img src="/theme/pic/projects/temp-map-2.jpg">
+
+                            <script>
+                                var loadmap = function() {
+                                    var sm = new scribblemaps.ScribbleMap(document.getElementById('ScribbleMap'));
+                                    console.log(sm);
+                                    sm.ui.setAvailableTools([]);
+                                    console.log(sm.ui.setAvailableTools);
+                                }
+                            </script>
+                            <script src="//scribblemaps.com/api/js/?callback=loadmap" async></script>  
+                            <div id="ScribbleMap" style="width: 500px; height: 500px"></div>
+                            <?//<img src="/theme/pic/projects/temp-map-2.jpg"> ?>
                         </div>
                     </div>
                     <div class="routes__btns">

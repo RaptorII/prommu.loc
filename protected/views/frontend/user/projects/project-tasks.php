@@ -93,12 +93,12 @@ foreach ($viData['filter']['cities'] as $id => $city)
 		            <div class="task__user-date"><?=$city['date']?></div>
 		          </div>
 		          <div class="task__tasks-info">
-		          	<?php $tasks = sizeof($viData['tasks'][$d][$p][$idus]); ?>
+		          	<?php $tasks = sizeof($viData['tasks'][$unix][$p][$idus]); ?>
 								<div class="task__tasks-title"<?=(!$tasks?' style="display:none"':'')?>>
 									<span class="task__name">Новое задание</span>
 									<ul class="task__hidden-ul">
 										<li data-id="new">Новое задание</li>
-										<? foreach ($viData['tasks'][$d][$p][$idus] as $task): ?>
+										<? foreach ($viData['tasks'][$unix][$p][$idus] as $task): ?>
 											<li 
 												data-id="<?=$task['id']?>" 
 												data-text="<?=$task['text']?>"
