@@ -2,13 +2,10 @@
 	$cookieView = Yii::app()->request->cookies['srch_a_view']->value; // вид, сохраненный в куках
 
 	foreach ($viData['posts'] as $p)
-		if($p['postself'] && in_array($p['id'], $_GET['post'])) {
+		if($p['postself'] && in_array($p['id'], $_GET['posts'])) {
 			Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
 			break;
 		}
-echo "<pre>";
-print_r($_GET); 
-echo "</pre>";
 	//if(!(MOBILE_DEVICE && !SHOW_APP_MESS)): 
 ?>
 	<?php Yii::app()->getClientScript()->registerScriptFile('/theme/js/page-promo-search.min.js', CClientScript::POS_END); ?>
