@@ -3,8 +3,8 @@
         <? $cnt = 1; ?>
         <? foreach ($viData['users'] as $id_user => $user): ?>
             <div class="col-xs-12 col-sm-4 col-md-3">
-                <div class="personal__item">
-                    <img class="<?=(!$value['status'] ? 'personal__deact' : '')?>"
+                <div class="personal__item<?=($user['status']<0)?' fail':''?>">
+                    <img class="<?=($user['status']>0 ? '' : 'personal__deact')?>"
                          src="<?=$user['src']?>">
                     <div class="personal__item-name"><?=$user['name']?></div>
                     <div class="personal__item-add">

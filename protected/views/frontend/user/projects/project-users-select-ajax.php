@@ -5,7 +5,8 @@
       <div class="row">
         <? foreach ($viData['users'] as $user): ?>
           <div class="col-xs-12 col-sm-4 col-md-3">
-            <div class="users-select__item <?=(!$user['status']?'disable':'')?>">
+            <? $s = $user['status']; ?>
+            <div class="users-select__item <?=$s<0?'fail':($s>0?'':'disable')?>">
               <img src="<?=$user['src']?>">
               <span><?=$user['name']?></span>
             </div>

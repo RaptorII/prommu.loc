@@ -1663,7 +1663,7 @@ class UserController extends AppController
                         $view = MainConfig::$VIEW_PROJECT_ITEM;
                         $model->getXLSFile();
                     }
-                    else {
+                    if($type==2) { // applicant
                         $data = $model->getProject($id);
                         $data['users'] = $model->getProjectAppPromoTemp($id);
                         $data = $model->buildTaskArray($data);

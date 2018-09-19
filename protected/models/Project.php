@@ -1170,8 +1170,7 @@ class Project extends ARModel
         $idus = Share::$UserProfile->id;
         $sql = Yii::app()->db->createCommand()
             ->select(
-                "pu.user, 
-                pu.status, 
+                "pu.status, 
                 pu.date,
                 pc.name lname,
                 pc.adres lindex,
@@ -1193,20 +1192,20 @@ class Project extends ARModel
             ->queryAll();  // поиск всех пользователей проекта
 
         foreach ($sql as $u) {
-            $id = $u['user'];
-            $arRes[$id]['status'] = $u['status'];
+            $arRes[$idus]['id_user'] = $idus;
+            $arRes[$idus]['status'] = $u['status'];
             if(!empty($u['point']))
-                $arRes[$id]['points'][] = $u['point'];
+                $arRes[$idus]['points'][] = $u['point'];
             if(!empty($u['id_city']))
-                $arRes[$id]['cities'][$u['id_city']] = $u['city'];
+                $arRes[$idus]['cities'][$u['id_city']] = $u['city'];
             if(!empty($u['id_metro']))
-                $arRes[$id]['metros'][$u['id_metro']] = $u['metro'];
+                $arRes[$idus]['metros'][$u['id_metro']] = $u['metro'];
         }
 
         return $arRes;
     }
     /*
-    *
+    *       Изменение статуса
     */
     public function changeAppStatus() {
         $arRes['project'] = Yii::app()->getRequest()->getParam('project');
