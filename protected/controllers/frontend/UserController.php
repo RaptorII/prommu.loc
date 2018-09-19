@@ -1534,11 +1534,12 @@ class UserController extends AppController
         if($id=='new') { // новый проект
             if(Yii::app()->request->isAjaxRequest) {
                 $this->renderPartial(
-                    MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
+                    'projects/ankety-ajax',
                     array('viData' => (new Services())->getFilteredPromos()),
                     false,
                     true
                 );
+                return;
             }
             else {
                 $data = (new Services())->getFilteredPromos();
@@ -1561,11 +1562,12 @@ class UserController extends AppController
                         $data = (isset($gp)
                             ? (new Services())->getFilteredPromos()
                             : $model->getStaff($id));
+                        if($gp==1) $view='projects/project-staff-add-ajax';
+                        elseif($gp==2) $view='projects/ankety-ajax';
+                        else $view='projects/project-staff-ajax';
 
                         $this->renderPartial(
-                           isset($gp)
-                                ? 'projects/project-staff-add-ajax'
-                                : 'projects/project-staff-ajax',
+                            $view,
                             array('viData' => $data, 'project' => $id),
                             false, true
                         );
