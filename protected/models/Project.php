@@ -379,6 +379,25 @@ class Project extends ARModel
         $filter = $this->getStaffFilter($prj);
 
         $sql = Yii::app()->db->createCommand()
+            ->select("DISTINCT(pu.user)")
+            ->from('project_user pu')
+            ->leftjoin('resume r', 'r.id_user=pu.user')
+            ->leftjoin('project_binding pb', 'pb.user=pu.user')
+            ->leftjoin('project_city pc', 'pc.point=pb.point')
+            ->where($filter['conditions'], $filter['values'])
+            ->offset($this->offset)
+            ->limit($this->limit)
+            ->order('pu.user desc')
+            ->queryAll();
+
+        if(!sizeof($sql))
+            return array();
+
+        $arId = array(); // Нашли ID пользователей по фильтру
+        for ($i=0, $n=sizeof($sql); $i<$n; $i++) 
+            $arId[] = $sql[$i]['user'];
+
+        $sql = Yii::app()->db->createCommand()
             ->select(
                 "pu.user, 
                 pu.status, 
@@ -401,14 +420,9 @@ class Project extends ARModel
             ->leftjoin('project_city pc', 'pc.point=pb.point')
             ->leftjoin('city c', 'c.id_city=pc.id_city')
             ->leftjoin('metro m', 'm.id=pc.metro')
-            ->where($filter['conditions'], $filter['values'])
+            ->where(array('in','pu.user',$arId))
             ->order('pu.user desc')
-            ->limit($this->limit)
-            ->offset($this->offset)
-            ->queryAll(); // поиск всех пользователей проекта
-
-        if(!sizeof($sql))
-            return array();
+            ->queryAll();  // поиск всех данных по найденым пользователям
 
         foreach ($sql as $v) {
             if(!empty($v['lname']))
@@ -1144,6 +1158,49 @@ class Project extends ARModel
                     ->delete('project_task','id=:id', [':id'=>$arr['task']]);
                 if($sql) $arRes['error'] = 0; 
                 break;
+        }
+
+        return $arRes;
+    }
+    /*
+    *
+    */
+    public function getProjectAppPromoTemp($prj) {
+        $arRes = array();
+        $idus = Share::$UserProfile->id;
+        $sql = Yii::app()->db->createCommand()
+            ->select(
+                "pu.user, 
+                pu.status, 
+                pu.date,
+                pc.name lname,
+                pc.adres lindex,
+                pc.id_city,
+                pc.metro id_metro,
+                pb.point,
+                c.name city,
+                c.ismetro ismetro,
+                m.name metro")
+            ->from('project_user pu')
+            ->leftjoin('project_binding pb', 'pb.user=pu.user')
+            ->leftjoin('project_city pc', 'pc.point=pb.point')
+            ->leftjoin('city c', 'c.id_city=pc.id_city')
+            ->leftjoin('metro m', 'm.id=pc.metro')
+            ->where(
+                'pu.project=:prj AND pu.user=:idus', 
+                array(':prj' =>$prj, ':idus'=>$idus)
+            )
+            ->queryAll();  // поиск всех пользователей проекта
+
+        foreach ($sql as $u) {
+            $id = $u['user'];
+            $arRes[$id]['status'] = $u['status'];
+            if(!empty($u['point']))
+                $arRes[$id]['points'][] = $u['point'];
+            if(!empty($u['id_city']))
+                $arRes[$id]['cities'][$u['id_city']] = $u['city'];
+            if(!empty($u['id_metro']))
+                $arRes[$id]['metros'][$u['id_metro']] = $u['metro'];
         }
 
         return $arRes;

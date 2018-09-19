@@ -1665,6 +1665,7 @@ class UserController extends AppController
                     }
                     else {
                         $data = $model->getProject($id);
+                        $data['users'] = $model->getProjectAppPromoTemp($id);
                         $data = $model->buildTaskArray($data);
                         $view = 'projects/project-app';
                     }

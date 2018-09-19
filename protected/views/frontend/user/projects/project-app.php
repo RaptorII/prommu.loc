@@ -21,9 +21,9 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/additiona
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/css/projects/project-app.css');
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/js/projects/project-app.js', CClientScript::POS_END);
 ?>
-    <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-        <? print_r($viData); ?>
-    </pre>
+<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
+<? print_r($viData); ?>
+</pre>
 
 
 <div class="filter__veil"></div>
