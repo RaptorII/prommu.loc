@@ -1050,7 +1050,7 @@ var ProjectAddPersonal = (function () {
 
         $.ajax({
             type: 'GET',
-            url: AJAX_GET_PROMO,
+            url: window.location.pathname,
             data: params,
             success: function(res){
                 $content.html(res);

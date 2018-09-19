@@ -329,7 +329,7 @@ var ProjectAddPersonal = (function () {
     }
 
     ProjectAddPersonal.prototype.getAppsAjax = function (e) {
-        let params = '',
+        let params = 'get-promos=2&',
             $content = $('#promo-content'),
             arInputs = $('#promo-filter input');
 
@@ -356,7 +356,7 @@ var ProjectAddPersonal = (function () {
 
         $.ajax({
             type: 'GET',
-            url: AJAX_GET_PROMO,
+            url: window.location.pathname,
             data: params,
             success: function(res){
                 $content.html(res);

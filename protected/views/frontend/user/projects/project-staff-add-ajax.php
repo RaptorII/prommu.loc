@@ -1,5 +1,4 @@
 <h2 class="project__title personal__title">ДОБАВИТЬ НОВЫЙ ПЕРСОНАЛ НА ПРОЕКТ </h2>
-<script type="text/javascript">var AJAX_GET_PROMO = "<?=MainConfig::$PAGE_SERVICES_PUSH?>";</script>
 <div class='row'>
     <? //       FILTER      ?>
 

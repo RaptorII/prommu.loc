@@ -185,7 +185,6 @@
 				  ?>
 				  <script type="text/javascript">
 				    var arIdies = <?=json_encode($viData['app_idies'])?>;
-				    var AJAX_GET_PROMO = "<?=MainConfig::$PAGE_SERVICES_PUSH?>";
 				  </script>
 				  <div class='row'>
 				    <? //		FILTER 		?>

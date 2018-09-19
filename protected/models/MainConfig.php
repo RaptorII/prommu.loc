@@ -166,7 +166,7 @@ class MainConfig
     public static $VIEWS_SERVICE_EMAIL = 'services/page-email-view';
     public static $VIEWS_CARD_PROMMU = 'services/page-card-view';
     /* SMS SERVICE PROMO AJAX */
-    public static $VIEWS_SERVICE_ANKETY_AJAX = 'services/ankety-ajax';
+    public static $VIEWS_SERVICE_ANKETY_AJAX = '../site/services/ankety-ajax';
 
     /* FOR STUDENTS */
     public static $VIEWS_WORK_FOR_STUDENTS = 'page-work-for-students-tpl';
