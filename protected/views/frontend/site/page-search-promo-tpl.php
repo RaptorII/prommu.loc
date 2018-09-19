@@ -6,7 +6,9 @@
 			Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
 			break;
 		}
-
+echo "<pre>";
+print_r($_GET); 
+echo "</pre>";
 	//if(!(MOBILE_DEVICE && !SHOW_APP_MESS)): 
 ?>
 	<?php Yii::app()->getClientScript()->registerScriptFile('/theme/js/page-promo-search.min.js', CClientScript::POS_END); ?>
