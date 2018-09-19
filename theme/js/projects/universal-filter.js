@@ -31,8 +31,6 @@ let IndexUniversalFilter = (function () {
         {
             //Аякс с задержкой
             clearTimeout(IndexUniversalFilter.AjaxTimer);
-
-            console.log(55555);
             IndexUniversalFilter.AjaxTimer = setTimeout(function () {
                 //Проверяем иерархию фильтров
                 self.hierarchyTracking();
@@ -231,9 +229,6 @@ let IndexUniversalFilter = (function () {
             if(parent_id>=0 && blocked_value=="true"){
 
                 let parent = $(".u-filter__item[data-id='" + parent_id +"']");
-
-                console.log(parent);
-
                 let parent_type = parent.data('type');
 
                 if(parent_type==="text"){
@@ -312,7 +307,6 @@ let IndexUniversalFilter = (function () {
                         }
                     });
 
-                    console.log(li_counter);
                     if(li_counter<=1){
                         $(self).addClass('blocked');
                         $(self).find('.u-filter__hidden-data').val('');
