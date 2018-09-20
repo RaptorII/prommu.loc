@@ -35,8 +35,8 @@ class PrommuOrder {
     
     public function servicesPrice(){
 
-        $sql = "SELECT first, second, type, service, city
-            FROM service_price";
+        $sql = "SELECT id, price, comment, service, region
+            FROM service_prices";
         $results = Yii::app()->db->createCommand($sql)->queryAll();
 
     
