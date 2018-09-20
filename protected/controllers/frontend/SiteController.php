@@ -962,8 +962,8 @@ class SiteController extends AppController
         $services = new Services();
         $title = 'Услуги портала Prommu.com';
         $this->setBreadcrumbs($title, MainConfig::$PAGE_SERVICES);
-        $prices = new PrommuOrder();
-        $price = $prices->servicesPrice();
+        $pricess = new PrommuOrder();
+        $prices = $pricess->servicesPrice();
         if( $id )
         {
             $data = $services->getServiceData($id);
