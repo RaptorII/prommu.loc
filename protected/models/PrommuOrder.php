@@ -37,7 +37,7 @@ class PrommuOrder {
 
         $sql = "SELECT id, price, comment, service, region
             FROM service_prices
-            GROUP service ";
+            GROUP BY  service DESC";
         $results = Yii::app()->db->createCommand($sql)->queryAll();
 
     
