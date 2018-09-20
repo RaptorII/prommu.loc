@@ -128,6 +128,22 @@
 	}
 	.service__title.small{ font-size: 40px; }
 	.service__price{ flex-wrap: nowrap }
-	.service__price-list{ width: initial }
-	.service__price-item{ margin:  0 20px 10px 0 }
+	.service__price-list{ 
+		width: initial;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+	.service__price-item{ 
+		margin: 0 20px 10px 0;
+	}
+	.service__price-item.many{
+		margin: 0 10px 10px 0;
+	}
+}
+@media (min-width: 992px){
+	.service__price-item.many{ width: 240px }
+}
+@media (min-width: 1200px){
+	.service__price-item.many{ width: 200px }
 }

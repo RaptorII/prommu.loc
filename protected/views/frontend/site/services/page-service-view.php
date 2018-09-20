@@ -13,8 +13,9 @@
     </div>
     <div class="service__price">
       <div class="service__price-list">
-        <? foreach ($prices['prices'][$viData['service']['link']] as $price): ?>
-        <div class="service__price-item">
+        <? $arRes = $prices['prices'][$viData['service']['link']]; ?>
+        <? foreach ($arRes as $price): ?>
+        <div class="service__price-item<?=(sizeof($arRes)>3?' many':'')?>">
           <b><?= $price['price']?></b><br>
           <span><?= $price['comment']?></span>
         </div>
