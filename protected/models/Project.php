@@ -578,6 +578,7 @@ class Project extends ARModel
                     $arr['inv-email'][0] = $sheet_array[$i]['C'];
                     $arr['inv-name'][0] = $sheet_array[$i]['A'];
                     $arr['inv-sname'][0] = $sheet_array[$i]['B'];
+                   $this->recordStaff($arr, $project);
                     $id_user = Yii::app()->db->createCommand()
                     ->select("MAX(id_user)")
                     ->from('user')
