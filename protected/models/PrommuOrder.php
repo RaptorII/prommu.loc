@@ -40,12 +40,7 @@ class PrommuOrder {
         $results = Yii::app()->db->createCommand($sql)->queryAll();
         
         for($i = 0; $i < sizeof($results); $i ++){
-            for($j = 0; $j < sizeof($results); $j ++){
-                if($results[$i]['service'] == $results[$j]['service']){
-                    $data['prices'][$results[$i]['service']][] = $results[$j];
-        
-                }
-            }
+            $data['prices'][$results[$i]['service']][] = $results[$j];
         }
         
     
