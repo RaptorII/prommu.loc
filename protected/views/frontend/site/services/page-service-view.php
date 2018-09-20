@@ -13,18 +13,12 @@
     </div>
     <div class="service__price">
       <div class="service__price-list">
+        <? foreach ($prices['prices'][$viData['service']['link']] as $price): ?>
         <div class="service__price-item">
-          <b>100 руб./день</b><br>
-          <span>МСК и область</span>
+          <b><?= $price['price']?></b><br>
+          <span><?= $price['comment']?></span>
         </div>
-        <div class="service__price-item">
-          <b>100 руб./день</b><br>
-          <span>МСК и область</span>
-        </div>
-        <div class="service__price-item">
-          <b>100 руб./день</b><br>
-          <span>МСК и область</span>
-        </div>
+        <? endforeach;?>
       </div>
       <div 
         class="order-service"
