@@ -5,7 +5,7 @@
 	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/services/list.js', CClientScript::POS_END);
 	$type = Share::$UserProfile->type;
 	$arApp = ['geolocation-staff','prommu_card','medical-record']; // то, что доступно соискателю
-    var_dump($price);
+ 
 // 	$viData['prices'] = array(
 // 		'premium-vacancy' => array(
 // 			0 => array(
@@ -112,7 +112,7 @@
 // 	);
 ?>
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($viData['prices']); ?>
+<? print_r(  var_dump($price)); ?>
 </pre>
 <div class="row">
 	<div class="col-xs-12 services">
