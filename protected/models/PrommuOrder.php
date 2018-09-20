@@ -33,6 +33,16 @@ class PrommuOrder {
         }
     }
     
+    public function servicesPrice(){
+
+        $sql = "SELECT first, second, type, service, city
+            FROM service_price";
+        $results = Yii::app()->db->createCommand($sql)->queryAll();
+
+    
+           return $results; 
+    }
+    
     public function serviceOrderSms($id_user,$sum, $status, $postback, $from, $to, $name,$type, $text, $id){
 
         if($postback == 0) {
