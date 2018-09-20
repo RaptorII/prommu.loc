@@ -20,7 +20,7 @@ class PrommuOrder {
             FROM service_cloud r
             WHERE r.id_user = $user AND r.status = 1 AND r.type = '$service'";
         $result = Yii::app()->db->createCommand($sql)->queryAll();
-        $sql = "SELECT first, second, type, service
+        $sql = "SELECT first, second, type, service, city
             FROM service_price 
             WHERE service = '$service'";
         $results = Yii::app()->db->createCommand($sql)->queryRow();
