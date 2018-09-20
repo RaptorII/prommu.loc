@@ -201,16 +201,17 @@
 }
 
 .routes__map{
+    width: 1140px;
+    height: 0px;
     -webkit-transition: all ease-out 1s;
     -moz-transition: all ease-out 1s;
     -o-transition: all ease-out 1s;
     transition: all ease-out 1s;
-    height:0px;
     margin-top:10px;
 }
 
 .map_active{
-    height: initial;
+    height: 474px;
 }
 
 .route__item-box{
@@ -219,4 +220,13 @@
 }
 .routes__btns{
     padding:0;
+}
+/*
+*       Map
+*/
+.sm_zoomControl .sm_zoomButton.sm_plus.sm_plus{
+    border-bottom: 1px solid #dedede;
+}
+.sm_editor.sm_webp .sm_footer.sm_footer{
+    background: #abb92a;
 }

@@ -1,14 +1,17 @@
 /**
  * Created by Stanislav on 07.09.2018.
  */
-
-/**
- * Created by Stanislav on 07.09.2018.
- */
-
+window.scribblemaps = {
+    settings: {baseAPI: "google", key: 'AIzaSyAOevBkK_oALP0mD9aG3g4RyhUePQHl6SU'}
+};
+window.smElement = false;
+/*
+*
+*/
 let IndexRoute = (function () {
 
-
+    IndexRoute.prototype.cnt = false;
+    IndexRoute.prototype.urlMap = '//scribblemaps.com/api/js/?callback=smLoadMap';
 
     function IndexRoute() {
         this.init();
@@ -55,7 +58,7 @@ let IndexRoute = (function () {
             var pdiv = $(this).closest('.project__route-changer').find('.route__table-active');
             pdiv.insertAfter(pdiv.next());
             return false
-        });
+        });  
     };
 
     IndexRoute.prototype.getSortData = function () {
@@ -69,15 +72,28 @@ let IndexRoute = (function () {
     };
 
     IndexRoute.prototype.mapOpen = function (e) {
-        let map = $(e).closest('.route__item-box').find('.routes__map');
-        if(!map.hasClass('map_active')){
-            map.addClass('map_active');
+        let self = this;
+            
+        smElement = $(e).closest('.route__item-box').find('.routes__map')[0];
+
+        if(!$(smElement).hasClass('map_active')){
             $(e).html('СКРЫТЬ МАРШРУТ');
+            if(!self.cnt) {
+                let e = document.createElement("script");
+                e.src = self.urlMap;
+                e.type="text/javascript";
+                document.getElementsByTagName("head")[0].appendChild(e);
+                self.cnt = true;  
+            }
+            else if(!$(smElement).html().length) {
+                smLoadMap();
+            }
         }
         else{
-            map.removeClass('map_active');
+            
             $(e).html('СМОТРЕТЬ МАРШРУТ');
         }
+        $(smElement).toggleClass('map_active');
     };
 
     IndexRoute.prototype.ajaxPushParams = function (data, type) {
@@ -96,6 +112,7 @@ let IndexRoute = (function () {
         $('.project__route-changer').hide();
         $('.rout__main').show();
     };
+
     return IndexRoute;
 }());
 
@@ -105,3 +122,28 @@ $(document).ready(function () {
     $("#sortable").sortable();
     $("#sortable").disableSelection();
 });
+/*
+*
+*/
+smLoadMap = function(){
+    var sm = new scribblemaps.ScribbleMap(
+            smElement,
+            { controlMode: { 'mapType': scribblemaps.ControlModes.SMALL }}
+        );
+    sm.view.setCenter({'lat':55.758031768239185,'lng':37.6171875});// Moscow
+    sm.map.setType('road');
+    sm.view.setZoom(8);
+    sm.ui.setAvailableTools([]);
+    sm.ui.setMapInfoIcons([]);
+    sm.ui.setMapTypes([]);
+    sm.ui.styleControl(scribblemaps.ControlType.SEARCH,{display:"none"});
+    sm.ui.styleControl(scribblemaps.ControlType.LINE_COLOR,{display:"none"});
+    sm.ui.styleControl(scribblemaps.ControlType.FILL_COLOR,{display:"none"});
+    sm.ui.styleControl(scribblemaps.ControlType.LINE_SETTINGS,{display:"none"});
+    sm.ui.styleControl(scribblemaps.ControlType.UNDO_CONTROL,{display:"none"});
+    sm.ui.styleControl(scribblemaps.ControlType.ZOOM,{
+        background: '#abb92a',
+        border: '1px solid #dedede'
+    });
+    console.log(sm);
+}

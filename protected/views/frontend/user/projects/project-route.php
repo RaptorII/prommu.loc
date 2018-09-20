@@ -255,109 +255,7 @@ $arFilterData = [
                         </tbody>
                     </table>
 
-                    <div class="routes__map">
-                        <div class="routes__map-city">Харьков</div>
-                        <div class="routes__map-map">
-
-                            <script>
-                                window.scribblemaps = {
-                                    settings: {baseAPI: "google", key: 'AIzaSyAOevBkK_oALP0mD9aG3g4RyhUePQHl6SU'}
-                                };
-                                var loadmap = function () {
-                                    var sm = new scribblemaps.ScribbleMap(
-                                        document.getElementById('ScribbleMap'),
-                                        { controlMode: { 'mapType': scribblemaps.ControlModes.SMALL } }
-                                    );
-                                    console.log(sm);
-                                    sm.ui.setAvailableTools([]);
-                                    sm.ui.setMapInfoIcons([]);
-                                    sm.ui.styleControl(scribblemaps.ControlType.SEARCH,{display:"none"});
-                                    sm.ui.styleControl(scribblemaps.ControlType.UNDO,{display:"none"});
-                                    sm.ui.styleControl(scribblemaps.ControlType.LINE_COLOR,{display:"none"});
-                                    sm.ui.styleControl(scribblemaps.ControlType.FILL_COLOR,{display:"none"});
-                                    sm.ui.styleControl(scribblemaps.ControlType.LINE_SETTINGS,{display:"none"});
-                                    sm.ui.styleControl(scribblemaps.ControlType.UNDO_CONTROL,{display:"none"});
-                                   
-                                    setMapTypeControlMode
-                                    /*sm.ui.setMapTypes([
-                                        {
-                                            label: "Hybrid",
-                                            id: "Hybrid"
-                                        },
-                                        {
-                                            label: "Road",
-                                            id: "Road"
-                                        }
-                                    ]);*/
-                                    sm.ui.setTheme("dark");
-                                }
-/*
-
-sm.ui.setTheme("light");
-
-sm.ui.styleControl(scribblemaps.ControlType.TOOLBOX, { width: "65px" });
-sm.ui.styleControl(scribblemaps.ControlType.SEARCH, { width: "120px", left: "75px", top: "10px" });
-sm.ui.styleControl(scribblemaps.ControlType.LINE_COLOR, { left: "10px", top: "167px" });
-sm.ui.styleControl(scribblemaps.ControlType.FILL_COLOR, { left: "10px", top: "199px" });
-sm.ui.styleControl(scribblemaps.ControlType.LINE_SETTINGS, { left: "75px", top: "42px" });
-
-sm.ui.setAvailableTools(["edit", "drag", "eraser",
-                         "fill", "scribble", "line",
-                         "polygon", "circle",
-                         "flightLine", "rectangle"]);
-
-sm.ui.setTool("drag");
-
-
-
-/*
-setMapInfoIcons
-:
-function (iconArray)
-setMapTypeControlMode
-:
-function (modeType)
-setMapTypes
-:
-function (mapTypeArray)
-setMarkerLibrary
-:
-function (markerLibrary, keepDefaults)
-setMenuIcons
-:
-function (iconArray)
-setModalElement
-:
-function (domElement)
-setSearchAppendString
-:
-function (appendQueryString)
-setSearchBounds
-:
-function (SMBounds)
-setSearchControlMode
-:
-function (modeType)
-setSearchRegion
-:
-function (regionTLD)
-setStyle
-:
-function (styleOject)
-setTheme
-:
-function (themeType, transition)
-setTool
-:
-function (toolId)
-
-                                }*/
-                            </script>
-                            <script src="//scribblemaps.com/api/js/?callback=loadmap" async></script>  
-                            <div id="ScribbleMap" style="width: 1140px; height: 474px"></div>
-                            <?//<img src="/theme/pic/projects/temp-map-2.jpg"> ?>
-                        </div>
-                    </div>
+                    <div class="routes__map"></div>
                     <div class="routes__btns">
                         <a href="#content_top" class="route__watch-btn route__button-change">ИЗМЕНИТЬ</a>
                         <span class="route__watch-btn route__button-map">СМОТРЕТЬ МАРШРУТ</span>
@@ -450,12 +348,7 @@ function (toolId)
                         </tbody>
                     </table>
 
-                    <div class="routes__map">
-                        <div class="routes__map-city">Москва</div>
-                        <div class="routes__map-map">
-                            <img src="/theme/pic/projects/temp-map-2.jpg">
-                        </div>
-                    </div>
+                    <div class="routes__map"></div>
                     <div class="routes__btns">
                         <a href="#content_top" class="route__watch-btn route__button-change">ИЗМЕНИТЬ</a>
                         <span class="route__watch-btn route__button-map">СМОТРЕТЬ МАРШРУТ</span>
@@ -544,12 +437,7 @@ function (toolId)
                         </tbody>
                     </table>
 
-                    <div class="routes__map">
-                        <div class="routes__map-city">Москва</div>
-                        <div class="routes__map-map">
-                            <img src="/theme/pic/projects/temp-map-2.jpg">
-                        </div>
-                    </div>
+                    <div class="routes__map"></div>
                     <div class="routes__btns">
                         <a href="#content_top" class="route__watch-btn route__button-change">ИЗМЕНИТЬ</a>
                         <span class="route__watch-btn route__button-map">СМОТРЕТЬ МАРШРУТ</span>
