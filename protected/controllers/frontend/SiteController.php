@@ -1014,7 +1014,7 @@ class SiteController extends AppController
 
         $this->render(
             $view, 
-            array('viData' => $data, 'id' => $id, 'price' => $price),
+            array('viData' => $data, 'id' => $id, 'prices' => $prices),
             array(
                 'pageTitle' => '<h1>'.$title.'</h1>', 
                 'htmlTitle' => $title
