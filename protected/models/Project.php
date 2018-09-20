@@ -574,16 +574,26 @@ class Project extends ARModel
                      ), 'email = :email', array(':email' => $sheet_array[$i]['C']));
                 
                 } else {
-                    $arr['prfx-phone'][0] = '';
-                    $arr['inv-phone'][0] = $sheet_array[$i]['D'];
-                    $arr['inv-email'][0] = $sheet_array[$i]['C'];
-                    $arr['inv-name'][0] = $sheet_array[$i]['A'];
-                    $arr['inv-sname'][0] = $sheet_array[$i]['B'];
-                   $this->recordStaff($arr, $project);
-                    $id_user = Yii::app()->db->createCommand()
-                    ->select("MAX(id_user)")
-                    ->from('user')
-                    ->queryScalar();
+                    if( (new User())->find("email = '{$sheet_array[$i]['C']}'") )
+                    {
+                        $result = Yii::app()->db->createCommand()
+                        ->select('id_user')
+                        ->from('user')
+                        ->where('email=:email', array(':email'=>$sheet_array[$i]['C']))
+                        ->queryAll();
+                        $id_user = $result[0]['id_user'];
+                    } else {
+                        $arr['prfx-phone'][0] = '';
+                        $arr['inv-phone'][0] = $sheet_array[$i]['D'];
+                        $arr['inv-email'][0] = $sheet_array[$i]['C'];
+                        $arr['inv-name'][0] = $sheet_array[$i]['A'];
+                        $arr['inv-sname'][0] = $sheet_array[$i]['B'];
+                        $this->recordStaff($arr, $project);
+                        $id_user = Yii::app()->db->createCommand()
+                        ->select("MAX(id_user)")
+                        ->from('user')
+                        ->queryScalar();
+                    }
                     
                     $res = Yii::app()->db->createCommand()
                         ->insert('project_user', array(
