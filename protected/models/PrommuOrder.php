@@ -42,7 +42,7 @@ class PrommuOrder {
         for($i = 0; $i < sizeof($results); $i ++){
             for($j = 0; $j < sizeof($results); $j ++){
                 if($results[$i]['service'] == $results[$j]['service']){
-                    $data['prices'][$results[$i]['service']][] = $results[$i];
+                    $data['prices'][$results[$i]['service']][] = $results[$j];
         
                 }
             }
