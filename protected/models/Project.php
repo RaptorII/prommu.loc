@@ -574,13 +574,13 @@ class Project extends ARModel
                      ), 'email = :email', array(':email' => $sheet_array[$i]['C']));
                 
                 } else {
-                    if( (new User())->find("email = '{$sheet_array[$i]['C']}'") )
-                    {
-                        $result = Yii::app()->db->createCommand()
+                    $result = Yii::app()->db->createCommand()
                         ->select('id_user')
                         ->from('user')
                         ->where('email=:email', array(':email'=>$sheet_array[$i]['C']))
                         ->queryAll();
+                    if(count($result))
+                    {
                         $id_user = $result[0]['id_user'];
                     } else {
                         $arr['prfx-phone'][0] = '';
