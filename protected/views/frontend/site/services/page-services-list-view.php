@@ -188,6 +188,7 @@
 				</div>
 			<? else: ?>
 				<? // вывод второго уровня  ?>
+			<? var_dump($prices);?>
 				<div class="row services__item-sub">
 					<div class="col-xs-12 col-sm-6 services__parent">
 						<div class="services__item-icon <?=$m['icon']?>"></div>
