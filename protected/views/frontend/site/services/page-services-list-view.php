@@ -114,6 +114,9 @@
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
 <? print_r(  var_dump($viData['prices'])); ?>
 </pre>
+<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
+<? print_r(  var_dump($price)); ?>
+</pre>
 <div class="row">
 	<div class="col-xs-12 services">
 		<? if($type!=2): // только не для соискателя ?>
