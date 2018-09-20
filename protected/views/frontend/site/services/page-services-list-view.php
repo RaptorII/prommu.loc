@@ -160,7 +160,7 @@
 						<a href="<?=$m['link']?>">Подробнее</a>
 					</div>
 					<div class="services__price-order">
-						<? foreach ($viData['prices'][$m['icon']] as $price): ?>
+						<? foreach ($prices['service'][$m['icon']] as $price): ?>
 							<div>
 								<div class="services__price">
 									<div class="services__price-item"><?=$price['comment']?></div>
@@ -172,7 +172,7 @@
 								>
 									<? if(in_array($type,[2,3]) && $m['icon']!='geolocation-staff'): ?>
 										<? 
-											sizeof($viData['prices'][$m['icon']]) > 1
+											sizeof($prices['service'][$m['icon']]) > 1
 											? $link = '/user' . $m['link'] . '?type=' . $price['id']
 											: $link = '/user' . $m['link'];
 										?>
