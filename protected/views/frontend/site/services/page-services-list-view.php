@@ -207,7 +207,7 @@
 								<a href="<?=$s['link']?>">Подробнее</a>
 							</div>
 							<div class="services__price-order">
-								<? foreach ($viData['prices'][$s['icon']] as $price): ?>
+								<? foreach ($prices['service'][$s['icon']] as $price): ?>
 									<div>
 										<div class="services__price">
 											<div class="services__price-item"><?=$price['comment']?></div>		
