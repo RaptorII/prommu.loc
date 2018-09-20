@@ -163,7 +163,7 @@
 						<? foreach ($prices['prices'][$s['icon']] as $price): ?>
 							<div>
 								<div class="services__price">
-									<div class="services__price-item"><?=$price['comment']?></div>
+									<div class="services__price-item"><?=$price['price']?> <?=$price['comment']?></div>
 								</div>
 								<div 
 									class="services__order order-service" 
@@ -210,7 +210,7 @@
 								<? foreach ($prices['prices'][$s['icon']] as $price): ?>
 									<div>
 										<div class="services__price">
-											<div class="services__price-item"><?=$price['comment']?></div>		
+											<div class="services__price-item"><?=$price['price']?> <?=$price['comment']?></div>		
 										</div>
 										<div 
 											class="services__order order-service" 
