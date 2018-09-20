@@ -160,7 +160,7 @@
 						<a href="<?=$m['link']?>">Подробнее</a>
 					</div>
 					<div class="services__price-order">
-						<? foreach ($prices['service'][$s['icon']] as $price): ?>
+						<? foreach ($prices[$s['icon']] as $price): ?>
 							<div>
 								<div class="services__price">
 									<div class="services__price-item"><?=$price['comment']?></div>
@@ -207,7 +207,7 @@
 								<a href="<?=$s['link']?>">Подробнее</a>
 							</div>
 							<div class="services__price-order">
-								<? foreach ($prices['service'][$s['icon']] as $price): ?>
+								<? foreach ($prices[$s['icon']] as $price): ?>
 									<div>
 										<div class="services__price">
 											<div class="services__price-item"><?=$price['comment']?></div>		
