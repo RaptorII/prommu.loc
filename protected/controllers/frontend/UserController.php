@@ -652,6 +652,7 @@ class UserController extends AppController
     public function actionActivate()
     {
         $data = (new Auth())->activateUser();
+        var_dump($data);
         Share::$UserProfile->type<1 && $this->redirect($data); // no profile for guest
 
         $isPopup = Yii::app()->getRequest()->getParam('npopup');
