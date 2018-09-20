@@ -39,9 +39,17 @@ class PrommuOrder {
             FROM service_prices";
         $results = Yii::app()->db->createCommand($sql)->queryAll();
         
+        for($i = 0; $i < sizeof($results); $i ++){
+            for($j = 0; $j < sizeof($results); $j ++){
+                if($results[$i]['service'] == $results[$j]['service']){
+                    $data['prices'][$results[$i]['service']][$k] = $results[$i];
+                    $k++;
+                }
+            }
+        }
         
     
-           return $results; 
+           return $data; 
     }
     
     public function serviceOrderSms($id_user,$sum, $status, $postback, $from, $to, $name,$type, $text, $id){
