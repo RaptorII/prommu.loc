@@ -143,6 +143,7 @@ class Project extends ARModel
                             'crdate' => $date,
                             'mdate' => $date,
                             'ismoder' => '0',
+                            'status' => 2,
                             'isblocked' => '0',
                             'email' => $arr['inv-email'][$i],
                             'passw' => md5($pass),
