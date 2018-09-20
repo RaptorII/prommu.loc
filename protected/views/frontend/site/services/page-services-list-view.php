@@ -160,7 +160,7 @@
 						<a href="<?=$m['link']?>">Подробнее</a>
 					</div>
 					<div class="services__price-order">
-						<? foreach ($prices['service'][$m['icon']] as $price): ?>
+						<? foreach ($prices['service'][$s['icon']] as $price): ?>
 							<div>
 								<div class="services__price">
 									<div class="services__price-item"><?=$price['comment']?></div>
@@ -188,7 +188,6 @@
 				</div>
 			<? else: ?>
 				<? // вывод второго уровня  ?>
-			<? var_dump($prices);?>
 				<div class="row services__item-sub">
 					<div class="col-xs-12 col-sm-6 services__parent">
 						<div class="services__item-icon <?=$m['icon']?>"></div>
