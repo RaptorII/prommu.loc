@@ -558,7 +558,7 @@ class Project extends ARModel
 
         for($i = 2; $i < count($sheet_array)+1; $i++){
                  $data = Yii::app()->db->createCommand()
-                ->select('pc.id, pc.user, pc.status, pc.project, pc.firstname, pc.lastname, pc.email, pc.phone')
+                ->select('pc.id, pc.user, pc.status, pc.project, pc.email, pc.phone')
                 ->from('project_user pc')
                 ->where('pc.email = :email', array(':email' =>$sheet_array[$i]['C']))
                 ->order('pc.date desc')
@@ -569,20 +569,24 @@ class Project extends ARModel
                      Yii::app()->db->createCommand()
                         ->update('project_user', array(
                             'project' => $project,
-                            'user' => rand(111,333),
-                            'firstname' =>  $sheet_array[$i]['A'],
-                            'lastname' =>  $sheet_array[$i]['B'],
                             'phone' =>  $sheet_array[$i]['D'],
-                            //'point' => $sheet_array[$i]['E'] !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                      ), 'email = :email', array(':email' => $sheet_array[$i]['C']));
                 
                 } else {
+                    $arr['prfx-phone'][0] = '';
+                    $arr['inv-phone'][0] = $sheet_array[$i]['D'];
+                    $arr['inv-email'][0] = $sheet_array[$i]['C'];
+                    $arr['inv-name'][0] = $sheet_array[$i]['A'];
+                    $arr['inv-sname'][0] = $sheet_array[$i]['B'];
+                    $id_user = Yii::app()->db->createCommand()
+                    ->select("MAX(id_user)")
+                    ->from('user')
+                    ->queryScalar();
+                    
                     $res = Yii::app()->db->createCommand()
                         ->insert('project_user', array(
                             'project' => $project,
-                            'user' => rand(111,333),
-                            'firstname' =>  $sheet_array[$i]['A'],
-                            'lastname' =>  $sheet_array[$i]['B'],
+                            'user' => $id_user,
                             'email' =>  $sheet_array[$i]['C'],
                             'phone' =>  $sheet_array[$i]['D'],
                         ));   
