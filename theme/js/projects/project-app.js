@@ -61,14 +61,18 @@ $(document).ready(function () {
         let points = current_position._latlng;
         let lat = points.lat;
         let lng = points.lng;
+        let user_id = $('.global_user_id').val();
+        let project_id = $('.global_project_id').val();
 
         if(lat && lng){
             $.ajax({
                 type: 'POST',
-                url: '/ajax/123123123',
+                url: '/ajax/reportproject',
                 data: {
-                    lat:lat,
-                    lng:lng
+                    latitude:lat,
+                    longitude:lng,
+                    idus:user_id,
+                    project:project_id
                 },
                 dataType: 'json',
                 success: function (val) {

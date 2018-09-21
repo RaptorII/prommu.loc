@@ -7,6 +7,8 @@ $this->setBreadcrumbsEx(
 );
 $this->setPageTitle($viData['project']['name']);
 */
+$userId = Share::$UserProfile->id;
+$projectId = $project;
 
 $this->setBreadcrumbsEx(
     array('Мои проекты', MainConfig::$PAGE_PROJECT_LIST),
@@ -189,4 +191,8 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/js/projects/project-
     <?php else: ?>
         <br><br><h2 class="center">Не найдено локаций</h2>
     <?php endif; ?>
+
+    <input type="hidden" name="global_project_id" value="<?= $projectId ?>"/>
+    <input type="hidden" name="global_user_id" value="<?=  $userId ?>"/>
+
 </div>
