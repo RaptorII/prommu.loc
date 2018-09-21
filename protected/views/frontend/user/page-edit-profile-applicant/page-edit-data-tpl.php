@@ -120,8 +120,8 @@
     }
   }
   if(!sizeof($arPayment)) {
-    $arPayment[135]['pt']==0;
-    $arPayment[135]['type'] = 'Час';
+    $arPayment[$_GET['position']]['pt']==0;
+    $arPayment[$_GET['position']]['type'] = 'Час';
   }
   // appearance
   $arAppear = array(11=>'hcolor',12=>'hlen',13=>'ycolor',14=>'chest',15=>'waist',16=>'thigh');
