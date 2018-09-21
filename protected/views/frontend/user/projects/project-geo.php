@@ -407,9 +407,14 @@ $viData['states'] = array(
 
     function onLocationFound(e) {
         var current_position;
-        map.removeLayer(current_position);
+        if (current_position) {
+            map.removeLayer(current_position);
+        }
+        current_position = L.marker(e.latlng).addTo(map);
         console.log(current_position);
     }
+
+
 
     $('#actions a').click(function(){
         locate();
