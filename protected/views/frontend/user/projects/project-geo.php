@@ -397,32 +397,19 @@ $viData['states'] = array(
 <script>
     var map = L.map('map').setView([51.505, -0.09], 13);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    /*L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: ''
-    }).addTo(map);
+    }).addTo(map);*/
 
     function locate() {
         map.locate({setView: true, maxZoom: 16});
     }
 
-    // placeholders for the L.marker and L.circle representing user's current position and accuracy
-    var current_position, current_accuracy;
-
     function onLocationFound(e) {
-        // if position defined, then remove the existing position marker and accuracy circle from the map
-        if (current_position) {
-            map.removeLayer(current_position);
-            map.removeLayer(current_accuracy);
-        }
-
-        var radius = e.accuracy / 2;
-
-        current_position = L.marker(e.latlng).addTo(map)
-            .bindPopup("You are within " + radius + " meters from this point").openPopup();
-
-        current_accuracy = L.circle(e.latlng, radius).addTo(map);
+        var current_position;
+        map.removeLayer(current_position);
+        console.log(current_position);
     }
-
 
 
     $('#actions a').click(function(){
