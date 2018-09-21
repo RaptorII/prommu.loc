@@ -5,6 +5,7 @@
   Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/services/list.js', CClientScript::POS_END);
   $type = Share::$UserProfile->type;
   $cnt = iconv_strlen($viData['service']['name'],'UTF-8');
+  $arCustom = ['outstaffing','personal-manager-outsourcing','medical-record']; // Уточнить цену
 ?>
 <div class="row">
   <div class="col-xs-12 service">
@@ -16,8 +17,14 @@
         <? $arRes = $prices['prices'][$viData['service']['link']]; ?>
         <? foreach ($arRes as $price): ?>
         <div class="service__price-item<?=(sizeof($arRes)>3?' many':'')?>">
-          <b><?= $price['price']?></b><br>
-          <span><?= $price['comment']?></span>
+          <? if(in_array($viData['service']['link'], $arCustom)): ?>
+            <span class="free">Уточнить цену</span>
+          <? elseif($price['price']): ?>
+            <b><?= $price['price']?> &#8381</b><br>
+            <span><?= $price['comment']?></span>
+          <? else: ?>
+            <span class="free">Бесплатно</span>
+          <? endif; ?>
         </div>
         <? endforeach;?>
       </div>

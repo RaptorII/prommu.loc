@@ -168,7 +168,8 @@
     <div class='center-box'>
       <?php if( $flagOwnProfile ): ?>
         <a class='ppp__btn' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>' style="margin-bottom: 10px">Редактировать профиль</a>
-        <a class='ppp__btn' href='<?= MainConfig::$PAGE_SETTINGS ?>'>Настройки профиля</a>
+        <a class='ppp__btn' href='<?= MainConfig::$PAGE_SETTINGS ?>' style="margin-bottom: 10px">Настройки профиля</a>
+        <a class='ppp__btn' href='<?= MainConfig::$PAGE_IM ?>'>Мои сообщения</a>
       <?php elseif( Share::$UserProfile->type == 3 && $ismoder): ?>
         <div class='btn-update btn-orange-sm-wr'>
           <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_IM . '?new=' . $idus ?>'>Отправить сообщение</a>
