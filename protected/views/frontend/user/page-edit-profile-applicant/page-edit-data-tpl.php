@@ -120,8 +120,11 @@
     }
   }
   if(!sizeof($arPayment)) {
-    $arPayment[$_GET['position']]['pt']==0;
-    $arPayment[$_GET['position']]['type'] = 'Час';
+    foreach ($arPosts as $k => $v)
+      if($v['checked'] == 'checked') {
+        $arPayment[$k]['pt'] = 0;
+        $arPayment[$k]['type'] = 'Час';      
+      }
   }
   // appearance
   $arAppear = array(11=>'hcolor',12=>'hlen',13=>'ycolor',14=>'chest',15=>'waist',16=>'thigh');
