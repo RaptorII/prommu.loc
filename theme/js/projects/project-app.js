@@ -64,7 +64,7 @@ $(document).ready(function () {
 
         if(lat && lng){
             $.ajax({
-                type: type,
+                type: 'POST',
                 url: '/ajax/123123123',
                 data: {
                     lat:lat,
