@@ -120,7 +120,7 @@
     }
   }
   if(!sizeof($arPayment)) {
-    $arPayment[135]['pt']==0
+    $arPayment[135]['pt']==0;
     $arPayment[135]['type'] = 'Час';
   }
   // appearance
