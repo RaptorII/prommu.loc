@@ -405,10 +405,6 @@ $viData['states'] = array(
         map.locate({setView: true, maxZoom: 16});
     }
 
-    function locate() {
-        map.locate({setView: true, maxZoom: 16});
-    }
-
     // placeholders for the L.marker and L.circle representing user's current position and accuracy
     var current_position, current_accuracy;
 
@@ -432,6 +428,7 @@ $viData['states'] = array(
     $('#actions a').click(function(){
         map.on('locationfound', onLocationFound);
         locate();
+        console.log(current_position);
     });
 
 
