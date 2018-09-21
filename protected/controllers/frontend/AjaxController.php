@@ -53,7 +53,18 @@ class AjaxController extends AppController
         } // endif
         Yii::app()->end();
     }
-
+    
+    public function actionReporproject(){
+        $phone = $_POST['project'];
+        $email = $_POST['idus'];
+        $phone = $_POST['latitude'];
+        $phone = $_POST['longitude'];
+        
+        var_dump($_POST);
+        
+        
+    }
+    
      public function actionRestorecode(){
         $code = rand(111111, 999999);
         $phone = $_POST['phone'];
