@@ -107,22 +107,7 @@
       $strPosts .= ($strPosts==''? '' : ',') . $arPosts[$val['id']]['newname'];
     }
   }
-  $arPayment = array();
-echo "<pre>";
-print_r($viData['userInfo']['userDolj']); 
-echo "</pre>"; 
-  
-  foreach ($viData['userInfo']['userDolj'][0] as $val){
-    if($val['pay']>0)
-      $arPayment[$val['idpost']]['pay'] = round($val['pay']);
-    $arPayment[$val['idpost']]['pt'] = $val['pt'];
-    switch ($val['pt']) {
-      case 0: $arPayment[$val['idpost']]['type'] = 'Час'; break;
-      case 1: $arPayment[$val['idpost']]['type'] = 'Неделя'; break;
-      case 2: $arPayment[$val['idpost']]['type'] = 'Месяц'; break;
-      case 3: $arPayment[$val['idpost']]['type'] = 'Посещение'; break;
-    }
-  }
+
 echo "<pre>";
 print_r($arPosts); 
 echo "</pre>";  
@@ -132,30 +117,38 @@ echo "</pre>";
 echo "<pre>";
 print_r($_GET); 
 echo "</pre>";
-echo "<pre>";
-print_r($arPosts); 
-echo "</pre>";
-  if(!sizeof($arPayment)) {
-    foreach ($arPosts as $k => $v) {
-      print_r($v);
-      if($v['checked'] === 'checked') {
-        $arPayment[$v['id']]['pt'] = 0;
-        $arPayment[$v['id']]['type'] = 'Час';      
+
+  $arPayment = array();
+  foreach ($viData['userInfo']['userDolj'][0] as $val) {
+    if($_GET['npopup'] && $_GET['position'])) {
+      foreach ($arPosts as $k => $v) {
+        if($v['checked'] === 'checked') {
+          $arPayment[$v['id']]['pt'] = 0;
+          $arPayment[$v['id']]['type'] = 'Час';
+        }
+      }
+    }
+    else {
+      if($val['pay']>0)
+        $arPayment[$val['idpost']]['pay'] = round($val['pay']);
+      $arPayment[$val['idpost']]['pt'] = $val['pt'];
+      switch ($val['pt']) {
+        case 0: $arPayment[$val['idpost']]['type'] = 'Час'; break;
+        case 1: $arPayment[$val['idpost']]['type'] = 'Неделя'; break;
+        case 2: $arPayment[$val['idpost']]['type'] = 'Месяц'; break;
+        case 3: $arPayment[$val['idpost']]['type'] = 'Посещение'; break;
       }
     }
   }
+
+
 echo "<pre>";
 print_r($arPosts); 
 echo "</pre>";  
 echo "<pre>";
 print_r($arPayment); 
 echo "</pre>";
-echo "<pre>";
-print_r($_GET); 
-echo "</pre>";
-echo "<pre>";
-print_r($arPosts); 
-echo "</pre>";
+
   // appearance
   $arAppear = array(11=>'hcolor',12=>'hlen',13=>'ycolor',14=>'chest',15=>'waist',16=>'thigh');
   $arAppearName = array(11=>'Цвет волос',12=>'Длина волос',13=>'Цвет глаз',14=>'Размер груди',15=>'Объем талии',16=>'Объем бедер');
