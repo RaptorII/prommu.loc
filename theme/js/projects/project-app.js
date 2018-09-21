@@ -40,4 +40,46 @@ let IndexTasks = (function () {
 
 $(document).ready(function () {
     new IndexTasks();
+
+
+    var map = L.map('map').setView([55.7251293,37.6167661], 10);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: ''
+    }).addTo(map);
+
+    function locate() {
+        map.locate({setView: true, maxZoom: 16});
+    }
+
+    function onLocationFound(e) {
+        var current_position;
+        if (current_position) {
+            map.removeLayer(current_position);
+        }
+        current_position = L.marker(e.latlng).addTo(map);
+        let points = current_position._latlng;
+        let lat = points.lat;
+        let lng = points.lng;
+
+        if(lat && lng){
+            $.ajax({
+                type: type,
+                url: '/ajax/123123123',
+                data: {
+                    lat:lat,
+                    lng:lng
+                },
+                dataType: 'json',
+                success: function (val) {
+
+                }
+            });
+        }
+    }
+
+    $('#get_points').click(function(){
+        locate();
+        map.on('locationfound', onLocationFound);
+    });
 });

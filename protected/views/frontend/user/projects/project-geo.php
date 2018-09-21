@@ -133,21 +133,6 @@ $viData['states'] = array(
   2 => 'просрочил'
 );
 */ ?>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
-      integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-      crossorigin=""/>
-
-<!-- Make sure you put this AFTER Leaflet's CSS -->
-<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
-        integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
-        crossorigin=""></script>
-
-<style>
-    #map { height: 400px; }
-</style>
-
-<div style="display:none" id="map"></div>
-<span id='actions'>Определить координаты</span>
 
 
 
@@ -392,40 +377,3 @@ $viData['states'] = array(
         </div>
     <?php endif; ?>
 </div>
-
-
-<script>
-    var map = L.map('map').setView([55.7251293,37.6167661], 10);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: ''
-    }).addTo(map);
-
-    function locate() {
-        map.locate({setView: true, maxZoom: 16});
-    }
-
-    function onLocationFound(e) {
-        var current_position;
-        if (current_position) {
-            map.removeLayer(current_position);
-        }
-        current_position = L.marker(e.latlng).addTo(map);
-        let points = current_position._latlng;
-        let lat = points.lat;
-        let lng = points.lng;
-
-
-        console.log(lat);
-        console.log(lng);
-    }
-
-
-
-    $('#actions').click(function(){
-        locate();
-        map.on('locationfound', onLocationFound);
-    });
-
-
-</script>

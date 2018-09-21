@@ -263,3 +263,22 @@
     width:inherit!important;
 }
 .task__table-info td.descr{ width: 65% }
+
+#get_points{
+    width: 220px;
+    text-align: center;
+    display: inline-block;
+    line-height: 33px;
+    color: #fff;
+    font-size: 16px;
+    background: #ff8300;
+    vertical-align: middle;
+    position: relative;
+    z-index: 0;
+    cursor: pointer;
+}
+
+#map{
+    display:none;
+    height: 100px;
+}
