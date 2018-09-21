@@ -397,9 +397,9 @@ $viData['states'] = array(
 <script>
     var map = L.map('map').setView([51.505, -0.09], 13);
 
-    /*L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: ''
-    }).addTo(map);*/
+    }).addTo(map);
 
     function locate() {
         map.locate({setView: true, maxZoom: 16});
@@ -410,7 +410,6 @@ $viData['states'] = array(
         map.removeLayer(current_position);
         console.log(current_position);
     }
-
 
     $('#actions a').click(function(){
         locate();
