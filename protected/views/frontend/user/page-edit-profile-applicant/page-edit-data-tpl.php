@@ -120,11 +120,11 @@ echo "</pre>";
 
   $arPayment = array();
   foreach ($viData['userInfo']['userDolj'][0] as $val) {
-    if($_GET['npopup'] && $_GET['position'])) {
+    if($_GET['npopup'] && $_GET['position']) {
       foreach ($arPosts as $k => $v) {
         if($v['checked'] === 'checked') {
-          $arPayment[$v['id']]['pt'] = 0;
-          $arPayment[$v['id']]['type'] = 'Час';
+          $arPayment[$_GET['position']]['pt'] = 0;
+          $arPayment[$_GET['position']]['type'] = 'Час';
         }
       }
     }
