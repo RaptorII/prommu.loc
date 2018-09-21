@@ -146,8 +146,8 @@ $viData['states'] = array(
     #map { height: 400px; }
 </style>
 
-<div id="map"></div>
-<div id='actions'><a href='#'>Find me!</a></div>
+<div style="display:none" id="map"></div>
+<span id='actions'>Определить координаты</span>
 
 
 
@@ -395,7 +395,7 @@ $viData['states'] = array(
 
 
 <script>
-    var map = L.map('map').setView([51.505, -0.09], 13);
+    var map = L.map('map').setView([55.7251293,37.6167661], 10);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: ''
@@ -411,12 +411,18 @@ $viData['states'] = array(
             map.removeLayer(current_position);
         }
         current_position = L.marker(e.latlng).addTo(map);
-        console.log(current_position);
+        let points = current_position._latlng;
+        let lat = points.lat;
+        let lng = points.lng;
+
+
+        console.log(lat);
+        console.log(lng);
     }
 
 
 
-    $('#actions a').click(function(){
+    $('#actions').click(function(){
         locate();
         map.on('locationfound', onLocationFound);
     });
