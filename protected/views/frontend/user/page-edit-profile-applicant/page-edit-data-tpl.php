@@ -108,6 +108,10 @@
     }
   }
   $arPayment = array();
+echo "<pre>";
+print_r($viData['userInfo']['userDolj']); 
+echo "</pre>"; 
+  
   foreach ($viData['userInfo']['userDolj'][0] as $val){
     if($val['pay']>0)
       $arPayment[$val['idpost']]['pay'] = round($val['pay']);
