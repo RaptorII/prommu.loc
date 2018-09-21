@@ -119,12 +119,14 @@
       case 3: $arPayment[$val['idpost']]['type'] = 'Посещение'; break;
     }
   }
-  if(!sizeof($arPayment)) {
-    foreach ($arPosts as $k => $v)
-      if($v['checked'] == 'checked') {
+  if(!$arPayment) {
+    foreach ($arPosts as $k => $v) {
+      print_r($v);
+      if($v['checked'] === 'checked') {
         $arPayment[$v['id']]['pt'] = 0;
         $arPayment[$v['id']]['type'] = 'Час';      
       }
+    }
   }
   // appearance
   $arAppear = array(11=>'hcolor',12=>'hlen',13=>'ycolor',14=>'chest',15=>'waist',16=>'thigh');
