@@ -1736,7 +1736,7 @@ class UserController extends AppController
 
                 $view = MainConfig::$VIEWS_SERVICE_PREMIUM_VIEW;
                 $vac = new Vacancy();
-                $data = $vac->getVacanciesPrem();
+                $data = $vac->getModerVacs();
                 Yii::app()->getClientScript()->registerCssFile($cssPath . 'services-premium-page.css');
                 break;
             case 'push-notification':

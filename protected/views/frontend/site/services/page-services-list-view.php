@@ -5,7 +5,7 @@
 	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/services/list.js', CClientScript::POS_END);
 	$type = Share::$UserProfile->type;
 	$arApp = ['geolocation-staff','prommu_card','medical-record']; // то, что доступно соискателю
- 
+	$arCustom = ['outstaffing','personal-manager-outsourcing','medical-record']; // Уточнить цену
 ?>
 <div class="row">
 	<div class="col-xs-12 services">
@@ -53,7 +53,11 @@
 						<? foreach ($prices['prices'][$m['icon']] as $price): ?>
 							<div>
 								<div class="services__price">
-									<div class="services__price-item"><?=$price['price']?$price['price']:'Бесплатно' ?> <?=$price['comment']?></div>
+									<? if(in_array($m['icon'], $arCustom)): ?>
+										<div class="services__price-item">Уточнить цену</div>
+									<? else: ?>
+										<div class="services__price-item"><?echo $price['price'] ? $price['price'] . ' &#8381 ' . $price['comment'] : 'Бесплатно'?></div>
+									<? endif; ?>
 								</div>
 								<div 
 									class="services__order order-service" 
@@ -62,7 +66,7 @@
 								>
 									<? if(in_array($type,[2,3]) && $m['icon']!='geolocation-staff'): ?>
 										<? 
-											sizeof($prices['service'][$m['icon']]) > 1
+											sizeof($prices['prices'][$m['icon']]) > 1
 											? $link = '/user' . $m['link'] . '?type=' . $price['id']
 											: $link = '/user' . $m['link'];
 										?>
@@ -100,7 +104,11 @@
 								<? foreach ($prices['prices'][$s['icon']] as $price): ?>
 									<div>
 										<div class="services__price">
-											<div class="services__price-item"><?=$price['price']?$price['price']:'Бесплатно'?> <?=$price['comment']?></div>		
+											<? if(in_array($m['icon'], $arCustom)): ?>
+												<div class="services__price-item">Уточнить цену</div>
+											<? else: ?>
+												<div class="services__price-item"><?echo $price['price'] ? $price['price'] . ' &#8381 ' . $price['comment'] : 'Бесплатно'?></div>
+											<? endif; ?>
 										</div>
 										<div 
 											class="services__order order-service" 
@@ -109,7 +117,7 @@
 										>
 											<? if(in_array($type,[2,3])): ?>
 												<?
-													sizeof($viData['prices'][$s['icon']]) > 1
+													sizeof($prices['prices'][$s['icon']]) > 1
 													? $link = '/user' . $s['link'] . '?type=' . $price['id']
 													: $link = '/user' . $s['link'];
 												?>

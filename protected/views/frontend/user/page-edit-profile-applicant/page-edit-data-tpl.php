@@ -119,6 +119,10 @@
       case 3: $arPayment[$val['idpost']]['type'] = 'Посещение'; break;
     }
   }
+  if(!sizeof($arPayment)) {
+    $arPayment[$_GET['position']]['pt']==0;
+    $arPayment[$_GET['position']]['type'] = 'Час';
+  }
   // appearance
   $arAppear = array(11=>'hcolor',12=>'hlen',13=>'ycolor',14=>'chest',15=>'waist',16=>'thigh');
   $arAppearName = array(11=>'Цвет волос',12=>'Длина волос',13=>'Цвет глаз',14=>'Размер груди',15=>'Объем талии',16=>'Объем бедер');
@@ -458,7 +462,7 @@
                       <ul class="epa__select-list epa__post-list">
                           <i class="epa__select-list-icon epa__post-btn">OK</i>
                           <li>
-                            <input type="radio" name="post[<?=$post['id']?>][hwm]" value="0" <?=(!isset($arPayment[$post['id']]['pt']) || $arPayment[$post['id']]['pt']==0)?'checked':''?>>
+                            <input type="radio" name="post[<?=$post['id']?>][hwm]" value="0" <?=$arPayment[$post['id']]['pt']==0 ? 'checked' : ''?>>
                             <label>Час</label>
                           </li>
                           <li>

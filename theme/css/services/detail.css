@@ -109,6 +109,10 @@
 	font-size: 18px;
 	color: #ffffff;
 }
+.service__price-item .free{
+	padding: 20px 0;
+	display: inline-block;
+}
 .service__price-list{ 
 	width: 100%;
 	text-align: center;
