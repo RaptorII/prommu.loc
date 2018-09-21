@@ -426,9 +426,8 @@ $viData['states'] = array(
 
 
     $('#actions a').click(function(){
-        map.on('locationfound', onLocationFound);
         locate();
-        console.log(current_position);
+        map.on('locationfound', onLocationFound);
     });
 
 
