@@ -192,7 +192,7 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/js/projects/project-
         <br><br><h2 class="center">Не найдено локаций</h2>
     <?php endif; ?>
 
-    <input type="hidden" name="global_project_id" value="<?= $projectId ?>"/>
-    <input type="hidden" name="global_user_id" value="<?=  $userId ?>"/>
+    <input type="hidden" class="global_project_id" name="global_project_id" value="<?= $projectId ?>"/>
+    <input type="hidden" class="global_user_id" name="global_user_id" value="<?=  $userId ?>"/>
 
 </div>

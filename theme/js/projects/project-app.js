@@ -67,7 +67,7 @@ $(document).ready(function () {
         if(lat && lng){
             $.ajax({
                 type: 'POST',
-                url: '/ajax/reportproject',
+                url: '/ajax/reportproject.php',
                 data: {
                     latitude:lat,
                     longitude:lng,
