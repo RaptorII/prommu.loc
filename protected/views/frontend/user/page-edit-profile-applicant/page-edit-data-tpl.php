@@ -122,8 +122,8 @@
   if(!sizeof($arPayment)) {
     foreach ($arPosts as $k => $v)
       if($v['checked'] == 'checked') {
-        $arPayment[$k]['pt'] = 0;
-        $arPayment[$k]['type'] = 'Час';      
+        $arPayment[$v['id']]['pt'] = 0;
+        $arPayment[$v['id']]['type'] = 'Час';      
       }
   }
   // appearance
