@@ -117,8 +117,11 @@
       case 1: $arPayment[$val['idpost']]['type'] = 'Неделя'; break;
       case 2: $arPayment[$val['idpost']]['type'] = 'Месяц'; break;
       case 3: $arPayment[$val['idpost']]['type'] = 'Посещение'; break;
-      default: $arPayment[$val['idpost']]['type'] = 'Час'; break;
     }
+  }
+  if(!sizeof($arPayment)) {
+    $arPayment[135]['pt']==0
+    $arPayment[135]['type'] = 'Час';
   }
   // appearance
   $arAppear = array(11=>'hcolor',12=>'hlen',13=>'ycolor',14=>'chest',15=>'waist',16=>'thigh');
@@ -154,15 +157,6 @@
   foreach($attrAll as $p)
     if(strpos($p['name'], 'admob')!==false && !empty($p['val']))
       $arAdPhones[] = $p;
-
-
-echo "<pre>";
-print_r($viData); 
-echo "</pre>";
-
-echo "<pre>";
-print_r($arPayment); 
-echo "</pre>";
 ?>
   <?php if( $viErrorData['err'] ): ?>
     <div class="err-msg-block">При сохранении данных профиля произошла ошибка. <?= $viErrorData['msg'] ?></div>
@@ -468,7 +462,7 @@ echo "</pre>";
                       <ul class="epa__select-list epa__post-list">
                           <i class="epa__select-list-icon epa__post-btn">OK</i>
                           <li>
-                            <input type="radio" name="post[<?=$post['id']?>][hwm]" value="0" <?=(!isset($arPayment[$post['id']]['pt']) || $arPayment[$post['id']]['pt']==0)?'checked':''?>>
+                            <input type="radio" name="post[<?=$post['id']?>][hwm]" value="0" <?=$arPayment[$post['id']]['pt']==0 ? 'checked' : ''?>>
                             <label>Час</label>
                           </li>
                           <li>
