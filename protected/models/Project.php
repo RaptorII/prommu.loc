@@ -61,6 +61,8 @@ class Project extends ARModel
                         'btime' => $arr['btime'][$c][$l][$p],
                         'etime' => $arr['etime'][$c][$l][$p],
                         'project' => $project,
+                        'latitude' => rand(1111,9999),
+                        'longitude' => rand(1111,9999),
                         'point' => $isCreate ? ($pId.rand(1111,9999)) : $p,
                         'location' => $isCreate ? $lId : $l,
                         'metro' => $arr['metro'][$c][$l]
@@ -106,6 +108,22 @@ class Project extends ARModel
                     ->insert('project_city', $arV);
             }
         }
+    }
+    /*
+    *       Запись местоположения пользователя
+    */
+    public function recordReport($arr, $project){
+         if(!$project)
+            return false;
+        Yii::app()->db->createCommand()
+                    ->insert('project_repost', array(
+                            'project' => $project,
+                            'user' => $arr['user'],
+                            'point' =>  $arr['point'],
+                            'date' => date("Y-m-d h-i-s"),
+                            'longitude' => rand(1111,9999),
+                            'latitude' => rand(1111,9999),
+                        ));
     }
     /*
     *       Запись новых пользователей
