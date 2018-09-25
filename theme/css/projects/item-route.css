@@ -230,3 +230,19 @@
 .sm_editor.sm_webp .sm_footer.sm_footer{
     background: #abb92a;
 }
+/*
+*
+*/
+.route__item-title span{ color: #abb92a }
+.route__table-user img{
+    min-width: 76px;
+}
+.route__table-user{
+    display: flex;
+    align-items: center;
+}
+.route__table-cell-user{ width: 20% }
+.route__table-cell-name{ width: 30% }
+.route__table-cell-adres{ width: 30% }
+.route__table-cell-metro{ width: 15% }
+.route__table-cell-status{ width: 5% }
