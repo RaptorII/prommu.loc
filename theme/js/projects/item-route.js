@@ -123,6 +123,12 @@ $(document).ready(function () {
     $("#sortable").disableSelection();
 
 
+    console.log(mapLocation);
+
+    setMapPoints(15642,3180,'map');
+    setMapPoints(15642,3180,'map2');
+
+    /*
     var map = L.map('map').setView([55.7251293,37.6167661], 10);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -131,23 +137,7 @@ $(document).ready(function () {
 
     map.locate({setView: true, maxZoom: 16});
 
-    var myLines = [{
-        "type": "LineString",
-        "coordinates": [[-100, 40], [-105, 45], [-110, 55]]
-    }, {
-        "type": "LineString",
-        "coordinates": [[-105, 40], [-110, 45], [-115, 55]]
-    }];
 
-    var myStyle = {
-        "color": "#ff7800",
-        "weight": 5,
-        "opacity": 0.65
-    };
-
-    L.geoJSON(myLines, {
-        style: myStyle
-    }).addTo(map);
 
 
 
@@ -203,8 +193,7 @@ $(document).ready(function () {
         }
     }).addTo(map);
 
-
-
+    */
 
 });
 /*
@@ -231,4 +220,72 @@ smLoadMap = function(){
         border: '1px solid #dedede'
     });
     console.log(sm);
-}
+};
+
+setMapPoints = function(userId, pointId ,mapid) {
+
+    var longitude = mapLocation[userId]['points'][pointId][0]['longitude'];
+    var latitude =  mapLocation[userId]['points'][pointId][0]['latitude'];
+
+    var startPoint = [];
+    startPoint.push(latitude);
+    startPoint.push(longitude);
+
+    try{
+        var map = L.map(mapid).setView(startPoint, 9);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: ''
+        }).addTo(map);
+
+        map.locate({setView: true, maxZoom: 16});
+    }
+    catch(err){
+
+    }
+
+
+
+
+    var location =[];
+    console.log(mapLocation[userId]['points']);
+     var size = Object.keys(mapLocation[userId]['points']).length;
+     for(var d = 0; d< size; d++){
+         var points = mapLocation[userId]['points'][pointId];
+
+         $.each(points, function(i,e){
+             var arPoints = [];
+             arPoints.push(this.longitude);
+             arPoints.push(this.latitude);
+             location.push(arPoints);
+
+             var geojsonFeature = {
+                 "type": "Feature",
+                 "geometry": {
+                     "type": "Point",
+                     "coordinates": arPoints
+                 }
+             };
+
+             L.geoJSON(geojsonFeature).addTo(map);
+         });
+     }
+
+
+    console.log(location);
+    var myLines = [{
+        "type": "LineString",
+        "coordinates": location
+    }];
+
+    var myStyle = {
+        "color": "#ff7800",
+        "weight": 5,
+        "opacity": 0.65
+    };
+
+    L.geoJSON(myLines, {
+        style: myStyle
+    }).addTo(map);
+
+};
