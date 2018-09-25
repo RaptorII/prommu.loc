@@ -116,7 +116,7 @@ class Project extends ARModel
         if(!$arr['project'])
             return false;
         Yii::app()->db->createCommand()
-                    ->insert('project_repost', array(
+                    ->insert('project_report', array(
                             'project' => $arr['project'],
                             'user' => $arr['idus'],
                             'point' => $arr['idus'],
