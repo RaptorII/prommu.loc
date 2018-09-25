@@ -157,10 +157,6 @@ $arFilterData = [
 </div>
 
 
-
-<div id="map" style="height: 400px;"></div>
-
-<div id="map2" style="height: 400px;"></div>
 <div class="project__module">
 
   <div class="project__route">
