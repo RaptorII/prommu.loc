@@ -228,31 +228,31 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 					$cntPosts = sizeof($viData['vac']);
 				?>
 				<div class="smss-result__text">
-					Добрый день <ФИО><br>
+					Добрый день, <ФИО><br>
 					Работодатель <span><?=$viData['emp']['name']?>
 					<a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $viData['emp']['id_user']?>">
 						<img src="<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . ($viData['emp']['logo'] ? $viData['emp']['logo'] . '100.jpg' : 'logo.png') ?>">
 					</a></span><br> приглашает Вас на вакансию <a href="https://prommu.com/vacancy/<?=$vacancy?>">&laquo;<?=$vac['title']?>&raquo;</a>
 					<? if($cntPosts==1): ?>
-						на должность <?=$vac['pname']?>
+						на должность:<br><?=$vac['pname']?><br>
 					<? else: ?>
-						на должности <?
+						на должности:<br> <?
 						foreach ($viData['vac'] as $k => $v) 
-							echo  $v['pname'] . ($k<($cntPosts-1)?', ':'');
+							echo  ($k+1) . ') ' . $v['pname'] . ($k<($cntPosts-1)?';<br>':'');
 						?>
 					<? endif; ?>
-						<br>
+						<br><br>
 						Заработная плата:<br> 
 						<? if( $vac['shour'] > 0 )
-							echo $vac['shour'] . ' руб/час<br/>';
+							echo '- ' . $vac['shour'] . ' руб/час<br/>';
 						if( $vac['sweek'] > 0 )
-							echo $vac['sweek'] . ' руб/неделю<br/>';
+							echo '- ' . $vac['sweek'] . ' руб/неделю<br/>';
 						if( $vac['smonth'] > 0 )
-							echo $vac['smonth'] . ' руб/месяц<br/>';
+							echo '- ' . $vac['smonth'] . ' руб/месяц<br/>';
 						if( $vac['svisit'] > 0 )
-							echo $vac['svisit'] . ' руб/посещение<br/>';
+							echo '- ' . $vac['svisit'] . ' руб/посещение<br/>';
 						?><br>
-						Если интересно - переходи по <a href="<?=MainConfig::$PAGE_VACANCY?>">ссылке</a>
+						Если интересно - за более детальной информацией переходи по <a class="smss-result__text-link" href="<?=MainConfig::$PAGE_VACANCY?>">ссылке</a>
 				</div>
 				</br></br>
 				<h1 class="smss-result__title">Стоимость услуги</h1>
