@@ -963,7 +963,7 @@ class SiteController extends AppController
         $title = 'Услуги портала Prommu.com';
         $this->setBreadcrumbs($title, MainConfig::$PAGE_SERVICES);
         $pricess = new PrommuOrder();
-        $prices = $pricess->servicesPrice();
+        $prices = $pricess->getPricesData();
         if( $id )
         {
             $data = $services->getServiceData($id);

@@ -14,37 +14,105 @@ class PrommuOrder {
         return $result;
     }
     //Определение цены использования услуги
-     public function servicePrice($user, $service){
+     public function servicePrice($arId, $service){
+        if(!sizeof($arId) || empty($service))
+            return -1;
 
-        $sql = "SELECT r.id_user, r.type
-            FROM service_cloud r
-            WHERE r.id_user = $user AND r.status = 1 AND r.type = '$service'";
-        $result = Yii::app()->db->createCommand($sql)->queryAll();
-        $sql = "SELECT first, second, type, service, city
-            FROM service_price 
-            WHERE service = '$service'";
-        $results = Yii::app()->db->createCommand($sql)->queryRow();
+        $arBD = Yii::app()->db->createCommand()
+            ->select("c.region")
+            ->from('empl_city ec')
+            ->leftjoin('city c', 'c.id_city=ec.id_city')
+            ->where(array('in','id_vac',$arId))
+            ->queryAll();
 
-        if(sizeof($result)) {
-            return $results['second'];
+        if(!sizeof($arBD))
+            return -1;
+
+        $bin = 0;
+        foreach ($arBD as $c) {
+            if($c['region']==1307) $bin|=1; // определяем МО
+            elseif($c['region']==1838) $bin|=2; // определяем ЛО
+            else $bin|=4;
         }
-        else{
-           return $results['first']; 
+
+        $arReg = array();
+        $price = 0;
+
+        if($service=='premium-vacancy' || $service=='email-invitation') {
+            switch ($bin) {
+                case 1: $arReg = [1]; break;// МО
+                case 2: $arReg = [2]; break;// ЛО
+                case 4: $arReg = [3]; break;// др.рег.
+            }
+            if($service=='premium-vacancy') {
+                switch ($bin) {
+                    case 3: // МО + ЛО
+                    case 7: $arReg = [1,3]; break;// МО + ЛО + др.рег.
+                    case 5: $arReg = [1]; break;// МО + др.рег.
+                    case 6: $arReg = [2]; break;// ЛО + др.рег.
+                }
+            }
+            if($service=='email-invitation') {
+                switch ($bin) {
+                    case 3: // МО + ЛО
+                    case 7: $arReg = [1,2]; break;// МО + ЛО + др.рег.
+                    case 5: $arReg = [1,3]; break;// МО + др.рег.
+                    case 6: $arReg = [2,3]; break;// ЛО + др.рег.
+                }
+            }
+
+            $arPrices = Yii::app()->db->createCommand()
+                ->select("price")
+                ->from('service_prices')
+                ->where(
+                        'service=:service AND region IN('.join(',',$arReg).')',
+                        array(':service' => $service)
+                    )
+                ->queryAll();
+
+            foreach ($arPrices as $v)
+                $price += $v['price'];
         }
+        else {
+            $arPrices = Yii::app()->db->createCommand()
+                ->select("price")
+                ->from('service_prices')
+                ->where(
+                        'service=:service',
+                        array(':service' => $service)
+                    )
+                ->queryRow();  
+            $price = $arPrices['price'];
+        }
+
+        return $price;
     }
-    
-    public function servicesPrice(){
 
+
+    public function getPricesData(){
         $sql = "SELECT id, price, comment, service, region
             FROM service_prices";
         $results = Yii::app()->db->createCommand($sql)->queryAll();
         
-        for($i = 0; $i < sizeof($results); $i ++){
+        for($i = 0; $i < sizeof($results); $i ++)
             $data['prices'][$results[$i]['service']][] = $results[$i];
-        }
-        
     
-           return $data; 
+        return $data; 
+    }
+
+    function getFormSignature($account, $desc, $sum, $secretKey) {
+        $hashStr = $account.'{up}'.$desc.'{up}'.$sum.'{up}'.$secretKey;
+        return hash('sha256', $hashStr);
+    }
+
+    public function createPayLink($account, $desc, $sum){
+         $publi = "84661-fc398";
+         $secretKey = '56B61C8ED08-535F660B689-40C558A1CE';
+         $hash = $this->getFormSignature($account, $desc, $sum, $secretKey);
+         $link = "https://unitpay.ru/pay/$publi?sum=$sum&account=$account&desc=$desc&signature=$hash";
+
+         return $link;
+
     }
     
     public function serviceOrderSms($id_user,$sum, $status, $postback, $from, $to, $name,$type, $text, $id){
@@ -334,12 +402,115 @@ class PrommuOrder {
         }
 
     }
+    /*
+    *       Заказ услуги Премиум
+    */
+    public function orderPremium($arVacs, $vacPrice, $employer) {
+        if(!isset($employer))
+            return false;
 
-	
+        $arBDate = Yii::app()->getRequest()->getParam('from');
+        $arEDate = Yii::app()->getRequest()->getParam('to');
+        $strVacs = implode('.', $arVacs);
+        $account = $employer . '.' . $strVacs;
+        $day = 60 * 60 * 24;
+        $mainPrice = 0;
 
+        for($i=0, $n=sizeof($arVacs); $i<$n; $i++) {
+            $from = strtotime($arBDate[$i]);
+            $to = strtotime($arEDate[$i]);
+            $days = ($to - $from) / $day;
+            $price = $vacPrice * $days;
+            $this->serviceOrder(
+                    $employer,
+                    $price,
+                    0, 
+                    0, 
+                    $arBDate[$i], 
+                    $arEDate[$i], 
+                    $arVacs[$i], 
+                    'vacancy'
+                );
+            $mainPrice += $price;
+        }
+        return $this->createPayLink($account, $strVacs, $mainPrice);
+    }
+    /*
+    *       Заказ услуги Email рассылка
+    */
+    public function orderEmail($vacancy, $vacPrice, $employer) {
+        $arApps = explode(",", Yii::app()->getRequest()->getParam('users'));
+        $date = date("Y-m-d h-i-s");
 
-	}
+        for($i=0, $n=count($arApps); $i<$n; $i++) {
+            $this->serviceOrderEmail(
+                    $employer,
+                    $vacPrice,
+                    0, 
+                    0, 
+                    $date,
+                    $date, 
+                    $vacancy, 
+                    'email', 
+                    $vacancy, 
+                    $arApps[$i]
+                );
+        }
+        $account = $employer . '.' . $vacancy . '.email.' . implode('.', $arApps);
 
+        return $this->createPayLink($account, $vacancy, $vacPrice);
+    }
+    /*
+    *       Заказ услуги Push рассылка
+    */
+    public function orderPush($vacancy, $vacPrice, $employer) {
+        $arApps = explode(",", Yii::app()->getRequest()->getParam('users'));
+        $date = date("Y-m-d h-i-s");
+        for($i=0, $n=count($arApps); $i<$n; $i++) {
+            $model->serviceOrderEmail(
+                    $employer,
+                    $vacPrice, 
+                    1, 
+                    0, 
+                    $date,
+                    $date, 
+                    $vacancy, 
+                    'push',
+                    $vacancy,
+                    $arApps[$i]
+                );
+        }
+    }
+    /*
+    *       Заказ услуги Push рассылка
+    */
+    public function orderSms($vacancy, $vacPrice, $employer) {
+        if(!isset($employer))
+            return false;
 
+        $arApps = explode(",", Yii::app()->getRequest()->getParam('users'));
+        $text = Yii::app()->getRequest()->getParam('text');
+        $date = date("Y-m-d h-i-s");
+        $mainPrice = 0;
 
+        for($i=0, $n=count($arApps); $i<$n; $i++) {
+            $this->serviceOrderSms(
+                    $employer,
+                    $vacPrice, 
+                    0, 
+                    0, 
+                    $date,
+                    $date,
+                    $vacancy, 
+                    'sms', 
+                    $text, 
+                    $arApps[$i]
+                );
+            $mainPrice += $vacPrice;
+        }
+        $account = $employer . '.' . $vacancy . '.sms.' . implode('.', $arApps);
+
+        return $this->createPayLink($account, $vacancy, $mainPrice);
+    }
+}
 ?>

@@ -1,16 +1,27 @@
+<?
+  $title = 'Оплата услуг PROMMU';
+  $this->setPageTitle($title);
+  $this->setBreadcrumbsEx(
+      array('Мой профиль', MainConfig::$PAGE_PROFILE),
+      array($title = 'Оплата услуг', MainConfig::$PAGE_PAYMENT)
+  );
+	$this->ViewModel->addContentClass('page-payment');
+	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/theme/css/page-payment.css');
+	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/payment-page.js', CClientScript::POS_END);
+?>
 <div class="row">
 	<div class="col-xs-12 payment">
 		<h1 class="payment__title">Оплата услуг PROMMU</h1>
 		<form 
-			action="/user/payment" 
+			action="<?=MainConfig::$PAGE_PAYMENT?>" 
 			class="payment-form" 
 			method="POST" 
 			id="payment-form" 
 			data-leg="<?=MainConfig::$PAGE_PAYMENT?>" 
-			data-ind="/user/payment">
-			<?php if($viData['service']=='premium'): ?>
+			data-ind="<?=MainConfig::$PAGE_PAYMENT?>">
+			<?php if($viData['service']=='premium-vacancy'): ?>
 				<span class="payment-form__type-name">ПЕРИОД РАБОТЫ ПРЕМИУМ УСЛУГИ</span>
-				<?php foreach ($viData['vacancies'] as $id): ?>
+				<?php foreach ($viData['vacancy'] as $id): ?>
 					<div class="payment-date">	
 						<div class="payment__date-id">Для вакансии <?=$id?></div>
 						<div class="payment__date-calendar begin">
@@ -57,10 +68,11 @@
 								<tr><td>Период работы услуги</td><td class="payment-period">0 дней</td></tr>
 							</tbody>
 						</table>
-						<input type="hidden" name="vacanc[]" value="<?=$id?>">					
+						<input type="hidden" name="vacancy[]" value="<?=$id?>">					
 						<input type="hidden" name="from[]" class="payment-begin-inp">
 						<input type="hidden" name="to[]" class="payment-end-inp">
 						<input type="hidden" name="period[]" class="payment-period-inp">
+						<input type="hidden" name="service" value="premium-vacancy">
 					</div>
 				<?php endforeach; ?>
 				<span class="payment-form__type-name">РЕЗУЛЬТАТ</span>		
@@ -68,13 +80,13 @@
 					<tbody>
 						<tr><td>Стоимость услуги</td><td><span id="payment-price"><?=$viData['price']?></span> руб/день</td>
 						</tr>
-						<tr><td>Выбраных вакансий</td><td id="payment-count"><?=count($viData['vacancies'])?></td></tr>
+						<tr><td>Выбраных вакансий</td><td id="payment-count"><?=count($viData['vacancy'])?></td></tr>
 						<tr><td>Итоговый период работы услуги </td><td id="payment-period">0 дней</td></tr>
 						<tr><td colspan="2" id="payment-result"></td></tr>
 					</tbody>
 				</table>
 			<?php endif; ?>
-			<?if($viData['service']=='sms'):?>
+			<?if($viData['service']=='sms-informing-staff'):?>
 				<?php $result = $viData['app_count'] * $viData['mes_count'] * $viData['price']; ?>
 				<span id="payment-result"><?=$result?>рублей</span>			
 			<?endif;?>
@@ -103,7 +115,7 @@
 				</label>
 			</div>
 			<button type="submit" class="payment-form__btn" id="payment-btn">СФОРМИРОВАТЬ СЧЕТ</button>
-			<input type="hidden" name="account" value="<?= Share::$UserProfile->id?>">
+			<input type="hidden" name="employer" value="<?= Share::$UserProfile->id?>">
 		</form>
 	</div>
 </div>

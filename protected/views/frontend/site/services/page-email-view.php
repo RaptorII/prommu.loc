@@ -215,36 +215,74 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 //		Выбор соискателей
 ?>
 <?php else: ?>
-	<?php $appCount = Yii::app()->getRequest()->getParam('users-cnt'); ?>
+	<?php 
+		$appCount = Yii::app()->getRequest()->getParam('users-cnt');
+		$vacancy = Yii::app()->getRequest()->getParam('vacancy');
+		?>
 	<div class="row">
 		<div class="col-xs-12 sms-service">
 			<form action="<?=MainConfig::$PAGE_PAYMENT?>" method="POST" class="smss__result-form">
-			<h1 class="smss-result__title">ТЕКСТ РАССЫЛКИ</h1>
-			<span class="smss-result__result" style="font-size:23px">Работодатель <?=Share::$UserProfile->exInfo->name?> приглашает на вакансию <a href="https://prommu.com/vacancy/<?=Yii::app()->getRequest()->getParam('vacancy')?>">https://prommu.com/vacancy/<?=Yii::app()->getRequest()->getParam('vacancy')?></a></span></br>
-				<h1 class="smss-result__title">РАСЧЕТ СТОИМОСТИ УСЛУГИ</h1>
+				<h1 class="smss-result__title">ТЕКСТ РАССЫЛКИ</h1>
+				<?
+					$vac = $viData['vac'][0];
+					$cntPosts = sizeof($viData['vac']);
+				?>
+				<div class="smss-result__text">
+					Добрый день <ФИО><br>
+					Работодатель <span><?=$viData['emp']['name']?>
+					<a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $viData['emp']['id_user']?>">
+						<img src="<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . ($viData['emp']['logo'] ? $viData['emp']['logo'] . '100.jpg' : 'logo.png') ?>">
+					</a></span><br> приглашает Вас на вакансию <a href="https://prommu.com/vacancy/<?=$vacancy?>">&laquo;<?=$vac['title']?>&raquo;</a>
+					<? if($cntPosts==1): ?>
+						на должность <?=$vac['pname']?>
+					<? else: ?>
+						на должности <?
+						foreach ($viData['vac'] as $k => $v) 
+							echo  $v['pname'] . ($k<($cntPosts-1)?', ':'');
+						?>
+					<? endif; ?>
+						<br>
+						Заработная плата:<br> 
+						<? if( $vac['shour'] > 0 )
+							echo $vac['shour'] . ' руб/час<br/>';
+						if( $vac['sweek'] > 0 )
+							echo $vac['sweek'] . ' руб/неделю<br/>';
+						if( $vac['smonth'] > 0 )
+							echo $vac['smonth'] . ' руб/месяц<br/>';
+						if( $vac['svisit'] > 0 )
+							echo $vac['svisit'] . ' руб/посещение<br/>';
+						?><br>
+						Если интересно - переходи по <a href="<?=MainConfig::$PAGE_VACANCY?>">ссылке</a>
+				</div>
+				</br></br>
+				<h1 class="smss-result__title">Стоимость услуги</h1>
 				<table class="smss-result__table">
 					<tr>
 						<td>Количество получателей</td>
 						<td><?=$appCount?></td>
 					</tr>
 					<tr>
+						<td>Стоимость рассылки</td>
+						<td><?=$viData['price']?> руб.</td>
+					</tr>
+				<?/*		<tr>
 						<td>Стоимость отправки одного сообщения</td>
 						<td><?=$viData['price']?> руб.</td>
 					</tr>
 					<tr>
 						<td>Сумма минимальной платежной операции</td>
 						<td>1 руб.</td>
-					</tr>
+					</tr> */?>
 				</table>
-				<?php $result = $appCount * $viData['price'];?>
-				<?php $result = $result<1 ? 1 : $result;?>
-				<span class="smss-result__result"><?echo $appCount . ' * ' . $viData['price'] . ' = ' . $result . ' руб.'?></span></br>
+				<?php //$result = $appCount * $viData['price'];?>
+				<?php //$result = $result<1 ? 1 : $result;?>
+				<span class="smss-result__result"><? //echo $appCount . ' * ' . $viData['price'] . ' = ' . $result . ' руб.'?></span></br>
 				<button class="smss-result__btn">Перейти к оплате</button>
-				<input type="hidden" name="vacemail" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
+				<input type="hidden" name="vacancy[]" value="<?=$vacancy?>">
 				<input type="hidden" name="users-cnt" value="<?=$appCount?>">
 				<input type="hidden" name="users" value="<?=Yii::app()->getRequest()->getParam('users')?>">
 				<input type="hidden" name="employer" value="<?=Share::$UserProfile->id?>">
-				<input type="hidden" name="service" value="email">
+				<input type="hidden" name="service" value="email-invitation">
 			</form>
 		</div>
 	</div>

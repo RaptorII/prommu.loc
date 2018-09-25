@@ -87,8 +87,8 @@
 					foreach ($arSoc as $soc => $key){ ?>
 						<input type="hidden" name="soc[<?=$idvac?>][<?=$soc?>]" value="1">
 			<?php }} ?>
-			<input type="hidden" name="account" value="<?=Share::$UserProfile->id?>">
-			<input type="hidden" name="service" value="repost">
+			<input type="hidden" name="employer" value="<?=Share::$UserProfile->id?>">
+			<input type="hidden" name="service" value="publication-vacancy-social-net">
 		</form>
 	<?php endif; ?>
 	<br>

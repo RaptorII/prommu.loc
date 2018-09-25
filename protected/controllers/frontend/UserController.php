@@ -34,7 +34,7 @@ class UserController extends AppController
         $order = new PrommuOrder();
         $order->outstaffing($_POST);
         Yii::app()->user->setFlash('success', '1');
-        $this->redirect("https://prommu.com/services");
+        $this->redirect(DS . MainConfig::$PAGE_SERVICES);
       }
 
 
@@ -997,271 +997,86 @@ class UserController extends AppController
 
 
     /**
-     *     Страница оплаты для юр. лиц
+     *     Страница оплаты
      */
     public function actionPayment()
     {
         // no profile for guest
         in_array(Share::$UserProfile->type, [2,3]) || $this->redirect(MainConfig::$PAGE_LOGIN);
 
-        $title = 'Оплата услуг PROMMU';
-        $this->setBreadcrumbsEx(
-            array('Мой профиль', MainConfig::$PAGE_PROFILE),
-            array($title = 'Оплата услуг', MainConfig::$PAGE_PAYMENT)
-        );
-        $this->ViewModel->addContentClass('page-payment');
-        Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/theme/css/page-payment.css');
-        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/payment-page.js', CClientScript::POS_END);
-        if(!Yii::app()->getRequest()->isPostRequest){
+        if(!Yii::app()->getRequest()->isPostRequest)
             throw new CHttpException(404, 'Error');
+
+        $model = new PrommuOrder();
+        $view = MainConfig::$PAGE_PAYMENT_VIEW;
+        $service = Yii::app()->getRequest()->getParam('service');
+        $vac = Yii::app()->getRequest()->getParam('vacancy');
+        $emp = Yii::app()->getRequest()->getParam('employer');
+        $price = $model->servicePrice($vac, $service);
+
+        switch ($service) {
+            case 'premium-vacancy':
+                if($price > 0) { // оплата услуги
+                    $pLink = $model->orderPremium($vac, $price, $emp);
+                    if($pLink)
+                        $this->redirect($pLink);
+                }
+                else { // бесплатно или без цены
+                    $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+                }
+                break;
+
+            case 'email-invitation':
+                if($price > 0) { // оплата услуги
+                    $pLink = $model->orderEmail($vac, $price, $emp);
+                    $this->redirect($pLink);
+                }
+                else { // бесплатно или без цены
+                    $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+                }
+                break;
+
+            case 'push-notification':
+                if($price > 0) { // оплата услуги
+                    $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+                }
+                else { // бесплатно или без цены
+                    $model->orderPush($vac, $price, $emp);
+                    Yii::app()->user->setFlash('success', array('event'=>'push'));
+                    $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+                }
+                break;
+
+            case 'sms-informing-staff':
+                if($price > 0) { // оплата услуги
+                    $pLink = $model->orderSms($vac, $price, $emp);
+                    if($pLink)
+                        $this->redirect($pLink);
+                }
+                else { // бесплатно или без цены
+                    $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+                }
+                break;
+
+            case 'publication-vacancy-social-net':
+                if($price > 0) { // оплата услуги
+                    $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+                }
+                else { // бесплатно или без цены
+                    $model->orderSocial($vac, $price, $emp);
+                    Yii::app()->user->setFlash('success', array('event'=>'push'));
+                    $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+                }
+                break;
         }
 
-        $prommuOrder = new PrommuOrder();
-        if($_POST['vacsms']){
-
-            $vac = $_POST['vacsms'];
-            $user = explode(",", $_POST['user']);
-            $account = $_POST['account'];
-            $account.=".$vac.sms";
-            $text = $_POST['text'];
-            $count = count($user);
-            $type = "sms";
-            $date = date("Y-m-d");
-            for($i = 0; $i < $count; $i ++)
-            {
-                $admin = $_POST['account'];
-                $use = $user[$i];
-                $sum = $prommuOrder->servicePrice($_POST['account'], "sms");
-                $postback = 0;
-                $status = 0;
-                $prommuOrder->serviceOrderSms($admin,$sum, $status, $postback, $date ,$date, $vac, $type, $text, $use);
-                $summa+=$sum;
-            }
-            for($i = 0; $i < $count; $i ++) {
-                $use = $user[$i];
-                $account.= ".$use";
-            }
-            $publi = "84661-fc398";
-           $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$vac";
-           $this->redirect($link);
-
-        } elseif($_POST['vacemail']){
-
-            $vac = $_POST['vacemail'];
-            $user = explode(",", $_POST['users']);
-            $account = $_POST['employer'];
-            $account.=".$vac.email";
-            $text = $_POST['vacemail'];
-            $count = count($user);
-            $type = "email";
-            $date = date("Y-m-d");
-            $sum = $prommuOrder->servicePrice($_POST['employer'], "email");
-            if($sum > 0){
-                for($i = 0; $i < $count; $i ++)
-                {
-                $admin = $_POST['employer'];
-                $use = $user[$i];
-                $sum = $prommuOrder->servicePrice($_POST['employer'], "email");
-                $postback = 0;
-                $status = 0;
-                $prommuOrder->serviceOrderEmail($admin,$sum, $status, $postback, $date ,$date, $vac, $type, $text, $use);
-                $summa+=$sum;
-                }
-                for($i = 0; $i < $count; $i ++) {
-                    $use = $user[$i];
-                    $account.= ".$use";
-                }
-                $publi = "84661-fc398";
-               $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$vac";
-                $this->redirect($link);
-           } else {
-
-               for($i = 0; $i < $count; $i ++)
-                {
-                 $admin = $_POST['employer'];
-                $use = $user[$i];
-                 $postback = 0;
-                $status = 1;
-                $prommuOrder->serviceOrderEmail($admin,$sum, $status, $postback, $date ,$date, $vac, $type, $text, $use);
-
-            $sql = "SELECT  e.title
-                FROM empl_vacations e
-                WHERE e.id = $vac";
-                $vacancy = Yii::app()->db->createCommand($sql)->queryAll();
-
-             $sql = "SELECT  u.email, e.name, e.firstname, e.lastname
-                FROM employer e
-                LEFT JOIN user u ON u.id_user = e.id_user
-                WHERE e.id_user = $admin";
-            $empl = Yii::app()->db->createCommand($sql)->queryAll();
-
-            $sql = "SELECT  e.id, u.email, e.firstname, e.lastname
-                FROM resume e
-                LEFT JOIN user u ON u.id_user = e.id_user
-                WHERE e.id_user = $use";
-            $resume = Yii::app()->db->createCommand($sql)->queryAll();
-
-            $message = '<p style="font-size:16px;"Работодатель'.$admin.' '.$empl[0]['lastname'].' '.$empl[0]['firstname'].'<br/> </p>
-                    <br/>
-
-                <p style=" font-size:16px;">
-                 <br/>Компания: '.$empl[0]['name'].'<br/>
-              Приглашает на вакансию:  '.$name.' '.$vacancy[0]['title'].'<br/>
-              Ссылка на вакансию:  <a href="https://prommu.com/vacancy/'.$name.'">'.$vacancy[0]['title'].'</a><br/>
-
-                    <br/>';
-                    if(strpos($resume[0]['email'], "@") !== false){
-                        Share::sendmail($empl[0]['email'], "Prommu.com. Приглашение На Вакансию", $message);
-                        Share::sendmail('denisgresk@gmail.com', "Prommu.com. Приглашение На Вакансию", $message);
-                    }
-                }
-                Yii::app()->user->setFlash('success', array('event'=>'email'));
-
-               $link = "https://prommu.com/services";
-               $this->redirect($link);
-
-            }
-
-        } elseif($_POST['vacpush']){
-
-            $vac = $_POST['vacpush'];
-            $user = explode(",", $_POST['users']);
-            $account = $_POST['employer'];
-            $account.=".$vac.push";
-            $text = $_POST['vacpush'];
-            $count = count($user);
-            $type = "push";
-            $date = date("Y-m-d h-i-s");
-            $sum = $prommuOrder->servicePrice($_POST['employer'], "push");
-            if($sum > 0){
-            for($i = 0; $i < $count; $i ++)
-            {
-                $admin = $_POST['employer'];
-                $use = $user[$i];
-                $sum = $prommuOrder->servicePrice($_POST['employer'], "push");
-                $postback = 0;
-                $status = 0;
-                $prommuOrder->serviceOrderEmail($admin,$sum, "0", $postback, $date ,$date, $vac, $type, $text, $use);
-                $summa+=$sum;
-
-            }
-            $publi = "84661-fc398";
-               $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$vac";
-               $this->redirect($link);
-            } else {
-                for($i = 0; $i < $count; $i ++)
-                {
-                $admin = $_POST['employer'];
-                $use = $user[$i];
-                $sum = $prommuOrder->servicePrice($_POST['employer'], "push");
-                $postback = 0;
-                $status = 0;
-                $prommuOrder->serviceOrderEmail($admin,$sum, "1", $postback, $date ,$date, $vac, $type, $text, $use);
-                $summa+=$sum;
-
-                }
-                 Yii::app()->user->setFlash('success', array('event'=>'push'));
-
-               $link = "https://prommu.com/services";
-               $this->redirect($link);
-
-
-            }
-
-
-
-        } elseif($_POST['vacanc']){
-
-
-            $from = $_POST['from'];
-            $to = $_POST['to'];
-            $account = $_POST['account'];
-            $name = $_POST['vacanc'];
-            $postback = 0;
-            $type = "vacancy";
-            $count = count($name);
-
-            for($i = 0; $i < $count; $i ++)
-            {
-                $date =  (strtotime ($to[$i])- strtotime ($from[$i]))/(60*60*24);
-                $sums = $prommuOrder->servicePrice($_POST['employer'], "vacancy");
-                $sum = $date * $sums;
-                $postback = 0;
-                $status = 0;
-                $prommuOrder->serviceOrder($account,$sum, $status, $postback, $from[$i], $to[$i], $name[$i], $type);
-                $summa+=$date;
-            }
-           $date = 0;
-            for($i = 0; $i < $count; $i ++) {
-                $vac = $name[$i];
-                $account.= ".$vac";
-            }
-
-           $publi = "84661-fc398";
-           $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$summa";
-           $this->redirect($link);
-        } elseif($_POST['vacrepost']){
-
-            $vac = $_POST['vacrepost'];
-            $user = explode(",", $_POST['network']);
-            $account = $_POST['employer'];
-            $account.=".$vac.repost";
-            $text = $_POST['vacrepost'];
-            $count = count($user);
-            $type = "push";
-            $date = date("Y-m-d h-i-s");
-            for($i = 0; $i < $count; $i ++)
-            {
-                $admin = $_POST['employer'];
-                $use = $user[$i];
-                $sum = $prommuOrder->servicePrice($_POST['employer'], "repost");
-                $postback = 0;
-                $status = 0;
-                $prommuOrder->serviceOrderEmail($admin,$sum, "0", $postback, $date ,$date, $vac, $type, $text, $use);
-                $summa+=$sum;
-
-            }
-
-            $publi = "84661-fc398";
-           $link = "https://unitpay.ru/pay/$publi?sum=$summa&account=$account&desc=$vac";
-           $this->redirect($link);
-
-        }elseif($_POST['sms']) {
-            $vac = new Vacancy();
-            $vac = $vac->getVacancyInfo($_POST['sms'][0]);
-            $mech = $vac[0]['id_attr'];
-
-            $result = $vac->VacMech($mech);
-
-            $data = $_POST['sms'];
-            $data['sms'] = 1;
-            //$model = new PrommuOrder;
-            //$data['price'] = $model->servicePrice(Share::$UserProfile->id,'sms');
-            $view = MainConfig::$PAGE_PAYMENT_VIEW;
-            $this->render($view, array('viData' => $data, 'User' => $result), array('nobc' => '1'));
-        }
-        else {      // premium
-            $data = array(
-                'service' => Yii::app()->getRequest()->getParam('service'),
-                'vacancies' => Yii::app()->getRequest()->getParam('vacancy'),
-                /*
-                'from' => Yii::app()->getRequest()->getParam('from'),
-                'to' => Yii::app()->getRequest()->getParam('to'),
-                'period' => Yii::app()->getRequest()->getParam('period'),
-                'personal' => Yii::app()->getRequest()->getParam('personal'),
-                'name' => Yii::app()->getRequest()->getParam('name'),
-                'inn' => Yii::app()->getRequest()->getParam('inn'),
-                'kpp' => Yii::app()->getRequest()->getParam('kpp'),
-                'account' => Yii::app()->getRequest()->getParam('account'),
-                */
+        $data = array(
+                'service' => $service, 
+                'vacancy' => $vac,
+                'price' => $price,
+                'employer' => $emp
             );
-            //$data = $_POST['vacancy'];
-            //$data['premium'] = 1;
-            $model = new PrommuOrder;
-            $data['price'] = $model->servicePrice(Share::$UserProfile->id,'vacancy');
-            $view = MainConfig::$PAGE_PAYMENT_VIEW;
-            $this->render($view, array('viData' => $data),  array( 'htmlTitle' => $title ));
-        }
+        $this->render($view, array('viData' => $data));
     }
     /*
     *       Отзыв / рейтинг
@@ -1405,7 +1220,7 @@ class UserController extends AppController
                             ));
 
             Yii::app()->user->setFlash('Message', array('mess'=>'Ваша заявка на формирование запроса команд API сформирована. Все нужные команды Вы сможете взять из сформировавшегося окна диалогов. Также в нём можно будет задать вопросы администратору по возникшим техническим вопросам'));
-            $this->redirect("https://prommu.com/user/im");
+            $this->redirect(MainConfig::$PAGE_IM);
 
 
 
@@ -1719,9 +1534,7 @@ class UserController extends AppController
         $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $Services = new Services();
         $title = 'Услуги портала Prommu.com';
-        $this->setBreadcrumbs($title, MainConfig::$PAGE_SERVICES);     
-        $cssPath = Yii::app()->baseUrl.'/theme/css/services/';
-        $jsPath = Yii::app()->baseUrl.'/theme/js/services/';
+        $this->setBreadcrumbs($title, MainConfig::$PAGE_SERVICES);
         $serviceLink = DS.MainConfig::$PAGE_SERVICES;
         $type = Share::$UserProfile->type;
         if(!in_array($type, [2,3]))
@@ -1737,15 +1550,43 @@ class UserController extends AppController
                 $view = MainConfig::$VIEWS_SERVICE_PREMIUM_VIEW;
                 $vac = new Vacancy();
                 $data = $vac->getModerVacs();
-                Yii::app()->getClientScript()->registerCssFile($cssPath . 'services-premium-page.css');
                 break;
+
+            case 'email-invitation':  
+                if($type==2)
+                    $this->redirect($serviceLink);
+                $vac = Yii::app()->getRequest()->getParam('vacancy');
+                $model = new PrommuOrder;
+                $data['price'] = $model->servicePrice($vac, $id);
+
+                if(Yii::app()->getRequest()->getParam('users') && $data['price']>=0){
+                    $data['emp'] = Share::$UserProfile->getProfileDataView()['userInfo'];
+                    $data['vac'] = (new Vacancy())->getVacancyInfo($vac);
+                    $view = MainConfig::$VIEWS_SERVICE_EMAIL;
+                }
+                elseif(Yii::app()->request->isAjaxRequest){
+                    $this->renderPartial(
+                        MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
+                        array('viData' => (new Services())->getFilteredPromos()), 
+                        false, 
+                        true
+                    );
+                    return;
+                }
+                else{
+                    $view = MainConfig::$VIEWS_SERVICE_EMAIL;
+                    $data2 = (Yii::app()->getRequest()->getParam('vacancy') 
+                        ? (new Services())->prepareFilterData()
+                        : (new Vacancy())->getModerVacs());
+                    $data = array_merge($data,$data2);
+                }
+                break;
+
             case 'push-notification':
                 if($type==2)
                     $this->redirect($serviceLink);
 
-                $model = new PrommuOrder;
-                $data['price'] = $model->servicePrice(Share::$UserProfile->id,'push');
-                if(Yii::app()->getRequest()->getParam('users') && $data['price']>0){
+                if(Yii::app()->getRequest()->getParam('users')){
                     $view = MainConfig::$VIEWS_SERVICE_PUSH_VIEW;
                 }
                 elseif(Yii::app()->request->isAjaxRequest){
@@ -1765,13 +1606,16 @@ class UserController extends AppController
                     $data = array_merge($data,$data2);
                 }
                 break;
+
             case 'sms-informing-staff':
                 if($type==2)
                     $this->redirect($serviceLink);
 
+                $vacancy = Yii::app()->getRequest()->getParam('vacancy');
+
                 if(Yii::app()->getRequest()->getParam('workers')){
                     $model = new PrommuOrder;
-                    $data['price'] = $model->servicePrice(Share::$UserProfile->id,'sms');
+                    $data['price'] = $model->servicePrice($vacancy,$id);
                     $view = MainConfig::$VIEWS_SERVICE_SMS_VIEW;
                 }
                 elseif(Yii::app()->request->isAjaxRequest){
@@ -1785,83 +1629,53 @@ class UserController extends AppController
                 }
                 else{
                     $view = MainConfig::$VIEWS_SERVICE_SMS_VIEW;
-                    $data = (Yii::app()->getRequest()->getParam('vacancy') 
+                    $data = $vacancy 
                         ? (new Services())->prepareFilterData()
-                        : (new Vacancy())->getModerVacs());
+                        : (new Vacancy())->getModerVacs();
                 }
                 break;
-            case 'outstaffing':
-                if($type==2)
-                    $this->redirect($serviceLink);
 
-                $vac = new Vacancy();
-                $data = $vac->getVacanciesPrem();
-                $view = MainConfig::$VIEWS_SERVICE_OUTSTAFFING_VIEW;
-                Yii::app()->getClientScript()->registerCssFile($cssPath . 'services-outstaffing-page.css');
-                Yii::app()->getClientScript()->registerScriptFile($jsPath . 'services-outstaffing-page.js', CClientScript::POS_END);
-                break;
-            case 'personal-manager-outsourcing':
-                if($type==2)
-                    $this->redirect($serviceLink);
-
-                $vac = new Vacancy();
-                $data = $vac->getVacanciesPrem();
-                $view = MainConfig::$VIEWS_SERVICE_OUTSOURCING_VIEW;
-                Yii::app()->getClientScript()->registerCssFile($cssPath . 'services-outstaffing-page.css');
-                Yii::app()->getClientScript()->registerScriptFile($jsPath . 'services-outstaffing-page.js', CClientScript::POS_END);
-                break;
-            case 'api-key-prommu':
-                if($type==2)
-                    $this->redirect($serviceLink);
-
-                $view = MainConfig::$VIEWS_SERVICE_API_VIEW;
-                Yii::app()->getClientScript()->registerCssFile($cssPath . 'services-api-page.css');
-                Yii::app()->getClientScript()->registerScriptFile($jsPath . 'services-api-page.js', CClientScript::POS_END);
-                break;
             case 'publication-vacancy-social-net':
                 if($type==2)
                     $this->redirect($serviceLink);
 
                 $data = (new Vacancy())->postToSocialService();
-                if(isset($data['vacs']) || isset($data['price'])){
+                if(isset($data['vacs'])) {
                     $view = MainConfig::$VIEWS_SERVICE_DUPLICATION;
                 }
                 else{
-                    $this->redirect(DS . MainConfig::$PAGE_SERVICES);
-                    exit();
+                    $this->redirect($serviceLink);
                 }
                 break;
+
+            case 'outstaffing':
+                if($type==2)
+                    $this->redirect($serviceLink);
+                $vac = new Vacancy();
+                $data = $vac->getVacanciesPrem();
+                $view = MainConfig::$VIEWS_SERVICE_OUTSTAFFING_VIEW;
+                break;
+
+            case 'personal-manager-outsourcing':
+                if($type==2)
+                    $this->redirect($serviceLink);
+                $vac = new Vacancy();
+                $data = $vac->getVacanciesPrem();
+                $view = MainConfig::$VIEWS_SERVICE_OUTSOURCING_VIEW;
+                break;
+
             case 'prommu_card':
                 $this->redirect(MainConfig::$PAGE_SERVICES_CARD_PROMMU);
                 break;
+
             case 'medical-record':
                 $this->redirect(MainConfig::$PAGE_SERVICES_MEDICAL);
                 break;
-            case 'email-invitation':  
+
+            case 'api-key-prommu':
                 if($type==2)
                     $this->redirect($serviceLink);
-
-                $model = new PrommuOrder;
-                $data['price'] = $model->servicePrice(Share::$UserProfile->id,'email');
-                if(Yii::app()->getRequest()->getParam('users') && $data['price']>0){
-                    $view = MainConfig::$VIEWS_SERVICE_EMAIL;
-                }
-                elseif(Yii::app()->request->isAjaxRequest){
-                    $this->renderPartial(
-                        MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
-                        array('viData' => (new Services())->getFilteredPromos()), 
-                        false, 
-                        true
-                    );
-                    return;
-                }
-                else{
-                    $view = MainConfig::$VIEWS_SERVICE_EMAIL;
-                    $data2 = (Yii::app()->getRequest()->getParam('vacancy') 
-                        ? (new Services())->prepareFilterData()
-                        : (new Vacancy())->getModerVacs());
-                    $data = array_merge($data,$data2);
-                }
+                $view = MainConfig::$VIEWS_SERVICE_API_VIEW;
                 break;
                
             default:

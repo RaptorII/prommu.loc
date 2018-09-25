@@ -456,6 +456,23 @@
 	color: #abb820;
 	font-family: 'RobotoCondensedBold', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 }
+.smss-result__text{
+	text-align: left;
+	padding: 10px 0 0;
+	font-size: 20px;
+	color: #abb820;
+	font-family: 'RobotoCondensedBold', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+}
+.smss-result__text span{
+	display: inline-block;
+}
+.smss-result__text img{
+	display: inline-block;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	border: 2px solid #abb820;
+}
 .smss-result__btn{
 	width: 193px;
 	height: 38px;

@@ -1,3 +1,7 @@
+<?
+  Yii::app()->getClientScript()->registerCssFile('/theme/css/services/services-api-page.css');
+  Yii::app()->getClientScript()->registerScriptFile('/theme/js/services/services-api-page.js', CClientScript::POS_END);
+?>
 <div class="row">
 	<?php if(Yii::app()->getRequest()->getParam('f-api')): ?>
 		<? $fapi = Yii::app()->getRequest()->getParam('f-api'); ?>

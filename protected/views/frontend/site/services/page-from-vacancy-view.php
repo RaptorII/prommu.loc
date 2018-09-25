@@ -5,7 +5,7 @@
 <?php if($viData['service']=='premium'): ?>
 	<form action="<?=MainConfig::$PAGE_PAYMENT?>" method="POST" id="order-form">
 		<input type="hidden" name="vacancy[]" value="<?=Yii::app()->getRequest()->getParam('id')?>">
-		<input type="hidden" name="service" value="<?=$viData['service']?>">
+		<input type="hidden" name="service" value="premium-vacancy">
 	</form>
 <?php endif; ?>
 <?php

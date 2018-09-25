@@ -67,7 +67,7 @@
 									<? if(in_array($type,[2,3]) && $m['icon']!='geolocation-staff'): ?>
 										<? 
 											sizeof($prices['prices'][$m['icon']]) > 1
-											? $link = '/user' . $m['link'] . '?type=' . $price['id']
+											? $link = '/user' . $m['link'] //. '?type=' . $price['id']
 											: $link = '/user' . $m['link'];
 										?>
 										<a href="<?=$link?>" class="user">Заказать</a>
@@ -118,7 +118,7 @@
 											<? if(in_array($type,[2,3])): ?>
 												<?
 													sizeof($prices['prices'][$s['icon']]) > 1
-													? $link = '/user' . $s['link'] . '?type=' . $price['id']
+													? $link = '/user' . $s['link'] //. '?type=' . $price['id']
 													: $link = '/user' . $s['link'];
 												?>
 												<a href="<?=$link?>" class="user">Заказать</a>

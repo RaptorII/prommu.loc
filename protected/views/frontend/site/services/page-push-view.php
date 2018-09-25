@@ -1,7 +1,7 @@
 <?php
   Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/theme/css/services/page-push.css');
   Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/services/page-push.js', CClientScript::POS_END);
-  if(!Yii::app()->getRequest()->getParam('vacancy') && !Yii::app()->getRequest()->getParam('vacpush')):
+  if(!Yii::app()->getRequest()->getParam('vacancy')):
   //
   //  Выбор вакансии
   //
@@ -130,10 +130,10 @@
     <div class='col-xs-12 col-sm-8 col-md-9 sms-service'>
       <div class='view-radio clearfix'>
         <h1 class="main-h1">Выбрать персонал для PUSH информирования</h1>
-        <form action="<?=($viData['price']==0 ? MainConfig::$PAGE_PAYMENT : '')?>" method="POST" id="workers-form">
-          <?php if($viData['price']!=0 && $viData['price']<1): ?>
+        <form action="<?=MainConfig::$PAGE_PAYMENT ?>" method="POST" id="workers-form">
+          <?php /*if($viData['price']!=0 && $viData['price']<1): ?>
             <div class="price-warning">Стоимость отправки сообщения для одного соискателя составляет <b><?=$viData['price']?> руб.</b><br/>Сумма минимальной платежной операции - <b>1 руб.</b></div>
-          <?php endif; ?>
+          <?php endif;*/ ?>
           <span class="workers-form__cnt">Выбрано получателей: <span id="mess-wcount">0</span></span>
           <div class="service__switch">
             <span class="service__switch-name">Выбрать всех</span>
@@ -145,11 +145,11 @@
           <button type="submit" class="workers-form-btn off" id="workers-btn">сформировать PUSH уведомления</button>
           <input type="hidden" name="users" id="mess-workers">
           <input type="hidden" name="users-cnt" id="mess-wcount-inp" value="0">
-          <input type="hidden" name="vacpush" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
-          <?php if($viData['price']==0): ?>
+          <input type="hidden" name="vacancy" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
+          <?php //if($viData['price']==0): ?>
             <input type="hidden" name="employer" value="<?=Share::$UserProfile->id?>">
-            <input type="hidden" name="service" value="push">           
-          <?php endif; ?>
+            <input type="hidden" name="service" value="push-notification">           
+          <?php //endif; ?>
         </form>
       </div>
       <div id="promo-content">
@@ -234,24 +234,24 @@
             <td>Количество получателей</td>
             <td><?=$appCount?></td>
           </tr>
-          <tr>
+        <?/*  <tr>
             <td>Стоимость отправки одного сообщения</td>
             <td><?=$viData['price']?> руб.</td>
           </tr>
           <tr>
             <td>Сумма минимальной платежной операции</td>
             <td>1 руб.</td>
-          </tr>
+          </tr> */ ?>
         </table>
-        <?php $result = $appCount * $viData['price'];?>
+        <?php /*$result = $appCount * $viData['price'];?>
         <?php $result = $result<1 ? 1 : $result;?>
-        <span class="smss-result__result"><?echo $appCount . ' * ' . $viData['price'] . ' = ' . $result . ' руб.'?></span>
+        <span class="smss-result__result"><?echo $appCount . ' * ' . $viData['price'] . ' = ' . $result . ' руб.'?></span> */ ?>
         <button class="smss-result__btn">Перейти к оплате</button>
-        <input type="hidden" name="vacpush" value="<?=Yii::app()->getRequest()->getParam('vacpush')?>">
+        <input type="hidden" name="vacancy" value="<?=Yii::app()->getRequest()->getParam('vacpush')?>">
         <input type="hidden" name="users-cnt" value="<?=$appCount?>">
         <input type="hidden" name="users" value="<?=Yii::app()->getRequest()->getParam('users')?>">
         <input type="hidden" name="employer" value="<?=Share::$UserProfile->id?>">
-        <input type="hidden" name="service" value="push">
+        <input type="hidden" name="service" value="push-notification">
       </form>
     </div>
   </div>

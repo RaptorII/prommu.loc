@@ -1,3 +1,7 @@
+<?
+  Yii::app()->getClientScript()->registerCssFile('/theme/css/services/services-outstaffing-page.css');
+  Yii::app()->getClientScript()->registerScriptFile('/theme/js/services/services-outstaffing-page.js', CClientScript::POS_END);
+?>
 <div class="row">
 	<div class="col-xs-12 outstaffing-service">
 		<?php if(Yii::app()->getRequest()->isPostRequest): ?>

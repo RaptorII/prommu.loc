@@ -248,12 +248,12 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 				<?$result = $appCount * $viData['price'];?>
 				<span class="smss-result__result"><?echo $appCount . ' * ' . $viData['price'] . ' = ' . $result . 'рублей'?></span>
 				<button class="smss-result__btn">Перейти к оплате</button>
-				<input type="hidden" name="vacsms" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
+				<input type="hidden" name="vacancy" value="<?=Yii::app()->getRequest()->getParam('vacancy')?>">
 				<input type="hidden" name="app_count" value="<?=$appCount?>">
-				<input type="hidden" name="user" value="<?=Yii::app()->getRequest()->getParam('workers')?>">
+				<input type="hidden" name="users" value="<?=Yii::app()->getRequest()->getParam('workers')?>">
 				<input type="hidden" name="text" value="<?=Yii::app()->getRequest()->getParam('message')?>">
-				<input type="hidden" name="account" value="<?=Share::$UserProfile->id?>">
-				<input type="hidden" name="sms" value="1">
+				<input type="hidden" name="employer" value="<?=Share::$UserProfile->id?>">
+				<input type="hidden" name="service" value="sms-informing-staff">
 			</form>
 		</div>
 	</div>

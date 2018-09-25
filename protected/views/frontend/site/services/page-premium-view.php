@@ -1,3 +1,6 @@
+<?
+	Yii::app()->getClientScript()->registerCssFile('/theme/css/services/services-premium-page.css');
+?>
 <div class="row">
 	<div class="col-xs-12 premium-service">
 		<?php if( $viData['vacs'] ): ?>
@@ -23,7 +26,7 @@
 						</label>		
 					<?php endforeach; ?>
 				</div>
-				<input type="hidden" name="service" value="premium">
+				<input type="hidden" name="service" value="premium-vacancy">
 				<button class="premium-service__btn payment-button">ОПЛАТИТЬ</button>
 			</form>
 		<?php else: ?>
