@@ -1423,6 +1423,7 @@ class UserController extends AppController
                 case 'route':
                     $data = $model->getProject($id);
                     $data = $model->buildTaskArray($data);
+                    $data['coordinates'] = $model->getСoordinates($id);
                     $view = MainConfig::$VIEW_PROJECT_ITEM_ROUTE;
                     break;
                 case 'tasks':

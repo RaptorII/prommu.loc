@@ -1262,4 +1262,23 @@ class Project extends ARModel
             );
         return $arRes;    
     }
+    /*
+    *       Получение координат по проекту
+    */
+    public function getСoordinates($prj) {
+        $arRes = array(); 
+        $sql = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('project_report')
+            ->where('project=:prj', array(':prj' =>$prj))
+            ->queryAll();  // поиск всех пользователей проекта  
+
+        foreach ($sql as $v)
+            $arRes['users'][$v['user']]['points'][$v['point']][] = [
+                'latitude' => $v['latitude'],
+                'longitude' => $v['longitude']
+            ];
+        $arRes['json'] = json_encode($arRes['users']);
+        return $arRes;     
+    }
 }

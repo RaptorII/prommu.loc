@@ -147,6 +147,10 @@ $arFilterData = [
         ]
     ]
 ];
+
+echo "<pre>";
+print_r($viData); 
+echo "</pre>";
 ?>
 
 <div class="row project">
