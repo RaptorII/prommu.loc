@@ -54,14 +54,12 @@ class AjaxController extends AppController
         Yii::app()->end();
     }
     
-    public function actionReporproject(){
-        $phone = $_POST['project'];
-        $email = $_POST['idus'];
-        $phone = $_POST['latitude'];
-        $phone = $_POST['longitude'];
+    public function actionReportproject(){
         
-        var_dump($_POST);
-        
+        $project = new Project();
+        $response = $project->recordReport($_POST);
+
+        // echo CJSON::encode($response);
         
     }
     
