@@ -28,39 +28,11 @@ class PrommuOrder {
         if(!sizeof($arBD))
             return -1;
 
-        $bin = 0;
-        foreach ($arBD as $c) {
-            if($c['region']==1307) $bin|=1; // определяем МО
-            elseif($c['region']==1838) $bin|=2; // определяем ЛО
-            else $bin|=4;
-        }
-
-        $arReg = array();
         $price = 0;
-
+        $bin = $this->convertedRegion($arBD);
+        
         if($service=='premium-vacancy' || $service=='email-invitation') {
-            switch ($bin) {
-                case 1: $arReg = [1]; break;// МО
-                case 2: $arReg = [2]; break;// ЛО
-                case 4: $arReg = [3]; break;// др.рег.
-            }
-            if($service=='premium-vacancy') {
-                switch ($bin) {
-                    case 3: // МО + ЛО
-                    case 7: $arReg = [1,3]; break;// МО + ЛО + др.рег.
-                    case 5: $arReg = [1]; break;// МО + др.рег.
-                    case 6: $arReg = [2]; break;// ЛО + др.рег.
-                }
-            }
-            if($service=='email-invitation') {
-                switch ($bin) {
-                    case 3: // МО + ЛО
-                    case 7: $arReg = [1,2]; break;// МО + ЛО + др.рег.
-                    case 5: $arReg = [1,3]; break;// МО + др.рег.
-                    case 6: $arReg = [2,3]; break;// ЛО + др.рег.
-                }
-            }
-
+            $arReg = getRegionalPrice($service,$bin);
             $arPrices = Yii::app()->db->createCommand()
                 ->select("price")
                 ->from('service_prices')
@@ -511,6 +483,77 @@ class PrommuOrder {
         $account = $employer . '.' . $vacancy . '.sms.' . implode('.', $arApps);
 
         return $this->createPayLink($account, $vacancy, $mainPrice);
+    }
+    /*
+    *       Конвертация регионов таблиц city и service_prices
+    */
+    private function convertedRegion($arr) {
+        $bin = 0;
+        foreach ($arr as $c) {
+            if($c['region']==1307) $bin|=1; // определяем МО
+            elseif($c['region']==1838) $bin|=2; // определяем ЛО
+            else $bin|=4;
+        }
+        return $bin;
+    }
+    /*
+    *       Подбор подходящего региона
+    */
+    private function getRegionalPrice($service, $bin) {
+        $arReg = [4];
+        if($service=='premium-vacancy' || $service=='email-invitation') {
+            switch ($bin) {
+                case 1: $arReg = [1]; break;// МО
+                case 2: $arReg = [2]; break;// ЛО
+                case 4: $arReg = [3]; break;// др.рег.
+            }
+        }
+        if($service=='premium-vacancy') {
+            switch ($bin) {
+                case 3: // МО + ЛО
+                case 7: $arReg = [1,3]; break;// МО + ЛО + др.рег.
+                case 5: $arReg = [1]; break;// МО + др.рег.
+                case 6: $arReg = [2]; break;// ЛО + др.рег.
+            }
+        }
+        if($service=='email-invitation') {
+            switch ($bin) {
+                case 3: // МО + ЛО
+                case 7: $arReg = [1,2]; break;// МО + ЛО + др.рег.
+                case 5: $arReg = [1,3]; break;// МО + др.рег.
+                case 6: $arReg = [2,3]; break;// ЛО + др.рег.
+            }
+        }
+        return $arReg;
+    }
+    /*
+    *       ПОлучение данных о вакансиях работодателя
+    */
+    public function getVacRegions($arPrice) {
+        if(Share::$UserProfile->type!=3)
+            return $arPrice;
+
+        $arRes = array();
+        $id = Share::$UserProfile->id;
+        $arBD = Yii::app()->db->createCommand()
+            ->select("c.region")
+            ->from('empl_city ec')
+            ->leftjoin('empl_vacations ev', 'ev.id=ec.id_vac AND ev.status=1')
+            ->leftjoin('city c', 'c.id_city=ec.id_city')
+            ->where('ev.id_user=:id',array(':id'=>$id))
+            ->queryAll();
+
+
+        $bin = $this->convertedRegion($arBD);
+        $arNewPrices = array();
+        foreach ($arPrice as $s => $arP) {
+            $arReg = $this->getRegionalPrice($s, $bin);
+            foreach ($arP as $v)
+                if(in_array($v['region'], $arReg))
+                    $arNewPrices[$s][] = $v;
+        }
+
+        return sizeof($arNewPrices)>0 ? $arNewPrices : $arPrice;
     }
 }
 ?>

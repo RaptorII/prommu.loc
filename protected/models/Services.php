@@ -52,10 +52,10 @@ class Services extends Model
         // получаем меню услуг
         $menu = $this->getMenu();
 
-        foreach ($res as $s) {
-            $data['services'][$s['id']] = $s;
-            foreach ($menu as $m) {
-                $m['icon'] = str_replace('/services/', '', $m['link']);
+        foreach ($menu as $m) {
+            $m['icon'] = str_replace('/services/', '', $m['link']);
+            foreach ($res as $s) {
+                $data['services'][$s['id']] = $s;       
                 if($m['icon']==$s['link'] || $m['icon']=='invitations') {
                     $m['anons'] = $s['anons'];
                     $data['menu'][$m['parent_id']][$m['id']] =  $m; 

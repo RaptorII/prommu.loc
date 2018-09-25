@@ -9,30 +9,6 @@
 ?>
 <div class="row">
 	<div class="col-xs-12 services">
-		<? if($type!=2): // только не для соискателя ?>
-			<? $link = $type==3 ? MainConfig::$PAGE_VACPUB : MainConfig::$PAGE_LOGIN ?>
-			<div class="row services__item">
-				<div class="col-xs-12 col-sm-6 services__prev">
-					<div class="services__item-icon"></div>
-					<div class="services__item-label">Размещение вакансий – БЕСПЛАТНО</div>
-					<div class="services__item-descr">Prommu предоставляет возможность в сжатые сроки найти подходящий персонал. Это процедура займет менее минуты</div>
-				</div>
-				<div class="col-xs-12 col-sm-6 services__detail">
-					<a href="<?=$link?>">Подробнее</a>
-				</div>
-				<div class="services__price-order">
-					<div>
-						<div class="services__price">
-							<div class="services__price-item">БЕСПЛАТНО!</div>
-						</div>
-						<div class="services__order">
-							<a href="<?=$link?>">Разместить Вакансию</a>
-						</div>
-						<div class="clearfix"></div>
-					</div>
-				</div>
-			</div>
-		<? endif; ?>
 		<? foreach ($viData['menu'][0] as $m): ?>
 			<?
 				if(!in_array($m['icon'], $arApp) && $type==2)
@@ -56,7 +32,11 @@
 									<? if(in_array($m['icon'], $arCustom)): ?>
 										<div class="services__price-item">Уточнить цену</div>
 									<? else: ?>
-										<div class="services__price-item"><?echo $price['price'] ? $price['price'] . ' &#8381 ' . $price['comment'] : 'Бесплатно'?></div>
+										<div class="services__price-item">
+											<?echo $price['price'] 
+												? '<b>'.$price['price'] . ' &#8381</b> ' . $price['comment'] 
+												: '<span>Бесплатно</span>'?>	
+										</div>
 									<? endif; ?>
 								</div>
 								<div 
@@ -64,7 +44,13 @@
 									data-id="<?=$m['id']?>" 
 									data-type="<?=$m['icon']?>"
 								>
-									<? if(in_array($type,[2,3]) && $m['icon']!='geolocation-staff'): ?>
+									<? if($type==3 && $m['icon']=='publish-vacancy'): ?>
+										<a href="<?=MainConfig::$PAGE_VACPUB?>" class="user">Разместить Вакансию</a>
+									<? elseif(!in_array($type,[2,3]) && $m['icon']=='publish-vacancy'): ?>
+										<a href="javascript:void(0)">Заказать</a>
+									<? elseif($m['icon']=='geolocation-staff'): ?>
+										<a href="javascript:void(0)" class="disable">В разработке</a>
+									<? elseif(in_array($type,[2,3])): ?>
 										<? 
 											sizeof($prices['prices'][$m['icon']]) > 1
 											? $link = '/user' . $m['link'] //. '?type=' . $price['id']
@@ -107,7 +93,11 @@
 											<? if(in_array($m['icon'], $arCustom)): ?>
 												<div class="services__price-item">Уточнить цену</div>
 											<? else: ?>
-												<div class="services__price-item"><?echo $price['price'] ? $price['price'] . ' &#8381 ' . $price['comment'] : 'Бесплатно'?></div>
+												<div class="services__price-item">
+													<?echo $price['price'] 
+														? '<b>'.$price['price'] . ' &#8381</b> ' . $price['comment'] 
+														: '<span>Бесплатно</span>'?>	
+												</div>
 											<? endif; ?>
 										</div>
 										<div 

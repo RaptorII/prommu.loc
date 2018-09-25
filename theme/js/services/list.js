@@ -66,12 +66,22 @@ var ServicesList = (function () {
             });
         }
         else if(type==='premium-vacancy'){
-            var itm = $(".services-form.premium-form").clone();
+            var itm = $(".services-form.premium-form.premium").clone();
             itm.toggleClass('services-form tmpl');
             ModalWindow.open({ 
                 content: itm, 
                 action: { active: 0 }, 
                 additionalStyle:'light-ver',
+                afterOpen: function () { $(".mw-win").css({position:'fixed', top:'40%'}) }
+            });
+        }
+        else if(type==='publish-vacancy'){
+            var itm = $(".services-form.premium-form.vacancy").clone();
+            itm.toggleClass('services-form tmpl');
+            ModalWindow.open({ 
+                content: itm, 
+                action: { active: 0 }, 
+                additionalStyle:'light-ver vacancy',
                 afterOpen: function () { $(".mw-win").css({position:'fixed', top:'40%'}) }
             });
         }
@@ -106,6 +116,8 @@ $(function(){
             var itm = $('.repost-to-social-form').clone();
         else if(arSuccessMess.event==='email' || arSuccessMess.event==='push')
             var itm = $('.email-invitation-form').clone();
+        else if(arSuccessMess.event==='free')
+            var itm = $('.services-finish-form.free').clone();
         else
             var itm = $('.services-finish-form').clone();
         itm.toggleClass('services-form tmpl');

@@ -1666,11 +1666,20 @@ class UserController extends AppController
                 break;
 
             case 'prommu_card':
-                $this->redirect(MainConfig::$PAGE_SERVICES_CARD_PROMMU);
+                $services = new Services();
+                $data = $services->getServiceData($id);
+                if( Yii::app()->getRequest()->getParam('save') ) {
+                    $services->orderPrommu();
+                    Yii::app()->user->setFlash('success', array('event'=>'free'));
+                    $this->redirect($serviceLink);
+                }
+                $Upluni = new Uploaduni();
+                $data = array_merge($data, $Upluni->init());
+                $view = MainConfig::$VIEWS_CARD_PROMMU;
                 break;
 
             case 'medical-record':
-                $this->redirect(MainConfig::$PAGE_SERVICES_MEDICAL);
+                $view = MainConfig::$VIEWS_SERVICE_MEDICAL; 
                 break;
 
             case 'api-key-prommu':

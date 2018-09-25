@@ -964,32 +964,28 @@ class SiteController extends AppController
         $this->setBreadcrumbs($title, MainConfig::$PAGE_SERVICES);
         $pricess = new PrommuOrder();
         $prices = $pricess->getPricesData();
+        $type = Share::$UserProfile->type;
         if( $id )
         {
             $data = $services->getServiceData($id);
             switch ($id){
+                case 'publish-vacancy':
                 case 'premium-vacancy':
                 case 'email-invitation':
                 case 'push-notification':
                 case 'sms-informing-staff':
-                case 'publication-vacancy-social-net':
-                case 'geolocation-staff':
+                case 'publication-vacancy-social-net':       
                 case 'personal-manager-outsourcing':
                 case 'outstaffing':
                 case 'api-key-prommu':
+                    if($type==2)
+                        $this->redirect(DS.MainConfig::$PAGE_SERVICES);
                     $view = MainConfig::$VIEWS_SERVICE_VIEW; 
-                    break;
+                    break; 
+                case 'geolocation-staff':
                 case 'prommu_card':
-                    if( Yii::app()->getRequest()->getParam('save') ) {
-                        $services->orderPrommu();
-                        $this->redirect(MainConfig::$PAGE_SERVICES_CARD_PROMMU);
-                    }
-                    $Upluni = new Uploaduni();
-                    $data = array_merge($data, $Upluni->init());
-                    $view = MainConfig::$VIEWS_CARD_PROMMU;
-                    break;
                 case 'medical-record':
-                    $view = MainConfig::$VIEWS_SERVICE_MEDICAL; 
+                    $view = MainConfig::$VIEWS_SERVICE_VIEW; 
                     break;                   
                 default:
                     throw new CHttpException(404, 'Error'); 
@@ -1009,6 +1005,8 @@ class SiteController extends AppController
         else
         {
             $data = $services->getServices();
+            $PrommuOrder = new PrommuOrder();
+            $prices['prices'] = $PrommuOrder->getVacRegions($prices['prices']);
             $view = MainConfig::$VIEWS_SERVICES;
         }
 

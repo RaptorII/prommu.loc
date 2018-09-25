@@ -80,41 +80,7 @@
 .pa__menu-link:hover i:before{ opacity: 0 }
 .pa__menu-link.active i:after{ opacity: 1 }
 .pa__menu-link:hover i:after{ opacity: 1 }
-/*
-.pa__menu-link.applicant:nth-child(1) i:before{ background-position: 0 0px }
-.pa__menu-link.applicant:nth-child(1) i:after{ background-position: 0 -12px }
-.pa__menu-link.applicant:nth-child(2) i:before{ background-position: 0 -24px }
-.pa__menu-link.applicant:nth-child(2) i:after{ background-position: 0 -36px }
-.pa__menu-link.applicant:nth-child(3) i:before{ background-position: 0 -48px }
-.pa__menu-link.applicant:nth-child(3) i:after{ background-position: 0 -60px }
-.pa__menu-link.applicant:nth-child(4) i:before{ background-position: 0 -144px }
-.pa__menu-link.applicant:nth-child(4) i:after{ background-position: 0 -156px }
-.pa__menu-link.applicant:nth-child(5) i:before{ background-position: 0 -72px }
-.pa__menu-link.applicant:nth-child(5) i:after{ background-position: 0 -84px }
-.pa__menu-link.applicant:nth-child(6) i:before{ background-position: 0 -96px }
-.pa__menu-link.applicant:nth-child(6) i:after{ background-position: 0 -108px }
-.pa__menu-link.applicant:nth-child(7) i:before{ background-position: 0 -120px }
-.pa__menu-link.applicant:nth-child(7) i:after{ background-position: 0 -132px }
 
-.pa__menu-link.employer:nth-child(1) i:before{ background-position: 0 0px }
-.pa__menu-link.employer:nth-child(1) i:after{ background-position: 0 -12px }
-.pa__menu-link.employer:nth-child(2) i:before{ background-position: 0 -24px }
-.pa__menu-link.employer:nth-child(2) i:after{ background-position: 0 -36px }
-.pa__menu-link.employer:nth-child(3) i:before{ background-position: 0 -264px }
-.pa__menu-link.employer:nth-child(3) i:after{ background-position: 0 -276px }
-.pa__menu-link.employer:nth-child(4) i:before{ background-position: 0 -168px }
-.pa__menu-link.employer:nth-child(4) i:after{ background-position: 0 -180px }
-.pa__menu-link.employer:nth-child(5) i:before{ background-position: 0 -216px }
-.pa__menu-link.employer:nth-child(5) i:after{ background-position: 0 -228px }
-.pa__menu-link.employer:nth-child(6) i:before{ background-position: 0 -192px }
-.pa__menu-link.employer:nth-child(6) i:after{ background-position: 0 -204px }
-.pa__menu-link.employer:nth-child(7) i:before{ background-position: 0 -144px }
-.pa__menu-link.employer:nth-child(7) i:after{ background-position: 0 -156px }
-.pa__menu-link.employer:nth-child(8) i:before{ background-position: 0 -120px }
-.pa__menu-link.employer:nth-child(8) i:after{ background-position: 0 -132px }
-.pa__menu-link.employer:nth-child(9) i:before{ background-position: 0 -240px }
-.pa__menu-link.employer:nth-child(9) i:after{ background-position: 0 -252px }
-*/
 .pa__menu-20.applicant i:before{ background-position: 0 0px }
 .pa__menu-20.applicant i:after{ background-position: 0 -12px }
 .pa__menu-75.applicant i:before{ background-position: 0 -24px }
@@ -131,6 +97,8 @@
 .pa__menu-25.applicant i:after{ background-position: 0 -132px }
 .pa__menu-80.applicant i:before{ background-position: 0 -288px }
 .pa__menu-80.applicant i:after{ background-position: 0 -300px }
+.pa__menu-83.applicant i:before{ background-position: 0 -240px }
+.pa__menu-83.applicant i:after{ background-position: 0 -252px }
 
 .pa__menu-15.employer i:before{ background-position: 0 0px }
 .pa__menu-15.employer i:after{ background-position: 0 -12px }
@@ -152,6 +120,7 @@
 .pa__menu-27.employer i:after{ background-position: 0 -252px }
 .pa__menu-81.employer i:before{ background-position: 0 -288px }
 .pa__menu-81.employer i:after{ background-position: 0 -300px }
+
 /*  */
 #DiContent .analytics-link{
     line-height: 27px;

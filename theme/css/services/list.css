@@ -92,6 +92,12 @@
 	background-color: #ffffff;
 	color: #abb92a;
 }
+#DiContent .services__order a.disable,
+#DiContent .services__order a.disable:hover{
+	background: #b9b9b9;
+	border: 2px solid #b9b9b9;
+	color: #ffffff;
+}
 /*
 *
 */
@@ -138,6 +144,12 @@
 .services__price{ width: 100% }
 .services__order{ width: 100% }
 .services__sublevel .services__item-descr{ padding: 0 15px 10px 65px; }
+.services__price-item b{
+	font-family: 'RobotoCondensedBold', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+	color: #ee7e00;
+	font-size: 18px;
+}
+.services__price-item span{ color: #f68000 }
 /*
 *		MEDIA
 */
