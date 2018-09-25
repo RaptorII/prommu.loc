@@ -226,6 +226,7 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 				<?
 					$vac = $viData['vac'][0];
 					$cntPosts = sizeof($viData['vac']);
+					$arPosts = array();
 				?>
 				<div class="smss-result__text">
 					Добрый день, <ФИО><br>
@@ -238,10 +239,13 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 					<? else: ?>
 						на должности:<br> <?
 						foreach ($viData['vac'] as $k => $v) 
-							echo  ($k+1) . ') ' . $v['pname'] . ($k<($cntPosts-1)?';<br>':'');
+							if(!in_array($v['id_attr'], $arPosts)) {
+								echo  ($k+1) . ') ' . $v['pname'] . ($k<($cntPosts-1)?';<br>':'');
+								$arPosts[] = $v['id_attr'];
+							}
 						?>
 					<? endif; ?>
-						<br><br>
+						<br>
 						Заработная плата:<br> 
 						<? if( $vac['shour'] > 0 )
 							echo '- ' . $vac['shour'] . ' руб/час<br/>';
