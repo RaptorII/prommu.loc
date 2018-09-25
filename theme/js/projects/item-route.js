@@ -6,8 +6,8 @@ window.scribblemaps = {
 };
 window.smElement = false;
 /*
-*
-*/
+ *
+ */
 let IndexRoute = (function () {
 
     IndexRoute.prototype.cnt = false;
@@ -21,24 +21,24 @@ let IndexRoute = (function () {
         let self = this;
 
 
-        $('.route__table-item').click(function(){
+        $('.route__table-item').click(function () {
             $('.route__table-item').each(function () {
                 $(this).removeClass('route__table-active');
             });
             $(this).addClass('route__table-active');
         });
 
-        $('.route__button-change,.route__change-id').click(function(){
+        $('.route__button-change,.route__change-id').click(function () {
             $('.project__route-changer').show();
             $('.rout__main').hide();
         });
 
-        $(".route__button-save").click(function(){
+        $(".route__button-save").click(function () {
             var data = self.getSortData();
             self.ajaxPushParams(data, 'POST');
         });
 
-        $('.route__button-cancel').click(function(){
+        $('.route__button-cancel').click(function () {
             $('.project__route-changer').hide();
             $('.rout__main').show();
         });
@@ -48,23 +48,23 @@ let IndexRoute = (function () {
         });
 
         //меняем местами
-        $(".project__route-touch.touch__arrow-top").click(function(){
+        $(".project__route-touch.touch__arrow-top").click(function () {
             var pdiv = $(this).closest('.project__route-changer').find('.route__table-active');
             pdiv.insertBefore(pdiv.prev());
             return false
         });
         //меняем местами
-        $(".project__route-touch.touch__arrow-bottom").click(function(){
+        $(".project__route-touch.touch__arrow-bottom").click(function () {
             var pdiv = $(this).closest('.project__route-changer').find('.route__table-active');
             pdiv.insertAfter(pdiv.next());
             return false
-        });  
+        });
     };
 
     IndexRoute.prototype.getSortData = function () {
         var data_object = {};
 
-        $('#sortable .route__table-item').each(function(i, e){
+        $('#sortable .route__table-item').each(function (i, e) {
             data_object[i] = $(this).data('location');
         });
 
@@ -73,38 +73,39 @@ let IndexRoute = (function () {
 
     IndexRoute.prototype.mapOpen = function (e) {
         let self = this;
-            
+
         smElement = $(e).closest('.route__item-box').find('.routes__map')[0];
 
-        if(!$(smElement).hasClass('map_active')){
+        if (!$(smElement).hasClass('map_active')) {
             $(e).html('СКРЫТЬ МАРШРУТ');
-            if(!self.cnt) {
+
+            if (!self.cnt) {
                 let e = document.createElement("script");
                 e.src = self.urlMap;
-                e.type="text/javascript";
+                e.type = "text/javascript";
                 document.getElementsByTagName("head")[0].appendChild(e);
-                self.cnt = true;  
+                self.cnt = true;
             }
-            else if(!$(smElement).html().length) {
+            else if (!$(smElement).html().length) {
                 smLoadMap();
             }
         }
-        else{
-            
+        else {
+
             $(e).html('СМОТРЕТЬ МАРШРУТ');
         }
         $(smElement).toggleClass('map_active');
     };
 
     IndexRoute.prototype.ajaxPushParams = function (data, type) {
-        if(!data) return;
+        if (!data) return;
 
         $.ajax({
             type: type,
             url: '/ajax/123123',
-            data: { data: JSON.stringify(data) },
+            data: {data: JSON.stringify(data)},
             dataType: 'json',
-            success: function (value){
+            success: function (value) {
                 location.reload();
             }
         });
@@ -125,167 +126,136 @@ $(document).ready(function () {
 
     console.log(mapLocation);
 
-    setMapPoints(15642,3180,'map');
-    setMapPoints(15642,3180,'map2');
+    var d1 = initializationMap(15642, 3180);
+    setMapLines(15642, 3180, d1);
+    setMapPoints(15642, 3180, d1);
 
-    /*
-    var map = L.map('map').setView([55.7251293,37.6167661], 10);
+    var d2 = initializationMap(1, 3180);
+    setMapPoints(2,3180,d2);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: ''
-    }).addTo(map);
+    var d3 = initializationMap(2, 3180);
+    setMapPoints(2,3180,d3);
 
-    map.locate({setView: true, maxZoom: 16});
-
-
-
-
-
-    var geojsonFeature = {
-        "type": "Feature",
-        "geometry": {
-            "type": "Point",
-            "coordinates": [-104.99404, 39.75621]
-        },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [-100, 38]
-        }
-    };
-
-    L.geoJSON(geojsonFeature).addTo(map);
-
-
-    var states = [{
-        "type": "Feature",
-        "properties": {"party": "Republican"},
-        "geometry": {
-            "type": "Polygon",
-            "coordinates": [[
-                [-104.05, 48.99],
-                [-97.22,  48.98],
-                [-96.58,  45.94],
-                [-104.03, 45.94],
-                [-104.05, 48.99]
-            ]]
-        }
-    }, {
-        "type": "Feature",
-        "properties": {"party": "Democrat"},
-        "geometry": {
-            "type": "Polygon",
-            "coordinates": [[
-                [-109.05, 41.00],
-                [-102.06, 40.99],
-                [-102.03, 36.99],
-                [-109.04, 36.99],
-                [-109.05, 41.00]
-            ]]
-        }
-    }];
-
-    L.geoJSON(states, {
-        style: function(feature) {
-            switch (feature.properties.party) {
-                case 'Republican': return {color: "#ff0000"};
-                case 'Democrat':   return {color: "#0000ff"};
-            }
-        }
-    }).addTo(map);
-
-    */
+    var d4 = initializationMap(3, 3180);
+    setMapPoints(3,3180,d4);
 
 });
 /*
-*
-*/
-smLoadMap = function(){
+ *
+ */
+smLoadMap = function () {
     var sm = new scribblemaps.ScribbleMap(
-            smElement,
-            { controlMode: { 'mapType': scribblemaps.ControlModes.SMALL }}
-        );
-    sm.view.setCenter({'lat':55.758031768239185,'lng':37.6171875});// Moscow
+        smElement,
+        {controlMode: {'mapType': scribblemaps.ControlModes.SMALL}}
+    );
+    sm.view.setCenter({'lat': 55.758031768239185, 'lng': 37.6171875});// Moscow
     sm.map.setType('road');
     sm.view.setZoom(8);
     sm.ui.setAvailableTools([]);
     sm.ui.setMapInfoIcons([]);
     sm.ui.setMapTypes([]);
-    sm.ui.styleControl(scribblemaps.ControlType.SEARCH,{display:"none"});
-    sm.ui.styleControl(scribblemaps.ControlType.LINE_COLOR,{display:"none"});
-    sm.ui.styleControl(scribblemaps.ControlType.FILL_COLOR,{display:"none"});
-    sm.ui.styleControl(scribblemaps.ControlType.LINE_SETTINGS,{display:"none"});
-    sm.ui.styleControl(scribblemaps.ControlType.UNDO_CONTROL,{display:"none"});
-    sm.ui.styleControl(scribblemaps.ControlType.ZOOM,{
+    sm.ui.styleControl(scribblemaps.ControlType.SEARCH, {display: "none"});
+    sm.ui.styleControl(scribblemaps.ControlType.LINE_COLOR, {display: "none"});
+    sm.ui.styleControl(scribblemaps.ControlType.FILL_COLOR, {display: "none"});
+    sm.ui.styleControl(scribblemaps.ControlType.LINE_SETTINGS, {display: "none"});
+    sm.ui.styleControl(scribblemaps.ControlType.UNDO_CONTROL, {display: "none"});
+    sm.ui.styleControl(scribblemaps.ControlType.ZOOM, {
         background: '#abb92a',
         border: '1px solid #dedede'
     });
     console.log(sm);
 };
 
-setMapPoints = function(userId, pointId ,mapid) {
+initializationMap = function (userId, pointId) {
+    var mapid = 'map_' + userId;
 
-    var longitude = mapLocation[userId]['points'][pointId][0]['longitude'];
-    var latitude =  mapLocation[userId]['points'][pointId][0]['latitude'];
-
+    //******Start points******//
     var startPoint = [];
-    startPoint.push(latitude);
-    startPoint.push(longitude);
+    if (mapLocation[userId]) {
+        var longitude = mapLocation[userId]['points'][pointId][0]['longitude'];
+        var latitude = mapLocation[userId]['points'][pointId][0]['latitude'];
 
-    try{
-        var map = L.map(mapid).setView(startPoint, 9);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: ''
-        }).addTo(map);
-
-        map.locate({setView: true, maxZoom: 16});
+        startPoint.push(latitude);
+        startPoint.push(longitude);
     }
-    catch(err){
-
+    else {
+        startPoint.push('55.7527111');
+        startPoint.push('37.6436342');
     }
+    //******Start points******//
 
+    var map = L.map(mapid).setView(startPoint, 9);
 
-
-
-    var location =[];
-    console.log(mapLocation[userId]['points']);
-     var size = Object.keys(mapLocation[userId]['points']).length;
-     for(var d = 0; d< size; d++){
-         var points = mapLocation[userId]['points'][pointId];
-
-         $.each(points, function(i,e){
-             var arPoints = [];
-             arPoints.push(this.longitude);
-             arPoints.push(this.latitude);
-             location.push(arPoints);
-
-             var geojsonFeature = {
-                 "type": "Feature",
-                 "geometry": {
-                     "type": "Point",
-                     "coordinates": arPoints
-                 }
-             };
-
-             L.geoJSON(geojsonFeature).addTo(map);
-         });
-     }
-
-
-    console.log(location);
-    var myLines = [{
-        "type": "LineString",
-        "coordinates": location
-    }];
-
-    var myStyle = {
-        "color": "#ff7800",
-        "weight": 5,
-        "opacity": 0.65
-    };
-
-    L.geoJSON(myLines, {
-        style: myStyle
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: ''
     }).addTo(map);
 
+    return map;
+};
+
+setMapLines = function (userId, pointId, map) {
+
+    var location = [];
+    if (mapLocation[userId]) {
+        var size = Object.keys(mapLocation[userId]['points']).length;
+        for (var d = 0; d < size; d++) {
+            var points = mapLocation[userId]['points'][pointId];
+
+            $.each(points, function (i, e) {
+                var arPoints = [];
+                arPoints.push(this.longitude);
+                arPoints.push(this.latitude);
+                location.push(arPoints);
+            });
+        }
+
+        var myLines = [{
+            "type": "LineString",
+            "coordinates": location
+        }];
+
+        var myStyle = {
+            "color": "#ff7800",
+            "weight": 5,
+            "opacity": 0.65
+        };
+
+        L.geoJSON(myLines, {
+            style: myStyle
+        }).addTo(map);
+    } else {
+        console.log('Точки юзера ' + userId + ' не найдены');
+    }
+};
+
+setMapPoints = function (userId, pointId, map) {
+
+    var location = [];
+    if (mapLocation[userId]) {
+        console.log(mapLocation[userId]['points']);
+        var size = Object.keys(mapLocation[userId]['points']).length;
+        for (var d = 0; d < size; d++) {
+            var points = mapLocation[userId]['points'][pointId];
+
+            $.each(points, function (i, e) {
+                var arPoints = [];
+                arPoints.push(this.longitude);
+                arPoints.push(this.latitude);
+                location.push(arPoints);
+
+                var geojsonFeature = {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": arPoints
+                    }
+                };
+
+                L.geoJSON(geojsonFeature).addTo(map);
+            });
+        }
+
+    } else {
+        console.log('Точки юзера ' + userId + ' не найдены');
+    }
 };
