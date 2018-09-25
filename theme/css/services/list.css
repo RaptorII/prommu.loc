@@ -5,7 +5,19 @@
 .services{ margin-top: 15px }
 .services__item{
 	position: relative;
-	padding: 8px 0 20px;
+}
+.services>div{ padding: 18px 0 10px }
+.services>div:first-child{ padding: 8px 0 10px }
+.services>div:before{
+	position: absolute;
+	top: 0;
+	right: 35px;
+	left: 35px;
+	border-top: 1px solid #dedede;
+	display: block;
+}
+.services>div:first-child:before{
+	border-top: none;
 }
 .services__prev{}
 .services__detail{}
@@ -105,7 +117,20 @@
 	padding: 8px 0 20px;
 }
 .services__sublevel{
-	padding-bottom: 20px;
+	padding: 10px 0;
+	position: relative;
+}
+.services__sublevel:before{
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 35px;
+	left: 35px;
+	border-top: 1px solid #dedede;
+	display: block;
+}
+.services__sublevel:nth-child(3):before{
+	border-top: none;
 }
 .services__parent{
 	position: relative;
