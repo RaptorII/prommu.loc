@@ -11,6 +11,10 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-route.css');
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item-route.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerScriptFile('https://code.jquery.com/ui/1.12.1/jquery-ui.js', CClientScript::POS_END);
+
+
+Yii::app()->getClientScript()->registerScriptFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.css');
 ?>
 
 
@@ -151,6 +155,9 @@ $arFilterData = [
     </div>
 </div>
 
+
+
+<div id="map" style="height: 400px;"></div>
 <div class="project__module">
 
     <div class="project__route">
