@@ -690,8 +690,6 @@ class ResponsesApplic extends Responses
                 ->from('vacation_stat v')
                 ->where('id_promo = :idp AND id_vac = :idvac', array(':idp' => $idPromo, ':idvac' => $id))
                 ->queryRow();
-
-
             // Добавляем приглашение на вакансию
             if( $res['id'] )
             {
@@ -699,17 +697,6 @@ class ResponsesApplic extends Responses
             }
             else
             {
-
-
-                $res = Yii::app()->db->createCommand()
-                    ->insert('vacation_stat', array(
-                        'id_promo' => $idPromo,
-                        'id_vac' => $id,
-                        'isresponse' => 2,
-                        'status' => 4,
-                        'date' => date('Y-m-d H:i:s'),
-                ));
-
                 $sql = "SELECT ru.email, r.firstname, r.lastname, e.title
                 FROM vacation_stat s
                 INNER JOIN empl_vacations e ON e.id = s.id_vac
@@ -719,26 +706,54 @@ class ResponsesApplic extends Responses
                 $res = Yii::app()->db->createCommand($sql);
                 $Q1 = $res->queryRow();
 
+                $arPre = array('/#APPNAME#/',
+                    '/#EMPCOMPANY#/','/#EMPLINK#/','/#EMPSRC#/',
+                    '/#VACID#/','/#VACNAME#/','/#VACPOSTS#/',
+                    '/#VACSALARY#/','/#RESPLINK#/','/#VACLINK#/'
+                );
 
-                $ress = Yii::app()->db->createCommand()
-                ->select("id")
-                ->from('vacation_stat v')
-                ->where('id_promo = :idp AND id_vac = :idvac', array(':idp' => $idPromo, ':idvac' => $id))
-                ->queryRow();
+                $emp = Share::$UserProfile->getProfileDataView()['userInfo'];
+                $vac = (new Vacancy())->getVacancyInfo($id);
+                $host = 'https://'.MainConfig::$SITE;
+                $arRes = array(
+                    $Q1['firstname'].' '.$Q1['lastname'], // #APPNAME#
+                    $emp['name'], // #EMPCOMPANY#
+                    $host.MainConfig::$PAGE_PROFILE_COMMON.'/'.$emp['id_user'],
+                    $host.'/'.MainConfig::$PATH_EMPL_LOGO.'/'.($emp['logo']?$emp['logo'].'100.jpg':'logo.png'),
+                    $id, // #VACID#
+                    $vac[0]['title'] // #VACNAME#
+                );
+                $cntPosts = sizeof($vac);
+                $arPosts = array();
+                $posts = '';
+                if($cntPosts==1) {
+                    $posts = 'на должность:<br>' . $vac[0]['pname'] . '<br>';
+                }
+                else {
+                    $posts = 'на должности:<br>';
+                    foreach ($vac as $k => $v)
+                        if(!in_array($v['id_attr'], $arPosts)) {
+                            $posts .= ($k+1) . ') ' . $v['pname'] . ($k<($cntPosts-1)?';<br>':'');
+                            $arPosts[] = $v['id_attr'];
+                        }
+                }
+                $arRes[] = $posts; // #VACPOSTS#
+                $salary = '';
+                if($vac[0]['shour'] > 0)
+                    $salary .= '- ' . $vac[0]['shour'] . ' руб/час<br/>';
+                if($vac[0]['sweek'] > 0)
+                    $salary .= '- ' . $vac[0]['sweek'] . ' руб/неделю<br/>';
+                if($vac[0]['smonth'] > 0)
+                    $salary .= '- ' . $vac[0]['smonth'] . ' руб/месяц<br/>';
+                if($vac[0]['svisit'] > 0)
+                    $salary .= '- ' . $vac[0]['svisit'] . ' руб/посещение<br/>';
+                $arRes[] = $salary; // #VACSALARY#
+                $arRes[] = $host.'/'.MainConfig::$PAGE_RESPONSES; // #RESPLINK#
+                $arRes[] = $host.MainConfig::$PAGE_VACANCY.'/'.$id; // #VACLINK#
 
-
-                 $content = file_get_contents(Yii::app()->basePath . "/views/mails/app/invitation-to-vac.html");
-                  $content = str_replace('#APPNAME#', $Q1['firstname'].' '.$Q1['lastname'], $content);
-                  $content = str_replace('#EMPCOMPANY#', Share::$UserProfile->exInfo->name, $content);
-                 $content = str_replace('#EMPLINK#',  MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
-                 $content = str_replace('#VACID#', $id, $content);
-                 $content = str_replace('#VACNAME#', $Q1['title'], $content);
-                 $content = str_replace('#RESPLINK#',MainConfig::$SITE . DS . MainConfig::$PAGE_RESPONSES, $content);
-                 $content = str_replace('#VACLINK#',  MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id, $content);
-      
-              Share::sendmail($Q1['email'], "Prommu.com. Приглашение на вакансию", $content);
-
-                
+                $content = file_get_contents(Yii::app()->basePath . "/views/mails/app/invitation-to-vac.html");
+                $content = preg_replace($arPre, $arRes, $content);
+                Share::sendmail($Q1['email'], "Prommu.com. Приглашение на вакансию", $content);
 
         $sql = "SELECT e.id_user id
                         FROM resume e
