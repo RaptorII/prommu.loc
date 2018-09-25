@@ -112,17 +112,17 @@ class Project extends ARModel
     /*
     *       Запись местоположения пользователя
     */
-    public function recordReport($arr, $project){
-         if(!$project)
+    public function recordReport($arr){
+        if(!$arr['project'])
             return false;
         Yii::app()->db->createCommand()
                     ->insert('project_repost', array(
-                            'project' => $project,
-                            'user' => $arr['user'],
-                            'point' =>  $arr['point'],
+                            'project' => $arr['project'],
+                            'user' => $arr['idus'],
+                            'point' => $arr['idus'],
                             'date' => date("Y-m-d h-i-s"),
-                            'longitude' => rand(1111,9999),
-                            'latitude' => rand(1111,9999),
+                            'longitude' => $arr['longitude'],
+                            'latitude' =>  $arr['latitude'],
                         ));
     }
     /*
