@@ -14,8 +14,10 @@ Yii::app()->getClientScript()->registerScriptFile('https://code.jquery.com/ui/1.
 
 Yii::app()->getClientScript()->registerScriptFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerCssFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.css');
-
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/universal-map.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-map.css');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/jquery.fancybox.css');
 
 
 $arFilterData = [
@@ -186,7 +188,6 @@ $arFilterData = [
           <div class="route__item">
             <h2 class="route__item-title"><?=$city['city']?> <span><?=$city['date']?></span></h2>
 
-              <?print_r($city)?>
             <div class="route__item-box">
               <table class="route__table">
                 <thead>

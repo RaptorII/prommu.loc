@@ -13,11 +13,6 @@ let IndexMap = (function () {
     IndexMap.prototype.init = function () {
         let self = this;
         self.mainMapContainer =  self.initializationMapPopup();
-        $.fancybox.open({
-            src  : "div.map__container",
-            type : 'inline',
-            touch : false
-        });
 
         $('.js-get-map').click(function () {
 
@@ -34,17 +29,20 @@ let IndexMap = (function () {
 
     IndexMap.prototype.initializationMapPopup = function () {
         $('body').append('<div class="map__container"><div id="map_main"></div></div>');
+        $('body').append('<div class="map__error">РћС€РёР±РєР°</div>');
 
         var startPoint = [];
         startPoint.push('55.7527111');
         startPoint.push('37.6436342');
         //******Start points******//
 
-        var map = L.map('map_main').setView(startPoint, 9);
-
+        var map = L.map('map_main').setView(startPoint, 15);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: ''
         }).addTo(map);
+
+        $('.map__container').hide();
+
 
         return map;
     };
@@ -107,8 +105,94 @@ let IndexMap = (function () {
                 style: myStyle
             }).addTo(map);
         } else {
-            console.log('Точки юзера ' + userId + ' не найдены');
+            console.log('РўРѕС‡РєРё СЋР·РµСЂР° ' + userId + ' РЅРµ РЅР°Р№РґРµРЅС‹');
         }
+    };
+
+
+    IndexMap.prototype.setUniqueMapLines = function (map, pointsloc) {
+        self = this;
+        var location = [];
+        if (pointsloc.error !=true) {
+
+
+            //******Start points******//
+            var startPoint = [];
+                var longitude = pointsloc[0]['longitude'];
+                var latitude = pointsloc[0]['latitude'];
+
+                startPoint.push(latitude);
+                startPoint.push(longitude);
+            //******Start points******//
+
+            map.eachLayer(function (layer) {
+                map.removeLayer(layer);
+            });
+
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: ''
+            }).addTo(map);
+
+            map.panTo(startPoint, 6);
+
+
+            var size = Object.keys(pointsloc).length;
+
+            for (var d = 0; d < size; d++) {
+                var points = pointsloc[d];
+
+                var arPoints = [];
+                arPoints.push(points.longitude);
+                arPoints.push(points.latitude);
+                location.push(arPoints);
+
+                var geojsonFeature = {
+                    "type": "Feature",
+                    "geometry": {
+                        "type": "Point",
+                        "coordinates": arPoints
+                    }
+                };
+
+                L.geoJSON(geojsonFeature).addTo(map);
+            }
+
+            var myLines = [{
+                "type": "LineString",
+                "coordinates": location
+            }];
+
+            var myStyle = {
+                "color": "red",
+                "weight": 4,
+                "opacity": 0.65
+            };
+
+            L.geoJSON(myLines, {
+                style: myStyle
+            }).addTo(map);
+
+            self.mapPopupOpen();
+        } else {
+            self.errorPopupOpen();
+        }
+    };
+
+    IndexMap.prototype.mapPopupOpen = function () {
+        $.fancybox.open({
+            src  : "div.map__container",
+            type : 'inline',
+            touch : false
+        });
+    };
+
+    IndexMap.prototype.errorPopupOpen = function () {
+        $.fancybox.open({
+            src  : "div.map__error",
+            type : 'inline',
+            touch : false
+        });
     };
 
     IndexMap.prototype.setMapPoints = function (userId, pointId, map) {
@@ -139,7 +223,7 @@ let IndexMap = (function () {
             }
 
         } else {
-            console.log('Точки юзера ' + userId + ' не найдены');
+            console.log('РўРѕС‡РєРё СЋР·РµСЂР° ' + userId + ' РЅРµ РЅР°Р№РґРµРЅС‹');
         }
     };
 
@@ -169,7 +253,7 @@ let IndexMap = (function () {
             success: function (value) {
                 console.log(value);
                 if(value){
-
+                    self.setUniqueMapLines(self.mainMapContainer, value)
                 }
             }
         });

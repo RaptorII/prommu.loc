@@ -8,3 +8,12 @@
     padding: 20px;
     width:80%;
 }
+
+.map__error{
+    padding: 20px;
+    width:300px;
+    display: none;
+    text-align: center;
+    color:red;
+    font-size: 20px;
+}
