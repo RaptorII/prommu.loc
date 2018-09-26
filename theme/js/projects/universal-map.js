@@ -17,10 +17,15 @@ let IndexMap = (function () {
             let map_user = $(this).data('map-user');
             let map_point = $(this).data('map-point');
             let map_date = $(this).data('map-date');
+            let type = 'coordinates';
 
-            var data = self.initData(map_project,map_user,map_point,map_date);
+            var data = self.initData(map_project,map_user,map_point,map_date, type);
             self.ajaxGetMapParams(data);
         });
+    };
+
+    IndexMap.prototype.initializationMapPopup = function (userId, pointId) {
+        $('body').append('<div id="map_main"></div>');
     };
 
     IndexMap.prototype.initializationMap = function (userId, pointId) {
@@ -118,12 +123,13 @@ let IndexMap = (function () {
     };
 
 
-    IndexMap.prototype.initData = function ( project, user, point, date) {
+    IndexMap.prototype.initData = function ( project, user, point, date, type) {
         var data_object = {};
         data_object.project = project;
         data_object.user = user;
         data_object.point = point;
         data_object.date = date;
+        data_object.type = type;
 
         return data_object;
     };
