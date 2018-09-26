@@ -1,0 +1,10 @@
+#map_main{
+    width: 95%;
+    height: 400px;
+    margin:0 auto;
+}
+
+.map__container{
+    padding: 20px;
+    width:80%;
+}

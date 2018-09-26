@@ -4,12 +4,20 @@
 
 let IndexMap = (function () {
 
+    IndexRoute.prototype.mainMapContainer = false;
+
     function IndexMap() {
         this.init();
     }
 
     IndexMap.prototype.init = function () {
         let self = this;
+        self.mainMapContainer =  self.initializationMapPopup();
+        $.fancybox.open({
+            src  : "div.map__container",
+            type : 'inline',
+            touch : false
+        });
 
         $('.js-get-map').click(function () {
 
@@ -24,8 +32,21 @@ let IndexMap = (function () {
         });
     };
 
-    IndexMap.prototype.initializationMapPopup = function (userId, pointId) {
-        $('body').append('<div id="map_main"></div>');
+    IndexMap.prototype.initializationMapPopup = function () {
+        $('body').append('<div class="map__container"><div id="map_main"></div></div>');
+
+        var startPoint = [];
+        startPoint.push('55.7527111');
+        startPoint.push('37.6436342');
+        //******Start points******//
+
+        var map = L.map('map_main').setView(startPoint, 9);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: ''
+        }).addTo(map);
+
+        return map;
     };
 
     IndexMap.prototype.initializationMap = function (userId, pointId) {
@@ -138,6 +159,8 @@ let IndexMap = (function () {
     IndexMap.prototype.ajaxGetMapParams = function (data) {
         if (!data) return;
 
+        let self = this;
+
         $.ajax({
             type: 'GET',
             url: '/ajax/Project',
@@ -145,6 +168,9 @@ let IndexMap = (function () {
             dataType: 'json',
             success: function (value) {
                 console.log(value);
+                if(value){
+
+                }
             }
         });
     };
