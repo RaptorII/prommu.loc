@@ -856,7 +856,7 @@ class AjaxController extends AppController
         echo CJSON::encode($result);
     }
     /*
-    *       
+    *       Глобальный экшн для ГЕО проектов
     */
     public function actionProject()
     {

@@ -245,4 +245,7 @@
 .route__table-cell-name{ width: 30% }
 .route__table-cell-adres{ width: 30% }
 .route__table-cell-metro{ width: 15% }
-.route__table-cell-status{ width: 5% }
+.route__table-cell-time{ width: 5% }
+#DiContent .route__item-title{ font-weight: normal }
+.route__table-cell-time>div{ text-align: center }
+.route__table-cell-time span{ white-space: nowrap }

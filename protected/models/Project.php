@@ -1292,12 +1292,54 @@ class Project extends ARModel
 
         if(!sizeof($arRes))
             $arRes = array('error'=>true);
-        /*foreach ($sql as $v)
-            $arRes['users'][$v['user']]['points'][$v['point']][] = [
-                'latitude' => $v['latitude'],
-                'longitude' => $v['longitude']
-            ];
-        $arRes['json'] = json_encode($arRes['users']);*/
+        return $arRes;
+    }
+    /*
+    *       Формирование массива для маршута
+    */
+    public function buildRouteArray($arr) {
+        $arI = array();
+        
+        $arRes['project'] = $arr['project'];
+        // сортируем по времени
+        usort($arr['original'], 
+            function($a, $b){
+                $t1 = strtotime($a['btime']);
+                $t2 = strtotime($b['btime']);
+                return ($t1 < $t2) ? -1 : 1;
+            }
+        );
+
+        foreach ($arr['users'] as $id => $v)
+            if(sizeof($v['points'])>0)
+                $arRes['users'][$v['id_user']] = $v;
+
+        if(!sizeof($arRes['users']))
+            return array('items' => $arI);
+
+        foreach ($arr['original'] as $p) {
+            foreach ($arRes['users'] as $idus => $u) {
+                if(!in_array($p['point'], $u['points']))
+                    continue;
+
+                $arRes['points'][$p['point']] = $p;
+                $c = $p['id_city'];
+                $date = strtotime($p['bdate']);
+                do{
+                    $arI[$date][$idus][$c]['date'] = date('d.m.Y',$date);
+                    $arI[$date][$idus][$c]['city'] = $p['city'];
+                    $arI[$date][$idus][$c]['ismetro'] = $p['ismetro'];
+                    $arI[$date][$idus][$c]['points'][] = $p['point'];
+                    $date += (60*60*24);
+                }
+                while($date <= strtotime($p['edate']));
+            }
+        }
+
+        ksort($arI);
+        $arRes['items'] = $arI;
+        $arRes['filter'] = $this->buildAdressArray($arr['original'])['filter'];
+
         return $arRes;
     }
 }
