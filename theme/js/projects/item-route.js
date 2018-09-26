@@ -124,9 +124,9 @@ $(document).ready(function () {
     $("#sortable").disableSelection();
 
 
-    console.log(mapLocation);
 
-    var d1 = initializationMap(15642, 3180);
+
+    /*var d1 = initializationMap(15642, 3180);
     setMapLines(15642, 3180, d1);
     setMapPoints(15642, 3180, d1);
 
@@ -137,7 +137,7 @@ $(document).ready(function () {
     setMapPoints(2,3180,d3);
 
     var d4 = initializationMap(3, 3180);
-    setMapPoints(3,3180,d4);
+    setMapPoints(3,3180,d4);*/
 
 });
 /*
@@ -164,98 +164,4 @@ smLoadMap = function () {
         border: '1px solid #dedede'
     });
     console.log(sm);
-};
-
-initializationMap = function (userId, pointId) {
-    var mapid = 'map_' + userId;
-
-    //******Start points******//
-    var startPoint = [];
-    if (mapLocation[userId]) {
-        var longitude = mapLocation[userId]['points'][pointId][0]['longitude'];
-        var latitude = mapLocation[userId]['points'][pointId][0]['latitude'];
-
-        startPoint.push(latitude);
-        startPoint.push(longitude);
-    }
-    else {
-        startPoint.push('55.7527111');
-        startPoint.push('37.6436342');
-    }
-    //******Start points******//
-
-    var map = L.map(mapid).setView(startPoint, 9);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: ''
-    }).addTo(map);
-
-    return map;
-};
-
-setMapLines = function (userId, pointId, map) {
-
-    var location = [];
-    if (mapLocation[userId]) {
-        var size = Object.keys(mapLocation[userId]['points']).length;
-        for (var d = 0; d < size; d++) {
-            var points = mapLocation[userId]['points'][pointId];
-
-            $.each(points, function (i, e) {
-                var arPoints = [];
-                arPoints.push(this.longitude);
-                arPoints.push(this.latitude);
-                location.push(arPoints);
-            });
-        }
-
-        var myLines = [{
-            "type": "LineString",
-            "coordinates": location
-        }];
-
-        var myStyle = {
-            "color": "#ff7800",
-            "weight": 5,
-            "opacity": 0.65
-        };
-
-        L.geoJSON(myLines, {
-            style: myStyle
-        }).addTo(map);
-    } else {
-        console.log('Точки юзера ' + userId + ' не найдены');
-    }
-};
-
-setMapPoints = function (userId, pointId, map) {
-
-    var location = [];
-    if (mapLocation[userId]) {
-        console.log(mapLocation[userId]['points']);
-        var size = Object.keys(mapLocation[userId]['points']).length;
-        for (var d = 0; d < size; d++) {
-            var points = mapLocation[userId]['points'][pointId];
-
-            $.each(points, function (i, e) {
-                var arPoints = [];
-                arPoints.push(this.longitude);
-                arPoints.push(this.latitude);
-                location.push(arPoints);
-
-                var geojsonFeature = {
-                    "type": "Feature",
-                    "geometry": {
-                        "type": "Point",
-                        "coordinates": arPoints
-                    }
-                };
-
-                L.geoJSON(geojsonFeature).addTo(map);
-            });
-        }
-
-    } else {
-        console.log('Точки юзера ' + userId + ' не найдены');
-    }
 };

@@ -373,8 +373,3 @@ $arFilterData = [
   </div>
 
 </div>
-
-
-<script>
-  var mapLocation = <?=$viData['coordinates']['json']?>;
-</script>

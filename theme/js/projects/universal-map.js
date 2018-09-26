@@ -19,7 +19,7 @@ let IndexMap = (function () {
             let map_date = $(this).data('map-date');
 
             var data = self.initData(map_project,map_user,map_point,map_date);
-            self.ajaxPushParams(data);
+            self.ajaxGetMapParams(data);
         });
     };
 
@@ -129,7 +129,7 @@ let IndexMap = (function () {
     };
 
 
-    IndexMap.prototype.ajaxPushParams = function (data) {
+    IndexMap.prototype.ajaxGetMapParams = function (data) {
         if (!data) return;
 
         $.ajax({
@@ -145,3 +145,8 @@ let IndexMap = (function () {
 
     return IndexMap;
 }());
+
+
+$(document).ready(function () {
+    new IndexMap();
+});
