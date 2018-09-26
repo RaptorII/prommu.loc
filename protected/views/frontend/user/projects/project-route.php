@@ -146,7 +146,7 @@ $arFilterData = [
   ];
 
   echo "<pre>";
-  print_r($viData['users']); 
+  print_r($viData['coordinates']); 
   echo "</pre>";
   ?>
 

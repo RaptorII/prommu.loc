@@ -1266,19 +1266,39 @@ class Project extends ARModel
     *       Получение координат по проекту
     */
     public function getСoordinates($prj) {
+        $arCond = 'project=:prj';
+        $arPrms[':prj'] = $prj;
+
+        $user = Yii::app()->getRequest()->getParam('user');
+        $point = Yii::app()->getRequest()->getParam('point');
+        $date = Yii::app()->getRequest()->getParam('date');
+
+        if(isset($user)) {
+            $arCond .= ' AND user=:user';
+            $arPrms[':user'] = $user;            
+        }
+        if(isset($point)) {
+            $arCond .= ' AND point=:point';
+            $arPrms[':point'] = $point;            
+        }
+        if(isset($date)) {
+            $arCond .= ' AND date(date)=:date';
+            $arPrms[':date'] = $date;            
+        }
+
         $arRes = array(); 
         $sql = Yii::app()->db->createCommand()
             ->select("*")
             ->from('project_report')
-            ->where('project=:prj', array(':prj' =>$prj))
+            ->where($arCond, $arPrms)
             ->queryAll();  // поиск всех пользователей проекта  
 
-        foreach ($sql as $v)
+        /*foreach ($sql as $v)
             $arRes['users'][$v['user']]['points'][$v['point']][] = [
                 'latitude' => $v['latitude'],
                 'longitude' => $v['longitude']
             ];
-        $arRes['json'] = json_encode($arRes['users']);
-        return $arRes;     
+        $arRes['json'] = json_encode($arRes['users']);*/
+        return $sql;
     }
 }
