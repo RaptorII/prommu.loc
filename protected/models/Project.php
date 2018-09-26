@@ -114,16 +114,20 @@ class Project extends ARModel
     */
     public function recordReport($arr){
         if(!$arr['project'])
-            return false;
-        Yii::app()->db->createCommand()
+            return array('error'=>true);
+
+        $res = Yii::app()->db->createCommand()
                     ->insert('project_report', array(
                             'project' => $arr['project'],
                             'user' => $arr['idus'],
-                            'point' => $arr['idus'],
+                            'point' => $arr['point'],
                             'date' => date("Y-m-d h-i-s"),
                             'longitude' => $arr['longitude'],
                             'latitude' =>  $arr['latitude'],
                         ));
+
+        if(!$res)
+            return array('error'=>true);
     }
     /*
     *       Запись новых пользователей

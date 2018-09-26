@@ -54,15 +54,6 @@ class AjaxController extends AppController
         Yii::app()->end();
     }
     
-    public function actionReportproject(){
-        
-        $project = new Project();
-        $response = $project->recordReport($_POST);
-
-        // echo CJSON::encode($response);
-        
-    }
-    
      public function actionRestorecode(){
         $code = rand(111111, 999999);
         $phone = $_POST['phone'];
@@ -860,17 +851,25 @@ class AjaxController extends AppController
     */
     public function actionProject()
     {
-        $result = array('error'=>true);
-        $method = $_SERVER['REQUEST_METHOD'];
+        $result = array();
+        $model = new Project();
         $data = Yii::app()->getRequest()->getParam('data');
         $data = json_decode($data, true, 5, JSON_BIGINT_AS_STRING);
-
-        if($method=='GET') {
-            if($data['type']=='coordinates') {
-                $model = new Project();
-                $result = $model->getСoordinates($data);
-            }
+        
+        switch ($_SERVER['REQUEST_METHOD']) {
+            case 'GET':
+                if($data['type']=='coordinates')
+                    $result = $model->getСoordinates($data);
+                break;
+            case 'POST':
+                if($data['type']=='coordinates')
+                    $result = $model->recordReport($data);
+                break;
+            default:
+                $result = array('error'=>true);
+                break;
         }
+
         echo CJSON::encode($result);
     }
 }
