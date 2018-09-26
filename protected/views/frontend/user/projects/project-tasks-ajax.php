@@ -19,6 +19,8 @@
 				<tbody>
 					<?php foreach ($city['users'] as $idus => $arPoints): ?>
 						<?php $user = $viData['users'][$idus]; ?>
+
+
 						<tr>
 							<td rowspan="<?=sizeof($arPoints)?>" class="user">
 								<div class="task__table-cell task__table-user">
@@ -29,13 +31,20 @@
 							<?php $cnt = 0; ?>
 							<?php foreach ($arPoints as $p): ?>
 								<?php $point = $viData['points'][$p]; ?>
+
+
+
 								<td class="name">
 									<div class="task__table-cell border"><?=$point['name']?></div>
 								</td>
 								<td class="index">
 									<div class="task__table-cell border task__table-index">
 										<span><?=$point['adres']?></span>
-										<b class="js-g-hashint" title="Посмотреть на карте"></b>
+										<b data-map-project="<?=$project?>"
+                                           data-map-user="<?=$user['id_user']?>"
+                                           data-map-point="<?=$point['point']?>"
+                                           data-map-date="<?=$d?>"
+                                           class="js-g-hashint js-get-map" title="Посмотреть на карте"></b>
 									</div>
 								</td>
 								<?php if(!empty($city['ismetro'])): ?>

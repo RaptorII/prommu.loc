@@ -11,6 +11,13 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-f
 Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/item-tasks.css');
 Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/item-tasks.js', CClientScript::POS_END);
 
+Yii::app()->getClientScript()->registerScriptFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.css');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . '/js/projects/universal-map.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/css/projects/universal-map.css');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . '/js/dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/js/dist/fancybox/jquery.fancybox.css');
+
 $arFilterData = [
     'STYLES' => 'project__tasks-filter',
     'HIDE' => false,
