@@ -15,6 +15,8 @@ Yii::app()->getClientScript()->registerScriptFile('https://code.jquery.com/ui/1.
 Yii::app()->getClientScript()->registerScriptFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerCssFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.css');
 
+Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/universal-map.js', CClientScript::POS_END);
+
 
 $arFilterData = [
   'STYLES' => 'project__tasks-filter',
@@ -146,7 +148,7 @@ $arFilterData = [
   ];
 
   echo "<pre>";
-  print_r($viData['users']); 
+  print_r($viData);
   echo "</pre>";
   ?>
 
@@ -183,6 +185,8 @@ $arFilterData = [
           ?>
           <div class="route__item">
             <h2 class="route__item-title"><?=$city['city']?> <span><?=$city['date']?></span></h2>
+
+              <?print_r($city)?>
             <div class="route__item-box">
               <table class="route__table">
                 <thead>
@@ -204,6 +208,7 @@ $arFilterData = [
                         <div class="route__table-cell route__table-user">
                           <img src="<?=$user['src']?>">
                           <span><?=$user['name']?></span>
+
                         </div>
                       </td>
                       <?php $cnt = 0; ?>
@@ -215,7 +220,13 @@ $arFilterData = [
                         <td class="route__table-cell-adres">
                           <div class="route__table-cell border route__table-index">
                             <span><?=$point['adres']?></span>
-                            <b class="js-g-hashint" title="Посмотреть на карте"></b>
+
+                            <b data-map-project="<?=$project?>"
+                               data-map-user="<?=$user['id_user']?>"
+                               data-map-point="<?=$point['point']?>"
+                               data-map-date="<?=$d?>"
+                               class="js-g-hashint js-get-map" title="Посмотреть на карте">
+                            </b>
                           </div>
                         </td>
                         <?php if(!empty($city['ismetro'])): ?>
