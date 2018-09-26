@@ -48,19 +48,20 @@ $(document).ready(function () {
         attribution: ''
     }).addTo(map);
 
-    function onLocationFound() {
+    function onLocationFound(map,btn) {
         var current_position;
         if (current_position) {
             map.removeLayer(current_position);
         }
-        current_position = L.marker(e.latlng).addTo(map);
+        current_position = L.marker(map.latlng).addTo(map);
         let points = current_position._latlng;
         let lat = points.lat;
         let lng = points.lng;
         let user_id = $('.global_user_id').val();
         let project_id = $('.global_project_id').val();
 
-console.log(arguments);
+console.log(map);
+console.log(btn);
 
         /*if(lat && lng){
             $.ajax({

@@ -278,10 +278,7 @@
     z-index: 0;
     cursor: pointer;
 }
-
-#map{
-    height: 100px;
-}
+#map{ display: none; }
 
 .task__table td.time>div{ white-space: nowrap }
 .app__loc-send{

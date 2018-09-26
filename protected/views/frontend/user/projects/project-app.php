@@ -17,7 +17,6 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/js/projects/project-
 ?>
 
 <div class="filter__veil"></div>
-<div id="map"></div>
 <div class="project__module" data-id="<?= $project ?>">
   <?php if (sizeof($viData['items']) > 0): ?>
     <div class="tasks__list">
@@ -160,8 +159,5 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/js/projects/project-
       <?php else: ?>
         <br><br><h2 class="center">Не найдено локаций</h2>
       <?php endif; ?>
-
-      <input type="hidden" class="global_project_id" name="global_project_id" value="<?=$project?>"/>
-      <input type="hidden" class="global_user_id" name="global_user_id" value="<?=Share::$UserProfile->id?>"/>
-
     </div>
+    <div id="map"></div>
