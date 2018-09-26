@@ -64,10 +64,12 @@ $(document).ready(function () {
         let user_id = $('.global_user_id').val();
         let project_id = $('.global_project_id').val();
 
-        if(lat && lng){
+console.log(e);
+
+        /*if(lat && lng){
             $.ajax({
                 type: 'POST',
-                url: '/ajax/reportproject',
+                url: '/ajax/Project',
                 data: {
                     latitude:lat,
                     longitude:lng,
@@ -79,10 +81,10 @@ $(document).ready(function () {
 
                 }
             });
-        }
+        }*/
     }
 
-    $('#get_points').click(function(){
+    $('.project__module').on('click','.app__loc-send',function(){
         locate();
         map.on('locationfound', onLocationFound);
     });
