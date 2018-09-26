@@ -10,6 +10,7 @@ let IndexMap = (function () {
         this.init();
     }
 
+
     IndexMap.prototype.init = function () {
         let self = this;
         self.mainMapContainer =  self.initializationMapPopup();

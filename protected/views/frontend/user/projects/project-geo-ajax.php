@@ -40,6 +40,7 @@
                                     <?= count($valueUser) ?>
                                 </div>
                             </td>
+
                             <td>
                                 <div class="geo__table-cell">
                                     <span class="geo__green">начал</span>

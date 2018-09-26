@@ -362,7 +362,6 @@ $viData['states'] = array(
                                     <div class="geo__table-cell geo__table-loc">
                                         <span><?=$viData['points'][$valueItem]['adres'];?></span>
 
-
                                         <b
                                             data-map-project="<?=$project?>"
                                             data-map-user="<?=$idus?>"
