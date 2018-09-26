@@ -552,8 +552,12 @@ class PrommuOrder {
                 if(in_array($v['region'], $arReg))
                     $arNewPrices[$s][] = $v;
         }
+        if(!array_key_exists('premium-vacancy', $arNewPrices))
+            $arNewPrices['premium-vacancy'] = $arPrice['premium-vacancy'];
+        if(!array_key_exists('email-invitation', $arNewPrices))
+            $arNewPrices['email-invitation'] = $arPrice['email-invitation'];
 
-        return sizeof($arNewPrices)>0 ? $arNewPrices : $arPrice;
+        return $arNewPrices;
     }
 }
 ?>
