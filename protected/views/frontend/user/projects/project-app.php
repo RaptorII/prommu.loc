@@ -18,7 +18,6 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/js/projects/project-
 
 <div class="filter__veil"></div>
 <div id="map"></div>
-<span id='get_points'>Определить координаты</span>
 <div class="project__module" data-id="<?= $project ?>">
   <?php if (sizeof($viData['items']) > 0): ?>
     <div class="tasks__list">
