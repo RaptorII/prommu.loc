@@ -79,7 +79,7 @@ $(document).ready(function () {
 
     $('.project__module').on('click','.app__loc-send',function(){
         let btn = this;
-        map.locate({setView: true});
+        map.locate();
         map.on('locationfound', function(e){ onLocationFound(e, btn) });
     });
 });

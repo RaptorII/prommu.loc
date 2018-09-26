@@ -119,7 +119,7 @@ class Project extends ARModel
         $res = Yii::app()->db->createCommand()
                     ->insert('project_report', array(
                             'project' => $arr['project'],
-                            'user' => $arr['idus'],
+                            'user' => $arr['user'],
                             'point' => $arr['point'],
                             'date' => date("Y-m-d h-i-s"),
                             'longitude' => $arr['longitude'],
