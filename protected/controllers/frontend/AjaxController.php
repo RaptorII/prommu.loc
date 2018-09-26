@@ -855,4 +855,23 @@ class AjaxController extends AppController
         }
         echo CJSON::encode($result);
     }
+    /*
+    *       
+    */
+    public function actionProject()
+    {
+        $result = array('error'=>true);
+        $method = $_SERVER['REQUEST_METHOD'];
+        $data = Yii::app()->getRequest()->getParam('data');
+        $data = json_decode($data, true);
+        $prj = $data('project');
+
+        if($method=='GET') {
+            if($data['type']=='coordinates') {
+                $model = new Project();
+                $result = $model->getСoordinates($prj);
+            }
+        }
+        echo CJSON::encode($result);
+    }
 }
