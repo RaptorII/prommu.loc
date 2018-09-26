@@ -221,6 +221,7 @@ $arFilterData = [
                           <div class="route__table-cell border route__table-index">
                             <span><?=$point['adres']?></span>
 
+
                             <b data-map-project="<?=$project?>"
                                data-map-user="<?=$user['id_user']?>"
                                data-map-point="<?=$point['point']?>"
