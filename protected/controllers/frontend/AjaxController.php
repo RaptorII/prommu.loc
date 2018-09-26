@@ -862,12 +862,12 @@ class AjaxController extends AppController
     {
         $result = array('error'=>true);
         $method = $_SERVER['REQUEST_METHOD'];
-        $params = Yii::app()->getRequest();
-        $prj = $params->getParam('project');
-        
+        $data = Yii::app()->getRequest()->getParam('data');
+        $data = json_decode($data, true);
+        $prj = $data('project');
+
         if($method=='GET') {
-            $type = $params->getParam('type');
-            if($type=='coordinates') {
+            if($data['type']=='coordinates') {
                 $model = new Project();
                 $result = $model->getСoordinates($prj);
             }
