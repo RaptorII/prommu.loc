@@ -126,8 +126,7 @@ class Project extends ARModel
                             'latitude' =>  $arr['latitude'],
                         ));
 
-        if(!$res)
-            return array('error'=>true);
+        return $res ? ['error'=>false] : ['error'=>true];
     }
     /*
     *       Запись новых пользователей
