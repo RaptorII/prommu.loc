@@ -121,7 +121,7 @@ class Project extends ARModel
                             'project' => $arr['project'],
                             'user' => $arr['user'],
                             'point' => $arr['point'],
-                            'date' => date("Y-m-d h-i-s"),
+                            'date' => date("Y-m-d H-i-s"),
                             'longitude' => $arr['longitude'],
                             'latitude' =>  $arr['latitude'],
                         ));

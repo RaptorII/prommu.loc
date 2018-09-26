@@ -68,7 +68,6 @@ $(document).ready(function () {
                 data: {data: JSON.stringify(data)},
                 dataType: 'json',
                 success: function (r) {
-                    console.log(r);
                     r.error==false
                     ? MainProject.showPopup('success','output-gps')
                     : MainProject.showPopup('error','server');
