@@ -48,7 +48,7 @@ $(document).ready(function () {
         attribution: ''
     }).addTo(map);
 
-    function onLocationFound(map,btn) {
+    function onLocationFound(btn) {
         var current_position;
         if (current_position) {
             map.removeLayer(current_position);
@@ -60,7 +60,7 @@ $(document).ready(function () {
         let user_id = $('.global_user_id').val();
         let project_id = $('.global_project_id').val();
 */
-console.log(map);
+console.log(this);
 console.log(btn);
 
         /*if(lat && lng){
@@ -82,8 +82,8 @@ console.log(btn);
     }
 
     $('.project__module').on('click','.app__loc-send',function(){
-        let e = this;
+        let btn = this;
         map.locate();
-        map.on('locationfound', onLocationFound(this, e));
+        map.on('locationfound', onLocationFound(btn));
     });
 });
