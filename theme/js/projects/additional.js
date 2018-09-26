@@ -126,6 +126,9 @@ var MainProject = {
                 case 'delete-task':
                     body = 'Задание успешно удалено';
                     break;
+                case 'output-gps':
+                    body = 'Вы были успешно отмечены на карте';
+                    break;
                 default: break;
             }
         }

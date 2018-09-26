@@ -41,49 +41,45 @@ let IndexTasks = (function () {
 $(document).ready(function () {
     new IndexTasks();
 
-
     var map = L.map('map').setView([55.7251293,37.6167661], 10);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: ''
     }).addTo(map);
 
-    function onLocationFound(btn) {
-        var current_position;
-        if (current_position) {
-            map.removeLayer(current_position);
-        }
-  /*      current_position = L.marker(map.latlng).addTo(map);
-        let points = current_position._latlng;
-        let lat = points.lat;
-        let lng = points.lng;
-        let user_id = $('.global_user_id').val();
-        let project_id = $('.global_project_id').val();
-*/
-console.log(this);
-console.log(btn);
+    function onLocationFound(obj,btn) {
+        let cp = L.marker(obj.latlng).addTo(map),
+            data = {
+                    type : 'coordinates',
+                    project : btn.dataset.project,
+                    user : btn.dataset.user,
+                    point : btn.dataset.point,
+                    latitude :cp._latlng.lat,
+                    longitude : cp._latlng.lng
+                };
 
-        /*if(lat && lng){
+        if(cp._latlng.lat && cp._latlng.lng){
             $.ajax({
                 type: 'POST',
                 url: '/ajax/Project',
-                data: {
-                    latitude:lat,
-                    longitude:lng,
-                    idus:user_id,
-                    project:project_id
-                },
+                data: {data: JSON.stringify(data)},
                 dataType: 'json',
-                success: function (val) {
-
+                success: function (r) {
+                    console.log(r);
+                    r.error!=true
+                    ? MainProject.showPopup('success','output-gps')
+                    : MainProject.showPopup('error','server');
                 }
             });
-        }*/
+        }
+        else {
+            MainProject.showPopup('error','server');
+        }
     }
 
     $('.project__module').on('click','.app__loc-send',function(){
         let btn = this;
-        map.locate();
-        map.on('locationfound', onLocationFound(btn));
+        map.locate({setView: true});
+        map.on('locationfound', function(e){ onLocationFound(e, btn) });
     });
 });
