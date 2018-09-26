@@ -1265,40 +1265,39 @@ class Project extends ARModel
     /*
     *       Получение координат по проекту
     */
-    public function getСoordinates($prj) {
+    public function getСoordinates($arr) {
         $arCond = 'project=:prj';
-        $arPrms[':prj'] = $prj;
+        $arPrms[':prj'] = $arr['project'];
 
-        $user = Yii::app()->getRequest()->getParam('user');
-        $point = Yii::app()->getRequest()->getParam('point');
-        $date = Yii::app()->getRequest()->getParam('date');
-
-        if(isset($user)) {
+        if(isset($arr['user'])) {
             $arCond .= ' AND user=:user';
-            $arPrms[':user'] = $user;            
+            $arPrms[':user'] = $arr['user'];            
         }
-        if(isset($point)) {
+        if(isset($arr['point'])) {
             $arCond .= ' AND point=:point';
-            $arPrms[':point'] = $point;            
+            $arPrms[':point'] = $arr['point'];            
         }
-        if(isset($date)) {
+        if(isset($arr['date'])) {
+            $arr['date'] = date('Y-m-d',$arr['date']);
             $arCond .= ' AND date(date)=:date';
-            $arPrms[':date'] = $date;            
+            $arPrms[':date'] = $arr['date'];            
         }
 
         $arRes = array(); 
-        $sql = Yii::app()->db->createCommand()
+        $arRes = Yii::app()->db->createCommand()
             ->select("*")
             ->from('project_report')
             ->where($arCond, $arPrms)
             ->queryAll();  // поиск всех пользователей проекта  
 
+        if(!sizeof($arRes))
+            $arRes = array('error'=>true);
         /*foreach ($sql as $v)
             $arRes['users'][$v['user']]['points'][$v['point']][] = [
                 'latitude' => $v['latitude'],
                 'longitude' => $v['longitude']
             ];
         $arRes['json'] = json_encode($arRes['users']);*/
-        return $sql;
+        return $arRes;
     }
 }
