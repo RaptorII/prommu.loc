@@ -41,19 +41,22 @@ let IndexTasks = (function () {
 $(document).ready(function () {
     new IndexTasks();
 
-    var map = L.map('map').setView([55.7251293,37.6167661], 10);
+    var btnElement,
+        map = L.map('map').setView([55.7251293,37.6167661], 10)
+                .on('locationfound', onLocationFound);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: ''
-    }).addTo(map);
+    $('.project__module').on('click','.app__loc-send',function(e){ 
+        map.locate();
+        btnElement = this;
+    });
 
-    function onLocationFound(obj,btn) {
-        let cp = L.marker(obj.latlng).addTo(map),
+    function onLocationFound(e) {
+        let cp = L.marker(e.latlng).addTo(map),
             data = {
                     type : 'coordinates',
-                    project : btn.dataset.project,
-                    user : btn.dataset.user,
-                    point : btn.dataset.point,
+                    project : btnElement.dataset.project,
+                    user : btnElement.dataset.user,
+                    point : btnElement.dataset.point,
                     latitude :cp._latlng.lat,
                     longitude : cp._latlng.lng
                 };
@@ -66,7 +69,7 @@ $(document).ready(function () {
                 dataType: 'json',
                 success: function (r) {
                     console.log(r);
-                    !r.error
+                    r.error==false
                     ? MainProject.showPopup('success','output-gps')
                     : MainProject.showPopup('error','server');
                 }
@@ -75,11 +78,5 @@ $(document).ready(function () {
         else {
             MainProject.showPopup('error','server');
         }
-    }
-
-    $('.project__module').on('click','.app__loc-send',function(){
-        let btn = this;
-        map.locate();
-        map.on('locationfound', function(e){ onLocationFound(e, btn) });
-    });
+    } 
 });

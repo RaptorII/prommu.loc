@@ -851,7 +851,7 @@ class AjaxController extends AppController
     */
     public function actionProject()
     {
-        $result = array();
+        $result = array('error'=>true);
         $model = new Project();
         $data = Yii::app()->getRequest()->getParam('data');
         $data = json_decode($data, true, 5, JSON_BIGINT_AS_STRING);
@@ -864,9 +864,6 @@ class AjaxController extends AppController
             case 'POST':
                 if($data['type']=='coordinates')
                     $result = $model->recordReport($data);
-                break;
-            default:
-                $result = array('error'=>true);
                 break;
         }
 
