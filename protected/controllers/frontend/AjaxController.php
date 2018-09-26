@@ -864,7 +864,7 @@ class AjaxController extends AppController
         $method = $_SERVER['REQUEST_METHOD'];
         $data = Yii::app()->getRequest()->getParam('data');
         $data = json_decode($data, true);
-        $prj = $data('project');
+        $prj = $data['project'];
 
         if($method=='GET') {
             if($data['type']=='coordinates') {
@@ -872,6 +872,6 @@ class AjaxController extends AppController
                 $result = $model->getСoordinates($prj);
             }
         }
-        echo CJSON::encode($result);
+        echo CJSON::encode($data);
     }
 }
