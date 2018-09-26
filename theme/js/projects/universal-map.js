@@ -4,7 +4,7 @@
 
 let IndexMap = (function () {
 
-    IndexRoute.prototype.mainMapContainer = false;
+    IndexMap.prototype.mainMapContainer = false;
 
     function IndexMap() {
         this.init();
@@ -14,7 +14,7 @@ let IndexMap = (function () {
         let self = this;
         self.mainMapContainer =  self.initializationMapPopup();
 
-        $('.js-get-map').click(function () {
+        $(".content-block").on('click', '.js-get-map', function() {
 
             let map_project= $(this).data('map-project');
             let map_user = $(this).data('map-user');

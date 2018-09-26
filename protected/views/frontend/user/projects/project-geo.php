@@ -7,6 +7,13 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item-geo.css');
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/item-geo.js', CClientScript::POS_END);
 
+Yii::app()->getClientScript()->registerScriptFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.css');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/universal-map.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-map.css');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/jquery.fancybox.css');
+
 /*$viData['dates'] = array(
     'bdate' => '07.02.18',
     'bdate-full' => '07.02.2018',
@@ -354,7 +361,14 @@ $viData['states'] = array(
                                 <td>
                                     <div class="geo__table-cell geo__table-loc">
                                         <span><?=$viData['points'][$valueItem]['adres'];?></span>
-                                        <b class="js-g-hashint" title="Посмотреть на карте"></b>
+
+
+                                        <b
+                                            data-map-project="<?=$project?>"
+                                            data-map-user="<?=$idus?>"
+                                            data-map-point="<?=$viData['points'][$valueItem]['point']?>"
+                                            data-map-date="<?=$keyUnix?>"
+                                            class="js-g-hashint js-get-map" title="Посмотреть на карте"></b>
                                     </div>
                                 </td>
                                 <td>

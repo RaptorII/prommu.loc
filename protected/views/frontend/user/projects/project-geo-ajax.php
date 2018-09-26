@@ -48,8 +48,13 @@
                             <td>
                                 <div class="geo__table-cell">
                                     <div class="geo__table-loc">
-                                        <span>АТБ1</span>
-                                        <b class="js-g-hashint" title="Посмотреть на карте"></b>
+                                        <span><?=$viData['points'][$valueUser[0]]['name']?></span>
+                                        <b
+                                            data-map-project="<?=$project?>"
+                                            data-map-user="<?=$keyUser?>"
+                                            data-map-point="<?=$viData['points'][$valueUser[0]]['point']?>"
+                                            data-map-date="<?=$keyTimeStamp?>"
+                                            class="js-g-hashint js-get-map" title="Посмотреть на карте"></b>
                                     </div>
                                 </div>
                             </td>
