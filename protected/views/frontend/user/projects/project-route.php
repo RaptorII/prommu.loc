@@ -90,11 +90,10 @@ $arFilterData = [
         ],
       ],
       'DATA_LI_VISIBLE' => '0',
-
       'DATA_DEFAULT' => '0',
       'CONDITION' => [
         'BLOCKED' => 'false',
-        'PARENT_ID' => '2',
+        'PARENT_ID' => '0',
         'PARENT_VALUE' => '',
         'PARENT_VALUE_ID' => []
       ]
@@ -115,7 +114,6 @@ foreach ($viData['filter']['metros'] as $id => $metro) {
     	];
 }
 ?>
-
 <div class="row project">
   <div class="col-xs-12">
     <? require __DIR__ . '/project-nav.php'; ?>

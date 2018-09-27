@@ -308,7 +308,7 @@ class Project extends ARModel
             $arRes['conditions'] .= " AND pc.metro=:metro";
             $arRes['values'][':metro'] = $metro;
         }
-        
+
         return $arRes;
     }
     /*
@@ -1391,7 +1391,7 @@ class Project extends ARModel
                 $arRes['tt_index'][] = $v['adres'];
 
             if(isset($v['id_metro']))
-                $arRes['metro'][$v['id_metro']] = array(
+                $arRes['metros'][$v['id_metro']] = array(
                     'id' => $v['id_metro'],
                     'metro' => $v['metro'],
                     'id_city' => $v['id_city'],
