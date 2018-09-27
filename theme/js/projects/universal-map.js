@@ -31,16 +31,16 @@ let IndexMap = (function () {
         //Клик по значку кнопке
         $(".content-block").on('click', '.map__universal-button', function() {
 
-            let map_project= $(this).data('map-project');
-            let map_user = $(this).data('map-user');
-            let map_point = $(this).data('map-point');
-            let map_date = $(this).data('map-date');
+            let map_project= $(this).data('map-project')+"";
+            let map_user = $(this).data('map-user')+"";
+            let map_point = $(this).data('map-point')+"";
+            let map_date = $(this).data('map-date')+"";
             let type = 'coordinates';
 
 
             var map_container = $(this).closest('.map__universal-container').find('.map__universal')
             if(map_container && $(map_container).data('map')!='Y') {
-                console.log(123);
+
                 var map_container = $(this).closest('.map__universal-container').find('.map__universal');
                 var id = 'map_' + map_project + '_' + map_user + '_' + map_date;
                 $(map_container).attr('id', id);
@@ -279,13 +279,24 @@ let IndexMap = (function () {
     };
 
 
-    IndexMap.prototype.initData = function ( project, user, point, date, type) {
+    IndexMap.prototype.initData = function (project, user, point, date, type) {
         var data_object = {};
-        data_object.project = project;
-        data_object.user = user;
-        data_object.point = point;
-        data_object.date = date;
-        data_object.type = type;
+
+        if(project.length>0) {
+            data_object.project = project;
+        }
+        if(user.length>0) {
+            data_object.user = user;
+        }
+        if(point.length>0){
+            data_object.point = point;
+        }
+        if(date.length>0) {
+            data_object.date = date;
+        }
+        if(type.length>0) {
+            data_object.type = type;
+        }
 
         return data_object;
     };

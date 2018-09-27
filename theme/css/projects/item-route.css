@@ -203,7 +203,7 @@
 }
 
 .routes__map{
-    width: 1140px;
+    width: 100%;
     height: 0px;
     -webkit-transition: all ease-out 1s;
     -moz-transition: all ease-out 1s;
