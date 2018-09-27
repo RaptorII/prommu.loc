@@ -81,13 +81,13 @@ let IndexRoute = (function () {
 
             if (!self.cnt) {
                 let e = document.createElement("script");
-                e.src = self.urlMap;
-                e.type = "text/javascript";
+                //e.src = self.urlMap;
+                //e.type = "text/javascript";
                 document.getElementsByTagName("head")[0].appendChild(e);
                 self.cnt = true;
             }
             else if (!$(smElement).html().length) {
-                smLoadMap();
+                //smLoadMap();
             }
         }
         else {

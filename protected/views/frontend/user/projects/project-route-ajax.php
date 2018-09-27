@@ -7,7 +7,7 @@
     ?>
       <div class="route__item">
         <h2 class="route__item-title"><?=$city['city']?> <span><?=$city['date']?></span></h2>
-        <div class="route__item-box">
+        <div class="route__item-box map__universal-container">
           <table class="route__table">
             <thead>
               <tr>
@@ -65,10 +65,17 @@
               </tr>
             </tbody>
           </table>
-          <div class="routes__map"></div>
+          <?/*<div class="routes__map"></div>*/?>
+
+          <div class="routes__map map__universal"></div>
           <div class="routes__btns">
             <a href="#content_top" class="route__watch-btn route__button-change">ИЗМЕНИТЬ</a>
-            <span class="route__watch-btn route__button-map">СМОТРЕТЬ МАРШРУТ</span>
+            <span
+                     data-map-project="<?=$project?>"
+                     data-map-user="<?=$id_user?>"
+                     data-map-point=""
+                     data-map-date="<?=$unix?>"
+                     class="route__watch-btn route__button-map map__universal-button">СМОТРЕТЬ МАРШРУТ</span>
           </div>
         </div>                
       </div>
