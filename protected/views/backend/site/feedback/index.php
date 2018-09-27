@@ -146,8 +146,9 @@ function ShowName($email, $type, $names)
 }
 function ShowStatus($id, $ismoder)
 {
-$status = ['не решена','решена'];
-    $st_ico = ["label-warning", "label-success"];
+$status = ['обработка','дубль','передан в отдел','ожидание ответа','спам','решено'];
+
+    $st_ico = ["label-warning","label-double", 'label-otdel', 'label-pending', 'label-spam', "label-success" ];
     $html = 
     '<div class="dropdown">
     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  title="статус: ' . $status[$ismoder] . '">
@@ -155,8 +156,8 @@ $status = ['не решена','решена'];
     <span class="caret"></span>
     </button>';
     $html .= '<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">';
-    for ($i = 0; $i < 2; $i++) {
-        $html .= '<li ><a href = "#" onclick = "doStatusModer(' . $id . ', ' . $i . ')" ><span class="label ' . $st_ico[$i] . '"><i class="icon-star icon-white"></i></span> ' . $status[$i] . '</a></li >';
+    for ($i = 0; $i < 6; $i++) {
+        $html .= '<li ><a href = "#" onclick = "doStatusModer(' . $id . ', ' . $i . ')" ><span class="label ' . $st_ico[$i] . '"><i class="icon-star icon-white">'.$status[$i].'</i></span> ' . $status[$i] . '</a></li >';
     }
     $html .= '</ul></div>';
     return $html;
