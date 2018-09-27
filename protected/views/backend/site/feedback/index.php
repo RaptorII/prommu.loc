@@ -152,7 +152,7 @@ $status = ['обработка','дубль','передан в отдел','о�
     $html = 
     '<div class="dropdown">
     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  title="статус: ' . $status[$ismoder] . '">
-    <span class="label ' . $status[$ismoder] . '"><i class="icon-star icon-white"></i></span>
+    <span class="label ' . $st_ico[$ismoder] . '"><i class="icon-star icon-white">'.$status[$ismoder].'</i></span>
     <span class="caret"></span>
     </button>';
     $html .= '<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">';
