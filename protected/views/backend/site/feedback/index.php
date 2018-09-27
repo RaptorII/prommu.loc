@@ -14,6 +14,15 @@
     border: #ecf0f5;
     width: 94px;
 }
+.label-double {
+    background-color: #3c8dbc;
+}
+.label-otdel {
+    background-color: #9947c6;
+}
+.label-pending {
+    background-color: #999;
+}
 </style>
 <?php 
 echo CHtml::form('/admin/site/UserUpdate?id=0','POST',array("id"=>"form"));
