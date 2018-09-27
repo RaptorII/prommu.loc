@@ -278,6 +278,9 @@ class Project extends ARModel
         $bdate = Yii::app()->getRequest()->getParam('bdate');
         $edate = Yii::app()->getRequest()->getParam('edate');
         $point = Yii::app()->getRequest()->getParam('point');
+        $tname = Yii::app()->getRequest()->getParam('tt_name');
+        $tindex = Yii::app()->getRequest()->getParam('tt_index');
+        $metro = Yii::app()->getRequest()->getParam('metro');
         $filter = Yii::app()->getRequest()->getParam('filter');
 
         if(!isset($filter))
@@ -295,7 +298,17 @@ class Project extends ARModel
             $arRes['conditions'] .= ' AND pc.point=:point';
             $arRes['values'][':point'] = $point;
         }
-
+        if(!empty($tname)) {
+            $arRes['conditions'] .= " AND pc.name LIKE '".$tname."'";
+        }
+        if(!empty($tindex)) {
+            $arRes['conditions'] .= " AND pc.adres LIKE '".$tindex."'";
+        }
+        if($metro>0) {
+            $arRes['conditions'] .= " AND pc.metro=:metro";
+            $arRes['values'][':metro'] = $metro;
+        }
+        
         return $arRes;
     }
     /*
@@ -1032,7 +1045,7 @@ class Project extends ARModel
 
         ksort($arI);
         $arRes['items'] = $arI;
-        $arRes['filter'] = $this->buildAdressArray($arr['original'])['filter'];
+        $arRes['filter'] = $this->getFilter($arRes['points']);
 
         return $arRes;
     }
@@ -1341,7 +1354,55 @@ class Project extends ARModel
 
         ksort($arI);
         $arRes['items'] = $arI;
-        $arRes['filter'] = $this->buildAdressArray($arr['original'])['filter'];
+        $arRes['filter'] = $this->getFilter($arRes['points']);
+
+        return $arRes;
+    }
+    /*
+    *       ормирование данных фильтра
+    */
+    public function getFilter($arr) {
+        if(!count($arr))
+            return array();
+    
+        $first = reset($arr);
+        $arRes = array(
+                'bdate' => $first['bdate'],
+                'edate' => $first['edate'],
+                'bdate-short' => $first['bdate'],
+                'edate-short' => $first['edate']
+            );
+
+        foreach ($arr as $v) {
+            if(strtotime($v['bdate']) < strtotime($arRes['bdate']))
+                $arRes['bdate'] = $v['bdate'];
+
+            if(strtotime($v['edate']) > strtotime($arRes['edate']))
+                $arRes['edate'] = $v['edate'];
+
+            $arRes['cities'][$v['id_city']] = array(
+                    'city' => $v['city'],
+                    'hasmetro' => $v['ismetro']
+                );
+
+            if(!empty($v['name']))
+                $arRes['tt_name'][] = $v['name'];
+            if(!empty($v['adres']))
+                $arRes['tt_index'][] = $v['adres'];
+
+            if(isset($v['id_metro']))
+                $arRes['metro'][$v['id_metro']] = array(
+                    'id' => $v['id_metro'],
+                    'metro' => $v['metro'],
+                    'id_city' => $v['id_city'],
+                    'city' => $v['city']
+                );
+        }
+
+        $arRes['bdate-short'] = date('d.m.y', strtotime($arRes['bdate']));
+        $arRes['edate-short'] = date('d.m.y', strtotime($arRes['edate']));
+        $arRes['tt_name'] = array_unique($arRes['tt_name']);
+        $arRes['tt_index'] = array_unique($arRes['tt_index']);
 
         return $arRes;
     }

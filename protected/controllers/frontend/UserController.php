@@ -1424,6 +1424,14 @@ class UserController extends AppController
                     $data = $model->getProject($id);
                     $data = $model->buildRouteArray($data);
                     $data['gps'] = $model->getСoordinates(['project'=>$id]);
+                    if(Yii::app()->request->isAjaxRequest) {
+                        $this->renderPartial(
+                            'projects/project-route-ajax',
+                            array('viData' => $data, 'project' => $id),
+                            false, true
+                        );
+                        return;
+                    }
                     $view = MainConfig::$VIEW_PROJECT_ITEM_ROUTE;
                     break;
                 case 'tasks':

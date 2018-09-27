@@ -1,3 +1,5 @@
+.project__module,
+.project__module *{ font-family: RobotoCondensed-Regular, verdana, arial; }
 .project__route .prommu__universal-filter{
     padding: 0px 20px 15px 10px;
     background: #f5f5f5;
