@@ -31,10 +31,10 @@ let IndexMap = (function () {
         //Клик по значку кнопке
         $(".content-block").on('click', '.map__universal-button', function() {
 
-            let map_project= $(this).data('map-project')+"";
-            let map_user = $(this).data('map-user')+"";
-            let map_point = $(this).data('map-point')+"";
-            let map_date = $(this).data('map-date')+"";
+            let map_project= $(this).data('map-project');
+            let map_user = $(this).data('map-user');
+            let map_point = $(this).data('map-point');
+            let map_date = $(this).data('map-date');
             let type = 'coordinates';
 
 
@@ -281,6 +281,12 @@ let IndexMap = (function () {
 
     IndexMap.prototype.initData = function (project, user, point, date, type) {
         var data_object = {};
+
+        project = project.toString();
+        user = user.toString();
+        point = point.toString();
+        date = date.toString();
+        type = type.toString();
 
         if(project.length>0) {
             data_object.project = project;
