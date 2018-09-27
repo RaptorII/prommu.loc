@@ -377,7 +377,7 @@ $viData['states'] = array(
                                     <div class="geo__table-cell">07.02.2018 с 9:00 до 18:00</div>
                                 </td>
                                 <td>
-                                    <div class="geo__table-cell">12</div>
+                                    <div class="geo__table-cell"><?=count($viData['tasks'][$unixTime][$valueItem][$idus])?></div>
                                 </td>
                             </tr>
                             <? endforeach; ?>
