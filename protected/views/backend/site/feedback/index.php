@@ -23,6 +23,9 @@
 .label-pending {
     background-color: #999;
 }
+.label-spam {
+    background-color: #ff7373;
+}
 </style>
 <?php 
 echo CHtml::form('/admin/site/UserUpdate?id=0','POST',array("id"=>"form"));
