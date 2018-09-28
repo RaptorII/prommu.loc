@@ -290,7 +290,12 @@ class Project extends ARModel
             $arRes['values'][':city'] = $city;
         }
         if(isset($bdate) && isset($edate)) {
-            $arRes['conditions'] .= ' AND pc.bdate>=:bdate AND pc.edate<=:edate';
+            $arRes['conditions'] .= ' AND ((pc.bdate>=:bdate AND pc.edate<=:edate) OR (pc.edate>=:bdate AND pc.edate<=:edate))';
+            //$arRes['conditions'] .= ' AND (pc.edate BETWEEN :bdate AND :edate)';
+            //$arRes['conditions'] .= ' AND (pc.edate BETWEEN :bdate AND :edate)';
+
+            //WHERE Value BETWEEN 10 AND 20
+
             $arRes['values'][':bdate'] = date('Y.m.d', strtotime($bdate));
             $arRes['values'][':edate'] = date('Y.m.d', strtotime($edate));
         }
