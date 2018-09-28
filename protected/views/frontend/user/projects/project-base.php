@@ -14,7 +14,7 @@
 					<a href="/user/uploadprojectxls?id=<?=$project?>&type=index" id="add-xls">Изменить адресную программу</a>
 					<a href="/uploads/prommu_example.xls" download>Скачать пример для добавления</a>
 				</div>
-				<h1 class="project__title">ПРОЕКТ: <span><?=$viData['title']?></span></h1>
+				<h1 class="project__title">ПРОЕКТ: <span><?=$viData['project']['name']?></span></h1>
 				<table class="project__program">
 					<tbody>
 						<? foreach ($viData['location'] as $id => $arCity): ?>

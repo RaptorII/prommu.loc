@@ -6,22 +6,38 @@
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/emp-list.css');
 ?>
 <div class="row projects">
-	<div class="col-xs-12">
-		<?php if(count($viData)): ?>
-			<h1 class="projects__title">ВЫБЕРИТЕ ПРОЕКТ</h1>
+  <div class="col-xs-12">
+    <div class="projects__header">
+      <span class="projects__header-name"><?=$viData['employer']['name']?></span>
+      <a class='projects__btn prmu-btn' href='<?=MainConfig::$PAGE_PROJECT_NEW?>'>
+      	<span>Добавить проект</span>
+      </a>  
+    </div>
+  </div>
+	<div class="col-xs-12 col-sm-4 col-lg-3">
+		<img src="<?=$viData['employer']['src']?>" alt="<?=$viData['employer']['name']?>" class="projects__user">
+	</div>
+	<div class="col-xs-12 col-sm-8 col-lg-9">
+		<?php if(count($viData['items'])): ?>
 			<div class="projects__list">
-				<?php for($i = 0; $i < count($viData); $i ++):?>
-					<a href="<? echo MainConfig::$PAGE_PROJECT_LIST . '/' . $viData[$i]['project'] ?>" class="projects__item"><?=$viData[$i]['name']?></a>
-				<?php endfor; ?>
-			</div>
-			<div class="projects__btn">
-				<a href="<?=MainConfig::$PAGE_PROJECT_NEW?>">+ Добавить проект</a>
+				<?php foreach ($viData['items'] as $id => $p): ?>
+					<div class="projects__item">
+						<a 
+							href="<? echo MainConfig::$PAGE_PROJECT_LIST . '/' . $id ?>" 
+							class="projects__item-name"><?=$p['name']?></a>
+						<div class="projects__item-data">
+							<div class="projects__item-date">Дата: <?=$p['date']?></div>
+							<div class="projects__item-staff">Персонал: 
+								<span class="js-g-hashint green" title="Приняли предложение"><?=$p['agreed']?></span> /
+								<span class="js-g-hashint grey" title="Пока без реакции"><?=$p['ignored']?></span> /
+								<span class="js-g-hashint red" title="Отказались"><?=$p['refused']?></span>
+							</div>
+						</div>		
+					</div>
+				<?php endforeach; ?>
 			</div>
 		<?php else: ?>
 			<h1 class="projects__title">У ВАС ПОКА НЕТ ПРОЕКТОВ</h1>
-			<div class="projects__btn empty">
-				<a href="<?=MainConfig::$PAGE_PROJECT_NEW?>">+ Добавить проект</a>
-			</div>
 		<?php endif; ?>
 	</div>
 </div>

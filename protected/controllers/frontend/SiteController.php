@@ -986,7 +986,19 @@ class SiteController extends AppController
                 case 'prommu_card':
                 case 'medical-record':
                     $view = MainConfig::$VIEWS_SERVICE_VIEW; 
-                    break;                   
+                    break;
+                case 'conditions':
+                    $model = new PagesContent;
+                    $lang = Yii::app()->session['lang'];
+                    $content = $model->getPageContent($id, $lang);
+                    $this->breadcrumbs = array($content['name'] => array(MainConfig::$PAGE_PAGES . DS . $content['link']));
+                    $this->render(
+                        MainConfig::$VIEWS_DB_PAGES, 
+                        array('content' => $content), 
+                        array('pageTitle' => $content['name'], 'htmlTitle' => $content['name'])
+                    );
+                    return;
+                    break;
                 default:
                     throw new CHttpException(404, 'Error'); 
                     break;
