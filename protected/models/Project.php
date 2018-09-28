@@ -219,15 +219,54 @@ class Project extends ARModel
     *       Проекты для Р
     */
     public function getProjectEmployer(){
-			$idus = Share::$UserProfile->id;
-			$result = Yii::app()->db->createCommand()
-				->select("*")
-				->from('project p')
-				->where('p.id_user = :idus', array(':idus' =>$idus))
-				->order('p.crdate desc')
-				->queryAll();
+        $arRes['items'] = array();
+        $idus = Share::$UserProfile->id;
+        $sql = Yii::app()->db->createCommand()
+            ->select("
+                    p.project, 
+                    p.name, 
+                    p.crdate, 
+                    pu.status, 
+                ")
+            ->from('project p')
+            ->where('p.id_user=:idus', array(':idus'=>$idus))
+            ->leftjoin('project_user pu', 'pu.project=p.project')
+            ->order('p.crdate desc')
+            ->queryAll();
 
-			return $result;
+        foreach ($sql as $v) {
+            $p = $v['project'];
+            $arRes['items'][$p]['name'] = $v['name']; 
+            $arRes['items'][$p]['date'] = date('d.m.Y',strtotime($v['crdate']));
+
+            if(!isset($arRes['items'][$p]['ignored']))
+                $arRes['items'][$p]['ignored'] = 0;
+
+            if(!isset($arRes['items'][$p]['agreed']))
+                $arRes['items'][$p]['agreed'] = 0;
+
+            if(!isset($arRes['items'][$p]['refused']))
+                $arRes['items'][$p]['refused'] = 0;
+            
+            switch ($v['status']) {
+                case '0': $arRes['items'][$p]['ignored']++; break;
+                case '1': $arRes['items'][$p]['agreed']++; break;
+                case '-1': $arRes['items'][$p]['refused']++; break;
+            }
+        }
+
+        $arRes['employer'] = Yii::app()->db->createCommand()
+            ->select("name, logo")
+            ->from('employer')
+            ->where('id_user=:idus', array(':idus'=>$idus))
+            ->queryRow();
+
+        $arRes['employer']['src'] = DS . MainConfig::$PATH_EMPL_LOGO . DS 
+            . (!$arRes['employer']['logo'] 
+                ? 'logo.png' 
+                : $arRes['employer']['logo'] . '400.jpg');
+
+        return $arRes;
     }
     /*
     *
@@ -254,9 +293,9 @@ class Project extends ARModel
 			$arRes = array();
 			foreach ($sql as $v) {
 				$v['link'] = MainConfig::$PAGE_PROJECT_LIST . DS . $v['project'];
-        $v['src'] = DS . MainConfig::$PATH_EMPL_LOGO 
-          . DS . (!$v['logo'] ? 'logo.png' : $v['logo'] . '100.jpg');
-        $v['profile'] = MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user'];
+                $v['src'] = DS . MainConfig::$PATH_EMPL_LOGO 
+                  . DS . (!$v['logo'] ? 'logo.png' : $v['logo'] . '100.jpg');
+                $v['profile'] = MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user'];
 
 				switch ($v['status']) {
 					case '0': $arRes['new-items'][] = $v; break;
