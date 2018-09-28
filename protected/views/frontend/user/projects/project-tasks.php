@@ -55,8 +55,9 @@ $arFilterData = [
     ]
 ];
 foreach ($viData['filter']['cities'] as $id => $city)
-  $arFilterData['FILTER_SETTINGS'][0]['DATA'][$id] = ['title'=>$city, 'id'=>$id];
+  $arFilterData['FILTER_SETTINGS'][0]['DATA'][$id] = ['title'=>$city['city'], 'id'=>$id];
 ?>
+
 <div class="filter__veil"></div>
 <div class="row project">
 	<div class="col-xs-12">
