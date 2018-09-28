@@ -1501,7 +1501,7 @@ class UserController extends AppController
         }
         else{
             if($type==3) { // employer
-                $data = $model->getProjectEmployer();
+                $data = $model->getProjectEmployer($id=='arcive' ? 1 : 0);
                 $view = MainConfig::$VIEW_EMP_PROJECT_LIST;
             }
             if($type==2) { // app

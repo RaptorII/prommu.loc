@@ -24,6 +24,13 @@
             <?php endif; ?>
             <div class="col-xs-12">
                 <div class="content-header">Личный кабинет работодателя</div>
+                <div class="content-header-add">
+                    <span>+</span>
+                    <ul>
+                        <li><a href="<?=MainConfig::$PAGE_VACPUB?>">Добавить вакансию</a></li>
+                        <li><a href="<?=MainConfig::$PAGE_PROJECT_NEW?>">Добавить проект</a></li>
+                    </ul>
+                </div>
                 <div class="content-header-line"></div>
             </div>
         </div>

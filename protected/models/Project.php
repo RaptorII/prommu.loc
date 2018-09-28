@@ -218,8 +218,8 @@ class Project extends ARModel
     /*
     *       Проекты для Р
     */
-    public function getProjectEmployer(){
-        $arRes['items'] = array();
+    public function getProjectEmployer($isArcive){
+        $arRes = ['items' => [], 'archive' => []];
         $idus = Share::$UserProfile->id;
         $sql = Yii::app()->db->createCommand()
             ->select("
@@ -247,7 +247,7 @@ class Project extends ARModel
 
             if(!isset($arRes['items'][$p]['refused']))
                 $arRes['items'][$p]['refused'] = 0;
-            
+
             switch ($v['status']) {
                 case '0': $arRes['items'][$p]['ignored']++; break;
                 case '1': $arRes['items'][$p]['agreed']++; break;
