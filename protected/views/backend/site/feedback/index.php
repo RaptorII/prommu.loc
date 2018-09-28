@@ -14,6 +14,18 @@
     border: #ecf0f5;
     width: 94px;
 }
+.label-double {
+    background-color: #3c8dbc;
+}
+.label-otdel {
+    background-color: #9947c6;
+}
+.label-pending {
+    background-color: #999;
+}
+.label-spam {
+    background-color: #ff7373;
+}
 </style>
 <?php 
 echo CHtml::form('/admin/site/UserUpdate?id=0','POST',array("id"=>"form"));
@@ -146,16 +158,17 @@ function ShowName($email, $type, $names)
 }
 function ShowStatus($id, $ismoder)
 {
-$status = ['не решена','решена'];
-    $st_ico = ["label-warning", "label-success"];
+$status = ['обработка','дубль','передан в отдел','ожидание ответа','спам','решено'];
+
+    $st_ico = ["label-warning","label-double", 'label-otdel', 'label-pending', 'label-spam', "label-success" ];
     $html = 
     '<div class="dropdown">
     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  title="статус: ' . $status[$ismoder] . '">
-    <span class="label ' . $st_ico[$ismoder] . '"><i class="icon-star icon-white"></i></span>
+    <span class="label ' . $st_ico[$ismoder] . '"><i class="icon-star icon-white">'.$status[$ismoder].'</i></span>
     <span class="caret"></span>
     </button>';
     $html .= '<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">';
-    for ($i = 0; $i < 2; $i++) {
+    for ($i = 0; $i < 6; $i++) {
         $html .= '<li ><a href = "#" onclick = "doStatusModer(' . $id . ', ' . $i . ')" ><span class="label ' . $st_ico[$i] . '"><i class="icon-star icon-white"></i></span> ' . $status[$i] . '</a></li >';
     }
     $html .= '</ul></div>';
