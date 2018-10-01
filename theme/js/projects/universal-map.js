@@ -59,7 +59,7 @@ let IndexMap = (function () {
 
     IndexMap.prototype.initializationMapPopup = function () {
         $('body').append('<div class="map__container"><div id="map_main"></div></div>');
-        $('body').append('<div class="map__error">Ошибка</div>');
+        $('body').append('<div class="map__error">Данные не найдены</div>');
 
         var startPoint = [];
         startPoint.push('55.7527111');

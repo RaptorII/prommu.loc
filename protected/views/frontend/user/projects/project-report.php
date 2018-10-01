@@ -6,6 +6,13 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/un
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-filter.css');
 /***********UNIVERSAL FILTER************/
 
+Yii::app()->getClientScript()->registerScriptFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.css');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/universal-map.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-map.css');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/jquery.fancybox.css');
+
 $arFilterData = [
     'ID' => $project, //Обязательное свойство!
     'FILTER_ADDITIONAL_VALUE' => [
@@ -36,14 +43,6 @@ $arFilterData = [
                 0 => [
                     'title' => 'Все',
                     'id' => '0'
-                ],
-                1 => [
-                    'title' => 'Москва',
-                    'id' => '1'
-                ],
-                2 => [
-                    'title' => 'Гонконг',
-                    'id' => '2'
                 ]
 
             ],
@@ -54,16 +53,16 @@ $arFilterData = [
             'TYPE' => 'calendar',
             'INPUT_NAME' => 'bdate',
             'DATA' => [],
-            'DATA_DEFAULT' => '25.08.2018',
-            'DATA_SHORT' => '25.08.18'
+            'DATA_DEFAULT' => $viData['filter']['bdate'],
+            'DATA_SHORT' => $viData['filter']['bdate-short']
         ],
         4 => [
             'NAME' => 'По',
             'TYPE' => 'calendar',
             'INPUT_NAME' => 'edate',
             'DATA' => [],
-            'DATA_DEFAULT' => '30.08.2018',
-            'DATA_SHORT' => '30.08.18'
+            'DATA_DEFAULT' => $viData['filter']['edate'],
+            'DATA_SHORT' => $viData['filter']['edate-short']
         ],
         5 => [
             'NAME' => 'Название и адрес ТТ',
@@ -92,11 +91,11 @@ $arFilterData = [
                 ],
                 3 => [
                     'title' => 'Опоздал',
-                    'id' => '2'
+                    'id' => '3'
                 ],
                 4 => [
                     'title' => 'Не опоздал',
-                    'id' => '2'
+                    'id' => '4'
                 ]
 
             ],
@@ -104,11 +103,17 @@ $arFilterData = [
         ]
     ]
 ];
+
+foreach ($viData['filter']['cities'] as $key => $value):
+    $arFilterData['FILTER_SETTINGS'][2]['DATA'][$key] = ['title' => $value['city'], 'id' => $key];
+endforeach;
 ?>
 
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
 <? print_r($viData); ?>
 </pre>
+
+
 
 <div class="row project">
     <div class="col-xs-12">
@@ -132,409 +137,7 @@ $arFilterData = [
     </div>
 
 
-    <div class="report__content">
-        <div class="report__infoblock">
-            <div class="report__person">
-                <div class="report__person-main">
-                    <div class="report__person-image">
-                        <img src="http://n1s1.starhit.ru/98/88/17/988817db6d167526849b082151b49a00/480x497_0_41ed55af84b672870b6db9d9401c9604@480x497_0xc0a8399a_17479801141492689970.jpeg">
-                    </div>
-                    <div class="report__person-name">
-                        Джеки Чан
-                    </div>
-                </div>
-
-                <div class="report__person-please">
-                    <div class="report__person-city">Гонконг</div>
-                    <div class="report__person-date">05.09.2018</div>
-                </div>
-            </div>
-
-            <table class="route__table report__table">
-                <thead>
-                <tr>
-                    <th>Название и адрес ТТ</th>
-                    <th>Дата</th>
-                    <th>План прибытия</th>
-                    <th>факт прибытия</th>
-                    <th>План убыл</th>
-                    <th>Факт убыл</th>
-                    <th>Пробыл</th>
-                    <th>Перемещение</th>
-                    <th>Задачи план</th>
-                    <th>Задачи факт</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span>Ул. Чаджуня 23</span>
-                            <span class="report__info-main">АТБ1</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            15.02.2018
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            в 10:00
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">в 10:15</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            в 12:00
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">в 12:15</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            55 мин.
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            30 мин.
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            3
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">2</span>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span>Ул. Фуньсуня 23</span>
-                            <span class="report__info-main">АТБ1</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            15.02.2018
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            в 10:00
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">в 10:15</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            в 12:00
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">в 12:15</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            55 мин.
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            30 мин.
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            3
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">2</span>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span>Ул. Зеросуня 23</span>
-                            <span class="report__info-main">АТБ1</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            15.02.2018
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            в 10:00
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">в 10:15</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            в 12:00
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">в 12:15</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            55 мин.
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            30 мин.
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            3
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">2</span>
-                        </div>
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
-
-            <div class="report__road-container">
-                <div class="report__road-see">Посмотреть маршрут на карте <b class="js-g-hashint tooltipstered"></b>
-                </div>
-            </div>
-        </div>
-
-        <div class="report__infoblock">
-            <div class="report__person">
-                <div class="report__person-main">
-                    <div class="report__person-image">
-                        <img src="http://n1s1.starhit.ru/98/88/17/988817db6d167526849b082151b49a00/480x497_0_41ed55af84b672870b6db9d9401c9604@480x497_0xc0a8399a_17479801141492689970.jpeg">
-                    </div>
-                    <div class="report__person-name">
-                        Джеки Чан
-                    </div>
-                </div>
-
-                <div class="report__person-please">
-                    <div class="report__person-city">Гонконг</div>
-                    <div class="report__person-date">05.09.2018</div>
-                </div>
-            </div>
-
-            <table class="route__table report__table">
-                <thead>
-                <tr>
-                    <th>Название и адрес ТТ</th>
-                    <th>Дата</th>
-                    <th>План прибытия</th>
-                    <th>факт прибытия</th>
-                    <th>План убыл</th>
-                    <th>Факт убыл</th>
-                    <th>Пробыл</th>
-                    <th>Перемещение</th>
-                    <th>Задачи план</th>
-                    <th>Задачи факт</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span>Ул. Чаджуня 23</span>
-                            <span class="report__info-main">АТБ1</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            15.02.2018
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            в 10:00
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">в 10:15</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            в 12:00
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">в 12:15</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            55 мин.
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            30 мин.
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            3
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">2</span>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span>Ул. Фуньсуня 23</span>
-                            <span class="report__info-main">АТБ1</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            15.02.2018
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            в 10:00
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">в 10:15</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            в 12:00
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">в 12:15</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            55 мин.
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            30 мин.
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            3
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">2</span>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span>Ул. Зеросуня 23</span>
-                            <span class="report__info-main">АТБ1</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            15.02.2018
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            в 10:00
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">в 10:15</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            в 12:00
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">в 12:15</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            55 мин.
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            30 мин.
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            3
-                        </div>
-                    </td>
-                    <td>
-                        <div class="route__table-cell border">
-                            <span class="report__info-main">2</span>
-                        </div>
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
-
-            <div class="report__road-container">
-                <div class="report__road-see">Посмотреть маршрут на карте <b class="js-g-hashint tooltipstered"></b>
-                </div>
-            </div>
-        </div>
+    <div class="report__content" id="ajax-content">
+        <? require __DIR__ . '/project-report-ajax.php'; // СПИСОК ?>
     </div>
 </div>
