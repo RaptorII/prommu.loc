@@ -1057,7 +1057,14 @@ class Project extends ARModel
     */
     public function buildTaskArray($arr) {
         $arI = array();
-        
+        $fbdate = Yii::app()->getRequest()->getParam('bdate');
+        $fedate = Yii::app()->getRequest()->getParam('edate');
+        $filter = Yii::app()->getRequest()->getParam('filter');
+        if(isset($fbdate) && isset($fedate) && isset($filter)) {
+            $fbdate = strtotime($fbdate);
+            $fedate = strtotime($fedate);
+        }
+    
         $arRes['project'] = $arr['project'];
         $arRes['tasks'] = $this->getTaskList($arr['project']['project']);
 
@@ -1068,24 +1075,26 @@ class Project extends ARModel
         if(!sizeof($arRes['users']))
             return array('items' => $arI);
 
-        foreach ($arr['original'] as $p) {
+        foreach ($arr['original'] as $p)
             foreach ($arRes['users'] as $idus => $u) {
                 if(!in_array($p['point'], $u['points']))
                     continue;
 
                 $arRes['points'][$p['point']] = $p;
-                $c = $p['id_city'];
-                $date = strtotime($p['bdate']);
+                $bdate = strtotime($p['bdate']);
+                $edate = strtotime($p['edate']); 
+                $bdate = (isset($filter) && $fbdate>$bdate) ? $fbdate : $bdate;
+                $edate = (isset($filter) && $fedate<$edate) ? $fedate : $edate;
+
                 do{
-                    $arI[$date][$c]['date'] = date('d.m.Y',$date);
-                    $arI[$date][$c]['city'] = $p['city'];
-                    $arI[$date][$c]['ismetro'] = $p['ismetro'];
-                    $arI[$date][$c]['users'][$idus][] = $p['point'];
-                    $date += (60*60*24);
+                    $arI[$bdate][$p['id_city']]['date'] = date('d.m.Y',$bdate);
+                    $arI[$bdate][$p['id_city']]['city'] = $p['city'];
+                    $arI[$bdate][$p['id_city']]['ismetro'] = $p['ismetro'];
+                    $arI[$bdate][$p['id_city']]['users'][$idus][] = $p['point'];
+                    $bdate += (60*60*24);
                 }
-                while($date <= strtotime($p['edate']));
+                while($bdate <= $edate);               
             }
-        }
 
         ksort($arI);
         $arRes['items'] = $arI;
@@ -1456,7 +1465,14 @@ class Project extends ARModel
     public function buildReportArray($arr) {
         $project = $arr['project']['project'];
         $arI = array();
-        
+        $fbdate = Yii::app()->getRequest()->getParam('bdate');
+        $fedate = Yii::app()->getRequest()->getParam('edate');
+        $filter = Yii::app()->getRequest()->getParam('filter');
+        if(isset($fbdate) && isset($fedate) && isset($filter)) {
+            $fbdate = strtotime($fbdate);
+            $fedate = strtotime($fedate);
+        }
+     
         $arRes['project'] = $arr['project'];
         // сортируем по времени
         usort($arr['original'], 
@@ -1481,16 +1497,22 @@ class Project extends ARModel
                     continue;
 
                 $arRes['points'][$p['point']] = $p;
-                $c = $p['id_city'];
-                $date = strtotime($p['bdate']);
+                $arRes['points'][$p['point']]['btime'] = date('G:i',strtotime($p['btime']));
+                $arRes['points'][$p['point']]['etime'] = date('G:i',strtotime($p['etime']));
+
+                $bdate = strtotime($p['bdate']);
+                $edate = strtotime($p['edate']); 
+                $bdate = (isset($filter) && $fbdate>$bdate) ? $fbdate : $bdate;
+                $edate = (isset($filter) && $fedate<$edate) ? $fedate : $edate;
+
                 do{
-                    $arI[$date][$idus][$c]['date'] = date('d.m.Y',$date);
-                    $arI[$date][$idus][$c]['city'] = $p['city'];
-                    $arI[$date][$idus][$c]['ismetro'] = $p['ismetro'];
-                    $arI[$date][$idus][$c]['points'][] = $p['point']; 
-                    $date += $day;
+                    $arI[$bdate][$idus][$p['id_city']]['date'] = date('d.m.Y',$bdate);
+                    $arI[$bdate][$idus][$p['id_city']]['city'] = $p['city'];
+                    $arI[$bdate][$idus][$p['id_city']]['ismetro'] = $p['ismetro'];
+                    $arI[$bdate][$idus][$p['id_city']]['points'][] = $p['point']; 
+                    $bdate += $day;
                 }
-                while($date <= strtotime($p['edate']));
+                while($bdate <= $edate);
             }
         }
         //      координаты
@@ -1518,7 +1540,6 @@ class Project extends ARModel
             $arT['marks'][$v['id']] = $v;
             $arRes['gps-info'][$d][$u][$p] = $arT;
         }
-
 
         ksort($arI);
         $arRes['items'] = $arI;

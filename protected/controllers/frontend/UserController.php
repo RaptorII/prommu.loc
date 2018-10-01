@@ -1448,9 +1448,17 @@ class UserController extends AppController
                     $view = MainConfig::$VIEW_PROJECT_ITEM_TASKS;
                     break;
                 case 'report':
-                    $view = MainConfig::$VIEW_PROJECT_ITEM_REPORT;
                     $data = $model->getProject($id);
                     $data = $model->buildReportArray($data);
+                    if(Yii::app()->request->isAjaxRequest) {
+                        $this->renderPartial(
+                            'projects/project-report-ajax',
+                            array('viData' => $data, 'project' => $id),
+                            false, true
+                        );
+                        return;
+                    }
+                    $view = MainConfig::$VIEW_PROJECT_ITEM_REPORT;
                     break;
                 case 'address-edit':
                     if( Yii::app()->getRequest()->isPostRequest) {

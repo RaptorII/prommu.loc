@@ -32,7 +32,7 @@ class PrommuOrder {
         $bin = $this->convertedRegion($arBD);
         
         if($service=='premium-vacancy' || $service=='email-invitation') {
-            $arReg = getRegionalPrice($service,$bin);
+            $arReg = $this->getRegionalPrice($service,$bin);
             $arPrices = Yii::app()->db->createCommand()
                 ->select("price")
                 ->from('service_prices')

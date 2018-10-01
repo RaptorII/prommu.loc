@@ -15,9 +15,7 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/
 
 $arFilterData = [
     'ID' => $project, //Обязательное свойство!
-    'FILTER_ADDITIONAL_VALUE' => [
-        'SECTION_ID' => Yii::app()->request->getParam('section')
-    ],
+    'FILTER_ADDITIONAL_VALUE' => ['filter'=>1],
     'FILTER_SETTINGS' => [
         0 => [
             'NAME' => 'Имя',

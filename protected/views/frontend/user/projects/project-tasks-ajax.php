@@ -12,7 +12,6 @@
 						<th class="name">Название ТТ</th>
 						<th class="index">Адрес ТТ</th>
 						<? if(!empty($city['ismetro'])): ?><th class="metro">Метро</th><? endif; ?>
-						<?//<th>Дата</th>?>
 						<th class="task">Кол-во заданий</th>
 					</tr>
 				</thead>
@@ -54,9 +53,6 @@
 										</div>
 									</td>					
 								<?php endif; ?>
-								<?/*<td>
-									<div class="task__table-cell border text-center"><?=$date?></div>
-								</td>*/?>
 								<td class="task">
 									<div class="task__table-cell border task__table-cnt">
 										<? $tasks = sizeof($viData['tasks'][$d][$p][$idus]); ?>

@@ -13,141 +13,7 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/un
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-map.css');
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/jquery.fancybox.css');
-
-/*$viData['dates'] = array(
-    'bdate' => '07.02.18',
-    'bdate-full' => '07.02.2018',
-    'edate' => '01.10.18',
-    'edate-full' => '01.10.2018'
-);
-$viData['index'] = array(
-1307 => array(
-  'name' => 'Москва',
-  'id' => 1307,
-  'metro' => 1,
-  'locations' => array(
-    1 => array(
-      'id' => 1,
-      'name' => 'АТБ1',
-      'index' => 'ул. Исполкомовская 123',
-      'metro' => array(
-        1 => 'Авиамоторная',
-        2 => 'Автозаводская (Замоскворецкая линия)',
-        4 => 'Алексеевская'
-      ),
-      'periods' => array(
-        1 => array(
-          'id' => 1,
-          'bdate' => '07.02.18',
-          'edate' => '08.02.18',
-          'btime' => '14:00',
-          'etime' => '16:00'
-        ),
-        2 => array(
-          'id' => 2,
-          'bdate' => '20.02.18',
-          'edate' => '22.02.18',
-          'btime' => '09:00',
-          'etime' => '18:00'
-        )
-      )
-    ),
-    2 => array(
-      'id' => 2,
-      'name' => 'АТБ2',
-      'index' => 'ул. Исполкомовская 777',
-      'metro' => array(
-        4 => 'Алексеевская'
-      ),
-      'periods' => array(
-        3 => array(
-          'id' => 3,
-          'bdate' => '01.08.18',
-          'edate' => '01.08.18',
-          'btime' => '12:00',
-          'etime' => '13:00'
-        )
-      )
-    )
-  ),
-  'users' => array(1,15)
-),
-2582 => array(
-  'name' => 'Донецк',
-  'id' => 2582,
-  'metro' => 0,
-  'locations' => array(
-    3 => array(
-      'id' => 3,
-      'name' => 'АТБ3',
-      'index' => 'ул. Исполкомовская 999',
-      'metro' => array(),
-      'periods' => array(
-        4 => array(
-          'id' => 4,
-          'bdate' => '07.02.18',
-          'edate' => '08.02.18',
-          'btime' => '14:00',
-          'etime' => '16:00'
-        ),
-        5 => array(
-          'id' => 5,
-          'bdate' => '20.02.18',
-          'edate' => '22.02.18',
-          'btime' => '09:00',
-          'etime' => '18:00'
-        )
-      )
-    )
-  ),
-  'users' => array(22)
-)
-);
-$viData['users'] = array(
-    1 => array(
-        'id' => 1,
-        'name' => 'Ибадулаев Павел',
-        'logo' => '/images/applic/20180503073112204100.jpg',
-        'isonline' => 1,
-        'loc_cnt' => 5,
-        'work_state' => 1,
-        'loc_last' => 'АТБ1',
-        'date' => '06.02.2018'
-    ),
-    15 => array(
-        'id' => 15,
-        'name' => 'Бондаренко Наталья',
-        'logo' => '/images/applic/20180428142455264100.jpg',
-        'isonline' => 0,
-        'loc_cnt' => 5,
-        'work_state' => 2,
-        'loc_last' => 'АТБ1',
-        'date' => '06.02.2018'
-    ),
-    22 => array(
-        'id' => 22,
-        'name' => 'Бондаренченко Раиса',
-        'logo' => '/images/applic/20180428142455264100.jpg',
-        'isonline' => 0,
-        'loc_cnt' => 3,
-        'work_state' => 2,
-        'loc_last' => 'АТБ1',
-        'date' => '06.02.2018'
-    ),
-);
-$viData['states'] = array(
-  1 => 'начал',
-  2 => 'просрочил'
-);
-*/ ?>
-
-
-
-<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($viData); ?>
-</pre>
-
-
+?>
 <div class="filter__veil"></div>
 <div class="row project">
     <div class="col-xs-12">
@@ -166,8 +32,8 @@ $viData['states'] = array(
                     <span class="city-filter__select">Все</span>
                     <ul class="city-list">
                         <li data-id="0">Все</li>
-                        <? foreach ($viData['filter']['cities'] as $id => $arCity)
-                            echo '<li data-id="' . $id . '">' . $arCity . '</li>';
+                        <? foreach ($viData['filter']['cities'] as $id => $city)
+                            echo '<li data-id="' . $id . '">' . $city['city'] . '</li>';
                         ?>
                     </ul>
                     <input type="hidden" name="city" class="city-input" value="0">
@@ -244,63 +110,6 @@ $viData['states'] = array(
             <div class="geo-item__cart-data">
                 <img src="<?= $arUser['src'] ?>">
                 <div class="geo-item__cart-info">
-                   <?/* <form action="" class="geo-item__cart-filter" id="filter-form">
-                        <div class="geo__header-date user__header-date">
-                            <div class="calendar-filter">
-                                <label>Дата с</label>
-                                <span><?= $viData['filter']['bdate-short'] ?></span>
-                                <div class="calendar" data-type="bdate">
-                                    <table>
-                                        <thead>
-                                        <tr>
-                                            <td class="mleft">‹
-                                            <td colspan="5" class="mname">
-                                            <td class="mright">›
-                                        </tr>
-                                        <tr>
-                                            <td>Пн
-                                            <td>Вт
-                                            <td>Ср
-                                            <td>Чт
-                                            <td>Пт
-                                            <td>Сб
-                                            <td>Вс
-                                        </tr>
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                                <input type="hidden" name="bdate" value="<?= $viData['filter']['bdate'] ?>">
-                            </div>
-                            <div class="calendar-filter">
-                                <label>По</label>
-                                <span><?= $viData['filter']['edate-short'] ?></span>
-                                <div class="calendar" data-type="edate">
-                                    <table>
-                                        <thead>
-                                        <tr>
-                                            <td class="mleft">‹
-                                            <td colspan="5" class="mname">
-                                            <td class="mright">›
-                                        </tr>
-                                        <tr>
-                                            <td>Пн
-                                            <td>Вт
-                                            <td>Ср
-                                            <td>Чт
-                                            <td>Пт
-                                            <td>Сб
-                                            <td>Вс
-                                        </tr>
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                                <input type="hidden" name="edate" value="<?= $viData['filter']['edate'] ?>">
-                            </div>
-                        </div>
-                        <input type="hidden" name="project" value="<?= $project ?>" class="project-inp">
-                    </form>*/?>
-
-
                     <div class="geo-item__cart-bl1">
                         <div class="geo-item__cart-name"><?= $arUser['name'] ?></div>
                         <div class="geo-item__cart-border">
@@ -337,7 +146,6 @@ $viData['states'] = array(
                 </div>
             </div>
             <div id="user-data">
-
                 <? foreach ($viData['items'][$unixTime] as $keyUnix => $valueUnix): ?>
                     <? if (isset($valueUnix['users'][$idus]) && !empty($valueUnix['users'][$idus])): ?>
                         <h2 class="geo__item-title"><?= $valueUnix['city'] ?> <span><?= $valueUnix['date'] ?></span></h2>
