@@ -65,14 +65,36 @@ $arFilterData = [
             'DATA_SHORT' => $viData['filter']['edate-short']
         ],
         5 => [
-            'NAME' => 'Название и адрес ТТ',
-            'TYPE' => 'text',
-            'INPUT_NAME' => 'address',
-            'DATA' => [],
-            'DATA_DEFAULT' => '',
-            'PLACEHOLDER' => ''
+            'NAME' => 'Название ТТ',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_name',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ]
+            ],
+            'DATA_DEFAULT' => '0'
         ],
         6 => [
+            'NAME' => 'Адрес ТТ',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_index',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ]
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        7 => [
+            'TYPE' => 'block',
+        ],
+        8 => [
+            'TYPE' => 'block',
+        ],
+        9 => [
             'NAME' => 'Тип события',
             'TYPE' => 'select',
             'INPUT_NAME' => 'type',
@@ -104,9 +126,12 @@ $arFilterData = [
     ]
 ];
 
-foreach ($viData['filter']['cities'] as $key => $value):
+foreach ($viData['filter']['cities'] as $key => $value)
     $arFilterData['FILTER_SETTINGS'][2]['DATA'][$key] = ['title' => $value['city'], 'id' => $key];
-endforeach;
+foreach ($viData['filter']['tt_name'] as $n)
+    $arFilterData['FILTER_SETTINGS'][5]['DATA'][] = ['title' => $n, 'id' => $n];
+foreach ($viData['filter']['tt_index'] as $i)
+    $arFilterData['FILTER_SETTINGS'][6]['DATA'][] = ['title' => $i, 'id' => $i];
 ?>
 
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
