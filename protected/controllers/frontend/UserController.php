@@ -1449,6 +1449,8 @@ class UserController extends AppController
                     break;
                 case 'report':
                     $view = MainConfig::$VIEW_PROJECT_ITEM_REPORT;
+                    $data = $model->getProject($id);
+                    $data = $model->buildReportArray($data);
                     break;
                 case 'address-edit':
                     if( Yii::app()->getRequest()->isPostRequest) {

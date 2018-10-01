@@ -1450,4 +1450,79 @@ class Project extends ARModel
 
         return $arRes;
     }
+    /*
+    *
+    */
+    public function buildReportArray($arr) {
+        $project = $arr['project']['project'];
+        $arI = array();
+        
+        $arRes['project'] = $arr['project'];
+        // сортируем по времени
+        usort($arr['original'], 
+            function($a, $b){
+                $t1 = strtotime($a['btime']);
+                $t2 = strtotime($b['btime']);
+                return ($t1 < $t2) ? -1 : 1;
+            }
+        );
+
+        foreach ($arr['users'] as $id => $v)
+            if(sizeof($v['points'])>0)
+                $arRes['users'][$v['id_user']] = $v;
+
+        if(!sizeof($arRes['users']))
+            return array('items' => $arI);
+
+        $day = 60 * 60 * 24;
+        foreach ($arr['original'] as $p) {
+            foreach ($arRes['users'] as $idus => $u) {
+                if(!in_array($p['point'], $u['points']))
+                    continue;
+
+                $arRes['points'][$p['point']] = $p;
+                $c = $p['id_city'];
+                $date = strtotime($p['bdate']);
+                do{
+                    $arI[$date][$idus][$c]['date'] = date('d.m.Y',$date);
+                    $arI[$date][$idus][$c]['city'] = $p['city'];
+                    $arI[$date][$idus][$c]['ismetro'] = $p['ismetro'];
+                    $arI[$date][$idus][$c]['points'][] = $p['point']; 
+                    $date += $day;
+                }
+                while($date <= strtotime($p['edate']));
+            }
+        }
+        //      координаты
+        $arRes['gps'] = $this->getСoordinates(['project'=>$project]);
+        $arRes['tasks'] = $this->getTaskList($project);
+        foreach ($arRes['gps'] as $v) {
+            $u = $v['user'];
+            $p = $v['point'];
+            $d = date('Y-m-d 00:00:00',strtotime($v['date']));
+            $d = strtotime($d);
+            $arT = $arRes['gps'][$d][$u][$p];
+            if(!count($arT['marks']))
+               $arT['btime-fact'] = date('G:i',strtotime($v['date']));
+            $arT['etime-fact'] = date('G:i',strtotime($v['date']));
+            $ttime = strtotime($arT['etime-fact']) - strtotime($arT['btime-fact']);
+            $arT['time-total'] = $ttime / 60; // минут
+            $arT['moving'] = 30; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! setting
+
+            $arT['tasks-total'] = count($arRes['tasks'][$d][$p][$u]);
+            foreach ($arRes['tasks'][$d][$p][$u] as $t)
+                if($t['status'])
+                  $arT['tasks-fact']++;  
+
+            $arT['marks'][$v['id']] = $v;
+            $arRes['gps'][$d][$u][$p] = $arT;
+        }
+
+
+        ksort($arI);
+        $arRes['items'] = $arI;
+        $arRes['filter'] = $this->getFilter($arRes['points']);
+
+        return $arRes;
+    }
 }
