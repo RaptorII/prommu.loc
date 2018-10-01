@@ -1501,7 +1501,7 @@ class Project extends ARModel
             $p = $v['point'];
             $d = date('Y-m-d 00:00:00',strtotime($v['date']));
             $d = strtotime($d);
-            $arT = $arRes['gps'][$d][$u][$p];
+            $arT = $arRes['gps-info'][$d][$u][$p];
             if(!count($arT['marks']))
                $arT['btime-fact'] = date('G:i',strtotime($v['date']));
             $arT['etime-fact'] = date('G:i',strtotime($v['date']));
@@ -1510,12 +1510,13 @@ class Project extends ARModel
             $arT['moving'] = 30; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! setting
 
             $arT['tasks-total'] = count($arRes['tasks'][$d][$p][$u]);
+            $arT['tasks-fact'] = 0;
             foreach ($arRes['tasks'][$d][$p][$u] as $t)
                 if($t['status'])
                   $arT['tasks-fact']++;  
 
             $arT['marks'][$v['id']] = $v;
-            $arRes['gps'][$d][$u][$p] = $arT;
+            $arRes['gps-info'][$d][$u][$p] = $arT;
         }
 
 
