@@ -1,5 +1,4 @@
 <?php
-var_dump($viData);
 $bUrl = Yii::app()->baseUrl;
 $idus = Yii::app()->getRequest()->getParam('user_id');
 $unixTime = Yii::app()->getRequest()->getParam('unix');
@@ -15,6 +14,10 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/univ
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/jquery.fancybox.css');
 ?>
+<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
+<? print_r($viData); ?>
+</pre>
+
 <div class="filter__veil"></div>
 <div class="row project">
     <div class="col-xs-12">
