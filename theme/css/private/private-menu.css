@@ -173,7 +173,9 @@
     display: inline-block;
     position: relative;
     /*vertical-align: top;*/
-    vertical-align: middle;
+    /*vertical-align: middle;*/
+    vertical-align: bottom;
+    height: 36px;
 }
 .content-header-add span{
     width: 25px;
@@ -242,20 +244,20 @@
     background: none;
 }
 
-.content-header-add #dropadd + ul a:hover {
+/*.content-header-add #dropadd + ul a:hover {
     background: #b9c733;
 }
 
 .content-header-add #dropadd + ul {
     background: #abb820;
-}
+}*/
 
 #dropadd:hover span.a1 {
     top: 0;
     right: 0;
     width: 36px;
     height: 36px;
-    background-color: rgba(119,187,0,0.3);
+    background-color: rgba(216,177,0,0.3);
 }
 
 #dropadd span{
@@ -267,7 +269,7 @@
     right: 1px;
     width: 34px;
     height: 30px;
-    background-color: rgba(119,187,0,0.2);
+    background-color: rgba(216,177,0,0.3);
     border-radius: 17px;
 }
 
@@ -276,7 +278,7 @@
     left: 9px;
     width: 18px;
     height: 18px;
-    background: #7b0;
+    background: #ff921d;
     border-radius: 10px;
 }
 
