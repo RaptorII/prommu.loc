@@ -1,4 +1,5 @@
 <?php
+var_dump($viData);
 $bUrl = Yii::app()->baseUrl;
 $idus = Yii::app()->getRequest()->getParam('user_id');
 $unixTime = Yii::app()->getRequest()->getParam('unix');
