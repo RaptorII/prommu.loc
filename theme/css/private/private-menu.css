@@ -172,7 +172,8 @@
 .content-header-add{
     display: inline-block;
     position: relative;
-    vertical-align: top;
+    /*vertical-align: top;*/
+    vertical-align: middle;
 }
 .content-header-add span{
     width: 25px;
@@ -223,3 +224,74 @@
     border-bottom-right-radius: 0px;
 }
 .content-header-add a:hover{ background: #ffbe78 }
+
+
+
+#dropadd{
+    width: 36px;
+    height: 36px;
+    border-radius: 16px;
+    margin: 0;
+    display: inline-block;
+    transition: top 0.3s ease;
+    -webkit-transition: top 0.3s ease;
+    -webkit-backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    -webkit-transform: translate3d(0,0,0);
+    cursor: pointer;
+    background: none;
+}
+
+.content-header-add #dropadd + ul a:hover {
+    background: #b9c733;
+}
+
+.content-header-add #dropadd + ul {
+    background: #abb820;
+}
+
+#dropadd:hover span.a1 {
+    top: 0;
+    right: 0;
+    width: 36px;
+    height: 36px;
+    background-color: rgba(119,187,0,0.3);
+}
+
+#dropadd span{
+    position: absolute;
+}
+
+#dropadd .a1{
+    top: 3px;
+    right: 1px;
+    width: 34px;
+    height: 30px;
+    background-color: rgba(119,187,0,0.2);
+    border-radius: 17px;
+}
+
+#dropadd .a2{
+    top: 9px;
+    left: 9px;
+    width: 18px;
+    height: 18px;
+    background: #7b0;
+    border-radius: 10px;
+}
+
+#dropadd .a3{
+    background: #fff;
+    width: 8px;
+    height: 2px;
+    left: 14px;
+    top: 17px;
+}
+
+#dropadd .a4{
+    background: #fff;
+    height: 8px;
+    width: 2px;
+    top: 14px;
+    left: 17px;
+}
