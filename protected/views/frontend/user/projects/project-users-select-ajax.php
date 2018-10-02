@@ -3,6 +3,7 @@
   <div class="row">
     <div class="col-xs-12 users-select__list">
       <div class="row">
+        <? $cnt = 0; ?>
         <? foreach ($viData['users'] as $user): ?>
           <div class="col-xs-12 col-sm-4 col-md-3">
             <? $s = $user['status']; ?>
@@ -18,6 +19,13 @@
               <?=(in_array($point, $user['points']))?'checked':''?>>
             <label for="user-<?=$user['id_user']?>"></label>
           </div>
+          <? 
+            $cnt++;
+            if($cnt%3==0)
+              echo '<div class="clearfix visible-xs visible-sm"></div>';
+            if($cnt%4==0)
+              echo '<div class="clearfix visible-md visible-lg"></div>';
+          ?>
         <? endforeach; ?>
       </div>
     </div>

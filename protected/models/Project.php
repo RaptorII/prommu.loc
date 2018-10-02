@@ -261,15 +261,12 @@ class Project extends ARModel
             ->where('id_user=:idus', array(':idus'=>$idus))
             ->queryRow();
 
-        $arRes['employer']['src'] = DS . MainConfig::$PATH_EMPL_LOGO . DS 
-            . (!$arRes['employer']['logo'] 
-                ? 'logo.png' 
-                : $arRes['employer']['logo'] . '400.jpg');
+        $arRes['employer']['src'] = ProjectStaff::getPhoto(3, $arRes['employer'], 'medium');
 
         return $arRes;
     }
     /*
-    *
+    *       Проекты для С
     */
     public function getProjectApplicant() {
 			$idus = Share::$UserProfile->id;
@@ -293,8 +290,7 @@ class Project extends ARModel
 			$arRes = array();
 			foreach ($sql as $v) {
 				$v['link'] = MainConfig::$PAGE_PROJECT_LIST . DS . $v['project'];
-                $v['src'] = DS . MainConfig::$PATH_EMPL_LOGO 
-                  . DS . (!$v['logo'] ? 'logo.png' : $v['logo'] . '100.jpg');
+                $v['src'] = ProjectStaff::getPhoto(3, $v, 'small');
                 $v['profile'] = MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user'];
 
 				switch ($v['status']) {
@@ -306,13 +302,19 @@ class Project extends ARModel
 
 			return $arRes;
     }
-    /*
-    *       Фильтр для Адресной программы
+    /**
+    * @param number - project ID
+    * @return array - ['index','staff','values']
     */
-    public function getIndexFilter($prj) {
-        $arRes['conditions'] = 'pc.project=:prj';
+    private function getQueryParams($prj) {
+        $arRes['index'] = 'pc.project=:prj';
+        $arRes['staff'] = 'pu.project = :prj';
         $arRes['values'] = array(':prj' =>$prj);
 
+        $filter = Yii::app()->getRequest()->getParam('filter');
+        if(!isset($filter))
+            return $arRes;
+        // index
         $city = Yii::app()->getRequest()->getParam('city');
         $bdate = Yii::app()->getRequest()->getParam('bdate');
         $edate = Yii::app()->getRequest()->getParam('edate');
@@ -320,37 +322,58 @@ class Project extends ARModel
         $tname = Yii::app()->getRequest()->getParam('tt_name');
         $tindex = Yii::app()->getRequest()->getParam('tt_index');
         $metro = Yii::app()->getRequest()->getParam('metro');
-        $filter = Yii::app()->getRequest()->getParam('filter');
+        // staff
+        $fname = Yii::app()->getRequest()->getParam('fname');
+        $lname = Yii::app()->getRequest()->getParam('lname');
+        $status = Yii::app()->getRequest()->getParam('status');
+        $haspoint = Yii::app()->getRequest()->getParam('haspoint');
 
-        if(!isset($filter))
-            return $arRes;
         if($city>0) {
-            $arRes['conditions'] .= ' AND pc.id_city=:city';
+            $arRes['index'] .= ' AND pc.id_city=:city';
+            $arRes['staff'] .= $arRes['index'];
             $arRes['values'][':city'] = $city;
         }
         if(isset($bdate) && isset($edate)) {
-            $arRes['conditions'] .= ' AND ((pc.bdate>=:bdate AND pc.edate<=:edate) OR (pc.edate>=:bdate AND pc.edate<=:edate))';
-            //$arRes['conditions'] .= ' AND (pc.edate BETWEEN :bdate AND :edate)';
-            //$arRes['conditions'] .= ' AND (pc.edate BETWEEN :bdate AND :edate)';
-
-            //WHERE Value BETWEEN 10 AND 20
-
+            $arRes['index'] .= ' AND ((pc.bdate>=:bdate AND pc.edate<=:edate)'
+            . ' OR (pc.edate>=:bdate AND pc.edate<=:edate)'
+            . ' OR (pc.bdate>=:bdate AND pc.bdate<=:edate))';
             $arRes['values'][':bdate'] = date('Y.m.d', strtotime($bdate));
             $arRes['values'][':edate'] = date('Y.m.d', strtotime($edate));
         }
         if($point>0) {
-            $arRes['conditions'] .= ' AND pc.point=:point';
-            $arRes['values'][':point'] = $point;
+            $arRes['index'] .= ' AND pc.point=' . $point;
         }
         if(!empty($tname)) {
-            $arRes['conditions'] .= " AND pc.name LIKE '".$tname."'";
+            $arRes['index'] .= " AND pc.name LIKE '".$tname."'";
+            $arRes['staff'] .= $arRes['index'];
         }
         if(!empty($tindex)) {
-            $arRes['conditions'] .= " AND pc.adres LIKE '".$tindex."'";
+            $arRes['index'] .= " AND pc.adres LIKE '".$tindex."'";
+            $arRes['staff'] .= $arRes['index'];
         }
         if($metro>0) {
-            $arRes['conditions'] .= " AND pc.metro=:metro";
+            $arRes['index'] .= " AND pc.metro=:metro";
+            $arRes['staff'] .= $arRes['index'];
             $arRes['values'][':metro'] = $metro;
+        }
+
+        if(!empty($fname)) {
+            $arRes['staff'] .= " AND r.firstname LIKE '%".$fname."%'";
+        }
+        if(!empty($lname)) {
+            $arRes['staff'] .= " AND r.lastname LIKE '%".$lname."%'";
+        }
+        if(isset($status)) {
+            switch ($status) {
+                case 1: $arRes['staff'] .= " AND pu.status=1"; break;
+                case 2: $arRes['staff'] .= " AND pu.status=0"; break;
+                case 3: $arRes['staff'] .= " AND pu.status=-1"; break;
+            }
+        }
+        if($haspoint>0) {
+            $arRes['staff'] .= ($haspoint==1
+                ? " AND pb.point IS NOT NULL"
+                : " AND pb.point IS NULL");
         }
 
         return $arRes;
@@ -359,7 +382,7 @@ class Project extends ARModel
     *       Список Адресной программы
     */
     public function getAdresProgramm($project){
-        $filter = $this->getIndexFilter($project);
+        $filter = $this->getQueryParams($project);
         $sql = Yii::app()->db->createCommand()
             ->select(
                 "pc.name, 
@@ -379,7 +402,7 @@ class Project extends ARModel
             ->from('project_city pc')
             ->leftjoin('city c', 'c.id_city=pc.id_city')
             ->leftjoin('metro m', 'm.id=pc.metro')
-            ->where($filter['conditions'], $filter['values'])
+            ->where($filter['index'], $filter['values'])
             ->order('pc.bdate desc')
             ->queryAll();
 
@@ -389,7 +412,7 @@ class Project extends ARModel
     *       подсчет пользователей проекта
     */
     public function getStaffProjectCnt($prj) {
-        $filter = $this->getStaffFilter($prj);
+        $filter = $this->getQueryParams($prj);
         return Yii::app()->db->createCommand()
             ->select("COUNT(DISTINCT(pu.id))")
             ->from('project_user pu')
@@ -398,64 +421,14 @@ class Project extends ARModel
             ->leftjoin('project_city pc', 'pc.point=pb.point')
             ->leftjoin('city c', 'c.id_city=pc.id_city')
             ->leftjoin('metro m', 'm.id=pc.metro')
-            ->where($filter['conditions'], $filter['values'])
+            ->where($filter['staff'], $filter['values'])
             ->queryScalar();
-    }
-    /*
-    *       Фильтр для персонала
-    */
-    public function getStaffFilter($prj) {
-        $arRes['conditions'] = 'pu.project = :prj';
-        $arRes['values'] = array(':prj' =>$prj);
-
-        $fname = Yii::app()->getRequest()->getParam('fname');
-        $lname = Yii::app()->getRequest()->getParam('lname');
-        $status = Yii::app()->getRequest()->getParam('status');
-        $point = Yii::app()->getRequest()->getParam('haspoint');
-        $city = Yii::app()->getRequest()->getParam('city');
-        $tname = Yii::app()->getRequest()->getParam('tt_name');
-        $tindex = Yii::app()->getRequest()->getParam('tt_index');
-        $metro = Yii::app()->getRequest()->getParam('metro');
-        $filter = Yii::app()->getRequest()->getParam('filter');
-
-        if(!isset($filter))
-            return $arRes;
-        if(!empty($fname)) {
-            $arRes['conditions'] .= " AND r.firstname LIKE '%".$fname."%'";
-        }
-        if(!empty($lname)) {
-            $arRes['conditions'] .= " AND r.lastname LIKE '%".$lname."%'";
-        }
-        if($status>0) {
-            $arRes['conditions'] .= " AND pu.status=" . ($status==1 ? 1 : 0);
-        }
-        if($point>0) {
-            $arRes['conditions'] .= ($point==1
-                ? " AND pb.point IS NOT NULL"
-                : " AND pb.point IS NULL");
-        }
-        if($city>0) {
-            $arRes['conditions'] .= " AND pc.id_city=:city";
-            $arRes['values'][':city'] = $city;
-        }
-        if(!empty($tname)) {
-            $arRes['conditions'] .= " AND pc.name LIKE '".$tname."'";
-        }
-        if(!empty($tindex)) {
-            $arRes['conditions'] .= " AND pc.adres LIKE '".$tindex."'";
-        }
-        if($metro>0) {
-            $arRes['conditions'] .= " AND pc.metro=:metro";
-            $arRes['values'][':metro'] = $metro;
-        }
-
-        return $arRes;
     }
     /*
     *       Персонал
     */
     public function getStaffProject($prj){
-        $filter = $this->getStaffFilter($prj);
+        $filter = $this->getQueryParams($prj);
 
         $sql = Yii::app()->db->createCommand()
             ->select("DISTINCT(pu.user)")
@@ -463,7 +436,7 @@ class Project extends ARModel
             ->leftjoin('resume r', 'r.id_user=pu.user')
             ->leftjoin('project_binding pb', 'pb.user=pu.user')
             ->leftjoin('project_city pc', 'pc.point=pb.point')
-            ->where($filter['conditions'], $filter['values'])
+            ->where($filter['staff'], $filter['values'])
             ->offset($this->offset)
             ->limit($this->limit)
             ->order('pu.user desc')
@@ -529,11 +502,7 @@ class Project extends ARModel
             $id = $u['user'];
             $arRes['users'][$id]['id_user'] = $id;
             $arRes['users'][$id]['name'] = $u['lastname'] . ' ' . $u['firstname'];
-            $arRes['users'][$id]['src'] = DS . MainConfig::$PATH_APPLIC_LOGO . DS . 
-                ($u['photo'] 
-                    ? ($u['photo'] . '100.jpg')
-                    : ($u['isman'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F)
-                );
+            $arRes['users'][$id]['src'] = ProjectStaff::getPhoto(2, $u, 'small');
             $arRes['users'][$id]['status'] = $u['status'];
             if(!empty($u['point']))
                 $arRes['users'][$id]['points'][] = $u['point'];
@@ -1039,11 +1008,7 @@ class Project extends ARModel
             $id = $u['user'];
             $arRes[$id]['id_user'] = $id;
             $arRes[$id]['name'] = $u['lastname'] . ' ' . $u['firstname'];
-            $arRes[$id]['src'] = DS . MainConfig::$PATH_APPLIC_LOGO . DS . 
-                ($u['photo'] 
-                    ? ($u['photo'] . '100.jpg')
-                    : ($u['isman'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F)
-                );
+            $arRes[$id]['src'] = ProjectStaff::getPhoto(2, $u, 'small');
             $arRes[$id]['status'] = $u['status'];
             $arRes[$id]['is_online'] = $u['is_online'];
             if(!empty($u['point']))
@@ -1510,6 +1475,94 @@ class Project extends ARModel
                     $arI[$bdate][$idus][$p['id_city']]['city'] = $p['city'];
                     $arI[$bdate][$idus][$p['id_city']]['ismetro'] = $p['ismetro'];
                     $arI[$bdate][$idus][$p['id_city']]['points'][] = $p['point']; 
+                    $bdate += $day;
+                }
+                while($bdate <= $edate);
+            }
+        }
+        //      координаты
+        $arRes['gps'] = $this->getСoordinates(['project'=>$project]);
+        $arRes['tasks'] = $this->getTaskList($project);
+        foreach ($arRes['gps'] as $v) {
+            $u = $v['user'];
+            $p = $v['point'];
+            $d = date('Y-m-d 00:00:00',strtotime($v['date']));
+            $d = strtotime($d);
+            $arT = $arRes['gps-info'][$d][$u][$p];
+            if(!count($arT['marks']))
+               $arT['btime-fact'] = date('G:i',strtotime($v['date']));
+            $arT['etime-fact'] = date('G:i',strtotime($v['date']));
+            $ttime = strtotime($arT['etime-fact']) - strtotime($arT['btime-fact']);
+            $arT['time-total'] = $ttime / 60; // минут
+            $arT['moving'] = 30; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! setting
+
+            $arT['tasks-total'] = count($arRes['tasks'][$d][$p][$u]);
+            $arT['tasks-fact'] = 0;
+            foreach ($arRes['tasks'][$d][$p][$u] as $t)
+                if($t['status'])
+                  $arT['tasks-fact']++;  
+
+            $arT['marks'][$v['id']] = $v;
+            $arRes['gps-info'][$d][$u][$p] = $arT;
+        }
+
+        ksort($arI);
+        $arRes['items'] = $arI;
+        $arRes['filter'] = $this->getFilter($arRes['points']);
+
+        return $arRes;
+    }
+    /*
+    *
+    */
+    public function buildGeoArray($arr) {
+        $project = $arr['project']['project'];
+        $arI = array();
+        $fbdate = Yii::app()->getRequest()->getParam('bdate');
+        $fedate = Yii::app()->getRequest()->getParam('edate');
+        $filter = Yii::app()->getRequest()->getParam('filter');
+        if(isset($fbdate) && isset($fedate) && isset($filter)) {
+            $fbdate = strtotime($fbdate);
+            $fedate = strtotime($fedate);
+        }
+     
+        $arRes['project'] = $arr['project'];
+        // сортируем по времени
+        usort($arr['original'], 
+            function($a, $b){
+                $t1 = strtotime($a['btime']);
+                $t2 = strtotime($b['btime']);
+                return ($t1 < $t2) ? -1 : 1;
+            }
+        );
+
+        foreach ($arr['users'] as $id => $v)
+            if(sizeof($v['points'])>0)
+                $arRes['users'][$v['id_user']] = $v;
+
+        if(!sizeof($arRes['users']))
+            return array('items' => $arI);
+
+        $day = 60 * 60 * 24;
+        foreach ($arr['original'] as $p) {
+            foreach ($arRes['users'] as $idus => $u) {
+                if(!in_array($p['point'], $u['points']))
+                    continue;
+
+                $arRes['points'][$p['point']] = $p;
+                $arRes['points'][$p['point']]['btime'] = date('G:i',strtotime($p['btime']));
+                $arRes['points'][$p['point']]['etime'] = date('G:i',strtotime($p['etime']));
+
+                $bdate = strtotime($p['bdate']);
+                $edate = strtotime($p['edate']); 
+                $bdate = (isset($filter) && $fbdate>$bdate) ? $fbdate : $bdate;
+                $edate = (isset($filter) && $fedate<$edate) ? $fedate : $edate;
+
+                do{
+                    $arI[$bdate][$p['id_city']]['date'] = date('d.m.Y',$bdate);
+                    $arI[$bdate][$p['id_city']]['city'] = $p['city'];
+                    $arI[$bdate][$p['id_city']]['ismetro'] = $p['ismetro'];
+                    $arI[$bdate][$p['id_city']]['users'][$idus] = $p['point']; 
                     $bdate += $day;
                 }
                 while($bdate <= $edate);
