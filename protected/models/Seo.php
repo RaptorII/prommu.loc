@@ -769,9 +769,9 @@ class Seo extends CActiveRecord
             . $cities . $wage . " возраст: " 
             . $arParams['years'] . ", пол: " . $sex;
         if(!empty($arParams['education']))
-            $description .= ', образование:' . $arParams['education'];
+            $description .= ', образование: ' . $arParams['education'];
         if(sizeof($arParams['lang'])>0)
-            $description .= ', иностранные языки:' . join(', ',$arParams['lang']);
+            $description .= ', иностранные языки: ' . join(', ',$arParams['lang']);
 
         $description = preg_replace("/\s{2,}/", " ", $description);
 
