@@ -1408,9 +1408,8 @@ class UserController extends AppController
                     $model->getXLSFile();
                     break;
                 case 'geo':
-                    $datas = $model->getProject($id);
-                    $data = $model->buildTaskArray($datas);
-                    $data['geo'] = $model->buildReportArray($datas);
+                    $data = $model->getProject($id);
+                    $data = $model->buildGeoArray($data);
                     if(Yii::app()->request->isAjaxRequest) {
                         $this->renderPartial(
                             'projects/project-geo-ajax',
