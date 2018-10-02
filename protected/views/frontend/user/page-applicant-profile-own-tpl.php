@@ -45,6 +45,16 @@
     $date1 = new DateTime();
     $date2 = new DateTime($attr['bday']);
     $birthday = $date1->diff($date2)->y;
+    // edu
+    $edu = '';
+    foreach($info['userAttribs'] as $v) {
+      if($v['idpar'] == 69) $edu = $v['name'];
+    }
+    // lang
+    $arLang = array();
+    foreach($info['userAttribs'] as $v)
+      if($v['idpar'] == 40) $arLang[] = $v['name'];
+
 
     $arSeoParams = array(
       'firstname' => $attr['firstname'],
@@ -52,7 +62,9 @@
       'cities' => current($info['userCities']),
       'posts' => current($info['userDolj']),
       'isman' => $attr['isman'],
-      'years' => $birthday . ' ' . Share::endingYears($birthday)
+      'years' => $birthday . ' ' . Share::endingYears($birthday),
+      'education' => $edu,
+      'lang' => $arLang
     );
     $arSeo = Seo::getMetaForApp($arSeoParams);
     // закрываем от индексации
