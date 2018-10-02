@@ -985,8 +985,20 @@ class Project extends ARModel
     *       Весь персонал
     */
     public function getProjectPromo($prj) {
-
         $arRes = array();
+        $arP['staff'] = 'pu.project = :prj';
+        $arP['values'] = array(':prj' =>$prj);
+
+        $filter = Yii::app()->getRequest()->getParam('filter');
+        if(isset($filter)) {
+            $fname = Yii::app()->getRequest()->getParam('fname');
+            $lname = Yii::app()->getRequest()->getParam('lname');
+            if(!empty($fname))
+                $arP['staff'] .= " AND r.firstname LIKE '%".$fname."%'";
+            if(!empty($lname))
+                $arP['staff'] .= " AND r.lastname LIKE '%".$lname."%'";
+        }
+
         $sql = Yii::app()->db->createCommand()
             ->select(
                 "pu.user, 
@@ -1001,7 +1013,7 @@ class Project extends ARModel
             ->leftjoin('resume r', 'r.id_user=pu.user')
             ->leftjoin('user u', 'u.id_user=pu.user')
             ->leftjoin('project_binding pb', 'pb.user=pu.user')
-            ->where('pu.project=:prj', array(':prj'=>$prj))
+            ->where($arP['staff'], $arP['values'])
             ->queryAll(); 
 
         foreach ($sql as $u) {

@@ -123,7 +123,6 @@ $arFilterData = [
         ]
     ]
 ];
-
 foreach ($viData['filter']['cities'] as $key => $value)
     $arFilterData['FILTER_SETTINGS'][2]['DATA'][$key] = ['title' => $value['city'], 'id' => $key];
 foreach ($viData['filter']['tt_name'] as $n)
@@ -131,13 +130,6 @@ foreach ($viData['filter']['tt_name'] as $n)
 foreach ($viData['filter']['tt_index'] as $i)
     $arFilterData['FILTER_SETTINGS'][6]['DATA'][] = ['title' => $i, 'id' => $i];
 ?>
-
-<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($viData); ?>
-</pre>
-
-
-
 <div class="row project">
     <div class="col-xs-12">
         <? require __DIR__ . '/project-nav.php'; ?>
