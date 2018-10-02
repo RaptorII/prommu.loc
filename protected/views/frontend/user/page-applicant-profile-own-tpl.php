@@ -40,18 +40,23 @@
   // Установка метаданных и заголовка
   //
   if(!$flagOwnProfile){
+    $sql = "SELECT ismoder FROM user WHERE id_user = " . $attr['id_user'];
+    $ismoder = Yii::app()->db->createCommand($sql)->queryScalar();
+    $date1 = new DateTime();
+    $date2 = new DateTime($attr['bday']);
+    $birthday = $date1->diff($date2)->y;
+
     $arSeoParams = array(
       'firstname' => $attr['firstname'],
       'lastname' => $attr['lastname'],
       'cities' => current($info['userCities']),
       'posts' => current($info['userDolj']),
       'isman' => $attr['isman'],
-      'years' => Share::endingYears($attr['bday'])
+      'years' => $birthday . ' ' . Share::endingYears($birthday)
     );
-    $arSeo = Seo::getMetaForApp($arSeoParams);    
-
+    $arSeo = Seo::getMetaForApp($arSeoParams);
     // закрываем от индексации
-    if($attr['index'] || $viData['profileEffect']<40){
+    if($attr['index'] || $viData['profileEffect']<40 || !$ismoder){
       Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
     }
     // устанавливаем title

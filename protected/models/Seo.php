@@ -696,7 +696,9 @@ class Seo extends CActiveRecord
     *       'cities' - array('name', 'region'),
     *       'posts' - array('isshow', 'val', 'pay', 'pay_type'),
     *       'isman' - boolean,
-    *       'years' - string
+    *       'years' - string,
+    *       'education' - string,
+    *       'lang' - array()
     *   ) 
     */
     public static function getMetaForApp($arParams)
@@ -712,29 +714,50 @@ class Seo extends CActiveRecord
         foreach($arParams['cities'] as $city)
             isset($city) && $arCities[] = $city['name'] . '(е)'; // города
 
-        foreach($arParams['posts'] as $pos){
-            if(!$pos['isshow']){
-                $arVacancies[] = $pos['val']; // вакансии
-                $pos['pay']>0
-                ? $arWages[] = $pos['pay'] . $pos['pay_type'] // зарплата
-                : $arWages[] = 'оплата по договоренности'; // зп 
+        foreach($arParams['posts'] as $p){
+            switch ($p['pt']) {
+                case 0: $p['pay_type'] ='руб. в час'; break;
+                case 1: $p['pay_type'] ='руб. в неделю'; break;
+                case 2: $p['pay_type'] ='руб. в месяц'; break;
+                case 3: $p['pay_type'] ='руб. за посещение'; break;
             }
-        }
+
+            if(!$p['isshow']){
+                if($p['pay']>0) {
+                    if(!sizeof($arWages)) {
+                        $arWages = array(
+                            'pt' => $p['pay_type'],
+                            'pay' => round($p['pay']),
+                        );
+                    }
+                    if($p['pay'] < $arWages['pay']) {
+                        $arWages['pt'] = $p['pay_type'];
+                        $arWages['pay'] = round($p['pay']);
+                    }
+                }
+                else {
+                    $wage = 'оплата по договоренности,'; 
+                }
+            }
+            else {
+                if($p['pname']=='без опыта')
+                    $arVacancies[] = $p['val'] . ' без опыта работы';
+                else
+                    $arVacancies[] = $p['val'] . ' с опытом: ' . $p['pname'];                
+            }
+       }
 
         $arCities = array_unique($arCities);
-        $arVacancies = array_unique($arVacancies);
-        $arWages = array_unique($arWages);
         sort($arCities);
-        sort($arVacancies);
-        sort($arWages);
-        if(sizeof($arCities)>0){
+
+        if(sizeof($arCities)>0){       
           $cities = 'в ' . join(', ', $arCities) . ',';
         }
         if(sizeof($arVacancies)>0)
           $vacancies = ' ' . join(', ', $arVacancies) . ', ';
 
         if(sizeof($arWages)>0)
-          $wage = ' ' . join(', ', $arWages) . ', ';
+          $wage = ' ожидаемая оплата: от ' . $arWages['pay'] . ' ' . $arWages['pt'] . ', ';
 
         $sex = $arParams['isman'] ? 'мужской' : 'женский'; // пол
         $site = 
@@ -743,8 +766,12 @@ class Seo extends CActiveRecord
             . Subdomain::getSubdomain($arParams['cities'])['name'];
 
         $description = "Резюме:" . $vacancies 
-            . $cities . $wage . " Возраст: " 
-            . $arParams['years'] . ", Пол: " . $sex;
+            . $cities . $wage . " возраст: " 
+            . $arParams['years'] . ", пол: " . $sex;
+        if(!empty($arParams['education']))
+            $description .= ', образование:' . $arParams['education'];
+        if(sizeof($arParams['lang'])>0)
+            $description .= ', иностранные языки:' . join(', ',$arParams['lang']);
 
         $description = preg_replace("/\s{2,}/", " ", $description);
 

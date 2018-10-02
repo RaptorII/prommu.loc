@@ -643,32 +643,35 @@ class User extends CActiveRecord
             ORDER BY um.isshow, val";
         $res = Yii::app()->db->createCommand($sql)->queryAll();
 
-        $exp = array();
         foreach ($res as $key => $val)
         {
-            if( $val['pay_type'] == 1 ) $res[$key]['pay_type'] ='руб/неделю';
-            elseif( $val['pay_type'] == 2 ) $res[$key]['pay_type'] ='руб/месяц';
-            else $res[$key]['pay_type'] ='руб/час';
-
-            if( $val['isshow'] ) $exp[] = $val['val'];
+        	switch ($val['pay_type']) {
+        		case 0: $res[$key]['pay_type'] ='руб. в час'; break;
+        		case 1: $res[$key]['pay_type'] ='руб. в неделю'; break;
+        		case 2: $res[$key]['pay_type'] ='руб. в месяц'; break;
+        		case 3: $res[$key]['pay_type'] ='руб. за посещение'; break;
+        	}
         } // end foreach
         $result['user_posts'] = $res;
 
-		$result['posts'] = array();
-		foreach($result['user_posts'] as $post){
-			$result['posts'][$post['idpost']]['val'] = $post['val'];
-			if(!$post['isshow']){
-				$result['posts'][$post['idpost']]['pay'] = $post['pay']>0 
-				? round($post['pay']) 
-				: '';
-				$result['posts'][$post['idpost']]['pt'] = !$post['pt']
-				? 'Час'
-				: ($post['pt']>1 ? 'Месяц' : 'Неделю');
-			}
-			if($post['isshow'])
-				$result['posts'][$post['idpost']]['pname'] = $post['pname'];
-		}
-		//
+				$result['posts'] = array();
+				foreach($result['user_posts'] as $post){
+					$result['posts'][$post['idpost']]['val'] = $post['val'];
+					if(!$post['isshow']){
+						$result['posts'][$post['idpost']]['pay'] = $post['pay']>0 
+						? round($post['pay']) 
+						: '';
+	        	switch ($post['pt']) {
+	        		case 0: $result['posts'][$post['idpost']]['pt'] ='Час'; break;
+	        		case 1: $result['posts'][$post['idpost']]['pt'] ='Неделю'; break;
+	        		case 2: $result['posts'][$post['idpost']]['pt'] ='Месяц'; break;
+	        		case 3: $result['posts'][$post['idpost']]['pt'] ='Посещение'; break;
+	        	}
+					}
+					if($post['isshow'])
+						$result['posts'][$post['idpost']]['pname'] = $post['pname'];
+				}
+				//
         // read cities
         $sql = "SELECT ci.id_city id, ci.name, 
         	co.id_co, co.name coname, 
@@ -762,24 +765,24 @@ class User extends CActiveRecord
 			'cities' => $result['user_cities'],
 			'posts' => $result['user_posts'],
 			'isman' => $result['isman'],
-			'years' => $result['years']
+			'years' => $result['years'],
+			'education' => $result['attr']['edu'],
+			'lang' => $result['attr']['lang']
 		);
 		$arSeo = Seo::getMetaForApp($arSeoParams);
-
 		// устанавливаем title
 		if(empty($result['meta_title']))
 		  $result['meta_title'] = $arSeo['meta_title'];
-
 		// устанавливаем description
 		if(empty($result['meta_description']))
 			$result['meta_description'] = $arSeo['meta_description'];
 
-        /*
-        // считываем опыт
-        $sql = "SELECT d.id, d.type, d.name FROM user_attr_dict d WHERE d.id_par = 31 ORDER BY id";
-        $result['expir'] = Yii::app()->db->createCommand($sql)->queryAll();
+    /*
+    // считываем опыт
+    $sql = "SELECT d.id, d.type, d.name FROM user_attr_dict d WHERE d.id_par = 31 ORDER BY id";
+    $result['expir'] = Yii::app()->db->createCommand($sql)->queryAll();
 		*/
-    	return $result;
+    return $result;
 	}
 
     /**
