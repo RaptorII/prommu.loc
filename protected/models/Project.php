@@ -1585,41 +1585,6 @@ class Project extends ARModel
                 while($bdate <= $edate);
             }
 
-
-
-
-
-        foreach ($arRes['gps'] as $v) {
-            $u = $v['user'];
-            $p = $v['point'];
-            $d = date('Y-m-d 00:00:00',strtotime($v['date']));
-            $d = strtotime($d);
-            $arT = $arRes['gps-info'][$d][$u][$p];
-            $dp = strtotime($arRes['points'][$p]['bdate']);
-            if($d>=$dp) { // старт работы
-
-            }
-            $arT['bdate'] = $arRes['points'][$p]['bdate'];
-            $arT['btime'] = date('G:i',$arRes['points'][$p]['btime']);
-
-
-            if(!count($arT['marks']))
-               $arT['btime-fact'] = date('G:i',strtotime($v['date']));
-
-            /*$arT['etime-fact'] = date('G:i',strtotime($v['date']));
-            $ttime = strtotime($arT['etime-fact']) - strtotime($arT['btime-fact']);
-            $arT['time-total'] = $ttime / 60; // минут
-
-            $arT['tasks-total'] = count($arRes['tasks'][$d][$p][$u]);
-            $arT['tasks-fact'] = 0;
-            foreach ($arRes['tasks'][$d][$p][$u] as $t)
-                if($t['status'])
-                  $arT['tasks-fact']++; */ 
-
-            $arT['marks'][$v['id']] = $v;
-            $arRes['gps-info'][$d][$u][$p] = $arT;
-        }
-
         ksort($arI);
         $arRes['items'] = $arI;
         $arRes['filter'] = $this->getFilter($arRes['points']);
