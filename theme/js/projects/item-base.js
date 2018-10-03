@@ -35,7 +35,8 @@ var BaseProgram = (function () {
         : $(main).find('.program__cell-period'),
       arDels = i==='c'
         ? $('[data-city="'+id+'"]')
-        : $('[data-period="'+id+'"]');
+        : $('[data-period="'+id+'"]'),
+      params = 'type=index&project=' + self.ID + (i==='c' ? '&city=' : '&point=') + id;
 
     if(arItems.length==1) {
       i==='c'
@@ -45,12 +46,12 @@ var BaseProgram = (function () {
     else {
       if(confirm(query)) {
         $.ajax({
-          type: 'POST',
-          url: '/ajax/ChangeGeoProject',
-          data: 'type=delete&project=' + self.ID + (i==='c' ? '&city=' : '&point=') + id,
+          type: 'DELETE',
+          url: '/ajax/Project',
+          data: {data: JSON.stringify(params)},
           dataType: 'json',
           success: function(r) { 
-            if(!r) {
+            if(r.error==true) {
               MainProject.showPopup('error','server');
             }
             else {

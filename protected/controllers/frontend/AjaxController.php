@@ -836,13 +836,18 @@ class AjaxController extends AppController
         $result = 0;
         $type = Yii::app()->getRequest()->getParam('type');
         $data = Yii::app()->getRequest()->getParam('data');
-        $data = json_decode($data, true);
         $model = new Project();
+        $data = json_decode($data, true);
         if($type=='delete') { // удаление локаций
             $result = $model->delLocation($_POST);   
         }
         else {
-            $result = $model->changeTask($data);
+            if(!$model->hasAccess($data['project'])) {
+                $result = ['error' => 1, 'data' => []];
+            }
+            else {
+                $result = $model->changeTask($data);                
+            }
         }
         echo CJSON::encode($result);
     }
@@ -852,19 +857,25 @@ class AjaxController extends AppController
     public function actionProject()
     {
         $result = array('error'=>true);
-        $model = new Project();
         $data = Yii::app()->getRequest()->getParam('data');
-        $data = json_decode($data, true, 5, JSON_BIGINT_AS_STRING);
+        $data = json_decode($data, true, 10, JSON_BIGINT_AS_STRING);
         
-        switch ($_SERVER['REQUEST_METHOD']) {
-            case 'GET':
-                if($data['type']=='coordinates')
-                    $result = $model->getСoordinates($data);
-                break;
-            case 'POST':
-                if($data['type']=='coordinates')
-                    $result = $model->recordReport($data);
-                break;
+        $model = new Project();
+        if($model->hasAccess($data['project'])) {
+            switch ($_SERVER['REQUEST_METHOD']) {
+                case 'GET':
+                    if($data['type']=='coordinates')
+                        $result = $model->getСoordinates($data);
+                    break;
+                case 'POST':
+                    if($data['type']=='coordinates')
+                        $result = $model->recordReport($data);
+                    break;
+                case 'DELETE':
+                    if($data['type']=='index') 
+                        $result = $model->deleteLocation($data);
+                    break;
+            }
         }
 
         echo CJSON::encode($result);

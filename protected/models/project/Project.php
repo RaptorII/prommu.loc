@@ -4,10 +4,8 @@
  * Date: 28.07.18
  */
 
-class Project extends ARModel
+class Project extends CActiveRecord
 {
-    public $USERS_IN_PAGE = 20;
-
     /**
      * @return string the associated database table name
      */
@@ -16,7 +14,13 @@ class Project extends ARModel
         return 'project';
     }
 
-
+    public function behaviors(){
+        return array(
+            'ProjectTask' => array('class' => 'ProjectTask'),
+            'ProjectStaff' => array('class' => 'ProjectStaff'),
+            'ProjectIndex' => array('class' => 'ProjectIndex')
+        );
+    }
 
 
     public function createProject($props){
@@ -38,78 +42,6 @@ class Project extends ARModel
         return $cloud;
     }
     /*
-    *       Запись адресной программы
-    */
-    public function recordIndex($arr, $project, $isCreate=false) {
-        if(!$project)
-            return false;
-
-        $arOldP = $arNewP = $arRes = array();
-        $lId = $pId = 0;
-
-        foreach ($arr['city'] as $c) { // по городам
-            foreach ($arr['bdate'][$c] as $l => $arLoc) { // по локациям
-                $lId++;
-                foreach ($arLoc as $p => $v) { // по точкам
-                    $pId++;
-                    $arRes[$p] = array(
-                        'name' => $arr['lname'][$c][$l],
-                        'adres' => $arr['lindex'][$c][$l],
-                        'id_city' => $c,
-                        'bdate' => date('Y-m-d', strtotime($arr['bdate'][$c][$l][$p])),
-                        'edate' => date('Y-m-d', strtotime($arr['edate'][$c][$l][$p])),
-                        'btime' => $arr['btime'][$c][$l][$p],
-                        'etime' => $arr['etime'][$c][$l][$p],
-                        'project' => $project,
-                        'latitude' => rand(1111,9999),
-                        'longitude' => rand(1111,9999),
-                        'point' => $isCreate ? ($pId.rand(1111,9999)) : $p,
-                        'location' => $isCreate ? $lId : $l,
-                        'metro' => $arr['metro'][$c][$l]
-                    );
-                    $arNewP[] = $p;
-                }     
-            }
-        }
-
-        // ищем существующие точки
-        $arBD = Yii::app()->db->createCommand()
-            ->select("point")
-            ->from('project_city')
-            ->where('project=:prj', array(':prj' =>$project))
-            ->queryAll();
-
-        foreach ($arBD as $v)
-            $arOldP[] = $v['point'];
-
-
-        foreach ($arOldP as $p) 
-            if( !in_array($p, $arNewP) ) {  // удаляем отсутствующие
-                Yii::app()->db->createCommand()
-                    ->delete(
-                        'project_city',
-                        'point=:pnt AND project=:prj', 
-                        array(':pnt'=>$p, ':prj'=>$project)
-                    );
-            }
-
-        foreach ($arRes as $p => $arV) {
-            if( in_array($p, $arOldP) ) { // изменяем существующие
-                Yii::app()->db->createCommand()
-                    ->update(
-                        'project_city',
-                        $arV,
-                        'point=:point',
-                        array(':point' => $new['point'])
-                    );    
-            }
-            else { // добавляем новые
-                Yii::app()->db->createCommand()
-                    ->insert('project_city', $arV);
-            }
-        }
-    }
-    /*
     *       Запись местоположения пользователя
     */
     public function recordReport($arr){
@@ -127,93 +59,6 @@ class Project extends ARModel
                         ));
 
         return $res ? ['error'=>false] : ['error'=>true];
-    }
-    /*
-    *       Запись новых пользователей
-    */
-    public function recordStaff($arr, $project) {
-        if(!$project)
-            return false;
-        $users = explode(',', $arr['users']);
-
-        if($arr['users-cnt']>0) { // персонал из БД
-            $sql = "SELECT r.id_user id, u.email 
-                FROM resume r
-                INNER JOIN user u ON r.id_user = u.id_user
-                WHERE u.id_user IN({$arr['users']})";
-            $arU = Yii::app()->db->createCommand($sql)->queryAll();
-
-            foreach ($arU as $user) {
-                Yii::app()->db->createCommand()
-                    ->insert('project_user', array(
-                            'project' => $project,
-                            'user' => $user['id'],
-                            'email' =>  $user['email'],
-                            'phone' => ''
-                        ));
-            }
-        }
-
-        if(strlen(reset($arr['inv-name']))) { // приглашенный персонал
-            for($i = 0; $i < count($arr['inv-name']); $i ++){
-                $pass = rand(11111,99999);
-                $date = date('Y-m-d H:i:s');
-                Yii::app()->db->createCommand()
-                    ->insert('user', array(
-                            'access_time' => $date,
-                            'crdate' => $date,
-                            'mdate' => $date,
-                            'ismoder' => '0',
-                            'status' => 2,
-                            'isblocked' => '0',
-                            'email' => $arr['inv-email'][$i],
-                            'passw' => md5($pass),
-                            'login' => $arr['prfx-phone'][$i].$arr['inv-phone'][$i]
-                        ));
-       
-                $id_user = Yii::app()->db->createCommand()
-                    ->select("MAX(id_user)")
-                    ->from('user')
-                    ->queryScalar();
-
-                $Api = new Api();
-                $male = $Api->maleor($arr['inv-name'][$i]);
-                if(!isset($male['sex']))
-                    $male['sex'] = 1;
-
-                Yii::app()->db->createCommand()
-                    ->insert('resume', array(
-                            'id_user' => $id_user+1,
-                            'firstname' => $arr['inv-name'][$i],
-                            'lastname' => $arr['inv-sname'][$i],
-                            'isman' => $male['sex'],
-                            'smart' => 1,
-                            'date_public' => $date,
-                            'mdate' => $date,
-                            'birthday' => date("Y-m-d", strtotime('2002.09.10')),
-                        ));
-
-                $pid = Yii::app()->db->createCommand()
-                    ->select("MAX(id)")
-                    ->from('resume')
-                    ->queryScalar();
-
-                Yii::app()->db->createCommand()
-                    ->insert('user_city', array(
-                            'id_user' => $id_user+1,
-                            'id_resume' => $pid+1,
-                            'id_city' => Subdomain::getId()
-                        ));
-
-                Yii::app()->db->createCommand()
-                    ->insert('project_user', array(
-                            'project' => $project,
-                            'user' => $id_user+1,
-                            'email' => $arr['inv-email'][$i],
-                            'phone' => $arr['prfx-phone'][$i].$arr['inv-phone'][$i]
-                        ));              
-            }
-        }
     }
     /*
     *       Проекты для Р
@@ -302,222 +147,13 @@ class Project extends ARModel
 
 			return $arRes;
     }
-    /**
-    * @param number - project ID
-    * @return array - ['index','staff','values']
-    */
-    private function getQueryParams($prj) {
-        $arRes['index'] = 'pc.project=:prj';
-        $arRes['staff'] = 'pu.project = :prj';
-        $arRes['values'] = array(':prj' =>$prj);
 
-        $filter = Yii::app()->getRequest()->getParam('filter');
-        if(!isset($filter))
-            return $arRes;
-        // index
-        $city = Yii::app()->getRequest()->getParam('city');
-        $bdate = Yii::app()->getRequest()->getParam('bdate');
-        $edate = Yii::app()->getRequest()->getParam('edate');
-        $point = Yii::app()->getRequest()->getParam('point');
-        $tname = Yii::app()->getRequest()->getParam('tt_name');
-        $tindex = Yii::app()->getRequest()->getParam('tt_index');
-        $metro = Yii::app()->getRequest()->getParam('metro');
-        // staff
-        $fname = Yii::app()->getRequest()->getParam('fname');
-        $lname = Yii::app()->getRequest()->getParam('lname');
-        $status = Yii::app()->getRequest()->getParam('status');
-        $haspoint = Yii::app()->getRequest()->getParam('haspoint');
-
-        if($city>0) {
-            $arRes['index'] .= ' AND pc.id_city=:city';
-            $arRes['staff'] .= $arRes['index'];
-            $arRes['values'][':city'] = $city;
-        }
-        if(isset($bdate) && isset($edate)) {
-            $arRes['index'] .= ' AND ((pc.bdate>=:bdate AND pc.edate<=:edate)'
-            . ' OR (pc.edate>=:bdate AND pc.edate<=:edate)'
-            . ' OR (pc.bdate>=:bdate AND pc.bdate<=:edate))';
-            $arRes['values'][':bdate'] = date('Y.m.d', strtotime($bdate));
-            $arRes['values'][':edate'] = date('Y.m.d', strtotime($edate));
-        }
-        if($point>0) {
-            $arRes['index'] .= ' AND pc.point=' . $point;
-        }
-        if(!empty($tname)) {
-            $arRes['index'] .= " AND pc.name LIKE '".$tname."'";
-            $arRes['staff'] .= $arRes['index'];
-        }
-        if(!empty($tindex)) {
-            $arRes['index'] .= " AND pc.adres LIKE '".$tindex."'";
-            $arRes['staff'] .= $arRes['index'];
-        }
-        if($metro>0) {
-            $arRes['index'] .= " AND pc.metro=:metro";
-            $arRes['staff'] .= $arRes['index'];
-            $arRes['values'][':metro'] = $metro;
-        }
-
-        if(!empty($fname)) {
-            $arRes['staff'] .= " AND r.firstname LIKE '%".$fname."%'";
-        }
-        if(!empty($lname)) {
-            $arRes['staff'] .= " AND r.lastname LIKE '%".$lname."%'";
-        }
-        if(isset($status)) {
-            switch ($status) {
-                case 1: $arRes['staff'] .= " AND pu.status=1"; break;
-                case 2: $arRes['staff'] .= " AND pu.status=0"; break;
-                case 3: $arRes['staff'] .= " AND pu.status=-1"; break;
-            }
-        }
-        if($haspoint>0) {
-            $arRes['staff'] .= ($haspoint==1
-                ? " AND pb.point IS NOT NULL"
-                : " AND pb.point IS NULL");
-        }
-
-        return $arRes;
-    }
-    /*
-    *       Список Адресной программы
-    */
-    public function getAdresProgramm($project){
-        $filter = $this->getQueryParams($project);
-        $sql = Yii::app()->db->createCommand()
-            ->select(
-                "pc.name, 
-                pc.adres, 
-                pc.id_city, 
-                c.name city, 
-                c.ismetro,
-                DATE_FORMAT(pc.bdate, '%d.%m.%Y') bdate, 
-                DATE_FORMAT(pc.edate, '%d.%m.%Y') edate,
-                TIME_FORMAT(pc.btime, '%H:%i') btime, 
-                TIME_FORMAT(pc.etime, '%H:%i') etime,
-                pc.point,
-                pc.location,
-                pc.metro id_metro,
-                m.name metro"
-            )
-            ->from('project_city pc')
-            ->leftjoin('city c', 'c.id_city=pc.id_city')
-            ->leftjoin('metro m', 'm.id=pc.metro')
-            ->where($filter['index'], $filter['values'])
-            ->order('pc.bdate desc')
-            ->queryAll();
-
-        return $this->buildAdressArray($sql); 
-    }
-    /*
-    *       подсчет пользователей проекта
-    */
-    public function getStaffProjectCnt($prj) {
-        $filter = $this->getQueryParams($prj);
-        return Yii::app()->db->createCommand()
-            ->select("COUNT(DISTINCT(pu.id))")
-            ->from('project_user pu')
-            ->leftjoin('resume r', 'r.id_user=pu.user')
-            ->leftjoin('project_binding pb', 'pb.user=pu.user')
-            ->leftjoin('project_city pc', 'pc.point=pb.point')
-            ->leftjoin('city c', 'c.id_city=pc.id_city')
-            ->leftjoin('metro m', 'm.id=pc.metro')
-            ->where($filter['staff'], $filter['values'])
-            ->queryScalar();
-    }
-    /*
-    *       Персонал
-    */
-    public function getStaffProject($prj){
-        $filter = $this->getQueryParams($prj);
-
-        $sql = Yii::app()->db->createCommand()
-            ->select("DISTINCT(pu.user)")
-            ->from('project_user pu')
-            ->leftjoin('resume r', 'r.id_user=pu.user')
-            ->leftjoin('project_binding pb', 'pb.user=pu.user')
-            ->leftjoin('project_city pc', 'pc.point=pb.point')
-            ->where($filter['staff'], $filter['values'])
-            ->offset($this->offset)
-            ->limit($this->limit)
-            ->order('pu.user desc')
-            ->queryAll();
-
-        if(!sizeof($sql))
-            return array();
-
-        $arId = array(); // Нашли ID пользователей по фильтру
-        for ($i=0, $n=sizeof($sql); $i<$n; $i++) 
-            $arId[] = $sql[$i]['user'];
-
-        $sql = Yii::app()->db->createCommand()
-            ->select(
-                "pu.user, 
-                pu.status, 
-                pu.date,
-                r.firstname, 
-                r.lastname,
-                r.photo,
-                r.isman,
-                pc.name lname,
-                pc.adres lindex,
-                pc.id_city,
-                pc.metro id_metro,
-                pb.point,
-                c.name city,
-                c.ismetro ismetro,
-                m.name metro")
-            ->from('project_user pu')
-            ->leftjoin('resume r', 'r.id_user=pu.user')
-            ->leftjoin('project_binding pb', 'pb.user=pu.user')
-            ->leftjoin('project_city pc', 'pc.point=pb.point')
-            ->leftjoin('city c', 'c.id_city=pc.id_city')
-            ->leftjoin('metro m', 'm.id=pc.metro')
-            ->where(array('in','pu.user',$arId))
-            ->order('pu.user desc')
-            ->queryAll();  // поиск всех данных по найденым пользователям
-
-        foreach ($sql as $v) {
-            if(!empty($v['lname']))
-                $arRes['filter']['tt_name'][] = $v['lname'];
-            if(!empty($v['lindex']))
-                $arRes['filter']['tt_index'][] = $v['lindex'];
-            if(!empty($v['id_city']))
-                $arRes['filter']['cities'][$v['id_city']] = array(
-                    'id_city' => $v['id_city'],
-                    'city' => $v['city'],
-                    'ismetro' => $v['ismetro']
-                );
-            if(!empty($v['metro']))
-                $arRes['filter']['metros'][$v['id_metro']] = array(
-                    'id' => $v['id_metro'],
-                    'metro' => $v['metro'],
-                    'id_city' => $v['id_city'],
-                    'city' => $v['city']
-                );
-        }
-        $arRes['filter']['tt_name'] = array_unique($arRes['filter']['tt_name']);
-        $arRes['filter']['tt_index'] = array_unique($arRes['filter']['tt_index']);
-
-        foreach ($sql as $u) {
-            $id = $u['user'];
-            $arRes['users'][$id]['id_user'] = $id;
-            $arRes['users'][$id]['name'] = $u['lastname'] . ' ' . $u['firstname'];
-            $arRes['users'][$id]['src'] = ProjectStaff::getPhoto(2, $u, 'small');
-            $arRes['users'][$id]['status'] = $u['status'];
-            if(!empty($u['point']))
-                $arRes['users'][$id]['points'][] = $u['point'];
-            if(!empty($u['id_city']))
-                $arRes['users'][$id]['cities'][$u['id_city']] = $u['city'];
-            if(!empty($u['id_metro']))
-                $arRes['users'][$id]['metros'][$u['id_metro']] = $u['metro'];
-        }
-
-        return $arRes;
-    }
-    
     public function getProject($prj){
-        $arRes = $this->getAdresProgramm($prj);
-        $arRes['users'] = $this->getProjectPromo($prj);
+        $arRes['original'] = $this->getIndex($prj);
+        $arRes['location'] = $this->buildIndexArray($arRes['original']);
+        $arRes['filter'] = $this->buildIndexFilterArray($arRes['original']);
+        $arRes['users'] = $this->getAllStaffProject($prj);
+        $arRes['users'] = $this->buildStaffArray($arRes['users']);
         $arRes['project'] = $this->getProjectData($prj);
 
         return $arRes;
@@ -726,111 +362,6 @@ class Project extends ARModel
         return sizeof($result);
     }
     /*
-    *       формирование массива адреса
-    */
-    public function buildAdressArray($arr){
-        if(!count($arr))
-            return array();
-   
-        $arF = array(
-            'bdate' => $arr[0]['bdate'],
-            'edate' => $arr[0]['edate'],
-            'bdate-short' => $arr[0]['bdate'],
-            'edate-short' => $arr[0]['edate']
-        );
-
-
-        $arI = array();
-        foreach ($arr as $i) {
-            if(strtotime($i['bdate']) < strtotime($arF['bdate']))
-                $arF['bdate'] = $i['bdate'];
-            if(strtotime($i['edate']) > strtotime($arF['edate']))
-                $arF['edate'] = $i['edate'];
-            $arF['cities'][$i['id_city']] = $i['city'];
-            $arI[$i['id_city']] = array(
-                'name' => $i['city'],
-                'id' => $i['id_city'],
-                'metro' => $i['ismetro']
-            );            
-        }
-        $arF['bdate-short'] = date('d.m.y', strtotime($arF['bdate']));
-        $arF['edate-short'] = date('d.m.y', strtotime($arF['edate']));
-
-
-        foreach ($arr as $i) {
-            $arL = array();
-            $arL['id'] = $i['location'];
-            $arL['name'] = $i['name'];
-            $arL['index'] = $i['adres'];
-            if(isset($i['id_metro'])) {
-                $arL['metro'][$i['id_metro']] = $i['metro'];
-                $arF['metro'][$i['id_metro']] = $i['metro'];               
-            }
-
-            $arI[$i['id_city']]['locations'][$i['location']] = $arL;
-        }
-        
-        foreach ($arr as $i) {
-            $arP = array();
-            $arP['id'] = $i['point'];
-            $arP['bdate'] = $i['bdate'];
-            $arP['edate'] = $i['edate'];
-            $arP['btime'] = $i['btime'];
-            $arP['etime'] = $i['etime'];
-            $arI[$i['id_city']]['locations'][$i['location']]['periods'][$i['point']] = $arP;
-        }
-        $arRes['location'] = $arI;
-        $arRes['filter'] = $arF;
-        $arRes['original'] = $arr;
-
-        return $arRes;
-    }
-    /*
-    *       удаление элементов проекта
-    */
-    public function delLocation($arr) {
-        if(!$this->hasAccess($arr['project']))
-            return 0;
-        
-        if(array_key_exists('point',$arr)) {
-            $result = Yii::app()->db->createCommand()
-                ->delete(
-                    'project_city',
-                    'point=:pnt AND project=:prj', 
-                    array(
-                        ':pnt'=>$arr['point'], 
-                        ':prj'=>$arr['project']
-                    )
-                );
-            return $result;
-        }
-        if(array_key_exists('location',$arr)) {
-            $result = Yii::app()->db->createCommand()
-                ->delete(
-                    'project_city',
-                    'location=:loc AND id_city=:city AND project=:prj', 
-                    array(
-                        ':loc'=>$arr['location'], 
-                        ':city'=>$arr['city'],
-                        ':prj'=>$arr['project']
-                    )
-                );
-            return $result;
-        }
-        if(array_key_exists('city',$arr)) {
-            $result = Yii::app()->db->createCommand()
-                ->delete(
-                    'project_city',
-                    'id_city=:city AND project=:prj', 
-                    array(
-                        ':city'=>$arr['city'], 
-                        ':prj'=>$arr['project']
-                    )
-                );
-            return $result;
-        }
-    }
-    /*
     *       Получение XLS
     */
     public function getXLSFile() {
@@ -858,51 +389,6 @@ class Project extends ARModel
                $this->importUsers($props);
             }
         }
-    }
-    /*
-    *       Получаем значение точки
-    */
-    public function getPoint($prj,$point) {
-        $sql = Yii::app()->db->createCommand()
-            ->select(
-                "pc.name,
-                pc.adres,
-                pc.id_city,
-                pc.metro id_metro,
-                DATE_FORMAT(pc.bdate, '%d.%m.%Y') bdate,
-                DATE_FORMAT(pc.edate, '%d.%m.%Y') edate,
-                TIME_FORMAT(pc.btime, '%H:%i') btime,
-                TIME_FORMAT(pc.etime, '%H:%i') etime,
-                pc.location,
-                c.name city, 
-                c.ismetro,
-                m.name metro"
-            )
-            ->from('project_city pc')
-            ->leftjoin('city c', 'c.id_city=pc.id_city')
-            ->leftjoin('metro m', 'm.id=pc.metro')
-            ->where(
-                'pc.project=:prj AND pc.point=:point', 
-                array(':prj'=>$prj, ':point'=>$point)
-            )
-            ->queryAll();
-
-        $arRes = array(
-            'id_city' => $sql[0]['id_city'],
-            'id_loc' => $sql[0]['location'],
-            'id_period' => $point,
-            'city' => $sql[0]['city'],
-            'ismetro' => $sql[0]['ismetro'],
-            'locname' => $sql[0]['name'],
-            'locindex' => $sql[0]['adres'],
-            'metro' => $sql[0]['metro'],
-            'date' => $sql[0]['bdate']==$sql[0]['edate']
-                ? $sql[0]['bdate']
-                : ('с ' . $sql[0]['bdate'] . ' по ' . $sql[0]['edate']),
-            'time' => $sql[0]['btime'] . '-' . $sql[0]['etime']
-        );
-
-        return $arRes;
     }
     /*
     *       привязка пользователя к точке
@@ -941,34 +427,6 @@ class Project extends ARModel
         }
     }
     /*
-    *       страница Персонал
-    */
-    public function getStaff($prj) {
-        $cnt = $this->getStaffProjectCnt($prj);
-        $arRes['pages'] = new CPagination($cnt);
-        $arRes['pages']->pageSize = $this->USERS_IN_PAGE;
-        $arRes['pages']->applyLimit($this);
-        $arRes['project'] = $this->getProjectData($prj);
-        $arRes = array_merge($arRes, $this->getStaffProject($prj));
-        return $arRes;
-    }
-    /*
-    *       Список задач
-    */
-    public function getTaskList($prj) {
-        $arRes = array();
-        $sql = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('project_task')
-            ->where('project = :prj', array(':prj' =>$prj))
-            ->queryAll();
-
-        for($i=0,$n=sizeof($sql); $i<$n; $i++)
-            $arRes[strtotime($sql[$i]['date'])][$sql[$i]['point']][$sql[$i]['user']][$sql[$i]['id']] = $sql[$i];
-
-        return $arRes;
-    }
-    /*
     *       Данные проекта
     */
     public function getProjectData($prj) {
@@ -982,57 +440,9 @@ class Project extends ARModel
         return $sql;
     }
     /*
-    *       Весь персонал
-    */
-    public function getProjectPromo($prj) {
-        $arRes = array();
-        $arP['staff'] = 'pu.project = :prj';
-        $arP['values'] = array(':prj' =>$prj);
-
-        $filter = Yii::app()->getRequest()->getParam('filter');
-        if(isset($filter)) {
-            $fname = Yii::app()->getRequest()->getParam('fname');
-            $lname = Yii::app()->getRequest()->getParam('lname');
-            if(!empty($fname))
-                $arP['staff'] .= " AND r.firstname LIKE '%".$fname."%'";
-            if(!empty($lname))
-                $arP['staff'] .= " AND r.lastname LIKE '%".$lname."%'";
-        }
-
-        $sql = Yii::app()->db->createCommand()
-            ->select(
-                "pu.user, 
-                pu.status,
-                pb.point, 
-                r.firstname, 
-                r.lastname,
-                r.photo,
-                r.isman,
-                u.is_online")
-            ->from('project_user pu')
-            ->leftjoin('resume r', 'r.id_user=pu.user')
-            ->leftjoin('user u', 'u.id_user=pu.user')
-            ->leftjoin('project_binding pb', 'pb.user=pu.user')
-            ->where($arP['staff'], $arP['values'])
-            ->queryAll(); 
-
-        foreach ($sql as $u) {
-            $id = $u['user'];
-            $arRes[$id]['id_user'] = $id;
-            $arRes[$id]['name'] = $u['lastname'] . ' ' . $u['firstname'];
-            $arRes[$id]['src'] = ProjectStaff::getPhoto(2, $u, 'small');
-            $arRes[$id]['status'] = $u['status'];
-            $arRes[$id]['is_online'] = $u['is_online'];
-            if(!empty($u['point']))
-                $arRes[$id]['points'][] = $u['point'];
-        }
-
-        return $arRes;
-    }
-    /*
     *       Формирование массива задач
     */
-    public function buildTaskArray($arr) {
+    public function buildTaskPageArray($arr) {
         $arI = array();
         $fbdate = Yii::app()->getRequest()->getParam('bdate');
         $fedate = Yii::app()->getRequest()->getParam('edate');
@@ -1044,6 +454,7 @@ class Project extends ARModel
     
         $arRes['project'] = $arr['project'];
         $arRes['tasks'] = $this->getTaskList($arr['project']['project']);
+        $arRes['tasks'] = $this->buildTaskArray($arRes['tasks']);
 
         foreach ($arr['users'] as $id => $v)
             if(sizeof($v['points'])>0)
@@ -1076,169 +487,6 @@ class Project extends ARModel
         ksort($arI);
         $arRes['items'] = $arI;
         $arRes['filter'] = $this->getFilter($arRes['points']);
-
-        return $arRes;
-    }
-    /*
-    *       Изменение задач
-    */
-    public function changeTask($arr) {
-        $arRes = ['error' => 1, 'data' => []];
-        if(!$this->hasAccess($arr['project']))
-           return $arRes;
-
-        $arNew = array(
-            'project' => $arr['project'],
-            'user' => $arr['user'],
-            'point' => $arr['point'],
-            'name' => $arr['title'],
-            'text' => $arr['text'],
-            'date' => date('Y-m-d', $arr['date'])
-        );
-
-        switch ($arr['type']) {
-            case 'new-task': // создание нового задания
-                $sql = Yii::app()->db->createCommand()
-                    ->insert('project_task', $arNew);
-                if($sql) {
-                    $sql = Yii::app()->db->createCommand()
-                        ->select("MAX(id)")
-                        ->from('project_task')
-                        ->queryScalar();
-
-                    $arRes['error'] = 0;
-                    $arRes['data']['task'] = $sql;
-                }
-                break;
-            case 'change-task': // изменение существующего
-                $sql = Yii::app()->db->createCommand()
-                    ->update(
-                        'project_task', 
-                        $arNew, 
-                        'id = :id', 
-                        array(':id' => $arr['task'])
-                    );
-                if($sql) $arRes['error'] = 0;
-                break;
-            case 'all-dates-task': // дублирование на все даты точки
-                $sql = Yii::app()->db->createCommand()
-                    ->select("bdate, edate")
-                    ->from('project_city')
-                    ->where(
-                        'project=:prj AND point=:pnt',
-                        array(
-                            ':prj' => $arr['project'],
-                            ':pnt' => $arr['point']
-                        )
-                    )
-                    ->queryRow();
-                $day = 60*60*24;
-                $bdate = strtotime($sql['bdate']);
-                $edate = strtotime($sql['edate']);
-
-                $sql = Yii::app()->db->createCommand()
-                    ->select("*")
-                    ->from('project_task')
-                    ->where(
-                        'project=:prj AND point=:pnt AND user=:u',
-                        array(
-                            ':prj' => $arr['project'],
-                            ':pnt' => $arr['point'],
-                            ':u' => $arr['user']
-                        )
-                    )
-                    ->queryAll();
-
-                $arT = array();
-                foreach ($sql as $v)
-                   $arT[] = strtotime($v['date']);
-
-                do{
-                    $arNew['date'] = date('Y-m-d', $bdate);
-                    if(in_array($bdate, $arT)) {
-                        $sql = Yii::app()->db->createCommand()
-                            ->update(
-                                'project_task', 
-                                $arNew, 
-                                'project=:prj AND point=:pnt AND user=:u AND date=:d',
-                                array(
-                                    ':prj' => $arr['project'],
-                                    ':pnt' => $arr['point'],
-                                    ':u' => $arr['user'],
-                                    ':d' => $arNew['date']
-                                )
-                            );
-                        if($sql) $arRes['error'] = 0;
-                    }
-                    else {
-                        $sql = Yii::app()->db->createCommand()
-                            ->insert('project_task', $arNew);
-                        if($sql) $arRes['error'] = 0;                      
-                    }
-                    $bdate += $day;
-                }
-                while($bdate <= $edate);
-                break;
-            case 'all-users-task': // дублирование на всех привязанных пользователей
-                $sql = Yii::app()->db->createCommand()
-                    ->select("*")
-                    ->from('project_task')
-                    ->where(
-                        'project=:prj AND point=:pnt AND date=:d',
-                        array(
-                            ':prj' => $arr['project'],
-                            ':pnt' => $arr['point'],
-                            ':d' => date('Y-m-d', $arr['date'])
-                        )
-                    )
-                    ->queryAll();
-
-                $arU = array();
-                foreach ($sql as $v)
-                   $arU[] = $v['user'];
-
-                $sql = Yii::app()->db->createCommand()
-                    ->select("user")
-                    ->from('project_binding')
-                    ->where(
-                        'project=:prj AND point=:pnt',
-                        array(
-                            ':prj' => $arr['project'],
-                            ':pnt' => $arr['point']
-                        )
-                    )
-                    ->queryAll();
-
-                foreach ($sql as $v) {
-                    $arNew['user'] = $v['user'];
-                    if(in_array($v['user'], $arU)) { 
-                        $sql = Yii::app()->db->createCommand()
-                            ->update(
-                                'project_task', 
-                                $arNew, 
-                                'project=:prj AND point=:pnt AND user=:u AND date=:d',
-                                array(
-                                    ':prj' => $arr['project'],
-                                    ':pnt' => $arr['point'],
-                                    ':u' => $arNew['user'],
-                                    ':d' => date('Y-m-d', $arr['date'])
-                                )
-                            );
-                        if($sql) $arRes['error'] = 0;
-                    }
-                    else {
-                        $sql = Yii::app()->db->createCommand()
-                            ->insert('project_task', $arNew);
-                        if($sql) $arRes['error'] = 0;                         
-                    }
-                }
-                break;
-            case 'delete-task': // изменение существующего
-                $sql = Yii::app()->db->createCommand()
-                    ->delete('project_task','id=:id', [':id'=>$arr['task']]);
-                if($sql) $arRes['error'] = 0; 
-                break;
-        }
 
         return $arRes;
     }
@@ -1495,6 +743,8 @@ class Project extends ARModel
         //      координаты
         $arRes['gps'] = $this->getСoordinates(['project'=>$project]);
         $arRes['tasks'] = $this->getTaskList($project);
+        $arRes['tasks'] = $this->buildTaskArray($arRes['tasks']);
+
         foreach ($arRes['gps'] as $v) {
             $u = $v['user'];
             $p = $v['point'];

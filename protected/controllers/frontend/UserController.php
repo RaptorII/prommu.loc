@@ -1391,10 +1391,13 @@ class UserController extends AppController
                     }
                     $model->getXLSFile();
                     $data = $model->getStaff($id);
+                    $data['project'] = $model->getProjectData($id);
                     $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
                     break;
                 case 'index':
-                    $data = $model->getAdresProgramm($id);
+                    $data['original'] = $model->getIndex($id);
+                    $data['location'] = $model->buildIndexArray($data['original']);
+                    $data['filter'] = $model->buildIndexFilterArray($data['original']);
                     $data['project'] = $model->getProjectData($id);
                     if(Yii::app()->request->isAjaxRequest) {
                         $this->renderPartial(
@@ -1436,7 +1439,7 @@ class UserController extends AppController
                     break;
                 case 'tasks':
                     $data = $model->getProject($id);
-                    $data = $model->buildTaskArray($data);
+                    $data = $model->buildTaskPageArray($data);
                     if(Yii::app()->request->isAjaxRequest) {
                         $this->renderPartial(
                             'projects/project-tasks-ajax',
@@ -1465,7 +1468,9 @@ class UserController extends AppController
                         $model->recordIndex($_POST, $id);
                         $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id.'/index');
                     }
-                    $data = $model->getAdresProgramm($id);
+                    $data['original'] = $model->getIndex($id);
+                    $data['location'] = $model->buildIndexArray($data['original']);
+                    $data['filter'] = $model->buildIndexFilterArray($data['original']);
                     $data['project'] = $model->getProjectData($id);
                     $view = MainConfig::$VIEW_PROJECT_ITEM_ADR_CHANGE;
                     break;
@@ -1490,6 +1495,7 @@ class UserController extends AppController
 
                     $view = MainConfig::$VIEW_PROJECT_ITEM_PROMO_CHANGE;
                     $data = $model->getStaff($id);
+                    $data['project'] = $model->getProjectData($id);
                     $data['point'] = $model->getPoint($id,$point);
                     if(empty($data['point']['id_city']))
                         $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id);
@@ -1503,7 +1509,7 @@ class UserController extends AppController
                     if($type==2) { // applicant
                         $data = $model->getProject($id);
                         $data['users'] = $model->getProjectAppPromoTemp($id);
-                        $data = $model->buildTaskArray($data);
+                        $data = $model->buildTaskPageArray($data);
                         $view = 'projects/project-app';
                     }
                     break;

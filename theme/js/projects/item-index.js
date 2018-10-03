@@ -257,13 +257,13 @@ var IndexProgram = (function () {
         if(i==='c') {
            query = 'Будет удален город и все связанные данные.\nВы действительно хотите это сделать?';
            arItems = $('.address__item');
-           params = 'type=delete&project=' + self.ID + '&city=' + e.dataset.id;
+           params = 'type=index&project=' + self.ID + '&city=' + e.dataset.id;
         }
         else {
             query = 'Будет удалена ТТ и все связанные данные.\nВы действительно хотите это сделать?';
             arItems = $(main).find('.loc-item');
             main = $(e).closest('.loc-item')[0];
-            params = 'type=delete&project=' + self.ID + '&city=' + e.dataset.idcity + '&location=' + e.dataset.id;
+            params = 'type=index&project=' + self.ID + '&city=' + e.dataset.idcity + '&location=' + e.dataset.id;
         }
 
     	if(arItems.length==1) {
@@ -274,12 +274,12 @@ var IndexProgram = (function () {
     	else {
     		if(confirm(query)) {
 	        $.ajax({
-            type: 'POST',
-            url: '/ajax/ChangeGeoProject',
-            data: params,
+            type: 'DELETE',
+            url: '/ajax/Project',
+            data: {data: JSON.stringify(params)},
             dataType: 'json',
             success: function(r) {
-              if(!r) {
+              if(r.error==true) {
                 MainProject.showPopup('error','server');
               }
               else {

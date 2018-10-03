@@ -1,13 +1,32 @@
 <?php
 
-class ProjectStaff extends Project {
+class ProjectStaff extends CActiveRecordBehavior{
+	public $USERS_IN_PAGE = 20;
+	public $limit;
+	public $offset;
+	/**
+	 * @param $prj number - project ID
+	 * @return staff output array
+	 * страница Персонал
+	 */
+	public function getStaff($prj) {
+		$arId = $this->getStaffProjectCnt($prj);
+		$arRes['pages'] = new CPagination(count($arId));
+		$arRes['pages']->pageSize = $this->USERS_IN_PAGE;
+		$arRes['pages']->applyLimit($this);
+		$arStaff = $this->getStaffProject($arId);
+		$arRes['filter'] = $this->buildStaffFilterArray($arStaff);
+		$arRes['users'] = $this->buildStaffArray($arStaff);
+
+		return $arRes;
+	}
 	/**
 	 * @param $arr array ['users','users-cnt','inv-name','inv-email','prfx-phone','inv-phone']
-	 * @param $project number - project ID
+	 * @param $prj number - project ID
 	 * Запись новых пользователей 
 	 */
-	public function recordStaff($arr, $project) {
-		if(!$project)
+	public function recordStaff($arr, $prj) {
+		if(!$prj)
 			return false;
 
 		$users = explode(',', $arr['users']);
@@ -22,7 +41,7 @@ class ProjectStaff extends Project {
 			foreach ($arU as $user) {
 				Yii::app()->db->createCommand()
 				->insert('project_user', array(
-					'project' => $project,
+					'project' => $prj,
 					'user' => $user['id'],
 					'email' =>  $user['email'],
 					'phone' => ''
@@ -83,7 +102,7 @@ class ProjectStaff extends Project {
 
 				Yii::app()->db->createCommand()
 				->insert('project_user', array(
-					'project' => $project,
+					'project' => $prj,
 					'user' => $id_user+1,
 					'email' => $arr['inv-email'][$i],
 					'phone' => $arr['prfx-phone'][$i].$arr['inv-phone'][$i]
@@ -92,127 +111,211 @@ class ProjectStaff extends Project {
 		}
 	}
 	/**
-	 * @param $project number - project ID
-	 * @return staff count
-	 * подсчет пользователей проекта
+	* @param $prj number - project ID
+	* @return array - ['conditions','values']
+	* Собираем условия для фильтра данных
+	*/
+	public function getStaffFilter($prj) {
+		$arRes['conditions'] = 'pu.project = :prj';
+		$arRes['values'] = array(':prj' =>$prj);
+
+		$filter = Yii::app()->getRequest()->getParam('filter');
+		if(!isset($filter))
+			return $arRes;
+
+		$city = Yii::app()->getRequest()->getParam('city');
+		$tname = Yii::app()->getRequest()->getParam('tt_name');
+		$tindex = Yii::app()->getRequest()->getParam('tt_index');
+		$metro = Yii::app()->getRequest()->getParam('metro');
+		$fname = Yii::app()->getRequest()->getParam('fname');
+		$lname = Yii::app()->getRequest()->getParam('lname');
+		$status = Yii::app()->getRequest()->getParam('status');
+		$haspoint = Yii::app()->getRequest()->getParam('haspoint');
+
+		if($city>0) {
+			$arRes['conditions'] .= ' AND pc.id_city=:city';
+			$arRes['values'][':city'] = $city;
+		}
+		if(!empty($tname)) {
+			$arRes['conditions'] .= " AND pc.name LIKE '".$tname."'";
+		}
+		if(!empty($tindex)) {
+			$arRes['conditions'] .= " AND pc.adres LIKE '".$tindex."'";
+		}
+		if($metro>0) {
+			$arRes['conditions'] .= " AND pc.metro=:metro";
+			$arRes['values'][':metro'] = $metro;
+		}
+		if(!empty($fname)) {
+			$arRes['conditions'] .= " AND r.firstname LIKE '%".$fname."%'";
+		}
+		if(!empty($lname)) {
+			$arRes['conditions'] .= " AND r.lastname LIKE '%".$lname."%'";
+		}
+		if(isset($status)) {
+			switch ($status) {
+				case 1: $arRes['conditions'] .= " AND pu.status=1"; break;
+				case 2: $arRes['conditions'] .= " AND pu.status=0"; break;
+				case 3: $arRes['conditions'] .= " AND pu.status=-1"; break;
+			}
+		}
+		if($haspoint>0) {
+			$arRes['conditions'] .= ($haspoint==1
+				? " AND pb.point IS NOT NULL"
+				: " AND pb.point IS NULL");
+		}
+
+		return $arRes;
+	}
+	/**
+	 * @param $arId number - project ID
+	 * @return staff data
+	 * Выборка без пагинации
 	 */
-	public function getStaffProjectCnt($prj) {
-		$filter = $this->getQueryParams($prj);
-		return Yii::app()->db->createCommand()
-						->select("COUNT(DISTINCT(pu.id))")
-						->from('project_user pu')
-						->leftjoin('resume r', 'r.id_user=pu.user')
-						->leftjoin('project_binding pb', 'pb.user=pu.user')
-						->leftjoin('project_city pc', 'pc.point=pb.point')
-						->leftjoin('city c', 'c.id_city=pc.id_city')
-						->leftjoin('metro m', 'm.id=pc.metro')
-						->where($filter['staff'], $filter['values'])
-						->queryScalar();
+	public function getAllStaffProject($prj) {
+		if(!$prj)
+		return false;	
+		$filter = $this->getStaffFilter($prj);
+		$sql = Yii::app()->db->createCommand()
+							->select(
+							"pu.user, 
+							pu.status,
+							pb.point, 
+							r.firstname, 
+							r.lastname,
+							r.photo,
+							r.isman,
+							u.is_online")
+							->from('project_user pu')
+							->leftjoin('resume r', 'r.id_user=pu.user')
+							->leftjoin('user u', 'u.id_user=pu.user')
+							->leftjoin('project_binding pb', 'pb.user=pu.user')
+							->where($filter['conditions'], $filter['values'])
+							->queryAll(); 
+
+		return $sql;
 	}
 	/**
 	 * @param $prj number - project ID
 	 * @return staff count
-	 * Персонал
+	 * подсчет пользователей проекта
 	 */
-	public function getStaffProject($prj){
-		$filter = $this->getQueryParams($prj);
-
+	public function getStaffProjectCnt($prj) {
+		if(!$prj)
+			return false;	
+		$filter = $this->getStaffFilter($prj);
 		$sql = Yii::app()->db->createCommand()
-				->select("DISTINCT(pu.user)")
-				->from('project_user pu')
-				->leftjoin('resume r', 'r.id_user=pu.user')
-				->leftjoin('project_binding pb', 'pb.user=pu.user')
-				->leftjoin('project_city pc', 'pc.point=pb.point')
-				->where($filter['staff'], $filter['values'])
-				->offset($this->offset)
-				->limit($this->limit)
-				->order('pu.user desc')
-				->queryAll();
-
-		if(!sizeof($sql))
-			return array();
+							->select("DISTINCT(pu.user)")
+							->from('project_user pu')
+							->leftjoin('resume r', 'r.id_user=pu.user')
+							->leftjoin('project_binding pb', 'pb.user=pu.user')
+							->leftjoin('project_city pc', 'pc.point=pb.point')
+							->leftjoin('city c', 'c.id_city=pc.id_city')
+							->leftjoin('metro m', 'm.id=pc.metro')
+							->where($filter['conditions'], $filter['values'])
+							->queryAll();
 
 		$arId = array(); // Нашли ID пользователей по фильтру
 		for ($i=0, $n=sizeof($sql); $i<$n; $i++) 
 			$arId[] = $sql[$i]['user'];
 
-	    $sql = Yii::app()->db->createCommand()
-					->select(
-						"pu.user, 
-						pu.status, 
-						pu.date,
-						r.firstname, 
-						r.lastname,
-						r.photo,
-						r.isman,
-						pc.name lname,
-						pc.adres lindex,
-						pc.id_city,
-						pc.metro id_metro,
-						pb.point,
-						c.name city,
-						c.ismetro ismetro,
-						m.name metro")
-					->from('project_user pu')
-					->leftjoin('resume r', 'r.id_user=pu.user')
-					->leftjoin('project_binding pb', 'pb.user=pu.user')
-					->leftjoin('project_city pc', 'pc.point=pb.point')
-					->leftjoin('city c', 'c.id_city=pc.id_city')
-					->leftjoin('metro m', 'm.id=pc.metro')
-					->where(array('in','pu.user',$arId))
-					->order('pu.user desc')
-					->queryAll();  // поиск всех данных по найденым пользователям
+		return $arId;
+	}
+	/**
+	 * @param $arId number - project ID
+	 * @return staff data
+	 * Поиск персонала по ID
+	 */
+	public function getStaffProject($arId){
+		if(!sizeof($arId))
+			return array();
+		// избавляемся от доп запроса выбирая только нужных юзеров по пагинации
+		for($i=$this->offset, $n=sizeof($arId); $i<$n; $i++)
+			if($i<($this->offset+$this->limit))
+				$arResId[] = $arId[$i];
 
-		foreach ($sql as $v) {
+		$sql = Yii::app()->db->createCommand()
+							->select(
+								"pu.user, 
+								pu.status, 
+								pu.date,
+								r.firstname, 
+								r.lastname,
+								r.photo,
+								r.isman,
+								pc.name lname,
+								pc.adres lindex,
+								pc.id_city,
+								pc.metro id_metro,
+								pb.point,
+								c.name city,
+								c.ismetro ismetro,
+								m.name metro")
+							->from('project_user pu')
+							->leftjoin('resume r', 'r.id_user=pu.user')
+							->leftjoin('project_binding pb', 'pb.user=pu.user')
+							->leftjoin('project_city pc', 'pc.point=pb.point')
+							->leftjoin('city c', 'c.id_city=pc.id_city')
+							->leftjoin('metro m', 'm.id=pc.metro')
+							->where(array('in','pu.user',$arResId))
+							->order('pu.user desc')
+							->queryAll();
+
+		return $sql;
+	}
+	/**
+	 * @param $arr array - sql result
+	 * @return $arr array - filter data
+	 */
+	public function buildStaffFilterArray($arr) {
+		$arRes = array();
+
+		foreach ($arr as $v) {
 			if(!empty($v['lname']))
-				$arRes['filter']['tt_name'][] = $v['lname'];
+				$arRes['tt_name'][] = $v['lname'];
 			if(!empty($v['lindex']))
-				$arRes['filter']['tt_index'][] = $v['lindex'];
+				$arRes['tt_index'][] = $v['lindex'];
 			if(!empty($v['id_city']))
-				$arRes['filter']['cities'][$v['id_city']] = array(
+				$arRes['cities'][$v['id_city']] = array(
 					'id_city' => $v['id_city'],
 					'city' => $v['city'],
 					'ismetro' => $v['ismetro']
 				);
 			if(!empty($v['metro']))
-				$arRes['filter']['metros'][$v['id_metro']] = array(
+				$arRes['metros'][$v['id_metro']] = array(
 					'id' => $v['id_metro'],
 					'metro' => $v['metro'],
 					'id_city' => $v['id_city'],
 					'city' => $v['city']
 				);
 		}
-		$arRes['filter']['tt_name'] = array_unique($arRes['filter']['tt_name']);
-		$arRes['filter']['tt_index'] = array_unique($arRes['filter']['tt_index']);
-
-		foreach ($sql as $u) {
-			$id = $u['user'];
-			$arRes['users'][$id]['id_user'] = $id;
-			$arRes['users'][$id]['name'] = $u['lastname'] . ' ' . $u['firstname'];
-			$arRes['users'][$id]['src'] = $this->getPhoto(2, $u, 'small');
-			$arRes['users'][$id]['status'] = $u['status'];
-			if(!empty($u['point']))
-				$arRes['users'][$id]['points'][] = $u['point'];
-			if(!empty($u['id_city']))
-				$arRes['users'][$id]['cities'][$u['id_city']] = $u['city'];
-			if(!empty($u['id_metro']))
-				$arRes['users'][$id]['metros'][$u['id_metro']] = $u['metro'];
-		}
+		$arRes['tt_name'] = array_unique($arRes['tt_name']);
+		$arRes['tt_index'] = array_unique($arRes['tt_index']);
 
 		return $arRes;
 	}
 	/**
-	 * @param $prj number - project ID
-	 * @return staff output array
-	 * страница Персонал
+	 * @param $arr array - sql result
+	 * @return $arr array - users data
 	 */
-	public function getStaff($prj) {
-		$cnt = $this->getStaffProjectCnt($prj);
-		$arRes['pages'] = new CPagination($cnt);
-		$arRes['pages']->pageSize = $this->USERS_IN_PAGE;
-		$arRes['pages']->applyLimit($this);
-		$arRes['project'] = $this->getProjectData($prj);
-		$arRes = array_merge($arRes, $this->getStaffProject($prj));
+	public function buildStaffArray($arr) {
+		$arRes = array();
+
+		foreach ($arr as $u) {
+			$id = $u['user'];
+			$arRes[$id]['id_user'] = $id;
+			$arRes[$id]['name'] = $u['lastname'] . ' ' . $u['firstname'];
+			$arRes[$id]['src'] = $this->getPhoto(2, $u, 'small');
+			$arRes[$id]['status'] = $u['status'];
+			$arRes[$id]['is_online'] = $u['is_online'];
+			if(!empty($u['point']))
+				$arRes[$id]['points'][] = $u['point'];
+			if(!empty($u['id_city']))
+				$arRes[$id]['cities'][$u['id_city']] = $u['city'];
+			if(!empty($u['id_metro']))
+				$arRes[$id]['metros'][$u['id_metro']] = $u['metro'];
+		}
+
 		return $arRes;
 	}
 	/**
@@ -220,6 +323,7 @@ class ProjectStaff extends Project {
 	*	@param $arr array - ['photo','isman','logo']
 	* @param $size string - ['small', 'medium', 'big']
 	*	@return string
+	* Доп метод для формирования ссылки на картинку
 	*/
 	public static function getPhoto($type, $arr, $size) {
 		$src = DS . 

@@ -1,9 +1,10 @@
 <?php
 
-class ProjectTask extends Project {
+class ProjectTask extends CActiveRecordBehavior{
 	/**
 	*	@param 	number - project ID 
 	*	@return array
+	* Задания по проекту
 	*/
 	public function getTaskList($prj) {
 		if(!$prj)
@@ -20,6 +21,7 @@ class ProjectTask extends Project {
 	/**
 	 * @param array tasks query
 	 * @return array
+	 * Формирования подходящего массива с заданиями
 	 */
 	public function buildTaskArray($arr) {
 		$arRes = array();
@@ -36,11 +38,10 @@ class ProjectTask extends Project {
 	/**
 	 * @param array ['project','user','point','title','text','date']
 	 * @return array ['error','data']
+	 * Изменение заданий
 	 */
 	public function changeTask($arr) {
 		$arRes = ['error' => 1, 'data' => []];
-		if(!$this->hasAccess($arr['project']))
-			return $arRes;
 
 		$arNew = array(
 			'project' => $arr['project'],
