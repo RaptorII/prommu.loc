@@ -1571,10 +1571,7 @@ class Project extends ARModel
                     $arI[$bdate][$p['id_city']]['date'] = date('d.m.Y',$bdate);
                     $arI[$bdate][$p['id_city']]['city'] = $p['city'];
                     $arI[$bdate][$p['id_city']]['ismetro'] = $p['ismetro'];
-                    if(!isset($arI[$bdate][$p['id_city']]['users'][$idus]['points']))
-                        $arI[$bdate][$p['id_city']]['users'][$idus]['points'] = 1;
-                    else
-                        $arI[$bdate][$p['id_city']]['users'][$idus]['points']++;
+                    $arI[$bdate][$p['id_city']]['users'][$idus]['points'][] = $p['point'];
 
                     foreach ($arRes['gps'] as $v) {
                         $d = date('Y-m-d 00:00:00',strtotime($v['date']));
