@@ -133,8 +133,7 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/
                         <div>
                             <div>
                                 <span>Старт работ: </span>
-                                    <?print_r($arUser);?>
-                                    <?if($arUser)?>
+
                                     <span class="geo__green">начал в 9:30</span>
                                     <span> / </span>
                                     <span class="geo__red">опоздание на 20 мин.</span>
@@ -167,7 +166,7 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/
                             </thead>
                             <tbody>
 
-                            <? foreach ($valueUnix['users'][$idus] as $keyItem => $valueItem): ?>
+                            <? foreach ($valueUnix['users'][$idus]['points'] as $keyItem => $valueItem): ?>
                             <tr>
                                 <td>
                                     <div class="geo__table-cell"><?=$viData['points'][$valueItem]['name'];?></div>
