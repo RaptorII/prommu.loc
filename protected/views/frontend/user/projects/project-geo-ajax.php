@@ -37,7 +37,7 @@
                             </td>
                             <td>
                                 <div class="geo__table-cell">
-                                    <?= $valueUser['points'] ; ?>
+                                    <?= count($valueUser['points']); ?>
                                 </div>
                             </td>
 

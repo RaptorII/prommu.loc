@@ -138,10 +138,10 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/
                                     <span> / </span>
                                     <span class="geo__red">опоздание на 20 мин.</span>
                             </div>
-                            <div>
+                            <?/*<div>
                                 <span>Последнее место: АТБ1 </span>
                                 <b></b>
-                            </div>
+                            </div>*/?>
                         </div>
                         <div class="geo-item__cart-cur">
                             <div><span>Сейчас в: АТБ1 </span><b></b></div>
@@ -154,6 +154,7 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/
                 <? foreach ($viData['items'][$unixTime] as $keyUnix => $valueUnix): ?>
                     <? if (isset($valueUnix['users'][$idus]) && !empty($valueUnix['users'][$idus])): ?>
                         <h2 class="geo__item-title"><?= $valueUnix['city'] ?> <span><?= $valueUnix['date'] ?></span></h2>
+
                         <table class="geo__item-table geo-item__table-single">
                             <thead>
                             <tr>
