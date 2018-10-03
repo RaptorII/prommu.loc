@@ -133,9 +133,11 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/
                         <div>
                             <div>
                                 <span>Старт работ: </span>
-                                <span class="geo__green">начал в 9:30</span>
-                                <span> / </span>
-                                <span class="geo__red">опоздание на 20 мин.</span>
+                                    <?print_r($arUser);?>
+                                    <?if($arUser)?>
+                                    <span class="geo__green">начал в 9:30</span>
+                                    <span> / </span>
+                                    <span class="geo__red">опоздание на 20 мин.</span>
                             </div>
                             <div>
                                 <span>Последнее место: АТБ1 </span>

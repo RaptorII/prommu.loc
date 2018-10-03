@@ -37,25 +37,34 @@
                             </td>
                             <td>
                                 <div class="geo__table-cell">
-                                    <?= count($valueUser) ?>
+                                    <?= $valueUser['points'] ; ?>
                                 </div>
                             </td>
 
                             <td>
                                 <div class="geo__table-cell">
-                                    <span class="geo__green">начал</span>
+
+                                    <?if($valueUser['fact']):?>
+                                        <span class="geo__green">начал</span>
+                                    <?else:?>
+                                        <span class="geo__grey">отсутствует</span>
+                                    <?endif;?>
                                 </div>
                             </td>
                             <td>
                                 <div class="geo__table-cell">
                                     <div class="geo__table-loc">
-                                        <span><?=$viData['points'][$valueUser[0]]['name']?></span>
+                                        <?if($valueUser['last-point']):?>
+                                        <span><?=$viData['points'][$valueUser['last-point']]['name']?></span>
                                         <b
                                             data-map-project="<?=$project?>"
                                             data-map-user="<?=$keyUser?>"
-                                            data-map-point="<?=$viData['points'][$valueUser[0]]['point']?>"
+                                            data-map-point="<?=$valueUser['last-point']?>"
                                             data-map-date="<?=$keyTimeStamp?>"
                                             class="js-g-hashint js-get-map" title="Посмотреть на карте"></b>
+                                        <?else:?>
+                                        <span>-</span>
+                                        <?endif;?>
                                     </div>
                                 </div>
                             </td>
