@@ -22,7 +22,7 @@ let IndexTasks = (function () {
         $('.task__block').on('click', '.task__button-change', function()
         {
             let data = self.setProperties(this, "change-task");
-            self.ajaxPushParams(data, "GET", this);
+            self.ajaxPushParams(data, "POST", this);
         });
         /**Дублироать на все даты**/
         $('.task__block').on('click', '.task__button-alldate', function()
@@ -164,14 +164,14 @@ let IndexTasks = (function () {
 
     IndexTasks.prototype.ajaxPushParams = function (data, type, e) {
         if(!data) return;
-
+        
         $.ajax({
-            type: type,
-            url: '/ajax/ChangeGeoProject',
+            type: 'POST',
+            url: '/ajax/Project',
             data: { data: JSON.stringify(data) },
             dataType: 'json',
             success: function (r){
-                if(r.error==1) {
+                if(r.error==true) {
                     MainProject.showPopup('error','server');
                     return;
                 }

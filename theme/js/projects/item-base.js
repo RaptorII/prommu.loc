@@ -36,7 +36,9 @@ var BaseProgram = (function () {
       arDels = i==='c'
         ? $('[data-city="'+id+'"]')
         : $('[data-period="'+id+'"]'),
-      params = 'type=index&project=' + self.ID + (i==='c' ? '&city=' : '&point=') + id;
+      params = {type:'del-index', project:self.ID};
+
+      i==='c' ? params.city=id : params.point=id;
 
     if(arItems.length==1) {
       i==='c'
@@ -46,7 +48,7 @@ var BaseProgram = (function () {
     else {
       if(confirm(query)) {
         $.ajax({
-          type: 'DELETE',
+          type: 'POST',
           url: '/ajax/Project',
           data: {data: JSON.stringify(params)},
           dataType: 'json',

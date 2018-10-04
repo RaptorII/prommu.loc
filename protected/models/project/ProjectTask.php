@@ -41,7 +41,7 @@ class ProjectTask extends CActiveRecordBehavior{
 	 * Изменение заданий
 	 */
 	public function changeTask($arr) {
-		$arRes = ['error' => 1, 'data' => []];
+		$arRes = ['error' => true, 'data' => []];
 
 		$arNew = array(
 			'project' => $arr['project'],
@@ -62,7 +62,7 @@ class ProjectTask extends CActiveRecordBehavior{
 						->from('project_task')
 						->queryScalar();
 
-					$arRes['error'] = 0;
+					$arRes['error'] = false;
 					$arRes['data']['task'] = $sql;
 				}
 				break;
@@ -75,7 +75,7 @@ class ProjectTask extends CActiveRecordBehavior{
 						'id = :id', 
 						array(':id' => $arr['task'])
 					);
-				if($sql) $arRes['error'] = 0;
+				if($sql) $arRes['error'] = false;
 				break;
 
 			case 'all-dates-task': // дублирование на все даты точки
@@ -126,12 +126,12 @@ class ProjectTask extends CActiveRecordBehavior{
 								':d' => $arNew['date']
 							)
 						);
-						if($sql) $arRes['error'] = 0;
+						if($sql) $arRes['error'] = false;
 					}
 					else {
 						$sql = Yii::app()->db->createCommand()
 						->insert('project_task', $arNew);
-						if($sql) $arRes['error'] = 0;
+						if($sql) $arRes['error'] = false;
 					}
 					$bdate += $day;
 				}
@@ -183,12 +183,12 @@ class ProjectTask extends CActiveRecordBehavior{
 								':d' => date('Y-m-d', $arr['date'])
 							)
 						);
-						if($sql) $arRes['error'] = 0;
+						if($sql) $arRes['error'] = false;
 					}
 					else {
 						$sql = Yii::app()->db->createCommand()
 						->insert('project_task', $arNew);
-						if($sql) $arRes['error'] = 0;                         
+						if($sql) $arRes['error'] = false;                         
 					}
 				}
 				break;
@@ -196,7 +196,7 @@ class ProjectTask extends CActiveRecordBehavior{
 			case 'delete-task': // изменение существующего
 				$sql = Yii::app()->db->createCommand()
 				->delete('project_task','id=:id', [':id'=>$arr['task']]);
-				if($sql) $arRes['error'] = 0; 
+				if($sql) $arRes['error'] = false; 
 				break;
 		}
 		return $arRes;

@@ -829,51 +829,32 @@ class AjaxController extends AppController
         }
     }
     /*
-    *       удаление элемента локации на ГЕО проекте
-    */
-    public function actionChangeGeoProject()
-    {
-        $result = 0;
-        $type = Yii::app()->getRequest()->getParam('type');
-        $data = Yii::app()->getRequest()->getParam('data');
-        $model = new Project();
-        $data = json_decode($data, true);
-        if($type=='delete') { // удаление локаций
-            $result = $model->delLocation($_POST);   
-        }
-        else {
-            if(!$model->hasAccess($data['project'])) {
-                $result = ['error' => 1, 'data' => []];
-            }
-            else {
-                $result = $model->changeTask($data);                
-            }
-        }
-        echo CJSON::encode($result);
-    }
-    /*
     *       Глобальный экшн для ГЕО проектов
     */
     public function actionProject()
     {
         $result = array('error'=>true);
         $data = Yii::app()->getRequest()->getParam('data');
-        $data = json_decode($data, true, 10, JSON_BIGINT_AS_STRING);
+        $data = json_decode($data, true, 5, JSON_BIGINT_AS_STRING);
         
         $model = new Project();
         if($model->hasAccess($data['project'])) {
             switch ($_SERVER['REQUEST_METHOD']) {
                 case 'GET':
-                    if($data['type']=='coordinates')
+                    if($data['type']=='coordinates') // получение координат передвижения С
                         $result = $model->getСoordinates($data);
                     break;
                 case 'POST':
-                    if($data['type']=='coordinates')
+                    if($data['type']=='coordinates') // запись координат от С
                         $result = $model->recordReport($data);
-                    break;
-                case 'DELETE':
-                    if($data['type']=='index') 
+                    if($data['type']=='del-index') // удаление объектов адресной программы
                         $result = $model->deleteLocation($data);
+                    if(in_array(
+                            $data['type'], 
+                            ['new-task','change-task','all-dates-task','all-users-task','delete-task']
+                        )
+                    )
+                        $result = $model->changeTask($data); 
                     break;
             }
         }
