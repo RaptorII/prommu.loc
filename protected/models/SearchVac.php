@@ -255,7 +255,13 @@ class SearchVac extends Model
             foreach($data['post'] as $post_id => $on)
             {
                 $post = $this->getOccupationByField('id', $post_id);
-                if($post && $post['comment']){
+                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                if($post['id']==111 && strpos($_SERVER['REQUEST_URI'], 'razdacha-listovok')!=false) {
+                    $posts[] = 'razdacha-listovok';
+                    $cnt++;
+                    $hasPost = true;
+                }
+                elseif($post && $post['comment']){
                     $posts[] = $post['comment'];
                     $cnt++;
                     $hasPost = true;
