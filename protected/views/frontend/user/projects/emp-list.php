@@ -10,9 +10,9 @@
   <div class="col-xs-12">
     <div class="projects__header">
       <span class="projects__header-name"><?=$viData['employer']['name']?></span>
-      <a class='projects__btn prmu-btn' href='<?=MainConfig::$PAGE_PROJECT_NEW?>'>
-      	<span>Добавить проект</span>
-      </a>  
+				<a class='projects__btn prmu-btn' href='<?=MainConfig::$PAGE_PROJECT_NEW?>'>
+					<span>Добавить проект</span>
+				</a>
     </div>
   </div>
 	<div class="col-xs-12 col-sm-4 col-lg-3">
@@ -31,6 +31,9 @@
 		</div>
 		<? if($section!='archive'): ?>
 			<?php if(count($viData['items'])): ?>
+				<a class='projects__btn all-projects prmu-btn' href='<?=MainConfig::$PAGE_PROJECT_ALL?>'>
+					<span>Все проекты</span>
+				</a>
 				<div class="projects__list">
 					<?php foreach ($viData['items'] as $id => $p): ?>
 						<div class="projects__item">

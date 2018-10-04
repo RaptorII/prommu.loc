@@ -341,22 +341,30 @@ class Project extends CActiveRecord
     /*
     *       Проверка доступа
     */
-    public function hasAccess($prj){
+    public function hasAccess($prj=0){
         $idus = Share::$UserProfile->id;
         $t = Share::$UserProfile->type;
+        $conditions = 'id_user=:idus';
+        $values = array(':idus' => $idus);
+
+        if($prj>0) {
+            $conditions .= ' AND project=:prj';
+            $values[':prj'] = $prj;
+        }
+
         if($t==3) {
             $result = Yii::app()->db->createCommand()
-                ->select('id')
-                ->from('project')
-                ->where('id_user=:idus AND project=:prj', array(':idus'=>$idus,':prj'=>$prj))
-                ->queryAll();
+                        ->select('id')
+                        ->from('project')
+                        ->where($conditions, $values)
+                        ->queryAll();
         }
         if($t==2) {
             $result = Yii::app()->db->createCommand()
-                ->select('id')
-                ->from('project_user')
-                ->where('user=:idus AND project=:prj', array(':idus'=>$idus,':prj'=>$prj))
-                ->queryAll();
+                        ->select('id')
+                        ->from('project_user')
+                        ->where($conditions, $values)
+                        ->queryAll();
         }
             
         return sizeof($result);
@@ -850,4 +858,22 @@ class Project extends CActiveRecord
 
         return $arRes;
     }
+    /**
+     * @param $idus number - user ID
+     * @return staff data
+     * Выборка без пагинации по всем проектам
+     */
+    public function getAllProjectsId($idus) {
+        if(!$idus)
+            return false;
+
+        $sql = Yii::app()->db->createCommand()
+                ->select('project')
+                ->from('project')
+                ->where('id_user=:idus', array(':idus' => $idus))
+                ->queryAll();
+
+        return $sql;
+    }
+
 }

@@ -76,13 +76,21 @@ class ProjectIndex extends CActiveRecordBehavior{
 		}
 	}
 	/**
-	* @param $prj number - project ID
+	* @param $prj number OR array - project ID
 	* @return array - ['conditions','values']
 	* Собираем условия для фильтра данных
 	*/
 	public function getIndexFilter($prj) {
-		$arRes['conditions'] = 'pc.project = :prj';
-		$arRes['values'] = array(':prj' =>$prj);
+		if(is_array($prj)) { // all projects
+			$arRes['conditions'] = 'pc.project IN (';
+			for ($i=0, $n=sizeof($prj); $i<$n; $i++)
+				$arRes['conditions'] .= $prj[$i]['project'] . ($i+1<$n ? ',' : ')');
+			$arRes['values'] = array();
+		}
+		else {	// one project
+			$arRes['conditions'] = 'pc.project = :prj';
+			$arRes['values'] = array(':prj' =>$prj);
+		}
 
 		$filter = Yii::app()->getRequest()->getParam('filter');
 		if(!isset($filter))
@@ -134,7 +142,8 @@ class ProjectIndex extends CActiveRecordBehavior{
 		$filter = $this->getIndexFilter($prj);
 		$sql = Yii::app()->db->createCommand()
 							->select(
-								"pc.name, 
+								"pc.project,
+								pc.name, 
 								pc.adres, 
 								pc.id_city, 
 								c.name city, 
@@ -213,6 +222,7 @@ class ProjectIndex extends CActiveRecordBehavior{
 		foreach ($arr as $i) {
 			$arP = array();
 			$arP['id'] = $i['point'];
+			$arP['project'] = $i['project'];
 			$arP['bdate'] = $i['bdate'];
 			$arP['edate'] = $i['edate'];
 			$arP['btime'] = $i['btime'];
@@ -316,8 +326,41 @@ class ProjectIndex extends CActiveRecordBehavior{
 
 		return $arRes;
 	}
+	/**
+	 * @param $arId array - projects IDies
+	 * @return staff data
+	 * Выборка без пагинации по всем проектам
+	 */
+	public function getIndexAllProjects($arId) {
+		$filter = $this->getIndexFilter($arId);
+		$sql = Yii::app()->db->createCommand()
+							->select(
+								"pc.project,
+								pc.name, 
+								pc.adres, 
+								pc.id_city, 
+								c.name city, 
+								c.ismetro,
+								DATE_FORMAT(pc.bdate, '%d.%m.%Y') bdate, 
+								DATE_FORMAT(pc.edate, '%d.%m.%Y') edate,
+								TIME_FORMAT(pc.btime, '%H:%i') btime, 
+								TIME_FORMAT(pc.etime, '%H:%i') etime,
+								pc.point,
+								pc.location,
+								pc.metro id_metro,
+								m.name metro"
+							)
+							->from('project_city pc')
+							->leftjoin('city c', 'c.id_city=pc.id_city')
+							->leftjoin('metro m', 'm.id=pc.metro')
+							->where($filter['conditions'],$filter['values'])
+							->order('pc.bdate asc')
+							->queryAll();
 
-
-
-
+		return array(
+				'original' => $sql,
+				'location' => $this->buildIndexArray($sql),
+				'filter' => $this->buildIndexFilterArray($sql)
+			);
+	}
 }

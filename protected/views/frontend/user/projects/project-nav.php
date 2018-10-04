@@ -4,7 +4,7 @@
 		$s = 'main';
 	$link = MainConfig::$PAGE_PROJECT_LIST . '/' .  $project;
 	$arTabs = [
-		'main' => [ 'name' => 'ОСНОВНОЕ', 'link' => $link ],
+		'main' => [ 'name' => 'ГЛАВНАЯ', 'link' => $link ],
 		'staff' => [ 'name' => 'ПЕРСОНАЛ', 'link' => $link . '/staff' ],
 		'index' => [ 'name' => 'АДРЕСНАЯ ПРОГРАММА', 'link' => $link . '/index' ],
 		'geo' => [ 'name' => 'ГЕОЛОКАЦИЯ', 'link' => $link . '/geo' ],

@@ -111,13 +111,21 @@ class ProjectStaff extends CActiveRecordBehavior{
 		}
 	}
 	/**
-	* @param $prj number - project ID
+	* @param $prj number OR array - project ID
 	* @return array - ['conditions','values']
 	* Собираем условия для фильтра данных
 	*/
 	public function getStaffFilter($prj) {
-		$arRes['conditions'] = 'pu.project = :prj';
-		$arRes['values'] = array(':prj' =>$prj);
+		if(is_array($prj)) { // all projects
+			$arRes['conditions'] = 'pu.project IN (';
+			for ($i=0, $n=sizeof($prj); $i<$n; $i++)
+				$arRes['conditions'] .= $prj[$i]['project'] . ($i+1<$n ? ',' : ')');
+			$arRes['values'] = array();
+		}
+		else {	// one project
+			$arRes['conditions'] = 'pu.project = :prj';
+			$arRes['values'] = array(':prj' =>$prj);
+		}
 
 		$filter = Yii::app()->getRequest()->getParam('filter');
 		if(!isset($filter))
@@ -168,7 +176,7 @@ class ProjectStaff extends CActiveRecordBehavior{
 		return $arRes;
 	}
 	/**
-	 * @param $arId number - project ID
+	 * @param $prj number - project ID
 	 * @return staff data
 	 * Выборка без пагинации
 	 */
@@ -178,7 +186,8 @@ class ProjectStaff extends CActiveRecordBehavior{
 		$filter = $this->getStaffFilter($prj);
 		$sql = Yii::app()->db->createCommand()
 							->select(
-							"pu.user, 
+							"pu.project,
+							pu.user, 
 							pu.status,
 							pb.point, 
 							r.firstname, 
@@ -222,7 +231,7 @@ class ProjectStaff extends CActiveRecordBehavior{
 		return $arId;
 	}
 	/**
-	 * @param $arId number - project ID
+	 * @param $arId array - filtered ID of staff
 	 * @return staff data
 	 * Поиск персонала по ID
 	 */
@@ -236,7 +245,8 @@ class ProjectStaff extends CActiveRecordBehavior{
 
 		$sql = Yii::app()->db->createCommand()
 							->select(
-								"pu.user, 
+								"pu.project,
+								pu.user, 
 								pu.status, 
 								pu.date,
 								r.firstname, 
@@ -303,6 +313,7 @@ class ProjectStaff extends CActiveRecordBehavior{
 
 		foreach ($arr as $u) {
 			$id = $u['user'];
+			$arRes[$id]['project'] = $u['project'];
 			$arRes[$id]['id_user'] = $id;
 			$arRes[$id]['name'] = $u['lastname'] . ' ' . $u['firstname'];
 			$arRes[$id]['src'] = $this->getPhoto(2, $u, 'small');
@@ -350,5 +361,32 @@ class ProjectStaff extends CActiveRecordBehavior{
 				$src .= MainConfig::$DEF_LOGO;
 		}
 		return $src;
+	}
+	/**
+	 * @param $arId array - projects IDies
+	 * @return staff data
+	 * Выборка без пагинации по всем проектам
+	 */
+	public function getStaffAllProjects($arId) {
+		$filter = $this->getStaffFilter($arId);
+		$sql = Yii::app()->db->createCommand()
+							->select(
+							"pu.project,
+							pu.user, 
+							pu.status,
+							pb.point, 
+							r.firstname, 
+							r.lastname,
+							r.photo,
+							r.isman,
+							u.is_online")
+							->from('project_user pu')
+							->leftjoin('resume r', 'r.id_user=pu.user')
+							->leftjoin('user u', 'u.id_user=pu.user')
+							->leftjoin('project_binding pb', 'pb.user=pu.user')
+							->where($filter['conditions'],$filter['values'])
+							->queryAll(); 
+
+		return $this->buildStaffArray($sql);
 	}
 }

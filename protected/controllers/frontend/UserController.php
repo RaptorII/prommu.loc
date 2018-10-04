@@ -1340,6 +1340,7 @@ class UserController extends AppController
     */
     public function actionProjects()
     {
+        $idus = Share::$UserProfile->id;
         $type = Share::$UserProfile->type;
         !in_array($type, [2,3]) && $this->redirect(MainConfig::$PAGE_INDEX);
 
@@ -1361,6 +1362,25 @@ class UserController extends AppController
                 $data = (new Services())->getFilteredPromos();
             }
             $view = MainConfig::$VIEW_PROJECT_NEW;
+        }
+        elseif($id=='all' && $type==3) {
+            if(!$model->hasAccess($id))
+                $this->redirect(MainConfig::$PAGE_PROJECT_LIST);
+
+            $arId = $model->getAllProjectsId($idus);
+            $data = $model->getIndexAllProjects($arId);
+            $data['users'] = $model->getStaffAllProjects($arId);
+            $view = MainConfig::$VIEW_PROJECT_ALL;
+
+            if(Yii::app()->request->isAjaxRequest) {
+                $this->renderPartial(
+                    'projects/all-ajax',
+                    array('viData' => $data, 'project' => $id),
+                    false, true
+                );
+                return;
+            }
+
         }
         elseif($id>0) { // существующий
             if(!$model->hasAccess($id))

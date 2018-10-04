@@ -35,6 +35,10 @@
 	padding: 5px 15px;
 	border-radius: 17px;
 }
+.projects__btn.all-projects{
+	width: 175px;
+	margin: 0 auto 20px;
+}
 .projects__btn:before,
 .projects__btn:after{ border-radius:13px }
 .projects__user{
