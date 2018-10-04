@@ -5,7 +5,7 @@
 	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/services/list.js', CClientScript::POS_END);
 	$type = Share::$UserProfile->type;
 	$arApp = ['geolocation-staff','prommu_card','medical-record']; // то, что доступно соискателю
-	$arCustom = ['outstaffing','personal-manager-outsourcing','medical-record']; // Уточнить цену
+	$arCustom = ['outstaffing','personal-manager-outsourcing','medical-record']; // По запросу
 ?>
 <div class="row">
 	<div class="col-xs-12 services">
@@ -30,7 +30,7 @@
 							<div>
 								<div class="services__price">
 									<? if(in_array($m['icon'], $arCustom)): ?>
-										<div class="services__price-item">Уточнить цену</div>
+										<div class="services__price-item">По запросу</div>
 									<? else: ?>
 										<div class="services__price-item">
 											<?echo $price['price'] 
@@ -91,7 +91,7 @@
 									<div>
 										<div class="services__price">
 											<? if(in_array($m['icon'], $arCustom)): ?>
-												<div class="services__price-item">Уточнить цену</div>
+												<div class="services__price-item">По запросу</div>
 											<? else: ?>
 												<div class="services__price-item">
 													<?echo $price['price'] 

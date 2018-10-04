@@ -707,12 +707,17 @@ class Seo extends CActiveRecord
         $arVacancies = array();
         $arWages = array();
         $cities = '';
+        $citiesTitle = '';
         $vacancies = '';
+        $vacanciesTitle = '';
         $wage = '';
         $fio = $arParams['firstname'] . ' ' . $arParams['lastname'];
+        $hasMoscow = false;
 
-        foreach($arParams['cities'] as $city)
+        foreach($arParams['cities'] as $city) {
             isset($city) && $arCities[] = $city['name'] . '(е)'; // города
+            $city['id']==1307 && $hasMoscow = $city['name'] . '(е)';
+        }
 
         foreach($arParams['posts'] as $p){
             switch ($p['pt']) {
@@ -751,22 +756,32 @@ class Seo extends CActiveRecord
         sort($arCities);
 
         if(sizeof($arCities)>0){       
-          $cities = 'в ' . join(', ', $arCities) . ',';
+          $cities = 'в ' . join(', ', $arCities);
+          $citiesTitle = $cities;
         }
-        if(sizeof($arVacancies)>0)
-          $vacancies = ' ' . join(', ', $arVacancies) . ', ';
+        if(sizeof($arCities)>1) {
+            !$hasMoscow
+            ? $citiesTitle = 'в ' . $arCities[0]
+            : $citiesTitle = 'в ' . $hasMoscow;
+        }
+
+        if(sizeof($arVacancies)>0) {
+            $vacancies = ' ' . join(', ', $arVacancies) . ', ';
+            $vacanciesTitle = $vacancies;
+        }
+        if(sizeof($arVacancies)>1)
+            $vacanciesTitle = ' ' . $arVacancies[0] . ', ';;
 
         if(sizeof($arWages)>0)
           $wage = ' ожидаемая оплата: от ' . $arWages['pay'] . ' ' . $arWages['pt'] . ', ';
 
         $sex = $arParams['isman'] ? 'мужской' : 'женский'; // пол
-        $site = 
-        $title = 'Резюме' . $vacancies 
-            . $cities . ' - поиск сотрудников на ' 
+        $title = 'Резюме' . $vacanciesTitle 
+            . $citiesTitle . ' - поиск сотрудников на ' 
             . Subdomain::getSubdomain($arParams['cities'])['name'];
 
         $description = "Резюме:" . $vacancies 
-            . $cities . $wage . " возраст: " 
+            . $cities . ',' . $wage . " возраст: " 
             . $arParams['years'] . ", пол: " . $sex;
         if(!empty($arParams['education']))
             $description .= ', образование: ' . $arParams['education'];

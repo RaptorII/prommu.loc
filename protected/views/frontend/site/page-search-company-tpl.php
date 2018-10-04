@@ -9,7 +9,6 @@
 	// если не моб устройство
 	// endif; 
 ?>
-<meta name="robots" content="noindex">
 <div class='row page-search-empl'>
   <script type="text/javascript">var arAllData = <?=json_encode($viData['filter'])?></script>
   <div class="pse__veil"></div>
