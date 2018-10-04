@@ -255,13 +255,7 @@ class SearchVac extends Model
             foreach($data['post'] as $post_id => $on)
             {
                 $post = $this->getOccupationByField('id', $post_id);
-                // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                if($post['id']==111 && strpos($_SERVER['REQUEST_URI'], 'razdacha-listovok')!=false) {
-                    $posts[] = 'razdacha-listovok';
-                    $cnt++;
-                    $hasPost = true;
-                }
-                elseif($post && $post['comment']){
+                if($post && $post['comment']){
                     $posts[] = $post['comment'];
                     $cnt++;
                     $hasPost = true;
@@ -548,7 +542,13 @@ class SearchVac extends Model
                 WHERE d.id_par = 110 AND d.id = '" . $id . "' AND d.key <> 'custpo'
                 ORDER BY d.npp, d.name";
             $post = Yii::app()->db->createCommand($sql)->queryRow();
-            $url .= '/' . $post['comment'];
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            if($post['id']==111 && strpos($_SERVER['REQUEST_URI'], 'razdacha-listovok')!=false) {
+                $url .= '/razdacha-listovok';
+            }
+            else {
+                $url .= '/' . $post['comment'];
+            }
         }
         // города
         if(isset($data['cities']) && sizeof($data['cities'])==1 && $data['cities'][0]!=$id_city){
