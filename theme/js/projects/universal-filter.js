@@ -70,7 +70,7 @@ let IndexUniversalFilter = (function () {
         this.hierarchyTracking();
         self.setDefaultFilterProperties();
         //      аякс постраничная навигация
-        $('#staff-content').on('click','.paging-wrapp a', function(e){
+        $('#ajax-content').on('click','.paging-wrapp a', function(e){
             e.preventDefault();
             self.ajaxSetParams(e.target);
         });
