@@ -209,6 +209,16 @@ class SearchRule extends CBaseUrlRule {
 
             foreach($tmpV as $k => $tmpV2)
             {
+                if($tmpV2=='razdacha-listovok') { // костыль  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    $outData['occupation'.$k] = array(
+                        'raw' => $v,
+                        'param' => 'post[111]=on'
+                    );
+
+                    $mayBeOne = true;
+                    $templateUrlParams['occupations'][] = 'Раздача листовок';
+                    continue;
+                }
                 if($occupation = $modelSearchVac->getOccupationByField('comment', $tmpV2))
                 {
                     $outData['occupation'.$k] = array(
@@ -429,6 +439,15 @@ class SearchRule extends CBaseUrlRule {
             $tmpV = explode(',', $v);
             foreach($tmpV as $k => $tmpV2)
             {
+                if($tmpV2=='razdacha-listovok') { // костыль !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    $outData['occupation'.$k] = array(
+                        'raw' => $v,
+                        'param' => 'posts[]=111'
+                    );
+                    $templateUrlParams['occupations'][] = 'Раздача листовок';
+                    continue;
+                }
+
                 if($occupation = $modelSearchPromo->getOccupationByField('comment', $tmpV2))
                 {
                     $outData['occupation'.$k] = array(
