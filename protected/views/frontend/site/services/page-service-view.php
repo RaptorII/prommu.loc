@@ -6,6 +6,7 @@
   $type = Share::$UserProfile->type;
   $cnt = iconv_strlen($viData['service']['name'],'UTF-8');
   $arCustom = ['outstaffing','personal-manager-outsourcing','medical-record']; // По запросу
+  $arGuest = ['prommu_card','medical-record']; // для гостя
 ?>
 <div class="row">
   <div class="col-xs-12 service">
@@ -33,7 +34,7 @@
         data-id="<?=$viData['service']['id']?>" 
         data-type="<?=$viData['service']['link']?>"
       >
-        <? if(in_array($type,[2,3]) && $viData['service']['link']!='geolocation-staff'): ?>
+        <? if((in_array($type,[2,3]) && $viData['service']['link']!='geolocation-staff') || in_array($viData['service']['link'], $arGuest)): ?>
           <a href="<?='/user/services/' . $viData['service']['link']?>" class="user">Заказать</a>
         <? else: ?>
           <a href="javascript:void(0)">Заказать</a>

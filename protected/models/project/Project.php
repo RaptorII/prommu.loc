@@ -868,7 +868,7 @@ class Project extends CActiveRecord
             return false;
 
         $sql = Yii::app()->db->createCommand()
-                ->select('project')
+                ->select('project, name')
                 ->from('project')
                 ->where('id_user=:idus', array(':idus' => $idus))
                 ->queryAll();

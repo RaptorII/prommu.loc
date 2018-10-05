@@ -116,6 +116,10 @@ class ProjectStaff extends CActiveRecordBehavior{
 	* Собираем условия для фильтра данных
 	*/
 	public function getStaffFilter($prj) {
+		$project = Yii::app()->getRequest()->getParam('project');
+		if($project>0)
+			$prj = $project;
+
 		if(is_array($prj)) { // all projects
 			$arRes['conditions'] = 'pu.project IN (';
 			for ($i=0, $n=sizeof($prj); $i<$n; $i++)
@@ -199,6 +203,7 @@ class ProjectStaff extends CActiveRecordBehavior{
 							->leftjoin('resume r', 'r.id_user=pu.user')
 							->leftjoin('user u', 'u.id_user=pu.user')
 							->leftjoin('project_binding pb', 'pb.user=pu.user')
+							->leftjoin('project_city pc', 'pc.point=pb.point')
 							->where($filter['conditions'], $filter['values'])
 							->queryAll(); 
 
@@ -384,6 +389,7 @@ class ProjectStaff extends CActiveRecordBehavior{
 							->leftjoin('resume r', 'r.id_user=pu.user')
 							->leftjoin('user u', 'u.id_user=pu.user')
 							->leftjoin('project_binding pb', 'pb.user=pu.user')
+							->leftjoin('project_city pc', 'pc.point=pb.point')
 							->where($filter['conditions'],$filter['values'])
 							->queryAll(); 
 

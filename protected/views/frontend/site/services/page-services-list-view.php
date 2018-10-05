@@ -6,6 +6,7 @@
 	$type = Share::$UserProfile->type;
 	$arApp = ['geolocation-staff','prommu_card','medical-record']; // то, что доступно соискателю
 	$arCustom = ['outstaffing','personal-manager-outsourcing','medical-record']; // По запросу
+	$arGuest = ['prommu_card','medical-record']; // для гостя
 ?>
 <div class="row">
 	<div class="col-xs-12 services">
@@ -50,7 +51,7 @@
 										<a href="javascript:void(0)">Заказать</a>
 									<? elseif($m['icon']=='geolocation-staff'): ?>
 										<a href="javascript:void(0)" class="disable">В разработке</a>
-									<? elseif(in_array($type,[2,3])): ?>
+									<? elseif(in_array($type,[2,3]) || in_array($m['icon'], $arGuest)): ?>
 										<? 
 											sizeof($prices['prices'][$m['icon']]) > 1
 											? $link = '/user' . $m['link'] //. '?type=' . $price['id']
@@ -105,7 +106,7 @@
 											data-id="<?=$s['id']?>" 
 											data-type="<?=$s['icon']?>"
 										>
-											<? if(in_array($type,[2,3])): ?>
+											<? if(in_array($type,[2,3]) || in_array($s['icon'], $arGuest)): ?>
 												<?
 													sizeof($prices['prices'][$s['icon']]) > 1
 													? $link = '/user' . $s['link'] //. '?type=' . $price['id']

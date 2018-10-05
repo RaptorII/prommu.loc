@@ -81,6 +81,10 @@ class ProjectIndex extends CActiveRecordBehavior{
 	* Собираем условия для фильтра данных
 	*/
 	public function getIndexFilter($prj) {
+		$project = Yii::app()->getRequest()->getParam('project');
+		if($project>0)
+			$prj = $project;
+
 		if(is_array($prj)) { // all projects
 			$arRes['conditions'] = 'pc.project IN (';
 			for ($i=0, $n=sizeof($prj); $i<$n; $i++)
@@ -185,11 +189,22 @@ class ProjectIndex extends CActiveRecordBehavior{
 				$arRes['bdate'] = $i['bdate'];
 			if(strtotime($i['edate']) > strtotime($arRes['edate']))
 				$arRes['edate'] = $i['edate'];
-			if(isset($i['id_metro']))
-				$arRes['metro'][$i['id_metro']] = $i['metro'];
+			if(!empty($i['name']))
+				$arRes['tt_name'][] = $i['name'];
+			if(!empty($i['adres']))
+				$arRes['tt_index'][] = $i['adres'];
+			if(!empty($i['metro']))
+				$arRes['metros'][$i['id_metro']] = array(
+					'id' => $i['id_metro'],
+					'metro' => $i['metro'],
+					'id_city' => $i['id_city'],
+					'city' => $i['city']
+				);
 		}
 		$arRes['bdate-short'] = date('d.m.y', strtotime($arRes['bdate']));
 		$arRes['edate-short'] = date('d.m.y', strtotime($arRes['edate']));
+		$arRes['tt_name'] = array_unique($arRes['tt_name']);
+		$arRes['tt_index'] = array_unique($arRes['tt_index']);
 
 		return $arRes;
 	}

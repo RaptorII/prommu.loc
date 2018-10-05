@@ -1370,6 +1370,7 @@ class UserController extends AppController
             $arId = $model->getAllProjectsId($idus);
             $data = $model->getIndexAllProjects($arId);
             $data['users'] = $model->getStaffAllProjects($arId);
+            $data['filter']['projects'] = $arId;
             $view = MainConfig::$VIEW_PROJECT_ALL;
 
             if(Yii::app()->request->isAjaxRequest) {
@@ -1582,14 +1583,11 @@ class UserController extends AppController
         $this->setBreadcrumbs($title, MainConfig::$PAGE_SERVICES);
         $serviceLink = DS.MainConfig::$PAGE_SERVICES;
         $type = Share::$UserProfile->type;
-        if(!in_array($type, [2,3]))
-            $this->redirect($serviceLink);
-
         $data = $Services->getServiceData($id);
         $data = array_merge(array('service' => $data), $Services->getServices($id));
         switch ($id){
             case 'premium-vacancy':
-                if($type==2)
+                if($type==2 || !in_array($type, [2,3]))
                     $this->redirect($serviceLink);
 
                 $view = MainConfig::$VIEWS_SERVICE_PREMIUM_VIEW;
@@ -1598,7 +1596,7 @@ class UserController extends AppController
                 break;
 
             case 'email-invitation':  
-                if($type==2)
+                if($type==2 || !in_array($type, [2,3]))
                     $this->redirect($serviceLink);
                 $vac = Yii::app()->getRequest()->getParam('vacancy');
                 $model = new PrommuOrder;
@@ -1628,7 +1626,7 @@ class UserController extends AppController
                 break;
 
             case 'push-notification':
-                if($type==2)
+                if($type==2 || !in_array($type, [2,3]))
                     $this->redirect($serviceLink);
 
                 if(Yii::app()->getRequest()->getParam('users')){
@@ -1653,7 +1651,7 @@ class UserController extends AppController
                 break;
 
             case 'sms-informing-staff':
-                if($type==2)
+                if($type==2 || !in_array($type, [2,3]))
                     $this->redirect($serviceLink);
 
                 $vacancy = Yii::app()->getRequest()->getParam('vacancy');
@@ -1681,7 +1679,7 @@ class UserController extends AppController
                 break;
 
             case 'publication-vacancy-social-net':
-                if($type==2)
+                if($type==2 || !in_array($type, [2,3]))
                     $this->redirect($serviceLink);
 
                 $data = (new Vacancy())->postToSocialService();
@@ -1702,7 +1700,7 @@ class UserController extends AppController
                 break;
 
             case 'personal-manager-outsourcing':
-                if($type==2)
+                if($type==2 || !in_array($type, [2,3]))
                     $this->redirect($serviceLink);
                 $vac = new Vacancy();
                 $data = $vac->getVacanciesPrem();
@@ -1727,7 +1725,7 @@ class UserController extends AppController
                 break;
 
             case 'api-key-prommu':
-                if($type==2)
+                if($type==2 || !in_array($type, [2,3]))
                     $this->redirect($serviceLink);
                 $view = MainConfig::$VIEWS_SERVICE_API_VIEW;
                 break;
