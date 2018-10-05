@@ -1,3 +1,6 @@
+/*
+*       Filter
+*/
 .prommu__universal-filter {
     display: flex;
     flex-wrap: wrap;
@@ -86,3 +89,39 @@
         display:none!important;
     }
 }
+/*
+* 
+*/
+.project__users-title{
+    text-align: center;
+    font-size: 24px;
+    margin: 20px 0;
+}
+.project__users-item{
+    display: flex;
+    padding-bottom: 20px;
+}
+.project__user-src{
+    margin-right: 10px;
+    position: relative;
+}
+.project__user-src:before{
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background: #abb820;
+}
+.project__user-src img{
+    width: 76px;
+    height: 76px;
+    display: block;
+    border-radius: 50%;
+}
+.project__user-name{
+    font-size: 18px;
+    padding-bottom: 5px;
+}
+.project__user-status.green{ color:#abb820 }
+.project__user-status.red{ color:#ed0909 }
+.project__user-status.grey{ color:#9e9e9e }

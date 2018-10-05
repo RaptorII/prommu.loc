@@ -204,11 +204,11 @@
 	foreach ($viData['filter']['metros'] as $id => $metro)
 		$arFilterData['FILTER_SETTINGS'][7]['DATA'][$id] = ['title' => $metro['metro'], 'id' => $metro['id'], 'DATA_VALUE_PARENT_ID' => $metro['id_city']];
 
-/*
+
 echo "<pre>";
-print_r($viData['users']); 
+print_r($viData); 
 echo "</pre>";
-*/
+
 ?>
 <div class="row project">
 	<div class="col-xs-12">

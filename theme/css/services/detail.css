@@ -12,7 +12,7 @@
 	background-size: cover;
 	border-radius: 15px;
 }
-.service__img.publish-vacancy{ background-image: url(/theme/pic/services-page/publish-vacancy.jpg) }
+.service__img.creation-vacancy{ background-image: url(/theme/pic/services-page/publish-vacancy.jpg) }
 .service__img.premium-vacancy{ background-image: url(/theme/pic/services-page/premium-vacancy.jpg) }
 .service__img.geolocation-staff{ background-image: url(/theme/pic/services-page/geolocation-staff.jpg) }
 .service__img.personal-manager-outsourcing{ background-image: url(/theme/pic/services-page/personal-manager-outsourcing.jpg) }

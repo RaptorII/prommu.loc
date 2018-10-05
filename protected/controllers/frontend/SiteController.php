@@ -969,7 +969,7 @@ class SiteController extends AppController
         {
             $data = $services->getServiceData($id);
             switch ($id){
-                case 'publish-vacancy':
+                case 'creation-vacancy':
                 case 'premium-vacancy':
                 case 'email-invitation':
                 case 'push-notification':
@@ -1006,6 +1006,7 @@ class SiteController extends AppController
             if(strlen($data['service']['meta_title']) > 0){
                 $title = htmlspecialchars_decode($data['service']['meta_title']);
                 $this->setBreadcrumbsEx(array($title, $_SERVER['REQUEST_URI']));
+                if()
             }
             if(strlen($data['service']['meta_description']) > 0){
                 Yii::app()->clientScript->registerMetaTag(
@@ -1027,7 +1028,7 @@ class SiteController extends AppController
             array('viData' => $data, 'id' => $id, 'prices' => $prices),
             array(
                 'pageTitle' => '<h1>'.$title.'</h1>', 
-                'htmlTitle' => $title
+                'htmlTitle' => $title . ' на портале Prommu.com'
             )
         );
     }

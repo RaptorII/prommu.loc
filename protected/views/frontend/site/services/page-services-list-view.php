@@ -45,9 +45,9 @@
 									data-id="<?=$m['id']?>" 
 									data-type="<?=$m['icon']?>"
 								>
-									<? if($type==3 && $m['icon']=='publish-vacancy'): ?>
+									<? if($type==3 && $m['icon']=='creation-vacancy'): ?>
 										<a href="<?=MainConfig::$PAGE_VACPUB?>" class="user">Разместить Вакансию</a>
-									<? elseif(!in_array($type,[2,3]) && $m['icon']=='publish-vacancy'): ?>
+									<? elseif(!in_array($type,[2,3]) && $m['icon']=='creation-vacancy'): ?>
 										<a href="javascript:void(0)">Заказать</a>
 									<? elseif($m['icon']=='geolocation-staff'): ?>
 										<a href="javascript:void(0)" class="disable">В разработке</a>
