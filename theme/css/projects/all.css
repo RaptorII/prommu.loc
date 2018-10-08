@@ -125,3 +125,12 @@
 .project__user-status.green{ color:#abb820 }
 .project__user-status.red{ color:#ed0909 }
 .project__user-status.grey{ color:#9e9e9e }
+
+.all__geo-data{
+    width: 20px;
+    height: 20px;
+    background: url(/theme/pic/projects/map-locator.png) right no-repeat;
+    cursor: pointer;
+    display: block;
+    float: right;
+}

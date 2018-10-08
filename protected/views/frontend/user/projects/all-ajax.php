@@ -14,10 +14,21 @@
 						<? foreach ($arCity['locations'] as $idloc => $arLoc): ?>
 							<tr class="loc-item" data-city="<?=$id?>">
 								<td>
-									<div class="program__cell green-name"><?=$arLoc['name']?></div>
+									<div class="program__cell green-name">
+                                        <?=$arLoc['name']?>
+                                    </div>
 								</td>
 								<td <?=(empty($arCity['metro'])?'colspan="2"':'')?>>
-									<div class="program__cell border"><?=$arLoc['index']?></div>
+									<div class="program__cell border">
+                                        <?=$arLoc['index']?>
+                                        <b
+                                                data-map-project="<?=$project?>"
+                                                data-map-user="<?=$idus?>"
+                                                data-map-point="<?=$viData['points'][$valueItem]['point']?>"
+                                                data-map-date="<?=$keyUnix?>"
+                                                class="js-g-hashint js-get-map all__geo-data" title="Посмотреть на карте">
+                                        </b>
+                                    </div>
 								</td>
 								<? if(!empty($arCity['metro'])): ?>
 									<td>
@@ -88,10 +99,13 @@
 				<? foreach ($viData['users'] as $idus => $user): ?>
 					<div class="col-xs-12 project__users-item">
 						<div class="project__user-src<?=!$user['is_online']?' active':''?>">
-							<img src="<?=$user['src']?>">
+                            <a target="_blank" href="/ankety/<?=$idus?>"><img src="<?=$user['src']?>"></a>
 						</div>
 						<div>
-							<div class="project__user-name"><?=$user['name']?></div>
+							<div class="project__user-name">
+
+                                <a target="_blank" href="/ankety/<?=$idus?>"><?=$user['name']?></a>
+                            </div>
 							<? if($user['status']>0): ?>
 								<div class="project__user-status green"><b>Согласие</b></div>
 							<? elseif($user['status']<0): ?>
