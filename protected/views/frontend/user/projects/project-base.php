@@ -111,7 +111,7 @@ $arFilterData = [
                 'PARENT_VALUE_ID' => []
             ]
         ],
-        /*8 => [
+        7 => [
             'NAME' => 'Имя',
             'TYPE' => 'text',
             'INPUT_NAME' => 'fname',
@@ -119,7 +119,7 @@ $arFilterData = [
             'DATA_DEFAULT' => '',
             'PLACEHOLDER' => ''
         ],
-        9 => [
+        8 => [
             'NAME' => 'Фамилия',
             'TYPE' => 'text',
             'INPUT_NAME' => 'lname',
@@ -127,10 +127,7 @@ $arFilterData = [
             'DATA_DEFAULT' => '',
             'PLACEHOLDER' => ''
         ],
-        10 => [
-            'TYPE' => 'block',
-        ],
-        11 => [
+        9 => [
             'NAME' => 'Статус Персонала',
             'TYPE' => 'select',
             'INPUT_NAME' => 'status',
@@ -154,6 +151,12 @@ $arFilterData = [
             ],
             'DATA_DEFAULT' => '0'
         ],
+        10 => [
+            'TYPE' => 'block',
+        ],
+        11 => [
+            'TYPE' => 'block',
+        ],
         12 => [
             'NAME' => 'Задания',
             'TYPE' => 'select',
@@ -173,7 +176,7 @@ $arFilterData = [
                 ]
             ],
             'DATA_DEFAULT' => '0'
-        ],*/
+        ],
 
     ]
 ];
@@ -188,6 +191,11 @@ foreach ($viData['filter']['tt_index'] as $i)
 foreach ($viData['filter']['metros'] as $id => $metro)
     $arFilterData['FILTER_SETTINGS'][6]['DATA'][$id] = ['title' => $metro['metro'], 'id' => $metro['id'], 'DATA_VALUE_PARENT_ID' => $metro['id_city']];
 ?>
+
+<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
+<? print_r($viData); ?>
+</pre>
+
 <div class="row project">
     <div class="col-xs-12">
         <? require __DIR__ . '/project-nav.php'; // Меню вкладок ?>

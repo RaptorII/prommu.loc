@@ -58,6 +58,13 @@
                             <td <? /*= (empty($arCity['metro']) ? 'colspan="2"' : '') */ ?>>
                                 <div class="program__cell border">
                                     <?= $arLoc['index'] ?>
+
+                                    <?/*
+                                        echo $project;
+                                        echo $idus;
+                                        echo $viData['points'][$valueItem]['point'];
+                                        echo $keyUnix;
+                                    */?>
                                     <b
                                             data-map-project="<?= $project ?>"
                                             data-map-user="<?= $idus ?>"
