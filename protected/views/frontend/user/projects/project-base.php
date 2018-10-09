@@ -1,125 +1,235 @@
 <?php
-	$bUrl = Yii::app()->baseUrl . '/theme/';
-	Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/item.css');
-	Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/item-base.css');
-	Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/additional.js', CClientScript::POS_END);
-	Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/item-base.js', CClientScript::POS_END);
+$bUrl = Yii::app()->baseUrl . '/theme/';
+Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/item.css');
+Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/item-base.css');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/additional.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/item-base.js', CClientScript::POS_END);
+
+Yii::app()->getClientScript()->registerScriptFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.css');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/universal-map.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-map.css');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . 'js/dist/fancybox/jquery.fancybox.css');
+Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-filter.css');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/universal-filter.js', CClientScript::POS_END);
+
+$arFilterData = [
+    'ID' => $project, //Обязательное свойство!
+    'FILTER_ADDITIONAL_VALUE' => ['filter' => 1],
+    'FILTER_SETTINGS' => [
+        0 => [
+            'NAME' => 'Проект',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'project',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ]
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        1 => [
+            'NAME' => 'Тип работы',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'work_type',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ],
+                1 => [
+                    'title' => 'Пример1',
+                    'id' => '1'
+                ],
+                2 => [
+                    'title' => 'Пример2',
+                    'id' => '2'
+                ]
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        2 => [
+            'NAME' => 'Город',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'city',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ]
+
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        3 => [
+            'NAME' => 'Дата с',
+            'TYPE' => 'calendar',
+            'INPUT_NAME' => 'bdate',
+            'DATA' => [],
+            'DATA_DEFAULT' => $viData['filter']['bdate'],
+            'DATA_SHORT' => $viData['filter']['bdate-short']
+        ],
+        4 => [
+            'NAME' => 'По',
+            'TYPE' => 'calendar',
+            'INPUT_NAME' => 'edate',
+            'DATA' => [],
+            'DATA_DEFAULT' => $viData['filter']['edate'],
+            'DATA_SHORT' => $viData['filter']['edate-short']
+        ],
+        5 => [
+            'NAME' => 'Название ТТ',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_name',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ]
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        6 => [
+            'NAME' => 'Адрес ТТ',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_index',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ]
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        7 => [
+            'TYPE' => 'block',
+        ],
+        8 => [
+            'TYPE' => 'block',
+        ],
+        9 => [
+            'NAME' => 'Метро',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'metro',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0',
+                    'DATA_VALUE_PARENT_ID' => 'ALL'
+                ]
+            ],
+            'DATA_LI_VISIBLE' => '0',
+            'DATA_DEFAULT' => '0',
+            'CONDITION' => [
+                'BLOCKED' => 'false',
+                'PARENT_ID' => '2',
+                'PARENT_VALUE' => '',
+                'PARENT_VALUE_ID' => []
+            ]
+        ],
+        /*8 => [
+            'NAME' => 'Имя',
+            'TYPE' => 'text',
+            'INPUT_NAME' => 'fname',
+            'DATA' => [],
+            'DATA_DEFAULT' => '',
+            'PLACEHOLDER' => ''
+        ],
+        9 => [
+            'NAME' => 'Фамилия',
+            'TYPE' => 'text',
+            'INPUT_NAME' => 'lname',
+            'DATA' => [],
+            'DATA_DEFAULT' => '',
+            'PLACEHOLDER' => ''
+        ],
+        10 => [
+            'TYPE' => 'block',
+        ],
+        11 => [
+            'NAME' => 'Статус Персонала',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'status',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ],
+                1 => [
+                    'title' => 'Подтверждено',
+                    'id' => '1'
+                ],
+                2 => [
+                    'title' => 'Не подтверждено',
+                    'id' => '2'
+                ],
+                3 => [
+                    'title' => 'Отказано',
+                    'id' => '3'
+                ]
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        12 => [
+            'NAME' => 'Задания',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'hastask',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ],
+                1 => [
+                    'title' => 'Есть',
+                    'id' => '1'
+                ],
+                2 => [
+                    'title' => 'Нет',
+                    'id' => '2'
+                ]
+            ],
+            'DATA_DEFAULT' => '0'
+        ],*/
+
+    ]
+];
+foreach ($viData['filter']['projects'] as $v)
+    $arFilterData['FILTER_SETTINGS'][0]['DATA'][$v['project']] = ['title' => $v['name'], 'id' => $v['project']];
+foreach ($viData['filter']['cities'] as $k => $c)
+    $arFilterData['FILTER_SETTINGS'][2]['DATA'][$k] = ['title' => $c, 'id' => $k];
+foreach ($viData['filter']['tt_name'] as $n)
+    $arFilterData['FILTER_SETTINGS'][5]['DATA'][] = ['title' => $n, 'id' => $n];
+foreach ($viData['filter']['tt_index'] as $i)
+    $arFilterData['FILTER_SETTINGS'][6]['DATA'][] = ['title' => $i, 'id' => $i];
+foreach ($viData['filter']['metros'] as $id => $metro)
+    $arFilterData['FILTER_SETTINGS'][9]['DATA'][$id] = ['title' => $metro['metro'], 'id' => $metro['id'], 'DATA_VALUE_PARENT_ID' => $metro['id_city']];
 ?>
 <div class="row project">
-	<div class="col-xs-12">
-		<? require __DIR__ . '/project-nav.php'; // Меню вкладок ?>
-		<div id="content">
-			<div class="project__module">
-				<div class="project__xls">
+    <div class="col-xs-12">
+        <? require __DIR__ . '/project-nav.php'; // Меню вкладок ?>
+        <div id="content">
+            <div class="project__module">
+                <div class="filter__veil"></div>
+                <div class="project__header">
+                    <? require __DIR__ . '/filter.php'; // ФИЛЬТР ?>
+                </div>
+                <? /*<div class="project__xls">
 					<a href="/user/uploadprojectxls?id=<?=$project?>&type=index" id="add-xls">Изменить адресную программу</a>
 					<a href="/uploads/prommu_example.xls" download>Скачать пример для добавления</a>
-				</div>
-				<h1 class="project__title">ПРОЕКТ: <span><?=$viData['project']['name']?></span></h1>
-				<table class="project__program">
-					<tbody>
-						<? foreach ($viData['location'] as $id => $arCity): ?>
-							<tr class="program__item" data-city="<?=$id?>">
-								<td colspan="5">
-									<div class="program__city border">
-										<b><?=$arCity['name']?></b>
-										<span class="address__item-change">
-											<span>изменить</span>
-											<ul>
-												<li><a href="<? echo $project . '/address-edit?city=' . $id ?>">изменить</a></li>
-												<li data-id="<?=$id?>" class="delcity">удалить</li>
-											</ul>
-										</span>
-									</div>
-								</td>
-							</tr>
-							<? foreach ($arCity['locations'] as $idloc => $arLoc): ?>
-								<tr class="loc-item" data-city="<?=$id?>">
-									<td>
-										<div class="program__cell green-name"><?=$arLoc['name']?></div>
-									</td>
-									<td <?=(empty($arCity['metro'])?'colspan="2"':'')?>>
-										<div class="program__cell border"><?=$arLoc['index']?></div>
-									</td>
-									<? if(!empty($arCity['metro'])): ?>
-										<td>
-											<div class="program__cell border"><? echo join(',</br>', $arLoc['metro']) ?></div>
-										</td>
-									<? endif; ?>
-									<td>
-										<div class="program__cell border user">
-											<?php 
-											$arUsers = array();
-											foreach ($arLoc['periods'] as $idper => $arPer):
-												foreach ($viData['users'] as $id_user => $user):
-													if(in_array($idper, $user['points'])):
-														$arUsers[$idper][] = $id_user;
-														?>
-														<div class="program__cell-users">
-															<div class="program__cell-user">
-																<img src="<?=$user['src']?>">
-																<span><?=$user['name']?></span>
-																
-															</div>
-														</div>									
-													<?php endif; ?>
-												<?php endforeach; ?>
-												<?php if(!sizeof($arUsers[$idper])): ?>
-													<div class="program__select-user" data-period="<?=$idper?>">
-														<a href="<? echo $project . '/users-select/' . $idper ?>" class="program-select-user__title">
-															<span>Выбрать персонал </span>
-															<b>&#9660</b>
-														</a>
-													</div>
-												<?php else: ?>
-													<a href="<? echo $project . '/users-select/' . $idper ?>"><span>Изменить</span></a>
-												<?php endif; ?>
-											<?php endforeach; ?>
-										</div>
-									</td>
-									<td class="period-data">
-										<div class="program__cell border">
-											<? foreach ($arLoc['periods'] as $idper => $arPer): ?>
-												<div class="program__cell-period" data-period="<?=$idper?>">
-													<span><? echo $arPer['bdate'] . ' до ' . $arPer['edate'] ?></span>
-													<span class="program__cell-tiem"><? echo $arPer['btime'] . ' - ' . $arPer['etime'] ?></span>
-													<span class="address__item-change period">
-														<span>изменить</span>
-														<ul>
-															<li><a href="<? echo $project . '/address-edit?city=' . $id . '&per=' . $idper ?>">изменить</a></li>
-															<li data-id="<?=$idper?>" class="delperiod">удалить</li>
-														</ul>
-													</span>
-												</div>
-												<?php foreach ($arUsers[$idper] as $u){ echo "<br>"; } ?>
-											<? endforeach; ?>
-										</div>
-									</td>
-								</tr>
-							<? endforeach; ?>
-							<?
-							/*
-							?>
-							<tr data-city="<?=$id?>">
-								<td colspan="5">
-									<div class="program__btns">
-										<a href="#" class="program__add-btn">+ ДОБАВИТЬ ПЕРИОД</a>
-										<a href="#" class="program__save-btn">СОХРАНИТЬ</a>
-									</div>
-								</td>
-							</tr>
-							<?
-							*/
-							?>
-						<? endforeach; ?>
-					</tbody>
-				</table>
-				<form enctype="multipart/form-data" action="" method="POST" id="base-form">
-					<input type="hidden" name="project" class="project-inp" value="<?=$project?>">
-					<input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
-					<input type="file" name="xls" id="add-xls-inp" class="hide">
-					<input type="hidden" name="xls-index" value="1">
-				</form>
-			</div>
-		</div>
-	</div>
+				</div>*/ ?>
+                <h1 class="project__title">ПРОЕКТ: <span><?= $viData['project']['name'] ?></span></h1>
+                <div id="ajax-content">
+                    <? require __DIR__ . '/project-base-ajax.php'; // СПИСОК ?>
+                </div>
+                <form enctype="multipart/form-data" action="" method="POST" id="base-form">
+                    <input type="hidden" name="project" class="project-inp" value="<?= $project ?>">
+                    <input type="hidden" name="MAX_FILE_SIZE" value="5242880"/>
+                    <input type="file" name="xls" id="add-xls-inp" class="hide">
+                    <input type="hidden" name="xls-index" value="1">
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
