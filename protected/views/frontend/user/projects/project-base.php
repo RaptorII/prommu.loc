@@ -19,38 +19,6 @@ $arFilterData = [
     'FILTER_ADDITIONAL_VALUE' => ['filter' => 1],
     'FILTER_SETTINGS' => [
         0 => [
-            'NAME' => 'Проект',
-            'TYPE' => 'select',
-            'INPUT_NAME' => 'project',
-            'DATA' => [
-                0 => [
-                    'title' => 'Все',
-                    'id' => '0'
-                ]
-            ],
-            'DATA_DEFAULT' => '0'
-        ],
-        1 => [
-            'NAME' => 'Тип работы',
-            'TYPE' => 'select',
-            'INPUT_NAME' => 'work_type',
-            'DATA' => [
-                0 => [
-                    'title' => 'Все',
-                    'id' => '0'
-                ],
-                1 => [
-                    'title' => 'Пример1',
-                    'id' => '1'
-                ],
-                2 => [
-                    'title' => 'Пример2',
-                    'id' => '2'
-                ]
-            ],
-            'DATA_DEFAULT' => '0'
-        ],
-        2 => [
             'NAME' => 'Город',
             'TYPE' => 'select',
             'INPUT_NAME' => 'city',
@@ -60,6 +28,30 @@ $arFilterData = [
                     'id' => '0'
                 ]
 
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        1 => [
+            'NAME' => 'Название ТТ',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_name',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ]
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        2 => [
+            'NAME' => 'Адрес ТТ',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_index',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ]
             ],
             'DATA_DEFAULT' => '0'
         ],
@@ -80,36 +72,26 @@ $arFilterData = [
             'DATA_SHORT' => $viData['filter']['edate-short']
         ],
         5 => [
-            'NAME' => 'Название ТТ',
+            'NAME' => 'Тип работы',
             'TYPE' => 'select',
-            'INPUT_NAME' => 'tt_name',
+            'INPUT_NAME' => 'work_type',
             'DATA' => [
                 0 => [
                     'title' => 'Все',
                     'id' => '0'
+                ],
+                1 => [
+                    'title' => 'Пример1',
+                    'id' => '1'
+                ],
+                2 => [
+                    'title' => 'Пример2',
+                    'id' => '2'
                 ]
             ],
             'DATA_DEFAULT' => '0'
         ],
         6 => [
-            'NAME' => 'Адрес ТТ',
-            'TYPE' => 'select',
-            'INPUT_NAME' => 'tt_index',
-            'DATA' => [
-                0 => [
-                    'title' => 'Все',
-                    'id' => '0'
-                ]
-            ],
-            'DATA_DEFAULT' => '0'
-        ],
-        7 => [
-            'TYPE' => 'block',
-        ],
-        8 => [
-            'TYPE' => 'block',
-        ],
-        9 => [
             'NAME' => 'Метро',
             'TYPE' => 'select',
             'INPUT_NAME' => 'metro',
@@ -124,7 +106,7 @@ $arFilterData = [
             'DATA_DEFAULT' => '0',
             'CONDITION' => [
                 'BLOCKED' => 'false',
-                'PARENT_ID' => '2',
+                'PARENT_ID' => '0',
                 'PARENT_VALUE' => '',
                 'PARENT_VALUE_ID' => []
             ]
@@ -195,16 +177,16 @@ $arFilterData = [
 
     ]
 ];
-foreach ($viData['filter']['projects'] as $v)
-    $arFilterData['FILTER_SETTINGS'][0]['DATA'][$v['project']] = ['title' => $v['name'], 'id' => $v['project']];
+/*foreach ($viData['filter']['projects'] as $v)
+    $arFilterData['FILTER_SETTINGS'][0]['DATA'][$v['project']] = ['title' => $v['name'], 'id' => $v['project']];*/
 foreach ($viData['filter']['cities'] as $k => $c)
-    $arFilterData['FILTER_SETTINGS'][2]['DATA'][$k] = ['title' => $c, 'id' => $k];
+    $arFilterData['FILTER_SETTINGS'][0]['DATA'][$k] = ['title' => $c, 'id' => $k];
 foreach ($viData['filter']['tt_name'] as $n)
-    $arFilterData['FILTER_SETTINGS'][5]['DATA'][] = ['title' => $n, 'id' => $n];
+    $arFilterData['FILTER_SETTINGS'][1]['DATA'][] = ['title' => $n, 'id' => $n];
 foreach ($viData['filter']['tt_index'] as $i)
-    $arFilterData['FILTER_SETTINGS'][6]['DATA'][] = ['title' => $i, 'id' => $i];
+    $arFilterData['FILTER_SETTINGS'][2]['DATA'][] = ['title' => $i, 'id' => $i];
 foreach ($viData['filter']['metros'] as $id => $metro)
-    $arFilterData['FILTER_SETTINGS'][9]['DATA'][$id] = ['title' => $metro['metro'], 'id' => $metro['id'], 'DATA_VALUE_PARENT_ID' => $metro['id_city']];
+    $arFilterData['FILTER_SETTINGS'][6]['DATA'][$id] = ['title' => $metro['metro'], 'id' => $metro['id'], 'DATA_VALUE_PARENT_ID' => $metro['id_city']];
 ?>
 <div class="row project">
     <div class="col-xs-12">
