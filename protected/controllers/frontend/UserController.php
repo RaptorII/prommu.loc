@@ -1524,6 +1524,14 @@ class UserController extends AppController
                 default:
                     if($type==3) { // employer
                         $data = $model->getProject($id);
+                        if(Yii::app()->request->isAjaxRequest) {
+                            $this->renderPartial(
+                                'projects/project-base-ajax',
+                                array('viData' => $data, 'project' => $id),
+                                false, true
+                            );
+                            return;
+                        }
                         $view = MainConfig::$VIEW_PROJECT_ITEM;
                         $model->getXLSFile();
                     }
