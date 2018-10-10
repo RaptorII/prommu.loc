@@ -20,7 +20,16 @@ var BaseProgram = (function () {
         '.delcity,.delperiod', 
         function(e){ self.ajaxDelIndex(e.target) 
     });
-  }
+
+    $('.program__tasks').click(function () {
+        $('.tasks__popup').fadeIn();
+    });
+    $('.tasks__popup-close').click(function () {
+        $('.tasks__popup').fadeOut();
+    });
+
+
+  };
   //
   BaseProgram.prototype.ajaxDelIndex = function (e) {
     let self = this, 

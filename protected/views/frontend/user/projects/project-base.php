@@ -128,7 +128,7 @@ $arFilterData = [
             'PLACEHOLDER' => ''
         ],
         9 => [
-            'NAME' => 'Статус Персонала',
+            'NAME' => 'Статус персонала',
             'TYPE' => 'select',
             'INPUT_NAME' => 'status',
             'DATA' => [
@@ -155,7 +155,24 @@ $arFilterData = [
             'TYPE' => 'block',
         ],
         11 => [
-            'TYPE' => 'block',
+            'NAME' => 'Статус ТТ',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_status',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ],
+                1 => [
+                    'title' => 'Открыта вакансия',
+                    'id' => '1'
+                ],
+                2 => [
+                    'title' => 'Закреплено',
+                    'id' => '2'
+                ]
+            ],
+            'DATA_DEFAULT' => '0'
         ],
         12 => [
             'NAME' => 'Задания',
@@ -221,5 +238,81 @@ foreach ($viData['filter']['metros'] as $id => $metro)
                 </form>
             </div>
         </div>
+    </div>
+</div>
+
+<div class="tasks__popup">
+    <div class="tasks__popup-close">
+        <span>X</span>
+    </div>
+    <div class="tasks__popup-content">
+        <div class="popup__content-user">
+            <img src="/images/applic/20180819180030833100.jpg">
+
+            <div class="popup__user">
+                <div class="popup__user-name">
+                    Маргарита
+                </div>
+                <div class="popup__user-secondname">
+                    Бахвалова
+                </div>
+
+                <div class="popup__user-status">
+                    <span class="geo__red">● неактивен</span> /
+                    <span class="geo__green">● активен</span>
+                </div>
+            </div>
+        </div>
+        <div class="popup__tasks">
+            <table class="popup__table">
+                <caption>Задания</caption>
+                <thead>
+                <tr>
+                    <td>Дата</td>
+                    <td>Название</td>
+                    <td>Описание</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        12.01.2018
+                    </td>
+                    <td>
+                        Покупка курицы
+                    </td>
+                    <td>
+                        Необходимо купить курицу в АТБ
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        13.01.2018
+                    </td>
+                    <td>
+                        Готовка курицы
+                    </td>
+                    <td>
+                        Необходимо приготовить курицу, купленную в АТБ
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        14.01.2018
+                    </td>
+                    <td>
+                        Оформление стола
+                    </td>
+                    <td>
+                        Необходимо подать гостям приготовленную курицу
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <div class="popup__control">
+        <a href="#">Редактировать задания</a>
     </div>
 </div>
