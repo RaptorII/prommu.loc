@@ -104,15 +104,10 @@ class Api
     }
     
     public function services(){
-         $period = Yii::app()->getRequest()->getParam('period');
-         $service = Yii::app()->getRequest()->getParam('service');
-         
-         $cost = 300;
-         $valute = 'RUB';
-         
-         $data['cost'] = $cost*$period;
-         $data['val'] = 'RUB';
-         return $data;
+        $pricess = new PrommuOrder();
+        $prices = $pricess->getPricesData();
+
+         return $prices;
     }
 
 
