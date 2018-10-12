@@ -11,7 +11,7 @@
 }
 @media (min-width: 992px) {
     .for-guest .ppp__period-list .ppp__field.ppp__field {
-        width: 32.5%;
+        width: 32%;
     }
     .ppp__field-fix.ppp__field-fix{
         display:table-row;
