@@ -1364,7 +1364,7 @@ class UserController extends AppController
             $view = MainConfig::$VIEW_PROJECT_NEW;
         }
         elseif($id=='all' && $type==3) {
-            if(!$model->hasAccess($id))
+            if(!$model->hasAccess())
                 $this->redirect(MainConfig::$PAGE_PROJECT_LIST);
 
             $arId = $model->getAllProjectsId($idus);
@@ -1381,7 +1381,18 @@ class UserController extends AppController
                 );
                 return;
             }
+        }
+        elseif($id=='user-card' && $type==3) {
+            if(!$model->hasAccess())
+                $this->redirect(MainConfig::$PAGE_PROJECT_LIST);
 
+            //$user_id = Yii::app()->getRequest()->getParam('user_id');
+            //$user = $model->getUserParam($user_id)
+
+            $arId = $model->getAllProjectsId($idus);
+            $data = $model->getIndexAllProjects($arId);
+            $data['users'] = $model->getStaffAllProjects($arId);
+            $view = MainConfig::$VIEW_PROJECT_USER_CARD;
         }
         elseif($id>0) { // существующий
             if(!$model->hasAccess($id))

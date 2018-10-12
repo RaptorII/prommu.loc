@@ -232,6 +232,7 @@ class MainConfig
     public static $VIEW_PROJECT_ITEM = 'projects/project-base';
     public static $VIEW_PROJECT_NEW = 'projects/new';
     public static $VIEW_PROJECT_ALL = 'projects/all';
+    public static $VIEW_PROJECT_USER_CARD = 'projects/user-card';
 
     public static $VIEW_PROJECT_ITEM_STAFF = 'projects/project-staff';
     public static $VIEW_PROJECT_ITEM_INDEX = 'projects/project-index';
