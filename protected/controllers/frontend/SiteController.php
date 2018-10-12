@@ -849,10 +849,11 @@ class SiteController extends AppController
     {
         $id = filter_var(Yii::app()->getRequest()->getParam('id', 0), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $Articles = new Articles();
-        $title = "Полезные статьи портала Prommu";
-        $pageH1 = "<h1>Полезные статьи портала Prommu</h1>";
-        $description = 'Статьи о поиске временной работы, специальностях и проведении  BTL и Event-мероприятий';
-        $this->setBreadcrumbs($title, MainConfig::$PAGE_ARTICLES);
+        $seo = (new Seo())->exist('/articles');
+        $title = $seo['meta_title'];
+        $pageH1 = $seo['seo_h1'];
+        $description = $seo['meta_description'];
+        $this->setBreadcrumbs($pageH1, MainConfig::$PAGE_ARTICLES);
 
         if( $id )
         {
@@ -866,7 +867,6 @@ class SiteController extends AppController
             }
             $pageH1 = html_entity_decode($data['data']['name']);
             $this->setBreadcrumbsEx(array($pageH1, MainConfig::$PAGE_ARTICLES . DS . $id));
-            $pageH1 = '<h1>' . $pageH1 . '</h1>';
             if(strlen($data['data']['meta_description']) > 0){
                 $description = html_entity_decode($data['data']['meta_description']);
             }
@@ -887,7 +887,7 @@ class SiteController extends AppController
         $this->render($page, 
             array('viData' => $data, 'pages' => $pages),
             array(
-                'pageTitle' => $pageH1, 
+                'pageTitle' => '<h1>' . $pageH1 . '</h1>', 
                 'htmlTitle' => $title,
                 'pageMetaDesription' => $description
             )
@@ -957,14 +957,13 @@ class SiteController extends AppController
      */
     public function actionServices()
     {
-        Subdomain::guestRedirect(Share::$UserProfile->type);
+        $type = Share::$UserProfile->type;
+        Subdomain::guestRedirect($type);
         $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $services = new Services();
-        $title = 'Услуги портала Prommu.com';
-        $this->setBreadcrumbs($title, MainConfig::$PAGE_SERVICES);
-        $pricess = new PrommuOrder();
-        $prices = $pricess->getPricesData();
-        $type = Share::$UserProfile->type;
+        $PrommuOrder = new PrommuOrder();
+        $prices = $PrommuOrder->getPricesData();
+
         if( $id )
         {
             $data = $services->getServiceData($id);
@@ -998,21 +997,10 @@ class SiteController extends AppController
                         array('pageTitle' => $content['name'], 'htmlTitle' => $content['name'])
                     );
                     return;
-                    break;
+                    break;                  
                 default:
                     throw new CHttpException(404, 'Error'); 
                     break;
-            }        
-            if(strlen($data['service']['meta_title']) > 0){
-                $title = htmlspecialchars_decode($data['service']['meta_title']);
-                $this->setBreadcrumbsEx(array($title, $_SERVER['REQUEST_URI']));
-                
-            }
-            if(strlen($data['service']['meta_description']) > 0){
-                Yii::app()->clientScript->registerMetaTag(
-                    htmlspecialchars_decode($data['service']['meta_description']), 
-                    'description'
-                );
             }
         }
         else
@@ -1023,129 +1011,120 @@ class SiteController extends AppController
             $view = MainConfig::$VIEWS_SERVICES;
         }
 
+        $seoModel = new Seo();
+        $seo = $seoModel->exist(DS.MainConfig::$PAGE_SERVICES);
+        $this->setBreadcrumbs($seo['seo_h1'], MainConfig::$PAGE_SERVICES);
+
+        if($id) {
+            $url = DS . MainConfig::$PAGE_SERVICES . DS . $id;
+            $seo = $seoModel->exist($url);
+            $this->setBreadcrumbsEx([$seo['seo_h1'], $url]);
+        }
+
         $this->render(
             $view, 
             array('viData' => $data, 'id' => $id, 'prices' => $prices),
             array(
-                'pageTitle' => '<h1>'.$title.'</h1>', 
-                'htmlTitle' => $title . ' на портале Prommu.com'
+                'pageTitle' => '<h1>' . $seo['seo_h1'] . '</h1>', 
+                'htmlTitle' => $seo['meta_title'],
+                'pageMetaDesription' => htmlspecialchars_decode($seo['meta_description'])
             )
         );
     }
 
     public function actionAbout(){
-
-        $this->setBreadcrumbs('О сервисе', MainConfig::$PAGE_ABOUT);
-
         $section = filter_var(Yii::app()->getRequest()->getParam('section'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        if(!empty($section)){
-            if($section != 'news' && !empty($id)){
-                throw new CHttpException(404, 'Error'); 
-            }
-            if($section == 'prom')
-            {
-                $model = new PagesContent;
-                $lang = Yii::app()->session['lang'];
-                $data = $model->getPageContent($section, Yii::app()->session['lang']);
-                $this->render(
-                    MainConfig::$VIEWS_PROMO_INFO, 
-                    array('viData' => $data),
-                    array()
-                );
-            }
-            elseif($section == 'empl')
-            {
-                $model = new PagesContent;
-                $lang = Yii::app()->session['lang'];
-                $data = $model->getPageContent($section, Yii::app()->session['lang']);
-                $this->render(
-                    MainConfig::$VIEWS_EMPL_INFO, 
-                    array('viData' => $data),
-                    array()
-                );
-            }
-            elseif($section == 'faqv')
-            {
-                $faq = new Faq();
-                $data = $faq->getFaq();
-                $title = "FAQ: вопрос - ответ";
-                $description = Yii::app()->db->createCommand()
-                    ->select("meta_description")
-                    ->from('seo')
-                    ->where("url = :url", array(':url' => '/faqv'))
-                    ->queryRow()['meta_description'];
-                $this->setBreadcrumbsEx(array($title, MainConfig::$PAGE_FAQ));
-                $this->render(
-                    MainConfig::$VIEWS_FAQ, 
-                    array('viData' => $data),
-                    array(
-                        'pageTitle' => '<h1>'.$title.'</h1>', 
-                        'htmlTitle' => $title,
-                        'pageMetaDesription' => $description
-                    )
-                );
-            }
-            elseif($section == 'news')
-            {
-                $News = new News();
-                $title = "Новости портала Prommu";
-                $pageH1 = "Новости портала Prommu";
-                $this->setBreadcrumbsEx(array($title, MainConfig::$PAGE_NEWS));
-                if($id)
-                {
-                    $data = $News->getNewsSingle($id);
-                    if(!isset($data['data']['id'])){
-                        throw new CHttpException(404, 'Error'); 
-                    }
-                    if(strlen($data['data']['meta_title']) > 0){
-                        $title = html_entity_decode($data['data']['meta_title']);
-                    }
-                    $pageH1 = $data['data']['name'];
-                    $this->setBreadcrumbsEx(array($pageH1, MainConfig::$PAGE_NEWS . DS . $id));
-                    if(strlen($data['data']['meta_description']) > 0){
-                        Yii::app()->clientScript->registerMetaTag(html_entity_decode($data['data']['meta_description']), 'description');
-                    }          
-                    $data['last'] = $News->getLastNews($id);
-                    $page = MainConfig::$VIEWS_NEWS_SINGLE;
-                }
-                else
-                {
-                    $count = $News->getNewsCount();
-                    $pages=new CPagination($count);
-                    $pages->pageSize = MainConfig::$DEF_PAGE_LIMIT;
-                    $pages->applyLimit($News);
+        $lang = Yii::app()->session['lang'];
+        $model = new PagesContent;
+        $data = ['content' => $model->getPageContent('about', $lang)];
+        $view = MainConfig::$VIEWS_DB_PAGES;
+        $seo = array(
+            'pageTitle' => '<h1>' . $data['content']['name'] . '</h1>',
+            'htmlTitle' => $data['content']['meta_title'],
+            'pageMetaDesription' => $data['content']['meta_description']
+        );
+        $this->setBreadcrumbs($data['content']['name'], MainConfig::$PAGE_ABOUT);
 
-                    $data = $News->getNews();
-                    $page = MainConfig::$VIEWS_NEWS;
-                }
-                $this->render($page, 
-                    array('viData' => $data, 'arResult' => $id, 'pages' => $pages),
-                    array(
-                        'pageTitle' => '<h1>'.$pageH1.'</h1>',
-                        'htmlTitle' => $title,
-                    )
-                );            
-            }
-            else
-            {                  
-                throw new CHttpException(404, 'Error'); 
+        if(!empty($section)) {
+            switch ($section) {
+                case 'prom':
+                case 'empl':
+                    $data = ['viData' => $model->getPageContent($section, $lang)];
+                    $view = $section=='prom'
+                        ? MainConfig::$VIEWS_PROMO_INFO
+                        : MainConfig::$VIEWS_EMPL_INFO;
+                    $seo = array(
+                        'pageTitle' => '<h1>' . $data['viData']['name'] . '</h1>',
+                        'htmlTitle' => $data['viData']['meta_title'],
+                        'pageMetaDesription' => $data['viData']['meta_description']
+                    );
+                    $url = $section=='prom' 
+                        ? MainConfig::$PAGE_PROMO_INFO 
+                        : MainConfig::$PAGE_EMPL_INFO;
+                    $this->setBreadcrumbsEx([$data['viData']['name'], $url]);
+                    if( !empty($id) )
+                        throw new CHttpException(404, 'Error'); 
+                    break;
+
+                case 'faqv':
+                    $data = ['viData' => (new Faq())->getFaq()];
+                    $view = MainConfig::$VIEWS_FAQ;
+                    $meta = $model->getPageContent($section, $lang);
+                    $seo = array(
+                        'pageTitle' => '<h1>' . $meta['name'] . '</h1>',
+                        'htmlTitle' => $meta['meta_title'],
+                        'pageMetaDesription' => $meta['meta_description']
+                    );
+                    $this->setBreadcrumbsEx([$meta['name'], MainConfig::$PAGE_FAQ]);
+                    if( !empty($id) )
+                        throw new CHttpException(404, 'Error'); 
+                    break;
+                
+                case 'news':
+                    $News = new News();
+                    $meta = (new Seo())->exist('/about/news');
+                    $this->setBreadcrumbsEx(array($meta['seo_h1'], MainConfig::$PAGE_NEWS));
+                    if($id) {
+                        $data = ['arResult' => $id];
+                        $news = $News->getNewsSingle($id);
+                        if(!isset($news['data']['id']))
+                            throw new CHttpException(404, 'Error');
+
+                        $seo = array(
+                            'pageTitle' => '<h1>' . html_entity_decode($news['data']['name']) . '</h1>',
+                            'htmlTitle' => html_entity_decode($news['data']['meta_title']),
+                            'pageMetaDesription' => html_entity_decode($news['data']['meta_description'])
+                        );
+                        $news['last'] = $News->getLastNews($id);
+                        $view = MainConfig::$VIEWS_NEWS_SINGLE;
+                        $this->setBreadcrumbsEx([
+                                html_entity_decode($news['data']['name']), 
+                                MainConfig::$PAGE_NEWS . DS . $id
+                            ]);
+                        $data['viData'] = $news;
+                    }
+                    else {
+                        $data = ['pages' => new CPagination($News->getNewsCount())];
+                        $data['pages']->pageSize = MainConfig::$DEF_PAGE_LIMIT;
+                        $data['pages']->applyLimit($News);
+                        $data['viData'] = $News->getNews();
+                        $view = MainConfig::$VIEWS_NEWS;
+                        $seo = array(
+                            'pageTitle' => '<h1>' . $meta['seo_h1'] . '</h1>',
+                            'htmlTitle' => $meta['meta_title'],
+                            'pageMetaDesription' => $meta['meta_description']
+                        );                     
+                    }
+                    break;
+
+                default:
+                    throw new CHttpException(404, 'Error'); 
+                    break;   
             }
         }
-        else{
-            $model = new PagesContent;
-            $lang = Yii::app()->session['lang'];
-            $content = $model->getPageContent('about', $lang);
-            $this->setBreadcrumbs($content['name'], MainConfig::$PAGE_ABOUT);
-            $this->render(
-                MainConfig::$VIEWS_DB_PAGES, 
-                array('content' => $content), 
-                array(
-                    'pageTitle' => '<h1>'.$content['name'].'</h1>',
-                    'htmlTitle' => $content['name']
-                )
-            );
-        }
+
+        $this->render($view, $data, $seo);   
     }
 
     /**
@@ -1153,10 +1132,10 @@ class SiteController extends AppController
      */
     public function actionFeedback()
     {
-        $title = 'Обратная связь';
-        $this->setBreadcrumbs($title, MainConfig::$PAGE_FEEDBACK);
-        // save data
+        $seo = (new Seo())->exist(Yii::app()->request->requestUri);
+        $this->setBreadcrumbs($seo['seo_h1'], MainConfig::$PAGE_FEEDBACK);
         $Feedback = new Feedback();
+
         if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('name') )
         {
             $res = $Feedback->saveData();
@@ -1174,7 +1153,14 @@ class SiteController extends AppController
         if(!$data)
             $data = array('viData'=>array(), 'model'=>(new FeedbackAF()));
 
-        $this->render($this->ViewModel->pageFeedback, $data, array('htmlTitle' => $title));
+        $this->render(
+                $this->ViewModel->pageFeedback, 
+                $data, 
+                array(
+                    'htmlTitle' => $seo['meta_title'],
+                    'pageMetaDesription' => $seo['meta_description']
+                ) 
+            );
     }
 
     /**

@@ -745,7 +745,7 @@ class Seo extends CActiveRecord
                 }
             }
             else {
-                if($p['pname']=='без опыта')
+                if($p['pname']=='без опыта' || empty($p['pname']))
                     $arVacancies[] = $p['val'] . ' без опыта работы';
                 else
                     $arVacancies[] = $p['val'] . ' с опытом: ' . $p['pname'];                
