@@ -23,16 +23,7 @@ Yii::app()->getClientScript()->registerScriptFile("/theme/js/private/page-prof-a
                 </a>
 
             </div>
-            <div class="ppp__logo-rating">
-                <ul class="ppp__star-block">
-                    <li class="full"></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                </ul>
-                <span class="ppp__subtitle">15 из 100</span>
-            </div>
+
             <div class="confirmed-user js-g-hashint tooltipstered">ПРОВЕРЕН</div>
             <div class="ppp__logo-more">
                 <div class="clearfix"></div>
@@ -79,7 +70,7 @@ Yii::app()->getClientScript()->registerScriptFile("/theme/js/private/page-prof-a
                 </div>
             </div>
 
-            <div class="ppp__module-title"><h2>Города</h2></div>
+            <div class="ppp__module-title"><h2>ГОРОД</h2></div>
             <div class="ppp__module">
                 <div class="ppp__period-list">
                     <div class="ppp__field">
