@@ -107,7 +107,7 @@ class Api
     
  public function importProject(){
         Yii::import('ext.yexcel.Yexcel');
-        $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/prommu/uploads/analit.xlsx");
+        $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/prommu/uploads/153596066899602.xls");
         var_dump($sheet_array);
 
         for($i = 1; $i < count($sheet_array)+1; $i++){
