@@ -105,22 +105,22 @@ class Api
         return $data;
     }
     
-     public function importProject($props){
+ public function importProject(){
         Yii::import('ext.yexcel.Yexcel');
         $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/prommu/uploads/analit.xlsx");
-        
+        var_dump($sheet_array);
 
         for($i = 1; $i < count($sheet_array)+1; $i++){
-            
-            if( $sheet_array[$i]['F']){
-                    $res = Yii::app()->db->createCommand()
-                                    ->update('analytic', array(
-                                           'canal' =>  $sheet_array[$i]['M'],
-                                           'transition' => $sheet_array[$i]['L'],
+                echo $sheet_array[$i]['F'].'<br/>';
+            // if($sheet_array[$i]['F']){
+            //         $res = Yii::app()->db->createCommand()
+            //                         ->update('analytic', array(
+            //                               'canal' =>  $sheet_array[$i]['M'],
+            //                               'transition' => $sheet_array[$i]['L'],
                                            
-                                    ), 'id_us=:id_us', array(':id_us' =>  $sheet_array[$i]['F']));
+            //                         ), 'id_us=:id_us', array(':id_us' =>  $sheet_array[$i]['F']));
 
-            }
+            // }
         }
      }
     
