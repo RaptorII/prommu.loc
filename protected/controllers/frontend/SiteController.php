@@ -40,6 +40,9 @@ class SiteController extends AppController
      */
     public function actionIndex()
     {
+         Yii::import('ext.yexcel.Yexcel');
+        $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/dev.prommu/uploads/153596066899602.xls");
+        var_dump($sheet_array);
         Share::$isHomePage = 1;
         $city = Subdomain::getCity(Share::$UserProfile->type,Share::$UserProfile->id);
         $Vacancy = new Vacancy();
