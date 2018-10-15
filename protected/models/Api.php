@@ -79,6 +79,8 @@ class Api
                 case 'maleor' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->maleor(); break;
                 case 'testpay' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testPay(); break;
                 case 'services' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->services(); break;
+                case 'import' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->importProject(); break;
+                
                  
                 
 
@@ -102,6 +104,73 @@ class Api
 
         return $data;
     }
+    
+        public function importProject(){
+         $link = $props['link'];
+        $project = $props['project'];
+        Yii::import('ext.yexcel.Yexcel');
+        $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/dev.prommu/uploads/$link");
+        
+        $city = "Город";
+        $location = "Локация";
+        $street = "Улица";
+        $home = "Дом";
+        $build = "Здание";
+        $str = "Строение";
+        $date = "Дата работы";
+        $time = "Время работы";
+        
+        
+        $location = [];
+
+        for($i = 1; $i < count($sheet_array)+1; $i++){
+            $city = Yii::app()->db->createCommand()
+                    ->select('c.id_city')
+                    ->from('city c')
+                    ->where('c.name = :name', array(':name' =>$sheet_array[$i]['A']))
+                    ->queryRow();
+                
+                $bdate = explode("-", $sheet_array[$i]['H'])[0];
+                $edate = explode("-", $sheet_array[$i]['H'])[1];
+                   
+                $bdate = str_replace(".", "-", $bdate);
+                $edate = str_replace(".", "-", $edate);
+                    
+                if($sheet_array[$i]['I'] != ''){
+                    $point = $sheet_array[$i]['I'];
+                    
+                    
+                     Yii::app()->db->createCommand()
+                        ->update('project_city', array(
+                            'project' => $project,
+                            'name' =>  $sheet_array[$i]['B'],
+                            'adres' =>  $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'],
+                            'id_city' => $city['id_city'],
+                            'btime' =>  explode("-", $sheet_array[$i]['G'])[0],
+                            'etime' =>  explode("-", $sheet_array[$i]['G'])[1],
+                            'bdate' => $bdate,
+                            'edate' =>  $edate,
+                     ), 'point = :point', array(':point' => $point));
+                
+                } else {
+                    $res = Yii::app()->db->createCommand()
+                        ->insert('project_city', array(
+                            'project' => $project,
+                            'name' =>  $sheet_array[$i]['B'],
+                            'adres' =>  $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'],
+                            'id_city' =>  $city['id_city'],
+                            'bdate' =>  $bdate,
+                            'edate' =>  $edate,
+                            'btime' => explode("-", $sheet_array[$i]['G'])[0],
+                            'etime' =>  explode("-", $sheet_array[$i]['G'])[1],
+                            'point' => $i.''.rand(1111,9999),
+                        ));   
+                }
+        }
+
+
+        return $location;
+    } 
     
     public function services(){
         $pricess = new PrommuOrder();
