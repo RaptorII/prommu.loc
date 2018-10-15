@@ -40,6 +40,7 @@ class SiteController extends AppController
      */
     public function actionIndex()
     {
+         
         Share::$isHomePage = 1;
         $city = Subdomain::getCity(Share::$UserProfile->type,Share::$UserProfile->id);
         $Vacancy = new Vacancy();

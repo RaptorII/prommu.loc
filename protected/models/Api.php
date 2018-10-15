@@ -79,6 +79,8 @@ class Api
                 case 'maleor' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->maleor(); break;
                 case 'testpay' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testPay(); break;
                 case 'services' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->services(); break;
+                case 'import' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->importProject(); break;
+                
                  
                 
 
@@ -102,6 +104,25 @@ class Api
 
         return $data;
     }
+    
+ public function importProject(){
+        Yii::import('ext.yexcel.Yexcel');
+        $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/dev.prommu/uploads/153596066899602.xls");
+        var_dump($sheet_array);
+
+        for($i = 1; $i < count($sheet_array)+1; $i++){
+                echo $sheet_array[$i]['F'].'<br/>';
+            // if($sheet_array[$i]['F']){
+            //         $res = Yii::app()->db->createCommand()
+            //                         ->update('analytic', array(
+            //                               'canal' =>  $sheet_array[$i]['M'],
+            //                               'transition' => $sheet_array[$i]['L'],
+                                           
+            //                         ), 'id_us=:id_us', array(':id_us' =>  $sheet_array[$i]['F']));
+
+            // }
+        }
+     }
     
     public function services(){
         $pricess = new PrommuOrder();
