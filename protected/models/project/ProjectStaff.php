@@ -395,4 +395,96 @@ class ProjectStaff extends CActiveRecordBehavior{
 
 		return $this->buildStaffArray($sql);
 	}
+
+    /**
+     * @param $user_id number - user ID
+     * @return staff data
+     * Достаем основную информацию о юзере
+     */
+    public function getUserMainInfo($user_id) {
+        $main = Yii::app()->db->createCommand()
+            ->select("isman,birthday,firstname,lastname,photo,email")
+            ->from('user u')
+            ->leftjoin('resume r', 'r.id_user=u.id_user')
+            //->leftjoin('user_attribs ua', 'ua.id_us=u.id_user')
+            ->where('u.id_user =:user_id', array(':user_id' => $user_id))
+            //->order('pu.user desc')
+            ->queryAll();
+        return $main;
+    }
+
+    /**
+     * @param $user_id number - user ID
+     * @return user-card data
+     * Достаем информацию о контактах юзере
+     */
+    public function getUserContactsInfo($user_id) {
+        $contacts = Yii::app()->db->createCommand()
+            ->select("uad.name, ua.val, ua.key")
+            ->from('user_attribs ua')
+            ->leftjoin('user_attr_dict uad', 'ua.key=uad.key')
+            ->where("ua.id_us =:user_id AND ua.val<>''", array(':user_id' => $user_id))
+            ->queryAll();
+        return $contacts;
+    }
+
+    /**
+     * @param $user_id number - user ID
+     * @return user-card data
+     * Достаем информацию о проектах юзере
+     */
+    public function getUserProjectsInfo($user_id) {
+        $project_info = Yii::app()->db->createCommand()
+            ->select(
+            //"DISTINCT(c.name)"
+                "c.name city, p.project, p.name"
+            )
+            ->from('project_user pu')
+            ->leftjoin('project p', 'p.project=pu.project')
+            ->leftjoin('project_city pc', 'pc.project=pu.project')
+            ->leftjoin('city c', 'pc.id_city=c.id_city')
+            ->where('pu.user =:user_id', array(':user_id' => $user_id))
+            ->order('pu.user desc')
+            ->queryAll();
+        return $project_info;
+    }
+
+    /**
+     * @param $user_id number - user ID
+     * @return user-card data
+     * Достаем Всю информацию о юзере для карточки персонала
+     */
+    public function getUserAllInfo($main, $contacts, $project_info) {
+        $viData = [];
+        foreach ($main as $key => $value) {
+            $viData = $value;
+        }
+
+        foreach ($contacts as $key => $value){
+            if($value['key']=='mob'){
+                $viData['tel'] = $value['val'];
+            }
+            else{
+                $viData['CONTACTS'][]=$value;
+            }
+        }
+
+        $arProjects = [];
+        $arCities = [];
+        foreach ($project_info as $key => $value) {
+            if (!in_array($value['name'], $arProjects)) {
+                $arProjects[] = $value['name'];
+            }
+            if (!in_array($value['city'], $arCities)) {
+                $arCities[] = $value['city'];
+            }
+        }
+
+        $viData['PROJECT'] = $arProjects;
+        $viData['CITIES'] = $arCities;
+
+        $viData['PHOTO'] = self::getPhoto('2', $viData ,'medium');
+
+        return $viData;
+    }
 }
