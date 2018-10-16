@@ -757,31 +757,31 @@ class Seo extends CActiveRecord
 
         if(sizeof($arCities)>0){       
           $cities = 'в ' . join(', ', $arCities);
-          $citiesTitle = $cities;
+          $citiesTitle = join(', ', $arCities);
         }
         if(sizeof($arCities)>1) {
             !$hasMoscow
             ? $citiesTitle = 'в ' . $arCities[0]
-            : $citiesTitle = 'в ' . $hasMoscow;
+            : $citiesTitle = $hasMoscow;
         }
 
         if(sizeof($arVacancies)>0) {
             $vacancies = ' ' . join(', ', $arVacancies) . ', ';
-            $vacanciesTitle = $vacancies;
+            $vacanciesTitle = join(', ', $arVacancies);
         }
         if(sizeof($arVacancies)>1)
-            $vacanciesTitle = ' ' . $arVacancies[0] . ', ';;
+            $vacanciesTitle = $arVacancies[0];
 
         if(sizeof($arWages)>0)
           $wage = ' ожидаемая оплата: от ' . $arWages['pay'] . ' ' . $arWages['pt'] . ', ';
 
         $sex = $arParams['isman'] ? 'мужской' : 'женский'; // пол
-        $title = 'Резюме' . $vacanciesTitle 
-            . $citiesTitle . ' - поиск сотрудников на ' 
+        $title = 'Резюме ' . $vacanciesTitle 
+            . ' в ' . $citiesTitle . ' - поиск сотрудников на ' 
             . Subdomain::getSubdomain($arParams['cities'])['name'];
 
         $description = "Резюме:" . $vacancies 
-            . $cities . ',' . $wage . " возраст: " 
+            . ' ищет работу ' . $cities . ', ' . $wage . " возраст: " 
             . $arParams['years'] . ", пол: " . $sex;
         if(!empty($arParams['education']))
             $description .= ', образование: ' . $arParams['education'];
