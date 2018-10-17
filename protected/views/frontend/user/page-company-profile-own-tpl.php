@@ -200,6 +200,7 @@
             <a class='upp__project-vacancy' href='<?= MainConfig::$PAGE_VACANCY . DS . $vacancy['id'] ?>'><?= $vacancy['title'] ?></a>
             <span class="dates">(<?= $vacancy['crdate'] . ' - ' . $vacancy['remdate'] ?>)</span>
           </div>
+          <span class="upp__project-item-messages">5</span>
         </div>
       <?php endforeach; ?>
     <?php endif; ?>

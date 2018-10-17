@@ -130,8 +130,8 @@
                     <a href="?info=dialog" class="erv__tab-link link4">Чат вакансии (<?=$viData['vacResponses']['countsDiscuss']?>)</a><br>
                     <a href='/<?= MainConfig::$PAGE_VACDELETE . "?id={$viData['vac']['id']}&page={$viData['vac']['status']}" ?>' class="erv__publ-btn" id="rv-vac-del">Удалить вакансию</a>
                     <div class="erv__logo-chat-block">
-                        <a href="<?=MainConfig::$PAGE_IM . '?vac'?>" class="evl__chat">Чат по вакансиям</a><br>
-                        <a href="<?=MainConfig::$PAGE_IM?>" class="evl__chat">Личный чат</a>
+                        <a href="<?=MainConfig::$PAGE_IM . '?vac'?>" class="evl__chat">Общий чат для вакансии</a><br>
+                        <a href="<?=MainConfig::$PAGE_IM?>" class="evl__chat">Сообщения</a>
                     </div>
                 </div>
                 <div class='col-xs-12 col-sm-8 col-lg-9'>
