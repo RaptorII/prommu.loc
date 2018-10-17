@@ -119,6 +119,9 @@
         <div class='btn-update btn-orange-sm-wr' style="margin-top: 10px" >
           <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_SETTINGS ?>' style="padding:5px 39px">Настройки профиля</a>
         </div>
+        <div class='btn-update btn-orange-sm-wr' style="margin-top: 10px" >
+          <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_IM ?>' style="padding:5px 39px">Мои сообщения</a>
+        </div>
      <?php  elseif( Share::$UserProfile->id == $data):?>
         <div class='btn-update btn-orange-sm-wr'>
           <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_IM . '?new=' . $idus ?>'>Отправить сообщение</a>

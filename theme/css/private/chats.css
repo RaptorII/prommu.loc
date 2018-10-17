@@ -45,6 +45,24 @@
 	margin: 50px 0 70px;
 	font-size: 20px;
 }
+#DiContent a.chat__list-item{
+	color: black;
+	display: block;
+	overflow: hidden;
+}
+
+
+#DiContent a.chat__list-item .title{
+	color:#abb820;
+}
+
+#DiContent a.chat__list-item:hover div{
+	background-color: #abb820;
+	color:white;
+}
+#DiTop,#DiSiteWrapp{
+	height: auto;
+}
 @media (max-width: 767px){
 	#DiSiteWrapp #DiContent #MWwrapper .mw-win.dark-ver{
 		width: 350px !important;

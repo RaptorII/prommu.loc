@@ -231,7 +231,7 @@
 .upp__img-block-more a{
 	width: 100%;
 	padding: 0 5px;
-	display: block;`
+	display: block;
 }
 .upp__img-block-more a:focus{ outline: none }
 .upp__img-block-more img{
@@ -579,4 +579,7 @@ a.upp__project-info{ width: 65px }
 	border-right: 10px solid transparent;
 	position: absolute;
 	right: 60px;
+}
+#DiContent.page-company-profile-own .btn-update a{
+	min-width:215px;
 }

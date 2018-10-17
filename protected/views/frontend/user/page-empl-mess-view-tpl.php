@@ -1,3 +1,4 @@
+
 <div class="message">
   <?php if( $viData['error'] ): ?>
     <?= $viData['message'] ?>
@@ -49,7 +50,7 @@
         <div id="DiChatWrapp">
             <div class="mess-block">
                 <div class="mess-block-inner">
-                  <div id="DiMessagesWrapp">
+                  <div id="DiMessagesWrapp" style="border:1px solid transparent;">
                     <?php if( $isNew ): ?>
                       <div class="nomess">Нет сообщений в этой теме. Выберите тему и введите сообщение...</div>
                     <?php endif; ?>
