@@ -33,7 +33,8 @@ class Project extends CActiveRecord
                             'project' => $project,
                             'id_user' => $idus,
                             'name' => $props['name'],
-                            'crdate' => date('Y-m-d h-i-s')
+                            'crdate' => date('Y-m-d h-i-s'),
+                            'vacancy' => $props['vacancy']
                         ));
     
         $this->recordIndex($props, $project, true);
@@ -70,7 +71,8 @@ class Project extends CActiveRecord
             ->select("
                     p.project, 
                     p.name, 
-                    p.crdate, 
+                    p.crdate,
+                    p.vacancy, 
                     pu.status, 
                 ")
             ->from('project p')
@@ -83,6 +85,7 @@ class Project extends CActiveRecord
             $p = $v['project'];
             $arRes['items'][$p]['name'] = $v['name']; 
             $arRes['items'][$p]['date'] = date('d.m.Y',strtotime($v['crdate']));
+            $arRes['items'][$p]['vacancy'] = $v['vacancy'];
 
             if(!isset($arRes['items'][$p]['ignored']))
                 $arRes['items'][$p]['ignored'] = 0;

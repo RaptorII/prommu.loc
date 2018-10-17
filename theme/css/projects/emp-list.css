@@ -64,7 +64,6 @@
 	padding: 20px;
 }
 .projects__item-data{
-	min-width: 160px;
 	top: 15px;
 	right: 15px;
 	font-size: 16px;
@@ -113,6 +112,14 @@
 }
 .projects__tabs-item:hover span{ color: #ffffff }
 /*
+*
+*/
+.projects__to-vac-btn{
+	color: #abb820;
+	text-decoration: underline;
+	cursor: pointer;
+}
+/*
 *		MEDIA
 */
 @media screen and (min-width: 768px){
@@ -126,13 +133,24 @@
 		display: inline-block;
 	}
 	.projects__item{
-		padding: 0 170px 0 0;
+		width: 100%;
+		display: table;
+		padding: 0;
 	}
 	.projects__item-data{
-		position: absolute;
+		width: 160px;
+		display: table-cell;
+		vertical-align: middle;
 		margin: 0;
-		padding: 0 0 0 15px;
+		padding: 15px 0;
 		border-top: none;
+	}
+	.projects__item-data>div{ 
+		padding: 0 5px 0 15px;
 		border-left: 1px solid #c5c5c5;
+	}
+	.projects__item-name{
+		display: table-cell;
+		vertical-align: middle;
 	}
 }

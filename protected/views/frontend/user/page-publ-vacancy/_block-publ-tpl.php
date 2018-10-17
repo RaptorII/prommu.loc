@@ -39,7 +39,7 @@
     // Опыт работы
     ?>
     <div class="fav__label fav__select">
-      <?php $arExp = array(1=>'Без опыта',2=>'До 1 месяца',3=>'От 1 до 3 месяцев',4=>'От 3 до 6 месяцев',5=>'От 6 до 12 месяцев',6=>'От 1 года до 2-х',7=>'Более 2-х лет') ?>
+      <?php $arExp = array(1=>'Без опыта',2=>'До 1 месяца',3=>'От 1 до 3 месяцев',4=>'От 3 до 6 месяцев',5=>'От 6 до 12 месяцев',6=>'от 1 до 2-х лет',7=>'Более 2-х лет') ?>
     <input type="text" name="str-expirience" class="fav__input fav__required" placeholder="Опыт работы *" id="av-expirience" disabled>
     <div class="fav__veil" id="av-expirience-veil"></div>
     <ul class="fav__select-list" id="av-expirience-list">

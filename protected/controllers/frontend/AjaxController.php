@@ -841,13 +841,13 @@ class AjaxController extends AppController
         if($model->hasAccess($data['project'])) {
             switch ($_SERVER['REQUEST_METHOD']) {
                 case 'GET':
-                    if($data['type']=='coordinates') // получение координат передвижения С
+                    if($data['type']==='coordinates') // получение координат передвижения С
                         $result = $model->getСoordinates($data);
                     break;
                 case 'POST':
-                    if($data['type']=='coordinates') // запись координат от С
+                    if($data['type']==='coordinates') // запись координат от С
                         $result = $model->recordReport($data);
-                    if($data['type']=='del-index') // удаление объектов адресной программы
+                    if($data['type']==='del-index') // удаление объектов адресной программы
                         $result = $model->deleteLocation($data);
                     if(in_array(
                             $data['type'], 
@@ -858,7 +858,19 @@ class AjaxController extends AppController
                     break;
             }
         }
-
+        if($data['type']==='convert') {
+            switch ($_SERVER['REQUEST_METHOD']) {
+                case 'POST':
+                    if($data['to']==='project') {
+                        $convert = new ProjectConvertVacancy();
+                        $result = $convert->vacancyConvertToProject($data);
+                        if(!$result['error'])
+                            $model->createProject($result);
+                    }
+                    
+                    break;
+            }
+        }    
         echo CJSON::encode($result);
     }
 }

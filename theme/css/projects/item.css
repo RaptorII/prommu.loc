@@ -417,6 +417,7 @@
 .addr__table td:nth-child(4){ width: 13% }
 .addr__table td:nth-child(5){ width: 13% }
 .addr__table-cell{
+	min-height: 25px;
 	padding: 0 10px;
 	margin: 10px 0;
 	font-size: 18px;

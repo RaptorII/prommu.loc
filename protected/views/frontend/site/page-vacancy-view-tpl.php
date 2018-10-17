@@ -62,6 +62,8 @@
             Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/vacedit/main.css');
             Yii::app()->getClientScript()->registerScriptFile($bUrl.'/jslib/nicedit/nicEdit.js', CClientScript::POS_END);
             Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/vacedit/main.js', CClientScript::POS_END);
+            Yii::app()->getClientScript()->registerScriptFile($bUrl."/theme/js/projects/project-convert-vacancy.js", CClientScript::POS_END);
+
             $name = Share::$UserProfile->exInfo->name;
             //
             $Q1 = Yii::app()->db->createCommand()
@@ -107,9 +109,12 @@
                 <div class="col-xs-12">
                     <div class="erv__header">
                         <?php if(!$viData['vac']['status']): ?>
-                            <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}" ?>' class="erv__header-btn">Опубликовать вакансию</a>
+                            <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}" ?>' class="erv__header-btn prmu-btn"><span>Опубликовать вакансию</span></a>
                         <?php else: ?>
-                            <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}&d=1" ?>' class="erv__header-btn">Снять с публикации</a>
+                            <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}&d=1" ?>' class="erv__header-btn prmu-btn"><span>Снять с публикации</span></a>
+                        <?php endif; ?>
+                        <? if($viData['vac']['ismoder']==100): ?>
+                            <div class="evl__to-project-btn prmu-btn" data-id="<?=$viData['vac']['id']?>"><span>Перевести в проект</span></div>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -226,7 +231,7 @@
                         //  Опыт работы
                         ?>
                         <div class="erv__label erv__select" data-info="Опыт работы *">
-                            <?php $arExp = array(1=>'Без опыта',2=>'До 1 месяца',3=>'От 1 до 3 месяцев',4=>'От 3 до 6 месяцев',5=>'От 6 до 12 месяцев',6=>'От 1 года до 2-х',7=>'Более 2-х лет') ?>
+                            <?php $arExp = array(1=>'Без опыта',2=>'До 1 месяца',3=>'От 1 до 3 месяцев',4=>'От 3 до 6 месяцев',5=>'От 6 до 12 месяцев',6=>'от 1 до 2-х лет',7=>'Более 2-х лет') ?>
                             <input type="text" name="str-expirience" class="erv__input erv__required" placeholder="Опыт работы *" id="rv-expirience" value="<?=$arExp[$viData['vac']['exp']]?>" disabled>
                             <div class="erv__veil" id="rv-expirience-veil"></div>
                             <ul class="erv__select-list" id="rv-expirience-list">
@@ -799,7 +804,7 @@
                     <?php endif; ?>
                     <?php if($vacancy['exp']): ?>
                         <div class="sv__attributes-item ico3">
-                            <?php $arExp = array(1=>'Без опыта',2=>'До 1 месяца',3=>'От 1 до 3 месяцев',4=>'От 3 до 6 месяцев',5=>'От 6 до 12 месяцев',6=>'От 1 года до 2-х',7=>'Более 2-х лет') ?>
+                            <?php $arExp = array(1=>'Без опыта',2=>'До 1 месяца',3=>'От 1 до 3 месяцев',4=>'От 3 до 6 месяцев',5=>'От 6 до 12 месяцев',6=>'от 1 до 2-х лет',7=>'Более 2-х лет') ?>
                             <div class="sv__attributes-name"><b>Опыт работы:</b></div>
                             <div class="sv__attributes-val"><?=$arExp[$vacancy['exp']]?></div>
                             <div class="clearfix"></div>

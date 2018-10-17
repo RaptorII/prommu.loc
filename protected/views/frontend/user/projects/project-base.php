@@ -13,6 +13,7 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/dist/fancybox/jque
 Yii::app()->getClientScript()->registerCssFile($bUrl . 'js/dist/fancybox/jquery.fancybox.css');
 Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-filter.css');
 Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/universal-filter.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($bUrl.'js/projects/project-convert-vacancy.js', CClientScript::POS_END);
 
 $arFilterData = [
     'ID' => $project, //Обязательное свойство!
@@ -227,6 +228,10 @@ foreach ($viData['filter']['metros'] as $id => $metro)
 					<a href="/uploads/prommu_example.xls" download>Скачать пример для добавления</a>
 				</div>*/ ?>
                 <h1 class="project__title">ПРОЕКТ: <span><?= $viData['project']['name'] ?></span></h1>
+                <? if(empty($p['vacancy'])): ?>
+                    <div class="projects__to-vac-btn prmu-btn" data-id="<?=$project?>"><span>Перевести в вакансию</span></div> 
+                <? endif; ?>
+
                 <div id="ajax-content">
                     <? require __DIR__ . '/project-base-ajax.php'; // СПИСОК ?>
                 </div>

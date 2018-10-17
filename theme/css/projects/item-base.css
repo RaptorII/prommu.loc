@@ -344,4 +344,17 @@
 #DiContent .popup__control a{
 	text-decoration: underline;
 }
-
+/*
+*
+*/
+.projects__to-vac-btn.prmu-btn{
+	max-width: 250px;
+	font-size: 18px;
+	text-transform: uppercase;
+	vertical-align: middle;
+	padding: 5px 15px;
+	border-radius: 17px;
+	margin: 0 auto 15px;
+	cursor: pointer;
+}
+.prmu-btn:before, .prmu-btn:after{ border-radius: 17px }

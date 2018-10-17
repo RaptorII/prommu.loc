@@ -42,7 +42,7 @@
     //  Опыт работы
     ?>
     <div class="erv__label erv__select" data-info="Опыт работы *">
-        <?php $arExp = array(1=>'Без опыта',2=>'До 1 месяца',3=>'От 1 до 3 месяцев',4=>'От 3 до 6 месяцев',5=>'От 6 до 12 месяцев',6=>'От 1 года до 2-х',7=>'Более 2-х лет') ?>
+        <?php $arExp = array(1=>'Без опыта',2=>'До 1 месяца',3=>'От 1 до 3 месяцев',4=>'От 3 до 6 месяцев',5=>'От 6 до 12 месяцев',6=>'от 1 до 2-х лет',7=>'Более 2-х лет') ?>
         <input type="text" name="str-expirience" class="erv__input erv__required" placeholder="Опыт работы *" id="rv-expirience" value="<?=$arExp[$viData['vac']['exp']]?>" disabled>
         <div class="erv__veil" id="rv-expirience-veil"></div>
         <ul class="erv__select-list" id="rv-expirience-list">

@@ -44,6 +44,7 @@ class ProjectStaff extends CActiveRecordBehavior{
 					'project' => $prj,
 					'user' => $user['id'],
 					'email' =>  $user['email'],
+					'status' =>  isset($arr['users-activate']) ? 1 : 0,
 					'phone' => ''
 				));
 			}
