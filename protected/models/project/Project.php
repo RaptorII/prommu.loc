@@ -33,7 +33,8 @@ class Project extends CActiveRecord
                             'project' => $project,
                             'id_user' => $idus,
                             'name' => $props['name'],
-                            'crdate' => date('Y-m-d h-i-s')
+                            'crdate' => date('Y-m-d h-i-s'),
+                            'vacancy' => $props['vacancy']
                         ));
     
         $this->recordIndex($props, $project, true);

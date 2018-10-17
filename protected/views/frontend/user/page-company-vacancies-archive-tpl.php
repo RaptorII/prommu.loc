@@ -27,7 +27,7 @@
   <div class="col-xs-12">
     <div class="evl__header">
       <h1 class="evl__header-name"><?=$name?></h1>
-      <a class='evl__header-btn' href='<?= MainConfig::$PAGE_VACPUB ?>'>Добавить вакансию</a>  
+      <a class='evl__header-btn prmu-btn' href='<?= MainConfig::$PAGE_VACPUB ?>'><span>ДОБАВИТЬ ВАКАНСИЮ</span></a>  
     </div>
   </div>     
   <div class='col-xs-12 col-sm-4 col-lg-3'>
@@ -62,17 +62,14 @@
           $need = DS . MainConfig::$PAGE_VACANCIES; 
           $url = Yii::app()->request->requestUri;
         ?>
-        <?php if(strpos($url, $need)===false): ?>
+        <? if(strpos($url, $need)!==false): ?>
+          <div class='evl__tabs-link active'>Мои вакансии : <span><?=$viData['cnt']['vac']?></span></div>
+          <a class='evl__tabs-link' href='<?= DS . MainConfig::$PAGE_VACARHIVE?>'>Архив : <span><?=$viData['cnt']['arc']?></span></a>
+        <? else: ?>
           <a class='evl__tabs-link' href='<?=$need?>'>Мои вакансии : <span><?=$viData['cnt']['vac']?></span></a>
-        <?php else: ?>
-          <span class='evl__tabs-link active'>Мои вакансии : <span><?=$viData['cnt']['vac']?></span></span>
-        <?php endif; ?>
-        <? $need = DS . MainConfig::$PAGE_VACARHIVE; ?>
-        <?php if(strpos($url, $need)===false): ?>
-          <a class='evl__tabs-link' href='<?=$need?>'>Архив : <span><?=$viData['cnt']['arc']?></span></a>
-        <?php else: ?>
-          <span class='evl__tabs-link active'>Архив : <span><?=$viData['cnt']['arc']?></span></span>
-        <?php endif; ?>
+          <div class='evl__tabs-link active'>Архив : <span><?=$viData['cnt']['arc']?></span></div>
+        <? endif; ?>
+        <div class="clearfix"></div>
       </div>
       <hr class="evl-vacancies__line">
       <div class="evl-vacancies__list">

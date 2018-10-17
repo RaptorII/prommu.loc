@@ -22,47 +22,18 @@
 	vertical-align: middle;
 	margin-right: 5px;
 }
-#DiContent .employer-vacansies-list .evl__header-btn{
-	width: 195px;
-	line-height: 30px;
-	display: block;
+.evl__header-btn{
+	max-width: 200px;
 	margin: 0 auto;
-	padding: 0;
-	background: #ff8300;
-	color: #FFFFFF;
-	text-align: center;
+	display: block;
+	font-size: 18px;
 	text-transform: uppercase;
-	font-size: 14px;
-	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-	position: relative;
-	z-index: 1;
-	border: none;
-	-webkit-transition: all 0.3s ease-out;
-	-moz-transition: all 0.3s ease-out;
-	-o-transition: all 0.3s ease-out;
-	transition: all 0.3s ease-out;
+	vertical-align: middle;
+	padding: 5px 15px;
+	border-radius: 17px;
 }
-.evl__header-btn:before{
-	content: '';
-	position: absolute;
-	z-index: -1;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: #ABB837;
-	-webkit-transform: scaleX(0);
-	transform: scaleX(0);
-	-webkit-transform-origin: 0 50%;
-	transform-origin: 0 50%;
-	-webkit-transition: all 0.3s ease-out;
-	-moz-transition: all 0.3s ease-out;
-	-o-transition: all 0.3s ease-out;
-	transition: all 0.3s ease-out;
-}
-.evl__header-btn:hover:before{
-	-webkit-transform: scaleX(1);
-	transform: scaleX(1);
+.evl__header-btn:before, .evl__header-btn:after {
+	border-radius: 13px;
 }
 /*
 *
@@ -132,27 +103,34 @@
 	border-top: 1px solid #D6D6D6;
 }
 .evl-vacancies__item{
-	padding: 20px 140px 20px 0;
+	width: 100%;
+	display: table;
+	padding: 15px 0;
 	border-bottom: 1px solid #D6D6D6;
 	position: relative;
 }
 #DiContent .evl-vacancies__item-name{
+	display: table-cell;
 	font-size: 16px;
 	font-weight: bold;
 	color: #ABB837;
 	text-decoration: underline;
 }
-.evl-vacancies__item-info{
-	position: absolute;
-	top: 17px;
-	right: 50px;
+.evl-vacancies__item-info,
+.evl-vacancies__item-btns{
+	display: table-cell;
+	padding-left: 5px;
+	vertical-align: middle;
 }
+.evl-vacancies__item-info{ width: 20% }
+.evl-vacancies__item-btns{ width: 7% }
 .evl-vacancies__item-resp,
 .evl-vacancies__item-view{ 
 	color: #343434;
 	padding: 0;
 	display: block;
 	line-height: 14px;
+	white-space: nowrap;
 }
 #DiContent .evl-vacancies__item-resp a,
 #DiContent .evl-vacancies__item-view a{ text-decoration: underline }
@@ -165,42 +143,39 @@
 }
 #DiContent .employer-vacansies-list .evl__header-btn.evl__archive-btn{ margin: 60px 0 }
 .evl__tabs{
-	display: block;
-	margin-bottom: 10px;
-	text-align: left;
+	width: 100%;
+	max-width: 350px;
+	margin-bottom: 20px;
+	font-size: 16px;
+	line-height: 26px;
 }
-.evl__tabs-link{
-	min-width: 170px;
-	display: inline-block;
-    margin: 0 0 10px -3px;
-    padding: 5px 5px;
-    line-height: 16px;
-    text-decoration: none;
-    color: #abb820;
-    text-transform: uppercase;
-    font-family: RobotoCondensed-Regular;
-    border: 1px solid #abb820;
-    font-size: 13px;
-    text-align: center;
-    transition: .3s all;
-    background: #fff;
-}
-.evl__tabs-link span{ color: #abb820 }
+
 #DiContent .evl__tabs .evl__tabs-link{
-	position: relative;
-	margin-right: -2px;
+	width: 50%;
+	float: left;
+	text-align: center;
 	color: #cacaca;
 	border: 2px solid #cacaca;
-	font-weight: bold;
 }
 #DiContent .evl__tabs .evl__tabs-link.active{
-	color: #fff;
-	border: 2px solid #abb820;
 	background: #abb820;
-	z-index: 20;
+	border: 2px solid #abb820;
+	color: #ffffff;
 }
-.evl__tabs-link.active span{ color: #FFFFFF }
-.evl__tabs-link:first-child{ margin-left: 0 }
+.evl__tabs-link span{ color: #abb820 }
+.evl__tabs-link.active span,
+.evl__tabs-link:hover span{ color: #ffffff }
+#DiContent .evl__tabs-link:first-child{ border-right: none }
+
+#DiContent a.evl__tabs-link:hover{
+	background: #ff921d;
+	border: 2px solid #ff921d;
+	color: #ffffff;
+	-webkit-transition: all ease-out .3s;
+	-moz-transition: all ease-out .3s;
+	-o-transition: all ease-out .3s;
+	transition: all ease-out .3s;
+}
 #DiContent .paging-wrapp{ margin-top: 30px; }
 .evl__logo-link-block{ 
 	margin: 20px 0;
@@ -289,20 +264,21 @@
 	transform: scaleX(1);	
 }
 #DiContent .upp__btn-rating-list:hover{ color: #FFFFFF }
-.evl__service-btn{
+.evl__service-btn,
+.evl__to-project-btn{
 	width: 33px;
 	height: 33px;
-	position: absolute;
-	top: 15px;
-	right: 0;
 	display: block;
+	margin: 3px 0;
 	color: transparent;
 	text-align: center;
-	background: #ff8300 url(/theme/pic/vacancy/vac-list-service-sprite.png) 0 -264px no-repeat;
 	cursor: pointer;
 	line-height: 14px;
 	border-radius: 5px;
+	background: #ff8300 url(/theme/pic/vacancy/vac-list-service-sprite.png) no-repeat;
 }
+.evl__service-btn{ background-position: 0 -264px }
+.evl__to-project-btn{ background-position: 0 -331px }
 /*
 *		MEDIA
 */
@@ -322,9 +298,8 @@
 		float: right;
 	}
 	.evl__vacancies{ margin-left: -15px }
-	.evl-vacancies__item{ padding: 20px 200px 20px 0 }
-	.evl-vacancies__item-info{ right: 100px	}
-	.evl__service-btn{
+	.evl__service-btn,
+	.evl__to-project-btn{
 		width: 90px;
 		height: initial;
 		padding: 5px;
@@ -339,8 +314,14 @@
 		display:initial;
 		padding: 0 10px 0 0;
 	}
-	.evl-vacancies__item{ padding: 20px 270px 20px 0 }
-	.evl-vacancies__item-info{ top: 23px }
+	.evl-vacancies__item-info{ width: 30% }
+	.evl-vacancies__item-info,
+	.evl-vacancies__item-btns{ vertical-align: top }
+	.evl__service-btn,
+	.evl__to-project-btn{ margin: 0 0 5px 0 }
+}
+@media (min-width: 1200px){
+	.evl-vacancies__item-info{ width: 23% }
 }
 /*
 *	POPAP
@@ -435,4 +416,12 @@
 	font-family: RobotoCondensed-Regular,verdana,arial;
 	font-size: 28px;
 	font-weight: normal;
+}
+#MWwrapper .mw-win.dark-ver .header-block{
+	margin: -20px 0 10px;
+	font-size: 24px;
+}
+#MWwrapper .mw-win.dark-ver .convert{ 
+	text-transform: none;
+	text-align: left;
 }

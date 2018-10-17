@@ -62,6 +62,8 @@
             Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/vacedit/main.css');
             Yii::app()->getClientScript()->registerScriptFile($bUrl.'/jslib/nicedit/nicEdit.js', CClientScript::POS_END);
             Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/vacedit/main.js', CClientScript::POS_END);
+            Yii::app()->getClientScript()->registerScriptFile($bUrl."/theme/js/projects/project-convert-vacancy.js", CClientScript::POS_END);
+
             $name = Share::$UserProfile->exInfo->name;
             //
             $Q1 = Yii::app()->db->createCommand()
@@ -107,9 +109,10 @@
                 <div class="col-xs-12">
                     <div class="erv__header">
                         <?php if(!$viData['vac']['status']): ?>
-                            <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}" ?>' class="erv__header-btn">Опубликовать вакансию</a>
+                            <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}" ?>' class="erv__header-btn prmu-btn"><span>Опубликовать вакансию</span></a>
                         <?php else: ?>
-                            <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}&d=1" ?>' class="erv__header-btn">Снять с публикации</a>
+                            <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}&d=1" ?>' class="erv__header-btn prmu-btn"><span>Снять с публикации</span></a>
+                            <div class="evl__to-project-btn prmu-btn" data-id="<?=$viData['vac']['id']?>"><span>Перевести в проект</span></div>
                         <?php endif; ?>
                     </div>
                 </div>

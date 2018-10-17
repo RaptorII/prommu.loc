@@ -1,6 +1,8 @@
 <?php
-  Yii::app()->getClientScript()->registerCssFile('/theme/css/private/vacansies-list.css');
-  Yii::app()->getClientScript()->registerScriptFile("/theme/js/private/page-vac-list.js", CClientScript::POS_END);
+  $bUrl = Yii::app()->baseUrl;
+  Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/private/vacansies-list.css');
+  Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/private/page-vac-list.js', CClientScript::POS_END);
+  Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/projects/project-convert-vacancy.js', CClientScript::POS_END);
 ?>
 <?php if( $mess = Yii::app()->user->getFlash('Message') ): Yii::app()->user->setFlash('Message', null) ?>
     <script type="text/javascript">var flashMes = "<?=$mess['message']?>"</script>
@@ -27,7 +29,7 @@
   <div class="col-xs-12">
     <div class="evl__header">
       <h1 class="evl__header-name"><?=$name?></h1>
-      <a class='evl__header-btn' href='<?= MainConfig::$PAGE_VACPUB ?>'>Добавить вакансию</a>  
+      <a class='evl__header-btn prmu-btn' href='<?= MainConfig::$PAGE_VACPUB ?>'><span>ДОБАВИТЬ ВАКАНСИЮ</span></a>  
     </div>
   </div>     
   <div class='col-xs-12 col-sm-4 col-lg-3'>
@@ -62,17 +64,14 @@
           $need = DS . MainConfig::$PAGE_VACANCIES; 
           $url = Yii::app()->request->requestUri;
         ?>
-        <?php if(strpos($url, $need)===false): ?>
+        <? if(strpos($url, $need)!==false): ?>
+          <div class='evl__tabs-link active'>Мои вакансии : <span><?=$arCount['vac']?></span></div>
+          <a class='evl__tabs-link' href='<?= DS . MainConfig::$PAGE_VACARHIVE?>'>Архив : <span><?=$arCount['arc']?></span></a>
+        <? else: ?>
           <a class='evl__tabs-link' href='<?=$need?>'>Мои вакансии : <span><?=$arCount['vac']?></span></a>
-        <?php else: ?>
-          <span class='evl__tabs-link active'>Мои вакансии : <span><?=$arCount['vac']?></span></span>
-        <?php endif; ?>
-        <? $need = DS . MainConfig::$PAGE_VACARHIVE; ?>
-        <?php if(strpos($url, $need)===false): ?>
-          <a class='evl__tabs-link' href='<?=$need?>'>Архив : <span><?=$arCount['arc']?></span></a>
-        <?php else: ?>
-          <span class='evl__tabs-link active'>Архив : <span><?=$arCount['arc']?></span></span>
-        <?php endif; ?>
+          <div class='evl__tabs-link active'>Архив : <span><?=$arCount['arc']?></span></div>
+        <? endif; ?>
+        <div class="clearfix"></div>
       </div>
       <hr class="evl-vacancies__line">
       <div class="evl-vacancies__list">
@@ -85,28 +84,30 @@
                 <span class="evl-vacancies__item-view">Просмотры: <a href="/user/analytics" class="js-g-hashint" title="Просмотры детально"><?=$viData['analytic'][$val['id']]?></a></span>
               </div>
               <?php if($val['ismoder']==100): // только для промодерированных ?>
-                <div class="evl__service-btn">Услуги для вакансии</div>
-                <div class="evl__service-popup tmpl" data-id="<?=$val['id']?>" data-header="Выбор услуги">
-                  <?php if(!$val['ispremium']): // если не установлен ?>
-                    <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=premium"?>" class="evl-vacancies__premium">Установить Премиум статус</a>
-                  <?php endif; ?>
-                  <?php if(substr($val['repost'], 0,1)=='0'): ?>
-                    <a href="<?=MainConfig::$PAGE_VACTOSOCIAL . "?id={$val['id']}&soc=1&page=0"?>" class="evl-vacancies__vk">Опубликовать в ВК</a>
-                  <?php endif; ?>
-                  <?php if(substr($val['repost'], 1,1)=='0'): ?>
-                    <a href="<?=MainConfig::$PAGE_VACTOSOCIAL . "?id={$val['id']}&soc=2&page=0"?>" class="evl-vacancies__fb">Опубликовать в Facebook</a>
-                  <?php endif; ?>
-                  <?php if(substr($val['repost'], 2,1)=='0'): ?>
-                    <a href="<?=MainConfig::$PAGE_VACTOSOCIAL . "?id={$val['id']}&soc=3&page=0"?>" class="evl-vacancies__tl">Опубликовать в Telegram</a>
-                  <?php endif; ?>
-                  <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=sms"?>" class="evl-vacancies__sms">Произвести СМС рассылку</a>
-                  <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=email"?>" class="evl-vacancies__email">Произвести EMAIL рассылку</a>
-                  <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=push"?>" class="evl-vacancies__push">PUSH уведомления</a>
-                  <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=outsourcing"?>" class="evl-vacancies__atsrc">Аутсорсинг</a>
-                  <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=outstaffing"?>" class="evl-vacancies__outstf">Аутстаффинг</a>
-                </div> 
-              <?php endif; ?>  
-              <div class="clearfix"></div>
+                <div class="evl-vacancies__item-btns">
+                  <div class="evl__service-btn">Услуги для вакансии</div>
+                  <div class="evl__service-popup tmpl" data-id="<?=$val['id']?>" data-header="Выбор услуги">
+                    <?php if(!$val['ispremium']): // если не установлен ?>
+                      <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=premium"?>" class="evl-vacancies__premium">Установить Премиум статус</a>
+                    <?php endif; ?>
+                    <?php if(substr($val['repost'], 0,1)=='0'): ?>
+                      <a href="<?=MainConfig::$PAGE_VACTOSOCIAL . "?id={$val['id']}&soc=1&page=0"?>" class="evl-vacancies__vk">Опубликовать в ВК</a>
+                    <?php endif; ?>
+                    <?php if(substr($val['repost'], 1,1)=='0'): ?>
+                      <a href="<?=MainConfig::$PAGE_VACTOSOCIAL . "?id={$val['id']}&soc=2&page=0"?>" class="evl-vacancies__fb">Опубликовать в Facebook</a>
+                    <?php endif; ?>
+                    <?php if(substr($val['repost'], 2,1)=='0'): ?>
+                      <a href="<?=MainConfig::$PAGE_VACTOSOCIAL . "?id={$val['id']}&soc=3&page=0"?>" class="evl-vacancies__tl">Опубликовать в Telegram</a>
+                    <?php endif; ?>
+                    <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=sms"?>" class="evl-vacancies__sms">Произвести СМС рассылку</a>
+                    <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=email"?>" class="evl-vacancies__email">Произвести EMAIL рассылку</a>
+                    <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=push"?>" class="evl-vacancies__push">PUSH уведомления</a>
+                    <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=outsourcing"?>" class="evl-vacancies__atsrc">Аутсорсинг</a>
+                    <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=outstaffing"?>" class="evl-vacancies__outstf">Аутстаффинг</a>
+                  </div> 
+                  <div class="evl__to-project-btn" data-id="<?=$val['id']?>">Сделать проектом</div>
+                </div>
+              <?php endif; ?>
             </div>
           <?php endforeach; ?>
         <?php else: ?>
