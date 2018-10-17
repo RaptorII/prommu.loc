@@ -60,7 +60,9 @@ var ProjectConvertVacancy = (function () {
 				}
 			});
 		});
-
+		$('.projects__to-vac-btn').click(function(){
+			console.log(111);
+		});
 	}
 
 	return ProjectConvertVacancy;

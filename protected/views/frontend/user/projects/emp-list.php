@@ -4,6 +4,7 @@
     $this->setPageTitle($title);
 	$bUrl = Yii::app()->baseUrl;
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/emp-list.css');
+	Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/projects/project-convert-vacancy.js', CClientScript::POS_END);
 	$section = Yii::app()->getRequest()->getParam('id');
 ?>
 <div class="row projects">
@@ -41,11 +42,16 @@
 								href="<? echo MainConfig::$PAGE_PROJECT_LIST . '/' . $id ?>" 
 								class="projects__item-name"><?=$p['name']?></a>
 							<div class="projects__item-data">
-								<div class="projects__item-date">Дата: <?=$p['date']?></div>
-								<div class="projects__item-staff">Персонал: 
-									<span class="js-g-hashint green" title="Приняли предложение"><?=$p['agreed']?></span> /
-									<span class="js-g-hashint grey" title="Пока без реакции"><?=$p['ignored']?></span> /
-									<span class="js-g-hashint red" title="Отказались"><?=$p['refused']?></span>
+								<div>
+									<div class="projects__item-date">Дата: <?=$p['date']?></div>
+									<div class="projects__item-staff">Персонал: 
+										<span class="js-g-hashint green" title="Приняли предложение"><?=$p['agreed']?></span> /
+										<span class="js-g-hashint grey" title="Пока без реакции"><?=$p['ignored']?></span> /
+										<span class="js-g-hashint red" title="Отказались"><?=$p['refused']?></span>
+									</div>
+									<? if(empty($p['vacancy'])): ?>
+										<div class="projects__to-vac-btn" data-id="<?=$id?>">Сделать вакансией</div>
+									<? endif; ?>
 								</div>
 							</div>		
 						</div>
@@ -63,13 +69,15 @@
 								href="<? echo MainConfig::$PAGE_PROJECT_LIST . '/' . $id ?>" 
 								class="projects__item-name"><?=$p['name']?></a>
 							<div class="projects__item-data">
-								<div class="projects__item-date">Дата: <?=$p['date']?></div>
-								<div class="projects__item-staff">Персонал: 
-									<span class="js-g-hashint green" title="Приняли предложение"><?=$p['agreed']?></span> /
-									<span class="js-g-hashint grey" title="Пока без реакции"><?=$p['ignored']?></span> /
-									<span class="js-g-hashint red" title="Отказались"><?=$p['refused']?></span>
-								</div>
-							</div>		
+								<div>
+									<div class="projects__item-date">Дата: <?=$p['date']?></div>
+									<div class="projects__item-staff">Персонал: 
+										<span class="js-g-hashint green" title="Приняли предложение"><?=$p['agreed']?></span> /
+										<span class="js-g-hashint grey" title="Пока без реакции"><?=$p['ignored']?></span> /
+										<span class="js-g-hashint red" title="Отказались"><?=$p['refused']?></span>
+									</div>
+								</div>	
+							</div>
 						</div>
 					<?php endforeach; ?>
 				</div>
