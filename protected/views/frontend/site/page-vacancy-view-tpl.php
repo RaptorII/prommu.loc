@@ -112,6 +112,8 @@
                             <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}" ?>' class="erv__header-btn prmu-btn"><span>Опубликовать вакансию</span></a>
                         <?php else: ?>
                             <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}&d=1" ?>' class="erv__header-btn prmu-btn"><span>Снять с публикации</span></a>
+                        <?php endif; ?>
+                        <? if($viData['vac']['ismoder']==100): ?>
                             <div class="evl__to-project-btn prmu-btn" data-id="<?=$viData['vac']['id']?>"><span>Перевести в проект</span></div>
                         <?php endif; ?>
                     </div>
