@@ -63,6 +63,55 @@
 #DiTop,#DiSiteWrapp{
 	height: auto;
 }
+
+.chat__all .chat__item{
+	position: relative;
+	padding: 10px 0;
+	min-height: 55px;
+	border-bottom: 1px solid #dadada;
+	font-size: 12px;
+	box-sizing: content-box;
+	overflow: hidden;
+	display: flex;
+}
+
+.chat__all .chat__item-info{
+	overflow: hidden;
+	display: flex;
+	margin-left: auto
+}
+.chat__all .chat__info-col{
+	padding: 10px;
+	text-align: center;
+	color:black;
+}
+
+.chat__all .chat__item .chat__item-name{
+	min-width: 300px;
+	font-size: 20px;
+	padding-left: 20px;
+	color:#abb820;
+
+	display: flex;
+	align-items: center;
+}
+.chat__info-noread{
+	color:red;
+}
+
+#DiContent a.chat__item:hover{
+	color:white;
+	background-color: #abb820;
+}
+
+#DiContent a.chat__item:hover .chat__info-col,
+#DiContent a.chat__item:hover .chat__item-name,
+#DiContent a.chat__item:hover .chat__info-noread
+{
+	color:white;
+}
+
+
 @media (max-width: 767px){
 	#DiSiteWrapp #DiContent #MWwrapper .mw-win.dark-ver{
 		width: 350px !important;

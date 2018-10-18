@@ -2,6 +2,113 @@
 Yii::app()->getClientScript()->registerCssFile('/theme/css/private/chats.css');
 Yii::app()->getClientScript()->registerScriptFile("/theme/js/private/chats.js", CClientScript::POS_END);
 ?>
+
+    <pre>
+        <? print_r($viData); ?>
+    </pre>
+
+
+    <div class="chat__all">
+        <div class="header-021">
+            <b>Категории</b>
+            <b class="-green">3</b>
+        </div>
+
+
+        <a href="#" class="chat__item">
+
+            <div class="chat__item-name">Название вакансии 1</div>
+            <div class="chat__item-info">
+                <div class="chat__info-col">
+                    <div class="chat__info-header">
+                        Кол-во участников
+                    </div>
+                    <div class="chat__info-descr">
+                        33
+                    </div>
+                </div>
+                <div class="chat__info-col">
+                    <div class="chat__info-header">
+                        Сообщений
+                    </div>
+                    <div class="chat__info-descr">
+                        1998
+                    </div>
+                </div>
+                <div class="chat__info-col">
+                    <div class="chat__info-header">
+                        Не прочитанные
+                    </div>
+                    <div class="chat__info-descr chat__info-noread">
+                        55
+                    </div>
+                </div>
+            </div>
+        </a>
+
+
+        <a href="#" class="chat__item">
+
+            <div class="chat__item-name">Название вакансии 2 Название вакансии 2</div>
+            <div class="chat__item-info">
+                <div class="chat__info-col">
+                    <div class="chat__info-header">
+                        Кол-во участников
+                    </div>
+                    <div class="chat__info-descr">
+                        33
+                    </div>
+                </div>
+                <div class="chat__info-col">
+                    <div class="chat__info-header">
+                        Сообщений
+                    </div>
+                    <div class="chat__info-descr">
+                        1998
+                    </div>
+                </div>
+                <div class="chat__info-col">
+                    <div class="chat__info-header">
+                        Не прочитанные
+                    </div>
+                    <div class="chat__info-descr chat__info-noread">
+                        12
+                    </div>
+                </div>
+            </div>
+        </a>
+
+        <a href="#" class="chat__item">
+
+            <div class="chat__item-name">Без вакансии</div>
+            <div class="chat__item-info">
+                <div class="chat__info-col">
+                    <div class="chat__info-header">
+                        Кол-во участников
+                    </div>
+                    <div class="chat__info-descr">
+                        33
+                    </div>
+                </div>
+                <div class="chat__info-col">
+                    <div class="chat__info-header">
+                        Сообщений
+                    </div>
+                    <div class="chat__info-descr">
+                        1998
+                    </div>
+                </div>
+                <div class="chat__info-col">
+                    <div class="chat__info-header">
+                        Не прочитанные
+                    </div>
+                    <div class="chat__info-descr chat__info-noread">
+                        45
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
     <div class='row'>
         <div class='col-xs-12'>
             <?php if (!$viData['count']): ?>
