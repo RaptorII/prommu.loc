@@ -838,7 +838,29 @@ class AjaxController extends AppController
         $data = json_decode($data, true, 5, JSON_BIGINT_AS_STRING);
         
         $model = new Project();
-        if($model->hasAccess($data['project'])) {
+        if($data['type']==='convert') {
+            $convert = new ProjectConvertVacancy();
+            $idus = Share::$UserProfile->id;
+            switch ($_SERVER['REQUEST_METHOD']) {
+                case 'POST':
+                    if($data['to']==='project') {
+                        $result = $convert->vacancyConvertToProject($data, $idus);
+                        if(!$result['error']) {
+                            $project = $model->createProject($result);
+                            $result['link'] = MainConfig::$PAGE_PROJECT_LIST . '/' . $project;
+                        }
+                        $result['link'] = MainConfig::$PAGE_PROJECT_LIST . '/' . $project;
+                    }
+                    if($data['to']==='vacancy') {
+                        $data['staff'] = $model->getAllStaffProject($data['id']);
+                        $data['index'] = $model->getIndex($data['id']);
+                        $data['project'] = $model->getProjectData($data['id']);
+                        $result = $convert->projectConvertToVacancy($data, $idus);
+                    }                    
+                    break;
+            }
+        }
+        elseif($model->hasAccess($data['project'])) {
             switch ($_SERVER['REQUEST_METHOD']) {
                 case 'GET':
                     if($data['type']==='coordinates') // получение координат передвижения С
@@ -858,19 +880,7 @@ class AjaxController extends AppController
                     break;
             }
         }
-        if($data['type']==='convert') {
-            switch ($_SERVER['REQUEST_METHOD']) {
-                case 'POST':
-                    if($data['to']==='project') {
-                        $convert = new ProjectConvertVacancy();
-                        $result = $convert->vacancyConvertToProject($data);
-                        if(!$result['error'])
-                            $model->createProject($result);
-                    }
-                    
-                    break;
-            }
-        }    
+    
         echo CJSON::encode($result);
     }
 }

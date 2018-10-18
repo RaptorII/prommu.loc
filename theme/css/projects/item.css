@@ -1154,7 +1154,7 @@
 	font-weight: normal;
 }
 #DiSiteWrapp #DiContent #MWwrapper .header div{
-	padding: 0 0 10px;
+	/*padding: 0 0 10px;*/
 	position: static;
 	background: transparent;
 	font-size: 24px;
@@ -1186,6 +1186,17 @@
 #MWwrapper form{ 
 	font-size: 18px;
 	text-align: center;
+}
+#MWwrapper .mw-win.dark-ver .header-block {
+    margin: -20px 0 10px;
+    font-size: 24px;
+    text-align: center;
+    text-transform: uppercase;
+}
+#MWwrapper .mw-win.dark-ver .convert {
+    text-transform: none;
+    text-align: left;
+    font-size: 18px;
 }
 /*
 *		MEDIA

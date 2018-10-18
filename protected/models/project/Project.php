@@ -24,7 +24,6 @@ class Project extends CActiveRecord
 
 
     public function createProject($props){
-        $cloud = [];
         $project = time().rand(11111,99999);
         ///Обработка адресной программы
         $idus = Share::$UserProfile->id;
@@ -40,7 +39,7 @@ class Project extends CActiveRecord
         $this->recordIndex($props, $project, true);
         $this->recordStaff($props, $project);
 
-        return $cloud;
+        return $project;
     }
     /*
     *       Запись местоположения пользователя

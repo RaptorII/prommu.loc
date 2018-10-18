@@ -7,9 +7,8 @@ class ProjectConvertVacancy
 	 * @return $arr error or data
 	 * Конвертировать вакансию в проект
 	 */
-	public function vacancyConvertToProject($arr) {
+	public function vacancyConvertToProject($arr, $idus) {
 		$arErr = array('error' => true);
-		$idus = Share::$UserProfile->id;
 		$arRes = array(
 				'error' => false,
 				'vacancy' => $arr['id']
@@ -138,8 +137,207 @@ class ProjectConvertVacancy
 		if(sizeof($arErr['empty-fields']))
 			return $arErr;
 
+		return $arRes;
+	}
+	/**
+	 * @param $arr array - ['id' => vacancy ID ]
+	 * @return $arr error or data
+	 * Конвертировать вакансию в проект
+	 */
+	public function projectConvertToVacancy($arr, $idus) {
+		$arErr = array('error' => true);
+		$arRes = array('error' => false);
+		$nI = sizeof($arr['index']);
+		$nS = sizeof($arr['staff']);
+		// делаем последние проверки
+		if(empty($arr['project']['id']) || $arr['project']['id_user']!=$idus)
+			return array_merge($arErr, ['project-missing' => true]);
+		if(!$nI)
+			$arErr['empty-fields'][] = '- добавление минимум одного соискателя';
+		if(!sizeof($arr['staff']))
+			$arErr['empty-fields'][] = '- добавление минимум одного ТТ с периодом';
+		if(!empty($arr['project']['vacancy']) || sizeof($arErr['empty-fields']))
+			return $arErr;
+
+		// готовим данные
+		$date = date("Y-m-d H:i:s");
+		$arU = Yii::app()->db->createCommand()
+							->select("id")
+							->from('employer')
+							->where('id_user=:id', array(':id'=>$idus))
+							->queryRow();
+
+		$remdate = strtotime($arr['index'][0]['edate']);
+		$arC = array();
+		for ($i = 0; $i < $nI; $i++) {
+			$bdate = strtotime($arr['index'][$i]['bdate']);
+			$edate = strtotime($arr['index'][$i]['edate']);
+			$arC[$arr['index'][$i]['id_city']]['id_city'] = $arr['index'][$i]['id_city'];
+
+			if(
+				!isset($arC[$arr['index'][$i]['id_city']]['bdate'])
+				||
+				$arC[$arr['index'][$i]['id_city']]['bdate'] > $bdate
+			) {
+				$arC[$arr['index'][$i]['id_city']]['bdate'] = $bdate;
+			}
+
+			if(
+				!isset($arC[$arr['index'][$i]['id_city']]['edate'])
+				||
+				$arC[$arr['index'][$i]['id_city']]['edate'] < $edate
+			){
+				$arC[$arr['index'][$i]['id_city']]['edate'] = $edate;
+			}
+
+			if($edate>$remdate)
+				$remdate = $edate;
+		}
+		// создаем вакансию
+		$arVac = array(
+				'id_user' => $idus,
+				'id_empl' => $arU['id'],
+				'title' => $arr['project']['name'],
+				'requirements' => $arr['project']['name'],
+				'remdate' => date('Y-m-d',$remdate),
+				'isman' => 1,
+				'iswoman' => 1,
+				'agefrom' => 14,
+				'ageto' => 0,
+				'status' => 0,
+				'ismoder' => 0,
+				'crdate' => $date,
+				'mdate' => $date,
+				'bdate' => '',
+				'edate' => ''
+			);
+		Yii::app()->db->createCommand()->insert('empl_vacations', $arVac);
+
+		$idvac = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
+		// записываем адресную программу
+		foreach ($arC as $k => $c) {
+			Yii::app()->db->createCommand()
+					->insert('empl_city', array(
+							'id_vac' => $idvac,
+							'id_city' => $c['id_city'],
+							'bdate' => date("Y-m-d 00:00:00",$c['bdate']),
+							'edate' => date("Y-m-d 00:00:00",$c['edate']),
+						));
+		}
+		$arC = Yii::app()->db->createCommand()
+							->select("id, id_city")
+							->from('empl_city')
+							->where('id_vac=:id', array(':id'=>$idvac))
+							->queryAll();
+
+		$arLId = array();
+		for ($i = 0; $i < $nI; $i++) {
+			$city;
+			foreach ($arC as $c)
+				if($arr['index'][$i]['id_city']==$c['id_city'])
+					$city = $c['id'];
+			
+			Yii::app()->db->createCommand()
+					->insert('empl_locations', 
+						array('id_vac' => $idvac,
+							'id_city' => $city,
+							'npp' => 1,
+							'name' => $arr['index'][$i]['name'],
+							'addr' => $arr['index'][$i]['adres'],
+						));
+			$idloc = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();	
+
+			$npp = 1;
+			$arP = array();
+			for ($j = 0; $j < $nI; $j++) {
+				if(
+					in_array($arr['index'][$j]['location'], $arLId)
+					||
+					($arr['index'][$i]['location'] != $arr['index'][$j]['location'])
+				)
+					continue;
+				
+				$arTb = explode(':', $arr['index'][$j]['btime']);
+				$arTe = explode(':', $arr['index'][$j]['etime']);
+
+				$arP[] = array(
+							'id_loc' => $idloc, 
+							'npp' => $npp, 
+							'bdate' => date("Y-m-d", strtotime($arr['index'][$j]['bdate'])), 
+							'edate' => date("Y-m-d", strtotime($arr['index'][$j]['edate'])), 
+							'btime' => $arTb[0] * 60 + $arTb[1], 
+							'etime' => $arTe[0] * 60 + $arTe[1]
+						);
+				$npp++;
+			}
+			$arLId[] = $arr['index'][$i]['location'];
+
+			if(sizeof($arP)) {
+				Yii::app()->db->schema->commandBuilder
+					->createMultipleInsertCommand('emplv_loc_times', $arP)
+					->execute();			
+			}
+		}
+		// для будущих должностей
+		// Тестовая запись !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		$insData[] = array(
+			'id_vac' => $idvac, 
+			'id_attr' => 135, 
+			'key' => 135,
+			'crdate' => $date
+		);
+		Yii::app()->db->schema->commandBuilder
+			->createMultipleInsertCommand('empl_attribs', $insData)
+			->execute();
+		// записываем персонал
+		$arS = array();
+		$arSIdus = array();
+		for ($i=0; $i < $nS; $i++) {
+			$id = $arr['staff'][$i]['user'];
+			$arS[$id] = array(
+					'id_vac' => $idvac,
+					'isresponse' => 2, // приглашение работодателя
+					'date' => $date,
+					'id_jobs' => 0,
+					'isend' => 0,
+					'service' => 0
+				);
+			if($arr['staff'][$i]['status']==1)
+				$arS[$id]['status'] = 5;
+			elseif($arr['staff'][$i]['status']==0)
+				$arS[$id]['status'] = 4;
+			else
+				$arS[$id]['status'] = 3;
+
+			$arSIdus[] = $arr['staff'][$i]['user'];
+		}
+
+		$res = Yii::app()->db->createCommand()
+							->select("r.id, r.id_user")
+							->from('resume r')
+							->where(array('in','r.id_user',$arSIdus))
+							->queryAll();
+		
+		$arSId = array();
+		foreach ($res as $u)
+			$arSId[$u['id_user']] = $u['id'];
+
+		foreach ($arS as $id_user => $s) {
+			$arS[$id_user]['id_promo'] = $arSId[$id_user];
+			Yii::app()->db->createCommand()
+				->insert('vacation_stat', $arS[$id_user]);
+		}
+		// обновление проекта
+		Yii::app()->db->createCommand()
+				->update(
+						'project', 
+						array('vacancy' => $idvac), 
+						'id=:id', 
+						array(':id' => $arr['project']['id'])
+					);
+
+		$arRes['link'] = MainConfig::$PAGE_VACANCY . '/' . $idvac;
 
 		return $arRes;
 	}
-
 }
