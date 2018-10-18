@@ -131,3 +131,60 @@
 	font-size: 18px;
 	text-align: center;
 }
+.message-wrapp{
+	margin-bottom: 30px;
+}
+.message-wrapp.empl .right{
+	display: flex;
+	justify-content: flex-end;
+}
+
+.message-wrapp.promo .left{
+	display: flex;
+	justify-content: flex-start;
+}
+
+.message-wrapp.empl .message{
+	margin-left: 10%;
+	background: #dce57e;
+	width: 90%;
+	padding: 10px;
+	border-radius: 3px;
+}
+
+.message-wrapp.promo .message{
+	margin-right: 10%;
+	background: #F7F7F7;
+	width: 90%;
+	padding: 10px;
+	border-radius: 3px;
+}
+
+.message-wrapp .fio{
+	font-weight:bold;
+	margin-right: 5px;
+}
+#DiContent .btn-white-green-wr button{
+	background-color: #f68000!important;
+	line-height: 30px;
+	border: 2px solid #f68000;
+	padding-left: 25px;
+	padding-right: 25px;
+	text-transform: uppercase;
+	display: inline-block;
+	margin-right: 5px;
+	top: 26px;
+	border-radius: 5px;
+	color: white;
+	outline:none;
+}
+
+#DiContent .btn-white-green-wr button:hover{
+	border: 2px solid #abb820!important;
+}
+
+.send-mess{
+	outline:none;
+	height: 60px;
+	padding: 10px;
+}
