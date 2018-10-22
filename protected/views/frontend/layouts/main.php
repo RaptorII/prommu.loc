@@ -166,6 +166,17 @@
     ?>
 </head>
 <body class="<?= $this->ViewModel->getViewData('addBodyClass') ?>">
+<?
+$session = new CHttpSession;
+echo "<pre>";
+print_r($session); 
+echo "</pre>";
+
+echo "<pre>";
+print_r($_SESSION); 
+echo "</pre>";
+?>
+
     <?php /*if(MOBILE_DEVICE && !SHOW_APP_MESS): // mob device without show message ?>
         <? require_once 'app_message.php';// for PHP detect device type ?>
     <?php else:*/ // other devices ?>
