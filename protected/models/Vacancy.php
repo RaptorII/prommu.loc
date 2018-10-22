@@ -2145,6 +2145,7 @@ WHERE id_vac = {$inVacId}";
               INNER JOIN user u ON e.id_user = u.id_user
               WHERE e.status = 1
                 AND e.ismoder = 100
+                AND e.remdate < UNIX_TIMESTAMP(CURDATE())
               ORDER BY e.ispremium DESC, e.id DESC 
               LIMIT 12
             ) t1 ON t1.id = e.id
@@ -2155,34 +2156,28 @@ WHERE id_vac = {$inVacId}";
             JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
             JOIN employer em ON em.id_user = e.id_user
             ORDER BY e.ispremium DESC, e.id DESC";
-        $res = Yii::app()->db->createCommand($sql);
-        $data= $res->queryAll();
+        $data = Yii::app()->db->createCommand($sql)->queryAll();
 
         foreach ($data as $key => &$vac) {
-            if(time() > strtotime($vac['remdate'])){
-                unset($data[$key]);
-            }
             $vac['detail_url'] = MainConfig::$PAGE_VACANCY . DS . $vac['id'];
-            if($vac['shour']>0 || $vac['sweek']>0 || $vac['smonth']>0){
-              if($vac['shour'] > 0){
-                $vac['payment'] = round($vac['shour'],0) . ' руб/час';
-              }
-              elseif($vac['sweek'] > 0){
-                $vac['payment'] = round($vac['sweek'],0) . ' руб/нед';
-              }
-              elseif($vac['smonth'] > 0){
-                $vac['payment'] = round($vac['smonth'],0) . ' руб/мес';
-              }
-            }
-            else{
-              $vac['payment'] = '';
-            }
-            $vac['logo_src'] = DS . MainConfig::$PATH_EMPL_LOGO . DS . (!$vac['logo'] ?  'logo-min.png' : ($vac['logo']) . '100.jpg');
-            $vac['period'] = ' с ' . $vac['crdate'] . ($vac['remdate']?' по '.$vac['remdate']:'');
-            $vac['work_type'] = ($vac['istemp'] ? 'Постоянная' : 'Временная');
+            $vac['payment'] = '';
+
+            if(($pay = round($vac['shour'],0)) > 0)
+                $vac['payment'] = $pay . ' руб/час';
+            elseif(($pay = round($vac['sweek'],0)) > 0)
+                $vac['payment'] = $pay . ' руб/нед';
+            elseif(($pay = round($vac['smonth'],0)) > 0)
+                $vac['payment'] = $pay . ' руб/мес';
+            elseif(($pay = round($vac['svisit'],0)) > 0)
+                $vac['payment'] = $pay . ' руб/пос';
+
+            $vac['logo_src'] = DS . MainConfig::$PATH_EMPL_LOGO . DS 
+                . (!$vac['logo'] ?  'logo-min.png' : ($vac['logo']) . '100.jpg');
+            $vac['period'] = ' с ' . $vac['crdate'] 
+                . ($vac['remdate'] ? ' по ' . $vac['remdate'] : '');
+            $vac['work_type'] = $vac['istemp'] ? 'Постоянная' : 'Временная';
         }
         unset($vac);
-
 
         return $data;
     }

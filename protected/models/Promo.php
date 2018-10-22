@@ -570,59 +570,65 @@ class Promo extends ARModel
     private function getApplicantsIndexPage()
     {
         $strCities = Subdomain::getCitiesIdies();
-        $filter = Promo::mergeScopes(['scope' => Promo::$SCOPE_HAS_PHOTO, 'alias' => 'r']);
-        $sql = "SELECT DISTINCT r.id, u.is_online, r.id_user idus, r.photo, r.firstname, r.lastname, r.isman, DATE_FORMAT(r.birthday,'%d.%m.%Y') as birthday,
-                cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate, r.rate, r.rate_neg, photo,
-                (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 1 AND mm.id_promo = r.id) comment_count
-            FROM resume r
-            INNER JOIN user_mech m ON r.id_user = m.id_us
-            INNER JOIN user_city ci ON r.id_user = ci.id_user 
-                AND ci.id_city IN({$strCities})
-            INNER JOIN user u ON r.id_user = u.id_user 
-                AND u.ismoder = 1 AND (u.isblocked = 0)
-            WHERE r.birthday IS NOT NULL AND {$filter}
-            ORDER BY avg_rate DESC, id DESC
-            LIMIT 6";
-        $result = Yii::app()->db->createCommand($sql)->queryAll();
-
-        if(!sizeof($result))
+        // достаем соискателей
+        $filter = Promo::mergeScopes([
+                'scope' => Promo::$SCOPE_HAS_PHOTO, 
+                'alias' => 'r'
+            ]);
+        $sql = "SELECT DISTINCT r.id, u.is_online, r.id_user idus, 
+                    r.photo, r.firstname, r.lastname, 
+                    r.isman, DATE_FORMAT(r.birthday,'%d.%m.%Y') as birthday,
+                    cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate,
+                    r.rate, r.rate_neg, photo, 
+                    (SELECT COUNT(id) FROM comments mm 
+                    WHERE mm.iseorp = 1 AND mm.id_promo = r.id) comment_count
+                FROM resume r
+                INNER JOIN user_mech m ON r.id_user = m.id_us
+                INNER JOIN user_city ci ON r.id_user = ci.id_user 
+                    AND ci.id_city IN({$strCities})
+                INNER JOIN user u ON r.id_user = u.id_user 
+                    AND u.ismoder = 1 AND (u.isblocked = 0)
+                WHERE r.birthday IS NOT NULL AND {$filter}
+                ORDER BY avg_rate DESC, id DESC
+                LIMIT 6";
+        $arApp = Yii::app()->db->createCommand($sql)->queryAll();
+        //
+        $nApp = sizeof($arApp);
+        if(!$nApp)
             return false;
-
+        // достаем должности соискателей
         $arIdies = array();
-        foreach ($result as $i => $item){
-            $arIdies[] = $item['idus'];
-        }
+        for ($i=0; $i < $nApp; $i++)
+            $arIdies[] = $arApp[$i]['idus'];
+
         $sql = "SELECT r.id_user idus, d.name name
-            FROM resume r
-            INNER JOIN user_mech um ON um.id_us = r.id_user AND um.isshow = 0
-            LEFT JOIN user_attr_dict d1 ON d1.id = um.id_attr
-            INNER JOIN user_attr_dict d ON d.id = um.id_mech 
-            WHERE r.id_user IN(".implode(",", $arIdies).")";
-        $arPositions = Yii::app()->db->createCommand($sql)->queryAll();
+                    FROM resume r
+                    INNER JOIN user_mech um 
+                        ON um.id_us = r.id_user AND um.isshow = 0
+                    INNER JOIN user_attr_dict d ON d.id = um.id_mech 
+                    WHERE r.id_user IN(".implode(",", $arIdies).")";
+        $arPosts = Yii::app()->db->createCommand($sql)->queryAll();
+        // формируем массив
+        foreach ($arApp as &$i) {
+            foreach($arPosts as $j => $pos)
+                if($pos['idus']==$i['idus'])
+                    $i['positions'] .= (isset($i['positions']) 
+                        ? ', ' . $pos['name'] 
+                        : $pos['name']);
 
-        foreach ($result as $i => &$item){
-            $id = $item['idus'];
-            foreach($arPositions as $j => $pos){
-                if($pos['idus']==$id){
-                    $item['positions'] .= (isset($item['positions']) ? ', '.$pos['name'] : $pos['name']);
-                }
-            }
-            $item['rate_count'] = $item['rate'] + $item['rate_neg'];
-            $item['comment-url'] = MainConfig::$PAGE_COMMENTS . DS . $id;
-            $item['datail-url'] = MainConfig::$PAGE_PROFILE_COMMON . DS . $id;
-            $item['logo'] = DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!$item['photo'] ?  'logo.png' : $item['photo'] . '100.jpg');
-            $item['birthday'] = date('Y') - date('Y', strtotime($item['birthday']));
-            $num = $item['birthday'];
-            $strYear = ' лет'; 
-            if ($num < 21 && $num > 4) $strYear = ' лет';
-            $num = $num%10;
-            if ($num == 1) $strYear = ' год';
-            if ($num > 1 && $num < 5) $strYear = ' года';
-            $item['birthday'] = $item['birthday'] . $strYear;
-            $item['fullname'] = trim($item['firstname']) . ' ' .  trim($item['lastname']) . ', ' . $item['birthday'];
+            $i['rate_count'] = $i['rate'] + $i['rate_neg'];
+            $i['comment-url'] = MainConfig::$PAGE_COMMENTS . DS . $i['idus'];
+            $i['datail-url'] = MainConfig::$PAGE_PROFILE_COMMON . DS . $i['idus'];
+            $i['logo'] = DS . MainConfig::$PATH_APPLIC_LOGO . DS 
+                . (!$i['photo'] ?  'logo.png' : $i['photo'] . '100.jpg');
+            $i['birthday'] = date('Y') - date('Y', strtotime($i['birthday']));
+            $i['birthday'] = $i['birthday'] . ' ' 
+                . Share::endingYears($i['birthday']);
+            $i['fullname'] = trim($i['firstname']) . ' ' 
+                .  trim($i['lastname']) . ', ' . $i['birthday'];
         }
-        unset($arIdies, $item, $arPositions);
+        unset($arIdies, $i, $arPosts);
 
-        return $result;      
+        return $arApp;      
     }
 }

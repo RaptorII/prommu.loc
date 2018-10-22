@@ -356,51 +356,55 @@ class Employer extends ARModel
     private function getEmployersIndexPage()
     {
         $strCities = Subdomain::getCitiesIdies();
-        $sql = "SELECT r.id, r.id_user idus, u.is_online, name , r.logo, r.rate, r.rate_neg
-                , cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate
-                , (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.id_promo = r.id) comment_count
-                
-            FROM employer r
-            INNER JOIN user u ON u.id_user = r.id_user 
-                AND u.ismoder = 1 AND u.isblocked = 0
-            INNER JOIN user_city ci ON r.id_user = ci.id_user 
-                AND ci.id_city IN({$strCities})
-            WHERE " . Employer::getScopesCustom(Employer::$SCOPE_HAS_LOGO, 'r') . "
-            ORDER BY avg_rate DESC
-            LIMIT 6";
-        $result = Yii::app()->db->createCommand($sql)
-        ->queryAll();
-
-        if(!sizeof($result))
+        // достаем работодателей
+        $filter = Employer::getScopesCustom(Employer::$SCOPE_HAS_LOGO, 'r');
+        $sql = "SELECT r.id, r.id_user idus, u.is_online, name, 
+                    r.logo, r.rate, r.rate_neg, 
+                    cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate,
+                    (SELECT COUNT(id) 
+                    FROM comments mm 
+                    WHERE mm.iseorp = 0 AND mm.id_promo = r.id) comment_count     
+                FROM employer r
+                INNER JOIN user u ON u.id_user = r.id_user 
+                    AND u.ismoder = 1 AND u.isblocked = 0
+                INNER JOIN user_city ci ON r.id_user = ci.id_user 
+                    AND ci.id_city IN({$strCities})
+                WHERE {$filter} 
+                ORDER BY avg_rate DESC
+                LIMIT 6";
+        $arEmp = Yii::app()->db->createCommand($sql)->queryAll();
+        //
+        $nEmp = sizeof($arEmp);
+        if(!$nEmp)
             return false;
-
+        // достаем должности соискателей
         $arIdies = array();
-        foreach ($result as $i => $item){
-            $arIdies[] = $item['idus'];
-        }
+        for ($i=0; $i < $nEmp; $i++)
+            $arIdies[] = $arEmp[$i]['idus'];
 
         $sql = "SELECT ci.id_city id, ci.name name, uc.id_user idus
-            FROM user_city uc
-            LEFT JOIN city ci ON uc.id_city = ci.id_city
-            WHERE uc.id_user IN(".implode(",", $arIdies).")";
+                    FROM user_city uc
+                    LEFT JOIN city ci ON uc.id_city = ci.id_city
+                    WHERE uc.id_user IN(".implode(",", $arIdies).")";
         $arCities = Yii::app()->db->createCommand($sql)->queryAll();
+        // формируем массив
+        foreach($arEmp as &$i){
+            foreach($arCities as $j => $city)
+                if($city['idus']==$i['idus'])
+                    $i['cities'] .= (isset($i['cities']) 
+                        ? ', '.$city['name'] 
+                        : $city['name']);
 
-        foreach($result as $i => &$item){
-            $id = $item['idus'];
-            foreach($arCities as $j => $city){
-                if($city['idus']==$id){
-                    $item['cities'] .= (isset($item['cities']) ? ', '.$city['name'] : $city['name']);
-                }
-            }
-            $item['datail-url'] = MainConfig::$PAGE_PROFILE_COMMON . DS . $id;
-            $item['logo'] = DS . MainConfig::$PATH_EMPL_LOGO . DS . (!$item['logo'] ?  'logo.png' : $item['logo'] . '100.jpg');
-            $item['fullname'] = $item['name'] . ' (№' . $id . ')';
-            $item['comment-url'] = MainConfig::$PAGE_COMMENTS . DS . $id;
-            $item['rate_count'] = $item['rate'] + $item['rate_neg'];
+            $i['datail-url'] = MainConfig::$PAGE_PROFILE_COMMON . DS . $i['idus'];
+            $i['logo'] = DS . MainConfig::$PATH_EMPL_LOGO . DS 
+                . (!$i['logo'] ?  'logo.png' : $i['logo'] . '100.jpg');
+            $i['fullname'] = $i['name'] . ' (№' . $i['idus'] . ')';
+            $i['comment-url'] = MainConfig::$PAGE_COMMENTS . DS . $i['idus'];
+            $i['rate_count'] = $i['rate'] + $i['rate_neg'];
         }
-        unset($item, $arCities, $arIdies);
+        unset($i, $arCities, $arIdies);
 
-        return $result;
+        return $arEmp;
     }
 
     public static function getUserAttrib($id_user) {
