@@ -123,7 +123,7 @@ return array(
             //'class'=>'system.caching.CFileCache',
             'class'=>'system.caching.CMemCache',
             'servers'=>array(
-                array('host'=>'dev.prommu.com', 'port'=>11211, 'weight'=>100),
+                array('host'=>'127.0.0.1', 'port'=>11211, 'weight'=>100),
             ),
 
         ),
