@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <?php
-
-
-echo "<pre style='display:none'>";
-print_r($_SESSION); 
-echo "</pre>";
-
     header('Content-Type: text/html; charset=utf-8');
     $baseUrl = Yii::app()->baseUrl;
     $curUrl = Yii::app()->request->requestUri;

@@ -50,8 +50,6 @@ class SiteController extends AppController
         $action = ContentPlus::getActionID();
         $lang = Yii::app()->session['lang'];
         //
-$time1 = microtime(true);
-
         $data = Cache::getData();
         if($data['data']===false) {
             $data['data']['content'] = $content = $model->getPageContent('about', $lang);
@@ -64,10 +62,6 @@ $time1 = microtime(true);
             $data['data']['couArt'] = $articles->getArticlesCount();
             Cache::setData($data);
         }
-
-$time2 = microtime(true);
-echo round(($time2 - $time1), 6) . '<br>';
-
         //
         $this->render(
           'index', 
