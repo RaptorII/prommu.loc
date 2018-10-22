@@ -53,11 +53,6 @@ class SiteController extends AppController
 $time1 = microtime(true);
 
         $data = Cache::getData();
-
-echo "<pre style='display:none'>";
-print_r($data); 
-echo "</pre>";
-
         if($data['data']===false) {
             $data['data']['content'] = $content = $model->getPageContent('about', $lang);
             $data['data']['vacancies'] = $model->getVacanies($lang);
