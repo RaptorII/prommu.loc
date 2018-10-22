@@ -50,7 +50,14 @@ class SiteController extends AppController
         $action = ContentPlus::getActionID();
         $lang = Yii::app()->session['lang'];
         //
+$time1 = microtime(true);
+
         $data = Cache::getData();
+
+echo "<pre style='display:none'>";
+print_r($data); 
+echo "</pre>";
+
         if($data['data']===false) {
             $data['data']['content'] = $content = $model->getPageContent('about', $lang);
             $data['data']['vacancies'] = $model->getVacanies($lang);
@@ -62,6 +69,10 @@ class SiteController extends AppController
             $data['data']['couArt'] = $articles->getArticlesCount();
             Cache::setData($data);
         }
+
+$time2 = microtime(true);
+echo round(($time2 - $time1), 6) . '<br>';
+
         //
         $this->render(
           'index', 
