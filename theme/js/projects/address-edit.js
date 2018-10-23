@@ -695,11 +695,15 @@ var AddressEdit = (function () {
             let arInputs = $(arr[i]).find('input');
 
             for (let j = 0, n = arInputs.length; j < n; j++) {
-                let name = $(arInputs[j]).attr('name');
-                if ($.inArray(name, ['c','m'])<0 && !arInputs[j].value.length)
-                  empty = true;
+                let data_m = $(arInputs[j]).attr('data-checker');
+                if(data_m!='metro') {
+                    let name = $(arInputs[j]).attr('name');
+                    if ($.inArray(name, ['c', 'm']) < 0 && !arInputs[j].value.length)
+                        empty = true;
+                }
             }
         }
+        console.log(empty);
         return empty;
     }
     //      удаление элементов

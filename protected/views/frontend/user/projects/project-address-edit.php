@@ -53,15 +53,15 @@
 													<?php if(is_array($arLoc['metro'])): ?>
 														<?php foreach($arLoc['metro'] as $mId => $mName): ?>
 															<span class="metro-select"><?=$mName?><b></b></span>
-															<input type="text" name="m" class="metro-inp" autocomplete="off" value="<?=$mName?>">
+															<input data-checker="metro" type="text" name="m" class="metro-inp" autocomplete="off" value="<?=$mName?>">
 															<ul class="select-list"></ul>
-															<input type="hidden" name="<?='metro[' . $idCity . '][' . $idLoc . ']'?>" value="<?=$mId?>">
+															<input data-checker="metro" type="hidden" name="<?='metro[' . $idCity . '][' . $idLoc . ']'?>" value="<?=$mId?>">
 														<?php endforeach; ?>
 													<?php else: ?>
 														<span class="metro-select"></span>
-														<input type="text" name="m" class="metro-inp" autocomplete="off" value="">
+														<input data-checker="metro" type="text" name="m" class="metro-inp" autocomplete="off" value="">
 														<ul class="select-list"></ul>
-														<input type="hidden" name="<?='metro[' . $idCity . '][' . $idLoc . ']'?>" value="<?=$mId?>">
+														<input data-checker="metro" type="hidden" name="<?='metro[' . $idCity . '][' . $idLoc . ']'?>" value="<?=$mId?>">
 													<?php endif; ?>
 												</div>
 											</div>
@@ -239,9 +239,9 @@
 		<label class="project__index-lbl">Метро</label>
 		<div class="metro-field project__index-arrow">
 			<span class="metro-select"></span>
-			<input type="text" name="m" class="metro-inp" autocomplete="off">
+			<input data-checker="metro" type="text" name="m" class="metro-inp" autocomplete="off">
 			<ul class="select-list"></ul>
-			<input type="hidden" name="metro" value="">
+			<input data-checker="metro" type="hidden" name="metro" value="">
 		</div>
 	</div>
 </div>

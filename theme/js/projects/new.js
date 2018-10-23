@@ -43,9 +43,12 @@ var ProjectPage = (function () {
                 let arInputs = $(arP[i]).find('input');
 
                 for (let j = 0, n = arInputs.length; j < n; j++) {
-                    let name = $(arInputs[j]).attr('name');
-                    if ($.inArray(name, ['c','m'])<0 && !arInputs[j].value.length)
-                        empAddrProg = true;
+                    let data_m = $(arInputs[j]).attr('data-checker');
+                    if(data_m!='metro') {
+                        let name = $(arInputs[j]).attr('name');
+                        if ($.inArray(name, ['c', 'm']) < 0 && !arInputs[j].value.length)
+                            empAddrProg = true;
+                    }
                 }
             }
             for (var i = 0, n = arI.length; i < n; i++) {
@@ -900,9 +903,12 @@ var ProjectAddIndexProg = (function () {
             let arInputs = $(arr[i]).find('input');
 
             for (let j = 0, n = arInputs.length; j < n; j++) {
-                let name = $(arInputs[j]).attr('name');
-                if ($.inArray(name, ['c','m'])<0 && !arInputs[j].value.length)
-                    empty = true;
+                let data_m = $(arInputs[j]).attr('data-checker');
+                if(data_m!='metro') {
+                    let name = $(arInputs[j]).attr('name');
+                    if ($.inArray(name, ['c', 'm']) < 0 && !arInputs[j].value.length)
+                        empty = true;
+                }
             }
         }
         return empty;

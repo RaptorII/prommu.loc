@@ -453,9 +453,9 @@
 		<label class="project__index-lbl">Метро</label>
 		<div class="metro-field project__index-arrow">
 			<span class="metro-select"></span>
-			<input type="text" name="m" class="metro-inp" autocomplete="off">
+			<input data-checker="metro" type="text" name="m" class="metro-inp" autocomplete="off">
 			<ul class="select-list"></ul>
-			<input type="hidden" name="metro" value="">
+			<input data-checker="metro" type="hidden" name="metro" value="">
 		</div>
 	</div>
 </div>
