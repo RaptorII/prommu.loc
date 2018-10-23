@@ -13,11 +13,12 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/un
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-map.css');
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/jquery.fancybox.css');
-?>
+/*?>
+
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
 <? print_r($viData); ?>
 </pre>
-
+<?*/?>
 <div class="filter__veil"></div>
 <div class="row project">
     <div class="col-xs-12">
@@ -28,85 +29,7 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/
 //
 ?>
 <div class="project__module">
-    <?php if (!isset($idus)): ?>
-        <form action="" class="project__geo-filter" id="filter-form">
-            <div class="geo__header-city">
-                <label>Город</label>
-                <div class="city-filter">
-                    <span class="city-filter__select">Все</span>
-                    <ul class="city-list">
-                        <li data-id="0">Все</li>
-                        <? foreach ($viData['filter']['cities'] as $id => $city)
-                            echo '<li data-id="' . $id . '">' . $city['city'] . '</li>';
-                        ?>
-                    </ul>
-                    <input type="hidden" name="city" class="city-input" value="0">
-                </div>
-            </div>
-
-            <div class="geo__header-date">
-                <div class="calendar-filter">
-                    <label>Дата с</label>
-                    <span><?= $viData['filter']['bdate-short'] ?></span>
-                    <div class="calendar" data-type="bdate">
-                        <table>
-                            <thead>
-                            <tr>
-                                <td class="mleft">‹
-                                <td colspan="5" class="mname">
-                                <td class="mright">›
-                            </tr>
-                            <tr>
-                                <td>Пн
-                                <td>Вт
-                                <td>Ср
-                                <td>Чт
-                                <td>Пт
-                                <td>Сб
-                                <td>Вс
-                            </tr>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                    <input type="hidden" name="bdate" value="<?= $viData['filter']['bdate'] ?>">
-                </div>
-                <div class="calendar-filter">
-                    <label>По</label>
-                    <span><?= $viData['filter']['edate-short'] ?></span>
-                    <div class="calendar" data-type="edate">
-                        <table>
-                            <thead>
-                            <tr>
-                                <td class="mleft">‹
-                                <td colspan="5" class="mname">
-                                <td class="mright">›
-                            </tr>
-                            <tr>
-                                <td>Пн
-                                <td>Вт
-                                <td>Ср
-                                <td>Чт
-                                <td>Пт
-                                <td>Сб
-                                <td>Вс
-                            </tr>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                    <input type="hidden" name="edate" value="<?= $viData['filter']['edate'] ?>">
-                </div>
-            </div>
-            <input type="hidden" name="project" value="<?= $project ?>" class="project-inp">
-            <input type="hidden" name="filter" value="1">
-        </form>
-        <?
-        //
-        ?>
-
-        <div class="project__geo-list" id="geo-list">
-            <? require __DIR__ . '/project-geo-ajax.php'; // СПИСОК ?>
-        </div>
-    <?php else: ?>
+    <?php if (isset($idus)): ?>
         <?
             $arUser = $viData['users'][$idus];
         ?>
@@ -202,5 +125,85 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/
                 <? endforeach; ?>
             </div>
         </div>
+    <?php elseif(sizeof($viData['items'])>0): ?>
+        <form action="" class="project__geo-filter" id="filter-form">
+            <div class="geo__header-city">
+                <label>Город</label>
+                <div class="city-filter">
+                    <span class="city-filter__select">Все</span>
+                    <ul class="city-list">
+                        <li data-id="0">Все</li>
+                        <? foreach ($viData['filter']['cities'] as $id => $city)
+                            echo '<li data-id="' . $id . '">' . $city['city'] . '</li>';
+                        ?>
+                    </ul>
+                    <input type="hidden" name="city" class="city-input" value="0">
+                </div>
+            </div>
+
+            <div class="geo__header-date">
+                <div class="calendar-filter">
+                    <label>Дата с</label>
+                    <span><?= $viData['filter']['bdate-short'] ?></span>
+                    <div class="calendar" data-type="bdate">
+                        <table>
+                            <thead>
+                            <tr>
+                                <td class="mleft">‹
+                                <td colspan="5" class="mname">
+                                <td class="mright">›
+                            </tr>
+                            <tr>
+                                <td>Пн
+                                <td>Вт
+                                <td>Ср
+                                <td>Чт
+                                <td>Пт
+                                <td>Сб
+                                <td>Вс
+                            </tr>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <input type="hidden" name="bdate" value="<?= $viData['filter']['bdate'] ?>">
+                </div>
+                <div class="calendar-filter">
+                    <label>По</label>
+                    <span><?= $viData['filter']['edate-short'] ?></span>
+                    <div class="calendar" data-type="edate">
+                        <table>
+                            <thead>
+                            <tr>
+                                <td class="mleft">‹
+                                <td colspan="5" class="mname">
+                                <td class="mright">›
+                            </tr>
+                            <tr>
+                                <td>Пн
+                                <td>Вт
+                                <td>Ср
+                                <td>Чт
+                                <td>Пт
+                                <td>Сб
+                                <td>Вс
+                            </tr>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <input type="hidden" name="edate" value="<?= $viData['filter']['edate'] ?>">
+                </div>
+            </div>
+            <input type="hidden" name="project" value="<?= $project ?>" class="project-inp">
+            <input type="hidden" name="filter" value="1">
+        </form>
+        <?
+        //
+        ?>
+
+        <div class="project__geo-list" id="geo-list">
+            <? require __DIR__ . '/project-geo-ajax.php'; // СПИСОК ?>
+        </div>
+    <?php else: ?>
+        <br><br><h2 class="center">Не найдено локаций с выбранным персоналом</h2>
     <?php endif; ?>
 </div>

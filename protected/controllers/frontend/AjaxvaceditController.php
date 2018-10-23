@@ -33,19 +33,7 @@ class AjaxVacEditController extends AppController
         $id = Yii::app()->getRequest()->getParam('idco') ?: 0;
         $filter = Yii::app()->getRequest()->getParam('query');
         $limit = Yii::app()->getRequest()->getParam('limit', '10');
-        $res = (new City)->getCityList($id, $filter, $limit);
-
-        $data = (object)array();
-        if( $res )
-            foreach ($res as $key => $val)
-            {
-                $data->suggestions[] = array('data' => $val['id'], 'value' => $val['name'], 'ismetro' => $val['ismetro']);
-            } // end foreach
-        else
-        {
-            $data->suggestions[] = array('data' => 'man', 'value' => $filter);
-        } // endif
-
+        $data = (new City)->getCityList($id, $filter, $limit);
         echo CJSON::encode($data);
         Yii::app()->end();
     }

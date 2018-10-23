@@ -761,7 +761,7 @@ $(function(){
 			clearTimeout(cityTimer);
 
 			cityTimer = setTimeout(function(){
-				var piece = val.toLowerCase(),     
+				var piece = val.toLowerCase().trim(),     
 				content = '';
 
 				$(main).addClass('load'); // загрузка завершена
@@ -794,7 +794,7 @@ $(function(){
 		mainCity = getCity(e.target),
 		idcity = Number(mainCity.dataset.idcity),
 		val = e.target.value,
-		piece = val.toLowerCase(),
+		piece = val.toLowerCase().trim(),
 		content = '';
 
 		$(e.target).val('').val(val);

@@ -515,7 +515,7 @@ $(function(){
     clearTimeout(cityTimer);
 
     cityTimer = setTimeout(function(){
-      var piece = val.toLowerCase(),     
+      var piece = val.toLowerCase().trim(),  
           content = '';
 
       $(main).addClass('load'); // загрузка завершена
@@ -549,7 +549,7 @@ $(function(){
         mainCity = getCity(e.target),
         idcity = Number(mainCity.dataset.idcity),
         val = e.target.value,
-        piece = val.toLowerCase(),
+        piece = val.toLowerCase().trim(),
         content = '';
 
     $(e.target).val('').val(val);
@@ -670,7 +670,7 @@ $(function(){
         val = $(e.target).val().charAt(0).toUpperCase() + $(e.target).val().slice(1).toLowerCase(),
         piece = $(e.target).val().toLowerCase(),
         showList = true;
-    arSelectId = GetSelectMetroes(sList);
+    arSelectId = GetSelectMetroes(sList).trim();
     $(e.target).val(val);
     $(e.target).css({width:(val.length * 10 + 5)+'px'});
 
