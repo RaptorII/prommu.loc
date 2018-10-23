@@ -15,8 +15,16 @@
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/address-edit.css');
 	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
 	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/address-edit.js', CClientScript::POS_END);
+    Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
 ?>
 <script type="text/javascript">var getParams = <?=json_encode($_GET)?></script>
+
+<div class="filter__veil"></div>
+<div class="row project">
+    <div class="col-xs-12">
+        <? require __DIR__ . '/project-nav.php'; // Меню вкладок ?>
+    </div>
+</div>
 <div class="row project">
 	<div class="col-xs-12">
 		<form action="" method="POST" id="new-project">
