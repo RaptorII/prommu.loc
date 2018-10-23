@@ -135,17 +135,40 @@ class City extends CActiveRecord
      */
     public function getCityList($inID, $filter, $limit)
     {
-        $filter = urldecode($filter);
-        $where = array('t.name like :filter AND (t.id_co = :id OR :id = 0)', array(':filter' => "%{$filter}%", ':id' => $inID));
+        $arRes = array();
+        $name = urldecode($filter);
+        $name = trim($name);
+        $name = stripslashes($name);
+        $inID = intval($inID);
 
-        $Q1 = Yii::app()->db->createCommand()
-            ->select('t.id_city id, t.name, t.ismetro, t.id_co')
-            ->from('city t')
-            ->where($where[0], $where[1])
-            ->limit($limit);
-        $res = $Q1->queryAll();
+        $sql = "SELECT id_city id, name, ismetro, id_co
+                FROM city
+                WHERE name LIKE '%{$name}%' AND (id_co={$inID} OR {$inID}=0)
+                ORDER BY CASE 
+                WHEN name LIKE '{$name}' THEN 0
+                WHEN name LIKE '{$name}%' THEN 1
+                WHEN name LIKE '%{$name}%' THEN 2
+                ELSE 3 END
+                LIMIT {$limit}";
 
-        return $res;
+        $res = Yii::app()->db->createCommand($sql)->queryAll();
+
+        $n = count($res);
+        
+        if(!$n) {
+            $arRes['suggestions'][] = array('data' => 'man', 'value' => $name);
+            return $arRes;
+        }
+
+        for ( $i=0; $i < $n; $i++ ) {
+            $arRes['suggestions'][] = array(
+                    'data' => $res[$i]['id'],
+                    'value' => $res[$i]['name'],
+                    'ismetro' => $res[$i]['ismetro']
+                );
+        }
+
+        return $arRes;
     }
 
 
