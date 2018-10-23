@@ -57,7 +57,7 @@
             	? CClientScript::POS_END
             	: CClientScript::POS_BEGIN);
 
-            Yii::app()->getClientScript()->registerCssFile($baseUrl.'/theme/css/footer.min.css');
+            Yii::app()->getClientScript()->registerCssFile($baseUrl.'/theme/css/site_template/footer.min.css');
 
             if(!in_array($curUrl, $arOptimizPages)){
                 //Yii::app()->getClientScript()->registerCssFile($baseUrl.'/jslib/multiple-select/multiple-select.css');

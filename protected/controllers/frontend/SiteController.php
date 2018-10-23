@@ -40,7 +40,6 @@ class SiteController extends AppController
      */
     public function actionIndex()
     {
-         
         Share::$isHomePage = 1;
         $city = Subdomain::getCity(Share::$UserProfile->type,Share::$UserProfile->id);
         $Vacancy = new Vacancy();
@@ -50,24 +49,23 @@ class SiteController extends AppController
         $articles = new Articles;
         $action = ContentPlus::getActionID();
         $lang = Yii::app()->session['lang'];
-
-        $data['content'] = $content = $model->getPageContent('about', $lang);
-        $data['vacancies'] = $model->getVacanies($lang);
-        $data['vacs'] = $model->getVacaniesAppointments($lang);
-        $data['applicants'] = $model->getApplicants($lang);
-        $data['companies'] = $model->getCompanies($lang);
-        $data['news'] = $news->getNews();
-        $data['articles'] = $articles->getArticles();
-        $data['couArt'] = $articles->getArticlesCount();
         //
-        $time .= 'L02.' . microtime(true);
-        //
-        if(MainConfig::$DEBUG_TIMER)
-            Yii::app()->request->cookies['index_timers'] = new CHttpCookie('index_timers', $time);
+        $data = Cache::getData();
+        if($data['data']===false) {
+            $data['data']['content'] = $content = $model->getPageContent('about', $lang);
+            $data['data']['vacancies'] = $model->getVacanies($lang);
+            $data['data']['vacs'] = $model->getVacaniesAppointments($lang);     
+            $data['data']['applicants'] = $model->getApplicants($lang);
+            $data['data']['companies'] = $model->getCompanies($lang);
+            $data['data']['news'] = $news->getNews();
+            $data['data']['articles'] = $articles->getArticles();
+            $data['data']['couArt'] = $articles->getArticlesCount();
+            Cache::setData($data);
+        }
         //
         $this->render(
           'index', 
-          array('content' => $data, 'city'=>$city)
+          array('content' => $data['data'], 'city'=>$city)
         );
     }
 
@@ -139,45 +137,43 @@ class SiteController extends AppController
     public function actionSearchEmpl()
     {
         if(Yii::app()->request->isAjaxRequest){
+            $SearchEmpl = new SearchEmpl();
             if(Yii::app()->getRequest()->isPostRequest){
-                $SearchEmpl = (new SearchEmpl());
                 $data = $SearchEmpl->searchFilterData();
                 $this->renderPartial(MainConfig::$VIEWS_SEARCH_EMPL_AJAX_FILTER, array('viData' => $data), false, true);                
             }
             else{
-                if(
-                    (!isset($_GET['cities']) && !isset($_GET['cotype']))||
-                    (sizeof($_GET['cities'])==1 && $_GET['cities'][0]==Subdomain::getId() && !isset($_GET['cotype']))
-                )// for SEO MOSCOW
-                    $seo = (new Seo)->exist(MainConfig::$PAGE_SEARCH_EMPL);
+                $data = Cache::getData();
+                if($data['data']===false) {
+                    if(
+                        (!isset($_GET['cities']) && !isset($_GET['cotype']))||
+                        (sizeof($_GET['cities'])==1 && $_GET['cities'][0]==$data['data']['city'] && !isset($_GET['cotype']))
+                    )
+                        $data['data']['seo'] = (new Seo)->exist(MainConfig::$PAGE_SEARCH_EMPL);
 
-                $SearchEmpl = (new SearchEmpl());
-                $arCount = $SearchEmpl->searchEmployersCount();
+                    $arCount = $SearchEmpl->searchEmployersCount();
+                    $cnt = sizeof($arCount);
 
-                if(!empty($_GET) && sizeof($arCount)){
-                    $id = isset($_GET['cities'][0]) ? $_GET['cities'][0] : 0;
-                    $arSID = Subdomain::getIdies();
-                    if(!in_array($id, $arSID))
-                        Yii::app()->request->cookies['srch_e_city'] = new CHttpCookie('srch_e_city', $id);
-                    Yii::app()->request->cookies['srch_e_res'] = new CHttpCookie('srch_e_res', 0);
+                    if(!empty($_GET) && $cnt){
+                        $id = isset($_GET['cities'][0]) ? $_GET['cities'][0] : 0;
+                        $arSID = Subdomain::getIdies();
+                        if(!in_array($id, $arSID))
+                            Yii::app()->request->cookies['srch_e_city'] = new CHttpCookie('srch_e_city', $id);
+                        Yii::app()->request->cookies['srch_e_res'] = new CHttpCookie('srch_e_res', 0);
+                    }
+
+                    $data['data']['pages'] = new CPagination($cnt);
+                    $data['data']['pages']->pageSize = MainConfig::$DEF_PAGE_LIMIT;
+                    $data['data']['pages']->applyLimit($SearchEmpl);
+                    $data['data']['viData'] = $SearchEmpl->getEmployers(1);
+                    $data['data']['viData']['count'] = $arCount;
+                    $data['data']['redirect'] = '';//Subdomain::ajaxFilterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
+                    Cache::setData($data);
                 }
-
-                $pages = new CPagination(sizeof($arCount));
-                $pages->pageSize = MainConfig::$DEF_PAGE_LIMIT;
-                $pages->applyLimit($SearchEmpl);
-                $data = $SearchEmpl->getEmployers(1);
-                $data['count'] = $arCount;
-                //$redirectUrl = Subdomain::ajaxFilterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
-                $redirectUrl = '';
 
                 $this->renderPartial(
                     MainConfig::$VIEWS_SEARCH_EMPL_AJAX_BLOCK,
-                    array(
-                        'viData' => $data, 
-                        'pages' => $pages,
-                        'seo' => $seo,
-                        'redirect' => $redirectUrl
-                    ), 
+                    $data['data'], 
                     false, 
                     true
                 );
@@ -185,74 +181,31 @@ class SiteController extends AppController
         }
         else{
             //Subdomain::filterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
-
             $this->setBreadcrumbs($title = "Поиск работодателей", MainConfig::$PAGE_SEARCH_EMPL);
 
-            $SearchEmpl = (new SearchEmpl());
-            $data['filter'] = $SearchEmpl->searchEmplForFilter(); // данные для фильтра
-            //
-            //  КУКИ
-            // для редиректа, если в выбранном ранее городе нет резлультата 0 - данных нет, 1 - есть
-            /*if(!isset(Yii::app()->request->cookies['srch_e_res']->value))
-                Yii::app()->request->cookies['srch_e_res'] = new CHttpCookie('srch_e_res', 0);
-            $cooHCRes = Yii::app()->request->cookies['srch_e_res']->value;
-            // город для фильтра 0 - нет города, >0 - id города
-            if(!isset(Yii::app()->request->cookies['srch_e_city']->value)){ 
-                $cooCity = Yii::app()->request->cookies['city']->value;
-                Yii::app()->request->cookies['srch_e_city'] = new CHttpCookie('srch_e_city', 0);
-                $arSID = Subdomain::getIdies();
-                foreach($data['filter']['cities'] as $id => $city)
-                    if($cooCity==$city['seo']){// ищем ID города из куки
-                        if(!in_array($id, $arSID))
-                            Yii::app()->request->cookies['srch_e_city'] = new CHttpCookie('srch_e_city', $id);
-                        break;
-                    }
+            $data = Cache::getData();
+            if($data['data']===false) {
+                $SearchEmpl = new SearchEmpl();
+                $data['data']['filter'] = $SearchEmpl->searchEmplForFilter(); // данные для фильтра
+                $arCount = $SearchEmpl->searchEmployersCount(); // кол-во найденных
+                $data['data']['count'] = sizeof($arCount);
+                $data['data']['pages'] = new CPagination($data['data']['count']);
+                $data['data']['pages']->pageSize = MainConfig::$DEF_PAGE_LIMIT;
+                $data['data']['pages']->applyLimit($SearchEmpl);
+                $data['data']['viData'] = array_merge($SearchEmpl->getEmployers(1), $data['data']);
+                if( 
+                    (sizeof($_GET['cities'])==1 && $_GET['cities'][0]==$data['data']['city']) || 
+                    (!isset($_GET['cities']) && !isset($_GET['cotype'])) 
+                ){
+                    $data['data']['seo'] = (new Seo)->exist(MainConfig::$PAGE_SEARCH_EMPL);
+                    $title = $data['data']['seo']['meta_title'];
+                    $h1 = $data['data']['seo']['seo_h1'];
+                }
+                Cache::setData($data);
             }
-            $cooHCity = Yii::app()->request->cookies['srch_e_city']->value;*/
-            //
-            //  РЕДИРЕКТЫ
-            //
-            /*if($cooHCity && empty($_GET) && $cooHCRes!=1){ // переход на выбранный город
-                $this->redirect(MainConfig::$PAGE_SEARCH_EMPL . '?cities[]=' . $cooHCity);
-                exit();
-            }*/
-
-            $arCount = $SearchEmpl->searchEmployersCount(); // кол-во найденных
-            // 
-            /*if($cooHCity==$_GET['cities'][0] && sizeof($_GET['cities'])==1 && !sizeof($arCount)){ 
-                Yii::app()->request->cookies['srch_e_res'] = new CHttpCookie('srch_e_res', 1);
-                $this->redirect(MainConfig::$PAGE_SEARCH_EMPL);
-                exit();
-            }
-            //записываем выбранный город
-            if(!empty($_GET) && sizeof($arCount)){
-                $id = isset($_GET['cities'][0]) ? $_GET['cities'][0] : 0;
-                $arSID = Subdomain::getIdies();
-                if(!in_array($id, $arSID))
-                    Yii::app()->request->cookies['srch_e_city'] = new CHttpCookie('srch_e_city', $id);
-                Yii::app()->request->cookies['srch_e_res'] = new CHttpCookie('srch_e_res', 0);
-            }*/
-
-            $pages = new CPagination(sizeof($arCount));
-            $pages->pageSize = MainConfig::$DEF_PAGE_LIMIT;
-            $pages->applyLimit($SearchEmpl);
-            $data = array_merge($SearchEmpl->getEmployers(1), $data);
-
-            if( 
-                (sizeof($_GET['cities'])==1 && $_GET['cities'][0]==Subdomain::getId()) || 
-                (!isset($_GET['cities']) && !isset($_GET['cotype'])) 
-            ){// for SEO MOSCOW
-                $seo = (new Seo)->exist(MainConfig::$PAGE_SEARCH_EMPL);
-                $title = $seo['meta_title'];
-                $h1 = $seo['seo_h1'];
-            }    
 
             $this->render($this->ViewModel->pageSearchEmpl,
-                    array('viData' => $data, 
-                        'pages' => $pages,
-                        'count' => sizeof($arCount),
-                        'seo' => $seo
-                    ),
+                    $data['data'],
                     array(
                         'htmlTitle' => $title,
                         'pageTitle' => '<h1>' . ($h1 ? $h1 : $title) .'</h1>'
@@ -262,14 +215,9 @@ class SiteController extends AppController
     }
 
 
-
-
     public function actionAnkety()
     {
-    $time = 'L00.' . microtime(true);
-
         $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
-    $time .= 'L01.' . microtime(true).'-ID-'.$id;
         if(!empty($id))
         {
             if( $id < 1 ) 
@@ -284,7 +232,6 @@ class SiteController extends AppController
             {
                 $data = $Profile->getProfileDataView();
                 $page = $Profile->viewTpl;
-        $time .= 'L02.' . microtime(true);
             }
             else
             {
@@ -303,7 +250,6 @@ class SiteController extends AppController
                 $strBreadcrumb = $fio = array_values($data['userInfo']['userAttribs'])[0]['firstname'] . ' ' . array_values($data['userInfo']['userAttribs'])[0]['lastname'];
                 $strBreadcrumb = 'Профиль соискателя - ' . $strBreadcrumb;
                 $this->setBreadcrumbs($title = "Поиск соискателей", MainConfig::$PAGE_SEARCH_PROMO);
-        $time .= 'L03.' . microtime(true);
             }
             if( $Profile->type == 3 ){
                 $Termostat = new Termostat();
@@ -311,8 +257,7 @@ class SiteController extends AppController
 
                 $strBreadcrumb = $data['userInfo']['name'];
                 $strBreadcrumb = 'Профиль работодателя - ' . $strBreadcrumb;
-                $this->setBreadcrumbs("Поиск работодателей", MainConfig::$PAGE_SEARCH_EMPL);            
-        $time .= 'L04.' . microtime(true);
+                $this->setBreadcrumbs("Поиск работодателей", MainConfig::$PAGE_SEARCH_EMPL);
             }
             if(strlen($strBreadcrumb) > 0){
                 $strBreadcrumb = html_entity_decode($strBreadcrumb);
@@ -344,148 +289,78 @@ class SiteController extends AppController
                 Yii::app()->request->cookies['srch_a_view'] = new CHttpCookie('srch_a_view', 'list');
 
             if(Yii::app()->request->isAjaxRequest){
-                if(isset($_GET['view'])){
+                if(isset($_GET['view']))
                     Yii::app()->request->cookies['srch_a_view'] = new CHttpCookie('srch_a_view', $_GET['view']);
-                }
 
-                $SearchPromo = (new SearchPromo());
-
-                if(!empty($_GET)){
-                    $seo = $SearchPromo->getPromoSeo($_GET, MainConfig::$PAGE_SEARCH_PROMO, Subdomain::getId()); // Moscow ID  
-                    $seo['url'] = $SearchPromo->buildPrettyUrl($_GET);
-                }         
-
-                $count = $SearchPromo->searchPromosCount();
-
-                //записываем выбранный город
-                if(!empty($_GET) && $count){
-                    $id = isset($_GET['cities'][0]) ? $_GET['cities'][0] : 0;
-                    $arSID = Subdomain::getIdies();
-                    if(!in_array($id, $arSID))
-                        Yii::app()->request->cookies['srch_a_city'] = new CHttpCookie('srch_a_city', $id);
-                    Yii::app()->request->cookies['srch_a_res'] = new CHttpCookie('srch_a_res', 0);
-                }
-
-                $pages=new CPagination($count);
-                $pages->pageSize = 21;
-                $pages->applyLimit($SearchPromo);
-                $data = $SearchPromo->getPromos();
-                //$redirectUrl = Subdomain::ajaxFilterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
-                $redirectUrl = '';
-
-                $this->renderPartial(
-                    MainConfig::$VIEWS_SEARCH_PROMO_AJAX,
-                    array(
-                        'viData' => $data, 
-                        'pages' => $pages,
-                        'count' => $count,
-                        'seo' => $seo,
-                        'redirect' => $redirectUrl
-                    ), 
-                    false, 
-                    true
-                );
-        $time .= 'L05.' . microtime(true);
-            }
-            else{
-                //Subdomain::filterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
-
-                $this->setBreadcrumbs($title = "Поиск соискателей", MainConfig::$PAGE_SEARCH_PROMO);
-
-                $SearchPromo = (new SearchPromo());
-                // build pretty URL
-                if(!(MOBILE_DEVICE && !SHOW_APP_MESS)){ // optimization for mobile devices
-                    if(!isset($_GET['seo_builded2']) && sizeof($_GET))
-                    {
-                        $url = $SearchPromo->buildPrettyUrl($_GET);
-                        $this->redirect($url);
-                        exit();
+                $data = Cache::getData();
+                if($data['data']===false) {
+                    $SearchPromo = new SearchPromo();
+                    if(!empty($_GET)){
+                        $data['data']['seo'] = $SearchPromo->getPromoSeo(
+                            $_GET, 
+                            MainConfig::$PAGE_SEARCH_PROMO, 
+                            $data['data']['city']
+                        );
+                        $data['data']['seo']['url'] = $SearchPromo->buildPrettyUrl($_GET);
                     }
-                    // search Cities
-                    /*$Q1 = Yii::app()->db->createCommand()
-                        ->select('t.id_city id, t.name, t.seo_url')
-                        ->from('city t')
-                        ->limit(10000);
-                    $arCities = $Q1->queryAll();
-                    //
-                    //  КУКИ
-                    // для редиректа, если ранее выбран город  1 - данных нет, 0 - есть
-                    if(!isset(Yii::app()->request->cookies['srch_a_res']->value))
-                        Yii::app()->request->cookies['srch_a_res'] = new CHttpCookie('srch_a_res', 0);
-                    $cooHCRes = Yii::app()->request->cookies['srch_a_res']->value;
-                    // город для фильтра 0 - нет города, >0 - id города
-                    if(!isset(Yii::app()->request->cookies['srch_a_city']->value)){ 
-                        $cooCity = Yii::app()->request->cookies['city']->value;
-                        Yii::app()->request->cookies['srch_a_city'] = new CHttpCookie('srch_a_city', 0);
-                        $arSID = Subdomain::getIdies();
-                        foreach ($arCities as $k => $city)
-                            if($cooCity==$city['seo_url']){
-                                if(!in_array($id, $arSID))
-                                    Yii::app()->request->cookies['srch_a_city'] = new CHttpCookie('srch_a_city', $id);
-                                $cityName = $city['name'];
-                                $cityId = $city['id'];
-                                break;
-                            }
-                    }
-                    $cooHCity = Yii::app()->request->cookies['srch_a_city']->value;
-                    //
-                    //  РЕДИРЕКТЫ
-                    // 
-                    if($cooHCity && empty($_GET) && $cooHCRes!=1){ // переход на выбранный город
-                        $_GET['cities'][] =  $cooHCity;
-                        $url = $SearchPromo->buildPrettyUrl($_GET);
-                        $this->redirect($url);
-                        exit();
-                    }*/
-
-                    $count = $SearchPromo->searchPromosCount();
-                    // переход на общую, если в выбранном городе нет данных
-                    /*if($cooHCity==$_GET['cities'][0] && sizeof($_GET['cities'])==1 && !$count){ 
-                        Yii::app()->request->cookies['srch_a_res'] = new CHttpCookie('srch_a_res', 1);
-                        $this->redirect(MainConfig::$PAGE_SEARCH_PROMO);
-                        exit();
-                    }
+                    $data['data']['count'] = $SearchPromo->searchPromosCount();
                     //записываем выбранный город
-                    if(!empty($_GET) && $count){
+                    if(!empty($_GET) && $data['data']['count']){
                         $id = isset($_GET['cities'][0]) ? $_GET['cities'][0] : 0;
                         $arSID = Subdomain::getIdies();
                         if(!in_array($id, $arSID))
                             Yii::app()->request->cookies['srch_a_city'] = new CHttpCookie('srch_a_city', $id);
                         Yii::app()->request->cookies['srch_a_res'] = new CHttpCookie('srch_a_res', 0);
-                    }*/
-
-                    $sID = Subdomain::getId();
-                    $seo = $SearchPromo->getPromoSeo($_GET, MainConfig::$PAGE_SEARCH_PROMO, $sID); // Moscow ID    
-                    if(is_array($seo)){
-                        $title = $seo['meta_title'];
-                        $h1 = $seo['seo_h1'];
                     }
-
-                    $pages=new CPagination($count);
-                    $pages->pageSize = 21;
-                    $pages->applyLimit($SearchPromo);
-                    $data = $SearchPromo->getPromos();
-
-                    $Api = new Api();
-                    $post = $Api->kew();
+                    $data['data']['pages'] = new CPagination($data['data']['count']);
+                    $data['data']['pages']->pageSize = 21;
+                    $data['data']['pages']->applyLimit($SearchPromo);
+                    $data['data']['viData'] = $SearchPromo->getPromos();
+                    $data['data']['redirect'] = '';//Subdomain::ajaxFilterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
+                    Cache::setData($data);
                 }
 
-        //$time .= 'L14.' . microtime(true);
-        //if (MainConfig::$DEBUG_TIMER)
-        //          Yii::app()->request->cookies['ankety_timers'] = new CHttpCookie('ankety_timers', $time);
+                $this->renderPartial(
+                    MainConfig::$VIEWS_SEARCH_PROMO_AJAX,
+                    $data['data'], 
+                    false, 
+                    true
+                );
+            }
+            else{
+                //Subdomain::filterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
+                $this->setBreadcrumbs($title = "Поиск соискателей", MainConfig::$PAGE_SEARCH_PROMO);
+                $SearchPromo = (new SearchPromo());
+                if(!isset($_GET['seo_builded2']) && sizeof($_GET))
+                {
+                    $url = $SearchPromo->buildPrettyUrl($_GET);
+                    $this->redirect($url);
+                    exit();
+                }
 
+                $data = Cache::getData();
+                if($data['data']===false) {
+                    $data['data']['count'] = $SearchPromo->searchPromosCount();
+                    $data['data']['seo'] = $SearchPromo->getPromoSeo(
+                                $_GET, 
+                                MainConfig::$PAGE_SEARCH_PROMO, 
+                                $data['data']['city']
+                            );
+                    if(is_array($data['data']['seo'])){
+                        $title = $data['data']['seo']['meta_title'];
+                        $h1 = $data['data']['seo']['seo_h1'];
+                    }
+                    $data['data']['pages'] = new CPagination($data['data']['count']);
+                    $data['data']['pages']->pageSize = 21;
+                    $data['data']['pages']->applyLimit($SearchPromo);
+                    $data['data']['viData'] = $SearchPromo->getPromos();
+                    $Api = new Api;
+                    $data['data']['datas'] = $Api->kew();
+                    Cache::setData($data);
+                }
 
                 $this->render($this->ViewModel->pageSearchPromo,
-                        array(
-                            'viData' => $data, 
-                            'pages' => $pages,
-                            'datas' => $post,
-                            'count' => $count,
-                            //'arCities' => $arCities,
-                            //'cityName' => $cityName,
-                            //'cityId' => $cityId,
-                            'seo' => $seo
-                        ),
+                        $data['data'],
                         array(
                             'htmlTitle' => $title,
                             'pageTitle' => '<h1>' . ($h1 ? $h1 : $title) .'</h1>'
@@ -588,7 +463,6 @@ class SiteController extends AppController
                     $this->redirect("/vacancy/$id" . '#tabs');
             }
 
-
             if(strpos($_SERVER['REQUEST_URI'], 'site/vacancy/') > -1)
             {
                 header('Location: '.str_replace('site/vacancy/', 'vacancy/', $_SERVER['REQUEST_URI']));
@@ -596,16 +470,6 @@ class SiteController extends AppController
             }
 
             $vac = (new Vacancy())->getVacancyView($id);
-            // if vacancy from subdomains
-            /*if(sizeof($vac['vac']['city'])==1) {
-                $arSID = Subdomain::getIdies();
-                foreach ($vac['vac']['city'] as $id => $c)
-                    if(in_array($id, $arSID)) {
-                        $arSub = Subdomain::getData(true);
-                        header("Location: " . $arSub[$id]['url'] . MainConfig::$PAGE_VACANCY . DS . $id);
-                        exit();
-                    }
-            }*/
 
             if(isset($vac['error']) && $vac['error'] == 1)
             {
@@ -644,50 +508,45 @@ class SiteController extends AppController
                 Yii::app()->request->cookies['vacancies_page_view'] = new CHttpCookie('vacancies_page_view', 'list');
 
             if(Yii::app()->request->isAjaxRequest){
-                if(isset($_GET['view'])){
+                if(isset($_GET['view']))
                     Yii::app()->request->cookies['vacancies_page_view'] = new CHttpCookie('vacancies_page_view', $_GET['view']);
-                }
 
-                $SearchVac = (new SearchVac());
-                $sID = Subdomain::getId();
-                $seo = $SearchVac->getVacancySeo($_GET, MainConfig::$PAGE_SEARCH_VAC, $sID); // Moscow ID
-                $seo['url'] = $SearchVac->buildPrettyUrl($_GET);
-                $count = $SearchVac->searchVacationsCount();
-                //записываем выбранный город
-                if(!empty($_GET) && $count){
-                    $id = isset($_GET['cities'][0]) ? $_GET['cities'][0] : 0;
-                    $arSID = Subdomain::getIdies();
-                    if(!in_array($id, $arSID))
-                        Yii::app()->request->cookies['srch_v_city'] = new CHttpCookie('srch_v_city', $id);
-                    Yii::app()->request->cookies['srch_v_res'] = new CHttpCookie('srch_v_res', 0);
+                $data = Cache::getData();
+                if($data['data']===false) {
+                    $SearchVac = (new SearchVac());
+                    $data['data']['seo'] = $SearchVac->getVacancySeo(
+                                                    $_GET, 
+                                                    MainConfig::$PAGE_SEARCH_VAC, 
+                                                    $data['data']['city']
+                                                );
+                    $data['data']['seo']['url'] = $SearchVac->buildPrettyUrl($_GET);
+                    $data['data']['count'] = $SearchVac->searchVacationsCount();
+                    //записываем выбранный город
+                    if(!empty($_GET) && $data['data']['count']){
+                        $id = isset($_GET['cities'][0]) ? $_GET['cities'][0] : 0;
+                        $arSID = Subdomain::getIdies();
+                        if(!in_array($id, $arSID))
+                            Yii::app()->request->cookies['srch_v_city'] = new CHttpCookie('srch_v_city', $id);
+                        Yii::app()->request->cookies['srch_v_res'] = new CHttpCookie('srch_v_res', 0);
+                    }
+                    $data['data']['pages'] = new CPagination($data['data']['count']);
+                    $data['data']['pages']->pageSize = 24;
+                    $data['data']['pages']->applyLimit($SearchVac);
+                    $data['data']['viData'] = $SearchVac->getVacations();
+                    $data['data']['redirect'] = '';//Subdomain::ajaxFilterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
+                    Cache::setData($data);
                 }
-                $pages=new CPagination($count);
-                $pages->pageSize = 24;
-                $pages->applyLimit($SearchVac);
-                $data = $SearchVac->getVacations();
-                //$redirectUrl = Subdomain::ajaxFilterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
-                $redirectUrl = '';
 
                 $this->renderPartial(
                     MainConfig::$VIEWS_SEARCH_VAC_AJAX,
-                    array(
-                        'viData' => $data, 
-                        'pages' => $pages,
-                        'count' => $count,
-                        'seo' => $seo,
-                        'redirect' => $redirectUrl
-                    ), 
+                    $data['data'], 
                     false, 
                     true
                 );
             }
             else{
                 //Subdomain::filterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
-
-                if($_SERVER['REQUEST_URI'] == '/vacancy/about')
-                    throw new CHttpException(404, 'Error');
                 $this->setBreadcrumbs($title = "Поиск вакансий", MainConfig::$PAGE_SEARCH_VAC);
-
                 $SearchVac = (new SearchVac());
 
                 if(
@@ -700,84 +559,37 @@ class SiteController extends AppController
                     $this->redirect($url);
                     exit();
                 }
-                // cities for select
-                /*$Q1 = Yii::app()->db->createCommand()
-                    ->select('t.id_city id, t.name, t.seo_url')
-                    ->from('city t')
-                    ->where("t.id_co = 1")
-                    ->limit(10000);
-                $arCities = $Q1->queryAll();*/
-                //
-                //  КУКИ
-                // для редиректа, если в ранее выбран город  1 - данных нет, 0 - есть
-                /*if(!isset(Yii::app()->request->cookies['srch_v_res']->value))
-                    Yii::app()->request->cookies['srch_v_res'] = new CHttpCookie('srch_v_res', 0);
-                $cooHCRes = Yii::app()->request->cookies['srch_v_res']->value;
-                // город для фильтра 0 - нет города, >0 - id города
-                if(!isset(Yii::app()->request->cookies['srch_v_city']->value)){ 
-                    $cooCity = Yii::app()->request->cookies['city']->value;
-                    Yii::app()->request->cookies['srch_v_city'] = new CHttpCookie('srch_v_city', 0);
-                    $arSID = Subdomain::getIdies();
-                    foreach ($arCities as $k => $city)
-                        if($cooCity==$city['seo_url']){// ищем ID города из куки
-                            if(!in_array($city['id'], $arSID))
-                                Yii::app()->request->cookies['srch_v_city'] = new CHttpCookie('srch_v_city', $id);
-                            $cityName = $city['name'];
-                            $cityId = $city['id'];
-                            break;
-                        }
-                }
-                $cooHCity = Yii::app()->request->cookies['srch_v_city']->value;
-                //
-                //  РЕДИРЕКТЫ
-                // переход на выбранный город
-                if($cooHCity && empty($_GET) && $cooHCRes!=1){
-                    $_GET['cities'][] =  $cooHCity;
-                    $url = $SearchVac->buildPrettyUrl($_GET);
-                    $this->redirect($url);
-                    exit();
-                }*/
 
-                $count = $SearchVac->searchVacationsCount();
-                // переход на общую страницу, если в родном городе нет данных
-                /*if($cooHCity==$_GET['cities'][0] && sizeof($_GET['cities'])==1 && !$count){
-                    Yii::app()->request->cookies['srch_v_res'] = new CHttpCookie('srch_v_res', 1);
-                    $this->redirect(MainConfig::$PAGE_SEARCH_VAC);
-                    exit();
+                $data = Cache::getData();
+                if($data['data']===false) {
+                    // cities for select
+                    $sql = Yii::app()->db->createCommand()
+                        ->select('t.id_city id, t.name, t.seo_url')
+                        ->from('city t')
+                        ->where("t.id_co = 1")
+                        ->limit(10000);
+                    $data['data']['arCities'] = $sql->queryAll();
+                    $data['data']['count'] = $SearchVac->searchVacationsCount();
+                    // search seo data
+                    $data['data']['seo'] = $SearchVac->getVacancySeo(
+                                                    $_GET, 
+                                                    MainConfig::$PAGE_SEARCH_VAC, 
+                                                    $data['data']['city']
+                                                );
+                    if(is_array($data['data']['seo'])){
+                        $title = $data['data']['seo']['meta_title'];
+                        $h1 = $data['data']['seo']['seo_h1'];
+                    }
+                    $data['data']['pages'] = new CPagination($data['data']['count']);
+                    $data['data']['pages']->pageSize = 24;
+                    $data['data']['pages']->applyLimit($SearchVac);
+                    $data['data']['viData'] = $SearchVac->getVacations();
+                    Cache::setData($data);
                 }
-                //записываем выбранный город
-                if(!empty($_GET) && $count){
-                    $id = isset($_GET['cities'][0]) ? $_GET['cities'][0] : 0;
-                    $arSID = Subdomain::getIdies();
-                    if(!in_array($id, $arSID))
-                        Yii::app()->request->cookies['srch_v_city'] = new CHttpCookie('srch_v_city', $id);
-                    Yii::app()->request->cookies['srch_v_res'] = new CHttpCookie('srch_v_res', 0);
-                }*/
-                // search seo data
-                $sID = Subdomain::getId();
-                $seo = $SearchVac->getVacancySeo($_GET, MainConfig::$PAGE_SEARCH_VAC, $sID); // Moscow ID    
-                if(is_array($seo)){
-                    $title = $seo['meta_title'];
-                    $h1 = $seo['seo_h1'];
-                }
-                $mod = $SearchVac->getVacations();
-                $pages=new CPagination($count);
-                $pages->pageSize = 24;
-                $pages->applyLimit($SearchVac);
-                $data = $SearchVac->getVacations();
-
 
                 $this->render(
                     $this->ViewModel->pageSearchVac,
-                    array(
-                        'viData' => $data,
-                        'pages' => $pages, 
-                        'count' => $count,
-                        //'arCities' => $arCities,
-                        'cityName' => $cityName,
-                        'cityId' => $cityId,
-                        'seo' => $seo
-                    ),
+                    $data['data'],
                     array(
                         'htmlTitle' => $title,
                         'pageTitle' => '<h1>' . ($h1 ? $h1 : $title) .'</h1>'
