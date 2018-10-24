@@ -369,17 +369,6 @@
                         <div class="mob-header__title"><?=$title?></div>
                     </div>
                 </div>
-                <script>
-                    $(document).ready(function(){
-                        $('.top-menu-wr__sandwich').click(function(){
-                            $(this).hasClass('active')
-                            ? $('.top-menu-wr__menu').fadeOut()
-                            : $('.top-menu-wr__menu').fadeIn();
-                            $(this).toggleClass('active');
-
-                        })
-                    })
-                </script>
                 <?php
                     if( Share::$isHomePage ){ echo $content; }
                     else { include_once __DIR__ . '/../' . MainConfig::$VIEWS_COMM_CONTENT_TPL . '.php'; } // endif
