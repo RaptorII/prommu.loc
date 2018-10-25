@@ -39,8 +39,10 @@
 *
 */
 .evl__logo{
+	max-width: 180px;
 	position: relative;
-	margin-bottom: 20px;
+	margin: 0 auto 20px;
+	text-align: center;
 }
 .evl-logo__img{
 	width: 100%;
@@ -294,7 +296,6 @@
 		display: inline-block;
 	}
 	.evl__logo{
-		max-width: 180px;
 		float: right;
 	}
 	.evl__vacancies{ margin-left: -15px }
