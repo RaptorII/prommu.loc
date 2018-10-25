@@ -154,3 +154,80 @@ foreach ($viData['filter']['cities'] as $id => $city)
 		<br><br><h2 class="center">Не найдено локаций с выбранным персоналом</h2>
 	<?php endif; ?>
 </div>
+
+
+<div class="tasks__popup">
+    <div class="tasks__popup-close">
+        <span>X</span>
+    </div>
+    <div class="tasks__popup-content">
+        <div class="popup__content-user">
+            <img src="/images/applic/20180819180030833100.jpg">
+
+            <div class="popup__user">
+                <div class="popup__user-name">
+                    Маргарита
+                </div>
+                <div class="popup__user-secondname">
+                    Бахвалова
+                </div>
+
+                <div class="popup__user-status">
+                    <span class="geo__red">● неактивен</span> /
+                    <span class="geo__green">● активен</span>
+                </div>
+            </div>
+        </div>
+        <div class="popup__tasks">
+            <table class="popup__table">
+                <caption>Задания</caption>
+                <thead>
+                <tr>
+                    <td>Дата</td>
+                    <td>Название</td>
+                    <td>Описание</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        12.01.2018
+                    </td>
+                    <td>
+                        Покупка курицы
+                    </td>
+                    <td>
+                        Необходимо купить курицу в АТБ
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        13.01.2018
+                    </td>
+                    <td>
+                        Готовка курицы
+                    </td>
+                    <td>
+                        Необходимо приготовить курицу, купленную в АТБ
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        14.01.2018
+                    </td>
+                    <td>
+                        Оформление стола
+                    </td>
+                    <td>
+                        Необходимо подать гостям приготовленную курицу
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <div class="popup__control">
+        <a href="#">Редактировать задания</a>
+    </div>
+</div>

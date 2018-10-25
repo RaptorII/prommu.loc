@@ -124,6 +124,14 @@ let IndexTasks = (function () {
 
             }
         });
+
+
+        $('.tasks__count').click(function () {
+            $('.tasks__popup').fadeIn();
+        });
+        $('.tasks__popup-close').click(function () {
+            $('.tasks__popup').fadeOut();
+        });
     };
 
     IndexTasks.prototype.setProperties = function (e, type) {

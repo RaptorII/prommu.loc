@@ -11,7 +11,6 @@
 						<th class="user">ФИО</th>
 						<th class="name">Название ТТ</th>
 						<th class="index">Адрес ТТ</th>
-						<? if(!empty($city['ismetro'])): ?><th class="metro">Метро</th><? endif; ?>
 						<th class="task">Кол-во заданий</th>
 					</tr>
 				</thead>
@@ -46,17 +45,17 @@
                                            class="js-g-hashint js-get-map" title="Посмотреть на карте"></b>
 									</div>
 								</td>
-								<?php if(!empty($city['ismetro'])): ?>
+								<?/*php if(!empty($city['ismetro'])): ?>
 									<td class="metro">
 										<div class="task__table-cell border task__table-index">
 											<span><?=$point['metro']?></span>
 										</div>
 									</td>					
-								<?php endif; ?>
+								<?php endif; */?>
 								<td class="task">
 									<div class="task__table-cell border task__table-cnt">
 										<? $tasks = sizeof($viData['tasks'][$d][$p][$idus]); ?>
-										<span><?=$tasks?></span>
+										<span class="tasks__count"><?=$tasks?></span>
 										<span 
 											class="task__table-watch" 
 											data-user="<?=$idus?>"
