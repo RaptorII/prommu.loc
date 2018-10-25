@@ -219,11 +219,11 @@ class ProjectTask extends CActiveRecordBehavior{
 
 		if(!empty($arr['date'])) {
 			$conditions .= ' AND date=:date';
-			$arParams[':date'] = $arr['date'];
+			$arParams[':date'] = date('Y-m-d 00:00:00',$arr['date']);
 		}
 
 		$sql = Yii::app()->db->createCommand()
-							->select("*")
+							->select("id, DATE_FORMAT(date, '%d.%m.%Y') date, name, text")
 							->from('project_task')
 							->where($conditions, $arParams)
 							->queryAll();
