@@ -162,7 +162,7 @@ foreach ($viData['filter']['cities'] as $id => $city)
     </div>
     <div class="tasks__popup-content">
         <div class="popup__content-user">
-            <img src="/images/applic/20180819180030833100.jpg">
+            <img class="popup__content-logo" src="/images/applic/20180819180030833100.jpg">
 
             <div class="popup__user">
                 <div class="popup__user-name">
@@ -189,45 +189,13 @@ foreach ($viData['filter']['cities'] as $id => $city)
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>
-                        12.01.2018
-                    </td>
-                    <td>
-                        Покупка курицы
-                    </td>
-                    <td>
-                        Необходимо купить курицу в АТБ
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        13.01.2018
-                    </td>
-                    <td>
-                        Готовка курицы
-                    </td>
-                    <td>
-                        Необходимо приготовить курицу, купленную в АТБ
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        14.01.2018
-                    </td>
-                    <td>
-                        Оформление стола
-                    </td>
-                    <td>
-                        Необходимо подать гостям приготовленную курицу
-                    </td>
-                </tr>
+
                 </tbody>
             </table>
         </div>
 
     </div>
-    <div class="popup__control">
+    <?/*<div class="popup__control">
         <a href="#">Редактировать задания</a>
-    </div>
+    </div>*/?>
 </div>

@@ -23,7 +23,7 @@
 							<td rowspan="<?=sizeof($arPoints)?>" class="user">
 								<div class="task__table-cell task__table-user">
 									<img src="<?=$user['src']?>">
-									<span><?=$user['user']?></span>
+									<span><?=$user['name']?></span>
 								</div>
 							</td>
 							<?php $cnt = 0; ?>

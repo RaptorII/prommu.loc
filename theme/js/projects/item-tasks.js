@@ -68,6 +68,13 @@ let IndexTasks = (function () {
                     arU[i].dataset.point===point
                 ) {
                     $(arU[i]).css({'display':'flex'});
+
+                    /*$.fancybox.open({
+                        src  : arU[i],
+                        type : 'inline',
+                        touch : false
+                    });*/
+
                     $('.tasks__list').fadeOut();
                 }
                 else{
@@ -125,10 +132,6 @@ let IndexTasks = (function () {
             }
         });
 
-
-        $('.tasks__count').click(function () {
-            $('.tasks__popup').fadeIn();
-        });
         $('.tasks__popup-close').click(function () {
             $('.tasks__popup').fadeOut();
         });
@@ -149,8 +152,10 @@ let IndexTasks = (function () {
                 url: '/ajax/Project',
                 data: {data: JSON.stringify(data)},
                 dataType: 'json',
-                success: function (value) {
-                    console.log(value);
+                success: function (value){
+                    if(value.tasks){
+                        self.popupShow(value);
+                    }
                 }
             });
         });
@@ -279,6 +284,51 @@ let IndexTasks = (function () {
         }
 
         return data_object;
+    };
+
+    IndexTasks.prototype.popupShow = function (d) {
+
+        var data = new Object();
+        data = d.tasks;
+        var user = d.user;
+        var size = Object.keys(data).length;
+        if(size>0){
+            this.popupClear();
+            var html = '';
+
+            $.each(data, function (i, e) {
+                html+='<tr>';
+                html+='<td>'+ data[i].date+'</td>';
+                html+='<td>'+ data[i].name+'</td>';
+                html+='<td>'+ data[i].text+'</td>';
+                html+='</tr>';
+            });
+            var popup = $(".tasks__popup");
+            $(popup).find(".popup__table tbody").append(html);
+            $(popup).find(".popup__user-name").html(user.firstname);
+            $(popup).find(".popup__user-secondname").html(user.lastname);
+            $(popup).find(".popup__content-logo").prop("src",user.logo);
+            var status = user.is_online;
+            var status_html = '';
+
+            if(status==1){
+                status_html = "<span class='geo__green'>● активен</span>";
+            }else{
+                status_html = "<span class='geo__red'>● неактивен</span>";
+            }
+            $(popup).find(".popup__user-status").html(status_html);
+
+            $('.tasks__popup').fadeIn();
+        }
+    };
+
+    IndexTasks.prototype.popupClear = function () {
+        var popup = $(".tasks__popup");
+        $(popup).find(".popup__table tbody").html('');
+        $(popup).find(".popup__user-name").html('');
+        $(popup).find(".popup__user-secondname").html('');
+        $(popup).find(".popup__user-status").html('');
+        $(popup).find(".popup__content-logo").prop("src",'');
     };
 
     return IndexTasks;
