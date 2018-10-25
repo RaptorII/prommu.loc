@@ -8,5 +8,7 @@ jQuery(function($){
             success: function(d){ console.log(d); }
         });
     });
-    $('#code-field').mask('999999');
+    $('#code-field').on('input',function(){ 
+        this.value = this.value.replace(/\D+/g,''); 
+    });
 });

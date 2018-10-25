@@ -26,7 +26,7 @@
                 <?php endif; ?>
 
                 <label class="field-hor">
-                    <b>Код</b><input type="text" name="code" value="<?= $viData['email'] ?>" id="code-field"/>
+                    <b>Код</b><input type="text" name="code" value="<?= $viData['email'] ?>" id="code-field" maxlength="6" />
                     <input type="hidden" name="id" value="<?= $_GET['id']?>"/>
                      <input type="hidden" name="phone" value="<?= $_GET['phone']?>"/>
                 </label>
