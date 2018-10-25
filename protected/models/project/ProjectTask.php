@@ -201,4 +201,33 @@ class ProjectTask extends CActiveRecordBehavior{
 		}
 		return $arRes;
 	}
+	/**
+	 * @param array ['project','user','point','title','text','date']
+	 * @return array ['error','data']
+	 * Изменение заданий
+	 */
+	public function getUserTasks($arr) {
+		$arRes = array('error'=>true);
+
+		if(!intval($arr['project']) || !intval($arr['user']) || !intval($arr['point']))
+			return $arRes;
+
+		$sql = Yii::app()->db->createCommand()
+							->select("*")
+							->from('project_task')
+							->where(
+								'project=:prj AND user=:user AND point=:pnt',
+								array(
+										':prj' => $arr['project'],
+										':user' => $arr['user'],
+										':pnt' => $arr['point']
+									)
+							)
+							->queryAll();
+
+		if(!sizeof($sql))
+			return $arRes;
+
+		return $sql;
+	}
 }

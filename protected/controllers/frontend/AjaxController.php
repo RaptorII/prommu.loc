@@ -865,6 +865,8 @@ class AjaxController extends AppController
                 case 'GET':
                     if($data['type']==='coordinates') // получение координат передвижения С
                         $result = $model->getСoordinates($data);
+                    if($data['type']==='userdata')
+                        $result = $model->getUserTasks($data);
                     break;
                 case 'POST':
                     if($data['type']==='coordinates') // запись координат от С
