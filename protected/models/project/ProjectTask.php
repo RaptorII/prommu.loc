@@ -212,22 +212,25 @@ class ProjectTask extends CActiveRecordBehavior{
 		if(!intval($arr['project']) || !intval($arr['user']) || !intval($arr['point']))
 			return $arRes;
 
+		$conditions = 'project=:prj AND user=:user AND point=:pnt';
+		$arParams[':prj'] = $arr['project'];
+		$arParams[':user'] = $arr['user'];
+		$arParams[':pnt'] = $arr['point'];
+
+		if(!empty($arr['date'])) {
+			$conditions .= ' AND date=:date';
+			$arParams[':date'] = $arr['date'];
+		}
+
 		$sql = Yii::app()->db->createCommand()
 							->select("*")
 							->from('project_task')
-							->where(
-								'project=:prj AND user=:user AND point=:pnt',
-								array(
-										':prj' => $arr['project'],
-										':user' => $arr['user'],
-										':pnt' => $arr['point']
-									)
-							)
+							->where($conditions, $arParams)
 							->queryAll();
 
-		if(!sizeof($sql))
-			return $arRes;
+		if(sizeof($sql))
+			$arRes = array('tasks' => $sql, 'error' => false);
 
-		return $sql;
+		return $arRes;
 	}
 }
