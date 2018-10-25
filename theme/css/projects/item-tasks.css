@@ -262,6 +262,9 @@
 .tasks__count{
     cursor: pointer;
 }
+.point__metro{
+    width:26px;
+}
 /**top bottom arrows**/
 .go-up, .go-down {
     display: none;
