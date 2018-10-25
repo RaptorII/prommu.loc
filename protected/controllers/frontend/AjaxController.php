@@ -867,6 +867,10 @@ class AjaxController extends AppController
                         $result = $model->getСoordinates($data);
                     if($data['type']==='userdata')
                         $result = $model->getUserTasks($data);
+                        if(intval($data['user'])) {
+                            $result['user'] = $model->getUserMainInfo(intval($data['user']));
+                            $result['user'] = $model->buildUserData(reset($result['user']));
+                        }
                     break;
                 case 'POST':
                     if($data['type']==='coordinates') // запись координат от С

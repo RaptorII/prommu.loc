@@ -404,7 +404,7 @@ class ProjectStaff extends CActiveRecordBehavior{
      */
     public function getUserMainInfo($user_id) {
         $main = Yii::app()->db->createCommand()
-            ->select("isman,birthday,firstname,lastname,photo,email")
+            ->select("r.isman,r.birthday,r.firstname,r.lastname,r.photo,u.email,u.is_online")
             ->from('user u')
             ->leftjoin('resume r', 'r.id_user=u.id_user')
             //->leftjoin('user_attribs ua', 'ua.id_us=u.id_user')
@@ -487,5 +487,13 @@ class ProjectStaff extends CActiveRecordBehavior{
         $viData['PHOTO'] = self::getPhoto('2', $viData ,'medium');
 
         return $viData;
+    }
+    /*
+    *
+    */
+    public function buildUserData($arr) {
+			$arr['logo'] = self::getPhoto('2', $arr ,'small');
+			$arr['fullname'] = $arr['lastname'] . ' ' . $arr['firstname'];
+			return $arr;
     }
 }
