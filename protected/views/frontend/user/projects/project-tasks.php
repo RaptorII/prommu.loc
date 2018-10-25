@@ -199,3 +199,7 @@ foreach ($viData['filter']['cities'] as $id => $city)
         <a href="#">Редактировать задания</a>
     </div>*/?>
 </div>
+
+
+<div class="go-up" title="Вверх" id='ToTop'>⇧</div>
+<div class="go-down" title="Вниз" id='OnBottom'>⇩</div>
