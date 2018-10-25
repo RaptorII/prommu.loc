@@ -260,7 +260,7 @@
 }
 
 .tasks__count{
-
+    cursor: pointer;
 }
 
 /*******popup*********/

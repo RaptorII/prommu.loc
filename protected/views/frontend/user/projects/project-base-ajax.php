@@ -98,7 +98,7 @@
                                                     <div class="program__cell-user">
                                                         <img src="<?= $user['src'] ?>">
                                                         <span><?= $user['name'] ?></span>
-                                                        <span title="Кол-во задач" class="program__tasks">4</span>
+                                                        <span title="Кол-во задач" class="program__tasks js-g-hashint">4</span>
                                                     </div>
                                                 </div>
                                             <?php endif; ?>

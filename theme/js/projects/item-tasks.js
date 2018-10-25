@@ -132,6 +132,28 @@ let IndexTasks = (function () {
         $('.tasks__popup-close').click(function () {
             $('.tasks__popup').fadeOut();
         });
+
+
+        $(".content-block").on('click', '.tasks__count', function() {
+
+            let project= $(this).data('popup-project');
+            let user = $(this).data('popup-user');
+            let point = $(this).data('popup-point');
+            let date = $(this).data('popup-date');
+            let type = 'userdata';
+
+            var data = self.initData(project,user,point,date, type);
+
+            $.ajax({
+                type: 'GET',
+                url: '/ajax/Project',
+                data: {data: JSON.stringify(data)},
+                dataType: 'json',
+                success: function (value) {
+                    console.log(value);
+                }
+            });
+        });
     };
 
     IndexTasks.prototype.setProperties = function (e, type) {
@@ -228,6 +250,35 @@ let IndexTasks = (function () {
                 }                
             }
         });
+    };
+
+
+    IndexTasks.prototype.initData = function (project, user, point, date, type) {
+        var data_object = {};
+
+        project = project.toString();
+        user = user.toString();
+        point = point.toString();
+        date = date.toString();
+        type = type.toString();
+
+        if(project.length>0) {
+            data_object.project = project;
+        }
+        if(user.length>0) {
+            data_object.user = user;
+        }
+        if(point.length>0){
+            data_object.point = point;
+        }
+        if(date.length>0) {
+            data_object.date = date;
+        }
+        if(type.length>0) {
+            data_object.type = type;
+        }
+
+        return data_object;
     };
 
     return IndexTasks;

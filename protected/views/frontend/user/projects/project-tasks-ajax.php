@@ -55,7 +55,15 @@
 								<td class="task">
 									<div class="task__table-cell border task__table-cnt">
 										<? $tasks = sizeof($viData['tasks'][$d][$p][$idus]); ?>
-										<span class="tasks__count"><?=$tasks?></span>
+										<span
+                                                class="tasks__count"
+                                                data-popup-project="<?=$project?>"
+                                                data-popup-user="<?=$user['id_user']?>"
+                                                data-popup-point="<?=$point['point']?>"
+                                                data-popup-date="<?=$d?>"
+
+
+                                        ><?=$tasks?></span>
 										<span 
 											class="task__table-watch" 
 											data-user="<?=$idus?>"
