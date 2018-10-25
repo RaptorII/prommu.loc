@@ -33,11 +33,20 @@
 
 
 								<td class="name">
-									<div class="task__table-cell border"><?=$point['name']?></div>
+									<div class="task__table-cell border">
+                                        <?=$point['name']?>
+                                    </div>
 								</td>
 								<td class="index">
 									<div class="task__table-cell border task__table-index">
-										<span><?=$point['adres']?></span>
+										<span><?=$point['adres']?>
+                                        <?if(!empty($city['ismetro'])):?>
+                                            <span>
+                                            <img class="point__metro" src="/theme/pic/project/metro.png"/>
+                                        </span>
+                                        <?endif;?>
+                                            </span>
+
 										<b data-map-project="<?=$project?>"
                                            data-map-user="<?=$user['id_user']?>"
                                            data-map-point="<?=$point['point']?>"
@@ -56,11 +65,11 @@
 									<div class="task__table-cell border task__table-cnt">
 										<? $tasks = sizeof($viData['tasks'][$d][$p][$idus]); ?>
 										<span
-                                                class="tasks__count"
-                                                data-popup-project="<?=$project?>"
-                                                data-popup-user="<?=$user['id_user']?>"
-                                                data-popup-point="<?=$point['point']?>"
-                                                data-popup-date="<?=$d?>"
+                                            class="tasks__count"
+                                            data-popup-project="<?=$project?>"
+                                            data-popup-user="<?=$user['id_user']?>"
+                                            data-popup-point="<?=$point['point']?>"
+                                            data-popup-date="<?=$d?>"
 
 
                                         ><?=$tasks?></span>
