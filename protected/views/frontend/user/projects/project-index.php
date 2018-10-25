@@ -14,12 +14,12 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/it
 <div class="project__module">
     <div class="project__addr-header">
         <div class="project__addr-xls">
-            <?/*<a href="/user/uploadprojectxls?id=<?= $project ?>&type=index" id="add-xls">Изменить адресную программу</a>
-            <a href="/uploads/prommu_example.xls" download>Скачать пример для добавления</a>*/?>
+            <?/*<a href="/user/uploadprojectxls?id=<?= $project ?>&type=index" id="add-xls">Изменить адресную программу</a>*/?>
+            <?/*<a href="/uploads/prommu_example.xls" download>Скачать пример для добавления</a>*/?>
             <a href="/uploads/prommu_example.xls" download>Скачать пример для добавления</a>
-            <a href="#" download>Загрузить новую</a>
-            <a href="#" download>Скачать существующую</a>
-            <a href="#" download>Загрузить изменения</a>
+            <a class="add-xls-new" href="javascript:void(0)">Загрузить новую</a>
+            <a href="/user/uploadprojectxls?id=<?= $project ?>&type=index" download>Скачать существующую</a>
+            <a class="add-xls-change" href="javascript:void(0)">Загрузить изменения</a>
             <form enctype="multipart/form-data" action="" method="POST" id="xls-form">
                 <input type="hidden" name="project" class="project-inp" value="<?= $project ?>">
                 <input type="hidden" name="MAX_FILE_SIZE" value="5242880"/>

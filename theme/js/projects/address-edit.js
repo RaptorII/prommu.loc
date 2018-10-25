@@ -788,6 +788,11 @@ var AddressEdit = (function () {
     		scrollElem = $('[data-city='+getParams.city+'] .loc-item:eq(-1)');
     	}
     	else {
+            $('.project__index .loc-item').each(function(){
+                if($(this).data('id')!=getParams.loc){
+                    $(this).hide();
+                }
+            });
     		scrollElem = $('[data-city='+getParams.city+'] .loc-item[data-id='+getParams.loc+']');
             //scrollElem = $('.project__title');
     	}

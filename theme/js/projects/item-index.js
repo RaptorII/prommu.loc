@@ -33,7 +33,8 @@ var IndexProgram = (function () {
 			self.closureCalendar(e.target);
 		});
 		// загружаем новый xls
-		$('#add-xls').click(function(){ self.addXlsFile(this) });
+		//$('#add-xls').click(function(){ self.addXlsFile(this) });
+        $('.add-xls-new, .add-xls-change').click(function(){ self.addXlsFile(this) });
 		$('body').on('click','.xls-popup-btn',function(){
 			$('#add-xls-inp').click();
 		});
@@ -301,9 +302,7 @@ var IndexProgram = (function () {
 		let self = this;
 
 		let html = "<div class='xls-popup' data-header='Изменение программы'>"+
-		"1) Необходимо открыть скачаный файл<br>"+
-		"2) Исправить существующие данные, либо добавить новые<br>"+
-		"3) Загрузить измененный файл<br>"+
+		"Загрузить измененный файл<br>"+
 		'<span class="xls-popup-err">Формат файла должен быть "xls" или "xlsx". Выберите подходящий файл!</span>'+
 		"<div class='xls-popup-btn'>ЗАГРУЗИТЬ</div>"+
 		"</div>";
