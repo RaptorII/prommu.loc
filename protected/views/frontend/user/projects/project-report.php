@@ -136,6 +136,11 @@ foreach ($viData['filter']['tt_index'] as $i)
     </div>
 </div>
 
+
+<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
+<? print_r($viData['result']); ?>
+</pre>
+
 <div class="project__module">
 
     <div class="filter__veil"></div>
@@ -147,7 +152,7 @@ foreach ($viData['filter']['tt_index'] as $i)
     <div class="project__header-xls project__xls">
         <? /*<a href="/uploads/promo_import.xls" download>Скачать текущий персонал</a>*/ ?>
         <a href="/uploads/promo_import.xls" download>
-            Выгрузить
+            Выгрузить отчет по выбранным данным в xls
         </a>
     </div>
 

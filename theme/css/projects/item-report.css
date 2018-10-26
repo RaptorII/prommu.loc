@@ -1,6 +1,7 @@
 .report__table{
     margin-top:30px;
 }
+/*
 .report__table tr td:nth-child(1){
     width:25%;
     text-align: left;
@@ -39,6 +40,48 @@
 .report__table tr td:nth-child(10){
     text-align: center;
 }
+*/
+.report__table tr td:nth-child(1){
+    text-align: center;
+}
+.report__table tr td:nth-child(2){
+    width:25%;
+    text-align: left;
+}
+.report__table tr td:nth-child(3){
+    width:10%!important;
+    text-align: center;
+}
+.report__table tr td:nth-child(4){
+    width:8%!important;
+    text-align: center;
+}
+.report__table tr td:nth-child(5){
+    width:8%!important;
+    text-align: center;
+}
+.report__table tr td:nth-child(6){
+    width:8%;
+    text-align: center;
+}
+.report__table tr td:nth-child(7){
+    width:8%;
+    text-align: center;
+}
+.report__table tr td:nth-child(8){
+    width:10%;
+    text-align: center;
+}
+.report__table tr td:nth-child(9){
+    width:10%;
+    text-align: center;
+}
+.report__table tr td:nth-child(10){
+    text-align: center;
+}
+.report__table tr td:nth-child(11){
+    text-align: center;
+}
 
 .report__info-main{
     color:#abb820;
@@ -70,21 +113,26 @@
 
 .report__person{
     font-size: 22px;
-    width: 300px;
-    margin: 0 auto;
+    width: 100%;
+    /* margin: 0 auto; */
     margin-top: 30px;
 }
 .report__person-main{
-    width:100%;
+    width: 100%;
+    overflow: hidden;
 }
 .report__person-image{
-    width:200px;
-    height: 200px;
-    margin:0 auto;
+    width: 130px;
+    height: 130px;
+    /* margin: 0 auto; */
+    float: left;
 }
 .report__person-name{
-    text-align: center;
-    margin-top: 5px;
+    /*text-align: center; */
+    margin-top: 50px;
+    /* padding-left: 40px; */
+    margin-left: 20px;
+    float: left;
 }
 .report__person-please{
     text-align: center;
