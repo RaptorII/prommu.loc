@@ -136,9 +136,9 @@
             <div class="erv-city__label erv-city__label-ltime">
                 <span class="erv-city__label-name"><span>Время работы:</span></span>
                 <div class="erv-city__label-input erv-city__label-period">
-                    <input type="text" name="city[btime][]" value="" class="erv__input btime-input">
+                    <input type="text" name="city[btime][]" value="" class="erv__input btime-input" placeholder="__:__" maxlength="5" autocomplete="off">
                     <span>-</span>
-                    <input type="text" name="city[etime][]" value="" class="erv__input etime-input">
+                    <input type="text" name="city[etime][]" value="" class="erv__input etime-input" placeholder="__:__" maxlength="5" autocomplete="off">
                     <div class="clearfix"></div>
                 </div>
             </div>
@@ -213,9 +213,9 @@
         <div class="erv-city__label erv-city__label-ltime">
             <span class="erv-city__label-name"><span>Время работы:</span></span>
             <div class="erv-city__label-input erv-city__label-period">
-                <input type="text" name="city[btime][]" value="" class="erv__input btime-input">
+                <input type="text" name="city[btime][]" value="" class="erv__input btime-input" placeholder="__:__" maxlength="5" autocomplete="off">
                 <span>-</span>
-                <input type="text" name="city[etime][]" value="" class="erv__input etime-input">
+                <input type="text" name="city[etime][]" value="" class="erv__input etime-input" placeholder="__:__" maxlength="5" autocomplete="off">
                 <div class="clearfix"></div>
             </div>
         </div>

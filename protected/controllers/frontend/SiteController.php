@@ -481,7 +481,7 @@ class SiteController extends AppController
             if(Share::$UserProfile->type==3 && $vac['vac']['idus']==Share::$UserProfile->id){
                 Yii::app()->session['editVacId'] = $id;  
             }
-
+            /*
             // индексируем только если владелец вакансии с этого региона
             $arCities = Subdomain::getCitiesIdies(false, 'arr');
             $res = Yii::app()->db->createCommand()
@@ -489,7 +489,7 @@ class SiteController extends AppController
                 ->from('user_city')
                 ->where('id_user=:id',array(':id'=>$vac['vac']['idus']))
                 ->queryRow();
-
+            */
             $view = $this->ViewModel->pageVacancy;
 
             if(Yii::app()->getRequest()->getParam('info') && $vac['vac']['idus']==Share::$UserProfile->id){

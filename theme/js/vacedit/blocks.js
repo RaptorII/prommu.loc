@@ -363,9 +363,6 @@ $(function(){
 		  d.metro = '';
 		}
 
-		// маска для полей времени
-		$(locBTime).mask("99:99");
-		$(locETime).mask("99:99");
 		//  запрос на создание локации
 		locBtn.click(function(e){
 		  if(d.name!=''){ remErr(locName) }
@@ -505,10 +502,6 @@ $(function(){
 		perAddPer.hide();
 		perMain.find('.rst-per-btn').remove();
 		   
-
-		// маска для полей времени
-		$(perBTime).mask("99:99");
-		$(perETime).mask("99:99");
 		//  запрос на создание локации
 		perBtn.click(function(e){
 		  d.bdate!='' ? remErr(perBDate) : addErr(perBDate);
@@ -584,8 +577,6 @@ $(function(){
 
 				perBdate.find('span').append(d.bdate);
 				perEdate.find('span').append(d.edate);
-				perBTime.mask('99:99');
-				perETime.mask('99:99');
 				perBTime.val(d.btime);
 				perETime.val(d.etime);
 
@@ -913,7 +904,7 @@ $(function(){
 				pList = $(sList).siblings('.metro-list'),
 				city = getCity(e.target).dataset.idcity,
 				val = $(e.target).val().charAt(0).toUpperCase() + $(e.target).val().slice(1).toLowerCase(),
-				piece = $(e.target).val().toLowerCase(),
+				piece = $(e.target).val().toLowerCase().trim(),
 				showList = true;
 				arSelectId = GetSelectMetroes(sList);
 				$(e.target).val(val);
@@ -1047,31 +1038,69 @@ $(function(){
 		//  Ввод времени
 		//
 		// проверка ввода времени
-		$(cModule).on('blur', '.btime-input', function(){ 
-			var val = $(this).val();
-			var main = ($(this).closest('.erv-city__time').length ? getPeriod(this) : getLocation(this));
+		var keyCode;
+		$(document).keydown(function(e){ keyCode = e.keyCode });
+		//
+		$('#city-module').on('input','.btime-input, .etime-input',function(){
+		  var v = this.value,
+		      l = v.length;
 
-			if(!getNum(val).length || val.substr(0,2)>=24 || val.substr(-2)>=60){
-				addErr(this);
-				main.dataset.btime = '';
-			}
-			else{
-				remErr(this);
-				main.dataset.btime = val;
-			}
+		  if(keyCode==8) { //backspace
+		    if(l==2) v = v.slice(0, -1);
+		  }
+		  else {
+		    switch(l) {
+		      case 1:
+		        v = v.replace(/[\D+]/g,'');
+		        break;
+		      case 2:
+		        v = v.replace(/[\D+]/g,'') + ':';
+		        break;
+		      case 3:
+		      case 4:
+		      case 5:
+		        arV = v.split(':');
+		        $.each(arV,function(i,e){
+		          arV[i] = e.replace(/[\D+]/g,'');
+		          arV[i] = arV[i].substr(0,2);
+		        });
+		        v = arV[0] + ':' + arV[1];
+		        break;
+		    }
+		  }
+		  this.value = v;
+		});
+		$(cModule).on('blur', '.btime-input', function(){ 
+		  var v = this.value,
+		      main = ($(this).closest('.erv-city__time').length 
+		                ? getPeriod(this) 
+		                : getLocation(this));
+
+		  if(getNum(v).length!=4 || v.substr(0,2)>=24 || v.substr(-2)>=60){
+		    addErr(this);
+		    this.value = '';
+		    main.dataset.btime = '';
+		  }
+		  else{
+		    remErr(this);
+		    main.dataset.btime = v;
+		  }
 		});
 		$(cModule).on('blur', '.etime-input', function(){
-			var val = $(this).val();
-			var main = ($(this).closest('.erv-city__time').length ? getPeriod(this) : getLocation(this));
+		  var v = this.value,
+		      main = ($(this).closest('.erv-city__time').length 
+		                ? getPeriod(this) 
+		                : getLocation(this));
 
-			if(!getNum(val).length || val.substr(0,2)>=24 || val.substr(-2)>=60){
-				addErr(this);
-				main.dataset.etime = '';
-			}
-			else{
-				remErr(this);
-				main.dataset.etime = val;
-			}
+		  if(getNum(v).length!=4 || v.substr(0,2)>=24 || v.substr(-2)>=60){
+		    addErr(this);
+		    this.value = '';
+		    main.dataset.etime = '';
+		  }
+		  else{
+		    remErr(this);
+		    main.dataset.etime = v;
+		  }
 		});
 		// 
 		// добавляем первый развернутый блок локации при загрузке страницы
