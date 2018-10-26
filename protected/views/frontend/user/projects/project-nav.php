@@ -11,6 +11,7 @@
 		'route' => [ 'name' => 'МАРШРУТ ГЕО', 'link' => $link . '/route' ],
 		'tasks' => [ 'name' => 'ЗАДАНИЯ', 'link' => $link . '/tasks' ],
 		'report' => [ 'name' => 'ОТЧЕТЫ', 'link' => $link . '/report' ],
+        'tasks_test' => [ 'name' => 'ЗАДАНИЯ (тест)', 'link' => $link . '/tasks_test' ],
 	];
 
   $this->setBreadcrumbsEx(

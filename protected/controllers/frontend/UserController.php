@@ -1485,6 +1485,19 @@ class UserController extends AppController
                     }
                     $view = MainConfig::$VIEW_PROJECT_ITEM_TASKS;
                     break;
+                case 'tasks_test':
+                    $data = $model->getProject($id);
+                    $data = $model->buildTaskPageArray($data);
+                    if(Yii::app()->request->isAjaxRequest) {
+                        $this->renderPartial(
+                            'projects/project-tasks_test-ajax',
+                            array('viData' => $data, 'project' => $id),
+                            false, true
+                        );
+                        return;
+                    }
+                    $view = 'projects/project-tasks_test';
+                    break;
                 case 'report':
                     $data = $model->getProject($id);
                     $data = $model->buildReportArray($data);

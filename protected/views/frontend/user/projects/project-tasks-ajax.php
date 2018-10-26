@@ -42,8 +42,8 @@
 										<span><?=$point['adres']?>
                                         <?if(!empty($city['ismetro'])):?>
                                             <span>
-                                            <img title="<?=$point['metro']?>" class="point__metro js-g-hashint" src="/images/metro.png"/>
-                                        </span>
+                                                <img title="<?=$point['metro']?>" class="point__metro js-g-hashint" src="/theme/pic/projects/metro.png"/>
+                                            </span>
                                         <?endif;?>
                                             </span>
 

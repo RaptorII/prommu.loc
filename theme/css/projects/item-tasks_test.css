@@ -1,0 +1,103 @@
+#DiContent .task__item-title{
+    text-align: left;
+    font-size: 30px;
+    margin:0;
+    padding:0;
+    font-size: 20px;
+}
+.task__item{
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
+
+.task__table th {
+    background: #f5f5f5;
+    color: black;
+    padding: 5px 0;
+    font-weight: normal;
+    border: 1px solid #cecece;
+}
+
+.task__table-user img{
+    width: 20px;
+    height: 20px;
+}
+.task__table-cell{
+    font-size:12px;
+    padding: 0 10px;
+    margin: 3px 0;
+}
+
+.task__item-date{
+    margin-top:10px;
+    font-size: 22px;
+}
+.task__item-city{
+    font-size: 18px;
+}
+.task__item-tt{
+    font-size: 16px;
+}
+
+
+.task__table .user{
+    width:20%!important;
+}
+.task__table .name{
+    width:15%!important;
+}
+.task__table .descr{
+    width:55%!important;
+}
+.task__table .status{
+    width:10%!important;
+}
+
+
+
+
+.tasks__one-date{
+    overflow: hidden;
+    box-sizing: border-box;
+    border-left:1px solid #cecece;
+    padding-left:10px;
+}
+.tasks__one-city{
+    overflow: hidden;
+    box-sizing: border-box;
+    border-left:1px solid #989898;
+    padding-left:10px;
+}
+
+.tasks__one-tt{
+    overflow: hidden;
+    box-sizing: border-box;
+    border-left:1px solid black;
+    padding-left:10px;
+}
+
+
+
+
+
+.tasks__status-work{
+
+}
+.tasks__status-expectation{
+    color:#c3b379;
+}
+.tasks__status-ready{
+    color:#5EA248;
+}
+.tasks__status-revision {
+    color: #DA3734;
+}
+.tasks__status-canceled{
+    color:red;
+}
+.tasks__status-circle{
+
+}
+.tasks__status{
+
+}
