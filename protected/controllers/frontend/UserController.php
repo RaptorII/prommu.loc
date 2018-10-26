@@ -1500,8 +1500,11 @@ class UserController extends AppController
                     break;
                 case 'report':
                     $data = $model->getProject($id);
-                    $data = $model->buildReportArray($data);
-                    $data['result'] = $model->buildReportArrayTemp($data);
+                    $data = array_merge(
+                            $model->buildReportArray($data),
+                            ['result' => $model->buildReportArrayTemp($data)]
+                        );
+
                     if(Yii::app()->request->isAjaxRequest) {
                         $this->renderPartial(
                             'projects/project-report-ajax',
