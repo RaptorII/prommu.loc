@@ -1,12 +1,12 @@
 /*
 *		feedback page
 */
-#DiContent.page-feedback{
+#DiContent#DiContent.page-feedback{
 	background: url(/theme/pic/feedback-page/feedback_bg.jpg) 50% 100% no-repeat;
-	padding: 0;
-	height: calc(100vh - 100px);
+	padding: 0 12px 100px;
+	/*height: calc(100vh - 100px);*/
 	position: relative;
-	min-height: 600px;
+	/*min-height: 600px;*/
 }
 #DiContent.page-feedback .content-block{ margin: 20px 0 0; }
 #DiSiteWrapp #DiTop{ margin-bottom: 0; }
@@ -148,6 +148,10 @@
 * 		MEDIA
 */
 @media (min-width: 768px){
+	#DiContent#DiContent.page-feedback{
+		height: calc(100vh - 100px);
+		min-height: 600px;
+	}
 	#DiContent.page-feedback:before{
 		content: '';
 		width: 100%;

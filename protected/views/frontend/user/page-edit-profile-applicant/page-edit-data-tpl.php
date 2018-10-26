@@ -238,7 +238,7 @@
                           </select>
                         </div>
                       </td>
-                      <td colspan="2"><input type="text" value="" class="epa__input"></td>
+                      <td colspan="2"><input type="text" value="" class="epa__input" maxlength="4" autocomplete="off"></td>
                     </tr>
                     <tr><td>Пн</td><td>Вт</td><td>Ср</td><td>Чт</td><td>Пт</td><td>Сб</td><td>Вс</td></tr>
                   <tbody>

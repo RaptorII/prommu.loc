@@ -3,7 +3,6 @@ jQuery(function($){
 		strAbout = 2000, // ограничение для поля "О себе"
 		hwLen = 3, // Вес-рост - 3 цифры
 		phoneLen = 10, // нормальное кол-во цифр в телефоне
-		periodMask = 'С 99 до 99',
 		curDate = new Date(),
 		curYear = curDate.getFullYear(),
 		curDay = Number(curDate.getDate()),
@@ -25,8 +24,11 @@ jQuery(function($){
 		cropperObj = null,
 		oldPhone = $('#phone-code').val(),
 		oldFlag = '',
+		keyCode = false,
 		confirmEmail = $('#conf-email').hasClass('complete') ? true : false;
 		confirmPhone = $('#conf-phone').hasClass('complete') ? true : false;
+
+	$(document).keydown(function(e){ keyCode = e.keyCode });
 
 	curDate.setFullYear(curYear-14); // ограничение по возрасту от 14 лет
 	// прокрутка по содержанию
@@ -57,7 +59,11 @@ jQuery(function($){
 	// дата рождения
 	//
 	Calendar('#epa-birthday', bYear, bMonth, bDay);
-	$("#epa-birthday input").mask("9999");
+	$("#epa-birthday input")
+		.on('input',function(){ this.value = getNum(this.value) })
+		.on('blur',function(){
+			if(this.value.length != 4) this.value = '';
+		})		
 	//
 	$(document).on('click', function(e){
 		var it = e.target;
@@ -208,7 +214,50 @@ jQuery(function($){
 			$(this).val(val.substr(0,strAbout));
 	});
 	//	устанавливаем маски
-	$("#city-module .epa__period .epa__input").mask(periodMask);
+	$("#city-module .epa__period .epa__input").on('input',function(){
+		var v = this.value,
+				l = v.length;
+
+		if(keyCode==8) { //backspace
+			if(l==8 || l==7) {
+				var arV = v.split(' до ');
+				if(!getNum(arV[1]).length)
+					v = 'С ' + getNum(v);
+			}
+			if(l==2)
+				v = '';
+		}
+		else {
+			if(!getNum(v).length)
+				v = 'С ';
+			if(l==1 && getNum(v).length==1) 
+				v = 'С ' + getNum(v);
+			if(l==4 && getNum(v).length==2 )
+				v = 'С ' + getNum(v) + ' до ';
+			if(l==4 && getNum(v).length==1)
+				v = (v.substr(-1)==' ' ? 'С ' + getNum(v) + ' до ' : 'С ' + getNum(v));
+			if(l==5) {
+				var s = v.substr(-1);
+				if(getNum(s).length==1) 
+					v = 'С ' + getNum(v).substr(0,2) + ' до ' + s;
+				else if(s==' ') 
+					v = 'С ' + getNum(v) + ' до ';
+				else 
+					v = 'С ' + getNum(v);
+			}
+			if(l>=7) {
+				var arV = v.split(' до ');
+				if(arV[0]===v) {
+					v = 'С ' + getNum(v).substr(0,2) + ' до ' + getNum(v).substr(0,2);
+				}
+				else {
+					v = 'С ' + getNum(arV[0]).substr(0,2) + ' до ' + getNum(arV[1]).substr(0,2);
+				}
+			}
+		}
+
+		this.value = v;
+	});
 	//
 	//  блок для создания города
 	//
@@ -433,6 +482,8 @@ jQuery(function($){
 			
 			$(item).find('i').text(dayName);
 			$(item).find('.epa__input').mask(periodMask);
+'С 99 до 99'
+
 		}
 		else{
 			var arItems = $(perList).find('.epa__period');
