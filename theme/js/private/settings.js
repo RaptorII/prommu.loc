@@ -3,7 +3,8 @@ $(function(){
 		arList = $('.set-main__select-list'),
 		arSelInp = $('.set-main__select-list input'),
 		oldEmail = $('#s-p-email').val(),
-		oldPhone = $('#s-p-phone').val(),
+		oldPhone = $('#phone-code').val(),
+		oldCode = $('[name="__phone_prefix"]').val(),
 		$pswBtn = $('.set-priv__psw'),
 		$eVeil = $('#email-inp span'),
 		$pVeil = $('#phone-inp span'),
@@ -14,7 +15,48 @@ $(function(){
 	var eConfirm = $('#email-inp').hasClass('confirm') ? true : false;
 	var pConfirm = $('#phone-inp').hasClass('confirm') ? true : false;
 
-	$('#time').mask('99:99');
+  // проверка ввода времени
+  var keyCode;
+  $(document).keydown(function(e){ keyCode = e.keyCode });
+  //
+  $('#time').on('input',function(){
+    var v = this.value,
+        l = v.length;
+
+    if(keyCode==8) { //backspace
+      if(l==2) v = v.slice(0, -1);
+    }
+    else {
+      switch(l) {
+        case 1:
+          v = v.replace(/[\D+]/g,'');
+          break;
+        case 2:
+          v = v.replace(/[\D+]/g,'') + ':';
+          break;
+        case 3:
+        case 4:
+        case 5:
+          arV = v.split(':');
+          $.each(arV,function(i,e){
+            arV[i] = e.replace(/[\D+]/g,'');
+            arV[i] = arV[i].substr(0,2);
+          });
+          v = arV[0] + ':' + arV[1];
+          break;
+        default:
+        	arV = v.split(':');
+        	if(arV[0]===v) {
+        		v = arV[0].replace(/[\D+]/g,'').substr(0,2) + ':';
+        	}
+        	else {
+        		v = arV[0].replace(/[\D+]/g,'').substr(0,2) + ':' + arV[1].replace(/[\D+]/g,'').substr(2,4);
+        	}
+        	break;
+      }
+    }
+    this.value = v;
+  });
 	$('#time').change(function(){
 		var val = $(this).val();
 
@@ -32,8 +74,6 @@ $(function(){
 
 		$(this).val(h+':'+m);
 	});
-
-	$('#s-p-phone').mask('+7(999) 999-99-99');
 	//
 	//	БЛОК ОСНОВНЫЕ
 	//
@@ -64,7 +104,7 @@ $(function(){
 	//
 	//		БЛОК ПРИВАТ
 	//
-	$('#email-inp span, #phone-inp span').click(function(){	//	фокусируем поля почты и телефона
+	$('#email-inp span').click(function(){	//	фокусируем поля почты
 		if(!$(this).hasClass('code')){
 			var input = $(this).hide().siblings('input'),
 				val = $(input).val();
@@ -72,8 +112,20 @@ $(function(){
 			$(input).val('').focus().val(val);
 		}
 	});
+	$('#phone-inp .set-priv__veil').click(function(){	//	фокусируем поля телефона
+		if(!$(this).hasClass('code')){
+			var input = $('#phone-code'),
+					main = input.closest('.country-phone'),
+					val = input.val();
+
+			$(main).addClass('focus');
+			$(this).hide().siblings('b').hide();
+			input.val('').focus().val(val);
+		}
+	});
 	//
-	$('#email-inp input, #phone-inp input').keyup(function(){//	ввод почты или телефона
+	$('#email-inp input, #phone-inp input')
+	.keyup(function(){//	ввод почты или телефона
 		var val = $(this).val(),
 			$btn = $(this).siblings('div'),
 			$veil = $(this).siblings('span'),
@@ -81,17 +133,34 @@ $(function(){
 
 		$(this).siblings('b').hide();
 
-		if(
-			($(this).closest('#email-inp').length && epattern.test(val)) // если это почта
-			||
-			($(this).closest('#phone-inp').length && pVal.length==11) //  если это телефон
-		){
-			$btn.fadeIn();
-			$veil.fadeOut();
+		if($(this).closest('#email-inp').length) { // если это почта
+			if(epattern.test(val)) {
+				$btn.fadeIn();
+				$veil.fadeOut();
+			}
+			else {
+				$btn.fadeOut();
+				$veil.fadeOut();
+			}
 		}
-		else{
-			$btn.fadeOut();
-			$veil.fadeOut();
+		if($(this).closest('#phone-inp').length) { // если это почта
+			var code = $('[name="__phone_prefix"]').val(),
+					phoneLen;
+
+			$btn = $('#phone-inp .set-priv__btn');
+			$veil = $('#phone-inp .set-priv__veil');
+
+			if(code.length==3) phoneLen = 9; // UKR, BEL
+			if(code.length==1) phoneLen = 10; // RF
+
+			if(pVal.length==phoneLen) {
+				$btn.fadeIn();
+				$veil.fadeOut();
+			}
+			else {
+				$btn.fadeOut();
+				$veil.fadeOut();
+			}
 		}
 	})
 	.blur(function(){	// потеря фокуса почты или телефона
@@ -125,29 +194,10 @@ $(function(){
 				$conf.show();
 			}
 		}
-		else{	//  если это телефон
-			if(len!=11){
-				$(this).val(oldPhone);
-				$btn.fadeOut();
-				$veil.fadeIn();
-				$conf.show();
-			}
-			else{
-				if(val!==oldPhone){
-					$btn.fadeIn();
-					$veil.fadeOut();
-					$conf.hide();
-				}
-				else{
-					$btn.fadeOut();
-					$veil.fadeIn();
-					$conf.show();
-				}
-			}
-		}	
+		else{ }
 	});
 	//
-	$('#email-inp div, #phone-inp div').click(function(){ // сохраняем почту или телефон
+	$('#email-inp div').click(function(){ // сохраняем почту или телефон
 		var $inp = $(this).siblings('input'),
 			$veil = $(this).siblings('span'),
 			$conf = $(this).siblings('b'),
@@ -173,21 +223,6 @@ $(function(){
 				});
 			}
 		}
-		else if(!isEmail && len==11){
-			if(val===oldVal){
-				$btn.fadeOut();
-				$veil.fadeIn();
-				$conf.show();
-			}
-			else if(!sendingCode){
-				sendingCode = true;
-				$.ajax({ type:'POST', url:'/ajax/restorecode', data:'phone='+val });
-				$('#phone-code').fadeIn();
-				$pVeil.addClass('code').fadeIn();
-				$('#phone-inp div').fadeOut();
-				showPopupError('Проверка телефона','На телефон выслан код для подтверждения. Введите его в поле "Проверочный код"');
-			}
-		}
 		else{
 			$inp.val(oldVal);
 			$btn.fadeOut();
@@ -196,15 +231,48 @@ $(function(){
 		}
 	});
 	//
-	$('#email-code input, #phone-code input').keyup(function(){ // проверка ввода кода для email
+	$('#phone-inp .set-priv__btn').click(function(){ // сохраняем почту или телефон
+		var main = $('.country-phone'),
+				codeInp = $('[name="__phone_prefix"]'),
+				code = codeInp.val(),
+				val = $('#phone-code').val(),
+				len = val.replace(/\D+/g,'').length,
+				phoneLen;
+
+		$btn = $('#phone-inp .set-priv__btn');
+		$veil = $('#phone-inp .set-priv__veil');
+		$conf = $('#phone-inp>b');
+		main.removeClass('focus');
+
+		if(code.length==3) phoneLen = 9; // UKR, BEL
+		if(code.length==1) phoneLen = 10; // RF
+
+		if(len==phoneLen) {
+			if(val===oldPhone){
+				$btn.fadeOut();
+				$veil.fadeIn();
+				$conf.show();
+			}
+			else if(!sendingCode) {
+				sendingCode = true;
+				$.ajax({ type:'POST', url:'/ajax/restorecode', data:'phone='+code+val });
+				$('#phone-code-inp').fadeIn();
+				$pVeil.addClass('code').fadeIn();
+				$('#phone-inp .set-priv__btn').fadeOut();
+				showPopupError('Проверка телефона','На телефон выслан код для подтверждения. Введите его в поле "Проверочный код"');
+			}
+		}
+	});
+	//
+	$('#email-code input, #phone-code-inp input').keyup(function(){ // проверка ввода кода для email
 		if($(this).closest('#email-code').length)
 			$(this).val().length==6 ? $('#email-code div').fadeIn() : $('#email-code div').fadeOut();
 		else
-			$(this).val().length==6 ? $('#phone-code div').fadeIn() : $('#phone-code div').fadeOut();
+			$(this).val().length==6 ? $('#phone-code-inp div').fadeIn() : $('#phone-code-inp div').fadeOut();
 	});
 	//
 	//	отправка введенного кода для почты и телефона
-	$('#email-code div, #phone-code div').click(function(){
+	$('#email-code div, #phone-code-inp div').click(function(){
 		$(this).fadeOut();
 
 		if($(this).closest('#email-code').length){ // для почты
@@ -243,13 +311,15 @@ $(function(){
 			});
 		}
 		else{	// для телефона
-			var code = $('#phone-code input').val(),
-				phone = $('#phone-inp input').val();
+			var code = $('#phone-code-inp input').val(),
+					codeInp = $('[name="__phone_prefix"]'),
+					phoneCode = codeInp.val(),
+					phone = $('#phone-code').val();
 
 			$.ajax({
 				type: 'POST',
 				url: '/ajax/confirm',
-				data: 'code='+ code + '&phone=' + phone,
+				data: 'code='+ code + '&phone=' + phoneCode + phone,
 				dataType: 'json',
 				success: function(r){
 					sendingCode = false;
@@ -257,21 +327,33 @@ $(function(){
 						$('#phone-inp').addClass('confirm');
 						$('#phone-inp b').attr('title','Телефон подтверждена').show();
 						$pVeil.removeClass('code');
-						$('#phone-code').fadeOut();
-						$('#phone-code div').fadeOut();
-						$('#phone-code input').val('');
+						$('#phone-code-inp').fadeOut();
+						$('#phone-code-inp div').fadeOut();
+						$('#phone-code-inp input').val('');
 						showPopupError('Телефон подтвержден','Номер телефона подтвержден');
-						saveData({'phone':phone});
+						saveData({'phone':phone,'phoneCode':phoneCode});
 						pConfirm = true;
 					}
 					else{
-						$('#phone-inp input').val(oldPhone);
+						$('#phone-code').val(oldPhone);
 						pConfirm ? $('#phone-inp').addClass('confirm') : $('#phone-inp').removeClass('confirm');
 						$('#phone-inp b').attr('title','Почта не подтверждена').show();
+						$('#phone-inp').removeClass('focus');
 						$pVeil.removeClass('code');
-						$('#phone-code').fadeOut();
-						$('#phone-code div').fadeOut();
-						$('#phone-code input').val('');
+						$('#phone-code-inp').fadeOut();
+						$('#phone-code-inp div').fadeOut();
+						var country = '';
+						if(oldCode=='7') // RF
+							country = 'ru';
+						if(oldCode=='380') // UA
+							country = 'ua';
+						if(oldCode=='375') // BY
+							country = 'by';
+
+						$('.country-phone-selected img').removeClass().addClass('flag flag-'+country);
+						$('.country-phone-selected span').text('+'+oldCode);
+						$('#phone-code-inp input').val('');
+						codeInp.val(oldCode);
 						showPopupError('Ошибка','Номер телефона не подтвержден');
 					}
 				}
@@ -325,6 +407,55 @@ $(function(){
 			$('#new-psw-inp').fadeOut();
 			$('#new-psw-inp input').eq(0).val('');
 			$('#new-psw-inp input').eq(1).val('');
+		}
+		/*
+		*		потеря фокуса телефона
+		*/
+		var main = $('.country-phone');
+		if(main.hasClass('focus') && !$it.closest('.country-phone').length && !$it.is('#phone-inp .set-priv__veil') ) {
+			var codeInp = $('[name="__phone_prefix"]'),
+					code = codeInp.val(),
+					len, phoneLen;
+
+			val = $('#phone-code').val();
+			len = val.length;
+			$btn = $('#phone-inp .set-priv__btn');
+			$veil = $('#phone-inp .set-priv__veil');
+			$conf = $('#phone-inp>b');
+			main.removeClass('focus');
+
+			if(code.length==3) phoneLen = 9; // UKR, BEL
+			if(code.length==1) phoneLen = 10; // RF
+
+			if(len==phoneLen) {
+				if(val!==oldPhone || code!=oldCode){
+					$btn.fadeIn();
+					$veil.fadeOut();
+					$conf.hide();
+				}
+				else{
+					$btn.fadeOut();
+					$veil.fadeIn();
+					$conf.show();
+				}
+			}
+			else {
+				var country = '';
+				if(oldCode=='7') // RF
+					country = 'ru';
+				if(oldCode=='380') // UA
+					country = 'ua';
+				if(oldCode=='375') // BY
+					country = 'by';
+
+				$('.country-phone-selected img').removeClass().addClass('flag flag-'+country);
+				$('.country-phone-selected span').text('+'+oldCode);
+				$('#phone-code').val(oldPhone);
+				codeInp.val(oldCode);
+				$btn.fadeOut();
+				$veil.fadeIn();
+				$conf.show();
+			}
 		}
 	});
 	//
@@ -444,8 +575,11 @@ $(function(){
 		if(d.email!==oldEmail)
 			oldEmail = d.email;
 
-		if(d.phone!==oldPhone)
+		if(d.phone!==oldPhone) {
 			oldPhone = d.phone;
+			oldCode = d.phoneCode;
+			d.phone = d.phoneCode + d.phone;
+		}
 
 		$.ajax({ 
 			type : 'POST', 

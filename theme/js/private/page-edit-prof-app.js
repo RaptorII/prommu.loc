@@ -221,7 +221,9 @@ jQuery(function($){
 		if(keyCode==8) { //backspace
 			if(l==8 || l==7) {
 				var arV = v.split(' до ');
-				if(!getNum(arV[1]).length)
+				if(arV[0]===v)
+					v = 'С ' + getNum(v).substr(0,2);
+				else if(!getNum(arV[1]).length)
 					v = 'С ' + getNum(v);
 			}
 			if(l==2)
@@ -251,7 +253,7 @@ jQuery(function($){
 					v = 'С ' + getNum(v).substr(0,2) + ' до ' + getNum(v).substr(0,2);
 				}
 				else {
-					v = 'С ' + getNum(arV[0]).substr(0,2) + ' до ' + getNum(arV[1]).substr(0,2);
+					v = 'С ' + getNum(arV[0]).substr(0,2) + ' до ' + getNum(arV[1]).substr(2,4);
 				}
 			}
 		}

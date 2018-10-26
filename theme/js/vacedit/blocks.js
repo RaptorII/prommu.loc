@@ -1066,6 +1066,13 @@ $(function(){
 		        });
 		        v = arV[0] + ':' + arV[1];
 		        break;
+	        default:
+	          arV = v.split(':');
+	          if(arV[0]===v)
+	            v = arV[0].replace(/[\D+]/g,'').substr(0,2) + ':';
+	          else
+	            v = arV[0].replace(/[\D+]/g,'').substr(0,2) + ':' + arV[1].replace(/[\D+]/g,'').substr(2,4);
+	          break;
 		    }
 		  }
 		  this.value = v;

@@ -271,7 +271,7 @@
 }
 .settings-priv__field:last-child,
 #phone-inp.settings-priv__field{ border-bottom: none }
-.settings-priv__field:last-child{ border-top: 1px solid #cecece }
+/*.settings-priv__field:last-child{ border-top: 1px solid #cecece }*/
 #DiContent .settings-page .set-priv__input{
 	width: 99%;
     display: table-cell;   
@@ -590,6 +590,44 @@
 	border: 1px solid #cecece;
 }
 #DiContent .sn__analytic-time input:focus{ outline:none }
+/*
+*		phone code
+*/
+.page-settings #phone-inp input{ border: none; }
+.page-settings .country-phone{
+	height: 36px;
+	font-family: RobotoCondensed-Regular,verdana,arial;
+	padding: 0;
+	display: table;
+	border: none;
+	background: transparent;
+	position: static;
+}
+.page-settings .country-phone-selected{
+	height: 35px;
+	background: url(/theme/pic/private/add-vac-select.png) 7px 50% no-repeat;
+	padding: 0px 2px 0px 20px;
+	line-height: 32px;
+	margin-right: 0px;
+}
+.page-settings .country-phone-selected img{
+	margin: 11px 5px 13px;
+}
+.page-settings .country-phone input#phone-code{
+	height: 30px;
+}
+.page-settings .country-phone.focus input#phone-code,
+.page-settings .country-phone.focus .country-phone-selected span{
+	color: #212121;
+}
+.page-settings .country-phone.error{
+	border: none;
+	box-shadow: none;
+}
+.page-settings .country-phone-options{ 
+	color: #212121;
+	line-height: 20px;
+}
 /*
 *		MEDIA
 */
