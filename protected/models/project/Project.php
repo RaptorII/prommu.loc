@@ -878,4 +878,96 @@ class Project extends CActiveRecord
         return $sql;
     }
 
+    /**
+     * 
+     */
+    public function buildReportArrayTemp($arr) {
+        $project = $arr['project']['project'];
+        $arI = array();
+        $fbdate = Yii::app()->getRequest()->getParam('bdate');
+        $fedate = Yii::app()->getRequest()->getParam('edate');
+        $filter = Yii::app()->getRequest()->getParam('filter');
+        if(isset($fbdate) && isset($fedate) && isset($filter)) {
+            $fbdate = strtotime($fbdate);
+            $fedate = strtotime($fedate);
+        }
+     
+        $arRes['project'] = $arr['project'];
+        // сортируем по времени
+        usort($arr['original'], 
+            function($a, $b){
+                $t1 = strtotime($a['btime']);
+                $t2 = strtotime($b['btime']);
+                return ($t1 < $t2) ? -1 : 1;
+            }
+        );
+
+        foreach ($arr['users'] as $id => $v)
+            if(sizeof($v['points'])>0)
+                $arRes['users'][$v['id_user']] = $v;
+
+        if(!sizeof($arRes['users']))
+            return array('items' => $arI);
+
+        $day = 60 * 60 * 24;
+        foreach ($arr['original'] as $p) {
+            foreach ($arRes['users'] as $idus => $u) {
+                if(!in_array($p['point'], $u['points']))
+                    continue;
+
+                $arRes['points'][$p['point']] = $p;
+                $arRes['points'][$p['point']]['btime'] = date('G:i',strtotime($p['btime']));
+                $arRes['points'][$p['point']]['etime'] = date('G:i',strtotime($p['etime']));
+
+                $bdate = strtotime($p['bdate']);
+                $edate = strtotime($p['edate']); 
+                $bdate = (isset($filter) && $fbdate>$bdate) ? $fbdate : $bdate;
+                $edate = (isset($filter) && $fedate<$edate) ? $fedate : $edate;
+
+                do{
+                    $arI[$idus][$bdate][$p['id_city']]['date'] = date('d.m.Y',$bdate);
+                    $arI[$idus][$bdate][$p['id_city']]['city'] = $p['city'];
+                    $arI[$idus][$bdate][$p['id_city']]['ismetro'] = $p['ismetro'];
+                    $arI[$idus][$bdate][$p['id_city']]['points'][] = $p['point']; 
+                    $bdate += $day;
+                }
+                while($bdate <= $edate);
+            }
+        }
+        //      координаты
+        $arRes['gps'] = $this->getСoordinates(['project'=>$project]);
+        $arRes['tasks'] = $this->getTaskList($project);
+        $arRes['tasks'] = $this->buildTaskArray($arRes['tasks']);
+
+        foreach ($arRes['gps'] as $v) {
+            $u = $v['user'];
+            $p = $v['point'];
+            $d = date('Y-m-d 00:00:00',strtotime($v['date']));
+            $d = strtotime($d);
+            $arT = $arRes['gps-info'][$d][$u][$p];
+            if(!count($arT['marks']))
+               $arT['btime-fact'] = date('G:i',strtotime($v['date']));
+            $arT['etime-fact'] = date('G:i',strtotime($v['date']));
+            $ttime = strtotime($arT['etime-fact']) - strtotime($arT['btime-fact']);
+            $arT['time-total'] = $ttime / 60; // минут
+            $arT['moving'] = 30; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! setting
+
+            $arT['tasks-total'] = count($arRes['tasks'][$d][$p][$u]);
+            $arT['tasks-fact'] = 0;
+            foreach ($arRes['tasks'][$d][$p][$u] as $t)
+                if($t['status'])
+                  $arT['tasks-fact']++;  
+
+            $arT['marks'][$v['id']] = $v;
+            $arRes['gps-info'][$d][$u][$p] = $arT;
+        }
+
+        foreach ($arI as $k => $v) {
+            ksort($v);
+            $arRes['items'][$k] = $v;
+        }
+        $arRes['filter'] = $this->getFilter($arRes['points']);
+
+        return $arRes;
+    }
 }
