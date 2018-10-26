@@ -1,6 +1,8 @@
 <?php
 	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/theme/css/private/settings.css');
+	Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/phone-codes/style.css');
 	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/private/settings.js', CClientScript::POS_END);
+	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/phone-codes/script.js', CClientScript::POS_END);
 	$set = $viData['setting'];
 
 	$time = '00:00';
@@ -12,7 +14,15 @@
 
 		$time = implode(':', $arTime);
 	}
+	if(isset($viData['phone'])){
+		$pos = strpos($viData['phone'], '(');
+		$viData['phone-code'] = substr($viData['phone'], 0,$pos);
+		$viData['phone'] = substr($viData['phone'], $pos);       
+  }
 ?>
+<script type="text/javascript">
+	var selectPhoneCode = <?=json_encode($viData['phone-code'])?>;
+</script>
 <div class="row settings-page">
 	<form action="/user/settings" method="POST" id="settings-form">
 		<input type="hidden" name="save" value="1" >
@@ -36,14 +46,6 @@
 								<input type="radio" name="lang" value="ru" id="lang-ru"<?=($set->lang=='ru' || ($set->lang!=='ru' && $set->lang!=='ua' && $set->lang!=='by') ? ' checked' : '')?>>
 								<label for="lang-ru"><span>Русский</span></label>
 							</li>
-							<?/*<li>
-								<input type="radio" name="lang" id="lang-ua" value="ua"<?=($set->lang=='ua' ? ' checked' : '')?>>
-								<label for="lang-ua"><span>Украинский</span></label>
-							</li>
-							<li>
-								<input type="radio" name="lang" id="lang-by" value="by"<?=($set->lang=='by' ? ' checked' : '')?>>
-								<label for="lang-by"><span>Белорусский</span></label>
-							</li>*/?>
 						</ul>
 					</div>
 					<?php if(Share::$UserProfile->type==2): ?>
@@ -62,22 +64,6 @@
 							</ul>
 						</div>
 					<? endif; ?>
-					<?/*
-					<div class="settings-main__select">
-						<span class="set-main__select-name">Вид пользователя</span>
-						<div class="set-main__select-val">Работодатель</div>	
-						<ul class="set-main__select-list">
-							<li>
-								<input type="radio" name="type" value="3" id="type-emp" checked>
-								<label for="type-emp"><span>Работодатель</span></label>
-							</li>
-							<li>
-								<input type="radio" name="type" id="type-app" value="2">
-								<label for="type-app"><span>Соискатель</span></label>
-							</li>
-						</ul>
-					</div>
-					*/?>
 				</div>
 				<div class="clearfix"></div>
 			</div>
@@ -129,11 +115,16 @@
 						<?php endif; ?>
 					</b>
 					<label for="s-p-phone" class="set-priv__label">Телефон</label>
-					<input type="text" class="set-priv__input" id="s-p-phone" name="phone" value="<?=$viData['phone']?>" placeholder="+7(___) __-__-__" />
+					<div class="set-priv__input">
+						<input id='phone-code' type="text" name="phone" value="<?=$viData['phone']?>" placeholder="(___) __-__-__" autocomplete="off">
+					</div>
+					
+<?/*
+					<input type="text" class="set-priv__input" id="s-p-phone" name="phone" value="<?=$viData['phone']?>" placeholder="+7(___) __-__-__" /> */?>
 					<span class="set-priv__veil"></span>
 					<div class="set-priv__btn">сохранить</div>
 				</div>
-				<div class="settings-priv__field settings-priv__ecode" id="phone-code">
+				<div class="settings-priv__field settings-priv__ecode" id="phone-code-inp">
 					<input type="text" class="set-priv__input" name="pcode" value="" autocomplete="off" maxlength="6" placeholder="Проверочный код"/>
 					<div class="set-priv__cod-btn">проверить</div>
 				</div>
@@ -159,13 +150,6 @@
 						<span data-enable="вкл." data-disable="выкл."></span>
 					</label>
 				</div>
-				<?/*<div class="settings-notif__switch">
-					<span class="set-ntf__sw-name">Desktop уведомления</span>
-					<input type="checkbox" name="ntf-dsk" class="set-ntf__sw-input" id="s-n-desc" value="1"/>
-					<label for="s-n-desc" class="set-ntf__sw-label">
-						<span data-enable="вкл." data-disable="выкл."></span>
-					</label>
-				</div>*/?>
 			</div>
 		</div>
 		<div class="col-xs-12 col-md-8 settings__notifications">
@@ -269,7 +253,7 @@
 							</div>
 							<div class="sn__analytic-time">
 								<label for="time">Время</label>
-								<input type="text" name="time" id="time" value="<? echo $time?>">
+								<input type="text" name="time" id="time" value="<? echo $time?>" maxlenth="5">
 							</div>
 						</div>
 					</div>
@@ -365,7 +349,7 @@
 							</div>
 							<div class="sn__analytic-time">
 								<label for="time">Время</label>
-								<input type="text" name="time" id="time" value="<? echo $time?>">
+								<input type="text" name="time" id="time" value="<? echo $time?>" maxlenth="5">
 							</div>
 						</div>
 					</div>
