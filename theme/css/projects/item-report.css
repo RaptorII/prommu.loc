@@ -250,3 +250,13 @@
     }
 }
 */
+
+@media (min-width: 992px){
+    #DiContent .prommu__universal-filter .u-filter__item.u-filter__item-7{
+        margin-top:30px;
+        width:100%;
+    }
+    #DiContent .prommu__universal-filter .u-filter__item.u-filter__item-7 .u-filter__item-data{
+        width:100%;
+    }
+}

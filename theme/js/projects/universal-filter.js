@@ -25,7 +25,10 @@ let IndexUniversalFilter = (function () {
 
         $('.prommu__universal-filter').on('click', '.u-filter__li-hidden', function()
         {
+            IndexUniversalFilter.AjaxTimer = setTimeout(function () {
             self.setValueFromLI(this);
+            }, 100); // время в мс
+
         });
         $('.prommu__universal-filter .u-filter__text').on('input',function ()
         {
@@ -226,7 +229,7 @@ let IndexUniversalFilter = (function () {
             let type = $(this).data('type');
 
 
-            if(parent_id>=0 && blocked_value=="true"){
+            /*if(parent_id>=0 && blocked_value){
 
                 let parent = $(".u-filter__item[data-id='" + parent_id +"']");
                 let parent_type = parent.data('type');
@@ -257,7 +260,7 @@ let IndexUniversalFilter = (function () {
                 if(parent_type==="select"){
                     let value = parseInt(parent.find('.u-filter__hidden-data').val());
 
-                    if(jQuery.inArray(value,parent__value_id)>=0){
+                    if($.inArray(value,parent__value_id)>=0){
                         $(this).removeClass('blocked');
                         if(type==="text"){
                             $(this).find('.u-filter__text').prop('readonly', false);
@@ -277,7 +280,7 @@ let IndexUniversalFilter = (function () {
                         }
                     }
                 }
-            }
+            }*/
 
 
             //скрываем li которые зависят от других полей
@@ -290,6 +293,12 @@ let IndexUniversalFilter = (function () {
                     let value_for_li = parseInt(parent_for_li.find('.u-filter__hidden-data').val());
                     $(self).find('.u-filter__li-hidden').each(function(){
                         let li_parent_value_id = $(this).data('li-parent-value-id');
+
+                        console.log("------------");
+                        console.log(this);
+                        console.log("li_parent_value_id: " + li_parent_value_id);
+                        console.log("value_for_li: " + value_for_li);
+                        console.log("default_li_visible: " + default_li_visible);
                         if((li_parent_value_id>=0 && (li_parent_value_id== value_for_li || default_li_visible==value_for_li)) || li_parent_value_id=="ALL"){
                             $(this).fadeIn();
                             $(this).addClass('li-checker');
@@ -298,7 +307,7 @@ let IndexUniversalFilter = (function () {
                             $(this).fadeOut();
                             $(this).removeClass('li-checker');
                         }
-                    })
+                    });
 
                     let li_counter = 0;
                     $(self).find('.u-filter__li-hidden').each(function(){
