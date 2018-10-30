@@ -311,39 +311,6 @@
                                         </div>
                                         <div class="clearfix"></div>
                                     </div>
-                                   <?/* <div class="enter logged">
-                                        <div class="fio-block js-push-block">
-                                            <div class="messicons">
-                                                <a href="/<?= MainConfig::$PAGE_RATE ?>" class="pum rate js-pum-rate js-g-hashint" title="Новые оценки рейтинга"><b class="nm">0</b><i></i></a>
-                                                <a href="<?= MainConfig::$PAGE_IM ?>" class="pum mess js-pum js-g-hashint" title="Новые сообщения"><b class="nm">0</b><i></i></a>
-                                                <a href="/<?= MainConfig::$PAGE_COMMENTS . DS . Share::$UserProfile->id?>" class="pum comments js-pum-comments js-g-hashint" title="Отзывы"><b class="nm">0</b><i></i></a>
-                                                <a href="<?= MainConfig::$PAGE_RESPONSES ?>" class="pum response js-g-hashint" title="<?= Share::$UserProfile->type == 2 ? 'Заявки/приглашения' : 'Заявки' ?> на вакансии">
-                                                    <b class="<?= ($cou = $this->ViewModel->getViewData()->userData['newResponses']) < 1 ? 'nm' : '' ?>"><?= (int)$cou ?></b>
-                                                    <i></i>
-                                                </a>
-                                            </div>
-                                            <?php if( MOBILE_DEVICE ): ?>
-                                                <div class="enter__user -autohover">
-                                                    <a href="#" class="um"><i></i></a>
-                                                    <div>
-                                                        <a href="<?= MainConfig::$PAGE_PROFILE ?>" class="prof"><?= Share::$UserProfile->fio ?></a>
-                                                        <a href="<?= MainConfig::$PAGE_LOGOUT ?>" class="exit">Выход</a>
-                                                    </div>
-                                                </div>
-                                            <?php else: ?>
-                                                <a href="<?= MainConfig::$PAGE_PROFILE ?>" class="fio" title="Мой профиль {<?= Yii::app()->session['au_us_data']->id ?>}">
-                                                    <?php if( $fname = Yii::app()->session['au_us_data']->firstname || Yii::app()->session['au_us_data']->lastname ):
-                                                    echo Yii::app()->session['au_us_data']->firstname . ' ' . Yii::app()->session['au_us_data']->lastname;
-                                                    else:
-                                                        echo Yii::app()->session['au_us_data']->firstname . ' ' . Yii::app()->session['au_us_data']->lastname . ' (' . Yii::app()->session['au_us_data']->name . ')';
-                                                    endif; ?>
-                                                </a>
-                                            <?php endif; ?>
-                                        </div>
-                                        <?php if( !MOBILE_DEVICE ): ?>
-                                            <a href="<?= MainConfig::$PAGE_LOGOUT ?>" class="enter__login enter__link">Выход</a>
-                                        <?php endif; ?>
-                                    </div>*/?>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -473,58 +440,6 @@
     	// если не моб устройство
   		//endif; 
   	?>
-	<script>
-		(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-		})(window,document,'script','dataLayer','GTM-K5HHCK');
-
-		var _tmr = window._tmr || (window._tmr = []);
-		_tmr.push({id: "2917456", type: "pageView", start: (new Date()).getTime()});
-		(function (d, w, id) {
-			if (d.getElementById(id)) return;
-			var ts = d.createElement("script"); ts.type = "text/javascript"; ts.async = true; ts.id = id;
-			ts.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//top-fwz1.mail.ru/js/code.js";
-			var f = function () {var s = d.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ts, s);};
-			if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
-		})(document, window, "topmailru-code");
-
-	    (function (w, d, c) {
-	        (w[c] = w[c] || []).push(function() {
-	            var options = {
-	                project: 4501529
-	            };
-	            try {
-	                w.top100Counter = new top100(options);
-	            } catch(e) { }
-	        });
-	        var n = d.getElementsByTagName("script")[0],
-	        s = d.createElement("script"),
-	        f = function () { n.parentNode.insertBefore(s, n); };
-	        s.type = "text/javascript";
-	        s.async = true;
-	        s.src =
-	        (d.location.protocol == "https:" ? "https:" : "http:") +
-	        "//st.top100.ru/top100/top100.js";
-
-	        if (w.opera == "[object Opera]") {
-	        d.addEventListener("DOMContentLoaded", f, false);
-	    } else { f(); }
-	    })(window, document, "_top100q");
-
-	    (function(w, d, s, h, id) {
-	        w.roistatProjectId = id; w.roistatHost = h;
-	        var p = d.location.protocol == "https:" ? "https://" : "http://";
-	        var u = /^.*roistat_visit=[^;]+(.*)?$/.test(d.cookie) ? "/dist/module.js" : "/api/site/1.0/"+id+"/init";
-	        var js = d.createElement(s); js.async = 1; js.src = p+h+u; var js2 = d.getElementsByTagName(s)[0]; js2.parentNode.insertBefore(js, js2);
-	    })(window, document, 'script', 'cloud.roistat.com', '606e27a586fdb5bfa3a4d92809dec248');
-	</script>
-	<noscript>
-		<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K5HHCK" height="0" width="0" style="display:none;visibility:hidden"></iframe>
-		<div><img src="//top-fwz1.mail.ru/counter?id=2917456;js=na" style="border:0;position:absolute;left:-9999px;" alt="" /></div>
-		<div><img src="https://mc.yandex.ru/watch/23945542" style="position:absolute; left:-9999px;" alt="" /></div>
-	</noscript>
 </body>
 </html>
 <?
