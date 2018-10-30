@@ -250,6 +250,11 @@
     }
 }
 */
+.js-g-hashint{
+    float: none;
+    margin: 0 auto;
+    display: block;
+}
 
 @media (min-width: 992px){
     #DiContent .prommu__universal-filter .u-filter__item.u-filter__item-7{

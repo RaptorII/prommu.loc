@@ -120,7 +120,7 @@
     </div>
 
             <script>
-                $(function () {
+                $(document).ready(function () {
 
                     var arStatus = <?=json_encode($value['DATA']);?>;
 

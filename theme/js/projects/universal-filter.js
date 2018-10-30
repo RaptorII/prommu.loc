@@ -25,10 +25,7 @@ let IndexUniversalFilter = (function () {
 
         $('.prommu__universal-filter').on('click', '.u-filter__li-hidden', function()
         {
-            IndexUniversalFilter.AjaxTimer = setTimeout(function () {
             self.setValueFromLI(this);
-            }, 100); // время в мс
-
         });
         $('.prommu__universal-filter .u-filter__text').on('input',function ()
         {

@@ -30,6 +30,7 @@ if (count($viData['result']['items']) > 0):
                     <th>Перемещение</th>
                     <th>Задачи план</th>
                     <th>Задачи факт</th>
+                    <th>Маршрут</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -107,6 +108,16 @@ if (count($viData['result']['items']) > 0):
                                             <span class="report__info-main">
                                                 <?= ($jpsInfo['tasks-fact']) ? $jpsInfo['tasks-fact'] : "-"; ?>
                                             </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="route__table-cell border">
+                                        <b data-map-project="<?=$project?>"
+                                                   data-map-user="<?=$key?>"
+                                                   data-map-point="<?=$valuePoint?>"
+                                                   data-map-date="<?=$keyDate?>"
+                                                   class="js-g-hashint js-get-map" title="Посмотреть на карте"></b>
+
                                     </div>
                                 </td>
                             </tr>
