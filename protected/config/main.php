@@ -191,14 +191,14 @@ return array(
             'class' => 'CLogRouter',
             'routes' => array(
                 array(
-                    /*
                     'class' => 'CFileLogRoute',
                     'levels' => 'error, warning',
                     'enabled' => true
-                    */
+                    /*
                     'class'=>'CProfileLogRoute', 
                     'levels'=>'profile',            // вывод запросов к БД
                     'enabled'=>true
+                    */
                 ),
             ),
         ),
