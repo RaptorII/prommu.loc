@@ -281,6 +281,10 @@ media
     .med-hidden{ display: none; }
 }
 @media (max-width: 767px){
+    #DiContent#DiContent#DiContent {
+        padding: 0 12px 30px;
+    }
+
     #DiContent .container{
         width: 100%;
         max-width: inherit;
@@ -323,7 +327,7 @@ media
         padding: 0 38px;
         margin: 0;
     }
-    #DiContent .register__reg-form .reg-form__input{ font-size: 20px; }
+    #DiContent .register__reg-form .reg-form__input{ font-size: 16px; }
     .reg-form__input::-webkit-input-placeholder{ color:#525252; }
     .reg-form__input::-moz-placeholder{color:#525252;}
     .reg-form__input:-moz-placeholder{color:#525252;}
@@ -368,7 +372,7 @@ media
     }
     .register__reg-social .register__preview{
     padding-bottom: 60px;
-    font-size: 24px;
+    font-size: 22px;
     max-width: 300px;
     margin: 0 auto;
     }
@@ -408,6 +412,7 @@ media
     .register__reg-form .register__preview{
         word-break: break-all;
         padding: 0 0 25px;
+        font-size: 18px;
     }
     #F1registerEmpl{ padding: 0px; }
     #DiContent.page-register .btn-reg button.reg-form__btn{
@@ -452,12 +457,18 @@ media
     }
     .competitor .register__reg-header{ padding: 0 0 185px; }
     .reg-form__label-name{
-        font-size: 20px;
+        font-size: 16px;
         line-height: 25px;
         vertical-align: bottom;
     }
     #DiContent.page-register .message.red{ padding: 0 0 20px 0; }
     #DiContent.page-phone .message.red{ padding: 0 0 20px 0; }
+    #DiContent .reg-form__label .reg-form__label-radio{ font-size: 12px }
+    #F1registerAppl>label:nth-child(1){width: 100%}
+    #DiContent #F1registerAppl .reg-form__label.com2{
+        width: 100%;
+        padding-left: 46px;
+    }
 }
 
 .reg-form__selection{
