@@ -244,7 +244,7 @@ class SearchVac extends Model
     public function buildPrettyUrl($data)
     {
         $url = array();
-        $this->updateSeoValues();
+        //$this->updateSeoValues();
         $cnt = 0;
         $hasPost = false;
 
@@ -429,7 +429,7 @@ class SearchVac extends Model
         if( !empty($data['cities']) ) 
             $filter[] = "c.id_city IN (".join(',',$data['cities']).')';
         else
-            $filter[] = "c.id_city IN (".Subdomain::getCitiesIdies().')';
+            $filter[] = "c.id_city IN (".Subdomain::getCacheData()->strCitiesIdes.')';
 
         if( !empty($data['smart']) )
         {

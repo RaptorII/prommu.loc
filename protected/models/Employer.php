@@ -355,7 +355,7 @@ class Employer extends ARModel
 
     private function getEmployersIndexPage()
     {
-        $strCities = Subdomain::getCitiesIdies();
+        $strCities = Subdomain::getCacheData()->strCitiesIdes;
         // достаем работодателей
         $filter = Employer::getScopesCustom(Employer::$SCOPE_HAS_LOGO, 'r');
         $sql = "SELECT r.id, r.id_user idus, u.is_online, name, 

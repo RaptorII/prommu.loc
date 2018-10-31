@@ -3,15 +3,19 @@
 class Cache
 {
     /**
+     * @param $id string - cache ID
      * @return array - ['city','controller','page','id','data']
      * Получаем кеш страницы
      */
-    public static function getData()
+    public static function getData($id = '')
     {
-        $arRes['city'] = Subdomain::getId();
+        $arRes['city'] = Subdomain::$HOST;
         $arRes['controller'] = Yii::app()->controller->id;
         $arRes['page'] = Yii::app()->request->requestUri;
-        $arRes['id'] = $arRes['city'] . DS . $arRes['controller'] . $arRes['page'];
+        if(!empty($id))
+            $arRes['id'] = $id;
+        else
+            $arRes['id'] = $arRes['city'] . DS . $arRes['controller'] . $arRes['page'];
         $arRes['data'] = Yii::app()->cache->get($arRes['id']);
         return $arRes;
     }

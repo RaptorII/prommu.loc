@@ -156,7 +156,7 @@ class SiteController extends AppController
 
                     if(!empty($_GET) && $cnt){
                         $id = isset($_GET['cities'][0]) ? $_GET['cities'][0] : 0;
-                        $arSID = Subdomain::getIdies();
+                        $arSID = Subdomain::getCacheData()->idies;
                         if(!in_array($id, $arSID))
                             Yii::app()->request->cookies['srch_e_city'] = new CHttpCookie('srch_e_city', $id);
                         Yii::app()->request->cookies['srch_e_res'] = new CHttpCookie('srch_e_res', 0);
@@ -265,7 +265,7 @@ class SiteController extends AppController
             }    
             $this->ViewModel->setViewData('pageTitle', '<h1>' . $strBreadcrumb . '</h1>');
             // индексируем только города субдомена
-            $arCities = Subdomain::getCitiesIdies(false, 'arr');
+            $arCities = Subdomain::getCacheData()->arCitiesIdes;
             reset($data['userInfo']['userCities'][0]);
             $idCity = key($data['userInfo']['userCities'][0]);
             if($idCity>0 && !in_array($idCity, $arCities))
@@ -303,11 +303,12 @@ class SiteController extends AppController
                         );
                         $data['data']['seo']['url'] = $SearchPromo->buildPrettyUrl($_GET);
                     }
-                    $data['data']['count'] = $SearchPromo->searchPromosCount();
+                    $arAllId = $SearchPromo->searchPromosCount();
+                    $data['data']['count'] = sizeof($arAllId);
                     //записываем выбранный город
                     if(!empty($_GET) && $data['data']['count']){
                         $id = isset($_GET['cities'][0]) ? $_GET['cities'][0] : 0;
-                        $arSID = Subdomain::getIdies();
+                        $arSID = Subdomain::getCacheData()->idies;
                         if(!in_array($id, $arSID))
                             Yii::app()->request->cookies['srch_a_city'] = new CHttpCookie('srch_a_city', $id);
                         Yii::app()->request->cookies['srch_a_res'] = new CHttpCookie('srch_a_res', 0);
@@ -315,7 +316,8 @@ class SiteController extends AppController
                     $data['data']['pages'] = new CPagination($data['data']['count']);
                     $data['data']['pages']->pageSize = 21;
                     $data['data']['pages']->applyLimit($SearchPromo);
-                    $data['data']['viData'] = $SearchPromo->getPromos();
+                    $data['data']['viData'] = $SearchPromo->getPromos($arAllId);
+                    $data['data']['viData']['promos'] = $arAllId;
                     $data['data']['redirect'] = '';//Subdomain::ajaxFilterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
                     Cache::setData($data);
                 }
@@ -339,8 +341,10 @@ class SiteController extends AppController
                 }
 
                 $data = Cache::getData();
+                //$data['data'] = false;
                 if($data['data']===false) {
-                    $data['data']['count'] = $SearchPromo->searchPromosCount();
+                    $arAllId = $SearchPromo->searchPromosCount();
+                    $data['data']['count'] = sizeof($arAllId);
                     $data['data']['seo'] = $SearchPromo->getPromoSeo(
                                 $_GET, 
                                 MainConfig::$PAGE_SEARCH_PROMO, 
@@ -353,7 +357,7 @@ class SiteController extends AppController
                     $data['data']['pages'] = new CPagination($data['data']['count']);
                     $data['data']['pages']->pageSize = 21;
                     $data['data']['pages']->applyLimit($SearchPromo);
-                    $data['data']['viData'] = $SearchPromo->getPromos();
+                    $data['data']['viData'] = $SearchPromo->getPromos($arAllId);
                     $Api = new Api;
                     $data['data']['datas'] = $Api->kew();
                     Cache::setData($data);
@@ -524,7 +528,7 @@ class SiteController extends AppController
                     //записываем выбранный город
                     if(!empty($_GET) && $data['data']['count']){
                         $id = isset($_GET['cities'][0]) ? $_GET['cities'][0] : 0;
-                        $arSID = Subdomain::getIdies();
+                        $arSID = Subdomain::getCacheData()->idies;
                         if(!in_array($id, $arSID))
                             Yii::app()->request->cookies['srch_v_city'] = new CHttpCookie('srch_v_city', $id);
                         Yii::app()->request->cookies['srch_v_res'] = new CHttpCookie('srch_v_res', 0);
@@ -1223,7 +1227,7 @@ class SiteController extends AppController
         $res = Yii::app()->db->createCommand()
                         ->insert('resume_reserv', $insData);
         $pids = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
-        $sID = Subdomain::getId();
+        $sID = Subdomain::getCacheData()->id;
         $res = Yii::app()->db->createCommand()
                         ->insert('user_city', array('id_user' => $pid,
                             'id_resume' => $pids,

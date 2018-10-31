@@ -501,53 +501,134 @@ class Promo extends ARModel
 
 
     public function getApplicantsSearchpromo($inParams)
-    {
-        $sql = "SELECT r.id,
-               r.id_user,
-               r.id_rating,
-               r.firstname,
-               r.lastname,
-               r.photo,
-               r.rate,
-               r.isman,
-               r.smart,
-               r.card,
-               r.cardPrommu,
-               r.rate_neg,
-               r.ismed,
-               u.is_online,
-               r.ishasavto,
-               DATE_FORMAT(r.date_public, '%d.%m.%Y') date_public,
-               DATE_FORMAT(r.birthday, '%d.%m.%Y') birthday,
-               DATE_FORMAT(r.mdate, '%d.%m.%Y') mdate
-              , ci.id_city, ci.name ciname
-              , m.id mid, m.name mname 
---               , d.id idattr, d.type dtype, d.name tname
-              , me.pay , me.pay_type pt 
-            FROM resume r
-            INNER JOIN (
-                SELECT DISTINCT r.id
-                FROM resume r
-                INNER JOIN user u ON u.id_user = r.id_user 
-                    AND u.ismoder = 1 AND u.isblocked = 0
-                INNER JOIN user_city uc ON r.id_user = uc.id_user 
-                {$inParams['table']}
-                INNER JOIN user_mech a ON a.id_us = r.id_user
-                {$inParams['filter']}
-                ORDER BY r.mdate DESC 
-                LIMIT {$inParams['offset']}, {$inParams['limit']}
-            ) t1 ON t1.id = r.id
-            
-            LEFT JOIN user_city uc ON r.id_user = uc.id_user
-            LEFT JOIN city ci ON ci.id_city = uc.id_city
-            LEFT JOIN user_metro um ON um.id_us = r.id_user
-            LEFT JOIN metro m ON m.id = um.id_metro
-            LEFT JOIN user_mech me ON me.isshow = 0 AND me.id_us = r.id_user
-            INNER JOIN user u ON u.id_user = r.id_user AND u.ismoder = 1 AND u.isblocked = 0
-            ORDER BY r.mdate DESC, ciname, mname
-            LIMIT 100";
+    {  
+        $sql = Yii::app()->db->createCommand()
+                ->select("
+                    r.id,
+                    r.id_user,
+                    r.id_rating,
+                    r.firstname,
+                    r.lastname,
+                    r.photo,
+                    r.rate,
+                    r.isman,
+                    r.smart,
+                    r.card,
+                    r.cardPrommu,
+                    r.rate_neg,
+                    r.ismed,
+                    r.ishasavto,
+                    DATE_FORMAT(r.date_public, '%d.%m.%Y') date_public,
+                    DATE_FORMAT(r.birthday, '%d.%m.%Y') birthday,
+                    DATE_FORMAT(r.mdate, '%d.%m.%Y') mdate,
+                    u.is_online")
+                ->from('resume r')
+                ->leftjoin('user u', 'u.id_user=r.id_user')
+                ->where(array('in', 'r.id', $inParams['arId']))
+                ->queryAll();
 
-            return Yii::app()->db->createCommand($sql)->queryAll();
+        $nP = sizeof($sql);
+        if(!$nP)
+            return $sql;
+
+        $arP = array();
+        $arId = array();
+        $arIdPromo = array();
+        for ( $i=0; $i<$nP; $i++ ) {
+            $arP[$sql[$i]['id_user']] = $sql[$i];
+            $arId[] = $sql[$i]['id_user'];
+            $arIdPromo[] = $sql[$i]['id'];
+        }
+
+        $sqlP = Yii::app()->db->createCommand()
+                    ->select("
+                        um.id_us id_user, 
+                        um.pay_type, 
+                        um.id_mech id, 
+                        um.pay, 
+                        uad.name")
+                    ->from('user_mech um')
+                    ->leftjoin('user_attr_dict uad', 'uad.id=um.id_mech')
+                    ->where('um.isshow=0 AND um.id_us IN('.implode(',',$arId).')')
+                    ->queryAll();
+
+        for ( $i=0, $n=sizeof($sqlP); $i<$n; $i++ )
+            $arP[$sqlP[$i]['id_user']]['post'][$sqlP[$i]['id']] = array(
+                    $sqlP[$i]['name'],
+                    $sqlP[$i]['pay'],
+                    $sqlP[$i]['pay_type']
+                );
+
+        $sqlC = Yii::app()->db->createCommand()
+                    ->select("uc.id_user, c.id_city id, c.name")
+                    ->from('user_city uc')
+                    ->leftjoin('city c', 'c.id_city=uc.id_city')
+                    ->where(array('in', 'uc.id_user', $arId))
+                    ->queryAll();
+
+        for ( $i=0, $n=sizeof($sqlC); $i<$n; $i++ ){
+            !empty($sqlC[$i]['name'])
+            &&
+            $arP[$sqlC[$i]['id_user']]['city'][$sqlC[$i]['id']] = $sqlC[$i]['name'];
+        }
+
+        $sqlM = Yii::app()->db->createCommand()
+                    ->select("um.id_us id_user, m.id, m.name")
+                    ->from('user_metro um')
+                    ->leftjoin('metro m', 'm.id=um.id_metro')
+                    ->where(array('in', 'um.id_us', $arId))
+                    ->queryAll();
+
+        for ( $i=0, $n=sizeof($sqlM); $i<$n; $i++ ) {
+            !empty($sqlM[$i]['name'])
+            &&
+            $arP[$sqlM[$i]['id_user']]['metroes'][$sqlM[$i]['id']] = $sqlM[$i]['name'];
+        }
+
+        $where = 'vs.id_promo IN(' . implode(',', $arIdPromo) . ') AND ' 
+            . Vacancy::getScopesCustom(Vacancy::$SCOPE_APPLIC_WORKING, 'vs');
+        $sqlV = Yii::app()->db->createCommand()
+                    ->select("vs.id_promo id")
+                    ->from('empl_vacations v')
+                    ->join('vacation_stat vs', 'vs.id_vac = v.id')
+                    ->where($where)
+                    ->queryAll();
+
+        $arV = array();
+        for ( $i=0, $n=sizeof($sqlV); $i<$n; $i++ )
+            $arV[$sqlV[$i]['id']] += 1;
+
+        $where = 'id_promo IN('.implode(',',$arIdPromo).') AND iseorp=1 AND isactive=1';
+        $sqlK = Yii::app()->db->createCommand()
+                    ->select("id_promo id, isneg")
+                    ->from('comments')
+                    ->where($where)
+                    ->queryAll();
+
+        $arK = array();
+        for ( $i=0, $n=sizeof($sqlK); $i<$n; $i++ ) {
+            !isset($arK[$sqlV[$i]['id']]['comm']) && $arK[$sqlV[$i]['id']]['comm'] = 0;
+            $sqlK[$i]['isneg']==0 && $arK[$sqlV[$i]['id']]['comm'] += 1;
+            !isset($arK[$sqlV[$i]['id']]['commneg']) && $arK[$sqlV[$i]['id']]['commneg'] = 0;
+            $sqlK[$i]['isneg']==1 && $arK[$sqlV[$i]['id']]['commneg'] += 1;
+        }
+
+        foreach ($arP as $idus => $p) {
+            $arP[$idus]['projects'] 
+                = !empty($arV[$p['id']]) ? $arV[$p['id']] : 0;
+            $arP[$idus]['comm']
+                = !empty($arK[$p['id']]['comm']) ? $arK[$p['id']]['comm'] : 0;
+            $arP[$idus]['commneg']
+                = !empty($arK[$p['id']]['commneg']) ? $arK[$p['id']]['commneg'] : 0;
+
+            $d1 = new DateTime();
+            $d2 = new DateTime($p['birthday']);
+            $diff = $d2->diff($d1);
+            $arP[$idus]['age'] = $diff->y;
+            $arP[$idus]['sex'] = $p['isman'];
+        }
+
+        return $arP;
     }
 
 
@@ -569,7 +650,7 @@ class Promo extends ARModel
 
     private function getApplicantsIndexPage()
     {
-        $strCities = Subdomain::getCitiesIdies();
+        $strCities = Subdomain::getCacheData()->strCitiesIdes;
         // достаем соискателей
         $filter = Promo::mergeScopes([
                 'scope' => Promo::$SCOPE_HAS_PHOTO, 

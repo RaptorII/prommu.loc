@@ -2,6 +2,7 @@
 
 class ProjectStaff extends CActiveRecordBehavior{
 	public $USERS_IN_PAGE = 20;
+	public $MAX_USERS_IN_PROJECT = 100;
 	public $limit;
 	public $offset;
 	/**
