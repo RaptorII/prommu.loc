@@ -5,7 +5,7 @@
 	$baseUrl = Yii::app()->baseUrl;
 	$curUrl = Yii::app()->request->requestUri;
 	setcookie ("pm_source", $_GET['pm_source']);
-	$SubdomainCache = Subdomain::getCacheData();
+// 	$SubdomainCache = Subdomain::getCacheData();
 ?>
 <style type="text/css">
 		/*   /jslib/bootstrap/css/bootstrap.min.css   */
@@ -456,44 +456,44 @@
 </body>
 </html>
 <?
- $sql = "SELECT odate, id_user
-         FROM user
-         WHERE is_online = 1";
- $users = Yii::app()->db->createCommand($sql)->queryAll();
+//  $sql = "SELECT odate, id_user
+//          FROM user
+//          WHERE is_online = 1";
+//  $users = Yii::app()->db->createCommand($sql)->queryAll();
 
-$count = count($users);
+// $count = count($users);
 
-for ($i=0; $i < $count ; $i++) {
-	$to_time = strtotime(date("Y-m-d h-i-s"));
- $from_time = $users[$i]['odate'];
- $odate =  round(abs($to_time - $from_time) / 60,2);
+// for ($i=0; $i < $count ; $i++) {
+// 	$to_time = strtotime(date("Y-m-d h-i-s"));
+//  $from_time = $users[$i]['odate'];
+//  $odate =  round(abs($to_time - $from_time) / 60,2);
 
-	if($odate > 15) {
+// 	if($odate > 15) {
 
-        Yii::app()->db->createCommand()
-            ->update('user', array(
-    	'is_online' => 0,),
-		'id_user=:id', array(':id'=>$users[$i]['id_user']));
+//         Yii::app()->db->createCommand()
+//             ->update('user', array(
+//     	'is_online' => 0,),
+// 		'id_user=:id', array(':id'=>$users[$i]['id_user']));
 
-    }
-    else {
+//     }
+//     else {
 
-       	Yii::app()->db->createCommand()
-            ->update('user', array(
-    		'odate'=>date("Y-m-d h-i-s"),
-    		'is_online' => 1,),
-			'id_user=:id', array(':id'=>$users[$i]['id_user']));
-    }
-}
+//       	Yii::app()->db->createCommand()
+//             ->update('user', array(
+//     		'odate'=>date("Y-m-d h-i-s"),
+//     		'is_online' => 1,),
+// 			'id_user=:id', array(':id'=>$users[$i]['id_user']));
+//     }
+// }
 
-if( Share::$UserProfile->id) {
+// if( Share::$UserProfile->id) {
 
 
-       	Yii::app()->db->createCommand()
-            ->update('user', array(
-    		'odate'=>date("Y-m-d h-i-s"),
-    		'is_online' => 1,),
-			'id_user=:id', array(':id'=>Share::$UserProfile->id));
+//       	Yii::app()->db->createCommand()
+//             ->update('user', array(
+//     		'odate'=>date("Y-m-d h-i-s"),
+//     		'is_online' => 1,),
+// 			'id_user=:id', array(':id'=>Share::$UserProfile->id));
 
-}
+// }
 ?>
