@@ -45,28 +45,24 @@
         ?>
     <?php else:*/ // other devices ?>
         <?php
+					$controller = Yii::app()->controller->route;
+					$action =  substr($controller, strpos($controller, '/'));
+					$action=='/index' && $action = '/';
         	$arOptimizPages = array(DS, MainConfig::$PAGE_WORK_FOR_STUDENTS, MainConfig::$PAGE_SEARCH_EMPL, MainConfig::$PAGE_VACANCY, MainConfig::$PAGE_SEARCH_PROMO, DS.MainConfig::$PAGE_SERVICES);
-        	// array with optimization
-            Yii::app()->getClientScript()->registerScriptFile($baseUrl . '/theme/js/dist/libs.js', $curUrl==MainConfig::$PAGE_SEARCH_PROMO
-            	? CClientScript::POS_HEAD
+        		// array with optimization
+            Yii::app()->getClientScript()->registerScriptFile($baseUrl . '/theme/js/dist/libs.js', CClientScript::POS_HEAD);
+            Yii::app()->getClientScript()->registerScriptFile($baseUrl . '/jslib/sourcebuster.min.js', in_array($action, $arOptimizPages) 
+            	? CClientScript::POS_END 
             	: CClientScript::POS_HEAD);
-            Yii::app()->getClientScript()->registerScriptFile($baseUrl . '/jslib/sourcebuster.min.js', in_array($curUrl,$arOptimizPages)
-            	? CClientScript::POS_END
-            	: CClientScript::POS_HEAD);
-            Yii::app()->getClientScript()->registerScriptFile($baseUrl . '/theme/js/dev/index.min.js', in_array($curUrl,$arOptimizPages)
-            	? CClientScript::POS_END
+            Yii::app()->getClientScript()->registerScriptFile($baseUrl . '/theme/js/dev/index.min.js', in_array($action, $arOptimizPages) 
+            	? CClientScript::POS_END 
             	: CClientScript::POS_BEGIN);
 
-            // Yii::app()->getClientScript()->registerCssFile($baseUrl.'/theme/css/site_template/main.min.css');
-
-            if(!in_array($curUrl, $arOptimizPages)){
-                //Yii::app()->getClientScript()->registerCssFile($baseUrl.'/jslib/multiple-select/multiple-select.css');
+            if(!in_array($action, $arOptimizPages)){
                 Yii::app()->getClientScript()->registerCssFile($baseUrl.'/jslib/bootstrap-datepicker/css/bootstrap-datepicker.min.css');
                 Yii::app()->getClientScript()->registerCssFile($baseUrl . '/' . MainConfig::$PATH_CSS . '/' . Share::$cssAsset['modalwindow.css']);
                 Yii::app()->getClientScript()->registerCssFile($baseUrl.'/theme/css/main-page.css');
                 Yii::app()->getClientScript()->registerScriptFile($baseUrl . '/theme/js/dist/jquery.maskedinput.min.js', CClientScript::POS_HEAD);
-                //Yii::app()->getClientScript()->registerScriptFile($baseUrl . '/theme/js/select2.min.js', CClientScript::POS_HEAD);
-
             }
 
             //Yii::app()->getClientScript()->registerScriptFile($baseUrl . '/theme/js/counters.min.js', CClientScript::POS_END);
