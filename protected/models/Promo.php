@@ -525,6 +525,7 @@ class Promo extends ARModel
                 ->from('resume r')
                 ->leftjoin('user u', 'u.id_user=r.id_user')
                 ->where(array('in', 'r.id_user', $inParams['arId']))
+                ->order('r.mdate desc')
                 ->queryAll();
 
         $nP = sizeof($sql);
