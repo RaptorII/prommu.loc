@@ -96,6 +96,12 @@ var MainProject = {
                 case 'nochange':
                     body = 'Значения в полях не менялись';
                     break;
+                case 'max-users':
+                    body = 'В проект возможно добавить не более ' + maxUsersInProject + ' соискателей';
+                    break;
+                case 'added-max-users':
+                    body = 'В проект возможно добавить не более ' + maxUsersInProject + ' соискателей. Сейчас выбрано допустимое количество';
+                    break;
                 default: break;
             }
         }

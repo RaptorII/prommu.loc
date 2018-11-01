@@ -190,7 +190,7 @@ foreach ($viData['filter']['metros'] as $id => $metro) {
 ?>
 <div class="row project">
     <div class="col-xs-12">
-        <? require __DIR__ . '/project-nav.php'; // Меню вкладок ?>
+        <? require 'project-nav.php'; // Меню вкладок ?>
     </div>
 </div>
 
@@ -204,7 +204,7 @@ foreach ($viData['filter']['metros'] as $id => $metro) {
             <span class="prommu__universal-filter__button">ФИЛЬТР ДЛЯ ПЕРСОНАЛА</span>
         </div>
         <div class="project__header">
-            <? require __DIR__ . '/filter.php'; // ФИЛЬТР ?>
+            <? require 'filter.php'; // ФИЛЬТР ?>
         </div>
 
 
@@ -220,29 +220,30 @@ foreach ($viData['filter']['metros'] as $id => $metro) {
             </div>
 
             <div class="program__btns control__buttons">
-
-                <span class="control__add-container">
-                    <span id="control__add-all" class="control__add-btn">+ ДОБАВИТЬ ПЕРСОНАЛ</span>
-                    <ul class="control__add-ul">
-                        <li id="control__add-personal">добавить из базы</li>
-                        <li id="control__new-personal">пригласить</li>
-                    </ul>
-                </span>
-
-                <? /*<button type="submit" id="control__save-btn" class="program__save-btn">ПРИМЕНИТЬ</button>*/ ?>
+                <? if($viData['users-cnt'] < $viData['users-limit']): ?>
+                    <span class="control__add-container">
+                        <span id="control__add-all" class="control__add-btn">+ ДОБАВИТЬ ПЕРСОНАЛ</span>
+                        <ul class="control__add-ul">
+                            <li id="control__add-personal">добавить из базы</li>
+                            <li id="control__new-personal">пригласить</li>
+                        </ul>
+                    </span>
+                <? else: ?>
+                    <span class="red">Достигнут лимит количества соискателей на проекте: <?=$viData['users-limit']?></span>
+                <? endif; ?>
             </div>
         </div>
 
         <h1 class="project__title personal__title">ПЕРСОНАЛ</h1>
         <div id="ajax-content">
-            <?php require __DIR__ . '/project-staff-ajax.php'; ?>
+            <?php require 'project-staff-ajax.php'; ?>
         </div>
     </div>
 
 
     <? /****************************Скрытые блоки приглашения персонала****************************/ ?>
     <div id="addition" class="project__module"></div>
-
+    <script type="text/javascript">var maxUsersInProject = <?=json_encode($viData['users-balance'])?>;</script>
     <div id="invitation" class="project__module">
         <h2 class="project__title personal__title">ПРИГЛАСИТЬ В ПРОЕКТ </h2>
         <div class="project__body project__body-invite invitation-item" data-id="0">

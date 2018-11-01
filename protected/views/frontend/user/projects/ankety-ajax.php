@@ -1,9 +1,4 @@
-<?php
-	$viData['app_idies'] = array();
-	foreach ($viData['workers']['promos'] as $key => $idus)
-		$viData['app_idies'][] = intval($idus['id_user']);	
-?>
-<script type="text/javascript">var arIdies = <?=json_encode($viData['app_idies'])?></script>
+<script type="text/javascript">var arIdies = <?=json_encode($viData['workers']['promos'])?></script>
 <div class='questionnaire'>
 	<div>
 		<?=$this->ViewModel->declOfNum($viData['app_count'], array('Найдена', 'Найдено', 'Найдено'))?>

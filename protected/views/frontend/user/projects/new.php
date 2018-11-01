@@ -12,11 +12,7 @@
 	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
 	Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/phone-codes/projects.js', CClientScript::POS_END);
 	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/new.js', CClientScript::POS_END);
-
-
-	//echo $viData['max_users'];
 ?>
-
 <div class="row project">
 	<div class="col-xs-12">
 		<form action="/user/procreate" method="POST" id="new-project">
@@ -57,6 +53,7 @@
 						<span class="save-btn" id="save-project">СОХРАНИТЬ</span>
 					</div>
 				</div>
+				<script type="text/javascript">var maxUsersInProject = <?=json_encode($viData['users-limit'])?>;</script>
 			</div>
 			<?php
 			//
@@ -181,14 +178,6 @@
 			?>
 			<div id="addition" class="project__module">
 				<h2 class="project__title">ДОБАВИТЬ НОВЫЙ ПЕРСОНАЛ НА ПРОЕКТ <span></span></h2>
-				  <?php
-				    $viData['app_idies'] = array();
-				    foreach ($viData['workers']['promos'] as $key => $idus)
-				    	$viData['app_idies'][] = intval($idus['id_user']);
-				  ?>
-				  <script type="text/javascript">
-				    var arIdies = <?=json_encode($viData['app_idies'])?>;
-				  </script>
 				  <div class='row'>
 				    <? //		FILTER 		?>
 				    <div class="filter__veil"></div>
@@ -277,82 +266,22 @@
 				    </div>
 				    <?php //    CONTENT 		?>
 				    <div class='col-xs-12 col-sm-8 col-md-9'>
-						<div id="workers-form">
-							<span class="workers-form__cnt">Выбрано соискателей: <span id="mess-wcount">0</span></span>
-							<div class="service__switch">
-								<span class="service__switch-name">Выбрать всех</span>
-								<input type="checkbox" name="ntf-push" id="all-workers" value="1"/>
-								<label for="all-workers">
-									<span data-enable="вкл." data-disable="выкл."></span>
-								</label>
+							<div id="workers-form">
+								<span class="workers-form__cnt">Выбрано соискателей: <span id="mess-wcount">0</span></span>
+								<div class="service__switch">
+									<span class="service__switch-name">Выбрать всех</span>
+									<input type="checkbox" name="ntf-push" id="all-workers" value="1"/>
+									<label for="all-workers">
+										<span data-enable="вкл." data-disable="выкл."></span>
+									</label>
+								</div>
+								<span class="workers-form-btn off" id="workers-btn" data-event="main">СОХРАНИТЬ</span>
+								<input type="hidden" name="users" id="mess-workers">
+								<input type="hidden" name="users-cnt" id="mess-wcount-inp" value="0">
 							</div>
-							<span class="workers-form-btn off" id="workers-btn" data-event="main">СОХРАНИТЬ</span>
-							<input type="hidden" name="users" id="mess-workers">
-							<input type="hidden" name="users-cnt" id="mess-wcount-inp" value="0">
-						</div>
-				      <div id="promo-content">
-				        <div class='questionnaire'>
-				          <div>
-				            <?=$this->ViewModel->declOfNum($viData['app_count'], array('Найдена', 'Найдено', 'Найдено'))?>
-				            <b><?=$viData['app_count']?></b>
-				            <?=$this->ViewModel->declOfNum($viData['app_count'], array('Анкета', 'Анкеты', 'Анкет'))?>
-				          </div>
-				        </div>
-				        <div class='row vacancy table-view'>
-				          <?if( $viData['workers']['promo'] ):?>
-				            <?$i=1;?>
-				            <?foreach ($viData['workers']['promo'] as $item):?>
-				              <div class='col-xs-12 col-sm-6 col-md-4'>
-				                <?
-				                  $G_NOLIKES = 1;
-				                  $G_ALT = 'Соискатель ' . $item['firstname'] . ' ' . $item['lastname'] . ' prommu.com';
-				                  $G_LOGO_LINK = MainConfig::$PAGE_PROFILE_COMMON . DS . $item['id_user'];
-				                  if($item['sex'] === '1'){
-				                    $G_LOGO_SRC = DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!$item['photo'] ? MainConfig::$DEF_LOGO : $item['photo'] . '400.jpg');
-				                  }
-				                  else
-				                    $G_LOGO_SRC = DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!$item['photo'] ? MainConfig::$DEF_LOGO_F : $item['photo'] . '400.jpg');
-				                  $G_COMP_FIO = $item['firstname'] . ' ' . $item['lastname'] . ', ' . $item['age'];
-				                  $G_RATE_POS = $item['rate'];
-				                  $G_RATE_NEG = $item['rate_neg'];
-				                  $G_COMMENTS_POS = $item['comm'];
-				                  $G_COMMENTS_NEG = $item['commneg'];
-				                  $G_TMPL_PH1 = '';
-				                  if( $item['ishasavto'] === '1' ) $G_TMPL_PH1 = "<div class='ico ico-avto js-g-hashint' title='Есть автомобиль'></div>";
-				                  if( $item['ismed'] === '1' ) $G_TMPL_PH1 .= '<div class="ico ico-med js-g-hashint" title="Есть медкнижка"></div>';
-				                  $G_TMPL_PH1 = "<div class='med-avto'>{$G_TMPL_PH1}</div>";
-				                  include $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user' . DS . MainConfig::$VIEWS_COMM_LOGO_TPL . ".php";
-				                ?>
-				                <input type="checkbox" name="promo[]" value="<?=$item['id_user']?>" class="promo_inp" id="promo<?=$item['id_user']?>">
-				                <label class="smss-promo__label" for="promo<?=$item['id_user']?>"></label>
-				              </div>
-				              <?if($i % 2 == 0):?>
-				                <div class="clear visible-sm"></div>
-				              <?endif?>
-				              <?if( $i % 3 == 0 ):?>
-				                <div class="clear visible-md visible-lg"></div>
-				              <?endif?>
-				              <?$i++;?>
-				            <?endforeach?>
-				          <?else:?>
-				            <div class="col-xs-12">Нет подходящих соискателей</div>
-				          <?endif;?>
-				        </div>
-				        <br>
-				        <br>
-				        <div class='paging-wrapp hidden-xs'>
-				        <?php
-				          $this->widget('CLinkPager', array(
-				              'pages' => $viData['pages'],
-				              'htmlOptions' => array('class' => 'paging-wrapp'),
-				              'firstPageLabel' => '1',
-				              'prevPageLabel' => 'Назад',
-				              'nextPageLabel' => 'Вперед',
-				              'header' => ''
-				            )
-				          )?>
-				        </div>
-				      </div>
+							<div id="promo-content">
+								<?php require 'ankety-ajax.php'; ?>
+							</div>
 				    </div>
 				</div>
 			</div>

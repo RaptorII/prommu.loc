@@ -1,6 +1,6 @@
 'use strict'
+var selectUsers = 0;
 var ProjectPage = (function () {
-
 	function ProjectPage() {
         this.init();
     }
@@ -186,6 +186,7 @@ var ProjectPage = (function () {
             error = -1;
             query = confirm('Будут удалены данные контакта.\n'
               +'Вы действительно хотите это сделать?');
+            selectUsers--; // счетчик пользователей в проекте
           }
           else error = 3;
       }
@@ -1029,7 +1030,8 @@ var ProjectAddPersonal = (function () {
         setTimeout( self.getAppsAjax(), 300);
     }
     ProjectAddPersonal.prototype.getAppsAjax = function (e) {
-        let params = '',
+        let self = this,
+            params = '',
             $content = $('#promo-content'),
             arInputs = $('#promo-filter input');
 
@@ -1065,9 +1067,9 @@ var ProjectAddPersonal = (function () {
                         scrollTop: $content.offset().top - 100 },
                         700
                     );//прокручиваем к заголовку
+
                     $.each($content.find('.promo_inp'), function(){
-                        var id = Number($(this).val());
-                        if($.inArray(id,self.arSelectIdies)>=0 || $('#all-workers').is(':checked'))
+                        if($.inArray(this.value, self.arSelectIdies)>=0)
                             $(this).prop('checked',true);
                     });
                 }
@@ -1123,8 +1125,24 @@ var ProjectAddPersonal = (function () {
 
         if( $e.attr('id')==='all-workers' ) {
             if($e.is(':checked')) {
-                self.arSelectIdies = arIdies.slice(); // arIdies берем с вьюхи
-                $.each(arInputs, function(){ $(this).prop('checked',true) });
+                let i = 0;
+
+                while(selectUsers < maxUsersInProject) {
+                    self.arSelectIdies.push(arIdies[i]);
+                    selectUsers++;
+                    i++;
+                }
+                $.each(arInputs, function(){
+                    if($.inArray(this.value, self.arSelectIdies)>=0)
+                        $(this).prop('checked',true);
+                });
+                if(selectUsers >= maxUsersInProject) {
+                    arIdies.length != self.arSelectIdies.length
+                    ? MainProject.showPopup('notif','added-max-users')
+                    : MainProject.showPopup('notif','max-users');
+                }
+                if(arIdies.length != self.arSelectIdies.length) // выключаем "Выбрать всех" если сработало ограничение
+                   setTimeout(function(){ $e.prop('checked',false) },500); 
             }
             else {
                 self.arSelectIdies = [];
@@ -1132,16 +1150,26 @@ var ProjectAddPersonal = (function () {
             }
         }
         else {
-            let id = Number($e.val());
+            let id = $e.val();
 
             if($e.is(':checked')){
                 // записуем выбраный ID
-                if($.inArray(id, self.arSelectIdies)<0){ self.arSelectIdies.push(id) };
+                if($.inArray(id, self.arSelectIdies)<0){
+                    if(selectUsers < maxUsersInProject) {
+                        selectUsers++;
+                        self.arSelectIdies.push(id)  
+                    }
+                    else {
+                        MainProject.showPopup('notif','max-users');
+                        setTimeout(function(){ $e.prop('checked',false) },10);
+                    }
+                };
                 if(self.arSelectIdies.length == arIdies.length) // arIdies берем с вьюхи
-                $('#all-workers').prop('checked',true);
+                    $('#all-workers').prop('checked',true);
             }
             else {
                 // убираем ID
+                selectUsers--;
                 if($.inArray(id, self.arSelectIdies)>=0)
                     self.arSelectIdies.splice(self.arSelectIdies.indexOf(id),1);
                 $('#all-workers').prop('checked',false);
@@ -1266,6 +1294,7 @@ var ProjectAddPersonal = (function () {
 var ProjectInvitePersonal = (function () {
     ProjectInvitePersonal.prototype.arOldPhones = [];
     ProjectInvitePersonal.prototype.keyCode = 0;
+    ProjectInvitePersonal.prototype.hasInvitation = false;
 
     function ProjectInvitePersonal() {
         var self = this;
@@ -1401,10 +1430,19 @@ var ProjectInvitePersonal = (function () {
             }
         }
         if (!empty) {
+            if(!self.hasInvitation) {
+                selectUsers++; // счетчик пользователей в проекте
+                self.hasInvitation = true;
+            }
             if(save) {
                 self.Project.showModule(e);
                 return true;
             }
+            if(selectUsers >= maxUsersInProject) {
+              MainProject.showPopup('notif','max-users');
+              return true;  
+            }
+            selectUsers++; // счетчик пользователей в проекте
 
             let html = $('#invitation-content').html(),
                 main = document.getElementById('invitation'),
