@@ -260,7 +260,7 @@ div.calendar:after{ content: '' }
     width: 10px
 }
 
-.filter-city-select {
+.prommu__universal-filter .filter-city-select {
     display: flex;
     flex-direction: row;
     justify-content: start;

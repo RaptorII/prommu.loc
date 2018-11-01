@@ -386,3 +386,7 @@
 #DiContent .popup__control a{
     text-decoration: underline;
 }
+
+.task__title{
+    font-size:18px;
+}

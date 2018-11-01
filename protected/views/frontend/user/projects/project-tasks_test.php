@@ -19,12 +19,26 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/js/dist/fancybox/jqu
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/js/dist/fancybox/jquery.fancybox.css');
 
 $arFilterData = [
-    'STYLES' => 'project__tasks-filter',
-    'HIDE' => false,
     'ID' => $project, //Обязательное свойство!
-    'FILTER_ADDITIONAL_VALUE' => ['filter'=>1],
+    'FILTER_ADDITIONAL_VALUE' => ['filter' => 1],
     'FILTER_SETTINGS' => [
         0 => [
+            'NAME' => 'ФИО',
+            'TYPE' => 'text',
+            'INPUT_NAME' => 'fname',
+            'DATA' => [],
+            'DATA_DEFAULT' => '',
+            'PLACEHOLDER' => ''
+        ],
+        /*1 => [
+            'NAME' => 'Фамилия',
+            'TYPE' => 'text',
+            'INPUT_NAME' => 'lname',
+            'DATA' => [],
+            'DATA_DEFAULT' => '',
+            'PLACEHOLDER' => ''
+        ],*/
+        1 => [
             'NAME' => 'Город',
             'TYPE' => 'select',
             'INPUT_NAME' => 'city',
@@ -33,10 +47,23 @@ $arFilterData = [
                     'title' => 'Все',
                     'id' => '0'
                 ]
+
             ],
-            'DATA_DEFAULT' => '0',
+            'DATA_DEFAULT' => '0'
         ],
-        1 => [
+        2 => [
+            'NAME' => 'Название ТТ',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_name',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ]
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        3 => [
             'NAME' => 'Дата с',
             'TYPE' => 'calendar',
             'INPUT_NAME' => 'bdate',
@@ -44,18 +71,43 @@ $arFilterData = [
             'DATA_DEFAULT' => $viData['filter']['bdate'],
             'DATA_SHORT' => $viData['filter']['bdate-short']
         ],
-        2 => [
+        4 => [
             'NAME' => 'По',
             'TYPE' => 'calendar',
             'INPUT_NAME' => 'edate',
             'DATA' => [],
             'DATA_DEFAULT' => $viData['filter']['edate'],
             'DATA_SHORT' => $viData['filter']['edate-short']
-        ]
+        ],
+        5 => [
+            'NAME' => 'Адрес ТТ',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_index',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ]
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        6 => [
+            'TYPE' => 'block',
+        ],
+        7 => [
+            'NAME' => 'Статус задачи',
+            'TYPE' => 'select-multi',
+            'INPUT_NAME' => 'type',
+            'DATA' => [
+                1 =>    'В работе',
+                2 =>    'Отменена',
+                3 =>    'Доработка',
+                4 =>    'Готова',
+                5 =>    'Ожидание',
+            ],
+        ],
     ]
 ];
-foreach ($viData['filter']['cities'] as $id => $city)
-  $arFilterData['FILTER_SETTINGS'][0]['DATA'][$id] = ['title'=>$city['city'], 'id'=>$id];
 ?>
 
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
@@ -69,9 +121,12 @@ foreach ($viData['filter']['cities'] as $id => $city)
 	</div>
 </div>
 <div class="project__module" data-id="<?=$project?>">
+    <div class="project__header">
+        <? require __DIR__ . '/filter.php'; // ФИЛЬТР ?>
+    </div>
+
 	<?php if(sizeof($viData['items'])>0): ?>
 		<div class="tasks__list">
-			<? require __DIR__ . '/filter.php'; // ФИЛЬТР ?>
 			<div class="tasks" id="ajax-content">
 				<? require __DIR__ . '/project-tasks_test-ajax.php'; // СПИСОК ?>
 			</div>

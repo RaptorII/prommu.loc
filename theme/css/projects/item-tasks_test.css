@@ -30,13 +30,54 @@
 
 .task__item-date{
     margin-top:10px;
-    font-size: 22px;
+    font-size: 18px;
 }
 .task__item-city{
     font-size: 18px;
 }
 .task__item-tt{
+    font-size: 18px;
+}
+.task__item-user{
     font-size: 16px;
+    margin-top:15px;
+    display:flex;
+    align-items: center;
+}
+
+.task__item-false{
+    border-bottom: 1px solid black;
+    padding-bottom: 10px;
+}
+
+
+
+.task__table-user-2{
+    font-size: 16px;
+    line-height: 25px;
+}
+
+.task__table-user-3{
+    color: #a4b0b9;
+    font-size: 16px;
+    line-height: 25px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.task__table-user-task-ok{
+    color:#abb92a!important;
+}
+.task__table-user-task-none{
+    color:red!important;
+}
+
+
+.task__item-user span{
+    font-size: 16px;
+}
+.task__item-user img{
+    width:40px;
+    height: 40px;
 }
 
 
@@ -60,20 +101,27 @@
     overflow: hidden;
     box-sizing: border-box;
     border-left:1px solid #cecece;
-    padding-left:10px;
+    padding-left:15px;
 }
 .tasks__one-city{
     overflow: hidden;
     box-sizing: border-box;
     border-left:1px solid #989898;
-    padding-left:10px;
+    padding-left:15px;
 }
 
 .tasks__one-tt{
     overflow: hidden;
     box-sizing: border-box;
     border-left:1px solid black;
-    padding-left:10px;
+    padding-left:15px;
+}
+
+.tasks__one-user{
+    overflow: hidden;
+    box-sizing: border-box;
+    border-left:1px solid black;
+    padding-left:15px;
 }
 
 
@@ -100,4 +148,113 @@
 }
 .tasks__status{
 
+}
+
+
+.task__item-tt b{
+    width: 20px;
+    height: 20px;
+    background: url(/theme/pic/projects/map-locator.png) right no-repeat;
+    cursor: pointer;
+    display: inline-block;
+}
+
+
+
+.prommu__universal-filter {
+    display: flex;
+    flex-wrap: wrap;
+    /* margin-bottom: 10px; */
+    padding-bottom: 15px;
+}
+#DiContent .prommu__universal-filter .u-filter__item{
+    display: flex;
+    padding-top: 5px;
+    width: 33.3333%;
+    margin-top: 10px;
+    align-items: center;
+}
+
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__item-title{
+    display: inline-block;
+    width: 125px;
+    text-align: left;
+}
+
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__item-data{
+    display: inline-block;
+    width: 185px;
+}
+
+.project__header{
+    background-color: #f5f5f5;
+    padding: 0px 30px 0px;
+    box-sizing: border-box;
+}
+.project__header-xls{
+    background: none;
+    text-align:left;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+
+@media screen and (min-width: 993px) {
+    #DiContent .prommu__universal-filter .u-filter__item.u-filter__item-0 .u-filter__item-title {
+        width: 55px;
+    }
+
+    .u-filter__item-3 {
+        width: 135px !important;
+        line-height: 26px;
+    }
+
+    .u-filter__item-4 {
+        width: 100px !important;
+        line-height: 26px;
+    }
+
+    .u-filter__item-4 {
+        margin-left: 5px;
+    }
+
+    .u-filter__item-5 {
+        margin-left: 120px;
+    }
+
+    .u-filter__item-3 .u-filter__item-data,
+    .u-filter__item-4 .u-filter__item-data {
+        width: 90px !important;
+    }
+}
+
+@media screen and (max-width: 1200px){
+    .u-filter__item-5{
+        margin-left:53px;
+    }
+}
+
+@media screen and (max-width: 992px){
+    .u-filter__item{
+        width: 33.3333%!important;
+    }
+    .u-filter__item-5{
+        margin-left:0px;
+    }
+    #DiContent .prommu__universal-filter .u-filter__item{
+        width: 300px!important;
+        margin: 3px auto;
+    }
+    .u-filter__blockitem{
+        display:none!important;
+    }
+}
+
+@media (min-width: 992px){
+    #DiContent .prommu__universal-filter .u-filter__item.u-filter__item-7{
+        margin-top:30px;
+        width:100%;
+    }
+    #DiContent .prommu__universal-filter .u-filter__item.u-filter__item-7 .u-filter__item-data{
+        width:100%;
+    }
 }
