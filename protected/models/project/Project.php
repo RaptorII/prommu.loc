@@ -156,9 +156,9 @@ class Project extends CActiveRecord
         $arRes['filter'] = $this->buildIndexFilterArray($arRes['original']);
         $arRes['users'] = $this->getAllStaffProject($prj);
         $arRes['users'] = $this->buildStaffArray($arRes['users']);
-        $arRes['tasks'] = $this->getTasks($prj);
+        $arRes['task-counters'] = $this->getTasks($prj,$onlyCounters=true);
         $arRes['project'] = $this->getProjectData($prj);
-        
+
         return $arRes;
     }
     

@@ -3,12 +3,13 @@
 class ProjectTask extends CActiveRecordBehavior{
 	/**
 	*	@param 	number - project ID 
+	*	@param 	bool - full data or only counters
 	*	@return array
 	* Отсортированные задания по проекту
 	*/
-	public function getTasks($prj) {
-		$arRes = $this->getTaskList($prj);
-		$arRes = $this->buildTaskArray($arRes);
+	public function getTasks($project, $onlyCounters=false) {
+		$arRes = $this->getTaskList($project);
+		$arRes = $this->buildTaskArray($arRes, $onlyCounters);
 		return $arRes;
 	}
 	/**
@@ -30,17 +31,24 @@ class ProjectTask extends CActiveRecordBehavior{
 	}
 	/**
 	 * @param array tasks query
+	 * @param 	bool - full data or only counters
 	 * @return array
 	 * Формирования подходящего массива с заданиями
 	 */
-	public function buildTaskArray($arr) {
+	public function buildTaskArray($arr, $onlyCounters=false) {
 		$arRes = array();
 
-		for($i=0,$n=sizeof($arr); $i<$n; $i++) {
-			$unix = strtotime($arr[$i]['date']);
-			$point = $arr[$i]['point'];
-			$user = $arr[$i]['user'];
-			$arRes[$unix][$point][$user][$arr[$i]['id']] = $arr[$i];
+		if(!$onlyCounters) {
+			for($i=0,$n=sizeof($arr); $i<$n; $i++) {
+				$unix = strtotime($arr[$i]['date']);
+				$point = $arr[$i]['point'];
+				$user = $arr[$i]['user'];
+				$arRes[$unix][$point][$user][$arr[$i]['id']] = $arr[$i];
+			}
+		}
+		else {
+			for($i=0,$n=sizeof($arr); $i<$n; $i++)
+				$arRes[$arr[$i]['point']][$arr[$i]['user']] += 1;
 		}
 
 		return $arRes;
