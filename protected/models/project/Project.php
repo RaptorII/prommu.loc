@@ -156,8 +156,9 @@ class Project extends CActiveRecord
         $arRes['filter'] = $this->buildIndexFilterArray($arRes['original']);
         $arRes['users'] = $this->getAllStaffProject($prj);
         $arRes['users'] = $this->buildStaffArray($arRes['users']);
+        $arRes['tasks'] = $this->getTasks($prj);
         $arRes['project'] = $this->getProjectData($prj);
-
+        
         return $arRes;
     }
     
@@ -463,8 +464,7 @@ class Project extends CActiveRecord
         }
     
         $arRes['project'] = $arr['project'];
-        $arRes['tasks'] = $this->getTaskList($arr['project']['project']);
-        $arRes['tasks'] = $this->buildTaskArray($arRes['tasks']);
+        $arRes['tasks'] = $this->getTasks($arr['project']['project']);
 
         foreach ($arr['users'] as $id => $v)
             if(sizeof($v['points'])>0)
@@ -752,8 +752,7 @@ class Project extends CActiveRecord
         }
         //      координаты
         $arRes['gps'] = $this->getСoordinates(['project'=>$project]);
-        $arRes['tasks'] = $this->getTaskList($project);
-        $arRes['tasks'] = $this->buildTaskArray($arRes['tasks']);
+        $arRes['tasks'] = $this->getTasks($project);
 
         foreach ($arRes['gps'] as $v) {
             $u = $v['user'];
@@ -936,8 +935,7 @@ class Project extends CActiveRecord
         }
         //      координаты
         $arRes['gps'] = $this->getСoordinates(['project'=>$project]);
-        $arRes['tasks'] = $this->getTaskList($project);
-        $arRes['tasks'] = $this->buildTaskArray($arRes['tasks']);
+        $arRes['tasks'] = $this->getTasks($project);
 
         foreach ($arRes['gps'] as $v) {
             $u = $v['user'];

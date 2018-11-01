@@ -4,6 +4,16 @@ class ProjectTask extends CActiveRecordBehavior{
 	/**
 	*	@param 	number - project ID 
 	*	@return array
+	* Отсортированные задания по проекту
+	*/
+	public function getTasks($prj) {
+		$arRes = $this->getTaskList($prj);
+		$arRes = $this->buildTaskArray($arRes);
+		return $arRes;
+	}
+	/**
+	*	@param 	number - project ID 
+	*	@return array
 	* Задания по проекту
 	*/
 	public function getTaskList($prj) {
@@ -204,7 +214,7 @@ class ProjectTask extends CActiveRecordBehavior{
 	/**
 	 * @param array ['project','user','point','title','text','date']
 	 * @return array ['error','data']
-	 * Изменение заданий
+	 * Вернуть задания пользователя
 	 */
 	public function getUserTasks($arr) {
 		$arRes = array('error'=>true);
