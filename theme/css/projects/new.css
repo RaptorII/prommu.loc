@@ -158,7 +158,7 @@
 *		INDEX
 */
 #index.project__module{ display: none }
-#DiContent .project__title{
+#DiContent #new-project .project__title{
 	text-transform: uppercase;
 	font-size: 24px;
 	margin: 0 0 45px;
@@ -831,9 +831,15 @@
 #addition .questionnaire b{ color: #abb820; }
 #addition .table-view .comm-logo-wrapp{ margin-bottom: 40px; }
 #addition .table-view .comm-logo img{ 
-    width: 100%; 
-    max-width: 225px; 
-    max-height: 225px;
+	width: 100%; 
+	max-width: 225px; 
+	max-height: 225px;
+	display: block;
+	border-radius: 50%;
+	border: 2px solid #CBD880;
+	position: relative;
+	overflow: hidden;
+	margin: 0 auto;
 }
 #addition .table-view .med-avto{ 
     margin: 7px 0 -7px 0; 

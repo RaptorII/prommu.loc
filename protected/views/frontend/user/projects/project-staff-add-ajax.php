@@ -112,7 +112,7 @@
             <input type="hidden" name="users-cnt" id="mess-wcount-inp" value="0">
         </div>
         <div id="promo-content">
-            <?php require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/site/services/ankety-ajax.php'; ?>
+            <?php require 'ankety-ajax.php'; ?>
         </div>
     </div>
 </div>

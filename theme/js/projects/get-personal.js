@@ -17,9 +17,6 @@ var ProjectAddPersonal = (function () {
     ProjectAddPersonal.prototype.init = function (project) {
         let self = this;
 
-        //self.Project = project;
-
-
         $("#invitation").on( "click", ".invitation-del", function() {
             self.removeElement(this);
         });
@@ -298,11 +295,15 @@ var ProjectAddPersonal = (function () {
                 $('#update-person').submit();
                 return;
             }
-
             let html = $('#invitation-content').html(),
                 main = document.getElementById('invitation'),
                 arInv = main.getElementsByClassName('invitation-item'),
                 id = Number(arInv[arInv.length-1].dataset.id) + 1;
+
+            if(arInv.length >= maxUsersInProject) {
+              MainProject.showPopup('notif','max-users');
+              return true;  
+            }
 
             $(arInv[arInv.length-1]).after(html);
             $(arInv[arInv.length-1]).attr('data-id',id); //Присвоение data-id для новых invitation-item
@@ -329,7 +330,8 @@ var ProjectAddPersonal = (function () {
     }
 
     ProjectAddPersonal.prototype.getAppsAjax = function (e) {
-        let params = 'get-promos=2&',
+        let self = this,
+            params = 'get-promos=2&',
             $content = $('#promo-content'),
             arInputs = $('#promo-filter input');
 
@@ -353,7 +355,6 @@ var ProjectAddPersonal = (function () {
             params += e.target.href.slice(e.target.href.indexOf('page='));
         }
         $('.filter__veil').show(); // процесс загрузки
-
         $.ajax({
             type: 'GET',
             url: window.location.pathname,
@@ -366,8 +367,7 @@ var ProjectAddPersonal = (function () {
                         700
                     );//прокручиваем к заголовку
                     $.each($content.find('.promo_inp'), function(){
-                        var id = Number($(this).val());
-                        if($.inArray(id,self.arSelectIdies)>=0 || $('#all-workers').is(':checked'))
+                        if($.inArray(this.value, self.arSelectIdies)>=0)
                             $(this).prop('checked',true);
                     });
                 }
@@ -423,8 +423,23 @@ var ProjectAddPersonal = (function () {
 
         if( $e.attr('id')==='all-workers' ) {
             if($e.is(':checked')) {
-                self.arSelectIdies = arIdies.slice(); // arIdies берем с вьюхи
-                $.each(arInputs, function(){ $(this).prop('checked',true) });
+                let i = 0;
+
+                while(self.arSelectIdies.length < maxUsersInProject) {
+                    self.arSelectIdies.push(arIdies[i]);
+                    i++;
+                }
+                $.each(arInputs, function(){
+                    if($.inArray(this.value, self.arSelectIdies)>=0)
+                        $(this).prop('checked',true);
+                });
+                if(self.arSelectIdies.length >= maxUsersInProject) {
+                    arIdies.length != self.arSelectIdies.length
+                    ? MainProject.showPopup('notif','added-max-users')
+                    : MainProject.showPopup('notif','max-users');
+                }
+                if(arIdies.length != self.arSelectIdies.length) // выключаем "Выбрать всех" если сработало ограничение
+                   setTimeout(function(){ $e.prop('checked',false) },500); 
             }
             else {
                 self.arSelectIdies = [];
@@ -432,11 +447,19 @@ var ProjectAddPersonal = (function () {
             }
         }
         else {
-            let id = Number($e.val());
+            let id = $e.val();
 
             if($e.is(':checked')){
                 // записуем выбраный ID
-                if($.inArray(id, self.arSelectIdies)<0){ self.arSelectIdies.push(id) };
+                if($.inArray(id, self.arSelectIdies)<0) { 
+                    if(self.arSelectIdies.length < maxUsersInProject) {
+                        self.arSelectIdies.push(id)  
+                    }
+                    else {
+                        MainProject.showPopup('notif','max-users');
+                        setTimeout(function(){ $e.prop('checked',false) },10);
+                    }
+                };
                 if(self.arSelectIdies.length == arIdies.length) // arIdies берем с вьюхи
                     $('#all-workers').prop('checked',true);
             }

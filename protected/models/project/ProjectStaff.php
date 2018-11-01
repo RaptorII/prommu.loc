@@ -12,7 +12,10 @@ class ProjectStaff extends CActiveRecordBehavior{
 	 */
 	public function getStaff($prj) {
 		$arId = $this->getStaffProjectCnt($prj);
-		$arRes['pages'] = new CPagination(count($arId));
+		$arRes['users-cnt'] = count($arId);
+		$arRes['users-limit'] = $this->MAX_USERS_IN_PROJECT;
+		$arRes['users-balance'] = $arRes['users-limit'] - $arRes['users-cnt'];
+		$arRes['pages'] = new CPagination($arRes['users-cnt']);
 		$arRes['pages']->pageSize = $this->USERS_IN_PAGE;
 		$arRes['pages']->applyLimit($this);
 		$arStaff = $this->getStaffProject($arId);
