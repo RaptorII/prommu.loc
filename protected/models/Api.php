@@ -2766,13 +2766,15 @@ public function vac(){
 
         // получаем данные страницы
         $SearchPromo = new SearchPromo();
-        $pages = new CPagination($SearchPromo->searchPromosCount($filter));
+        $arAllId = $SearchPromo->searchPromosCount($filter);
+        $cnt = sizeof($arAllId);
+        $pages = new CPagination($cnt);
         $pages->pageSize = $limit;
         $pages->applyLimit($SearchPromo);
 
 
         // отсеивать из ответа работодателей
-        $data = $SearchPromo->getPromos(0, $filter);
+        $data = $SearchPromo->getPromos($arAllId, 0, $filter);
 
         return array_merge($data);
     }
@@ -3594,7 +3596,7 @@ public function vac(){
             $Auth = new Auth();
             $res = $Auth->Authorize(['id' => $id]);
 
-            header("Location: " . Subdomain::getUrl() . "/$strk");
+            header("Location: " . Subdomain::getCacheData()->url . "/$strk");
         }
     }
 

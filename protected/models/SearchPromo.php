@@ -5,11 +5,11 @@
  */
 class SearchPromo extends Model
 {
-    public function getPromos($isEmplOnly = 0,$props = [])
+    public function getPromos($arAllId, $isEmplOnly = 0,$props = [])
     {
         $filter = $this->renderSQLFilter(['filter' => $props['filter']]);
 
-        $data = $this->searchPromos($filter);
+        $data = $this->searchPromos($arAllId, $filter);
         if( !$isEmplOnly ) $data = array_merge($data, $this->getFilterData());
 
         return $data;
@@ -60,21 +60,23 @@ class SearchPromo extends Model
 
     public function searchPromosCount()
     {
+        $arRes = array();
         $filter = $this->renderSQLFilter();
-
-        $sql = "SELECT COUNT(DISTINCT r.id)
+        $sql = "SELECT DISTINCT r.id_user
                 FROM resume r
                 INNER JOIN user u ON u.id_user = r.id_user 
-                    AND u.ismoder = 1 AND u.isblocked = 0 
                 INNER JOIN user_city uc ON r.id_user = uc.id_user  
                     {$filter['table']}
                 INNER JOIN user_mech a ON a.id_us = r.id_user
                     {$filter['filter']}
-                ORDER BY r.id DESC ";
+                ORDER BY r.mdate DESC ";
         /** @var $res CDbCommand */
-        $res = Yii::app()->db->createCommand($sql);
+        $query = Yii::app()->db->createCommand($sql)->queryAll();
 
-        return $res->queryScalar();
+        for( $i=0, $n=sizeof($query); $i<$n; $i++ )
+            $arRes[] = $query[$i]['id_user'];
+
+        return $arRes;
     }
 
 
@@ -173,6 +175,8 @@ class SearchPromo extends Model
         $filter = [];
         $tables = [];
         
+        $filter[] = "u.ismoder = 1 AND u.isblocked = 0";
+        
         // quick search
         if( !empty($data['qs']) ) {
             // фильтр по фио
@@ -186,7 +190,7 @@ class SearchPromo extends Model
         }
         else
         {
-            $filter[] = 'uc.id_city IN ('.Subdomain::getCitiesIdies().')';
+            $filter[] = 'uc.id_city IN ('.Subdomain::getCacheData()->strCitiesIdes.')';
         }
 
         if( !empty($data['ph']) )
@@ -252,90 +256,39 @@ class SearchPromo extends Model
 
 
 
-    private function searchPromos($filter)
+    private function searchPromos($arAllId, $filter)
     {
         $limit = $this->limit;
         $offset = $this->offset;
+        $arRes['promos'] = $arAllId;
+        $arId = array();
+        // находим нужные ID по пагинации
+        for( $i=$offset, $n=sizeof($arAllId); $i<$n; $i++ )
+            ( $i < ($offset + $limit) ) && $arId[] = $arAllId[$i];
 
-        try
-        {
-            $res = (new Promo())->getApplicantsQueries(array('page' => 'searchpromo', 'table' => $filter['table'], 'filter' => $filter['filter'], 'offset' => $offset, 'limit' => $limit));
+        try {
+            $arPromo = (new Promo())->getApplicantsQueries(
+                array(
+                    'page' => 'searchpromo', 
+                    'table' => $filter['table'], 
+                    'filter' => $filter['filter'], 
+                    'offset' => $offset, 
+                    'limit' => $limit,
+                    'arId' => $arId
+                )
+            );
+
+            $i = 1;
+            foreach ($arPromo as $p) {
+                $arRes['promo'][$i] = $p;
+                $i++; 
+            }
         }
         catch (Exception $e) {
             return array('error' => $e->getMessage());
         } // endtry
 
-        $sql = "SELECT r.id_user
-            FROM resume r
-            INNER JOIN (
-                SELECT DISTINCT r.id
-                FROM resume r
-                INNER JOIN user u ON u.id_user = r.id_user 
-                    AND u.ismoder = 1 AND u.isblocked = 0
-                INNER JOIN user_city uc ON r.id_user = uc.id_user 
-                {$filter['table']}
-                INNER JOIN user_mech a ON a.id_us = r.id_user
-                {$filter['filter']}
-                ORDER BY r.id DESC 
-            ) t1 ON t1.id = r.id
-            
-            LIMIT 10000";
-
-            $result = Yii::app()->db->createCommand($sql)->queryAll();
-
-        // подготовка данных по соискателям
-        $data['promo'] = array();
-        if( $res )
-        {
-            $UserProfileApplic = (new ProfileFactory())->makeProfile(['id' => 1, 'type' => 2]);
-            foreach ($res as $key => $val)
-            {
-                if( !isset($data['promo'][$val['id']])) $data['promo'][$val['id']] = array('city' => array(), 'post' => array(), 'metroes' => array()) ;
-                // город
-                $data['promo'][$val['id']]['city'][$val['id_city']] = $val['ciname'];
-                // должности
-                $data['promo'][$val['id']]['post'][$val['idpost']] = array($val['val'], $val['pay'], $val['pt']);
-                // metro
-                if( $val['mid'] ) $data['promo'][$val['id']]['metroes'][$val['mid']] = $val['mname'];
-                // возраст
-                $d1 = new DateTime();
-                $d2 = new DateTime($val['birthday']);
-                $diff = $d2->diff($d1);
-                $data['promo'][$val['id']]['age'] = $diff->y;
-                $id = $val['id'];
-                $id_user = $val['id_user'];
-                 $sql = "SELECT COUNT(vs.id) cou
-                FROM empl_vacations v
-                INNER JOIN vacation_stat vs ON vs.id_vac = v.id 
-                WHERE vs.id_promo = {$id} 
-                  AND " . Vacancy::getScopesCustom(Vacancy::$SCOPE_APPLIC_WORKING, 'vs');
-                $res = Yii::app()->db->createCommand($sql)->queryScalar();
-                $data['promo'][$val['id']]['projects'] = $res;
-                $sql = "SELECT r.isman 
-                    FROM resume r
-                    LEFT JOIN user u ON u.id_user = r.id_user
-                    LEFT JOIN user_attribs a ON r.id_user = a.id_us
-                    LEFT JOIN user_attr_dict d ON a.id_attr = d.id
-                    WHERE r.id_user = {$id_user}";
-                $res = Yii::app()->db->createCommand($sql)->queryScalar();
-                $data['promo'][$val['id']]['sex'] = $res;
-
-
-                $data['promo'][$val['id']] = array_merge($data['promo'][$val['id']], $val);
-                // comment
-                if( !isset($data['promo'][$val['id']]['comm']) ) list($data['promo'][$val['id']]['comm'], $data['promo'][$val['id']]['commneg']) = $UserProfileApplic->getCommentsCount($val['id']);
-            } // end foreach
-        } // endif
-        
-        $i = 1;
-        $ret['promo'] = array();
-        $ret['promos'] = $result;
-        foreach ($data['promo'] as $key => $val) { $ret['promo'][$i] = $val; $i++; }
-        // $i = 1;
-        // foreach ($result as $key => $val) { $ret['promos'][$i] = $val['id_user']; $i++; }
-
-
-        return $ret;
+        return $arRes;
     }
 
     public function buildPrettyUrl($data)

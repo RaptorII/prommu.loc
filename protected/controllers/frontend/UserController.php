@@ -1360,6 +1360,7 @@ class UserController extends AppController
             }
             else {
                 $data = (new Services())->getFilteredPromos();
+                $data['max_users'] = $model->MAX_USERS_IN_PROJECT;
             }
             $view = MainConfig::$VIEW_PROJECT_NEW;
         }

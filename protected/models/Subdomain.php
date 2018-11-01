@@ -386,6 +386,48 @@ class Subdomain
 
 		return $url;
 	}
+	/*
+	*		Получаем кешируемые данные
+	*/
+	public static function getCacheData()
+	{
+		$id = self::$HOST . '/Subdomain/All';
+		$arRes = Cache::getData($id);
+		if($arRes['data']===false) {
+			$sql = Yii::app()->db->createCommand()
+								->select("*")
+								->from('subdomains')
+								->where(array('like', 'url', self::$HOST))
+								->queryRow();
 
+			if(!isset($sql['seo']))
+				$sql['seo'] = 'seo';
+
+			$arRes['data']->host = self::$HOST;
+			$arRes['data']->id = $sql['id'];
+			$arRes['data']->seo = $sql['seo'];
+			$arRes['data']->label = $sql['label'];
+			$arRes['data']->url = $sql['url'];
+			$arRes['data']->name = $sql['meta'];
+			$arRes['data']->idies = self::getIdies();
+			$arRes['data']->data = self::getData(true); // true для домена
+
+			$sql = Yii::app()->db->createCommand()
+									->select('c.id_city id')
+									->from('city c')
+									->where('c.region=:region', array(':region' => $arRes['data']->id))
+									->limit(10000)
+									->queryAll();
+
+			$arRes['data']->arCitiesIdes = array();
+			foreach ($sql as $city)
+				array_push($arRes['data']->arCitiesIdes, $city['id']);
+
+			$arRes['data']->strCitiesIdes = implode(',', $arRes['data']->arCitiesIdes);
+
+			Cache::setData($arRes, 604800); // кеш на неделю
+		}
+		return $arRes['data'];
+	}
 }
 ?>

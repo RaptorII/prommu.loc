@@ -30,16 +30,8 @@
     </div>
   </div>
 <?php elseif(!Yii::app()->getRequest()->getParam('users')): ?>
-  <?
-  //    Выбор соискателей
-  //
-  
-    $viData['app_idies'] = array();
-    foreach ($viData['workers']['promos'] as $key => $idus)
-      $viData['app_idies'][] = intval($idus['id_user']);
-  ?>
   <script type="text/javascript">
-    var arIdies = <?=json_encode($viData['app_idies'])?>;
+    var arIdies = <?=json_encode($viData['workers']['promos'])?>;
     var arSelectCity = <?=json_encode($viData['workers']['city'])?>;
     var AJAX_GET_PROMO = "<?='/user'.MainConfig::$PAGE_SERVICES_PUSH?>";
   </script>

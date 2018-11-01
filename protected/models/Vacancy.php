@@ -734,11 +734,12 @@ public function rules()
             . 'cardPrommu=' . $arVacInfo['cardPrommu'];
         // ищем 10 соискателей, и сортируем, чтобы сначала вывести с фото
         $sPromo = new SearchPromo();
-        $cnt = $sPromo->searchPromosCount();
+        $arAllId = $sPromo->searchPromosCount();
+        $cnt = sizeof($arAllId);
         $pages = new CPagination($cnt);
         $pages->pageSize = 10;
         $pages->applyLimit($sPromo);
-        $arr = $sPromo->getPromos(true)['promo'];
+        $arr = $sPromo->getPromos($arAllId, true)['promo'];
 
         $arRes = array();
         foreach ($arr as $u) {
@@ -2121,7 +2122,7 @@ WHERE id_vac = {$inVacId}";
 
     private function getVacanciesIndexPage()
     {
-        $strCities = Subdomain::getCitiesIdies();
+        $strCities = Subdomain::getCacheData()->strCitiesIdes;
         $sql = "SELECT e.id, e.ispremium, e.istemp,
               DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
               e.shour,

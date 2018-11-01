@@ -289,11 +289,12 @@ class Services extends Model
         $SearchPromo = new SearchPromo();
         $ph = $filter['ph'] ?: null;
         $filter = ['filter' => compact('ph')];
-        $arRes['app_count'] = $SearchPromo->searchPromosCount($filter);
+        $arAllId = $SearchPromo->searchPromosCount($filter);
+        $arRes['app_count'] = sizeof($arAllId);
         $arRes['pages'] = new CPagination($arRes['app_count']);
         $arRes['pages']->pageSize = 51;
         $arRes['pages']->applyLimit($SearchPromo);
-        $arRes['workers'] = $SearchPromo->getPromos(0, $filter);
+        $arRes['workers'] = $SearchPromo->getPromos($arAllId, 0, $filter);
         return $arRes;    	
     }
 }

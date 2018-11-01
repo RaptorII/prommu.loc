@@ -39,7 +39,7 @@ class SearchRule extends CBaseUrlRule {
         $outData = array();
 
         $modelSearchVac = new SearchVac;
-        $modelSearchVac->updateSeoValues();
+        //$modelSearchVac->updateSeoValues();
 
         $templateUrlParams = array(
             'cities' => array(),
