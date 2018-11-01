@@ -62,7 +62,7 @@ class SearchPromo extends Model
     {
         $arRes = array();
         $filter = $this->renderSQLFilter();
-        $sql = "SELECT DISTINCT r.id
+        $sql = "SELECT DISTINCT r.id_user
                 FROM resume r
                 INNER JOIN user u ON u.id_user = r.id_user 
                 INNER JOIN user_city uc ON r.id_user = uc.id_user  
@@ -74,7 +74,7 @@ class SearchPromo extends Model
         $query = Yii::app()->db->createCommand($sql)->queryAll();
 
         for( $i=0, $n=sizeof($query); $i<$n; $i++ )
-            $arRes[] = $query[$i]['id'];
+            $arRes[] = $query[$i]['id_user'];
 
         return $arRes;
     }

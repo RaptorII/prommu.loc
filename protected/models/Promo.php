@@ -524,7 +524,7 @@ class Promo extends ARModel
                     u.is_online")
                 ->from('resume r')
                 ->leftjoin('user u', 'u.id_user=r.id_user')
-                ->where(array('in', 'r.id', $inParams['arId']))
+                ->where(array('in', 'r.id_user', $inParams['arId']))
                 ->queryAll();
 
         $nP = sizeof($sql);
