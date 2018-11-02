@@ -244,10 +244,14 @@ var ProjectAddIndexProg = (function () {
         // работа с временем
         $('.time-inp').mask('99:99');
         $('#index').on('blur', '.time-inp', function() { self.checkTime(this) });
+        // работаем с должностями
+        $('#index').on('input','.post-inp',function(){ self.inputPost(this) });
+        $('#index').on('focus','.post-inp',function(){ self.focusPost(this) });
         // обрабатываем клики
         $(document).on('click', function(e) {
             self.checkCity(e.target);
             self.checkMetro(e.target);
+            self.checkPost(e.target);
             self.closureCalendar(e.target);
         });
     }
@@ -421,10 +425,11 @@ var ProjectAddIndexProg = (function () {
                                 arPerInp = $(arPers[i]).find('input');
 
                             name += '[' + idP + ']';
-                            $(arPerInp[0]).attr('name','bdate' + name);
-                            $(arPerInp[1]).attr('name','edate' + name);
-                            $(arPerInp[2]).attr('name','btime' + name);
-                            $(arPerInp[3]).attr('name','etime' + name);
+                            $(arPerInp[1]).attr('name','post' + name);
+                            $(arPerInp[2]).attr('name','bdate' + name);
+                            $(arPerInp[3]).attr('name','edate' + name);
+                            $(arPerInp[4]).attr('name','btime' + name);
+                            $(arPerInp[5]).attr('name','etime' + name);
                         }
                     }
 
@@ -631,10 +636,11 @@ var ProjectAddIndexProg = (function () {
           arPerInp = $(newLoc).find('.period-item input');
 
           name += '[' + arIdies.period + ']';
-          $(arPerInp[0]).attr('name','bdate' + name);
-          $(arPerInp[1]).attr('name','edate' + name);
-          $(arPerInp[2]).attr('name','btime' + name);
-          $(arPerInp[3]).attr('name','etime' + name);
+          $(arPerInp[1]).attr('name','post' + name);
+          $(arPerInp[2]).attr('name','bdate' + name);
+          $(arPerInp[3]).attr('name','edate' + name);
+          $(arPerInp[4]).attr('name','btime' + name);
+          $(arPerInp[5]).attr('name','etime' + name);
 
           arTime = $(newLoc).find('.time-inp');
           $(arTime).mask('99:99');
@@ -837,10 +843,11 @@ var ProjectAddIndexProg = (function () {
             arPers[arPers.length-1].dataset.id = arIdies.period;
             arPerInp = $(arPers[arPers.length-1]).find('input');
             name = '[' + idC + '][' + idL + '][' + arIdies.period + ']';
-            $(arPerInp[0]).attr('name','bdate' + name);
-            $(arPerInp[1]).attr('name','edate' + name);
-            $(arPerInp[2]).attr('name','btime' + name);
-            $(arPerInp[3]).attr('name','etime' + name);
+            $(arPerInp[1]).attr('name','post' + name);
+            $(arPerInp[2]).attr('name','bdate' + name);
+            $(arPerInp[3]).attr('name','edate' + name);
+            $(arPerInp[4]).attr('name','btime' + name);
+            $(arPerInp[5]).attr('name','etime' + name);
             $(main).find('.time-inp').mask('99:99');
         }
         else
@@ -895,6 +902,109 @@ var ProjectAddIndexProg = (function () {
         arT[1] = ('0' + arT[1]).slice(-2);
         $(e).val(arT[0] + ':' + arT[1]);
     }
+    //
+    //      Должность
+    //
+    //      Ввод должности
+    ProjectAddIndexProg.prototype.inputPost = function (e) {
+        this.getPosts(e.value, e);
+    }
+    //      фокус поля должности
+    ProjectAddIndexProg.prototype.focusPost = function (e) {
+        let val = $(e).val();
+        $(e).val('').val(val);
+        this.getPosts(val, e);
+    };
+    //      запрос списка должностей
+    ProjectAddIndexProg.prototype.getPosts = function (val, e) {
+        let self = this,
+            v = e.value.replace(/[^а-яА-ЯїЇєЄіІёЁ\- ]/g,''),
+            main = $(e).closest('.post-field')[0],
+            list = $(main).find('.select-list'),
+            arLi = $(list).find('li'),
+            cnt = 0;
+
+        v = v.charAt(0).toUpperCase() + v.slice(1).toLowerCase();
+        e.value = v;
+
+        for (var i=1; i < arLi.length; i++) {
+            let vNew = $(arLi[i]).text();
+
+            if( vNew.indexOf(v) >= 0 ) {
+                $(arLi[i]).show();
+                cnt++;
+            }
+            else {
+                $(arLi[i]).hide();
+            }
+        }
+        cnt ? $(arLi[0]).hide() : $(arLi[0]).show();
+        $(list).show();
+    }
+    //      Установка должности
+    ProjectAddIndexProg.prototype.checkPost = function (e) {
+        let self = this,
+            $e = $(e),
+            arPosts = $('#index .post-field');
+
+        if( !$e.closest('.post-field').length && !$e.is('.post-field') ) {
+            for(let i=0; i<arPosts.length; i++){ // закрываем списки без фокуса
+                let cSelect = $(arPosts[i]).find('.post-select'),
+                    cInput = $(arPosts[i]).find('.post-inp'),
+                    cList = $(arPosts[i]).find('.select-list'),
+                    v = $(cSelect).text();
+
+                cSelect.text()==='' ? cSelect.hide() : cSelect.show();
+                cInput.val(v).hide();
+                cList.fadeOut();
+            }
+        }
+        else{ // клик по объектам списка
+            if( $e.is('li') && !$e.hasClass('emp') ) { // выбираем из списка
+                let main = $e.closest('.post-item')[0],
+                    select = $(main).find('.post-select'),
+                    inpText = $(main).find('.post-inp'),
+                    list = $(main).find('.select-list'),
+                    input = $(inpText).siblings('[type="hidden"]'),
+                    v = $(input).val();
+
+                if(v!=='' && v===e.dataset.id) {
+                    let v = select.text();
+                    inpText.val(v).hide();
+                    select.show();
+                }
+                else { // ввод нового города
+                    let v = $(e).text();
+
+                    input.val(e.dataset.id);
+                    inpText.val(v).hide();
+                    select.html(v+'<b></b>').show();
+                }
+                list.fadeOut();
+            }
+            else{
+                let main = $e.is('.post-field') ? e : $e.closest('.post-field')[0];
+                for(let i=0; i<arPosts.length; i++) { // закрываем списки без фокуса
+                    let cSelect = $(arPosts[i]).find('.post-select'),
+                        cInput = $(arPosts[i]).find('.post-inp'),
+                        cList = $(arPosts[i]).find('.select-list'),
+                        v = $(cSelect).text();
+
+                    if( !$(arPosts[i]).is(main) ) {
+                        cSelect.show();
+                        cInput.val(v).hide();
+                        cList.fadeOut();
+                    }
+                    else{
+                        if( $e.is('b') )
+                            cInput.val('');
+                        cInput.show().focus();
+                        cSelect.hide();
+                    }
+                }
+            }
+        }
+    }
     //      Проверка заполненности полей
     ProjectAddIndexProg.prototype.checkFields = function () {
         let arr = $('#index .city-item'),
@@ -907,7 +1017,7 @@ var ProjectAddIndexProg = (function () {
                 let data_m = $(arInputs[j]).attr('data-checker');
                 if(data_m!='metro') {
                     let name = $(arInputs[j]).attr('name');
-                    if ($.inArray(name, ['c', 'm']) < 0 && !arInputs[j].value.length)
+                    if ($.inArray(name, ['c', 'm', 'p']) < 0 && !arInputs[j].value.length)
                         empty = true;
                 }
             }

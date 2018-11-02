@@ -1431,9 +1431,7 @@ class UserController extends AppController
                     $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
                     break;
                 case 'index':
-                    $data['original'] = $model->getIndex($id);
-                    $data['location'] = $model->buildIndexArray($data['original']);
-                    $data['filter'] = $model->buildIndexFilterArray($data['original']);
+                    $data = $model->getIndexes($id);
                     $data['project'] = $model->getProjectData($id);
                     if(Yii::app()->request->isAjaxRequest) {
                         $this->renderPartial(
@@ -1521,9 +1519,7 @@ class UserController extends AppController
                         $model->recordIndex($_POST, $id);
                         $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id.'/index');
                     }
-                    $data['original'] = $model->getIndex($id);
-                    $data['location'] = $model->buildIndexArray($data['original']);
-                    $data['filter'] = $model->buildIndexFilterArray($data['original']);
+                    $data = $model->getIndexes($id);
                     $data['project'] = $model->getProjectData($id);
                     $view = MainConfig::$VIEW_PROJECT_ITEM_ADR_CHANGE;
                     break;

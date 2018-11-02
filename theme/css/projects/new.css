@@ -285,7 +285,7 @@
 }
 .project__index-arrow,
 .project__index-pen,
-.city-field, .metro-field{ position: relative }
+.city-field, .metro-field, .post-field{ position: relative }
 .project__index-arrow:after,
 .project__index-pen:after{
 	position: absolute;
@@ -332,16 +332,17 @@
 	transition: all 0.3s ease-out;
 }
 .select-list li:hover{ background-color: rgba(255,255,255,0.2) }
-.city-field, .metro-field{
+.city-field, .metro-field, .post-field{
 	width: 100%;
 	max-width: 250px;
 	background: #ffffff;
 	border: 1px solid #cecece;
 	cursor: text;
 }
-.city-field, .metro-field{ padding-right: 25px }
+.city-field, .metro-field, .post-field{ padding-right: 25px }
 #DiContent #index .metro-field input,
-#DiContent #index .city-field input{
+#DiContent #index .city-field input,
+#DiContent #index .post-field input{
 	height: 30px;
 	border: none;
 	background: transparent;
@@ -381,6 +382,7 @@
 }
 .city-select,
 .metro-select,
+.post-select,
 .filter-city-select li:not([data-id="0"]){
 	display: inline-block;
 	padding: 3px 20px 3px 5px;
@@ -411,6 +413,7 @@
 }
 .city-select b,
 .metro-select b,
+.post-select b,
 .filter-city-select b{
 	width: 19px;
 	height: 19px;
@@ -425,6 +428,7 @@
 .filter-city-select b{ top: 5px }
 .city-select b:before,
 .metro-select b:before,
+.post-select b:before,
 .filter-city-select b:before{
 	content: '\2716';
 	display: block;
@@ -718,6 +722,14 @@
 	width: 100%;
 	margin-bottom: 15px;
 }
+.post-item{ display: flex; }
+.post-item li[data-id="0"]{ display: none; }
+.post-item .select-list{ display: none }
+.period-item .post-item{
+	width: 100%;
+	padding-left: 0;
+	margin-bottom: 15px;
+}
 /*
 *		MEDIA
 */
@@ -782,9 +794,6 @@
 	}
 	.project__index-row.loc-field{ flex-wrap: nowrap }
 	.city-item, .loc-item, .period-item{ padding: 25px 25px 10px }
-	.period-item .period-field,
-	.period-item .project__index-pen{ width: initial }
-	.period-item .period-field:nth-child(2){ padding-left: 0 }
 }
 @media screen and (min-width: 992px){
 	#DiContent .project__opt-row .project__opt-btn{ 
@@ -799,12 +808,15 @@
 	.project__index-period .project__index-pen:after{ display: block }
 
 	.project__index { padding: 25px 25px 10px }
+	.period-item .period-field,
+	.period-item .project__index-pen{ width: initial }
 }
 @media screen and (min-width: 1200px){
 	#DiContent .project__index-time input{ 
 		text-align: center;
 		padding: 0 16px 0 6px;
 	}
+	.period-item .post-item{ width: 25% }
 }
 /*
 *

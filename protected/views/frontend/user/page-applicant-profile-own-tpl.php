@@ -125,8 +125,8 @@
   <div class="ppp__logo">
     <div class="ppp__logo-main">
       <?php if($attr['photo']): ?>
-        <a href="<?= $this->ViewModel->getHtmlLogo($attr['photo'], ViewModel::$LOGO_TYPE_APPLIC, ViewModel::$LOGO_SIZE_MAX) ?>" class="js-g-hashint ppp-logo-main__link ppp__logo-full" title="<?=$h1title?>">
-          <img src="<?= $this->ViewModel->getHtmlLogo($attr['photo'], ViewModel::$LOGO_TYPE_APPLIC, ViewModel::$LOGO_SIZE_400); ?>" alt='Соискатель <?=$attr['lastname']?> prommu.com' class="ppp-logo-main__img">
+        <a href="<?= $this->ViewModel->getHtmlLogo($attr['photo'], ViewModel::$LOGO_TYPE_APPLIC, ViewModel::$LOGO_SIZE_MAX, $attr['isman']) ?>" class="js-g-hashint ppp-logo-main__link ppp__logo-full" title="<?=$h1title?>">
+          <img src="<?= $this->ViewModel->getHtmlLogo($attr['photo'], ViewModel::$LOGO_TYPE_APPLIC, ViewModel::$LOGO_SIZE_400, $attr['isman']); ?>" alt='Соискатель <?=$attr['lastname']?> prommu.com' class="ppp-logo-main__img">
         </a>
       <?php else: ?>
         <img src="<?= $this->ViewModel->getHtmlLogoPromo($attr['photo'], ViewModel::$LOGO_TYPE_APPLIC, ViewModel::$LOGO_SIZE_400, $attr['isman']) ?>" alt="" class="ppp-logo-main__img">

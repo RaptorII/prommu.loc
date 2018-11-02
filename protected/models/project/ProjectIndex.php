@@ -2,6 +2,21 @@
 
 class ProjectIndex extends CActiveRecordBehavior{
 	/**
+	 *	@param 	number - project ID 
+	 *	@return array
+	 * Отсортированные задания по проекту
+	 */
+	public function getIndexes($prj) {
+		$arRes['original'] = $this->getIndex($prj);
+		$arRes['location'] = $this->buildIndexArray($arRes['original']);
+		$arRes['filter'] = $this->buildIndexFilterArray($arRes['original']);
+		$arP = (new Vacancy)->getPost();
+		for ($i=0, $n=sizeof($arP); $i < $n; $i++) 
+			$arRes['posts'][$arP[$i]['id']] = $arP[$i]['name'];
+
+		return $arRes;
+	}
+	/**
 	 * @param $arr array - ['city','metro','lname','lindex','bdate','edate','btime','etime']
 	 * @param $prj number - project ID
 	 * @param $isCreate bool
@@ -32,7 +47,8 @@ class ProjectIndex extends CActiveRecordBehavior{
 						'longitude' => rand(1111,9999),
 						'point' => $isCreate ? ($pId.rand(1111,9999)) : $p,
 						'location' => $isCreate ? $lId : $l,
-						'metro' => $arr['metro'][$c][$l]
+						'metro' => $arr['metro'][$c][$l],
+						'post' => $arr['post'][$c][$l][$p]
 					);
 					$arNewP[] = $p;
 				}     
@@ -158,6 +174,7 @@ class ProjectIndex extends CActiveRecordBehavior{
 								TIME_FORMAT(pc.etime, '%H:%i') etime,
 								pc.point,
 								pc.location,
+								pc.post,
 								pc.metro id_metro,
 								m.name metro"
 							)
@@ -242,6 +259,7 @@ class ProjectIndex extends CActiveRecordBehavior{
 			$arP['edate'] = $i['edate'];
 			$arP['btime'] = $i['btime'];
 			$arP['etime'] = $i['etime'];
+			$arP['post'] = $i['post'];
 			$arRes[$i['id_city']]['locations'][$i['location']]['periods'][$i['point']] = $arP;
 		}
 
