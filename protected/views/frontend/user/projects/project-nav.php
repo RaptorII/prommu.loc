@@ -17,7 +17,9 @@
   $this->setBreadcrumbsEx(
     array('Мои проекты', MainConfig::$PAGE_PROJECT_LIST),
     array($viData['project']['name'], $link),
-    array($arTabs[$s]['name'], $arTabs[$s]['link'])
+    ($s!=='address-edit' 
+    	? [$arTabs[$s]['name'], $arTabs[$s]['link']] 
+    	: ['РЕДАКТИРОВАТЬ АДРЕСНУЮ ПРОГРАММУ', $link . '/address-edit']) // костыль для редактирования адресной программы
   );
   $this->setPageTitle($viData['project']['name']);
 ?>

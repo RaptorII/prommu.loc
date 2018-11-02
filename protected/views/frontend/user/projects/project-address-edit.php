@@ -1,22 +1,10 @@
 <?php
-	$pLink = MainConfig::$PAGE_PROJECT_LIST . '/' . $project;
-  $this->setBreadcrumbsEx(
-    array('Мои проекты', MainConfig::$PAGE_PROJECT_LIST),
-    array($viData['project']['name'], $pLink),
-    array(
-    	'РЕДАКТИРОВАТЬ АДРЕСНУЮ ПРОГРАММУ', 
-    	$pLink . '/address-edit'
-    )
-  );
-  $this->setPageTitle($viData['project']['name']);
-
 	$bUrl = Yii::app()->baseUrl;
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/new.css');
 	Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/address-edit.css');
 	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/additional.js', CClientScript::POS_END);
 	Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/address-edit.js', CClientScript::POS_END);
   Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/item.css');
-
 ?>
 <script type="text/javascript">var getParams = <?=json_encode($_GET)?></script>
 <div class="filter__veil"></div>
