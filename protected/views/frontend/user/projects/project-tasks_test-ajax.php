@@ -102,7 +102,7 @@
                                     <div class="task__table-cell border">
                                 <span class="tasks__status-canceled tasks__status">
                                     <span class="tasks__status-circle">&#8226;</span>
-                                    Отменена
+                                    <span class="status__active">Отменена</span>
                                 </span>
                                     </div>
                                 </td>
@@ -187,7 +187,7 @@
                                     <div class="task__table-cell border">
                                 <span class="tasks__status-work tasks__status">
                                     <span class="tasks__status-circle">&#8226;</span>
-                                    В работе
+                                    <span class="status__active">В работе</span>
                                 </span>
                                     </div>
                                 </td>
@@ -232,7 +232,7 @@
                                     <div class="task__table-cell border">
                                 <span class="tasks__status-canceled tasks__status">
                                     <span class="tasks__status-circle">&#8226;</span>
-                                    Отменена
+                                    <span class="status__active">Отменена</span>
                                 </span>
                                     </div>
                                 </td>
@@ -350,7 +350,7 @@
                                     <div class="task__table-cell border">
                                 <span class="tasks__status-canceled tasks__status">
                                     <span class="tasks__status-circle">&#8226;</span>
-                                    Отменена
+                                    <span class="status__active">Отменена</span>
                                 </span>
                                     </div>
                                 </td>
@@ -527,7 +527,7 @@
                                     <div class="task__table-cell border">
                                 <span class="tasks__status-canceled tasks__status">
                                     <span class="tasks__status-circle">&#8226;</span>
-                                    Отменена
+                                    <span class="status__active">Отменена</span>
                                 </span>
                                     </div>
                                 </td>
