@@ -258,3 +258,110 @@
         width:100%;
     }
 }
+
+
+/**top bottom arrows**/
+.go-up, .go-down {
+    display: none;
+    position: fixed;
+    z-index: 20;
+    left: 2%;
+    background: #4F4F4F;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+    text-align: center;
+    font: normal normal 42px/42px sans-serif;
+    text-shadow: 0 1px 2px #000;
+    opacity: .5;
+    padding: 3px;
+    margin-bottom: 5px;
+    width: 42px;
+    height: 47px;
+}
+.go-up { bottom: 60px; }
+.go-down { bottom: 10px; }
+.go-down:hover,
+.go-up:hover {
+    opacity: 1;
+    box-shadow: 0 5px 0.5em -1px #666;
+}
+
+
+/*********control**********/
+#DiContent textarea.control__text-area{
+    height: 80px;
+    width:100%;
+    resize: none;
+    outline:none;
+    border: none;
+    background: none;
+    color: black;
+}
+
+.control__select-area{
+    outline:none;
+}
+.control__panel{
+    text-align: right;
+    margin-top: 5px;
+}
+
+.control__panel button{
+    display: inline-block;
+    padding: 5px 10px;
+    color: #fff;
+    background: #ff6500;
+    text-transform: uppercase;
+    border: 0;
+    outline:none;
+    margin-left:5px;
+}
+
+.control__panel-checkbox{
+    display: flex;
+    justify-content: flex-end;
+    margin-top:5px;
+}
+.control__panel-checkbox .panel-checkbox{
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+
+/********checkbox***********/
+.task__checkbox{
+    font-size: 14px;
+    font-family: 'LatoRegular', Calibri, Arial, sans-serif;
+    padding: 0 30px 0 35px;
+    line-height: 25px;
+    vertical-align: top;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+}
+.task__checkbox-input{
+    display:none!important;
+}
+.task__checkbox-checker{
+    height: 25px;
+    width: 25px;
+    background: none;
+    border: 1px solid #c8c8c8;
+    border-radius: 2px;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.task__checkbox-input:checked + .task__checkbox-checker span{
+    background: #abb820;
+}
+.task__checkbox-checker span{
+    width: 11px;
+    height: 11px;
+    margin: 6px;
+    display: block;
+}

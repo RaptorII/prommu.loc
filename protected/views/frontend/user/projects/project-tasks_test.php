@@ -120,6 +120,8 @@ $arFilterData = [
 		<? require __DIR__ . '/project-nav.php'; // Меню вкладок ?>
 	</div>
 </div>
+
+
 <div class="project__module" data-id="<?=$project?>">
     <div class="project__header">
         <? require __DIR__ . '/filter.php'; // ФИЛЬТР ?>
@@ -135,3 +137,6 @@ $arFilterData = [
 		<br><br><h2 class="center">Не найдено локаций с выбранным персоналом</h2>
 	<?php endif; ?>
 </div>
+
+<div class="go-up" title="Вверх" id='ToTop'>⇧</div>
+<div class="go-down" title="Вниз" id='OnBottom'>⇩</div>

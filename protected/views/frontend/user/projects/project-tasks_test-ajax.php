@@ -7,220 +7,239 @@
         </div>
         <div class="tasks__one-tt">
 
-            <div class="task__item-user">
-                <div class="task__table-cell task__table-user task__table-user-1">
-                    <img src="/images/applic/20180819180030833100.jpg">
-                    <span>Бахвалова Маргарита</span>
+            <div class="task__item-container">
+                <div class="task__item-user">
+                    <div class="task__table-cell task__table-user task__table-user-1">
+                        <img src="/images/applic/20180819180030833100.jpg">
+                        <span>Бахвалова Маргарита</span>
+                    </div>
+                    <div class="task__table-cell task__table-user border task__table-user-2">
+                        Кол-во задач: <span class="task__table-user-task-ok">3</span>
+                    </div>
+                    <div data-type='change'
+                         class="task__table-cell task__table-user border task__table-user-3 button__task-control"
+                    >
+                        Изменить
+                    </div>
                 </div>
-                <div class="task__table-cell task__table-user border task__table-user-2">
-                    Кол-во задач: <span class="task__table-user-task-ok">3</span>
-                </div>
-                <div class="task__table-cell task__table-user border task__table-user-3">
-                    Изменить
-                </div>
-            </div>
 
-            <div class="tasks__one-user">
-                <div class="task__item">
-                    <table class="task__table">
-                        <thead>
-                        <tr>
-                            <th class="name">Название</th>
-                            <th class="descr">Описание</th>
-                            <th class="status">Статус</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class="name">
-                                <div class="task__table-cell border">
-                                    Название задания
-                                </div>
-                            </td>
-                            <td class="descr">
-                                <div class="task__table-cell border task__table-index">
-                                    Описание задания Описание задания Описание задания Описание задания Описание
-                                    задания
-                                    мОписание
-                                    задания Описание задания Описание задания Описание задания Описание
-                                    заданияОписание
-                                    задания
-                                    Описание задания Описание задания Описание задания Описание задания Описание
-                                    заданияОписание
-                                    задания Описание задания Описание задания
-                                </div>
-                            </td>
-                            <td class="status">
-                                <div class="task__table-cell border">
+                <div class="tasks__one-user">
+                    <div class="task__item">
+                        <table class="task__table">
+                            <thead>
+                            <tr>
+                                <th class="name">Название</th>
+                                <th class="descr">Описание</th>
+                                <th class="status">Статус</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="name">
+                                    <div class="task__table-cell border">
+                                        Название задания
+                                    </div>
+                                </td>
+                                <td class="descr">
+                                    <div class="task__table-cell border task__table-index">
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        задания
+                                        мОписание
+                                        задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания Описание задания Описание задания
+                                    </div>
+                                </td>
+                                <td class="status">
+                                    <div class="task__table-cell border">
                                 <span class="tasks__status-work tasks__status">
                                     <span class="tasks__status-circle">&#8226;</span>
-                                    В работе
+                                    <span class="status__active">В работе</span>
                                 </span>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
 
-                <div class="task__item">
+                    <div class="task__item">
 
-                    <table class="task__table">
-                        <thead>
-                        <? /*<tr>
+                        <table class="task__table">
+                            <thead>
+                            <? /*<tr>
                         <th class="user">ФИО</th>
                         <th class="name">Название</th>
                         <th class="descr">Описание</th>
                         <th class="status">Статус</th>
                     </tr>*/ ?>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class="name">
-                                <div class="task__table-cell border">
-                                    Название задания
-                                </div>
-                            </td>
-                            <td class="descr">
-                                <div class="task__table-cell border task__table-index">
-                                    Описание задания Описание задания Описание задания Описание задания Описание
-                                    задания
-                                    мОписание
-                                    задания Описание задания Описание задания Описание задания Описание
-                                    заданияОписание
-                                    задания
-                                    Описание задания Описание задания Описание задания Описание задания Описание
-                                    заданияОписание
-                                    задания Описание задания Описание задания
-                                </div>
-                            </td>
-                            <td class="status">
-                                <div class="task__table-cell border">
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="name">
+                                    <div class="task__table-cell border">
+                                        Название задания
+                                    </div>
+                                </td>
+                                <td class="descr">
+                                    <div class="task__table-cell border task__table-index">
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        задания
+                                        мОписание
+                                        задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания Описание задания Описание задания
+                                    </div>
+                                </td>
+                                <td class="status">
+                                    <div class="task__table-cell border">
                                 <span class="tasks__status-canceled tasks__status">
                                     <span class="tasks__status-circle">&#8226;</span>
                                     Отменена
                                 </span>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
                 </div>
             </div>
 
-            <div class="task__item-user task__item-false">
-                <div class="task__table-cell task__table-user task__table-user-1">
-                    <img src="/images/applic/20180819180030833100.jpg">
-                    <span>Бахвалова Маргарита</span>
+            <div class="task__item-container">
+                <div class="task__item-user task__item-false">
+                    <div class="task__table-cell task__table-user task__table-user-1">
+                        <img src="/images/applic/20180819180030833100.jpg">
+                        <span>Бахвалова Маргарита</span>
+                    </div>
+                    <div class="task__table-cell task__table-user border task__table-user-2">
+                        Кол-во задач: <span class="task__table-user-task-none">0</span>
+                    </div>
+                    <div data-type='add'
+                         class="task__table-cell task__table-user border task__table-user-3 button__task-control"
+                    >
+                        Добавить
+                    </div>
                 </div>
-                <div class="task__table-cell task__table-user border task__table-user-2">
-                    Кол-во задач: <span class="task__table-user-task-none">0</span>
+
+                <div class="tasks__one-user">
+
                 </div>
-                <div class="task__table-cell task__table-user border task__table-user-3">
-                    Добавить
-                </div>
+
             </div>
 
 
-            <div class="task__item-user">
-                <div class="task__table-cell task__table-user task__table-user-1">
-                    <img src="/images/applic/20180819180030833100.jpg">
-                    <span>Бахвалова Маргарита</span>
+            <div class="task__item-container">
+                <div class="task__item-user">
+                    <div class="task__table-cell task__table-user task__table-user-1">
+                        <img src="/images/applic/20180819180030833100.jpg">
+                        <span>Бахвалова Маргарита</span>
+                    </div>
+                    <div class="task__table-cell task__table-user border task__table-user-2">
+                        Кол-во задач: <span class="task__table-user-task-ok">2</span>
+                    </div>
+                    <div data-type='change'
+                         class="task__table-cell task__table-user border task__table-user-3 button__task-control"
+                    >
+                        Изменить
+                    </div>
                 </div>
-                <div class="task__table-cell task__table-user border task__table-user-2">
-                    Кол-во задач: <span class="task__table-user-task-ok">2</span>
-                </div>
-                <div class="task__table-cell task__table-user border task__table-user-3">
-                    Изменить
-                </div>
-            </div>
-            <div class="tasks__one-user">
-                <div class="task__item">
-                    <table class="task__table">
-                        <thead>
-                        <tr>
-                            <th class="name">Название</th>
-                            <th class="descr">Описание</th>
-                            <th class="status">Статус</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class="name">
-                                <div class="task__table-cell border">
-                                    Название задания
-                                </div>
-                            </td>
-                            <td class="descr">
-                                <div class="task__table-cell border task__table-index">
-                                    Описание задания Описание задания Описание задания Описание задания Описание
-                                    задания
-                                    мОписание
-                                    задания Описание задания Описание задания Описание задания Описание
-                                    заданияОписание
-                                    задания
-                                    Описание задания Описание задания Описание задания Описание задания Описание
-                                    заданияОписание
-                                    задания Описание задания Описание задания
-                                </div>
-                            </td>
-                            <td class="status">
-                                <div class="task__table-cell border">
+                <div class="tasks__one-user">
+                    <div class="task__item">
+                        <table class="task__table">
+                            <thead>
+                            <tr>
+                                <th class="name">Название</th>
+                                <th class="descr">Описание</th>
+                                <th class="status">Статус</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="name">
+                                    <div class="task__table-cell border">
+                                        Название задания
+                                    </div>
+                                </td>
+                                <td class="descr">
+                                    <div class="task__table-cell border task__table-index">
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        задания
+                                        мОписание
+                                        задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания Описание задания Описание задания
+                                    </div>
+                                </td>
+                                <td class="status">
+                                    <div class="task__table-cell border">
                                 <span class="tasks__status-work tasks__status">
                                     <span class="tasks__status-circle">&#8226;</span>
                                     В работе
                                 </span>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
 
-                <div class="task__item">
+                    <div class="task__item">
 
-                    <table class="task__table">
-                        <thead>
-                        <? /*<tr>
+                        <table class="task__table">
+                            <thead>
+                            <? /*<tr>
                         <th class="user">ФИО</th>
                         <th class="name">Название</th>
                         <th class="descr">Описание</th>
                         <th class="status">Статус</th>
                     </tr>*/ ?>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class="name">
-                                <div class="task__table-cell border">
-                                    Название задания
-                                </div>
-                            </td>
-                            <td class="descr">
-                                <div class="task__table-cell border task__table-index">
-                                    Описание задания Описание задания Описание задания Описание задания Описание
-                                    задания
-                                    мОписание
-                                    задания Описание задания Описание задания Описание задания Описание
-                                    заданияОписание
-                                    задания
-                                    Описание задания Описание задания Описание задания Описание задания Описание
-                                    заданияОписание
-                                    задания Описание задания Описание задания
-                                </div>
-                            </td>
-                            <td class="status">
-                                <div class="task__table-cell border">
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="name">
+                                    <div class="task__table-cell border">
+                                        Название задания
+                                    </div>
+                                </td>
+                                <td class="descr">
+                                    <div class="task__table-cell border task__table-index">
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        задания
+                                        мОписание
+                                        задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания Описание задания Описание задания
+                                    </div>
+                                </td>
+                                <td class="status">
+                                    <div class="task__table-cell border">
                                 <span class="tasks__status-canceled tasks__status">
                                     <span class="tasks__status-circle">&#8226;</span>
                                     Отменена
                                 </span>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -236,51 +255,110 @@
 
         <div class="tasks__one-tt">
 
-            <div class="task__item">
-                <table class="task__table">
-                    <thead>
-                    <tr>
+            <div class="task__item-container">
+                <div class="task__item-user">
+                    <div class="task__table-cell task__table-user task__table-user-1">
+                        <img src="/images/applic/20180819180030833100.jpg">
+                        <span>Бахвалова Маргарита</span>
+                    </div>
+                    <div class="task__table-cell task__table-user border task__table-user-2">
+                        Кол-во задач: <span class="task__table-user-task-ok">3</span>
+                    </div>
+                    <div data-type='change'
+                         class="task__table-cell task__table-user border task__table-user-3 button__task-control"
+                    >
+                        Изменить
+                    </div>
+                </div>
+
+                <div class="tasks__one-user">
+                    <div class="task__item">
+                        <table class="task__table">
+                            <thead>
+                            <tr>
+                                <th class="name">Название</th>
+                                <th class="descr">Описание</th>
+                                <th class="status">Статус</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="name">
+                                    <div class="task__table-cell border">
+                                        Название задания
+                                    </div>
+                                </td>
+                                <td class="descr">
+                                    <div class="task__table-cell border task__table-index">
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        задания
+                                        мОписание
+                                        задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания Описание задания Описание задания
+                                    </div>
+                                </td>
+                                <td class="status">
+                                    <div class="task__table-cell border">
+                                <span class="tasks__status-work tasks__status">
+                                    <span class="tasks__status-circle">&#8226;</span>
+                                    <span class="status__active">В работе</span>
+                                </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <div class="task__item">
+
+                        <table class="task__table">
+                            <thead>
+                            <? /*<tr>
                         <th class="user">ФИО</th>
                         <th class="name">Название</th>
                         <th class="descr">Описание</th>
                         <th class="status">Статус</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td rowspan="1" class="user">
-                            <div class="task__table-cell task__table-user">
-                                <img src="/images/applic/20180819180030833100.jpg">
-                                <span>Бахвалова Маргарита</span>
-                            </div>
-                        </td>
-                        <td class="name">
-                            <div class="task__table-cell border">
-                                Название задания
-                            </div>
-                        </td>
-                        <td class="descr">
-                            <div class="task__table-cell border task__table-index">
-                                Описание задания Описание задания Описание задания Описание задания Описание задания
-                                мОписание
-                                задания Описание задания Описание задания Описание задания Описание заданияОписание
-                                задания
-                                Описание задания Описание задания Описание задания Описание задания Описание
-                                заданияОписание
-                                задания Описание задания Описание задания
-                            </div>
-                        </td>
-                        <td class="status">
-                            <div class="task__table-cell border">
-                                <span class="tasks__status-revision tasks__status">
+                    </tr>*/ ?>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="name">
+                                    <div class="task__table-cell border">
+                                        Название задания
+                                    </div>
+                                </td>
+                                <td class="descr">
+                                    <div class="task__table-cell border task__table-index">
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        задания
+                                        мОписание
+                                        задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания Описание задания Описание задания
+                                    </div>
+                                </td>
+                                <td class="status">
+                                    <div class="task__table-cell border">
+                                <span class="tasks__status-canceled tasks__status">
                                     <span class="tasks__status-circle">&#8226;</span>
-                                    Доработка
+                                    Отменена
                                 </span>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -293,298 +371,175 @@
     <div class="tasks__one-city">
         <div class="task__item-tt">Название ТТ 1, Адрес ТТ 1</div>
         <div class="tasks__one-tt">
+            <div class="task__item-container">
+                <div class="task__item-user">
+                    <div class="task__table-cell task__table-user task__table-user-1">
+                        <img src="/images/applic/20180819180030833100.jpg">
+                        <span>Бахвалова Маргарита</span>
+                    </div>
+                    <div class="task__table-cell task__table-user border task__table-user-2">
+                        Кол-во задач: <span class="task__table-user-task-ok">3</span>
+                    </div>
+                    <div data-type='change'
+                         class="task__table-cell task__table-user border task__table-user-3 button__task-control"
+                    >
+                        Изменить
+                    </div>
+                </div>
 
-            <div class="task__item">
-                <table class="task__table">
-                    <thead>
-                    <tr>
+                <div class="tasks__one-user">
+                    <div class="task__item">
+                        <table class="task__table">
+                            <thead>
+                            <tr>
+                                <th class="name">Название</th>
+                                <th class="descr">Описание</th>
+                                <th class="status">Статус</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="name">
+                                    <div class="task__table-cell border">
+                                        Название задания
+                                    </div>
+                                </td>
+                                <td class="descr">
+                                    <div class="task__table-cell border task__table-index">
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        задания
+                                        мОписание
+                                        задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания Описание задания Описание задания
+                                    </div>
+                                </td>
+                                <td class="status">
+                                    <div class="task__table-cell border">
+                                <span class="tasks__status-work tasks__status">
+                                    <span class="tasks__status-circle">&#8226;</span>
+                                    <span class="status__active">В работе</span>
+                                </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="task__item-container">
+                <div class="task__item-user">
+                    <div class="task__table-cell task__table-user task__table-user-1">
+                        <img src="/images/applic/20180819180030833100.jpg">
+                        <span>Бахвалова Маргарита</span>
+                    </div>
+                    <div class="task__table-cell task__table-user border task__table-user-2">
+                        Кол-во задач: <span class="task__table-user-task-ok">3</span>
+                    </div>
+                    <div data-type='change'
+                         class="task__table-cell task__table-user border task__table-user-3 button__task-control"
+                    >
+                        Изменить
+                    </div>
+                </div>
+
+                <div class="tasks__one-user">
+                    <div class="task__item">
+                        <table class="task__table">
+                            <thead>
+                            <tr>
+                                <th class="name">Название</th>
+                                <th class="descr">Описание</th>
+                                <th class="status">Статус</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="name">
+                                    <div class="task__table-cell border">
+                                        Название задания
+                                    </div>
+                                </td>
+                                <td class="descr">
+                                    <div class="task__table-cell border task__table-index">
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        задания
+                                        мОписание
+                                        задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания Описание задания Описание задания
+                                    </div>
+                                </td>
+                                <td class="status">
+                                    <div class="task__table-cell border">
+                                <span class="tasks__status-work tasks__status">
+                                    <span class="tasks__status-circle">&#8226;</span>
+                                    <span class="status__active">В работе</span>
+                                </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <div class="task__item">
+
+                        <table class="task__table">
+                            <thead>
+                            <? /*<tr>
                         <th class="user">ФИО</th>
                         <th class="name">Название</th>
                         <th class="descr">Описание</th>
                         <th class="status">Статус</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-
-                    <tr>
-                        <td rowspan="3" class="user">
-                            <div class="task__table-cell task__table-user">
-                                <img src="/images/applic/20180819180030833100.jpg">
-                                <span>Бахвалова Маргарита</span>
-                            </div>
-                        </td>
-
-
-                        <td class="name">
-                            <div class="task__table-cell border">
-                                Название задания 1
-                            </div>
-                        </td>
-                        <td class="descr">
-                            <div class="task__table-cell border task__table-index">
-                                Описание задания Описание задания Описание задания Описание задания Описание задания
-                                мОписание
-                                задания Описание задания Описание задания Описание задания Описание заданияОписание
-                                задания
-                                Описание
-                                задания Описание задания Описание задания Описание задания Описание заданияОписание
-                                задания
-                                Описание
-                                задания Описание
-                            </div>
-                        </td>
-                        <td class="status">
-                            <div class="task__table-cell border">
-                                <span class="tasks__status-ready tasks__status">
-                                   <span class="tasks__status-circle">&#8226;</span>
-                                    Готова
+                    </tr>*/ ?>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="name">
+                                    <div class="task__table-cell border">
+                                        Название задания
+                                    </div>
+                                </td>
+                                <td class="descr">
+                                    <div class="task__table-cell border task__table-index">
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        задания
+                                        мОписание
+                                        задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания
+                                        Описание задания Описание задания Описание задания Описание задания Описание
+                                        заданияОписание
+                                        задания Описание задания Описание задания
+                                    </div>
+                                </td>
+                                <td class="status">
+                                    <div class="task__table-cell border">
+                                <span class="tasks__status-canceled tasks__status">
+                                    <span class="tasks__status-circle">&#8226;</span>
+                                    Отменена
                                 </span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
 
-                        <td class="name">
-                            <div class="task__table-cell border">
-                                Название задания 2
-                            </div>
-                        </td>
-                        <td class="descr">
-                            <div class="task__table-cell border task__table-index">
-                                Описание задания Описание задания Описание задания Описание задания Описание задания
-                                мОписание
-                                задания Описание задания Описание задания Описание задания Описание заданияОписание
-                                задания
-                                Описание
-                                задания Описание задания Описание задания Описание задания Описание заданияОписание
-                                задания
-                                Описание
-                                задания Описание
-                            </div>
-                        </td>
-                        <td class="status">
-                            <div class="task__table-cell border">
-                                <span class="tasks__status-expectation tasks__status">
-                                   <span class="tasks__status-circle">&#8226;</span>
-                                    Ожидание
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-
-
-                        <td class="name">
-                            <div class="task__table-cell border">
-                                Название задания 3
-                            </div>
-                        </td>
-                        <td class="descr">
-                            <div class="task__table-cell border task__table-index">
-                                Описание задания Описание задания Описание задания Описание задания Описание задания
-                                мОписание
-                                задания Описание задания Описание задания Описание задания Описание заданияОписание
-                                задания
-                                Описание
-                                задания Описание задания Описание задания Описание задания Описание заданияОписание
-                                задания
-                                Описание
-                                задания Описание
-                            </div>
-                        </td>
-                        <td class="status">
-                            <div class="task__table-cell border">
-                               <span class="tasks__status-expectation tasks__status">
-                                   <span class="tasks__status-circle">&#8226;</span>
-                                    Ожидание
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr></tr>
-
-
-                    <tr>
-                        <td rowspan="3" class="user">
-                            <div class="task__table-cell task__table-user">
-                                <img src="/images/applic/20180817201854435100.jpg">
-                                <span>Пасько Юлия</span>
-                            </div>
-                        </td>
-
-
-                        <td class="name">
-                            <div class="task__table-cell border">
-                                Название задания 1
-                            </div>
-                        </td>
-                        <td class="descr">
-                            <div class="task__table-cell border task__table-index">
-                                123
-                            </div>
-                        </td>
-                        <td class="status">
-                            <div class="task__table-cell border">
-                               <span class="tasks__status-expectation tasks__status">
-                                   <span class="tasks__status-circle">&#8226;</span>
-                                    Ожидание
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-
-
-                        <td class="name">
-                            <div class="task__table-cell border">
-                                Название задания 2
-                            </div>
-                        </td>
-                        <td class="descr">
-                            <div class="task__table-cell border task__table-index">
-                                123
-                            </div>
-                        </td>
-                        <td class="status">
-                            <div class="task__table-cell border">
-                                <span class="tasks__status-expectation tasks__status">
-                                   <span class="tasks__status-circle">&#8226;</span>
-                                    Ожидание
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-
-
-                        <td class="name">
-                            <div class="task__table-cell border">
-                                Название задания 3
-                            </div>
-                        </td>
-                        <td class="descr">
-                            <div class="task__table-cell border task__table-index">
-                                123
-                            </div>
-                        </td>
-                        <td class="status">
-                            <div class="task__table-cell border">
-                               <span class="tasks__status-expectation tasks__status">
-                                   <span class="tasks__status-circle">&#8226;</span>
-                                    Ожидание
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td rowspan="3" class="user">
-                            <div class="task__table-cell task__table-user">
-                                <img src="/images/applic/20180416165041951100.jpg">
-                                <span>Деревянко Дмитрий</span>
-                            </div>
-                        </td>
-
-
-                        <td class="name">
-                            <div class="task__table-cell border">
-                                Название задания 1
-                            </div>
-                        </td>
-                        <td class="descr">
-                            <div class="task__table-cell border task__table-index">
-                                321
-                            </div>
-                        </td>
-                        <td class="status">
-                            <div class="task__table-cell border">
-                                <span class="tasks__status-expectation tasks__status">
-                                   <span class="tasks__status-circle">&#8226;</span>
-                                    Ожидание
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-
-
-                        <td class="name">
-                            <div class="task__table-cell border">
-                                Название задания 2
-                            </div>
-                        </td>
-                        <td class="descr">
-                            <div class="task__table-cell border task__table-index">
-                                321
-                            </div>
-                        </td>
-                        <td class="status">
-                            <div class="task__table-cell border">
-                                <span class="tasks__status-expectation tasks__status">
-                                   <span class="tasks__status-circle">&#8226;</span>
-                                    Ожидание
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-
-
-                        <td class="name">
-                            <div class="task__table-cell border">
-                                Название задания 3
-                            </div>
-                        </td>
-                        <td class="descr">
-                            <div class="task__table-cell border task__table-index">
-                                123
-                            </div>
-                        </td>
-                        <td class="status">
-                            <div class="task__table-cell border">
-                                <span class="tasks__status-expectation tasks__status">
-                                   <span class="tasks__status-circle">&#8226;</span>
-                                    Ожидание
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-
-
-                    <tr>
-                        <td rowspan="1" class="user">
-                            <div class="task__table-cell task__table-user">
-                                <img src="/images/applic/20180815140556607100.jpg">
-                                <span>Архипцев Кирилл</span>
-                            </div>
-                        </td>
-
-
-                        <td class="name">
-                            <div class="task__table-cell border">
-                                Название задания 1
-                            </div>
-                        </td>
-                        <td class="descr">
-                            <div class="task__table-cell border task__table-index">
-                                321
-                            </div>
-                        </td>
-                        <td class="status">
-                            <div class="task__table-cell border">
-                               <span class="tasks__status-expectation tasks__status">
-                                   <span class="tasks__status-circle">&#8226;</span>
-                                    Ожидание
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                </div>
             </div>
+
         </div>
     </div>
 </div>
