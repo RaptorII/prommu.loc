@@ -882,14 +882,11 @@ var AddressEdit = (function () {
     	scrollElem = $('#index .city-item:eq(-1)');
     }
     else {
-    	$('.project__index .city-item').each(function(){
-            if($(this).data('city')!=getParams.city){
-                $(this).hide();
-            }
-        });
-
-        scrollElem = $('#index [data-city='+getParams.city+']');
-
+      $('.project__index .city-item').each(function(){
+        if($(this).data('city')!=getParams.city && undefined!=getParams.city)
+          $(this).hide();
+      });
+      scrollElem = $('#index [data-city='+getParams.city+']');
     }
     if(undefined!=getParams.loc) {
     	if(getParams.loc==='new') {
