@@ -347,7 +347,8 @@ class Project extends CActiveRecord
     public function hasAccess($prj=0){
         $idus = Share::$UserProfile->id;
         $t = Share::$UserProfile->type;
-        $conditions = 'id_user=:idus';
+        $t==3 && $conditions = 'id_user=:idus';
+        $t==2 && $conditions = 'user=:idus';
         $values = array(':idus' => $idus);
 
         if($prj>0) {
