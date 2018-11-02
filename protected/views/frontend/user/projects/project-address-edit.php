@@ -46,7 +46,7 @@
 												<div class="metro-field project__index-arrow">
 													<?php if(is_array($arLoc['metro'])): ?>
 														<?php foreach($arLoc['metro'] as $mId => $mName): ?>
-															<span class="metro-select"><?=$mName?><b></b></span>
+															<span class="metro-select"<?=($mId ? '' : 'style="display:none"')?>><?=($mId ? '$mName<b></b>' : '')?></span>
 															<input data-checker="metro" type="text" name="m" class="metro-inp" autocomplete="off" value="<?=$mName?>">
 															<ul class="select-list"></ul>
 															<input data-checker="metro" type="hidden" name="<?='metro[' . $idCity . '][' . $idLoc . ']'?>" value="<?=$mId?>">
