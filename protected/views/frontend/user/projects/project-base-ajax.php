@@ -98,7 +98,11 @@
                                                     <div class="program__cell-user">
                                                         <img src="<?= $user['src'] ?>">
                                                         <span><?= $user['name'] ?></span>
-                                                        <span title="Кол-во задач" class="program__tasks js-g-hashint">4</span>
+                                                        <span title="Кол-во задач" class="program__tasks js-g-hashint"><?
+                                                        echo (isset($viData['task-counters'][$idper][$id_user]) 
+                                                                ? $viData['task-counters'][$idper][$id_user] 
+                                                                : 0);
+                                                        ?></span>
                                                     </div>
                                                 </div>
                                             <?php endif; ?>
