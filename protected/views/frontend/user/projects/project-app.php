@@ -16,6 +16,11 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/css/projects/project-ap
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/js/projects/project-app.js', CClientScript::POS_END);
 ?>
 
+
+<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
+<? print_r($viData); ?>
+</pre>
+
 <div class="filter__veil"></div>
 <div class="project__module" data-id="<?= $project ?>">
   <?php if (sizeof($viData['items']) > 0): ?>
@@ -107,6 +112,7 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/js/projects/project-
                               <tr>
                                 <th class="name">Название</th>
                                 <th class="task">Описание</th>
+                                <th class="status">Действие</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -123,6 +129,12 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/js/projects/project-
                                       <?= $task['text'] ?>
                                     </div>
                                   </td>
+                                    <td class="stat">
+                                        <div class="task__table-cell border">
+                                            <button data-status='start' class="task_activ">Начать</button>
+                                            <?/*<button data-status='stop' class="task_activ">Завершить</button>*/?>
+                                        </div>
+                                    </td>
                                 </tr>
 
                               <? endforeach; ?>
