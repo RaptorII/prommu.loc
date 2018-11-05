@@ -108,14 +108,18 @@
                 <input type="hidden" name="save" value='1'>
                 <div class="col-xs-12">
                     <div class="erv__header">
-                        <?php if(!$viData['vac']['status']): ?>
-                            <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}" ?>' class="erv__header-btn prmu-btn"><span>Опубликовать вакансию</span></a>
-                        <?php else: ?>
-                            <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}&d=1" ?>' class="erv__header-btn prmu-btn"><span>Снять с публикации</span></a>
-                        <?php endif; ?>
+                        <? if(!isset($viData['vac']['cannot-publish'])): ?>
+                            <? if(!$viData['vac']['status']): ?>
+                                <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}" ?>' class="erv__header-btn prmu-btn"><span>Опубликовать вакансию</span></a>
+                            <? else: ?>
+                                <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}&d=1" ?>' class="erv__header-btn prmu-btn"><span>Снять с публикации</span></a>
+                            <? endif; ?>
+                        <? else: ?>
+                            <p class="erv__header-warning">Необходимо заполнить все обязательные поля *</p>
+                        <? endif; ?>
                         <? if($viData['vac']['ismoder']==100): ?>
                             <div class="evl__to-project-btn prmu-btn" data-id="<?=$viData['vac']['id']?>"><span>Перевести в проект</span></div>
-                        <?php endif; ?>
+                        <? endif; ?>
                     </div>
                 </div>
                 <div class='col-xs-12 col-sm-4 col-lg-3'>

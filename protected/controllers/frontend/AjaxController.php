@@ -840,11 +840,10 @@ class AjaxController extends AppController
         $model = new Project();
         if($data['type']==='convert') {
             $convert = new ProjectConvertVacancy();
-            $idus = Share::$UserProfile->id;
             switch ($_SERVER['REQUEST_METHOD']) {
                 case 'POST':
                     if($data['to']==='project') {
-                        $result = $convert->vacancyConvertToProject($data, $idus);
+                        $result = $convert->vacancyConvertToProject($data);
                         if(!$result['error']) {
                             $project = $model->createProject($result);
                             $result['link'] = MainConfig::$PAGE_PROJECT_LIST . '/' . $project;
@@ -855,7 +854,7 @@ class AjaxController extends AppController
                         $data['staff'] = $model->getAllStaffProject($data['id']);
                         $data['index'] = $model->getIndex($data['id']);
                         $data['project'] = $model->getProjectData($data['id']);
-                        $result = $convert->projectConvertToVacancy($data, $idus);
+                        $result = $convert->projectConvertToVacancy($data);
                     }                    
                     break;
             }

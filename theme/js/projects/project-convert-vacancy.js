@@ -50,8 +50,6 @@ var ProjectConvertVacancy = (function () {
 	}
 
 	ProjectConvertVacancy.prototype.toProjectAnswer = function (r, popup) {
-console.log(r);
-
 		if(r.error==true) {
 			var n,content;
 

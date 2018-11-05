@@ -7,30 +7,21 @@ class ProjectConvertVacancy
 	 * @return $arr error or data
 	 * Конвертировать вакансию в проект
 	 */
-	public function vacancyConvertToProject($arr, $idus) {
+	public function vacancyConvertToProject($arr) {
 		$arErr = array('error' => true);
 		$arRes = array(
 				'error' => false,
 				'vacancy' => $arr['id']
 			);
-		if(!$arr['id'])
+		$idus = Share::$UserProfile->id;
+		if(!$arr['id'] || !$idus)
 			return $arErr;
 
 		// достаем название вакансии
-		$arV = Yii::app()->db->createCommand()
-							->select("ev.title")
-							->from('empl_vacations ev')
-							->where(
-									'ev.id=:id AND id_user=:idus',
-									array(':id'=>$arr['id'],':idus'=>$idus)
-							)
-							->queryRow();
-		if(empty($arV['title'])) {
-			$arErr['vacancy-missing'] = true;
-			return $arErr;
-		}
-		$arRes['name'] = $arV['title'];
-		
+		$arRes['name'] = $this->getVacancyTitle($arr['id'], $idus);
+
+		if(empty($arRes['name']))
+			return array_merge($arErr, ['vacancy-missing' => true]);
 
 		$arProject = Yii::app()->db->createCommand()
 							->select("*")
@@ -115,24 +106,11 @@ class ProjectConvertVacancy
 			}
 		}
 		// достаем подтвержденных юзеров
-		$arU = Yii::app()->db->createCommand()
-							->select("r.id_user")
-							->from('vacation_stat vs')
-							->leftjoin('resume r','r.id=vs.id_promo')
-							->where('vs.id_vac=:id AND vs.status=5',array(':id'=>$arr['id']))
-							->queryAll();
-
-		$arRes['users-cnt'] = sizeof($arU); 	// users-cnt
-		$arRes['users-activate'] = true;			// users-activate
-		if(!$arRes['users-cnt']) {
+		$arU = $this->getVacancyUsers($arr['id']);
+		if(!$arU)
 			$arErr['empty-fields'][] = '- минимум один подтвержденный соискатель';
-		}
-		else {
-			for( $i = 0; $i < $arRes['users-cnt']; $i++ ) {
-				$arRes['users'] .= $arU[$i]['id_user']; 	// users
-				( $i + 1 ) < $arRes['users-cnt'] && $arRes['users'] .= ',';
-			}
-		}
+		else
+			$arRes = array_merge($arRes, $arU);
 
 		if(sizeof($arErr['empty-fields']))
 			return $arErr;
@@ -144,13 +122,14 @@ class ProjectConvertVacancy
 	 * @return $arr error or data
 	 * Конвертировать вакансию в проект
 	 */
-	public function projectConvertToVacancy($arr, $idus) {
+	public function projectConvertToVacancy($arr) {
 		$arErr = array('error' => true);
 		$arRes = array('error' => false);
 		$nI = sizeof($arr['index']);
 		$nS = sizeof($arr['staff']);
 		// делаем последние проверки
-		if(empty($arr['project']['id']) || $arr['project']['id_user']!=$idus)
+		$idus = Share::$UserProfile->id;
+		if(empty($arr['project']['id']) || $arr['project']['id_user']!=$idus || !$idus)
 			return array_merge($arErr, ['project-missing' => true]);
 		if(!$nI)
 			$arErr['empty-fields'][] = '- добавление минимум одного соискателя';
@@ -170,25 +149,16 @@ class ProjectConvertVacancy
 		$remdate = strtotime($arr['index'][0]['edate']);
 		$arC = array();
 		for ($i = 0; $i < $nI; $i++) {
+			$id_city = $arr['index'][$i]['id_city'];
 			$bdate = strtotime($arr['index'][$i]['bdate']);
 			$edate = strtotime($arr['index'][$i]['edate']);
-			$arC[$arr['index'][$i]['id_city']]['id_city'] = $arr['index'][$i]['id_city'];
+			$arC[$id_city]['id_city'] = $id_city;
 
-			if(
-				!isset($arC[$arr['index'][$i]['id_city']]['bdate'])
-				||
-				$arC[$arr['index'][$i]['id_city']]['bdate'] > $bdate
-			) {
-				$arC[$arr['index'][$i]['id_city']]['bdate'] = $bdate;
-			}
+			if(!isset($arC[$id_city]['bdate']) || $arC[$id_city]['bdate']>$bdate)
+				$arC[$id_city]['bdate'] = $bdate;
 
-			if(
-				!isset($arC[$arr['index'][$i]['id_city']]['edate'])
-				||
-				$arC[$arr['index'][$i]['id_city']]['edate'] < $edate
-			){
-				$arC[$arr['index'][$i]['id_city']]['edate'] = $edate;
-			}
+			if(!isset($arC[$id_city]['edate']) || $arC[$id_city]['edate']<$edate)
+				$arC[$id_city]['edate'] = $edate;
 
 			if($edate>$remdate)
 				$remdate = $edate;
@@ -231,7 +201,11 @@ class ProjectConvertVacancy
 							->queryAll();
 
 		$arLId = array();
+		$arP = array();
 		for ($i = 0; $i < $nI; $i++) {
+			if(in_array($arr['index'][$i]['location'], $arLId))
+				continue;
+
 			$city;
 			foreach ($arC as $c)
 				if($arr['index'][$i]['id_city']==$c['id_city'])
@@ -248,13 +222,9 @@ class ProjectConvertVacancy
 			$idloc = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();	
 
 			$npp = 1;
-			$arP = array();
+			
 			for ($j = 0; $j < $nI; $j++) {
-				if(
-					in_array($arr['index'][$j]['location'], $arLId)
-					||
-					($arr['index'][$i]['location'] != $arr['index'][$j]['location'])
-				)
+				if($arr['index'][$i]['location'] != $arr['index'][$j]['location'])
 					continue;
 				
 				$arTb = explode(':', $arr['index'][$j]['btime']);
@@ -271,21 +241,24 @@ class ProjectConvertVacancy
 				$npp++;
 			}
 			$arLId[] = $arr['index'][$i]['location'];
-
-			if(sizeof($arP)) {
-				Yii::app()->db->schema->commandBuilder
-					->createMultipleInsertCommand('emplv_loc_times', $arP)
-					->execute();			
-			}
 		}
-		// для будущих должностей
-		// Тестовая запись !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		$insData[] = array(
-			'id_vac' => $idvac, 
-			'id_attr' => 135, 
-			'key' => 135,
-			'crdate' => $date
-		);
+
+		if(sizeof($arP)) {
+			Yii::app()->db->schema->commandBuilder
+				->createMultipleInsertCommand('emplv_loc_times', $arP)
+				->execute();
+		}
+
+		// записываем должности
+		$insData = array();
+		for ($i = 0; $i < $nI; $i++)
+			$insData[] = array(
+				'id_vac' => $idvac, 
+				'id_attr' => $arr['index'][$i]['post'], 
+				'key' => $arr['index'][$i]['post'],
+				'crdate' => $date
+			);
+
 		Yii::app()->db->schema->commandBuilder
 			->createMultipleInsertCommand('empl_attribs', $insData)
 			->execute();
@@ -339,5 +312,213 @@ class ProjectConvertVacancy
 		$arRes['link'] = MainConfig::$PAGE_VACANCY . '/' . $idvac;
 
 		return $arRes;
+	}
+	/**
+	 * @param $id number - project ID
+	 * @param $type string - 'vacancy' | 'project'
+	 * @return bool - true = success
+	 * Синхронизация проекта и вакансии
+	 */
+	public function synphronization($id, $type) {
+		$idus = Share::$UserProfile->id;
+
+		if(!$id || !in_array($type,['vacancy','project','vacancy-delete']) || !$idus)
+			return false;
+
+		$where = (in_array($type,['vacancy','vacancy-delete']) ? 'vacancy=' : 'project=')
+							. $id . ' AND id_user=' . $idus;
+
+		$project = Yii::app()->db->createCommand()
+						->select("*")
+						->from('project')
+						->where($where)
+						->queryRow();
+		//
+		// синхронизация по вакансии
+		if($type=='vacancy') {
+			if(!$project['id'])
+				return false;
+			// достаем название вакансии
+			$vacTitle = $this->getVacancyTitle($id, $idus);
+
+			if(empty($vacTitle))
+				return false;
+
+			if($project['name']!=$vacTitle) {
+				Yii::app()->db->createCommand()
+					->update('project', ['name' => $vacTitle], 'id=' . $project['id']);
+			}
+			// достаем подтвержденных юзеров
+			$arUsers = $this->getVacancyUsers($id);
+			if(is_array($arUsers)) {
+				$model = new Project();
+				$model->recordStaff($arUsers, $project['project']);
+			}
+			return $project['project'];
+		}
+		//
+		// синхронизация по проекту
+		if($type=='project') {
+			if(!$project['vacancy'])
+				return false;
+
+			$model = new Project();
+			$arStaff = $model->getAllStaffProject($project['project']);
+			$arIindex = $model->getIndex($project['project']);
+			$nI = sizeof($arIindex);
+			$nS = sizeof($arStaff);
+			$date = date("Y-m-d H:i:s");
+			$remdate = strtotime($arIindex[0]['edate']);
+
+			for ($i = 0; $i < $nI; $i++) {
+				$edate = strtotime($arIindex[$i]['edate']);
+				($edate > $remdate) && ($remdate = $edate);
+			}
+			// записываем данные вакансии
+			Yii::app()->db->createCommand()
+				->update('empl_vacations', 
+					array(
+						//'title' => $project['project']['name'],
+						'remdate' => date('Y-m-d', $remdate),
+						'ismoder' => 0,
+						'mdate' => $date						
+					), 
+					'id=:id',
+					array(':id' => $project['vacancy'])
+				);
+			// записываем должности
+			$insData = array();
+			for ($i = 0; $i < $nI; $i++)
+				$insData[] = array(
+					'id_vac' => $project['vacancy'], 
+					'id_attr' => $arIindex[$i]['post'], 
+					'key' => $arIindex[$i]['post']
+				);
+			$sql = "DELETE empl_attribs 
+							FROM empl_attribs 
+							INNER JOIN user_attr_dict d ON d.id = 110
+							INNER JOIN user_attr_dict d1 
+								ON empl_attribs.id_attr=d1.id AND d1.id_par=d.id
+							WHERE id_vac = ".$project['vacancy'];
+			Yii::app()->db->createCommand($sql)->execute();
+
+			Yii::app()->db->schema->commandBuilder
+				->createMultipleInsertCommand('empl_attribs', $insData)
+				->execute();
+			// записываем персонал
+			$sql = Yii::app()->db->createCommand()
+								->select("vs.id_promo, r.id_user")
+								->from('vacation_stat vs')
+								->leftjoin('resume r','r.id=vs.id_promo')
+								->where('vs.id_vac=' . $project['vacancy'])
+								->queryAll();
+
+			$arSId = array();
+			$arSIduser = array();
+			foreach ($sql as $u) {
+				$arSId[] = $u['id_promo'];
+				$arSIduser[] = $u['id_user'];
+			}
+
+			$arS = array();
+			$arSPIdus = array();
+			for ($i=0; $i < $nS; $i++) {
+				$id_user = $arStaff[$i]['user'];
+				if( in_array($id_user, $arSIduser) )
+					continue;
+
+				$arS[$id_user] = array(
+						'id_vac' => $project['vacancy'],
+						'isresponse' => 2, // приглашение работодателя
+						'date' => $date,
+						'id_jobs' => 0,
+						'isend' => 0,
+						'service' => 0
+					);
+				if($arStaff[$i]['status']==1)
+					$arS[$id_user]['status'] = 5;
+				elseif($arStaff[$i]['status']==0)
+					$arS[$id_user]['status'] = 4;
+				else
+					$arS[$id_user]['status'] = 3;
+
+				$arSPIdus[] = $id_user;
+			}
+			$res = Yii::app()->db->createCommand()
+								->select("r.id, r.id_user")
+								->from('resume r')
+								->where(array('in','r.id_user',$arSPIdus))
+								->queryAll();
+			
+			$arSId = array();
+			foreach ($res as $u)
+				$arSId[$u['id_user']] = $u['id'];
+
+			if(sizeof($arS)) {
+				foreach ($arS as $id_user => $s) {
+					$arS[$id_user]['id_promo'] = $arSId[$id_user];
+					Yii::app()->db->createCommand()
+						->insert('vacation_stat', $arS[$id_user]);
+				}
+			}
+			return $project['vacancy'];
+		}
+		//
+		// отвязывание от удаляемой вакансии
+		if($type=='vacancy-delete') {
+			if(!$project['id'])
+				return false;
+
+			Yii::app()->db->createCommand()
+				->update('project', ['vacancy'=>NULL], 'id=' . $project['id']);
+			return true;
+		}
+	}
+	/**
+	 * @param $vacancy number - vacancy ID
+	 * @return array
+	 * достаем подтвержденных юзеров
+	 */
+	private function getVacancyUsers($vacancy) {
+		$sql = Yii::app()->db->createCommand()
+							->select("r.id_user")
+							->from('vacation_stat vs')
+							->leftjoin('resume r','r.id=vs.id_promo')
+							->where(
+								'vs.id_vac=:id AND vs.status=5',
+								array(':id'=>$vacancy)
+							)->queryAll();
+
+		$arRes['users-cnt'] = sizeof($sql); 	// users-cnt
+		$arRes['users-activate'] = true;			// users-activate
+
+		if(!$arRes['users-cnt']) {
+			return false;
+		}
+
+		for( $i = 0; $i < $arRes['users-cnt']; $i++ ) {
+			$arRes['users'] .= $sql[$i]['id_user']; 	// users
+			( $i + 1 ) < $arRes['users-cnt'] && $arRes['users'] .= ',';
+		}
+
+		return $arRes;
+	}
+	/**
+	 * @param $vacancy number - vacancy ID
+	 * @param $idus number - employer`s id_user
+	 * @return string
+	 * достаем подтвержденных юзеров
+	 */
+	private function getVacancyTitle($vacancy, $idus) {
+		$sql = Yii::app()->db->createCommand()
+							->select("ev.title")
+							->from('empl_vacations ev')
+							->where(
+									'ev.id=:id AND id_user=:idus',
+									array(':id'=>$vacancy,':idus'=>$idus)
+							)
+							->queryRow();
+
+		return $sql['title'];
 	}
 }

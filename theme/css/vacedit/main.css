@@ -1344,3 +1344,12 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 #add-new-vac:hover{
 	background-color: rgba(52, 52, 52, 0.5);
 }
+/*
+*
+*/
+.erv__header-warning{
+	color: red;
+	margin: 0 15px;
+	line-height: 35px;
+	font-size: 16px;
+}

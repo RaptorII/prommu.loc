@@ -228,7 +228,7 @@ foreach ($viData['filter']['metros'] as $id => $metro)
 					<a href="/uploads/prommu_example.xls" download>Скачать пример для добавления</a>
 				</div>*/ ?>
                 <h1 class="project__title">ПРОЕКТ: <span><?= $viData['project']['name'] ?></span></h1>
-                <? if(empty($p['vacancy'])): ?>
+                <? if(empty($viData['project']['vacancy'])): ?>
                     <div class="projects__to-vac-btn prmu-btn" data-id="<?=$project?>"><span>Перевести в вакансию</span></div> 
                 <? endif; ?>
 

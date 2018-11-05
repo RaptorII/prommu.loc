@@ -806,6 +806,8 @@ class UserController extends AppController
             $res = (new Vacancy())->saveVacpubData();
             if( $res['err'] ) {
             } else {
+                $project = new ProjectConvertVacancy();
+                $project->synphronization($res['idvac'],'vacancy');
                 $this->redirect(MainConfig::$PAGE_VACANCY . DS . $res['idvac']);
             } // endif
         } // endif
@@ -1410,6 +1412,8 @@ class UserController extends AppController
                     $save = Yii::app()->getRequest()->getParam('save-users');
                     if(isset($save)) {
                         $model->recordStaff($_POST, $id);
+                        $convert = new ProjectConvertVacancy();
+                        $convert->synphronization($id,'project');
                         $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id.'/staff');
                     }
                     if(Yii::app()->request->isAjaxRequest) {
@@ -1520,6 +1524,8 @@ class UserController extends AppController
                 case 'address-edit':
                     if( Yii::app()->getRequest()->isPostRequest) {
                         $model->recordIndex($_POST, $id);
+                        $convert = new ProjectConvertVacancy();
+                        $convert->synphronization($id,'project');
                         $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id.'/index');
                     }
                     $data = $model->getIndexes($id);

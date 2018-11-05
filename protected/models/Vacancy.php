@@ -627,13 +627,25 @@ public function rules()
                 }
             } // end foreach
             $data['vac'] = $data['vac'][0];
-
             $data['vac']['comment'] =$res[0]['comment']; 
             // если соикатель - проверяем есть ли отклик и подходит ли по параметрам
             $res = $this->chkResponse(['idvac' => $inIdVac, 'vacdata' => $data['vac']]);
             $data['response'] = $res;
             $data['vacAttribs'] = $data['response']['vacAttribs'];
             unset($data['response']['vacAttribs']);
+            // Ищем наличие сроков оплаты
+            $hasPay = false;
+            foreach($data['vacAttribs'] as $key => $item) {
+                in_array($key, [130,132,133,134,163,164]) && $hasPay = true;
+            }
+            // Вакансию нельзя публиковать, если отсутствуют обязательные поля
+            if(
+                empty($data['vac']['exp']) || !$hasPay 
+                || 
+                (empty($data['vac']['shour']) && empty($data['vac']['sweek']) 
+                    && empty($data['vac']['smonth']) && empty($data['vac']['svisit']))
+            )
+                $data['vac']['cannot-publish'] = true;
 
             // получаем данные для вкладок
             $data['vacResponses'] = $this->getTabsData($inIdVac, $data['vac']['idus'], $data['response']['status']);
@@ -2404,12 +2416,12 @@ WHERE id_vac = {$inVacId}";
     {
         $idus = $this->Profile->id ?: Share::$UserProfile->exInfo->id;
 
-        $sql = "SELECT COUNT(*) cou 
+        $sql = "SELECT COUNT(DISTINCT(v.id)) cou 
             FROM empl_vacations v 
             WHERE v.id_user = {$idus} AND (v.status = 1)";
         $vacCnt = Yii::app()->db->createCommand($sql)->queryScalar();
 
-        $sql = "SELECT COUNT(*) cou 
+        $sql = "SELECT COUNT(DISTINCT(v.id)) cou 
             FROM empl_vacations v 
             LEFT JOIN vacation_stat vs ON vs.id_vac = v.id
             WHERE v.id_user = {$idus} AND (v.status = 0 OR vs.status in (6,7))";
@@ -2457,6 +2469,8 @@ WHERE id_vac = {$inVacId}";
                 Yii::app()->db->createCommand()->delete('emplv_loc_times', array('in', 'id_loc', $arLocId));
             }
 
+            $project = new ProjectConvertVacancy();
+            $project->synphronization($id,'vacancy-delete');
             $message = 'Вакансия №' . $id . ' успешно удалена';
             $error = 0;
         }
