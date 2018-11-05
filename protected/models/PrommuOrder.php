@@ -426,7 +426,7 @@ class PrommuOrder {
                     $date, 
                     $vacancy, 
                     'email', 
-                    $vacancy[0], 
+                    $vacancy, 
                     $arApps[$i]
                 );
         }
@@ -453,7 +453,7 @@ class PrommuOrder {
                     $date, 
                     $vacancy, 
                     'push',
-                    $vacancy[0],
+                    $vacancy,
                     $arApps[$i]
                 );
         }
@@ -480,7 +480,7 @@ class PrommuOrder {
                     0, 
                     $date,
                     $date,
-                    $vacancy[0], 
+                    $vacancy, 
                     'sms', 
                     $text, 
                     $arApps[$i]
