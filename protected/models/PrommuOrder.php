@@ -92,7 +92,7 @@ class PrommuOrder {
         if($postback == 0) {
             $sql = "SELECT  e.title
                 FROM empl_vacations e
-                WHERE e.id = {$name}";
+                WHERE e.id = {$name[0]}";
             $vacancy = Yii::app()->db->createCommand($sql)->queryAll();
 
              $sql = "SELECT  u.email, e.name, e.firstname, e.lastname 
@@ -426,7 +426,7 @@ class PrommuOrder {
                     $date, 
                     $vacancy, 
                     'email', 
-                    $vacancy, 
+                    $vacancy[0], 
                     $arApps[$i]
                 );
         }
@@ -453,7 +453,7 @@ class PrommuOrder {
                     $date, 
                     $vacancy, 
                     'push',
-                    $vacancy,
+                    $vacancy[0],
                     $arApps[$i]
                 );
         }
@@ -480,7 +480,7 @@ class PrommuOrder {
                     0, 
                     $date,
                     $date,
-                    $vacancy, 
+                    $vacancy[0], 
                     'sms', 
                     $text, 
                     $arApps[$i]
