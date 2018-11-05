@@ -413,8 +413,10 @@ class PrommuOrder {
     public function orderEmail($vacancy, $vacPrice, $employer) {
         $arApps = explode(",", Yii::app()->getRequest()->getParam('users'));
         $date = date("Y-m-d h-i-s");
-
-        for($i=0, $n=count($arApps); $i<$n; $i++) {
+         if(count($arApps) > 100){
+            $n = 100;
+        } else $n = count($arApps);
+        for($i=0; $i<$n; $i++) {
             $this->serviceOrderEmail(
                     $employer,
                     $vacPrice,
@@ -438,7 +440,10 @@ class PrommuOrder {
     public function orderPush($vacancy, $vacPrice, $employer) {
         $arApps = explode(",", Yii::app()->getRequest()->getParam('users'));
         $date = date("Y-m-d h-i-s");
-        for($i=0, $n=count($arApps); $i<$n; $i++) {
+        if(count($arApps) > 100){
+            $n = 100;
+        } else $n = count($arApps);
+        for($i=0; $i<$n; $i++) {
             $model->serviceOrderEmail(
                     $employer,
                     $vacPrice, 
@@ -464,8 +469,10 @@ class PrommuOrder {
         $text = Yii::app()->getRequest()->getParam('text');
         $date = date("Y-m-d h-i-s");
         $mainPrice = 0;
-
-        for($i=0, $n=count($arApps); $i<$n; $i++) {
+         if(count($arApps) > 100){
+            $n = 100;
+        } else $n = count($arApps);
+        for($i=0; $i<$n; $i++) {
             $this->serviceOrderSms(
                     $employer,
                     $vacPrice, 
