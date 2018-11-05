@@ -1013,7 +1013,10 @@ class UserController extends AppController
         $vac = Yii::app()->getRequest()->getParam('vacancy');
         $emp = Yii::app()->getRequest()->getParam('employer');
         $price = $model->servicePrice($vac, $service);
-
+        
+        $keys = array_keys($vac);
+        $vac = $keys[0];
+        
         switch ($service) {
             case 'premium-vacancy':
                 if($price > 0) { // оплата услуги
