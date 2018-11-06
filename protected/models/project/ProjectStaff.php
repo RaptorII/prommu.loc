@@ -425,6 +425,7 @@ class ProjectStaff extends CActiveRecordBehavior{
                     ->from('user_mech um')
                     ->leftjoin('user_attr_dict uad', 'uad.id=um.id_mech')
                     ->where(' um.isshow=0 AND um.id_us=:user_id', array(':user_id' => $user_id))
+                    ->order('uad.name desc')
                     ->queryAll();
                     
         $main['mech'] =  $mech;       
