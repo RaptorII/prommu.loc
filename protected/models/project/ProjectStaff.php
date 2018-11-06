@@ -501,7 +501,7 @@ class ProjectStaff extends CActiveRecordBehavior{
             }
         }
         
-        $viData['MECH'] = $arCities;
+        
         $viData['PROJECT'] = $arProjects;
         $viData['CITIES'] = $arCities;
 
