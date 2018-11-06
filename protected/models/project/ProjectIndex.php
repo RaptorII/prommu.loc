@@ -182,7 +182,7 @@ class ProjectIndex extends CActiveRecordBehavior{
 							->leftjoin('city c', 'c.id_city=pc.id_city')
 							->leftjoin('metro m', 'm.id=pc.metro')
 							->where($filter['conditions'], $filter['values'])
-							->order('pc.id desc')
+				// 			->order('pc.id desc')
 							->queryAll();
 
 		return $sql; 
