@@ -400,7 +400,25 @@ class ProjectStaff extends CActiveRecordBehavior{
 
 		return $this->buildStaffArray($sql);
 	}
-
+    
+    
+    /**
+     * @param $user_id number - user ID
+     * @return staff data
+     * Получаем информацию о должностях соискателя
+     */
+     public function getUserMechInfo($user_id) {
+         $main = Yii::app()->db->createCommand()
+                    ->select("uad.name as mech")
+                    ->from('user_mech um')
+                    ->leftjoin('user_attr_dict uad', 'uad.id=um.id_mech')
+                    ->where(' um.isshow=0 AND um.id_us=:user_id', array(':user_id' => $user_id))
+                    ->group('uad.name')
+                    ->queryAll();
+                    
+        return $main;
+     }
+     
     /**
      * @param $user_id number - user ID
      * @return staff data
@@ -414,14 +432,6 @@ class ProjectStaff extends CActiveRecordBehavior{
             ->where('u.id_user =:user_id', array(':user_id' => $user_id))
             //->order('pu.user desc')
             ->queryAll();
-            
-         $main[] = Yii::app()->db->createCommand()
-                    ->select("uad.name as mech")
-                    ->from('user_mech um')
-                    ->leftjoin('user_attr_dict uad', 'uad.id=um.id_mech')
-                    ->where(' um.isshow=0 AND um.id_us=:user_id', array(':user_id' => $user_id))
-                    ->group('uad.name')
-                    ->queryAll();
                     
         return $main;
     }
@@ -470,17 +480,12 @@ class ProjectStaff extends CActiveRecordBehavior{
      * @return user-card data
      * Достаем Всю информацию о юзере для карточки персонала
      */
-    public function getUserAllInfo($main, $contacts, $project_info) {
+    public function getUserAllInfo($main, $mech, $contacts, $project_info) {
         $viData = [];
         foreach ($main as $key => $value) {
-            if($value['key']=='mech'){
-                $viData['MECH'][] = $value['val'];
-            } else {
-                $viData = $value;
-            }
-           
+             $viData = $value;
         }
-
+    
         foreach ($contacts as $key => $value){
             if($value['key']=='mob'){
                 $viData['PHONE'] = $value['val'];
@@ -503,6 +508,7 @@ class ProjectStaff extends CActiveRecordBehavior{
         
         
         $viData['PROJECT'] = $arProjects;
+        $viData['MECH'] =  $mech;
         $viData['CITIES'] = $arCities;
 
         $viData['PHOTO'] = self::getPhoto('2', $viData ,'medium');
