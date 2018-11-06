@@ -415,16 +415,14 @@ class ProjectStaff extends CActiveRecordBehavior{
             //->order('pu.user desc')
             ->queryAll();
             
-         $mech = Yii::app()->db->createCommand()
-                    ->select("
-                        uad.name")
+         $main['mech'] = Yii::app()->db->createCommand()
+                    ->select("uad.name")
                     ->from('user_mech um')
                     ->leftjoin('user_attr_dict uad', 'uad.id=um.id_mech')
                     ->where(' um.isshow=0 AND um.id_us=:user_id', array(':user_id' => $user_id))
                     ->group('uad.name')
                     ->queryAll();
                     
-        $main['mech'] =  $mech;       
         return $main;
     }
 
