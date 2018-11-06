@@ -41,10 +41,13 @@ class ImEmpl extends Im
             LIMIT {$offset}, {$limit}";
         /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);
-        $data['chats'] = $res->queryAll();
-
-        $data['count'] = $this->getChatsCount($id);
-
+	$data['chats'] = [
+ 		'id_vac' => 0,
+		'title' => '',
+		'count' => $this->getChatsCount($id),
+		'chats' => $res->queryAll()
+		];
+                	
         return $data;
     }
     
@@ -73,6 +76,15 @@ class ImEmpl extends Im
         $offset = $this->offset;
         $id = $this->Profile->id;
 
+	$sql_root = "SELECT ct.id_vac, ct.title FROM chat_theme ct WHERE ct.id_use = {$id} AND ct.id_vac <> 0 ORDER BY ct.id_vac";
+	$res = Yii::app()->db->createCommand($sql_root);
+        $category = $res->queryAll();
+
+        $chats = []; 
+	foreach($category as $cat) {
+          //print_r($cat['id_vac']);
+        
+
         $sql = "SELECT ct.id, ct.id_vac, ct.title, e.title etitle
             , DATE_FORMAT(ca.crdate, '%d.%m.%Y') crfdate
             , DATE_FORMAT(ca2.crdate, '%d.%m.%Y') crldate
@@ -93,14 +105,21 @@ class ImEmpl extends Im
                             SELECT ca.id_theme, COUNT(*) countn FROM chat ca WHERE ca.is_read = 0 AND ca.is_resp = 0 GROUP BY ca.id_theme 
                         ) coun ON coun.id_theme = ct.id
                         INNER JOIN resume r ON r.id_user = ct.id_usp
-            WHERE ct.id_use = {$id} AND ct.id_vac <> 0
+            WHERE ct.id_use = {$id} AND ct.id_vac = {$cat['id_vac']}
             ORDER BY crldatetime DESC
             LIMIT {$offset}, {$limit}";
         /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);
-        $data['chats'] = $res->queryAll();
+        array_push($chats, [
+ 		'id_vac' => $cat['id_vac'],
+		'title' => $cat['title'],
+		'count' => $this->getChatsCountVac($id, $cat['id_vac']),
+		'chats' => $res->queryAll()
+		]);
+        
+        }
 
-        $data['count'] = $this->getChatsCount($id);
+        $data['chats'] = $chats;
 
         return $data;
     }
@@ -129,6 +148,13 @@ class ImEmpl extends Im
         return $res->queryScalar();
     }
 
+    public function getChatsCountVac($id, $id_vac) {
+	$sql = "SELECT COUNT(*) count FROM chat_theme WHERE id_use = {$id} AND id_vac = {$id_vac}";
+        /** @var $res CDbCommand */
+        $res = Yii::app()->db->createCommand($sql);
+
+        return $res->queryScalar();
+    }
 
     /**
      * Получаем данные для страницы переписки
