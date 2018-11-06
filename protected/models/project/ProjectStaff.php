@@ -473,12 +473,17 @@ class ProjectStaff extends CActiveRecordBehavior{
     public function getUserAllInfo($main, $contacts, $project_info) {
         $viData = [];
         foreach ($main as $key => $value) {
-            $viData = $value;
+            if($value['key']=='mech'){
+                $viData['MECH'][] = $value['val'];
+            } else {
+                $viData = $value;
+            }
+           
         }
 
         foreach ($contacts as $key => $value){
             if($value['key']=='mob'){
-                $viData['tel'] = $value['val'];
+                $viData['PHONE'] = $value['val'];
             }
             else{
                 $viData['CONTACTS'][]=$value;
@@ -495,7 +500,8 @@ class ProjectStaff extends CActiveRecordBehavior{
                 $arCities[] = $value['city'];
             }
         }
-
+        
+        $viData['MECH'] = $arCities;
         $viData['PROJECT'] = $arProjects;
         $viData['CITIES'] = $arCities;
 
