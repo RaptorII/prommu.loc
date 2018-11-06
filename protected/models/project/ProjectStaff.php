@@ -408,13 +408,26 @@ class ProjectStaff extends CActiveRecordBehavior{
      */
     public function getUserMainInfo($user_id) {
         $main = Yii::app()->db->createCommand()
-            ->select("r.isman,r.birthday,r.firstname,r.lastname,r.photo,u.email,u.is_online, m.id_mech")
+            ->select("r.isman,r.birthday,r.firstname,r.lastname,r.photo,u.email,u.is_online")
             ->from('user u')
             ->leftjoin('resume r', 'r.id_user=u.id_user')
-            ->leftjoin('user_mech m', 'r.id_user=m.id_us')
             ->where('u.id_user =:user_id', array(':user_id' => $user_id))
             //->order('pu.user desc')
             ->queryAll();
+            
+         $mech = Yii::app()->db->createCommand()
+                    ->select("
+                        um.id_us id_user, 
+                        um.pay_type, 
+                        um.id_mech id, 
+                        um.pay, 
+                        uad.name")
+                    ->from('user_mech um')
+                    ->leftjoin('user_attr_dict uad', 'uad.id=um.id_mech')
+                    ->where('um.isshow=0 AND um.id_us IN('.implode(',',$user_id).')')
+                    ->queryAll();
+                    
+        $main['mech'] =  $mech;       
         return $main;
     }
 
@@ -430,6 +443,9 @@ class ProjectStaff extends CActiveRecordBehavior{
             ->leftjoin('user_attr_dict uad', 'ua.key=uad.key')
             ->where("ua.id_us =:user_id AND ua.val<>''", array(':user_id' => $user_id))
             ->queryAll();
+            
+       
+                    
         return $contacts;
     }
 
