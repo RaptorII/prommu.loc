@@ -1393,13 +1393,14 @@ class UserController extends AppController
             $user_id = Yii::app()->getRequest()->getParam('user_id');
 
             $main = $model->getUserMainInfo($user_id);
+            $mech = $model->getUserMechInfo($user_id);
             if(!count($main)){
                 throw new CHttpException(404, 'Error');
                 return;
             }
             $contacts = $model->getUserContactsInfo($user_id);
             $project_info = $model->getUserProjectsInfo($user_id);
-            $data = $model->getUserAllInfo($main,$contacts,$project_info);
+            $data = $model->getUserAllInfo($main,$mech, $contacts,$project_info);
 
             $view = MainConfig::$VIEW_PROJECT_USER_CARD;
         }
