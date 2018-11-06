@@ -408,10 +408,10 @@ class ProjectStaff extends CActiveRecordBehavior{
      */
     public function getUserMainInfo($user_id) {
         $main = Yii::app()->db->createCommand()
-            ->select("r.isman,r.birthday,r.firstname,r.lastname,r.photo,u.email,u.is_online")
+            ->select("r.isman,r.birthday,r.firstname,r.lastname,r.photo,u.email,u.is_online, m.id_mech")
             ->from('user u')
             ->leftjoin('resume r', 'r.id_user=u.id_user')
-            //->leftjoin('user_attribs ua', 'ua.id_us=u.id_user')
+            ->leftjoin('user_mech m', 'r.id_user=m.id_us')
             ->where('u.id_user =:user_id', array(':user_id' => $user_id))
             //->order('pu.user desc')
             ->queryAll();
