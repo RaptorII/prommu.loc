@@ -487,7 +487,7 @@ class ProjectStaff extends CActiveRecordBehavior{
         }
         
         foreach ($mech as $key => $value) {
-             $mechs[] = $value;
+             $mechs[] = $value['name'];
         }
         
         foreach ($contacts as $key => $value){
