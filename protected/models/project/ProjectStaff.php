@@ -417,15 +417,11 @@ class ProjectStaff extends CActiveRecordBehavior{
             
          $mech = Yii::app()->db->createCommand()
                     ->select("
-                        um.id_us id_user, 
-                        um.pay_type, 
-                        um.id_mech id, 
-                        um.pay, 
                         uad.name")
                     ->from('user_mech um')
                     ->leftjoin('user_attr_dict uad', 'uad.id=um.id_mech')
                     ->where(' um.isshow=0 AND um.id_us=:user_id', array(':user_id' => $user_id))
-                    ->order('uad.name desc')
+                    ->group('uad.name')
                     ->queryAll();
                     
         $main['mech'] =  $mech;       
