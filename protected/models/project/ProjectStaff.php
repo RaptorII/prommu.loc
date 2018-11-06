@@ -409,7 +409,7 @@ class ProjectStaff extends CActiveRecordBehavior{
      */
      public function getUserMechInfo($user_id) {
          $main = Yii::app()->db->createCommand()
-                    ->select("uad.name as mech")
+                    ->select("uad.name")
                     ->from('user_mech um')
                     ->leftjoin('user_attr_dict uad', 'uad.id=um.id_mech')
                     ->where(' um.isshow=0 AND um.id_us=:user_id', array(':user_id' => $user_id))
