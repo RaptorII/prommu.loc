@@ -485,7 +485,11 @@ class ProjectStaff extends CActiveRecordBehavior{
         foreach ($main as $key => $value) {
              $viData = $value;
         }
-    
+        
+        foreach ($mech as $key => $value) {
+             $mechs[] = $value;
+        }
+        
         foreach ($contacts as $key => $value){
             if($value['key']=='mob'){
                 $viData['PHONE'] = $value['val'];
@@ -508,7 +512,7 @@ class ProjectStaff extends CActiveRecordBehavior{
         
         
         $viData['PROJECT'] = $arProjects;
-        $viData['MECH'] =  $mech;
+        $viData['MECH'] =  $mechs;
         $viData['CITIES'] = $arCities;
 
         $viData['PHOTO'] = self::getPhoto('2', $viData ,'medium');
