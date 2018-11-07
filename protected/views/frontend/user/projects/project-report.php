@@ -18,22 +18,22 @@ $arFilterData = [
     'ID' => $project, //Обязательное свойство!
     'FILTER_ADDITIONAL_VALUE' => ['filter' => 1],
     'FILTER_SETTINGS' => [
-        0 => [
+        /*0 => [
             'NAME' => 'ФИО',
             'TYPE' => 'text',
             'INPUT_NAME' => 'fname',
             'DATA' => [],
             'DATA_DEFAULT' => '',
             'PLACEHOLDER' => ''
-        ],
-        /*1 => [
+        ],*/
+        0 => [
             'NAME' => 'Фамилия',
             'TYPE' => 'text',
             'INPUT_NAME' => 'lname',
             'DATA' => [],
             'DATA_DEFAULT' => '',
             'PLACEHOLDER' => ''
-        ],*/
+        ],
         1 => [
             'NAME' => 'Город',
             'TYPE' => 'select',
