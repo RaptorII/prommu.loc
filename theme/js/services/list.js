@@ -7,6 +7,22 @@ var ServicesList = (function () {
     ServicesList.prototype.init = function () {
         var self = this;
         $(".order-service a").click(function (e) { self.onOrderServiceClickFn(e, this); });
+
+        if(typeof arSuccessMess === 'undefined' || arSuccessMess == null)
+            return;
+
+        if(arSuccessMess.event==='social')
+            var itm = $('.repost-to-social-form').clone();
+        else if(arSuccessMess.event==='email' || arSuccessMess.event==='push')
+            var itm = $('.email-invitation-form').clone();
+        else if(arSuccessMess.event==='free')
+            var itm = $('.services-finish-form.free').clone();
+        else
+            var itm = $('.services-finish-form').clone();
+        itm.toggleClass('services-form tmpl');
+        ModalWindow.open({ content: itm, action: { active: 0 }, additionalStyle:'dark-ver' });
+
+
     };
     ServicesList.prototype.onOrderCreateFn = function (e, that) {
         var self = this;
@@ -111,16 +127,4 @@ var ServicesList = (function () {
 
 $(function(){
     new ServicesList();
-    if(arSuccessMess !=null) {
-        if(arSuccessMess.event==='social')
-            var itm = $('.repost-to-social-form').clone();
-        else if(arSuccessMess.event==='email' || arSuccessMess.event==='push')
-            var itm = $('.email-invitation-form').clone();
-        else if(arSuccessMess.event==='free')
-            var itm = $('.services-finish-form.free').clone();
-        else
-            var itm = $('.services-finish-form').clone();
-        itm.toggleClass('services-form tmpl');
-        ModalWindow.open({ content: itm, action: { active: 0 }, additionalStyle:'dark-ver' });
-    }
 });
