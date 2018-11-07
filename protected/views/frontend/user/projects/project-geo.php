@@ -115,7 +115,7 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/
                                     <div class="geo__table-cell"><?=$viData['points'][$valueItem]['btime']?> - <?=$viData['points'][$valueItem]['etime']?></div>
                                 </td>
                                 <td>
-                                    <div class="geo__table-cell"> c <?=$viData['points'][$valueItem]['btime']?> до <?=$viData['points'][$valueItem]['etime']?></div>
+                                    <div class="geo__table-cell"> c <?=$viData['gps-info'][$unixTime][$idus][$valueItem]['btime-fact']?> до <?=$viData['gps-info'][$unixTime][$idus][$valueItem]['etime-fact']?></div>
                                 </td>
                                 <td>
                                     <div class="geo__table-cell"><?=count($viData['tasks'][$unixTime][$valueItem][$idus])?></div>
