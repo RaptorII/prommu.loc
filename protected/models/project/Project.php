@@ -837,13 +837,13 @@ class Project extends CActiveRecord
                         $d = date('Y-m-d 00:00:00',strtotime($v['date']));
                         $d = strtotime($d);
                         if($bdate==$d && $p['point']==$v['point'] && $idus==$v['user']) {
-                            if(!isset($arI[$bdate][$p['id_city']]['users'][$idus]['plan'])) {
+                           // if(!isset($arI[$bdate][$p['id_city']]['users'][$idus]['plan'])) {
                                 $arI[$bdate][$p['id_city']]['users'][$idus]['plan'] = $p['btime'];
                                 $arI[$bdate][$p['id_city']]['users'][$idus]['fact'] = date('H:i',strtotime($v['date']));
                                 $d1 = strtotime($p['bdate'] . ' ' . $p['btime'] . ':00'); 
                                 $d2 = strtotime($v['date']);
                                 $arI[$bdate][$p['id_city']]['users'][$idus]['diff'] = $d1 < $d2;                         
-                            }
+                          //  }
                             $arI[$bdate][$p['id_city']]['users'][$idus]['last-point'] = $v['point'];
                         }
                     }
