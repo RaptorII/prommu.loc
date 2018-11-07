@@ -809,7 +809,8 @@ class Project extends CActiveRecord
         );
         //      координаты
         $arRes['gps'] = $this->getСoordinates(['project'=>$project]);
-
+        $arRes['tasks'] = $this->getTasks($project);
+        
         foreach ($arr['users'] as $id => $v)
             if(sizeof($v['points'])>0)
                 $arRes['users'][$v['id_user']] = $v;
@@ -832,22 +833,45 @@ class Project extends CActiveRecord
                     $arI[$bdate][$p['id_city']]['city'] = $p['city'];
                     $arI[$bdate][$p['id_city']]['ismetro'] = $p['ismetro'];
                     $arI[$bdate][$p['id_city']]['users'][$idus]['points'][] = $p['point'];
-
-                    foreach ($arRes['gps'] as $v) {
+                    
+                     foreach ($arRes['gps'] as $v) {
+                        $u = $v['user'];
+                        $p = $v['point'];
                         $d = date('Y-m-d 00:00:00',strtotime($v['date']));
                         $d = strtotime($d);
-                        if($bdate==$d && $p['point']==$v['point'] && $idus==$v['user']) {
-                           // if(!isset($arI[$bdate][$p['id_city']]['users'][$idus]['plan'])) {
-                                $arI[$bdate][$p['id_city']]['users'][$idus]['plan_start'] = $p['btime'];
-                                $arI[$bdate][$p['id_city']]['users'][$idus]['plan_end'] = $p['etime'];
-                                $arI[$bdate][$p['id_city']]['users'][$idus]['fact'] = date('H:i',strtotime($v['date']));
-                                $d1 = strtotime($p['bdate'] . ' ' . $p['btime'] . ':00'); 
-                                $d2 = strtotime($v['date']);
-                                $arI[$bdate][$p['id_city']]['users'][$idus]['diff'] = $d1 < $d2;                         
-                          //  }
-                            $arI[$bdate][$p['id_city']]['users'][$idus]['last-point'] = $v['point'];
-                        }
+                        $arT = $arRes['gps-info'][$d][$u][$p];
+                        if(!count($arT['marks']))
+                           $arT['btime-fact'] = date('G:i',strtotime($v['date']));
+                        $arT['etime-fact'] = date('G:i',strtotime($v['date']));
+                        $ttime = strtotime($arT['etime-fact']) - strtotime($arT['btime-fact']);
+                        $arT['time-total'] = $ttime / 60; // минут
+                        $arT['moving'] = 30; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! setting
+            
+                        $arT['tasks-total'] = count($arRes['tasks'][$d][$p][$u]);
+                        $arT['tasks-fact'] = 0;
+                        foreach ($arRes['tasks'][$d][$p][$u] as $t)
+                            if($t['status'])
+                              $arT['tasks-fact']++;  
+            
+                        $arT['marks'][$v['id']] = $v;
+                        $arRes['gps-info'][$d][$u][$p] = $arT;
                     }
+        
+                    // foreach ($arRes['gps'] as $v) {
+                    //     $d = date('Y-m-d 00:00:00',strtotime($v['date']));
+                    //     $d = strtotime($d);
+                    //     if($bdate==$d && $p['point']==$v['point'] && $idus==$v['user']) {
+                    //       // if(!isset($arI[$bdate][$p['id_city']]['users'][$idus]['plan'])) {
+                    //             $arI[$bdate][$p['id_city']]['users'][$idus]['plan_start'] = $p['btime'];
+                    //             $arI[$bdate][$p['id_city']]['users'][$idus]['plan_end'] = $p['etime'];
+                    //             $arI[$bdate][$p['id_city']]['users'][$idus]['fact'] = date('H:i',strtotime($v['date']));
+                    //             $d1 = strtotime($p['bdate'] . ' ' . $p['btime'] . ':00'); 
+                    //             $d2 = strtotime($v['date']);
+                    //             $arI[$bdate][$p['id_city']]['users'][$idus]['diff'] = $d1 < $d2;                         
+                    //       //  }
+                    //         $arI[$bdate][$p['id_city']]['users'][$idus]['last-point'] = $v['point'];
+                    //     }
+                    // }
 
 
                     $bdate += (60*60*24);
