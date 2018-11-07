@@ -214,8 +214,13 @@ jQuery(function($){
 			$(this).val(val.substr(0,strAbout));
 	});
 	//	устанавливаем маски
-	$("#city-module .epa__period .epa__input").on('input',function(){
-		var v = this.value,
+	$("#city-module .epa__period .epa__input").on(
+			'input',
+			function(){ checkPeriod(this) }
+		);
+
+	function checkPeriod (e){
+		var v = e.value,
 				l = v.length;
 
 		if(keyCode==8) { //backspace
@@ -250,16 +255,16 @@ jQuery(function($){
 			if(l>=7) {
 				var arV = v.split(' до ');
 				if(arV[0]===v) {
-					v = 'С ' + getNum(v).substr(0,2) + ' до ' + getNum(v).substr(0,2);
+					v = 'С ' + getNum(v).substr(0,2) + ' до ' + getNum(v).substr(2,4);
 				}
 				else {
-					v = 'С ' + getNum(arV[0]).substr(0,2) + ' до ' + getNum(arV[1]).substr(2,4);
+					v = 'С ' + getNum(arV[0]).substr(0,2) + ' до ' + getNum(arV[1]).substr(0,2);
 				}
 			}
 		}
 
-		this.value = v;
-	});
+		e.value = v;
+	}
 	//
 	//  блок для создания города
 	//
@@ -483,9 +488,9 @@ jQuery(function($){
 			var item = $(perList).find('.epa__period:eq(-1)');
 			
 			$(item).find('i').text(dayName);
-			$(item).find('.epa__input').mask(periodMask);
-'С 99 до 99'
-
+			$(item).find('.epa__input').on('input',function(){
+				checkPeriod(this);
+			});
 		}
 		else{
 			var arItems = $(perList).find('.epa__period');
