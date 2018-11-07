@@ -112,10 +112,10 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="geo__table-cell">07.02.2018 <?=$viData['points'][$valueItem]['btime']?> - <?=$viData['points'][$valueItem]['etime']?></div>
+                                    <div class="geo__table-cell"><?=$viData['points'][$valueItem]['btime']?> - <?=$viData['points'][$valueItem]['etime']?></div>
                                 </td>
                                 <td>
-                                    <div class="geo__table-cell">07.02.2018 с 9:00 до 18:00</div>
+                                    <div class="geo__table-cell"> c <?=$viData['points'][$valueItem]['btime']?> до <?=$viData['points'][$valueItem]['etime']?></div>
                                 </td>
                                 <td>
                                     <div class="geo__table-cell"><?=count($viData['tasks'][$unixTime][$valueItem][$idus])?></div>
