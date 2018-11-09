@@ -278,7 +278,7 @@ if(!Yii::app()->getRequest()->getParam('vacancy')):?>
 				<?php //$result = $result<1 ? 1 : $result;?>
 				<span class="smss-result__result"><? //echo $appCount . ' * ' . $viData['price'] . ' = ' . $result . ' руб.'?></span></br>
 				<button class="smss-result__btn">Перейти к оплате</button>
-				<input type="hidden" name="vacancy[]" value="<?=$vacancy?>">
+				<input type="hidden" name="vacancy" value="<?=$vacancy?>">
 				<input type="hidden" name="users-cnt" value="<?=$appCount?>">
 				<input type="hidden" name="users" value="<?=Yii::app()->getRequest()->getParam('users')?>">
 				<input type="hidden" name="employer" value="<?=Share::$UserProfile->id?>">
