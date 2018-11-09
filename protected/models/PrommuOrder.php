@@ -87,7 +87,7 @@ class PrommuOrder {
 
     }
     
-    public function serviceOrderSms($id_user,$sum, $status, $postback, $from, $to, $name,$type, $text, $id){
+    public function serviceOrderSms($id_user,$sum, $status, $postback, $from, $to, $name,$type, $text, $id, $stack){
 
         if($postback == 0) {
             $sql = "SELECT  e.title
@@ -119,7 +119,8 @@ class PrommuOrder {
                                 'status' => $status,
                                 'sum' => $sum,
                                 'text' => $text,
-                                'user' => $id
+                                'user' => $id,
+                                'stack' => $stack
                             ));
         } else {
 
