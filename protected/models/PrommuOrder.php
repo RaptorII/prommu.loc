@@ -423,7 +423,7 @@ class PrommuOrder {
                     $arApps,
                     $stack
                 );
-        $account = $employer . '.' . $vacancy . '.email.' . implode('.', $stack);
+        $account = $employer . '.' . $vacancy . '.email.' .$stack;
 
         return $this->createPayLink($account, $vacancy,  $vacPrice);
     }
@@ -431,8 +431,10 @@ class PrommuOrder {
     *       Заказ услуги Push рассылка
     */
     public function orderPush($vacancy, $vacPrice, $employer) {
-        $arApps = explode(",", Yii::app()->getRequest()->getParam('users'));
+        $arApps = Yii::app()->getRequest()->getParam('users');
         $date = date("Y-m-d h-i-s");
+        $stack = time();
+
         for($i=0, $n=count($arApps); $i<$n; $i++) {
             $this->serviceOrderEmail(
                     $employer,
@@ -444,7 +446,8 @@ class PrommuOrder {
                     $vacancy, 
                     'push',
                     $vacancy,
-                    $arApps[$i]
+                    $arApps,
+                    $stack
                 );
         }
     }
@@ -455,7 +458,8 @@ class PrommuOrder {
         if(!isset($employer))
             return false;
 
-        $arApps = explode(",", Yii::app()->getRequest()->getParam('users'));
+        $arApps = Yii::app()->getRequest()->getParam('users');
+        $stack = time();
         $text = Yii::app()->getRequest()->getParam('text');
         $date = date("Y-m-d h-i-s");
         $mainPrice = 0;
@@ -471,11 +475,12 @@ class PrommuOrder {
                     $vacancy, 
                     'sms', 
                     $text, 
-                    $arApps[$i]
+                    $arApps,
+                    $stack
                 );
             $mainPrice += $vacPrice;
         }
-        $account = $employer . '.' . $vacancy . '.sms.' . implode('.', $arApps);
+        $account = $employer . '.' . $vacancy . '.sms.' . $stack;
 
         return $this->createPayLink($account, $vacancy, $mainPrice);
     }
