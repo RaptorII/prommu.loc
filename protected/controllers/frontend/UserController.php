@@ -58,7 +58,7 @@ class UserController extends AppController
                $res = Yii::app()->db->createCommand()
                 ->update('service_cloud', array(
                     'key'=> $unitpayId,
-                ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
+                ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
               
             }elseif($arr[2] == "push"){
                 
@@ -67,7 +67,7 @@ class UserController extends AppController
                $res = Yii::app()->db->createCommand()
                 ->update('service_cloud', array(
                     'key'=> $unitpayId,
-                ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
+                ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
               
             } elseif($arr[2] == "email"){
              
@@ -76,7 +76,7 @@ class UserController extends AppController
                $res = Yii::app()->db->createCommand()
                 ->update('service_cloud', array(
                     'key'=> $unitpayId,
-                ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
+                ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
                
             } else {
 
