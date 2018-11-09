@@ -174,6 +174,12 @@ class PrommuOrder {
                                 'text' => $text,
                                 'user' => $id
                             ));
+                            
+            $pid = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
+            
+            return $pid;
+
+
         } else {
 
             $res = Yii::app()->db->createCommand()
