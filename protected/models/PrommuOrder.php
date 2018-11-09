@@ -87,6 +87,96 @@ class PrommuOrder {
 
     }
     
+    public function autoOrder($type, $stack, $account, $vacancy){
+        if($type == 'email'){
+            $res = Yii::app()->db->createCommand()
+                ->update('service_cloud', array(
+                    'status'=> 1,
+                ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$vacancy", ':stack'=> $stack));
+                
+                $sql = "SELECT  e.user
+                FROM service_cloud e
+                WHERE e.stack = {$stack}";
+                $user = Yii::app()->db->createCommand($sql)->queryAll();
+                
+                $user = exolode(',', $user);
+                 $sql = "SELECT  e.title
+                FROM empl_vacations e
+                WHERE e.id = {$name}";
+                $vacancy = Yii::app()->db->createCommand($sql)->queryAll();
+
+                 $sql = "SELECT  u.email, e.name, e.firstname, e.lastname
+                    FROM employer e
+                    LEFT JOIN user u ON u.id_user = e.id_user
+                    WHERE e.id_user = {$account}";
+                $empl = Yii::app()->db->createCommand($sql)->queryAll();
+                
+                for($i = 0; $i < count($user); $i ++){
+                    $sql = "SELECT  e.id, u.email, e.firstname, e.lastname
+                    FROM resume e
+                    LEFT JOIN user u ON u.id_user = e.id_user
+                    WHERE e.id_user = {$user['user'][$i]}";
+                    $resume = Yii::app()->db->createCommand($sql)->queryAll();
+                    
+                    $message = '<p style="font-size:16px;"Работодатель'.$account.' '.$empl[0]['lastname'].' '.$empl[0]['firstname'].'<br/> </p>
+                    <br/>
+
+                    <p style=" font-size:16px;">
+                     <br/>Компания: '.$empl[0]['name'].'<br/>
+                  Приглашает на вакансию:  '.$name.' '.$vacancy[0]['title'].'<br/>
+                  Ссылка на вакансию:  <a href="https://prommu.com/vacancy/'.$name.'">'.$vacancy[0]['title'].'</a><br/>
+
+                    <br/>';
+                    if(strpos($resume[0]['email'], "@") !== false){
+                        Share::sendmail($empl[0]['email'], "Prommu.com. Приглашение На Вакансию", $message);
+                        Share::sendmail('denisgresk@gmail.com', "Prommu.com. Приглашение На Вакансию", $message);
+                    }
+                    
+                }
+                
+
+            
+        } elseif($type == 'sms'){
+            $res = Yii::app()->db->createCommand()
+                ->update('service_cloud', array(
+                    'status'=> 1,
+                ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$vacancy", ':stack'=> $stack));
+                
+                 $sql = "SELECT  e.user,e.key
+                FROM service_cloud e
+                WHERE e.stack = {$stack}";
+                $user = Yii::app()->db->createCommand($sql)->queryAll();
+                $users = exolode(',', $user['user']);
+                for($i = 0; $i < count($users); $i ++){
+                    $api = new Api();
+                    $api->teleProm($users[$i], $user['key']);
+                }
+                
+        } elseif($type == 'push'){
+           $res = Yii::app()->db->createCommand()
+                ->update('service_cloud', array(
+                    'status'=> 1,
+                ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$vacancy", ':stack'=> $stack));
+
+                $link = "https://prommu.com/vacancy/$user";
+                $text = "Работодатель приглашает на вакансию";
+
+                $sql = "SELECT r.push
+                FROM user_push r
+                WHERE r.id = {$user}";
+                $res = Yii::app()->db->createCommand($sql)->queryRow();
+                
+                if($res) {
+                $type = "vacancy";
+                $api = new Api();
+                $api->getPushApi($res['push'], $type, $text, $link);
+
+                
+                }
+        }
+
+    }
+    
     public function serviceOrderSms($id_user,$sum, $status, $postback, $from, $to, $name,$type, $text, $id, $stack){
 
         if($postback == 0) {
