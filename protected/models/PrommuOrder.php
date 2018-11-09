@@ -325,9 +325,7 @@ class PrommuOrder {
                                 'sum' => $sum,
                                 'date' => date("Y-m-d"),
                             ));
-            $pid = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
-            
-            return $pid;
+           
         } else {
 
         	$res = Yii::app()->db->createCommand()
