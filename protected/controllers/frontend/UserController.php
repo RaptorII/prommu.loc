@@ -39,6 +39,9 @@ class UserController extends AppController
 
 
       public function actionPostback(){
+          
+       
+        
         $method = $_GET['method'];
         $account = $_GET['params']['account'];
         $orderSum = (int)$_GET['params']['orderSum'];
@@ -49,32 +52,32 @@ class UserController extends AppController
             $account = $arr[0];
             $count = count($arr);
             if($arr[2] == "sms"){
-                for ($i = $count; $i > 2 ; $i --) {
+               
                 $name = $arr[1];
-                $user = $arr[$i];
+                $user = $arr[3];
                $res = Yii::app()->db->createCommand()
                 ->update('service_cloud', array(
                     'key'=> $unitpayId,
-                ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':user' => $user));
-                }
+                ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
+              
             }elseif($arr[2] == "push"){
-                for ($i = $count; $i > 2 ; $i --) {
+                
                 $name = $arr[1];
-                $user = $arr[$i];
+                $user = $arr[3];
                $res = Yii::app()->db->createCommand()
                 ->update('service_cloud', array(
                     'key'=> $unitpayId,
-                ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':user' => $user));
-                }
+                ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
+              
             } elseif($arr[2] == "email"){
-                for ($i = $count; $i > 2 ; $i --) {
+             
                 $name = $arr[1];
-                $user = $arr[$i];
+                $user = $arr[3];
                $res = Yii::app()->db->createCommand()
                 ->update('service_cloud', array(
                     'key'=> $unitpayId,
-                ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':user' => $user));
-                }
+                ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
+               
             } else {
 
             for ($i = $count; $i > 0 ; $i --) {
@@ -88,6 +91,11 @@ class UserController extends AppController
 
         }
         if($method == "pay"){
+            $data['result']['message'] = "Запрос успешно обработан";
+            $data = json_encode($data);
+            echo $data;
+            
+            $model = new PrommuOrder();
             $unitpayId = $_GET['params']['unitpayId'];
             $account = $_GET['params']['account'];
             $arr = explode(".", $account);
@@ -111,18 +119,11 @@ class UserController extends AppController
               Share::sendmail($rest['email'], "Prommu.com. Действие по услугам", $content);
 
             if($arr[2] == "sms"){
-                for ($i = 3; $i < $count; $i ++) {
+                
                 $name = $arr[1];
-                $user = $arr[$i];
-               $res = Yii::app()->db->createCommand()
-                ->update('service_cloud', array(
-                    'status'=> 1,
-                ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':user'=> $user));
+                $user = $arr[3];
+                $model->autoOrder($arr[2], $user, $account, $name);
 
-                $api = new Api();
-                $api->teleProm($user, $unitpayId);
-
-                }
             } elseif($arr[2] == "vacancy") {
             for ($i = $count; $i > 0 ; $i --) {
                 $name = $arr[$i];
@@ -141,85 +142,20 @@ class UserController extends AppController
 
                 }
             } elseif($arr[2] == "push") {
-            for ($i = $count; $i > 0 ; $i --) {
-                $name = $arr[$i];
+            
+                $name = $arr[1];
+                $user = $arr[3];
+                $model->autoOrder($arr[2], $user, $account, $name);
 
-                $res = Yii::app()->db->createCommand()
-                ->update('service_cloud', array(
-                    'status'=> 1,
-                ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':user'=> $user));
-
-                $link = "https://prommu.com/vacancy/$user";
-                $text = "Работодатель приглашает на вакансию";
-
-                $sql = "SELECT r.push
-                FROM user_push r
-                WHERE r.id = {$user}";
-                $res = Yii::app()->db->createCommand($sql)->queryRow();
-                if($res) {
-                $type = "vacancy";
-                $api = new Api();
-                $api->getPushApi($res['push'], $type, $text, $link);
-
-                }
-                }
             } elseif($arr[2] == "email") {
-                for ($i = 3; $i < $count; $i ++) {
-                 $name = $arr[1];
-                $user = $arr[$i];
-
-
-                $res = Yii::app()->db->createCommand()
-                ->update('service_cloud', array(
-                    'status'=> 1,
-                ), 'id_user=:id_user AND name=:name AND user=:user', array(':id_user' => "$account", ':name' => "$name", ':user'=> $user));
-
-                $sql = "SELECT  e.title
-                FROM empl_vacations e
-                WHERE e.id = {$name}";
-                $vacancy = Yii::app()->db->createCommand($sql)->queryAll();
-
-             $sql = "SELECT  u.email, e.name, e.firstname, e.lastname
-                FROM employer e
-                LEFT JOIN user u ON u.id_user = e.id_user
-                WHERE e.id_user = {$account}";
-            $empl = Yii::app()->db->createCommand($sql)->queryAll();
-
-            $sql = "SELECT  e.id, u.email, e.firstname, e.lastname
-                FROM resume e
-                LEFT JOIN user u ON u.id_user = e.id_user
-                WHERE e.id_user = {$user}";
-            $resume = Yii::app()->db->createCommand($sql)->queryAll();
-
-            // $res = Yii::app()->db->createCommand()
-            //     ->insert('vacation_stat', array(
-            //         'id_vac' => $name,
-            //         'id_promo' => $resume[0]['id'],
-            //         'isresponse' => 2,
-            //         'status' => 4,
-            //         'date' => date("Y-m-d h-i-s")
-            //         ));
-
-            $message = '<p style="font-size:16px;"Работодатель'.$id_user.' '.$empl[0]['lastname'].' '.$empl[0]['firstname'].'<br/> </p>
-                    <br/>
-
-                <p style=" font-size:16px;">
-                 <br/>Компания: '.$empl[0]['name'].'<br/>
-              Приглашает на вакансию:  '.$name.' '.$vacancy[0]['title'].'<br/>
-              Ссылка на вакансию:  <a href="https://prommu.com/vacancy/'.$name.'">'.$vacancy[0]['title'].'</a><br/>
-
-                    <br/>';
-                    if(strpos($resume[0]['email'], "@") !== false){
-                        Share::sendmail($empl[0]['email'], "Prommu.com. Приглашение На Вакансию", $message);
-                        Share::sendmail('denisgresk@gmail.com', "Prommu.com. Приглашение На Вакансию", $message);
-                    }
-                }
+                
+                $name = $arr[1];
+                $user = $arr[3];
+                $model->autoOrder($arr[2], $user, $account, $name);
             }
+            
 
         }
-         $data['result']['message'] = "Запрос успешно обработан";
-        $data = json_encode($data);
-        echo $data;
       }
 
 
