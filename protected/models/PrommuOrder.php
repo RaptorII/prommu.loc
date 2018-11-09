@@ -159,7 +159,7 @@ class PrommuOrder {
 
     }
 
-    public function serviceOrderEmail($id_user,$sum, $status, $postback, $from, $to, $name,$type, $text, $id){
+    public function serviceOrderEmail($id_user,$sum, $status, $postback, $from, $to, $name,$type, $text, $id,$stack){
 
         if($postback == 0) {
            
@@ -172,13 +172,10 @@ class PrommuOrder {
                                 'status' => $status,
                                 'sum' => $sum,
                                 'text' => $text,
-                                'user' => $id
+                                'user' => $id,
+                                'stack' => $stack
                             ));
                             
-            $pid = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
-            
-            return $pid;
-
 
         } else {
 
@@ -412,20 +409,21 @@ class PrommuOrder {
     public function orderEmail($vacancy, $vacPrice, $employer) {
         $arApps = Yii::app()->getRequest()->getParam('users');
         $date = date("Y-m-d h-i-s");
-
-           $res =  $this->serviceOrderEmail(
+        $stack = time();
+           $this->serviceOrderEmail(
                     $employer,
                     $vacPrice,
                     0, 
                     0, 
                     $date,
                     $date, 
-                    $vacancy[0], 
+                    $vacancy, 
                     'email', 
-                    $vacancy[0], 
-                    $arApps
+                    $vacancy, 
+                    $arApps,
+                    $stack
                 );
-        $account = $employer . '.' . $vacancy[0] . '.email.' . implode('.', $res);
+        $account = $employer . '.' . $vacancy . '.email.' . implode('.', $stack);
 
         return $this->createPayLink($account, key($vacancy),  $vacPrice);
     }
