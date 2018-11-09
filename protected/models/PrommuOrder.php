@@ -460,12 +460,13 @@ class PrommuOrder {
             return false;
 
         $arApps = Yii::app()->getRequest()->getParam('users');
+        $sumArr = count(explode(',',$arApps));
         $stack = time();
         $text = Yii::app()->getRequest()->getParam('text');
         $date = date("Y-m-d h-i-s");
         $mainPrice = 0;
 
-        for($i=0, $n=count($arApps); $i<$n; $i++) {
+       
             $this->serviceOrderSms(
                     $employer,
                     $vacPrice, 
@@ -479,8 +480,8 @@ class PrommuOrder {
                     $arApps,
                     $stack
                 );
-            $mainPrice += $vacPrice;
-        }
+            $mainPrice= $vacPrice*$sumArr;
+       
         $account = $employer . '.' . $vacancy . '.sms.' . $stack;
 
         return $this->createPayLink($account, $vacancy, $mainPrice);
