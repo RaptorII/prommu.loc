@@ -420,12 +420,12 @@ class PrommuOrder {
                     0, 
                     $date,
                     $date, 
-                    key($vacancy), 
+                    $vacancy, 
                     'email', 
-                    key($vacancy), 
+                    $vacancy, 
                     $arApps
                 );
-        $account = $employer . '.' . key($vacancy) . '.email.' . implode('.', $res);
+        $account = $employer . '.' . $vacancy . '.email.' . implode('.', $res);
 
         return $this->createPayLink($account, key($vacancy),  $vacPrice);
     }
