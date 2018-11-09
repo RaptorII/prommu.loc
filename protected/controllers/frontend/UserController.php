@@ -1016,8 +1016,6 @@ class UserController extends AppController
         $emp = Yii::app()->getRequest()->getParam('employer');
         $price = $model->servicePrice($vac, $service);
         
-        $keys = array_keys($vac);
-        $vac = $keys[0];
         
         switch ($service) {
             case 'premium-vacancy':
