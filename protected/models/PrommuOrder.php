@@ -404,7 +404,7 @@ class PrommuOrder {
     *       Заказ услуги Email рассылка
     */
     public function orderEmail($vacancy, $vacPrice, $employer) {
-      
+        $arApps = Yii::app()->getRequest()->getParam('users');
         $date = date("Y-m-d h-i-s");
 
            $res =  $this->serviceOrderEmail(
