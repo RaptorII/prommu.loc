@@ -81,7 +81,7 @@ class PrommuOrder {
          $publi = "84661-fc398";
          $secretKey = '56B61C8ED08-535F660B689-40C558A1CE';
          $hash = $this->getFormSignature($account, $desc, $sum, $secretKey);
-         $link = "https://unitpay.ru/pay/$publi?sum=$sum&account=$account&desc=$desc&signature=$hash";
+         $link = "https://unitpay.ru/pay/$publi?sum=$sum&account=$account&desc=$sum&signature=$hash";
 
          return $link;
 
@@ -92,7 +92,7 @@ class PrommuOrder {
         if($postback == 0) {
             $sql = "SELECT  e.title
                 FROM empl_vacations e
-                WHERE e.id = {$name[0]}";
+                WHERE e.id = {$name}";
             $vacancy = Yii::app()->db->createCommand($sql)->queryAll();
 
              $sql = "SELECT  u.email, e.name, e.firstname, e.lastname 
@@ -162,17 +162,6 @@ class PrommuOrder {
     public function serviceOrderEmail($id_user,$sum, $status, $postback, $from, $to, $name,$type, $text, $id){
 
         if($postback == 0) {
-            $sql = "SELECT  e.title
-                FROM empl_vacations e
-                WHERE e.id = {$name}";
-            $vacancy = Yii::app()->db->createCommand($sql)->queryAll();
-
-             $sql = "SELECT  u.email, e.name, e.firstname, e.lastname 
-                FROM employer e
-                LEFT JOIN user u ON u.id_user = e.id_user
-                WHERE e.id_user = {$id_user}";
-            $empl = Yii::app()->db->createCommand($sql)->queryAll();
-
            
             $res = Yii::app()->db->createCommand()
                         ->insert('service_cloud', array('id_user' => $id_user,
@@ -191,6 +180,7 @@ class PrommuOrder {
                 ->update('service_cloud', array(
                     'status' => $status,
                 ), 'id_user=:id_user AND sum=:sum', array(':id_user' => $id_user, ':sum' => $sum));
+                
             $sql = "SELECT  e.title
                 FROM empl_vacations e
                 WHERE e.id = {$name}";
@@ -241,6 +231,9 @@ class PrommuOrder {
                                 'sum' => $sum,
                                 'date' => date("Y-m-d"),
                             ));
+            $pid = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
+            
+            return $pid;
         } else {
 
         	$res = Yii::app()->db->createCommand()
@@ -411,28 +404,24 @@ class PrommuOrder {
     *       Заказ услуги Email рассылка
     */
     public function orderEmail($vacancy, $vacPrice, $employer) {
-        $arApps = explode(",", Yii::app()->getRequest()->getParam('users'));
+      
         $date = date("Y-m-d h-i-s");
-         if(count($arApps) > 100){
-            $n = 100;
-        } else $n = count($arApps);
-        for($i=0; $i<$n; $i++) {
-            $this->serviceOrderEmail(
+
+           $res =  $this->serviceOrderEmail(
                     $employer,
                     $vacPrice,
                     0, 
                     0, 
                     $date,
                     $date, 
-                    $vacancy, 
+                    key($vacancy), 
                     'email', 
-                    $vacancy, 
-                    $arApps[$i]
+                    key($vacancy), 
+                    $arApps
                 );
-        }
-        $account = $employer . '.' . $vacancy . '.email.' . implode('.', $arApps);
+        $account = $employer . '.' . key($vacancy) . '.email.' . implode('.', $res);
 
-        return $this->createPayLink($account, $vacancy, $vacPrice);
+        return $this->createPayLink($account, key($vacancy),  $vacPrice);
     }
     /*
     *       Заказ услуги Push рассылка
@@ -440,11 +429,8 @@ class PrommuOrder {
     public function orderPush($vacancy, $vacPrice, $employer) {
         $arApps = explode(",", Yii::app()->getRequest()->getParam('users'));
         $date = date("Y-m-d h-i-s");
-        if(count($arApps) > 100){
-            $n = 100;
-        } else $n = count($arApps);
-        for($i=0; $i<$n; $i++) {
-            $model->serviceOrderEmail(
+        for($i=0, $n=count($arApps); $i<$n; $i++) {
+            $this->serviceOrderEmail(
                     $employer,
                     $vacPrice, 
                     1, 
@@ -469,10 +455,8 @@ class PrommuOrder {
         $text = Yii::app()->getRequest()->getParam('text');
         $date = date("Y-m-d h-i-s");
         $mainPrice = 0;
-         if(count($arApps) > 100){
-            $n = 100;
-        } else $n = count($arApps);
-        for($i=0; $i<$n; $i++) {
+
+        for($i=0, $n=count($arApps); $i<$n; $i++) {
             $this->serviceOrderSms(
                     $employer,
                     $vacPrice, 
