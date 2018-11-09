@@ -425,7 +425,7 @@ class PrommuOrder {
                 );
         $account = $employer . '.' . $vacancy . '.email.' . implode('.', $stack);
 
-        return $this->createPayLink($account, key($vacancy),  $vacPrice);
+        return $this->createPayLink($account, $vacancy,  $vacPrice);
     }
     /*
     *       Заказ услуги Push рассылка
