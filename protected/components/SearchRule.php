@@ -149,6 +149,34 @@ class SearchRule extends CBaseUrlRule {
                 );
                 continue;
             }
+            
+            if(strpos($v, 'payto') === 0)
+            {
+                $templateUrlParams['others']++;
+                $payto = explode('-', str_replace('payto=', '', $v));
+                if(sizeof($payto) != 2)
+                    continue;
+
+                $outData['payto'] = array(
+                    'raw' => $v,
+                    'param' => 'payto='.(int)$payto[0]
+                );
+                continue;
+            }
+            
+            if(strpos($v, 'payfrom') === 0)
+            {
+                $templateUrlParams['others']++;
+                $payfrom = explode('-', str_replace('payfrom=', '', $v));
+                if(sizeof($payto) != 2)
+                    continue;
+
+                $outData['payfrom'] = array(
+                    'raw' => $v,
+                    'param' => 'payfrom='.(int)$payfrom[0]
+                );
+                continue;
+            }
 
 
             // bt
@@ -359,6 +387,8 @@ class SearchRule extends CBaseUrlRule {
                 );
                 continue;
             }
+            
+           
             
             if($v == 'cardprommu')
             {
