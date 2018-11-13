@@ -216,8 +216,6 @@ class SearchPromo extends Model
         
         if( !empty($data['payto']) && $data['type'] || !empty($data['payfrom']) && $data['type'])
         {
-            if(empty($data['payto'])) $data['payto'] = 0;
-            if(empty($data['payfrom'])) $data['payfrom'] = 100000;
             $filter[] = 'a.id_attr = 0 AND a.isshow = 0 AND a.pay > '.$data['payto'].' AND a.pay < '.$data['payfrom'].' AND a.pay_type = '.$data['type'];
         }
         
