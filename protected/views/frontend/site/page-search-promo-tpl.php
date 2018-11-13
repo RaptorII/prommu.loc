@@ -115,70 +115,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="filter-label filter-salary">
-                                        <label class="filter-name opened">Заработная плата</label>
-                    <div class="filter-content opened">
-                        <div class="psv__salary">
-                            <span class="psv__salary-name">В час</span>
-                            <div class="psv__salary-block">
-                                <label class="psv__salary-label">
-                                    <span>от</span>
-                                    <input name="sphf" type="text" value="" class="psv__input">
-                                </label>
-                                <label class="psv__salary-label">
-                                    <span>до</span>
-                                    <input name="spht" type="text" value="" class="psv__input">
-                                </label> 
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
-                        <div class="psv__salary">
-                            <span class="psv__salary-name">В неделю</span>
-                            <div class="psv__salary-block">
-                                <label class="psv__salary-label">
-                                    <span>от</span>
-                                    <input name="spwf" type="text" value="" class="psv__input">
-                                </label>
-                                <label class="psv__salary-label">
-                                    <span>до</span>
-                                    <input name="spwt" type="text" value="" class="psv__input">
-                                </label> 
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
-                        <div class="psv__salary">
-                            <span class="psv__salary-name">В месяц</span>
-                            <div class="psv__salary-block">
-                                <label class="psv__salary-label">
-                                    <span>от</span>
-                                    <input name="spmf" type="text" value="" class="psv__input">
-                                </label>
-                                <label class="psv__salary-label">
-                                    <span>до</span>
-                                    <input name="spmt" type="text" value="" class="psv__input">
-                                </label> 
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
-                        <div class="psv__salary">
-                            <span class="psv__salary-name">За посещение</span>
-                            <div class="psv__salary-block">
-                                <label class="psv__salary-label">
-                                    <span>от</span>
-                                    <input name="spvf" type="text" value="" class="psv__input">
-                                </label>
-                                <label class="psv__salary-label">
-                                    <span>до</span>
-                                    <input name="spvt" type="text" value="" class="psv__input">
-                                </label> 
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
-                        <input id="psv-salary-type" name="sr" type="hidden" value="2">
-                        <div class="psv__filter-btn">ОК</div>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
+
 
 				<div class='psa__filter-block filter-additional'>
 					<div class='psa__filter-name opened'>Дополнительно</div>
