@@ -150,35 +150,68 @@ class SearchRule extends CBaseUrlRule {
                 continue;
             }
             
-            if(strpos($v, 'payto') === 0)
+            if(strpos($v, 'salary-hour') === 0)
             {
                 $templateUrlParams['others']++;
-                $payto = explode('-', str_replace('payto=', '', $v));
-                if(sizeof($payto) != 2)
+                $salary = explode(',', str_replace('salary-hour=', '', $v));
+
+                if(sizeof($salary) != 2)
                     continue;
 
-                $outData['payto'] = array(
+                $outData['salary-hour'] = array(
                     'raw' => $v,
-                    'param' => 'payto='.(int)$payto[0]
+                    'param' => 'payto='.(int)$salary[0].'&payfrom='.(int)$salary[1].'&type=0'
+                );
+
+                $outData['sr'] = array(
+                    'raw' => 1,
+                    'param' => 'sr=1'
+                );
+                continue;
+            }
+
+            
+            if(strpos($v, 'salary-week') === 0)
+            {
+                $templateUrlParams['others']++;
+                $salary = explode(',', str_replace('salary-week=', '', $v));
+
+                if(sizeof($salary) != 2)
+                    continue;
+
+                $outData['salary-week'] = array(
+                    'raw' => $v,
+                    'param' => 'payto='.(int)$salary[0].'&payfrom='.(int)$salary[1].'&type=1'
+                );
+
+                $outData['sr'] = array(
+                    'raw' => 1,
+                    'param' => 'sr=1'
+                );
+                continue;
+            }
+
+            
+            if(strpos($v, 'salary-month') === 0)
+            {
+                $templateUrlParams['others']++;
+                $salary = explode(',', str_replace('salary-month=', '', $v));
+
+                if(sizeof($salary) != 2)
+                    continue;
+
+                $outData['salary-month'] = array(
+                    'raw' => $v,
+                    'param' => 'payto='.(int)$salary[0].'&payfrom='.(int)$salary[1].'&type=2'
+                );
+
+                $outData['sr'] = array(
+                    'raw' => 1,
+                    'param' => 'sr=1'
                 );
                 continue;
             }
             
-            if(strpos($v, 'payfrom') === 0)
-            {
-                $templateUrlParams['others']++;
-                $payfrom = explode('-', str_replace('payfrom=', '', $v));
-                if(sizeof($payto) != 2)
-                    continue;
-
-                $outData['payfrom'] = array(
-                    'raw' => $v,
-                    'param' => 'payfrom='.(int)$payfrom[0]
-                );
-                continue;
-            }
-
-
             // bt
             if($v == 'partial' || $v == 'fulltime')
             {
