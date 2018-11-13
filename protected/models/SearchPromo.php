@@ -95,6 +95,8 @@ class SearchPromo extends Model
         $mb = Yii::app()->getRequest()->getParam('mb');
         $payto = Yii::app()->getRequest()->getParam('payto');
         $payfrom = Yii::app()->getRequest()->getParam('payfrom');
+        $sr = Yii::app()->getRequest()->getParam('sr');
+        $type = Yii::app()->getRequest()->getParam('type');
         $avto = Yii::app()->getRequest()->getParam('avto');
         $smart = Yii::app()->getRequest()->getParam('smart');
         $card = Yii::app()->getRequest()->getParam('card');
@@ -161,12 +163,16 @@ class SearchPromo extends Model
         if( Yii::app()->getRequest()->getParam('cardPrommu') || $inProps['filter']['cardPrommu']  ) $data['cardPrommu'] = $inProps['filter']['cardPrommu'] ?: Yii::app()->getRequest()->getParam('cardPrommu');
         // Quick search название города или имя,фамилия
         if( $sq = Yii::app()->getRequest()->getParam('qs')){  $data['qs'] = trim(filter_var($sq, FILTER_SANITIZE_FULL_SPECIAL_CHARS));}
-         if( Yii::app()->getRequest()->getParam('payto') || $inProps['filter']['payto']  ) $data['payto'] = $inProps['filter']['payto'] ?: Yii::app()->getRequest()->getParam('payto');
-          if( Yii::app()->getRequest()->getParam('payfrom') || $inProps['filter']['payfrom']  ) $data['payfrom'] = $inProps['filter']['payfrom'] ?: Yii::app()->getRequest()->getParam('payfrom');
         elseif($inProps['filter']['qs']) {
             $data['qs'] = $inProps['filter']['qs'];
 
         }
+        if( Yii::app()->getRequest()->getParam('payto') || $inProps['filter']['payto']  ) $data['payto'] = $inProps['filter']['payto'] ?: Yii::app()->getRequest()->getParam('payto');
+        if( Yii::app()->getRequest()->getParam('payfrom') || $inProps['filter']['payfrom']  ) $data['payfrom'] = $inProps['filter']['payfrom'] ?: Yii::app()->getRequest()->getParam('payfrom');
+        if( Yii::app()->getRequest()->getParam('type') || $inProps['filter']['type']  ) $data['type'] = $inProps['filter']['type'] ?: Yii::app()->getRequest()->getParam('type');
+        if( Yii::app()->getRequest()->getParam('sr') || $inProps['filter']['sr']  ) $data['sr'] = $inProps['filter']['sr'] ?: Yii::app()->getRequest()->getParam('sr');
+          
+
         // age
         if(Yii::app()->getRequest()->getParam('af') || $inProps['filter']['af'])
             $data['ageFrom'] = $inProps['filter']['af'] ?: Yii::app()->getRequest()->getParam('af');
@@ -208,11 +214,11 @@ class SearchPromo extends Model
             $filter[] = 'a.id_mech IN ('.join(',',$data['posts']).')';
         }
         
-        if( !empty($data['payto']) || !empty($data['payfrom']) )
+        if( !empty($data['payto']) && $data['type'] || !empty($data['payfrom']) && $data['type'])
         {
             if(empty($data['payto'])) $data['payto'] = 0;
             if(empty($data['payfrom'])) $data['payfrom'] = 100000;
-            $filter[] = 'a.id_attr = 0 AND a.isshow = 0 AND a.pay > '.$data['payto'].' AND a.pay < '.$data['payfrom'];
+            $filter[] = 'a.id_attr = 0 AND a.isshow = 0 AND a.pay > '.$data['payto'].' AND a.pay < '.$data['payfrom'].' AND a.pay_type = '.$data['type'];
         }
         
         // sex
@@ -393,17 +399,25 @@ class SearchPromo extends Model
             $cnt++;
         }
         
-        if(isset($data['payto']))
+        if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['type'] == 0)
         {
-            $url[] = 'payto';
+            $url[] = 'salary-hour='.(int)$data['payto'].','.(int)$data['payfrom'];
             $cnt++;
         }
         
-        if(isset($data['payfrom']))
+        if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['type'] == 1)
         {
-            $url[] = 'payfrom';
+            $url[] = 'salary-week='.(int)$data['payto'].','.(int)$data['payfrom'];
             $cnt++;
         }
+        
+        if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['type'] == 2)
+        {
+            $url[] = 'salary-month='.(int)$data['payto'].','.(int)$data['payfrom'];
+            $cnt++;
+        }
+        
+      
 
         // наличие автомобиля
         if(isset($data['avto']))
