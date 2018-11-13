@@ -212,7 +212,7 @@ class SearchPromo extends Model
         {
             if(empty($data['payto'])) $data['payto'] = 0;
             if(empty($data['payfrom'])) $data['payfrom'] = 100000;
-            $filter[] = 'a.id_mech = 115 AND a.isshow = 0 AND a.pay > '.$data['payto'].' AND a.pay < '.$data['payfrom'];
+            $filter[] = 'a.id_attr = 0 AND a.isshow = 0 AND a.pay > '.$data['payto'].' AND a.pay < '.$data['payfrom'];
         }
         
         // sex
