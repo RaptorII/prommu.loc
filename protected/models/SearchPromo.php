@@ -93,6 +93,8 @@ class SearchPromo extends Model
         $sf = Yii::app()->getRequest()->getParam('sf');
         $ph = Yii::app()->getRequest()->getParam('ph');
         $mb = Yii::app()->getRequest()->getParam('mb');
+        $payto = Yii::app()->getRequest()->getParam('payto');
+        $payfrom = Yii::app()->getRequest()->getParam('payfrom');
         $avto = Yii::app()->getRequest()->getParam('avto');
         $smart = Yii::app()->getRequest()->getParam('smart');
         $card = Yii::app()->getRequest()->getParam('card');
@@ -159,6 +161,8 @@ class SearchPromo extends Model
         if( Yii::app()->getRequest()->getParam('cardPrommu') || $inProps['filter']['cardPrommu']  ) $data['cardPrommu'] = $inProps['filter']['cardPrommu'] ?: Yii::app()->getRequest()->getParam('cardPrommu');
         // Quick search название города или имя,фамилия
         if( $sq = Yii::app()->getRequest()->getParam('qs')){  $data['qs'] = trim(filter_var($sq, FILTER_SANITIZE_FULL_SPECIAL_CHARS));}
+         if( Yii::app()->getRequest()->getParam('payto') || $inProps['filter']['payto']  ) $data['payto'] = $inProps['filter']['payto'] ?: Yii::app()->getRequest()->getParam('payto');
+          if( Yii::app()->getRequest()->getParam('payfrom') || $inProps['filter']['payfrom']  ) $data['payfrom'] = $inProps['filter']['payfrom'] ?: Yii::app()->getRequest()->getParam('payfrom');
         elseif($inProps['filter']['qs']) {
             $data['qs'] = $inProps['filter']['qs'];
 
@@ -203,7 +207,13 @@ class SearchPromo extends Model
         {
             $filter[] = 'a.id_mech IN ('.join(',',$data['posts']).')';
         }
-
+        
+        if( !empty($data['payto']) || !empty($data['payfrom']) )
+        {
+            
+            $filter[] = 'a.id_mech = 115 AND a.isshow = 0 AND a.pay > '.$data['payto'].' AND a.pay < '.$data['payfrom'];
+        }
+        
         // sex
         if( !empty($data['sf']) && empty($data['sm']) || empty($data['sf']) && !empty($data['sm']) )
         {
@@ -379,6 +389,18 @@ class SearchPromo extends Model
         if(isset($data['mb']))
         {
             $url[] = 'medbook';
+            $cnt++;
+        }
+        
+        if(isset($data['payto']))
+        {
+            $url[] = 'payto';
+            $cnt++;
+        }
+        
+        if(isset($data['payfrom']))
+        {
+            $url[] = 'payfrom';
             $cnt++;
         }
 
