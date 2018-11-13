@@ -115,47 +115,70 @@
 						</div>
 					</div>
 				</div>
-				<div class='filter-label filter-salary'>
-                <?php $flag = $viData['payto'] || $viData['payfrom'] ?>
-                <label class='filter-name <?= $flag ? 'opened' : '' ?>'>Заработная плата</label>
-                <div class='filter-content <?= $flag ? 'opened' : '' ?>'>
-                    <div class='radio-box right-box'>
-                        <div class='salary-box'>
-                            <label for='EdSalPerHF'>В час&nbsp;&nbsp;</label>
-                            <i>от</i>
-                            <input id='EdSalPerHF' name='payto' type='text' value="<?= $viData['sphf'] ?>">
-                            <i>до</i>
-                            <input id='EdSalPerHT' name='payfrom' type='text' value="<?= $viData['spht'] ?>">
-                            <label class='radio-box' for='RBShour'>
-                                <input <?= $viData['sr'] == '1' || empty($viData['sr']) ? 'checked' : '' ?> id='RBShour' name='sr' type='radio' value='1'>
-                                <span></span>
-                            </label>
+				<div class="filter-label filter-salary">
+                                        <label class="filter-name opened">Заработная плата</label>
+                    <div class="filter-content opened">
+                        <div class="psv__salary">
+                            <span class="psv__salary-name">В час</span>
+                            <div class="psv__salary-block">
+                                <label class="psv__salary-label">
+                                    <span>от</span>
+                                    <input name="sphf" type="text" value="" class="psv__input">
+                                </label>
+                                <label class="psv__salary-label">
+                                    <span>до</span>
+                                    <input name="spht" type="text" value="" class="psv__input">
+                                </label> 
+                                <div class="clearfix"></div>
+                            </div>
                         </div>
-                        <!--<div class='salary-box'>-->
-                        <!--    <label for='EdSalPerWF'>В неделю</label>-->
-                        <!--    <i>от</i>-->
-                        <!--    <input id='EdSalPerWF' name='spwf' type='text' value="<?= $viData['spwf'] ?>">-->
-                        <!--    <i>до</i>-->
-                        <!--    <input id='EdSalPerWT' name='spwt' type='text' value="<?= $viData['spwt'] ?>">-->
-                        <!--    <label class='radio-box' for='RBSweek'>-->
-                        <!--        <input id='RBSweek' name='sr' type='radio' value='2' <?= $viData['sr'] == '2' ? 'checked' : '' ?>>-->
-                        <!--        <span></span>-->
-                        <!--    </label>-->
-                        <!--</div>-->
-                        <!--<div class='salary-box'>-->
-                        <!--    <label for='EdSalPerMF'>В месяц</label>-->
-                        <!--    <i>от</i>-->
-                        <!--    <input id='EdSalPerMF' name='spmf' type='text' value="<?= $viData['spmf'] ?>">-->
-                        <!--    <i>до</i>-->
-                        <!--    <input id='EdSalPerMT' name='spmt' type='text' value="<?= $viData['spmt'] ?>">-->
-                        <!--    <label class='radio-box' for='RBSmonth'>-->
-                        <!--        <input id='RBSmonth' name='sr' type='radio' value='3' <?= $viData['sr'] == '3' ? 'checked' : '' ?>>-->
-                        <!--        <span></span>-->
-                        <!--    </label>-->
-                        <!--</div>-->
+                        <div class="psv__salary">
+                            <span class="psv__salary-name">В неделю</span>
+                            <div class="psv__salary-block">
+                                <label class="psv__salary-label">
+                                    <span>от</span>
+                                    <input name="spwf" type="text" value="" class="psv__input">
+                                </label>
+                                <label class="psv__salary-label">
+                                    <span>до</span>
+                                    <input name="spwt" type="text" value="" class="psv__input">
+                                </label> 
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="psv__salary">
+                            <span class="psv__salary-name">В месяц</span>
+                            <div class="psv__salary-block">
+                                <label class="psv__salary-label">
+                                    <span>от</span>
+                                    <input name="spmf" type="text" value="" class="psv__input">
+                                </label>
+                                <label class="psv__salary-label">
+                                    <span>до</span>
+                                    <input name="spmt" type="text" value="" class="psv__input">
+                                </label> 
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="psv__salary">
+                            <span class="psv__salary-name">За посещение</span>
+                            <div class="psv__salary-block">
+                                <label class="psv__salary-label">
+                                    <span>от</span>
+                                    <input name="spvf" type="text" value="" class="psv__input">
+                                </label>
+                                <label class="psv__salary-label">
+                                    <span>до</span>
+                                    <input name="spvt" type="text" value="" class="psv__input">
+                                </label> 
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <input id="psv-salary-type" name="sr" type="hidden" value="2">
+                        <div class="psv__filter-btn">ОК</div>
+                        <div class="clearfix"></div>
                     </div>
                 </div>
-            </div>
 
 				<div class='psa__filter-block filter-additional'>
 					<div class='psa__filter-name opened'>Дополнительно</div>
