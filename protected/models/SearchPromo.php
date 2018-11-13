@@ -214,7 +214,7 @@ class SearchPromo extends Model
             $filter[] = 'a.id_mech IN ('.join(',',$data['posts']).')';
         }
         
-        if( !empty($data['payto']) && $data['type'] || !empty($data['payfrom']) && $data['type'])
+        if( !empty($data['payto']) || !empty($data['payfrom']))
         {
             $filter[] = 'a.id_attr = 0 AND a.isshow = 0 AND a.pay > '.$data['payto'].' AND a.pay < '.$data['payfrom'].' AND a.pay_type = '.$data['type'];
         }
