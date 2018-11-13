@@ -423,6 +423,21 @@ class SearchRule extends CBaseUrlRule {
                 continue;
             }
             
+            // age
+            if(strpos($v, 'age') === 0)
+            {
+                $templateUrlParams['others']++;
+                $age = explode('-', str_replace('age=', '', $v));
+                if(sizeof($age) != 2)
+                    continue;
+
+                $outData['age'] = array(
+                    'raw' => $v,
+                    'param' => 'af='.(int)$age[0].'&at='.(int)$age[1]
+                );
+                continue;
+            }
+            
             if($v == 'cardprommu')
             {
                 $templateUrlParams['others']++;
