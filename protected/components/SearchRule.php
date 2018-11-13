@@ -150,67 +150,6 @@ class SearchRule extends CBaseUrlRule {
                 continue;
             }
             
-            if(strpos($v, 'salary-hour') === 0)
-            {
-                $templateUrlParams['others']++;
-                $salary = explode(',', str_replace('salary-hour=', '', $v));
-
-                if(sizeof($salary) != 2)
-                    continue;
-
-                $outData['salary-hour'] = array(
-                    'raw' => $v,
-                    'param' => 'payto='.(int)$salary[0].'&payfrom='.(int)$salary[1].'&type=0'
-                );
-
-                $outData['sr'] = array(
-                    'raw' => 1,
-                    'param' => 'sr=1'
-                );
-                continue;
-            }
-
-            
-            if(strpos($v, 'salary-week') === 0)
-            {
-                $templateUrlParams['others']++;
-                $salary = explode(',', str_replace('salary-week=', '', $v));
-
-                if(sizeof($salary) != 2)
-                    continue;
-
-                $outData['salary-week'] = array(
-                    'raw' => $v,
-                    'param' => 'payto='.(int)$salary[0].'&payfrom='.(int)$salary[1].'&type=1'
-                );
-
-                $outData['sr'] = array(
-                    'raw' => 1,
-                    'param' => 'sr=1'
-                );
-                continue;
-            }
-
-            
-            if(strpos($v, 'salary-month') === 0)
-            {
-                $templateUrlParams['others']++;
-                $salary = explode(',', str_replace('salary-month=', '', $v));
-
-                if(sizeof($salary) != 2)
-                    continue;
-
-                $outData['salary-month'] = array(
-                    'raw' => $v,
-                    'param' => 'payto='.(int)$salary[0].'&payfrom='.(int)$salary[1].'&type=2'
-                );
-
-                $outData['sr'] = array(
-                    'raw' => 1,
-                    'param' => 'sr=1'
-                );
-                continue;
-            }
             
             // bt
             if($v == 'partial' || $v == 'fulltime')
@@ -421,7 +360,67 @@ class SearchRule extends CBaseUrlRule {
                 continue;
             }
             
-           
+            if(strpos($v, 'salary-hour') === 0)
+            {
+                $templateUrlParams['others']++;
+                $salary = explode(',', str_replace('salary-hour=', '', $v));
+
+                if(sizeof($salary) != 2)
+                    continue;
+
+                $outData['salary-hour'] = array(
+                    'raw' => $v,
+                    'param' => 'payto='.(int)$salary[0].'&payfrom='.(int)$salary[1].'&type=0'
+                );
+
+                $outData['sr'] = array(
+                    'raw' => 1,
+                    'param' => 'sr=1'
+                );
+                continue;
+            }
+
+            
+            if(strpos($v, 'salary-week') === 0)
+            {
+                $templateUrlParams['others']++;
+                $salary = explode(',', str_replace('salary-week=', '', $v));
+
+                if(sizeof($salary) != 2)
+                    continue;
+
+                $outData['salary-week'] = array(
+                    'raw' => $v,
+                    'param' => 'payto='.(int)$salary[0].'&payfrom='.(int)$salary[1].'&type=1'
+                );
+
+                $outData['sr'] = array(
+                    'raw' => 1,
+                    'param' => 'sr=1'
+                );
+                continue;
+            }
+
+            
+            if(strpos($v, 'salary-month') === 0)
+            {
+                $templateUrlParams['others']++;
+                $salary = explode(',', str_replace('salary-month=', '', $v));
+
+                if(sizeof($salary) != 2)
+                    continue;
+
+                $outData['salary-month'] = array(
+                    'raw' => $v,
+                    'param' => 'payto='.(int)$salary[0].'&payfrom='.(int)$salary[1].'&type=2'
+                );
+
+                $outData['sr'] = array(
+                    'raw' => 1,
+                    'param' => 'sr=1'
+                );
+                continue;
+            }
             
             if($v == 'cardprommu')
             {
