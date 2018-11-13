@@ -339,6 +339,7 @@ class SearchRule extends CBaseUrlRule {
                 );
                 continue;
             }
+            
 
             if($v == 'card')
             {
