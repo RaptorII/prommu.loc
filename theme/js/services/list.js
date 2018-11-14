@@ -18,7 +18,7 @@ var ServicesList = (function () {
         else if(arSuccessMess.event==='free')
             var itm = $('.services-finish-form.free').clone();
         else
-            var itm = $('.services-finish-form').clone();
+            var itm = $('.services-finish-form.payable').clone();
         itm.toggleClass('services-form tmpl');
         ModalWindow.open({ content: itm, action: { active: 0 }, additionalStyle:'dark-ver' });
 

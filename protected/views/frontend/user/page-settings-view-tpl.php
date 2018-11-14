@@ -15,6 +15,7 @@
 		$time = implode(':', $arTime);
 	}
 	if(isset($viData['phone'])){
+		$viData['phone'] = str_replace('+','',$viData['phone']);
 		$pos = strpos($viData['phone'], '(');
 		$viData['phone-code'] = substr($viData['phone'], 0,$pos);
 		$viData['phone'] = substr($viData['phone'], $pos);       

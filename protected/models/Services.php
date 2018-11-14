@@ -179,6 +179,8 @@ class Services extends Model
         $data['liveaddr'] = filter_var(Yii::app()->getRequest()->getParam('addr'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 //        $data['livecountry'] = filter_var(Yii::app()->getRequest()->getParam('country'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $data['tel'] = filter_var(Yii::app()->getRequest()->getParam('tel'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $phoneCode = filter_var(Yii::app()->getRequest()->getParam('__phone_prefix'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $data['tel'] = $phoneCode . $data['tel'];
         $data['docorgcode'] = filter_var(Yii::app()->getRequest()->getParam('docorgcode'), FILTER_SANITIZE_NUMBER_INT);
         $data['comment'] = filter_var(Yii::app()->getRequest()->getParam('comment'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $data['crdate'] = date("Y-m-d H:i:s");
@@ -296,5 +298,58 @@ class Services extends Model
         $arRes['pages']->applyLimit($SearchPromo);
         $arRes['workers'] = $SearchPromo->getPromos($arAllId, 0, $filter);
         return $arRes;    	
+    }
+    /**
+    *   тянем данные для карты
+    */
+    public function getUserDataForCard() {
+        $arRes['months'] = array(0=>'Январь',1=>'Февраль',2=>'Март',3=>'Апрель',4=>'Май',5=>'Июнь',6=>'Июль',7=>'Август',8=>'Сентябрь',9=>'Октябрь',10=>'Ноябрь',11=>'Декабрь');
+        $id = Share::$UserProfile->id;
+
+        if($id>0) {
+            $arRes['user'] = Yii::app()->db->createCommand()
+                                ->select('a.val phone, u.email, u.status')
+                                ->from('user u')
+                                ->leftJoin(
+                                    'user_attribs a', 
+                                    'a.id_us=u.id_user AND a.id_attr=1'
+                                )
+                                ->where(
+                                    'u.id_user=:idus', 
+                                    array(':idus' => $id)
+                                )
+                                ->queryRow();
+
+            if(isset($arRes['user']['phone'])){
+                $arRes['user']['phone'] = str_replace('+','',$arRes['user']['phone']);
+                $pos = strpos($arRes['user']['phone'], '(');
+                $arRes['user']['phone-code'] = substr($arRes['user']['phone'],0,$pos);
+                $arRes['user']['phone'] = substr($arRes['user']['phone'], $pos);
+            }
+
+            if($arRes['user']['status']==2){
+              $res = Yii::app()->db->createCommand()
+                ->select('r.firstname, r.lastname, r.birthday')
+                ->from('resume r')
+                ->where('r.id_user=:idus', array(':idus' => $id))
+                ->queryRow();
+            }
+            if($arRes['user']['status']==3){
+              $res = Yii::app()->db->createCommand()
+                ->select('e.firstname, e.lastname')
+                ->from('employer e')
+                ->where('e.id_user=:idus', array(':idus' => $id))
+                ->queryRow();
+            }
+            $arRes['user']['firstname'] = $res['firstname'];
+            $arRes['user']['lastname'] = $res['lastname'];
+
+            if(!empty($res['birthday']))
+                $arRes['user']['birthday'] = DateTime::createFromFormat(
+                                                    'Y-m-d', 
+                                                    $res['birthday']
+                                                )->format('d.m.Y');
+        }
+        return $arRes;
     }
 }

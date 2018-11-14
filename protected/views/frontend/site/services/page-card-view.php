@@ -1,38 +1,22 @@
 <?
-  Yii::app()->getClientScript()->registerCssFile('/theme/css/services/services-card-page.css');
-  Yii::app()->getClientScript()->registerScriptFile('/theme/js/services/services-card-page.js', CClientScript::POS_END);
+  $bUrl = Yii::app()->baseUrl . '/theme/';
+  Yii::app()->getClientScript()->registerCssFile($bUrl.'css/phone-codes/style.css'); 
+  Yii::app()->getClientScript()->registerScriptFile($bUrl.'js/phone-codes/script.js', CClientScript::POS_END);
+  Yii::app()->getClientScript()->registerCssFile($bUrl.'css/services/services-card-page.css');
+  Yii::app()->getClientScript()->registerScriptFile($bUrl.'js/services/services-card-page.js', CClientScript::POS_END);
 ?>
 <?php if( $mess = Yii::app()->user->getFlash('Message') ): Yii::app()->user->setFlash('Message', '') ?>
     <div class="mess-box tmpl <?= $mess['type'] ?>" id="pr-card-mes"><?= $mess['message'] ?></div>
 <?php endif; ?>
 <?php
-  if($id = Share::$UserProfile->id){
-    $user = Yii::app()->db->createCommand()
-        ->select('a.val phone, u.email, u.status')
-        ->from('user u')
-        ->leftJoin('user_attribs a', 'a.id_us=u.id_user AND a.id_attr=1')
-        ->where('u.id_user=:idus', array(':idus' => $id))
-        ->queryRow();
-
-    if($user['status']==2){
-      $res = Yii::app()->db->createCommand()
-        ->select('r.firstname, r.lastname, r.birthday')
-        ->from('resume r')
-        ->where('r.id_user=:idus', array(':idus' => $id))
-        ->queryRow();
-    }
-    if($user['status']==3){
-      $res = Yii::app()->db->createCommand()
-        ->select('e.firstname, e.lastname')
-        ->from('employer e')
-        ->where('e.id_user=:idus', array(':idus' => $id))
-        ->queryRow();
-    }
-  }
-  $arMonth = array(0=>'Январь',1=>'Февраль',2=>'Март',3=>'Апрель',4=>'Май',5=>'Июнь',6=>'Июль',7=>'Август',8=>'Сентябрь',9=>'Октябрь',10=>'Ноябрь',11=>'Декабрь');
-  if(!empty($res['birthday']))
-    $res['birthday'] = DateTime::createFromFormat('Y-m-d', $res['birthday'])->format('d.m.Y');
+  $model = new Services();
+  $arRes = $model->getUserDataForCard();
 ?>
+<? if(!empty($arRes['user']['phone-code'])): ?>
+    <script type="text/javascript">
+      selectPhoneCode = <?=$arRes['user']['phone-code']?>;
+    </script>
+<? endif; ?>
 <div class='row'>
   <div class='col-xs-12 prommucard'>
     <div class="container-fluid">
@@ -45,7 +29,7 @@
             <h1 class="pr-card__title">Заполните, пожалуйста, форму заявки</h1>
             <hr class="pr-card__hr">
             <form action="" id="F1cardOrder" method="POST" class="pr-card__form">
-              <?if(!in_array($user['status'], [2,3])):?>
+              <?if(!in_array($arRes['user']['status'], [2,3])):?>
                 <div class="pr-card__checkbox">
                   <input id="type" name="applicant" value="true" type="checkbox">
                   <label for="type" class="pr-card__checkbox-label">
@@ -62,7 +46,7 @@
                 </div>
                 <div class="clearfix"></div>
               <?endif;?>
-              <?if($user['status']==2):?>
+              <?if($arRes['user']['status']==2):?>
                 <div class="pr-card__form-select-block">
                   <select name="post" class="pr-card__form-select pr-card__form-input required-inp">
                     <option value="" disabled selected>Должность *</option>
@@ -74,47 +58,47 @@
                 <input name="applicant" value="true" type="hidden">              
               <?endif;?>
               <label class="pr-card__form-label">
-                <input type="text" name="fff"  data-field-check='name:Фамилия,empty' value="<?=$res['lastname']?>" placeholder="Фамилия *" class="pr-card__form-input required-inp" id="pr-card-surname"/>
+                <input type="text" name="fff"  data-field-check='name:Фамилия,empty' value="<?=$arRes['user']['lastname']?>" placeholder="Фамилия *" class="pr-card__form-input required-inp" id="pr-card-surname"/>
               </label>
               <label class="pr-card__form-label">
-                <input type="text" name="nnn"  data-field-check='name:Имя,empty' value="<?=$res['firstname']?>" placeholder="Имя *" class="pr-card__form-input required-inp" id="pr-card-name"/>
+                <input type="text" name="nnn"  data-field-check='name:Имя,empty' value="<?=$arRes['user']['firstname']?>" placeholder="Имя *" class="pr-card__form-input required-inp" id="pr-card-name"/>
               </label>
               <label class="pr-card__form-label">
                 <input type="text" name="ooo"  data-field-check='name:Отчество,empty' placeholder="Отчество *" class="pr-card__form-input required-inp" id="pr-card-patronymic"/>
               </label>
               <div class="pr-card__calendar">
                 <div class="pr-card__calendar-label">Дата рождения *</div>
-                <span class="pr-card__calendar-result" id="birthday-res"><?=$res['birthday']?></span>
+                <span class="pr-card__calendar-result" id="birthday-res"><?=$arRes['user']['birthday']?></span>
                 <table id="birthday" class="pr-card__calendar-table">
                   <thead>
                     <tr>
                       <td colspan="5">
                         <div class="pr-card__form-select-block">
                           <select class="pr-card__form-select pr-card__form-input">
-                            <?foreach ($arMonth as $i => $month):?>
+                            <?foreach ($arRes['months'] as $i => $month):?>
                               <option value="<?=$i?>"><?=$month?></option>
                             <?endforeach?>
                           </select>
                         </div>
                       </td>
-                      <td colspan="2"><input type="text" value="" class="pr-card__form-input"></td>
+                      <td colspan="2"><input type="text" value="" class="pr-card__form-input" maxlength="4"></td>
                     </tr>
                     <tr><td>Пн</td><td>Вт</td><td>Ср</td><td>Чт</td><td>Пт</td><td>Сб</td><td>Вс</td></tr>
                   <tbody>
                 </table>
-                <input type="hidden" name="birthday" id="birthday-inp" class="required-inp" value="<?=$res['birthday']?>">
+                <input type="hidden" name="birthday" id="birthday-inp" class="required-inp" value="<?=$arRes['user']['birthday']?>">
               </div>
               <label class="pr-card__form-label" data-info='Место рождения (индекс, страна, область, город, улица, № дома) *'>
                 <input type="text" placeholder="Место рождения (индекс, страна, область, город, улица, № дома) *" name="bornplace" data-field-check='name:Место рождения,empty' class="pr-card__form-input required-inp"/>
               </label>
               <label class="pr-card__form-label">
-                <input type="text" name="tel" id="pr-card-phone" data-field-check='name:Мобильный телефон,empty' placeholder="Мобильный телефон *" value="<?=$user['phone']?>" class="pr-card__form-input required-inp"/>
+                <input type="text" name="tel" id="phone-code" data-field-check='name:Мобильный телефон,empty' placeholder="Мобильный телефон *" value="<?=$arRes['user']['phone']?>" class="required-inp"/>
               </label>
               <label class="pr-card__form-label">
-                <input type="text" name="email" id="pr-card-mail" data-field-check='name:Email,empty' placeholder="Email *" value="<?=$user['email']?>" class="pr-card__form-input required-inp"/>
+                <input type="text" name="email" id="pr-card-mail" data-field-check='name:Email,empty' placeholder="Email *" value="<?=$arRes['user']['email']?>" class="pr-card__form-input required-inp"/>
               </label>
               <label class="pr-card__form-label">
-                <input type="text" name="doc-ser" id="pr-card-serial" data-field-check='name:Серия паспорта,empty' placeholder="Серия, номер паспорта *" class="pr-card__form-input required-inp"/>
+                <input type="text" name="doc-ser" id="pr-card-serial" data-field-check='name:Серия паспорта,empty' placeholder="Серия, номер паспорта *" class="pr-card__form-input required-inp" maxlength="11"/>
               </label>
               <label class="pr-card__form-label">
                 <input type="text" name="doc-org" data-field-check='name:Кем выдан паспорт,empty' placeholder="Кем выдан паспорт *" class="pr-card__form-input required-inp"/>
@@ -128,7 +112,7 @@
                       <td colspan="5">
                         <div class="pr-card__form-select-block">
                           <select class="pr-card__form-select pr-card__form-input">
-                            <?foreach ($arMonth as $i => $month):?>
+                            <?foreach ($arRes['months'] as $i => $month):?>
                               <option value="<?=$i?>"><?=$month?></option>
                             <?endforeach?>
                           </select>
@@ -139,10 +123,10 @@
                     <tr><td>Пн</td><td>Вт</td><td>Ср</td><td>Чт</td><td>Пт</td><td>Сб</td><td>Вс</td></tr>
                   <tbody>
                 </table>
-                <input type="hidden" name="doc-date" id="passport-inp" class="required-inp">
+                <input type="hidden" name="doc-date" id="passport-inp" class="required-inp" maxlength="4">
               </div>
               <label class="pr-card__form-label">
-                <input type="text" name="docorgcode" id="pr-card-code" data-field-filter='digits:-;max:8' placeholder="Код подразделения *" class="pr-card__form-input required-inp"/>
+                <input type="text" name="docorgcode" id="pr-card-code" data-field-filter='digits:-;max:8' placeholder="Код подразделения *" class="pr-card__form-input required-inp" maxlength="6" />
               </label>
               <label class="pr-card__form-label" data-info="Адрес прописки (индекс, страна, область, город, улица, № дома) *">
                 <input type="text" name="regaddr" id="EdRegaddr" data-field-check='name:Адрес прописки,empty' placeholder="Адрес прописки (индекс, страна, область, город, улица, № дома) *" class="pr-card__form-input required-inp"/>
@@ -214,6 +198,6 @@
     G_VARS.uniFiles = <?= json_encode($_SESSION['uploaduni']) ?>;
   });
 </script>
-<?if(!in_array($user['status'], [2,3])){
+<?if(!in_array($arRes['user']['status'], [2,3])){
   require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/site/services/popups.php';
 }?>

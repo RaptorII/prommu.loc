@@ -377,10 +377,10 @@ $(function(){
 				showPopupError('Проверка почты','На почту выслан код для подтверждения. Введите его в поле "Проверочный код"');
 			}
 			else{
-				$.ajax({ type:'POST', url:'/ajax/restorecode', data:'phone='+oldPhone });
-				$('#phone-code').fadeIn();
+				$.ajax({ type:'POST', url:'/ajax/restorecode', data:'phone='+oldCode+oldPhone });
+				$('#phone-code-inp').fadeIn();
 				$pVeil.addClass('code').fadeIn();
-				$('#phone-inp div').fadeOut();
+				//$('#phone-inp .set-priv__input').fadeOut();
 				$('#phone-inp p').fadeOut();
 				showPopupError('Проверка телефона','На телефон выслан код для подтверждения. Введите его в поле "Проверочный код"');				
 			}	

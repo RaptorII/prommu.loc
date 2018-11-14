@@ -1,7 +1,7 @@
 $(function(){
 	var arReq = $('.smr__required');
 	// phone
-	$('#smr-phone').mask('+7(999) 999-99-99');
+	//$('#smr-phone').mask('+7(999) 999-99-99');
 
 	$('#smr-surname').bind('keyup change blur', function(){ checkFio(this) });
 	$('#smr-name').bind('keyup change blur', function(){ checkFio(this) });
@@ -41,6 +41,20 @@ $(function(){
 				r = p.test(v) ? remEr(e) : addEr(e);
 			else
 				r = addEr(e);
+		}
+		else if(id=='phone-code') {
+			var main = $(e).closest('.country-phone')[0],
+					code = $('[name="__phone_prefix"]').val(),
+					phone = v.replace(/\D+/g,''),
+					l = phone.length,
+          phoneLen = 10;
+
+			if(code.length==3) // UKR, BEL
+				phoneLen = 9;
+			if(code.length==1) // RF
+				phoneLen = 10;
+
+			r = (l!=phoneLen ? addEr(main) : remEr(main));
 		}
 		else{
 			r = ( ($(e).is('select') && v==null) || ($(e).is('input') && v=='') ) 

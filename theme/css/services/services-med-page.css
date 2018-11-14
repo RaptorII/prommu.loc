@@ -111,3 +111,27 @@
 	background: url(/theme/pic/services-page/med-record-bg.jpg) no-repeat;
 	background-size: contain;
 }
+/*
+*		13.11.2018
+*/
+.country-phone{
+	display: table;
+	height: 35px;
+	padding: 0 15px 0 0; 
+	border: 1px solid #EBEBEB;
+	font-size: 14px;
+	border-radius: 1px;
+	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+}
+.country-phone-selected{
+	height: 33px;
+	line-height: 33px;
+}
+.country-phone-selected img{
+	margin: 11px 5px 12px;
+}
+#phone-code::-webkit-input-placeholder{ color:#757575; }
+#phone-code::-moz-placeholder{color:#757575;}
+#phone-code:-moz-placeholder{color:#757575;}
+#phone-code:-ms-input-placeholder{color:#757575;}
+.country-phone.error{ box-shadow:none }

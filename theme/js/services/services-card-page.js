@@ -12,10 +12,24 @@ var Prommucard = (function (){
         ModalWindow.open({ content: message, action: { active: 0 }, additionalStyle:'dark-ver'});
       }
       //  добавляем маски
-      $("#pr-card-phone").mask("+7(999) 999-99-99");
-      $("#pr-card-code").mask("999-99");
-      $.mask.definitions['~']='[А-ЯЁа-яёA-Za-z0-9]';
-      $('#pr-card-serial').mask("~~~~-~~~~~~");
+      $('#pr-card-code').on('input',function(){
+        this.value = this.value.replace(/[^0-9\-]+/g,'');
+      });
+      $('#pr-card-serial').on('input',function(){
+        var v = this.value;
+
+        v = v.toUpperCase().replace(/[^А-ЯЁа-яёA-Za-z0-9\-]/g,'');
+
+        if(v.length>=5) {
+          var arV = v.split('-');
+          if(arV.length==1)
+            v = v.substr(0,4) + '-' + v.substr(4);
+          else
+            v = arV[0] + '-' + arV[1];
+        }
+        this.value = v;
+        //$('#pr-card-serial').mask("~~~~-~~~~~~");
+      });
       //  строим календарь
       if($('*').is('#birthday')){
         curBYear = curYear;
@@ -28,10 +42,14 @@ var Prommucard = (function (){
           curBDay = Number(arBirthday[0]);
         }
         Calendar("birthday",curBYear,curBMonth,curBDay);
-        $("#birthday input").mask("9999");
+        $("#birthday input").on('input',function(){
+          this.value = this.value.replace(/\D+/g,'');
+        });
       }        
       Calendar("passport",curYear,curMonth);
-      $("#passport input").mask("9999");
+      $("#passport input").on('input',function(){
+        this.value = this.value.replace(/\D+/g,'');
+      });
       /*
       *     События
       */
@@ -44,8 +62,41 @@ var Prommucard = (function (){
       $(document).on('click', '#passport .day', function(){ checkDate(this) });
       // Проверяем поля
       $('.required-inp').change(function(){
-        var value = $(this).val();
-        if(value!='' || value!=null){
+        var v = this.value,
+            id = $(this).attr('id');
+
+        if(id==='phone-code') {
+          var main = $(this).closest('.country-phone')[0],
+              code = $('[name="__phone_prefix"]').val(),
+              phone = v.replace(/\D+/g,''),
+              l = phone.length,
+              phoneLen = 10;
+
+          if(code.length==3) // UKR, BEL
+            phoneLen = 9;
+          if(code.length==1) // RF
+            phoneLen = 10;
+
+          if(l!=phoneLen) {
+            this.value = '';
+            addEr(main);
+          }
+          else {
+            remEr(main);
+          }
+        }
+        else if(id==='pr-card-code' || id==='pr-card-serial') {
+          var maxlen = Number($(this).attr('maxlength'));
+          if(v.length!=maxlen) {
+            this.value = '';
+            addEr(this);
+          }
+          else {
+            remEr(this);
+          }
+
+        }
+        else if(v!='' || v!=null){
           remEr(this);
         }
         else{
@@ -69,7 +120,30 @@ var Prommucard = (function (){
       $(document).on('click', '#pr-card-btn', function(){
         var errors = false;
         $.each($('.required-inp'), function(){
-          if($(this).val()=='' || $(this).val()==null){ 
+          var v = this.value,
+              id = $(this).attr('id');
+
+          if(id==='phone-code') {
+            var main = $(this).closest('.country-phone')[0],
+                code = $('[name="__phone_prefix"]').val(),
+                phone = v.replace(/\D+/g,''),
+                l = phone.length,
+                phoneLen = 10;
+
+            if(code.length==3) // UKR, BEL
+              phoneLen = 9;
+            if(code.length==1) // RF
+              phoneLen = 10;
+
+            if(l!=phoneLen) {
+              this.value = '';
+              addEr(main);
+            }
+            else {
+              remEr(main);
+            }
+          }
+          if(v=='' || v==null){ 
             if($(this).prop('type')=='hidden'){
               addEr($(this).closest('.pr-card__calendar'));
             }
@@ -86,16 +160,6 @@ var Prommucard = (function (){
         if(!errors)
           $("#F1cardOrder").submit();   
       });
-
-
-
-
-
-
-
-
-
-
       //  подсказка для некоторых полей
       $('.pr-card__form-label input').bind('focus blur', function(){
         $(this).closest('.pr-card__form-label').toggleClass('focus');

@@ -17,7 +17,7 @@ class MedRequest {
                     'fff' => $cloud['surname'],
                     'iii' => $cloud['name'],
                     'ooo' => $cloud['patronymic'],
-                    'tel' => $cloud['phone'],
+                    'tel' => $cloud['__phone_prefix'] . $cloud['phone'],
                     'email' => $cloud['email'],
                     'regaddr' => $cloud['adres'],
                     'pay' => $cloud['pay'],
@@ -216,23 +216,33 @@ class MedRequest {
     }
 
     public function getUserData($idus, $type){
+        $arRes = array();
         if($type==2){ // applicant
-            return Yii::app()->db->createCommand()
-                ->select('r.firstname, r.lastname, a.val phone, u.email')
-                ->from('user u')
-                ->leftJoin('resume r', 'r.id_user=u.id_user')
-                ->leftJoin('user_attribs a', 'a.id_us=u.id_user AND a.id_attr=1')
-                ->where('u.id_user=:id_user', array(':id_user' => $idus))
-                ->queryRow();       
+            $arRes = Yii::app()->db->createCommand()
+                        ->select('r.firstname, r.lastname, a.val phone, u.email')
+                        ->from('user u')
+                        ->leftJoin('resume r', 'r.id_user=u.id_user')
+                        ->leftJoin('user_attribs a', 'a.id_us=u.id_user AND a.id_attr=1')
+                        ->where('u.id_user=:id_user', array(':id_user' => $idus))
+                        ->queryRow();
         }
         else{ // employer
-            return Yii::app()->db->createCommand()
-                ->select('e.firstname, e.lastname, a.val phone, u.email')
-                ->from('employer e')
-                ->leftJoin('user u', 'u.id_user=e.id_user')
-                ->leftJoin('user_attribs a', 'a.id_us=e.id_user AND a.id_attr=1')
-                ->where('e.id_user=:id_user', array(':id_user' => $idus))
-                ->queryRow();   
+            $arRes = Yii::app()->db->createCommand()
+                        ->select('e.firstname, e.lastname, a.val phone, u.email')
+                        ->from('employer e')
+                        ->leftJoin('user u', 'u.id_user=e.id_user')
+                        ->leftJoin('user_attribs a', 'a.id_us=e.id_user AND a.id_attr=1')
+                        ->where('e.id_user=:id_user', array(':id_user' => $idus))
+                        ->queryRow();
         }
+
+        if(isset($arRes['phone'])){
+            $arRes['phone'] = str_replace('+','',$arRes['phone']);
+            $pos = strpos($arRes['phone'], '(');
+            $arRes['phone-code'] = substr($arRes['phone'],0,$pos);
+            $arRes['phone'] = substr($arRes['phone'], $pos);     
+        }
+
+        return $arRes;
     }
 }

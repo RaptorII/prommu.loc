@@ -183,7 +183,7 @@
 *   SERVICE IS ORDERED
 */
 ?>
-<div class="services-form services-finish-form tmpl">
+<div class="services-form services-finish-form payable tmpl">
   <div class="form-str2__header">Ваш запрос по услуге успешно отправлен. Наш менеджер свяжется с Вами в течении ближайшего времени. Стоимость будет согласована после уточнения деталей менеджером</div>
   <br>
   <i>С найлучшими пожеланиями команда Промму!</i>

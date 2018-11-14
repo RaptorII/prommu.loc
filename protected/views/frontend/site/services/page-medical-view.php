@@ -1,8 +1,17 @@
 <?php
-    Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/theme/css/services/services-med-page.css');
-    Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/services/services-med-page.js', CClientScript::POS_END);
-	$arRes = (new MedRequest())->getUserData(Share::$UserProfile->id, Share::$UserProfile->type);
+	$bUrl = Yii::app()->baseUrl . '/theme/';
+	Yii::app()->getClientScript()->registerCssFile($bUrl.'css/phone-codes/style.css'); 
+	Yii::app()->getClientScript()->registerScriptFile($bUrl.'js/phone-codes/script.js', CClientScript::POS_END);
+	Yii::app()->getClientScript()->registerCssFile($bUrl.'css/services/services-med-page.css');
+	Yii::app()->getClientScript()->registerScriptFile($bUrl.'js/services/services-med-page.js', CClientScript::POS_END);
+  $model = new MedRequest();
+	$arRes = $model->getUserData(Share::$UserProfile->id, Share::$UserProfile->type);
 ?>
+<? if(!empty($arRes['phone-code'])): ?>
+		<script type="text/javascript">
+			selectPhoneCode = <?=$arRes['phone-code']?>;
+		</script>
+<? endif; ?>
 <div class="service-med-record">
 	<div class="row">
 		<div class="hidden-xs col-sm-4">
@@ -21,7 +30,7 @@
 					<input type="text" name="patronymic" class="smr__input smr__required" placeholder="Отчество" id="smr-patronymic">
 				</label>
 				<label class="smr__label">
-					<input type="text" name="phone" class="smr__input smr__required" placeholder="Мобильный телефон" id="smr-phone" value="<?=$arRes['phone']?>">
+					<input id='phone-code' type="text" name="phone" placeholder="Мобильный телефон" value="<?=$arRes['phone']?>" class="smr__required">
 				</label>
 				<label class="smr__label">
 					<input type="text" name="email" class="smr__input smr__required" placeholder="Email" id="smr-mail" value="<?=$arRes['email']?>">
