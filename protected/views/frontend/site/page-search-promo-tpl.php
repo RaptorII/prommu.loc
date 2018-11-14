@@ -115,6 +115,71 @@
 						</div>
 					</div>
 				</div>
+                                <div class='filter-label filter-salary'>
+                    <?php //$flag = $viData['sphf'] || $viData['spht'] || $viData['spwf'] || $viData['spwt'] || $viData['spmf'] || $viData['spmt'] ?>
+                    <label class='filter-name opened<?//= $flag ? 'opened' : '' ?>'>Заработная плата</label>
+                    <div class='filter-content opened<?//= $flag ? 'opened' : '' ?>'>
+                        <div class="psv__salary">
+                            <span class="psv__salary-name">В час</span>
+                            <div class="psv__salary-block">
+                                <label class="psv__salary-label">
+                                    <span>от</span>
+                                    <input name=sphf type='text' value="<?=($viData['sr']==1 ? $viData['sphf'] : '')?>" class="psv__input">
+                                </label>
+                                <label class="psv__salary-label">
+                                    <span>до</span>
+                                    <input name='spht' type='text' value="<?=($viData['sr']==1 ? $viData['spht'] : '')?>" class="psv__input">
+                                </label> 
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="psv__salary">
+                            <span class="psv__salary-name">В неделю</span>
+                            <div class="psv__salary-block">
+                                <label class="psv__salary-label">
+                                    <span>от</span>
+                                    <input name=spwf type='text' value="<?=($viData['sr']==2 ? $viData['spwf'] : '')?>" class="psv__input">
+                                </label>
+                                <label class="psv__salary-label">
+                                    <span>до</span>
+                                    <input name='spwt' type='text' value="<?=($viData['sr']==2 ? $viData['spwt'] : '')?>" class="psv__input">
+                                </label> 
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="psv__salary">
+                            <span class="psv__salary-name">В месяц</span>
+                            <div class="psv__salary-block">
+                                <label class="psv__salary-label">
+                                    <span>от</span>
+                                    <input name=spmf type='text' value="<?=($viData['sr']==3 ? $viData['spmf'] : '')?>" class="psv__input">
+                                </label>
+                                <label class="psv__salary-label">
+                                    <span>до</span>
+                                    <input name='spmt' type='text' value="<?=($viData['sr']==3 ? $viData['spmt'] : '')?>" class="psv__input">
+                                </label> 
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="psv__salary">
+                            <span class="psv__salary-name">За посещение</span>
+                            <div class="psv__salary-block">
+                                <label class="psv__salary-label">
+                                    <span>от</span>
+                                    <input name=spvf type='text' value="<?=($viData['sr']==4 ? $viData['spvf'] : '')?>" class="psv__input">
+                                </label>
+                                <label class="psv__salary-label">
+                                    <span>до</span>
+                                    <input name='spvt' type='text' value="<?=($viData['sr']==4 ? $viData['spvt'] : '')?>" class="psv__input">
+                                </label> 
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <input id='psv-salary-type' name='sr' type='hidden' value="<?=($viData['sr'] ? $viData['sr'] : 1)?>">
+                        <div class="psv__filter-btn">ОК</div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
 
 
 				<div class='psa__filter-block filter-additional'>
