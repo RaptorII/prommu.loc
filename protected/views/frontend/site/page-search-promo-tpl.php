@@ -119,7 +119,7 @@
 						</div>
 					</div>
 				</div>
-                <div class='filter-label filter-salary'>
+                <div class='psa__filter-block filter-label filter-salary'>
                     <?php //$flag = $viData['sphf'] || $viData['spht'] || $viData['spwf'] || $viData['spwt'] || $viData['spmf'] || $viData['spmt'] ?>
                     <label class='filter-name opened<?//= $flag ? 'opened' : '' ?>'>Заработная плата</label>
                     <div class='filter-content opened<?//= $flag ? 'opened' : '' ?>'>
