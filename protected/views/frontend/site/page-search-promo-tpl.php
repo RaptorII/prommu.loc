@@ -11,6 +11,7 @@
 	<?php Yii::app()->getClientScript()->registerScriptFile('/theme/js/page-promo-search.min.js', CClientScript::POS_END); ?>
 	<style type="text/css">
 		/*	/theme/css/page-promo-search.css	*/
+		#DiContent.page-ankety .page-search-ankety .psv__salary-label{width:50%;float:left;padding-left:35px;position:relative}
 		.psv__salary{width:100%;display:table;margin-bottom:5px}.psv__salary-name{width:90px;display:table-cell;font-size:14px;color:#A0A0A0;vertical-align:middle;line-height:35px;text-align:left}.psv__salary-block{width:calc(100% - 90px);display:table-cell}
 		#DiContent .page-search-ankety .psv__input,.psv__content,.psv__salary-name{font-family:RobotoCondensed-Regular,verdana,arial}
 		#DiContent.page-ankety .page-search-ankety .filter .filter-label.filter-cities{padding-top:0}
