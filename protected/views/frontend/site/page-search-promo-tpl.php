@@ -115,7 +115,7 @@
 						</div>
 					</div>
 				</div>
-                                <div class='filter-label filter-salary'>
+                <div class='filter-label filter-salary'>
                     <?php //$flag = $viData['sphf'] || $viData['spht'] || $viData['spwf'] || $viData['spwt'] || $viData['spmf'] || $viData['spmt'] ?>
                     <label class='filter-name opened<?//= $flag ? 'opened' : '' ?>'>Заработная плата</label>
                     <div class='filter-content opened<?//= $flag ? 'opened' : '' ?>'>
@@ -157,20 +157,6 @@
                                 <label class="psv__salary-label">
                                     <span>до</span>
                                     <input name='spmt' type='text' value="<?=($viData['sr']==3 ? $viData['spmt'] : '')?>" class="psv__input">
-                                </label> 
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
-                        <div class="psv__salary">
-                            <span class="psv__salary-name">За посещение</span>
-                            <div class="psv__salary-block">
-                                <label class="psv__salary-label">
-                                    <span>от</span>
-                                    <input name=spvf type='text' value="<?=($viData['sr']==4 ? $viData['spvf'] : '')?>" class="psv__input">
-                                </label>
-                                <label class="psv__salary-label">
-                                    <span>до</span>
-                                    <input name='spvt' type='text' value="<?=($viData['sr']==4 ? $viData['spvt'] : '')?>" class="psv__input">
                                 </label> 
                                 <div class="clearfix"></div>
                             </div>
