@@ -119,58 +119,136 @@
 						</div>
 					</div>
 				</div>
-                <div class='psa__filter-block filter-salary'>
-                    <?php //$flag = $viData['sphf'] || $viData['spht'] || $viData['spwf'] || $viData['spwt'] || $viData['spmf'] || $viData['spmt'] ?>
-                    <label class='filter-name opened<?//= $flag ? 'opened' : '' ?>'>Заработная плата</label>
-                    <div class='filter-content opened<?//= $flag ? 'opened' : '' ?>'>
-                        <div class="psv__salary">
-                            <span class="psv__salary-name">В час</span>
-                            <div class="psv__salary-block">
-                                <label class="psv__salary-label">
-                                    <span>от</span>
-                                    <input name=sphf type='text' value="<?=($viData['sr']==1 ? $viData['sphf'] : '')?>" class="psv__input">
-                                </label>
-                                <label class="psv__salary-label">
-                                    <span>до</span>
-                                    <input name='spht' type='text' value="<?=($viData['sr']==1 ? $viData['spht'] : '')?>" class="psv__input">
-                                </label> 
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
-                        <div class="psv__salary">
-                            <span class="psv__salary-name">В неделю</span>
-                            <div class="psv__salary-block">
-                                <label class="psv__salary-label">
-                                    <span>от</span>
-                                    <input name=spwf type='text' value="<?=($viData['sr']==2 ? $viData['spwf'] : '')?>" class="psv__input">
-                                </label>
-                                <label class="psv__salary-label">
-                                    <span>до</span>
-                                    <input name='spwt' type='text' value="<?=($viData['sr']==2 ? $viData['spwt'] : '')?>" class="psv__input">
-                                </label> 
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
-                        <div class="psv__salary">
-                            <span class="psv__salary-name">В месяц</span>
-                            <div class="psv__salary-block">
-                                <label class="psv__salary-label">
-                                    <span>от</span>
-                                    <input name=spmf type='text' value="<?=($viData['sr']==3 ? $viData['spmf'] : '')?>" class="psv__input">
-                                </label>
-                                <label class="psv__salary-label">
-                                    <span>до</span>
-                                    <input name='spmt' type='text' value="<?=($viData['sr']==3 ? $viData['spmt'] : '')?>" class="psv__input">
-                                </label> 
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
-                        <input id='psv-salary-type' name='sr' type='hidden' value="<?=($viData['sr'] ? $viData['sr'] : 1)?>">
-                        <div class="psv__filter-btn">ОК</div>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
 
+
+<style type="text/css">
+.psa__salary {
+	width: 100%;
+	display: table;
+	margin-bottom: 5px;
+}
+.psa__salary-name {
+    width: 90px;
+    display: table-cell;
+    font-size: 14px;
+    color: #A0A0A0;
+    vertical-align: middle;
+    line-height: 35px;
+    text-align: left;
+}
+.psa__salary-block {
+    width: calc(100% - 90px);
+    display: table-cell;
+}
+.psa__age-label span,
+#DiContent.page-ankety .page-search-ankety .filter-salary label {
+    font-size: 14px;
+    color: #A0A0A0;
+    font-family: RobotoCondensed-Regular,verdana,arial;
+    text-transform: none;
+}
+.psa__age-label span, .psa__salary-label span {
+    width: 30px;
+    text-align: right;
+    position: absolute;
+    left: 0;
+    top: 0;
+    line-height: 35px;
+}
+#DiContent .page-search-ankety .psa__age-label .psa__input, #DiContent .page-search-ankety .psa__salary-block .psa__input {
+    width: 100%;
+    padding: 0 5px;
+}
+#DiContent.page-ankety .page-search-ankety .psa__age-label, #DiContent.page-ankety .page-search-ankety .psa__salary-label{
+	width: 50%;
+	float: left;
+	padding-left: 35px;
+	position: relative;
+}
+</style>
+
+				<div class='psa__filter-block filter-salary'>
+					<div class='psa__filter-name opened'>Заработная плата</div>
+					<div class='psa__filter-content opened'>
+						<div class="psa__salary">
+							<span class="psa__salary-name">В час</span>
+							<div class="psa__salary-block">
+								<label class="psa__salary-label">
+									<span>от</span>
+									<input name=payfrom type='text' value="<?=($_GET['sr']==1 ? $viData['payfrom'] : '')?>" class="psa__input">
+								</label>
+								<label class="psa__salary-label">
+									<span>до</span>
+									<input name='payto' type='text' value="<?=($_GET['sr']==1 ? $viData['payto'] : '')?>" class="psa__input">
+								</label> 
+								<div class="clearfix"></div>
+							</div>
+						</div>
+						<div class="psa__salary">
+							<span class="psa__salary-name">В неделю</span>
+							<div class="psa__salary-block">
+								<label class="psa__salary-label">
+									<span>от</span>
+									<input name=payfrom type='text' value="<?=($_GET['sr']==2 ? $viData['payfrom'] : '')?>" class="psa__input">
+								</label>
+								<label class="psa__salary-label">
+									<span>до</span>
+									<input name='payto' type='text' value="<?=($_GET['sr']==2 ? $viData['payto'] : '')?>" class="psa__input">
+								</label> 
+								<div class="clearfix"></div>
+							</div>
+						</div>
+						<div class="psa__salary">
+							<span class="psa__salary-name">В месяц</span>
+							<div class="psa__salary-block">
+								<label class="psa__salary-label">
+									<span>от</span>
+									<input name=payfrom type='text' value="<?=($_GET['sr']==3 ? $viData['payfrom'] : '')?>" class="psa__input">
+								</label>
+								<label class="psa__salary-label">
+									<span>до</span>
+									<input name='payto' type='text' value="<?=($_GET['sr']==3 ? $viData['payto'] : '')?>" class="psa__input">
+								</label> 
+								<div class="clearfix"></div>
+							</div>
+						</div>
+						<div class="psa__salary">
+							<span class="psa__salary-name">За посещение</span>
+							<div class="psa__salary-block">
+								<label class="psa__salary-label">
+									<span>от</span>
+									<input name=payfrom type='text' value="<?=($_GET['sr']==4 ? $viData['payfrom'] : '')?>" class="psa__input">
+								</label>
+								<label class="psa__salary-label">
+									<span>до</span>
+									<input name='payto' type='text' value="<?=($_GET['sr']==4 ? $viData['payto'] : '')?>" class="psa__input">
+								</label> 
+								<div class="clearfix"></div>
+							</div>
+						</div>
+						<input id='psv-salary-type' name='sr' type='hidden' value="<?=($_GET['sr'] ? $viData['sr'] : 1)?>">
+						<div class="psa__filter-btn">ОК</div>
+						<div class="clearfix"></div>
+					</div>
+				</div>
+				<div class='psa__filter-block filter-age'>
+					<label class='psa__filter-name opened'>Возраст</label>
+					<div class='psa__filter-content opened'>
+						<div class="psa__age">
+							<label class="psa__age-label">
+								<span>от</span>
+								<input name=af type='text' value="<?= $_GET['af'] ?>" class="psa__input">
+							</label>
+							<label class="psa__age-label">
+								<span>до</span>
+								<input name='at' type='text' value="<?= $_GET['at'] ?>" class="psa__input">
+							</label> 
+							<div class="clearfix"></div>
+							<div class="psa__filter-btn">ОК</div>
+							<div class="clearfix"></div>
+						</div>
+					</div>
+				</div>
 
 				<div class='psa__filter-block filter-additional'>
 					<div class='psa__filter-name opened'>Дополнительно</div>
