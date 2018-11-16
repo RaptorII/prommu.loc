@@ -20,7 +20,8 @@
 			@media (min-width:768px){ #DiContent.page-ankety .list-view .company-logo-wrapp img{ width:115px; height:115px } }
 			@media (min-width:992px){ #DiContent.page-ankety .list-view .company-logo-wrapp img{ width:191px; height:191px } }
 			@media (min-width:1200px){ #DiContent.page-ankety .list-view .company-logo-wrapp img{ width:220px; height:220px } }
-		.select-list{max-height:300px;overflow-y:auto;padding:0;margin:0;border-top:none;list-style:none;background-color:rgba(52,52,52,.6);position:absolute;top:100%;left:-1px;right:-1px;z-index:2;font-family:RobotoCondensed-Regular,verdana,arial;font-size:14px;color:#FFF}.select-list li{width:100%;line-height:30px;padding:3px 6px;cursor:pointer;-webkit-transition:all .3s ease-out;-moz-transition:all .3s ease-out;-o-transition:all .3s ease-out;transition:all .3s ease-out}.select-list li:hover{background-color:rgba(255,255,255,.2)}#filter-city{position:relative}#filter-city .select-list li{padding:0 15px;text-align:left}#DiContent #filter-city .filter-city-select input{padding:0;border:none;background:0 0;margin:2px 0 2px 6px;height:29px}#DiContent #filter-city .filter-city-select input:focus{outline:0}.filter-city-select.load:after{content:'';width:20px;height:20px;right:3px;background:url(/theme/pic/loading1.gif) no-repeat;background-size:cover;top:7px;position:absolute}.city-select,.filter-city-select li:not([data-id="0"]){display:inline-block;padding:3px 20px 3px 5px;margin:2px 0 2px 6px;background-color:rgba(52,52,52,.6);color:#fff;line-height:18px;border-radius:5px;position:relative}.filter-city-select li:not([data-id="0"]){line-height:23px}.filter-city-select li[data-id="0"]{width:10px}.filter-city-select{display:flex;flex-direction:row;justify-content:start;flex-wrap:wrap;margin:0;list-style:none;border:1px solid #EBEBEB;position:relative;padding:0 25px 0 15px}.city-select b,.filter-city-select b{width:19px;height:19px;display:block;position:absolute;top:2px;right:0;font-style:normal;text-align:center;cursor:pointer}.filter-city-select b{top:5px}.city-select b:before,.filter-city-select b:before{content:'\2716';display:block;position:absolute;top:0;right:0;bottom:0;left:0;line-height:20px}#DiContent .project__index-time input{text-align:center;padding:0 16px 0 6px}		
+		.select-list{max-height:300px;overflow-y:auto;padding:0;margin:0;border-top:none;list-style:none;background-color:rgba(52,52,52,.6);position:absolute;top:100%;left:-1px;right:-1px;z-index:2;font-family:RobotoCondensed-Regular,verdana,arial;font-size:14px;color:#FFF}.select-list li{width:100%;line-height:30px;padding:3px 6px;cursor:pointer;-webkit-transition:all .3s ease-out;-moz-transition:all .3s ease-out;-o-transition:all .3s ease-out;transition:all .3s ease-out}.select-list li:hover{background-color:rgba(255,255,255,.2)}#filter-city{position:relative}#filter-city .select-list li{padding:0 15px;text-align:left}#DiContent #filter-city .filter-city-select input{padding:0;border:none;background:0 0;margin:2px 0 2px 6px;height:29px}#DiContent #filter-city .filter-city-select input:focus{outline:0}.filter-city-select.load:after{content:'';width:20px;height:20px;right:3px;background:url(/theme/pic/loading1.gif) no-repeat;background-size:cover;top:7px;position:absolute}.city-select,.filter-city-select li:not([data-id="0"]){display:inline-block;padding:3px 20px 3px 5px;margin:2px 0 2px 6px;background-color:rgba(52,52,52,.6);color:#fff;line-height:18px;border-radius:5px;position:relative}.filter-city-select li:not([data-id="0"]){line-height:23px}.filter-city-select li[data-id="0"]{width:10px}.filter-city-select{display:flex;flex-direction:row;justify-content:start;flex-wrap:wrap;margin:0;list-style:none;border:1px solid #EBEBEB;position:relative;padding:0 25px 0 15px}.city-select b,.filter-city-select b{width:19px;height:19px;display:block;position:absolute;top:2px;right:0;font-style:normal;text-align:center;cursor:pointer}.filter-city-select b{top:5px}.city-select b:before,.filter-city-select b:before{content:'\2716';display:block;position:absolute;top:0;right:0;bottom:0;left:0;line-height:20px}#DiContent .project__index-time input{text-align:center;padding:0 16px 0 6px}
+		.psa__salary{width:100%;display:table;margin-bottom:5px}.psa__salary-name{width:90px;display:table-cell;font-size:14px;color:#A0A0A0;vertical-align:middle;line-height:35px;text-align:left}.psa__salary-block{width:calc(100% - 90px);display:table-cell}#DiContent.page-ankety .page-search-ankety .filter-salary label,.psa__age-label span{font-size:14px;color:#A0A0A0;font-family:RobotoCondensed-Regular,verdana,arial;text-transform:none}.psa__age-label span,.psa__salary-label span{width:30px;text-align:right;position:absolute;left:0;top:0;line-height:35px}#DiContent .page-search-ankety .psa__age-label .psa__input,#DiContent .page-search-ankety .psa__salary-block .psa__input{width:100%;padding:0 5px}#DiContent.page-ankety .page-search-ankety .psa__age-label,#DiContent.page-ankety .page-search-ankety .psa__salary-label{width:50%;float:left;padding-left:35px;position:relative}		
 	</style>
 <?php 
 	// если не моб устройство
@@ -119,54 +120,6 @@
 						</div>
 					</div>
 				</div>
-
-
-<style type="text/css">
-.psa__salary {
-	width: 100%;
-	display: table;
-	margin-bottom: 5px;
-}
-.psa__salary-name {
-    width: 90px;
-    display: table-cell;
-    font-size: 14px;
-    color: #A0A0A0;
-    vertical-align: middle;
-    line-height: 35px;
-    text-align: left;
-}
-.psa__salary-block {
-    width: calc(100% - 90px);
-    display: table-cell;
-}
-.psa__age-label span,
-#DiContent.page-ankety .page-search-ankety .filter-salary label {
-    font-size: 14px;
-    color: #A0A0A0;
-    font-family: RobotoCondensed-Regular,verdana,arial;
-    text-transform: none;
-}
-.psa__age-label span, .psa__salary-label span {
-    width: 30px;
-    text-align: right;
-    position: absolute;
-    left: 0;
-    top: 0;
-    line-height: 35px;
-}
-#DiContent .page-search-ankety .psa__age-label .psa__input, #DiContent .page-search-ankety .psa__salary-block .psa__input {
-    width: 100%;
-    padding: 0 5px;
-}
-#DiContent.page-ankety .page-search-ankety .psa__age-label, #DiContent.page-ankety .page-search-ankety .psa__salary-label{
-	width: 50%;
-	float: left;
-	padding-left: 35px;
-	position: relative;
-}
-</style>
-
 				<div class='psa__filter-block filter-salary'>
 					<div class='psa__filter-name opened'>Заработная плата</div>
 					<div class='psa__filter-content opened'>
@@ -175,11 +128,11 @@
 							<div class="psa__salary-block">
 								<label class="psa__salary-label">
 									<span>от</span>
-									<input name=payfrom type='text' value="<?=($_GET['sr']==1 ? $viData['payfrom'] : '')?>" class="psa__input">
+									<input name=payfrom type='text' value="<?=($_GET['sr']==1 ? $_GET['sphf'] : '')?>" class="psa__input">
 								</label>
 								<label class="psa__salary-label">
 									<span>до</span>
-									<input name='payto' type='text' value="<?=($_GET['sr']==1 ? $viData['payto'] : '')?>" class="psa__input">
+									<input name='payto' type='text' value="<?=($_GET['sr']==1 ? $_GET['spht'] : '')?>" class="psa__input">
 								</label> 
 								<div class="clearfix"></div>
 							</div>
@@ -189,11 +142,11 @@
 							<div class="psa__salary-block">
 								<label class="psa__salary-label">
 									<span>от</span>
-									<input name=payfrom type='text' value="<?=($_GET['sr']==2 ? $viData['payfrom'] : '')?>" class="psa__input">
+									<input name=payfrom type='text' value="<?=($_GET['sr']==2 ? $_GET['spwf'] : '')?>" class="psa__input">
 								</label>
 								<label class="psa__salary-label">
 									<span>до</span>
-									<input name='payto' type='text' value="<?=($_GET['sr']==2 ? $viData['payto'] : '')?>" class="psa__input">
+									<input name='payto' type='text' value="<?=($_GET['sr']==2 ? $_GET['spwt'] : '')?>" class="psa__input">
 								</label> 
 								<div class="clearfix"></div>
 							</div>
@@ -203,11 +156,11 @@
 							<div class="psa__salary-block">
 								<label class="psa__salary-label">
 									<span>от</span>
-									<input name=payfrom type='text' value="<?=($_GET['sr']==3 ? $viData['payfrom'] : '')?>" class="psa__input">
+									<input name=payfrom type='text' value="<?=($_GET['sr']==3 ? $_GET['spmf'] : '')?>" class="psa__input">
 								</label>
 								<label class="psa__salary-label">
 									<span>до</span>
-									<input name='payto' type='text' value="<?=($_GET['sr']==3 ? $viData['payto'] : '')?>" class="psa__input">
+									<input name='payto' type='text' value="<?=($_GET['sr']==3 ? $_GET['spmt'] : '')?>" class="psa__input">
 								</label> 
 								<div class="clearfix"></div>
 							</div>
@@ -217,16 +170,16 @@
 							<div class="psa__salary-block">
 								<label class="psa__salary-label">
 									<span>от</span>
-									<input name=payfrom type='text' value="<?=($_GET['sr']==4 ? $viData['payfrom'] : '')?>" class="psa__input">
+									<input name=payfrom type='text' value="<?=($_GET['sr']==4 ? $_GET['spvf'] : '')?>" class="psa__input">
 								</label>
 								<label class="psa__salary-label">
 									<span>до</span>
-									<input name='payto' type='text' value="<?=($_GET['sr']==4 ? $viData['payto'] : '')?>" class="psa__input">
+									<input name='payto' type='text' value="<?=($_GET['sr']==4 ? $_GET['spmt'] : '')?>" class="psa__input">
 								</label> 
 								<div class="clearfix"></div>
 							</div>
 						</div>
-						<input id='psv-salary-type' name='sr' type='hidden' value="<?=($_GET['sr'] ? $viData['sr'] : 1)?>">
+						<input id='psa-salary-type' name='sr' type='hidden' value="<?=($_GET['sr'] ? $_GET['sr'] : 1)?>">
 						<div class="psa__filter-btn">ОК</div>
 						<div class="clearfix"></div>
 					</div>
