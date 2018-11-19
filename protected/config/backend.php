@@ -17,12 +17,16 @@ return CMap::mergeArray(
                 'loginUrl'=>array('/users/login'),
             ),
 
-  		// mailer
-  		'mailer'=>array(
-    		'pathViews' => 'application.views.backend.email',
-    		'pathLayouts' => 'application.views.email.backend.layouts'
-  		),
+            // mailer
+            'mailer'=>array(
+                'pathViews' => 'application.views.backend.email',
+                'pathLayouts' => 'application.views.email.backend.layouts'
+            ),
 
+        ),
+
+        'import' => array(
+            'application.models.admin.*',
         ),
     )
 );

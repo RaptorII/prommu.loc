@@ -408,4 +408,24 @@ class AjaxController extends CController {
       else
         echo CJSON::encode(array('error'=>1,'sendmail'=>0));
     }
+  /**
+   * 
+   */
+  public function actionFeedback()
+  {
+    $result = array('error'=>true);
+    $type = Yii::app()->getRequest()->getParam('type');
+    $model = new FeedbackTemplate();
+
+    switch ($type) {
+      case 'add':
+        $result = $model->addTemplate();
+        break;
+      case 'del':
+        $result = $model->delTemplate();
+        break;
+    }
+
+    echo CJSON::encode($result);
+  }
 }

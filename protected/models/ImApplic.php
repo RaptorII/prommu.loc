@@ -1,10 +1,10 @@
 <?php
+
 /**
  * Date: 22.04.2016
  *
  * Модель переписки
  */
-
 class ImApplic extends Im
 {
 
@@ -45,27 +45,28 @@ class ImApplic extends Im
 
         return $data;
     }
-    
-public function accessMessage($idto){
-  
-            $result['user'] = Yii::app()->db->createCommand()
+
+    public function accessMessage($idto)
+    {
+
+        $result['user'] = Yii::app()->db->createCommand()
             ->select("u.ismoder,u.isblocked")
             ->from('user u')
-            ->where('u.id_user=:st', array(':st'=>Share::$UserProfile->id))
+            ->where('u.id_user=:st', array(':st' => Share::$UserProfile->id))
             ->queryRow();
 
-            if($idto){
-                $result['new'] = Yii::app()->db->createCommand()
+        if ($idto) {
+            $result['new'] = Yii::app()->db->createCommand()
                 ->select("e.id")
                 ->from('employer e')
-                ->where('e.id=:st', array(':st'=>$idto))
+                ->where('e.id=:st', array(':st' => $idto))
                 ->queryRow();
-            }
+        }
 
         return $result;
     }
 
-     public function getMessCount($inIdTm, $inUsId)
+    public function getMessCount($inIdTm, $inUsId)
     {
         $sql = "SELECT COUNT(*) cou
                 FROM chat ca
@@ -75,8 +76,9 @@ public function accessMessage($idto){
                 AND ca.id_usp = {$inUsId}";
         /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);
-       return $res->queryScalar();
+        return $res->queryScalar();
     }
+
     /**
      * Получаем колво чатов пользователя
      */
@@ -95,11 +97,9 @@ public function accessMessage($idto){
      */
     public function getMessViewData($inChatId = 0, $inIdTo = 0)
     {
-        if( $inChatId || $inIdTo )
-        {
+        if ($inChatId || $inIdTo) {
             // вакансии по которым есть отклики для новой темы
-            if( $inIdTo )
-            {
+            if ($inIdTo) {
                 $idpromo = Share::$UserProfile->exInfo->id_resume;
                 $sql = "SELECT e.id, e.title
                     FROM empl_vacations e
@@ -114,8 +114,7 @@ public function accessMessage($idto){
 
 
             // заголовок чата
-            if( $inChatId )
-            {
+            if ($inChatId) {
                 $sql = "SELECT DISTINCT  ct.id, ct.title, e.title vactitle, ca.id_usp idusp, ca.id_use iduse
                         FROM chat_theme ct
                         LEFT JOIN empl_vacations e ON e.id = ct.id_vac
@@ -125,14 +124,10 @@ public function accessMessage($idto){
                 $res = Yii::app()->db->createCommand($sql);
                 $res = $res->queryRow();
 
-                if( $res['idusp'] == Share::$UserProfile->exInfo->id )
-                {
+                if ($res['idusp'] == Share::$UserProfile->exInfo->id) {
                     $data['title'] = $res;
-                }
-                else return array('error' => 100); // чужой диалог
-            }
-            else
-            {
+                } else return array('error' => 100); // чужой диалог
+            } else {
             } // endif
 
 
@@ -144,7 +139,7 @@ public function accessMessage($idto){
                     'maxFS' => 5242880, // max filesize
                     'maxImgDim' => array(2500, 2500),
                     'removeProtected' => true,
-                    'sizes' => array('isorig' => true, 'dims' => [], 'thumb' => 150 ),
+                    'sizes' => array('isorig' => true, 'dims' => [], 'thumb' => 150),
                     'tmpDir' => "/" . MainConfig::$PATH_CONTENT_PROTECTED . "/im/tmp",
                 )
             );
@@ -152,10 +147,11 @@ public function accessMessage($idto){
 
             // берем только файлы этого диалога
             $themeFiles = array();
-            foreach ($files['files'] ?: array() as $key => $val)
-            {
-                if( $val['extmeta']->idTheme == $inChatId ) {
-                    $val['files'] = array_map(function($v){ return str_replace('/protected', '', $v); }, $val['files']);
+            foreach ($files['files'] ?: array() as $key => $val) {
+                if ($val['extmeta']->idTheme == $inChatId) {
+                    $val['files'] = array_map(function ($v) {
+                        return str_replace('/protected', '', $v);
+                    }, $val['files']);
                     $themeFiles[$key] = $val;
                 }
             }
@@ -165,9 +161,7 @@ public function accessMessage($idto){
             Yii::app()->session['imdata'] = array('chatId' => $inChatId);
 
             return $data;
-        }
-        else
-        {
+        } else {
             return array('error' => 1, 'message' => 'Диалог не найден');
         } // endif
     }
@@ -176,7 +170,7 @@ public function accessMessage($idto){
      * Отправляем сообщение пользователя
      */
     public function sendUserMessages($inProps = [])
-    {   
+    {
         //сообщение
         $message = $inProps['message'] ?: filter_var(Yii::app()->getRequest()->getParam('m', 0), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         //id чата
@@ -192,8 +186,7 @@ public function accessMessage($idto){
         $Profile = $inProps['profile'] ?: $this->Profile ?: Share::$UserProfile;
         $id = $inProps['idus'] ?: $Profile->id;
         // добавляем новый чат
-        if( $new > 0 )
-        {
+        if ($new > 0) {
             $iduse = $new;
 
 
@@ -201,8 +194,8 @@ public function accessMessage($idto){
                 'id_usp' => $id,
                 'id_use' => $iduse,
             );
-            if( $theme ) $props['title'] = $theme;
-            elseif( $vid ) $props['id_vac'] = $vid;
+            if ($theme) $props['title'] = $theme;
+            elseif ($vid) $props['id_vac'] = $vid;
 
             $res = Yii::app()->db->createCommand()
                 ->insert('chat_theme', $props);
@@ -212,33 +205,26 @@ public function accessMessage($idto){
             $lastMessId = 0;
 
             // получаем тему из вакансии
-            if( $vid )
-            {
+            if ($vid) {
                 $sql = "SELECT e.title FROM empl_vacations e WHERE e.id = {$vid}";
                 /** @var $res CDbCommand */
                 $res = Yii::app()->db->createCommand($sql);
                 $theme = $res->queryScalar();
             }
-        }
-        else
-        {
+        } else {
         } // endif
-        
+
         // проверяем диалог на владельца
-        if( $new || $ids = $this->isMyChat($idTm))
-        {
+        if ($new || $ids = $this->isMyChat($idTm)) {
             $message = trim(preg_replace('/&lt;([\/]?(?:div|b|i|br|u))&gt;/i', "<$1>", $message));
-            if( true )
-            {
+            if (true) {
                 $uploaduni = new Uploaduni();
                 $files = $uploaduni->getUploadedFiles(array('scope' => 'im'));
 
                 // берем только файлы этого диалога
-                if( $files )
-                {
-                    foreach ($files as $key => $val)
-                    {
-                        if( $val['extmeta']->idTheme == $idTm ) $themeFiles[$key] = $val;
+                if ($files) {
+                    foreach ($files as $key => $val) {
+                        if ($val['extmeta']->idTheme == $idTm) $themeFiles[$key] = $val;
                     } // end foreach
 
                     // перемещаем файлы
@@ -259,39 +245,44 @@ public function accessMessage($idto){
                         'crdate' => date("Y-m-d H:i:s"),
                     ));
 
-                    $mailCloud = new MailCloud();
-                    $mailCloud->mailerMess($ids['iduse'],$idTm, 2);
-        
+                $mailCloud = new MailCloud();
+                $mailCloud->mailerMess($ids['iduse'], $idTm, 2);
+
             }
-             // endif
+            // endif
             $ids = $ids['iduse'] ?: $iduse;
             file_get_contents("https://prommu.com/api.mailer/?id=$ids&type=3&method=mess");
 
             $sql = "SELECT r.new_mess
             FROM push_config r
             WHERE r.id = {$ids}";
-            $res = Yii::app()->db->createCommand($sql)->queryScalar(); 
-            if($res == 2) {
-            $sql = "SELECT r.push
+            $res = Yii::app()->db->createCommand($sql)->queryScalar();
+            if ($res == 2) {
+                $sql = "SELECT r.push
             FROM user_push r
             WHERE r.id = {$ids}";
-            $res = Yii::app()->db->createCommand($sql)->queryRow(); 
+                $res = Yii::app()->db->createCommand($sql)->queryRow();
 
 
+                if ($res) {
+                    $type = "mess";
+                    $api = new Api();
+                    $api->getPush($res['push'], $type);
 
-            if($res) {
-                $type = "mess";
-                $api = new Api();
-                $api->getPush($res['push'], $type);
-            
-                    }
                 }
+            }
+            // оповещение по Телеграм
+            if ($id == 2054 || $ids == 1766) { // 2054,1766 - ID администратора
+                $mess = '"' . (isset($inProps['original']) ? $inProps['original'] : strip_tags($message)) . '"';
+                $text = "Зарегистрированный пользователь обратился по обратной связи: $mess. Необходима модерация https://prommu.com/admin/site/update/$idTm";
+                $sendto = "https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=$text";
+                file_get_contents($sendto);
+            }
+
             return array_merge($this->getNewMessData($idTm, $lastMessId), array('theme' => $theme, 'idtm' => $idTm));
-        }
-        else
-        {
+        } else {
             // не мой
-            return array('error' => 100) ;
+            return array('error' => 100);
         } // endif
 
     }
@@ -313,7 +304,6 @@ public function accessMessage($idto){
     }
 
 
-
     /**
      * Получаем сообщения пользователя
      */
@@ -322,15 +312,13 @@ public function accessMessage($idto){
         $firstId = filter_var(Yii::app()->getRequest()->getParam('fid', 0), FILTER_SANITIZE_NUMBER_INT);
         $idTm = filter_var(Yii::app()->getRequest()->getParam('tm', 0), FILTER_SANITIZE_NUMBER_INT);
 
-        if( $idTm )
-        {
+        if ($idTm) {
             // последние сообщения
-            if( !$firstId )
-            {
+            if (!$firstId) {
                 $limit = 15;
                 $filter = '';
 
-            // предыдущие сообщения
+                // предыдущие сообщения
             } else {
                 $limit = 100;
                 $filter = ' AND ca.id < ' . $firstId;
@@ -367,18 +355,14 @@ public function accessMessage($idto){
             $res = $res->queryRow();
 
 
-            if( $data[0]['idusp'] == Share::$UserProfile->exInfo->id )
-            {
+            if ($data[0]['idusp'] == Share::$UserProfile->exInfo->id) {
                 return array('data' => $data, 'count' => $res['cou']);
-            }
-            else
-            {
+            } else {
                 return array('error' => 100);
             } // endif
 
         } // endif
     }
-
 
 
     // получение новых сообщений
@@ -389,8 +373,6 @@ public function accessMessage($idto){
 
         return $this->getNewMessData($idTm, $lastMessId);
     }
-
-
 
 
     private function getNewMessData($inIdTm, $lastId)
@@ -425,7 +407,6 @@ public function accessMessage($idto){
     }
 
 
-
     private function isMyChat($inIdTm)
     {
         $sql = "SELECT ca.id_usp idusp, ca.id_use iduse
@@ -435,8 +416,7 @@ public function accessMessage($idto){
                 WHERE ca.id_theme = {$inIdTm}
                 LIMIT 1";
         /** @var $res CDbCommand */
-        $res = Yii::app()->db->createCommand($sql);
-        $res = $res->queryRow();
+        $res = Yii::app()->db->createCommand($sql)->queryRow();
 
         return Share::$UserProfile->id == $res['idusp'] ? $res : $res;
     }
@@ -447,16 +427,13 @@ public function accessMessage($idto){
      */
     private function moveUploadedFiles($inFiles)
     {
-        foreach ($inFiles as $key => $val)
-        {
+        foreach ($inFiles as $key => $val) {
             $movedFiles[$key] = $val;
-            foreach ($movedFiles[$key]['files'] as $key2 => &$val2)
-            {
+            foreach ($movedFiles[$key]['files'] as $key2 => &$val2) {
                 // задаём новые значения путей
                 $val2 = str_replace('tmp/', '', $val2);
                 // перемещаем файлы в рабочую директорию
-                if( file_exists(MainConfig::$DOC_ROOT . $inFiles[$key]['files'][$key2]) )
-                {
+                if (file_exists(MainConfig::$DOC_ROOT . $inFiles[$key]['files'][$key2])) {
                     copy(MainConfig::$DOC_ROOT . $inFiles[$key]['files'][$key2], MainConfig::$DOC_ROOT . $val2);
                     unlink(MainConfig::$DOC_ROOT . $inFiles[$key]['files'][$key2]);
                 } // endif
@@ -467,19 +444,18 @@ public function accessMessage($idto){
     }
 
 
-
     /**
      * Подготавливаем файлы сообщения
      */
     private function prepareFiles($data)
     {
-        $data = array_map(function($v) {
-            if($v['files'])
-            {
+        $data = array_map(function ($v) {
+            if ($v['files']) {
                 $v['files'] = get_object_vars(json_decode($v['files']));
-                foreach ($v['files'] as $key => &$val)
-                {
-                    $val->files = array_map(function($v2){ return str_replace('/protected', '', $v2); }, get_object_vars($val->files));
+                foreach ($v['files'] as $key => &$val) {
+                    $val->files = array_map(function ($v2) {
+                        return str_replace('/protected', '', $v2);
+                    }, get_object_vars($val->files));
                 } // end foreach
             }
             return $v;

@@ -7,6 +7,7 @@
 
 class ImEmpl extends Im
 {
+    public $adminId = 2054; // id Админа
     /**
      * Получаем чаты пользователя
      */
@@ -41,13 +42,13 @@ class ImEmpl extends Im
             LIMIT {$offset}, {$limit}";
         /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);
-	$data['chats'] = [
- 		'id_vac' => 0,
-		'title' => '',
-		'count' => $this->getChatsCount($id),
-		'chats' => $res->queryAll()
-		];
-                	
+    $data['chats'] = [
+        'id_vac' => 0,
+        'title' => '',
+        'count' => $this->getChatsCount($id),
+        'chats' => $res->queryAll()
+        ];
+                    
         return $data;
     }
     
@@ -76,12 +77,12 @@ class ImEmpl extends Im
         $offset = $this->offset;
         $id = $this->Profile->id;
 
-	$sql_root = "SELECT ct.id_vac, ct.title FROM chat_theme ct WHERE ct.id_use = {$id} AND ct.id_vac <> 0 ORDER BY ct.id_vac";
-	$res = Yii::app()->db->createCommand($sql_root);
+    $sql_root = "SELECT ct.id_vac, ct.title FROM chat_theme ct WHERE ct.id_use = {$id} AND ct.id_vac <> 0 ORDER BY ct.id_vac";
+    $res = Yii::app()->db->createCommand($sql_root);
         $category = $res->queryAll();
 
         $chats = []; 
-	foreach($category as $cat) {
+    foreach($category as $cat) {
           //print_r($cat['id_vac']);
         
 
@@ -111,11 +112,11 @@ class ImEmpl extends Im
         /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);
         array_push($chats, [
- 		'id_vac' => $cat['id_vac'],
-		'title' => $cat['title'],
-		'count' => $this->getChatsCountVac($id, $cat['id_vac']),
-		'chats' => $res->queryAll()
-		]);
+        'id_vac' => $cat['id_vac'],
+        'title' => $cat['title'],
+        'count' => $this->getChatsCountVac($id, $cat['id_vac']),
+        'chats' => $res->queryAll()
+        ]);
         
         }
 
@@ -149,7 +150,7 @@ class ImEmpl extends Im
     }
 
     public function getChatsCountVac($id, $id_vac) {
-	$sql = "SELECT COUNT(*) count FROM chat_theme WHERE id_use = {$id} AND id_vac = {$id_vac}";
+    $sql = "SELECT COUNT(*) count FROM chat_theme WHERE id_use = {$id} AND id_vac = {$id_vac}";
         /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);
 
@@ -425,7 +426,13 @@ class ImEmpl extends Im
                     }
                 }
 
-
+            // оповещение по Телеграм
+            if($id==1766 || $ids==2054) { // 1766,2054 - ID администратора для Р
+                $mess = '"' . (isset($inProps['original']) ? $inProps['original'] : strip_tags($message)) . '"';
+                $text = "Зарегистрированный пользователь обратился по обратной связи: $mess. Необходима модерация https://prommu.com/admin/site/update/$idTm";
+                $sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=$text";
+                file_get_contents($sendto);
+            }
             $serv = $this->getNewMessData($idTm, $lastMessId);
             return array_merge($serv, array('theme' => $theme, 'idtm' => $idTm));
         }
@@ -586,11 +593,9 @@ class ImEmpl extends Im
                 WHERE ca.id_theme = {$inIdTm}
                 LIMIT 1";
         /** @var $res CDbCommand */
-        $res = Yii::app()->db->createCommand($sql);
-        $res = $res->queryRow();
+        $res = Yii::app()->db->createCommand($sql)->queryRow();
 
-        return Share::$UserProfile->id == $res['iduse'] ? $res : false;
-//        return Share::$UserProfile->id == $res['idusp'] ? $res : false;
+        return Share::$UserProfile->id == $res['iduse'] ? $res : $res;
     }
 
 
@@ -639,5 +644,254 @@ class ImEmpl extends Im
         }, $data);
 
         return $data;
+    }
+    /**
+    *   
+    */
+    public function getAllChats($idus)
+    {
+        $arRes = array(
+                        'cnt'=> 0,
+                        'feedback' => [
+                                'cnt'=>0,
+                                'cnt-users'=>2, // всегда только 2 участника
+                                'cnt-noread'=>0,
+                                'items'=>[]
+                            ],
+                        'vacancies' => [
+                                'cnt'=>0,
+                                'cnt-users'=>'???',
+                                'cnt-noread'=>0,
+                                'items'=>[]
+                            ]  
+                    );
+        // ищем все темы
+        $sql = Yii::app()->db->createCommand()
+                ->select("*")
+                ->from('chat_theme')
+                ->where('id_use=:id',array(':id'=>$idus))
+                ->queryAll();
+
+        if(!sizeof($sql))
+            return $arRes;
+
+        $arId = array();
+        $arIdPersonal = array();
+        $arIdFeedback = array();
+        foreach ($sql as $c) {
+            $arRes['cnt']++;
+            $arId[] = $c['id'];
+            if($c['id_vac']==0 && $c['id_usp']==$this->adminId) { // общение с техподдержкой 
+                $arRes['feedback']['cnt']++;
+                if(!$c['is_resp'] && !$c['is_read'])
+                   $arRes['feedback']['cnt-noread']++; 
+                $arIdFeedback[] = $c['id'];
+            }
+            else { // лично с Р
+                $arRes['vacancies']['cnt']++;
+                $arIdPersonal[] = $c['id'];
+            }
+        }
+        // ищем все личные сообщения
+        $sql = Yii::app()->db->createCommand()
+                ->select("ct.id_vac, c.*")
+                ->from('chat c')
+                ->leftjoin('chat_theme ct', 'c.id_theme=ct.id')
+                ->where(array('in','c.id_theme',$arId))
+                ->queryAll();
+
+        foreach ($sql as $m) {
+            if(in_array($m['id_theme'], $arIdFeedback)) {
+                $arRes['feedback']['items'][] = $m;
+            }
+            if(in_array($m['id_theme'], $arIdPersonal) && $m['id_vac']>0) {
+                $arT = array(
+                            'id' => $m['id'],
+                            'id_vac' => $m['id_vac'],
+                            'author' => $m['id_usp'],
+                            'message' => $m['message'],
+                            'crdate' => $m['crdate'],
+                        );
+
+                $arRes['vacancies'][$m['id_vac']]['items'][] = $arT;
+            }
+        }
+        // общие сообщения вакансии
+        $sql = Yii::app()->db->createCommand()
+                ->select("ev.title, ed.*")
+                ->from('emplv_discuss ed')
+                ->leftjoin('empl_vacations ev', 'ev.id_user='.$idus)
+                ->where('ed.id_vac=ev.id')
+                ->queryAll();
+
+        foreach ($sql as $m) {
+            $arT = array(
+                        'id' => $m['id'],
+                        'id_vac' => $m['id_vac'],
+                        'author' => $m['id_user'],
+                        'message' => $m['mess'],
+                        'crdate' => $m['crdate'],
+                    );
+
+            $arRes['vacancies']['items'][$m['id_vac']]['title'] = $m['title'];
+            $arRes['vacancies']['items'][$m['id_vac']]['items'][] = $arT;
+        }
+
+        return $arRes;
+    }
+    /**
+     * 
+     */
+    public function getFeedbackChats($idus)
+    {
+        $arRes = array();
+        $this->limit = 5;
+        $sql = Yii::app()->db->createCommand()
+                        ->select("id")
+                        ->from('chat_theme ct')
+                        ->where(
+                            'ct.id_use=:id AND ct.id_vac=0 AND ct.id_usp=:adm',
+                            array(':id'=>$idus,':adm'=>$this->adminId)
+                        )
+                        ->queryAll();
+
+        if(!sizeof($sql))
+            return $arRes;
+
+        $arId = array();
+        foreach ($sql as $c)
+            $arId[] = $c['id'];
+
+        $arRes['cnt'] = sizeof($arId);
+        $arRes['pages'] = new CPagination($arRes['cnt']);
+        $arRes['pages']->pageSize = $this->limit;
+        $arRes['pages']->applyLimit($this);
+
+        for($i=$this->offset, $n=sizeof($sql); $i<$n; $i++)
+            if($i<($this->offset+$this->limit))
+                $arId[] = $sql[$i]['id'];
+
+        $sql = Yii::app()->db->createCommand()
+                        ->select("*")
+                        ->from('chat')
+                        ->where(array('in','id_theme',$arId))
+                        ->queryAll(); 
+
+        foreach ($sql as $m) {
+            $id = $m['id_theme'];
+            $arRes['items'][$id]['cnt']++;
+            $arRes['items'][$id]['cnt-users'] = 2; // всегда только 2 участника
+            !isset($arRes['items'][$id]['cnt-noread']) && $arRes['items'][$id]['cnt-noread']=0;
+            if(!$m['is_resp'] && !$m['is_read'])
+                $arRes['items'][$id]['cnt-noread']++;
+
+            $arRes['items'][$id]['id'] = $id;
+            (!empty($m['title']) || !isset($m['title'])) 
+            && 
+            $arRes['items'][$id]['title'] = $m['title'];
+            $arRes['items'][$id]['items'][] = $m['id'];
+            //$arRes['messeges'][$m['id']] = $m;
+        }
+
+        return $arRes;
+    }
+    /**
+     * 
+     */
+    public function getVacanciesChats($idus)
+    {
+        $arRes = array();
+        $this->limit = 5;
+        // поиск вакансий
+        $sql = Yii::app()->db->createCommand()
+                        ->select("ev.id, ev.title, r.id_user")
+                        ->from('empl_vacations ev')
+                        ->leftjoin(
+                            'vacation_stat vs',
+                            'vs.id_vac=ev.id AND vs.status>4'
+                        )
+                        ->leftjoin('resume r','r.id=vs.id_promo')
+                        ->where('ev.id_user=:id',array(':id'=>$idus))
+                        ->queryAll();
+
+        $arVid = $arPid = array();
+        foreach ($sql as $v) {
+            $arVac = $arRes['vacancies'][$v['id']];
+            !in_array($v['id'], $arVid) && array_push($arVid, $v['id']);
+            if(isset($v['id_user']) && !in_array($v['id_user'], $arPid))
+                array_push($arPid, $v['id_user']);
+            $arVac['title'] = $v['title'];
+            if(isset($v['id_user']) && !in_array($v['id_user'], $arVac['public_users']))
+                $arVac['public_users'][] = $v['id_user'];
+            $arRes['vacancies'][$v['id']] = $arVac;
+        }
+        // поиск общих чатов
+        $sql = Yii::app()->db->createCommand()
+                        ->select("*")
+                        ->from('emplv_discuss')
+                        ->where(array('in','id_vac',$arVid))
+                        ->queryAll();   
+
+        foreach ($sql as $v) {
+            $arVac = $arRes['vacancies'][$v['id_vac']];
+            if($v['id_user']!=$idus && !in_array($v['id_user'], $arPid))
+                array_push($arPid, $v['id_user']);
+            if(!in_array($v['id_user'], $arVac['public_users']))
+                $arVac['public_users'][] = $v['id_user'];
+            $arVac['public_messeges'][] = $v['id'];
+
+            $arRes['vacancies'][$v['id_vac']] = $arVac;
+        }
+
+        // поиск личных чатов
+        $sql = Yii::app()->db->createCommand()
+                        ->select("ct.id_vac, c.*")
+                        ->from('chat c')
+                        ->leftjoin('chat_theme ct', 'c.id_theme=ct.id')
+                        ->where(array('in','ct.id_vac',$arVid))
+                        ->queryAll();
+        //
+        foreach ($sql as $v) {
+            $arVac = $arRes['vacancies'][$v['id_vac']];
+            if(!in_array($v['id_usp'], $arPid))
+                array_push($arPid, $v['id_usp']);
+            $arVac['private_messeges'][$v['id_theme']][] = $v['id'];
+
+            !isset($arVac['noread'][$v['id_theme']]) && $arVac['noread'][$v['id_theme']]=0;
+            if(!$v['is_resp'] && !$v['is_read'])
+                $arVac['noread'][$v['id_theme']]++;
+
+            $arRes['vacancies'][$v['id_vac']] = $arVac;
+        }
+        $arRes['promos'] = $this->getUsersData($arPid);
+
+        return $arRes;
+    }
+    /**
+     * 
+     */
+    public function getUsersData($arr)
+    {
+        $arRes = array();
+        $sql = Yii::app()->db->createCommand()
+                        ->select("id_user, isman, firstname, lastname, photo")
+                        ->from('resume')
+                        ->where(array('in','id_user',$arr))
+                        ->queryAll();
+
+        foreach ($sql as $v) {
+            $src = DS . MainConfig::$PATH_APPLIC_LOGO . DS;
+            if($v['photo'])
+                $src .= $v['photo'] . '100.jpg';
+            else
+                $src .= $v['isman'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F;
+
+            $arRes[$v['id_user']] = array(
+                    'fullname' => $v['lastname'] . ' ' . $v['firstname'],
+                    'logo' => $src
+                );
+        }
+
+        return $arRes;  
     }
 }

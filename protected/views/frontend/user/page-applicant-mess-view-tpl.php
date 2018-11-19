@@ -1,8 +1,7 @@
-<div class="message">
-  <?php if( $viData['error'] ): ?>
-    <?= $viData['message'] ?>
-  <?php endif; ?>
-</div>
+<?
+  Yii::app()->getClientScript()->registerCssFile('/theme/css/chats/item.css');
+?>
+<div class="message"><? echo ($viData['error'] ? $viData['message'] : '')?></div>
 <?php if( !$viData['error'] ): ?>
   <br />
   <a href="<?= MainConfig::$PAGE_IM ?>">&lt; Назад к диалогам</a>

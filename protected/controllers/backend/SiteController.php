@@ -1443,6 +1443,7 @@ class SiteController extends Controller
         }
             $model = new Feedback();
             $data = $model->getDatas($id);
+            $model->setStatusReaded($id,'feedback');
             $title = 'Ответ на обращение';
             $this->setPageTitle($title);
             $this->breadcrumbs = array('Обратная связь'=>array('feedback'),'1'=>$title);
@@ -1456,33 +1457,22 @@ class SiteController extends Controller
             $model = new ImEmpl;
             $_POST['Update']['iduse'] = 2054;
             $model->insertChatMess($_POST['Update'], $id);
-
             $mailer = new MailCloud();
             $mailer->mailerMail($_POST['Update']);
-
             $model = new FeedbackTreatment;
             $model->unsetAttributes();  // clear any default values
             $model->search();
             $this->redirect(array("site/update/$id"));
             //$this->render('feedback/index', array('model'=>$model));
-            }
-            $sql = "SELECT ca.id, ca.message, ca.is_resp isresp, ca.is_read isread, ca.id_usp idusp, ca.id_use iduse, ca.files
-                  , e.name nameto
-                  , CONCAT(r.firstname, ' ', r.lastname) namefrom 
-                  , DATE_FORMAT(ca.crdate, '%d.%m.%Y') crdate, DATE_FORMAT(ca.crdate, '%H:%i:%s') crtime
-                FROM chat ca
-                LEFT JOIN employer e ON e.id_user = ca.id_use
-                LEFT JOIN resume r ON r.id_user = ca.id_usp
-                WHERE ca.id_theme = {$id}";
-        /** @var $res CDbCommand */
-            $res = Yii::app()->db->createCommand($sql);
-            $data = $res->queryAll();
-
-            
-
-
-            $this->render('feedback/update', array('id'=>$id, 'data'=>$data,));
         }
+        $model = new Feedback;
+        $data = $model->getAdminData($id);
+        $model->setStatusReaded($id,'chat');
+        $title = 'Ответ на обращение';
+        $this->setPageTitle($title);
+        $this->breadcrumbs = array('Обратная связь'=>array('feedback'),'1'=>$title); 
+        $this->render('feedback/update', array('id'=>$id, 'data'=>$data,));
+    }
     
 
 

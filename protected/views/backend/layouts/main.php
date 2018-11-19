@@ -2,8 +2,7 @@
 <?php if(Yii::app()->user->isGuest) {echo $content;  } else {?>
 
 <? $model = new Feedback;
-   $model = $model->getDatAdmin();
-   $counF = count($model); 
+   $model = $model->getDatAdmin(); 
 
    $modelVac = new Vacancy;
    $modelVac = $modelVac->getVacAdmin();
@@ -139,25 +138,22 @@
               <!-- The user image in the navbar-->
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
               <span class="hidden-xs"> Обратная связь</span>
-               <span class="label label-danger"><?=$counF?></span>
+               <span class="label label-danger"><?=$model['cnt']?></span>
             </a>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" style="max-height:520px;overflow:overlay">
               <!-- The user image in the menu -->
-              <?for($i = 0; $i < $counF; $i++):?>
-              <li style="padding:0px;height: auto;" class="user-header">
-          
-              
-                <?if($model[$i]['type'] == 0){ 
-                 echo '<a style=" white-space: unset;   background-color: #e1e3e9;" href="/admin/site/mail/' . $model[$i]['id']. '" rel="tooltip" data-placement="top" title="Ответить"><p>'.$model[$i]['id'].'-'.$model[$i]['theme'].'</p></a>';
-               }
-                 else {
-                  echo '<a style=" white-space: unset;   background-color: #e1e3e9;" href="/admin/site/update/' . $model[$i]['chat'] . '" rel="tooltip" data-placement="top" title="Ответить"><p>'.$model[$i]['id'].'-'.$model[$i]['theme'].'</p></a> ';
-                 }
-                ?>
-              
-            
-              </li>
-              <? endfor;?>
+              <? foreach ($model['items'] as $id => $v) :?>
+                <li style="padding:0px;height: auto;" class="user-header">
+                  <a 
+                    style="white-space:unset;background-color:#e1e3e9" 
+                    href="/admin/site/<?=(!$v['type'] ? 'mail/' . $id : 'update/' . $v['chat'])?>" 
+                    rel="tooltip" 
+                    data-placement="top" 
+                    title="Ответить">
+                    <p style="margin:0;text-align:left"><?=$id . ' - ' . $v['title']?> <b>(<?=$v['cnt']?>)</b></p>
+                  </a>
+                </li>
+              <? endforeach ;?>
             </ul>
           </li>
           <li class="dropdown user user-menu">

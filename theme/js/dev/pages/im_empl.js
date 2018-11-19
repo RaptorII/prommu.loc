@@ -74,7 +74,7 @@
 	            G_VARS.isNew || self.getMessages(0);
 	            $(".go button").click(function (e) { self.sendMessage(e, this); });
 	            if (!G_VARS.isNew)
-	                self.chkNewMessages();
+	            	self.timerCheckNewMess(true, 5000);
 	            if ($("#Mmessage").length)
 	                self.initEditor();
 	            $("#DiButtonPanel .js-attach-file").click(function (e) { self.onAttachClickFn(e, this); });
@@ -158,24 +158,44 @@
 	    };
 	    PageCompanyMessView.prototype.chkNewMessages = function () {
 	        var self = this;
-	        self.T1NewMess = setTimeout(function go() {
-	            G_VARS.App.showLoading2($(".header-021"), { outerAlign: 'left', offsetX: -10 });
-	            $.get(MainConfig.AJAX_GET_GETNEWMESAGES, { tm: G_VARS.idTm, l: self.lastMessId }, function (data) {
-	                data = JSON.parse(data);
-	                self.appendMessages(data.messages);
-	                self.T1NewMess = setTimeout(go, 5 * 1000);
-	            })
-	                .always(function () {
-	                G_VARS.App.hideLoading();
-	            });
-	        }, 5 * 1000);
+
+					G_VARS.App.showLoading2(
+							$(".header-021"), 
+							{ outerAlign: 'left', offsetX: -10 }
+						);
+
+					$.get(
+						MainConfig.AJAX_GET_GETNEWMESAGES, 
+						{ tm: G_VARS.idTm, l: self.lastMessId },
+						function (data) {
+							data = JSON.parse(data);
+							self.appendMessages(data.messages);
+							self.timerCheckNewMess(true, 5000);
+						})
+					.always(function () { G_VARS.App.hideLoading() });
 	    };
+	    //
+	    PageCompanyMessView.prototype.timerCheckNewMess = function () {
+	    	var self = this;
+
+				if(arguments[0]==true) {
+					self.T1NewMess = setTimeout(
+							function(){ self.chkNewMessages() },
+							arguments[1]
+						);
+				}
+				else {
+					console.log(2);
+					clearTimeout(self.T1NewMess);
+				}
+	    }
 	    PageCompanyMessView.prototype.appendMessages = function (inMessages) {
 	        var self = this;
 	        var DiMessages = $("#DiMessages");
 	        var flag = 0;
 	        for (var ii in inMessages) {
 	            var val = inMessages[ii];
+
 	            var block;
 	            if (val.isresp == 0) {
 	                block = $(".mess-from.tmpl").clone();
@@ -200,7 +220,7 @@
 	            block.find('.date').text(val.crtime + ' ' + val.crdate);
 	            block.find('.mess').html(val.message.replace("\n", '<br/>'));
 	            self.prependFiles({ block: block, data: val });
-	            DiMessages.append(block);
+	            DiMessages.append(block); //Добавить сообщение
 	            block.hide();
 	            block.removeClass('tmpl');
 	            block.fadeIn(400, function () {
@@ -330,6 +350,9 @@
 	        var self = this;
 	        var $that = $(that);
 	        e.preventDefault();
+
+	        self.timerCheckNewMess(false);
+
 	        if (self.NicEditor.nicInstances[0].getContent().replace('<br>', '').trim() == '')
 	            return;
 	        G_VARS.App.showLoading2($that, { outerAlign: 'left', valign: 'top', offsetX: -10, offsetY: 3 });
@@ -408,12 +431,13 @@
 	                }
 	                else {
 	                }
+
 	                if (flag)
 	                    block.addClass('-new');
 	                block.find('.date').text(val.crtime + ' ' + val.crdate);
 	                block.find('.mess').html(val.message.replace("\n", '<br/>'));
 	                self.prependFiles({ block: block, data: val });
-	                DiMessages.append(block);
+	                DiMessages.append(block); //Добавить сообщение
 	                block.hide();
 	                block.removeClass('tmpl');
 	                block.fadeIn(400, function () {
@@ -427,7 +451,7 @@
 	                if (parseInt(self.lastMessId) < parseInt(val.id))
 	                    self.lastMessId = val.id;
 	            }
-	            self.chkNewMessages();
+	            self.timerCheckNewMess(true,1);
 	        })
 	            .always(function () {
 	            G_VARS.App.hideLoading();

@@ -52,7 +52,7 @@ echo '</div></div>';
 
 echo '<div class="control-group">
       <label class="control-label">История решения вопроса</label>
-      <div class="controls input-append">';
+      <div class="controls input-append" style="word-break:break-word">';
 echo "Вопрос обратной связи: ".$data[0]['text']."<br>";
 echo "Ответ админа: ".$data[0]['chat'];
 echo '  <span class="add-on"></span>';
@@ -61,8 +61,8 @@ echo '</div></div>';
 echo '<div class="control-group">
       <label class="control-label">Ответ</label>
 	    <div class="controls input-append">';
-echo CHtml::textArea('Feedback[chat]', $data[0]['chat'], array('rows' => 6, 'cols' => 50,'class'=>'form-control'));
-echo '  <span class="add-on"></span>';
+echo CHtml::textArea('Feedback[chat]', $data[0]['chat'], array('rows' => 6, 'cols' => 50,'class'=>'form-control','id'=>'admin-answer'));
+echo '  <span class="add-on"></span><p></p>';
 echo '</div></div>';
 
 echo '<div class="span11">';
@@ -78,5 +78,6 @@ echo '</div></div></div>';
 
 //$this->endWidget();
 echo CHtml::endForm();
+require 'mail-templates.php'; // подключение шаблонов
 ?>
 </div>
