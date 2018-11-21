@@ -371,7 +371,7 @@ class SearchRule extends CBaseUrlRule {
 
                 $outData['salary-hour'] = array(
                     'raw' => $v,
-                    'param' => 'payto='.(int)$salary[0].'&payfrom='.(int)$salary[1].'&type=0'
+                    'param' => 'payfrom='.(int)$salary[0].'&payto='.(int)$salary[1].'&type=0'
                 );
 
                 $outData['sr'] = array(
@@ -392,7 +392,7 @@ class SearchRule extends CBaseUrlRule {
 
                 $outData['salary-week'] = array(
                     'raw' => $v,
-                    'param' => 'payto='.(int)$salary[0].'&payfrom='.(int)$salary[1].'&type=1'
+                    'param' => 'payfrom='.(int)$salary[0].'&payto='.(int)$salary[1].'&type=1'
                 );
 
                 $outData['sr'] = array(
@@ -413,7 +413,7 @@ class SearchRule extends CBaseUrlRule {
 
                 $outData['salary-month'] = array(
                     'raw' => $v,
-                    'param' => 'payto='.(int)$salary[0].'&payfrom='.(int)$salary[1].'&type=2'
+                    'param' => 'payfrom='.(int)$salary[0].'&payto='.(int)$salary[1].'&type=2'
                 );
 
                 $outData['sr'] = array(
@@ -433,7 +433,7 @@ class SearchRule extends CBaseUrlRule {
 
                 $outData['salary-visit'] = array(
                     'raw' => $v,
-                    'param' => 'payto='.(int)$salary[0].'&payfrom='.(int)$salary[1].'&type=2'
+                    'param' => 'payfrom='.(int)$salary[0].'&payto='.(int)$salary[1].'&type=2'
                 );
 
                 $outData['sr'] = array(
