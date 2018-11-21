@@ -430,29 +430,34 @@ class SearchPromo extends Model
             $cnt++;
         }
         
-        if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['payto'] > 0 && (int)$data['payfrom'] > 0 && (int)$data['sr'] == 1)
+          // salary per hour
+        if(isset($data['sphf']) && isset($data['spht']) && (int)$data['sphf'] > 0 && (int)$data['spht'] > 0 && (int)$data['sr'] == 1)
         {
-            $url[] = 'salary-hour='.(int)$data['payfrom'].','.(int)$data['payto'];
+            $url[] = 'salary-hour='.(int)$data['sphf'].','.(int)$data['spht'];
             $cnt++;
         }
-        
-        if(isset($data['payto']) && isset($data['payfrom'])  && (int)$data['payto'] > 0 && (int)$data['payfrom'] > 0 && (int)$data['sr'] == 2)
+
+        // salary per week
+        if(isset($data['spwf']) && isset($data['spwt']) && (int)$data['spwf'] > 0 && (int)$data['spwt'] > 0 && (int)$data['sr'] == 2)
         {
-            $url[] = 'salary-week='.(int)$data['payfrom'].','.(int)$data['payto'];
+            $url[] = 'salary-week='.(int)$data['spwf'].','.(int)$data['spwt'];
             $cnt++;
         }
-        
-        if(isset($data['payto']) && isset($data['payfrom'])  && (int)$data['payto'] > 0 && (int)$data['payfrom'] > 0 && (int)$data['sr'] == 3)
+
+        // salary per month
+        if(isset($data['spmf']) && isset($data['spmt']) && (int)$data['spmf'] > 0 && (int)$data['spmt'] > 0 && (int)$data['sr'] == 3)
         {
-            $url[] = 'salary-month='.(int)$data['payfrom'].','.(int)$data['payto'];
+            $url[] = 'salary-month='.(int)$data['spmf'].','.(int)$data['spmt'];
             $cnt++;
         }
-        
-         if(isset($data['payto']) && isset($data['payfrom'])  && (int)$data['payto'] > 0 && (int)$data['payfrom'] > 0 && (int)$data['sr'] == 4)
+
+        // salary per visit
+        if(isset($data['spvf']) && isset($data['spvt']) && (int)$data['spvf'] > 0 && (int)$data['spvt'] > 0 && (int)$data['sr'] == 4)
         {
-            $url[] = 'salary-visit='.(int)$data['payfrom'].','.(int)$data['payto'];
+            $url[] = 'salary-visit='.(int)$data['spvf'].','.(int)$data['spvt'];
             $cnt++;
         }
+
         
 
       
