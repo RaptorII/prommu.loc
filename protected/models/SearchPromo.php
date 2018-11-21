@@ -93,8 +93,12 @@ class SearchPromo extends Model
         $sf = Yii::app()->getRequest()->getParam('sf');
         $ph = Yii::app()->getRequest()->getParam('ph');
         $mb = Yii::app()->getRequest()->getParam('mb');
-        $payto = Yii::app()->getRequest()->getParam('payto');
-        $payfrom = Yii::app()->getRequest()->getParam('payfrom');
+          // salary
+        $data['sr'] = filter_var(Yii::app()->getRequest()->getParam('sr'), FILTER_SANITIZE_NUMBER_INT);
+        $data['payto'] = filter_var(Yii::app()->getRequest()->getParam('payto'), FILTER_SANITIZE_NUMBER_FLOAT);
+        $data['payfrom'] = filter_var(Yii::app()->getRequest()->getParam('payfrom'), FILTER_SANITIZE_NUMBER_FLOAT);
+
+       
         $sr = Yii::app()->getRequest()->getParam('sr');
         $type = Yii::app()->getRequest()->getParam('type');
         $avto = Yii::app()->getRequest()->getParam('avto');
