@@ -226,7 +226,10 @@ class SearchPromo extends Model
          if(empty($salradio)) $salradio = 0;
         if( isset($data['payfrom']) ) $filter[] = "a.pay >= {$data['payfrom']}";
         if( isset($data['payto']) ) $filter[] = " a.pay <= {$data['payto']}";
-        if( isset($salradio) ) $filter[] = "a.id_attr = 0 AND a.isshow = 0 AND a.pay_type = {$salradio}";
+        if( isset($salradio) ){
+            $type = (int)$salradio-1;
+            $filter[] = "a.id_attr = 0 AND a.isshow = 0 AND a.pay_type = {$type}";
+        }
         
         // sex
         if( !empty($data['sf']) && empty($data['sm']) || empty($data['sf']) && !empty($data['sm']) )
