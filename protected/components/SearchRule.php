@@ -397,7 +397,7 @@ class SearchRule extends CBaseUrlRule {
 
                 $outData['sr'] = array(
                     'raw' => 1,
-                    'param' => 'sr=1'
+                    'param' => 'sr=2'
                 );
                 continue;
             }
@@ -418,7 +418,27 @@ class SearchRule extends CBaseUrlRule {
 
                 $outData['sr'] = array(
                     'raw' => 1,
-                    'param' => 'sr=1'
+                    'param' => 'sr=3'
+                );
+                continue;
+            }
+            
+             if(strpos($v, 'salary-visit') === 0)
+            {
+                $templateUrlParams['others']++;
+                $salary = explode(',', str_replace('salary-visit=', '', $v));
+
+                if(sizeof($salary) != 2)
+                    continue;
+
+                $outData['salary-visit'] = array(
+                    'raw' => $v,
+                    'param' => 'payto='.(int)$salary[0].'&payfrom='.(int)$salary[1].'&type=2'
+                );
+
+                $outData['sr'] = array(
+                    'raw' => 1,
+                    'param' => 'sr=4'
                 );
                 continue;
             }
