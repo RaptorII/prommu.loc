@@ -282,7 +282,7 @@ class SearchPromo extends Model
 
 
 
-    function searchPromos($arAllId, $filter)
+    private function searchPromos($arAllId, $filter)
     {
         $limit = $this->limit;
         $offset = $this->offset;
