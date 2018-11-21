@@ -229,7 +229,7 @@ class SearchPromo extends Model
             $filter[] = "a.id_attr = 0 AND a.isshow = 0 AND a.pay_type = {$type}";
         }
         
-        file_put_contents('test.txt', date('d.m.Y H:i')."\t".var_export($filter, 1)."\n", FILE_APPEND | LOCK_EX);
+        //file_put_contents('test.txt', date('d.m.Y H:i')."\t".var_export($filter, 1)."\n", FILE_APPEND | LOCK_EX);
         // sex
         if( !empty($data['sf']) && empty($data['sm']) || empty($data['sf']) && !empty($data['sm']) )
         {
