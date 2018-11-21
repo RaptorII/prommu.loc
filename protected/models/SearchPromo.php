@@ -245,8 +245,8 @@ class SearchPromo extends Model
         if( isset($data['salMonT']) ) $filter[] = "a.pay <= {$data['salMonT']}";
         if( isset($data['salVisitF']) ) $filter[] = "a.pay >= {$data['salVisitF']}";
         if( isset($data['salVisitT']) ) $filter[] = "a.pay >= {$data['salVisitT']}";
-        if( isset($data['salHourF']) ||  isset($data['salHourT']) || isset($data['salWeekF'])|| isset($data['salWeekT']) || 
-        isset($data['salMonF']) ||isset($data['salMonT']) || isset($data['salVisitF']) || isset($data['salHourF']) ){
+        if( $data['salHourF'] > 0 ||  $data['salHourT'] > 0 || $data['salWeekF'] > 0|| $data['salWeekT']> 0 || 
+       $data['salMonF']> 0 ||$data['salMonT']> 0 || $data['salVisitF']> 0 || $data['salHourF']> 0 ){
             $type = (int)$salradio-1;
             $filter[] = "a.id_attr = 0 AND a.isshow = 0 AND a.pay_type = {$type}";
         }
