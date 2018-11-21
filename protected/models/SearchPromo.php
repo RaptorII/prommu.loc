@@ -170,7 +170,7 @@ class SearchPromo extends Model
         if( Yii::app()->getRequest()->getParam('payto') || $inProps['filter']['payto']  ) $data['payto'] = $inProps['filter']['payto'] ?: Yii::app()->getRequest()->getParam('payto');
         if( Yii::app()->getRequest()->getParam('payfrom') || $inProps['filter']['payfrom']  ) $data['payfrom'] = $inProps['filter']['payfrom'] ?: Yii::app()->getRequest()->getParam('payfrom');
         if( Yii::app()->getRequest()->getParam('type') || $inProps['filter']['type']  ) $data['type'] = $inProps['filter']['type'] ?: Yii::app()->getRequest()->getParam('type');
-        if( Yii::app()->getRequest()->getParam('sr') || $inProps['filter']['sr']  ) $data['sr'] = $inProps['filter']['sr'] ?: Yii::app()->getRequest()->getParam('sr');
+        $salradio = filter_var(Yii::app()->getRequest()->getParam('sr', $inProps['filter']['sr'] ?: 0), FILTER_SANITIZE_NUMBER_INT);
           
 
         // age
@@ -214,11 +214,15 @@ class SearchPromo extends Model
             $filter[] = 'a.id_mech IN ('.join(',',$data['posts']).')';
         }
         
-        if( !empty($data['payto']) || !empty($data['payfrom']))
-        {   
-            if(empty($data['type'])) $data['type'] = 0;
-            $filter[] = 'a.id_attr = 0 AND a.isshow = 0 AND a.pay > '.$data['payto'].' AND a.pay < '.$data['payfrom'].' AND a.pay_type = '.$data['type'];
-        }
+        // if( !empty($data['payto']) || !empty($data['payfrom']))
+        // {   
+        //     if(empty($data['type'])) $data['type'] = 0;
+        //     $filter[] = 'a.id_attr = 0 AND a.isshow = 0 AND a.pay > '.$data['payto'].' AND a.pay < '.$data['payfrom'].' AND a.pay_type = '.$data['type'];
+        // }
+        
+        if( isset($data['payto']) ) $filter[] = "a.pay >= {$data['payto']}";
+        if( isset($data['payfrom']) ) $filter[] = " a.pay <= {$data['payfrom']}";
+        if( isset($salradio) ) $filter[] = "a.id_attr = 0 AND a.isshow = 0 AND a.pay_type = {$salradio}";
         
         // sex
         if( !empty($data['sf']) && empty($data['sm']) || empty($data['sf']) && !empty($data['sm']) )
@@ -398,24 +402,31 @@ class SearchPromo extends Model
             $cnt++;
         }
         
-        if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['type'] == 0)
+        if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['sr'] == 1)
         {
             $url[] = 'salary-hour='.(int)$data['payto'].','.(int)$data['payfrom'];
             $cnt++;
         }
         
-        if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['type'] == 1)
+        if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['sr'] == 2)
         {
             $url[] = 'salary-week='.(int)$data['payto'].','.(int)$data['payfrom'];
             $cnt++;
         }
         
-        if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['type'] == 2)
+        if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['sr'] == 3)
         {
             $url[] = 'salary-month='.(int)$data['payto'].','.(int)$data['payfrom'];
             $cnt++;
         }
         
+         if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['sr'] == 4)
+        {
+            $url[] = 'salary-visit='.(int)$data['payto'].','.(int)$data['payfrom'];
+            $cnt++;
+        }
+        
+
       
 
         // наличие автомобиля
