@@ -170,9 +170,9 @@ class SearchPromo extends Model
         elseif($inProps['filter']['qs']) {
             $data['qs'] = $inProps['filter']['qs'];
 
-        }
-        if( Yii::app()->getRequest()->getParam('payto') || $inProps['filter']['payto']  ) $data['payto'] = $inProps['filter']['payto'] ?: Yii::app()->getRequest()->getParam('payto');
-        if( Yii::app()->getRequest()->getParam('payfrom') || $inProps['filter']['payfrom']  ) $data['payfrom'] = $inProps['filter']['payfrom'] ?: Yii::app()->getRequest()->getParam('payfrom');
+
+        if( Yii::app()->getRequest()->getParam('payto') || $inProps['filter']['payto']  ) $data['payto'] = $inProps['filter']['payto'] ?: filter_var(Yii::app()->getRequest()->getParam('payto'), FILTER_SANITIZE_NUMBER_INT);
+        if( Yii::app()->getRequest()->getParam('payfrom') || $inProps['filter']['payfrom']  ) $data['payfrom'] = $inProps['filter']['payfrom'] ?: filter_var(Yii::app()->getRequest()->getParam('payfrom'), FILTER_SANITIZE_NUMBER_INT);
         if( Yii::app()->getRequest()->getParam('type') || $inProps['filter']['type']  ) $data['type'] = $inProps['filter']['type'] ?: Yii::app()->getRequest()->getParam('type');
         $salradio = filter_var(Yii::app()->getRequest()->getParam('sr', $inProps['filter']['sr'] ?: 0), FILTER_SANITIZE_NUMBER_INT);
           
