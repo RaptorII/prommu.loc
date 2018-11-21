@@ -170,8 +170,8 @@ class SearchPromo extends Model
         elseif($inProps['filter']['qs']) {
             $data['qs'] = $inProps['filter']['qs'];
 
-        // if(($int = filter_var(Yii::app()->getRequest()->getParam('payto'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['payto'])) $data['payto'] = $int;
-        // if(($int = filter_var(Yii::app()->getRequest()->getParam('payfrom'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['payfrom'])) $data['payfrom'] = $int;
+        if(($int = filter_var(Yii::app()->getRequest()->getParam('payto'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['payto'])) $data['payto'] = $int;
+        if(($int = filter_var(Yii::app()->getRequest()->getParam('payfrom'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['payfrom'])) $data['payfrom'] = $int;
         $salradio = filter_var(Yii::app()->getRequest()->getParam('sr', $inProps['filter']['sr'] ?: 0), FILTER_SANITIZE_NUMBER_INT);
           
 
@@ -282,7 +282,7 @@ class SearchPromo extends Model
 
 
 
-    private function searchPromos($arAllId, $filter)
+    function searchPromos($arAllId, $filter)
     {
         $limit = $this->limit;
         $offset = $this->offset;
