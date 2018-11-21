@@ -128,11 +128,11 @@
 							<div class="psa__salary-block">
 								<label class="psa__salary-label">
 									<span>от</span>
-									<input name=payfrom type='text' value="<?=($_GET['sr']==1 ? $_GET['sphf'] : '')?>" class="psa__input">
+									<input name=sphf type='text' value="<?=($_GET['sr']==1 ? $_GET['sphf'] : '')?>" class="psa__input">
 								</label>
 								<label class="psa__salary-label">
 									<span>до</span>
-									<input name='payto' type='text' value="<?=($_GET['sr']==1 ? $_GET['spht'] : '')?>" class="psa__input">
+									<input name='spht' type='text' value="<?=($_GET['sr']==1 ? $_GET['spht'] : '')?>" class="psa__input">
 								</label> 
 								<div class="clearfix"></div>
 							</div>
@@ -142,11 +142,11 @@
 							<div class="psa__salary-block">
 								<label class="psa__salary-label">
 									<span>от</span>
-									<input name=payfrom type='text' value="<?=($_GET['sr']==2 ? $_GET['spwf'] : '')?>" class="psa__input">
+									<input name=spwf type='text' value="<?=($_GET['sr']==2 ? $_GET['spwf'] : '')?>" class="psa__input">
 								</label>
 								<label class="psa__salary-label">
 									<span>до</span>
-									<input name='payto' type='text' value="<?=($_GET['sr']==2 ? $_GET['spwt'] : '')?>" class="psa__input">
+									<input name='spwt' type='text' value="<?=($_GET['sr']==2 ? $_GET['spwt'] : '')?>" class="psa__input">
 								</label> 
 								<div class="clearfix"></div>
 							</div>
@@ -156,11 +156,11 @@
 							<div class="psa__salary-block">
 								<label class="psa__salary-label">
 									<span>от</span>
-									<input name=payfrom type='text' value="<?=($_GET['sr']==3 ? $_GET['spmf'] : '')?>" class="psa__input">
+									<input name=spmf type='text' value="<?=($_GET['sr']==3 ? $_GET['spmf'] : '')?>" class="psa__input">
 								</label>
 								<label class="psa__salary-label">
 									<span>до</span>
-									<input name='payto' type='text' value="<?=($_GET['sr']==3 ? $_GET['spmt'] : '')?>" class="psa__input">
+									<input name='spmt' type='text' value="<?=($_GET['sr']==3 ? $_GET['spmt'] : '')?>" class="psa__input">
 								</label> 
 								<div class="clearfix"></div>
 							</div>
@@ -170,11 +170,11 @@
 							<div class="psa__salary-block">
 								<label class="psa__salary-label">
 									<span>от</span>
-									<input name=payfrom type='text' value="<?=($_GET['sr']==4 ? $_GET['spvf'] : '')?>" class="psa__input">
+									<input name=spvf type='text' value="<?=($_GET['sr']==4 ? $_GET['spvf'] : '')?>" class="psa__input">
 								</label>
 								<label class="psa__salary-label">
 									<span>до</span>
-									<input name='payto' type='text' value="<?=($_GET['sr']==4 ? $_GET['spmt'] : '')?>" class="psa__input">
+									<input name='spmt' type='text' value="<?=($_GET['sr']==4 ? $_GET['spmt'] : '')?>" class="psa__input">
 								</label> 
 								<div class="clearfix"></div>
 							</div>
