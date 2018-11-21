@@ -223,14 +223,15 @@ class SearchPromo extends Model
         //     if(empty($data['type'])) $data['type'] = 0;
         //     $filter[] = 'a.id_attr = 0 AND a.isshow = 0 AND a.pay > '.$data['payto'].' AND a.pay < '.$data['payfrom'].' AND a.pay_type = '.$data['type'];
         // }
-         if(empty($salradio)) $salradio = 0;
+         
         if( isset($data['payfrom']) ) $filter[] = "a.pay >= {$data['payfrom']}";
         if( isset($data['payto']) ) $filter[] = " a.pay <= {$data['payto']}";
-        if( isset($salradio) ){
+        if(isset($salradio)){
             $type = (int)$salradio-1;
             $filter[] = "a.id_attr = 0 AND a.isshow = 0 AND a.pay_type = {$type}";
         }
         
+        file_put_contents('test.txt', date('d.m.Y H:i')."\t".var_export($filter, 1)."\n", FILE_APPEND | LOCK_EX);
         // sex
         if( !empty($data['sf']) && empty($data['sm']) || empty($data['sf']) && !empty($data['sm']) )
         {
