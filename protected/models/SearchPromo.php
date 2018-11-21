@@ -95,8 +95,15 @@ class SearchPromo extends Model
         $mb = Yii::app()->getRequest()->getParam('mb');
           // salary
         $data['sr'] = filter_var(Yii::app()->getRequest()->getParam('sr'), FILTER_SANITIZE_NUMBER_INT);
-        $data['payto'] = filter_var(Yii::app()->getRequest()->getParam('payto'), FILTER_SANITIZE_NUMBER_INT);
-        $data['payfrom'] = filter_var(Yii::app()->getRequest()->getParam('payfrom'), FILTER_SANITIZE_NUMBER_INT);
+        $data['sphf'] = filter_var(Yii::app()->getRequest()->getParam('sphf'), FILTER_SANITIZE_NUMBER_FLOAT);
+        $data['spht'] = filter_var(Yii::app()->getRequest()->getParam('spht'), FILTER_SANITIZE_NUMBER_FLOAT);
+        $data['spwf'] = filter_var(Yii::app()->getRequest()->getParam('spwf'), FILTER_SANITIZE_NUMBER_FLOAT);
+        $data['spwt'] = filter_var(Yii::app()->getRequest()->getParam('spwt'), FILTER_SANITIZE_NUMBER_FLOAT);
+        $data['spmf'] = filter_var(Yii::app()->getRequest()->getParam('spmf'), FILTER_SANITIZE_NUMBER_FLOAT);
+        $data['spmt'] = filter_var(Yii::app()->getRequest()->getParam('spmt'), FILTER_SANITIZE_NUMBER_FLOAT);
+        $data['spvf'] = filter_var(Yii::app()->getRequest()->getParam('spvf'), FILTER_SANITIZE_NUMBER_FLOAT);
+        $data['spvt'] = filter_var(Yii::app()->getRequest()->getParam('spvt'), FILTER_SANITIZE_NUMBER_FLOAT);
+
 
        
         $sr = Yii::app()->getRequest()->getParam('sr');
@@ -171,10 +178,16 @@ class SearchPromo extends Model
             $data['qs'] = $inProps['filter']['qs'];
 
         }
-         $data['payto'] = $inProps['filter']['payto'] ?: Yii::app()->getRequest()->getParam('payto');
-         $data['payfrom'] = $inProps['filter']['payfrom'] ?: Yii::app()->getRequest()->getParam('payfrom');
-        if( Yii::app()->getRequest()->getParam('type') || $inProps['filter']['type']  ) $data['type'] = $inProps['filter']['type'] ?: Yii::app()->getRequest()->getParam('type');
         $salradio = filter_var(Yii::app()->getRequest()->getParam('sr', $inProps['filter']['sr'] ?: 0), FILTER_SANITIZE_NUMBER_INT);
+        if( $salradio == 1 && (($int = filter_var(Yii::app()->getRequest()->getParam('sphf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['sphf'])) ) $data['salHourF'] = $int;
+        if( $salradio == 1 && (($int = filter_var(Yii::app()->getRequest()->getParam('spht'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spht'])) ) $data['salHourT'] = $int;
+        if( $salradio == 2 && (($int = filter_var(Yii::app()->getRequest()->getParam('spwf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spwf'])) ) $data['salWeekF'] = $int;
+        if( $salradio == 2 && (($int = filter_var(Yii::app()->getRequest()->getParam('spwt'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spwt'])) ) $data['salWeekT'] = $int;
+        if( $salradio == 3 && (($int = filter_var(Yii::app()->getRequest()->getParam('spmf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spmf'])) ) $data['salMonF'] = $int;
+        if( $salradio == 3 && (($int = filter_var(Yii::app()->getRequest()->getParam('spmt'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spmt'])) ) $data['salMonT'] = $int;
+        if( $salradio == 4 && (($int = filter_var(Yii::app()->getRequest()->getParam('spvf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spvf'])) ) $data['salVisitF'] = $int;
+        if( $salradio == 4 && (($int = filter_var(Yii::app()->getRequest()->getParam('spvt'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spvt'])) ) $data['salVisitT'] = $int;
+
           
 
         // age
@@ -223,15 +236,21 @@ class SearchPromo extends Model
         //     if(empty($data['type'])) $data['type'] = 0;
         //     $filter[] = 'a.id_attr = 0 AND a.isshow = 0 AND a.pay > '.$data['payto'].' AND a.pay < '.$data['payfrom'].' AND a.pay_type = '.$data['type'];
         // }
-         if(empty($salradio)) $salradio = 0;
-        if($data['payfrom']) $filter[] = "a.pay >= {$data['payfrom']}";
-        if($data['payto']) $filter[] = " a.pay <= {$data['payto']}";
+       
+        if( isset($data['salHourF']) ) $filter[] = "a.pay >= {$data['salHourF']}";
+        if( isset($data['salHourT']) ) $filter[] = "a.pay <= {$data['salHourT']}";
+        if( isset($data['salWeekF']) ) $filter[] = "a.pay >= {$data['salWeekF']}";
+        if( isset($data['salWeekT']) ) $filter[] = "a.pay >= {$data['salWeekT']}";
+        if( isset($data['salMonF']) ) $filter[] = "a.pay >= {$data['salMonF']}";
+        if( isset($data['salMonT']) ) $filter[] = "a.pay >= {$data['salMonT']}";
+        if( isset($data['salVisitF']) ) $filter[] = "a.pay >= {$data['salVisitF']}";
+        if( isset($data['salVisitT']) ) $filter[] = "a.pay >= {$data['salVisitT']}";
         if( isset($salradio) ){
             $type = (int)$salradio-1;
             $filter[] = "a.id_attr = 0 AND a.isshow = 0 AND a.pay_type = {$type}";
         }
         
-         file_put_contents('test.txt', date('d.m.Y H:i')."\t".var_export($filter,1).'----'.$data['payfrom'].'-----'.$data['payto']."\n", FILE_APPEND | LOCK_EX);
+         file_put_contents('test.txt', date('d.m.Y H:i')."\t".var_export($filter,1).'----'.$data['salHourF'].'-----'.$data['salHourT']."\n", FILE_APPEND | LOCK_EX);
          
         // sex
         if( !empty($data['sf']) && empty($data['sm']) || empty($data['sf']) && !empty($data['sm']) )
