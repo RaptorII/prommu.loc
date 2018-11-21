@@ -178,7 +178,7 @@ class SearchPromo extends Model
             $data['qs'] = $inProps['filter']['qs'];
 
         }
-        $salradio = filter_var(Yii::app()->getRequest()->getParam('sr', $inProps['filter']['sr'] ?: 0), FILTER_SANITIZE_NUMBER_INT);
+         $salradio = filter_var(Yii::app()->getRequest()->getParam('sr', $inProps['filter']['sr'] ?: 0), FILTER_SANITIZE_NUMBER_INT);
         if( $salradio == 1 && (($int = filter_var(Yii::app()->getRequest()->getParam('sphf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['sphf'])) ) $data['salHourF'] = $int;
         if( $salradio == 1 && (($int = filter_var(Yii::app()->getRequest()->getParam('spht'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spht'])) ) $data['salHourT'] = $int;
         if( $salradio == 2 && (($int = filter_var(Yii::app()->getRequest()->getParam('spwf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spwf'])) ) $data['salWeekF'] = $int;
@@ -236,7 +236,7 @@ class SearchPromo extends Model
         //     if(empty($data['type'])) $data['type'] = 0;
         //     $filter[] = 'a.id_attr = 0 AND a.isshow = 0 AND a.pay > '.$data['payto'].' AND a.pay < '.$data['payfrom'].' AND a.pay_type = '.$data['type'];
         // }
-       
+        
         if( isset($data['salHourF']) ) $filter[] = "a.pay >= {$data['salHourF']}";
         if( isset($data['salHourT']) ) $filter[] = "a.pay <= {$data['salHourT']}";
         if( isset($data['salWeekF']) ) $filter[] = "a.pay >= {$data['salWeekF']}";
@@ -245,7 +245,8 @@ class SearchPromo extends Model
         if( isset($data['salMonT']) ) $filter[] = "a.pay <= {$data['salMonT']}";
         if( isset($data['salVisitF']) ) $filter[] = "a.pay >= {$data['salVisitF']}";
         if( isset($data['salVisitT']) ) $filter[] = "a.pay >= {$data['salVisitT']}";
-        if( isset($salradio) ){
+        if( isset($data['salHourF']) ||  isset($data['salHourT']) || isset($data['salWeekF'])|| isset($data['salWeekT']) || 
+        isset($data['salMonF']) ||isset($data['salMonT']) || isset($data['salVisitF']) || isset($data['salHourF']) ){
             $type = (int)$salradio-1;
             $filter[] = "a.id_attr = 0 AND a.isshow = 0 AND a.pay_type = {$type}";
         }
