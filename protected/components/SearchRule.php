@@ -361,6 +361,7 @@ class SearchRule extends CBaseUrlRule {
                 continue;
             }
             
+            // salary per hour
             if(strpos($v, 'salary-hour') === 0)
             {
                 $templateUrlParams['others']++;
@@ -371,7 +372,7 @@ class SearchRule extends CBaseUrlRule {
 
                 $outData['salary-hour'] = array(
                     'raw' => $v,
-                    'param' => 'payfrom='.(int)$salary[0].'&payto='.(int)$salary[1].'&type=0'
+                    'param' => 'sphf='.(int)$salary[0].'&spht='.(int)$salary[1]
                 );
 
                 $outData['sr'] = array(
@@ -381,10 +382,11 @@ class SearchRule extends CBaseUrlRule {
                 continue;
             }
 
-            
+            // salary per week
             if(strpos($v, 'salary-week') === 0)
             {
                 $templateUrlParams['others']++;
+
                 $salary = explode(',', str_replace('salary-week=', '', $v));
 
                 if(sizeof($salary) != 2)
@@ -392,20 +394,21 @@ class SearchRule extends CBaseUrlRule {
 
                 $outData['salary-week'] = array(
                     'raw' => $v,
-                    'param' => 'payfrom='.(int)$salary[0].'&payto='.(int)$salary[1].'&type=1'
+                    'param' => 'spwf='.(int)$salary[0].'&spwt='.(int)$salary[1]
                 );
 
                 $outData['sr'] = array(
                     'raw' => 1,
-                    'param' => 'sr=2'
+                    'param' => 'sr=1'
                 );
                 continue;
             }
 
-            
+            // salary per month
             if(strpos($v, 'salary-month') === 0)
             {
                 $templateUrlParams['others']++;
+
                 $salary = explode(',', str_replace('salary-month=', '', $v));
 
                 if(sizeof($salary) != 2)
@@ -413,19 +416,20 @@ class SearchRule extends CBaseUrlRule {
 
                 $outData['salary-month'] = array(
                     'raw' => $v,
-                    'param' => 'payfrom='.(int)$salary[0].'&payto='.(int)$salary[1].'&type=2'
+                    'param' => 'spmf='.(int)$salary[0].'&spmt='.(int)$salary[1]
                 );
 
                 $outData['sr'] = array(
                     'raw' => 1,
-                    'param' => 'sr=3'
+                    'param' => 'sr=1'
                 );
                 continue;
             }
-            
-             if(strpos($v, 'salary-visit') === 0)
+            // salary per visit
+            if(strpos($v, 'salary-visit') === 0)
             {
                 $templateUrlParams['others']++;
+
                 $salary = explode(',', str_replace('salary-visit=', '', $v));
 
                 if(sizeof($salary) != 2)
@@ -433,12 +437,12 @@ class SearchRule extends CBaseUrlRule {
 
                 $outData['salary-visit'] = array(
                     'raw' => $v,
-                    'param' => 'payfrom='.(int)$salary[0].'&payto='.(int)$salary[1].'&type=2'
+                    'param' => 'spvf='.(int)$salary[0].'&spvt='.(int)$salary[1]
                 );
 
                 $outData['sr'] = array(
                     'raw' => 1,
-                    'param' => 'sr=4'
+                    'param' => 'sr=1'
                 );
                 continue;
             }
