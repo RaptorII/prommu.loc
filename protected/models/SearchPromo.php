@@ -220,8 +220,8 @@ class SearchPromo extends Model
         //     $filter[] = 'a.id_attr = 0 AND a.isshow = 0 AND a.pay > '.$data['payto'].' AND a.pay < '.$data['payfrom'].' AND a.pay_type = '.$data['type'];
         // }
          if(empty($salradio)) $salradio = 0;
-        if( isset($data['payto']) ) $filter[] = "a.pay >= {$data['payto']}";
-        if( isset($data['payfrom']) ) $filter[] = " a.pay <= {$data['payfrom']}";
+        if( isset($data['payfrom']) ) $filter[] = "a.pay >= {$data['payfrom']}";
+        if( isset($data['payto']) ) $filter[] = " a.pay <= {$data['payto']}";
         if( isset($salradio) ) $filter[] = "a.id_attr = 0 AND a.isshow = 0 AND a.pay_type = {$salradio}";
         
         // sex
@@ -404,25 +404,25 @@ class SearchPromo extends Model
         
         if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['sr'] == 1)
         {
-            $url[] = 'salary-hour='.(int)$data['payto'].','.(int)$data['payfrom'];
+            $url[] = 'salary-hour='.(int)$data['payfrom'].','.(int)$data['payto'];
             $cnt++;
         }
         
         if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['sr'] == 2)
         {
-            $url[] = 'salary-week='.(int)$data['payto'].','.(int)$data['payfrom'];
+            $url[] = 'salary-week='.(int)$data['payfrom'].','.(int)$data['payto'];
             $cnt++;
         }
         
         if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['sr'] == 3)
         {
-            $url[] = 'salary-month='.(int)$data['payto'].','.(int)$data['payfrom'];
+            $url[] = 'salary-month='.(int)$data['payfrom'].','.(int)$data['payto'];
             $cnt++;
         }
         
          if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['sr'] == 4)
         {
-            $url[] = 'salary-visit='.(int)$data['payto'].','.(int)$data['payfrom'];
+            $url[] = 'salary-visit='.(int)$data['payfrom'].','.(int)$data['payto'];
             $cnt++;
         }
         
