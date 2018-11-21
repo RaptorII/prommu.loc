@@ -402,25 +402,25 @@ class SearchPromo extends Model
             $cnt++;
         }
         
-        if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['sr'] == 1)
+        if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['payto'] > 0 && (int)$data['payfrom'] > 0 && (int)$data['sr'] == 1)
         {
             $url[] = 'salary-hour='.(int)$data['payfrom'].','.(int)$data['payto'];
             $cnt++;
         }
         
-        if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['sr'] == 2)
+        if(isset($data['payto']) && isset($data['payfrom'])  && (int)$data['payto'] > 0 && (int)$data['payfrom'] > 0 && (int)$data['sr'] == 2)
         {
             $url[] = 'salary-week='.(int)$data['payfrom'].','.(int)$data['payto'];
             $cnt++;
         }
         
-        if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['sr'] == 3)
+        if(isset($data['payto']) && isset($data['payfrom'])  && (int)$data['payto'] > 0 && (int)$data['payfrom'] > 0 && (int)$data['sr'] == 3)
         {
             $url[] = 'salary-month='.(int)$data['payfrom'].','.(int)$data['payto'];
             $cnt++;
         }
         
-         if(isset($data['payto']) && isset($data['payfrom']) && (int)$data['sr'] == 4)
+         if(isset($data['payto']) && isset($data['payfrom'])  && (int)$data['payto'] > 0 && (int)$data['payfrom'] > 0 && (int)$data['sr'] == 4)
         {
             $url[] = 'salary-visit='.(int)$data['payfrom'].','.(int)$data['payto'];
             $cnt++;
