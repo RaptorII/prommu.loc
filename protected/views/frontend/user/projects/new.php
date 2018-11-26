@@ -307,4 +307,5 @@
 	for ($i=0, $n=sizeof($viData['workers']['posts']); $i < $n; $i++) 
 		$arPosts[$viData['workers']['posts'][$i]['id']] = $viData['workers']['posts'][$i]['name'];
 	require 'project-index-blocks.php'; // Блоки адресной программы для добавления
+	require 'project-staff-blocks.php'; // Блоки персонала для приглашения
 ?>

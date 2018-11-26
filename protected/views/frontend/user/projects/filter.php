@@ -123,10 +123,10 @@
                 $(document).ready(function () {
 
                     var arStatus = <?=json_encode($value['DATA']);?>;
-
+                    /*
                     var e = $("#F1Filter"), i = $("#content"), l = $(".filter-dolj .psv__checkbox-input"), s = $(".psv__veil"),
                         a = $(".psv__salary .psv__input"), c = $("#psv-salary-type"), r = !1, o = "#psv-seo-text";
-
+                    */
                     function f(t, e) {
                         var i = $(e), l = $("#filter-city").data("city"), s = i.closest(".filter-city-select")[0],
                             a = $(s).siblings(".select-list")[0], n = $(".filter-city-select").find('[type="hidden"]'),
@@ -134,16 +134,14 @@
                         if (n.length)for (var u = 0, d = n.length; u < d; u++)o.push($(n[u]).val());
                         //$(s).addClass("load");
 
-
                         for (var e in arStatus) {
                             var i = arStatus[e];
-                            $.inArray(e+1, o) < 0 && 0 <= i.toLowerCase().indexOf(r) && (f += '<li class="u-filter__li-hidden" data-id="' + (e+1) + '">' + i + "</li>")
-
+                            $.inArray(e, o) < 0 && 0 <= i.toLowerCase().indexOf(r) && (f += '<li class="u-filter__li-hidden" data-id="' + (e) + '">' + i + "</li>")
                         }
                         f ? $(a).html(f).fadeIn() : $(a).html('<li class="emp">Список пуст</li>').fadeIn(), $(s).removeClass("load")
                     }
 
-                    $(".filter-dolj .psv__checkbox-input").change(function () {
+                    /*$(".filter-dolj .psv__checkbox-input").change(function () {
                         if ($(this).is(l[0]))if ($(this).is(":checked"))for (t = 1; t < l.length; t++)$(l[t]).prop("checked", !0); else for (var t = 1; t < l.length; t++)$(l[t]).prop("checked", !1);
                         setTimeout(function () {
                             n()
@@ -178,7 +176,7 @@
                     }), $(".filter-salary input,.filter-age input").on("input", function () {
                         var t = $(this).val().replace(/\D+/g, "");
                         $(this).val(t)
-                    }), $("#filter-city").on("input", ".city-inp", function (t) {
+                    }),*/ $("#filter-city").on("input", ".city-inp", function (t) {
                         var e = $(t.target), i = e.val();
                         e.css({width: 10 * i.length + 5 + "px"}), clearTimeout(r), r = setTimeout(function () {
                             f(i, e)
@@ -194,7 +192,7 @@
                         if (e.closest("#filter-city").length || e.is("#filter-city"))if (e.is(".select-list li") && !e.hasClass("emp")) {
                             var i = e.closest("#filter-city")[0], l = $(i).find(".filter-city-select"), s = $(i).find(".city-inp"),
                                 a = $(i).find(".select-list");
-                            s.val("").css({width: "5px"}), $(l).find('[data-id="0"]').before("<li>" + e.text() + '<b></b><input name="cities[]" type="hidden" value="' + t.target.dataset.id + '"/></li>'), a.fadeOut()
+                            s.val("").css({width: "5px"}), $(l).find('[data-id="0"]').before("<li>" + e.text() + '<b></b><input name="event_status[]" type="hidden" value="' + t.target.dataset.id + '"/></li>'), a.fadeOut()
                         } else e.is(".filter-city-select b") && (e.closest("li").remove()); else $("#filter-city .city-inp").val("").css({width: "5px"}), $("#filter-city .select-list").fadeOut();
                     })
                 });

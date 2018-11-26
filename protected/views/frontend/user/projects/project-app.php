@@ -16,11 +16,11 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/css/projects/project-ap
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/js/projects/project-app.js', CClientScript::POS_END);
 ?>
 
-
+<? /* ?>
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
 <? print_r($viData); ?>
 </pre>
-
+<? */ ?>
 <div class="filter__veil"></div>
 <div class="project__module" data-id="<?= $project ?>">
   <?php if (sizeof($viData['items']) > 0): ?>

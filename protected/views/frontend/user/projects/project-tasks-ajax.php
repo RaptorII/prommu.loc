@@ -39,8 +39,11 @@
 								</td>
 								<td class="index">
 									<div class="task__table-cell border task__table-index">
+
 										<span><?=$point['adres']?>
-                                        <?if(!empty($city['ismetro'])):?>
+
+
+                                        <?if(!empty($point['metro'])):?>
                                             <span>
                                                 <img title="<?=$point['metro']?>" class="point__metro js-g-hashint" src="/theme/pic/projects/metro.png"/>
                                             </span>

@@ -72,10 +72,9 @@ $model= new Project();
 $viData['PHOTO'] = $model -> getPhoto('2', $viData ,'medium');
 */
 ?>
+<? /* ?>
 
-<pre>
-    <?print_r($viData);?>
-</pre>
+<? */ ?>
 
 <div class="container">
     <h1 class="user-profile-page__title">Профиль персонала - <?= $viData['firstname'] ?> <?= $viData['lastname'] ?></h1>
@@ -133,13 +132,15 @@ $viData['PHOTO'] = $model -> getPhoto('2', $viData ,'medium');
             </div>
 
 
-            <div class="ppp__module-title"><h2>ПРОЕКТ</h2></div>
+            <div class="ppp__module-title"><h2>ПРОЕКТЫ</h2></div>
             <div class="ppp__module">
-                <? foreach ($viData['PROJECT'] as $key => $value): ?>
-                    <div class="ppp__field">
-                        <span class="ppp__field-val"><?= $value ?></span>
-                    </div>
-                <? endforeach; ?>
+                <div class="ppp__period-list">
+                     <? foreach ($viData['PROJECT'] as $key => $value): ?>
+                        <div class="ppp__field">
+                            <span class="ppp__field-val"><?= $value ?></span>
+                        </div>
+                    <? endforeach; ?>
+                </div>
             </div>
 
             <div class="ppp__module-title"><h2>ГОРОД</h2></div>
@@ -156,17 +157,12 @@ $viData['PHOTO'] = $model -> getPhoto('2', $viData ,'medium');
 
             <div class="ppp__module-title"><h2>ДОЛЖНОСТЬ</h2></div>
             <div class="ppp__module">
-                <div class="ppp__field">
-                    <span class="ppp__field-name">Проект1:</span>
-                    <span class="ppp__field-val">Должность1</span>
-                </div>
-                <div class="ppp__field">
-                    <span class="ppp__field-name">Проект2:</span>
-                    <span class="ppp__field-val">Должность2</span>
-                </div>
-                <div class="ppp__field">
-                    <span class="ppp__field-name">Проект2:</span>
-                    <span class="ppp__field-val">Должность3</span>
+                <div class="ppp__period-list">
+                     <? foreach ($viData['MECH'] as $key => $value): ?>
+                        <div class="ppp__field">
+                            <span class="ppp__field-val"><?= $value ?></span>
+                        </div>
+                    <? endforeach; ?>
                 </div>
             </div>
 

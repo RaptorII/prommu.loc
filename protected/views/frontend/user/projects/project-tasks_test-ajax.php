@@ -24,7 +24,7 @@
                 </div>
 
                 <div class="tasks__one-user">
-                    <div class="task__item">
+                    <div data-task-id='1' data-user-id='1' data-tt-id='1' data-date-unix='1' data-type="old" class="task__item">
                         <table class="task__table">
                             <thead>
                             <tr>
@@ -55,10 +55,10 @@
                                 </td>
                                 <td class="status">
                                     <div class="task__table-cell border">
-                                <span class="tasks__status-work tasks__status">
-                                    <span class="tasks__status-circle">&#8226;</span>
-                                    <span class="status__active">В работе</span>
-                                </span>
+                                        <span class="tasks__status-work tasks__status">
+                                            <span class="tasks__status-circle">&#8226;</span>
+                                            <span class="status__active">В работе</span>
+                                        </span>
                                     </div>
                                 </td>
                             </tr>

@@ -37,9 +37,9 @@
                             </td>
 
 
-                            <td>
+                            <?/*<td>
                                 <div class="program__cell border program__cell-fix">Метро</div>
-                            </td>
+                            </td>*/?>
 
 
                             <td>
@@ -59,12 +59,23 @@
                                 <div class="program__cell border">
                                     <?= $arLoc['index'] ?>
 
+
+                                    <?$metro = join(',</br>', $arLoc['metro'])?>
+                                    <?if(!empty($metro)):?>
+                                        <span>
+                                            <img title="<?=$metro?>"
+                                                 class="point__metro js-g-hashint"
+                                                 src="/theme/pic/projects/metro.png"/>
+                                        </span>
+                                    <?endif;?>
+
                                     <?/*
                                         echo $project;
                                         echo $idus;
                                         echo $viData['points'][$valueItem]['point'];
                                         echo $keyUnix;
                                     */?>
+
                                     <b
                                             data-map-project="<?= $project ?>"
                                             data-map-user="<?= $idus ?>"
@@ -75,7 +86,7 @@
                                 </div>
                             </td>
 
-                            <td>
+                            <?/*<td>
                                 <div class="program__cell border">
                                     <? if (!empty($arCity['metro'])): ?>
                                         <? echo join(',</br>', $arLoc['metro']) ?>
@@ -83,7 +94,7 @@
                                         <div class="program__cell-null">-</div>
                                     <? endif; ?>
                                 </div>
-                            </td>
+                            </td>*/?>
 
                             <td>
                                 <div class="program__cell border user">
@@ -97,8 +108,19 @@
                                                 <div class="program__cell-users">
                                                     <div class="program__cell-user">
                                                         <img src="<?= $user['src'] ?>">
-                                                        <span><?= $user['name'] ?></span>
-                                                        <span title="Кол-во задач" class="program__tasks js-g-hashint"><?
+
+                                                            <a href="/user/projects/user-card/<?=$user['id_user']?>" target="_blank">
+                                                                <span class="program__user-card"><?= $user['name'] ?> </span>
+                                                            </a>
+
+
+
+                                                        <span title="Кол-во задач" class="program__tasks js-g-hashint tasks__count"
+                                                              data-popup-project="<?=$project?>"
+                                                              data-popup-user="<?=$user['id_user']?>"
+                                                              data-popup-point="<?=$idper?>"
+                                                              data-popup-date=""
+                                                        ><?
                                                         echo (isset($viData['task-counters'][$idper][$id_user]) 
                                                                 ? $viData['task-counters'][$idper][$id_user] 
                                                                 : 0);

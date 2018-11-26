@@ -5,15 +5,20 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/item-base.c
 Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/additional.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/item-base.js', CClientScript::POS_END);
 
-Yii::app()->getClientScript()->registerScriptFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerCssFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.css');
-Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/universal-map.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-map.css');
-Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerCssFile($bUrl . 'js/dist/fancybox/jquery.fancybox.css');
 Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-filter.css');
 Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/universal-filter.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerScriptFile($bUrl.'js/projects/project-convert-vacancy.js', CClientScript::POS_END);
+
+
+/***********FANCYBOX************/
+Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . 'js/dist/fancybox/jquery.fancybox.css');
+/***********FANCYBOX************/
+/***********MAP************/
+Yii::app()->getClientScript()->registerScriptFile('https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=AIzaSyC9M8BgorAu7Sn226LNP2rteTF5gO7KjLc');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/route-map.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-map.css');
+/***********MAP************/
 
 $arFilterData = [
     'ID' => $project, //Обязательное свойство!
@@ -75,19 +80,11 @@ $arFilterData = [
         5 => [
             'NAME' => 'Тип работы',
             'TYPE' => 'select',
-            'INPUT_NAME' => 'work_type',
+            'INPUT_NAME' => 'post',
             'DATA' => [
                 0 => [
                     'title' => 'Все',
                     'id' => '0'
-                ],
-                1 => [
-                    'title' => 'Пример1',
-                    'id' => '1'
-                ],
-                2 => [
-                    'title' => 'Пример2',
-                    'id' => '2'
                 ]
             ],
             'DATA_DEFAULT' => '0'
@@ -158,18 +155,18 @@ $arFilterData = [
         11 => [
             'NAME' => 'Статус ТТ',
             'TYPE' => 'select',
-            'INPUT_NAME' => 'tt_status',
+            'INPUT_NAME' => 'haspoint',
             'DATA' => [
                 0 => [
                     'title' => 'Все',
                     'id' => '0'
                 ],
                 1 => [
-                    'title' => 'Открыта вакансия',
+                    'title' => 'Выбран персонал',
                     'id' => '1'
                 ],
                 2 => [
-                    'title' => 'Закреплено',
+                    'title' => 'Без персонала',
                     'id' => '2'
                 ]
             ],
@@ -198,8 +195,6 @@ $arFilterData = [
 
     ]
 ];
-/*foreach ($viData['filter']['projects'] as $v)
-    $arFilterData['FILTER_SETTINGS'][0]['DATA'][$v['project']] = ['title' => $v['name'], 'id' => $v['project']];*/
 foreach ($viData['filter']['cities'] as $k => $c)
     $arFilterData['FILTER_SETTINGS'][0]['DATA'][$k] = ['title' => $c, 'id' => $k];
 foreach ($viData['filter']['tt_name'] as $n)
@@ -208,32 +203,36 @@ foreach ($viData['filter']['tt_index'] as $i)
     $arFilterData['FILTER_SETTINGS'][2]['DATA'][] = ['title' => $i, 'id' => $i];
 foreach ($viData['filter']['metros'] as $id => $metro)
     $arFilterData['FILTER_SETTINGS'][6]['DATA'][$id] = ['title' => $metro['metro'], 'id' => $metro['id'], 'DATA_VALUE_PARENT_ID' => $metro['id_city']];
-?>
+foreach ($viData['filter']['posts'] as $k => $p)
+    $arFilterData['FILTER_SETTINGS'][5]['DATA'][$k] = ['title' => $p, 'id' => $k];
 
-<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($viData); ?>
-</pre>
+/*
+echo "<pre>";
+print_r($viData); 
+echo "</pre>";
+*/
+?>
 
 <div class="row project">
     <div class="col-xs-12">
-        <? require __DIR__ . '/project-nav.php'; // Меню вкладок ?>
+        <? require 'project-nav.php'; // Меню вкладок ?>
         <div id="content">
             <div class="project__module">
                 <div class="filter__veil"></div>
                 <div class="project__header">
-                    <? require __DIR__ . '/filter.php'; // ФИЛЬТР ?>
+                    <? require 'filter.php'; // ФИЛЬТР ?>
                 </div>
-                <? /*<div class="project__xls">
-					<a href="/user/uploadprojectxls?id=<?=$project?>&type=index" id="add-xls">Изменить адресную программу</a>
-					<a href="/uploads/prommu_example.xls" download>Скачать пример для добавления</a>
-				</div>*/ ?>
+
+                <div class="notification">
+                    * При поиске персонала, пустые ТТ отображаться не будут!
+                </div>
                 <h1 class="project__title">ПРОЕКТ: <span><?= $viData['project']['name'] ?></span></h1>
                 <? if(empty($viData['project']['vacancy'])): ?>
                     <div class="projects__to-vac-btn prmu-btn" data-id="<?=$project?>"><span>Перевести в вакансию</span></div> 
                 <? endif; ?>
 
                 <div id="ajax-content">
-                    <? require __DIR__ . '/project-base-ajax.php'; // СПИСОК ?>
+                    <? require 'project-base-ajax.php'; // СПИСОК ?>
                 </div>
                 <form enctype="multipart/form-data" action="" method="POST" id="base-form">
                     <input type="hidden" name="project" class="project-inp" value="<?= $project ?>">
@@ -252,14 +251,14 @@ foreach ($viData['filter']['metros'] as $id => $metro)
     </div>
     <div class="tasks__popup-content">
         <div class="popup__content-user">
-            <img src="/images/applic/20180819180030833100.jpg">
+            <img class="popup__content-logo" src="/images/applic/20180819180030833100.jpg">
 
             <div class="popup__user">
                 <div class="popup__user-name">
-                    Маргарита
+                    ...
                 </div>
                 <div class="popup__user-secondname">
-                    Бахвалова
+                    ...
                 </div>
 
                 <div class="popup__user-status">
@@ -318,6 +317,6 @@ foreach ($viData['filter']['metros'] as $id => $metro)
 
     </div>
     <div class="popup__control">
-        <a href="#">Редактировать задания</a>
+        <a href="/user/projects/<?=$project?>/tasks">Редактировать задания</a>
     </div>
 </div>

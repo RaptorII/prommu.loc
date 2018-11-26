@@ -213,9 +213,9 @@ foreach ($viData['filter']['metros'] as $id => $metro) {
             <div class="project__header-xlscontainer">
                 <div class="project__header-xls project__xls">
                     <a href="/user/uploadprojectxls?id=<?= $project ?>&type=users" download>Выгрузить добавленный персонал</a>
-                    <a href="javascript:coid(0)" class="add-program">Загрузить изменения по добавленному персоналу</a>
+                    <a href="javascript:void(0)" class="add-program">Загрузить изменения по добавленному персоналу</a>
                     <a href="/uploads/promo_import.xls" download>Выгрузить пример для добавления нового персонала</a>
-                    <a href="javascript:coid(0)" class="add-program" >Загрузить новый персонал</a>
+                    <a href="javascript:void(0)" class="add-program" >Загрузить новый персонал</a>
                 </div>
             </div>
 
@@ -279,20 +279,4 @@ foreach ($viData['filter']['metros'] as $id => $metro) {
     <input type="file" name="xls" id="add-xls-inp" class="hide">
     <input type="hidden" name="xls-users" value="1">
 </form>
-<div class="hidden" id="invitation-content">
-    <div class="project__body project__body-invite invitation-item" data-id="">
-        <span class="invitation-del">&#10006</span>
-        <div>
-            <input type="text" name="" placeholder="Имя" class="invite-inp name">
-        </div>
-        <div>
-            <input type="text" name="" placeholder="Фамилия" class="invite-inp sname">
-        </div>
-        <div>
-            <input type="text" name="" placeholder="Телефон" class="invite-inp phone">
-        </div>
-        <div>
-            <input type="text" name="" placeholder="E-mail" class="invite-inp email">
-        </div>
-    </div>
-</div>
+<? require 'project-staff-blocks.php'; // Блоки персонала для приглашения ?>

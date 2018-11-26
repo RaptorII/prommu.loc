@@ -6,26 +6,21 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/un
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-filter.css');
 /***********UNIVERSAL FILTER************/
 
-Yii::app()->getClientScript()->registerScriptFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerCssFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.css');
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/universal-map.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-map.css');
+/***********FANCYBOX************/
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/jquery.fancybox.css');
+/***********FANCYBOX************/
+/***********MAP************/
+Yii::app()->getClientScript()->registerScriptFile('https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=AIzaSyC9M8BgorAu7Sn226LNP2rteTF5gO7KjLc');
+Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/route-map.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-map.css');
+/***********MAP************/
 
 
 $arFilterData = [
     'ID' => $project, //Обязательное свойство!
     'FILTER_ADDITIONAL_VALUE' => ['filter' => 1],
     'FILTER_SETTINGS' => [
-        /*0 => [
-            'NAME' => 'ФИО',
-            'TYPE' => 'text',
-            'INPUT_NAME' => 'fname',
-            'DATA' => [],
-            'DATA_DEFAULT' => '',
-            'PLACEHOLDER' => ''
-        ],*/
         0 => [
             'NAME' => 'Фамилия',
             'TYPE' => 'text',
@@ -113,11 +108,11 @@ $arFilterData = [
             'TYPE' => 'select-multi',
             'INPUT_NAME' => 'type',
             'DATA' => [
-                1 =>    'План прибытия',
-                2 =>    'Факт Прибытия',
-                3 =>    'План убытия',
-                4 =>    'Факт убытия',
-                5 =>    'Пробыл на ТТ',
+               // 1 =>    'План прибытия',
+               // 2 =>    'Факт Прибытия',
+               // 3 =>    'План убытия',
+               // 4 =>    'Факт убытия',
+               // 5 =>    'Пробыл на ТТ',
                 6 =>    'Опоздания',
                 7 =>    'Отмечен на ТТ',
                 8 =>    'Не отмечен на ТТ'
@@ -137,23 +132,16 @@ foreach ($viData['filter']['tt_index'] as $i)
 
 <div class="row project">
     <div class="col-xs-12">
-        <? require __DIR__ . '/project-nav.php'; ?>
+        <? require 'project-nav.php'; ?>
     </div>
 </div>
-
-
-<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
-<? print_r($viData['result']); ?>
-</pre>
-
-
 
 <div class="project__module">
 
     <div class="filter__veil"></div>
 
     <div class="project__header">
-        <? require __DIR__ . '/filter.php'; // ФИЛЬТР ?>
+        <? require 'filter.php'; // ФИЛЬТР ?>
     </div>
 
     <div class="project__header-xls project__xls">
@@ -165,6 +153,6 @@ foreach ($viData['filter']['tt_index'] as $i)
 
 
     <div class="report__content" id="ajax-content">
-        <? require __DIR__ . '/project-report-ajax.php'; // СПИСОК ?>
+        <? require 'project-report-ajax.php'; // СПИСОК ?>
     </div>
 </div>
