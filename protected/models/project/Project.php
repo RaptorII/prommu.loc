@@ -6,6 +6,7 @@
 
 class Project extends CActiveRecord
 {
+    public $XLS_UPLOAD_PATH = '/var/www/dev.prommu/uploads/';
     /**
      * @return string the associated database table name
      */
@@ -60,6 +61,30 @@ class Project extends CActiveRecord
 
         return $res ? ['error'=>false] : ['error'=>true];
     }
+    
+    /*
+    *   Геокодирование
+    */
+    
+    public function getCoords($geocode)
+    {
+        $response = json_decode(file_get_contents('https://geocode-maps.yandex.ru/1.x/?format=json&geocode='
+                . $geocode));
+        $coordsStr = $response->response->
+            GeoObjectCollection
+            ->featureMember[0]
+            ->GeoObject
+            ->Point
+            ->pos;
+     
+        $coords = explode(' ', $coordsStr);
+         
+        return [
+            'la' => $coords[1],
+            'lo' => $coords[0],
+        ];
+    }
+
     /*
     *       Проекты для Р
     */
@@ -162,11 +187,60 @@ class Project extends CActiveRecord
         return $arRes;
     }
     
+    public function confirmXls($props){
+        $arRes['error'] = true; 
+        $link = $props['link'];
+        $project = $props['project'];
+        Yii::import('ext.yexcel.Yexcel');
+        $sheet_array = Yii::app()->yexcel->readActiveSheet($this->XLS_UPLOAD_PATH . $link);
+        $xls = reset($sheet_array);
+
+        if( $props['type'] === 'xls-index')
+        {
+            $city = "Город";
+            $location = "Локация";
+            $street = "Улица";
+            $home = "Дом";
+            $build = "Здание";
+            $str = "Строение";
+            $date = "Дата работы";
+            $time = "Время работы";
+
+            if($xls['A'] == $city && $xls['B'] == $location &&
+                $xls['C'] == $street && $xls['D'] == $home &&
+                $xls['E'] == $build && $xls['F'] == $str &&
+                $xls['G'] == $date && $xls['H'] == $time)
+            {
+                $arRes['error'] = false; 
+            }
+            
+        }
+        elseif($props['type'] === 'xls-staff')
+        {
+            $firstname = "Имя";
+            $lastname = "Фамилия";
+            $email = "Электронная почта";
+            $phone = "Телефон";
+            $location = "Локации";
+            
+            if($xls['A'] == $firstname && $xls['B'] == $lastname &&
+                $xls['C'] == $email && $xls['D'] == $phone &&
+                $xls['E'] == $location)
+            {    
+                $arRes['error'] = false;    
+            }
+            
+        }
+        
+        return $arRes;
+    } 
+    
+    
     public function importProject($props){
          $link = $props['link'];
         $project = $props['project'];
         Yii::import('ext.yexcel.Yexcel');
-        $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/dev.prommu/uploads/$link");
+        $sheet_array = Yii::app()->yexcel->readActiveSheet($this->XLS_UPLOAD_PATH . $link);
         
         $city = "Город";
         $location = "Локация";
@@ -192,7 +266,8 @@ class Project extends CActiveRecord
                    
                 $bdate = str_replace(".", "-", $bdate);
                 $edate = str_replace(".", "-", $edate);
-                    
+                $adres = $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'];
+                $location = $this->getCoords($adres);
                 if($sheet_array[$i]['I'] != ''){
                     $point = $sheet_array[$i]['I'];
                     
@@ -201,12 +276,14 @@ class Project extends CActiveRecord
                         ->update('project_city', array(
                             'project' => $project,
                             'name' =>  $sheet_array[$i]['B'],
-                            'adres' =>  $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'],
+                            'adres' =>  $adres,
                             'id_city' => $city['id_city'],
                             'btime' =>  explode("-", $sheet_array[$i]['G'])[0],
                             'etime' =>  explode("-", $sheet_array[$i]['G'])[1],
                             'bdate' => $bdate,
                             'edate' =>  $edate,
+                            'latitude' => $location['la'],
+                            'longitude' => $location['lo'],
                      ), 'point = :point', array(':point' => $point));
                 
                 } else {
@@ -221,6 +298,8 @@ class Project extends CActiveRecord
                             'btime' => explode("-", $sheet_array[$i]['G'])[0],
                             'etime' =>  explode("-", $sheet_array[$i]['G'])[1],
                             'point' => $i.''.rand(1111,9999),
+                            'latitude' => $location['la'],
+                            'longitude' => $location['lo'],
                         ));   
                 }
         }
@@ -233,7 +312,8 @@ class Project extends CActiveRecord
         $link = $props['link'];
         $project = $props['project'];
         Yii::import('ext.yexcel.Yexcel');
-        $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/dev.prommu/uploads/$link");
+        
+        $sheet_array = Yii::app()->yexcel->readActiveSheet($this->XLS_UPLOAD_PATH . $link);
         
         $firstname = "Имя";
         $lastname = "Фамилия";
@@ -380,10 +460,10 @@ class Project extends CActiveRecord
         $index = Yii::app()->getRequest()->getParam('xls-index');
         $users = Yii::app()->getRequest()->getParam('xls-users');
         $id = Yii::app()->getRequest()->getParam('id');
-        
+
         if(isset($index)) {
             $name = $id . '.' . (end(explode('.', $_FILES['xls']['name'])));
-            $uploadfile = '/var/www/dev.prommu/uploads/' . $name;
+            $uploadfile = $this->XLS_UPLOAD_PATH . $name;
             if (move_uploaded_file($_FILES['xls']['tmp_name'], $uploadfile)) {
                $props['project'] = $id;
                $props['title'] = 'test';
@@ -393,7 +473,7 @@ class Project extends CActiveRecord
         }
         if(isset($users)) {
             $name = $id . '.' . (end(explode('.', $_FILES['xls']['name'])));
-            $uploadfile = '/var/www/dev.prommu/uploads/' . $name;
+            $uploadfile = $this->XLS_UPLOAD_PATH . $name;
             if (move_uploaded_file($_FILES['xls']['tmp_name'], $uploadfile)) {
                $props['project'] = $id;
                $props['title'] = 'test';
@@ -631,10 +711,10 @@ class Project extends CActiveRecord
                 $c = $p['id_city'];
                 $date = strtotime($p['bdate']);
                 do{
-                    $arI[$date][$idus][$c]['date'] = date('d.m.Y',$date);
-                    $arI[$date][$idus][$c]['city'] = $p['city'];
-                    $arI[$date][$idus][$c]['ismetro'] = $p['ismetro'];
-                    $arI[$date][$idus][$c]['points'][] = $p['point'];
+                    $arI[$date]['date'] = date('d.m.Y',$date);
+                    $arI[$date]['cities'][$c]['city']['city'] = $p['city'];
+                    $arI[$date]['cities'][$c]['city']['ismetro'] = $p['ismetro'];
+                    $arI[$date]['cities'][$c]['user'][$idus]['points'][] = $p['point'];
                     $date += (60*60*24);
                 }
                 while($date <= strtotime($p['edate']));
@@ -788,17 +868,12 @@ class Project extends CActiveRecord
     *
     */
     public function buildGeoArray($arr) {
-        $project = $arr['project']['project'];
         $arI = array();
-        $fbdate = Yii::app()->getRequest()->getParam('bdate');
-        $fedate = Yii::app()->getRequest()->getParam('edate');
-        $filter = Yii::app()->getRequest()->getParam('filter');
-        if(isset($fbdate) && isset($fedate) && isset($filter)) {
-            $fbdate = strtotime($fbdate);
-            $fedate = strtotime($fedate);
-        }
-    
+        $date = date('Y-m-d');
         $arRes['project'] = $arr['project'];
+        $arRes['date'] = date('d.m.Y');
+        $arRes['unix'] = strtotime($date . ' 00:00:00');
+
         // сортируем по времени
         usort($arr['original'], 
             function($a, $b){
@@ -807,10 +882,67 @@ class Project extends CActiveRecord
                 return ($t1 < $t2) ? -1 : 1;
             }
         );
+
+        $arRes['id_user'] = filter_var(
+                        Yii::app()->getRequest()->getParam('user_id'),
+                        FILTER_SANITIZE_NUMBER_INT
+                    );
+        $arRes['id_point'] = filter_var(
+                        Yii::app()->getRequest()->getParam('point'),
+                        FILTER_SANITIZE_NUMBER_INT
+                    );
+        // проверяем наличие данных для карточки
+        if(
+            (!empty($arRes['id_user']) && empty($arRes['id_point']))
+            ||
+            (!empty($arRes['id_user']) && !array_key_exists($arRes['id_user'],$arr['users']))
+            ||
+            (!empty($arRes['id_point']) && !sizeof($arr['original']))
+        ) {
+            return array('error' => true);
+        }
+
         //      координаты
-        $arRes['gps'] = $this->getСoordinates(['project'=>$project]);
-        $arRes['tasks'] = $this->getTasks($project);
-        
+        $arRes['gps'] = $this->getСoordinates(['project'=>$arr['project']['project']]);
+
+        // собираем данные для карточки
+        if(!empty($arRes['id_user']) && !empty($arRes['id_point'])) {
+            if(!sizeof($arr['users'][$arRes['id_user']]['points']))
+                return array('error' => true);
+            $arRes['user'] = $arr['users'][$arRes['id_user']];
+          
+            foreach ($arr['original'] as $p) {
+                foreach ($arRes['gps'] as $v) {
+                    $d = date('Y-m-d 00:00:00',strtotime($v['date']));
+                    $d = strtotime($d);
+                    if($arRes['unix']==$d && $p['point']==$v['point'] && $arRes['id_user']==$v['user']) {
+                        if(!isset($arRes['item']['bfact'])) {
+                            $arRes['item']['bfact'] = date('G:i',strtotime($v['date']));
+                            $d1 = strtotime($date . ' ' . $p['btime'] . ':00');
+                            $d2 = strtotime($v['date']);
+                            $d3 = strtotime($date . ' ' . $p['etime'] . ':00');
+                            $arRes['item']['is-lateness'] = $d1 < $d2; // опоздание
+                            $arRes['item']['is-missed'] = $d3 < $d2; // пропуск
+                            if($arRes['item']['is-lateness'])
+                                $arRes['item']['time-lateness'] = ($d2 - $d1) / 60;
+                            $curTime = new DateTime();
+                            $bfact = new DateTime($v['date']);
+                            $tActive = $curTime->diff($bfact);
+                            if($tActive)
+                                $arRes['item']['time-isactive'] = $tActive->h.':'.str_pad($tActive->i, 2, "0", STR_PAD_LEFT);
+                        }
+                        $arRes['item']['last-point'] = $v['point'];
+                    }
+                }
+                $arRes['item']['bplan'] = date('G:i',strtotime($p['btime']));
+                $arRes['item']['eplan'] = date('G:i',strtotime($p['etime']));
+                $arRes['item']['efact'] = date('H:i',strtotime($v['date']));
+                $arRes['tasks'] = $this->getTasks($arr['project']['project']);          
+                $arRes['point'] = $p;
+            }
+            return $arRes;
+        }
+
         foreach ($arr['users'] as $id => $v)
             if(sizeof($v['points'])>0)
                 $arRes['users'][$v['id_user']] = $v;
@@ -818,68 +950,58 @@ class Project extends CActiveRecord
         if(!sizeof($arRes['users']))
             return array('items' => $arI);
 
+        $fStatus = filter_var(
+                            Yii::app()->getRequest()->getParam('user_status'), // 0,1,2
+                            FILTER_SANITIZE_NUMBER_INT
+                        );
+        $fStatus = intval($fStatus);
+        $arU = [0=>[],1=>[],2=>[]]; // 0=>all, 1=>active, 2=>noactive
         foreach ($arr['original'] as $p)
             foreach ($arRes['users'] as $idus => $u) {
                 if(!in_array($p['point'], $u['points']))
                     continue;
 
-                $arRes['points'][$p['point']] = $p;
-                $bdate = strtotime($p['bdate']);
-                $edate = strtotime($p['edate']); 
-                $bdate = (isset($filter) && $fbdate>$bdate) ? $fbdate : $bdate;
-                $edate = (isset($filter) && $fedate<$edate) ? $fedate : $edate;
-                do{
-                    $arI[$bdate][$p['id_city']]['date'] = date('d.m.Y',$bdate);
-                    $arI[$bdate][$p['id_city']]['city'] = $p['city'];
-                    $arI[$bdate][$p['id_city']]['ismetro'] = $p['ismetro'];
-                    $arI[$bdate][$p['id_city']]['users'][$idus]['points'][] = $p['point'];
-                    
-                     foreach ($arRes['gps'] as $v) {
-                        $u = $v['user'];
-                        $p = $v['point'];
-                        $d = date('Y-m-d 00:00:00',strtotime($v['date']));
-                        $d = strtotime($d);
-                        $arT = $arRes['gps-info'][$d][$u][$p];
-                        if(!count($arT['marks']))
-                           $arT['btime-fact'] = date('G:i',strtotime($v['date']));
-                        $arT['etime-fact'] = date('G:i',strtotime($v['date']));
-                        $ttime = strtotime($arT['etime-fact']) - strtotime($arT['btime-fact']);
-                        $arT['time-total'] = $ttime / 60; // минут
-                        $arT['moving'] = 30; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! setting
-            
-                        $arT['tasks-total'] = count($arRes['tasks'][$d][$p][$u]);
-                        $arT['tasks-fact'] = 0;
-                        foreach ($arRes['tasks'][$d][$p][$u] as $t)
-                            if($t['status'])
-                              $arT['tasks-fact']++;  
-            
-                        $arT['marks'][$v['id']] = $v;
-                        $arRes['gps-info'][$d][$u][$p] = $arT;
+                !in_array($idus, $arU[0]) && array_push($arU[0], $idus);
+                $city = $p['id_city'];
+                foreach ($arRes['gps'] as $v) {
+                    $d = date('Y-m-d 00:00:00',strtotime($v['date']));
+                    $d = strtotime($d);
+                    if($arRes['unix']==$d && $p['point']==$v['point'] && $idus==$v['user']) {
+                        !in_array($idus, $arU[1]) && array_push($arU[1], $idus);
+                        if( $fStatus==2 )
+                            continue;
+
+                        if(!isset($arI[$city]['users'][$idus]['bfact'])) {
+                            $arI[$city]['users'][$idus]['bfact'] = date('G:i',strtotime($v['date']));
+                            $d1 = strtotime($date . ' ' . $p['btime'] . ':00');
+                            $d2 = strtotime($v['date']);
+                            $d3 = strtotime($date . ' ' . $p['etime'] . ':00');
+                            $arI[$city]['users'][$idus]['is-lateness'] = $d1 < $d2; // опоздание
+                            $arI[$city]['users'][$idus]['is-missed'] = $d3 < $d2; // пропуск
+
+                            $curTime = new DateTime();
+                            $bfact = new DateTime($v['date']);
+                            $tActive = $curTime->diff($bfact);
+                            if($tActive)
+                                $arI[$city]['users'][$idus]['time-isactive'] = $tActive->h.':'.str_pad($tActive->i, 2, "0", STR_PAD_LEFT);
+                        }
+                        $arI[$city]['users'][$idus]['bplan'] = date('G:i',strtotime($p['btime']));
+                        $arI[$city]['users'][$idus]['eplan'] = date('G:i',strtotime($p['etime']));
+                        $arI[$city]['users'][$idus]['efact'] = date('H:i',strtotime($v['date']));
+                        $arI[$city]['users'][$idus]['last-point'] = $v['point'];
                     }
-        
-                    // foreach ($arRes['gps'] as $v) {
-                    //     $d = date('Y-m-d 00:00:00',strtotime($v['date']));
-                    //     $d = strtotime($d);
-                    //     if($bdate==$d && $p['point']==$v['point'] && $idus==$v['user']) {
-                    //       // if(!isset($arI[$bdate][$p['id_city']]['users'][$idus]['plan'])) {
-                    //             $arI[$bdate][$p['id_city']]['users'][$idus]['plan_start'] = $p['btime'];
-                    //             $arI[$bdate][$p['id_city']]['users'][$idus]['plan_end'] = $p['etime'];
-                    //             $arI[$bdate][$p['id_city']]['users'][$idus]['fact'] = date('H:i',strtotime($v['date']));
-                    //             $d1 = strtotime($p['bdate'] . ' ' . $p['btime'] . ':00'); 
-                    //             $d2 = strtotime($v['date']);
-                    //             $arI[$bdate][$p['id_city']]['users'][$idus]['diff'] = $d1 < $d2;                         
-                    //       //  }
-                    //         $arI[$bdate][$p['id_city']]['users'][$idus]['last-point'] = $v['point'];
-                    //     }
-                    // }
-
-
-                    $bdate += (60*60*24);
                 }
-                while($bdate <= $edate);
-            }
+                !in_array($idus, $arU[1]) && array_push($arU[2], $idus);
 
-        ksort($arI);
+                if(in_array($idus, $arU[$fStatus])) {
+                    $arI[$city]['users'][$idus]['points'][] = $p['point'];
+                    $arI[$city]['date'] = date('d.m.Y');
+                    $arI[$city]['city'] = $p['city'];
+                    $arI[$city]['ismetro'] = $p['ismetro'];
+                }
+
+                $arRes['points'][$p['point']] = $p;
+            }
         $arRes['items'] = $arI;
         $arRes['filter'] = $this->getFilter($arRes['points']);
 
@@ -906,12 +1028,27 @@ class Project extends CActiveRecord
     /**
      * 
      */
-    public function buildReportArrayTemp($arr) {
+    public function buildReportArrayNew($arr) {
         $project = $arr['project']['project'];
         $arI = array();
         $fbdate = Yii::app()->getRequest()->getParam('bdate');
         $fedate = Yii::app()->getRequest()->getParam('edate');
         $filter = Yii::app()->getRequest()->getParam('filter');
+        $arEvents = Yii::app()->getRequest()->getParam('event_status');
+        /* $arEvents = array()
+            1 =>    'План прибытия',
+            2 =>    'Факт Прибытия',
+            3 =>    'План убытия',
+            4 =>    'Факт убытия',
+            5 =>    'Пробыл на ТТ',
+            6 =>    'Опоздания',
+            7 =>    'Отмечен на ТТ',
+            8 =>    'Не отмечен на ТТ'    
+        */
+        $isUserLateness = in_array(6, $arEvents) ?: false; // 'Опоздания'
+        $isUserChecked = in_array(7, $arEvents) ?: false; // 'Отмечен на ТТ'
+        $isUserNoChecked = in_array(8, $arEvents) ?: false; // 'Не отмечен на ТТ'
+        
         if(isset($fbdate) && isset($fedate) && isset($filter)) {
             $fbdate = strtotime($fbdate);
             $fedate = strtotime($fedate);
@@ -934,6 +1071,51 @@ class Project extends CActiveRecord
         if(!sizeof($arRes['users']))
             return array('items' => $arI);
 
+        //      координаты
+        $arRes['gps'] = $this->getСoordinates(['project'=>$project]);
+        $arRes['tasks'] = $this->getTasks($project);
+        $arGPS = array(); // временный массив для фильтра
+        $arTime = array(); // временный массив для фильтра
+        foreach ($arRes['gps'] as $v) {
+            $u = $v['user'];
+            $p = $v['point'];
+            $d = date('Y-m-d 00:00:00',strtotime($v['date']));
+            $d = strtotime($d);
+            // тестовый массив
+            if(!in_array($v['point'], $arGPS[$v['user']][$d]))
+                $arGPS[$v['user']][$d][] = $v['point'];
+            //
+            $arT = $arRes['gps-info'][$u][$d][$p];
+            if(!count($arT['marks'])) // это значит, что сейчас первый проход - время начала(первый чек)
+            {
+               $arT['btime-fact'] = date('G:i',strtotime($v['date']));
+               $arTime[$v['user']][$d][$v['point']] = date('H:i:00',strtotime($v['date']));
+            }
+            else // если есть отметки - значит это уже не первый проход, и можно записать в время окончания
+            {
+                $arT['etime-fact'] = date('G:i',strtotime($v['date']));
+            }
+            if(isset($arT['btime-fact']) && isset($arT['etime-fact']))
+            {
+                $ttime = (strtotime($arT['etime-fact']) - strtotime($arT['btime-fact'])) / 60; // минут
+                if($ttime > 60)
+                    $arT['time-total'] = floor($ttime/60) . ':' . ($ttime%60);
+                else
+                    $arT['time-total'] = $ttime;                
+            }
+
+            $arT['moving'] = 15; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! setting
+
+            $arT['tasks-total'] = count($arRes['tasks'][$d][$p][$u]);
+            $arT['tasks-fact'] = 0;
+            foreach ($arRes['tasks'][$d][$p][$u] as $t)
+                if($t['status'])
+                  $arT['tasks-fact']++;  
+
+            $arT['marks'][$v['id']] = $v;
+            $arRes['gps-info'][$u][$d][$p] = $arT;
+        }
+
         $day = 60 * 60 * 24;
         foreach ($arr['original'] as $p) {
             foreach ($arRes['users'] as $idus => $u) {
@@ -950,40 +1132,35 @@ class Project extends CActiveRecord
                 $edate = (isset($filter) && $fedate<$edate) ? $fedate : $edate;
 
                 do{
-                    $arI[$idus][$bdate][$p['id_city']]['date'] = date('d.m.Y',$bdate);
-                    $arI[$idus][$bdate][$p['id_city']]['city'] = $p['city'];
-                    $arI[$idus][$bdate][$p['id_city']]['ismetro'] = $p['ismetro'];
-                    $arI[$idus][$bdate][$p['id_city']]['points'][] = $p['point']; 
+                    $filterLike = true;
+                    if($isUserChecked && !in_array($p['point'], $arGPS[$idus][$bdate])) // Отмечен на ТТ
+                       $filterLike = false;
+                    if($isUserNoChecked && in_array($p['point'], $arGPS[$idus][$bdate])) // Не отмечен на ТТ
+                       $filterLike = false;
+                    $isUserChecked && $isUserNoChecked && $filterLike = true;
+                    if($isUserLateness) // при наличии отметки проверяем на опоздание
+                    {
+                        if(isset($arTime[$idus][$bdate][$p['point']]))
+                        {
+                            $d1 = strtotime($p['btime'] . ':00');
+                            $d2 = strtotime($arTime[$idus][$bdate][$p['point']]);
+                            $filterLike = $d1 < $d2; // опоздание                           
+                        }
+                        else
+                            $filterLike = false;
+                    }
+
+                    if($filterLike)
+                    {
+                        $arI[$idus][$bdate][$p['id_city']]['date'] = date('d.m.Y',$bdate);
+                        $arI[$idus][$bdate][$p['id_city']]['city'] = $p['city'];
+                        $arI[$idus][$bdate][$p['id_city']]['ismetro'] = $p['ismetro'];
+                        $arI[$idus][$bdate][$p['id_city']]['points'][] = $p['point'];                         
+                    }
                     $bdate += $day;
                 }
                 while($bdate <= $edate);
             }
-        }
-        //      координаты
-        $arRes['gps'] = $this->getСoordinates(['project'=>$project]);
-        $arRes['tasks'] = $this->getTasks($project);
-
-        foreach ($arRes['gps'] as $v) {
-            $u = $v['user'];
-            $p = $v['point'];
-            $d = date('Y-m-d 00:00:00',strtotime($v['date']));
-            $d = strtotime($d);
-            $arT = $arRes['gps-info'][$d][$u][$p];
-            if(!count($arT['marks']))
-               $arT['btime-fact'] = date('G:i',strtotime($v['date']));
-            $arT['etime-fact'] = date('G:i',strtotime($v['date']));
-            $ttime = strtotime($arT['etime-fact']) - strtotime($arT['btime-fact']);
-            $arT['time-total'] = $ttime / 60; // минут
-            $arT['moving'] = 30; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! setting
-
-            $arT['tasks-total'] = count($arRes['tasks'][$d][$p][$u]);
-            $arT['tasks-fact'] = 0;
-            foreach ($arRes['tasks'][$d][$p][$u] as $t)
-                if($t['status'])
-                  $arT['tasks-fact']++;  
-
-            $arT['marks'][$v['id']] = $v;
-            $arRes['gps-info'][$d][$u][$p] = $arT;
         }
 
         foreach ($arI as $k => $v) {

@@ -1389,6 +1389,8 @@ class UserController extends AppController
                 case 'geo':
                     $data = $model->getProject($id);
                     $data = $model->buildGeoArray($data);
+                    if($data['error'])
+                        throw new CHttpException(404, 'Error');
                     if(Yii::app()->request->isAjaxRequest) {
                         $this->renderPartial(
                             'projects/project-geo-ajax',
@@ -1441,11 +1443,7 @@ class UserController extends AppController
                     break;
                 case 'report':
                     $data = $model->getProject($id);
-                    $data = array_merge(
-                            $model->buildReportArray($data),
-                            ['result' => $model->buildReportArrayTemp($data)]
-                        );
-
+                    $data = $model->buildReportArrayNew($data);
                     if(Yii::app()->request->isAjaxRequest) {
                         $this->renderPartial(
                             'projects/project-report-ajax',

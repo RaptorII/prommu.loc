@@ -39,6 +39,87 @@ let IndexTasks = (function () {
         $("#OnBottom").click(function(){$("html,body").animate({scrollTop:$(document).height()},"slow")});
         /*********Скрол************/
 
+        $('.tasks').on('click', '.control__panel-save', function()
+        {
+            let data = [];
+            $('.task__item[data-type="add"]').each(function(){
+
+                let task_data = [];
+                task_data['data'] = [];
+
+                /*****************/
+                let title = $(this).find('.name .control__text-area').val();
+                task_data['data']['title'] = title;
+                let descr = $(this).find('.descr .control__text-area').val();
+                task_data['data']['descr'] = descr;
+                let status = $(this).find('.status .control__select-area').val();
+                task_data['data']['status'] = status;
+                /*****************/
+
+                /*****************/
+                let panel = $(this).next();
+                let all_date = $(panel).find('[name="all_date"]').is(':checked');
+                task_data['all_date'] = all_date;
+
+                let all_users = $(panel).find('[name="all_users"]').is(':checked');
+                task_data['all_users'] = all_users;
+
+                let del = $(panel).find('[name="delete"]').is(':checked');
+                task_data['delete'] = del;
+                /*****************/
+
+                task_data['type'] = 'new';
+
+                data.push(task_data);
+            });
+
+            /*******Ищем изменяемые******/
+            $('textarea[data-type="change"]').each(function () {
+                console.log($(this));
+                let item = $(this).closest('.task__item');
+                let id = $(item).data('task-id');
+
+                let user_id = $(item).data('user-id');
+                let tt_id = $(item).data('tt-id');
+                let date = $(item).data('date-unix');
+
+                let task_data = [];
+                task_data['data'] = [];
+
+                /*****************/
+                let title = $(item).find('.name .control__text-area').val();
+                task_data['data']['title'] = title;
+                let descr = $(item).find('.descr .control__text-area').val();
+                task_data['data']['descr'] = descr;
+                let status = $(item).find('.status .control__select-area').val();
+                task_data['data']['status'] = status;
+                /*****************/
+
+                /*****************/
+                let panel = $(item).next();
+                let all_date = $(panel).find('[name="all_date"]').is(':checked');
+                task_data['all_date'] = all_date;
+
+                let all_users = $(panel).find('[name="all_users"]').is(':checked');
+                task_data['all_users'] = all_users;
+
+                let del = $(panel).find('[name="delete"]').is(':checked');
+                task_data['delete'] = del;
+                /*****************/
+
+                task_data['type'] = 'change';
+                task_data['task_id'] = id;
+                task_data['user_id'] = user_id;
+                task_data['tt_id'] = tt_id;
+                task_data['date'] = date;
+
+
+                data.push(task_data);
+            });
+
+            console.log(data);
+        });
+
     };
 
     IndexTasks.prototype.setControlPanel = function (type, e) {
@@ -72,7 +153,7 @@ let IndexTasks = (function () {
         let template = '<div class="control__panel-checkbox">'+
             '<div class="panel-checkbox">'+
                 '<label class="task__checkbox">'+
-                    '<input class="task__checkbox-input" name="all_date" type="checkbox" value="1">'+
+                    '<input class="task__checkbox-input" name="all_date" type="checkbox">'+
                     '<span class="task__checkbox-checker"><span></span></span>'+
                     'Дублировать на все даты'+
                 '</label>'+
@@ -81,7 +162,7 @@ let IndexTasks = (function () {
 
             '<div class="panel-checkbox">' +
                 '<label class="task__checkbox">'+
-                    '<input class="task__checkbox-input" name="all_users" type="checkbox" value="1">'+
+                    '<input class="task__checkbox-input" name="all_users" type="checkbox">'+
                     '<span class="task__checkbox-checker"><span></span></span>'+
                     'Дублировать всем'+
                 '</label>'+
@@ -89,7 +170,7 @@ let IndexTasks = (function () {
 
             '<div class="panel-checkbox">' +
                 '<label class="task__checkbox">'+
-                    '<input class="task__checkbox-input" name="delete" type="checkbox" value="1">'+
+                    '<input class="task__checkbox-input" name="delete" type="checkbox">'+
                     '<span class="task__checkbox-checker"><span></span></span>'+
                     'Удалить'+
                 '</label>'+
@@ -109,8 +190,9 @@ let IndexTasks = (function () {
             if($(this).hasClass('name')){
                 if($(this).find('.control__text-area').length==0){
                     let text = $(this).find('div').text();
+                    let task_id = $(this).closest('.task__item').data('task-id');
                     $(this).find('div').html('');
-                    $(this).find('div').append('<textarea class="control__text-area">' + text.trim() + '</textarea>');
+                    $(this).find('div').append('<textarea data-content="name" data-id="'+task_id+'" data-type="change" class="control__text-area">' + text.trim() + '</textarea>');
                 }
             }
 
@@ -136,7 +218,7 @@ let IndexTasks = (function () {
 
     IndexTasks.prototype.getTemplate = function (type) {
         if(type=='add'){
-            let template = '<div class="task__item">'+
+            let template = '<div data-type="add" class="task__item">'+
             '<table class="task__table">'+
             '<thead>'+
             '<tr>'+
@@ -187,7 +269,7 @@ let IndexTasks = (function () {
         status.push('Готова');
         status.push('Отменена');
 
-        let html ='<select class="control__select-area">';
+        let html ='<select data-content="status" class="control__select-area">';
         for(let i = 0; i<status.length;i++){
             if(status[i]==value){
                 html+='<option value="'+i+'" selected>'+status[i]+'</option>';

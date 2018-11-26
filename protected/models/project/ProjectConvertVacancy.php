@@ -75,12 +75,12 @@ class ProjectConvertVacancy
 				$arErr['empty-fields'][] = '- минимум одна локация в каждом городе';
 
 			$arP = Yii::app()->db->createCommand()
-								->select("id_loc, btime, etime,
-										DATE_FORMAT(bdate, '%Y-%m-%d') bdate,
-										DATE_FORMAT(edate, '%Y-%m-%d') edate")
-								->from('emplv_loc_times')
-								->where(array('in','id_loc',$arLId))
-								->queryAll();
+							->select("id_loc, btime, etime,
+									DATE_FORMAT(bdate, '%Y-%m-%d') bdate,
+									DATE_FORMAT(edate, '%Y-%m-%d') edate")
+							->from('emplv_loc_times')
+							->where(array('in','id_loc',$arLId))
+							->queryAll();
 
 			$nP = sizeof($arP);
 			if(!$nP) {
@@ -111,6 +111,30 @@ class ProjectConvertVacancy
 			$arErr['empty-fields'][] = '- минимум один подтвержденный соискатель';
 		else
 			$arRes = array_merge($arRes, $arU);
+		// достаем должности
+		$arPosts = Yii::app()->db->createCommand()
+									->select('ea.id_attr id')
+									->from('empl_attribs ea')
+									->leftjoin('user_attr_dict uad','uad.id=ea.id_attr')
+									->where(
+										'ea.id_vac=:id AND uad.id_par=110', 
+										array(':id' => $arr['id']))
+									->queryAll();
+
+		if(sizeof($arRes['bdate'])) {
+			$post = reset($arPosts)['id'];
+			$nPost = sizeof($arPosts) - 1;
+			for( $i = 0; $i < $nP; $i++ ) {
+				for( $j = 0; $j < $nL; $j++ ) {
+					if($arP[$i]['id_loc'] == $arL[$j]['id']) {
+						$c = $arRes['city'][$arL[$j]['id_city']];
+						$l = $arL[$j]['id'];
+						$arRes['post'][$c][$l][$i] = $post;
+						$post = (key($arPosts)==$nPost ? reset($arPosts)['id'] : next($arPosts)['id']);
+					}
+				}
+			}
+		}
 
 		if(sizeof($arErr['empty-fields']))
 			return $arErr;
@@ -315,7 +339,7 @@ class ProjectConvertVacancy
 	}
 	/**
 	 * @param $id number - project ID
-	 * @param $type string - 'vacancy' | 'project'
+	 * @param $type string - 'vacancy' | 'project' | 'vacancy-delete'
 	 * @return bool - true = success
 	 * Синхронизация проекта и вакансии
 	 */

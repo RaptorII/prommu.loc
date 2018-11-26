@@ -95,8 +95,32 @@ var ProjectPage = (function () {
             $name.text('').hide();
         }
         else{
-            $name.text(arExt[1] + '.' + arExt[2]).show();
-            $('[data-btn="index"]').addClass('disable');
+            let fd = new FormData;
+
+            fd.append('xls', $inp.prop('files')[0]);
+            fd.append('type', 'xls-index');
+
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/Project',
+                data: fd,
+                processData: false,
+                contentType: false,
+                success: function (r){
+                    r = JSON.parse(r);
+                    if(r.error==true)
+                    {
+                        r.message = (r.message!=null ? r.message : 'load-file');
+                        MainProject.showPopup('error',r.message);
+                        $inp.val('');
+                    }
+                    else
+                    {
+                        $name.text(arExt[1] + '.' + arExt[2]).show();
+                        $('[data-btn="index"]').addClass('disable');
+                    }
+                }
+            });
         }
     }
     //      показать нужный модуль

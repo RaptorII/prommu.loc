@@ -836,9 +836,31 @@ class AjaxController extends AppController
         $result = array('error'=>true);
         $data = Yii::app()->getRequest()->getParam('data');
         $data = json_decode($data, true, 5, JSON_BIGINT_AS_STRING);
+        if(!isset($data['type']))
+            $data['type'] = Yii::app()->getRequest()->getParam('type');
         
         $model = new Project();
-        if($data['type']==='convert') {
+        if(in_array($data['type'],['xls-index','xls-staff']) && $_SERVER['REQUEST_METHOD']==='POST')
+        {
+            $props = array(
+                    'title' => 'test',
+                    'type' => $data['type']
+                );
+
+            $props['project'] = strlen($data['id']) ? $data['id'] : rand(10000,99999);
+            $props['link'] = $props['project'] . '.' . (end(explode('.', $_FILES['xls']['name'])));
+            $uploadfile = $model->XLS_UPLOAD_PATH . $props['link'];
+
+
+            if (move_uploaded_file($_FILES['xls']['tmp_name'], $uploadfile))
+                $result = $model->confirmXls($props);
+            else
+                $result['message'] = 'server';
+
+            unlink($uploadfile);
+        }
+        if($data['type']==='convert')
+        {
             $convert = new ProjectConvertVacancy();
             switch ($_SERVER['REQUEST_METHOD']) {
                 case 'POST':
@@ -859,17 +881,20 @@ class AjaxController extends AppController
                     break;
             }
         }
-        elseif($model->hasAccess($data['project'])) {
+        elseif($model->hasAccess($data['project']))
+        {
             switch ($_SERVER['REQUEST_METHOD']) {
                 case 'GET':
                     if($data['type']==='coordinates') // получение координат передвижения С
                         $result = $model->getСoordinates($data);
-                    if($data['type']==='userdata')
+                    if($data['type']==='userdata') {
                         $result = $model->getUserTasks($data);
-                        if(intval($data['user'])) {
-                            $result['user'] = $model->getUserMainInfo(intval($data['user']));
-                            $result['user'] = $model->buildUserData(reset($result['user']));
+                        $user = intval($data['user']);
+                        if($user) {
+                            $result['user'] = $model->getUserMainInfo($user);
+                            $result['user'] = $model->buildUserData($result['user'][0]);
                         }
+                    }
                     break;
                 case 'POST':
                     if($data['type']==='coordinates') // запись координат от С

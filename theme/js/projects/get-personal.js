@@ -603,8 +603,30 @@ var ProjectAddPersonal = (function () {
             $('.xls-popup-err').show();
         }
         else {
-            $('.xls-popup-err').hide();
-            $('#base-form').submit();
+            let fd = new FormData;
+            fd.append('xls', $inp.prop('files')[0]);
+            fd.append('type', 'xls-staff');
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/Project',
+                data: fd,
+                processData: false,
+                contentType: false,
+                success: function (r){
+                    r = JSON.parse(r);
+                    if(r.error==true)
+                    {
+                        r.message = (r.message!=null ? r.message : 'load-file');
+                        MainProject.showPopup('error',r.message);
+                        $inp.val('');
+                    }
+                    else
+                    {
+                        $('.xls-popup-err').hide();
+                        $('#base-form').submit();
+                    }
+                }
+            });
         }
     }
     //

@@ -358,3 +358,19 @@
 	cursor: pointer;
 }
 .prmu-btn:before, .prmu-btn:after{ border-radius: 17px }
+
+.program__user-card{
+	color:black;
+}
+.program__user-card:hover{
+	color:black;
+}
+.point__metro{
+	width: 26px;
+}
+.notification {
+	padding-left: 15px;
+	color: grey;
+	font-size: 12px;
+	margin-top:15px;
+}

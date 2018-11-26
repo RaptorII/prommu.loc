@@ -28,11 +28,12 @@ class ProjectIndex extends CActiveRecordBehavior{
 
 		$arOldP = $arNewP = $arRes = array();
 		$lId = $pId = 0;
-
+        $Project = new Project();
 		foreach ($arr['city'] as $c) { // по городам
 			foreach ($arr['bdate'][$c] as $l => $arLoc) { // по локациям
 				$lId++;
-				foreach ($arLoc as $p => $v) { // по точкам
+				foreach ($arLoc as $p => $v) {// по точкам
+				    $location = $Project->getCoords($arr['lindex'][$c][$l]);
 					$pId++;
 					$arRes[$p] = array(
 						'name' => $arr['lname'][$c][$l],
@@ -43,12 +44,12 @@ class ProjectIndex extends CActiveRecordBehavior{
 						'btime' => $arr['btime'][$c][$l][$p],
 						'etime' => $arr['etime'][$c][$l][$p],
 						'project' => $prj,
-						'latitude' => rand(1111,9999),
-						'longitude' => rand(1111,9999),
+						'latitude' => $location['la'],
+						'longitude' => $location['lo'],
 						'point' => $isCreate ? ($pId.rand(1111,9999)) : $p,
 						'location' => $isCreate ? $lId : $l,
 						'metro' => $arr['metro'][$c][$l],
-						'post' => $arr['post'][$c][$l][$p]
+						'post' => $arr['post'][$c][$l][$p],
 					);
 					$arNewP[] = $p;
 				}     
@@ -75,6 +76,7 @@ class ProjectIndex extends CActiveRecordBehavior{
 				);
 			}
 
+		$arInsert = array();
 		foreach ($arRes as $p => $arV) {
 			if( in_array($p, $arOldP) ) { // изменяем существующие
 				Yii::app()->db->createCommand()
@@ -86,10 +88,11 @@ class ProjectIndex extends CActiveRecordBehavior{
 				);    
 			}
 			else { // добавляем новые
-				Yii::app()->db->createCommand()
-				->insert('project_city', $arV);
+				$arInsert[] = $arV;
 			}
 		}
+		// груповая запись в project_city
+		$this->multipleInsert(['project_city'=>$arInsert]);
 	}
 	/**
 	* @param $prj number OR array - project ID
@@ -97,7 +100,11 @@ class ProjectIndex extends CActiveRecordBehavior{
 	* Собираем условия для фильтра данных
 	*/
 	public function getIndexFilter($prj) {
-		$project = Yii::app()->getRequest()->getParam('project');
+		$project = filter_var(
+									Yii::app()->getRequest()->getParam('project'),
+									FILTER_SANITIZE_NUMBER_INT
+								);
+
 		if($project>0)
 			$prj = $project;
 
@@ -112,22 +119,62 @@ class ProjectIndex extends CActiveRecordBehavior{
 			$arRes['values'] = array(':prj' =>$prj);
 		}
 
+		$section = filter_var(
+								Yii::app()->getRequest()->getParam('section'),
+								FILTER_SANITIZE_FULL_SPECIAL_CHARS
+							);
 		$filter = Yii::app()->getRequest()->getParam('filter');
-		if(!isset($filter))
-			return $arRes;
-
-		$city = Yii::app()->getRequest()->getParam('city');
+		$city = filter_var(
+								Yii::app()->getRequest()->getParam('city'),
+								FILTER_SANITIZE_NUMBER_INT
+							);
 		$bdate = Yii::app()->getRequest()->getParam('bdate');
 		$edate = Yii::app()->getRequest()->getParam('edate');
-		$point = Yii::app()->getRequest()->getParam('point');
-		$tname = Yii::app()->getRequest()->getParam('tt_name');
-		$tindex = Yii::app()->getRequest()->getParam('tt_index');
-		$metro = Yii::app()->getRequest()->getParam('metro');
+		$city = filter_var(
+								Yii::app()->getRequest()->getParam('city'),
+								FILTER_SANITIZE_NUMBER_INT
+							);
+		$point = filter_var(
+								Yii::app()->getRequest()->getParam('point'),
+								FILTER_SANITIZE_NUMBER_INT
+							);
+		$metro = filter_var(
+								Yii::app()->getRequest()->getParam('metro'),
+								FILTER_SANITIZE_NUMBER_INT
+							);
+		$tname = filter_var(
+								Yii::app()->getRequest()->getParam('tt_name'),
+								FILTER_SANITIZE_FULL_SPECIAL_CHARS
+							);
+		$tindex = filter_var(
+								Yii::app()->getRequest()->getParam('tt_index'),
+								FILTER_SANITIZE_FULL_SPECIAL_CHARS
+							);
+		$post = filter_var(
+								Yii::app()->getRequest()->getParam('post'),
+								FILTER_SANITIZE_NUMBER_INT
+							);
+		$haspoint = filter_var(
+								Yii::app()->getRequest()->getParam('haspoint'),
+								FILTER_SANITIZE_NUMBER_INT
+							);
+		$hastask = filter_var(
+								Yii::app()->getRequest()->getParam('hastask'),
+								FILTER_SANITIZE_NUMBER_INT
+							);
+
+		if($section==='geo') {
+			$arRes['conditions'] .= ' AND (:date BETWEEN pc.bdate AND pc.edate)';
+			$arRes['values'][':date'] = date('Y.m.d', time());
+		}
+		elseif(!isset($filter))
+			return $arRes;
 
 		if($city>0) {
 			$arRes['conditions'] .= ' AND pc.id_city=:city';
 			$arRes['values'][':city'] = $city;
 		}
+
 		if(isset($bdate) && isset($edate)) {
 			$arRes['conditions'] .= ' AND ((pc.bdate>=:bdate AND pc.edate<=:edate)'
 			. ' OR (pc.edate>=:bdate AND pc.edate<=:edate)'
@@ -135,6 +182,7 @@ class ProjectIndex extends CActiveRecordBehavior{
 			$arRes['values'][':bdate'] = date('Y.m.d', strtotime($bdate));
 			$arRes['values'][':edate'] = date('Y.m.d', strtotime($edate));
 		}
+
 		if($point>0) {
 			$arRes['conditions'] .= ' AND pc.point=:point';
 			$arRes['values'][':point'] = $point;
@@ -149,6 +197,20 @@ class ProjectIndex extends CActiveRecordBehavior{
 			$arRes['conditions'] .= " AND pc.metro=:metro";
 			$arRes['values'][':metro'] = $metro;
 		}
+		if($post>0) {
+			$arRes['conditions'] .= " AND pc.post=:post";
+			$arRes['values'][':post'] = $post;
+		}
+		if($haspoint>0) {
+			$arRes['conditions'] .= ($haspoint==1
+				? " AND pb.point IS NOT NULL"
+				: " AND pb.point IS NULL");
+		}
+		if($hastask>0) {
+			$arRes['conditions'] .= ($hastask==1
+				? " AND pt.id IS NOT NULL"
+				: " AND pt.id IS NULL");
+		}
 
 		return $arRes;
 	}
@@ -160,6 +222,7 @@ class ProjectIndex extends CActiveRecordBehavior{
 		if(!$prj)
 			return false;
 		$filter = $this->getIndexFilter($prj);
+
 		$sql = Yii::app()->db->createCommand()
 							->select(
 								"pc.project,
@@ -176,13 +239,26 @@ class ProjectIndex extends CActiveRecordBehavior{
 								pc.location,
 								pc.post,
 								pc.metro id_metro,
-								m.name metro"
+								m.name metro,
+								uad.name post_name"
 							)
 							->from('project_city pc')
 							->leftjoin('city c', 'c.id_city=pc.id_city')
 							->leftjoin('metro m', 'm.id=pc.metro')
+							->leftjoin(
+									'user_attr_dict uad', 
+									'uad.id=pc.post AND uad.id_par=110'
+								)
+							->leftjoin(
+									'project_binding pb',
+									'pb.point=pc.point AND pb.project=' . $prj
+								)
+							->leftjoin(
+									'project_task pt', 
+									'pt.point=pc.point AND pt.project='.$prj
+								)
 							->where($filter['conditions'], $filter['values'])
-				// 			->order('pc.id desc')
+							->order('pc.bdate desc')
 							->queryAll();
 
 		return $sql; 
@@ -217,6 +293,7 @@ class ProjectIndex extends CActiveRecordBehavior{
 					'id_city' => $i['id_city'],
 					'city' => $i['city']
 				);
+			$arRes['posts'][$i['post']] = $i['post_name'];
 		}
 		$arRes['bdate-short'] = date('d.m.y', strtotime($arRes['bdate']));
 		$arRes['edate-short'] = date('d.m.y', strtotime($arRes['edate']));
@@ -395,5 +472,19 @@ class ProjectIndex extends CActiveRecordBehavior{
 				'location' => $this->buildIndexArray($sql),
 				'filter' => $this->buildIndexFilterArray($sql)
 			);
+	}
+	/**
+	 * 	@param $arData - array(table => data)
+	 *  запись в одно обращение
+	 */
+	public function multipleInsert($arData)
+	{
+		foreach ($arData as $table => $arInsert)
+			if(count($arInsert))
+			{
+				Yii::app()->db->schema->commandBuilder
+					->createMultipleInsertCommand($table, $arInsert)
+					->execute();
+			}
 	}
 }

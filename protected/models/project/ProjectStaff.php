@@ -18,7 +18,7 @@ class ProjectStaff extends CActiveRecordBehavior{
 		$arRes['pages'] = new CPagination($arRes['users-cnt']);
 		$arRes['pages']->pageSize = $this->USERS_IN_PAGE;
 		$arRes['pages']->applyLimit($this);
-		$arStaff = $this->getStaffProject($arId);
+		$arStaff = $this->getStaffProject($prj, $arId);
 		$arRes['filter'] = $this->buildStaffFilterArray($arStaff);
 		$arRes['users'] = $this->buildStaffArray($arStaff);
 
@@ -42,77 +42,105 @@ class ProjectStaff extends CActiveRecordBehavior{
 			WHERE u.id_user IN({$arr['users']})";
 			$arU = Yii::app()->db->createCommand($sql)->queryAll();
 
-			foreach ($arU as $user) {
-				Yii::app()->db->createCommand()
-				->insert('project_user', array(
-					'project' => $prj,
-					'user' => $user['id'],
-					'email' =>  $user['email'],
-					'status' =>  isset($arr['users-activate']) ? 1 : 0,
-					'phone' => ''
-				));
+			$arPU = Yii::app()->db->createCommand()
+								->select("user")
+								->from('project_user')
+								->where('project=:prj',array(':prj'=>$prj))
+								->queryAll();			
+
+			$arPUId = array();
+			foreach ($arPU as $user)
+				$arPUId[] = $user['user'];
+
+			$arInsert = array();
+			foreach ($arU as $user) 
+			{
+				if(!in_array($user['id'], $arPUId))
+					$arInsert[] = array(
+							'project' => $prj,
+							'user' => $user['id'],
+							'email' =>  $user['email'],
+							'status' =>  isset($arr['users-activate']) ? 1 : 0,
+							'phone' => ''
+						);
 			}
+			$this->multipleInsert(['project_user' => $arInsert]);
 		}
 
 		if(strlen(reset($arr['inv-name']))) { // приглашенный персонал
-			for($i = 0; $i < count($arr['inv-name']); $i ++){
+			$arInsertC = array();
+			$arInsertPU = array();
+			$arInsertU = array();
+			$arInsertR = array();
+			$idCity = Subdomain::getId();
+			$nU = count($arr['inv-name']);
+			$date = date('Y-m-d H:i:s');
+			$birthday = date("Y-m-d", strtotime('2002.09.10'));
+			$Api = new Api();
+
+			for($i = 0; $i < $nU; $i ++)
+			{
 				$pass = rand(11111,99999);
-				$date = date('Y-m-d H:i:s');
-				Yii::app()->db->createCommand()
-				->insert('user', array(
-					'access_time' => $date,
-					'crdate' => $date,
-					'mdate' => $date,
-					'ismoder' => '0',
-					'status' => 2,
-					'isblocked' => '0',
-					'email' => $arr['inv-email'][$i],
-					'passw' => md5($pass),
-					'login' => $arr['prfx-phone'][$i].$arr['inv-phone'][$i]
-				));
+				$arInsertU[] = array(
+						'access_time' => $date,
+						'crdate' => $date,
+						'mdate' => $date,
+						'ismoder' => '0',
+						'status' => 2,
+						'isblocked' => '0',
+						'email' => $arr['inv-email'][$i],
+						'passw' => md5($pass),
+						'login' => $arr['prfx-phone'][$i] . $arr['inv-phone'][$i]					
+					);
 
-				$id_user = Yii::app()->db->createCommand()
-				->select("MAX(id_user)")
-				->from('user')
-				->queryScalar();
-
-				$Api = new Api();
 				$male = $Api->maleor($arr['inv-name'][$i]);
 				if(!isset($male['sex']))
 					$male['sex'] = 1;
 
-				Yii::app()->db->createCommand()
-				->insert('resume', array(
-					'id_user' => $id_user+1,
-					'firstname' => $arr['inv-name'][$i],
-					'lastname' => $arr['inv-sname'][$i],
-					'isman' => $male['sex'],
-					'smart' => 1,
-					'date_public' => $date,
-					'mdate' => $date,
-					'birthday' => date("Y-m-d", strtotime('2002.09.10')),
-				));
+				$arInsertR[] = array(
+						'firstname' => $arr['inv-name'][$i],
+						'lastname' => $arr['inv-sname'][$i],
+						'isman' => $male['sex'],
+						'smart' => 1,
+						'date_public' => $date,
+						'mdate' => $date,
+						'birthday' => $birthday,
+					);
 
-				$pid = Yii::app()->db->createCommand()
-				->select("MAX(id)")
-				->from('resume')
-				->queryScalar();
-
-				Yii::app()->db->createCommand()
-				->insert('user_city', array(
-					'id_user' => $id_user+1,
-					'id_resume' => $pid+1,
-					'id_city' => Subdomain::getId()
-				));
-
-				Yii::app()->db->createCommand()
-				->insert('project_user', array(
-					'project' => $prj,
-					'user' => $id_user+1,
-					'email' => $arr['inv-email'][$i],
-					'phone' => $arr['prfx-phone'][$i].$arr['inv-phone'][$i]
-				));
+				$arInsertC[] = array('id_city' => $idCity);
+				$arInsertPU[] = array(
+													'project' => $prj,
+													'email' => $arr['inv-email'][$i],
+													'phone' => $arr['prfx-phone'][$i].$arr['inv-phone'][$i]					
+												);
 			}
+			// делаем запись в user
+			$this->multipleInsert(['user' => $arInsertU]);
+			$id_user = Yii::app()->db->createCommand()
+										->select("MAX(id_user)")
+										->from('user')
+										->queryScalar();
+			$id_user = $id_user - $nU;
+			for($i = 0; $i < $nU; $i ++) // готовим почву для следующих таблиц
+			{
+				$arInsertR[$i]['id_user'] = ++$id_user;
+				$arInsertC[$i]['id_user'] = $id_user;
+				$arInsertPU[$i]['user'] = $id_user;
+			}
+			// делаем запись в resume
+			$this->multipleInsert(['resume' => $arInsertR]);
+			$pid = Yii::app()->db->createCommand()
+										->select("MAX(id)")
+										->from('resume')
+										->queryScalar();
+			$pid = $pid - $nU;
+			for($i = 0; $i < $nU; $i ++) // готовим id_resume
+				$arInsertC[$i]['id_resume'] = ++$pid;
+
+			$this->multipleInsert(array(
+						'user_city' => $arInsertC,
+						'project_user' => $arInsertPU
+					));
 		}
 	}
 	/**
@@ -121,7 +149,11 @@ class ProjectStaff extends CActiveRecordBehavior{
 	* Собираем условия для фильтра данных
 	*/
 	public function getStaffFilter($prj) {
-		$project = Yii::app()->getRequest()->getParam('project');
+		$project = filter_var(
+								Yii::app()->getRequest()->getParam('project'),
+								FILTER_SANITIZE_NUMBER_INT
+							);
+
 		if($project>0)
 			$prj = $project;
 
@@ -140,14 +172,42 @@ class ProjectStaff extends CActiveRecordBehavior{
 		if(!isset($filter))
 			return $arRes;
 
-		$city = Yii::app()->getRequest()->getParam('city');
-		$tname = Yii::app()->getRequest()->getParam('tt_name');
-		$tindex = Yii::app()->getRequest()->getParam('tt_index');
-		$metro = Yii::app()->getRequest()->getParam('metro');
-		$fname = Yii::app()->getRequest()->getParam('fname');
-		$lname = Yii::app()->getRequest()->getParam('lname');
-		$status = Yii::app()->getRequest()->getParam('status');
-		$haspoint = Yii::app()->getRequest()->getParam('haspoint');
+		$city = filter_var(
+								Yii::app()->getRequest()->getParam('city'),
+								FILTER_SANITIZE_NUMBER_INT
+							);
+		$metro = filter_var(
+								Yii::app()->getRequest()->getParam('metro'),
+								FILTER_SANITIZE_NUMBER_INT
+							);
+		$tname = filter_var(
+								Yii::app()->getRequest()->getParam('tt_name'),
+								FILTER_SANITIZE_FULL_SPECIAL_CHARS
+							);
+		$tindex = filter_var(
+								Yii::app()->getRequest()->getParam('tt_index'),
+								FILTER_SANITIZE_FULL_SPECIAL_CHARS
+							);
+		$fname = filter_var(
+								Yii::app()->getRequest()->getParam('fname'),
+								FILTER_SANITIZE_FULL_SPECIAL_CHARS
+							);
+		$lname = filter_var(
+								Yii::app()->getRequest()->getParam('lname'),
+								FILTER_SANITIZE_FULL_SPECIAL_CHARS
+							);
+		$status = filter_var(
+								Yii::app()->getRequest()->getParam('status'),
+								FILTER_SANITIZE_NUMBER_INT
+							);
+		$haspoint = filter_var(
+								Yii::app()->getRequest()->getParam('haspoint'),
+								FILTER_SANITIZE_NUMBER_INT
+							);
+		$hastask = filter_var(
+								Yii::app()->getRequest()->getParam('hastask'),
+								FILTER_SANITIZE_NUMBER_INT
+							);
 
 		if($city>0) {
 			$arRes['conditions'] .= ' AND pc.id_city=:city';
@@ -181,6 +241,11 @@ class ProjectStaff extends CActiveRecordBehavior{
 				? " AND pb.point IS NOT NULL"
 				: " AND pb.point IS NULL");
 		}
+		if($hastask>0) {
+			$arRes['conditions'] .= ($hastask==1
+				? " AND pt.id IS NOT NULL"
+				: " AND pt.id IS NULL");
+		}
 
 		return $arRes;
 	}
@@ -207,13 +272,41 @@ class ProjectStaff extends CActiveRecordBehavior{
 							->from('project_user pu')
 							->leftjoin('resume r', 'r.id_user=pu.user')
 							->leftjoin('user u', 'u.id_user=pu.user')
-							->leftjoin('project_binding pb', 'pb.user=pu.user')
+							->leftjoin(
+									'project_binding pb', 
+									'pb.user=pu.user AND pb.project='.$prj
+								)
+							->leftjoin(
+									'project_task pt', 
+									'pt.user=pu.user AND pt.project='.$prj
+								)	
 							->leftjoin('project_city pc', 'pc.point=pb.point')
 							->where($filter['conditions'], $filter['values'])
 							->queryAll(); 
 
 		return $sql;
 	}
+	
+	/**
+     * @param $user_id number - user ID
+     * @return staff data
+     * Получаем информацию о должностях соискателя
+     */
+     public function getUserMechInfo($user_id) {
+         
+         $mechs = $this->getUserProjectsInfoPost($user_id);
+         for($i = 0; $i < count($mechs); $i ++){
+             $main = Yii::app()->db->createCommand()
+                    ->select("uad.name")
+                    ->from('user_attr_dict uad')
+                    ->where(' uad.id_par=110 AND uad.key=:key', array(':key' => $mechs[$i]['post']))
+                    ->queryRow();
+            if($main['name']) $mech[] = $main;
+         }
+        return $mech;
+     }
+
+
 	/**
 	 * @param $prj number - project ID
 	 * @return staff count
@@ -227,7 +320,10 @@ class ProjectStaff extends CActiveRecordBehavior{
 							->select("DISTINCT(pu.user)")
 							->from('project_user pu')
 							->leftjoin('resume r', 'r.id_user=pu.user')
-							->leftjoin('project_binding pb', 'pb.user=pu.user')
+							->leftjoin(
+									'project_binding pb', 
+									'pb.user=pu.user AND pb.project='.$prj
+								)
 							->leftjoin('project_city pc', 'pc.point=pb.point')
 							->leftjoin('city c', 'c.id_city=pc.id_city')
 							->leftjoin('metro m', 'm.id=pc.metro')
@@ -241,18 +337,21 @@ class ProjectStaff extends CActiveRecordBehavior{
 		return $arId;
 	}
 	/**
+	 * @param $prj number - project ID
 	 * @param $arId array - filtered ID of staff
 	 * @return staff data
 	 * Поиск персонала по ID
 	 */
-	public function getStaffProject($arId){
+	public function getStaffProject($prj, $arId){
 		if(!sizeof($arId))
 			return array();
 		// избавляемся от доп запроса выбирая только нужных юзеров по пагинации
+		$arResId = array();
 		for($i=$this->offset, $n=sizeof($arId); $i<$n; $i++)
 			if($i<($this->offset+$this->limit))
 				$arResId[] = $arId[$i];
 
+		$strId = implode(',', $arResId);
 		$sql = Yii::app()->db->createCommand()
 							->select(
 								"pu.project,
@@ -273,11 +372,17 @@ class ProjectStaff extends CActiveRecordBehavior{
 								m.name metro")
 							->from('project_user pu')
 							->leftjoin('resume r', 'r.id_user=pu.user')
-							->leftjoin('project_binding pb', 'pb.user=pu.user')
+							->leftjoin(
+									'project_binding pb',
+									'pb.user=pu.user AND pb.project=:prj'
+								)
 							->leftjoin('project_city pc', 'pc.point=pb.point')
 							->leftjoin('city c', 'c.id_city=pc.id_city')
 							->leftjoin('metro m', 'm.id=pc.metro')
-							->where(array('in','pu.user',$arResId))
+							->where(
+								'pu.user IN(' . $strId . ') AND pu.project=:prj',
+								array(':prj'=>$prj)
+							)
 							->order('pu.user desc')
 							->queryAll();
 
@@ -400,25 +505,7 @@ class ProjectStaff extends CActiveRecordBehavior{
 
 		return $this->buildStaffArray($sql);
 	}
-    
-    
-    /**
-     * @param $user_id number - user ID
-     * @return staff data
-     * Получаем информацию о должностях соискателя
-     */
-     public function getUserMechInfo($user_id) {
-         $main = Yii::app()->db->createCommand()
-                    ->select("uad.name")
-                    ->from('user_mech um')
-                    ->leftjoin('user_attr_dict uad', 'uad.id=um.id_mech')
-                    ->where(' um.isshow=0 AND um.id_us=:user_id', array(':user_id' => $user_id))
-                    ->group('uad.name')
-                    ->queryAll();
-                    
-        return $main;
-     }
-     
+
     /**
      * @param $user_id number - user ID
      * @return staff data
@@ -429,10 +516,10 @@ class ProjectStaff extends CActiveRecordBehavior{
             ->select("r.isman,r.birthday,r.firstname,r.lastname,r.photo,u.email,u.is_online")
             ->from('user u')
             ->leftjoin('resume r', 'r.id_user=u.id_user')
+            //->leftjoin('user_attribs ua', 'ua.id_us=u.id_user')
             ->where('u.id_user =:user_id', array(':user_id' => $user_id))
             //->order('pu.user desc')
             ->queryAll();
-                    
         return $main;
     }
 
@@ -448,9 +535,6 @@ class ProjectStaff extends CActiveRecordBehavior{
             ->leftjoin('user_attr_dict uad', 'ua.key=uad.key')
             ->where("ua.id_us =:user_id AND ua.val<>''", array(':user_id' => $user_id))
             ->queryAll();
-            
-       
-                    
         return $contacts;
     }
 
@@ -463,7 +547,7 @@ class ProjectStaff extends CActiveRecordBehavior{
         $project_info = Yii::app()->db->createCommand()
             ->select(
             //"DISTINCT(c.name)"
-                "c.name city, p.project, p.name"
+                "c.name city, p.project, p.name,pc.post"
             )
             ->from('project_user pu')
             ->leftjoin('project p', 'p.project=pu.project')
@@ -471,6 +555,27 @@ class ProjectStaff extends CActiveRecordBehavior{
             ->leftjoin('city c', 'pc.id_city=c.id_city')
             ->where('pu.user =:user_id', array(':user_id' => $user_id))
             ->order('pu.user desc')
+            ->queryAll();
+        return $project_info;
+    }
+    
+    /**
+     * @param $user_id number - user ID
+     * @return user-card data
+     * Достаем информацию о проектах юзере
+     */
+    public function getUserProjectsInfoPost($user_id) {
+        $project_info = Yii::app()->db->createCommand()
+            ->select(
+            //"DISTINCT(c.name)"
+                "c.name city, p.project, p.name,pc.post"
+            )
+            ->from('project_user pu')
+            ->leftjoin('project p', 'p.project=pu.project')
+            ->leftjoin('project_city pc', 'pc.project=pu.project')
+            ->leftjoin('city c', 'pc.id_city=c.id_city')
+            ->where('pu.user =:user_id', array(':user_id' => $user_id))
+            ->group('pc.post')
             ->queryAll();
         return $project_info;
     }
@@ -483,16 +588,16 @@ class ProjectStaff extends CActiveRecordBehavior{
     public function getUserAllInfo($main, $mech, $contacts, $project_info) {
         $viData = [];
         foreach ($main as $key => $value) {
-             $viData = $value;
+            $viData = $value;
         }
         
         foreach ($mech as $key => $value) {
              $mechs[] = $value['name'];
         }
-        
+
         foreach ($contacts as $key => $value){
             if($value['key']=='mob'){
-                $viData['PHONE'] = $value['val'];
+                $viData['tel'] = $value['val'];
             }
             else{
                 $viData['CONTACTS'][]=$value;
@@ -509,8 +614,7 @@ class ProjectStaff extends CActiveRecordBehavior{
                 $arCities[] = $value['city'];
             }
         }
-        
-        
+
         $viData['PROJECT'] = $arProjects;
         $viData['MECH'] =  $mechs;
         $viData['CITIES'] = $arCities;
@@ -527,4 +631,18 @@ class ProjectStaff extends CActiveRecordBehavior{
 			$arr['fullname'] = $arr['lastname'] . ' ' . $arr['firstname'];
 			return $arr;
     }
+		/**
+		 * 	@param $arData - array(table => data)
+		 *  запись в одно обращение
+		 */
+		public function multipleInsert($arData)
+		{
+			foreach ($arData as $table => $arInsert)
+				if(count($arInsert))
+				{
+					Yii::app()->db->schema->commandBuilder
+						->createMultipleInsertCommand($table, $arInsert)
+						->execute();
+				}
+		}
 }

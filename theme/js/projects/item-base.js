@@ -21,14 +21,32 @@ var BaseProgram = (function () {
         function(e){ self.ajaxDelIndex(e.target) 
     });
 
-    $('.program__tasks').click(function () {
-        $('.tasks__popup').fadeIn();
-    });
     $('.tasks__popup-close').click(function () {
         $('.tasks__popup').fadeOut();
     });
 
+    $(".content-block").on('click', '.tasks__count', function() {
 
+        let project= $(this).data('popup-project');
+        let user = $(this).data('popup-user');
+        let point = $(this).data('popup-point');
+        let date = $(this).data('popup-date');
+        let type = 'userdata';
+
+        var data = self.initData(project,user,point,date, type);
+
+        $.ajax({
+            type: 'GET',
+            url: '/ajax/Project',
+            data: {data: JSON.stringify(data)},
+            dataType: 'json',
+            success: function (value){
+                if(value.tasks){
+                    self.popupShow(value);
+                }
+            }
+        });
+    });
   };
   //
   BaseProgram.prototype.ajaxDelIndex = function (e) {
@@ -106,7 +124,81 @@ var BaseProgram = (function () {
       $('.xls-popup-err').hide();
       $('#base-form').submit();
     }
-  }
+  };
+
+
+    BaseProgram.prototype.popupShow = function (d) {
+
+        var data = new Object();
+        data = d.tasks;
+        var user = d.user;
+        var size = Object.keys(data).length;
+        if(size>0){
+            this.popupClear();
+            var html = '';
+
+            $.each(data, function (i, e) {
+                html+='<tr>';
+                html+='<td>'+ data[i].date+'</td>';
+                html+='<td>'+ data[i].name+'</td>';
+                html+='<td>'+ data[i].text+'</td>';
+                html+='</tr>';
+            });
+            var popup = $(".tasks__popup");
+            $(popup).find(".popup__table tbody").append(html);
+            $(popup).find(".popup__user-name").html(user.firstname);
+            $(popup).find(".popup__user-secondname").html(user.lastname);
+            $(popup).find(".popup__content-logo").prop("src",user.logo);
+            var status = user.is_online;
+            var status_html = '';
+
+            if(status==1){
+                status_html = "<span class='geo__green'>● активен</span>";
+            }else{
+                status_html = "<span class='geo__red'>● неактивен</span>";
+            }
+            $(popup).find(".popup__user-status").html(status_html);
+
+            $('.tasks__popup').fadeIn();
+        }
+    };
+
+    BaseProgram.prototype.popupClear = function () {
+        var popup = $(".tasks__popup");
+        $(popup).find(".popup__table tbody").html('');
+        $(popup).find(".popup__user-name").html('');
+        $(popup).find(".popup__user-secondname").html('');
+        $(popup).find(".popup__user-status").html('');
+        $(popup).find(".popup__content-logo").prop("src",'');
+    };
+
+    BaseProgram.prototype.initData = function (project, user, point, date, type) {
+        var data_object = {};
+
+        project = project.toString();
+        user = user.toString();
+        point = point.toString();
+        date = date.toString();
+        type = type.toString();
+
+        if(project.length>0) {
+            data_object.project = project;
+        }
+        if(user.length>0) {
+            data_object.user = user;
+        }
+        if(point.length>0){
+            data_object.point = point;
+        }
+        if(date.length>0) {
+            data_object.date = date;
+        }
+        if(type.length>0) {
+            data_object.type = type;
+        }
+
+        return data_object;
+    };
   //
   return BaseProgram;
 }());

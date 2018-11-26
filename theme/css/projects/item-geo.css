@@ -42,94 +42,40 @@
 }
 .geo-item__cart-data img{ min-width: 175px }
 /*
-*	calendar
+*
 */
-.calendar-filter>span{
-	width: 170px;
-	height: 26px;
-	padding: 0 20px 0 10px;
-	line-height: 26px;
-	background: #ffffff;
-	border: 1px solid silver;
-	border-radius: 1px;
-	cursor: pointer;
-}
-#filter-form .calendar-filter .calendar{
+#DiContent .project__geo-filter .u-filter__item{
 	width: 100%;
-	min-width: 180px;
-	padding: 10px;
-	position: absolute;
-	top: 0px;
-	right: -45px;
-	background-color: rgba(52, 52, 52, 0.6);
-	z-index: 2;
-	display: none;
-	margin: 0;
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+	justify-content: flex-end;
 }
-div.calendar:after{ content: '' }
-.calendar table{ 
+#DiContent .project__geo-filter .u-filter__item-title{
+	width: initial;
+	padding: 0 10px;
+}
+#DiContent .project__geo-filter .u-filter__item .u-filter__item-data{
+	max-width: 200px;
+}
+#DiContent .project__module .project__geo-filter input{
 	width: 100%;
-	cursor: default;
-}
-.calendar table td{
-	padding: initial;
-	text-align: center;
-	color: #FFFFFF;
-	-webkit-transition: all 0.3s ease-out;
-	-moz-transition: all 0.3s ease-out;
-	-o-transition: all 0.3s ease-out;
-	transition: all 0.3s ease-out;
-}
-.calendar tbody td:nth-child(n+6){ color: #ff8300 }
-.calendar td.day:hover{ background-color: rgba(255,255,255,0.2) }
-.calendar tbody td.today,
-.calendar tbody td.today:hover{ 
-	color: #FFFFFF;
-	background-color: rgba(171, 184, 32, 0.5);
-}
-.calendar tbody td.select,
-.calendar tbody td.select:hover{ 
-	color: #FFFFFF;
-	background-color: rgba(255, 131, 0, 0.5);
-}
-.calendar td.nofit:hover{
-    background-color: rgba(255, 0, 0, 0.5);
-    cursor: no-drop;
-}
-.calendar td.day,
-.calendar td.mleft,
-.calendar td.mright{ cursor: pointer }
-.calendar b{
-	color: #FFFFFF;
-	background-color: red;
-	position: absolute;
-	top: -5px;
-	line-height: normal;
-	right: 0;
-	left: 0;
-	text-align: center;
-	z-index: 2;
-	display: none;
-}
-/*		*/
-.user__header-date{
-	text-align: right;
-}
-.user__header-date .calendar-filter{
-	padding-left: 10px;
-	position: relative;
-	font-size: 14px;
-	display: inline-block;
-}
-#filter-form .user__header-date .calendar{ right: -5px }
-.geo__grey{
-	color:#9e9e9e;
 }
 /*
 *		MEDIA
 */
-@media (min-width: 768px) {
-	.calendar-filter>span{
-		width: 90px;
+@media (min-width: 400px) {
+	#DiContent .project__geo-filter .u-filter__item{
+		width: 50%;
+		justify-content: flex-center;
 	}
 }
+@media (min-width: 768px) {
+	#DiContent .project__geo-filter .u-filter__item{
+		width: 25%;
+		justify-content: flex-start;
+	}
+	#DiContent .project__geo-filter .u-filter__item .u-filter__item-data{
+		margin-right: 10px;
+	}
+}   

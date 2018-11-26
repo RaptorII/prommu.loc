@@ -1,4 +1,7 @@
-#DiContent .content-block{ margin: 0 }
+#DiContent .content-block{ 
+	margin: 0;
+	position: relative;
+}
 .project,
 .project *{ font-family: RobotoCondensed-Regular, verdana, arial; }
 #DiContent .project input:focus,

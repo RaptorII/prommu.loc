@@ -78,6 +78,16 @@ let IndexUniversalFilter = (function () {
         $(document).on('click', function (e) {
             self.closureHiddenUlContent(e.target);
         });
+        // событие удаления элемента и мультиселекта
+        $('.prommu__universal-filter #filter-city').on('click','b',function ()
+        {
+            self.hierarchyTracking(); //Проверяем иерархию фильтров
+            clearTimeout(IndexUniversalFilter.AjaxTimer);
+            IndexUniversalFilter.AjaxTimer = setTimeout(function () {
+                self.ajaxSetParams();
+            }, 100); // время в мс
+        });
+
     };
 
     /**Функция отображения/скрытия пунктов меню**/
@@ -139,9 +149,10 @@ let IndexUniversalFilter = (function () {
 
 
     IndexUniversalFilter.prototype.setValueFromLI = function (e) {
-        let li = e;
-        let id = $(li).data('id');
-        let value = $(li).text();
+        let self = this,
+            li = e,
+            id = $(li).data('id'),
+            value = $(li).text();
         /**Устанавливаем скрытый input***/
         $(li).parent().parent().find('.u-filter__hidden-data').val(id);
         /******Устанавливаем value в span*******/
@@ -150,9 +161,13 @@ let IndexUniversalFilter = (function () {
         $(li).parent().fadeOut();
 
         //Проверяем иерархию фильтров
-        this.hierarchyTracking();
-        //Запускаем Ajax
-        this.ajaxSetParams();
+        self.hierarchyTracking();
+
+        //Аякс с задержкой
+        clearTimeout(IndexUniversalFilter.AjaxTimer);
+        IndexUniversalFilter.AjaxTimer = setTimeout(function () {
+            self.ajaxSetParams();
+        }, 100); // время в мс
     };
 
     IndexUniversalFilter.prototype.ajaxSetParams = function () {
@@ -162,7 +177,6 @@ let IndexUniversalFilter = (function () {
         $('.prommu__universal-filter').find('input').each(function () {
 
             $('.filter__veil').show();
-
 
             //Формирование запроса Get
             let name = $(this).attr("name");
@@ -290,12 +304,14 @@ let IndexUniversalFilter = (function () {
                     let value_for_li = parseInt(parent_for_li.find('.u-filter__hidden-data').val());
                     $(self).find('.u-filter__li-hidden').each(function(){
                         let li_parent_value_id = $(this).data('li-parent-value-id');
-
+/*
+Стас, ты говнюк. Че до сих пор не убрал это мясо???????????????????????????
                         console.log("------------");
                         console.log(this);
                         console.log("li_parent_value_id: " + li_parent_value_id);
                         console.log("value_for_li: " + value_for_li);
                         console.log("default_li_visible: " + default_li_visible);
+*/
                         if((li_parent_value_id>=0 && (li_parent_value_id== value_for_li || default_li_visible==value_for_li)) || li_parent_value_id=="ALL"){
                             $(this).fadeIn();
                             $(this).addClass('li-checker');

@@ -338,7 +338,9 @@ var AddressEdit = (function () {
                   v = $(cSelect).text();
 
               cSelect.text()==='' ? cSelect.hide() : cSelect.show();
+
               cInput.val(v).hide();
+
               cList.fadeOut();
           }
       }
@@ -354,6 +356,7 @@ var AddressEdit = (function () {
               if(v!=='' && v===e.dataset.id) {
                   let v = select.text();
                   inpText.val(v).hide();
+
                   select.show();
               }
               else { // ввод нового города
@@ -361,6 +364,7 @@ var AddressEdit = (function () {
 
                   input.val(e.dataset.id);
                   inpText.val(v).hide();
+
                   select.html(v+'<b></b>').show();
               }
               list.fadeOut();
@@ -371,16 +375,23 @@ var AddressEdit = (function () {
                   let cSelect = $(arMetros[i]).find('.metro-select'),
                       cInput = $(arMetros[i]).find('.metro-inp'),
                       cList = $(arMetros[i]).find('.select-list'),
-                      v = $(cSelect).text();
+                      v = $(cSelect).text(),
+                      input = $(cInput).siblings('[type="hidden"]');
 
                   if( !$(arMetros[i]).is(main) ) {
-                      cSelect.show();
+
+                      if(v.length>0){
+                          cSelect.show();
+                      }
                       cInput.val(v).hide();
                       cList.fadeOut();
                   }
                   else{
-                      if( $e.is('b') )
+                      if( $e.is('b') ){
                           cInput.val('');
+                          input.val('');
+                          cSelect.text('');
+                      }
                       cInput.show().focus();
                       cSelect.hide();
                   }

@@ -43,9 +43,9 @@ let IndexRoute = (function () {
             $('.rout__main').show();
         });
 
-        $('.route__button-map').click(function () {
+        /*$('.route__button-map').click(function () {
             self.mapOpen(this);
-        });
+        });*/
 
         //меняем местами
         $(".project__route-touch.touch__arrow-top").click(function () {
@@ -59,6 +59,13 @@ let IndexRoute = (function () {
             pdiv.insertAfter(pdiv.next());
             return false
         });
+
+        // загружаем новый xls
+        $('.add-xls-new, .add-xls-change').click(function(){ self.addXlsFile(this) });
+        $('body').on('click','.xls-popup-btn',function(){
+            $('#add-xls-inp').click();
+        });
+        $('#add-xls-inp').change(function() { self.checkFormatFile(this) });
     };
 
     IndexRoute.prototype.getSortData = function () {
@@ -113,6 +120,56 @@ let IndexRoute = (function () {
         $('.project__route-changer').hide();
         $('.rout__main').show();
     };
+    //
+    IndexRoute.prototype.addXlsFile = function () {
+        let self = this;
+
+        let html = "<div class='xls-popup' data-header='Изменение программы'>"+
+        "Загрузить измененный файл<br>"+
+        '<span class="xls-popup-err">Формат файла должен быть "xls" или "xlsx". Выберите подходящий файл!</span>'+
+        "<div class='xls-popup-btn'>ЗАГРУЗИТЬ</div>"+
+        "</div>";
+
+        ModalWindow.open({ content: html, action: { active: 0 }, additionalStyle:'dark-ver' });
+    }
+    //      Проверка формата файла .XLS .XLSX
+    IndexRoute.prototype.checkFormatFile = function () {
+        let self = this,
+        $inp = $('#add-xls-inp'),
+        $name = $('#add-xls-name'),
+        arExt = $inp.val().match(/\\([^\\]+)\.([^\.]+)$/);
+
+        if(arExt[2]!=='xls' && arExt[2]!=='xlsx'){
+            $inp.val('');
+            $('.xls-popup-err').show();
+        }
+        else{
+            let fd = new FormData;
+            fd.append('xls', $inp.prop('files')[0]);
+            fd.append('type', 'xls-index');
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/Project',
+                data: fd,
+                processData: false,
+                contentType: false,
+                success: function (r){
+                    r = JSON.parse(r);
+                    if(r.error==true)
+                    {
+                        r.message = (r.message!=null ? r.message : 'load-file');
+                        MainProject.showPopup('error',r.message);
+                        $inp.val('');
+                    }
+                    else
+                    {
+                        $('.xls-popup-err').hide();
+                        $('#xls-form').submit();
+                    }
+                }
+            });
+        }
+    }
 
     return IndexRoute;
 }());
@@ -143,6 +200,7 @@ $(document).ready(function () {
 /*
  *
  */
+ /*
 smLoadMap = function () {
     var sm = new scribblemaps.ScribbleMap(
         smElement,
@@ -164,4 +222,4 @@ smLoadMap = function () {
         border: '1px solid #dedede'
     });
     console.log(sm);
-};
+};*/

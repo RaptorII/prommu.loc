@@ -1,7 +1,8 @@
+
 /**
  * Created by Stanislav on 26.09.2018.
  */
-
+'use strict'
 let IndexMap = (function () {
 
     IndexMap.prototype.mainMapContainer = false;
@@ -95,8 +96,9 @@ let IndexMap = (function () {
 
 
     IndexMap.prototype.setUniqueMapLines = function (map, pointsloc) {
-        self = this;
+        var self = this;
         var location = [];
+        var road = [];
         if (pointsloc.error !=true) {
 
 
@@ -127,9 +129,16 @@ let IndexMap = (function () {
                 var points = pointsloc[d];
 
                 var arPoints = [];
+                var arPointsRoad = [];
+                console.log(points);
                 arPoints.push(points.longitude);
                 arPoints.push(points.latitude);
+
+                arPointsRoad.push(points.latitude);
+                arPointsRoad.push(points.longitude);
+
                 location.push(arPoints);
+                road.push(arPointsRoad);
 
                 var geojsonFeature = {
                     "type": "Feature",
@@ -140,7 +149,9 @@ let IndexMap = (function () {
                 };
 
                 L.geoJSON(geojsonFeature).addTo(map);
+
             }
+
 
             var myLines = [{
                 "type": "LineString",
@@ -165,7 +176,7 @@ let IndexMap = (function () {
 
 
     IndexMap.prototype.setMapLines = function (map, pointsloc) {
-        self = this;
+        var self = this;
         var location = [];
         if (pointsloc.error !=true) {
 
@@ -250,7 +261,7 @@ let IndexMap = (function () {
 
         var location = [];
         if (mapLocation[userId]) {
-            console.log(mapLocation[userId]['points']);
+            //console.log(mapLocation[userId]['points']);
             var size = Object.keys(mapLocation[userId]['points']).length;
             for (var d = 0; d < size; d++) {
                 var points = mapLocation[userId]['points'][pointId];
@@ -274,7 +285,7 @@ let IndexMap = (function () {
             }
 
         } else {
-            console.log('Точки юзера ' + userId + ' не найдены');
+            //console.log('Точки юзера ' + userId + ' не найдены');
         }
     };
 
@@ -319,7 +330,7 @@ let IndexMap = (function () {
             data: {data: JSON.stringify(data)},
             dataType: 'json',
             success: function (value) {
-                console.log(value);
+                //console.log(value);
                 if(value){
                     self.setUniqueMapLines(self.mainMapContainer, value)
                 }
@@ -338,8 +349,9 @@ let IndexMap = (function () {
             data: {data: JSON.stringify(data)},
             dataType: 'json',
             success: function (value) {
-                console.log(value);
+                //console.log(value);
                 if(value){
+                    console.log(value);
                     self.setMapLines(map, value)
                 }
             }
