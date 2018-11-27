@@ -80,13 +80,29 @@
 							<span class="loc-del">&#10006</span>
 							<span class="add-period-btn">Добавить период</span>
 							<div class="project__index-row loc-field">
-								<div class="project__index-pen">
-									<label class="project__index-lbl">Адрес ТТ</label>
+								<div class="project__index-pen lindex">
+									<label class="project__index-lbl">Улица</label>
 									<input type="text" name="lindex" autocomplete="off">
 								</div>
-								<div class="project__index-pen">
+								<div class="project__index-pen lname">
 									<label class="project__index-lbl">Название ТТ</label>
 									<input type="text" name="lname" autocomplete="off">
+								</div>
+								<div class="project__index-pen lhouse">
+									<label class="project__index-lbl">Дом</label>
+									<input type="text" name="lhouse" autocomplete="off" data-checker="house">
+								</div>
+								<div class="project__index-pen lbuilding">
+									<label class="project__index-lbl">Здание</label>
+									<input type="text" name="lbuilding" autocomplete="off" data-checker="house">
+								</div>
+								<div class="project__index-pen lconstruction">
+									<label class="project__index-lbl">Строение</label>
+									<input type="text" name="lconstruction" autocomplete="off" data-checker="house">
+								</div>
+								<div class="project__index-pen lcorps">
+									<label class="project__index-lbl">Корпус</label>
+									<input type="text" name="lcorps" autocomplete="off" data-checker="house">
 								</div>
 							</div>
 							<div class="period-item" data-id="0">

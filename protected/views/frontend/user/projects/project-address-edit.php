@@ -52,7 +52,7 @@
 															<input data-checker="metro" type="hidden" name="<?='metro[' . $idCity . '][' . $idLoc . ']'?>" value="<?=$mId?>">
 														<?php endforeach; ?>
 													<?php else: ?>
-														<span class="metro-select"></span>
+														<span class="metro-select" style="display: none"></span>
 														<input data-checker="metro" type="text" name="m" class="metro-inp" autocomplete="off" value="">
 														<ul class="select-list"></ul>
 														<input data-checker="metro" type="hidden" name="<?='metro[' . $idCity . '][' . $idLoc . ']'?>" value="<?=$mId?>">
@@ -60,13 +60,29 @@
 												</div>
 											</div>
 										<?php endif; ?>
-										<div class="project__index-pen">
+										<div class="project__index-pen lindex">
 											<label class="project__index-lbl">Адрес ТТ</label>
 											<input type="text" name="<?='lindex[' . $idCity . '][' . $idLoc . ']'?>" autocomplete="off" value="<?=$arLoc['index']?>">
 										</div>
-										<div class="project__index-pen">
+										<div class="project__index-pen lname">
 											<label class="project__index-lbl">Название ТТ</label>
 											<input type="text" name="<?='lname[' . $idCity . '][' . $idLoc . ']'?>" autocomplete="off" value="<?=$arLoc['name']?>">
+										</div>
+										<div class="project__index-pen lhouse">
+											<label class="project__index-lbl">Дом</label>
+											<input type="text" name="<?='lhouse[' . $idCity . '][' . $idLoc . ']'?>" autocomplete="off" data-checker="house" value="<?=$arLoc['house']?>">
+										</div>
+										<div class="project__index-pen lbuilding">
+											<label class="project__index-lbl">Здание</label>
+											<input type="text" name="<?='lbuilding[' . $idCity . '][' . $idLoc . ']'?>" autocomplete="off" data-checker="house" value="<?=$arLoc['building']?>">
+										</div>
+										<div class="project__index-pen lconstruction">
+											<label class="project__index-lbl">Строение</label>
+											<input type="text" name="<?='lconstruction[' . $idCity . '][' . $idLoc . ']'?>" autocomplete="off" data-checker="house" value="<?=$arLoc['construction']?>">
+										</div>
+										<div class="project__index-pen lcorps">
+											<label class="project__index-lbl">Корпус</label>
+											<input type="text" name="<?='lcorps[' . $idCity . '][' . $idLoc . ']'?>" autocomplete="off" data-checker="house" value="<?=$arLoc['corps']?>">
 										</div>
 									</div>
 									<?php foreach ($arLoc['periods'] as $idPer => $arPer): ?>

@@ -662,6 +662,7 @@
 }
 .loc-item .project__index-pen, .metro-item{
 	display: flex;
+	justify-content: flex-end;
 }
 .loc-item>.project__index-row .project__index-pen:first-child,
 .metro-item:first-child{
@@ -804,7 +805,6 @@
 	.project__index { max-width: initial }
 	.loc-item>.project__index-row .project__index-pen, .metro-item{
 		width: 30%;
-		margin: 0 0 0 5%;
 	}
 	.project__index-row.loc-field{ flex-wrap: nowrap }
 	.city-item, .loc-item, .period-item{ padding: 25px 25px 10px }
@@ -1293,4 +1293,72 @@ input:checked + .filter__chbox-lab:after{
 .filter__vis.active:after{
     border-bottom:initial;
     border-top:15px solid #abb820;
+}
+/*
+*		27.11.18
+*/
+.project__index-row.loc-field{ flex-wrap: wrap; }
+#index .loc-item .metro-item,
+#index .loc-item .project__index-pen.lindex,
+#index .loc-item .project__index-pen.lname{ width: 100% }
+#index .loc-item .metro-item + .lindex + .lname{ margin-right: 0 }
+
+#index .loc-item .metro-item{ min-width: 190px; }
+#index .loc-item .project__index-pen.lindex input,
+#index .loc-item .project__index-pen.lname input{
+	min-width: 100px;
+	max-width: 200px;
+	padding: 0 15px 0 5px;
+}
+
+#index .loc-item .project__index-pen.lhouse input,
+#index .loc-item .project__index-pen.lbuilding input,
+#index .loc-item .project__index-pen.lconstruction input,
+#index .loc-item .project__index-pen.lcorps input{
+	padding: 0 15px 0 5px;
+	width: 100px;
+}
+
+
+
+#index .loc-item .project__index-pen.lhouse,
+#index .loc-item .project__index-pen.lbuilding,
+#index .loc-item .project__index-pen.lconstruction,
+#index .loc-item .project__index-pen.lcorps{ width: 100%; }
+.project__index-row.loc-field{ 
+	margin-bottom: 0; 
+	justify-content: space-between;
+}
+#index .loc-item .project__index-lbl{ padding: 5px 10px; }
+.metro-field{ max-width: 200px; }
+
+
+@media (min-width: 500px){
+	#index .loc-item .project__index-pen.lindex input,
+	#index .loc-item .project__index-pen.lname input{
+		min-width: 150px;
+		padding: 0 20px 0 15px;
+	}
+	#index .loc-item .project__index-pen.lhouse,
+	#index .loc-item .project__index-pen.lbuilding,
+	#index .loc-item .project__index-pen.lconstruction,
+	#index .loc-item .project__index-pen.lcorps{ width: 50%; }
+}
+@media (min-width: 768px){
+
+}
+@media (min-width: 992px){ 
+	#index .loc-item .project__index-pen.lhouse,
+	#index .loc-item .project__index-pen.lbuilding,
+	#index .loc-item .project__index-pen.lconstruction,
+	#index .loc-item .project__index-pen.lcorps{
+		width: 16%;
+		margin-right: 5%;
+	}
+	#index .loc-item .metro-item,
+	#index .loc-item .project__index-pen.lindex,
+	#index .loc-item .project__index-pen.lname{ width: 25% }
+	#index .loc-item .metro-item,
+	#index .loc-item .project__index-pen.lindex{ margin-right: 3%; }
+	#index .loc-item .project__index-pen.lname{ margin-right: 40% }
 }

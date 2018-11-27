@@ -40,15 +40,37 @@ var ProjectPage = (function () {
                 empUsersInvite = false;
 
             for (let i = 0, l = arP.length; i < l; i++) {
-                let arInputs = $(arP[i]).find('input');
+                let city = $(arP[i]).find("[name='city[]']").val(),
+                    arLoc = $(arP[i]).find('.loc-field');
 
-                for (let j = 0, n = arInputs.length; j < n; j++) {
-                    let data_m = $(arInputs[j]).attr('data-checker');
-                    if(data_m!='metro') {
-                        let name = $(arInputs[j]).attr('name');
-                        if ($.inArray(name, ['c', 'm']) < 0 && !arInputs[j].value.length)
+                if(!city.length)
+                    empAddrProg = true;
+
+                for (let j = 0, n = arLoc.length; j < n; j++)
+                {
+                    let arInputs = $(arLoc[j]).find('input'),
+                        hasHouse = false;
+
+                    for (let k = 0, m = arInputs.length; k < m; k++)
+                    {
+                        let data = $(arInputs[k]).attr('data-checker'),
+                            name = $(arInputs[k]).attr('name');
+
+                        if(data==='house' && arInputs[k].value.length)
+                            hasHouse = true;
+                        else if (
+                            $.inArray(name, ['c', 'm', 'p']) < 0 
+                            && 
+                            !arInputs[k].value.length
+                            &&
+                            data!=='metro' && data!=='house'
+                            )
+                        {
                             empAddrProg = true;
+                        }
                     }
+                    if(!hasHouse)
+                        empAddrProg = true;
                 }
             }
             for (var i = 0, n = arI.length; i < n; i++) {
@@ -439,10 +461,18 @@ var ProjectAddIndexProg = (function () {
                             $(arLocInp[1]).attr('name','metro' + name);
                             $(arLocInp[2]).attr('name','lindex' + name);
                             $(arLocInp[3]).attr('name','lname' + name);
+                            $(arLocInp[4]).attr('name','lhouse' + name);
+                            $(arLocInp[5]).attr('name','lbuilding' + name);
+                            $(arLocInp[6]).attr('name','lconstruction' + name);
+                            $(arLocInp[7]).attr('name','lcorps' + name);
                         }
                         else {
                             $(arLocInp[0]).attr('name','lindex' + name);
                             $(arLocInp[1]).attr('name','lname' + name);
+                            $(arLocInp[2]).attr('name','lhouse' + name);
+                            $(arLocInp[3]).attr('name','lbuilding' + name);
+                            $(arLocInp[4]).attr('name','lconstruction' + name);
+                            $(arLocInp[5]).attr('name','lcorps' + name); 
                         }
 
                         for (let i = 0, n = arPers.length; i < n; i++) {
@@ -651,11 +681,20 @@ var ProjectAddIndexProg = (function () {
             $(arLocInp[1]).attr('name','metro' + name);
             $(arLocInp[2]).attr('name','lindex' + name);
             $(arLocInp[3]).attr('name','lname' + name);
+            $(arLocInp[4]).attr('name','lhouse' + name);
+            $(arLocInp[5]).attr('name','lbuilding' + name);
+            $(arLocInp[6]).attr('name','lconstruction' + name);
+            $(arLocInp[7]).attr('name','lcorps' + name);  
           }
           else {
             arLocInp = $(newLoc).find('.loc-field input');
             $(arLocInp[0]).attr('name','lindex' + name);
             $(arLocInp[1]).attr('name','lname' + name);
+            $(arLocInp[2]).attr('name','lhouse' + name);
+            $(arLocInp[3]).attr('name','lbuilding' + name);
+            $(arLocInp[4]).attr('name','lconstruction' + name);
+            $(arLocInp[5]).attr('name','lcorps' + name);
+
           }
           $(newLoc).append(newPeriod);
           arPerInp = $(newLoc).find('.period-item input');
@@ -1035,16 +1074,39 @@ var ProjectAddIndexProg = (function () {
         let arr = $('#index .city-item'),
             empty = false;
 
-        for (let i = 0, l = arr.length; i < l; i++) {
-            let arInputs = $(arr[i]).find('input');
+        for (let i = 0, l = arr.length; i < l; i++)
+        {
+            let city = $(arr[i]).find("[name='city[]']").val(),
+                arLoc = $(arr[i]).find('.loc-field');
 
-            for (let j = 0, n = arInputs.length; j < n; j++) {
-                let data_m = $(arInputs[j]).attr('data-checker');
-                if(data_m!='metro') {
-                    let name = $(arInputs[j]).attr('name');
-                    if ($.inArray(name, ['c', 'm', 'p']) < 0 && !arInputs[j].value.length)
+            if(!city.length)
+                empty = true;
+
+            for (let j = 0, n = arLoc.length; j < n; j++)
+            {
+                let arInputs = $(arLoc[j]).find('input'),
+                    hasHouse = false;
+
+                for (let k = 0, m = arInputs.length; k < m; k++)
+                {
+                    let data = $(arInputs[k]).attr('data-checker'),
+                        name = $(arInputs[k]).attr('name');
+
+                    if(data==='house' && arInputs[k].value.length)
+                        hasHouse = true;
+                    else if (
+                        $.inArray(name, ['c', 'm', 'p']) < 0 
+                        && 
+                        !arInputs[k].value.length
+                        &&
+                        data!=='metro' && data!=='house'
+                        )
+                    {
                         empty = true;
+                    }
                 }
+                if(!hasHouse)
+                    empty = true;
             }
         }
         return empty;

@@ -812,16 +812,39 @@ var AddressEdit = (function () {
         let arr = $('#index .city-item'),
             empty = false;
 
-        for (let i = 0, l = arr.length; i < l; i++) {
-            let arInputs = $(arr[i]).find('input');
+        for (let i = 0, l = arr.length; i < l; i++)
+        {
+            let city = $(arr[i]).find("[name='city[]']").val(),
+                arLoc = $(arr[i]).find('.loc-field');
 
-            for (let j = 0, n = arInputs.length; j < n; j++) {
-                let data_m = $(arInputs[j]).attr('data-checker');
-                if(data_m!='metro') {
-                    let name = $(arInputs[j]).attr('name');
-                    if ($.inArray(name, ['c', 'm', 'p']) < 0 && !arInputs[j].value.length)
+            if(!city.length)
+                empty = true;
+
+            for (let j = 0, n = arLoc.length; j < n; j++)
+            {
+                let arInputs = $(arLoc[j]).find('input'),
+                    hasHouse = false;
+
+                for (let k = 0, m = arInputs.length; k < m; k++)
+                {
+                    let data = $(arInputs[k]).attr('data-checker'),
+                        name = $(arInputs[k]).attr('name');
+
+                    if(data==='house' && arInputs[k].value.length)
+                        hasHouse = true;
+                    else if (
+                        $.inArray(name, ['c', 'm', 'p']) < 0 
+                        && 
+                        !arInputs[k].value.length
+                        &&
+                        data!=='metro' && data!=='house'
+                        )
+                    {
                         empty = true;
+                    }
                 }
+                if(!hasHouse)
+                    empty = true;
             }
         }
         return empty;

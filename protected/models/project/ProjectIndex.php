@@ -38,6 +38,10 @@ class ProjectIndex extends CActiveRecordBehavior{
 					$arRes[$p] = array(
 						'name' => $arr['lname'][$c][$l],
 						'adres' => $arr['lindex'][$c][$l],
+						'house' => $arr['lhouse'][$c][$l],
+						'building' => $arr['lbuilding'][$c][$l],
+						'construction' => $arr['lconstruction'][$c][$l],
+						'corps' => $arr['lcorps'][$c][$l],
 						'id_city' => $c,
 						'bdate' => date('Y-m-d', strtotime($arr['bdate'][$c][$l][$p])),
 						'edate' => date('Y-m-d', strtotime($arr['edate'][$c][$l][$p])),
@@ -228,6 +232,10 @@ class ProjectIndex extends CActiveRecordBehavior{
 								"pc.project,
 								pc.name, 
 								pc.adres, 
+								pc.house, 
+								pc.building, 
+								pc.construction, 
+								pc.corps, 
 								pc.id_city, 
 								c.name city, 
 								c.ismetro,
@@ -323,6 +331,10 @@ class ProjectIndex extends CActiveRecordBehavior{
 			$arL['id'] = $i['location'];
 			$arL['name'] = $i['name'];
 			$arL['index'] = $i['adres'];
+			$arL['house'] = $i['house'];
+			$arL['building'] = $i['building'];
+			$arL['construction'] = $i['construction'];
+			$arL['corps'] = $i['corps'];
 			if(isset($i['id_metro']))
 				$arL['metro'][$i['id_metro']] = $i['metro'];
 			$arRes[$i['id_city']]['locations'][$i['location']] = $arL;
