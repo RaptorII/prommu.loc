@@ -269,7 +269,7 @@ class Project extends CActiveRecord
                 $edate = str_replace(".", "-", $edate);
                 $adres = $sheet_array[$i]['A'].' ул.'.$sheet_array[$i]['C'].' дом '.$sheet_array[$i]['D'].' здание'.$sheet_array[$i]['E'].' строение '.$sheet_array[$i]['F'].' строение '.$sheet_array[$i]['G'];
                 $location = $this->getCoords($adres);
-                if($sheet_array[$i]['I'] != ''){
+                if($sheet_array[$i]['J'] != ''){
                     $point = $sheet_array[$i]['J'];
                     
                      Yii::app()->db->createCommand()
