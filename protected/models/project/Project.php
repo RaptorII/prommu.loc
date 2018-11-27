@@ -276,6 +276,10 @@ class Project extends CActiveRecord
                         ->update('project_city', array(
                             'project' => $project,
                             'name' =>  $sheet_array[$i]['B'],
+                            'house' => $sheet_array[$i]['C'],
+                            'building' => $sheet_array[$i]['D'],
+                            'construction' => $sheet_array[$i]['E'],
+                            'corps' => $sheet_array[$i]['F'],
                             'adres' =>  $adres,
                             'id_city' => $city['id_city'],
                             'btime' =>  explode("-", $sheet_array[$i]['G'])[0],
