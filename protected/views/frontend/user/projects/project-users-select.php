@@ -112,7 +112,7 @@
 				<td><?=$viData['point']['locname'] ?></td>
 			</tr>
 			<tr>
-				<td><?=$viData['point']['locindex'] ?></td>
+				<td><?=$viData['point']['index_full'] ?></td>
 			</tr>
 			<tr>
 				<td><?=$viData['point']['date'] . ' ' . $viData['point']['time']?></td>

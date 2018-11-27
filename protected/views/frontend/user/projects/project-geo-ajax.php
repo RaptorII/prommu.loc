@@ -1,8 +1,3 @@
-<?
-echo "<pre>";
-print_r($viData); 
-echo "</pre>";
-?>
 <? if (sizeof($viData['items']) > 0): ?>
     <? foreach ($viData['items'] as $keyCity => $valueCity): ?>
         <div class="project__geo-item">

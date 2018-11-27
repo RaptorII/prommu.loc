@@ -57,7 +57,7 @@
                             </td>
                             <td <? /*= (empty($arCity['metro']) ? 'colspan="2"' : '') */ ?>>
                                 <div class="program__cell border">
-                                    <?= $arLoc['index'] ?>
+                                    <?= $arLoc['index_full'] ?>
 
 
                                     <?$metro = join(',</br>', $arLoc['metro'])?>

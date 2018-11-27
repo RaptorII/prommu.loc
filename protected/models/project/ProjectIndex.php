@@ -331,6 +331,11 @@ class ProjectIndex extends CActiveRecordBehavior{
 			$arL['id'] = $i['location'];
 			$arL['name'] = $i['name'];
 			$arL['index'] = $i['adres'];
+			$arL['index_full'] = $i['adres'];
+			!empty($i['house']) && $arL['index_full'] .= ', д.' . $i['house'];
+			!empty($i['building']) && $arL['index_full'] .= ', здание ' . $i['building'];
+			!empty($i['construction']) && $arL['index_full'] .= ', строение ' . $i['construction'];
+			!empty($i['corps']) && $arL['index_full'] .= ', корп.' . $i['corps'];
 			$arL['house'] = $i['house'];
 			$arL['building'] = $i['building'];
 			$arL['construction'] = $i['construction'];
@@ -411,6 +416,10 @@ class ProjectIndex extends CActiveRecordBehavior{
 							->select(
 								"pc.name,
 								pc.adres,
+								pc.house, 
+								pc.building, 
+								pc.construction, 
+								pc.corps,
 								pc.id_city,
 								pc.metro id_metro,
 								DATE_FORMAT(pc.bdate, '%d.%m.%Y') bdate,
@@ -439,12 +448,22 @@ class ProjectIndex extends CActiveRecordBehavior{
 			'ismetro' => $sql[0]['ismetro'],
 			'locname' => $sql[0]['name'],
 			'locindex' => $sql[0]['adres'],
+			'index_full' => $sql[0]['adres'],
+			'house' => $sql[0]['house'],
+			'building' => $sql[0]['building'],
+			'construction' => $sql[0]['construction'],
+			'corps' => $sql[0]['corps'],
 			'metro' => $sql[0]['metro'],
 			'date' => $sql[0]['bdate']==$sql[0]['edate']
 			? $sql[0]['bdate']
 			: ('с ' . $sql[0]['bdate'] . ' по ' . $sql[0]['edate']),
 			'time' => $sql[0]['btime'] . '-' . $sql[0]['etime']
 		);
+
+		!empty($arRes['house']) && $arRes['index_full'] .= ', д.' . $arRes['house'];
+		!empty($arRes['building']) && $arRes['index_full'] .= ', здание ' . $arRes['building'];
+		!empty($arRes['construction']) && $arRes['index_full'] .= ', строение ' . $arRes['construction'];
+		!empty($arRes['corps']) && $arRes['index_full'] .= ', корп.' . $arRes['corps'];
 
 		return $arRes;
 	}

@@ -16,25 +16,6 @@ Yii::app()->getClientScript()->registerScriptFile('https://maps.googleapis.com/m
 Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/route-map.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-map.css');
 /***********MAP************/
-/*
-Yii::app()->getClientScript()->registerCssFile('//unpkg.com/leaflet@1.2.0/dist/leaflet.css');
-Yii::app()->getClientScript()->registerCssFile('//unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css');
-
-
-
-Yii::app()->getClientScript()->registerScriptFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerCssFile('//unpkg.com/leaflet@1.3.4/dist/leaflet.css');
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/universal-map.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/universal-map.css');
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/js/dist/fancybox/jquery.fancybox.css');
-
-
-Yii::app()->getClientScript()->registerScriptFile('//unpkg.com/leaflet@1.2.0/dist/leaflet.js', CClientScript::POS_END);
-Yii::app()->getClientScript()->registerScriptFile('//unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js', CClientScript::POS_END);
-*/
-
-
 ?>
 
 <div class="row project">

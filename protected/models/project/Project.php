@@ -570,7 +570,9 @@ class Project extends CActiveRecord
                     $arI[$bdate][$p['id_city']]['date'] = date('d.m.Y',$bdate);
                     $arI[$bdate][$p['id_city']]['city'] = $p['city'];
                     $arI[$bdate][$p['id_city']]['ismetro'] = $p['ismetro'];
-                    $arI[$bdate][$p['id_city']]['users'][$idus][] = $p['point'];
+                    if(!in_array($p['point'], $arI[$bdate][$p['id_city']]['users'][$idus]))
+                        $arI[$bdate][$p['id_city']]['users'][$idus][] = $p['point'];
+
                     $bdate += (60*60*24);
                 }
                 while($bdate <= $edate);               
@@ -698,6 +700,7 @@ class Project extends CActiveRecord
         
         $arRes['project'] = $arr['project'];
         $arRes['items'] = $arI;
+
         // сортируем по времени
         usort($arr['original'], 
             function($a, $b){
@@ -726,7 +729,8 @@ class Project extends CActiveRecord
                     $arI[$date]['date'] = date('d.m.Y',$date);
                     $arI[$date]['cities'][$c]['city']['city'] = $p['city'];
                     $arI[$date]['cities'][$c]['city']['ismetro'] = $p['ismetro'];
-                    $arI[$date]['cities'][$c]['user'][$idus]['points'][] = $p['point'];
+                    if(!in_array($p['point'], $arI[$date]['cities'][$c]['user'][$idus]['points']))
+                        $arI[$date]['cities'][$c]['user'][$idus]['points'][] = $p['point'];
                     $date += (60*60*24);
                 }
                 while($date <= strtotime($p['edate']));
@@ -1007,7 +1011,8 @@ class Project extends CActiveRecord
                 !in_array($idus, $arU[1]) && array_push($arU[2], $idus);
 
                 if(in_array($idus, $arU[$fStatus])) {
-                    $arI[$city]['users'][$idus]['points'][] = $p['point'];
+                    if(!in_array($p['point'], $arI[$city]['users'][$idus]['points']))
+                        $arI[$city]['users'][$idus]['points'][] = $p['point'];
                     $arI[$city]['date'] = date('d.m.Y');
                     $arI[$city]['city'] = $p['city'];
                     $arI[$city]['ismetro'] = $p['ismetro'];
@@ -1169,7 +1174,8 @@ class Project extends CActiveRecord
                         $arI[$idus][$bdate][$p['id_city']]['date'] = date('d.m.Y',$bdate);
                         $arI[$idus][$bdate][$p['id_city']]['city'] = $p['city'];
                         $arI[$idus][$bdate][$p['id_city']]['ismetro'] = $p['ismetro'];
-                        $arI[$idus][$bdate][$p['id_city']]['points'][] = $p['point'];                         
+                        if(!in_array($p['point'], $arI[$idus][$bdate][$p['id_city']]['points']))
+                            $arI[$idus][$bdate][$p['id_city']]['points'][] = $p['point'];                       
                     }
                     $bdate += $day;
                 }
