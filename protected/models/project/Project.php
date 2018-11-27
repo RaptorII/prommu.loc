@@ -203,13 +203,14 @@ class Project extends CActiveRecord
             $home = "Дом";
             $build = "Здание";
             $str = "Строение";
+            $corps = "Строение";
             $date = "Дата работы";
             $time = "Время работы";
 
             if($xls['A'] == $city && $xls['B'] == $location &&
                 $xls['C'] == $street && $xls['D'] == $home &&
                 $xls['E'] == $build && $xls['F'] == $str &&
-                $xls['G'] == $date && $xls['H'] == $time)
+                $xls['G'] == $corps && $xls['H'] == $time && $xls['I'] == $date)
             {
                 $arRes['error'] = false; 
             }
@@ -261,8 +262,8 @@ class Project extends CActiveRecord
                     ->where('c.name = :name', array(':name' =>$sheet_array[$i]['A']))
                     ->queryRow();
                 
-                $bdate = explode("-", $sheet_array[$i]['H'])[0];
-                $edate = explode("-", $sheet_array[$i]['H'])[1];
+                $bdate = explode("-", $sheet_array[$i]['I'])[0];
+                $edate = explode("-", $sheet_array[$i]['I'])[1];
                    
                 $bdate = str_replace(".", "-", $bdate);
                 $edate = str_replace(".", "-", $edate);
@@ -282,8 +283,8 @@ class Project extends CActiveRecord
                             'corps' => $sheet_array[$i]['G'],
                             'adres' =>  $adres,
                             'id_city' => $city['id_city'],
-                            'btime' =>  explode("-", $sheet_array[$i]['I'])[0],
-                            'etime' =>  explode("-", $sheet_array[$i]['I'])[1],
+                            'btime' =>  explode("-", $sheet_array[$i]['H'])[0],
+                            'etime' =>  explode("-", $sheet_array[$i]['H'])[1],
                             'bdate' => $bdate,
                             'edate' =>  $edate,
                             'latitude' => $location['la'],
