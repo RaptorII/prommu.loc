@@ -89,10 +89,11 @@ class Yexcel
                 ->setCellValue("C{$j}", $data[$i]['adres'])
                 ->setCellValue("D{$j}", $data[$i]['house'])
                 ->setCellValue("E{$j}", $data[$i]['building'])
-                ->setCellValue("F{$j}", $data[$i]['construction'])
-                ->setCellValue("H{$j}", $data[$i]['bdate'].'-'.$data[$i]['edate'])
-                ->setCellValue("G{$j}", $data[$i]['btime'].'-'.$data[$i]['etime'])
-                ->setCellValue("I{$j}", $data[$i]['point']);
+                ->setCellValue("F{$j}", $data[$i]['corps'])
+                ->setCellValue("H{$j}", $data[$i]['construction'])
+                ->setCellValue("G{$j}", $data[$i]['bdate'].'-'.$data[$i]['edate'])
+                ->setCellValue("I{$j}", $data[$i]['btime'].'-'.$data[$i]['etime'])
+                ->setCellValue("J{$j}", $data[$i]['point']);
             $j++;
         }
 
