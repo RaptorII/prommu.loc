@@ -266,24 +266,24 @@ class Project extends CActiveRecord
                    
                 $bdate = str_replace(".", "-", $bdate);
                 $edate = str_replace(".", "-", $edate);
-                $adres = $sheet_array[$i]['A'].' дом'.$sheet_array[$i]['C'].' здание'.$sheet_array[$i]['D'].' строение'.$sheet_array[$i]['E'].' корпус'.$sheet_array[$i]['F'];
+                $adres = $sheet_array[$i]['A'].' ул.'.$sheet_array[$i]['C'].' дом '.$sheet_array[$i]['D'].' здание'.$sheet_array[$i]['E'].' строение '.$sheet_array[$i]['F'].' строение '.$sheet_array[$i]['G'];
                 $location = $this->getCoords($adres);
                 if($sheet_array[$i]['I'] != ''){
-                    $point = $sheet_array[$i]['I'];
-                    
+                    $point = $sheet_array[$i]['J'];
                     
                      Yii::app()->db->createCommand()
                         ->update('project_city', array(
                             'project' => $project,
                             'name' =>  $sheet_array[$i]['B'],
-                            'house' => $sheet_array[$i]['C'],
-                            'building' => $sheet_array[$i]['D'],
-                            'construction' => $sheet_array[$i]['E'],
-                            'corps' => $sheet_array[$i]['F'],
+                            'adres' => $sheet_array[$i]['C'],
+                            'house' => $sheet_array[$i]['D'],
+                            'building' => $sheet_array[$i]['E'],
+                            'construction' => $sheet_array[$i]['F'],
+                            'corps' => $sheet_array[$i]['G'],
                             'adres' =>  $adres,
                             'id_city' => $city['id_city'],
-                            'btime' =>  explode("-", $sheet_array[$i]['G'])[0],
-                            'etime' =>  explode("-", $sheet_array[$i]['G'])[1],
+                            'btime' =>  explode("-", $sheet_array[$i]['I'])[0],
+                            'etime' =>  explode("-", $sheet_array[$i]['I'])[1],
                             'bdate' => $bdate,
                             'edate' =>  $edate,
                             'latitude' => $location['la'],
@@ -293,15 +293,19 @@ class Project extends CActiveRecord
                 } else {
                     $res = Yii::app()->db->createCommand()
                         ->insert('project_city', array(
-                            'project' => $project,
+                           'project' => $project,
                             'name' =>  $sheet_array[$i]['B'],
-                            'adres' =>  $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'],
-                            'id_city' =>  $city['id_city'],
-                            'bdate' =>  $bdate,
+                            'adres' => $sheet_array[$i]['C'],
+                            'house' => $sheet_array[$i]['D'],
+                            'building' => $sheet_array[$i]['E'],
+                            'construction' => $sheet_array[$i]['F'],
+                            'corps' => $sheet_array[$i]['G'],
+                            'adres' =>  $adres,
+                            'id_city' => $city['id_city'],
+                            'btime' =>  explode("-", $sheet_array[$i]['I'])[0],
+                            'etime' =>  explode("-", $sheet_array[$i]['I'])[1],
+                            'bdate' => $bdate,
                             'edate' =>  $edate,
-                            'btime' => explode("-", $sheet_array[$i]['G'])[0],
-                            'etime' =>  explode("-", $sheet_array[$i]['G'])[1],
-                            'point' => $i.''.rand(1111,9999),
                             'latitude' => $location['la'],
                             'longitude' => $location['lo'],
                         ));   
