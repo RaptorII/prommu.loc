@@ -266,7 +266,7 @@ class Project extends CActiveRecord
                    
                 $bdate = str_replace(".", "-", $bdate);
                 $edate = str_replace(".", "-", $edate);
-                $adres = $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'];
+                $adres = $sheet_array[$i]['A'].' дом'.$sheet_array[$i]['C'].' здание'.$sheet_array[$i]['D'].' строение'.$sheet_array[$i]['E'].' корпус'.$sheet_array[$i]['F'];
                 $location = $this->getCoords($adres);
                 if($sheet_array[$i]['I'] != ''){
                     $point = $sheet_array[$i]['I'];
