@@ -415,7 +415,8 @@ class Project extends CActiveRecord
         Yii::import('ext.yexcel.Yexcel');
         
          $data = Yii::app()->db->createCommand()
-            ->select('pc.id, pc.name, pc.adres, pc.id_city, c.name city, pc.bdate, pc.edate, pc.btime, pc.etime, pc.project, pc.point')
+            ->select('pc.id, pc.name, pc.adres, pc.id_city, c.name city, pc.bdate, pc.edate, pc.btime, pc.etime, pc.project, pc.point, pc.corps,
+            pc.construction, pc.building, pc.house')
             ->from('project_city pc')
             ->join('city c', 'c.id_city=pc.id_city')
             ->where('pc.project = :project', array(':project' =>$project))
