@@ -30,10 +30,18 @@ class ProjectIndex extends CActiveRecordBehavior{
 		$lId = $pId = 0;
         $Project = new Project();
 		foreach ($arr['city'] as $c) { // по городам
+		
+		$city = Yii::app()->db->createCommand()
+                    ->select('c.name')
+                    ->from('city c')
+                    ->where('c.id_city = :id_city', array(':id_city' =>$c))
+                    ->queryRow();
+
 			foreach ($arr['bdate'][$c] as $l => $arLoc) { // по локациям
 				$lId++;
 				foreach ($arLoc as $p => $v) {// по точкам
-				    $location = $Project->getCoords($arr['lindex'][$c][$l]);
+				$adres = 'город '.$city['name'].' улица '.$arr['lindex'][$c][$l].' дом '.$arr['lhouse'][$c][$l].' здание '.$arr['lbuilding'][$c][$l].' строение '.$arr['lconstruction'][$c][$l].' корпус '.$arr['lcorps'][$c][$l];
+				    $location = $Project->getCoords($adres);
 					$pId++;
 					$arRes[$p] = array(
 						'name' => $arr['lname'][$c][$l],
