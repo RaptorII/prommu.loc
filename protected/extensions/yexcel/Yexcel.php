@@ -72,8 +72,8 @@ class Yexcel
             ->setCellValue('E1', 'Здание')
             ->setCellValue('F1', 'Строение')
             ->setCellValue('G1', 'Корпус')
-            ->setCellValue('H1', 'Дата работы')
-            ->setCellValue('I1', 'Время работы')
+            ->setCellValue('H1', 'Время работы')
+            ->setCellValue('I1', 'Дата работы')
             ->setCellValue('J1', 'Идентификатор');
         $j = 2;
         for($i = 0; $i < sizeof($data); $i ++){
