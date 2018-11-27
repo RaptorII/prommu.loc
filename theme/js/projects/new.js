@@ -62,18 +62,19 @@ var ProjectPage = (function () {
                 }
             }
 
-            if((empAddrProg && empAddrFile) && (empUsersSelect && empUsersInvite)) {
+            //if((empAddrProg && empAddrFile) && (empUsersSelect && empUsersInvite)) {
+            if(empAddrProg && empAddrFile) {
                 MainProject.showPopup('error','full-in-create');
                 return false;
             }
-            else if(empAddrProg && empAddrFile) {
+            /*else if(empAddrProg && empAddrFile) {
                 MainProject.showPopup('error','addr-in-create');
                 return false;
             }
             else if(empUsersSelect && empUsersInvite) {
                 MainProject.showPopup('error','users-in-create');
                 return false;
-            }
+            }*/
             else $('#new-project').submit();
         }
     }
@@ -1196,6 +1197,7 @@ var ProjectAddPersonal = (function () {
             data: params,
             success: function(res){
                 $content.html(res);
+                selectUsers = 0;
                 if(e){   // постраничное обновление
                     $('html, body').animate({
                         scrollTop: $content.offset().top - 100 },

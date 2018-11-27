@@ -545,4 +545,29 @@ class ProjectConvertVacancy
 
 		return $sql['title'];
 	}
+	/**
+	 * @param $arr - array('id')
+	 * @return array - projects
+	 */
+	public function findRelatedProjects($arr)
+	{
+		$arRes = array();
+		if(!count($arr))
+			return $arRes;
+
+		$arId = array();
+		foreach ($arr as $k => $v)
+			$arId[] = $v['id'];
+
+		$sql = Yii::app()->db->createCommand()
+						->select('project,vacancy')
+						->from('project')
+						->where(array('in','vacancy',$arId))
+						->queryAll();
+
+		foreach ($sql as $v)
+			$arRes[$v['vacancy']] = $v['project'];
+
+		return $arRes;
+	}
 }

@@ -8,7 +8,7 @@ var ProjectConvertVacancy = (function () {
 	ProjectConvertVacancy.prototype.init = function () {
 		let self = this;
 
-		$('.evl__to-project-btn').click(function(){
+		$('#to-project-btn').click(function(){
 			self.convert(this,'project');
 		});
 

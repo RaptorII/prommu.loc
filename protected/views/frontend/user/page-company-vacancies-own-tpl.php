@@ -105,7 +105,11 @@
                     <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=outsourcing"?>" class="evl-vacancies__atsrc">Аутсорсинг</a>
                     <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$val['id']}&service=outstaffing"?>" class="evl-vacancies__outstf">Аутстаффинг</a>
                   </div> 
-                  <div class="evl__to-project-btn" data-id="<?=$val['id']?>">Сделать проектом</div>
+                  <? if(!empty($viData['projects'][$val['id']])): // проверяем наличие привязанного проекта ?>
+                    <a class="evl__to-project-btn" href="<?=MainConfig::$PAGE_PROJECT_LIST . DS . $viData['projects'][$val['id']] ?>">Привязанный проект</a>
+                  <? else: ?>
+                    <div class="evl__to-project-btn" data-id="<?=$val['id']?>" id="to-project-btn">Сделать проектом</div>
+                  <? endif; ?>
                 </div>
               <?php endif; ?>
             </div>

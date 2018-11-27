@@ -704,7 +704,9 @@ class UserController extends AppController
         $pages->applyLimit($Vacancy);
         $data['rate'] = Share::$UserProfile->getProfileDataView();
         $data = array_merge($data, $Vacancy->getVacancies());
-
+        $model = new ProjectConvertVacancy();
+        $data['projects'] = $model->findRelatedProjects($data['vacs']);
+        
         $this->setBreadcrumbs($title = 'Мои вакансии', MainConfig::$PAGE_VACANCIES);
         $this->render($this->ViewModel->pageVacancies,
                 array('viData' => $data, 'arCount'=>$arCount, 'pages' => $pages),

@@ -299,8 +299,8 @@
 		float: right;
 	}
 	.evl__vacancies{ margin-left: -15px }
-	.evl__service-btn,
-	.evl__to-project-btn{
+	#DiContent .evl__service-btn,
+	#DiContent .evl__to-project-btn{
 		width: 90px;
 		height: initial;
 		padding: 5px;
@@ -308,6 +308,8 @@
 		background: #abb820;
 		border-radius: 0;
 	}
+	#DiContent .evl__service-btn:hover,
+	#DiContent .evl__to-project-btn:hover{ color: #ffffff; }
 }
 @media (min-width: 992px){
 	.evl-vacancies__item-resp,

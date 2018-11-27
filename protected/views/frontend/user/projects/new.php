@@ -36,6 +36,7 @@
 						<div class="project__opt-row" data-btn="xls">
 							<a href="/uploads/prommu_example.xls" download class="project__opt-xls">Скачать пример адресной программы</a>
 						</div>
+						<b title="Адресная программа обязательна" class="js-g-hashint">*</b>
 					</div>
 					<div class="project__opt">
 						<div class="project__opt-row">

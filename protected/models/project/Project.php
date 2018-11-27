@@ -545,6 +545,7 @@ class Project extends CActiveRecord
         }
     
         $arRes['project'] = $arr['project'];
+        $arRes['items'] = $arI;
         $arRes['tasks'] = $this->getTasks($arr['project']['project']);
 
         foreach ($arr['users'] as $id => $v)
@@ -552,7 +553,7 @@ class Project extends CActiveRecord
                 $arRes['users'][$v['id_user']] = $v;
 
         if(!sizeof($arRes['users']))
-            return array('items' => $arI);
+            return $arRes;
 
         foreach ($arr['original'] as $p)
             foreach ($arRes['users'] as $idus => $u) {
@@ -696,6 +697,7 @@ class Project extends CActiveRecord
         $arI = array();
         
         $arRes['project'] = $arr['project'];
+        $arRes['items'] = $arI;
         // сортируем по времени
         usort($arr['original'], 
             function($a, $b){
@@ -710,7 +712,7 @@ class Project extends CActiveRecord
                 $arRes['users'][$v['id_user']] = $v;
 
         if(!sizeof($arRes['users']))
-            return array('items' => $arI);
+            return $arRes;
 
         foreach ($arr['original'] as $p) {
             foreach ($arRes['users'] as $idus => $u) {
@@ -881,6 +883,7 @@ class Project extends CActiveRecord
         $arI = array();
         $date = date('Y-m-d');
         $arRes['project'] = $arr['project'];
+        $arRes['items'] = $arI;
         $arRes['date'] = date('d.m.Y');
         $arRes['unix'] = strtotime($date . ' 00:00:00');
 
@@ -958,7 +961,7 @@ class Project extends CActiveRecord
                 $arRes['users'][$v['id_user']] = $v;
 
         if(!sizeof($arRes['users']))
-            return array('items' => $arI);
+            return $arRes;
 
         $fStatus = filter_var(
                             Yii::app()->getRequest()->getParam('user_status'), // 0,1,2
@@ -1065,6 +1068,7 @@ class Project extends CActiveRecord
         }
      
         $arRes['project'] = $arr['project'];
+        $arRes['items'] = $arI;
         // сортируем по времени
         usort($arr['original'], 
             function($a, $b){
@@ -1079,7 +1083,7 @@ class Project extends CActiveRecord
                 $arRes['users'][$v['id_user']] = $v;
 
         if(!sizeof($arRes['users']))
-            return array('items' => $arI);
+            return $arRes;
 
         //      координаты
         $arRes['gps'] = $this->getСoordinates(['project'=>$project]);

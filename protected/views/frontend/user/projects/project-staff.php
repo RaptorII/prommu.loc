@@ -198,22 +198,23 @@ foreach ($viData['filter']['metros'] as $id => $metro) {
 
 <form action="" method="POST" id="update-person">
     <div id="main" class="project__module">
-
-
-        <div class="prommu__universal-filter__buttoncontainer">
-            <span class="prommu__universal-filter__button">ФИЛЬТР ДЛЯ ПЕРСОНАЛА</span>
-        </div>
-        <div class="project__header">
-            <? require 'filter.php'; // ФИЛЬТР ?>
-        </div>
-
+        <? if(count($viData['users'])): ?>
+            <div class="prommu__universal-filter__buttoncontainer">
+                <span class="prommu__universal-filter__button">ФИЛЬТР ДЛЯ ПЕРСОНАЛА</span>
+            </div>
+            <div class="project__header">
+                <? require 'filter.php'; // ФИЛЬТР ?>
+            </div>
+        <? endif; ?>
 
         <div class="project__control-panel">
 
             <div class="project__header-xlscontainer">
                 <div class="project__header-xls project__xls">
-                    <a href="/user/uploadprojectxls?id=<?= $project ?>&type=users" download>Выгрузить добавленный персонал</a>
-                    <a href="javascript:void(0)" class="add-program">Загрузить изменения по добавленному персоналу</a>
+                    <? if(count($viData['users'])): ?>
+                        <a href="/user/uploadprojectxls?id=<?= $project ?>&type=users" download>Выгрузить добавленный персонал</a>
+                        <a href="javascript:void(0)" class="add-program">Загрузить изменения по добавленному персоналу</a>
+                    <? endif; ?>
                     <a href="/uploads/promo_import.xls" download>Выгрузить пример для добавления нового персонала</a>
                     <a href="javascript:void(0)" class="add-program" >Загрузить новый персонал</a>
                 </div>

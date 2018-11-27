@@ -91,12 +91,14 @@
     <div class="filter__veil"></div>
 	<div class="col-xs-12">
 		<h2 class="project__title">ВЫБОР ПОЛЬЗОВАТЕЛЕЙ<span></span></h2>
-    <div class="prommu__universal-filter__buttoncontainer">
-        <span class="prommu__universal-filter__button">ФИЛЬТР ДЛЯ ПЕРСОНАЛА</span>
-    </div>
-    <div class="project__header">
-        <? require __DIR__ . '/filter.php'; // ФИЛЬТР ?>
-    </div>
+        <? if(count($viData['users'])): ?>
+            <div class="prommu__universal-filter__buttoncontainer">
+                <span class="prommu__universal-filter__button">ФИЛЬТР ДЛЯ ПЕРСОНАЛА</span>
+            </div>
+            <div class="project__header">
+                <? require 'filter.php'; // ФИЛЬТР ?>
+            </div>
+        <? endif; ?>
 		<table class="index-table">
 			<tr>
 				<td><b><?=$viData['point']['city'] ?></b></td>
@@ -120,10 +122,12 @@
 		<br>
 		<form action="" method="POST" id="select-form">
 			<div id="ajax-content">
-				<?php require __DIR__ . '/project-users-select-ajax.php'; ?>
+				<?php require 'project-users-select-ajax.php'; ?>
 			</div>
 			<div class="project__all-btns">
-				<span class="save-btn" id="save-btn">СОХРАНИТЬ</span>
+                <? if(count($viData['users'])): ?>
+                	<span class="save-btn" id="save-btn">СОХРАНИТЬ</span>
+                <? endif; ?>
 				<a class="save-btn" href="<?=$pLink?>">НАЗАД</a>
 			</div>
 		</form>
