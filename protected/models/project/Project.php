@@ -653,14 +653,19 @@ class Project extends CActiveRecord
     public function getСoordinates($arr) {
         $arCond = 'project=:prj';
         $arPrms[':prj'] = $arr['project'];
-
+        
+        $point = 'project=:prj';
+        $arPoint[':prj'] = $arr['project'];
+        
         if(isset($arr['user'])) {
             $arCond .= ' AND user=:user';
             $arPrms[':user'] = $arr['user'];            
         }
         if(isset($arr['point'])) {
             $arCond .= ' AND point=:point';
-            $arPrms[':point'] = $arr['point'];            
+            $point .=' AND point=:point';
+            $arPrms[':point'] = $arr['point'];  
+            $arPoint[':point'] = $arr['point'];
         }
         if(isset($arr['date'])) {
             $arr['date'] = date('Y-m-d',$arr['date']);
@@ -669,12 +674,17 @@ class Project extends CActiveRecord
         }
 
         $arRes = array(); 
-        $arRes = Yii::app()->db->createCommand()
+        $arRes['fact'] = Yii::app()->db->createCommand()
             ->select("*")
             ->from('project_report')
             ->where($arCond, $arPrms)
-            ->queryAll();  // поиск всех пользователей проекта  
-
+            ->queryAll();  // поиск всех пользователей проекта 
+            
+        $arRes['plane'] = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('project_city')
+            ->where($point, $arPoint)
+            ->queryAll();  
         if(!sizeof($arRes))
             $arRes = array('error'=>true);
         return $arRes;
