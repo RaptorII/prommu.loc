@@ -74,7 +74,7 @@ class Yexcel
             ->setCellValue('H1', 'Дата работы')
             ->setCellValue('G1', 'Время работы')
             ->setCellValue('I1', 'Идентификатор');
-        $j = 1;
+        $j = 2;
         for($i = 0; $i < sizeof($data); $i ++){
 
             $city = Yii::app()->db->createCommand()
@@ -137,7 +137,7 @@ class Yexcel
             ->setCellValue('C1', 'Электронная почта')
             ->setCellValue('D1', 'Телефон')
             ->setCellValue('E1', 'Локации');
-        $j = 1;
+        $j = 2;
         for($i = 0; $i < sizeof($data); $i ++){
 
             $objPHPExcel->setActiveSheetIndex(0)
