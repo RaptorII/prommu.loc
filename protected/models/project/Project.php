@@ -203,7 +203,7 @@ class Project extends CActiveRecord
             $home = "Дом";
             $build = "Здание";
             $str = "Строение";
-            $corps = "Строение";
+            $corps = "Корпус";
             $date = "Дата работы";
             $time = "Время работы";
 
