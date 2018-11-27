@@ -54,7 +54,7 @@
                                            data-map-user="<?=$user['id_user']?>"
                                            data-map-point="<?=$point['point']?>"
                                            data-map-date="<?=$d?>"
-                                           class="js-g-hashint js-get-map" title="Посмотреть на карте"></b>
+                                           class="js-g-hashint js-get-target" title="Посмотреть на карте"></b>
 									</div>
 								</td>
 								<?/*php if(!empty($city['ismetro'])): ?>

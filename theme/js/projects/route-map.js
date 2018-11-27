@@ -39,6 +39,18 @@ let GoogleMap = (function () {
             self.ajaxGetMapParams(data);
         });
 
+        $(".content-block").on('click', '.js-get-target', function() {
+
+            let map_project= $(this).data('map-project');
+            let map_user = $(this).data('map-user');
+            let map_point = $(this).data('map-point');
+            let map_date = $(this).data('map-date');
+            let type = 'coordinates';
+
+            var data = self.initData(map_project,map_user,map_point,map_date, type);
+            self.ajaxGetMapParamsPlan(data);
+        });
+
     };
 
     GoogleMap.prototype.initialize = function (value) {
@@ -196,9 +208,27 @@ let GoogleMap = (function () {
             data: {data: JSON.stringify(data)},
             dataType: 'json',
             success: function (value) {
-                //console.log(value);
-                if(value){
-                    self.initialize(value);
+                console.log(value);
+                if(value['plane']){
+                    self.initialize(value['plane']);
+                }
+            }
+        });
+    };
+    GoogleMap.prototype.ajaxGetMapParamsPlan = function (data) {
+        if (!data) return;
+
+        let self = this;
+
+        $.ajax({
+            type: 'GET',
+            url: '/ajax/Project',
+            data: {data: JSON.stringify(data)},
+            dataType: 'json',
+            success: function (value) {
+                console.log(value);
+                if(value['plane']){
+                    self.initialize(value['plane']);
                 }
             }
         });

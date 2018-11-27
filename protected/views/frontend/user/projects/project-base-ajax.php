@@ -81,7 +81,7 @@
                                             data-map-user="<?= $idus ?>"
                                             data-map-point="<?= $viData['points'][$valueItem]['point'] ?>"
                                             data-map-date="<?= $keyUnix ?>"
-                                            class="js-g-hashint js-get-map all__geo-data" title="Посмотреть на карте">
+                                            class="js-g-hashint js-get-target all__geo-data" title="Посмотреть на карте">
                                     </b>
                                 </div>
                             </td>

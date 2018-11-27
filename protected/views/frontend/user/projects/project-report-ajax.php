@@ -30,7 +30,6 @@ if (count($viData['items']) > 0):
                     <th>Перемещение</th>
                     <th>Задачи план</th>
                     <th>Задачи факт</th>
-                    <th>Маршрут</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -99,16 +98,6 @@ if (count($viData['items']) > 0):
                                             <span class="report__info-main">
                                                 <?= ($arGPS['tasks-fact']) ? $arGPS['tasks-fact'] : "-"; ?>
                                             </span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="route__table-cell border">
-                                        <b data-map-project="<?=$project?>"
-                                                   data-map-user="<?=$id_user?>"
-                                                   data-map-point="<?=$id_point?>"
-                                                   data-map-date="<?=$unix?>"
-                                                   class="js-g-hashint js-get-map" title="Посмотреть на карте"></b>
-
                                     </div>
                                 </td>
                             </tr>
