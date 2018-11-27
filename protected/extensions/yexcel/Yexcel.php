@@ -71,9 +71,10 @@ class Yexcel
             ->setCellValue('D1', 'Дом')
             ->setCellValue('E1', 'Здание')
             ->setCellValue('F1', 'Строение')
+            ->setCellValue('G1', 'Корпус')
             ->setCellValue('H1', 'Дата работы')
-            ->setCellValue('G1', 'Время работы')
-            ->setCellValue('I1', 'Идентификатор');
+            ->setCellValue('I1', 'Время работы')
+            ->setCellValue('J1', 'Идентификатор');
         $j = 2;
         for($i = 0; $i < sizeof($data); $i ++){
 
@@ -89,9 +90,9 @@ class Yexcel
                 ->setCellValue("C{$j}", $data[$i]['adres'])
                 ->setCellValue("D{$j}", $data[$i]['house'])
                 ->setCellValue("E{$j}", $data[$i]['building'])
-                ->setCellValue("F{$j}", $data[$i]['corps'])
-                ->setCellValue("H{$j}", $data[$i]['construction'])
-                ->setCellValue("G{$j}", $data[$i]['bdate'].'-'.$data[$i]['edate'])
+                ->setCellValue("F{$j}", $data[$i]['construction'])
+                ->setCellValue("G{$j}", $data[$i]['corps'])
+                ->setCellValue("H{$j}", $data[$i]['bdate'].'-'.$data[$i]['edate'])
                 ->setCellValue("I{$j}", $data[$i]['btime'].'-'.$data[$i]['etime'])
                 ->setCellValue("J{$j}", $data[$i]['point']);
             $j++;
