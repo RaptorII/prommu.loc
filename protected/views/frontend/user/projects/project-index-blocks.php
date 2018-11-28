@@ -44,6 +44,10 @@
 				<label class="project__index-lbl">Корпус</label>
 				<input type="text" name="lcorps" autocomplete="off" data-checker="house">
 			</div>
+			<div class="project__index-row comment">
+				<label class="project__index-lbl">Комментарий</label>
+				<textarea name="comment"></textarea>
+			</div>
 		</div>
 	</div>
 </div>

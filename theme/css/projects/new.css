@@ -1301,7 +1301,7 @@ input:checked + .filter__chbox-lab:after{
 #index .loc-item .metro-item,
 #index .loc-item .project__index-pen.lindex,
 #index .loc-item .project__index-pen.lname{ width: 100% }
-#index .loc-item .metro-item + .lindex + .lname{ margin-right: 0 }
+/*#index .loc-item .metro-item + .lindex + .lname{ margin-right: 0 }*/
 
 #index .loc-item .metro-item{ min-width: 190px; }
 #index .loc-item .project__index-pen.lindex input,
@@ -1318,9 +1318,6 @@ input:checked + .filter__chbox-lab:after{
 	padding: 0 15px 0 5px;
 	width: 100px;
 }
-
-
-
 #index .loc-item .project__index-pen.lhouse,
 #index .loc-item .project__index-pen.lbuilding,
 #index .loc-item .project__index-pen.lconstruction,
@@ -1331,7 +1328,21 @@ input:checked + .filter__chbox-lab:after{
 }
 #index .loc-item .project__index-lbl{ padding: 5px 10px; }
 .metro-field{ max-width: 200px; }
-
+.project__index-row.comment{
+	display: block;
+}
+#index .project__index-row.comment .project__index-lbl{
+	padding: 5px 0;
+	display: block;
+}
+#index .comment textarea{
+	display: block;
+	resize: vertical;
+	padding: 5px 15px;
+	min-height: 40px;
+	background-color: #ffffff;
+}
+#index .comment textarea:focus{ outline: none }
 
 @media (min-width: 500px){
 	#index .loc-item .project__index-pen.lindex input,
@@ -1355,10 +1366,12 @@ input:checked + .filter__chbox-lab:after{
 		width: 16%;
 		margin-right: 5%;
 	}
+	#index .loc-item .project__index-pen.lcorps{ margin-right: 0; }
 	#index .loc-item .metro-item,
 	#index .loc-item .project__index-pen.lindex,
 	#index .loc-item .project__index-pen.lname{ width: 25% }
-	#index .loc-item .metro-item,
+	#index .loc-item .project__index-pen.lname,
 	#index .loc-item .project__index-pen.lindex{ margin-right: 3%; }
 	#index .loc-item .project__index-pen.lname{ margin-right: 40% }
+	#index .loc-item .metro-item{ margin-left: -37%; }
 }

@@ -40,6 +40,14 @@
 									<span class="loc-del">&#10006</span>
 									<span class="add-period-btn">Добавить период</span>
 									<div class="project__index-row loc-field">
+										<div class="project__index-pen lindex">
+											<label class="project__index-lbl">Улица</label>
+											<input type="text" name="<?='lindex[' . $idCity . '][' . $idLoc . ']'?>" autocomplete="off" value="<?=$arLoc['index']?>">
+										</div>
+										<div class="project__index-pen lname">
+											<label class="project__index-lbl">Название ТТ</label>
+											<input type="text" name="<?='lname[' . $idCity . '][' . $idLoc . ']'?>" autocomplete="off" value="<?=$arLoc['name']?>">
+										</div>
 										<?php if(!empty($arCity['metro'])): ?>
 											<div class="metro-item">
 												<label class="project__index-lbl">Метро</label>
@@ -60,14 +68,6 @@
 												</div>
 											</div>
 										<?php endif; ?>
-										<div class="project__index-pen lindex">
-											<label class="project__index-lbl">Улица</label>
-											<input type="text" name="<?='lindex[' . $idCity . '][' . $idLoc . ']'?>" autocomplete="off" value="<?=$arLoc['index']?>">
-										</div>
-										<div class="project__index-pen lname">
-											<label class="project__index-lbl">Название ТТ</label>
-											<input type="text" name="<?='lname[' . $idCity . '][' . $idLoc . ']'?>" autocomplete="off" value="<?=$arLoc['name']?>">
-										</div>
 										<div class="project__index-pen lhouse">
 											<label class="project__index-lbl">Дом</label>
 											<input type="text" name="<?='lhouse[' . $idCity . '][' . $idLoc . ']'?>" autocomplete="off" data-checker="house" value="<?=$arLoc['house']?>">
@@ -83,6 +83,10 @@
 										<div class="project__index-pen lcorps">
 											<label class="project__index-lbl">Корпус</label>
 											<input type="text" name="<?='lcorps[' . $idCity . '][' . $idLoc . ']'?>" autocomplete="off" data-checker="house" value="<?=$arLoc['corps']?>">
+										</div>
+										<div class="project__index-row comment">
+											<label class="project__index-lbl">Комментарий</label>
+											<textarea name="<?='comment[' . $idCity . '][' . $idLoc . ']'?>"><?=$arLoc['comment']?></textarea>
 										</div>
 									</div>
 									<?php foreach ($arLoc['periods'] as $idPer => $arPer): ?>

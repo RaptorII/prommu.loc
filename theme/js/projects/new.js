@@ -86,7 +86,7 @@ var ProjectPage = (function () {
 
             //if((empAddrProg && empAddrFile) && (empUsersSelect && empUsersInvite)) {
             if(empAddrProg && empAddrFile) {
-                MainProject.showPopup('error','full-in-create');
+                MainProject.showPopup('attention','full-in-create');
                 return false;
             }
             /*else if(empAddrProg && empAddrFile) {
@@ -437,7 +437,8 @@ var ProjectAddIndexProg = (function () {
                             arRows = $(main).find('.loc-item .project__index-row');
 
                         for (var i = 0, n = arRows.length; i < n; i++) {
-                            $(arRows[i]).prepend(mContent);
+                            //$(arRows[i]).prepend(mContent);
+                            $(arRows[i]).find('.project__index-pen.lname').after(mContent);
                             /*let loc = $(arRows[i]).closest('.loc-item')[0],
                                 inp = $(arRows[i]).find('input')[0],
                                 name = '[' + data.id + '][' + loc.dataset.id + ']';
@@ -458,13 +459,14 @@ var ProjectAddIndexProg = (function () {
 
                         name = '[' + data.id + '][' + idL + ']';
                         if(data.metro==='1') {
-                            $(arLocInp[1]).attr('name','metro' + name);
-                            $(arLocInp[2]).attr('name','lindex' + name);
-                            $(arLocInp[3]).attr('name','lname' + name);
+                            $(arLocInp[0]).attr('name','lindex' + name);
+                            $(arLocInp[1]).attr('name','lname' + name);
+                            $(arLocInp[3]).attr('name','metro' + name);
                             $(arLocInp[4]).attr('name','lhouse' + name);
                             $(arLocInp[5]).attr('name','lbuilding' + name);
                             $(arLocInp[6]).attr('name','lconstruction' + name);
                             $(arLocInp[7]).attr('name','lcorps' + name);
+                            $(arLocs[i]).find('textarea').attr('name','comment' + name);
                         }
                         else {
                             $(arLocInp[0]).attr('name','lindex' + name);
@@ -473,6 +475,7 @@ var ProjectAddIndexProg = (function () {
                             $(arLocInp[3]).attr('name','lbuilding' + name);
                             $(arLocInp[4]).attr('name','lconstruction' + name);
                             $(arLocInp[5]).attr('name','lcorps' + name); 
+                            $(arLocs[i]).find('textarea').attr('name','comment' + name);
                         }
 
                         for (let i = 0, n = arPers.length; i < n; i++) {
@@ -676,15 +679,17 @@ var ProjectAddIndexProg = (function () {
 
           if($(main).find('.metro-item').length) {// если есть метро
             row = $(newLoc).find('.loc-field');
-            $(row).prepend($('#metro-content').html());
-            arLocInp = $(newLoc).find('.loc-field input');
-            $(arLocInp[1]).attr('name','metro' + name);
-            $(arLocInp[2]).attr('name','lindex' + name);
-            $(arLocInp[3]).attr('name','lname' + name);
+            //$(row).prepend($('#metro-content').html());
+            $(row).find('.project__index-pen.lname').after($('#metro-content').html());
+            arLocInp = $(newLoc).find('.loc-field input');   
+            $(arLocInp[0]).attr('name','lindex' + name);
+            $(arLocInp[1]).attr('name','lname' + name);
+            $(arLocInp[3]).attr('name','metro' + name);
             $(arLocInp[4]).attr('name','lhouse' + name);
             $(arLocInp[5]).attr('name','lbuilding' + name);
             $(arLocInp[6]).attr('name','lconstruction' + name);
             $(arLocInp[7]).attr('name','lcorps' + name);  
+            $(newLoc).find('textarea').attr('name','comment' + name); 
           }
           else {
             arLocInp = $(newLoc).find('.loc-field input');
@@ -694,7 +699,7 @@ var ProjectAddIndexProg = (function () {
             $(arLocInp[3]).attr('name','lbuilding' + name);
             $(arLocInp[4]).attr('name','lconstruction' + name);
             $(arLocInp[5]).attr('name','lcorps' + name);
-
+            $(newLoc).find('textarea').attr('name','comment' + name); 
           }
           $(newLoc).append(newPeriod);
           arPerInp = $(newLoc).find('.period-item input');

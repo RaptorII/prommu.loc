@@ -105,6 +105,10 @@
 									<input type="text" name="lcorps" autocomplete="off" data-checker="house">
 								</div>
 							</div>
+							<div class="project__index-row comment">
+								<label class="project__index-lbl">Комментарий</label>
+								<textarea name="comment"></textarea>
+							</div>
 							<div class="period-item" data-id="0">
 								<span class="project__index-name">Период</span>
 								<span class="period-del">&#10006</span>

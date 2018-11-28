@@ -12,7 +12,7 @@
     <div class="projects__header">
       <span class="projects__header-name"><?=$viData['employer']['name']?></span>
 				<a class='projects__btn prmu-btn' href='<?=MainConfig::$PAGE_PROJECT_NEW?>'>
-					<span>Добавить проект</span>
+					<span>Добавить новый проект</span>
 				</a>
     </div>
   </div>

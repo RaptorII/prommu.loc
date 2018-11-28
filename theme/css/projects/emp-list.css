@@ -188,6 +188,7 @@
     text-align: left;
     font-size:18px;
 }
+.projects__header .projects__btn{ max-width: 300px; }
 /*
 *		MEDIA
 */
