@@ -198,19 +198,23 @@ class Project extends CActiveRecord
         if( $props['type'] === 'xls-index')
         {
             $city = "Город";
-            $location = "Локация";
+            $location = "Название ТТ";
             $street = "Улица";
             $home = "Дом";
             $build = "Здание";
             $str = "Строение";
             $corps = "Корпус";
-            $date = "Дата работы";
+            $date = "Дата работы Старт";
+            $dateF = "Дата работы Финал";
             $time = "Время работы";
+            $comment = "Комментарий";
+            
 
             if($xls['A'] == $city && $xls['B'] == $location &&
                 $xls['C'] == $street && $xls['D'] == $home &&
                 $xls['E'] == $build && $xls['F'] == $str &&
-                $xls['G'] == $corps && $xls['H'] == $time && $xls['I'] == $date)
+                $xls['G'] == $corps && $xls['H'] == $date && $xls['I'] == $dateF
+                && $xls['J'] == $time && $xls['K'] == $comment)
             {
                 $arRes['error'] = false; 
             }
@@ -244,13 +248,15 @@ class Project extends CActiveRecord
         $sheet_array = Yii::app()->yexcel->readActiveSheet($this->XLS_UPLOAD_PATH . $link);
         
         $city = "Город";
-        $location = "Локация";
+        $location = "Название ТТ";
         $street = "Улица";
         $home = "Дом";
         $build = "Здание";
         $str = "Строение";
-        $date = "Дата работы";
+        $date = "Дата работы Старт";
+        $dateF = "Дата работы Финал";
         $time = "Время работы";
+        $comment = "Комментарий";
         
         
         $location = [];
@@ -282,10 +288,11 @@ class Project extends CActiveRecord
                             'construction' => $sheet_array[$i]['F'],
                             'corps' => $sheet_array[$i]['G'],
                             'id_city' => $city['id_city'],
-                            'btime' =>  explode("-", $sheet_array[$i]['H'])[0],
-                            'etime' =>  explode("-", $sheet_array[$i]['H'])[1],
-                            'bdate' => $bdate,
-                            'edate' =>  $edate,
+                            'btime' =>  explode("-", $sheet_array[$i]['J'])[0],
+                            'etime' =>  explode("-", $sheet_array[$i]['J'])[1],
+                            'bdate' =>  $sheet_array[$i]['H'],
+                            'edate' =>  $sheet_array[$i]['I'],
+                            'comment' =>  $sheet_array[$i]['L'],
                             'latitude' => $location['la'],
                             'longitude' => $location['lo'],
                      ), 'point = :point', array(':point' => $point));
@@ -301,10 +308,11 @@ class Project extends CActiveRecord
                             'construction' => $sheet_array[$i]['F'],
                             'corps' => $sheet_array[$i]['G'],
                             'id_city' => $city['id_city'],
-                            'btime' =>  explode("-", $sheet_array[$i]['I'])[0],
-                            'etime' =>  explode("-", $sheet_array[$i]['I'])[1],
-                            'bdate' => $bdate,
-                            'edate' =>  $edate,
+                            'btime' =>  explode("-", $sheet_array[$i]['J'])[0],
+                            'etime' =>  explode("-", $sheet_array[$i]['J'])[1],
+                            'bdate' =>  $sheet_array[$i]['H'],
+                            'edate' =>  $sheet_array[$i]['I'],
+                            'comment' =>  $sheet_array[$i]['L'],
                             'latitude' => $location['la'],
                             'longitude' => $location['lo'],
                         ));   
@@ -419,7 +427,7 @@ class Project extends CActiveRecord
         
          $data = Yii::app()->db->createCommand()
             ->select('pc.id, pc.name, pc.adres, pc.id_city, c.name city, pc.bdate, pc.edate, pc.btime, pc.etime, pc.project, pc.point, pc.corps,
-            pc.construction, pc.building, pc.house')
+            pc.construction, pc.building, pc.house,pc.comment')
             ->from('project_city pc')
             ->join('city c', 'c.id_city=pc.id_city')
             ->where('pc.project = :project', array(':project' =>$project))
