@@ -280,10 +280,17 @@ class ProjectIndex extends CActiveRecordBehavior{
 							->order('pc.bdate desc')
 							->queryAll();
 
-		foreach ($sql as $k => $v)
-			$sql[$k]['index_full'] = $this->getFullIndex($v);
+		$arId = $arRes = array();
+		foreach ($sql as $v)
+			if(!in_array($v['point'], $arId))
+			{
+				$arT = $v;
+				$arT['index_full'] = $this->getFullIndex($v);
+				$arRes[] = $arT;
+				$arId[] = $v['point'];
+			}
 
-		return $sql; 
+		return $arRes; 
 	}
 	/**
 	 * @param $arr array - sql result
