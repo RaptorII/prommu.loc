@@ -704,7 +704,7 @@ class Project extends CActiveRecord
             
         for($i = 0; $i < count($arRes['plane']); $i ++){
             if(strtotime($arRest['plane'][$i]['bdate']) < $arr['date'] && 
-               strtotime($arRest['plane'][$i]['bdate']) < $arr['date']){
+               strtotime($arRest['plane'][$i]['bdate']) > $arr['date']){
                    $arRes['plane'][] =  $arRest['plane'][$i];
                }
         }
