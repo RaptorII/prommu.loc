@@ -824,7 +824,7 @@ var AddressEdit = (function () {
         }
     }
     //      Проверка заполненности полей
-    AddressEdit.prototype.checkFields = function () {
+    AddressEdit.prototype.checkFields = function () { 
         let arr = $('#index .city-item'),
             empty = false;
 
