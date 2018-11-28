@@ -40,7 +40,7 @@ class ProjectIndex extends CActiveRecordBehavior{
 			foreach ($arr['bdate'][$c] as $l => $arLoc) { // по локациям
 				$lId++;
 				foreach ($arLoc as $p => $v) {// по точкам
-				$adres = $city['name'].' ул. '.$arr['lindex'][$c][$l].' дом '.$arr['lhouse'][$c][$l].' здание '.$arr['lbuilding'][$c][$l].' строение '.$arr['lconstruction'][$c][$l].' корпус '.$arr['lcorps'][$c][$l];
+				$adres = $city['name'].' ул. '.$arr['lindex'][$c][$l].' дом '.$arr['lhouse'][$c][$l];
 				$location = $Project->getCoords($adres);
 					$pId++;
 					$arRes[$p] = array(
