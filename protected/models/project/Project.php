@@ -971,27 +971,28 @@ class Project extends CActiveRecord
                     $d = date('Y-m-d 00:00:00',strtotime($v['date']));
                     $d = strtotime($d);
                     if($arRes['unix']==$d && $p['point']==$v['point'] && $arRes['id_user']==$v['user']) {
-                        if(!isset($arRes['item']['bfact'])) {
-                            $arRes['item']['bfact'] = date('G:i',strtotime($v['date']));
+                        if(!isset($arRes['items'][$p['point']]['bfact'])) {
+                            $arRes['items'][$p['point']]['bfact'] = date('G:i',strtotime($v['date']));
                             $d1 = strtotime($date . ' ' . $p['btime'] . ':00');
                             $d2 = strtotime($v['date']);
                             $d3 = strtotime($date . ' ' . $p['etime'] . ':00');
-                            $arRes['item']['is-lateness'] = $d1 < $d2; // опоздание
-                            $arRes['item']['is-missed'] = $d3 < $d2; // пропуск
-                            if($arRes['item']['is-lateness'])
-                                $arRes['item']['time-lateness'] = ($d2 - $d1) / 60;
+                            $arRes['items'][$p['point']]['is-lateness'] = $d1 < $d2; // опоздание
+                            $arRes['items'][$p['point']]['is-missed'] = $d3 < $d2; // пропуск
+                            if($arRes['items'][$p['point']]['is-lateness'])
+                                $arRes['items'][$p['point']]['time-lateness'] = ($d2 - $d1) / 60;
                             $curTime = new DateTime();
                             $bfact = new DateTime($v['date']);
                             $tActive = $curTime->diff($bfact);
                             if($tActive)
-                                $arRes['item']['time-isactive'] = $tActive->h.':'.str_pad($tActive->i, 2, "0", STR_PAD_LEFT);
+                                $arRes['items'][$p['point']]['time-isactive'] = $tActive->h.':'.str_pad($tActive->i, 2, "0", STR_PAD_LEFT);
                         }
-                        $arRes['item']['last-point'] = $v['point'];
+                        $arRes['items'][$p['point']]['last-point'] = $v['point'];
+                        $arRes['items'][$p['point']]['efact'] = date('G:i',strtotime($v['date']));
                     }
                 }
-                $arRes['item']['bplan'] = date('G:i',strtotime($p['btime']));
-                $arRes['item']['eplan'] = date('G:i',strtotime($p['etime']));
-                $arRes['item']['efact'] = date('H:i',strtotime($v['date']));
+                $arRes['items'][$p['point']]['bplan'] = date('G:i',strtotime($p['btime']));
+                $arRes['items'][$p['point']]['eplan'] = date('G:i',strtotime($p['etime']));
+                
                 $arRes['tasks'] = $this->getTasks($arr['project']['project']);
                 if(in_array($p['point'], $arRes['user']['points']))
                     $arRes['points'][$p['point']] = $p;
