@@ -605,6 +605,8 @@ class Project extends CActiveRecord
                 pc.name lname,
                 pc.adres lindex,
                 pc.id_city,
+                pc.latitude,
+                pc.longitude,
                 pc.metro id_metro,
                 pb.point,
                 c.name city,
