@@ -681,7 +681,9 @@ class Project extends CActiveRecord
         if(isset($arr['date'])) {
             $arr['date'] = date('Y-m-d',$arr['date']);
             $arCond .= ' AND date(date)=:date';
-            $arPrms[':date'] = $arr['date'];            
+            $point .=' AND edate=>:date AND date(date) <=:date';
+            $arPrms[':date'] = $arr['date'];   
+            $arPoint[':date'] = $arr['date'];
         }
 
         $arRes = array(); 
