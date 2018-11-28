@@ -29,7 +29,7 @@
                 <div class="addr__table-cell"><?=$arLoc['name']?></div>
               </td>
               <td>
-                <div class="addr__table-cell border"><?=$arLoc['index']?></div>
+                <div class="addr__table-cell border"><?=$arLoc['index_full']?></div>
               </td>
               <? if(!empty($arCity['metro'])): ?>
                 <td>

@@ -40,7 +40,7 @@
 								<td class="index">
 									<div class="task__table-cell border task__table-index">
 
-										<span><?=$point['adres']?>
+										<span><?=$point['index_full']?>
 
 
                                         <?if(!empty($point['metro'])):?>

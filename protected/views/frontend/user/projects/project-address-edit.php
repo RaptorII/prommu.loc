@@ -61,7 +61,7 @@
 											</div>
 										<?php endif; ?>
 										<div class="project__index-pen lindex">
-											<label class="project__index-lbl">Адрес ТТ</label>
+											<label class="project__index-lbl">Улица</label>
 											<input type="text" name="<?='lindex[' . $idCity . '][' . $idLoc . ']'?>" autocomplete="off" value="<?=$arLoc['index']?>">
 										</div>
 										<div class="project__index-pen lname">

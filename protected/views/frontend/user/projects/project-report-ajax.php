@@ -45,7 +45,7 @@ if (count($viData['items']) > 0):
                                 </td>
                                 <td>
                                     <div class="route__table-cell border">
-                                        <span><?= $viData['points'][$id_point]['adres'] ?></span>
+                                        <span><?= $viData['points'][$id_point]['index_full'] ?></span>
                                         <span class="report__info-main"><?= $viData['points'][$id_point]['name'] ?></span>
                                     </div>
                                 </td>

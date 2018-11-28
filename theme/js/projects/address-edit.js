@@ -205,10 +205,18 @@ var AddressEdit = (function () {
               $(arLocInp[1]).attr('name','metro' + name);
               $(arLocInp[2]).attr('name','lindex' + name);
               $(arLocInp[3]).attr('name','lname' + name);
+              $(arLocInp[4]).attr('name','lhouse' + name);
+              $(arLocInp[5]).attr('name','lbuilding' + name);
+              $(arLocInp[6]).attr('name','lconstruction' + name);
+              $(arLocInp[7]).attr('name','lcorps' + name);
             }
             else {
               $(arLocInp[0]).attr('name','lindex' + name);
               $(arLocInp[1]).attr('name','lname' + name);
+              $(arLocInp[2]).attr('name','lhouse' + name);
+              $(arLocInp[3]).attr('name','lbuilding' + name);
+              $(arLocInp[4]).attr('name','lconstruction' + name);
+              $(arLocInp[5]).attr('name','lcorps' + name);
             }
 
             for (let i = 0, n = arPers.length; i < n; i++) {
@@ -428,11 +436,19 @@ var AddressEdit = (function () {
         $(arLocInp[1]).attr('name','metro' + name);
         $(arLocInp[2]).attr('name','lindex' + name);
         $(arLocInp[3]).attr('name','lname' + name);
+        $(arLocInp[4]).attr('name','lhouse' + name);
+        $(arLocInp[5]).attr('name','lbuilding' + name);
+        $(arLocInp[6]).attr('name','lconstruction' + name);
+        $(arLocInp[7]).attr('name','lcorps' + name);
       }
       else {
         arLocInp = $(newLoc).find('.loc-field input');
         $(arLocInp[0]).attr('name','lindex' + name);
         $(arLocInp[1]).attr('name','lname' + name);
+        $(arLocInp[2]).attr('name','lhouse' + name);
+        $(arLocInp[3]).attr('name','lbuilding' + name);
+        $(arLocInp[4]).attr('name','lconstruction' + name);
+        $(arLocInp[5]).attr('name','lcorps' + name);
       }
       $(newLoc).append(newPeriod);
       arPerInp = $(newLoc).find('.period-item input');
