@@ -24,7 +24,7 @@ let GoogleMap = (function () {
             let type = 'coordinates';
 
             var data = self.initData(map_project,map_user,map_point,map_date, type);
-            self.ajaxGetMapParams(data);
+            self.ajaxGetMapParamsFact(data);
         });
 
         $(".content-block").on('click', '.map__universal-button', function() {
@@ -36,7 +36,7 @@ let GoogleMap = (function () {
             let type = 'coordinates';
 
             var data = self.initData(map_project,map_user,map_point,map_date, type);
-            self.ajaxGetMapParams(data);
+            self.ajaxGetMapParamsPlan(data);
         });
 
         $(".content-block").on('click', '.js-get-target', function() {
@@ -197,7 +197,7 @@ let GoogleMap = (function () {
         return data_object;
     };
 
-    GoogleMap.prototype.ajaxGetMapParams = function (data) {
+    GoogleMap.prototype.ajaxGetMapParamsFact = function (data) {
         if (!data) return;
 
         let self = this;
@@ -209,8 +209,8 @@ let GoogleMap = (function () {
             dataType: 'json',
             success: function (value) {
                 console.log(value);
-                if(value['plane']){
-                    self.initialize(value['plane']);
+                if(value['fact']){
+                    self.initialize(value['fact']);
                 }
             }
         });

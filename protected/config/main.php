@@ -157,9 +157,13 @@ return array(
                 '<controller:user>/<action:projects>/<id:user-card>/<user_id:\d+>' => '<controller>/<action>',
                 '<controller:user>/<action:projects>/<id:[\w-]+>/<section:[\w-]+>' => '<controller>/<action>',
                 '<controller:user>/<action:projects>/<id:[\w-]+>/<section:route>/<user_id:\d+>' => '<controller>/<action>',
-                '<controller:user>/<action:projects>/<id:[\w-]+>/<section:geo>/<user_id:\d+>' => '<controller>/<action>',
-                '<controller:user>/<action:projects>/<id:[\w-]+>/<section:geo>/<user_id:\d+>/<unix:\d+>' => '<controller>/<action>',
+                '<controller:user>/<action:projects>/<id:[\w-]+>/<section:geo>/<user_id:\d+>/<point:\d+>' => '<controller>/<action>',
                 '<controller:user>/<action:projects>/<id:[\w-]+>/<section:users-select>/<point:\d+>' => '<controller>/<action>',
+                // chats
+                '<controller:user>/<action:chats>/<section:[\w-]+>' => '<controller>/<action>',
+                '<controller:user>/<action:chats>/<section:feedback>/<id:\d+>' => '<controller>/<action>',
+                '<controller:user>/<action:chats>/<section:vacancies>/<vacancy:\d+>' => '<controller>/<action>',
+                '<controller:user>/<action:chats>/<section:vacancies>/<vacancy:\d+>/<id:\d+>' => '<controller>/<action>',
                 // все action с цифрами на общий контроллер
                 '<action>/<id:\d+>' => 'site/<action>',
                 // для всех страниц
