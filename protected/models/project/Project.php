@@ -664,11 +664,25 @@ class Project extends CActiveRecord
     *       Получение координат по проекту
     */
     public function getСoordinates($arr) {
+        
+        
         $arCond = 'project=:prj';
         $arPrms[':prj'] = $arr['project'];
         
         $point = 'project=:prj';
         $arPoint[':prj'] = $arr['project'];
+        
+        if($arr['point']){
+            $arCond .= ' AND pc.point IN ('.$arr['point'].')';
+             $arRes['plane'] = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('project_city')
+            ->where($point, $arPoint)
+            ->queryAll();  
+            if(!sizeof($arRes))
+                $arRes = array('error'=>true);
+            return $arRes;
+        }
         
         if(isset($arr['user'])) {
             $arCond .= ' AND user=:user';
@@ -683,9 +697,7 @@ class Project extends CActiveRecord
         if(isset($arr['date'])) {
             $arr['date'] = date('Y-m-d',$arr['date']);
             $arCond .= ' AND date(date)=:date';
-           
             $arPrms[':date'] = $arr['date'];   
-            $arPoint[':date'] = $arr['date'];
         }
 
         $arRes = array(); 
@@ -695,11 +707,6 @@ class Project extends CActiveRecord
             ->where($arCond, $arPrms)
             ->queryAll();  // поиск всех пользователей проекта 
             
-        $arRes['plane'] = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('project_city')
-            ->where($point, $arPoint)
-            ->queryAll();  
         if(!sizeof($arRes))
             $arRes = array('error'=>true);
         return $arRes;
