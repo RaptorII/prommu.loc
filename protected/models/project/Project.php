@@ -696,7 +696,7 @@ class Project extends CActiveRecord
             ->from('project_report')
             ->where($arCond, $arPrms)
             ->queryAll();  // поиск всех пользователей проекта 
-        if(isset($arr['point'])){
+        if(!empty($arr['point'])) {
                 
          $arRes['plane']= Yii::app()->db->createCommand()
             ->select("*")
