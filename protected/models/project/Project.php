@@ -705,8 +705,8 @@ class Project extends CActiveRecord
         file_put_contents('test.txt', date('d.m.Y H:i')."\t".var_export($arRest['plane'],1)."\n", FILE_APPEND | LOCK_EX);
         for($i = 0; $i < count($arRest['plane']); $i ++){
             file_put_contents('time.txt', date('d.m.Y H:i')."\t".strtotime($arRest['plane'][$i]['edate']).' ---'.strtotime($arRest['plane'][$i]['bdate']).'---'.$dates."\n", FILE_APPEND | LOCK_EX);
-            if(strtotime($arRest['plane'][$i]['edate']) > $dates && 
-               strtotime($arRest['plane'][$i]['bdate']) < $dates){
+            if(strtotime($arRest['plane'][$i]['edate']) >= $dates && 
+               strtotime($arRest['plane'][$i]['bdate']) <= $dates){
                    $arRes['plane'][] = $arRest['plane'][$i];
                    file_put_contents('plane.txt', date('d.m.Y H:i')."\t".var_export($arRest['plane'][$i],1)."\n", FILE_APPEND | LOCK_EX);
             }
