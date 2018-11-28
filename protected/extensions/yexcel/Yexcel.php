@@ -66,15 +66,17 @@ class Yexcel
         // Add some data
         $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A1', 'Город')
-            ->setCellValue('B1', 'Локация')
+            ->setCellValue('B1', 'Название ТТ')
             ->setCellValue('C1', 'Улица')
             ->setCellValue('D1', 'Дом')
             ->setCellValue('E1', 'Здание')
             ->setCellValue('F1', 'Строение')
             ->setCellValue('G1', 'Корпус')
-            ->setCellValue('H1', 'Время работы')
-            ->setCellValue('I1', 'Дата работы')
-            ->setCellValue('J1', 'Идентификатор');
+            ->setCellValue('H1', 'Дата работы Старт')
+            ->setCellValue('I1', 'Дата работы Финал')
+            ->setCellValue('J1', 'Время работы')
+            ->setCellValue('K1', 'Комментарий')
+            ->setCellValue('L1', 'Идентификатор');
         $j = 2;
         for($i = 0; $i < sizeof($data); $i ++){
 
@@ -92,9 +94,11 @@ class Yexcel
                 ->setCellValue("E{$j}", $data[$i]['building'])
                 ->setCellValue("F{$j}", $data[$i]['construction'])
                 ->setCellValue("G{$j}", $data[$i]['corps'])
-                ->setCellValue("H{$j}", $data[$i]['bdate'].'-'.$data[$i]['edate'])
-                ->setCellValue("I{$j}", $data[$i]['btime'].'-'.$data[$i]['etime'])
-                ->setCellValue("J{$j}", $data[$i]['point']);
+                ->setCellValue("H{$j}", $data[$i]['bdate'])
+                ->setCellValue("I{$j}", $data[$i]['edate'])
+                ->setCellValue("J{$j}", $data[$i]['comment'])
+                ->setCellValue("K{$j}", $data[$i]['btime'].'-'.$data[$i]['etime'])
+                ->setCellValue("L{$j}", $data[$i]['point']);
             $j++;
         }
 
