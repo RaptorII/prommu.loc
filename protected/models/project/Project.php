@@ -1,4 +1,4 @@
-ф<?php
+<?php
 /**
  * Created by Grescode
  * Date: 28.07.18
