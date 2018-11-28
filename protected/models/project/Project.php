@@ -672,17 +672,6 @@ class Project extends CActiveRecord
         $point = 'project=:prj';
         $arPoint[':prj'] = $arr['project'];
         
-        if($arr['point']){
-            $arCond .= ' AND pc.point IN ('.$arr['point'].')';
-             $arRes['plane'] = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('project_city')
-            ->where($point, $arPoint)
-            ->queryAll();  
-            if(!sizeof($arRes))
-                $arRes = array('error'=>true);
-            return $arRes;
-        }
         
         if(isset($arr['user'])) {
             $arCond .= ' AND user=:user';
@@ -706,6 +695,12 @@ class Project extends CActiveRecord
             ->from('project_report')
             ->where($arCond, $arPrms)
             ->queryAll();  // поиск всех пользователей проекта 
+        
+         $arRes['plane'] = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('project_city')
+            ->where($point, $arPoint)
+            ->queryAll();  
             
         if(!sizeof($arRes))
             $arRes = array('error'=>true);
