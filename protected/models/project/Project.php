@@ -684,6 +684,7 @@ class Project extends CActiveRecord
             $arPoint[':point'] = $arr['point'];
         }
         if(isset($arr['date'])) {
+            $dates = $arr['date'];
             $arr['date'] = date('Y-m-d',$arr['date']);
             $arCond .= ' AND date(date)=:date';
             $arPrms[':date'] = $arr['date'];   
@@ -703,9 +704,9 @@ class Project extends CActiveRecord
             ->queryAll(); 
         file_put_contents('test.txt', date('d.m.Y H:i')."\t".var_export($arRest['plane'],1)."\n", FILE_APPEND | LOCK_EX);
         for($i = 0; $i < count($arRest['plane']); $i ++){
-            file_put_contents('time.txt', date('d.m.Y H:i')."\t".strtotime($arRest['plane'][$i]['edate']).' ---'.strtotime($arRest['plane'][$i]['bdate']).'---'.$arr['date']."\n", FILE_APPEND | LOCK_EX);
-            if(strtotime($arRest['plane'][$i]['edate']) > $arr['date'] && 
-               strtotime($arRest['plane'][$i]['bdate']) < $arr['date']){
+            file_put_contents('time.txt', date('d.m.Y H:i')."\t".strtotime($arRest['plane'][$i]['edate']).' ---'.strtotime($arRest['plane'][$i]['bdate']).'---'.$dates."\n", FILE_APPEND | LOCK_EX);
+            if(strtotime($arRest['plane'][$i]['edate']) > $dates && 
+               strtotime($arRest['plane'][$i]['bdate']) < $dates){
                    $arRes['plane'][] =  $arRest['plane'][$i];
                }
         }
