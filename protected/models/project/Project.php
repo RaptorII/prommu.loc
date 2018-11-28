@@ -703,8 +703,8 @@ class Project extends CActiveRecord
             ->queryAll(); 
             
         for($i = 0; $i < count($arRes['plane']); $i ++){
-            if(strtotime($arRest['plane'][$i]['bdate']) < $arr['date'] && 
-               strtotime($arRest['plane'][$i]['bdate']) > $arr['date']){
+            if(strtotime($arRest['plane'][$i]['edate']) > $arr['date'] && 
+               strtotime($arRest['plane'][$i]['bdate']) < $arr['date']){
                    $arRes['plane'][] =  $arRest['plane'][$i];
                }
         }
