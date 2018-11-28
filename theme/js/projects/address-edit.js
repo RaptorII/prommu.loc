@@ -827,7 +827,7 @@ var AddressEdit = (function () {
     AddressEdit.prototype.checkFields = function () { 
         let arr = $('#index .city-item'),
             empty = false;
-
+            
         for (let i = 0, l = arr.length; i < l; i++)
         {
             let city = $(arr[i]).find("[name='city[]']").val(),
@@ -835,7 +835,7 @@ var AddressEdit = (function () {
 
             if(!city.length)
                 empty = true;
-
+              
             for (let j = 0, n = arLoc.length; j < n; j++)
             {
                 let arInputs = $(arLoc[j]).find('input'),
@@ -856,13 +856,14 @@ var AddressEdit = (function () {
                         data!=='metro' && data!=='house'
                         )
                     {
-                        empty = true;
+                      return true;
                     }
                 }
                 if(!hasHouse)
-                    empty = true;
+                  return true;
             }
         }
+
         return empty;
     }
     //      удаление элементов

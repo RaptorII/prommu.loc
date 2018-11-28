@@ -1102,11 +1102,11 @@ var ProjectAddIndexProg = (function () {
                         data!=='metro' && data!=='house'
                         )
                     {
-                        empty = true;
+                        return true;
                     }
                 }
                 if(!hasHouse)
-                    empty = true;
+                    return true;
             }
         }
         return empty;
