@@ -702,7 +702,7 @@ class Project extends CActiveRecord
             ->where($point, $arPoint)
             ->queryAll(); 
             
-        for($i = 0; $i < count($arRes['plane']); $i ++){
+        for($i = 0; $i < count($arRest['plane']); $i ++){
             if(strtotime($arRest['plane'][$i]['edate']) > $arr['date'] && 
                strtotime($arRest['plane'][$i]['bdate']) < $arr['date']){
                    $arRes['plane'][] =  $arRest['plane'][$i];
