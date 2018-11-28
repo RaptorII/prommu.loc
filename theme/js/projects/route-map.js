@@ -144,7 +144,7 @@ let GoogleMap = (function () {
 
         var element_id = $(element).attr("id");
         var mapOptions = {
-            zoom: 7,
+            zoom: 3,
             center: new google.maps.LatLng(55.75370903771494,37.61981338262558),
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
