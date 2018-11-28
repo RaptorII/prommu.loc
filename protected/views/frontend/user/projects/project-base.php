@@ -207,9 +207,10 @@ foreach ($viData['filter']['posts'] as $k => $p)
     $arFilterData['FILTER_SETTINGS'][5]['DATA'][$k] = ['title' => $p, 'id' => $k];
 
 
-echo "<pre>";
+/*echo "<pre>";
 print_r($viData); 
 echo "</pre>";
+*/
 
 ?>
 
