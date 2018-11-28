@@ -96,8 +96,8 @@ class Yexcel
                 ->setCellValue("G{$j}", $data[$i]['corps'])
                 ->setCellValue("H{$j}", $data[$i]['bdate'])
                 ->setCellValue("I{$j}", $data[$i]['edate'])
-                ->setCellValue("J{$j}", $data[$i]['comment'])
-                ->setCellValue("K{$j}", $data[$i]['btime'].'-'.$data[$i]['etime'])
+                ->setCellValue("J{$j}", $data[$i]['btime'].'-'.$data[$i]['etime'])
+                ->setCellValue("K{$j}", $data[$i]['comment'])
                 ->setCellValue("L{$j}", $data[$i]['point']);
             $j++;
         }
