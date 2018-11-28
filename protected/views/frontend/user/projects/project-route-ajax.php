@@ -38,7 +38,7 @@
                                         </td>
                                         <td class="route__table-cell-adres">
                                             <div class="route__table-cell border route__table-index">
-                                                <span><?= $point['adres'] ?>
+                                                <span><?= $point['index_full'] ?>
                                                     <?if(!empty($point['metro'])):?>
                                                         <span>
                                                             <img title="<?=$point['metro']?>"

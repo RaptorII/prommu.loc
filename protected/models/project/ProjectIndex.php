@@ -277,6 +277,9 @@ class ProjectIndex extends CActiveRecordBehavior{
 							->order('pc.bdate desc')
 							->queryAll();
 
+		foreach ($sql as $k => $v)
+			$sql[$k]['index_full'] = $this->getFullIndex($v);
+
 		return $sql; 
 	}
 	/**
@@ -339,11 +342,7 @@ class ProjectIndex extends CActiveRecordBehavior{
 			$arL['id'] = $i['location'];
 			$arL['name'] = $i['name'];
 			$arL['index'] = $i['adres'];
-			$arL['index_full'] = $i['adres'];
-			!empty($i['house']) && $arL['index_full'] .= ', д.' . $i['house'];
-			!empty($i['building']) && $arL['index_full'] .= ', здание ' . $i['building'];
-			!empty($i['construction']) && $arL['index_full'] .= ', строение ' . $i['construction'];
-			!empty($i['corps']) && $arL['index_full'] .= ', корп.' . $i['corps'];
+			$arL['index_full'] = $this->getFullIndex($i);
 			$arL['house'] = $i['house'];
 			$arL['building'] = $i['building'];
 			$arL['construction'] = $i['construction'];
@@ -468,10 +467,7 @@ class ProjectIndex extends CActiveRecordBehavior{
 			'time' => $sql[0]['btime'] . '-' . $sql[0]['etime']
 		);
 
-		!empty($arRes['house']) && $arRes['index_full'] .= ', д.' . $arRes['house'];
-		!empty($arRes['building']) && $arRes['index_full'] .= ', здание ' . $arRes['building'];
-		!empty($arRes['construction']) && $arRes['index_full'] .= ', строение ' . $arRes['construction'];
-		!empty($arRes['corps']) && $arRes['index_full'] .= ', корп.' . $arRes['corps'];
+		$arRes['index_full'] = $this->getFullIndex($arRes, $arRes['locindex']);
 
 		return $arRes;
 	}
@@ -525,5 +521,20 @@ class ProjectIndex extends CActiveRecordBehavior{
 					->createMultipleInsertCommand($table, $arInsert)
 					->execute();
 			}
+	}
+	/**
+	 * @param $arr - array('adres','house','building','construction','corps')
+	 */
+	private function getFullIndex($arr, $index = '')
+	{
+		$strRes = $arr['adres'];
+
+		!empty($index) && $strRes = $index;
+		!empty($arr['house']) && $strRes .= ', д.' . $arr['house'];
+		!empty($arr['building']) && $strRes .= ', здание ' . $arr['building'];
+		!empty($arr['construction']) && $strRes .= ', строение ' . $arr['construction'];
+		!empty($arr['corps']) && $strRes .= ', корп.' . $arr['corps'];
+
+		return $strRes;
 	}
 }
