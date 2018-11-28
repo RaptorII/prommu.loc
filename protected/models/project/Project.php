@@ -686,8 +686,6 @@ class Project extends CActiveRecord
         if(isset($arr['date'])) {
             $arr['date'] = date('Y-m-d',$arr['date']);
             $arCond .= ' AND date(date)=:date';
-            $point .= ' AND edate=<'.$arr['date'];
-            $point .= ' AND bdate=>'.$arr['date'];
             $arPrms[':date'] = $arr['date'];   
         }
 
@@ -698,11 +696,18 @@ class Project extends CActiveRecord
             ->where($arCond, $arPrms)
             ->queryAll();  // поиск всех пользователей проекта 
         
-         $arRes['plane'] = Yii::app()->db->createCommand()
+         $arRest['plane']= Yii::app()->db->createCommand()
             ->select("*")
             ->from('project_city')
             ->where($point, $arPoint)
-            ->queryAll();  
+            ->queryAll(); 
+            
+        for($i = 0; $i < count($arRes['plane']); $i ++){
+            if(strtotime($arRest['plane'][$i]['bdate']) < $arr['date'] && 
+               strtotime($arRest['plane'][$i]['bdate']) < $arr['date']){
+                   $arRes['plane'][] =  $arRest['plane'][$i];
+               }
+        }
             
         if(!sizeof($arRes))
             $arRes = array('error'=>true);
