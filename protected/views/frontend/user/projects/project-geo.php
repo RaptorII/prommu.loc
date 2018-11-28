@@ -20,13 +20,14 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/univ
     <? require 'project-nav.php'; ?>
   </div>
 </div>
+<div class="project__module">
+  <?php if (!empty($viData['id_user'])): ?>
 <?
 echo "<pre>";
 print_r($viData);
 echo "</pre>";
 ?>
-<div class="project__module">
-  <?php if (!empty($viData['id_user']) && !empty($viData['id_point'])): ?>
+    
     <div class="geo__item-cart">
       <div class="geo-item__cart-data">
         <img src="<?= $viData['user']['src'] ?>">

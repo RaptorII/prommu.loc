@@ -946,17 +946,13 @@ class Project extends CActiveRecord
                         Yii::app()->getRequest()->getParam('user_id'),
                         FILTER_SANITIZE_NUMBER_INT
                     );
-        $arRes['id_point'] = filter_var(
-                        Yii::app()->getRequest()->getParam('point'),
-                        FILTER_SANITIZE_NUMBER_INT
-                    );
         // проверяем наличие данных для карточки
         if(
-            (!empty($arRes['id_user']) && empty($arRes['id_point']))
-            ||
-            (!empty($arRes['id_user']) && !array_key_exists($arRes['id_user'],$arr['users']))
-            ||
-            (!empty($arRes['id_point']) && !sizeof($arr['original']))
+            !empty($arRes['id_user'])
+            && 
+            !array_key_exists($arRes['id_user'],$arr['users'])
+            &&
+            !sizeof($arr['original'])
         ) {
             return array('error' => true);
         }
@@ -965,7 +961,7 @@ class Project extends CActiveRecord
         $arRes['gps'] = $this->getСoordinates(['project'=>$arr['project']['project']]);
 
         // собираем данные для карточки
-        if(!empty($arRes['id_user']) && !empty($arRes['id_point'])) {
+        if(!empty($arRes['id_user'])) {
             if(!sizeof($arr['users'][$arRes['id_user']]['points']))
                 return array('error' => true);
             $arRes['user'] = $arr['users'][$arRes['id_user']];
@@ -996,8 +992,9 @@ class Project extends CActiveRecord
                 $arRes['item']['bplan'] = date('G:i',strtotime($p['btime']));
                 $arRes['item']['eplan'] = date('G:i',strtotime($p['etime']));
                 $arRes['item']['efact'] = date('H:i',strtotime($v['date']));
-                $arRes['tasks'] = $this->getTasks($arr['project']['project']);          
-                $arRes['point'] = $p;
+                $arRes['tasks'] = $this->getTasks($arr['project']['project']);
+                if(in_array($p['point'], $arRes['user']['points']))
+                    $arRes['points'][$p['point']] = $p;
             }
             return $arRes;
         }
