@@ -41,6 +41,7 @@ class ProjectIndex extends CActiveRecordBehavior{
 				$lId++;
 				foreach ($arLoc as $p => $v) {// по точкам
 				$adres = $city['name'].' ул. '.$arr['lindex'][$c][$l].' дом '.$arr['lhouse'][$c][$l];
+				file_put_contents('geocoding.txt', date('d.m.Y H:i')."\t".$adres."\n", FILE_APPEND | LOCK_EX);
 				$location = $Project->getCoords($adres);
 					$pId++;
 					$arRes[$p] = array(
