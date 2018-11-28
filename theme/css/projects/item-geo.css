@@ -78,4 +78,18 @@
 	#DiContent .project__geo-filter .u-filter__item .u-filter__item-data{
 		margin-right: 10px;
 	}
-}   
+}
+
+
+#DiContent h2.geo__item-error{
+	text-align:center;
+	color:red;
+}
+.geo__route-map{
+	width:100%;
+	height:500px;
+	background-color: #00a600;
+}
+.geo__item-error{
+	display: none;
+}

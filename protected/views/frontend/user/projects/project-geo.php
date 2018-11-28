@@ -21,7 +21,9 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/univ
   </div>
 </div>
 <?
-//
+echo "<pre>";
+print_r($viData);
+echo "</pre>";
 ?>
 <div class="project__module">
   <?php if (!empty($viData['id_user']) && !empty($viData['id_point'])): ?>
@@ -112,7 +114,23 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/univ
             </tr>
           </tbody>
         </table>
+
+          <div class="geo__route-block">
+              <h2 class="geo__item-title">Маршрут передвижения</h2>
+
+              <div class="geo__map-container">
+                  <h2 class="geo__item-error">Маршрут передвижения не найден!</h2>
+                  <div class="geo__route-map" id="geo__route-<?=$viData['id_user'];?>-<?=$viData['unix']?>"                                         data-map-project="<?=$project?>"
+                       data-map-user="<?=$viData['id_user']?>"
+                       data-map-point="<?=$viData['id_point']?>"
+                       data-map-date="<?=$viData['unix']?>">
+                  </div>
+              </div>
+
+          </div>
+
       </div>
+
     </div>
   <?
   //

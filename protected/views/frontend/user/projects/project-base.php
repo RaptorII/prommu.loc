@@ -206,11 +206,11 @@ foreach ($viData['filter']['metros'] as $id => $metro)
 foreach ($viData['filter']['posts'] as $k => $p)
     $arFilterData['FILTER_SETTINGS'][5]['DATA'][$k] = ['title' => $p, 'id' => $k];
 
-/*
+
 echo "<pre>";
 print_r($viData); 
 echo "</pre>";
-*/
+
 ?>
 
 <div class="row project">

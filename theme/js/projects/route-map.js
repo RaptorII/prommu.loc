@@ -51,6 +51,21 @@ let GoogleMap = (function () {
             self.ajaxGetMapParamsPlan(data);
         });
 
+        if($('.geo__route-map')){
+
+            $('.geo__route-map').each(function () {
+                var element = this;
+                let map_project= $(this).data('map-project');
+                let map_user = $(this).data('map-user');
+                let map_point = $(this).data('map-point');
+                let map_date = $(this).data('map-date');
+                let type = 'coordinates';
+
+                var data = self.initData(map_project,map_user,map_point,map_date, type);
+                self.ajaxGetMapParamsFactForBlock(data, element);
+            });
+        }
+
     };
 
     GoogleMap.prototype.initialize = function (value) {
@@ -70,7 +85,11 @@ let GoogleMap = (function () {
         this.directionsService = new google.maps.DirectionsService();
 
         //console.log(value);
-        if (value.error !=true) {
+
+        var sizeValue = Object.keys(value).length;
+
+
+        if (value.error !=true && sizeValue>0) {
             var size = Object.keys(value).length;
 
             if (size>1){
@@ -115,6 +134,64 @@ let GoogleMap = (function () {
         /*setTimeout(function() {
             self.map.setZoom(4);
         }, 2000);*/
+    };
+
+
+
+    GoogleMap.prototype.initializeForStaticBlocks = function (value, element) {
+        //console.log(this);
+        var self = this;
+
+        var element_id = $(element).attr("id");
+        var mapOptions = {
+            zoom: 7,
+            center: new google.maps.LatLng(55.75370903771494,37.61981338262558),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        this.map = new google.maps.Map(document.getElementById(element_id),    mapOptions);
+
+        this.directionsService = new google.maps.DirectionsService();
+
+        //console.log(value);
+
+        var sizeValue = Object.keys(value).length;
+
+
+        if (value.error !=true && sizeValue>0) {
+            var size = Object.keys(value).length;
+
+            if (size>1){
+                for (var d = 1; d < size; d++) {
+                    var points_start = value[d-1];
+                    var points_stop = value[d];
+
+                    var start_point = new google.maps.LatLng(points_start.latitude, points_start.longitude);
+                    var end_point = new google.maps.LatLng(points_stop.latitude, points_stop.longitude);
+                    this.requestDirections(start_point, end_point, { strokeColor:'#ff8300' });
+                }
+            }else{
+                for (var d = 0; d < size; d++) {
+                    var points_stop = value[d];
+                    var end_point = new google.maps.LatLng(points_stop.latitude, points_stop.longitude);
+                    this.requestDirections(end_point, end_point, { strokeColor:'#ff8300' });
+                }
+            }
+        }else{
+            $(element).closest('.geo__map-container').find('.geo__item-error').fadeIn();
+        }
+        /*var start_point = new google.maps.LatLng(55.738013,37.5226403);
+         var end_point = new google.maps.LatLng(55.715705,37.5436313);
+         var end_point2 = new google.maps.LatLng(55.706332,37.5786703);
+         var end_point3 = new google.maps.LatLng(55.737122,37.5871923);
+
+         this.requestDirections(start_point, end_point, { strokeColor:'#ff8300' });
+         this.requestDirections(end_point, end_point2, { strokeColor:'#ff8300' });
+         this.requestDirections(end_point2, end_point3, { strokeColor:'#ff8300' });
+         this.requestDirections(end_point3, start_point, { strokeColor:'#ff8300' });*/
+
+        /*setTimeout(function() {
+         self.map.setZoom(4);
+         }, 2000);*/
     };
 
 
@@ -215,6 +292,7 @@ let GoogleMap = (function () {
             }
         });
     };
+
     GoogleMap.prototype.ajaxGetMapParamsPlan = function (data) {
         if (!data) return;
 
@@ -229,6 +307,26 @@ let GoogleMap = (function () {
                 console.log(value);
                 if(value['plane']){
                     self.initialize(value['plane']);
+                }
+            }
+        });
+    };
+
+
+    GoogleMap.prototype.ajaxGetMapParamsFactForBlock = function (data, element) {
+        if (!data) return;
+
+        let self = this;
+
+        $.ajax({
+            type: 'GET',
+            url: '/ajax/Project',
+            data: {data: JSON.stringify(data)},
+            dataType: 'json',
+            success: function (value) {
+                console.log(value);
+                if(value['fact']){
+                    self.initializeForStaticBlocks(value['fact'], element);
                 }
             }
         });

@@ -69,17 +69,12 @@
                                         </span>
                                     <?endif;?>
 
-                                    <?/*
-                                        echo $project;
-                                        echo $idus;
-                                        echo $viData['points'][$valueItem]['point'];
-                                        echo $keyUnix;
-                                    */?>
+                                    <? $reset = reset($arLoc['periods'])['id'];?>
 
                                     <b
                                             data-map-project="<?= $project ?>"
                                             data-map-user="<?= $idus ?>"
-                                            data-map-point="<?= $viData['points'][$valueItem]['point'] ?>"
+                                            data-map-point="<?=$reset;?>"
                                             data-map-date="<?= $keyUnix ?>"
                                             class="js-g-hashint js-get-target all__geo-data" title="Посмотреть на карте">
                                     </b>

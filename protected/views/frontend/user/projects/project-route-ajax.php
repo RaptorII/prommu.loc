@@ -53,7 +53,7 @@
                                                    data-map-user="<?= $id_user ?>"
                                                    data-map-point="<?= $p ?>"
                                                    data-map-date="<?= $unix ?>"
-                                                   class="js-g-hashint js-get-map" title="Посмотреть на карте">
+                                                   class="js-g-hashint js-get-target" title="Посмотреть на карте">
                                                 </b>
                                             </div>
                                         </td>
