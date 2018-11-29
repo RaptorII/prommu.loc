@@ -46,6 +46,7 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/univ
                                 <th>Торговая точка</th>
                                 <th>Активность по ТТ</th>
                                 <th>Старт работ</th>
+                                <th>Маршрут</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -81,6 +82,23 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/univ
                                             <?else:?>
                                                 -
                                             <? endif; ?>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="geo__table-cell geo__table-loc">
+
+                                            <? if (isset($viData['items'][$value['point']]['bfact']) && !$viData['items'][$value['point']]['is-missed']): ?>
+                                                <b
+                                                        data-map-project="<?= $project ?>"
+                                                        data-map-user="<?= $viData['id_user'] ?>"
+                                                        data-map-point="<?= $value['point'] ?>"
+                                                        data-map-date="<?= $viData['unix'] ?>"
+                                                        class="js-g-hashint js-get-map" title="Посмотреть маршрут в рамках текущей ТТ"></b>
+                                            <? else: ?>
+                                                -
+                                            <? endif; ?>
+
+
                                         </div>
                                     </td>
                                 </tr>
@@ -128,6 +146,7 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/univ
                             <th>Название</th>
                             <th>Город</th>
                             <th>Адрес</th>
+                            <th>Маршрут</th>
                             <th>План работ</th>
                             <th>Факт работ</th>
                             <th>Задачи по ТТ</th>
@@ -146,14 +165,23 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/univ
                                 <td>
                                     <div class="geo__table-cell geo__table-loc">
                                         <span><?= $value['index_full']; ?></span>
-                                        <b
-                                                data-map-project="<?= $project ?>"
-                                                data-map-user="<?= $viData['id_user'] ?>"
-                                                data-map-point="<?= $value['point'] ?>"
-                                                data-map-date="<?= $viData['unix'] ?>"
-                                                class="js-g-hashint js-get-map" title="Посмотреть маршрут в рамках текущей ТТ"></b>
                                     </div>
                                 </td>
+                                <td>
+                                    <div class="geo__table-cell geo__table-loc">
+                                        <? if (isset($viData['items'][$value['point']]['bfact']) && !$viData['items'][$value['point']]['is-missed']): ?>
+                                            <b
+                                                    data-map-project="<?= $project ?>"
+                                                    data-map-user="<?= $viData['id_user'] ?>"
+                                                    data-map-point="<?= $value['point'] ?>"
+                                                    data-map-date="<?= $viData['unix'] ?>"
+                                                    class="js-g-hashint js-get-map" title="Посмотреть маршрут в рамках текущей ТТ"></b>
+                                        <? else: ?>
+                                            -
+                                        <? endif; ?>
+                                    </div>
+                                </td>
+
                                 <td>
                                     <div class="geo__table-cell"><?= $viData['items'][$value['point']]['bplan'] ?></div>
                                 </td>
