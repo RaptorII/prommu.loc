@@ -41,6 +41,9 @@
 	transition: all 0.3s ease-out;
 }
 .geo-item__cart-data img{ min-width: 175px }
+.geo-item__cart-data{
+	padding-bottom: 0;
+}
 /*
 *
 */
@@ -87,8 +90,26 @@
 }
 .geo__route-map{
 	width:100%;
-	height:500px;
+	height:300px;
 }
 .geo__item-error{
 	display: none;
+}
+
+
+.geo__table-route{
+	width:100%;
+	font-size: 18px;
+}
+
+.geo__table-route .table-cell-first{
+	text-align: left;
+}
+.geo__table-route th{
+	background: #abb92a;
+	color: #ffffff;
+	padding: 5px 0;
+	font-weight: normal;
+	border-left: 1px solid #dedede;
+	border-right: 1px solid #dedede;
 }

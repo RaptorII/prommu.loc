@@ -19,7 +19,6 @@
                     <tr>
                         <td>
                             <div class="geo__table-cell geo__table-user">
-
                                 <img src="<?= $viData['users'][$keyUser]['src'] ?>">
                                 <span><?= $viData['users'][$keyUser]['name'] ?></span>
                             </div>
@@ -64,7 +63,7 @@
                                         data-map-user="<?=$keyUser?>"
                                         data-map-point="<?=$valueUser['points'][0]?>"
                                         data-map-date="<?=$viData['unix']?>"
-                                        class="js-g-hashint js-get-map" title="Посмотреть на карте"></b>
+                                        class="js-g-hashint js-get-target" title="Посмотреть на карте"></b>
                                     <?else:?>
                                     <span>-</span>
                                     <?endif;?>
@@ -73,7 +72,7 @@
                         </td>
                         <td>
                             <div class="geo__table-cell">
-                                <a href="<? echo MainConfig::$PAGE_PROJECT_LIST . '/' . $project . '/geo/' . $keyUser . '/'.$valueUser['points'][0]?>">подробнее</a>
+                                <a href="<? echo MainConfig::$PAGE_PROJECT_LIST . '/' . $project . '/geo/' . $keyUser ?>">подробнее</a>
                             </div>
                         </td>
                     </tr>
