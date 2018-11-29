@@ -886,7 +886,7 @@ class AjaxController extends AppController
             switch ($_SERVER['REQUEST_METHOD']) {
                 case 'GET':
                     if($data['type']==='coordinates') // получение координат передвижения С
-                        $result = $model->getСoordinates($data);
+                        $result = $model->getСoordinatesAjax($data);
                     if($data['type']==='userdata') {
                         $result = $model->getUserTasks($data);
                         $user = intval($data['user']);

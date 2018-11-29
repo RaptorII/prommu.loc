@@ -672,8 +672,38 @@ class Project extends CActiveRecord
     *       Получение координат по проекту
     */
     public function getСoordinates($arr) {
-        
-        
+        $arCond = 'project=:prj';
+        $arPrms[':prj'] = $arr['project'];
+
+        if(isset($arr['user'])) {
+            $arCond .= ' AND user=:user';
+            $arPrms[':user'] = $arr['user'];            
+        }
+        if(isset($arr['point'])) {
+            $arCond .= ' AND point=:point';
+            $arPrms[':point'] = $arr['point'];            
+        }
+        if(isset($arr['date'])) {
+            $arr['date'] = date('Y-m-d',$arr['date']);
+            $arCond .= ' AND date(date)=:date';
+            $arPrms[':date'] = $arr['date'];            
+        }
+
+        $arRes = array(); 
+        $arRes = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('project_report')
+            ->where($arCond, $arPrms)
+            ->queryAll();  // поиск всех пользователей проекта  
+
+        if(!sizeof($arRes))
+            $arRes = array('error'=>true);
+        return $arRes;
+    }
+    /**
+     * 
+     */
+    public function getСoordinatesAjax($arr) {
         $arCond = 'project=:prj';
         $arPrms[':prj'] = $arr['project'];
         
