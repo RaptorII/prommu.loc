@@ -616,8 +616,20 @@ var ProjectAddPersonal = (function () {
                     r = JSON.parse(r);
                     if(r.error==true)
                     {
-                        r.message = (r.message!=null ? r.message : 'load-file');
-                        MainProject.showPopup('error',r.message);
+                        if(r.message==='server')
+                            MainProject.showPopup('error',r.message);
+                        else if(r.message!=null)
+                        {
+                            let content = '<div class="empty-fields">Некорректно заполнены следующие колонки:<br>'
+                                    + r.message + '</div>';
+
+                            ModalWindow.open({ 
+                                    content: content, 
+                                    action: { active: 0 }, 
+                                    additionalStyle:'dark-ver'
+                                });
+                            $('#MWwrapper .header-block').text('Ошибка');
+                        }
                         $inp.val('');
                     }
                     else

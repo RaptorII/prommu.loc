@@ -27,6 +27,7 @@
 				<div class="wfs-prolog-item__img ico2"></div>
 				<div class="wfs-prolog-item__text">Подработка в вечернее или ночное время</div>
 			</div>
+			<div class="clearfix hidden-sm hidden-md hidden-lg"></div>
 			<div class="col-xs-6 col-sm-3 wfs-prolog__item">
 				<div class="wfs-prolog-item__img ico3"></div>
 				<div class="wfs-prolog-item__text">Подработка на выходных</div>
