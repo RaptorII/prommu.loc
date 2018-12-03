@@ -128,7 +128,7 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-m
                                         <div class="geo__map-container">
 
                                             <div class="geo__route-map get-point"
-                                                 id="geo__route-<?= $idus; ?>-<?= $unix ?>"
+                                                 id="geo__route-<?= $idus; ?>-<?= $unix ?>-<?= $point['point'] ?>"
                                                  data-map-project="<?= $project ?>"
                                                  data-map-user="<?= $idus ?>"
                                                  data-map-point="<?= $point['point'] ?>"
