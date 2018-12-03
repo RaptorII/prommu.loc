@@ -206,7 +206,9 @@ class Project extends CActiveRecord
             $corps = "Корпус";
             $date = "Дата работы Старт";
             $dateF = "Дата работы Финал";
-            $time = "Время работы";
+            $time = "Время работы Старт";
+            $timeF = "Время работы Финал";
+            $post = "Должность";
             $comment = "Комментарий";
             
 
@@ -214,7 +216,7 @@ class Project extends CActiveRecord
                 $xls['C'] == $street && $xls['D'] == $home &&
                 $xls['E'] == $build && $xls['F'] == $str &&
                 $xls['G'] == $corps && $xls['H'] == $date && $xls['I'] == $dateF
-                && $xls['J'] == $time && $xls['K'] == $comment)
+                && $xls['J'] == $time && $xls['K'] == $timeF && $xls['L'] == $post)
             {
                 $arRes['error'] = false; 
             }
@@ -255,7 +257,9 @@ class Project extends CActiveRecord
         $str = "Строение";
         $date = "Дата работы Старт";
         $dateF = "Дата работы Финал";
-        $time = "Время работы";
+        $time = "Время работы Старт";
+        $timeF = "Время работы Финал";
+        $post = "Должность";
         $comment = "Комментарий";
         
         
@@ -267,7 +271,14 @@ class Project extends CActiveRecord
                     ->from('city c')
                     ->where('c.name = :name', array(':name' =>$sheet_array[$i]['A']))
                     ->queryRow();
-                
+                    
+            $res = Yii::app()->db->createCommand()
+                    ->select('m.id')
+                    ->from('user_attr_dict m')
+                    ->where(array('and', 'id_par = 110', 'name = :post'), array(':post' => $sheet_array[$i]['L']));
+            $post = $res->queryRow();
+
+
                 $bdate = explode("-", $sheet_array[$i]['I'])[0];
                 $edate = explode("-", $sheet_array[$i]['I'])[1];
                    
@@ -276,7 +287,7 @@ class Project extends CActiveRecord
                 $adres = $sheet_array[$i]['A'].' ул.'.$sheet_array[$i]['C'].' дом '.$sheet_array[$i]['D'].' здание'.$sheet_array[$i]['E'].' строение '.$sheet_array[$i]['F'].' строение '.$sheet_array[$i]['G'];
                 $location = $this->getCoords($adres);
                 if($sheet_array[$i]['J'] != ''){
-                    $point = $sheet_array[$i]['J'];
+                    $point = $sheet_array[$i]['N'];
                     
                      Yii::app()->db->createCommand()
                         ->update('project_city', array(
@@ -288,12 +299,13 @@ class Project extends CActiveRecord
                             'construction' => $sheet_array[$i]['F'],
                             'corps' => $sheet_array[$i]['G'],
                             'id_city' => $city['id_city'],
-                            'btime' =>  explode("-", $sheet_array[$i]['J'])[0],
-                            'etime' =>  explode("-", $sheet_array[$i]['J'])[1],
+                            'btime' => $sheet_array[$i]['J'],
+                            'etime' =>  $sheet_array[$i]['K'],
                             'bdate' =>  $sheet_array[$i]['H'],
                             'edate' =>  $sheet_array[$i]['I'],
-                            'comment' =>  $sheet_array[$i]['L'],
+                            'comment' =>  $sheet_array[$i]['M'],
                             'latitude' => $location['la'],
+                            'post' => $post['id'],
                             'longitude' => $location['lo'],
                      ), 'point = :point', array(':point' => $point));
                 
