@@ -211,58 +211,59 @@ class Project extends CActiveRecord
             $post = "Должность";
             $comment = "Комментарий";
             
-            $report = 'Не верно заполнены поля:';
+            $report = [];
             $repFlag = 0;
             if($xls['A'] != $city){
-                $report.="$city,";
+                $report[] =$city;
                 $repFlag++;
             }
             if($xls['B'] != $location){
-                $report.="$location,";
+                $report[] =$location;
                 $repFlag++;
             }
             if($xls['C'] != $street){
-                $report.="$street,";
+                $report[] =$street;
                 $repFlag++;
             }
             if($xls['D'] != $home){
-                $report.="$home,";
+                $report[] =$home;
                 $repFlag++;
             }
             if($xls['E'] != $build){
-                $report.="$build,";
+                $report[] =$build;
                 $repFlag++;
             }
             if($xls['F'] != $str){
-                $report.="$str,";
+               $report[] =$str;
                 $repFlag++;
             }
             if($xls['G'] != $corps){
-                $report.="$corps,";
+                $report[] =$corps;
                 $repFlag++;
             }
             if($xls['H'] != $date){
-                $report.="$date,";
+               $report[] =$date;
                 $repFlag++;
             }
             if($xls['I'] != $dateF){
-                $report.="$dateF,";
+                $report[] =$dateF;
                 $repFlag++;
             }
             if($xls['J'] != $time){
-                $report.="$time,";
+                $report[] =$time;
                 $repFlag++;
             }
             if($xls['K'] != $timeF){
-                $report.="$timeF,";
+                $report[] =$timeF;
                 $repFlag++;
             }
             if($xls['L'] != $post){
-                $report.="$post,";
+                $report[] =$post;
                 $repFlag++;
             }
             if($repFlag)
             {
+                $report = implode(", ",$report);
                 $arRes['message'] = $report; 
             } else $arRes['error'] = false; 
             
