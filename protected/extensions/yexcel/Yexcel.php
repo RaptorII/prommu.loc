@@ -92,7 +92,7 @@ class Yexcel
                     ->select('m.name')
                     ->from('user_attr_dict m')
                     ->where(array('and', 'id_par = 110', 'id = :post'), array(':post' => $data[$i]['post']));
-            $res = $post->queryRow();
+            $post = $res->queryRow();
 
             $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue("A{$j}", $city['name'])
