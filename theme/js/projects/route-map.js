@@ -51,9 +51,9 @@ let GoogleMap = (function () {
             self.ajaxGetMapParamsPlan(data);
         });
 
-        if($('.geo__route-map.get-route')){
+        if($('.map__get-route')){
 
-            $('.geo__route-map.get-route').each(function () {
+            $('.map__get-route').each(function () {
                 var element = this;
                 let map_project= $(this).data('map-project');
                 let map_user = $(this).data('map-user');
@@ -66,9 +66,9 @@ let GoogleMap = (function () {
             });
         }
 
-        if($('.geo__route-map.get-point')){
+        if($('.map__get-point')){
 
-            $('.geo__route-map.get-point').each(function () {
+            $('.map__get-point').each(function () {
                 var element = this;
                 let map_project= $(this).data('map-project');
                 let map_user = $(this).data('map-user');
