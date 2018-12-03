@@ -206,7 +206,7 @@ class Project extends CActiveRecord
             $corps = "Корпус";
             $date = "Дата работы Старт";
             $dateF = "Дата работы Финал";
-            $time = "Время работы Старт";
+            $times = "Время работы Старт";
             $timeF = "Время работы Финал";
             $post = "Должность";
             $comment = "Комментарий";
@@ -249,8 +249,8 @@ class Project extends CActiveRecord
                 $report[] =$dateF;
                 $repFlag++;
             }
-            if($xls['J'] != $time){
-                $report[] =$time;
+            if($xls['J'] != $times){
+                $report[] =$times;
                 $repFlag++;
             }
             if($xls['K'] != $timeF){
@@ -366,12 +366,13 @@ class Project extends CActiveRecord
                             'construction' => $sheet_array[$i]['F'],
                             'corps' => $sheet_array[$i]['G'],
                             'id_city' => $city['id_city'],
-                            'btime' =>  explode("-", $sheet_array[$i]['J'])[0],
-                            'etime' =>  explode("-", $sheet_array[$i]['J'])[1],
+                            'btime' => $sheet_array[$i]['J'],
+                            'etime' =>  $sheet_array[$i]['K'],
                             'bdate' =>  $sheet_array[$i]['H'],
                             'edate' =>  $sheet_array[$i]['I'],
-                            'comment' =>  $sheet_array[$i]['L'],
+                            'comment' =>  $sheet_array[$i]['M'],
                             'latitude' => $location['la'],
+                            'post' => $post['id'],
                             'longitude' => $location['lo'],
                         ));   
                 }
