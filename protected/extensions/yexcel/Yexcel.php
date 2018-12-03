@@ -74,9 +74,11 @@ class Yexcel
             ->setCellValue('G1', 'Корпус')
             ->setCellValue('H1', 'Дата работы Старт')
             ->setCellValue('I1', 'Дата работы Финал')
-            ->setCellValue('J1', 'Время работы')
-            ->setCellValue('K1', 'Комментарий')
-            ->setCellValue('L1', 'Идентификатор');
+            ->setCellValue('J1', 'Время работы Cтарт')
+            ->setCellValue('K1', 'Время работы Финал')
+            ->setCellValue('L1', 'Должность')
+            ->setCellValue('M1', 'Комментарий')
+            ->setCellValue('N1', 'Идентификатор');
         $j = 2;
         for($i = 0; $i < sizeof($data); $i ++){
 
@@ -85,6 +87,12 @@ class Yexcel
                 ->from('city c')
                 ->where('c.id_city = :id_city', array(':id_city' =>$data[$i]['id_city']))
                 ->queryRow();
+                
+            $res = Yii::app()->db->createCommand()
+                    ->select('m.name')
+                    ->from('user_attr_dict m')
+                    ->where(array('and', 'id_par = 110', 'id = :post'), array(':post' => $data[$i]['post']));
+            $res = $post->queryRow();
 
             $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue("A{$j}", $city['name'])
@@ -96,9 +104,11 @@ class Yexcel
                 ->setCellValue("G{$j}", $data[$i]['corps'])
                 ->setCellValue("H{$j}", $data[$i]['bdate'])
                 ->setCellValue("I{$j}", $data[$i]['edate'])
-                ->setCellValue("J{$j}", $data[$i]['btime'].'-'.$data[$i]['etime'])
-                ->setCellValue("K{$j}", $data[$i]['comment'])
-                ->setCellValue("L{$j}", $data[$i]['point']);
+                ->setCellValue("J{$j}", $data[$i]['btime'])
+                ->setCellValue("K{$j}", $data[$i]['etime'])
+                ->setCellValue("L{$j}", $post['name'])
+                ->setCellValue("M{$j}", $data[$i]['comment'])
+                ->setCellValue("N{$j}", $data[$i]['point']);
             $j++;
         }
 
