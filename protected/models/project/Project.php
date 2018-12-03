@@ -217,55 +217,54 @@ class Project extends CActiveRecord
                 $report.="$city,";
                 $repFlag++;
             }
-            if($xls['B'] == $location){
+            if($xls['B'] != $location){
                 $report.="$location,";
                 $repFlag++;
             }
-            if($xls['C'] == $street){
+            if($xls['C'] != $street){
                 $report.="$street,";
                 $repFlag++;
             }
-            if($xls['D'] == $home){
+            if($xls['D'] != $home){
                 $report.="$home,";
                 $repFlag++;
             }
-            if($xls['E'] == $build){
+            if($xls['E'] != $build){
                 $report.="$build,";
                 $repFlag++;
             }
-            if($xls['F'] == $str){
+            if($xls['F'] != $str){
                 $report.="$str,";
                 $repFlag++;
             }
-            if($xls['G'] == $corps){
+            if($xls['G'] != $corps){
                 $report.="$corps,";
                 $repFlag++;
             }
-            if($xls['H'] == $date){
+            if($xls['H'] != $date){
                 $report.="$date,";
                 $repFlag++;
             }
-            if($xls['I'] == $dateF){
+            if($xls['I'] != $dateF){
                 $report.="$dateF,";
                 $repFlag++;
             }
-            if($xls['J'] == $time){
+            if($xls['J'] != $time){
                 $report.="$time,";
                 $repFlag++;
             }
-            if($xls['K'] == $timeF){
+            if($xls['K'] != $timeF){
                 $report.="$timeF,";
                 $repFlag++;
             }
-            if($xls['L'] == $post){
+            if($xls['L'] != $post){
                 $report.="$post,";
                 $repFlag++;
             }
             if($repFlag)
             {
-                $arRes['error'] = false; 
                 $arRes['message'] = $report; 
-            }
+            } else $arRes['error'] = false; 
             
         }
         elseif($props['type'] === 'xls-staff')
