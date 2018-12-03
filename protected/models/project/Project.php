@@ -215,8 +215,9 @@ class Project extends CActiveRecord
             if($xls['A'] == $city && $xls['B'] == $location &&
                 $xls['C'] == $street && $xls['D'] == $home &&
                 $xls['E'] == $build && $xls['F'] == $str &&
-                $xls['G'] == $corps && $xls['H'] == $date && $xls['I'] == $dateF
-                && $xls['J'] == $time && $xls['K'] == $timeF && $xls['L'] == $post)
+                $xls['G'] == $corps && $xls['H'] == $date && $xls['I'] == $dateF &&
+                $xls['J'] == $time && $xls['K'] == $timeF && $xls['L'] == $post &&
+                $xls['M'] == $comment)
             {
                 $arRes['error'] = false; 
             }
