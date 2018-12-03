@@ -1330,7 +1330,8 @@ class UserController extends AppController
 
             $main = $model->getUserMainInfo($user_id);
             $mech = $model->getUserMechInfo($user_id);
-            if(!count($main)){
+            if(!count($main))
+            {
                 throw new CHttpException(404, 'Error');
                 return;
             }
@@ -1346,6 +1347,11 @@ class UserController extends AppController
 
             switch (Yii::app()->getRequest()->getParam('section')) {
                 case 'staff':
+                    if($type==2) // applicant
+                    {
+                        throw new CHttpException(404, 'Error');
+                        return;
+                    }
                     $save = Yii::app()->getRequest()->getParam('save-users');
                     if(isset($save)) {
                         $model->recordStaff($_POST, $id);
@@ -1375,6 +1381,11 @@ class UserController extends AppController
                     $view = MainConfig::$VIEW_PROJECT_ITEM_STAFF;
                     break;
                 case 'index':
+                    if($type==2) // applicant
+                    {
+                        throw new CHttpException(404, 'Error');
+                        return;
+                    }
                     $data = $model->getIndexes($id);
                     $data['project'] = $model->getProjectData($id);
                     if(Yii::app()->request->isAjaxRequest) {
@@ -1389,6 +1400,11 @@ class UserController extends AppController
                     $model->getXLSFile();
                     break;
                 case 'geo':
+                    if($type==2) // applicant
+                    {
+                        throw new CHttpException(404, 'Error');
+                        return;
+                    }
                     $data = $model->getProject($id);
                     $data = $model->buildGeoArray($data);
                     if($data['error'])
@@ -1404,20 +1420,35 @@ class UserController extends AppController
                     $view = MainConfig::$VIEW_PROJECT_ITEM_GEO;
                     break;
                 case 'route':
-                    $data = $model->getProject($id);
-                    $data = $model->buildRouteArray($data);
-                    $data['gps'] = $model->getСoordinates(['project'=>$id]);
-                    if(Yii::app()->request->isAjaxRequest) {
-                        $this->renderPartial(
-                            'projects/project-route-ajax',
-                            array('viData' => $data, 'project' => $id),
-                            false, true
-                        );
-                        return;
+                    if($type==2) // applicant
+                    {
+                        $data = $model->getProject($id);
+                        $data['users'] = $model->getProjectAppPromoTemp($id);
+                        $data = $model->buildTaskPageArray($data);
+                        $view = 'projects/applicant/route';
                     }
-                    $view = MainConfig::$VIEW_PROJECT_ITEM_ROUTE;
+                    if($type==3) // employer
+                    {
+                        $data = $model->getProject($id);
+                        $data = $model->buildRouteArray($data);
+                        $data['gps'] = $model->getСoordinates(['project'=>$id]);
+                        if(Yii::app()->request->isAjaxRequest) {
+                            $this->renderPartial(
+                                'projects/project-route-ajax',
+                                array('viData' => $data, 'project' => $id),
+                                false, true
+                            );
+                            return;
+                        }
+                        $view = MainConfig::$VIEW_PROJECT_ITEM_ROUTE;                        
+                    }
                     break;
                 case 'tasks':
+                    if($type==2) // applicant
+                    {
+                        throw new CHttpException(404, 'Error');
+                        return;
+                    }
                     $data = $model->getProject($id);
                     $data = $model->buildTaskPageArray($data);
                     if(Yii::app()->request->isAjaxRequest) {
@@ -1431,6 +1462,11 @@ class UserController extends AppController
                     $view = MainConfig::$VIEW_PROJECT_ITEM_TASKS;
                     break;
                 case 'tasks_test':
+                    if($type==2) // applicant
+                    {
+                        throw new CHttpException(404, 'Error');
+                        return;
+                    }
                     $data = $model->getProject($id);
                     $data = $model->buildTaskPageArray($data);
                     if(Yii::app()->request->isAjaxRequest) {
@@ -1444,6 +1480,11 @@ class UserController extends AppController
                     $view = 'projects/project-tasks_test';
                     break;
                 case 'report':
+                    if($type==2) // applicant
+                    {
+                        throw new CHttpException(404, 'Error');
+                        return;
+                    }
                     $data = $model->getProject($id);
                     $data = $model->buildReportArrayNew($data);
                     if(Yii::app()->request->isAjaxRequest) {
@@ -1457,6 +1498,11 @@ class UserController extends AppController
                     $view = MainConfig::$VIEW_PROJECT_ITEM_REPORT;
                     break;
                 case 'address-edit':
+                    if($type==2) // applicant
+                    {
+                        throw new CHttpException(404, 'Error');
+                        return;
+                    }
                     if( Yii::app()->getRequest()->isPostRequest) {
                         $model->recordIndex($_POST, $id);
                         $convert = new ProjectConvertVacancy();
@@ -1468,6 +1514,11 @@ class UserController extends AppController
                     $view = MainConfig::$VIEW_PROJECT_ITEM_ADR_CHANGE;
                     break;
                 case 'users-select':
+                    if($type==2) // applicant
+                    {
+                        throw new CHttpException(404, 'Error');
+                        return;
+                    }
                     if(Yii::app()->request->isAjaxRequest) {
                         $data = $model->getStaff($id);
                         $this->renderPartial(
@@ -1511,7 +1562,7 @@ class UserController extends AppController
                         $data = $model->getProject($id);
                         $data['users'] = $model->getProjectAppPromoTemp($id);
                         $data = $model->buildTaskPageArray($data);
-                        $view = 'projects/project-app';
+                        $view = 'projects/applicant/base';
                     }
                     break;
             }
