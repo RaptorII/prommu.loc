@@ -91,7 +91,7 @@ class Yexcel
             $res = Yii::app()->db->createCommand()
                     ->select('m.name')
                     ->from('user_attr_dict m')
-                    ->where(array('and', 'm.id_par = 110', 'm.id = :post'), array(':post' => $data[$i]['post']));
+                    ->where(array('and', 'id_par = 110', 'id = :post'), array(':post' => $data[$i]['post']));
             $post = $res->queryRow();
 
             $objPHPExcel->setActiveSheetIndex(0)
