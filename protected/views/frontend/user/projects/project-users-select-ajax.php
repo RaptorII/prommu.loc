@@ -43,5 +43,9 @@
     ));
   ?>
 <?php else: ?>
-  <p class="center">Подходящий персонал не найден</p>
+    <p class="center">Подходящий персонал не найден</p>
+    <div class="staff__block">
+        <a class="staff__new" target="_blank" href="/user/projects/<?=$project?>/staff?type=add">Добавить персонал</a>
+        <a class="staff__new" target="_blank" href="/user/projects/<?=$project?>/staff?type=new">Пригласить персонал</a>
+    </div>
 <?php endif; ?>

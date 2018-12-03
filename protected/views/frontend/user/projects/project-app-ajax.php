@@ -18,7 +18,7 @@ if(sizeof($viData['items'])>0): ?>
           <tr>
             <th class="name">Название ТТ</th>
             <th class="index">Адрес ТТ</th>
-            <? if(!empty($city['ismetro'])): ?><th class="metro">Метро</th><? endif; ?>
+            <th class="metro">Метро</th>
             <th class="time">Время</th>
             <th class="task">Кол-во заданий</th>
             <th class="btn"></th>
@@ -36,17 +36,27 @@ if(sizeof($viData['items'])>0): ?>
               </td>
               <td class="index">
                 <div class="task__table-cell border task__table-index">
-                  <span><?=$point['adres']?></span>
-                  <b class="js-g-hashint" title="Посмотреть на карте"></b>
+                    <span><?=$point['adres']?></span>
+                    <b
+                            data-map-project="<?= $project ?>"
+                            data-map-user="<?= $idus ?>"
+                            data-map-point="<?=$p;?>"
+                            data-map-date="<?= $d ?>"
+                            class="js-g-hashint js-get-target all__geo-data" title="Посмотреть на карте">
+                    </b>
                 </div>
               </td>
-              <?php if(!empty($city['ismetro'])): ?>
                 <td class="metro">
                   <div class="task__table-cell border task__table-index">
-                    <span><?=$point['metro']?></span>
+                    <span>
+                        <?if(!empty($point['metro'])): ?>
+                            <?=$point['metro']?>
+                        <?else:?>
+                            -
+                        <?endif;?>
+                    </span>
                   </div>
                 </td>
-              <?php endif; ?>
               <td class="time">
                 <div class="task__table-cell border text-center"><?=$point['btime'].'-'.$point['etime']?></div>
               </td>

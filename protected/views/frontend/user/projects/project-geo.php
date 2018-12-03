@@ -127,7 +127,7 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/univ
 
                     <div class="geo__map-container">
                         <h2 class="geo__item-error">Маршрут передвижения не найден!</h2>
-                        <div class="geo__route-map" id="geo__route-<?= $viData['id_user']; ?>-<?= $viData['unix'] ?>"
+                        <div class="geo__route-map get-route" id="geo__route-<?= $viData['id_user']; ?>-<?= $viData['unix'] ?>"
                              data-map-project="<?= $project ?>"
                              data-map-user="<?= $viData['id_user'] ?>"
                              data-map-point="<?= $viData['id_point'] ?>"

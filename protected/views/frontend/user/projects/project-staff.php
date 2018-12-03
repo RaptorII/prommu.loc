@@ -6,6 +6,7 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/item.css');
 Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/additional.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/phone-codes/projects.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/get-personal.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/projects/item-staff.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/new.css');
 Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/phone-codes/style.css');
 Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/item-staff.css');
@@ -281,3 +282,6 @@ foreach ($viData['filter']['metros'] as $id => $metro) {
     <input type="hidden" name="xls-users" value="1">
 </form>
 <? require 'project-staff-blocks.php'; // Блоки персонала для приглашения ?>
+
+
+<input type="hidden" class="staff__control" value="<?=$_GET['type'];?>"/>

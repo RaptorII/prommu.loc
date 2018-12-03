@@ -51,9 +51,9 @@ let GoogleMap = (function () {
             self.ajaxGetMapParamsPlan(data);
         });
 
-        if($('.geo__route-map')){
+        if($('.geo__route-map.get-route')){
 
-            $('.geo__route-map').each(function () {
+            $('.geo__route-map.get-route').each(function () {
                 var element = this;
                 let map_project= $(this).data('map-project');
                 let map_user = $(this).data('map-user');
@@ -63,6 +63,21 @@ let GoogleMap = (function () {
 
                 var data = self.initData(map_project,map_user,map_point,map_date, type);
                 self.ajaxGetMapParamsFactForBlock(data, element);
+            });
+        }
+
+        if($('.geo__route-map.get-point')){
+
+            $('.geo__route-map.get-point').each(function () {
+                var element = this;
+                let map_project= $(this).data('map-project');
+                let map_user = $(this).data('map-user');
+                let map_point = $(this).data('map-point');
+                let map_date = $(this).data('map-date');
+                let type = 'coordinates';
+
+                var data = self.initData(map_project,map_user,map_point,map_date, type);
+                self.ajaxGetMapParamsPlanForBlock(data, element);
             });
         }
 
@@ -327,6 +342,25 @@ let GoogleMap = (function () {
                 console.log(value);
                 if(value['fact']){
                     self.initializeForStaticBlocks(value['fact'], element);
+                }
+            }
+        });
+    };
+
+    GoogleMap.prototype.ajaxGetMapParamsPlanForBlock = function (data, element) {
+        if (!data) return;
+
+        let self = this;
+
+        $.ajax({
+            type: 'GET',
+            url: '/ajax/Project',
+            data: {data: JSON.stringify(data)},
+            dataType: 'json',
+            success: function (value) {
+                console.log(value);
+                if(value['plane']){
+                    self.initializeForStaticBlocks(value['plane'], element);
                 }
             }
         });

@@ -328,3 +328,8 @@
     outline: none;
     margin-left: 5px;
 }
+
+.geo__route-map{
+    width:100%;
+    height:300px;
+}

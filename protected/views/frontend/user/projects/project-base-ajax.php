@@ -142,7 +142,7 @@
                                 <div class="program__cell border">
                                     <? foreach ($arLoc['periods'] as $idper => $arPer): ?>
                                         <div class="program__cell-period" data-period="<?= $idper ?>">
-                                            <span><? echo $arPer['bdate'] . ' до ' . $arPer['edate'] ?></span>
+                                            <span><? echo $arPer['bdate'] . ' по ' . $arPer['edate'] ?></span>
                                             <span class="program__cell-tiem"><? echo $arPer['btime'] . ' - ' . $arPer['etime'] ?></span>
                                             <span class="address__item-change period">
 														<span>изменить</span>

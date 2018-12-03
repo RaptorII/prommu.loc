@@ -40,42 +40,4 @@ let IndexTasks = (function () {
 
 $(document).ready(function () {
     new IndexTasks();
-
-    var btnElement,
-        map = L.map('map').setView([55.7251293,37.6167661], 10)
-                .on('locationfound', onLocationFound);
-
-    $('.project__module').on('click','.app__loc-send',function(e){ 
-        map.locate();
-        btnElement = this;
-    });
-
-    function onLocationFound(e) {
-        let cp = L.marker(e.latlng).addTo(map),
-            data = {
-                    type : 'coordinates',
-                    project : btnElement.dataset.project,
-                    user : btnElement.dataset.user,
-                    point : btnElement.dataset.point,
-                    latitude :cp._latlng.lat,
-                    longitude : cp._latlng.lng
-                };
-
-        if(cp._latlng.lat && cp._latlng.lng){
-            $.ajax({
-                type: 'POST',
-                url: '/ajax/Project',
-                data: {data: JSON.stringify(data)},
-                dataType: 'json',
-                success: function (r) {
-                    r.error==false
-                    ? MainProject.showPopup('success','output-gps')
-                    : MainProject.showPopup('error','server');
-                }
-            });
-        }
-        else {
-            MainProject.showPopup('error','server');
-        }
-    } 
 });
