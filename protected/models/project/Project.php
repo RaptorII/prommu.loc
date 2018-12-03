@@ -211,15 +211,59 @@ class Project extends CActiveRecord
             $post = "Должность";
             $comment = "Комментарий";
             
-
-            if($xls['A'] == $city && $xls['B'] == $location &&
-                $xls['C'] == $street && $xls['D'] == $home &&
-                $xls['E'] == $build && $xls['F'] == $str &&
-                $xls['G'] == $corps && $xls['H'] == $date && $xls['I'] == $dateF &&
-                $xls['J'] == $time && $xls['K'] == $timeF && $xls['L'] == $post &&
-                $xls['M'] == $comment)
+            $report = 'Не верно заполнены поля:';
+            $repFlag = 0;
+            if($xls['A'] != $city){
+                $report.="$city,";
+                $repFlag++;
+            }
+            if($xls['B'] == $location){
+                $report.="$location,";
+                $repFlag++;
+            }
+            if($xls['C'] == $street){
+                $report.="$street,";
+                $repFlag++;
+            }
+            if($xls['D'] == $home){
+                $report.="$home,";
+                $repFlag++;
+            }
+            if($xls['E'] == $build){
+                $report.="$build,";
+                $repFlag++;
+            }
+            if($xls['F'] == $str){
+                $report.="$str,";
+                $repFlag++;
+            }
+            if($xls['G'] == $corps){
+                $report.="$corps,";
+                $repFlag++;
+            }
+            if($xls['H'] == $date){
+                $report.="$date,";
+                $repFlag++;
+            }
+            if($xls['I'] == $dateF){
+                $report.="$dateF,";
+                $repFlag++;
+            }
+            if($xls['J'] == $time){
+                $report.="$time,";
+                $repFlag++;
+            }
+            if($xls['K'] == $timeF){
+                $report.="$timeF,";
+                $repFlag++;
+            }
+            if($xls['L'] == $post){
+                $report.="$post,";
+                $repFlag++;
+            }
+            if($repFlag)
             {
-                $arRes['error'] = false; 
+                $arRes['error'] = $report; 
             }
             
         }
