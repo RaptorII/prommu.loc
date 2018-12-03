@@ -263,7 +263,8 @@ class Project extends CActiveRecord
             }
             if($repFlag)
             {
-                $arRes['error'] = $report; 
+                $arRes['error'] = false; 
+                $arRes['message'] = $report; 
             }
             
         }
