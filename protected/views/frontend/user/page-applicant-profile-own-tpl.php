@@ -224,7 +224,7 @@
   */
   ?>
   <div class="ppp__content">
-    <h1 class="ppp__content-title"><?=$h1title?></h1>
+    <h2 class="ppp__content-title"><?=$h1title?></h2>
     <?
     //    RATING
     ?>
