@@ -1,3 +1,156 @@
-#DiMessagesInner i{
-	font-style: italic !important;
+.chat-item,
+.chat-item *{
+	font-family: RobotoCondensed-Regular, verdana, arial;
+}
+#DiContent .chat-item__btn-link{
+	display: inline-block;
+	margin-bottom: 25px;
+	font-size: 18px;
+	line-height: 30px;
+}
+#DiContent .chat-item__btn-link:hover{
+	color: #abb820;
+	text-decoration: underline;
+}
+.chat-item__btn-link span{
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+	margin-right: 5px;
+	background-color: #abb820;
+	border-radius: 15px;
+	color: #ffffff;
+	text-align: center;
+	font-size: 28px;
+	line-height: 26px;
+	vertical-align: top;
+}
+.chat-item__title{ text-align: center; }
+#DiContent .chat-item h2{
+	margin: 0 0 20px;
+	font-size: 28px;
+	text-align: center;
+	font-weight: normal;
+	display: inline-block;
+	position: relative;
+}
+#F2upload #UplImg { display: none; }
+/*
+*		messages
+*/
+#DiMessagesWrapp { 
+	height: 600px;
+	padding: 0 10px 10px 10px; 
+	overflow: auto; 
+	position: relative;
+}
+#DiMessagesWrapp.load:before{
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 100px;
+	background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+	background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%);
+	background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%);
+}
+#DiMessagesWrapp.load:after{
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 32px;
+	background: url(/theme/pic/loading1.gif) 50% no-repeat;
+}
+.mess-box{
+	margin-bottom: 30px;
+	vertical-align: bottom;
+}
+.mess-box .mess {
+	padding: 10px;
+	border-radius: 10px;
+}
+.mess-box.mess-from .mess{
+	margin-right: 100px;
+	background: #ccdb30;
+	border-top-left-radius: 0px;
+}
+.mess-box.mess-to .mess{
+	margin-left: 100px;
+	background: #dce57e;
+	border-top-right-radius: 0px;
+}
+.mess-box.mess-to .author{ text-align: right }
+.mess-box .author{
+	padding-bottom: 5px;
+}
+.mess-box .author img{
+	width: 30px;
+	border-radius: 15px;
+	display: inline-block;
+	margin-right: 5px;
+}
+#DiMessagesInner i{ font-style: italic !important; }
+.mess-box .author b{ color: #212121 }
+/*
+*		chatEdit
+*/
+.message-box { width: 100%; display: table; position: relative; padding: 15px 0 0; }
+.message-box .box-bar-td { border: 1px solid silver; background: #F7F7F7; font-family: "Times New Roman"; }
+.message-box .box-bar-td .butt { float: left; display: block; width: 24px; height: 24px; margin: 5px; line-height: 24px; text-align: center; font-style: italic; font-size: 20px; color: #212121; }
+.message-box .message { padding: 5px; background: #f2f2f2; }
+.message-box .message textarea { width: 100%; height: 52px; padding: 5px; background: #fff; }
+.message-box .message .go { margin-top: 5px; padding-right: 2px; text-align: left; }
+.message-box .message .go button { float: right; margin: 0; }
+.message-box .message #DiButtonPanel { position: relative; margin-right: 120px; }
+.message-box .message > div { border: 0 !important; }
+.message-box .message .nicEdit-main { margin: 0 !important; padding: 4px; width: 100% !important; border: 1px solid #e3e3e3 !important; background: #fff; }
+.message-box .message .nicEdit-main:focus { outline: none; }
+.message-box .message .nicEdit-panelContain { width: auto !important; border: 0 !important; background: none !important; }
+.message-box .message .nicEdit-button { background-image: url("/jslib/nicedit/nicEditorIcons.gif") !important; }
+.message-box .add-panel { display: block; position: absolute; left: 60px; top: 50%; margin-top: -11px; font-size: 14px; }
+.message-box .divider { display: inline-block; position: relative; margin: 0 10px; height: 5px; }
+.message-box .divider::before { content: ' '; display: block; position: absolute; width: 1px; height: 20px; left: 0; top: -8px; background: linear-gradient(to bottom, #999999 0, #666666 50%, #999999 100%); }
+.message-box .attach-file { display: inline-block; vertical-align: middle; }
+.message-box .attach-file::before { background-position: 0 -640px; }
+.message-box .attach-file span { border-bottom: 1px solid #e3e3e3; font-size: 11px; }
+#DiChatWrapp .message-box .message .go button { 
+	float: right; 
+	margin: 0; 
+	position: relative;
+}
+#DiChatWrapp .message-box .message .go button:focus{ outline:none; }
+#DiChatWrapp .message-box .message .go button.load:before{
+	content: '';
+	background: url(/theme/pic/loading2.gif) no-repeat 50%;
+	width: 70px;
+	height: 26px;
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -80px;
+}
+.message-box .message .nicEdit-main i{ font-style:italic!important; }
+/*
+*		download files
+*/
+#F3uploaded { display: none; }
+#F3uploaded h3 { font-size: 14px; }
+#F3uploaded .attached-file { float: left; position: relative; margin-bottom: 10px; padding-left: 23px; clear: left; }
+#F3uploaded .attached-file .uni-delete { display: block; position: absolute; width: 12px; height: 12px; left: 0; top: 5px; background: transparent url(/theme/pic/tmp/close.png) 0 0 no-repeat; cursor: pointer; }
+#F3uploaded .attached-file .uni-delete:hover { background: transparent url(/theme/pic/tmp/close-h.png) 0 0 no-repeat; }
+#F3uploaded .attached-image { float: left; position: relative; margin: 0 5px 20px 0; }
+#F3uploaded .attached-image .uni-delete { display: block; position: absolute; width: 30px; height: 29px; right: 0; top: 0; background: transparent url(/theme/pic/ico-form.png) 0 -464px no-repeat; cursor: pointer; }
+#F3uploaded .attached-image .uni-delete:hover { background-position: 0 -58px; }
+#F3uploaded .attached-image .uni-img-link { display: block; max-width: 100px; max-height: 100px; }
+#F3uploaded .attached-image .uni-img-link img { width: 100%; }
+/*
+*		MEDIA
+*/
+@media (min-width: 768px) { 
+	.message-box .attach-file span { font-size: 14px; } 
 }

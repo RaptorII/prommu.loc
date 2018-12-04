@@ -463,4 +463,21 @@ class ImApplic extends Im
 
         return $data;
     }
+    /**
+     * 
+     */
+    public function recordAdminMessage($id, $arr)
+    {
+    /*    $admin = ($arr['user-type']==2 ? 1766 : 2054);
+        $res = Yii::app()->db->createCommand()
+                    ->insert('chat', array(
+                    'id_theme' => $id,
+                    'id_usp' => $admin,
+                    'id_use' => $arr['user-type']==2 ? $admin : $arr['user-id'],
+                    'message' => $arr['message'],
+                    'is_resp' => 0,
+                    'is_read' => 0,
+                    'crdate' => date("Y-m-d H:i:s"),
+                )); */
+    }
 }

@@ -1783,4 +1783,129 @@ class UserController extends AppController
             )
         );
     }
+    /**
+     * Чат
+     */
+    public function actionChats()
+    {
+        in_array(Share::$UserProfile->type, [2,3]) || $this->redirect(MainConfig::$PAGE_LOGIN);
+
+        $section = filter_var(
+                        Yii::app()->getRequest()->getParam('section'),
+                        FILTER_SANITIZE_FULL_SPECIAL_CHARS
+                    );
+        $id = filter_var(
+                        Yii::app()->getRequest()->getParam('id'),
+                        FILTER_SANITIZE_NUMBER_INT
+                    );
+        $vacancy = filter_var(
+                        Yii::app()->getRequest()->getParam('vacancy'),
+                        FILTER_SANITIZE_NUMBER_INT
+                    );
+
+        if(!empty($section) && !in_array($section,['vacancies','feedback']))
+            throw new CHttpException(404, 'Error');
+
+        $title = 'Сообщения';
+        $idus = Share::$UserProfile->id;
+        $view = MainConfig::$VIEW_CHATS_LIST;
+        $page = MainConfig::$PAGE_CHATS_LIST;
+        $this->setBreadcrumbs($title, $page);
+        $model = Share::$UserProfile->makeChat();
+        $data = array();
+
+        switch ($section) {
+            case 'vacancies':
+                $title = 'Сообщения по вакансиям';
+                $view = MainConfig::$VIEW_CHATS_LIST_VACANCIES;
+                $page = MainConfig::$PAGE_CHATS_LIST_VACANCIES;
+                if(strlen($vacancy) && strlen($id)) // private
+                {
+                    if(!$model->hasAccess('vacancy',$id,$vacancy))
+                        throw new CHttpException(404, 'Error');
+
+                    $view = 'chats/item-personal';
+                    $data = $model->getVacancyPersonal($vacancy,$id);
+
+                    if(Yii::app()->request->isAjaxRequest)
+                    {
+                        $this->renderPartial(
+                            MainConfig::$VIEW_CHATS_ITEM_PUBLIC_AJAX,
+                            array('viData' => $data), 
+                            false, 
+                            true
+                        );
+                        return;
+                    }
+                }
+                elseif(strlen($vacancy)) // public
+                {
+                    $model = new VacDiscuss;
+                    if(!intval($vacancy) || !$model->hasAccess($vacancy))
+                        throw new CHttpException(404, 'Error');
+
+                    $view = MainConfig::$VIEW_CHATS_ITEM_PUBLIC;
+                    $data = $model->getDiscuss($vacancy);
+
+                    if(Yii::app()->request->isAjaxRequest)
+                    {
+                        $this->renderPartial(
+                            MainConfig::$VIEW_CHATS_ITEM_PUBLIC_AJAX,
+                            array('viData' => $data), 
+                            false, 
+                            true
+                        );
+                        return;
+                    }
+                }
+                else // list
+                {
+                    $view = MainConfig::$VIEW_CHATS_LIST_VACANCIES;
+                    $data = $model->getVacanciesChats($idus);
+                }
+
+                break;
+
+            case 'feedback':
+                $title = 'Сообщения Prommu';
+                $view = MainConfig::$VIEW_CHATS_LIST_FEEDBACK;
+                $page = MainConfig::$PAGE_CHATS_LIST_FEEDBACK;
+                if(strlen($id))
+                {
+                    if(!$model->hasAccess('feedback',$id))
+                        throw new CHttpException(404, 'Error');
+
+                    $view = MainConfig::$VIEW_CHATS_ITEM;
+                    $data = $model->getMessViewData($id);
+                }
+                else
+                {
+                    $data = $model->getFeedbackChats();
+                    $feedback = new Feedback;
+                    $data['directs'] = $feedback->getDirects();
+                }
+
+                break;
+            default:
+                $data = $model->getAllChats();
+                break;
+        }
+
+
+
+
+        if(!empty($section))
+            $this->setBreadcrumbsEx([$title, $page]);
+
+        $this->render(
+                $view, 
+                array(
+                    'viData' => $data, 
+                    'section' => $section, 
+                    'id' => $id,
+                    'vacancy' => $vacancy
+                ),
+                array('htmlTitle' => $title)
+            );
+    }
 }

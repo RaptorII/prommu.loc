@@ -680,4 +680,137 @@ class Share
         if ($num > 1 && $num < 5) return 'года';
         return 'лет';
     }
+    /**
+    * @param $type number - user`s type
+    * @param $photo string - id`s photo 
+    * @param $size string - ['small', 'medium', 'big']
+    * @param $gender number(0|1)
+    * @return string
+    * Доп метод для формирования ссылки на картинку
+    */
+    public static function getPhoto($type, $photo, $size='small', $gender=0)
+    {
+        $src = DS . 
+            ($type==2 ? MainConfig::$PATH_APPLIC_LOGO : MainConfig::$PATH_EMPL_LOGO)
+            . DS;
+        if($type==2) { // applicant
+            if($photo)
+                switch ($size) {
+                    case 'small': $src .= $photo . '100.jpg'; break;
+                    case 'medium': $src .= $photo . '400.jpg'; break;
+                    case 'big': $src .= $photo . '000.jpg'; break;
+                }
+            else
+                $src .= $gender ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F;
+        }
+        if($type==3) { // employer
+            if($photo)
+                switch ($size) {
+                    case 'small': $src .= $photo . '100.jpg'; break;
+                    case 'medium': $src .= $photo . '400.jpg'; break;
+                    case 'big': $src .= $photo . '000.jpg'; break;
+                }
+            else
+                $src .= MainConfig::$DEF_LOGO;
+        }
+        return $src;
+    }
+    /**
+     * @param $arr array id_user`s
+     * @return array
+     * получить данные пользователей по массиву
+     */
+    public static function getUsers($arr) 
+    {
+        $arRes = array();
+        $arr = array_unique($arr);
+        $sql = Yii::app()->db->createCommand()
+                ->select("
+                    u.id_user, 
+                    u.status, 
+                    r.isman,
+                    CONCAT(r.firstname,' ',r.lastname) app_name,
+                    r.photo app_photo,
+                    e.name emp_name,    
+                    e.logo emp_photo")
+                ->from('user u')
+                ->leftjoin('resume r','r.id_user=u.id_user')
+                ->leftjoin('employer e','e.id_user=u.id_user')
+                ->where(array('in','u.id_user',$arr))
+                ->queryAll();
+
+        foreach ($sql as $v)
+        {
+            if($v['status']==2)
+            {
+                $arRes[$v['id_user']] = array(
+                        'id' => $v['id_user'],
+                        'status' => $v['status'],
+                        'name' => $v['app_name'],
+                        'src' => self::getPhoto(2,$v['app_photo'],'small',$v['isman']),
+                        'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user']
+                    );
+            }
+            if($v['status']==3)
+            {
+                $arRes[$v['id_user']] = array(
+                        'id' => $v['id_user'],
+                        'status' => $v['status'],
+                        'name' => $v['emp_name'],
+                        'src' => self::getPhoto(3,$v['emp_photo']),
+                        'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user']
+                    );
+            }
+            if(in_array($v['id_user'], [1766,2054]))
+            {
+                $arRes[$v['id_user']]['name'] = 'Администрация Prommu';
+                $arRes[$v['id_user']]['src'] = '/theme/pic/prommu-adm.jpg';
+                unset($arRes[$v['id_user']]['profile']);
+            }
+        }
+        return $arRes;
+    }
+    /**
+     * @param $date string - BD data
+     * @param $time string - BD data
+     * @return string
+     * красивая дата
+     */
+    public static function getPrettyDate($date, $time=false)
+    {
+        if(!$time)
+        {
+            $pieces = explode(' ', $date);
+            $unixD = strtotime($pieces[0] . ' 00:00:00');
+            $unixDT = strtotime($pieces[0] . ' ' . $pieces[1]);
+        }
+        else
+        {
+            $unixD = strtotime($date . ' 00:00:00');
+            $unixDT = strtotime($date . ' ' . $time);
+        }
+
+        $unixCur = strtotime(date('Y.m.d 00:00:00'));
+        $resDate = date('G:i',$unixDT);
+        $dateY = date('Y',$unixD);
+        $arMonths = array(
+                1=>'января',2=>'февраля',3=>'марта',
+                4=>'апреля',5=>'мая',6=>'июня',
+                7=>'июля',8=>'августа',9=>'сентября',
+                10=>'октября',11=>'ноября',12=>'декабря'
+            );
+        
+        if($unixCur==$unixD)
+            $resDate .= ''; 
+        elseif($unixCur == ($unixD+(60*60*24)))
+            $resDate .= ' вчера';
+        else
+            $resDate .= ' ' . date('d',$unixD) . ' ' 
+                        . $arMonths[date('n',$unixD)];
+
+        if(date('Y')!=$dateY)
+            $resDate .= ' ' . $dateY;
+
+        return $resDate;
+    }
 }

@@ -913,4 +913,43 @@ class AjaxController extends AppController
     
         echo CJSON::encode($result);
     }
+    /*
+    *       Глобальный экшн для чатов
+    */
+    public function actionChat()
+    {
+        $result = array('error'=>true);
+        $data = Yii::app()->getRequest()->getParam('data');
+        $data = json_decode($data, true, 5, JSON_BIGINT_AS_STRING);
+        $type = Share::$UserProfile->type;
+
+        if(!in_array($type, [2,3]))
+        {
+            echo CJSON::encode($result);
+            Yii::app()->end();
+        }
+
+        if(intval($data['user'])>0)
+        {
+            if($data['new'])
+            {
+
+            if( Share::$UserProfile->type == 2 ) $Im = new ImApplic();
+            elseif( Share::$UserProfile->type == 3 ) $Im = new ImEmpl();
+            if( $Im )
+
+                $arParams = array(
+                    'new' => $data['user'],
+                    'vid' => $data['vacancy']
+                );
+            }
+            $result = ['eeeeeeeeeer'=>1];
+        }
+        else
+        {
+            $model = new VacDiscuss();
+            $result = $model->recordMessage($data);            
+        }
+        echo CJSON::encode($result);
+    }
 }

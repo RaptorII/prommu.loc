@@ -251,4 +251,15 @@ class MainConfig
 
     public static $VIEW_OTHERCITIES = 'page-cities-view';
     public static $PAGE_OTHERCITIES = '/othercities';
+
+    /*   chats   */
+    public static $PAGE_CHATS_LIST = '/user/chats';
+    public static $PAGE_CHATS_LIST_VACANCIES = '/user/chats/vacancies';
+    public static $PAGE_CHATS_LIST_FEEDBACK = '/user/chats/feedback';
+    public static $VIEW_CHATS_LIST = 'chats/list';
+    public static $VIEW_CHATS_LIST_VACANCIES = 'chats/list-vacancies';
+    public static $VIEW_CHATS_LIST_FEEDBACK = 'chats/list-feedback';
+    public static $VIEW_CHATS_ITEM = 'chats/item';
+    public static $VIEW_CHATS_ITEM_PUBLIC = 'chats/item-public';
+    public static $VIEW_CHATS_ITEM_PUBLIC_AJAX = 'chats/item-public-ajax';
 }
