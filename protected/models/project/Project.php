@@ -36,7 +36,7 @@ class Project extends CActiveRecord
                             'vacancy' => $props['vacancy']
                         ));
     
-        if(count($_FILES['xls']) && !empty($props['xls']))
+        if(isset($_FILES['xls']['name']) && isset($_FILES['xls']['size']))
         {
             $name = $project . '.' . (end(explode('.', $_FILES['xls']['name'])));
             $uploadfile = $this->XLS_UPLOAD_PATH . $name;
