@@ -1861,7 +1861,7 @@ class UserController extends AppController
                 else // list
                 {
                     $view = MainConfig::$VIEW_CHATS_LIST_VACANCIES;
-                    $data = $model->getVacanciesChats($idus);
+                    $data = $model->getVacanciesChats();
                 }
 
                 break;

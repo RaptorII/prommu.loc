@@ -20,8 +20,8 @@
 					<div class="vacancy__item-content">
 						<div class="vac-item__content-chat">
 							<div class="vac-item__chat-users">
-								<? foreach ($item['users'] as $id_promo): ?>
-									<? $user = $viData['promos'][$id_promo]; ?>
+								<? foreach ($item['users'] as $idus): ?>
+									<? $user = $viData['users'][$idus]; ?>
 									<a href="<?=$user['profile']?>" title="<?=$user['name']?>" target="_blank" class="js-g-hashint">
 										<img src="<?=$user['src']?>" alt="<?=$user['name']?>">
 									</a>
@@ -29,9 +29,9 @@
 							</div>
 							<a href="<?=$personal_link?>">Общий чат</a>
 						</div>
-						<? foreach ($item['users'] as $id_promo): ?>
+						<? foreach ($item['users'] as $idus): ?>
 							<div class="vac-item__content-chat personal">
-								<? $user = $viData['promos'][$id_promo]; ?>
+								<? $user = $viData['users'][$idus]; ?>
 								<a href="<?=$user['profile']?>" title="<?=$user['name']?>" target="_blank" class="js-g-hashint">
 									<img src="<?=$user['src']?>" alt="<?=$user['name']?>">
 								</a>
