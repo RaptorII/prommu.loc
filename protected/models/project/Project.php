@@ -311,7 +311,7 @@ class Project extends CActiveRecord
         
         $location = [];
 
-        for($i = 2; $i < count($sheet_array)+1; $i++){
+        for($i = 0; $i < count($sheet_array)+1; $i++){
             $city = Yii::app()->db->createCommand()
                     ->select('c.id_city')
                     ->from('city c')
