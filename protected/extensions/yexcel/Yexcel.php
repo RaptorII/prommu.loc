@@ -119,9 +119,9 @@ class Yexcel
         $objPHPExcel->setActiveSheetIndex(0);
 
         // Save a xls file
-        $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/project_export.xls';
+        $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/project_export.xlsx';
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="project_export.xls"');
+        header('Content-Disposition: attachment;filename="project_export.xlsx"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
@@ -172,9 +172,9 @@ class Yexcel
         $objPHPExcel->setActiveSheetIndex(0);
 
         // Save a xls file
-        $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/users_export.xls';
+        $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/users_export.xlsx';
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="users_export.xls"');
+        header('Content-Disposition: attachment;filename="users_export.xlsx"');
         header('Cache-Control: max-age=0');
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
