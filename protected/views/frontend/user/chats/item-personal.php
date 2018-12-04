@@ -5,19 +5,17 @@ echo "</pre>";
 	$sectionList = MainConfig::$PAGE_CHATS_LIST_VACANCIES;
 	$this->setBreadcrumbsEx(array($viData['vacancy']['title'], $sectionList . DS . $vacancy . DS . $id));
 	$this->setPageTitle($viData['vacancy']['title']);
-	$bUrl = Yii::app()->baseUrl . '/theme/';
-	Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/chats/item.css');
+
+	Yii::app()->getClientScript()->registerCssFile('/theme/css/chats/item.css');
+	Yii::app()->getClientScript()->registerCssFile('/jslib/magnific-popup/magnific-popup-min.css');
+	Yii::app()->getClientScript()->registerScriptFile('/theme/js/chats/item-emp.js', CClientScript::POS_END);
 	Yii::app()->getClientScript()->registerScriptFile('/jslib/nicedit/nicEdit.js', CClientScript::POS_END);
-	Yii::app()->getClientScript()->registerScriptFile($bUrl . 'js/chats/item-emp.js', CClientScript::POS_END);
+	Yii::app()->getClientScript()->registerScriptFile('/jslib/magnific-popup/jquery.magnific-popup.min.js', CClientScript::POS_END);
 ?>
 <div class="message"><? echo ($viData['error'] ? $viData['message'] : '')?></div>
-<?php if( !$viData['error'] ): ?>
-  <br />
-  <a href="<?= MainConfig::$PAGE_IM ?>">&lt; Назад к диалогам</a>
-  <br />
-  <br />
-  <div class='row'>
-    <div class='col-xs-12'>
+<div class="chat-item">
+	<? if(!$viData['error']): ?>
+		<a href="<?=$sectionList?>" class="chat-item__btn-link"><span><</span> Назад</a>
       <?php if( $isNew ): ?>
         <div class="theme-input">
             <?php if( $viData['themes'] ): ?>
@@ -191,6 +189,5 @@ echo "</pre>";
               <span class="uni-delete js-hashint" title="удалить изображение"></span>
               <a href="" class="uni-link" target="_blank"></a>
       </div>
-    </div>
-  </div>
-<?php endif; ?>
+	<?php endif; ?>
+</div>
