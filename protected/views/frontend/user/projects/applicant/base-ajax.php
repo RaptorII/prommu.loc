@@ -36,7 +36,7 @@ if(sizeof($viData['items'])>0): ?>
               </td>
               <td class="index">
                 <div class="task__table-cell border task__table-index">
-                    <span><?=$point['adres']?></span>
+                    <span><?=$point['index_full']?></span>
                     <b
                             data-map-project="<?= $project ?>"
                             data-map-user="<?= $idus ?>"

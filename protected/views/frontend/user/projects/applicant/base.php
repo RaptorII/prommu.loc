@@ -26,23 +26,15 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-m
 ?>
 
 
-<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
+<?/*<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
 <? print_r($viData); ?>
-</pre>
+</pre>*/?>
 
 <div class="filter__veil"></div>
 
-
 <div class="row project">
     <div class="col-xs-12">
-        <div class="project__tabs">
-            <a href="/user/projects/154332830171869/tasks_test" class="active">
-                <b>ГЛАВНАЯ</b>
-            </a>
-            <a href="/user/projects/154332830171869/tasks_test" class="">
-                <b>МАРШРУТ</b>
-            </a>
-        </div>
+        <? require 'nav.php'; ?>
     </div>
 </div>
 
@@ -50,9 +42,9 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-m
 <div class="project__module" data-id="<?= $project ?>">
     <?php if (sizeof($viData['items']) > 0): ?>
         <div class="tasks__list">
-            <? require __DIR__ . '/filter.php'; // ФИЛЬТР ?>
+            <?/* require __DIR__ . '/filter.php'; // ФИЛЬТР */?>
             <div class="tasks" id="ajax-content">
-                <? require __DIR__ . '/project-app-ajax.php'; // СПИСОК ?>
+                <? require __DIR__ . '/base-ajax.php'; // СПИСОК ?>
             </div>
         </div>
         <div class="users__list">
@@ -126,7 +118,6 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-m
                                             </tbody>
                                         </table>
                                         <div class="geo__map-container">
-
                                             <div class="geo__route-map map__get-point"
                                                  id="geo__route-<?= $idus; ?>-<?= $unix ?>-<?= $point['point'] ?>"
                                                  data-map-project="<?= $project ?>"

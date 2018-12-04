@@ -67,17 +67,16 @@ let GoogleMap = (function () {
         }
 
         if($('.map__get-point')){
-
             $('.map__get-point').each(function () {
-                var element = this;
-                let map_project= $(this).data('map-project');
-                let map_user = $(this).data('map-user');
-                let map_point = $(this).data('map-point');
-                let map_date = $(this).data('map-date');
-                let type = 'coordinates';
+                    var element = this;
+                    let map_project= $(this).data('map-project');
+                    let map_user = $(this).data('map-user');
+                    let map_point = $(this).data('map-point');
+                    let map_date = $(this).data('map-date');
+                    let type = 'coordinates';
 
-                var data = self.initData(map_project,map_user,map_point,map_date, type);
-                self.ajaxGetMapParamsPlanForBlock(data, element);
+                    var data = self.initData(map_project,map_user,map_point,map_date, type);
+                    self.ajaxGetMapParamsPlanForBlock(data, element);
             });
         }
 
@@ -191,6 +190,8 @@ let GoogleMap = (function () {
                     this.requestDirections(end_point, end_point, { strokeColor:'#ff8300' });
                 }
             }
+
+
         }else{
             $(element).closest('.geo__map-container').find('.geo__item-error').fadeIn();
         }
