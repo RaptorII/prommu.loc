@@ -956,19 +956,21 @@ class SiteController extends AppController
         if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('name') )
         {
             $res = $Feedback->saveData();
-            if($res['ERROR']){
+            if($res['ERROR'])
+            {
                 $data = array(
                         'viData' => $Feedback->getData(), 
                         'error' => $res['MESSAGE'],
                         'model'=>(new FeedbackAF())
                     );
             }
-            else{
+            elseif(in_array(Share::$UserProfile->type, [2,3]))
+                $this->redirect(MainConfig::$PAGE_CHATS_LIST_FEEDBACK);
+            else
                 $this->redirect(MainConfig::$PAGE_FEEDBACK);
-            }
         }
         if(!$data)
-            $data = array('viData'=>array(), 'model'=>(new FeedbackAF()));
+            $data = array('viData'=>$Feedback->getData(), 'model'=>(new FeedbackAF()));
 
         $this->render(
                 $this->ViewModel->pageFeedback, 
