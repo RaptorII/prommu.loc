@@ -5,6 +5,7 @@
  * Date: 19.09.2018
  * Time: 14:40
  */
+$today = date('d.m.Y');
 if (sizeof($viData['items']) > 0): ?>
     <?php
     foreach ($viData['items'] as $d => $date):
@@ -12,7 +13,9 @@ if (sizeof($viData['items']) > 0): ?>
 
         <?/* <h2 class="task__item-title"><?=$city['city']?> <span><?=$city['date']?></span></h2>*/
         ?>
-        <h2 class="task__item-title"><?= date('d.m.Y', $d); ?></span></h2>
+        <h2 class="task__item-title">
+            <?= date('d.m.Y', $d); ?>
+        </h2>
         <div class="task__item">
         <table class="task__table">
             <thead>
@@ -51,10 +54,10 @@ if (sizeof($viData['items']) > 0): ?>
                     <span>
                         <? if (!empty($point['metro'])): ?>
                             <?= $point['metro'] ?>
-                        <?
+                            <?
                         else:?>
                             -
-                        <?endif; ?>
+                        <? endif; ?>
                     </span>
                                 </div>
                             </td>
@@ -84,7 +87,10 @@ if (sizeof($viData['items']) > 0): ?>
             ?>                    </tbody>
         </table>
 
-
+        <? if (date('d.m.Y') == date('d.m.Y', $d)):?>
+        <h2 class="task__item-title">
+            Маршрут на сегодня
+        </h2>
         <div class="geo__map-container">
 
             <div class="geo__route-map map__get-point"
@@ -95,6 +101,16 @@ if (sizeof($viData['items']) > 0): ?>
                  data-map-date="<?= $d ?>">
             </div>
         </div>
+    <?
+    else:?>
+        <div class="routes__btns">
+            <span data-map-project="<?= $project ?>"
+                  data-map-user="<?= $idus ?>"
+                  data-map-point=""
+                  data-map-date="<?= $d ?>"
+                  class="route__watch-btn route__button-map map__universal-button">СМОТРЕТЬ МАРШРУТ</span>
+        </div>
+    <?endif; ?>
 
 
         </div><?

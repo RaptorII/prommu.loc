@@ -26,9 +26,9 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-m
 ?>
 
 
-<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
+<?/*<pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
 <? print_r($viData); ?>
-</pre>
+</pre>*/?>
 
 <div class="filter__veil"></div>
 

@@ -69,22 +69,32 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-m
                                         <table class="task__table task__table-pointinfo">
                                             <thead>
                                             <tr>
+                                                <th>Город</th>
                                                 <th>Название</th>
-
+                                                <th>Адрес</th>
                                                 <? if ($point['metro']): ?>
                                                     <th>Метро</th>
                                                 <? endif; ?>
-                                                <th>Адрес</th>
-                                                <th>Город</th>
                                                 <th>Дата</th>
                                                 <th>Время</th>
+                                                <th></th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <tr>
                                                 <td class="name">
                                                     <div class="task__table-cell border">
+                                                        <?= $point['city'] ?>
+                                                    </div>
+                                                </td>
+                                                <td class="name">
+                                                    <div class="task__table-cell border">
                                                         <?= $point['name'] ?>
+                                                    </div>
+                                                </td>
+                                                <td class="name">
+                                                    <div class="task__table-cell border">
+                                                        <?= $point['adres'] ?>
                                                     </div>
                                                 </td>
                                                 <? if ($point['metro']): ?>
@@ -96,16 +106,6 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-m
                                                 <? endif; ?>
                                                 <td class="name">
                                                     <div class="task__table-cell border">
-                                                        <?= $point['adres'] ?>
-                                                    </div>
-                                                </td>
-                                                <td class="name">
-                                                    <div class="task__table-cell border">
-                                                        <?= $point['city'] ?>
-                                                    </div>
-                                                </td>
-                                                <td class="name">
-                                                    <div class="task__table-cell border">
                                                         <?= $city['date'] ?>
                                                     </div>
                                                 </td>
@@ -114,18 +114,21 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/projects/universal-m
                                                         с <?= $point['btime'] ?> по <?= $point['etime'] ?>
                                                     </div>
                                                 </td>
+                                                <td class="time">
+                                                    <div class="task__table-cell border task__table-index">
+                                                        <b
+                                                                data-map-project="<?= $project ?>"
+                                                                data-map-user="<?= $idus ?>"
+                                                                data-map-point="<?= $point['point'] ?>"
+                                                                data-map-date="<?= $unix ?>"
+                                                                class="js-g-hashint js-get-target all__geo-data"
+                                                                title="Посмотреть на карте">
+                                                        </b>
+                                                    </div>
+                                                </td>
                                             </tr>
                                             </tbody>
                                         </table>
-                                        <div class="geo__map-container">
-                                            <div class="geo__route-map map__get-point"
-                                                 id="geo__route-<?= $idus; ?>-<?= $unix ?>-<?= $point['point'] ?>"
-                                                 data-map-project="<?= $project ?>"
-                                                 data-map-user="<?= $idus ?>"
-                                                 data-map-point="<?= $point['point'] ?>"
-                                                 data-map-date="<?= $unix ?>">
-                                            </div>
-                                        </div>
 
 
                                         <div class="task__single-table">
