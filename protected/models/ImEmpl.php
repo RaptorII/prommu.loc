@@ -673,28 +673,28 @@ class ImEmpl extends Im
                 ->order('ct.id desc')
                 ->queryAll();
 
-        if(!count($sql))
-            return $arRes;
-
-        $arRes['cnt'] = count($sql);
-        $arId = array();
-        foreach ($sql as $v)
-            $arId[] = $v['id'];
-
-        $sql = Yii::app()->db->createCommand()
-                        ->select("*")
-                        ->from('chat')
-                        ->where(array('in','id_theme',$arId))
-                        ->queryAll(); 
-
-        foreach ($sql as $v)
+        if(count($sql))
         {
-            $arRes['feedback']['cnt-mess']++;
-            if(!isset($arRes['feedback']['cnt-noread']))
-                $arRes['feedback']['cnt-noread'] = 0;
+            $arRes['cnt'] = count($sql);
+            $arId = array();
+            foreach ($sql as $v)
+                $arId[] = $v['id'];
 
-            if(!$v['is_resp'] && !$v['is_read'])
-                $arRes['feedback']['cnt-noread']++;
+            $sql = Yii::app()->db->createCommand()
+                            ->select("*")
+                            ->from('chat')
+                            ->where(array('in','id_theme',$arId))
+                            ->queryAll(); 
+
+            foreach ($sql as $v)
+            {
+                $arRes['feedback']['cnt-mess']++;
+                if(!isset($arRes['feedback']['cnt-noread']))
+                    $arRes['feedback']['cnt-noread'] = 0;
+
+                if(!$v['is_resp'] && !$v['is_read'])
+                    $arRes['feedback']['cnt-noread']++;
+            }
         }
         //
         //
