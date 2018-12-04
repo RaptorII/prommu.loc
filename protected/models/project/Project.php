@@ -26,7 +26,6 @@ class Project extends CActiveRecord
 
     public function createProject($props){
         $project = time().rand(11111,99999);
-        ///Обработка адресной программы
         $idus = Share::$UserProfile->id;
         $res = Yii::app()->db->createCommand()
                         ->insert('project', array(
@@ -37,7 +36,21 @@ class Project extends CActiveRecord
                             'vacancy' => $props['vacancy']
                         ));
     
-        $this->recordIndex($props, $project, true);
+        if(count($_FILES['xls']) && !empty($props['xls']))
+        {
+            $name = $project . '.' . (end(explode('.', $_FILES['xls']['name'])));
+            $uploadfile = $this->XLS_UPLOAD_PATH . $name;
+            if (move_uploaded_file($_FILES['xls']['tmp_name'], $uploadfile))
+            {
+                $this->importProject(['project' => $project,'link' => $name]);
+                unlink($uploadfile);
+            }            
+        }
+        else
+        {
+            $this->recordIndex($props, $project, true);  
+        }
+
         $this->recordStaff($props, $project);
 
         return $project;

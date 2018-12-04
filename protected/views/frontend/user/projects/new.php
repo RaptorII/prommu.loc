@@ -15,7 +15,7 @@
 ?>
 <div class="row project">
 	<div class="col-xs-12">
-		<form action="/user/procreate" method="POST" id="new-project">
+		<form enctype="multipart/form-data" action="/user/procreate" method="POST" id="new-project">
 			<div id="main" class="project__module">
 				<div class="project__name">
 					<input type="text" name="name" placeholder="*Введите название проекта" autocomplete="off" id="project-name">
@@ -29,7 +29,7 @@
 						<div class="project__opt-row" data-btn="xls">
 							<span>Добавить адресную программу через XLS</span>
 							<span class="project__opt-btn" id="add-xls">Выбрать</span>
-
+							<input type="hidden" name="MAX_FILE_SIZE" value="5242880">
 							<input type="file" name="xls" id="add-xls-inp">
 						</div>
 						<div id="add-xls-name"></div>
