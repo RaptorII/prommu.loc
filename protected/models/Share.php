@@ -724,6 +724,9 @@ class Share
     {
         $arRes = array();
         $arr = array_unique($arr);
+        if(!count($arr))
+            return $arRes;
+
         $sql = Yii::app()->db->createCommand()
                 ->select("
                     u.id_user, 

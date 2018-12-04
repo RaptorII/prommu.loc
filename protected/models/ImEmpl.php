@@ -484,12 +484,8 @@ class ImEmpl extends Im
 
             // получаем сообщения
             $sql = "SELECT ca.id, ca.message, ca.is_resp isresp, ca.is_read isread, ca.id_usp idusp, ca.id_use iduse, ca.files
-                  , e.name nameto, e.logo phototo
-                  , CONCAT(r.firstname, ' ', r.lastname) namefrom, r.photo photofrom, r.isman
                   , DATE_FORMAT(ca.crdate, '%d.%m.%Y') crdate, DATE_FORMAT(ca.crdate, '%H:%i:%s') crtime
                 FROM chat ca 
-                LEFT JOIN employer e ON e.id_user = ca.id_use
-                LEFT JOIN resume r ON r.id_user = ca.id_usp
                 WHERE ca.id_theme = {$idTm}
                   {$filter}
                 ORDER BY id DESC
@@ -498,9 +494,9 @@ class ImEmpl extends Im
             $res = Yii::app()->db->createCommand($sql);
             $data = ($res->queryAll());
 
-
             // обработать файлы
             $data = $this->prepareFiles($data);
+            // получение юзеров и форматирование даты
             $data = $this->buildMessArray($data);
 
             // есть ли еще сообщения
@@ -556,12 +552,8 @@ class ImEmpl extends Im
     {
         // выбираем новые
         $sql = "SELECT ca.id, ca.message, ca.is_resp isresp, ca.is_read isread, ca.id_usp idusp, ca.id_use iduse, ca.files
-                  , e.name nameto, e.logo phototo
-                  , CONCAT(r.firstname, ' ', r.lastname) namefrom, r.photo photofrom, r.isman
                   , DATE_FORMAT(ca.crdate, '%d.%m.%Y') crdate, DATE_FORMAT(ca.crdate, '%H:%i:%s') crtime
                 FROM chat ca
-                LEFT JOIN employer e ON e.id_user = ca.id_use
-                LEFT JOIN resume r ON r.id_user = ca.id_usp
                 WHERE ca.id_theme = {$inIdTm}
                   AND ca.id > {$lastId}";
         /** @var $res CDbCommand */
@@ -570,6 +562,7 @@ class ImEmpl extends Im
 
         // обработать файлы
         $data['messages'] = $this->prepareFiles($data['messages']);
+        // получение юзеров и форматирование даты
         $data['messages'] = $this->buildMessArray($data['messages']);
 
         // помечаем прочитанными
@@ -659,6 +652,63 @@ class ImEmpl extends Im
                         'is_read' => 0,
                         'crdate' => date("Y-m-d H:i:s"),
                     )); 
+    }
+    /**
+     *      проверка доступа к чату
+     */
+    public function hasAccess($chat, $id, $vacancy=0)
+    {
+        $idus = Share::$UserProfile->id;
+        $type = Share::$UserProfile->type;
+        if($type!=3 || !intval($id))
+            return false;
+
+        if($chat==='feedback')
+        {
+            // просто проверяем наличие чата
+            $sql = Yii::app()->db->createCommand()
+                    ->select('id')
+                    ->from('chat_theme')
+                    ->where(
+                        'id_use=:idus AND id=:id',
+                        array(':idus'=>$idus, ':id'=>$id)
+                    )
+                    ->queryRow();
+
+            return isset($sql['id']);
+        }
+        if($chat==='vacancy')
+        {
+            if(!intval($vacancy))
+                return false;
+            // проверка подтвержденного юзера
+            $sql = Yii::app()->db->createCommand()
+                    ->select('vs.id')
+                    ->from('vacation_stat vs')
+                    ->leftjoin('resume r','r.id=vs.id_promo')
+                    ->where(
+                        'vs.id_vac=:id AND r.id_user=:idus AND vs.status>4',
+                        array(':id'=>$vacancy,':idus'=>$id)
+                    )
+                    ->queryRow();
+
+            if(!isset($sql['id']))
+                return false;
+            // проверка владельца вакансии
+            $sql = Yii::app()->db->createCommand()
+                    ->select('id, title')
+                    ->from('empl_vacations')
+                    ->where(
+                        'id=:id AND id_user=:id_emp',
+                        array(':id'=>$vacancy,':id_emp'=>$idus)
+                    )
+                    ->queryRow();
+
+            if(!isset($sql['id']))
+                return false;
+
+        }
+        return true;
     }
     /**
     *      страница всех чатов
@@ -950,97 +1000,29 @@ class ImEmpl extends Im
         return $arRes;
     }
     /**
-     *      проверка доступа к чату
-     */
-    public function hasAccess($chat, $id, $vacancy=0)
-    {
-        $idus = Share::$UserProfile->id;
-        $type = Share::$UserProfile->type;
-        if(!in_array($type, [2,3]) || !intval($id))
-            return false;
-
-        if($chat==='feedback')
-        {
-            // просто проверяем наличие чата
-            $sql = Yii::app()->db->createCommand()
-                    ->select('id')
-                    ->from('chat_theme')
-                    ->where(
-                        'id_use=:idus AND id=:id',
-                        [':idus'=>$idus, ':id'=>$id]
-                    )
-                    ->queryRow();
-
-            return isset($sql['id']);
-        }
-        if($chat==='vacancy')
-        {
-            if(!intval($vacancy))
-                return false;
-            // проверка подтвержденного юзера
-            $sql = Yii::app()->db->createCommand()
-                    ->select('vs.id')
-                    ->from('vacation_stat vs')
-                    ->leftjoin('resume r','r.id=vs.id_promo')
-                    ->where(
-                        'vs.id_vac=:id AND r.id_user=:idus AND vs.status>4',
-                        array(':id'=>$vacancy,':idus'=>$id)
-                    )
-                    ->queryRow();
-
-            if(!isset($sql['id']))
-                return false;
-            // проверка владельца вакансии
-            $sql = Yii::app()->db->createCommand()
-                    ->select('id, title')
-                    ->from('empl_vacations')
-                    ->where(
-                        'id=:id AND id_user=:id_emp',
-                        array(':id'=>$vacancy,':id_emp'=>$idus)
-                    )
-                    ->queryRow();
-
-            if(!isset($sql['id']))
-                return false;
-
-        }
-        return true;
-    }
-    /**
      *      Формирование правильного массива
      */
     public function buildMessArray($arr)
     {
-        foreach ($arr as &$v)
+        $arUId = array();
+        foreach ($arr as $k => $v)
         {
-            $v['date'] = Share::getPrettyDate($v['crdate'],$v['crtime']);
-            $v = $this->getUserPhoto($v);
+            $arUId[] = $v['idusp'];
+            $arUId[] = $v['iduse'];
+            $arr[$k]['date'] = Share::getPrettyDate($v['crdate'],$v['crtime']);
         }
-        unset($v);
+
+        $arUsers = Share::getUsers($arUId);
+
+        foreach ($arr as $k => $v)
+        {
+            $arr[$k]['nameto'] = $arUsers[$v['iduse']]['name'];
+            $arr[$k]['phototo'] = $arUsers[$v['iduse']]['src'];
+            $arr[$k]['namefrom'] = $arUsers[$v['idusp']]['name'];
+            $arr[$k]['photofrom'] = $arUsers[$v['idusp']]['src'];
+        }
 
         return $arr;
-    }
-    /**
-     *  @param $arr [phototo,photofrom,isman,idusp]
-     */
-    public function getUserPhoto($arr)
-    {
-        $src = DS . MainConfig::$PATH_EMPL_LOGO . DS;
-        if($arr['phototo'])
-            $arr['phototo'] = $src . $arr['phototo'] . '100.jpg';
-        else
-            $arr['phototo'] = $src . MainConfig::$DEF_LOGO;
-
-        $src = DS . MainConfig::$PATH_APPLIC_LOGO . DS;
-        if($arr['photofrom'])
-            $arr['photofrom'] = $src . $arr['photofrom'] . '100.jpg';
-        else
-            $arr['photofrom'] = $src . ($arr['isman'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F);
-
-        if($arr['idusp']==$this->adminId)
-            $arr['photofrom'] = '/theme/pic/prommu-adm.jpg';
-
-        return $arr;   
     }
     /**
      * 
