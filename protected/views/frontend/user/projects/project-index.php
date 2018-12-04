@@ -15,8 +15,8 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/projects/it
     <div class="project__addr-header">
         <div class="project__addr-xls">
             <?/*<a href="/user/uploadprojectxls?id=<?= $project ?>&type=index" id="add-xls">Изменить адресную программу</a>*/?>
-            <?/*<a href="/uploads/prommu_example.xls" download>Скачать пример для добавления</a>*/?>
-            <a href="/uploads/prommu_example.xls" download>Скачать пример для добавления</a>
+            <?/*<a href="/uploads/prommu_example.xlsx" download>Скачать пример для добавления</a>*/?>
+            <a href="/uploads/prommu_example.xlsx" download>Скачать пример для добавления</a>
             <a class="add-xls-new" href="javascript:void(0)">Загрузить новую</a>
             <a href="/user/uploadprojectxls?id=<?= $project ?>&type=index" download>Скачать существующую</a>
             <a class="add-xls-change" href="javascript:void(0)">Загрузить изменения</a>
