@@ -294,7 +294,7 @@ class Project extends CActiveRecord
         $project = $props['project'];
         Yii::import('ext.yexcel.Yexcel');
         $sheet_array = Yii::app()->yexcel->readActiveSheet($this->XLS_UPLOAD_PATH . $link);
-        
+        file_put_contents("createresult.txt", date('d.m.Y H:i')."\t".var_export($sheet_array,1)."\n", FILE_APPEND | LOCK_EX);
         $city = "Город";
         $location = "Название ТТ";
         $street = "Улица";
