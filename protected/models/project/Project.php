@@ -249,10 +249,10 @@ class Project extends CActiveRecord
                 $report[] =$dateF;
                 $repFlag++;
             }
-            if($xls['J'] != $times){
-                $report[] =$times;
-                $repFlag++;
-            }
+            // if($xls['J'] != $times){
+            //     $report[] =$times;
+            //     $repFlag++;
+            // }
             if($xls['K'] != $timeF){
                 $report[] =$timeF;
                 $repFlag++;
