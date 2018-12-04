@@ -39,7 +39,6 @@ class Project extends CActiveRecord
     
         $this->recordIndex($props, $project, true);
         $this->recordStaff($props, $project);
-        $this->importProject($props);
 
         return $project;
     }
