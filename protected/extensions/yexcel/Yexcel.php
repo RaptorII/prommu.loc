@@ -120,7 +120,7 @@ class Yexcel
 
         // Save a xls file
         $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/project_export.xlsx';
-        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="project_export.xlsx"');
         header('Cache-Control: max-age=0');
 
