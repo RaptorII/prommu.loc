@@ -172,7 +172,7 @@ let GoogleMap = (function () {
 
     GoogleMap.prototype.setPointMessage = function (value) {
         var contentString = '<div id="content"><div>Название ТТ: '+value.name+'</div>' +
-            '<div>Время: с '+value.btime+' по '+value.etime+'</div></div>';
+            '<div>Время: с '+value.btime+' до '+value.etime+'</div></div>';
         var infowindow = new google.maps.InfoWindow({
             content: contentString
         });
