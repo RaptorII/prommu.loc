@@ -581,7 +581,7 @@ class ImApplic extends Im
                 if(!isset($arRes['feedback']['cnt-noread']))
                     $arRes['feedback']['cnt-noread'] = 0;
 
-                if(!$v['is_resp'] && !$v['is_read'])
+                if($v['is_resp'] && !$v['is_read']) // ответ Р и не прочитано
                     $arRes['feedback']['cnt-noread']++;
             }
         }
@@ -643,7 +643,7 @@ class ImApplic extends Im
           if(!in_array($v['id_usp'], $arPid))
               $arPid[] = $v['id_usp'];
 
-          if(!$v['is_resp'] && !$v['is_read'])
+          if($v['is_resp'] && !$v['is_read']) // ответ Р и не прочитано
               $arRes['vacancies']['cnt-noread']++;
         }
         $arRes['vacancies']['cnt-users'] = count($arPid);
@@ -812,7 +812,7 @@ class ImApplic extends Im
             $arC['id'] = $v['id'];
             $arC['user'] = $v['id_usp'];
             !isset($arC['noread']) && $arC['noread'] = 0;
-            if(!$v['is_resp'] && !$v['is_read'])
+            if($v['is_resp'] && !$v['is_read']) // ответ Р и не прочитано
                 $arC['noread']++;
             $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_theme']] = $arC;
         }
