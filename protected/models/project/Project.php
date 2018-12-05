@@ -26,7 +26,6 @@ class Project extends CActiveRecord
 
     public function createProject($props){
         $project = time().rand(11111,99999);
-        ///Обработка адресной программы
         $idus = Share::$UserProfile->id;
         $res = Yii::app()->db->createCommand()
                         ->insert('project', array(
@@ -37,7 +36,21 @@ class Project extends CActiveRecord
                             'vacancy' => $props['vacancy']
                         ));
     
-        $this->recordIndex($props, $project, true);
+        if(isset($_FILES['xls']['name']) && isset($_FILES['xls']['size']))
+        {
+            $name = $project . '.' . (end(explode('.', $_FILES['xls']['name'])));
+            $uploadfile = $this->XLS_UPLOAD_PATH . $name;
+            if (move_uploaded_file($_FILES['xls']['tmp_name'], $uploadfile))
+            {
+                $this->importProject(['project' => $project,'link' => $name]);
+                unlink($uploadfile);
+            }            
+        }
+        else
+        {
+            $this->recordIndex($props, $project, true);  
+        }
+
         $this->recordStaff($props, $project);
 
         return $project;
@@ -249,10 +262,10 @@ class Project extends CActiveRecord
                 $report[] =$dateF;
                 $repFlag++;
             }
-            if($xls['J'] != $times){
-                $report[] =$times;
-                $repFlag++;
-            }
+            // if($xls['J'] != $times){
+            //     $report[] =$times;
+            //     $repFlag++;
+            // }
             if($xls['K'] != $timeF){
                 $report[] =$timeF;
                 $repFlag++;
@@ -294,7 +307,7 @@ class Project extends CActiveRecord
         $project = $props['project'];
         Yii::import('ext.yexcel.Yexcel');
         $sheet_array = Yii::app()->yexcel->readActiveSheet($this->XLS_UPLOAD_PATH . $link);
-        
+        file_put_contents("createresult.txt", date('d.m.Y H:i')."\t".var_export($sheet_array,1)."\n", FILE_APPEND | LOCK_EX);
         $city = "Город";
         $location = "Название ТТ";
         $street = "Улица";
@@ -311,7 +324,7 @@ class Project extends CActiveRecord
         
         $location = [];
 
-        for($i = 1; $i < count($sheet_array)+1; $i++){
+        for($i = 2; $i < count($sheet_array)+1; $i++){
             $city = Yii::app()->db->createCommand()
                     ->select('c.id_city')
                     ->from('city c')
@@ -332,7 +345,14 @@ class Project extends CActiveRecord
                 $edate = str_replace(".", "-", $edate);
                 $adres = $sheet_array[$i]['A'].' ул.'.$sheet_array[$i]['C'].' дом '.$sheet_array[$i]['D'].' здание'.$sheet_array[$i]['E'].' строение '.$sheet_array[$i]['F'].' строение '.$sheet_array[$i]['G'];
                 $location = $this->getCoords($adres);
-                if($sheet_array[$i]['J'] != ''){
+                
+                 $datas = Yii::app()->db->createCommand()
+                ->select('pc.point')
+                ->from('project_city pc')
+                ->where('pc.point = :point', array(':point' =>$sheet_array[$i]['N']))
+                ->queryRow(); 
+                
+                if(count($datas['point'])){
                     $point = $sheet_array[$i]['N'];
                     
                      Yii::app()->db->createCommand()
@@ -374,6 +394,7 @@ class Project extends CActiveRecord
                             'latitude' => $location['la'],
                             'post' => $post['id'],
                             'longitude' => $location['lo'],
+                            'point' => rand(11111,99999),
                         ));   
                 }
         }

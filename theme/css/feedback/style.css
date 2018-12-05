@@ -77,6 +77,7 @@
 	line-height: normal;
 }
 #DiContent.page-feedback .feedback-page__input.error{ border: 1px solid #ff8300; }
+#DiContent.page-feedback .feedback-page__textarea.error{ border: 1px solid #ff8300; }
 #DiContent.page-feedback .feedback-page__input,
 #DiContent.page-feedback .feedback-page__select{
 	height: 35px;

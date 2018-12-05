@@ -293,7 +293,7 @@
                                                 </span>
                                                 <span class="small-menu__name">ОТЗЫВЫ И РЕЙТИНГИ</span>
                                             </a>
-                                            <?php $link = MainConfig::$PAGE_IM ?>
+                                            <?php $link = MainConfig::$PAGE_CHATS_LIST ?>
                                             <a href="<?=$link?>" class="small-menu__item notice<?=($curUrl==$link ? ' current' : '')?>" id="sm-notice-cnt">
                                                 <span class="small-menu__circle">
                                                     <b class="small-menu__cnt">0</b>

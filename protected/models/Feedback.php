@@ -24,8 +24,8 @@ class Feedback extends Model
         return  $data;
     }
 
-     public function getDatAdmin()
-    {
+		public function getDatAdmin()
+		{
 			$arRes = ['cnt'=>0,'items'=>[]];
 			$arCId = array();
 			$arMess = Yii::app()->db->createCommand()
@@ -40,11 +40,12 @@ class Feedback extends Model
 			foreach ($arMess as $v)
 				!in_array($v['id_theme'], $arCId) && $arCId[] = $v['id_theme'];
 			$strCId = implode(',', $arCId);
+			$where = 'is_smotr=0' . (strlen($strCId) ? ' OR chat IN(' . $strCId . ')' : '');
 
 			$arFeedback = Yii::app()->db->createCommand()
 								->select("id, theme, chat, is_smotr, type")
 								->from('feedback')
-								->where('is_smotr=0 OR chat IN(' . $strCId . ')')
+								->where($where)
 								->order('id desc')
 								->queryAll();
 
@@ -69,22 +70,32 @@ class Feedback extends Model
 
     public function getData()
     {
-    	/*
-        $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
+			$arRes = array(
+					'type' => filter_var(
+						Yii::app()->getRequest()->getParam('type', 0), 
+						FILTER_SANITIZE_NUMBER_INT
+					),
+					'name' => filter_var(
+						Yii::app()->getRequest()->getParam('name'), 
+						FILTER_SANITIZE_FULL_SPECIAL_CHARS
+					),
+					'theme' => filter_var(
+						Yii::app()->getRequest()->getParam('name'), 
+						FILTER_SANITIZE_FULL_SPECIAL_CHARS
+					),
+					'email' => filter_var(
+						Yii::app()->getRequest()->getParam('email'), 
+						FILTER_SANITIZE_EMAIL
+					),
+					'text' => filter_var(
+						Yii::app()->getRequest()->getParam('text'), 
+						FILTER_SANITIZE_FULL_SPECIAL_CHARS
+					)
+				);
 
-        $sql = "SELECT s.id, s.name, DATE_FORMAT(s.crdate, '%d.%m.%Y') crdate
-                FROM services s WHERE s.id = {$id}";
-        return array(); 
-        */
-        //Yii::app()->db->createCommand($sql)->queryRow();
+			$arRes['directs'] = $this->getDirects();
 
-        return array(
-        	'type' => filter_var(Yii::app()->getRequest()->getParam('type', 0), FILTER_SANITIZE_NUMBER_INT),
-        	'name' => filter_var(Yii::app()->getRequest()->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-        	'theme' => filter_var(Yii::app()->getRequest()->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-        	'email' => filter_var(Yii::app()->getRequest()->getParam('email'), FILTER_SANITIZE_EMAIL),
-        	'text' => filter_var(Yii::app()->getRequest()->getParam('text'), FILTER_SANITIZE_FULL_SPECIAL_CHARS)
-        );
+			return $arRes;
     }
 
     public function setFeedback($cloud){
@@ -116,6 +127,7 @@ class Feedback extends Model
 			$keywords = filter_var(Yii::app()->getRequest()->getParam('keywords'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 			$point = filter_var(Yii::app()->getRequest()->getParam('point'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 			$last_referer = filter_var(Yii::app()->getRequest()->getParam('last_referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$direct = filter_var(Yii::app()->getRequest()->getParam('direct'), FILTER_SANITIZE_NUMBER_INT);
 			$text = substr($text, 0, 5000);
 			$roistat = (isset($_COOKIE['roistat_visit'])) ? $_COOKIE['roistat_visit'] : "(none)";
 
@@ -157,6 +169,7 @@ class Feedback extends Model
 										'text' => $text,
 										'email' => $emails,
 										'pid' => $id,
+										'direct' => $direct
 									);
 
 				$arFeedbackNew = array(
@@ -359,6 +372,7 @@ class Feedback extends Model
 		$item = $arRes['items'][0];
 		if(!in_array($item['idusp'], [2054,1766])) {
 			$arRes['user'] = array( // applicant
+				'id' => $item['idusp'],
 				'name' => $item['namefrom'],
 				'type' => 2,
 				'link' => '/admin/site/Promoedit/' . $item['idusp'],
@@ -366,6 +380,7 @@ class Feedback extends Model
 		}
 		else{
 			$arRes['user'] = array( // employer
+				'id' => $item['iduse'],
 				'name' => $item['nameto'],
 				'type' => 3,
 				'link' => '/admin/site/Empledit/' . $item['iduse'],
@@ -406,6 +421,21 @@ class Feedback extends Model
 												. '(id_use=1766 AND is_resp=0 AND is_read=0))', // 1766 - ID админстратора для С
 												array(':chat'=>$id)
 											);
+		return $arRes;
+	}
+	/**
+	 * 
+	 */
+	public function getDirects() {
+		$arRes = array();
+		$sql = Yii::app()->db->createCommand()
+						->select("*")
+						->from('feedback_direct')
+						->queryAll();		
+
+		foreach ($sql as $v)
+			$arRes[$v['id']] = $v;
+
 		return $arRes;
 	}
 }

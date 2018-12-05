@@ -51,12 +51,12 @@ $tab = Yii::app()->getRequest()->getParam('info');
        class="tabs-block__link<?= ($info == 'reject' ? ' active' : '') ?>">Отклоненные<b><?= ($arResp['counts'][3] ? "({$arResp['counts'][3]})" : "") ?></b></a>
     <a href="?info=refuse"
        class="tabs-block__link<?= ($info == 'refuse' ? ' active' : '') ?>">Отказавшиеся<b><?= ($arResp['counts'][5] ? "({$arResp['counts'][5]})" : "") ?></b></a>
-    <a href="?info=dialog" class="tabs-block__link<?= ($info == 'dialog' ? ' active' : '') ?>">Чат
-        вакансии<b><?= ($arResp['countsDiscuss'] ? "({$arResp['countsDiscuss']})" : "") ?></b></a>
+    <?/*?><a href="?info=dialog" class="tabs-block__link<?= ($info == 'dialog' ? ' active' : '') ?>">Чат
+        вакансии<b><?= ($arResp['countsDiscuss'] ? "({$arResp['countsDiscuss']})" : "") ?></b></a><?*/?>
 </div>
 
 <div class="vacs-info" data-page="<?= $tab ?>">
-    <?php if ($tab == 'dialog'): ?>
+    <?php /*if ($tab == 'dialog'): ?>
         <div class="message">
             <?php if ($mess = Yii::app()->user->getFlash('data')): Yii::app()->user->setFlash('data', null) ?>
                 <div class="mess-box <?= $mess['error'] ? 'error' : '' ?> -center"><?= $mess['message'] ?></div>
@@ -104,8 +104,8 @@ $tab = Yii::app()->getRequest()->getParam('info');
             'prevPageLabel' => 'Назад',
             'nextPageLabel' => 'Вперед',
             'header' => '',
-        )) ?>
-    <?php else:
+        )) */?>
+    <?php if ($tab != 'dialog')://else:
         if ($tab == 'approv')
             $respInd = 8;
         elseif ($tab == 'resp')

@@ -50,9 +50,21 @@
                 <label class="feedback-page__label">
                     <input data-field-check='name:Email,empty,email' id='EdEmail' name='email' type='text' value="<?=($viData['email'] ? $viData['email'] : Share::$UserProfile->exInfo->email )?>" class="feedback-page__input" placeholder="Email" title="Email">
                 </label>
+
                 <label class="feedback-page__label">
                     <input data-field-check='name:Тема,empty,max:100' id='EdTheme' name='theme' type='text' class="feedback-page__input" placeholder="Тематика запроса" title="Тематика запроса" value="<?=($viData['theme'] ? $viData['theme'] : '')?>">
                 </label>
+
+
+                <label class="feedback-page__label">
+                    <select data-field-check='name:Направление,empty,max:100' id='EdWay' name='direct' type='text' class="feedback-page__input" placeholder="Направление запроса" title="Направление запроса">
+                        <option value="0" selected disabled>Направление запроса</option>
+                        <?foreach ($viData['directs'] as $key => $value):?>
+                            <option value="<?=$value['id']?>"><?=$value['name']?></option>
+                        <?endforeach;?>
+                    </select>
+                </label>
+
                 <label class="feedback-page__label">
                     <textarea name="text" data-field-check='name:Текст,empty' id='MText' placeholder="Сообщение" class="feedback-page__textarea" title="Сообщение"><?=($viData['text'] ? $viData['text'] : '')?></textarea>
                 </label>
