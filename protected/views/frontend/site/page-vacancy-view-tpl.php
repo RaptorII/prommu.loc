@@ -131,7 +131,7 @@
                     <a href="?info=aside" class="erv__tab-link link3">Отложенные (<?=$viData['vacResponses']['counts'][1]?>)</a><br>
                     <a href="?info=reject" class="erv__tab-link link2">Отклоненные (<?=$viData['vacResponses']['counts'][3]?>)</a><br>
                     <a href="?info=refuse" class="erv__tab-link link6">Отказавшиеся (<?=$viData['vacResponses']['counts'][5]?>)</a><br>
-                    <a href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $viData['vac']['id']?>" class="erv__tab-link link4">Чат вакансии (<?=$viData['vacResponses']['countsDiscuss']?>)</a><br>
+                    <a href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $viData['vac']['id']?>" class="erv__tab-link link4">Обратная связь (<?=$viData['vacResponses']['countsDiscuss']?>)</a><br>
                     <a href='/<?= MainConfig::$PAGE_VACDELETE . "?id={$viData['vac']['id']}&page={$viData['vac']['status']}" ?>' class="erv__publ-btn" id="rv-vac-del">Удалить вакансию</a>
                     <div class="erv__logo-chat-block">
                         <a href="<?=MainConfig::$PAGE_IM . '?vac'?>" class="evl__chat">Общий чат для вакансии</a><br>
@@ -718,7 +718,7 @@
                 <div class="sv__logo-name"><?=$vacancy['coname']?></div>
                 <div class="sv__logo-name js-g-hashint" title="Дата публикации"><?=$vacancy['crdate']?></div>
                 <?php if (Share::$UserProfile->type == 2 && in_array($viData['response']['status'], [4,5,6,7])): ?>
-                    <a href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vacancy['id']?>" class="erv__tab-link link4 <?=$viData['vacResponses']['countsDiscuss'] ? 'active' : ''?>">Чат вакансии</a><br>
+                    <a href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vacancy['id']?>" class="erv__tab-link link4 <?=$viData['vacResponses']['countsDiscuss'] ? 'active' : ''?>">Обратная связь</a><br>
                 <?php endif; ?>
                 <?php if($vacancy['iscontshow']): ?>
                     <script type="text/javascript">

@@ -200,7 +200,7 @@
             <a class='upp__project-vacancy' href='<?= MainConfig::$PAGE_VACANCY . DS . $vacancy['id'] ?>'><?= $vacancy['title'] ?></a>
             <span class="dates">(<?= $vacancy['crdate'] . ' - ' . $vacancy['remdate'] ?>)</span>
           </div>
-          <span class="upp__project-item-messages">5</span>
+          <a href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vacancy['id'] ?>" class="upp__project-item-messages js-g-hashint" title="Обратная связь" style="color:#212121"><?=$vacancy['discuss_cnt']?></a>
         </div>
       <?php endforeach; ?>
     <?php endif; ?>

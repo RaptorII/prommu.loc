@@ -1022,7 +1022,8 @@ WHERE uc.id_user = {$id}";
     {
         $id = $inID ?: Share::$UserProfile->exInfo->id;
         // получаем рейтинг и уровень характеристик
-        $sql = "SELECT v.id, v.title, DATE_FORMAT(v.crdate, '%d.%m.%Y') crdate, DATE_FORMAT(v.remdate, '%d.%m.%Y') remdate
+        $sql = "SELECT v.id, v.title, DATE_FORMAT(v.crdate, '%d.%m.%Y') crdate, DATE_FORMAT(v.remdate, '%d.%m.%Y') remdate,
+            (SELECT COUNT(id) FROM emplv_discuss ed WHERE ed.id_vac=v.id) discuss_cnt
             FROM empl_vacations v
             WHERE v.id_user = {$id} AND v.status = 1 AND v.ismoder = 100
             ORDER BY v.id DESC
