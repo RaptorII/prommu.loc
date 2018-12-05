@@ -114,20 +114,34 @@ let GoogleMap = (function () {
                     var start_point = new google.maps.LatLng(points_start.latitude, points_start.longitude);
                     var end_point = new google.maps.LatLng(points_stop.latitude, points_stop.longitude);
                     this.requestDirections(start_point, end_point, { strokeColor:'#ff8300' });
+                    var marker = new google.maps.Marker({
+                        position: start_point,
+                        map: this.map
+                    });
                 }
             }else{
                 for (var d = 0; d < size; d++) {
                     var points_stop = value[d];
                     var end_point = new google.maps.LatLng(points_stop.latitude, points_stop.longitude);
                     this.requestDirections(end_point, end_point, { strokeColor:'#ff8300' });
+
+                    var marker = new google.maps.Marker({
+                        position: end_point,
+                        map: this.map
+                    });
                 }
             }
+
+
 
             $.fancybox.open({
                 src  : "div.map__container",
                 type : 'inline',
                 touch : false
             });
+
+            console.log(this.map.markers);
+
         }else{
             $.fancybox.open({
                 src  : "div.map__error",
@@ -208,6 +222,8 @@ let GoogleMap = (function () {
         /*setTimeout(function() {
          self.map.setZoom(4);
          }, 2000);*/
+
+        console.log(this.map.markers);
     };
 
 
@@ -237,7 +253,7 @@ let GoogleMap = (function () {
                 markerOptions:{icon:'/theme/pic/projects/geo.png'},
                 routeIndex: 1,
                 suppressInfoWindows: false
-                //suppressMarkers: true,
+                //suppressMarkers: true
                 //suppressInfoWindows: true
 
             });
