@@ -158,11 +158,6 @@
 	    PageApplicantMessView.prototype.chkNewMessages = function () {
 	        var self = this;
 
-					G_VARS.App.showLoading2(
-							$(".header-021"), 
-							{ outerAlign: 'left', offsetX: -10 }
-						);
-
 					$.get(
 						MainConfig.AJAX_GET_GETNEWMESAGES, 
 						{ tm: G_VARS.idTm, l: self.lastMessId },
@@ -198,10 +193,12 @@
 	            if (val.isresp == 1) {
 	                block = $(".mess-from.tmpl").clone();
 	                block.find('.fio').text(val.namefrom);
+	                block.find('.author img').attr('src',val.photofrom);
 	            }
 	            else {
 	                block = $(".mess-to.tmpl").clone();
 	                block.find('.fio').text(val.nameto);
+	                block.find('.author img').attr('src',val.phototo);
 	            }
 	            if (val.isread == '0' && val.isresp == '1') {
 	                if (!$('.new-mess').length) {
@@ -251,10 +248,12 @@
 	            if (val.isresp == 1) {
 	                block = $(".mess-from.tmpl").clone();
 	                block.find('.fio').text(val.namefrom);
+	                block.find('.author img').attr('src',val.photofrom);
 	            }
 	            else {
 	                block = $(".mess-to.tmpl").clone();
 	                block.find('.fio').text(val.nameto);
+	                block.find('.author img').attr('src',val.phototo);
 	            }
 	            if (val.isread == '0')
 	                block.addClass('unread');
@@ -414,10 +413,12 @@
 	                if (val.isresp == 1) {
 	                    block = $(".mess-from.tmpl").clone();
 	                    block.find('.fio').text(val.namefrom);
+	                		block.find('.author img').attr('src',val.photofrom);
 	                }
 	                else {
 	                    block = $(".mess-to.tmpl").clone();
 	                    block.find('.fio').text(val.nameto);
+	                		block.find('.author img').attr('src',val.phototo);
 	                }
 	                if (val.isread == '0' && val.isresp == '1') {
 	                    if (!$('.new-mess').length) {

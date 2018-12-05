@@ -9,10 +9,10 @@
 		$this->setBreadcrumbsEx(array($title, $sectionList . DS . $id));
 		$this->setPageTitle($title);		
 	}
-	
+	$type = Share::$UserProfile->type;
 	Yii::app()->getClientScript()->registerCssFile('/theme/css/chats/item.css');
 	Yii::app()->getClientScript()->registerCssFile('/jslib/magnific-popup/magnific-popup-min.css');
-	Yii::app()->getClientScript()->registerScriptFile('/theme/js/chats/item-emp.js', CClientScript::POS_END);
+	Yii::app()->getClientScript()->registerScriptFile('/theme/js/chats/item-' . ($type==3?'emp.js':'app.js'), CClientScript::POS_END);
 	Yii::app()->getClientScript()->registerScriptFile('/jslib/nicedit/nicEdit.js', CClientScript::POS_END);
 	Yii::app()->getClientScript()->registerScriptFile('/jslib/magnific-popup/jquery.magnific-popup.min.js', CClientScript::POS_END);
 ?>
