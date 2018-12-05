@@ -838,10 +838,10 @@ class ImApplic extends Im
 
         foreach ($arr as $k => $v)
         {
-            $arr[$k]['nameto'] = $arUsers[$v['iduse']]['name'];
-            $arr[$k]['phototo'] = $arUsers[$v['iduse']]['src'];
-            $arr[$k]['namefrom'] = $arUsers[$v['idusp']]['name'];
-            $arr[$k]['photofrom'] = $arUsers[$v['idusp']]['src'];
+            $arr[$k]['nameto'] = $arUsers[$v['idusp']]['name'];
+            $arr[$k]['phototo'] = $arUsers[$v['idusp']]['src'];
+            $arr[$k]['namefrom'] = $arUsers[$v['iduse']]['name'];
+            $arr[$k]['photofrom'] = $arUsers[$v['iduse']]['src'];
         }
 
         return $arr;
