@@ -465,7 +465,7 @@
 	    PageApplicantMessView.prototype.setChatSize = function (inProps) {
 	        if (inProps === void 0) { inProps = {}; }
 	        var self = this;
-	        $("#DiChatWrapp").height($(window).innerHeight());
+	        //$("#DiChatWrapp").height($(window).innerHeight());
 	        if (!inProps.isNew)
 	            $('html, body').animate({ scrollTop: $('.mess-box-end').offset().top }, 0);
 	    };
