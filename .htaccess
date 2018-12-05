@@ -7,6 +7,9 @@ RewriteCond %{REQUEST_FILENAME} !-d
 # otherwise forward it to index.php
 RewriteRule . index.php
 
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
 #RedirectMatch (/images/.*\.jpg)$ https://prommu.com$1
 #RedirectMatch (/images/.*\.png)$ https://prommu.com$1
 
