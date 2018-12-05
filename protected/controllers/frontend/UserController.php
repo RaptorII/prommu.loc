@@ -1831,7 +1831,7 @@ class UserController extends AppController
                         $props['message'] = "test";
                         $props['new'] = $id;
                         $props['vid'] = $vacancy;
-                        $ImEmpl->sendUserMessages($props);
+                        $chat->sendUserMessages($props);
                     }
                     //костыль на время (годен до 2021 года)
                     $data = $model->getVacancyPersonal($vacancy,$id);
