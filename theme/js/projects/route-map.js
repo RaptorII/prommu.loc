@@ -114,22 +114,27 @@ let GoogleMap = (function () {
                     var start_point = new google.maps.LatLng(points_start.latitude, points_start.longitude);
                     var end_point = new google.maps.LatLng(points_stop.latitude, points_stop.longitude);
                     this.requestDirections(start_point, end_point, { strokeColor:'#ff8300' });
-                    var marker = new google.maps.Marker({
-                        position: start_point,
-                        map: this.map
-                    });
                 }
+
+                //////////РИСУЕМ СООБЩЕНИЕ///////////
+                for (var d = 0; d < size; d++) {
+                    this.setPointMessage(value[d]);
+                }
+                //////////РИСУЕМ СООБЩЕНИЕ///////////
+
+
             }else{
                 for (var d = 0; d < size; d++) {
                     var points_stop = value[d];
                     var end_point = new google.maps.LatLng(points_stop.latitude, points_stop.longitude);
                     this.requestDirections(end_point, end_point, { strokeColor:'#ff8300' });
-
-                    var marker = new google.maps.Marker({
-                        position: end_point,
-                        map: this.map
-                    });
                 }
+
+                //////////РИСУЕМ СООБЩЕНИЕ///////////
+                for (var d = 0; d < size; d++) {
+                    this.setPointMessage(value[d]);
+                }
+                //////////РИСУЕМ СООБЩЕНИЕ///////////
             }
 
 
@@ -165,6 +170,22 @@ let GoogleMap = (function () {
     };
 
 
+    GoogleMap.prototype.setPointMessage = function (value) {
+        var contentString = '<div id="content"><div>Название ТТ: '+value.name+'</div>' +
+            '<div>Время: с '+value.btime+' по '+value.etime+'</div></div>';
+        var infowindow = new google.maps.InfoWindow({
+            content: contentString
+        });
+
+        var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(value.latitude, value.longitude),
+            map: this.map,
+            icon: {url:'/theme/pic/projects/message.png',scaledSize: new google.maps.Size(20, 20)}
+        });
+
+        infowindow.open(this.map,marker);
+    };
+
 
     GoogleMap.prototype.initializeForStaticBlocks = function (value, element) {
         //console.log(this);
@@ -197,12 +218,22 @@ let GoogleMap = (function () {
                     var end_point = new google.maps.LatLng(points_stop.latitude, points_stop.longitude);
                     this.requestDirections(start_point, end_point, { strokeColor:'#ff8300' });
                 }
+                //////////РИСУЕМ СООБЩЕНИЕ///////////
+                for (var d = 0; d < size; d++) {
+                    this.setPointMessage(value[d]);
+                }
+                //////////РИСУЕМ СООБЩЕНИЕ///////////
             }else{
                 for (var d = 0; d < size; d++) {
                     var points_stop = value[d];
                     var end_point = new google.maps.LatLng(points_stop.latitude, points_stop.longitude);
                     this.requestDirections(end_point, end_point, { strokeColor:'#ff8300' });
                 }
+                //////////РИСУЕМ СООБЩЕНИЕ///////////
+                for (var d = 0; d < size; d++) {
+                    this.setPointMessage(value[d]);
+                }
+                //////////РИСУЕМ СООБЩЕНИЕ///////////
             }
 
 
