@@ -949,7 +949,7 @@ class ImEmpl extends Im
             if(!empty($v['applicant']) && !in_array($v['applicant'], $arV[$id]['users']))
                 $arV[$id]['users'][] = $v['applicant'];
             !in_array($id, $arVId) && array_push($arVId, $id);
-            if(!empty($v['id_public']))
+            if(!empty($v['id_public']) && !in_array($v['id_public'], $arV[$id]['public-mess']))
                 $arV[$id]['public-mess'][] = $v['id_public'];
             if(!empty($v['id_personal']) && !in_array($v['id_personal'], $arV[$id]['personal-id']))
                 $arV[$id]['personal-id'][] = $v['id_personal'];

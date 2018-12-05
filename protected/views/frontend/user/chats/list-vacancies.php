@@ -27,7 +27,7 @@
 									</a>
 								<? endforeach ?>
 							</div>
-							<a href="<?=$personal_link?>">Общий чат</a>
+							<a href="<?=$personal_link?>">Общий чат <span class="js-g-hashint vac-item__content-chat-mess" title="Сообщений"><?=count($item['public-mess'])?></span></a>
 						</div>
 						<? foreach ($item['users'] as $idus): ?>
 							<div class="vac-item__content-chat personal">
