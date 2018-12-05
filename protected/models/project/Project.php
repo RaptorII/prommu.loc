@@ -841,7 +841,18 @@ class Project extends CActiveRecord
         }
             
         if(!sizeof($arRes))
-            $arRes = array('error'=>true);
+					return array('error'=>true);
+
+				foreach ($arRes['plane'] as $k => $v)
+				{
+					$arRes['plane'][$k]['btime'] = date('G:i',strtotime($v['btime']));
+					$arRes['plane'][$k]['etime'] = date('G:i',strtotime($v['etime']));
+				}
+				foreach ($arRes['fact'] as $k => $v)
+				{
+					$arRes['fact'][$k]['date'] = date('d.m.Y G:i',strtotime($v['date']));
+				}
+
         return $arRes;
     }
     /*
