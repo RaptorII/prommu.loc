@@ -27,7 +27,11 @@
 									</a>
 								<? endforeach ?>
 							</div>
-							<a href="<?=$personal_link?>">Общий чат <span class="js-g-hashint vac-item__content-chat-mess" title="Сообщений"><?=count($item['public-mess'])?></span></a>
+							<a href="<?=$personal_link?>">Общий чат
+								<? if($cntMess = count($item['public-mess'])): ?>
+									<span class="js-g-hashint vac-item__content-chat-mess" title="Сообщений"><?=$cntMess?></span>
+								<? endif; ?>
+							</a>
 						</div>
 						<? foreach ($item['users'] as $idus): ?>
 							<div class="vac-item__content-chat personal">
@@ -35,7 +39,14 @@
 								<a href="<?=$user['profile']?>" title="<?=$user['name']?>" target="_blank" class="js-g-hashint">
 									<img src="<?=$user['src']?>" alt="<?=$user['name']?>">
 								</a>
-								<a href="<?=$personal_link . DS . $user['id']?>">Личный чат</a>
+								<a href="<?=$personal_link . DS . $user['id']?>">Личный чат
+									<? if($cntMess = count($item['personal-chat'][$user['id']]['id'])): ?>
+										<span class="js-g-hashint vac-item__content-chat-mess" title="Сообщений"><?=$cntMess?></span>
+									<? endif; ?>
+									<? if($cntMess = $item['personal-chat'][$user['id']]['noread']>0): ?>
+										<span class="js-g-hashint vac-item__content-chat-mess noread" title="Не прочитано"><?=$cntMess?></span>
+									<? endif; ?>
+								</a>
 							</div>
 						<? endforeach ?>		
 					</div>

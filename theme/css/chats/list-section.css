@@ -180,6 +180,9 @@
 	margin: 0 5px;
 	padding: 0 5px;
 }
+#DiContent .vac-item__content-chat-mess.noread{
+	background-color: #ff0000;
+}
 /*
 *	POPAP
 */

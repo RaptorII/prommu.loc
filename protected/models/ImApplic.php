@@ -808,13 +808,13 @@ class ImApplic extends Im
 
         
         foreach ($sql as $v) {
-            $arC = $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_theme']];
-            $arC['id'] = $v['id'];
-            $arC['user'] = $v['id_usp'];
+            $arC = $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_use']];
+            $arC['id'][] = $v['id'];
+            $arC['user'] = $v['id_use'];
             !isset($arC['noread']) && $arC['noread'] = 0;
             if($v['is_resp'] && !$v['is_read']) // ответ Р и не прочитано
                 $arC['noread']++;
-            $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_theme']] = $arC;
+            $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_use']] = $arC;
         }
 
         $arRes['users'] = Share::getUsers($arUId);

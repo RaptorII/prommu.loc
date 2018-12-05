@@ -986,13 +986,13 @@ class ImEmpl extends Im
 
         
         foreach ($sql as $v) {
-            $arC = $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_theme']];
-            $arC['id'] = $v['id'];
+            $arC = $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_usp']];
+            $arC['id'][] = $v['id'];
             $arC['user'] = $v['id_usp'];
             !isset($arC['noread']) && $arC['noread'] = 0;
             if(!$v['is_resp'] && !$v['is_read'])
                 $arC['noread']++;
-            $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_theme']] = $arC;
+            $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_usp']] = $arC;
         }
 
         $arRes['users'] = Share::getUsers($arUId);
