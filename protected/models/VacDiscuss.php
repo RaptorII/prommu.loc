@@ -158,7 +158,10 @@ class VacDiscuss extends Model
             $sql = Yii::app()->db->createCommand()
                     ->select('id')
                     ->from('empl_vacations')
-                    ->where('id_user=:idus',array(':idus'=>$idus))
+                    ->where(
+                        'id=:id AND id_user=:idus',
+                        array(':idus'=>$idus,':id'=>$id)
+                    )
                     ->queryRow();
 
             return isset($sql['id']);
