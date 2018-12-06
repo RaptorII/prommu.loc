@@ -806,7 +806,6 @@ class ImApplic extends Im
                 ->where(array('in','ct.id_vac',$arVIdSelect))
                 ->queryAll();
 
-        
         foreach ($sql as $v) {
             $arC = $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_use']];
             $arC['id'][] = $v['id'];
@@ -815,6 +814,25 @@ class ImApplic extends Im
             if($v['is_resp'] && !$v['is_read']) // ответ Р и не прочитано
                 $arC['noread']++;
             $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_use']] = $arC;
+        }
+
+        $sql = Yii::app()->db->createCommand()
+                ->select("vs.id_vac id, r.id_user user")
+                ->from('vacation_stat vs')
+                ->leftjoin('resume r', 'r.id=vs.id_promo')
+                ->where(
+									array(
+										'and', 
+										'vs.status>4', 
+										array('in','vs.id_vac',$arVIdSelect)
+									)
+                )
+                ->queryAll();
+
+        foreach ($sql as $v) {
+        	if(!in_array($v['user'], $arRes['items'][$v['id']]['users']))
+        		$arRes['items'][$v['id']]['users'][] = $v['user'];
+        	$arUId[] = $v['user'];
         }
 
         $arRes['users'] = Share::getUsers($arUId);

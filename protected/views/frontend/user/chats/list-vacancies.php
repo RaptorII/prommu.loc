@@ -1,4 +1,5 @@
 <?
+	$type = Share::$UserProfile->type;
 	$bUrl = Yii::app()->baseUrl . '/theme/';
 	Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/chats/list-section.css');
 	Yii::app()->getClientScript()->registerScriptFile($bUrl.'js/chats/list.js', CClientScript::POS_END);
@@ -34,20 +35,23 @@
 							</a>
 						</div>
 						<? foreach ($item['users'] as $idus): ?>
-							<div class="vac-item__content-chat personal">
-								<? $user = $viData['users'][$idus]; ?>
-								<a href="<?=$user['profile']?>" title="<?=$user['name']?>" target="_blank" class="js-g-hashint">
-									<img src="<?=$user['src']?>" alt="<?=$user['name']?>">
-								</a>
-								<a href="<?=$personal_link . DS . $user['id']?>">Личный чат
-									<? if($cntMess = count($item['personal-chat'][$user['id']]['id'])): ?>
-										<span class="js-g-hashint vac-item__content-chat-mess" title="Сообщений"><?=$cntMess?></span>
-									<? endif; ?>
-									<? if($cntMess = $item['personal-chat'][$user['id']]['noread']>0): ?>
-										<span class="js-g-hashint vac-item__content-chat-mess noread" title="Не прочитано"><?=$cntMess?></span>
-									<? endif; ?>
-								</a>
-							</div>
+							<? $user = $viData['users'][$idus]; ?>
+							<? if($type!=$user['status']): // только противоположности ?>
+								<div class="vac-item__content-chat personal">
+									
+									<a href="<?=$user['profile']?>" title="<?=$user['name']?>" target="_blank" class="js-g-hashint">
+										<img src="<?=$user['src']?>" alt="<?=$user['name']?>">
+									</a>
+									<a href="<?=$personal_link . DS . $user['id']?>">Личный чат
+										<? if($cntMess = count($item['personal-chat'][$user['id']]['id'])): ?>
+											<span class="js-g-hashint vac-item__content-chat-mess" title="Сообщений"><?=$cntMess?></span>
+										<? endif; ?>
+										<? if($cntMess = $item['personal-chat'][$user['id']]['noread']>0): ?>
+											<span class="js-g-hashint vac-item__content-chat-mess noread" title="Не прочитано"><?=$cntMess?></span>
+										<? endif; ?>
+									</a>
+								</div>
+							<? endif; ?>
 						<? endforeach ?>		
 					</div>
 				<? endif; ?>
