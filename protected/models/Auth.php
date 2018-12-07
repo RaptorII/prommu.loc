@@ -296,173 +296,189 @@ class Auth
                 ->from('user u')
                 ->where('u.id_user = :id', array(':id' => $usData['id_user']))
                 ->queryRow();
-            $emails = $usData['email'];
+
+                $emails = $usData['email'];
+                $emails = filter_var($emails,FILTER_VALIDATE_EMAIL);
 
                 if( $usData['status'] == 2 && empty($usDataTest['id_user']))
-                {   $types = "Соискатель";
-                    $message = "Ваш пользователь успешно активирован. Нажмите на кнопку ниже, чтобы перейти к форме заполнения данных. После того, как вы заполните все необходимые данные о себе - ваш профиль будет виден в общем списке соискателей и поиске на сайте, а также вы сможете откликаться на понравившиеся вакансии.";
+                {   
+                    $types = "Соискатель";
+                    $message = "<tr><td>Ваш пользователь успешно активирован. Нажмите на кнопку ниже, чтобы перейти к форме заполнения данных. После того, как вы заполните все необходимые данные о себе - ваш профиль будет виден в общем списке соискателей и поиске на сайте, а также вы сможете откликаться на понравившиеся вакансии.";
                     $nam = $data->name ? $data->name : $data->fname;
                     $names = "$nam ".$data->lname;
 
+                    if(!empty($emails)) // отправка сообщения клиенту
+                        Share::sendmail($emails, "Prommu: активация прошла успешно", $message);
+
                     $messages = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден)
-                <br/>
-                <br/>
-                Пользователь: <b>%s</b>, 
-                Тип:<b>%s</b>,
-                Имя:<b>%s</b>, Email: <b>%s</b>,
-                <br/>
-                ----------------------------------------------------------
-                <br/>
-                Тип трафика:<b>%s</b> 
-                <br/>
-                Источник: <b>%s</b> 
-                <br/>
-                Канал: <b>%s</b>  
-                <br/>
-                Кампания: <b>%s</b>  
-                <br/>
-                Контент: <b>%s</b>  
-                <br/>
-                Ключевые слова: <b>%s</b> 
-                <br/>
-                Точка входа: <b>%s</b> 
-                <br/>
-                Реферер: <b>%s</b>
-                <br/>
-                IP: <b>%s</b>
-                 <br/>
-                GA: <b>%s</b>
-                 <br/>
-                Площадка: <b>%s</b>",
-            MainConfig::$SITE, $idUs,$types,$names, $emails, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
-        $email[0] = "denisgresk@gmail.com";
-        $email[1] = "man.market2@gmail.com";
-        $email[2] = "susgresk@gmail.com";
-        $email[3] = "e.market.easss@gmail.com"; 
-        $email[4] = "code@code.code";
-        $email[5] = "manag_reports@euro-asian.ru";
-        $email[6] = "e.marketing@euro-asian.ru";
-        for($i = 0; $i <6; $i++){
-             Share::sendmail($email[$i], "Prommu: зарегистрирован новый пользователь", trim($messages));
-       
-        }
-         $message = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден) Требуется модерация администратора сайта!
-                <br/>
-                <br/>
-                Пользователь: <b>%s</b>,
-                Тип:<b>%s</b>,
-                Имя:<b>%s</b>,
-                <br/>
-                ----------------------------------------------------------
-                <br/>
-                Тип трафика:<b>%s</b> 
-                <br/>
-                Источник: <b>%s</b> 
-                <br/>
-                Канал: <b>%s</b>  
-                <br/>
-                Кампания: <b>%s</b>  
-                <br/>
-                Контент: <b>%s</b>  
-                <br/>
-                Ключевые слова: <b>%s</b> 
-                <br/>
-                Точка входа: <b>%s</b> 
-                <br/>
-                Реферер: <b>%s</b> 
-                <br/>
-                IP: <b>%s</b>
-                <br/>
-                GA: <b>%s</b>
-                <br/>
-                Площадка: <b>%s</b>",
-            MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
-        Share::sendmail("mk0630733719@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
-
-
-
+                        <br/>
+                        <br/>
+                        Пользователь: <b>%s</b>, 
+                        Тип:<b>%s</b>,
+                        Имя:<b>%s</b>, Email: <b>%s</b>,
+                        <br/>
+                        ----------------------------------------------------------
+                        <br/>
+                        Тип трафика:<b>%s</b> 
+                        <br/>
+                        Источник: <b>%s</b> 
+                        <br/>
+                        Канал: <b>%s</b>  
+                        <br/>
+                        Кампания: <b>%s</b>  
+                        <br/>
+                        Контент: <b>%s</b>  
+                        <br/>
+                        Ключевые слова: <b>%s</b> 
+                        <br/>
+                        Точка входа: <b>%s</b> 
+                        <br/>
+                        Реферер: <b>%s</b>
+                        <br/>
+                        IP: <b>%s</b>
+                         <br/>
+                        GA: <b>%s</b>
+                         <br/>
+                        Площадка: <b>%s</b>",
+                        MainConfig::$SITE, $idUs,$types,$names, $emails, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
+                    $email[0] = "denisgresk@gmail.com";
+                    $email[1] = "admin.prommu@prommu.ru";
+                    /*
+                    $email[1] = "man.market2@gmail.com";
+                    $email[2] = "susgresk@gmail.com";
+                    $email[3] = "e.market.easss@gmail.com"; 
+                    $email[4] = "code@code.code";
+                    $email[5] = "manag_reports@euro-asian.ru";
+                    $email[6] = "e.marketing@euro-asian.ru";
+                    */
+                    for($i = 0; $i <2; $i++)
+                    {
+                        Share::sendmail($email[$i], "Prommu: зарегистрирован новый пользователь", trim($messages));
+                    }
+                    /*
+                    $message = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден) Требуется модерация администратора сайта!
+                        <br/>
+                        <br/>
+                        Пользователь: <b>%s</b>,
+                        Тип:<b>%s</b>,
+                        Имя:<b>%s</b>,
+                        <br/>
+                        ----------------------------------------------------------
+                        <br/>
+                        Тип трафика:<b>%s</b> 
+                        <br/>
+                        Источник: <b>%s</b> 
+                        <br/>
+                        Канал: <b>%s</b>  
+                        <br/>
+                        Кампания: <b>%s</b>  
+                        <br/>
+                        Контент: <b>%s</b>  
+                        <br/>
+                        Ключевые слова: <b>%s</b> 
+                        <br/>
+                        Точка входа: <b>%s</b> 
+                        <br/>
+                        Реферер: <b>%s</b> 
+                        <br/>
+                        IP: <b>%s</b>
+                        <br/>
+                        GA: <b>%s</b>
+                        <br/>
+                        Площадка: <b>%s</b>",
+                        MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
+                    Share::sendmail("mk0630733719@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
+                    */
                 }
                 elseif($usData['status'] == 3 && empty($usDataTest['id_user']))
-                {   $types ="Работодатель";
-                    $message = "Ваш пользователь успешно активирован. Нажмите на кнопку ниже, чтобы перейти к форме заполнения данных. После того, как вы заполните все необходимые данные о себе - ваш профиль будет виден в общем списке работодателей и поиске на сайте, а также вы сможете размещать вакансии.";
-                     $names = $data->name;
+                {   
+                    $types ="Работодатель";
+                    $message = "<tr><td>Ваш пользователь успешно активирован. Нажмите на кнопку ниже, чтобы перейти к форме заполнения данных. После того, как вы заполните все необходимые данные о себе - ваш профиль будет виден в общем списке работодателей и поиске на сайте, а также вы сможете размещать вакансии.";
+                    $names = $data->name;
 
-                     $messages = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден)
-                <br/>
-                <br/>
-                Пользователь: <b>%s</b>, 
-                Тип:<b>%s</b>,
-                Имя:<b>%s</b>, Email: <b>%s</b>,
-                <br/>
-                ----------------------------------------------------------
-                <br/>
-                Тип трафика:<b>%s</b> 
-                <br/>
-                Источник: <b>%s</b> 
-                <br/>
-                Канал: <b>%s</b>  
-                <br/>
-                Кампания: <b>%s</b>  
-                <br/>
-                Контент: <b>%s</b>  
-                <br/>
-                Ключевые слова: <b>%s</b> 
-                <br/>
-                Точка входа: <b>%s</b> 
-                <br/>
-                Реферер: <b>%s</b>
-                <br/>
-                IP: <b>%s</b>
-                <br/>
-                GA: <b>%s</b>
-                <br/>
-                Площадка: <b>%s</b>",
-            MainConfig::$SITE, $idUs,$types,$names, $emails, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
-        $email[0] = "denisgresk@gmail.com";
-        $email[1] = "man.market2@gmail.com";
-        $email[2] = "susgresk@gmail.com";
-        $email[3] = "e.market.easss@gmail.com"; 
-        $email[4] = "code@code.code";
-        $email[5] = "manag_reports@euro-asian.ru";
-        $email[6] = "e.marketing@euro-asian.ru";
-        for($i = 0; $i <6; $i++){
-             Share::sendmail($email[$i], "Prommu: зарегистрирован новый пользователь", trim($messages));
-       
-        }
-         $message = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден) Требуется модерация администратора сайта!
-                <br/>
-                <br/>
-                Пользователь: <b>%s</b>,
-                Тип:<b>%s</b>,
-                Имя:<b>%s</b>,
-                <br/>
-                ----------------------------------------------------------
-                <br/>
-                Тип трафика:<b>%s</b> 
-                <br/>
-                Источник: <b>%s</b> 
-                <br/>
-                Канал: <b>%s</b>  
-                <br/>
-                Кампания: <b>%s</b>  
-                <br/>
-                Контент: <b>%s</b>  
-                <br/>
-                Ключевые слова: <b>%s</b> 
-                <br/>
-                Точка входа: <b>%s</b> 
-                <br/>
-                Реферер: <b>%s</b>
-                <br/>
-                IP: <b>%s</b>
-                <br/>
-                GA: <b>%s</b>
-                <br/>
-                Площадка: <b>%s</b>",
-            MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client,$pm);
-        Share::sendmail("mk0630733719@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
+                    if(!empty($emails)) // отправка сообщения клиенту
+                        Share::sendmail($emails, "Prommu: активация прошла успешно", $message);
 
-                   
+                    $messages = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден)
+                        <br/>
+                        <br/>
+                        Пользователь: <b>%s</b>, 
+                        Тип:<b>%s</b>,
+                        Имя:<b>%s</b>, Email: <b>%s</b>,
+                        <br/>
+                        ----------------------------------------------------------
+                        <br/>
+                        Тип трафика:<b>%s</b> 
+                        <br/>
+                        Источник: <b>%s</b> 
+                        <br/>
+                        Канал: <b>%s</b>  
+                        <br/>
+                        Кампания: <b>%s</b>  
+                        <br/>
+                        Контент: <b>%s</b>  
+                        <br/>
+                        Ключевые слова: <b>%s</b> 
+                        <br/>
+                        Точка входа: <b>%s</b> 
+                        <br/>
+                        Реферер: <b>%s</b>
+                        <br/>
+                        IP: <b>%s</b>
+                        <br/>
+                        GA: <b>%s</b>
+                        <br/>
+                        Площадка: <b>%s</b>",
+                        MainConfig::$SITE, $idUs,$types,$names, $emails, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
+
+                    $email[0] = "denisgresk@gmail.com";
+                    $email[1] = "admin.prommu@prommu.ru";
+                    /*
+                    $email[1] = "man.market2@gmail.com";
+                    $email[2] = "susgresk@gmail.com";
+                    $email[3] = "e.market.easss@gmail.com"; 
+                    $email[4] = "code@code.code";
+                    $email[5] = "manag_reports@euro-asian.ru";
+                    $email[6] = "e.marketing@euro-asian.ru";
+                    */
+                    for($i = 0; $i <2; $i++)
+                    {
+                        Share::sendmail($email[$i], "Prommu: зарегистрирован новый пользователь", trim($messages));
+                    }
+                    /*
+                    $message = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден) Требуется модерация администратора сайта!
+                        <br/>
+                        <br/>
+                        Пользователь: <b>%s</b>,
+                        Тип:<b>%s</b>,
+                        Имя:<b>%s</b>,
+                        <br/>
+                        ----------------------------------------------------------
+                        <br/>
+                        Тип трафика:<b>%s</b> 
+                        <br/>
+                        Источник: <b>%s</b> 
+                        <br/>
+                        Канал: <b>%s</b>  
+                        <br/>
+                        Кампания: <b>%s</b>  
+                        <br/>
+                        Контент: <b>%s</b>  
+                        <br/>
+                        Ключевые слова: <b>%s</b> 
+                        <br/>
+                        Точка входа: <b>%s</b> 
+                        <br/>
+                        Реферер: <b>%s</b>
+                        <br/>
+                        IP: <b>%s</b>
+                        <br/>
+                        GA: <b>%s</b>
+                        <br/>
+                        Площадка: <b>%s</b>",
+                        MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client,$pm);
+                    Share::sendmail("mk0630733719@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
+                    */
                 } // endif
 
                  
@@ -1243,6 +1259,39 @@ class Auth
             } // endif
         } // endif
 
+        // CAPTCHA
+        $recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
+        if(!empty($recaptcha))
+        {
+            $google_url="https://www.google.com/recaptcha/api/siteverify";
+            $secret='6Lf2oE0UAAAAAPkKWuPxJl0cuH7tOM2OoVW5k6yH';
+            $ip=$_SERVER['REMOTE_ADDR'];
+            $url=$google_url."?secret=".$secret."&response=".$recaptcha."&remoteip=".$ip;
+            //
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+            curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.16) Gecko/20110319 Firefox/3.6.16");
+            $res = curl_exec($curl);
+            curl_close($curl);
+            //
+            $res = json_decode($res, true);//reCaptcha введена
+            if(!$res['success']) // wrong captcha
+            {
+                $message = "Ошибки заполнения формы";
+                $hint = 'Вы допустили ошибку при прохождении проверки "Я не робот"';
+                $flag_error = 1;
+                $element = 'recaptcha';
+            }
+        }
+        else
+        {
+            $message = "Ошибки заполнения формы";
+            $hint = 'Необходимо пройти проверку "Я не робот"';
+            $flag_error = 1;
+            $element = 'recaptcha';
+        }
 
         if( $flag_error )
         {
@@ -1584,6 +1633,40 @@ class Auth
                 $flag_error = 1;
             } // endif
         } // endif
+
+        // CAPTCHA
+        $recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
+        if(!empty($recaptcha))
+        {
+            $google_url="https://www.google.com/recaptcha/api/siteverify";
+            $secret='6Lf2oE0UAAAAAPkKWuPxJl0cuH7tOM2OoVW5k6yH';
+            $ip=$_SERVER['REMOTE_ADDR'];
+            $url=$google_url."?secret=".$secret."&response=".$recaptcha."&remoteip=".$ip;
+            //
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+            curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.16) Gecko/20110319 Firefox/3.6.16");
+            $res = curl_exec($curl);
+            curl_close($curl);
+            //
+            $res = json_decode($res, true);//reCaptcha введена
+            if(!$res['success']) // wrong captcha
+            {
+                $message = "Ошибки заполнения формы";
+                $hint = 'Вы допустили ошибку при прохождении проверки "Я не робот"';
+                $flag_error = 1;
+                $element = 'recaptcha';
+            }
+        }
+        else
+        {
+            $message = "Ошибки заполнения формы";
+            $hint = 'Необходимо пройти проверку "Я не робот"';
+            $flag_error = 1;
+            $element = 'recaptcha';
+        }
 
         return array('message' => $message,
             'hint' => $hint,
