@@ -543,3 +543,7 @@ media
     width: 302px;
     margin: 0 auto;
 }
+.g-recaptcha-parent>.red{
+    display: block;
+    text-align: center;
+}

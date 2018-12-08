@@ -4,7 +4,7 @@
     Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/phone-codes/style.css'); 
     Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/register-form/register-form.js', CClientScript::POS_END);
     Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/phone-codes/script.js', CClientScript::POS_END);
-    //Yii::app()->getClientScript()->registerScriptFile('https://www.google.com/recaptcha/api.js', CClientScript::POS_END);
+    Yii::app()->getClientScript()->registerScriptFile('https://www.google.com/recaptcha/api.js', CClientScript::POS_END);
     $this->setBreadcrumbs($title = 'Регистрация соискателя', $this->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1')));
     $this->pageTitle = $title;
 
@@ -118,7 +118,14 @@
                 <label class="reg-form__label com7 js-g-hashint" title="Подтвердите пароль">
                     <input id='EdPassRep' type='password' name="passrep" placeholder="Подтвердите пароль" class="reg-form__input" value="<?=$viData['inputData']['passrep']?>">
                 </label>
-                <?/*<div class="g-recaptcha" data-sitekey="6Lf2oE0UAAAAAKL5IvtsS1yytkQDqIAPg1t-ilNB"></div>*/?>
+                <? if($viData['use_recaptcha']==true): ?>
+                    <div class="g-recaptcha-parent">
+                        <?php if( $viData['element'] == 'recaptcha' ): ?>
+                            <span class="red"><?= $viData['hint'] ?></span>
+                        <?php endif; ?>
+                        <div class="g-recaptcha" data-sitekey="6Lf2oE0UAAAAAKL5IvtsS1yytkQDqIAPg1t-ilNB"></div>
+                    </div>
+                <? endif; ?>
                 <div class='btn-reg btn-orange-wr'>
                     <button class='hvr-sweep-to-right reg-form__btn' type='submit'>Зарегистрироваться</button>
                 </div>

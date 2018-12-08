@@ -1260,51 +1260,50 @@ class Auth
         } // endif
 
         // CAPTCHA
-        $recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
-        if(!empty($recaptcha))
+        $use_recaptcha = $this->useRegisterCaptcha();
+        if($use_recaptcha==true)
         {
-            $google_url="https://www.google.com/recaptcha/api/siteverify";
-            $secret='6Lf2oE0UAAAAAPkKWuPxJl0cuH7tOM2OoVW5k6yH';
-            $ip=$_SERVER['REMOTE_ADDR'];
-            $url=$google_url."?secret=".$secret."&response=".$recaptcha."&remoteip=".$ip;
-            //
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($curl, CURLOPT_TIMEOUT, 10);
-            curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.16) Gecko/20110319 Firefox/3.6.16");
-            $res = curl_exec($curl);
-            curl_close($curl);
-            //
-            $res = json_decode($res, true);//reCaptcha введена
-            if(!$res['success']) // wrong captcha
+            $recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
+            if(!empty($recaptcha))
+            {
+                $google_url="https://www.google.com/recaptcha/api/siteverify";
+                $secret='6Lf2oE0UAAAAAPkKWuPxJl0cuH7tOM2OoVW5k6yH';
+                $ip=$_SERVER['REMOTE_ADDR'];
+                $url=$google_url."?secret=".$secret."&response=".$recaptcha."&remoteip=".$ip;
+                //
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_URL, $url);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+                curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.16) Gecko/20110319 Firefox/3.6.16");
+                $res = curl_exec($curl);
+                curl_close($curl);
+                //
+                $res = json_decode($res, true);//reCaptcha введена
+                if(!$res['success']) // wrong captcha
+                {
+                    $message = "Ошибки заполнения формы";
+                    $hint = 'Вы допустили ошибку при прохождении проверки "Я не робот"';
+                    $flag_error = 1;
+                    $element = 'recaptcha';
+                }
+            }
+            else
             {
                 $message = "Ошибки заполнения формы";
-                $hint = 'Вы допустили ошибку при прохождении проверки "Я не робот"';
+                $hint = 'Необходимо пройти проверку "Я не робот"';
                 $flag_error = 1;
                 $element = 'recaptcha';
             }
         }
-        else
-        {
-            $message = "Ошибки заполнения формы";
-            $hint = 'Необходимо пройти проверку "Я не робот"';
-            $flag_error = 1;
-            $element = 'recaptcha';
-        }
 
-        if( $flag_error )
-        {
-            unset($inputData['pass']);
-            unset($inputData['passrep']);
-        } // endif
-
-
-        return array('message' => $message,
-            'hint' => $hint,
-            'error' => $flag_error,
-            'element' => $flag_error ? $element : '',
-            'inputData' => $inputData,
+        return array(
+                'message' => $message,
+                'hint' => $hint,
+                'error' => $flag_error,
+                'element' => $flag_error ? $element : '',
+                'inputData' => $inputData,
+                'use_recaptcha' => $use_recaptcha
             );
     }
 
@@ -1635,44 +1634,50 @@ class Auth
         } // endif
 
         // CAPTCHA
-        $recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
-        if(!empty($recaptcha))
+        $use_recaptcha = $this->useRegisterCaptcha();
+        if($use_recaptcha==true)
         {
-            $google_url="https://www.google.com/recaptcha/api/siteverify";
-            $secret='6Lf2oE0UAAAAAPkKWuPxJl0cuH7tOM2OoVW5k6yH';
-            $ip=$_SERVER['REMOTE_ADDR'];
-            $url=$google_url."?secret=".$secret."&response=".$recaptcha."&remoteip=".$ip;
-            //
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($curl, CURLOPT_TIMEOUT, 10);
-            curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.16) Gecko/20110319 Firefox/3.6.16");
-            $res = curl_exec($curl);
-            curl_close($curl);
-            //
-            $res = json_decode($res, true);//reCaptcha введена
-            if(!$res['success']) // wrong captcha
+            $recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
+            if(!empty($recaptcha))
+            {
+                $google_url="https://www.google.com/recaptcha/api/siteverify";
+                $secret='6Lf2oE0UAAAAAPkKWuPxJl0cuH7tOM2OoVW5k6yH';
+                $ip=$_SERVER['REMOTE_ADDR'];
+                $url=$google_url."?secret=".$secret."&response=".$recaptcha."&remoteip=".$ip;
+                //
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_URL, $url);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+                curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.16) Gecko/20110319 Firefox/3.6.16");
+                $res = curl_exec($curl);
+                curl_close($curl);
+                //
+                $res = json_decode($res, true);//reCaptcha введена
+                if(!$res['success']) // wrong captcha
+                {
+                    $message = "Ошибки заполнения формы";
+                    $hint = 'Вы допустили ошибку при прохождении проверки "Я не робот"';
+                    $flag_error = 1;
+                    $element = 'recaptcha';
+                }
+            }
+            else
             {
                 $message = "Ошибки заполнения формы";
-                $hint = 'Вы допустили ошибку при прохождении проверки "Я не робот"';
+                $hint = 'Необходимо пройти проверку "Я не робот"';
                 $flag_error = 1;
                 $element = 'recaptcha';
             }
         }
-        else
-        {
-            $message = "Ошибки заполнения формы";
-            $hint = 'Необходимо пройти проверку "Я не робот"';
-            $flag_error = 1;
-            $element = 'recaptcha';
-        }
 
-        return array('message' => $message,
-            'hint' => $hint,
-            'error' => $flag_error,
-            'element' => $flag_error ? $element : '',
-            'inputData' => $inputData,
+        return array(
+                'message' => $message,
+                'hint' => $hint,
+                'error' => $flag_error,
+                'element' => $flag_error ? $element : '',
+                'inputData' => $inputData,
+                'use_recaptcha' => $use_recaptcha
             );
     }
 
@@ -1892,5 +1897,13 @@ class Auth
         unset(Yii::app()->session['au_token']);
         unset(Yii::app()->session['au_exptime']);
         unset(Yii::app()->session['au_us_data']);
+    }
+    /**
+     *      Использование капчи при регистрации
+     *      @return true | false
+     */
+    private function useRegisterCaptcha()
+    {
+        return false;
     }
 }
