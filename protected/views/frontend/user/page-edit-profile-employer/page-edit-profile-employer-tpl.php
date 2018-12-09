@@ -22,7 +22,7 @@
         <div class="epe__logo">
           <div class='epe__logo-img'>
             <img src='<?=$viData['info']['src']?>' alt="<?=$viData['info']['name']?>">
-            <a href="<?=MainConfig::$PAGE_USER_PHOTOS?>" class="epe__logo-edit">Изменить аватар</a>
+            <a href="<?=MainConfig::$PAGE_EDIT_PROFILE . '?ep=1'?>" class="epe__logo-edit">Изменить аватар</a>
           </div>
           <div class="epe-logo__btn-block" id="load-img-module">
             <div class="epe-logo__load js-g-hashint" id="btn-load-image" title="Выбрать изображение"></div>

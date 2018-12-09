@@ -87,7 +87,7 @@
           <img src="<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . 'logo.png'; ?>" alt="">
         <?php endif; ?>
         <?if( $flagOwnProfile ):?>
-          <a href="<?=MainConfig::$PAGE_USER_PHOTOS?>" class="upp__change-logo">Изменить аватар</a>
+          <a href="<?=MainConfig::$PAGE_EDIT_PROFILE . '?ep=1'?>" class="upp__change-logo">Изменить аватар</a>
         <?php elseif($viData['userInfo']['is_online']): ?>
           <span class="upp-logo__item-onl"><span>В сети</span>
         <?php endif; ?>

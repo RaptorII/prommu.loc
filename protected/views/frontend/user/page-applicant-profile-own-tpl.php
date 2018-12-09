@@ -135,7 +135,7 @@
         <span class="ppp-logo__item-onl"><span>В сети</span>
       <?php endif; ?>
       <?if($flagOwnProfile):?>
-        <a href="<?=MainConfig::$PAGE_USER_PHOTOS?>" class="ppp-logo-main__change">Изменить аватар</a>
+        <a href="<?=MainConfig::$PAGE_EDIT_PROFILE . '?ep=1'?>" class="ppp-logo-main__change">Изменить аватар</a>
       <?endif;?>        
     </div>
     <?php if(!$flagOwnProfile): ?>

@@ -62,7 +62,6 @@ class MainConfig
     // user profile data
     public static $VIEWS_EDIT_PROFILE_APPLICANT = 'page-edit-profile-applicant-tpl';
     public static $VIEWS_EDIT_PROFILE_EMPLOYER = 'page-edit-profile-employer-tpl';
-    public static $PAGE_USER_PHOTOS = '/user/editprofile/photos';
     //
     public static $VIEWS_COMPANY_PROFILE_OWN = 'page-company-profile-own-tpl';
     public static $VIEWS_COMPANY_VACS_OWN = 'page-company-vacancies-own-tpl';

@@ -1,58 +1,30 @@
-<?php if ($this->breadcrumbs):
-    if (Yii::app()->controller->route !== 'site/index')
-        $this->breadcrumbs = array_merge(array(Yii::t('zii', 'Главная') => Yii::app()->homeUrl), $this->breadcrumbs);
+<?php if( $this->breadcrumbs ):
+    if( Yii::app()->controller->route !== 'site/index' )
+        $this->breadcrumbs = array_merge(array(Yii::t('zii','Главная')=>Yii::app()->homeUrl), $this->breadcrumbs);
 
     $this->widget('zii.widgets.CBreadcrumbs', array(
-        'links' => $this->breadcrumbs,
-        'homeLink' => false,
-        'tagName' => 'div',
-        'separator' => ' &gt; ',
+        'links'=>$this->breadcrumbs,
+        'homeLink'=>false,
+        'tagName'=>'div',
+        'separator'=>' &gt; ',
 //        'activeLinkTemplate'=>'<a href="{url}">{label}</a> <span class="divider">/</span>',
-        'activeLinkTemplate' => '<a href="{url}">{label}</a>',
-        'inactiveLinkTemplate' => '<span>{label}</span>',
-        'htmlOptions' => array('class' => 'container breadcrumbs')
+        'activeLinkTemplate'=>'<a href="{url}">{label}</a>',
+        'inactiveLinkTemplate'=>'<span>{label}</span>',
+        'htmlOptions'=>array ('class'=>'container breadcrumbs')
     )); ?>
 <?php endif; ?>
 
-<?php if (($action = $this->action->getId()) == 'profile') $action = 'company-profile-own' ?>
+<?php if( ($action = $this->action->getId()) == 'profile' ) $action = 'company-profile-own' ?>
 
-<div id="DiContent"
-     class="page-<?= $action ?> <?= $this->ViewModel->getViewData()->addContentClass ?><?= ContentPlus::getActionID() ? ' action-' . ContentPlus::getActionID() : '' ?>">
+<div id="DiContent" class="page-<?= $action ?> <?= $this->ViewModel->getViewData()->addContentClass ?><?= ContentPlus::getActionID() ? ' action-' . ContentPlus::getActionID() : '' ?>">
     <div class="container">
         <div class="row content-header-box mt20">
-            <?php if ($action == 'company-profile-own' && Share::$UserProfile->exInfo->isblocked == 3): ?>
-                <div class="center red">Необходимо перейти в редактирование профиля и заполнить необходимые поля. После
-                    этого ваш профиль будет отображаться в общем списке работодателей и поиске на сайте, а также вы
-                    сможете размещать вакансии. <? echo Share::$UserProfile->checkRequiredFields()['mess'] ?></div>
+            <?php if( $action == 'company-profile-own' &&  Share::$UserProfile->exInfo->isblocked == 3 ): ?>
+                <div class="center red">Необходимо перейти в редактирование профиля и заполнить необходимые поля. После этого ваш профиль будет отображаться в общем списке работодателей и поиске на сайте, а также вы сможете размещать вакансии. <? echo Share::$UserProfile->checkRequiredFields()['mess']?></div>
             <?php endif; ?>
             <div class="col-xs-12">
                 <div class="content-header">Личный кабинет работодателя</div>
-
-                <?/*<div class="content-header-add">
-                    <span>+</span>
-                    <ul>
-                        <li><a href="<?= MainConfig::$PAGE_VACPUB ?>">Добавить вакансию</a></li>
-                        <li><a href="<?= MainConfig::$PAGE_PROJECT_NEW ?>">Добавить проект</a></li>
-                    </ul>
-                </div>*/?>
-
-
-                <div class="content-header-add">
-                   <span id="dropadd" class="data-title-l">
-                        <span class="a1"></span>
-                        <span class="a2"></span>
-                        <span class="a3"></span>
-                        <span class="a4"></span>
-                    </span>
-                    <ul>
-                        <li><a href="<?= MainConfig::$PAGE_VACPUB ?>">Добавить вакансию</a></li>
-                        <li><a href="<?= MainConfig::$PAGE_PROJECT_NEW ?>">Добавить проект</a></li>
-                    </ul>
-                </div>
-
-
                 <div class="content-header-line"></div>
-
             </div>
         </div>
         <div class="row content-menu-box mt20">
@@ -61,17 +33,16 @@
                     <?php Yii::app()->getClientScript()->registerCssFile('/theme/css/private/private-menu.css'); ?>
                     <?php $mactive = ContentPlus::getActionID(); ?>
                     <?php foreach (Share::$viewData['menu'] as $key => $val): ?>
-                        <?php if (!$val['hidden']): ?>
+                        <?php if(!$val['hidden']): ?>
                             <?
-                                $section = filter_var(Yii::app()->getRequest()->getParam('section'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                                $ep = filter_var(Yii::app()->getRequest()->getParam('ep'), FILTER_SANITIZE_NUMBER_INT);
                                 $active ='';
-                                if(strpos($val['link'], 'editprofile/photos')>0)
-                                    $section=='photos' ? $active='active' : $active='';
+                                if(strpos($val['link'], 'ep=1')>0)
+                                    $ep ? $active='active' : $active='';
                                 else
                                     $active = strpos($val['link'], $mactive) === false ? '' : 'active';
                             ?>
-                            <a href="/<?= $val['link'] ?>"
-                               class="pa__menu-link pa__menu-<?= $val['id'] ?> employer <?= $active ?>">
+                            <a href="/<?= $val['link'] ?>" class="pa__menu-link pa__menu-<?=$val['id']?> employer <?=$active?>">
                                 <span class="pa__menu-item">
                                     <span class="pa__menu-item-icon"><i></i></span>
                                     <span class="pa__menu-item-text"><?= $val['name'] ?></span>
