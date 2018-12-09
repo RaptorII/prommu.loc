@@ -16,10 +16,10 @@
         <p class="rp-content1__descr">Для того, чтобы ваши вакансии увидели все соискатели, а также , чтобы самостоятельно начать приглашать соискателей необходимо заполнить обязательные данные о вашей компании</p>
         <div class="rp-content1__logo">
           <span class="rp-content1__logo-img">
-            <img src="<?=(!empty($viData['info']['src']) ? $viData['info']['src'] : '/theme/pic/register-popup-page/register_popup_r_logo.png')?>" id="company-img">
+            <img src="/theme/pic/register-popup-page/register_popup_r_logo.png" id="company-img">
           </span>
           <span class="rp-content1__logo-text">Добавление логотипа повысит узнаваемость бренда среди соискателей<span class="rp-content1__warning">Добавляйте пожалуйста логотип своей компании или личные фото. В случае несоответствия фотографий Вы не сможете пройти модерацию! Спасибо за понимание!</span></span>
-          <input type="hidden" name="logo" id="HiLogo" class="required-inp" value="<?=(!empty($viData['info']['src']) ? $viData['info']['src'] : '')?>" />
+          <input type="hidden" name="logo" id="HiLogo" class="required-inp" value="<?=(!empty($viData['info']['logo']) ? $viData['info']['logo'] : '')?>" />
         </div>
         <div class="rp-content1__btn-block" id="load-img-module">        
           <div class="rp-btn-block__load js-g-hashint" id="btn-load-image" title="Выбрать изображение"></div>

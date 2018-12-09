@@ -70,10 +70,7 @@ $(function(){
 
   //  таймер проверки загрузки фото
   setInterval(function (e){
-    var v = $('#HiLogo').val();
-
-    if(!v.length || v.indexOf('.jpg')<0)
-    {
+    if($('#HiLogo').val() != ''){
       $('#company-img').attr('src','/images/company/tmp/'+$('#HiLogo').val()+'400.jpg');
       remEr('.rp-content1__logo-img');
       error = false;
@@ -279,7 +276,6 @@ $(function(){
   //
   $.each($('.required-inp'),function()
   { 
-    checkField(this);
     error = false;
     $.each(arInputs, function(){ if(!checkFieldEasy(this)) error = true; });
     (!error && !$('.error').length) ? remEr('#company-btn','off') : addEr('#company-btnn','off');
