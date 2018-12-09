@@ -1,8 +1,8 @@
 <?
-	Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css');
+  Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css');
   Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'register-popup/register-popup-emp.css');
   Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'register-popup/register-popup-emp.js', CClientScript::POS_END);
-	Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
+  Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
 ?>
 <meta name="robots" content="noindex">
 <div class="register-popup js-popup show">
@@ -19,7 +19,7 @@
             <img src="<?=(!empty($viData['info']['src']) ? $viData['info']['src'] : '/theme/pic/register-popup-page/register_popup_r_logo.png')?>" id="company-img">
           </span>
           <span class="rp-content1__logo-text">Добавление логотипа повысит узнаваемость бренда среди соискателей<span class="rp-content1__warning">Добавляйте пожалуйста логотип своей компании или личные фото. В случае несоответствия фотографий Вы не сможете пройти модерацию! Спасибо за понимание!</span></span>
-          <input type="hidden" name="logo" id="HiLogo" class="required-inp" />
+          <input type="hidden" name="logo" id="HiLogo" class="required-inp" value="<?=(!empty($viData['info']['src']) ? $viData['info']['src'] : '')?>" />
         </div>
         <div class="rp-content1__btn-block" id="load-img-module">        
           <div class="rp-btn-block__load js-g-hashint" id="btn-load-image" title="Выбрать изображение"></div>

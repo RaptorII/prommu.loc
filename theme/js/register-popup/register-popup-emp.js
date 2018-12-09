@@ -70,7 +70,10 @@ $(function(){
 
   //  таймер проверки загрузки фото
   setInterval(function (e){
-    if($('#HiLogo').val() != ''){
+    var v = $('#HiLogo').val();
+
+    if(!v.length || v.indexOf('.jpg')<0)
+    {
       $('#company-img').attr('src','/images/company/tmp/'+$('#HiLogo').val()+'400.jpg');
       remEr('.rp-content1__logo-img');
       error = false;
@@ -91,6 +94,7 @@ $(function(){
   // проверка перед отправкой формы
   $('#popup-form').submit(function(){
     $.each(arInputs, function(){ checkField(this) });
+
     if($('.error').length>0){
       $('html, body').animate({ scrollTop: $($('.error')[0]).offset().top-20 }, 1000);
       addEr('#company-btn','off');
@@ -98,6 +102,7 @@ $(function(){
     }
     else{
       remEr('#company-btn','off');
+      $('#popup-form').submit();
     } 
   });
   //    push
@@ -271,4 +276,12 @@ $(function(){
         split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
     $(e).val(split.join('-'));
   }
+  //
+  $.each($('.required-inp'),function()
+  { 
+    checkField(this);
+    error = false;
+    $.each(arInputs, function(){ if(!checkFieldEasy(this)) error = true; });
+    (!error && !$('.error').length) ? remEr('#company-btn','off') : addEr('#company-btnn','off');
+  });
 }); 

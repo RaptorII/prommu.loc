@@ -593,6 +593,11 @@ class UserController extends AppController
         
         Share::$UserProfile->type<1 && $this->redirect($data); // no profile for guest
 
+        $uid = filter_var(
+                    Yii::app()->getRequest()->getParam('uid'),
+                    FILTER_SANITIZE_NUMBER_INT
+                );
+
         $isPopup = Yii::app()->getRequest()->getParam('npopup');
         if($isPopup){
             $city = Yii::app()->getRequest()->getParam('city');
@@ -606,15 +611,21 @@ class UserController extends AppController
             if(!$res['err']) $this->redirect(MainConfig::$PAGE_PROFILE);
         }
 
-        $this->setBreadcrumbsEx(
-            array('Мой профиль', MainConfig::$PAGE_PROFILE),
-            array($title = 'Редактирование профиля', MainConfig::$PAGE_EDIT_PROFILE)
-        );
+        $view = $this->ViewModel->pageRegisterPopup;
+        if(empty($uid))
+        {
+            $view = $this->ViewModel->pageEditProfile;
+            $this->setBreadcrumbsEx(
+                array('Мой профиль', MainConfig::$PAGE_PROFILE),
+                array($title = 'Редактирование профиля', MainConfig::$PAGE_EDIT_PROFILE)
+            );       
+        }
+
         $this->setPageTitle('Регистрация успешно завершена');
         $arResult = Share::$UserProfile->getProfileDataEdit();
 
         $this->render(
-                $this->ViewModel->pageRegisterPopup, 
+                $view, 
                 array('viData'=>$arResult, 'viErrorData'=>$res)
             );
     }
