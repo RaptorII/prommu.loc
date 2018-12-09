@@ -23,7 +23,7 @@ $(function(){
 
         for (var i=0; i<arCountries.length; i++)
           if(oldPhoneCode==arCountries[i].phone){
-            country = arCountries[i].id_co;
+            country = arCountries[i].id;
             break;
           }
 

@@ -1070,20 +1070,6 @@ class UserProfileEmpl extends UserProfile
                     $arRes['userCities']['name'] = $sql['name'];        
                 }
             }
-            // закрыли попап не сохранив
-            if(!$phoneCode && !$arRes['phone-code'])
-            { 
-                $arGeo = (new Geo())->getUserGeo();   
-                foreach($arRes['countries'] as $v)
-                    $arGeo['country']==$v['id_co'] && $arRes['phone-code'] = $v['phone'];
-            }
-            else if($phone && $phoneCode)
-            {  // пошли через попап
-                $arRes['phone'] = urldecode($phone);
-                $arRes['phone'] = urldecode($arRes['phone']);// надо именно 2 раза
-                $arRes['phone-code'] = urldecode($phoneCode);
-                $arRes['phone-code'] = urldecode($arRes['phone-code']);// надо именно 2 раза
-            }
         }
 
         if(!empty($uid)) // подгон данных для попапа
@@ -1094,10 +1080,10 @@ class UserProfileEmpl extends UserProfile
             {
                 if(!empty($arRes['phone']) && $v['phone']==$arRes['phone-code'])
                 { // регистрация через телефон
-                    $arRes['userCities']['id_country'] = $v['id_co'];
+                    $arRes['userCities']['id_country'] = $v['id'];
                     break;
                 }
-                else if($v['id_co']==$arGeo['country'])
+                else if($v['id']==$arGeo['country'])
                 { // регистрация через почту
                     $arRes['phone-code'] = $v['phone'];
                 }
@@ -1115,6 +1101,21 @@ class UserProfileEmpl extends UserProfile
                 $arRes['userCities']['id_country'] = $sql['id_co'];
                 $arRes['userCities']['name'] = $sql['name']; 
             }
+        }
+
+        if($phone && $phoneCode)
+        {  // пошли через попап
+            $arRes['phone'] = urldecode($phone);
+            $arRes['phone'] = urldecode($arRes['phone']);// надо именно 2 раза
+            $arRes['phone-code'] = urldecode($phoneCode);
+            $arRes['phone-code'] = urldecode($arRes['phone-code']);// надо именно 2 раза
+        }
+        elseif(!$phoneCode && !$arRes['phone-code'])
+        { 
+            $arGeo = (new Geo())->getUserGeo();  
+
+            foreach($arRes['countries'] as $v)
+                $arGeo['country']==$v['id'] && $arRes['phone-code'] = $v['phone'];
         }
 
         return $arRes;
