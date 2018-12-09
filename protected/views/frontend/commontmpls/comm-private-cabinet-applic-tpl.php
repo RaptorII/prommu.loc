@@ -33,10 +33,10 @@
                     <?php foreach (Share::$viewData['menu'] as $key => $val): ?>
                         <?php if(!$val['hidden']): ?>
                             <?
-                                $ep = filter_var(Yii::app()->getRequest()->getParam('ep'), FILTER_SANITIZE_NUMBER_INT);
+                                $section = filter_var(Yii::app()->getRequest()->getParam('section'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
                                 $active ='';
-                                if(strpos($val['link'], 'ep=1')>0)
-                                    $ep ? $active='active' : $active='';
+                                if(strpos($val['link'], 'editprofile/photos')>0)
+                                    $section=='photos' ? $active='active' : $active='';
                                 else
                                     $active = strpos($val['link'], $mactive) === false ? '' : 'active';
                             ?>

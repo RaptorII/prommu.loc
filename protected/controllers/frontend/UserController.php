@@ -448,54 +448,56 @@ class UserController extends AppController
 
     public function actionEditprofile()
     {
-        Share::$UserProfile->type < 1 && $this->redirect(MainConfig::$PAGE_LOGIN); // no profile for guest
+        !in_array(Share::$UserProfile->type, [2,3]) && $this->redirect(MainConfig::$PAGE_LOGIN); // no profile for guest
 
+        $section = Yii::app()->getRequest()->getParam('section');
+        $result = array();
+        $view = $this->ViewModel->pageEditProfile;
+        $title = 'Редактирование профиля';
 
-        // save data
-        if( Yii::app()->getRequest()->isPostRequest)
+        if($section=='photos') // раздел Мои фото
         {
-            $res = Share::$UserProfile->saveProfileData();
-            if(!$res['err']) $this->redirect(MainConfig::$PAGE_PROFILE);
-        // del photo
-        } elseif( Yii::app()->getRequest()->getParam('del') )
-        {
-            $res = Share::$UserProfile->delProfilePhoto();
-            $s1 = $this->ViewModel->replaceInUrl('', 'del', null);
-            $this->redirect($_SERVER['HTTP_REFERER']);
-        // сделать фото главным
-        } elseif( Yii::app()->getRequest()->getParam('dm') )
-        {
-            $res = Share::$UserProfile->setPhotoAsLogo();
-            $s1 = $this->ViewModel->replaceInUrl('', 'dm', null);
-            $this->redirect($_SERVER['HTTP_REFERER']);
-        } // endif
-
-        $this->setBreadcrumbsEx(array('Мой профиль', MainConfig::$PAGE_PROFILE), array($title = 'Редактирование профиля', MainConfig::$PAGE_EDIT_PROFILE));
-
-
-        // Magnific Popup
-        Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/jslib/magnific-popup/magnific-popup-min.css');
-        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/jslib/magnific-popup/jquery.magnific-popup.min.js', CClientScript::POS_END);
-
-        // Cropper
-        Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/jslib/cropperjs/cropper.min.css');
-        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/jslib/cropperjs/cropper.min.js', CClientScript::POS_END);
-        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/jquery-ui.min.js', CClientScript::POS_END);
-        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/jquery.form-validator.min.js', CClientScript::POS_END);
-        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/jquery.mask.min.js', CClientScript::POS_END);
-
-        if( Share::$UserProfile->type == 3 ){
-        }
-        else{
-            if(Yii::app()->getRequest()->getParam('ep')){
-                Yii::app()->getClientScript()->registerCssFile("/" . MainConfig::$PATH_CSS . DS . Share::$cssAsset['prof_edit_applic.css']);
-                //Yii::app()->getClientScript()->registerScriptFile("/theme/js/dev/pages/prof_edit_applic.js", CClientScript::POS_END);
+            if( Yii::app()->getRequest()->getParam('del') )
+            {// del photo
+                $result = Share::$UserProfile->delProfilePhoto();
+                $s1 = $this->ViewModel->replaceInUrl('', 'del', null);
+                $this->redirect($_SERVER['HTTP_REFERER']);
+                
+            } 
+            elseif( Yii::app()->getRequest()->getParam('dm') )
+            {// сделать фото главным
+                $result = Share::$UserProfile->setPhotoAsLogo();
+                $s1 = $this->ViewModel->replaceInUrl('', 'dm', null);
+                $this->redirect($_SERVER['HTTP_REFERER']);
             }
+
+            $view = $this->ViewModel->pageMyPhotos;
+            $this->setBreadcrumbsEx(
+                    array('Мой профиль', MainConfig::$PAGE_PROFILE), 
+                    array($title, MainConfig::$PAGE_EDIT_PROFILE),
+                    array($title = 'Мои фото', MainConfig::$PAGE_USER_PHOTOS)
+                );
+        }
+        else
+        {
+            if( Yii::app()->getRequest()->isPostRequest ) // save data
+            {
+                $result = Share::$UserProfile->saveProfileData();
+                !$result['err'] && $this->redirect(MainConfig::$PAGE_PROFILE);
+            } 
+
+            $this->setBreadcrumbsEx(
+                    array('Мой профиль', MainConfig::$PAGE_PROFILE), 
+                    array($title, MainConfig::$PAGE_EDIT_PROFILE)
+                );
         }
 
-        $this->render($this->ViewModel->pageEditProfile,
-                array('viData' => Share::$UserProfile->getProfileDataEdit(), 'viErrorData' => $res),
-                array('htmlTitle' => 'Редактирование профиля')
+        $data = Share::$UserProfile->getProfileDataEdit();
+
+        $this->render(
+                $view,
+                array('viData' => $data, 'viErrorData' => $result),
+                array('htmlTitle' => $title)
             );
     }
 
@@ -611,7 +613,10 @@ class UserController extends AppController
         $this->setPageTitle('Регистрация успешно завершена');
         $arResult = Share::$UserProfile->getProfileDataEdit();
 
-        $this->render($this->ViewModel->pageEditProfile, array('viData'=>$arResult, 'viErrorData'=>$res));
+        $this->render(
+                $this->ViewModel->pageRegisterPopup, 
+                array('viData'=>$arResult, 'viErrorData'=>$res)
+            );
     }
 
 
@@ -1206,19 +1211,6 @@ class UserController extends AppController
         $data['setting'] = json_decode($data['setting']);
 
         $this->render(MainConfig::$VIEWS_SETTINGS, array('viData' => $data), array('htmlTitle' => $title));
-    }
-    /*
-    *   Страница настроек
-    */
-    public function actionSnapshottest()
-    {
-        in_array(Share::$UserProfile->type, [2,3]) || $this->redirect(MainConfig::$PAGE_LOGIN);
-
-        $title = 'Снимок';
-        Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/jslib/cropperjs/cropper.min.css');
-        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/jslib/cropperjs/cropper.min.js', CClientScript::POS_END);
-        Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
-        $this->render('/user/page-edit-profile-applicant/page-edit-photo-tpl2', array(), array('htmlTitle' => $title));
     }
     /*
     *   Удалить вакансию

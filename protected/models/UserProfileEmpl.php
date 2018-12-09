@@ -447,13 +447,7 @@ class UserProfileEmpl extends UserProfile
 
     public function getProfileDataEdit()
     {
-//        $data = $this->getProfileData();
-        $data['rating'] = $this->getPointRate();
-
-        $res = $this->getProfileEditPageData($data = array());
-        $data = array_merge($data, $res);
-
-        return $data;
+        return $this->getProfileEditPageData();
     }
 
 
@@ -557,6 +551,7 @@ class UserProfileEmpl extends UserProfile
             $name = filter_var(Yii::app()->getRequest()->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $fname = filter_var(Yii::app()->getRequest()->getParam('fname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $lname = filter_var(Yii::app()->getRequest()->getParam('lname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $contact = filter_var(Yii::app()->getRequest()->getParam('contact'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $email = filter_var(Yii::app()->getRequest()->getParam('email'), FILTER_VALIDATE_EMAIL);
             $companyType = filter_var(Yii::app()->getRequest()->getParam('companyType'), FILTER_SANITIZE_NUMBER_INT);
             $cityManual = filter_var(Yii::app()->getRequest()->getParam('cityManualMulti'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -572,6 +567,7 @@ class UserProfileEmpl extends UserProfile
                 e.name,
                 e.firstname,
                 e.lastname,
+                e.contact,
                 e.photo,
                 e.logo,
                 e.crdate
@@ -605,6 +601,11 @@ class UserProfileEmpl extends UserProfile
 
             if($data['name'] != $name){
                 $arrs.='Название|';
+                $bFlashFlag = true;
+            }
+
+            if($data['contact'] != $contact){
+                $arrs.='Контактное лицо|';
                 $bFlashFlag = true;
             }
 
@@ -651,6 +652,7 @@ class UserProfileEmpl extends UserProfile
                     'name' => $name,
                     'firstname' => $fname,
                     'lastname' => $lname,
+                    'contact' => $contact,
                     'type' => $companyType,
                     'ismoder' => 0,
                     'mdate' => date('Y-m-d H:i:s'),
@@ -857,95 +859,265 @@ class UserProfileEmpl extends UserProfile
 
 
 
-    private function getProfileEditPageData($inData)
+    private function getProfileEditPageData()
     {
-        $id = Share::$UserProfile->exInfo->id;
+        $arRes = array();
+        $id = Share::$UserProfile->id;
+        $type = Share::$UserProfile->type;
+
+        if(!$id || $type!=3)
+            return $arRes;
+
+        $section = filter_var(
+                            Yii::app()->getRequest()->getParam('section'),
+                            FILTER_SANITIZE_FULL_SPECIAL_CHARS
+                        );
+
+        if($section=='photos') // для страницы Мои фото этого достаточно
+        {
+            $arRes['userPhotos'] = Yii::app()->db->createCommand()
+                            ->select('up.id, up.photo, e.logo')
+                            ->from('user_photos up')
+                            ->rightjoin('employer e', 'e.id=up.id_empl')
+                            ->where('e.id_user=:id',[':id'=>$id])
+                            ->order('npp desc')
+                            ->limit(MainConfig::$APPLICANT_MAX_PHOTOS)
+                            ->queryAll();
+
+            foreach ($arRes['userPhotos'] as &$v)
+            {
+                $v['ismain'] = $v['logo']==$v['photo'];
+                $v['src_small'] = Share::getPhoto($type,$v['photo'],'small');
+                $v['src_big'] = Share::getPhoto($type,$v['photo'],'big');
+            }
+            unset($v);
+
+            return $arRes;
+        }
 
         // читаем данные из профиля
-        $sql = "SELECT u.email
-              , e.id,
-                e.id_user idus,
-                e.type,
-                e.name,
-                e.firstname,
-                e.lastname,
-                e.photo,
-                e.logo,
-                u.confirmEmail,
-                u.confirmPhone,
-                e.crdate
-            FROM employer e
-            INNER JOIN user u ON u.id_user = e.id_user
-            WHERE e.id_user = {$id}";
-        $res = Yii::app()->db->createCommand($sql)->queryRow();
-        $data['emplInfo'] = $res;
+        $arRes['info'] = Yii::app()->db->createCommand()
+                        ->select("e.id,
+                                e.id_user idus,
+                                e.type,
+                                e.name,
+                                e.firstname,
+                                e.lastname,
+                                e.photo,
+                                e.logo,
+                                e.crdate,
+                                e.contact,
+                                u.confirmEmail,
+                                u.confirmPhone,
+                                u.email")
+                        ->from('employer e')
+                        ->join('user u', 'u.id_user=e.id_user')
+                        ->where('e.id_user=:idus', [':idus'=>$id])
+                        ->queryRow();
 
+        // вычисляем настоящий урл для фото
+        $arRes['info']['src'] = Share::getPhoto(
+                                        $type, 
+                                        $arRes['info']['logo'], 
+                                        'small');
+        // отсекаем телефон в логине
+        $arRes['info']['email'] = filter_var(
+                                        $arRes['info']['email'],
+                                        FILTER_VALIDATE_EMAIL
+                                    );
 
         // считываем характеристики пользователя
-        $sql = "SELECT e.id_user idus
-              , a.val
-              , a.id_attr
-              , d.name
-              , d.type
-              , d.id_par idpar
-              , d.key
-              , u.confirmEmail
-              , u.confirmPhone
-              , u.email
-            FROM employer e
-            LEFT JOIN user u ON u.id_user = e.id_user
-            LEFT JOIN user_attribs a ON e.id_user = a.id_us
-            LEFT JOIN user_attr_dict d ON a.id_attr = d.id
-            WHERE e.id_user = {$id}
-            ORDER BY a.id_attr";
-        $res = Yii::app()->db->createCommand($sql)->queryAll();
+        $sql = Yii::app()->db->createCommand()
+                        ->select("ua.id_us idus,
+                                ua.val, 
+                                ua.id_attr, 
+                                uad.name, 
+                                uad.key")
+                        ->from('user_attribs ua')
+                        ->leftjoin('user_attr_dict uad', 'uad.id=ua.id_attr')
+                        ->where('ua.id_us=:idus', [':idus' => $id])
+                        ->order('ua.id_attr asc')
+                        ->queryAll();
 
-        foreach ($res as $key => $val)
+        $arMess = array();
+        foreach ($sql as $v)
         {
-//            $val['val'] != '' ?: $val['val'] = $val['name'];
-            $attr[$val['id_attr']] = $val;
-        } // end foreach
-        // меняем данные для изменения кодов телефона
-        if(isset($attr[1]['val'])){
-            $pos = strpos($attr[1]['val'], '(');
-            $attr[1]['phone-code'] = substr($attr[1]['val'], 1,($pos-1));
-            $attr[1]['phone'] = substr($attr[1]['val'], $pos);     
-        }     
-        $data['userAttribs'] = $attr;
+            if($v['key']=='mob') // преобразуем телефон
+            {
+                $v['phone'] = str_replace('+', '', $v['val']);
+                $pos = strpos($v['phone'], '(');
+                $v['phone-code'] = substr($v['phone'], 0, $pos);
+                if(empty($v['phone-code']))
+                    $v['phone-code'] = 7; // по умолчанию Рашка
+                $v['phone'] = substr($v['phone'], $pos);  
+                $arRes['phone'] = $v['phone'];
+                $arRes['phone-code'] = $v['phone-code'];
+            }
+            $v['key']=='viber' && $arMess[]='Viber';
+            $v['key']=='whatsapp' && $arMess[]='WhatsApp';
+            $v['key']=='telegram' && $arMess[]='Telegram';
+            $v['key']=='googleallo' && $arMess[]='Google Allo';
 
+            $arRes['attribs'][$v['key']] = $v;
 
-        // считываем тип работодателя
-        $sql = "SELECT d.id, d.type, d.name FROM user_attr_dict d WHERE d.id_par = 101 ORDER BY id";
-        $data['cotype'] = Yii::app()->db->createCommand($sql)->queryAll();
-        foreach ($data['cotype'] as $key => &$val)
-        {
-            if( $data['emplInfo']['type'] == $val['id'] ) $val['selected'] = 1;
-        } // end foreach
+        }
+        $arRes['messengers'] = implode(',',$arMess);
+        
 
+        // считываем типы пользователя
+        $arRes['cotype'] = Yii::app()->db->createCommand()
+                        ->select('id, type, name')
+                        ->from('user_attr_dict')
+                        ->where('id_par=101')
+                        ->order('id asc')
+                        ->queryAll();
 
-        // read cities
-        $sql = "SELECT ci.id_city id, ci.name, co.id_co, co.name coname, ci.ismetro
-FROM user_city uc
-LEFT JOIN city ci ON uc.id_city = ci.id_city
-LEFT JOIN country co ON co.id_co = ci.id_co
-WHERE uc.id_user = {$id}";
-        $data['userCities'] = Yii::app()->db->createCommand($sql)->queryAll();
+        foreach ($arRes['cotype'] as &$v)
+            $v['selected'] = $arRes['info']['type']==$v['id'];
+        unset($v);
 
+        // считываем города пользователя
+        $arRes['userCities'] = Yii::app()->db->createCommand()
+                        ->select('ci.id_city, ci.name, ci.id_co id_country')
+                        ->from('user_city uc')
+                        ->leftjoin('city ci', 'ci.id_city=uc.id_city')
+                        ->where('uc.id_user=:idus', [':idus' => $id])
+                        ->queryRow();
 
         // считываем страны
-        $sql = "SELECT id_co, name, phone FROM country co WHERE co.hidden = 0";
-        $data['countries'] = Yii::app()->db->createCommand($sql)->queryAll();
+        $arRes['countries'] = Yii::app()->db->createCommand()
+                        ->select('id_co id, name, phone')
+                        ->from('country')
+                        ->where('hidden=0')
+                        ->queryAll();
 
-        $sql = "SELECT p.id, p.photo, CASE WHEN p.photo = r.logo THEN 1 ELSE 0 END ismain
-            FROM employer r
-            LEFT JOIN user_photos p ON p.id_empl = r.id
-            WHERE r.id_user = {$id}
-            ORDER BY npp DESC";
-        $res = Yii::app()->db->createCommand($sql)->queryAll();
-        $data['userPhotos'] = $res;
-        // if( count($data['userPhotos']) == 1 && !$data['userPhotos'][0]['id'] ) $data['userPhotos'] = array();
+        // если попап закрыли
+        $uid = filter_var(
+                    Yii::app()->getRequest()->getParam('uid'),
+                    FILTER_SANITIZE_NUMBER_INT
+                );
+        $city = filter_var(
+                    Yii::app()->getRequest()->getParam('city'),
+                    FILTER_SANITIZE_FULL_SPECIAL_CHARS
+                );
+        $phoneCode = filter_var(
+                    Yii::app()->getRequest()->getParam('__phone_prefix'),
+                    FILTER_SANITIZE_NUMBER_INT
+                );
+        $phone = filter_var(
+                    Yii::app()->getRequest()->getParam('phone'),
+                    FILTER_SANITIZE_NUMBER_INT
+                );
 
-        return $data;
+        if(empty($uid)) // эти проверки только для страницы редактирования профиля
+        {
+            if(!empty($city) && empty($arRes['userCities']['name']))
+            {
+                $cityId = 0;
+                $cityName = urldecode($city);
+                $cityName = urldecode($cityName); // надо именно 2 раза
+                $cityName = htmlspecialchars($cityName);
+
+                $sql = Yii::app()->db->createCommand()
+                        ->select('id_city, name, id_co')
+                        ->from('city')
+                        ->where('name=:name',[':name'=>$cityName])
+                        ->queryAll();
+
+                if(count($sql)==1) // если совпадает один город
+                {
+                    $cityId = $sql[0]['id_city'];
+                    $cityName = $sql[0]['name'];
+                }
+                else
+                {
+                    $arGeo = (new Geo())->getUserGeo(); 
+                    foreach ($sql as $v)
+                        if($arGeo['country']==$v['id_co'])
+                        {
+                            $cityId = $v['id_city'];
+                            $cityName = $v['name'];           
+                        }
+                }
+                // обновляем данные
+                if($cityId>0 && !empty($cityName))
+                {
+                    Yii::app()->db->createCommand()
+                            ->update('user_city', 
+                                ['id_city' => $cityId], 
+                                'id_user=:id', 
+                                [':id' => $id]
+                            );
+                    $arRes['userCities']['id_city'] = $cityId;
+                    $arRes['userCities']['name'] = $cityName;
+                }
+                else
+                {
+                    $cityId = Subdomain::getCacheData()->id;
+                    $sql = Yii::app()->db->createCommand()
+                            ->select("id_city, name")
+                            ->from('city')
+                            ->where('id_city=:id', [':id' => $cityId])
+                            ->queryRow();
+
+                    Yii::app()->db->createCommand()
+                            ->update('user_city', 
+                                ['id_city' => $cityId], 
+                                'id_user=:id', 
+                                [':id' => $id]
+                            );
+                    $arRes['userCities']['id_city'] = $cityId;
+                    $arRes['userCities']['name'] = $sql['name'];        
+                }
+            }
+            // закрыли попап не сохранив
+            if(!$phoneCode && !$arRes['phone-code'])
+            { 
+                $arGeo = (new Geo())->getUserGeo();   
+                foreach($arRes['countries'] as $v)
+                    $arGeo['country']==$v['id_co'] && $arRes['phone-code'] = $v['phone'];
+            }
+            else if($phone && $phoneCode)
+            {  // пошли через попап
+                $arRes['phone'] = urldecode($phone);
+                $arRes['phone'] = urldecode($arRes['phone']);// надо именно 2 раза
+                $arRes['phone-code'] = urldecode($phoneCode);
+                $arRes['phone-code'] = urldecode($arRes['phone-code']);// надо именно 2 раза
+            }
+        }
+
+        if(!empty($uid)) // подгон данных для попапа
+        {
+            $arGeo = (new Geo())->getUserGeo();
+            // Телефон
+            foreach($arRes['countries'] as $v)
+            {
+                if(!empty($arRes['phone']) && $v['phone']==$arRes['phone-code'])
+                { // регистрация через телефон
+                    $arRes['userCities']['id_country'] = $v['id_co'];
+                    break;
+                }
+                else if($v['id_co']==$arGeo['country'])
+                { // регистрация через почту
+                    $arRes['phone-code'] = $v['phone'];
+                }
+            }
+
+            if(empty($arGeo['city']) || empty($arGeo['country']))
+            {
+                $cityId = Subdomain::getCacheData()->id;
+                $sql = Yii::app()->db->createCommand()
+                        ->select("name, id_co")
+                        ->from('city')
+                        ->where('id_city=:id', [':id' => $cityId])
+                        ->queryRow();
+
+                $arRes['userCities']['id_country'] = $sql['id_co'];
+                $arRes['userCities']['name'] = $sql['name']; 
+            }
+        }
+
+        return $arRes;
     }
 
 
@@ -1247,7 +1419,7 @@ WHERE uc.id_user = {$id}";
     */
     private function getProfileMainData($id){
         // читаем данные из профиля
-        $sql = "SELECT u.email, e.id, e.id_user idus, e.type, e.name, e.firstname, e.lastname, u.confirmEmail, u.confirmPhone
+        $sql = "SELECT u.email, e.id, e.id_user idus, e.type, e.name, e.firstname, e.lastname, e.contact, u.confirmEmail, u.confirmPhone
             FROM employer e
             INNER JOIN user u ON u.id_user = e.id_user
             WHERE e.id_user = {$id}";

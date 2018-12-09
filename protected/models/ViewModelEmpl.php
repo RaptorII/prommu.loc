@@ -13,8 +13,11 @@ class ViewModelEmpl extends ViewModel
     {
         parent::__construct();
 
+        $view = MainConfig::$VIEWS_EMPLOYER;
         $this->pageProfile = MainConfig::$VIEWS_COMPANY_PROFILE_OWN;
-        $this->pageEditProfile = MainConfig::$VIEWS_EDIT_PROFILE_EMPLOYER;
+        $this->pageEditProfile = $view . MainConfig::$VIEWS_EDIT_PROFILE;
+        $this->pageRegisterPopup = $view . MainConfig::$VIEWS_REGISTER_POPUP;
+        $this->pageMyPhotos = $view . MainConfig::$VIEWS_MY_PHOTOS;
         $this->pageVacpub = MainConfig::$VIEWS_PUBL_VACANCY;
         $this->pageVacancies = MainConfig::$VIEWS_COMPANY_VACS_OWN;
         $this->pageVacancArh = MainConfig::$VIEWS_COMPANY_VACS_ARHIVE;

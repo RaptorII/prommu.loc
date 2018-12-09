@@ -16,6 +16,8 @@ class ViewModel
     //Yii::app()->Controller->ViewModel->formatTelNumber($attr[1]['val'])
     public $pageProfile;
     public $pageEditProfile;
+    public $pageRegisterPopup;
+    public $pageMyPhotos;
     public $pageSearchVac;
     public $pageSearchEmpl;
     public $pageSearchPromo;

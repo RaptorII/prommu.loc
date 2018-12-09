@@ -54,50 +54,6 @@ jQuery(function($){
 	//
 	$(document).on('click',function(e){ checkPhone(e) });
 	$('#phone-code').on('input',function(e){ checkPhone(e) });
-	//  Ввод города
-	$('.epe__input-city').focus(function(){ findCities(this) });
-	//
-	$('.epe__input-city').keyup(function(){ findCities(this) });
-	//
-	$('.epe__input-city').blur(function(){
-		var cityLabel = $(this).closest('.epe__label'),
-			cityId = $('#id-city'),
-			cityLict = $('.city-list'),
-			val = $(this).val().toLowerCase();
-
-		if(val!==''){
-			var fEmpty = true;
-			$.each(arCities, function(i){
-				if(this.toLowerCase().indexOf(val)>=0){
-					remErr(cityLabel);
-					cityId.val(i);
-					fEmpty = false;
-				}
-			});
-			if(fEmpty){
-				cityId.val('');
-				addErr(cityLabel);
-			}
-			cityLict.fadeOut();
-		}
-		else{
-			addErr(cityLabel);
-			cityLict.fadeOut();
-			cityId.val('');
-		}
-	});
-	//  выбор города из списка
-	$('.epe__label').on('click', '.city-list li', function(){
-		var cityLabel = $(this).closest('.epe__label');
-
-		if(!$(this).hasClass('emp')){
-			$('.epe__input-city').val($(this).text());
-			$('#id-city').val($(this).data('val'));
-			$('.city-list').fadeOut();
-			remErr(cityLabel);
-		}
-		else{ addErr(cityLabel) }
-	});
 	//
 	$('.epe__btn').click(function(e){
 		var nemail = $('.epe__input-mail').val(),
@@ -161,27 +117,6 @@ jQuery(function($){
 			clearTimeout(imgTimer);
 		} 
 	}, 1000);
-	//
-	function findCities(e){
-		var val = $(e).val().toLowerCase(),
-			arResult = [],
-			arResultId = [],
-			content = '';
-
-		if(val.length>2){ // если введено более 3х символов
-			$.each(arCities, function(i){
-				if(this.toLowerCase().indexOf(val)>=0){ 
-					arResult.push(this);
-					arResultId.push(i);
-				}
-			});
-			arResult.length>0  
-			? $.each(arResult, function(i){ content += '<li data-val="'+arResultId[i]+'">'+this+'</li>' })         
-			: content = '<li class="emp">Список пуст</li>';
-
-			$(e).siblings('.city-list').empty().append(content).fadeIn(); 
-		}
-	}
 	// additional functions
 	function addErr(e){ 
 		$(e).addClass('error');
@@ -412,4 +347,116 @@ jQuery(function($){
 		var html = "<form data-header='" + t + "'>" + m + "</form>";
 		ModalWindow.open({ content: html, action: { active: 0 }, additionalStyle:'dark-ver' });
 	}
+	//
+	//      ГОРОДА
+	//
+	var bAjaxTimer = false;
+	$('#F1compprof').on('input', '.epe__input-city', function() { inputCity(this) });
+	$('#F1compprof').on('focus', '.epe__input-city', function() { focusCity(this) });
+	// обрабатываем клики
+	$(document).on('click', function(e) { checkCity(e.target) });
+  //      ввод города
+  inputCity = function (e) {
+    var v = $(e).val();
+    clearTimeout(bAjaxTimer);
+    setFirstUpper(e);
+    bAjaxTimer = setTimeout(function(){ getAjaxCities(v, e) },1000);
+  }
+  //      фокус поля города
+  focusCity = function (e) {
+    var v = $(e).val();
+    $(e).val('').val(v);
+    setFirstUpper(e);
+    getAjaxCities(v, e);
+  };
+  //      запрос списка городов
+  getAjaxCities = function (val, e) {
+    var $e = $(e),
+				list = $e.siblings('.city-list')[0],
+				main = $e.closest('.city-field')[0],
+				mainCity = $e.closest('.city-item')[0],
+				idcity = Number($('#id-city').val()),
+				piece = val.toLowerCase(),
+				content = '';
+
+    $(main).addClass('load'); // загрузка началась
+
+    $.ajax({
+      type: 'POST',
+      url: MainConfig.AJAX_GET_VE_GET_CITIES,
+      data: 'query=' + val,
+      dataType: 'json',
+      success: function(r) {
+        for (var i in r.suggestions) {
+          var item = r.suggestions[i],
+            id = +item.data;
+
+          if(isNaN(item.data))
+            break;
+
+          if(item.value.toLowerCase().indexOf(piece) >= 0)
+          { // собираем список
+            content += '<li data-id="' + item.data + '">' + item.value + '</li>';
+          }
+        }
+        content
+        ? $(list).html(content).fadeIn()
+        : $(list).html('<li class="emp">Список пуст</li>').fadeIn();
+        $(main).removeClass('load'); // загрузка завершена
+      }
+    });
+  }
+  //      фокус инпута и выбор города
+  checkCity = function (e) {
+    var $e = $(e),
+    		cNew = $e.text(),
+      	data = e.dataset,
+				cSelect = $('.city-select'),
+				cInput = $('.epe__input-city'),
+				cList = $('.city-list'),
+				inp = $('#id-city'),
+				id = inp.val(),
+				v = cSelect.text();
+
+   	if( !$e.closest('.city-field').length && !$e.is('.city-field') )
+   	{
+			cSelect.text()==='' ? cSelect.hide() : cSelect.show();
+			cInput.val(v).hide();
+			cList.fadeOut();
+    }
+    else if( $e.is('li') && !$e.hasClass('emp') ) // клик по объектам списка
+		{ // выбираем из списка
+			if(id!=='' && id===data.id)
+			{
+				cInput.val(v).hide();
+				cSelect.show();
+			}
+			else
+			{ // ввод нового города
+				inp.val(data.id);
+				cInput.val(cNew).hide();
+				cSelect.html(cNew+'<b></b>').show();
+			}
+			cList.fadeOut();
+		}
+		else
+		{
+			$e.is('b') && cInput.val('');
+			cInput.show().focus();
+			cSelect.hide();
+		}
+  }
+  //      правильный ввод названия города
+  setFirstUpper = function (e) {
+    let split = $(e).val().split(' ');
+
+    for(let i=0, len=split.length; i<len; i++)
+      split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
+    $(e).val(split.join(' '));
+
+    split = $(e).val().split('-');
+    for(let i=0, len=split.length; i<len; i++)
+      split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
+    $(e).val(split.join('-'));
+  }
 });

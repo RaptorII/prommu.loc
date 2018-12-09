@@ -152,6 +152,8 @@ return array(
                 '<page:about>/<section:[\w-]+>/<id:[\w-]+>' => 'site/<page>',
                 'imfiles' => 'site/imfiles',
                 '<controller:user>/<action:services>/<id:[\w-]+>' => '<controller>/<action>',
+                // profile
+                '<controller:user>/<action:editprofile>/<section:photos>' => '<controller>/<action>',
                 // projects
                 '<controller:user>/<action:projects>/<id:[\w-]+>' => '<controller>/<action>',
                 '<controller:user>/<action:projects>/<id:user-card>/<user_id:\d+>' => '<controller>/<action>',

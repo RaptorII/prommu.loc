@@ -459,6 +459,7 @@
 #F1compprof.edit-profile-employer .epe__input-name{ padding-left: 150px }
 #F1compprof.edit-profile-employer .epe__input-type{ padding-left: 110px }
 #F1compprof.edit-profile-employer .epe__input-site{ padding-left: 80px }
+#F1compprof.edit-profile-employer .epe__input-contact{ padding-left: 110px }
 #F1compprof.edit-profile-employer .epe__input-fname{ padding-left: 90px }
 #F1compprof.edit-profile-employer .epe__input-lname{ padding-left: 110px }
 #F1compprof.edit-profile-employer .epe__input-mail{ padding-left: 90px }
@@ -642,7 +643,7 @@ input:checked + .epe__checkbox:after{ content: '\2714' }
 	position: absolute;
 	top: 34px;
 	left: 0;
-	z-index: 2;
+	z-index: 3;
 	font-family: RobotoCondensed-Regular, verdana, arial;
 	font-size: 14px;
 	color: #FFFFFF;
@@ -947,6 +948,40 @@ input:checked + .epe__checkbox:after{ content: '\2714' }
 }
 .country-phone-selector:hover{ background: transparent }
 .country-phone-options{ overflow-y: auto; }
+/* city */
+#F1compprof.edit-profile-employer .epe__input-city{ display: none; }
+.city-select{
+	display: inline-block;
+	padding: 3px 20px 3px 5px;
+	margin: 5px 0 5px 60px;
+	background-color: rgba(52, 52, 52, 0.6);
+	color: #fff;
+	line-height: 18px;
+	border-radius: 5px;
+	position: absolute;
+	font-family: RobotoCondensedRegular, RobotoRegular, verdana, arial;
+}
+.city-select b{
+	width: 19px;
+	height: 19px;
+	display: block;
+	position: absolute;
+	top: 3px;
+	right: 0;
+	font-style: normal;
+	text-align: center;
+	cursor: pointer;
+}
+.city-select b:before{
+	content: '\2716';
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	line-height: 20px;
+}
 /*
 *		MEDIA
 */

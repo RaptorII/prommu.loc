@@ -1,6 +1,8 @@
-<?php
-  Yii::app()->getClientScript()->registerCssFile('/theme/css/private/popup-load-img.css');
-  Yii::app()->getClientScript()->registerScriptFile('/theme/js/private/popup-load-img.js', CClientScript::POS_END);
+<?
+  Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/popup-load-img.css');
+  Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'dist/cropper.min.css');
+  Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/popup-load-img.js', CClientScript::POS_END);
+  Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/cropper.min.js', CClientScript::POS_END);
 ?>
 <canvas class="snapshot__canvas"></canvas>
 <div class="body__content">

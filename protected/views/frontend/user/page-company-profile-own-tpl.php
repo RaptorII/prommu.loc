@@ -87,7 +87,7 @@
           <img src="<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . 'logo.png'; ?>" alt="">
         <?php endif; ?>
         <?if( $flagOwnProfile ):?>
-          <a href="/user/editprofile?ep=1" class="upp__change-logo">Изменить аватар</a>
+          <a href="<?=MainConfig::$PAGE_USER_PHOTOS?>" class="upp__change-logo">Изменить аватар</a>
         <?php elseif($viData['userInfo']['is_online']): ?>
           <span class="upp-logo__item-onl"><span>В сети</span>
         <?php endif; ?>
@@ -264,6 +264,12 @@
           <div class="ppe__field">
             <span class="ppe__field-name">Фамилия:</span>
             <span class="ppe__field-val"><?=$allInfo['lastname']?></span>
+          </div>
+        <?php endif; ?>
+        <?php if(strlen($allInfo['contact'])>0): ?>
+          <div class="ppe__field">
+            <span class="ppe__field-name">Контактное лицо:</span>
+            <span class="ppe__field-val"><?=$allInfo['contact']?></span>
           </div>
         <?php endif; ?>
         <div class="ppe__field<?=($isBlocked && !$allInfo['email'] ?' error':'')?>">
