@@ -865,4 +865,88 @@ class ImApplic extends Im
         return $arr;
     }
     
+     public function getVacancyPersonal($vacancy, $id_app)
+    {
+        $arRes = array();
+        $id_emp = Share::$UserProfile->exInfo->id;
+
+        if(!intval($vacancy) || !intval($id_app) || !intval($id_emp))
+            return array('error'=>true);
+
+        $sql = Yii::app()->db->createCommand()
+                ->select('vs.id')
+                ->from('vacation_stat vs')
+                ->leftjoin('resume r','r.id=vs.id_promo')
+                ->where(
+                    'vs.id_vac=:id AND r.id_user=:idus AND vs.status>4',
+                    array(':id'=>$vacancy,':idus'=>$id_app)
+                )
+                ->queryRow();
+
+        if(!isset($sql['id']))
+            return array('error'=>true);
+
+        $arRes['vacancy'] = Yii::app()->db->createCommand()
+                ->select('id, title')
+                ->from('empl_vacations')
+                ->where(
+                    'id=:id AND id_user=:id_emp',
+                    array(':id'=>$vacancy,':id_emp'=>$id_emp)
+                )
+                ->queryRow();       
+
+        if(!isset($arRes['vacancy']['id']))
+            return array('error'=>true);
+
+        $arRes['items'] = Yii::app()->db->createCommand()
+                ->select('c.*')
+                ->from('chat c')
+                ->leftjoin('chat_theme ct','ct.id=c.id_theme')
+                ->where(
+                    'ct.id_vac=:id',
+                    array(':id'=>$vacancy)
+                )
+                ->queryAll(); 
+
+        // получаем файлы диалога
+        $Upluni = new Uploaduni();
+        $Upluni->setCustomOptions(array(
+                'type' => array('images' => 'image/jpeg,image/png', 'files' => 'word,excel,spreadsheetml'),
+                'scope' => 'im',
+                'maxFS' => 5242880, // max filesize
+                'maxImgDim' => array(2500, 2500),
+                'removeProtected' => true,
+                'sizes' => array('isorig' => true, 'dims' => [], 'thumb' => 150 ),
+                'tmpDir' => "/" . MainConfig::$PATH_CONTENT_PROTECTED . "/im/tmp",
+            )
+        );
+        $files = $Upluni->init();
+
+        $chat_id = reset($arRes['items'])['c.id_theme'];
+        if(!empty($chat_id))
+        {
+            // берем только файлы этого диалога
+            $themeFiles = array();
+            foreach ($files['files'] ?: array() as $key => $val)
+            {
+                if( $val['extmeta']->idTheme == $chat_id ) {
+                    $val['files'] = array_map(
+                        function($v){ 
+                            return str_replace('/protected', '', $v); 
+                        }, 
+                        $val['files']
+                    );
+                    $themeFiles[$key] = $val;
+                }
+            }
+            $arRes['files'] = $themeFiles;
+
+            // set chat data
+            Yii::app()->session['imdata'] = array('chatId' => $chat_id);            
+        }
+
+        return $arRes;
+    }
+
+    
 }
