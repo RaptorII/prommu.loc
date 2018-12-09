@@ -1081,11 +1081,14 @@ class UserProfileEmpl extends UserProfile
                 if(!empty($arRes['phone']) && $v['phone']==$arRes['phone-code'])
                 { // регистрация через телефон
                     $arRes['userCities']['id_country'] = $v['id'];
+                    $arRes['userCities']['name'] = $v['city']; 
                     break;
                 }
                 else if($v['id']==$arGeo['country'])
                 { // регистрация через почту
                     $arRes['phone-code'] = $v['phone'];
+                    $arRes['userCities']['id_country'] = $v['id'];
+                    $arRes['userCities']['name'] = $arGeo['city']; 
                 }
             }
 
