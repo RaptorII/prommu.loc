@@ -578,58 +578,36 @@ class Share
     {
         if(!filter_var($inMail, FILTER_VALIDATE_EMAIL)) // !!! проверка формата почты
             return false;
-        
+
         if( isset($addParams['From']) ) $from = $addParams['From'];
         else $from = array('auto-mailer@prommu.com' => 'Prommu.com');
-
-//        unset($addParams['from']);
-//        $addParams = (object)$addParams;
-//        $headers[] = "Content-Type: text/html; charset=\"utf-8\"";
-//        $addParams = array_map(function ($k,$v) { return "{$k}: {$v}"; }, array_keys($addParams), $addParams);
-//        $headers = array_merge($headers, $addParams);
-//        mail($inMail, $inSubj, $inMess, join(" \r\n", $headers));
-        //."X-Mailer: PHP/" . phpversion()
-//Yii::app()->getRequest()->hostinfo
 
         $SM = Yii::app()->swiftMailer;
 
         // Get config
-        $mailHost = '127.0.0.1';
+        $mailHost = 'mail.companyreport.net';
         $mailPort = 25; // Optional
-
+        $sec = 'null';
         // New transport
-        $Transport = $SM->smtpTransport($mailHost, $mailPort);
+        $Transport = $SM->smtpTransport($mailHost, $mailPort, $sec)
+                        ->setUsername('noreply@prommu.com')
+                        ->setPassword('1I1OD6iL');
 
         $Mailer = $SM->mailer($Transport);
 
         $content = file_get_contents(Yii::app()->basePath . "/views/mails/letter.html");
         $content = str_replace('{{{BODY}}}', $inMess, $content);
+        $plainTextContent = ""; // Plain text content
 
-        // Plain text content
-        $plainTextContent = "";
-
-        // New message
-        $css = '
-            margin: 0 auto; width: 600px;
-        ';
         $Message = $SM
             ->newMessage($inSubj)
             ->setFrom($from)
-//            ->setTo(array('Zotaper@yandex.ru' => 'Test'))
-//            ->setTo(array('Zotaper@localhost.com' => 'Test'))
             ->setTo(array($inMail => ''))
-//            ->addPart($css, 'text/css')
             ->addPart($content, 'text/html')
             ->setBody($plainTextContent);
 
-//        $Message->setCc(array(array('some@address.tld' => 'The Name'),array('another@address.tld' => 'Another Name')));
         if( isset($addParams['Cc']) ) $Message->setCc($addParams['Cc']);
         if( isset($addParams['Bcc']) ) $Message->setBcc($addParams['Bcc']);
-//        if( count($headers) )
-//        {
-//            $MeHeaders = $Message->getHeaders();
-////            array_map(function ($v) use ($MeHeaders) { return $MeHeaders->addTextHeader($v); }, $headers);
-//        } // endif
 
         // Send mail
         return $Mailer->send($Message);
