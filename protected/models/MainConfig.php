@@ -60,11 +60,9 @@ class MainConfig
     public static $VIEWS_REGISTER_COMPLETE = 'page-register-complete-tpl';
     public static $VIEWS_REGISTEREX_MESSAGE = 'page-registerex-message-tpl';
     // user profile data
-    public static $VIEWS_APPLICANT = 'applicant/';
-    public static $VIEWS_EMPLOYER = 'employer/';
-    public static $VIEWS_EDIT_PROFILE = 'edit-profile';
-    public static $VIEWS_REGISTER_POPUP = 'register-popup';
-    public static $VIEWS_MY_PHOTOS = 'my-photos';
+    public static $VIEWS_EDIT_PROFILE_APPLICANT = 'page-edit-profile-applicant-tpl';
+    public static $VIEWS_EDIT_PROFILE_EMPLOYER = 'page-edit-profile-employer-tpl';
+    public static $PAGE_USER_PHOTOS = '/user/editprofile/photos';
     //
     public static $VIEWS_COMPANY_PROFILE_OWN = 'page-company-profile-own-tpl';
     public static $VIEWS_COMPANY_VACS_OWN = 'page-company-vacancies-own-tpl';
@@ -103,7 +101,6 @@ class MainConfig
     public static $VIEWS_PUBVAC_BLOCK3_LOCATION_VIEW_TPL = '_block3-loc-view-tpl';
     public static $VIEWS_PUBVAC_BLOCK3_LOCATION_EDIT_TPL = '_block3-loc-edit-tpl';
     public static $VIEWS_PUBVAC_BLOCK3_LOCATION_WRAPPER_TPL = '_block3-loc-wrapper-tpl';
-    public static $PAGE_USER_PHOTOS = '/user/editprofile/photos';
 
     public static $PAGE_INDEX = '';
     public static $PAGE_SITE_MESSAGE = '/message';

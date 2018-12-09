@@ -448,56 +448,44 @@ class UserController extends AppController
 
     public function actionEditprofile()
     {
-        !in_array(Share::$UserProfile->type, [2,3]) && $this->redirect(MainConfig::$PAGE_LOGIN); // no profile for guest
+        Share::$UserProfile->type < 1 && $this->redirect(MainConfig::$PAGE_LOGIN); // no profile for guest
 
-        $section = Yii::app()->getRequest()->getParam('section');
-        $result = array();
-        $view = $this->ViewModel->pageEditProfile;
-        $title = 'Редактирование профиля';
-
-        if($section=='photos') // раздел Мои фото
+        // save data
+        if( Yii::app()->getRequest()->isPostRequest)
         {
-            if( Yii::app()->getRequest()->getParam('del') )
-            {// del photo
-                $result = Share::$UserProfile->delProfilePhoto();
-                $s1 = $this->ViewModel->replaceInUrl('', 'del', null);
-                $this->redirect($_SERVER['HTTP_REFERER']);
-                
-            } 
-            elseif( Yii::app()->getRequest()->getParam('dm') )
-            {// сделать фото главным
-                $result = Share::$UserProfile->setPhotoAsLogo();
-                $s1 = $this->ViewModel->replaceInUrl('', 'dm', null);
-                $this->redirect($_SERVER['HTTP_REFERER']);
+            $res = Share::$UserProfile->saveProfileData();
+            if(!$res['err']) $this->redirect(MainConfig::$PAGE_PROFILE);
+        // del photo
+        } elseif( Yii::app()->getRequest()->getParam('del') )
+        {
+            $res = Share::$UserProfile->delProfilePhoto();
+            $s1 = $this->ViewModel->replaceInUrl('', 'del', null);
+            $this->redirect($_SERVER['HTTP_REFERER']);
+        // сделать фото главным
+        } elseif( Yii::app()->getRequest()->getParam('dm') )
+        {
+            $res = Share::$UserProfile->setPhotoAsLogo();
+            $s1 = $this->ViewModel->replaceInUrl('', 'dm', null);
+            $this->redirect($_SERVER['HTTP_REFERER']);
+        } // endif
+
+        $this->setBreadcrumbsEx(array('Мой профиль', MainConfig::$PAGE_PROFILE), array($title = 'Редактирование профиля', MainConfig::$PAGE_EDIT_PROFILE));
+
+        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/jquery-ui.min.js', CClientScript::POS_END);
+        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/jquery.form-validator.min.js', CClientScript::POS_END);
+        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/jquery.mask.min.js', CClientScript::POS_END);
+
+        if( Share::$UserProfile->type == 3 ){
+        }
+        else{
+            if(Yii::app()->getRequest()->getParam('ep')){
+                Yii::app()->getClientScript()->registerCssFile("/" . MainConfig::$PATH_CSS . DS . Share::$cssAsset['prof_edit_applic.css']);         
             }
-
-            $view = $this->ViewModel->pageMyPhotos;
-            $this->setBreadcrumbsEx(
-                    array('Мой профиль', MainConfig::$PAGE_PROFILE), 
-                    array($title, MainConfig::$PAGE_EDIT_PROFILE),
-                    array($title = 'Мои фото', MainConfig::$PAGE_USER_PHOTOS)
-                );
-        }
-        else
-        {
-            if( Yii::app()->getRequest()->isPostRequest ) // save data
-            {
-                $result = Share::$UserProfile->saveProfileData();
-                !$result['err'] && $this->redirect(MainConfig::$PAGE_PROFILE);
-            } 
-
-            $this->setBreadcrumbsEx(
-                    array('Мой профиль', MainConfig::$PAGE_PROFILE), 
-                    array($title, MainConfig::$PAGE_EDIT_PROFILE)
-                );
         }
 
-        $data = Share::$UserProfile->getProfileDataEdit();
-
-        $this->render(
-                $view,
-                array('viData' => $data, 'viErrorData' => $result),
-                array('htmlTitle' => $title)
+        $this->render($this->ViewModel->pageEditProfile,
+                array('viData' => Share::$UserProfile->getProfileDataEdit(), 'viErrorData' => $res),
+                array('htmlTitle' => 'Редактирование профиля')
             );
     }
 
@@ -590,44 +578,29 @@ class UserController extends AppController
     public function actionActivate()
     {
         $data = (new Auth())->activateUser();
-        
         Share::$UserProfile->type<1 && $this->redirect($data); // no profile for guest
-
-        $uid = filter_var(
-                    Yii::app()->getRequest()->getParam('uid'),
-                    FILTER_SANITIZE_NUMBER_INT
-                );
 
         $isPopup = Yii::app()->getRequest()->getParam('npopup');
         if($isPopup){
             $city = Yii::app()->getRequest()->getParam('city');
             Subdomain::popupRedirect($city,Share::$UserProfile->id);
         }
-
+    
         // save data
         if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('email') )
         {
             $res = Share::$UserProfile->saveProfileData();
             if(!$res['err']) $this->redirect(MainConfig::$PAGE_PROFILE);
         }
-
-        $view = $this->ViewModel->pageRegisterPopup;
-        if(empty($uid))
-        {
-            $view = $this->ViewModel->pageEditProfile;
-            $this->setBreadcrumbsEx(
-                array('Мой профиль', MainConfig::$PAGE_PROFILE),
-                array($title = 'Редактирование профиля', MainConfig::$PAGE_EDIT_PROFILE)
-            );       
-        }
-
+        
+        $this->setBreadcrumbsEx(
+            array('Мой профиль', MainConfig::$PAGE_PROFILE), 
+            array($title = 'Редактирование профиля', MainConfig::$PAGE_EDIT_PROFILE)
+        );
         $this->setPageTitle('Регистрация успешно завершена');
         $arResult = Share::$UserProfile->getProfileDataEdit();
 
-        $this->render(
-                $view, 
-                array('viData'=>$arResult, 'viErrorData'=>$res)
-            );
+        $this->render($this->ViewModel->pageEditProfile, array('viData'=>$arResult, 'viErrorData'=>$res));
     }
 
 

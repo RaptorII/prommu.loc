@@ -1,6 +1,12 @@
+<?
+  $bUrl = Yii::app()->baseUrl;
+  // Cropper
+  Yii::app()->getClientScript()->registerCssFile($bUrl.'/jslib/cropperjs/cropper.min.css');
+  Yii::app()->getClientScript()->registerScriptFile($bUrl.'/jslib/cropperjs/cropper.min.js', CClientScript::POS_END);
+?>
+
 <?php if(empty($_GET['uid'])): ?>
 <?php
-  $bUrl = Yii::app()->baseUrl;
   Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/phone-codes/style.css');
   Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/private/page-edit-prof-app.css');
   Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/private/page-edit-prof-app.js', CClientScript::POS_END);
