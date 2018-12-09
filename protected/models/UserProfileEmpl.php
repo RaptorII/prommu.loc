@@ -868,12 +868,7 @@ class UserProfileEmpl extends UserProfile
         if(!$id || $type!=3)
             return $arRes;
 
-        $section = filter_var(
-                            Yii::app()->getRequest()->getParam('section'),
-                            FILTER_SANITIZE_FULL_SPECIAL_CHARS
-                        );
-
-        if($section=='photos') // для страницы Мои фото этого достаточно
+        if(Yii::app()->getRequest()->getParam('ep')==1) // для страницы Мои фото этого достаточно
         {
             $arRes['userPhotos'] = Yii::app()->db->createCommand()
                             ->select('up.id, up.photo, e.logo')
