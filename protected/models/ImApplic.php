@@ -890,8 +890,8 @@ class ImApplic extends Im
                 ->select('id, title')
                 ->from('empl_vacations')
                 ->where(
-                    'id=:id AND id_user=:id_emp',
-                    array(':id'=>$vacancy,':id_emp'=>$id_emp)
+                    'id=:id',
+                    array(':id'=>$vacancy)
                 )
                 ->queryRow();       
 
