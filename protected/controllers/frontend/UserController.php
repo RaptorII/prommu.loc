@@ -1803,8 +1803,6 @@ class UserController extends AppController
                     $view = 'chats/item-personal';
                     $data = $model->getVacancyPersonal($vacancy,$id);
             
-                    //костыль на время (годен до 2021 года)
-                    $data = $model->getVacancyPersonal($vacancy,$id);
                     
                     if(Yii::app()->request->isAjaxRequest)
                     {
