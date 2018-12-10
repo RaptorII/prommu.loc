@@ -432,7 +432,10 @@
 	background: url(/theme/pic/private/add-vac-select.png) 50% no-repeat;
 	z-index: 0;
 }
-#F1compprof.edit-profile-employer .epe__label.epe__select{ padding-right: 25px }
+#F1compprof.edit-profile-employer .epe__label.epe__select{ 
+	padding-right: 25px;
+	display: block;
+}
 .epe__label-name{
 	position: absolute;
 	top: 0;

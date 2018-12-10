@@ -229,7 +229,7 @@ $(function(){
 			video.srcObject = stream;
 			video.play();
 		}
-		else{ video.src=URL.createObjectURL(stream) }
+		else{ video.srcObject = stream }
 		setTimeout(function(){
 			$mess.text('');
 			$load.fadeOut();
