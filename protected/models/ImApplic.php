@@ -868,9 +868,9 @@ class ImApplic extends Im
      public function getVacancyPersonal($vacancy, $id_app)
     {
         $arRes = array();
-        $id_emp = Share::$UserProfile->exInfo->id;
+        $id_prom = Share::$UserProfile->id;
 
-        if(!intval($vacancy) || !intval($id_app) || !intval($id_emp))
+        if(!intval($vacancy) || !intval($id_app))
             return array('error'=>true);
 
         $sql = Yii::app()->db->createCommand()
