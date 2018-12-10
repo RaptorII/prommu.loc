@@ -1802,13 +1802,7 @@ class UserController extends AppController
 
                     $view = 'chats/item-personal';
                     $data = $model->getVacancyPersonal($vacancy,$id);
-                    if(!count($data['items'])) {
-                        $chat = new ImEmpl();
-                        $props['message'] = "test";
-                        $props['new'] = $id;
-                        $props['vid'] = $vacancy;
-                        $chat->sendUserMessages($props);
-                    }
+            
                     //костыль на время (годен до 2021 года)
                     $data = $model->getVacancyPersonal($vacancy,$id);
                     
