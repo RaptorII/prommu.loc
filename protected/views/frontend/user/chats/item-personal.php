@@ -1,21 +1,19 @@
 <?
-echo "<pre>";
-print_r($viData); 
-echo "</pre>";
-	$sectionList = MainConfig::$PAGE_CHATS_LIST_VACANCIES;
-	$this->setBreadcrumbsEx(array($viData['vacancy']['title'], $sectionList . DS . $vacancy . DS . $id));
-	$this->setPageTitle($viData['vacancy']['title']);
 
-	Yii::app()->getClientScript()->registerCssFile('/theme/css/chats/item.css');
-	Yii::app()->getClientScript()->registerCssFile('/jslib/magnific-popup/magnific-popup-min.css');
-	Yii::app()->getClientScript()->registerScriptFile('/theme/js/chats/item-emp.js', CClientScript::POS_END);
-	Yii::app()->getClientScript()->registerScriptFile('/jslib/nicedit/nicEdit.js', CClientScript::POS_END);
-	Yii::app()->getClientScript()->registerScriptFile('/jslib/magnific-popup/jquery.magnific-popup.min.js', CClientScript::POS_END);
+  $sectionList = MainConfig::$PAGE_CHATS_LIST_VACANCIES;
+  $this->setBreadcrumbsEx(array($viData['vacancy']['title'], $sectionList . DS . $vacancy . DS . $id));
+  $this->setPageTitle($viData['vacancy']['title']);
+
+  Yii::app()->getClientScript()->registerCssFile('/theme/css/chats/item.css');
+  Yii::app()->getClientScript()->registerCssFile('/jslib/magnific-popup/magnific-popup-min.css');
+  Yii::app()->getClientScript()->registerScriptFile('/theme/js/chats/item-emp.js', CClientScript::POS_END);
+  Yii::app()->getClientScript()->registerScriptFile('/jslib/nicedit/nicEdit.js', CClientScript::POS_END);
+  Yii::app()->getClientScript()->registerScriptFile('/jslib/magnific-popup/jquery.magnific-popup.min.js', CClientScript::POS_END);
 ?>
 <div class="message"><? echo ($viData['error'] ? $viData['message'] : '')?></div>
 <div class="chat-item">
-	<? if(!$viData['error']): ?>
-		<a href="<?=$sectionList?>" class="chat-item__btn-link"><span><</span> Назад</a>
+  <? if(!$viData['error']): ?>
+    <a href="<?=$sectionList?>" class="chat-item__btn-link"><span><</span> Назад</a>
       <?php if( $isNew ): ?>
         <div class="theme-input">
             <?php if( $viData['themes'] ): ?>
@@ -41,7 +39,7 @@ echo "</pre>";
               <br />
               <br />
         </div>
-      <?php endif; ?>
+     <?php endif; ?>
 
       <div class='header-021'>
         <b>
@@ -151,7 +149,7 @@ echo "</pre>";
 
       <script type="text/javascript">
       <!--
-          G_VARS.idTm = '<?= $idTm ?>';
+         G_VARS.idTm = '<?=$viData['items'][0]['id_theme']?>';
           <?php if( $isNew ): ?>
             G_VARS.isNew = '<?= $isNew ?>';
           <?php endif; ?>
@@ -189,5 +187,5 @@ echo "</pre>";
               <span class="uni-delete js-hashint" title="удалить изображение"></span>
               <a href="" class="uni-link" target="_blank"></a>
       </div>
-	<?php endif; ?>
+  <?php endif; ?>
 </div>
