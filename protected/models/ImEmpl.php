@@ -1065,11 +1065,14 @@ class ImEmpl extends Im
                 ->from('chat c')
                 ->leftjoin('chat_theme ct','ct.id=c.id_theme')
                 ->where(
-                    'ct.id_vac=:id',
-                    array(':id'=>$vacancy)
+                    'ct.id_use=:id AND ct.id_usp=:id_usp',
+                    array(':id'=>$id_emp, ':id_usp'=>$id_app)
                 )
                 ->queryAll(); 
 
+        if(!count($arRes['items'])){
+            $arRes['items']['new'] = $id_app;
+        }
         // получаем файлы диалога
         $Upluni = new Uploaduni();
         $Upluni->setCustomOptions(array(
