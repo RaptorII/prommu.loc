@@ -865,12 +865,12 @@ class ImApplic extends Im
         return $arr;
     }
     
-     public function getVacancyPersonal($vacancy, $id_app)
+     public function getVacancyPersonal($vacancy, $id_emp)
     {
         $arRes = array();
-        $id_prom = Share::$UserProfile->id;
+        $id_app = Share::$UserProfile->id;
 
-        if(!intval($vacancy) || !intval($id_app))
+        if(!intval($vacancy) || !intval($id_app) || !intval($id_emp))
             return array('error'=>true);
 
         $sql = Yii::app()->db->createCommand()
@@ -883,30 +883,34 @@ class ImApplic extends Im
                 )
                 ->queryRow();
 
-        if(!isset($sql['id']))
-            return array('error'=>true);
+        // if(!isset($sql['id']))
+        //     return array('error'=>true);
 
         $arRes['vacancy'] = Yii::app()->db->createCommand()
                 ->select('id, title')
                 ->from('empl_vacations')
                 ->where(
-                    'id=:id',
-                    array(':id'=>$vacancy)
+                    'id=:id AND id_user=:id_emp',
+                    array(':id'=>$vacancy,':id_emp'=>$id_emp)
                 )
                 ->queryRow();       
 
-        if(!isset($arRes['vacancy']['id']))
-            return array('error'=>true);
+        // if(!isset($arRes['vacancy']['id']))
+        //     return array('error'=>true);
 
-        $arRes['items'] = Yii::app()->db->createCommand()
+         $arRes['items'] = Yii::app()->db->createCommand()
                 ->select('c.*')
                 ->from('chat c')
                 ->leftjoin('chat_theme ct','ct.id=c.id_theme')
                 ->where(
-                    'ct.id_vac=:id',
-                    array(':id'=>$vacancy)
+                    'ct.id_use=:id AND ct.id_usp=:id_usp',
+                    array(':id'=>$id_emp, ':id_usp'=>$id_app)
                 )
                 ->queryAll(); 
+
+        if(!count($arRes['items'])){
+            $arRes['items']['new'] = $id_emp;
+        } 
 
         // получаем файлы диалога
         $Upluni = new Uploaduni();
