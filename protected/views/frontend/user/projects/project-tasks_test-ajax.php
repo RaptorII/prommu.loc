@@ -1,3 +1,8 @@
+<?
+echo "<pre>";
+print_r($viData); 
+echo "</pre>";
+?>
 <div class="task__item-date">11.09.2018</div>
 <div class="tasks__one-date">
     <div class="task__item-city">Алабино</div>

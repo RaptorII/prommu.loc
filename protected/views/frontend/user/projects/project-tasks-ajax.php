@@ -1,3 +1,8 @@
+<?
+echo "<pre>";
+print_r($viData); 
+echo "</pre>";
+?>
 <?php if(sizeof($viData['items'])>0): ?>
 	<?php
 		foreach ($viData['items'] as $d => $date):

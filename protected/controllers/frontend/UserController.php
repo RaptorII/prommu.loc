@@ -1444,7 +1444,7 @@ class UserController extends AppController
                         return;
                     }
                     $data = $model->getProject($id);
-                    $data = $model->buildTaskPageArray($data);
+                    $data = $model->buildNewTaskPageArray($data);
                     if(Yii::app()->request->isAjaxRequest) {
                         $this->renderPartial(
                             'projects/project-tasks_test-ajax',
