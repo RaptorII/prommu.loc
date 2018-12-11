@@ -30,10 +30,12 @@
 
 .task__item-date{
     margin-top:10px;
-    font-size: 18px;
+    font-size: 20px;
+    font-weight:bold;
 }
 .task__item-city{
-    font-size: 18px;
+    font-size: 20px;
+    font-weight:bold;
 }
 .task__item-tt{
     font-size: 18px;
@@ -51,7 +53,9 @@
 }
 
 
-
+.task__table-user-1{
+    min-width:270px;
+}
 .task__table-user-2{
     font-size: 16px;
     line-height: 25px;
@@ -108,6 +112,7 @@
     box-sizing: border-box;
     border-left:1px solid #989898;
     padding-left:15px;
+    margin-bottom:30px;
 }
 
 .tasks__one-tt{
@@ -305,7 +310,7 @@
 }
 .control__panel{
     text-align: right;
-    margin-top: 5px;
+    margin-top: 15px;
 }
 
 .control__panel button{
@@ -365,10 +370,7 @@
     margin: 6px;
     display: block;
 }
-
-.tasks{
-    font-family: RobotoCondensed-Regular, verdana, arial;
-}
 .task__table-user-2{
     display:flex;
+    align-items: center;
 }

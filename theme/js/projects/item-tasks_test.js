@@ -18,7 +18,7 @@ let IndexTasks = (function () {
         $('.task__item-container').on('click', '.control__panel-add', function(e)
         {
             let type = $(this).data('type');
-            self.setControlPanel(type, this);
+            self.setControlPanelFromButton(type, this);
         });
 
 
@@ -44,6 +44,13 @@ let IndexTasks = (function () {
             let data = [];
             $('.task__item[data-type="add"]').each(function(){
 
+                let target = $(this).closest('.tasks__one-user');
+
+                let user_id = $(target).data('user-id');
+                let tt_id = $(target).data('tt-id');
+                let date = $(target).data('date-unix');
+                let project = $(target).data('project');
+
                 let task_data = [];
                 task_data['data'] = [];
 
@@ -68,7 +75,11 @@ let IndexTasks = (function () {
                 task_data['delete'] = del;
                 /*****************/
 
-                task_data['type'] = 'new';
+                task_data['event'] = 'new';;
+                task_data['user_id'] = user_id;
+                task_data['tt_id'] = tt_id;
+                task_data['date'] = date;
+                task_data['project'] = project;
 
                 data.push(task_data);
             });
@@ -77,11 +88,13 @@ let IndexTasks = (function () {
             $('textarea[data-type="change"]').each(function () {
                 console.log($(this));
                 let item = $(this).closest('.task__item');
-                let id = $(item).data('task-id');
+                let target = $(item).closest('.tasks__one-user');
 
-                let user_id = $(item).data('user-id');
-                let tt_id = $(item).data('tt-id');
-                let date = $(item).data('date-unix');
+                let id = $(item).data('task-id');
+                let user_id = $(target).data('user-id');
+                let tt_id = $(target).data('tt-id');
+                let date = $(target).data('date-unix');
+                let project = $(target).data('project');
 
                 let task_data = [];
                 task_data['data'] = [];
@@ -107,36 +120,65 @@ let IndexTasks = (function () {
                 task_data['delete'] = del;
                 /*****************/
 
-                task_data['type'] = 'change';
+                task_data['event'] = 'change';
                 task_data['task_id'] = id;
                 task_data['user_id'] = user_id;
                 task_data['tt_id'] = tt_id;
                 task_data['date'] = date;
+                task_data['project'] = project;
 
 
                 data.push(task_data);
             });
 
-            console.log(data);
+            let main = [];
+            main['project'] = $('#project_main').val();
+            main['type'] = 'task';
+            main['items'] = data;
+
         });
 
+    };
+    IndexTasks.prototype.setControlPanel = function(data){
+        if(data['items'].length>0){
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/Project',
+                data: {data: JSON.stringify(data)},
+                dataType: 'json',
+                success: function (value) {
+                    if(value.length>0){
+                        location.reload();
+                    }
+                }
+            });
+        }
     };
 
     IndexTasks.prototype.setControlPanel = function (type, e) {
         if(type=='add'){
             let template = this.getTemplate(type);
-            let target = $(e).closest('.task__item-container').find('.tasks__one-user');
+            let target = $(e).closest('.task__item-user').next('.tasks__one-user');
             $(target).append(template);
 
             this.setButtonPanel(target);
             this.setCheckboxPanel(target);
 
         }else if(type=='change'){
-            let target = $(e).closest('.task__item-container').find('.tasks__one-user');
+            let target = $(e).closest('.task__item-user').next('.tasks__one-user');
             this.setButtonPanel(target);
             this.setCheckboxPanel(target);
             this.setChangeBox(target);
         }
+    };
+
+    IndexTasks.prototype.setControlPanelFromButton = function (type, e) {
+        let template = this.getTemplate(type);
+        let target = $(e).closest('.control__panel').prev('.tasks__one-user');
+        $(target).append(template);
+
+        this.setButtonPanel(target);
+        this.setCheckboxPanel(target);
     };
 
     IndexTasks.prototype.setButtonPanel = function (e) {
