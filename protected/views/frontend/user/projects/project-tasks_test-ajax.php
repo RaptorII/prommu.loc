@@ -5,6 +5,7 @@ echo "</pre>";
 */
 ?>
 
+<?if(count($viData['items'])>0):?>
 <? foreach ($viData['items'] as $keyDate => $itemDate): ?>
     <div class="task__item-date"><?= date('d.m.Y', $keyDate) ?></div>
     <div class="tasks__one-date">
@@ -17,7 +18,12 @@ echo "</pre>";
                     <div class="task__item-tt">
                         <?= $viData['points'][$keyTT]['name'] ?>,
                         <?= $viData['points'][$keyTT]['index_full'] ?>
-                        <b class="js-g-hashint js-get-map tooltipstered"></b>
+                        <b class="js-g-hashint js-get-target tooltipstered"
+                           data-map-project="<?=$project?>"
+                           data-map-user=""
+                           data-map-point="<?=$keyTT?>"
+                           data-map-date="<?=$keyDate?>"
+                        ></b>
                     </div>
                     <div class="tasks__one-tt">
 
@@ -169,6 +175,11 @@ echo "</pre>";
 <? endforeach; ?>
 
     <input type="hidden" id="project_main" value="<?= $project ?>">
+
+
+    <?else:?>
+    <br><p class="center">Задачи отсутствуют</p>
+    <?endif;?>
 <? /*
 
 
