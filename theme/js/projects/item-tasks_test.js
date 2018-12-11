@@ -41,9 +41,10 @@ let IndexTasks = (function () {
 
         $('.tasks').on('click', '.control__panel-save', function()
         {
-            let data = [];
+            let data = {};
+            var i=0;
             $('.task__item[data-type="add"]').each(function(){
-
+                data[i] = {};
                 let target = $(this).closest('.tasks__one-user');
 
                 let user_id = $(target).data('user-id');
@@ -51,42 +52,38 @@ let IndexTasks = (function () {
                 let date = $(target).data('date-unix');
                 let project = $(target).data('project');
 
-                let task_data = [];
-                task_data['data'] = [];
-
                 /*****************/
                 let title = $(this).find('.name .control__text-area').val();
-                task_data['data']['title'] = title;
+                data[i]['title'] = title;
                 let descr = $(this).find('.descr .control__text-area').val();
-                task_data['data']['descr'] = descr;
+                data[i]['descr'] = descr;
                 let status = $(this).find('.status .control__select-area').val();
-                task_data['data']['status'] = status;
+                data[i]['status'] = status;
                 /*****************/
 
                 /*****************/
                 let panel = $(this).next();
                 let all_date = $(panel).find('[name="all_date"]').is(':checked');
-                task_data['all_date'] = all_date;
+                data[i]['all_date'] = all_date;
 
                 let all_users = $(panel).find('[name="all_users"]').is(':checked');
-                task_data['all_users'] = all_users;
+                data[i]['all_users'] = all_users;
 
                 let del = $(panel).find('[name="delete"]').is(':checked');
-                task_data['delete'] = del;
+                data[i]['delete'] = del;
                 /*****************/
 
-                task_data['event'] = 'new';;
-                task_data['user_id'] = user_id;
-                task_data['tt_id'] = tt_id;
-                task_data['date'] = date;
-                task_data['project'] = project;
-
-                data.push(task_data);
+                data[i]['event'] = 'new';;
+                data[i]['user_id'] = user_id;
+                data[i]['tt_id'] = tt_id;
+                data[i]['date'] = date;
+                data[i]['project'] = project;
+                i++;
             });
 
             /*******Ищем изменяемые******/
             $('textarea[data-type="change"]').each(function () {
-                console.log($(this));
+                data[i] = {};
                 let item = $(this).closest('.task__item');
                 let target = $(item).closest('.tasks__one-user');
 
@@ -96,51 +93,49 @@ let IndexTasks = (function () {
                 let date = $(target).data('date-unix');
                 let project = $(target).data('project');
 
-                let task_data = [];
-                task_data['data'] = [];
 
                 /*****************/
                 let title = $(item).find('.name .control__text-area').val();
-                task_data['data']['title'] = title;
+                data[i]['title'] = title;
                 let descr = $(item).find('.descr .control__text-area').val();
-                task_data['data']['descr'] = descr;
+                data[i]['descr'] = descr;
                 let status = $(item).find('.status .control__select-area').val();
-                task_data['data']['status'] = status;
+                data[i]['status'] = status;
                 /*****************/
 
                 /*****************/
                 let panel = $(item).next();
                 let all_date = $(panel).find('[name="all_date"]').is(':checked');
-                task_data['all_date'] = all_date;
+                data[i]['all_date'] = all_date;
 
                 let all_users = $(panel).find('[name="all_users"]').is(':checked');
-                task_data['all_users'] = all_users;
+                data[i]['all_users'] = all_users;
 
                 let del = $(panel).find('[name="delete"]').is(':checked');
-                task_data['delete'] = del;
+                data[i]['delete'] = del;
                 /*****************/
 
-                task_data['event'] = 'change';
-                task_data['task_id'] = id;
-                task_data['user_id'] = user_id;
-                task_data['tt_id'] = tt_id;
-                task_data['date'] = date;
-                task_data['project'] = project;
-
-
-                data.push(task_data);
+                data[i]['event'] = 'change';
+                data[i]['task_id'] = id;
+                data[i]['user_id'] = user_id;
+                data[i]['tt_id'] = tt_id;
+                data[i]['date'] = date;
+                data[i]['project'] = project;
+                i++;
             });
 
-            let main = [];
+            let main = {};
             main['project'] = $('#project_main').val();
             main['type'] = 'task';
             main['items'] = data;
+            self.getAjax(main);
 
         });
 
     };
-    IndexTasks.prototype.setControlPanel = function(data){
-        if(data['items'].length>0){
+    IndexTasks.prototype.getAjax = function(data){
+        console.log(data);
+        //if(data['items'].length>0){
             $.ajax({
                 type: 'POST',
                 url: '/ajax/Project',
@@ -152,7 +147,7 @@ let IndexTasks = (function () {
                     }
                 }
             });
-        }
+        //}
     };
 
     IndexTasks.prototype.setControlPanel = function (type, e) {
