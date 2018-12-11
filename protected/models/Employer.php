@@ -314,7 +314,7 @@ class Employer extends ARModel
             --   INNER JOIN empl_attribs ea ON ea.id_vac = e.id
              
               {$inParams['filter']}
-              ORDER BY e.id DESC 
+              ORDER BY e.mdate DESC, e.id DESC 
               LIMIT {$inParams['offset']}, {$inParams['limit']}
             ) t1 ON t1.id = e.id
             
@@ -323,7 +323,7 @@ class Employer extends ARModel
             LEFT JOIN user_metro um ON um.id_us = e.id_user
             INNER JOIN user u ON u.id_user = e.id_user AND u.ismoder = 1  
             LEFT JOIN user_attr_dict d ON d.id = e.type
-            ORDER BY e.id DESC";
+            ORDER BY e.mdate DESC, e.id DESC";
         $res = Yii::app()->db->createCommand($sql);
 
         try
