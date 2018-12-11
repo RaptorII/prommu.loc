@@ -266,9 +266,9 @@ class ProjectTask extends CActiveRecordBehavior{
 
 		foreach ($arr['items'] as $v)
 		{
-			$arTask['user'] = filter_var($arr['user_id'],FILTER_SANITIZE_NUMBER_INT);
-			$arTask['point'] = filter_var($arr['tt_id'],FILTER_SANITIZE_NUMBER_INT);
-			$arTask['date'] = filter_var($arr['date'],FILTER_SANITIZE_NUMBER_INT);
+			$arTask['user'] = filter_var($v['user_id'],FILTER_SANITIZE_NUMBER_INT);
+			$arTask['point'] = filter_var($v['tt_id'],FILTER_SANITIZE_NUMBER_INT);
+			$arTask['date'] = filter_var($v['date'],FILTER_SANITIZE_NUMBER_INT);
 			$arTask['name'] = filter_var($v['title'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 			$arTask['text'] = filter_var($v['descr'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 			$arTask['status'] = filter_var($v['status'],FILTER_SANITIZE_NUMBER_INT);
@@ -295,8 +295,10 @@ class ProjectTask extends CActiveRecordBehavior{
 			// новая задача
 			if($v['event']=='new') 
 			{
+				$arT = $arTask;
+				$arT['date'] = date('Y-m-d', $arTask['date']);
 				$sql = Yii::app()->db->createCommand()
-								->insert('project_task', $arTask);
+								->insert('project_task', $arT);
 				if($sql!=false)
 				{
 					$id = Yii::app()->db->createCommand()
@@ -312,8 +314,10 @@ class ProjectTask extends CActiveRecordBehavior{
 			// изменение существующей задачи
 			if($v['event']=='change' && $id>0) 
 			{
+				$arT = $arTask;
+				$arT['date'] = date('Y-m-d', $arTask['date']);
 				$sql = Yii::app()->db->createCommand()
-								->update('project_task', $arTask, 'id=:id', [':id' => $id]);
+								->update('project_task', $arT, 'id=:id', [':id' => $id]);
 				if($sql!=false)
 				{
 					$arRes['error'] = false;
