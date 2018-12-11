@@ -106,7 +106,7 @@ class ProjectIndex extends CActiveRecordBehavior{
 			}
 		}
 		// груповая запись в project_city
-		$this->multipleInsert(['project_city'=>$arInsert]);
+		Share::multipleInsert(['project_city'=>$arInsert]);
 	}
 	/**
 	* @param $prj number OR array - project ID
@@ -518,20 +518,6 @@ class ProjectIndex extends CActiveRecordBehavior{
 				'location' => $this->buildIndexArray($sql),
 				'filter' => $this->buildIndexFilterArray($sql)
 			);
-	}
-	/**
-	 * 	@param $arData - array(table => data)
-	 *  запись в одно обращение
-	 */
-	public function multipleInsert($arData)
-	{
-		foreach ($arData as $table => $arInsert)
-			if(count($arInsert))
-			{
-				Yii::app()->db->schema->commandBuilder
-					->createMultipleInsertCommand($table, $arInsert)
-					->execute();
-			}
 	}
 	/**
 	 * @param $arr - array('adres','house','building','construction','corps')

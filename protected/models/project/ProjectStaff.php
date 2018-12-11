@@ -64,7 +64,7 @@ class ProjectStaff extends CActiveRecordBehavior{
 							'phone' => ''
 						);
 			}
-			$this->multipleInsert(['project_user' => $arInsert]);
+			Share::multipleInsert(['project_user' => $arInsert]);
 		}
 
 		if(strlen(reset($arr['inv-name']))) { // приглашенный персонал
@@ -115,7 +115,7 @@ class ProjectStaff extends CActiveRecordBehavior{
 												);
 			}
 			// делаем запись в user
-			$this->multipleInsert(['user' => $arInsertU]);
+			Share::multipleInsert(['user' => $arInsertU]);
 			$id_user = Yii::app()->db->createCommand()
 										->select("MAX(id_user)")
 										->from('user')
@@ -128,7 +128,7 @@ class ProjectStaff extends CActiveRecordBehavior{
 				$arInsertPU[$i]['user'] = $id_user;
 			}
 			// делаем запись в resume
-			$this->multipleInsert(['resume' => $arInsertR]);
+			Share::multipleInsert(['resume' => $arInsertR]);
 			$pid = Yii::app()->db->createCommand()
 										->select("MAX(id)")
 										->from('resume')
@@ -137,7 +137,7 @@ class ProjectStaff extends CActiveRecordBehavior{
 			for($i = 0; $i < $nU; $i ++) // готовим id_resume
 				$arInsertC[$i]['id_resume'] = ++$pid;
 
-			$this->multipleInsert(array(
+			Share::multipleInsert(array(
 						'user_city' => $arInsertC,
 						'project_user' => $arInsertPU
 					));
@@ -631,18 +631,4 @@ class ProjectStaff extends CActiveRecordBehavior{
 			$arr['fullname'] = $arr['lastname'] . ' ' . $arr['firstname'];
 			return $arr;
     }
-		/**
-		 * 	@param $arData - array(table => data)
-		 *  запись в одно обращение
-		 */
-		public function multipleInsert($arData)
-		{
-			foreach ($arData as $table => $arInsert)
-				if(count($arInsert))
-				{
-					Yii::app()->db->schema->commandBuilder
-						->createMultipleInsertCommand($table, $arInsert)
-						->execute();
-				}
-		}
 }

@@ -251,4 +251,164 @@ class ProjectTask extends CActiveRecordBehavior{
 
 		return $arRes;
 	}
+	/**
+	 * @param $arr - array [project,user_id,tt_id,date,items=[[event, task_id, all_date, all_users, delete, title, descr, status]]       
+	 * @return array ['error','data']
+	 * обработчик событий  заданий
+	 */
+	public function taskAjaxHandler($arr)
+	{
+		$arRes = ['error' => true, 'data' => []];
+		$arTask['project'] = filter_var($arr['project'],FILTER_SANITIZE_NUMBER_INT);
+		$arTask['user'] = filter_var($arr['user_id'],FILTER_SANITIZE_NUMBER_INT);
+		$arTask['point'] = filter_var($arr['tt_id'],FILTER_SANITIZE_NUMBER_INT);
+		$arTask['date'] = filter_var($arr['date'],FILTER_SANITIZE_NUMBER_INT);
+
+		if(!count($arr['items']) || !$arTask['project'] || !$arTask['user'] 
+			 || !$arTask['point'] || !$arTask['date'])
+			return $arRes;
+
+		foreach ($arr['items'] as $v)
+		{
+			$arTask['name'] = filter_var($v['title'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$arTask['text'] = filter_var($v['descr'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$arTask['status'] = filter_var($v['status'],FILTER_SANITIZE_NUMBER_INT);
+			$id = filter_var($v['task_id'],FILTER_SANITIZE_NUMBER_INT);
+
+			// удаление задачи
+			if($v['delete']==true && $id>0)
+			{
+				$sql = Yii::app()->db->createCommand()
+								->delete('project_task','id=:id', [':id' => $id]);
+				if($sql!=false)
+				{
+					$arRes['error'] = false;
+					$arRes['data']['deleted'][] = $id;
+				}
+				continue;
+			}
+
+			// новая задача
+			if($v['event']=='new') 
+			{
+				$sql = Yii::app()->db->createCommand()
+								->insert('project_task', $arTask);
+				if($sql!=false)
+				{
+					$id = Yii::app()->db->createCommand()
+									->select("MAX(id)")
+									->from('project_task')
+									->queryScalar();
+
+					$arRes['error'] = false;
+					$arRes['data']['added'][] = $id;
+				}
+			}
+
+			// изменение существующей задачи
+			if($v['event']=='change' && $id>0) 
+			{
+				$sql = Yii::app()->db->createCommand()
+								->update('project_task', $arTask, 'id=:id', [':id' => $id]);
+				if($sql!=false)
+				{
+					$arRes['error'] = false;
+					$arRes['data']['changed'][] = $id;
+				}
+			}
+			// дублирование на все даты точки
+			if($v['all_date']==true) 
+			{
+				$this->taskToAllDates($arTask);
+				$arRes['error'] = false;
+				$arRes['data']['all_date'][] = $id;
+			}
+			// дублирование на всех привязанных пользователей
+			if($v['all_users']==true) 
+			{
+				$this->taskToAllUsers($arTask);
+				$arRes['error'] = false;
+				$arRes['data']['all_users'][] = $id;
+			}
+		}
+
+		return $arRes;
+	}
+	/**
+	 * @param $arr - array [project,user,point,date,name,text,status]
+	 * @return bool
+	 */
+	public function taskToAllDates($arr)
+	{
+		$arInsert = array();
+		$date = $arr['date'];
+		$day = 60*60*24;
+
+		$sql = Yii::app()->db->createCommand()
+						->select("bdate, edate")
+						->from('project_city')
+						->where(
+							'project=:prj AND point=:pnt',
+							[ ':prj' => $arr['project'], ':pnt' => $arr['point'] ]
+						)
+						->queryRow();
+
+		
+		$bdate = strtotime($sql['bdate']);
+		$edate = strtotime($sql['edate']);
+
+		do{
+			if($bdate!=$date)
+			{
+				$arInsert[] = array(
+						'project' => $arr['project'],
+						'user' => $arr['user'],
+						'point' => $arr['point'],
+						'name' => $arr['name'],
+						'text' => $arr['text'],
+						'date' => date('Y-m-d', $bdate),
+						'status' => $arr['status']
+					);
+			}
+			$bdate += $day;
+		}
+		while($bdate <= $edate);
+		// добавление одним запросом
+		Share::multipleInsert(['project_task'=>$arInsert]);
+	}
+	/**
+	 * @param $arr - array [project,user,point,date,name,text,status]
+	 * @return bool
+	 */
+	public function taskToAllUsers($arr)
+	{
+		$arInsert = array();
+		$user = $arr['user'];
+		$sql = Yii::app()->db->createCommand() // все юзеры, привязаные к точке
+			->select("user")
+			->from('project_binding')
+			->where(
+				'project=:prj AND point=:pnt',
+				[ ':prj' => $arr['project'], ':pnt' => $arr['point'] ]
+			)
+			->queryAll();
+
+		foreach ($sql as $v)
+		{
+			if($v['user'] != $user)
+			{
+				$arInsert[] = array(
+						'project' => $arr['project'],
+						'user' => $v['user'],
+						'point' => $arr['point'],
+						'name' => $arr['name'],
+						'text' => $arr['text'],
+						'date' => date('Y-m-d', $arr['date']),
+						'status' => $arr['status']
+					);
+			}
+		}
+		// добавление одним запросом
+		Share::multipleInsert(['project_task'=>$arInsert]);
+	}
 }

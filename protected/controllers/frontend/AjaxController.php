@@ -887,7 +887,8 @@ class AjaxController extends AppController
                 case 'GET':
                     if($data['type']==='coordinates') // получение координат передвижения С
                         $result = $model->getСoordinatesAjax($data);
-                    if($data['type']==='userdata') {
+                    if($data['type']==='userdata')
+                    {
                         $result = $model->getUserTasks($data);
                         $user = intval($data['user']);
                         if($user) {
@@ -907,6 +908,10 @@ class AjaxController extends AppController
                         )
                     )
                         $result = $model->changeTask($data); 
+                    if($data['type']==='task')
+                    {
+                        $result = $model->taskAjaxHandler($data); 
+                    }
                     break;
             }
         }

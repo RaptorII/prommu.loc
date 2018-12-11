@@ -794,4 +794,18 @@ class Share
 
         return $resDate;
     }
+    /**
+     *  @param $arData - array(table => data)
+     *  запись в одно обращение
+     */
+    public static function multipleInsert($arData)
+    {
+        foreach ($arData as $table => $arInsert)
+            if(count($arInsert))
+            {
+                Yii::app()->db->schema->commandBuilder
+                    ->createMultipleInsertCommand($table, $arInsert)
+                    ->execute();
+            }
+    }
 }
