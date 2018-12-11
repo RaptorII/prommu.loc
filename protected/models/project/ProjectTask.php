@@ -276,8 +276,10 @@ class ProjectTask extends CActiveRecordBehavior{
 			$id = filter_var($v['task_id'],FILTER_SANITIZE_NUMBER_INT);
 
 			// удаление задачи
-			if($v['delete']==true && $id>0)
+			if($v['delete']==true)
 			{
+				if(!$id) continue;
+
 				$sql = Yii::app()->db->createCommand()
 								->delete('project_task','id=:id', [':id' => $id]);
 				if($sql!=false)
