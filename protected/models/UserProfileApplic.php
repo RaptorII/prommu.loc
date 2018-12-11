@@ -278,10 +278,12 @@ class UserProfileApplic extends UserProfile
             $pathinfo = pathinfo(Yii::app()->session['uplLogo']['file']);
 
             Yii::app()->db->createCommand()
-                ->update('resume', array(
-                    'photo' => $pathinfo['filename'],
-                ), 'id = :id', array(':id' => $id_resume));
-
+                ->update(
+                    'resume', 
+                    ['photo' => $pathinfo['filename'], 'ismoder' => 0],
+                    'id_user = :id_user', 
+                    [':id_user' => $id]
+                );
 
             Yii::app()->db->createCommand()
                 ->insert('user_photos', array(
@@ -291,36 +293,16 @@ class UserProfileApplic extends UserProfile
                     'photo' => $pathinfo['filename'],
                 ));
 
-
-            $pathinfo = pathinfo($cropRes['file']);
-
-            $cropRes['idfile'] = $pathinfo['filename'];
-          
-        $link = 'http://' . MainConfig::$SITE . '/admin/site/PromoEdit'. DS .$id;
-        $message = sprintf("Пользователь <a href='%s'>%s</a> изменил данные профиля.
-            <br />
-            Изменены поля: Фотография профиля|
-            <br />
-            Перейти на модерацию соискателя <a href='%s'>по ссылке</a>.",
-            'https://' . MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $id,
-            $id,
-           $link
-        );
-      
-        Share::sendmail("mk0630733719@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);
-        Share::sendmail("susgresk@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);  
-        
-        $res = Yii::app()->db->createCommand()
+            Yii::app()->db->createCommand()
                 ->update('user', array(
                     'ismoder' => 0,
                 ), 'id_user=:id_user', array(':id_user' => $id));
 
-        $res = Yii::app()->db->createCommand()
-                ->update('resume', array(
-                    'ismoder' => 0,
-                ), 'id_user=:id_user', array(':id_user' => $id));
 
-
+            $pathinfo = pathinfo($cropRes['file']);
+            $cropRes['idfile'] = $pathinfo['filename'];
+          
+            Mailing::send('EMAIL_CHANGE_PROFILE_LOGO', ['id_user'=>$id], 2);
         }
         else
         {
