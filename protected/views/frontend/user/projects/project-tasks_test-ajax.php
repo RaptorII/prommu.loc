@@ -1,4 +1,4 @@
-<?/*
+<? /*
 echo "<pre>";
 print_r($viData);
 echo "</pre>";
@@ -6,7 +6,7 @@ echo "</pre>";
 ?>
 
 <? foreach ($viData['items'] as $keyDate => $itemDate): ?>
-    <div class="task__item-date"><?=date('d.m.Y', $keyDate)?></div>
+    <div class="task__item-date"><?= date('d.m.Y', $keyDate) ?></div>
     <div class="tasks__one-date">
 
         <? foreach ($itemDate as $keyCity => $itemCity): ?>
@@ -33,7 +33,7 @@ echo "</pre>";
 
                                     <div class="task__table-cell task__table-user border task__table-user-2">
                                         Кол-во задач:
-                                        <?$tasksCount = count($viData['tasks'][$keyDate][$keyTT][$keyUser]) ?>
+                                        <? $tasksCount = count($viData['tasks'][$keyDate][$keyTT][$keyUser]) ?>
                                         <span class="task__table-user-task-ok">
                                             <? if ($tasksCount > 0): ?>
                                                 <?= $tasksCount ?>
@@ -63,7 +63,8 @@ echo "</pre>";
                                 </div>
 
                                 <div class="tasks__one-user" data-user-id='<?= $keyUser ?>'
-                                     data-tt-id='<?= $keyTT ?>' data-date-unix='<?= $keyDate ?>' data-project='<?=$project?>'>
+                                     data-tt-id='<?= $keyTT ?>' data-date-unix='<?= $keyDate ?>'
+                                     data-project='<?= $project ?>'>
                                     <? foreach ($itemUser as $keyTask => $itemTask): ?>
                                         <div data-task-id='<?= $keyTask ?>' data-type="old" class="task__item">
                                             <table class="task__table">
@@ -78,21 +79,26 @@ echo "</pre>";
                                                 <tr>
                                                     <td class="name">
                                                         <div class="task__table-cell border">
-                                                            <?=$itemTask['name']?>
+                                                            <?= $itemTask['name'] ?>
                                                         </div>
                                                     </td>
                                                     <td class="descr">
                                                         <div class="task__table-cell border task__table-index">
-                                                            <?=$itemTask['text']?>
+                                                            <?= $itemTask['text'] ?>
                                                         </div>
                                                     </td>
                                                     <td class="status">
+
                                                         <div class="task__table-cell border">
-                                        <span class="tasks__status-work tasks__status">
-                                            <span class="tasks__status-circle">&#8226;</span>
-                                            <span class="status__active">В работе</span>
-                                        </span>
+
+                                                            <span class="tasks__status-<?=$itemTask['status']?> tasks__status">
+                                                                <span class="tasks__status-circle">&#8226;</span>
+                                                                <span class="status__active">
+                                                                    <?=$arStatus[$itemTask['status']];?>
+                                                                </span>
+                                                            </span>
                                                         </div>
+
                                                     </td>
                                                 </tr>
                                                 </tbody>
@@ -157,7 +163,7 @@ echo "</pre>";
     </div>
 <? endforeach; ?>
 
-<input type="hidden" id="project_main" value="<?=$project?>">
+    <input type="hidden" id="project_main" value="<?= $project ?>">
 <? /*
 
 

@@ -133,19 +133,19 @@
 
 
 
-.tasks__status-work{
+.tasks__status-0{
 
 }
-.tasks__status-expectation{
+.tasks__status-1{
     color:#c3b379;
 }
-.tasks__status-ready{
+.tasks__status-3{
     color:#5EA248;
 }
-.tasks__status-revision {
+.tasks__status-2 {
     color: #DA3734;
 }
-.tasks__status-canceled{
+.tasks__status-4{
     color:red;
 }
 .tasks__status-circle{

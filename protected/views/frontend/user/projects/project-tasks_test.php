@@ -108,6 +108,14 @@ $arFilterData = [
         ],
     ]
 ];
+
+$arStatus = [
+    '0'=>'Ожидание',
+    '1'=>'В работе',
+    '2'=>'Доработка',
+    '3'=>'Готова',
+    '4'=>'Отменена'
+];
 ?>
 <? /* ?>
 <pre style="height:100px;cursor:pointer" onclick="$(this).css({height:'inherit'})">
