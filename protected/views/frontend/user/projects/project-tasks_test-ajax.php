@@ -65,16 +65,21 @@ echo "</pre>";
                                 <div class="tasks__one-user" data-user-id='<?= $keyUser ?>'
                                      data-tt-id='<?= $keyTT ?>' data-date-unix='<?= $keyDate ?>'
                                      data-project='<?= $project ?>'>
+                                    <? $taskcount = 0; ?>
                                     <? foreach ($itemUser as $keyTask => $itemTask): ?>
+
                                         <div data-task-id='<?= $keyTask ?>' data-type="old" class="task__item">
                                             <table class="task__table">
-                                                <thead>
-                                                <tr>
-                                                    <th class="name">Название</th>
-                                                    <th class="descr">Описание</th>
-                                                    <th class="status">Статус</th>
-                                                </tr>
-                                                </thead>
+                                                <? if ($taskcount == 0): ?>
+                                                    <?$taskcount++;?>
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="name">Название</th>
+                                                        <th class="descr">Описание</th>
+                                                        <th class="status">Статус</th>
+                                                    </tr>
+                                                    </thead>
+                                                <? endif; ?>
                                                 <tbody>
                                                 <tr>
                                                     <td class="name">
@@ -91,10 +96,10 @@ echo "</pre>";
 
                                                         <div class="task__table-cell border">
 
-                                                            <span class="tasks__status-<?=$itemTask['status']?> tasks__status">
+                                                            <span class="tasks__status-<?= $itemTask['status'] ?> tasks__status">
                                                                 <span class="tasks__status-circle">&#8226;</span>
                                                                 <span class="status__active">
-                                                                    <?=$arStatus[$itemTask['status']];?>
+                                                                    <?= $arStatus[$itemTask['status']]; ?>
                                                                 </span>
                                                             </span>
                                                         </div>
