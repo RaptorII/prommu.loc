@@ -84,6 +84,7 @@ let IndexTasks = (function () {
             /*******Ищем изменяемые******/
             $('textarea[data-type="change"]').each(function () {
                 data[i] = {};
+
                 let item = $(this).closest('.task__item');
                 let target = $(item).closest('.tasks__one-user');
 
