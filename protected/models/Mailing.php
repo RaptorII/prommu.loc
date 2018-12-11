@@ -18,7 +18,7 @@ class Mailing
 	// набор параметров для события, которые пото можно перенести
 	public static $PARAMS = array(
 		'EMAIL_CHANGE_PROFILE_LOGO' => array( // собитие изменения лого
-			'receivers' => "mk0630733719@gmail.com,susgresk@gmail.com",
+			'receivers' => 'derevyanko977@gmail.com'//"mk0630733719@gmail.com,susgresk@gmail.com",
 			'title' => "Prommu.com Изменение профиля юзера #ID_USER#",
 			'text' => "Пользователь <a href='#LINK_PROFILE#'>#ID_USER#</a> изменил данные профиля.<br/>Изменены поля: Логотип компании|<br/>Перейти на модерацию соискателя <a href='#LINK_PROFILE_ADMIN#'>по ссылке</a>.",
 			'params' => array(
