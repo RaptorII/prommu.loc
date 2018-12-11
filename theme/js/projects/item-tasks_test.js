@@ -54,11 +54,11 @@ let IndexTasks = (function () {
 
                 /*****************/
                 let title = $(this).find('.name .control__text-area').val();
-                data[i]['title'] = title;
+                data[i]['title'] = ''+title;
                 let descr = $(this).find('.descr .control__text-area').val();
-                data[i]['descr'] = descr;
+                data[i]['descr'] = ''+descr;
                 let status = $(this).find('.status .control__select-area').val();
-                data[i]['status'] = status;
+                data[i]['status'] = ''+status;
                 /*****************/
 
                 /*****************/
@@ -97,11 +97,11 @@ let IndexTasks = (function () {
 
                 /*****************/
                 let title = $(item).find('.name .control__text-area').val();
-                data[i]['title'] = title;
+                data[i]['title'] = ''+title;
                 let descr = $(item).find('.descr .control__text-area').val();
-                data[i]['descr'] = descr;
+                data[i]['descr'] = ''+descr;
                 let status = $(item).find('.status .control__select-area').val();
-                data[i]['status'] = status;
+                data[i]['status'] = ''+status;
                 /*****************/
 
                 /*****************/
@@ -136,19 +136,19 @@ let IndexTasks = (function () {
     };
     IndexTasks.prototype.getAjax = function(data){
         console.log(data);
-        //if(data['items'].length>0){
+        if(data){
             $.ajax({
                 type: 'POST',
                 url: '/ajax/Project',
                 data: {data: JSON.stringify(data)},
                 dataType: 'json',
                 success: function (value) {
-                    if(value.length>0){
+                    if(value){
                         location.reload();
                     }
                 }
             });
-        //}
+        }
     };
 
     IndexTasks.prototype.setControlPanel = function (type, e) {
