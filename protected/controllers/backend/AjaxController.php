@@ -428,4 +428,28 @@ class AjaxController extends CController {
 
     echo CJSON::encode($result);
   }
+  /**
+   * 
+   */
+  public function actionSettings()
+  {
+    $arRes = array('error'=>true,'message'=>'Ошибка');
+    if (Yii::app()->user->isGuest)
+      return $arRes;
+
+    $event = Yii::app()->getRequest()->getParam('event');
+    $value = Yii::app()->getRequest()->getParam('value');
+
+    if($event=='clearcache' && $value)
+    {
+      $cache = Yii::app()->cache->flush();
+      if($cache)
+      {
+        $result['error'] = false;
+        $result['message'] = 'Весь кеш успешно удален';
+      }
+    }
+
+    echo CJSON::encode($result);
+  }
 }

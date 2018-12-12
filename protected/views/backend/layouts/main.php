@@ -50,6 +50,7 @@
   <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
   <link rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css">
   <script src="<?php echo Yii::app()->request->baseUrl; ?>/plugins/jQuery/jquery-2.2.3.min.js"></script>
+  <script src="<?php echo Yii::app()->request->baseUrl; ?>/js/main.js"></script>
   <script language="JavaScript" src="/js/topmenu_bo.js"></script>
   <?php
     $title = CHtml::encode($this->pageTitle);
@@ -675,6 +676,24 @@
           <a href="<?=$hUrl?>ideas">
             <i class="glyphicon glyphicon-leaf"></i>
             <span>Идеи/Предложения</span>
+          </a>
+        </li>
+        <?php
+        // Settings
+        ?>
+        <li class="<?=($curId=='settings'?'active':'')?>">
+          <a href="<?=$hUrl?>settings">
+            <i class="glyphicon glyphicon-cog"></i>
+            <span>Настройки сайта</span>
+          </a>
+        </li>
+        <?php
+        // Notifications
+        ?>
+        <li class="<?=($curId=='notifications'?'active':'')?>">
+          <a href="<?=$hUrl?>notifications">
+            <i class="glyphicon glyphicon-send"></i>
+            <span>Уведомления</span>
           </a>
         </li>
       </ul>

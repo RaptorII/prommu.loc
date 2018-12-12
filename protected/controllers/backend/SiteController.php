@@ -1783,4 +1783,30 @@ class SiteController extends Controller
             $this->render('section', array()); 
         }
     }
+    /**
+     *      Раздел настроек
+     */
+    public function actionSettings()
+    {
+        if(self::isAuth())
+        {
+            $title = 'Настройки';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('1'=>$title);    
+            $this->render('settings/index', array('data' => $data));
+        }
+    }
+    /**
+     *      Раздел уведомлений
+     */
+    public function actionNotifications()
+    {
+        if(self::isAuth()) 
+        {
+            $title = 'Уведомления';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('1'=>$title);   
+            $this->render('notifications/index', array('data' => $data));
+        }
+    }
 }

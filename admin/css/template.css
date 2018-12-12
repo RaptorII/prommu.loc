@@ -1,0 +1,117 @@
+#tablist{
+	background-color: #222d32;
+}
+#tablist li{
+
+}
+#tablist a{
+	font-weight: bold;
+	color: #b8c7ce;
+	border-left: 3px solid transparent;      
+}
+#tablist .active a,
+#tablist a:hover{
+	color: #fff;
+	background: #1e282c;
+	border-left-color: #3c8dbc;
+}
+.settings h4{
+	font-size: 18px;
+}
+.btn-success{
+	min-width: 150px;
+	min-height: 34px;
+}
+.btn-loading {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 20px;
+}
+.btn-loading div {
+  position: absolute;
+  top: 5px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #fff;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.btn-loading div:nth-child(1) {
+  left: 6px;
+  animation: btn-loading1 0.6s infinite;
+}
+.btn-loading div:nth-child(2) {
+  left: 6px;
+  animation: btn-loading2 0.6s infinite;
+}
+.btn-loading div:nth-child(3) {
+  left: 26px;
+  animation: btn-loading2 0.6s infinite;
+}
+.btn-loading div:nth-child(4) {
+  left: 45px;
+  animation: btn-loading3 0.6s infinite;
+}
+@keyframes btn-loading1 {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+@keyframes btn-loading3 {
+  0% { transform: scale(1); }
+  100% { transform: scale(0); }
+}
+@keyframes btn-loading2 {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(19px, 0); }
+}
+/*
+*   Notifications
+*/
+.alert.success{
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
+.alert.danger{
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+.alert.info{
+  color: #31708f;
+  background-color: #d9edf7;
+  border-color: #bcdff1;
+}
+.alert.warning{
+  color: #8a6d3b;
+  background-color: #fcf8e3;
+  border-color: #faf2cc;
+}
+/*
+*   bs-callout
+*/
+.bs-callout {
+  padding: 10px;
+  margin: 20px 0;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-radius: 3px;
+  font-size: 16px;
+}
+.bs-callout-success {
+  border-left-color: #3c763d;
+  background-color: #dff0d8;
+}
+.bs-callout-danger {
+  border-left-color: #a94442;
+  background-color: #f2dede;
+}
+.bs-callout-info {
+  border-left-color: #31708f;
+  background-color: #d9edf7;
+}
+.bs-callout-warning {
+  border-left-color: #8a6d3b;
+  background-color: #faf2cc;
+}

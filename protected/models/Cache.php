@@ -24,7 +24,7 @@ class Cache
      * @param $time number - time cache (default - 1 hour )
      * Устанавливаем кеш страницы
      */
-    public static function setData($data, $time = 3600)
+    public static function setData($data, $time = 1800)
     {
         if(empty($data['id']) || empty($data['data']))
             return false;
