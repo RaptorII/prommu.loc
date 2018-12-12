@@ -1422,20 +1422,23 @@ class UserController extends AppController
                 case 'tasks':
                     if($type==2) // applicant
                     {
-                        throw new CHttpException(404, 'Error');
-                        return;
+                        $data = array('Stanislav'=>'Olegovi4');
+                        $view = 'projects/applicant/tasks';
                     }
-                    $data = $model->getProject($id);
-                    $data = $model->buildTaskPageArray($data);
-                    if(Yii::app()->request->isAjaxRequest) {
-                        $this->renderPartial(
-                            'projects/project-tasks-ajax',
-                            array('viData' => $data, 'project' => $id),
-                            false, true
-                        );
-                        return;
+                    if($type==3) // employer
+                    {
+                        $data = $model->getProject($id);
+                        $data = $model->buildTaskPageArray($data);
+                        if(Yii::app()->request->isAjaxRequest) {
+                            $this->renderPartial(
+                                'projects/project-tasks-ajax',
+                                array('viData' => $data, 'project' => $id),
+                                false, true
+                            );
+                            return;
+                        }
+                        $view = MainConfig::$VIEW_PROJECT_ITEM_TASKS;
                     }
-                    $view = MainConfig::$VIEW_PROJECT_ITEM_TASKS;
                     break;
                 case 'tasks_test':
                     if($type==2) // applicant
