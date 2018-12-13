@@ -259,6 +259,7 @@ $(function(){
   function checkField(e){
     var val = $(e).val(), erBlock = e;
     if($(e).is('#HiLogo')){ erBlock='.rp-content1__logo-img' }
+    if($(e).is('#phone-code')){ erBlock='.country-phone' } 
 
     (val=='' || val==null) ? addEr(erBlock) : remEr(erBlock);
   }
