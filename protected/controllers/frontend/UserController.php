@@ -1422,7 +1422,8 @@ class UserController extends AppController
                 case 'tasks':
                     if($type==2) // applicant
                     {
-                        $data = array('Stanislav'=>'Olegovi4');
+                        $data = $model->getProject($id);
+                        $data = $model->buildNewTaskPageArray($data, true);
                         $view = 'projects/applicant/tasks';
                     }
                     if($type==3) // employer

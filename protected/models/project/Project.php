@@ -1355,9 +1355,10 @@ class Project extends CActiveRecord
     /*
     *       Формирование массива задач для новой страницы
     */
-    public function buildNewTaskPageArray($arr)
+    public function buildNewTaskPageArray($arr, $isApplicant=false)
     {
         $arI = array();
+        $idus = Share::$UserProfile->id;
         $fbdate = Yii::app()->getRequest()->getParam('bdate');
         $fedate = Yii::app()->getRequest()->getParam('edate');
         $filter = Yii::app()->getRequest()->getParam('filter');
@@ -1371,7 +1372,11 @@ class Project extends CActiveRecord
         $arRes['tasks'] = $this->getTasks($arr['project']['project']);
 
         foreach ($arr['users'] as $id => $v)
-            if(sizeof($v['points'])>0)
+            if(
+                (!$isApplicant || ($isApplicant && $v['id_user']==$idus)) 
+                && 
+                sizeof($v['points'])>0
+            )
                 $arRes['users'][$v['id_user']] = $v;
 
         if(!sizeof($arRes['users']))
