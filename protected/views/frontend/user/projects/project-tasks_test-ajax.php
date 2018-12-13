@@ -31,10 +31,10 @@ echo "</pre>";
 
                             <? foreach ($itemTT as $keyUser => $itemUser): ?>
                                 <div class="task__item-user">
-                                    <div class="task__table-cell task__table-user task__table-user-1">
+                                    <a href="/user/projects/user-card/<?=$keyUser?>" class="task__table-cell task__table-user task__table-user-1">
                                         <img src="<?= $viData['users'][$keyUser]['src'] ?>">
                                         <span><?= $viData['users'][$keyUser]['name'] ?></span>
-                                    </div>
+                                    </a>
 
 
                                     <div class="task__table-cell task__table-user border task__table-user-2">
