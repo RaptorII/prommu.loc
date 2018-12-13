@@ -1355,10 +1355,9 @@ class Project extends CActiveRecord
     /*
     *       Формирование массива задач для новой страницы
     */
-    public function buildNewTaskPageArray($arr, $isApplicant=false)
+    public function buildNewTaskPageArray($arr)
     {
         $arI = array();
-        $idus = Share::$UserProfile->id;
         $fbdate = Yii::app()->getRequest()->getParam('bdate');
         $fedate = Yii::app()->getRequest()->getParam('edate');
         $filter = Yii::app()->getRequest()->getParam('filter');
@@ -1372,11 +1371,7 @@ class Project extends CActiveRecord
         $arRes['tasks'] = $this->getTasks($arr['project']['project']);
 
         foreach ($arr['users'] as $id => $v)
-            if(
-                (!$isApplicant || ($isApplicant && $v['id_user']==$idus)) 
-                && 
-                sizeof($v['points'])>0
-            )
+            if(sizeof($v['points'])>0)
                 $arRes['users'][$v['id_user']] = $v;
 
         if(!sizeof($arRes['users']))
@@ -1401,6 +1396,64 @@ class Project extends CActiveRecord
                     {
                         $arUser = $arRes['tasks'][$bdate][$p['point']][$idus];
                         $arI[$bdate][$p['id_city']]['points'][$p['point']][$idus] = $arUser;
+                    }
+
+                    $bdate += (60*60*24);
+                }
+                while($bdate <= $edate);               
+            }
+
+        ksort($arI);
+        $arRes['items'] = $arI;
+        $arRes['filter'] = $this->getFilter($arRes['points']);
+
+        return $arRes;
+    }
+    /**
+     * 
+     */
+    public function buildApplicantTaskPageArray($arr)
+    {
+        $arI = array();
+        $idus = Share::$UserProfile->id;
+        $fbdate = Yii::app()->getRequest()->getParam('bdate');
+        $fedate = Yii::app()->getRequest()->getParam('edate');
+        $filter = Yii::app()->getRequest()->getParam('filter');
+        if(isset($fbdate) && isset($fedate) && isset($filter)) {
+            $fbdate = strtotime($fbdate);
+            $fedate = strtotime($fedate);
+        }
+    
+        $arRes['project'] = $arr['project'];
+        $arRes['items'] = $arI;
+        $arRes['tasks'] = $this->getTasks($arr['project']['project']);
+
+        foreach ($arr['users'] as $id => $v)
+            if(sizeof($v['points'])>0)
+                $arRes['users'][$v['id_user']] = $v;
+
+        if(!sizeof($arRes['users']))
+            return $arRes;
+
+        foreach ($arr['original'] as $p)
+            foreach ($arRes['users'] as $idus => $u) {
+                if(!in_array($p['point'], $u['points']))
+                    continue;
+
+                $arRes['points'][$p['point']] = $p;
+                $bdate = strtotime($p['bdate']);
+                $edate = strtotime($p['edate']); 
+                $bdate = (isset($filter) && $fbdate>$bdate) ? $fbdate : $bdate;
+                $edate = (isset($filter) && $fedate<$edate) ? $fedate : $edate;
+
+                do{
+                    $arI[$bdate][$p['id_city']]['date'] = date('d.m.Y',$bdate);
+                    $arI[$bdate][$p['id_city']]['city'] = $p['city'];
+                    $arI[$bdate][$p['id_city']]['ismetro'] = $p['ismetro'];
+                    if(!array_key_exists($idus, $arI[$bdate][$p['id_city']]['points'][$p['point']]))
+                    {
+                        $arUser = $arRes['tasks'][$bdate][$p['point']][$idus];
+                        count($arUser) && $arI[$bdate][$p['id_city']]['points'][$p['point']][$idus] = $arUser;
                     }
 
                     $bdate += (60*60*24);
