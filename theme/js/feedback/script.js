@@ -1,52 +1,74 @@
 $(function(){
     $('#F1feedback').submit(function(){
-        var arErrors = 0;
-        var $mailInput = $('#EdEmail');
-        if($mailInput.val() != '') {
-            var pattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i;
-            if(pattern.test($('#EdEmail').val())){
+        var pattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i,
+            button = document.querySelector('.feedback-page__button'),
+            $themeInput = $('#EdTheme'),
+            $mailInput = $('#EdEmail'),
+            $textInput = $('#MText'),
+            $wayInput = $('#EdWay'),
+            arErrors = 0;
+
+        if(MainScript.isButtonLoading(button)){ return false; }
+        else{ MainScript.buttonLoading(button,true); }
+
+        if($mailInput.val() != '')
+        {
+            if(pattern.test($('#EdEmail').val()))
+            {
                 $mailInput.removeClass('error');
             }
-            else{
+            else
+            {
                 $mailInput.addClass('error');
                 arErrors++;
             }
         }
-        else{
+        else
+        {
             $mailInput.addClass('error');
             arErrors++;
         }
 
 
-        var $wayInput = $('#EdWay');
-        if($wayInput.val() == null){
+        if($wayInput.val() == null)
+        {
             $wayInput.addClass('error');
             arErrors++;
-        }else{
+        }
+        else
+        {
             $wayInput.removeClass('error');
         }
 
-        var $themeInput = $('#EdTheme');
-        if(!$.trim($themeInput.val())){
+        if(!$.trim($themeInput.val()))
+        {
             $themeInput.addClass('error');
             arErrors++;
-        }else{
+        }
+        else
+        {
             $themeInput.removeClass('error');
         }
 
-        var $textInput = $('#MText');
-        if(!$.trim($textInput.val())){
+        if(!$.trim($textInput.val()))
+        {
             $textInput.addClass('error');
             arErrors++;
-        }else{
+        }
+        else
+        {
             $textInput.removeClass('error');
         }
 
 
 
-        if(arErrors>0){
+        if(arErrors>0)
+        {
+            MainScript.buttonLoading(button,false);
             return false;
-        }else{
+        }
+        else
+        {
             return true;
         }
     });

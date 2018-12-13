@@ -3692,3 +3692,43 @@ var InputFields = (function () {
 
     return InputFields;
 }());
+/*
+*
+*/
+var MainScript = (function () {
+    function MainScript() {
+        var self = this;
+    }
+    MainScript.buttonLoading = function(e, flag)
+    {
+        if(flag==true)
+        {
+            var content = $(e).html(),
+                    w = $(e).innerWidth(),
+                    h = $(e).innerHeight(),
+                    t = h / 2 - 5, // 5 половина высоты точки
+                    lw = w / 2 - 32; // 32 - половина ширины блока загрузки
+
+            (t < 0) && (t = 0);
+            (lw < 0) && (lw = 0);
+
+            $(e).css({position:'relative', width:w, height:h});
+
+            e.dataset.content = content;
+            $(e).html('<div class="btn-loading"><div></div><div></div><div></div><div></div></div>');
+            $(e).find('.btn-loading').css({height:h, left:lw});
+            $(e).find('.btn-loading>div').css({top:t});
+        }
+        if(flag==false)
+        {
+            var content = e.dataset.content;
+            $(e).html('').html(content);
+        }
+    };
+    MainScript.isButtonLoading = function(e)
+    {
+        return $(e).find('.btn-loading').length;
+    }
+
+    return MainScript;
+}());

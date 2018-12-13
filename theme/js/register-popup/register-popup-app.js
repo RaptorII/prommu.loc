@@ -213,11 +213,19 @@ $(function(){
     (!error && !$('.error').length) ? remEr('#applicant-btn','off') : addEr('#applicant-btn','off');
   });
   // проверка перед отправкой формы
-  $('#popup-form').submit(function(){
+  $('#popup-form').submit(function()
+  {
+    var button = document.querySelector('#applicant-btn');
+
+    if(MainScript.isButtonLoading(button)){ return false; }
+    else{ MainScript.buttonLoading(button,true); }
+
     $.each(arInputs, function(){ checkField(this) });
+    
     if($('.error').length>0){
       $('html, body').animate({ scrollTop: $($('.error')[0]).offset().top-20 }, 1000);
       addEr('#applicant-btn','off');
+      MainScript.buttonLoading(button,false);
       return false;
     }
     else{

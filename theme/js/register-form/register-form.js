@@ -83,6 +83,15 @@ jQuery(function($){
 
 		e.preventDefault();
 
+		if(MainScript.isButtonLoading(this))
+		{
+			return false;
+		}
+		else
+		{
+			MainScript.buttonLoading(this,true);
+		}
+
 		$('#EdName').val()==='' ? $('#EdName').addClass('error') : $('#EdName').removeClass('error');
 		$('#EdLname').val()==='' ? $('#EdLname').addClass('error') : $('#EdLname').removeClass('error');
 
@@ -127,13 +136,17 @@ jQuery(function($){
 			$cnfPsw.removeClass('error');
 		}
 
-		if(!$('.error').length && !error){
+		if(!$('.error').length && !error)
+		{
 			if(state==2){
 				var newPhone = '+' + $('[name="__phone_prefix"]').val() + $('#phone-code').val();
 				$('[name="email"]').val(newPhone);
 			}	
 			$form.submit();
-			//console.log($form.serializeArray());
+		}
+		else
+		{
+			MainScript.buttonLoading(this,false);
 		}
 		
 	});

@@ -1,16 +1,9 @@
-<?
-  $bUrl = Yii::app()->baseUrl;
-  // Cropper
-  Yii::app()->getClientScript()->registerCssFile($bUrl.'/jslib/cropperjs/cropper.min.css');
-  Yii::app()->getClientScript()->registerScriptFile($bUrl.'/jslib/cropperjs/cropper.min.js', CClientScript::POS_END);
-?>
-
 <?php if(empty($_GET['uid'])): ?>
 <?php
-  Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/phone-codes/style.css');
-  Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/private/page-edit-prof-app.css');
-  Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/private/page-edit-prof-app.js', CClientScript::POS_END);
-  Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/phone-codes/script.js', CClientScript::POS_END);
+  Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css');
+  Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-edit-prof-app.css');
+  Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-app.js', CClientScript::POS_END);
+  Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
 
   $attrAll = $viData['userInfo']['userAttribs'];
   $attr = array_values($attrAll)[0];
@@ -857,29 +850,44 @@
 ?>
 <?php if(!empty($_GET['uid'])): ?>
   <? 
-    Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/register-popup/register-popup-app.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/phone-codes/style.css'); 
-    Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/phone-codes/script.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/register-popup/register-popup-app.css');
+    Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'register-popup/register-popup-app.js', CClientScript::POS_END);
+    Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css'); 
+    Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
+    Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'register-popup/register-popup-app.css');
 
-    $city = (new Geo())->getUserGeo(); 
+    $arGeo = (new Geo())->getUserGeo();
     $attr = $viData['userInfo']['userAttribs'];
-    
-    foreach($viData['countries'] as $c){
-      if($attr[1]['val']){ // регистрация через телефон
-        if($c['phone']==$attr[1]['phone-code']){
-          $city['country'] = $c['id_co'];
-          break;
-        }
+
+    foreach($viData['countries'] as $v)
+    {
+      if(!empty($attr[1]['val']) && $v['phone']==$attr[1]['phone-code'])
+      { // регистрация через телефон
+        $arGeo['country'] = $v['id_co'];
+        break;
       }
-      else if($c['id_co']==$city['country']){ // регистрация через почту
+      else if($v['id_co']==$arGeo['country'])
+      { // регистрация через почту
         $attr[1]['phone-code'] = $c['phone'];
+        break;
       }
+    }
+
+    if(empty($arGeo['city']) || empty($arGeo['country']))
+    {
+      $cityId = Subdomain::getCacheData()->id;
+      $sql = Yii::app()->db->createCommand()
+              ->select("name, id_co")
+              ->from('city')
+              ->where('id_city=:id', [':id' => $cityId])
+              ->queryRow();
+
+      $arGeo['country'] = $sql['id_co'];
+      $arGeo['city'] = $sql['name']; 
     }
   ?>
   <script type="text/javascript">
     var selectPhoneCode = <?=json_encode($attr[1]['phone-code'])?>;
-    var country = <?=json_encode($city['country'])?>;
+    var country = <?=json_encode($arGeo['country'])?>;
     var arCountries = <?=json_encode($viData['countries'])?>;
   </script>
   <div class="register-popup">
@@ -891,20 +899,18 @@
       <div class="rp-content1__block">
         <form action="#" class='js-form register-popup-form' id="popup-form">
           <p class="rp-content1__descr">Для того, чтобы Вашу анкету увидели все работодатели, чтобы начать искать работу и откликаться на вакансии необходимо заполнить обязательные данные о себе</p>
-          <?//if($_GET['photos'] == ""):?>
-            <div class="rp-content1__logo">
-              <span class="rp-content1__logo-img">
-                <img src="/theme/pic/register-popup-page/register_popup_r_logo.png" id="applicant-img">
-              </span>
-              <span class="rp-content1__text">Добавление Вашей фотографии повысит привлекательность анкеты и увеличит шансы что работодатель выберет именно Вас<span class="rp-content1__warning">Добавляйте только свои личные фото, иначе Вы не сможете пройти модерацию! Спасибо за понимание!</span></span>
-              <input type="hidden" name="logo" id="HiLogo" class="<?//required-inp?>"/>
-            </div>
-            <div class="rp-content1__btn-block" id="load-img-module">
-              <div class="rp-btn-block__load js-g-hashint" id="btn-load-image" title="Выбрать изображение"></div>
-              <div class="rp-btn-block__webcam js-g-hashint" id="btn-get-snapshot" title="Сделать снимок"></div>
-              <div class="clearfix"></div>
-            </div>
-          <?//endif;?>
+          <div class="rp-content1__logo">
+            <span class="rp-content1__logo-img">
+              <img src="/theme/pic/register-popup-page/register_popup_r_logo.png" id="applicant-img">
+            </span>
+            <span class="rp-content1__text">Добавление Вашей фотографии повысит привлекательность анкеты и увеличит шансы что работодатель выберет именно Вас<span class="rp-content1__warning">Добавляйте только свои личные фото, иначе Вы не сможете пройти модерацию! Спасибо за понимание!</span></span>
+            <input type="hidden" name="logo" id="HiLogo" class="required-inp"/>
+          </div>
+          <div class="rp-content1__btn-block" id="load-img-module">
+            <div class="rp-btn-block__load js-g-hashint" id="btn-load-image" title="Выбрать изображение"></div>
+            <div class="rp-btn-block__webcam js-g-hashint" id="btn-get-snapshot" title="Сделать снимок"></div>
+            <div class="clearfix"></div>
+          </div>
           <div class="rp-content1__inputs">
             <?if($_GET['birthday'] != "type"):?>
               <div class="rp-content1__inputs-row">
@@ -939,7 +945,7 @@
             </div>
             <div class="rp-content1__inputs-row">
               <span class="rp-content1__select-arrow city">
-                <input type="text" name="city" value="<?=$city['city']?>" class="rp-content1__inputs-input city required-inp" id="city-input" autocomplete="off" >
+                <input type="text" name="city" value="<?=$arGeo['city']?>" class="rp-content1__inputs-input city required-inp" id="city-input" autocomplete="off" >
                 <ul id="city-list"></ul>              
               </span>
               <span class="rp-content1__text">Ваш город</span>
@@ -1076,6 +1082,5 @@
     </div>
     <button class="pp-form__button" id="pash-save-btn">Сохранить</button>
   </form>
-  <? $G_LOGO_SRC = DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!Share::$UserProfile->exInfo->photo ?  $_GET['photo'].'400.jpg' : (Share::$UserProfile->exInfo->photo ?  Share::$UserProfile->exInfo->photo . '400.jpg' : $_GET['photo'].'400.jpg'));?>
 <?endif;?>
 <?php require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/popup-load-img.php'; ?>

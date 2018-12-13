@@ -1,6 +1,24 @@
 <?php
 class Mailing
 {
+  public static function mainParams()
+  {
+  	return array(
+							0 => array(
+										'name' => "#SITE#",
+										'pattern' => "/#SITE#/",
+										'value' => Subdomain::$HOST,
+										'description' => "Корень сайта"
+									),
+							1 => array(
+										'name' => "#PAGE_PROFILE_COMMON#",
+										'pattern' => "/#PAGE_PROFILE_COMMON#/",
+										'value' => MainConfig::$PAGE_PROFILE_COMMON,
+										'description' => "Раздел 'Анкеты'"
+									)
+  			);
+  }
+/*
 	public static $MAIN_PARAMS = array(
 		0 => array(
 					'name' => "#SITE#",
@@ -14,7 +32,7 @@ class Mailing
 					'value' => '/ankety',//MainConfig::$PAGE_PROFILE_COMMON,
 					'description' => "Раздел 'Анкеты'"
 				)
-	);
+	);*/
 	// набор параметров для события, которые пото можно перенести
 	public static $PARAMS = array(
 		'EMAIL_CHANGE_PROFILE_LOGO' => array( // собитие изменения лого
@@ -76,7 +94,8 @@ class Mailing
 				}
 			}
 			// добавляем общих параметров
-			foreach (self::$MAIN_PARAMS as $k => $v)
+			$arMainParams = self::mainParams();
+			foreach ($arMainParams as $k => $v)
 			{
 				$arPatterns[] = $v['pattern'];
 				$arValues[] = $v['value'];

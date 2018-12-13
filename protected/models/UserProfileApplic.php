@@ -1195,10 +1195,15 @@ class UserProfileApplic extends UserProfile
                 $this->profileFill++;
         }
         // меняем данные для изменения кодов телефона
-        if(isset($attr[1]['val'])){
-            $pos = strpos($attr[1]['val'], '(');
-            $attr[1]['phone-code'] = substr($attr[1]['val'], 1,($pos-1));
-            $attr[1]['phone'] = substr($attr[1]['val'], $pos);     
+        if(!empty($attr[1]['val']))
+        {
+            $phone = str_replace('+', '', $attr[1]['phone']);
+            $pos = strpos($phone, '(');
+            $phoneCode = substr($phone, 0, $pos);
+            if(empty($phoneCode))
+                $phoneCode = 7; // по умолчанию Рашка
+            $attr[1]['phone'] = substr($phone, $pos);
+            $attr[1]['phone-code'] = $phoneCode;    
         }
 
         $data['userAttribs'] = $attr;

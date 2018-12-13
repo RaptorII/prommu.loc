@@ -1,28 +1,29 @@
 <?php 
-    $bUrl = Yii::app()->baseUrl;
-    Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/register-form/register-form.css');
-    Yii::app()->getClientScript()->registerCssFile($bUrl.'/theme/css/phone-codes/style.css'); 
-    Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/register-form/register-form.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/phone-codes/script.js', CClientScript::POS_END);
-    Yii::app()->getClientScript()->registerScriptFile('https://www.google.com/recaptcha/api.js', CClientScript::POS_END);
+    Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'register-form/register-form.css');
+    Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css'); 
+    Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'register-form/register-form.js', CClientScript::POS_END);
+    Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
+    if($viData['use_recaptcha']==true)
+    {
+        Yii::app()->getClientScript()->registerScriptFile('https://www.google.com/recaptcha/api.js', CClientScript::POS_END);
+    }
     $this->setBreadcrumbs($title = 'Регистрация соискателя', $this->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1')));
     $this->pageTitle = $title;
 
     // если вводился телефон - давайте работать с телефоном
     $phone = '';
     $phoneCode = 0; 
-    if($viData['inputData']['email'] && !filter_var($viData['inputData']['email'], FILTER_VALIDATE_EMAIL)){
+    if($viData['inputData']['email'] && !filter_var($viData['inputData']['email'], FILTER_VALIDATE_EMAIL))
+    {
+        $viData['inputData']['email'] = str_replace('+','',$viData['inputData']['email']);
         $pos = strpos($viData['inputData']['email'], '(');
-        $phone = substr($viData['inputData']['email'], $pos);
-        $phoneCode = str_replace($phone, '', $viData['inputData']['email']);
-        $phoneCode = substr($phoneCode, 1);
+        $phoneCode = substr($viData['inputData']['email'], 0,$pos);
+        $phone = substr($viData['inputData']['email'], $pos); 
     }
 ?>
 <script type="text/javascript">var selectPhoneCode = <?=json_encode($phoneCode)?></script>
 <div class='row'>
     <div class='col-xs-12 register-wrapp competitor'>
-
-        <?php $admin =  $_GET['admin']; ?>
         <div class="register__reg-header">
             <div class="reg-header__pic"></div>
             <div class="reg-header__text">
@@ -41,14 +42,14 @@
                     <?php if( $viData['element'] == 'name' ): ?>
                         <span class="red"><?= $viData['hint'] ?></span>
                     <?php endif; ?>
-                    <input id='EdName' name='name' type='text'  value="<?= $viData['inputData']['name'] ?>" placeholder="Имя" class="reg-form__input">
+                    <input id='EdName' name='name' type='text'  value="<?= $viData['inputData']['name'] ?>" placeholder="Имя" class="reg-form__input" autocomplete="off">
                 </label>
 
                 <label class="reg-form__label com2 js-g-hashint" title="Фамилия">
                     <?php if( $viData['element'] == 'lname' ): ?>
                         <span class="red"><?= $viData['hint'] ?></span>
                     <?php endif; ?>
-                    <input id='EdLname' name='lname' type='text'  value="<?= $viData['inputData']['lname'] ?>" placeholder="Фамилия" class="reg-form__input">
+                    <input id='EdLname' name='lname' type='text'  value="<?= $viData['inputData']['lname'] ?>" placeholder="Фамилия" class="reg-form__input" autocomplete="off">
                     <input  name='type' type='hidden'  value="2" >
                 </label>
 
@@ -73,8 +74,8 @@
                     <?php if( $viData['element'] == 'email' ): ?>
                         <span class="red"><?= $viData['hint'] ?></span>
                     <?php endif; ?>
-                    <input id='EdEmail' name='email' type='email' data-field-check='name:Email,empty,email' value="<?= $viData['inputData']['email'] ?>" placeholder="Email" class="reg-form__input">
-                    <input id='phone-code' type="text" name="phone" placeholder="Телефон" value="<?=$phone?>">
+                    <input id='EdEmail' name='email' type='email' data-field-check='name:Email,empty,email' value="<?= $viData['inputData']['email'] ?>" placeholder="Email" class="reg-form__input" autocomplete="off">
+                    <input id='phone-code' type="text" name="phone" placeholder="Телефон" value="<?=$phone?>" autocomplete="off">
                 </label>
 
                 <label class="reg-form__label com4">
@@ -112,11 +113,11 @@
                     <?php if( $viData['element'] == 'pass' ): ?>
                         <span class="red"><?= $viData['hint'] ?></span>
                     <?php endif; ?>
-                    <input id='EdPass' name='pass' type='password' data-field-check='name:Пароль,empty,password:#EdPassRep' placeholder="Пароль" class="reg-form__input" value="<?=$viData['inputData']['pass']?>">
+                    <input id='EdPass' name='pass' type='password' data-field-check='name:Пароль,empty,password:#EdPassRep' placeholder="Пароль" class="reg-form__input" value="<?=$viData['inputData']['pass']?>" autocomplete="off">
                 </label>
 
                 <label class="reg-form__label com7 js-g-hashint" title="Подтвердите пароль">
-                    <input id='EdPassRep' type='password' name="passrep" placeholder="Подтвердите пароль" class="reg-form__input" value="<?=$viData['inputData']['passrep']?>">
+                    <input id='EdPassRep' type='password' name="passrep" placeholder="Подтвердите пароль" class="reg-form__input" value="<?=$viData['inputData']['passrep']?>" autocomplete="off">
                 </label>
                 <? if($viData['use_recaptcha']==true): ?>
                     <div class="g-recaptcha-parent">
@@ -139,7 +140,7 @@
                 <input type="hidden" class="keywords" name="keywords" value="">
                 <input type="hidden" class="point" name="point" value="">
                 <input type="hidden" class="last_referer" name="last_referer" value="">
-                <input type="hidden" class="admin" name="admin" value="<?= $admin; ?>">
+                <input type="hidden" class="admin" name="admin" value="<?=$_GET['admin']?>">
                 <input type="hidden" name="ip" value="<?=$_SERVER['HTTP_X_FORWARDED_FOR']?>"/>
                 <input type="hidden" name="pm_source" value="<?=$_COOKIE["pm_source"];?>"/>
                 <input type="hidden" name="client" value="<?=$_COOKIE["_ga"];?>"/>
