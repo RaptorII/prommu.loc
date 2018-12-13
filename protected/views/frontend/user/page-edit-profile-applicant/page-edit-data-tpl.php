@@ -856,18 +856,18 @@
     Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'register-popup/register-popup-app.css');
 
     $arGeo = (new Geo())->getUserGeo();
-    $attr = $viData['userInfo']['userAttribs'];
+    $attr = reset($viData['userInfo']['userAttribs']);
 
     foreach($viData['countries'] as $v)
     {
-      if(!empty($attr[1]['val']) && $v['phone']==$attr[1]['phone-code'])
+      if(!empty($attr['val']) && $v['phone']==$attr['phone-code'])
       { // регистрация через телефон
         $arGeo['country'] = $v['id_co'];
         break;
       }
       else if($v['id_co']==$arGeo['country'])
       { // регистрация через почту
-        $attr[1]['phone-code'] = $c['phone'];
+        $attr['phone-code'] = $c['phone'];
         break;
       }
     }
@@ -886,7 +886,7 @@
     }
   ?>
   <script type="text/javascript">
-    var selectPhoneCode = <?=json_encode($attr[1]['phone-code'])?>;
+    var selectPhoneCode = <?=json_encode($attr['phone-code'])?>;
     var country = <?=json_encode($arGeo['country'])?>;
     var arCountries = <?=json_encode($viData['countries'])?>;
   </script>
@@ -940,7 +940,7 @@
               </div>
             <?endif;?>
             <div class="rp-content1__inputs-row">
-              <input type="text" name="phone" value="<?=$attr[1]['phone']?>" id="phone-code" class="required-inp">
+              <input type="text" name="phone" value="<?=$attr['phone']?>" id="phone-code" class="required-inp">
               <span class="rp-content1__text">Номер телефона позволит Вам использовать дополнительный функционал сервиса бесплатно.</span>
             </div>
             <div class="rp-content1__inputs-row">
