@@ -867,7 +867,7 @@
       }
       else if($v['id_co']==$arGeo['country'])
       { // регистрация через почту
-        $attr['phone-code'] = $c['phone'];
+        $attr['phone-code'] = $v['phone'];
         break;
       }
     }
