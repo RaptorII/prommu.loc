@@ -37,28 +37,26 @@
             <?php endif; ?>
               <label id="LEdTheme">
                 <b>Введите новую тему</b>
-                <input type="text" name="theme-cust" id="EdTheme"/>
+                <input type="text" name="theme-cust" id="EdTheme" value="<?=$viData['vacancy']['title']?>"/>
               </label>
               <br />
               <br />
         </div>
       <?php endif; ?>
 
-      <div class='header-021'>
-        <b>
-          <?php if( !$isNew ): ?>
-              <?= $viData['title']['title'] ?: $viData['title']['vactitle'] ?>
-          <?php endif; ?>
-        </b>
-      </div>
-      <br>
+        <div class="chat-item__title">
+            <h2>
+                <?=$viData['vacancy']['title']?>
+            </h2>
+        </div>
+
 
         <div id="DiChatWrapp">
             <div class="mess-block">
                 <div class="mess-block-inner">
                   <div id="DiMessagesWrapp" style="border:1px solid transparent;">
                     <?php if( $isNew ): ?>
-                      <div class="nomess">Нет сообщений в этой теме. Выберите тему и введите сообщение...</div>
+                      <div class="nomess">Сообщений нет</div>
                     <?php endif; ?>
                     <div id="DiMessagesInner">
                       <div id="DiMessages"></div>
@@ -129,26 +127,31 @@
 
       <div class="new-mess-tpl tmpl"><div><b>Новые сообщения</b></div></div>
 
-      <div class='mess-box mess-from tmpl'>
-        <b class='fio'><!-- fio --></b>
-        <span class='date'><!-- date --></span>
-        <div class='mess'><!-- mess --></div>
-        <div class='files'>
-            <div class="js-container"></div>
-            <a href="" class="black-orange"><img src="" alt=""></a>
-        </div>
-      </div>
-      <div class='mess-box mess-to tmpl'>
-        <div class='right'>
-          <b class='fio'><!-- fio --></b>
-          <span class='date'><!-- date --></span>
-        </div>
-        <div class='mess'><!-- mess --></div>
+        <div class='mess-box mess-from tmpl'>
+            <div class='author'>
+                <img src="" alt="">
+                <b class='fio'><!-- fio --></b>
+                <span class='date'><!-- date --></span>
+            </div>
+            <div class='mess'><!-- mess --></div>
             <div class='files'>
                 <div class="js-container"></div>
                 <a href="" class="black-orange"><img src="" alt=""></a>
             </div>
-      </div>
+        </div>
+
+        <div class='mess-box mess-to tmpl'>
+            <div class='author'>
+                <img src="" alt="">
+                <b class='fio'><!-- fio --></b>
+                <span class='date'><!-- date --></span>
+            </div>
+            <div class='mess'><!-- mess --></div>
+            <div class='files'>
+                <div class="js-container"></div>
+                <a href="" class="black-orange"><img src="" alt=""></a>
+            </div>
+        </div>
 
       <script type="text/javascript">
       <!--

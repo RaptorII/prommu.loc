@@ -212,7 +212,7 @@
 	            }
 	            if (flag)
 	                block.addClass('-new');
-	            block.find('.date').text(val.crtime + ' ' + val.crdate);
+	            block.find('.date').text(val.date);
 	            block.find('.mess').html(val.message.replace("\n", '<br/>'));
 	            self.prependFiles({ block: block, data: val });
 	            DiMessages.append(block);
@@ -257,7 +257,7 @@
 	            }
 	            if (val.isread == '0')
 	                block.addClass('unread');
-	            block.find('.date').text(val.crtime + ' ' + val.crdate);
+	            block.find('.date').text(val.date);
 	            block.find('.mess').html(val.message.replace("\n", '<br/>'));
 	            self.prependFiles({ block: block, data: val });
 	            DiMessages.prepend(block);
@@ -432,7 +432,7 @@
 	                }
 	                if (flag)
 	                    block.addClass('-new');
-	                block.find('.date').text(val.crtime + ' ' + val.crdate);
+	                block.find('.date').text(val.date);
 	                block.find('.mess').html(val.message.replace("\n", '<br/>'));
 	                self.prependFiles({ block: block, data: val });
 	                DiMessages.append(block);

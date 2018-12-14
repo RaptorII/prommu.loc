@@ -177,3 +177,8 @@
 @media (min-width: 768px) { 
 	.message-box .attach-file span { font-size: 14px; } 
 }
+
+
+.theme-input{
+	display: none;
+}
