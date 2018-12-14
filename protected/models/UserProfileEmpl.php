@@ -15,7 +15,6 @@ class UserProfileEmpl extends UserProfile
         $props = is_object($inProps) ? get_object_vars($inProps) : $inProps;
 
         $this->type = 3;
-
         if( $props['idProfile'] ) $this->exInfo = (object)array('eid' => $props['idProfile']);
 
         $this->photosMax = MainConfig::$EMPLOYER_MAX_PHOTOS;
@@ -1062,7 +1061,7 @@ class UserProfileEmpl extends UserProfile
                     $arRes['userCities']['id_country'] = $v['id'];
                     break;
                 }
-                else if($v['id']==$arGeo['country'])
+                else if($arRes['info']['email'] && $v['id']==$arGeo['country'])
                 { // регистрация через почту
                     $arRes['phone-code'] = $v['phone'];
                     $arRes['userCities']['id_country'] = $v['id'];

@@ -1197,7 +1197,7 @@ class UserProfileApplic extends UserProfile
         // меняем данные для изменения кодов телефона
         if(!empty($attr[1]['val']))
         {
-            $phone = str_replace('+', '', $attr[1]['phone']);
+            $phone = str_replace('+', '', $attr[1]['val']);
             $pos = strpos($phone, '(');
             $phoneCode = substr($phone, 0, $pos);
             if(empty($phoneCode))

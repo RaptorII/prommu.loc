@@ -865,7 +865,7 @@
         $arGeo['country'] = $v['id_co'];
         break;
       }
-      else if($v['id_co']==$arGeo['country'])
+      else if(filter_var($attr['email'], FILTER_VALIDATE_EMAIL) && $v['id_co']==$arGeo['country'])
       { // регистрация через почту
         $attr['phone-code'] = $v['phone'];
         break;

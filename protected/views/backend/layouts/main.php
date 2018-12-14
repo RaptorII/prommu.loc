@@ -679,21 +679,21 @@
           </a>
         </li>
         <?php
-        // Settings
-        ?>
-        <li class="<?=($curId=='settings'?'active':'')?>">
-          <a href="<?=$hUrl?>settings">
-            <i class="glyphicon glyphicon-cog"></i>
-            <span>Настройки сайта</span>
-          </a>
-        </li>
-        <?php
         // Notifications
         ?>
         <li class="<?=($curId=='notifications'?'active':'')?>">
           <a href="<?=$hUrl?>notifications">
             <i class="glyphicon glyphicon-send"></i>
             <span>Уведомления</span>
+          </a>
+        </li>
+        <?php
+        // Settings
+        ?>
+        <li class="<?=($curId=='settings'?'active':'')?>">
+          <a href="<?=$hUrl?>settings">
+            <i class="glyphicon glyphicon-cog"></i>
+            <span>Настройки сайта</span>
           </a>
         </li>
       </ul>
