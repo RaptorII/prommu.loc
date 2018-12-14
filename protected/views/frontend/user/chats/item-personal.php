@@ -1,7 +1,4 @@
 <?
-// echo "<pre>";
-// print_r($viData); 
-// echo "</pre>";
 	$sectionList = MainConfig::$PAGE_CHATS_LIST_VACANCIES;
 	$this->setBreadcrumbsEx(array($viData['vacancy']['title'], $sectionList . DS . $vacancy . DS . $id));
 	$this->setPageTitle($viData['vacancy']['title']);
@@ -161,7 +158,7 @@
 
       <script type="text/javascript">
       <!--
-          G_VARS.idTm = '<?=$viData['items'][0]['id_theme']?>';
+          G_VARS.idTm = '<?=$viData['theme']?>';
           <?php if( $isNew ): ?>
             G_VARS.isNew = '<?= $isNew ?>';
           <?php endif; ?>

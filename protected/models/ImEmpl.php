@@ -833,7 +833,7 @@ class ImEmpl extends Im
     public function getFeedbackChats()
     {
         $arRes = array();
-        $this->limit = 30;
+        $this->limit = 10;
         $idus = Share::$UserProfile->id;
         $arT = Yii::app()->db->createCommand()
                 ->select("
@@ -890,8 +890,8 @@ class ImEmpl extends Im
         foreach ($sql as $m)
         {
             $id = $m['id_theme'];
-            $arRes['items'][$id]['cnt-mess']++;
             $arRes['cnt-mess']++;
+            $arRes['items'][$id]['cnt-mess']++;
             !isset($arRes['items'][$id]['cnt-noread']) && $arRes['items'][$id]['cnt-noread']=0;
             if(!$m['is_resp'] && !$m['is_read']) // ответ Р и не прочитано
             {
@@ -1002,15 +1002,15 @@ class ImEmpl extends Im
             $arC['id'][] = $v['id'];
             $arC['user'] = $v['id_usp'];
             !isset($arC['noread']) && $arC['noread'] = 0;
-            if(!$v['is_resp'] && !$v['is_read'])
+            if(!$v['is_resp'] && !$v['is_read']) // ответ не Р и не прочитано
             {
-                $arC['noread']++;
                 $arRes['items'][$v['id_vac']]['cnt-mess-noread']++;
                 $arRes['cnt-mess-noread']++;
+                $arC['noread']++;
             }
             $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_usp']] = $arC;
             $arRes['items'][$v['id_vac']]['cnt-mess']++;
-            
+            $arRes['cnt-mess']++;
         }
 
         $arRes['users'] = Share::getUsers($arUId);
@@ -1052,7 +1052,7 @@ class ImEmpl extends Im
 
         if(!intval($vacancy) || !intval($id_app) || !intval($id_emp))
             return array('error'=>true);
-
+        // проверяем наличие подтвержденных соискателей
         $sql = Yii::app()->db->createCommand()
                 ->select('vs.id')
                 ->from('vacation_stat vs')
@@ -1065,7 +1065,7 @@ class ImEmpl extends Im
 
         if(!isset($sql['id']))
             return array('error'=>true);
-
+        // собираем инфу о вакансии
         $arRes['vacancy'] = Yii::app()->db->createCommand()
                 ->select('id, title')
                 ->from('empl_vacations')
@@ -1083,18 +1083,22 @@ class ImEmpl extends Im
                 ->from('chat c')
                 ->leftjoin('chat_theme ct','ct.id=c.id_theme')
                 ->where(
-                    'ct.id_use=:id AND ct.id_usp=:id_usp',
-                    array(':id'=>$id_emp, ':id_usp'=>$id_app)
+                    'ct.id_use=:id AND ct.id_usp=:id_usp AND ct.id_vac=:id_vac',
+                    [':id'=>$id_emp, ':id_usp'=>$id_app, ':id_vac'=>$vacancy]
                 )
                 ->queryAll(); 
 
-        if(!count($arRes['items'])){
-            $arRes['items']['new'] = $id_app;
-        }
+        count($arRes['items'])
+        ? $arRes['theme'] = reset($arRes['items'])['id_theme']
+        : $arRes['items']['new'] = $id_app;;
+
         // получаем файлы диалога
         $Upluni = new Uploaduni();
         $Upluni->setCustomOptions(array(
-                'type' => array('images' => 'image/jpeg,image/png', 'files' => 'word,excel,spreadsheetml'),
+                'type' => array(
+                        'images' => 'image/jpeg,image/png', 
+                        'files' => 'word,excel,spreadsheetml'
+                    ),
                 'scope' => 'im',
                 'maxFS' => 5242880, // max filesize
                 'maxImgDim' => array(2500, 2500),

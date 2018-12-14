@@ -656,7 +656,7 @@ class ImApplic extends Im
     public function getFeedbackChats()
     {
         $arRes = array();
-        $this->limit = 30;
+        $this->limit = 10;
         $idus = Share::$UserProfile->id;
         $arT = Yii::app()->db->createCommand()
                 ->select("
@@ -678,7 +678,7 @@ class ImApplic extends Im
         if(!$nT)
             return $arRes;
 
-        $arRes['cnt'] = $nT;
+        $arRes['cnt-chat'] = $nT;
         $arRes['pages'] = new CPagination($nT);
         $arRes['pages']->pageSize = $this->limit;
         $arRes['pages']->applyLimit($this);
@@ -713,10 +713,14 @@ class ImApplic extends Im
         foreach ($sql as $m)
         {
             $id = $m['id_theme'];
+            $arRes['cnt-mess']++;
             $arRes['items'][$id]['cnt-mess']++;
             !isset($arRes['items'][$id]['cnt-noread']) && $arRes['items'][$id]['cnt-noread']=0;
             if($m['is_resp'] && !$m['is_read']) // ответ Р и не прочитано
+            {
                 $arRes['items'][$id]['cnt-noread']++;
+                $arRes['cnt-mess-noread']++;
+            }
 
             if(!empty($m['title']))
                 $arRes['items'][$id]['title'] = $m['title'];
@@ -761,7 +765,9 @@ class ImApplic extends Im
         if(!count($sql))
             return $arRes;
 
-        $arRes['cnt'] = 0;
+        $arRes['cnt-chat'] = 0;
+        $arRes['cnt-mess'] = 0;
+        $arRes['cnt-mess-noread'] = 0;
         foreach ($sql as $v) {
             $id = $v['id'];
             $arV[$id]['id'] = $id;
@@ -772,16 +778,20 @@ class ImApplic extends Im
                 $arV[$id]['users'][] = $v['employer'];
             !in_array($id, $arVId) && array_push($arVId, $id);
             if(!empty($v['id_public']) && !in_array($v['id_public'], $arV[$id]['public-mess']))
+            {
                 $arV[$id]['public-mess'][] = $v['id_public'];
+                $arV[$id]['cnt-mess']++;
+                $arRes['cnt-mess']++;
+            }
             if(!empty($v['id_personal']) && !in_array($v['id_personal'], $arV[$id]['personal-id']))
                 $arV[$id]['personal-id'][] = $v['id_personal'];
         }
         $nV = count($arVId);
         foreach ($arV as $v) {
             if(count($v['public-mess']))
-                $arRes['cnt']++;
+                $arRes['cnt-chat']++;
 
-            $arRes['cnt'] += count($v['personal-id']);
+            $arRes['cnt-chat'] += count($v['personal-id']);
         }
 
         $arRes['pages'] = new CPagination($nV);
@@ -806,14 +816,21 @@ class ImApplic extends Im
                 ->where(array('in','ct.id_vac',$arVIdSelect))
                 ->queryAll();
 
-        foreach ($sql as $v) {
+        foreach ($sql as $v)
+        {
             $arC = $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_use']];
             $arC['id'][] = $v['id'];
             $arC['user'] = $v['id_use'];
             !isset($arC['noread']) && $arC['noread'] = 0;
             if($v['is_resp'] && !$v['is_read']) // ответ Р и не прочитано
+            {
+                $arRes['items'][$v['id_vac']]['cnt-mess-noread']++;
+                $arRes['cnt-mess-noread']++;
                 $arC['noread']++;
+            }
             $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_use']] = $arC;
+            $arRes['items'][$v['id_vac']]['cnt-mess']++;
+            $arRes['cnt-mess']++;
         }
 
         $sql = Yii::app()->db->createCommand()
@@ -821,11 +838,10 @@ class ImApplic extends Im
                 ->from('vacation_stat vs')
                 ->leftjoin('resume r', 'r.id=vs.id_promo')
                 ->where(
-									array(
-										'and', 
-										'vs.status>4', 
-										array('in','vs.id_vac',$arVIdSelect)
-									)
+					array(
+						'and','vs.status>4', 
+						['in','vs.id_vac',$arVIdSelect]
+					)
                 )
                 ->queryAll();
 
@@ -872,7 +888,7 @@ class ImApplic extends Im
 
         if(!intval($vacancy) || !intval($id_app) || !intval($id_emp))
             return array('error'=>true);
-
+        // проверяем наличие подтвержденных соискателей
         $sql = Yii::app()->db->createCommand()
                 ->select('vs.id')
                 ->from('vacation_stat vs')
@@ -883,9 +899,9 @@ class ImApplic extends Im
                 )
                 ->queryRow();
 
-        // if(!isset($sql['id']))
-        //     return array('error'=>true);
-
+        if(!isset($sql['id']))
+            return array('error'=>true);
+        // собираем инфу о вакансии
         $arRes['vacancy'] = Yii::app()->db->createCommand()
                 ->select('id, title')
                 ->from('empl_vacations')
@@ -895,27 +911,30 @@ class ImApplic extends Im
                 )
                 ->queryRow();       
 
-        // if(!isset($arRes['vacancy']['id']))
-        //     return array('error'=>true);
+        if(!isset($arRes['vacancy']['id']))
+            return array('error'=>true);
 
          $arRes['items'] = Yii::app()->db->createCommand()
                 ->select('c.*')
                 ->from('chat c')
                 ->leftjoin('chat_theme ct','ct.id=c.id_theme')
                 ->where(
-                    'ct.id_use=:id AND ct.id_usp=:id_usp',
-                    array(':id'=>$id_emp, ':id_usp'=>$id_app)
+                    'ct.id_use=:id AND ct.id_usp=:id_usp AND ct.id_vac=:id_vac',
+                    [':id'=>$id_emp, ':id_usp'=>$id_app, ':id_vac'=>$vacancy]
                 )
                 ->queryAll(); 
 
-        if(!count($arRes['items'])){
-            $arRes['items']['new'] = $id_emp;
-        } 
+        count($arRes['items'])
+        ? $arRes['theme'] = reset($arRes['items'])['id_theme']
+        : $arRes['items']['new'] = $id_emp;
 
         // получаем файлы диалога
         $Upluni = new Uploaduni();
         $Upluni->setCustomOptions(array(
-                'type' => array('images' => 'image/jpeg,image/png', 'files' => 'word,excel,spreadsheetml'),
+                'type' => array(
+                        'images' => 'image/jpeg,image/png', 
+                        'files' => 'word,excel,spreadsheetml'
+                    ),
                 'scope' => 'im',
                 'maxFS' => 5242880, // max filesize
                 'maxImgDim' => array(2500, 2500),
