@@ -3,6 +3,7 @@
 $_POST['FeedbackTreatment'] ='';
 Yii::app()->getClientScript()->registerCoreScript('jquery');
 Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl.'/js/ajaxfileupload.js', CClientScript::POS_HEAD);
+Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl.'/js/form-checker.js', CClientScript::POS_HEAD);
 // print_r($data);
 echo '<div class="col-md-12">';
 echo '<div class="col-md-6">
