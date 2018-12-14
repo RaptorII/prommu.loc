@@ -54,7 +54,13 @@
         <div id="DiChatWrapp">
             <div class="mess-block">
                 <div class="mess-block-inner">
-                  <div id="DiMessagesWrapp" style="border:1px solid transparent;">
+
+                    <?if($isNew): ?>
+                        <div id="DiMessagesWrapp" style="height: 50px;">
+                    <?else:?>
+                        <div id="DiMessagesWrapp">
+                    <?endif;?>
+
                     <?php if( $isNew ): ?>
                       <div class="nomess">Сообщений нет</div>
                     <?php endif; ?>
