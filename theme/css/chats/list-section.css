@@ -32,7 +32,21 @@
 	text-align: center;
 	font-weight: normal;
 }
-#DiContent .chat-list h2>span{ color: #abb820 }
+.chat-list h2 span{
+	min-width: 30px;
+	display: inline-block;
+	text-align: center;
+	color: #ffffff;
+	border-radius: 15px;
+	margin: 0 0 0 5px;
+	padding: 0 5px;
+	font-size: 22px;
+	line-height: 30px;
+}
+.chat-list h2 .chat{ background-color: #abb820 }
+.chat-list h2 .messages{ background-color: #ff8300 }
+.chat-list h2 .noread{ background-color: #ff0000 }
+
 #DiContent .chat-list__empty-btn.prmu-btn{
 	color: #ffffff;
 	font-family: RobotoCondensed-Regular,verdana,arial;
@@ -97,6 +111,10 @@
 	cursor: pointer;
 	position: relative;
 }
+.disable .vacancy__item-tab{
+	border: 1px solid #ededed;
+	background-color: #ffffff;
+}
 .vacancy__item-tab:after{
 	content: '';
 	width: 15px;
@@ -138,6 +156,7 @@
 .vacancy__item-tab-small{
 	font-size: 12px;
 	text-transform: none;
+	color: red;
 }
 .vacancy__item-content{
 	padding: 15px 15px 0;
@@ -156,28 +175,43 @@
 }
 .vac-item__chat-users{
 	display: inline-block;
-	padding-right: 15px;
+	padding-right: 10px;
 }
 .vac-item__chat-users a{
 	display: inline-block;
 	margin-left: -15px;
 }
 .vac-item__chat-users a:first-child{ margin-left: 0 }
+#DiContent .vac-item__chat-users-name{
+	display: inline-block;
+	padding: 6px 10px;
+	background-color: #f5f5f5;
+	border-radius: 16px;
+}
+#DiContent .vac-item__chat-users-name b{ 
+	color: #abb820;
+	font-weight: normal;
+}
+#DiContent .vac-item__chat-users-name:hover b{ 
+	text-decoration: underline; 
+	color: #abb820;
+}
 .vac-item__chat-users img,
 .vac-item__content-chat.personal img{
 	width: 32px;
 	border-radius: 15px;
 	border: 1px solid #abb820;
 }
-.vac-item__content-chat.personal a:first-child{ padding-right: 15px; }
+.vac-item__content-chat.personal a:first-child{ padding-right: 10px; }
 #DiContent .vac-item__content-chat-mess{
 	min-width: 20px;
 	background-color: #ff8300;
 	display: inline-block;
 	text-align: center;
 	color: #ffffff;
-	border-radius: 50%;
-	margin: 0 5px;
+	/*border-radius: 50%;*/
+	border-radius: 10px;
+	margin: 0 0 0 5px;
 	padding: 0 5px;
 }
 #DiContent .vac-item__content-chat-mess.noread{

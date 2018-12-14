@@ -9,7 +9,17 @@
 <div class="chat-list feedback">
 	<a href="<?=MainConfig::$PAGE_CHATS_LIST?>" class="chat-list__btn-link"><span><</span> Назад</a>
 	<? if(sizeof($viData['items'])): ?>
-		<h2>Сообщения Prommu <span><?=$viData['cnt']?></span></h2>
+		<h2>Сообщения Prommu 
+			<? if($viData['cnt-chat']>0): ?>
+				<span class="js-g-hashint chat" title="Открытых чатов"><?=$viData['cnt-chat']?></span>
+			<? endif; ?>
+			<? if($viData['cnt-mess']>0): ?>
+				<span class="js-g-hashint messages" title="Сообщений"><?=$viData['cnt-mess']?></span>
+			<? endif; ?>
+			<? if($viData['cnt-mess-noread']>0): ?>
+				<span class="js-g-hashint noread" title="Не прочитано"><?=$viData['cnt-mess-noread']?></span>
+			<? endif; ?>
+		</h2>
 		<? foreach ($viData['items'] as $id => $item): ?>
 			<a href="<?=MainConfig::$PAGE_CHATS_LIST_FEEDBACK . DS . $id?>" class="chat__item">
 				<div class="chat__item-user">

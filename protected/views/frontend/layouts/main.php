@@ -298,7 +298,7 @@
                                                     <b class="small-menu__cnt">0</b>
                                                     <i></i>
                                                 </span>
-                                                <span class="small-menu__name">УВЕДОМЛЕНИЯ</span>
+                                                <span class="small-menu__name">СООБЩЕНИЯ</span>
                                             </a>
                                             <?php $link = MainConfig::$PAGE_SETTINGS ?>
                                             <a href="<?=$link?>" class="small-menu__item settings<?=($curUrl==$link ? ' current' : '')?>">

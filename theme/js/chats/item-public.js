@@ -6,6 +6,7 @@ var PublicChat = (function () {
 	PublicChat.prototype.ajaxTimer = false;
 	PublicChat.prototype.TIME = 5000;
 	PublicChat.prototype.OFFSET = 1;
+	PublicChat.prototype.isMyMess = false;
 
 	function PublicChat() { this.init(); }
 	//
@@ -66,6 +67,7 @@ var PublicChat = (function () {
 					self.ajaxActivate('new');
 					self.NicEditor.nicInstances[0].setContent('');
 					$(button).removeClass('load');
+					self.isMyMess = true;
 				}
 			},
 		});
@@ -102,6 +104,11 @@ var PublicChat = (function () {
 				else if(type==='new')
 				{
 					$(self.TAPE).append(result);
+					if(self.isMyMess)
+					{
+						self.WINDOW.scrollTop = self.WINDOW.scrollHeight;
+						self.isMyMess = false;
+					}
 				}
 				else if(type==='old')
 				{

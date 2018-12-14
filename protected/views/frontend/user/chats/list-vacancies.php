@@ -1,18 +1,33 @@
 <?
 	$type = Share::$UserProfile->type;
-	$bUrl = Yii::app()->baseUrl . '/theme/';
-	Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/chats/list-section.css');
-	Yii::app()->getClientScript()->registerScriptFile($bUrl.'js/chats/list.js', CClientScript::POS_END);
+	Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'chats/list-section.css');
+	Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'chats/list.js', CClientScript::POS_END);
 ?>
 <div class="chat-list vacancies">
 	<a href="<?=MainConfig::$PAGE_CHATS_LIST?>" class="chat-list__btn-link"><span><</span> Назад</a>
 	<? if(count($viData['items'])): ?>
-		<h2>Сообщения по вакансиям <span><?=$viData['cnt']?></span></h2>
+		<h2>Сообщения по вакансиям 
+			<? if($viData['cnt-chat']>0): ?>
+				<span class="js-g-hashint chat" title="Открытых чатов"><?=$viData['cnt-chat']?></span>
+			<? endif; ?>
+			<? if($viData['cnt-mess']>0): ?>
+				<span class="js-g-hashint messages" title="Сообщений"><?=$viData['cnt-mess']?></span>
+			<? endif; ?>
+			<? if($viData['cnt-mess-noread']>0): ?>
+				<span class="js-g-hashint noread" title="Не прочитано"><?=$viData['cnt-mess-noread']?></span>
+			<? endif; ?>
+		</h2>
 		<? foreach ($viData['items'] as $idvac => $item): ?>
 			<? $personal_link = MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $idvac; ?>
 			<div class="vacancy__item<?=(count($item['users'])?'':' disable')?>">
 				<div class="vacancy__item-tab">
 					<a href="<?=MainConfig::$PAGE_VACANCY . DS . $item['id']?>" title="Перейти на вакансию" target="_blank" class="js-g-hashint"><?=$item['title']?></a>
+					<? if($item['cnt-mess']>0): ?>
+						<span class="js-g-hashint vac-item__content-chat-mess" title="Сообщений"><?=$item['cnt-mess']?></span>
+					<? endif; ?>
+					<? if($item['cnt-mess-noread']>0): ?>
+						<span class="js-g-hashint vac-item__content-chat-mess noread" title="Не прочитано"><?=$item['cnt-mess-noread']?></span>
+					<? endif; ?>
 					<? if(!count($item['users'])): ?>
 						<span class="vacancy__item-tab-small">(нет утвержденного персонала)</span>
 					<? endif; ?>
@@ -22,13 +37,15 @@
 						<div class="vac-item__content-chat">
 							<div class="vac-item__chat-users">
 								<? foreach ($item['users'] as $idus): ?>
-									<? $user = $viData['users'][$idus]; ?>
-									<a href="<?=$user['profile']?>" title="<?=$user['name']?>" target="_blank" class="js-g-hashint">
-										<img src="<?=$user['src']?>" alt="<?=$user['name']?>">
-									</a>
+									<? if($idus != Share::$UserProfile->id): ?>
+										<? $user = $viData['users'][$idus]; ?>
+										<a href="<?=$user['profile']?>" title="<?=$user['name']?>" target="_blank" class="js-g-hashint">
+											<img src="<?=$user['src']?>" alt="<?=$user['name']?>">
+										</a>
+									<? endif; ?>
 								<? endforeach ?>
 							</div>
-							<a href="<?=$personal_link?>">Общий чат
+							<a href="<?=$personal_link?>" class="vac-item__chat-users-name"><b>Общий чат</b>
 								<? if($cntMess = count($item['public-mess'])): ?>
 									<span class="js-g-hashint vac-item__content-chat-mess" title="Сообщений"><?=$cntMess?></span>
 								<? endif; ?>
@@ -42,7 +59,7 @@
 									<a href="<?=$user['profile']?>" title="<?=$user['name']?>" target="_blank" class="js-g-hashint">
 										<img src="<?=$user['src']?>" alt="<?=$user['name']?>">
 									</a>
-									<a href="<?=$personal_link . DS . $user['id']?>">Личный чат
+									<a href="<?=$personal_link . DS . $user['id']?>" class="vac-item__chat-users-name"><b>Личный чат</b>
 										<? if($cntMess = count($item['personal-chat'][$user['id']]['id'])): ?>
 											<span class="js-g-hashint vac-item__content-chat-mess" title="Сообщений"><?=$cntMess?></span>
 										<? endif; ?>

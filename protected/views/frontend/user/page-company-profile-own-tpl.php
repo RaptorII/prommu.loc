@@ -120,15 +120,15 @@
           <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_SETTINGS ?>' style="padding:5px 39px">Настройки профиля</a>
         </div>
         <div class='btn-update btn-orange-sm-wr' style="margin-top: 10px" >
-          <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_IM ?>' style="padding:5px 39px">Мои сообщения</a>
+          <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_CHATS_LIST ?>' style="padding:5px 39px">Мои сообщения</a>
         </div>
-     <?php  elseif( Share::$UserProfile->id == $data):?>
+      <? endif; ?>  
+      <?  /*elseif( Share::$UserProfile->id == $data):?>
         <div class='btn-update btn-orange-sm-wr'>
           <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_IM . '?new=' . $idus ?>'>Отправить сообщение</a>
         </div>
-      <?php endif; ?>
-      
-      <?php  if(Share::$UserProfile->type == 2 && $datas == 1):?>
+      <?php endif;*/ ?>
+      <? if(Share::$UserProfile->type == 2 && $datas == 1):?>
         <div class='btn-update btn-orange-sm-wr'>
           <a class='hvr-sweep-to-right' href='#'>Невозможно отправить сообщение</a>
           <h3 class='unpubl'>Сообщения можно писать только, при одобрении работодателем на опубликованной им вакансии</h3>

@@ -855,7 +855,7 @@ class ImEmpl extends Im
         if(!$nT)
             return $arRes;
 
-        $arRes['cnt'] = $nT;
+        $arRes['cnt-chat'] = $nT;
         $arRes['pages'] = new CPagination($nT);
         $arRes['pages']->pageSize = $this->limit;
         $arRes['pages']->applyLimit($this);
@@ -891,9 +891,13 @@ class ImEmpl extends Im
         {
             $id = $m['id_theme'];
             $arRes['items'][$id]['cnt-mess']++;
+            $arRes['cnt-mess']++;
             !isset($arRes['items'][$id]['cnt-noread']) && $arRes['items'][$id]['cnt-noread']=0;
             if(!$m['is_resp'] && !$m['is_read']) // ответ Р и не прочитано
+            {
                 $arRes['items'][$id]['cnt-noread']++;
+                $arRes['cnt-mess-noread']++;
+            }
 
             if(!empty($m['title']))
                 $arRes['items'][$id]['title'] = $m['title'];
@@ -939,8 +943,11 @@ class ImEmpl extends Im
         if(!count($sql))
             return $arRes;
 
-        $arRes['cnt'] = 0;
-        foreach ($sql as $v) {
+        $arRes['cnt-chat'] = 0;
+        $arRes['cnt-mess'] = 0;
+        $arRes['cnt-mess-noread'] = 0;
+        foreach ($sql as $v)
+        {
             $id = $v['id'];
             $arV[$id]['id'] = $id;
             $arV[$id]['title'] = $v['title'];
@@ -950,16 +957,21 @@ class ImEmpl extends Im
                 $arV[$id]['users'][] = $v['applicant'];
             !in_array($id, $arVId) && array_push($arVId, $id);
             if(!empty($v['id_public']) && !in_array($v['id_public'], $arV[$id]['public-mess']))
+            {
                 $arV[$id]['public-mess'][] = $v['id_public'];
+                $arV[$id]['cnt-mess']++;
+                $arRes['cnt-mess']++;
+            }
             if(!empty($v['id_personal']) && !in_array($v['id_personal'], $arV[$id]['personal-id']))
                 $arV[$id]['personal-id'][] = $v['id_personal'];
         }
         $nV = count($arVId);
-        foreach ($arV as $v) {
+        foreach ($arV as $v)
+        {
             if(count($v['public-mess']))
-                $arRes['cnt']++;
+                $arRes['cnt-chat']++;
 
-            $arRes['cnt'] += count($v['personal-id']);
+            $arRes['cnt-chat'] += count($v['personal-id']);
         }
 
         $arRes['pages'] = new CPagination($nV);
@@ -984,15 +996,21 @@ class ImEmpl extends Im
                 ->where(array('in','ct.id_vac',$arVIdSelect))
                 ->queryAll();
 
-        
-        foreach ($sql as $v) {
+        foreach ($sql as $v)
+        {
             $arC = $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_usp']];
             $arC['id'][] = $v['id'];
             $arC['user'] = $v['id_usp'];
             !isset($arC['noread']) && $arC['noread'] = 0;
             if(!$v['is_resp'] && !$v['is_read'])
+            {
                 $arC['noread']++;
+                $arRes['items'][$v['id_vac']]['cnt-mess-noread']++;
+                $arRes['cnt-mess-noread']++;
+            }
             $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_usp']] = $arC;
+            $arRes['items'][$v['id_vac']]['cnt-mess']++;
+            
         }
 
         $arRes['users'] = Share::getUsers($arUId);
