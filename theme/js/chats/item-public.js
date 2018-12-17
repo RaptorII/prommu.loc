@@ -48,6 +48,8 @@ var PublicChat = (function () {
 			return;
 
 		$(button).addClass('load');
+        $(button).prop('disabled', true);
+
 		$.ajax({
 			type: 'POST',
 			url: '/ajax/Chat',
@@ -69,6 +71,7 @@ var PublicChat = (function () {
 					$(button).removeClass('load');
 					self.isMyMess = true;
 				}
+                $(button).prop('disabled', false);
 			},
 		});
 	}
