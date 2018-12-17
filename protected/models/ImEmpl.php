@@ -800,19 +800,25 @@ class ImEmpl extends Im
 
             if(!empty($v['id_public']))
             {
-            	$arV[$id]['public-mess'][] = $v['id_public'];
-            	$arRes['vacancies']['cnt-mess']++;
-                if(!$v['public_readed'])
-                    $arRes['vacancies']['cnt-noread']++;
+                if(!in_array($v['id_public'], $arV[$id]['public-mess']))
+                {
+                	$arV[$id]['public-mess'][] = $v['id_public'];
+                	$arRes['vacancies']['cnt-mess']++;
+                }
+                if(!in_array($v['id_public'], $arV[$id]['public-mess-readed']) && !$v['public_readed'])
+                    $arV[$id]['public-mess-readed'][] = $v['id_public'];
             }
                 
             if(!empty($v['id_personal']) && !in_array($v['id_personal'], $arV[$id]['personal-chat']))
             	$arV[$id]['personal-chat'][] = $v['id_personal'];
         }
 
-        foreach ($arV as $v) {
+        foreach ($arV as $v)
+        {
             if(count($v['public-mess']))
                 $arRes['cnt']++;
+
+            $arRes['vacancies']['cnt-noread'] += count($v['public-mess-readed']);
 
             $arRes['cnt'] += count($v['personal-chat']);
         }
@@ -825,14 +831,15 @@ class ImEmpl extends Im
                 ->where(array('in','ct.id_vac',$arVId))
                 ->queryAll();
 
-        foreach ($sql as $v) {
+        foreach ($sql as $v)
+        {
         	$arRes['vacancies']['cnt-mess']++;
 
-          if(!in_array($v['id_usp'], $arPid))
-              $arPid[] = $v['id_usp'];
+            if(!in_array($v['id_usp'], $arPid))
+                $arPid[] = $v['id_usp'];
 
-          if(!$v['is_resp'] && !$v['is_read'])
-              $arRes['vacancies']['cnt-noread']++;
+            if(!$v['is_resp'] && !$v['is_read'])
+                $arRes['vacancies']['cnt-noread']++;
         }
         $arRes['vacancies']['cnt-users'] = count($arPid);
 
@@ -971,35 +978,67 @@ class ImEmpl extends Im
             $arV[$id]['isactive'] = strtotime(date('Y-m-d')) < strtotime($v['remdate']);
             if(!empty($v['applicant']) && !in_array($v['applicant'], $arV[$id]['users']))
                 $arV[$id]['users'][] = $v['applicant'];
-            !in_array($id, $arVId) && array_push($arVId, $id);
+
             if(!empty($v['id_public']))
             {
                 if(!in_array($v['id_public'], $arV[$id]['public-mess']))
                 {
                     $arV[$id]['public-mess'][] = $v['id_public'];
                     $arV[$id]['cnt-mess']++;
-                    $arRes['cnt-mess']++;                    
+                    $arRes['cnt-mess']++;
                 }
-                if(!$v['public_readed'])
+                if(!in_array($v['id_public'], $arV[$id]['public-mess-readed']) && !$v['public_readed'])
                 {
-                    $arV[$id]['cnt-public-noread']++;
-                    $arV[$id]['cnt-mess-noread']++;
-                    $arRes['cnt-mess-noread']++;
+                    $arV[$id]['public-mess-readed'][] = $v['id_public'];
                 }
             }
 
             if(!empty($v['id_personal']) && !in_array($v['id_personal'], $arV[$id]['personal-id']))
                 $arV[$id]['personal-id'][] = $v['id_personal'];
         }
-        $nV = count($arVId);
-        foreach ($arV as $v)
+        
+        foreach ($arV as $id => $v)
         {
+            array_push($arVId, $id);
             if(count($v['public-mess']))
                 $arRes['cnt-chat']++;
+            if(count($v['public-mess-readed']))
+            {
+                $n = count($v['public-mess-readed']);
+                $arV[$id]['cnt-public-noread'] = $n;
+                $arV[$id]['cnt-mess-noread'] = $arV[$id]['cnt-mess-noread'] + $n;
+                $arRes['cnt-mess-noread'] = $arRes['cnt-mess-noread'] + $n;
+            }
 
             $arRes['cnt-chat'] += count($v['personal-id']);
         }
 
+        // поиск личных чатов
+        $sql = Yii::app()->db->createCommand()
+                ->select("ct.id_vac, c.*")
+                ->from('chat c')
+                ->leftjoin('chat_theme ct', 'c.id_theme=ct.id')
+                ->where(array('in','ct.id_vac',$arVId))
+                ->queryAll();
+
+        foreach ($sql as $v)
+        {
+            $arC = $arV[$v['id_vac']]['personal-chat'][$v['id_usp']];
+            $arC['id'][] = $v['id'];
+            $arC['user'] = $v['id_usp'];
+            !isset($arC['noread']) && $arC['noread'] = 0;
+            if(!$v['is_resp'] && !$v['is_read']) // ответ не Р и не прочитано
+            {
+                $arV[$v['id_vac']]['cnt-mess-noread']++;
+                $arRes['cnt-mess-noread']++;
+                $arC['noread']++;
+            }
+            $arV[$v['id_vac']]['personal-chat'][$v['id_usp']] = $arC;
+            $arV[$v['id_vac']]['cnt-mess']++;
+            $arRes['cnt-mess']++;
+        }
+
+        $nV = count($arVId);
         $arRes['pages'] = new CPagination($nV);
         $arRes['pages']->pageSize = $this->limit;
         $arRes['pages']->applyLimit($this);
@@ -1013,31 +1052,6 @@ class ImEmpl extends Im
 
                 $arRes['items'][$arVId[$i]] = $arV[$arVId[$i]];
             }
-
-        // поиск личных чатов
-        $sql = Yii::app()->db->createCommand()
-                ->select("ct.id_vac, c.*")
-                ->from('chat c')
-                ->leftjoin('chat_theme ct', 'c.id_theme=ct.id')
-                ->where(array('in','ct.id_vac',$arVIdSelect))
-                ->queryAll();
-
-        foreach ($sql as $v)
-        {
-            $arC = $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_usp']];
-            $arC['id'][] = $v['id'];
-            $arC['user'] = $v['id_usp'];
-            !isset($arC['noread']) && $arC['noread'] = 0;
-            if(!$v['is_resp'] && !$v['is_read']) // ответ не Р и не прочитано
-            {
-                $arRes['items'][$v['id_vac']]['cnt-mess-noread']++;
-                $arRes['cnt-mess-noread']++;
-                $arC['noread']++;
-            }
-            $arRes['items'][$v['id_vac']]['personal-chat'][$v['id_usp']] = $arC;
-            $arRes['items'][$v['id_vac']]['cnt-mess']++;
-            $arRes['cnt-mess']++;
-        }
 
         $arRes['users'] = Share::getUsers($arUId);
 
