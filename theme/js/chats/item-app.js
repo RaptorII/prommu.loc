@@ -71,7 +71,9 @@
 	        if (G_VARS.idTm || G_VARS.isNew) {
 	            self.setChatSize({ isNew: G_VARS.isNew });
 	            G_VARS.isNew || self.getMessages(0);
-	            $(".go button").click(function (e) { self.sendMessage(e, this); });
+	            $(".go button").click(function (e) {
+                    $(this).prop('disabled', true);
+	                self.sendMessage(e, this); });
 	            if (!G_VARS.isNew)
 	                self.timerCheckNewMess(true, 5000);
 	            if ($("#Mmessage").length)
@@ -352,7 +354,9 @@
 	        
 	        if (self.NicEditor.nicInstances[0].getContent().replace('<br>', '').trim() == '')
 	            return;
-	        G_VARS.App.showLoading2($that, { outerAlign: 'left', valign: 'top', offsetX: -10, offsetY: 3 });
+
+	        G_VARS.App.showLoading2($that, { outerAlign: 'left', valign: 'top', offsetX: -10, offsetY: 3 })
+
 	        var flag = 1;
 	        if (G_VARS.isNew) {
 	            var theme, vacId;
@@ -453,6 +457,8 @@
 	        })
 	            .always(function () {
 	            G_VARS.App.hideLoading();
+
+	            $(".go button").prop('disabled', false);
 	        });
 	    };
 	    PageApplicantMessView.prototype.initEditor = function () {

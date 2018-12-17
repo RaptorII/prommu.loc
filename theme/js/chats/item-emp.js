@@ -72,7 +72,9 @@
 	        if (G_VARS.idTm || G_VARS.isNew) {
 	            self.setChatSize({ isNew: G_VARS.isNew });
 	            G_VARS.isNew || self.getMessages(0);
-	            $(".go button").click(function (e) { self.sendMessage(e, this); });
+	            $(".go button").click(function (e) {
+                    $(this).prop('disabled', true);
+	                self.sendMessage(e, this); });
 	            if (!G_VARS.isNew)
 	            	self.timerCheckNewMess(true, 5000);
 	            if ($("#Mmessage").length)
@@ -461,6 +463,8 @@
 	        })
 	            .always(function () {
 	            G_VARS.App.hideLoading();
+
+	            $(".go button").prop('disabled', false);
 	        });
 	    };
 	    PageCompanyMessView.prototype.initEditor = function () {
