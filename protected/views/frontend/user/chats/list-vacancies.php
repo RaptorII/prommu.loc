@@ -49,6 +49,9 @@
 								<? if($cntMess = count($item['public-mess'])): ?>
 									<span class="js-g-hashint vac-item__content-chat-mess" title="Сообщений"><?=$cntMess?></span>
 								<? endif; ?>
+								<? if($item['cnt-public-noread']>0): ?>
+									<span class="js-g-hashint vac-item__content-chat-mess noread" title="Не прочитано"><?=$item['cnt-public-noread']?></span>
+								<? endif; ?>
 							</a>
 						</div>
 						<? foreach ($item['users'] as $idus): ?>

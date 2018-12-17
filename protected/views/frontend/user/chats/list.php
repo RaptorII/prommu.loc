@@ -1,7 +1,6 @@
 <?
-    $bUrl = Yii::app()->baseUrl . '/theme/';
-    Yii::app()->getClientScript()->registerCssFile($bUrl.'css/chats/list.css');
-    Yii::app()->getClientScript()->registerScriptFile($bUrl.'js/chats/list.js', CClientScript::POS_END);
+    Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'chats/list.css');
+    Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'chats/list.js', CClientScript::POS_END);
 ?>
 <div class="chat__all">
     <h1>Сообщения</h1>

@@ -591,9 +591,17 @@ class ImApplic extends Im
         $arV = $arVId = $arPid = array();
         // находим все по вакансиям
         $sql = Yii::app()->db->createCommand()
-                ->select("ev.id, ed.id id_public, ct.id id_personal, vs.id_promo")
+                ->select("ev.id, 
+                    ed.id id_public, 
+                    ct.id id_personal, 
+                    vs.id_promo,
+                    IF(edr.cdate IS NULL,0,1) AS public_readed")
                 ->from('empl_vacations ev')
                 ->leftjoin('emplv_discuss ed','ed.id_vac=ev.id')
+                ->leftjoin(
+                    'emplv_discuss_readed edr',
+                    'edr.id_message=ed.id AND edr.id_user='.$idus
+                )
                 ->leftjoin('chat_theme ct','ct.id_vac=ev.id')
                 ->leftjoin(
                     'vacation_stat vs',
@@ -616,6 +624,8 @@ class ImApplic extends Im
             {
                 $arV[$id]['public-mess'][] = $v['id_public'];
                 $arRes['vacancies']['cnt-mess']++;
+                if(!$v['public_readed'])
+                    $arRes['vacancies']['cnt-noread']++;
             }
                 
             if(!empty($v['id_personal']) && !in_array($v['id_personal'], $arV[$id]['personal-chat']))
@@ -737,6 +747,7 @@ class ImApplic extends Im
      */
     public function getVacanciesChats()
     {
+        $idus = Share::$UserProfile->id;
         $id_resume = Share::$UserProfile->exInfo->id_resume;
         $arRes = $arV = $arVId = $arUId = $arVIdSelect = array();
         $this->limit = 10; // вывод 10 вакансий на странице
@@ -750,9 +761,14 @@ class ImApplic extends Im
                     ev.remdate,
                     ev.id_user employer,
                     ed.id id_public, 
-                    ct.id id_personal")
+                    ct.id id_personal,
+                    IF(edr.cdate IS NULL,0,1) AS public_readed")
                 ->from('empl_vacations ev')
                 ->leftjoin('emplv_discuss ed','ed.id_vac=ev.id')
+                ->leftjoin(
+                    'emplv_discuss_readed edr',
+                    'edr.id_message=ed.id AND edr.id_user='.$idus
+                )
                 ->leftjoin('chat_theme ct','ct.id_vac=ev.id')
                 ->leftjoin(
                     'vacation_stat vs',
@@ -777,12 +793,22 @@ class ImApplic extends Im
             if(!empty($v['employer']) && !in_array($v['employer'], $arV[$id]['users']))
                 $arV[$id]['users'][] = $v['employer'];
             !in_array($id, $arVId) && array_push($arVId, $id);
-            if(!empty($v['id_public']) && !in_array($v['id_public'], $arV[$id]['public-mess']))
+            if(!empty($v['id_public']))
             {
-                $arV[$id]['public-mess'][] = $v['id_public'];
-                $arV[$id]['cnt-mess']++;
-                $arRes['cnt-mess']++;
+                if(!in_array($v['id_public'], $arV[$id]['public-mess']))
+                {
+                    $arV[$id]['public-mess'][] = $v['id_public'];
+                    $arV[$id]['cnt-mess']++;
+                    $arRes['cnt-mess']++;                    
+                }
+                if(!$v['public_readed'])
+                {
+                    $arV[$id]['cnt-public-noread']++;
+                    $arV[$id]['cnt-mess-noread']++;
+                    $arRes['cnt-mess-noread']++;
+                }
             }
+
             if(!empty($v['id_personal']) && !in_array($v['id_personal'], $arV[$id]['personal-id']))
                 $arV[$id]['personal-id'][] = $v['id_personal'];
         }
