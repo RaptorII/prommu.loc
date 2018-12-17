@@ -95,7 +95,8 @@ var PublicChat = (function () {
 			type: 'GET',
 			url: window.location.pathname,
 			data: data,
-			success: function(result) {
+			success: function(result)
+			{
 				if(lastMess==undefined && result.length) // первое собщение
 				{
 					$(self.TAPE).html(result);
@@ -103,6 +104,10 @@ var PublicChat = (function () {
 				}
 				else if(type==='new')
 				{
+					if(result.length)
+					{
+						$('#DiMessagesInner .new-mess').remove(); // удаляем подсказку о новом сообщении
+					}
 					$(self.TAPE).append(result);
 					if(self.isMyMess)
 					{

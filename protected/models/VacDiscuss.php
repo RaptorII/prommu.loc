@@ -14,6 +14,7 @@ class VacDiscuss extends Model
         $this->limit = 50;
         $conditions = 'ed.id_vac=:idvac';
         $arParams[':idvac'] = $id;
+        $idus = Share::$UserProfile->id;
 
         $id_message = filter_var(
                 Yii::app()->getRequest()->getParam('id_message'), 
@@ -41,8 +42,12 @@ class VacDiscuss extends Model
                 ->queryRow();
 
         $arRes['items'] = Yii::app()->db->createCommand()
-                ->select("ed.*")
+                ->select("ed.*, IF(edr.cdate IS NULL, 0, 1) AS readed")
                 ->from('emplv_discuss ed')
+                ->leftjoin(
+                	'emplv_discuss_readed edr', 
+                	'edr.id_message=ed.id AND edr.id_user='.$idus
+                )
                 ->where($conditions,$arParams)
                 ->order('ed.crdate desc')
                 ->offset($this->offset)
@@ -54,10 +59,30 @@ class VacDiscuss extends Model
 
         $arRes['title'] = reset($arRes['items'])['title'];
         $arIdus = array();
+        $arIdMess = array();
         foreach ($arRes['items'] as $k => $v)
         {
             $arRes['items'][$k]['date'] = Share::getPrettyDate($v['crdate']);
             $arIdus[] = $v['id_user'];
+            if(!$v['readed'])
+            {
+            	$arIdMess[] = $v['id'];
+            }
+        }
+
+        if(count($arIdMess))
+        { // устанавливаем статус прочитанности
+        	$arInsert = array();
+        	$date = time();
+        	foreach ($arIdMess as $v)
+        	{
+        		$arInsert[] = array(
+        				'id_message' => $v,
+        				'id_user' => $idus,
+        				'cdate' => $date
+        			);
+        	}
+        	Share::multipleInsert(['emplv_discuss_readed'=>$arInsert]);
         }
 
         $arRes['users'] = Share::getUsers($arIdus);
