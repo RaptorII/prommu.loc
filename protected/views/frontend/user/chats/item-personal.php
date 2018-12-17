@@ -10,6 +10,11 @@
 	Yii::app()->getClientScript()->registerScriptFile('/jslib/nicedit/nicEdit.js', CClientScript::POS_END);
 	Yii::app()->getClientScript()->registerScriptFile('/jslib/magnific-popup/jquery.magnific-popup.min.js', CClientScript::POS_END);
 ?>
+
+
+<pre>
+    <?print_r($viData);?>
+</pre>
 <div class="message"><? echo ($viData['error'] ? $viData['message'] : '')?></div>
 <div class="chat-item">
 	<? if(!$viData['error']): ?>
@@ -19,12 +24,7 @@
             <?php if( $viData['themes'] ): ?>
               <label id="LCBtheme">
                 <b>Выберите тему диалога из заявок этого пользователя на ваши вакансии</b>
-                <select name="theme" id="CBTheme">
-                  <option value="aa">- Выберите тему -</option>
-                  <?php foreach ($viData['themes'] as $key => $val): ?>
-                    <option value="<?= $val['id'] ?>"><?= $val['title'] ?></option>
-                  <?php endforeach; ?>
-                </select>
+                <input name="theme" id="CBTheme" value="<?=$viData['vacancy']['id']?>"\>
               </label>
               <br />
               <br />
@@ -40,6 +40,7 @@
               <br />
         </div>
       <?php endif; ?>
+      <input type="hidden" name="theme" id="CBTheme" value="<?=$viData['vacancy']['id']?>"\>
 
         <div class="chat-item__title">
             <h2>

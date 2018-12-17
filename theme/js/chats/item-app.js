@@ -362,7 +362,7 @@
 	            var theme, vacId;
 	            if ($("#EdTheme").val())
 	                theme = $("#EdTheme").val();
-	            else if ($("#CBTheme").val() != 'aa')
+	            if ($("#CBTheme").val())
 	                vacId = $("#CBTheme").val();
 	            if (!theme && !vacId) {
 	                var item = $("#CBTheme");
@@ -384,7 +384,7 @@
 	            var props = { 'new': G_VARS.isNew, m: self.NicEditor.nicInstances[0].getContent() };
 	            if (theme)
 	                props['t'] = theme;
-	            else if (vacId)
+	            if (vacId)
 	                props['vid'] = vacId;
 	        }
 	        else {
