@@ -7,6 +7,7 @@ var PublicChat = (function () {
 	PublicChat.prototype.TIME = 5000;
 	PublicChat.prototype.OFFSET = 1;
 	PublicChat.prototype.isMyMess = false;
+	PublicChat.prototype.idTheme = $('#chat-vacancy').val();
 
 	function PublicChat() { this.init(); }
 	//

@@ -173,6 +173,7 @@
 #F3uploaded .attached-image .uni-delete:hover { background-position: 0 -58px; }
 #F3uploaded .attached-image .uni-img-link { display: block; max-width: 100px; max-height: 100px; }
 #F3uploaded .attached-image .uni-img-link img { width: 100%; }
+#F2upload .loading-ico { display: none; }
 /*
 *		MEDIA
 */
