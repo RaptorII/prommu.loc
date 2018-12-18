@@ -87,6 +87,36 @@ class VacDiscuss extends Model
 
         $arRes['users'] = Share::getUsers($arIdus);
 
+        // получаем файлы диалога
+        $Upluni = new Uploaduni();
+        $Upluni->setCustomOptions(array(
+                'type' => array('images' => 'image/jpeg,image/png', 'files' => 'word,excel,spreadsheetml'),
+                'scope' => 'im',
+                'maxFS' => 5242880, // max filesize
+                'maxImgDim' => array(2500, 2500),
+                'removeProtected' => true,
+                'sizes' => array('isorig' => true, 'dims' => [], 'thumb' => 150),
+                'tmpDir' => "/" . MainConfig::$PATH_CONTENT_PROTECTED . "/im/tmp",
+            )
+        );
+        $files = $Upluni->init();
+
+        // берем только файлы этого диалога
+        $arRes['files'] = array();
+        foreach ($files['files'] ?: array() as $key => $val)
+        {
+            if ($val['extmeta']->idTheme == $id)
+            {
+                $val['files'] = array_map(
+                    function ($v){ return str_replace('/protected', '', $v);}, 
+                    $val['files']
+                );
+                $arRes['files'][$key] = $val;
+            }
+        }
+        // set chat data
+        Yii::app()->session['imdata'] = array('vacancy' => $id);
+
         return $arRes;
     }
 
@@ -135,13 +165,27 @@ class VacDiscuss extends Model
         // сохраняем сообщение
         if( $res )
         {
-            $res = Yii::app()->db->createCommand()
+            $uploaduni = new Uploaduni();
+            $files = $uploaduni->getUploadedFiles(['scope' => 'im']);
+            $arFiles = array();
+
+            if ($files)
+            {
+                foreach ($files as $key => $val)
+                    $val['extmeta']->idTheme==$id && $arFiles[$key] = $val;
+
+                $arFiles = $arFiles ? json_encode($this->moveUploadedFiles($arFiles)) : '';
+                $arFiles && $uploaduni->removeUnExistedFiles(['scope' => 'im']);
+            }
+
+            Yii::app()->db->createCommand()
                 ->insert('emplv_discuss', array(
-                    'id_vac' => $id,
-                    'id_user' => Share::$UserProfile->id,
-                    'mess' => $mess,
-                    'crdate' => date("Y-m-d H:i:s"),
-                ));
+                        'id_vac' => $id,
+                        'id_user' => $idus,
+                        'mess' => $mess,
+                        'files' => $arFiles,
+                        'crdate' => date("Y-m-d H:i:s"),
+                    ));
 
             $error = 0;
             $message = "Сообщение добавлено";
@@ -150,9 +194,7 @@ class VacDiscuss extends Model
         {
             $error = 1;
             $message = "Ошибка добавления сообщения";
-        } // endif
-
-        Yii::app()->user->setFlash('data', array('error' => $error, 'message' => $message));
+        }
 
         return array('error' => $error);
     }
