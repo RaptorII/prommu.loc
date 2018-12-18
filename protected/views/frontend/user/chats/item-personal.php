@@ -12,9 +12,7 @@
 ?>
 
 
-<pre>
-    <?print_r($viData);?>
-</pre>
+
 <div class="message"><? echo ($viData['error'] ? $viData['message'] : '')?></div>
 <div class="chat-item">
 	<? if(!$viData['error']): ?>

@@ -36,7 +36,59 @@ var PublicChat = (function () {
         if($(this).scrollTop()==0)
         	self.ajaxActivate('old');
 		});
+
+        $("#DiButtonPanel .js-attach-file").click(function (e) { self.onAttachClickFn(e, this); });
+        var Upli = new Uploaduni();
+        self.uploaduni = Upli;
+        Upli.init({ uploadConnector: MainConfig.AJAX_POST_UPLOADUNI_EX,
+            scope: 'im',
+            imgBlockTmpl: 'attached-image-tpl',
+            filesBlockTmpl: 'attached-file-tpl',
+            imgsWrapper: '#DiImgs',
+            filesWrapper: '#DiFiles',
+            lnktoimg: 'orig',
+            uploadForm: '#F2upload',
+            messageBlock: '.message',
+            loadingBLock: '.loading-ico',
+            onDeleteEnd: function (item) {
+                if ($('#DiImgs').find('.uni-delete').length < 1 && $('#DiFiles').find('.uni-delete').length < 1)
+                    $("#F3uploaded").fadeOut(200);
+            },
+        });
+        Upli.setFiles(G_VARS.uniFiles);
 	};
+
+    PublicChat.prototype.onAttachClickFn = function (e, that) {
+        var self = this;
+        var $that = $(that);
+        e.preventDefault();
+        var form = $("#TmplF2upload").html();
+        ModalWindow.open({ content: form, action: { active: 0 }, bgIsCloseBtn: 0, position: 'fixed', context: '#DiContent',
+            afterOpen: function () {
+                ModalWindow.content.find('.btn-upload button').click(function (e) { $("#UplImg").click(); });
+                ModalWindow.content.find('#UplImg').change(function (e) { self.onAtachFileChangeFn(e, this); });
+            }
+        });
+    };
+
+    PublicChat.prototype.onAtachFileChangeFn = function (e, that) {
+        var self = this;
+        var $that = $(that);
+        self.uploaduni.uploadEx({ 'uploadInput': that, meta: { idTheme: self.idTheme },
+            onSuccessEnd: function (item) {
+                $("#F3uploaded").fadeIn(400);
+                ModalWindow.close();
+                Hinter.bind(item.find('.js-hashint'));
+            },
+            onAfterUpload: function (data) {
+                for (var ii in data['file']['files']) {
+                    var val = data['file']['files'][ii];
+                    data['file']['files'][ii] += ',' + self.idTheme;
+                }
+                return data;
+            },
+        });
+    };
 	//
 	PublicChat.prototype.sendMessage = function(button)
 	{
