@@ -1,0 +1,116 @@
+.js-g-hashint{
+    width: 20px;
+    height: 20px;
+    background: url(/theme/pic/projects/map-locator.png) right no-repeat;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.cabinet{
+    width:100%;
+    overflow: hidden;
+}
+.cabinet__header{
+    display: flex;
+    height: 70px;
+    justify-content: flex-end;
+    margin-bottom:40px;
+}
+
+
+.timer__box{
+    display: flex;
+    align-items: center;
+}
+.timer__time{
+    font-size: 40px;
+}
+.timer__control{
+    margin-left:15px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+}
+.cabinet__timer{
+    background: rgba(171, 184, 32, 0.7);
+    height: 70px;
+    padding: 7px 17px;
+    cursor: pointer;
+    color: white;
+    min-width: 250px;
+}
+
+.cabinet__timer:hover{
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.timer__play{
+    background-size: 15px 15px;
+    display: block;
+    width: 15px;
+    height: 15px;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%3E%0A%20%20%3Cg%20fill%3D%22%23fff%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M8.2%2C0.3%20C12.5%2C0.3%2016%2C3.8%2016%2C8.1%20C16%2C12.4%2012.5%2C15.9%208.2%2C15.9%20C3.9%2C15.9%200.4%2C12.4%200.4%2C8.1%20C0.4%2C3.8%203.9%2C0.3%208.2%2C0.3%20Z%20M8.2%2C15.1%20C12%2C15.1%2015.1%2C12%2015.2%2C8.1%20C15.2%2C4.2%2012%2C1.1%208.2%2C1.1%20C4.3%2C1.1%201.2%2C4.3%201.2%2C8.1%20C1.2%2C12%204.4%2C15.1%208.2%2C15.1%20Z%22/%3E%0A%20%20%20%20%3Cpath%20d%3D%22M7%2C4.7%20C6.8%2C4.6%206.6%2C4.7%206.6%2C4.8%20L6.6%2C11.7%20C6.6%2C11.9%206.9%2C11.9%207%2C11.8%20L11.5%2C8.3%20C11.6%2C8.2%2011.6%2C8.1%2011.5%2C8%20L7%2C4.7%20Z%22/%3E%0A%20%20%3C/g%3E%0A%3C/svg%3E%0A');
+}
+
+.timer__control-start{
+    margin-left: 10px;
+}
+
+.cabinet__user-logo{
+    height: 50px;
+    border-radius: 50%;
+}
+.cabinet__user{
+    display: flex;
+    align-items: center;
+    width:25%;
+}
+
+.cabinet__user-logo{
+    margin-left: 10px;
+}
+.cabinet__user-name{
+    margin-left: 10px;
+    text-decoration: underline;
+}
+.point{
+    width: 100%;
+    background-color: #f5f5f5;
+    padding: 10px;
+    box-sizing: border-box;
+    align-items: center;
+    display: flex;
+}
+.task,.task__header{
+    display: flex;
+    border-bottom: 1px solid #f5f5f5;
+}
+.task__header{
+    font-weight: bold;
+    border-top:1px solid #f5f5f5;
+}
+
+.task__item{
+    width:100%;
+    padding: 10px;
+}
+.project__info{
+    display: flex;
+    width: 50%;
+    align-items: center;
+    font-size: 25px;
+    justify-content: center;
+}
+.tasks .start{
+    background: #abb92a;
+}
+.tasks .task__control{
+    color: white;
+    cursor: pointer;
+}
+.tasks .task__control:hover{
+    background: rgba(0, 0, 0, 0.5);
+}
+
+
+
