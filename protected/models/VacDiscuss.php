@@ -114,8 +114,14 @@ class VacDiscuss extends Model
                 $arRes['files'][$key] = $val;
             }
         }
-        // set chat data
-        Yii::app()->session['imdata'] = array('vacancy' => $id);
+        // set vacancy chat data in session
+        $imData = Yii::app()->session['imdata'];
+        if(!is_array($imData['vacancy']))
+            $imData['vacancy'] = [$id];
+        elseif(!in_array($id, $imData['vacancy']))
+            $imData['vacancy'][] = $id;
+
+        Yii::app()->session['imdata'] = $imData;
 
         return $arRes;
     }

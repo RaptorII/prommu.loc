@@ -224,11 +224,17 @@ class ImEmpl extends Im
                     $themeFiles[$key] = $val;
                 }
             }
-//            if( Yii::app()->session['uploaduni_opts']['removeProtected'] ) foreach ($files as $key => &$val) unset($val['origProtected']);
+
             $data = array_merge($data, array('files' => $themeFiles));
 
-            // set chat data
-            Yii::app()->session['imdata'] = array('chatId' => $inChatId);
+            // set chat data in session
+            $imData = Yii::app()->session['imdata'];
+            if(!is_array($imData['chatId']))
+                $imData['chatId'] = [$inChatId];
+            elseif(!in_array($inChatId, $imData['chatId']))
+                $imData['chatId'][] = $inChatId;
+
+            Yii::app()->session['imdata'] = $imData;
 
             return $data;
         }
@@ -1168,8 +1174,14 @@ class ImEmpl extends Im
             }
             $arRes['files'] = $themeFiles;
 
-            // set chat data
-            Yii::app()->session['imdata'] = array('chatId' => $chat_id);            
+            // set chat data in session
+            $imData = Yii::app()->session['imdata'];
+            if(!is_array($imData['chatId']))
+                $imData['chatId'] = [$chat_id];
+            elseif(!in_array($chat_id, $imData['chatId']))
+                $imData['chatId'][] = $chat_id;
+
+            Yii::app()->session['imdata'] = $imData;           
         }
 
         return $arRes;
