@@ -174,6 +174,27 @@
 #F3uploaded .attached-image .uni-img-link { display: block; max-width: 100px; max-height: 100px; }
 #F3uploaded .attached-image .uni-img-link img { width: 100%; }
 #F2upload .loading-ico { display: none; }
+#form-message{ margin-bottom: 0 }
+/*
+*
+*/
+#DiContent .mess-box .-files a{
+	display: block;
+	text-decoration: underline;
+	color: #ff6500;
+}
+.mess-box .-images a{
+	display: inline-block;
+	margin: 5px;
+	vertical-align: top;
+}
+.mess-box .-images img{
+	width: 100px;
+	height: 100px;
+	display: block;
+	object-fit: cover;
+	border-radius: 15px;
+}
 /*
 *		MEDIA
 */

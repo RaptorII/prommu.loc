@@ -196,20 +196,23 @@ class Uploaduni extends Model
 
         try
         {
-            if( $_FILES[$img]['size'] > $options['maxFS'] || $_FILES[$img]['size'] == 0 ) throw new Exception('Неправильный размер файла!', -101);
+            if( $_FILES[$img]['size'] > $options['maxFS'] || $_FILES[$img]['size'] == 0 ) 
+            {
+                throw new Exception('Неправильный размер файла!', -101);
+            }
 
             // получаем тип файла
             $type = false;
             foreach ($options['type'] as $key => $val)
-            {
                 foreach ($val as $val2)
-                {
-                    if( strpos($_FILES[$img]['type'], $val2) !== false ) { $type = [$key, $val2]; break; }
-                } // end foreach
-            } // end foreach
+                    if( strpos($_FILES[$img]['type'], $val2) !== false )
+                    { 
+                        $type = [$key, $val2]; break; 
+                    }
 
 
-            if( !$type ) {
+            if( !$type )
+            {
                 throw new Exception("Тип файла {$_FILES[$img]['type']} не допустим", -102);
             }
             else
@@ -218,17 +221,16 @@ class Uploaduni extends Model
                 $fiId = date('YmdHis') . rand(100, 1000);
                 $fn = $fiId . ".{$ext}";
                 $path = $options['tmpDir'];
-
+                $url = $options['removeProtected'] ? str_replace('/protected', '', $path) : $path;
+                $arResult = array();
 
                 // проверяем на реальное наличие файлов
                 if( $files = $_SESSION['uploaduniFiles'] )
                 {
                     $_SESSION['uploaduniFiles'] = array();
-
                     foreach ($files as $key => $val2)
-                    {
-                        if( file_exists(MainConfig::$DOC_ROOT . $val2[0]) ) $_SESSION['uploaduniFiles'][$key] = $val2;
-                    } // end foreach
+                        if( file_exists(MainConfig::$DOC_ROOT . $val2[0]) ) 
+                            $_SESSION['uploaduniFiles'][$key] = $val2;
                 }
 
 
@@ -245,53 +247,72 @@ class Uploaduni extends Model
                     {
                         foreach ($options['sizes']['dims'] as $key => $val)
                         {
-                            if( (int) ($ret = $this->imgResizeToRect($_FILES[$img]["tmp_name"], MainConfig::$DOC_ROOT . $path . DS . $fiId . $val . ".{$ext}", "image/jpeg", $val)) > 0 )
+                            $filePath = DS . $fiId . $val . ".{$ext}";
+                            if( (int) ($ret = $this->imgResizeToRect($_FILES[$img]["tmp_name"], MainConfig::$DOC_ROOT . $path . $filePath, "image/jpeg", $val)) > 0 )
                             {
-                                $_SESSION['uploaduniFiles'][$options['scope']][$fiId]['files'][$val] = $path . DS . $fiId. $val . ".{$ext}";
+                                $_SESSION['uploaduniFiles'][$options['scope']][$fiId]['files'][$val] = $path . $filePath;
+                                $arResult[$fiId]['files'][$val] = $url . $filePath;
                             }
-                            else
-                            {
-                            } // endif
-                        } // end foreach
-
+                        }
 
                         // оставляем оригинал
                         if( $options['sizes']['isorig'] )
                         {
-                            if( copy($_FILES[$img]["tmp_name"], MainConfig::$DOC_ROOT . $path . DS . $fiId . ".{$ext}") )
-                                    $_SESSION['uploaduniFiles'][$options['scope']][$fiId]['files']['orig'] = $path . DS . $fiId . ".{$ext}";
+                            $filePath = DS . $fiId . ".{$ext}";
+                            if( copy($_FILES[$img]["tmp_name"], MainConfig::$DOC_ROOT . $path . $filePath) )
+                            {
+                                $_SESSION['uploaduniFiles'][$options['scope']][$fiId]['files']['orig'] = $path . $filePath;
+                                $arResult[$fiId]['files']['orig'] = $url . $filePath;
+                            }
                         }
-
 
                         // делаем миниатюру
                         if( $options['sizes']['thumb'] )
                         {
+                            $filePath = DS . $fiId . "tb.{$ext}";
                             if( $ret = $this->imgResizeToRect($_FILES[$img]["tmp_name"]
-                                    , MainConfig::$DOC_ROOT . $path . DS . $fiId . "tb.{$ext}", "image/jpeg", $options['sizes']['thumb']) > 0
-                                )
-                                    $_SESSION['uploaduniFiles'][$options['scope']][$fiId]['files']['tb'] = $path . DS . $fiId . "tb.{$ext}";
+                                    , MainConfig::$DOC_ROOT . $path . $filePath, "image/jpeg", $options['sizes']['thumb']) > 0
+                            )
+                            {
+                                $_SESSION['uploaduniFiles'][$options['scope']][$fiId]['files']['tb'] = $path . $filePath;
+                                $arResult[$fiId]['files']['tb'] = $url . $filePath;
+                            }
                         }
 
-                        $_SESSION['uploaduniFiles'][$options['scope']][$fiId] = array_merge($_SESSION['uploaduniFiles'][$options['scope']][$fiId], array(
-                            'meta' => array(
-                                'name' => $_FILES[$img]["name"],
-                                'type' => 'images',
-                                'ext' => $ext,
-                            ),
-                            'extmeta' => $meta,
-                        ));
-                    } // endif
-
-
-                // Обрабатываем файлы
-                } elseif( $type[0] == 'files' )
+                        $_SESSION['uploaduniFiles'][$options['scope']][$fiId] = array_merge(
+                            $_SESSION['uploaduniFiles'][$options['scope']][$fiId], 
+                                array(
+                                    'meta' => array(
+                                        'name' => $_FILES[$img]["name"],
+                                        'type' => 'images',
+                                        'ext' => $ext,
+                                    ),
+                                    'extmeta' => $meta,
+                                )
+                            );
+                        $arResult[$fiId] = array_merge(
+                                $arResult[$fiId], 
+                                array(
+                                    'meta' => array(
+                                        'name' => $_FILES[$img]["name"],
+                                        'type' => 'images',
+                                        'ext' => $ext,
+                                    ),
+                                    'extmeta' => $meta,
+                                )
+                            );
+                    }
+                }
+                elseif( $type[0] == 'files' ) // Обрабатываем файлы
                 {
-                    if( copy($_FILES[$img]["tmp_name"], MainConfig::$DOC_ROOT . $path . DS . $fiId . ".{$ext}") )
+                    $filePath = DS . $fiId . ".{$ext}";
+                    if( copy($_FILES[$img]["tmp_name"], MainConfig::$DOC_ROOT . $path . $filePath) )
                     {
-                        if( $options['removeProtected'] ) $file = str_replace('protected/', '', $path . DS . $fiId . ".{$ext}");
-                        else $file = $path . DS . $fiId . ".{$ext}";
                         $_SESSION['uploaduniFiles'][$options['scope']][$fiId] = array(
-                            'files' => array('orig' => $file, 'origProtected' => $path . DS . $fiId . ".{$ext}"),
+                            'files' => array(
+                                'orig' => $url . $filePath, 
+                                'origProtected' => $path . $filePath
+                            ),
                             'meta' => array(
                                 'name' => $_FILES[$img]["name"],
                                 'type' => 'files',
@@ -299,13 +320,26 @@ class Uploaduni extends Model
                             ),
                             'extmeta' => $meta,
                         );
+
+                        $arResult[$fiId] = array(
+                            'files' => array(
+                                'orig' => $url . $filePath, 
+                                'origProtected' => $path . $filePath
+                            ),
+                            'meta' => array(
+                                'name' => $_FILES[$img]["name"],
+                                'type' => 'files',
+                                'ext' => $ext,
+                            ),
+                            'extmeta' => $meta,
+                        );     
                     }
                 }
                 else
                 {
                     throw new Exception('Неправильный тип файла', -103);
-                } // endif
-            } // endif
+                }
+            }
         }
         catch (Exception $e) {
             $message = $e->getMessage();
@@ -313,19 +347,14 @@ class Uploaduni extends Model
             $flag = 1;
         } // endtry
 
-
-
-
         if( $flag )
         {
-            $ret = array('error' => $code, 'message' => $message, 'ret' => $ret);
+            return array('error'=>$code, 'message'=>$message, 'ret'=>$ret);
         }
         else
         {
-//            if( $options['removeProtected'] ) foreach ($_SESSION['uploaduniFiles'][$options['scope']] as $key => &$val) unset($val['origProtected']);
-            $ret = array('error' => 100, 'id' => $fiId, 'file' => $_SESSION['uploaduniFiles'][$options['scope']][$fiId], 'files' => $_SESSION['uploaduniFiles'][$options['scope']]);
-        } // endif
-        return $ret;
+            return array('error'=>100, 'id'=>$fiId, 'file'=>$arResult[$fiId], 'files'=>$arResult);
+        }
     }
 
 
