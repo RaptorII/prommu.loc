@@ -106,10 +106,11 @@ class VacDiscuss extends Model
         $files = $Upluni->init();
 
         // берем только файлы этого диалога
+        $sessionId = 'v'.$id;
         $arRes['files'] = array();
         foreach ($files['files'] ?: array() as $key => $val)
         {
-            if ($val['extmeta']->idTheme == $id)
+            if ($val['extmeta']->idTheme == $sessionId)
             {
                 $val['files'] = array_map(
                     function ($v){ return str_replace('/protected', '', $v);}, 
@@ -121,9 +122,9 @@ class VacDiscuss extends Model
         // set vacancy chat data in session
         $imData = Yii::app()->session['imdata'];
         if(!is_array($imData['vacancy']))
-            $imData['vacancy'] = [$id];
-        elseif(!in_array($id, $imData['vacancy']))
-            $imData['vacancy'][] = $id;
+            $imData['vacancy'] = [$sessionId];
+        elseif(!in_array($sessionId, $imData['vacancy']))
+            $imData['vacancy'][] = $sessionId;
 
         Yii::app()->session['imdata'] = $imData;
 
@@ -250,8 +251,9 @@ class VacDiscuss extends Model
 
         if ($files)
         {
-          foreach ($files as $key => $val)
-                        $val['extmeta']->idTheme==$vacancy && $arFiles[$key] = $val;
+            $sessionId = 'v'.$vacancy;
+            foreach ($files as $key => $val)
+                $val['extmeta']->idTheme==$sessionId && $arFiles[$key] = $val;
 
           $arFiles = $arFiles ? serialize($this->moveUploadedFiles($arFiles)) : '';
           $arFiles && $uploaduni->removeUnExistedFiles(['scope' => 'im']);
