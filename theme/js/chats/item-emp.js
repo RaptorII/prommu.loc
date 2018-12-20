@@ -364,33 +364,17 @@
 	        G_VARS.App.showLoading2($that, { outerAlign: 'left', valign: 'top', offsetX: -10, offsetY: 3 });
 	        var flag = 1;
 	        if (G_VARS.isNew) {
-	            var theme, vacId;
-	            if ($("#EdTheme").val())
-	                theme = $("#EdTheme").val();
-	            else if ($("#CBTheme").val() != 'aa')
-	                vacId = $("#CBTheme").val();
-	            if (!theme && !vacId) {
-	                var item = $("#CBTheme");
-	                $('body').stop().animate({ scrollTop: item.offset().top - 30 + 'px' }, 500, function () {
-	                    var msgBox = $('.error-hint-box');
-	                    msgBox.text('Выберите или введите тему').css({ left: item.offset().left, top: item.offset().top + item.outerHeight() + 10 });
-	                    msgBox.fadeIn(400);
-	                    item.addClass('field--warning');
-	                    item.focus();
-	                    item.on('blur', function () {
-	                        msgBox.fadeOut(200);
-	                        item.removeClass('field--warning');
-	                        $(this).off('blur');
-	                    });
-	                });
-	                G_VARS.App.hideLoading();
-	                flag = 0;
+	            var theme = $("#EdTheme").val(),
+	            		vid = $("#CBTheme").val(),
+	            		props = { 'new': G_VARS.isNew, m: self.NicEditor.nicInstances[0].getContent() };
+
+	            if(vid.trim().length && theme.trim().length)
+	            {
+	            	props['vid'] = vid;
+	              props['t'] = theme;
 	            }
-	            var props = { 'new': G_VARS.isNew, m: self.NicEditor.nicInstances[0].getContent() };
-	            if (theme)
-	                props['t'] = theme;
-	            else if (vacId)
-	                props['vid'] = vacId;
+	            if (theme.trim().length)
+	              props['t'] = theme;
 	        }
 	        else {
 	            var props = { tm: G_VARS.idTm, m: self.NicEditor.nicInstances[0].getContent(), l: self.lastMessId };
@@ -407,7 +391,7 @@
 	                $(".nomess").fadeOut(200, function () { $(this).remove(); });
 	                $(".theme-input").slideUp(200, function () { $(this).remove(); });
 	                $(".header-021 b").text(data.theme);
-	                history.pushState(null, null, '/' + MainConfig.PAGE_IM + '/' + data.idtm);
+	                //history.pushState(null, null, '/' + MainConfig.PAGE_IM + '/' + data.idtm);
 	                G_VARS.idTm = data.idtm;
 	                self.idTheme = data.idtm;
 	                G_VARS.isNew = 0;

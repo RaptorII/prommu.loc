@@ -198,11 +198,11 @@ class ImApplic extends Im
 
 
             $props = array(
-                'id_usp' => $id,
+                'id_usp' => $id ?: Share::$UserProfile->id,
                 'id_use' => $iduse,
             );
-            if ($theme) $props['title'] = $theme;
-            elseif ($vid) $props['id_vac'] = $vid;
+            $vid && $props['id_vac'] = $vid;
+            $theme && $props['title'] = $theme;
 
             $res = Yii::app()->db->createCommand()
                 ->insert('chat_theme', $props);

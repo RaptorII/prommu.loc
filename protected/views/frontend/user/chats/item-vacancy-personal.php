@@ -49,7 +49,7 @@
                 <div class="mess-block-inner">
 
                     <?if($isNew): ?>
-                        <div id="DiMessagesWrapp" style="height: 50px;">
+                        <div id="DiMessagesWrapp">
                     <?else:?>
                         <div id="DiMessagesWrapp">
                     <?endif;?>

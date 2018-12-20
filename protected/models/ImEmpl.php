@@ -285,13 +285,11 @@ class ImEmpl extends Im
 
 
             $props = array(
-                'id_use' =>  $id ?: Share::$UserProfile->id,
+                'id_use' => $id ?: Share::$UserProfile->id,
                 'id_usp' => $idusp,
             );
-            if( $theme ) $props['title'] = $theme;
-            elseif( $vid ) $props['id_vac'] = $vid;
-
-
+            $vid && $props['id_vac'] = $vid;
+            $theme && $props['title'] = $theme;
 
             $res = Yii::app()->db->createCommand()
                 ->insert('chat_theme', $props);
