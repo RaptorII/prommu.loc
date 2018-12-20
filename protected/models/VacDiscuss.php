@@ -70,7 +70,7 @@ class VacDiscuss extends Model
             }
             if(strlen($v['files']))
             {
-                $arRes['items'][$k]['files'] = unserialize($v['files'],true);
+                $arRes['items'][$k]['files'] = unserialize($v['files']);
             }
         }
 

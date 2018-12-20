@@ -14,12 +14,33 @@ var PublicChat = (function () {
 	PublicChat.prototype.init = function ()
 	{
 		let self = this,
+				gallery = {
+					enabled: true,
+					preload: [0, 2],
+					navigateByImgClick: true,
+					arrowMarkup: '<button title="%title%" type="button" class="mfp-arrow mfp-arrow-%dir%"></button>',
+					tPrev: '',
+					tNext: '',
+					tCounter: '<span class="mfp-counter">%curr% / %total%</span>'					
+				},
 				myNicEditor = new nicEditor(
 					{ 
 						maxHeight: 52, 
 						buttonList: ['bold', 'italic', 'underline'] 
 					}
 				);
+		// проектор для картинок чата
+		$('#DiMessagesInner').magnificPopup({
+			delegate: '.-images a',
+			type: 'image',
+			gallery: gallery
+		});
+		// проектор для картинок сессии
+		$('#DiImgs').magnificPopup({
+			delegate: '.uni-img-link',
+			type: 'image',
+			gallery: gallery
+		});
 
 		if ($("#Mmessage").is('*'))
 		{
@@ -39,9 +60,8 @@ var PublicChat = (function () {
 		});
 
         $("#DiButtonPanel .js-attach-file").click(function (e) { self.onAttachClickFn(e, this); });
-        var Upli = new Uploaduni();
-        self.uploaduni = Upli;
-        Upli.init({ uploadConnector: MainConfig.AJAX_POST_UPLOADUNI_EX,
+        self.uploaduni = new Uploaduni();
+        self.uploaduni.init({ uploadConnector: MainConfig.AJAX_POST_UPLOADUNI_EX,
             scope: 'im',
             imgBlockTmpl: 'attached-image-tpl',
             filesBlockTmpl: 'attached-file-tpl',
@@ -56,7 +76,7 @@ var PublicChat = (function () {
                     $("#F3uploaded").fadeOut(200);
             },
         });
-        Upli.setFiles(G_VARS.uniFiles);
+        self.uploaduni.setFiles(G_VARS.uniFiles);
 	};
 
     PublicChat.prototype.onAttachClickFn = function (e, that) {
@@ -121,10 +141,15 @@ var PublicChat = (function () {
 				{
 					self.ajaxActivate('new');
 					self.NicEditor.nicInstances[0].setContent('');
+					$('#F3uploaded').fadeOut();
+					setTimeout(function(){
+						$('#DiImgs').html('');
+						$('#DiFiles').html('');
+					},500);
 					$(button).removeClass('load');
 					self.isMyMess = true;
 				}
-                $(button).prop('disabled', false);
+				$(button).prop('disabled', false);
 			},
 		});
 	}
