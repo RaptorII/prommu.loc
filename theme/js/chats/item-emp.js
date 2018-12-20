@@ -67,7 +67,17 @@
 	        self.init();
 	    }
 	    PageCompanyMessView.prototype.init = function () {
-	        var self = this;
+	        var self = this,
+							gallery = {
+								enabled: true,
+								preload: [0, 2],
+								navigateByImgClick: true,
+								arrowMarkup: '<button title="%title%" type="button" class="mfp-arrow mfp-arrow-%dir%"></button>',
+								tPrev: '',
+								tNext: '',
+								tCounter: '<span class="mfp-counter">%curr% / %total%</span>'					
+							};
+
 	        self.idTheme = G_VARS.idTm;
 	        if (G_VARS.idTm || G_VARS.isNew) {
 	            self.setChatSize({ isNew: G_VARS.isNew });
@@ -100,6 +110,18 @@
 	            });
 	            G_VARS.isNew || Upli.setFiles(G_VARS.uniFiles);
 	        }
+				// проектор для картинок чата
+				$('#DiMessagesInner').magnificPopup({
+					delegate: '.-images a',
+					type: 'image',
+					gallery: gallery
+				});
+				// проектор для картинок сессии
+				$('#DiImgs').magnificPopup({
+					delegate: '.uni-img-link',
+					type: 'image',
+					gallery: gallery
+				});
 	    };
 	    PageCompanyMessView.prototype.getMessages = function (inFirstId) {
 	        if (inFirstId === void 0) { inFirstId = 0; }
@@ -337,19 +359,6 @@
 	            files.appendTo(messBlock);
 	        if (ii) {
 	            files.append(wrapper.addClass('-images'));
-	            files.magnificPopup({
-	                delegate: '.-images a',
-	                type: 'image',
-	                gallery: {
-	                    enabled: true,
-	                    preload: [0, 2],
-	                    navigateByImgClick: true,
-	                    arrowMarkup: '<button title="%title%" type="button" class="mfp-arrow mfp-arrow-%dir%"></button>',
-	                    tPrev: '',
-	                    tNext: '',
-	                    tCounter: '<span class="mfp-counter">%curr% / %total%</span>'
-	                }
-	            });
 	        }
 	    };
 	    PageCompanyMessView.prototype.sendMessage = function (e, that) {

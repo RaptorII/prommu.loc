@@ -989,7 +989,7 @@ class ImApplic extends Im
         );
         $files = $Upluni->init();
 
-        $chat_id = reset($arRes['items'])['c.id_theme'];
+        $chat_id = reset($arRes['items'])['id_theme'];
         if(!empty($chat_id))
         {
             // берем только файлы этого диалога
