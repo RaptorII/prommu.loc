@@ -1794,7 +1794,8 @@ class UserController extends AppController
         $model = Share::$UserProfile->makeChat();
         $data = array();
 
-        switch ($section) {
+        switch ($section)
+        {
             case 'vacancies':
                 $title = 'Сообщения по вакансиям';
                 $view = MainConfig::$VIEW_CHATS_LIST_VACANCIES;

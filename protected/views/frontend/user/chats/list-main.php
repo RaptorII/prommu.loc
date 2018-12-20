@@ -15,10 +15,12 @@
                 <div class="chat__info-header">Сообщений</div>
                 <div class="chat__info-descr"><?=$viData['vacancies']['cnt-mess']?></div>
             </div>
-            <div class="chat__info-col">
-                <div class="chat__info-header">Не прочитанные</div>
-                <div class="chat__info-descr chat__info-noread"><?=$viData['vacancies']['cnt-noread']?></div>
-            </div>
+            <? if($viData['vacancies']['cnt-noread']>0): ?>
+                <div class="chat__info-col">
+                    <div class="chat__info-header">Не прочитанные</div>
+                    <div class="chat__info-descr chat__info-noread"><?=$viData['vacancies']['cnt-noread']?></div>
+                </div>
+            <? endif; ?>
         </div>
     </a>
 
@@ -30,10 +32,12 @@
                 <div class="chat__info-header">Сообщений</div>
                 <div class="chat__info-descr"><?=$viData['feedback']['cnt-mess']?></div>
             </div>
-            <div class="chat__info-col">
-                <div class="chat__info-header">Не прочитанные</div>
-                <div class="chat__info-descr chat__info-noread"><?=$viData['feedback']['cnt-noread']?></div>
-            </div>
+            <? if($viData['feedback']['cnt-noread']>0): ?>
+                <div class="chat__info-col">
+                    <div class="chat__info-header">Не прочитанные</div>
+                    <div class="chat__info-descr chat__info-noread"><?=$viData['feedback']['cnt-noread']?></div>
+                </div>
+            <? endif; ?>
         </div>
     </a>
 </div>

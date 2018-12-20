@@ -221,10 +221,11 @@ class VacDiscuss extends Model
         if($type==3)
         {
             $sql = Yii::app()->db->createCommand()
-                    ->select('id')
-                    ->from('empl_vacations')
+                    ->select('ev.id')
+                    ->from('empl_vacations ev')
+                    ->leftjoin('vacation_stat vs','vs.id_vac=ev.id')
                     ->where(
-                        'id=:id AND id_user=:idus',
+                        'ev.id=:id AND ev.id_user=:idus AND vs.status>4',
                         array(':idus'=>$idus,':id'=>$id)
                     )
                     ->queryRow();
@@ -295,5 +296,62 @@ class VacDiscuss extends Model
         } // end foreach
 
         return $movedFiles;
+    }
+    /**
+     *      счетчик непрочитаных для юзера в шапку
+     */
+    public static function publicVacChatCnt()
+    {
+        $idus = Share::$UserProfile->id;
+        $type = Share::$UserProfile->type;
+
+        if(!$idus || !in_array($type,[2,3]))
+            return false;
+
+
+        if($type==2) // applicant
+        {
+            $id_promo = Share::$UserProfile->exInfo->id_resume;
+            if(!$id_promo)
+                return false;
+
+            return Yii::app()->db->createCommand()
+                    ->select('COUNT(ed.id) cnt')
+                    ->from('empl_vacations ev')
+                    ->leftjoin('emplv_discuss ed','ed.id_vac=ev.id')
+                    ->leftjoin(
+                        'emplv_discuss_readed edr',
+                        'edr.id_message=ed.id AND edr.id_user='.$idus
+                    )
+                    ->leftjoin(
+                        'vacation_stat vs',
+                        'vs.id_vac=ev.id AND vs.status>4'
+                    )
+                    ->where(
+                        'vs.id_promo=:idr AND edr.cdate IS NULL',
+                        array(':idr'=>$id_promo)
+                    )
+                    ->queryScalar();
+        }
+        if($type==3) // employer
+        {
+            return Yii::app()->db->createCommand()
+                    ->select('COUNT(ed.id) cnt')
+                    ->from('empl_vacations ev')
+                    ->leftjoin('emplv_discuss ed','ed.id_vac=ev.id')
+                    ->leftjoin(
+                        'emplv_discuss_readed edr',
+                        'edr.id_message=ed.id AND edr.id_user=ev.id_user'
+                    )
+                    ->leftjoin(
+                        'vacation_stat vs',
+                        'vs.id_vac=ev.id AND vs.status>4'
+                    )
+                    ->where(
+                        'ev.id_user=:id AND edr.cdate IS NULL',
+                        array(':id'=>$idus)
+                    )
+                    ->queryScalar();
+        }
     }
 }

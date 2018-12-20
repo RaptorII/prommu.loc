@@ -47,6 +47,7 @@ class PushChecker extends Model
         /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);
         $data['newmessages'] = $res->queryAll();
+        $data['vacancy_public_mess_cnt'] = VacDiscuss::publicVacChatCnt();
 
         return $data;
     }

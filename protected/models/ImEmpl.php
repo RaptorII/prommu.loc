@@ -412,9 +412,9 @@ class ImEmpl extends Im
             FROM push_config r
             WHERE r.id = {$ids}";
             $res = Yii::app()->db->createCommand($sql)->queryScalar(); 
+            // !!!!!!!!!!!
+            file_get_contents("/api.mailer/?id=$ids&type=2&method=mess");
 
-           
-            file_get_contents("https://prommu.com/api.mailer/?id=$ids&type=2&method=mess");
             if($res == 2) {
             $sql = "SELECT r.push
             FROM user_push r
@@ -854,8 +854,8 @@ class ImEmpl extends Im
      */
     public function getFeedbackChats()
     {
-        $arRes = array();
         $this->limit = 10;
+        $arRes = $arId = $arIdus = array();
         $idus = Share::$UserProfile->id;
         $arT = Yii::app()->db->createCommand()
                 ->select("
@@ -877,16 +877,23 @@ class ImEmpl extends Im
         if(!$nT)
             return $arRes;
 
+        foreach ($arT as $v)
+            $arId[] = $v['id'];
+
+        $arM = Yii::app()->db->createCommand()
+                        ->select("*")
+                        ->from('chat')
+                        ->where(array('in','id_theme',$arId))
+                        ->queryAll(); 
+
         $arRes['cnt-chat'] = $nT;
         $arRes['pages'] = new CPagination($nT);
         $arRes['pages']->pageSize = $this->limit;
         $arRes['pages']->applyLimit($this);
 
-        $arId = $arIdus = array();
         for($i=$this->offset; $i<$nT; $i++)
             if($i<($this->offset+$this->limit))
             {
-                $arId[] = $arT[$i]['id'];
                 $arRes['items'][$arT[$i]['id']] = [
                         'id' => $arT[$i]['id'],
                         'direct' => ($arT[$i]['direct'] ?: 1),
@@ -903,15 +910,16 @@ class ImEmpl extends Im
                 $arRes['items'][$arT[$i]['id']]['title'] = $title;
             }
 
-        $sql = Yii::app()->db->createCommand()
-                        ->select("*")
-                        ->from('chat')
-                        ->where(array('in','id_theme',$arId))
-                        ->queryAll(); 
-
-        foreach ($sql as $m)
+        foreach ($arM as $m)
         {
             $id = $m['id_theme'];
+            if(!array_key_exists($id,$arRes['items'])) // общие счетчики
+            {
+                $arRes['cnt-mess']++;
+                if(!$m['is_resp'] && !$m['is_read']) // ответ Р и не прочитано
+                    $arRes['cnt-mess-noread']++;
+                continue;
+            }
             $arRes['cnt-mess']++;
             $arRes['items'][$id]['cnt-mess']++;
             !isset($arRes['items'][$id]['cnt-noread']) && $arRes['items'][$id]['cnt-noread']=0;
