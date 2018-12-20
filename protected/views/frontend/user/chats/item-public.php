@@ -78,7 +78,7 @@
         //-->
     </script>
 
-    <script type="text/template" id="TmplF2upload">
+    <div id="TmplF2upload">
         <form method="post" enctype="multipart/form-data" id="F2upload">
             <input type="hidden" name="MAX_FILE_SIZE" value="5242880">
             <h2>Добавить файл к сообщению</h2>
@@ -90,7 +90,7 @@
             </div>
             <p>Файл загружаемый на сайт не должен превышать размер 5 Мб, максимальный размер изображения 2500х2500 пикселей.<br />Типы файла для загрузки: JPG, PNG, DOC, XLS</p>
         </form>
-    </script>
+    </div>
 
     <div class="attached-image attached-image-tpl tmpl uni-img-block">
         <span class="uni-delete js-hashint" title="удалить файл"></span>

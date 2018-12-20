@@ -68,6 +68,10 @@ class VacDiscuss extends Model
             {
             	$arIdMess[] = $v['id'];
             }
+            if(strlen($v['files']))
+            {
+                $arRes['items'][$k]['files'] = unserialize($v['files'],true);
+            }
         }
 
         if(count($arIdMess))
@@ -171,19 +175,6 @@ class VacDiscuss extends Model
         // сохраняем сообщение
         if( $res )
         {
-            $uploaduni = new Uploaduni();
-            $files = $uploaduni->getUploadedFiles(['scope' => 'im']);
-            $arFiles = array();
-
-            if ($files)
-            {
-                foreach ($files as $key => $val)
-                    $val['extmeta']->idTheme==$id && $arFiles[$key] = $val;
-
-                $arFiles = $arFiles ? json_encode($this->moveUploadedFiles($arFiles)) : '';
-                $arFiles && $uploaduni->removeUnExistedFiles(['scope' => 'im']);
-            }
-
             Yii::app()->db->createCommand()
                 ->insert('emplv_discuss', array(
                         'id_vac' => $id,
@@ -253,6 +244,19 @@ class VacDiscuss extends Model
         if(!intval($vacancy) || !strlen($message) || !$this->hasAccess($vacancy))
             return array('error' => true);
 
+        $uploaduni = new Uploaduni();
+        $files = $uploaduni->getUploadedFiles(['scope' => 'im']);
+        $arFiles = array();
+
+        if ($files)
+        {
+          foreach ($files as $key => $val)
+                        $val['extmeta']->idTheme==$vacancy && $arFiles[$key] = $val;
+
+          $arFiles = $arFiles ? serialize($this->moveUploadedFiles($arFiles)) : '';
+          $arFiles && $uploaduni->removeUnExistedFiles(['scope' => 'im']);
+        }
+
         Yii::app()->db->createCommand()
             ->insert(
                 'emplv_discuss', 
@@ -260,10 +264,34 @@ class VacDiscuss extends Model
                     'id_vac' => $vacancy,
                     'id_user' => Share::$UserProfile->id,
                     'mess' => $message,
+                    'files' => $arFiles,
                     'crdate' => date("Y-m-d H:i:s")
                 )
             );
 
         return array('error' => false);   
+    }
+    /**
+     * Перемещаем прикрепленные файлы
+     */
+    private function moveUploadedFiles($inFiles)
+    {
+        foreach ($inFiles as $key => $val)
+        {
+            $movedFiles[$key] = $val;
+            foreach ($movedFiles[$key]['files'] as $key2 => &$val2)
+            {
+                // задаём новые значения путей
+                $val2 = str_replace('tmp/', '', $val2);
+                // перемещаем файлы в рабочую директорию
+                if( file_exists(MainConfig::$DOC_ROOT . $inFiles[$key]['files'][$key2]) )
+                {
+                    copy(MainConfig::$DOC_ROOT . $inFiles[$key]['files'][$key2], MainConfig::$DOC_ROOT . $val2);
+                    unlink(MainConfig::$DOC_ROOT . $inFiles[$key]['files'][$key2]);
+                } // endif
+            } // end foreach
+        } // end foreach
+
+        return $movedFiles;
     }
 }

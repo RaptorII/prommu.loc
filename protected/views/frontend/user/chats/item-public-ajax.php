@@ -22,5 +22,21 @@
 			<span class='date'><?=$item['date']?></span>
 		</div>
 		<div class='mess'><?=html_entity_decode($item['mess'])?></div>
+		<? if(is_array($item['files'])): ?>
+			<div class="js-container -files clearfix">
+				<? foreach($item['files'] as $k => $v): ?>
+					<? if($v['meta']['type']=='files'): ?>
+						<a href="<?=$v['files']['orig']?>" class="black-orange" title="<?=$v['files']['name']?>"><?=$v['files']['name']?></a>
+					<? endif; ?>
+				<? endforeach; ?>
+			</div>
+			<div class="js-container -images">
+				<? foreach($item['files'] as $k => $v): ?>
+					<? if($v['meta']['type']=='images'): ?>
+						<a href="<?=$v['files']['orig']?>" class="black-orange" title="<?=$v['files']['name']?>"><?=$v['files']['name']?></a>
+					<? endif; ?>
+				<? endforeach; ?>
+			</div>
+		<? endif; ?>
 	</div>
 <?endfor;?>
