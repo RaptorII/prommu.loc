@@ -114,6 +114,7 @@
 .disable .vacancy__item-tab{
 	border: 1px solid #ededed;
 	background-color: #ffffff;
+	cursor: default;
 }
 .vacancy__item-tab:after{
 	content: '';

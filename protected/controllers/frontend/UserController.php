@@ -1804,20 +1804,8 @@ class UserController extends AppController
                     if(!$model->hasAccess('vacancy',$id,$vacancy))
                         throw new CHttpException(404, 'Error');
 
-                    $view = 'chats/item-personal';
+                    $view = MainConfig::$VIEW_CHATS_ITEM_VACANCY_PERSONAL;
                     $data = $model->getVacancyPersonal($vacancy,$id);
-            
-                    
-                    if(Yii::app()->request->isAjaxRequest)
-                    {
-                        $this->renderPartial(
-                            MainConfig::$VIEW_CHATS_ITEM_PUBLIC_AJAX,
-                            array('viData' => $data), 
-                            false, 
-                            true
-                        );
-                        return;
-                    }
                 }
                 elseif(strlen($vacancy)) // public
                 {
@@ -1825,13 +1813,13 @@ class UserController extends AppController
                     if(!intval($vacancy) || !$model->hasAccess($vacancy))
                         throw new CHttpException(404, 'Error');
 
-                    $view = MainConfig::$VIEW_CHATS_ITEM_PUBLIC;
+                    $view = MainConfig::$VIEW_CHATS_ITEM_VACANCY_PUBLIC;
                     $data = $model->getDiscuss($vacancy);
 
                     if(Yii::app()->request->isAjaxRequest)
                     {
                         $this->renderPartial(
-                            MainConfig::$VIEW_CHATS_ITEM_PUBLIC_AJAX,
+                            MainConfig::$VIEW_CHATS_ITEM_VACANCY_PUBLIC_AJAX,
                             array('viData' => $data), 
                             false, 
                             true
@@ -1856,7 +1844,7 @@ class UserController extends AppController
                     if(!$model->hasAccess('feedback',$id))
                         throw new CHttpException(404, 'Error');
 
-                    $view = MainConfig::$VIEW_CHATS_ITEM;
+                    $view = MainConfig::$VIEW_CHATS_ITEM_FEEDBACK;
                     $data = $model->getMessViewData($id);
                 }
                 else

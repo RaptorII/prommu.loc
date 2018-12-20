@@ -16,7 +16,7 @@
             <?if(!count($viData['items'])):?>
                 <p>Сообщений нет</p>
             <?else:?>
-                <?require_once 'item-public-ajax.php'?>
+                <?require_once 'item-vacancy-public-ajax.php'?>
             <?endif;?>
         </div>
     </div>

@@ -30,7 +30,7 @@
 					<? endif; ?>
 					<? if(!count($item['users'])): ?>
 						<span class="vacancy__item-tab-small">(нет утвержденного персонала)</span>
-					<? endif; ?>
+					<? endif; ?>	
 				</div>
 				<? if(count($item['users'])): ?>
 					<div class="vacancy__item-content">

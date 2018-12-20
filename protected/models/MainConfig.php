@@ -263,10 +263,11 @@ class MainConfig
     public static $PAGE_CHATS_LIST = '/user/chats';
     public static $PAGE_CHATS_LIST_VACANCIES = '/user/chats/vacancies';
     public static $PAGE_CHATS_LIST_FEEDBACK = '/user/chats/feedback';
-    public static $VIEW_CHATS_LIST = 'chats/list';
+    public static $VIEW_CHATS_LIST = 'chats/list-main';
     public static $VIEW_CHATS_LIST_VACANCIES = 'chats/list-vacancies';
     public static $VIEW_CHATS_LIST_FEEDBACK = 'chats/list-feedback';
-    public static $VIEW_CHATS_ITEM = 'chats/item';
-    public static $VIEW_CHATS_ITEM_PUBLIC = 'chats/item-public';
-    public static $VIEW_CHATS_ITEM_PUBLIC_AJAX = 'chats/item-public-ajax';
+    public static $VIEW_CHATS_ITEM_FEEDBACK = 'chats/item-feedback';
+    public static $VIEW_CHATS_ITEM_VACANCY_PERSONAL = 'chats/item-vacancy-personal';
+    public static $VIEW_CHATS_ITEM_VACANCY_PUBLIC = 'chats/item-vacancy-public';
+    public static $VIEW_CHATS_ITEM_VACANCY_PUBLIC_AJAX = 'chats/item-vacancy-public-ajax';
 }
