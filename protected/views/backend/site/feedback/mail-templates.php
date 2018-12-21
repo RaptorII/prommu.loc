@@ -1,5 +1,6 @@
 <?
     Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl . '/js/templates.js', CClientScript::POS_HEAD);
+    Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl . '/js/nicEdit.js', CClientScript::POS_HEAD);
     $model = new FeedbackTemplate();
     $arTemplates = $model->getTemplates();
 ?>
@@ -13,12 +14,13 @@
         </div>
     </div>
 
-    <div class="control-group">
+    <div class="control-group" id="template_text">
         <label class="control-label">Текст шаблона</label>
         <textarea rows="6" cols="50" class="form-control" id="template_description" name="template_description"></textarea>
+        <div id="template_text-panel"></div>
         <p></p>
     </div>
-
+    
     <div class="templates__control">
         <div class="btn label-success" id="save-template">Сохранить</div>
     </div>
@@ -30,7 +32,7 @@
                 <div data-id="<?=$v['id']?>" class="template__item">
                     <?=$v['name']?>
                     <b>x</b>
-                    <i><?=$v['text']?></i>
+                    <i><?=html_entity_decode($v['text'])?></i>
                 </div>
             <? endforeach; ?>
         </div>
@@ -98,5 +100,25 @@
     .direct-chat-text{
         margin: 5px 50px 0 0;
     }
-
+    /* */
+    .direct-chat-messages{
+        margin: 15px 0;
+        background: #ffffff;
+    }
+    .box{ 
+        background-color: transparent;
+        box-shadow: none;
+    }
+    .nicEdit-main {
+        margin: 0 !important;
+        padding: 4px;
+        width: 100% !important;
+        border: 1px solid #e3e3e3 !important;
+        background: #fff;
+    }
+    #template_text>div:nth-child(2),
+    .controls.input-append>div{ border: 0 !important; }
+    .nicEdit-main:focus{ outline: none; }
+    #admin-answer-panel .nicEdit-button,
+    #template_text-panel .nicEdit-button{ background-image: url("/jslib/nicedit/nicEditorIcons.gif") !important; }
 </style>

@@ -7,7 +7,7 @@
 
 class ImEmpl extends Im
 {
-    public $adminId = 2054; // id Админа
+    public static $adminId = 2054; // id Админа
     /**
      * Получаем чаты пользователя
      */
@@ -644,18 +644,18 @@ class ImEmpl extends Im
     /**
      *      Ответ админа в чате
      */
-    public function recordAdminMessage($id, $arr)
+    public function recordAdminMessage($id, $message, $idus)
     {
-        $res = Yii::app()->db->createCommand()
-                    ->insert('chat', array(
-                        'id_theme' => $id,
-                        'id_usp' => $this->$adminId,
-                        'id_use' => $arr['user-id'],
-                        'message' => $arr['message'],
-                        'is_resp' => 0,
-                        'is_read' => 0,
-                        'crdate' => date("Y-m-d H:i:s"),
-                    )); 
+        Yii::app()->db->createCommand()
+            ->insert('chat', array(
+                'id_theme' => $id,
+                'id_usp' => self::$adminId,
+                'id_use' => $idus,
+                'message' => $message,
+                'is_resp' => 0,
+                'is_read' => 0,
+                'crdate' => date("Y-m-d H:i:s"),
+            ));
     }
     /**
      *      проверка доступа к чату
@@ -738,7 +738,7 @@ class ImEmpl extends Im
                 ->from('chat_theme ct')
                 ->where(
                     'ct.id_use=:id AND ct.id_vac=0 AND ct.id_usp=:adm',
-                    array(':id'=>$idus,':adm'=>$this->adminId)
+                    array(':id'=>$idus,':adm'=>self::$adminId)
                 )
                 ->order('ct.id desc')
                 ->queryAll();
@@ -868,7 +868,7 @@ class ImEmpl extends Im
                 ->leftjoin('feedback f', 'f.chat=ct.id')
                 ->where(
                     'ct.id_use=:id AND ct.id_vac=0 AND ct.id_usp=:adm',
-                    array(':id'=>$idus,':adm'=>$this->adminId)
+                    array(':id'=>$idus,':adm'=>self::$adminId)
                 )
                 ->order('ct.id desc')
                 ->queryAll();

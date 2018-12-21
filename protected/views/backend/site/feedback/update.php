@@ -112,11 +112,15 @@ echo '</div>';
 echo '<div class="control-group">
       <label class="control-label">Ответ</label>
         <div class="controls input-append">';
-echo CHtml::textArea('Update[message]', $data['message'], array('class' => 'form-control','id'=>'admin-answer'));
+echo CHtml::textArea(
+    'Update[message]', 
+    ($data['message'] ? $data['message'] : '<br>'), 
+    array('class' => 'form-control','id'=>'admin-answer')
+);
+echo '<div id="admin-answer-panel"></div>';
 echo '  <span class="add-on"><i class="icon-tag"></i></span>';
 echo '</div>
         </div></div>';
-echo CHtml::textArea('Update[idusp]', $data[0]['idusp'], array('class' => 'hidd'));
 echo '<div class="span11">';
 echo '<div style="float:right;  display:inline;">';
 echo CHtml::submitButton('Отправить', array("class" => "btn btn-success", "id" => "btn_submit"));
@@ -126,7 +130,8 @@ echo '<a href="/admin/site/feedback/index" class="btn btn-warning" id="btn_cance
 echo '</div>';
 echo '</div>';
 echo '</div>';
-
+echo '<input type="hidden" name="usertype" value="'.$data['user']['type'].'">';
+echo '<input type="hidden" name="Update[idusp]" value="'.$data['user']['id'].'">';
 echo CHtml::endForm();
 require 'mail-templates.php'; // подключение шаблонов
 ?>

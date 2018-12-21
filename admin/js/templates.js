@@ -9,22 +9,30 @@ var Templates = (function () {
     }
 
     Templates.prototype.init = function () {
-        var self = this;
-        $('#save-template').click(function(){
-            var title = $('#template_title').val();
-            var text = $('#template_description').val();
+        var self = this,
+            myNicEditor = new nicEditor(
+                { 
+                    maxHeight: 200, 
+                    buttonList: ['bold','italic','underline','left','center','right','justify','ol','ul'] 
+                }
+            );
 
-            if(title.length && text.length) {
-                self.addTemplate(title,text);
+        $('#save-template').click(function(){
+            var title = $('#template_title').val(),
+                message = self.NicEditor.nicInstances[1].getContent().trim();
+
+            if(!message.length || message==='<br>' || !title.length)
+            {
+                alert('Оба поля должны быть заполнены');
+                return false;
             }
-            else {
-                confirm('Оба поля должны быть заполнены');
-            }
+
+            self.addTemplate(title,message);
         })
 
         $(".templates__block").on( "click", ".template__item", function() {
-            var text = $(this).find('i').text();
-            $('#admin-answer').val(text);
+            var text = $(this).find('i').html();
+            self.NicEditor.nicInstances[0].setContent(text);
         });
 
         $(".templates__block").on( "click", ".template__item b", function() {
@@ -34,6 +42,23 @@ var Templates = (function () {
 
             if(query)
                 self.delTemplate(id);
+        });
+
+        self.NicEditor = myNicEditor;
+        myNicEditor.addInstance('admin-answer');
+        myNicEditor.setPanel('admin-answer-panel');
+        self.NicEditor = myNicEditor;
+        myNicEditor.addInstance('template_description');
+        myNicEditor.setPanel('template_text-panel');
+        
+        $('#btn_submit').click(function()
+        {
+            var message = self.NicEditorAnswer.nicInstances[0].getContent().trim();
+            if(!message.length || message==='<br>')
+            {
+                alert('Необходимо заполнить поле ответа');
+                return false;
+            }
         });
     };
 

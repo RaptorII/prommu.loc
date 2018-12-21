@@ -62,7 +62,12 @@ echo '</div></div>';
 echo '<div class="control-group">
       <label class="control-label">Ответ</label>
 	    <div class="controls input-append">';
-echo CHtml::textArea('Feedback[chat]', $data[0]['chat'], array('rows' => 6, 'cols' => 50,'class'=>'form-control','id'=>'admin-answer'));
+echo CHtml::textArea(
+        'Feedback[chat]',
+        $data[0]['chat'], 
+        array('rows'=>6,'cols'=>50,'class'=>'form-control','id'=>'admin-answer')
+      );
+echo '<div id="admin-answer-panel"></div>';
 echo '  <span class="add-on"></span><p></p>';
 echo '</div></div>';
 

@@ -1452,18 +1452,22 @@ class SiteController extends Controller
 
     public function actionUpdate($id)
     {
-        
-        if(!empty($_POST['Update']) ) {
-            $model = new ImEmpl;
+        if(!empty($_POST['Update']) )
+        {
+            $idus = $_POST['Update']['idusp'];
+            if($_POST['usertype']==3)
+                $model = new ImEmpl;
+            else
+                $model = new ImApplic;
+            
+            $model->recordAdminMessage($id, $_POST['Update']['message'], $idus);
             $_POST['Update']['iduse'] = 2054;
-            $model->insertChatMess($_POST['Update'], $id);
             $mailer = new MailCloud();
             $mailer->mailerMail($_POST['Update']);
             $model = new FeedbackTreatment;
             $model->unsetAttributes();  // clear any default values
             $model->search();
             $this->redirect(array("site/update/$id"));
-            //$this->render('feedback/index', array('model'=>$model));
         }
         $model = new Feedback;
         $data = $model->getAdminData($id);
@@ -1801,12 +1805,19 @@ class SiteController extends Controller
      */
     public function actionNotifications()
     {
-        if(self::isAuth()) 
+        if(!self::isAuth() /*|| strpos($this->user_access, "notifications") == false*/)
         {
-            $title = 'Уведомления';
-            $this->setPageTitle($title);
-            $this->breadcrumbs = array('1'=>$title);   
-            $this->render('notifications/index', array('data' => $data));
+            $this->render('access');
+            return;
         }
+
+        $title = 'Уведомления';
+        $this->setPageTitle($title);
+        $this->breadcrumbs = array($title);
+        $model = new Mailing;
+        $model->unsetAttributes();
+        $model->search();
+
+        $this->render('notifications/index', array('model' => $model));
     }
 }
