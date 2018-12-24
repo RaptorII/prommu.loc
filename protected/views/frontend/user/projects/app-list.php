@@ -25,6 +25,7 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/app-
 						</div>
 					</div>
 				<? endforeach; ?>
+
 			</div>
 		<? endif; ?>
 
@@ -42,6 +43,21 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/app-
 						</div>
 					</div>
 				<? endforeach; ?>
+
+
+                <?php
+                // display pagination
+                $this->widget('CLinkPager', array(
+                    'pages' => $viData['pages'],
+                    'htmlOptions' => array('class' => 'paging-wrapp'),
+                    'firstPageLabel' => '1',
+                    'prevPageLabel' => 'Назад',
+                    'nextPageLabel' => 'Вперед',
+                    'header' => '',
+                    'cssFile' => false
+                ));
+                ?>
+
 			</div>
 			<? else: ?>
 
@@ -51,6 +67,7 @@ Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/projects/app-
 
 		</div>
 	</div>
+
 <? /*
 <div class="row projects">
 	<div class="col-xs-12">
