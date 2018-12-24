@@ -56,6 +56,19 @@
 							</div>		
 						</div>
 					<?php endforeach; ?>
+					<br>
+					<?php
+						// display pagination
+						$this->widget('CLinkPager', array(
+							'pages' => $viData['pages'],
+							'htmlOptions' => array('class' => 'paging-wrapp'),
+							'firstPageLabel' => '1',
+							'prevPageLabel' => 'Назад',
+							'nextPageLabel' => 'Вперед',
+							'header' => '',
+							'cssFile' => false
+						));
+					?>
 				</div>
 			<?php else: ?>
 				<h1 class="projects__title">У ВАС ПОКА НЕТ ПРОЕКТОВ</h1>

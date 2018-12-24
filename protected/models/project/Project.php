@@ -7,6 +7,9 @@
 class Project extends CActiveRecord
 {
     public $XLS_UPLOAD_PATH = '/var/www/dev.prommu/uploads/';
+    public $PROJECTS_IN_PAGE = 1;
+    public $limit;
+    public $offset;
     /**
      * @return string the associated database table name
      */
@@ -101,9 +104,32 @@ class Project extends CActiveRecord
     /*
     *       Проекты для Р
     */
-    public function getProjectEmployer($isArcive){
-        $arRes = ['items' => [], 'archive' => []];
+    public function getProjectEmployer($isArcive)
+    {
         $idus = Share::$UserProfile->id;
+        $arRes = ['items' => [], 'archive' => []];
+        $arId = array();
+        
+        $sql = Yii::app()->db->createCommand()
+                ->select("DISTINCT(project) id")
+                ->from('project')
+                ->where('id_user=:idus', array(':idus'=>$idus))
+                ->order('crdate desc')
+                ->queryAll();
+
+        for ($i=0, $n=sizeof($sql); $i<$n; $i++) 
+            $arId[] = $sql[$i]['id'];
+
+        $arRes['pages'] = new CPagination(count($arId));
+        $arRes['pages']->pageSize = $this->PROJECTS_IN_PAGE;
+        $arRes['pages']->applyLimit($this);
+
+        // избавляемся от доп запроса выбирая только нужных юзеров по пагинации
+        $arResId = array();
+        for($i=$this->offset, $n=sizeof($arId); $i<$n; $i++)
+            if($i<($this->offset+$this->limit))
+                $arResId[] = $arId[$i];
+
         $sql = Yii::app()->db->createCommand()
             ->select("
                     p.project, 
@@ -113,12 +139,14 @@ class Project extends CActiveRecord
                     pu.status, 
                 ")
             ->from('project p')
-            ->where('p.id_user=:idus', array(':idus'=>$idus))
             ->leftjoin('project_user pu', 'pu.project=p.project')
-            ->order('p.crdate desc')
+            ->where(
+                ['AND','p.id_user='.$idus,['in','p.project',$arResId]]
+            )
             ->queryAll();
 
-        foreach ($sql as $v) {
+        foreach ($sql as $v)
+        {
             $p = $v['project'];
             $arRes['items'][$p]['name'] = $v['name']; 
             $arRes['items'][$p]['date'] = date('d.m.Y',strtotime($v['crdate']));
