@@ -94,44 +94,42 @@ class MailCloud extends Model
 
   	}
 
-     public function mailerMail($cloud)
+    public function mailerMail($cloud)
     {
+        $adminMess = $cloud['chat'] ? $cloud['chat'] : $cloud['message'];
+        if(filter_var($cloud['email'],FILTER_SANITIZE_EMAIL))
+        {
+            $message = '<p style="font-size:16px;text-align: center">Здравствуйте'.$cloud['name'].'</p>
+                <br/>
+                <p style="font-size:16px;">Ответ на ваше обращение:</p>
+                <div style="font-size:16px"> '.$adminMess.'.</div>
+                <br/>';
+            Share::sendmail($cloud['email'], "Prommu.com. Ответ на вопрос", $message);    
+        }
 
-             $message = '<p style="font-size:16px;text-align: center">Здравствуйте'.$cloud['name'].'</p>
-                    <br/>
-
-                <p style=" font-size:16px;">
-                    <br/>
-                Ответ на ваше обращение: '.$cloud['chat'].'.</p>
-                    <br/>
-                ';
-            // if($cloud['email']) {
-            //     Share::sendmail($cloud['email'], "Prommu.com. Ответ на вопрос", $message);
-            // }
-            if(!$cloud['chat']) {
-                $message = '
-                    <br/>
+        if(!$cloud['chat'])
+        {
+            $message = '<br/>
                 <p style=" font-size:16px;"><br/>Номер обращения в системе Prommu Admin: '.$cloud['id'].'.</p><br/>
                 <p style=" font-size:16px;"><br/>Пользователь: '.$cloud['idusp'].'.</p><br/>
-                 <p style=" font-size:16px;"><br/>Текст обращения: '.$cloud['text'].'.</p><br/>
-                <p style=" font-size:16px;"><br/>Ответ администратора Prommu: '.$cloud['message'].'.</p><br/>
-                ';
+                <p style=" font-size:16px;"><br/>Текст обращения: '.$cloud['text'].'.</p><br/>
+                <p style=" font-size:16px;"><br/>Ответ администратора Prommu: '.$adminMess.'.</p><br/>';
             Share::sendmail('projekt.sergey@gmail.com', "Prommu.com. Ответ на вопрос", $message);
             Share::sendmail('denisgresk@gmail.com', "Prommu.com. Ответ на вопрос", $message);
-            }
-            else {
-                $message = '
-                    <br/>
+        }
+        else
+        {
+            $message = '<br/>
                 <p style=" font-size:16px;"><br/>Номер обращения в системе Prommu Admin: '.$cloud['id'].'.</p><br/>
                 <p style=" font-size:16px;"><br/>Пользователь: '.$cloud['name'].'.</p><br/>
                 <p style=" font-size:16px;"><br/>Текст обращения: '.$cloud['text'].'.</p><br/>
-                <p style=" font-size:16px;"><br/>Ответ администратора Prommu: '.$cloud['chat'].'.</p><br/>
-                ';
+                <p style=" font-size:16px;"><br/>Ответ администратора Prommu: '.$adminMess.'.</p><br/>';
             Share::sendmail('projekt.sergey@gmail.com', "Prommu.com. Ответ на вопрос", $message);
-            }
-        
+        }
 
-        
+        $text = "Администратор ответил на feedback https://prommu.com/admin/feedback";
+        $sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=".$text;
+        file_get_contents($sendto);
     }
 
  	

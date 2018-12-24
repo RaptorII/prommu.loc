@@ -132,6 +132,7 @@ echo '</div>';
 echo '</div>';
 echo '<input type="hidden" name="usertype" value="'.$data['user']['type'].'">';
 echo '<input type="hidden" name="Update[idusp]" value="'.$data['user']['id'].'">';
+echo '<input type="hidden" name="Update[email]" value="'.$data['chat']['email'].'">';
 echo CHtml::endForm();
 require 'mail-templates.php'; // подключение шаблонов
 ?>
