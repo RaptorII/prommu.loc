@@ -283,17 +283,13 @@ class Feedback extends Model
                 Roistat: <b>%s</b>  ",
         MainConfig::$SITE, $name, $theme, $emails, $text, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $roistat);
 	           
-				$email[0] = "denisgresk@gmail.com";
-				$email[1] = "man.market2@gmail.com";
-				$email[2] = "mk0630733719@gmail.com";
-				$email[3] = "e.market.easss@gmail.com"; 
-				$email[4] = "projekt.sergey@gmail.com";
-				$email[5] = "manag_reports@euro-asian.ru";
-				$email[6] = "e.marketing@euro-asian.ru";
-				$email[7] = "site.adm@euro-asian.ru";
-				for($i = 0; $i <8; $i++)
+				$arMail[] = "denisgresk@gmail.com";
+				$arMail[] = "projekt.sergey@gmail.com";
+				$arMail[] = "e.marketing@euro-asian.ru";
+				$arMail[] = "site.adm@euro-asian.ru";
+				foreach ($arMail as $mail)
 				{
-					Share::sendmail($email[$i], "Prommu: сообщение через обратную связь", trim($message));
+					Share::sendmail($mail, "Prommu: сообщение через обратную связь", trim($message));
 				}
 
 				Yii::app()->user->setFlash(

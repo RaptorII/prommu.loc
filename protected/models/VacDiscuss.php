@@ -336,7 +336,7 @@ class VacDiscuss extends Model
         if($type==3) // employer
         {
             return Yii::app()->db->createCommand()
-                    ->select('COUNT(ed.id) cnt')
+                    ->select('COUNT(DISTINCT(ed.id)) cnt')
                     ->from('empl_vacations ev')
                     ->leftjoin('emplv_discuss ed','ed.id_vac=ev.id')
                     ->leftjoin(
