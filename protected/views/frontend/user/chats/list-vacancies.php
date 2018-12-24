@@ -66,7 +66,7 @@
 										<? if($cntMess = count($item['personal-chat'][$user['id']]['id'])): ?>
 											<span class="js-g-hashint vac-item__content-chat-mess" title="Сообщений"><?=$cntMess?></span>
 										<? endif; ?>
-										<? if(count($item['personal-chat'][$user['id']]['noread']>0)): ?>
+										<? if($cntMess = count($item['personal-chat'][$user['id']]['noread'])): ?>
 											<span class="js-g-hashint vac-item__content-chat-mess noread" title="Не прочитано"><?=$cntMess?></span>
 										<? endif; ?>
 									</a>
