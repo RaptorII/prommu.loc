@@ -258,8 +258,6 @@ class ImApplic extends Im
             }
             // endif
             $ids = $ids['iduse'] ?: $iduse;
-            // !!!!!!!!!!!
-            file_get_contents("/api.mailer/?id=$ids&type=3&method=mess");
 
             $sql = "SELECT r.new_mess
             FROM push_config r
