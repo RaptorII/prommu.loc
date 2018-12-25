@@ -1073,6 +1073,12 @@ class Auth
         $cookie = new CHttpCookie('prommu', base64_encode($data));
         $cookie->expire = time() + MainConfig::$AUTH_EXPIRE_TIME_LONG;
         Yii::app()->request->cookies['prommu'] = $cookie;
+        
+        $res = Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'mdate' => date('Y-m-d H:i:s'),
+                ), 'id_user=:id_user', array(':id_user' => $inData->uid));
+                
         $session = Yii::app()->session;
         $session['au_uid'] = $inData->uid;
         $session['au_token'] = $inData->token;
