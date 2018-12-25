@@ -13,13 +13,15 @@ Yii::app()->getClientScript()->registerScriptFile('/theme/js/projects/app-tasks.
         <div class="cabinet__timer">
             <div class="timer__box">
                 <div class="timer__time">
-                    <span class="timer__hours">15</span>
+                    <span id="t_hours" class="timer__hours">&nbsp;&nbsp;</span>
                     <span class="timer__sw">:</span>
-                    <span class="timer__minutes">15</span>
+                    <span id="t_minutes" class="timer__minutes">&nbsp;&nbsp;</span>
                 </div>
-                <div class="timer__control">
-                    <i class="timer__play"></i>
-                    <span class="timer__control-start">начать</span>
+                <div class="timer__control-top">
+                    <div id="t_week" class="timer__control-text"></div>
+                    <div class="timer__control-tasks">
+                        Задач на сегодня:<span class="control__tasks">7</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -59,23 +61,48 @@ Yii::app()->getClientScript()->registerScriptFile('/theme/js/projects/app-tasks.
 
                     </div>
                 </div>
-
                 <? foreach ($viData['items'] as $keyDate => $itemDate): ?>
                     <? foreach ($itemDate as $keyCity => $itemCity): ?>
                         <? foreach ($itemCity['points'] as $keyTT => $itemTT): ?>
                             <div class="cabinet__point">
                                 <div class="point">
-                                    <?= $viData['points'][$keyTT]['city'] ?>,
-                                    <?= $viData['points'][$keyTT]['index_full'] ?>
+                                    <div class="point__header">
 
-                                    (<?= $viData['points'][$keyTT]['name'] ?>)
-                                    <b class="js-g-hashint js-get-target tooltipstered"
-                                       data-map-project="<?= $project ?>"
-                                       data-map-user=""
-                                       data-map-point="<?= $keyTT ?>"
-                                       data-map-date="<?= $keyDate ?>"
-                                    ></b>
+                                        <? if ($viData['points'][$keyTT]['comment']): ?>
+                                            <div class="warning"></div>
+                                        <? endif; ?>
+
+                                        <?= $viData['points'][$keyTT]['city'] ?>,
+                                        <?= $viData['points'][$keyTT]['index_full'] ?>
+
+                                        (<?= $viData['points'][$keyTT]['name'] ?>)
+                                        <b class="js-g-hashint js-get-target tooltipstered"
+                                           data-map-project="<?= $project ?>"
+                                           data-map-user=""
+                                           data-map-point="<?= $keyTT ?>"
+                                           data-map-date="<?= $keyDate ?>"
+                                        ></b>
+                                    </div>
+
+                                    <? if ($keyTT == 5728): ?>
+
+                                        <div class="timer__control point__timer stop">
+                                            <i class="timer__stop"></i>
+                                            <span class="timer__control-stop">завершить</span>
+                                        </div>
+                                    <? else: ?>
+                                        <div class="timer__control point__timer start">
+                                            <i class="timer__play"></i>
+                                            <span class="timer__control-start">начать</span>
+                                        </div>
+                                    <? endif; ?>
                                 </div>
+
+                                <? if ($viData['points'][$keyTT]['comment']): ?>
+                                    <div class="point__descr">
+                                        <?= $viData['points'][$keyTT]['comment'] ?>
+                                    </div>
+                                <? endif; ?>
 
 
                                 <? foreach ($itemTT as $keyUser => $itemUser): ?>
@@ -85,6 +112,10 @@ Yii::app()->getClientScript()->registerScriptFile('/theme/js/projects/app-tasks.
 
                                             <div class="task">
                                                 <div class="task__title task__item">
+
+                                                    <? if ($itemTask['text']): ?>
+                                                        <div class="task__descr-ico js-g-hashint"></div>
+                                                    <? endif; ?>
                                                     <?= $itemTask['name'] ?>
                                                 </div>
                                                 <div class="task__date task__item">
@@ -99,20 +130,26 @@ Yii::app()->getClientScript()->registerScriptFile('/theme/js/projects/app-tasks.
                                                 <div class="task__post task__item">
                                                     <?= $viData['points'][$keyTT]['post_name'] ?>
                                                 </div>
-                                                <?/*<div class="task__status task__item">
+                                                <div class="task__status task__item">
                                                     <?= $itemTask['status'] ?>
-                                                </div>*/?>
-                                                <div class="task__control start task__item">
+                                                </div>
+                                                <? /*<div class="task__control task__item">
                                                     <div class="timer__control">
                                                         <i class="timer__play"></i>
                                                         <span class="timer__control-start">начать</span>
                                                     </div>
-                                                </div>
+                                                </div>*/ ?>
 
                                             </div>
-                                            <?/*<div class="task__descr task__item">
+
+                                            <? if ($itemTask['text']): ?>
+                                                <div class="task_descr">
+                                                    Описание задачи: <?= $itemTask['text'] ?>
+                                                </div>
+                                            <? endif; ?>
+                                            <? /*<div class="task__descr task__item">
                                                 <?= $itemTask['text'] ?>
-                                            </div>*/?>
+                                            </div>*/ ?>
 
 
                                         <? endforeach; ?>
