@@ -412,8 +412,6 @@ class ImEmpl extends Im
             FROM push_config r
             WHERE r.id = {$ids}";
             $res = Yii::app()->db->createCommand($sql)->queryScalar(); 
-            // !!!!!!!!!!!
-            file_get_contents("/api.mailer/?id=$ids&type=2&method=mess");
 
             if($res == 2) {
             $sql = "SELECT r.push
