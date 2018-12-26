@@ -4,7 +4,29 @@ $userId = Share::$UserProfile->id;
 
 Yii::app()->getClientScript()->registerCssFile('/theme/css/projects/app-tasks.css');
 Yii::app()->getClientScript()->registerScriptFile('/theme/js/projects/app-tasks.js', CClientScript::POS_END);
+
+
+/***********FANCYBOX************/
+Yii::app()->getClientScript()->registerScriptFile('/theme/js/dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile('/theme/js/dist/fancybox/jquery.fancybox.css');
+/***********FANCYBOX************/
+/***********MAP************/
+Yii::app()->getClientScript()->registerScriptFile('https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=AIzaSyC9M8BgorAu7Sn226LNP2rteTF5gO7KjLc');
+Yii::app()->getClientScript()->registerScriptFile('/theme/js/projects/route-map.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile('/theme/css/projects/universal-map.css');
+/***********MAP************/
+
+$arStatus = [
+    '0'=>'Ожидание',
+    '1'=>'В работе',
+    '2'=>'Доработка',
+    '3'=>'Готова',
+    '4'=>'Отменена'
+];
+
 ?>
+
+
 <div class="cabinet">
     <div class="cabinet__header">
         <div class="project__info">
@@ -78,7 +100,7 @@ Yii::app()->getClientScript()->registerScriptFile('/theme/js/projects/app-tasks.
                                         (<?= $viData['points'][$keyTT]['name'] ?>)
                                         <b class="js-g-hashint js-get-target tooltipstered"
                                            data-map-project="<?= $project ?>"
-                                           data-map-user=""
+                                           data-map-user="<?=$userId?>"
                                            data-map-point="<?= $keyTT ?>"
                                            data-map-date="<?= $keyDate ?>"
                                         ></b>
@@ -112,11 +134,9 @@ Yii::app()->getClientScript()->registerScriptFile('/theme/js/projects/app-tasks.
 
                                             <div class="task">
                                                 <div class="task__title task__item">
-
-                                                    <? if ($itemTask['text']): ?>
-                                                        <div class="task__descr-ico js-g-hashint"></div>
-                                                    <? endif; ?>
-                                                    <?= $itemTask['name'] ?>
+                                                    <div class="task__descr-ico">
+                                                        <?= $itemTask['name'] ?>
+                                                    </div>
                                                 </div>
                                                 <div class="task__date task__item">
                                                     <?= date('d.m.Y', $keyDate) ?>
@@ -130,15 +150,25 @@ Yii::app()->getClientScript()->registerScriptFile('/theme/js/projects/app-tasks.
                                                 <div class="task__post task__item">
                                                     <?= $viData['points'][$keyTT]['post_name'] ?>
                                                 </div>
+
                                                 <div class="task__status task__item">
-                                                    <?= $itemTask['status'] ?>
-                                                </div>
-                                                <? /*<div class="task__control task__item">
-                                                    <div class="timer__control">
-                                                        <i class="timer__play"></i>
-                                                        <span class="timer__control-start">начать</span>
+
+
+                                                    <?/*=$arStatus[$itemTask['status']] */?>
+
+                                                    <div class="task__item-data">
+                                                        <span class="task__select"><?=$arStatus[$itemTask['status']];?></span>
+                                                        <ul class="task__ul-hidden">
+                                                            <?foreach ($arStatus as $key => $value):?>
+                                                                <li class="task__li-hidden" data-id="<?=$key?>"><?=$value?></li>
+                                                            <?endforeach;?>
+                                                        </ul>
+                                                        <input type="hidden" class="task__li-visible"
+                                                               value="<?=$itemTask['status'];?>">
                                                     </div>
-                                                </div>*/ ?>
+                                                </div>
+
+
 
                                             </div>
 
