@@ -216,6 +216,17 @@ class ProjectTask extends CActiveRecordBehavior{
 				->delete('project_task','id=:id', [':id'=>$arr['task']]);
 				if($sql) $arRes['error'] = false; 
 				break;
+
+			case 'change-task-status': // изменение статуса
+				$sql = Yii::app()->db->createCommand()
+								->update(
+									'project_task',
+									['status'=>$arr['status']], 
+									'id=:id',
+									[':id'=>$arr['task']]
+								);
+				$sql && $arRes['error'] = false;
+				break;
 		}
 		return $arRes;
 	}
