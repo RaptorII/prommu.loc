@@ -105,27 +105,46 @@ class MailingLetter extends CActiveRecord
 			if(count($arRes['moder']))
 				$conditions = 'ismoder IN(' . implode(',',$arRes['moder']) . ')';
 
-			$sql = Yii::app()->db->createCommand()
-							->select("id_user, email")
-							->from('user')
-							->where($conditions)
-							->order('id_user desc')
-							->queryAll();
-
-			foreach ($sql as $v)
+			if(strlen($conditions))
 			{
-				if(filter_var($v['email'],FILTER_VALIDATE_EMAIL))
+				$sql = Yii::app()->db->createCommand()
+								->select("id_user, email")
+								->from('user')
+								->where($conditions)
+								->order('id_user desc')
+								->queryAll();
+
+				foreach ($sql as $v)
 				{
-					$arRes['receiver'][] = $v['email'];
-					$arRes['items'][] = $v; // на будущее логирование
-				}
+					if(filter_var($v['email'],FILTER_VALIDATE_EMAIL))
+					{
+						$arRes['receiver'][] = $v['email'];
+						$arRes['items'][] = $v; // на будущее логирование
+					}
+				}				
 			}
+
 			$arRes['receiver'] = array_unique($arRes['receiver']);
 			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			if(count($arRes['receiver'])<1000) 
-			foreach ($arRes['receiver'] as $email)
+			if(count($arRes['receiver'])<1000)
 			{
-				Share::sendmail($email, $arRes['title'], $arRes['text']);	
+				$SM = Yii::app()->swiftMailer;
+				$Transport = $SM->smtpTransport('mail.companyreport.net', 25, 'null')
+												->setUsername('noreply@prommu.com')
+												->setPassword('1I1OD6iL');
+
+				$Mailer = $SM->mailer($Transport);
+
+				foreach ($arRes['receiver'] as $email)
+				{
+					$Message = $SM->newMessage($arRes['title'])
+												->setFrom(['auto-mailer@prommu.com'=>'Prommu.com'])
+												->setTo([$email => ''])
+												->addPart($arRes['text'],'text/html')
+												->setBody('');
+					// Send mail
+					$Mailer->send($Message);
+				}
 			}
 			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		}
