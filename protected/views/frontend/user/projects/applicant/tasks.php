@@ -19,7 +19,6 @@ Yii::app()->getClientScript()->registerCssFile('/theme/css/projects/universal-ma
 $arStatus = [
     '0'=>'Ожидание',
     '1'=>'В работе',
-    '2'=>'Доработка',
     '3'=>'Готова',
     '4'=>'Отменена'
 ];
@@ -107,13 +106,18 @@ $arStatus = [
                                     </div>
 
                                     <? if ($keyTT == 5728): ?>
-
-                                        <div class="timer__control point__timer stop">
+                                        <div class="timer__control point__timer stop"
+                                             data-point="<?= $keyTT ?>"
+                                             data-date="<?= $keyDate ?>"
+                                        >
                                             <i class="timer__stop"></i>
                                             <span class="timer__control-stop">завершить</span>
                                         </div>
                                     <? else: ?>
-                                        <div class="timer__control point__timer start">
+                                        <div class="timer__control point__timer start"
+                                             data-point="<?= $keyTT ?>"
+                                             data-date="<?= $keyDate ?>"
+                                        >
                                             <i class="timer__play"></i>
                                             <span class="timer__control-start">начать</span>
                                         </div>
@@ -160,11 +164,14 @@ $arStatus = [
                                                         <span class="task__select"><?=$arStatus[$itemTask['status']];?></span>
                                                         <ul class="task__ul-hidden">
                                                             <?foreach ($arStatus as $key => $value):?>
-                                                                <li class="task__li-hidden" data-id="<?=$key?>"><?=$value?></li>
+                                                                <li class="task__li-hidden" data-id="<?=$key?>" data-task-id="<?=$itemTask['id'];?>"><?=$value?></li>
                                                             <?endforeach;?>
                                                         </ul>
                                                         <input type="hidden" class="task__li-visible"
-                                                               value="<?=$itemTask['status'];?>">
+                                                               value="<?=$itemTask['status'];?>"
+                                                                data-map-point="<?= $keyTT ?>"
+                                                                data-map-date="<?= $keyDate ?>"
+                                                        />
                                                     </div>
                                                 </div>
 
@@ -196,6 +203,8 @@ $arStatus = [
 
 </div>
 
+<input type="hidden" id="user_id" value="<?=$userId?>"/>
+<input type="hidden" id="project_id" value="<?=$project?>"/>
 
 <?
 echo "<pre>";
