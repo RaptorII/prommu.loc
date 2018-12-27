@@ -115,3 +115,35 @@
   border-left-color: #8a6d3b;
   background-color: #faf2cc;
 }
+/*
+*   forms
+*/
+.d-label{ width: 100%; }
+.form-control{ border-radius: 3px; }
+.d-small{ max-width: 300px; }
+.d-medium{ max-width: 600px; }
+.d-textarea{
+  width: 100%;
+  min-height: 400px;
+  resize: vertical;
+  font-weight: normal;
+}
+.CodeMirror{ 
+  width: 100%;
+  border: 1px solid #d2d6de;
+  border-radius: 3px;
+  font-weight: normal;
+  min-height: 600px; 
+}
+.d-indent{
+  margin: 1em 0;
+}
+/*
+*   tables
+*/
+.custom-table{ background-color: #fff; }
+.custom-table tr:hover * { 
+  color: #3c8dbc;
+  cursor: pointer;
+}
+.clearfix{ clear: both; }

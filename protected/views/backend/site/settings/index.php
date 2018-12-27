@@ -1,6 +1,3 @@
-<?
-	Yii::app()->getClientScript()->registerCssFile('/admin/css/template.css');
-?>
 <div class="row">
 	<div class="col-xs-12 settings">
 		<h2>Настройки</h2>
@@ -63,12 +60,6 @@
 
         });
 			}
-			
 		});
-
-
-
-
 	});
-	
 </script>

@@ -1811,13 +1811,57 @@ class SiteController extends Controller
             return;
         }
 
-        $title = 'Уведомления';
-        $this->setPageTitle($title);
-        $this->breadcrumbs = array($title);
-        $model = new Mailing;
-        $model->unsetAttributes();
-        $model->search();
+        $event = Yii::app()->getRequest()->getParam('event_id');
+        $letter = Yii::app()->getRequest()->getParam('letter_id');
 
-        $this->render('notifications/index', array('model' => $model));
+        $data = array();
+        $title = 'Уведомления';
+        $arBread[$title] = ['notifications'];
+        $view = 'notifications/index';
+
+        if(isset($letter) || isset($event))
+        {      
+            if($letter=='0')
+            {
+                $model = new MailingLetter;
+                $data = $model->setLetter($letter);
+
+                if($data['complete'])
+                    $this->redirect(array('notifications'));
+                $title = 'Создание письма';
+                $view = 'notifications/letter';
+            }
+            if($letter>0)
+            {
+                $model = new MailingLetter;
+                $data = $model->getLetter($letter);
+                $title = 'Редактирование письма';
+                $view = 'notifications/letter';      
+            }
+            if($event=='0')
+            {
+                $title = 'Создание события';
+                $view = 'notifications/event';
+            }
+            if($event>0)
+            {
+                $title = 'Редактирование события';
+                $view = 'notifications/event';
+            }
+            array_push($arBread, $title);
+        }
+        else
+        {
+            $model = new Mailing;
+            $model->unsetAttributes();
+
+            $model = new MailingLetter;
+            $model->unsetAttributes();
+        }
+        $this->setPageTitle($title);
+        $this->breadcrumbs = $arBread;
+        $bUrl = Yii::app()->request->baseUrl;
+        Yii::app()->getClientScript()->registerCssFile($bUrl . '/css/template.css');
+        $this->render($view, array('viData' => $data));
     }
 }
