@@ -1819,25 +1819,8 @@ class SiteController extends Controller
         $arBread[$title] = ['notifications'];
         $view = 'notifications/index';
 
-        if(isset($letter) || isset($event))
-        {      
-            if($letter=='0')
-            {
-                $model = new MailingLetter;
-                $data = $model->setLetter($letter);
-
-                if($data['complete'])
-                    $this->redirect(array('notifications'));
-                $title = 'Создание письма';
-                $view = 'notifications/letter';
-            }
-            if($letter>0)
-            {
-                $model = new MailingLetter;
-                $data = $model->getLetter($letter);
-                $title = 'Редактирование письма';
-                $view = 'notifications/letter';      
-            }
+        if(isset($event))
+        {
             if($event=='0')
             {
                 $title = 'Создание события';
@@ -1848,6 +1831,26 @@ class SiteController extends Controller
                 $title = 'Редактирование события';
                 $view = 'notifications/event';
             }
+            array_push($arBread, $title);            
+        }
+        elseif(isset($letter))
+        {
+            $model = new MailingLetter;
+            if($letter=='0')
+            {
+                $title = 'Создание письма';
+                $view = 'notifications/letter';
+            }
+            if($letter>0)
+            {
+                $data = $model->getLetter($letter);
+                $title = 'Редактирование письма';
+                $view = 'notifications/letter';      
+            }
+            if(Yii::app()->getRequest()->isPostRequest)
+                $data = $model->setLetter($letter);
+            if($data['complete'])
+                $this->redirect(array('notifications'));
             array_push($arBread, $title);
         }
         else

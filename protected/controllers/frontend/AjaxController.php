@@ -904,7 +904,7 @@ class AjaxController extends AppController
                         $result = $model->deleteLocation($data);
                     if(in_array(
                             $data['type'], 
-                            ['new-task','change-task','all-dates-task','all-users-task','delete-task']
+                            ['new-task','change-task','all-dates-task','all-users-task','delete-task','change-task-status']
                         )
                     )
                         $result = $model->changeTask($data); 

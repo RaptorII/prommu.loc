@@ -12,6 +12,13 @@ class MailingLetter extends CActiveRecord
 		$this->offset = 0;
 	}
 	/**
+	 * 
+	 */
+	public static function model($className=__CLASS__)
+	{
+		return parent::model($className);
+	}
+	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
@@ -49,72 +56,19 @@ class MailingLetter extends CActiveRecord
 	*/
 	public function setLetter($id)
 	{
-		if(!Yii::app()->getRequest()->isPostRequest)
-			return array('error'=>false);
-
-		$arRes = array('error'=>true);
-		$arReceiver = $arStatus = $arModer = array();
-		$params = array();
-		$conditions = '';
-		// check form data
-		// status
-    $arRes['form']['status'] = Yii::app()->getRequest()->getParam('user_status');
-		if(is_array($arRes['form']['status']))
-			foreach ($arRes['form']['status'] as $v)
-			{
-				$v==1 && $arStatus[] = 0;
-				$v==2 && $arStatus[] = $v;
-				$v==3 && $arStatus[] = $v;
-			}
-		// ismoder
-		$arRes['form']['moder'] = Yii::app()->getRequest()->getParam('user_moder');
-		if(is_array($arRes['form']['moder']))
-			foreach ($arRes['form']['moder'] as $v)
-			{
-				$v==1 && $arModer[] = $v;
-				$v==2 && $arModer[] = 0;
-			}
-		// emails
-    $arRes['form']['receivers'] = filter_var(
-                    Yii::app()->getRequest()->getParam('receivers'),
-                    FILTER_SANITIZE_FULL_SPECIAL_CHARS
-                );
-		$arT = explode(',',$arRes['form']['receivers']);
-		foreach ($arT as $k => $v)
-		{
-			$arT[$k] = trim($v);
-			if(filter_var($arT[$k],FILTER_VALIDATE_EMAIL))
-				$arReceiver[] = $arT[$k];
-		}
-		// title
-    $arRes['form']['title'] = filter_var(
-                    Yii::app()->getRequest()->getParam('title'),
-                    FILTER_SANITIZE_FULL_SPECIAL_CHARS
-                );
-    $arRes['form']['title'] = trim($arRes['form']['title']);
-    // text
-    $arRes['form']['text'] = Yii::app()->getRequest()->getParam('text');
-    // event
-		$event = Yii::app()->getRequest()->getParam('event_type');
-		// error
-		if((!count($arStatus) && !count($arModer)) && !count($arReceiver))
-			$arRes['messages'][] = '- необходимо задать параметры для выборки пользователей или ввести валидный Email';
-		if(empty($arRes['form']['title']) || empty($arRes['form']['text']))
-			$arRes['messages'][] = '- поля "Заголовок" и "Текст письма" должны быть заполнены';
-		if(count($arRes['messages']))
+		$arRes = $this->validateForm();
+		if($arRes['error'])
 			return $arRes;
-		// continue
-		$arRes['error'] = false;
-		if(count($arStatus))
-			$conditions = 'status IN(' . implode(',',$arStatus) . ')';
-		if(count($arModer))
-			$conditions = 'ismoder IN(' . implode(',',$arModer) . ')';
+
+		$event = Yii::app()->getRequest()->getParam('event_type');
+
 
 		$arParams = array(
 									'status' => $arRes['form']['status'],
 									'moder' => $arRes['form']['moder']
 								);
-		$arInsert = array(
+
+		$arNewData = array(
 									'title'	=> $arRes['form']['title'],
 									'text' => $arRes['form']['text'],
 									'receiver' => $arRes['form']['receivers'],
@@ -123,37 +77,76 @@ class MailingLetter extends CActiveRecord
 									'cdate'	=> time()
 								);
 		
-		if($id==0)
+		if($id=='0')
 		{
-      Yii::app()->db->createCommand()->insert('admin_mailing_letter', $arInsert);
+			Yii::app()->db->createCommand()->insert(
+					'admin_mailing_letter', 
+					$arNewData
+				);
 			$arRes['complete'] = true;
 		}
 		elseif($id>0)
 		{
-
+			Yii::app()->db->createCommand()->update(
+					'admin_mailing_letter', 
+					$arNewData, 
+					'id=:id', 
+					[':id' => $id]
+				);
+			$arRes['complete'] = true;
 		}
 
 		if($event=='send') // выполняем отправку
 		{
-			$sql = Yii::app()->db->createCommand()
-							->select("id_user, email")
-							->from('user')
-							->where($conditions)
-							->order('id_user desc')
-							->queryAll();
+			$conditions = '';
+			// continue
+			if(count($arRes['status']))
+				$conditions = 'status IN(' . implode(',',$arRes['status']) . ')';
+			if(count($arRes['moder']))
+				$conditions = 'ismoder IN(' . implode(',',$arRes['moder']) . ')';
 
-			foreach ($sql as $v)
+			if(strlen($conditions))
 			{
-				if(filter_var($v['email'],FILTER_VALIDATE_EMAIL))
+				$sql = Yii::app()->db->createCommand()
+								->select("id_user, email")
+								->from('user')
+								->where($conditions)
+								->order('id_user desc')
+								->queryAll();
+
+				foreach ($sql as $v)
 				{
-					$arReceiver[] = $v['email'];
-					$arRes['items'][] = $v;
+					if(filter_var($v['email'],FILTER_VALIDATE_EMAIL))
+					{
+						$arRes['receiver'][] = $v['email'];
+						$arRes['items'][] = $v; // на будущее логирование
+					}
+				}				
+			}
+
+			$arRes['receiver'] = array_unique($arRes['receiver']);
+			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			if(count($arRes['receiver'])<1000)
+			{
+				$SM = Yii::app()->swiftMailer;
+				$Transport = $SM->smtpTransport('mail.companyreport.net', 25, 'null')
+												->setUsername('noreply@prommu.com')
+												->setPassword('1I1OD6iL');
+
+				$Mailer = $SM->mailer($Transport);
+
+				foreach ($arRes['receiver'] as $email)
+				{
+					$Message = $SM->newMessage($arRes['title'])
+												->setFrom(['auto-mailer@prommu.com'=>'Prommu.com'])
+												->setTo([$email => ''])
+												->addPart($arRes['text'],'text/html')
+												->setBody('');
+					// Send mail
+					$Mailer->send($Message);
 				}
 			}
-			$arReceiver = array_unique($arReceiver);
-			/*
-			*			Нужна отправка
-			*/
+			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		}
 
 		return $arRes;
@@ -165,12 +158,12 @@ class MailingLetter extends CActiveRecord
 	{
 		$arRes = array('error'=>true);
 
-		$data = $this->findByPk($id);
+		$data = MailingLetter::model()->findByPk($id);
 
 		if(!isset($data->id))
 			return $arRes;
 
-		$arRes['error'] = false;
+		$arRes['error'] = false;	
 		$params = unserialize($data->params);
 		$arRes['form'] = array(
 				'status' => $params['status'],
@@ -179,6 +172,65 @@ class MailingLetter extends CActiveRecord
 				'title' => $data->title,
 				'text' => $data->text,
 			);
+
+		return $arRes;
+	}
+	/**
+	 *  Проверка полей
+	 */
+	public function validateForm()
+	{
+		$arRes = array('error'=>false);
+		// check form data
+		// status
+    $arRes['form']['status'] = Yii::app()->getRequest()->getParam('user_status');
+		if(is_array($arRes['form']['status']))
+			foreach ($arRes['form']['status'] as $v)
+			{
+				$v==1 && $arRes['status'][] = 0;
+				$v==2 && $arRes['status'][] = $v;
+				$v==3 && $arRes['status'][] = $v;
+			}
+		// ismoder
+		$arRes['form']['moder'] = Yii::app()->getRequest()->getParam('user_moder');
+		if(is_array($arRes['form']['moder']))
+			foreach ($arRes['form']['moder'] as $v)
+			{
+				$v==1 && $arRes['moder'][] = $v;
+				$v==2 && $arRes['moder'][] = 0;
+			}
+		// emails
+    $arRes['form']['receivers'] = filter_var(
+                    Yii::app()->getRequest()->getParam('receivers'),
+                    FILTER_SANITIZE_FULL_SPECIAL_CHARS
+                );
+		$arT = explode(',',$arRes['form']['receivers']);
+		foreach ($arT as $k => $v)
+		{
+			$arT[$k] = trim($v);
+			if(filter_var($arT[$k],FILTER_VALIDATE_EMAIL))
+				$arRes['receiver'][] = $arT[$k];
+		}
+		// title
+    $arRes['form']['title'] = filter_var(
+                    Yii::app()->getRequest()->getParam('title'),
+                    FILTER_SANITIZE_FULL_SPECIAL_CHARS
+                );
+    $arRes['form']['title'] = trim($arRes['form']['title']);
+    $arRes['title'] = $arRes['form']['title'];
+    // text
+    $arRes['form']['text'] = Yii::app()->getRequest()->getParam('text');
+    $arRes['text'] = $arRes['form']['text'];
+		// error
+		if((!count($arRes['status']) && !count($arRes['moder'])) && !count($arRes['receiver']))
+			$arRes['messages'][] = '- необходимо задать параметры для выборки пользователей или ввести валидный Email';
+		if(empty($arRes['form']['title']) || empty($arRes['form']['text']))
+			$arRes['messages'][] = '- поля "Заголовок" и "Текст письма" должны быть заполнены';
+		if(count($arRes['messages']))
+		{
+			$arRes['error'] = true;
+		}
+
 		return $arRes;
 	}
 }
