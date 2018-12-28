@@ -69,11 +69,12 @@ class Project extends CActiveRecord
         $res = Yii::app()->db->createCommand()
             ->insert('project_report', array(
                 'project' => $arr['project'],
-                'user' => $arr['user'],
+                'user' => Share::$UserProfile->id,
                 'point' => $arr['point'],
-                'date' => date("Y-m-d H-i-s"),
+                'status' => $arr['status'],
                 'longitude' => $arr['longitude'],
                 'latitude' => $arr['latitude'],
+                'date' => date("Y-m-d H-i-s")
             ));
 
         return $res ? ['error' => false] : ['error' => true];
@@ -1522,6 +1523,9 @@ class Project extends CActiveRecord
         if (!sizeof($arRes['users']))
             return $arRes;
 
+        $curDate = date('Y-m-d 00:00:00');
+        $curDate = strtotime($curDate);
+
         foreach ($arr['original'] as $p)
             foreach ($arRes['users'] as $idus => $u) {
                 if (!in_array($p['point'], $u['points']))
@@ -1537,6 +1541,7 @@ class Project extends CActiveRecord
                     $arI[$bdate][$p['id_city']]['date'] = date('d.m.Y', $bdate);
                     $arI[$bdate][$p['id_city']]['city'] = $p['city'];
                     $arI[$bdate][$p['id_city']]['ismetro'] = $p['ismetro'];
+                    $arI[$bdate][$p['id_city']]['is_cur_date'] = ($curDate==$bdate);
                     if (!array_key_exists($idus, $arI[$bdate][$p['id_city']]['points'][$p['point']])) {
                         $arUser = $arRes['tasks'][$bdate][$p['point']][$idus];
                         count($arUser) && $arI[$bdate][$p['id_city']]['points'][$p['point']][$idus] = $arUser;
@@ -1553,14 +1558,11 @@ class Project extends CActiveRecord
         $arRes['start'] = array();
         if(count($arGPS) && !isset($arGPS['error']))
         {
-            $cd = date('Y-m-d 00:00:00');
-            $cd = strtotime($cd);
-
             foreach ($arGPS as $v)
             {
                 $d = date('Y-m-d 00:00:00', strtotime($v['date']));
                 $d = strtotime($d);
-                $d==$cd && $arRes['start'][] = $v['point'];
+                $d==$curDate && $arRes['start'][] = $v['point'];
             }
             array_unique($arRes['start']);
         }
