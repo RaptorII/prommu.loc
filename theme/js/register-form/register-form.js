@@ -73,7 +73,10 @@ jQuery(function($){
 		}
 	});
 	//
-
+	$('#agreement-inp').on('change',function(){
+		var $lab = $('#agreement-lab');
+		$(this).is(':checked') ? $lab.removeClass('error') : $lab.addClass('error');
+	});
 	// нажатие кнопки
 	$('.reg-form__btn').click(function(e){
 		var state = $('[name="type-reg"]:checked').val(),
@@ -94,6 +97,9 @@ jQuery(function($){
 
 		$('#EdName').val()==='' ? $('#EdName').addClass('error') : $('#EdName').removeClass('error');
 		$('#EdLname').val()==='' ? $('#EdLname').addClass('error') : $('#EdLname').removeClass('error');
+		$('#agreement-inp').is(':checked') ? $('#agreement-lab').removeClass('error') : $('#agreement-lab').addClass('error');
+
+
 
 		// контакты
 		if(state==1){	// почта

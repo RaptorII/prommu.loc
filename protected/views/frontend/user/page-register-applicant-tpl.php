@@ -127,10 +127,22 @@
                         <div class="g-recaptcha" data-sitekey="6Lf2oE0UAAAAAKL5IvtsS1yytkQDqIAPg1t-ilNB"></div>
                     </div>
                 <? endif; ?>
+                <?
+                //
+                ?>
+                <div class="reg-form__personal-data">
+                    <label>
+                        <input type="checkbox" name="agreement" value="1" class="hide" id="agreement-inp">
+                        <span class="reg-form__radio" id="agreement-lab"><span></span></span>
+                        <span>Я даю согласие на обработку своих <a href="<?=MainConfig::$PAGE_CONDITIONS?>" target="_blank">персональных данных</a></span>
+                    </label>
+                </div>
+                <?
+                //
+                ?>
                 <div class='btn-reg btn-orange-wr'>
                     <button class='hvr-sweep-to-right reg-form__btn' type='submit'>Зарегистрироваться</button>
                 </div>
-
                 <input name='p' type='hidden' value='1'>
                 <input type="hidden" class="referer" name="referer" value="">
                 <input type="hidden" class="transition" name="transition" value="">
@@ -145,11 +157,6 @@
                 <input type="hidden" name="pm_source" value="<?=$_COOKIE["pm_source"];?>"/>
                 <input type="hidden" name="client" value="<?=$_COOKIE["_ga"];?>"/>
             </form>
-            <span class="reg-form__description">
-                Нажав кнопку зарегистрироваться, я тем самым подтверждаю, что принимаю
-                <a href="<?=MainConfig::$PAGE_CONDITIONS?>" target="_blank">условия использования</a>
-                сайта
-            </span>
         </div>
         <div class="col-xs-12 col-sm-4 register__reg-social">
             <span class="register__preview">Либо зарегистрируйтесь через социальные сети:</span>

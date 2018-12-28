@@ -1340,6 +1340,8 @@ class Auth
         $data['crdate'] = date('Y-m-d H:i:s');
         $data['mdate'] = date('Y-m-d H:i:s');
         $data['ismoder'] = '0';
+        !empty($inData['agreement']) && $data['agreement'] = $inData['agreement'];
+        
 
         $res = Yii::app()->db->createCommand()
             ->insert('user', $data);
@@ -1408,6 +1410,8 @@ class Auth
         $client = Yii::app()->getRequest()->getParam('client');
         $client = substr($client, 6, 100);
 
+        $agreement = filter_var(Yii::app()->getRequest()->getParam('agreement'), FILTER_SANITIZE_NUMBER_INT);
+
         if( $idUs && $res['isblocked'] != 2 )
         {
             return array('error' => 1, 'message' => 'Пользователь с таким email адресом уже есть', 'inputData' => $inData['inputData']);
@@ -1433,6 +1437,7 @@ class Auth
                 'isblocked' => 2,
                 'ismoder' => 0,
                 'status' => $inData['type'],
+                'agreement' => $agreement
             ), 1);
 
             $idUser = 0;

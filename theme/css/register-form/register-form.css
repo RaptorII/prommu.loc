@@ -233,16 +233,6 @@
     line-height: 18px;
     padding: 13px 35px;
 }
-#DiContent .register__reg-form .reg-form__description{
-    font-size: 12px;
-    color: #868686;
-    font-family: 'LatoLight', Calibri, Arial, sans-serif;
-}
-#DiContent .register__reg-form .reg-form__description a{
-    text-decoration: underline;
-    color: #868686;
-}
-#DiContent .register__reg-form .reg-form__description a:hover{ color:#abb820; }
 .mob-visible{ display: none; }
 #DiContent.page-register .btn-reg button:focus{ outline: none; }
 #DiContent.page-phone .btn-reg button:focus{ outline: none; }
@@ -344,9 +334,6 @@ media
         width: 100%;
         max-width: 380px; 
     }
-    /*
-     new
-    */
     #DiContent.page-register .btn-reg.btn-reg button{
         max-width: 350px; 
         font-size: 20px;
@@ -356,15 +343,6 @@ media
         max-width: 350px; 
         font-size: 20px;
         line-height: 14px;
-    }
-    /*
-    *
-    */
-    #DiContent .register__reg-form .reg-form__description{
-        padding: 0 38px;
-        display: inline-block;
-        font-size: 18px;
-        line-height: 22px;
     }
     #DiContent .register__reg-social{
         padding: 0 0 50px;
@@ -451,10 +429,6 @@ media
     .reg-social__link.od{ background-position: 50% -168px; }
     .reg-social__link.go{ background-position: 50% -224px; }
     .reg-social__link.in{ background-position: 50% -280px; }
-    #DiContent .register__reg-form .reg-form__description{ 
-        padding: 0; 
-        word-break: break-all;
-    }
     .competitor .register__reg-header{ padding: 0 0 185px; }
     .reg-form__label-name{
         font-size: 16px;
@@ -546,4 +520,33 @@ media
 .g-recaptcha-parent>.red{
     display: block;
     text-align: center;
+}
+/*
+*
+*/
+.reg-form__personal-data{text-align:center}
+#DiContent .reg-form__personal-data label{
+    display: inline-block;
+    margin: 0;
+    cursor: pointer;
+    position: relative;
+    padding-left: 30px;
+}
+#DiContent .reg-form__personal-data a,
+#DiContent .reg-form__personal-data span{
+    font-size: 14px;
+    font-family: 'LatoRegular', Calibri, Arial, sans-serif;  
+}
+.reg-form__personal-data span{vertical-align:sub}
+#DiContent .reg-form__personal-data a:hover{text-decoration:underline}
+#DiContent .reg-form__personal-data input:checked + .reg-form__radio span{background:#abb820}
+.reg-form__personal-data .reg-form__radio{
+    -webkit-transition: all .3s ease-out;
+    -moz-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+    transition: all .3s ease-out;
+}
+.reg-form__personal-data .reg-form__radio.error{
+    border: 1px solid red;
+    box-shadow: 0px 0px 5px 0px red;
 }
