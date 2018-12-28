@@ -1549,6 +1549,21 @@ class Project extends CActiveRecord
         ksort($arI);
         $arRes['items'] = $arI;
         $arRes['filter'] = $this->getFilter($arRes['points']);
+        $arGPS = $this->getСoordinates(['project' => $arr['project']['project']]);
+        $arRes['start'] = array();
+        if(count($arGPS) && !isset($arGPS['error']))
+        {
+            $cd = date('Y-m-d 00:00:00');
+            $cd = strtotime($cd);
+
+            foreach ($arGPS as $v)
+            {
+                $d = date('Y-m-d 00:00:00', strtotime($v['date']));
+                $d = strtotime($d);
+                $d==$cd && $arRes['start'][] = $v['point'];
+            }
+            array_unique($arRes['start']);
+        }
 
         return $arRes;
     }
