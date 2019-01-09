@@ -1555,16 +1555,18 @@ class Project extends CActiveRecord
         $arRes['items'] = $arI;
         $arRes['filter'] = $this->getFilter($arRes['points']);
         $arGPS = $this->getСoordinates(['project' => $arr['project']['project']]);
-        $arRes['start'] = array();
+        $arRes['start'] = $arT = array();
         if(count($arGPS) && !isset($arGPS['error']))
         {
             foreach ($arGPS as $v)
             {
                 $d = date('Y-m-d 00:00:00', strtotime($v['date']));
                 $d = strtotime($d);
-                $d==$curDate && $arRes['start'][] = $v['point'];
+                $d==$curDate && $arT[$v['point']] = $v['status'];
             }
-            array_unique($arRes['start']);
+
+            foreach ($arT as $k => $v)
+                !$v && $arRes['start'][] = $k;
         }
 
         return $arRes;
