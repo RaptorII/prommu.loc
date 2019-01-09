@@ -199,11 +199,9 @@ var Cabinet = (function () {
 
     Cabinet.prototype.ajaxSetTasksStatus = function (data) {
         if (!data) return;
-
         let self = this;
-
         $.ajax({
-            type: 'GET',
+            type: 'POST',
             url: '/ajax/Project',
             data: {data: JSON.stringify(data)},
             dataType: 'json',
