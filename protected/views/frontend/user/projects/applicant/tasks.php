@@ -230,6 +230,8 @@ echo "</pre>";
             navigator.geolocation.getCurrentPosition(
                 function( position ){ // все в порядке
                     console.log( position );
+                    console.log( position.coords.latitude );
+                    console.log( position.coords.longitude );
                 },
                 function(){ // ошибка
                 }
