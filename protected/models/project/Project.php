@@ -1515,6 +1515,7 @@ class Project extends CActiveRecord
         $arRes['project'] = $arr['project'];
         $arRes['items'] = $arI;
         $arRes['tasks'] = $this->getTasks($arr['project']['project']);
+        $arRes['tasks_cnt'] = 0;
 
         foreach ($arr['users'] as $id => $v)
             if (sizeof($v['points']) > 0)
@@ -1537,16 +1538,21 @@ class Project extends CActiveRecord
                 $bdate = (isset($filter) && $fbdate > $bdate) ? $fbdate : $bdate;
                 $edate = (isset($filter) && $fedate < $edate) ? $fedate : $edate;
 
-                do {
+                do
+                {
                     $arI[$bdate][$p['id_city']]['date'] = date('d.m.Y', $bdate);
                     $arI[$bdate][$p['id_city']]['city'] = $p['city'];
                     $arI[$bdate][$p['id_city']]['ismetro'] = $p['ismetro'];
                     $arI[$bdate][$p['id_city']]['is_cur_date'] = ($curDate==$bdate);
-                    if (!array_key_exists($idus, $arI[$bdate][$p['id_city']]['points'][$p['point']])) {
+                    if($curDate==$bdate && count($arRes['tasks'][$bdate][$p['point']][$idus]))
+                    {
+                        $arRes['tasks_cnt']+=count($arRes['tasks'][$bdate][$p['point']][$idus]);
+                    }
+                    if (!array_key_exists($idus, $arI[$bdate][$p['id_city']]['points'][$p['point']]))
+                    {
                         $arUser = $arRes['tasks'][$bdate][$p['point']][$idus];
                         count($arUser) && $arI[$bdate][$p['id_city']]['points'][$p['point']][$idus] = $arUser;
                     }
-
                     $bdate += (60 * 60 * 24);
                 } while ($bdate <= $edate);
             }
