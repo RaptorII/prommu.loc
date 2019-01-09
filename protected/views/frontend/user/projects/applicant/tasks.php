@@ -31,6 +31,8 @@ $arStatus = [
         <div class="project__info">
             <span><?= $viData['project']['name'] ?></span>
         </div>
+
+        <a class="cabinet__link-target" href="#target">
         <div class="cabinet__timer">
             <div class="timer__box">
                 <div class="timer__time">
@@ -41,11 +43,13 @@ $arStatus = [
                 <div class="timer__control-top">
                     <div id="t_week" class="timer__control-text"></div>
                     <div class="timer__control-tasks">
-                        Задач на сегодня:<span class="control__tasks">7</span>
+                        Задач на сегодня:<span class="control__tasks"><?=$viData['tasks_cnt']?></span>
                     </div>
                 </div>
             </div>
         </div>
+        </a>
+
         <a class="cabinet__user" href="/user/profile">
             <img class="cabinet__user-logo" src="<?= $viData['users'][$userId]['src'] ?>"
                  alt="<?= $viData['users'][$userId]['name'] ?>"/>
@@ -79,12 +83,15 @@ $arStatus = [
                                                     <?= $itemTask['status'] ?>
                                                 </div>*/ ?>
                     <div class="task__control start task__item">
-
+                        Статус
                     </div>
                 </div>
                 <? foreach ($viData['items'] as $keyDate => $itemDate): ?>
 
                     <? foreach ($itemDate as $keyCity => $itemCity): ?>
+                        <? if ($itemCity['is_cur_date'] == 1): ?>
+                            <div id="target"></div>
+                        <?endif;?>
                         <? foreach ($itemCity['points'] as $keyTT => $itemTT): ?>
 
                             <div class="cabinet__point">
@@ -119,7 +126,7 @@ $arStatus = [
                                                  data-date="<?= $keyDate ?>"
                                             >
                                                 <i class="timer__play"></i>
-                                                <span class="timer__control-start">начать</span>
+                                                <span class="timer__control-st">начать</span>
                                             </div>
                                         <? else: ?>
                                             <div class="timer__control point__timer stop"
@@ -127,7 +134,7 @@ $arStatus = [
                                                  data-date="<?= $keyDate ?>"
                                             >
                                                 <i class="timer__stop"></i>
-                                                <span class="timer__control-stop">завершить</span>
+                                                <span class="timer__control-st">завершить</span>
                                             </div>
                                         <? endif; ?>
                                     <? endif; ?>
@@ -145,7 +152,7 @@ $arStatus = [
                                         <? foreach ($itemUser as $keyTask => $itemTask): ?>
 
 
-                                            <div class="task">
+                                            <div class="task" data-id="<?=$keyTask;?>">
                                                 <div class="task__title task__item">
                                                     <div class="task__descr-ico">
                                                         <?= $itemTask['name'] ?>
