@@ -52,28 +52,45 @@ var Cabinet = (function () {
 
         $('.point__timer.start').on('click', function (e) {
             let cabinet_project= $('#project_id').val();
-            let cabinet_user = $('#user_id').val();
             let cabinet_point = $(this).data('point');
-            let cabinet_date = $(this).data('date');
             let type = 'coordinates';
 
-            console.log(cabinet_project);
-            console.log(cabinet_user);
-            console.log(cabinet_point);
-            console.log(cabinet_date);
+            let data = self.initData(cabinet_project, '', type, 0 ,cabinet_point, 1,2);
+            self.ajaxWorkStart(data);
+
+            console.log(data);
+
+            /*navigator.geolocation.getCurrentPosition(
+                function(position){ // все в порядке
+                    console.log( position.coords.latitude );
+                    console.log( position.coords.longitude );
+                },
+                function(){ // ошибка
+                }
+            );*/
+
         });
 
         $('.point__timer.stop').on('click', function (e) {
             let cabinet_project= $('#project_id').val();
-            let cabinet_user = $('#user_id').val();
             let cabinet_point = $(this).data('point');
-            let cabinet_date = $(this).data('date');
             let type = 'coordinates';
 
-            console.log(cabinet_project);
-            console.log(cabinet_user);
-            console.log(cabinet_point);
-            console.log(cabinet_date);
+            let data = self.initData(cabinet_project, '', type, 1 ,cabinet_point, 1,2);
+            self.ajaxWorkStart(data);
+
+            console.log(data);
+
+            /*navigator.geolocation.getCurrentPosition(
+             function(position){ // все в порядке
+             console.log( position.coords.latitude );
+             console.log( position.coords.longitude );
+             },
+             function(){ // ошибка
+             }
+             );*/
+
+
         });
 
 
@@ -84,7 +101,7 @@ var Cabinet = (function () {
             let cabinet_task = $(this).data('task-id');
             let type = 'change-task-status';
 
-            let data = self.initTaskData(cabinet_project, cabinet_task, type, cabinet_task_value);
+            let data = self.initData(cabinet_project, cabinet_task, type, cabinet_task_value);
             self.ajaxSetTasksStatus(data);
         });
 
@@ -100,6 +117,7 @@ var Cabinet = (function () {
             $('.task__ul-hidden').fadeOut();
         }
     };
+
 
 
     Cabinet.prototype.clock = function (){
@@ -173,13 +191,18 @@ var Cabinet = (function () {
         return data_object;
     };
 
-    Cabinet.prototype.initTaskData = function (project, task, type, status) {
+    Cabinet.prototype.initData = function (project, task, type, status, point='', lat='',lon='') {
         var data_object = {};
 
         project = project.toString();
         type = type.toString();
         task = task.toString();
         status = status.toString();
+
+        point = point.toString();
+        lat = lat.toString();
+        lon = lon.toString();
+
 
         if(project.length>0) {
             data_object.project = project;
@@ -194,10 +217,37 @@ var Cabinet = (function () {
             data_object.status = status;
         }
 
+        if(point.length>0) {
+            data_object.point = point;
+        }
+        if(lat.length>0) {
+            data_object.latitude = lat;
+        }
+        if(lon.length>0) {
+            data_object.longitude = lon;
+        }
+
         return data_object;
     };
 
     Cabinet.prototype.ajaxSetTasksStatus = function (data) {
+        if (!data) return;
+        let self = this;
+        $.ajax({
+            type: 'POST',
+            url: '/ajax/Project',
+            data: {data: JSON.stringify(data)},
+            dataType: 'json',
+            success: function (value) {
+                //console.log(value);
+                if(value){
+                    console.log(value);
+                }
+            }
+        });
+    };
+
+    Cabinet.prototype.ajaxWorkStart = function (data) {
         if (!data) return;
         let self = this;
         $.ajax({

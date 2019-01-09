@@ -86,9 +86,12 @@ $arStatus = [
 
                     <? foreach ($itemDate as $keyCity => $itemCity): ?>
                         <? foreach ($itemCity['points'] as $keyTT => $itemTT): ?>
+
                             <div class="cabinet__point">
                                 <div class="point">
                                     <div class="point__header">
+
+
 
                                         <? if ($viData['points'][$keyTT]['comment']): ?>
                                             <div class="warning"></div>
@@ -97,7 +100,10 @@ $arStatus = [
                                         <?= $viData['points'][$keyTT]['city'] ?>,
                                         <?= $viData['points'][$keyTT]['index_full'] ?>
 
-                                        (<?= $viData['points'][$keyTT]['name'] ?>)
+                                        <?if($viData['points'][$keyTT]['metro']):?>
+                                            (Станция метро: <?=$viData['points'][$keyTT]['metro']?>)
+                                        <?endif;?>
+
                                         <b class="js-g-hashint js-get-target tooltipstered"
                                            data-map-project="<?= $project ?>"
                                            data-map-user="<?= $userId ?>"
@@ -106,17 +112,8 @@ $arStatus = [
                                         ></b>
                                     </div>
 
-                                        <?/* if ($keyTT == 5728): ?>
-                                            <div class="timer__control point__timer stop"
-                                                 data-point="<?= $keyTT ?>"
-                                                 data-date="<?= $keyDate ?>"
-                                            >
-                                                <i class="timer__stop"></i>
-                                                <span class="timer__control-stop">завершить</span>
-                                            </div>
-                                        <? endif; */?>
-
-                                        <?if($itemCity['is_cur_date'] == 1):?>
+                                    <? if ($itemCity['is_cur_date'] == 1): ?>
+                                        <? if (!in_array($keyTT, $viData['start'])): ?>
                                             <div class="timer__control point__timer start"
                                                  data-point="<?= $keyTT ?>"
                                                  data-date="<?= $keyDate ?>"
@@ -124,7 +121,16 @@ $arStatus = [
                                                 <i class="timer__play"></i>
                                                 <span class="timer__control-start">начать</span>
                                             </div>
-                                        <?endif;?>
+                                        <? else: ?>
+                                            <div class="timer__control point__timer stop"
+                                                 data-point="<?= $keyTT ?>"
+                                                 data-date="<?= $keyDate ?>"
+                                            >
+                                                <i class="timer__stop"></i>
+                                                <span class="timer__control-stop">завершить</span>
+                                            </div>
+                                        <? endif; ?>
+                                    <? endif; ?>
                                 </div>
 
                                 <? if ($viData['points'][$keyTT]['comment']): ?>
@@ -159,24 +165,30 @@ $arStatus = [
                                                 </div>
 
                                                 <div class="task__status task__item">
+                                                    <? if ($itemCity['is_cur_date'] == 1
+                                                        &&
+                                                        in_array($keyTT, $viData['start'])
+                                                    ): ?>
+
+                                                        <div class="task__item-data">
+                                                            <span class="task__select"><?= $arStatus[$itemTask['status']]; ?></span>
+                                                            <ul class="task__ul-hidden">
+                                                                <? foreach ($arStatus as $key => $value): ?>
+                                                                    <li class="task__li-hidden" data-id="<?= $key ?>"
+                                                                        data-task-id="<?= $itemTask['id']; ?>"><?= $value ?></li>
+                                                                <? endforeach; ?>
+                                                            </ul>
+                                                            <input type="hidden" class="task__li-visible"
+                                                                   value="<?= $itemTask['status']; ?>"
+                                                                   data-map-point="<?= $keyTT ?>"
+                                                                   data-map-date="<?= $keyDate ?>"
+                                                            />
+                                                        </div>
+                                                    <? else: ?>
+                                                        <?= $arStatus[$itemTask['status']] ?>
+                                                    <? endif; ?>
 
 
-                                                    <? /*=$arStatus[$itemTask['status']] */ ?>
-
-                                                    <div class="task__item-data">
-                                                        <span class="task__select"><?= $arStatus[$itemTask['status']]; ?></span>
-                                                        <ul class="task__ul-hidden">
-                                                            <? foreach ($arStatus as $key => $value): ?>
-                                                                <li class="task__li-hidden" data-id="<?= $key ?>"
-                                                                    data-task-id="<?= $itemTask['id']; ?>"><?= $value ?></li>
-                                                            <? endforeach; ?>
-                                                        </ul>
-                                                        <input type="hidden" class="task__li-visible"
-                                                               value="<?= $itemTask['status']; ?>"
-                                                               data-map-point="<?= $keyTT ?>"
-                                                               data-map-date="<?= $keyDate ?>"
-                                                        />
-                                                    </div>
                                                 </div>
 
 
@@ -213,31 +225,8 @@ $arStatus = [
 <input type="hidden" id="user_id" value="<?= $userId ?>"/>
 <input type="hidden" id="project_id" value="<?= $project ?>"/>
 
-<input type="button" value="123" id="get-location"/>
-
 <?
 echo "<pre>";
 print_r($viData);
 echo "</pre>";
 ?>
-
-<script>
-    'use strict';
-    (function ($, window, document) {
-
-        $('#get-location').click( function(e) {
-            e.preventDefault();
-            navigator.geolocation.getCurrentPosition(
-                function( position ){ // все в порядке
-                    console.log( position );
-
-                    console.log( position.coords.latitude );
-                    console.log( position.coords.longitude );
-                },
-                function(){ // ошибка
-                }
-            );
-        });
-
-    })(jQuery, window, document);
-</script>
