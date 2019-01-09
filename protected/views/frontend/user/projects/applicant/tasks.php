@@ -231,9 +231,3 @@ $arStatus = [
 
 <input type="hidden" id="user_id" value="<?= $userId ?>"/>
 <input type="hidden" id="project_id" value="<?= $project ?>"/>
-
-<?
-echo "<pre>";
-print_r($viData);
-echo "</pre>";
-?>
