@@ -17,10 +17,10 @@ Yii::app()->getClientScript()->registerCssFile('/theme/css/projects/universal-ma
 /***********MAP************/
 
 $arStatus = [
-    '0'=>'Ожидание',
-    '1'=>'В работе',
-    '3'=>'Готова',
-    '4'=>'Отменена'
+    '0' => 'Ожидание',
+    '1' => 'В работе',
+    '3' => 'Готова',
+    '4' => 'Отменена'
 ];
 
 ?>
@@ -83,6 +83,7 @@ $arStatus = [
                     </div>
                 </div>
                 <? foreach ($viData['items'] as $keyDate => $itemDate): ?>
+
                     <? foreach ($itemDate as $keyCity => $itemCity): ?>
                         <? foreach ($itemCity['points'] as $keyTT => $itemTT): ?>
                             <div class="cabinet__point">
@@ -99,29 +100,31 @@ $arStatus = [
                                         (<?= $viData['points'][$keyTT]['name'] ?>)
                                         <b class="js-g-hashint js-get-target tooltipstered"
                                            data-map-project="<?= $project ?>"
-                                           data-map-user="<?=$userId?>"
+                                           data-map-user="<?= $userId ?>"
                                            data-map-point="<?= $keyTT ?>"
                                            data-map-date="<?= $keyDate ?>"
                                         ></b>
                                     </div>
 
-                                    <? if ($keyTT == 5728): ?>
-                                        <div class="timer__control point__timer stop"
-                                             data-point="<?= $keyTT ?>"
-                                             data-date="<?= $keyDate ?>"
-                                        >
-                                            <i class="timer__stop"></i>
-                                            <span class="timer__control-stop">завершить</span>
-                                        </div>
-                                    <? else: ?>
-                                        <div class="timer__control point__timer start"
-                                             data-point="<?= $keyTT ?>"
-                                             data-date="<?= $keyDate ?>"
-                                        >
-                                            <i class="timer__play"></i>
-                                            <span class="timer__control-start">начать</span>
-                                        </div>
-                                    <? endif; ?>
+                                        <?/* if ($keyTT == 5728): ?>
+                                            <div class="timer__control point__timer stop"
+                                                 data-point="<?= $keyTT ?>"
+                                                 data-date="<?= $keyDate ?>"
+                                            >
+                                                <i class="timer__stop"></i>
+                                                <span class="timer__control-stop">завершить</span>
+                                            </div>
+                                        <? endif; */?>
+
+                                        <?if($itemCity['is_cur_date'] == 1):?>
+                                            <div class="timer__control point__timer start"
+                                                 data-point="<?= $keyTT ?>"
+                                                 data-date="<?= $keyDate ?>"
+                                            >
+                                                <i class="timer__play"></i>
+                                                <span class="timer__control-start">начать</span>
+                                            </div>
+                                        <?endif;?>
                                 </div>
 
                                 <? if ($viData['points'][$keyTT]['comment']): ?>
@@ -158,23 +161,23 @@ $arStatus = [
                                                 <div class="task__status task__item">
 
 
-                                                    <?/*=$arStatus[$itemTask['status']] */?>
+                                                    <? /*=$arStatus[$itemTask['status']] */ ?>
 
                                                     <div class="task__item-data">
-                                                        <span class="task__select"><?=$arStatus[$itemTask['status']];?></span>
+                                                        <span class="task__select"><?= $arStatus[$itemTask['status']]; ?></span>
                                                         <ul class="task__ul-hidden">
-                                                            <?foreach ($arStatus as $key => $value):?>
-                                                                <li class="task__li-hidden" data-id="<?=$key?>" data-task-id="<?=$itemTask['id'];?>"><?=$value?></li>
-                                                            <?endforeach;?>
+                                                            <? foreach ($arStatus as $key => $value): ?>
+                                                                <li class="task__li-hidden" data-id="<?= $key ?>"
+                                                                    data-task-id="<?= $itemTask['id']; ?>"><?= $value ?></li>
+                                                            <? endforeach; ?>
                                                         </ul>
                                                         <input type="hidden" class="task__li-visible"
-                                                               value="<?=$itemTask['status'];?>"
-                                                                data-map-point="<?= $keyTT ?>"
-                                                                data-map-date="<?= $keyDate ?>"
+                                                               value="<?= $itemTask['status']; ?>"
+                                                               data-map-point="<?= $keyTT ?>"
+                                                               data-map-date="<?= $keyDate ?>"
                                                         />
                                                     </div>
                                                 </div>
-
 
 
                                             </div>
@@ -196,6 +199,10 @@ $arStatus = [
                             </div>
                         <? endforeach; ?>
                     <? endforeach; ?>
+
+                    <div class="cabinet__date-end">
+
+                    </div>
                 <? endforeach; ?>
             <? endif; ?>
         </div>
@@ -203,11 +210,31 @@ $arStatus = [
 
 </div>
 
-<input type="hidden" id="user_id" value="<?=$userId?>"/>
-<input type="hidden" id="project_id" value="<?=$project?>"/>
+<input type="hidden" id="user_id" value="<?= $userId ?>"/>
+<input type="hidden" id="project_id" value="<?= $project ?>"/>
+
+<input type="button" value="123" id="get-location"/>
 
 <?
 echo "<pre>";
 print_r($viData);
 echo "</pre>";
 ?>
+
+<script>
+    'use strict';
+    (function ($, window, document) {
+
+        $('#get-location').click( function(e) {
+            e.preventDefault();
+            navigator.geolocation.getCurrentPosition(
+                function( position ){ // все в порядке
+                    console.log( position );
+                },
+                function(){ // ошибка
+                }
+            );
+        });
+
+    })(jQuery, window, document);
+</script>
