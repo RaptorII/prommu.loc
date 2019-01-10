@@ -11,6 +11,7 @@
 
 .cabinet{
     width:100%;
+    min-width:600px;
     /*overflow: hidden;*/
 }
 .cabinet__header{
@@ -297,7 +298,7 @@
 }
 
 .cabinet__date-end{
-    height:50px;
+    height:30px;
 }
 
 .cabinet__rout-view{
@@ -387,11 +388,11 @@
 
 @media screen and (min-width: 993px) {
     #DiContent .prommu__universal-filter .u-filter__item.u-filter__item-0 .u-filter__item-title {
-        width: 55px;
+        width: 100px;
     }
 
     .u-filter__item-3 {
-        width: 135px !important;
+        width: 180px !important;
         line-height: 26px;
     }
 
@@ -405,7 +406,7 @@
     }
 
     .u-filter__item-5 {
-        margin-left: 120px;
+        margin-left: 75px;
     }
 
     .u-filter__item-3 .u-filter__item-data,
@@ -416,7 +417,7 @@
 
 @media screen and (max-width: 1200px){
     .u-filter__item-5{
-        margin-left:53px;
+        margin-left:8px;
     }
 }
 

@@ -24,10 +24,10 @@
 <? foreach ($viData['items'] as $keyDate => $itemDate): ?>
     <div class="cabinet__menu">
         <span  data-map-project="<?= $project ?>"
-               data-map-user="<?= $idus ?>"
+               data-map-user="<?= $userId ?>"
                data-map-point=""
                data-map-date="<?= $keyDate ?>"
-               class="cabinet__rout-view js-get-map">Смотреть маршрут</span>
+               class="cabinet__rout-view js-get-target">Смотреть маршрут</span>
 
         <?/*<span class="cabinet__menu-con">
             <span class="cabinet__rout-view">Описания задач</span>

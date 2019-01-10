@@ -94,7 +94,16 @@ $arFilterData = [
             'DATA_DEFAULT' => '0'
         ],
         6 => [
-            'TYPE' => 'block',
+            'NAME' => 'Должность',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_position',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ]
+            ],
+            'DATA_DEFAULT' => '0'
         ],
         7 => [
             'NAME' => 'Статус задачи',
@@ -180,19 +189,3 @@ $arStatus = [
 
 <input type="hidden" id="user_id" value="<?= $userId ?>"/>
 <input type="hidden" id="project_id" value="<?= $project ?>"/>
-
-
-<script type="text/javascript">
-    var bg_Offset = 0;
-    function scroll_bg(){
-        if (bg_Offset>0 && bg_Offset == 20){
-            bg_Offset = bg_Offset + 1;
-        }else if)_
-        transform: rotate(0deg);
-
-
-        if (bg_Offset > 277) bg_Offset = 0;
-        $(".warning").css("backgroundPosition", bg_Offset + "px 0px");*/
-    }
-    $(document).ready(function(){ setInterval("scroll_bg()",50); });
-</script>
