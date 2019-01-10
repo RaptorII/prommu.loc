@@ -102,7 +102,7 @@ var Cabinet = (function () {
         $(".cabinet").on("click",".cabinet__link-target", function (event) {
             event.preventDefault();
             var id  = $(this).attr('href'),
-            top = $(id).offset().top - 100;
+            top = $(id).offset().top - 180;
             $('body,html').animate({scrollTop: top}, 1500);
         });
 

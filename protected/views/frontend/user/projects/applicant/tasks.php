@@ -15,6 +15,101 @@ Yii::app()->getClientScript()->registerScriptFile('https://maps.googleapis.com/m
 Yii::app()->getClientScript()->registerScriptFile('/theme/js/projects/route-map.js', CClientScript::POS_END);
 Yii::app()->getClientScript()->registerCssFile('/theme/css/projects/universal-map.css');
 /***********MAP************/
+/***********UNIVERSAL FILTER************/
+Yii::app()->getClientScript()->registerScriptFile('/theme/js/projects/universal-filter.js', CClientScript::POS_END);
+Yii::app()->getClientScript()->registerCssFile('/theme/css/projects/universal-filter.css');
+/***********UNIVERSAL FILTER************/
+
+$arFilterData = [
+    'ID' => $project, //Обязательное свойство!
+    'FILTER_ADDITIONAL_VALUE' => ['filter' => 1],
+    'FILTER_SETTINGS' => [
+        0 => [
+            'NAME' => 'Название',
+            'TYPE' => 'text',
+            'INPUT_NAME' => 'title',
+            'DATA' => [],
+            'DATA_DEFAULT' => '',
+            'PLACEHOLDER' => ''
+        ],
+        /*1 => [
+            'NAME' => 'Фамилия',
+            'TYPE' => 'text',
+            'INPUT_NAME' => 'lname',
+            'DATA' => [],
+            'DATA_DEFAULT' => '',
+            'PLACEHOLDER' => ''
+        ],*/
+        1 => [
+            'NAME' => 'Город',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'city',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ]
+
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        2 => [
+            'NAME' => 'Название ТТ',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_name',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ]
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        3 => [
+            'NAME' => 'Дата с',
+            'TYPE' => 'calendar',
+            'INPUT_NAME' => 'bdate',
+            'DATA' => [],
+            'DATA_DEFAULT' => $viData['filter']['bdate'],
+            'DATA_SHORT' => $viData['filter']['bdate-short']
+        ],
+        4 => [
+            'NAME' => 'По',
+            'TYPE' => 'calendar',
+            'INPUT_NAME' => 'edate',
+            'DATA' => [],
+            'DATA_DEFAULT' => $viData['filter']['edate'],
+            'DATA_SHORT' => $viData['filter']['edate-short']
+        ],
+        5 => [
+            'NAME' => 'Адрес ТТ',
+            'TYPE' => 'select',
+            'INPUT_NAME' => 'tt_index',
+            'DATA' => [
+                0 => [
+                    'title' => 'Все',
+                    'id' => '0'
+                ]
+            ],
+            'DATA_DEFAULT' => '0'
+        ],
+        6 => [
+            'TYPE' => 'block',
+        ],
+        7 => [
+            'NAME' => 'Статус задачи',
+            'TYPE' => 'select-multi',
+            'INPUT_NAME' => 'type',
+            'DATA' => [
+                1 =>    'В работе',
+                2 =>    'Отменена',
+                3 =>    'Доработка',
+                4 =>    'Готова',
+                5 =>    'Ожидание',
+            ],
+        ],
+    ]
+];
 
 $arStatus = [
     '0' => 'Ожидание',
@@ -57,173 +152,27 @@ $arStatus = [
         </a>
     </div>
 
+
+    <div class="project__module" data-id="<?=$project?>">
+        <div class="project__header">
+            <? require '/../filter.php'; // ФИЛЬТР?>
+        </div>
+    </div>
+
     <div class="cabinet__body">
 
         <div class="cabinet__tasks">
 
             <? if (count($viData['items']) > 0): ?>
 
-                <div class="task__header">
-                    <div class="task__title task__item">
-                        Название
-                    </div>
-                    <div class="task__date task__item">
-                        Дата
-                    </div>
-                    <div class="task__start task__item">
-                        Начало
-                    </div>
-                    <div class="task__end task__item">
-                        Конец
-                    </div>
-                    <div class="task__post task__item">
-                        Должность
-                    </div>
-                    <? /*<div class="task__status task__item">
-                                                    <?= $itemTask['status'] ?>
-                                                </div>*/ ?>
-                    <div class="task__control start task__item">
-                        Статус
-                    </div>
+                <div class="tasks__box" id="ajax-content">
+                    <? require __DIR__ . '/tasks-ajax.php';?>
                 </div>
-                <? foreach ($viData['items'] as $keyDate => $itemDate): ?>
-
-                    <? foreach ($itemDate as $keyCity => $itemCity): ?>
-                        <? if ($itemCity['is_cur_date'] == 1): ?>
-                            <div id="target"></div>
-                        <?endif;?>
-                        <? foreach ($itemCity['points'] as $keyTT => $itemTT): ?>
-
-                            <div class="cabinet__point">
-                                <div class="point">
-                                    <div class="point__header">
+            <?php else: ?>
+                <br><br><h2 class="center">Задания не найдены</h2>
+            <?php endif; ?>
 
 
-
-                                        <? if ($viData['points'][$keyTT]['comment']): ?>
-                                            <div class="warning"></div>
-                                        <? endif; ?>
-
-                                        <?= $viData['points'][$keyTT]['city'] ?>,
-                                        <?= $viData['points'][$keyTT]['index_full'] ?>
-
-                                        <?if($viData['points'][$keyTT]['metro']):?>
-                                            (Станция метро: <?=$viData['points'][$keyTT]['metro']?>)
-                                        <?endif;?>
-
-                                        <b class="js-g-hashint js-get-target tooltipstered"
-                                           data-map-project="<?= $project ?>"
-                                           data-map-user="<?= $userId ?>"
-                                           data-map-point="<?= $keyTT ?>"
-                                           data-map-date="<?= $keyDate ?>"
-                                        ></b>
-                                    </div>
-
-                                    <? if ($itemCity['is_cur_date'] == 1): ?>
-                                        <? if (!in_array($keyTT, $viData['start'])): ?>
-                                            <div class="timer__control point__timer start"
-                                                 data-point="<?= $keyTT ?>"
-                                                 data-date="<?= $keyDate ?>"
-                                            >
-                                                <i class="timer__play"></i>
-                                                <span class="timer__control-st">начать</span>
-                                            </div>
-                                        <? else: ?>
-                                            <div class="timer__control point__timer stop"
-                                                 data-point="<?= $keyTT ?>"
-                                                 data-date="<?= $keyDate ?>"
-                                            >
-                                                <i class="timer__stop"></i>
-                                                <span class="timer__control-st">завершить</span>
-                                            </div>
-                                        <? endif; ?>
-                                    <? endif; ?>
-                                </div>
-
-                                <? if ($viData['points'][$keyTT]['comment']): ?>
-                                    <div class="point__descr">
-                                        <?= $viData['points'][$keyTT]['comment'] ?>
-                                    </div>
-                                <? endif; ?>
-
-
-                                <? foreach ($itemTT as $keyUser => $itemUser): ?>
-                                    <div class="tasks">
-                                        <? foreach ($itemUser as $keyTask => $itemTask): ?>
-
-
-                                            <div class="task" data-id="<?=$keyTask;?>">
-                                                <div class="task__title task__item">
-                                                    <div class="task__descr-ico">
-                                                        <?= $itemTask['name'] ?>
-                                                    </div>
-                                                </div>
-                                                <div class="task__date task__item">
-                                                    <?= date('d.m.Y', $keyDate) ?>
-                                                </div>
-                                                <div class="task__start task__item">
-                                                    <?= $viData['points'][$keyTT]['btime'] ?>
-                                                </div>
-                                                <div class="task__end task__item">
-                                                    <?= $viData['points'][$keyTT]['etime'] ?>
-                                                </div>
-                                                <div class="task__post task__item">
-                                                    <?= $viData['points'][$keyTT]['post_name'] ?>
-                                                </div>
-
-                                                <div class="task__status task__item">
-                                                    <? if ($itemCity['is_cur_date'] == 1
-                                                        &&
-                                                        in_array($keyTT, $viData['start'])
-                                                    ): ?>
-
-                                                        <div class="task__item-data">
-                                                            <span class="task__select"><?= $arStatus[$itemTask['status']]; ?></span>
-                                                            <ul class="task__ul-hidden">
-                                                                <? foreach ($arStatus as $key => $value): ?>
-                                                                    <li class="task__li-hidden" data-id="<?= $key ?>"
-                                                                        data-task-id="<?= $itemTask['id']; ?>"><?= $value ?></li>
-                                                                <? endforeach; ?>
-                                                            </ul>
-                                                            <input type="hidden" class="task__li-visible"
-                                                                   value="<?= $itemTask['status']; ?>"
-                                                                   data-map-point="<?= $keyTT ?>"
-                                                                   data-map-date="<?= $keyDate ?>"
-                                                            />
-                                                        </div>
-                                                    <? else: ?>
-                                                        <?= $arStatus[$itemTask['status']] ?>
-                                                    <? endif; ?>
-
-
-                                                </div>
-
-
-                                            </div>
-
-                                            <? if ($itemTask['text']): ?>
-                                                <div class="task_descr">
-                                                    Описание задачи: <?= $itemTask['text'] ?>
-                                                </div>
-                                            <? endif; ?>
-                                            <? /*<div class="task__descr task__item">
-                                                <?= $itemTask['text'] ?>
-                                            </div>*/ ?>
-
-
-                                        <? endforeach; ?>
-                                    </div>
-                                <? endforeach; ?>
-
-                            </div>
-                        <? endforeach; ?>
-                    <? endforeach; ?>
-
-                    <div class="cabinet__date-end">
-
-                    </div>
-                <? endforeach; ?>
-            <? endif; ?>
         </div>
     </div>
 
@@ -231,3 +180,19 @@ $arStatus = [
 
 <input type="hidden" id="user_id" value="<?= $userId ?>"/>
 <input type="hidden" id="project_id" value="<?= $project ?>"/>
+
+
+<script type="text/javascript">
+    var bg_Offset = 0;
+    function scroll_bg(){
+        if (bg_Offset>0 && bg_Offset == 20){
+            bg_Offset = bg_Offset + 1;
+        }else if)_
+        transform: rotate(0deg);
+
+
+        if (bg_Offset > 277) bg_Offset = 0;
+        $(".warning").css("backgroundPosition", bg_Offset + "px 0px");*/
+    }
+    $(document).ready(function(){ setInterval("scroll_bg()",50); });
+</script>
