@@ -6,6 +6,7 @@ $link = MainConfig::$PAGE_PROJECT_LIST . '/' .  $project;
 $arTabs = [
     'main' => [ 'name' => 'ГЛАВНАЯ', 'link' => $link ],
     'route' => [ 'name' => 'МАРШРУТ', 'link' => $link . '/route' ],
+    'cabinet' => [ 'name' => 'КАБИНЕТ', 'link' => $link . '/tasks' ],
 ];
 
 $this->setBreadcrumbsEx(

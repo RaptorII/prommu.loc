@@ -129,6 +129,8 @@ $arStatus = [
 
 ?>
 
+<div class="filter__veil"></div>
+
 
 <div class="cabinet">
     <div class="cabinet__header">
