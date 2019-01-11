@@ -423,15 +423,10 @@ class UserController extends AppController
         // Magnific Popup
         Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/jslib/magnific-popup/magnific-popup-min.css');
         Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/jslib/magnific-popup/jquery.magnific-popup.min.js', CClientScript::POS_END);
-        // Cropper
-        Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/jslib/cropperjs/cropper.min.css');
-        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/jslib/cropperjs/cropper.min.js', CClientScript::POS_END);
         Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/jquery-ui.min.js', CClientScript::POS_END);
         Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/jquery.form-validator.min.js', CClientScript::POS_END);
         Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/jquery.mask.min.js', CClientScript::POS_END);
         Yii::app()->getClientScript()->registerScriptFile("/theme/js/dev/pages/prof_user.js", CClientScript::POS_END);
-
-        //Yii::app()->getClientScript()->registerCssFile('/theme/css/page-profile.css');
 
         $this->setBreadcrumbs($title = 'Мой профиль', MainConfig::$PAGE_PROFILE);
         $this->setPageTitle($title);
@@ -1040,39 +1035,28 @@ class UserController extends AppController
     */
     public function actionAnalytics()
     {
-        in_array(Share::$UserProfile->type, [2,3]) || $this->redirect(MainConfig::$PAGE_LOGIN);
+        $type = Share::$UserProfile->type;
+        $idus = Share::$UserProfile->id;
+        (in_array($type, [2,3]) && !empty($idus)) 
+        || 
+        $this->redirect(MainConfig::$PAGE_LOGIN);
 
-        $status = "0,1,2,3,4,5,6";
-        $statusEnd = "7";
-        $Vacancy = new Vacancy();
-        $Termostat = new Termostat();
-        $arDates = $Termostat->getDates();
-        $count = $Vacancy->getVacanciesCount();
-        $viData = $Vacancy->getVacancies();
-        $countView = $Termostat->getPromoView(Share::$UserProfile->id, $arDates);
-        $countResponse = $Termostat->getPromoResponse(Share::$UserProfile->id, 2, $status, $arDates);
-        $countInvite = $Termostat->getPromoResponse(Share::$UserProfile->id, 1, $status, $arDates);
-        $countProject = $Termostat->getPromoResponse(Share::$UserProfile->id, '1,2', $statusEnd, $arDates);
-        $arResult = array(
-            'viData' => $viData,
-            'count' => $count,
-            'countView' => $countView,
-            'countResponse' => $countResponse,
-            'countInvite' => $countInvite,
-            'countProject'=> $countProject,
-            'arDates' => $arDates
-        );
+        $model = new Termostat();
+        $data = $model->getAnalytics();
 
-        if(Yii::app()->request->isAjaxRequest){
-            $this->renderPartial(MainConfig::$AJAX_ANALYTICS, $arResult, false, true);
+        if(Yii::app()->request->isAjaxRequest)
+        {
+            $this->renderPartial(MainConfig::$AJAX_ANALYTICS, $data, false, true);
         }
-        else{
-            Yii::app()->getClientScript()->registerCssFile('/theme/css/analytics.css');
-            Yii::app()->getClientScript()->registerScriptFile('https://www.gstatic.com/charts/loader.js');
-            Yii::app()->getClientScript()->registerScriptFile('/theme/js/analytics.js', CClientScript::POS_END);
+        else
+        {
             $title = 'Аналитика';
             $this->setBreadcrumbs($title, MainConfig::$PAGE_ANALYTICS);
-            $this->render(MainConfig::$VIEWS_ANALYTICS, $arResult, array('htmlTitle' => $title));
+            $this->render(
+                MainConfig::$VIEWS_ANALYTICS, 
+                array('viData' => $data), 
+                array('htmlTitle' => $title)
+            );
         }
     }
 
@@ -1261,7 +1245,8 @@ class UserController extends AppController
         $type = Share::$UserProfile->type;
         !in_array($type, [2,3]) && $this->redirect(MainConfig::$PAGE_INDEX);
 
-        $id = Yii::app()->getRequest()->getParam('id');
+        $rq = Yii::app()->getRequest();
+        $id = $rq->getParam('id');
             
         $model = new Project();
     
@@ -1302,7 +1287,7 @@ class UserController extends AppController
         }
         elseif($id=='user-card' && $type==3) {
 
-            $user_id = Yii::app()->getRequest()->getParam('user_id');
+            $user_id = $rq->getParam('user_id');
 
             $main = $model->getUserMainInfo($user_id);
             $mech = $model->getUserMechInfo($user_id);
@@ -1321,14 +1306,14 @@ class UserController extends AppController
             if(!$model->hasAccess($id))
                 $this->redirect(MainConfig::$PAGE_PROJECT_LIST);
 
-            switch (Yii::app()->getRequest()->getParam('section')) {
+            switch ($rq->getParam('section')) {
                 case 'staff':
                     if($type==2) // applicant
                     {
                         throw new CHttpException(404, 'Error');
                         return;
                     }
-                    $save = Yii::app()->getRequest()->getParam('save-users');
+                    $save = $rq->getParam('save-users');
                     if(isset($save)) {
                         $model->recordStaff($_POST, $id);
                         $convert = new ProjectConvertVacancy();
@@ -1336,7 +1321,7 @@ class UserController extends AppController
                         $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id.'/staff');
                     }
                     if(Yii::app()->request->isAjaxRequest) {
-                        $gp = Yii::app()->getRequest()->getParam('get-promos');
+                        $gp = $rq->getParam('get-promos');
                         $data = (isset($gp)
                             ? (new Services())->getFilteredPromos()
                             : $model->getStaff($id));
@@ -1424,13 +1409,23 @@ class UserController extends AppController
                     {
                         $data = $model->getProject($id);
                         $data = $model->buildApplicantTaskPageArray($data);
+                        if(Yii::app()->request->isAjaxRequest)
+                        {
+                            $this->renderPartial(
+                                'projects/applicant/tasks-ajax',
+                                array('viData' => $data, 'project' => $id),
+                                false, true
+                            );
+                            return;
+                        }
                         $view = 'projects/applicant/tasks';
                     }
                     if($type==3) // employer
                     {
                         $data = $model->getProject($id);
                         $data = $model->buildTaskPageArray($data);
-                        if(Yii::app()->request->isAjaxRequest) {
+                        if(Yii::app()->request->isAjaxRequest)
+                        {
                             $this->renderPartial(
                                 'projects/project-tasks-ajax',
                                 array('viData' => $data, 'project' => $id),
@@ -1483,7 +1478,8 @@ class UserController extends AppController
                         throw new CHttpException(404, 'Error');
                         return;
                     }
-                    if( Yii::app()->getRequest()->isPostRequest) {
+                    if( $rq->isPostRequest )
+                    {
                         $model->recordIndex($_POST, $id);
                         $convert = new ProjectConvertVacancy();
                         $convert->synphronization($id,'project');
@@ -1509,11 +1505,12 @@ class UserController extends AppController
                         return;
                     }
 
-                    if( Yii::app()->getRequest()->isPostRequest) {
+                    if( $rq->isPostRequest )
+                    {
                         $model->setPromoToPoint($_POST);
                         $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id);
                     }
-                    $point = Yii::app()->getRequest()->getParam('point');
+                    $point = $rq->getParam('point');
                     if(!isset($point))
                         $this->redirect(MainConfig::$PAGE_PROJECT_LIST.'/'.$id);
 
@@ -1770,16 +1767,17 @@ class UserController extends AppController
     {
         in_array(Share::$UserProfile->type, [2,3]) || $this->redirect(MainConfig::$PAGE_LOGIN);
 
+        $rq = Yii::app()->getRequest();
         $section = filter_var(
-                        Yii::app()->getRequest()->getParam('section'),
+                        $rq->getParam('section'),
                         FILTER_SANITIZE_FULL_SPECIAL_CHARS
                     );
         $id = filter_var(
-                        Yii::app()->getRequest()->getParam('id'),
+                        $rq->getParam('id'),
                         FILTER_SANITIZE_NUMBER_INT
                     );
         $vacancy = filter_var(
-                        Yii::app()->getRequest()->getParam('vacancy'),
+                        $rq->getParam('vacancy'),
                         FILTER_SANITIZE_NUMBER_INT
                     );
 

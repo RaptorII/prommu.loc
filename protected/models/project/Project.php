@@ -1504,16 +1504,20 @@ class Project extends CActiveRecord
     {
         $arI = array();
         $idus = Share::$UserProfile->id;
-        $fbdate = Yii::app()->getRequest()->getParam('bdate');
-        $fedate = Yii::app()->getRequest()->getParam('edate');
-        $filter = Yii::app()->getRequest()->getParam('filter');
-        if (isset($fbdate) && isset($fedate) && isset($filter)) {
+        $curDate = date('Y-m-d 00:00:00');
+        $curDate = strtotime($curDate);
+        $defEndDate = $curDate + (60*60*24*5); // по умолчанию период - 5 дней
+        $rq = Yii::app()->getRequest();
+        $fbdate = $rq->getParam('bdate');
+        $fedate = $rq->getParam('edate');
+        $filter = $rq->getParam('filter');
+        if (isset($fbdate) && isset($fedate) && isset($filter))
+        {
             $fbdate = strtotime($fbdate);
             $fedate = strtotime($fedate);
         }
 
         $arRes['project'] = $arr['project'];
-        $arRes['items'] = $arI;
         $arRes['tasks'] = $this->getTasks($arr['project']['project']);
         $arRes['tasks_cnt'] = 0;
 
@@ -1524,19 +1528,27 @@ class Project extends CActiveRecord
         if (!sizeof($arRes['users']))
             return $arRes;
 
-        $curDate = date('Y-m-d 00:00:00');
-        $curDate = strtotime($curDate);
+
 
         foreach ($arr['original'] as $p)
-            foreach ($arRes['users'] as $idus => $u) {
+            foreach ($arRes['users'] as $idus => $u)
+            {
                 if (!in_array($p['point'], $u['points']))
                     continue;
 
                 $arRes['points'][$p['point']] = $p;
                 $bdate = strtotime($p['bdate']);
                 $edate = strtotime($p['edate']);
-                $bdate = (isset($filter) && $fbdate > $bdate) ? $fbdate : $bdate;
-                $edate = (isset($filter) && $fedate < $edate) ? $fedate : $edate;
+                if(isset($filter)) // фильтрация по дате
+                {
+                    $bdate = $fbdate > $bdate ? $fbdate : $bdate;
+                    $edate = $fedate < $edate ? $fedate : $edate;                    
+                }
+                else // по умолчанию 5 дней
+                {
+                    $bdate = $curDate > $bdate ? $curDate : $bdate;
+                    $edate = $defEndDate < $edate ? $defEndDate : $edate;  
+                }
 
                 do
                 {
@@ -1560,6 +1572,14 @@ class Project extends CActiveRecord
         ksort($arI);
         $arRes['items'] = $arI;
         $arRes['filter'] = $this->getFilter($arRes['points']);
+        if(!isset($filter))
+        {
+            $arRes['filter']['bdate'] = date('d.m.Y',$curDate);
+            $arRes['filter']['edate'] = date('d.m.Y',$curDate);
+            $arRes['filter']['bdate-short'] = date('d.m.y',$defEndDate);
+            $arRes['filter']['edate-short'] = date('d.m.y',$defEndDate);
+        }
+
         $arGPS = $this->getСoordinates(['project' => $arr['project']['project']]);
         $arRes['start'] = $arT = array();
         if(count($arGPS) && !isset($arGPS['error']))
