@@ -1506,7 +1506,7 @@ class Project extends CActiveRecord
         $idus = Share::$UserProfile->id;
         $curDate = date('Y-m-d 00:00:00');
         $curDate = strtotime($curDate);
-        //$defEndDate = $curDate + (60*60*24*5); // по умолчанию период - 5 дней
+        $defEndDate = $curDate + (60*60*24*5); // по умолчанию период - 5 дней
         $rq = Yii::app()->getRequest();
         $fbdate = $rq->getParam('bdate');
         $fedate = $rq->getParam('edate');
@@ -1539,7 +1539,7 @@ class Project extends CActiveRecord
                 $arRes['points'][$p['point']] = $p;
                 $bdate = strtotime($p['bdate']);
                 $edate = strtotime($p['edate']);
-               /* if(isset($filter)) // фильтрация по дате
+                if(isset($filter)) // фильтрация по дате
                 {
                     $bdate = $fbdate > $bdate ? $fbdate : $bdate;
                     $edate = $fedate < $edate ? $fedate : $edate;                    
@@ -1548,7 +1548,7 @@ class Project extends CActiveRecord
                 {
                     $bdate = $curDate > $bdate ? $curDate : $bdate;
                     $edate = $defEndDate < $edate ? $defEndDate : $edate;  
-                }*/
+                }
                 $bdate =  (isset($filter) && $fbdate > $bdate) ? $fbdate : $bdate;
                 $edate = (isset($filter) && $fedate < $edate) ? $fedate : $edate;
 
@@ -1574,13 +1574,13 @@ class Project extends CActiveRecord
         ksort($arI);
         $arRes['items'] = $arI;
         $arRes['filter'] = $this->getFilter($arRes['points']);
-        /*if(!isset($filter))
+        if(!isset($filter))
         {
-            $arRes['filter']['bdate'] = date('d.m.Y',$curDate);
-            $arRes['filter']['edate'] = date('d.m.Y',$defEndDate);
-            $arRes['filter']['bdate-short'] = date('d.m.y',$curDate);
-            $arRes['filter']['edate-short'] = date('d.m.y',$defEndDate);
-        }*/
+            $arRes['filter']['def-bdate'] = date('d.m.Y',$curDate);
+            $arRes['filter']['def-edate'] = date('d.m.Y',$defEndDate);
+            $arRes['filter']['def-bdate-short'] = date('d.m.y',$curDate);
+            $arRes['filter']['def-edate-short'] = date('d.m.y',$defEndDate);
+        }
 
         $arGPS = $this->getСoordinates(['project' => $arr['project']['project']]);
         $arRes['start'] = $arT = array();
