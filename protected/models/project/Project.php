@@ -1575,8 +1575,8 @@ class Project extends CActiveRecord
         if(!isset($filter))
         {
             $arRes['filter']['bdate'] = date('d.m.Y',$curDate);
-            $arRes['filter']['edate'] = date('d.m.Y',$curDate);
-            $arRes['filter']['bdate-short'] = date('d.m.y',$defEndDate);
+            $arRes['filter']['edate'] = date('d.m.Y',$defEndDate);
+            $arRes['filter']['bdate-short'] = date('d.m.y',$curDate);
             $arRes['filter']['edate-short'] = date('d.m.y',$defEndDate);
         }
 
