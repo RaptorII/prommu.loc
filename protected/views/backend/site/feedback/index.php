@@ -54,7 +54,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
           array(
             'header' => 'Имя/Фамилия',
             'name' => 'email',
-            'value' => 'ShowName($data->email, $data->type, $data->name)',
+            'value' => 'ShowName($data->pid, $data->name)',
             'type' => 'raw',   
           ),
           array(
@@ -107,19 +107,26 @@ function ShowType($type)
   }
   return $user;
 }
-function ShowName($email, $type, $names)
+function ShowName($id_user, $name)
 {
-  if($type == 0)
-    return $names;
+  if(!$id_user)
+    return $name;
 
-  $user = Yii::app()->db->createCommand()
-            ->select(($type==3?'e.name, ':'').'e.firstname, e.lastname')
-            ->from(($type==3?'employer e':'resume e'))
-            ->join('user usr', 'usr.id_user=e.id_user')
-            ->where('usr.email=:email', array(':email' => $email))
+  $sql = Yii::app()->db->createCommand()
+            ->select("u.status, 
+            CONCAT(r.firstname,' ',r.lastname) app_name,
+            CONCAT(e.firstname,' ',e.lastname) emp_name")
+            ->from('user u')
+            ->leftjoin('resume r','r.id_user=u.id_user')
+            ->leftjoin('employer e','e.id_user=u.id_user')
+            ->where('u.id_user=:id',[':id'=>$id_user])
             ->queryRow();
 
-  return (!is_array($user) ? "Удален" : join(' ',$user));
+  $result = 'Удален';
+  $sql['status']==2 && $result = $sql['app_name'];
+  $sql['status']==3 && $result = $sql['emp_name'];
+
+  return trim($result);
 }
 function ShowStatus($id, $ismoder)
 {
