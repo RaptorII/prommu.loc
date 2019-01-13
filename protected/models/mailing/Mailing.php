@@ -72,7 +72,7 @@ class Mailing extends CActiveRecord
 	 */
 	public static function getStatus($status)
 	{
-		return $bool<0 ? "Ошибка" : ($bool>0 ? "Отправлено" : "Ожидание");
+		return $status<0 ? "Ошибка" : ($status>0 ? "Отправлено" : "Ожидание");
 	}
 	/**
 	 * @param $status - bool
