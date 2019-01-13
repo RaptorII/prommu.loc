@@ -12,7 +12,7 @@
 							<tr><td><b>ID</b></td><td><?=$viData['item']->id?></td></tr>
 							<tr><td><b>Дата создания</b></td><td><?=Mailing::getDate($viData['item']->cdate)?></td></tr>
 							<tr><td><b>Статус</b></td><td><?=Mailing::getStatus($viData['item']->status)?></td></tr>
-							<tr><td><b>Дата отправки</b></td><td><?=Mailing::getDate($viData['item']->rdate)?></td></tr>
+							<tr><td><b>Дата отправки</b></td><td><?=$viData['item']->rdate ? Mailing::getDate($viData['item']->rdate) : "-"?></td></tr>
 							<tr><td><b>Результат</b></td><td><?=$viData['item']->result?></td></tr>
 							<tr><td><b>Срочное</b></td><td><?=Mailing::getBool($viData['item']->is_urgent)?></td></tr>
 							<tr><td><b>Получатель</b></td><td><?=$viData['item']->receiver?></td></tr>

@@ -244,7 +244,7 @@ class Mailing extends CActiveRecord
 			// меняем константы в теле письма
 			$body = preg_replace($arPatterns, $arValues, $objEvent->text);
 			// помещаем письмо в шаблон
-			$body = str_replace(MailingTemplate::$CONTENT, $body, $objTemplate);
+			$body = str_replace(MailingTemplate::$CONTENT, $body, $objTemplate->body);
 			// go 
 			self::setToMailing($arReceivers, $title, $body, 0);
 		}
@@ -256,7 +256,7 @@ class Mailing extends CActiveRecord
 	{
 		$arRes = Cache::getData(self::$cacheID);
 		$arRes['data']===false && self::setCacheData();
-		return $arRes;
+		return $arRes['data'];
 	}
 	/**
 	 * 	Делаем запись в кеш
