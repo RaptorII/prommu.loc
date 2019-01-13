@@ -72,7 +72,7 @@ class Mailing extends CActiveRecord
 	 */
 	public static function getStatus($status)
 	{
-		return $status ? "Отправлено" : "Не отправлено";
+		return $bool<0 ? "Ошибка" : ($bool>0 ? "Отправлено" : "Ожидание");
 	}
 	/**
 	 * @param $status - bool
@@ -173,9 +173,18 @@ class Mailing extends CActiveRecord
 										->addPart($v->body,'text/html')
 										->setBody('');
 
-			$arRes[$k]->status = 1; // устанавливаем статус "Отправлено"
 			$arRes[$k]->rdate = time(); // фиксируем время отправки
-			$arRes[$k]->result = $Mailer->send($Message); // выполняем отправку и подхватываем результат
+			if (!$Mailer->send($Message, $failures))
+			{
+				$arRes[$k]->status = -1; // устанавливаем статус "Ошибка"
+				$arRes[$k]->result = serialize($failures);
+			}
+			else
+			{
+				$arRes[$k]->status = 1; // устанавливаем статус "Отправлено"
+				$arRes[$k]->result = serialize([]);
+			}
+
 			$arRes[$k]->save();
 		}
 	}

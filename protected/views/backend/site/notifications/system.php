@@ -13,7 +13,8 @@
 							<tr><td><b>Дата создания</b></td><td><?=Mailing::getDate($viData['item']->cdate)?></td></tr>
 							<tr><td><b>Статус</b></td><td><?=Mailing::getStatus($viData['item']->status)?></td></tr>
 							<tr><td><b>Дата отправки</b></td><td><?=$viData['item']->rdate ? Mailing::getDate($viData['item']->rdate) : "-"?></td></tr>
-							<tr><td><b>Результат</b></td><td><?=$viData['item']->result?></td></tr>
+							<? $arResult = !empty($viData['item']->result) ? unserialize($viData['item']->result) : [] ?>
+							<tr><td><b>Результат</b></td><td><pre><?=print_r($arResult)?></pre></td></tr>
 							<tr><td><b>Срочное</b></td><td><?=Mailing::getBool($viData['item']->is_urgent)?></td></tr>
 							<tr><td><b>Получатель</b></td><td><?=$viData['item']->receiver?></td></tr>
 							<tr><td><b>Заголовок письма</b></td><td><?=$viData['item']->title?></td></tr>
