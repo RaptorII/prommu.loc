@@ -142,7 +142,7 @@
 *   tables
 */
 .custom-table{ background-color: #fff; }
-.custom-table tr:hover * { 
+.custom-table tbody tr:hover td:not(.empty) { 
   color: #3c8dbc;
   cursor: pointer;
 }

@@ -1811,60 +1811,52 @@ class SiteController extends Controller
             return;
         }
 
-        $event = Yii::app()->getRequest()->getParam('event_id');
-        $letter = Yii::app()->getRequest()->getParam('letter_id');
+        $rq = Yii::app()->getRequest();
 
-        $data = array();
+        $id = $rq->getParam('id');
+        $type = $rq->getParam('type');
+        
         $title = 'Уведомления';
         $arBread[$title] = ['notifications'];
-        $view = 'notifications/index';
 
-        if(isset($event))
+        switch ($type)
         {
-            if($event=='0')
-            {
-                $title = 'Создание события';
-                $view = 'notifications/event';
-            }
-            if($event>0)
-            {
-                $title = 'Редактирование события';
-                $view = 'notifications/event';
-            }
-            array_push($arBread, $title);            
+            case 'system': $model = new Mailing; break;
+            case 'event': $model = new MailingEvent; break;
+            case 'letter': $model = new MailingLetter; break;
+            case 'template': $model = new MailingTemplate; break;
         }
-        elseif(isset($letter))
+
+        if(isset($id))
         {
-            $model = new MailingLetter;
-            if($letter=='0')
+            $title = ($id>0 ? 'Редактирование ' : 'Создание ') . $model->pageTitle;
+            $type=='system' && $title = $model->pageTitle;
+            if(!$rq->isPostRequest)
             {
-                $title = 'Создание письма';
-                $view = 'notifications/letter';
+                $data = $model->getData($id);
             }
-            if($letter>0)
+            else
             {
-                $data = $model->getLetter($letter);
-                $title = 'Редактирование письма';
-                $view = 'notifications/letter';      
+                $data = $model->setData($rq);
+                $data['redirect'] && $this->redirect(['notifications']);
             }
-            if(Yii::app()->getRequest()->isPostRequest)
-                $data = $model->setLetter($letter);
-            if($data['complete'])
-                $this->redirect(array('notifications'));
+
+            $data['id'] = $id;
             array_push($arBread, $title);
         }
         else
         {
-            $model = new Mailing;
-            $model->unsetAttributes();
-
-            $model = new MailingLetter;
-            $model->unsetAttributes();
+            $model = (object) ['view'=>'notifications/index'];
+            $data = [];
         }
+
         $this->setPageTitle($title);
         $this->breadcrumbs = $arBread;
+
         $bUrl = Yii::app()->request->baseUrl;
-        Yii::app()->getClientScript()->registerCssFile($bUrl . '/css/template.css');
-        $this->render($view, array('viData' => $data));
+        $gcs = Yii::app()->getClientScript();
+        $gcs->registerCssFile($bUrl . '/css/template.css');
+
+        $this->render($model->view, ['viData' => $data]);
     }
 }

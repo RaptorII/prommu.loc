@@ -739,11 +739,11 @@
 ?>
     <!-- Main content -->
     <section class="content">
-    
- <?php echo $content; ?> 
-
+      <? foreach(Yii::app()->user->getFlashes() as $key => $message): ?>
+        <div class="alert <?=$key?>"><?=$message?></div>
+      <? endforeach; ?>
+      <? echo $content; ?> 
       <!-- Your Page Content Here -->
-
     </section>
     <!-- /.content -->
   </div>

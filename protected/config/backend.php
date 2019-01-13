@@ -27,6 +27,7 @@ return CMap::mergeArray(
 
         'import' => array(
             'application.models.admin.*',
+            'application.models.mailing.*',
         ),
     )
 );
