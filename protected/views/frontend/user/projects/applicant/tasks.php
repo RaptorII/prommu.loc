@@ -127,7 +127,22 @@ $arStatus = [
     '4' => 'Отменена'
 ];
 
+foreach ($viData['filter']['cities'] as $k => $c)
+    $arFilterData['FILTER_SETTINGS'][1]['DATA'][$k] = ['title' => $c['city'], 'id' => $k];
+foreach ($viData['filter']['tt_name'] as $n)
+    $arFilterData['FILTER_SETTINGS'][2]['DATA'][] = ['title' => $n, 'id' => $n];
+foreach ($viData['filter']['tt_index'] as $i)
+    $arFilterData['FILTER_SETTINGS'][5]['DATA'][] = ['title' => $i, 'id' => $i];
+foreach ($viData['filter']['posts'] as $k => $p)
+    $arFilterData['FILTER_SETTINGS'][6]['DATA'][$k] = ['title' => $p, 'id' => $k];
+
 ?>
+
+<?/*
+<pre>
+    <?print_r($viData['filter']);?>
+</pre>
+*/?>
 
 <div class="filter__veil"></div>
 

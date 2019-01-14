@@ -590,7 +590,7 @@
             </div>
             <span class="epa__btn epa__add-city-btn">Добавить город</span>
             <div class="clearfix"></div>
-            <button type="submit" class="epa__btn epa__save-btn">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>          
+            <button type="submit" class="epa__btn epa__save-btn">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>
           </div>
           <?
           // APPEARANCE
@@ -634,7 +634,7 @@
                   </ul>
                 </div>
             <?php endforeach; ?>
-            <button type="submit" class="epa__btn epa__save-btn">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>          
+            <button type="submit" class="epa__btn epa__save-btn">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>
           </div>
           <?
           //  ADDITIONAL
@@ -703,7 +703,7 @@
             </div>
 
             <div class="epa__req-list">Необходимо заполнить: <div></div></div>
-            <button type="submit" class="epa__btn epa__save-btn">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>          
+            <button type="submit" class="epa__btn epa__save-btn">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>
           </div>
         </form>
       </div>
@@ -1084,3 +1084,10 @@
   </form>
 <?endif;?>
 <?php require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/popup-load-img.php'; ?>
+
+
+<script>
+$('.epa__save-btn').click(function(){
+    MainScript.buttonLoading(this,true);
+});
+</script>

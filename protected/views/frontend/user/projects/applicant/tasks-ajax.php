@@ -38,7 +38,11 @@
         <? if ($itemCity['is_cur_date'] == 1): ?>
             <div id="target"></div>
         <? endif; ?>
+
+        <pre><?print_r($itemCity);?></pre>
+
         <? foreach ($itemCity['points'] as $keyTT => $itemTT): ?>
+
 
             <div class="cabinet__point">
                 <div class="point">
