@@ -143,13 +143,13 @@ class Mailing extends CActiveRecord
 		Share::multipleInsert(['system_event_email'=>$arRes]);
 	}
 	/**
-	 * @param $limit - integer (100 in default)
+	 * @param $limit - integer (300 in default)
 	 * Отправка по крону и обновление значений таблицы system_event_email
 	 */
-	public static function send($limit=100)
+	public static function send($limit=300)
 	{
 		$limit = intval($limit);
-		!$limit && $limit = 100;
+		!$limit && $limit = 300;
 
 		$arRes = self::model()->findAll(array(
 									'condition' => 'status=0',
@@ -157,6 +157,9 @@ class Mailing extends CActiveRecord
 									'limit' => $limit
 								)
 							);
+
+		if(!count($arRes))
+			return;
 
 		$SM = Yii::app()->swiftMailer; // swiftMailer !!!!!!!!!!!!!!!!!!!!!!!
 		$Transport = $SM->smtpTransport('mail.companyreport.net', 25, 'null')
