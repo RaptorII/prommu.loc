@@ -547,6 +547,18 @@
     background: transparent url(/theme/pic/vacancy/vac-tabs-icon.png) 0 0 no-repeat;
 }
 #DiContent.page-vacancy .erv__tab-link.link4:before{ background-position: 0px -54px }
+.vac__error .sv__textblock-title span{
+	color:red;
+}
+.vac__error .sv__textblock-title{
+	padding-left: 0px;
+}
+.vac__error .sv__textblock-title:after{
+	background-color: red;
+}
+.vac__error .sv__textblock-text{
+	border: 1px solid red;
+}
 /*
 *		MEDIA
 */

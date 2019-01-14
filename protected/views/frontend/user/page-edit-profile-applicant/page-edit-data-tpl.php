@@ -1085,9 +1085,3 @@
 <?endif;?>
 <?php require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/popup-load-img.php'; ?>
 
-
-<script>
-$('.epa__save-btn').click(function(){
-    MainScript.buttonLoading(this,true);
-});
-</script>

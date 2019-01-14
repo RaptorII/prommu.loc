@@ -2,7 +2,7 @@
 *	page reg vacansy
 */
 #DiContent i{ font-style: normal }
-#DiContent .employer-reg-vacansy{ 
+#DiContent .employer-reg-vacansy{
 	font-family: RobotoCondensed-Regular, verdana, arial;
 	color: #343434;
 	font-size: 14px;
@@ -21,22 +21,22 @@
 	color: #343434;
 	font-size: 18px;
 	text-decoration: underline;
-	vertical-align: middle;	  
-	text-align: center; 
+	vertical-align: middle;
+	text-align: center;
 }
 .erv__header-name:before{
 	content: '';
 	display: inline-block;
 	width: 27px;
 	height: 27px;
-	background: url(/theme/pic/private/vac-list-user-icon.png) no-repeat; 
+	background: url(/theme/pic/private/vac-list-user-icon.png) no-repeat;
 	vertical-align: middle;
 	margin-right: 5px;
 }
 #DiContent .erv__header-btn{
 	color: #fff;
 }
-#DiContent .employer-reg-vacansy .erv__header-btn, 
+#DiContent .employer-reg-vacansy .erv__header-btn,
 .evl__to-project-btn.prmu-btn{
 	display: block;
 	line-height: 35px;
@@ -48,7 +48,7 @@
 	border-radius: 18px;
 }
 .prmu-btn:before, .prmu-btn:after{ border-radius: 18px }
-.erv__logo{ 
+.erv__logo{
 	width: 100%;
 	margin-bottom: 30px;
 	border-radius: 50%;
@@ -74,14 +74,14 @@
 	color: #343434;
 	font-size: 18px;
 }
-.erv__salary-block .-green{ 
-	padding-left: 5px; 
+.erv__salary-block .-green{
+	padding-left: 5px;
 	font-weight: bold;
 }
 #DiContent.page-vacancy .erv__subtitle{ position: relative }
 .erv__subtitle-who{ min-height: 29px }
 #DiContent.page-vacancy .erv__subtitle h2{
-	padding: 0 5px 0 0; 
+	padding: 0 5px 0 0;
 	display: inline-block;
 	margin: 0;
 	position: relative;
@@ -122,7 +122,7 @@
 	margin-bottom: 40px;
 	position: relative;
 }
-.erv__label{ 
+.erv__label{
 	display: block;
 	margin: 0 0 20px;
 	position: relative;
@@ -178,7 +178,7 @@
 	top: 0;
 	right: 0;
 	background: url(/theme/pic/private/add-vac-select.png) 50% no-repeat;
-	z-index: 0;	
+	z-index: 0;
 }
 .erv__select select{
 	-webkit-appearance: none;
@@ -191,7 +191,7 @@
 	padding: 10px 15px;
 }
 .erv__select select{ color: #A0A0A0 }
-#DiContent.page-vacancy .erv__select .erv__input{ 
+#DiContent.page-vacancy .erv__select .erv__input{
 	padding: 0 35px 0 15px;
 	cursor: pointer;
 }
@@ -290,7 +290,7 @@
 	z-index: 1;
 	cursor: pointer;
 }
-.erv__label-tbl{ 
+.erv__label-tbl{
 	width: 100%;
 	display: table;
 	padding: 0;
@@ -302,7 +302,7 @@
 	font-family: RobotoCondensed-Regular, verdana, arial;
 	vertical-align: middle;
 }
-#DiContent.page-vacancy .erv__label-checkbox{ 
+#DiContent.page-vacancy .erv__label-checkbox{
 	cursor: pointer;
 	display: inline-block;
 }
@@ -453,7 +453,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 /*
 *
 */
-.erv-city__item{ 
+.erv-city__item{
 	position: relative;
 	padding: 10px 0;
 }
@@ -567,7 +567,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 .erv-city__item>.erv-city__item-veil{ z-index: 6 }
 .erv-city__location>.erv-city__close{ z-index: 5 }
 .erv-city__location>.erv-city__item-veil{ z-index: 4 }
-.erv-city__time>.erv-city__close{ 
+.erv-city__time>.erv-city__close{
 	z-index: 3;
 	top: 0;
 }
@@ -647,7 +647,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
     z-index: 2;
     display: none;
 }
-.city-calendar table{ 
+.city-calendar table{
 	width: 100%;
 	cursor: default;
 }
@@ -663,12 +663,12 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 .city-calendar tbody td:nth-child(n+6){ color: #ff8300 }
 .city-calendar td.day:hover{ background-color: rgba(255,255,255,0.2) }
 .city-calendar tbody td.today,
-.city-calendar tbody td.today:hover{ 
+.city-calendar tbody td.today:hover{
 	color: #FFFFFF;
 	background-color: rgba(171, 184, 32, 0.5);
 }
 .city-calendar tbody td.select,
-.city-calendar tbody td.select:hover{ 
+.city-calendar tbody td.select:hover{
 	color: #FFFFFF;
 	background-color: rgba(255, 131, 0, 0.5);
 }
@@ -822,7 +822,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 		text-align: left;
 	}
 	#DiContent .employer-reg-vacansy .erv__header-btn,
-	.evl__to-project-btn.prmu-btn{ 
+	.evl__to-project-btn.prmu-btn{
 		margin: 0 15px;
 		display: inline-block;
 	}
@@ -875,7 +875,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	position: relative;
 	z-index: 1;
 }
-#ev-posts-select{ 
+#ev-posts-select{
 	width: 100%;
 	min-height: 33px;
 	display: flex;
@@ -886,7 +886,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	overflow: hidden;
 }
 #ev-posts-select li,
-.ev-metro-select li{ 
+.ev-metro-select li{
 	line-height: 29px;
 	margin: 2px 5px 2px 0;
 }
@@ -1223,7 +1223,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	}
 	.erv__quarter-item{ width:50% }
 	.erv__salary{ flex-wrap: nowrap }
-	.erv__services{ 
+	.erv__services{
 		float: right;
 		max-width: 165px;
 		justify-content: flex-end;
@@ -1244,10 +1244,10 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 		display: initial;
 		white-space: initial;
 	}
-	.erv__label-tbl{ 
+	.erv__label-tbl{
 		padding: 0 10px;
 	}
-	
+
 }
 @media (max-width: 767px){
 	#reg-vac-form .col-xs-12.col-sm-4.col-lg-3,
