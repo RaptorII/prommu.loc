@@ -719,10 +719,9 @@ class Api
 
     }
 
-    public function mailBox(){
-        $mailing = new Mailing();
-        $mailing->send();
-        
+    public function mailBox()
+    {
+        Mailing::send();
     }
 
     public function authUsers()
