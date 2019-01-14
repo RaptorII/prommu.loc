@@ -720,16 +720,9 @@ class Api
     }
 
     public function mailBox(){
-        $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $type = filter_var(Yii::app()->getRequest()->getParam('type'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $method = filter_var(Yii::app()->getRequest()->getParam('method'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $mailCloud = new MailCloud();
-        if($method == "mess"){
-            $mailCloud->mailerMess($id, $type);
-        }
-        if($method == "moder"){
-            $mailCloud->mailerModer($id, $type);
-        }
+        $mailing = new Mailing();
+        $mailing->send();
+        
     }
 
     public function authUsers()
