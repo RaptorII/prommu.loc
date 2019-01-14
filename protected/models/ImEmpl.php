@@ -944,6 +944,9 @@ class ImEmpl extends Im
     {
         $idus = Share::$UserProfile->id;
         $arRes = $arV = $arVId = $arUId = $arVIdSelect = array();
+        $s = Yii::app()->getRequest()->getParam('s');
+        $conditions = 'ev.id_user=:id AND ' . ($s=='archive'
+            ? '(ev.status=0 OR vs.status in (6,7))' : 'ev.status=1');
         $this->limit = 10; // вывод 10 вакансий на странице
         // поиск вакансий
 
@@ -969,8 +972,8 @@ class ImEmpl extends Im
                     'vs.id_vac=ev.id AND vs.status>4'
                 )
                 ->leftjoin('resume r','r.id=vs.id_promo')
-                ->where('ev.id_user=:id',array(':id'=>$idus))
-                ->order('ev.remdate desc, ev.id desc')
+                ->where($conditions,array(':id'=>$idus))
+                ->order('ev.id desc')
                 ->queryAll();
 
         if(!count($sql))

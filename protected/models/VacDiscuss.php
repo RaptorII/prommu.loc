@@ -12,7 +12,7 @@ class VacDiscuss extends Model
     public function getDiscuss($id)
     {
         $this->limit = 50;
-        $conditions = 'ed.id_vac=:idvac';
+        $conditions = 'id_vac=:idvac';
         $arParams[':idvac'] = $id;
         $idus = Share::$UserProfile->id;
 
@@ -27,7 +27,7 @@ class VacDiscuss extends Model
 
         if(intval($id_message)>0)
         {
-            $conditions .= ' AND ed.id>:idmes';
+            $conditions .= ' AND id>:idmes';
             $arParams[':idmes'] = intval($id_message);
         }
         if(intval($offset)>0)
@@ -42,14 +42,10 @@ class VacDiscuss extends Model
                 ->queryRow();
 
         $arRes['items'] = Yii::app()->db->createCommand()
-                ->select("ed.*, IF(edr.cdate IS NULL, 0, 1) AS readed")
-                ->from('emplv_discuss ed')
-                ->leftjoin(
-                	'emplv_discuss_readed edr', 
-                	'edr.id_message=ed.id AND edr.id_user='.$idus
-                )
+                ->select("id, id_user, mess, files, crdate")
+                ->from('emplv_discuss')
                 ->where($conditions,$arParams)
-                ->order('ed.crdate desc')
+                ->order('crdate desc')
                 ->offset($this->offset)
                 ->limit($this->limit)
                 ->queryAll();
@@ -58,21 +54,44 @@ class VacDiscuss extends Model
             return $arRes;
 
         $arRes['title'] = reset($arRes['items'])['title'];
-        $arIdus = array();
-        $arIdMess = array();
-        foreach ($arRes['items'] as $k => $v)
+        $arIdus = $arIdMess = $arId = array();
+        foreach ($arRes['items'] as &$item)
         {
-            $arRes['items'][$k]['date'] = Share::getPrettyDate($v['crdate']);
-            $arIdus[] = $v['id_user'];
-            if(!$v['readed'])
-            {
-            	$arIdMess[] = $v['id'];
-            }
-            if(strlen($v['files']))
-            {
-                $arRes['items'][$k]['files'] = unserialize($v['files']);
-            }
+            $arIdMess[] = $item['id'];
+            $arIdus[] = $item['id_user'];
+            $item['users_readed'] = array();
+            $item['date'] = Share::getPrettyDate($item['crdate']);
+            strlen($item['files']) && $item['files'] = unserialize($v['files']);
         }
+        unset($item);
+
+        $sql = Yii::app()->db->createCommand()
+                ->select("id_message id, id_user")
+                ->from('emplv_discuss_readed')
+                ->where(['in','id_message',$arIdMess])
+                ->queryAll();
+
+        foreach ($arRes['items'] as &$item)
+            foreach ($sql as $v)
+                if($item['id']==$v['id'])
+                {
+                    if($v['id_user']!=$idus)
+                    {
+                        if(
+                            !in_array($v['id_user'],$item['users_readed']) 
+                            && 
+                            $v['id_user']!=$item['id_user']
+                        )
+                            $item['users_readed'][] = $v['id_user'];
+                    }
+                    else
+                    {
+                        $item['readed'] = 1;
+                        $key = array_search($v['id'], $arIdMess);
+                        unset($arIdMess[$key]);
+                    }
+                }
+        unset($item);
 
         if(count($arIdMess))
         { // устанавливаем статус прочитанности
@@ -302,38 +321,19 @@ class VacDiscuss extends Model
      */
     public static function publicVacChatCnt()
     {
-        $idus = Share::$UserProfile->id;
-        $type = Share::$UserProfile->type;
+        $profile = Share::$UserProfile;
 
-        if(!$idus || !in_array($type,[2,3]))
+        if(!$profile->id || !in_array($profile->type,[2,3]))
             return false;
 
-
-        if($type==2) // applicant
+        if($profile->type==2) // applicant
         {
-            $id_promo = Share::$UserProfile->exInfo->id_resume;
-            if(!$id_promo)
-                return false;
-
-            return Yii::app()->db->createCommand()
-                    ->select('COUNT(ed.id) cnt')
-                    ->from('empl_vacations ev')
-                    ->leftjoin('emplv_discuss ed','ed.id_vac=ev.id')
-                    ->leftjoin(
-                        'emplv_discuss_readed edr',
-                        'edr.id_message=ed.id AND edr.id_user='.$idus
-                    )
-                    ->leftjoin(
-                        'vacation_stat vs',
-                        'vs.id_vac=ev.id AND vs.status>4'
-                    )
-                    ->where(
-                        'vs.id_promo=:idr AND edr.cdate IS NULL',
-                        array(':idr'=>$id_promo)
-                    )
-                    ->queryScalar();
+            $arVacs = Vacancy::getVacsForChats($profile, false)['id'];
+            if(!count($arVacs)) return 0;
+print_r($arVacs);
+            return self::getChatsByVacs($arVacs, $profile,false);
         }
-        if($type==3) // employer
+        if($profile->type==3) // employer
         {
             return Yii::app()->db->createCommand()
                     ->select('COUNT(DISTINCT(ed.id)) cnt')
@@ -353,5 +353,41 @@ class VacDiscuss extends Model
                     )
                     ->queryScalar();
         }
+    }
+    /**
+     * @param $arVacs - array() ID of vacancies
+     * @param $user - profile object
+     * @param $isFull - bool all columns or ID only
+     * @return array(query = array())
+     */
+    public static function getChatsByVacs($arVacs,$user,$isFull=true)
+    {
+        if(!$isFull)
+        {
+            return Yii::app()->db->createCommand()
+                        ->select("edr.cdate")
+                        ->from('emplv_discuss ed')
+                        ->leftjoin(
+                            'emplv_discuss_readed edr',
+                            'edr.id_message=ed.id AND edr.id_user='.$user->id
+                        )
+                        ->where(['in','ed.id_vac',$arVacs])
+                        ->queryScalar();            
+        }
+
+        $arRes['query'] = Yii::app()->db->createCommand()
+                            ->select("ed.id, 
+                                ed.id_vac, 
+                                ed.id_user,
+                                IF(edr.cdate IS NULL,0,1) AS readed")
+                            ->from('emplv_discuss ed')
+                            ->leftjoin(
+                                'emplv_discuss_readed edr',
+                                'edr.id_message=ed.id AND edr.id_user='.$user->id
+                            )
+                            ->where(['in','ed.id_vac',$arVacs])
+                            ->queryAll();
+
+        return $arRes;
     }
 }

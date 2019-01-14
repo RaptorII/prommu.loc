@@ -771,7 +771,7 @@ class Share
             $unixDT = strtotime($date . ' ' . $time);
         }
 
-        $unixCur = strtotime(date('Y.m.d 00:00:00'));
+        $unixCur = mktime(0,0,0);
         $resDate = date('G:i',$unixDT);
         $dateY = date('Y',$unixD);
         $arMonths = array(

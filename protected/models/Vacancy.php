@@ -649,6 +649,27 @@ public function rules()
 
             // получаем данные для вкладок
             $data['vacResponses'] = $this->getTabsData($inIdVac, $data['vac']['idus'], $data['response']['status']);
+            // чат по вакансии
+            $sql = Yii::app()->db->createCommand()
+                    ->select("r.id_user, c.id chat")
+                    ->from('vacation_stat vs')
+                    ->leftjoin('chat_theme ct','ct.id_vac=vs.id_vac')
+                    ->leftjoin('chat c','c.id_theme=ct.id')
+                    ->leftjoin('resume r','r.id=vs.id_promo')
+                    ->where(
+                        'vs.id_vac=:id AND vs.status>4',
+                        array(':id'=>$data['vac']['id'])
+                    )
+                    ->queryAll();
+
+            $arUId = $arChatId = array();
+            foreach($sql as $v)
+            {
+                $arUId[] = $v['id_user'];
+                $arChatId[] = $v['chat'];
+            }
+            $data['users_chat'] = Share::getUsers($arUId);
+            $data['users_chat_cnt'] = count($arChatId);
             //
             //      META
             //
@@ -2588,5 +2609,47 @@ WHERE id_vac = {$inVacId}";
         foreach ($data as $v) $arRes[$v['id']] = $v;
 
         return array('vacs'=>$arRes);
+    }
+    /**
+     * @param $user - profile object
+     * @param $isFull - bool all columns or ID only
+     * @param $isArchive - int (0=active,1=archive,-1=all)
+     * @return array [query = [], key-id = [], id = []]
+     */
+    public static function getVacsForChats($user,$isFull,$isArchive=-1)
+    {
+        $arRes = array();
+
+        if($user->type==2) // applicant
+        {
+            $select = $isFull ? 'ev.id, ev.title, ev.id_user' : 'ev.id';
+            $filter = 'vs.id_promo=:id AND ';
+            if($isArchive>0) $filter .= 'ev.status=0 AND vs.status>5';
+            elseif($isArchive==0) $filter .= 'ev.status=1 AND vs.status=5';
+            else $filter .= 'vs.status>4';
+
+            $params = [':id'=>$user->exInfo->id_resume];
+
+            $arRes['query'] = Yii::app()->db->createCommand()
+                                ->select($select)
+                                ->from('empl_vacations ev')
+                                ->leftjoin('vacation_stat vs','vs.id_vac=ev.id')
+                                ->where($filter,$params)
+                                ->order('ev.id desc')
+                                ->queryAll();
+      
+        }
+        if($user->type==3) // employer
+        {
+
+        }
+
+        foreach ($arRes['query'] as $v)
+        {
+            $arRes['id'][] = $v['id'];
+            $arRes['key-id'][$v['id']] = $v;
+        }
+
+        return $arRes;
     }
 }

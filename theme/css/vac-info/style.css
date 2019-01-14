@@ -188,3 +188,23 @@
 	height: 60px;
 	padding: 10px;
 }
+.vacs-info__back-link{
+	display: inline-block;
+	margin-bottom: 25px;
+	font-size: 18px;
+	line-height: 30px;
+}
+#DiContent .vacs-info__back-link:hover{ text-decoration: underline; }
+.vacs-info__back-link span{
+	width: 30px;
+	height: 30px;
+	display: inline-block;
+	margin-right: 5px;
+	background-color: #abb820;
+	border-radius: 15px;
+	color: #ffffff;
+	text-align: center;
+	font-size: 28px;
+	line-height: 26px;
+	vertical-align: top;
+}

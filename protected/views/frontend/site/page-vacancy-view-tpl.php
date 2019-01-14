@@ -145,15 +145,22 @@
                         (<?= $viData['vacResponses']['counts'][3] ?>)</a><br>
                     <a href="?info=refuse" class="erv__tab-link link6">Отказавшиеся
                         (<?= $viData['vacResponses']['counts'][5] ?>)</a><br>
-                    <a href="<?= MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $viData['vac']['id'] ?>"
-                       class="erv__tab-link link4">Обратная связь (<?= $viData['vacResponses']['countsDiscuss'] ?>
-                        )</a><br>
-                    <a href='/<?= MainConfig::$PAGE_VACDELETE . "?id={$viData['vac']['id']}&page={$viData['vac']['status']}" ?>'
-                       class="erv__publ-btn" id="rv-vac-del">Удалить вакансию</a>
-                    <div class="erv__logo-chat-block">
-                        <a href="<?= MainConfig::$PAGE_IM . '?vac' ?>" class="evl__chat">Общий чат для вакансии</a><br>
-                        <a href="<?= MainConfig::$PAGE_IM ?>" class="evl__chat">Сообщения</a>
-                    </div>
+                    <? if(count($viData['users_chat'])): ?>
+                        <a href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $viData['vac']['id']?>" class="erv__tab-link link4">Общий чат (<?=$viData['vacResponses']['countsDiscuss']?>)</a><br>
+                        <div class="evl__chat-personal erv__tab-link link4">
+                            <span>ЛИЧНЫЙ ЧАТ (<?=$viData['users_chat_cnt']?>)</span>
+                            <ul>
+                                <? foreach ($viData['users_chat'] as $v): ?>
+                                    <li>
+                                        <a href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $viData['vac']['id'] . DS . $v['id']?>">
+                                            <img src="<?=$v['src']?>" alt="<?=$v['name']?>">
+                                            <span><?=$v['name']?></span>
+                                        </a>
+                                    </li>
+                                <? endforeach; ?>
+                            </ul>
+                        </div>
+                    <? endif; ?>
                 </div>
                 <div class='col-xs-12 col-sm-8 col-lg-9'>
                     <?
@@ -827,7 +834,10 @@
                                       id="rv-conditions"><?= $viData['vac']['conditions'] ?></textarea>
                         </label>
                     </div>
-                    <button class="erv__button">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>
+                    <div class="erv__button-block">
+                        <button class="erv__button prmu-btn erv__button-block-btn"><span>СОХРАНИТЬ ИЗМЕНЕНИЯ</span></button>
+                        <a href='/<?= MainConfig::$PAGE_VACDELETE . "?id={$viData['vac']['id']}&page={$viData['vac']['status']}" ?>' class="prmu-btn erv__button-block-btn" id="rv-vac-del"><span>УДАЛИТЬ ВАКАНСИЮ</span></a>
+                    </div>
                 </div>
             </form>
             <div class="clearfix"></div>

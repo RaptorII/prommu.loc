@@ -46,6 +46,7 @@
 		<img src="" alt="">
 		<b class='fio'><!-- fio --></b>
 		<span class='date'><!-- date --></span>
+		<span class='viewed'><!-- viewed --></span>
 	</div>
 	<div class='mess'><!-- mess --></div>
 	<div class='files'>
@@ -61,6 +62,7 @@
 		<img src="" alt="">
 		<b class='fio'><!-- fio --></b>
 		<span class='date'><!-- date --></span>
+		<span class='viewed'><!-- viewed --></span>
 	</div>
 	<div class='mess'><!-- mess --></div>
 	<div class='files'>

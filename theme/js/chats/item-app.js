@@ -125,7 +125,7 @@
 	    PageApplicantMessView.prototype.getMessages = function (inFirstId) {
 	        if (inFirstId === void 0) { inFirstId = 0; }
 	        var self = this;
-	        G_VARS.App.showLoading($("#DiMessagesWrapp"), 0, { top: 1, variant: 2 });
+	        //G_VARS.App.showLoading($("#DiMessagesWrapp"), 0, { top: 1, variant: 2 });
 	        $.get(MainConfig.AJAX_GET_GETUSERMESAGES, { tm: G_VARS.idTm, fid: inFirstId }, function (data) {
 	            data = JSON.parse(data);
 	            self.prependMessages(data.data, data.count, inFirstId > 0);
@@ -146,7 +146,7 @@
 	            });
 	        })
 	            .always(function () {
-	            G_VARS.App.hideLoading();
+	            //G_VARS.App.hideLoading();
 	        });
 	    };
 	    PageApplicantMessView.prototype.onAtachFileChangeFn = function (e, that) {
@@ -203,27 +203,34 @@
 						);
 				}
 				else {
-					console.log(2);
 					clearTimeout(self.T1NewMess);
 				}
 	    }
 	    PageApplicantMessView.prototype.appendMessages = function (inMessages) {
-	        var self = this;
-	        var DiMessages = $("#DiMessages");
-	        var flag = 0;
-	        for (var ii in inMessages) {
-	            var val = inMessages[ii];
-	            var block;
-	            if (val.isresp == 1) {
-	                block = $(".mess-from.tmpl").clone();
-	                block.find('.fio').text(val.namefrom);
-	                block.find('.author img').attr('src',val.photofrom);
-	            }
-	            else {
-	                block = $(".mess-to.tmpl").clone();
-	                block.find('.fio').text(val.nameto);
-	                block.find('.author img').attr('src',val.phototo);
-	            }
+					var self = this,
+							flag = 0,
+							DiMessages = $("#DiMessages");
+
+					for (var ii in inMessages)
+					{
+							var block, val = inMessages[ii];
+							if (val.isresp == 1)
+							{
+								block = $(".mess-from.tmpl").clone();
+								block.find('.fio').text(val.namefrom);
+								block.find('.author img').attr('src',val.photofrom);
+							}
+							else
+							{
+								block = $(".mess-to.tmpl").clone();
+								block.find('.fio').text(val.nameto);
+								block.find('.author img').attr('src',val.phototo);
+								if(ii==0) // отображаем просмотрено или доставлено на последнем сообщении пользователя
+								{
+									var isviewed = (val.isread==1 ? 'Просмотрено' : 'Доставлено');
+									block.find('.viewed').text(isviewed);
+								}
+							}
 	            if (val.isread == '0' && val.isresp == '1') {
 	                if (!$('.new-mess').length) {
 	                    var hr = $('.new-mess-tpl').clone();
@@ -260,25 +267,35 @@
 	        self.getMessages(inFirstId);
 	    };
 	    PageApplicantMessView.prototype.prependMessages = function (inMessages, inCount, inNoScroll) {
-	        var self = this;
-	        var DiMessages = $("#DiMessages");
-	        var DiMessagesInner = $("#DiMessagesInner");
-	        $('.prev-mess').remove();
-	        var flag = 0;
-	        var hh = 0;
-	        for (var ii in inMessages) {
-	            var val = inMessages[ii];
-	            var block;
-	            if (val.isresp == 1) {
-	                block = $(".mess-from.tmpl").clone();
-	                block.find('.fio').text(val.namefrom);
-	                block.find('.author img').attr('src',val.photofrom);
-	            }
-	            else {
-	                block = $(".mess-to.tmpl").clone();
-	                block.find('.fio').text(val.nameto);
-	                block.find('.author img').attr('src',val.phototo);
-	            }
+					var self = this, 
+							flag = 0, 
+							hh = 0,
+							DiMessages = $("#DiMessages"),
+							DiMessagesInner = $("#DiMessagesInner");
+
+					$('.prev-mess').remove();
+
+	        for (var ii in inMessages)
+	        {
+							var block, val = inMessages[ii];
+
+							if (val.isresp == 1)
+							{
+								block = $(".mess-from.tmpl").clone();
+								block.find('.fio').text(val.namefrom);
+								block.find('.author img').attr('src',val.photofrom);
+							}
+							else
+							{
+								block = $(".mess-to.tmpl").clone();
+								block.find('.fio').text(val.nameto);
+								block.find('.author img').attr('src',val.phototo);
+								if(ii==0) // отображаем просмотрено или доставлено на последнем сообщении пользователя
+								{
+									var isviewed = (val.isread==1 ? 'Просмотрено' : 'Доставлено');
+									block.find('.viewed').text(isviewed);
+								}
+							}
 	            if (val.isread == '0')
 	                block.addClass('unread');
 	            block.find('.date').text(val.date);
@@ -404,18 +421,30 @@
 	            var flag = 0;
 	            $('.new-mess').remove();
 	            $('.mess-box.-new').removeClass('-new');
-	            for (var ii in data.messages) {
-	                var val = data.messages[ii];
-	                var block;
-	                if (val.isresp == 1) {
-	                    block = $(".mess-from.tmpl").clone();
-	                    block.find('.fio').text(val.namefrom);
-	                		block.find('.author img').attr('src',val.photofrom);
-	                }
-	                else {
-	                    block = $(".mess-to.tmpl").clone();
-	                    block.find('.fio').text(val.nameto);
-	                		block.find('.author img').attr('src',val.phototo);
+
+							if(data.messages[0].isresp==1) // если последнее сообщение работодателя
+								$('#DiMessages .author .viewed').text(''); // очищаем все Просмотрено/Добавлено
+
+							for (var ii in data.messages)
+							{
+									var block, val = data.messages[ii];
+
+									if (val.isresp == 1)
+									{
+										block = $(".mess-from.tmpl").clone();
+										block.find('.fio').text(val.namefrom);
+										block.find('.author img').attr('src',val.photofrom);
+									}
+									else
+									{
+										block = $(".mess-to.tmpl").clone();
+										block.find('.fio').text(val.nameto);
+										block.find('.author img').attr('src',val.phototo);
+										if(ii==0) // отображаем просмотрено или доставлено на последнем сообщении пользователя
+										{
+											var isviewed = (val.isread==1 ? 'Просмотрено' : 'Доставлено');
+											block.find('.viewed').text(isviewed);
+										}
 	                }
 	                if (val.isread == '0' && val.isresp == '1') {
 	                    if (!$('.new-mess').length) {

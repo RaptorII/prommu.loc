@@ -1,9 +1,9 @@
 <meta name="robots" content="noindex,nofollow">
-<?php 
-  Yii::app()->getClientScript()->registerCssFile('/theme/css/page-profile.css'); 
-  Yii::app()->getClientScript()->registerScriptFile("/theme/js/private/page-prof-emp.js", CClientScript::POS_END);
-?>
-<?php if(!in_array(Share::$UserProfile->type, [2,3])): ?>
+<? 
+  Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-prof-emp.css'); 
+  Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/page-prof-emp.js', CClientScript::POS_END);
+
+if(!in_array(Share::$UserProfile->type, [2,3])): ?>
   <? 
     $title = 'Профиль работодателя - ' . $viData['userInfo']['name'];
     $this->pageTitle = $title; 
@@ -14,7 +14,7 @@
   <hr class="user-profile-page__line">
   <div class="container" >
     <div class="content-block">
-<?php endif; ?>
+<? endif; ?>
 <?php
   
    $id = $viData['userInfo']['id_user'];
@@ -316,9 +316,9 @@
             <span class="ppe__field-val"><?=$allAttr[100]['val']?></span>
           </div>
         <?php endif; ?>
-        <?php if($allAttr[108]['val']): ?>
+        <? /*if($allAttr[108]['val']): ?>
           <div class="ppe__checkbox <?=($allAttr[108]['val'] ? 'active' : '')?>">Получение новостей об изменениях и новых возможностях на сайте</div>
-        <?php endif; ?>
+        <? endif;*/ ?>
       </div>
     <?php endif; ?>
     <?php if( $flagOwnProfile ): ?>

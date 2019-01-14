@@ -55,28 +55,39 @@ var PublicChat = (function () {
 		self.ajaxActivate('new');
 
 		$(self.WINDOW).scroll(function(){
-        if($(this).scrollTop()==0)
-        	self.ajaxActivate('old');
+			if($(this).scrollTop()==0)
+				self.ajaxActivate('old');
 		});
 
-        $("#DiButtonPanel .js-attach-file").click(function (e) { self.onAttachClickFn(e, this); });
-        self.uploaduni = new Uploaduni();
-        self.uploaduni.init({ uploadConnector: MainConfig.AJAX_POST_UPLOADUNI_EX,
-            scope: 'im',
-            imgBlockTmpl: 'attached-image-tpl',
-            filesBlockTmpl: 'attached-file-tpl',
-            imgsWrapper: '#DiImgs',
-            filesWrapper: '#DiFiles',
-            lnktoimg: 'orig',
-            uploadForm: '#F2upload',
-            messageBlock: '.message',
-            loadingBLock: '.loading-ico',
-            onDeleteEnd: function (item) {
-                if ($('#DiImgs').find('.uni-delete').length < 1 && $('#DiFiles').find('.uni-delete').length < 1)
-                    $("#F3uploaded").fadeOut(200);
-            },
-        });
-        self.uploaduni.setFiles(G_VARS.uniFiles);
+		$("#DiButtonPanel .js-attach-file").click(function (e) { self.onAttachClickFn(e, this); });
+		self.uploaduni = new Uploaduni();
+		self.uploaduni.init({ uploadConnector: MainConfig.AJAX_POST_UPLOADUNI_EX,
+			scope: 'im',
+			imgBlockTmpl: 'attached-image-tpl',
+			filesBlockTmpl: 'attached-file-tpl',
+			imgsWrapper: '#DiImgs',
+			filesWrapper: '#DiFiles',
+			lnktoimg: 'orig',
+			uploadForm: '#F2upload',
+			messageBlock: '.message',
+			loadingBLock: '.loading-ico',
+			onDeleteEnd: function (item) {
+				if ($('#DiImgs').find('.uni-delete').length < 1 && $('#DiFiles').find('.uni-delete').length < 1)
+				$("#F3uploaded").fadeOut(200);
+			},
+		});
+		self.uploaduni.setFiles(G_VARS.uniFiles);
+
+		/*
+    $(window).on('resize scroll load',scrollMainMenu);
+    function scrollMainMenu() {
+			var bottomW = $(document).scrollTop() + $(window).height(),
+					bottomC = $('#DiChatWrapp').offset().top + $('#DiChatWrapp').innerHeight(),
+					newVal = '';
+
+			newVal = (((bottomW < bottomC) && $(window).width() > 750) ? (bottomC-bottomW) : 0)+'px';
+			$('.message-box').css({bottom:newVal});
+    }*/
 	};
 
     PublicChat.prototype.onAttachClickFn = function (e, that) {
@@ -121,7 +132,7 @@ var PublicChat = (function () {
 			return;
 
 		$(button).addClass('load');
-        $(button).prop('disabled', true);
+		$(button).prop('disabled', true);
 
 		$.ajax({
 			type: 'POST',
@@ -168,10 +179,13 @@ var PublicChat = (function () {
 		if(lastMess!=undefined && type==='new')
 			data['id_message'] = lastMess.dataset.id;
 		if(lastMess!=undefined && type==='old')
+		{
 			data['offset'] = self.OFFSET;
+			$(self.WINDOW).addClass('load');
+		}
 
-		$('.go button').addClass('load');
-		$(self.WINDOW).addClass('load');
+		//$('.go button').addClass('load');
+		//$(self.WINDOW).addClass('load');
 		$.ajax({
 			type: 'GET',
 			url: window.location.pathname,
@@ -208,7 +222,7 @@ var PublicChat = (function () {
 				}	
 			},
 			complete: function(){
-				$('.go button').removeClass('load');
+				//$('.go button').removeClass('load');
 				$(self.WINDOW).removeClass('load');
 			}
 		});

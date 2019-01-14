@@ -1,45 +1,45 @@
-<?php
-$bUrl = Yii::app()->baseUrl;
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/vac-info/style.css');
-Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/vac-info/script.js', CClientScript::POS_END);
-//
-// Установка метаданных и заголовка
-//
-// закрываем от индексации
-if ($viData['vac']['index'])
-    Yii::app()->clientScript->registerMetaTag('noindex,nofollow', 'robots', null, array());
-// устанавливаем h1
-$this->ViewModel->setViewData('pageTitle', '<h1>' . $viData['vac']['meta_h1'] . '</h1>');
-// устанавливаем description
-Yii::app()->clientScript->registerMetaTag($viData['vac']['meta_description'], 'description');
+<?
+    Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'vac-info/style.css');
+    Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'vac-info/script.js', CClientScript::POS_END);
+    //
+    // Установка метаданных и заголовка
+    //
+    // закрываем от индексации
+    if ($viData['vac']['index'])
+        Yii::app()->clientScript->registerMetaTag('noindex,nofollow', 'robots', null, array());
+    // устанавливаем h1
+    $this->ViewModel->setViewData('pageTitle', '<h1>' . $viData['vac']['meta_h1'] . '</h1>');
+    // устанавливаем description
+    Yii::app()->clientScript->registerMetaTag($viData['vac']['meta_description'], 'description');
 
-$info = Yii::app()->getRequest()->getParam('info');
-switch ($info) {
-    case 'resp':
-        $title = "Откликнувшиеся на вакансию";
-        break; // откликнувшиеся
-    case 'reject':
-        $title = "Отклоненные заявки";
-        break; // отклоненные
-    case 'aside':
-        $title = "Отложенные заявки";
-        break;   // отложенные
-    case 'refuse':
-        $title = "Отказавшиеся от предложения";
-        break;   // Отказавшиеся
-    case 'approv':
-        $title = "Утвержденные на вакансию";
-        break;   // Утвержденные
-    default:
-        $title = $viData['vac']['meta_title'];
-}
-$this->pageTitle = $title;
-$this->setBreadcrumbsEx(array($viData['vac']['meta_h1'], $_SERVER['REDIRECT_URL']));
-$this->setBreadcrumbsEx(array($title, $_SERVER['REQUEST_URI']));
-//
-$arResp = $viData['vacResponses'];
-$tab = Yii::app()->getRequest()->getParam('info');
+    $info = Yii::app()->getRequest()->getParam('info');
+    switch ($info) {
+        case 'resp':
+            $title = "Откликнувшиеся на вакансию";
+            break; // откликнувшиеся
+        case 'reject':
+            $title = "Отклоненные заявки";
+            break; // отклоненные
+        case 'aside':
+            $title = "Отложенные заявки";
+            break;   // отложенные
+        case 'refuse':
+            $title = "Отказавшиеся от предложения";
+            break;   // Отказавшиеся
+        case 'approv':
+            $title = "Утвержденные на вакансию";
+            break;   // Утвержденные
+        default:
+            $title = $viData['vac']['meta_title'];
+    }
+    $this->pageTitle = $title;
+    $this->setBreadcrumbsEx(array($viData['vac']['meta_h1'], $_SERVER['REDIRECT_URL']));
+    $this->setBreadcrumbsEx(array($title, $_SERVER['REQUEST_URI']));
+    //
+    $arResp = $viData['vacResponses'];
+    $tab = Yii::app()->getRequest()->getParam('info');
 ?>
+<a href="<?=MainConfig::$PAGE_VACANCY . DS . $viData['vac']['id']?>" class="vacs-info__back-link"><span><</span> Назад</a>
 <div class="tabs-block">
     <a href="?info=approv"
        class="tabs-block__link<?= ($info == 'approv' ? ' active' : '') ?>">Утвержденные<b><?= ($arResp['counts'][8] ? "({$arResp['counts'][8]})" : "") ?></b></a>
@@ -159,15 +159,16 @@ $tab = Yii::app()->getRequest()->getParam('info');
                         ?>
                     </td>
                     <td class='table__cell'>
-                        <?php if (!($r == 2 && $s == 3) && !($r == 2 && $s == 4)): ?>
+                        <? if (!($r == 2 && $s == 3) && !($r == 2 && $s == 4)): ?>
                             <span class="responses__btn change-btn">Изменить</span>
-                        <?php endif; ?>
-                        <a href="<?= MainConfig::$PAGE_IM . '?new=' . $val['idusr'] ?>" class="responses__btn">Написать
-                            сообщение</a>
-                        <?php if (in_array($s, [6, 7]) && !$val['id_vac']): ?>
+                        <? endif; ?>
+                        <? if($s>4): // писать только утвержденным ?>
+                            <a href="<?= MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $viData['vac']['id'] . DS . $val['idusr'] ?>" class="responses__btn">Написать сообщение</a>
+                        <? endif; ?>
+                        <? if (in_array($s, [6, 7]) && !$val['id_vac']): ?>
                             <a href="<?= MainConfig::$PAGE_REVIEWS//MainConfig::$PAGE_SETRATE . DS . $val['id'] . DS . $val['idusr']  ?>"
                                class="responses__btn">Оставить отзыв</a>
-                        <?php endif; ?>
+                        <? endif; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

@@ -42,5 +42,14 @@
 				</div>
 			<? endif; ?>
 		</div>
+		<? if(count($item['users_readed'])): ?>
+			<div class="mess-box__readed">
+				<span>Прочитано:</span>
+				<? foreach($item['users_readed'] as $id_user): ?>
+					<? $rUser = $viData['users'][$id_user]; ?>
+					<img src="<?=$rUser['src']?>" alt="<?=$rUser['name']?>" title="<?=$rUser['name']?>">
+				<? endforeach; ?>
+			</div>
+		<? endif; ?>
 	</div>
 <?endfor;?>

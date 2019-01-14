@@ -762,113 +762,79 @@ class ImApplic extends Im
      */
     public function getVacanciesChats()
     {
-        $idus = Share::$UserProfile->id;
-        $id_resume = Share::$UserProfile->exInfo->id_resume;
-        $arRes = $arV = $arVId = $arUId = $arVIdSelect = array();
         $this->limit = 10; // вывод 10 вакансий на странице
-        // поиск вакансий
+        $arRes = array(
+                'items' => array(),
+                'cnt-chat' => 0,
+                'cnt-mess' => 0,
+                'cnt-mess-noread' => 0
+            );
+        $arV = $arUId = $arVId = array();
+        $bArchive = Yii::app()->getRequest()->getParam('s')=='archive';
 
-        // находим все по вакансиям
-        $sql = Yii::app()->db->createCommand()
-                ->select("
-                    ev.id,
-                    ev.title, 
-                    ev.remdate,
-                    ev.id_user employer,
-                    ed.id id_public, 
-                    ct.id id_personal,
-                    IF(edr.cdate IS NULL,0,1) AS public_readed")
-                ->from('empl_vacations ev')
-                ->leftjoin('emplv_discuss ed','ed.id_vac=ev.id')
-                ->leftjoin(
-                    'emplv_discuss_readed edr',
-                    'edr.id_message=ed.id AND edr.id_user='.$idus
-                )
-                ->leftjoin('chat_theme ct','ct.id_vac=ev.id')
-                ->leftjoin(
-                    'vacation_stat vs',
-                    'vs.id_vac=ev.id AND vs.status>4'
-                )
-                ->where('vs.id_promo=:id',array(':id'=>$id_resume))
-                ->order('ev.remdate desc, ev.id desc')
-                ->queryAll();
-
-        if(!count($sql))
+        // Находим все вакансии с соискателем
+        $arVacs = Vacancy::getVacsForChats($this->Profile,true,$bArchive);
+        // если вакансий нет - финал
+        if(!count($arVacs['id']))
             return $arRes;
-
-        $arRes['cnt-chat'] = 0;
-        $arRes['cnt-mess'] = 0;
-        $arRes['cnt-mess-noread'] = 0;
-        foreach ($sql as $v) {
-            $id = $v['id'];
-            $arV[$id]['id'] = $id;
-            $arV[$id]['title'] = $v['title'];
-            $arV[$id]['remdate'] = date('d.m.Y',strtotime($v['remdate']));
-            $arV[$id]['isactive'] = strtotime(date('Y-m-d')) < strtotime($v['remdate']);
-            if(!empty($v['employer']) && !in_array($v['employer'], $arV[$id]['users']))
-                $arV[$id]['users'][] = $v['employer'];
-            
-            if(!empty($v['id_public']))
-            {
-                if(!in_array($v['id_public'], $arV[$id]['public-mess']))
-                {
-                    $arV[$id]['public-mess'][] = $v['id_public'];
-                    $arV[$id]['cnt-mess']++;
-                    $arRes['cnt-mess']++;                    
-                }
-                if(!in_array($v['id_public'], $arV[$id]['public-mess-readed']) && !$v['public_readed'])
-                {
-                    $arV[$id]['public-mess-readed'][] = $v['id_public'];
-                }
-            }
-
-            if(!empty($v['id_personal']) && !in_array($v['id_personal'], $arV[$id]['personal-id']))
-                $arV[$id]['personal-id'][] = $v['id_personal'];
-        }
-        
-        foreach ($arV as $id => $v)
+        // формируем массив вакансии
+        foreach ($arVacs['key-id'] as $id => $v)
         {
-            array_push($arVId, $id);
-
-            if(count($v['public-mess']))
-                $arRes['cnt-chat']++;
-            if(count($v['public-mess-readed']))
-            {
-                $n = count($v['public-mess-readed']);
-                $arV[$id]['cnt-public-noread'] = $n;
-                $arV[$id]['cnt-mess-noread'] = $arV[$id]['cnt-mess-noread'] + $n;
-                $arRes['cnt-mess-noread'] = $arRes['cnt-mess-noread'] + $n;
-            }
-
-            $arRes['cnt-chat'] += count($v['personal-id']);
+            $arV[$id] = $v;
+            $arV[$id]['users'][] = $v['id_user'];
+            $arUId[] = $v['id_user']; // собираем юзеров для единого запроса
         }
 
-        // поиск личных чатов
-        $sql = Yii::app()->db->createCommand()
-                ->select("ct.id_vac, c.*")
-                ->from('chat c')
-                ->leftjoin('chat_theme ct', 'c.id_theme=ct.id')
-                ->where(array('in','ct.id_vac',$arVId))
-                ->queryAll();
-
-        foreach ($sql as $v)
+        // Находим сообщения общих чатов
+        $arPublic = VacDiscuss::getChatsByVacs($arVacs['id'],$this->Profile);
+        // переносим в вакансии общие чаты
+        foreach ($arPublic['query'] as $v)
         {
-            $arC = $arV[$v['id_vac']]['personal-chat'][$v['id_use']];
+            $arV[$v['id_vac']]['public-mess'][] = $v['id']; //общий чат вакансии
+            $arV[$v['id_vac']]['cnt-mess']++; // счетчик общих чатов вакансии
+            $arRes['cnt-mess']++; // общий счетчик общих чатов
+            // массив непрочитанных
+            if(!$v['readed'])
+            {
+                $arV[$v['id_vac']]['cnt-public-noread']++;
+                $arV[$v['id_vac']]['cnt-mess-noread']++;
+                $arRes['cnt-mess-noread']++;
+            }
+        }
+
+        // Находим сообщения личных чатов
+        $arPrivate = self::getChatsByVacs($arVacs['id']);
+        // переносим в вакансии личные чаты
+
+        foreach ($arPrivate['query'] as $v)
+        {
+            $id = $v['id_vac'];
+
+            $arV[$id]['personal-id'][$v['id_theme']] = $v['id_theme'];
+
+            $arC = $arV[$id]['personal-chat'][$v['id_use']];
             $arC['id'][] = $v['id'];
             $arC['user'] = $v['id_use'];
             !isset($arC['noread']) && $arC['noread'] = 0;
             if($v['is_resp'] && !$v['is_read']) // ответ Р и не прочитано
             {
-                $arV[$v['id_vac']]['cnt-mess-noread']++;
+                $arV[$id]['cnt-mess-noread']++;
                 $arRes['cnt-mess-noread']++;
                 $arC['noread']++;
             }
-            $arV[$v['id_vac']]['personal-chat'][$v['id_use']] = $arC;
-            $arV[$v['id_vac']]['cnt-mess']++;
-            $arRes['cnt-mess']++;
+            $arV[$id]['personal-chat'][$v['id_use']] = $arC;
+            $arV[$id]['cnt-mess']++; //
+            $arRes['cnt-mess']++; // общий счетчик чатов
         }
 
-        $nV = count($arVId);
+        // дорабатываем массив вакансия
+        foreach ($arV as $id => $v)
+        {
+            count($v['public-mess']) && $arRes['cnt-chat']++; // общий чат считаем один раз
+            $arRes['cnt-chat'] += count($v['personal-chat']);            
+        }
+        
+        $nV = count($arVacs['id']);
         $arRes['pages'] = new CPagination($nV);
         $arRes['pages']->pageSize = $this->limit;
         $arRes['pages']->applyLimit($this);
@@ -876,29 +842,21 @@ class ImApplic extends Im
         for($i=$this->offset; $i<$nV; $i++)
             if($i<($this->offset+$this->limit))
             {
-                $arVIdSelect[] = $arVId[$i];
-                if(count($arV[$arVId[$i]]['users']))
-                    $arUId = array_merge($arUId, $arV[$arVId[$i]]['users']);
-
-                $arRes['items'][$arVId[$i]] = $arV[$arVId[$i]];
+                $id = $arVacs['id'][$i];
+                $arVId[] = $id;
+                $arRes['items'][$id] = $arV[$id];
             }
 
         $sql = Yii::app()->db->createCommand()
                 ->select("vs.id_vac id, r.id_user user")
                 ->from('vacation_stat vs')
                 ->leftjoin('resume r', 'r.id=vs.id_promo')
-                ->where(
-					array(
-						'and','vs.status>4', 
-						['in','vs.id_vac',$arVIdSelect]
-					)
-                )
+                ->where(['and','vs.status>4',['in','vs.id_vac',$arVId]])
                 ->queryAll();
 
         foreach ($sql as $v)
         {
-        	if(!in_array($v['user'], $arRes['items'][$v['id']]['users']))
-        		$arRes['items'][$v['id']]['users'][] = $v['user'];
+        	$arRes['items'][$v['id']]['users'][] = $v['user'];
         	$arUId[] = $v['user'];
         }
 

@@ -71,6 +71,7 @@
 .mess-box{
 	margin-bottom: 30px;
 	vertical-align: bottom;
+	position: relative;
 }
 .mess-box .mess {
 	padding: 10px;
@@ -86,6 +87,7 @@
 	background: #dce57e;
 	border-top-right-radius: 0px;
 }
+.mess-box.mess-to .mess, .mess-box.mess-to .mess *{ word-break: break-word }
 .mess-box.mess-to .author{ text-align: right }
 .mess-box .author{
 	padding-bottom: 5px;
@@ -98,6 +100,14 @@
 }
 #DiMessagesInner i{ font-style: italic !important; }
 .mess-box .author b{ color: #212121 }
+.mess-box .author .viewed{
+	position: absolute;
+	right: 10px;
+	bottom: 0;
+	font-size: 10px;
+	font-style: italic;
+	color: #8f8f8e;
+}
 .new-mess{ 
 	position: relative;
 	text-align: center;
@@ -195,18 +205,45 @@
 	object-fit: cover;
 	border-radius: 15px;
 }
+.theme-input{ display:none }
+#DiContent .btn-white-green-wr button:disabled{ background: #777!important }
 /*
 *		MEDIA
 */
 @media (min-width: 768px) { 
 	.message-box .attach-file span { font-size: 14px; } 
 }
-
-
-.theme-input{
-	display: none;
+/*
+*
+*/
+/*
+.chat-item{
+	position: relative;
+	padding-bottom: 120px;
 }
-
-#DiContent .btn-white-green-wr button:disabled{
-    background: #777!important;
+*/
+.chat-item .message-box{
+	position: sticky;
+	bottom: 0;
+	left: 0;
+	padding: 0;
+}
+/*
+*		readed
+*/
+.mess-box__readed{ text-align: right }
+.mess-box.mess-to .mess-box__readed{ margin-left: 100px }
+/*.mess-box.mess-from .mess-box__readed{ margin-right: 100px }*/
+.mess-box__readed span{
+	display: inline-block;
+	font-size: 12px;
+	color: #888887;
+	font-style: italic;
+}
+.mess-box__readed img{
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	margin: 5px;
+	border-radius: 10px;
 }
