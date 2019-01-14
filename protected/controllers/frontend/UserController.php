@@ -1876,4 +1876,13 @@ class UserController extends AppController
                 array('htmlTitle' => $title)
             );
     }
+    /**
+     *  developer`s page
+     */
+    public function actionTest()
+    {
+        in_array(Share::$UserProfile->id, [7000,15642]) || $this->redirect(MainConfig::$PAGE_LOGIN);
+
+        $this->render('test');
+    }
 }
