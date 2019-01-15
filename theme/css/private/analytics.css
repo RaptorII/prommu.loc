@@ -61,7 +61,7 @@
 	padding: 0 5px;
 	line-height: 35px;
 	font-size: 16px;
-	font-family: RobotoRegular, RobotoRegular, verdana, arial
+	font-family: RobotoRegular, RobotoRegular, verdana, arial;
 	-webkit-transition: background-color 0.3s ease-out;
 	-moz-transition: background-color 0.3s ease-out;
 	-o-transition: background-color 0.3s ease-out;
@@ -376,7 +376,7 @@
 	font-family: RobotoCondensedRegular, verdana, arial;
 	position: relative;	
 }
-.paa-event__item-content:before{
+/*.paa-event__item-content:before{
 	content: '';
 	position: absolute;
 	top: 15px;
@@ -384,11 +384,10 @@
 	left: 0;
 	border: 1px dotted #696969;
 	z-index: -1;
-}
+}*/
 .paa-event__item-name{
 	display: table-cell;
 	color: #000000;
-	background-color: 
 }
 .paa-event__item-count{
 	display: table-cell;
