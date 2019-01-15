@@ -241,45 +241,8 @@
             <?php endfor; ?>
           </ul> 
           <span class="ppp__subtitle"><?=$rate?> из 100 баллов</span>
-          <span class="ppp__diagramm">Подробнее</span>
         </div>
 
-
-
-        <div class="ppp__diagramm-show" id="oil" style="width: 500px; height: 400px;">
-
-
-        </div>
-
-        <pre>
-        <?print_r($viData);?>
-</pre>
-
-       <script>
-   google.load("visualization", "1", {packages:["corechart"]});
-   google.setOnLoadCallback(drawChart);
-   function drawChart() {
-    var data = google.visualization.arrayToDataTable([
-     ['Год', 'Рейтинг'],
-     ['1860', 900],
-     ['1885', 2000],
-     ['1901', 170],
-     ['1902', 700],
-     ['1903', 2000],
-     ['1904', 1500],
-     ['1905', 2000],
-     ['1906', 1500],
-     ['1907', 2000],
-    ]);
-    var options = {
-     title: 'Рейтинг соискателя',
-     hAxis: {title: 'Дата'},
-     vAxis: {title: '%'}
-    };
-    var chart = new google.visualization.ColumnChart(document.getElementById('oil'));
-    chart.draw(data, options);
-   }
-  </script>
 
         <hr class="ppp__line">
         <table class="upp__table">
