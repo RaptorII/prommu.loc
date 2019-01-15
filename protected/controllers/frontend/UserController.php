@@ -1041,7 +1041,7 @@ class UserController extends AppController
         || 
         $this->redirect(MainConfig::$PAGE_LOGIN);
 
-        $model = new Termostat();
+        $model = new Termostat;
         $data = $model->getAnalytics();
 
         if(Yii::app()->request->isAjaxRequest)

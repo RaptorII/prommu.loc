@@ -245,8 +245,81 @@
 			}
 			return $arDates;
 		}
+		/**
+		 * @return array() 
+		 */
+		public function getAnalytics()
+		{
+			$type = Share::$UserProfile->type;
+			$idus = Share::$UserProfile->id;
+			$dates = $this->getDates();
 
-	}	
+			if($type==2) // applicant
+			{
+				$statusEnd = '7';
+        $status = '0,1,2,3,4,5,6';
+				$arRes['cnt_views'] = $this->getPromoView($idus, $dates);
+        $arRes['cnt_invitations'] = $this->getPromoResponse($idus, '2', $status, $dates);
+        $arRes['cnt_requests'] = $this->getPromoResponse($idus, '1', $status,$dates);
+        $arRes['cnt_approved'] = $this->getPromoResponse($idus, '1,2', $statusEnd, $dates);
+			}
+			if($type==3) // employer
+			{
+				// vacancies
+				$model = new Vacancy();
+				$arV = $model->getVacancies();
+
+				$arRes['vacancies'] = array(
+																'cnt' => $model->getVacanciesCount(),
+																'items' => $arV['vacs'],
+																'cnt_views' => 0,
+																'cnt_responses' => 0,
+																'cnt_invitations' => 0
+															);
+				foreach ($arV['vacs'] as $v)
+				{
+					$id = $v['id'];
+					$arRes['vacancies']['items'][$id]['analytic'] = $arV['analytic'][$id];
+					$arRes['vacancies']['items'][$id]['responses'] = $arV['responses'][$id];
+
+					$arRes['vacancies']['cnt_views'] += $arV['analytic'][$id];
+					$arRes['vacancies']['cnt_responses'] += $v['isresp'][1];
+					$arRes['vacancies']['cnt_invitations'] += $arV['responses'][$id];
+				}
+				// services
+				$arS = $this->getTermostatServices($idus, $dates);
+				$arRes['services'] = array(
+															'outsourcing' => 0,
+															'outstaffing' => 0,
+															'vacancy' => 0,
+															'sms' => 0,
+															'push' => 0,
+															'email' => 0
+														);
 
 
+				foreach ($arS[0] as $v)
+				{
+					$v['type']=='sms' && $arRes['services']['sms']++;
+					$v['type']=='vacancy' && $arRes['services']['vacancy']++;
+					$v['type']=='push' && $arRes['services']['push']++;
+					$v['type']=='email' && $arRes['services']['email']++;
+				}
+
+				foreach ($arS[1] as $v)
+				{
+					$v['type']=='outsourcing' && $arRes['services']['outsourcing']++;
+					$v['type']=='outstaffing' && $arRes['services']['outstaffing']++;
+				}
+				$arRes['services']['cnt'] = array_sum($arRes['services']);
+				// schedule
+				$schedule = $this->getTermostatEmplCount($idus, $dates);
+				$arRes['schedule'] = json_encode($schedule);
+				$arRes['cnt_profile_views'] = $this->getTermostatEmplCounts($idus, $dates);
+			}
+			$arRes['dates'] = $dates;
+
+			return $arRes;			
+		}
+	}
 ?>
