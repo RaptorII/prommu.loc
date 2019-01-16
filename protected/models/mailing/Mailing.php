@@ -150,15 +150,16 @@ class Mailing extends CActiveRecord
 	{
 		$limit = intval($limit);
 		!$limit && $limit = 300;
+		$arRes = ['success'=>0, 'error'=>0, 'error-id'=>[]];
 
-		$arRes = self::model()->findAll(array(
+		$arMail = self::model()->findAll(array(
 									'condition' => 'status=0',
 									'order' => 'is_urgent DESC',
 									'limit' => $limit
 								)
 							);
 
-		if(!count($arRes))
+		if(!count($arMail))
 			return;
 
 		$SM = Yii::app()->swiftMailer; // swiftMailer !!!!!!!!!!!!!!!!!!!!!!!
@@ -168,7 +169,7 @@ class Mailing extends CActiveRecord
 
 		$Mailer = $SM->mailer($Transport);
 
-		foreach($arRes as $k => $v)
+		foreach($arMail as $k => $v)
 		{
 			$Message = $SM->newMessage($v->title)
 										->setFrom(['auto-mailer@prommu.com'=>'Prommu.com'])
@@ -176,20 +177,24 @@ class Mailing extends CActiveRecord
 										->addPart($v->body,'text/html')
 										->setBody('');
 
-			$arRes[$k]->rdate = time(); // фиксируем время отправки
+			$arMail[$k]->rdate = time(); // фиксируем время отправки
 			if (!$Mailer->send($Message, $failures))
 			{
-				$arRes[$k]->status = -1; // устанавливаем статус "Ошибка"
-				$arRes[$k]->result = serialize($failures);
+				$arMail[$k]->status = -1; // устанавливаем статус "Ошибка"
+				$arMail[$k]->result = serialize($failures);
+				$arRes['error-id'][] = $arMail[$k]->id;
+				$arRes['error']++;
 			}
 			else
 			{
-				$arRes[$k]->status = 1; // устанавливаем статус "Отправлено"
-				$arRes[$k]->result = serialize([]);
+				$arMail[$k]->status = 1; // устанавливаем статус "Отправлено"
+				$arMail[$k]->result = serialize([]);
+				$arRes['success']++;
 			}
 
-			$arRes[$k]->save();
+			$arMail[$k]->save();
 		}
+		return $arRes;
 	}
 	/**
 	 * @param $event - number ID

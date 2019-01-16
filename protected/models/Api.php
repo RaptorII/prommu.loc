@@ -721,7 +721,7 @@ class Api
 
     public function mailBox()
     {
-        Mailing::send();
+        return Mailing::send();
     }
 
     public function authUsers()
