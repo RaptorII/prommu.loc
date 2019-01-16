@@ -140,7 +140,7 @@ class Services extends Model
 
        $email[0] = "web.dev@prommu.ru";
         $email[1] = "man.market2@gmail.com";
-        $email[2] = "mk0630733719@gmail.com";
+        $email[2] = "prommu.servis@gmail.com";
         $email[3] = "e.market.easss@gmail.com"; 
         $email[4] = "projekt.sergey@gmail.com";
         $email[5] = "manag_reports@euro-asian.ru";

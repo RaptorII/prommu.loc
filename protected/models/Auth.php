@@ -387,7 +387,7 @@ class Auth
                         <br/>
                         Площадка: <b>%s</b>",
                         MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
-                    Share::sendmail("mk0630733719@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
+                    Share::sendmail("prommu.servis@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
                     */
                 }
                 elseif($usData['status'] == 3 && empty($usDataTest['id_user']))
@@ -477,7 +477,7 @@ class Auth
                         <br/>
                         Площадка: <b>%s</b>",
                         MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client,$pm);
-                    Share::sendmail("mk0630733719@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
+                    Share::sendmail("prommu.servis@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
                     */
                 } // endif
 

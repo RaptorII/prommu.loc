@@ -36,7 +36,7 @@ class MedRequest {
                     <br/>';
             Share::sendmail('denisgresk@gmail.com', "Prommu.com. Заказ Услуги Медицинская Карта!", $message);
             Share::sendmail('dsale_1@plan-o-gram.ru', "Prommu.com. Заказ Услуги Медицинская Карта!", $message);
-            Share::sendmail('mk0630733719@gmail.com', "Prommu.com. Заказ Услуги Медицинская Карта!", $message);
+            Share::sendmail('prommu.servis@gmail.com', "Prommu.com. Заказ Услуги Медицинская Карта!", $message);
             Share::sendmail('Job@mandarin-agency.ru', "Prommu.com. Заказ Услуги Медицинская Карта!", $message);
             Share::sendmail('e.market.easss@gmail.com', "Prommu.com. Заказ Услуги Медицинская Карта!", $message);
             Share::sendmail('client@btl-me.ru', "Prommu.com. Заказ Услуги Медицинская Карта!", $message);

@@ -614,7 +614,7 @@ class UserProfileApplic extends UserProfile
            $link
         );
       
-        Share::sendmail("mk0630733719@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);
+        Share::sendmail("prommu.servis@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);
         Share::sendmail("susgresk@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);  
         } 
 

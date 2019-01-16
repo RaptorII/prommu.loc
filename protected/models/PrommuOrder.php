@@ -239,7 +239,7 @@ class PrommuOrder {
                     <br/>';
             Share::sendmail('denisgresk@gmail.com', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
             Share::sendmail('dsale_1@plan-o-gram.ru', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
-            Share::sendmail('mk0630733719@gmail.com', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
+            Share::sendmail('prommu.servis@gmail.com', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
             Share::sendmail('Job@mandarin-agency.ru', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
             Share::sendmail('e.market.easss@gmail.com', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
             Share::sendmail('client@btl-me.ru', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
@@ -296,7 +296,7 @@ class PrommuOrder {
                     <br/>';
             Share::sendmail('denisgresk@gmail.com', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
             Share::sendmail('dsale_1@plan-o-gram.ru', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
-            Share::sendmail('mk0630733719@gmail.com', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
+            Share::sendmail('prommu.servis@gmail.com', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
             Share::sendmail('Job@mandarin-agency.ru', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
             Share::sendmail('e.market.easss@gmail.com', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
             Share::sendmail('client@btl-me.ru', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
@@ -354,7 +354,7 @@ class PrommuOrder {
                     <br/>';
             Share::sendmail('denisgresk@gmail.com', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
             Share::sendmail('dsale_1@plan-o-gram.ru', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
-            Share::sendmail('mk0630733719@gmail.com', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
+            Share::sendmail('prommu.servis@gmail.com', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
             Share::sendmail('Job@mandarin-agency.ru', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
             Share::sendmail('e.market.easss@gmail.com', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
             Share::sendmail('client@btl-me.ru', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
@@ -421,7 +421,7 @@ class PrommuOrder {
                 Сообщение:'.$other.'</p>';
             Share::sendmail('denisgresk@gmail.com', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
             Share::sendmail('dsale_1@plan-o-gram.ru', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
-            Share::sendmail('mk0630733719@gmail.com', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
+            Share::sendmail('prommu.servis@gmail.com', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
             Share::sendmail('Job@mandarin-agency.ru', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
             Share::sendmail('e.market.easss@gmail.com', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
             Share::sendmail('client@btl-me.ru', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
@@ -451,7 +451,7 @@ class PrommuOrder {
                 Сообщение:'.$other.'</p>';
             Share::sendmail('denisgresk@gmail.com', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
             Share::sendmail('dsale_1@plan-o-gram.ru', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
-            Share::sendmail('mk0630733719@gmail.com', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
+            Share::sendmail('prommu.servis@gmail.com', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
             Share::sendmail('Job@mandarin-agency.ru', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
             Share::sendmail('e.market.easss@gmail.com', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
             Share::sendmail('client@btl-me.ru', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);

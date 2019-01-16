@@ -161,6 +161,7 @@
 					</div>
 					<div role="tabpanel" class="tab-pane fade" id="tab_system">
 						<h4>Отправка</h4>
+						<div class="bs-callout bs-callout-info">Срочные сообщения отправляются в первую очередь, потом происходит отправка по порядку(id)<br>Отправка из очереди происходит каждые 5 минут. За одну итерацию отправляется до 300 писем(настраивается разработчиком)</div>
 						<?
 							$model = new Mailing;
 							$this->widget(

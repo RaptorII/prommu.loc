@@ -71,7 +71,7 @@ class UserProfileEmpl extends UserProfile
             $pathinfo = pathinfo($cropRes['file']);
             $cropRes['idfile'] = $pathinfo['filename'];
 
-            Mailing::set(1, ['id_user'=>$id], 2);
+            Mailing::set(1, ['id_user'=>$id], 3);
         }
         else
         {
@@ -659,7 +659,7 @@ class UserProfileEmpl extends UserProfile
                     Share::$UserProfile->exInfo->name,
                    $link
                 );
-                Share::sendmail("mk0630733719@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);
+                Share::sendmail("prommu.servis@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);
                 Share::sendmail("susgresk@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);     
             }
             if($bFlashFlag)
