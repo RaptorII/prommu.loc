@@ -1504,8 +1504,7 @@ class Project extends CActiveRecord
     {
         $arI = array();
         $idus = Share::$UserProfile->id;
-        $curDate = date('Y-m-d 00:00:00');
-        $curDate = strtotime($curDate);
+        $curDate = mktime(0,0,0);
         $defEndDate = $curDate + (60*60*24*5); // по умолчанию период - 5 дней
         $rq = Yii::app()->getRequest();
         $fbdate = $rq->getParam('bdate');
@@ -1522,13 +1521,15 @@ class Project extends CActiveRecord
         $arRes['tasks_cnt'] = 0;
 
         foreach ($arr['users'] as $id => $v)
-            if (sizeof($v['points']) > 0)
-                $arRes['users'][$v['id_user']] = $v;
+            if ($id==$idus && sizeof($v['points'])>0) // собираем инфу по юзеру
+            {
+                $arP = array_unique($v['points']);
+                $arRes['users'][$id] = $v;
+                $arRes['users'][$id]['points'] = $arP;
+            }
 
-        if (!sizeof($arRes['users']))
+        if (!sizeof($arRes['users'])) // если юзер не привязан к точкам
             return $arRes;
-
-
 
         foreach ($arr['original'] as $p)
             foreach ($arRes['users'] as $idus => $u)
@@ -1564,8 +1565,9 @@ class Project extends CActiveRecord
                     }
                     if (!array_key_exists($idus, $arI[$bdate][$p['id_city']]['points'][$p['point']]))
                     {
-                        $arUser = $arRes['tasks'][$bdate][$p['point']][$idus];
-                        count($arUser) && $arI[$bdate][$p['id_city']]['points'][$p['point']][$idus] = $arUser;
+                        $arUserTask = $arRes['tasks'][$bdate][$p['point']][$idus];
+                        $arUserTask = count($arUserTask) ? $arUserTask : []; // если задач нет - отправляем пустой массив
+                        $arI[$bdate][$p['id_city']]['points'][$p['point']][$idus] = $arUserTask;
                     }
                     $bdate += (60 * 60 * 24);
                 } while ($bdate <= $edate);
