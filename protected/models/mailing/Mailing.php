@@ -160,7 +160,7 @@ class Mailing extends CActiveRecord
 							);
 
 		if(!count($arMail))
-			return;
+			return $arRes;
 
 		$SM = Yii::app()->swiftMailer; // swiftMailer !!!!!!!!!!!!!!!!!!!!!!!
 		$Transport = $SM->smtpTransport('mail.companyreport.net', 25, 'null')
