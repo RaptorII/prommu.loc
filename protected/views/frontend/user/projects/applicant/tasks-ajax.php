@@ -22,6 +22,9 @@
     </div>
 </div>
 <? foreach ($viData['items'] as $keyDate => $itemDate): ?>
+
+    <b><?= date('d.m.Y', $keyDate) ?></b>
+
     <div class="cabinet__menu">
         <span  data-map-project="<?= $project ?>"
                data-map-user="<?= $userId ?>"
@@ -39,14 +42,12 @@
             <div id="target"></div>
         <? endif; ?>
 
-        <pre><?print_r($itemCity);?></pre>
+        <?/*<pre><?print_r($itemCity);?></pre>*/?>
 
         <? foreach ($itemCity['points'] as $keyTT => $itemTT): ?>
-
-
             <div class="cabinet__point">
                 <div class="point">
-                    <div class="point__header">
+                    <div class="point__header point__part">
 
 
                         <? if ($viData['points'][$keyTT]['comment']): ?>
@@ -68,6 +69,23 @@
                         ></b>
                     </div>
 
+                    <div class="point__part">
+                        <? if ($itemCity['is_cur_date'] == 1): ?>
+                            <b><?= date('d.m.Y', $keyDate) ?></b>
+                        <?else:?>
+                            <?= date('d.m.Y', $keyDate) ?>
+                        <?endif;?>
+                    </div>
+                    <div class="point__part">
+                        <?= $viData['points'][$keyTT]['btime'] ?>
+                    </div>
+                    <div class="point__part">
+                        <?= $viData['points'][$keyTT]['etime'] ?>
+                    </div>
+                    <div class="point__part">
+                        <?= $viData['points'][$keyTT]['post_name'] ?>
+                    </div>
+                    <div class="point__part">
                     <? if ($itemCity['is_cur_date'] == 1): ?>
                         <? if (!in_array($keyTT, $viData['start'])): ?>
                             <div class="timer__control point__timer start"
@@ -87,6 +105,7 @@
                             </div>
                         <? endif; ?>
                     <? endif; ?>
+                    </div>
                 </div>
 
                 <? if ($viData['points'][$keyTT]['comment']): ?>
