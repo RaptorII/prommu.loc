@@ -324,70 +324,44 @@ class VacDiscuss extends Model
         $profile = Share::$UserProfile;
 
         if(!$profile->id || !in_array($profile->type,[2,3]))
-            return false;
+            return 0;
 
-        if($profile->type==2) // applicant
-        {
-            $arVacs = Vacancy::getVacsForChats($profile, false)['id'];
-            if(!count($arVacs)) return 0;
-print_r($arVacs);
-            return self::getChatsByVacs($arVacs, $profile,false);
-        }
-        if($profile->type==3) // employer
-        {
-            return Yii::app()->db->createCommand()
-                    ->select('COUNT(DISTINCT(ed.id)) cnt')
-                    ->from('empl_vacations ev')
-                    ->leftjoin('emplv_discuss ed','ed.id_vac=ev.id')
-                    ->leftjoin(
-                        'emplv_discuss_readed edr',
-                        'edr.id_message=ed.id AND edr.id_user=ev.id_user'
-                    )
-                    ->leftjoin(
-                        'vacation_stat vs',
-                        'vs.id_vac=ev.id AND vs.status>4'
-                    )
-                    ->where(
-                        'ev.id_user=:id AND edr.cdate IS NULL',
-                        array(':id'=>$idus)
-                    )
-                    ->queryScalar();
-        }
+        $arVacs = Vacancy::getVacsForChats($profile, false);
+
+        if(!count($arVacs))
+            return 0;
+
+        return self::getChatsByVacs($arVacs, $profile, false);
     }
     /**
      * @param $arVacs - array() ID of vacancies
      * @param $user - profile object
-     * @param $isFull - bool all columns or ID only
-     * @return array(query = array())
+     * @param $isFull - bool all columns or cnt readed only
+     * @return array()
      */
     public static function getChatsByVacs($arVacs,$user,$isFull=true)
     {
-        if(!$isFull)
-        {
-            return Yii::app()->db->createCommand()
-                        ->select("edr.cdate")
+        $select = !$isFull
+            ? "COUNT(ed.id) - COUNT(edr.cdate) as cnt"
+            : "DISTINCT(ed.id), ed.id_vac, ed.id_user, IF(edr.cdate IS NULL,0,1) AS readed";
+
+        $query = Yii::app()->db->createCommand()
+                        ->select($select)
                         ->from('emplv_discuss ed')
                         ->leftjoin(
                             'emplv_discuss_readed edr',
-                            'edr.id_message=ed.id AND edr.id_user='.$user->id
+                            'edr.id_message=ed.id AND edr.id_user=:idus',
+                            [':idus'=>$user->id]
                         )
-                        ->where(['in','ed.id_vac',$arVacs])
-                        ->queryScalar();            
+                        ->where(['in','ed.id_vac',$arVacs]);
+
+        if(!$isFull) // счетчик непрочитанных
+        {
+            return $query->queryScalar();
         }
-
-        $arRes['query'] = Yii::app()->db->createCommand()
-                            ->select("ed.id, 
-                                ed.id_vac, 
-                                ed.id_user,
-                                IF(edr.cdate IS NULL,0,1) AS readed")
-                            ->from('emplv_discuss ed')
-                            ->leftjoin(
-                                'emplv_discuss_readed edr',
-                                'edr.id_message=ed.id AND edr.id_user='.$user->id
-                            )
-                            ->where(['in','ed.id_vac',$arVacs])
-                            ->queryAll();
-
-        return $arRes;
+        else
+        {
+            return $query->queryAll();
+        }
     }
 }

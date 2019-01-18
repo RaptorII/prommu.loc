@@ -721,6 +721,7 @@ class Api
 
     public function mailBox()
     {
+        Im::sendEmailNotifications();
         return Mailing::send();
     }
 

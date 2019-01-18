@@ -1211,7 +1211,7 @@ public function rules()
                  $content = str_replace('#VACLINK#','http://' . MainConfig::$SITE . '/admin/site/VacancyEdit'. DS .$idvac, $content);
                
          $email[0] = "susgresk@gmail.com";
-        $email[1] = "mk0630733719@gmail.com";
+        $email[1] = "prommu.servis@gmail.com";
         $email[2] = "denisgresk@gmail.com";
         for($i = 0; $i <3; $i++){
            Share::sendmail($email[$i], "Prommu.com Изменение вакансии №" . $idvac, $content);
@@ -1331,7 +1331,7 @@ public function rules()
                    $link
                 );
         $email[0] = "denisgresk@gmail.com";
-        $email[1] = "mk0630733719@gmail.com";
+        $email[1] = "prommu.servis@gmail.com";
         //$email[2] = "code@code.com";
         for($i = 0; $i <2; $i++){
            Share::sendmail($email[$i], "Prommu.com Размещение вакансии №" . $idvac, $message);
@@ -2614,42 +2614,87 @@ WHERE id_vac = {$inVacId}";
      * @param $user - profile object
      * @param $isFull - bool all columns or ID only
      * @param $isArchive - int (0=active,1=archive,-1=all)
-     * @return array [query = [], key-id = [], id = []]
+     * @return array [query = [], key-id = [], id = [], users = []]
      */
     public static function getVacsForChats($user,$isFull,$isArchive=-1)
     {
-        $arRes = array();
+        if(!$user->id || !in_array($user->type,[2,3]))
+            return array();
+
+        $select = 'ev.id' 
+            . ($isFull ? ', ev.title, ev.id_user' : '');
 
         if($user->type==2) // applicant
         {
-            $select = $isFull ? 'ev.id, ev.title, ev.id_user' : 'ev.id';
             $filter = 'vs.id_promo=:id AND ';
-            if($isArchive>0) $filter .= 'ev.status=0 AND vs.status>5';
-            elseif($isArchive==0) $filter .= 'ev.status=1 AND vs.status=5';
-            else $filter .= 'vs.status>4';
-
+            switch ($isArchive)
+            {
+                case  1: $filter .= 'vs.status>5'; break; // archive
+                case  0: $filter .= 'vs.status=5'; break;
+                default: $filter .= 'vs.status>4'; break; // -1
+            }
             $params = [':id'=>$user->exInfo->id_resume];
-
-            $arRes['query'] = Yii::app()->db->createCommand()
-                                ->select($select)
-                                ->from('empl_vacations ev')
-                                ->leftjoin('vacation_stat vs','vs.id_vac=ev.id')
-                                ->where($filter,$params)
-                                ->order('ev.id desc')
-                                ->queryAll();
-      
         }
-        if($user->type==3) // employer
+        else // employer
         {
-
+            $filter = 'ev.id_user=:id';
+            switch ($isArchive)
+            {
+                case  1: 
+                    $filter .= ' AND (ev.status=0 OR vs.status in (6,7))'; // archive
+                    break;
+                case  0: $filter .= ' AND ev.status=1'; break;
+            }
+            $params = [':id'=>$user->id];
         }
 
-        foreach ($arRes['query'] as $v)
+        $query = Yii::app()->db->createCommand()
+                    ->select($select)
+                    ->from('empl_vacations ev')
+                    ->leftjoin('vacation_stat vs','vs.id_vac=ev.id')
+                    ->where($filter, $params)
+                    ->order('ev.id desc')
+                    ->queryAll();
+
+        foreach ($query as $v)
         {
             $arRes['id'][] = $v['id'];
             $arRes['key-id'][$v['id']] = $v;
+            if(!empty($v['id_user']) && $user->id != $v['id_user']) // собираем юзеров для единого запроса
+            {
+                $arRes['key-id'][$v['id']]['users'][] = $v['id_user'];
+                $arRes['users'][] = $v['id_user'];
+            }
         }
+        $arRes['id'] = array_unique($arRes['id']);
+        sort($arRes['id']);
+        // ищем соискателей всех вакансий
+        if($isFull && count($arRes['id']))
+        {
+            $query = Yii::app()->db->createCommand()
+                        ->select("vs.id_vac id, r.id_user")
+                        ->from('vacation_stat vs')
+                        ->leftjoin('resume r', 'r.id=vs.id_promo')
+                        ->where([
+                            'and',
+                            'vs.status>4',
+                            ['in','vs.id_vac',$arRes['id']]]
+                        )
+                        ->queryAll();
 
-        return $arRes;
+            foreach ($query as $v)
+                if($user->id != $v['id_user']) // собираем юзеров для единого запроса
+                {
+                    $arRes['key-id'][$v['id']]['users'][] = $v['id_user'];
+                    $arRes['users'][] = $v['id_user'];
+                }
+        }
+        if(count($arRes['users']))
+        {
+            $arRes['users'] = array_unique($arRes['users']);
+            sort($arRes['users']);
+        }    
+
+        return ($isFull ? $arRes : $arRes['id']);
     }
 }

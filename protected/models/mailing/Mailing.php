@@ -63,6 +63,12 @@ class Mailing extends CActiveRecord
 										'pattern' => "/#PAGE_PROFILE_COMMON#/",
 										'value' => MainConfig::$PAGE_PROFILE_COMMON,
 										'description' => "Раздел 'Анкеты'"
+									),
+							2 => array(
+										'name' => "#PAGE_USER_CHATS_LIST#",
+										'pattern' => "#PAGE_USER_CHATS_LIST#",
+										'value' => Subdomain::$HOST . MainConfig::$PAGE_CHATS_LIST,
+										'description' => "Раздел профиля пользователя 'Чаты'"
 									)
 				);
 	}
@@ -89,7 +95,7 @@ class Mailing extends CActiveRecord
 	 */
 	public static function getDate($date, $format = 'd.m.Y G:i')
 	{
-		return date($format, $date);
+		return !empty($date) ? date($format, $date) : ' - ';
 	}
 	/**
 	 * @param $email - string
@@ -97,11 +103,13 @@ class Mailing extends CActiveRecord
 	public function getEmailArray($email)
 	{
 		$arRes = array();
-		$arItems = explode(',',$this->receiver);
+		$arItems = explode(',',$email);
+
 		foreach ($arItems as $k => $v)
 		{
 			$email = trim($v);
-			if(filter_var($email,FILTER_VALIDATE_EMAIL))
+			// проверяем на соответствие email или константе
+			if(filter_var($email,FILTER_VALIDATE_EMAIL) || preg_match('/#{1}[A-Z_]+#{1}/', $email))
 				$arRes[] = $email;
 		}
 		return $arRes;
@@ -199,14 +207,16 @@ class Mailing extends CActiveRecord
 	/**
 	 * @param $event - number ID
 	 * @param $arParams - array()
+	 * @param $isUrgent - boolean (false=default)
 	 * @param $usertype - number (2,3,0=default)
 	 * Распарсиваем ВСЕ строки и выполняем подмену констант с постановкой сформированного письма в очередь в активном шаблоне
 	 */
-  public static function set($event, $arParams, $usertype=0)
+  public static function set($event, $arParams, $isUrgent=false, $usertype=0)
   {
 		$arPatterns = array();
 		$type = 'email'; // можем попробовать хранить пуш и емейл в одном месте
 		$arRes = self::getCacheData();
+
 		$objEvent = $arRes['events'][$event];
 		$objTemplate = $arRes['template'];
 
@@ -253,6 +263,7 @@ class Mailing extends CActiveRecord
 					$arValues[] = $arEventParams[$k]['value'];
 				}
 			}
+
 			// меняем константы в получателях
 			$receivers = preg_replace($arPatterns, $arValues, $objEvent->receiver);
 			$arReceivers = explode(",", $receivers);
@@ -272,7 +283,9 @@ class Mailing extends CActiveRecord
 	public static function getCacheData()
 	{
 		$arRes = Cache::getData(self::$cacheID);
-		$arRes['data']===false && self::setCacheData();
+		if($arRes['data']===false)
+			$arRes = self::setCacheData();
+		
 		return $arRes['data'];
 	}
 	/**
@@ -289,5 +302,6 @@ class Mailing extends CActiveRecord
 		$template = new MailingTemplate;
 		$arRes['data']['template'] = $template->getActiveTemplate(); // и активный шаблон
 		Cache::setData($arRes, self::$cacheTime);
+		return $arRes;
 	}
 }

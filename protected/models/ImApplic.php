@@ -7,8 +7,6 @@
  */
 class ImApplic extends Im
 {
-    public static $adminId = 1766; // id Админа
-
     public function getChats()
     {
         $limit = 5;
@@ -46,40 +44,6 @@ class ImApplic extends Im
 
         return $data;
     }
-
-    public function accessMessage($idto)
-    {
-
-        $result['user'] = Yii::app()->db->createCommand()
-            ->select("u.ismoder,u.isblocked")
-            ->from('user u')
-            ->where('u.id_user=:st', array(':st' => Share::$UserProfile->id))
-            ->queryRow();
-
-        if ($idto) {
-            $result['new'] = Yii::app()->db->createCommand()
-                ->select("e.id")
-                ->from('employer e')
-                ->where('e.id=:st', array(':st' => $idto))
-                ->queryRow();
-        }
-
-        return $result;
-    }
-
-    public function getMessCount($inIdTm, $inUsId)
-    {
-        $sql = "SELECT COUNT(*) cou
-                FROM chat ca
-                LEFT JOIN employer e ON e.id_user = ca.id_use
-                LEFT JOIN resume r ON r.id_user = ca.id_usp
-                WHERE ca.id_theme = {$inIdTm}
-                AND ca.id_usp = {$inUsId}";
-        /** @var $res CDbCommand */
-        $res = Yii::app()->db->createCommand($sql);
-        return $res->queryScalar();
-    }
-
     /**
      * Получаем колво чатов пользователя
      */
@@ -91,8 +55,6 @@ class ImApplic extends Im
 
         return $res->queryScalar();
     }
-
-
     /**
      * Получаем данные для страницы переписки
      */
@@ -292,24 +254,6 @@ class ImApplic extends Im
         } // endif
 
     }
-
-
-    /**
-     * Получаем кол-во сообщений пользователя
-     */
-    public function getMessagesCount($inIdTm)
-    {
-        $sql = "SELECT COUNT(*) cou
-                FROM chat ca
-                LEFT JOIN employer e ON e.id_user = ca.id_use
-                LEFT JOIN resume r ON r.id_user = ca.id_usp
-                WHERE ca.id_theme = {$inIdTm}";
-        /** @var $res CDbCommand */
-        $res = Yii::app()->db->createCommand($sql);
-        return array_reverse($res->queryRow());
-    }
-
-
     /**
      * Получаем сообщения пользователя
      */
@@ -366,18 +310,9 @@ class ImApplic extends Im
 
         } // endif
     }
-
-
-    // получение новых сообщений
-    public function getNewMessages()
-    {
-        $idTm = filter_var(Yii::app()->getRequest()->getParam('tm', 0), FILTER_SANITIZE_NUMBER_INT);
-        $lastMessId = filter_var(Yii::app()->getRequest()->getParam('l', 0), FILTER_SANITIZE_NUMBER_INT);
-
-        return $this->getNewMessData($idTm, $lastMessId);
-    }
-
-
+    /**
+     * 
+     */
     private function getNewMessData($inIdTm, $lastId)
     {
         // выбираем новые
@@ -420,477 +355,10 @@ class ImApplic extends Im
 
         return Share::$UserProfile->id == $res['idusp'] ? $res : $res;
     }
-
-
     /**
-     * Перемещаем прикрепленные файлы
+     *
      */
-    private function moveUploadedFiles($inFiles)
-    {
-        foreach ($inFiles as $key => $val) {
-            $movedFiles[$key] = $val;
-            foreach ($movedFiles[$key]['files'] as $key2 => &$val2) {
-                // задаём новые значения путей
-                $val2 = str_replace('tmp/', '', $val2);
-                // перемещаем файлы в рабочую директорию
-                if (file_exists(MainConfig::$DOC_ROOT . $inFiles[$key]['files'][$key2])) {
-                    copy(MainConfig::$DOC_ROOT . $inFiles[$key]['files'][$key2], MainConfig::$DOC_ROOT . $val2);
-                    unlink(MainConfig::$DOC_ROOT . $inFiles[$key]['files'][$key2]);
-                } // endif
-            } // end foreach
-        } // end foreach
-
-        return $movedFiles;
-    }
-
-
-    /**
-     * Подготавливаем файлы сообщения
-     */
-    private function prepareFiles($data)
-    {
-        $data = array_map(function ($v) {
-            if ($v['files']) {
-                $v['files'] = get_object_vars(json_decode($v['files']));
-                foreach ($v['files'] as $key => &$val) {
-                    $val->files = array_map(function ($v2) {
-                        return str_replace('/protected', '', $v2);
-                    }, get_object_vars($val->files));
-                } // end foreach
-            }
-            return $v;
-        }, $data);
-
-        return $data;
-    }
-    /**
-     *      Ответ админа в чате
-     */
-    public function recordAdminMessage($id, $message, $idus)
-    {
-        Yii::app()->db->createCommand()
-            ->insert('chat', array(
-                'id_theme' => $id,
-                'id_usp' => $idus,
-                'id_use' => self::$adminId,
-                'message' => $message,
-                'is_resp' => 1,
-                'is_read' => 0,
-                'crdate' => date("Y-m-d H:i:s"),
-            ));
-    }
-    /**
-     *      проверка доступа к чату
-     */
-    public function hasAccess($chat, $id, $vacancy=0)
-    {
-        $idus = Share::$UserProfile->id;
-        $type = Share::$UserProfile->type;
-        if($type!=2 || !intval($id))
-            return false;
-
-        if($chat==='feedback')
-        {
-            // просто проверяем наличие чата
-            $sql = Yii::app()->db->createCommand()
-                    ->select('id')
-                    ->from('chat_theme')
-                    ->where(
-                        'id_usp=:idus AND id=:id',
-                        array(':idus'=>$idus, ':id'=>$id)
-                    )
-                    ->queryRow();
-
-            return isset($sql['id']);
-        }
-        if($chat==='vacancy')
-        {
-            if(!intval($vacancy))
-                return false;
-            // проверка подтвержденного юзера
-            $sql = Yii::app()->db->createCommand()
-                    ->select('vs.id')
-                    ->from('vacation_stat vs')
-                    ->leftjoin('resume r','r.id=vs.id_promo')
-                    ->where(
-                        'vs.id_vac=:id AND r.id_user=:idus AND vs.status>4',
-                        array(':id'=>$vacancy,':idus'=>$idus)
-                    )
-                    ->queryRow();
-
-            if(!isset($sql['id']))
-                return false;
-            // проверка владельца вакансии
-            $sql = Yii::app()->db->createCommand()
-                    ->select('id, title')
-                    ->from('empl_vacations')
-                    ->where(
-                        'id=:id AND id_user=:id_emp',
-                        array(':id'=>$vacancy,':id_emp'=>$id)
-                    )
-                    ->queryRow();
-
-            if(!isset($sql['id']))
-                return false;
-
-        }
-        return true;
-    }
-    /**
-     *      страница всех чатов
-     */
-    public function getAllChats()
-    {
-        $idus = Share::$UserProfile->id;
-        $id_resume = Share::$UserProfile->exInfo->id_resume;
-
-        $arRes = array(
-                    'cnt'=> 0,
-                    'feedback' => [
-                            'cnt-mess'=>0,
-                            'cnt-noread'=>0
-                        ],
-                    'vacancies' => [
-                            'cnt-mess'=>0,
-                            'cnt-users'=>0,
-                            'cnt-noread'=>0
-                        ]  
-                );
-        // чат фидбека
-        $sql = Yii::app()->db->createCommand()
-                ->select("ct.id")
-                ->from('chat_theme ct')
-                ->where(
-                    'ct.id_usp=:id AND ct.id_vac=0 AND ct.id_use=:adm',
-                    array(':id'=>$idus,':adm'=>self::$adminId)
-                )
-                ->order('ct.id desc')
-                ->queryAll();
-
-        if(count($sql))
-        {
-            $arRes['cnt'] = count($sql);
-            $arId = array();
-            foreach ($sql as $v)
-                $arId[] = $v['id'];
-
-            $sql = Yii::app()->db->createCommand()
-                            ->select("*")
-                            ->from('chat')
-                            ->where(array('in','id_theme',$arId))
-                            ->queryAll(); 
-
-            foreach ($sql as $v)
-            {
-                $arRes['feedback']['cnt-mess']++;
-                if(!isset($arRes['feedback']['cnt-noread']))
-                    $arRes['feedback']['cnt-noread'] = 0;
-
-                if($v['is_resp'] && !$v['is_read']) // ответ Р и не прочитано
-                    $arRes['feedback']['cnt-noread']++;
-            }
-        }
-        //
-        //
-        // чат вакансий
-        $arV = $arVId = $arPid = array();
-        // находим все по вакансиям
-        $sql = Yii::app()->db->createCommand()
-                ->select("ev.id, 
-                    ed.id id_public, 
-                    ct.id id_personal, 
-                    vs.id_promo,
-                    IF(edr.cdate IS NULL,0,1) AS public_readed")
-                ->from('empl_vacations ev')
-                ->leftjoin('emplv_discuss ed','ed.id_vac=ev.id')
-                ->leftjoin(
-                    'emplv_discuss_readed edr',
-                    'edr.id_message=ed.id AND edr.id_user='.$idus
-                )
-                ->leftjoin('chat_theme ct','ct.id_vac=ev.id')
-                ->leftjoin(
-                    'vacation_stat vs',
-                    'vs.id_vac=ev.id AND vs.status>4'
-                )
-                ->where('vs.id_promo=:id',array(':id'=>$id_resume))
-                ->queryAll();
-
-        if(!count($sql))
-            return $arRes;
-
-        foreach ($sql as $v) {
-            $id = $v['id'];
-            $arV[$id]['id'] = $id;
-            if(!empty($v['id_promo']) && !in_array($v['id_promo'], $arPid))
-                $arPid[] = $v['id_promo'];
-            !in_array($v['id'], $arVId) && array_push($arVId, $v['id']);
-
-            if(!empty($v['id_public']))
-            {
-                $arV[$id]['public-mess'][] = $v['id_public'];
-                $arRes['vacancies']['cnt-mess']++;
-                if(!in_array($v['id_public'], $arV[$id]['public-mess-readed']) && !$v['public_readed'])
-                    $arV[$id]['public-mess-readed'][] = $v['id_public'];
-            }
-                
-            if(!empty($v['id_personal']) && !in_array($v['id_personal'], $arV[$id]['personal-chat']))
-                $arV[$id]['personal-chat'][] = $v['id_personal'];
-        }
-
-        foreach ($arV as $v) {
-            if(count($v['public-mess']))
-                $arRes['cnt']++;
-
-            $arRes['vacancies']['cnt-noread'] += count($v['public-mess-readed']);
-
-            $arRes['cnt'] += count($v['personal-chat']);
-        }
-
-        // поиск личных чатов
-        $sql = Yii::app()->db->createCommand()
-                ->select("ct.id_vac, c.*")
-                ->from('chat c')
-                ->leftjoin('chat_theme ct', 'c.id_theme=ct.id')
-                ->where(array('in','ct.id_vac',$arVId))
-                ->queryAll();
-
-        foreach ($sql as $v) {
-            $arRes['vacancies']['cnt-mess']++;
-
-          if(!in_array($v['id_usp'], $arPid))
-              $arPid[] = $v['id_usp'];
-
-          if($v['is_resp'] && !$v['is_read']) // ответ Р и не прочитано
-              $arRes['vacancies']['cnt-noread']++;
-        }
-        $arRes['vacancies']['cnt-users'] = count($arPid);
-
-        return $arRes;
-    }
-    /**
-     *      список чатов с админом
-     */
-    public function getFeedbackChats()
-    {
-        $this->limit = 10;
-        $arRes = $arId = $arIdus = array();
-        $idus = Share::$UserProfile->id;
-        $arT = Yii::app()->db->createCommand()
-                ->select("
-                    ct.id, 
-                    ct.id_use, 
-                    ct.title, 
-                    f.theme, 
-                    f.direct")
-                ->from('chat_theme ct')
-                ->leftjoin('feedback f', 'f.chat=ct.id')
-                ->where(
-                    'ct.id_usp=:id AND ct.id_vac=0 AND ct.id_use=:adm',
-                    array(':id'=>$idus,':adm'=>self::$adminId)
-                )
-                ->order('ct.id desc')
-                ->queryAll();
-
-        $nT = sizeof($arT);
-        if(!$nT)
-            return $arRes;
-
-        foreach ($arT as $v)
-            $arId[] = $v['id'];
-
-        $sql = Yii::app()->db->createCommand()
-                        ->select("*")
-                        ->from('chat')
-                        ->where(array('in','id_theme',$arId))
-                        ->queryAll(); 
-
-        $arRes['cnt-chat'] = $nT;
-        $arRes['pages'] = new CPagination($nT);
-        $arRes['pages']->pageSize = $this->limit;
-        $arRes['pages']->applyLimit($this);
-
-        for($i=$this->offset; $i<$nT; $i++)
-            if($i<($this->offset+$this->limit))
-            {
-                $arRes['items'][$arT[$i]['id']] = [
-                        'id' => $arT[$i]['id'],
-                        'direct' => ($arT[$i]['direct'] ?: 1),
-                        'user' => $arT[$i]['id_use']
-                    ];
-                $arIdus[] = $arT[$i]['id_use'];
-
-                $title = 'Без названия';
-                if(!empty($arT[$i]['title']))
-                    $title = $arT[$i]['title'];
-                if(!empty($arT[$i]['theme']))
-                    $title = $arT[$i]['theme'];
-
-                $arRes['items'][$arT[$i]['id']]['title'] = $title;
-            }
-
-        foreach ($sql as $m)
-        {
-            $id = $m['id_theme'];
-            if(!array_key_exists($id,$arRes['items'])) // общие счетчики
-            {
-                $arRes['cnt-mess']++;
-                if($m['is_resp'] && !$m['is_read']) // ответ Р и не прочитано
-                    $arRes['cnt-mess-noread']++;
-                continue;
-            }
-            $arRes['cnt-mess']++;
-            $arRes['items'][$id]['cnt-mess']++;
-            !isset($arRes['items'][$id]['cnt-noread']) && $arRes['items'][$id]['cnt-noread']=0;
-            if($m['is_resp'] && !$m['is_read']) // ответ Р и не прочитано
-            {
-                $arRes['items'][$id]['cnt-noread']++;
-                $arRes['cnt-mess-noread']++;
-            }
-
-            if(!empty($m['title']))
-                $arRes['items'][$id]['title'] = $m['title'];
-            if(!empty($m['theme']))
-                $arRes['items'][$id]['title'] = $m['theme'];
-        }
-
-        $arRes['users'] = Share::getUsers($arIdus);
-
-        return $arRes;
-    }
-    /**
-     *      список чатов по вакансиям
-     */
-    public function getVacanciesChats()
-    {
-        $this->limit = 10; // вывод 10 вакансий на странице
-        $arRes = array(
-                'items' => array(),
-                'cnt-chat' => 0,
-                'cnt-mess' => 0,
-                'cnt-mess-noread' => 0
-            );
-        $arV = $arUId = $arVId = array();
-        $bArchive = Yii::app()->getRequest()->getParam('s')=='archive';
-
-        // Находим все вакансии с соискателем
-        $arVacs = Vacancy::getVacsForChats($this->Profile,true,$bArchive);
-        // если вакансий нет - финал
-        if(!count($arVacs['id']))
-            return $arRes;
-        // формируем массив вакансии
-        foreach ($arVacs['key-id'] as $id => $v)
-        {
-            $arV[$id] = $v;
-            $arV[$id]['users'][] = $v['id_user'];
-            $arUId[] = $v['id_user']; // собираем юзеров для единого запроса
-        }
-
-        // Находим сообщения общих чатов
-        $arPublic = VacDiscuss::getChatsByVacs($arVacs['id'],$this->Profile);
-        // переносим в вакансии общие чаты
-        foreach ($arPublic['query'] as $v)
-        {
-            $arV[$v['id_vac']]['public-mess'][] = $v['id']; //общий чат вакансии
-            $arV[$v['id_vac']]['cnt-mess']++; // счетчик общих чатов вакансии
-            $arRes['cnt-mess']++; // общий счетчик общих чатов
-            // массив непрочитанных
-            if(!$v['readed'])
-            {
-                $arV[$v['id_vac']]['cnt-public-noread']++;
-                $arV[$v['id_vac']]['cnt-mess-noread']++;
-                $arRes['cnt-mess-noread']++;
-            }
-        }
-
-        // Находим сообщения личных чатов
-        $arPrivate = self::getChatsByVacs($arVacs['id']);
-        // переносим в вакансии личные чаты
-
-        foreach ($arPrivate['query'] as $v)
-        {
-            $id = $v['id_vac'];
-
-            $arV[$id]['personal-id'][$v['id_theme']] = $v['id_theme'];
-
-            $arC = $arV[$id]['personal-chat'][$v['id_use']];
-            $arC['id'][] = $v['id'];
-            $arC['user'] = $v['id_use'];
-            !isset($arC['noread']) && $arC['noread'] = 0;
-            if($v['is_resp'] && !$v['is_read']) // ответ Р и не прочитано
-            {
-                $arV[$id]['cnt-mess-noread']++;
-                $arRes['cnt-mess-noread']++;
-                $arC['noread']++;
-            }
-            $arV[$id]['personal-chat'][$v['id_use']] = $arC;
-            $arV[$id]['cnt-mess']++; //
-            $arRes['cnt-mess']++; // общий счетчик чатов
-        }
-
-        // дорабатываем массив вакансия
-        foreach ($arV as $id => $v)
-        {
-            count($v['public-mess']) && $arRes['cnt-chat']++; // общий чат считаем один раз
-            $arRes['cnt-chat'] += count($v['personal-chat']);            
-        }
-        
-        $nV = count($arVacs['id']);
-        $arRes['pages'] = new CPagination($nV);
-        $arRes['pages']->pageSize = $this->limit;
-        $arRes['pages']->applyLimit($this);
-
-        for($i=$this->offset; $i<$nV; $i++)
-            if($i<($this->offset+$this->limit))
-            {
-                $id = $arVacs['id'][$i];
-                $arVId[] = $id;
-                $arRes['items'][$id] = $arV[$id];
-            }
-
-        $sql = Yii::app()->db->createCommand()
-                ->select("vs.id_vac id, r.id_user user")
-                ->from('vacation_stat vs')
-                ->leftjoin('resume r', 'r.id=vs.id_promo')
-                ->where(['and','vs.status>4',['in','vs.id_vac',$arVId]])
-                ->queryAll();
-
-        foreach ($sql as $v)
-        {
-        	$arRes['items'][$v['id']]['users'][] = $v['user'];
-        	$arUId[] = $v['user'];
-        }
-
-        $arRes['users'] = Share::getUsers($arUId);
-
-        return $arRes;
-    }
-    /**
-     *      Формирование правильного массива
-     */
-    public function buildMessArray($arr)
-    {
-        $arUId = array();
-        foreach ($arr as $k => $v)
-        {
-            $arUId[] = $v['idusp'];
-            $arUId[] = $v['iduse'];
-            $arr[$k]['date'] = Share::getPrettyDate($v['crdate'],$v['crtime']);
-        }
-
-        $arUsers = Share::getUsers($arUId);
-
-        foreach ($arr as $k => $v)
-        {
-            $arr[$k]['nameto'] = $arUsers[$v['idusp']]['name'];
-            $arr[$k]['phototo'] = $arUsers[$v['idusp']]['src'];
-            $arr[$k]['namefrom'] = $arUsers[$v['iduse']]['name'];
-            $arr[$k]['photofrom'] = $arUsers[$v['iduse']]['src'];
-        }
-
-        return $arr;
-    }
-    
-     public function getVacancyPersonal($vacancy, $id_emp)
+    public function getVacancyPersonal($vacancy, $id_emp)
     {
         $arRes = array();
         $id_app = Share::$UserProfile->id;
@@ -985,6 +453,14 @@ class ImApplic extends Im
 
         return $arRes;
     }
+    /**
+     *  получение новых сообщений
+     */
+    public function getNewMessages()
+    {
+        $idTm = filter_var(Yii::app()->getRequest()->getParam('tm', 0), FILTER_SANITIZE_NUMBER_INT);
+        $lastMessId = filter_var(Yii::app()->getRequest()->getParam('l', 0), FILTER_SANITIZE_NUMBER_INT);
 
-    
+        return $this->getNewMessData($idTm, $lastMessId);
+    }
 }

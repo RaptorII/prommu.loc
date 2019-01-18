@@ -40,6 +40,8 @@ class MailingEvent extends Mailing
 	public function setData($obj)
 	{
 		$arRes = array('error'=>false);
+		// id
+		$id = $obj->getParam('id');
 		// emails
 		$this->receiver = filter_var(
 		                $obj->getParam('receiver'),
@@ -62,9 +64,10 @@ class MailingEvent extends Mailing
 		if(count($arRes['messages'])) // error
 		{
 			$arRes['error'] = true;
-			$this->comment = $obj->getParam('comment');
-			$this->type = $obj->getParam('event_type');
-			$this->params = $obj->getParam('params');
+			$event = $this->getData($id)['item'];
+			$this->comment = $event->comment;
+			$this->type = $event->type;
+			$this->params = $event->params;
 			$arRes['item'] = $this;
 			$template = new MailingTemplate;
 			$arRes['template'] = $template->getActiveTemplate();
@@ -74,7 +77,6 @@ class MailingEvent extends Mailing
 
 		$time = time();
 		$this->mdate = $time;
-		$id = $obj->getParam('id');
 
 		if(!intval($id)) // insert
 		{

@@ -90,9 +90,6 @@
 					<a href="<?=$this->createUrl('')?>" class="btn btn-success d-indent">Назад</a>
 					<button type="submit" class="btn btn-success d-indent" id="btn_submit">Сохранить</button>
 				</div>
-				<input type="hidden" name="comment" value="<?=$item->comment?>">
-				<input type="hidden" name="event_type" value="<?=$item->type?>">
-				<input type="hidden" name="params" value="<?=$item->params?>">
 			</form>
 		</div>
 	</div>
