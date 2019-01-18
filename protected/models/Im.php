@@ -20,7 +20,7 @@ abstract class Im extends Model
         $this->Profile = $Profile ?: Share::$UserProfile;
         $this->isApp = get_class($this)=='ImApplic';
         $this->adminId = ($this->isApp ? 1766 : 2054); // id Админа (для каждого свое)
-        $this->limit = MainConfig::$DEF_PAGE_LIMIT; // вывод 10 элементов по пагинации
+        $this->limit = 10; // вывод 10 элементов по пагинации
     }
     /**
      * @param $arVacs - array() ID of vacancies
