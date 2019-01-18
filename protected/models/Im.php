@@ -97,7 +97,6 @@ abstract class Im extends Model
     */
     public function getAllChats()
     {
-        self::sendEmailNotifications();
         $user = $this->Profile;
 
         $arRes = array(
