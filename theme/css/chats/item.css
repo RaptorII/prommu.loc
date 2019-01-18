@@ -173,7 +173,10 @@
 /*
 *		download files
 */
-#F3uploaded { display: none; }
+#F3uploaded { 
+	display: none;
+	background-color: #ffffff;
+}
 #F3uploaded h3 { font-size: 14px; }
 #F3uploaded .attached-file { float: left; position: relative; margin-bottom: 10px; padding-left: 23px; clear: left; }
 #F3uploaded .attached-file .uni-delete { display: block; position: absolute; width: 12px; height: 12px; left: 0; top: 5px; background: transparent url(/theme/pic/tmp/close.png) 0 0 no-repeat; cursor: pointer; }

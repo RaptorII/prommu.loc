@@ -28,6 +28,9 @@ abstract class Im extends Model
      */
     public function getChatsByVacs($arVacs)
     {
+        $filter = ($this->isApp ? 'ct.id_usp' : 'ct.id_use') 
+                    . '=' . $this->Profile->id;
+
         return Yii::app()->db->createCommand()
                 ->select("DISTINCT(c.id),
                     c.id_theme, 
@@ -38,7 +41,7 @@ abstract class Im extends Model
                     ct.id_vac")
                 ->from('chat c')
                 ->leftjoin('chat_theme ct','c.id_theme=ct.id')
-                ->where(['in','ct.id_vac',$arVacs])
+                ->where(['and',$filter,['in','ct.id_vac',$arVacs]])
                 ->queryAll();  
     }
     /**
@@ -61,7 +64,7 @@ abstract class Im extends Model
                     ->from('chat c')
                     ->leftjoin('chat_theme ct', 'ct.id=c.id_theme')
                     ->where($filter,$params)
-                    ->order('ct.id desc')
+                    ->order('c.id desc')
                     ->queryAll();
 
         if(!$isMain && count($arRes))
