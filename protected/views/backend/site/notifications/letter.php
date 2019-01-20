@@ -10,6 +10,7 @@
 		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/css/css.js', CClientScript::POS_HEAD);
 		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/vbscript/vbscript.js', CClientScript::POS_HEAD);
 		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/htmlmixed/htmlmixed.js', CClientScript::POS_HEAD);
+		Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl . '/js/nicEdit.js', CClientScript::POS_HEAD);
 		Yii::app()->getClientScript()->registerCssFile($codeMirror . 'lib/codemirror.css');
 		
 		$item = $viData['item'];
@@ -17,7 +18,9 @@
 		$params = unserialize($item->params);
 
 		if(empty($item->text))
-			$item->text = $viData['template']->body;
+			$item->text = 'Соделжимое письма';
+		// if new letter => in template
+		!isset($item->in_template) && $item->in_template = 1;
 	?>
 	<? if($viData['error'] && isset($viData['messages'])): ?>
 		<div class="alert danger">- <?=implode('<br>- ', $viData['messages']) ?></div>
@@ -79,7 +82,29 @@
 									<input type="text" name="title" class="form-control" autocomplete="off" value="<?=$item->title?>">
 								</label>
 							</div>
-						</div>
+							<?
+							//
+							?>
+							<? if(!intval($viData['id'])): ?>
+								<div class="col-xs-12 col-sm-6">
+									<br>
+									<label class="d-label">
+										<input type="radio" name="in_template" value="1" class="area_type" <?=($item->in_template ? 'checked="checked"' : '')?>>
+										<span>В активном шаблоне</span>
+									</label>
+								</div>
+								<div class="col-xs-12 col-sm-6">
+									<br>
+									<label class="d-label">
+										<input type="radio" name="in_template" value="0" class="area_type" <?=(!$item->in_template ? 'checked="checked"' : '')?>>
+										<span>HTML</span>
+									</label>
+								</div>
+								<div class="col-xs-12"><div class="bs-callout bs-callout-warning">Режим устанавливается при создании письма и больше не меняется. Редактирование актуальных данных в двух режимах одновременно невозможно</div></div>
+							<? else: ?>
+								<input type="hidden" name="in_template" value="<?=$item->in_template?>" class="area_type">
+							<? endif; ?>
+						</div>				
 					</div>
 					<div class="hidden-xs col-sm-1 col-md-3"></div>
 				</div>
@@ -88,6 +113,7 @@
 				?>
 				<label class="d-label">
 					<span>Текст письма</span>
+					<div id="transform-code-panel"></div>
 					<textarea name="text" class="d-textarea" id="transform-code"><?=$item->text?></textarea>
 				</label>
 				<div class="pull-right">
@@ -118,43 +144,145 @@
 			border: 1px solid #d2d6de;
 			border-radius: 3px;
 		}
+		.nicEdit-main {
+			margin: 0 !important;
+			padding: 4px;
+			width: 100% !important;
+			border-top: 1px solid #e3e3e3 !important;
+			background: #fff;
+		}
+		#transform-code>div:nth-child(2),
+		.controls.input-append>div{ border: 0 !important; }
+		.nicEdit-main:focus{ outline: none; }
+		#transform-code-panel .nicEdit-button{ background-image: url("/jslib/nicedit/nicEditorIcons.gif") !important; }
+		.CodeMirror{ min-height: 425px; }
 	</style>
 	<?
 	//
 	?>
 	<script type="text/javascript">
 		jQuery(function($){
-			var iframe = document.getElementById('iframe-html');
-			var mixedMode = {
-						name: "htmlmixed",
-						scriptTypes: [
-							{matches: /\/x-handlebars-template|\/x-mustache/i, mode: null},
-							{matches: /(text|application)\/(x-)?vb(a|script)/i,mode: "vbscript"}
-						]
-					};
+			var format, fullContent, myCodeMirror,
+					isNew = Number("<?=$viData['id']?>"),
+					content = <?=json_encode($viData['template']->body)?>,
+					replace = "<?=MailingTemplate::$CONTENT?>",
+					myNicEditor = new nicEditor(
+						{
+							maxHeight: 600, 
+							buttonList: ['bold','italic','underline','left','center','right','justify','ol','ul'] 
+						}
+					);
+			// get format
+			$.each($('.area_type'),function(){
+				if($(this).is(':checked'))
+					format = this.value==='1' ? 'text' : 'html';
+			});
+			if(format==undefined)
+				format = $('.area_type').val()==='1' ? 'text' : 'html';
+			// init
+			myNicEditor.addInstance('transform-code');
+			myNicEditor.setPanel('transform-code-panel');
+			myCodeMirror = initMirror();
 
-			var myCodeMirror = CodeMirror.fromTextArea(
-							document.getElementById('transform-code'),
-							{
-								lineNumbers: true,
-								matchBrackets: true,
-								mode: mixedMode,
-								indentUnit: 2
-							}
-						);
-
-			iframe = iframe.contentWindow || ( iframe.contentDocument.document || iframe.contentDocument);
-			iframe.document.open();
-			iframe.document.write(myCodeMirror.getValue());
-			iframe.document.close();
-
+			if(format==='text')
+			{
+				fullContent = content.replace(replace, myNicEditor.nicInstances[0].getContent().trim());
+				$('.CodeMirror').hide();
+				$('#transform-code-panel').show();
+				$('#transform-code-panel').siblings('div:eq(0)').show();
+			}
+			else
+			{
+				fullContent = myCodeMirror.getValue();
+				$('.CodeMirror').show();
+				$('#transform-code-panel').hide();
+				$('#transform-code-panel').siblings('div:eq(0)').hide();
+			}
+			setIframe(fullContent);
+			// set data to iframe
 			$('#check-html').click(function()
 			{
-				iframe.document.open();
-				iframe.document.write(myCodeMirror.getValue());
-				iframe.document.close();
+				var newVal;
+
+				if(format==='text')
+				{
+					newVal = myNicEditor.nicInstances[0].getContent().trim();
+					fullContent = content.replace(replace, newVal);
+				}
+				if(format==='html')
+				{
+					newVal = myCodeMirror.getValue();
+					fullContent = newVal;
+				}
+				
+				setIframe(fullContent);
 			});
-			$('.submit-btn').click(function(){ $('#notification-form').submit() });
+			// format
+			$('.area_type').change(function(){
+				if(this.value==='1')
+				{
+					var textarea = document.getElementById('transform-code');
+					newVal = $(textarea).html();
+					myNicEditor.nicInstances[0].setContent(newVal)
+					$('.CodeMirror').hide();
+					$('#transform-code-panel').show();
+					$('#transform-code-panel').siblings('div:eq(0)').show();
+					format = 'text';
+				}
+				if(this.value==='0')
+				{
+					newVal = content.replace(replace, myNicEditor.nicInstances[0].getContent().trim());
+					myCodeMirror.setValue(newVal);
+					myCodeMirror.toTextArea();
+					myCodeMirror = initMirror();
+					$('.CodeMirror').show();
+					$('#transform-code-panel').hide();
+					$('#transform-code-panel').siblings('div:eq(0)').hide();
+					format = 'html';
+				}
+			});
+			// send form
+			$('.submit-btn').click(function(){ 
+				if(format==='text')
+				{
+					var newVal = myNicEditor.nicInstances[0].getContent().trim();
+					myCodeMirror.setValue(newVal);	
+				}
+				$('#notification-form').submit();
+			});
+			//
+			//
+			//
+			function initMirror()
+			{
+				var mixedMode = {
+							name: "htmlmixed",
+							scriptTypes: [
+								{matches: /\/x-handlebars-template|\/x-mustache/i, mode: null},
+								{matches: /(text|application)\/(x-)?vb(a|script)/i,mode: "vbscript"}
+							]
+						};
+
+				return CodeMirror.fromTextArea(
+								document.getElementById('transform-code'),
+								{
+									lineNumbers: true,
+									matchBrackets: true,
+									mode: mixedMode,
+									indentUnit: 2
+								}
+							);
+
+			}
+			function setIframe(content)
+			{
+				var iframe = document.getElementById('iframe-html');
+
+				iframe = iframe.contentWindow || ( iframe.contentDocument.document || iframe.contentDocument);
+				iframe.document.open();
+				iframe.document.write(content);
+				iframe.document.close();
+			}
 		});
 	</script>
 <? endif; ?>

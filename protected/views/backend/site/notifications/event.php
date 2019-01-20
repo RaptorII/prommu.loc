@@ -30,6 +30,20 @@
 						<div class="row">
 							<div class="col-xs-12">
 								<label class="d-label">Тип: <?=MailingEvent::$TYPES[$item->type]?></label>
+								<div class="row">
+									<div class="col-xs-12 col-sm-6">
+										<label class="d-label">
+											<span>Активное:</span>
+											<input type="checkbox" name="is_active" value="1" <?=($item->is_active ? 'checked="checked"' : '')?>>
+										</label>
+									</div>
+									<div class="col-xs-12 col-sm-6">
+										<label class="d-label">
+											<span>Срочное:</span>
+											<input type="checkbox" name="is_urgent" value="1" <?=($item->is_urgent ? 'checked="checked"' : '')?>>
+										</label>
+									</div>
+								</div>
 								<label class="d-label">
 									<span>Email (получатели)</span>
 									<input type="text" name="receiver" class="form-control" value="<?=$item->receiver?>">

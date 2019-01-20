@@ -51,6 +51,8 @@ class MailingLetter extends Mailing
 		            	);
 		// text
 		$this->text = $obj->getParam('text');
+		// in_template
+		$this->in_template = $obj->getParam('in_template');
 		
 		if(
 			(!count($arParams['status']) && !count($arParams['moder']))
@@ -62,12 +64,13 @@ class MailingLetter extends Mailing
 			$arRes['messages'][] = 'поля "Заголовок" и "Текст письма" должны быть заполнены';
 
 		$this->params = serialize($arParams);
+		$template = new MailingTemplate;
+		$arRes['template'] = $template->getActiveTemplate();
 
 		if(count($arRes['messages'])) // error
 		{
 			$arRes['error'] = true;
 			$arRes['item'] = $this;
-
 			return $arRes;
 		}
 		
@@ -134,6 +137,13 @@ class MailingLetter extends Mailing
 
 			if(count($arReceiver))
 			{
+				// помещаем письмо в шаблон	
+				$this->in_template && $this->text = str_replace(
+																								MailingTemplate::$CONTENT,
+																								$this->text,
+																								$arRes['template']->body
+																							);
+
 				$this->setToMailing($arReceiver, $this->title, $this->text);
 				$arRes['redirect'] = true;
 				Yii::app()->user->setFlash('success', 'Данные сохранены поставлены в очередь отправки');

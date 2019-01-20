@@ -55,6 +55,10 @@ class MailingEvent extends Mailing
 		            	);
 		// text
 		$this->text = $obj->getParam('text');
+		// is_active
+		$this->is_active = $obj->getParam('is_active');
+		// is_urgent
+		$this->is_urgent = $obj->getParam('is_urgent');
 		
 		if(!count($arReceiver))
 			$arRes['messages'][] = 'необходимо ввести корректный Email';

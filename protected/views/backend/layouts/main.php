@@ -695,6 +695,15 @@
             <i class="glyphicon glyphicon-cog"></i>
             <span>Настройки сайта</span>
           </a>
+        </li>  
+        <?
+        // System
+        ?>
+        <li class="<?=($curId=='system'?'active':'')?>">
+          <a href="<?=$hUrl?>system">
+            <i class="glyphicon glyphicon-wrench"></i>
+            <span>Разработчикам</span>
+          </a>
         </li>
       </ul>
       <!-- /.sidebar-menu -->

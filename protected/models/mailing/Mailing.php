@@ -214,7 +214,6 @@ class Mailing extends CActiveRecord
   public static function set($event, $arParams, $isUrgent=false, $usertype=0)
   {
 		$arPatterns = array();
-		$type = 'email'; // можем попробовать хранить пуш и емейл в одном месте
 		$arRes = self::getCacheData();
 
 		$objEvent = $arRes['events'][$event];
@@ -225,8 +224,8 @@ class Mailing extends CActiveRecord
 
 		$arEventParams = unserialize($objEvent->params);
 		$arValues = array();
-
-		if($type=='email')
+		// можем попробовать хранить пуш и емейл в одном месте
+		if($objEvent->type==1 && $objEvent->is_active) // если это email 
 		{
 			foreach ($arEventParams as $k => $v) // собираем из двух массивов
 			{
@@ -274,7 +273,7 @@ class Mailing extends CActiveRecord
 			// помещаем письмо в шаблон
 			$body = str_replace(MailingTemplate::$CONTENT, $body, $objTemplate->body);
 			// go 
-			self::setToMailing($arReceivers, $title, $body, 0);
+			self::setToMailing($arReceivers, $title, $body, $objEvent->id_urgent);
 		}
 	}
 	/**

@@ -1859,4 +1859,58 @@ class SiteController extends Controller
 
         $this->render($model->view, ['viData' => $data]);
     }
+    /*
+    *   Технический раздел
+    */
+    public function actionSystem()
+    {
+        if(!self::isAuth() /*|| strpos($this->user_access, "system") == false*/)
+        {
+            $this->render('access');
+            return;
+        }
+
+        $rq = Yii::app()->getRequest();
+
+        $id = $rq->getParam('id');
+        $type = $rq->getParam('type');
+
+        $title = 'Разработчикам';
+        $arBread[$title] = ['system'];
+
+        switch ($type)
+        {
+            case 'review': $model = new CodeReview($id); break;
+        }
+
+        if(isset($id))
+        {
+            $title = $model->pageTitle;
+            $view = $model->view;
+            if(!$rq->isPostRequest)
+            {
+                $data = $model->getData($id);
+            }
+            else
+            {
+                $data = $model->setData($rq);
+                $data['redirect'] && $this->redirect(['system']);
+            }
+            $data['id'] = $id;
+            array_push($arBread, $title);
+        }
+        else
+        {
+            $view = 'system/list';
+            $data = [];
+        }
+
+        $this->setPageTitle($title);
+        $this->breadcrumbs = $arBread;
+        $bUrl = Yii::app()->request->baseUrl;
+        $gcs = Yii::app()->getClientScript();
+        $gcs->registerCssFile($bUrl . '/css/template.css');
+
+        $this->render($view, ['viData' => $data]);       
+    }
 }
