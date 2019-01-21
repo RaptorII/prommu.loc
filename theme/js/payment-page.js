@@ -258,6 +258,8 @@ var Payment = (function (){
           ||
           (!radioLegal&&flagDate)
         ){
+
+          MainScript.buttonLoading(this,true);
           $('#payment-form').submit();
         }
       });

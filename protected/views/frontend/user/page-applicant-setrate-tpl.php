@@ -4,6 +4,10 @@
 
   if( $saveResp['saved'] == 1 ): ?>
     <div class="mess-box"><?= $saveResp['message'] ?></div>
+
+      <br><br>
+      <a href="/ankety/<?=$viData['user']['idusempl']?>">Назад</a>
+
 <?php else: ?>
   <div class='row'>
     <?php if( $viData['error'] ): ?>   
