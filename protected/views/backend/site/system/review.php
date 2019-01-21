@@ -10,6 +10,7 @@
 		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/css/css.js', CClientScript::POS_HEAD);
 		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/vbscript/vbscript.js', CClientScript::POS_HEAD);
 		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/htmlmixed/htmlmixed.js', CClientScript::POS_HEAD);
+		Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl . '/js/nicEdit.js', CClientScript::POS_HEAD);
 		Yii::app()->getClientScript()->registerCssFile($codeMirror . 'lib/codemirror.css');
 
 		$item = $viData['item'];
@@ -32,7 +33,8 @@
 								</label>
 								<label class="d-label">
 									<span>Описание</span>
-									<textarea name="description" class="d-textarea form-control"><?=$item->description?></textarea>
+									<div id="description-edit-panel"></div>
+									<textarea name="description" class="d-textarea form-control" id="description-edit"><?=$item->description?></textarea>
 								</label>
 							</div>
 						</div>
@@ -57,8 +59,18 @@
 	//
 	?>
 	<style type="text/css">
+		.nicEdit-main {
+			margin: 0 !important;
+			padding: 4px;
+			width: 100% !important;
+			border-top: 1px solid #e3e3e3 !important;
+			background: #fff;
+		}
 		#transform-code>div:nth-child(2),
+		#description-edit>div:nth-child(2),
 		.controls.input-append>div{ border: 0 !important; }
+		.nicEdit-main:focus{ outline: none; }
+		#description-edit-panel .nicEdit-button{ background-image: url("/jslib/nicedit/nicEditorIcons.gif") !important; }
 		.CodeMirror{ min-height: 425px; }
 	</style>
 	<?
@@ -67,6 +79,15 @@
 	<script type="text/javascript">
 		jQuery(function($){
 			var myCodeMirror = initMirror();
+			var myNicEditor = new nicEditor(
+						{
+							maxHeight: 600, 
+							buttonList: ['bold','italic','underline','left','center','right','justify','ol','ul'] 
+						}
+					);
+
+			myNicEditor.addInstance('description-edit');
+			myNicEditor.setPanel('description-edit-panel');
 			//
     	function initMirror()
     	{
