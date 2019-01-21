@@ -302,7 +302,8 @@ class Employer extends ARModel
                    (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.isneg = 1 AND mm.isactive = 1 AND mm.id_empl = e.id) commneg
                    ,(SELECT COUNT(*) cou FROM empl_vacations v WHERE v.id_user = e.id_user AND v.status = 1 AND v.ismoder = 100) vaccount
                    ,e.logo,
-                   DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
+                   DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate,
+                   DATE_FORMAT(e.mdate, '%d.%m.%Y') mdate
               , ci.id_city, ci.name ciname
               , d.id idattr, d.type dtype, d.name tname
             FROM employer e
