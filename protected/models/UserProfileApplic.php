@@ -302,7 +302,7 @@ class UserProfileApplic extends UserProfile
             $pathinfo = pathinfo($cropRes['file']);
             $cropRes['idfile'] = $pathinfo['filename'];
           
-            Mailing::set(1, ['id_user'=>$id], false, 2);
+            Mailing::set(1, ['id_user'=>$id], 2);
         }
         else
         {
