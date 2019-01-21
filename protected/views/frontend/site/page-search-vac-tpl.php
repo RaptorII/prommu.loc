@@ -252,7 +252,8 @@
                                         src='<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . (!$vac['logo'] ?  'logo.png' : ($vac['logo']) . '400.jpg') ?>'>
                                 </a>
                                 <a class="psv-list__logo-name" href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $vac['uid']?>"><?=$vac['coname']?></a>
-                                <span class="psv-list__logo-crdate js-g-hashint" title="Дата публикации"><?=$vac['crdate']?></span>
+
+                                <span class="psv-list__logo-crdate js-g-hashint" title="Дата публикации">Дата публикации: <?=$vac['crdate']?></span>
                             </div>
                             <div class="psv-list__content">
                                 <a href="<?= MainConfig::$PAGE_VACANCY . DS . $vac['id'] ?>" class="psv-list__title">

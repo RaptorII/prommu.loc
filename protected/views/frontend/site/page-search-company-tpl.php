@@ -109,6 +109,9 @@
         <?php /* BM: list view */ ?>
         <div class='list-view'>
           <?php foreach ($viData['empls'] as $key => $val): ?>
+              <pre>
+            <?print_r($val);?>
+        </pre>
               <div class='company-list-item-box'>
                   <div class='row'>
                       <div class='col-xs-12 col-sm-3 col-lg-2'>
@@ -123,6 +126,16 @@
                               </div>
                               <br>
                               <br>
+                          </div>
+
+                          <div class='company-info-wrapp com-rate'>
+                              <div class="company-info-status">
+                                  Онлайн/Офлайн
+                                  <?=$mdate?>
+                              </div>
+                              <div class="company-info-start">
+                                  На сервисе с <span class="pos"><?=$val['crdate']?></span>
+                              </div>
                           </div>
                       </div>
                       <div class='col-xs-12 col-sm-9 col-lg-10'>
