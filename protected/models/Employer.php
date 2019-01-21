@@ -359,7 +359,7 @@ class Employer extends ARModel
         $strCities = Subdomain::getCacheData()->strCitiesIdes;
         // достаем работодателей
         $filter = Employer::getScopesCustom(Employer::$SCOPE_HAS_LOGO, 'r');
-        $sql = "SELECT r.id, r.id_user idus, u.is_online, name, 
+        $sql = "SELECT r.id, r.id_user idus, u.is_online, name, DATE_FORMAT(e.mdate, '%d.%m.%Y') mdate,
                     r.logo, r.rate, r.rate_neg, 
                     cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate,
                     (SELECT COUNT(id) 
