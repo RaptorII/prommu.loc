@@ -25,6 +25,7 @@
 				<div class="tab-content">
 					<div role="tabpanel" class="tab-pane fade active in" id="tab_event">
 						<h4>События</h4>
+						<div class="bs-callout bs-callout-warning">Внимание, данные кешируются. При изменении события кеш меняется. При добавлении через БД нужно сбрасывать кеш в разделе "Настройки сайта"</div>
 						<?
 							$model = new MailingEvent;
 							$this->widget(

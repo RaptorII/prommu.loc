@@ -66,7 +66,7 @@ class Mailing extends CActiveRecord
 									),
 							2 => array(
 										'name' => "#PAGE_USER_CHATS_LIST#",
-										'pattern' => "#PAGE_USER_CHATS_LIST#",
+										'pattern' => "/#PAGE_USER_CHATS_LIST#/",
 										'value' => Subdomain::$HOST . MainConfig::$PAGE_CHATS_LIST,
 										'description' => "Раздел профиля пользователя 'Чаты'"
 									)
@@ -207,11 +207,10 @@ class Mailing extends CActiveRecord
 	/**
 	 * @param $event - number ID
 	 * @param $arParams - array()
-	 * @param $isUrgent - boolean (false=default)
 	 * @param $usertype - number (2,3,0=default)
 	 * Распарсиваем ВСЕ строки и выполняем подмену констант с постановкой сформированного письма в очередь в активном шаблоне
 	 */
-  public static function set($event, $arParams, $isUrgent=false, $usertype=0)
+  public static function set($event, $arParams, $usertype=0)
   {
 		$arPatterns = array();
 		$arRes = self::getCacheData();
@@ -273,7 +272,7 @@ class Mailing extends CActiveRecord
 			// помещаем письмо в шаблон
 			$body = str_replace(MailingTemplate::$CONTENT, $body, $objTemplate->body);
 			// go 
-			self::setToMailing($arReceivers, $title, $body, $objEvent->id_urgent);
+			self::setToMailing($arReceivers, $title, $body, $objEvent->is_urgent);
 		}
 	}
 	/**

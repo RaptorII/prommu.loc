@@ -71,7 +71,7 @@ class UserProfileEmpl extends UserProfile
             $pathinfo = pathinfo($cropRes['file']);
             $cropRes['idfile'] = $pathinfo['filename'];
 
-            Mailing::set(1, ['id_user'=>$id], false, 3);
+            Mailing::set(1, ['id_user'=>$id], 3);
         }
         else
         {
