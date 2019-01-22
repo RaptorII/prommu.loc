@@ -1373,8 +1373,10 @@ class UserProfileEmpl extends UserProfile
                 e.id_user,
                 e.name,
                 e.logo,
-                e.mdate
+                u.mdate,
+                u.is_online
             FROM employer e
+            LEFT JOIN user u ON u.id_user = e.id_user
             WHERE e.id_user = {$id}";
         $res = Yii::app()->db->createCommand($sql)->queryRow();
 
