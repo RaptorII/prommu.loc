@@ -321,7 +321,7 @@ class SiteController extends AppController
                     $data['data']['redirect'] = '';//Subdomain::ajaxFilterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
                     Cache::setData($data);
                 }
-
+                var_dump($data['data']);
                 $this->renderPartial(
                     MainConfig::$VIEWS_SEARCH_PROMO_AJAX,
                     $data['data'], 
@@ -362,7 +362,7 @@ class SiteController extends AppController
                     $data['data']['datas'] = $Api->kew();
                     Cache::setData($data);
                 }
-                //var_dump( $data['data']);
+                var_dump( $data['data']);
                 $this->render($this->ViewModel->pageSearchPromo,
                         $data['data'],
                         array(
