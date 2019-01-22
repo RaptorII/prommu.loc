@@ -740,6 +740,7 @@ class UserProfileEmpl extends UserProfile
                 , e.name
                 , e.logo
                 , u.is_online
+                , u.mdate
             ")
             ->from('user u')
             ->leftJoin('user_work w', 'u.id_user = w.id_user')
