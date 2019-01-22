@@ -47,8 +47,10 @@
 
                                 <div class='company-info-wrapp com-rate' style="text-align:center;">
                                     <div class="company-info-status">
-                                        <div>Последний вход:</div>
-                                        <div><b><span class="pos" style="color: #abb820;"><?=$val['mdate']?></span></b></div>
+                                        <div>Дата последнего посещения:</div>
+                                        <div><b><span class="pos" style="color: #abb820;">
+                                                    <?=date_format(date_create($val['mdate']), 'd.m.Y');?>
+                                                </span></b></div>
                                     </div>
                                 </div>
                             </div>
