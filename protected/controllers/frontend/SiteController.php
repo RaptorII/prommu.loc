@@ -170,7 +170,7 @@ class SiteController extends AppController
                     $data['data']['redirect'] = '';//Subdomain::ajaxFilterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
                     Cache::setData($data);
                 }
-                 var_dump($data['data']);
+                 //var_dump($data['data']);
                 $this->renderPartial(
                     MainConfig::$VIEWS_SEARCH_EMPL_AJAX_BLOCK,
                     $data['data'], 
@@ -203,7 +203,7 @@ class SiteController extends AppController
                 }
                 Cache::setData($data);
             }
-            var_dump($data['data']);
+            //var_dump($data['data']);
             $this->render($this->ViewModel->pageSearchEmpl,
                     $data['data'],
                     array(
@@ -270,7 +270,7 @@ class SiteController extends AppController
             $idCity = key($data['userInfo']['userCities'][0]);
             if($idCity>0 && !in_array($idCity, $arCities))
                 Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
-            var_dump($data);
+            //var_dump($data);
             $this->render('../' . MainConfig::$DIR_VIEWS_USER . DS . $page,
                     array('viData' => $data,
                             'idus' => $id,
@@ -362,7 +362,7 @@ class SiteController extends AppController
                     $data['data']['datas'] = $Api->kew();
                     Cache::setData($data);
                 }
-                var_dump( $data['data']);
+                //var_dump( $data['data']);
                 $this->render($this->ViewModel->pageSearchPromo,
                         $data['data'],
                         array(
