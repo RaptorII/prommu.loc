@@ -111,28 +111,27 @@
             var arMetroes = <?=json_encode($arMetroes);?>;
             var arPosts = <?=json_encode($viData['posts']);?>;
         </script>
-        <div class='row employer-reg-vacansy'>
+        <div class='employer-reg-vacansy'>
+            <div class='row'>
             <form action="<?= MainConfig::$PAGE_VACANCY_EDIT . DS . $viData['vac']['id'] ?>" method="POST"
                   id="reg-vac-form">
                 <input type="hidden" name="block" value='vacpage'>
                 <input type="hidden" name="save" value='1'>
                 <div class="col-xs-12">
                     <div class="erv__header">
-                        <? if (!isset($viData['vac']['cannot-publish'])): ?>
-                            <? if (!$viData['vac']['status']): ?>
-                                <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}" ?>'
-                                   class="erv__header-btn prmu-btn"><span>Опубликовать вакансию</span></a>
-                            <? else: ?>
-                                <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}&d=1" ?>'
-                                   class="erv__header-btn prmu-btn"><span>Снять с публикации</span></a>
-                            <? endif; ?>
-                        <? else: ?>
-                            <p class="erv__header-warning">Необходимо заполнить все обязательные поля *</p>
-                        <? endif; ?>
-                        <? if ($viData['vac']['ismoder'] == 100): ?>
-                            <div class="evl__to-project-btn prmu-btn" data-id="<?= $viData['vac']['id'] ?>"><span>Перевести в проект</span>
-                            </div>
-                        <? endif; ?>
+											<? if (!isset($viData['vac']['cannot-publish'])): ?>
+												<? if (!$viData['vac']['status']): ?>
+													<span class="erv__not-publ">Вакансия не опубликована</span>
+													<a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}" ?>' class="erv__header-btn prmu-btn"><span>Опубликовать вакансию</span></a>
+												<? else: ?>
+													<a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}&d=1" ?>' class="erv__header-btn prmu-btn"><span>Снять с публикации</span></a>
+												<? endif; ?>
+											<? else: ?>
+												<p class="erv__header-warning">Необходимо заполнить все обязательные поля *</p>
+											<? endif; ?>
+											<? if ($viData['vac']['ismoder'] == 100): ?>
+												<div class="evl__to-project-btn prmu-btn" data-id="<?= $viData['vac']['id'] ?>"><span>Перевести в проект</span></div>
+											<? endif; ?>
                     </div>
                 </div>
                 <div class='col-xs-12 col-sm-4 col-lg-3'>
@@ -176,9 +175,6 @@
                                id="rv-vac-title" value="<?= $viData['vac']['title'] ?>">
                     </label>
                     <h1 class="erv__title"><?= $viData['vac']['title'] ?></h1>
-                    <?php if ($flagEdit && !$viData['vac']['status']): ?>
-                        <span class="erv__not-publ">Вакансия не опубликована</span>
-                    <?php endif; ?>
                     <div class="erv__title-module">
                         <div>
                             <div class="erv__salary">
@@ -198,9 +194,10 @@
                                     <?php endif; ?>
                                 </div>
                             </div>
-                            <div class='erv__publ-date'>Дата публикации: <?= $viData['vac']['crdate'] ?><br>Дата начала
-                                работы: <span id="rv-vac-bdate"><?= $begWorkDate ?></span><br>Дата завершения работы:
-                                <span id="rv-vac-edate"><?= $endWorkDate ?></span></div>
+                            <div class='erv__publ-date'>
+                                Дата публикации: <?= $viData['vac']['crdate'] ?><br>
+                                Дата начала работы: <span id="rv-vac-bdate"><?= $begWorkDate ?></span><br>
+                                Дата завершения работы: <span id="rv-vac-edate"><?= $endWorkDate ?></span></div>
                         </div>
                         <div class="erv__services">
                             <?php if ($viData['vac']['ismoder'] == 100): // отображать услуги только для промодерированных вкансий ?>
@@ -758,7 +755,7 @@
                                                         <span class="erv-city__close"></span>
                                                         <div class="erv-city__item-veil"></div>
                                                         <div class="erv-city__label erv-city__label-ltime">
-                                                            <span class="erv-city__label-name"><span>Дата работы:</span></span>
+                                                            <span class="erv-city__label-name"><span>Дата работы на проекте:</span></span>
                                                             <span class="erv-city__label-input city-period">
                                                                 <table>
                                                                     <?
@@ -784,17 +781,17 @@
                                                     </div>
                                                 <?php endforeach; ?>
                                             <?php endif; ?>
-                                            <span class="erv-city__button add-per-btn">Добавить период</span>
+                                            <span class="prmu-btn add-per-btn"><span>Добавить период</span></span>
                                             <div class="clearfix"></div>
                                         </div>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
-                                <span class="erv-city__button add-loc-btn">Добавить локацию</span>
+                                <span class="prmu-btn add-loc-btn"><span>Добавить локацию</span></span>
                                 <div class="clearfix"></div>
                             </div>
                             <? $count++ ?>
                         <?php endforeach; ?>
-                        <span class="erv-city__button add-city-btn">Добавить город</span>
+                        <span class="prmu-btn add-city-btn"><span>Добавить город</span></span>
                     </div>
                     <?
                     /*
@@ -846,6 +843,7 @@
                 </div>
             </form>
             <div class="clearfix"></div>
+            </div>
         </div>
         <? // блоки для управления локациями
         require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/site/vacancies/vacancy-edit-blocks.php'; ?>
@@ -1130,7 +1128,7 @@
                                 <?php foreach ($viData['vac']['loctime'][$loc['id']] as $time): ?>
                                     <? $arTemp[$city[3]][$loc['id']]['time'] = $time; ?>
                                     <div class="sv__data-city time">
-                                        <span class="sv__data-city-name"><span>Дата работы:</span></span>
+                                        <span class="sv__data-city-name"><span>Дата работы на проекте:</span></span>
                                         <span class="sv__data-city-val">
                                             <table>
                                                 <?

@@ -601,3 +601,6 @@ a.upp__project-info{ width: 65px }
 	max-width: 300px;
 	margin: 20px auto 0;
 }
+@media (min-width: 768px){
+	#DiContent.page-company-profile-own .prmu-btn{ line-height: 29px; }
+}

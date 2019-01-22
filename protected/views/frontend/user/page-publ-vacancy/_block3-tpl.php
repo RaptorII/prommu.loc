@@ -84,7 +84,7 @@
                                     <span class="erv-city__close"></span>
                                     <div class="erv-city__item-veil"></div>
                                     <div class="erv-city__label erv-city__label-ltime">
-                                        <span class="erv-city__label-name"><span>Дата работы:</span></span>
+                                        <span class="erv-city__label-name"><span>Дата работы по проекту:</span></span>
                                         <span class="erv-city__label-input city-period">
                                             <table>
                                                 <? 
@@ -110,17 +110,17 @@
                                 </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
-                        <span class="erv-city__button add-per-btn">Добавить период</span>
+                        <span class="prmu-btn add-per-btn"><span>Добавить период</span></span>
                         <div class="clearfix"></div>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?> 
-            <span class="erv-city__button add-loc-btn">Добавить локацию</span>
+            <span class="prmu-btn add-loc-btn"><span>Добавить локацию</span></span>
             <div class="clearfix"></div>  
         </div>
         <?$count++?>
     <?php endforeach; ?>
-    <span class="erv-city__button add-city-btn">Добавить город</span>
+    <span class="prmu-btn add-city-btn"><span>Добавить город</span></span>
     <div class="clearfix"></div>
 </div>
 <? // блоки для управления локациями

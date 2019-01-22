@@ -39,13 +39,13 @@
 #DiContent .employer-reg-vacansy .erv__header-btn,
 .evl__to-project-btn.prmu-btn{
 	display: block;
-	line-height: 35px;
+	line-height: 40px;
 	font-size: 16px;
 	padding: 0 15px;
 	margin: 0 0 15px;
 	text-transform: uppercase;
 	cursor: pointer;
-	border-radius: 18px;
+	border-radius: 20px;
 }
 .prmu-btn:before, .prmu-btn:after{ border-radius: 18px }
 .erv__logo{
@@ -62,12 +62,6 @@
 	font-size: 24px;
 	color: #ABB837;
 	display: inline-block;
-}
-.erv__not-publ{
-	color: #ff8300;
-    font-size: 16px;
-    margin: 0 0 22px;
-    display: inline-block;
 }
 .erv__salary-block{
 	float: left;
@@ -815,7 +809,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 *		MEDIA
 */
 @media (min-width: 768px){
-	.erv__header{ padding: 20px 0 15px 80px }
+	.erv__header{ padding: 20px 0 15px }
 	.erv__header-name{
 		margin: 0;
 		display: inline-block;
@@ -824,6 +818,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	#DiContent .employer-reg-vacansy .erv__header-btn,
 	.evl__to-project-btn.prmu-btn{
 		margin: 0 15px;
+		line-height: 35px;
 		display: inline-block;
 	}
 	.erv__logo{
@@ -1216,7 +1211,6 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 		float: right;
 		margin-left: 6%;
 	}
-	.erv-city__label-name:after{ display: block }
 	.erv__label-tbl>div>span:first-child{
 		display: block;
 		margin-bottom: 5px;
@@ -1402,14 +1396,14 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 #DiContent.page-vacancy .erv__button-block-btn{
 	width: 100%;
 	min-width: 200px;
-	margin: 5px;
+	margin: 5px 0;
 	padding: 0px 10px;
 	position: relative;
 	text-align: center;
 	border-radius: 12px;
 	background-color: rgba(171,184,32,.5);
-	border-radius: 15px;
-	line-height: 30px;
+	border-radius: 20px;
+	line-height: 40px;
 	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 	font-size: 16px;  
 }
@@ -1424,14 +1418,6 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	left: 3px;
 }
 .erv__button.erv__button-block-btn:hover:before{ background:#ff921d }
-@media (min-width: 768px){
-	.evl__chat-personal ul{ 
-		display:none;
-		position: absolute;
-	}
-	.erv__button-block{ padding-right:100px }
-	#DiContent.page-vacancy .erv__button-block-btn{ width:inherit }
-}
 /*
 *		22.01.19
 */
@@ -1444,4 +1430,69 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	display: block;
 	text-align: right;
 	margin-top: 20px;
+}
+.erv__not-publ{
+	display: block;
+	margin: 0 0 15px;
+	color: #ff0000;
+	font-weight: bold;
+	text-transform: uppercase;
+	font-size: 16px;
+	vertical-align: middle;
+	text-align: center;
+}
+.erv-city__label{ display: block; }
+.erv-city__label:before{ top: 26px; }
+.erv-city__label-name{
+	display: block;
+	width: 100%;
+	padding: 0;
+}
+.erv-city__location,
+.erv-city__time{ margin-left: 0; }
+#city-module .prmu-btn{
+	width: 130px;
+	display: inline-block;
+	float: right;
+	cursor: pointer;
+	margin: 5px 0;
+}
+#rv-vac-bdate{
+	padding-top: 10px;
+	display: inline-block;
+}
+#rv-vac-bdate, #rv-vac-edate{ 
+	color: #ff8300;
+	font-weight: bold;
+}
+@media (min-width: 768px){
+	.erv__not-publ{
+		display: inline-block;
+		margin: 0;
+		max-width: 160px;
+	}
+	.evl__chat-personal ul{ 
+		display:none;
+		position: absolute;
+	}
+	.erv__button-block{ padding-right:100px }
+	#DiContent.page-vacancy .erv__button-block-btn{ 
+		width:inherit;
+		line-height: 35px;
+		margin: 5px;
+	}
+	.erv-city__label-input{ width: 300px }
+}
+@media (min-width: 992px){
+	.erv-city__label{ display: table; }
+	.erv-city__label:before{ top: 8px; }
+	.erv-city__label-name{
+		width: calc(100% - 250px);
+		display: table-cell;
+		padding-top: 8px;
+	}
+	.erv-city__location,
+	.erv-city__time{ margin-left: 5px; }
+	.erv-city__label-name:after{ display: block }
+	.erv-city__label-input{ width: 250px }
 }

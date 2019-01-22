@@ -35,53 +35,6 @@
 	vertical-align: middle;
 	margin-right: 5px;
 }
-#DiContent .employer-reg-vacansy .erv__header-backtovac .erv__header-btn{
-	margin: 0;
-	width: initial;
-	padding: 0 10px;
-}
-#DiContent .employer-reg-vacansy .erv__header-btn{
-	width: 195px;
-	line-height: 30px;
-	display: block;
-	margin: 0 auto;
-	padding: 0;
-	background: #ff8300;
-	color: #FFFFFF;
-	text-align: center;
-	text-transform: uppercase;
-	font-size: 14px;
-	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-	position: relative;
-	z-index: 1;
-	border: none;
-	-webkit-transition: all 0.3s ease-out;
-	-moz-transition: all 0.3s ease-out;
-	-o-transition: all 0.3s ease-out;
-	transition: all 0.3s ease-out;
-}
-.erv__header-btn:before{
-	content: '';
-	position: absolute;
-	z-index: -1;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: #ABB837;
-	-webkit-transform: scaleX(0);
-	transform: scaleX(0);
-	-webkit-transform-origin: 0 50%;
-	transform-origin: 0 50%;
-	-webkit-transition: all 0.3s ease-out;
-	-moz-transition: all 0.3s ease-out;
-	-o-transition: all 0.3s ease-out;
-	transition: all 0.3s ease-out;
-}
-.erv__header-btn:hover:before{
-	-webkit-transform: scaleX(1);
-	transform: scaleX(1);
-}
 .erv__logo{ width: 100% }
 /*
 *
@@ -470,7 +423,6 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	display: block;
 	margin: 0 auto;
 	padding: 0;
-	background: #FF8300;
 	color: #FFFFFF;
 	text-transform: uppercase;
 	font-size: 14px;
@@ -550,7 +502,6 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	display: table-cell;
 	position: relative;
 	vertical-align: top;
-	line-height: 35px;
 }
 .erv-city__label-name span{
 	position: relative;
@@ -567,6 +518,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	right: 5px;
 	left: 0;
 	border-top: 2px dotted #A0A0A0;
+	display: none;
 }
 .erv-city__label-input{
 	width: 250px;
@@ -1142,10 +1094,6 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 		display: inline-block;
 		text-align: left;
 	}
-	#DiContent .employer-reg-vacansy .erv__header-btn{ 
-		margin: 0 30px;
-		display: inline-block;
-	}
 	.erv__logo{
 		max-width: 180px;
 		float: right;
@@ -1154,9 +1102,6 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	.evl-vacancies__item{ padding: 20px 200px 20px 0 }
 	.erv__quarter-item{ width:50% }
 }
-/*
-*		10-09-2018
-*/
 #add-new-vac{
 	width: 130px;
 	line-height: 27px;
@@ -1177,4 +1122,145 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 }
 #add-new-vac:hover{
 	background-color: rgba(52, 52, 52, 0.5);
+}
+/*
+*		22.01.19
+*/
+.erv__button-block{
+	display: flex;
+	justify-content: space-around;
+	flex-wrap: wrap;
+}
+#DiContent.page-vacedit .erv__button-block-btn{
+	width: 100%;
+	min-width: 200px;
+	margin: 5px 0;
+	padding: 0px 10px;
+	position: relative;
+	text-align: center;
+	border-radius: 12px;
+	background-color: rgba(171,184,32,.5);
+	border-radius: 20px;
+	line-height: 40px;
+	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+	font-size: 16px;  
+}
+#DiContent.page-vacedit .erv__button-block-btn:hover{ background-color:rgba(255,101,0,.5) }
+.erv__button.erv__button-block-btn:before{
+	z-index: 1;
+	-webkit-transform: initial;
+	transform: initial;
+	top: 3px;
+	right: 3px;
+	bottom: 3px;
+	left: 3px;
+}
+.erv__button.erv__button-block-btn:hover:before{ background:#ff921d }
+#DiContent .dark-ver .big-flash{
+	font-size: 16px;
+	font-family: RobotoCondensed-Regular,verdana,arial;
+}
+#DiContent .dark-ver .big-flash i{
+	font-style: italic;
+	display: block;
+	text-align: right;
+	margin-top: 20px;
+}
+.erv__not-publ{
+	display: block;
+	margin: 0 0 15px;
+	color: #ff0000;
+	font-weight: bold;
+	text-transform: uppercase;
+	font-size: 16px;
+	vertical-align: middle;
+	text-align: center;
+}
+.erv-city__label{ display: block; }
+.erv-city__label:before{ top: 26px; }
+.erv-city__label-name{
+	display: block;
+	width: 100%;
+	padding: 0;
+}
+.erv-city__location,
+.erv-city__time{ margin-left: 0; }
+#city-module .prmu-btn{
+	width: 130px;
+	display: inline-block;
+	float: right;
+	cursor: pointer;
+	margin: 5px 0;
+}
+#rv-vac-bdate{
+	padding-top: 10px;
+	display: inline-block;
+}
+#rv-vac-bdate, #rv-vac-edate{ 
+	color: #ff8300;
+	font-weight: bold;
+}
+#DiContent .erv__header-btn{
+	color: #fff;
+}
+#DiContent.page-vacedit .erv__header-btn,
+.evl__to-project-btn.prmu-btn{
+	display: block;
+	line-height: 40px;
+	font-size: 16px;
+	padding: 0 15px;
+	margin: 0 0 15px;
+	text-transform: uppercase;
+	cursor: pointer;
+	border-radius: 20px;
+}
+.prmu-btn:before, .prmu-btn:after{ border-radius: 18px }
+#city-module .prmu-btn{
+	width: 130px;
+	display: inline-block;
+	float: right;
+	cursor: pointer;
+	margin: 5px 0;
+}
+@media (min-width: 768px){
+	.erv__not-publ{
+		display: inline-block;
+		margin: 0;
+		max-width: 160px;
+	}
+	.evl__chat-personal ul{ 
+		display:none;
+		position: absolute;
+	}
+	.erv__button-block{ padding-right:100px }
+	#DiContent.page-vacedit .erv__button-block-btn{ 
+		width:inherit;
+		line-height: 35px;
+		margin: 5px;
+	}
+	#DiContent.page-vacedit .erv__header-btn{ 
+		display: inline-block;
+		margin: 0;
+		line-height: 35px;
+	}
+	.erv-city__label-input{ width: 300px }
+	#DiContent .page-vacedit .erv__header-btn,
+	.evl__to-project-btn.prmu-btn{
+		margin: 0 15px;
+		line-height: 35px;
+		display: inline-block;
+	}
+}
+@media (min-width: 992px){
+	.erv-city__label{ display: table; }
+	.erv-city__label:before{ top: 8px; }
+	.erv-city__label-name{
+		width: calc(100% - 250px);
+		display: table-cell;
+		padding-top: 8px;
+	}
+	.erv-city__location,
+	.erv-city__time{ margin-left: 5px; }
+	.erv-city__label-name:after{ display: block }
+	.erv-city__label-input{ width: 250px }
 }

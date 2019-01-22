@@ -58,9 +58,9 @@
                     </div>
                 </div>
             </div>
-            <span class="erv-city__button erv-city__btn">Сохранить город</span>
+            <span class="prmu-btn erv-city__btn"><span>Сохранить город</span></span>
         </div>
-        <span class="erv-city__button add-loc-btn" style="display: none;">Добавить локацию</span>
+        <span class="prmu-btn add-loc-btn" style="display: none;"><span>Добавить локацию</span></span>
         <div class="clearfix"></div>
     </div>    
 </div>
@@ -92,7 +92,7 @@
         </label>
         <div class="loc-date-block">
             <div class="erv-city__label erv-city__label-ltime">
-                <span class="erv-city__label-name"><span>Дата начала работ:</span></span>
+                <span class="erv-city__label-name"><span>Дата начала работ на проекте:</span></span>
                 <div class="erv-city__label-input city-bdate">
                     <span></span>
                     <div class="city-calendar" data-type="bdate">
@@ -113,7 +113,7 @@
                 </div>
             </div>
             <div class="erv-city__label erv-city__label-ltime">
-                <span class="erv-city__label-name"><span>Дата окончания работ:</span></span>
+                <span class="erv-city__label-name"><span>Дата окончания работ на проекте:</span></span>
                 <div class="erv-city__label-input city-edate">
                     <span></span>
                     <div class="city-calendar" data-type="edate">
@@ -142,9 +142,9 @@
                     <div class="clearfix"></div>
                 </div>
             </div>
-            <span class="erv-city__button erv-loc__btn">Сохранить локацию</span>
+            <span class="prmu-btn erv-loc__btn"><span>Сохранить локацию</span></span>
         </div>
-        <span class="erv-city__button add-per-btn" style="display: none">Добавить период</span>
+        <span class="prmu-btn add-per-btn" style="display: none"><span>Добавить период</span></span>
         <div class="clearfix"></div>
     </div>
 </div>
@@ -158,7 +158,7 @@
         <span class="erv-city__close"></span>
         <div class="erv-city__item-veil"></div>
         <div class="erv-city__label erv-city__label-ltime">
-            <span class="erv-city__label-name"><span>Дата работы:</span></span>
+            <span class="erv-city__label-name"><span>Дата работы на проекте:</span></span>
             <span class="erv-city__label-input city-period">
                 <table></table>
             </span>
@@ -169,7 +169,7 @@
 <div id='add-period-content'>
     <div class="loc-date-block">
         <div class="erv-city__label erv-city__label-ltime">
-            <span class="erv-city__label-name"><span>Дата начала работ:</span></span>
+            <span class="erv-city__label-name"><span>Дата начала работ на проекте:</span></span>
             <div class="erv-city__label-input city-bdate">
                 <span></span>
                 <div class="city-calendar" data-type="bdate">
@@ -190,7 +190,7 @@
             </div>
         </div>
         <div class="erv-city__label erv-city__label-ltime">
-            <span class="erv-city__label-name"><span>Дата окончания работ:</span></span>
+            <span class="erv-city__label-name"><span>Дата окончания работ на проекте:</span></span>
             <div class="erv-city__label-input city-edate">
                 <span></span>
                 <div class="city-calendar" data-type="edate">
@@ -219,8 +219,8 @@
                 <div class="clearfix"></div>
             </div>
         </div>
-        <span class="erv-city__button rst-per-btn">Отменить</span>
-        <span class="erv-city__button save-per-btn">Сохранить период</span>   
+        <span class="prmu-btn rst-per-btn"><span>Отменить</span></span>
+        <span class="prmu-btn save-per-btn"><span>Сохранить период</span></span>   
         <div class="clearfix"></div>
     </div>
 </div>

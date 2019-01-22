@@ -3,7 +3,7 @@
 ?>
 <script type="text/javascript">var arPosts = <?=json_encode($viData['posts']);?></script>
 <input type="hidden" name="block" value="1">
-<div class="erv__subtitle erv__subtitle-who"><h2>Какой специалист нужен и с какими параметрами?</h2></div>
+<div class="erv__subtitle erv__subtitle-who"><h2>2Какой специалист нужен и с какими параметрами?</h2></div>
 <div class="erv__module">
     <label class="erv__label" data-info="Заголовок вакансии * (не более 70 символов)">
         <input type="text" name="vacancy-title" class="erv__input erv__required" placeholder="Заголовок вакансии *" id="rv-vac-title" value="<?=$viData['vac']['title']?>">

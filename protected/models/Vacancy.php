@@ -1245,12 +1245,14 @@ public function rules()
             
             Yii::app()->user->setFlash('Message', array('type' => '-green', 'message' => "<div class='big-flash'>Уважаемый «" . $user->name . "»!<br>Вы только что добавили новую вакансию на сервис Prommu. На данном этапе она еще не опубликована на сервисе. После закрытия этого информационного окна, Вы можете посмотреть добавленную информацию, изменить и дополнить ее с указанием адресов работы и другой необходимой информации. После этого необходимо нажать кнопку «ОПУБЛИКОВАТЬ ВАКАНСИЮ» и после прохождения модерации (в рабочее время до 15 минут) Ваша вакансия будет размещена на сервисе. Просмотреть и отредактировать данную вакансию Вы можете в любой момент времени в личном кабинете - категория «МОИ ВАКАНСИИ». Быстрого и лёгкого поиска Вам персонала<i>С найлучшими пожеланиями команда Промму!</i></div>"));
 
-            $arMail = array(
-                        'email_user' => $user->email,
-                        'company_user' => $user->name,
-                        'id_vacancy' => $idvac
+            Mailing::set(
+                        3,
+                        array(
+                            'email_user' => $user->email,
+                            'company_user' => $user->name,
+                            'id_vacancy' => $idvac
+                        )
                     );
-            Mailing::set(3,$arMail);
         }
         
         return array('idvac' => $idvac);
@@ -1295,66 +1297,43 @@ public function rules()
             
         
 
-            if( $isDeactivate ) $message = 'Вакансия снята с публикации';
-            else {
+            if( $isDeactivate )
+            {
+                $message = 'Вакансия снята с публикации';
+            }
+            else
+            {
+                $user = Share::$UserProfile->exInfo;
                 if( (int)$Q1['ismoder'] == 0 )
                 {
-                    $message = sprintf("Ув. %s. 
-                            <br />
-                            <br />
-                            Ваша вакансия «%s» отправлена на модерацию – и будет опубликована в ближайшее время. Обычно это занимает до 2 часов в рабочее время.
-                            <br />
-                            <br />
-                            Сообщаем Вам что информацию по данным вакансии можете корректировать исходя из возникших ситуаций и задач.
-                            <br />
-                            Ссылка на Вашу вакансию: <a href='https://%3$01s'>%s</a>
-                            <br />
-                            <br />
-                            Преимущества размещения вакансии на сервисе ПРОММУ:
-                            <ol>
-                              <li>Большая база проверенного персонала</li>
-                              <li>Система отзывов и рейтинга персонала</li>
-                              <li>Размещение вакансии происходит с подсказками и с возможностью учесть все мелочи по вакансии (избежание дополнительных утомительных вопросов)</li>
-                              <li>Push оповещения персонала персонала подходящего под указанные параметры в вакансии</li>
-                              <li>Обсуждение вакансии на сервисе онлайн со всеми отобранными соискателями (всех кого отобрали позже – смогут прочесть все ранее написанные сообщения)</li>
-                              <li>Отбирать и Отклонять кандидатов на вакансию в 1 клик</li>
-                              <li>И много других преимуществ, которые Вы ощутите работая на нашем сервисе</li>
-                              <li>Легких, прибыльных и удачных Вам проектов.</li>
-                            </ol>
-                            Если у Вас возникли сложности или есть дополнительные вопросы обращайтесь сюда <a href='mailto:%4$01s'>%s</a> мы максимально быстро дадим ответ",
-                        Share::$UserProfile->exInfo->efio,
-                        $Q1['title'],
-                        MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id,
-                        "https://prommu.com/feedback"
-                    );
-
-                    Share::sendmail(Share::$UserProfile->exInfo->email, "Prommu.com. Публикация вакансии", $message);
+                    // Письмо пользователю 
+                    $user->efio = trim($user->efio);
+                    empty($user->efio) && $user->efio = 'пользователь';
+                    Mailing::set(
+                                4,
+                                array(
+                                    'email_user' => $user->email,
+                                    'name_user' => $user->efio,
+                                    'name_vacancy' => $Q1['title'],
+                                    'id_vacancy' => $id,
+                                )
+                            );
                 } // endif
 
-                $link = 'http://' . MainConfig::$SITE . '/admin/site/VacancyEdit'. DS .$id;
-                // Письмо админу
-                $message = sprintf("Пользователь <a href='%s'>%s</a> отправил вакансию №%s <a href='%s'>%s</a> на модерацию.
-                    <br />
-                    <br />
-                    Перейти на модерацию вакансий <a href='%s'>по ссылке</a>.",
-                    'https://' . MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->id,
-                    Share::$UserProfile->exInfo->name,
-                    $Q1['id'],
-                    'https://' . MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id,
-                    $Q1['title'],
+                // Письмо админу 
+                $user->name = trim($user->name);
+                empty($user->name) && $user->name = 'компания';
+                Mailing::set(
+                            5,
+                            array(
+                                'id_user' => $user->id,
+                                'company_user' => $user->name,
+                                'name_vacancy' => $Q1['title'],
+                                'id_vacancy' => $id,
+                            )
+                        );
 
-                   $link
-                );
-        $email[0] = "denisgresk@gmail.com";
-        $email[1] = "prommu.servis@gmail.com";
-        //$email[2] = "code@code.com";
-        for($i = 0; $i <2; $i++){
-           Share::sendmail($email[$i], "Prommu.com Размещение вакансии №" . $idvac, $message);
-       
-        }
-            
-
-                $message = 'Ваша вакансия отправлена на модерацию – и будет опубликована в ближайшее время. Обычно это занимает до 2 часов в рабочее время.';
+                $message = 'Ваша вакансия отправлена на модерацию – и будет опубликована в ближайшее время. Обычно это занимает до 15 минут в рабочее время.';
             }
 
             $error = 0;

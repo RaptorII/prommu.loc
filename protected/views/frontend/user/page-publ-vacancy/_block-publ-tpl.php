@@ -203,7 +203,7 @@
     ?>
     <div class="fav__label fav__select">
         <span class="fav__hint fav__hint-vacname">Укажите дату начала работы по проекту без привязки к городу</span>
-        <input type="text" name="cibdate" class="fav__input fav__required" placeholder="Дата начала работ *" id="av-cibdate">
+        <input type="text" name="cibdate" class="fav__input fav__required" placeholder="Дата начала работ по проекту*" id="av-cibdate">
         <div class="fav__veil" id="av-cibdate-veil"></div>
         <div class="fav__calendar">
             <div id="av-begin-err">Дата начала не корректна</div>              
@@ -220,7 +220,7 @@
     ?>
     <div class="fav__label fav__select">
         <span class="fav__hint fav__hint-vacname">Укажите дату последнего дня работы по проекту без привязки к городу</span>  
-        <input type="text" name="ciedate" class="fav__input fav__required" placeholder="Дата окончания работ *" id="av-ciedate">
+        <input type="text" name="ciedate" class="fav__input fav__required" placeholder="Дата окончания по проекту*" id="av-ciedate">
         <div class="fav__veil" id="av-ciedate-veil"></div>
         <div class="fav__calendar">
             <div id="av-end-err">Дата окончания не корректна</div>
