@@ -15,8 +15,8 @@ RewriteCond %{REQUEST_URI} ^(.*)content/im(.*)$ [NC]
 RewriteCond %{HTTP_HOST} ^(.*)$
 RewriteRule ^(.*)$ https://%1/imfiles?f=$1 [R,L]
 
-RedirectMatch (/images/.*\.jpg)$ https://prommu.com$1
-RedirectMatch (/images/.*\.png)$ https://prommu.com$1
+#RedirectMatch (/images/.*\.jpg)$ https://prommu.com$1
+#RedirectMatch (/images/.*\.png)$ https://prommu.com$1
 
 #<filesMatch "\.(css|js)$">
 #	Header set Cache-Control "max-age=604800"
