@@ -44,6 +44,13 @@
                                         <?php endif; ?> 
                                     </a>
                                 </div>
+
+                                <div class='company-info-wrapp com-rate' style="text-align:center;">
+                                    <div class="company-info-status">
+                                        <div>Последний вход:</div>
+                                        <div><b><span class="pos" style="color: #abb820;"><?=$val['mdate']?></span></b></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class='col-xs-12 col-sm-8'>
