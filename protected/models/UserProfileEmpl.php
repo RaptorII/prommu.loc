@@ -1372,7 +1372,8 @@ class UserProfileEmpl extends UserProfile
         $sql = "SELECT e.id,
                 e.id_user,
                 e.name,
-                e.logo
+                e.logo,
+                e.mdate
             FROM employer e
             WHERE e.id_user = {$id}";
         $res = Yii::app()->db->createCommand($sql)->queryRow();
