@@ -142,7 +142,8 @@ class UserProfileApplic extends UserProfile
             'lastname' => $val['lastname'],
             'photo' => $val['photo'],
             'email' => $val['email'],
-        ];
+            'mdate' => $val['mdate']
+        ]; 
 
 
         // считываем фото пользователя
@@ -1165,11 +1166,11 @@ class UserProfileApplic extends UserProfile
 
         // считываем характеристики пользователя
         $sql = "SELECT DATE_FORMAT(r.birthday,'%d.%m.%Y') as bday, r.id
-              , r.id_user, r.isman , r.ismed , r.smart,  r.ishasavto , r.aboutme , r.firstname , r.lastname , r.photo
+              , r.id_user,u.mdate, r.isman , r.ismed , r.smart,  r.ishasavto , r.aboutme , r.firstname , r.lastname , r.photo
               , a.val , a.id_attr, u.confirmPhone, u.confirmEmail
               , d.name , d.type , d.id_par idpar , d.key
               , u.email, card, cardPrommu, u.is_online
-              , r.index, r.meta_h1, r.meta_title, r.meta_description, u.mdate
+              , r.index, r.meta_h1, r.meta_title, r.meta_description
             FROM resume r
             LEFT JOIN user u ON u.id_user = r.id_user
             LEFT JOIN user_attribs a ON r.id_user = a.id_us
