@@ -431,7 +431,7 @@ class Promo extends ARModel
           , r.id_user, r.isman , r.ismed , r.smart,  r.ishasavto , r.aboutme , r.firstname , r.lastname , r.photo
           , a.val , a.id_attr
           , d.name , d.type , d.id_par idpar , d.key
-          , u.email, card, cardPrommu
+          , u.email, card, cardPrommu, u.mdate
         FROM resume r
         LEFT JOIN user u ON u.id_user = r.id_user
         LEFT JOIN user_attribs a ON r.id_user = a.id_us
@@ -520,8 +520,8 @@ class Promo extends ARModel
                     r.ishasavto,
                     DATE_FORMAT(r.date_public, '%d.%m.%Y') date_public,
                     DATE_FORMAT(r.birthday, '%d.%m.%Y') birthday,
-                    DATE_FORMAT(r.mdate, '%d.%m.%Y') mdate,
-                    u.is_online")
+                    DATE_FORMAT(r.mdate, '%d.%m.%Y') mdates,
+                    u.is_online, u.mdate")
                 ->from('resume r')
                 ->leftjoin('user u', 'u.id_user=r.id_user')
                 ->where(array('in', 'r.id_user', $inParams['arId']))
