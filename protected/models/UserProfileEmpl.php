@@ -372,7 +372,8 @@ class UserProfileEmpl extends UserProfile
                 e.logo,
                 u.email,
                 u.crdate,
-                u.is_online
+                u.is_online,
+                u.mdate
             FROM employer e
             INNER JOIN user u ON u.id_user = e.id_user
             WHERE e.id_user = {$id}";
