@@ -1,3 +1,34 @@
+<?
+// Share::$UserProfile->exInfo->name
+// Share::$UserProfile->exInfo->email
+/*
+$arrr = array(
+      'email_user' => array(
+                    'name' => "#EMAIL_USER#",
+                    'pattern' => "/#EMAIL_USER#/",
+                    'description' => "Email пользователя сайта"
+                  ),
+      'company_user' => array(
+                    'name' => "#COMPANY_USER#",
+                    'pattern' => "/#COMPANY_USER#/",
+                    'description' => "Название компании пользователя сайта(если нет - 'пользователь')"
+                  ),
+      'id_vacancy' => array(
+                    'name' => "#ID_VACANCY#",
+                    'pattern' => "/#ID_VACANCY#/",
+                    'description' => "ID созданной вакансии"
+                  ),
+      'link_vacancy' => array(
+                    'name' => "#LINK_VACANCY#",
+                    'pattern' => "/#LINK_VACANCY#/",
+                    'value' => '#PAGE_USER_VACANCY#/#ID_VACANCY#',
+                    'breplace' => true,
+                    'description' => "Ссылка на созданную вакансию пользователя"
+                  )
+    );
+
+print_r(serialize($arrr));*/
+?>
 <meta name="robots" content="noindex,nofollow">
 <? 
   Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-prof-emp.css'); 

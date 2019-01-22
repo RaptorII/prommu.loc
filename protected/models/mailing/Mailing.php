@@ -69,6 +69,12 @@ class Mailing extends CActiveRecord
 										'pattern' => "/#PAGE_USER_CHATS_LIST#/",
 										'value' => Subdomain::$HOST . MainConfig::$PAGE_CHATS_LIST,
 										'description' => "Раздел профиля пользователя 'Чаты'"
+									),
+							3 => array(
+										'name' => "#PAGE_USER_VACANCY#",
+										'pattern' => "/#PAGE_USER_VACANCY#/",
+										'value' => Subdomain::$HOST . MainConfig::$PAGE_VACANCY,
+										'description' => "Страница вакансии в публичной части"
 									)
 				);
 	}
