@@ -1432,3 +1432,16 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	.erv__button-block{ padding-right:100px }
 	#DiContent.page-vacancy .erv__button-block-btn{ width:inherit }
 }
+/*
+*		22.01.19
+*/
+#DiContent .dark-ver .big-flash{
+	font-size: 16px;
+	font-family: RobotoCondensed-Regular,verdana,arial;
+}
+#DiContent .dark-ver .big-flash i{
+	font-style: italic;
+	display: block;
+	text-align: right;
+	margin-top: 20px;
+}

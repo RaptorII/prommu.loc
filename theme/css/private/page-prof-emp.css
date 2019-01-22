@@ -456,9 +456,6 @@ a.upp__project-info{ width: 65px }
 	border-radius:50%;
 	background-color:#abb820;
 }
-/*
-*
-*/
 .confirmed-user{
 	max-width: 100px;
 	height: 30px;
@@ -472,9 +469,6 @@ a.upp__project-info{ width: 65px }
 	text-align: left;
 	position: relative;
 }
-/*
-*
-*/
 #DiSiteWrapp #DiContent #MWwrapper .mw-win.dark-ver{ 
 	width: 350px;
 	left: -175px; 
@@ -536,9 +530,6 @@ a.upp__project-info{ width: 65px }
 	padding-left: 0px;
 	list-style: none;
 }
-/*
-*
-*/
 .upp__rating-block{ 
 	position: relative;
 	display: inline-block;
@@ -592,4 +583,21 @@ a.upp__project-info{ width: 65px }
 	min-width: 20px;
 	text-align: center;
 	float: right;
+}
+/*
+*		21.01.18
+*/
+#DiContent.page-company-profile-own .prmu-btn{
+	display: block;
+	font-size: 16px;
+	text-transform: uppercase;
+	margin: 10px 0;
+	line-height: 34px;
+	border-radius: 20px;
+}
+.page-company-profile-own .prmu-btn:after, 
+.page-company-profile-own .prmu-btn:before{ border-radius: 18px; }
+#DiContent.page-company-profile-own .ppe__module .prmu-btn{
+	max-width: 300px;
+	margin: 20px auto 0;
 }

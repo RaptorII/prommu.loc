@@ -113,15 +113,9 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
         <div class="confirmed-user js-g-hashint" title="Личность работодателя является подлинной">ПРОВЕРЕН</div>
       <?php endif; ?>
       <?php if( $flagOwnProfile ): ?>
-        <div class='btn-update btn-orange-sm-wr'>
-          <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>'>Редактировать профиль</a>
-        </div>
-        <div class='btn-update btn-orange-sm-wr' style="margin-top: 10px" >
-          <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_SETTINGS ?>' style="padding:5px 39px">Настройки профиля</a>
-        </div>
-        <div class='btn-update btn-orange-sm-wr' style="margin-top: 10px" >
-          <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_CHATS_LIST ?>' style="padding:5px 39px">Мои сообщения</a>
-        </div>
+        <a class='ppe__logo-btn prmu-btn' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>'><span>Редактировать профиль</span></a>
+        <a class='ppe__logo-btn prmu-btn' href='<?= MainConfig::$PAGE_SETTINGS ?>'><span>Настройки профиля</span></a>
+        <a class='ppe__logo-btn prmu-btn' href='<?= MainConfig::$PAGE_CHATS_LIST ?>'><span>Мои сообщения</span></a>
       <? endif; ?>  
       <?  /*elseif( Share::$UserProfile->id == $data):?>
         <div class='btn-update btn-orange-sm-wr'>
@@ -321,13 +315,11 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
         <? endif;*/ ?>
       </div>
     <?php endif; ?>
-    <?php if( $flagOwnProfile ): ?>
-      <div class='center-box'>
-        <div class='btn-update btn-orange-sm-wr' style="max-width:640px">
-          <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>'>Редактировать профиль</a>
-        </div>
+    <? if( $flagOwnProfile ): ?>
+      <div class="ppe__module">
+        <a class='prmu-btn' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>'><span>Редактировать профиль</span></a>
       </div>
-    <?php endif; ?>
+    <? endif; ?>
   </div>
 </div>
 <?php if(Yii::app()->user->getFlash('Message') ): ?>

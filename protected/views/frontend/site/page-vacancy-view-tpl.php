@@ -1,3 +1,8 @@
+<?
+    Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'dist/magnific-popup-min.css');
+    Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . Share::$cssAsset['modalwindow.css']);
+    Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery.magnific-popup.min.js', CClientScript::POS_END);
+?>
 <?php if ($mess = Yii::app()->user->getFlash('Message')): Yii::app()->user->setFlash('Message', null) ?>
     <script type="text/javascript">var flashMes = "<?=$mess['message']?>"</script>
 <?php endif; ?>
