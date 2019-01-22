@@ -170,7 +170,7 @@ class SiteController extends AppController
                     $data['data']['redirect'] = '';//Subdomain::ajaxFilterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
                     Cache::setData($data);
                 }
-                 //var_dump($data['data']);
+                 var_dump($data['data']);
                 $this->renderPartial(
                     MainConfig::$VIEWS_SEARCH_EMPL_AJAX_BLOCK,
                     $data['data'], 
@@ -203,7 +203,7 @@ class SiteController extends AppController
                 }
                 Cache::setData($data);
             }
-            //var_dump($data['data']);
+            var_dump($data['data']);
             $this->render($this->ViewModel->pageSearchEmpl,
                     $data['data'],
                     array(
