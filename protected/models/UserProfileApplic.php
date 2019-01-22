@@ -110,7 +110,7 @@ class UserProfileApplic extends UserProfile
               , r.id_user, r.isman , r.ismed , r.smart, r.ishasavto , r.aboutme , r.firstname , r.lastname , r.photo
               , a.val , a.id_attr
               , d.name , d.type , d.id_par idpar , d.key
-              , u.email, u.is_online
+              , u.email, u.is_online, u.mdate
             FROM resume r
             LEFT JOIN user u ON u.id_user = r.id_user
             LEFT JOIN user_attribs a ON r.id_user = a.id_us
