@@ -48,8 +48,16 @@
     $birthday = $date1->diff($date2)->y;
     // edu
     $edu = '';
+
+    $userData = [];
     foreach($info['userAttribs'] as $v) {
       if($v['idpar'] == 69) $edu = $v['name'];
+
+      $userData['is_online'] = $v['is_online'];
+
+      if($v['mdate']){
+          $userData['mdate'] = $v['mdate'];
+      }
     }
     // lang
     $arLang = array();
@@ -218,6 +226,22 @@
       <?php endif; ?>
       <div class="clearfix"></div>
     </div>
+
+    <hr/>
+    <div>
+        Статус:
+        <?if($userData['is_online']):?>
+            <b><span class="ppp__content-status-on">Сейчас на сайте</span></b>
+        <?else:?>
+            <b><span class="ppp__content-status-off">Нет на сайте</span></b>
+        <?endif;?>
+
+    </div>
+    <div>
+        Дата последнего посещения:
+        <span><b><?=date_format(date_create($userData['mdate']), 'd.m.Y');?></b></span>
+    </div>
+
   </div>
   <?
   /*

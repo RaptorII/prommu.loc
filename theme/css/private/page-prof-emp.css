@@ -574,6 +574,14 @@ a.upp__project-info{ width: 65px }
 	position: absolute;
 	right: 60px;
 }
+
+.upp__content-status-on{
+	color:#ABB837;
+}
+.upp__content-status-off{
+	color:red;
+}
+
 #DiContent.page-company-profile-own .btn-update a{
 	min-width:215px;
 }

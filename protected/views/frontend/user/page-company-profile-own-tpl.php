@@ -160,6 +160,22 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
         </div>
       <?php endif; ?>       
     </div>
+
+    <hr/>
+    <div>
+        Статус:
+        <?if($viData['userInfo']['is_online']):?>
+            <b><span class="upp__content-status-on">Сейчас на сайте</span></b>
+        <?else:?>
+            <b><span class="upp__content-status-off">Нет на сайте</span></b>
+        <?endif;?>
+
+    </div>
+    <div>
+        Дата последнего посещения:
+        <span><b><?=date_format(date_create($viData['userInfo']['mdate']), 'd.m.Y');?></b></span>
+    </div>
+
   </div>
   <?
   /*

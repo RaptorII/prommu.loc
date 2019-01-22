@@ -984,3 +984,10 @@ a.upp__project-info{ width: 65px }
 	position: absolute;
 	right: 60px;
 }
+
+.ppp__content-status-on{
+	color:#ABB837;
+}
+.ppp__content-status-off{
+	color:red;
+}
