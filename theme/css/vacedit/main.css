@@ -1465,6 +1465,21 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	color: #ff8300;
 	font-weight: bold;
 }
+.erv__services-soc.prmu-btn{ padding: 0; }
+.erv__services-soc.prmu-btn span{
+	font-size: 14px;
+	text-transform: none;
+	padding: 0;
+}
+.erv__services-soc.prmu-btn:before{ background: #ff921d; }
+.erv__services-soc.prmu-btn:after{ background: #abb837; }
+.erv__services-soc.prmu-btn.link:before{ background: #abb837; }
+.erv__services-soc.prmu-btn.link:after{ background: #ff921d; }
+#DiContent .erv__services .erv__services-soc.prmu-btn{ background-color: rgba(255,101,0,.5) }
+#DiContent .erv__services .erv__services-soc.prmu-btn:hover{ background-color: rgba(171,184,32,.5) }
+#DiContent .erv__services .erv__services-soc.prmu-btn.link{ background-color: rgba(171,184,32,.5) }
+#DiContent .erv__services .erv__services-soc.prmu-btn.link:hover{ background-color: rgba(255,101,0,.5) }
+
 @media (min-width: 768px){
 	.erv__not-publ{
 		display: inline-block;

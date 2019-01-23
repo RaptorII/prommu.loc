@@ -201,27 +201,36 @@
                         </div>
                         <div class="erv__services">
                             <?php if ($viData['vac']['ismoder'] == 100): // отображать услуги только для промодерированных вкансий ?>
-                                <?php if (!empty($viData['vac']['vk_link'])): ?>
-                                    <a href="<?= $viData['vac']['vk_link'] ?>" class="erv__services-soc">Вакансия в
-                                        ВК</a>
-                                <?php elseif (substr($viData['vac']['repost'], 0, 1) == '0'): ?>
-                                    <a href="<?= MainConfig::$PAGE_VACTOSOCIAL . "?id={$viData['vac']['id']}&soc=1&page=0" ?>"
-                                       class="erv__services-soc">Опубликовать в ВК</a>
-                                <?php endif; ?>
-                                <?php if (!empty($viData['vac']['fb_link'])): ?>
-                                    <a href="<?= $viData['vac']['fb_link'] ?>" class="erv__services-soc">Вакансия в
-                                        Facebook</a>
-                                <?php elseif (substr($viData['vac']['repost'], 1, 1) == '0'): ?>
-                                    <a href="<?= MainConfig::$PAGE_VACTOSOCIAL . "?id={$viData['vac']['id']}&soc=2&page=0" ?>"
-                                       class="erv__services-soc">Опубликовать в Facebook</a>
-                                <?php endif; ?>
-                                <?php if (!empty($viData['vac']['tl_link'])): ?>
-                                    <a href="<?= $viData['vac']['tl_link'] ?>" class="erv__services-soc">Вакансия в
-                                        Telegram</a>
-                                <?php elseif (substr($viData['vac']['repost'], 2, 1) == '0'): ?>
+                                <? if (!empty($viData['vac']['vk_link'])): ?>
+                                    <a href="<?= $viData['vac']['vk_link'] ?>" class="erv__services-soc prmu-btn link">
+                                        <span>Вакансия в ВК</span>
+                                    </a>
+                                <? elseif (substr($viData['vac']['repost'], 0, 1) == '0'): ?>
+                                    <a href="<?= MainConfig::$PAGE_VACTOSOCIAL . "?id={$viData['vac']['id']}&soc=1&page=0" ?>" 
+                                        class="erv__services-soc prmu-btn">
+                                        <span>Опубликовать в ВК</span>
+                                    </a>
+                                <? endif; ?>
+                                <? if (!empty($viData['vac']['fb_link'])): ?>
+                                    <a href="<?= $viData['vac']['fb_link'] ?>" class="erv__services-soc prmu-btn link">
+                                        <span>Вакансия в Facebook</span>
+                                    </a>
+                                <? elseif (substr($viData['vac']['repost'], 1, 1) == '0'): ?>
+                                    <a href="<?= MainConfig::$PAGE_VACTOSOCIAL . "?id={$viData['vac']['id']}&soc=2&page=0" ?>" 
+                                        class="erv__services-soc prmu-btn">
+                                        <span>Опубликовать в Facebook</span>
+                                    </a>
+                                <? endif; ?>
+                                <? if (!empty($viData['vac']['tl_link'])): ?>
+                                    <a href="<?= $viData['vac']['tl_link'] ?>" class="erv__services-soc prmu-btn link">
+                                        <span>Вакансия в Telegram</span>
+                                    </a>
+                                <? elseif (substr($viData['vac']['repost'], 2, 1) == '0'): ?>
                                     <a href="<?= MainConfig::$PAGE_VACTOSOCIAL . "?id={$viData['vac']['id']}&soc=3&page=0" ?>"
-                                       class="erv__services-soc">Опубликовать в Telegram</a>
-                                <?php endif; ?>
+                                        class="erv__services-soc prmu-btn">
+                                        <span>Опубликовать в Telegram</span>
+                                    </a>
+                                <? endif; ?>
                                 <span>Закажите услугу для вакансии</span>
                                 <?php if (!$viData['vac']['ispremium']): // если вакансия НЕ премиум ?>
                                     <a href="<?= MainConfig::$PAGE_ORDER_SERVICE . "?id={$viData['vac']['id']}&service=premium" ?>"
