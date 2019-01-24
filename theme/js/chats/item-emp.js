@@ -85,8 +85,6 @@
 	            $(".go button").click(function (e) {
                     $(this).prop('disabled', true);
 	                self.sendMessage(e, this); });
-	            if (!G_VARS.isNew)
-	            	self.timerCheckNewMess(true, 5000);
 	            if ($("#Mmessage").length)
 	                self.initEditor();
 	            $("#DiButtonPanel .js-attach-file").click(function (e) { self.onAttachClickFn(e, this); });
@@ -145,6 +143,7 @@
 	                    $("#DiMessagesInner").height($("#DiMessages").outerHeight());
 	                }
 	            });
+	            self.timerCheckNewMess(true, 5000);
 	        })
 	            .always(function () {
 	            //G_VARS.App.hideLoading();
