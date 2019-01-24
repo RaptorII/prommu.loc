@@ -1,4 +1,5 @@
 <?
+    Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . Share::$cssAsset['modalwindow.css']);
     Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'vac-info/style.css');
     Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'vac-info/script.js', CClientScript::POS_END);
     //
@@ -158,9 +159,10 @@
                         }
                         ?>
                     </td>
-                    <td class='table__cell'>
+                    <td class='table__cell control-block'>
                         <? if (!($r == 2 && $s == 3) && !($r == 2 && $s == 4)): ?>
-                            <span class="responses__btn change-btn">Изменить</span>
+                        <span class="control-block-cont"></span>
+                        <span class="responses__btn change-btn hide__button-change">Изменить</span>
                         <? endif; ?>
                         <? if($s>4): // писать только утвержденным ?>
                             <a href="<?= MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $viData['vac']['id'] . DS . $val['idusr'] ?>" class="responses__btn">Написать сообщение</a>

@@ -47,6 +47,25 @@
 	margin: 0 5px 5px 0;
 	font-size: 12px;
 }
+
+.control-block-cont span{
+	display: inline-block;
+	cursor: pointer;
+	padding: 5px;
+	border: 1px solid #000000;
+	border-radius: 5px;
+	margin: 0 5px 5px 0;
+	font-size: 12px;
+}
+
+.control-block-cont{
+	display: inline;
+}
+
+#DiContent .responses-table .hide__button-change.hide__button-change {
+	display: none;
+}
+
 .tabs-block{
 	display: flex;
 	text-align: center;

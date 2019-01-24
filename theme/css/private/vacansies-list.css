@@ -153,7 +153,7 @@
 }
 
 #DiContent .evl__tabs .evl__tabs-link{
-	width: 50%;
+	width: 49%;
 	float: left;
 	text-align: center;
 	color: #cacaca;
@@ -178,6 +178,15 @@
 	-o-transition: all ease-out .3s;
 	transition: all ease-out .3s;
 }
+
+
+.evl__tabs-link, .evl__tabs-link{
+	border-radius:5px;
+}
+.evl__tabs-link{
+	margin-left:2px;
+}
+
 #DiContent .paging-wrapp{ margin-top: 30px; }
 .evl__logo-link-block{ 
 	margin: 20px 0;
@@ -306,7 +315,7 @@
 		padding: 5px;
 		color: #ffffff;
 		background: #abb820;
-		border-radius: 0;
+		border-radius: 5px;
 	}
 	#DiContent .evl__service-btn:hover,
 	#DiContent .evl__to-project-btn:hover{ color: #ffffff; }

@@ -1,9 +1,9 @@
 jQuery(function($){
 	var page = $('.vacs-info').data('page');
 
-	$('.change-btn').click(function(){
+	$('.change-btn').each(function(){
 		var main = $(this).closest('tr')[0],
-			sBlock = $(main).find('.status-block')[0];
+			sBlock = $(main).find('.control-block-cont')[0];
 			s = main.dataset.status,
 			content = '',
 			arRes = [];
@@ -14,10 +14,10 @@ jQuery(function($){
 
 		$.each(arRes, function(){ content += '<span data-st=' + this.s + '>' + this.t + '</span>' });
 		$(sBlock).empty().html(content);
-		$(this).fadeOut();
+		//$('.change-btn').fadeOut();
 	});
 	//
-	$('.status-block').on('click', 'span', function(e){
+	$('.control-block-cont').on('click', 'span', function(e){
 		var main = $(this).closest('tr')[0],
 			s = e.target.dataset.st;
 

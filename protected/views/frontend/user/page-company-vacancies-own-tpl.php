@@ -29,7 +29,7 @@
   <div class="col-xs-12">
     <div class="evl__header">
       <h1 class="evl__header-name"><?=$name?></h1>
-      <a class='evl__header-btn prmu-btn' href='<?= MainConfig::$PAGE_VACPUB ?>'><span>ДОБАВИТЬ ВАКАНСИЮ</span></a>  
+      <a class='evl__header-btn prmu-btn' href='<?= MainConfig::$PAGE_VACPUB ?>'><span>ДОБАВИТЬ ВАКАНСИЮ</span></a>
     </div>
   </div>     
   <div class='col-xs-12 col-sm-4 col-lg-3'>
