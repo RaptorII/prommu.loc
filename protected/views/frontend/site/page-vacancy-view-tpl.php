@@ -1200,8 +1200,12 @@
                             <div class="sv__textblock-title ico1">
                                 <span>Причины, по которым Вы не подходите на данную вакансию</span>
                             </div>
-                            <div class="sv__textblock-text"><?= $viData['response']['error_message'] ?></div>
+                            <div class="sv__textblock-text"><?= $viData['response']['message'] ?></div>
                         </div>
+
+                        <?/*<div class="btn-response btn-orange-fix-wr">
+                            <a class="hvr-sweep-to-right" href="#">Откликнуться на вакансию</a>
+                        </div>*/?>
                     <? endif; ?>
 
                 <?php endif; ?>
@@ -1220,7 +1224,7 @@
                     </div>
                 <?php endif; */ ?>
 
-                <div class="resp-message"><?= $viData['response']['message'] ?></div>
+
             </div>
         </div>
     <?php endif; ?>
