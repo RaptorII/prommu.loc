@@ -55,11 +55,11 @@ class ResponsesEmpl extends Responses
                 $content = file_get_contents(Yii::app()->basePath . "/views/mails/app/emp-failure.html");
                 $content = str_replace('#APPNAME#', $vacData['firstname'].' '.$vacData['lastname'], $content);
                 $content = str_replace('#EMPCOMPANY#',  Share::$UserProfile->exInfo->name, $content);
-                $content = str_replace('#EMPLINK#',  MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
-                $content = str_replace('#VACID#', $vacData['id'], $content);
+                $content = str_replace('#EMPLINK#',  Subdomain::$HOST . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
+                $content = str_replace('#VACSEARCH#', Subdomain::$HOST . MainConfig::$PAGE_SEARCH_VAC, $content);
                 $content = str_replace('#VACNAME#', $vacData['title'], $content);
-                $content = str_replace('#VACLINK#', MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $vacData['id'], $content);
-                $content = str_replace('#RESPLINK#',MainConfig::$SITE . MainConfig::$PAGE_RESPONSES, $content);
+                $content = str_replace('#VACLINK#', Subdomain::$HOST . MainConfig::$PAGE_VACANCY . DS . $vacData['id'], $content);
+                $content = str_replace('#RESPLINK#',Subdomain::$HOST . MainConfig::$PAGE_RESPONSES, $content);
                         
                 Share::sendmail($vacData['email'], "Prommu: Отклонение заявки", $content);
             }

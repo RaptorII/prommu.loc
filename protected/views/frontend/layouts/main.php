@@ -48,24 +48,31 @@
 					$controller = Yii::app()->controller->route;
 					$action =  substr($controller, strpos($controller, '/'));
 					$action=='/index' && $action = '/';
+					$script = Yii::app()->getClientScript();
         	$arOptimizPages = array(DS, MainConfig::$PAGE_WORK_FOR_STUDENTS, MainConfig::$PAGE_SEARCH_EMPL, MainConfig::$PAGE_VACANCY, MainConfig::$PAGE_SEARCH_PROMO, DS.MainConfig::$PAGE_SERVICES);
         		// array with optimization
-            Yii::app()->getClientScript()->registerScriptFile($baseUrl . '/theme/js/dist/libs.js', CClientScript::POS_HEAD);
-            Yii::app()->getClientScript()->registerScriptFile($baseUrl . '/jslib/sourcebuster.min.js', in_array($action, $arOptimizPages) 
+            $script->registerScriptFile($baseUrl . '/theme/js/dist/libs.js', CClientScript::POS_HEAD);
+            $script->registerScriptFile($baseUrl . '/jslib/sourcebuster.min.js', in_array($action, $arOptimizPages) 
             	? CClientScript::POS_END 
             	: CClientScript::POS_HEAD);
-            Yii::app()->getClientScript()->registerScriptFile($baseUrl . '/theme/js/dev/index.min.js', in_array($action, $arOptimizPages) 
+            $script->registerScriptFile($baseUrl . '/theme/js/dev/index.min.js', in_array($action, $arOptimizPages) 
             	? CClientScript::POS_END 
             	: CClientScript::POS_BEGIN);
 
+					// FANCYBOX
+					$script->registerScriptFile(MainConfig::$JS . 'dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
+					$script->registerCssFile(MainConfig::$JS . 'dist/fancybox/jquery.fancybox.css');
+
+
+
             if(!in_array($action, $arOptimizPages)){
-                Yii::app()->getClientScript()->registerCssFile($baseUrl.'/jslib/bootstrap-datepicker/css/bootstrap-datepicker.min.css');
-                Yii::app()->getClientScript()->registerCssFile($baseUrl . '/' . MainConfig::$PATH_CSS . '/' . Share::$cssAsset['modalwindow.css']);
-                Yii::app()->getClientScript()->registerCssFile($baseUrl.'/theme/css/main-page.css');
-                Yii::app()->getClientScript()->registerScriptFile($baseUrl . '/theme/js/dist/jquery.maskedinput.min.js', CClientScript::POS_HEAD);
+                $script->registerCssFile($baseUrl.'/jslib/bootstrap-datepicker/css/bootstrap-datepicker.min.css');
+                $script->registerCssFile($baseUrl . '/' . MainConfig::$PATH_CSS . '/' . Share::$cssAsset['modalwindow.css']);
+                $script->registerCssFile($baseUrl.'/theme/css/main-page.css');
+                $script->registerScriptFile($baseUrl . '/theme/js/dist/jquery.maskedinput.min.js', CClientScript::POS_HEAD);
             }
 
-            //Yii::app()->getClientScript()->registerScriptFile($baseUrl . '/theme/js/counters.min.js', CClientScript::POS_END);
+            //$script->registerScriptFile($baseUrl . '/theme/js/counters.min.js', CClientScript::POS_END);
 
             if( ($action = $this->action->getId()) == 'profile' && Share::$UserProfile->type == 3 )
 
