@@ -140,6 +140,7 @@
       <?php else: ?>
         <img src="<?= $this->ViewModel->getHtmlLogoPromo($attr['photo'], ViewModel::$LOGO_TYPE_APPLIC, ViewModel::$LOGO_SIZE_400, $attr['isman']) ?>" alt="" class="ppp-logo-main__img">
       <?php endif; ?>
+
       <?php if(!$flagOwnProfile && $attr['is_online']): ?>
         <span class="ppp-logo__item-onl"><span>В сети</span>
       <?php endif; ?>
@@ -147,6 +148,45 @@
         <a href="<?=MainConfig::$PAGE_EDIT_PROFILE . '?ep=1'?>" class="ppp-logo-main__change">Изменить аватар</a>
       <?endif;?>        
     </div>
+
+        <?/*<div>
+            Статус:
+            <?if($userData['is_online']):?>
+                <b><span class="ppp__content-status-on">Сейчас на сайте</span></b>
+            <?else:?>
+                <b><span class="ppp__content-status-off">Нет на сайте</span></b>
+            <?endif;?>
+
+        </div>
+        <div>
+            Был на сервисе:
+            <span><i></i><?=date_format(date_create($userData['mdate']), 'd.m.Y');?></span>
+        </div>*/?>
+
+        <div style="text-align: center;margin-top: 10px;margin-bottom: 10px;">
+            <?if($userData['is_online']):?>
+                <span style="color:#abb820"><i style="
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                background: #abb820;
+                border-radius: 50%;
+                margin-right: 8px;
+            "></i>В сети</span>
+            <?else:?>
+
+            <span style="color:#D6D6D6"><i style="
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                background: #D6D6D6;
+                border-radius: 50%;
+                margin-right: 8px;
+            "></i>Был на сервисе: <?=date_format(date_create($userData['mdate']), 'd.m.Y');?></span>
+            <?endif;?>
+        </div>
+
+
     <?php if(!$flagOwnProfile): ?>
       <div class="ppp__logo-rating">
         <ul class="ppp__star-block">
@@ -227,20 +267,6 @@
       <div class="clearfix"></div>
     </div>
 
-    <hr/>
-    <div>
-        Статус:
-        <?if($userData['is_online']):?>
-            <b><span class="ppp__content-status-on">Сейчас на сайте</span></b>
-        <?else:?>
-            <b><span class="ppp__content-status-off">Нет на сайте</span></b>
-        <?endif;?>
-
-    </div>
-    <div>
-        Дата последнего посещения:
-        <span><b><?=date_format(date_create($userData['mdate']), 'd.m.Y');?></b></span>
-    </div>
 
   </div>
   <?

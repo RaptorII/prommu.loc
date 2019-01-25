@@ -139,6 +139,35 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
       <?php endforeach; ?>
       <div class="clearfix"></div> 
     </div>
+
+    <div style="text-align: center;margin-top: 10px;margin-bottom: 10px;">
+            <?if($viData['userInfo']['is_online']):?>
+                 <span style="color:#abb820"><i style="
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                background: #abb820;
+                border-radius: 50%;
+                margin-right: 8px;
+            "></i>В сети</span>
+            <?else:?>
+
+            <span style="color:#D6D6D6"><i style="
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                background: #D6D6D6;
+                border-radius: 50%;
+                margin-right: 8px;
+            "></i>Был на сервисе: <?=date_format(date_create($viData['userInfo']['mdate']), 'd.m.Y');?></span>
+            <?endif;?>
+        </div>
+
+
+
+
+
+
     <div class='center-box'>
       <?php if(!$flagOwnProfile && ($viData['userAllInfo']['emplInfo']['confirmEmail'] || $viData['userAllInfo']['emplInfo']['confirmPhone'])): ?>
         <div class="confirmed-user js-g-hashint" title="Личность работодателя является подлинной">ПРОВЕРЕН</div>
@@ -159,21 +188,6 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
           <h3 class='unpubl'>Сообщения можно писать только, при одобрении работодателем на опубликованной им вакансии</h3>
         </div>
       <?php endif; ?>       
-    </div>
-
-    <hr/>
-    <div>
-        Статус:
-        <?if($viData['userInfo']['is_online']):?>
-            <b><span class="upp__content-status-on">Сейчас на сайте</span></b>
-        <?else:?>
-            <b><span class="upp__content-status-off">Нет на сайте</span></b>
-        <?endif;?>
-
-    </div>
-    <div>
-        Дата последнего посещения:
-        <span><b><?=date_format(date_create($viData['userInfo']['mdate']), 'd.m.Y');?></b></span>
     </div>
 
   </div>

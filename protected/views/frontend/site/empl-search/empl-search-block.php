@@ -32,16 +32,31 @@
 
                     </div>
 
-                    <div class='company-info-wrapp com-rate' style="text-align:center;">
-                        <div class="company-info-status">
-                            <div>Последний вход:</div>
-                            <div><span class="pos"><?=$val['mdate']?></span></div>
-                        </div>
-                        <div class="company-info-start">
-                            <div>На сервисе с </div>
-                            <div><span class="pos"><?=$val['crdate']?></span></div>
-                        </div>
+
+                    <div style="text-align: center;margin-top: 10px;margin-bottom: 10px;">
+                        <? if ($val['is_online']): ?>
+                            <span style="color:#abb820"><i style="
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                background: #abb820;
+                border-radius: 50%;
+                margin-right: 8px;
+            "></i>В сети</span>
+                        <? else: ?>
+
+                            <span style="color:#D6D6D6"><i style="
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                background: #D6D6D6;
+                border-radius: 50%;
+                margin-right: 8px;
+            "></i>Был на сервисе: <?= date_format(date_create($val['mdate']), 'd.m.Y'); ?></span>
+                        <? endif; ?>
                     </div>
+
+
                 </div>
                 <div class='col-xs-12 col-sm-9 col-lg-10'>
                     <div class='title-block'>
