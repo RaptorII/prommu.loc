@@ -534,7 +534,7 @@ class SiteController extends AppController
                         Yii::app()->request->cookies['srch_v_res'] = new CHttpCookie('srch_v_res', 0);
                     }
                     $data['data']['pages'] = new CPagination($data['data']['count']);
-                    $data['data']['pages']->pageSize = 24;
+                    $data['data']['pages']->pageSize = 12;
                     $data['data']['pages']->applyLimit($SearchVac);
                     $data['data']['viData'] = $SearchVac->getVacations();
                     $data['data']['redirect'] = '';//Subdomain::ajaxFilterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
@@ -585,7 +585,7 @@ class SiteController extends AppController
                         $h1 = $data['data']['seo']['seo_h1'];
                     }
                     $data['data']['pages'] = new CPagination($data['data']['count']);
-                    $data['data']['pages']->pageSize = 24;
+                    $data['data']['pages']->pageSize = 12;
                     $data['data']['pages']->applyLimit($SearchVac);
                     $data['data']['viData'] = $SearchVac->getVacations();
                     Cache::setData($data);
