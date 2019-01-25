@@ -58,6 +58,7 @@ class Promo extends ARModel
         $dateEnds = 0;
         $dateStarts = 0;
         $dateTomorrow = 0;
+        $result['cnt'] = 0;
          $sql = "SELECT DISTINCT e.id, e.title, e.status vstatus, e.remdate, e.crdate
               , DATE_FORMAT(e.crdate, '%d.%m.%Y') bdate
               , r.id_user idusr, r.firstname, r.lastname, r.photo, r.isman
@@ -77,18 +78,22 @@ class Promo extends ARModel
             if($res[$i]['isresponse'] == 2 && $res[$i]['status'] == 4){
                 $result['vacancyResponse'] = $res[$i]['id']."&";
                 $countResponse++;
+                $result['cnt']++;
             }
             if( $res[$i]['status'] == 5 || $res[$i]['status'] == 6 ){
                 $result['vacancyPlus'] = $res[$i]['id']."&";
                 $countPlus++;
+                $result['cnt']++;
             }
             if( $res[$i]['status'] == 3){
                 $result['vacancyMinus'] = $res[$i]['id']."&";
                 $countMinus++;
+                $result['cnt']++;
             }
             if($res[$i]['crdate'] == date("m.d.Y")){
                 $result['vacancyStart'] = $res[$i]['id']."&";
                 $dateStart++;
+                $result['cnt']++;
             }
            
         }
@@ -128,10 +133,12 @@ class Promo extends ARModel
                 if(explode(" ", $rest[$i]['bdate'])[0] ==  $dateTomor){
                     $result['vacancyTomorrow'] = $rest[$i]['id']."&";
                     $dateTomorrow++;
+                    $result['cnt']++;
                 }
                  if(explode(" ", $rest[$i]['bdate'])[0] ==  $dateEnd){
                     $result['vacancyStart'] = $res[$i]['id']."&";
                     $dateStarts++;
+                    $result['cnt']++;
                 }
                  if(explode(" ", $rest[$i]['edate'])[0] ==  $dateEnd){
                      $result['vacancyEnd'] = $res[$i]['id']."&";
@@ -140,9 +147,6 @@ class Promo extends ARModel
             }
        
         }
-
-        
-        
          
         $result['countInvite'] = $countInvite;
         $result['countResponse'] = $countResponse;

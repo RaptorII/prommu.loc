@@ -54,43 +54,62 @@ class Employer extends ARModel
         $countMinus = 0;
         $dateEnds = 0;
         $dateStarts = 0;
-         $sql = "SELECT DISTINCT e.id, e.title, e.status vstatus
-              , r.id_user idusr, r.firstname, r.lastname, r.photo, r.isman
-              , s.id sid, s.status, s.isresponse, DATE_FORMAT(s.date, '%d.%m.%Y') rdate
-            FROM empl_vacations e
-            INNER JOIN vacation_stat s ON e.id = s.id_vac AND s.isresponse IN(1,2) 
-            INNER JOIN resume r ON s.id_promo = r.id
-            WHERE e.id_user = {$id} AND s.id_jobs = 0
-            ORDER BY s.id DESC";
+        $result['cnt'] = 0;
+         $sql = "SELECT e.id, e.title, s.status, s.isresponse
+                    FROM empl_vacations e
+                    INNER JOIN vacation_stat s ON e.id = s.id_vac 
+                        AND s.isresponse IN(1,2) 
+                    WHERE e.id_user = {$id}
+                    ORDER BY s.id DESC";
         /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);
         $res = $res->queryAll();
 
-
         $countVacStat = count($res);
         
-        for($i = 0; $i < $countVacStat; $i++){
-
-            if($res[$i]['isresponse'] == 1 && $res[$i]['status'] == 0){
-                $result['vacancyInvite'] = $res[$i]['id']."&";
+        for($i = 0; $i < $countVacStat; $i++)
+        {
+            if($res[$i]['isresponse'] == 1 && $res[$i]['status'] == 0)
+            {
+                $result['vacancyInvite'][$res[$i]['id']]['name'] = $res[$i]['title'];
+                if(!isset($result['vacancyInvite'][$res[$i]['id']]['cnt']))
+                    $result['vacancyInvite'][$res[$i]['id']]['cnt']==0;
+                $result['vacancyInvite'][$res[$i]['id']]['cnt']++;
+                $result['vacancyInvite'][$res[$i]['id']]['link'] = 
+                    MainConfig::$PAGE_VACANCY . DS . $res[$i]['id'] . '?info=resp';
                 $countInvite++;
-             
+                $result['cnt']++;
             }
-            if($res[$i]['isresponse'] == 2 && $res[$i]['status'] == 0){
+            // в main не используется
+            /*if($res[$i]['isresponse'] == 2 && $res[$i]['status'] == 0)
+            {
                 $result['vacancyResponse'] = $res[$i]['id']."&";
                 $countResponse++;
-            }
-            if( $res[$i]['status'] == 5){
-                $result['vacancyPlus'] = $res[$i]['id']."&";
+            }*/
+            if( $res[$i]['status'] == 5)
+            {
+                $result['vacancyPlus'][$res[$i]['id']]['name'] = $res[$i]['title'];
+                if(!isset($result['vacancyPlus'][$res[$i]['id']]['cnt']))
+                    $result['vacancyPlus'][$res[$i]['id']]['cnt']==0;
+                $result['vacancyPlus'][$res[$i]['id']]['cnt']++;
+                $result['vacancyPlus'][$res[$i]['id']]['link'] = 
+                    MainConfig::$PAGE_VACANCY . DS . $res[$i]['id'] . '?info=approv';
                 $countPlus++;
+                $result['cnt']++;
             }
-            if( $res[$i]['status'] == 3){
-               $result['vacancyMinus'] = $res[$i]['id']."&";
+            if( $res[$i]['status'] == 3)
+            {
+                $result['vacancyMinus'][$res[$i]['id']]['name'] = $res[$i]['title'];
+                if(!isset($result['vacancyMinus'][$res[$i]['id']]['cnt']))
+                    $result['vacancyMinus'][$res[$i]['id']]['cnt']==0;
+                $result['vacancyMinus'][$res[$i]['id']]['cnt']++;
+                $result['vacancyMinus'][$res[$i]['id']]['link'] = 
+                    MainConfig::$PAGE_VACANCY . DS . $res[$i]['id'] . '?info=reject';
                 $countMinus++;
+                $result['cnt']++;
             }
         }
-        
-     
+
         $date = new DateTime('-50 days');
         $dateStart = $date->format('Y-m-d');
         $dateEnd =  date('Y-m-d');
@@ -112,20 +131,41 @@ class Employer extends ARModel
             $rest = Yii::app()->db->createCommand($sql);
             $rest = $rest->queryAll();;
 
-        for($i = 0; $i < count($rest); $i++){
-            if(explode(" ", $rest[$i]['bdate'])[0] ==  $dateTomor ||explode(" ", $rest[$i]['bdate'])[0] == $dateEnd ){
-                $result['vacancyStart'] = $rest[$i]['id']."&";
+        for($i = 0; $i < count($rest); $i++)
+        {
+            if(explode(" ", $rest[$i]['bdate'])[0] ==  $dateTomor ||explode(" ", $rest[$i]['bdate'])[0] == $dateEnd )
+            {
+                $result['vacancyStart'][$res[$i]['id']]['name'] = $res[$i]['title'];
+                if(!isset($result['vacancyStart'][$res[$i]['id']]['cnt']))
+                    $result['vacancyStart'][$res[$i]['id']]['cnt']==0;
+                $result['vacancyStart'][$res[$i]['id']]['cnt']++;
+                $result['vacancyStart'][$res[$i]['id']]['link'] = 
+                    MainConfig::$PAGE_VACANCY . DS . $res[$i]['id'];
                 $dateStarts++;
+                $result['cnt']++;
             }
-             if(explode(" ", $rest[$i]['bdate'])[0] ==  $dateEnd){
-                $result['vacancyStart'] = $rest[$i]['id']."&";
+            if(explode(" ", $rest[$i]['bdate'])[0] ==  $dateEnd)
+            {
+                $result['vacancyStart'][$res[$i]['id']]['name'] = $res[$i]['title'];
+                if(!isset($result['vacancyStart'][$res[$i]['id']]['cnt']))
+                    $result['vacancyStart'][$res[$i]['id']]['cnt']==0;
+                $result['vacancyStart'][$res[$i]['id']]['cnt']++;
+                $result['vacancyStart'][$res[$i]['id']]['link'] = 
+                    MainConfig::$PAGE_VACANCY . DS . $res[$i]['id'];
                 $dateStarts++;
+                $result['cnt']++;
             }
-             if(explode(" ", $rest[$i]['edate'])[0] ==  $dateEnd){
-                  $result['vacancyEnd'] = $rest[$i]['id']."&";
-                 $dateEnds++;
+            if(explode(" ", $rest[$i]['edate'])[0] ==  $dateEnd)
+            {
+                $result['vacancyEnd'][$res[$i]['id']]['name'] = $res[$i]['title'];
+                if(!isset($result['vacancyEnd'][$res[$i]['id']]['cnt']))
+                    $result['vacancyEnd'][$res[$i]['id']]['cnt']==0;
+                $result['vacancyEnd'][$res[$i]['id']]['cnt']++;
+                $result['vacancyEnd'][$res[$i]['id']]['link'] = 
+                    MainConfig::$PAGE_VACANCY . DS . $res[$i]['id'];
+                $dateEnds++;
+                $result['cnt']++;
             }
-       
         }
     
         $result['countInvite'] = $countInvite;
@@ -134,8 +174,8 @@ class Employer extends ARModel
         $result['countMinus'] = $countMinus;
         $result['dateEnd'] = $dateEnds;
         $result['dateStart'] = $dateStarts;
-        return $result;
 
+        return $result;
     }
 
     public function employers()
