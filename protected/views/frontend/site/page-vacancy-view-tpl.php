@@ -963,6 +963,11 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                     <span class="sv__data-pubdate-item">Дата начала работы:<b><?= $begWorkDate ?></b></span><br>
                     <span class="sv__data-pubdate-item">Дата завершения работы:<b><?= $viData['vac']['remdate'] ?></b></span>
                 </div>
+
+                <? if(Share::isApplicant()): ?>
+                    <div class="prmu-btn sv__data-responce" data-id="<?=$vacancy['id']?>"><span>ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ</span></div>
+                <? endif; ?>
+
                 <span class="sv__data-subtitle"><h3>КТО НУЖЕН и с какими параметрами</h3></span>
                 <div class="sv__attributes">
                     <?php if ($vacancy['isman'] || $vacancy['iswoman']): ?>
@@ -1216,12 +1221,12 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                 <?php endif; ?>
                 <?php if ($viData['response']['response'] > 0 && $ismoder != 0): ?>
                     <div class='btn-response btn-orange-fix-wr'>
-                        <a class='hvr-sweep-to-right' href='#'>Откликнуться на вакансию</a>
+                        <a class='hvr-sweep-to-right' href='javascript:void(0);'>Откликнуться на вакансию</a>
                     </div>
 
                 <?php else: ?>
 
-                    <? if (!Share::$UserProfile->type < 2): ?>
+                    <? if (!Share::isEmployer()): ?>
                         <? /*<div class="sv__textblock vac__error">
                             <div class="sv__textblock-title ico1">
                                 <span>Причины, по которым Вы не подходите на данную вакансию</span>
@@ -1235,12 +1240,12 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                         <? if ($ismoder == 1): ?>
 
                             <? if ($viData['response']['message'] == 'Вы уже подали заявку на данную вакансию'): ?>
-                                <div class="vac__popup">
+                                <div class="prmu__popup">
                                     <p><?= $viData['response']['message'] ?></p>
                                     <p>Чтобы откликнуться на другие вакансии - <a href="/vacancy ">жмите сюда</a></p>
                                 </div>
                             <? else: ?>
-                                <div class="vac__popup">
+                                <div class="prmu__popup">
                                     <p>Нам очень жаль, но Ваша анкета не подходит под указанные параметры
                                         Работодателя:</p>
                                     <p><?= $viData['response']['message'] ?></p>
@@ -1249,7 +1254,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                                 </div>
                             <? endif; ?>
                         <? else: ?>
-                            <div class="vac__popup">
+                            <div class="prmu__popup">
                                 <p>Нам очень жаль, но Ваша анкета еще не прошла модерацию :(</p>
                                 <p>Как только модератор пропустит Вашу анкету - Вы получите оповещение в Личном
                                     кабинете, а
@@ -1261,7 +1266,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
 
                 <?php endif; ?>
 
-                <?php if (Share::$UserProfile->type < 2/*Share::$UserProfile->type==2 &&  $ismoder!=1*/): ?>
+                <?php if (!Share::isEmployer() && !Share::isApplicant()): ?>
                     <div class='btn-register btn-orange-fix-wr'>
                         <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_REGISTER ?>?p=1' title="">Откликнуться
                             на вакансию</a>

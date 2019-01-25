@@ -571,38 +571,12 @@
 		padding-left: 0;
 	}
 }
-
-
-
-/********************************/
- .vac__popup {
-	 border-radius:10px;
-	 display: none;
-	 width: 100%;
-	 max-width: 350px;
-	 font-size: 18px;
-	 text-align: center!important;
-	 background: #5aad17;
-	 background: -moz-linear-gradient(-45deg, #5aad17 0%, #0f4801 100%);
-	 background: -webkit-linear-gradient(-45deg, #5aad17 0%, #0f4801 100%);
-	 background: linear-gradient(135deg, #5aad17 0%, #0f4801 100%);
-	 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#5aad17', endColorstr='#0f4801', GradientType=1);
-	 padding: 40px;
-	 border: none;
-	 font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-	 color: #FFFFFF;
- }
-
-.vac__popup p {
-	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-}
-
-.vac__popup a {
-	color: white;
-	text-decoration: underline;
-}
-
+/*
+*
+*/
 .btn-response-popup .hvr-sweep-to-right {
 	outline: none;
 }
-/********************************/
+.sv__data-main,
+.sv__data-responce{ margin-bottom: 15px; }
+.sv__data-responce{ cursor: pointer; }
