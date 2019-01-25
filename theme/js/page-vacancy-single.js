@@ -125,4 +125,13 @@ $(function(){
 		}
 		return res;
 	}
+
+
+    $('.btn-response-popup').click(function () {
+        $.fancybox.open({
+            src: "div.vac__popup",
+            type: 'inline',
+            touch: false
+        });
+    });
 });
