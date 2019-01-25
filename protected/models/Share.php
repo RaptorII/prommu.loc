@@ -581,8 +581,8 @@ class Share
 
         if( isset($addParams['From']) ) $from = $addParams['From'];
         else $from = array('auto-mailer@prommu.com' => 'Prommu.com');
-//file_put_contents('user_log.txt', print_r($inMess, true), FILE_APPEND | LOCK_EX);
-        $SM = Yii::app()->swiftMailer;
+file_put_contents('_sendmail.txt', print_r($inMess, true), FILE_APPEND | LOCK_EX);
+        /*$SM = Yii::app()->swiftMailer;
 
         // Get config
         $mailHost = 'mail.companyreport.net';
@@ -610,7 +610,7 @@ class Share
         if( isset($addParams['Bcc']) ) $Message->setBcc($addParams['Bcc']);
 
         // Send mail
-        return $Mailer->send($Message);
+        return $Mailer->send($Message);*/
     }
 
 
@@ -702,7 +702,7 @@ class Share
     {
         $arRes = array();
         $arr = array_unique($arr);
-        if(!count($arr))
+        if(!count($arr) || !array_filter($arr))
             return $arRes;
 
         $sql = Yii::app()->db->createCommand()
@@ -807,5 +807,19 @@ class Share
                     ->createMultipleInsertCommand($table, $arInsert)
                     ->execute();
             }
+    }
+    /**
+     * @return bool
+     */
+    public static function isApplicant()
+    {
+        return  self::$UserProfile->type==2 ? true : false;  
+    }
+    /**
+     * @return bool
+     */
+    public static function isEmployer()
+    {
+        return  self::$UserProfile->type==3 ? true : false;  
     }
 }

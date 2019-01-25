@@ -83,7 +83,12 @@
                                 <div class="psv-list__param-val"><?=$vac['remdate']?></div>
                             </div>                                    
                         </div>
-                        <a href='/vacancy/<?= $vac['id'] ?>' class="psv-list__link">Подробнее</a>
+                        <div class="psv-list__content-btns">
+                            <a href="<?=MainConfig::$PAGE_VACANCY . DS . $vac['id']?>" class="psv-list__link">Подробнее</a>
+                            <? if(Share::isApplicant()): ?>
+                                <a href="javascript:void(0)" class="psv-list__link psv-list__responce-btn" data-id="<?=$vac['id']?>">ОТКЛИКНУТЬСЯ</a>
+                            <? endif; ?>
+                        </div>
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -163,7 +168,8 @@
                             <div class="clearfix"></div>
                         </div>
                         <div class="clearfix"></div>
-                        <a href='/vacancy/<?= $vac['id'] ?>' class="psv-table__link">Подробнее</a>
+                        <a href="<?=MainConfig::$PAGE_VACANCY . DS . $vac['id']?>" class="psv-table__link">Подробнее</a>
+                        <a href="javascript:void(0)" class="psv-table__link psv-list__responce-btn" data-id="<?=$vac['id']?>">ОТКЛИКНУТЬСЯ</a>
                     </div>                            
                 </div>
                 <?php if( $cnt % 2 == 0 ): ?>
@@ -246,7 +252,8 @@
                             <div class="clearfix"></div>
                         </div>
                         <div class="clearfix"></div>
-                        <a href='/vacancy/<?= $vac['id'] ?>' class="psv-table__link">Подробнее</a>
+                        <a href="<?=MainConfig::$PAGE_VACANCY . DS . $vac['id']?>" class="psv-table__link">Подробнее</a>
+                        <a href="javascript:void(0)" class="psv-table__link psv-list__responce-btn" data-id="<?=$vac['id']?>">ОТКЛИКНУТЬСЯ</a>
                     </div>                            
                 </div>
                 <?php if( $cnt % 2 == 0 ): ?>

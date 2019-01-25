@@ -129,9 +129,29 @@ $(function(){
 
     $('.btn-response-popup').click(function () {
         $.fancybox.open({
-            src: "div.vac__popup",
+            src: "div.prmu__popup",
             type: 'inline',
             touch: false
         });
     });
+
+ $(document).on("click",".sv__data-responce", function(t) {
+    $.get(
+    	MainConfig.AJAX_POST_SETVACATIONRESPONSE, 
+    	{id: this.dataset.id}, 
+    	function(t) {
+        t = JSON.parse(t);
+        if(typeof t.message !=undefined)
+        {
+        	$('body').append('<div class="prmu__popup"><p>'+t.message+'</p></div>'),
+          $.fancybox.open({
+              src: "body>div.prmu__popup",
+              type: 'inline',
+              touch: false,
+              afterClose: function(){ $('body>div.prmu__popup').remove() }
+          })
+        }
+    	}
+    )
+ })
 });
