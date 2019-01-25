@@ -65,7 +65,12 @@ class ResponsesEmpl extends Responses
             }
         
            
-            if(!($vacData['status'] == 4) && $status == 4 ) {
+            if(
+                ( !($vacData['status'] == 4) && $status == 4 )
+                ||
+                ( !($vacData['status'] == 5) && $status == 5 )
+            ) 
+            {
                 $this->approveVacAfterAction($vacData);
 
             $idPromo = $vacData['promo'];
