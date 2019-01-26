@@ -2054,6 +2054,7 @@ WHERE id_vac = {$inVacId}";
     {
         $filter = $inParams['filter'];
         $limit = (int)$inParams['limit'] > 0 ? "LIMIT {$inParams['offset']}, {$inParams['limit']}" : '';
+       // var_dump($limit);
         $sql = "SELECT e.id, e.ispremium, e.title, e.requirements, e.duties, e.conditions, e.istemp,
                    DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
                    e.shour,
@@ -2077,7 +2078,7 @@ WHERE id_vac = {$inVacId}";
               INNER JOIN user u ON e.id_user = u.id_user 
               INNER JOIN empl_attribs ea ON ea.id_vac = e.id
               {$filter['table']}
-              {$filter['filter']}  AND e.status = 1 AND e.ismoder = 100 
+              {$filter['filter']}  AND e.status = 1 AND e.ismoder = 100 AND e.remdate >= now()
               ORDER BY e.ispremium DESC, e.id DESC 
               {$limit}  
             ) t1 ON t1.id = e.id
@@ -2087,8 +2088,6 @@ WHERE id_vac = {$inVacId}";
             JOIN empl_attribs ea ON ea.id_vac = e.id
             JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
             JOIN employer em ON em.id_user = e.id_user
-            -- WHERE e.status = 1
-            -- AND e.ismoder = 100
             ORDER BY e.ispremium DESC, e.id DESC
             LIMIT 100";
         $res = Yii::app()->db->createCommand($sql);
