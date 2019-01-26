@@ -428,8 +428,6 @@ class SearchVac extends Model
         // city filter
         if( !empty($data['cities']) ) 
             $filter[] = "c.id_city IN (".join(',',$data['cities']).')';
-        else
-            $filter[] = "c.id_city IN (".Subdomain::getCacheData()->strCitiesIdes.')';
 
         if( !empty($data['smart']) )
         {
@@ -486,7 +484,7 @@ class SearchVac extends Model
 
         $filterData['table'] = join(' \n', $table);
         $filterData['filter'] = $filter;
-
+        //var_dump($filterData);
         return $filterData;
     }
 
