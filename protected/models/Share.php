@@ -581,8 +581,8 @@ class Share
 
         if( isset($addParams['From']) ) $from = $addParams['From'];
         else $from = array('auto-mailer@prommu.com' => 'Prommu.com');
-file_put_contents('_sendmail.txt', print_r($inMess, true), FILE_APPEND | LOCK_EX);
-        /*$SM = Yii::app()->swiftMailer;
+//file_put_contents('_sendmail.txt', print_r($inMess, true), FILE_APPEND | LOCK_EX);
+        $SM = Yii::app()->swiftMailer;
 
         // Get config
         $mailHost = 'mail.companyreport.net';
@@ -610,7 +610,7 @@ file_put_contents('_sendmail.txt', print_r($inMess, true), FILE_APPEND | LOCK_EX
         if( isset($addParams['Bcc']) ) $Message->setBcc($addParams['Bcc']);
 
         // Send mail
-        return $Mailer->send($Message);*/
+        return $Mailer->send($Message);
     }
 
 

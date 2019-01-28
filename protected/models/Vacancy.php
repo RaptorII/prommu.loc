@@ -774,54 +774,61 @@ public function rules()
         $pages->applyLimit($sPromo);
         $arr = $sPromo->getPromos($arAllId, true)['promo'];
 
-        $arRes = array();
-        foreach ($arr as $u) {
-            $u['src'] = $host . '/' . MainConfig::$PATH_APPLIC_LOGO . '/' . 
-                ($u['photo'] 
-                    ? ($u['photo'] . '100.jpg')
-                    : ($u['isman'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F)
-                );
-            $u['link'] = $host . MainConfig::$PAGE_PROFILE_COMMON . '/' . $u['id_user'];
-            $u['name'] = trim($u['firstname'] . ' ' . $u['lastname']);
-            $datetime = new DateTime($u['birthday']);
-            $interval = $datetime->diff(new DateTime(date("Y-m-d")));
-            $u['years'] = $interval->format("%Y");
-            $u['years'] = $u['years'] . ' ' . Share::endingYears($u['years']);
-            empty($u['photo']) ? array_push($arRes, $u) : array_unshift($arRes, $u);
-        }
-        // формируем html письма
-        $file = file_get_contents(Yii::app()->basePath . '/views/mails/after-moder-vac.php');
-        preg_match_all('/#LPLACE(.*?)#LPLACE|#CYCLE(.*?)#CYCLE/', $file, $matches);
+        if(count($arr))
+        {
+        	$arRes = array();
+	        foreach ($arr as $u)
+	        {
+	            $u['src'] = $host . '/' . MainConfig::$PATH_APPLIC_LOGO . '/' . 
+	                ($u['photo'] 
+	                    ? ($u['photo'] . '100.jpg')
+	                    : ($u['isman'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F)
+	                );
+	            $u['link'] = $host . MainConfig::$PAGE_PROFILE_COMMON . '/' . $u['id_user'];
+	            $u['name'] = trim($u['firstname'] . ' ' . $u['lastname']);
+	            $datetime = new DateTime($u['birthday']);
+	            $interval = $datetime->diff(new DateTime(date("Y-m-d")));
+	            $u['years'] = $interval->format("%Y");
+	            $u['years'] = $u['years'] . ' ' . Share::endingYears($u['years']);
+	            empty($u['photo']) ? array_push($arRes, $u) : array_unshift($arRes, $u);
+	        }
+	        // формируем html письма
+	        $file = file_get_contents(Yii::app()->basePath . '/views/mails/after-moder-vac.php');
+	        preg_match_all('/#LPLACE(.*?)#LPLACE|#CYCLE(.*?)#CYCLE/', $file, $matches);
 
-        $listPlace = '';
-        if(sizeof($arRes)>=5) {
-            $list = '';
-            for ($i=0; $i<5; $i++) {
-                $e = $arRes[$i];
-                $list .= preg_replace(
-                    array('/#ALINK/','/#ASRC/','/#ANAME/','/#ACITY/','/#AYEARS/'), 
-                    array($e['link'],$e['src'],$e['name'],join(', ',$e['city']),$e['years']), 
-                    $matches[2][1]
-                );
-            }
-            $listPlace = preg_replace(
-                    array('/#LCONTENT/', '/#ANKETY/'), 
-                    array($list, $url), 
-                    $matches[1][0]
-                );
+	        $listPlace = '';
+	        if(sizeof($arRes)>=5)
+	        {
+	            $list = '';
+	            for ($i=0; $i<5; $i++)
+	            {
+	                $e = $arRes[$i];
+	                $list .= preg_replace(
+	                    array('/#ALINK/','/#ASRC/','/#ANAME/','/#ACITY/','/#AYEARS/'), 
+	                    array($e['link'],$e['src'],$e['name'],join(', ',$e['city']),$e['years']), 
+	                    $matches[2][1]
+	                );
+	            }
+	            $listPlace = preg_replace(
+	                    array('/#LCONTENT/', '/#ANKETY/'), 
+	                    array($list, $url), 
+	                    $matches[1][0]
+	                );
+	        }
+	        $arNeed = array('/#EMP/','/#VNAME/','/#VLINK/','/#CONTACT/');
+	        $arRpls = array(
+	                $arVac['name'],
+	                $arVac['title'],
+	                $host . MainConfig::$PAGE_VACANCY . "/" . $id,
+	                $host . MainConfig::$PAGE_FEEDBACK
+	            );
+	        $file = preg_replace($arNeed, $arRpls, $file);
+	        $file = str_replace($matches[0][0], $listPlace, $file);
+	        $message = str_replace($matches[0][1], '', $file);
+	        // письмо работодателю
+	        Share::sendmail($arVac['email'], "Prommu.com. Вакансия прошла модерацию", $message);
         }
-        $arNeed = array('/#EMP/','/#VNAME/','/#VLINK/','/#CONTACT/');
-        $arRpls = array(
-                $arVac['name'],
-                $arVac['title'],
-                $host . MainConfig::$PAGE_VACANCY . "/" . $id,
-                $host . MainConfig::$PAGE_FEEDBACK
-            );
-        $file = preg_replace($arNeed, $arRpls, $file);
-        $file = str_replace($matches[0][0], $listPlace, $file);
-        $message = str_replace($matches[0][1], '', $file);
-        // письмо работодателю
-        Share::sendmail($arVac['email'], "Prommu.com. Вакансия прошла модерацию", $message);
+
         // репостим
         $this->VkRepost($id, $arVac['repost']);
         // событие ПУШ
@@ -2209,223 +2216,239 @@ WHERE id_vac = {$inVacId}";
         return $data;
     }
 
-    public function VkRepost($id, $repost){
+		public function VkRepost($id, $repost)
+		{
+			$result = $this->getVacancyInfo($id);
+			$arVac = reset($result);
+			$arCity = $arPost = $arVacUpdate = $arCloudUpdate = array();
+			// cities
+			foreach ($result as $v)
+				!in_array($v['ciname'], $arCity) && $arCity[] = $v['ciname'];
+			$sCity = implode(', ', $arCity);
+			// posts
+			foreach ($result as $v)
+				!in_array($v['pname'], $arPost) && $arPost[] = $v['pname'];
+			$sPost = implode(', ', $arPost);
+			// gender
+			if($arVac['isman'] && !$arVac['iswoman'])
+				$male = "Юноши";
+			elseif($arVac['iswoman'] && !$arVac['isman'])
+				$male = "Девушки";
+			else
+				$male = "Юноши, девушки";
+			//	age
+			if($arVac['ageto'] == 0) 
+				$age = "От " . $arVac['agefrom']; 
+			else 
+				$age = "От " . $arVac['agefrom'] . " до " . $arVac['ageto'];
+			// for vk | fb
+			switch ($arVac['pname'])
+			{
+				case 'Промоутер':
+					$attachments = "photo-151205900_456239032";
+					$photo_fb = "https://www.facebook.com/prommucom/photos/a.911915242298934.1073741828.911896865634105/911926268964498/?type=3&theater";
+					break;
+				case 'Консультант':
+					$attachments = "photo-151205900_456239028";
+					$photo_fb = "https://www.facebook.com/prommucom/photos/a.911915242298934.1073741828.911896865634105/911925525631239/?type=3&theater";
+					break;
+				case 'Модель':
+					$attachments = "photo-151205900_456239029";
+					$photo_fb = "https://www.facebook.com/prommucom/photos/a.911915242298934.1073741828.911896865634105/911925772297881/?type=3&theater";
+					break;
+				case 'Супервайзер':
+					$attachments = "photo-151205900_456239030";
+					$photo_fb = "https://www.facebook.com/prommucom/photos/a.911915242298934.1073741828.911896865634105/911925975631194/?type=3&theater";
+					break;
+				case 'Тайный покупатель':
+					$attachments = "photo-151205900_456239027";
+					$photo_fb = "https://www.facebook.com/prommucom/photos/a.911915242298934.1073741828.911896865634105/911926132297845/?type=3&theater";
+					break;
+				case 'Мерчендайзер':
+					$attachments = "photo-151205900_456239056";
+					$photo_fb = "";
+					break;
+				case 'Хостес':
+					$attachments = "photo-151205900_456239034";
+					$photo_fb = "https://www.facebook.com/prommucom/photos/a.911915242298934.1073741828.911896865634105/911926582297800/?type=3&theater";
+					break;
+				case 'Ростовая кукла':
+					$attachments = "photo-151205900_456239033";
+					$photo_fb = "https://www.facebook.com/prommucom/photos/a.911915242298934.1073741828.911896865634105/911926372297821/?type=3&theater";
+					break;
+				case 'Интервьюер':
+					$attachments = "photo-151205900_456239055";
+					$photo_fb = "";
+					break;
+				case 'Аниматор':
+					$attachments = "photo-151205900_456239057";
+					$photo_fb = "";
+					break;
+				default:
+					$attachments = "";
+					break;
+			}
+			// salary
+			$coast = '';
+			if($arVac['shour'] == "0.00")
+			{
+				return "error: shour = 0";
+			}
+			else
+			{
+				if($arVac['svisit']>0)
+					$coast = $arVac['svisit'] . " руб/посещение";
+				if($arVac['smonth']>0)
+					$coast = $arVac['smonth'] . " руб/месяц";
+				if($arVac['sweek']>0)
+					$coast = $arVac['sweek'] . " руб/неделю";
+				if($arVac['shour']>0)
+					$coast = $arVac['shour'] . " руб/час";
+			}
+			// message
+			$conditions = $arVac['conditions'];
+			$requirements = $arVac['requirements'];
+			$duties = $arVac['duties'];
+			$linki = Subdomain::$HOST . MainConfig::$PAGE_VACANCY . $arVac['id'];
+			$vacType = ($arVac['istemp'] ? 'временная' : 'постоянная') . ' работа';
 
-        $result = $this->getVacancyInfo($id);
-        $id_user = $result[0]['id_user'];
-        if($result[0]['isman'] && !$result[0]['iswoman']) {
-                $male = "Юноши";
-            }elseif($result[0]['iswoman'] && !$result[0]['isman']){
-                $male = "Девушки";
-            }
-            else 
-                $male = "Юноши, девушки";
+      $message =
+             "🔥 Требуется: $sPost 🔥
 
-        if($result[0]['ageto'] == 0) {
-
-           $age = "От ".$result[0]['agefrom']; 
-
-        } else 
-            $age = "От ".$result[0]['agefrom']." до ".$result[0]['ageto'];
-
-        switch ($result[0]['pname']) {
-            case 'Промоутер':
-                $attachments = "photo-151205900_456239032";
-                $photo_fb = "https://www.facebook.com/prommucom/photos/a.911915242298934.1073741828.911896865634105/911926268964498/?type=3&theater";
-                break;
-            case 'Консультант':
-               $attachments = "photo-151205900_456239028";
-               $photo_fb = "https://www.facebook.com/prommucom/photos/a.911915242298934.1073741828.911896865634105/911925525631239/?type=3&theater";
-                break;
-            case 'Модель':
-               $attachments = "photo-151205900_456239029";
-               $photo_fb = "https://www.facebook.com/prommucom/photos/a.911915242298934.1073741828.911896865634105/911925772297881/?type=3&theater";
-                break;
-            case 'Супервайзер':
-                $attachments = "photo-151205900_456239030";
-                $photo_fb = "https://www.facebook.com/prommucom/photos/a.911915242298934.1073741828.911896865634105/911925975631194/?type=3&theater";
-                break;
-            case 'Тайный покупатель':
-               $attachments = "photo-151205900_456239027";
-               $photo_fb = "https://www.facebook.com/prommucom/photos/a.911915242298934.1073741828.911896865634105/911926132297845/?type=3&theater";
-                break;
-            case 'Мерчендайзер':
-                $attachments = "photo-151205900_456239056";
-                $photo_fb = "";
-                break;
-            case 'Хостес':
-               $attachments = "photo-151205900_456239034";
-               $photo_fb = "https://www.facebook.com/prommucom/photos/a.911915242298934.1073741828.911896865634105/911926582297800/?type=3&theater";
-                break;
-            case 'Ростовая кукла':
-              $attachments = "photo-151205900_456239033";
-              $photo_fb = "https://www.facebook.com/prommucom/photos/a.911915242298934.1073741828.911896865634105/911926372297821/?type=3&theater";
-                break;
-            case 'Интервьюер':
-              $attachments = "photo-151205900_456239055";
-              $photo_fb = "";
-                break;
-            case 'Аниматор':
-              $attachments = "photo-151205900_456239057";
-              $photo_fb = "";
-                break;
-
-
-            default:
-               $attachments = "";
-                break;
-        }
-        if($result[0]['shour'] == "0.00") {
-            return "error: shour = 0";
-        }
-        else  $coast = $result[0]['shour']." руб/час";;
-        // elseif($result[0]['sweek'] != 0) {
-        //     $coast = $result[0]['shour']." руб/неделю";
-        // }
-        // elseif($result[0]['smonth'] != 0) {
-        //     $coast = $result[0]['smonth']." руб/месяц";
-        // }
-
-        $title = $result[0]['title'];
-
-        $id_attr = $result[0]['id_attr'];
-        $dia = $result[0]['pname'];
-        $conditions = $result[0]['conditions'];
-        $requirements = $result[0]['requirements'];
-        $duties = $result[0]['duties'];
-        $idvac = $result[0]['id'];
-        $linki = "https://prommu.com/vacancy/$idvac";
-        $post = $result[0]['pname'];
-        $city = $result[0]['ciname'];
-
-        $message =
-               "🔥 Требуется: $post 🔥
-               
-                Город: $city
-                
-                Пол: $male
-
-                Возраст: $age
-
-                Оплата: $coast
-
-                Сроки оплаты: после окончания проекта
-
-                Требования: 
-                • $requirements
-
-                Условия: 
-                • $conditions
-
-                Обязанности: 
-                • $duties
-
-                👇ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ 👇 
-                Cсылка: $linki";
-
-            $token = "283f11bf157c1c9d30cc8ac2a7d0bbce526500ad79cd4df2c2b9c39c708459f848a675e669d628ef9acab";
-            $group = "-8777665";
-            $St = 'https://api.vk.com/method/wall.post';
-
-        if(substr($repost, 0,1)=='1' && empty($result[0]['vk_link'])) {
-            $curl = curl_init();
-            curl_setopt($curl,CURLOPT_URL,$St);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // защищенный режим с помощью cUrl-a
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false); // защищенный режим с помощью cUrl-a
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, array('access_token'=>$token, 'owner_id'=>$group, 'attachments'=>$attachments, 'message'=>$message, 'from_group'=>1, 'v' => 'V'));
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-            $stream = curl_exec($curl);
-            $data = json_decode($stream, true);
-            curl_close($curl);
-
-            $res = Yii::app()->db->createCommand()
-                            ->update('empl_vacations', array(
-                                 'vk_link' => "https://vk.com/wall-8777665_".$data['response']['post_id']
-                            ), 'id = :id', array(':id' => $id));
-                            
-            Yii::app()->db->createCommand()
-                        ->insert('service_cloud', array('id_user' => $id_user,
-                                'name' => $id,
-                                'type' => "repost", 
-                                'bdate' => date("Y-m-d h-i-s"),
-                                'edate' => date("Y-m-d h-i-s"),
-                                'status' => 1,
-                                'sum' => 0,
-                                'text' => "vk",
-                                'user' => "vk"
-                            ));
-        } 
-
-        if(substr($repost, 2,1)=='1' && empty($result[0]['tl_link'])) {
-            $message =
-               "Опубликована вакансия $title\n\n🔥Требуется: $post\n\n 🔥Город: $city\n\n  👥Пол: $male\n\n 👫Возраст: $age\n\n 💰Оплата: $coast \n\n⏰Сроки оплаты: после окончания проекта\n\n👔Требования: • $requirements\n\n📝Условия: • $conditions\n\n💼Обязанности: • $duties\n\n👇ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ 👇\n\n👌Cсылка: $linki";
-
-            $sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?parse_mode=HTML&chat_id=@prommucom&text=".urlencode($message)."&disable_web_page_preview=true";
-            file_get_contents($sendto);
-            $res = Yii::app()->db->createCommand()
-                            ->update('empl_vacations', array(
-                                 'tl_link' => "https://t.me/prommucom",
-                            ), 'id = :id', array(':id' => $id));
-                 Yii::app()->db->createCommand()
-                        ->insert('service_cloud', array('id_user' => $id_user,
-                                'name' => $id,
-                                'type' => "repost", 
-                                'bdate' => date("Y-m-d h-i-s"),
-                                'edate' => date("Y-m-d h-i-s"),
-                                'status' => 1,
-                                'sum' => 0,
-                                'text' => "telegram",
-                                'user' => "telegram"
-                            ));
-
-        } 
-
-        if(substr($repost, 1,1)=='1' && empty($result[0]['fb_link'])){
-            $graph_url= "https://graph.facebook.com/911896865634105/feed/";
-              $postData = "&message=$message&link=$photo_fb&access_token=EAACEdEose0cBAMuyoA7ZBo2nV8Wb16bSh7V3QAKhNFCSXTLcIH4YOU8xY2SZBOMeTPG495G2VuzYhQMnvqq7eMpK5sAyGyX5V9P2cV8CwPs7rittgbGnZAZC4GVA9gGvF6trbS2AaZCGeZBbQCsvuzgLMxEGTuNfnpY4g2wd6W3NPOskCJLZA1ZAGjwkHFlqc92EXGyeqi7PGwZDZD";
-
-            $ch = curl_init();
-
-            curl_setopt($ch, CURLOPT_URL, $graph_url);
-            curl_setopt($ch, CURLOPT_HEADER, 0);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-
-            $output = curl_exec($ch);
-            $output = json_decode($output, true);
-             $res = Yii::app()->db->createCommand()
-                                ->update('empl_vacations', array(
-                                     'fb_link' => "https://www.facebook.com/prommucom/".$output['id'],
-                                ), 'id = :id', array(':id' => $id));
-            
-            Yii::app()->db->createCommand()
-                        ->insert('service_cloud', array('id_user' => $id_user,
-                                'name' => $id,
-                                'type' => "repost", 
-                                'bdate' => date("Y-m-d h-i-s"),
-                                'edate' => date("Y-m-d h-i-s"),
-                                'status' => 1,
-                                'sum' => 0,
-                                'text' => "telegram",
-                                'user' => "fb"
-                            ));
-                            
-            
-            curl_close($ch);
-        }
-        // записываем результат репоста
-        $res = Yii::app()->db->createCommand()
-            ->update('empl_vacations', array(
-                'repost' => $repost,
-            ), 'id = :id', array(':id' => $id));
-            
+              Тип: $vacType
+             
+              Город: $sCity
               
-                            
+              Пол: $male
+
+              Возраст: $age
+
+              Оплата: $coast
+
+              Сроки оплаты: после окончания проекта
+
+              Требования: 
+              • $requirements
+
+              Условия: 
+              • $conditions
+
+              Обязанности: 
+              • $duties
+
+              👇ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ 👇 
+              Cсылка: $linki";
+			// VK
+			if(empty($arVac['vk_link']) && substr($repost, 0,1)==1)
+			{
+				$token = "283f11bf157c1c9d30cc8ac2a7d0bbce526500ad79cd4df2c2b9c39c708459f848a675e669d628ef9acab";
+				$group = "-8777665";
+				$St = 'https://api.vk.com/method/wall.post';
+
+				$curl = curl_init();
+				curl_setopt($curl,CURLOPT_URL,$St);
+				curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // защищенный режим с помощью cUrl-a
+				curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false); // защищенный режим с помощью cUrl-a
+				curl_setopt($curl, CURLOPT_POST, true);
+				curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+				curl_setopt($curl, CURLOPT_POSTFIELDS, 
+						array(
+							'access_token'=>$token, 
+							'owner_id'=>$group, 
+							'attachments'=>$attachments, 
+							'message'=>$message, 
+							'from_group'=>1, 
+							'v' => 'V'
+						)
+					);
+				curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
+				$stream = curl_exec($curl);
+				$data = json_decode($stream, true);
+				curl_close($curl);
+				//
+				$arVacUpdate['vk_link'] = "https://vk.com/wall-8777665_".$data['response']['post_id'];
+				$arCloudUpdate[] = array(
+						'id_user' => $arVac['id_user'],
+						'name' => $id,
+						'type' => "repost", 
+						'bdate' => date("Y-m-d h-i-s"),
+						'edate' => date("Y-m-d h-i-s"),
+						'status' => 1,
+						'sum' => 0,
+						'text' => "vk",
+						'user' => "vk"
+					);
+			}
+			// TELEGRAM
+			if(empty($arVac['tl_link']) && substr($repost, 2,1)==1)
+			{
+				$title = $arVac['title'];
+				$message = "Опубликована вакансия $title\n\n🔥Требуется: $post\n\n 🔥Город: $city\n\n  👥Пол: $male\n\n 👫Возраст: $age\n\n 💰Оплата: $coast \n\n⏰Сроки оплаты: после окончания проекта\n\n👔Требования: • $requirements\n\n📝Условия: • $conditions\n\n💼Обязанности: • $duties\n\n👇ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ 👇\n\n👌Cсылка: $linki";
+
+				$sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?parse_mode=HTML&chat_id=@prommucom&text=" . urlencode($message) . "&disable_web_page_preview=true";
+				file_get_contents($sendto);
+				//
+				$arVacUpdate['tl_link'] = "https://t.me/prommucom";
+				$arCloudUpdate[] = array(
+						'id_user' => $arVac['id_user'],
+						'name' => $id,
+						'type' => "repost", 
+						'bdate' => date("Y-m-d h-i-s"),
+						'edate' => date("Y-m-d h-i-s"),
+						'status' => 1,
+						'sum' => 0,
+						'text' => "telegram",
+						'user' => "telegram"
+					);
+			}
+			// FB
+			if(empty($arVac['fb_link']) && substr($repost, 1,1)==1)
+			{
+				$graph_url= "https://graph.facebook.com/911896865634105/feed/";
+				$postData = "&message=$message&link=$photo_fb&access_token=EAACEdEose0cBAMuyoA7ZBo2nV8Wb16bSh7V3QAKhNFCSXTLcIH4YOU8xY2SZBOMeTPG495G2VuzYhQMnvqq7eMpK5sAyGyX5V9P2cV8CwPs7rittgbGnZAZC4GVA9gGvF6trbS2AaZCGeZBbQCsvuzgLMxEGTuNfnpY4g2wd6W3NPOskCJLZA1ZAGjwkHFlqc92EXGyeqi7PGwZDZD";
+
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $graph_url);
+				curl_setopt($ch, CURLOPT_HEADER, 0);
+				curl_setopt($ch, CURLOPT_POST, 1);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+				$output = curl_exec($ch);
+				$output = json_decode($output, true);
+				curl_close($ch);
+				//
+				$arVacUpdate['fb_link'] = "https://www.facebook.com/prommucom/".$output['id'];
+				$arCloudUpdate[] = array(
+						'id_user' => $arVac['id_user'],
+						'name' => $id,
+						'type' => "repost", 
+						'bdate' => date("Y-m-d h-i-s"),
+						'edate' => date("Y-m-d h-i-s"),
+						'status' => 1,
+						'sum' => 0,
+						'text' => "fb",
+						'user' => "fb"
+					);
+			}
+      // публикации выполнялись
+      if(count($arVacUpdate))
+      {
+				Yii::app()->db->createCommand()
+					->update('empl_vacations', $arVacUpdate, 'id = :id', [':id' => $id]);
+				Share::multipleInsert(['service_cloud'=>$arCloudUpdate]);
+      }
+			// записываем результат репоста
+			$res = Yii::app()->db->createCommand()
+							->update('empl_vacations', 
+									['repost' => $repost], 
+									'id = :id', 
+									[':id' => $id]
+								);                    
     }
+
+
+
     public function getSeсtionsVacCount()
     {
         $idus = $this->Profile->id ?: Share::$UserProfile->exInfo->id;
