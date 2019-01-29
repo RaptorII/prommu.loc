@@ -2383,7 +2383,7 @@ WHERE id_vac = {$inVacId}";
 			if(empty($arVac['tl_link']) && substr($repost, 2,1)==1)
 			{
 				$title = $arVac['title'];
-				$message = "Опубликована вакансия $title\n\n🔥Требуется: $post\n\n 🔥Город: $city\n\n  👥Пол: $male\n\n 👫Возраст: $age\n\n 💰Оплата: $coast \n\n⏰Сроки оплаты: после окончания проекта\n\n👔Требования: • $requirements\n\n📝Условия: • $conditions\n\n💼Обязанности: • $duties\n\n👇ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ 👇\n\n👌Cсылка: $linki";
+				$message = "Опубликована вакансия $title\n\n🔥Требуется: $sPost\n\n Тип: $vacType\n\n 🔥Город: $sCity\n\n  👥Пол: $male\n\n 👫Возраст: $age\n\n 💰Оплата: $coast \n\n⏰Сроки оплаты: после окончания проекта\n\n👔Требования: • $requirements\n\n📝Условия: • $conditions\n\n💼Обязанности: • $duties\n\n👇ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ 👇\n\n👌Cсылка: $linki";
 
 				$sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?parse_mode=HTML&chat_id=@prommucom&text=" . urlencode($message) . "&disable_web_page_preview=true";
 				file_get_contents($sendto);
@@ -2434,17 +2434,11 @@ WHERE id_vac = {$inVacId}";
       // публикации выполнялись
       if(count($arVacUpdate))
       {
+        $arVacUpdate['repost'] = $repost;
 				Yii::app()->db->createCommand()
 					->update('empl_vacations', $arVacUpdate, 'id = :id', [':id' => $id]);
 				Share::multipleInsert(['service_cloud'=>$arCloudUpdate]);
-      }
-			// записываем результат репоста
-			$res = Yii::app()->db->createCommand()
-							->update('empl_vacations', 
-									['repost' => $repost], 
-									'id = :id', 
-									[':id' => $id]
-								);                    
+      }                  
     }
 
 
