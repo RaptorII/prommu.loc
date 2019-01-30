@@ -834,6 +834,13 @@ class Auth
                     'token' => $token,
                     'date_login' => date('Y-m-d H:i:s'),
                 ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
+                
+            $res = Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'mdate' => date('Y-m-d H:i:s'),
+                ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
+        
+        
         } else {
             $res = Yii::app()->db->createCommand()
                 ->insert('user_work', array(
@@ -951,6 +958,12 @@ class Auth
                     'token' => $token,
                     'date_login' => date('Y-m-d H:i:s'),
                 ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
+                
+            $res = Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'mdate' => date('Y-m-d H:i:s'),
+                ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
+        
         } else {
             $res = Yii::app()->db->createCommand()
                 ->insert('user_work', array(
