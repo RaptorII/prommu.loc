@@ -778,18 +778,7 @@ class Auth
             ));            
         }
 
-        /*
-            $user = User::model()->find(array(
-                'select' => 'id_user, status, passw, isblocked',
-                'condition' => "email = :email OR id_user = :idus OR login = :email",
-                'params'=>array(':email' => $login, ':idus' => $usId),
-            ));
-        */
 
-         //'condition' => "email = :email OR id_user = :idus OR login = :login",
-                //'params'=>array(':email' => $login, ':idus' => $usId, ':login' => $login),
-//        $sql = "select id_user, status, email, passw from user where email = '$login' and passw = md5('$passw') OR id_user = {$usId} limit 1;";
-//        $res = Yii::app()->db->createCommand($sql)->queryAll();
 
         // проверяем пароль и блокировку
         if( $user && $user->id_user )
@@ -853,6 +842,13 @@ class Auth
                     'id_user' => $usRes['id'],
                     'date_login' => date('Y-m-d H:i:s'),
                 ));
+                
+            $res = Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'mdate' => date('Y-m-d H:i:s'),
+                ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
+        
+                
         }
 
 
@@ -963,6 +959,11 @@ class Auth
                     'id_user' => $usRes['id'],
                     'date_login' => date('Y-m-d H:i:s'),
                 ));
+                
+            $res = Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'mdate' => date('Y-m-d H:i:s'),
+                ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
         }
 
 
@@ -1073,12 +1074,7 @@ class Auth
         $cookie = new CHttpCookie('prommu', base64_encode($data));
         $cookie->expire = time() + MainConfig::$AUTH_EXPIRE_TIME_LONG;
         Yii::app()->request->cookies['prommu'] = $cookie;
-        
-        $res = Yii::app()->db->createCommand()
-                ->update('user', array(
-                    'mdate' => date('Y-m-d H:i:s'),
-                ), 'id_user=:id_user', array(':id_user' => $inData->uid));
-                
+       
         $session = Yii::app()->session;
         $session['au_uid'] = $inData->uid;
         $session['au_token'] = $inData->token;
