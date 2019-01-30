@@ -838,6 +838,7 @@ class Auth
             $res = Yii::app()->db->createCommand()
                 ->update('user', array(
                     'mdate' => date('Y-m-d H:i:s'),
+                    'is_online' => 1,
                 ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
         
         
@@ -853,6 +854,7 @@ class Auth
             $res = Yii::app()->db->createCommand()
                 ->update('user', array(
                     'mdate' => date('Y-m-d H:i:s'),
+                    'is_online' => 1,
                 ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
         
                 
@@ -962,6 +964,7 @@ class Auth
             $res = Yii::app()->db->createCommand()
                 ->update('user', array(
                     'mdate' => date('Y-m-d H:i:s'),
+                    'is_online' => 1,
                 ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
         
         } else {
@@ -976,6 +979,7 @@ class Auth
             $res = Yii::app()->db->createCommand()
                 ->update('user', array(
                     'mdate' => date('Y-m-d H:i:s'),
+                    'is_online' => 1,
                 ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
         }
 
