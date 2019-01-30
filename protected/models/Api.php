@@ -80,6 +80,8 @@ class Api
                 case 'testpay' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testPay(); break;
                 case 'services' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->services(); break;
                 case 'import' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->importProject(); break;
+                case 'rest_one_day': $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getRestOneDay(); break;
+                
                 
                  
                 
@@ -105,7 +107,15 @@ class Api
         return $data;
     }
     
- public function importProject(){
+    public function getRestOneDay(){
+        $Im = new Im();
+        $Im->sendEmailNotifications();
+        
+        $Share = new Share();
+        $Share->getOnline();
+    }
+    
+    public function importProject(){
         Yii::import('ext.yexcel.Yexcel');
         $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/dev.prommu/uploads/153596066899602.xls");
         var_dump($sheet_array);
