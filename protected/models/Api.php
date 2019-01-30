@@ -108,8 +108,8 @@ class Api
     }
     
     public function getRestOneDay(){
-        $Im = new Im();
-        $Im->sendEmailNotifications();
+        // $Im = new Im();
+        // $Im->sendEmailNotifications();
         
         $Share = new Share();
         $Share->getOnline();
