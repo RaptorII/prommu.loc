@@ -152,6 +152,40 @@ abstract class UserProfile extends CModel
 
 
     protected abstract function getUserData($inId);
+    /**
+     *  @param $id - ineger (ID - user)
+     *  @param $type - string (applicant | employer)
+     *  Показать контактные данные работодателя или соискателя
+     */
+    public function showContactData($id, $type)
+    {
+        if(!intval($id))
+            return false;
+
+        $query = Yii::app()->db->createCommand()
+                    ->select('COUNT(vs.id)')
+                    ->from('vacation_stat vs')
+                    ->leftjoin('empl_vacations ev', 'ev.id=vs.id_vac');
+        $filter = 'ev.id_user=:id_emp AND vs.id_promo=:id_app AND vs.status>4';
+
+        if($type==='applicant' && Share::isEmployer())
+        {
+            $params = array(
+                    ':id_emp' => Share::$UserProfile->id,
+                    ':id_app' => $id
+                );
+            return $query->where($filter,$params)->queryScalar() > 0;
+        }
+        if($type==='employer' && Share::isApplicant())
+        {
+            $params = array(
+                    ':id_app' => Share::$UserProfile->exInfo->id_resume,
+                    ':id_emp' => $id
+                );
+            return $query->where($filter,$params)->queryScalar() > 0;
+        }
+        return false;   
+    }
 }
 
 

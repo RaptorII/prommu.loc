@@ -1485,7 +1485,7 @@ class UserProfileApplic extends UserProfile
     /*
     *      Проверка обязательных полей
     */
-    function checkRequiredFields(){
+    public function checkRequiredFields(){
         $idus = $this->exInfo->id;
         $arResult = Yii::app()->db->createCommand()
             ->select('r.firstname, r.lastname, u.email, a.val phone, uc.id_city city, r.aboutme, um.id_mech pos')

@@ -1,34 +1,3 @@
-<?
-// Share::$UserProfile->exInfo->name
-// Share::$UserProfile->exInfo->email
-/*
-$arrr = array(
-      'email_user' => array(
-                    'name' => "#EMAIL_USER#",
-                    'pattern' => "/#EMAIL_USER#/",
-                    'description' => "Email пользователя сайта"
-                  ),
-      'company_user' => array(
-                    'name' => "#COMPANY_USER#",
-                    'pattern' => "/#COMPANY_USER#/",
-                    'description' => "Название компании пользователя сайта(если нет - 'пользователь')"
-                  ),
-      'id_vacancy' => array(
-                    'name' => "#ID_VACANCY#",
-                    'pattern' => "/#ID_VACANCY#/",
-                    'description' => "ID созданной вакансии"
-                  ),
-      'link_vacancy' => array(
-                    'name' => "#LINK_VACANCY#",
-                    'pattern' => "/#LINK_VACANCY#/",
-                    'value' => '#PAGE_USER_VACANCY#/#ID_VACANCY#',
-                    'breplace' => true,
-                    'description' => "Ссылка на созданную вакансию пользователя"
-                  )
-    );
-
-print_r(serialize($arrr));*/
-?>
 <meta name="robots" content="noindex,nofollow">
 <? 
   Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-prof-emp.css'); 
@@ -49,7 +18,7 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
 <?php
   
    $id = $viData['userInfo']['id_user'];
-      
+   
       $sql = "SELECT r.id, r.id_user idus,r.web, name , r.logo, r.rate, r.rate_neg
                 , cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate,
                  (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.isneg = 0 AND mm.isactive = 1 AND mm.id_empl = r.id) commpos,
@@ -306,7 +275,7 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
       <?php endif; ?>
     </div>
     <br>
-    <?php if($flagOwnProfile): ?>
+    <?php if($flagOwnProfile): // инфа для владельца ?>
       <div class="ppe__module-title"><h2>КОНТАКТНАЯ ИНФОРМАЦИЯ</h2></div>
       <div class="ppe__module">
         <?php if(strlen($allInfo['firstname'])>0): ?>
@@ -375,13 +344,53 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
           <div class="ppe__checkbox <?=($allAttr[108]['val'] ? 'active' : '')?>">Получение новостей об изменениях и новых возможностях на сайте</div>
         <? endif;*/ ?>
       </div>
-    <?php endif; ?>
-    <? if( $flagOwnProfile ): ?>
       <div class="ppe__module">
         <a class='prmu-btn' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>'><span>Редактировать профиль</span></a>
       </div>
     <? endif; ?>
-  </div>
+    <? if(Share::$UserProfile->showContactData($viData['userInfo']['id_user'], 'employer')): // вывод данных для С, который сотрудничает ?>
+      <div class="ppe__module-title"><h2>КОНТАКТНАЯ ИНФОРМАЦИЯ</h2></div>
+      <div class="ppe__module">
+        <div class="ppe__field">
+          <span class="ppe__field-name">Email:</span>
+          <span class="ppe__field-val"><?=$allInfo['email']?></span>
+        </div>
+        <div class="ppe__field">
+          <span class="ppe__field-name">Телефон:</span>
+          <span class="ppe__field-val"><?=$allAttr[1]['val']?></span>
+        </div>
+        <?
+          $idViber = $this->ViewModel->isInArray($allAttr, 'key', 'viber');
+          $idWhatsApp = $this->ViewModel->isInArray($allAttr, 'key', 'whatsapp');
+          $idTelegram = $this->ViewModel->isInArray($allAttr, 'key', 'telegram');
+          $idGoogleAllo = $this->ViewModel->isInArray($allAttr, 'key', 'googleallo');
+        ?>
+        <? if(!empty($allAttr[$idViber]['val'])): ?>
+          <div class="ppe__field">
+            <span class="ppe__field-name">Viber:</span>
+            <span class="ppe__field-val"><?=$allAttr[$idViber]['val']?></span>
+          </div>
+        <? endif; ?>
+        <? if(!empty($allAttr[$idWhatsApp]['val'])): ?>
+          <div class="ppe__field">
+            <span class="ppe__field-name">WhatsApp:</span>
+            <span class="ppe__field-val"><?=$allAttr[$idWhatsApp]['val']?></span>
+          </div>
+        <? endif; ?>
+        <? if(!empty($allAttr[$idTelegram]['val'])): ?>
+          <div class="ppe__field">
+            <span class="ppe__field-name">Telegram:</span>
+            <span class="ppe__field-val"><?=$allAttr[$idTelegram]['val']?></span>
+          </div>
+        <? endif; ?>
+        <? if(!empty($allAttr[$idGoogleAllo]['val'])): ?>
+          <div class="ppe__field">
+            <span class="ppe__field-name">Google Allo:</span>
+            <span class="ppe__field-val"><?=$allAttr[$idGoogleAllo]['val']?></span>
+          </div>
+        <? endif; ?>
+      </div>
+    <? endif; ?>
 </div>
 <?php if(Yii::app()->user->getFlash('Message') ): ?>
   <? Yii::app()->user->setFlash('Message', ''); ?>

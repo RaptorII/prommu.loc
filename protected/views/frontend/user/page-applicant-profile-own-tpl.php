@@ -2,7 +2,6 @@
 <?php
   $attr = array_values($viData['userInfo']['userAttribs'])[0];
   $idPromo = $attr['id'];
-   
   $sql = "SELECT
           (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 1 AND mm.isneg = 0  AND mm.id_promo = {$idPromo}) commpos,
           (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 1 AND mm.isneg = 1 AND mm.id_promo = {$idPromo}) commneg";
@@ -400,17 +399,31 @@
         <span class="ppp__field-name">Дата рождения:</span>
         <span class="ppp__field-val"><?=DateTime::createFromFormat('d.m.Y', $attr['bday'])->format('d/m/Y');?></span>
       </div>
-      <?php if($isBlocked && $flagOwnProfile && !$attr['val']): ?>
+      <? if($isBlocked && $flagOwnProfile && !$attr['val']): // предупреждение владельца о пустых полях ?>
         <div class="ppp__field error">
           <span class="ppp__field-name">Телефон:</span>
           <span class="ppp__field-val"></span>
         </div>
       <? endif; ?>
-      <?php if($isBlocked && $flagOwnProfile && !$attr['email']): ?>
+      <? if($isBlocked && $flagOwnProfile && !$attr['email']): // предупреждение владельца о пустых полях ?>
         <div class="ppp__field error">
           <span class="ppp__field-name">Электронная почта:</span>
           <span class="ppp__field-val"></span>
         </div>
+      <? endif; ?>
+      <? if(Share::$UserProfile->showContactData($idPromo,'applicant')): // вывод данных для Р, который сотрудничает ?>
+        <? if(!empty($attr['phone'])): ?>
+          <div class="ppp__field">
+            <span class="ppp__field-name">Телефон:</span>
+            <span class="ppp__field-val"><?='+' . $attr['phone-code'] . $attr['phone']?></span>
+          </div>
+        <? endif; ?>
+        <? if(!empty($attr['email'])): ?>
+          <div class="ppp__field">
+            <span class="ppp__field-name">Электронная почта:</span>
+            <span class="ppp__field-val"><?=$attr['email']?></span>
+          </div>
+        <? endif; ?>
       <? endif; ?>
       <div class="ppp__field">
         <span class="ppp__field-name">Пол:</span>
