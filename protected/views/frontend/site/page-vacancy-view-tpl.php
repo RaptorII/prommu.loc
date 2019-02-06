@@ -964,8 +964,9 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                     <span class="sv__data-pubdate-item">Дата завершения работы:<b><?= $viData['vac']['remdate'] ?></b></span>
                 </div>
 
-                <? if(Share::isApplicant()): ?>
-                    <div class="prmu-btn sv__data-responce" data-id="<?=$vacancy['id']?>"><span>ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ</span></div>
+                <? if (Share::isApplicant()): ?>
+                    <div class="prmu-btn sv__data-responce" data-id="<?= $vacancy['id'] ?>"><span>ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ</span>
+                    </div>
                 <? endif; ?>
 
                 <span class="sv__data-subtitle"><h3>КТО НУЖЕН и с какими параметрами</h3></span>
@@ -1219,7 +1220,15 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                         <div class="sv__textblock-text"><?= html_entity_decode($vacancy['duties']) ?></div>
                     </div>
                 <?php endif; ?>
-                <?php if ($viData['response']['response'] > 0 && $ismoder != 0): ?>
+
+
+                <?php if (!Share::isEmployer() && !Share::isApplicant()): ?>
+                    <div class='btn-register btn-orange-fix-wr'>
+                        <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_REGISTER ?>?p=1' title="">Откликнуться
+                            на вакансию</a>
+                    </div>
+
+                <?elseif ($viData['response']['response'] > 0 && $ismoder != 0): ?>
                     <div class='btn-response btn-orange-fix-wr'>
                         <a class='hvr-sweep-to-right' href='javascript:void(0);'>Откликнуться на вакансию</a>
                     </div>
@@ -1266,13 +1275,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
 
                 <?php endif; ?>
 
-                <?php if (!Share::isEmployer() && !Share::isApplicant()): ?>
-                    <div class='btn-register btn-orange-fix-wr'>
-                        <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_REGISTER ?>?p=1' title="">Откликнуться
-                            на вакансию</a>
-                    </div>
 
-                <?php endif; ?>
 
                 <?php /*if( Share::$UserProfile->type < 2 ): ?>
                     <div class='btn-register btn-orange-fix-wr'>
