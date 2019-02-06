@@ -1222,6 +1222,8 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                 <?php endif; ?>
 
 
+
+
                 <?php if (!Share::isEmployer() && !Share::isApplicant()): ?>
                     <div class='btn-register btn-orange-fix-wr'>
                         <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_REGISTER ?>?p=1' title="">Откликнуться
@@ -1247,7 +1249,6 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                         </div>
 
                         <? if ($ismoder == 1): ?>
-
                             <? if ($viData['response']['message'] == 'Вы уже подали заявку на данную вакансию'): ?>
                                 <div class="prmu__popup">
                                     <p><?= $viData['response']['message'] ?></p>
