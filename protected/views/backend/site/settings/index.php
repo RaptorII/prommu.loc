@@ -1,3 +1,4 @@
+<? Yii::app()->getClientScript()->registerCssFile(Yii::app()->request->baseUrl . '/css/template.css'); ?>
 <div class="row">
 	<div class="col-xs-12 settings">
 		<h2>Настройки</h2>
@@ -36,7 +37,7 @@
 									<div class="pull-right">
 										<button type="submit" class="btn btn-success d-indent">Сохранить</button>
 									</div>
-									<div class="clearfix"></div>								
+									<div class="clearfix"></div>
 								</div>
 							</form>
 						</div>
