@@ -181,7 +181,7 @@ foreach ($viData['filter']['posts'] as $k => $p)
 
     <div class="project__module" data-id="<?=$project?>">
         <div class="project__header">
-            <? require '/../filter.php'; // ФИЛЬТР?>
+            <? require_once('/../filter.php'); // ФИЛЬТР?>
         </div>
     </div>
 
