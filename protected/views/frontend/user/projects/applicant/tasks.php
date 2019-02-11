@@ -185,7 +185,9 @@ foreach ($viData['filter']['posts'] as $k => $p)
         </div>
     </div>
 
-    <div class="cabinet__body">
+
+
+    <?/*<div class="cabinet__body">
 
         <div class="cabinet__tasks">
 
@@ -200,7 +202,9 @@ foreach ($viData['filter']['posts'] as $k => $p)
 
 
         </div>
-    </div>
+    </div>*/?>
+
+
 
 </div>
 
