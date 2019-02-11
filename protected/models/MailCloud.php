@@ -4,7 +4,7 @@
 class MailCloud extends Model
 {
 
-	 public function mailer($cloud)
+	public function mailer($cloud)
     {
 
 
@@ -24,7 +24,7 @@ class MailCloud extends Model
 
         $analytData = Yii::app()->db->createCommand()
                 ->select("a.id_us, a.referer, a.canal, a.campaign,
-          			 a.content, a.keywords, a.point, a.last_referer")
+          			 a.content, a.keywords, a.point, a.last_referer, a.ip, a.client")
                 ->from('analytic a')
                ->join('user u', 'u.id_user = a.id_us')
                 ->where('a.id_us = :u', array(':u' => $value))
@@ -35,7 +35,7 @@ class MailCloud extends Model
     	if( $res['status'] == 2 )
         {
 
-            $link  = 'https://prommu.com' . MainConfig::$PAGE_ACTIVATE . '/?t=' . $usData['token'] . "&uid=" . $value."&referer=".$analytData['referer']."&transition=".$analytData['transition']."&canal=".$analytData['canal']."&campaign=".$analytData['campaign']."&content=".$analytData['content']."&keywords=".$analytData['keywords']."&point=".$analytData['point']."&last_referer=".$analytData['last_referer']."&admin=".$analytData['admin'];
+            $link  = 'https://prommu.com' . MainConfig::$PAGE_ACTIVATE . '/?t=' . $usData['token'] . "&uid=" . $value."&referer=".$analytData['referer']."&transition=".$analytData['transition']."&canal=".$analytData['canal']."&campaign=".$analytData['campaign']."&content=".$analytData['content']."&keywords=".$analytData['keywords']."&point=".$analytData['point']."&last_referer=".$analytData['last_referer']."&admin=".$analytData['admin']."&ip=".$analytData['ip']."&client=".$analytData['client'];
 
              $message = '<p style="font-size:16px;">Вы зарегистрировались у нас на сервисе: https://prommu.com/  но еще не активировали свой аккаунт</p>
                     <br/>
@@ -63,7 +63,7 @@ class MailCloud extends Model
         }
         else
         {
-            $link  = 'https://prommu.com' . MainConfig::$PAGE_ACTIVATE . '/?t=' . $usData['token'] . "&uid=" . $value."&referer=".$analytData['referer']."&transition=".$analytData['transition']."&canal=".$analytData['canal']."&campaign=".$analytData['campaign']."&content=".$analytData['content']."&keywords=".$analytData['keywords']."&point=".$analytData['point']."&last_referer=".$analytData['last_referer']."&admin=".$analytData['admin'];
+            $link  = 'https://prommu.com' . MainConfig::$PAGE_ACTIVATE . '/?t=' . $usData['token'] . "&uid=" . $value."&referer=".$analytData['referer']."&transition=".$analytData['transition']."&canal=".$analytData['canal']."&campaign=".$analytData['campaign']."&content=".$analytData['content']."&keywords=".$analytData['keywords']."&point=".$analytData['point']."&last_referer=".$analytData['last_referer']."&admin=".$analytData['admin']."&ip=".$analytData['ip']."&client=".$analytData['client'];
             $message = '<p style="font-size:16px;">Вы зарегистрировались у нас на сервисе: https://prommu.com/  но еще не активировали свой аккаунт</p>
                     <br/>
                       
@@ -94,7 +94,7 @@ class MailCloud extends Model
 
   	}
 
-    public function mailerMail($cloud)
+     public function mailerMail($cloud)
     {
         $adminMess = $cloud['chat'] ? $cloud['chat'] : $cloud['message'];
         if(filter_var($cloud['email'],FILTER_SANITIZE_EMAIL))
@@ -348,8 +348,8 @@ class MailCloud extends Model
     //                         "<br/><br/>"
     //                     , $inProps['name']
     //                     , $inProps['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $inProps['id']
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $inProps['id']
     //                     );
 
     //                 Share::sendmail($inProps['email'], "Prommu: Опубликована вакансия", $message);
@@ -361,8 +361,8 @@ class MailCloud extends Model
     //                         "<br/><br/>"
     //                     , $inProps['name']
     //                     , $inProps['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $inProps['id']
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $inProps['id']
     //                     );
 
     //                 Share::sendmail($inProps['email'], "Prommu: Опубликована вакансия", $message);
@@ -376,9 +376,9 @@ class MailCloud extends Model
     //                     , $Profile->exInfo->firstname
     //                     , $Profile->exInfo->lastname
     //                     , $vacData['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_RESPONSES
     //                     );
 
     //                 Share::sendmail($email, "Prommu: заявка на вакансию", $message);
@@ -392,9 +392,9 @@ class MailCloud extends Model
     //                     , $Profile->exInfo->firstname
     //                     , $Profile->exInfo->lastname
     //                     , $vacData['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_RESPONSES
     //                     );
 
     //                 Share::sendmail($email, "Prommu: заявка на вакансию", $message);
@@ -408,9 +408,9 @@ class MailCloud extends Model
     //                     , $Profile->exInfo->firstname
     //                     , $Profile->exInfo->lastname
     //                     , $vacData['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_RESPONSES
     //                     );
 
     //                 Share::sendmail($email, "Prommu: заявка на вакансию", $message);
@@ -424,9 +424,9 @@ class MailCloud extends Model
     //                     , $Profile->exInfo->firstname
     //                     , $Profile->exInfo->lastname
     //                     , $vacData['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_RESPONSES
     //                     );
 
     //                 Share::sendmail($email, "Prommu: заявка на вакансию", $message);
@@ -440,9 +440,9 @@ class MailCloud extends Model
     //                     , $Profile->exInfo->firstname
     //                     , $Profile->exInfo->lastname
     //                     , $vacData['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_RESPONSES
     //                     );
 
     //                 Share::sendmail($email, "Prommu: заявка на вакансию", $message);
@@ -456,9 +456,9 @@ class MailCloud extends Model
     //                     , $Profile->exInfo->firstname
     //                     , $Profile->exInfo->lastname
     //                     , $vacData['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_RESPONSES
     //                     );
 
     //                 Share::sendmail($email, "Prommu: заявка на вакансию", $message);
@@ -472,9 +472,9 @@ class MailCloud extends Model
     //                     , $Profile->exInfo->firstname
     //                     , $Profile->exInfo->lastname
     //                     , $vacData['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_RESPONSES
     //                     );
 
     //                 Share::sendmail($email, "Prommu: заявка на вакансию", $message);
@@ -488,9 +488,9 @@ class MailCloud extends Model
     //                     , $Profile->exInfo->firstname
     //                     , $Profile->exInfo->lastname
     //                     , $vacData['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_RESPONSES
     //                     );
 
     //                 Share::sendmail($email, "Prommu: заявка на вакансию", $message);
@@ -516,9 +516,9 @@ class MailCloud extends Model
     //                     , $Profile->exInfo->firstname
     //                     , $Profile->exInfo->lastname
     //                     , $vacData['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_RESPONSES
     //                     );
 
     //                 Share::sendmail($email, "Prommu: заявка на вакансию", $message);
@@ -532,9 +532,9 @@ class MailCloud extends Model
     //                     , $Profile->exInfo->firstname
     //                     , $Profile->exInfo->lastname
     //                     , $vacData['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_RESPONSES
     //                     );
 
     //                 Share::sendmail($email, "Prommu: заявка на вакансию", $message);
@@ -548,9 +548,9 @@ class MailCloud extends Model
     //                     , $Profile->exInfo->firstname
     //                     , $Profile->exInfo->lastname
     //                     , $vacData['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_RESPONSES
     //                     );
 
     //                 Share::sendmail($email, "Prommu: заявка на вакансию", $message);
@@ -564,9 +564,9 @@ class MailCloud extends Model
     //                     , $Profile->exInfo->firstname
     //                     , $Profile->exInfo->lastname
     //                     , $vacData['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_RESPONSES
     //                     );
 
     //                 Share::sendmail($email, "Prommu: заявка на вакансию", $message);
@@ -580,9 +580,9 @@ class MailCloud extends Model
     //                     , $Profile->exInfo->firstname
     //                     , $Profile->exInfo->lastname
     //                     , $vacData['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_RESPONSES
     //                     );
 
     //                 Share::sendmail($email, "Prommu: заявка на вакансию", $message);
@@ -596,9 +596,9 @@ class MailCloud extends Model
     //                     , $Profile->exInfo->firstname
     //                     , $Profile->exInfo->lastname
     //                     , $vacData['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_RESPONSES
     //                     );
 
     //                 Share::sendmail($email, "Prommu: заявка на вакансию", $message);
@@ -612,9 +612,9 @@ class MailCloud extends Model
     //                     , $Profile->exInfo->firstname
     //                     , $Profile->exInfo->lastname
     //                     , $vacData['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_RESPONSES
     //                     );
 
     //                 Share::sendmail($email, "Prommu: заявка на вакансию", $message);
@@ -628,9 +628,9 @@ class MailCloud extends Model
     //                     , $Profile->exInfo->firstname
     //                     , $Profile->exInfo->lastname
     //                     , $vacData['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_RESPONSES
     //                     );
 
     //                 Share::sendmail($email, "Prommu: заявка на вакансию", $message);
@@ -644,9 +644,9 @@ class MailCloud extends Model
     //                     , $Profile->exInfo->firstname
     //                     , $Profile->exInfo->lastname
     //                     , $vacData['title']
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id
-    //                     , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $Profile->exInfo->id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $id
+    //                     , Subdomain::getSiteName() . MainConfig::$PAGE_RESPONSES
     //                     );
 
     //                 Share::sendmail($email, "Prommu: заявка на вакансию", $message);

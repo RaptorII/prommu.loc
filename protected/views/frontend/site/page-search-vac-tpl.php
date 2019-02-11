@@ -250,7 +250,7 @@
                                 <a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $vac['uid']?>" class="psv-list__logo-link">
                                     <img 
                                         alt='Работодатель <?= $vac['coname'] ?> prommu.com'
-                                        src='<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . (!$vac['logo'] ?  'logo.png' : ($vac['logo']) . '400.jpg') ?>'>
+                                        src="<?=Share::getPhoto(3, $vac['logo'], 'medium')?>">
                                 </a>
                                 <a class="psv-list__logo-name" href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $vac['uid']?>"><?=$vac['coname']?></a>
 
@@ -391,7 +391,7 @@
                                     <a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $vac['uid']?>" class="psv-table__logo-link">
                                         <img 
                                             alt='Работодатель <?= $vac['coname'] ?> prommu.com'
-                                            src='<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . (!$vac['logo'] ?  'logo.png' : ($vac['logo']) . '100.jpg') ?>'>
+                                            src="<?=Share::getPhoto(3, $vac['logo'], 'medium')?>">
                                     </a>
                                     <a class="psv-table__logo-name" href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $vac['uid']?>"><?=$vac['coname']?></a>
                                     <div class="clearfix"></div>
@@ -475,7 +475,7 @@
                                     <a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $vac['uid']?>" class="psv-table__logo-link">
                                         <img 
                                             alt='Работодатель <?= $vac['coname'] ?> prommu.com'
-                                            src='<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . (!$vac['logo'] ?  'logo.png' : ($vac['logo']) . '100.jpg') ?>'>
+                                            src="<?=Share::getPhoto(3, $vac['logo'], 'medium')?>">
                                     </a>
                                     <a class="psv-table__logo-name" href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $vac['uid']?>"><?=$vac['coname']?></a>
                                     <div class="clearfix"></div>

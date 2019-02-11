@@ -684,7 +684,7 @@ class Api
                  $content = str_replace('#VACNAME#', $rest[$i]['title'], $content);
                  $content = str_replace('#VACDATEBEG#',$rest[$i]['bdate'], $content);
                  $content = str_replace('#VACTIMEBEG#',"08:00", $content);
-                 $content = str_replace('#VACLINK#',  MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $rest[$i]['id'], $content);
+                 $content = str_replace('#VACLINK#',  Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $rest[$i]['id'], $content);
                
                Share::sendmail($ress[$i]['email'], "Prommu.com Старт проекта завтра", $content);
             }
@@ -694,7 +694,7 @@ class Api
                  $content = str_replace('#VACID#', $rest[$i]['id'], $content);
                  $content = str_replace('#VACNAME#', $rest[$i]['title'], $content);
                  $content = str_replace('#VACDATEBEG#',$rest[$i]['bdate'], $content);
-                 $content = str_replace('#VACLINK#',  MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $rest[$i]['id'], $content);
+                 $content = str_replace('#VACLINK#',  Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $rest[$i]['id'], $content);
                
                Share::sendmail($rest[$i]['email'], "Prommu.com Старт проекта завтра", $content);
             
@@ -705,7 +705,7 @@ class Api
                  $content = str_replace('#VACID#', $rest[$i]['id'], $content);
                  $content = str_replace('#VACNAME#', $rest[$i]['title'], $content);
                  $content = str_replace('#VACDATEBEG#',$rest[$i]['bdate'], $content);
-                 $content = str_replace('#VACLINK#',  MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $rest[$i]['id'], $content);
+                 $content = str_replace('#VACLINK#',  Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $rest[$i]['id'], $content);
                
                Share::sendmail($rest[$i]['email'], "Prommu.com Старт проекта сегодня", $content);
                 
@@ -716,7 +716,7 @@ class Api
                  $content = str_replace('#VACID#', $rest[$i]['id'], $content);
                  $content = str_replace('#VACNAME#', $rest[$i]['title'], $content);
                  $content = str_replace('##VACTIMEEND##',$rest[$i]['edate'], $content);
-                 $content = str_replace('#VACLINK#',  MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $rest[$i]['id'], $content);
+                 $content = str_replace('#VACLINK#',  Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $rest[$i]['id'], $content);
                
                Share::sendmail($rest[$i]['email'], "Prommu.com Завершение проекта сегодня", $content);
                 

@@ -463,7 +463,7 @@ class ResponsesEmpl extends Responses
                     <br>
                     Нажмите на <a href='%s'>ссылку</a>, чтобы перейти на страницу рейтинга.
                     "
-                , 'http://' . MainConfig::$SITE . DS . MainConfig::$PAGE_RATE
+                , Subdomain::site() . DS . MainConfig::$PAGE_RATE
             );
             Share::sendmail($vacData['emailpromo'], "Prommu.com. Новый рейтинг", $emailMessage);
 
@@ -499,7 +499,7 @@ class ResponsesEmpl extends Responses
                         <br>
                         Нажмите на <a href='%s'>ссылку</a>, чтобы перейти на страницу отзывов.
                         "
-                    , 'http://' . MainConfig::$SITE . DS . MainConfig::$PAGE_COMMENTS
+                    , Subdomain::site() . DS . MainConfig::$PAGE_COMMENTS
                 );
                 Share::sendmail($vacData['emailpromo'], "Prommu.com. Новый отзыв", $emailMessage);
             } // endif
@@ -566,11 +566,11 @@ class ResponsesEmpl extends Responses
             $content = file_get_contents(Yii::app()->basePath . "/views/mails/app/new-review.html");
         $content = str_replace('#APPNAME#', $vacData['username'], $content);
         $content = str_replace('#EMPCOMPANY#',  Share::$UserProfile->exInfo->name, $content);
-        $content = str_replace('#EMPLINK#',  MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
+        $content = str_replace('#EMPLINK#',  Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
         $content = str_replace('#VACID#', $id, $content);
         $content = str_replace('#VACNAME#', $vacData['title'], $content);
-        $content = str_replace('#VACLINK#', MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id, $content);
-        $content = str_replace('#RATELINK#',MainConfig::$SITE . MainConfig::$PAGE_RATE, $content);
+        $content = str_replace('#VACLINK#', Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $id, $content);
+        $content = str_replace('#RATELINK#',Subdomain::site() . MainConfig::$PAGE_RATE, $content);
                 
         Share::sendmail($vacData['emailpromo'], "Prommu: Новый отзыв", $content);
 
@@ -609,7 +609,7 @@ class ResponsesEmpl extends Responses
                 //         <br>
                 //         Нажмите на <a href='%s'>ссылку</a>, чтобы перейти на страницу отзывов.
                 //         "
-                //     , 'http://' . MainConfig::$SITE . DS . MainConfig::$PAGE_COMMENTS
+                //     , Subdomain::site() . DS . MainConfig::$PAGE_COMMENTS
                 // );
                 // Share::sendmail($vacData['emailpromo'], "Prommu.com. Новый отзыв", $emailMessage);
             } // endif
@@ -654,11 +654,11 @@ class ResponsesEmpl extends Responses
         $content = file_get_contents(Yii::app()->basePath . "/views/mails/app/approval-for-vac.html");
         $content = str_replace('#APPNAME#', $inData['firstname'].' '.$inData['lastname'], $content);
         $content = str_replace('#EMPCOMPANY#',  Share::$UserProfile->exInfo->name, $content);
-        $content = str_replace('#EMPLINK#',  MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
+        $content = str_replace('#EMPLINK#',  Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
         $content = str_replace('#VACID#', $inData['id'], $content);
         $content = str_replace('#VACNAME#', $inData['title'], $content);
-        $content = str_replace('#VACLINK#', MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $inData['id'], $content);
-        $content = str_replace('#RESPLINK#',MainConfig::$SITE . MainConfig::$PAGE_RESPONSES, $content);
+        $content = str_replace('#VACLINK#', Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $inData['id'], $content);
+        $content = str_replace('#RESPLINK#',Subdomain::site() . MainConfig::$PAGE_RESPONSES, $content);
                 
         Share::sendmail($inData['email'], "Prommu: Утверждение на вакансию", $content);
 

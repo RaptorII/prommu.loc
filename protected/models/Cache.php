@@ -9,7 +9,7 @@ class Cache
      */
     public static function getData($id = '')
     {
-        $arRes['city'] = Subdomain::$HOST;
+        $arRes['city'] = Subdomain::site();
         $arRes['controller'] = Yii::app()->controller->id;
         $arRes['page'] = Yii::app()->request->requestUri;
         if(!empty($id))

@@ -94,14 +94,7 @@ class Services extends Model
                 'tel' => $tel,
                 'email' => $email,
                 'crdate' => date("Y-m-d H:i:s"),
-                'content' => $content,
-                'referer' => $referer,
-	            'last_referer' => $last_referer,
-	            'point' => $point,
-	            'keywords' => $keywords,
-	            'canal' => $canal, 
-	            'campaign' => $campaign,
-	            'transition' => $transition));
+            ));
 
 
         $message = sprintf("На сайте <a href='http://%s'>http://%1$01s</a> Заказ  услуг
@@ -136,18 +129,18 @@ class Services extends Model
                 Реферер: <b>%s</b>
                 <br/>
                 Roistat: <b>%s</b>  ",
-            MainConfig::$SITE,$id, $fio, $tel, $email, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $roistat);
+            Subdomain::getSiteName(),$id, $fio, $tel, $email, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $roistat);
 
-       $email[0] = "web.dev@prommu.ru";
-        $email[1] = "man.market2@gmail.com";
-        $email[2] = "prommu.servis@gmail.com";
-        $email[3] = "e.market.easss@gmail.com"; 
-        $email[4] = "projekt.sergey@gmail.com";
-        $email[5] = "manag_reports@euro-asian.ru";
-        $email[6] = "e.marketing@euro-asian.ru";
-        $email[7] = "site.adm@euro-asian.ru";
-        for($i = 0; $i <8; $i++){
-            Share::sendmail($email[$i], "Prommu: заказ услуг", trim($message));
+        $emails[0] = "denisgresk@gmail.com";
+        $emails[1] = "man.market2@gmail.com";
+        $emails[2] = "prommu.servis@gmail.com";
+        $emails[3] = "e.market.easss@gmail.com"; 
+        $emails[4] = "projekt.sergey@gmail.com";
+        $emails[5] = "manag_reports@euro-asian.ru";
+        $emails[6] = "e.marketing@euro-asian.ru";
+        $emails[7] = "site.adm@euro-asian.ru";
+        for($i = 0; $i <count($emails); $i++){
+            Share::sendmail($emails[$i], "Prommu: заказ услуг", trim($message));
        
         }
 
@@ -289,14 +282,14 @@ class Services extends Model
     public function getFilteredPromos(){
 		$arRes = array();
         $SearchPromo = new SearchPromo();
-        $ph = $filter['ph'] ?: null;
-        $filter = ['filter' => compact('ph')];
-        $arAllId = $SearchPromo->searchPromosCount($filter);
+        // $ph = $filter['ph'];
+        // $filter = ['filter' => compact('ph')];
+        $arAllId = $SearchPromo->searchPromosCount();
         $arRes['app_count'] = sizeof($arAllId);
         $arRes['pages'] = new CPagination($arRes['app_count']);
         $arRes['pages']->pageSize = 51;
         $arRes['pages']->applyLimit($SearchPromo);
-        $arRes['workers'] = $SearchPromo->getPromos($arAllId, 0, $filter);
+        $arRes['workers'] = $SearchPromo->getPromos($arAllId);
         return $arRes;    	
     }
     /**

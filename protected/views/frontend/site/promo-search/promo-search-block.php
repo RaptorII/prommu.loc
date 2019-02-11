@@ -34,11 +34,9 @@
                             <div class='company-logo-wrapp'>
                                 <div class='company-logo'>
                                     <a href='<?= MainConfig::$PAGE_PROFILE_COMMON . DS . $val['id_user'] ?>'>
-                                        <?php if($val['sex']):?>
-                                            <img alt='Соискатель <?= $val['firstname'] . ' ' . $val['lastname'] ?> prommu.com' src='<?= DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!$val['photo'] ? MainConfig::$DEF_LOGO : $val['photo'] . '100.jpg') ?>'>
-                                        <?php else: ?>
-                                            <img alt='Соискатель <?= $val['firstname'] . ' ' . $val['lastname'] ?> prommu.com' src='<?= DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!$val['photo'] ? MainConfig::$DEF_LOGO_F : $val['photo'] . '100.jpg') ?>'>
-                                        <?php endif; ?>
+                                        <img 
+                                            alt='Соискатель <?= $val['firstname'] . ' ' . $val['lastname'] ?> prommu.com' 
+                                            src="<?=Share::getPhoto(2, $val['photo'], 'small', $val['sex'])?>">
                                         <?php if($val['is_online']): ?>
                                             <span class="promo-list__item-onl"><span>В сети</span></span>
                                         <?php endif; ?> 
@@ -143,12 +141,9 @@
                     <div class='comm-logo-wrapp'>
                         <div class='comm-logo'>
                             <a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $val['id_user']?>">
-                                <img alt='<?="Соискатель {$val['firstname']} {$val['lastname']} prommu.com "?>' src="<?
-                                    if($val['sex'])
-                                        echo DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!$val['photo'] ? MainConfig::$DEF_LOGO : $val['photo'] . '100.jpg');
-                                    else 
-                                        echo DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!$val['photo'] ? MainConfig::$DEF_LOGO_F : $val['photo'] . '100.jpg');
-                                ?>">
+                                <img 
+                                    alt='<?="Соискатель {$val['firstname']} {$val['lastname']} prommu.com "?>'
+                                    src="<?=Share::getPhoto(2, $val['photo'], 'small', $val['sex'])?>">
                                 <?php if($val['is_online']): ?>
                                     <span class="promo-list__item-onl"><span>В сети</span></span>
                                 <?php endif; ?>

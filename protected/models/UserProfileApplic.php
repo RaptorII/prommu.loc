@@ -604,13 +604,13 @@ class UserProfileApplic extends UserProfile
             ), 'id_user=:id_user', array(':id_user' => $id));
 
         if($arrs != ''){
-        $link = 'http://' . MainConfig::$SITE . '/admin/site/PromoEdit'. DS .$id;
+        $link = Subdomain::site() . '/admin/site/PromoEdit'. DS .$id;
         $message = sprintf("Пользователь <a href='%s'>%s</a> изменил данные профиля.
             <br />
             Изменены поля: $arrs
             <br />
             Перейти на модерацию соискателя <a href='%s'>по ссылке</a>.",
-            'https://' . MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $id,
+            Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . $id,
             $name,
            $link
         );

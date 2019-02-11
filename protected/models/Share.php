@@ -695,7 +695,8 @@ class Share
         $src = DS . 
             ($type==2 ? MainConfig::$PATH_APPLIC_LOGO : MainConfig::$PATH_EMPL_LOGO)
             . DS;
-        if($type==2) { // applicant
+        if($type==2) // applicant
+        {
             if($photo)
                 switch ($size) {
                     case 'small': $src .= $photo . '100.jpg'; break;
@@ -704,8 +705,15 @@ class Share
                 }
             else
                 $src .= $gender ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F;
+
+            if(!file_exists(Subdomain::domainRoot() . $src)) // if FILE not found
+            {
+                $src = DS . MainConfig::$PATH_APPLIC_LOGO . DS
+                    . ($gender ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F);
+            }
         }
-        if($type==3) { // employer
+        if($type==3) // employer
+        {
             if($photo)
                 switch ($size) {
                     case 'small': $src .= $photo . '100.jpg'; break;
@@ -714,6 +722,11 @@ class Share
                 }
             else
                 $src .= MainConfig::$DEF_LOGO;
+
+            if(!file_exists(Subdomain::domainRoot() . $src)) // if FILE not found
+            {
+                $src = DS . MainConfig::$PATH_EMPL_LOGO . DS . MainConfig::$DEF_LOGO;
+            }
         }
         return $src;
     }

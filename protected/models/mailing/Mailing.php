@@ -55,7 +55,7 @@ class Mailing extends CActiveRecord
 							0 => array(
 										'name' => "#SITE#",
 										'pattern' => "/#SITE#/",
-										'value' => Subdomain::$HOST,
+										'value' => Subdomain::site(),
 										'description' => "Корень сайта"
 									),
 							1 => array(
@@ -67,19 +67,19 @@ class Mailing extends CActiveRecord
 							2 => array(
 										'name' => "#PAGE_USER_CHATS_LIST#",
 										'pattern' => "/#PAGE_USER_CHATS_LIST#/",
-										'value' => Subdomain::$HOST . MainConfig::$PAGE_CHATS_LIST,
+										'value' => Subdomain::site() . MainConfig::$PAGE_CHATS_LIST,
 										'description' => "Раздел профиля пользователя 'Чаты'"
 									),
 							3 => array(
 										'name' => "#PAGE_USER_VACANCY#",
 										'pattern' => "/#PAGE_USER_VACANCY#/",
-										'value' => Subdomain::$HOST . MainConfig::$PAGE_VACANCY,
+										'value' => Subdomain::site() . MainConfig::$PAGE_VACANCY,
 										'description' => "Страница вакансии в публичной части"
 									),
 							4 => array(
 										'name' => "#PAGE_FEEDBACK#",
 										'pattern' => "/#PAGE_FEEDBACK#/",
-										'value' => Subdomain::$HOST . MainConfig::$PAGE_FEEDBACK,
+										'value' => Subdomain::site() . MainConfig::$PAGE_FEEDBACK,
 										'description' => "Страница обратной связи в публичной части"
 									),
 							5 => array(

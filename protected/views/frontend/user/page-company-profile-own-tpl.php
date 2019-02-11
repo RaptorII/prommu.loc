@@ -80,14 +80,21 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
       <div class="upp__img-block-main">
         <?php $hasphoto = $viData['userInfo']['logo']; ?>
         <?php if( $hasphoto ): ?>
-          <a href="<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . $hasphoto . '000.jpg'; ?>" class="js-g-hashint upp__img-block-main-link profile__logo-full" title="<?=$viData['userInfo']['name']?>">
-            <img src="<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . $hasphoto . '400.jpg'; ?>" alt="Работодатель <?=$viData['userInfo']['name']?> prommu.com">
+          <a 
+            href="<?=Share::getPhoto(3, $hasphoto, 'big')?>"
+            class="js-g-hashint upp__img-block-main-link profile__logo-full"
+            title="<?=$viData['userInfo']['name']?>">
+            <img 
+              src="<?=Share::getPhoto(3, $hasphoto, 'small')?>"
+              alt="Работодатель <?=$viData['userInfo']['name']?> prommu.com">
           </a>
         <?php else: ?>
-          <img src="<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . 'logo.png'; ?>" alt="">
+          <img 
+            src="<?=Share::getPhoto(3, $hasphoto, 'small')?>"
+            alt="Работодатель <?=$viData['userInfo']['name']?> prommu.com">
         <?php endif; ?>
         <?if( $flagOwnProfile ):?>
-          <a href="<?=MainConfig::$PAGE_EDIT_PROFILE . '?ep=1'?>" class="upp__change-logo">Изменить аватар</a>
+          <a href="/user/editprofile?ep=1" class="upp__change-logo">Изменить аватар</a>
         <?php elseif($viData['userInfo']['is_online']): ?>
           <span class="upp-logo__item-onl"><span>В сети</span>
         <?php endif; ?>
@@ -97,8 +104,12 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
       <? $i=0; ?>
       <?php foreach ($viData['userPhotos'] as $key => $val): ?>
         <div class="upp__img-block-more <?=($i>2?'off':'')?>">
-          <a href="<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . $val['photo'] . '000.jpg' ?>" class="profile__logo-full">
-            <img src="<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . $val['photo'] . '100.jpg' ?>" alt="Соискатель <?=$viData['userInfo']['name']?> prommu.com">
+          <a 
+            href="<?=Share::getPhoto(3, $val['photo'], 'big')?>" 
+            class="profile__logo-full">
+            <img 
+              src="<?=Share::getPhoto(3, $val['photo'], 'small')?>"
+              alt="Соискатель <?=$viData['userInfo']['name']?> prommu.com">
           </a>
         </div>
         <? if($i==3): ?>
@@ -401,3 +412,33 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
       <p>Модерация занимает от 1 до 2 часов в рабочее время (обычно быстрее)<br/> и о результатах проверки - Вам прийдет уведомление на эл почту.</p>
   </form>
 <?php endif; ?>
+<?
+  //
+  //
+  //
+  //
+  //
+  $bPopup = false;
+
+  $src = DS . MainConfig::$PATH_EMPL_LOGO . DS . $viData['userInfo']['logo'] . '400.jpg';
+  if(!file_exists(Subdomain::domainRoot() . $src))
+    $bPopup = true;
+?>
+<? if($flagOwnProfile && $bPopup && !$_COOKIE['popup_photo']): ?>
+  <div class="prmu__popup prmu__popup-error">
+    <p>У вас не загружено еще ни одной фотографии.</p>
+    <p>Добавляйте пожалуйста логотип своей компании или личные фото. В случае несоответствия фотографий Вы не сможете пройти модерацию! Спасибо за понимание!</p>
+  </div>
+  <? setcookie('popup_photo','1',time()+86400,'/','.'.$_SERVER['SERVER_NAME'], false);?>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      if($('.prmu__popup-error').length!=0){
+          $.fancybox.open({
+              src: "div.prmu__popup.prmu__popup-error",
+              type: 'inline',
+              touch: false
+          });
+      }
+    });
+  </script>
+<? endif; ?>

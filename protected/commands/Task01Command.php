@@ -86,7 +86,7 @@ class Task01Command extends CConsoleCommand
                         Нажмите на <a href='%s'>ссылку</a>, чтобы перейти на страницу диалогов.
                         ",
                     $themesStr
-                    , 'http://' . MainConfig::$SITE . MainConfig::$PAGE_IM
+                    , Subdomain::site() . MainConfig::$PAGE_CHATS_LIST
                 );
 
                 if( $themesStr )
@@ -175,7 +175,7 @@ class Task01Command extends CConsoleCommand
                         Нажмите на <a href='%s'>ссылку</a>, чтобы перейти на страницу диалогов.
                         ",
                     $themesStr
-                    , 'http://' . MainConfig::$SITE . MainConfig::$PAGE_IM
+                    , Subdomain::site() . MainConfig::$PAGE_CHATS_LIST
                 );
 
                 if( $themesStr ) {

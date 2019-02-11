@@ -180,14 +180,14 @@ public function rules()
             if(date("Y-m-d") == $val['remdate']){
                 $message = sprintf("Завершение вакансии №%s “<a href='https://%s'>%s</a>” сегодня. <br>Просим оценить ваше сотрудничество с компанией “<a href='https://%s'>%s</a>”, для этого перейдите на страницу <a href='http://%s'>http://%s</a>"
                     , $val['id']
-                    , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $val['id']
+                    , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $val['id']
                     , $val['title']
-                    , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $val['idusempl']
+                    , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $val['idusempl']
                     , $val['name']
-                    , MainConfig::$SITE . MainConfig::$PAGE_SETRATE . DS . $val['id']
-                    , MainConfig::$SITE . MainConfig::$PAGE_SETRATE . DS . $val['id']
-//                    , MainConfig::$SITE
-//                    , MainConfig::$SITE
+                    , Subdomain::getSiteName() . MainConfig::$PAGE_SETRATE . DS . $val['id']
+                    , Subdomain::getSiteName() . MainConfig::$PAGE_SETRATE . DS . $val['id']
+//                    , Subdomain::getSiteName()
+//                    , Subdomain::getSiteName()
                 );
                  Share::sendmail($val['emailpromo'], "Prommu.com. Завершение проекта сегодня", $message);
                  Share::sendmail($val['emailempl'], "Prommu.com. Завершение проекта сегодня", $message);
@@ -202,26 +202,26 @@ public function rules()
 //             {
 //                 $message = sprintf("Вы были приняты на вакансию №%s “<a href='https://%s'>%s</a>”. <br>Просим оценить ваше сотрудничество с компанией “<a href='https://%s'>%s</a>”, для этого перейдите на страницу <a href='http://%s'>http://%s</a>"
 //                     , $val['id']
-//                     , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $val['id']
+//                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $val['id']
 //                     , $val['title']
-//                     , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $val['idusempl']
+//                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $val['idusempl']
 //                     , $val['name']
-//                     , MainConfig::$SITE . MainConfig::$PAGE_SETRATE . DS . $val['id']
-//                     , MainConfig::$SITE . MainConfig::$PAGE_SETRATE . DS . $val['id']
-// //                    , MainConfig::$SITE
-// //                    , MainConfig::$SITE
+//                     , Subdomain::getSiteName() . MainConfig::$PAGE_SETRATE . DS . $val['id']
+//                     , Subdomain::getSiteName() . MainConfig::$PAGE_SETRATE . DS . $val['id']
+// //                    , Subdomain::getSiteName()
+// //                    , Subdomain::getSiteName()
 //                 );
 
 //                 // Share::sendmail($val['emailpromo'], "Prommu.com. рейтинг", $message);
 
 //                 $message = sprintf("Соискатель “<a href='https://%s'>%s</a>” был принят вами на вакансию №%s “<a href='https://%s'>%s</a>”. <br>Просим оценить ваше сотрудничество, для этого перейдите на страницу <a href='https://%s'>http://%s</a>"
-//                 , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $val['iduspromo']
+//                 , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $val['iduspromo']
 //                 , $val['firstname'] . ' ' . $val['lastname']
 //                 , $val['id']
-//                 , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $val['id']
+//                 , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $val['id']
 //                 , $val['title']
-//                 , MainConfig::$SITE . MainConfig::$PAGE_SETRATE . DS . $val['id'] . '/' . $val['iduspromo']
-//                 , MainConfig::$SITE . MainConfig::$PAGE_SETRATE . DS . $val['id'] . '/' . $val['iduspromo']
+//                 , Subdomain::getSiteName() . MainConfig::$PAGE_SETRATE . DS . $val['id'] . '/' . $val['iduspromo']
+//                 , Subdomain::getSiteName() . MainConfig::$PAGE_SETRATE . DS . $val['id'] . '/' . $val['iduspromo']
 //                 );
 
 //                 // Share::sendmail($val['emailempl'], "Prommu.com. рейтинг", $message);
@@ -268,10 +268,10 @@ public function rules()
         {
         // TODO: ПРОВЕРИТЬ СОСТАВЛЕНИЕ ПИСЬМА
             $message = sprintf("Вакансия “<a href='http://%s'>%s</a>” завершается, если Вы не набрали нужного персонала, можно <a href='http://%s'>продлить вакансию</a>. Также, пожалуйста, <a href='http://%s'>оставьте обратную связь по работе сервиса</a>"
-            , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $val['id']
+            , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $val['id']
             , $val['title']
-            , MainConfig::$SITE . MainConfig::$PAGE_VACANCY_EDIT . DS . $val['id'] . '?bl=3'
-            , MainConfig::$SITE . MainConfig::$PAGE_SET_SITE_RATE . DS . $val['id']
+            , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY_EDIT . DS . $val['id'] . '?bl=3'
+            , Subdomain::getSiteName() . MainConfig::$PAGE_SET_SITE_RATE . DS . $val['id']
             );
 
             // Share::sendmail($val['emailempl'], "Prommu.com. окончание вакансии", $message);
@@ -739,7 +739,7 @@ public function rules()
             ->where('ea.id_vac=:id AND uad.id_par=110', array(':id' => $id))
             ->queryAll();
         // создаем параметры для фильтра
-        $host = Subdomain::$HOST;
+        $host = Subdomain::site();
         $url = $host . MainConfig::$PAGE_SEARCH_PROMO . '?';
         foreach ($arVac['cities'] as $c) {
             $_POST['cities'][] = $c['id_city'];
@@ -1200,8 +1200,8 @@ public function rules()
                  $content = str_replace('#EMPCOMPANY#', Share::$UserProfile->exInfo->name, $content);
                  $content = str_replace('#VACID#', $idvac, $content);
                  $content = str_replace('#VACNAME#', $fields['title'], $content);
-                 $content = str_replace('#VACPARAMLIST#',$arrs, $content);
-                 $content = str_replace('#VACLINK#',  MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $idvac, $content);
+                 $content = str_replace('#VACPARAMLIST#', $arrs, $content);
+                 $content = str_replace('#VACLINK#',  Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $idvac, $content);
                if(strpos($rest[$i]['email'], "@") !== false)
                Share::sendmail($rest[$i]['email'], "Prommu.com Изменение вакансии №" .$idvac, $content);
             }
@@ -1214,8 +1214,8 @@ public function rules()
                  $content = str_replace('#EMPCOMPANY#', Share::$UserProfile->exInfo->name, $content);
                  $content = str_replace('#VACID#', $idvac, $content);
                  $content = str_replace('#VACNAME#', $fields['title'], $content);
-                 $content = str_replace('#VACPARAMLIST#',$arrs, $content);
-                 $content = str_replace('#VACLINK#','http://' . MainConfig::$SITE . '/admin/site/VacancyEdit'. DS .$idvac, $content);
+                 $content = str_replace('#VACPARAMLIST#', $arrs, $content);
+                 $content = str_replace('#VACLINK#', Subdomain::site() . '/admin/site/VacancyEdit'. DS .$idvac, $content);
                
          $email[0] = "susgresk@gmail.com";
         $email[1] = "prommu.servis@gmail.com";
@@ -1854,11 +1854,11 @@ WHERE id_vac = {$inVacId}";
          $content = file_get_contents(Yii::app()->basePath . "/views/mails/app/create-vac.html");
          $content = str_replace('#APPNAME#', $result[$i]['firstname']." ".$result[$i]['lastname'], $content);
          $content = str_replace('#EMPCOMPANY#', Share::$UserProfile->exInfo->name, $content);
-         $content = str_replace('#EMPLINK#', MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->id, $content);
+         $content = str_replace('#EMPLINK#', Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->id, $content);
          $content = str_replace('#VACID#', $inId, $content);
          $content = str_replace('#VACNAME#', $title, $content);
          $content = str_replace('#APPCITY#', $rest['ciname'][0], $content);
-         $content = str_replace('#VACLINK#',  'https://' . MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $vacancy, $content);
+         $content = str_replace('#VACLINK#',  Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $vacancy, $content);
       
         for($i = 0; $i < count($result); $i++){
            Share::sendmail($result[$i]['email'], "Prommu.com Размещение вакансии №" . $inId, $message);
@@ -2205,8 +2205,7 @@ WHERE id_vac = {$inVacId}";
             elseif(($pay = round($vac['svisit'],0)) > 0)
                 $vac['payment'] = $pay . ' руб/пос';
 
-            $vac['logo_src'] = DS . MainConfig::$PATH_EMPL_LOGO . DS 
-                . (!$vac['logo'] ?  'logo-min.png' : ($vac['logo']) . '100.jpg');
+            $vac['logo_src'] = Share::getPhoto(3, $vac['logo']);
             $vac['period'] = ' с ' . $vac['crdate'] 
                 . ($vac['remdate'] ? ' по ' . $vac['remdate'] : '');
             $vac['work_type'] = $vac['istemp'] ? 'Постоянная' : 'Временная';
@@ -2309,7 +2308,7 @@ WHERE id_vac = {$inVacId}";
 			$conditions = $arVac['conditions'];
 			$requirements = $arVac['requirements'];
 			$duties = $arVac['duties'];
-			$linki = Subdomain::$HOST . MainConfig::$PAGE_VACANCY . $arVac['id'];
+			$linki = Subdomain::site() . MainConfig::$PAGE_VACANCY . $arVac['id'];
 			$vacType = ($arVac['istemp'] ? 'временная' : 'постоянная') . ' работа';
 
       $message =

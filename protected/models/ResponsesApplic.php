@@ -55,11 +55,11 @@ class ResponsesApplic extends Responses
                  $content = file_get_contents(Yii::app()->basePath . "/views/mails/emp/app-refused-part.html");
                   $content = str_replace('#APPNAME#', Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname, $content);
                   $content = str_replace('#EMPNAME#', $vacData['name'], $content);
-                 $content = str_replace('#APPLINK#',  MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
+                 $content = str_replace('#APPLINK#',  Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
                  $content = str_replace('#VACID#', $vacData['id_vac'], $content);
                  $content = str_replace('#VACNAME#', $vacData['title'], $content);
-                 $content = str_replace('#RESPLINK#',MainConfig::$SITE . MainConfig::$PAGE_RESPONSES, $content);
-                 $content = str_replace('#VACLINK#',  MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $vacData['id_vac'], $content);
+                 $content = str_replace('#RESPLINK#',Subdomain::site() . MainConfig::$PAGE_RESPONSES, $content);
+                 $content = str_replace('#VACLINK#',  Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $vacData['id_vac'], $content);
       
               Share::sendmail($vacData['email'], "Prommu: заявка на вакансию отклонена", $content);
 
@@ -69,11 +69,11 @@ class ResponsesApplic extends Responses
             if($status == 5){
                  $content = file_get_contents(Yii::app()->basePath . "/views/mails/emp/app-confirmed-part.html");
                  $content = str_replace('#APPNAME#', Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname, $content);
-                 $content = str_replace('#APPLINK#',  MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
+                 $content = str_replace('#APPLINK#',  Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
                  $content = str_replace('#VACID#', $vacData['id_vac'], $content);
                  $content = str_replace('#VACNAME#', $vacData['title'], $content);
-                 $content = str_replace('#RESPLINK#',MainConfig::$SITE . MainConfig::$PAGE_RESPONSES, $content);
-                 $content = str_replace('#VACLINK#',  MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $vacData['id_vac'], $content);
+                 $content = str_replace('#RESPLINK#',Subdomain::site() . MainConfig::$PAGE_RESPONSES, $content);
+                 $content = str_replace('#VACLINK#',  Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $vacData['id_vac'], $content);
       
            Share::sendmail($vacData['email'], "Prommu: заявка на вакансию подтверждена", $content);
 
@@ -387,11 +387,11 @@ class ResponsesApplic extends Responses
 
                    $content = file_get_contents(Yii::app()->basePath . "/views/mails/emp/response-to-vac.html");
                   $content = str_replace('#APPNAME#', Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname, $content);
-                 $content = str_replace('#APPLINK#',  MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
+                 $content = str_replace('#APPLINK#',  Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
                  $content = str_replace('#VACID#', $id, $content);
                  $content = str_replace('#VACNAME#', $vacData['title'], $content);
-                 $content = str_replace('#VACLINK#', MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id, $content);
-                 $content = str_replace('#RESPLINK#',MainConfig::$SITE . MainConfig::$PAGE_RESPONSES, $content);
+                 $content = str_replace('#VACLINK#', Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $id, $content);
+                 $content = str_replace('#RESPLINK#',Subdomain::site() . MainConfig::$PAGE_RESPONSES, $content);
                 
       
               Share::sendmail($email, "Prommu: Отклик на вакансию", $content);
@@ -487,11 +487,11 @@ class ResponsesApplic extends Responses
             // Отправляем письмо уведомление о новом рейтинге
             $content = file_get_contents(Yii::app()->basePath . "/views/mails/emp/new-review.html");
                   $content = str_replace('#APPNAME#', Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname, $content);
-                 $content = str_replace('#APPLINK#',  MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
+                 $content = str_replace('#APPLINK#',  Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
                  $content = str_replace('#VACID#', $vacData['id_vac'], $content);
                  $content = str_replace('#VACNAME#', $vacData['title'], $content);
-                 $content = str_replace('#RATELINK#',MainConfig::$SITE . DS . MainConfig::$PAGE_RATE, $content);
-                 $content = str_replace('#VACLINK#',  MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $vacData['id_vac'], $content);
+                 $content = str_replace('#RATELINK#',Subdomain::site() . DS . MainConfig::$PAGE_RATE, $content);
+                 $content = str_replace('#VACLINK#',  Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $vacData['id_vac'], $content);
       
               Share::sendmail($vacData['emailempl'], "Prommu.com. Новый рейтинг", $content);
 
@@ -513,11 +513,11 @@ class ResponsesApplic extends Responses
                 // Отправляем письмо уведомление о новом отзыве
                  $content = file_get_contents(Yii::app()->basePath . "/views/mails/emp/new-review.html");
                   $content = str_replace('#EMPNAME#', Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname, $content);
-                 $content = str_replace('#APPLINK#',  MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
+                 $content = str_replace('#APPLINK#',  Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
                  $content = str_replace('#VACID#', $vacData['id_vac'], $content);
                  $content = str_replace('#VACNAME#', $vacData['title'], $content);
-                 $content = str_replace('#RATELINK#',MainConfig::$SITE . DS . MainConfig::$PAGE_RATE, $content);
-                 $content = str_replace('#VACLINK#',  MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $vacData['id_vac'], $content);
+                 $content = str_replace('#RATELINK#',Subdomain::site() . DS . MainConfig::$PAGE_RATE, $content);
+                 $content = str_replace('#VACLINK#',  Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $vacData['id_vac'], $content);
       
               Share::sendmail($vacData['emailempl'], "Prommu.com. Новый рейтинг", $content);
 
@@ -600,11 +600,11 @@ class ResponsesApplic extends Responses
              $content = file_get_contents(Yii::app()->basePath . "/views/mails/emp/new-review.html");
              $content = str_replace('#EMPNAME#', $vacData['username'], $content);
                   $content = str_replace('#APPNAME#', Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname, $content);
-                 $content = str_replace('#APPLINK#',  MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
+                 $content = str_replace('#APPLINK#',  Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
                  $content = str_replace('#VACID#', $vacData['id_vac'], $content);
                  $content = str_replace('#VACNAME#', $vacData['title'], $content);
-                 $content = str_replace('#RATELINK#',MainConfig::$SITE . DS . MainConfig::$PAGE_RATE, $content);
-                 $content = str_replace('#VACLINK#',  MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $id, $content);
+                 $content = str_replace('#RATELINK#',Subdomain::site() . DS . MainConfig::$PAGE_RATE, $content);
+                 $content = str_replace('#VACLINK#',  Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $id, $content);
       
               Share::sendmail($vacData['emailempl'], "Prommu.com. Новый отзыв", $content);
 
@@ -626,11 +626,11 @@ class ResponsesApplic extends Responses
                 // Отправляем письмо уведомление о новом отзыве
               //    $content = file_get_contents(Yii::app()->basePath . "/views/mails/emp/new-review.html");
               //     $content = str_replace('#APPNAME#', Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname, $content);
-              //    $content = str_replace('#APPLINK#',  MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
+              //    $content = str_replace('#APPLINK#',  Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
               //    $content = str_replace('#VACID#', $vacData['id_vac'], $content);
               //    $content = str_replace('#VACNAME#', $vacData['title'], $content);
-              //    $content = str_replace('#RATELINK#',MainConfig::$SITE . DS . MainConfig::$PAGE_RATE, $content);
-              //    $content = str_replace('#VACLINK#',  MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $vacData['id_vac'], $content);
+              //    $content = str_replace('#RATELINK#',Subdomain::site() . DS . MainConfig::$PAGE_RATE, $content);
+              //    $content = str_replace('#VACLINK#',  Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $vacData['id_vac'], $content);
       
               // Share::sendmail($vacData['emailempl'], "Prommu.com. Новый рейтинг", $content);
 
@@ -639,7 +639,7 @@ class ResponsesApplic extends Responses
 
             // устанавливаем статус
             $res = Yii::app()->db->createCommand()
-                ->update('vacation_stat', array( 'status' => 6,
+                ->update('vacation_stat', array( 'status' => 7,
                     'mdate' => date('Y-m-d H:i:s'),
                 ), 'id = :id', array(':id' => $vacData['sid']));
             $ret = array('error' => 0, 'res' => $res);
@@ -714,7 +714,7 @@ class ResponsesApplic extends Responses
 
                 $emp = Share::$UserProfile->getProfileDataView()['userInfo'];
                 $vac = (new Vacancy())->getVacancyInfo($id);
-                $host = 'https://'.MainConfig::$SITE;
+                $host = Subdomain::site();
                 $arRes = array(
                     $Q1['firstname'].' '.$Q1['lastname'], // #APPNAME#
                     $emp['name'], // #EMPCOMPANY#
@@ -796,13 +796,13 @@ class ResponsesApplic extends Responses
                 "<br/><br/>" .
                 "Страница <a href='http:
                 //%s'>заявок на ваши вакансии</a>."
-            , MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $inData['idus']
+            , Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . $inData['idus']
             , $inData['fio']
             , $inData['isman'] == '1' ? 'подтвердил' : 'подтвердила'
             , $inData['id']
-            , MainConfig::$SITE . MainConfig::$PAGE_VACANCY . DS . $inData['id']
+            , Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $inData['id']
             , $inData['title']
-            , MainConfig::$SITE . MainConfig::$PAGE_RESPONSES
+            , Subdomain::site() . MainConfig::$PAGE_RESPONSES
             );
 
         Share::sendmail($inData['email'], "Prommu: заявка на вакансию подтверждена", $message);
@@ -878,7 +878,7 @@ class ResponsesApplic extends Responses
             $res = Yii::app()->db->createCommand($sql);
             $res = $res->queryRow();
 
-            $UserProfileEmpl = new UserProfileEmpl(array('id' => $res['id_user']));
+            $UserProfileEmpl = new UserProfileEmpl(array('id' => $res['id_user']));         
             $data = $UserProfileEmpl->getPointRate($res['id_user']);
             $data = $UserProfileEmpl->prepareProfileCommonRate($data);
             $data['user'] = $user;
@@ -904,7 +904,7 @@ class ResponsesApplic extends Responses
         if( $res['status'] == 6 )
         {
             $UserProfile = new UserProfileEmpl(array('id' => $idUs));
-             $data = $UserProfile->getProfileDataView($idUs, $id);
+            $data = $UserProfile->getProfileDataView($idUs, $id);
             $res = $this->getVacStatus($id, $idUs);
             $data['user'] = $res;
         }else

@@ -437,8 +437,7 @@ class Employer extends ARModel
                         : $city['name']);
 
             $i['datail-url'] = MainConfig::$PAGE_PROFILE_COMMON . DS . $i['idus'];
-            $i['logo'] = DS . MainConfig::$PATH_EMPL_LOGO . DS 
-                . (!$i['logo'] ?  'logo.png' : $i['logo'] . '100.jpg');
+            $i['logo'] = Share::getPhoto(3, $i['logo']);
             $i['fullname'] = $i['name'] . ' (№' . $i['idus'] . ')';
             $i['comment-url'] = MainConfig::$PAGE_COMMENTS . DS . $i['idus'];
             $i['rate_count'] = $i['rate'] + $i['rate_neg'];

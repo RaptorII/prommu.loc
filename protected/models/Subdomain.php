@@ -2,12 +2,73 @@
 
 class Subdomain
 {
-	public static $MAIN_SITE = 'https://prommu.com';
-	public static $MAIN_SEND_FILE_URL = '/ajax/AcceptFileFromSubdomain';
-	public static $MAIN_DEL_FILE_URL = '/ajax/DelThroughSubdomain';
-	public static $MAIN_SITE_ROOT = '/var/www/prommu'; // для загрузки файлов на домен
+	public static $MAIN_SEND_FILE_URL = '/ajax/AcceptFileFromSubdomain'; // пока не используется
+	public static $MAIN_DEL_FILE_URL = '/ajax/DelThroughSubdomain'; // пока не используется
 	public static $REDIRECT = '/api.auth_user/?id=#ID#&code=prommucomWd126wdn&url=';
-	public static $HOST = 'https://prommu.com';
+	/**
+	 * 	Определяем что за сайт
+	 */
+	public static function site()
+	{
+		return Yii::app()->request->hostInfo;
+	}
+	/**
+	 *	получить имя сайта по урлу (без https://)
+	 * 	@return string
+	 */
+	public static function getSiteName()
+	{
+		$site = self::site();
+		$pos = strripos(self::site(), '://') + 3;
+		$site = substr($site, $pos);
+		return $site;
+	}
+	/**
+	 * 	является ли текущий сайт доменом
+	 * 	@return bool
+	 */
+	public static function isDomain()
+	{
+		return self::getSiteName() == self::domain()->url;
+	}
+	/**
+	 * 	путь к корню домена
+	 * 	@return string
+	 */
+	public static function domainRoot()
+	{
+		return self::domain()->root;
+	}
+	/**
+	 * 	урл текущего сайта
+	 * 	@return string
+	 */
+	public static function domainSite()
+	{
+		return 'https://' . self::domain()->url;
+	}
+	/**
+	 * 	закешированые данные о урле
+	 * 	@return object
+	 */
+	public static function domain()
+	{
+		$id = self::getSiteName() . '/Subdomain/Domain';
+		$arRes = Cache::getData($id);
+		if($arRes['data']===false)
+		{
+			$sql = Yii::app()->db->createCommand()
+								->select("*")
+								->from('subdomains')
+								->where('is_domain=1')
+								->queryRow();
+
+			$arRes['data'] = (object) $sql;
+
+			Cache::setData($arRes, 604800); // кеш на неделю
+		}
+		return $arRes['data'];
+	}
 	/*
 	*		Получить ID текущего сайта
 	*/
@@ -16,7 +77,7 @@ class Subdomain
 		$res = Yii::app()->db->createCommand()
 			->select('id')
 			->from('subdomains')
-			->where(array('like', 'url', self::$HOST))
+			->where(['like', 'url', self::getSiteName()])
 			->queryRow();
 		return $res['id'];
 	}
@@ -28,7 +89,7 @@ class Subdomain
 		$sql = Yii::app()->db->createCommand()
 			->select('id')
 			->from('subdomains')
-			->where('id<>:id',array(':id'=>1307))
+			->where('id<>:id',[':id'=>1307])
 			->queryAll();
 
 		$arRes = array();
@@ -40,28 +101,23 @@ class Subdomain
 	/*
 	*		Получаем всю инфу по сайтам
 	*/
-	public static function getData($without=false)
+	public static function getData()
 	{
 		$arRes = array();
+		$query = Yii::app()->db->createCommand()->select('*')->from('subdomains');
 
-		if($without)
+		if(self::isDomain()) // для домена
 		{
-			$sql = Yii::app()->db->createCommand()
-				->select('*')
-				->from('subdomains')
-				->where(array('not like', 'url', self::$HOST))
-				->queryAll();
+			$query->where(['not like', 'url', self::getSiteName()]);
 		}
-		else
+
+		$result = $query->queryAll();
+
+		foreach ($result as $d)
 		{
-			$sql = Yii::app()->db->createCommand()
-				->select('*')
-				->from('subdomains')
-				->queryAll();
-		}
-		
-		foreach ($sql as $d)
 			$arRes[$d['id']] = $d;
+			$arRes[$d['id']]['url'] = 'https://' . $d['url'];
+		}
 
 		return $arRes;
 	}
@@ -79,13 +135,9 @@ class Subdomain
 
 		foreach ($arCnt as $id => $cnt)
 			if($cnt==count($arCities))
-				return array(
-					'name' => $arSub[$id]['meta']
-				);
+				return ['name' => $arSub[$id]['meta']];
 
-		return array(
-			'name' => $arSub[1307]['meta']
-		);
+		return ['name' => $arSub[1307]['meta']];
 	}
 	/*
 	*		Определяем город и при необходимости редиректимся на главной
@@ -107,7 +159,7 @@ class Subdomain
 				')
 				->from('user_city uc')
 				->join('city c', 'uc.id_city=c.id_city')
-				->where('uc.id_user=:idus', array(':idus' => $idus))
+				->where('uc.id_user=:idus', [':idus' => $idus])
 				->queryAll();
 
 			$arCnt = array_fill_keys($arId, 0);
@@ -143,7 +195,7 @@ class Subdomain
 			->select('uc.id_city, c.region')
 			->from('user_city uc')
 			->join('city c', 'uc.id_city=c.id_city')
-			->where('id_user=:id_user', array(':id_user' => $idus))
+			->where('id_user=:id_user', [':id_user' => $idus])
 			->queryAll();
 
 
@@ -196,7 +248,7 @@ class Subdomain
 			$arRes = Yii::app()->db->createCommand()
 				->select('c.region')
 				->from('city c')
-				->where(array('in', 'c.id_city', $arC))
+				->where(['in', 'c.id_city', $arC])
 				->limit(10000);
 			$arCities = $arRes->queryAll();
 
@@ -213,10 +265,10 @@ class Subdomain
 					if(in_array($type, [2,3]))
 						self::setRedirect($idus, $id, true);
 					else {
-						$arData = self::getData(true);
+						$arData = self::getData();
 						$url = 'Location: ' . $arData[$id]['url'] . $_SERVER['REQUEST_URI'];
-						//header($url);
-						//exit();
+						header($url);
+						exit();
 					}	
 				}
 		}
@@ -224,7 +276,7 @@ class Subdomain
 	/*
 	*		Получаем ID городов региона субдомена в виде строки
 	*/
-	public static function getCitiesIdies($main = false, $type = 'str')
+	public static function getCitiesIdies($main = false, $type = 'str') // упразднен, все делается в методе кеша
 	{
 		$arId = self::getIdies();
 		$sId = self::getId();
@@ -233,7 +285,7 @@ class Subdomain
 			$arRes = Yii::app()->db->createCommand()
 				->select('c.id_city id')
 				->from('city c')
-				->where(array('in', 'c.region', $arId) )
+				->where(['in', 'c.region', $arId])
 				->limit(10000)
 				->queryAll();
 		}
@@ -241,7 +293,7 @@ class Subdomain
 			$arRes = Yii::app()->db->createCommand()
 				->select('c.id_city id')
 				->from('city c')
-				->where('c.region=:region', array(':region' => $sId))
+				->where('c.region=:region', [':region' => $sId])
 				->limit(10000)
 				->queryAll();
 		}
@@ -275,60 +327,9 @@ class Subdomain
 					$url .= DS . '?' . str_replace('&', ',', $arUrl[1]);
 				}
 			}
-			//header($url);
-			//exit();
+			header($url);
+			exit();
 		}
-	}
-	/*
-	*		Получаем название SEO таблицы
-	*/
-	public static function getSeoTable()
-	{
-		$res = Yii::app()->db->createCommand()
-			->select('seo')
-			->from('subdomains')
-			->where(array('like', 'url', self::$HOST))
-			->queryRow();
-		if(!isset($res['seo']))
-			$res['seo'] = 'seo';
-
-		return $res['seo'];
-	}
-	/*
-	*
-	*/
-	public static function getLabel()
-	{
-		$res = Yii::app()->db->createCommand()
-			->select('label')
-			->from('subdomains')
-			->where(array('like', 'url', self::$HOST))
-			->queryRow();
-		return $res['label'];
-	}
-	/*
-	*
-	*/
-	public static function getUrl()
-	{
-		$res = Yii::app()->db->createCommand()
-			->select('url')
-			->from('subdomains')
-			->where(array('like', 'url', self::$HOST))
-			->queryRow();
-		return $res['url'];
-	}
-	/*
-	*
-	*/
-	public static function getName()
-	{
-		$res = Yii::app()->db->createCommand()
-			->select('meta')
-			->from('subdomains')
-			->where(array('like', 'url', self::$HOST))
-			->queryRow();
-		return $res['meta'];
 	}
 	/*
 	*		редиректим гостя
@@ -337,8 +338,8 @@ class Subdomain
 		$sId = self::getId();
 		if($sId!=1307 && $type!=2 && $type!=3) {
 			$url = 'Location: ' . self::$MAIN_SITE . $_SERVER['REQUEST_URI'];
-			//header($url);
-			//exit();
+			header($url);
+			exit();
 		}
 	}
 	/*
@@ -354,7 +355,7 @@ class Subdomain
 			$arRes = Yii::app()->db->createCommand()
 				->select('c.region')
 				->from('city c')
-				->where(array('in', 'c.id_city', $arC))
+				->where(['in', 'c.id_city', $arC])
 				->limit(10000);
 			$arCities = $arRes->queryAll();
 
@@ -365,7 +366,7 @@ class Subdomain
 				if(in_array($c['region'], $arId))
 					$arCnt[$c['region']]++;
 
-			$arData = self::getData(true);
+			$arData = self::getData();
 			$sId = self::getId();
 			foreach ($arCnt as $id => $cnt) 
 				if($cnt>0 && $cnt==sizeof($arC) && $id!=$sId) {
@@ -391,35 +392,38 @@ class Subdomain
 	*/
 	public static function getCacheData()
 	{
-		$id = self::$HOST . '/Subdomain/All';
+		$id = self::getSiteName() . '/Subdomain/All';
 		$arRes = Cache::getData($id);
-		if($arRes['data']===false) {
+		if($arRes['data']===false)
+		{
 			$sql = Yii::app()->db->createCommand()
 								->select("*")
 								->from('subdomains')
-								->where(array('like', 'url', self::$HOST))
+								->where(['like', 'url', self::getSiteName()])
 								->queryRow();
 
-			if(!isset($sql['seo']))
-				$sql['seo'] = 'seo';
+			empty($sql['seo']) && $sql['seo'] = 'seo';
 
-			$arRes['data']->host = self::$HOST;
-			$arRes['data']->id = $sql['id'];
-			$arRes['data']->seo = $sql['seo'];
-			$arRes['data']->label = $sql['label'];
-			$arRes['data']->url = $sql['url'];
-			$arRes['data']->name = $sql['meta'];
-			$arRes['data']->idies = self::getIdies();
-			$arRes['data']->data = self::getData(true); // true для домена
+			$arRes['data'] = (object) array(
+					'host' => self::getSiteName(),
+					'id' => $sql['id'],
+					'seo' => $sql['seo'],
+					'label' => $sql['label'],
+					'url' => 'https://' . $sql['url'],
+					'name' => $sql['meta'],
+					'idies' => self::getIdies(),
+					'data' => self::getData(),
+					'arCitiesIdes' => array(),
+					'strCitiesIdes' => '',
+				);
 
 			$sql = Yii::app()->db->createCommand()
 									->select('c.id_city id')
 									->from('city c')
-									->where('c.region=:region', array(':region' => $arRes['data']->id))
+									->where('c.region=:region', [':region' => $arRes['data']->id])
 									->limit(10000)
 									->queryAll();
 
-			$arRes['data']->arCitiesIdes = array();
 			foreach ($sql as $city)
 				array_push($arRes['data']->arCitiesIdes, $city['id']);
 
