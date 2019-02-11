@@ -154,21 +154,21 @@ foreach ($viData['filter']['posts'] as $k => $p)
         </div>
 
         <a class="cabinet__link-target" href="#target">
-        <div class="cabinet__timer">
-            <div class="timer__box">
-                <div class="timer__time">
-                    <span id="t_hours" class="timer__hours">&nbsp;&nbsp;</span>
-                    <span class="timer__sw">:</span>
-                    <span id="t_minutes" class="timer__minutes">&nbsp;&nbsp;</span>
-                </div>
-                <div class="timer__control-top">
-                    <div id="t_week" class="timer__control-text"></div>
-                    <div class="timer__control-tasks">
-                        Задач на сегодня:<span class="control__tasks"><?=$viData['tasks_cnt']?></span>
+            <div class="cabinet__timer">
+                <div class="timer__box">
+                    <div class="timer__time">
+                        <span id="t_hours" class="timer__hours">&nbsp;&nbsp;</span>
+                        <span class="timer__sw">:</span>
+                        <span id="t_minutes" class="timer__minutes">&nbsp;&nbsp;</span>
+                    </div>
+                    <div class="timer__control-top">
+                        <div id="t_week" class="timer__control-text"></div>
+                        <div class="timer__control-tasks">
+                            Задач на сегодня:<span class="control__tasks"><?=$viData['tasks_cnt']?></span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </a>
 
         <a class="cabinet__user" href="/user/profile">
@@ -181,20 +181,19 @@ foreach ($viData['filter']['posts'] as $k => $p)
 
     <div class="project__module" data-id="<?=$project?>">
         <div class="project__header">
-            <?/* require_once('/../filter.php');*/ // ФИЛЬТР?>
+            <? require_once(__DIR__.'/../filter.php'); // ФИЛЬТР?>
         </div>
     </div>
 
 
-
-    <?/*<div class="cabinet__body">
+    <div class="cabinet__body">
 
         <div class="cabinet__tasks">
 
             <? if (count($viData['items']) > 0): ?>
 
                 <div class="tasks__box" id="ajax-content">
-                    <? require __DIR__ . '/tasks-ajax.php';?>
+                    <? require_once(__DIR__.'/tasks-ajax.php'); // ФИЛЬТР?>
                 </div>
             <?php else: ?>
                 <br><br><h2 class="center">Задания не найдены</h2>
@@ -202,7 +201,7 @@ foreach ($viData['filter']['posts'] as $k => $p)
 
 
         </div>
-    </div>*/?>
+    </div>
 
 
 
