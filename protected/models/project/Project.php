@@ -6,7 +6,7 @@
  */
 class Project extends CActiveRecord
 {
-    public $XLS_UPLOAD_PATH = '/var/www/dev.prommu/uploads/';
+    public $XLS_UPLOAD_PATH = '/var/www/prommu.dev/uploads/';
     public $PROJECTS_IN_PAGE = 10;
     public $limit;
     public $offset;
@@ -42,7 +42,7 @@ class Project extends CActiveRecord
                 'vacancy' => $props['vacancy']
             ));
 
-        if (isset($_FILES['xls']['name']) && isset($_FILES['xls']['size'])) {
+        if (strpos($_FILES['xls']['name'])>0) {
             $name = $project . '.' . (end(explode('.', $_FILES['xls']['name'])));
             $uploadfile = $this->XLS_UPLOAD_PATH . $name;
             if (move_uploaded_file($_FILES['xls']['tmp_name'], $uploadfile)) {

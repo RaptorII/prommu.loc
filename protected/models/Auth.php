@@ -340,7 +340,7 @@ class Auth
                         GA: <b>%s</b>
                          <br/>
                         Площадка: <b>%s</b>",
-                        MainConfig::$SITE, $idUs,$types,$names, $emails, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
+                        Subdomain::getSiteName(), $idUs,$types,$names, $emails, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
                     $email[0] = "denisgresk@gmail.com";
                     $email[1] = "admin.prommu@prommu.ru";
                     /*
@@ -386,7 +386,7 @@ class Auth
                         GA: <b>%s</b>
                         <br/>
                         Площадка: <b>%s</b>",
-                        MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
+                        Subdomain::getSiteName(), $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
                     Share::sendmail("prommu.servis@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
                     */
                 }
@@ -429,7 +429,7 @@ class Auth
                         GA: <b>%s</b>
                         <br/>
                         Площадка: <b>%s</b>",
-                        MainConfig::$SITE, $idUs,$types,$names, $emails, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
+                        Subdomain::getSiteName(), $idUs,$types,$names, $emails, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
 
                     $email[0] = "denisgresk@gmail.com";
                     $email[1] = "admin.prommu@prommu.ru";
@@ -476,7 +476,7 @@ class Auth
                         GA: <b>%s</b>
                         <br/>
                         Площадка: <b>%s</b>",
-                        MainConfig::$SITE, $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client,$pm);
+                        Subdomain::getSiteName(), $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client,$pm);
                     Share::sendmail("prommu.servis@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
                     */
                 } // endif

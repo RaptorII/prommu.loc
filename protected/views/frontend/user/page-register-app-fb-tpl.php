@@ -85,7 +85,7 @@ $this->pageTitle = $title;
 
         // if (isset($userInfo['response'][0]['email'])) {
         //     $userInfo = $userInfo['response'][0];
-            var_dump($userInfo);
+          //  var_dump($userInfo);
        // }
 
 }

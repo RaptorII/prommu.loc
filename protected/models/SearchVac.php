@@ -426,8 +426,15 @@ class SearchVac extends Model
         }
 
         // city filter
-        if( !empty($data['cities']) ) 
+        if( !empty($data['cities']) )
+        {
             $filter[] = "c.id_city IN (".join(',',$data['cities']).')';
+        }
+        else
+        {
+            $filter[] = 'c.id_city IN ('.Subdomain::getCacheData()->strCitiesIdes.')';
+        }
+
 
         if( !empty($data['smart']) )
         {
@@ -556,7 +563,7 @@ class SearchVac extends Model
         }
         $url = (sizeof($data['cities'])>1 || sizeof($data['post'])>1 ? '' : $base . $url);
 
-        $table = Subdomain::getSeoTable();
+        $table = Subdomain::getCacheData()->seo;
         $seo = Yii::app()->db->createCommand('SELECT * FROM ' . $table . ' WHERE url = "'.$url.'"')->queryRow();
 
         return $seo;

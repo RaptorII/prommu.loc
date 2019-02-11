@@ -281,7 +281,7 @@ class Feedback extends Model
                 Реферер: <b>%s</b>
                 <br/>
                 Roistat: <b>%s</b>  ",
-        MainConfig::$SITE, $name, $theme, $emails, $text, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $roistat);
+        Subdomain::getSiteName(), $name, $theme, $emails, $text, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $roistat);
 	           
 				$arMail[] = "denisgresk@gmail.com";
 				$arMail[] = "projekt.sergey@gmail.com";

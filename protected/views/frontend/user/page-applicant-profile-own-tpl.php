@@ -132,59 +132,50 @@
   <?php else: ?>
   <div class="ppp__logo">
     <div class="ppp__logo-main">
-      <?php if($attr['photo']): ?>
-        <a href="<?= $this->ViewModel->getHtmlLogo($attr['photo'], ViewModel::$LOGO_TYPE_APPLIC, ViewModel::$LOGO_SIZE_MAX, $attr['isman']) ?>" class="js-g-hashint ppp-logo-main__link ppp__logo-full" title="<?=$h1title?>">
-          <img src="<?= $this->ViewModel->getHtmlLogo($attr['photo'], ViewModel::$LOGO_TYPE_APPLIC, ViewModel::$LOGO_SIZE_400, $attr['isman']); ?>" alt='Соискатель <?=$attr['lastname']?> prommu.com' class="ppp-logo-main__img">
+      <? if($attr['photo']): ?>
+        <a href="<?=Share::getPhoto(2, $attr['photo'], 'big', $attr['isman']);?>" class="js-g-hashint ppp-logo-main__link ppp__logo-full" title="<?=$h1title?>">
+          <img 
+            src="<?=Share::getPhoto(2, $attr['photo'], 'medium', $attr['isman']);?>"
+            alt='Соискатель <?=$attr['lastname']?> prommu.com'
+            class="ppp-logo-main__img">
         </a>
-      <?php else: ?>
-        <img src="<?= $this->ViewModel->getHtmlLogoPromo($attr['photo'], ViewModel::$LOGO_TYPE_APPLIC, ViewModel::$LOGO_SIZE_400, $attr['isman']) ?>" alt="" class="ppp-logo-main__img">
-      <?php endif; ?>
+      <? else: ?>
+        <img 
+          src="<?=Share::getPhoto(2, $attr['photo'], 'medium', $attr['isman']);?>"
+          alt='Соискатель <?=$attr['lastname']?> prommu.com'
+          class="ppp-logo-main__img">
+      <? endif; ?>
 
       <?php if(!$flagOwnProfile && $attr['is_online']): ?>
         <span class="ppp-logo__item-onl"><span>В сети</span>
       <?php endif; ?>
       <?if($flagOwnProfile):?>
         <a href="<?=MainConfig::$PAGE_EDIT_PROFILE . '?ep=1'?>" class="ppp-logo-main__change">Изменить аватар</a>
-      <?endif;?>        
+      <?endif;?> 
     </div>
 
-        <?/*<div>
-            Статус:
-            <?if($userData['is_online']):?>
-                <b><span class="ppp__content-status-on">Сейчас на сайте</span></b>
-            <?else:?>
-                <b><span class="ppp__content-status-off">Нет на сайте</span></b>
-            <?endif;?>
+    <div style="text-align: center;margin-top: 10px;margin-bottom: 10px;">
+        <?if($userData['is_online']):?>
+            <span style="color:#abb820"><i style="
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #abb820;
+            border-radius: 50%;
+            margin-right: 8px;
+        "></i>В сети</span>
+        <?else:?>
 
-        </div>
-        <div>
-            Был на сервисе:
-            <span><i></i><?=date_format(date_create($userData['mdate']), 'd.m.Y');?></span>
-        </div>*/?>
-
-        <div style="text-align: center;margin-top: 10px;margin-bottom: 10px;">
-            <?if($userData['is_online']):?>
-                <span style="color:#abb820"><i style="
-                display: inline-block;
-                width: 8px;
-                height: 8px;
-                background: #abb820;
-                border-radius: 50%;
-                margin-right: 8px;
-            "></i>В сети</span>
-            <?else:?>
-
-            <span style="color:#D6D6D6"><i style="
-                display: inline-block;
-                width: 8px;
-                height: 8px;
-                background: #D6D6D6;
-                border-radius: 50%;
-                margin-right: 8px;
-            "></i>Был(а) на сервисе: <?=date_format(date_create($userData['mdate']), 'd.m.Y');?></span>
-            <?endif;?>
-        </div>
-
+        <span style="color:#D6D6D6"><i style="
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #D6D6D6;
+            border-radius: 50%;
+            margin-right: 8px;
+        "></i>Был(а) на сервисе: <?=date_format(date_create($userData['mdate']), 'd.m.Y');?></span>
+        <?endif;?>
+    </div>
 
     <?php if(!$flagOwnProfile): ?>
       <div class="ppp__logo-rating">
@@ -219,8 +210,11 @@
         foreach($info['userPhotos'] as $photo):
           if($photo['ismain']==0): ?>
             <div class="ppp-logo__item">
-              <a href="<?= DS . MainConfig::$PATH_APPLIC_LOGO . DS . $photo['photo'] . '000.jpg' ?>" class="ppp-logo-item__link ppp__logo-full">
-                <img src="<?= DS . MainConfig::$PATH_APPLIC_LOGO . DS . $photo['photo'] . '100.jpg' ?>" alt="Соискатель <?=$attr['lastname']?> prommu.com" class="ppp-logo-item__img">
+              <a href="<?=Share::getPhoto(2, $photo['photo'], 'big', $attr['isman'])?>" class="ppp-logo-item__link ppp__logo-full">
+                <img 
+                  src="<?=Share::getPhoto(2, $photo['photo'], 'small', $attr['isman'])?>" 
+                  alt="Соискатель <?=$attr['lastname']?> prommu.com" 
+                  class="ppp-logo-item__img">
               </a>
             </div>
             <?php $i++;
@@ -229,7 +223,7 @@
           endif;
         endforeach; ?>
       <div class="clearfix"></div>     
-    </div>     
+    </div>    
     <div class='center-box'>
       <?php if( $flagOwnProfile ): ?>
         <a class='ppp__btn' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>' style="margin-bottom: 10px">Редактировать профиль</a>
@@ -656,4 +650,34 @@
         <p>Модерация занимает от 1 до 2 часов в рабочее время (обычно быстрее)<br/> и о результатах проверки - Вам прийдет уведомление на эл почту.</p>
     </form>
   <?php endif; ?>
+  <?
+    //
+    //
+    //
+    //
+    //
+    $bPopup = false;
+
+    $src = DS . MainConfig::$PATH_APPLIC_LOGO . DS . $attr['photo'] . '100.jpg';
+    if(!file_exists(Subdomain::domainRoot() . $src))
+      $bPopup = true;
+  ?>
+  <? if($flagOwnProfile && $bPopup && !$_COOKIE['popup_photo']): ?>
+    <div class="prmu__popup prmu__popup-error">
+      <p>У вас не загружено еще ни одной фотографии.</p>
+      <p>Добавление Вашей фотографии повысит привлекательность анкеты и увеличит шансы что работодатель выберет именно Вас. Добавляйте только свои личные фото, иначе Вы не сможете пройти модерацию! Спасибо за понимание!</p>
+    </div>
+    <? setcookie('popup_photo','1',time()+86400,'/','.'.$_SERVER['SERVER_NAME'], false);?>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        if($('.prmu__popup-error').length!=0){
+            $.fancybox.open({
+                src: "div.prmu__popup.prmu__popup-error",
+                type: 'inline',
+                touch: false
+            });
+        }
+      });
+    </script>
+  <? endif; ?>
 <?php endif; ?>

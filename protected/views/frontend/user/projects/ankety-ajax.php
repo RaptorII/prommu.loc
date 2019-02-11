@@ -13,14 +13,9 @@
 			<div class='col-xs-12 col-sm-6 col-md-4'>
 				<div class='comm-logo-wrapp'>
 				<div class='comm-logo'>
-				<?
-					if($item['sex'] === '1'){
-						$G_LOGO_SRC = DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!$item['photo'] ? MainConfig::$DEF_LOGO : $item['photo'] . '400.jpg');
-					}
-					else 
-						$G_LOGO_SRC = DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!$item['photo'] ? MainConfig::$DEF_LOGO_F : $item['photo'] . '400.jpg');
-				?>
-				<img alt="<?='Соискатель '.$item['firstname'].' '.$item['lastname'].' prommu.com'?>" src='<?= $G_LOGO_SRC ?>'>
+				<img 
+					alt="<?='Соискатель '.$item['firstname'].' '.$item['lastname'].' prommu.com'?>" 
+					src='<?=Share::getPhoto(2, $item['photo'], 'medium', $item['sex'])?>'>
 				<br>
 				<br>
 				<b class="name"><? echo $item['firstname'] . ' ' . $item['lastname'] . ', ' . $item['age']?></b>

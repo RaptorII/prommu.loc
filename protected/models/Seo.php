@@ -12,10 +12,11 @@ class Seo extends CActiveRecord
 {
     public function exist($idOrUrl)
     {
+        $table = Subdomain::getCacheData()->seo;
         if((int)$idOrUrl)
-            return Yii::app()->db->createCommand('SELECT * FROM seo WHERE id = '.(int)$idOrUrl)->queryRow();
+            return Yii::app()->db->createCommand('SELECT * FROM '.$table.' WHERE id = '.(int)$idOrUrl)->queryRow();
         else
-            return Yii::app()->db->createCommand('SELECT * FROM seo WHERE url = "'.$idOrUrl.'"')->queryRow();
+            return Yii::app()->db->createCommand('SELECT * FROM '.$table.' WHERE url = "'.$idOrUrl.'"')->queryRow();
     }
 
     public function existTemplate($url)
@@ -23,11 +24,12 @@ class Seo extends CActiveRecord
     	if(!isset($_GET['template_url_params']))
     		return false;
 
+        $table = Subdomain::getCacheData()->seo;
         $xWord = isset($_GET['template_url_params']['promos']) ? 'promos' : 'vacancies';
 
     	if($_GET['template_url_params']['others'] == 0 && sizeof($_GET['template_url_params']['cities']) == 1 && sizeof($_GET['template_url_params']['occupations']) == 1)
     	{
-    		$result = Yii::app()->db->createCommand('SELECT * FROM seo WHERE url = "/'.$xWord.'/[специальность]/[город]"')->queryRow();
+    		$result = Yii::app()->db->createCommand('SELECT * FROM '.$table.' WHERE url = "/'.$xWord.'/[специальность]/[город]"')->queryRow();
 
     		if($result)
     		{
@@ -49,7 +51,7 @@ class Seo extends CActiveRecord
     	}
     	else if($_GET['template_url_params']['others'] == 0 && sizeof($_GET['template_url_params']['cities']) == 1 && !sizeof($_GET['template_url_params']['occupations']))
     	{
-    		$result = Yii::app()->db->createCommand('SELECT * FROM seo WHERE url = "/'.$xWord.'/[город]"')->queryRow();
+    		$result = Yii::app()->db->createCommand('SELECT * FROM '.$table.' WHERE url = "/'.$xWord.'/[город]"')->queryRow();
 
     		if($result)
     		{
@@ -70,8 +72,9 @@ class Seo extends CActiveRecord
 
     public function saveNew($data)
     {
+        $table = Subdomain::getCacheData()->seo;
         $command = Yii::app()->db->createCommand();
-        $command->insert('seo', array(
+        $command->insert($table, array(
             'url' => $data['url'],
             'meta_title' => $data['meta_title'],
             'meta_description' => $data['meta_description'],
@@ -85,18 +88,17 @@ class Seo extends CActiveRecord
     public function updateExist($data)
     {
         // Yii::app()->db->createCommand('UPDATE seo SET url = "'.$data['url'].'", meta_title = "'.$data['meta_title'].'", meta_description = "'.$data['meta_description'].'", meta_keywords= "'.$data['meta_keywords'].'", seo_h1 = "'.$data['seo_h1'].'" WHERE id = "'.$data['id'].'"')->execute();
-            $res = Yii::app()->db->createCommand()
-                    ->update('seo', array( 
-                        'url' => $data['url'],
-                        'meta_title' => $data['meta_title'],
-                        'meta_description' => $data['meta_description'],
-                        'meta_keywords' => $data['meta_keywords'],
-                        'seo_h1' => $data['seo_h1'],
-                        'mdate' => date("Y-m-d h-i-s"),
-                        'index' => $data['index'],
-                    ), 'id = :id', array(':id' => $data['id']));
-        
-
+        $table = Subdomain::getCacheData()->seo;
+        $res = Yii::app()->db->createCommand()
+            ->update($table, array( 
+                'url' => $data['url'],
+                'meta_title' => $data['meta_title'],
+                'meta_description' => $data['meta_description'],
+                'meta_keywords' => $data['meta_keywords'],
+                'seo_h1' => $data['seo_h1'],
+                'mdate' => date("Y-m-d h-i-s"),
+                'index' => $data['index'],
+            ), 'id = :id', array(':id' => $data['id']));
     }
 
 
@@ -117,7 +119,7 @@ class Seo extends CActiveRecord
      */
     public function tableName()
     {
-        return 'seo';
+        return Subdomain::getCacheData()->seo;
     }
 
     /**
@@ -685,10 +687,9 @@ class Seo extends CActiveRecord
      */
     public function deleteSeo($id)
     {
-        $command = Yii::app()->db->createCommand()->delete('seo', 'id=:id', array(':id'=>$id));
+        $table = Subdomain::getCacheData()->seo;
+        $command = Yii::app()->db->createCommand()->delete($table, 'id=:id', array(':id'=>$id));
     }
-
-
     /*
     *   @param array $arParams(
     *       'firstname' - string,
@@ -830,7 +831,7 @@ class Seo extends CActiveRecord
         if($arParams['agefrom'] || $arParams['ageto']){
             $years = ($arParams['agefrom'] ? 'от ' . $arParams['agefrom'] : '')
                 . ($arParams['ageto'] ? ' до ' . $arParams['ageto'] : '') 
-                . 'лет';    // возраст
+                . ' лет';    // возраст
         }
         $h1 = 'Вакансия - ' . $vacancies . ' - оплата ' . $wage;
         $title = 'Вакансия ' . $vacancies . $city . ' - поиск работы на '
@@ -855,8 +856,9 @@ class Seo extends CActiveRecord
     public function changeSeoParams($id,$param,$value)
     {
         if(isset($id) && isset($param)){
+            $table = Subdomain::getCacheData()->seo;
             return Yii::app()->db->createCommand()
-                    ->update('seo', array( 
+                    ->update($table, array( 
                         $param => $value,
                         'mdate' => date("Y-m-d h-i-s"),
                     ), 'id = :id', array(':id' => $id));

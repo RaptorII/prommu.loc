@@ -78,7 +78,7 @@ class SiteController extends AppController
                 throw new CHttpException(404, 'Error');
             }
             elseif($action=='work-for-students'){
-                $this->render(MainConfig::$VIEWS_WORK_FOR_STUDENTS, array(), array());
+                $this->render($action . DS . Subdomain::getCacheData()->id);
             }
             else{
                 $model = new PagesContent;
@@ -485,15 +485,16 @@ class SiteController extends AppController
             if(Share::$UserProfile->type==3 && $vac['vac']['idus']==Share::$UserProfile->id){
                 Yii::app()->session['editVacId'] = $id;  
             }
-            /*
             // индексируем только если владелец вакансии с этого региона
-            $arCities = Subdomain::getCitiesIdies(false, 'arr');
             $res = Yii::app()->db->createCommand()
                 ->select('id_city')
                 ->from('user_city')
                 ->where('id_user=:id',array(':id'=>$vac['vac']['idus']))
                 ->queryRow();
-            */
+
+            if($res['id_city']>0 && !in_array($res['id_city'], Subdomain::getCacheData()->arCitiesIdes))
+                Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
+            // 
             $view = $this->ViewModel->pageVacancy;
 
             if(Yii::app()->getRequest()->getParam('info') && $vac['vac']['idus']==Share::$UserProfile->id){

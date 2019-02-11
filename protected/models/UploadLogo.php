@@ -32,7 +32,7 @@ class UploadLogo extends Model
             $ext = substr($_FILES['photo']['name'], 1 + strrpos($_FILES['photo']['name'], "."));
             $fn = date('YmdHis').rand(100,1000) . ".jpg";
             $path = "/images/{$this->imgPath}/tmp/";
-            $newFullFn = MainConfig::$DOC_ROOT . $path . $fn;
+            $newFullFn = Subdomain::domainRoot() . $path . $fn;
             if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
             {
                 $imgProps = getimagesize($newFullFn);
@@ -101,7 +101,7 @@ class UploadLogo extends Model
             $ext = substr($_FILES['photo']['name'], 1 + strrpos($_FILES['photo']['name'], "."));
             $fn = date('YmdHis').rand(100,1000) . ".jpg";
             $path = "/images/company/tmp/";
-            $newFullFn = MainConfig::$DOC_ROOT . $path . $fn;
+            $newFullFn = Subdomain::domainRoot() . $path . $fn;
             if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
             {
                 $imgProps = getimagesize($newFullFn);
@@ -144,10 +144,10 @@ class UploadLogo extends Model
         $message = "WARNING!";
         $pathTmp = $path;
         $file =  $fn;
-        if( file_exists(MainConfig::$DOC_ROOT . $pathTmp . $file) )
+        if( file_exists(Subdomain::domainRoot() . $pathTmp . $file) )
         {
             $path = "/images/company/";
-            $res = $this->imgCrop(MainConfig::$DOC_ROOT . $pathTmp . $file, MainConfig::$DOC_ROOT . $path . $file,
+            $res = $this->imgCrop(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $path . $file,
                     array('x1' => 0,
                         'y1' => 0,
                         'width' => 400,
@@ -155,12 +155,12 @@ class UploadLogo extends Model
                         'rotate' => 0
                         )
                 );
-            $pathinfo = pathinfo(MainConfig::$DOC_ROOT . $pathTmp . $file);
-            $this->imgResizeToRect(MainConfig::$DOC_ROOT . $path . $file, MainConfig::$DOC_ROOT . $path . $pathinfo['filename']  . '100.jpg', "image/jpeg", 220);
-            $this->imgResizeToRect(MainConfig::$DOC_ROOT . $path . $file, MainConfig::$DOC_ROOT . $path . $pathinfo['filename']  . '400.jpg', "image/jpeg", 400);
-            $this->saveAsJpeg(MainConfig::$DOC_ROOT . $pathTmp . $file, MainConfig::$DOC_ROOT . $path . $pathinfo['filename'] . '000.jpg');
+            $pathinfo = pathinfo(Subdomain::domainRoot() . $pathTmp . $file);
+            $this->imgResizeToRect(Subdomain::domainRoot() . $path . $file, Subdomain::domainRoot() . $path . $pathinfo['filename']  . '100.jpg', "image/jpeg", 220);
+            $this->imgResizeToRect(Subdomain::domainRoot() . $path . $file, Subdomain::domainRoot() . $path . $pathinfo['filename']  . '400.jpg', "image/jpeg", 400);
+            $this->saveAsJpeg(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $path . $pathinfo['filename'] . '000.jpg');
 
-            unlink(MainConfig::$DOC_ROOT . $path . $file);
+            unlink(Subdomain::domainRoot() . $path . $file);
         }
         else
         {
@@ -182,7 +182,7 @@ class UploadLogo extends Model
             $ext = substr($_FILES['photo']['name'], 1 + strrpos($_FILES['photo']['name'], "."));
             $fn = date('YmdHis').rand(100,1000) . ".jpg";
             $path = "/images/applic/tmp/";
-            $newFullFn = MainConfig::$DOC_ROOT . $path . $fn;
+            $newFullFn = Subdomain::domainRoot() . $path . $fn;
             if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
             {
                 $imgProps = getimagesize($newFullFn);
@@ -225,10 +225,10 @@ class UploadLogo extends Model
         $message = "WARNING!";
         $pathTmp = $path;
         $file =  $fn;
-        if( file_exists(MainConfig::$DOC_ROOT . $pathTmp . $file) )
+        if( file_exists(Subdomain::domainRoot() . $pathTmp . $file) )
         {
             $path = "/images/applic/";
-            $res = $this->imgCrop(MainConfig::$DOC_ROOT . $pathTmp . $file, MainConfig::$DOC_ROOT . $path . $file,
+            $res = $this->imgCrop(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $path . $file,
                     array('x1' => 0,
                         'y1' => 0,
                         'width' => 400,
@@ -236,13 +236,13 @@ class UploadLogo extends Model
                         'rotate' => 0
                         )
                 );
-            $pathinfo = pathinfo(MainConfig::$DOC_ROOT . $pathTmp . $file);
-            $this->imgResizeToRect(MainConfig::$DOC_ROOT . $path . $file, MainConfig::$DOC_ROOT . $path . $pathinfo['filename']  . '100.jpg', "image/jpeg", 220);
-            $this->imgResizeToRect(MainConfig::$DOC_ROOT . $path . $file, MainConfig::$DOC_ROOT . $path . $pathinfo['filename']  . '225.jpg', "image/jpeg", 225);
-            $this->imgResizeToRect(MainConfig::$DOC_ROOT . $path . $file, MainConfig::$DOC_ROOT . $path . $pathinfo['filename']  . '400.jpg', "image/jpeg", 400);
-            $this->saveAsJpeg(MainConfig::$DOC_ROOT . $pathTmp . $file, MainConfig::$DOC_ROOT . $path . $pathinfo['filename'] . '000.jpg');
+            $pathinfo = pathinfo(Subdomain::domainRoot() . $pathTmp . $file);
+            $this->imgResizeToRect(Subdomain::domainRoot() . $path . $file, Subdomain::domainRoot() . $path . $pathinfo['filename']  . '100.jpg', "image/jpeg", 220);
+            $this->imgResizeToRect(Subdomain::domainRoot() . $path . $file, Subdomain::domainRoot() . $path . $pathinfo['filename']  . '225.jpg', "image/jpeg", 225);
+            $this->imgResizeToRect(Subdomain::domainRoot() . $path . $file, Subdomain::domainRoot() . $path . $pathinfo['filename']  . '400.jpg', "image/jpeg", 400);
+            $this->saveAsJpeg(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $path . $pathinfo['filename'] . '000.jpg');
 
-            unlink(MainConfig::$DOC_ROOT . $path . $file);
+            unlink(Subdomain::domainRoot() . $path . $file);
         }
         else
         {
@@ -267,10 +267,10 @@ class UploadLogo extends Model
         $message = "Ошибка обработки файла";
         $pathTmp = Yii::app()->session['uplLogo']['path'];
         $file = Yii::app()->session['uplLogo']['file'];
-        if( file_exists(MainConfig::$DOC_ROOT . $pathTmp . $file) )
+        if( file_exists(Subdomain::domainRoot() . $pathTmp . $file) )
         {
             $path = "/images/{$this->imgPath}/";
-            $res = $this->imgCrop(MainConfig::$DOC_ROOT . $pathTmp . $file, MainConfig::$DOC_ROOT . $path . $file,
+            $res = $this->imgCrop(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $path . $file,
                     array('x1' => $x1,
                         'y1' => $y1,
                         'width' => $width,
@@ -280,15 +280,15 @@ class UploadLogo extends Model
                 );
 
             // создаем thumb
-            $pathinfo = pathinfo(MainConfig::$DOC_ROOT . $pathTmp . $file);
-            $this->imgResizeToRect(MainConfig::$DOC_ROOT . $path . $file, MainConfig::$DOC_ROOT . $path . $pathinfo['filename'] . '100.jpg', "image/jpeg", 220);
-            $this->imgResizeToRect(MainConfig::$DOC_ROOT . $path . $file, MainConfig::$DOC_ROOT . $path . $pathinfo['filename'] . '169.jpg', "image/jpeg", 169);
-            $this->imgResizeToRect(MainConfig::$DOC_ROOT . $path . $file, MainConfig::$DOC_ROOT . $path . $pathinfo['filename'] . '400.jpg', "image/jpeg", 400);
+            $pathinfo = pathinfo(Subdomain::domainRoot() . $pathTmp . $file);
+            $this->imgResizeToRect(Subdomain::domainRoot() . $path . $file, Subdomain::domainRoot() . $path . $pathinfo['filename'] . '100.jpg', "image/jpeg", 220);
+            $this->imgResizeToRect(Subdomain::domainRoot() . $path . $file, Subdomain::domainRoot() . $path . $pathinfo['filename'] . '169.jpg', "image/jpeg", 169);
+            $this->imgResizeToRect(Subdomain::domainRoot() . $path . $file, Subdomain::domainRoot() . $path . $pathinfo['filename'] . '400.jpg', "image/jpeg", 400);
             // copy orig
-//            copy(MainConfig::$DOC_ROOT . $pathTmp . $file, MainConfig::$DOC_ROOT . $path . $pathinfo['filename'] . '000.' . $pathinfo['extension']);
-            $this->saveAsJpeg(MainConfig::$DOC_ROOT . $pathTmp . $file, MainConfig::$DOC_ROOT . $path . $pathinfo['filename'] . '000.jpg', $rotate);
+//            copy(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $path . $pathinfo['filename'] . '000.' . $pathinfo['extension']);
+            $this->saveAsJpeg(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $path . $pathinfo['filename'] . '000.jpg', $rotate);
 
-            unlink(MainConfig::$DOC_ROOT . $path . $file);
+            unlink(Subdomain::domainRoot() . $path . $file);
         }
         else
         {
@@ -323,10 +323,10 @@ class UploadLogo extends Model
         $pathTmp = Yii::app()->session['uplLogo']['path'];
         $file = Yii::app()->session['uplLogo']['file'];
 
-        if( file_exists(MainConfig::$DOC_ROOT . $pathTmp . $file) )
+        if( file_exists(Subdomain::domainRoot() . $pathTmp . $file) )
         {
-            $pathinfo = pathinfo(MainConfig::$DOC_ROOT . $pathTmp . $file);
-            $res = $this->imgCrop(MainConfig::$DOC_ROOT . $pathTmp . $file, MainConfig::$DOC_ROOT . $pathTmp . "{$pathinfo['filename']}tt.jpg",
+            $pathinfo = pathinfo(Subdomain::domainRoot() . $pathTmp . $file);
+            $res = $this->imgCrop(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $pathTmp . "{$pathinfo['filename']}tt.jpg",
                     array('x1' => $x1,
                         'y1' => $y1,
                         'width' => $width,
@@ -336,14 +336,14 @@ class UploadLogo extends Model
                 );
 
             // создаем thumb
-            $this->imgResizeToRect(MainConfig::$DOC_ROOT . $pathTmp . "{$pathinfo['filename']}tt.jpg", MainConfig::$DOC_ROOT . $pathTmp . $pathinfo['filename'] . '100.jpg', "image/jpeg", 220);
-            $this->imgResizeToRect(MainConfig::$DOC_ROOT . $pathTmp . "{$pathinfo['filename']}tt.jpg", MainConfig::$DOC_ROOT . $pathTmp . $pathinfo['filename'] . '400.jpg', "image/jpeg", 400);
-            $this->imgResizeToRect(MainConfig::$DOC_ROOT . $pathTmp . "{$pathinfo['filename']}tt.jpg", MainConfig::$DOC_ROOT . $pathTmp . $pathinfo['filename'] . '169.jpg', "image/jpeg", 169);
-            $this->imgResizeToRect(MainConfig::$DOC_ROOT . $pathTmp . "{$pathinfo['filename']}tt.jpg", MainConfig::$DOC_ROOT . $pathTmp . $pathinfo['filename'] . '30.jpg', "image/jpeg", 30);
+            $this->imgResizeToRect(Subdomain::domainRoot() . $pathTmp . "{$pathinfo['filename']}tt.jpg", Subdomain::domainRoot() . $pathTmp . $pathinfo['filename'] . '100.jpg', "image/jpeg", 220);
+            $this->imgResizeToRect(Subdomain::domainRoot() . $pathTmp . "{$pathinfo['filename']}tt.jpg", Subdomain::domainRoot() . $pathTmp . $pathinfo['filename'] . '400.jpg', "image/jpeg", 400);
+            $this->imgResizeToRect(Subdomain::domainRoot() . $pathTmp . "{$pathinfo['filename']}tt.jpg", Subdomain::domainRoot() . $pathTmp . $pathinfo['filename'] . '169.jpg', "image/jpeg", 169);
+            $this->imgResizeToRect(Subdomain::domainRoot() . $pathTmp . "{$pathinfo['filename']}tt.jpg", Subdomain::domainRoot() . $pathTmp . $pathinfo['filename'] . '30.jpg', "image/jpeg", 30);
             // copy orig
-            $this->saveAsJpeg(MainConfig::$DOC_ROOT . $pathTmp . $file, MainConfig::$DOC_ROOT . $pathTmp . $pathinfo['filename'] . '000.jpg', $rotate);
+            $this->saveAsJpeg(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $pathTmp . $pathinfo['filename'] . '000.jpg', $rotate);
 
-            unlink(MainConfig::$DOC_ROOT . $pathTmp . "{$pathinfo['filename']}tt.jpg");
+            unlink(Subdomain::domainRoot() . $pathTmp . "{$pathinfo['filename']}tt.jpg");
         }
         else
         {
@@ -374,12 +374,12 @@ class UploadLogo extends Model
         else
             $path = "/images/{$this->imgPath}/tmp/";
 
-        file_exists(MainConfig::$DOC_ROOT . $path . $inId . '.jpg') && unlink(MainConfig::$DOC_ROOT . $path . $inId . '.jpg');
-        file_exists(MainConfig::$DOC_ROOT . $path . $inId . '30.jpg') && unlink(MainConfig::$DOC_ROOT . $path . $inId . '30.jpg');
-        file_exists(MainConfig::$DOC_ROOT . $path . $inId . '100.jpg') && unlink(MainConfig::$DOC_ROOT . $path . $inId . '100.jpg');
-        file_exists(MainConfig::$DOC_ROOT . $path . $inId . '169.jpg') && unlink(MainConfig::$DOC_ROOT . $path . $inId . '169.jpg');
-        file_exists(MainConfig::$DOC_ROOT . $path . $inId . '400.jpg') &&  unlink(MainConfig::$DOC_ROOT . $path . $inId . '400.jpg');
-        file_exists(MainConfig::$DOC_ROOT . $path . $inId . '000.jpg') &&  unlink(MainConfig::$DOC_ROOT . $path . $inId . '000.jpg');
+        file_exists(Subdomain::domainRoot() . $path . $inId . '.jpg') && unlink(Subdomain::domainRoot() . $path . $inId . '.jpg');
+        file_exists(Subdomain::domainRoot() . $path . $inId . '30.jpg') && unlink(Subdomain::domainRoot() . $path . $inId . '30.jpg');
+        file_exists(Subdomain::domainRoot() . $path . $inId . '100.jpg') && unlink(Subdomain::domainRoot() . $path . $inId . '100.jpg');
+        file_exists(Subdomain::domainRoot() . $path . $inId . '169.jpg') && unlink(Subdomain::domainRoot() . $path . $inId . '169.jpg');
+        file_exists(Subdomain::domainRoot() . $path . $inId . '400.jpg') &&  unlink(Subdomain::domainRoot() . $path . $inId . '400.jpg');
+        file_exists(Subdomain::domainRoot() . $path . $inId . '000.jpg') &&  unlink(Subdomain::domainRoot() . $path . $inId . '000.jpg');
     }
 
 
@@ -622,7 +622,7 @@ class UploadLogo extends Model
 
         $fn = date('YmdHis').rand(100,1000) . ".jpg";
         $path = "/images/{$this->imgPath}/tmp/";
-        $newFullFn = MainConfig::$DOC_ROOT . $path . $fn;
+        $newFullFn = Subdomain::domainRoot() . $path . $fn;
 
         $d = str_replace('data:image/png;base64,', '', $_POST['data']);
         $d = str_replace(' ', '+', $d);
@@ -672,7 +672,7 @@ class UploadLogo extends Model
             )
         );
         //отправляем файл на второй сервер и получаем его ответ
-        $url = Subdomain::$MAIN_SITE . Subdomain::$MAIN_SEND_FILE_URL;
+        $url = Subdomain::domainSite() . Subdomain::$MAIN_SEND_FILE_URL;
         $context = stream_context_create($options);
         $result = file_get_contents($url, false, $context);
         return $result;

@@ -79,8 +79,6 @@ class AppController extends CController
 
         // получаем css стили из manifest-a
         $this->obtainCss();
-
-        MainConfig::$SITE = Yii::app()->params['site'];
     }
 
 

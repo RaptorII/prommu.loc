@@ -115,7 +115,9 @@
                           <div class='company-logo-wrapp'>
                               <div class='company-logo'>
                                   <a href='<?= MainConfig::$PAGE_PROFILE_COMMON . DS . $val['id_user'] ?>'>
-                                      <img alt='Работодатель <?= $val['name'] ?> prommu.com' src='<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . (!$val['logo'] ?  'logo.png' : ($val['logo']) . '100.jpg') ?>'>
+                                      <img 
+                                      	alt='Работодатель <?= $val['name'] ?> prommu.com' 
+                                      	src="<?=Share::getPhoto(3, $val['logo'])?>">
 										<?php if($val['is_online']): ?>
 											<span class="empl-list__item-onl"><span>В сети</span></span>
 										<?php endif; ?>

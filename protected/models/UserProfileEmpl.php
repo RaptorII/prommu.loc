@@ -626,7 +626,7 @@ class UserProfileEmpl extends UserProfile
                     'mdate' => date('Y-m-d H:i:s'),
                 ), 'id_user=:id_user', array(':id_user' => $id));
 
-            $link = 'http://' . MainConfig::$SITE . '/admin/site/EmplEdit'. DS .$id;
+            $link = Subdomain::site() . '/admin/site/EmplEdit'. DS .$id;
 
             if($arrs != '')
             {
@@ -656,7 +656,7 @@ class UserProfileEmpl extends UserProfile
                      Изменены поля: $arrs
                     <br />
                     Перейти на модерацию работодателя <a href='%s'>по ссылке</a>.",
-                    'https://' . MainConfig::$SITE . MainConfig::$PAGE_PROFILE_COMMON . DS . $id,
+                    Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . $id,
                     Share::$UserProfile->exInfo->name,
                    $link
                 );

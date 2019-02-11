@@ -899,8 +899,10 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
             <div class='col-xs-12 single-vacancy__num'>№ <?= $vacancy['id'] ?></div>
             <div class='col-xs-12 col-sm-4 single-vacancy__logo'>
                 <a href="<?= MainConfig::$PAGE_PROFILE_COMMON . DS . $vacancy['idus'] ?>" class="sv__logo-link">
-                    <img src="<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . (!$vacancy['logo'] ? 'logo.png' : ($vacancy['logo']) . '400.jpg') ?>"
-                         class="sv__logo-img" alt="<?= "Работодатель {$vacancy['coname']} prommu.com" ?>">
+                    <img 
+                        src="<?=Share::getPhoto(3, $vacancy['logo'], 'medium');?>"
+                        class="sv__logo-img"
+                        alt="<?= "Работодатель {$vacancy['coname']} prommu.com" ?>">
                 </a>
                 <div class="sv__logo-name"><?= $vacancy['coname'] ?></div>
                 <div class="sv__logo-name js-g-hashint" title="Дата публикации"><?= $vacancy['crdate'] ?></div>
@@ -1238,12 +1240,6 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                 <?php else: ?>
 
                     <? if (!Share::isEmployer()): ?>
-                        <? /*<div class="sv__textblock vac__error">
-                            <div class="sv__textblock-title ico1">
-                                <span>Причины, по которым Вы не подходите на данную вакансию</span>
-                            </div>
-                            <div class="sv__textblock-text"><?= $viData['response']['message'] ?></div>
-                        </div>*/ ?>
                         <div class="btn-response-popup btn-orange-fix-wr">
                             <button class="hvr-sweep-to-right">Откликнуться на вакансию</button>
                         </div>
@@ -1271,19 +1267,8 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                                     также на электронную почту</p>
                             </div>
                         <? endif; ?>
-
                     <? endif; ?>
-
                 <?php endif; ?>
-
-
-
-                <?php /*if( Share::$UserProfile->type < 2 ): ?>
-                    <div class='btn-register btn-orange-fix-wr'>
-                        <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_REGISTER ?>?p=1'>Откликнуться на вакансию</a>
-                    </div>
-                <?php endif; */ ?>
-
 
             </div>
         </div>

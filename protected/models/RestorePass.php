@@ -47,7 +47,7 @@ class RestorePass
            
 
             if(strripos($email, "@")){
-            $message = sprintf("Восстановление пароля на сервисе &laquo;Prommu.com&raquo;
+            $messages = sprintf("Восстановление пароля на сервисе &laquo;Prommu.com&raquo;
                     <br/>
                     <br/>
                     Для восстановления пароля Вам необходимо перейти по активной ссылке: <a href='%s'>%1$01s</a>
@@ -55,13 +55,13 @@ class RestorePass
                     <br/>
                     Если Вы не запрашивали восстановление пароля на свой email адрес, проигнорируйте это письмо
                     ",
-                'https://' . MainConfig::$SITE . DS . MainConfig::$PAGE_NEW_PASS . '/?t=' . $token . "&uid=" . $User->id_user
+                Subdomain::site() . DS . MainConfig::$PAGE_NEW_PASS . '/?t=' . $token . "&uid=" . $User->id_user
             );
 
-            Share::sendmail($email, "Prommu.com. Восстановление пароля", $message);
+            Share::sendmail($email, "Prommu.com. Восстановление пароля", $messages);
         }
         else {
-             $links = "https://" .MainConfig::$SITE . DS . MainConfig::$PAGE_NEW_PASS."/?";
+             $links = Subdomain::site() . DS . MainConfig::$PAGE_NEW_PASS."/?";
             $link = "t=$token";
             
             $link = $links.$link;
@@ -70,7 +70,7 @@ class RestorePass
             
 
 
-            Yii::app()->user->setFlash('Result', ['error' => 1, 'message' => $message]);
+           Yii::app()->user->setFlash('Result', ['error' => 1, 'message' => $message]);
             $data = ['error' => 1, 'message' => ""];
 
 

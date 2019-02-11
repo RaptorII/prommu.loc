@@ -667,7 +667,7 @@ class SearchPromo extends Model
         }
         $url = (sizeof($data['cities'])>1 || sizeof($data['posts'])>1 ? '' : $base . $url);
 
-        $table = Subdomain::getSeoTable();
+        $table = Subdomain::getCacheData()->seo;
         $seo = Yii::app()->db->createCommand('SELECT * FROM ' . $table . ' WHERE url = "'.$url.'"')->queryRow();
 
         return $seo;

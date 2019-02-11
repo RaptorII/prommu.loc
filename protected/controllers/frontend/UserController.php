@@ -296,7 +296,7 @@ class UserController extends AppController
              ->queryRow();
 
          if(!empty($usData)) {
-            $link  = Subdomain::getUrl() . '/message';
+            $link  = Subdomain::site() . '/message';
             $this->redirect( $link);
          } else {
 
@@ -348,7 +348,7 @@ class UserController extends AppController
                             ->where('u.email = :email', array(':email' => $data['email']))
                             ->queryRow();
                             if(!empty($usData)) {
-                                $link  = Subdomain::getUrl() . '/message';
+                                $link  = Subdomain::site() . '/message';
                                 $this->redirect( $link);
                             } else {
 

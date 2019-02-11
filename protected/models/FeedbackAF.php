@@ -121,7 +121,7 @@ class FeedbackAF extends CActiveRecord
                 <br/>
                 Реферер: <b>%s</b>\",
 ",
-            MainConfig::$SITE, $name, $theme, $email, $text, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer);
+            Subdomain::getSiteName(), $name, $theme, $email, $text, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer);
 
         $email = (new Options)->getOption('moderEmail')->val;
 //        $email = "Zotaper@localhost.com";
