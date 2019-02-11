@@ -128,7 +128,7 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
                 background: #D6D6D6;
                 border-radius: 50%;
                 margin-right: 8px;
-            "></i>Был на сервисе: <?=date_format(date_create($viData['userInfo']['mdate']), 'd.m.Y');?></span>
+            "></i>Был(а) на сервисе: <?=date_format(date_create($viData['userInfo']['mdate']), 'd.m.Y');?></span>
             <?endif;?>
         </div>
 

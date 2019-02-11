@@ -52,7 +52,7 @@
                 background: #D6D6D6;
                 border-radius: 50%;
                 margin-right: 8px;
-            "></i>Был на сервисе: <?= date_format(date_create($val['mdate']), 'd.m.Y'); ?></span>
+            "></i>Был(а) на сервисе: <?= date_format(date_create($val['mdate']), 'd.m.Y'); ?></span>
                         <? endif; ?>
                     </div>
 
