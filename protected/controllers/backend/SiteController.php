@@ -1792,11 +1792,19 @@ class SiteController extends Controller
      */
     public function actionSettings()
     {
-        if(self::isAuth())
+        if(self::isAuth() /*|| strpos($this->user_access, "settings") == false*/)
         {
             $title = 'Настройки';
             $this->setPageTitle($title);
             $this->breadcrumbs = array('1'=>$title);    
+
+            $rq = Yii::app()->getRequest();
+            if($rq->isPostRequest)
+            {
+                $model = new Settings;
+                $data = $model->setData($rq);
+            }
+
             $this->render('settings/index', array('data' => $data));
         }
     }

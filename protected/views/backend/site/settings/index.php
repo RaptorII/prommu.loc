@@ -19,7 +19,27 @@
 				<div class="tab-content">
 					<div role="tabpanel" class="tab-pane fade active in" id="tab_main">
 						<h4>Общее</h4>
-						<div>пока пустой</div>
+						<div>
+							<form method="POST">
+								<?
+									$model = new Settings;
+									$data = $model->getData();
+								?>
+								<label class="d-label">
+									<span>Использовать капчу при регистрации пользователей : </span>
+									<input type="checkbox" name="register_captcha" value="1" <?=($data->register_captcha ? 'checked="checked"' : '')?>>
+								</label>
+								<br>
+								<br>
+								<br>
+								<div>
+									<div class="pull-right">
+										<button type="submit" class="btn btn-success d-indent">Сохранить</button>
+									</div>
+									<div class="clearfix"></div>								
+								</div>
+							</form>
+						</div>
 					</div>
 					<div role="tabpanel" class="tab-pane fade" id="tab_cache">
 						<h4>Кеш</h4>

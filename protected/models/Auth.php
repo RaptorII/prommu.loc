@@ -1279,7 +1279,8 @@ class Auth
         } // endif
 
         // CAPTCHA
-        $use_recaptcha = $this->useRegisterCaptcha();
+        $model = new Settings;
+        $use_recaptcha = $model->getData()->register_captcha;
         if($use_recaptcha==true)
         {
             $recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
@@ -1658,7 +1659,8 @@ class Auth
         } // endif
 
         // CAPTCHA
-        $use_recaptcha = $this->useRegisterCaptcha();
+        $model = new Settings;
+        $use_recaptcha = $model->getData()->register_captcha;
         if($use_recaptcha==true)
         {
             $recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
@@ -1921,13 +1923,5 @@ class Auth
         unset(Yii::app()->session['au_token']);
         unset(Yii::app()->session['au_exptime']);
         unset(Yii::app()->session['au_us_data']);
-    }
-    /**
-     *      Использование капчи при регистрации
-     *      @return true | false
-     */
-    private function useRegisterCaptcha()
-    {
-        return false;
     }
 }

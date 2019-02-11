@@ -612,6 +612,11 @@ class UserController extends AppController
             $data = (new Auth())->registerUser($type);
             if( !$data['error'] ) $this->redirect(Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => $type, 's' => 2)));
         }
+        else
+        {
+            $model = new Settings;
+            $data['use_recaptcha'] = $model->getData()->register_captcha;
+        }
 
         if( $type == '1' )
         {
