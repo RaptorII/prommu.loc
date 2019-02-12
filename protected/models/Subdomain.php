@@ -337,7 +337,7 @@ class Subdomain
 	public static function guestRedirect($type) {
 		$sId = self::getId();
 		if($sId!=1307 && $type!=2 && $type!=3) {
-			$url = 'Location: ' . self::domain()->url . $_SERVER['REQUEST_URI'];
+			$url = 'Location: https://' . self::domain()->url . $_SERVER['REQUEST_URI'];
 			header($url);
 			exit();
 		}
