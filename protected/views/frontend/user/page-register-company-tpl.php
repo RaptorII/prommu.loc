@@ -92,7 +92,7 @@
                 ?>
                 <div class="reg-form__personal-data">
                     <label>
-                        <input type="checkbox" name="agreement" value="1" class="hide" id="agreement-inp">
+                        <input type="checkbox" name="agreement" value="1" class="hide" id="agreement-inp" checked="checked">
                         <span class="reg-form__radio" id="agreement-lab"><span></span></span>
                         <span>Я даю согласие на обработку своих <a href="<?=MainConfig::$PAGE_CONDITIONS?>" target="_blank">персональных данных</a></span>
                     </label>
