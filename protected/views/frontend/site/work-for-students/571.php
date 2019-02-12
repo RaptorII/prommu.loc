@@ -19,6 +19,7 @@
 			<p>Наш сайт работы для студентов предназначен для поиска временной и постоянной работы в области BTL и Event мероприятий. У нас вы найдете обширную базу предложений, благодаря чему выбрать подходящее не составит труда. Зарегистрируйтесь на нашем портале, и вы сможете максимально быстро найти хорошую подработку в свободное время.</p>
 		</div>
 		<div class="wfs-prolog__list">
+			<!--noindex-->
 			<div class="col-xs-6 col-sm-3 wfs-prolog__item">
 				<div class="wfs-prolog-item__img ico1"></div>
 				<div class="wfs-prolog-item__text">Почасовая работа в дневное время</div>
@@ -37,6 +38,7 @@
 				<div class="wfs-prolog-item__text">Разовое участие в мероприятиях (акциях)</div>
 			</div>
 			<div class="clearfix"></div>
+			<!--/noindex-->
 		</div>
 		<div class="col-xs-12 wfs-prolog__text" style="padding-top:0">
 			<h2 style="text-align:center;margin-top:0">Сфера BTL и Event – самая перспективная подработка для студентов с ежедневной оплатой</h2>
@@ -49,6 +51,7 @@
 	<div class="container-fluid wfs__content">
 		<div class="row">
 			<div class="col-xs-12 wfs__services">
+				<!--noindex-->
 				<h2 class="wfs-services__title">
 					Основные преимущества поиска подработки для студентов
 					<span class="wfs-services__title-prommu">на Prommu.com</span>
@@ -88,6 +91,7 @@
 					</div>
 					<div class="clearfix"></div>
 				</div>
+				<!--/noindex-->
 			</div>
 		</div>
 	</div>
@@ -99,7 +103,9 @@
 				<span class="wfs-vacancies__title-light">в Нижнем Новгороде</span>
 			</h2>
 			<hr class="wfs-vacancies__line">
+			<!--noindex-->
 			<p class="wfs-vacancies__text">Чаще всего, работодатели ищут студентов для раздачи листовок. Промоутеры отправляются в людные места, где предлагают прохожим ознакомиться с конкретным рекламным предложением (буклеты, флаера и пр.). Кроме того, они могут консультировать потенциальных покупателей, описывать им преимущества товара и бренда, привлекать внимание публики к конкретному заведению или событию и пр.</p>
+			<!--/noindex-->
 			<div class="wfs-vacancies__list">
 				<a class="wfs-vacancies__item" href="/vacancy/promouter" title="Промоутер">
 					<img class="wfs-vacancies-item__img" src="/theme/pic/work-for-students/vac1.jpg">
@@ -173,6 +179,7 @@
 	<div class="container-fluid wfs__content">
 		<div class="row">
 			<div class="col-xs-12 wfs-tutorial">
+				<!--noindex-->
 				<h3 class="wfs-tutorial__title">
 					Как найти подработку на лето для студентов 
 					<span class="wfs-tutorial__title-light">в Нижнем Новгороде с порталом Prommu</span>
@@ -189,13 +196,15 @@
 					<div class="col-xs-12 col-sm-4 wfs-tutorial__item">Заполните анкету максимально подробно</div>
 					<div class="col-xs-12 col-sm-4 wfs-tutorial__item">Откликайтесь на вакансии или получайте уведомления о новых предложениях</div>
 				</div>
-			</div>			
+			</div>
+			<!--/noindex-->			
 		</div>
 	</div>
 </div>
 <div class="container-fluid wfs__content">
 	<div class="row">
 		<div class="col-xs-12 wfs__advantages">
+			<!--noindex-->
 			<h3 class="wfs-advantages__title">
 				у временной работы для студентов
 				<span class="wfs-advantages__title-reg">есть преимущества</span>
@@ -237,6 +246,7 @@
 				</div>
 			</div>
 			<p class="wfs-advantages-item__text">В какой бы области вы не видели себя через несколько лет, опыт в промо-специалистом существенно упростит процесс получения должности в будущем.</p>
+			<!--/noindex-->
 		</div>
 	</div>
 </div>

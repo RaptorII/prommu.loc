@@ -19,6 +19,7 @@
 			<p>Наш сайт предназначен для поиска временной или постоянной работы в области BTL и Event. У нас вы найдете большую базу вакансий для студентов без опыта работы в Новосибирске. Зарегистрируйтесь, и вы сможете начать искать подработку уже сейчас.</p>
 		</div>
 		<div class="wfs-prolog__list">
+			<!--noindex-->
 			<div class="col-xs-6 col-sm-3 wfs-prolog__item">
 				<div class="wfs-prolog-item__img ico1"></div>
 				<div class="wfs-prolog-item__text">Почасовая работа в дневное время</div>
@@ -37,6 +38,7 @@
 				<div class="wfs-prolog-item__text">Разовое участие в мероприятиях (акциях)</div>
 			</div>
 			<div class="clearfix"></div>
+			<!--/noindex-->
 		</div>
 		<div class="col-xs-12 wfs-prolog__text" style="padding-top:0">
 			<h2 style="text-align:center;margin-top:0">Что такое BTL-маркетинг</h2>
@@ -48,6 +50,7 @@
 	<div class="container-fluid wfs__content">
 		<div class="row">
 			<div class="col-xs-12 wfs__services">
+				<!--noindex-->
 				<h2 class="wfs-services__title">
 					Основные преимущества поиска подработки для студентов
 					<span class="wfs-services__title-prommu">на Prommu.com</span>
@@ -87,6 +90,7 @@
 					</div>
 					<div class="clearfix"></div>
 				</div>
+				<!--/noindex-->
 			</div>
 		</div>
 	</div>
@@ -94,6 +98,7 @@
 <div class="container-fluid wfs__content">
 	<div class="row">
 		<div class="col-xs-12 wfs__vacancies">
+			<!--noindex-->
 			<h3 class="wfs-vacancies__title">Преимущества поиска вакансий работы на лето для студентов
 				<span class="wfs-vacancies__title-light">в Новосибирске в области BTL</span>
 			</h3>
@@ -155,6 +160,7 @@
 			<p style="font-size:15px;color:#646464;font-family: Roboto-Regular,Calibri,Arial,sans-serif;border-bottom:6px solid #abb837;padding-bottom:45px">Все профессии достаточно разнообразные, многие из них предполагают общение с людьми, а также участие в интересных шоу-программах и других акциях. Таким образом, занятость принесет вам массу положительных впечатлений.</p>
 			<p class="wfs-vacancies__bottom-text">Частичное трудоустройство в одной из этих сфер позволяет без специального опыта выполнять задачи клиента <b class="wfs-vacancies__bottom-income">и получать доход</b></p>
 			<hr class="wfs-vacancies__bottom-line">
+			<!--/noindex-->
 		</div>
 	</div>
 </div>

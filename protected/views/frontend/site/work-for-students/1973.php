@@ -18,6 +18,7 @@
 		<div class="col-xs-12 wfs-prolog__text">
 			<p>На нашем портале вы можете найти вакансии для студентов без опыта работы как в Екатеринбурге, так и по всей России. Мы специализируемся на трудоустройстве в области BTL и Event мероприятий. Для того, чтобы воспользоваться всеми возможностями нашего портала, пройдите быструю регистрацию.</p>
 		</div>
+		<!--noindex-->
 		<div class="wfs-prolog__list">
 			<div class="col-xs-6 col-sm-3 wfs-prolog__item">
 				<div class="wfs-prolog-item__img ico1"></div>
@@ -38,6 +39,7 @@
 			</div>
 			<div class="clearfix"></div>
 		</div>
+		<!--/noindex-->
 		<div class="col-xs-12 wfs-prolog__text" style="padding-top:0">
 			<h2 style="text-align:center;margin-top:0">Почему мы предлагаем подработку для студентов с ежедневной оплатой в области BTL</h2>
 			<p>Популярность BTL и Event маркетинга в последнее время все больше возрастает. Подобная реклама позволяет максимально эффективно воздействовать на потребителей, в силу чего подавляющее большинство компаний отдают предпочтение проведению промо-акций, а не продвижению товара через СМИ. Как результат, сильно растет спрос на специалистов, которые могут организовать или участвовать в промо-мероприятии, так что вакантные места на должности промоутера, супервайзера, мерчендайзера, ростовой куклы и специальностей есть практически всегда.</p>
@@ -63,6 +65,7 @@
 <div class="wfs__grey-section">
 	<div class="container-fluid wfs__content">
 		<div class="row">
+			<!--noindex-->
 			<div class="col-xs-12 wfs__services">
 				<h2 class="wfs-services__title">
 					Основные преимущества поиска подработки для студентов
@@ -104,6 +107,7 @@
 					<div class="clearfix"></div>
 				</div>
 			</div>
+			<!--/noindex-->
 		</div>
 	</div>
 </div>
@@ -165,6 +169,7 @@
 				</a>		
 				<div class="clearfix"></div>
 			</div>
+			<!--noindex-->
 			<p style="font-size:15px;color:#646464;font-family: Roboto-Regular,Calibri,Arial,sans-serif;">Но на промоутерах перечень должностей в сфере BTL не заканчиваются. На нашем сайте работы для студентов вы увидите такие вакансии:</p>
 			<ul class="wfs-vacancies__small-list">
 				<li class="wfs-vacancies__li"><span>аниматор;</span></li>
@@ -178,6 +183,7 @@
 			<p style="font-size:15px;color:#646464;font-family: Roboto-Regular,Calibri,Arial,sans-serif;border-bottom:6px solid #abb837;padding-bottom:45px">Все профессии достаточно разнообразные, многие из них предполагают общение с людьми, а также участие в интересных шоу-программах и других акциях. Таким образом, занятость принесет вам массу положительных впечатлений.</p>
 			<p class="wfs-vacancies__bottom-text">Частичное трудоустройство в одной из этих сфер позволяет без специального опыта выполнять задачи клиента <b class="wfs-vacancies__bottom-income">и получать доход</b></p>
 			<hr class="wfs-vacancies__bottom-line">
+			<!--/noindex-->
 		</div>
 	</div>
 </div>
@@ -185,6 +191,7 @@
 	<div class="container-fluid wfs__content">
 		<div class="row">
 			<div class="col-xs-12 wfs-tutorial">
+				<!--noindex-->
 				<h3 class="wfs-tutorial__title">
 					Как найти подработку на лето для студентов 
 					<span class="wfs-tutorial__title-light">в ЕКАТЕРИНБУРГЕ с порталом Prommu</span>
@@ -201,6 +208,7 @@
 					<div class="col-xs-12 col-sm-4 wfs-tutorial__item">Заполните анкету максимально подробно</div>
 					<div class="col-xs-12 col-sm-4 wfs-tutorial__item">Откликайтесь на вакансии или получайте уведомления о новых предложениях</div>
 				</div>
+				<!--/noindex-->
 			</div>			
 		</div>
 	</div>
@@ -208,6 +216,7 @@
 <div class="container-fluid wfs__content">
 	<div class="row">
 		<div class="col-xs-12 wfs__advantages">
+			<!--noindex-->
 			<h3 class="wfs-advantages__title">
 				у временной работы для студентов
 				<span class="wfs-advantages__title-reg">есть преимущества</span>
@@ -255,6 +264,7 @@
 					</div>
 				</div>
 			</div>
+			<!--/noindex-->
 		</div>
 	</div>
 </div>
@@ -277,6 +287,7 @@
 <div class="container-fluid wfs__content">
 	<div class="row">
 		<div class="col-xs-12 wfs__bottom-text">
+			<!--noindex-->
 			<h3 style="text-align:center;font-size:16px;color:#646464;font-family: Roboto-Regular,Calibri,Arial,sans-serif">PROMMU – лучший портал поиска работы для студентов</h3>
 			<p style="font-size:15px;color:#646464;font-family: Roboto-Regular,Calibri,Arial,sans-serif">Для соискателей мы предлагаем:</p>
 			<ul style="font-size:15px;color:#646464;font-family: Roboto-Regular,Calibri,Arial,sans-serif">
@@ -286,6 +297,7 @@
 				<li>посетить наш блог, где находится много полезной для трудоустройства информации (какую должность из области Event-маркетинга выбрать, какие качества вам пригодятся на работе, как лучше подготовиться к собеседованию и пр.).</li>
 			</ul>
 			<p style="font-size:15px;color:#646464;font-family: Roboto-Regular,Calibri,Arial,sans-serif">С нами вы без проблем найдете высокооплачиваемую и интересную подработку в своем городе.</p>
+			<!--/noindex-->
 		</div>
 	</div>
 </div>
