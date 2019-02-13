@@ -16,7 +16,9 @@ class AjaxController extends AppController
     }
 
 
-
+    function actionCreateclient(){
+        
+    }
     // actionIndex вызывается всегда, когда action не указан явно.
     function actionIndex()
     {
