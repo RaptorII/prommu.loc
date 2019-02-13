@@ -249,6 +249,10 @@ class Auth
                         $data->bdate = date("Y-m-d", strtotime($data->bdate));
                         $insData['birthday'] = $data->bdate;
                     }
+                    else
+                    {
+                        $insData['birthday'] = '2001-01-01'; // 18 years 
+                    }
 
                     // загрузка фото ВК
                     if( $data->photo_200 && ($fid = $this->loadVKLogo($data)) )
