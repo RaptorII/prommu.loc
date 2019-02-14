@@ -1020,18 +1020,6 @@ body{ background: rgba(0, 0, 0, 0.31)!important; }
     max-width: 180px;
   }
 }
-@media(max-width : 767px){
-    .rp-content1__inputs .rp-content1__inputs-row:first-child{ min-height: 105px; }
-    .rp-content1__select-arrow.birthday,
-    .rp-content1__select-arrow.birthmonth,
-    .rp-content1__select-arrow.birthyear,
-    .rp-content1__select-arrow.city,
-    #DiTop #DiContent .rp-content1__inputs-input,
-    .country-phone{ width: 178px; }
-    .rp-content1__text{ padding-left: 10px; }
-    .pr-card__calendar{ max-width: 178px; }
-    #DiTop #DiContent .rp-content1__inputs-input.year{ width: 44px; }
-}
 @media(min-width : 768px){
     .rp-content2__block{ padding: 30px 40px 30px 80px; }
     .rp-c2-possibility__item{ width: 50%; }
@@ -1042,5 +1030,50 @@ body{ background: rgba(0, 0, 0, 0.31)!important; }
         left: -190px;
         width: 380px;
         padding: 20px 40px;
+    }
+}
+/*
+*   14.02.19
+*/
+@media(max-width : 767px){
+    #DiTop #DiContent .rp-content1__inputs-input.year{ width: 44px; }
+    .rp-content1__logo{
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column-reverse;
+    }
+    .rp-content1__text{
+        width: 100%;
+        display: block;
+        padding: 0 0 15px;
+        text-align: center;
+    }
+    .rp-content1__logo-img{
+        display: block;
+        margin: 0 auto;       
+    }
+    .rp-content1__btn-block{
+        width: 200px;
+        margin: 0 auto 20px;
+    }
+    .rp-content1__inputs-row{
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column-reverse;
+    }
+    .rp-content1__inputs .rp-content1__inputs-row:first-child{ min-height: 105px; }
+    .rp-content1__select-arrow.birthday,
+    .rp-content1__select-arrow.birthmonth,
+    .rp-content1__select-arrow.birthyear,
+    .rp-content1__select-arrow.city,
+    #DiTop #DiContent .rp-content1__inputs-input,
+    .country-phone{ 
+        width: 178px;
+        margin: 0 auto;
+    }
+    .rp-content1__push{ text-align: center; }
+    .pr-card__calendar{
+        max-width: 178px;
+        margin: 0 auto;
     }
 }
