@@ -1,0 +1,38 @@
+#restore-pass *{ font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif; }
+#restore-pass h1{
+    font-size: 24px;
+    color: #646464;
+}
+#restore-pass label{
+    display: block;
+    margin-bottom: 20px;
+}
+#restore-pass input[type=password],
+#restore-pass input[type=text]{
+    width: 100%;
+    color: #646464;
+    font-size: 14px;
+    border: 1px solid #ebebeb;
+    background-color: #FFFFFF;
+    line-height: normal;
+    height: 35px;
+    padding: 0 16px;
+}
+#restore-pass .prmu-btn{
+    border: none;
+    width: 100%;
+    font-size: 18px;
+    line-height: 35px;
+    border-radius: 18px;
+}
+.prmu-btn:after, .prmu-btn:before{
+    border-radius: 18px;
+}
+#restore-pass input:focus,
+#restore-pass button:focus{ outline: none }
+@media screen and (max-width: 450px){
+    .col-xs-push-1{
+        left: 0;
+        width: 100%;
+    }
+}

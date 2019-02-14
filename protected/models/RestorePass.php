@@ -46,27 +46,24 @@ class RestorePass
                 ));
            
 
-            if(strripos($email, "@")){
-            $messages = sprintf("Восстановление пароля на сервисе &laquo;Prommu.com&raquo;
-                    <br/>
-                    <br/>
-                    Для восстановления пароля Вам необходимо перейти по активной ссылке: <a href='%s'>%1$01s</a>
-                    <br/>
-                    <br/>
-                    Если Вы не запрашивали восстановление пароля на свой email адрес, проигнорируйте это письмо
-                    ",
-                Subdomain::site() . DS . MainConfig::$PAGE_NEW_PASS . '/?t=' . $token . "&uid=" . $User->id_user
-            );
-
-            Share::sendmail($email, "Prommu.com. Восстановление пароля", $messages);
-        }
-        else {
-             $links = Subdomain::site() . DS . MainConfig::$PAGE_NEW_PASS."/?";
-            $link = "t=$token";
-            
-            $link = $links.$link;
-            file_get_contents("https://prommu.com/api.teles/?phone=$email&code=$link");
-        }
+            if(strripos($email, "@"))
+            {
+                $link = MainConfig::$PAGE_NEW_PASS . '/?t=' . $token . "&uid=" . $User->id_user;
+                Mailing::set(
+                            6,
+                            array(
+                                'email_user' => $email,
+                                'link_restore_pass' => $link
+                            )
+                        );
+            }
+            else
+            {
+                $links = Subdomain::site() . DS . MainConfig::$PAGE_NEW_PASS."/?";
+                $link = "t=$token";
+                $link = $links.$link;
+                file_get_contents("https://prommu.com/api.teles/?phone=$email&code=$link");
+            }
             
 
 
