@@ -237,60 +237,35 @@ class Feedback extends Model
 					file_get_contents($sendto);
         }
 
-
-        $message = '<p style="font-size:16px;text-align: center">Здравствуйте'.$name.'</p>
-                    <br/>
-
-                <p style=" font-size:16px;">
-                    <br/>
-               Ваше обращение поставлено в очередь на рассмотрение.</p>
-                    <br/>
-                ';
-        Share::sendmail($emails, "Prommu.com. Пришло сообщение ", $message);
-    
-        $message = sprintf("На сайте <a href='http://%s'>prommu.com</a> было оставлено сообщение через обратную связь 
-                <br/>
-                <br/>
-                Пользователь: <b>%s</b>  
-                <br/>
-                Тема: <b>%s</b>  
-                <br/>
-                Email: <b>%s</b>  
-                <br/>
-                <br/>
-                Сообщение:
-                <br/>
-                &laquo;%s&raquo;
-                <br/>
-                ----------------------------------------------------------
-                </br>
-                Тип трафика: <b>%s</b>
-                <br/>
-                Источник: <b>%s</b>
-                <br/>
-                Канал: <b>%s</b>
-                <br/>
-                Кампания: <b>%s</b>
-                <br/>
-                Контент: <b>%s</b>
-                <br/>
-                Ключевые слова: <b>%s</b>
-                <br/>
-                Точка входа: <b>%s</b>
-                <br/>
-                Реферер: <b>%s</b>
-                <br/>
-                Roistat: <b>%s</b>  ",
-        Subdomain::getSiteName(), $name, $theme, $emails, $text, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $roistat);
-	           
-				$arMail[] = "denisgresk@gmail.com";
-				$arMail[] = "projekt.sergey@gmail.com";
-				$arMail[] = "e.marketing@euro-asian.ru";
-				$arMail[] = "site.adm@euro-asian.ru";
-				foreach ($arMail as $mail)
-				{
-					Share::sendmail($mail, "Prommu: сообщение через обратную связь", trim($message));
-				}
+        $name = trim($name);
+        empty($name) && $name = 'пользователь';
+        // уведомление юзеру
+        Mailing::set(
+                    7,
+                    array(
+                        'email_user' => $emails,
+                        'name_user' => $name
+                    )
+                );
+        // уведомления админам
+        Mailing::set(
+                    8,
+                    array(
+                        'name_user' => $name,
+                        'theme_message' => $theme,
+                        'email_user' => $emails,
+												'text_message' => $text,
+												'referer_seo' => $referer,
+												'transition_seo' => $transition,
+												'canal_seo' => $canal,
+												'campaign_seo' => $campaign,
+												'content_seo' => $content,
+												'keywords_seo' => $keywords,
+												'point_seo' => $point,
+												'l_referer_seo' => $last_referer,
+												'roistat_seo' => $roistat
+                    )
+                );
 
 				Yii::app()->user->setFlash(
 						'Message', 
