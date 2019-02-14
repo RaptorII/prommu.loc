@@ -1421,16 +1421,6 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 /*
 *		22.01.19
 */
-#DiContent .dark-ver .big-flash{
-	font-size: 16px;
-	font-family: RobotoCondensed-Regular,verdana,arial;
-}
-#DiContent .dark-ver .big-flash i{
-	font-style: italic;
-	display: block;
-	text-align: right;
-	margin-top: 20px;
-}
 .erv__not-publ{
 	display: block;
 	margin: 0 0 15px;

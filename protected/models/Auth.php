@@ -294,7 +294,7 @@ class Auth
 
                 $this->AuthorizeNet(['id' => $usData['id_user']]);
 
-                $link = 'https://' . $_SERVER['HTTP_HOST'] . "/user/activate/?type=$type&uid=".$usData['id_user']."&sex=".$sex."&smart=".$smart."&birthday=".$birthday."&photos=".$photos."&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
+                $link = Subdomain::site() . "/user/activate/?type=$type&uid=".$usData['id_user']."&sex=".$sex."&smart=".$smart."&birthday=".$birthday."&photos=".$photos."&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
                 $usData = Yii::app()->db->createCommand()
                 ->select("u.email, u.status")
                 ->from('user u')

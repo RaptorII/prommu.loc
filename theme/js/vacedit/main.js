@@ -25,7 +25,13 @@ $(function(){
     Calendar(arCalendars[i], curDate.getFullYear(), curDate.getMonth());
   //  Если есть флеш сообщение
   if(typeof flashMes !== "undefined" && flashMes.length>0){
-    callPopup(flashMes);
+    $('body').append('<div class="prmu__popup"><p>'+flashMes+'</p></div>'),
+    $.fancybox.open({
+        src: "body>div.prmu__popup",
+        type: 'inline',
+        touch: false,
+        afterClose: function(){ $('body>div.prmu__popup').remove() }
+    });
   }
   // Удаление вакансии
   $('#rv-vac-del').click(function(e){

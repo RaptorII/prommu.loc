@@ -977,3 +977,27 @@ body{ background: rgba(0, 0, 0, 0.31)!important; }
         margin-bottom: 0;
     }
 }
+/*
+*   14.02.19
+*/
+@media(max-width : 767px){
+    .rp-content1__logo{ 
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column-reverse;
+    }
+    .rp-content1__logo-img{
+        display: block;
+        margin: 0 auto 15px;
+    }
+    .rp-content1__logo-text{
+        display: block;
+        padding: 0 15px 15px;
+        text-align: center;
+    }
+    .rp-content1__btn-block{
+        width: 200px;
+        margin: 0 auto 20px;
+    }
+    .rp-content1__push{ text-align: center }
+}

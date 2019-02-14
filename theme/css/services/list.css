@@ -175,6 +175,14 @@
 	font-size: 18px;
 }
 .services__price-item span{ color: #f68000 }
+.services__price-order>div:after{
+	content: '';
+	display: block;
+	height: 1px;
+	background-color: #dedede;
+	margin: 0 30px 5px;
+}
+.services__price-order>div:last-child:after{ content: initial; }
 /*
 *		MEDIA
 */

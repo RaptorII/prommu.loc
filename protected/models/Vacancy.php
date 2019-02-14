@@ -1239,7 +1239,7 @@ public function rules()
                 ->where('v.id = :id AND v.id_user = :idus', array(':id' => $idvac, ':idus' => Share::$UserProfile->id))
                 ->queryRow();
             $showFlash = $res['status'];          
-            $message = 'Данные успешно сохранены и направлены на модерацию. Обычно это занимает от 2 - 4 часов.';
+            $message = 'Данные успешно сохранены и направлены на модерацию. Обычно это занимает до 15 минут в рабочее время.';
         }
         if($showFlash){
           Yii::app()->user->setFlash('Message', array('type' => '-green', 'message' => $message));  

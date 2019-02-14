@@ -468,3 +468,11 @@ header h1 {
   position: relative;
   z-index: 2;
 }
+#DiContent .cd-close-panel.move-left{
+  border: 1px solid #abb820;
+  border-radius: 10px;
+  padding: 0 5px;
+  height: 30px;
+  line-height: 30px;
+  background-color: #ffffff;
+}

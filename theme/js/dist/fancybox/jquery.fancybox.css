@@ -798,3 +798,16 @@ li.fancybox-thumbs-loading {
   color: white;
   text-decoration: underline;
 }
+/*
+*   big-flash
+*/
+.prmu__popup .big-flash{
+  font-size: 16px;
+  font-family: RobotoCondensed-Regular,verdana,arial;
+}
+.prmu__popup .big-flash i{
+  font-style: italic;
+  display: block;
+  text-align: right;
+  margin-top: 20px;
+}
