@@ -45,10 +45,10 @@ class RestorePass
                     'dt_create' => date("Y-m-d H:i:s"),
                 ));
            
-
+            $link = Subdomain::site() . DS . MainConfig::$PAGE_NEW_PASS . '/?t=' . $token;
             if(strripos($email, "@"))
             {
-                $link = MainConfig::$PAGE_NEW_PASS . '/?t=' . $token . "&uid=" . $User->id_user;
+                $link .= "&uid=" . $User->id_user;
                 Mailing::set(
                             6,
                             array(
@@ -59,15 +59,10 @@ class RestorePass
             }
             else
             {
-                $links = Subdomain::site() . DS . MainConfig::$PAGE_NEW_PASS."/?";
-                $link = "t=$token";
-                $link = $links.$link;
                 file_get_contents("https://prommu.com/api.teles/?phone=$email&code=$link");
             }
             
-
-
-           Yii::app()->user->setFlash('Result', ['error' => 1, 'message' => $message]);
+            Yii::app()->user->setFlash('Result', ['error' => 1, 'message' => $message]);
             $data = ['error' => 1, 'message' => ""];
 
 
