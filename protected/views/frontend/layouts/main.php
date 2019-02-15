@@ -488,7 +488,7 @@
                             //
                             // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! только индексируемые города
                             //
-                            $arIndexCities = [1838, 1307, 1449];
+                            $arIndexCities = [1838, 1307, 1449, 571, 1973];
                         ?>
                         <? foreach ($SubdomainCache->data as $id => $site): ?>
                             <? if(in_array($id, $arIndexCities) && $id!=$SubdomainCache->id): ?>
