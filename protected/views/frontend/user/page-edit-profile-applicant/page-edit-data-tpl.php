@@ -1,4 +1,4 @@
-<?php if(!empty($_GET['uid'])): ?>
+<?php if(empty($_GET['uid'])): ?>
 <?php
   Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css');
   Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-edit-prof-app.css');
@@ -848,7 +848,7 @@
 *       POPUP
 */
 ?>
-<?php if(empty($_GET['uid'])): ?>
+<?php if(!empty($_GET['uid'])): ?>
   <?
     Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'register-popup/register-popup-app.js', CClientScript::POS_END);
     Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css'); 
