@@ -1,4 +1,4 @@
-<?php if(empty($_GET['uid'])): ?>
+<?php if(!empty($_GET['uid'])): ?>
 <?php
   Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css');
   Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-edit-prof-app.css');
@@ -848,12 +848,13 @@
 *       POPUP
 */
 ?>
-<?php if(!empty($_GET['uid'])): ?>
-  <? 
+<?php if(empty($_GET['uid'])): ?>
+  <?
     Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'register-popup/register-popup-app.js', CClientScript::POS_END);
     Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css'); 
     Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
     Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'register-popup/register-popup-app.css');
+    Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'dist/jquery-ui.min.css'); 
 
     $arGeo = (new Geo())->getUserGeo();
     $attr = reset($viData['userInfo']['userAttribs']);
@@ -914,28 +915,8 @@
           <div class="rp-content1__inputs">
             <?if($_GET['birthday'] != "type"):?>
               <div class="rp-content1__inputs-row">
-                <div class="pr-card__calendar">
-                  <span class="pr-card__calendar-result" id="birthday-res"></span>
-                  <table id="birthday" class="pr-card__calendar-table">
-                    <thead>
-                      <tr>
-                        <td colspan="5">
-                          <div class="rp-content1__select-arrow">
-                            <select class="rp-content1__inputs-select">
-                              <?foreach ($viData['months'] as $i => $month):?>
-                                <option value="<?=$i?>"><?=$month?></option>
-                              <?endforeach?>
-                            </select>
-                          </div>
-                        </td>
-                        <td colspan="2"><input type="text" value="" class="rp-content1__inputs-input year"></td>
-                      </tr>
-                      <tr><td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс</tr>
-                    <tbody>
-                  </table>
-                  <input type="hidden" name="birthday" id="birthday-inp" class="required-inp">
-                </div>
-                <span class="rp-content1__text">Работодатель обычно предьявляет требования к возрасту и отслеживает эти данные в анкете.</span>
+                <input type="text" name="birthday" id="datepicker" class="custom-calendar rp-content1__inputs-input required-inp" placeholder="Дата рождения">
+                <span class="rp-content1__text">Укажите Вашу дату рождения.<br><span class="rp-content1__warning">Возраст должен быть не менее 14 лет</span></span>
                 <div class="clearfix"></div>
               </div>
             <?endif;?>

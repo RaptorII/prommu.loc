@@ -1,15 +1,9 @@
 $(function(){
-  var curDate = new Date(),
-    curYear = curDate.getFullYear()-14, // возраст от 14 лет
-    curMonth = curDate.getMonth(),
-    curDay = Number(curDate.getDate()),
-    oldPhone = $('#phone-code').val(),
-    keyCode = 0,
-    cityTimer = false, // таймер обращения к серверу для поиска городов
-    bShowCityList = true, // флаг отображения списка городов
-    arInputs = $('.required-inp');
-
-  curDate = new Date(curYear, curMonth, curDay);
+  var oldPhone = $('#phone-code').val(),
+      keyCode = 0,
+      cityTimer = false, // таймер обращения к серверу для поиска городов
+      bShowCityList = true, // флаг отображения списка городов
+      arInputs = $('.required-inp');
 
   $('body').append('<div class="bg_veil"></div>'); // фон для окна пуш настроек
 
@@ -73,16 +67,8 @@ $(function(){
         }
   });
   
-  if($('#birthday').is('*')){
-    // строим календарь
-    Calendar("birthday",curYear,curMonth);
-    $("#birthday input").mask("9999");
-    // Проверяем дату по году
-    $('#birthday input').keyup(function(){ checkDate(this); });
-    // Проверяем дату по месяцу
-    $('#birthday select').change(function(){ checkDate(this) });
-    // Проверяем дату по дню
-    $(document).on('click', '#birthday .day', function(){ checkDate(this) }); 
+  if($('#datepicker').is('*')){ // Проверяем дату по году
+    $('#datepicker').change(function(){ checkDate() });
   }
   /*
   *   События
@@ -269,78 +255,18 @@ $(function(){
     });
     return false;
   } 
-  // построение календаря
-  function Calendar(id, year, month) {
-    var Dlast = new Date(year,month+1,0).getDate(),
-        D = new Date(year,month,Dlast),
-        DNlast = D.getDay(),
-        DNfirst = new Date(D.getFullYear(),D.getMonth(),1).getDay(),
-        calendar = '<tr>',
-        m = document.querySelector('#'+id+' option[value="' + D.getMonth() + '"]'),
-        g = document.querySelector('#'+id+' input');
-    if(DNfirst != 0){ for(var  i = 1; i < DNfirst; i++) calendar += '<td>' }
-    else{ for(var  i = 0; i < 6; i++) calendar += '<td>' }
-    for(var  i = 1; i <= Dlast; i++) {
-      if(
-        i == new Date().getDate() && 
-        D.getFullYear() == new Date().getFullYear() && 
-        D.getMonth() == new Date().getMonth()
-      ){ calendar += '<td class="day today">' + i }
-      else{ calendar += '<td class="day">' + i }
-      if(new Date(D.getFullYear(),D.getMonth(),i).getDay() == 0){ calendar+='<tr>' }
-    }
-    for(var  i = DNlast; i < 7; i++) calendar += '<td>&nbsp;';
-    document.querySelector('#'+id+' tbody').innerHTML = calendar;
-    g.value = D.getFullYear();
-    m.selected = true;
-    if(document.querySelectorAll('#'+id+' tbody tr').length < 6){
-        document.querySelector('#'+id+' tbody').innerHTML += '<tr><td>&nbsp;<td>&nbsp;<td>&nbsp;<td>&nbsp;<td>&nbsp;<td>&nbsp;<td>&nbsp;';
-    }
-  }
   //  проверка корректности даты
-  function checkDate(e){
-    var table =  $(e).closest('table').prop('id'),
-      idTable = '#'+table,
-      y = Number($(idTable+' input').val()),
-      m = Number($(idTable+' select').val());
+  function checkDate(){
+    var item = document.getElementById('datepicker'),
+        objDate = $(item).datepicker('getDate'),
+        d = String(objDate.getDate()),
+        m = String(objDate.getMonth()+1);
 
-    if($(e).is(idTable+' input') || $(e).is(idTable+' select')){
-      var selectDay = $(idTable).find(idTable+' .day.select');
-      d = (selectDay.length>0 ? Number($(selectDay).text()) : Number(curDate.getDate()));
-      elemErr = e;
-    }   
-    if($(e).is(idTable+' .day')){
-      d = Number($(e).text());
-      elemErr = $(e).closest('.pr-card__calendar');
-    }
-    newDate = new Date(y, m, d);
+    d = d.length<2 ? ('0'+d) : d;
+    m = m.length<2 ? ('0'+m) : m;
 
-    if(Math.ceil((curDate - newDate) / (1000 * 60 * 60 * 24)) >= 1){ // дата должна быть меньше сегодняшней
-      remEr(idTable+' input');
-      remEr(idTable+' select');
-      remEr($(e).closest('.pr-card__calendar'));        
-      if($(e).is(idTable+' .day')){ 
-        $.each($(idTable+' .day'), function(){ $(this).removeClass('select') });
-        $(e).addClass('select'); 
-        str = ('0' + d).slice(-2) + '.' + ('0' + (m + 1)).slice(-2) + '.' + y;
-      }
-      else{
-        if(String(y).length==4){ // 4 цифры в году
-          Calendar(table,y,m);
-          str = ('0' + d).slice(-2) + '.' + ('0' + (m + 1)).slice(-2) + '.' + y;
-        }
-        else{
-          addEr(elemErr);
-          str = ('0' + d).slice(-2) + '.' + ('0' + (m + 1)).slice(-2) + '.XXXX';
-        }
-      }        
-      $(idTable+'-res').text(str);
-      $(idTable+'-inp').val(str);
-    }
-    else{
-      addEr(elemErr);
-    }
-  }  
+    item.value = d + '.' + m + '.' + objDate.getFullYear();
+  }
   //  визуализация ошибок
   function addEr(e, style='error'){ $(e).addClass(style) }
   function remEr(e, style='error'){ $(e).removeClass(style) }
@@ -369,4 +295,13 @@ $(function(){
         split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
     $(e).val(split.join('-'));
   }
+  // календарь
+  $("#datepicker").datepicker({
+    maxDate: '-14y',
+    changeYear: true,
+    yearRange: "1950:2005",
+    beforeShow: function(){
+      $('#ui-datepicker-div').addClass('custom-calendar');
+    }
+  });
 });
