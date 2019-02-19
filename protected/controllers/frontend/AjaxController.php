@@ -315,12 +315,25 @@ class AjaxController extends AppController
      */
     public function actionSetVacationResponse()
     {
-        if( Share::$UserProfile->type == 2 )
+        $result = array('error' => 1);
+        if(Share::isApplicant()) // applicant
         {
-            $res = (new ResponsesApplic)->setVacationResponse();
-            $html = $this->render('vac-response-tpl', array('viData' => $res), array(), true);
-            echo CJSON::encode(array_merge($res, array('html' => $html)));
-        } // endif
+            $result = (new ResponsesApplic)->setVacationResponse();
+        }
+        elseif(Share::isEmployer()) // employer
+        {
+            $result['message'] = 'Нам очень жаль:( но Вы зарегистрированы '
+                . 'как работодатель и не можете отзываться на вакансию';
+        }
+        else // guest
+        {
+            $result['message'] = '<p>Для отклика на вакансию необходимо <a href="' 
+                . Yii::app()->controller->createUrl(MainConfig::$PAGE_REGISTER,['p'=>1]) 
+                . '">зарегистрироваться</a> на портале.</p><p>Если Вы ранее уже регистрировались'
+                . '- необходимо <a href="' . MainConfig::$PAGE_LOGIN . '">авторизоваться</a></p>';
+        }
+
+        echo CJSON::encode($result);
         Yii::app()->end();
     }
 

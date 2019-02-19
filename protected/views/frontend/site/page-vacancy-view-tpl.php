@@ -905,7 +905,11 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                         alt="<?= "Работодатель {$vacancy['coname']} prommu.com" ?>">
                 </a>
                 <div class="sv__logo-name"><?= $vacancy['coname'] ?></div>
-                <div class="sv__logo-name js-g-hashint" title="Дата публикации"><?= $vacancy['crdate'] ?></div>
+                <div class="sv__logo-name">Опубликовано: <?= $vacancy['crdate'] ?></div>
+                <div class="sv__logo-name">Просмотров: <?= $viData['views'] ?></div>
+                <? if($viData['vacResponses']['counts'][4] > 0): ?>
+                    <div class="sv__logo-name">Откликов: <?= $viData['vacResponses']['counts'][4] ?></div>
+                <? endif; ?>
                 <?php if (Share::$UserProfile->type == 2 && in_array($viData['response']['status'], [4, 5, 6, 7])): ?>
                     <a href="<?= MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vacancy['id'] ?>"
                        class="erv__tab-link link4 <?= $viData['vacResponses']['countsDiscuss'] ? 'active' : '' ?>">Обратная

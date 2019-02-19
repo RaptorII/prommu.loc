@@ -300,156 +300,201 @@ class ResponsesApplic extends Responses
 
         return $data;
     }
-
-
     /**
      * делаем отклик соискателя на вакансию
      */
     public function setVacationResponse($inProps = [])
     {
-        $id = $inProps['idvac'] ?: filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
+        $id = $inProps['idvac'] 
+            ?: filter_var(
+                    Yii::app()->getRequest()->getParam('id'), 
+                    FILTER_SANITIZE_NUMBER_INT
+                );
+        $arRes = array(
+                    'error' => 1,
+                    'message' => 'Произошла ошибка во время подачи заявки на вакансию. Попробуйте позже'
+                );
         $Profile = $this->Profile ?: Share::$UserProfile;
         $idPromo = $Profile->exInfo->id_resume;
-    
 
-        $message = 'Произошла ошибка во время подачи заявки на вакансию. Попробуйте позже.';
-        if( $Profile->exInfo->status == 2 && $id )
+        if(!$id) // bad vacancy
         {
-            $vacData = Yii::app()->db->createCommand()
-                ->select("e.id, e.title, e.agefrom, e.ageto, e.isman, e.iswoman, e.status")
-                ->from('empl_vacations e')
-                ->where("id = :id_vacation", array(":id_vacation" => $id))
-                ->queryRow();
+            $arRes['message'] = 'Неправильный номер вакансии';
+            return $arRes;
+        }
 
+        $arApp = Yii::app()->db->createCommand()
+                    ->select('r.isman, r.birthday, u.ismoder')
+                    ->from('resume r')
+                    ->leftjoin('user u','u.id_user=r.id_user')
+                    ->where('r.id_user=:id', [':id'=>Share::$UserProfile->id])
+                    ->queryRow();
 
-            if( $vacData['id'] )
+        if(!$arApp['ismoder']) // not moder applicant
+        {
+            $arRes['message'] = '<p>Нам очень жаль, но Ваша анкета еще не прошла модерацию :(</p>'
+                . '<p>Как только модератор пропустит Вашу анкету - Вы получите оповещение в Личном '
+                . 'кабинете, а также на электронную почту</p>';
+            return $arRes;
+        }
+        // search vacancy
+        $arVacancy = Yii::app()->db->createCommand()
+                    ->select("id,
+                        id_user,
+                        title, 
+                        agefrom, 
+                        ageto, 
+                        isman, 
+                        iswoman, 
+                        status")
+                    ->from('empl_vacations')
+                    ->where("id=:id", [":id" => $id])
+                    ->queryRow();
+
+        if(!$arVacancy['id']) // bad vacancy
+        {
+            $arRes['message'] = 'Неправильный номер вакансии';
+            return $arRes;
+        }
+        if($arVacancy['status']<1) // закрытая вакансия
+        {
+            $arRes['message'] = 'Вакансия находится на стадии модерации. Попробуйте позже';
+            return $arRes;
+        }
+
+        // search responces of this user on current vacancy
+        $query = Yii::app()->db->createCommand()
+                    ->select('id')
+                    ->from('vacation_stat')
+                    ->where(
+                        'id_vac=:id AND id_promo=:id_promo AND isresponse=1',
+                        [":id_promo"=>$idPromo, ":id"=>$id]
+                    )
+                    ->queryScalar();
+
+        if($query)
+        {
+            $arRes['message'] = '<p>Вы уже подавали заявку на эту вакансию</p>'
+                . '<p>Чтобы откликнуться на другие вакансии - <a href="'
+                . MainConfig::$PAGE_SEARCH_VAC . '">жмите сюда</a></p>';
+            return $arRes;
+        }
+        else
+        {
+            // проверка пола
+            if(!$arVacancy['isman'] && $arApp['isman'] && $inData['iswoman'])
             {
-                $res = Yii::app()->db->createCommand()
-                    ->select("s.id, s.status, s.isresponse")
-                    ->from('vacation_stat s')
-                    ->where("id_vac = :id_vacation AND id_promo = :idPromo AND isresponse = 1", array(":idPromo" => $idPromo, ":id_vacation" => $id));
-                $res = $res->queryRow();
+                $arRes['message'] = 'Вы не подходите на даную ваканию по параметру “Пол соискателя женский”';
+                return $arRes;
+            }
+            elseif($inData['isman'] && !$arApp['isman'] && !$inData['iswoman'])
+            {
+                $arRes['message'] = 'Вы не подходите на даную ваканию по параметру “Пол соискателя мужской”';
+                return $arRes;
+            }
+            // проверка возраста
+            $datetime = new DateTime($arApp['birthday']);
+            $interval = $datetime->diff(new DateTime(date("Y-m-d")));
+            $years = $interval->format("%Y");
 
-                if( $res['id'] )
+            if(
+                ($arVacancy['agefrom']>0 && $arVacancy['agefrom']>$years)
+                ||
+                ($arVacancy['ageto']>0 && $arVacancy['ageto']<$years)
+            )
+            {
+                $arRes['message'] = 'Вы не подходите на даную ваканию по параметру “Возраст соискателя”';
+                return $arRes;
+            }
+            // города пользователя
+            $arUserCities = Yii::app()->db->createCommand()
+                        ->select("id_city")
+                        ->from('user_city')
+                        ->where(
+                            "id_user=:id", 
+                            [":id"=>Share::$UserProfile->id]
+                        )
+                        ->queryColumn();
+            // города вакансии
+            $arVacCities = Yii::app()->db->createCommand()
+                        ->select("id_city")
+                        ->from('empl_city')
+                        ->where("id_vac=:id", [":id"=>$id])
+                        ->queryColumn();
+
+            if(count($arUserCities) && count($arVacCities))
+            {
+                $hasCity = false;
+                foreach ($arUserCities as $city)
+                    if(in_array($city, $arVacCities))
+                        $hasCity = true;
+
+                if(!$hasCity)
                 {
-                    $message = 'Вы уже подавали заявку на эту вакансию';
-                    $flagError = 1;
+                    $arRes['message'] = 'Вы не подходите на даную ваканию по параметру “Город”';
+                    return $arRes;                   
                 }
-                else
-                {
-                    // Добавляем заявку на вакансию
-//                    if( false )
-                    $res = Yii::app()->db->createCommand()
-                        ->insert('vacation_stat', array(
-                            'id_promo' => $idPromo,
-                            'id_vac' => $id,
-                            'isresponse' => 1,
-                            'date' => date('Y-m-d H:i:s'),
-                    ));
+            }
+            // Добавляем заявку на вакансию
+            Yii::app()->db->createCommand()
+                ->insert(
+                    'vacation_stat', 
+                    array(
+                        'id_promo' => $idPromo,
+                        'id_vac' => $id,
+                        'isresponse' => 1,
+                        'date' => date('Y-m-d H:i:s'),
+                    )
+                );
+            // Находим email работодателя
+            $email = Yii::app()->db->createCommand()
+                        ->select('email')
+                        ->from('user')
+                        ->where('id_user=:id', [':id' => $arVacancy['id_user']])
+                        ->queryScalar();
+            // Письмо пользователю 
+            $name = trim(Share::$UserProfile->exInfo->firstname);
+            empty($name) && $name = 'пользователь';
+            Mailing::set(
+                    9,
+                    array(
+                        'email_user' => $email,
+                        'name_user' => $name,
+                        'id_user' => Share::$UserProfile->id,
+                        'id_vacancy' => $id,  
+                        'name_vacancy' => $arVacancy['title']
+                    )
+                );
+            // push
+            $config = Yii::app()->db->createCommand()
+                        ->select('new_invite')
+                        ->from('push_config')
+                        ->where('id=:id', [':id' => $arVacancy['id_user']])
+                        ->queryScalar();
 
-                    $res = Yii::app()->db->createCommand()
-                    ->select("s.id, s.status, s.isresponse")
-                    ->from('vacation_stat s')
-                    ->where("id_vac = :id_vacation AND id_promo = :idPromo AND isresponse = 1", array(":idPromo" => $idPromo, ":id_vacation" => $id));
-                    $ress = $res->queryRow();
+            $push = Yii::app()->db->createCommand()
+                        ->select('push')
+                        ->from('user_push')
+                        ->where('id=:id', [':id' => $arVacancy['id_user']])
+                        ->queryScalar();
 
-                    //  $res = Yii::app()->db->createCommand()
-                    //     ->insert('vacancy_request', array(
-                    //         'id' => $ress['id'],
-                    //         'date' => date("Y-m-d"),
-                    //         'invite' => 1,
-                    //         'promoStatus' => 'SENDING',
-                    //         'promo_id' => $idPromo,
-                    //         'vacancy_id' => $id,
-                    // ));
-                    
-                    // $res = Yii::app()->db->createCommand()
-                    //     ->insert('vacancy_request', array(
-                    //         'id' => $ress['id'],
-                    //         'date' => date("Y-m-d"),
-                    //         'invite' => 1,
-                    //         'promoStatus' => 'SENDING',
-                    //         'promo_id' => 3584,
-                    //         'vacancy_id' => 1588,
-                    //         ));
-
-                    // данные работодателя
-                    $sql = "SELECT em.id, u.email
-                        FROM empl_vacations e
-                        INNER JOIN employer em ON em.id_user = e.id_user
-                        INNER JOIN user u ON em.id_user = u.id_user 
-                        WHERE e.id = {$id} ";
-                    /** @var $res CDbCommand */
-                    $res = Yii::app()->db->createCommand($sql);
-                    $res = $res->queryRow();
-                    $email = $res['email'];
-
-
-                   $content = file_get_contents(Yii::app()->basePath . "/views/mails/emp/response-to-vac.html");
-                  $content = str_replace('#APPNAME#', Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname, $content);
-                 $content = str_replace('#APPLINK#',  Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
-                 $content = str_replace('#VACID#', $id, $content);
-                 $content = str_replace('#VACNAME#', $vacData['title'], $content);
-                 $content = str_replace('#VACLINK#', Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $id, $content);
-                 $content = str_replace('#RESPLINK#',Subdomain::site() . MainConfig::$PAGE_RESPONSES, $content);
-                
-      
-              Share::sendmail($email, "Prommu: Отклик на вакансию", $content);
-
-
-                
-
-                    $message = 'Заявка на вакансию направлена работодателю, как только работодатель примет решение - вы получите уведомление в личном кабинете';
-                } // endif
-
-
-            // нет такой вакансии
-            } else { $flagError = 1; } // endif
-
-        // errors
-        } else {
-            if( $Profile->exInfo->status == 3 ) $message = 'Заявку на вакансию может подать только авторизированный соискатель';
-            elseif( !$id ) $message = 'Неправильный номер вакансии';
-            else $message = 'Чтобы подать заявку на вакансию необходимо авторизироваться';
-
-            $flagError = 1;
-        } // endif
-        if( $flagError )
-        {
-            $ret = array('error' => 1, 'message' => $message);
-
-        } else {
-            $ret = array('error' => 0, 'message' => $message);
-        } // endif
-
-        $sql = "SELECT e.id_user
-                        FROM empl_vacations e
-                        INNER JOIN employer em ON em.id_user = e.id_user
-                        INNER JOIN user u ON em.id_user = u.id_user 
-                        WHERE e.id = {$id} ";
-        $res = Yii::app()->db->createCommand($sql);
-        $ids = $res->queryScalar();
-            $sql = "SELECT r.new_invite
-            FROM push_config r
-            WHERE r.id = {$ids}";
-            $res = Yii::app()->db->createCommand($sql)->queryScalar(); 
-            if($res == 2) {
-            $sql = "SELECT r.push
-            FROM user_push r
-            WHERE r.id = {$ids}";
-            $res = Yii::app()->db->createCommand($sql)->queryRow(); 
-
-            if($res) {
-                $type = "invite";
+            if($config==2 && $push)
+            {
                 $api = new Api();
-                $api->getPush($res['push'], $type);
-            
-                    }
-                }
+                $api->getPush($push, 'invite');
+            }
 
-        return $ret;
+            $arRes['message'] = 'Заявка на вакансию направлена работодателю. '
+                . 'Как только работодатель примет решение - вы получите '
+                . 'уведомление в личном кабинете';
+            $arRes['error'] = 0;
+        }
+
+        return $arRes;
     }
-
+    /**
+     * 
+     */
     public function saveRateDatas($props = [])
     {
         $id = $props['idvac'] ?: filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);

@@ -88,6 +88,12 @@ class Mailing extends CActiveRecord
 										'value' => '/admin/site/VacancyEdit',
 										'description' => "Страница вакансии в административной части"
 									),
+							6 => array(
+										'name' => "#PAGE_USER_RESPONCES#",
+										'pattern' => "/#PAGE_USER_RESPONCES#/",
+										'value' => Subdomain::site() . MainConfig::$PAGE_RESPONSES,
+										'description' => "Страница отзывов пользователя"
+									)	
 				);
 	}
 	/**
