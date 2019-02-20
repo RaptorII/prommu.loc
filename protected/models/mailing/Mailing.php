@@ -93,7 +93,43 @@ class Mailing extends CActiveRecord
 										'pattern' => "/#PAGE_USER_RESPONCES#/",
 										'value' => Subdomain::site() . MainConfig::$PAGE_RESPONSES,
 										'description' => "Страница отзывов пользователя"
-									)	
+									),
+							7 => array(
+										'name' => "#PAGE_USER_RESPONCES#",
+										'pattern' => "/#PAGE_USER_RESPONCES#/",
+										'value' => Subdomain::site() . MainConfig::$PAGE_RESPONSES,
+										'description' => "Страница отзывов пользователя"
+									),
+							8 => array(
+										'name' => "#PAGE_USER_VACANCY_EDIT#",
+										'pattern' => "/#PAGE_USER_VACANCY_EDIT#/",
+										'value' => Subdomain::site() . MainConfig::$PAGE_VACANCY_EDIT,
+										'description' => "Страница редактирования вакансии в публичной части"
+									),
+							9 => array(
+										'name' => "#PAGE_SERVICES_PREMIUM#",
+										'pattern' => "/#PAGE_SERVICES_PREMIUM#/",
+										'value' => Subdomain::site() . MainConfig::$PAGE_SERVICES_PREMIUM,
+										'description' => "Страница услуги 'Премиум'"
+									),
+							10 => array(
+										'name' => "#PAGE_SERVICES_GEO#",
+										'pattern' => "/#PAGE_SERVICES_GEO#/",
+										'value' => Subdomain::site() . MainConfig::$PAGE_SERVICES_GEO,
+										'description' => "Страница услуги 'ГЕО'"
+									),
+							11 => array(
+										'name' => "#PAGE_SERVICES_MEDICAL#",
+										'pattern' => "/#PAGE_SERVICES_MEDICAL#/",
+										'value' => Subdomain::site() . MainConfig::$PAGE_SERVICES_MEDICAL,
+										'description' => "Страница услуги 'Медкнига'"
+									),
+							12 => array(
+										'name' => "#PAGE_SERVICES_OUTSTAFFING#",
+										'pattern' => "/#PAGE_SERVICES_OUTSTAFFING#/",
+										'value' => Subdomain::site() . MainConfig::$PAGE_SERVICES_OUTSTAFFING,
+										'description' => "Страница услуги 'Аутстаф'"
+									)
 				);
 	}
 	/**
@@ -294,7 +330,10 @@ class Mailing extends CActiveRecord
 			// меняем константы в теле письма
 			$body = preg_replace($arPatterns, $arValues, $objEvent->text);
 			// помещаем письмо в шаблон
-			$body = str_replace(MailingTemplate::$CONTENT, $body, $objTemplate->body);
+			if($objEvent->in_template)
+			{
+				$body = str_replace(MailingTemplate::$CONTENT, $body, $objTemplate->body);
+			}
 			// go 
 			self::setToMailing($arReceivers, $title, $body, $objEvent->is_urgent);
 		}

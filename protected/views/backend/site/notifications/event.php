@@ -155,7 +155,11 @@
 
 			myNicEditor.addInstance('transform-code');
 			myNicEditor.setPanel('transform-code-panel');
+<? if($item->in_template): ?>
 			var fullContent = content.replace(replace, myNicEditor.nicInstances[0].getContent().trim());
+<? else: ?>
+			var fullContent = myNicEditor.nicInstances[0].getContent().trim();
+<? endif; ?>
 
 			setIframe(fullContent);
 			var myCodeMirror = initMirror();
@@ -169,8 +173,11 @@
 					newVal = myNicEditor.nicInstances[0].getContent().trim();
 				if(format==='html')
 					newVal = myCodeMirror.getValue();
-				
+<? if($item->in_template): ?>
 				fullContent = content.replace(replace, newVal);
+<? else: ?>
+				fullContent = newVal;
+<? endif; ?>
 				setIframe(fullContent);
 			});
 			//
@@ -203,6 +210,13 @@
 				if(format==='text')
 				{
 					var newVal = myNicEditor.nicInstances[0].getContent().trim();
+<? if(!$item->in_template): ?>
+	var header = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><html xmlns="http://www.w3.org/1999/xhtml"><head>'
+			+'<title></title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head>'
+			+ '<body style="margin:0;background-color:#FFFFFF">',
+			footer = '</body></html>';
+	newVal = header + newVal + footer;
+<? endif; ?>
 					myCodeMirror.setValue(newVal);	
 				}
 

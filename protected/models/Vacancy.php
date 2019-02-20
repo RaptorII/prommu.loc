@@ -697,17 +697,18 @@ public function rules()
 
     public function updateVacancy($id, $data)
     {
-        if(isset($data['cur_status'])) {
+        if(isset($data['cur_status']))
+        {
             $data['ismoder'] = $data['cur_status']==100 ? $data['cur_status'] : 0;
             unset($data['cur_status']);            
         }
-        else {
-            // сохранение вакансии
+        else // сохранение вакансии
+        {
             $data['index'] = (isset($data['index']) ? : 0);
             $data['ismoder'] = (empty($data['ismoder']) ? 0 : $data['ismoder']);
         }
         Yii::app()->db->createCommand()
-            ->update('empl_vacations', $data, 'id=:id', array(':id'=>$id));
+            ->update('empl_vacations', $data, 'id=:id', [':id'=>$id]);
 
         if($data['ismoder'] != "100" )
             return;
@@ -741,12 +742,14 @@ public function rules()
         // создаем параметры для фильтра
         $host = Subdomain::site();
         $url = $host . MainConfig::$PAGE_SEARCH_PROMO . '?';
-        foreach ($arVac['cities'] as $c) {
+        foreach ($arVac['cities'] as $c)
+        {
             $_POST['cities'][] = $c['id_city'];
             $url .= 'cities[]=' . $c['id_city'] . '&';
         }
 
-        foreach ($arVac['posts'] as $p) {
+        foreach ($arVac['posts'] as $p)
+        {
             $_POST['posts'][] = $p['id'];
             $url .= 'posts[]=' . $p['id'] . '&';
         }
@@ -766,69 +769,67 @@ public function rules()
             . 'card=' . $arVac['card'] . '&'
             . 'cardPrommu=' . $arVacInfo['cardPrommu'];
         // ищем 10 соискателей, и сортируем, чтобы сначала вывести с фото
-        $sPromo = new SearchPromo();
-        $arAllId = $sPromo->searchPromosCount();
+        $model = new SearchPromo();
+        $arAllId = $model->searchPromosCount();
         $cnt = sizeof($arAllId);
         $pages = new CPagination($cnt);
-        $pages->pageSize = 10;
-        $pages->applyLimit($sPromo);
-        $arr = $sPromo->getPromos($arAllId, true)['promo'];
+        $pages->pageSize = 20;
+        $pages->applyLimit($model);
+        $arApplicants = $model->getPromos($arAllId, true)['promo'];
 
-        if(count($arr))
+        $appList = '';
+        if(count($arApplicants)>=3)
         {
-        	$arRes = array();
-	        foreach ($arr as $u)
-	        {
-	            $u['src'] = $host . '/' . MainConfig::$PATH_APPLIC_LOGO . '/' . 
-	                ($u['photo'] 
-	                    ? ($u['photo'] . '100.jpg')
-	                    : ($u['isman'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F)
-	                );
-	            $u['link'] = $host . MainConfig::$PAGE_PROFILE_COMMON . '/' . $u['id_user'];
-	            $u['name'] = trim($u['firstname'] . ' ' . $u['lastname']);
-	            $datetime = new DateTime($u['birthday']);
-	            $interval = $datetime->diff(new DateTime(date("Y-m-d")));
-	            $u['years'] = $interval->format("%Y");
-	            $u['years'] = $u['years'] . ' ' . Share::endingYears($u['years']);
-	            empty($u['photo']) ? array_push($arRes, $u) : array_unshift($arRes, $u);
-	        }
-	        // формируем html письма
-	        $file = file_get_contents(Yii::app()->basePath . '/views/mails/after-moder-vac.php');
-	        preg_match_all('/#LPLACE(.*?)#LPLACE|#CYCLE(.*?)#CYCLE/', $file, $matches);
+            $arRes = array();
+            foreach ($arApplicants as $u)
+            {
+                $u['src'] = $host . Share::getPhoto(2,$u['photo'],'small',$u['isman']);
+                $u['link'] = $host . MainConfig::$PAGE_PROFILE_COMMON . '/' . $u['id_user'];
+                $u['name'] = trim($u['firstname'] . ' ' . $u['lastname']);
+                $datetime = new DateTime($u['birthday']);
+                $interval = $datetime->diff(new DateTime(date("Y-m-d")));
+                $u['years'] = $interval->format("%Y");
+                $u['years'] = $u['years'] . ' ' . Share::endingYears($u['years']);
+                empty($u['photo']) ? array_push($arRes, $u) : array_unshift($arRes, $u);
+            }
 
-	        $listPlace = '';
-	        if(sizeof($arRes)>=5)
-	        {
-	            $list = '';
-	            for ($i=0; $i<5; $i++)
-	            {
-	                $e = $arRes[$i];
-	                $list .= preg_replace(
-	                    array('/#ALINK/','/#ASRC/','/#ANAME/','/#ACITY/','/#AYEARS/'), 
-	                    array($e['link'],$e['src'],$e['name'],join(', ',$e['city']),$e['years']), 
-	                    $matches[2][1]
-	                );
-	            }
-	            $listPlace = preg_replace(
-	                    array('/#LCONTENT/', '/#ANKETY/'), 
-	                    array($list, $url), 
-	                    $matches[1][0]
-	                );
-	        }
-	        $arNeed = array('/#EMP/','/#VNAME/','/#VLINK/','/#CONTACT/');
-	        $arRpls = array(
-	                $arVac['name'],
-	                $arVac['title'],
-	                $host . MainConfig::$PAGE_VACANCY . "/" . $id,
-	                $host . MainConfig::$PAGE_FEEDBACK
-	            );
-	        $file = preg_replace($arNeed, $arRpls, $file);
-	        $file = str_replace($matches[0][0], $listPlace, $file);
-	        $message = str_replace($matches[0][1], '', $file);
-	        // письмо работодателю
-	        Share::sendmail($arVac['email'], "Prommu.com. Вакансия прошла модерацию", $message);
+            $count = sizeof($arRes)>=6 ? 6 : 3;
+            $anketa = '<td style="padding:0 8px 25px">
+                <div style="display:block;box-shadow:0px 8px 16px 0px rgba(0, 0, 0, 0.19);">
+                    <img src="#ASRC" style="width:100%;display:block">
+                    <span style="display:block;padding:13px;font-family:Arial,Helvetica,sans-serif;font-size:16px">
+                        <b style="display:inline-block;padding-bottom:15px;">#ANAME</b><br>
+                        <span style="line-height:20px;padding-bottom:20px;display:inline-block">#ACITY<br>#AYEARS</span>
+                        <a href="#ALINK" style="background-color:#fe820b;color:#ffffff;text-decoration:none;display:block;text-align:center;padding:12px 5px">Посмотреть анкету</a>
+                    </span>
+                </div>
+            </td>';
+
+            $appList = '<tr>';
+            for ($i=0; $i<$count; $i++)
+            {
+                $e = $arRes[$i];
+                $appList .= preg_replace(
+                    ['/#ALINK/','/#ASRC/','/#ANAME/','/#ACITY/','/#AYEARS/'], 
+                    [$e['link'],$e['src'],$e['name'],join(', ',$e['city']),$e['years']], 
+                    $anketa
+                );
+                if(($i+1)==3)
+                    $appList .= '</tr><tr>';
+            }
+            $appList .= '</tr>';
         }
-
+        // письмо работодателю
+        Mailing::set(
+            10,
+            array(
+                'email_user' => $arVac['email'],
+                'id_vacancy' => $id,
+                'title_vacancy' => $arVac['title'],
+                'applicants_list' => $appList,
+                'link_ankety_filter' => $url
+            )
+        );
         // репостим
         $this->VkRepost($id, $arVac['repost']);
         // событие ПУШ
@@ -842,7 +843,7 @@ public function rules()
             $type = "vacmoder";
             $api = new Api();
             $api->getPush($res['push'], $type);
-        } 
+        }
     }
 
     public function ChangeModer($id, $st)
