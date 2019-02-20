@@ -1,7 +1,7 @@
 <?php
 
 error_reporting(E_ALL ^ E_NOTICE);
-
+define('DS', '/');
 // путь до фреймворка и нужного нам конфига
 //$yii = dirname(__FILE__).'/framework/yii.php';
 $yii = $_SERVER['DOCUMENT_ROOT'].'/framework/yii.php';
