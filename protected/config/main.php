@@ -81,6 +81,13 @@ return array(
                     'client_id' => '1433357213420977',
                     'client_secret' => '50c978a980e66889c328e96d99077fdd',
                 ),
+            'yandex_oauth' => array(
+					// register your app here: https://oauth.yandex.ru/client/my
+					'class' => 'YandexOAuthService',
+					'client_id' => 'e730911b9e9d4f35a8f911d5d7d05cc9',
+					'client_secret' => '07dd2865b0824a2bb4c7b770e12f27f1',
+					'title' => 'Yandex (OAuth)',
+				),
             'odnoklassniki' => array(
                     //https://apiok.ru/dev/app/create
                     'class' => 'OdnoklassnikiOAuthService',
