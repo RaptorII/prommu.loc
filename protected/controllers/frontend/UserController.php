@@ -229,33 +229,34 @@ class UserController extends AppController
     }
 
     public function actionMessenger($cloud){
+        file_put_contents("тест.txt", date('d.m.Y H:i')."\t".var_export($cloud,1)."\n", FILE_APPEND | LOCK_EX);
         if($cloud == "") $cloud = $_GET;
 
         $analyt = Yii::app()->request->cookies['sbjs_current'];
         $analy = explode("|||", $analyt);
         if(!empty($analyt)){
             $data['referer'] = explode("=",$analy[2])[1];
-        $data['transition'] = explode("=",$analy[0])[1];
-        $data['canal'] = explode("=",$analy[1])[1];
-        $data['campaign'] = explode("=",$analy[3])[1];
-        $data['content'] = explode("=",$analy[4])[1];
-        $data['keywords'] = explode("=",$analy[5])[1];
-        $data['point'] = $_GET['point'];
-        $data['last_referer'] = $_GET['last_referer'];
+            $data['transition'] = explode("=",$analy[0])[1];
+            $data['canal'] = explode("=",$analy[1])[1];
+            $data['campaign'] = explode("=",$analy[3])[1];
+            $data['content'] = explode("=",$analy[4])[1];
+            $data['keywords'] = explode("=",$analy[5])[1];
+            $data['point'] = $_GET['point'];
+            $data['last_referer'] = $_GET['last_referer'];
         } else {
             $data['referer'] = "(none)";
-        $data['transition'] = "(none)";
-        $data['canal'] = "(none)";
-        $data['campaign'] = "(none)";
-        $data['content'] = "(none)";
-        $data['keywords'] = "(none)";
-        $data['point'] = "(none)";
-        $data['last_referer'] = "(none)";
+            $data['transition'] = "(none)";
+            $data['canal'] = "(none)";
+            $data['campaign'] = "(none)";
+            $data['content'] = "(none)";
+            $data['keywords'] = "(none)";
+            $data['point'] = "(none)";
+            $data['last_referer'] = "(none)";
         }
         $data['email'] = $cloud['email'];
-        $data['name'] = $cloud['fname'].' '.$cloud['lname'];
-        $data['fname'] = $cloud['fname'];
-        $data['lname'] = $cloud['lname'];
+        $data['fname'] = $cloud['fname'] ? $cloud['fname'] : explode(" ", $cloud['name'])[0];
+        $data['lname'] = $cloud['lname'] ? $cloud['lname'] : explode(" ", $cloud['name'])[1];
+        $data['name'] = $data['fname'].' '.$data['lname'];
         $data['gender'] = $cloud['gender'];
         $data['birthday'] = $cloud['birthday'];
         $data['gender'] = $cloud['gender'];
