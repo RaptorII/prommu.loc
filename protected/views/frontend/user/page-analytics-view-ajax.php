@@ -3,7 +3,7 @@
 // Employer
 //
 ?>
-<? if(Share::$UserProfile->type==3): ?>
+<? if(Share::isEmployer()): ?>
 	<div class="pa__module">
 		<h2 class="pa__title">ПУБЛИКАЦИЯ ВАКАНСИЙ</h2>
 		<div class="row">
@@ -17,17 +17,21 @@
 				</div>
 			</div>
 			<div class="col-xs-12 col-sm-8 pa__list">
-				<div class="pa-list__title">Опубликованные вакансии</div>
-				<? foreach ($viData['vacancies']['items'] as $v):?>
-				<div class="pa-list__item">
-					<span class="pa-list__item-name"><?=$v['title'];?></span>
-					<div class="pa-list__item-count">
-						<span class="pa-list__item-cnt ico1">Просмотров: <span><?=$v['analytic']?></span></span>
-						<span class="pa-list__item-cnt ico2">Откликов: <span><?= $v['isresp'][1]?></span></span>
-						<span class="pa-list__item-cnt ico3">Приглашений: <span><?=$v['responses']?></span></span>
-					</div>
-				</div>
-				<? endforeach;?>
+				<? if(count($viData['vacancies']['items'])): ?>
+					<div class="pa-list__title">Опубликованные вакансии</div>
+					<? foreach ($viData['vacancies']['items'] as $v):?>
+						<div class="pa-list__item">
+							<span class="pa-list__item-name"><?=$v['title'];?></span>
+							<div class="pa-list__item-count">
+								<span class="pa-list__item-cnt ico1">Просмотров: <span><?=$v['views']?></span></span>
+								<span class="pa-list__item-cnt ico2">Откликов: <span><?= $v['responses']?></span></span>
+								<span class="pa-list__item-cnt ico3">Приглашений: <span><?=$v['invitations']?></span></span>
+							</div>
+						</div>
+					<? endforeach; ?>
+				<? else: ?>
+					<div class="pa-list__title">Опубликованных вакансий нет</div>
+				<? endif; ?>
 			</div>
 		</div>
 	</div>
@@ -64,6 +68,14 @@
 					<div class="pa-service__item">
 						<span class="pa-service__item-name oustaff">Аутстаффинг персонала</span>
 						<span class="pa-service__item-cnt"><span>Количество использований: </span><b><?=$viData['services']['outstaffing']?></b></span>
+					</div>
+					<div class="pa-service__item">
+						<span class="pa-service__item-name share">Группы социальных сетей PROMMU</span>
+						<span class="pa-service__item-cnt"><span>Количество использований: </span><b><?=$viData['services']['repost']?></b></span>
+					</div>
+					<div class="pa-service__item">
+						<span class="pa-service__item-name api">Получение API ключа</span>
+						<span class="pa-service__item-cnt"><span>Количество использований: </span><b><?=$viData['services']['api']?></b></span>
 					</div>
 				</div>
 			</div>

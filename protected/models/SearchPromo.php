@@ -58,10 +58,9 @@ class SearchPromo extends Model
 
 
 
-    public function searchPromosCount()
+    public function searchPromosCount($props = [])
     {
-        $arRes = array();
-        $filter = $this->renderSQLFilter();
+        $filter = $this->renderSQLFilter(['filter' => $props['filter']]);
         $sql = "SELECT DISTINCT r.id_user
                 FROM resume r
                 INNER JOIN user u ON u.id_user = r.id_user 
@@ -71,14 +70,10 @@ class SearchPromo extends Model
                     {$filter['filter']}
                 ORDER BY r.mdate DESC ";
         /** @var $res CDbCommand */
-        $query = Yii::app()->db->createCommand($sql)->queryAll();
+        $query = Yii::app()->db->createCommand($sql)->queryColumn();
 
-        for( $i=0, $n=sizeof($query); $i<$n; $i++ )
-            $arRes[] = $query[$i]['id_user'];
-
-        return $arRes;
+        return $query;
     }
-
 
 
     // получение данных для фильтра
@@ -457,9 +452,12 @@ class SearchPromo extends Model
             $cnt++;
         }
 
-        
-
-      
+        // age
+        if(isset($data['af']) || isset($data['at']))
+        {
+            $url[] = 'age='.(int)$data['af'].'-'.(int)$data['at'];
+            $cnt++;
+        }
 
         // наличие автомобиля
         if(isset($data['avto']))

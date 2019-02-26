@@ -969,12 +969,8 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                     <span class="sv__data-pubdate-item">Дата начала работы:<b><?= $begWorkDate ?></b></span><br>
                     <span class="sv__data-pubdate-item">Дата завершения работы:<b><?= $viData['vac']['remdate'] ?></b></span>
                 </div>
-
-                <? if (Share::isApplicant()): ?>
-                    <div class="prmu-btn sv__data-responce" data-id="<?= $vacancy['id'] ?>"><span>ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ</span>
+                <div class="prmu-btn sv__data-responce" data-id="<?= $vacancy['id'] ?>"><span>ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ</span>
                     </div>
-                <? endif; ?>
-
                 <span class="sv__data-subtitle"><h3>КТО НУЖЕН и с какими параметрами</h3></span>
                 <div class="sv__attributes">
                     <?php if ($vacancy['isman'] || $vacancy['iswoman']): ?>
@@ -1226,54 +1222,9 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                         <div class="sv__textblock-text"><?= html_entity_decode($vacancy['duties']) ?></div>
                     </div>
                 <?php endif; ?>
-
-
-
-
-                <?php if (!Share::isEmployer() && !Share::isApplicant()): ?>
-                    <div class='btn-register btn-orange-fix-wr'>
-                        <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_REGISTER ?>?p=1' title="">Откликнуться
-                            на вакансию</a>
-                    </div>
-
-                <?elseif ($viData['response']['response'] > 0 && $ismoder != 0): ?>
-                    <div class='btn-response btn-orange-fix-wr'>
-                        <a class='hvr-sweep-to-right' href='javascript:void(0);'>Откликнуться на вакансию</a>
-                    </div>
-
-                <?php else: ?>
-
-                    <? if (!Share::isEmployer()): ?>
-                        <div class="btn-response-popup btn-orange-fix-wr">
-                            <button class="hvr-sweep-to-right">Откликнуться на вакансию</button>
-                        </div>
-
-                        <? if ($ismoder == 1): ?>
-                            <? if ($viData['response']['message'] == 'Вы уже подали заявку на данную вакансию'): ?>
-                                <div class="prmu__popup">
-                                    <p><?= $viData['response']['message'] ?></p>
-                                    <p>Чтобы откликнуться на другие вакансии - <a href="/vacancy ">жмите сюда</a></p>
-                                </div>
-                            <? else: ?>
-                                <div class="prmu__popup">
-                                    <p>Нам очень жаль, но Ваша анкета не подходит под указанные параметры
-                                        Работодателя:</p>
-                                    <p><?= $viData['response']['message'] ?></p>
-                                    <p>Попробуйте откликнуться на другие вакансии - <a href="/vacancy ">жмите сюда</a>
-                                    </p>
-                                </div>
-                            <? endif; ?>
-                        <? else: ?>
-                            <div class="prmu__popup">
-                                <p>Нам очень жаль, но Ваша анкета еще не прошла модерацию :(</p>
-                                <p>Как только модератор пропустит Вашу анкету - Вы получите оповещение в Личном
-                                    кабинете, а
-                                    также на электронную почту</p>
-                            </div>
-                        <? endif; ?>
-                    <? endif; ?>
-                <?php endif; ?>
-
+                <div class='btn-response btn-orange-fix-wr'>
+                    <a class='hvr-sweep-to-right' href='javascript:void(0);'>Откликнуться на вакансию</a>
+                </div>
             </div>
         </div>
     <?php endif; ?>

@@ -45,24 +45,13 @@
     $date1 = new DateTime();
     $date2 = new DateTime($attr['bday']);
     $birthday = $date1->diff($date2)->y;
-    // edu
     $edu = '';
-
-    $userData = [];
-    foreach($info['userAttribs'] as $v) {
-      if($v['idpar'] == 69) $edu = $v['name'];
-
-      $userData['is_online'] = $v['is_online'];
-
-      if($v['mdate']){
-          $userData['mdate'] = $v['mdate'];
-      }
-    }
-    // lang
     $arLang = array();
     foreach($info['userAttribs'] as $v)
-      if($v['idpar'] == 40) $arLang[] = $v['name'];
-
+    {
+      $v['idpar']==69 && $edu = $v['name']; // edu
+      $v['idpar'] == 40 && $arLang[] = $v['name']; // lang
+    }
 
     $arSeoParams = array(
       'firstname' => $attr['firstname'],
@@ -153,31 +142,12 @@
         <a href="<?=MainConfig::$PAGE_EDIT_PROFILE . '?ep=1'?>" class="ppp-logo-main__change">Изменить аватар</a>
       <?endif;?> 
     </div>
-
-    <div style="text-align: center;margin-top: 10px;margin-bottom: 10px;">
-        <?if($userData['is_online']):?>
-            <span style="color:#abb820"><i style="
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #abb820;
-            border-radius: 50%;
-            margin-right: 8px;
-        "></i>В сети</span>
-        <?else:?>
-
-        <span style="color:#D6D6D6"><i style="
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #D6D6D6;
-            border-radius: 50%;
-            margin-right: 8px;
-        "></i>Был(а) на сервисе: <?=date_format(date_create($userData['mdate']), 'd.m.Y');?></span>
+    <? if(!$flagOwnProfile): ?>
+      <div class="ppp-logo-main__active">
+        <?if(!$attr['is_online']):?>
+          <span class="disable"><i></i>Был(а) на сервисе: <?=date_format(date_create($attr['mdate']), 'd.m.Y');?></span>
         <?endif;?>
-    </div>
-
-    <?php if(!$flagOwnProfile): ?>
+      </div>
       <div class="ppp__logo-rating">
         <ul class="ppp__star-block">
           <?php

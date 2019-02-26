@@ -119,35 +119,13 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
       <?php endforeach; ?>
       <div class="clearfix"></div> 
     </div>
-
-    <div style="text-align: center;margin-top: 10px;margin-bottom: 10px;">
-            <?if($viData['userInfo']['is_online']):?>
-                 <span style="color:#abb820"><i style="
-                display: inline-block;
-                width: 8px;
-                height: 8px;
-                background: #abb820;
-                border-radius: 50%;
-                margin-right: 8px;
-            "></i>В сети</span>
-            <?else:?>
-
-            <span style="color:#D6D6D6"><i style="
-                display: inline-block;
-                width: 8px;
-                height: 8px;
-                background: #D6D6D6;
-                border-radius: 50%;
-                margin-right: 8px;
-            "></i>Был(а) на сервисе: <?=date_format(date_create($viData['userInfo']['mdate']), 'd.m.Y');?></span>
-            <?endif;?>
-        </div>
-
-
-
-
-
-
+    <? if(!$flagOwnProfile): ?>
+      <div class="upp-logo-main__active">
+        <?if(!$viData['userInfo']['is_online']):?>
+          <span class="disable"><i></i>Был(а) на сервисе: <?=date_format(date_create($viData['userInfo']['mdate']), 'd.m.Y');?></span>
+        <?endif;?>
+      </div>
+    <? endif; ?>
     <div class='center-box'>
       <?php if(!$flagOwnProfile && ($viData['userAllInfo']['emplInfo']['confirmEmail'] || $viData['userAllInfo']['emplInfo']['confirmPhone'])): ?>
         <div class="confirmed-user js-g-hashint" title="Личность работодателя является подлинной">ПРОВЕРЕН</div>
@@ -157,19 +135,13 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
         <a class='ppe__logo-btn prmu-btn' href='<?= MainConfig::$PAGE_SETTINGS ?>'><span>Настройки профиля</span></a>
         <a class='ppe__logo-btn prmu-btn' href='<?= MainConfig::$PAGE_CHATS_LIST ?>'><span>Мои сообщения</span></a>
       <? endif; ?>  
-      <?  /*elseif( Share::$UserProfile->id == $data):?>
-        <div class='btn-update btn-orange-sm-wr'>
-          <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_IM . '?new=' . $idus ?>'>Отправить сообщение</a>
-        </div>
-      <?php endif;*/ ?>
       <? if(Share::$UserProfile->type == 2 && $datas == 1):?>
         <div class='btn-update btn-orange-sm-wr'>
           <a class='hvr-sweep-to-right' href='#'>Невозможно отправить сообщение</a>
           <h3 class='unpubl'>Сообщения можно писать только, при одобрении работодателем на опубликованной им вакансии</h3>
         </div>
-      <?php endif; ?>       
+      <?php endif; ?>
     </div>
-
   </div>
   <?
   /*

@@ -271,24 +271,13 @@ class Api
         }
         $result = $web + $logo + $comment + $rates + $vacancy + 2 + 2;
         
-        $dates['bdate'] = '2018-07-01';
-        $dates['edate'] = '2018-08-01';
-        
-        $datess['bdate'] = '2018-06-01';
-        $datess['edate'] = '2018-07-01';
-        
-        $Termostat = new Termostat();
-        $results['services'] = $Termostat->getTermostatServices($id, $dates)[0];
-        $results['service'] = $Termostat->getTermostatServices($id, $dates)[1];
-        $results['viewsYester'] = $Termostat->getTermostatEmplCount($id, $dates);
-        $results['viewsTo'] = $Termostat->getTermostatEmplCount($id, $datess);
-        $results['viewsUser'] = $Termostat->getTermostatEmplUserCount($id, $datess);
-        // $proc1 = ($results['viewsTo']+$results['viewsYester'])/2;
-        // $proc2 = 100/$results['viewsUser'];
-        // $proc3 = 1/$results['service'];
-        // $proc4 = 6/$results['services'];
-        // $proc = $proc1+$proc2+$proc3+$proc4;
-        var_dump($results);
+        $model = new Termostat();
+        $arRes['dates'] = $model->getDates();
+        $arRes['services'] = $model->getTermostatServices($id, $arRes['dates']);
+        $arRes['schedule'] = $model->getTermostatEmplCount($id, $arRes['dates']);
+        $arRes['viewsUser'] = $model->getTermostatEmplCount($id, $arRes['dates']);
+
+        var_dump($arRes);
         echo "Прежний рейтинг работодателя: $result (система рейтинга Prommu Rate )<br/> ";
         // echo "Прежний рейтинг работодателя: $result + $proc ( services - $proc1, service - $proc2, proc3 - $proc3, proc4 - $proc4 ) (система рейтинга Prommu Rate + Termostat )<br/> ";
         

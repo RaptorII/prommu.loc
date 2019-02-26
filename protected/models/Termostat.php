@@ -1,24 +1,37 @@
 <?php
 	
 	class Termostat{
-		///Соискатель
-		public function getPromoView($user,$arDates){
+		/**
+		*	@param $id_user integer id_user
+		*	@param $bDate string bdate
+		*	@param $eDate string edate
+		* @return integer
+		*/
+		public function getPromoView($id_user, $bDate, $eDate)
+		{
+			$sql = "SELECT COUNT(id)
+								FROM termostat_analytic
+								WHERE user = {$id_user} 
+									AND date between '{$bDate}' 
+									AND '{$eDate}'";
+			$query = Yii::app()->db->createCommand($sql)->queryScalar();
 
-			$sql = "SELECT COUNT(*)
-	            FROM termostat_analytic t
-	            WHERE t.user = {$user} AND t.date between '{$arDates['bdate']}' AND '{$arDates['edate']}'
-	            ";
-	        	$res = Yii::app()->db->createCommand($sql)->queryScalar();
-
-	        	if($res == ''){
-	        		return '0';
-	        	}
-	     		else return $res;
+			return intval($query);
 		}
-		
-		public function setUserDataTime($user, $arDates, $analytic){
+		/**
+		 * 
+		 */
+		public function setUserDataTime($id_user, $arDates, $analytic)
+		{
+			Yii::app()->db->createCommand()
+				->update(
+					'user', 
+					['analytday' => $analytic],
+					'id_user=:id_user', 
+					[':id_user' => $id_user]
+				);
 
-			$day = 0;
+			/*$day = 0;
 			$time = '0000-00-00 00:00:00';
 			if(isset($analytic)){
 				$day = $arDates['day'];
@@ -34,158 +47,128 @@
 					'user', 
 					array('analytday' => $day, 'analyttime' => $time),
 					'id_user=:id_us', 
-					array(':id_us' => $user)
+					array(':id_us' => $id_user)
 				);
 
-			return $res;
+			return $res;*/
 		}
+		/**
+		*	@param $id_user integer id_user
+		*	@param $bDate string bdate
+		*	@param $eDate string edate
+		* @return array [cnt_invitations,cnt_requests,cnt_approved]
+		*/
+		public function getPromoResponse($id_user, $bDate, $eDate)
+		{
+			$arRes = array_fill_keys(['cnt_invitations','cnt_requests','cnt_approved'],0);
 
-		public function getPromoResponse($user, $response, $status, $arDates){
+			$sql = "SELECT vs.isresponse, vs.status
+								FROM vacation_stat vs
+								RIGHT JOIN resume r ON r.id=vs.id_promo
+								WHERE r.id_user = {$id_user} 
+									AND vs.date between '{$bDate}'
+									AND '{$eDate}'";
+			$query = Yii::app()->db->createCommand($sql)->queryAll();
 
-			$sql = "SELECT COUNT(*)
-            FROM resume r
-            INNER JOIN vacation_stat s ON s.id_promo = r.id 
-            WHERE r.id_user = {$user} AND s.date between '{$arDates['bdate']}' AND '{$arDates['edate']}' AND s.isresponse IN($response) AND s.status IN($status)";
-        /** @var $res CDbCommand */
-        $res = Yii::app()->db->createCommand($sql);
-        $res = $res->queryScalar();
+			for($i=0, $n=count($query); $i<$n; $i++)
+			{
+				if($query[$i]['status']!=7)
+				{
+					$query[$i]['isresponse']==2 && $arRes['cnt_invitations']++;
+					$query[$i]['isresponse']==1 && $arRes['cnt_requests']++;
+				}
+				else
+				{
+					$query[$i]['isresponse']>0 && $arRes['cnt_approved']++;
+				}
+			}
 
-	        	if($res == ''){
-	        		return '0';
-	        	}
-	     		else return $res;
+			return $arRes;
 		}
+		/**
+		*	@param integer id_user
+		*	@param array [bdate,edate,db_bdate,db_edate]
+		* @return array [outsourcing, outstaffing,vacancy,sms,push,email,api,repost,cnt]
+		 */
+		public function getTermostatServices($id_user, $arDates)
+		{
+			$arRes = array_fill_keys(
+				['outsourcing','outstaffing','vacancy','sms','push','email','api','repost'],
+				0
+			);
+			// vacancy, sms, push, email, api, repost
+			$sql = "SELECT type
+								FROM service_cloud
+								WHERE id_user = {$id_user} AND status = 1 
+									AND date between '{$arDates['db_bdate']}'
+									AND '{$arDates['db_edate']}'";
+			$query = Yii::app()->db->createCommand($sql)->queryColumn();
 
-		///Работодатель
+			for($i=0, $n=count($query); $i<$n; $i++) $arRes[$query[$i]]++;
 
-		public function getTermostatServicesCount($user){
+			// outsourcing, outstaffing
+			$sql = "SELECT type
+								FROM outstaffing
+								WHERE id = {$id_user}
+									AND date between '{$arDates['db_bdate']}'
+									AND '{$arDates['db_edate']}'";
+			$query = Yii::app()->db->createCommand($sql)->queryColumn();	 
 
-			$sql = "SELECT COUNT(*)
-	            FROM service_cloud s
-	            WHERE s.id_user = {$user} AND s.date between  '12.12.2017' AND  '31.12.2019'AND s.status = 1
-	            ";
-	        	$res = Yii::app()->db->createCommand($sql)->queryScalar();
+			for($i=0, $n=count($query); $i<$n; $i++) $arRes[$query[$i]]++;
+			
+			$arRes['cnt'] = array_sum($arRes);
 
-	        	if($res == ''){
-	        		return '0';
-	        	}
-	     		else return $res;
+			return $arRes;
 		}
-
-		public function getTermostatServices($user, $arDates){
-
-			$t1 = strtotime($arDates['bdate']);
-			$t2 = strtotime($arDates['edate']) + 60*60*24;
-			$bdate = date("Y",$t1) . '-' . date("m",$t1) . '-' . date("d",$t1);
-			$edate = date("Y",$t2) . '-' . date("m",$t2) . '-' . date("d",$t2);
-
-			$sql = "SELECT s.type, s.name, s.sum
-	            FROM service_cloud s
-	            WHERE s.id_user = {$user} AND s.status = 1 AND s.date between TIMESTAMP('{$bdate}') AND TIMESTAMP('{$edate}') 
-	            ";
-	        $res = Yii::app()->db->createCommand($sql)->queryAll();
-
-			$sql = "SELECT s.type
-	            FROM outstaffing s
-	            WHERE s.id = {$user}
-	            ";
-	        $ress = Yii::app()->db->createCommand($sql)->queryAll();	        
-
-	        $res[0] = $res;
-	        $res[1] = $ress;
-
-	        return $res;
-		}
-
-		public function getTermostatCount($idvac){
-
+		/**
+		 * 
+		 */
+		public function getTermostatCount($idvac)
+		{
 			$sql = "SELECT COUNT(*)
 	            FROM termostat_analytic t
-	            WHERE t.id = {$idvac} AND t.date between  '12.12.2017' AND  '26.12.2017'
-	            ";
-	        	$res = Yii::app()->db->createCommand($sql)->queryScalar();
+	            WHERE t.id = {$idvac}";
+			$query = Yii::app()->db->createCommand($sql)->queryScalar();
 
-	
-	        	if($res == ''){
-	        		return '0';
-	        	}
-	     		else return $res;
-
+			return intval($query);
 		}
-    
-        
-        public function getTermostatEmplUserCount($user, $arDates){
-
+		/**
+		*	@param integer id_user
+		*	@param array [bdate,edate,db_bdate,db_edate]
+		* @return array [date,count]
+		 */
+		public function getTermostatEmplCount($id_user, $arDates)
+		{
 			$t1 = strtotime($arDates['bdate']);
 			$t2 = strtotime($arDates['edate']);
 			$day = 60 * 60 * 24;
 			$days = ($t2 - $t1) / $day;
 			$curDay = $t1;
+			$mainCnt = 0;
+			$arView = array();
 
-			for($c=0; $c<=$days; $c++){ 
-				$date = date("Y",$curDay).'.'.date("m",$curDay).'.'.(date("d",$curDay));
+			$sql = "SELECT date
+								FROM termostat_analytic
+								WHERE id = {$id_user} 
+									AND date between '{$arDates['db_bdate']}' 
+									AND '{$arDates['db_edate']}'";
+			$query = Yii::app()->db->createCommand($sql)->queryColumn();
 
-				$sql = "SELECT COUNT(*)
-					FROM termostat_analytic t
-					WHERE t.user = $user AND date(t.date) = '$date'
-					ORDER BY t.date ASC";
-				$res = Yii::app()->db->createCommand($sql)->queryScalar();
-
-				$arGraph[$c] = array(date('d.m.y',$curDay), (int)$res);
-				$curDay +=$day;
+			for($c=0; $c<=$days; $c++)
+			{
+				$cnt = 0;
+				for($i=0, $n=count($query); $i<$n; $i++)
+				{
+					$dbDate = strtotime($query[$i]);
+					$curDay<$dbDate && $dbDate<($curDay+$day) && $cnt++;
+				}
+				$arView[$c] = array(date('d.m.y',$curDay), $cnt);
+				$mainCnt += $cnt;
+				$curDay += $day;
 			}
 
-			return $arGraph;
+			return array('schedule'=>$arView, 'count'=>$mainCnt);
 		}
-		
-		public function getTermostatEmplCount($user, $arDates){
-
-			$t1 = strtotime($arDates['bdate']);
-			$t2 = strtotime($arDates['edate']);
-			$day = 60 * 60 * 24;
-			$days = ($t2 - $t1) / $day;
-			$curDay = $t1;
-
-			for($c=0; $c<=$days; $c++){ 
-				$date = date("Y",$curDay).'.'.date("m",$curDay).'.'.(date("d",$curDay));
-
-				$sql = "SELECT COUNT(*)
-					FROM termostat_analytic t
-					WHERE t.id = $user AND date(t.date) = '$date'
-					ORDER BY t.date ASC";
-				$res = Yii::app()->db->createCommand($sql)->queryScalar();
-
-				$arGraph[$c] = array(date('d.m.y',$curDay), (int)$res);
-				$curDay +=$day;
-			}
-
-			return $arGraph;
-		}
-
-		public function getTermostatEmplCounts($user, $arDates){
-			$t1 = strtotime($arDates['bdate']);
-			$t2 = strtotime($arDates['edate']);
-			$day = 60 * 60 * 24;
-			$days = ($t2 - $t1) / $day;
-			$curDay = $t1;
-			$count = 0;
-
-			for($c=0; $c<=$days; $c++){ 
-				$date = date("Y",$curDay).'.'.date("m",$curDay).'.'.(date("d",$curDay));
-
-				$sql = "SELECT COUNT(*)
-					FROM termostat_analytic t
-					WHERE t.id = $user AND date(t.date) = '$date'
-					ORDER BY t.date ASC";
-				$res = Yii::app()->db->createCommand($sql)->queryScalar();
-				$count += (int)$res;
-				$curDay +=$day;
-			}
-
-			return $count;
-		}
-		
-
 
 		public function setTermostat($idvac, $user, $type){
 			if($type == "vacancy"){
@@ -228,98 +211,167 @@
         	}
 
 		}
+		/**
+		 * @return array [bdate,edate,db_bdate,db_edate]
+		 */
+		public function getDates()
+		{
+			$bdate = date('d.m.Y', mktime(0,0,0,date('m'),1,date('Y')));
+			$edate = date('d.m.Y');
 
+			if(Yii::app()->getRequest()->isPostRequest)
+			{
+				$bdate = Yii::app()->getRequest()->getParam('pa-bdate');
+				$edate = Yii::app()->getRequest()->getParam('pa-edate');
+			}
 
-		public function getDates(){
-			if(Yii::app()->getRequest()->isPostRequest){
-				$arDates = array(
-					'bdate' => Yii::app()->getRequest()->getParam('pa-bdate'),
-					'edate' => Yii::app()->getRequest()->getParam('pa-edate')
+			return array(
+					'bdate' => $bdate,
+					'edate' => $edate,				
+					'db_bdate' => DateTime::createFromFormat('d.m.Y', $bdate)
+													->format('Y-m-d 00:00:00'),
+					'db_edate' => DateTime::createFromFormat('d.m.Y', $edate)
+													->format('Y-m-d 23:59:59')
 				);
-			}
-			else{
-				$arDates = array(
-					'bdate' => date('d.m.Y', mktime(0,0,0,date("m"),1,date("Y"))),// если не установлено, то начало текущего месяца
-					'edate' => date('d.m.Y')
-				);
-			}
-			return $arDates;
 		}
 		/**
 		 * @return array() 
 		 */
 		public function getAnalytics()
 		{
-			$type = Share::$UserProfile->type;
-			$idus = Share::$UserProfile->id;
+			$arRes = array();
 			$dates = $this->getDates();
+			$profile = Share::$UserProfile;
 
-			if($type==2) // applicant
+			if(Share::isApplicant()) // applicant
 			{
-				$statusEnd = '7';
-        $status = '0,1,2,3,4,5,6';
-				$arRes['cnt_views'] = $this->getPromoView($idus, $dates);
-        $arRes['cnt_invitations'] = $this->getPromoResponse($idus, '2', $status, $dates);
-        $arRes['cnt_requests'] = $this->getPromoResponse($idus, '1', $status,$dates);
-        $arRes['cnt_approved'] = $this->getPromoResponse($idus, '1,2', $statusEnd, $dates);
+				$arRes = $this->getPromoResponse(
+										$profile->id,
+										$dates['db_bdate'],
+										$dates['db_edate']
+									);
+				$arRes['cnt_views'] = $this->getPromoView(
+										$profile->id,
+										$dates['db_bdate'],
+										$dates['db_edate']
+									);
 			}
-			if($type==3) // employer
+			if(Share::isEmployer()) // employer
 			{
 				// vacancies
+				$arVac = array_fill_keys(['cnt_views','cnt_responses','cnt_invitations'],0);
 				$model = new Vacancy();
-				$arV = $model->getVacancies();
+				$query = $model->getVacsForTermostat($profile->id, $dates);
 
-				$arRes['vacancies'] = array(
-																'cnt' => $model->getVacanciesCount(),
-																'items' => $arV['vacs'],
-																'cnt_views' => 0,
-																'cnt_responses' => 0,
-																'cnt_invitations' => 0
-															);
-				foreach ($arV['vacs'] as $v)
+				$arVac['cnt'] = count($query);
+				$arI = array();
+
+				if($arVac['cnt'])
 				{
-					$id = $v['id'];
-					$arRes['vacancies']['items'][$id]['analytic'] = $arV['analytic'][$id];
-					$arRes['vacancies']['items'][$id]['responses'] = $arV['responses'][$id];
+					$arId = array();
+					foreach ($query as $v)
+					{
+						$arId[] = $v['id'];
+						$arI[$v['id']] = array_fill_keys(['views','responses','invitations'],0);
+						$arI[$v['id']]['title'] = $v['title'];
+					}
+					//
+					$query = Yii::app()->db->createCommand()
+										->select("id_vac,isresponse,status")
+										->from('vacation_stat')
+										->where(['in','id_vac',$arId])
+										->queryAll();
 
-					$arRes['vacancies']['cnt_views'] += $arV['analytic'][$id];
-					$arRes['vacancies']['cnt_responses'] += $v['isresp'][1];
-					$arRes['vacancies']['cnt_invitations'] += $arV['responses'][$id];
+					for ($i=0, $n=count($query); $i<$n; $i++)
+					{ 
+						if($query[$i]['isresponse']==2) // считаем приглашения
+						{
+							$arI[$query[$i]['id_vac']]['invitations']++;
+							$arVac['cnt_invitations']++;
+						}
+						if($query[$i]['isresponse']==1) // считаем отклики
+						{
+							$arI[$query[$i]['id_vac']]['responses']++;
+							$arVac['cnt_responses']++;
+						}
+					}
+					//
+					$query = Yii::app()->db->createCommand()
+										->select('COUNT(id) cnt, id')
+										->from('termostat_analytic')
+										->where(['in','id',$arId])
+										->group('id')
+										->queryAll();
+
+					for ($i=0, $n=count($query); $i<$n; $i++)
+					{ 
+						$arI[$query[$i]['id']]['views'] = $query[$i]['cnt'];
+						$arVac['cnt_views'] += $query[$i]['cnt'];
+					}
 				}
+				$arVac['items'] = $arI;
+				$arRes['vacancies'] = $arVac;
 				// services
-				$arS = $this->getTermostatServices($idus, $dates);
-				$arRes['services'] = array(
-															'outsourcing' => 0,
-															'outstaffing' => 0,
-															'vacancy' => 0,
-															'sms' => 0,
-															'push' => 0,
-															'email' => 0
-														);
-
-
-				foreach ($arS[0] as $v)
-				{
-					$v['type']=='sms' && $arRes['services']['sms']++;
-					$v['type']=='vacancy' && $arRes['services']['vacancy']++;
-					$v['type']=='push' && $arRes['services']['push']++;
-					$v['type']=='email' && $arRes['services']['email']++;
-				}
-
-				foreach ($arS[1] as $v)
-				{
-					$v['type']=='outsourcing' && $arRes['services']['outsourcing']++;
-					$v['type']=='outstaffing' && $arRes['services']['outstaffing']++;
-				}
-				$arRes['services']['cnt'] = array_sum($arRes['services']);
+				$arRes['services'] = $this->getTermostatServices($profile->id, $dates);
 				// schedule
-				$schedule = $this->getTermostatEmplCount($idus, $dates);
-				$arRes['schedule'] = json_encode($schedule);
-				$arRes['cnt_profile_views'] = $this->getTermostatEmplCounts($idus, $dates);
+				$schedule = $this->getTermostatEmplCount($profile->id, $dates);
+				$arRes['schedule'] = json_encode($schedule['schedule']);
+				$arRes['cnt_profile_views'] = $schedule['count'];
 			}
 			$arRes['dates'] = $dates;
 
 			return $arRes;			
+		}
+		/**
+		 * 		Рассылка аналитики
+		 */
+		public function sendEmailNotifications()
+		{
+			//if(date('j')==1) // отправляем 1го числа каждого месяца
+			//{
+				$arId = Yii::app()->db->createCommand()
+									->select('id_user')
+									->from('user')
+									->where('analytday>0')
+									->queryColumn();
+				$arId = [15642];
+
+				$arUsers = Share::getUsers($arId);
+
+				if(!count($arUsers))
+					return false;
+
+				$bTime = strtotime('first day of last month');
+				$bDate = date('Y-m-d 00:00:00', $bTime);
+				$eDate = date('Y-m-d 00:00:00');
+				$arParams['analytic_period'] = date('d.m.Y',$bTime) . ' - ' . date('d.m.Y');
+
+				foreach ($arUsers as $id => $v)
+				{
+					// set email
+					$email = trim($v['email']);
+					if(filter_var($email,FILTER_VALIDATE_EMAIL))
+						$arParams['email_user'] = $email;
+					if(!isset($arParams['email_user']))
+						continue;
+					// set name
+					$arParams['name_user'] = trim($v['name']);
+					if(empty($arParams['name_user']))
+						$arParams['name_user'] = 'Пользователь';
+
+					if($v['status']==2) // applicant
+					{
+						$arApp = $this->getPromoResponse($id, $bDate, $eDate);
+						$arParams = array_merge($arParams,$arApp);
+						$arParams['cnt_views'] = $this->getPromoView($id, $bDate, $eDate);
+						Mailing::set(11,$arParams);
+					}
+					if($v['status']==3) // employer
+					{
+
+					}
+				}
+			//}
 		}
 	}
 ?>

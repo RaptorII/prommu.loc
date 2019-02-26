@@ -118,6 +118,7 @@
 .reg-social__link.od{ background-position: 0 -168px; }
 .reg-social__link.go{ background-position: 0 -224px; }
 .reg-social__link.in{ background-position: 0 -280px; }
+.reg-social__link.ya{ background-position: 0 -336px; }
 #DiContent .register__reg-social .reg-social__link.disable{
     -webkit-filter: grayscale(100%);
     filter: grayscale(100%);
@@ -429,6 +430,7 @@ media
     .reg-social__link.od{ background-position: 50% -168px; }
     .reg-social__link.go{ background-position: 50% -224px; }
     .reg-social__link.in{ background-position: 50% -280px; }
+    .reg-social__link.ya{ background-position: 50% -336px; }
     .competitor .register__reg-header{ padding: 0 0 185px; }
     .reg-form__label-name{
         font-size: 16px;

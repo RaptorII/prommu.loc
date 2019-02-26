@@ -697,6 +697,7 @@ public function rules()
 
     public function updateVacancy($id, $data)
     {
+        $arFilter = $arGet = array();
         if(isset($data['cur_status']))
         {
             $data['ismoder'] = $data['cur_status']==100 ? $data['cur_status'] : 0;
@@ -719,6 +720,7 @@ public function rules()
                 v.isman, v.iswoman, v.ismed, 
                 v.isavto, v.smart, v.card, 
                 v.cardPrommu, v.repost, 
+                v.agefrom, v.ageto, 
                 e.name, u.email')
             ->from('empl_vacations v')
             ->leftJoin('employer e', 'e.id_user=v.id_user')
@@ -726,56 +728,80 @@ public function rules()
             ->where('v.id=:id', array(':id' => $id))
             ->queryRow();
         // достаем города вакансии
-        $arVac['cities'] = Yii::app()->db->createCommand()
-            ->select('ec.id_city, c.id_co, c.name')
+        $arFilter['cities'] = Yii::app()->db->createCommand()
+            ->select('ec.id_city')
             ->from('empl_city ec')
             ->leftJoin('city c', 'c.id_city=ec.id_city')
             ->where('ec.id_vac=:id', array(':id' => $id))
-            ->queryAll();
+            ->queryColumn();
+        $arGet['cities'] = $arFilter['cities'];
         // достаем должности вакансии
-        $arVac['posts'] = Yii::app()->db->createCommand()
-            ->select('uad.id, uad.name')
+        $arFilter['posts'] = Yii::app()->db->createCommand()
+            ->select('uad.id')
             ->from('empl_attribs ea')
-            ->leftJoin('user_attr_dict uad', 'uad.key=ea.key')
+            ->leftJoin('user_attr_dict uad', 'uad.id=ea.key')
             ->where('ea.id_vac=:id AND uad.id_par=110', array(':id' => $id))
-            ->queryAll();
+            ->queryColumn();
+        $arGet['posts'] = $arFilter['posts'];
         // создаем параметры для фильтра
         $host = Subdomain::site();
         $url = $host . MainConfig::$PAGE_SEARCH_PROMO . '?';
-        foreach ($arVac['cities'] as $c)
-        {
-            $_POST['cities'][] = $c['id_city'];
-            $url .= 'cities[]=' . $c['id_city'] . '&';
-        }
 
-        foreach ($arVac['posts'] as $p)
+        if($arVac['isman'])
         {
-            $_POST['posts'][] = $p['id'];
-            $url .= 'posts[]=' . $p['id'] . '&';
+            $arFilter['sm'] = $arVac['isman'];
+            $arGet['sm'] = $arVac['isman'];
         }
-        $_POST['sm'] = $arVac['isman'];
-        $_POST['sf'] = $arVac['iswoman'];
-        $_POST['mb'] = $arVac['ismed'];
-        $_POST['avto'] = $arVac['isavto'];
-        $_POST['smart'] = $arVac['smart'];
-        $_POST['card'] = $arVac['card'];
-        $_POST['cardPrommu'] = $arVac['cardPrommu'];
+        if($arVac['iswoman'])
+        {
+            $arFilter['sf'] = $arVac['iswoman'];
+            $arGet['sf'] = $arVac['iswoman'];
+        }
+        if($arVac['ismed'])
+        {
+            $arFilter['mb'] = $arVac['ismed'];
+            $arGet['mb'] = $arVac['ismed'];
+        }
+        if($arVac['isavto'])
+        {
+            $arFilter['avto'] = $arVac['isavto'];
+            $arGet['avto'] = $arVac['isavto'];
+        }
+        if($arVac['smart'])
+        {
+            $arFilter['smart'] = $arVac['smart'];
+            $arGet['smart'] = $arVac['smart'];
+        }
+        if($arVac['card'])
+        {
+            $arFilter['card'] = $arVac['card'];
+            $arGet['card'] = $arVac['card'];
+        }
+        if($arVac['cardPrommu'])
+        {
+            $arFilter['cardPrommu'] = $arVac['cardPrommu'];
+            $arGet['cardPrommu'] = $arVac['cardPrommu'];
+        }
+        if($arVac['agefrom'])
+        {
+            $arFilter['af'] = $arVac['agefrom'];
+            $arGet['af'] = $arVac['agefrom'];
+        }
+        if($arVac['ageto'])
+        {
+            $arFilter['at'] = $arVac['ageto'];
+            $arGet['at'] = $arVac['ageto'];
+        }
+        $url .= http_build_query($arGet);
 
-        $url .= 'sm=' . $arVac['isman'] . '&'
-            . 'sf=' . $arVac['iswoman'] . '&'
-            . 'mb=' . $arVac['ismed'] . '&'
-            . 'avto=' . $arVac['isavto'] . '&'
-            . 'smart=' . $arVac['smart'] . '&'
-            . 'card=' . $arVac['card'] . '&'
-            . 'cardPrommu=' . $arVacInfo['cardPrommu'];
         // ищем 10 соискателей, и сортируем, чтобы сначала вывести с фото
+        $filter = ['filter'=>$arFilter];
         $model = new SearchPromo();
-        $arAllId = $model->searchPromosCount();
-        $cnt = sizeof($arAllId);
-        $pages = new CPagination($cnt);
+        $arAllId = $model->searchPromosCount($filter);
+        $pages = new CPagination(count($arAllId));
         $pages->pageSize = 20;
         $pages->applyLimit($model);
-        $arApplicants = $model->getPromos($arAllId, true)['promo'];
+        $arApplicants = $model->getPromos($arAllId, true, $filter)['promo'];
 
         $appList = '';
         if(count($arApplicants)>=3)
@@ -790,13 +816,14 @@ public function rules()
                 $interval = $datetime->diff(new DateTime(date("Y-m-d")));
                 $u['years'] = $interval->format("%Y");
                 $u['years'] = $u['years'] . ' ' . Share::endingYears($u['years']);
-                empty($u['photo']) ? array_push($arRes, $u) : array_unshift($arRes, $u);
+                $path = Subdomain::domainRoot() . DS . MainConfig::$PATH_APPLIC_LOGO . DS . $u['photo'] . '100.jpg';
+                file_exists($path) ? array_unshift($arRes, $u) : array_push($arRes, $u);
             }
 
             $count = sizeof($arRes)>=6 ? 6 : 3;
-            $anketa = '<td style="padding:0 8px 25px">
+            $anketa = '<td style="padding:0 8px 25px;vertical-align:top">
                 <div style="display:block;box-shadow:0px 8px 16px 0px rgba(0, 0, 0, 0.19);">
-                    <img src="#ASRC" style="width:100%;display:block">
+                    <img src="#ASRC" style="width:100%;display:block;object-fit:cover;height:230px">
                     <span style="display:block;padding:13px;font-family:Arial,Helvetica,sans-serif;font-size:16px">
                         <b style="display:inline-block;padding-bottom:15px;">#ANAME</b><br>
                         <span style="line-height:20px;padding-bottom:20px;display:inline-block">#ACITY<br>#AYEARS</span>
@@ -818,6 +845,10 @@ public function rules()
                     $appList .= '</tr><tr>';
             }
             $appList .= '</tr>';
+        }
+        else
+        {
+            $url = $host . MainConfig::$PAGE_SEARCH_PROMO;
         }
         // письмо работодателю
         Mailing::set(
@@ -1291,6 +1322,7 @@ public function rules()
             $fields = array(
                 'status' => $isDeactivate ? 0 : 1,
                 'ismoder' => 0, // деактивировать модерацию
+                'bdate' => $isDeactivate ? '0000-00-00 00:00:00' : date('Y-m-d H:i:s')
             );
 
         $title = $Q1['title'];
@@ -2706,5 +2738,22 @@ WHERE id_vac = {$inVacId}";
         }    
 
         return ($isFull ? $arRes : $arRes['id']);
+    }
+    /**
+     * @param $id_user integer
+     * @param $arDates array [bdate,edate,db_bdate,db_edate]
+     * @return array [id,title]
+     */
+    public function getVacsForTermostat($id_user, $arDates)
+    {
+        $sql = "SELECT id, title
+                    FROM empl_vacations
+                    WHERE id_user = {$id_user} 
+                        AND bdate between '{$arDates['db_bdate']}' 
+                        AND '{$arDates['db_edate']}'
+                    ORDER BY id DESC";
+        $query = Yii::app()->db->createCommand($sql)->queryAll();
+
+        return $query;
     }
 }

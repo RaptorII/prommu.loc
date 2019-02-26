@@ -1035,24 +1035,25 @@ class UserController extends AppController
                 array('htmlTitle' => $title)
             );
     }
-
-    /*
-    *   Аналитика
-    */
+    /**
+     * Аналитика
+     */
     public function actionAnalytics()
     {
-        $type = Share::$UserProfile->type;
-        $idus = Share::$UserProfile->id;
-        (in_array($type, [2,3]) && !empty($idus)) 
-        || 
-        $this->redirect(MainConfig::$PAGE_LOGIN);
+        if( !Share::isApplicant() && !Share::isEmployer() )
+            $this->redirect(MainConfig::$PAGE_LOGIN);
 
         $model = new Termostat;
         $data = $model->getAnalytics();
 
         if(Yii::app()->request->isAjaxRequest)
         {
-            $this->renderPartial(MainConfig::$AJAX_ANALYTICS, $data, false, true);
+            $this->renderPartial(
+                    MainConfig::$AJAX_ANALYTICS, 
+                    ['viData' => $data], 
+                    false, 
+                    true
+                );
         }
         else
         {
@@ -1065,7 +1066,16 @@ class UserController extends AppController
             );
         }
     }
-
+    /**
+     * Форма с графиком для аналитики
+     */
+    public function actionSchedule()
+    {
+        $this->render('page-schedule-view');
+    }
+    /**
+     * 
+     */
     public function actionApi()
     {
         $api = $_GET['api'];
@@ -1203,30 +1213,6 @@ class UserController extends AppController
             $url = DS . ($page ? MainConfig::$PAGE_VACANCIES : MainConfig::$PAGE_VACARHIVE);
             $this->redirect($url);
         }
-    }
-    /*
-    *
-    */
-    public function actionSchedule()
-    {
-        $status = "0,1,2,3,4,5,6";
-        $statusEnd = "7";
-        $Termostat = new Termostat();
-        $arDates = $Termostat->getDates();
-        $countView = $Termostat->getPromoView(Share::$UserProfile->id, $arDates);
-        $countResponse = $Termostat->getPromoResponse(Share::$UserProfile->id, 2, $status, $arDates);
-        $countInvite = $Termostat->getPromoResponse(Share::$UserProfile->id, 1, $status, $arDates);
-        $countProject = $Termostat->getPromoResponse(Share::$UserProfile->id, '1,2', $statusEnd, $arDates);
-        $arResult = array(
-            'count' => $count,
-            'countView' => $countView,
-            'countResponse' => $countResponse,
-            'countInvite' => $countInvite,
-            'countProject'=> $countProject,
-            'arDates' => $arDates
-        );
-
-        $this->render('page-schedule-view', $arResult);
     }
     /*
     *

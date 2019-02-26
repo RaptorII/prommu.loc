@@ -2,7 +2,9 @@
 	Yii::app()->getClientScript()->registerScriptFile('https://www.gstatic.com/charts/loader.js');
 	Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
 	
-	$arGraph = (new Termostat())->getTermostatEmplCount($idus, $arDates);
+	$model = new Termostat();
+	$arDates = $model->getDates();
+	$arGraph = $model->getTermostatEmplCount(Share::$UserProfile->id, $arDates);
 ?>
 <style type="text/css">
 	.pa__graph-ph:before,.pa__graph-pnt:before,.pa__graph-pv:before{content:'';border-radius:3px;position:absolute}.pa__graph-block{width:750px;padding:20px 15px;border:1px solid #f3f3f3;position:relative}.pa__graph{position:relative;z-index:1}.pa__graph-points{width:700px;position:absolute;top:25px;left:40px;z-index:2}.pa__graph-points span{position:absolute;text-align:center}.pa__graph-pv{width:30px;left:-30px}.pa__graph-ph{width:40px;bottom:-14px}.pa__graph-points b{background-color:#fff;color:#000;font-size:12px;line-height:14px;font-family:RobotoCondensedBold,RobotoCondensedRegular,verdana,arial;font-weight:400;display:block;position:relative;cursor:default;letter-spacing:-.5px}.pa__graph-pv b{top:8px;right:3px}.pa__graph-ph b{top:7px;left:-20px}.pa__graph-ph:before,.pa__graph-pv:before{width:5px;height:5px;background-color:#000}.pa__graph-pv:before{bottom:-3px;right:-3px}.pa__graph-ph:before{top:-3px;right:40px}.pa__graph-pnt{position:absolute}.pa__graph-pnt:before{width:6px;height:6px;top:-3px;left:-6px;background-color:#abb820}.pa__graph-points b:hover{z-index:3}
@@ -10,6 +12,8 @@
 
 <form action="" method="POST" id="schedule-form">
 	<input type="hidden" name="schedule" id="schedule-inp">
+	<input type="hidden" name="pa-bdate" value="<?=$arDates['bdate']?>">
+	<input type="hidden" name="pa-edate" value="<?=$arDates['bdate']?>">
 	<div class="pa__graph-block" id="pa-chart"></div>
 </form>
 <script type="text/javascript">

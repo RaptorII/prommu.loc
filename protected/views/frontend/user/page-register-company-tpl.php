@@ -125,7 +125,7 @@
                 <a href="/user/login?service=vkontakte&type=3" class="reg-social__link vk js-g-hashint" title="vkontakte.ru" ><span class="mob-hidden">vkontakte.ru</span></a>
                 <a href="/user/login?service=mailru&type=3" class="reg-social__link ml js-g-hashint" title="mail.ru"><span class="mob-hidden">mail.ru</a>
                 <a href="/user/login?service=odnoklassniki&type=3" class="reg-social__link od js-g-hashint" title="odnoklasniki.ru"><span class="mob-hidden">odnoklasniki.ru</span></a>
-                <a href="/user/login?service=google_oauth&type=3" class="reg-social__link go " title="google+"><span class="mob-hidden">google+</span></a>  
+                <a href="/user/login?service=google_oauth&type=3" class="reg-social__link go " title="google"><span class="mob-hidden">google</span></a>  
             </div>
 
         </div>

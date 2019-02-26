@@ -167,6 +167,7 @@
 .auth-form__social-link.od{ background-position: 0 -168px; }
 .auth-form__social-link.go{ background-position: 0 -224px; }
 .auth-form__social-link.in{ background-position: 0 -280px; }
+.auth-form__social-link.ya{ background-position: 0 -336px; }
 #DiContent .auth-form__social .auth-form__social-link.disable{
     filter: grayscale(100%);
     cursor: no-drop;
@@ -298,6 +299,7 @@ media
     .auth-form__social-link.od{ background-position: 50% -168px; }
     .auth-form__social-link.go{ background-position: 50% -224px; }
     .auth-form__social-link.in{ background-position: 50% -280px; }
+    .auth-form__social-link.ya{ background-position: 50% -336px; }
     .auth-form__label-name{
         font-size: 20px;
         line-height: 25px;

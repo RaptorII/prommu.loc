@@ -737,14 +737,22 @@ class Share
      */
     public static function getUsers($arr) 
     {
-        $arRes = array();
+        $arRes = $arT = array();
         $arr = array_unique($arr);
+
+        for($i=0, $n=count($arr); $i<$n; $i++)
+        {
+            !empty($arr[$i]) && $arT[] = $arr[$i];
+        }
+        $arr = $arT;
+
         if(!count($arr) || !array_filter($arr))
             return $arRes;
 
         $sql = Yii::app()->db->createCommand()
                 ->select("
-                    u.id_user, 
+                    u.id_user,
+                    u.email,
                     u.status, 
                     r.isman,
                     CONCAT(r.firstname,' ',r.lastname) app_name,
@@ -763,6 +771,7 @@ class Share
             {
                 $arRes[$v['id_user']] = array(
                         'id' => $v['id_user'],
+                        'email' => $v['email'],
                         'status' => $v['status'],
                         'name' => $v['app_name'],
                         'src' => self::getPhoto(2,$v['app_photo'],'small',$v['isman']),
@@ -773,6 +782,7 @@ class Share
             {
                 $arRes[$v['id_user']] = array(
                         'id' => $v['id_user'],
+                        'email' => $v['email'],
                         'status' => $v['status'],
                         'name' => $v['emp_name'],
                         'src' => self::getPhoto(3,$v['emp_photo']),

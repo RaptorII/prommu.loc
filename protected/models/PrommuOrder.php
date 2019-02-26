@@ -408,6 +408,7 @@ class PrommuOrder {
                                 'email' => $email,
                                 'phone' => $phone,
                                 'type' => $type,
+                                'date' => date('Y-m-d H:i:s')
                             ));
         $message = '<p style="font-size:16px;">На сайте prommu.com был оставлен запрос от клиента по Услуге Аутстаффинг </p>
                     <br/>
@@ -438,6 +439,7 @@ class PrommuOrder {
                                 'email' => $email,
                                 'phone' => $phone,
                                 'type' => $type,
+                                'date' => date('Y-m-d H:i:s')
                             ));
             $message = '<p style="font-size:16px;">На сайте prommu.com был оставлен запрос от клиента по Услуге Аутсорсинг</p>
                     <br/>

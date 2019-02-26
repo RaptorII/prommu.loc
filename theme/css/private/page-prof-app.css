@@ -983,3 +983,22 @@ a.upp__project-info{ width: 65px }
     position: absolute;
     right: 60px;
 }
+/*
+*
+*/
+.ppp-logo-main__active{
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.ppp-logo-main__active i{
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;  
+}
+.ppp-logo-main__active .enable{ color:#abb820 }
+.ppp-logo-main__active .enable i{ background: #abb820 }
+.ppp-logo-main__active .disable{ color:#D6D6D6 }
+.ppp-logo-main__active .disable i{ background: #D6D6D6 }

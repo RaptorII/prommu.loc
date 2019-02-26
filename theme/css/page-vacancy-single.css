@@ -574,9 +574,15 @@
 /*
 *
 */
-.btn-response-popup .hvr-sweep-to-right {
-	outline: none;
-}
 .sv__data-main,
 .sv__data-responce{ margin-bottom: 15px; }
-.sv__data-responce{ cursor: pointer; }
+.sv__data-responce{ 
+	cursor: pointer;
+	border-radius: 18px;
+}
+.sv__data-responce.prmu-btn:after,
+.sv__data-responce.prmu-btn:before{ border-radius:15px; }
+.sv__data-responce span{
+	display: inline-block;
+	padding: 5px;
+}
