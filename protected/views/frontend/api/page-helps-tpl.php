@@ -1,31 +1,24 @@
 <!DOCTYPE html>
-
-<html lang="en">
-<head>
-    <title>API Documentation Example using Redoc</title>
-
+<html>
+  <head>
+    <title>ReDoc</title>
     <!-- needed for adaptive design -->
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
 
+    <!--
+    ReDoc doesn't change outer page styles
+    -->
     <style>
-        body {
-            margin: 0;
-            padding: 5mm;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+      }
     </style>
-</head>
-<body>
-<div id="redoc-container"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/redoc@2.0.0-alpha.24/bundles/redoc.standalone.js"></script>
-<script>
-    Redoc.init('/v2/api-docs', {
-        scrollYOffset: 50,
-        nativeScrollbars: true,
-        hideDownloadButton: true
-    }, document.getElementById('redoc-container'))
-</script>
-
-
-</body>
+  </head>
+  <body>
+    <redoc spec-url='http://petstore.swagger.io/v2/swagger.json'></redoc>
+    <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"> </script>
+  </body>
 </html>
