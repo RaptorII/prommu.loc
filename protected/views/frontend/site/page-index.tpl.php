@@ -15,25 +15,50 @@ $ppp = 		array(
 										'pattern' => "/#ANALYTIC_PERIOD#/",
 										'description' => "Период расчета аналитики"
 									),
+			'cnt_vacancy_public' => array(
+										'name' => "#ANALYTIC_VAC_PUBLIC#",
+										'pattern' => "/#ANALYTIC_VAC_PUBLIC#/",
+										'description' => "Опубликованых вакансий"
+									),
+			'cnt_vacancy_views' => array(
+										'name' => "#ANALYTIC_VAC_VIEWS#",
+										'pattern' => "/#ANALYTIC_VAC_VIEWS#/",
+										'description' => "Кол-во просмотров вакансий"
+									),
+			'cnt_vacancy_responce' => array(
+										'name' => "#ANALYTIC_VAC_RESPONCE#",
+										'pattern' => "/#ANALYTIC_VAC_RESPONCE#/",
+										'description' => "Кол-во откликов на вакансии"
+									),
+			'cnt_vacancy_invite' => array(
+										'name' => "#ANALYTIC_VAC_INVIT#",
+										'pattern' => "/#ANALYTIC_VAC_INVIT#/",
+										'description' => "Кол-во приглашений на вакансии"
+									),
+			'vacancy_list' => array(
+										'name' => "#VACANCY_LIST#",
+										'pattern' => "/#VACANCY_LIST#/",
+										'description' => "Список вакансий"
+									),
+			'cnt_services' => array(
+										'name' => "#ANALYTIC_SERVICE_CNT#",
+										'pattern' => "/#ANALYTIC_SERVICE_CNT#/",
+										'description' => "Кол-во использованных услуг"
+									),
+			'service_list' => array(
+										'name' => "#SERVICE_LIST#",
+										'pattern' => "/#SERVICE_LIST#/",
+										'description' => "Список использованных услуг"
+									),
 			'cnt_views' => array(
-										'name' => "#ANALYTIC_VACCNT#",
-										'pattern' => "/#ANALYTIC_VACCNT#/",
-										'description' => "Просмотренных вакансий"
+										'name' => "#ANALYTIC_CNT_VIEWS#",
+										'pattern' => "/#ANALYTIC_CNT_VIEWS#/",
+										'description' => "Кол-во просмотров"
 									),
-			'cnt_invitations' => array(
-										'name' => "#ANALYTIC_INVIT#",
-										'pattern' => "/#ANALYTIC_INVIT#/",
-										'description' => "Приглашения на вакансию от работодателя"
-									),
-			'cnt_requests' => array(
-										'name' => "#ANALYTIC_CLICKS#",
-										'pattern' => "/#ANALYTIC_CLICKS#/",
-										'description' => "Самостоятельных кликов на размещенные вакансии"
-									),
-			'cnt_approved' => array(
-										'name' => "#ANALYTIC_VACSPENT#",
-										'pattern' => "/#ANALYTIC_VACSPENT#/",
-										'description' => "Отработанных (утвержденных) вакансий"
+			'analytic_schedule_src' => array(
+										'name' => "#SCHEDULE_SRC#",
+										'pattern' => "/#SCHEDULE_SRC#/",
+										'description' => "Картинка с графиком"
 									)
 		);
 

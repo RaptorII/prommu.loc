@@ -1,6 +1,8 @@
 <?php
 	
 	class Termostat{
+
+		public static $PATH_TO_SCHEDULE = '/uploads/mail/analytics/';
 		/**
 		*	@param $id_user integer id_user
 		*	@param $bDate string bdate
@@ -235,92 +237,117 @@
 				);
 		}
 		/**
+		 * @param $id_user - integer
+		 * @param $arDates - array[bdate, edate, db_bdate, db_edate]
+		 * @return array()
+		 */
+		public function getAppAnalytics($id_user, $arDates)
+		{
+			if(!$id_user || !is_array($arDates))
+				return false;
+
+			$arRes = array();
+			$arRes = $this->getPromoResponse(
+									$id_user,
+									$arDates['db_bdate'],
+									$arDates['db_edate']
+								);
+			$arRes['cnt_views'] = $this->getPromoView(
+									$id_user,
+									$arDates['db_bdate'],
+									$arDates['db_edate']
+								);
+			$arRes['dates'] = $arDates;
+
+			return $arRes;
+		}
+		/**
+		 * @param $id_user - integer
+		 * @param $arDates - array[bdate, edate, db_bdate, db_edate]
 		 * @return array() 
 		 */
-		public function getAnalytics()
+		public function getEmpAnalytics($id_user, $arDates)
 		{
+			if(!$id_user || !is_array($arDates))
+				return false;
+
 			$arRes = array();
-			$dates = $this->getDates();
-			$profile = Share::$UserProfile;
+			$arRes['dates'] = $arDates;
+			// vacancies
+			$arVac = array_fill_keys(['cnt_views','cnt_responses','cnt_invitations'],0);
+			$model = new Vacancy();
+			$query = $model->getVacsForTermostat($id_user, $arDates);
 
-			if(Share::isApplicant()) // applicant
+			$arVac['cnt'] = count($query);
+			$arI = array();
+
+			if($arVac['cnt'])
 			{
-				$arRes = $this->getPromoResponse(
-										$profile->id,
-										$dates['db_bdate'],
-										$dates['db_edate']
-									);
-				$arRes['cnt_views'] = $this->getPromoView(
-										$profile->id,
-										$dates['db_bdate'],
-										$dates['db_edate']
-									);
-			}
-			if(Share::isEmployer()) // employer
-			{
-				// vacancies
-				$arVac = array_fill_keys(['cnt_views','cnt_responses','cnt_invitations'],0);
-				$model = new Vacancy();
-				$query = $model->getVacsForTermostat($profile->id, $dates);
-
-				$arVac['cnt'] = count($query);
-				$arI = array();
-
-				if($arVac['cnt'])
+				$arId = array();
+				foreach ($query as $v)
 				{
-					$arId = array();
-					foreach ($query as $v)
+					$arId[] = $v['id'];
+					$arI[$v['id']] = array_fill_keys(['views','responses','invitations'],0);
+					$arI[$v['id']]['title'] = $v['title'];
+				}
+				//
+				$query = Yii::app()->db->createCommand()
+									->select("id_vac,isresponse,status")
+									->from('vacation_stat')
+									->where(['in','id_vac',$arId])
+									->queryAll();
+
+				for ($i=0, $n=count($query); $i<$n; $i++)
+				{ 
+					if($query[$i]['isresponse']==2) // считаем приглашения
 					{
-						$arId[] = $v['id'];
-						$arI[$v['id']] = array_fill_keys(['views','responses','invitations'],0);
-						$arI[$v['id']]['title'] = $v['title'];
+						$arI[$query[$i]['id_vac']]['invitations']++;
+						$arVac['cnt_invitations']++;
 					}
-					//
-					$query = Yii::app()->db->createCommand()
-										->select("id_vac,isresponse,status")
-										->from('vacation_stat')
-										->where(['in','id_vac',$arId])
-										->queryAll();
-
-					for ($i=0, $n=count($query); $i<$n; $i++)
-					{ 
-						if($query[$i]['isresponse']==2) // считаем приглашения
-						{
-							$arI[$query[$i]['id_vac']]['invitations']++;
-							$arVac['cnt_invitations']++;
-						}
-						if($query[$i]['isresponse']==1) // считаем отклики
-						{
-							$arI[$query[$i]['id_vac']]['responses']++;
-							$arVac['cnt_responses']++;
-						}
-					}
-					//
-					$query = Yii::app()->db->createCommand()
-										->select('COUNT(id) cnt, id')
-										->from('termostat_analytic')
-										->where(['in','id',$arId])
-										->group('id')
-										->queryAll();
-
-					for ($i=0, $n=count($query); $i<$n; $i++)
-					{ 
-						$arI[$query[$i]['id']]['views'] = $query[$i]['cnt'];
-						$arVac['cnt_views'] += $query[$i]['cnt'];
+					if($query[$i]['isresponse']==1) // считаем отклики
+					{
+						$arI[$query[$i]['id_vac']]['responses']++;
+						$arVac['cnt_responses']++;
 					}
 				}
-				$arVac['items'] = $arI;
-				$arRes['vacancies'] = $arVac;
-				// services
-				$arRes['services'] = $this->getTermostatServices($profile->id, $dates);
-				// schedule
-				$schedule = $this->getTermostatEmplCount($profile->id, $dates);
-				$arRes['schedule'] = json_encode($schedule['schedule']);
-				$arRes['cnt_profile_views'] = $schedule['count'];
-			}
-			$arRes['dates'] = $dates;
+				//
+				$query = Yii::app()->db->createCommand()
+									->select('COUNT(id) cnt, id')
+									->from('termostat_analytic')
+									->where(['in','id',$arId])
+									->group('id')
+									->queryAll();
 
-			return $arRes;			
+				for ($i=0, $n=count($query); $i<$n; $i++)
+				{ 
+					$arI[$query[$i]['id']]['views'] = $query[$i]['cnt'];
+					$arVac['cnt_views'] += $query[$i]['cnt'];
+				}
+			}
+			$arVac['items'] = $arI;
+			$arRes['vacancies'] = $arVac;
+			// services
+			$arRes['services'] = $this->getTermostatServices($id_user, $arDates);
+			// schedule
+			$schedule = $this->getTermostatEmplCount($id_user, $arDates);
+			$arRes['schedule'] = json_encode($schedule['schedule']);
+			$arRes['cnt_profile_views'] = $schedule['count'];
+			
+			return $arRes;
+		}
+		/**
+		 * 
+		 */
+		public function getDateForEmail()
+		{
+			$bTime = strtotime('first day of last month');
+			$arRes = array(
+					'bdate' => date('d.m.Y', $bTime),
+					'edate' => date('d.m.Y'),
+					'db_bdate' => date('Y-m-d 00:00:00', $bTime),
+					'db_edate' => date('Y-m-d 00:00:00')
+				);
+			return $arRes;
 		}
 		/**
 		 * 		Рассылка аналитики
@@ -334,17 +361,21 @@
 									->from('user')
 									->where('analytday>0')
 									->queryColumn();
-				$arId = [15642];
+				//
+				//
+				//
+				$arId = [7000];
+				//
+				//
+				//
 
 				$arUsers = Share::getUsers($arId);
 
 				if(!count($arUsers))
 					return false;
 
-				$bTime = strtotime('first day of last month');
-				$bDate = date('Y-m-d 00:00:00', $bTime);
-				$eDate = date('Y-m-d 00:00:00');
-				$arParams['analytic_period'] = date('d.m.Y',$bTime) . ' - ' . date('d.m.Y');
+				$arDates = $this->getDateForEmail();
+				$arParams['analytic_period'] = $arDates['bdate'] . ' - ' . $arDates['edate'];
 
 				foreach ($arUsers as $id => $v)
 				{
@@ -359,16 +390,93 @@
 					if(empty($arParams['name_user']))
 						$arParams['name_user'] = 'Пользователь';
 
-					if($v['status']==2) // applicant
+					if(Share::isApplicant($v['status'])) // applicant
 					{
-						$arApp = $this->getPromoResponse($id, $bDate, $eDate);
-						$arParams = array_merge($arParams,$arApp);
-						$arParams['cnt_views'] = $this->getPromoView($id, $bDate, $eDate);
+						$arRes = $this->getAppAnalytics($id, $arDates);
+						$arParams['cnt_invitations'] = $arRes['cnt_invitations'];
+						$arParams['cnt_requests'] = $arRes['cnt_requests'];
+						$arParams['cnt_approved'] = $arRes['cnt_approved'];
+						$arParams['cnt_views'] = $arRes['cnt_views'];
 						Mailing::set(11,$arParams);
 					}
-					if($v['status']==3) // employer
+					if(Share::isEmployer($v['status'])) // employer
 					{
+						$arRes = $this->getEmpAnalytics($id, $arDates);
+						$arParams['cnt_vacancy_public'] = $arRes['vacancies']['cnt'];
+						$arParams['cnt_vacancy_views'] = $arRes['vacancies']['cnt_views'];
+						$arParams['cnt_vacancy_responce'] = $arRes['vacancies']['cnt_responses'];
+						$arParams['cnt_vacancy_invite'] = $arRes['vacancies']['cnt_invitations'];
+						$arParams['vacancy_list'] = $arParams['service_list'] = '';
+						if($arRes['vacancies']['cnt']>0)
+						{
+							$str = '<b style="display:block; color:#abb820; padding-bottom:12px; font-size:14px">#TITLE</b>
+								<span style="display:block; color:#5b5b5b; font-size:14px; padding-bottom:7px">Просмотров: #VIEW</span>
+								<span style="display:block; color:#5b5b5b; font-size:14px; padding-bottom:7px">Откликов: #RESP</span>
+								<span style="display:block; color:#5b5b5b; font-size:14px; padding-bottom:7px">Приглашений: #INVITE</span>
+								<span style="display:block; margin: 7px 0 20px; border-bottom:1px solid #efefef"></span>';
 
+							foreach ($arRes['vacancies']['items'] as $vac)
+							{
+								$arParams['vacancy_list'] .= preg_replace(
+										['/#TITLE/','/#VIEW/','/#RESP/','/#INVITE/'], 
+										[$vac['title'],$vac['views'],$vac['responses'],$vac['invitations']], 
+										$str
+									);
+							}
+						}
+						if(count($arRes['services']))
+						{
+							$str = '<span style="display:block; padding-bottom:20px">#NAME: 
+								<span style="color:#abb820; white-space:nowrap">Количество использований: </span>
+								<span style="color:#ff6500">#CNT</span></span>';
+							foreach ($arRes['services'] as $code => $val)
+							{
+								if($val>0)
+								{
+									switch ($code)
+									{
+										case 'outsourcing':
+											$name = 'Личный менеджер и аутсорсинг персонала';
+											break;
+										case 'outstaffing':
+											$name = 'Аутстаффинг персонала';
+											break;
+										case 'vacancy':
+											$name = 'Премиум-вакансии';
+											break;
+										case 'sms':
+											$name = 'SMS информирование';
+											break;
+										case 'push':
+											$name = 'PUSH уведомления';
+											break;
+										case 'email':
+											$name = 'Электронная почта';
+											break;
+										case 'api':
+											$name = 'Получение API ключа';
+											break;
+										case 'repost':
+											$name = 'Группы социальных сетей PROMMU';
+											break;
+									};
+									$arParams['service_list'] .= preg_replace(
+											['/#NAME/', '/#CNT/'], 
+											[$name, $val], 
+											$str
+										);
+								}
+							}
+						}
+						$arParams['cnt_services'] = $arRes['services']['cnt'];
+						$arParams['cnt_views'] = $arRes['cnt_profile_views'];
+						$name = date('YmdHis') . $id;
+						$buildSchedule = Subdomain::site() . MainConfig::$PAGE_ANALYTICS_SCHEDULE 
+						 . '?id_user=$id&name=$name';
+						file_get_contents($buildSchedule);
+						$arParams['analytic_schedule_src'] = Subdomain::site() 
+							. self::$PATH_TO_SCHEDULE . $name . '.jpg';
+						Mailing::set(12,$arParams);
 					}
 				}
 			//}

@@ -1044,7 +1044,16 @@ class UserController extends AppController
             $this->redirect(MainConfig::$PAGE_LOGIN);
 
         $model = new Termostat;
-        $data = $model->getAnalytics();
+        $arDates = $model->getDates();
+        if(Share::isApplicant())
+        {
+            $data = $model->getAppAnalytics(Share::$UserProfile->id, $arDates);
+        }
+        else
+        {
+            $data = $model->getEmpAnalytics(Share::$UserProfile->id, $arDates);
+        }
+        
 
         if(Yii::app()->request->isAjaxRequest)
         {
@@ -1071,7 +1080,23 @@ class UserController extends AppController
      */
     public function actionSchedule()
     {
-        $this->render('page-schedule-view');
+        $rq = Yii::app()->getRequest();
+        $id_user = filter_var($rq->getParam('id_user'),FILTER_SANITIZE_NUMBER_INT);
+        $name = filter_var($rq->getParam('name'),FILTER_SANITIZE_NUMBER_INT);
+
+        if(Yii::app()->request->isPostRequest && $name>0)
+        {
+            $file = $rq->getParam('schedule');
+            Upload::setCanvas(Termostat::$PATH_TO_SCHEDULE,$name,$file);
+        }
+        elseif($id_user>0 && $file>0)
+        {
+            $model = new Termostat();
+            $arDates = $model->getDateForEmail();
+            $data = $model->getTermostatEmplCount($id_user, $arDates);
+            $data['name'] = $name;
+            $this->render('page-schedule-view',['viData'=>$data]);
+        } 
     }
     /**
      * 

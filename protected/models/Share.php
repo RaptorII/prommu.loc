@@ -858,15 +858,17 @@ class Share
     /**
      * @return bool
      */
-    public static function isApplicant()
+    public static function isApplicant($param=false)
     {
-        return  self::$UserProfile->type==2 ? true : false;  
+        $status = ($param ? $param : self::$UserProfile->type);
+        return  $status==2 ? true : false;  
     }
     /**
      * @return bool
      */
-    public static function isEmployer()
+    public static function isEmployer($param=false)
     {
-        return  self::$UserProfile->type==3 ? true : false;  
+        $status = ($param ? $param : self::$UserProfile->type);
+        return  $status==3 ? true : false;  
     }
 }
