@@ -1423,6 +1423,7 @@ class Auth
         $point = filter_var(Yii::app()->getRequest()->getParam('point'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $last_referer = filter_var(Yii::app()->getRequest()->getParam('last_referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $ip = Yii::app()->getRequest()->getParam('ip');
+        $robot = filter_var(Yii::app()->getRequest()->getParam('email_robot'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $pm = Yii::app()->getRequest()->getParam('pm_source');
         if($pm == '') $pm = 'none';
         $client = Yii::app()->getRequest()->getParam('client');
@@ -1546,7 +1547,7 @@ class Auth
             .'</div>';
             Share::sendmail($inData['inputData']['email'], "Prommu.com. Подтверждение регистрации на портале поиска временной работы!", $message);
         }
-        else
+        elseif($inData['type'] == 3 && empty($robot))
         {
             $link = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=3&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin."&ip=".$ip."&client=".$client."&pm=".$pm;
             $message = '<p style="font-size:16px;">Наш портал <b>Prommu.com</b> позволяет найти квалифицированный персонал в России и странах СНГ совершенно бесплатно.</p>'
