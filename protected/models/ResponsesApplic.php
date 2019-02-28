@@ -742,6 +742,15 @@ class ResponsesApplic extends Responses
             }
             else
             {
+                $res = Yii::app()->db->createCommand()
+                    ->insert('vacation_stat', array(
+                        'id_promo' => $idPromo,
+                        'id_vac' => $id,
+                        'isresponse' => 2,
+                        'status' => 4,
+                        'date' => date('Y-m-d H:i:s'),
+                ));
+                
                 $sql = "SELECT ru.email, r.firstname, r.lastname, e.title
                 FROM vacation_stat s
                 INNER JOIN empl_vacations e ON e.id = s.id_vac
