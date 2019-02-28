@@ -62,7 +62,7 @@ class CustomYandexOAuthService extends YandexOAuthService {
 
 		// COMPOSING UNIFIED ATTRIBUTES FOR STORING IN DATABASE
 		$this->attributes['service'] = $this->name;
-//		$this->attributes['access_token'] = $this->access_token;
+		$this->attributes['access_token'] = $this->access_token;
 
 		$this->attributes['id'] = $info['id'];
 		$this->attributes['name'] = $info['real_name'];
