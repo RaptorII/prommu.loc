@@ -116,7 +116,7 @@ class Employer extends ARModel
         $date = new DateTime('+1 day');
         $dateTomor = $date->format('Y-m-d');
        $sql = "SELECT e.id,  e.title,
-                   DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate, et.bdate, et.edate, u.email, em.name
+                   DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate, et.bdate, et.edate, u.email, em.name, em.firstname
             FROM empl_vacations e 
             LEFT JOIN empl_city c1 ON c1.id_vac = e.id 
             LEFT JOIN city c2 ON c2.id_city = c1.id_city 
@@ -131,6 +131,7 @@ class Employer extends ARModel
             $rest = Yii::app()->db->createCommand($sql);
             $rest = $rest->queryAll();;
 
+        $name = 'пользователь';
         for($i = 0; $i < count($rest); $i++)
         {
             if(explode(" ", $rest[$i]['bdate'])[0] ==  $dateTomor ||explode(" ", $rest[$i]['bdate'])[0] == $dateEnd )
@@ -166,11 +167,19 @@ class Employer extends ARModel
                 $dateEnds++;
                 $result['cnt']++;
             }
+            !empty($rest[$i]['firstname']) && $name = $rest[$i]['firstname'];
         }
-    
+ 
         $result['countInvite'] = $countInvite;
         $result['countResponse'] = $countResponse;
         $result['countPlus'] = $countPlus;
+        $cookieView = Yii::app()->request->cookies['cookie_personal_data']->value;
+        if($countPlus>0 && $cookieView!=1)
+        {
+            $message = "<p class='big-flash'>Уважаемый " . $name . "<br>Вам открыты контактные данные соискателя, теперь Вы можете связаться для уточнения деталей проекта или сотрудничества через предоставленные контактные данные. Важно!!! Для обеспечения гарантий оплаты и безопасности сотрудничества мы рекомендуем держать связь по вакансии и проекту на нашем сервисе Prommu. Все договоренности, не зафиксированные в Вашем личном кабинете, не обеспечивают защиту со стороны сервиса Prommu</p>";
+            Yii::app()->user->setFlash('prommu_flash', $message);
+            Yii::app()->request->cookies['cookie_personal_data'] = new CHttpCookie('cookie_personal_data', 1);
+        }
         $result['countMinus'] = $countMinus;
         $result['dateEnd'] = $dateEnds;
         $result['dateStart'] = $dateStarts;

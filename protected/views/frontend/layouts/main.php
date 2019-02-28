@@ -502,7 +502,12 @@
                 </div>
             </div>
         </div>    
-
+<?
+//
+?>
+<? if(Yii::app()->user->hasFlash('prommu_flash')):?>
+    <div class="prmu__popup prommu_flash"><? echo Yii::app()->user->getFlash('prommu_flash'); ?></div>
+<? endif; ?>
 </body>
 </html>
 <?  

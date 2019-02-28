@@ -50,6 +50,7 @@ class Promo extends ARModel
     }
 
     public function getNotifications(){
+        $name = 'пользователь';
         $id = Share::$UserProfile->id;
         $countInvite = 0;
         $countResponse = 0;
@@ -95,8 +96,9 @@ class Promo extends ARModel
                 $dateStart++;
                 $result['cnt']++;
             }
-           
+            !empty($res[$i]['firstname']) && $name = $res[$i]['firstname'];
         }
+
          $date = new DateTime('-50 days');
         $dateStart = $date->format('Y-m-d');
         $dateEnd =  date('Y-m-d');
@@ -151,12 +153,20 @@ class Promo extends ARModel
         $result['countInvite'] = $countInvite;
         $result['countResponse'] = $countResponse;
         $result['countPlus'] = $countPlus;
+        $cookieView = Yii::app()->request->cookies['cookie_personal_data']->value;
+        if($countPlus>0 && $cookieView!=1)
+        {
+            $message = "<p class='big-flash'>Уважаемый " . $name . "<br>Вам открыты контактные данные работодателя, теперь Вы можете связаться для уточнения деталей проекта или сотрудничества через предоставленные контактные данные. Важно!!! Для обеспечения гарантий оплаты и безопасности сотрудничества мы рекомендуем держать связь по вакансии и проекту на нашем сервисе Prommu. Все договоренности, не зафиксированные в Вашем личном кабинете, не обеспечивают защиту со стороны сервиса Prommu</p>";
+            Yii::app()->user->setFlash('prommu_flash', $message);
+            Yii::app()->request->cookies['cookie_personal_data'] = new CHttpCookie('cookie_personal_data', 1);
+        }
+
         $result['countMinus'] = $countMinus;
         $result['dateEnd'] = $dateEnds;
         $result['dateStart'] = $dateStarts;
         $result['tommorowStart'] = $dateTomorrow;
-        return $result;
 
+        return $result;
     }
 
     public function blockedPromo($id, $st)
