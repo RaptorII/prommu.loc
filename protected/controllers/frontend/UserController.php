@@ -342,7 +342,7 @@ class UserController extends AppController
                            }
                            else {
                             $data = $eauth->getAttributes();
-
+                            var_dump($data);
                             $usData = Yii::app()->db->createCommand()
                             ->select("u.email")
                             ->from('user u')
