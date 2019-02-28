@@ -588,9 +588,9 @@
   *
   */?>
   <script type="text/javascript">
-  <!--
-      G_VARS.App.customProps.idPromo = '<?= $Profile->exInfo->id_resume ?>';
-  //-->
+    $(document).ready(function(){
+      G_VARS.App.customProps.idPromo = '<?=$Profile->exInfo->id_resume?>';
+    });
   </script>
   <script id="TplInvVacs" type="text/template" data-btn="Пригласить">
       <div class="vac-form">
