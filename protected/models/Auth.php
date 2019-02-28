@@ -1423,7 +1423,7 @@ class Auth
         $point = filter_var(Yii::app()->getRequest()->getParam('point'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $last_referer = filter_var(Yii::app()->getRequest()->getParam('last_referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $ip = Yii::app()->getRequest()->getParam('ip');
-        $robot = Yii::app()->getRequest()->getParam('email_robot');
+        $robot = Yii::app()->getRequest()->getParam('lastname');
         $pm = Yii::app()->getRequest()->getParam('pm_source');
         if($pm == '') $pm = 'none';
         $client = Yii::app()->getRequest()->getParam('client');
