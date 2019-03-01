@@ -619,7 +619,8 @@ class UserProfileApplic extends UserProfile
         Share::sendmail("susgresk@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);  
         } 
 
-        Yii::app()->user->setFlash('Message', array('type' => 'succ', 'mess' => 'Изменения успешно сохранены и отправлены на модерацию'));
+        $message = '<p>Анкета отправлена на модерацию.<br>Модерация занимает до 15 минут в рабочее время. О результатах проверки - Вам прийдет уведомление на эл. почту</p>';
+        Yii::app()->user->setFlash('prommu_flash', $message);
     }
 
 

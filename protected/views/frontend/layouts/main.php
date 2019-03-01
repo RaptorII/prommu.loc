@@ -505,9 +505,13 @@
 <?
 //
 ?>
-<? if(Yii::app()->user->hasFlash('prommu_flash')):?>
-    <div class="prmu__popup prommu_flash"><? echo Yii::app()->user->getFlash('prommu_flash'); ?></div>
-<? endif; ?>
+<? 
+if(Yii::app()->user->hasFlash('prommu_flash'))
+    foreach(Yii::app()->user->getFlashes() as $key => $message)
+        if($key==='prommu_flash')
+        { ?><div class="prmu__popup prommu_flash"><? echo $message; ?></div><? }
+
+?>
 </body>
 </html>
 <?  

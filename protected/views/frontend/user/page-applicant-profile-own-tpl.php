@@ -611,46 +611,16 @@
       <p class="message">У вас нет активных вакансий. Для создания вакансии перейдите на <a href="<?= MainConfig::$PAGE_VACPUB ?>">эту страницу</a></p>
   </script>
   <template id='TPLAddComment'></template>
+<?
+  $cookieView = Yii::app()->request->cookies['popup_photo']->value;
+  $fullPath = Subdomain::domainRoot() . DS . MainConfig::$PATH_APPLIC_LOGO 
+    . DS . $attr['photo'] . '100.jpg';
 
- 
-
-  <?php if(Yii::app()->user->getFlash('Message') ): ?>
-    <? Yii::app()->user->setFlash('Message', ''); ?>
-    <form method="post" id="" class="Info tmpl">
-      <input type="hidden" name="t" value="e"/>
-      <div class="row">
-      <p style="font-size: 18px;text-align: center;padding-bottom: 15px; line-height: 25px;" class="info"><b>Анкета отправлена на модерацию</b></p>
-        <p>Модерация занимает от 1 до 2 часов в рабочее время (обычно быстрее)<br/> и о результатах проверки - Вам прийдет уведомление на эл почту.</p>
-    </form>
-  <?php endif; ?>
-  <?
-    //
-    //
-    //
-    //
-    //
-    $bPopup = false;
-
-    $src = DS . MainConfig::$PATH_APPLIC_LOGO . DS . $attr['photo'] . '100.jpg';
-    if(!file_exists(Subdomain::domainRoot() . $src))
-      $bPopup = true;
-  ?>
-  <? if($flagOwnProfile && $bPopup && !$_COOKIE['popup_photo']): ?>
-    <div class="prmu__popup prmu__popup-error">
-      <p>У вас не загружено еще ни одной фотографии.</p>
-      <p>Добавление Вашей фотографии повысит привлекательность анкеты и увеличит шансы что работодатель выберет именно Вас. Добавляйте только свои личные фото, иначе Вы не сможете пройти модерацию! Спасибо за понимание!</p>
-    </div>
-    <? setcookie('popup_photo','1',time()+86400,'/','.'.$_SERVER['SERVER_NAME'], false);?>
-    <script type="text/javascript">
-      $(document).ready(function(){
-        if($('.prmu__popup-error').length!=0){
-            $.fancybox.open({
-                src: "div.prmu__popup.prmu__popup-error",
-                type: 'inline',
-                touch: false
-            });
-        }
-      });
-    </script>
-  <? endif; ?>
-<?php endif; ?>
+  if($flagOwnProfile && !file_exists($fullPath) && !$cookieView)
+  {
+    Yii::app()->request->cookies['popup_photo'] = new CHttpCookie('popup_photo', 1);
+    $message = '<p>У вас не загружено еще ни одной фотографии.<br>Добавляйте пожалуйста логотип своей компании или личные фото. В случае несоответствия фотографий Вы не сможете пройти модерацию! Спасибо за понимание!</p>';
+    Yii::app()->user->setFlash('prommu_flash', $message);    
+  }
+?>
+<? endif; ?>

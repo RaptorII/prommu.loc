@@ -375,42 +375,15 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
       </div>
     <? endif; ?>
 </div>
-<?php if(Yii::app()->user->getFlash('Message') ): ?>
-  <? Yii::app()->user->setFlash('Message', ''); ?>
-  <form method="post" id="" class="Info tmpl">
-    <input type="hidden" name="t" value="e"/>
-    <div class="row">
-    <p style="font-size: 18px;text-align: center;padding-bottom: 15px; line-height: 25px;" class="info"><b>Анкета отправлена на модерацию</b></p>
-      <p>Модерация занимает от 1 до 2 часов в рабочее время (обычно быстрее)<br/> и о результатах проверки - Вам прийдет уведомление на эл почту.</p>
-  </form>
-<?php endif; ?>
 <?
-  //
-  //
-  //
-  //
-  //
-  $bPopup = false;
+  $cookieView = Yii::app()->request->cookies['popup_photo']->value;
+  $fullPath = Subdomain::domainRoot() . DS . MainConfig::$PATH_EMPL_LOGO 
+    . DS . $viData['userInfo']['logo'] . '400.jpg';
 
-  $src = DS . MainConfig::$PATH_EMPL_LOGO . DS . $viData['userInfo']['logo'] . '400.jpg';
-  if(!file_exists(Subdomain::domainRoot() . $src))
-    $bPopup = true;
+  if($flagOwnProfile && !file_exists($fullPath) && !$cookieView)
+  {
+    Yii::app()->request->cookies['popup_photo'] = new CHttpCookie('popup_photo', 1);
+    $message = '<p>У вас не загружено еще ни одной фотографии.<br>Добавляйте пожалуйста логотип своей компании или личные фото. В случае несоответствия фотографий Вы не сможете пройти модерацию! Спасибо за понимание!</p>';
+    Yii::app()->user->setFlash('prommu_flash', $message);    
+  }
 ?>
-<? if($flagOwnProfile && $bPopup && !$_COOKIE['popup_photo']): ?>
-  <div class="prmu__popup prmu__popup-error">
-    <p>У вас не загружено еще ни одной фотографии.</p>
-    <p>Добавляйте пожалуйста логотип своей компании или личные фото. В случае несоответствия фотографий Вы не сможете пройти модерацию! Спасибо за понимание!</p>
-  </div>
-  <? setcookie('popup_photo','1',time()+86400,'/','.'.$_SERVER['SERVER_NAME'], false);?>
-  <script type="text/javascript">
-    $(document).ready(function(){
-      if($('.prmu__popup-error').length!=0){
-          $.fancybox.open({
-              src: "div.prmu__popup.prmu__popup-error",
-              type: 'inline',
-              touch: false
-          });
-      }
-    });
-  </script>
-<? endif; ?>
