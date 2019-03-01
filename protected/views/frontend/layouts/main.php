@@ -557,7 +557,7 @@ foreach(Yii::app()->user->getFlashes() as $key => $message)
 // }
 ?>
 <script>
-$(document).ready(function(){
+/*$(document).ready(function(){
     setTimeout(function(){
         var name = "_ga"
         var matches = document.cookie.match(new RegExp(
@@ -586,6 +586,6 @@ $(document).ready(function(){
         });
 
     }, 3000);
-});
+});*/
 </script>
 
