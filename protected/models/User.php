@@ -551,6 +551,12 @@ class User extends CActiveRecord
 		    	->where('u.id_user=:id', array(':id'=>$id))
 		    	->queryRow();
 
+		if(!is_array($result))
+		{
+			Yii::app()->user->setFlash('danger', 'Внимание! Ошибка базы данных id_user='.$id);
+			return ['error'=>1];
+		}
+
 		$result['src'] = '/' . MainConfig::$PATH_APPLIC_LOGO 
 			. '/' . ($result['photo'] ? $result['photo'] . '400.jpg' : ($result['isman']
 			? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F));

@@ -1,10 +1,13 @@
 <?php
-Yii::app()->getClientScript()->registerCssFile('/admin/css/app-profile.css');
-Yii::app()->getClientScript()->registerCoreScript('jquery');
-Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl.'/js/ajaxfileupload.js', CClientScript::POS_HEAD);
+$gcs = Yii::app()->getClientScript();
+$gcs->registerCssFile('/admin/css/app-profile.css');
+$gcs->registerCoreScript('jquery');
+$gcs->registerScriptFile(Yii::app()->request->baseUrl.'/js/ajaxfileupload.js', CClientScript::POS_HEAD);
 // Magnific Popup
-Yii::app()->getClientScript()->registerCssFile('/jslib/magnific-popup/magnific-popup-min.css');
-Yii::app()->getClientScript()->registerScriptFile('/jslib/magnific-popup/jquery.magnific-popup.min.js', CClientScript::POS_END);
+$gcs->registerCssFile('/jslib/magnific-popup/magnific-popup-min.css');
+$gcs->registerScriptFile('/jslib/magnific-popup/jquery.magnific-popup.min.js', CClientScript::POS_END);
+$bUrl = Yii::app()->request->baseUrl;
+Yii::app()->getClientScript()->registerCssFile($bUrl . '/css/template.css');
 
 echo "<pre style='display:none'>";
 print_r($data); 
