@@ -470,12 +470,46 @@
 						}
 						$arParams['cnt_services'] = $arRes['services']['cnt'];
 						$arParams['cnt_views'] = $arRes['cnt_profile_views'];
+						// draw graph
 						$name = date('YmdHis') . $id;
-						$buildSchedule = Subdomain::site() . MainConfig::$PAGE_ANALYTICS_SCHEDULE 
-						 . '?id_user=$id&name=$name';
-						file_get_contents($buildSchedule);
-						$arParams['analytic_schedule_src'] = Subdomain::site() 
-							. self::$PATH_TO_SCHEDULE . $name . '.jpg';
+						$arSchedule = $this->getTermostatEmplCount($id, $arDates);
+						$arParams['analytic_schedule_src'] = '';
+						if($arSchedule['count']>0)
+						{
+							Yii::import('application.extensions.pchartlib.pChart4Yii');
+							Yii::import('application.extensions.pchartlib.pData4Yii');
+							$DataSet = new pData4Yii;
+							$DataSet->Data = array();
+							$pChart = new pChart4Yii(700,230);
+							foreach ($arSchedule['schedule'] as $v)
+							{
+							$date = explode('.',$v[0]);
+							$DataSet->AddPoint($v[1], 'Serie1', $date[0]);
+							}
+							// Adding data
+							$DataSet->AddAllSeries();
+							$DataSet->SetAbsciseLabelSerie();
+							// Chart Presentation
+							$pChart->setFontProperties("fonts/tahoma.ttf",8);
+							$pChart->setGraphArea(30,30,670,200);
+							$pChart->drawFilledRoundedRectangle(0,0,700,230,1,254,254,254);
+							$pChart->drawGraphArea(254,254,254);
+							$pChart->drawScale($DataSet->GetData(),$DataSet->GetDataDescription(),SCALE_START0,1,1,1);   
+							$pChart->drawGrid(4,TRUE,222,222,222,50);
+							$pChart->setFontProperties("fonts/tahoma.ttf",6);
+							$pChart->drawTreshold(0,143,55,72,TRUE,TRUE);
+							$pChart->drawCubicCurve($DataSet->GetData(),$DataSet->GetDataDescription(),.1);
+							// output as file
+							$fullPath = Subdomain::site() . self::$PATH_TO_SCHEDULE . $name . '.png';
+							$pChart->Render($fullPath);
+							$arParams['analytic_schedule_src'] = '<span style="border:1px solid #c9c9c9; display:block; height:110px">
+									<img src="' . $fullPath . '" alt="Prommu.com" width="305" height="92" border="0" style="display:block;max-width:285px;">
+								</span>';
+							// output as text using base64 encode
+							$pChart->toBase64();
+							header("Content-Type: image/png");
+						}
+
 						Mailing::set(12,$arParams);
 					}
 				}

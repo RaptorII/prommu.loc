@@ -721,6 +721,9 @@ class Api
     public function mailBox()
     {
         Im::sendEmailNotifications();
+        $termostat = new Termostat;
+        $termostat->sendEmailNotifications();
+
         return Mailing::send();
     }
 

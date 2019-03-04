@@ -232,8 +232,6 @@
       <?php endif; ?>
       <div class="clearfix"></div>
     </div>
-
-
   </div>
   <?
   /*
@@ -258,8 +256,6 @@
           </ul> 
           <span class="ppp__subtitle"><?=$rate?> из 100 баллов</span>
         </div>
-
-
         <hr class="ppp__line">
         <table class="upp__table">
           <tbody>

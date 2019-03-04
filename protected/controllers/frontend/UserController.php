@@ -1076,29 +1076,6 @@ class UserController extends AppController
         }
     }
     /**
-     * Форма с графиком для аналитики
-     */
-    public function actionSchedule()
-    {
-        $rq = Yii::app()->getRequest();
-        $id_user = filter_var($rq->getParam('id_user'),FILTER_SANITIZE_NUMBER_INT);
-        $name = filter_var($rq->getParam('name'),FILTER_SANITIZE_NUMBER_INT);
-
-        if(Yii::app()->request->isPostRequest && $name>0)
-        {
-            $file = $rq->getParam('schedule');
-            Upload::setCanvas(Termostat::$PATH_TO_SCHEDULE,$name,$file);
-        }
-        elseif($id_user>0 && $file>0)
-        {
-            $model = new Termostat();
-            $arDates = $model->getDateForEmail();
-            $data = $model->getTermostatEmplCount($id_user, $arDates);
-            $data['name'] = $name;
-            $this->render('page-schedule-view',['viData'=>$data]);
-        } 
-    }
-    /**
      * 
      */
     public function actionApi()
