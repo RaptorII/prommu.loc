@@ -1461,4 +1461,13 @@ class SiteController extends AppController
     {
         $this->render(MainConfig::$VIEW_OTHERCITIES, array());
     }
+    /**
+     *      Генерация YVL для яндекса
+     */
+    public function actionYandex_job()
+    {
+        $model = new Yandex();
+        $result = $model->generateFile();
+        echo intval($result);
+    }
 }
