@@ -453,7 +453,7 @@ class SearchPromo extends Model
         }
 
         // age
-        if(isset($data['af']) || isset($data['at']))
+        if((isset($data['af']) && (int)$data['af'] > 0) || (isset($data['at']) && (int)$data['at'] > 0))
         {
             $url[] = 'age='.(int)$data['af'].'-'.(int)$data['at'];
             $cnt++;

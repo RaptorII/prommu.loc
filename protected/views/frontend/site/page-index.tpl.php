@@ -465,15 +465,16 @@
 						</div>
 						<div class="clearfix"></div>
 					</div>
-
-					<div class="about-block">             
-						<div class="header h-indent about-block__title">
-							<hr class="line">
-							<h2><span>О нас</span></h2>
+					<? $description = $this->ViewModel->getViewData()->pageMetaKeywords; ?>
+					<? if(!empty($description)): ?>
+						<div class="about-block">
+							<div class="header h-indent about-block__title">
+								<hr class="line">
+								<h2><span>О нас</span></h2>
+							</div>
+							<div class="italic-non about-block__text" style="text-align: justify;"><?php echo $this->ViewModel->getViewData()->pageMetaKeywords; ?></div>
 						</div>
-						<div class="italic-non about-block__text" style="text-align: justify;"><?php echo $this->ViewModel->getViewData()->pageMetaKeywords; ?></div>                
-					</div>
-
+					<? endif; ?>
 					<div class="m-bottom-registration">
 						<div class="m-bottom-reg__line"></div>
 						<div class="m-wrapper__btn-block">

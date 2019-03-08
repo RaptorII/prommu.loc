@@ -2961,6 +2961,7 @@ WHERE id_vac = {$inVacId}";
 			foreach ($query as $v)
 			{
 				$v['company'] = htmlspecialchars($v['company'],ENT_XML1);
+				$v['name'] = trim($v['name']);
 				$v['name'] = htmlspecialchars($v['name'],ENT_XML1);
 				$v['site'] = htmlspecialchars($v['site'],ENT_XML1);
 				in_array($v['type'], [104,105]) && $v['hr-agency'] = $v['type_val'];
@@ -3061,5 +3062,5 @@ WHERE id_vac = {$inVacId}";
 			$arRes['main'] = $arT;
 
 			return $arRes;
-    }
+		}
 }
