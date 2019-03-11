@@ -235,7 +235,7 @@
 						<input type="checkbox" name="analytic" id="e-analytic"<?=($set->analytic=='on'?' checked':'')?>/>
 						<label for="e-analytic"></label>
 						<div class="set-ntf__pnt-name">Подписка на аналитику своего профиля</div>
-						<div class="settings-notif__analytic" id="analytic" style="<?=($set->analytic=='on'?'':'display:none')?>">
+						<?/*<div class="settings-notif__analytic" id="analytic" style="<?=($set->analytic=='on'?'':'display:none')?>">
 							<div class="sn__analytic-days">
 								<input type="radio" name="day" value="1" id="day-mon"<?=(in_array($set->day, [0,1])?' checked':'')?>/>
 								<label for="day-mon">Пн</label>
@@ -255,8 +255,8 @@
 							<div class="sn__analytic-time">
 								<label for="time">Время</label>
 								<input type="text" name="time" id="time" value="<? echo $time?>" maxlenth="5">
-							</div>
-						</div>
+							</div>?>
+						</div>*/?>
 					</div>
 				<?php else: ?>
 					<div class="settings-notif__point">
@@ -331,7 +331,7 @@
 						<input type="checkbox" name="analytic" id="e-analytic"<?=($set->analytic=='on'?' checked':'')?>/>
 						<label for="e-analytic"></label>
 						<div class="set-ntf__pnt-name">Подписка на аналитику своего профиля</div>
-						<div class="settings-notif__analytic" id="analytic" style="<?=($set->analytic=='on'?'':'display:none')?>">
+						<?/*<div class="settings-notif__analytic" id="analytic" style="<?=($set->analytic=='on'?'':'display:none')?>">
 							<div class="sn__analytic-days">
 								<input type="radio" name="day" value="1" id="day-mon"<?=(in_array($set->day, [0,1])?' checked':'')?>/>
 								<label for="day-mon">Пн</label>
@@ -352,7 +352,7 @@
 								<label for="time">Время</label>
 								<input type="text" name="time" id="time" value="<? echo $time?>" maxlenth="5">
 							</div>
-						</div>
+						</div>*/?>
 					</div>
 				<?php endif; ?>
 			</div>

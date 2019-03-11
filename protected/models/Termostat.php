@@ -354,166 +354,166 @@
 		 */
 		public function sendEmailNotifications()
 		{
-			//if(date('j')==1) // отправляем 1го числа каждого месяца
-			//{
-				$arId = Yii::app()->db->createCommand()
-									->select('id_user')
-									->from('user')
-									->where('analytday>0')
-									->queryColumn();
-				//
-				//
-				//
-				$arId = [7000];
-				//
-				//
-				//
+			//if(date('j')!=1) // отправляем 1го числа каждого месяца
+			//	return false;
 
-				$arUsers = Share::getUsers($arId);
+			$arId = Yii::app()->db->createCommand()
+								->select('id_user')
+								->from('user')
+								->where(['like','setting','%"analytic":"on"%'])
+								->queryColumn();
+			//
+			//
+			//
+			$arId = [7000];
+			//
+			//
+			//
 
-				if(!count($arUsers))
-					return false;
+			$arUsers = Share::getUsers($arId);
 
-				$arDates = $this->getDateForEmail();
-				$arParams['analytic_period'] = $arDates['bdate'] . ' - ' . $arDates['edate'];
+			if(!count($arUsers))
+				return false;
 
-				foreach ($arUsers as $id => $v)
+			$arDates = $this->getDateForEmail();
+			$arParams['analytic_period'] = $arDates['bdate'] . ' - ' . $arDates['edate'];
+
+			foreach ($arUsers as $id => $v)
+			{
+				// set email
+				$email = trim($v['email']);
+				if(filter_var($email,FILTER_VALIDATE_EMAIL))
+					$arParams['email_user'] = $email;
+				if(!isset($arParams['email_user']))
+					continue;
+				// set name
+				$arParams['name_user'] = trim($v['name']);
+				if(empty($arParams['name_user']))
+					$arParams['name_user'] = 'Пользователь';
+
+				if(Share::isApplicant($v['status'])) // applicant
 				{
-					// set email
-					$email = trim($v['email']);
-					if(filter_var($email,FILTER_VALIDATE_EMAIL))
-						$arParams['email_user'] = $email;
-					if(!isset($arParams['email_user']))
-						continue;
-					// set name
-					$arParams['name_user'] = trim($v['name']);
-					if(empty($arParams['name_user']))
-						$arParams['name_user'] = 'Пользователь';
+					$arRes = $this->getAppAnalytics($id, $arDates);
+					$arParams['cnt_invitations'] = $arRes['cnt_invitations'];
+					$arParams['cnt_requests'] = $arRes['cnt_requests'];
+					$arParams['cnt_approved'] = $arRes['cnt_approved'];
+					$arParams['cnt_views'] = $arRes['cnt_views'];
+					Mailing::set(11,$arParams);
+				}
+				if(Share::isEmployer($v['status'])) // employer
+				{
+					$arRes = $this->getEmpAnalytics($id, $arDates);
+					$arParams['cnt_vacancy_public'] = $arRes['vacancies']['cnt'];
+					$arParams['cnt_vacancy_views'] = $arRes['vacancies']['cnt_views'];
+					$arParams['cnt_vacancy_responce'] = $arRes['vacancies']['cnt_responses'];
+					$arParams['cnt_vacancy_invite'] = $arRes['vacancies']['cnt_invitations'];
+					$arParams['vacancy_list'] = $arParams['service_list'] = '';
+					if($arRes['vacancies']['cnt']>0)
+					{
+						$str = '<b style="display:block; color:#abb820; padding-bottom:12px; font-size:14px">#TITLE</b>
+							<span style="display:block; color:#5b5b5b; font-size:14px; padding-bottom:7px">Просмотров: #VIEW</span>
+							<span style="display:block; color:#5b5b5b; font-size:14px; padding-bottom:7px">Откликов: #RESP</span>
+							<span style="display:block; color:#5b5b5b; font-size:14px; padding-bottom:7px">Приглашений: #INVITE</span>
+							<span style="display:block; margin: 7px 0 20px; border-bottom:1px solid #efefef"></span>';
 
-					if(Share::isApplicant($v['status'])) // applicant
-					{
-						$arRes = $this->getAppAnalytics($id, $arDates);
-						$arParams['cnt_invitations'] = $arRes['cnt_invitations'];
-						$arParams['cnt_requests'] = $arRes['cnt_requests'];
-						$arParams['cnt_approved'] = $arRes['cnt_approved'];
-						$arParams['cnt_views'] = $arRes['cnt_views'];
-						Mailing::set(11,$arParams);
-					}
-					if(Share::isEmployer($v['status'])) // employer
-					{
-						$arRes = $this->getEmpAnalytics($id, $arDates);
-						$arParams['cnt_vacancy_public'] = $arRes['vacancies']['cnt'];
-						$arParams['cnt_vacancy_views'] = $arRes['vacancies']['cnt_views'];
-						$arParams['cnt_vacancy_responce'] = $arRes['vacancies']['cnt_responses'];
-						$arParams['cnt_vacancy_invite'] = $arRes['vacancies']['cnt_invitations'];
-						$arParams['vacancy_list'] = $arParams['service_list'] = '';
-						if($arRes['vacancies']['cnt']>0)
+						foreach ($arRes['vacancies']['items'] as $vac)
 						{
-							$str = '<b style="display:block; color:#abb820; padding-bottom:12px; font-size:14px">#TITLE</b>
-								<span style="display:block; color:#5b5b5b; font-size:14px; padding-bottom:7px">Просмотров: #VIEW</span>
-								<span style="display:block; color:#5b5b5b; font-size:14px; padding-bottom:7px">Откликов: #RESP</span>
-								<span style="display:block; color:#5b5b5b; font-size:14px; padding-bottom:7px">Приглашений: #INVITE</span>
-								<span style="display:block; margin: 7px 0 20px; border-bottom:1px solid #efefef"></span>';
-
-							foreach ($arRes['vacancies']['items'] as $vac)
+							$arParams['vacancy_list'] .= preg_replace(
+									['/#TITLE/','/#VIEW/','/#RESP/','/#INVITE/'], 
+									[$vac['title'],$vac['views'],$vac['responses'],$vac['invitations']], 
+									$str
+								);
+						}
+					}
+					if(count($arRes['services']))
+					{
+						$str = '<span style="display:block; padding-bottom:20px">#NAME: 
+							<span style="color:#abb820; white-space:nowrap">Количество использований: </span>
+							<span style="color:#ff6500">#CNT</span></span>';
+						foreach ($arRes['services'] as $code => $val)
+						{
+							if($val>0)
 							{
-								$arParams['vacancy_list'] .= preg_replace(
-										['/#TITLE/','/#VIEW/','/#RESP/','/#INVITE/'], 
-										[$vac['title'],$vac['views'],$vac['responses'],$vac['invitations']], 
+								switch ($code)
+								{
+									case 'outsourcing':
+										$name = 'Личный менеджер и аутсорсинг персонала';
+										break;
+									case 'outstaffing':
+										$name = 'Аутстаффинг персонала';
+										break;
+									case 'vacancy':
+										$name = 'Премиум-вакансии';
+										break;
+									case 'sms':
+										$name = 'SMS информирование';
+										break;
+									case 'push':
+										$name = 'PUSH уведомления';
+										break;
+									case 'email':
+										$name = 'Электронная почта';
+										break;
+									case 'api':
+										$name = 'Получение API ключа';
+										break;
+									case 'repost':
+										$name = 'Группы социальных сетей PROMMU';
+										break;
+								};
+								$arParams['service_list'] .= preg_replace(
+										['/#NAME/', '/#CNT/'], 
+										[$name, $val], 
 										$str
 									);
 							}
 						}
-						if(count($arRes['services']))
-						{
-							$str = '<span style="display:block; padding-bottom:20px">#NAME: 
-								<span style="color:#abb820; white-space:nowrap">Количество использований: </span>
-								<span style="color:#ff6500">#CNT</span></span>';
-							foreach ($arRes['services'] as $code => $val)
-							{
-								if($val>0)
-								{
-									switch ($code)
-									{
-										case 'outsourcing':
-											$name = 'Личный менеджер и аутсорсинг персонала';
-											break;
-										case 'outstaffing':
-											$name = 'Аутстаффинг персонала';
-											break;
-										case 'vacancy':
-											$name = 'Премиум-вакансии';
-											break;
-										case 'sms':
-											$name = 'SMS информирование';
-											break;
-										case 'push':
-											$name = 'PUSH уведомления';
-											break;
-										case 'email':
-											$name = 'Электронная почта';
-											break;
-										case 'api':
-											$name = 'Получение API ключа';
-											break;
-										case 'repost':
-											$name = 'Группы социальных сетей PROMMU';
-											break;
-									};
-									$arParams['service_list'] .= preg_replace(
-											['/#NAME/', '/#CNT/'], 
-											[$name, $val], 
-											$str
-										);
-								}
-							}
-						}
-						$arParams['cnt_services'] = $arRes['services']['cnt'];
-						$arParams['cnt_views'] = $arRes['cnt_profile_views'];
-						// draw graph
-						$name = date('YmdHis') . $id;
-						$arSchedule = $this->getTermostatEmplCount($id, $arDates);
-						$arParams['analytic_schedule_src'] = '';
-						if($arSchedule['count']>0)
-						{
-							Yii::import('application.extensions.pchartlib.pChart4Yii');
-							Yii::import('application.extensions.pchartlib.pData4Yii');
-							$DataSet = new pData4Yii;
-							$DataSet->Data = array();
-							$pChart = new pChart4Yii(700,230);
-							foreach ($arSchedule['schedule'] as $v)
-							{
-							$date = explode('.',$v[0]);
-							$DataSet->AddPoint($v[1], 'Serie1', $date[0]);
-							}
-							// Adding data
-							$DataSet->AddAllSeries();
-							$DataSet->SetAbsciseLabelSerie();
-							// Chart Presentation
-							$pChart->setFontProperties("fonts/tahoma.ttf",8);
-							$pChart->setGraphArea(30,30,670,200);
-							$pChart->drawFilledRoundedRectangle(0,0,700,230,1,254,254,254);
-							$pChart->drawGraphArea(254,254,254);
-							$pChart->drawScale($DataSet->GetData(),$DataSet->GetDataDescription(),SCALE_START0,1,1,1);   
-							$pChart->drawGrid(4,TRUE,222,222,222,50);
-							$pChart->setFontProperties("fonts/tahoma.ttf",6);
-							$pChart->drawTreshold(0,143,55,72,TRUE,TRUE);
-							$pChart->drawCubicCurve($DataSet->GetData(),$DataSet->GetDataDescription(),.1);
-							// output as file
-							$src = self::$PATH_TO_SCHEDULE . $name . '.png';
-							$pChart->Render(Subdomain::domainRoot() . $src);
-							$arParams['analytic_schedule_src'] = '<span style="border:1px solid #c9c9c9; display:block; height:110px">
-									<img src="' . Subdomain::site() . $src . '" alt="Prommu.com" width="305" height="92" border="0" style="display:block;max-width:285px;padding-top:10px">
-								</span>';
-							// output as text using base64 encode
-							//$pChart->toBase64();
-							//header("Content-Type: image/png");
-						}
-
-						Mailing::set(12,$arParams);
 					}
+					$arParams['cnt_services'] = $arRes['services']['cnt'];
+					$arParams['cnt_views'] = $arRes['cnt_profile_views'];
+					// draw graph
+					$name = date('YmdHis') . $id;
+					$arSchedule = $this->getTermostatEmplCount($id, $arDates);
+					$arParams['analytic_schedule_src'] = '';
+					if($arSchedule['count']>0)
+					{
+						Yii::import('application.extensions.pchartlib.pChart4Yii');
+						Yii::import('application.extensions.pchartlib.pData4Yii');
+						$DataSet = new pData4Yii;
+						$DataSet->Data = array();
+						$pChart = new pChart4Yii(700,230);
+						foreach ($arSchedule['schedule'] as $v)
+						{
+						$date = explode('.',$v[0]);
+						$DataSet->AddPoint($v[1], 'Serie1', $date[0]);
+						}
+						// Adding data
+						$DataSet->AddAllSeries();
+						$DataSet->SetAbsciseLabelSerie();
+						// Chart Presentation
+						$pChart->setFontProperties("fonts/tahoma.ttf",8);
+						$pChart->setGraphArea(30,30,690,200);
+						$pChart->drawFilledRoundedRectangle(0,0,700,230,1,254,254,254);
+						$pChart->drawGraphArea(254,254,254);
+						$pChart->drawScale($DataSet->GetData(),$DataSet->GetDataDescription(),SCALE_START0,1,1,1);   
+						$pChart->drawGrid(4,TRUE,222,222,222,50);
+						$pChart->setFontProperties("fonts/tahoma.ttf",6);
+						$pChart->drawTreshold(0,143,55,72,TRUE,TRUE);
+						$pChart->drawCubicCurve($DataSet->GetData(),$DataSet->GetDataDescription(),.1);
+						// output as file
+						$src = self::$PATH_TO_SCHEDULE . $name . '.png';
+						$pChart->Render(Subdomain::domainRoot() . $src);
+						$arParams['analytic_schedule_src'] = '<span style="border:1px solid #c9c9c9; display:block; height:110px">
+								<img src="' . Subdomain::site() . $src . '" alt="Prommu.com" width="305" height="92" border="0" style="display:block;max-width:285px;padding-top:10px">
+							</span>';
+						// output as text using base64 encode
+						//$pChart->toBase64();
+						//header("Content-Type: image/png");
+					}
+
+					Mailing::set(12,$arParams);
 				}
-			//}
+			}
 		}
 	}
 ?>
