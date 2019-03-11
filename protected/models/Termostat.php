@@ -345,7 +345,7 @@
 					'bdate' => date('d.m.Y', $bTime),
 					'edate' => date('d.m.Y'),
 					'db_bdate' => date('Y-m-d 00:00:00', $bTime),
-					'db_edate' => date('Y-m-d 23:59:59')
+					'db_edate' => date('Y-m-d 00:00:00')
 				);
 			return $arRes;
 		}
