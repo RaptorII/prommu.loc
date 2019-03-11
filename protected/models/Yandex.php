@@ -4,10 +4,11 @@ class Yandex //extends CActiveRecord
 	public $filename = 'yandex_job.yvl';
 	public function generateFile()
 	{
+		/*
 		$fullPath = Subdomain::domainRoot() . DS . $this->filename;
 		if(!file_exists($fullPath))
 			return false;
-	
+		*/
 		$model = new Vacancy;
 		$data = $model->getVacsForYandex();
 		if(!$data)
@@ -55,12 +56,12 @@ class Yandex //extends CActiveRecord
 			$vacancy->appendChild($e);
 			$e = $dom->createElement('duty',$v['duties']); 						// duty
 			$vacancy->appendChild($e);
-			$e = $dom->createElement('term',$v['conditions']); 				// term
-			$vacancy->appendChild($e);
+			$term = $dom->createElement('term');							 				// term
 			/*$e = $dom->createElement('contract','TEST'); 						// contract !!!!!!!!!!!!!!!!!!
-			$vacancy->appendChild($e);
-			$e = $dom->createElement('text','TEST'); 									// text !!!!!!!!!!!!!!!!!!
 			$vacancy->appendChild($e);*/
+			$e = $dom->createElement('text',$v['conditions']); 				// text
+			$term->appendChild($e);
+			$vacancy->appendChild($term);
 			$requirement = $dom->createElement('requirement'); 				// requirement
 			if(!empty($v['аge']))
 			{
@@ -111,16 +112,13 @@ class Yandex //extends CActiveRecord
 				$e = $dom->createElement('site',$employer['site']); 		// site
 				$company->appendChild($e);
 			}
-			if(isset($employer['hr-agency']))
-			{
-				$e = $dom->createElement('hr-agency',$employer['hr-agency']);// hr-agency
-				$company->appendChild($e);
-			}
-			if(!empty($employer['name']))
+			$e = $dom->createElement('hr-agency',$employer['hr-agency']);// hr-agency
+			$company->appendChild($e);
+			/*if(!empty($employer['name']))
 			{
 				$e = $dom->createElement('contact-name',$employer['name']); // contact-name
 				$company->appendChild($e);
-			}
+			}*/
 			$vacancy->appendChild($company);
 			$vacancies->appendChild($vacancy);
 		}

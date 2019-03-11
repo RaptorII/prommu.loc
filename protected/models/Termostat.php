@@ -345,7 +345,7 @@
 					'bdate' => date('d.m.Y', $bTime),
 					'edate' => date('d.m.Y'),
 					'db_bdate' => date('Y-m-d 00:00:00', $bTime),
-					'db_edate' => date('Y-m-d 00:00:00')
+					'db_edate' => date('Y-m-d 23:59:59')
 				);
 			return $arRes;
 		}
@@ -500,14 +500,14 @@
 							$pChart->drawTreshold(0,143,55,72,TRUE,TRUE);
 							$pChart->drawCubicCurve($DataSet->GetData(),$DataSet->GetDataDescription(),.1);
 							// output as file
-							$fullPath = Subdomain::site() . self::$PATH_TO_SCHEDULE . $name . '.png';
-							$pChart->Render($fullPath);
+							$src = self::$PATH_TO_SCHEDULE . $name . '.png';
+							$pChart->Render(Subdomain::domainRoot() . $src);
 							$arParams['analytic_schedule_src'] = '<span style="border:1px solid #c9c9c9; display:block; height:110px">
-									<img src="' . $fullPath . '" alt="Prommu.com" width="305" height="92" border="0" style="display:block;max-width:285px;">
+									<img src="' . Subdomain::site() . $src . '" alt="Prommu.com" width="305" height="92" border="0" style="display:block;max-width:285px;padding-top:10px">
 								</span>';
 							// output as text using base64 encode
-							$pChart->toBase64();
-							header("Content-Type: image/png");
+							//$pChart->toBase64();
+							//header("Content-Type: image/png");
 						}
 
 						Mailing::set(12,$arParams);

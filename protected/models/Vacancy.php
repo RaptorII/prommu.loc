@@ -2945,11 +2945,11 @@ WHERE id_vac = {$inVacId}";
 			$arUser = array();
 			foreach ($arRes['main'] as $v)
 				$arUser[] = $v['id_user'];
+            //CONCAT(e.firstname,' ',e.lastname) name,
 			$query = Yii::app()->db->createCommand()
 								->select("e.id_user,
 									e.type type,
 									e.name company,
-									CONCAT(e.firstname,' ',e.lastname) name,
 									e.logo photo,
 									ua.val site,
 									uad.name type_val")
@@ -2961,10 +2961,10 @@ WHERE id_vac = {$inVacId}";
 			foreach ($query as $v)
 			{
 				$v['company'] = htmlspecialchars($v['company'],ENT_XML1);
-				$v['name'] = trim($v['name']);
-				$v['name'] = htmlspecialchars($v['name'],ENT_XML1);
+				/*$v['name'] = trim($v['name']);
+				$v['name'] = htmlspecialchars($v['name'],ENT_XML1);*/
 				$v['site'] = htmlspecialchars($v['site'],ENT_XML1);
-				in_array($v['type'], [104,105]) && $v['hr-agency'] = $v['type_val'];
+				$v['hr-agency'] = in_array($v['type'], [104,105]) ? 'true' : 'false';
 				$src = DS . MainConfig::$PATH_EMPL_LOGO . DS . $v['photo'] . '400.jpg';
 				if(file_exists(Subdomain::domainRoot() . $src))
 					$v['logo'] = Subdomain::domainSite() . $src;
