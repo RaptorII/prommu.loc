@@ -696,9 +696,13 @@
               <span class="epa__label-name">О себе: <span style="display: none">(текст до 2000 символов)</span></span>
               <textarea name="about-mself" class="epa__textarea epa__required" placeholder="Укажите навыки и знания, которые помогут вам справиться с желаемой работой или дополнительную информацию, которая поможет работодателю лучше узнать Вас" data-name="О себе"><?=$attr['aboutme']?></textarea>
             </label>
-
+            <?
+              $isNews = false;
+              foreach ($attrAll as $v)
+                $v['key']=='isnews' && $isNews = $v['val'];
+            ?>
             <div class="epa__attr-block">
-                <input type="checkbox" name="user-attribs[isnews]" id="epa-isnews" class="epa__hidden" value="1" <?=($attr['isnews'] ? 'checked' : '')?>>
+                <input type="checkbox" name="user-attribs[isnews]" id="epa-isnews" class="epa__hidden" value="1" <?=$isNews ? 'checked' : ''?>>
                 <label class="epa__checkbox" for="epa-isnews">Получать новости об изменениях и новых возможностях на сайте</label>
             </div>
 

@@ -193,9 +193,7 @@
                   <input type='text' name='user-attribs[post]' value="<?=$viData['attribs']['post']['val']?>" class="epe__input epe__input-pos" autocomplete="off">
                 </label>
                 <input type='checkbox' name='user-attribs[isnews]' value="1" <?=$viData['attribs']['isnews']['val'] ? 'checked' : '' ?> class="epe__hidden" id="subscribtion">
-                <? /* ?>
                 <label class="epe__checkbox" for="subscribtion">Получать новости об изменениях и новых возможностях на сайте</label>
-                <? */ ?>
                 <button class='epe__btn' type='submit'>Сохранить изменения</button>
                 <input type="hidden" name="logo" id="HiLogo"/>
                 <input type="hidden" name="savest" value="1"/>

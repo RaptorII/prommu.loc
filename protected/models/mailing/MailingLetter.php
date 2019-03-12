@@ -38,6 +38,8 @@ class MailingLetter extends Mailing
 		$arParams['status'] = $obj->getParam('user_status');
 		// ismoder
 		$arParams['moder'] = $obj->getParam('user_moder');
+		// subscribe
+		$arParams['subscribe'] = $obj->getParam('user_subscribe');
 		// emails
 		$this->receiver = filter_var(
 		                $obj->getParam('receiver'),
@@ -55,7 +57,7 @@ class MailingLetter extends Mailing
 		$this->in_template = $obj->getParam('in_template');
 		
 		if(
-			(!count($arParams['status']) && !count($arParams['moder']))
+			(!count($arParams['status']) && !count($arParams['moder']) && empty($arParams['subscribe']))
 			&& 
 			!count($arReceiver)
 		)
@@ -107,20 +109,24 @@ class MailingLetter extends Mailing
 		//}
 		if($event=='send') // send data
 		{
-			$conditions = '';
+			$arCond = [];
 			// continue
 			if(count($arParams['status']))
-				$conditions = 'status IN(' . implode(',',$arParams['status']) . ')';
+				$arCond[] = 'u.status IN(' . implode(',',$arParams['status']) . ')';
 			if(count($arParams['moder']))
-				$conditions = 'ismoder IN(' . implode(',',$arParams['moder']) . ')';
+				$arCond[] = 'u.ismoder IN(' . implode(',',$arParams['moder']) . ')';
+			if(!empty($arParams['subscribe']))
+				$arCond[] = "ua.key='isnews' AND ua.val=1";
 
-			if(strlen($conditions))
+			if(count($arCond))
 			{
+				$strCond = implode(' AND ', $arCond);
 				$sql = Yii::app()->db->createCommand()
-								->select("id_user, email")
-								->from('user')
-								->where($conditions)
-								->order('id_user desc')
+								->select("u.id_user, u.email")
+								->from('user u')
+								->leftjoin('user_attribs ua','ua.id_us=u.id_user')
+								->where($strCond)
+								->order('u.id_user desc')
 								->queryAll();
 
 				foreach ($sql as $v)
@@ -130,7 +136,7 @@ class MailingLetter extends Mailing
 						$arReceiver[] = $v['email'];
 						$arRes['items'][] = $v; // на будущее логирование
 					}
-				}				
+				}			
 			}
 
 			$arReceiver = array_unique($arReceiver);

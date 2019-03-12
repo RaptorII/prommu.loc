@@ -1002,3 +1002,10 @@ a.upp__project-info{ width: 65px }
 .ppp-logo-main__active .enable i{ background: #abb820 }
 .ppp-logo-main__active .disable{ color:#D6D6D6 }
 .ppp-logo-main__active .disable i{ background: #D6D6D6 }
+.ppp__isnews{
+    margin-bottom: 35px;
+}
+.ppp__isnews .ppp__checkbox{
+    float: none;
+    cursor: default;
+}

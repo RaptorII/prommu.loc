@@ -566,6 +566,16 @@
           <? $empty = false; ?>
         </div>
       <? endif; ?>
+      <?
+        $isNews = false;
+        foreach ($info['userAttribs'] as $v)
+          $v['key']=='isnews' && $isNews = $v['val'];
+      ?>
+      <? if($isNews && $flagOwnProfile): ?>
+        <div class="ppp__isnews">
+          <div class="ppp__checkbox <?=$isNews ? 'active' : ''?>">Получение новостей об изменениях и новых возможностях на сайте</div>
+        </div>
+      <? endif; ?>
       <? if($empty): ?>
         <div class="ppp__subtitle">Не заполнено</div>
       <? endif; ?>

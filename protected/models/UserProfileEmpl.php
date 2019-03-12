@@ -1308,7 +1308,7 @@ class UserProfileEmpl extends UserProfile
     
 
         $insData = array();
-
+        !isset($attrs['isnews']) && $attrs['isnews']=0;
         foreach ($attrs as $key => $val)
         {
             $keys[] = "'" . $key . "'";

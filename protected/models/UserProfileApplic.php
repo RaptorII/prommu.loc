@@ -726,7 +726,7 @@ class UserProfileApplic extends UserProfile
         $attrs = Yii::app()->getRequest()->getParam('user-attribs');
 
         $insData = array();
-
+        !isset($attrs['isnews']) && $attrs['isnews']=0;
         foreach ($attrs as $key => $val)
         {
             $keys[] = "'" . $key . "'";

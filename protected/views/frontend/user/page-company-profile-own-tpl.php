@@ -323,9 +323,14 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
             <span class="ppe__field-val"><?=$allAttr[100]['val']?></span>
           </div>
         <?php endif; ?>
-        <? /*if($allAttr[108]['val']): ?>
-          <div class="ppe__checkbox <?=($allAttr[108]['val'] ? 'active' : '')?>">Получение новостей об изменениях и новых возможностях на сайте</div>
-        <? endif;*/ ?>
+        <?
+          $isNews = false;
+          foreach ($allAttr as $v)
+            $v['key']=='isnews' && $isNews=$v['val'];
+        ?> 
+        <? if($isNews): ?>
+          <div class="ppe__checkbox <?=$isNews ? 'active' : ''?>">Получение новостей об изменениях и новых возможностях на сайте</div>
+        <? endif; ?>
       </div>
       <div class="ppe__module">
         <a class='prmu-btn' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>'><span>Редактировать профиль</span></a>

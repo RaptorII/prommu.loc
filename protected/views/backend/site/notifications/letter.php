@@ -30,42 +30,63 @@
 			<form action="" method="POST" id="notification-form">
 				<div class="row">
 					<div class="hidden-xs col-sm-1 col-md-3"></div>
-					<div class="col-xs-12 col-sm-10 col-md-6">
+					<div class="col-xs-12 col-sm-10 col-md-6 send_params">
 						<div class="row">
 							<?
 							//
 							?>
-							<div class="col-xs-12 col-md-6">
+							<div class="col-xs-12">
 								<label class="d-label">
 									<input type="checkbox" name="user_status[]" value="0"
 										<?=((count($params['status']) && in_array(0, $params['status']))?'checked="checked"':'')?>>
 									<span>Не активированым</span>
 								</label>
-								<label class="d-label">
-									<input type="checkbox" name="user_status[]" value="2"
-									<?=((count($params['status']) && in_array(2,$params['status']))?'checked="checked"':'')?>>
-									<span>Соискателям</span>
-								</label>
-								<label class="d-label">
-									<input type="checkbox" name="user_status[]" value="3"
-									<?=((count($params['status']) && in_array(3,$params['status']))?'checked="checked"':'')?>>
-									<span>Работодателям</span>
-								</label>
+								<hr>
 							</div>
-							<?
-							//
-							?>
-							<div class="col-xs-12 col-md-6">
+							<div class="col-xs-12">
+								<div class="row">
+									<div class="col-xs-12 col-md-6">
+										<label class="d-label">
+											<input type="checkbox" name="user_status[]" value="2"
+											<?=((count($params['status']) && in_array(2,$params['status']))?'checked="checked"':'')?>>
+											<span>Соискателям</span>
+										</label>
+									</div>
+									<div class="col-xs-12 col-md-6">
+										<label class="d-label">
+											<input type="checkbox" name="user_status[]" value="3"
+											<?=((count($params['status']) && in_array(3,$params['status']))?'checked="checked"':'')?>>
+											<span>Работодателям</span>
+										</label>
+									</div>
+								</div>
+								<hr>
+							</div>
+							<div class="col-xs-12">
+								<div class="row">
+									<div class="col-xs-12 col-md-6">
+										<label class="d-label">
+											<input type="checkbox" name="user_moder[]" value="0" 
+												<?=((count($params['moder']) && in_array(0, $params['moder']))?'checked="checked"':'')?>>
+											<span>Промодерированым</span>
+										</label>
+									</div>
+									<div class="col-xs-12 col-md-6">
+										<label class="d-label">
+											<input type="checkbox" name="user_moder[]" value="1"
+												<?=((count($params['moder']) && in_array(1,$params['moder']))?'checked="checked"':'')?>>
+											<span>Не промодерированым</span>
+										</label>	
+									</div>
+								</div>
+								<hr>
+							</div>
+							<div class="col-xs-12">
 								<label class="d-label">
-									<input type="checkbox" name="user_moder[]" value="0" 
-										<?=((count($params['moder']) && in_array(0, $params['moder']))?'checked="checked"':'')?>>
-									<span>Промодерированым</span>
+									<input type="checkbox" name="user_subscribe" value="1" 
+										<?=$params['subscribe']?'checked="checked"':''?>>
+									<span>Подписанным на новости об изменениях и новых возможностях на сайте</span>
 								</label>
-								<label class="d-label">
-									<input type="checkbox" name="user_moder[]" value="1"
-										<?=((count($params['moder']) && in_array(1,$params['moder']))?'checked="checked"':'')?>>
-									<span>Не промодерированым</span>
-								</label>						
 							</div>
 							<?
 							//
@@ -156,6 +177,10 @@
 		.nicEdit-main:focus{ outline: none; }
 		#transform-code-panel .nicEdit-button{ background-image: url("/jslib/nicedit/nicEditorIcons.gif") !important; }
 		.CodeMirror{ min-height: 425px; }
+		#notification-form hr{
+			margin: 5px 0;
+			border-color: #d2d6de;
+		}
 	</style>
 	<?
 	//
@@ -248,6 +273,24 @@
 					var newVal = myNicEditor.nicInstances[0].getContent().trim();
 					myCodeMirror.setValue(newVal);	
 				}
+				if(this.value==='send')
+				{
+					var arCheckboxes = $('.send_params [type="checkbox"]'),
+							bChecked = false;
+
+					$.each(arCheckboxes,function(){
+						if($(this).is(':checked'))
+							bChecked = true;
+					});
+
+					if(
+						bChecked 
+						&& 
+						!confirm('По выбранным параметрам произойдет рассылка пользователям из базы. Вы уверены?')
+					)
+						return false;
+				}
+
 				$('#notification-form').submit();
 			});
 			//
