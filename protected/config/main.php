@@ -146,6 +146,7 @@ return array(
 
 
                 'api.<api:[a-z_]+>' => 'api/api',
+                'cron.<cron:[a-z_]+>' => 'cron/cron',
                 'gii'=>'gii',
                 'gii/<controller:\w+>'=>'gii/<controller>',
                 'gii/<controller:\w+>/<action:\w+>'=>'gii/<controller>/<action>',
