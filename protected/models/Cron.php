@@ -19,6 +19,7 @@ class Cron
             switch( strtolower($cronMethod) )
             {
                 case 'rest_one_day': $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getRestOneDay(); break;
+                case 'rest_one_test': $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getTest(); break;
 
                 default: throw new ExceptionApi('No such method', 1001);
 
@@ -47,5 +48,8 @@ class Cron
         $Share->getOnline();
     }
     
+    public function getTest(){
+        echo "PROMMU TEST";
+    }
 
 }
