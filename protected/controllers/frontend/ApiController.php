@@ -1,10 +1,6 @@
 <?php
 
-/**
- * Created by Vlasakh
- * Date: 19.10.16
- * Time: 16:32
- */
+
 class ApiController extends AppController
 {
     public $layout = 'column1';
