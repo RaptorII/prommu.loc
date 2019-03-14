@@ -1,6 +1,6 @@
 <?php
 /**
- * Работа с API
+ * Работа с Cron
  * Date: 15.03.19
  * Time: 16:30
  * PROMMU
