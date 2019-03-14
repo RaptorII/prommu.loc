@@ -146,11 +146,13 @@ return array(
 
 
                 'api.<api:[a-z_]+>' => 'api/api',
+                'api' => 'api/index',
                 'cron.<cron:[a-z_]+>' => 'cron/cron',
+                'cron' => 'cron/index',
+                
                 'gii'=>'gii',
                 'gii/<controller:\w+>'=>'gii/<controller>',
                 'gii/<controller:\w+>/<action:\w+>'=>'gii/<controller>/<action>',
-                'api' => 'api/index',
                 'vacancies' => 'vacancies/index',
                 //'promo' => 'site/ankety',
                 // отдельные страницы
