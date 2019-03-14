@@ -30,8 +30,8 @@ class CronController extends AppController
 
         $Cron = new Cron();
         $data = $Cron->cronProcess();
-//        error_code access_token
-        echo CJSON::encode($data);
+        
+        if($data) echo CJSON::encode($data);
         Yii::app()->end();
     }
 
