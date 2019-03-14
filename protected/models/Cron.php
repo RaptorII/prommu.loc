@@ -27,59 +27,6 @@ class Cron
         {
             switch( strtolower($cronMethod) )
             {
-                case 'auth_user' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->authUser(); break;
-                case 'auth' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->authUsers(); break;
-                case 'push' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPush(); break;
-                case 'export' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->export(); break;
-                case 'user_restorepass' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->restorePass(); break;
-                case 'post_get' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPost(); break;
-                case 'city_get' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getCity(); break;
-                case 'vacancy_search' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getVacancy(); break;
-                case 'vacancy_own' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getVacancyOwn(); break;
-                case 'vacancy_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getVacancyDataView(); break;
-                case 'empl_search' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getEmplSearch(); break;
-                case 'promo_search' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPromoSearch(); break;
-                case 'response_set' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setResponse(); break;
-                case 'response_data' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->dataResponse(); break;
-                case 'chat_theme_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getChatThemes(); break;
-                case 'cotypes_get' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getCotypes(); break;
-                case 'vacancy_data' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getVacancyData(); break;
-                case 'send_mess' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setMess(); break;
-                case 'edit_prof' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->updateProf(); break;
-                case 'set_vk' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->setCommAndRate(); break;
-                case 'rere' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rere(); break;
-                case 'vacancy_act' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacAct(); break;
-                case 'vacancy_pub' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacationPub(); break;
-                case 'invite_set' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setInvite(); break;
-                case 'photo' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->photoEdit(); break;
-                case 'data_help' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getHelp(); break;
-                case 'send_push' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setPush(); break;
-                case 'send_topic' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setTopics(); break;
-                case 'get_topic' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getTopics(); break;
-                case 'kew' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->kew(); break;
-                case 'rest' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rest(); break;
-                case 'vac' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->vac(); break;
-                case 'delete' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->delete(); break;
-                case 'firebase' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->firebase(); break;
-                case 'tele' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->teleProm(); break;
-                case 'teles' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->teleProms(); break;
-                case 'teles_test' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->telePromsTest(); break;
-                case 'nicola' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getNicolaDay(); break;
-                case 'feedback' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->feedback(); break;
-                case 'mailer' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->mailBox(); break;
-                case 'vacmon' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->vacancyMonitoring(); break;
-                case 'apivk' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->apiVK(); break;
-                case 'log' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testLog(); break;
-                case 'tect' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->teSt(); break;
-                case 'ideas' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->ideas(); break;
-                case 'export_auto' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->exportAutomize(); break;
-                case 'geo_project' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->geoProject(); break;
-                case 'serchuse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->searchUse(); break;
-                case 'rateuse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rateUse(); break;
-                case 'maleor' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->maleor(); break;
-                case 'testpay' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testPay(); break;
-                case 'services' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->services(); break;
-                case 'import' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->importProject(); break;
                 case 'rest_one_day': $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getRestOneDay(); break;
                 
                 
