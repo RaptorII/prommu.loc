@@ -989,7 +989,7 @@ foreach ($viData['posts'] as $p)
                                                 <img 
                                                     alt='Соискатель <?= $val['firstname'] . ' ' . $val['lastname'] ?> prommu.com' 
                                                     src="<?=Share::getPhoto(2, $val['photo'], 'small', $val['sex'])?>">
-                                                <?php if ($val['is_online']): ?>
+                                                <?php if (!$val['is_online']): ?>
                                                     <span class="promo-list__item-onl"><span>В сети</span></span>
                                                 <?php endif; ?>
                                             </a>

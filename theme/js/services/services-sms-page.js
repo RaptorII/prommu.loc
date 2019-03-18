@@ -67,7 +67,7 @@ $(function(){
   *   PAGE 1
   */
   var arInputs = $('.smss-vacancies__item-input'),
-      $button = $('#sms-vac-btn'),
+      $button = $('#vac-btn'),
       $vacancy = $('#vacancy'),
       strParent = '.smss-vacancies__item';
   //  select vacancies
@@ -88,15 +88,36 @@ $(function(){
       });
     } 
   });
+  $button.click(function(e){
+    e.preventDefault();
+    if(MainScript.isButtonLoading(this))
+    {
+      return false;
+    }
+    else
+    {
+      MainScript.buttonLoading(this,true);
+      $(this.parentNode).submit();
+    }
+  });
   /*
   *   PAGE 2
   */
   var $form = $('#promo-filter'),
-      $content = $('#content'),
+      $content = $('#promo-content'),
       $load = $('.smss__veil'),
       $cntW = $('.smss-workers__form-workers'),
-      arSelectIdies = [];
+      arSelectIdies = [],
+      arSalaryInp = $('.filter-salary .psa__input');
 
+  // salary
+  arSalaryInp.focus(function() {
+    for (var t = 1, e = 0; e < arSalaryInp.length; e++)
+      $(this).is(arSalaryInp[e]) && (t = 5 < e ? 4 : e < 4 ? 1 < e ? 2 : 1 : 3);
+    for (e = 0; e < arSalaryInp.length; e++)
+    (1 == t && 0 != e && 1 != e || 2 == t && 2 != e && 3 != e || 3 == t && 4 != e && 5 != e || 4 == t && 6 != e && 7 != e) && $(arSalaryInp[e]).val("");
+    $("#psa-salary-type").val(t);
+  });
   // просмотреть все вакансии
   $('.more-posts').click(function(){ 
     $(this.parentNode).css({height:'initial'});
@@ -115,7 +136,7 @@ $(function(){
   });
   // прячем фильтр для моб. разрешения
   $(window).on('load resize',function(){
-    if($(window).width() < '768')
+    if($(window).width() < '751')
       $('.filter__vis').hasClass('active') ? $form.show() : $form.hide(); 
     else
       $form.show();
@@ -147,8 +168,8 @@ $(function(){
   $('.filter-sex input, .filter-additional input').change(function(){ 
     setTimeout(function(){ getVacanciesAjax() }, 300); 
   });
-  // подгрузка данных для возраста
-  $('.filter__age-btn').click(function(){ getVacanciesAjax() });
+  // подгрузка данных для текстовых полей 
+  $('#promo-filter .prmu-btn').click(function(){ getVacanciesAjax() });
   // подгрузка данных при перелистывании
   $('#content').on('click', '.paging-wrapp a', function(e){ getVacanciesAjax(e) });
   //  выбор работников
@@ -459,5 +480,21 @@ $(function(){
     for(var i=0, len=split.length; i<len; i++)
       split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
     $(e).val(split.join('-'));
-  } 
+  }
+  /*
+  *   PAGE 3
+  */
+  $('#sms_pay_btn').click(function(e){
+    e.preventDefault();
+    if(MainScript.isButtonLoading(this))
+    {
+      return false;
+    }
+    else
+    {
+      MainScript.buttonLoading(this,true);
+      $('.smss__result-form').submit();
+    }
+  });
+  
 })

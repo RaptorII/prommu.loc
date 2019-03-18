@@ -161,44 +161,16 @@
 	color: #FFFFFF;
 	background-color: #ABB837;
 }
-.pr-card__btn{
+#copy-index.pr-card__btn{
 	width: 100%;
 	max-width: 445px;
-	padding: 8px 0;
+}
+#pr-card-btn.pr-card__btn{
+	width: 100%;
+	max-width: 445px;
 	margin: 0 auto 40px;
-	display: block;
-	background-color: #FF8300;
-	color: #FFFFFF;
-	text-align: center;
-	cursor: pointer;
-	position: relative;
-    z-index: 1;
 }
 .pr-card__btn.off{ cursor: no-drop; }
-.pr-card__btn:before{
-	content: "";
-	position: absolute;
-	z-index: -1;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: #ABB837;
-	-webkit-transform: scaleX(1);
-	transform: scaleX(1);
-	-webkit-transform-origin: 0 50%;
-	transform-origin: 0 50%;
-	-webkit-transition-property: transform;
-	transition-property: transform;
-	-webkit-transition-duration: 0.3s;
-	transition-duration: 0.3s;
-	-webkit-transition-timing-function: ease-out;
-	transition-timing-function: ease-out;
-}
-.pr-card__btn.off:before{
-	-webkit-transform: scaleX(0);
-	transform: scaleX(0);
-}
 .pr-card__upload,
 .pr-card__form{
 	width: 100%;

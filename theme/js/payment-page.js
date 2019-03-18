@@ -258,8 +258,12 @@ var Payment = (function (){
           ||
           (!radioLegal&&flagDate)
         ){
+          console.log(111);
 
-          MainScript.buttonLoading(this,true);
+          if(MainScript.isButtonLoading(this))
+            return false;
+          else
+            MainScript.buttonLoading(this,true);
           $('#payment-form').submit();
         }
       });

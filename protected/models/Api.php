@@ -2272,7 +2272,7 @@ public function vac(){
 
                 $message = "Вы получили новое сообщение на сервисе";
                 $title = "Новое сообщение";
-                $link = "https://prommu.com/user/im";
+                $link = Subdomain::site() . MainConfig::$PAGE_CHATS_LIST;
                 break;
 
              case 'vacancy':
@@ -2372,7 +2372,7 @@ public function vac(){
 
                 $message = "Вы получили новое сообщение на сервисе";
                 $title = "Новое сообщение";
-                $link = "https://prommu.com/user/im";
+                $link = Subdomain::site() . MainConfig::$PAGE_CHATS_LIST;
                 break;
 
              case 'vacancy':

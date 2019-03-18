@@ -3,9 +3,6 @@
 	Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/chats/list-section.css');
 	Yii::app()->getClientScript()->registerScriptFile($bUrl.'js/chats/list.js', CClientScript::POS_END);
 ?>
-<? if($mess = Yii::app()->user->getFlash('Message')):?>
-    <form class="complete-popup tmpl"><?=$mess['message']?></form>
-<? endif; ?>
 <div class="chat-list feedback">
 	<a href="<?=MainConfig::$PAGE_CHATS_LIST?>" class="chat-list__btn-link"><span><</span> Назад</a>
 	<? if(sizeof($viData['items'])): ?>

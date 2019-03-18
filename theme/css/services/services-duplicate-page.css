@@ -112,48 +112,8 @@
 }
 #DiContent .sd__vacancy input:checked + label:after{ content: '\2714' }
 #DiContent .sd__vacancy input{ display: none }
-.repost-button{
-	width: 100%;
-    max-width: 260px;
-    padding: 8px;
-    margin: 30px 0 60px auto;
-    line-height: 27px;
-    font-size: 20px;
-    text-transform: uppercase;
-    color: #FFFFFF;
-    text-align: center;
-    background-color: #FF8300;
-    border: none;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-    position: relative;
-    z-index: 1;
-    cursor: pointer;
-    float: right;
-    display: none;
-}
-.repost-button:before{
-	content: "";
-	position: absolute;
-	z-index: -1;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: #bbc823;
-	-webkit-transform: scaleX(0);
-	transform: scaleX(0);
-	-webkit-transform-origin: 0 50%;
-	transform-origin: 0 50%;
-	-webkit-transition: all 0.3s ease-out;
-	-moz-transition: all 0.3s ease-out;
-	-o-transition: all 0.3s ease-out;
-	transition: all 0.3s ease-out;
-}
-.repost-button:hover:before {
-	-webkit-transform: scaleX(1);
-	transform: scaleX(1);
-}
-.repost-button:focus{ outline:none }
+.repost-button{ display: none; }
+.repost-button.prmu-btn.prmu-btn_normal.pull-right span{ font-style: normal; }
 /*
 *		Страница оплаты
 */

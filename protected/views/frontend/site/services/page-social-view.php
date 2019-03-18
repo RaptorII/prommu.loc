@@ -1,6 +1,7 @@
 <?php
-	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . '/theme/css/services/services-duplicate-page.css');
-	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/services/services-duplicate-page.js', CClientScript::POS_END);
+	$rq = Yii::app()->getRequest();
+	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'services/services-duplicate-page.css');
+	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'services/services-duplicate-page.js', CClientScript::POS_END);
 ?>
 <div class="col-xs-12 services-duplication">
 	<?php if(!isset($viData['price'])): ?>
@@ -8,7 +9,7 @@
 		<div class="sd__tabs">
 			<?php 
 				if(sizeof($viData['vacs'])):
-					$tab = Yii::app()->getRequest()->getParam('tab'); 
+					$tab = $rq->getParam('tab'); 
 					if($tab=='info'):
 			?>
 					<a class='sd__tabs-link' href='?tab='>Выбор и размещение</a>
@@ -38,7 +39,7 @@
 			<br>
 			<p><span>С найлучшими пожеланиями команда Промму!</span></p>
 		<?php else: ?>
-			<form action="" method="POST">
+			<form action="" method="POST" id="repost-form">
 				<div class="sd__vac-list">
 					<?php foreach($viData['vacs'] as $v): ?>
 						<div class="sd__vacancy" data-id="<?=$v['id']?>" data-repost="<?=$v['repost']?>">
@@ -56,7 +57,10 @@
 						</div>
 					<?php endforeach ?>
 				</div>
-				<button class="repost-button">РАЗМЕСТИТЬ</button>
+				<br>
+				<button class="repost-button prmu-btn prmu-btn_normal pull-right">
+					<span>РАЗМЕСТИТЬ</span>
+				</button>
 			</form>
 		<?php endif; ?>
 	<?php else: ?>

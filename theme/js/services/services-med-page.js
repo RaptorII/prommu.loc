@@ -9,17 +9,25 @@ $(function(){
 
 	$('.smr__required').bind('keyup change blur', function(){ checkFields(this) });
 	// submit
-	$('#smr-btn').click(function(e){
+	$('#service__btn').click(function(e){
 		e.preventDefault();
 		var flag = false;
+
+    if(MainScript.isButtonLoading(this))
+      return false;
+    else
+    	MainScript.buttonLoading(this,true);
 
 		$.each(arReq,function(){
 			if(checkFields(this)) flag = true;
 		});
 
-		if(!flag){
-			$('#smr-form').submit();
+		if(flag)
+		{
+			MainScript.buttonLoading(this,false);
+			return false;
 		}
+		$('#smr-form').submit();
 	});
 
 	function addEr(e){ 

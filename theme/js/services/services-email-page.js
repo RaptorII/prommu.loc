@@ -26,6 +26,18 @@ $(function(){
       $('#vac-btn').fadeOut();
     }  
   });
+  $('#vac-btn').click(function(e){
+    e.preventDefault();
+    if(MainScript.isButtonLoading(this))
+    {
+      return false;
+    }
+    else
+    {
+      MainScript.buttonLoading(this,true);
+      $(this.parentNode).submit();
+    }
+  });
   /*
   *   PAGE 2
   */
@@ -33,8 +45,17 @@ $(function(){
       $content = $('#promo-content'),
       $load = $('.filter__veil'),
       $cntW = $('.workers-form__cnt'),
-      arSelectIdies = [];
+      arSelectIdies = [],
+      arSalaryInp = $('.filter-salary .psa__input');
 
+  // salary
+  arSalaryInp.focus(function() {
+    for (var t = 1, e = 0; e < arSalaryInp.length; e++)
+      $(this).is(arSalaryInp[e]) && (t = 5 < e ? 4 : e < 4 ? 1 < e ? 2 : 1 : 3);
+    for (e = 0; e < arSalaryInp.length; e++)
+    (1 == t && 0 != e && 1 != e || 2 == t && 2 != e && 3 != e || 3 == t && 4 != e && 5 != e || 4 == t && 6 != e && 7 != e) && $(arSalaryInp[e]).val("");
+    $("#psa-salary-type").val(t);
+  });
   // просмотреть все вакансии
   $('.more-posts').click(function(){ 
     $(this.parentNode).css({height:'initial'});
@@ -53,7 +74,7 @@ $(function(){
   });
   // прячем фильтр для моб. разрешения
   $(window).on('load resize',function(){
-    if($(window).width() < '768')
+    if($(window).width() < '751')
       $('.filter__vis').hasClass('active') ? $form.show() : $form.hide(); 
     else
       $form.show();
@@ -87,8 +108,8 @@ $(function(){
   });
   // подгрузка данных при перелистывании
   $('#promo-content').on('click', '.paging-wrapp a', function(e){ getVacanciesAjax(e) });
-  // подгрузка данных для возраста
-  $('.filter__age-btn').click(function(){ getVacanciesAjax() });
+  // подгрузка данных для текстовых полей 
+  $('#promo-filter .prmu-btn').click(function(){ getVacanciesAjax() });
   //  выбор работников
   $content.on('change', '.promo_inp', function(){
     var id = Number($(this).val());
@@ -339,4 +360,19 @@ $(function(){
       split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
     $(e).val(split.join('-'));
   }
+  /*
+  *   PAGE 3
+  */
+  $('#email_pay_btn').click(function(e){
+    e.preventDefault();
+    if(MainScript.isButtonLoading(this))
+    {
+      return false;
+    }
+    else
+    {
+      MainScript.buttonLoading(this,true);
+      $('.smss__result-form').submit();
+    }
+  });
 })

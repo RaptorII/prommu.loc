@@ -6,8 +6,8 @@
       array($title = 'Оплата услуг', MainConfig::$PAGE_PAYMENT)
   );
 	$this->ViewModel->addContentClass('page-payment');
-	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/theme/css/page-payment.css');
-	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/payment-page.js', CClientScript::POS_END);
+	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'page-payment.css');
+	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'payment-page.js', CClientScript::POS_END);
 ?>
 <div class="row">
 	<div class="col-xs-12 payment">
@@ -114,7 +114,10 @@
 					<input type="text" name="kpp" placeholder="КПП" class="payment__input" id="legal-kpp" />
 				</label>
 			</div>
-			<button type="submit" class="payment-form__btn" id="payment-btn">СФОРМИРОВАТЬ СЧЕТ</button>
+			<div class="center">
+				<br>
+				<button type="submit" class="payment-form__btn prmu-btn prmu-btn_normal" id="payment-btn"><span>СФОРМИРОВАТЬ СЧЕТ</span></button>
+			</div>
 			<input type="hidden" name="employer" value="<?= Share::$UserProfile->id?>">
 		</form>
 	</div>

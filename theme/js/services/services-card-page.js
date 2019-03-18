@@ -6,11 +6,6 @@ var Prommucard = (function (){
         curMonth = curDate.getMonth(),
         curDay = Number(curDate.getDate());
 
-      //
-      if($('*').is('#pr-card-mes')){
-        message = $('#pr-card-mes').toggleClass('tmpl');
-        ModalWindow.open({ content: message, action: { active: 0 }, additionalStyle:'dark-ver'});
-      }
       //  добавляем маски
       $('#pr-card-code').on('input',function(){
         this.value = this.value.replace(/[^0-9\-]+/g,'');
@@ -117,8 +112,18 @@ var Prommucard = (function (){
         result ? $('#pr-card-btn').removeClass('off') : $('#pr-card-btn').addClass('off');
       },500);
       //  перед отправкой формы
-      $(document).on('click', '#pr-card-btn', function(){
+      $(document).on('click', '#pr-card-btn', function(e){
         var errors = false;
+
+        if(MainScript.isButtonLoading(e.target))
+        {
+          return false;
+        }
+        else
+        {
+          MainScript.buttonLoading(e.target,true);
+        }
+
         $.each($('.required-inp'), function(){
           var v = this.value,
               id = $(this).attr('id');
@@ -154,8 +159,10 @@ var Prommucard = (function (){
           }       
         });
         var arErrors = $('.error');
-        if(arErrors.length>0){
+        if(arErrors.length>0)
+        {
           $('html, body').animate({ scrollTop: $(arErrors[0]).offset().top-20 }, 1000);
+          MainScript.buttonLoading(e.target,false);
         }
         if(!errors)
           $("#F1cardOrder").submit();   

@@ -697,7 +697,6 @@ public function rules()
 
     public function updateVacancy($id, $data)
     {
-        $arFilter = $arGet = array();
         if(isset($data['cur_status']))
         {
             $data['ismoder'] = $data['cur_status']==100 ? $data['cur_status'] : 0;
@@ -711,91 +710,18 @@ public function rules()
         Yii::app()->db->createCommand()
             ->update('empl_vacations', $data, 'id=:id', [':id'=>$id]);
 
-        if($data['ismoder'] != "100" )
+        if($data['ismoder'] != "100")
             return;
 
-        // достаем данные вакансии
-        $arVac = Yii::app()->db->createCommand()
-            ->select('v.id, v.id_user, v.title, 
-                v.isman, v.iswoman, v.ismed, 
-                v.isavto, v.smart, v.card, 
-                v.cardPrommu, v.repost, 
-                v.agefrom, v.ageto, 
-                e.name, u.email')
-            ->from('empl_vacations v')
-            ->leftJoin('employer e', 'e.id_user=v.id_user')
-            ->leftJoin('user u', 'u.id_user=v.id_user')
-            ->where('v.id=:id', array(':id' => $id))
-            ->queryRow();
-        // достаем города вакансии
-        $arFilter['cities'] = Yii::app()->db->createCommand()
-            ->select('ec.id_city')
-            ->from('empl_city ec')
-            ->leftJoin('city c', 'c.id_city=ec.id_city')
-            ->where('ec.id_vac=:id', array(':id' => $id))
-            ->queryColumn();
-        $arGet['cities'] = $arFilter['cities'];
-        // достаем должности вакансии
-        $arFilter['posts'] = Yii::app()->db->createCommand()
-            ->select('uad.id')
-            ->from('empl_attribs ea')
-            ->leftJoin('user_attr_dict uad', 'uad.id=ea.key')
-            ->where('ea.id_vac=:id AND uad.id_par=110', array(':id' => $id))
-            ->queryColumn();
-        $arGet['posts'] = $arFilter['posts'];
+        // данные о вакансии и параметры фильтр
+        $arData = $this->getFilterForVacancy($id);
         // создаем параметры для фильтра
         $host = Subdomain::site();
         $url = $host . MainConfig::$PAGE_SEARCH_PROMO . '?';
-
-        if($arVac['isman'])
-        {
-            $arFilter['sm'] = $arVac['isman'];
-            $arGet['sm'] = $arVac['isman'];
-        }
-        if($arVac['iswoman'])
-        {
-            $arFilter['sf'] = $arVac['iswoman'];
-            $arGet['sf'] = $arVac['iswoman'];
-        }
-        if($arVac['ismed'])
-        {
-            $arFilter['mb'] = $arVac['ismed'];
-            $arGet['mb'] = $arVac['ismed'];
-        }
-        if($arVac['isavto'])
-        {
-            $arFilter['avto'] = $arVac['isavto'];
-            $arGet['avto'] = $arVac['isavto'];
-        }
-        if($arVac['smart'])
-        {
-            $arFilter['smart'] = $arVac['smart'];
-            $arGet['smart'] = $arVac['smart'];
-        }
-        if($arVac['card'])
-        {
-            $arFilter['card'] = $arVac['card'];
-            $arGet['card'] = $arVac['card'];
-        }
-        if($arVac['cardPrommu'])
-        {
-            $arFilter['cardPrommu'] = $arVac['cardPrommu'];
-            $arGet['cardPrommu'] = $arVac['cardPrommu'];
-        }
-        if($arVac['agefrom'])
-        {
-            $arFilter['af'] = $arVac['agefrom'];
-            $arGet['af'] = $arVac['agefrom'];
-        }
-        if($arVac['ageto'])
-        {
-            $arFilter['at'] = $arVac['ageto'];
-            $arGet['at'] = $arVac['ageto'];
-        }
-        $url .= http_build_query($arGet);
+        $url .= http_build_query($arData['filter']);
 
         // ищем 10 соискателей, и сортируем, чтобы сначала вывести с фото
-        $filter = ['filter'=>$arFilter];
+        $filter = ['filter' => $arData['filter']];
         $model = new SearchPromo();
         $arAllId = $model->searchPromosCount($filter);
         $pages = new CPagination(count($arAllId));
@@ -854,20 +780,20 @@ public function rules()
         Mailing::set(
             10,
             array(
-                'email_user' => $arVac['email'],
+                'email_user' => $arData['vacancy']['email'],
                 'id_vacancy' => $id,
-                'title_vacancy' => $arVac['title'],
+                'title_vacancy' => $arData['vacancy']['title'],
                 'applicants_list' => $appList,
                 'link_ankety_filter' => $url
             )
         );
         // репостим
-        $this->VkRepost($id, $arVac['repost']);
+        $this->VkRepost($id, $arData['vacancy']['repost']);
         // событие ПУШ
         $res = Yii::app()->db->createCommand()
             ->select("push")
             ->from('user_push')
-            ->where('id=:id',array(':id'=>$arVac['id_user']))
+            ->where('id=:id',array(':id'=>$arData['vacancy']['id_user']))
             ->queryRow();
 
         if($res) {
@@ -2756,311 +2682,363 @@ WHERE id_vac = {$inVacId}";
 
         return $query;
     }
-		/**
-		 *      Собираем вакансии для яндекса
-		 */
-		public function getVacsForYandex()
+	/**
+	 *      Собираем вакансии для яндекса
+	 */
+	public function getVacsForYandex()
+	{
+		$offset = 0;
+		$limit = 100; // вакансий за 1 итерацию
+		$arRes = array('main'=>[],'city'=>[],'location'=>[],'employer'=>[]);
+
+		$arId = Yii::app()->db->createCommand()
+							->select('id')
+							->from('empl_vacations')
+							->where('status=1 AND ismoder=100 AND remdate>=NOW()')
+							//->order('ispremium DESC, id DESC')
+							->queryColumn();
+
+		$n = count($arId);
+		if(!$n)
+			return false;
+    
+		while ($offset <= $n)
 		{
-			$offset = 0;
-			$limit = 100; // вакансий за 1 итерацию
-			$arRes = array('main'=>[],'city'=>[],'location'=>[],'employer'=>[]);
-
-			$arId = Yii::app()->db->createCommand()
-								->select('id')
-								->from('empl_vacations')
-								->where('status=1 AND ismoder=100 AND remdate>=NOW()')
-								//->order('ispremium DESC, id DESC')
-								->queryColumn();
-
-			$n = count($arId);
-			if(!$n)
-				return false;
-        
-			while ($offset <= $n)
+			$arNewId = array();
+			for ($i = $offset; $i < $n; $i ++)
 			{
-				$arNewId = array();
-				for ($i = $offset; $i < $n; $i ++)
-				{
-					if(($i < ($offset + $limit)) && isset($arId[$i]))
-						$arNewId[] = $arId[$i];
-				}
-				// main info
-				$query = Yii::app()->db->createCommand()
-										->select("ev.id,
-												ev.id_user,
-												ev.title,
-												UNIX_TIMESTAMP(ev.crdate) crdate,
-												UNIX_TIMESTAMP(ev.mdate) mdate,
-												ev.shour,
-												ev.sweek,
-												ev.smonth,
-												ev.svisit,
-												ev.requirements,
-												ev.duties,
-												ev.conditions,
-												ev.agefrom,
-												ev.ageto,
-												ev.istemp,
-												ev.isman,
-												ev.exp,
-												ev.iswoman,
-												ev.ismed,
-												ev.isavto,
-												ev.smart,
-												ev.card,
-												ev.cardPrommu,
-												ea.id_attr,
-												ea.val attr")
-										->from('empl_vacations ev')
-										->leftjoin('empl_attribs ea','ea.id_vac=ev.id')
-										->where(['in','ev.id',$arNewId])
-										//->order('ev.ispremium DESC, ev.id DESC')
-										->queryAll();
-				$arRes['main'] = array_merge($arRes['main'],$query);
-				// cities
-				$query = Yii::app()->db->createCommand()
-										->select("id,
-												id_vac, 
-												id_city, 
-												DATE_FORMAT(bdate,'%d.%m.%Y') bdate, 
-												DATE_FORMAT(edate,'%d.%m.%Y') edate")
-										->from('empl_city')
-										->where(['in','id_vac',$arNewId])
-										->queryAll();
-				$arRes['city'] = array_merge($arRes['city'],$query);
-				// locations
-				$query = Yii::app()->db->createCommand()
-										->select("el.id_vac,
-												el.id_city,
-												el.id_metro,
-												el.id_metros,
-												el.name,
-												el.addr,
-												DATE_FORMAT(elt.bdate,'%d.%m.%Y') bdate,
-												DATE_FORMAT(elt.edate,'%d.%m.%Y') edate,
-												elt.btime,
-												elt.etime")
-										->from('empl_locations el')
-										->leftjoin('emplv_loc_times elt','elt.id_loc=el.id')
-										->where(['in','el.id_vac',$arNewId])
-										->queryAll();
-				$arRes['location'] = array_merge($arRes['location'],$query);
-
-				$offset += $limit;
+				if(($i < ($offset + $limit)) && isset($arId[$i]))
+					$arNewId[] = $arId[$i];
 			}
-			//
-			//
-			// атрибуты
-			$arAttrib = array();
-			foreach ($arRes['main'] as $v)
-				$arAttrib[] = $v['id_attr'];
-			$arAttrib = array_unique($arAttrib);
+			// main info
 			$query = Yii::app()->db->createCommand()
-									->select("id,name,id_par")
-									->from('user_attr_dict')
-									->where(['in','id',$arAttrib])
+									->select("ev.id,
+											ev.id_user,
+											ev.title,
+											UNIX_TIMESTAMP(ev.crdate) crdate,
+											UNIX_TIMESTAMP(ev.mdate) mdate,
+											ev.shour,
+											ev.sweek,
+											ev.smonth,
+											ev.svisit,
+											ev.requirements,
+											ev.duties,
+											ev.conditions,
+											ev.agefrom,
+											ev.ageto,
+											ev.istemp,
+											ev.isman,
+											ev.exp,
+											ev.iswoman,
+											ev.ismed,
+											ev.isavto,
+											ev.smart,
+											ev.card,
+											ev.cardPrommu,
+											ea.id_attr,
+											ea.val attr")
+									->from('empl_vacations ev')
+									->leftjoin('empl_attribs ea','ea.id_vac=ev.id')
+									->where(['in','ev.id',$arNewId])
+									//->order('ev.ispremium DESC, ev.id DESC')
 									->queryAll();
-			$arAttrib = array();
-			foreach ($query as $v)
-				$arAttrib[$v['id']] = [$v['name'],$v['id_par']];
-			//
-			// города
-			$arCity = array();
-			foreach ($arRes['city'] as $v)
-				$arCity[] = $v['id_city'];
-			$arCity = array_unique($arCity);
+			$arRes['main'] = array_merge($arRes['main'],$query);
+			// cities
 			$query = Yii::app()->db->createCommand()
-										->select("ci.id_city id, ci.name, co.name country")
-										->from('city ci')
-										->leftjoin('country co','co.id_co=ci.id_co')
-										->where(['in','ci.id_city',$arCity])
-										->queryAll();
-			$arCity = array();
-			foreach ($query as $v)
-				$arCity[$v['id']] = ['city'=>$v['name'],'country'=>$v['country']];
-			foreach ($arRes['city'] as &$v)
+									->select("id,
+											id_vac, 
+											id_city, 
+											DATE_FORMAT(bdate,'%d.%m.%Y') bdate, 
+											DATE_FORMAT(edate,'%d.%m.%Y') edate")
+									->from('empl_city')
+									->where(['in','id_vac',$arNewId])
+									->queryAll();
+			$arRes['city'] = array_merge($arRes['city'],$query);
+			// locations
+			$query = Yii::app()->db->createCommand()
+									->select("el.id_vac,
+											el.id_city,
+											el.id_metro,
+											el.id_metros,
+											el.name,
+											el.addr,
+											DATE_FORMAT(elt.bdate,'%d.%m.%Y') bdate,
+											DATE_FORMAT(elt.edate,'%d.%m.%Y') edate,
+											elt.btime,
+											elt.etime")
+									->from('empl_locations el')
+									->leftjoin('emplv_loc_times elt','elt.id_loc=el.id')
+									->where(['in','el.id_vac',$arNewId])
+									->queryAll();
+			$arRes['location'] = array_merge($arRes['location'],$query);
+
+			$offset += $limit;
+		}
+		//
+		//
+		// атрибуты
+		$arAttrib = array();
+		foreach ($arRes['main'] as $v)
+			$arAttrib[] = $v['id_attr'];
+		$arAttrib = array_unique($arAttrib);
+		$query = Yii::app()->db->createCommand()
+								->select("id,name,id_par")
+								->from('user_attr_dict')
+								->where(['in','id',$arAttrib])
+								->queryAll();
+		$arAttrib = array();
+		foreach ($query as $v)
+			$arAttrib[$v['id']] = [$v['name'],$v['id_par']];
+		//
+		// города
+		$arCity = array();
+		foreach ($arRes['city'] as $v)
+			$arCity[] = $v['id_city'];
+		$arCity = array_unique($arCity);
+		$query = Yii::app()->db->createCommand()
+									->select("ci.id_city id, ci.name, co.name country")
+									->from('city ci')
+									->leftjoin('country co','co.id_co=ci.id_co')
+									->where(['in','ci.id_city',$arCity])
+									->queryAll();
+		$arCity = array();
+		foreach ($query as $v)
+			$arCity[$v['id']] = ['city'=>$v['name'],'country'=>$v['country']];
+		foreach ($arRes['city'] as &$v)
+		{
+			isset($arCity[$v['id_city']]['city'])
+			? $v['city'] = $arCity[$v['id_city']]['city']
+			: $v['city'] = 'Москва';
+			isset($arCity[$v['id_city']]['country'])
+			? $v['country'] = $arCity[$v['id_city']]['country']
+			: $v['country'] = 'РФ';
+		}
+		unset($v);
+		//
+		// локации и метро
+		$arMetro = array();
+		foreach ($arRes['location'] as $k => $v)
+		{
+			$arM = array();
+			if($v['id_metro']>0)
 			{
-				isset($arCity[$v['id_city']]['city'])
-				? $v['city'] = $arCity[$v['id_city']]['city']
-				: $v['city'] = 'Москва';
-				isset($arCity[$v['id_city']]['country'])
-				? $v['country'] = $arCity[$v['id_city']]['country']
-				: $v['country'] = 'РФ';
+				$arM[] = $v['id_metro'];
+				$arMetro[] = $v['id_metro'];
 			}
-			unset($v);
-			//
-			// локации и метро
+			if(!empty($v['id_metros']))
+			{
+				$arT = explode(',',$v['id_metros']);
+				$arMetro = array_merge($arMetro,$arT);
+				$arM = array_merge($arM,$arT);
+			}
+			$arRes['location'][$k]['id_metro'] = $arM;
+			unset($arRes['location'][$k]['id_metros']);
+			// преобразуем время
+			if($v['btime'])
+			{
+				$h = floor($v['btime'] / 60);
+				$m = $v['btime'] - $h * 60;
+				$arRes['location'][$k]['btime']=sprintf('%d:%02d',$h,$m);
+			}
+			if($v['etime'])
+			{
+				$h = floor($v['etime'] / 60);
+				$m = $v['etime'] - $h * 60;
+				$arRes['location'][$k]['etime']=sprintf('%d:%02d',$h,$m);
+			}
+		}
+		$arMetro = array_unique($arMetro);
+		if(count($arMetro))
+		{
+			$query = Yii::app()->db->createCommand()
+									->select("id, name")
+									->from('metro')
+									->where(['in','id',$arMetro])
+									->queryAll();
 			$arMetro = array();
+			foreach ($query as $v)
+				$arMetro[$v['id']] = $v['name'];
 			foreach ($arRes['location'] as $k => $v)
 			{
-				$arM = array();
-				if($v['id_metro']>0)
-				{
-					$arM[] = $v['id_metro'];
-					$arMetro[] = $v['id_metro'];
-				}
-				if(!empty($v['id_metros']))
-				{
-					$arT = explode(',',$v['id_metros']);
-					$arMetro = array_merge($arMetro,$arT);
-					$arM = array_merge($arM,$arT);
-				}
-				$arRes['location'][$k]['id_metro'] = $arM;
-				unset($arRes['location'][$k]['id_metros']);
-				// преобразуем время
-				if($v['btime'])
-				{
-					$h = floor($v['btime'] / 60);
-					$m = $v['btime'] - $h * 60;
-					$arRes['location'][$k]['btime']=sprintf('%d:%02d',$h,$m);
-				}
-				if($v['etime'])
-				{
-					$h = floor($v['etime'] / 60);
-					$m = $v['etime'] - $h * 60;
-					$arRes['location'][$k]['etime']=sprintf('%d:%02d',$h,$m);
-				}
+				if(count($v['id_metro']))
+					foreach ($v['id_metro'] as $m)
+						$arRes['location'][$k]['metro'][] = $arMetro[$m];
+				unset($arRes['location'][$k]['id_metro']);
 			}
-			$arMetro = array_unique($arMetro);
-			if(count($arMetro))
-			{
-				$query = Yii::app()->db->createCommand()
-										->select("id, name")
-										->from('metro')
-										->where(['in','id',$arMetro])
-										->queryAll();
-				$arMetro = array();
-				foreach ($query as $v)
-					$arMetro[$v['id']] = $v['name'];
-				foreach ($arRes['location'] as $k => $v)
-				{
-					if(count($v['id_metro']))
-						foreach ($v['id_metro'] as $m)
-							$arRes['location'][$k]['metro'][] = $arMetro[$m];
-					unset($arRes['location'][$k]['id_metro']);
-				}
-			}
-			//
-			// работодатели
-			$arUser = array();
-			foreach ($arRes['main'] as $v)
-				$arUser[] = $v['id_user'];
-            //CONCAT(e.firstname,' ',e.lastname) name,
-			$query = Yii::app()->db->createCommand()
-								->select("e.id_user,
-									e.type type,
-									e.name company,
-									e.logo photo,
-									ua.val site,
-									uad.name type_val")
-								->from('employer e')
-								->leftjoin('user_attribs ua','ua.id_us=e.id_user AND ua.key="site"')
-								->leftjoin('user_attr_dict uad','uad.id=e.type')
-								->where(['in','e.id_user',$arUser])
-								->queryAll();
-			foreach ($query as $v)
-			{
-				$v['company'] = htmlspecialchars($v['company'],ENT_XML1);
-				/*$v['name'] = trim($v['name']);
-				$v['name'] = htmlspecialchars($v['name'],ENT_XML1);*/
-				$v['site'] = htmlspecialchars($v['site'],ENT_XML1);
-				$v['hr-agency'] = in_array($v['type'], [104,105]) ? 'true' : 'false';
-				$src = DS . MainConfig::$PATH_EMPL_LOGO . DS . $v['photo'] . '400.jpg';
-				if(file_exists(Subdomain::domainRoot() . $src))
-					$v['logo'] = Subdomain::domainSite() . $src;
-				$arRes['employer'][$v['id_user']] = $v;
-			}
-			//
-			// собираем все воедино
-			$arT = array();
-			$arExp = array(
-				1 => 'Без опыта', 
-				2 => 'До 1 месяца', 
-				3 => 'От 1 до 3 месяцев', 
-				4 => 'От 3 до 6 месяцев', 
-				5 => 'От 6 до 12 месяцев', 
-				6 => 'от 1 до 2-х лет', 
-				7 => 'Более 2-х лет'
-			);
-
-			foreach ($arRes['main'] as $k => $v)
-			{
-				$id = $v['id'];
-				$arT[$id]['id'] = $id;
-				$arT[$id]['id_user'] = $v['id_user'];
-				$arT[$id]['link'] = Subdomain::domainSite() . MainConfig::$PAGE_VACANCY . DS . $id;
-				$arT[$id]['title'] = htmlspecialchars($v['title'],ENT_XML1);
-				$arT[$id]['crdate'] = date('c',$v['crdate']);
-				$arT[$id]['mdate'] = date('c',$v['mdate']);
-				$arSalary = [];
-				$v['svisit']>0 && $arSalary[] = $v['svisit'] . ' за посещение';
-				$v['smonth']>0 && $arSalary[] = $v['smonth'] . ' в месяц';
-				$v['sweek']>0 && $arSalary[] = $v['sweek'] . ' в неделю';
-				$v['shour']>0 && $arSalary[] = $v['shour'] . ' за час';
-				$arT[$id]['salary'] = implode(', ', $arSalary);
-				$arT[$id]['requirements'] = htmlspecialchars($v['requirements'],ENT_XML1);
-				$arT[$id]['duties'] = htmlspecialchars($v['duties'],ENT_XML1);
-				$arT[$id]['conditions'] = htmlspecialchars($v['conditions'],ENT_XML1);
-				$age = '';
-				$v['agefrom']>0 && $age .= 'от ' . $v['agefrom'] . ' ';
-				$v['ageto']>0 && $age .= 'до ' . $v['ageto'];
-				$arT[$id]['age'] = $age;
-				$arT[$id]['istemp'] = ($v['istemp'] ? 'полная' : 'временная');
-				$sex = ($v['isman'] ? 'мужской' : '');
-				$sex .= ($v['iswoman']
-					?((($v['isman']&&$v['iswoman'])?' и ':'') . 'женский')
-					:'');
-				$arT[$id]['sex'] = $sex;
-				$arT[$id]['experience'] = $arExp[$v['exp']];
-				$arT[$id]['ismed'] = $v['ismed'];
-				$arT[$id]['isavto'] = $v['isavto'];
-				$arT[$id]['smart'] = $v['smart'];
-				$arT[$id]['card'] = $v['card'];
-				$arT[$id]['cardPrommu'] = $v['cardPrommu'];
-
-				if($arAttrib[$v['id_attr']][1]==110) // posts
-				{
-					$arT[$id]['category'][] = array(
-						'industry' => 'TEST',																// !!!!!!!!!!!!!!!!!!
-						'specialization' => $arAttrib[$v['id_attr']][0]
-					);
-				}
-			}
-
-			foreach ($arRes['city'] as $v)
-			{
-				$arV = $arT[$v['id_vac']];
-				$loc = $v['country'].', '.$v['city'];
-				$arV['adresses'][$v['id']]['location'] = $loc;
-				$arT[$v['id_vac']] = $arV;
-				foreach ($arRes['location'] as &$l)
-				{
-					if($v['id_vac']==$l['id_vac'])
-					{
-						if($v['id']==$l['id_city'])
-							$l['location'] = $loc;
-						elseif($v['id_city']==$l['id_city'])
-							$l['location'] = $loc;
-						elseif(!$l['id_city'])
-							$l['location'] = $loc;
-					}
-				}
-				unset($l);
-			}
-			foreach ($arRes['location'] as &$v)
-			{
-				unset($arT[$v['id_vac']]['adresses'][$v['id_city']]);
-				!empty($v['name']) && $v['location'] .= ', ' . $v['name'];
-				!empty($v['addr']) && $v['location'] .= ', ' . $v['addr'];
-				$arA = ['location' => htmlspecialchars($v['location'],ENT_XML1)];
-				isset($v['metro']) && $arA['metro'] = $v['metro'];
-
-				$arT[$v['id_vac']]['adresses'][] = $arA;
-			}
-			unset($v);
-
-			$arRes['main'] = $arT;
-
-			return $arRes;
 		}
+		//
+		// работодатели
+		$arUser = array();
+		foreach ($arRes['main'] as $v)
+			$arUser[] = $v['id_user'];
+        //CONCAT(e.firstname,' ',e.lastname) name,
+		$query = Yii::app()->db->createCommand()
+							->select("e.id_user,
+								e.type type,
+								e.name company,
+								e.logo photo,
+								ua.val site,
+								uad.name type_val")
+							->from('employer e')
+							->leftjoin('user_attribs ua','ua.id_us=e.id_user AND ua.key="site"')
+							->leftjoin('user_attr_dict uad','uad.id=e.type')
+							->where(['in','e.id_user',$arUser])
+							->queryAll();
+		foreach ($query as $v)
+		{
+			$v['company'] = htmlspecialchars($v['company'],ENT_XML1);
+			/*$v['name'] = trim($v['name']);
+			$v['name'] = htmlspecialchars($v['name'],ENT_XML1);*/
+			$v['site'] = htmlspecialchars($v['site'],ENT_XML1);
+			$v['hr-agency'] = in_array($v['type'], [104,105]) ? 'true' : 'false';
+			$src = DS . MainConfig::$PATH_EMPL_LOGO . DS . $v['photo'] . '400.jpg';
+			if(file_exists(Subdomain::domainRoot() . $src))
+				$v['logo'] = Subdomain::domainSite() . $src;
+			$arRes['employer'][$v['id_user']] = $v;
+		}
+		//
+		// собираем все воедино
+		$arT = array();
+		$arExp = array(
+			1 => 'Без опыта', 
+			2 => 'До 1 месяца', 
+			3 => 'От 1 до 3 месяцев', 
+			4 => 'От 3 до 6 месяцев', 
+			5 => 'От 6 до 12 месяцев', 
+			6 => 'от 1 до 2-х лет', 
+			7 => 'Более 2-х лет'
+		);
+
+		foreach ($arRes['main'] as $k => $v)
+		{
+			$id = $v['id'];
+			$arT[$id]['id'] = $id;
+			$arT[$id]['id_user'] = $v['id_user'];
+			$arT[$id]['link'] = Subdomain::domainSite() . MainConfig::$PAGE_VACANCY . DS . $id;
+			$arT[$id]['title'] = htmlspecialchars($v['title'],ENT_XML1);
+			$arT[$id]['crdate'] = date('c',$v['crdate']);
+			$arT[$id]['mdate'] = date('c',$v['mdate']);
+			$arSalary = [];
+			$v['svisit']>0 && $arSalary[] = $v['svisit'] . ' за посещение';
+			$v['smonth']>0 && $arSalary[] = $v['smonth'] . ' в месяц';
+			$v['sweek']>0 && $arSalary[] = $v['sweek'] . ' в неделю';
+			$v['shour']>0 && $arSalary[] = $v['shour'] . ' за час';
+			$arT[$id]['salary'] = implode(', ', $arSalary);
+			$arT[$id]['requirements'] = htmlspecialchars($v['requirements'],ENT_XML1);
+			$arT[$id]['duties'] = htmlspecialchars($v['duties'],ENT_XML1);
+			$arT[$id]['conditions'] = htmlspecialchars($v['conditions'],ENT_XML1);
+			$age = '';
+			$v['agefrom']>0 && $age .= 'от ' . $v['agefrom'] . ' ';
+			$v['ageto']>0 && $age .= 'до ' . $v['ageto'];
+			$arT[$id]['age'] = $age;
+			$arT[$id]['istemp'] = ($v['istemp'] ? 'полная' : 'временная');
+			$sex = ($v['isman'] ? 'мужской' : '');
+			$sex .= ($v['iswoman']
+				?((($v['isman']&&$v['iswoman'])?' и ':'') . 'женский')
+				:'');
+			$arT[$id]['sex'] = $sex;
+			$arT[$id]['experience'] = $arExp[$v['exp']];
+			$arT[$id]['ismed'] = $v['ismed'];
+			$arT[$id]['isavto'] = $v['isavto'];
+			$arT[$id]['smart'] = $v['smart'];
+			$arT[$id]['card'] = $v['card'];
+			$arT[$id]['cardPrommu'] = $v['cardPrommu'];
+
+			if($arAttrib[$v['id_attr']][1]==110) // posts
+			{
+				$arT[$id]['category'][] = array(
+					'industry' => 'TEST',// !!!!!!!!!!!!!!!!!!
+					'specialization' => $arAttrib[$v['id_attr']][0]
+				);
+			}
+		}
+
+		foreach ($arRes['city'] as $v)
+		{
+			$arV = $arT[$v['id_vac']];
+			$loc = $v['country'].', '.$v['city'];
+			$arV['adresses'][$v['id']]['location'] = $loc;
+			$arT[$v['id_vac']] = $arV;
+			foreach ($arRes['location'] as &$l)
+			{
+				if($v['id_vac']==$l['id_vac'])
+				{
+					if($v['id']==$l['id_city'])
+						$l['location'] = $loc;
+					elseif($v['id_city']==$l['id_city'])
+						$l['location'] = $loc;
+					elseif(!$l['id_city'])
+						$l['location'] = $loc;
+				}
+			}
+			unset($l);
+		}
+		foreach ($arRes['location'] as &$v)
+		{
+			unset($arT[$v['id_vac']]['adresses'][$v['id_city']]);
+			!empty($v['name']) && $v['location'] .= ', ' . $v['name'];
+			!empty($v['addr']) && $v['location'] .= ', ' . $v['addr'];
+			$arA = ['location' => htmlspecialchars($v['location'],ENT_XML1)];
+			isset($v['metro']) && $arA['metro'] = $v['metro'];
+
+			$arT[$v['id_vac']]['adresses'][] = $arA;
+		}
+		unset($v);
+
+		$arRes['main'] = $arT;
+
+		return $arRes;
+	}
+    /**
+     * @param integer - vacancy ID
+     * Собираем параметры фильтра по конкретной вакансии
+     */
+    public function getFilterForVacancy($id)
+    {
+        if(!$id)
+            return false;
+
+        $arFilter = array();
+        $arVac = Yii::app()->db->createCommand()
+            ->select('v.id, v.id_user, v.title, 
+                v.isman, v.iswoman, v.ismed, 
+                v.isavto, v.smart, v.card, 
+                v.cardPrommu, v.repost, 
+                v.agefrom, v.ageto, 
+                e.name, u.email')
+            ->from('empl_vacations v')
+            ->leftJoin('employer e', 'e.id_user=v.id_user')
+            ->leftJoin('user u', 'u.id_user=v.id_user')
+            ->where('v.id=:id', array(':id' => $id))
+            ->queryRow();
+
+        // достаем города вакансии
+        $arFilter['cities'] = Yii::app()->db->createCommand()
+            ->select('ec.id_city')
+            ->from('empl_city ec')
+            ->leftJoin('city c', 'c.id_city=ec.id_city')
+            ->where('ec.id_vac=:id', array(':id' => $id))
+            ->queryColumn();
+
+        // достаем должности вакансии
+        $arFilter['posts'] = Yii::app()->db->createCommand()
+            ->select('uad.id')
+            ->from('empl_attribs ea')
+            ->leftJoin('user_attr_dict uad', 'uad.id=ea.key')
+            ->where('ea.id_vac=:id AND uad.id_par=110', array(':id' => $id))
+            ->queryColumn();
+
+        // создаем параметры для фильтра
+        $arVac['isman'] && $arFilter['sm'] = $arVac['isman'];
+        $arVac['iswoman'] && $arFilter['sf'] = $arVac['iswoman'];
+        $arVac['ismed'] && $arFilter['mb'] = $arVac['ismed'];
+        $arVac['isavto'] && $arFilter['avto'] = $arVac['isavto'];
+        $arVac['smart'] && $arFilter['smart'] = $arVac['smart'];
+        $arVac['card'] && $arFilter['card'] = $arVac['card'];
+        $arVac['cardPrommu'] && $arFilter['cardPrommu'] = $arVac['cardPrommu'];
+        $arVac['agefrom'] && $arFilter['af'] = $arVac['agefrom'];
+        $arVac['ageto'] && $arFilter['at'] = $arVac['ageto'];
+
+        return ['vacancy'=>$arVac, 'filter'=>$arFilter];
+    }
 }

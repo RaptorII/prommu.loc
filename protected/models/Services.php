@@ -218,7 +218,7 @@ class Services extends Model
         unset($_SESSION['uploaduni']);
 
         $message = 'Ваша заявка успешно принята в обработку. Ожидайте, наши менеджеры свяжутся с вами';
-        Yii::app()->user->setFlash('Message', array('type' => '-green', 'message' => $message));
+        Yii::app()->user->setFlash('prommu_flash', $message);
         return array('error' => 0);
     }
 
@@ -235,61 +235,27 @@ class Services extends Model
     /*
     *   добываем анкеты для услуг
     */
-    public function prepareFilterData(){
+    public function prepareFilterData()
+    {
         $vacId = Yii::app()->getRequest()->getParam('vacancy');
-        // достаем данные вакансии
-        $arVacInfo = Yii::app()->db->createCommand()
-            ->select('ev.id, ev.id_user, ev.isman, ev.iswoman, ev.agefrom, ev.ageto, ev.ismed, ev.isavto, ev.smart, ev.card, ev.cardPrommu')
-            ->from('empl_vacations ev')
-            ->where('ev.id=:id', array(':id' => $vacId))
-            ->queryRow();
-        // достаем города вакансии
-        $arVacInfo['cities'] = Yii::app()->db->createCommand()
-            ->select('ec.id_city, c.id_co, c.name')
-            ->from('empl_city ec')
-            ->leftJoin('city c', 'c.id_city=ec.id_city')
-            ->where('ec.id_vac=:id', array(':id' => $vacId))
-            ->queryAll();
-        // достаем должности вакансии
-        $arVacInfo['posts'] = Yii::app()->db->createCommand()
-            ->select('uad.id, uad.name')
-            ->from('empl_attribs ea')
-            ->leftJoin('user_attr_dict uad', 'uad.key=ea.key')
-            ->where('ea.id_vac=:id AND uad.id_par=110', array(':id' => $vacId))
-            ->queryAll();
-
-        foreach ($arVacInfo['cities'] as $c)
-            $_POST['cities'][] = $c['id_city'];
-
-        foreach ($arVacInfo['posts'] as $p)
-            $_POST['posts'][] = $p['id'];
-
-		$_POST['sm'] = $arVacInfo['isman'];
-		$_POST['sf'] = $arVacInfo['iswoman'];
-		$_POST['mb'] = $arVacInfo['ismed'];
-		$_POST['avto'] = $arVacInfo['isavto'];
-		$_POST['smart'] = $arVacInfo['smart'];
-		$_POST['card'] = $arVacInfo['card'];
-		$_POST['cardPrommu'] = $arVacInfo['cardPrommu'];
-		$_POST['af'] = $arVacInfo['agefrom'];
-		$_POST['at'] = $arVacInfo['ageto'];
-
-		return $this->getFilteredPromos();
+        $model = new Vacancy();
+        $arData = $model->getFilterForVacancy($vacId);
+        $_GET = $arData['filter']; // это надо чтоб установились в фильтр параметры вакансии и чтоб правильно работала навигация
+		return $this->getFilteredPromos($arData['filter']);
     }
     /*
     *
     */
-    public function getFilteredPromos(){
+    public function getFilteredPromos($filter=array()){
 		$arRes = array();
-        $SearchPromo = new SearchPromo();
-        // $ph = $filter['ph'];
-        // $filter = ['filter' => compact('ph')];
-        $arAllId = $SearchPromo->searchPromosCount();
+        $model = new SearchPromo();
+        $arProps = ['filter' => $filter];
+        $arAllId = $model->searchPromosCount($arProps);
         $arRes['app_count'] = sizeof($arAllId);
         $arRes['pages'] = new CPagination($arRes['app_count']);
-        $arRes['pages']->pageSize = 51;
-        $arRes['pages']->applyLimit($SearchPromo);
-        $arRes['workers'] = $SearchPromo->getPromos($arAllId);
+        $arRes['pages']->pageSize = 21;
+        $arRes['pages']->applyLimit($model);
+        $arRes['workers'] = $model->getPromos($arAllId, false, $arProps);
         return $arRes;    	
     }
     /**

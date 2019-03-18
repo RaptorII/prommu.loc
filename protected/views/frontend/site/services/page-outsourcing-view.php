@@ -1,11 +1,12 @@
 <?
-  Yii::app()->getClientScript()->registerCssFile('/theme/css/services/services-outstaffing-page.css');
-  Yii::app()->getClientScript()->registerScriptFile('/theme/js/services/services-outstaffing-page.js', CClientScript::POS_END);
+	$rq = Yii::app()->getRequest();
+	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'services/services-outstaffing-page.css');
+	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'services/services-outstaffing-page.js', CClientScript::POS_END);
 ?>
 <div class="row">
 	<div class="col-xs-12 outstaffing-service">
-		<?php if(Yii::app()->getRequest()->isPostRequest): ?>
-			<?php if(Yii::app()->getRequest()->getParam('step')==2): ?>	
+		<?php if($rq->isPostRequest): ?>
+			<?php if($rq->getParam('step')==2): ?>	
 				<?
 					$id = Share::$UserProfile->exInfo->id;
 					$sql = "SELECT s.val phone
@@ -27,15 +28,20 @@
 					<label for="os-other"  class="os__contact-label">Свой вариант для связи</label>
 					<br>
 					<textarea placeholder="Свой вариант для связи" name="other-contact" class="os__contact-textarea"></textarea>
-					<?php foreach (Yii::app()->getRequest()->getParam('vacancy') as $vacancy): ?>
+					<?php foreach ($rq->getParam('vacancy') as $vacancy): ?>
 						<input type="hidden" name="vacancy[]" value="<?=$vacancy?>">
 					<?php endforeach ?>
 					<input type="hidden" name="account" value="<?=Share::$UserProfile->id?>">
-					<input type="hidden" name="consultation" value="<?=Yii::app()->getRequest()->getParam('consultation')?>">
-					<input type="hidden" name="advertising" value="<?=Yii::app()->getRequest()->getParam('advertising')?>">
-					<input type="hidden" name="control" value="<?=Yii::app()->getRequest()->getParam('control')?>">
+					<input type="hidden" name="consultation" value="<?=$rq->getParam('consultation')?>">
+					<input type="hidden" name="advertising" value="<?=$rq->getParam('advertising')?>">
+					<input type="hidden" name="control" value="<?=$rq->getParam('control')?>">
 					<input type="hidden" name="service" value="outsourcing">
-					<button class="outstaffing-service__btn payment-button">СОХРАНИТЬ</button>
+					<div class="center">
+						<br>
+						<button class="service__btn prmu-btn prmu-btn_normal">
+							<span>СОХРАНИТЬ</span>
+						</button>
+					</div>
 				</form>
 			<?php else: ?>
 				<h2 class="outstaffing-service__title">ВЫБЕРИТЕ УСЛУГИ АУТСОРСИНГА</h2>
@@ -79,11 +85,13 @@
 						</div>
 						<div class="clearfix"></div>
 					</div>
-					<?php foreach (Yii::app()->getRequest()->getParam('vacancy') as $vacancy): ?>
+					<?php foreach ($rq->getParam('vacancy') as $vacancy): ?>
 						<input type="hidden" name="vacancy[]" value="<?=$vacancy?>">
 					<?php endforeach ?>
 					<input type="hidden" name="step" value="2">
-					<button class="outstaffing-service__btn payment-button">ЗАКАЗАТЬ</button>
+					<button class="service__btn prmu-btn prmu-btn_normal pull-right">
+						<span>ЗАКАЗАТЬ</span>
+					</button>
 				</form>
 			<?php endif; ?>
 		<?php else: ?>
@@ -149,13 +157,22 @@
 							</div>
 							<div class="clearfix"></div>
 						</div>
-						<button class="outstaffing-service__btn payment-button">ЗАКАЗАТЬ</button>					
+						<br>
+						<button class="service__btn prmu-btn prmu-btn_normal pull-right">
+							<span>ЗАКАЗАТЬ</span>
+						</button>
 					</div>
 					<input type="hidden" name="step" value="2">
 				</form>
 			<?php else: ?>
-				<h2 class="outstaffing-service__title">У ВАС НЕТ ОПУБЛИКОВАНЫХ ВАКАНСИЙ</h2>
-				<a href="<?=MainConfig::$PAGE_VACPUB?>" class="outstaffing-service__btn visible">ДОБАВИТЬ ВАКАНСИЮ</a>
+				<br>
+				<h2 class="outstaffing-service__title center">У ВАС НЕТ ОПУБЛИКОВАНЫХ ВАКАНСИЙ</h2>
+				<div class="center">
+					<br>
+					<a href="<?=MainConfig::$PAGE_VACPUB?>" class="service__btn visible prmu-btn prmu-btn_normal">
+						<span>ДОБАВИТЬ ВАКАНСИЮ</span>
+					</a>
+				</div>
 			<?php endif; ?>
 		<?php endif; ?>
 	</div>

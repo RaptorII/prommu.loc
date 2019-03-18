@@ -553,16 +553,18 @@ jQuery(function($){
 		.change(function(){ checkField(this) });
 	//
 	$('.epa__save-btn').click(function(e){
-
-		var the_button = this;
-        MainScript.buttonLoading(the_button,true);
-
-		var epattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i,
-			nemail = $('#epa-email').val(),
-			resEmail = false,
-			errors = false;
+		var self = this,
+				epattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i,
+				nemail = $('#epa-email').val(),
+				resEmail = false,
+				errors = false;
 
 		e.preventDefault();
+
+		if(MainScript.isButtonLoading(self))
+			return false;
+		else
+			MainScript.buttonLoading(self,true);
 
 		resEmail = epattern.test(nemail) ? remErr('.epa__email') : addErr('.epa__email');
 		$('.epa__email').removeClass('erroremail');
@@ -609,11 +611,11 @@ jQuery(function($){
 						checkPhone({'type':'input'});
 
 						var arErrors = $('.error');
-						if(arErrors.length>0){
-                            MainScript.buttonLoading(the_button,false);
-                            $('html, body').animate({ scrollTop: $(arErrors[0]).offset().top-20 }, 1000);
+						if(arErrors.length>0)
+						{
+							$('html, body').animate({ scrollTop: $(arErrors[0]).offset().top-20 }, 1000);
+							MainScript.buttonLoading(self,false);
 						}
-
 
 						if(!errors && !arErrors.length){
 							var arPosts = $('#epa-list-posts input'),
@@ -686,11 +688,11 @@ jQuery(function($){
 			checkPhone({'type':'input'});
 
 			var arErrors = $('.error');
-			if(arErrors.length>0){
-                MainScript.buttonLoading(the_button,false);
-                $('html, body').animate({ scrollTop: $(arErrors[0]).offset().top-20 }, 1000);
+			if(arErrors.length>0)
+			{
+				MainScript.buttonLoading(self,false);
+				$('html, body').animate({ scrollTop: $(arErrors[0]).offset().top-20 }, 1000);
 			}
-
 
 			if(!errors && !arErrors.length){
 				var arPosts = $('#epa-list-posts input'),

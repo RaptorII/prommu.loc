@@ -194,7 +194,11 @@
                 </label>
                 <input type='checkbox' name='user-attribs[isnews]' value="1" <?=$viData['attribs']['isnews']['val'] ? 'checked' : '' ?> class="epe__hidden" id="subscribtion">
                 <label class="epe__checkbox" for="subscribtion">Получать новости об изменениях и новых возможностях на сайте</label>
-                <button class='epe__btn' type='submit'>Сохранить изменения</button>
+                <div class="center">
+                  <button class='epe__btn prmu-btn prmu-btn_normal' type='submit'>
+                    <span>Сохранить изменения</span>
+                  </button>
+                </div>
                 <input type="hidden" name="logo" id="HiLogo"/>
                 <input type="hidden" name="savest" value="1"/>
               </div>

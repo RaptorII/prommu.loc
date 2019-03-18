@@ -1,10 +1,11 @@
 <?
-  Yii::app()->getClientScript()->registerCssFile('/theme/css/services/services-api-page.css');
-  Yii::app()->getClientScript()->registerScriptFile('/theme/js/services/services-api-page.js', CClientScript::POS_END);
+	$rq = Yii::app()->getRequest();
+	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'services/services-api-page.css');
+	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'services/services-api-page.js', CClientScript::POS_END);
 ?>
 <div class="row">
-	<?php if(Yii::app()->getRequest()->getParam('f-api')): ?>
-		<? $fapi = Yii::app()->getRequest()->getParam('f-api'); ?>
+	<?php if($rq->getParam('f-api')): ?>
+		<? $fapi = $rq->getParam('f-api'); ?>
 		<div class="col-xs-12 api-service">
 			<?php if($fapi==1): ?>
 				<h2 class="api-service__title">ВЫБЕРИТЕ ДАННЫЕ ПЕРСОНАЛА, КОТОРЫЕ ВЫ ХОТИТЕ ОТОБРАЖАТЬ НА СВОЕМ РЕСУРСЕ</h2>
@@ -13,7 +14,7 @@
 			<?php elseif($fapi==3): ?>
 				<h2 class="api-service__title">УСЛУГА В РАЗРАБОТКЕ</h2>
 			<?php endif ?>
-			<form action="/user/api/?api=<?=$fapi?>" method="POST">
+			<form action="/user/api/?api=<?=$fapi?>" method="POST" id="api_form">
 				<?php if($fapi==1): ?>
 					<div class="col-xs-12 col-sm-6">
 						<div class="api-chbox">
@@ -178,7 +179,10 @@
 				<?php elseif($fapi==3): ?>
 				<?php endif ?>
 				<div class="col-xs-12">
-					<button type="submit" class="api-service__btn">Продолжить</button>
+					<br>
+					<button type="submit" class="service__btn prmu-btn prmu-btn_normal">
+						<span>Продолжить</span>
+					</button>
 				</div>
 				<input type="hidden" name="f-api" value="<?=$fapi?>">
 			</form>
@@ -217,7 +221,10 @@
 					</div>	*/?>				
 					<div class="clearfix"></div>
 				</div>
-				<button class="api-service__btn">ПОЛУЧИТЬ ДОСТУП</button>
+				<br>
+				<button class="service__btn prmu-btn prmu-btn_normal">
+					<span>ПОЛУЧИТЬ ДОСТУП</span>
+				</button>
 			</form>
 			<div class="clearfix"></div>
 			<?

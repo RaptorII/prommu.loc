@@ -1,9 +1,9 @@
 <?php
 	$bUrl = Yii::app()->baseUrl . '/theme/';
-	Yii::app()->getClientScript()->registerCssFile($bUrl.'css/phone-codes/style.css'); 
-	Yii::app()->getClientScript()->registerScriptFile($bUrl.'js/phone-codes/script.js', CClientScript::POS_END);
-	Yii::app()->getClientScript()->registerCssFile($bUrl.'css/services/services-med-page.css');
-	Yii::app()->getClientScript()->registerScriptFile($bUrl.'js/services/services-med-page.js', CClientScript::POS_END);
+	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'phone-codes/style.css'); 
+	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
+	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'services/services-med-page.css');
+	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'services/services-med-page.js', CClientScript::POS_END);
   $model = new MedRequest();
 	$arRes = $model->getUserData(Share::$UserProfile->id, Share::$UserProfile->type);
 ?>
@@ -52,7 +52,9 @@
 				<label class="smr__label">
 					<textarea class="smr__input smr__textarea" placeholder="Комментарий" name="comment"></textarea>
 				</label>
-				<button type="submit" class="smr__btn" id="smr-btn">Отправить заявку</button>
+				<button type="submit" class="service__btn prmu-btn prmu-btn_normal" id="service__btn">
+					<span>Отправить заявку</span>
+				</button>
 			</form>
 		</div>
 	</div>

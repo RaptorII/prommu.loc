@@ -1,4 +1,3 @@
-<script type="text/javascript">var arIdies = <?=json_encode($viData['workers']['promos'])?></script>
 <div class='questionnaire'>
 	<div>
 		<?=$this->ViewModel->declOfNum($viData['app_count'], array('Найдена', 'Найдено', 'Найдено'))?>
@@ -13,39 +12,44 @@
 			<div class='col-xs-12 col-sm-6 col-md-4'>
 				<div class='comm-logo-wrapp'>
 				<div class='comm-logo'>
-				<?
-					if($item['sex'] === '1'){
-						$G_LOGO_SRC = DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!$item['photo'] ? MainConfig::$DEF_LOGO : $item['photo'] . '400.jpg');
-					}
-					else 
-						$G_LOGO_SRC = DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!$item['photo'] ? MainConfig::$DEF_LOGO_F : $item['photo'] . '400.jpg');
-				?>
-				<img alt="<?='Соискатель '.$item['firstname'].' '.$item['lastname'].' prommu.com'?>" src='<?= $G_LOGO_SRC ?>'>
-				<br>
-				<br>
-				<b class="name"><? echo $item['firstname'] . ' ' . $item['lastname'] . ', ' . $item['age']?></b>
-				<div class='tmpl-ph1'>
-					<div class='med-avto'>
-						<?php if($item['ishasavto']==='1'): ?>
-							<div class='ico ico-avto js-g-hashint' title='Есть автомобиль'></div>
+					<div class="comm-logo__img">
+						<img 
+							alt="<?='Соискатель '.$item['firstname'].' '.$item['lastname'].' prommu.com'?>" 
+							src="<?=Share::getPhoto(2,$item['photo'],'small',$item['sex'])?>">
+						<? if ($item['is_online']): ?>
+							<span class="promo-list__item-onl"><span>В сети</span></span>
+						<? endif; ?>
+					</div>
+					<div class="comm-logo__presence">
+						<? if(!$item['is_online']): ?>
+							<span>
+								<i></i>Был(а) на сервисе: <?=date_format(date_create($item['mdate']),'d.m.Y'); ?>
+							</span>
+						<? endif; ?>
+					</div>
+					<b class="name"><?= $item['firstname'] . ' ' . $item['lastname'] . ', ' . $item['age']?></b>
+					<div class='tmpl-ph1'>
+						<div class='med-avto'>
+							<?php if($item['ishasavto']==='1'): ?>
+								<div class='ico ico-avto js-g-hashint' title='Есть автомобиль'></div>
+							<?php endif; ?>
+							<?php if($item['ismed']==='1'): ?>
+								<div class="ico ico-med js-g-hashint" title="Есть медкнижка"></div>
+							<?php endif; ?>
+						</div>
+					</div>
+					<div class='hr'>
+						<?php if( is_numeric($item['comm']) ): ?>
+							<div class='comments js-g-hashint' title='Отзывы положительные | отрицательные'>
+								<span class='r1'><?=$item['comm']?></span> | <?=$item['commneg']?>
+							</div>
 						<?php endif; ?>
-						<?php if($item['ismed']==='1'): ?>
-							<div class="ico ico-med js-g-hashint" title="Есть медкнижка"></div>
+						<?php if( is_numeric($item['rate']) ): ?>
+							<div class='rate js-g-hashint' title='Рейтинг положительный | отрицательный'>
+								<span class='r1'><?=$item['rate']?></span> | <?=$item['rate_neg']?>
+							</div>
 						<?php endif; ?>
 					</div>
-				</div>
-				<div class='hr'>
-					<?php if( is_numeric($item['comm']) ): ?>
-						<div class='comments js-g-hashint' title='Отзывы положительные | отрицательные'>
-							<span class='r1'><?=$item['comm']?></span> | <?=$item['commneg']?>
-						</div>
-					<?php endif; ?>
-					<?php if( is_numeric($item['rate']) ): ?>
-						<div class='rate js-g-hashint' title='Рейтинг положительный | отрицательный'>
-							<span class='r1'><?=$item['rate']?></span> | <?=$item['rate_neg']?>
-						</div>
-					<?php endif; ?>
-				</div>
 				</div>
 				</div>
 				<input type="checkbox" name="promo[]" value="<?=$item['id_user']?>" class="promo_inp" id="promo<?=$item['id_user']?>">
@@ -77,3 +81,4 @@
 		)
 	)?>
 </div>
+<script type="text/javascript">var arIdies = <?=json_encode($viData['workers']['promos'])?></script>

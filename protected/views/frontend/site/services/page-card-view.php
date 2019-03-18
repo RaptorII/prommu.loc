@@ -1,13 +1,9 @@
 <?
-  $bUrl = Yii::app()->baseUrl . '/theme/';
-  Yii::app()->getClientScript()->registerCssFile($bUrl.'css/phone-codes/style.css'); 
-  Yii::app()->getClientScript()->registerScriptFile($bUrl.'js/phone-codes/script.js', CClientScript::POS_END);
-  Yii::app()->getClientScript()->registerCssFile($bUrl.'css/services/services-card-page.css');
-  Yii::app()->getClientScript()->registerScriptFile($bUrl.'js/services/services-card-page.js', CClientScript::POS_END);
+  Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'phone-codes/style.css'); 
+  Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
+  Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'services/services-card-page.css');
+  Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'services/services-card-page.js', CClientScript::POS_END);
 ?>
-<?php if( $mess = Yii::app()->user->getFlash('Message') ): Yii::app()->user->setFlash('Message', '') ?>
-    <div class="mess-box tmpl <?= $mess['type'] ?>" id="pr-card-mes"><?= $mess['message'] ?></div>
-<?php endif; ?>
 <?php
   $model = new Services();
   $arRes = $model->getUserDataForCard();
@@ -131,7 +127,11 @@
               <label class="pr-card__form-label" data-info="Адрес прописки (индекс, страна, область, город, улица, № дома) *">
                 <input type="text" name="regaddr" id="EdRegaddr" data-field-check='name:Адрес прописки,empty' placeholder="Адрес прописки (индекс, страна, область, город, улица, № дома) *" class="pr-card__form-input required-inp"/>
               </label>
-              <div class="pr-card__form-btn" id="copy-index">АДРЕС ПРОЖИВАНИЯ СОВПАДАЕТ С АДРЕСОМ РЕГИСТРАЦИИ</div>
+              <div class="center">
+                <span class="pr-card__btn prmu-btn prmu-btn_normal" id="copy-index">
+                  <span>АДРЕС ПРОЖИВАНИЯ СОВПАДАЕТ С АДРЕСОМ РЕГИСТРАЦИИ</span>
+                </span>
+              </div>
               <label class="pr-card__form-label" data-info="Адрес проживания (индекс, страна, область, город, улица, № дома) *">
                 <input type="text" name="addr" id="EdAddr" data-field-check='name:Адрес фактического проживания,empty' placeholder="Адрес проживания (индекс, страна, область, город, улица, № дома) *" class="pr-card__form-input required-inp"/>
               </label>
@@ -164,7 +164,11 @@
               </div>
               <input type="hidden" name="MAX_FILE_SIZE" value="1048576"  multiple="true">
             </form>
-            <span class="pr-card__btn off" id="pr-card-btn">ЗАКАЗАТЬ КОРПОРАТИВНУЮ КАРТУ PROMMU</span>
+            <div class="center">
+              <span class="pr-card__btn off prmu-btn prmu-btn_normal" id="pr-card-btn">
+                <span>ЗАКАЗАТЬ КОРПОРАТИВНУЮ КАРТУ PROMMU</span>
+              </span>
+            </div>
           </div>
         </div>
         <div class="clearfix"></div>        

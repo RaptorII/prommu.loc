@@ -1,9 +1,9 @@
 $(function(){
 	var arInputs = $('.os-vacancies__item-input'),
 		arLabels = $('.os-vacancies__item'),
-		$button = $('.outstaffing-service__btn'),
+		$button = $('.service__btn'),
 		arServices = $('.os-services__item input'),
-		arContacts = $('.os__contact-input');
+		arContacts = $('.os__contact-input'),
 		bAllTrue = false,
 		bAllFalse = false;
 	//
@@ -89,4 +89,17 @@ $(function(){
 		}
 		bAllTrue ? $button.fadeIn() : $button.fadeOut();
 	});
+	//
+  $('#outstaffing-form button').click(function(e){
+    e.preventDefault();
+    if(MainScript.isButtonLoading(this))
+    {
+      return false;
+    }
+    else
+    {
+      MainScript.buttonLoading(this,true);
+      $('#outstaffing-form').submit();
+    }
+  });
 });

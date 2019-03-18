@@ -270,7 +270,11 @@
               </div>
               <div class="clearfix"></div>
             </div>
-            <button type="submit" class="epa__btn epa__save-btn">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>
+            <div class="center">
+              <button type="submit" class="epa__save-btn prmu-btn prmu-btn_normal">
+                <span>СОХРАНИТЬ ИЗМЕНЕНИЯ</span>
+              </button>
+            </div>
           </div>
           <?
           // CONTACTS 
@@ -411,7 +415,11 @@
               <span class="epa__label-name">Другое:</span>
               <input type="text" name="user-attribs[custcont]" value="<?=$attrAll[39]['val']?>" class="epa__input">
             </label>
-            <button type="submit" class="epa__btn epa__save-btn">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>
+            <div class="center">
+              <button type="submit" class="epa__save-btn prmu-btn prmu-btn_normal">
+                <span>СОХРАНИТЬ ИЗМЕНЕНИЯ</span>
+              </button>
+            </div>
           </div>
           <?
           // VACANCIES 
@@ -513,7 +521,11 @@
               <?php endforeach;?>
               <div class="clearfix"></div> 
             </div>
-            <button type="submit" class="epa__btn epa__save-btn">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>
+            <div class="center">
+              <button type="submit" class="epa__save-btn prmu-btn prmu-btn_normal">
+                <span>СОХРАНИТЬ ИЗМЕНЕНИЯ</span>
+              </button>
+            </div>
           </div>
           <?
           // LOCATION 
@@ -590,7 +602,11 @@
             </div>
             <span class="epa__btn epa__add-city-btn">Добавить город</span>
             <div class="clearfix"></div>
-            <button type="submit" class="epa__btn epa__save-btn">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>
+            <div class="center">
+              <button type="submit" class="epa__save-btn prmu-btn prmu-btn_normal">
+                <span>СОХРАНИТЬ ИЗМЕНЕНИЯ</span>
+              </button>
+            </div>
           </div>
           <?
           // APPEARANCE
@@ -634,7 +650,11 @@
                   </ul>
                 </div>
             <?php endforeach; ?>
-            <button type="submit" class="epa__btn epa__save-btn">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>
+            <div class="center">
+              <button type="submit" class="epa__save-btn prmu-btn prmu-btn_normal">
+                <span>СОХРАНИТЬ ИЗМЕНЕНИЯ</span>
+              </button>
+            </div>
           </div>
           <?
           //  ADDITIONAL
@@ -707,7 +727,11 @@
             </div>
 
             <div class="epa__req-list">Необходимо заполнить: <div></div></div>
-            <button type="submit" class="epa__btn epa__save-btn">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>
+            <div class="center">
+              <button type="submit" class="epa__save-btn prmu-btn prmu-btn_normal">
+                <span>СОХРАНИТЬ ИЗМЕНЕНИЯ</span>
+              </button>
+            </div>
           </div>
         </form>
       </div>

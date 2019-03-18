@@ -5,53 +5,8 @@
 	margin: 0 0 35px;
 	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 }
-#DiContent .api-service .api-service__btn{
-	width: 100%;
-	max-width: 260px;
-	padding: 8px;
-	margin: 30px 0 60px auto;
-	line-height: 27px;
-	font-size: 20px;
-	text-transform: uppercase;
-	color: #FFFFFF;
-	text-align: center;
-	background-color: #FF8300;
-	border: none;
-	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-	position: relative;
-	z-index: 1;
-	cursor: pointer;
-	/*float: right;*/
-	display: none;
-}
-#DiContent .api-service .api-service__btn.visible{ 
-	display: block; 
-	float: none;
-	margin: 30px auto 60px;
-}
-.api-service__btn:focus{ outline: none; }
-.api-service__btn:before{
-	content: "";
-	position: absolute;
-	z-index: -1;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: #abb820;
-	-webkit-transform: scaleX(0);
-	transform: scaleX(0);
-	-webkit-transform-origin: 0 50%;
-	transform-origin: 0 50%;
-	-webkit-transition: transform 0.3s ease-out;
-	-moz-transition: transform 0.3s ease-out;
-	-o-transition: transform 0.3s ease-out;
-	transition: transform 0.3s ease-out;
-}
-.api-service__btn:hover:before{
-	-webkit-transform: scaleX(1);
-	transform: scaleX(1);
-}
+#DiContent .api-service .service__btn{ display: none; }
+#DiContent .api-service .service__btn.visible{ display: block; }
 /*
 *	services-list
 */

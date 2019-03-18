@@ -1151,14 +1151,8 @@ class UserController extends AppController
                                 'user' => "api"
                             ));
 
-            Yii::app()->user->setFlash('Message', array('mess'=>'Ваша заявка на формирование запроса команд API сформирована. Все нужные команды Вы сможете взять из сформировавшегося окна диалогов. Также в нём можно будет задать вопросы администратору по возникшим техническим вопросам'));
-            $this->redirect(MainConfig::$PAGE_IM);
-
-
-
-
-
-
+        Yii::app()->user->setFlash('prommu_flash', 'Ваша заявка на формирование запроса команд API сформирована. Все нужные команды Вы сможете взять из сформировавшегося окна диалогов. Также в нём можно будет задать вопросы администратору по возникшим техническим вопросам');
+        $this->redirect(MainConfig::$PAGE_CHATS_LIST_FEEDBACK);
     }
     /*
     *   Страница настроек
@@ -1714,7 +1708,6 @@ class UserController extends AppController
                 $data = $services->getServiceData($id);
                 if( Yii::app()->getRequest()->getParam('save') ) {
                     $services->orderPrommu();
-                    Yii::app()->user->setFlash('success', array('event'=>'free'));
                     $this->redirect($serviceLink);
                 }
                 $Upluni = new Uploaduni();

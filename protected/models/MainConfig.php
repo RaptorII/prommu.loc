@@ -207,7 +207,6 @@ class MainConfig
     /* ANALYTICS */
     public static $VIEWS_ANALYTICS = 'page-analytics-view-tpl';
     public static $PAGE_ANALYTICS = '/user/analytics';
-    public static $PAGE_ANALYTICS_SCHEDULE = '/user/schedule';
     public static $AJAX_ANALYTICS = 'page-analytics-view-ajax';
 
     /* SETTINGS */

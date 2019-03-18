@@ -1,5 +1,6 @@
 <?
-	Yii::app()->getClientScript()->registerCssFile('/theme/css/services/services-premium-page.css');
+	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'services/services-premium-page.css');
+	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'services/services-premium-page.js', CClientScript::POS_END);
 ?>
 <div class="row">
 	<div class="col-xs-12 premium-service">
@@ -27,51 +28,13 @@
 					<?php endforeach; ?>
 				</div>
 				<input type="hidden" name="service" value="premium-vacancy">
-				<button class="premium-service__btn payment-button">ОПЛАТИТЬ</button>
+				<br>
+				<button class="service__btn pull-right prmu-btn prmu-btn_normal"><span>ОПЛАТИТЬ</span></button>
 			</form>
 		<?php else: ?>
-			<h2 class="premium-service__title">У ВАС НЕТ ВАКАНСИЙ</h2>
-			<a href="<?=MainConfig::$PAGE_VACPUB?>" class="premium-service__btn visible">ДОБАВИТЬ ВАКАНСИЮ</a>
+			<br>
+			<h2 class="premium-service__title center">У ВАС НЕТ АКТИВНЫХ ВАКАНСИЙ</h2>
+			<a href="<?=MainConfig::$PAGE_VACPUB?>" class="service__btn visible prmu-btn prmu-btn_normal"><span>ДОБАВИТЬ ВАКАНСИЮ</span></a>
 		<?php endif; ?>
 	</div>
 </div>
-
-<script type="text/javascript">
-	$(function(){
-		var arInputs = $('.ps-vacancies__item-input'),
-			arLabels = $('.ps-vacancies__item'),
-			$button = $('.premium-service__btn'),
-			$all = $('#choose-all'),
-			bAllTrue = false,
-			bAllFalse = false;
-
-		arInputs.change(function(){
-			var $this = $(this),
-				$parent = $(this).parent('.ps-vacancies__item'),
-			bAllTrue = false;
-			bAllFalse = false;
-			$this.is(':checked') ? $parent.addClass('active') : $parent.removeClass('active');	
-			$.each(arInputs, function(){ $(this).is(':checked') ? bAllTrue=true : bAllFalse=true });
-			!bAllFalse ? $all.prop('checked',true) : $all.prop('checked',false);
-			bAllTrue ? $button.fadeIn() : $button.fadeOut();				
-		});
-		//
-		//
-		//
-		$all.change(function(){
-			if($(this).is(':checked')){
-				$.each(arInputs, function(){ $(this).prop('checked', true) });
-				$.each(arLabels, function(){ $(this).addClass('active') });
-				bAllTrue = true;
-				bAllFalse = false;
-			}
-			else{
-				$.each(arInputs, function(){ $(this).prop('checked', false) });
-				$.each(arLabels, function(){ $(this).removeClass('active') });
-				bAllTrue = false;
-				bAllFalse = true;
-			}
-			bAllTrue ? $button.fadeIn() : $button.fadeOut();
-		});
-	});
-</script>

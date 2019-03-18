@@ -56,10 +56,17 @@ jQuery(function($){
 	$('#phone-code').on('input',function(e){ checkPhone(e) });
 	//
 	$('.epe__btn').click(function(e){
-		var nemail = $('.epe__input-mail').val(),
-			errors = false;
+		var self = this,
+				nemail = $('.epe__input-mail').val(),
+				errors = false;
 
 		e.preventDefault();
+
+		if(MainScript.isButtonLoading(self))
+			return false;
+		else
+			MainScript.buttonLoading(self,true);
+
 
 		checkPhone({'type':false,'target':false});
 
@@ -80,7 +87,10 @@ jQuery(function($){
 
 						var arErrors = $('.error');
 						if(arErrors.length>0)
+						{
 							$('html, body').animate({ scrollTop: $(arErrors[0]).offset().top-20 }, 1000);
+							MainScript.buttonLoading(self,false);
+						}
 						if(!errors && !arErrors.length){
 							$('#F1compprof').submit();
 						}
@@ -94,8 +104,10 @@ jQuery(function($){
 			});
 			var arErrors = $('.error');
 			if(arErrors.length>0)
+			{
 				$('html, body').animate({ scrollTop: $(arErrors[0]).offset().top-20 }, 1000);
-
+				MainScript.buttonLoading(self,false);
+			}
 			if(!errors && !arErrors.length){
 				$('#F1compprof').submit();
 			}

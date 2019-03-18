@@ -7,6 +7,14 @@ var ServicesList = (function () {
     ServicesList.prototype.init = function () {
         var self = this;
         $(".order-service a").click(function (e) { self.onOrderServiceClickFn(e, this); });
+        //
+        $('.user.creation-vacancy').click(function(){
+            $.fancybox.open({
+                src: '.creation-vacancy_mess.prmu__popup',
+                type: 'inline',
+                touch: false
+            });
+        });
 
         if(typeof arSuccessMess === 'undefined' || arSuccessMess == null)
             return;
@@ -21,8 +29,6 @@ var ServicesList = (function () {
             var itm = $('.services-finish-form.payable').clone();
         itm.toggleClass('services-form tmpl');
         ModalWindow.open({ content: itm, action: { active: 0 }, additionalStyle:'dark-ver' });
-
-
     };
     ServicesList.prototype.onOrderCreateFn = function (e, that) {
         var self = this;

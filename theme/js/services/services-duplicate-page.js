@@ -22,4 +22,16 @@ $(function(){
 
 		isChanged ? $btn.fadeIn() : $btn.fadeOut();
 	});
+	$btn.click(function(e){
+		e.preventDefault();
+    if(MainScript.isButtonLoading(this))
+    {
+      return false;
+    }
+    else
+    {
+      MainScript.buttonLoading(this,true);
+      $('#repost-form').submit();
+    }
+	});
 });
