@@ -41,9 +41,9 @@ class UploadLogo extends Model
                     $flag = 1;
                     $message = "Изображение превышает размер в 4500х4500 пикселей";
                 }
-                elseif( $imgProps[0] < 480 || $imgProps[1] < 480 ){
+                elseif( $imgProps[0] < 400 || $imgProps[1] < 400 ){
                     $flag = 1;
-                    $message = "Минимальное разрешение изображения - 480x480 пикселей";
+                    $message = "Минимальное разрешение изображения - 400x400 пикселей";
                 }
                 else
                 {
@@ -110,9 +110,9 @@ class UploadLogo extends Model
                     $flag = 1;
                     $message = "Изображение превышает размер в 4500х4500 пикселей";
                 }
-                elseif( $imgProps[0] < 480 || $imgProps[1] < 480 ){
+                elseif( $imgProps[0] < 400 || $imgProps[1] < 400 ){
                     $flag = 1;
-                    $message = "Минимальное разрешение изображения - 480x480 пикселей";
+                    $message = "Минимальное разрешение изображения - 400x400 пикселей";
                 }
                 else
                 {
@@ -191,9 +191,9 @@ class UploadLogo extends Model
                     $flag = 1;
                     $message = "Изображение превышает размер в 4500х4500 пикселей";
                 }
-                elseif( $imgProps[0] < 480 || $imgProps[1] < 480 ){
+                elseif( $imgProps[0] < 400 || $imgProps[1] < 400 ){
                     $flag = 1;
-                    $message = "Минимальное разрешение изображения - 480x480 пикселей";
+                    $message = "Минимальное разрешение изображения - 400x400 пикселей";
                 }
                 else
                 {
@@ -642,8 +642,8 @@ class UploadLogo extends Model
                 if( $imgProps[0] > 4500 || $imgProps[1] > 4500 ){
                     $arRes = array('error' => 1, 'message' => 'Изображение превышает размер в 4500х4500 пикселей');
                 }
-                elseif( $imgProps[0] < 480 || $imgProps[1] < 480 ){
-                    $arRes = array('error' => 1, 'message' => 'Минимальное разрешение изображения - 480x480 пикселей');
+                elseif( $imgProps[0] < 400 || $imgProps[1] < 400 ){
+                    $arRes = array('error' => 1, 'message' => 'Минимальное разрешение изображения - 400x400 пикселей');
                 }
                 else{
                     Yii::app()->session['uplLogo'] = array('path' => "/images/{$this->imgPath}/tmp/", 'file' => $fn);

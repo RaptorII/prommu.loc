@@ -993,3 +993,21 @@ body{ background: rgba(0, 0, 0, 0.31)!important; }
         margin: 0 auto;
     }
 }
+/*
+*       18-03-19
+*/
+.prmu__popup.prmu__popup{
+    font-size: 16px;
+}
+.prmu__popup div{
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-around;
+}
+.prmu__popup div a:last-child{
+    -webkit-transition: color 0.3s ease-out;
+    -moz-transition: color 0.3s ease-out;
+    -o-transition: color 0.3s ease-out;
+    transition: color 0.3s ease-out;
+}
+.prmu__popup div a:last-child:hover{ color:red; }

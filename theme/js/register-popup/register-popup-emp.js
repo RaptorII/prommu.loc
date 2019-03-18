@@ -287,4 +287,21 @@ $(function(){
     $.each(arInputs, function(){ if(!checkFieldEasy(this)) error = true; });
     (!error && !$('.error').length) ? remEr('#company-btn','off') : addEr('#company-btnn','off');
   });
+  //
+  $('.rp-header__close-btn').click(function(){
+    $.each(arInputs,function(){checkField(this)});
+    if($('.error').length)
+    {
+      $.fancybox.open({
+        src: '.prmu__popup',
+        type: 'inline',
+        touch: false
+      });
+    }
+    else
+    {
+      $('#popup-form').submit();
+      //location = $('.prmu__popup a')[1].href;
+    }
+  });
 }); 

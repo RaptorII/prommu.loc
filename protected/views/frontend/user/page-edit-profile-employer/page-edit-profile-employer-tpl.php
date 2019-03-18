@@ -237,7 +237,15 @@
   <div class="register-popup js-popup show">
     <div class="register-popup__header">
       <h1 class="rp-header__title">ПОЗДРАВЛЯЕМ ВАС С УСПЕШНОЙ РЕГИСТРАЦИЕЙ</h1> 
-      <a class="rp-header__close-btn close" href="<?=MainConfig::$PAGE_EDIT_PROFILE?>">&#10006</a>
+      <a class="rp-header__close-btn" href="javascript:void(0)">&#10006</a>
+      <div class="tmpl rp-header__close-mess">
+        <div class="prmu__popup">Мы заметили, что есть важные незаполненные поля. Для поиска персонала это важные параметры!
+          <div>
+            <a href="javascript:void(0)" data-fancybox-close="">Продолжить</a>  
+            <a href="<?=MainConfig::$PAGE_EDIT_PROFILE?>">Покинуть страницу</a>            
+          </div>
+        </div>
+      </div>
     </div>
     <div class="register-popup__content1">
       <div class="rp-content1__block">

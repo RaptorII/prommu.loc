@@ -292,6 +292,7 @@
 	cursor: default;
 	display: none;
 	border: 1px solid transparent;
+	z-index: 3;
 }
 .epa__calendar:before{
 	content: '';

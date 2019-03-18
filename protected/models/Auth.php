@@ -115,6 +115,7 @@ class Auth
                                 'logo' => $data->photos,
                                 'crdate' => date('Y-m-d H:i:s'),
                                 'admin' => $admin,
+                                'type' => 102 // устанавливаем по умолчанию "Прямой работодатель"
                             ));
 
                     $res = Yii::app()->db->createCommand()

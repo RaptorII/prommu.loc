@@ -304,4 +304,21 @@ $(function(){
       $('#ui-datepicker-div').addClass('custom-calendar');
     }
   });
+  //
+  $('.rp-header__close-btn').click(function(){
+    $.each(arInputs,function(){checkField(this)});
+    if($('.error').length)
+    {
+      $.fancybox.open({
+        src: '.prmu__popup',
+        type: 'inline',
+        touch: false
+      });
+    }
+    else
+    {
+      $('#popup-form').submit();
+      //location = $('.prmu__popup a')[1].href;
+    }
+  });
 });

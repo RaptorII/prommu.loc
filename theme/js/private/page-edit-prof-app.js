@@ -1382,4 +1382,15 @@ jQuery(function($){
 		? $('.epa__logo-name-list').addClass('fixed')
 		: $('.epa__logo-name-list').removeClass('fixed');
 	}
+	//
+	// начальное выделение полей
+	//
+	$.each($('.epa__post-detail .epa__required'), function(){ checkField(this) });
+	$.each($(mainM + ' .epa__required'), function(){ checkField(this) });
+	$.each($(cntctM + ' .epa__required'), function(){ checkField(this) });
+	$.each($('.epa__education [type="radio"]'), function(){ checkField(this) });
+	$.each($('.epa__language [type="checkbox"]'), function(){ checkField(this) });
+	checkField('[name="about-mself"]');
+	checkField('[name="user-attribs[edu]"]');
+	checkField('[name="langs[]"]');
 });

@@ -471,4 +471,8 @@ jQuery(function($){
       split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
     $(e).val(split.join('-'));
   }
+  //
+  // начальное выделение полей
+  //
+  $.each($('.epe__required'), function(){ checkField(this) });
 });
