@@ -107,33 +107,6 @@ class Api
         return $data;
     }
     
-    public function getRestOneDay(){
-        // $Im = new Im();
-        // $Im->sendEmailNotifications();
-        
-        $Share = new Share();
-        $Share->getOnline();
-    }
-    
-    public function importProject(){
-        Yii::import('ext.yexcel.Yexcel');
-        $sheet_array = Yii::app()->yexcel->readActiveSheet("/var/www/dev.prommu/uploads/153596066899602.xls");
-        var_dump($sheet_array);
-
-        for($i = 1; $i < count($sheet_array)+1; $i++){
-                echo $sheet_array[$i]['F'].'<br/>';
-            // if($sheet_array[$i]['F']){
-            //         $res = Yii::app()->db->createCommand()
-            //                         ->update('analytic', array(
-            //                               'canal' =>  $sheet_array[$i]['M'],
-            //                               'transition' => $sheet_array[$i]['L'],
-                                           
-            //                         ), 'id_us=:id_us', array(':id_us' =>  $sheet_array[$i]['F']));
-
-            // }
-        }
-     }
-    
     public function services(){
         $pricess = new PrommuOrder();
         $prices = $pricess->getPricesData();
@@ -141,98 +114,6 @@ class Api
          return $prices;
     }
 
-
-    function getFormSignature($account, $desc, $sum, $secretKey) {
-        $hashStr = $account.'{up}'.$desc.'{up}'.$sum.'{up}'.$secretKey;
-        return hash('sha256', $hashStr);
-    }
-
-    
-    public function testPay(){
-        //  $publi = "84661-fc398";
-        //  $account = 14500;
-        //  $desc = 'testpay';
-        //  $sum = 100;
-        //  $secretKey = '56B61C8ED08-535F660B689-40C558A1CE';
-        //  $hash = $this->getFormSignature($account, $desc, $sum, $secretKey);
-        //  $link = "https://unitpay.ru/pay/$publi?sum=$sum&account=$account&desc=$desc&signature=$hash";
-         
-        //  header("Location: $link");
-        $project = Yii::app()->getRequest()->getParam('project');
-           $data = Yii::app()->db->createCommand()
-            ->select('pc.id, pc.user, pc.status, pc.project,  r.firstname, r.lastname, pc.email, pc.phone')
-            ->from('project_user pc')
-            ->join('resume r', 'r.id_user=pc.user')
-            ->where('pc.project = :project', array(':project' =>$project))
-            ->queryAll();
-        
-          for($i = 0; $i < count($data); $i ++){
-           $datas = Yii::app()->db->createCommand()
-            ->select('prc.name')
-            ->from('project_user pc')
-            ->join('project_binding pb', 'pb.user=pc.user')
-            ->join('project_city prc', 'prc.point=pb.point')
-            ->where('pb.project = :project AND pb.user = :user', array(':project' =>$project, ':user' => $data[$i]['user']))
-            ->group('prc.name')
-            ->queryAll();
-            
-            $data[$i]['point'] = $datas;
-        }
-        return $data[0]['point'][0]['name'];
-           
-    }
-    public function maleor($names){
-        $name = $names ? $names :Yii::app()->getRequest()->getParam('name');
-        $sql = "SELECT  r.firstname
-                    FROM resume r
-                    WHERE r.isman = 1";
-                $result = Yii::app()->db->createCommand($sql)->queryAll();
-
-        $sql = "SELECT  r.firstname
-                    FROM resume r
-                    WHERE r.isman = 0";
-                $results = Yii::app()->db->createCommand($sql)->queryAll();
-
-                $sex= 0;
-                $sexs= 0;
-                    $count = count($result);
-                     $counts = count($results);
-                    //   echo "Поиск по базе мужчин <br/>";
-                   for($i = 0; $i < $count; $i++){
-                        
-                        if(strpos($result[$i]['firstname'], $name) !== false) {
-                            //echo $result[$i]['firstname']."-".$name."<br/>";
-                            $sex++;
-               
-                        }
-                        
-                    }
-                    // echo "Поиск по базе женщин <br/>";
-                    for($i = 0; $i < $counts; $i++){
-                        
-                        if(strpos($results[$i]['firstname'], $name) !== false) {
-                           // echo $results[$i]['firstname']."-".$name."<br/>";
-                            $sexs++;
-               
-                        }
-                        
-                    }
-
-                if($sexs < $sex){
-                  $data['var']=  100 - ($sexs/$sex);
-                   $data['sex'] = '1';
-                } elseif($sex < $sexs) {
-                     $data['var'] =  100 - ($sex/$sexs);
-                    $data['sex'] = '0';
-                }
-                elseif($sex == 0 && $sexs == 0) {
-                   
-                    $sex = "Не могу определить... Ты случайно не $name ? ";
-                }
-       return $data;
-
-        
-    }
     
     public function rateUse(){
           
