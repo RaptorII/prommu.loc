@@ -621,10 +621,15 @@ class Api
     public function authUsers()
     {
         $Auth = new Auth();
-        $status = 404;
-         
+       
+        $res = $Auth->doAPIAuth();
+        if($res['error_code'] == '102'){
+             $status = 200;
+        } else {
+             $status = 405;
+        }
         header("HTTP/1.1 " . $status . " " . $this->requestStatus($status));
-        return $Auth->doAPIAuth();
+        return $res;
     }
 
     public function feedback(){
