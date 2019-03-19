@@ -623,7 +623,7 @@ class Api
         $Auth = new Auth();
        
         $res = $Auth->doAPIAuth();
-        if($res['error_code'] == '102'){
+        if(!$res['error_code']){
              $status = 200;
         } else {
              $status = 405;
