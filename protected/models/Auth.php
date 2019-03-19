@@ -756,7 +756,9 @@ class Auth
      * @throws Exception
      */
     public function Authorize($inParams)
-    {
+    {   
+        
+        var_dump($inParams);
         $login = $inParams['login'];
         $passw = $inParams['passw'];
         $remember = $inParams['remember'];
@@ -1122,6 +1124,8 @@ class Auth
         $login = $inParams['login'];
         $passw = $inParams['passw'];
         $remember = $inParams['remember'];
+        
+        
 
         $error = 100;
         try
