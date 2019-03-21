@@ -141,7 +141,7 @@ foreach ($viData['rating']['pointRate'] as $key => $val){
 }
 
 
-
+$ratingJson = json_encode($ratingJson);
 var_dump($ratingJson);
 ?>
 <script>
