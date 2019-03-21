@@ -125,7 +125,7 @@ class Api
     public function testInfo(){
         $rate = new RateEmpl();
         $data['rating'] = $rate->getDynamicRate(Share::$UserProfile->id );
-        // $data['rating'] = $rate->prepareProfileCommonRate($data['rating']);
+        $data['rating'] = $rate->prepareProfileCommonDynamicRate($data['rating']);
 
 
 //             // рейтинг выставленный пользователями, только для своего профиля
