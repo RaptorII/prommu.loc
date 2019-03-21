@@ -342,7 +342,12 @@ endif;
     google.load("visualization", "1", {packages: ["corechart"]});
     google.setOnLoadCallback(drawChart);
     function drawChart() {
-        var data = google.visualization.arrayToDataTable(<?=$ratingJson?>);
+        var data = google.visualization.arrayToDataTable([
+            ['Год', 'Рейтинг'],
+            ['2019-03-20', 9,1],
+            ['2019-03-23', 1,4],
+        ]
+);
 
         var options = {
             title: '',
