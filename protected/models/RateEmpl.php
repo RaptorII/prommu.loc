@@ -46,7 +46,7 @@ class RateEmpl extends Rate
     /**
      * Получаем данные рейтинга пользователя
      */
-    private function getPointRate($inID)
+    public function getPointRate($inID)
     {
         $id = $inID;
 
@@ -124,7 +124,7 @@ EOT;
     /**
      * Готовим рейтинг к выводу
      */
-    private function getRateByUser()
+    public function getRateByUser()
     {
         // получаем рейтинг и уровень характеристик
         $sql = "SELECT ra.id_vac, ra.id_userf idus, ra.id_point, DATE_FORMAT(ra.crdate, '%d.%m.%Y %H:%i:%s') crdate, ra.point
