@@ -126,23 +126,20 @@ $arUser = $arUser[$userId];
     <h2>Рейтинг:</h2>
    <div class="user__diagram" id="oil" style="width: 100%; height: 400px;">
 </div>
-<?
-var_dump($viData);
-                $ratingJson = [];
-                $ratingCount = 0;
-                $ratingJson[$ratingCount] = ['Дата', 'хорошо', 'плохо'];
-            ?>
-<?php foreach ($viData['rating']['pointRate'] as $key => $val): ?>
-                <?
-                    var_dump($key);
-                    $ratingCount++;
-                    $ratingJson[$ratingCount]['0'] = $viData['rating']['pointRate'][$key];
-                    $ratingJson[$ratingCount]['1'] = $val[0];
-                    $ratingJson[$ratingCount]['2'] = $val[1];
-                
-                ?>
-            <?php endforeach; ?>
-<?
+
+<?php 
+$ratingJson = [];
+$ratingCount = 0;
+$ratingJson[$ratingCount] = ['Дата', 'хорошо', 'плохо'];
+
+foreach ($viData['rating']['pointRate'] as $key => $val){
+   var_dump($key);
+    $ratingCount++;
+    $ratingJson[$ratingCount]['0'] = $viData['rating']['pointRate'][$key];
+    $ratingJson[$ratingCount]['1'] = $val[0];
+    $ratingJson[$ratingCount]['2'] = $val[1];  
+}
+
 
 
 var_dump($ratingJson);
