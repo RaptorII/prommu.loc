@@ -28,6 +28,7 @@ class Api
             switch( strtolower($apiMethod) )
             {
                 case 'auth_user' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->authUser(); break;
+                case 'register' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->registerUsers(); break;
                 case 'auth' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->authUsers(); break;
                 case 'push' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPush(); break;
                 case 'export' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->export(); break;
@@ -112,6 +113,10 @@ class Api
         $prices = $pricess->getPricesData();
 
          return $prices;
+    }
+    
+    public function registerUsers(){
+       
     }
 
     
