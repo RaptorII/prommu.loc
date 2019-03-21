@@ -12,13 +12,13 @@ class Api
 
     /** @var UserProfile */
     private $Profile;
-    private $idus;      // id пользователя
+    private $idus;
     private $token = null;  
     private $apiKey = 'AAAAOoZQN40:APA91bEgi7ebdOYMEwl60gzbgqFCOxv3gvmiq9hdpl4lE1SLOeCHHHlRah0U5qEHroYznP3MHnm3Ilj-n7ilsf8Rd9J-oEDZYE_3vsFIvqq9XgZrLfL64MWFaaFUVPZ5aIrtfNo3Mt07';
     public $apiUrl = 'https://fcm.googleapis.com/fcm/send';
     public $timeout = 5;
     public $sslVerifyHost = false;
-    public $sslVerifyPeer = false;   //  push токен пользователя
+    public $sslVerifyPeer = false;   
 
     public function apiProcess()
     {
