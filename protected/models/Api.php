@@ -124,7 +124,18 @@ class Api
     
     public function testInfo(){
         $rate = new RateEmpl();
-        return $rate->getViewData();
+        $data['rating'] = $rate->getPointRate(Share::$UserProfile->id );
+        $data['rating'] = $rate->prepareProfileCommonRate($data['rating']);
+
+
+//             // рейтинг выставленный пользователями, только для своего профиля
+//             if(serProfile->id )
+//             {
+//                 $data['rateByUser'] = $rate->getRateByUser();
+// //                $this->setLastRateDate($data['rateByUser']);
+//             } // endif
+
+        return $data;
     }
     
     public function services(){
