@@ -702,7 +702,7 @@ class Auth
                     && !empty($pass)
             )
             {
-                $data = $this->doLogin(['login' => $login, 'passmd5' => md5($pass), 'passw' => $pass, 'remember' => 1]);
+                $data = $this->doLogin(['login' => $login, 'passmd5' => $pass, 'passw' => $pass, 'remember' => 1]);
                 $error = $data['error'];
 
             // *** Не корректны параметры запроса ***
