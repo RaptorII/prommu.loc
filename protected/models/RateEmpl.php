@@ -144,7 +144,7 @@ EOT;
             $rate[0] += $val['rate'];
             $rate[1] += abs($val['rate_neg']);
             
-            $date = date('Y-m-d', $val['crdate']);
+            $date = date('Y-m-d',  strtotime($val['crdate']));
             // рейтинги по атрибутам
             $pointRate[$date][0] += $val['rate'];
             $pointRate[$date][1] += abs($val['rate_neg']);
