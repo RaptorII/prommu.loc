@@ -135,7 +135,7 @@ $ratingJson[$ratingCount] = ['Дата', 'хорошо', 'плохо'];
 foreach ($viData['rating']['pointRate'] as $key => $val){
    var_dump($key);
     $ratingCount++;
-    $ratingJson[$ratingCount]['0'] = $viData['rating']['pointRate'][$key];
+    $ratingJson[$ratingCount]['0'] = $key;
     $ratingJson[$ratingCount]['1'] = $val[0];
     $ratingJson[$ratingCount]['2'] = $val[1];  
 }
@@ -151,11 +151,7 @@ var_dump($ratingJson);
     google.setOnLoadCallback(drawChart);
     
     function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-            ['Год', 'Хорошо', 'Плохо'],
-            ['2019-03-20', 9,1],
-            ['2019-03-23', 1,4]]
-);
+        var data = google.visualization.arrayToDataTable(<?=$ratingJson;?>);
         
        
         var options = {
