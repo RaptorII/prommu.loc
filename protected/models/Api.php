@@ -31,6 +31,8 @@ class Api
                 case 'register' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->registerUsers(); break;
                 case 'faq' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getFaq(); break;
                 case 'auth' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->authUsers(); break;
+                
+                
                 case 'push' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPush(); break;
                 case 'export' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->export(); break;
                 case 'user_restorepass' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->restorePass(); break;
@@ -81,7 +83,7 @@ class Api
                 case 'maleor' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->maleor(); break;
                 case 'testpay' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testPay(); break;
                 case 'services' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->services(); break;
-                case 'import' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->importProject(); break;
+                case 'import' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testInfo(); break;
                 case 'rest_one_day': $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getRestOneDay(); break;
                 
                 
@@ -117,6 +119,12 @@ class Api
         $res = $faq->getFaqAll($type);
         
         return $res;
+    }
+    
+    
+    public function testInfo(){
+        $rate = new RateEmpl();
+        return $rate->getRateByUser();
     }
     
     public function services(){
