@@ -42,7 +42,8 @@ class RateEmpl extends Rate
 	}
 
 
-
+    
+    
     /**
      * Получаем данные рейтинга пользователя
      */
@@ -81,6 +82,43 @@ EOT;
         return $data;
     }
 
+    /**
+     * Получаем данные рейтинга пользователя
+     */
+    public function getDynamicRate($inID)
+    {
+        $id = $inID;
+
+        // получаем рейтинг и уровень характеристик
+        $sql = <<<EOT
+SELECT sum(m.rate) as rate, sum(m.rate_neg) as rate_neg, m.crdate, m.id_point, m.descr 
+FROM (
+  SELECT
+    CASE WHEN rd.point >= 0 THEN rd.point ELSE 0 END AS rate,
+    CASE WHEN rd.point < 0 THEN rd.point ELSE 0 END AS rate_neg,
+    rd.id_point,
+    r.descr
+  FROM rating_details rd,
+       point_rating r
+  WHERE id_user = {$id}
+  AND r.id = rd.id_point
+) m 
+GROUP BY m.crdate 
+EOT;
+        $res = Yii::app()->db->createCommand($sql)->queryAll();
+        $data['rate'] = $res;
+
+
+        // получение название характеристик рейтинга
+        $sql = "SELECT id, descr FROM point_rating WHERE grp = 2";
+        /** @var $res CDbCommand */
+        $res = Yii::app()->db->createCommand($sql);
+        $res = $res->queryAll();
+        $data['rateNames'] = array();
+        foreach ($res as $key => $val) { $data['rateNames'][$val['id']] = $val['descr']; }
+
+        return $data;
+    }
 
 
     /**
