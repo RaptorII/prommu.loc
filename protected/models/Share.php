@@ -740,10 +740,7 @@ class Share
         $arRes = $arT = array();
         $arr = array_unique($arr);
 
-        for($i=0, $n=count($arr); $i<$n; $i++)
-        {
-            !empty($arr[$i]) && $arT[] = $arr[$i];
-        }
+        foreach ($arr as $v) $arT[] = $v;
         $arr = $arT;
 
         if(!count($arr) || !array_filter($arr))
