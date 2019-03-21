@@ -239,6 +239,16 @@
 
     </div>
 </div>
+<?php foreach ($viData['rating']['pointRate'] as $key => $val): ?>
+                <?
+                if($viData['rating']['rateNames'][$key]):
+                    $ratingCount++;
+                    $ratingJson[$ratingCount]['0'] = $viData['rating']['rateNames'][$key];
+                    $ratingJson[$ratingCount]['1'] = $val[0];
+                    $ratingJson[$ratingCount]['2'] = $val[1];
+                endif;
+                ?>
+            <?php endforeach; ?>
 <?
 if(count($ratingJson)>1):
     $ratingJson = json_encode($ratingJson);
