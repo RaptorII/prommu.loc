@@ -91,7 +91,7 @@ EOT;
 
         // получаем рейтинг и уровень характеристик
         $sql = <<<EOT
-SELECT sum(m.rate) as rate, sum(m.rate_neg) as rate_neg, m.crdate, m.id_point, m.descr 
+SELECT sum(m.rate) as rate, sum(m.rate_neg) as rate_neg, rd.crdate, m.id_point, m.descr 
 FROM (
   SELECT
     CASE WHEN rd.point >= 0 THEN rd.point ELSE 0 END AS rate,
@@ -103,7 +103,7 @@ FROM (
   WHERE id_user = {$id}
   AND r.id = rd.id_point
 ) m 
-GROUP BY m.crdate 
+GROUP BY rd.crdate 
 EOT;
         $res = Yii::app()->db->createCommand($sql)->queryAll();
         $data['rate'] = $res;
