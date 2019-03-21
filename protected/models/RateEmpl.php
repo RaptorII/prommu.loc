@@ -86,7 +86,7 @@ EOT;
     /**
      * Готовим рейтинг к выводу
      */
-    private function prepareProfileCommonRate($inData)
+    public function prepareProfileCommonRate($inData)
     {
         foreach ($inData['rateNames'] as $key => $val)
         {
