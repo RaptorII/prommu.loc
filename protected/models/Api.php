@@ -124,7 +124,7 @@ class Api
     
     public function testInfo(){
         $rate = new RateEmpl();
-        $data['rating'] = $rate->getPointRate(Share::$UserProfile->id );
+        $data['rating'] = $rate->getDynamicRate(Share::$UserProfile->id );
         // $data['rating'] = $rate->prepareProfileCommonRate($data['rating']);
 
 
