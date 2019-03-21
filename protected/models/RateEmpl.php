@@ -143,10 +143,11 @@ EOT;
             // сумарные рейтинги по всем атрибутам
             $rate[0] += $val['rate'];
             $rate[1] += abs($val['rate_neg']);
-
+            
+            $date = date('Y-m-d', $val['crdate']);
             // рейтинги по атрибутам
-            $pointRate[$val['crdate']][0] += $val['rate'];
-            $pointRate[$val['crdate']][1] += abs($val['rate_neg']);
+            $pointRate[$date][0] += $val['rate'];
+            $pointRate[$date][1] += abs($val['rate_neg']);
         } // end foreach
 
         return array('pointRate' => $pointRate,
