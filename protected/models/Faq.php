@@ -57,6 +57,24 @@ class Faq extends CActiveRecord
     /*
     *	get faq item info for admin
     */
+    
+    public function getFaqAll($type)
+	{
+	    if($type == 2 || $type = 3){
+	        return  Yii::app()->db->createCommand()
+					->select('*')
+					->from('faq_api')
+					->where('type=:type',array(':type'=>$type))
+					->queryRow();
+	    } else {
+	        return  Yii::app()->db->createCommand()
+					->select('*')
+					->from('faq_api')
+					->queryRow();
+	    }
+		
+	}
+	
 	public function getFaqItem($id)
 	{
 		return  Yii::app()->db->createCommand()
