@@ -109,15 +109,6 @@ EOT;
         $res = Yii::app()->db->createCommand($sql)->queryAll();
         $data['rate'] = $res;
 
-
-        // получение название характеристик рейтинга
-        $sql = "SELECT id, descr FROM point_rating WHERE grp = 2";
-        /** @var $res CDbCommand */
-        $res = Yii::app()->db->createCommand($sql);
-        $res = $res->queryAll();
-        $data['rateNames'] = array();
-        foreach ($res as $key => $val) { $data['rateNames'][$val['id']] = $val['descr']; }
-
         return $data;
     }
     
@@ -126,10 +117,6 @@ EOT;
      */
     public function prepareProfileCommonDynamicRate($inData)
     {
-        foreach ($inData['rateNames'] as $key => $val)
-        {
-            $pointRate[$key] = array(0, 0);
-        } // end foreach
 
 
         // sum all pos and neg rate
