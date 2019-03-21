@@ -101,7 +101,7 @@ FROM (
     rd.crdate
   FROM rating_details rd,
        point_rating r
-  WHERE id_user = {$id}
+  WHERE rd.id_userf = {$id}
   AND r.id = rd.id_point
 ) m 
 GROUP BY m.crdate 
