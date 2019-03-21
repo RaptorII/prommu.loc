@@ -19,10 +19,10 @@ class RateEmpl extends Rate
 	 */
 	public function getViewData()
 	{
-        if( $this->id || Share::$UserProfile->id)
+        if(Share::$UserProfile->id)
         {
             // получаем общий рейтинг
-            $data['rating'] = $this->getPointRate($this->id);
+            $data['rating'] = $this->getPointRate(Share::$UserProfile->id);
             $data['rating'] = $this->prepareProfileCommonRate($data['rating']);
 
 
