@@ -124,7 +124,7 @@ class Api
     
     public function testInfo(){
         $rate = new RateEmpl();
-        return $rate->getRateByUser();
+        return $rate->getViewData();
     }
     
     public function services(){
