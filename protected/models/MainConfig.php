@@ -268,4 +268,10 @@ class MainConfig
     public static $VIEW_CHATS_ITEM_VACANCY_PERSONAL = 'chats/item-vacancy-personal';
     public static $VIEW_CHATS_ITEM_VACANCY_PUBLIC = 'chats/item-vacancy-public';
     public static $VIEW_CHATS_ITEM_VACANCY_PUBLIC_AJAX = 'chats/item-vacancy-public-ajax';
+
+    /*   applicant`s vacancies   */
+    public static $VIEW_APPLICANT_VACS_LIST = 'vacancies/applicant-list';
+    public static $PAGE_APPLICANT_VACS_LIST = '/user/vacancies';
+    public static $PAGE_APPLICANT_VACS_LIST_ARCHIVE = '/user/vacancies/archive';
+    public static $VIEW_APPLICANT_VACS_ITEM = 'vacancies/applicant-item';
 }

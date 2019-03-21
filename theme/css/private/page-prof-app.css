@@ -365,7 +365,10 @@
     padding-bottom: 20px;
     font-family: RobotoCondensedBold, RobotoCondensedRegular, verdana, arial;
 }
-.ppp__about-val{ text-align: justify }
+.ppp__about-val{ 
+    text-align: justify;
+    word-break: break-word;
+}
 /*  */
 .ppp__post-list{ margin: 25px 0 0 }
 .ppp__post-name{ 

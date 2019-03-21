@@ -1,0 +1,198 @@
+.applicant_project, .applicant_project *{
+	font-family: RobotoCondensedRegular, Calibri, Arial, sans-serif;
+	font-size: 16px;
+}
+.applicant_project>div{
+	max-width: 1030px;
+	margin: 0 auto;
+	float: none;
+}
+.app_project__head{
+	width: 100%;
+	background-color: #f0f3f6;
+	border-radius: 15px;
+	padding: 10px;
+	vertical-align: top;
+}
+#DiContent .app_project__head a{
+	width: 75px;
+	display: block;
+	padding: 5px 10px;
+	background-color: #ee7e00;
+	text-align: center;
+	border-radius: 12px;
+	color: #ffffff;
+	font-size: 16px;
+}
+.app_project__head-title{
+	padding: 15px 0;
+	text-align: center;
+}
+.app_project__head-title h1{
+	margin: 0;
+	font-size: 24px;
+	color: #abb820;
+}
+.app_project__head-salary{
+	background-color: #abb820;
+	border-radius: 12px;
+	padding: 5px 10px;
+	display: flex;
+	white-space: nowrap;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+.app_project__head-salary span{ 
+	min-width: 50%; 
+	color: #ffffff;
+	font-size: 18px;
+	font-weight: bold;
+}
+/* */
+.app_project__body-item{ 
+	position: relative;
+	padding-top: 25px;
+	display: flex;
+}
+.app_project__body-flex{
+	display: flex;
+	flex-wrap: wrap;
+}
+.app_project__body-table table{
+	width: 100%;
+	text-align: center;
+	max-width: 450px;
+	margin: 0 auto;
+}
+.app_project__company a{
+	display: flex;
+	align-items: center;
+	text-align: center;
+}
+.app_project__company img{
+	width: 50px;
+	height: 50px;
+	min-width: 50px;
+	min-height: 50px;
+	border-radius: 50%;
+	border: 2px solid #abb820;
+}
+.app_project__company span{
+	font-size: 18px;
+	padding: 0 10px;
+	color: #212121;
+}
+.app_project__posts{
+	color: #abb820;
+	font-size: 22px;
+	padding-bottom: 10px;
+}
+.app_project__body-table table td:first-child{
+	padding-right: 5px;
+	text-align: center;
+}
+.app_project__body-border{
+	width: 100%;
+	border: 1px solid #abb820;
+	border-radius: 10px;
+	padding: 20px 15px 15px;
+}
+#DiContent .app_project__body-title h2{
+	color: #abb820;
+	font-size: 16px;
+	font-weight: normal;
+	text-transform: uppercase;
+	margin: 0;
+	display: inline-block;
+	padding: 0 10px;
+	background-color: #ffffff;
+	position: relative;
+	z-index: 2;
+}
+.app_project__body-title{ 
+	position: absolute;
+	overflow: hidden;
+	height: 25px;
+	top: 14px;
+	left: 35px;
+}
+/*
+.app_project__body-title:before{
+	content: '';
+	display: block;
+	position: absolute;
+	top: 50%;
+	right: 0;
+	left: 0;
+	height: 1px;
+	background-color: #abb820; 
+	z-index: 1;
+}
+*/
+.app_project__body ul{
+	list-style: none;
+	padding-left: 15px;
+}
+.app_project__body li{
+	border-bottom: 1px solid #c5c5c5;
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+}
+.app_project__location{
+	border-top: 1px solid #c5c5c5;
+	padding-top: 5px;
+	margin-top: 5px;
+}
+.app_project__body li:last-child{ border: none }
+.app_project__city td{ padding: 5px; }
+.app_project__body-info{
+	padding-bottom: 10px;
+	word-wrap: break-word;
+}
+.app-projects__body-btn{
+	width: 150px;
+	display: inline-block;
+	background: #ff921d;
+	text-align: center;
+	padding: 2px 5px;
+	border-radius: 5px;
+	cursor: pointer;
+	margin: 10px 2px 0px;
+	font-weight: normal;
+	font-size: 14px;
+}
+#DiContent .app-projects__body-btn,
+#DiContent .app-projects__body-btn:hover{ color: #ffffff; }
+.app_project__body-status .app_project__body-flex{ justify-content: space-around; }
+/*
+*		MEDIA
+*/
+@media screen and (min-width: 400px){
+
+}
+@media screen and (min-width: 768px){
+	.app_project__head{ display:table }
+	#DiContent .app_project__head a,
+	.app_project__head-title,
+	.app_project__head-salary{
+		display: table-cell;
+		vertical-align: middle;
+	}
+	.app_project__head-title{ padding: 0 15px; }
+	.app_project__head-title h1{ font-size: 30px; }
+	.app_project__head-salary{ width: 200px; }
+	.app_project__company img{
+		width: 100px;
+		height: 100px;
+		min-width: 100px;
+		min-height: 100px;
+	}
+	.app_project__body-table table{ 
+		text-align: left;
+		max-width: 500px;
+	}
+	.app_project__body-table table td:first-child{
+		padding-right: 10px;
+		text-align: right;
+	}
+}

@@ -177,6 +177,10 @@ return array(
                 '<controller:user>/<action:chats>/<section:feedback>/<id:\d+>' => '<controller>/<action>',
                 '<controller:user>/<action:chats>/<section:vacancies>/<vacancy:\d+>' => '<controller>/<action>',
                 '<controller:user>/<action:chats>/<section:vacancies>/<vacancy:\d+>/<id:\d+>' => '<controller>/<action>',
+                // applicant vacancies
+                '<controller:user>/<action:vacancies>/<id:\d+>' => '<controller>/<action>',
+                '<controller:user>/<action:vacancies>/<section:[\w-]+>' => '<controller>/<action>',
+                '<controller:user>/<action:vacancies>/<section:archive>/<id:\d+>' => '<controller>/<action>',
                 // все action с цифрами на общий контроллер
                 '<action>/<id:\d+>' => 'site/<action>',
                 // для всех страниц

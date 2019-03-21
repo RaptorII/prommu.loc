@@ -1382,7 +1382,8 @@ class UserProfileApplic extends UserProfile
 
         $arDays = Yii::app()->getRequest()->getParam('days');
         $arTime = Yii::app()->getRequest()->getParam('time');
-        $arCity = Yii::app()->getRequest()->getParam('city');
+        //$arCity = Yii::app()->getRequest()->getParam('city');
+        $arCity = $_POST['city'];
 
         foreach($arCity as $idCity){
             for($day=1; $day<=7; $day++){

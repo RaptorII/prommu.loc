@@ -969,8 +969,11 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                     <span class="sv__data-pubdate-item">Дата начала работы:<b><?= $begWorkDate ?></b></span><br>
                     <span class="sv__data-pubdate-item">Дата завершения работы:<b><?= $viData['vac']['remdate'] ?></b></span>
                 </div>
-                <div class="prmu-btn sv__data-responce" data-id="<?= $vacancy['id'] ?>"><span>ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ</span>
+                <div class="center">
+                    <div class="sv__data-responce prmu-btn prmu-btn_normal" data-id="<?=$vacancy['id']?>">
+                        <span>ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ</span>
                     </div>
+                </div>
                 <span class="sv__data-subtitle"><h3>КТО НУЖЕН и с какими параметрами</h3></span>
                 <div class="sv__attributes">
                     <?php if ($vacancy['isman'] || $vacancy['iswoman']): ?>
@@ -1222,8 +1225,10 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                         <div class="sv__textblock-text"><?= html_entity_decode($vacancy['duties']) ?></div>
                     </div>
                 <?php endif; ?>
-                <div class='btn-response btn-orange-fix-wr'>
-                    <a class='hvr-sweep-to-right' href='javascript:void(0);'>Откликнуться на вакансию</a>
+                <div class="center">
+                    <div class="sv__data-responce prmu-btn prmu-btn_normal" data-id="<?=$vacancy['id']?>">
+                        <span>ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ</span>
+                    </div>
                 </div>
             </div>
         </div>

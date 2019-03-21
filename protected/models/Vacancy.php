@@ -3041,4 +3041,299 @@ WHERE id_vac = {$inVacId}";
 
         return ['vacancy'=>$arVac, 'filter'=>$arFilter];
     }
+    /**
+     * @param $id_resume int ID resume
+     * @param $isArchive bool page section
+     * Получение списка вакансий для С
+     */
+    public function getAppVacancies($id_resume, $isArchive=false)
+    {
+        $arRes = ['items'=>[],'pages'=>[]];
+        $limit = 10;
+        $filter = 'vs.id_promo=:id AND vs.status' . 
+            (!$isArchive ? '<=5 AND ev.status=1' : '>5');
+        $params = [':id' => $id_resume];
+        // id
+        $arIdVacs = Yii::app()->db->createCommand()
+                    ->select('ev.id')
+                    ->from('empl_vacations ev')
+                    ->leftjoin('vacation_stat vs','vs.id_vac=ev.id')
+                    ->where($filter, $params)
+                    ->queryColumn();
+
+        if(!count($arIdVacs))
+            return $arRes;
+        // pagination
+        $arRes['pages'] = new CPagination(count($arIdVacs));
+        $arRes['pages']->pageSize = $limit;
+        $arRes['pages']->applyLimit($this);
+        // full data
+        $arRes['items'] = Yii::app()->db->createCommand()
+                    ->select("ev.id,
+                        ev.id_user employer,
+                        ev.title,
+                        DATE_FORMAT(ev.crdate, '%d.%m.%Y') crdate,
+                        DATE_FORMAT(ev.bdate, '%d.%m.%Y') pubdate,
+                        vs.isresponse,
+                        vs.status,
+                        vs.second_response sresponse")
+                    ->from('empl_vacations ev')
+                    ->leftjoin('vacation_stat vs','vs.id_vac=ev.id')
+                    ->where($filter, $params)
+                    ->order('ev.id desc')
+                    ->limit($this->limit)
+                    ->offset($this->offset)
+                    ->queryAll();
+
+        // ищем только недоступные вакансии
+        $arIdDisVacs = $this->checkAccessToResponse($arIdVacs);
+
+        $arIdUser = array();
+        foreach ($arRes['items'] as &$v)
+        {
+            $arIdUser[] = $v['employer'];
+            $v['pubdate']==='00.00.0000' && $v['pubdate'] = $v['crdate'];
+            $v['condition'] = $this->getAppVacStatus($v['isresponse'], $v['status']);
+            $v['access_to_chat'] = $v['status']>4; // доступ к чату
+            $v['second_response'] = (!in_array($v['id'],$arIdDisVacs) && $v['status']==3 && !$v['sresponse']);  // проверяем доступна ли вакансия
+        }
+        unset($v);
+
+        $arRes['users'] = Share::getUsers($arIdUser);
+        
+        return $arRes;
+    }
+    /**
+     * @param $id_vac int ID vacancy
+     * @param $id_resume int ID resume
+     * получаем данные по вакансии
+     */
+    public function getAppVacancy($id_vac, $id_resume)
+    {
+        $arRes = array();
+
+        $arRes['item'] = Yii::app()->db->createCommand()
+                    ->select("ev.id,
+                        ev.id_user employer,
+                        ev.title,
+                        DATE_FORMAT(ev.crdate, '%d.%m.%Y') crdate,
+                        DATE_FORMAT(ev.bdate, '%d.%m.%Y') pubdate,
+                        DATE_FORMAT(ev.remdate, '%d.%m.%Y') remdate,
+                        ev.shour,
+                        ev.sweek,
+                        ev.smonth,
+                        ev.svisit,
+                        ev.requirements,
+                        ev.duties,
+                        ev.conditions,
+                        vs.id vstatus_id,
+                        vs.isresponse,
+                        vs.status,
+                        vs.second_response sresponse")
+                    ->from('empl_vacations ev')
+                    ->leftjoin('vacation_stat vs','vs.id_vac=ev.id')
+                    ->where(
+                        'vs.id_promo=:id_promo AND ev.id=:id',
+                        [':id_promo'=>$id_resume,':id'=>$id_vac]
+                    )
+                    ->queryRow();
+
+        if(!$arRes['item']['id'])
+            return ['item'=>[]];
+
+        if($arRes['item']['pubdate']==='00.00.0000')
+            $arRes['item']['pubdate'] = $arRes['item']['crdate'];
+        $arRes['item']['condition'] = $this->getAppVacStatus(
+                $arRes['item']['isresponse'],
+                $arRes['item']['status']
+            );
+        $arRes['item']['access_to_chat'] = $arRes['item']['status']>4; // доступ к чату
+        $arRes['item']['access_to_answer'] = ($arRes['item']['isresponse']==2 && $arRes['item']['status']<2);
+        // ищем только недоступные вакансии
+        $arIdDisVac = $this->checkAccessToResponse([$id_vac]);
+        $arRes['item']['second_response'] = (
+                !count($arIdDisVac) 
+                && 
+                $arRes['item']['status']==3 
+                && 
+                !$arRes['item']['sresponse']
+            );  // проверяем доступна ли вакансия
+        // атрибуты
+        $arRes['attribs'] = Yii::app()->db->createCommand()
+                    ->select("ea.*, uad.name pname, uad.id_par")
+                    ->from('empl_attribs ea')
+                    ->leftjoin(
+                        'user_attr_dict uad',
+                        'uad.id=ea.id_attr' //AND uad.id_par=110'
+                    )
+                    ->where('ea.id_vac=:id',[':id'=>$id_vac])
+                    ->queryAll();
+
+        foreach ($arRes['attribs'] as $v)
+            $v['id_par']==110 && $arRes['posts'][] = $v['pname'];
+        
+        // города
+        $arRes['city'] = Yii::app()->db->createCommand()
+                    ->select("ec.id,
+                        DATE_FORMAT(ec.bdate,'%d.%m.%Y') bdate, 
+                        DATE_FORMAT(ec.edate,'%d.%m.%Y') edate,
+                        ec.id_city,
+                        c.name city")
+                    ->from('empl_city ec')
+                    ->leftjoin('city c','c.id_city = ec.id_city')
+                    ->where('ec.id_vac=:id',[':id'=>$id_vac])
+                    ->queryAll();
+        // locations
+        $arRes['locations'] = Yii::app()->db->createCommand()
+                    ->select("el.id,
+                            el.id_vac,
+                            el.id_city,
+                            el.id_metro,
+                            el.id_metros,
+                            el.name,
+                            el.addr")
+                    ->from('empl_locations el')
+                    ->where('el.id_vac=:id',[':id'=>$id_vac])
+                    ->queryAll();
+
+        $arIdLoc = $arMetro = array();
+        foreach ($arRes['locations'] as &$v)
+        {
+            $arIdLoc[] = $v['id'];
+            $arM = array();
+            if($v['id_metro']>0)
+            {
+                $arM[] = $v['id_metro'];
+                $arMetro[] = $v['id_metro'];
+            }
+            if(!empty($v['id_metros']))
+            {
+                $arT = explode(',',$v['id_metros']);
+                $arMetro = array_merge($arMetro,$arT);
+                $arM = array_merge($arM,$arT);
+            }
+            $v['id_metro'] = $arM;
+            unset($v['id_metros']);
+        }
+        unset($v);
+        // метро
+        $arMetro = array_unique($arMetro);
+        if(count($arMetro))
+        {
+            $query = Yii::app()->db->createCommand()
+                    ->select("id, name")
+                    ->from('metro')
+                    ->where(['in','id',$arMetro])
+                    ->queryAll();
+            $arMetro = array();
+            foreach ($query as $v)
+                $arMetro[$v['id']] = $v['name'];
+            foreach ($arRes['locations'] as &$v)
+            {
+                if(count($v['id_metro']))
+                    foreach ($v['id_metro'] as $m)
+                        $v['metro'][] = $arMetro[$m];
+                unset($v['id_metro']);
+            }
+            unset($v);
+        }
+        // периоды
+        $arRes['periods'] = Yii::app()->db->createCommand()
+                    ->select("id_loc,
+                        DATE_FORMAT(bdate,'%d.%m.%Y') bdate,
+                        DATE_FORMAT(edate,'%d.%m.%Y') edate,
+                        btime,
+                        etime")
+                    ->from('emplv_loc_times')
+                    ->where(['in','id_loc',$arIdLoc])
+                    ->queryAll();
+
+        foreach ($arRes['periods'] as &$v)
+        {
+            // преобразуем время
+            if($v['btime'])
+            {
+                $h = floor($v['btime'] / 60);
+                $m = $v['btime'] - $h * 60;
+                $v['btime']=sprintf('%d:%02d',$h,$m);
+            }
+            if($v['etime'])
+            {
+                $h = floor($v['etime'] / 60);
+                $m = $v['etime'] - $h * 60;
+                $v['etime']=sprintf('%d:%02d',$h,$m);
+            }
+        }
+
+        $arRes['user'] = Share::getUsers([$arRes['item']['employer']]);
+
+        return $arRes;
+    }
+    /**
+     * @param $id_vac int ID vacancy
+     * @param $id_resume int ID resume
+     * проверка доступа соискателя к вакансии
+     */
+    public function hasAppAccess($id_vac, $id_resume)
+    {
+        return Yii::app()->db->createCommand()
+                    ->select('ev.id')
+                    ->from('empl_vacations ev')
+                    ->leftjoin('vacation_stat vs','vs.id_vac=ev.id')
+                    ->where(
+                        'vs.id_promo=:id_promo AND ev.id=:id',
+                        [':id_promo'=>$id_resume,':id'=>$id_vac]
+                    )
+                    ->queryScalar();
+    }
+    /**
+     * @param $isResponse int isresponse from vacancy_stat
+     * @param $status int status from vacancy_stat
+     * получаем человекопонятный статус
+     */
+    public function getAppVacStatus($isResponse, $status)
+    {
+        $result = '';
+        if($isResponse==1) // отклик
+        {
+            switch($status)
+            {
+                case 3: $result = 'Работодатель отказал'; break;
+                case 5: $result = 'Работодатель утвердил'; break;
+                case 6: $result = 'Завершено без рейтинга'; break;
+                case 7: $result = 'Завершено с рейтингом'; break;
+                default: $result = 'Ожидение ответа'; break;
+            }
+        }
+        elseif($isResponse==2) // приглашение
+        {
+            switch($status)
+            {
+                case 1: $result = 'Приглашение просмотрено'; break;
+                case 3: $result = 'Приглашение отклонено'; break;
+                case 4: $result = 'Приглашение принято'; break;
+                case 5: $result = 'Приглашение принято'; break;
+                case 6: $result = 'Завершено без рейтинга'; break;
+                case 7: $result = 'Завершено с рейтингом'; break;
+                default: $result = 'Новый проект'; break;
+            }
+        }
+        return $result;
+    }
+    /**
+     * @param $arIdVacs - array of ID vacancies
+     * ищем доступные для отклика вакансии
+     */
+    public function checkAccessToResponse($arIdVacs)
+    {
+        return Yii::app()->db->createCommand()
+                    ->select("DISTINCT(ev.id)")
+                    ->from('empl_vacations ev')
+                    ->leftjoin('vacation_stat vs','vs.id_vac=ev.id')
+                    ->where(['and',
+                        'ev.status=0 OR vs.status>5',
+                        ['in','ev.id',$arIdVacs]
+                    ])
+                    ->queryColumn();
+    }
 }

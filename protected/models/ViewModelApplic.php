@@ -14,5 +14,7 @@ class ViewModelApplic extends ViewModel
         $this->pageResponses = MainConfig::$VIEWS_APPLICANT_RESPONSES;
         $this->pageSetRate = MainConfig::$VIEWS_APPLICANT_SETRATE;
         $this->pageMessView = MainConfig::$VIEWS_APPLICANT_MESS_VIEW;
+        $this->pageVacancies = MainConfig::$VIEW_APPLICANT_VACS_LIST;
+        $this->pageVacancyItem = MainConfig::$VIEW_APPLICANT_VACS_ITEM;
     }
 }

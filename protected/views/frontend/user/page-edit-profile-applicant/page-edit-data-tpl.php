@@ -592,7 +592,7 @@
                           <div class="epa__label epa__period" data-id="<?=$idDay?>">
                             <span class="epa__period-close"></span>
                             <span class="epa__label-name"><i><?=$arDays[$idDay]?></i>, Время дня:</span>
-                            <input type="text" name="time[<?=$city['id']?>][<?=$idDay?>]" class="epa__input epa__required" value="<?=$value?>" data-name="Временной период">
+                            <input type="text" name="time[<?=$city['id']?>][<?=$idDay?>]" class="epa__input epa__required" value="<?=$value?>" data-name="Временной период" autocomplete="off">
                           </div>
                     <?php endforeach; ?>
                   </div>
@@ -842,7 +842,7 @@
     <div class="epa__label epa__period" data-id="NEWDAY">
       <span class="epa__period-close"></span>
       <span class="epa__label-name"><i></i>, Время дня:</span>
-      <input type="text" name="time[NEWID][NEWDAY]" class="epa__input epa__required">
+      <input type="text" name="time[NEWID][NEWDAY]" class="epa__input epa__required" autocomplete="off">
     </div>
   </div>
   <?//  *****************  //?>

@@ -674,34 +674,70 @@ class UserController extends AppController
 
     public function actionVacancies()
     {
-        // no profile for guest
-        Share::$UserProfile->type != 3 && $this->redirect(MainConfig::$PAGE_LOGIN);
-        $vac = explode("&", $_GET['vacancy']);
-        $coun = count($vac);
+        if(!Share::isEmployer() && !Share::isApplicant())
+            $this->redirect(MainConfig::$PAGE_LOGIN);
 
-            for($i = 0; $i < $coun; $i ++) {
+        $data = array();
+        $title = '';
+        $model = new Vacancy();
+        $view = $this->ViewModel->pageVacancies;
+
+        if(Share::isEmployer())
+        {
+            $vac = explode("&", $_GET['vacancy']);
+            $coun = count($vac);
+
+            for($i = 0; $i < $coun; $i ++)
+            {
                 Yii::app()->db->createCommand()
                 ->update('empl_vacations', array(
                 'count'=> 1),
                     'id=:id', array(':id'=>$vac[$i]));
             }
 
-        $Vacancy = new Vacancy();
+            $data['arCount'] = $model->getSeсtionsVacCount()['cnt'];
+            $data['pages'] = new CPagination($data['arCount']['vac']);
+            $data['pages']->pageSize = MainConfig::$DEF_PAGE_LIMIT;
+            $data['pages']->applyLimit($model);
+            $data['viData']['rate'] = Share::$UserProfile->getProfileDataView();
+            $data['viData'] = array_merge($data['viData'], $model->getVacancies());
+            $model = new ProjectConvertVacancy();
+            $data['viData']['projects'] = $model->findRelatedProjects($data['viData']['vacs']);
+            $title = 'Мои вакансии';
+            $this->setBreadcrumbs($title, MainConfig::$PAGE_VACANCIES);
+        }
+        elseif(Share::isApplicant())
+        {
+            $rq = Yii::app()->getRequest();
+            $id_resume = Share::$UserProfile->exInfo->id_resume;
+            $id = $rq->getParam('id');
+            $isArchive = $rq->getParam('section')==='archive';
+            $link = $isArchive 
+                ? MainConfig::$PAGE_APPLICANT_VACS_LIST_ARCHIVE 
+                : MainConfig::$PAGE_APPLICANT_VACS_LIST;
+            
+            if($id>0)
+            {
+                if(!$model->hasAppAccess($id, $id_resume))
+                    throw new CHttpException(404, 'Error');
 
-        $arCount = $Vacancy->getSeсtionsVacCount()['cnt'];
-        $pages = new CPagination($arCount['vac']);
-        $pages->pageSize = MainConfig::$DEF_PAGE_LIMIT;
-        $pages->applyLimit($Vacancy);
-        $data['rate'] = Share::$UserProfile->getProfileDataView();
-        $data = array_merge($data, $Vacancy->getVacancies());
-        $model = new ProjectConvertVacancy();
-        $data['projects'] = $model->findRelatedProjects($data['vacs']);
-        
-        $this->setBreadcrumbs($title = 'Мои вакансии', MainConfig::$PAGE_VACANCIES);
-        $this->render($this->ViewModel->pageVacancies,
-                array('viData' => $data, 'arCount'=>$arCount, 'pages' => $pages),
-                array('htmlTitle' => $title)
-            );
+                $view = $this->ViewModel->pageVacancyItem;
+                $data['viData'] = $model->getAppVacancy($id, $id_resume);
+                $title = $data['viData']['item']['title'];
+                $this->setBreadcrumbsEx(
+                    ['Мои проекты', $link],
+                    [$title, $link . DS . $id ]
+                );
+            }
+            else
+            {
+                $data['viData'] = $model->getAppVacancies($id_resume, $isArchive);
+                $title = 'Мои проекты';
+                $this->setBreadcrumbs($title, $link);
+            }
+        }
+
+        $this->render($view, $data, ['htmlTitle' => $title]);
     }
 
     public function actionVacarhive()

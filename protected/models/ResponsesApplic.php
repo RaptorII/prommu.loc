@@ -310,6 +310,12 @@ class ResponsesApplic extends Responses
                     Yii::app()->getRequest()->getParam('id'), 
                     FILTER_SANITIZE_NUMBER_INT
                 );
+        $sresponse = $inProps['second_response'] 
+            ?: filter_var(
+                    Yii::app()->getRequest()->getParam('sresponse'), 
+                    FILTER_SANITIZE_NUMBER_INT
+                );
+
         $arRes = array(
                     'error' => 1,
                     'message' => 'Произошла ошибка во время подачи заявки на вакансию. Попробуйте позже'
@@ -364,19 +370,29 @@ class ResponsesApplic extends Responses
 
         // search responces of this user on current vacancy
         $query = Yii::app()->db->createCommand()
-                    ->select('id')
+                    ->select('*')
                     ->from('vacation_stat')
                     ->where(
-                        'id_vac=:id AND id_promo=:id_promo AND isresponse=1',
+                        'id_vac=:id AND id_promo=:id_promo',
                         [":id_promo"=>$idPromo, ":id"=>$id]
                     )
-                    ->queryScalar();
+                    ->queryRow();
 
-        if($query)
+        if($query['id'] && $query['second_response'])
         {
-            $arRes['message'] = '<p>Вы уже подавали заявку на эту вакансию</p>'
-                . '<p>Чтобы откликнуться на другие вакансии - <a href="'
-                . MainConfig::$PAGE_SEARCH_VAC . '">жмите сюда</a></p>';
+            if($query['response']==1)
+            {
+                $arRes['message'] = '<p>Вы уже подавали заявку на эту вакансию</p>'
+                    . '<p>Чтобы откликнуться на другие вакансии - <a href="'
+                    . MainConfig::$PAGE_SEARCH_VAC . '">жмите сюда</a></p>';               
+            }
+            else
+            {
+                $arRes['message'] = '<p>Вы уже были приглашены на эту вакансию</p>'
+                    . '<p>Чтобы откликнуться на другие вакансии - <a href="'
+                    . MainConfig::$PAGE_SEARCH_VAC . '">жмите сюда</a></p>';
+            }
+
             return $arRes;
         }
         else
@@ -435,17 +451,40 @@ class ResponsesApplic extends Responses
                     return $arRes;                   
                 }
             }
-            // Добавляем заявку на вакансию
-            Yii::app()->db->createCommand()
-                ->insert(
-                    'vacation_stat', 
-                    array(
-                        'id_promo' => $idPromo,
-                        'id_vac' => $id,
-                        'isresponse' => 1,
-                        'date' => date('Y-m-d H:i:s'),
-                    )
-                );
+            // повторная отправка
+            if($sresponse==$idPromo && !$query['second_response']) 
+            {
+                Yii::app()->db->createCommand()
+                    ->update('vacation_stat', 
+                        [
+                            'isresponse' => 1,
+                            'status' => 0,
+                            'second_response' => 1,
+                            'mdate' => date('Y-m-d H:i:s')
+                        ],
+                        'id=:id',
+                        [':id' => $query['id']]
+                    );
+                $arRes['message'] = 'Заявка на вакансию направлена работодателю повторно. '
+                    . 'Как только работодатель примет решение - вы получите '
+                    . 'уведомление в личном кабинете';          
+            }
+            else // Добавляем заявку на вакансию
+            {
+                Yii::app()->db->createCommand()
+                    ->insert(
+                        'vacation_stat', 
+                        array(
+                            'id_promo' => $idPromo,
+                            'id_vac' => $id,
+                            'isresponse' => 1,
+                            'date' => date('Y-m-d H:i:s'),
+                        )
+                    );
+                $arRes['message'] = 'Заявка на вакансию направлена работодателю. '
+                    . 'Как только работодатель примет решение - вы получите '
+                    . 'уведомление в личном кабинете';
+            }
             // Находим email работодателя
             $email = Yii::app()->db->createCommand()
                         ->select('email')
@@ -484,9 +523,6 @@ class ResponsesApplic extends Responses
                 $api->getPush($push, 'invite');
             }
 
-            $arRes['message'] = 'Заявка на вакансию направлена работодателю. '
-                . 'Как только работодатель примет решение - вы получите '
-                . 'уведомление в личном кабинете';
             $arRes['error'] = 0;
         }
 

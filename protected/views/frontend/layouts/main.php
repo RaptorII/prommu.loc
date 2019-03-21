@@ -203,7 +203,7 @@
                                                 $vacClass = $curUrl==$link ? ' current' : '';
                                                 $vacClass .= $notif['cnt'] ? ' active' : '';
                                             ?>
-                                            <? if(Share::$UserProfile->type==3): ?>
+                                            <? if(Share::isEmployer()): ?>
 	                                            <div class="small-menu__item<?=($curUrl==MainConfig::$PAGE_VACPUB ? ' current' : '')?>">
 	                                              <a href="<?=MainConfig::$PAGE_VACPUB?>" class="addvac">
 	                                                <span class="small-menu__circle"><i></i></span>
@@ -211,6 +211,14 @@
 	                                              </a>
 	                                            </div>
                                           	<? endif; ?>
+                                            <? if(Share::isApplicant()): ?>
+                                                <div class="small-menu__item<?=($curUrl==MainConfig::$PAGE_APPLICANT_VACS_LIST ? ' current' : '')?>">
+                                                  <a href="<?=MainConfig::$PAGE_APPLICANT_VACS_LIST?>" class="addvac">
+                                                    <span class="small-menu__circle"><i></i></span>
+                                                    <span class="small-menu__name">ПРОЕКТЫ</span>
+                                                  </a>
+                                                </div>
+                                            <? endif; ?>
                                             <div class="small-menu__item vacancy<?=$vacClass?>" id="sm-vac-cnt">
                                                 <a href="<?=$link?>">
                                                     <span class="small-menu__circle">
@@ -488,7 +496,7 @@
                             //
                             // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! только индексируемые города
                             //
-                            $arIndexCities = [1838, 1307, 1449, 571, 1973];
+                            $arIndexCities = [1838,1307,1449,571,1973,149,437,684,2260,1879,2243,2300,2339,2467,2127,1072];
                         ?>
                         <? foreach ($SubdomainCache->data as $id => $site): ?>
                             <? if(in_array($id, $arIndexCities) && $id!=$SubdomainCache->id): ?>
