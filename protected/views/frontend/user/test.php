@@ -160,9 +160,9 @@ endif;
     
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
-            ['Год', 'Рейтинг'],
-            ['2019-03-20', 9,1],
-            ['2019-03-23', 1,4]]
+            ['Год', 'Хорошо', 'Плохо'],
+            ['Date(2019-03-20)', 9,1],
+            ['Date(2019-03-23)', 1,4]]
 );
         
        
