@@ -143,14 +143,7 @@ var_dump($viData);
                 ?>
             <?php endforeach; ?>
 <?
-if(count($ratingJson)>1):
-    $ratingJson = json_encode($ratingJson);
-else:
-    $ratingJson = [];
-    $ratingJson[0] = ['Дата', 'хорошо', 'плохо'];
-    $ratingJson[1] = ['Нет данных',0,0];
-    $ratingJson = json_encode($ratingJson);
-endif;
+
 
 var_dump($ratingJson);
 ?>
