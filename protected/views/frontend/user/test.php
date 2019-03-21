@@ -151,6 +151,8 @@ else:
     $ratingJson[1] = ['Нет данных',0,0];
     $ratingJson = json_encode($ratingJson);
 endif;
+
+var_dump($ratingJson);
 ?>
 <script>
     var arArray = [];
