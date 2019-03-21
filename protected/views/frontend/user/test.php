@@ -1,5 +1,9 @@
 <script src="https://www.google.com/jsapi"></script>
-
+<?
+$userId = Share::$UserProfile->id;
+$arUser = Share::getUsers(array($userId));
+$arUser = $arUser[$userId];
+?>
 <style>
     .user__info {
         display: flex;
@@ -185,7 +189,7 @@
     <h2>Рейтинг:</h2>
     <div class="user__diagram" id="oil" style="width: 100%; height: 400px;">
 
-
+    
 
     </div>
 
@@ -239,14 +243,19 @@
 
     </div>
 </div>
+<?
+                $ratingJson = [];
+                $ratingCount = 0;
+                $ratingJson[$ratingCount] = ['Дата', 'хорошо', 'плохо'];
+            ?>
 <?php foreach ($viData['rating']['pointRate'] as $key => $val): ?>
                 <?
-                if($viData['rating']['rateNames'][$key]):
+               
                     $ratingCount++;
-                    $ratingJson[$ratingCount]['0'] = $viData['rating']['rateNames'][$key];
+                    $ratingJson[$ratingCount]['0'] = $viData['rating']['pointRate'][$key];
                     $ratingJson[$ratingCount]['1'] = $val[0];
                     $ratingJson[$ratingCount]['2'] = $val[1];
-                endif;
+                
                 ?>
             <?php endforeach; ?>
 <?
@@ -273,7 +282,7 @@ endif;
             title: '',
             hAxis: {title: 'Дата'},
             colors: ['#ABB837','red'],
-            vAxis: {title: '%'}
+            vAxis: {title: 'Dynamic Rate'}
         };
         var chart = new google.visualization.ColumnChart(document.getElementById('oil'));
         chart.draw(data, options);
