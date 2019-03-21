@@ -120,7 +120,42 @@ EOT;
 
         return $data;
     }
+    
+    /**
+     * Готовим dynamic рейтинг к выводу
+     */
+    public function prepareProfileCommonDynamicRate($inData)
+    {
+        foreach ($inData['rateNames'] as $key => $val)
+        {
+            $pointRate[$key] = array(0, 0);
+        } // end foreach
 
+
+        // sum all pos and neg rate
+        $rate = array(0, 0);
+        $maxPointRate = 0;
+        foreach ($inData['rate'] as $key => $val)
+        {
+            // масимальный рейтинг
+            if( $val['rate'] - abs($val['rate_neg']) > $maxPointRate) $maxPointRate = $val['rate'] - abs($val['rate_neg']);
+
+            // сумарные рейтинги по всем атрибутам
+            $rate[0] += $val['rate'];
+            $rate[1] += abs($val['rate_neg']);
+
+            // рейтинги по атрибутам
+            $pointRate[$val['crdate']][0] += $val['rate'];
+            $pointRate[$val['crdate']][1] += abs($val['rate_neg']);
+        } // end foreach
+
+        return array('pointRate' => $pointRate,
+                'rate' => $rate,
+                'countRate' => $rate[0] - $rate[1],
+                'maxPointRate' => $maxPointRate,
+                'rateNames' => $inData['rateNames'],
+            );
+    }
 
     /**
      * Готовим рейтинг к выводу
