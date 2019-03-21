@@ -239,22 +239,26 @@
 
     </div>
 </div>
+<?
+if(count($ratingJson)>1):
+    $ratingJson = json_encode($ratingJson);
+else:
+    $ratingJson = [];
+    $ratingJson[0] = ['Дата', 'хорошо', 'плохо'];
+    $ratingJson[1] = ['Нет данных',0,0];
+    $ratingJson = json_encode($ratingJson);
+endif;
+?>
 <script>
+    var arArray = [];
+    arArray = <?=$ratingJson?>;
     google.load("visualization", "1", {packages: ["corechart"]});
     google.setOnLoadCallback(drawChart);
+    
     function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-            ['Год', 'Рейтинг'],
-            ['1860', 900],
-            ['1885', 2000],
-            ['1901', 170],
-            ['1902', 700],
-            ['1903', 2000],
-            ['1904', 1500],
-            ['1905', 2000],
-            ['1906', 1500],
-            ['1907', 2000],
-        ]);
+        var data = google.visualization.arrayToDataTable(<?=$ratingJson?>);
+        
+       
         var options = {
             title: '',
             hAxis: {title: 'Дата'},
