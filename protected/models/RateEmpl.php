@@ -19,7 +19,7 @@ class RateEmpl extends Rate
 	 */
 	public function getViewData()
 	{
-        if( $this->id )
+        if( $this->id || Share::$UserProfile->id)
         {
             // получаем общий рейтинг
             $data['rating'] = $this->getPointRate($this->id);
