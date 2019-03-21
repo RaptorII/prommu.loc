@@ -262,7 +262,7 @@ endif;
         var options = {
             title: '',
             hAxis: {title: 'Дата'},
-            colors: ['#ABB837','green'],
+            colors: ['#ABB837','red'],
             vAxis: {title: '%'}
         };
         var chart = new google.visualization.ColumnChart(document.getElementById('oil'));
