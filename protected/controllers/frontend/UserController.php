@@ -1904,8 +1904,14 @@ class UserController extends AppController
      */
     public function actionTest()
     {
-        in_array(Share::$UserProfile->id, [7000,15642]) || $this->redirect(MainConfig::$PAGE_LOGIN);
+        // in_array(Share::$UserProfile->id, [7000,15642]) || $this->redirect(MainConfig::$PAGE_LOGIN);
+        $rate = new RateEmpl();
+        $data['rating'] = $rate->getDynamicRate(Share::$UserProfile->id );
+        $data['rating'] = $rate->prepareProfileCommonDynamicRate($data['rating']);
 
-        $this->render('test');
+        $this->render('test',
+            array('viData' => $data,
+                ));
+      
     }
 }
