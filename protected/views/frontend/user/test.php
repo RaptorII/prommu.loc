@@ -134,7 +134,7 @@ var_dump($viData);
             ?>
 <?php foreach ($viData['rating']['pointRate'] as $key => $val): ?>
                 <?
-               
+                    var_dump($key);
                     $ratingCount++;
                     $ratingJson[$ratingCount]['0'] = $viData['rating']['pointRate'][$key];
                     $ratingJson[$ratingCount]['1'] = $val[0];
