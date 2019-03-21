@@ -1,7 +1,7 @@
 <?php
 /**
  *degres
- * Модель статей
+ * Модель FAQ
  */
 
 class Faq extends CActiveRecord
@@ -65,12 +65,12 @@ class Faq extends CActiveRecord
 					->select('*')
 					->from('faq_api')
 					->where('type=:type',array(':type'=>$type))
-					->queryRow();
+					->queryAll();
 	    } else {
 	        return  Yii::app()->db->createCommand()
 					->select('*')
 					->from('faq_api')
-					->queryRow();
+					->queryAll();
 	    }
 		
 	}
