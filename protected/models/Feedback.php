@@ -133,7 +133,7 @@ class Feedback extends Model
 			$roistat = (isset($_COOKIE['roistat_visit'])) ? $_COOKIE['roistat_visit'] : "(none)";
 
 			$arErrors = false;
-			if(empty($id) || $app == 0) { // CAPTCHA
+			if(empty($id) && $app == 0) { // CAPTCHA
 				$recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
 				if(!empty($recaptcha))
 				{
