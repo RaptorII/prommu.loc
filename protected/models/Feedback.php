@@ -113,6 +113,7 @@ class Feedback extends Model
     public function saveData()
     {
 			$autotype = filter_var(Yii::app()->getRequest()->getParam('autotype'), FILTER_SANITIZE_NUMBER_INT);
+			$app = filter_var(Yii::app()->getRequest()->getParam('app'), FILTER_SANITIZE_NUMBER_INT);
 			$type = filter_var(Yii::app()->getRequest()->getParam('type', 0), FILTER_SANITIZE_NUMBER_INT);
 			$name = filter_var(Yii::app()->getRequest()->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 			$theme = filter_var(Yii::app()->getRequest()->getParam('theme'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -132,7 +133,7 @@ class Feedback extends Model
 			$roistat = (isset($_COOKIE['roistat_visit'])) ? $_COOKIE['roistat_visit'] : "(none)";
 
 			$arErrors = false;
-			if(empty($id)) { // CAPTCHA
+			if(empty($id) || $app == 0) { // CAPTCHA
 				$recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
 				if(!empty($recaptcha))
 				{
