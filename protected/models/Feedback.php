@@ -233,7 +233,7 @@ class Feedback extends Model
 									->insert('feedback', $arFeedback);
 					$idFeedback = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
 					$mess = '"' . $text . '"';
-					$texs = "Незарегистрированный пользователь $name оставил обращение по обратной связи: $mess. Необходима модерация https://prommu.com/admin/site/mail/$idFeedback";
+					$texs = "Пользователь $name оставил обращение по обратной связи: $mess. Необходима модерация https://prommu.com/admin/site/mail/$idFeedback";
 					$sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=$texs";
 					file_get_contents($sendto);
         }
