@@ -669,7 +669,7 @@ class Api
 
     public function feedback(){
         $autotype = 0;
-        $type = 0;
+        $type = filter_var(Yii::app()->getRequest()->getParam('type'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);;
         $theme = "Вопрос в приложении: ";
         $name = filter_var(Yii::app()->getRequest()->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $them = filter_var(Yii::app()->getRequest()->getParam('theme'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
