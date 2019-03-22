@@ -256,6 +256,12 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
           <span class="ppe__field-val"><?=$allAttr[99]['val']?></span>
         </div>
       <?php endif; ?>
+      <?php if(strlen($allInfo['aboutme'])): ?>
+        <div class="ppe__field ppe__about">
+          <span class="ppe__field-name">О компании:</span>
+          <div class="ppe__field-val"><?=$allInfo['aboutme']?></div>
+        </div>
+      <?php endif; ?>
     </div>
     <br>
     <?php if($flagOwnProfile): // инфа для владельца ?>

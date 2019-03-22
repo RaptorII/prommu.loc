@@ -945,6 +945,28 @@ input:checked + .epe__checkbox:after{ content: '\2714' }
 	line-height: 20px;
 }
 /*
+*
+*/
+#F1compprof textarea{
+	width: 100%;
+	resize: none;
+	background: transparent;
+	border: none;
+	padding: 30px 15px 0;
+	min-height: 125px;
+	font-size: 14px;
+	color: #343434;
+	font-family: RobotoCondensedRegular, RobotoRegular, verdana, arial;
+}
+#F1compprof textarea:focus{ outline: none; }
+#F1compprof.edit-profile-employer .epe__label.epe__about{
+	padding: 0;
+}
+.epe__about .epe__label-name{
+	background-color: #ffffff;
+	right: 20px;
+}
+/*
 *		MEDIA
 */
 @media (min-width: 500px){

@@ -42,16 +42,16 @@ class Yandex //extends CActiveRecord
 				$category = $dom->createElement('category'); 						//category
 				$e = $dom->createElement('industry',$arCat['industry']);// industry 
 				$category->appendChild($e);
-				$e = $dom->createElement('specialization',$arCat['specialization']);// specialization
-				$category->appendChild($e);
+				//$e = $dom->createElement('specialization',$arCat['specialization']);// specialization
+				//$category->appendChild($e);
 				$vacancy->appendChild($category);
 			}
 			$e = $dom->createElement('job-name',$v['title']); 				// job-name
 			$vacancy->appendChild($e);
 			$e = $dom->createElement('employment',$v['istemp']); 			// employment
 			$vacancy->appendChild($e);
-			/*$e = $dom->createElement('schedule','TEST'); 						// schedule !!!!!!!!!!!!!!!!!!
-			$vacancy->appendChild($e);*/
+			$e = $dom->createElement('schedule','гибкий'); 						// schedule
+			$vacancy->appendChild($e);
 			$e = $dom->createElement('description',$v['requirements']);// description
 			$vacancy->appendChild($e);
 			$e = $dom->createElement('duty',$v['duties']); 						// duty
@@ -59,13 +59,15 @@ class Yandex //extends CActiveRecord
 			$term = $dom->createElement('term');							 				// term
 			/*$e = $dom->createElement('contract','TEST'); 						// contract !!!!!!!!!!!!!!!!!!
 			$vacancy->appendChild($e);*/
-			$e = $dom->createElement('text',$v['conditions']); 				// text
+			$conditions = $v['conditions1'] . $v['conditions2'] . $v['conditions3'];
+			$conditions = htmlspecialchars($conditions,ENT_XML1);
+			$e = $dom->createElement('text',$conditions); 				// text
 			$term->appendChild($e);
 			$vacancy->appendChild($term);
 			$requirement = $dom->createElement('requirement'); 				// requirement
-			if(!empty($v['аge']))
+			if(!empty($v['age']))
 			{
-				$e = $dom->createElement('аge',$v['аge']); 							// аge
+				$e = $dom->createElement('age',$v['age']); 							// аge
 				$requirement->appendChild($e);
 			}
 			if(!empty($v['sex']))
@@ -102,6 +104,12 @@ class Yandex //extends CActiveRecord
 			$company = $dom->createElement('company'); 								// company
 			$e = $dom->createElement('name',$employer['company']); 		// name
 			$company->appendChild($e);
+			if(strlen($employer['aboutcompany']))
+			{
+				$e = $dom->createElement('description',$employer['aboutcompany']);// description
+				$company->appendChild($e);		
+			}
+
 			if(isset($employer['logo']))
 			{
 				$e = $dom->createElement('logo',$employer['logo']); 		// logo
@@ -112,6 +120,10 @@ class Yandex //extends CActiveRecord
 				$e = $dom->createElement('site',$employer['site']); 		// site
 				$company->appendChild($e);
 			}
+
+
+
+
 			$e = $dom->createElement('hr-agency',$employer['hr-agency']);// hr-agency
 			$company->appendChild($e);
 			/*if(!empty($employer['name']))

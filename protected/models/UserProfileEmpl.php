@@ -530,14 +530,16 @@ class UserProfileEmpl extends UserProfile
         }
         else    // *** Сохраняем данные пользователя ***
         {
-            $name = filter_var(Yii::app()->getRequest()->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $fname = filter_var(Yii::app()->getRequest()->getParam('fname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $lname = filter_var(Yii::app()->getRequest()->getParam('lname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $contact = filter_var(Yii::app()->getRequest()->getParam('contact'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $email = filter_var(Yii::app()->getRequest()->getParam('email'), FILTER_VALIDATE_EMAIL);
-            $companyType = filter_var(Yii::app()->getRequest()->getParam('companyType'), FILTER_SANITIZE_NUMBER_INT);
-            $cityManual = filter_var(Yii::app()->getRequest()->getParam('cityManualMulti'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $logo = filter_var(Yii::app()->getRequest()->getParam('logo'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $rq = Yii::app()->getRequest();
+            $name = filter_var($rq->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $fname = filter_var($rq->getParam('fname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $lname = filter_var($rq->getParam('lname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $contact = filter_var($rq->getParam('contact'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $email = filter_var($rq->getParam('email'), FILTER_VALIDATE_EMAIL);
+            $companyType = filter_var($rq->getParam('companyType'), FILTER_SANITIZE_NUMBER_INT);
+            $cityManual = filter_var($rq->getParam('cityManualMulti'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $logo = filter_var($rq->getParam('logo'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $aboutme = filter_var($rq->getParam('aboutme'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
             $arrs = '';
             $bFlashFlag = false;
@@ -552,7 +554,8 @@ class UserProfileEmpl extends UserProfile
                 e.contact,
                 e.photo,
                 e.logo,
-                e.crdate
+                e.crdate,
+                e.aboutme
             FROM employer e
             INNER JOIN user u ON u.id_user = e.id_user
             WHERE e.id_user = {$id}";
@@ -591,6 +594,10 @@ class UserProfileEmpl extends UserProfile
                 $bFlashFlag = true;
             }
 
+            if($data['aboutme'] != $aboutme){
+                $arrs.='О компании|';
+                $bFlashFlag = true;
+            }
             ///API
             //             $fieldsApi = array(
             //                 'firstName' => $fname,
@@ -636,6 +643,7 @@ class UserProfileEmpl extends UserProfile
                     'lastname' => $lname,
                     'contact' => $contact,
                     'type' => $companyType,
+                    'aboutme' => $aboutme,
                     'ismoder' => 0,
                     'mdate' => date('Y-m-d H:i:s'),
                 );
@@ -886,6 +894,7 @@ class UserProfileEmpl extends UserProfile
                                 e.logo,
                                 e.crdate,
                                 e.contact,
+                                e.aboutme,
                                 u.confirmEmail,
                                 u.confirmPhone,
                                 u.email")
@@ -1405,7 +1414,7 @@ class UserProfileEmpl extends UserProfile
     */
     private function getProfileMainData($id){
         // читаем данные из профиля
-        $sql = "SELECT u.email, e.id, e.id_user idus, e.type, e.name, e.firstname, e.lastname, e.contact, u.confirmEmail, u.confirmPhone
+        $sql = "SELECT u.email, e.id, e.id_user idus, e.type, e.name, e.firstname, e.lastname, e.contact, u.confirmEmail, u.confirmPhone, e.aboutme
             FROM employer e
             INNER JOIN user u ON u.id_user = e.id_user
             WHERE e.id_user = {$id}";

@@ -192,6 +192,10 @@
                   <span class="epe__label-name">Ваша должность:</span>
                   <input type='text' name='user-attribs[post]' value="<?=$viData['attribs']['post']['val']?>" class="epe__input epe__input-pos" autocomplete="off">
                 </label>
+                <label class="epe__label epe__about">
+                  <span class="epe__label-name">О компании:</span>
+                  <textarea name="aboutme"><?=$viData['info']['aboutme']?></textarea>
+                </label>
                 <input type='checkbox' name='user-attribs[isnews]' value="1" <?=$viData['attribs']['isnews']['val'] ? 'checked' : '' ?> class="epe__hidden" id="subscribtion">
                 <label class="epe__checkbox" for="subscribtion">Получать новости об изменениях и новых возможностях на сайте</label>
                 <div class="center">

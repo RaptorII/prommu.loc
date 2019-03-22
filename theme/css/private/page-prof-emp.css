@@ -347,6 +347,19 @@ a.upp__project-info{ width: 65px }
 	position: relative;
 	display: table;
 }
+.ppe__field.ppe__about{
+	height: initial;
+	display: block;
+}
+.ppe__about .ppe__field-name{
+	width: initial;
+	display: block;
+}
+.ppe__about .ppe__field-val{
+	width: initial;
+	display: block;
+	word-break: break-word;
+}
 .ppe__field.error{
 	box-shadow: inset 0px 0px 3px red;
 	border: 1px solid red;
