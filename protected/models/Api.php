@@ -677,7 +677,9 @@ class Api
         $theme.=$them;
 
         $Feedback = new Feedback();
-        $Feedback->SaveData();
+        $res = $Feedback->SaveData();
+        
+        return $res;
     }
 
     public function rere()
