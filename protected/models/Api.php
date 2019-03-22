@@ -669,6 +669,7 @@ class Api
     public function feedback(){
         $autotype = 0;
         $app = Yii::app()->getRequest()->getParam('app');
+        $id = Yii::app()->getRequest()->getParam('id');
         $type = filter_var(Yii::app()->getRequest()->getParam('type'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $theme = "Вопрос в приложении: ";
         $name = filter_var(Yii::app()->getRequest()->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
