@@ -31,7 +31,7 @@ class Api
                 case 'register' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->registerUsers(); break;
                 case 'faq' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getFaq(); break;
                 case 'auth' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->authUsers(); break;
-                
+                case 'feedback' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->feedback(); break;
                 
                 case 'push' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPush(); break;
                 case 'export' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->export(); break;
@@ -69,7 +69,6 @@ class Api
                 case 'teles' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->teleProms(); break;
                 case 'teles_test' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->telePromsTest(); break;
                 case 'nicola' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getNicolaDay(); break;
-                case 'feedback' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->feedback(); break;
                 case 'mailer' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->mailBox(); break;
                 case 'vacmon' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->vacancyMonitoring(); break;
                 case 'apivk' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->apiVK(); break;
