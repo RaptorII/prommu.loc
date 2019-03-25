@@ -149,7 +149,7 @@ class Api
        $auth = new Auth();
        $inData['inputData'] = $_GET;
        $inData['type'] = Yii::app()->getRequest()->getParam('type');
-       return $auth->registerUserFirstAppStep($inData);
+       return $auth->registerUser($inData);
        
     }
 
