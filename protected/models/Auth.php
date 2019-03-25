@@ -1781,7 +1781,7 @@ class Auth
     private function checkFieldsEmpl()
     {
         $key = 'name';
-        $inputData[$key] = ;
+        $inputData[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         if( empty($inputData[$key]) )
         {
             $message = "Ошибки заполнения формы";
