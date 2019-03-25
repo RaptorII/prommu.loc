@@ -137,9 +137,9 @@ class Auth
                         'last_referer' => $last_referer,
                         'admin' => $admin,
                         'subdomen' => 0,
-                        'client' => $client,
-                        'ip' => $ip, 
-                        'source' => $pm
+                        'client' => $client? $client:" ", 
+                        'ip' => $ip ? $ip:" ", 
+                        'source' => $pm ? $pm:" ", 
                     );
 
                      $res = Yii::app()->db->createCommand()
@@ -1781,7 +1781,7 @@ class Auth
     private function checkFieldsEmpl()
     {
         $key = 'name';
-        $inputData[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $inputData[$key] = ;
         if( empty($inputData[$key]) )
         {
             $message = "Ошибки заполнения формы";
