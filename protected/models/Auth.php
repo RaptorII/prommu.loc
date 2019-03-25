@@ -137,9 +137,9 @@ class Auth
                         'last_referer' => $last_referer,
                         'admin' => $admin,
                         'subdomen' => 0,
-                        'client' => $client? $client:" ", 
-                        'ip' => $ip ? $ip:" ", 
-                        'source' => $pm ? $pm:" ", 
+                        'client' => $client, 
+                        'ip' => $ip, 
+                        'source' => $pm, 
                     );
 
                      $res = Yii::app()->db->createCommand()
