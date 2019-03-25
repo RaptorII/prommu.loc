@@ -1429,9 +1429,7 @@ class Auth
         $ip = Yii::app()->getRequest()->getParam('ip');
         $robot = Yii::app()->getRequest()->getParam('lastname');
         $pm = Yii::app()->getRequest()->getParam('pm_source');
-        if($pm == '') $pm = 'none';
-        $client = Yii::app()->getRequest()->getParam('client');
-        $client = substr($client, 6, 100);
+       
 
         $agreement = filter_var(Yii::app()->getRequest()->getParam('agreement'), FILTER_SANITIZE_NUMBER_INT);
 
@@ -1501,9 +1499,6 @@ class Auth
                         'last_referer' => $last_referer,
                         'active' => 0,
                         'subdomen' => 0,
-                        'client' => $client,
-                        'ip' => $ip, 
-                        'source' => $pm
                     );
 
         $res = Yii::app()->db->createCommand()
@@ -1511,7 +1506,7 @@ class Auth
                         
         if( $inData['type'] == 2 )
         {
-            $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=2&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin."&sex=".$sex."&smart=".$smart."&ip=".$ip."&client=".$client."&pm=".$pm;
+            $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=2&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin."&sex=".$sex."&smart=".$smart;
             $message = '<p style="font-size:16px">Наш портал <b>Prommu.com</b> позволяет найти работу в России и странах СНГ совершенно бесплатно.</p>'
             .'<br/>'
             .'<p style=" margin-bottom: 0px;font-size:16px">Мы предлагаем временную работу и интересную подработку по следующим вакансиям:</p>'
@@ -1552,7 +1547,7 @@ class Auth
             Share::sendmail($inData['inputData']['email'], "Prommu.com. Подтверждение регистрации на портале поиска временной работы!", $message);
         }elseif($inData['type'] == 3 && empty($robot)) 
         {
-            $link = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=3&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin."&ip=".$ip."&client=".$client."&pm=".$pm;
+            $link = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=3&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin;
             $message = '<p style="font-size:16px;">Наш портал <b>Prommu.com</b> позволяет найти квалифицированный персонал в России и странах СНГ совершенно бесплатно.</p>'
             .'<br/>'
             .'<p style=" margin-bottom: 0px;font-size:16px;">На нашем портале вы сможете разместить вакансии и найти сотрудников по следующим направлениям:</p>'
