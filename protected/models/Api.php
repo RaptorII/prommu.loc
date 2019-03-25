@@ -147,7 +147,8 @@ class Api
     public function registerUsers(){
         
        $auth = new Auth();
-       return $auth->registerUserFirstAppStep($_GET);
+       $inData['inputData'] = $_GET;
+       return $auth->registerUserFirstAppStep($inData);
        
     }
 
