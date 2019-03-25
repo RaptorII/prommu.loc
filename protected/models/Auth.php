@@ -1680,9 +1680,9 @@ class Auth
                         'last_referer' => $last_referer,
                         'active' => 0,
                         'subdomen' => 0,
-                        'client' => $client,
-                        'ip' => $ip, 
-                        'source' => $pm
+                        'client' => $client ? $client : " ",
+                        'ip' => $ip ? $ip : " ", 
+                        'source' => $pm ? $pm : " ", 
                     );
 
         $res = Yii::app()->db->createCommand()
