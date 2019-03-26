@@ -2424,51 +2424,56 @@ WHERE id_vac = {$inVacId}";
     /**
      * Удалить вакансию
      */
-    public function vacDelete($inProps=[])
+    public function vacDelete($id_vac=false, $id_user=false)
     {
-        $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
-        $message = 'Вакансию №' . $id . ' не удалось удалить';
-        $error = -100;
-        try
+        $id_vac = $id_vac ?: filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
+        $id_user = $id_user ?: Share::$UserProfile->id;
+        $arRes = array(
+                'error' => true, 
+                'id' => $id_vac, 
+                'message' => 'Вакансия №' . $id_vac . ' не найдена'
+            );
+
+        $query = Yii::app()->db->createCommand()
+            ->select("id")
+            ->from('empl_vacations')
+            ->where(
+                'id=:id AND id_user=:idus',
+                [':id' => $id_vac, ':idus' => $id_user]
+            )
+            ->queryColumn(); 
+
+        if(!count($query))
+            return $arRes;
+
+        $arDel = [':id'=>$id_vac];
+        $query = Yii::app()->db->createCommand()->delete('empl_vacations','id=:id',$arDel);
+
+        if(!$query)
+            return $arRes;
+
+        Yii::app()->db->createCommand()->delete('empl_attribs','id_vac=:id',$arDel);
+        Yii::app()->db->createCommand()->delete('empl_city','id_vac=:id',$arDel);
+        Yii::app()->db->createCommand()->delete('vacation_stat','id_vac=:id',$arDel);
+
+        $arLocId = Yii::app()->db->createCommand()
+            ->select('id')
+            ->from('empl_locations')
+            ->where('id_vac=:id', $arDel)
+            ->queryColumn();
+
+        if(count($arLocId))
         {
-            $Q1 = Yii::app()->db->createCommand()
-                ->select("id, title, ismoder")
-                ->from('empl_vacations v')
-                ->where('v.id = :id AND v.id_user = :idus', array(':id' => $id, ':idus' => Share::$UserProfile->id))
-                ->queryRow();
-
-            if( !$Q1['id'] ) throw new Exception('', -101);
-
-            Yii::app()->db->createCommand()->delete('empl_vacations', 'id=:id', array(':id' => $id));
-            Yii::app()->db->createCommand()->delete('empl_attribs', 'id_vac=:id', array(':id' => $id));
-            Yii::app()->db->createCommand()->delete('empl_city', 'id_vac=:id', array(':id' => $id));
-            Yii::app()->db->createCommand()->delete('vacation_stat', 'id_vac=:id', array(':id' => $id));
-
-            $Q1 = Yii::app()->db->createCommand()
-                ->select('l.id')
-                ->from('empl_locations l')
-                ->where('l.id_vac = :idvac', array(':idvac'=>$id));
-            $arLoc = $Q1->queryAll();
-
-            if(!empty($arLoc)){
-                foreach($arLoc as $v) 
-                    $arLocId[] = $v['id'];
-
-                Yii::app()->db->createCommand()->delete('empl_locations', 'id_vac=:id', array(':id' => $id));
-                Yii::app()->db->createCommand()->delete('emplv_loc_times', array('in', 'id_loc', $arLocId));
-            }
-
-            $project = new ProjectConvertVacancy();
-            $project->synphronization($id,'vacancy-delete');
-            $message = 'Вакансия №' . $id . ' успешно удалена';
-            $error = 0;
+            Yii::app()->db->createCommand()->delete('empl_locations','id_vac=:id',$arDel);
+            Yii::app()->db->createCommand()->delete('emplv_loc_times',['in','id_loc',$arLocId]);
         }
-        catch (Exception $e) {
-            $message = $e->getMessage();
-            $error = $e->getCode();
-        } // endtry
 
-        return array('error' => $error, 'id' => $id, 'message' => $message);
+        $project = new ProjectConvertVacancy();
+        $project->synphronization($id_vac,'vacancy-delete');
+        $arRes['message'] = 'Вакансия №' . $id_vac . ' успешно удалена';
+        $arRes['error'] = false;
+
+        return $arRes;
     }
 
     /*
@@ -2920,10 +2925,20 @@ WHERE id_vac = {$inVacId}";
         $arT[$id]['title'] = htmlspecialchars($v['title'],ENT_XML1);
         $arT[$id]['crdate'] = date('c',$v['crdate']);
         $arT[$id]['mdate'] = date('c',$v['mdate']);
+        /*
         $v['svisit']>0 && $arT[$id]['salary'] = $v['svisit'];
         $v['shour']>0 && $arT[$id]['salary'] = $v['shour'];
         $v['sweek']>0 && $arT[$id]['salary'] = $v['sweek'];
         $v['smonth']>0 && $arT[$id]['salary'] = $v['smonth'];
+        */
+        if($v['smonth']>0)
+            $arT[$id]['salary'] = $v['smonth'];
+        elseif($v['sweek']>0)
+            $arT[$id]['salary'] = $v['sweek'] * 4; // 4 недели в месяце
+        elseif($v['shour']>0)
+            $arT[$id]['salary'] = $v['shour'] * 8 * 22; // 8 часов * 22 рабочих дня в месяце
+        else
+            $arT[$id]['salary'] = $v['svisit'];
         $arT[$id]['requirements'] = htmlspecialchars($v['requirements'],ENT_XML1);
         $arT[$id]['duties'] = htmlspecialchars($v['duties'],ENT_XML1);
         $arSalary = [];

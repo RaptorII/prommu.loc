@@ -1115,18 +1115,21 @@ class SiteController extends Controller
 
      public function actionVacancyDelete($id)
     {
-        // if($this->user_access != 1) {
-        //  $this->render('access');
-        //  return;
-        // }
-        
-            $model = new Vacancy;
-            $model->deleteVacancy($id);
-            // --- вывод формы
-            $data = $model->searchvac();
-            $model->status=1;
-            $this->render('vacancy/view', array('model'=>$model));
-        
+        if(!self::isAuth() /*|| strpos($this->user_access, "vacancy") == false*/)
+        {
+            $this->render('access');
+            return;
+        }
+
+        $model = new Vacancy;
+        $type = 'success';
+        $id_vac = Yii::app()->getRequest()->getParam('id');
+        $id_user = Yii::app()->getRequest()->getParam('id_user');
+        $arRes = $model->vacDelete($id_vac,$id_user);
+ 
+        $arRes['error'] != 0 && $type = 'danger';
+        Yii::app()->user->setFlash($type, $arRes['message']);
+        $this->redirect(['site/vacancy']);
     }
 
     public function actionEmplEdit($id)

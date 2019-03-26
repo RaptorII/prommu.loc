@@ -343,8 +343,9 @@ class ProjectConvertVacancy
 	 * @return bool - true = success
 	 * Синхронизация проекта и вакансии
 	 */
-	public function synphronization($id, $type) {
-		$idus = Share::$UserProfile->id;
+	public function synphronization($id, $type, $id_user=false)
+	{
+		$idus = $id_user ?: Share::$UserProfile->id;
 
 		if(!$id || !in_array($type,['vacancy','project','vacancy-delete']) || !$idus)
 			return false;

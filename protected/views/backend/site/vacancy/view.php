@@ -1,3 +1,8 @@
+<?
+  $bUrl = Yii::app()->request->baseUrl;
+  $gcs = Yii::app()->getClientScript();
+  $gcs->registerCssFile($bUrl . '/css/template.css');
+?>
 <img style="padding-top: : -24px; padding-left: 44%;" src="/admin/logo-sm.png"><h3 class="box-title">Администрирование вакансий</h3>
 <a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="#" >Экспорт в Excell</a>
 <a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="#"  onclick="create()">Создание вакансии</a>
@@ -103,7 +108,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
           ),
              array(
             'name' => 'Удалить',
-            'value' => 'ShowDelete($data->id)',
+            'value' => 'ShowDelete($data->id, $data->id_user)',
             'type' => 'raw',
             'filter' => '',
             'htmlOptions' => array('style' => 'width: 50px; text-align: center;', 'class' => 'sorting', 'background'=> '#ef0018')
@@ -168,8 +173,8 @@ function ShowEdit($id) {
     return  '<button type="button" class="btn btn-default"><a href="/admin/site/VacancyEdit/' . $id . '">Редактировать</a></button> ';
 }
 
-function ShowDelete($id) {
-    return  '<button type="button" onclick = "doDelete(' . $id . ')" class="btn btn-default">Удалить</button> ';
+function ShowDelete($idvac, $iduser) {
+    return  '<button type="button" onclick = "doDelete(' . $idvac . ',' . $iduser . ')" class="btn btn-default">Удалить</button> ';
 
 }
 function GetEmployerName($id){
@@ -218,8 +223,8 @@ echo CHtml::endForm();
         $("#btn_submit").click();
     }
 
-    function doDelete(id) {
-        $("#form").attr("action", "/admin/site/VacancyDelete/" + id);
+    function doDelete(idvac,iduser) {
+        $("#form").attr("action", "/admin/site/VacancyDelete/?id=" + idvac + '&id_user=' + iduser);
         $("#btn_submit").click();
     }
 
