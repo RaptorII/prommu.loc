@@ -103,10 +103,15 @@ class Api
                 case -1003 : $message = 'Wrong header'; break;
                 default: $code= 1002; $message = $e->getMessage();
             }
-
+            
+            
             $data = ['error' => $code, 'message' => $message];
+            
         } // endtry
-
+        
+       
+        $status = $this->error_refuse($data);
+        header("HTTP/1.1 " . $status . " " . $this->requestStatus($status));
         return $data;
     }
     
@@ -153,7 +158,16 @@ class Api
        return $auth->registerUser($inData);
        
     }
-
+    
+    public function error_refuse($data){
+        if(!$data['error']){
+             $status = 200;
+        } else {
+             $status = 405;
+        }
+        
+        return $status;
+    }
     
     public function rateUse(){
           
@@ -663,12 +677,7 @@ class Api
         $Auth = new Auth();
        
         $res = $Auth->doAPIAuth();
-        if(!$res['error_code']){
-             $status = 200;
-        } else {
-             $status = 405;
-        }
-        header("HTTP/1.1 " . $status . " " . $this->requestStatus($status));
+       
         return $res;
     }
 
