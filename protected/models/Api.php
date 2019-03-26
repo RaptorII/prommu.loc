@@ -163,7 +163,7 @@ class Api
         if(!$data['error']){
              $status = 200;
         } else {
-             $status = 405;
+             $status = 500;
         }
         
         return $status;
