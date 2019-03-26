@@ -872,8 +872,14 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                         <div class="erv__button-block">
                             <button class="erv__button prmu-btn erv__button-block-btn"><span>СОХРАНИТЬ ИЗМЕНЕНИЯ</span>
                             </button>
+                            <? if (!isset($viData['vac']['cannot-publish']) && $viData['vac']['status']): ?>
+                                <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}&d=1" ?>' class="prmu-btn erv__button-block-btn">
+                                    <span>СНЯТЬ С ПУБЛИКАЦИИ</span>
+                                </a>
+                            <? endif; ?>
+                            <?/*
                             <a href='/<?= MainConfig::$PAGE_VACDELETE . "?id={$viData['vac']['id']}&page={$viData['vac']['status']}" ?>'
-                               class="prmu-btn erv__button-block-btn" id="rv-vac-del"><span>УДАЛИТЬ ВАКАНСИЮ</span></a>
+                               class="prmu-btn erv__button-block-btn" id="rv-vac-del"><span>УДАЛИТЬ ВАКАНСИЮ</span></a>*/?>
                         </div>
                     </div>
                 </form>
