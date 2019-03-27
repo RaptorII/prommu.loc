@@ -740,7 +740,7 @@ class Auth
             }
         } // endtry
 
-        if( $error < 0 ) return array('error_code' => abs($error), 'message' => $message);
+        if( $error < 0 ) return array('error' => abs($error), 'message' => $message);
         else return array('access_token' => $data['data']['token'], 'id' => $data['data']['idus'], 'type' => $data['data']['type'], 'exp_date' => strtotime('+1 day'));
     }
 
