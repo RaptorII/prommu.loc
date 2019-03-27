@@ -354,8 +354,8 @@
 		 */
 		public function sendEmailNotifications()
 		{
-			//if(date('j')!=1) // отправляем 1го числа каждого месяца
-			//	return false;
+			if(date('j')!=1) // отправляем 1го числа каждого месяца
+				return false;
 
 			$arId = Yii::app()->db->createCommand()
 								->select('id_user')

@@ -9,7 +9,9 @@
 	z-index: 600; 
 	border: 1px solid #c8c8c8;
 	border-top: none;
-	display: none; 
+	display: none;
+	/* */
+	display: none !important;
 }
 .country-phone-selected {
 	width: auto;
@@ -21,6 +23,9 @@
 	background: url(/theme/pic/private/add-vac-select.png) 15px 50% no-repeat;
 	white-space: nowrap;
 	margin-right: 2px;
+	/* */
+	background: none;
+	cursor: default;
 }
 .country-phone-option {cursor: pointer; background: white; padding: 2px 0;}
 .country-phone-option:hover, .country-phone-option.hovered {background: #77cbff;}

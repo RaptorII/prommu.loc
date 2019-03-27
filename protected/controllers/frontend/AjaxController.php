@@ -972,4 +972,17 @@ class AjaxController extends AppController
         }
         echo CJSON::encode($result);
     }
+    /**
+     *  для регистрационного попапа С
+     */
+    public function actionProfile()
+    {
+        $data = Yii::app()->getRequest()->getParam('data');
+        $data = json_decode($data, true, 5, JSON_BIGINT_AS_STRING);
+
+        if(Share::isApplicant())
+        {
+            Share::$UserProfile->savePopupData($data);
+        }
+    }
 }

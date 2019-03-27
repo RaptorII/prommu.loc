@@ -765,7 +765,6 @@ body{ background: rgba(0, 0, 0, 0.31)!important; }
 */
 #DiTop #DiContent .rp-content1__inputs-input.city{
     position: absolute;
-    text-align: center;
     background: #F2F2F2;
 }
 #DiContent .rp-content1__inputs-row ul{
@@ -785,7 +784,9 @@ body{ background: rgba(0, 0, 0, 0.31)!important; }
     font-size: 14px;
     font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     display: none;
+    z-index: 3;
 }
+#DiContent .rp-content1__inputs-row ul li[value="0"]{ display: none; }
 #DiContent .rp-content1__inputs-row li{
     padding: 0 20px;  
 }
@@ -1010,4 +1011,35 @@ body{ background: rgba(0, 0, 0, 0.31)!important; }
     -o-transition: color 0.3s ease-out;
     transition: color 0.3s ease-out;
 }
-.prmu__popup div a:last-child:hover{ color:red; }
+/*
+*   26-03-19
+*/
+.register-popup{ position: relative; }
+.register-popup__veil {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 6;
+    background-color: rgba(255,255,255,.7);
+    display: none;
+}
+.register-popup__veil:before {
+    content: '';
+    width: 130px;
+    height: 130px;
+    position: absolute;
+    top: 150px;
+    left: -65px;
+    background: url(/theme/pic/vacancy/loading.gif) no-repeat;
+    margin-left: 50%;
+}
+.prmu__popup.prmu__popup a{
+    text-decoration: none;
+    padding: 3px 5px;
+    background: #ff8300;
+    margin: 1px;
+    border-radius: 5px;
+}
+.prmu__popup div a:last-child:hover{ background: red; }

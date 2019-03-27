@@ -184,25 +184,32 @@ class Mailing extends CActiveRecord
 		{
 			foreach ($receiver as $email)
 			{
+				if(filter_var($email,FILTER_VALIDATE_EMAIL))
+				{
+					$arRes[] = array(
+												'receiver' => $email,
+												'title' => $title,
+												'body' => $body,
+												'cdate' => $time
+											);					
+				}
+			}
+		}
+		else // если email один
+		{
+			if(filter_var($receiver,FILTER_VALIDATE_EMAIL))
+			{
 				$arRes[] = array(
-											'receiver' => $email,
+											'receiver' => $receiver,
 											'title' => $title,
 											'body' => $body,
 											'cdate' => $time
 										);
 			}
 		}
-		else // если email один
-		{
-			$arRes = array(
-										'receiver' => $receiver,
-										'title' => $title,
-										'body' => $body,
-										'cdate' => $time
-									);
-		}
 
-		Share::multipleInsert(['system_event_email'=>$arRes]);
+		if(count($arRes))
+			Share::multipleInsert(['system_event_email'=>$arRes]);
 	}
 	/**
 	 * @param $limit - integer (300 in default)

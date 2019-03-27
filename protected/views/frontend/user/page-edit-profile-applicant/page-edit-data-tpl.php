@@ -24,7 +24,7 @@
     ->limit(10000);
   $arCities = $Q1->queryAll();
   $arTemp = array();
-  $_GET['city'] = urldecode($_GET['city']);
+  /*$_GET['city'] = urldecode($_GET['city']);
   $_GET['city'] = urldecode($_GET['city']);
   foreach ($arCities as $city){
     if($_GET['city'] == $city['name']){
@@ -35,7 +35,7 @@
         break;
     }
     $arTemp[$city['id']] = $city['name'];
-  }
+  }*/
   // оптимизируем массив городов для JS
   $arCities = array_unique($arTemp);
   asort($arCities);
@@ -53,7 +53,7 @@
   $arMetroes = $arTemp;
   //  birthday
   if($_GET['birthday']){
-    $birthday = explode(".", $_GET['birthday']);
+   /* $birthday = explode(".", $_GET['birthday']);
     $bday = $birthday[0];
     $bmon = $birthday[1];
     $byear = $birthday[2];
@@ -69,7 +69,7 @@
     $res = Yii::app()->db->createCommand()
       ->update('promo', array(
         'birthday' =>  $dates,
-    ), 'user_id=:id', array(':id' => $attr['id_user']));
+    ), 'user_id=:id', array(':id' => $attr['id_user']));*/
   }
   else{
     $bday = date("d", $date = strtotime($attr['bday']));
@@ -85,12 +85,12 @@
     
     $arPosts[$val['id']]['checked'] = '';
     if($_GET['position'] == $val['id']){
-      $res = Yii::app()->db->createCommand()
+      /*$res = Yii::app()->db->createCommand()
         ->update('user_mech', array(
                 'crdate' => date('Y-m-d H:i:s'),
                 'id_mech' => $val['id'],
                 'isshow' => 0, 
-            ), 'id_us=:id', array(':id' =>  $attr['id_user']));
+            ), 'id_us=:id', array(':id' =>  $attr['id_user']));*/
       $arPosts[$val['id']]['checked'] = "checked";
     } 
     elseif($val['isshow1'] && !$_GET['npopup']) // если это не после модального окна, то проверяем
@@ -884,7 +884,8 @@
     Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'register-popup/register-popup-app.css');
     Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'dist/jquery-ui.min.css'); 
 
-    $arGeo = (new Geo())->getUserGeo();
+    //$arGeo = (new Geo())->getUserGeo();
+    $arGeo = array('country'=>1);
     $attr = reset($viData['userInfo']['userAttribs']);
 
     foreach($viData['countries'] as $v)
@@ -905,36 +906,31 @@
     {
       $cityId = Subdomain::getCacheData()->id;
       $sql = Yii::app()->db->createCommand()
-              ->select("name, id_co")
+              ->select("id_city, name, id_co")
               ->from('city')
               ->where('id_city=:id', [':id' => $cityId])
               ->queryRow();
 
       $arGeo['country'] = $sql['id_co'];
       $arGeo['city'] = $sql['name']; 
+      $arGeo['id_city'] = $sql['id_city']; 
     }
   ?>
   <script type="text/javascript">
     var selectPhoneCode = <?=json_encode($attr['phone-code'])?>;
     var country = <?=json_encode($arGeo['country'])?>;
     var arCountries = <?=json_encode($viData['countries'])?>;
+    var arPosts = <?=json_encode($viData['posts'])?>;
   </script>
   <div class="register-popup">
+    <div class="register-popup__veil"></div>
     <div class="register-popup__header">
       <h1 class="rp-header__title">ПОЗДРАВЛЯЕМ ВАС С УСПЕШНОЙ РЕГИСТРАЦИЕЙ</h1> 
       <a class="rp-header__close-btn" href="javascript:void(0)">&#10006</a>
-      <div class="tmpl rp-header__close-mess">
-        <div class="prmu__popup">Мы заметили, что есть важные незаполненные поля. Для поиска работы это важные параметры!
-          <div>
-            <a href="javascript:void(0)" data-fancybox-close>Продолжить</a>  
-            <a href="<?=MainConfig::$PAGE_EDIT_PROFILE?>">Покинуть страницу</a>            
-          </div>
-        </div>
-      </div>
     </div>
     <div class="register-popup__content1">
       <div class="rp-content1__block">
-        <form action="" class='js-form register-popup-form' id="popup-form">
+        <form method="POST" class='js-form register-popup-form' id="popup-form">
           <p class="rp-content1__descr">Для того, чтобы Вашу анкету увидели все работодатели, чтобы начать искать работу и откликаться на вакансии необходимо заполнить обязательные данные о себе</p>
           <div class="rp-content1__logo">
             <span class="rp-content1__logo-img">
@@ -949,6 +945,9 @@
             <div class="clearfix"></div>
           </div>
           <div class="rp-content1__inputs">
+            <?
+            // birthday
+            ?>
             <?if($_GET['birthday'] != "type"):?>
               <div class="rp-content1__inputs-row">
                 <input type="text" name="birthday" id="datepicker" class="custom-calendar rp-content1__inputs-input required-inp" placeholder="Дата рождения" autocomplete="off">
@@ -956,26 +955,45 @@
                 <div class="clearfix"></div>
               </div>
             <?endif;?>
+            <?
+            // phone
+            ?>
             <div class="rp-content1__inputs-row">
               <input type="text" name="phone" value="<?=$attr['phone']?>" id="phone-code" class="required-inp">
               <span class="rp-content1__text">Номер телефона позволит Вам использовать дополнительный функционал сервиса бесплатно.</span>
             </div>
+            <?
+            // city
+            ?>
             <div class="rp-content1__inputs-row">
               <span class="rp-content1__select-arrow city">
-                <input type="text" name="city" value="<?=$arGeo['city']?>" class="rp-content1__inputs-input city required-inp" id="city-input" autocomplete="off" >
-                <ul id="city-list"></ul>              
+                <input type="text" name="city_input" value="<?=$arGeo['city']?>" class="rp-content1__inputs-input city required-inp" id="city_input" autocomplete="off" >
+                <ul id="city_list"></ul>
+                <input type="hidden" name="city" id="city_hidden" value="<?=$arGeo['id_city']?>" data-name="<?=$arGeo['city']?>">
               </span>
               <span class="rp-content1__text">Ваш город</span>
               <div class="clearfix"></div>
             </div>
+            <?
+            // position
+            ?>
             <div class="rp-content1__inputs-row">
                 <span class="rp-content1__select-arrow city">
-                  <select name="position" id="applicant-position" class="rp-content1__inputs-select required-inp">
-                    <option disabled selected>Должность</option>
-                    <?php foreach($viData['posts'] as $p): ?>
-                      <option value="<?=$p['id']?>"><?=$p['val']?></option>
-                    <?php endforeach; ?>
-                  </select>
+                  <input 
+                  type="text" 
+                  name="position_input" 
+                  autocomplete="off" 
+                  class="rp-content1__inputs-input required-inp" 
+                  placeholder="Должность"
+                  id="post_input"
+                  >
+                  <input type="hidden" name="position" id="post_hidden">
+                  <ul id="post_list">
+                    <li data-id="0">Список пуст</li>
+                    <? foreach($viData['posts'] as $p): ?>
+                      <li data-id="<?=$p['id']?>"><?=$p['val']?></li>
+                    <? endforeach; ?>
+                  </ul>
                 </span>
                 <span class="rp-content1__text">Укажите должность, на которой вы хотите работать (в анкете можно указать несколько должностей).</span>
                 <div class="clearfix"></div>
@@ -992,9 +1010,14 @@
             </div>
             <span class="rp-content1__push-props" id="push-props">настроить</span>
           </div>
-          <button class="rp-content1__button off" id="applicant-btn">сохранить и продолжить</button>
+
+          <div class="center">
+            <button class="prmu-btn prmu-btn_normal" id="form_btn">
+              <span>Продолжить</span>
+            </button>
+          </div>
           <input name="all" value="0" type="hidden">
-          <input name="rate" value="2" type="hidden">          
+          <input name="rate" value="2" type="hidden">
           <input name="respond" value="2" type="hidden">
           <input name="mess" value="2" type="hidden">
           <input name="workday" value="2" type="hidden">
@@ -1099,6 +1122,17 @@
     </div>
     <button class="pp-form__button" id="pash-save-btn">Сохранить</button>
   </form>
+  <?
+  //
+  ?>
+  <div class="tmpl rp-header__close-mess">
+    <div class="prmu__popup">Мы заметили, что Вы не заполнили некоторые данные о себе, для поиска работы и для Работодателей которые ищут персонал - они очень важны и мы рекомендуем их заполнить
+      <div>
+        <a href="javascript:void(0)" data-fancybox-close>Заполнить данные</a>
+        <a href="<?=MainConfig::$PAGE_EDIT_PROFILE?>">Идти дальше</a>
+      </div>
+    </div>
+  </div>
 <?endif;?>
 <?php require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/popup-load-img.php'; ?>
 

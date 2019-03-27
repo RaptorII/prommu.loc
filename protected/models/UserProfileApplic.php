@@ -1521,4 +1521,86 @@ class UserProfileApplic extends UserProfile
 
         return $arResult;
     }
+    /**
+     * 
+     */
+    public function savePopupData($data)
+    {
+        $id = $this->exInfo->id;
+        $db = Yii::app()->db;
+        // birthday
+        $birthday = date('Y-m-d',strtotime($data['birthday']));
+        if($birthday!="1970-01-01")
+        {
+            $db->createCommand()
+                ->update('resume', 
+                    ['birthday'=>$birthday],
+                    'id_user=:id_user', 
+                    [':id_user'=>$id]
+                );
+        }
+        // city
+        if(isset($data['city']))
+        {
+            $db->createCommand()
+                 ->update('user_city',
+                    ['id_city'=>$data['city']], 
+                    'id_user=:id_user',
+                    [':id_user'=>$id]
+                );
+        }
+        // position
+        if(isset($data['position']))
+        {
+            $arPost = $db->createCommand()
+                        ->select('id')
+                        ->from('user_attr_dict')
+                        ->where('id_par=:id',[':id'=>110])
+                        ->queryColumn();
+
+            if(in_array($data['position'], $arPost))
+            {
+                $db->createCommand()
+                    ->update('user_mech', 
+                        array(
+                            'crdate' => date('Y-m-d H:i:s'),
+                            'id_mech' => $data['position'],
+                            'isshow' => 0, 
+                        ),
+                        'id_us=:id_user', 
+                        [':id_user'=>$id]
+                    );                
+            }
+        }
+        // phone
+        if(isset($data['phone']))
+        {
+            $phone = $db->createCommand()
+                        ->select('val')
+                        ->from('user_attribs')
+                        ->where('id_attr=1')
+                        ->queryScalar();
+
+            if($phone)
+            {
+                $db->createCommand()->delete(
+                        'user_attribs',
+                        'id_attr=1 AND id_us=:id_user',
+                        [':id_user'=>$id]
+                    );
+            }
+
+            $db->createCommand()
+                ->insert(
+                    'user_attribs',
+                    [
+                        'id_us' => $id,
+                        'id_attr' => 1,
+                        'key' => 'mob',
+                        'val' => '+'.$data['phone'],
+                        'crdate' => date('Y-m-d H:i:s')
+                    ]
+                );
+        }
+    }
 }
