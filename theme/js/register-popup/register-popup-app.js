@@ -43,7 +43,10 @@ var RegisterPopupApp = (function () {
       setTimeout(function(){
         let val = $('#post_hidden').val();
         if(!val.length)
+        {
           $(e.target).addClass('error');
+          $(e.target).val('');
+        }
         else if(self.result.position!=val)
         {
           self.setAjax({position:val});
