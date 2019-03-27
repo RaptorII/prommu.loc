@@ -930,7 +930,7 @@
     </div>
     <div class="register-popup__content1">
       <div class="rp-content1__block">
-        <form method="POST" class='js-form register-popup-form' id="popup-form">
+        <form class='js-form register-popup-form' id="popup-form">
           <p class="rp-content1__descr">Для того, чтобы Вашу анкету увидели все работодатели, чтобы начать искать работу и откликаться на вакансии необходимо заполнить обязательные данные о себе</p>
           <div class="rp-content1__logo">
             <span class="rp-content1__logo-img">
