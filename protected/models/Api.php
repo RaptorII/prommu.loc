@@ -3514,7 +3514,7 @@ public function vac(){
      */
     public function restorePass()
     {
-        $email = filter_var(Yii::app()->getRequest()->getParam('emailaddr'), FILTER_SANITIZE_EMAIL);
+        $email = filter_var(Yii::app()->getRequest()->getParam('param'), FILTER_SANITIZE_EMAIL);
 
         $RestorePass = new RestorePass();
         $res = $RestorePass->passRestoreRequest(compact('email'));
