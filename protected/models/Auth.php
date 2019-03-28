@@ -590,6 +590,8 @@ class Auth
 
     public function registerUser($inParam)
     {
+        
+        var_dump($inParam);
         // регистрация соискателя
         if( in_array($inParam, ['1', 'vk', 'fb']) || $inParam['type'] == 2 )
         {
