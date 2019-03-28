@@ -138,19 +138,14 @@ class Api
     
     
     public function testInfo(){
-        $rate = new RateEmpl();
-        $data['rating'] = $rate->getDynamicRate(Share::$UserProfile->id );
-        $data['rating'] = $rate->prepareProfileCommonDynamicRate($data['rating']);
+        // $rate = new RateEmpl();
+        // $data['rating'] = $rate->getDynamicRate(Share::$UserProfile->id );
+        // $data['rating'] = $rate->prepareProfileCommonDynamicRate($data['rating']);
 
-
-//             // рейтинг выставленный пользователями, только для своего профиля
-//             if(serProfile->id )
-//             {
-//                 $data['rateByUser'] = $rate->getRateByUser();
-// //                $this->setLastRateDate($data['rateByUser']);
-//             } // endif
-
-        return $data;
+        $email = Yii::app()->getRequest()->getParam('email');
+        $User = User::model()->find('login=:login', [':login' => $email]);
+        
+        return $User;
     }
     
     public function services(){
