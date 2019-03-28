@@ -1227,7 +1227,7 @@ class Auth
     private function checkFieldsApplicant()
     {
         $inputData = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-
+        var_dump($inputData);
         $key = 'name';
         if( empty($inputData[$key]) )
         {
@@ -1644,6 +1644,8 @@ class Auth
     {
         $key = 'name';
         $inputData[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        
+         var_dump($inputData);
         if( empty($inputData[$key]) )
         {
             $message = "Ошибки заполнения формы";
