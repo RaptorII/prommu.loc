@@ -1664,7 +1664,7 @@ class Auth
         } // endif
 
 
-        if($inputData['email'] && !$inputData['phone'])
+        if(!empty($inputData['email']) && empty($inputData['phone']))
         {
             $key = 'email';
             if( !$flag_error && !filter_var($inputData[$key], FILTER_VALIDATE_EMAIL) )
@@ -1683,9 +1683,7 @@ class Auth
                     $element = $key;
                 } // endif
             } // endif
-        }
-        
-        if($inputData['phone'] && !$inputData['email'])
+        }elseif(!empty($inputData['phone']) && empty($inputData['email']))
         {
             $key = 'phone';
             if( !$flag_error && $inputData[$key])
@@ -1704,6 +1702,11 @@ class Auth
                     $element = $key;
                 } // endif
             } // endif
+        } else {
+            $message = "Введите email или номер телефона для регистрации";
+            $hint = 'введите данные';
+            $flag_error = 1;
+            $element = $key;
         }
         
 
