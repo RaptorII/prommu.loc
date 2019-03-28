@@ -74,7 +74,7 @@ class RestorePass
                 case -102 : $message = 'Введите корректный email адрес'; break; // invalid email
                 case -103 : $message = 'Таких учетных данных не обнаружено среди зарегистрированных пользователей'; break; // token expired
                 case -104 : $message = 'Пользователь не найден - либо вы не подтвердили свой email'; break; // token expired
-                default: $error = 101; $message = 'Ошибка восстановления пароля';
+                default: $error = 101; $message = 'Ошибка восстановления пароля '.$e->getMessage();
             }
 
             $data = ['error' => $error, 'message' => $message];
