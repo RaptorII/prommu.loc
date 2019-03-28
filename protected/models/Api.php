@@ -28,7 +28,7 @@ class Api
             switch( strtolower($apiMethod) )
             {
                 case 'auth_user' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->authUser(); break;
-                case 'register' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->registerUsers(); break;
+                case 'register' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->registerUsers(); break;
                 case 'faq' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getFaq(); break;
                 case 'auth' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->authUsers(); break;
                 case 'feedback' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->feedback(); break;
@@ -163,9 +163,9 @@ class Api
     public function registerUsers(){
         
        $auth = new Auth();
-       $inData['inputData'] = $_POST;
-       $inData = $_POST;
-       $inData['type'] = $_POST['type'];
+       $inData['inputData'] = $_GET;
+       $inData = $_GET;
+       $inData['type'] = $_GET['type'];
        return $auth->registerUser($inData);
        
     }
