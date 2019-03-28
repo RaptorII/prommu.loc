@@ -143,9 +143,13 @@ class Api
         // $data['rating'] = $rate->prepareProfileCommonDynamicRate($data['rating']);
 
         $email = Yii::app()->getRequest()->getParam('email');
-        $User = User::model()->find('login=:login', [':login' => $email]);
+        $data = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('user usr')
+            ->where('login=:login', array( ':login'=> $email))
+            ->queryAll();
         
-        return $User;
+        return $data;
     }
     
     public function services(){
