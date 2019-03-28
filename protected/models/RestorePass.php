@@ -24,7 +24,7 @@ class RestorePass
              $res = Yii::app()->db->createCommand($sql)->queryRow();
             if( $res ) throw new Exception('', -104);
 
-            if(strpos($email, "@") === false){
+            if(strpos($email, "@") === false && !empty($email)){
                 
                 $sql = "SELECT *
                     FROM user u
