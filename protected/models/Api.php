@@ -119,7 +119,7 @@ class Api
         $type = Yii::app()->getRequest()->getParam('type');
         if($type == 2) $type = 1;
         if($type == 3) $type = 2;
-        var_dump($type);
+       
         $faq = new Faq();
         $res = $faq->getFaqAll($type);
         
