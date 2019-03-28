@@ -60,7 +60,7 @@ class Faq extends CActiveRecord
     
     public function getFaqAll($type)
 	{
-	    if($type == 2 || $type = 1){
+	    if($type == 2 || $type == 1){
 	        $res =  Yii::app()->db->createCommand()
 					->select('answer, question, theme, type')
 					->from('faq_api')
