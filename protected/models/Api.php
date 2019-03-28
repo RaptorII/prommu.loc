@@ -123,6 +123,16 @@ class Api
         $faq = new Faq();
         $res = $faq->getFaqAll($type);
         
+        foreach($res as $key => $value){
+            if($key == "type" && $value == "2"){
+                 $res[$key][$value] = "3";
+            } 
+            
+            if($key == "type" && $value == "1"){
+                 $res[$key][$value] = "2";
+            } 
+            
+        }
         return $res;
     }
     
