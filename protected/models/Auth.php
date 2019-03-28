@@ -1665,8 +1665,7 @@ class Auth
             // } // endif
         } // endif
 
-        var_dump($inputData['phone']);
-        var_dump($inputData['email']);
+       
         if(!empty($inputData['email']) && empty($inputData['phone']))
         {
             $key = 'email';
