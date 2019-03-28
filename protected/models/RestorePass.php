@@ -25,7 +25,14 @@ class RestorePass
             if( $res ) throw new Exception('', -104);
 
             if(strpos($email, "@") === false){
-                $User = User::model()->find('login=:login', [':login' => $email]);
+                
+                $sql = "SELECT *
+                    FROM user u
+                    WHERE u.login LIKE '%{$email}%' 
+                    ";
+                $res = Yii::app()->db->createCommand($sql)->queryRow();
+                $User->id_user = $res['id_user'];
+
                 $message = "На указанный вами телефон отправлено письмо со ссылкой для восстановления пароля";
             }
             else{
