@@ -1668,50 +1668,50 @@ class Auth
         } // endif
 
        
-        if(!empty($inputData['email']) && empty($inputData['phone']))
-        {
-            $key = 'email';
-            if( !$flag_error && !filter_var($inputData[$key], FILTER_VALIDATE_EMAIL) )
-            {
-                $message = "Ошибки заполнения формы";
-                $hint = 'введите правильный электронный адрес';
-                $flag_error = 1;
-                $element = $key;
-             } else {
-                // нет есть в системе и статус = регистрация 1 шаг
-                if( (new User())->find("email = '{$inputData[$key]}'") )
-                {
-                    $message = "Такой email уже зарегистрирован в системе";
-                    $hint = 'введите другой email адрес';
-                    $flag_error = 1;
-                    $element = $key;
-                } // endif
-            } // endif
-        }elseif(!empty($inputData['phone']) && empty($inputData['email']))
-        {
-            $key = 'phone';
-            if( !$flag_error && $inputData[$key])
-            {
-                $message = "Ошибки заполнения формы";
-                $hint = 'введите правильный номер телефона';
-                $flag_error = 1;
-                $element = $key;
-             } else {
-                // нет есть в системе и статус = регистрация 1 шаг
-                if( (new User())->find("login = '{$inputData[$key]}'") )
-                {
-                    $message = "Такой телефон уже зарегистрирован в системе";
-                    $hint = 'введите другой номер телефон';
-                    $flag_error = 1;
-                    $element = $key;
-                } // endif
-            } // endif
-        } else {
-            $message = "Введите email или номер телефона для регистрации";
-            $hint = 'введите данные';
-            $flag_error = 1;
-            $element = $key;
-        }
+        // if(!empty($inputData['email']) && empty($inputData['phone']))
+        // {
+        //     $key = 'email';
+        //     if( !$flag_error && !filter_var($inputData[$key], FILTER_VALIDATE_EMAIL) )
+        //     {
+        //         $message = "Ошибки заполнения формы";
+        //         $hint = 'введите правильный электронный адрес';
+        //         $flag_error = 1;
+        //         $element = $key;
+        //      } else {
+        //         // нет есть в системе и статус = регистрация 1 шаг
+        //         if( (new User())->find("email = '{$inputData[$key]}'") )
+        //         {
+        //             $message = "Такой email уже зарегистрирован в системе";
+        //             $hint = 'введите другой email адрес';
+        //             $flag_error = 1;
+        //             $element = $key;
+        //         } // endif
+        //     } // endif
+        // }elseif(!empty($inputData['phone']) && empty($inputData['email']))
+        // {
+        //     $key = 'phone';
+        //     if( !$flag_error && $inputData[$key])
+        //     {
+        //         $message = "Ошибки заполнения формы";
+        //         $hint = 'введите правильный номер телефона';
+        //         $flag_error = 1;
+        //         $element = $key;
+        //      } else {
+        //         // нет есть в системе и статус = регистрация 1 шаг
+        //         if( (new User())->find("login = '{$inputData[$key]}'") )
+        //         {
+        //             $message = "Такой телефон уже зарегистрирован в системе";
+        //             $hint = 'введите другой номер телефон';
+        //             $flag_error = 1;
+        //             $element = $key;
+        //         } // endif
+        //     } // endif
+        // } else {
+        //     $message = "Введите email или номер телефона для регистрации";
+        //     $hint = 'введите данные';
+        //     $flag_error = 1;
+        //     $element = $key;
+        // }
         
 
 
