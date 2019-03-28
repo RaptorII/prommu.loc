@@ -19,7 +19,7 @@ var RegisterPopupApp = (function () {
     $("#datepicker").datepicker({
       maxDate: '-14y',
       changeYear: true,
-      yearRange: "1950:2005",
+      yearRange: "1970:2005",
       beforeShow: function(){
         $('#ui-datepicker-div').addClass('custom-calendar');
       }
@@ -258,13 +258,25 @@ var RegisterPopupApp = (function () {
     if($(item).val().length)
     {
       let objDate = $(item).datepicker('getDate'),
+          checkYear = new Date().getFullYear() - 14,
           d = String(objDate.getDate()),
-          m = String(objDate.getMonth()+1);
+          m = String(objDate.getMonth()+1),
+          y = objDate.getFullYear();
 
       d = d.length<2 ? ('0'+d) : d;
       m = m.length<2 ? ('0'+m) : m;
+      y = checkYear<y ? checkYear : y;
 
-      item.value = d + '.' + m + '.' + objDate.getFullYear();      
+      item.value = d + '.' + m + '.' + y;
+      if(item.value=='01.01.1970')
+      {
+        $(item).addClass('error');
+        item.value='';
+      }
+      else
+      {
+        $(item).removeClass('error');
+      }   
     }
   }
   //

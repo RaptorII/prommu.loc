@@ -1436,15 +1436,56 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 }
 .country-phone-selector:hover{ background: transparent }
 /*
-*		17.09.18
+*		28.03.19
 */
-.epa__label-name em{
-	font-style: normal;
-	position: absolute;
-	right: 0;
+#DiContent .epa__label.epa__date,
+#DiContent .epa__label.epa__payment{
+	display: flex;
+	align-items: center;
 }
+#DiContent .epa__date .epa__label-name,
+#DiContent .epa__payment .epa__label-name{
+	position: static;
+	padding: 0;
+	white-space: nowrap;
+}
+#DiContent .epa__date .epa__input{ padding: 0 10px; }
 #DiContent .epa__payment .epa__input{
-	padding-left: 120px;
-	padding-right: 22px;
+	margin: 0 5px;
+	padding: 0;
+	-webkit-transition: box-shadow .3s ease-out;
+	-moz-transition: box-shadow .3s ease-out;
+	-o-transition: box-shadow .3s ease-out;
+	transition: box-shadow .3s ease-out;
 }
-.epa__payment .epa__label-name{ right: 5px }
+#DiContent .epa__payment .epa__input.error{
+	box-shadow: inset 0px 0px 3px red;
+	border: 1px solid red;
+}
+.epa__payment em{
+	line-height: 33px;
+	font-weight: bold;
+	font-style: normal;
+	font-size: 14px;
+}
+.epa__period-error{
+	position: absolute;
+	left: 110px;
+	right: 40px;
+	top: 0;
+	line-height: 33px;
+	color: red;
+	display: none;
+}
+.epa__period-error b{
+	width: 18px;
+	height: 33px;
+	margin: 0 1px;
+	box-shadow: inset 0px 0px 3px red;
+	border: 1px solid red;
+}
+#DiContent .edit-profile-applicant .epa__label.epa__period.error{
+	box-shadow: none;
+	border: 1px solid #EBEBEB;
+}
+.epa__period.error .epa__period-error{ display: flex; }

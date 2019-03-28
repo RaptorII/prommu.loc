@@ -466,23 +466,22 @@ class UserProfileApplic extends UserProfile
         } 
         else{
             // *** Сохраняем данные пользователя ***
-            $name = filter_var(Yii::app()->getRequest()->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $lastname = filter_var(Yii::app()->getRequest()->getParam('lastname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $dateBirth = Yii::app()->getRequest()->getParam('bdate');
-            $dateBirth = "{$dateBirth['y']}-{$dateBirth['m']}-{$dateBirth['d']}";
-            $hasmedbook = Yii::app()->getRequest()->getParam('hasmedbook');
-            $hasavto = Yii::app()->getRequest()->getParam('hasavto');
-            $smart = Yii::app()->getRequest()->getParam('smart');
-            $card = Yii::app()->getRequest()->getParam('card');
-            $cardPrommu = Yii::app()->getRequest()->getParam('promm');
-            $email = filter_var(Yii::app()->getRequest()->getParam('email'), FILTER_VALIDATE_EMAIL);
-            $aboutme = filter_var(Yii::app()->getRequest()->getParam('about-mself'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $city = Yii::app()->getRequest()->getParam('city');
-            $sex = Yii::app()->getRequest()->getParam('sex');
+            $rq = Yii::app()->getRequest();
+            $name = filter_var($rq->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $lastname = filter_var($rq->getParam('lastname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $birthday = filter_var($rq->getParam('bdate'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $birthday = date('Y-m-d',strtotime($birthday));
+            $hasmedbook = $rq->getParam('hasmedbook');
+            $hasavto = $rq->getParam('hasavto');
+            $smart = $rq->getParam('smart');
+            $card = $rq->getParam('card');
+            $cardPrommu = $rq->getParam('promm');
+            $email = filter_var($rq->getParam('email'), FILTER_VALIDATE_EMAIL);
+            $aboutme = filter_var($rq->getParam('about-mself'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $city = $rq->getParam('city');
+            $sex = $rq->getParam('sex');
             // save resume
-            $dates = date('Y-m-d', strtotime($dateBirth));
-
-             $sql = "SELECT r.birthday -- , DATE_FORMAT(r.birthday,'%d') as bd
+            $sql = "SELECT r.birthday -- , DATE_FORMAT(r.birthday,'%d') as bd
               , r.id_user, r.isman , r.ismed , r.smart, r.ishasavto , r.aboutme , r.firstname , r.lastname , r.photo
               , a.val , a.id_attr, r.smart
               , d.name , d.type , d.id_par idpar , d.key
@@ -501,7 +500,7 @@ class UserProfileApplic extends UserProfile
             if($res[0]['lastname'] != $lastname){
                 $arrs.='Фамилия|';
             }
-            if($res[0]['birthday'] != $dateBirth){
+            if($res[0]['birthday'] != $birthday){
                 $arrs.='День рождения|';
             }
             // if($res[0]['ismed'] != $hasmedbook){
@@ -563,7 +562,7 @@ class UserProfileApplic extends UserProfile
                 'firstname' => $name,
                 'lastname' => $lastname,
                 'aboutme' => $aboutme,
-                'birthday' =>  $dates,
+                'birthday' =>  $birthday,
                 'mdate' => date('Y-m-d H:i:s'),
                 'ismoder' => 0,
                 

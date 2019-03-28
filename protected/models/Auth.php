@@ -252,7 +252,7 @@ class Auth
                     }
                     else
                     {
-                        $insData['birthday'] = '2001-01-01'; // 18 years 
+                        $insData['birthday'] = '1970-01-01'; // 18 years 
                     }
 
                     // загрузка фото ВК

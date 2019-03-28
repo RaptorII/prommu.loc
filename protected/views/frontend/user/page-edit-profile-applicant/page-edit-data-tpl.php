@@ -4,6 +4,7 @@
   Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-edit-prof-app.css');
   Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-app.js', CClientScript::POS_END);
   Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
+  Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'dist/jquery-ui.min.css'); 
 
   $attrAll = $viData['userInfo']['userAttribs'];
   $attr = array_values($attrAll)[0];
@@ -71,11 +72,11 @@
         'birthday' =>  $dates,
     ), 'user_id=:id', array(':id' => $attr['id_user']));
   }
-  else{*/
+  else{
     $bday = date("d", $date = strtotime($attr['bday']));
     $bmon = date("m", $date);
     $byear = date("Y", $date);
-  //}
+  }*/
   // posotions
   $arPosts = array();
   $strPosts = '';
@@ -215,39 +216,16 @@
               <span class="epa__label-name">Фамилия:</span>
               <input type="text" name="lastname" value="<?=trim($attr['lastname'])?>" class="epa__input epa__required" data-name="Фамилия">
             </label>
-            <div class="epa__label epa__date epa__select">
+            <div class="epa__label epa__date epa__select<?=($attr['bday']=='01.01.1970'?' error':'')?>">
               <span class="epa__label-name">Дата рождения:</span>
-              <span class="epa__input" id="epa-birthday-res"><?=$bday . '/' . $bmon . '/' . $byear?></span>
-              <div class="epa__calendar">
-                <table id="epa-birthday" class="epa__calendar-table">
-                  <thead>
-                    <tr>
-                      <td colspan="5">
-                        <div class="epa__calendar-select epa__select white">
-                          <select class="epa__input epa__calendar-month">
-                            <?foreach ($viData['months'] as $i => $month):?>
-                              <option value="<?=$i?>"><?=$month?></option>
-                            <?endforeach?>
-                          </select>
-                        </div>
-                      </td>
-                      <td colspan="2"><input type="text" value="" class="epa__input" maxlength="4" autocomplete="off"></td>
-                    </tr>
-                    <tr><td>Пн</td><td>Вт</td><td>Ср</td><td>Чт</td><td>Пт</td><td>Сб</td><td>Вс</td></tr>
-                  <tbody>
-                </table>  
-                <input type="hidden" name="bdate[d]" value="<?=$bday?>" id="epa-bday" class="epa__required" data-name="Дата рождения">
-                <input type="hidden" name="bdate[m]" value="<?=$bmon?>" id="epa-bmonth" class="epa__required" data-name="Дата рождения">
-                <input type="hidden" name="bdate[y]" value="<?=$byear?>" id="epa-byear" class="epa__required" data-name="Дата рождения">        
-              </div>
+              <input 
+                type="text" 
+                name="bdate" 
+                id="birthday" 
+                autocomplete="off" 
+                value="<?=($attr['bday']=='01.01.1970'?'':$attr['bday'])?>"
+                class="epa__input">
             </div>
-            <?/*
-            <div class="epa__label epa__gender">
-              <span class="epa__label-name">Пол:</span>
-              <span class="epa__input"><?=($gender?'мужской':'женский')?></span>
-              <input name='sex' type='hidden' value='<?=$gender?>'>
-            </div>
-            */?>
             <?php $gender = (!empty($_GET['sex']) ? $_GET['sex'] : $attr['isman']) ?>
             <div class="epa__attr-block">
               <div class="epa__attr-block1">
@@ -460,8 +438,9 @@
                     <div class="epa__post-name"><?=$post['newname']?></div>
                     <div class="epa__post-close"></div>
                     <label class="epa__label epa__payment">
-                      <span class="epa__label-name">Ожидаемая оплата: <em>руб</em></span>
+                      <span class="epa__label-name">Ожидаемая оплата:</span>
                       <input type="text" name="post[<?=$post['id']?>][payment]" value="<?=isset($arPayment[$post['id']]['pay']) ? $arPayment[$post['id']]['pay'] : ''?>" class="epa__input epa__required" data-name="Ожидаемая оплата">
+                      <em>руб</em>
                     </label>
                     <label class="epa__label epa__select">
                       <input type="text" name="epa-str-period" value="<?=$arPayment[$post['id']]['type']?>" class="epa__input epa__post-period" disabled>
@@ -575,7 +554,7 @@
                     </div>
                     <div class="clearfix"></div>
                   <? endif; ?>
-                  <h3 class="epa__cities-title">Дни недели:</h3>
+                  <h3 class="epa__cities-title">Удобное время работы:</h3>
                   <div class="epa__days-checkboxes">
                     <?php foreach($arDays as $idDay => $name): ?>
                       <div class="epa__day">
@@ -591,6 +570,7 @@
                           <? $value = 'С ' . explode(':', $t['timeb'])[0] . ' до ' . explode(':', $t['timee'])[0]?>
                           <div class="epa__label epa__period" data-id="<?=$idDay?>">
                             <span class="epa__period-close"></span>
+                            <div class="epa__period-error"><span>С</span><b></b><span>до</span><b></b></div>
                             <span class="epa__label-name"><i><?=$arDays[$idDay]?></i>, Время дня:</span>
                             <input type="text" name="time[<?=$city['id']?>][<?=$idDay?>]" class="epa__input epa__required" value="<?=$value?>" data-name="Временной период" autocomplete="off">
                           </div>
@@ -802,7 +782,7 @@
         <input type="text" name="cityname[]" value="" class="epa__input city-input" autocomplete="off">
         <ul class="city-list"></ul>
       </div>
-      <h3 class="epa__cities-title">Дни недели:</h3>
+      <h3 class="epa__cities-title">Удобное время работы:</h3>
       <div class="epa__days-checkboxes">
         <div class="epa__day">
           <input type="checkbox" name="days[NEWID]" value="1" class="epa__day-input" data-day="ПН">
@@ -841,6 +821,7 @@
   <div id="add-day-period">
     <div class="epa__label epa__period" data-id="NEWDAY">
       <span class="epa__period-close"></span>
+      <div class="epa__period-error"><span>С</span><b></b><span>до</span><b></b></div>
       <span class="epa__label-name"><i></i>, Время дня:</span>
       <input type="text" name="time[NEWID][NEWDAY]" class="epa__input epa__required" autocomplete="off">
     </div>
@@ -869,6 +850,10 @@
       <span class="epa__label-name epa__phone-name">Доп. Телефон:</span>
       <input type="text" name="user-attribs[admobNEWNUM]" value="" class="epa__input epa__phone" autocomplete="off">
     </label>
+  </div>
+  <?//  *****************  //?>
+  <div id="error_messege" class="tmpl">
+    <div class="prmu__popup">Для того что бы Ваша анкета была доступна для просмотра всем работодателям и Вы могли откликаться на понравившиеся Вам вакансии, необходимо заполнить все обязательные поля, они выделены красной рамкой.<br>Спасибо за понимание</div>
   </div>
 <?php endif; ?>
 <? 

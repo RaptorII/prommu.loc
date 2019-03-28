@@ -55,49 +55,6 @@ jQuery(function($){
 			clearTimeout(imgTimer);
 		} 
 	}, 1000);
-	//
-	// дата рождения
-	//
-	Calendar('#epa-birthday', bYear, bMonth, bDay);
-	$("#epa-birthday input")
-		.on('input',function(){ this.value = getNum(this.value) })
-		.on('blur',function(){
-			if(this.value.length != 4) this.value = '';
-		})		
-	//
-	$(document).on('click', function(e){
-		var it = e.target;
-		// открыаем/закрываем календарь
-		if(
-			$(it).hasClass('epa__date') || 
-			$(it).closest('.epa__date').length
-		)
-			$('.epa__calendar').fadeIn();	
-		else
-			$('.epa__calendar').fadeOut();
-		// select
-		for(var i=0; i<arSelect.length; i++){
-			var veil = 'epa-veil-' + arSelect[i],
-				list = '#epa-list-' + arSelect[i],
-				btn = '#epa-list-' + arSelect[i] + ' i';
-
-			if(it.id == veil)
-				$(list).fadeIn();
-			else if($(it).is(btn) || !$(it).closest(list).length)
-				$(list).fadeOut();
-		}
-		// single post select	
-		if($(it).hasClass('epa__post-veil')){
-			var list = $(it).siblings('.epa__post-list');
-			$(list).fadeIn();
-		}
-		else if($(it).is('.epa__post-btn') || !$(it).closest('.epa__post-list').length)
-			$('.epa__post-list').fadeOut();
-	});
-	// события календаря
-	$('.epa__calendar').on('change', 'select', function(){ checkDate(this) });
-	$('.epa__calendar').on('keyup', 'input', function(){ checkDate(this) });
-	$('.epa__calendar').on('click', '.day', function(){ checkDate(this) });
 	// события выбора мессенджера
 	$('#epa-list-messenger input').on('change', function(){
 		var arInputs = $('#epa-list-messenger input'),
@@ -613,8 +570,15 @@ jQuery(function($){
 						var arErrors = $('.error');
 						if(arErrors.length>0)
 						{
-							$('html, body').animate({ scrollTop: $(arErrors[0]).offset().top-20 }, 1000);
 							MainScript.buttonLoading(self,false);
+							$.fancybox.open({
+								src: '.prmu__popup',
+								type: 'inline',
+								touch: false,
+								afterClose: function(){
+									$('html, body').animate({ scrollTop: $($('.error')[0]).offset().top-20 }, 1000);
+								}
+							});
 						}
 
 						if(!errors && !arErrors.length){
@@ -691,7 +655,14 @@ jQuery(function($){
 			if(arErrors.length>0)
 			{
 				MainScript.buttonLoading(self,false);
-				$('html, body').animate({ scrollTop: $(arErrors[0]).offset().top-20 }, 1000);
+        $.fancybox.open({
+          src: '.prmu__popup',
+          type: 'inline',
+          touch: false,
+          afterClose: function(){
+            $('html, body').animate({ scrollTop: $($('.error')[0]).offset().top-20 }, 1000);
+          }
+        });
 			}
 
 			if(!errors && !arErrors.length){
@@ -750,25 +721,6 @@ jQuery(function($){
 		else
 			$(label).after(html);
 	});
-	//	
-	/*$(cntctM).on('blur', '.epa__add-phone input', function(){
-		var $it = $(this),
-			val = $it.val(),
-			clearVal = getNum(val),
-			arAddPhones = [];
-
-		$.each($(cntctM+' .epa__phone'), function(){
-			if(($(this).prop('id')=='phone-code' || $(this).closest('.epa__add-phone').length) && !$(this).is($it)){
-				var v = $(this).val(),
-					clV = getNum(v);
-				if(clV!='' && clV.length==phoneLen && $.inArray(v, arAddPhones)<0) 
-					arAddPhones.push($(this).val());				
-			}
-		});
-
-		if(clearVal.length!=phoneLen || $.inArray(val,arAddPhones)>=0)
-			$it.val(''); // смотрим, не введен ли этот номер ранее
-	});*/
 	//
 	$('.epa__req-list').on('click', 'b', function(){
 		var name = $(this).text();
@@ -777,84 +729,6 @@ jQuery(function($){
 	/*
 	*     Финкции
 	*/
-	function Calendar(id, year, month, day=0){
-		var Dlast = new Date(year,month+1,0).getDate(),
-			D = new Date(year,month,Dlast),
-			DNlast = D.getDay(),
-			DNfirst = new Date(D.getFullYear(),D.getMonth(),1).getDay(),
-			calendar = '<tr>',
-			m = document.querySelector(id+' option[value="' + D.getMonth() + '"]'),
-			g = document.querySelector(id+' input');
-		if(DNfirst != 0){ for(var  i = 1; i < DNfirst; i++) calendar += '<td>' }
-		else{ for(var  i = 0; i < 6; i++) calendar += '<td>' }
-		for(var  i = 1; i <= Dlast; i++) {
-			if(
-				i == new Date().getDate() && 
-				D.getFullYear() == new Date().getFullYear() && 
-				D.getMonth() == new Date().getMonth()
-			) calendar += '<td class="day today">' + i; // today
-			else if(day && day==i)	calendar += '<td class="day select">' + i; // birtday
-			else calendar += '<td class="day">' + i; // other
-			if(new Date(D.getFullYear(),D.getMonth(),i).getDay() == 0){ calendar+='<tr>' }
-		}
-		for(var  i = DNlast; i < 7; i++) calendar += '<td>&nbsp;';
-		document.querySelector(id+' tbody').innerHTML = calendar;
-		g.value = D.getFullYear();
-		m.selected = true;
-	}
-	//
-	function checkDate(e){
-		var table =  $(e).closest('table').prop('id'),
-			label = $(e).closest('.epa__label'),		
-			idTable = '#'+table,
-			y = Number($(idTable+' input').val()),
-			m = Number($(idTable+' select').val());
-
-		if($(e).is(idTable+' input') || $(e).is(idTable+' select')){
-			var selectDay = $(idTable).find(idTable+' .day.select');
-			d = (selectDay.length>0 ? Number($(selectDay).text()) : curDay);
-			elemErr = e;
-		}   
-		if($(e).is(idTable+' .day')){
-			d = Number($(e).text());
-			elemErr = $(e).closest('.epa__calendar');
-		}
-		newDate = new Date(y, m, d);
-
-		if(Math.ceil((curDate - newDate) / (1000 * 60 * 60 * 24)) > 1){ // дата должна быть меньше сегодняшней
-			remErr(label);
-			remErr(idTable+' input');
-			remErr(idTable+' select');
-			remErr($(e).closest('.epa__calendar'));        
-			if($(e).is(idTable+' .day')){ 
-				$.each($(idTable+' .day'), function(){ $(this).removeClass('select') });
-				$(e).addClass('select'); 
-				str = ('0' + d).slice(-2) + '/' + ('0' + (m + 1)).slice(-2) + '/' + y;
-				$('#epa-bday').val(d);
-				setTimeout(function(){ $('.epa__calendar').hide() }, 100);
-			}
-			else{
-				if(String(y).length==strYear){
-					Calendar(idTable,y,m);
-					str = ('0' + d).slice(-2) + '/' + ('0' + (m + 1)).slice(-2) + '/' + y;
-					$('#epa-bmonth').val(('0' + (m + 1)).slice(-2));
-					$('#epa-byear').val(y);
-				}
-				else{
-					addErr(elemErr);
-					addErr(label);
-					str = ('0' + d).slice(-2) + '/' + ('0' + (m + 1)).slice(-2) + '/XXXX';
-					$('#epa-bmonth').val(('0' + (m + 1)).slice(-2));
-					$('#epa-byear').val('');
-				}
-			} 
-			$(idTable+'-res').text(str);
-		}
-		else{
-			addErr(elemErr);
-			addErr(label);
-		}
-	}
 	// additional functions
 	function addErr(e){ 
 		$(e).addClass('error');
@@ -1071,7 +945,7 @@ jQuery(function($){
 			epattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i;
 			res = false;
 
-		if(id=='epa-email'){
+		if(id=='epa-email'){ // email
 			res = epattern.test(val) ? remErr(label) : addErr(label);
 			$('.epa__email').removeClass('erroremail');
 			if(res && val!=oldEmail){
@@ -1097,32 +971,39 @@ jQuery(function($){
 				}, 500);
 			}	
 		}
-		else if($(label).hasClass('epa__period')){
+		else if($(label).hasClass('epa__period')){ // поле установки подходящего времени в дни недели
 			if(val.length>8){ // 8 минимум
-				var arVals = val.split('до'),
-					from = Number(getNum(arVals[0])),
-					to = Number(getNum(arVals[1]));
+				var arVals = val.split('до');
+				if(arVals.length==2)
+				{
+					var from = Number(getNum(arVals[0])),
+							to = Number(getNum(arVals[1]));
 
-				res = (from>23 || to>24 || from>=to) ? addErr(label) : remErr(label); // проверяем правильность временного промежутка
+					res = (from>23 || to>24 || from>=to) ? addErr(label) : remErr(label); // проверяем правильность временного промежутка
+				}
 			}
 			else if(val=='')
 				res = addErr(label);
 			else
 				res = remErr(label);
 		}
-		else if($(label).hasClass('epa__education')) {
+		else if($(label).hasClass('epa__education')) { // образование
 			var selected = false;
 			$.each($(label).find('[type="radio"]'),
 				function(){ if(this.checked) selected = true; });
 			res = (!selected ? addErr(label) : remErr(label));
 		}
-		else if($(label).hasClass('epa__language')) {
+		else if($(label).hasClass('epa__language')) { // языки
 			var selected = false;
 			$.each($(label).find('[type="checkbox"]'),
 				function(){ if(this.checked) selected = true; });
 			res = (!selected ? addErr(label) : remErr(label));
 		}
 		else{
+			if($(label).hasClass('epa__payment')) // исключения для поля "Ожидаемая оплата""
+			{
+				label = $it;
+			}
 			res = ((val=='' || val==null) ? addErr(label) : remErr(label));
 		}
 		if(id=='epa-mail' || id=='epa-gmail'){
@@ -1393,4 +1274,63 @@ jQuery(function($){
 	checkField('[name="about-mself"]');
 	checkField('[name="user-attribs[edu]"]');
 	checkField('[name="langs[]"]');
+	checkPhone({type:'input'});
+	//
+	//
+	// инициализация календаря
+	$("#birthday").datepicker({
+		maxDate: '-14y',
+		changeYear: true,
+		yearRange: "1970:2005",
+		beforeShow: function(){
+			$('#ui-datepicker-div').addClass('custom-calendar');
+		}
+	});
+	// проверка корректности даты
+	if($('#birthday').is('*'))
+	{
+		$('#birthday').change(function(){
+			if(this.value.length)
+			{
+				let objDate = $(this).datepicker('getDate'),
+						checkYear = new Date().getFullYear() - 14,
+						d = String(objDate.getDate()),
+						m = String(objDate.getMonth()+1),
+						y = objDate.getFullYear();
+
+				d = d.length<2 ? ('0'+d) : d;
+				m = m.length<2 ? ('0'+m) : m;
+				y = checkYear<y ? checkYear : y;
+
+				this.value = d + '.' + m + '.' + y;
+				if(this.value=='01.01.1970')
+				{
+					addErr('.epa__label.epa__date');
+					this.value='';
+				}
+				else
+				{
+					remErr('.epa__label.epa__date');
+				}
+			}
+			else
+			{
+				addErr('.epa__label.epa__date');
+			}
+		});
+	}
+	//
+	$(document).click(function(e){
+		if($(e.target).closest('.epa__period-error').length || $(e.target).is('.epa__period-error'))
+		{
+			let main = $(e.target).closest('.epa__period')[0],
+					input = $(main).find('.epa__input');
+			$(input).focus();
+			remErr(main);
+		}
+	});
+	//
+	$(cityM).on('blur','.epa__period .epa__input',function(e){
+		setTimeout(function(){ checkField(e.target) },100);
+	});
 });
