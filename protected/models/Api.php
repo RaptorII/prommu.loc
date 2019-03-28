@@ -138,18 +138,11 @@ class Api
     
     
     public function testInfo(){
-        // $rate = new RateEmpl();
-        // $data['rating'] = $rate->getDynamicRate(Share::$UserProfile->id );
-        // $data['rating'] = $rate->prepareProfileCommonDynamicRate($data['rating']);
-
-        $email = Yii::app()->getRequest()->getParam('email');
-        $sql = "SELECT *
-            FROM user u
-            WHERE u.login LIKE '%{$email}%' 
-            ";
-        $res = Yii::app()->db->createCommand($sql)->queryRow();
         
-        return $res;
+        $email = Yii::app()->getRequest()->getParam('email');
+        $User = User::model()->find('login=:login', [':login' => $email]);
+        
+        return $User;
     }
     
     public function services(){
