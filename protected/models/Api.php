@@ -155,7 +155,7 @@ class Api
        $inData['inputData'] = $_POST;
        $inData = $_POST;
        $inData['type'] = $_POST['type'];
-       var_dump($inData);
+    
        return $auth->registerUser($inData);
        
     }
