@@ -1511,7 +1511,6 @@ class Auth
             $phone = $inData['inputData']['phone'];
             $rest = Yii::app()->db->createCommand()
                         ->insert('activate', array('id' => $code,
-                            'id' => $code,
                             'code' => $code,
                             'phone' => $inData['inputData']['email'],
                             'date' => date("Y-m-d h-i-s"),
