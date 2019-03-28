@@ -125,7 +125,6 @@ class Api
         
         for($i = 0; $i < count($res); $i ++){
 	        if($res[$i]["type"] == '1'){
-	            var_dump($res[$i]);
 	            $res[$i]["type"] = '2';
 	        }
 	        
