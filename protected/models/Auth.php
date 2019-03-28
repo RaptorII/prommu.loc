@@ -1689,23 +1689,23 @@ class Auth
                     } // endif
                 }
             }else {
-                $key = 'phone';
-                if( !$flag_error && empty($inputData[$key]))
-                {
-                    $message = "Ошибки заполнения формы";
-                    $hint = 'введите правильный номер телефона';
-                    $flag_error = 1;
-                    $element = $key;
-                 } else {
-                    // нет есть в системе и статус = регистрация 1 шаг
-                    if( (new User())->find("email = '{$inputData[$key]}'") )
-                    {
-                        $message = "Такой телефон уже зарегистрирован в системе";
-                        $hint = 'введите другой номер телефон';
-                        $flag_error = 1;
-                        $element = $key;
-                    } // endif
-                } // endif
+                // $key = 'phone';
+                // if( !$flag_error && empty($inputData[$key]))
+                // {
+                //     $message = "Ошибки заполнения формы";
+                //     $hint = 'введите правильный номер телефона';
+                //     $flag_error = 1;
+                //     $element = $key;
+                //  } else {
+                //     // нет есть в системе и статус = регистрация 1 шаг
+                //     if( (new User())->find("email = '{$inputData[$key]}'") )
+                //     {
+                //         $message = "Такой телефон уже зарегистрирован в системе";
+                //         $hint = 'введите другой номер телефон';
+                //         $flag_error = 1;
+                //         $element = $key;
+                //     } // endif
+                // } // endif
             }
         // }elseif(!empty($inputData['phone']) && empty($inputData['email']))
         // {
