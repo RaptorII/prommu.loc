@@ -1671,7 +1671,7 @@ class Auth
         // if(!empty($inputData['email']) && empty($inputData['phone']))
         // {
             $key = 'email';
-            if($inputData[$key]){
+            if(!empty($inputData[$key])){
                 if( !$flag_error && !filter_var($inputData[$key], FILTER_VALIDATE_EMAIL))
                 {
                     $message = "Ошибки заполнения формы";
@@ -1690,7 +1690,7 @@ class Auth
                 }
             }else {
                 $key = 'phone';
-                if( !$flag_error && $inputData[$key])
+                if( !$flag_error && empty($inputData[$key]))
                 {
                     $message = "Ошибки заполнения формы";
                     $hint = 'введите правильный номер телефона';
@@ -1698,7 +1698,7 @@ class Auth
                     $element = $key;
                  } else {
                     // нет есть в системе и статус = регистрация 1 шаг
-                    if( (new User())->find("login = '{$inputData[$key]}'") )
+                    if( (new User())->find("email = '{$inputData[$key]}'") )
                     {
                         $message = "Такой телефон уже зарегистрирован в системе";
                         $hint = 'введите другой номер телефон';
