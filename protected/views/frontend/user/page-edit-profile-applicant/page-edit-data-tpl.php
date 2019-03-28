@@ -15,7 +15,7 @@
   elseif($_GET['photo']) $logoLink .= $_GET['photo'] . $logoSize;
   else $logoLink .= $attr['isman']  ? 'logo.jpg' : 'logo_f.jpg';
   // city
-  if(!sizeof($_GET['city']))
+  //if(!sizeof($_GET['city']))
     $arUserCities = $viData['userInfo']['userCities'][0];
 
   $Q1 = Yii::app()->db->createCommand()
@@ -52,8 +52,8 @@
   }
   $arMetroes = $arTemp;
   //  birthday
-  if($_GET['birthday']){
-   /* $birthday = explode(".", $_GET['birthday']);
+  /*if($_GET['birthday']){
+    $birthday = explode(".", $_GET['birthday']);
     $bday = $birthday[0];
     $bmon = $birthday[1];
     $byear = $birthday[2];
@@ -69,13 +69,13 @@
     $res = Yii::app()->db->createCommand()
       ->update('promo', array(
         'birthday' =>  $dates,
-    ), 'user_id=:id', array(':id' => $attr['id_user']));*/
+    ), 'user_id=:id', array(':id' => $attr['id_user']));
   }
-  else{
+  else{*/
     $bday = date("d", $date = strtotime($attr['bday']));
     $bmon = date("m", $date);
     $byear = date("Y", $date);
-  }
+  //}
   // posotions
   $arPosts = array();
   $strPosts = '';
