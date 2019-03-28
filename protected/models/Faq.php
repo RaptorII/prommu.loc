@@ -62,13 +62,13 @@ class Faq extends CActiveRecord
 	{
 	    if($type == 2 || $type = 1){
 	        return  Yii::app()->db->createCommand()
-					->select('anwser, question, theme')
+					->select('*')
 					->from('faq_api')
 					->where('type=:type',array(':type'=>$type))
 					->queryAll();
 	    } else {
 	        return  Yii::app()->db->createCommand()
-					->select('anwser, question, theme')
+					->select('*')
 					->from('faq_api')
 					->queryAll();
 	    }
