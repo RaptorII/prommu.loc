@@ -1664,26 +1664,48 @@ class Auth
         } // endif
 
 
-        $key = 'email';
-        $inputData[$key] = Yii::app()->getRequest()->getParam($key);
-        if( !$flag_error && !filter_var($inputData[$key], FILTER_VALIDATE_EMAIL) )
+        if($inputData['email'] && !$inputData['phone'])
         {
-            $message = "Ошибки заполнения формы";
-            $hint = 'введите правильный электронный адрес';
-            $flag_error = 1;
-            $element = $key;
-
-        // проверяем на дубликат
-        } else {
-            // нет есть в системе и статус = регистрация 1 шаг
-            if( (new User())->find("email = '{$inputData[$key]}'") )
+            $key = 'email';
+            if( !$flag_error && !filter_var($inputData[$key], FILTER_VALIDATE_EMAIL) )
             {
-                $message = "Такой email уже зарегистрирован в системе";
-                $hint = 'введите другой email адрес';
+                $message = "Ошибки заполнения формы";
+                $hint = 'введите правильный электронный адрес';
                 $flag_error = 1;
                 $element = $key;
+             } else {
+                // нет есть в системе и статус = регистрация 1 шаг
+                if( (new User())->find("email = '{$inputData[$key]}'") )
+                {
+                    $message = "Такой email уже зарегистрирован в системе";
+                    $hint = 'введите другой email адрес';
+                    $flag_error = 1;
+                    $element = $key;
+                } // endif
             } // endif
-        } // endif
+        }
+        
+        if($inputData['phone'] && !$inputData['email'])
+        {
+            $key = 'phone';
+            if( !$flag_error && $inputData[$key])
+            {
+                $message = "Ошибки заполнения формы";
+                $hint = 'введите правильный номер телефона';
+                $flag_error = 1;
+                $element = $key;
+             } else {
+                // нет есть в системе и статус = регистрация 1 шаг
+                if( (new User())->find("login = '{$inputData[$key]}'") )
+                {
+                    $message = "Такой телефон уже зарегистрирован в системе";
+                    $hint = 'введите другой номер телефон';
+                    $flag_error = 1;
+                    $element = $key;
+                } // endif
+            } // endif
+        }
+        
 
 
         $key = 'pass';
