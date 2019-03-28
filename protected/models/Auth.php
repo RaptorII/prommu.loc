@@ -1626,8 +1626,6 @@ class Auth
     {
         $key = 'name';
         $inputData[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        
-        
         if( empty($inputData[$key]) )
         {
             $message = "Ошибки заполнения формы";
@@ -1647,46 +1645,27 @@ class Auth
             // } // endif
         } // endif
 
-       
-    
-            $key = 'email';
-            
-                if( !$flag_error && !filter_var($inputData[$key], FILTER_VALIDATE_EMAIL))
-                {
-                    $message = "Ошибки заполнения формы";
-                    $hint = 'введите правильный электронный адрес';
-                    $flag_error = 1;
-                    $element = $key;
-                 } else {
-                // нет есть в системе и статус = регистрация 1 шаг
-                    if( (new User())->find("email = '{$inputData[$key]}'") )
-                    {
-                        $message = "Такой email уже зарегистрирован в системе";
-                        $hint = 'введите другой email адрес';
-                        $flag_error = 1;
-                        $element = $key;
-                    } // endif
-                }
-            
-                // $key = 'phone';
-                // if( !$flag_error && empty($inputData[$key]))
-                // {
-                //     $message = "Ошибки заполнения формы";
-                //     $hint = 'введите правильный номер телефона';
-                //     $flag_error = 1;
-                //     $element = $key;
-                //  } else {
-                //     // нет есть в системе и статус = регистрация 1 шаг
-                //     if( (new User())->find("email = '{$inputData[$key]}'") )
-                //     {
-                //         $message = "Такой телефон уже зарегистрирован в системе";
-                //         $hint = 'введите другой номер телефон';
-                //         $flag_error = 1;
-                //         $element = $key;
-                //     } // endif
-                // } // endif
-        
-        
+
+        $key = 'email';
+        $inputData[$key] = Yii::app()->getRequest()->getParam($key);
+        if( !$flag_error && !filter_var($inputData[$key], FILTER_VALIDATE_EMAIL) )
+        {
+            $message = "Ошибки заполнения формы";
+            $hint = 'введите правильный электронный адрес';
+            $flag_error = 1;
+            $element = $key;
+
+        // проверяем на дубликат
+        } else {
+            // нет есть в системе и статус = регистрация 1 шаг
+            if( (new User())->find("email = '{$inputData[$key]}'") )
+            {
+                $message = "Такой email уже зарегистрирован в системе";
+                $hint = 'введите другой email адрес';
+                $flag_error = 1;
+                $element = $key;
+            } // endif
+        } // endif
 
 
         $key = 'pass';
