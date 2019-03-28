@@ -67,14 +67,13 @@ class Faq extends CActiveRecord
 					->where('type=:type',array(':type'=>$type))
 					->queryAll();
 					
-			var_dump($res);
 					
 	    } else {
 	        $res =  Yii::app()->db->createCommand()
 					->select('answer, question, theme, type')
 					->from('faq_api')
 					->queryAll();
-		    var_dump($res);
+		   
 	    }
 	    
 	    
@@ -83,6 +82,7 @@ class Faq extends CActiveRecord
 	         if($res[$i]['type'] == 2) $res[$i]['type'] = 3;
 	    }
 	    
+	     var_dump($res);
 	   // return $res;
 		
 	}
