@@ -143,9 +143,9 @@ class Api
         // $data['rating'] = $rate->prepareProfileCommonDynamicRate($data['rating']);
 
         $email = Yii::app()->getRequest()->getParam('email');
-        $sql = "SELECT id_user
-            FROM user
-            WHERE login LIKE '%{$email}%' 
+        $sql = "SELECT *
+            FROM user u
+            WHERE u.login LIKE '%{$email}%' 
             ";
         $res = Yii::app()->db->createCommand($sql)->queryRow();
         
