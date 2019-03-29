@@ -135,9 +135,13 @@ class Api
     public function testInfo(){
         
         $email = Yii::app()->getRequest()->getParam('email');
-        $User = User::model()->find('login=:login', [':login' => $email]);
+        $sql = "SELECT id_user
+            FROM user
+            WHERE login LIKE '%{$email}%' 
+            ";
+        $res = Yii::app()->db->createCommand($sql)->queryRow();
         
-        return $User;
+        return $res;
     }
     
     public function services(){
