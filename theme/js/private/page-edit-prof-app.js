@@ -55,6 +55,28 @@ jQuery(function($){
 			clearTimeout(imgTimer);
 		} 
 	}, 1000);
+	//
+	$(document).on('click', function(e){
+		var it = e.target;
+		// select
+		for(var i=0; i<arSelect.length; i++){
+			var veil = 'epa-veil-' + arSelect[i],
+				list = '#epa-list-' + arSelect[i],
+				btn = '#epa-list-' + arSelect[i] + ' i';
+
+			if(it.id == veil)
+				$(list).fadeIn();
+			else if($(it).is(btn) || !$(it).closest(list).length)
+				$(list).fadeOut();
+		}
+		// single post select	
+		if($(it).hasClass('epa__post-veil')){
+			var list = $(it).siblings('.epa__post-list');
+			$(list).fadeIn();
+		}
+		else if($(it).is('.epa__post-btn') || !$(it).closest('.epa__post-list').length)
+			$('.epa__post-list').fadeOut();
+	});
 	// события выбора мессенджера
 	$('#epa-list-messenger input').on('change', function(){
 		var arInputs = $('#epa-list-messenger input'),

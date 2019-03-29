@@ -25,18 +25,18 @@
     ->limit(10000);
   $arCities = $Q1->queryAll();
   $arTemp = array();
-  /*$_GET['city'] = urldecode($_GET['city']);
-  $_GET['city'] = urldecode($_GET['city']);
+  //$_GET['city'] = urldecode($_GET['city']);
+  //$_GET['city'] = urldecode($_GET['city']);
   foreach ($arCities as $city){
-    if($_GET['city'] == $city['name']){
+    /*if($_GET['city'] == $city['name']){
       $arUserCities[$city['id']] = $city;
       $res = Yii::app()->db->createCommand()
         ->update('user_city', array('id_city' => $city['id']), 
         'id_user=:id_user', array(':id_user' => Share::$UserProfile->exInfo->id));
         break;
-    }
+    }*/
     $arTemp[$city['id']] = $city['name'];
-  }*/
+  }
   // оптимизируем массив городов для JS
   $arCities = array_unique($arTemp);
   asort($arCities);
