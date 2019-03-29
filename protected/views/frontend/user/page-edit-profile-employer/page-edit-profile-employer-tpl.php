@@ -94,7 +94,7 @@
                 </label>
                 <label class="epe__label">
                   <span class="epe__label-name">Контактное лицо:</span>
-                  <input type='text' name='contact' value="<?=$viData['info']['contact']?>" class="epe__input epe__input-contact" autocomplete="off">
+                  <input type='text' name='contact' value="<?=$viData['info']['contact']?>" class="epe__input epe__input-contact epe__required" autocomplete="off">
                 </label>
                 <label class="epe__label epe__email" data-error="Указанный e-mail адрес уже используется в системе" for="epe-email">
                   <span class="epe__label-name">Ваша email:</span>
@@ -212,6 +212,10 @@
       </div>
     </div>
   </form>
+  <?//  *****************  //?>
+  <div id="error_messege" class="tmpl">
+    <div class="prmu__popup">Для того что бы Ваша компания была доступна для просмотра всем соискателям и Вы могли добавлять вакансии и приглашать нужный Вам персонал, необходимо заполнить все обязательные поля, они выделены красной рамкой.<br>Спасибо за понимание</div>
+  </div>
   <? // записываются данные о пуше ?>
   <script type="text/javascript">
     var selectPhoneCode = <?=json_encode($viData['phone-code'])?>;

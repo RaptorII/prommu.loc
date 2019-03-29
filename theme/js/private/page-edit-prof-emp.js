@@ -105,8 +105,15 @@ jQuery(function($){
 			var arErrors = $('.error');
 			if(arErrors.length>0)
 			{
-				$('html, body').animate({ scrollTop: $(arErrors[0]).offset().top-20 }, 1000);
 				MainScript.buttonLoading(self,false);
+				$.fancybox.open({
+					src: '.prmu__popup',
+					type: 'inline',
+					touch: false,
+					afterClose: function(){
+						$('html, body').animate({ scrollTop: $($('.error')[0]).offset().top-20 }, 1000);
+					}
+				});
 			}
 			if(!errors && !arErrors.length){
 				$('#F1compprof').submit();
