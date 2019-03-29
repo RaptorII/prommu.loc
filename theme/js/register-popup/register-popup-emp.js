@@ -103,6 +103,15 @@ var RegisterPopupEmp = (function () {
         return false; 
       else if(this.id==='form_btn')
         MainScript.buttonLoading(this,true);
+      // проверка телефона
+      let val = $('#phone-code').val(),
+          main = $('#phone-code').closest('div');
+
+      if(val.replace(/\D+/g,'').length<10)
+      { // RF
+        $(main).addClass('error');
+        $(e.target).val('');
+      }
 
       if($('.country-phone').hasClass('error'))
       {
