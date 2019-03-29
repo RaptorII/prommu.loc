@@ -135,7 +135,7 @@ class Api
     public function testInfo(){
         
         $email = Yii::app()->getRequest()->getParam('email');
-        $User = User::model()->find('email=:email', [':email' => $email]);
+        $User = User::model()->find('login=:login', [':login' => $email]);
         
         return $User;
     }
