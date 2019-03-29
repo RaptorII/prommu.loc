@@ -980,7 +980,7 @@ class AjaxController extends AppController
         $data = Yii::app()->getRequest()->getParam('data');
         $data = json_decode($data, true, 5, JSON_BIGINT_AS_STRING);
 
-        if(Share::isApplicant())
+        if(Share::isApplicant() || Share::isEmployer())
         {
             Share::$UserProfile->savePopupData($data);
         }

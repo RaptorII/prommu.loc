@@ -984,7 +984,7 @@ class UserProfileEmpl extends UserProfile
                     Yii::app()->getRequest()->getParam('uid'),
                     FILTER_SANITIZE_NUMBER_INT
                 );
-        $city = filter_var(
+        $cityId = filter_var(
                     Yii::app()->getRequest()->getParam('city'),
                     FILTER_SANITIZE_FULL_SPECIAL_CHARS
                 );
@@ -992,72 +992,26 @@ class UserProfileEmpl extends UserProfile
                     Yii::app()->getRequest()->getParam('__phone_prefix'),
                     FILTER_SANITIZE_NUMBER_INT
                 );
-        $phone = filter_var(
-                    Yii::app()->getRequest()->getParam('phone'),
-                    FILTER_SANITIZE_NUMBER_INT
-                );
 
         if(empty($uid)) // эти проверки только для страницы редактирования профиля
         {
-            if(!empty($city) && empty($arRes['userCities']['name']))
+            if(!$cityId)
             {
-                $cityId = 0;
-                $cityName = urldecode($city);
-                $cityName = urldecode($cityName); // надо именно 2 раза
-                $cityName = htmlspecialchars($cityName);
-
-                $sql = Yii::app()->db->createCommand()
-                        ->select('id_city, name, id_co')
-                        ->from('city')
-                        ->where('name=:name',[':name'=>$cityName])
-                        ->queryAll();
-
-                if(count($sql)==1) // если совпадает один город
-                {
-                    $cityId = $sql[0]['id_city'];
-                    $cityName = $sql[0]['name'];
-                }
-                else
-                {
-                    $arGeo = (new Geo())->getUserGeo(); 
-                    foreach ($sql as $v)
-                        if($arGeo['country']==$v['id_co'])
-                        {
-                            $cityId = $v['id_city'];
-                            $cityName = $v['name'];           
-                        }
-                }
-                // обновляем данные
-                if($cityId>0 && !empty($cityName))
-                {
-                    Yii::app()->db->createCommand()
-                            ->update('user_city', 
-                                ['id_city' => $cityId], 
-                                'id_user=:id', 
-                                [':id' => $id]
-                            );
-                    $arRes['userCities']['id_city'] = $cityId;
-                    $arRes['userCities']['name'] = $cityName;
-                }
-                else
-                {
-                    $cityId = Subdomain::getCacheData()->id;
-                    $sql = Yii::app()->db->createCommand()
-                            ->select("id_city, name")
-                            ->from('city')
-                            ->where('id_city=:id', [':id' => $cityId])
-                            ->queryRow();
-
-                    Yii::app()->db->createCommand()
-                            ->update('user_city', 
-                                ['id_city' => $cityId], 
-                                'id_user=:id', 
-                                [':id' => $id]
-                            );
-                    $arRes['userCities']['id_city'] = $cityId;
-                    $arRes['userCities']['name'] = $sql['name'];        
-                }
+                $cityId = Subdomain::getCacheData()->id;    
             }
+
+            Yii::app()->db->createCommand()
+                    ->update('user_city', 
+                        ['id_city' => $cityId], 
+                        'id_user=:id', 
+                        [':id' => $id]
+                    );
+            $arRes['userCities']['id_city'] = $cityId;
+            $arRes['userCities']['name'] = Yii::app()->db->createCommand()
+                    ->select("name")
+                    ->from('city')
+                    ->where('id_city=:id',[':id'=>$cityId])
+                    ->queryScalar();
         }
 
         if(!empty($uid)) // подгон данных для попапа
@@ -1094,17 +1048,9 @@ class UserProfileEmpl extends UserProfile
             }
         }
 
-        if($phone && $phoneCode)
-        {  // пошли через попап
-            $arRes['phone'] = urldecode($phone);
-            $arRes['phone'] = urldecode($arRes['phone']);// надо именно 2 раза
-            $arRes['phone-code'] = urldecode($phoneCode);
-            $arRes['phone-code'] = urldecode($arRes['phone-code']);// надо именно 2 раза
-        }
-        elseif(!$phoneCode && !$arRes['phone-code'])
+        if(!$phoneCode && !$arRes['phone-code'])
         { 
-            $arGeo = (new Geo())->getUserGeo();  
-
+            $arGeo = (new Geo())->getUserGeo();
             foreach($arRes['countries'] as $v)
                 $arGeo['country']==$v['id'] && $arRes['phone-code'] = $v['phone'];
         }
@@ -1563,5 +1509,82 @@ class UserProfileEmpl extends UserProfile
             $arResult['mess'] = 'Необходимо заполнить поля: ' . implode(', ', $arResult['fields']);
 
         return $arResult;
+    }
+    /**
+     *  сохранение данных с попапа по ajax
+     */
+    public function savePopupData($data)
+    {
+        $id = $this->exInfo->id;
+        $db = Yii::app()->db;
+        // phone
+        if(isset($data['phone']))
+        {
+            $phone = $db->createCommand()
+                        ->select('val')
+                        ->from('user_attribs')
+                        ->where('id_attr=1')
+                        ->queryScalar();
+
+            if($phone)
+            {
+                $db->createCommand()->delete(
+                        'user_attribs',
+                        'id_attr=1 AND id_us=:id_user',
+                        [':id_user'=>$id]
+                    );
+            }
+
+            $db->createCommand()
+                ->insert(
+                    'user_attribs',
+                    [
+                        'id_us' => $id,
+                        'id_attr' => 1,
+                        'key' => 'mob',
+                        'val' => '+'.$data['phone'],
+                        'crdate' => date('Y-m-d H:i:s')
+                    ]
+                );
+        }
+        // city
+        if(isset($data['city']))
+        {
+            $db->createCommand()
+                 ->update('user_city',
+                    ['id_city'=>$data['city']], 
+                    'id_user=:id_user',
+                    [':id_user'=>$id]
+                );
+        }
+        // contact
+        if(isset($data['contact']))
+        {
+            $db->createCommand()
+                ->update('employer', 
+                    ['contact' => $data['contact']],
+                    'id_user=:id_user', 
+                    [':id_user'=>$id]
+                );
+        }
+        // company type
+        if(isset($data['companyType']))
+        {
+            $arCompany = $db->createCommand()
+                        ->select('id')
+                        ->from('user_attr_dict')
+                        ->where('id_par=:id',[':id'=>101])
+                        ->queryColumn();
+
+            if(in_array($data['companyType'], $arCompany))
+            {
+                $db->createCommand()
+                    ->update('employer', 
+                        ['type' => $data['companyType']],
+                        'id_user=:id_user', 
+                        [':id_user'=>$id]
+                    );               
+            }
+        }
     }
 }

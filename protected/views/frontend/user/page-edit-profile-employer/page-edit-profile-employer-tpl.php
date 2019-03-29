@@ -239,17 +239,10 @@
   ?>
   <meta name="robots" content="noindex">
   <div class="register-popup js-popup show">
+    <div class="register-popup__veil"></div>
     <div class="register-popup__header">
       <h1 class="rp-header__title">ПОЗДРАВЛЯЕМ ВАС С УСПЕШНОЙ РЕГИСТРАЦИЕЙ</h1> 
       <a class="rp-header__close-btn" href="javascript:void(0)">&#10006</a>
-      <div class="tmpl rp-header__close-mess">
-        <div class="prmu__popup">Мы заметили, что есть важные незаполненные поля. Для поиска персонала это важные параметры!
-          <div>
-            <a href="javascript:void(0)" data-fancybox-close="">Продолжить</a>  
-            <a href="<?=MainConfig::$PAGE_EDIT_PROFILE?>">Покинуть страницу</a>            
-          </div>
-        </div>
-      </div>
     </div>
     <div class="register-popup__content1">
       <div class="rp-content1__block">
@@ -267,16 +260,53 @@
             <div class="rp-btn-block__webcam js-g-hashint" id="btn-get-snapshot" title="Сделать снимок"></div>
             <div class="clearfix"></div>
           </div>
-         
+          <?
+          // phone
+          ?>
           <div class="rp-content1__inputs">
-            <input type="text" name="phone" value="<?=$viData['phone']?>" id="phone-code" class="required-inp">
+            <input 
+              type="text" 
+              name="phone" 
+              value="<?=$viData['phone']?>" 
+              id="phone-code" 
+              class="required-inp"
+              autocomplete="off">
+            <?
+            // city
+            ?>
             <span class="rp-content1__inputs-city">
-              <input type="text" name="city" value="<?=$viData['userCities']['name']?>" class="rp-content1__inputs-input required-inp" id="city-input" autocomplete="off" >
-              <ul id="city-list"></ul>
+              <input type="text" name="city_input" value="<?=$viData['userCities']['name']?>" class="rp-content1__inputs-input required-inp" id="city_input" autocomplete="off" >
+              <ul id="city_list"></ul>
+              <input type="hidden" name="city" id="city_hidden" value="<?=$viData['userCities']['id_city']?>" data-name="<?=$viData['userCities']['name']?>">
             </span>
             <div class="clearfix"></div>
           </div>
-         
+          <?
+          // contact
+          ?>
+          <div class="rp-content1__inputs rp-content1__fields">
+            <div>
+              <input 
+                type="text" 
+                name="contact"
+                id="contact_field" 
+                class="rp-content1__inputs-input required-inp"
+                placeholder="Контактное лицо"
+                autocomplete="off"
+                value="<?=$viData['info']['contact']?>">
+            </div>
+            <?
+            // companyType
+            ?>
+            <div>
+              <select name="companyType" class="rp-content1__inputs-input required-inp" id="type_select">
+                <? foreach($viData['cotype'] as $v): ?>
+                  <option value="<?=$v['id']?>"<?=($v['selected']?' selected':'')?>><?=$v['name']?></option>
+                <? endforeach; ?>
+              </select>              
+            </div>
+          </div>
+
           <div class="rp-content1__push">
             <span class="rp-content1__push-text">Включить PUSH уведомления</span>
             <div class="rp-content1__push-switch-block">
@@ -287,8 +317,13 @@
             </div>
             <span class="rp-content1__push-props" id="push-props">настроить</span>
           </div>
-          <button class="rp-content1__button off" id="company-btn">сохранить и продолжить</button>
-          
+
+          <div class="center">
+            <button class="prmu-btn prmu-btn_normal" id="form_btn">
+              <span>продолжить</span>
+            </button>
+          </div>
+ 
           <input name="all" value="0" type="hidden">
           <input name="rate" value="2" type="hidden">
           <input name="invite" value="2" type="hidden">
@@ -401,5 +436,15 @@
     </div>
     <button class="pp-form__button" id="pash-save-btn">Сохранить</button>
   </form>
+  <?
+  //
+  ?>
+  <div class="tmpl">
+    <div class="prmu__popup">Мы заметили, что Вы не заполнили некоторые данные о себе, для поиска соискателей и размещения вакансий они очень важны и мы рекомендуем их заполнить<div>
+        <a href="javascript:void(0)" data-fancybox-close>Заполнить данные</a>
+        <a href="<?=MainConfig::$PAGE_EDIT_PROFILE?>">Идти дальше</a>
+      </div>
+    </div>
+  </div>
 <?php endif; ?>
 <?php require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/popup-load-img.php'; ?>

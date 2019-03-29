@@ -1,135 +1,168 @@
-$(function(){
-  var arInputs = $('.required-inp'),
-      oldPhone = $('#phone-code').val(),
-      cityTimer = false, // таймер обращения к серверу для поиска городов
-      bShowCityList = true, // флаг отображения списка городов
-      keyCode = 0;
+'use strict'
+var RegisterPopupEmp = (function () {
 
-  $('body').append('<div class="bg_veil"></div>');
+  RegisterPopupEmp.prototype.result = [];
+  RegisterPopupEmp.prototype.cityTimer = false;
 
-  $(document).keydown(function(e){ keyCode = e.keyCode }); // код нажатой клавиши
+  function RegisterPopupEmp() { this.init() }
 
-    var timerCity = setInterval(checkCity,100),
-      $code = $('[name="__phone_prefix"]'),
-      oldPhoneCode = $code.val();
+  RegisterPopupEmp.prototype.init = function () {
+    let self = this;
 
-    function checkCity(){
-      if(oldPhoneCode!=$code.val()){
-        oldPhoneCode = $code.val();
-        clearInterval(timerCity);
-        var $input = $('#city-input'),
-          val = $input.val().charAt(0).toUpperCase() + $input.val().slice(1).toLowerCase(),
-          piece = $input.val().toLowerCase();
+    // устанавливаем начальные параметры
+    $.each($('#popup-form').serializeArray(),function(){
+      self.result[this.name] = this.value;
+    });
+    //
+    //
+    // обработчик всех кликов
+    $(document).click(function(e){
+      self.closeCityList(e.target);
+    });
+    //
+    //
+    // обработчик выбора телефона
+    $('#phone-code').on('blur',function(e){
+      setTimeout(function(){
+        let val = $(e.target).val(),
+            len = val.replace(/\D+/g,'').length,
+            code = $('[name="__phone_prefix"]').val(),
+            main = $(e.target).closest('div');
 
-        for (var i=0; i<arCountries.length; i++)
-          if(oldPhoneCode==arCountries[i].phone){
-            country = arCountries[i].id;
-            break;
-          }
-
-        $.ajax({
-          url: MainConfig.AJAX_GET_VE_GET_CITIES,
-          data: 'idco=' + country + '&query=' + val,
-          dataType: 'json',
-          success: function(res){
-            var errCity = true;
-            $.each(res.suggestions, function(){ // список городов если что-то введено
-              if(this.value.toLowerCase()===piece && this.data!=='man'){ // если введен именно город полностью
-                remEr('#city-input');
-                $input.val(val);
-                errCity = false;
-              }
-            });
-            if(errCity){
-              addEr('#city-input');
-              $input.val('');
+            if(code.length==3 && len<9)
+            { // UKR
+              $(main).addClass('error');
+              $(e.target).val('');
             }
-            timerCity = setInterval(checkCity,100);
+            else if(code.length==1 && len<10)
+            { // RF
+              $(main).addClass('error');
+              $(e.target).val('');
+            }
+            else if(self.result.phone!=val){
+              self.setAjax({phone:code+val});
+              self.result.phone = val;
+              $(main).removeClass('error');
+            }
+      },100);
+    });
+    //
+    //
+    // обработчик выбора города
+    $('#city_input').on('blur',function(e){
+      setTimeout(function(){
+        let val = $('#city_hidden').val();
+        if(!val.length)
+          $(e.target).addClass('error');
+        else if(self.result.city!=val)
+        {
+          self.setAjax({city:val});
+          self.result.city = val;
+          $(e.target).removeClass('error');
+        }
+      },100);
+    });
+    //
+    $('#city_input').on('input focus', function(e){
+      self.selectCity(e.type, e.target);
+    });
+    // обработчик ввода контактного лица
+    $('#contact_field').on('blur',function(e){
+      setTimeout(function(){
+        let val = e.target.value;
+        if(!val.length)
+          $(e.target).addClass('error');
+        else if(self.result.contact!=val)
+        {
+          self.setAjax({contact:val});
+          self.result.contact = val;
+          $(e.target).removeClass('error');
+        }
+      },100);
+    });
+    // обработчик выбора типа компании
+    $('#type_select').on('change',function(e){
+      let option = $(e.target).find(':checked')[0],
+          val = option.value;
+
+      setTimeout(function(){
+          self.setAjax({companyType:val});
+          self.result.companyType = val;
+      },100);
+    });
+    //
+    //
+    // проверка перед отправкой формы
+    $('#form_btn, .rp-header__close-btn').click(function(e)
+    {
+      let bError = false;
+
+      e.preventDefault();
+
+      if(MainScript.isButtonLoading(this))
+        return false; 
+      else if(this.id==='form_btn')
+        MainScript.buttonLoading(this,true);
+
+      if($('.country-phone').hasClass('error'))
+      {
+        bError = true;
+      }
+      if(!$('#city_hidden').val().length)
+      {
+        $('#city_input').addClass('error');
+        bError = true;
+      }
+      if(!$('#contact_field').val().length)
+      {
+        $('#contact_field').addClass('error');
+        bError = true;
+      }
+      //
+      if($('.error').length>0 || bError)
+      {
+        $.fancybox.open({
+          src: '.prmu__popup',
+          type: 'inline',
+          touch: false,
+          afterClose: function(){
+            $('html, body').animate({ scrollTop: $($('.error')[0]).offset().top-20 }, 1000);
           }
         });
+
+        if(this.id==='form_btn')
+          MainScript.buttonLoading(this,false);
       }
-    }
-  
-  $('#phone-code').on('blur',function(){
-    var len = $(this).val().replace(/\D+/g,'').length,
-        code = $('[name="__phone_prefix"]').val(),
-        phoneLen = 10; 
-
-        if(code.length==3 && len<9){ // UKR
-          addEr($(this).closest('div'));
-          $(this).val('');
-        }
-        else if(code.length==1 && len<10){ // RF
-          addEr($(this).closest('div'));
-          $(this).val('');
-        }
-        else{
-          remEr($(this).closest('div')); 
-        }
-  });
-
-  //  таймер проверки загрузки фото
-  setInterval(function (e){
-    if($('#HiLogo').val() != ''){
-      $('#company-img').attr('src','/images/company/tmp/'+$('#HiLogo').val()+'400.jpg');
-      remEr('.rp-content1__logo-img');
-      error = false;
-      $.each(arInputs, function(){ if(!checkFieldEasy(this)) error = true; });
-      (!error && !$('.error').length) ? remEr('#company-btn','off') : addEr('#company-btn','off');
-    }
-  }, 1000);
+      else
+      {
+        $('#popup-form').submit();
+      }  
+    }); 
+  }
   //
-  //  события
-  //
-  //  проверка полей
-  $('.required-inp').change(function(){ 
-    checkField(this);
-    error = false;
-    $.each(arInputs, function(){ if(!checkFieldEasy(this)) error = true; });
-    (!error && !$('.error').length) ? remEr('#company-btn','off') : addEr('#company-btnn','off');
-  });
-  // проверка перед отправкой формы
-  $('#popup-form').submit(function()
+  RegisterPopupEmp.prototype.setAjax = function (data)
   {
-    var button = document.querySelector('#company-btn');
+    $('.register-popup__veil').show();
+    $.ajax({
+      type: 'POST',
+      url: '/ajax/profile',
+      data: {data: JSON.stringify(data)},
+      dataType: 'json',
+      complete: function(){ $('.register-popup__veil').hide() }
+    });
+  }
+  //
+  RegisterPopupEmp.prototype.selectCity = function (event, item)
+  {
+    let self = this,
+        sec = event==='focus' ? 1 : 1000;
 
-    if(MainScript.isButtonLoading(button)){ return false; }
-    else{ MainScript.buttonLoading(button,true); }
-
-    $.each(arInputs, function(){ checkField(this) });
-
-    if($('.error').length>0){
-      $('html, body').animate({ scrollTop: $($('.error')[0]).offset().top-20 }, 1000);
-      addEr('#company-btn','off');
-      MainScript.buttonLoading(button,false);
-      return false;
-    }
-    else{
-      remEr('#company-btn','off');
-    } 
-  });
-  //    push
-  $('#push-props').click(function(){ pushProps() });
-  $('#push-checkbox').change(function(){ if(!$(this).prop('checked')) pushProps() });
-  $('body').on('change', '#all', function(){
-    $(this).prop('checked') ? $('.pp-form__all-props').fadeOut() : $('.pp-form__all-props').fadeIn();
-  });
-  $('.bg_veil').click(function(){ sendPushData() });
-  $('.push-popup__form').submit(function(){ return sendPushData() });
-  $('#push-checkbox').change(function(){ $(this).prop('checked') ? $('#push-props').hide() : $('#push-props').show() });
-  //    города
-  //  поиск городов по вводу
-  $('#city-input').bind('input focus', function(e){
-    var $input = $(this),
-        sec = e.type==='focus' ? 1 : 1000;
-
-    bShowCityList = true;
-    clearTimeout(cityTimer);
-    cityTimer = setTimeout(function(){
-      setFirstUpper('#city-input'); //  город с большой буквы
-      var val = $input.val(),
-          piece = $input.val().toLowerCase(),
-          main = $input.closest('span'),
+    clearTimeout(self.cityTimer);
+    self.cityTimer = setTimeout(function(){
+      self.setFirstUpper('#city_input');
+      var val = $(item).val(),
+          piece = $(item).val().toLowerCase(),
+          main = $(item).closest('span'),
           content = '',
           arCities = [];
 
@@ -141,14 +174,13 @@ $(function(){
           dataType: 'json',
           success: function(res){
             $.each(res.suggestions, function(){ 
-              arCities.push(this.value);
+              arCities.push(this);
             });// список городов если ничего не введено
             arCities.length>0  
-            ? $.each(arCities, function(){ content += '<li>'+this+'</li>' })         
+            ? $.each(arCities, function(){ content += '<li data-id='+this.data+'>'+this.value+'</li>' })         
             : content = '<li class="emp">Список пуст</li>';
-            $('#city-list').empty().append(content);
-            if(bShowCityList)
-              $('#city-list').show();
+            $('#city_list').empty().append(content);
+            $('#city_list').show();
             $(main).removeClass('load');
           }
         });
@@ -161,74 +193,104 @@ $(function(){
           dataType: 'json',
           success: function(res){
             $.each(res.suggestions, function(){ // список городов если что-то введено
-              word = this.value.toLowerCase();
+              let word = this.value.toLowerCase();
               if(word===piece && this.data!=='man'){ // если введен именно город полностью
-                remEr('#city-input');
-                arCities.push(this.value);
+                $('#city_input').removeClass('error');
+                arCities.push(this);
               }
               else if(word.indexOf(piece)>=0 && this.data!=='man')
-                arCities.push(this.value);
+                arCities.push(this);
             });
             arCities.length>0  
-            ? $.each(arCities, function(){ content += '<li>'+this+'</li>' })         
+            ? $.each(arCities, function(){ content += '<li data-id='+this.data+'>'+this.value+'</li>' })         
             : content = '<li class="emp">Список пуст</li>';
-            $('#city-list').empty().append(content);
-            if(bShowCityList)
-              $('#city-list').show();
+            $('#city_list').empty().append(content);
+            $('#city_list').show();
             $(main).removeClass('load');
           }
         });
-      } 
-    },sec);   
-  });
-  //  выбор города из списка
-  $(document).on('click', '#city-list li', function(){
-    if(!$(this).hasClass('emp')){
-      $('#city-input').val($(this).text());
-      bShowCityList = false;
-      $('#city-list').hide();
-      remEr('#city-input');
+      }
+    },sec);
+  }
+  // выбор города из списка
+  RegisterPopupEmp.prototype.closeCityList = function (item)
+  {
+    if($(item).closest('#city_list').length)
+    {
+      if(!$(item).hasClass('emp'))
+      {
+        $('#city_input').val($(item).text())
+          .removeClass('error');
+        $('#city_hidden').val(item.dataset.id)
+          .data('name',$(item).text());
+        $('#city_list').hide();
+      }
+      else
+      {
+        $('#city_input').addClass('error');
+      }
     }
-    else{
-      addEr('#city-input');
+    else
+    {
+      $('#city_input').val($('#city_hidden').data('name'))
+        .removeClass('error');
+      $('#city_list').hide();
     }
-  });
-  //  закрываем список городов
-  $(document).click(function(e){
-    if(!$('#city-input').is(e.target) && !$(e.target).closest('#city-list').length){
-      setFirstUpper('#city-input'); //  город с большой буквы
+  }
+  //      правильный ввод названия города
+  RegisterPopupEmp.prototype.setFirstUpper = function (e)
+  {
+    var split = $(e).val().split(' ');
 
-      var $input = $('#city-input'),
-          val = $input.val(),
-          piece = $input.val().toLowerCase();
-    
-      $.ajax({
-        url: MainConfig.AJAX_GET_VE_GET_CITIES,
-        data: 'idco=' + country + '&query=' + val,
-        dataType: 'json',
-        success: function(res){
-          var errCity = true;
-          $.each(res.suggestions, function(){ // список городов если что-то введено
-            if(this.value.toLowerCase()===piece && this.data!=='man'){ // если введен именно город полностью
-              remEr('#city-input');
-              $input.val(val);
-              setFirstUpper('#city-input');
-              errCity = false;
-            }
-          });
-          if(errCity){
-            addEr('#city-input');
-            $input.val('');
-          }
-        }
-      });
-      bShowCityList = false;
-      $('#city-list').hide();
-    }
+    for(var i=0, len=split.length; i<len; i++)
+        split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
+    $(e).val(split.join(' '));
+
+    split = $(e).val().split('-');
+    for(var i=0, len=split.length; i<len; i++)
+        split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
+    $(e).val(split.join('-'));
+  }
+  //
+  return RegisterPopupEmp;
+}());
+/*
+*
+*/
+$(function(){
+  var oldPhone = $('#phone-code').val(),
+      keyCode = 0,
+      arInputs = $('.required-inp'),
+      $code = $('[name="__phone_prefix"]'),
+      oldPhoneCode = $code.val();
+
+  new RegisterPopupEmp();
+
+  $('body').append('<div class="bg_veil"></div>');
+  $(document).keydown(function(e){ keyCode = e.keyCode }); // код нажатой клавиши
+  //  окно пуш настроек
+  $('#push-props').click(function(){ pushProps() });
+  $('#push-checkbox').change(function(){ if(!$(this).prop('checked')) pushProps() });
+  $('body').on('change', '#all', function(){
+    $(this).prop('checked') ? $('.pp-form__all-props').fadeOut() : $('.pp-form__all-props').fadeIn();
   });
-  //
-  //    функции
-  //
+  //  выбор всех пуш настроек
+  $('#push-checkbox').change(function(){ $(this).prop('checked') ? $('#push-props').hide() : $('#push-props').show() });
+  //  отправка пуш настроек на основную форму
+  $('.bg_veil').click(function(){ sendPushData() });
+  $('.push-popup__form').submit(function(){ return sendPushData() });
+  //  таймер проверки загрузки фото
+  setInterval(function (e){
+    if($('#HiLogo').val() != ''){
+      $('#company-img').attr('src','/images/company/tmp/'+$('#HiLogo').val()+'400.jpg');
+      remEr('.rp-content1__logo-img');
+      $.each(arInputs, function(){ checkFieldEasy(this) });
+    }
+  }, 1000);
+  /*
+  *     Финкции
+  */
+  //  отображение пуш настроек
   function pushProps(){
     $('.push-popup__form').fadeIn();
     $('.bg_veil').fadeIn();
@@ -267,41 +329,4 @@ $(function(){
     if($(e).val()=='' || $(e).val()==null) return false;
     else return true;
   }
-  //      правильный ввод названия города
-  function setFirstUpper(e) {
-    var split = $(e).val().split(' ');
-
-    for(var i=0, len=split.length; i<len; i++)
-        split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
-    $(e).val(split.join(' '));
-
-    split = $(e).val().split('-');
-    for(var i=0, len=split.length; i<len; i++)
-        split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
-    $(e).val(split.join('-'));
-  }
-  //
-  $.each($('.required-inp'),function()
-  { 
-    error = false;
-    $.each(arInputs, function(){ if(!checkFieldEasy(this)) error = true; });
-    (!error && !$('.error').length) ? remEr('#company-btn','off') : addEr('#company-btnn','off');
-  });
-  //
-  $('.rp-header__close-btn').click(function(){
-    $.each(arInputs,function(){checkField(this)});
-    if($('.error').length)
-    {
-      $.fancybox.open({
-        src: '.prmu__popup',
-        type: 'inline',
-        touch: false
-      });
-    }
-    else
-    {
-      $('#popup-form').submit();
-      //location = $('.prmu__popup a')[1].href;
-    }
-  });
 }); 
