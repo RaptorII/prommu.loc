@@ -1575,7 +1575,11 @@ class UserProfileEmpl extends UserProfile
         {
             $db->createCommand()
                 ->update('employer', 
-                    ['contact' => $data['contact']],
+                    [
+                        'contact' => $data['contact'],
+                        'firstname' => $data['contact'],
+                        'lastname' => $data['contact']
+                    ],
                     'id_user=:id_user', 
                     [':id_user'=>$id]
                 );
