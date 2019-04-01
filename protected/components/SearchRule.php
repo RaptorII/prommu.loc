@@ -9,17 +9,39 @@ class SearchRule extends CBaseUrlRule {
     public function parseUrl($manager,$request,$pathInfo,$rawPathInfo)
     {
         $path = explode('/', $request->getPathInfo());
-
-        if(($path[0] != 'vacancy' && $path[0] != 'ankety') )
-            return false;
-        else
+        if($path[0]=='site' && $path[1]=='vacancy')
         {
-            if(sizeof($path)>1 || sizeof($_GET)){
-                if($path[0]=='vacancy')
-                    return $this->parseVacation($path);
+            $url = Yii::app()->request->hostInfo . substr(Yii::app()->request->url, 5);
+            header('Location: ' . $url);
+            exit();                   
+        }
 
-                if($path[0]=='ankety')
-                    return $this->parsePromo($path);
+        if( $path[0] != 'vacancy' && $path[0] != 'ankety' )
+        {
+            return false;
+        }
+        elseif(sizeof($path)>1 || sizeof($_GET))
+        {
+            if($path[0]=='vacancy')
+            {
+                $length = count($path);
+                if($length>1 && stripos($path[1],"?")===false) // страница отдельной вакансии
+                {
+                    $_GET['id'] = intval($path[1]);
+                    if(count($path)==3) // страница секций
+                    {
+                        $_GET['section'] = $path[2];
+                        return 'site/vacancy';
+                    }
+                }
+                else // страница списка вакансий или отдельной вакансии
+                {
+                    return $this->parseVacation($path);
+                }
+            }
+            if($path[0]=='ankety')
+            {
+                return $this->parsePromo($path);
             }
         }
 

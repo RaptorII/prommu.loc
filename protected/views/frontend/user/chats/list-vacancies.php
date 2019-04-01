@@ -32,7 +32,8 @@
 			<? $personal_link = MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $idvac; ?>
 			<div class="vacancy__item<?=(count($item['users'])?'':' disable')?>">
 				<div class="vacancy__item-tab">
-					<a href="<?=MainConfig::$PAGE_VACANCY . DS . $item['id']?>" title="Перейти на вакансию" target="_blank" class="js-g-hashint"><?=$item['title']?></a>
+					<a href="javascript:void(0)"><?=$item['title']?></a>
+					<?/*<a href="<?=MainConfig::$PAGE_VACANCY . DS . $item['id']?>" title="Перейти на вакансию" target="_blank" class="js-g-hashint"><?=$item['title']?></a>*/?>
 					<? if($item['cnt-mess']>0): ?>
 						<span class="js-g-hashint vac-item__content-chat-mess" title="Сообщений"><?=$item['cnt-mess']?></span>
 					<? endif; ?>

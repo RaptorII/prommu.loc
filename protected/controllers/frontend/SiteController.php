@@ -436,77 +436,61 @@ class SiteController extends AppController
     ///Отображение вакансий
     public function actionVacancy()
     {
-        $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
-        
-        if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('mess') ){
-            $res = (new VacDiscuss())->postMessage();
-            if(!$res['error'] )
-                $this->redirect("/vacancy/$id" . '?info=dialog');
-        }
+        $rq = Yii::app()->getRequest();
+        $id = $rq->getParam('id');
+        $id_user = Share::$UserProfile->id;
+        //
+        if(isset($id)) // страница конкретной вакансии
+        {
+            $section = $rq->getParam('section');
+            $info = $rq->getParam('info');
+            $view = $this->ViewModel->pageVacancy;
+            $model = new Vacancy;
+            $data = $model->getVacancyView($id);
+            if($data['error'] == 1)
+                throw new CHttpException(404, 'Error'); 
 
-        if(empty($id)){
-            $tmp = explode('/', $_SERVER['REQUEST_URI']);
-            if(sizeof($tmp)==3){
-                $id = (int)$tmp[2];
-                if(!$id && sizeof($_GET)==3 && $_GET['sex']==3)
+            $isOwner = Vacancy::hasAccess($id,$id_user);
+            if($isOwner)
+            {
+                Yii::app()->session['editVacId'] = $id; 
+            }
+
+            if($section=='invited') // секции конкретной вакансии
+            {
+                Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
+                if($isOwner)
+                {
+                    $data['invited'] = $model->getVacancyInvited($id);
+                    $view = 'vacancy/invited';
+                }
+                else
                     throw new CHttpException(404, 'Error');
             }
-        }
-        else{
-            $this->redirect(MainConfig::$PAGE_SEARCH_VAC);
-        }
-
-
-        if(!empty($id))
-        {
-            $Termostat = new Termostat();
-            $Termostat->setTermostat($id, Share::$UserProfile->id ? Share::$UserProfile->id : 0, 'vacancy' );
-            if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('mess') )
+            if(!empty($info))
             {
-                $res = (new VacDiscuss())->postMessage();
-                if(!$res['error'])
-                    $this->redirect("/vacancy/$id" . '#tabs');
+                Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
+                if($isOwner)
+                    $view = MainConfig::$VIEWS_VAC_TAB_RESP;
+                else
+                    throw new CHttpException(404, 'Error');
             }
-
-            if(strpos($_SERVER['REQUEST_URI'], 'site/vacancy/') > -1)
-            {
-                header('Location: '.str_replace('site/vacancy/', 'vacancy/', $_SERVER['REQUEST_URI']));
-                exit();
-            }
-
-            $vac = (new Vacancy())->getVacancyView($id);
-
-            if(isset($vac['error']) && $vac['error'] == 1)
-            {
-                throw new CHttpException(404, 'Error'); 
-            }
-
-            $this->setBreadcrumbs($title = "Поиск вакансий", MainConfig::$PAGE_SEARCH_VAC);
-
-            if(Share::$UserProfile->type==3 && $vac['vac']['idus']==Share::$UserProfile->id){
-                Yii::app()->session['editVacId'] = $id;  
-            }
+            //
             // индексируем только если владелец вакансии с этого региона
             $res = Yii::app()->db->createCommand()
                 ->select('id_city')
                 ->from('user_city')
-                ->where('id_user=:id',array(':id'=>$vac['vac']['idus']))
+                ->where('id_user=:id',array(':id'=>$data['vac']['idus']))
                 ->queryRow();
 
             if($res['id_city']>0 && !in_array($res['id_city'], Subdomain::getCacheData()->arCitiesIdes))
                 Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
-            // 
-            $view = $this->ViewModel->pageVacancy;
-
-            if(Yii::app()->getRequest()->getParam('info') && $vac['vac']['idus']==Share::$UserProfile->id){
-                !in_array(Share::$UserProfile->type, [2,3]) && $this->redirect(MainConfig::$PAGE_LOGIN);
-                $view = MainConfig::$VIEWS_VAC_TAB_RESP;
-            }
-
-            $this->render($view,
-                array('viData' => $vac, 'id' => $id),
-                array('pageTitle' => $title)
-            );
+            //
+            //
+            $Termostat = new Termostat();
+            $Termostat->setTermostat($id, $id_user?:0, 'vacancy' );
+            $this->setBreadcrumbs($title = "Поиск вакансий", MainConfig::$PAGE_SEARCH_VAC);
+            $this->render($view,['viData'=>$data, 'id'=>$id], ['pageTitle'=>$title]);
         }
         else
         {

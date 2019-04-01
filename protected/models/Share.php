@@ -868,4 +868,11 @@ class Share
         $status = ($param ? $param : self::$UserProfile->type);
         return  $status==3 ? true : false;  
     }
+    /**
+     * 
+     */
+    public static function isGuest()
+    {
+        return !(self::isApplicant() || self::isEmployer());
+    }
 }

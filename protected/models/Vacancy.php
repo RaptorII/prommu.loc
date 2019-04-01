@@ -3359,4 +3359,38 @@ WHERE id_vac = {$inVacId}";
                     ])
                     ->queryColumn();
     }
+    /**
+     *  проверяем юзера на владельца вакансии
+     */
+    public static function hasAccess($id_vacancy, $id_user)
+    {
+        return Yii::app()->db->createCommand()
+                    ->select("id")
+                    ->from('empl_vacations')
+                    ->where(
+                        'id=:id AND id_user=:id_user',
+                        [':id'=>$id_vacancy,':id_user'=>$id_user]
+                    )
+                    ->queryScalar();
+    }
+    /**
+     * @param $id_vacancy - int
+     * собираем данные для страницы Приглашенные
+     */
+    public static function getVacancyInvited($id_vacancy)
+    {
+        $model = new ServiceCloud;
+        $arRes = $model->getVacData($id_vacancy);
+
+        if(!count($arRes['items']))
+            return $arRes;
+
+        $arIdUser = array();
+        foreach ($arRes['items'] as $v)
+            !in_array($v['user'],$arIdUser) && $arIdUser[] = $v['user'];
+
+        $arRes['users'] = Share::getUsers($arIdUser);
+
+        return $arRes;
+    }
 }

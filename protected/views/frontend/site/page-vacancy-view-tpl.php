@@ -144,6 +144,8 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                         <span class="erv__tab-link link5">Просмотров (<?= $viData['views'] ?>)</span><br>
                         <a href="?info=resp" class="erv__tab-link link1">Откликнувшиеся
                             (<?= $viData['vacResponses']['counts'][4] ?: 0 ?>)</a><br>
+                        <? $cntInvited = (new ServiceCloud())->getVacDataCnt($viData['vac']['id']); ?>
+							<a href="<?=MainConfig::$PAGE_VACANCY . DS .  $viData['vac']['id'] . DS . 'invited'?>" class="erv__tab-link link8">Приглашенные(<?=$cntInvited?>)</a><br>
                         <a href="?info=approv" class="erv__tab-link link7">Утвержденные
                             (<?= $viData['vacResponses']['counts'][8] ?: 0 ?>)</a><br>
                         <a href="?info=aside" class="erv__tab-link link3">Отложенные
@@ -209,6 +211,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                             </div>
                             <div class="erv__services">
                                 <?php if ($viData['vac']['ismoder'] == 100): // отображать услуги только для промодерированных вкансий ?>
+                                    <span>Бесплатные услуги</span>
                                     <? if (!empty($viData['vac']['vk_link'])): ?>
                                         <a href="<?= $viData['vac']['vk_link'] ?>"
                                            class="erv__services-soc prmu-btn link">
@@ -242,24 +245,22 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                                             <span>Опубликовать в Telegram</span>
                                         </a>
                                     <? endif; ?>
-                                    <span>Закажите услугу для вакансии</span>
-                                    <?php if (!$viData['vac']['ispremium']): // если вакансия НЕ премиум ?>
-                                        <a href="<?= MainConfig::$PAGE_ORDER_SERVICE . "?id={$viData['vac']['id']}&service=premium" ?>"
-                                           class="erv__services-link erv__services-premium js-g-hashint"
-                                           title="Установить Премиум статус"></a>
-                                    <?php endif; ?>
-                                    <a href="<?= MainConfig::$PAGE_ORDER_SERVICE . "?id={$viData['vac']['id']}&service=sms" ?>"
-                                       class="erv__services-link erv__services-sms js-g-hashint"
-                                       title="СМС информирование"></a>
-                                    <a href="<?= MainConfig::$PAGE_ORDER_SERVICE . "?id={$viData['vac']['id']}&service=email" ?>"
-                                       class="erv__services-link erv__services-email js-g-hashint"
-                                       title="EMAIL информирование"></a>
-                                    <a href="<?= MainConfig::$PAGE_ORDER_SERVICE . "?id={$viData['vac']['id']}&service=outsourcing" ?>"
-                                       class="erv__services-link erv__services-atsrc js-g-hashint"
-                                       title="Аутсорсинг"></a>
-                                    <a href="<?= MainConfig::$PAGE_ORDER_SERVICE . "?id={$viData['vac']['id']}&service=outstaffing" ?>"
-                                       class="erv__services-link erv__services-outstf js-g-hashint"
-                                       title="Аутстаффинг"></a>
+                                    <? $link = "?id={$viData['vac']['id']}&service="; ?>
+                                    <a href='<?= MainConfig::$PAGE_ORDER_SERVICE . "$link=push"?>'
+                                       class="erv__services-soc prmu-btn"><span>PUSH информирование</span></a>   
+                                    <span>Платные услуги</span>
+                                    <? if (!$viData['vac']['ispremium']): // если вакансия НЕ премиум ?>
+                                        <a href='<?= MainConfig::$PAGE_ORDER_SERVICE . "$link=premium"?>'
+                                           class="erv__services-soc prmu-btn"><span>Премиум</span></a>
+                                    <? endif; ?>
+                                    <a href='<?=MainConfig::$PAGE_ORDER_SERVICE . "$link=sms"?>'
+                                       class="erv__services-soc prmu-btn"><span>СМС информирование</span></a>
+                                    <a href='<?=MainConfig::$PAGE_ORDER_SERVICE . "$link=email"?>'
+                                       class="erv__services-soc prmu-btn"><span>EMAIL информирование</span></a>
+                                    <a href='<?=MainConfig::$PAGE_ORDER_SERVICE . "$link=outsourcing"?>'
+                                       class="erv__services-soc prmu-btn"><span>Аутсорсинг</span></a>
+                                    <a href='<?=MainConfig::$PAGE_ORDER_SERVICE . "$link=outstaffing"?>'
+                                       class="erv__services-soc prmu-btn"><span>Аутстаффинг</span></a>
                                 <?php endif; ?>
                             </div>
                         </div>

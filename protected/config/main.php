@@ -181,6 +181,8 @@ return array(
                 '<controller:user>/<action:vacancies>/<id:\d+>' => '<controller>/<action>',
                 '<controller:user>/<action:vacancies>/<section:[\w-]+>' => '<controller>/<action>',
                 '<controller:user>/<action:vacancies>/<section:archive>/<id:\d+>' => '<controller>/<action>',
+                // vacancy
+                '<controller:site>/<action:vacancy>/<id:\d+>/<section:invited>' => '<controller>/<action>',
                 // все action с цифрами на общий контроллер
                 '<action>/<id:\d+>' => 'site/<action>',
                 // для всех страниц
