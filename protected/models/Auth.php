@@ -1462,7 +1462,7 @@ class Auth
 
 
         } else {
-            //  if(!empty($inData['inputData']['phone'])) $inData['inputData']['email'] = $inData['inputData']['phone'];
+             if(!empty($inData['inputData']['phone'])) $inData['inputData']['email'] = $inData['inputData']['phone'];
             $idUs = $this->userInsert(array('email' => $inData['inputData']['email'],
                 'passw' => $inData['inputData']['pass'],
                 'login' => $inData['inputData']['email'],
@@ -1518,23 +1518,22 @@ class Auth
         $res = Yii::app()->db->createCommand()
                         ->insert('analytic', $analytData);
                         
-        // if(!empty($inData['inputData']['phone'])){
-        //     $code = rand(1111,9999);
-        //     $phone = $inData['inputData']['phone'];
-        //     $rest = Yii::app()->db->createCommand()
-        //                 ->insert('activate', array('id' => $code,
-        //                     'id' => $code,
-        //                     'code' => $code,
-        //                     'phone' => $inData['inputData']['email'],
-        //                     'date' => date("Y-m-d h-i-s"),
-        //                     'type' => $inData['type'],
-        //                     ));
+        if(!empty($inData['inputData']['phone'])){
+            $code = rand(1111,9999);
+            $phone = $inData['inputData']['phone'];
+            $rest = Yii::app()->db->createCommand()
+                        ->insert('activate', array('id' => $code,
+                            'id' => $code,
+                            'code' => $code,
+                            'phone' => $inData['inputData']['email'],
+                            'date' => date("Y-m-d h-i-s"),
+                            'type' => $inData['type'],
+                            ));
 
-        // file_get_contents("https://prommu.com/api.teles/?phone=$phone&code=$code");
+        file_get_contents("https://prommu.com/api.teles/?phone=$phone&code=$code");
 
             
-        // } else
-        if($inData['type'] == 2) {
+        } elseif($inData['type'] == 2) {
             $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=2&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin."&sex=".$sex."&smart=".$smart."&ip=".$ip."&client=".$client."&pm=".$pm;
             $message = '<p style="font-size:16px">Наш портал <b>Prommu.com</b> позволяет найти работу в России и странах СНГ совершенно бесплатно.</p>'
             .'<br/>'
