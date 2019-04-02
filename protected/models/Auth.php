@@ -1250,23 +1250,42 @@ class Auth
         } // endif
 
         
-            $key = 'email';
-            if( !$flag_error && !filter_var($inputData[$key], FILTER_VALIDATE_EMAIL) )
+                    $key = 'email';
+        $term = 'login';
+        $inputData[$key] = Yii::app()->getRequest()->getParam($key);
+        
+        if(empty($inputData[$key])){
+            $key = 'phone';
+            $term = 'login';
+            $inputData[$key] = Yii::app()->getRequest()->getParam($key);
+        }
+        
+        
+        if( !$flag_error && !filter_var($inputData['email'], FILTER_VALIDATE_EMAIL) && empty($inputData['phone']))
+        {
+            $message = "Ошибки заполнения формы";
+            $hint = 'введите правильный электронный адрес или номер телефона';
+            $flag_error = 1;
+            $element = $key;
+
+        // проверяем на дубликат
+        } elseif(!$flag_error && empty($inputData['phone']) && empty($inputData['email'])) {
+            
+            $message = "Ошибки заполнения формы";
+            $hint = 'введите правильный номер телефона';
+            $flag_error = 1;
+            $element = 'phone';
+            
+        } else {
+            // нет есть в системе и статус = регистрация 1 шаг
+            if( (new User())->find("$term = '{$inputData[$key]}'") )
             {
-                $message = "Ошибки заполнения формы";
-                $hint = 'введите правильный электронный адрес';
+                $message = "Такой пользователь уже зарегистрирован в системе";
+                $hint = 'введите другие данные';
                 $flag_error = 1;
                 $element = $key;
-             } else {
-                // нет есть в системе и статус = регистрация 1 шаг
-                if( (new User())->find("email = '{$inputData[$key]}'") )
-                {
-                    $message = "Такой email уже зарегистрирован в системе";
-                    $hint = 'введите другой email адрес';
-                    $flag_error = 1;
-                    $element = $key;
-                } // endif
             } // endif
+        } // endif
        
         
        
