@@ -1249,7 +1249,6 @@ class Auth
             $element = $key;
         } // endif
 
-        
         $key = 'email';
         $term = 'email';
         $inputData[$key] = Yii::app()->getRequest()->getParam($key);
@@ -1259,7 +1258,6 @@ class Auth
             $term = 'login';
             $inputData[$key] = Yii::app()->getRequest()->getParam($key);
         }
-        
         
         if( !$flag_error && !filter_var($inputData['email'], FILTER_VALIDATE_EMAIL) && empty($inputData['phone']))
         {
@@ -1277,20 +1275,17 @@ class Auth
             $element = 'phone';
             
         } else {
-            // нет есть в системе и статус = регистрация 1 шаг
+            
             if( (new User())->find("$term = '{$inputData[$key]}'") )
             {
                 $message = "Такой пользователь уже зарегистрирован в системе";
                 $hint = 'введите другие данные';
                 $flag_error = 1;
                 $element = $key;
-            } // endif
-        } // endif
+            } 
+        } 
        
         
-       
-
-
         $key = 'pass';
         $data = Yii::app()->getRequest()->getParam('pass');
         if( !$flag_error )
