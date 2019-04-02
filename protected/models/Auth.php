@@ -1647,10 +1647,17 @@ class Auth
 
 
         $key = 'email';
+        $term = 'login';
         $inputData[$key] = Yii::app()->getRequest()->getParam($key);
         
-        $inputData['phone'] = Yii::app()->getRequest()->getParam('phone');
-        if( !$flag_error && !filter_var($inputData[$key], FILTER_VALIDATE_EMAIL) || empty($inputData['phone']))
+        if(empty($inputData[$key])){
+            $key = 'phone';
+            $term = 'login';
+            $inputData[$key] = Yii::app()->getRequest()->getParam($key);
+        }
+        
+        
+        if( !$flag_error && !filter_var($inputData['email'], FILTER_VALIDATE_EMAIL) && empty($inputData['phone']))
         {
             $message = "Ошибки заполнения формы";
             $hint = 'введите правильный электронный адрес или номер телефона';
@@ -1667,7 +1674,7 @@ class Auth
             
         } else {
             // нет есть в системе и статус = регистрация 1 шаг
-            if( (new User())->find("email = '{$inputData[$key]}'") )
+            if( (new User())->find("$term = '{$inputData[$key]}'") )
             {
                 $message = "Такой пользователь уже зарегистрирован в системе";
                 $hint = 'введите другие данные';
