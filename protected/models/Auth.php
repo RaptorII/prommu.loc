@@ -1250,8 +1250,8 @@ class Auth
         } // endif
 
         
-                    $key = 'email';
-        $term = 'login';
+        $key = 'email';
+        $term = 'email';
         $inputData[$key] = Yii::app()->getRequest()->getParam($key);
         
         if(empty($inputData[$key])){
@@ -1665,7 +1665,7 @@ class Auth
 
 
         $key = 'email';
-        $term = 'login';
+        $term = 'email';
         $inputData[$key] = Yii::app()->getRequest()->getParam($key);
         
         if(empty($inputData[$key])){
