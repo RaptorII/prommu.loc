@@ -686,7 +686,7 @@ class Api
             $activate = Yii::app()->db->createCommand()
             ->select("r.code")
             ->from('activate r')
-            ->where('r.phone = :login', array(':login' => $login))
+            ->where('r.phone = :login AND r.code = :code', array(':login' => $login, ':code' => $code))
             ->queryRow();
             
             if($activate['code'] == $code){
