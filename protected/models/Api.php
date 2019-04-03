@@ -722,6 +722,7 @@ class Api
             }
             
             $res = [];
+            $res['code'] = 1;
             $res['message'] = 'Отправлен код подтверждения';
             return $res;
              
