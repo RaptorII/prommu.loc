@@ -696,7 +696,7 @@ class Api
                     $res['code'] = $this->teleProms($login, $code);
                     
                 } else {
-                    $message = '<p style="font-size:16px">Ваш код для потдверждения регистрации'.$code.'</p>';
+                    $message = '<p style="font-size:16px">Ваш код для потдверждения регистрации <br/><p style="text-align:center">'.$code.'</p></p>';
                     Share::sendmail($login, "Prommu.com. Код подтверждения регистрации", $message);
                 }
        
