@@ -693,7 +693,7 @@ class Api
                                     
                 if(strpos($login, '@') === false){
                     
-                    $this->teleProm($login, $code);
+                    $res['code'] = $this->teleProm($login, $code);
                     
                 } else {
                     $message = '<p style="font-size:16px">Ваш код для потдверждения регистрации'.$code.'</p>';
