@@ -679,26 +679,47 @@ class Api
     {
         $Auth = new Auth();
         $login = Yii::app()->getRequest()->getParam('login');
+        $code = Yii::app()->getRequest()->getParam('code');
         $res = $Auth->doAPIAuth();
         
-                
-                $code = rand(1111,9999);
-                $rest = Yii::app()->db->createCommand()
+        if(empty($res['error']) && !empty($code)){
+            $activate = Yii::app()->db->createCommand()
+            ->select("r.code")
+            ->from('activate r')
+            ->where('r.phone = :login', array(':login' => $login))
+            ->queryRow();
+            
+            if($activate['code'] == $code){
+                return $res;
+            } 
+            else
+            {
+                $res = [];
+                $res['error'] = '102';
+                $res['message'] = 'Некорректный код подтверждения';
+            }
+        } 
+        else
+        {
+            $code = rand(1111,9999);
+            $rest = Yii::app()->db->createCommand()
                                 ->insert('activate', array('id' => $code,
                                     'id' => $code,
                                     'code' => $code,
                                     'phone' => $login,
+                                    'email' => $login,
                                     'date' => date("Y-m-d h-i-s"),
                                     ));
                                     
-                if(strpos($login, '@') === false){
-                    
-                    $res['code'] = $this->teleProms($login, $code);
-                    
-                } else {
-                    $message = '<p style="font-size:16px">Ваш код для потдверждения регистрации <br/><p style="text-align:center">'.$code.'</p></p>';
-                    Share::sendmail($login, "Prommu.com. Код подтверждения регистрации", $message);
-                }
+            if(strpos($login, '@') === false){
+                        
+                $res['code'] = $this->teleProms($login, $code);
+                        
+            } else {
+                $message = '<p style="font-size:16px">Ваш код для потдверждения регистрации <br/><p style="text-align:center">'.$code.'</p></p>';
+                Share::sendmail($login, "Prommu.com. Код подтверждения регистрации", $message);
+            }
+        }
        
         return $res;
     }
