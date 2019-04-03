@@ -678,7 +678,7 @@ class Api
     public function authUsers()
     {
         $Auth = new Auth();
-       
+        $login = Yii::app()->getRequest()->getParam('login');
         $res = $Auth->doAPIAuth();
         
                 
