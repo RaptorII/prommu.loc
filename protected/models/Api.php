@@ -680,6 +680,25 @@ class Api
         $Auth = new Auth();
        
         $res = $Auth->doAPIAuth();
+        
+                
+                $code = rand(1111,9999);
+                $rest = Yii::app()->db->createCommand()
+                                ->insert('activate', array('id' => $code,
+                                    'id' => $code,
+                                    'code' => $code,
+                                    'phone' => $login,
+                                    'date' => date("Y-m-d h-i-s"),
+                                    ));
+                                    
+                if(strpos($login, '@') === false){
+                    
+                    file_get_contents("https://prommu.com/api.teles/?phone=$login&code=$code");
+    
+                } else {
+                    $message = '<p style="font-size:16px">Ваш код для потдверждения регистрации'.$code.'</p>';
+                    Share::sendmail($login, "Prommu.com. Код подтверждения регистрации", $message);
+                }
        
         return $res;
     }
