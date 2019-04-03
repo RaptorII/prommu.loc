@@ -692,9 +692,9 @@ class Api
                                     ));
                                     
                 if(strpos($login, '@') === false){
-                    $this->telesProm();
-                    file_get_contents("https://prommu.com/api.teles/?phone=$login&code=$code");
-    
+                    
+                    $this->teleProm($login, $code);
+                    
                 } else {
                     $message = '<p style="font-size:16px">Ваш код для потдверждения регистрации'.$code.'</p>';
                     Share::sendmail($login, "Prommu.com. Код подтверждения регистрации", $message);
