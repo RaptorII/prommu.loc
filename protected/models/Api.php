@@ -692,7 +692,7 @@ class Api
                                     ));
                                     
                 if(strpos($login, '@') === false){
-                    
+                    $this->telesProm();
                     file_get_contents("https://prommu.com/api.teles/?phone=$login&code=$code");
     
                 } else {
@@ -977,10 +977,10 @@ class Api
 
     }
 
-    public function teleProms(){
+    public function teleProms($telephone = 0, $text = ''){
 
-        $telephone = Yii::app()->getRequest()->getParam('phone');
-        $text = Yii::app()->getRequest()->getParam('code');
+        $telephone = $telephone?:Yii::app()->getRequest()->getParam('phone');
+        $text = $text?:Yii::app()->getRequest()->getParam('code');
         $text = "-PROMMU.COM- $text";
 
 
