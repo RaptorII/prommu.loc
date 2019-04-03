@@ -697,9 +697,10 @@ class Api
                 $res = [];
                 $res['error'] = '102';
                 $res['message'] = 'Некорректный код подтверждения';
+                return $res;
             }
         } 
-        else
+        elseif(empty($res['error']) && empty($code))
         {
             $code = rand(1111,9999);
             $rest = Yii::app()->db->createCommand()
@@ -725,6 +726,7 @@ class Api
             return $res;
              
         }
+        else return $res;
        
        
     }
