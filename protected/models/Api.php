@@ -719,9 +719,14 @@ class Api
                 $message = '<p style="font-size:16px">Ваш код для потдверждения регистрации <br/><p style="text-align:center">'.$code.'</p></p>';
                 Share::sendmail($login, "Prommu.com. Код подтверждения регистрации", $message);
             }
+            
+            $res = [];
+            $res['message'] = 'Отправлен код подтверждения';
+            return $res;
+             
         }
        
-        return $res;
+       
     }
 
     public function feedback(){
