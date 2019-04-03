@@ -1133,6 +1133,7 @@ class Auth
         try
         {
             $data = $this->Authorize(['login' => $login, 'passw' => $passw, 'remember' => $remember, 'passmd5' => $inParams['passmd5']]);
+            
         }
         catch (Exception $e)
         {
