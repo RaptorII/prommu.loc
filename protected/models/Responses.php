@@ -41,4 +41,11 @@ abstract class Responses extends Model
      * Сохраняем данные выставленного рейтинга
      */
     abstract public function saveRateData();
+
+    
+    public static $STATUS_REJECT = 3; // отклонена
+    public static $STATUS_EMPLOYER_ACCEPT = 4; // принята работодателем
+    public static $STATUS_APPLICANT_ACCEPT = 5; // принята обеими сторонами
+    public static $STATUS_BEFORE_RATING = 6; // есть уведомление об окончании(завершена вакансия)
+    public static $STATUS_AFTER_RATING = 7; // есть рейтинг
 }

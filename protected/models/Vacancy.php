@@ -2699,7 +2699,7 @@ WHERE id_vac = {$inVacId}";
       $arId = Yii::app()->db->createCommand()
                 ->select('id')
                 ->from('empl_vacations')
-                ->where('status=1 AND ismoder=100 AND remdate>=NOW()')
+                ->where('status=1 AND ismoder=100'/* AND remdate>=NOW()'*/) // убираем remdate для повышения эффективности
                 //->order('ispremium DESC, id DESC')
                 ->queryColumn();
 
@@ -2784,7 +2784,9 @@ WHERE id_vac = {$inVacId}";
       // атрибуты
       $arAttrib = array();
       foreach ($arRes['main'] as $v)
-        $arAttrib[] = $v['id_attr'];
+      {
+        !empty($v['id_attr']) && $arAttrib[] = $v['id_attr'];
+      }
       $arAttrib = array_unique($arAttrib);
       $query = Yii::app()->db->createCommand()
                   ->select("id,name,id_par")
@@ -2938,7 +2940,7 @@ WHERE id_vac = {$inVacId}";
         elseif($v['shour']>0)
             $arT[$id]['salary'] = $v['shour'] * 8 * 22; // 8 часов * 22 рабочих дня в месяце
         else
-            $arT[$id]['salary'] = $v['svisit'];
+            $arT[$id]['salary'] = $v['svisit'] * 22;// * 22 рабочих дня в месяце
         $arT[$id]['requirements'] = htmlspecialchars($v['requirements'],ENT_XML1);
         $arT[$id]['duties'] = htmlspecialchars($v['duties'],ENT_XML1);
         $arSalary = [];
@@ -3097,6 +3099,7 @@ WHERE id_vac = {$inVacId}";
                         ev.title,
                         DATE_FORMAT(ev.crdate, '%d.%m.%Y') crdate,
                         DATE_FORMAT(ev.bdate, '%d.%m.%Y') pubdate,
+                        vs.id vstatus_id,
                         vs.isresponse,
                         vs.status,
                         vs.second_response sresponse")
@@ -3118,6 +3121,7 @@ WHERE id_vac = {$inVacId}";
             $v['pubdate']==='00.00.0000' && $v['pubdate'] = $v['crdate'];
             $v['condition'] = $this->getAppVacStatus($v['isresponse'], $v['status']);
             $v['access_to_chat'] = $v['status']>4; // доступ к чату
+            $v['access_to_answer'] = ($v['isresponse']==2 && $v['status']==4); // приглашение от работодателя сразу status=4
             $v['second_response'] = (!in_array($v['id'],$arIdDisVacs) && $v['status']==3 && !$v['sresponse']);  // проверяем доступна ли вакансия
         }
         unset($v);
@@ -3171,8 +3175,7 @@ WHERE id_vac = {$inVacId}";
                 $arRes['item']['status']
             );
         $arRes['item']['access_to_chat'] = $arRes['item']['status']>4; // доступ к чату
-        $arRes['item']['access_to_answer'] = ($arRes['item']['isresponse']==2 && $arRes['item']['status']<2);
-        // ищем только недоступные вакансии
+        $arRes['item']['access_to_answer'] = ($arRes['item']['isresponse']==2 && $arRes['item']['status']==4); // приглашение от работодателя сразу status=4
         $arIdDisVac = $this->checkAccessToResponse([$id_vac]);
         $arRes['item']['second_response'] = (
                 !count($arIdDisVac) 
@@ -3323,8 +3326,8 @@ WHERE id_vac = {$inVacId}";
             {
                 case 3: $result = 'Работодатель отказал'; break;
                 case 5: $result = 'Работодатель утвердил'; break;
-                case 6: $result = 'Завершено без рейтинга'; break;
-                case 7: $result = 'Завершено с рейтингом'; break;
+                case 6: $result = 'Необходима оценка'; break;
+                case 7: $result = 'Проект завершен'; break;
                 default: $result = 'Ожидение ответа'; break;
             }
         }
@@ -3334,10 +3337,10 @@ WHERE id_vac = {$inVacId}";
             {
                 case 1: $result = 'Приглашение просмотрено'; break;
                 case 3: $result = 'Приглашение отклонено'; break;
-                case 4: $result = 'Приглашение принято'; break;
+                case 4: $result = 'Приглашение от работодателя'; break;
                 case 5: $result = 'Приглашение принято'; break;
-                case 6: $result = 'Завершено без рейтинга'; break;
-                case 7: $result = 'Завершено с рейтингом'; break;
+                case 6: $result = 'Необходима оценка'; break;
+                case 7: $result = 'Проект завершен'; break;
                 default: $result = 'Новый проект'; break;
             }
         }

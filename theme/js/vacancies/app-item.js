@@ -1,8 +1,8 @@
 $(function(){
-  var arBlocks = $('.app_project__body-status .app_project__body-flex');
   // повторная отправка
-  $('.second_response').click(function() {
-    var self = this;
+  $('.app-projects__item-replace').on('click','.second_response',function() {
+    var self = this,
+        arBlocks = $('.app_project__body-status .app_project__body-flex');
         
     $.get(
       MainConfig.AJAX_POST_SETVACATIONRESPONSE, 
@@ -11,8 +11,11 @@ $(function(){
         t = JSON.parse(t);
         if(typeof t.message !=undefined)
         {
-          $(arBlocks[1]).fadeOut();
-          $(arBlocks[0]).html('<b>Ожидение ответа</b>');
+          if(t.error!=1)
+          {
+            $(arBlocks[1]).fadeOut();
+            $(arBlocks[0]).html('<b>Ожидение ответа</b>');           
+          }
           $('body').append('<div class="prmu__popup"><p>'+t.message+'</p></div>'),
           $.fancybox.open({
             src: "body>div.prmu__popup",
@@ -27,6 +30,9 @@ $(function(){
   // согласие или отказ
   $('.change_status').click(function() {
     var self = this,
+        main = $('.app-projects__item-replace'),
+        blockAccept = $('.status_accept-content'),
+        blockReject = $('.status_reject-content'),
         message = 'Произошла ошибка<br>Пожалуйста обновите страницу и попробуйте еще раз';
 
     $.post(
@@ -36,16 +42,18 @@ $(function(){
         t = JSON.parse(t);
         if(typeof t.error !=undefined)
         {
-          $(arBlocks[1]).fadeOut();
-          if(t.error==0 && self.dataset.status==3)
+          if(t.error==0)
           {
-            $(arBlocks[0]).html('<b>Приглашение отклонено</b>');
-            message = 'Вы успешно отклонили приглашение на вакансию';
-          }
-          if(t.error==0 && self.dataset.status==5)
-          {
-            $(arBlocks[0]).html('<b>Приглашение принято</b>');
-            message = 'Вы успешно подтвердили участие в вакансии';
+            if($(self).hasClass('status_reject'))
+            {
+              $(main).html($(blockReject).html());
+              message = 'Вы успешно отклонили приглашение на вакансию';
+            }
+            if($(self).hasClass('status_accept'))
+            {
+              $(main).html($(blockAccept).html());
+              message = 'Вы успешно подтвердили участие в вакансии';
+            }
           }
         }
         $('body').append('<div class="prmu__popup"><p>'+message+'</p></div>'),
@@ -55,11 +63,7 @@ $(function(){
           touch: false,
           afterClose: function(){ $('body>div.prmu__popup').remove() }
         })
-        console.log(t);
     });
-
-
   });
 
-  
 });

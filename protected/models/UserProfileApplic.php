@@ -1602,4 +1602,28 @@ class UserProfileApplic extends UserProfile
                 );
         }
     }
+    /**
+     *  возможность писать работодателю
+     */
+    public function hasAccessToChat($id_employer)
+    {
+        if(!$id_employer)
+            return false;
+
+        $query = Yii::app()->db->createCommand()
+                ->select('COUNT(vs.id)')
+                ->from('vacation_stat vs')
+                ->leftjoin('empl_vacations ev', 'ev.id=vs.id_vac')
+                ->where(
+                    'vs.id_promo=:id_app AND ev.id_user=:id_emp AND vs.status>:status',
+                    [
+                        ':id_app'=>$this->exInfo->id_resume,
+                        ':id_emp'=>$id_employer,
+                        ':status'=>Responses::$STATUS_EMPLOYER_ACCEPT
+                    ]  
+                )
+                ->queryScalar();
+
+        return $query>0;
+    }
 }

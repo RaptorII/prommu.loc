@@ -51,27 +51,6 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
             $web = 2;
         }
         $result = $web + $logo + $comment + $rates + $vacancy + 2 + 2;
-
-
-  $id_promo = Share::$UserProfile->id;
-    $sql = "SELECT
-         r.id_user id
-    FROM vacation_stat s
-    INNER JOIN empl_vacations e ON e.id = s.id_vac
-    INNER JOIN employer em ON em.id_user = e.id_user
-    INNER JOIN resume r ON s.id_promo = r.id
-    INNER JOIN user ru ON ru.id_user = r.id_user
-    INNER JOIN user eu ON eu.id_user = em.id_user
-    WHERE s.status = 5 OR s.status = 6
-      AND e.id_user = {$idus}
-      AND r.id_user = {$id_promo}";
-    /** @var $res CDbCommand */
-    $res = Yii::app()->db->createCommand($sql);
-    $data = $res->queryScalar(); 
-    if($data == $id_promo)
-      $data = Share::$UserProfile->id;
-    else 
-      $datas = 1;
 ?>
 <script type="text/javascript">//G_VARS.Modal = <?= $modal; ?>;</script>
 <div class='row'>
@@ -135,12 +114,18 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
         <a class='ppe__logo-btn prmu-btn' href='<?= MainConfig::$PAGE_SETTINGS ?>'><span>Настройки профиля</span></a>
         <a class='ppe__logo-btn prmu-btn' href='<?= MainConfig::$PAGE_CHATS_LIST ?>'><span>Мои сообщения</span></a>
       <? endif; ?>  
-      <? if(Share::$UserProfile->type == 2 && $datas == 1):?>
-        <div class='btn-update btn-orange-sm-wr'>
-          <a class='hvr-sweep-to-right' href='#'>Невозможно отправить сообщение</a>
+      <? if(Share::isApplicant()): ?>
+        <? if(Share::$UserProfile->hasAccessToChat($id)): ?>
+          <div class="center">
+            <h3 class='unpubl'>Есть доступные чаты с этим работодателем</h3>
+            <a href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES?>" class="prmu-btn prmu-btn_normal">
+              <span>Перейти в чаты</span>
+            </a>
+          </div>
+        <? else: ?>
           <h3 class='unpubl'>Сообщения можно писать только, при одобрении работодателем на опубликованной им вакансии</h3>
-        </div>
-      <?php endif; ?>
+        <? endif; ?>
+      <? endif; ?>
     </div>
   </div>
   <?

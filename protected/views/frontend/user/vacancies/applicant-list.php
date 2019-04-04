@@ -28,46 +28,93 @@
 		</div>
 		<? if(count($viData['items'])): ?>
 			<div class="app-projects__list">
-				<? foreach ($viData['items'] as $k => $v): ?>
-					<? $employer = $viData['users'][$v['employer']]; ?>
+				<? foreach ($viData['items'] as $k => $vacancy): ?>
+					<? $employer = $viData['users'][$vacancy['employer']]; ?>
 					<div class="app-projects__list-item">
 						<div class="app-projects__item-logo">
 							<img src="<?=$employer['src']?>" alt="<?=$employer['name']?>">
 						</div>
 						<div class="app-projects__item-info">
 							<div class="app-projects__item-company"><?=$employer['name']?></div>
-							<div class="app-projects__item-title"><?=$v['title']?></div>
+							<div class="app-projects__item-title"><?=$vacancy['title']?></div>
 							<div class="app-projects__item-link">
-								<a href="<?=MainConfig::$PAGE_APPLICANT_VACS_LIST . DS . $v['id']?>" class="prmu-btn prmu-btn_small">
+								<a href="<?=MainConfig::$PAGE_APPLICANT_VACS_LIST . DS . $vacancy['id']?>" class="prmu-btn prmu-btn_small">
 									<span>Просмотр</span>
 								</a>
 							</div>
 						</div>
 						<div class="clearfix"></div>
 						<div class="app-projects__item-right">
-							<div class="app-projects__right-bl center">Дата публикации : <b><?=$v['pubdate']?></b></div>
-							<div class="app-projects__right-bl center">Статус : <b><?=$v['condition']?></b></div>
-							<? if($v['access_to_chat']): ?>
+							<div class="app-projects__right-bl center">Дата публикации : <b><?=$vacancy['pubdate']?></b></div>
+							<div class="app-projects__item-replace">
+								<div class="app-projects__right-bl center">Статус : <b><?=$vacancy['condition']?></b></div>
+								<? if($vacancy['access_to_answer']): ?>
+									<div class="app-projects__right-bl center">
+										<span 
+											class="app-projects__item-btn change_status status_accept" 
+											data-id="<?=$vacancy['vstatus_id']?>"
+											data-status="<?=Responses::$STATUS_APPLICANT_ACCEPT?>" <?// татус принятия заявки ?>
+											>Принять</span>
+									</div>
+									<div class="app-projects__right-bl center">
+										<span 
+											class="app-projects__item-btn change_status status_reject" 
+											data-id="<?=$vacancy['vstatus_id']?>"
+											data-status="<?=Responses::$STATUS_REJECT?>" <?// татус отклонения заявки ?>
+											>Отклонить</span>
+									</div>
+								<? elseif($vacancy['access_to_chat']): ?>
+									<? if($vacancy['status']==Responses::$STATUS_BEFORE_RATING): ?>
+										<div class="app-projects__right-bl center">
+											<a 
+												href="<?=MainConfig::$PAGE_SETRATE . DS . $vacancy['id']?>" 
+												class="app-projects__item-btn">Оценить работодателя</a>
+										</div>
+									<? endif; ?>
+									<? $link = MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vacancy['id']; ?>
+									<div class="app-projects__right-bl center">
+										<a 
+											href="<?=$link?>" 
+											class="app-projects__item-btn">Общий чат</a>
+									</div>
+									<div class="app-projects__right-bl center">
+										<a 
+											href="<?=$link . DS . $vacancy['employer']?>" 
+											class="app-projects__item-btn">Личный чат</a>
+									</div>
+								<? elseif($vacancy['second_response']): ?>
+									<div class="app-projects__right-bl center">
+										<span 
+											class="app-projects__item-btn second_response" 
+											data-id="<?=$vacancy['id']?>"
+											data-sresponse="<?=Share::$UserProfile->exInfo->id_resume?>"
+											>Отозваться повторно</span>
+									</div>
+								<? endif; ?>
+							</div>
+							<?// блоки для подмены после аякса ?>
+							<div class="status_accept-content tmpl">
+								<div class="app-projects__right-bl center">Статус : <b>Приглашение принято</b></div>
+								<? $link = MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vacancy['id']; ?>
 								<div class="app-projects__right-bl center">
-									<a 
-										href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $v['id']?>" 
-										class="app-projects__item-btn">Общий чат</a>
+									<a href="<?=$link?>" class="app-projects__item-btn">Общий чат</a>
 								</div>
 								<div class="app-projects__right-bl center">
-									<a 
-										href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $v['id'] . DS . $v['employer']?>" 
-										class="app-projects__item-btn">Личный чат</a>
+									<a href="<?=$link . DS . $vacancy['employer']?>" class="app-projects__item-btn">Личный чат</a>
 								</div>
-							<? endif; ?>
-							<? if($v['second_response']): ?>
-								<div class="app-projects__right-bl center">
-									<span 
-										class="app-projects__item-btn second_response" 
-										data-id="<?=$v['id']?>"
-										data-sresponse="<?=Share::$UserProfile->exInfo->id_resume?>"
-										>Отозваться повторно</span>
-								</div>
-							<? endif; ?>
+							</div>
+							<div class="status_reject-content tmpl">
+								<div class="app-projects__right-bl center">Статус : <b>Приглашение отклонено</b></div>
+								<? if(!$vacancy['sresponse']): ?>
+									<div class="app-projects__right-bl center">
+										<span 
+											class="app-projects__item-btn second_response" 
+											data-id="<?=$vacancy['id']?>"
+											data-sresponse="<?=Share::$UserProfile->exInfo->id_resume?>"
+											>Отозваться повторно</span>
+									</div>
+								<? endif; ?>
+							</div>
 						</div>
 					</div>
 				<? endforeach; ?>

@@ -60,42 +60,79 @@
 								<div class="app_project__body-title">
 									<h2>Состояние</h2>
 								</div>
-								<div class="app_project__body-flex">
-									<b><?=$vacancy['condition']?></b>
+								<div class="app-projects__item-replace">
+									<div class="app_project__body-flex">
+										<b><?=$vacancy['condition']?></b>
+									</div>
+									<? if($vacancy['second_response']): ?>
+										<div class="app_project__body-flex">
+											<span 
+												class="app-projects__body-btn second_response" 
+												data-id="<?=$vacancy['id']?>"
+												data-sresponse="<?=Share::$UserProfile->exInfo->id_resume?>"
+												>Отозваться повторно</span>
+										</div>
+									<? elseif($vacancy['access_to_answer']): ?>
+										<div class="app_project__body-flex">
+											<span 
+												class="app-projects__body-btn change_status status_accept" 
+												data-id="<?=$vacancy['vstatus_id']?>"
+												data-status="<?=Responses::$STATUS_APPLICANT_ACCEPT?>" <?// татус принятия заявки ?>
+												>Принять</span>
+											<span 
+												class="app-projects__body-btn change_status status_reject" 
+												data-id="<?=$vacancy['vstatus_id']?>"
+												data-status="<?=Responses::$STATUS_REJECT?>" <?// татус отклонения заявки ?>
+												>Отклонить</span>
+										</div>
+									<? elseif($vacancy['access_to_chat']): ?>
+										<? if($vacancy['status']==Responses::$STATUS_BEFORE_RATING): ?>
+											<div class="app_project__body-flex">
+												<b><a 
+													href="<?=MainConfig::$PAGE_SETRATE . DS . $vacancy['id']?>" 
+													class="app-projects__body-btn">Оценить работодателя</a></b>
+											</div>
+										<? endif; ?>
+										<? $link = MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vacancy['id']; ?>
+										<div class="app_project__body-flex">
+											<b><a 
+											href="<?=$link?>"
+											class="app-projects__body-btn">Общий чат</a></b>
+											<b><a 
+											href="<?=$link . DS . $vacancy['employer']?>"
+											class="app-projects__body-btn">Личный чат</a></b>
+										</div>
+									<? endif; ?>
 								</div>
-								<? if($vacancy['second_response']): ?>
+								<?// блоки для подмены после аякса ?>
+								<div class="status_accept-content tmpl">
 									<div class="app_project__body-flex">
-										<span 
-											class="app-projects__body-btn second_response" 
-											data-id="<?=$vacancy['id']?>"
-											data-sresponse="<?=Share::$UserProfile->exInfo->id_resume?>"
-											>Отозваться повторно</span>
+										<b>Приглашение принято</b>
 									</div>
-								<? endif; ?>
-								<? if($vacancy['access_to_answer']): ?>
-									<div class="app_project__body-flex">
-										<span 
-											class="app-projects__body-btn change_status" 
-											data-id="<?=$vacancy['vstatus_id']?>"
-											data-status="5"
-											>Принять</span>
-										<span 
-											class="app-projects__body-btn change_status" 
-											data-id="<?=$vacancy['vstatus_id']?>"
-											data-status="3"
-											>Отклонить</span>
-									</div>
-								<? endif; ?>
-								<? if($vacancy['access_to_chat']): ?>
+									<? $link = MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vacancy['id']; ?>
 									<div class="app_project__body-flex">
 										<b><a 
-										href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vacancy['id']?>"
+										href="<?=$link?>"
 										class="app-projects__body-btn">Общий чат</a></b>
 										<b><a 
-										href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vacancy['id'] . DS . $vacancy['employer']?>"
+										href="<?=$link . DS . $vacancy['employer']?>"
 										class="app-projects__body-btn">Личный чат</a></b>
 									</div>
-								<? endif; ?>
+								</div>
+								<div class="status_reject-content tmpl">
+									<div class="app_project__body-flex">
+										<b>Приглашение отклонено</b>
+									</div>
+									<div class="app_project__body-flex">
+										<? if(!$vacancy['sresponse']): ?>
+											<span 
+												class="app-projects__body-btn second_response" 
+												data-id="<?=$vacancy['id']?>"
+												data-sresponse="<?=Share::$UserProfile->exInfo->id_resume?>"
+												>Отозваться повторно</span>
+										<? endif; ?>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
