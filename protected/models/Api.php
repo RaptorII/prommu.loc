@@ -682,7 +682,7 @@ class Api
         $code = Yii::app()->getRequest()->getParam('code');
         $res = $Auth->doAPIAuth();
         
-        if(empty($res['error']) && !empty($code)){
+        if(empty($res['error']) && !empty($code) && $res['status'] == 2){
             $activate = Yii::app()->db->createCommand()
             ->select("r.code")
             ->from('activate r')
@@ -700,7 +700,7 @@ class Api
                 return $res;
             }
         } 
-        elseif(empty($res['error']) && empty($code))
+        elseif(empty($res['error']) && empty($code) && $res['status'] == 2)
         {
             $code = rand(1111,9999);
             $rest = Yii::app()->db->createCommand()
