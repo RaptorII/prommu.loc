@@ -727,9 +727,9 @@ class Api
             return $res;
              
         } else {
-            var_dump($res['id']);
+            
             $Auth->userUpdate(array('isblocked' => 0), 'id_user='.$res['id']);
-            return $res;
+            return $res['id'];
         }
        
        
