@@ -690,6 +690,7 @@ class Api
             ->queryRow();
             
             if($activate['code'] == $code){
+                $Auth->userUpdate(array('isblocked' => 0), 'id_user='.$res['id']);
                 return $res;
             } 
             else
@@ -728,8 +729,7 @@ class Api
              
         } else {
             
-            $Auth->userUpdate(array('isblocked' => 0), 'id_user='.$res['id']);
-            return $res['id'];
+            return $res;
         }
        
        
