@@ -1481,7 +1481,7 @@ class Auth
             $idUs = $this->userInsert(array('email' => $inData['inputData']['email'],
                 'passw' => $inData['inputData']['pass'],
                 'login' => $inData['inputData']['email'],
-                'isblocked' => 0,
+                'isblocked' => 2,
                 'ismoder' => 1,
                 'status' => $inData['type'],
                 'agreement' => $agreement
