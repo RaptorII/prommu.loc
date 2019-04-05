@@ -802,7 +802,7 @@ class Auth
                 elseif( (int)$user->isblocked === 1 ) throw new Exception('', -104);
                 // elseif( (int)$user->isblocked === 2 ) throw new Exception('', -105);
 //                elseif( (int)$user->isblocked === 3 ) throw new Exception('', -106);
-                elseif( !in_array((int)$user->isblocked, [0,3]) ) throw new Exception('', -103);
+                // elseif( !in_array((int)$user->isblocked, [0,3]) ) throw new Exception('', -103);
             } // endif
         }
         else
