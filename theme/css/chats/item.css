@@ -250,3 +250,8 @@
 	margin: 5px;
 	border-radius: 10px;
 }
+/*	*/
+#DiContent .mess-box.mess-from .mess a{
+	color: #ff6500;
+	text-decoration: underline;
+}

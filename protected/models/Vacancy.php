@@ -128,121 +128,129 @@ public function rules()
      */
     public function chkVacsEnds()
     {
-        $sql = "SELECT s.edate, s.name
-            FROM service_cloud s
-            WHERE s.type = 'vacancy' AND s.status = 1";
-        $ress = Yii::app()->db->createCommand($sql)->queryAll();
-        $count = count($ress);
-        for($i = 0; $i < $count; $i ++){
-            
-            if((time() - strtotime($ress[$i]['edate'])) > 1000 ){
-                 $res = Yii::app()->db->createCommand()
-                ->update('empl_vacations', array(
-                    'ispremium'=> 0,
-                ), 'id=:id', array(':id' => $ress[$i]['name']));
+    	$db = Yii::app()->db;
+			// выключаем премиум
+			$query = $db->createCommand()
+								->select("id, edate, name id_vacancy")
+								->from('service_cloud')
+								->where("type='vacancy' AND status=1")
+								->queryAll();
 
-                $res = Yii::app()->db->createCommand()
-                ->update('service_cloud', array(
-                    'status'=> 0,
-                ), 'edate=:edate', array(':edate' => $ress[$i]['edate']));
-            }
-        }
+			if(count($query))
+			{
+				$arIdVac = $arIdService = array();
+				foreach ($query as $v)
+				{
+					if((time() - strtotime($v['edate'])) > 1000 )
+					{
+						$arIdVac[] = $v['id_vacancy'];
+						$arIdService[] = $v['id'];
+					}
+				}
+				if(count($arIdVac)) // убираем статус в таблице вакансий
+				{
+					$db->createCommand()->update('empl_vacations',['ispremium'=>0],['in','id',$arIdVac]);
+				}
+				if(count($arIdService)) // и в таблице услуг
+				{
+					$db->createCommand()->update('service_cloud',['status'=>0],['in','id',$arIdService]);
+				}
+			}
 
+			$query = $db->createCommand() // ищем подходящие по статусу вакансии
+								->select("vs.id,
+									vs.mdate,
+									vs.id_vac,
+									ev.title,
+									ev.remdate,
+									ev.id_user id_emp,
+									r.id_user id_app")
+								->from('vacation_stat vs')
+								->leftjoin('empl_vacations ev','ev.id=vs.id_vac')
+								->leftjoin('resume r','r.id=vs.id_promo')
+								->where(
+									'vs.status=:status AND ev.remdate=CURRENT_DATE()',
+									[':status'=>Responses::$STATUS_APPLICANT_ACCEPT]
+								)
+								->queryAll();
 
-        // читаем вакансии
-        $sql = "SELECT
-                s.id sid, s.status, s.mdate
-                , eu.email emailempl, eu.id_user idusempl
-                , ru.email emailpromo, ru.id_user iduspromo
-                , e.id, e.title, e.remdate
-                , em.name
-                , r.firstname, r.lastname
-            FROM vacation_stat s
-            INNER JOIN empl_vacations e ON e.id = s.id_vac
-            INNER JOIN employer em ON em.id_user = e.id_user
-            INNER JOIN user eu ON em.id_user = eu.id_user
-            INNER JOIN resume r ON s.id_promo = r.id
-            INNER JOIN user ru ON ru.id_user = r.id_user
-            WHERE s.isresponse = 1
-              AND s.status = 5";
-        $res = Yii::app()->db->createCommand($sql)->queryAll();
-        foreach ($res as $key => $val)
-        {
-            $flag = 0;
-            // проверка на 7 дней после начала работы соискателя
-            if( ($diff = (time() - strtotime($val['mdate'])) / 86400) > 1) $flag = 1;
+			if(count($query))
+			{
+				$arId = $arT = array();
+				foreach ($query as $v)
+				{
+					!empty($v['id_emp']) && $arId[] = $v['id_emp'];
+					!empty($v['id_app']) && $arId[] = $v['id_app'];
+					$arT[$v['id_vac']]['items'][] = $v;
+				}
+				$arUsers = Share::getUsers($arId);
+				$arId = array();
 
-            // закончилась раньше 7 дней
-            if( !$flag && (time() > strtotime($val['remdate'])) ) $flag = 1;
+				foreach ($arT as $id_vac => $arV)
+				{
+					$arItem = reset($arV['items']);
+					$arLink = array();
+					$message = "Завершение вакансии №" . $id_vac . " “" . $arItem['title'] 
+						. "” сегодня.<br>Просим оценить ваше сотрудничество с ";
+					$title = 'Завершение проекта';
+					$linkRate = Subdomain::site() . MainConfig::$PAGE_SETRATE . DS . $id_vac;
+					foreach ($arV['items'] as $v)
+					{
+						Mailing::set( // письмо соискателю
+							13,
+							array(
+								'email_user' => $arUsers[$v['id_app']]['email'],
+								'id_vacancy' => $id_vac,
+								'title_vacancy' => $v['title'],
+								'id_company' => $v['id_emp'],
+								'name_company' => $arUsers[$v['id_emp']]['name']
+							)
+						);
+						$arId[] = $v['id'];
+						$name = $arUsers[$v['id_app']]['name'];
+						empty($name) && $name = 'Пользователь';
+						$arLink[] = '<a href="'. $linkRate . DS . $v['id_app'] . '">' . $name . '</a>';
+						Im::setMessageFromBot( // сообщение в чат
+								$v['id_app'],
+								$arUsers[$v['id_app']]['status'],
+								$title,
+								$message . 'работодателем <a href="' . $linkRate . '">' . $arUsers[$v['id_emp']]['name'] . '</a>'
+							);
+					}
+					Mailing::set( // письмо работодателю
+						14,
+						array(
+							'email_user' => $arUsers[$arItem['id_emp']]['email'],
+							'id_vacancy' => $id_vac,
+							'title_vacancy' => $arItem['title'],
+							'links_list' => implode('<br>',$arLink)
+						)
+					);
 
-         
+					Im::setMessageFromBot( // сообщение в чат
+							$arItem['id_emp'],
+							$arUsers[$arItem['id_emp']]['status'],
+							$title,
+							$message . 'соискателями: <br>' . implode('<br>',$arLink)
+						);
+				}
+				if(count($arId)) // делаем вакансии завершенными
+				{
+					$db->createCommand()->update(
+							'vacation_stat', 
+							[
+								'status' => Responses::$STATUS_BEFORE_RATING,
+								'mdate' => date('Y-m-d H:i:s')
+							], 
+							['in','id',$arId]
+						);
+				}
+			}
 
-            if(date("Y-m-d") == $val['remdate']){
-                $message = sprintf("Завершение вакансии №%s “<a href='https://%s'>%s</a>” сегодня. <br>Просим оценить ваше сотрудничество с компанией “<a href='https://%s'>%s</a>”, для этого перейдите на страницу <a href='http://%s'>http://%s</a>"
-                    , $val['id']
-                    , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $val['id']
-                    , $val['title']
-                    , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $val['idusempl']
-                    , $val['name']
-                    , Subdomain::getSiteName() . MainConfig::$PAGE_SETRATE . DS . $val['id']
-                    , Subdomain::getSiteName() . MainConfig::$PAGE_SETRATE . DS . $val['id']
-//                    , Subdomain::getSiteName()
-//                    , Subdomain::getSiteName()
-                );
-                 Share::sendmail($val['emailpromo'], "Prommu.com. Завершение проекта сегодня", $message);
-                 Share::sendmail($val['emailempl'], "Prommu.com. Завершение проекта сегодня", $message);
-                  $res = Yii::app()->db->createCommand()
-                    ->update('vacation_stat', array( 'status' => 6,
-                        'mdate' => date('Y-m-d H:i:s'),
-                    ), 'id = :id', array(':id' => $val['sid']));
-                $ret = array('error' => 0, 'res' => $res);
-            }
+			// проверка на то, что вакансия подходит к концу
+			$this->chkVacsAlmostEnds();
 
-//             if($flag)
-//             {
-//                 $message = sprintf("Вы были приняты на вакансию №%s “<a href='https://%s'>%s</a>”. <br>Просим оценить ваше сотрудничество с компанией “<a href='https://%s'>%s</a>”, для этого перейдите на страницу <a href='http://%s'>http://%s</a>"
-//                     , $val['id']
-//                     , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $val['id']
-//                     , $val['title']
-//                     , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $val['idusempl']
-//                     , $val['name']
-//                     , Subdomain::getSiteName() . MainConfig::$PAGE_SETRATE . DS . $val['id']
-//                     , Subdomain::getSiteName() . MainConfig::$PAGE_SETRATE . DS . $val['id']
-// //                    , Subdomain::getSiteName()
-// //                    , Subdomain::getSiteName()
-//                 );
-
-//                 // Share::sendmail($val['emailpromo'], "Prommu.com. рейтинг", $message);
-
-//                 $message = sprintf("Соискатель “<a href='https://%s'>%s</a>” был принят вами на вакансию №%s “<a href='https://%s'>%s</a>”. <br>Просим оценить ваше сотрудничество, для этого перейдите на страницу <a href='https://%s'>http://%s</a>"
-//                 , Subdomain::getSiteName() . MainConfig::$PAGE_PROFILE_COMMON . DS . $val['iduspromo']
-//                 , $val['firstname'] . ' ' . $val['lastname']
-//                 , $val['id']
-//                 , Subdomain::getSiteName() . MainConfig::$PAGE_VACANCY . DS . $val['id']
-//                 , $val['title']
-//                 , Subdomain::getSiteName() . MainConfig::$PAGE_SETRATE . DS . $val['id'] . '/' . $val['iduspromo']
-//                 , Subdomain::getSiteName() . MainConfig::$PAGE_SETRATE . DS . $val['id'] . '/' . $val['iduspromo']
-//                 );
-
-//                 // Share::sendmail($val['emailempl'], "Prommu.com. рейтинг", $message);
-
-//                 $res = Yii::app()->db->createCommand()
-//                     ->update('vacation_stat', array( 'status' => 6,
-//                         'mdate' => date('Y-m-d H:i:s'),
-//                     ), 'id = :id', array(':id' => $val['sid']));
-//                 $ret = array('error' => 0, 'res' => $res);
-
-//             }
-            else
-            {
-            } // endif
-        } // end foreach
-
-
-        // проверка на то, что вакансия подходит к концу
-        $this->chkVacsAlmostEnds();
-
-        return 1;
+			return 1;
     }
 
 

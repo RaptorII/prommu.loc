@@ -92,5 +92,7 @@ class Cron
                     $model->generateFile(); // формируем вакансии для Яндекс Работа 2 раза в день
                 break;
         }
+        $vacancy = new Vacancy();
+        $vacancy->chkVacsEnds(); // завершение вакансий выполняем каждый час
     }
 }

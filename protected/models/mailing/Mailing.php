@@ -123,6 +123,12 @@ class Mailing extends CActiveRecord
 										'pattern' => "/#PAGE_SERVICES_OUTSTAFFING#/",
 										'value' => Subdomain::site() . MainConfig::$PAGE_SERVICES_OUTSTAFFING,
 										'description' => "Страница услуги 'Аутстаф'"
+									),
+							12 => array(
+										'name' => "#PAGE_SETRATE#",
+										'pattern' => "/#PAGE_SETRATE#/",
+										'value' => Subdomain::site() . MainConfig::$PAGE_SETRATE,
+										'description' => "Страница услуги 'Аутстаф'"
 									)
 				);
 	}

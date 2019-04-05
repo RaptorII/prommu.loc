@@ -7,6 +7,8 @@
 
 abstract class Im extends Model
 {
+    public static $ADMIN_APPLICANT = 2054;
+    public static $ADMIN_EMPLOYER = 1766;
     /** @var  UserProfile */
     protected $Profile;
     /**
@@ -486,8 +488,71 @@ abstract class Im extends Model
             ));
     }
     /**
-     * 
+     * @param $id_user int id_user
+     * @param $type int user type (2,3)
+     * @param $title string
+     * @param $message string
      */
+    public static function setMessageFromBot($id_user, $type, $title, $message)
+    {
+        $db = Yii::app()->db;
+        $isApp = Share::isApplicant($type);
+        $id_usp = $isApp ? $id_user : self::$ADMIN_APPLICANT;
+        $id_use = $isApp ? self::$ADMIN_EMPLOYER : $id_user;
+        $filter = $isApp 
+            ? 'id_vac=0 AND id_usp=:id AND id_use=' . self::$ADMIN_EMPLOYER 
+            : 'id_vac=0 AND id_use=:id AND id_usp=' . self::$ADMIN_APPLICANT;
+        $chatId = $db->createCommand()
+                    ->select("id")
+                    ->from('chat_theme')
+                    ->where($filter,[':id'=>$id_user])
+                    ->order('id desc')
+                    ->queryScalar();
+
+        if($chatId>0) // чат уже создавался
+        {
+            $db->createCommand()->update(
+                    'chat_theme',
+                    ['title' => $title],
+                    'id=:id',
+                    [':id' => $chatId]
+                );
+            $db->createCommand()->update(
+                    'feedback',
+                    ['theme' => $title],
+                    'chat=:id',
+                    [':id' => $chatId]
+                );
+        }
+        else // создаем новый чат
+        {
+            $db->createCommand()->insert(
+                    'chat_theme',
+                    ['id_usp'=>$id_usp,'id_use'=>$id_use,'title'=>$title]
+                );
+
+            $chatId = $db->createCommand()
+                        ->select("id")
+                        ->from('chat_theme')
+                        ->order('id desc')
+                        ->queryScalar();
+        }
+
+        $db->createCommand()->insert('chat', 
+                [
+                    'id_theme' => $chatId,
+                    'id_usp' => $id_usp,
+                    'id_use' => $id_use,
+                    'message' => $message,
+                    'is_resp' => $isApp,
+                    'is_read' => 0,
+                    'crdate' => date("Y-m-d H:i:s"),
+                ]
+            );
+    }
+    /**
+     * 
+     */  
     public static function sendEmailNotifications()
     {
         //$endDate = mktime(0,0,0);
