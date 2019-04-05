@@ -727,7 +727,8 @@ class Api
             return $res;
              
         } else {
-            $Auth::userUpdate(array('isblocked' => 0), 'id_user='.$res['id']);
+            $Auth = new Auth();
+            $Auth->userUpdate(array('isblocked' => 0), 'id_user='.$res['id']);
             return $res;
         }
        
