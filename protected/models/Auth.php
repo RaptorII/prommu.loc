@@ -800,7 +800,7 @@ class Auth
             {
                 if( $user->passw != $passMd5 ) throw new Exception('', -102);
                 elseif( (int)$user->isblocked === 1 ) throw new Exception('', -104);
-                elseif( (int)$user->isblocked === 2 ) throw new Exception('', -105);
+                // elseif( (int)$user->isblocked === 2 ) throw new Exception('', -105);
 //                elseif( (int)$user->isblocked === 3 ) throw new Exception('', -106);
                 elseif( !in_array((int)$user->isblocked, [0,3]) ) throw new Exception('', -103);
             } // endif
