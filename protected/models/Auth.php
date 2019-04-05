@@ -743,7 +743,7 @@ class Auth
         } // endtry
 
         if( $error < 0 ) return array('error' => abs($error), 'message' => $message);
-        else return array('access_token' => $data['data']['token'], 'id' => $data['data']['idus'], 'type' => $data['data']['type'], 'exp_date' => strtotime('+1 day'));
+        else return array('access_token' => $data['data']['token'], 'id' => $data['data']['idus'], 'type' => $data['data']['type'],'status' => $data['data']['status'], 'exp_date' => strtotime('+1 day'));
     }
 
 
@@ -884,6 +884,7 @@ class Auth
             "uid" => $uid, // not used
             "idus" => $usData->id, // not used
             "type" => $usData->status,
+            "status" => $usData->isblocked,
 //            "login" => $login,
 //            "rating" => 0,
 //            "count_resp" => 0,
