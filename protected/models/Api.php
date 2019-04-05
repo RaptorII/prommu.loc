@@ -689,8 +689,13 @@ class Api
             ->where('r.phone = :login AND r.code = :code', array(':login' => $login, ':code' => $code))
             ->queryRow();
             
+            
             if($activate['code'] == $code){
-                $Auth->userUpdate(array('isblocked' => 0), 'id_user='.$res['id']);
+                Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'isblocked' => 0,
+                ), 'id_user=:id_user', array(':id_user' => $res['id']));
+
                 return $res;
             } 
             else
