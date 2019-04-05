@@ -1396,7 +1396,7 @@ class Auth
 
 
 
-    private function userUpdate($inData, $inWhere)
+    public function userUpdate($inData, $inWhere)
     {
         if( $inData['login'] ) $data['login'] = $inData['login'];
         if( $inData['passw'] ) $data['passw'] = md5($inData['passw']);
