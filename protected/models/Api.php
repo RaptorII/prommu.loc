@@ -726,8 +726,10 @@ class Api
             $res['message'] = 'Отправлен код подтверждения';
             return $res;
              
+        } else {
+            $Auth::userUpdate(array('isblocked' => 0), 'id_user='.$res['id_user']);
+            return $res;
         }
-        else return $res;
        
        
     }
