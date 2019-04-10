@@ -128,7 +128,13 @@ class Mailing extends CActiveRecord
 										'name' => "#PAGE_SETRATE#",
 										'pattern' => "/#PAGE_SETRATE#/",
 										'value' => Subdomain::site() . MainConfig::$PAGE_SETRATE,
-										'description' => "Страница услуги 'Аутстаф'"
+										'description' => "Страница выставления рейтинга"
+									),
+							13 => array(
+										'name' => "#PAGE_RATE#",
+										'pattern' => "/#PAGE_RATE#/",
+										'value' => Subdomain::site() . DS . MainConfig::$PAGE_RATE,
+										'description' => "Страница просмотра рейтинга"
 									)
 				);
 	}

@@ -2,26 +2,6 @@
 <?php
   $attr = array_values($viData['userInfo']['userAttribs'])[0];
   $idPromo = $attr['id'];
-  $sql = "SELECT
-          (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 1 AND mm.isneg = 0  AND mm.id_promo = {$idPromo}) commpos,
-          (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 1 AND mm.isneg = 1 AND mm.id_promo = {$idPromo}) commneg";
-  $res = Yii::app()->db->createCommand($sql)->queryRow();
-  $comments = $res['commpos'] + $res['commneg'];
-
-  $rates = ($viData['rating']['countRate']/$comments) * 8.5;
-
-  if($res['commpos'] - $res['commneg'] > 0){
-    $comment = 25;
-  }
-
-  if($viData['profileEffect']){
-    $attrib = $viData['profileEffect']/3;
-  } 
-
-  $rate = $attrib + $comment + $rates;
-  $rate = round($rate,1);
-
-  $attr = array_values($viData['userInfo']['userAttribs'])[0];
   $info = $viData['userInfo'];
   $h1title = $attr['firstname'] . ' ' . $attr['lastname'];
 ?>
@@ -81,20 +61,6 @@
       $attr['meta_description'] = $arSeo['meta_description'];
     Yii::app()->clientScript->registerMetaTag($attr['meta_description'], 'description');
   }
-
-  $rt = $rate;
-  $stars = 0;
-  if($rt > 0 && $rt <= 20)
-    $stars = 1;
-  elseif($rt > 20 && $rt <= 40)
-    $stars = 2;
-  elseif($rt > 40 && $rt <= 60)
-    $stars = 3;
-  elseif($rt > 60 && $rt <= 80)
-    $stars = 4;
-  elseif($rt > 80 && $rt <= 100)
-    $stars = 5;
-
   $cntComments = $viData['lastComments']['count'][0] + $viData['lastComments']['count'][1];
 
   $arPosts = array();
@@ -152,13 +118,8 @@
         <?endif;?>
       </div>
       <div class="ppp__logo-rating">
-        <ul class="ppp__star-block">
-          <?php
-            for($i=1; $i<=5; $i++):
-              if($i>$stars):?><li></li><?else:?><li class="full"></li><?endif;?>
-          <?php endfor; ?>
-        </ul>
-        <span class="ppp__subtitle"><?=$rate?> из 100</span>       
+        <ul class="ppp__star-block"><li class="full"></li></ul>
+        <span class="ppp__subtitle"><?=Share::getRating($attr['rate'],$attr['rate_neg'])?></span>      
       </div>
       <?php if($attr['confirmPhone'] || $attr['confirmEmail']): ?>
         <div class="confirmed-user js-g-hashint" title="Личность соискателя является подлинной">ПРОВЕРЕН</div>
@@ -246,15 +207,9 @@
     <?php if( $flagOwnProfile ): ?>
       <div class="ppp__rating">
         <div class="ppp__rating-block">
-          <p>Как считается рейтинг</p>
           <span class="ppp__subtitle">Общий рейтинг</span>
-          <ul class="ppp__star-block">
-            <?php
-              for($i=1; $i<=5; $i++):
-                if($i>$stars):?><li></li><?else:?><li class="full"></li><?endif;?>
-            <?php endfor; ?>
-          </ul> 
-          <span class="ppp__subtitle"><?=$rate?> из 100 баллов</span>
+          <ul class="ppp__star-block"><li class="full"></li></ul> 
+          <span class="ppp__subtitle"><?=Share::getRating($attr['rate'],$attr['rate_neg'])?></span>
         </div>
         <hr class="ppp__line">
         <table class="upp__table">

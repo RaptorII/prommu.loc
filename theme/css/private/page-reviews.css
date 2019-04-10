@@ -125,6 +125,7 @@
 	max-width: 100%;
 	margin: 0 auto 20px;
 	display: block;
+	border-radius: 50%;
 }
 #DiTop #DiContent .rai__title{
 	margin: 0 0 25px;
@@ -548,7 +549,7 @@
 	margin: 0 auto;
 }
 .responses__item{
-	padding: 10px 10px 0;
+	padding: 10px;
 	margin-bottom: 10px;
 	border: 1px solid #EBEBEB;
 	position: relative;
@@ -585,6 +586,7 @@
 .app-responses__logo img{
 	display: block;
 	width: 100%;
+	border-radius: 50%;
 }
 #DiContent .responses .app-responses__item-title a{ color: #FFFFFF }
 .responses__item-bdate{

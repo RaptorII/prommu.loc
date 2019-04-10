@@ -205,9 +205,9 @@
 									<div class="companies__item-com-rate">
 										<?if($item['rate_count']>0):?>
 										<div class="companies__item-rating">
-											<span class="rating-positive js-g-hashint" title="Положительных отзывов"><?=$item['rate']?></span> |
-											<span class="rating-count js-g-hashint" title="Всего отзывов"><?=$item['rate_count']?></span> |
-											<span class="rating-negative js-g-hashint" title="Отрицательных отзывов"><?=$item['rate_neg']?></span>
+											<span class="rating-count js-g-hashint" title="Всего"><?=$item['rate_count']?></span>
+											( <span class="rating-positive js-g-hashint" title="Положительный"><?=$item['rate']?></span>
+											/ <span class="rating-negative js-g-hashint" title="Отрицательный"><?=$item['rate_neg']?></span> )
 										</div>
 										<?endif;?>
 										<?if($item['comment_count']>0):?>
@@ -247,9 +247,9 @@
 								<div class="companies__item-com-rate">
 									<?if($item['rate_count']>0):?>
 									<div class="companies__item-rating">
-										<span class="rating-positive js-g-hashint" title="Положительных отзывов"><?=$item['rate']?></span> |
-										<span class="rating-count js-g-hashint" title="Всего отзывов"><?=$item['rate_count']?></span> |
-										<span class="rating-negative js-g-hashint" title="Отрицательных отзывов"><?=$item['rate_neg']?></span>
+										<span class="rating-count js-g-hashint" title="Всего"><?=$item['rate_count']?></span>
+										( <span class="rating-positive js-g-hashint" title="Положительный"><?=$item['rate']?></span>
+										/ <span class="rating-negative js-g-hashint" title="Отрицательный"><?=$item['rate_neg']?></span> )
 									</div>
 									<?endif;?>
 									<?if($item['comment_count']>0):?>

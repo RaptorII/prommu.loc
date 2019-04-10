@@ -549,6 +549,7 @@ a.upp__project-info{ width: 65px }
 	position: relative;
 	display: inline-block;
 }
+.upp__rating-block div{ display: inline-block; }
 .upp__rating-block p{
 	width: 140px;
 	position: absolute;

@@ -1,5 +1,6 @@
 <meta name="robots" content="noindex,nofollow">
 <? 
+  $id = $viData['userInfo']['id_user'];
   Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-prof-emp.css'); 
   Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/page-prof-emp.js', CClientScript::POS_END);
 
@@ -15,44 +16,6 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
   <div class="container" >
     <div class="content-block">
 <? endif; ?>
-<?php
-  
-   $id = $viData['userInfo']['id_user'];
-   
-      $sql = "SELECT r.id, r.id_user idus,r.web, name , r.logo, r.rate, r.rate_neg
-                , cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate,
-                 (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.isneg = 0 AND mm.isactive = 1 AND mm.id_empl = r.id) commpos,
-                   (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.isneg = 1 AND mm.isactive = 1 AND mm.id_empl = r.id) commneg
-                , (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.id_promo = r.id) comment_count
-                   ,(SELECT COUNT(*) cou FROM empl_vacations v WHERE v.id_user = r.id_user AND v.status = 1 AND v.ismoder = 100) vaccount
-            FROM employer r
-            WHERE r.id_user = {$id}
-            ORDER BY avg_rate DESC
-            LIMIT 6";
-        $result = Yii::app()->db->createCommand($sql)
-        ->queryAll();
-
-        $rate = $result[0]['rate'] + $result[0]['rate_neg'];
-        $rating = $result[0]['commpos'] + $result[0]['commneg'];
-        $rates = ($rate/$rating) * 10;
-
-        if($result[0]['vaccount']){
-            $vacancy = 10;
-        }
-
-        if($result[0]['commpos'] - $result[0]['commneg'] > 0){
-            $comment = 25;
-        } 
-
-        if($result[0]['logo']){
-            $logo = 2;
-        }
-        if($result[0]['web']){
-            $web = 2;
-        }
-        $result = $web + $logo + $comment + $rates + $vacancy + 2 + 2;
-?>
-<script type="text/javascript">//G_VARS.Modal = <?= $modal; ?>;</script>
 <div class='row'>
   <div class='col-xs-12 col-sm-4 col-lg-3 no-md-relat ppe__logo'>
     <div class="upp__img-block">
@@ -136,31 +99,12 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
   <div class='col-xs-12 col-sm-8 col-lg-9 ppe__content'>
     <h2 class="upp__title"><?=$viData['userInfo']['name']?></h2>
     <div class="upp__rating-block">
-      <?php if(Share::$UserProfile->type==3): ?>
-        <p>Как считается рейтинг</p>
-      <?php endif; ?>
       <span class="upp__subtitle">Общий рейтинг</span> 
       <ul class="upp__star-block">
-        <?php
-          $rt = $result;
-          $stars = 0;
-          if($rt > 0 && $rt <= 20)
-            $stars = 1;
-          elseif($rt > 20 && $rt <= 40)
-            $stars = 2;
-          elseif($rt > 40 && $rt <= 60)
-            $stars = 3;
-          elseif($rt > 60 && $rt <= 80)
-            $stars = 4;
-          elseif($rt > 80 && $rt <= 100)
-            $stars = 5;
-          for($i=1; $i<=5; $i++):
-            if($i>$stars):?><li></li><?else:?><li class="full"></li><?endif;?>
-          <?php endfor; ?>
+        <li class="full"></li>
       </ul>     
-      <span class="upp__subtitle"><?=$result?> из 100 баллов</span><br/>
+      <div class="upp__subtitle"><?=Share::getRating($viData['userInfo']['rate'],$viData['userInfo']['rate_neg'])?></div><br/>
     </div>
- <!--    <span class="upp__subtitle">(2/2)  - email, (2/2) - подтвержденный телефон, (<?=$logo?>/2) - логотип компании, (<?=$web?>/2) - сайт компании, (2/7) - 10 месяцев на сайте, (<?=$vacancy ?>/10) - опубликованные вакансии,  (<?=$comment?>/25) - отзывы, (<?=$rates?>/50) - оценки рейтинга</span> -->
     <hr class="upp__line">
     <table class="upp__table">
       <tbody>
@@ -270,6 +214,20 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
             <span class="ppe__field-val"><?=$allInfo['contact']?></span>
           </div>
         <?php endif; ?>
+        <? $attrVal = $this->ViewModel->isInArray($allAttr, 'key', 'inn'); ?>
+        <? if(!empty($allAttr[$attrVal]['val'])): ?>
+          <div class="ppe__field">
+            <span class="ppe__field-name">ИНН:</span>
+            <span class="ppe__field-val"><?=$allAttr[$attrVal]['val']?></span>
+          </div>
+        <? endif; ?>
+        <? $attrVal = $this->ViewModel->isInArray($allAttr, 'key', 'legalindex'); ?>
+        <? if(!empty($allAttr[$attrVal]['val'])): ?>
+          <div class="ppe__field">
+            <span class="ppe__field-name">Юридический адрес:</span>
+            <span class="ppe__field-val"><?=$allAttr[$attrVal]['val']?></span>
+          </div>
+        <? endif; ?>
         <div class="ppe__field<?=($isBlocked && !$allInfo['email'] ?' error':'')?>">
           <span class="ppe__field-name">Email:</span>
           <span class="ppe__field-val"><?=$allInfo['email']?></span>
@@ -278,6 +236,13 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
           <span class="ppe__field-name">Телефон:</span>
           <span class="ppe__field-val"><?=$allAttr[1]['val']?></span>
         </div>
+        <? $attrVal = $this->ViewModel->isInArray($allAttr, 'key', 'stationaryphone'); ?>
+        <? if(!empty($allAttr[$attrVal]['val'])): ?>
+          <div class="ppe__field">
+            <span class="ppe__field-name">Городской телефон:</span>
+            <span class="ppe__field-val"><?=$allAttr[$attrVal]['val']?></span>
+          </div>
+        <? endif; ?>
         <?php
           $idViber = $this->ViewModel->isInArray($allAttr, 'key', 'viber');
           $idWhatsApp = $this->ViewModel->isInArray($allAttr, 'key', 'whatsapp');

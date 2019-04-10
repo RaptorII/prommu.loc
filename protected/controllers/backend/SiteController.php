@@ -220,6 +220,7 @@ class SiteController extends Controller
             $model = new Comment;
             $model->unsetAttributes(); 
             $model->search();
+            $model->setViewed($_GET['type']);
             $model->iseorp=$_GET['type'];
          
             $title = 'Отзывы';
@@ -1923,5 +1924,45 @@ class SiteController extends Controller
         $gcs->registerCssFile($bUrl . '/css/template.css');
 
         $this->render($view, ['viData' => $data]);       
+    }
+    /**
+     * Отзывы о нас
+     */
+    public function actionReviews()
+    {
+        if(!self::isAuth() /*|| strpos($this->user_access, "system") == false*/)
+        {
+            $this->render('access');
+            return;
+        }
+
+        $rq = Yii::app()->getRequest();
+        $id = $rq->getParam('id');
+
+        $title = 'Отзывы о нас';
+        $arBread[$title] = ['reviews'];
+
+        if(isset($id))
+        {
+            $title = 'Просмотр отзыва';
+            $view = 'reviews/item';
+            $model = new CommentsAboutUs($id);
+            $data = $model->getData($id);
+            $data['id'] = $id;
+            array_push($arBread, $title);
+        }
+        else
+        {
+            $view = 'reviews/list';
+            $data = [];
+        }
+
+        $this->setPageTitle($title);
+        $this->breadcrumbs = $arBread;
+        $bUrl = Yii::app()->request->baseUrl;
+        $gcs = Yii::app()->getClientScript();
+        $gcs->registerCssFile($bUrl . '/css/template.css');
+
+        $this->render($view, ['viData' => $data]);  
     }
 }

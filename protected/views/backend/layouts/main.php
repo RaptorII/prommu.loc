@@ -20,7 +20,13 @@
    $modelR = new Employer;
    $modelR = $modelR->getEmplAdmin();
    $counR = count($modelR);// clear any default values
-    
+ 
+  $comments = new Comment();
+  $arCommentsCnt = $comments->commentsCnt();
+  $comments = new CommentsAboutUs();
+  $arCommentsCnt['aboutus_reviews'] = $comments->commentsCnt();
+  $arCommentsCnt['all'] += $arCommentsCnt['aboutus_reviews'];
+
   $arIdeas = (new Ideas)->getCntForAdmin();
 
   $hUrl = Yii::app()->homeUrl;
@@ -225,6 +231,37 @@
               <? endfor;?>
             </ul>
           </li>
+          <? if($arCommentsCnt['all']): ?>
+            <li class="dropdown user user-menu">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+               <span class="label label-danger"><?=$arCommentsCnt['all']?></span>
+                <span class="hidden-xs">Отзывы</span>
+              </a>
+              <ul class="dropdown-menu">
+                <? if($arCommentsCnt['emp_reviews']): ?>
+                  <li style="padding:0px;height: auto;" class="user-header">
+                    <a style="white-space:unset;background-color:#e1e3e9;" href="/admin/comments?type=1" rel="tooltip" data-placement="top" title="Просмотреть">
+                      <p>О соискателях (<?=$arCommentsCnt['emp_reviews']?>)</p>
+                    </a>
+                  </li>
+                <? endif; ?>
+                <? if($arCommentsCnt['app_reviews']): ?>
+                  <li style="padding:0px;height: auto;" class="user-header">
+                    <a style="white-space:unset;background-color:#e1e3e9;" href="/admin/comments?type=0" rel="tooltip" data-placement="top" title="Просмотреть">
+                      <p>О работодателях (<?=$arCommentsCnt['app_reviews']?>)</p>
+                    </a>
+                  </li>
+                <? endif; ?>
+                <? if($arCommentsCnt['aboutus_reviews']): ?>
+                  <li style="padding:0px;height: auto;" class="user-header">
+                    <a style="white-space:unset;background-color:#e1e3e9;" href="/admin/reviews" rel="tooltip" data-placement="top" title="Просмотреть">
+                      <p>О ресурсе (<?=$arCommentsCnt['aboutus_reviews']?>)</p>
+                    </a>
+                  </li>
+                <? endif; ?>
+              </ul>
+            </li>
+          <? endif; ?>
           <li class="dropdown user user-menu">
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -703,6 +740,15 @@
           <a href="<?=$hUrl?>system">
             <i class="glyphicon glyphicon-wrench"></i>
             <span>Разработчикам</span>
+          </a>
+        </li>
+        <?
+        // Reviews
+        ?>
+        <li class="<?=($curId=='reviews'?'active':'')?>">
+          <a href="<?=$hUrl?>reviews">
+            <i class="glyphicon glyphicon-heart"></i>
+            <span>Отзывы о нас</span>
           </a>
         </li>
       </ul>

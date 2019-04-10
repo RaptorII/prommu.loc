@@ -1,9 +1,5 @@
 $(function(){
-	var arRate = $('.rai__table tr'),
-		arReviews = $('.rai__review-input'),
-		arRevLabels = $('.rai__review-label'),
-		textarea = $('.rai__review-area');
-	
+	var arRate = $('.rai__table tr');
 	//
 	//	event send form
 	//
@@ -20,8 +16,7 @@ $(function(){
 		}
 	});
 	$('.rai__table input').change(function(){ checkRates(this) });
-	arReviews.change(function(){ checkReviews() });
-	textarea.keyup(function(){ checkTextField() });	
+	$('.rai__review-area').keyup(function(){ checkTextField(this) });		
 	//
 	//	functions
 	//
@@ -47,16 +42,36 @@ $(function(){
 		}
 	}
 	function checkReviews(){
-		if(!arReviews[0].checked && !arReviews[1].checked){
-			$(arRevLabels[0]).addClass('error');
-			$(arRevLabels[1]).addClass('error');
+		var arItems = $('.rai__review-input'),
+				arLabels = $('.rai__review-label');
+
+		if(!arItems[0].checked && !arItems[1].checked){
+			$(arLabels[0]).addClass('error');
+			$(arLabels[1]).addClass('error');
 		}
 		else{
-			$(arRevLabels[0]).removeClass('error');
-			$(arRevLabels[1]).removeClass('error');
+			$(arLabels[0]).removeClass('error');
+			$(arLabels[1]).removeClass('error');
+		}
+		if(!arItems[2].checked && !arItems[3].checked){
+			$(arLabels[2]).addClass('error');
+			$(arLabels[3]).addClass('error');
+		}
+		else{
+			$(arLabels[2]).removeClass('error');
+			$(arLabels[3]).removeClass('error');
 		}
 	}
 	function checkTextField(){
-		textarea.val()!='' ? textarea.removeClass('error') : textarea.addClass('error');		
+		var arItems = $('.rai__review-area');
+
+		if(typeof arguments[0] == 'object')
+			arItems = [arguments[0]];
+
+		$.each(arItems, function(){
+			$(this).val().trim()!=''
+				? $(this).removeClass('error')
+				: $(this).addClass('error');
+		});
 	}
 });

@@ -41,11 +41,18 @@ abstract class Responses extends Model
      * Сохраняем данные выставленного рейтинга
      */
     abstract public function saveRateData();
+    /**
+     * @param $isResponse int isresponse from vacancy_stat
+     * @param $status int status from vacancy_stat
+     * получаем человекопонятный статус
+     */
+    abstract public function getStatus($isResponse, $status);
 
-    
     public static $STATUS_REJECT = 3; // отклонена
     public static $STATUS_EMPLOYER_ACCEPT = 4; // принята работодателем
     public static $STATUS_APPLICANT_ACCEPT = 5; // принята обеими сторонами
     public static $STATUS_BEFORE_RATING = 6; // есть уведомление об окончании(завершена вакансия)
-    public static $STATUS_AFTER_RATING = 7; // есть рейтинг
+    public static $STATUS_EMPLOYER_RATED = 7; // работодатель выставил рейтинг
+    public static $STATUS_APPLICANT_RATED = 8; // соискатель выставил рейтинг
+    public static $STATUS_FULL_RATUING = 9; // все выставили рейтинг
 }

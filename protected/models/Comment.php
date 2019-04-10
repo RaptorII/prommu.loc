@@ -12,6 +12,11 @@ class Comment extends ARModel
         parent::__construct();
     }
 
+    public static function model($className=__CLASS__)
+    {
+        return parent::model($className);
+    }
+
     public function tableName()
     {
         return 'comments';
@@ -106,6 +111,47 @@ class Comment extends ARModel
         $res->execute();
         
     }
+    /**
+     *  счетчик для админки
+     */
+    public function commentsCnt()
+    {
+        $arRes = array(
+                'emp_reviews' => 0,
+                'app_reviews' => 0,
+                'all' => 0
+            );
 
- 
+        $query = self::model()->findAll(array(
+                    'condition' => 'is_viewed=0',
+                    'order' => 'id DESC',
+                )
+            );
+
+        if(count($query))
+        {
+            foreach ($query as $obj)
+            {
+                $obj->iseorp==1 
+                    ? $arRes['emp_reviews']++
+                    : $arRes['app_reviews']++;
+
+            }
+            $arRes['all'] = count($query);
+        }
+
+        return $arRes;
+    }
+    /**
+     * @param $iseorp - bool
+     */
+    public function setViewed($iseorp)
+    {
+        Yii::app()->db->createCommand()->update(
+                'comments', 
+                ['is_viewed'=>1],
+                'iseorp=:iseorp',
+                [':iseorp' => $iseorp]
+            );
+    }
 }

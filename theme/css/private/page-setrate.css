@@ -125,6 +125,7 @@ body #DiSiteWrapp{ height: initial; }*/
 	max-width: 100%;
 	margin: 0 auto 20px;
 	display: block;
+	border-radius: 50%;
 }
 #DiTop #DiContent .rai__title{
 	margin: 0 0 25px;
@@ -399,4 +400,10 @@ body #DiSiteWrapp{ height: initial; }*/
 .rai__btn:hover:before{
 	-webkit-transform: scaleX(1);
 	transform: scaleX(1);	
+}
+#DiContent .reviews-block__title{
+	font-size: 26px;
+	font-weight: normal;
+	margin: 35px 0;
+	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 }

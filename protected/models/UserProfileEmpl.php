@@ -283,31 +283,91 @@ class UserProfileEmpl extends UserProfile
 
         return $data;
     }
-
-
-
     /**
-     * Получаем позитивный и негативный рейтинги
+     * @param $inID int id_user
+     * @return array(int - positive, int - negative, int - sum)
+     * получаем значение рейтинга
      */
     public function getRateCount($inID = 0)
     {
-        $id = $inID ?: Share::$UserProfile->id;
+        $arRes = array(0,0,0); // положительные, отрицательные, сумма
+        $id_user = $inID ?: Share::$UserProfile->id;
+        // считаем баллы рейтинга
+        $query = Yii::app()->db->createCommand()
+                    ->select("rd.point, pr.value")
+                    ->from('rating_details rd')
+                    ->leftjoin('point_rating pr','pr.id=rd.id_point')
+                    ->where('rd.id_user=:id',[':id'=>$id_user])
+                    ->queryAll();
 
-//        $sql = "SELECT SUM(p.rating) rpos, SUM(p.rating_neg) rneg FROM projects p WHERE p.id_empl = {$idempl}";
-        $sql = "SELECT sum(m.rate) as rpos, sum(m.rate_neg) as rneg, m.id_point, m.descr 
-            FROM (
-              SELECT
-                CASE WHEN rd.point >= 0 THEN rd.point ELSE 0 END AS rate,
-                CASE WHEN rd.point < 0 THEN rd.point ELSE 0 END AS rate_neg,
-                rd.id_point,
-                r.descr
-              FROM rating_details rd,
-                   point_rating r
-              WHERE id_user = {$id}
-              AND r.id = rd.id_point
-            ) m ";
-        $res = Yii::app()->db->createCommand($sql)->queryRow();
-        return array($res['rpos'], $res['rneg']);
+        if(count($query))
+            foreach ($query as $v)
+            {
+                $v['point']>0 && $arRes[0] += ($v['point'] * $v['value']);
+                $v['point']<0 && $arRes[1] += ($v['point'] * $v['value']);
+            }
+        // считаем баллы комментариев
+        $query = Yii::app()->db->createCommand()
+                    ->select("count(c.id) - sum(c.isneg) positive, sum(c.isneg) negative")
+                    ->from('comments c')
+                    ->leftjoin('employer e','e.id=c.id_empl')
+                    ->where(
+                        'e.id_user=:id and c.iseorp=0',
+                        [':id'=>$id_user]
+                    )
+                    ->queryRow();
+
+        $query['positive']>0 && $arRes[0] += ($query['positive'] * 20); // по ТЗ
+        $query['negative']>0 && $arRes[1] += ($query['negative'] * -20); // по ТЗ
+        // считаем года
+        $query = Yii::app()->db->createCommand()
+                    ->select("TIMESTAMPDIFF(YEAR,crdate,curdate())")
+                    ->from('user')
+                    ->where('id_user=:id',[':id'=>$id_user])
+                    ->queryScalar();
+        $arRes[0] += $query * 5; // по ТЗ 5 балов за год
+        // подсчет отработанных вакансий
+        $query = Yii::app()->db->createCommand()
+                    ->select("count(*)")
+                    ->from('empl_vacations')
+                    ->where(
+                        'id_user=:id and status=1 and ismoder=100 and remdate>=now()',
+                        [':id'=>$id_user]
+                    )
+                    ->queryScalar();
+        $arRes[0] += $query;
+        // подсчет личных данных
+        $query = Yii::app()->db->createCommand()
+                    ->select("e.logo,
+                        u.confirmEmail,
+                        u.confirmPhone,
+                        ua.key,
+                        ua.val")
+                    ->from('user u')
+                    ->join('employer e','e.id_user=u.id_user')
+                    ->join('user_attribs ua','ua.id_us=u.id_user')
+                    ->where('u.id_user=:id',[':id'=>$id_user])
+                    ->queryAll();   
+
+        $info = reset($query);
+        $flag = false;
+        foreach ($query as $v)
+        {
+            $v['key']=='site' && !empty($v['val']) && $arRes[0]++; // по ТЗ
+            $v['key']=='inn' && !empty($v['val']) && $arRes[0]+=2; // по ТЗ
+            $v['key']=='legalindex' && !empty($v['val']) && $arRes[0]+=2; // по ТЗ
+            $v['key']=='stationaryphone' && !empty($v['val']) && $arRes[0]++; // по ТЗ
+            if(!$flag && in_array($v['key'],['viber','whatsapp','telegram','googleallo']))
+            {
+                $flag = true;
+                $arRes[0]++; // по ТЗ
+            }
+        }
+        !empty($info['logo']) && $arRes[0] += 2;// по ТЗ наличие фото
+        $info['confirmEmail'] && $arRes[0] += 2; // по ТЗ
+        $info['confirmPhone'] && $arRes[0] += 2; // по ТЗ
+        //
+        return $arRes;
     }
 
 
@@ -1342,6 +1402,8 @@ class UserProfileEmpl extends UserProfile
                 e.id_user,
                 e.name,
                 e.logo,
+                e.rate,
+                e.rate_neg,
                 u.mdate,
                 u.is_online
             FROM employer e

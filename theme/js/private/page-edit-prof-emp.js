@@ -479,6 +479,10 @@ jQuery(function($){
     $(e).val(split.join('-'));
   }
   //
+  $('[name="user-attribs[stationaryphone]"]').on('input',function(){
+  	this.value = this.value.replace(/\D+/g,'');
+  })
+  //
   // начальное выделение полей
   //
   $.each($('.epe__required'), function(){ checkField(this) });

@@ -605,8 +605,8 @@ class Share
 
         if( isset($addParams['From']) ) $from = $addParams['From'];
         else $from = array('auto-mailer@prommu.com' => 'Prommu.com');
-//file_put_contents('_sendmail.txt', print_r($inMess, true), FILE_APPEND | LOCK_EX);
-        $SM = Yii::app()->swiftMailer;
+file_put_contents('_sendmail.txt', print_r($inMess, true), FILE_APPEND | LOCK_EX);
+       /* $SM = Yii::app()->swiftMailer;
 
         // Get config
         $mailHost = 'mail.companyreport.net';
@@ -634,7 +634,7 @@ class Share
         if( isset($addParams['Bcc']) ) $Message->setBcc($addParams['Bcc']);
 
         // Send mail
-        return $Mailer->send($Message);
+        return $Mailer->send($Message);*/
     }
 
 
@@ -874,5 +874,14 @@ class Share
     public static function isGuest()
     {
         return !(self::isApplicant() || self::isEmployer());
+    }
+    /**
+     * 
+     */
+    public static function getRating($pos, $neg)
+    {
+        echo '<span class="js-g-hashint" title="Всего">' . ($pos+$neg) 
+            . '</span> ( <span class="-green js-g-hashint" title="Положительный">' . $pos 
+            . '</span> / <span class="-red js-g-hashint" title="Отрицательный">' . $neg . '</span> )';
     }
 }

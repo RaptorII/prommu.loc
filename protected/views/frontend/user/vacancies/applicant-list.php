@@ -64,7 +64,7 @@
 											>Отклонить</span>
 									</div>
 								<? elseif($vacancy['access_to_chat']): ?>
-									<? if($vacancy['status']==Responses::$STATUS_BEFORE_RATING): ?>
+									<? if(in_array($vacancy['status'], [Responses::$STATUS_BEFORE_RATING,Responses::$STATUS_EMPLOYER_RATED])): ?>
 										<div class="app-projects__right-bl center">
 											<a 
 												href="<?=MainConfig::$PAGE_SETRATE . DS . $vacancy['id']?>" 

@@ -918,46 +918,30 @@ class UserController extends AppController
      */
     public function actionSetrate()
     {
-        in_array(Share::$UserProfile->type, [2,3]) || $this->redirect(MainConfig::$PAGE_LOGIN);
+        Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
 
         $title = 'Добавить Рейтинг/Отзыв';
-        //$this->setBreadcrumbs($title,$this->ViewModel->pageSetRate);
         Yii::app()->getClientScript()->registerCssFile('/theme/css/private/page-setrate.css');
         Yii::app()->getClientScript()->registerScriptFile('/theme/js/private/page-setrate.js', CClientScript::POS_END);
+
         $Responses = Share::$UserProfile->makeResponse();
+        $viData = $Responses->setRate();
 
         if( Yii::app()->getRequest()->isPostRequest )
         {
             $res = $Responses->saveRateData();
-
         }
-        else {
-
-            if(Share::$UserProfile->type == 3){
-            $viData = $Responses->setRate();
-            $id = $viData['user']['pid'];
-            $idUs = $viData['user']['iduspromo'];
+        else
+        {
+            $id = (Share::isEmployer() ? $viData['user']['pid'] : $viData['user']['eid']);
+            $idUs = (Share::isEmployer() ? $viData['user']['iduspromo'] : $viData['user']['idusempl']);
             $data = $Responses->loadRatingPageDatas($id, $idUs);
-
-        }
-        elseif(Share::$UserProfile->type == 2){
-            $viData = $Responses->setRate();
-            $id = $viData['user']['eid'];
-            $idUs = $viData['user']['idusempl'];
-            $data = $Responses->loadRatingPageDatas($id, $idUs);
-
         }
 
-        }
-
-
-        $this->render($this->ViewModel->pageSetRate,
-                array('viData' => $Responses->setRate(), 'data' => $data),
-
-                array(
-                    'saveResp' => $res,
-                    'htmlTitle' => $title
-                )
+        $this->render(
+                $this->ViewModel->pageSetRate,
+                array('viData' => $viData, 'data' => $data),
+                array('saveResp' => $res,'htmlTitle' => $title)
             );
     }
 
@@ -1050,20 +1034,15 @@ class UserController extends AppController
     */
     public function actionReviews()
     {
-        in_array(Share::$UserProfile->type, [2,3]) || $this->redirect(MainConfig::$PAGE_LOGIN);
+        Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
 
-        $Responses = Share::$UserProfile->type == 2 ? new ResponsesApplic() : new ResponsesEmpl();
+        $Responses = Share::isApplicant() ? new ResponsesApplic() : new ResponsesEmpl();
         $pages = new CPagination($Responses->getResponsesRatingCount());
         $pages->pageSize = MainConfig::$DEF_PAGE_LIMIT;
         $pages->applyLimit($Responses);
-
+        
         Yii::app()->getClientScript()->registerCssFile("/theme/css/private/page-reviews.css");
-
-        if(Share::$UserProfile->type==2)
-            $title = 'Оценка работодателей';
-        else
-            $title = 'Оценка персонала';
-
+        $title = Share::isApplicant() ? 'Оценка персонала' : 'Оценка работодателей';
         $this->setBreadcrumbs($title, MainConfig::$PAGE_REVIEWS_VIEW);
 
         $this->render(MainConfig::$PAGE_REVIEWS_VIEW,

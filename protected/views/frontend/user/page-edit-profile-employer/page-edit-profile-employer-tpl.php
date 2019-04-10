@@ -96,6 +96,16 @@
                   <span class="epe__label-name">Контактное лицо:</span>
                   <input type='text' name='contact' value="<?=$viData['info']['contact']?>" class="epe__input epe__input-contact epe__required" autocomplete="off">
                 </label>
+                <label class="epe__label">
+                  <span class="epe__label-name">ИНН:</span>
+                  <input type='text' name='user-attribs[inn]' value="<?=$viData['attribs']['inn']['val']?>" class="epe__input epe__input-inn" autocomplete="off">
+                </label>
+                <label class="epe__label">
+                  <span class="epe__label-name">Юридический адрес:</span>
+                  <input type='text' name='user-attribs[legalindex]' value="<?=$viData['attribs']['legalindex']['val']?>" class="epe__input epe__input-pos" autocomplete="off">
+                </label>
+
+
                 <label class="epe__label epe__email" data-error="Указанный e-mail адрес уже используется в системе" for="epe-email">
                   <span class="epe__label-name">Ваша email:</span>
                   <input type='text' name='email' value="<?=$viData['info']['email']?>" class="epe__input epe__input-mail epe__required" id="epe-email" autocomplete="off">
@@ -136,6 +146,10 @@
                   <dir class="epe__confirm-btn hvr-sweep-to-right">ПРОВЕРИТЬ</dir>
                   <dir class="clearfix"></dir>
                 </div>
+                <label class="epe__label">
+                  <span class="epe__label-name">Городской телефон:</span>
+                  <input type='text' name='user-attribs[stationaryphone]' value="<?=$viData['attribs']['stationaryphone']['val']?>" class="epe__input epe__input-pos" autocomplete="off">
+                </label>
                 <div class="epe__label epe__mess epe__select">
                   <span class="epe__label-name">Мессенджеры:</span>
                   <input type="text" name="epe-str-mess" value="<?=$viData['messengers']?>" class="epe__input epe__input-soc" id="epe-str-mess" disabled>

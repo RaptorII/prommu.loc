@@ -469,6 +469,8 @@
 #F1compprof.edit-profile-employer .epe__input-soc{ padding-left: 110px }
 #F1compprof.edit-profile-employer .epe__input-pos{ padding-left: 130px }
 #F1compprof.edit-profile-employer .epe__input-city{ padding-left: 60px }
+#F1compprof.edit-profile-employer .epe__input-inn{ padding-left: 40px }
+
 #F1compprof.edit-profile-employer .epe__email:before {
     content: attr(data-error);
     width: 300px;

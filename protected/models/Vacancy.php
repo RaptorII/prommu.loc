@@ -3123,11 +3123,12 @@ WHERE id_vac = {$inVacId}";
         $arIdDisVacs = $this->checkAccessToResponse($arIdVacs);
 
         $arIdUser = array();
+        $responses = new ResponsesApplic();
         foreach ($arRes['items'] as &$v)
         {
             $arIdUser[] = $v['employer'];
             $v['pubdate']==='00.00.0000' && $v['pubdate'] = $v['crdate'];
-            $v['condition'] = $this->getAppVacStatus($v['isresponse'], $v['status']);
+            $v['condition'] = $responses->getStatus($v['isresponse'], $v['status']);
             $v['access_to_chat'] = $v['status']>4; // доступ к чату
             $v['access_to_answer'] = ($v['isresponse']==2 && $v['status']==4); // приглашение от работодателя сразу status=4
             $v['second_response'] = (!in_array($v['id'],$arIdDisVacs) && $v['status']==3 && !$v['sresponse']);  // проверяем доступна ли вакансия
@@ -3178,7 +3179,8 @@ WHERE id_vac = {$inVacId}";
 
         if($arRes['item']['pubdate']==='00.00.0000')
             $arRes['item']['pubdate'] = $arRes['item']['crdate'];
-        $arRes['item']['condition'] = $this->getAppVacStatus(
+        $responses = new ResponsesApplic();
+        $arRes['item']['condition'] = $responses->getStatus(
                 $arRes['item']['isresponse'],
                 $arRes['item']['status']
             );
@@ -3319,40 +3321,6 @@ WHERE id_vac = {$inVacId}";
                         [':id_promo'=>$id_resume,':id'=>$id_vac]
                     )
                     ->queryScalar();
-    }
-    /**
-     * @param $isResponse int isresponse from vacancy_stat
-     * @param $status int status from vacancy_stat
-     * получаем человекопонятный статус
-     */
-    public function getAppVacStatus($isResponse, $status)
-    {
-        $result = '';
-        if($isResponse==1) // отклик
-        {
-            switch($status)
-            {
-                case 3: $result = 'Работодатель отказал'; break;
-                case 5: $result = 'Работодатель утвердил'; break;
-                case 6: $result = 'Необходима оценка'; break;
-                case 7: $result = 'Проект завершен'; break;
-                default: $result = 'Ожидение ответа'; break;
-            }
-        }
-        elseif($isResponse==2) // приглашение
-        {
-            switch($status)
-            {
-                case 1: $result = 'Приглашение просмотрено'; break;
-                case 3: $result = 'Приглашение отклонено'; break;
-                case 4: $result = 'Приглашение от работодателя'; break;
-                case 5: $result = 'Приглашение принято'; break;
-                case 6: $result = 'Необходима оценка'; break;
-                case 7: $result = 'Проект завершен'; break;
-                default: $result = 'Новый проект'; break;
-            }
-        }
-        return $result;
     }
     /**
      * @param $arIdVacs - array of ID vacancies

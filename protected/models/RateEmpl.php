@@ -24,7 +24,11 @@ class RateEmpl extends Rate
             // получаем общий рейтинг
             $data['rating'] = $this->getPointRate($this->UserProfile->id );
             $data['rating'] = $this->prepareProfileCommonRate($data['rating']);
-
+            $data['main_rating'] = Yii::app()->db->createCommand()
+                                        ->select("e.rate,e.rate_neg")
+                                        ->from('employer e')
+                                        ->where('e.id_user=:id',[':id'=>$this->id,])
+                                        ->queryRow();
 
             // рейтинг выставленный пользователями, только для своего профиля
             if( $this->id == $this->UserProfile->id )

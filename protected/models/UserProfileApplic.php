@@ -38,30 +38,82 @@ class UserProfileApplic extends UserProfile
         $this->wDays->tha = 'Суббота';
         $this->wDays->sun = 'Воскресенье';
     }
-
-
-
     /**
-     * Получаем позитивный и негативный рейтинги
+     * @param $inID int id_user
+     * @return array(int - positive, int - negative, int - sum)
+     * получаем значение рейтинга
      */
     public function getRateCount($inID = 0)
     {
-        $id = $inID ?: Share::$UserProfile->exInfo->id;
+        $arRes = array(0,0); // положительные, отрицательные, сумма
+        $id_user = $inID ?: Share::$UserProfile->exInfo->id;
+        // считаем баллы рейтинга
+        $query = Yii::app()->db->createCommand()
+                    ->select("rd.point, pr.value")
+                    ->from('rating_details rd')
+                    ->leftjoin('point_rating pr','pr.id=rd.id_point')
+                    ->where('rd.id_user=:id',[':id'=>$id_user])
+                    ->queryAll();
 
-        $sql = "SELECT sum(m.rate) as rate, sum(m.rate_neg) as rate_neg, m.id_point, m.descr 
-            FROM (
-              SELECT
-                CASE WHEN rd.point >= 0 THEN rd.point ELSE 0 END AS rate,
-                CASE WHEN rd.point < 0 THEN rd.point ELSE 0 END AS rate_neg,
-                rd.id_point,
-                r.descr
-              FROM rating_details rd,
-                   point_rating r
-              WHERE id_user = {$id}
-              AND r.id = rd.id_point
-            ) m ";
-        $res = Yii::app()->db->createCommand($sql)->queryRow();
-        return array($res['rate'], $res['rate_neg']);
+        if(count($query))
+            foreach ($query as $v)
+            {
+                $v['point']>0 && $arRes[0] += ($v['point'] * $v['value']);
+                $v['point']<0 && $arRes[1] += ($v['point'] * $v['value']);
+            }
+        // считаем баллы комментариев
+        $query = Yii::app()->db->createCommand()
+                    ->select("count(c.id) - sum(c.isneg) positive, sum(c.isneg) negative")
+                    ->from('comments c')
+                    ->leftjoin('resume r','r.id=c.id_promo')
+                    ->where(
+                        'r.id_user=:id and c.iseorp=1',
+                        [':id'=>$id_user]
+                    )
+                    ->queryRow();
+
+        $query['positive']>0 && $arRes[0] += ($query['positive'] * 40); // по ТЗ
+        $query['negative']>0 && $arRes[1] += ($query['negative'] * -40); // по ТЗ
+        // считаем года
+        $query = Yii::app()->db->createCommand()
+                    ->select("TIMESTAMPDIFF(YEAR,crdate,curdate())")
+                    ->from('user')
+                    ->where('id_user=:id',[':id'=>$id_user])
+                    ->queryScalar();
+        $query<1 && $arRes[0] += 2; // по ТЗ
+        ($query==1 || $query==2) && $arRes[0] += 3; // по ТЗ
+        $query>2 && $arRes[0] += 5; // по ТЗ
+        // подсчет отработанных вакансий
+        $query = Yii::app()->db->createCommand()
+                    ->select("count(*)")
+                    ->from('vacation_stat vs')
+                    ->leftjoin('resume r','r.id=vs.id_promo')
+                    ->where(
+                        'r.id_user=:id AND vs.status>:s1',
+                        [':id'=>$id_user,':s1'=>Responses::$STATUS_APPLICANT_ACCEPT])
+                    ->queryScalar();
+        $query>0 && $query<4 && $arRes[0] += 1; // по ТЗ
+        $query>3 && $query<11 && $arRes[0] += 2; // по ТЗ
+        $query>10 && $query<26 && $arRes[0] += 3; // по ТЗ
+        $query>25 && $query<51 && $arRes[0] += 4; // по ТЗ
+        $query>50 && $arRes[0] += 5; // по ТЗ
+        // подсчет личных данных
+        $query = Yii::app()->db->createCommand()
+                    ->select("r.photo mainphoto,
+                        u.confirmEmail,
+                        u.confirmPhone,
+                        up.photo")
+                    ->from('user u')
+                    ->join('resume r','r.id_user=u.id_user')
+                    ->join('user_photos up','up.id_user=u.id_user')
+                    ->where('u.id_user=:id',[':id'=>$id_user])
+                    ->queryAll();
+        // по ТЗ если больше 1 фото => 2 бала, если 1 фото => 1 бал         
+        !empty($query['mainphoto']) && $arRes[0] += count($query);
+        $arRes[0] += $query['confirmEmail']; // по ТЗ
+        $arRes[0] += $query['confirmPhone']; // по ТЗ
+
+        return $arRes;
     }
 
 
@@ -1170,7 +1222,7 @@ class UserProfileApplic extends UserProfile
               , a.val , a.id_attr, u.confirmPhone, u.confirmEmail
               , d.name , d.type , d.id_par idpar , d.key
               , u.email, card, cardPrommu, u.is_online
-              , r.index, r.meta_h1, r.meta_title, r.meta_description
+              , r.index, r.meta_h1, r.meta_title, r.meta_description, r.rate, r.rate_neg
             FROM resume r
             LEFT JOIN user u ON u.id_user = r.id_user
             LEFT JOIN user_attribs a ON r.id_user = a.id_us

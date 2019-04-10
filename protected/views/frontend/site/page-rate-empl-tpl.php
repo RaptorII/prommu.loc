@@ -124,6 +124,16 @@ $arUser = $arUser[$userId];
     #DiContent.page-rate h2{
         text-align: left;
     }
+    /*
+    *
+    */
+    .page-rate_star{
+        width: 15px;
+        height: 15px;
+        display: inline-block;
+        background: url(/theme/pic/reviews-page/reviews_sprite.png) 0 -16px no-repeat;
+        background-position: 0 0;
+    }
 </style>
 
 
@@ -136,13 +146,8 @@ $arUser = $arUser[$userId];
         <?php else: ?>
             <h2>Рейтинг пользователя <?= $Profile->exInfo->name ?></h2>
         <?php endif; ?>
-
-
-
         <div class="user__rating">
             <div class="user__info">
-
-
                 <div class="user__info-part1">
                     <img src="<?=$arUser['src']?>" alt="<?=$arUser['name']?>" class="user__info-logo"/>
                 </div>
@@ -150,9 +155,9 @@ $arUser = $arUser[$userId];
                     <h2 class="user__info-title"><?=$arUser['name']?></h2>
 
                     <div class="">
-
-                        <span>ОБЩИЙ РЕЙТИНГ  </span><b><?= $viData['rating']['countRate'] ?></b> ИЗ 100 БАЛЛОВ
-
+                        <span>ОБЩИЙ РЕЙТИНГ </span>
+                        <span class="page-rate_star"></span>
+                        <?=Share::getRating($viData['main_rating']['rate'],$viData['main_rating']['rate_neg'])?>
                     </div>
                     <hr class="user__rating-line"/>
 
