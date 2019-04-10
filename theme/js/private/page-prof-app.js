@@ -33,21 +33,4 @@ jQuery(function($){
 			timerHint = setTimeout(function(){ $('.ppp__rating-block p').fadeOut(300) },500);
 		}
 	});
-	//
-	$('.ppp__rating-block p').click(function(){
-		$(this).fadeOut();
-		var html = "<form data-header='Как считается рейтинг' class='text-left'>"
-		+ "<ul><li>1. Оценки за Вакансию</li>"
-		+ "<li>2. Отзывы (более свежие повышают рейтинг)</li>"
-		+ "<li>3. Время на сайте от момента регистрации</li>"
-		+ "<li>4. Количество отработанных Вакансий</li>"
-		+ "<li>5. Заполненность анкеты</li>"
-		+ "<li>6. Подтверждение данных</li>"
-		+ "<li>- наличие фото (одно и больше)</li>"
-		+ "<li>- больше одного фото</li>"
-		+ "<li>- электронная почта</li>"
-		+ "<li>- мобильный телефон - номер</li></ul>"
-		+ "</form>";
-		ModalWindow.open({ content: html, action: { active: 0 }, additionalStyle:'dark-ver' });
-	});
 });
