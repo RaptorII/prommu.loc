@@ -137,7 +137,7 @@ class Subdomain
 			if($cnt==count($arCities))
 				return ['name' => $arSub[$id]['meta']];
 
-		return ['name' => $arSub[1307]['meta']];
+		return ['name' => self::domain()->meta];
 	}
 	/*
 	*		Определяем город и при необходимости редиректимся на главной

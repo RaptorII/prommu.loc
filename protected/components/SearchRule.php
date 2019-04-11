@@ -158,7 +158,7 @@ class SearchRule extends CBaseUrlRule {
             }
 
             // age
-            if(strpos($v, 'age') === 0)
+            if(strpos($v, 'age=') === 0)
             {
                 $templateUrlParams['others']++;
                 $age = explode('-', str_replace('age=', '', $v));
@@ -470,7 +470,7 @@ class SearchRule extends CBaseUrlRule {
             }
             
             // age
-            if(strpos($v, 'age') === 0)
+            if(strpos($v, 'age=') === 0)
             {
                 $templateUrlParams['others']++;
                 $age = explode('-', str_replace('age=', '', $v));

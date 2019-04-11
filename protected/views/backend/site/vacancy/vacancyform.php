@@ -29,7 +29,7 @@ echo '<div class="col-xs-12">';
 
         echo '<div class="control-group">
               <label class="control-label">Требования</label>
-        	    <div class="controls input-append">';
+                <div class="controls input-append">';
         $text = html_entity_decode($data['vac']['requirements']);
         $text = strip_tags($text);
         echo CHtml::textArea('Vacancy[requirements]', $text, array('rows' => 6, 'cols' => 50,'class'=>'form-control'));
@@ -161,7 +161,7 @@ echo '<div class="col-xs-12">';
             . '<div class="controls input-append">';
             $text = html_entity_decode($data['vac']['meta_title']);
             $text = strip_tags($text); 
-            echo CHtml::textArea(
+            /*echo CHtml::textArea(
                 'Vacancy[meta_title]', 
                 $text, 
                 array(
@@ -169,7 +169,8 @@ echo '<div class="col-xs-12">';
                     'cols' => 40,
                     'class'=>'form-control'
                 )
-            )
+            )*/
+            echo $text
             . '</div></div>';
 
         echo '<div class="control-group">'
@@ -177,7 +178,7 @@ echo '<div class="col-xs-12">';
             . '<div class="controls input-append">';
             $text = html_entity_decode($data['vac']['meta_h1']);
             $text = strip_tags($text);     
-            echo CHtml::textArea(
+            /*echo CHtml::textArea(
                 'Vacancy[meta_h1]', 
                 $text, 
                 array(
@@ -185,7 +186,8 @@ echo '<div class="col-xs-12">';
                     'cols' => 40,
                     'class'=>'form-control'
                 )
-            )
+            )*/
+            echo $text
             . '</div></div>';
 
         echo '<div class="control-group">'
@@ -193,7 +195,7 @@ echo '<div class="col-xs-12">';
             . '<div class="controls input-append">';
             $text = html_entity_decode($data['vac']['meta_description']);
             $text = strip_tags($text);     
-            echo CHtml::textArea(
+            /*echo CHtml::textArea(
                 'Vacancy[meta_description]', 
                 $text,
                 array(
@@ -201,7 +203,8 @@ echo '<div class="col-xs-12">';
                     'cols' => 40,
                     'class'=>'form-control'
                 )
-            )
+            )*/
+            echo $text
             . '</div></div>';
 
         echo '<div class="control-group">

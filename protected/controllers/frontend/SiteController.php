@@ -1022,7 +1022,10 @@ class SiteController extends AppController
                 array('viData' => $data['data']
                     , 'pages' => $data['pages']
                     , 'count' => $data['count'] ),
-                array('pageTitle' => $title)
+                array(
+                    'pageTitle' => $title,
+                    'pageTitle' => '<h1>'.$title.'</h1>'
+                )
         );
     }
 

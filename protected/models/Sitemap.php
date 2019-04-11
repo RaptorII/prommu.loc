@@ -122,14 +122,14 @@ class Sitemap extends CActiveRecord
         }
          if( $pagesStatic[18] )
         {
-            $s1 = '/empl';
+            $s1 = '/about/empl';
             $mages['empl'] = array('loc' => Yii::app()->createAbsoluteUrl($s1), 'lastmod' => date('c', strtotime($pagesStatic[18]['mdate'])), 'priority' => 0.64, 'changefreq' => $freq->m);
             $this->dburls[] = array('name' => 'Информация для работодателей', 'link' => Yii::app()->createAbsoluteUrl($s1), 'level' => 0, 'crdate' => date("Y-m-d H:i:s"));
         }
 
         if( $pagesStatic[19] )
         {
-            $s1 = '/prom';
+            $s1 = '/about/prom';
             $mages['prom'] = array('loc' => Yii::app()->createAbsoluteUrl($s1), 'lastmod' => date('c', strtotime($pagesStatic[19]['mdate'])), 'priority' => 0.64, 'changefreq' => $freq->m);
             $this->dburls[] = array('name' => 'Информация для соискателей', 'link' => Yii::app()->createAbsoluteUrl($s1), 'level' => 0, 'crdate' => date("Y-m-d H:i:s"));
        }
