@@ -958,6 +958,7 @@ class UserProfileEmpl extends UserProfile
                                 e.crdate,
                                 e.contact,
                                 e.aboutme,
+                                e.employer_contact,
                                 u.confirmEmail,
                                 u.confirmPhone,
                                 u.email")
