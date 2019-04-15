@@ -445,11 +445,11 @@ class UserController extends AppController
     public function actionEditprofile()
     {
         Share::$UserProfile->type < 1 && $this->redirect(MainConfig::$PAGE_LOGIN); // no profile for guest
-
+        var_dump(Yii::app()->getRequest()->isPostRequest);
         // save data
         if( Yii::app()->getRequest()->isPostRequest)
         {   
-            var_dump($_POST);
+            
             $res = Share::$UserProfile->saveProfileData();
             if(!$res['err']) $this->redirect(MainConfig::$PAGE_PROFILE);
         // del photo
