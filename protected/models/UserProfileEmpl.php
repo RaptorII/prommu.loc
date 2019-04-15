@@ -592,7 +592,6 @@ class UserProfileEmpl extends UserProfile
         {
             $rq = Yii::app()->getRequest();
             
-            var_dump($rq);
             $name = filter_var($rq->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $fname = filter_var($rq->getParam('fname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $lname = filter_var($rq->getParam('lname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
