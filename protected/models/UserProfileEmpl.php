@@ -595,7 +595,7 @@ class UserProfileEmpl extends UserProfile
             $fname = filter_var($rq->getParam('fname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $lname = filter_var($rq->getParam('lname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $contact = filter_var($rq->getParam('contact'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $emplcontact = filter_var($rq->getParam('employer_contact'), FILTER_SANITIZE_NUMBER_INT);
+            $emplcontact = $rq->getParam('employer_contact');
             $email = filter_var($rq->getParam('email'), FILTER_VALIDATE_EMAIL);
             $companyType = filter_var($rq->getParam('companyType'), FILTER_SANITIZE_NUMBER_INT);
             $cityManual = filter_var($rq->getParam('cityManualMulti'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
