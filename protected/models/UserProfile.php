@@ -169,7 +169,7 @@ abstract class UserProfile extends CModel
         $filter = 'ev.id_user=:id_emp AND vs.id_promo=:id_app AND vs.status>4';
         
         $queryEmpl = Yii::app()->db->createCommand()
-                    ->select('employer_contact em')
+                    ->select('em.employer_contact')
                     ->from('employer em');
         $filter_Empl = 'em.id_user=:id_emp';
 
