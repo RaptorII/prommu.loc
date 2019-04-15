@@ -170,7 +170,7 @@ abstract class UserProfile extends CModel
         
         $queryEmpl = Yii::app()->db->createCommand()
                     ->select('employer_contact em')
-                    ->from('employer vs');
+                    ->from('employer em');
         $filter_Empl = 'em.id_user=:id_emp';
 
         if($type==='applicant' && Share::isEmployer())
