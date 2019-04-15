@@ -99,8 +99,8 @@
                   <input type='text' name='contact' value="<?=$viData['info']['contact']?>" class="epe__input epe__input-contact epe__required" autocomplete="off">
                 </label>
                 
-                 <input type='checkbox' name='employer_contact' value="1" <?=$viData['info']['employer_contact'] ? 'checked' : '' ?> class="epe__hidden" id="employer_contact">
-                <label class="epe__checkbox" for="employer_contact">Отображать контактные данные</label>
+                 <input type='checkbox' name='employerContact' value="1" <?=$viData['info']['employer_contact'] ? 'checked' : '' ?> class="epe__hidden" id="employerContact">
+                <label class="epe__checkbox" for="employerContact">Отображать контактные данные</label>
                 
                 <label class="epe__label">
                   <span class="epe__label-name">ИНН:</span>
