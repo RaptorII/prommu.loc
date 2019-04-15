@@ -583,7 +583,7 @@ class UserProfileEmpl extends UserProfile
         $id = $this->exInfo->id;
         $res = $this->checkFieldsProfile();
 
-        
+    
         if($res['err'])// неправильно заполнены поля
         {
             return $res;   
@@ -591,6 +591,8 @@ class UserProfileEmpl extends UserProfile
         else    // *** Сохраняем данные пользователя ***
         {
             $rq = Yii::app()->getRequest();
+            
+            var_dump($rq);
             $name = filter_var($rq->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $fname = filter_var($rq->getParam('fname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $lname = filter_var($rq->getParam('lname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
