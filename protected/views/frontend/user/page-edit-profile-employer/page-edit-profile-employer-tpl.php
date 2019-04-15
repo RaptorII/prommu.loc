@@ -1,7 +1,6 @@
 <?
   Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css');
   Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
-  var_dump($viData['info']);
 ?>
 <meta name="robots" content="noindex">
 
