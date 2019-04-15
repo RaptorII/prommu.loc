@@ -195,7 +195,12 @@ abstract class UserProfile extends CModel
                 
             $flag = $query->where($filter,$params)->queryScalar();
             $flag_Contact = $queryEmpl->where($filter_Empl,$params_Empl)->queryScalar();
-            return ((int)$flag+(int)$flag_Contact) > 1;
+            
+            if($flag > 0 && $flag_Contact > 0){
+                $res = 1;
+            } else $res = 0;
+            
+            return $res;
         }
         return false;   
     }
