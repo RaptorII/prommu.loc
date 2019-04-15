@@ -167,6 +167,11 @@ abstract class UserProfile extends CModel
                     ->from('vacation_stat vs')
                     ->leftjoin('empl_vacations ev', 'ev.id=vs.id_vac');
         $filter = 'ev.id_user=:id_emp AND vs.id_promo=:id_app AND vs.status>4';
+        
+        $queryEmpl = Yii::app()->db->createCommand()
+                    ->select('employer_contact em')
+                    ->from('employer vs');
+        $filter_Empl = 'em.id_user=:id_emp';
 
         if($type==='applicant' && Share::isEmployer())
         {
@@ -182,7 +187,15 @@ abstract class UserProfile extends CModel
                     ':id_app' => Share::$UserProfile->exInfo->id_resume,
                     ':id_emp' => $id
                 );
-            return $query->where($filter,$params)->queryScalar() > 0;
+            
+            $params_Empl = array(
+                    ':id_emp' => $id
+                );
+                
+                
+            $flag = $query->where($filter,$params)->queryScalar();
+            $flag_Contact = $queryEmpl->where($filter_Empl,$params)->queryScalar();
+            return ((int)$flag+(int)$flag_Contact) > 1;
         }
         return false;   
     }
