@@ -441,48 +441,48 @@ class SiteController extends AppController
         if(isset($id)) // страница конкретной вакансии
         {
             $section = $rq->getParam('section');
-            $info = $rq->getParam('info');
             $view = $this->ViewModel->pageVacancy;
             $model = new Vacancy;
-            $data = $model->getVacancyView($id);
-            if($data['error'] == 1)
-                throw new CHttpException(404, 'Error'); 
 
             $isOwner = Vacancy::hasAccess($id,$id_user);
-            if($isOwner)
-            {
-                Yii::app()->session['editVacId'] = $id; 
-            }
+            if($isOwner){ Yii::app()->session['editVacId'] = $id; }
 
-            if($section=='invited') // секции конкретной вакансии
+            if(in_array(
+                $section,
+                [
+                    MainConfig::$VACANCY_APPROVED,
+                    MainConfig::$VACANCY_INVITED,
+                    MainConfig::$VACANCY_RESPONDED,
+                    MainConfig::$VACANCY_DEFERRED,
+                    MainConfig::$VACANCY_REJECTED,
+                    MainConfig::$VACANCY_REFUSED
+                ]
+                )) // секции конкретной вакансии
             {
                 Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
                 if($isOwner)
                 {
-                    $data['invited'] = $model->getVacancyInvited($id);
-                    $view = 'vacancy/invited';
+                    $data = $model->getInfo($id, false);
+                    $view = 'vacancy/index';
                 }
                 else
                     throw new CHttpException(404, 'Error');
             }
-            if(!empty($info))
+            else
             {
-                Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
-                if($isOwner)
-                    $view = MainConfig::$VIEWS_VAC_TAB_RESP;
-                else
-                    throw new CHttpException(404, 'Error');
-            }
-            //
-            // индексируем только если владелец вакансии с этого региона
-            $res = Yii::app()->db->createCommand()
-                ->select('id_city')
-                ->from('user_city')
-                ->where('id_user=:id',array(':id'=>$data['vac']['idus']))
-                ->queryRow();
+                $data = $model->getVacancyView($id);
+                if($data['error'] == 1)
+                    throw new CHttpException(404, 'Error'); 
+                // индексируем только если владелец вакансии с этого региона
+                $res = Yii::app()->db->createCommand()
+                    ->select('id_city')
+                    ->from('user_city')
+                    ->where('id_user=:id',array(':id'=>$data['vac']['idus']))
+                    ->queryRow();
 
-            if($res['id_city']>0 && !in_array($res['id_city'], Subdomain::getCacheData()->arCitiesIdes))
-                Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
+                if($res['id_city']>0 && !in_array($res['id_city'], Subdomain::getCacheData()->arCitiesIdes))
+                    Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
+            }
             //
             //
             $Termostat = new Termostat();

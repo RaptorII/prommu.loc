@@ -694,6 +694,10 @@ public function rules()
             // устанавливаем description
             if(empty($data['vac']['meta_description']))
                 $data['vac']['meta_description'] = $arSeo['meta_description'];
+            //
+            // информация по счетчикам
+            //
+            $data['info'] = $this->getInfo($inIdVac);
         }
         else
         {
@@ -3353,22 +3357,22 @@ WHERE id_vac = {$inVacId}";
                     ->queryScalar();
     }
     /**
-     * @param $id_vacancy - int
-     * собираем данные для страницы Приглашенные
+     * @param $id_vacancy - integer
+     * @param $cnt_only - bool
      */
-    public static function getVacancyInvited($id_vacancy)
+    public function getInfo($id_vacancy,$cnt_only=true)
     {
-        $model = new ServiceCloud;
-        $arRes = $model->getVacData($id_vacancy);
+        $arRes = array();
+        $responses = new ResponsesEmpl();
+        $arRes['cnt'] = $responses->getVacResponsesCnt($id_vacancy);
 
-        if(!count($arRes['items']))
-            return $arRes;
+        if($cnt_only)
+            return $arRes['cnt'];
 
-        $arIdUser = array();
-        foreach ($arRes['items'] as $v)
-            !in_array($v['user'],$arIdUser) && $arIdUser[] = $v['user'];
-
-        $arRes['users'] = Share::getUsers($arIdUser);
+        $arRes['pages'] = new CPagination($arRes['cnt']['cnt']);
+        $arRes['pages']->pageSize = $responses->limit;
+        $arRes['pages']->applyLimit($responses);
+        $arRes = array_merge($arRes, $responses->getVacResponses($id_vacancy));
 
         return $arRes;
     }

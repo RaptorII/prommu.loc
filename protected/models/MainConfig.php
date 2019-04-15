@@ -199,11 +199,12 @@ class MainConfig
     public static $LINK_TO_PLAYMARKET = 'https://play.google.com/store/apps/details?id=com.prommu.mobile';
     public static $LINK_TO_APP_STORE = '/';
     /* VACANTION VIEW FOR TABS */
-    public static $VIEWS_VAC_TAB_RESP = 'vac-info/page-vacancy-resp';
-    public static $VIEWS_VAC_TAB_REFUSE = 'vac-info/page-vacancy-refuse';
-    public static $VIEWS_VAC_TAB_ASIDE = 'vac-info/page-vacancy-aside';
-    public static $VIEWS_VAC_TAB_DIALOG = 'vac-info/page-vacancy-dialog';
-
+    public static $VACANCY_APPROVED = 'approved'; // Утвержденные
+    public static $VACANCY_INVITED = 'invited'; // Приглашенные
+    public static $VACANCY_RESPONDED = 'responded'; // Откликнувшиеся
+    public static $VACANCY_DEFERRED = 'deferred'; // Отложенные
+    public static $VACANCY_REJECTED = 'rejected'; // Отклоненные
+    public static $VACANCY_REFUSED = 'refused'; // Отказавшиеся
     /* ANALYTICS */
     public static $VIEWS_ANALYTICS = 'page-analytics-view-tpl';
     public static $PAGE_ANALYTICS = '/user/analytics';

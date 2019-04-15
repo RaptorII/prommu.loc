@@ -80,7 +80,7 @@
             <div class='evl-vacancies__item'>
               <a class='evl-vacancies__item-name' href='<?= MainConfig::$PAGE_VACANCY . DS . $val['id'] ?>'><?= $val['title'] ?></a>
               <div class="evl-vacancies__item-info">
-                <span class="evl-vacancies__item-resp">Отклики: <a href="/vacancy/<?=$val['id']?>?info=resp" class="js-g-hashint" title="Отклики детально"><?=$val['isresp'][1]?></a></span>
+                <span class="evl-vacancies__item-resp">Отклики: <a href="<?=MainConfig::$PAGE_VACANCY . DS . $val['id'] . DS . MainConfig::$VACANCY_RESPONDED?>" class="js-g-hashint" title="Отклики детально"><?=$val['isresp'][1]?></a></span>
                 <span class="evl-vacancies__item-view">Просмотры: <a href="/user/analytics" class="js-g-hashint" title="Просмотры детально"><?=$viData['analytic'][$val['id']]?></a></span>
               </div>
               <?php if($val['ismoder']==100): // только для промодерированных ?>

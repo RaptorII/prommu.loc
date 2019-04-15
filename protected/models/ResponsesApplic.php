@@ -731,7 +731,7 @@ class ResponsesApplic extends Responses
             // устанавливаем статус
             $status = ($vacData['status']==self::$STATUS_BEFORE_RATING 
                 ? self::$STATUS_APPLICANT_RATED
-                : self::$STATUS_FULL_RATUING); // полный статус только после того как оценит работодатель
+                : self::$STATUS_FULL_RATING); // полный статус только после того как оценит работодатель
             $db->createCommand()->update(
                 'vacation_stat', 
                 ['status'=>$status, 'mdate'=>date('Y-m-d H:i:s')],
@@ -1039,12 +1039,22 @@ class ResponsesApplic extends Responses
         {
             switch($status)
             {
-                case 3: $result = 'Работодатель отказал'; break;
-                case 5: $result = 'Работодатель утвердил'; break;
-                case 6: $result = 'Необходима оценка'; break;
-                case 7: $result = 'Работодатель Вас оценил'; break;
-                case 8:
-                case 9: $result = 'Проект завершен'; break;
+                case self::$STATUS_REJECT: 
+                    $result = 'Работодатель отказал'; 
+                    break;
+                case self::$STATUS_APPLICANT_ACCEPT: 
+                    $result = 'Работодатель утвердил'; 
+                    break;
+                case self::$STATUS_BEFORE_RATING: 
+                    $result = 'Необходима оценка'; 
+                    break;
+                case self::$STATUS_EMPLOYER_RATED: 
+                    $result = 'Работодатель Вас оценил'; 
+                    break;
+                case self::$STATUS_APPLICANT_RATED:
+                case self::$STATUS_FULL_RATING: 
+                    $result = 'Проект завершен'; 
+                    break;
                 default: $result = 'Ожидение ответа'; break;
             }
         }
@@ -1052,14 +1062,28 @@ class ResponsesApplic extends Responses
         {
             switch($status)
             {
-                case 1: $result = 'Приглашение просмотрено'; break;
-                case 3: $result = 'Приглашение отклонено'; break;
-                case 4: $result = 'Приглашение от работодателя'; break;
-                case 5: $result = 'Приглашение принято'; break;
-                case 6: $result = 'Необходима оценка'; break;
-                case 7: $result = 'Работодатель Вас оценил'; break;
-                case 8:
-                case 9: $result = 'Проект завершен'; break;
+                case self::$STATUS_VIEW: 
+                    $result = 'Приглашение просмотрено'; 
+                    break;
+                case self::$STATUS_REJECT: 
+                    $result = 'Приглашение отклонено'; 
+                    break;
+                case self::$STATUS_EMPLOYER_ACCEPT: 
+                    $result = 'Приглашение от работодателя'; 
+                    break;
+                case self::$STATUS_APPLICANT_ACCEPT: 
+                    $result = 'Приглашение принято'; 
+                    break;
+                case self::$STATUS_BEFORE_RATING:
+                    $result = 'Необходима оценка'; 
+                    break;
+                case self::$STATUS_EMPLOYER_RATED: 
+                    $result = 'Работодатель Вас оценил'; 
+                    break;
+                case self::$STATUS_APPLICANT_RATED:
+                case self::$STATUS_FULL_RATING: 
+                    $result = 'Проект завершен'; 
+                    break;
                 default: $result = 'Новый проект'; break;
             }
         }

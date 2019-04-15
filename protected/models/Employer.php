@@ -76,7 +76,7 @@ class Employer extends ARModel
                     $result['vacancyInvite'][$res[$i]['id']]['cnt']==0;
                 $result['vacancyInvite'][$res[$i]['id']]['cnt']++;
                 $result['vacancyInvite'][$res[$i]['id']]['link'] = 
-                    MainConfig::$PAGE_VACANCY . DS . $res[$i]['id'] . '?info=resp';
+                    MainConfig::$PAGE_VACANCY . DS . $res[$i]['id'] . DS . MainConfig::$VACANCY_RESPONDED;
                 $countInvite++;
                 $result['cnt']++;
             }
@@ -93,7 +93,7 @@ class Employer extends ARModel
                     $result['vacancyPlus'][$res[$i]['id']]['cnt']==0;
                 $result['vacancyPlus'][$res[$i]['id']]['cnt']++;
                 $result['vacancyPlus'][$res[$i]['id']]['link'] = 
-                    MainConfig::$PAGE_VACANCY . DS . $res[$i]['id'] . '?info=approv';
+                    MainConfig::$PAGE_VACANCY . DS . $res[$i]['id'] . DS . MainConfig::$VACANCY_APPROVED;
                 $countPlus++;
                 $result['cnt']++;
             }
@@ -104,7 +104,7 @@ class Employer extends ARModel
                     $result['vacancyMinus'][$res[$i]['id']]['cnt']==0;
                 $result['vacancyMinus'][$res[$i]['id']]['cnt']++;
                 $result['vacancyMinus'][$res[$i]['id']]['link'] = 
-                    MainConfig::$PAGE_VACANCY . DS . $res[$i]['id'] . '?info=reject';
+                    MainConfig::$PAGE_VACANCY . DS . $res[$i]['id'] . DS . MainConfig::$VACANCY_REFUSED;
                 $countMinus++;
                 $result['cnt']++;
             }

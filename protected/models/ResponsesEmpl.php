@@ -421,7 +421,7 @@ class ResponsesEmpl extends Responses
                 elseif( $val['status']==3 && $val['isresponse']==2 ) $data[5] += $val['cou'];
                 elseif( $val['status']==3 ) $data[3] += $val['cou'];
                 elseif( $val['status']==5 ) $data[8] += $val['cou'];
-                elseif( in_array($val['status'], [0,4,6,7]) ) $data[4] += $val['cou'];
+                elseif( in_array($val['status'], [0,4,6,7,8,9]) ) $data[4] += $val['cou'];
             } // end foreach
 
             return array('counts' => $data);
@@ -622,7 +622,7 @@ class ResponsesEmpl extends Responses
             // устанавливаем статус
             $status = ($vacData['status']==self::$STATUS_BEFORE_RATING 
                 ? self::$STATUS_EMPLOYER_RATED
-                : self::$STATUS_FULL_RATUING); // полный статус только после того как оценит работодатель
+                : self::$STATUS_FULL_RATING); // полный статус только после того как оценит работодатель
             $db->createCommand()->update(
                 'vacation_stat', 
                 ['status'=>$status, 'mdate'=>date('Y-m-d H:i:s')],
@@ -782,38 +782,271 @@ class ResponsesEmpl extends Responses
     public function getStatus($isResponse, $status)
     {
         $result = '';
-       /* if($isResponse==1) // отклик
+        if($isResponse==1) // отклик
         {
             switch($status)
             {
-                case 3: $result = 'Работодатель отказал'; break;
-                case 5: $result = 'Работодатель утвердил'; break;
-                case 6: $result = 'Необходима оценка'; break;
-                case 7: $result = 'Работодатель Вас оценил'; break;
-                case 8:
-                case 9: $result = 'Проект завершен'; break;
-                default: $result = 'Ожидение ответа'; break;
+                case self::$STATUS_NEW: 
+                    $result = 'Новая'; 
+                    break;
+                case self::$STATUS_VIEW: 
+                    $result = 'Отложенная'; 
+                    break;
+                case self::$STATUS_REJECT: 
+                    $result = 'Отклонена'; 
+                    break;
+                case self::$STATUS_APPLICANT_ACCEPT: 
+                    $result = 'Заявка подтверждена'; 
+                    break;
+                case self::$STATUS_BEFORE_RATING: 
+                    $result = 'Необходима оценка'; 
+                    break;
+                case self::$STATUS_APPLICANT_RATED: 
+                    $result = 'Соискатель Вас оценил'; 
+                    break;
+                case self::$STATUS_EMPLOYER_RATED:
+                case self::$STATUS_FULL_RATING: 
+                    $result = 'Проект завершен'; 
+                    break;
             }
         }
         elseif($isResponse==2) // приглашение
         {
             switch($status)
             {
-                case 1: $result = 'Приглашение просмотрено'; break;
-                case 3: $result = 'Приглашение отклонено'; break;
-                case 4: $result = 'Приглашение от работодателя'; break;
-                case 5: $result = 'Приглашение принято'; break;
-                case 6: $result = 'Необходима оценка'; break;
-                case 7: $result = 'Работодатель Вас оценил'; break;
-                case 8:
-                case 9: $result = 'Проект завершен'; break;
-                default: $result = 'Новый проект'; break;
+                case self::$STATUS_REJECT: 
+                    $result = 'Отказавшийся'; 
+                    break;
+                case self::$STATUS_EMPLOYER_ACCEPT: 
+                    $result = 'Приглашение отправлено'; 
+                    break;
+                case self::$STATUS_APPLICANT_ACCEPT: 
+                    $result = 'Приглашение принято'; 
+                    break;
+                case self::$STATUS_BEFORE_RATING: 
+                    $result = 'Необходима оценка'; 
+                    break;
+                case self::$STATUS_APPLICANT_RATED: 
+                    $result = 'Соискатель Вас оценил'; 
+                    break;
+                case self::$STATUS_EMPLOYER_RATED:
+                case self::$STATUS_FULL_RATING: 
+                    $result = 'Проект завершен'; 
+                    break;
             }
-        }*/
+        }
+
         return $result;
     }
     /**
      * 
      */
-    
+    public function getVacResponsesCnt($id_vacancy)
+    {
+        $arRes = [
+                MainConfig::$VACANCY_APPROVED => 0, // Утвержденные
+                MainConfig::$VACANCY_INVITED => 0, // Приглашенные
+                MainConfig::$VACANCY_RESPONDED => 0, // Откликнувшиеся
+                MainConfig::$VACANCY_DEFERRED => 0, // Отложенные
+                MainConfig::$VACANCY_REJECTED => 0, // Отклоненные
+                MainConfig::$VACANCY_REFUSED => 0 // Отказавшиеся
+            ];
+        // общий чат
+        $model = new VacDiscuss();
+        $arRes['discuss'] = $model->getDiscussCount($id_vacancy);
+        // приглашения (включая приглашения по услугам)
+        $model = new ServiceCloud();
+        $arRes[MainConfig::$VACANCY_INVITED] = $model->getVacDataCnt($id_vacancy);
+        //
+        $query = Yii::app()->db->createCommand()
+                    ->select("status, isresponse")
+                    ->from('vacation_stat')
+                    ->where('id_vac=:id',[':id'=>$id_vacancy])
+                    ->queryAll();
+
+        if(!count($query))
+            return $arRes;
+
+        foreach ($query as $v)
+        {
+            // новые(отложенные)
+            if($v['status']==self::$STATUS_VIEW)
+                $arRes[MainConfig::$VACANCY_DEFERRED]++;
+            // Отклонение, отказ
+            if($v['status']==self::$STATUS_REJECT)
+            {
+                $v['isresponse']==1 && $arRes[MainConfig::$VACANCY_REJECTED]++;
+                $v['isresponse']==2 && $arRes[MainConfig::$VACANCY_REFUSED]++;
+            }
+            // утвержденные
+            if($v['status'] > self::$STATUS_EMPLOYER_ACCEPT)
+                $arRes[MainConfig::$VACANCY_APPROVED]++;
+            // откликнувшиеся
+            if(in_array($v['status'],[self::$STATUS_NEW,self::$STATUS_EMPLOYER_ACCEPT]))
+                $arRes[MainConfig::$VACANCY_RESPONDED]++;
+            // приглашения
+            $v['isresponse']==2 && $arRes[MainConfig::$VACANCY_INVITED]++;
+        }
+        $arRes['cnt'] = count($query);
+
+        return $arRes;
+    }
+    /**
+     * 
+     */
+    public function getVacResponses($id_vacancy)
+    {
+        $arRes = array();
+        $db = Yii::app()->db;
+        $section = Yii::app()->getRequest()->getParam('section');
+        $condition = 'vs.id_vac=:id AND ';
+        $filter = [':id'=>$id_vacancy];
+
+        $arRes['vacancy'] = $db->createCommand()
+                            ->select("id,
+                                title,
+                                status,
+                                DATE_FORMAT(crdate, '%d.%m.%Y') bdate")
+                            ->from('empl_vacations')
+                            ->where('id=:id', $filter)
+                            ->queryRow();
+
+        if($section==MainConfig::$VACANCY_DEFERRED) // Новые(отложенные)
+        {
+            $condition .= 'vs.status=:status';
+            $filter[':status'] = self::$STATUS_VIEW;
+        }
+        if($section==MainConfig::$VACANCY_REJECTED) // Отклонение
+        {
+            $condition .= 'vs.isresponse=:response AND vs.status=:status';
+            $filter[':response'] = 1;
+            $filter[':status'] = self::$STATUS_REJECT;
+        }
+        if($section==MainConfig::$VACANCY_REFUSED) // Отказ
+        {
+            $condition .= 'vs.isresponse=:response AND vs.status=:status';
+            $filter[':response'] = 2;
+            $filter[':status'] = self::$STATUS_REJECT;
+        }
+        if($section==MainConfig::$VACANCY_APPROVED) // Утвержденные
+        {
+            $condition .= 'vs.status>:status';
+            $filter[':status'] = self::$STATUS_EMPLOYER_ACCEPT;
+        }
+        if($section==MainConfig::$VACANCY_RESPONDED) // Откликнувшиеся
+        {
+            $condition .= '(vs.status=:status1 OR vs.status=:status2)';
+            $filter[':status1'] = self::$STATUS_NEW;
+            $filter[':status2'] = self::$STATUS_EMPLOYER_ACCEPT;
+        }
+        if($section!=MainConfig::$VACANCY_INVITED)
+        {
+            $arRes['items'] = $db->createCommand()
+                                ->select("r.id_user user,
+                                    vs.id sid,
+                                    vs.status, 
+                                    vs.isresponse,
+                                    DATE_FORMAT(vs.date, '%d.%m.%Y') rdate")
+                                ->from('vacation_stat vs')
+                                ->join('resume r','r.id=vs.id_promo')
+                                ->where($condition, $filter)
+                                ->order('vs.id desc')
+                                ->limit($this->limit)
+                                ->offset($this->offset)
+                                ->queryAll();
+        }
+        else // Приглашения
+        {
+            $query = $db->createCommand()
+                                ->select("sc.id sc_id,
+                                    sc.type,
+                                    sc.name vacancy,
+                                    sc.status sc_status,
+                                    sc.user sc_user,
+                                    DATE_FORMAT(sc.date,'%H:%i %d.%m.%Y') sc_date,
+                                    UNIX_TIMESTAMP(sc.date) usc_date,
+                                    r.id_user vs_user,
+                                    vs.id vs_id,
+                                    vs.status vs_status, 
+                                    vs.isresponse,
+                                    UNIX_TIMESTAMP(vs.date) uvs_date,
+                                    DATE_FORMAT(vs.date, '%H:%i %d.%m.%Y') vs_date")
+                                ->from('empl_vacations ev')
+                                ->leftjoin('service_cloud sc','sc.name=ev.id')
+                                ->leftjoin('vacation_stat vs','vs.id_vac=ev.id')
+                                ->leftjoin('resume r','r.id=vs.id_promo')
+                                ->where(
+                                    "ev.id=:id AND (sc.type IN('email','push','sms') or vs.isresponse=2)",
+                                    [':id'=>$id_vacancy]
+                                )
+                                ->order('vs.date asc, sc.date asc')
+                                ->limit($this->limit)
+                                ->offset($this->offset)
+                                ->queryAll();
+
+            if (count($query))
+            {
+                $arSC = $arVS = array();
+                foreach ($query as $v)
+                {
+                    $arT = array();
+                    if(
+                        !in_array($v['sc_id'], $arSC) 
+                        && 
+                        in_array($v['type'],['email','push','sms'])
+                    )
+                    {
+                        $arUsers = explode(',',$v['sc_user']);
+                        foreach ($arUsers as $id_user)
+                        {
+                            $arT[] = array(
+                                'user' => $id_user,
+                                'status' => ($v['sc_status'] ? 'Отправлено' : 'Ожидание'),
+                                'type' => $v['type'],
+                                'date' => $v['sc_date']
+                            );
+                        }
+                        $arSC[] = $v['sc_id'];
+                    }
+                    //
+                    if(!in_array($v['vs_id'], $arVS)  &&  $v['isresponse']==2)
+                    {
+                        $arT[] = array(
+                            'user' => $v['vs_user'],
+                            'status' => $this->getStatus($v['isresponse'], $v['vs_status']),
+                            'type' => 'site',
+                            'date' => $v['vs_date']
+                        );
+                        $arVS[] = $v['vs_id'];
+                    }
+                    //
+                    count($arT)==1 && $arRes['items'][] = reset($arT);
+                    //
+                    if(count($arT)>1)
+                    {
+                        if($v['usc_date'] > $v['uvs_date'])
+                        {
+                            for($i=0,$n=count($arT); $i<$n; $i++)
+                                $arRes['items'][] = $arT[$i];
+                        }
+                        else
+                        {
+                            for($i=count($arT)-1; $i>=0; $i--)
+                                $arRes['items'][] = $arT[$i];                   
+                        }
+                    }
+                }
+            }
+        }
+
+        if(count($arRes['items']))
+        {
+            $arId = array();
+            foreach ($arRes['items'] as $v)
+                $arId[] = $v['user'];
+            $arRes['users'] = Share::getUsers($arId);
+        }
+
+        return $arRes;
+    }
 }

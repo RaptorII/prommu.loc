@@ -138,22 +138,30 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                         </div>
                     </div>
                     <div class='col-xs-12 col-sm-4 col-lg-3'>
-                        <img src="<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . (!Share::$UserProfile->exInfo->logo ? 'logo.png' : (Share::$UserProfile->exInfo->logo) . '400.jpg') ?>"
+                        <img src="<?=Share::getPhoto(3,Share::$UserProfile->exInfo->logo)?>"
                              class="erv__logo js-g-hashint" title="<?= $name ?>"/>
                         <div class="clearfix"></div>
                         <span class="erv__tab-link link5">Просмотров (<?= $viData['views'] ?>)</span><br>
-                        <a href="?info=resp" class="erv__tab-link link1">Откликнувшиеся
-                            (<?= $viData['vacResponses']['counts'][4] ?: 0 ?>)</a><br>
-                        <? $cntInvited = (new ServiceCloud())->getVacDataCnt($viData['vac']['id']); ?>
-							<a href="<?=MainConfig::$PAGE_VACANCY . DS .  $viData['vac']['id'] . DS . 'invited'?>" class="erv__tab-link link8">Приглашенные(<?=$cntInvited?>)</a><br>
-                        <a href="?info=approv" class="erv__tab-link link7">Утвержденные
-                            (<?= $viData['vacResponses']['counts'][8] ?: 0 ?>)</a><br>
-                        <a href="?info=aside" class="erv__tab-link link3">Отложенные
-                            (<?= $viData['vacResponses']['counts'][1] ?>)</a><br>
-                        <a href="?info=reject" class="erv__tab-link link2">Отклоненные
-                            (<?= $viData['vacResponses']['counts'][3] ?>)</a><br>
-                        <a href="?info=refuse" class="erv__tab-link link6">Отказавшиеся
-                            (<?= $viData['vacResponses']['counts'][5] ?>)</a><br>
+                        <? $linkVac = MainConfig::$PAGE_VACANCY . DS . $viData['vac']['id'] . DS; ?>
+                        
+                        <a href="<?=$linkVac . MainConfig::$VACANCY_RESPONDED?>" class="erv__tab-link link1">Откликнувшиеся
+                            (<?=$viData['info'][MainConfig::$VACANCY_INVITED]?>)</a><br>
+
+						<a href="<?=$linkVac . MainConfig::$VACANCY_INVITED?>" class="erv__tab-link link8">Приглашенные
+                            (<?=$viData['info'][MainConfig::$VACANCY_INVITED]?>)</a><br>
+
+                        <a href="<?=$linkVac . MainConfig::$VACANCY_APPROVED?>" class="erv__tab-link link7">Утвержденные
+                            (<?=$viData['info'][MainConfig::$VACANCY_APPROVED]?>)</a><br>
+
+                        <a href="<?=$linkVac . MainConfig::$VACANCY_DEFERRED?>" class="erv__tab-link link3">Отложенные
+                            (<?=$viData['info'][MainConfig::$VACANCY_DEFERRED]?>)</a><br>
+
+                        <a href="<?=$linkVac . MainConfig::$VACANCY_REJECTED?>" class="erv__tab-link link2">Отклоненные
+                            (<?=$viData['info'][MainConfig::$VACANCY_REJECTED]?>)</a><br>
+
+                        <a href="<?=$linkVac . MainConfig::$VACANCY_REFUSED?>" class="erv__tab-link link6">Отказавшиеся
+                            (<?=$viData['info'][MainConfig::$VACANCY_REFUSED]?>)</a><br>
+
                         <? if (count($viData['users_chat'])): ?>
                             <a href="<?= MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $viData['vac']['id'] ?>"
                                class="erv__tab-link link4">Общий чат (<?= $viData['vacResponses']['countsDiscuss'] ?>

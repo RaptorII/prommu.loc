@@ -18,14 +18,25 @@ class ServiceCloud
 		if(!$id_vacancy)
 			return false;
 
-		return Yii::app()->db->createCommand()
-							->select("COUNT(id)")
+		$query = Yii::app()->db->createCommand()
+							->select("user")
 							->from('service_cloud')
 							->where(
 								"name=:id AND type IN('email','push','sms')",
 								[':id'=>$id_vacancy]
 							)
-							->queryScalar();
+							->queryAll();
+
+		if(count($query))
+		{
+			$cnt = 0;
+			foreach ($query as $v)
+				$cnt += count(explode(',', $v['user']));
+
+			return $cnt;
+		}
+		else
+			return 0;
 	}
 	/**
 	* @param $id_vacancy - int
