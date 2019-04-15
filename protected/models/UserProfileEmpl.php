@@ -712,8 +712,8 @@ class UserProfileEmpl extends UserProfile
                     'mdate' => date('Y-m-d H:i:s'),
                 );
                 
-                var_dump($fields);
-            
+                
+                file_put_contents("тест.txt", date('d.m.Y H:i')."\t".var_export($fields,1)."\n", FILE_APPEND | LOCK_EX);
                 $res = Yii::app()->db->createCommand()
                     ->update('employer', $fields, 'id_user=:id_user', array(':id_user' => $id));
                 // save user
