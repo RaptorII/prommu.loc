@@ -711,6 +711,8 @@ class UserProfileEmpl extends UserProfile
                     'ismoder' => 0,
                     'mdate' => date('Y-m-d H:i:s'),
                 );
+                
+                var_dump($fields);
             
                 $res = Yii::app()->db->createCommand()
                     ->update('employer', $fields, 'id_user=:id_user', array(':id_user' => $id));
