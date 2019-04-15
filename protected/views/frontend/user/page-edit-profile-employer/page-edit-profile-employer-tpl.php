@@ -98,7 +98,7 @@
                 </label>
                 
                  <input type='checkbox' name='employer_contact' value="1" <?=$viData['info']['contact'] ? 'checked' : '' ?> class="epe__hidden" id="subscribtion">
-                <label class="epe__checkbox" for="subscribtion">Отображать контакнтные данные</label>
+                <label class="epe__checkbox" for="subscribtion">Отображать контактные данные</label>
                 
                 <label class="epe__label">
                   <span class="epe__label-name">ИНН:</span>
