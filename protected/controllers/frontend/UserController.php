@@ -448,7 +448,8 @@ class UserController extends AppController
 
         // save data
         if( Yii::app()->getRequest()->isPostRequest)
-        {
+        {   
+            var_dump($_POST);
             $res = Share::$UserProfile->saveProfileData();
             if(!$res['err']) $this->redirect(MainConfig::$PAGE_PROFILE);
         // del photo
