@@ -3642,7 +3642,9 @@ public function vac(){
                 $Profile = (new ProfileFactory())->makeProfile(['id' => $idus]);
                 $this->Profile = $Profile;
             } // endif
-
+            
+            
+            var_dump($Profile);
             foreach ($dataTypes as $key => $val)
             {
                 switch( $val )
