@@ -3643,6 +3643,7 @@ public function vac(){
                 $this->Profile = $Profile;
             } // endif
             
+            var_dump($Profile);
             if(!$Profile->error){
             foreach ($dataTypes as $key => $val)
             {
@@ -3733,7 +3734,7 @@ public function vac(){
         // ПРоверка домена на актуальность, получение всех данных авторизации
         $data = (new UserTokens())->getUserTokens(['token' => $accessToken]);
         unset($data['tokens']['uid']);
-
+        var_dump($data);
         $idus = $inProps['idus'] ?: $data['tokens']['id_user'];
 
         // получаем объект профиля
