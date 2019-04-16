@@ -3692,7 +3692,8 @@ public function vac(){
 
             $data = ['error' => $error, 'message' => $message];
         } // endtry
-
+    
+        var_dump($data);
         return $data;
     }
 
