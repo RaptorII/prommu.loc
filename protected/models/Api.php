@@ -3683,7 +3683,7 @@ public function vac(){
                 }
             } // end foreach
         }
-        else $data = $Profile;
+        else $data = ['error' => '-101', 'message' => 'Невозможно получить данные пользователя'];
 
         } catch (Exception $e)
         {
