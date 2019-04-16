@@ -1535,6 +1535,15 @@ class Auth
                         ->insert('analytic', $analytData);
                         
         if($inData['type'] == 2) {
+            
+            $res = Yii::app()->db->createCommand()
+                        ->insert('resume', array('id_user' => $idUs,
+                                'firstname' => $inData['inputData']['name'],
+                                'lastname' => $inData['inputData']['lname'],
+                                'date_public' => date('Y-m-d H:i:s'),
+                                'mdate' => date('Y-m-d H:i:s'),
+                            ));
+                            
             $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=2&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin."&sex=".$sex."&smart=".$smart."&ip=".$ip."&client=".$client."&pm=".$pm;
             $message = '<p style="font-size:16px">Наш портал <b>Prommu.com</b> позволяет найти работу в России и странах СНГ совершенно бесплатно.</p>'
             .'<br/>'
@@ -1575,6 +1584,15 @@ class Auth
             .'</div>';
             Share::sendmail($inData['inputData']['email'], "Prommu.com. Подтверждение регистрации на портале поиска временной работы!", $message);
         } elseif($inData['type'] == 3 && empty($robot)){
+            
+            $res = Yii::app()->db->createCommand()
+                        ->insert('employer', array('id_user' => $idUs,
+                                'name' => $inData['inputData']['name'],
+                                'crdate' => date('Y-m-d H:i:s'),
+                                'type' => 102 // устанавливаем по умолчанию "Прямой работодатель"
+                            ));
+
+
             $link = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=3&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin."&ip=".$ip."&client=".$client."&pm=".$pm;
             $message = '<p style="font-size:16px;">Наш портал <b>Prommu.com</b> позволяет найти квалифицированный персонал в России и странах СНГ совершенно бесплатно.</p>'
             .'<br/>'
