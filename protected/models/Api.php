@@ -3643,8 +3643,7 @@ public function vac(){
                 $this->Profile = $Profile;
             } // endif
             
-            
-            var_dump($Profile);
+            if(!$Profile->error){
             foreach ($dataTypes as $key => $val)
             {
                 switch( $val )
@@ -3683,6 +3682,8 @@ public function vac(){
                         break;
                 }
             } // end foreach
+        }
+        else $data = $Profile;
 
         } catch (Exception $e)
         {
