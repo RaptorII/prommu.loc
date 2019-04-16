@@ -32,6 +32,7 @@ class Api
                 case 'faq' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getFaq(); break;
                 case 'auth' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->authUsers(); break;
                 case 'feedback' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->feedback(); break;
+                case 'user_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getUserData(); break;
                 
                 case 'push' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPush(); break;
                 case 'export' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->export(); break;
