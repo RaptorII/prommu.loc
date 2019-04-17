@@ -289,7 +289,8 @@ class User extends CActiveRecord
 				'comment' => $data['comment'],
 				
 			), 'id_user=:id_user', array(':id_user' => $id));
-
+    
+        return array('error'=>0,  'message'=>'success' ,'sendmail'=>0); 
 	}
 
 
@@ -365,7 +366,7 @@ class User extends CActiveRecord
 						'val' => $val,
 					), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
 			}
-			return array('error'=>0,'sendmail'=>0);
+			return array('error'=>0,  'message'=>'success' ,'sendmail'=>0);
 		}
 	}
 
