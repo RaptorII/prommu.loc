@@ -628,7 +628,7 @@ class UploadLogo extends Model
         $fn = date('YmdHis').rand(100,1000) . ".jpg";
         $dirUser = Share::$UserProfile->id;
        
-        $path = "/images/".$dirUser."/tmp/";
+        $path = "/images/".$this->imgPath."/tmp/";
         $newFullFn = Subdomain::domainRoot() . $path . $fn;
         
         $d = str_replace('data:image/png;base64,', '', $_POST['data']);
