@@ -631,9 +631,11 @@ class UploadLogo extends Model
         $path = "/images/".$this->imgPath."/tmp/";
         $newFullFn = Subdomain::domainRoot() . $path . $fn;
         
+        
         $paths = "/images/".$dirUser."/tmp/";
         $newFullFns = Subdomain::domainRoot() . $paths . $fn;
-        var_dump($newFullFns);
+        FileHelper::createDirectory($newFullFns, $mode = 0775, $recursive = true);
+        
         $d = str_replace('data:image/png;base64,', '', $_POST['data']);
         $d = str_replace(' ', '+', $d);
         $fileData = base64_decode($d);
