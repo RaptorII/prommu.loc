@@ -623,9 +623,9 @@ class UploadLogo extends Model
 
         $fn = date('YmdHis').rand(100,1000) . ".jpg";
         $dirUser = Share::$UserProfile->id;
-        $path = "/images/".$dirUser."/{$this->imgPath}/tmp/";
+        $path = "/images/".$dirUser."/tmp/";
         $newFullFn = '/var/www/files_prommu' . $path . $fn;
-        var_dump($newFullFn);
+        
         $d = str_replace('data:image/png;base64,', '', $_POST['data']);
         $d = str_replace(' ', '+', $d);
         $fileData = base64_decode($d);
@@ -648,8 +648,8 @@ class UploadLogo extends Model
                     $arRes = array('error' => 1, 'message' => 'Минимальное разрешение изображения - 400x400 пикселей');
                 }
                 else{
-                    Yii::app()->session['uplLogo'] = array('path' => "/images/{$this->imgPath}/tmp/", 'file' => $fn);
-                    $arRes = array('error' => 0, 'file' => "/images/{$this->imgPath}/tmp/" . $fn);
+                    Yii::app()->session['uplLogo'] = array('path' => "/images/tmp/", 'file' => $fn);
+                    $arRes = array('error' => 0, 'file' => "/images/tmp/" . $fn);
                 }
             }
         }
