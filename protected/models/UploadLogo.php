@@ -31,8 +31,9 @@ class UploadLogo extends Model
         {
             $ext = substr($_FILES['photo']['name'], 1 + strrpos($_FILES['photo']['name'], "."));
             $fn = date('YmdHis').rand(100,1000) . ".jpg";
-            $path = "/images/{Share::$UserProfile->id}/{$this->imgPath}/tmp/";
-            $newFullFn = "/var/www/files_prommu" . $path . $fn;
+            $path = "/images/company/tmp/";
+            $newFullFn = Subdomain::domainRoot() . $path . $fn;
+
             if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
             {
                 $imgProps = getimagesize($newFullFn);
@@ -70,8 +71,8 @@ class UploadLogo extends Model
             }
             else
             {
-                Yii::app()->session['uplLogo'] = array('path' => "/var/www/files_prommu/images/{Share::$UserProfile->id}/{$this->imgPath}/tmp/", 'file' => $fn);
-                $ret = array('error' => 0, 'file' => "/var/www/files_prommu/images/{Share::$UserProfile->id}/{$this->imgPath}/tmp/" . $fn);
+                Yii::app()->session['uplLogo'] = array('path' => "/images/{$this->imgPath}/tmp/", 'file' => $fn);
+                    $arRes = array('error' => 0, 'file' => "/images/{$this->imgPath}/tmp/" . $fn);
             } // endif
         } // endif
 //        $sql = "SELECT s.id, s.name, DATE_FORMAT(s.crdate, '%d.%m.%Y') crdate
