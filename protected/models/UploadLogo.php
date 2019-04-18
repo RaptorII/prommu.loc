@@ -31,7 +31,7 @@ class UploadLogo extends Model
         {
             $ext = substr($_FILES['photo']['name'], 1 + strrpos($_FILES['photo']['name'], "."));
             $fn = date('YmdHis').rand(100,1000) . ".jpg";
-            $path = "/images/{$this->imgPath}/tmp/";
+            $path = "/images/{Share::$UserProfile->id}/{$this->imgPath}/tmp/";
             $newFullFn = "http://files.prommu.com/" . $path . $fn;
             if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
             {
