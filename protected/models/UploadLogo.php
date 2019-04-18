@@ -623,7 +623,7 @@ class UploadLogo extends Model
 
         $fn = date('YmdHis').rand(100,1000) . ".jpg";
         $path = "/images/{Share::$UserProfile->id}/{$this->imgPath}/tmp/";
-        $newFullFn = '/var/www/prommu.dev' . $path . $fn;
+        $newFullFn = '/var/www/file_prommu' . $path . $fn;
         var_dump($newFullFn);
         $d = str_replace('data:image/png;base64,', '', $_POST['data']);
         $d = str_replace(' ', '+', $d);
