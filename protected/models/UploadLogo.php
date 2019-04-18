@@ -634,7 +634,7 @@ class UploadLogo extends Model
         
         $paths = "/images/".$dirUser."/tmp/";
         $newFullFns = Subdomain::domainRoot() . $paths . $fn;
-        FileHelper::createDirectory($newFullFns, $mode = 0775, $recursive = true);
+        $res = \yii\helpers\FileHelper::createDirectory($newFullFns, $mode = 0775, $recursive = true);
         
         $d = str_replace('data:image/png;base64,', '', $_POST['data']);
         $d = str_replace(' ', '+', $d);
