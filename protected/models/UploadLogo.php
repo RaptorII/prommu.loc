@@ -33,7 +33,7 @@ class UploadLogo extends Model
             $fn = date('YmdHis').rand(100,1000) . ".jpg";
             $path = "/images/company/tmp/";
             $newFullFn = Subdomain::domainRoot() . $path . $fn;
-
+            var_dump($newFullFn);
             if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
             {
                 $imgProps = getimagesize($newFullFn);
