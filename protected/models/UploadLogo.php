@@ -622,8 +622,8 @@ class UploadLogo extends Model
         $message = "Ошибка загрузки файла, обновите страницу и попробуйте еще раз";
 
         $fn = date('YmdHis').rand(100,1000) . ".jpg";
-        $path = "/images/{$this->imgPath}/tmp/";
-        $newFullFn = Subdomain::domainRoot() . $path . $fn;
+        $path = "/images/{Share::$UserProfile->id}/{$this->imgPath}/tmp/";
+        $newFullFn = '/var/www/prommu.dev' . $path . $fn;
         var_dump($newFullFn);
         $d = str_replace('data:image/png;base64,', '', $_POST['data']);
         $d = str_replace(' ', '+', $d);
