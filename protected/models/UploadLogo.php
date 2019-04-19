@@ -649,7 +649,10 @@ class UploadLogo extends Model
         $path = "/images/".$this->dirUser()."/tmp/";
         mkdir($this->domainFiles()."/images/".$this->dirUser(), 0700);
         mkdir($this->domainFiles()."/images/".$this->dirUser()."/tmp/", 0700);
+        
         $newFullFn = $this->domainFiles(). $path . $fn;
+        
+        var_dump($newFullFn);
         
         $d = str_replace('data:image/png;base64,', '', $_POST['data']);
         $d = str_replace(' ', '+', $d);
