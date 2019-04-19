@@ -3541,7 +3541,7 @@ public function vac(){
 //         return (new City())->getCityList(0, $filter, $limit);
         $sql = "SELECT co.id_co idco,
                   co.name
-                  , uc.id_city idci
+                  , ci.name idci
                 FROM country co
                 LEFT JOIN city ci ON co.id_co = ci.id_co
                 LEFT JOIN user_city uc ON ci.id_city = uc.id_city AND uc.id_user = 4278
