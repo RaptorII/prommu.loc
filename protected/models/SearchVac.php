@@ -428,11 +428,11 @@ class SearchVac extends Model
         // city filter
         if( !empty($data['cities']) )
         {
-            $filter[] = "c.id_city IN (".join(',',$data['cities']).')';
+            $filter[] = "e.id_city IN (".join(',',$data['cities']).')';
         }
         else
         {
-            $filter[] = 'c.id_city IN ('.Subdomain::getCacheData()->strCitiesIdes.')';
+            $filter[] = 'e.id_city IN ('.Subdomain::getCacheData()->strCitiesIdes.')';
         }
 
 
@@ -451,7 +451,7 @@ class SearchVac extends Model
         if( !empty($data['posts']) )
         {
             foreach ($data['posts'] as $key => &$val) { $val = $key; } // end foreach;
-            $filterPost = ' ea.id_attr IN ('.join(',', $data['posts']).')';
+            $filterPost = ' e.id_attr IN ('.join(',', $data['posts']).')';
         }
         
         
