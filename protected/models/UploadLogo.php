@@ -41,9 +41,8 @@ class UploadLogo extends Model
             $paths = "/images/".$this->dirUser()."/tmp/";
             mkdir($this->domainFiles()."/images/".$dirUser."/tmp/", 0700);
             $newFullFns = $this->domainFiles(). $paths . $fn;
-            move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFns);
             
-            if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
+            if(move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFns))
             {
                 $imgProps = getimagesize($newFullFn);
                 if( $imgProps[0] > 4500 || $imgProps[1] > 4500 )
@@ -58,7 +57,7 @@ class UploadLogo extends Model
                 else
                 {
                     $defSize = 1600;
-                    if( (int) ($ret = $this->imgResizeToRect($newFullFn, $newFullFn, "image/jpeg", $defSize)) > 0 )
+                    if( (int) ($ret = $this->imgResizeToRect($newFullFns, $newFullFns, "image/jpeg", $defSize)) > 0 )
                     {
 
                     }
@@ -116,9 +115,8 @@ class UploadLogo extends Model
             $paths = "/images/".$this->dirUser()."/tmp/";
             mkdir($this->domainFiles()."/images/".$dirUser."/tmp/", 0700);
             $newFullFns = $this->domainFiles(). $paths . $fn;
-            move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFns);
             
-            if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
+            if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFns) )
             {
                 $imgProps = getimagesize($newFullFn);
                 if( $imgProps[0] > 4500 || $imgProps[1] > 4500 )
@@ -133,7 +131,7 @@ class UploadLogo extends Model
                 else
                 {
                     $defSize = 1600;
-                    if( (int) ($ret = $this->imgResizeToRect($newFullFn, $newFullFn, "image/jpeg", $defSize)) > 0 )
+                    if( (int) ($ret = $this->imgResizeToRect($newFullFns, $newFullFns, "image/jpeg", $defSize)) > 0 )
                     {
                     }
                     else
@@ -203,9 +201,8 @@ class UploadLogo extends Model
             $paths = "/images/".$this->dirUser()."/tmp/";
             mkdir($this->domainFiles()."/images/".$dirUser."/tmp/", 0700);
             $newFullFns = $this->domainFiles(). $paths . $fn;
-            move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFns);
-        
-            if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
+            
+            if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFns) )
             {
                 $imgProps = getimagesize($newFullFn);
                 if( $imgProps[0] > 4500 || $imgProps[1] > 4500 )
@@ -220,7 +217,7 @@ class UploadLogo extends Model
                 else
                 {
                     $defSize = 1600;
-                    if( (int) ($ret = $this->imgResizeToRect($newFullFn, $newFullFn, "image/jpeg", $defSize)) > 0 )
+                    if( (int) ($ret = $this->imgResizeToRect($newFullFns, $newFullFns, "image/jpeg", $defSize)) > 0 )
                     {
                     }
                     else
