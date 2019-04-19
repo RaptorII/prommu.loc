@@ -230,14 +230,18 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                                         <?php endif; ?>
                                     </div>
                                 </div>
-                                <div class='erv__publ-date'>
+                                <div class="erv__publ-date<?=!$isArchiveVac?' enable':''?>">
                                     Дата публикации: <?= $viData['vac']['crdate'] ?><br>
                                     Дата начала работы: <span id="rv-vac-bdate"><?= $begWorkDate ?></span><br>
                                     <?/*Дата завершения работы: <span id="rv-vac-edate"><?= $endWorkDate ?></span>*/?>
-                                    <div class="erv__input remdate_input">
-                                        <span>Дата завершения работы:</span>
-                                        <input type="text" name="remdate" value="<?=$viData['vac']['remdate']?>" data-date="<?=$viData['vac']['remdate']?>" id="remdate_input">
-                                    </div>
+                                    <? if($isArchiveVac): ?>
+                                        Дата завершения работы: <span id="rv-vac-edate"><?=$viData['vac']['remdate']?></span>
+                                    <? else: ?>
+                                        <div class="erv__input remdate_input">
+                                            <span>Дата завершения работы:</span>
+                                            <input type="text" name="remdate" value="<?=$viData['vac']['remdate']?>" data-date="<?=$viData['vac']['remdate']?>" id="remdate_input">
+                                        </div>
+                                    <? endif; ?>
                                 </div>
 
 

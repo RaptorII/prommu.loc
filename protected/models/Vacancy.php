@@ -3068,7 +3068,7 @@ WHERE id_vac = {$inVacId}";
         $arRes = ['active'=>[],'archive'=>[],'apps'=>[],'items'=>[]];
         // находим ID всех вакансий юзера
         $arVac = Yii::app()->db->createCommand()
-                    ->select("id,status,if(remdate>CURRENT_DATE(),0,1) archive_date")
+                    ->select("id,status,if(remdate>=CURRENT_DATE(),0,1) archive_date")
                     ->from('empl_vacations')
                     ->where('id_user=:id',[':id' => $id_user])
                     ->queryAll();
@@ -3141,7 +3141,7 @@ WHERE id_vac = {$inVacId}";
                         ispremium,
                         if(ismoder=100,1,0) ismoder,
                         DATE_FORMAT(remdate,'%d.%m.%Y') remdate,
-                        if(remdate>CURRENT_DATE(),0,1) archive_date")
+                        if(remdate>=CURRENT_DATE(),0,1) archive_date")
                     ->from('empl_vacations')
                     ->where(['in','id',$arId])
                     ->order('id desc')
@@ -3169,12 +3169,10 @@ WHERE id_vac = {$inVacId}";
                 }
             }
             $t = strtotime($v['remdate']) - mktime(0,0,0);
-            if($t>0)
-            {
-                $t = $t / 86400;
-                $v['left_days_cnt'] = $t;
-                $v['left_days'] = "$t " . Share::endingYears($t,false);
-            }
+            $t = $t / 86400;
+            $v['left_days_cnt'] = $t;
+            $v['left_days'] = "$t " . Share::endingYears($t,false);
+
             if($v['archive_date'])
             {
                 $v['vacancy_state'] = 'завершена';

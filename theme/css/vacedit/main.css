@@ -1300,7 +1300,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	position: relative;
 }
 .erv__salary:after,
-.erv__publ-date:after,
+.erv__publ-date.enable:after,
 .erv__title:after{
 	content: '';
 	width: 25px;

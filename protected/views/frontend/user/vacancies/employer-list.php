@@ -89,9 +89,10 @@
 								</div>
 								<? if($isActiveVacs): ?>
 									<div class="vac-item__info-item">Состояние: <b><?=$v['vacancy_state']?></b></div>
-									<? if($v['left_days_cnt']): ?>
-										<div class="vac-item__info-item">До окончания: <b><?=$v['left_days']?></b></div>
-									<? endif; ?>
+									<div class="vac-item__info-item">
+										<? if($v['left_days_cnt']>0): ?>До окончания: <b><?=$v['left_days']?></b>
+										<? elseif($v['left_days_cnt']==0): ?>Дата окончания: <b>Сегодня</b><? endif; ?>
+									</div>
 									<? if($v['need_rating']): ?>
 										<div class="vac-item__info-item">
 											<a href="<?=MainConfig::$PAGE_REVIEWS?>" class="prmu-btn">
