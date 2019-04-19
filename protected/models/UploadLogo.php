@@ -160,7 +160,7 @@ class UploadLogo extends Model
         $file =  $fn;
         if( file_exists($this->domainFiles() . $pathTmp . $file) )
         {
-            $path = "/images/company/";
+            $path = "/images/".$this->dirUser()."/";
             $res = $this->imgCrop($this->domainFiles(). $pathTmp . $file, $this->domainFiles(). $path . $file,
                     array('x1' => 0,
                         'y1' => 0,
