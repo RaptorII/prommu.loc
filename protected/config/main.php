@@ -126,12 +126,12 @@ return array(
         // ),
 
         'cache'=>array(
-            //'class'=>'system.caching.CDummyCache', // заглушка без кеша
+            'class'=>'system.caching.CDummyCache', // заглушка без кеша
             //'class'=>'system.caching.CFileCache',
-            'class'=>'system.caching.CMemCache',
-            'servers'=>array(
-                array('host'=>'127.0.0.1', 'port'=>11211, 'weight'=>100),
-            ),
+            //'class'=>'system.caching.CMemCache',
+            //'servers'=>array(
+            //    array('host'=>'127.0.0.1', 'port'=>11211, 'weight'=>100),
+            //),
         ),
 
         'urlManager' => array(
@@ -199,7 +199,7 @@ return array(
             'connectionString' => 'mysql:host=localhost;dbname=promo_dev',
             'emulatePrepare' => true,
             'username' => 'root',
-            'password' => 'WWFf57EfyY4fcaFh',
+            'password' => 'bvgthbz',
             'charset' => 'utf8',
             'enableProfiling' => true,
             'enableParamLogging' => true,

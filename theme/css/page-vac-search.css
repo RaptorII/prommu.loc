@@ -695,12 +695,24 @@
 /*			*/
 /*	 TABLE	*/
 /*			*/
-#DiContent .psv__table-list{ margin: 0 -4px 30px }
+#DiContent .psv__table-list{
+	margin: 0 -4px 30px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-content: stretch;
+	align-items: stretch;
+}
+
 #DiContent .psv__table-item{ padding: 0 4px 8px; }
 .psv__table-block{
 	padding: 10px;
 	border: 1px solid #949494;
 	border-top: none;
+	display: flex;
+	flex-direction: column;
+	height: calc( 100% - 65px);
 }
 .psv__table-premium{ 
 	border: 1px solid #ABB837;
@@ -734,7 +746,10 @@
 	color: #E5EF90;
 	background: url(/theme/pic/vacancy/srch-vac-sprite.png) 0 -60px no-repeat;
 }
-.psv-table__param-block{ border-bottom: 1px solid #D6D6D6 }
+.psv-table__param-block{
+	border-bottom: 1px solid #D6D6D6;
+	flex: 1 1 auto;
+}
 .psv__table-premium .psv__param.ico1:before{ background-position: 7px -80px }
 .psv__table-premium .psv__param.ico2:before{ background-position: 0px -120px }
 .psv__table-premium .psv__param.ico3:before{ background-position: 7px -160px }
