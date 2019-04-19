@@ -515,5 +515,32 @@
 				}
 			}
 		}
+		/**
+		 * @param $arId - array(id vacancies)
+		 * @return array
+		 */
+		public static function getTermostatVacanciesViews($arId)
+		{
+			$arRes = array();
+			if(!is_array($arId) || !count($arId))
+				return $arRes;
+
+			$query = Yii::app()->db->createCommand()
+									->select("count(id) count, id id_vacancy")
+									->from('termostat_analytic')
+									->where(['in','id',$arId])
+									->group('id')
+									->queryAll();
+
+
+			foreach ($arId as $id_vacancy)
+			{
+				$arRes[$id_vacancy] = ['count'=>0,'id_vacancy'=>$id_vacancy];
+				foreach ($query as $v)
+					$arRes[$v['id_vacancy']] = $v;
+			}
+			
+			return $arRes;
+		}
 	}
 ?>

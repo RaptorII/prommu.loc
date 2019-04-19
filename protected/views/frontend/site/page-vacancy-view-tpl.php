@@ -66,12 +66,12 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
     */
     ?>
     <?php if (Share::$UserProfile->type == 3 && Share::$UserProfile->exInfo->id == $viData['vac']['idus']): ?>
-        <?php
-        $bUrl = Yii::app()->baseUrl;
-        Yii::app()->getClientScript()->registerCssFile($bUrl . '/theme/css/vacedit/main.css');
-        Yii::app()->getClientScript()->registerScriptFile($bUrl . '/jslib/nicedit/nicEdit.js', CClientScript::POS_END);
-        Yii::app()->getClientScript()->registerScriptFile($bUrl . '/theme/js/vacedit/main.js', CClientScript::POS_END);
-        Yii::app()->getClientScript()->registerScriptFile($bUrl . "/theme/js/projects/project-convert-vacancy.js", CClientScript::POS_END);
+        <?
+        Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'vacedit/main.css');
+        Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'dist/jquery-ui.min.css');
+        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScript::POS_END);
+        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'vacedit/main.js', CClientScript::POS_END);
+        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . "projects/project-convert-vacancy.js", CClientScript::POS_END);      
 
         $name = Share::$UserProfile->exInfo->name;
         //
@@ -106,6 +106,12 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                                 $endWorkDate = $t[1];
                         }
         }
+        //
+        //
+        //
+        $isArchiveVac = in_array($viData['vac']['id'], $viData['archive']); // архивная вакансия
+        $isCompleteVac = mktime(0,0,0) > strtotime($viData['vac']['remdate']); // завершенная по времени вакансия
+        $isModerVac = $viData['vac']['ismoder'] == 100;
         ?>
         <script type="text/javascript">
             var arMetroes = <?=json_encode($arMetroes);?>;
@@ -119,21 +125,33 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                     <input type="hidden" name="save" value='1'>
                     <div class="col-xs-12">
                         <div class="erv__header">
-                            <? if (!isset($viData['vac']['cannot-publish'])): ?>
-                                <? if (!$viData['vac']['status']): ?>
-                                    <span class="erv__not-publ">Вакансия не опубликована</span>
-                                    <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}" ?>'
-                                       class="erv__header-btn prmu-btn"><span>Опубликовать вакансию</span></a>
-                                <? else: ?>
-                                    <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}&d=1" ?>'
-                                       class="erv__header-btn prmu-btn"><span>Снять с публикации</span></a>
-                                <? endif; ?>
-                            <? else: ?>
+                            <? if ($viData['vac']['cannot-publish']==true): // не заполнены обязательные поля ?>
                                 <p class="erv__header-warning">Необходимо заполнить все обязательные поля *</p>
-                            <? endif; ?>
-                            <? if ($viData['vac']['ismoder'] == 100): ?>
-                                <div class="evl__to-project-btn prmu-btn" data-id="<?= $viData['vac']['id'] ?>"><span>Перевести в проект</span>
-                                </div>
+                            <? else: ?>
+                                <? if($isArchiveVac): // архивная вакансия ?>
+                                    <a href='<?=MainConfig::$PAGE_VACPUB . "?copy_id={$viData['vac']['id']}" ?>'
+                                       class="erv__header-btn prmu-btn"><span>Дублировать вакансию</span></a>
+                                <? else: // вакансии зи раздела "Активные" ?>
+                                    <? if($isCompleteVac): // Завершенные вакансии без рейтинга ?>
+                                        <a href='<?=MainConfig::$PAGE_REVIEWS?>' class="erv__header-btn prmu-btn">
+                                            <span>Оценить персонал</span>
+                                        </a>
+                                    <? else: ?>
+                                        <? if (!$viData['vac']['status']): ?>
+                                            <span class="erv__not-publ">Вакансия не опубликована</span>
+                                            <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}" ?>'
+                                               class="erv__header-btn prmu-btn"><span>Опубликовать вакансию</span></a>
+                                        <? else: ?>
+                                            <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}&d=1" ?>'
+                                               class="erv__header-btn prmu-btn"><span>Снять с публикации</span></a>
+                                        <? endif; ?>
+                                        <? if ($isModerVac): ?>
+                                            <div class="evl__to-project-btn prmu-btn" data-id="<?=$viData['vac']['id']?>">
+                                                <span>Перевести в проект</span>
+                                            </div>
+                                        <? endif; ?>
+                                    <? endif; ?>
+                                <? endif; ?>
                             <? endif; ?>
                         </div>
                     </div>
@@ -145,7 +163,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                         <? $linkVac = MainConfig::$PAGE_VACANCY . DS . $viData['vac']['id'] . DS; ?>
                         
                         <a href="<?=$linkVac . MainConfig::$VACANCY_RESPONDED?>" class="erv__tab-link link1">Откликнувшиеся
-                            (<?=$viData['info'][MainConfig::$VACANCY_INVITED]?>)</a><br>
+                            (<?=$viData['info'][MainConfig::$VACANCY_RESPONDED]?>)</a><br>
 
 						<a href="<?=$linkVac . MainConfig::$VACANCY_INVITED?>" class="erv__tab-link link8">Приглашенные
                             (<?=$viData['info'][MainConfig::$VACANCY_INVITED]?>)</a><br>
@@ -215,10 +233,27 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                                 <div class='erv__publ-date'>
                                     Дата публикации: <?= $viData['vac']['crdate'] ?><br>
                                     Дата начала работы: <span id="rv-vac-bdate"><?= $begWorkDate ?></span><br>
-                                    Дата завершения работы: <span id="rv-vac-edate"><?= $endWorkDate ?></span></div>
+                                    <?/*Дата завершения работы: <span id="rv-vac-edate"><?= $endWorkDate ?></span>*/?>
+                                    <div class="erv__input remdate_input">
+                                        <span>Дата завершения работы:</span>
+                                        <input type="text" name="remdate" value="<?=$viData['vac']['remdate']?>" data-date="<?=$viData['vac']['remdate']?>" id="remdate_input">
+                                    </div>
+                                </div>
+
+
+
+
+
+                                
+
+
+
+
+
+
                             </div>
                             <div class="erv__services">
-                                <?php if ($viData['vac']['ismoder'] == 100): // отображать услуги только для промодерированных вкансий ?>
+                                <?php if ($isModerVac && !$isCompleteVac): // отображать услуги только для промодерированных незавершенных вкансий ?>
                                     <span>Бесплатные услуги</span>
                                     <? if (!empty($viData['vac']['vk_link'])): ?>
                                         <a href="<?= $viData['vac']['vk_link'] ?>"

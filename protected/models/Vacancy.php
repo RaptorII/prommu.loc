@@ -129,128 +129,137 @@ public function rules()
     public function chkVacsEnds()
     {
     	$db = Yii::app()->db;
-			// выключаем премиум
-			$query = $db->createCommand()
-								->select("id, edate, name id_vacancy")
-								->from('service_cloud')
-								->where("type='vacancy' AND status=1")
-								->queryAll();
+		// выключаем премиум
+		$query = $db->createCommand()
+							->select("id, edate, name id_vacancy")
+							->from('service_cloud')
+							->where("type='vacancy' AND status=1")
+							->queryAll();
 
-			if(count($query))
+		if(count($query))
+		{
+			$arIdVac = $arIdService = array();
+			foreach ($query as $v)
 			{
-				$arIdVac = $arIdService = array();
-				foreach ($query as $v)
+				if((time() - strtotime($v['edate'])) > 1000 )
 				{
-					if((time() - strtotime($v['edate'])) > 1000 )
-					{
-						$arIdVac[] = $v['id_vacancy'];
-						$arIdService[] = $v['id'];
-					}
-				}
-				if(count($arIdVac)) // убираем статус в таблице вакансий
-				{
-					$db->createCommand()->update('empl_vacations',['ispremium'=>0],['in','id',$arIdVac]);
-				}
-				if(count($arIdService)) // и в таблице услуг
-				{
-					$db->createCommand()->update('service_cloud',['status'=>0],['in','id',$arIdService]);
+					$arIdVac[] = $v['id_vacancy'];
+					$arIdService[] = $v['id'];
 				}
 			}
-
-			$query = $db->createCommand() // ищем подходящие по статусу вакансии
-								->select("vs.id,
-									vs.mdate,
-									vs.id_vac,
-									ev.title,
-									ev.remdate,
-									ev.id_user id_emp,
-									r.id_user id_app")
-								->from('vacation_stat vs')
-								->leftjoin('empl_vacations ev','ev.id=vs.id_vac')
-								->leftjoin('resume r','r.id=vs.id_promo')
-								->where(
-									'vs.status=:status AND ev.remdate=CURRENT_DATE()',
-									[':status'=>Responses::$STATUS_APPLICANT_ACCEPT]
-								)
-								->queryAll();
-
-			if(count($query))
+			if(count($arIdVac)) // убираем статус в таблице вакансий
 			{
-				$arId = $arT = array();
-				foreach ($query as $v)
-				{
-					!empty($v['id_emp']) && $arId[] = $v['id_emp'];
-					!empty($v['id_app']) && $arId[] = $v['id_app'];
-					$arT[$v['id_vac']]['items'][] = $v;
-				}
-				$arUsers = Share::getUsers($arId);
-				$arId = array();
+				$db->createCommand()->update('empl_vacations',['ispremium'=>0],['in','id',$arIdVac]);
+			}
+			if(count($arIdService)) // и в таблице услуг
+			{
+				$db->createCommand()->update('service_cloud',['status'=>0],['in','id',$arIdService]);
+			}
+		}
 
-				foreach ($arT as $id_vac => $arV)
-				{
-					$arItem = reset($arV['items']);
-					$arLink = array();
-					$message = "Завершение вакансии №" . $id_vac . " “" . $arItem['title'] 
-						. "” сегодня.<br>Просим оценить ваше сотрудничество с ";
-					$title = 'Завершение проекта';
-					$linkRate = Subdomain::site() . MainConfig::$PAGE_SETRATE . DS . $id_vac;
-					foreach ($arV['items'] as $v)
-					{
-						Mailing::set( // письмо соискателю
-							13,
-							array(
-								'email_user' => $arUsers[$v['id_app']]['email'],
-								'id_vacancy' => $id_vac,
-								'title_vacancy' => $v['title'],
-								'id_company' => $v['id_emp'],
-								'name_company' => $arUsers[$v['id_emp']]['name']
+		$query = $db->createCommand() // ищем подходящие по статусу вакансии
+							->select("vs.id,
+								vs.mdate,
+								vs.id_vac,
+								ev.title,
+								ev.remdate,
+								ev.id_user id_emp,
+								r.id_user id_app")
+							->from('vacation_stat vs')
+							->leftjoin('empl_vacations ev','ev.id=vs.id_vac')
+							->leftjoin('resume r','r.id=vs.id_promo')
+							->where(
+								'vs.status=:status AND ev.remdate=:date',
+                                [
+                                    ':status' => Responses::$STATUS_APPLICANT_ACCEPT,
+                                    ':date' => date("Y-m-d", strtotime("yesterday"))
+                                ]
 							)
-						);
-						$arId[] = $v['id'];
-						$name = $arUsers[$v['id_app']]['name'];
-						empty($name) && $name = 'Пользователь';
-						$arLink[] = '<a href="'. $linkRate . DS . $v['id_app'] . '">' . $name . '</a>';
-						Im::setMessageFromBot( // сообщение в чат
-								$v['id_app'],
-								$arUsers[$v['id_app']]['status'],
-								$title,
-								$message . 'работодателем <a href="' . $linkRate . '">' . $arUsers[$v['id_emp']]['name'] . '</a>'
-							);
-					}
-					Mailing::set( // письмо работодателю
-						14,
+							->queryAll();
+
+		if(count($query))
+		{
+			$arId = $arT = array();
+			foreach ($query as $v)
+			{
+				!empty($v['id_emp']) && $arId[] = $v['id_emp'];
+				!empty($v['id_app']) && $arId[] = $v['id_app'];
+				$arT[$v['id_vac']]['items'][] = $v;
+			}
+			$arUsers = Share::getUsers($arId);
+			$arId = array();
+
+			foreach ($arT as $id_vac => $arV)
+			{
+				$arItem = reset($arV['items']);
+				$arLink = array();
+				$message = "Завершение вакансии №" . $id_vac . " “" . $arItem['title'] 
+					. "” сегодня.<br>Просим оценить ваше сотрудничество с ";
+				$title = 'Завершение проекта';
+				$linkRate = Subdomain::site() . MainConfig::$PAGE_SETRATE . DS . $id_vac;
+				foreach ($arV['items'] as $v)
+				{
+					Mailing::set( // письмо соискателю
+						13,
 						array(
-							'email_user' => $arUsers[$arItem['id_emp']]['email'],
+							'email_user' => $arUsers[$v['id_app']]['email'],
 							'id_vacancy' => $id_vac,
-							'title_vacancy' => $arItem['title'],
-							'links_list' => implode('<br>',$arLink)
+							'title_vacancy' => $v['title'],
+							'id_company' => $v['id_emp'],
+							'name_company' => $arUsers[$v['id_emp']]['name']
 						)
 					);
-
+					$arId[] = $v['id'];
+					$name = $arUsers[$v['id_app']]['name'];
+					empty($name) && $name = 'Пользователь';
+					$arLink[] = '<a href="'. $linkRate . DS . $v['id_app'] . '">' . $name . '</a>';
 					Im::setMessageFromBot( // сообщение в чат
-							$arItem['id_emp'],
-							$arUsers[$arItem['id_emp']]['status'],
+							$v['id_app'],
+							$arUsers[$v['id_app']]['status'],
 							$title,
-							$message . 'соискателями: <br>' . implode('<br>',$arLink)
+							$message . 'работодателем <a href="' . $linkRate . '">' . $arUsers[$v['id_emp']]['name'] . '</a>'
 						);
 				}
-				if(count($arId)) // делаем вакансии завершенными
-				{
-					$db->createCommand()->update(
-							'vacation_stat', 
-							[
-								'status' => Responses::$STATUS_BEFORE_RATING,
-								'mdate' => date('Y-m-d H:i:s')
-							], 
-							['in','id',$arId]
-						);
-				}
+				Mailing::set( // письмо работодателю
+					14,
+					array(
+						'email_user' => $arUsers[$arItem['id_emp']]['email'],
+						'id_vacancy' => $id_vac,
+						'title_vacancy' => $arItem['title'],
+						'links_list' => implode('<br>',$arLink)
+					)
+				);
+
+				Im::setMessageFromBot( // сообщение в чат
+						$arItem['id_emp'],
+						$arUsers[$arItem['id_emp']]['status'],
+						$title,
+						$message . 'соискателями: <br>' . implode('<br>',$arLink)
+					);
 			}
+			if(count($arId)) // делаем заявки завершенными
+			{
+				$db->createCommand()->update(
+						'vacation_stat', 
+						[
+							'status' => Responses::$STATUS_BEFORE_RATING,
+							'mdate' => date('Y-m-d H:i:s')
+						], 
+						['in','id',$arId]
+					);
+			}
+		}
+        // делаем вакансии неактивными
+        $db->createCommand()->update(
+                    'empl_vacations', 
+                    ['status' => 0], 
+                    "status=1 and remdate=:date and crdate>UNIX_TIMESTAMP('2019-04-01 00:00:00')", // костыль чтобы не поломать яндекс работу(чтобы старые вакансии выводились)
+                    [':date' => date("Y-m-d", strtotime("yesterday"))]
+                );
+		// проверка на то, что вакансия подходит к концу
+		$this->chkVacsAlmostEnds();
 
-			// проверка на то, что вакансия подходит к концу
-			$this->chkVacsAlmostEnds();
-
-			return 1;
+		return 1;
     }
 
 
@@ -304,6 +313,17 @@ public function rules()
         $data = $this->getVacancyData(0);
         $data = array_merge($data, $this->getVacancyEditData($data));
 
+        $copyId = filter_var(
+                        Yii::app()->getRequest()->getParam('copy_id'),
+                        FILTER_SANITIZE_NUMBER_INT
+                    );
+
+        $arArchive = $this->getEmpVacanciesIdList(Share::$UserProfile->id)['archive'];
+        if(in_array($copyId, $arArchive))
+        {
+            $data['copy_vacacancy'] = $this->getVacancyView($copyId);
+        }
+
         return $data;
     }
 
@@ -331,39 +351,6 @@ public function rules()
         $data = $this->getVacancyData($idvac);
         $data = array_merge($data, $this->getVacancyEditData(array_merge($data, array('idvac' => $idvac))), array('idvac' => $idvac)
                 , array('block' => $block));
-
-        return $data;
-    }
-
-
-    public function getVacanciesArh()
-    {
-        $idus = $this->Profile->id ?: Share::$UserProfile->exInfo->id;
-
-        $limit = $this->limit > 0 ? "LIMIT {$this->offset}, {$this->limit}" : '';
-
-
-        // читаем вакансии
-        $sql = "SELECT v.id, v.title, v.status, v.count
-                  , DATE_FORMAT(v.crdate, '%d.%m.%Y') crdate, DATE_FORMAT(v.remdate, '%d.%m.%Y') remdate
-                  , vs.id_promo
-                  , vs.isresponse + 1 isresp
-            FROM empl_vacations v
-            INNER JOIN ( SELECT v.id FROM empl_vacations v WHERE v.id_user = {$idus} ORDER BY v.id DESC 
-                {$limit} ) t1 ON t1.id = v.id 
-            LEFT JOIN vacation_stat vs ON vs.id_vac = v.id 
-            LEFT JOIN employer e ON e.id_user = v.id_user
-            WHERE v.id_user = {$idus}
-            AND (v.status = 0 OR vs.status in (6,7))
-            ORDER BY v.id DESC
-            ";
-        
-        $res = Yii::app()->db->createCommand($sql)->queryAll();
-        foreach ($res as $key => $val)
-        {
-            if( !isset($data['vacs'][$val['id']]) ) $data['vacs'][$val['id']] = array_merge($val, array('isresp' => array($val['count'],0)));
-            if( $val['isresp'] ) $data['vacs'][$val['id']]['isresp'][$val['isresp']-1]++;
-        } // end foreach
 
         return $data;
     }
@@ -551,7 +538,7 @@ public function rules()
                        DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
                        e.ismed, e.isavto, e.contacts, e.agefrom, e.ageto, e.status, e.vk_link, e.fb_link, e.tl_link,
                        DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
-                  , c1.id ecid, c1.id_city, c2.name AS ciname, c1.citycu, c2.ismetro, c2.region
+                  , c1.id ecid, c1.id_city, c2.name AS ciname, c1.citycu, c2.ismetro, c2.region, c2.id_co
                   , DATE_FORMAT(c1.bdate, '%d.%m.%Y') cbdate
                   , DATE_FORMAT(c1.edate, '%d.%m.%Y') cedate 
                   , ea.id_attr
@@ -587,7 +574,15 @@ public function rules()
             foreach ($res as $key => $val)
             {
                 if( !isset($data['vac'][0])) $data['vac'][0] = array('city' => array(), 'post' => array(), 'metroes' => array(), 'hasmetro' => array(), 'location' => array());
-                $data['vac'][0]['city'][$val['id_city']] = array($val['id_city'] ? $val['ciname'] : $val['citycu'], $val['cbdate'], $val['cedate'], $val['ecid'], $val['id_city'], 'region'=>$val['region']);
+                $data['vac'][0]['city'][$val['id_city']] = array(
+                        $val['id_city'] ? $val['ciname'] : $val['citycu'], 
+                        $val['cbdate'], 
+                        $val['cedate'], 
+                        $val['ecid'], 
+                        $val['id_city'], 
+                        'region'=>$val['region'],
+                        'id_co'=>$val['id_co']
+                    );
                 if( $val['ismetro'] ) $data['vac'][0]['hasmetro'][$val['id_city']] = 1;
                 $data['vac'][0]['post'][$val['id_attr']] = $val['pname'];
 
@@ -1108,6 +1103,14 @@ public function rules()
             $fields['cardPrommu'] = filter_var(Yii::app()->getRequest()->getParam('card-prommu'), FILTER_SANITIZE_NUMBER_INT);
             $fields['card'] = filter_var(Yii::app()->getRequest()->getParam('bank-card'), FILTER_SANITIZE_NUMBER_INT);
             $fields['istemp'] = $inProps['istemp'] ?: filter_var(Yii::app()->getRequest()->getParam('busyType'), FILTER_SANITIZE_NUMBER_INT);
+            // дата завершения
+            $remdate = filter_var(Yii::app()->getRequest()->getParam('remdate'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $arRemdate = explode('.', $remdate);
+            if(checkdate($arRemdate[1], $arRemdate[0], $arRemdate[2]))
+            {
+                $fields['remdate'] = "{$arRemdate[2]}-{$arRemdate[1]}-{$arRemdate[0]}";
+            }
+
             // сохраняем атрибуты вакансии
             $this->saveVacAttribs($idvac);
 
@@ -1212,7 +1215,7 @@ public function rules()
             $message = 'Данные успешно сохранены и направлены на модерацию. Обычно это занимает до 15 минут в рабочее время.';
         }
         if($showFlash){
-          Yii::app()->user->setFlash('Message', array('type' => '-green', 'message' => $message));  
+          Yii::app()->user->setFlash('prommu_flash', $message);  
         }
         if($blockpub == 'pub')
         {
@@ -1220,7 +1223,7 @@ public function rules()
             $user->name = trim($user->name);
             empty($user->name) && $user->name = 'пользователь';
             
-            Yii::app()->user->setFlash('Message', array('type' => '-green', 'message' => "<div class='big-flash'>Уважаемый «" . $user->name . "»!<br>Вы только что добавили новую вакансию на сервис Prommu. На данном этапе она еще не опубликована на сервисе. После закрытия этого информационного окна, Вы можете посмотреть добавленную информацию, изменить и дополнить ее с указанием адресов работы и другой необходимой информации. После этого необходимо нажать кнопку «ОПУБЛИКОВАТЬ ВАКАНСИЮ» и после прохождения модерации (в рабочее время до 15 минут) Ваша вакансия будет размещена на сервисе. Просмотреть и отредактировать данную вакансию Вы можете в любой момент времени в личном кабинете - категория «МОИ ВАКАНСИИ». Быстрого и лёгкого поиска Вам персонала<i>С найлучшими пожеланиями команда Промму!</i></div>"));
+            Yii::app()->user->setFlash('prommu_flash', "<div class='big-flash'>Уважаемый «" . $user->name . "»!<br>Вы только что добавили новую вакансию на сервис Prommu. На данном этапе она еще не опубликована на сервисе. После закрытия этого информационного окна, Вы можете посмотреть добавленную информацию, изменить и дополнить ее с указанием адресов работы и другой необходимой информации. После этого необходимо нажать кнопку «ОПУБЛИКОВАТЬ ВАКАНСИЮ» и после прохождения модерации (в рабочее время до 15 минут) Ваша вакансия будет размещена на сервисе. Просмотреть и отредактировать данную вакансию Вы можете в любой момент времени в личном кабинете - категория «МОИ ВАКАНСИИ». Быстрого и лёгкого поиска Вам персонала<i>С найлучшими пожеланиями команда Промму!</i></div>");
 
             Mailing::set(
                         3,
@@ -2410,29 +2413,6 @@ WHERE id_vac = {$inVacId}";
 				Share::multipleInsert(['service_cloud'=>$arCloudUpdate]);
       }                  
     }
-
-
-
-    public function getSeсtionsVacCount()
-    {
-        $idus = $this->Profile->id ?: Share::$UserProfile->exInfo->id;
-
-        $sql = "SELECT COUNT(DISTINCT(v.id)) cou 
-            FROM empl_vacations v 
-            WHERE v.id_user = {$idus} AND (v.status = 1)";
-        $vacCnt = Yii::app()->db->createCommand($sql)->queryScalar();
-
-        $sql = "SELECT COUNT(DISTINCT(v.id)) cou 
-            FROM empl_vacations v 
-            LEFT JOIN vacation_stat vs ON vs.id_vac = v.id
-            WHERE v.id_user = {$idus} AND (v.status = 0 OR vs.status in (6,7))";
-        $arcCnt = Yii::app()->db->createCommand($sql)->queryScalar();
-
-        $data['cnt'] = array('vac'=>$vacCnt, 'arc'=>$arcCnt);
-
-        return $data;
-    }
-
     /**
      * Удалить вакансию
      */
@@ -3079,17 +3059,169 @@ WHERE id_vac = {$inVacId}";
         return ['vacancy'=>$arVac, 'filter'=>$arFilter];
     }
     /**
+    * @param $type - string('active'|'archive')
+    * @param $id_user - integer
+    * @return array('active' array,'archive' array,'apps' array, 'items' array)
+    */
+    public function getEmpVacanciesIdList($id_user)
+    {
+        $arRes = ['active'=>[],'archive'=>[],'apps'=>[],'items'=>[]];
+        // находим ID всех вакансий юзера
+        $arVac = Yii::app()->db->createCommand()
+                    ->select("id,status,if(remdate>CURRENT_DATE(),0,1) archive_date")
+                    ->from('empl_vacations')
+                    ->where('id_user=:id',[':id' => $id_user])
+                    ->queryAll();
+
+        if(!count($arVac))
+            return $arRes;
+
+        $arId = array();
+        foreach ($arVac as $v)
+            $arId[] = $v['id'];
+
+        $arRes['apps'] = Yii::app()->db->createCommand()
+                    ->select("id_vac,status,isresponse")
+                    ->from('vacation_stat')
+                    ->where(['in','id_vac',$arId])
+                    ->queryAll();
+
+        foreach ($arVac as $v)
+        {
+            if($v['archive_date'])
+            {
+                $bFlag = true;
+                foreach($arRes['apps'] as $s)
+                    if(
+                        $v['id']==$s['id_vac']
+                        &&
+                        ($s['status']==Responses::$STATUS_BEFORE_RATING // есть уведомление об окончании
+                            ||
+                        $s['status']==Responses::$STATUS_APPLICANT_RATED) // соискатель выставил рейтинг
+                    )
+                    {
+                        $bFlag = false;
+                    }
+                // если нет заявок или ВСЕ заявки с рейтингом от Р
+                $bFlag
+                    ? $arRes['archive'][] = $v['id']
+                    : $arRes['active'][] = $v['id'];
+            }
+            else
+            {
+                $arRes['active'][] = $v['id'];
+            }
+        }
+        return $arRes;
+    }
+    /**
+    * @param $type - string('active'|'archive')
+    * @param $id_user - integer
+    * @return array('active' array,'archive' array,'apps' array)
+    */
+    public function getEmpVacanciesList($type, $id_user=false)
+    {
+        !$id_user && $id_user = ($this->Profile->id ?: Share::$UserProfile->id);
+        $arRes = $this->getEmpVacanciesIdList($id_user);
+        // пагинация
+        $arRes['pages'] = new CPagination(count($arRes[$type]));
+        $arRes['pages']->pageSize = $this->limit;
+        $arRes['pages']->applyLimit($this);
+        // ищем вакансии
+        $arId = array();
+        for($i=$this->offset, $n=count($arRes[$type]); $i<$n; $i++)
+            if($i < ($this->offset + $this->limit))
+                $arId[] = $arRes[$type][$i];
+
+        $arRes['items'] = Yii::app()->db->createCommand()
+                    ->select("id,
+                        title,
+                        status,
+                        repost,
+                        ispremium,
+                        if(ismoder=100,1,0) ismoder,
+                        DATE_FORMAT(remdate,'%d.%m.%Y') remdate,
+                        if(remdate>CURRENT_DATE(),0,1) archive_date")
+                    ->from('empl_vacations')
+                    ->where(['in','id',$arId])
+                    ->order('id desc')
+                    ->queryAll();
+
+        foreach ($arRes['items'] as &$v)
+        {
+            !isset($v['responded']) && $v['responded']=0;
+            foreach ($arRes['apps'] as $s)
+            {
+                if($s['id_vac']==$v['id'])
+                {
+                    if(in_array($s['status'],
+                        [Responses::$STATUS_NEW,
+                        Responses::$STATUS_EMPLOYER_ACCEPT]))
+                    {
+                        $v['responded']++; // считаем откликнувшихся
+                    }
+                    if(in_array($s['status'],
+                        [Responses::$STATUS_BEFORE_RATING,
+                        Responses::$STATUS_APPLICANT_RATED]))
+                    {
+                        $v['need_rating'] = true; // проверяем необходимость оценить С
+                    }
+                }
+            }
+            $t = strtotime($v['remdate']) - mktime(0,0,0);
+            if($t>0)
+            {
+                $t = $t / 86400;
+                $v['left_days_cnt'] = $t;
+                $v['left_days'] = "$t " . Share::endingYears($t,false);
+            }
+            if($v['archive_date'])
+            {
+                $v['vacancy_state'] = 'завершена';
+            }
+            else
+            {
+                if($v['status'])
+                {
+                    $v['vacancy_state'] = $v['ismoder'] ? 'опубликована' : 'ожидает модерации';
+                }
+                else
+                {
+                   $v['vacancy_state'] = 'не опубликована'; 
+                }
+            }
+        }
+        unset($v);
+
+        $arRes['termostat'] = Termostat::getTermostatVacanciesViews($arRes[$type]);
+
+        return $arRes;
+    }
+    /**
+     * @param $type - string('active'|'archive')
      * @param $id_resume int ID resume
-     * @param $isArchive bool page section
      * Получение списка вакансий для С
      */
-    public function getAppVacancies($id_resume, $isArchive=false)
+    public function getAppVacanciesList($type, $id_resume=false)
     {
+        !$id_resume && $id_resume = Share::$UserProfile->exInfo->id_resume;
         $arRes = ['items'=>[],'pages'=>[]];
-        $limit = 10;
-        $filter = 'vs.id_promo=:id AND vs.status' . 
-            (!$isArchive ? '<=5 AND ev.status=1' : '>5');
+
+        $filter = 'vs.id_promo=:id and ';
         $params = [':id' => $id_resume];
+        if($type=='archive')
+        {
+            $filter .= 'vs.status!=:s1 and vs.status!=:s2 and ev.remdate<CURRENT_DATE()';
+            $params[':s1'] = Responses::$STATUS_BEFORE_RATING;
+            $params[':s2'] = Responses::$STATUS_EMPLOYER_RATED;
+        }
+        else // active
+        {
+            $filter .= '( (ev.remdate<CURRENT_DATE() and (vs.status=:s1 or vs.status=:s2)) 
+                or ev.remdate>=CURRENT_DATE())';
+            $params[':s1'] = Responses::$STATUS_BEFORE_RATING;
+            $params[':s2'] = Responses::$STATUS_EMPLOYER_RATED;
+        }
         // id
         $arIdVacs = Yii::app()->db->createCommand()
                     ->select('ev.id')
@@ -3102,13 +3234,14 @@ WHERE id_vac = {$inVacId}";
             return $arRes;
         // pagination
         $arRes['pages'] = new CPagination(count($arIdVacs));
-        $arRes['pages']->pageSize = $limit;
+        $arRes['pages']->pageSize = $this->limit;
         $arRes['pages']->applyLimit($this);
         // full data
         $arRes['items'] = Yii::app()->db->createCommand()
                     ->select("ev.id,
                         ev.id_user employer,
                         ev.title,
+                        DATE_FORMAT(ev.remdate, '%d.%m.%Y') remdate,
                         DATE_FORMAT(ev.crdate, '%d.%m.%Y') crdate,
                         DATE_FORMAT(ev.bdate, '%d.%m.%Y') pubdate,
                         vs.id vstatus_id,
@@ -3133,9 +3266,15 @@ WHERE id_vac = {$inVacId}";
             $arIdUser[] = $v['employer'];
             $v['pubdate']==='00.00.0000' && $v['pubdate'] = $v['crdate'];
             $v['condition'] = $responses->getStatus($v['isresponse'], $v['status']);
-            $v['access_to_chat'] = $v['status']>4; // доступ к чату
-            $v['access_to_answer'] = ($v['isresponse']==2 && $v['status']==4); // приглашение от работодателя сразу status=4
-            $v['second_response'] = (!in_array($v['id'],$arIdDisVacs) && $v['status']==3 && !$v['sresponse']);  // проверяем доступна ли вакансия
+            $v['access_to_chat'] = $v['status']>Responses::$STATUS_EMPLOYER_ACCEPT; // доступ к чату
+            $v['access_to_answer'] = ($v['isresponse']==2 && $v['status']==Responses::$STATUS_EMPLOYER_ACCEPT); // приглашение от работодателя сразу status=4
+            $v['second_response'] = (
+                    !in_array($v['id'],$arIdDisVacs) 
+                    && 
+                    $v['status']==Responses::$STATUS_REJECT 
+                    && 
+                    !$v['sresponse']
+                );  // проверяем доступна ли вакансия
         }
         unset($v);
 
@@ -3188,13 +3327,17 @@ WHERE id_vac = {$inVacId}";
                 $arRes['item']['isresponse'],
                 $arRes['item']['status']
             );
-        $arRes['item']['access_to_chat'] = $arRes['item']['status']>4; // доступ к чату
-        $arRes['item']['access_to_answer'] = ($arRes['item']['isresponse']==2 && $arRes['item']['status']==4); // приглашение от работодателя сразу status=4
+        $arRes['item']['access_to_chat'] = $arRes['item']['status']>Responses::$STATUS_EMPLOYER_ACCEPT; // доступ к чату
+        $arRes['item']['access_to_answer'] = (
+                $arRes['item']['isresponse']==2 
+                && 
+                $arRes['item']['status']==Responses::$STATUS_EMPLOYER_ACCEPT
+            ); // приглашение от работодателя сразу status=4
         $arIdDisVac = $this->checkAccessToResponse([$id_vac]);
         $arRes['item']['second_response'] = (
                 !count($arIdDisVac) 
                 && 
-                $arRes['item']['status']==3 
+                $arRes['item']['status']==Responses::$STATUS_REJECT
                 && 
                 !$arRes['item']['sresponse']
             );  // проверяем доступна ли вакансия
@@ -3369,8 +3512,9 @@ WHERE id_vac = {$inVacId}";
         if($cnt_only)
             return $arRes['cnt'];
 
-        $arRes['pages'] = new CPagination($arRes['cnt']['cnt']);
-        $arRes['pages']->pageSize = $responses->limit;
+        $section = Yii::app()->getRequest()->getParam('section');
+        $arRes['pages'] = new CPagination($arRes['cnt'][$section]);
+        $arRes['pages']->pageSize = 20; // 20 юзеров на странице
         $arRes['pages']->applyLimit($responses);
         $arRes = array_merge($arRes, $responses->getVacResponses($id_vacancy));
 

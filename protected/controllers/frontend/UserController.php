@@ -644,12 +644,11 @@ class UserController extends AppController
             }
         }
 
+        $model = new Vacancy();
+        $data = $model->getVacPubFormData();
         $this->setBreadcrumbs($title = 'Публикация вакансии', MainConfig::$PAGE_VACPUB);
         $this->render($this->ViewModel->pageVacpub,
-                array(
-                    'viData' => (new Vacancy())->getVacPubFormData(),
-                    'IS_PUBDATA' => 1
-                ),
+                array('viData' => $data, 'IS_PUBDATA' => 1),
                 array('htmlTitle' => $title)
             );
     }
@@ -675,8 +674,7 @@ class UserController extends AppController
 
     public function actionVacancies()
     {
-        if(!Share::isEmployer() && !Share::isApplicant())
-            $this->redirect(MainConfig::$PAGE_LOGIN);
+        Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
 
         $data = array();
         $title = '';
@@ -685,25 +683,20 @@ class UserController extends AppController
 
         if(Share::isEmployer())
         {
-            $vac = explode("&", $_GET['vacancy']);
-            $coun = count($vac);
-
-            for($i = 0; $i < $coun; $i ++)
+            $arVac = explode("&", $_GET['vacancy']); // & служебный символ GET. Изменится только первая вакансия
+            if(count($arVac))
             {
                 Yii::app()->db->createCommand()
-                ->update('empl_vacations', array(
-                'count'=> 1),
-                    'id=:id', array(':id'=>$vac[$i]));
+                    ->update(
+                    'empl_vacations', 
+                    ['count'=> 1],
+                    ['in','id',$arVac]);                
             }
 
-            $data['arCount'] = $model->getSeсtionsVacCount()['cnt'];
-            $data['pages'] = new CPagination($data['arCount']['vac']);
-            $data['pages']->pageSize = MainConfig::$DEF_PAGE_LIMIT;
-            $data['pages']->applyLimit($model);
-            $data['viData']['rate'] = Share::$UserProfile->getProfileDataView();
-            $data['viData'] = array_merge($data['viData'], $model->getVacancies());
-            $model = new ProjectConvertVacancy();
-            $data['viData']['projects'] = $model->findRelatedProjects($data['viData']['vacs']);
+            $data['viData'] = $model->getEmpVacanciesList('active');
+            $data['viData']['user'] = Share::$UserProfile->getProfileDataView();
+            $model = new ProjectConvertVacancy(); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            $data['viData']['projects'] = $model->findRelatedProjects($data['viData']['active']);
             $title = 'Мои вакансии';
             $this->setBreadcrumbs($title, MainConfig::$PAGE_VACANCIES);
         }
@@ -732,7 +725,7 @@ class UserController extends AppController
             }
             else
             {
-                $data['viData'] = $model->getAppVacancies($id_resume, $isArchive);
+                $data['viData'] = $model->getAppVacanciesList($isArchive?'archive':'active');
                 $title = 'Мои проекты';
                 $this->setBreadcrumbs($title, $link);
             }
@@ -743,21 +736,18 @@ class UserController extends AppController
 
     public function actionVacarhive()
     {
-        Share::$UserProfile->type != 3 && $this->redirect(MainConfig::$PAGE_LOGIN);
+        !Share::isEmployer() && $this->redirect(MainConfig::$PAGE_LOGIN);
 
-        $Vacancy = new Vacancy();
-        $data = $Vacancy->getSeсtionsVacCount();
-        $pages = new CPagination($data['cnt']['arc']);
-        $pages->pageSize = MainConfig::$DEF_PAGE_LIMIT;
-        $pages->applyLimit($Vacancy);
-        $data['rate'] = Share::$UserProfile->getProfileDataView();
-        $arVacs = $Vacancy->getVacanciesArh();
+        $model = new Vacancy();
+        $data = $model->getEmpVacanciesList('archive');
+        $data['user'] = Share::$UserProfile->getProfileDataView();
 
-        $this->setBreadcrumbs($title = 'Архив вакансий', MainConfig::$PAGE_VACARHIVE);
-        $this->render($this->ViewModel->pageVacancArh,
-                array('viData' => $data, 'arVacs'=>$arVacs, 'pages' => $pages),
-                array('htmlTitle' => $title)
-            );
+        $this->setBreadcrumbs($title='Архив вакансий', MainConfig::$PAGE_VACARHIVE);
+        $this->render(
+            $this->ViewModel->pageVacancies,
+            ['viData'=>$data],
+            ['htmlTitle'=>$title]
+        );
     }
 
 
@@ -1213,7 +1203,7 @@ class UserController extends AppController
     */
     public function actionVacdelete()
     {
-        Share::$UserProfile->type <> 3 && $this->redirect(MainConfig::$PAGE_INDEX);
+        !Share::isEmployer() && $this->redirect(MainConfig::$PAGE_INDEX);
 
         $page = filter_var(Yii::app()->getRequest()->getParam('page'), FILTER_SANITIZE_NUMBER_INT);
         $res = (new Vacancy())->vacDelete();
@@ -1221,7 +1211,7 @@ class UserController extends AppController
             $this->redirect(MainConfig::$PAGE_INDEX);
         }
         else {
-            Yii::app()->user->setFlash('Message', array('type' => '-green', 'message' => $res['message']));
+            Yii::app()->user->setFlash('prommu_flash', $res['message']);
             $url = DS . ($page ? MainConfig::$PAGE_VACANCIES : MainConfig::$PAGE_VACARHIVE);
             $this->redirect($url);
         }
@@ -1231,12 +1221,12 @@ class UserController extends AppController
     */
     public function actionVacPostToSocial()
     {
-        Share::$UserProfile->type <> 3 && $this->redirect(MainConfig::$PAGE_INDEX);
+        !Share::isEmployer() && $this->redirect(MainConfig::$PAGE_INDEX);
 
         $page = filter_var(Yii::app()->getRequest()->getParam('page'), FILTER_SANITIZE_NUMBER_INT);
         $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
         $res = (new Vacancy())->VacPostToSocial();
-        Yii::app()->user->setFlash('Message', array('type' => '-green', 'message' => $res['message']));
+        Yii::app()->user->setFlash('prommu_flash', $res['message']);
         $url = $page ? (DS . MainConfig::$PAGE_VACANCIES) : (MainConfig::$PAGE_VACANCY . DS . $id);
         $this->redirect($url);
     }

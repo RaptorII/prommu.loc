@@ -62,8 +62,7 @@ class MainConfig
     public static $VIEWS_EDIT_PROFILE_EMPLOYER = 'page-edit-profile-employer-tpl';
     //
     public static $VIEWS_COMPANY_PROFILE_OWN = 'page-company-profile-own-tpl';
-    public static $VIEWS_COMPANY_VACS_OWN = 'page-company-vacancies-own-tpl';
-    public static $VIEWS_COMPANY_VACS_ARHIVE = 'page-company-vacancies-archive-tpl';
+    public static $VIEWS_COMPANY_VACS_OWN = 'vacancies/employer-list';
     public static $VIEWS_VACANCY_VIEW = 'page-vacancy-view-tpl';
     public static $VIEWS_PUBL_VACANCY = 'page-publ-vacancy-tpl';
     public static $VIEWS_APPLICANT_PROFILE_OWN = 'page-applicant-profile-own-tpl';

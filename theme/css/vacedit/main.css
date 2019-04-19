@@ -638,7 +638,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
     top: 0;
     left: 0;
     background-color: rgba(52, 52, 52, 0.6);
-    z-index: 2;
+    z-index: 3;
     display: none;
 }
 .city-calendar table{
@@ -1316,6 +1316,10 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 .erv__salary:after,
 .erv__publ-date:after{ width: 20px }
 .erv__title:after{ top: 5px }
+.erv__publ-date:after{
+	top: initial;
+	bottom: 0;
+}
 /*
 *		10-09-2018
 */
@@ -1517,3 +1521,24 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 		margin: 0 5px 5px 5px;
 	}
 }
+/*
+*
+*/
+#DiContent.page-vacancy .remdate_input{
+	padding: 0;
+	position: relative;
+}
+#DiContent.page-vacancy .remdate_input span{
+	position: absolute;
+	top: 7px;
+}
+#DiContent.page-vacancy #remdate_input{
+	width: 220px;
+	border: none;
+	background: transparent;
+	color: #ff8300;
+	font-weight: bold;
+	height: 35px;
+	padding: 0 0 0 150px;
+}
+#remdate_input:focus{ outline: none }

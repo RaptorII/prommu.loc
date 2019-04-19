@@ -1,56 +1,35 @@
 <?php 
-  Yii::app()->getClientScript()->registerCssFile('/theme/css/private/vacansies-list.css');
-  Yii::app()->getClientScript()->registerScriptFile("/theme/js/private/page-vac-list.js", CClientScript::POS_END);
-?>
-<?php if( $mess = Yii::app()->user->getFlash('Message') ): Yii::app()->user->setFlash('Message', null) ?>
-    <script type="text/javascript">var flashMes = "<?=$mess['message']?>"</script>
-<?php endif; ?>
-<?
-  $name = Share::$UserProfile->exInfo->name;
-  $idus = Share::$UserProfile->id;
-  $rt = $viData['rate']['rating']['full'];
-  $stars = 0;
-  if($rt > 0 && $rt <= 2)
-    $stars = 1;
-  elseif($rt > 2 && $rt <= 2.5)
-    $stars = 2;
-  elseif($rt > 2.5 && $rt <= 3.5)
-    $stars = 3;
-  elseif($rt > 3.5 && $rt <= 4.5)
-    $stars = 4;
-  elseif($rt > 4.5 && $rt <= 5)
-    $stars = 5;
+  Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'private/vacansies-list.css');
+  Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'private/page-vac-list.js', CClientScript::POS_END);
 
-  $cntComments = $viData['rate']['lastComments']['count'][0] + $viData['rate']['lastComments']['count'][1];
+	$arUser = $viData['user']['userInfo'];
+	$cntComments = $viData['user']['lastComments']['count'][0] + $viData['user']['lastComments']['count'][1];
 ?>
 <div class='row employer-vacansies-list'>
   <div class="col-xs-12">
     <div class="evl__header">
-      <h1 class="evl__header-name"><?=$name?></h1>
+      <h1 class="evl__header-name"><?=$arUser['name']?></h1>
       <a class='evl__header-btn prmu-btn' href='<?= MainConfig::$PAGE_VACPUB ?>'><span>ДОБАВИТЬ ВАКАНСИЮ</span></a>  
     </div>
   </div>     
   <div class='col-xs-12 col-sm-4 col-lg-3'>
     <div class="evl__logo">
-      <img src="<?=DS . MainConfig::$PATH_EMPL_LOGO . DS . (!Share::$UserProfile->exInfo->logo ?  'logo.png' : (Share::$UserProfile->exInfo->logo) . '400.jpg')?>" class="evl-logo__img js-g-hashint" title="<?=$name?>">
+      <img src="<?=Share::getPhoto(3,$arUser['logo']);?>" class="evl-logo__img js-g-hashint" title="<?=$arUser['name']?>">
       <ul class="evl-logo__stars">
-        <?php
-          for($i=1; $i<=5; $i++):
-            if($i>$stars):?><li></li><?else:?><li class="full"></li><?endif;?>
-        <?php endfor; ?>
+        <li class="full"></li>
       </ul>
-      <span class="evl-logo__subtitle"><?=round($viData['rate']['rating']['full'], 2)?> из 5.0</span>
+      <span class="evl-logo__subtitle"><?=Share::getRating($arUser['rate'], $arUser['rate_neg'])?></span>
       <?php if($cntComments): ?>
         <div class="evl-logo__subtitle">
           <span>Отзывы:</span> 
           <span class="evl-logo__review evl-logo__review-red js-g-hashint" title="Отрицательные отзывы">
-            <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>"><?=$viData['rate']['lastComments']['count'][1]?></a>
+            <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$arUser['id_user']?>"><?=$viData['user']['lastComments']['count'][1]?></a>
           </span>
           <span class="evl-logo__review evl-logo__review-green js-g-hashint" title="Положительные отзывы">
-            <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>"><?=$viData['rate']['lastComments']['count'][0]?></a>
+            <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$arUser['id_user']?>"><?=$viData['user']['lastComments']['count'][0]?></a>
           </span> 
           <span class="ppp__logo-allrev">Всего:</span>
-          <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>"><?=$cntComments?></a>
+          <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$arUser['id_user']?>"><?=$cntComments?></a>
         </div>
       <?php endif; ?>
     </div>
@@ -88,11 +67,9 @@
           <span class="evl-vacancies__empty">Пока нет  вакансий в архиве</span>
         <?php endif; ?>  
       </div>
-      <?php
-        // display pagination
-        $this->widget('CLinkPager', array(
-          'pages' => $pages,
-          'htmlOptions' => array('class' => 'paging-wrapp'),
+      <? $this->widget('CLinkPager', array(
+          'pages' => $viData['pages'],
+          'htmlOptions' => ['class' => 'paging-wrapp'],
           'firstPageLabel' => '1',
           'prevPageLabel' => 'Назад',
           'nextPageLabel' => 'Вперед',

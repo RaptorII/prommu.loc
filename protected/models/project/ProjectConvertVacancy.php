@@ -547,18 +547,14 @@ class ProjectConvertVacancy
 		return $sql['title'];
 	}
 	/**
-	 * @param $arr - array('id')
+	 * @param $arId - array('id')
 	 * @return array - projects
 	 */
-	public function findRelatedProjects($arr)
+	public function findRelatedProjects($arId)
 	{
 		$arRes = array();
-		if(!count($arr))
+		if(!count($arId))
 			return $arRes;
-
-		$arId = array();
-		foreach ($arr as $k => $v)
-			$arId[] = $v['id'];
 
 		$sql = Yii::app()->db->createCommand()
 						->select('project,vacancy')

@@ -471,6 +471,10 @@ class SiteController extends AppController
             else
             {
                 $data = $model->getVacancyView($id);
+                if($isOwner) // для владельца проверка на отношение вакансии к архиву
+                {
+                    $data['archive'] = $model->getEmpVacanciesIdList($id_user)['archive'];
+                }
                 if($data['error'] == 1)
                     throw new CHttpException(404, 'Error'); 
                 // индексируем только если владелец вакансии с этого региона

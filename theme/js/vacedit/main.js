@@ -1304,6 +1304,10 @@ $(function(){
     begDate = getDateFromData(main, 'bdate');
     endDate = getDateFromData(main, 'edate');
 
+    remInp = $('#remdate_input').val();
+    arDate = remInp.split('.');
+    remDate = new Date(Number(arDate[2]),Number(arDate[1]-1),Number(arDate[0]));
+
     if(calendarType=='bdate'){ // дата начала
       if(diffDate(newDate,curDate) >= 0){ // не прошедшая ли дата
         if(endDate){  // дата окончания уже есть
@@ -1330,7 +1334,15 @@ $(function(){
           : $(erEdate).show();
         }
         else{
-          setDate(newDate, elem, main);
+          if(diffDate(newDate,remDate)>0) // проверяем с датой окончания вакансии
+          {
+            $(erEdate).show();
+            $.fancybox.open({ src: "#error_remdate", type: 'inline'});
+          }
+          else
+          {
+            setDate(newDate, elem, main);
+          }
         }
       }
       else{
@@ -1755,7 +1767,60 @@ $(function(){
     $('html, body').animate({ scrollTop: $(b).offset().top-50 }, 1000);
   });
   $('.erv__publ-date').click(function(){
-    var b = $('#city-module');
-    $('html, body').animate({ scrollTop: $(b).offset().top-40 }, 1000);
+    //var b = $('#city-module');
+    //$('html, body').animate({ scrollTop: $(b).offset().top-40 }, 1000);
+    $("#remdate_input").focus();
+  });
+  /*
+  *
+  */
+  $("#remdate_input").datepicker({
+    minDate: $("#remdate_input").val(),
+    changeYear: true,
+    beforeShow: function(){
+      $('#ui-datepicker-div').addClass('custom-calendar');
+    }
+  });
+  $('#remdate_input').change(function(){
+    let item = document.getElementById('remdate_input');
+
+    if($(item).val().length)
+    {
+      let objDate = $(item).datepicker('getDate'),
+          checkYear = new Date().getFullYear(),
+          d = String(objDate.getDate()),
+          m = String(objDate.getMonth()+1),
+          y = objDate.getFullYear();
+
+      d = d.length<2 ? ('0'+d) : d;
+      m = m.length<2 ? ('0'+m) : m;
+      y = checkYear<y ? checkYear : y;
+
+      item.value = d + '.' + m + '.' + y;
+      if(item.value=='01.01.1970')
+      {
+        $(item).addClass('error');
+        item.value='';
+      }
+      else
+      {
+        $(item).removeClass('error');
+      }   
+    }
+  });
+  //
+  //
+  // обработчик выбора даты
+  $('#remdate_input').on('blur',function(e){
+    setTimeout(function(){
+      let val = $(e.target).val();
+      if(!val.length)
+      {
+        $(e.target).addClass('error');
+        $(e.target).val(e.target.dataset.date);
+      }
+      else
+        $(e.target).removeClass('error');
+    },100);
   });
 });

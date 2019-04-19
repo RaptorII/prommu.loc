@@ -673,14 +673,14 @@ class Share
 
 
 
-    public static function endingYears($num)
+    public static function endingYears($num,$year=true)
     {
         $num = (int)$num;  
-        if ($num < 21 && $num > 4) return 'лет';
+        if ($num < 21 && $num > 4) return ($year ? 'лет' : 'дней');
         $num = $num%10;
-        if ($num == 1) return 'год';
-        if ($num > 1 && $num < 5) return 'года';
-        return 'лет';
+        if ($num == 1) return ($year ? 'год' : 'день');
+        if ($num > 1 && $num < 5) return ($year ? 'года' : 'дня');
+        return ($year ? 'лет' : 'дней');
     }
     /**
     * @param $type number - user`s type
