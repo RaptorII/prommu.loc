@@ -430,10 +430,10 @@ class SearchVac extends Model
         {
             $filter[] = "e.id_city IN (".join(',',$data['cities']).')';
         }
-        else
-        {
-            $filter[] = 'e.id_city IN ('.Subdomain::getCacheData()->strCitiesIdes.')';
-        }
+        // else
+        // {
+        //     $filter[] = 'e.id_city IN ('.Subdomain::getCacheData()->strCitiesIdes.')';
+        // }
 
 
         if( !empty($data['smart']) )
