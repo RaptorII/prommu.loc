@@ -425,16 +425,16 @@ class SearchVac extends Model
             $filter[] = "e.title LIKE '%{$data['qs']}%'";
         }
 
-        // city filter
-        if( !empty($data['cities']) )
-        {
-            $filter[] = "e.id_city IN (".join(',',$data['cities']).')';
-        }
-        else
-        {
-            $filter[] = 'e.id_city IN ('.Subdomain::getCacheData()->strCitiesIdes.')';
-        }
-
+        // // city filter
+        // if( !empty($data['cities']) )
+        // {
+        //     $filter[] = "e.id_city IN (".join(',',$data['cities']).')';
+        // }
+        // else
+        // {
+        //     $filter[] = 'e.id_city IN ('.Subdomain::getCacheData()->strCitiesIdes.')';
+        // }
+    
 
         if( !empty($data['smart']) )
         {
@@ -447,12 +447,12 @@ class SearchVac extends Model
         if( !empty($data['card']) )
             $filter[] = ' e.card = 1';
         
-        // posts filter
-        if( !empty($data['posts']) )
-        {
-            foreach ($data['posts'] as $key => &$val) { $val = $key; } // end foreach;
-            $filterPost = ' e.id_attr IN ('.join(',', $data['posts']).')';
-        }
+        // // posts filter
+        // if( !empty($data['posts']) )
+        // {
+        //     foreach ($data['posts'] as $key => &$val) { $val = $key; } // end foreach;
+        //     $filterPost = ' e.id_attr IN ('.join(',', $data['posts']).')';
+        // }
         
         
         $s1 = '';
