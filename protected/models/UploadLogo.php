@@ -634,8 +634,8 @@ class UploadLogo extends Model
         
         $paths = "/images/".$dirUser."/tmp/";
         
-        mkdir("/var/www/files_prommu/images/".$dirUser, 0700);
-        mkdir("/var/www/files_prommu/images/".$dirUser."/tmp/", 0700);
+        var_dump(mkdir("/var/www/files_prommu/images/".$dirUser, 0700));
+        var_dump(mkdir("/var/www/files_prommu/images/".$dirUser."/tmp/", 0700));
         
         $newFullFns = "/var/www/files_prommu" . $paths . $fn;
         
