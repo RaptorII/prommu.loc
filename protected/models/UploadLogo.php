@@ -652,8 +652,6 @@ class UploadLogo extends Model
         
         $newFullFn = $this->domainFiles(). $path . $fn;
         
-        var_dump($newFullFn);
-        
         $d = str_replace('data:image/png;base64,', '', $_POST['data']);
         $d = str_replace(' ', '+', $d);
         $fileData = base64_decode($d);
