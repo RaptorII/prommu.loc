@@ -267,7 +267,7 @@ class UploadLogo extends Model
         } 
 
 
-        return $pathinfo['filename'];
+        return $this->domainFiles().$pathinfo['filename'];
     }
 
     /**
