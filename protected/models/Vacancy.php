@@ -2050,27 +2050,17 @@ WHERE id_vac = {$inVacId}";
               , c1.id_city, c2.name AS ciname, c1.citycu
               , ea.id_attr
               , d.name AS pname
-              , em.id_user uid, em.name coname, ifnull(em.logo, '') logo
+              , em.id_user uid, e.coname, ifnull(em.logo, '') logo
             FROM empl_vacations e 
-            INNER JOIN (
-              SELECT DISTINCT e.id
-              FROM empl_vacations e
-              INNER JOIN empl_city c ON c.id_vac = e.id 
-              INNER JOIN user u ON e.id_user = u.id_user 
-              INNER JOIN empl_attribs ea ON ea.id_vac = e.id
-              {$filter['table']}
-              {$filter['filter']}  AND e.status = 1 AND e.ismoder = 100 AND e.remdate >= now()
-              ORDER BY e.ispremium DESC, e.id DESC 
-              {$limit}  
-            ) t1 ON t1.id = e.id
-            
             LEFT JOIN empl_city c1 ON c1.id_vac = e.id 
             LEFT JOIN city c2 ON c2.id_city = c1.id_city 
             JOIN empl_attribs ea ON ea.id_vac = e.id
             JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
             JOIN employer em ON em.id_user = e.id_user
-            ORDER BY e.ispremium DESC, e.id DESC
-            LIMIT 100";
+            {$filter['table']}
+            {$filter['filter']}  AND e.status = 1 AND e.ismoder = 100 AND e.remdate >= now()
+            ORDER BY e.ispremium DESC, e.id DESC 
+            {$limit}  ";
         $res = Yii::app()->db->createCommand($sql);
         $data= $res->queryAll();
         foreach ($data as $key => $value) {
