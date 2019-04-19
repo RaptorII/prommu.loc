@@ -79,8 +79,8 @@ class UploadLogo extends Model
             }
             else
             {
-                Yii::app()->session['uplLogo'] = array('path' => "/images/{$this->imgPath}/tmp/", 'file' => $fn);
-                    $arRes = array('error' => 0, 'file' => "/images/{$this->imgPath}/tmp/" . $fn);
+                Yii::app()->session['uplLogo'] = array('path' => "/images/{$this->dirUser()}/tmp/", 'file' => $fn);
+                    $arRes = array('error' => 0, 'file' => "/images/{$this->dirUser()}/tmp/" . $fn);
             } // endif
         } // endif
 //        $sql = "SELECT s.id, s.name, DATE_FORMAT(s.crdate, '%d.%m.%Y') crdate
@@ -647,6 +647,7 @@ class UploadLogo extends Model
         
         
         $path = "/images/".$this->dirUser()."/tmp/";
+        mkdir($this->domainFiles()."/images/".$this->dirUser(), 0700);
         mkdir($this->domainFiles()."/images/".$this->dirUser()."/tmp/", 0700);
         $newFullFn = $this->domainFiles(). $path . $fn;
         
@@ -655,7 +656,6 @@ class UploadLogo extends Model
         $fileData = base64_decode($d);
 
         $res = file_put_contents($newFullFn, $fileData);
-        // $res_test = file_put_contents($newFullFns, $fileData);
 
         if($res===false){
             $arRes = array('error' => 1, 'message' => $message);
