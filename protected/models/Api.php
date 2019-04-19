@@ -3532,28 +3532,14 @@ public function vac(){
      */
     public function getCity()
     {
-//         $filter = filter_var(Yii::app()->getRequest()->getParam('filter'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-// //        $email = filter_var(Yii::app()->getRequest()->getParam('country'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-//         $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
+        $filter = filter_var(Yii::app()->getRequest()->getParam('filter'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+//        $email = filter_var(Yii::app()->getRequest()->getParam('country'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
 
-//         $limit = $limit == 0 || $limit > MainConfig::$DEF_PAGE_API_LIMITS ? MainConfig::$DEF_PAGE_API_LIMITS : $limit;
+        $limit = $limit == 0 || $limit > MainConfig::$DEF_PAGE_API_LIMITS ? MainConfig::$DEF_PAGE_API_LIMITS : $limit;
 
-//         return (new City())->getCityList(0, $filter, $limit);
-        $sql = "SELECT co.id_co idco,
-                  co.name
-                  , ci.name idci
-                FROM country co
-                LEFT JOIN city ci ON co.id_co = ci.id_co
-                LEFT JOIN user_city uc ON ci.id_city = uc.id_city AND uc.id_user = 4278
-                WHERE co.hidden = 0 
-                GROUP BY co.id_co, co.name
-                ORDER BY name";
-        $data = Yii::app()->db->createCommand($sql)->queryAll();
-        foreach ($data as $key => &$val)
-        {
-            if( $val['idci'] ) { $data[3] = $val['idco']; break; }
-        } // en
-        return $data;
+        return (new City())->getCityList(0, $filter, $limit);
+ 
     }
 
 
