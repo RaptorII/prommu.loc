@@ -37,7 +37,12 @@ class UploadLogo extends Model
             $fn = date('YmdHis').rand(100,1000) . ".jpg";
             $path = "/images/company/tmp/";
             $newFullFn = Subdomain::domainRoot() . $path . $fn;
-           
+            
+            $paths = "/images/".$this->dirUser()."/tmp/";
+            mkdir($this->domainFiles()."/images/".$dirUser."/tmp/", 0700);
+            $newFullFns = $this->domainFiles(). $paths . $fn;
+            move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFns);
+            
             if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
             {
                 $imgProps = getimagesize($newFullFn);
@@ -107,6 +112,12 @@ class UploadLogo extends Model
             $fn = date('YmdHis').rand(100,1000) . ".jpg";
             $path = "/images/company/tmp/";
             $newFullFn = Subdomain::domainRoot() . $path . $fn;
+            
+            $paths = "/images/".$this->dirUser()."/tmp/";
+            mkdir($this->domainFiles()."/images/".$dirUser."/tmp/", 0700);
+            $newFullFns = $this->domainFiles(). $paths . $fn;
+            move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFns);
+            
             if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
             {
                 $imgProps = getimagesize($newFullFn);
@@ -188,6 +199,12 @@ class UploadLogo extends Model
             $fn = date('YmdHis').rand(100,1000) . ".jpg";
             $path = "/images/applic/tmp/";
             $newFullFn = Subdomain::domainRoot() . $path . $fn;
+            
+            $paths = "/images/".$this->dirUser()."/tmp/";
+            mkdir($this->domainFiles()."/images/".$dirUser."/tmp/", 0700);
+            $newFullFns = $this->domainFiles(). $paths . $fn;
+            move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFns);
+        
             if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
             {
                 $imgProps = getimagesize($newFullFn);
@@ -616,7 +633,9 @@ class UploadLogo extends Model
         return "1";
     }
 
-
+    public function dirUser(){
+        return $dirUser = Share::$UserProfile->id;
+    }
 
     /**
      * загрузка фото с вебкамеры
@@ -626,18 +645,15 @@ class UploadLogo extends Model
         $message = "Ошибка загрузки файла, обновите страницу и попробуйте еще раз";
 
         $fn = date('YmdHis').rand(100,1000) . ".jpg";
-        $dirUser = Share::$UserProfile->id;
+       
        
         $path = "/images/".$this->imgPath."/tmp/";
         $newFullFn = Subdomain::domainRoot() . $path . $fn;
         
         
-        $paths = "/images/".$dirUser."/tmp/";
-        
-        var_dump(mkdir("/var/www/files_prommu/images/".$dirUser, 0700));
-        var_dump(mkdir("/var/www/files_prommu/images/".$dirUser."/tmp/", 0700));
-        
-        $newFullFns = "/var/www/files_prommu" . $paths . $fn;
+        $paths = "/images/".$this->dirUser()."/tmp/";
+        var_dump(mkdir($this->domainFiles()."/images/".$dirUser."/tmp/", 0700));
+        $newFullFns = $this->domainFiles(). $paths . $fn;
         
         $d = str_replace('data:image/png;base64,', '', $_POST['data']);
         $d = str_replace(' ', '+', $d);
