@@ -39,7 +39,7 @@ class UploadLogo extends Model
             // $newFullFn = Subdomain::domainRoot() . $path . $fn;
             
             $path = "/images/".$this->dirUser()."/tmp/";
-            mkdir($this->domainFiles()."/images/".$this->dirUser()."/tmp/", 0700);
+            $this->createUserDir($this->dirUser());
             $newFullFn = $this->domainFiles(). $path . $fn;
             
             if(move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn))
@@ -113,7 +113,7 @@ class UploadLogo extends Model
             // $newFullFn = Subdomain::domainRoot() . $path . $fn;
             
             $path = "/images/".$this->dirUser()."/tmp/";
-            mkdir($this->domainFiles()."/images/".$this->dirUser()."/tmp/", 0700);
+            $this->createUserDir($this->dirUser());
             $newFullFn = $this->domainFiles(). $path . $fn;
             
             if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
@@ -197,7 +197,7 @@ class UploadLogo extends Model
             $fn = date('YmdHis').rand(100,1000) . ".jpg";
             
             $path = "/images/".$this->dirUser()."/tmp/";
-            mkdir($this->domainFiles()."/images/".$this->dirUser()."/tmp/", 0700);
+            $this->createUserDir($this->dirUser());
             $newFullFn = $this->domainFiles(). $path . $fn;
             
             if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
@@ -631,6 +631,11 @@ class UploadLogo extends Model
     public function dirUser(){
         return $dirUser = Share::$UserProfile->id;
     }
+    
+    public function createUserDir($cloud){
+        mkdir($this->domainFiles()."/images/".$cloud, 0700);
+        mkdir($this->domainFiles()."/images/".$cloud."/tmp/", 0700);
+    }
 
     /**
      * загрузка фото с вебкамеры
@@ -647,9 +652,7 @@ class UploadLogo extends Model
         
         
         $path = "/images/".$this->dirUser()."/tmp/";
-        mkdir($this->domainFiles()."/images/".$this->dirUser(), 0700);
-        mkdir($this->domainFiles()."/images/".$this->dirUser()."/tmp/", 0700);
-        
+        $this->createUserDir($this->dirUser());
         $newFullFn = $this->domainFiles(). $path . $fn;
         
         $d = str_replace('data:image/png;base64,', '', $_POST['data']);
