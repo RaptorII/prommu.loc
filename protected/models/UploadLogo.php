@@ -19,9 +19,9 @@ class UploadLogo extends Model
     }
 
     
-    private function domainFiles()
+    public function domainFiles()
 	{
-		return '/var/www/files_prommu';
+		return "/var/www/files_prommu";
 	}
 
     /**
