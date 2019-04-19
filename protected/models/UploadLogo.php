@@ -35,14 +35,14 @@ class UploadLogo extends Model
         {
             $ext = substr($_FILES['photo']['name'], 1 + strrpos($_FILES['photo']['name'], "."));
             $fn = date('YmdHis').rand(100,1000) . ".jpg";
-            $path = "/images/company/tmp/";
-            $newFullFn = Subdomain::domainRoot() . $path . $fn;
+            // $path = "/images/company/tmp/";
+            // $newFullFn = Subdomain::domainRoot() . $path . $fn;
             
-            $paths = "/images/".$this->dirUser()."/tmp/";
-            mkdir($this->domainFiles()."/images/".$dirUser."/tmp/", 0700);
-            $newFullFns = $this->domainFiles(). $paths . $fn;
+            $path = "/images/".$this->dirUser()."/tmp/";
+            mkdir($this->domainFiles()."/images/".$this->dirUser()."/tmp/", 0700);
+            $newFullFn = $this->domainFiles(). $path . $fn;
             
-            if(move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFns))
+            if(move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn))
             {
                 $imgProps = getimagesize($newFullFn);
                 if( $imgProps[0] > 4500 || $imgProps[1] > 4500 )
@@ -57,7 +57,7 @@ class UploadLogo extends Model
                 else
                 {
                     $defSize = 1600;
-                    if( (int) ($ret = $this->imgResizeToRect($newFullFns, $newFullFns, "image/jpeg", $defSize)) > 0 )
+                    if( (int) ($ret = $this->imgResizeToRect($newFullFn, $newFullFn, "image/jpeg", $defSize)) > 0 )
                     {
 
                     }
@@ -109,14 +109,14 @@ class UploadLogo extends Model
         {
             $ext = substr($_FILES['photo']['name'], 1 + strrpos($_FILES['photo']['name'], "."));
             $fn = date('YmdHis').rand(100,1000) . ".jpg";
-            $path = "/images/company/tmp/";
-            $newFullFn = Subdomain::domainRoot() . $path . $fn;
+            // $path = "/images/company/tmp/";
+            // $newFullFn = Subdomain::domainRoot() . $path . $fn;
             
-            $paths = "/images/".$this->dirUser()."/tmp/";
-            mkdir($this->domainFiles()."/images/".$dirUser."/tmp/", 0700);
-            $newFullFns = $this->domainFiles(). $paths . $fn;
+            $path = "/images/".$this->dirUser()."/tmp/";
+            mkdir($this->domainFiles()."/images/".$this->dirUser()."/tmp/", 0700);
+            $newFullFn = $this->domainFiles(). $path . $fn;
             
-            if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFns) )
+            if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
             {
                 $imgProps = getimagesize($newFullFn);
                 if( $imgProps[0] > 4500 || $imgProps[1] > 4500 )
@@ -131,7 +131,7 @@ class UploadLogo extends Model
                 else
                 {
                     $defSize = 1600;
-                    if( (int) ($ret = $this->imgResizeToRect($newFullFns, $newFullFns, "image/jpeg", $defSize)) > 0 )
+                    if( (int) ($ret = $this->imgResizeToRect($newFullFn, $newFullFn, "image/jpeg", $defSize)) > 0 )
                     {
                     }
                     else
@@ -150,18 +150,18 @@ class UploadLogo extends Model
             }
             else
             {
-                Yii::app()->session['uplLogo'] = array('path' => "/images/company/tmp/", 'file' => $fn);
-                $ret = array('error' => 0, 'file' => "/images/company/tmp/" . $fn);
+                Yii::app()->session['uplLogo'] = array('path' => "/images/".$this->dirUser()."/tmp/", 'file' => $fn);
+                $ret = array('error' => 0, 'file' => "/images/".$this->dirUser()."/tmp/" . $fn);
             } // endif
         } // endif
 
         $message = "WARNING!";
         $pathTmp = $path;
         $file =  $fn;
-        if( file_exists(Subdomain::domainRoot() . $pathTmp . $file) )
+        if( file_exists($this->domainFiles() . $pathTmp . $file) )
         {
             $path = "/images/company/";
-            $res = $this->imgCrop(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $path . $file,
+            $res = $this->imgCrop($this->domainFiles(). $pathTmp . $file, $this->domainFiles(). $path . $file,
                     array('x1' => 0,
                         'y1' => 0,
                         'width' => 400,
@@ -169,12 +169,12 @@ class UploadLogo extends Model
                         'rotate' => 0
                         )
                 );
-            $pathinfo = pathinfo(Subdomain::domainRoot() . $pathTmp . $file);
-            $this->imgResizeToRect(Subdomain::domainRoot() . $path . $file, Subdomain::domainRoot() . $path . $pathinfo['filename']  . '100.jpg', "image/jpeg", 220);
-            $this->imgResizeToRect(Subdomain::domainRoot() . $path . $file, Subdomain::domainRoot() . $path . $pathinfo['filename']  . '400.jpg', "image/jpeg", 400);
-            $this->saveAsJpeg(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $path . $pathinfo['filename'] . '000.jpg');
+            $pathinfo = pathinfo($this->domainFiles(). $pathTmp . $file);
+            $this->imgResizeToRect($this->domainFiles(). $path . $file, $this->domainFiles(). $path . $pathinfo['filename']  . '100.jpg', "image/jpeg", 220);
+            $this->imgResizeToRect($this->domainFiles().  $path . $file, $this->domainFiles(). $path . $pathinfo['filename']  . '400.jpg', "image/jpeg", 400);
+            $this->saveAsJpeg($this->domainFiles().  $pathTmp . $file, $this->domainFiles().  $path . $pathinfo['filename'] . '000.jpg');
 
-            unlink(Subdomain::domainRoot() . $path . $file);
+            unlink($this->domainFiles().  $path . $file);
         }
         else
         {
@@ -195,14 +195,12 @@ class UploadLogo extends Model
         {
             $ext = substr($_FILES['photo']['name'], 1 + strrpos($_FILES['photo']['name'], "."));
             $fn = date('YmdHis').rand(100,1000) . ".jpg";
-            $path = "/images/applic/tmp/";
-            $newFullFn = Subdomain::domainRoot() . $path . $fn;
             
-            $paths = "/images/".$this->dirUser()."/tmp/";
-            mkdir($this->domainFiles()."/images/".$dirUser."/tmp/", 0700);
-            $newFullFns = $this->domainFiles(). $paths . $fn;
+            $path = "/images/".$this->dirUser()."/tmp/";
+            mkdir($this->domainFiles()."/images/".$this->dirUser()."/tmp/", 0700);
+            $newFullFn = $this->domainFiles(). $path . $fn;
             
-            if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFns) )
+            if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
             {
                 $imgProps = getimagesize($newFullFn);
                 if( $imgProps[0] > 4500 || $imgProps[1] > 4500 )
@@ -217,7 +215,7 @@ class UploadLogo extends Model
                 else
                 {
                     $defSize = 1600;
-                    if( (int) ($ret = $this->imgResizeToRect($newFullFns, $newFullFns, "image/jpeg", $defSize)) > 0 )
+                    if( (int) ($ret = $this->imgResizeToRect($newFullFn, $newFullFn, "image/jpeg", $defSize)) > 0 )
                     {
                     }
                     else
@@ -236,18 +234,18 @@ class UploadLogo extends Model
             }
             else
             {
-                Yii::app()->session['uplLogo'] = array('path' => "/images/applic/tmp/", 'file' => $fn);
-                $ret = array('error' => 0, 'file' => "/images/applic/tmp/" . $fn);
+                Yii::app()->session['uplLogo'] = array('path' => "/images/".$this->dirUser()."/tmp/", 'file' => $fn);
+                $ret = array('error' => 0, 'file' => "/images/".$this->dirUser()."/tmp/" . $fn);
             } // endif
         } // endif
 
         $message = "WARNING!";
         $pathTmp = $path;
         $file =  $fn;
-        if( file_exists(Subdomain::domainRoot() . $pathTmp . $file) )
+        if( file_exists($this->domainFiles() . $pathTmp . $file) )
         {
-            $path = "/images/applic/";
-            $res = $this->imgCrop(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $path . $file,
+            $path = "/images/".$this->dirUser()."/";
+            $res = $this->imgCrop($this->domainFiles(). $pathTmp . $file, $this->domainFiles(). $path . $file,
                     array('x1' => 0,
                         'y1' => 0,
                         'width' => 400,
@@ -255,13 +253,13 @@ class UploadLogo extends Model
                         'rotate' => 0
                         )
                 );
-            $pathinfo = pathinfo(Subdomain::domainRoot() . $pathTmp . $file);
-            $this->imgResizeToRect(Subdomain::domainRoot() . $path . $file, Subdomain::domainRoot() . $path . $pathinfo['filename']  . '100.jpg', "image/jpeg", 220);
-            $this->imgResizeToRect(Subdomain::domainRoot() . $path . $file, Subdomain::domainRoot() . $path . $pathinfo['filename']  . '225.jpg', "image/jpeg", 225);
-            $this->imgResizeToRect(Subdomain::domainRoot() . $path . $file, Subdomain::domainRoot() . $path . $pathinfo['filename']  . '400.jpg', "image/jpeg", 400);
-            $this->saveAsJpeg(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $path . $pathinfo['filename'] . '000.jpg');
+            $pathinfo = pathinfo($this->domainFiles(). $pathTmp . $file);
+            $this->imgResizeToRect($this->domainFiles(). $path . $file, $this->domainFiles(). $path . $pathinfo['filename']  . '100.jpg', "image/jpeg", 220);
+            $this->imgResizeToRect($this->domainFiles(). $path . $file, $this->domainFiles(). $path . $pathinfo['filename']  . '225.jpg', "image/jpeg", 225);
+            $this->imgResizeToRect($this->domainFiles(). $path . $file, $this->domainFiles(). $path . $pathinfo['filename']  . '400.jpg', "image/jpeg", 400);
+            $this->saveAsJpeg($this->domainFiles(). $pathTmp . $file, $this->domainFiles(). $path . $pathinfo['filename'] . '000.jpg');
 
-            unlink(Subdomain::domainRoot() . $path . $file);
+            unlink($this->domainFiles(). $path . $file);
         }
         else
         {
@@ -286,10 +284,10 @@ class UploadLogo extends Model
         $message = "Ошибка обработки файла";
         $pathTmp = Yii::app()->session['uplLogo']['path'];
         $file = Yii::app()->session['uplLogo']['file'];
-        if( file_exists(Subdomain::domainRoot() . $pathTmp . $file) )
+        if( file_exists($this->domainFiles(). $pathTmp . $file) )
         {
             $path = "/images/{$this->imgPath}/";
-            $res = $this->imgCrop(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $path . $file,
+            $res = $this->imgCrop($this->domainFiles(). $pathTmp . $file, $this->domainFiles(). $path . $file,
                     array('x1' => $x1,
                         'y1' => $y1,
                         'width' => $width,
@@ -299,15 +297,15 @@ class UploadLogo extends Model
                 );
 
             // создаем thumb
-            $pathinfo = pathinfo(Subdomain::domainRoot() . $pathTmp . $file);
-            $this->imgResizeToRect(Subdomain::domainRoot() . $path . $file, Subdomain::domainRoot() . $path . $pathinfo['filename'] . '100.jpg', "image/jpeg", 220);
-            $this->imgResizeToRect(Subdomain::domainRoot() . $path . $file, Subdomain::domainRoot() . $path . $pathinfo['filename'] . '169.jpg', "image/jpeg", 169);
-            $this->imgResizeToRect(Subdomain::domainRoot() . $path . $file, Subdomain::domainRoot() . $path . $pathinfo['filename'] . '400.jpg', "image/jpeg", 400);
+            $pathinfo = pathinfo($this->domainFiles(). $pathTmp . $file);
+            $this->imgResizeToRect($this->domainFiles().  $path . $file, $this->domainFiles(). $path . $pathinfo['filename'] . '100.jpg', "image/jpeg", 220);
+            $this->imgResizeToRect($this->domainFiles(). $path . $file, $this->domainFiles(). $path . $pathinfo['filename'] . '169.jpg', "image/jpeg", 169);
+            $this->imgResizeToRect($this->domainFiles(). $path . $file, $this->domainFiles(). $path . $pathinfo['filename'] . '400.jpg', "image/jpeg", 400);
             // copy orig
 //            copy(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $path . $pathinfo['filename'] . '000.' . $pathinfo['extension']);
-            $this->saveAsJpeg(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $path . $pathinfo['filename'] . '000.jpg', $rotate);
+            $this->saveAsJpeg($this->domainFiles(). $pathTmp . $file, $this->domainFiles(). $path . $pathinfo['filename'] . '000.jpg', $rotate);
 
-            unlink(Subdomain::domainRoot() . $path . $file);
+            unlink($this->domainFiles(). $path . $file);
         }
         else
         {
@@ -342,10 +340,10 @@ class UploadLogo extends Model
         $pathTmp = Yii::app()->session['uplLogo']['path'];
         $file = Yii::app()->session['uplLogo']['file'];
 
-        if( file_exists(Subdomain::domainRoot() . $pathTmp . $file) )
+        if( file_exists($this->domainFiles(). $pathTmp . $file) )
         {
-            $pathinfo = pathinfo(Subdomain::domainRoot() . $pathTmp . $file);
-            $res = $this->imgCrop(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $pathTmp . "{$pathinfo['filename']}tt.jpg",
+            $pathinfo = pathinfo($this->domainFiles(). $pathTmp . $file);
+            $res = $this->imgCrop($this->domainFiles(). $pathTmp . $file, $this->domainFiles(). $pathTmp . "{$pathinfo['filename']}tt.jpg",
                     array('x1' => $x1,
                         'y1' => $y1,
                         'width' => $width,
@@ -355,14 +353,14 @@ class UploadLogo extends Model
                 );
 
             // создаем thumb
-            $this->imgResizeToRect(Subdomain::domainRoot() . $pathTmp . "{$pathinfo['filename']}tt.jpg", Subdomain::domainRoot() . $pathTmp . $pathinfo['filename'] . '100.jpg', "image/jpeg", 220);
-            $this->imgResizeToRect(Subdomain::domainRoot() . $pathTmp . "{$pathinfo['filename']}tt.jpg", Subdomain::domainRoot() . $pathTmp . $pathinfo['filename'] . '400.jpg', "image/jpeg", 400);
-            $this->imgResizeToRect(Subdomain::domainRoot() . $pathTmp . "{$pathinfo['filename']}tt.jpg", Subdomain::domainRoot() . $pathTmp . $pathinfo['filename'] . '169.jpg', "image/jpeg", 169);
-            $this->imgResizeToRect(Subdomain::domainRoot() . $pathTmp . "{$pathinfo['filename']}tt.jpg", Subdomain::domainRoot() . $pathTmp . $pathinfo['filename'] . '30.jpg', "image/jpeg", 30);
+            $this->imgResizeToRect($this->domainFiles(). $pathTmp . "{$pathinfo['filename']}tt.jpg", $this->domainFiles(). $pathTmp . $pathinfo['filename'] . '100.jpg', "image/jpeg", 220);
+            $this->imgResizeToRect($this->domainFiles(). $pathTmp . "{$pathinfo['filename']}tt.jpg", $this->domainFiles(). $pathTmp . $pathinfo['filename'] . '400.jpg', "image/jpeg", 400);
+            $this->imgResizeToRect($this->domainFiles(). $pathTmp . "{$pathinfo['filename']}tt.jpg", $this->domainFiles(). $pathTmp . $pathinfo['filename'] . '169.jpg', "image/jpeg", 169);
+            $this->imgResizeToRect($this->domainFiles(). $pathTmp . "{$pathinfo['filename']}tt.jpg", $this->domainFiles(). $pathTmp . $pathinfo['filename'] . '30.jpg', "image/jpeg", 30);
             // copy orig
-            $this->saveAsJpeg(Subdomain::domainRoot() . $pathTmp . $file, Subdomain::domainRoot() . $pathTmp . $pathinfo['filename'] . '000.jpg', $rotate);
+            $this->saveAsJpeg($this->domainFiles(). $pathTmp . $file, $this->domainFiles(). $pathTmp . $pathinfo['filename'] . '000.jpg', $rotate);
 
-            unlink(Subdomain::domainRoot() . $pathTmp . "{$pathinfo['filename']}tt.jpg");
+            unlink($this->domainFiles(). $pathTmp . "{$pathinfo['filename']}tt.jpg");
         }
         else
         {
@@ -644,20 +642,20 @@ class UploadLogo extends Model
         $fn = date('YmdHis').rand(100,1000) . ".jpg";
        
        
-        $path = "/images/".$this->imgPath."/tmp/";
-        $newFullFn = Subdomain::domainRoot() . $path . $fn;
+        // $path = "/images/".$this->imgPath."/tmp/";
+        // $newFullFn = Subdomain::domainRoot() . $path . $fn;
         
         
-        $paths = "/images/".$this->dirUser()."/tmp/";
-        mkdir($this->domainFiles()."/images/".$dirUser."/tmp/", 0700);
-        $newFullFns = $this->domainFiles(). $paths . $fn;
+        $path = "/images/".$this->dirUser()."/tmp/";
+        mkdir($this->domainFiles()."/images/".$this->dirUser()."/tmp/", 0700);
+        $newFullFn = $this->domainFiles(). $path . $fn;
         
         $d = str_replace('data:image/png;base64,', '', $_POST['data']);
         $d = str_replace(' ', '+', $d);
         $fileData = base64_decode($d);
 
         $res = file_put_contents($newFullFn, $fileData);
-        $res_test = file_put_contents($newFullFns, $fileData);
+        // $res_test = file_put_contents($newFullFns, $fileData);
 
         if($res===false){
             $arRes = array('error' => 1, 'message' => $message);
@@ -675,8 +673,8 @@ class UploadLogo extends Model
                     $arRes = array('error' => 1, 'message' => 'Минимальное разрешение изображения - 400x400 пикселей');
                 }
                 else{
-                    Yii::app()->session['uplLogo'] = array('path' => "/images/tmp/", 'file' => $fn);
-                    $arRes = array('error' => 0, 'file' => "/images/tmp/" . $fn);
+                    Yii::app()->session['uplLogo'] = array('path' => "/images/".$this->dirUser()."/tmp/", 'file' => $fn);
+                    $arRes = array('error' => 0, 'file' => "/images/".$this->dirUser()."/tmp/" . $fn);
                 }
             }
         }
