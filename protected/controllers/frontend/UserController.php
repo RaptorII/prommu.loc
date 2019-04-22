@@ -444,27 +444,25 @@ class UserController extends AppController
 
     public function actionEditprofile()
     {
-        Share::$UserProfile->type < 1 && $this->redirect(MainConfig::$PAGE_LOGIN); // no profile for guest
+        Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN); // no profile for guest
         
-        // save data
-        if( Yii::app()->getRequest()->isPostRequest)
-        {   
-            
+        if( Yii::app()->getRequest()->isPostRequest) // save data
+        {
             $res = Share::$UserProfile->saveProfileData();
             if(!$res['err']) $this->redirect(MainConfig::$PAGE_PROFILE);
-        // del photo
-        } elseif( Yii::app()->getRequest()->getParam('del') )
+        } 
+        elseif( Yii::app()->getRequest()->getParam('del') ) // del photo
         {
             $res = Share::$UserProfile->delProfilePhoto();
             $s1 = $this->ViewModel->replaceInUrl('', 'del', null);
             $this->redirect($_SERVER['HTTP_REFERER']);
-        // сделать фото главным
-        } elseif( Yii::app()->getRequest()->getParam('dm') )
+        } 
+        elseif( Yii::app()->getRequest()->getParam('dm') ) // сделать фото главным
         {
             $res = Share::$UserProfile->setPhotoAsLogo();
             $s1 = $this->ViewModel->replaceInUrl('', 'dm', null);
             $this->redirect($_SERVER['HTTP_REFERER']);
-        } // endif
+        }
 
         $this->setBreadcrumbsEx(array('Мой профиль', MainConfig::$PAGE_PROFILE), array($title = 'Редактирование профиля', MainConfig::$PAGE_EDIT_PROFILE));
 
@@ -472,12 +470,9 @@ class UserController extends AppController
         Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/jquery.form-validator.min.js', CClientScript::POS_END);
         Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/jquery.mask.min.js', CClientScript::POS_END);
 
-        if( Share::$UserProfile->type == 3 ){
-        }
-        else{
-            if(Yii::app()->getRequest()->getParam('ep')){
-                Yii::app()->getClientScript()->registerCssFile("/" . MainConfig::$PATH_CSS . DS . Share::$cssAsset['prof_edit_applic.css']);         
-            }
+        if(Share::isApplicant() && Yii::app()->getRequest()->getParam('ep'))
+        {
+            Yii::app()->getClientScript()->registerCssFile("/" . MainConfig::$PATH_CSS . DS . Share::$cssAsset['prof_edit_applic.css']);
         }
 
         $this->render($this->ViewModel->pageEditProfile,

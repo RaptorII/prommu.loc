@@ -109,9 +109,9 @@ class UserProfileApplic extends UserProfile
                     ->where('u.id_user=:id',[':id'=>$id_user])
                     ->queryAll();
         // по ТЗ если больше 1 фото => 2 бала, если 1 фото => 1 бал         
-        !empty($query['mainphoto']) && $arRes[0] += count($query);
-        $arRes[0] += $query['confirmEmail']; // по ТЗ
-        $arRes[0] += $query['confirmPhone']; // по ТЗ
+        !empty($query[0]['mainphoto']) && $arRes[0] += count($query);
+        $arRes[0] += $query[0]['confirmEmail']; // по ТЗ
+        $arRes[0] += $query[0]['confirmPhone']; // по ТЗ
 
         return $arRes;
     }
@@ -513,12 +513,14 @@ class UserProfileApplic extends UserProfile
         $idresume = $this->exInfo->id_resume;
         $res = $this->checkFieldsProfile();
      
-        if($res['err']){// неправильно заполнены поля
+        if($res['err']) // неправильно заполнены поля
+        {
             return $res;
         } 
-        else{
-            // *** Сохраняем данные пользователя ***
+        else // *** Сохраняем данные пользователя ***
+        {
             $rq = Yii::app()->getRequest();
+            
             $name = filter_var($rq->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $lastname = filter_var($rq->getParam('lastname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $birthday = filter_var($rq->getParam('bdate'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -577,52 +579,35 @@ class UserProfileApplic extends UserProfile
                 $arrs.='Информация о себе|';
             }
 
+            $arRating = Share::$UserProfile->getRateCount();
 
-            // gender
-            $res = Yii::app()->db->createCommand()
-                ->update('resume', array(
-                'isman' => $sex ? 1 : 0,
-            ), 'id_user=:id_user', array(':id_user' => $id));
-            // auto
-            $res = Yii::app()->db->createCommand()
-                ->update('resume', array(
-                'ishasavto' => isset($hasavto) ? 1 : 0,
-            ), 'id_user=:id_user', array(':id_user' => $id));
-            // medbook
-            $res = Yii::app()->db->createCommand()
-                ->update('resume', array(
-                'ismed' => isset($hasmedbook) ? 1 : 0,
-            ), 'id_user=:id_user', array(':id_user' => $id));
-            // smartphone
-            $res = Yii::app()->db->createCommand()
-                ->update('resume', array(
-                'smart' => isset($smart) ? 1 : 0,
-            ), 'id_user=:id_user', array(':id_user' => $id));
-            // card
-            $res = Yii::app()->db->createCommand()
-                ->update('resume', array(
-                'card' => isset($card) ? 1 : 0,
-            ), 'id_user=:id_user', array(':id_user' => $id));
-            // prommu card
-            $res = Yii::app()->db->createCommand()
-                ->update('resume', array(
-                'cardPrommu' => isset($cardPrommu) ? 1 : 0,
-            ), 'id_user=:id_user', array(':id_user' => $id));
+            $res = Yii::app()->db->createCommand()->update(
+                    'resume', 
+                    [
+                        'firstname' => $name,
+                        'lastname' => $lastname,
+                        'aboutme' => $aboutme,
+                        'birthday' =>  $birthday,
+                        'rate' => $arRating[0],
+                        'rate_neg' => $arRating[1],
+                        'isman' => $sex ? 1 : 0, // sex
+                        'ishasavto' => isset($hasavto) ? 1 : 0, // auto
+                        'ismed' => isset($hasmedbook) ? 1 : 0, // medbook
+                        'smart' => isset($smart) ? 1 : 0, // smartphone
+                        'card' => isset($card) ? 1 : 0, // card
+                        'cardPrommu' => isset($cardPrommu) ? 1 : 0, // prommu card
+                        'mdate' => date('Y-m-d H:i:s'),
+                        'ismoder' => 0 
+                    ],
+                    'id_user=:id_user',
+                    [':id_user' => $id]
+                );
 
-            $res = Yii::app()->db->createCommand()
-                ->update('resume', array(
-                'firstname' => $name,
-                'lastname' => $lastname,
-                'aboutme' => $aboutme,
-                'birthday' =>  $birthday,
-                'mdate' => date('Y-m-d H:i:s'),
-                'ismoder' => 0,
-                
-            ), 'id_user=:id_user', array(':id_user' => $id)); 
-
-            if(count($city)){
+            if(count($city))
+            {
                 $insData = array();
-                foreach ($city as $idcity){
+                foreach ($city as $idcity)
+                {
                     $insData[] = array('id_resume'=>$idresume, 'id_user'=>$id, 'id_city'=>$idcity, 'street'=>NULL, 'addinfo'=>NULL);
                 }
                 if(count($insData)){
@@ -654,20 +639,21 @@ class UserProfileApplic extends UserProfile
                 'mdate' => date('Y-m-d H:i:s'),
             ), 'id_user=:id_user', array(':id_user' => $id));
 
-        if($arrs != ''){
-        $link = Subdomain::site() . '/admin/site/PromoEdit'. DS .$id;
-        $message = sprintf("Пользователь <a href='%s'>%s</a> изменил данные профиля.
-            <br />
-            Изменены поля: $arrs
-            <br />
-            Перейти на модерацию соискателя <a href='%s'>по ссылке</a>.",
-            Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . $id,
-            $name,
-           $link
-        );
-      
-        Share::sendmail("prommu.servis@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);
-        Share::sendmail("susgresk@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);  
+        if($arrs != '')
+        {
+            $link = Subdomain::site() . '/admin/site/PromoEdit'. DS .$id;
+            $message = sprintf("Пользователь <a href='%s'>%s</a> изменил данные профиля.
+                <br />
+                Изменены поля: $arrs
+                <br />
+                Перейти на модерацию соискателя <a href='%s'>по ссылке</a>.",
+                Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . $id,
+                $name,
+               $link
+            );
+          
+            Share::sendmail("prommu.servis@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);
+            Share::sendmail("susgresk@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);  
         } 
 
         $message = '<p>Анкета отправлена на модерацию.<br>Модерация занимает до 15 минут в рабочее время. О результатах проверки - Вам прийдет уведомление на эл. почту</p>';

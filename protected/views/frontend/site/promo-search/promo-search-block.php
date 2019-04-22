@@ -75,8 +75,11 @@
                                 <a href='<?= MainConfig::$PAGE_PROFILE_COMMON . DS . $val['id_user'] ?>'><?= $val['firstname'] . ' ' . $val['lastname'] . ', ' . $val['age'] ?></a>
                             </h2>
                             <div class='charac clearfix'>
-                                <div class='rate' title="положительный / отрицательный">
-                                    Рейтинг: <b class="green"><?= $val['rate'] ?></b> / <b class="red"><?= $val['rate_neg'] ?></b>
+                                <div class='rate'>
+                                    Рейтинг:
+                                    <span class="js-g-hashint" title="Всего"><?=($val['rate'] + $val['rate_neg'])?></span>
+                                    (<b class="-green js-g-hashint" title="Положительный"><?=$val['rate']?></b> 
+                                    / <b class="-red js-g-hashint" title="Отрицательный"><?=$val['rate_neg']?></b>)
                                 </div>
                                 <div class='comments' title="положительные / отрицательные">
                                     Отзывы:
@@ -169,11 +172,11 @@
                                         <span class='r1'><?=$val['comm']?></span> | <?=$val['commneg']?>
                                     </div>
                                 <?php endif; ?>
-                                <?php if( is_numeric($val['rate']) ): ?>
-                                <div class='rate js-g-hashint' title='Рейтинг положительный | отрицательный'>
-                                  <span class='r1'><?=$val['rate']?></span> | <?=$val['rate_neg']?>
+                                <div class='rate'>
+                                    <span class="js-g-hashint" title="Всего"><?=($val['rate'] + $val['rate_neg'])?></span>
+                                    (<span class="-green js-g-hashint" title="Положительный"><?=$val['rate']?></span> 
+                                    / <span class="-red js-g-hashint" title="Отрицательный"><?=$val['rate_neg']?></b>)
                                 </div>
-                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

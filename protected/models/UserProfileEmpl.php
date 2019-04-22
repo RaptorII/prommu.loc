@@ -588,7 +588,7 @@ class UserProfileEmpl extends UserProfile
         {
             return $res;   
         }
-        else    // *** Сохраняем данные пользователя ***
+        else // *** Сохраняем данные пользователя ***
         {
             $rq = Yii::app()->getRequest();
             
@@ -705,6 +705,8 @@ class UserProfileEmpl extends UserProfile
 
             if($arrs != '')
             {
+                $arRating = Share::$UserProfile->getRateCount();
+
                 $fields = array(
                     'name' => $name,
                     'firstname' => $fname,
@@ -715,9 +717,10 @@ class UserProfileEmpl extends UserProfile
                     'aboutme' => $aboutme,
                     'ismoder' => 0,
                     'mdate' => date('Y-m-d H:i:s'),
+                    'rate' => $arRating[0],
+                    'rate_neg' => $arRating[1]
                 );
-                
-                
+
                 $res = Yii::app()->db->createCommand()
                     ->update('employer', $fields, 'id_user=:id_user', array(':id_user' => $id));
                 // save user

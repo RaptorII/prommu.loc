@@ -161,11 +161,11 @@
                               </h2>
                           </div>
                           <div class="rate-block">
-                              <div class="com-rate" title="Положительный отрицательный">
-                                  Рейтинг: <span class="pos"><?= $val['rate'] ?></span>/<span
-                                      class="neg"><?= abs($val['rate_neg']) ?></span>
-                                  <div class="btn-rate-details btn-white-green-wr"><a href="#" data-id="<?= $val['id_user'] ?>" title="Показать подробный рейтинг">Подробнее</a>
-                                  </div>
+                              <div class="com-rate">
+                                Рейтинг: 
+                                <span class="js-g-hashint" title="Всего"><?=($val['rate'] + $val['rate_neg'])?></span>
+                                (<b class="-green js-g-hashint" title="Положительный"><?=$val['rate']?></b> 
+                                / <b class="-red js-g-hashint" title="Отрицательный"><?=$val['rate_neg']?></b>)
                               </div>
                               <table class='rate hide-rate'>
                                   <thead>
