@@ -28,7 +28,7 @@
     align-items: stretch;
 }
 
-#DiContent .psv-table__title {
+#DiContent .page-search-vacancy .psv-table__title {
     min-height: 75px;
     max-height: 75px;
     position: relative;
@@ -38,6 +38,7 @@
     content: '';
     position: absolute;
     bottom: 0;
+    left: 0;
     height: 15px;
     width: 100%;
     background: rgba(255,255,255,0);
