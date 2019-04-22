@@ -44,11 +44,11 @@
 								<span class='r1'><?=$item['comm']?></span> | <?=$item['commneg']?>
 							</div>
 						<?php endif; ?>
-						<?php if( is_numeric($item['rate']) ): ?>
-							<div class='rate js-g-hashint' title='Рейтинг положительный | отрицательный'>
-								<span class='r1'><?=$item['rate']?></span> | <?=$item['rate_neg']?>
-							</div>
-						<?php endif; ?>
+            <div class='rate'>
+              <span class="js-g-hashint" title="Всего"><?=($item['rate'] + $item['rate_neg'])?></span>
+              (<span class="-green js-g-hashint" title="Положительный"><?=$item['rate']?></span> 
+              / <span class="-red js-g-hashint" title="Отрицательный"><?=$item['rate_neg']?></span>)
+            </div>
 					</div>
 				</div>
 				</div>
