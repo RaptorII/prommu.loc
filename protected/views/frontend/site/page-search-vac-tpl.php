@@ -32,6 +32,25 @@
     min-height: 75px;
     max-height: 75px;
     position: relative;
+    overflow: hidden;
+}
+
+
+#DiContent .psv-table__title-premium.psv-table__title:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 15px;
+    width: 100%;
+    background: rgba(255,255,255,0);
+    background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(212,219,141,1) 51%, rgba(171,184,32,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,0)), color-stop(51%, rgba(212,219,141,1)), color-stop(100%, rgba(171,184,32,1)));
+    background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(212,219,141,1) 51%, rgba(171,184,32,1) 100%);
+    background: -o-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(212,219,141,1) 51%, rgba(171,184,32,1) 100%);
+    background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(212,219,141,1) 51%, rgba(171,184,32,1) 100%);
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(212,219,141,1) 51%, rgba(171,184,32,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#abb820', GradientType=0 );
 }
 
 #DiContent .psv-table__title:after {
@@ -55,6 +74,10 @@
     display: flex;
     flex-direction: column;
     height: calc( 100% - 75px);
+}
+
+.psv-table__param-block {
+    flex: 1 1 auto;
 }
 /* end fix */
     </style>
