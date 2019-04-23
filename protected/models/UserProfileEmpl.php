@@ -467,7 +467,7 @@ class UserProfileEmpl extends UserProfile
         foreach ($res as $key => $val)
         {
 //            $val['val'] != '' ?: $val['val'] = $val['name'];
-            $attr[$val['key']] = $val;
+            $attr[] = $val;
         } // end foreach
         $data['userAttribs'] = $attr;
 
