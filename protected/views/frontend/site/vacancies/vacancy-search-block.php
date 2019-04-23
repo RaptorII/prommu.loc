@@ -221,11 +221,24 @@
                                     <div class="psv-table__param-name">
                                         <b>Город:</b>
                                     </div>
-                                    <div class="psv-table__param-val psv-table__city" data-city="<?=join(', ', $vac['city'])?>">
-                                        <?php
-                                            echo join(', ', array_slice($vac['city'], 0, 3));
-                                        ?>
-                                    </div>
+                                    <?php
+                                        if (count($vac['city'])>3) {
+                                            ?>
+                                            <div class="psv-table__param-val psv-table__city"
+                                                 data-city="<?= join(', ', $vac['city']) ?>">
+                                                <?php
+                                                echo join(', ', array_slice($vac['city'], 0, 3));
+                                                ?>
+                                            </div>
+                                            <?php
+                                        } else {
+                                            ?>
+                                            <div class="psv-table__param-val">
+                                                <?= join(', ', array_slice($vac['city'], 0, 3));?>
+                                            </div>
+                                            <?php
+                                        }
+                                    ?>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="psv__param ico4">
