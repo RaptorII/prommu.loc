@@ -419,12 +419,7 @@
                             </a>
                             <div class="psv__table-block <?=($vac['ispremium']?'psv__table-premium':'')?>">
                                 <div class="psv-table__param-block">
-                                    <div class="psv__param ico1">
-                                        <div class="psv-table__param-name">
-                                            <b>Краткое описание вакансии:</b>
-                                        </div>
-                                        <div class="psv-table__param-val"><?=$vac['title']?></div>
-                                    </div>
+
                                     <?  // эти константы взяты наобум по стилям   
                                         if($vac['isman']) $sex = 6;
                                         if($vac['iswoman']) $sex = 7; 
@@ -458,7 +453,13 @@
                                             <b>Открыта по:</b>
                                         </div>
                                         <div class="psv-table__param-val"><?=$vac['remdate']?></div>
-                                    </div>                                   
+                                    </div>
+                                    <div class="psv__param ico1">
+                                        <div class="psv-table__param-name">
+                                            <b>Краткое описание вакансии:</b>
+                                        </div>
+                                        <div class="psv-table__param-val"><?=$vac['title']?></div>
+                                    </div>
                                 </div>
                                 <div class="psv-table__logo">
                                     <a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $vac['uid']?>" class="psv-table__logo-link">
