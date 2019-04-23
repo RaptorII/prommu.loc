@@ -221,11 +221,9 @@
                                     <div class="psv-table__param-name">
                                         <b>Город:</b>
                                     </div>
-                                    <div class="psv-table__param-val" data-city="<?=join(', ', $vac['city'])?>">
+                                    <div class="psv-table__param-val psv-table__city" data-city="<?=join(', ', $vac['city'])?>">
                                         <?php
-                                            //join(', ', $vac['city']); //test new vacancy view
                                             echo join(', ', array_slice($vac['city'], 0, 3));
-                                            //echo "mod";
                                         ?>
                                     </div>
                                     <div class="clearfix"></div>

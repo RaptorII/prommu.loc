@@ -29,8 +29,8 @@
 }
 
 #DiContent .page-search-vacancy .psv-table__title {
-    min-height: 75px;
-    max-height: 75px;
+    min-height: 85px;
+    max-height: 85px;
     position: relative;
     overflow: hidden;
 }
@@ -39,9 +39,10 @@
 
 #DiContent .psv__table-item-wrap {
     position: relative;
+    height: 100%;
 }
 
-#DiContent .psv__table-item-wrap:after {
+#DiContent .psv__table-item-wrap psv-table__city:after {
     content: attr(data-city);
     position: absolute;
     width: 100%;
@@ -49,7 +50,7 @@
     top: 0;
 }
 
-#DiContent .psv__table-item-wrap:hover:after {
+#DiContent .psv__table-item-wrap:hover psv-table__city:after {
     content: attr(data-city);
     position: absolute;
     width: 100%;
@@ -94,7 +95,7 @@
 .psv__table-block {
     display: flex;
     flex-direction: column;
-    height: calc( 100% - 75px);
+    height: 100%;
 }
 
 .psv-table__param-block {
@@ -544,11 +545,9 @@
                                             <div class="psv-table__param-name">
                                                 <b>Город:</b>
                                             </div>
-                                            <div class="psv-table__param-val" data-city="<?=join(', ', $vac['city'])?>">
+                                            <div class="psv-table__param-val psv-table__city" data-city="<?=join(', ', $vac['city'])?>">
                                                 <?php
-                                                    //join(', ', $vac['city']); //test new vacancy view
                                                     echo join(', ', array_slice($vac['city'], 0, 3));
-                                                    //echo "mod";
                                                 ?>
                                             </div>
                                             <div class="clearfix"></div>
