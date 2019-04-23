@@ -30,13 +30,13 @@
 
 #DiContent .page-search-vacancy .psv-table__title {
     min-height: 75px;
-    max-height: 75px;
+    /*max-height: 75px;*/
     position: relative;
     overflow: hidden;
+    flex: 1 1 auto;
 }
 
-
-#DiContent .psv-table__title-premium.psv-table__title:before {
+/*#DiContent .psv-table__title-premium.psv-table__title:before {
     content: '';
     position: absolute;
     bottom: 0;
@@ -51,9 +51,9 @@
     background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(171,184,32,1) 51%, rgba(171,184,32,1) 100%);
     background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(171,184,32,1) 51%, rgba(171,184,32,1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#abb820', GradientType=0 );
-}
+}*/
 
-#DiContent .psv-table__title:before {
+/*#DiContent .psv-table__title:before {
     content: '';
     position: absolute;
     bottom: 0;
@@ -62,13 +62,13 @@
     width: 100%;
     background: rgba(255,255,255,0);
     background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(235,235,235,1) 51%, rgba(235,235,235,1) 100%);
-    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,0)), color-stop(51%, rgba(235,235,235,1)), color-stop(100%, rgba(235,235,235,1)));
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,0)), color-stop(51%, rgba(235,235,235,1)),color-stop(100%, rgba(235,235,235,1)));
     background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(235,235,235,1) 51%, rgba(235,235,235,1) 100%);
     background: -o-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(235,235,235,1) 51%, rgba(235,235,235,1) 100%);
     background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(235,235,235,1) 51%, rgba(235,235,235,1) 100%);
     background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(235,235,235,1) 51%, rgba(235,235,235,1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ebebeb', GradientType=0 );
-}
+}*/
 
 .psv__table-block {
     display: flex;
@@ -78,6 +78,13 @@
 
 .psv-table__param-block {
     flex: 1 1 auto;
+}
+
+.psv-table__param-block .psv__param.ico3:hover:after {
+    content: attr(data-city);
+    position: absolute;
+    width: 100%;
+    height: auto;
 }
 /* end fix */
     </style>
@@ -478,75 +485,82 @@
                 <div class="row psv__table-list">
                     <?php $cnt=1; ?>
                     <?php foreach($viData['vacs'] as $key => $vac): ?>
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 psv__table-item">
-                            <a href="<?= MainConfig::$PAGE_VACANCY . DS . $vac['id'] ?>" class="psv-table__title<?=($vac['ispremium']?' psv-table__title-premium js-g-hashint" title="Премиум вакансия"':'"')?>><?php 
-                                if( $vac['shour'] > 0 || $vac['sweek'] > 0 || $vac['smonth'] > 0 || $vac['svisit'] > 0 ){
-                                    if($vac['shour'] > 0)
-                                        echo join(', ', $vac['posts']) . " - " . $vac['shour'] . ' руб/час';
-                                    elseif($vac['sweek'] > 0)
-                                        echo join(', ', $vac['posts']) . " - " . $vac['sweek'] . ' руб/неделю';
-                                    elseif($vac['smonth'] > 0)
-                                        echo join(', ', $vac['posts']) . " - " . $vac['smonth'] . ' руб/мес';
-                                    elseif($vac['svisit'] > 0)
-                                        echo join(', ', $vac['posts']) . " - " . $vac['svisit'] . ' руб/посещение';
-                                }?>
-                            </a>
-                            <div class="psv__table-block <?=($vac['ispremium']?'psv__table-premium':'')?>">
-                                <div class="psv-table__param-block">
-                                    <div class="psv__param ico1">
-                                        <div class="psv-table__param-name">
-                                            <b>Краткое описание вакансии:</b>
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                            <div class="psv__table-item">
+                                <a href="<?= MainConfig::$PAGE_VACANCY . DS . $vac['id'] ?>" class="psv-table__title<?=($vac['ispremium']?' psv-table__title-premium js-g-hashint" title="Премиум вакансия"':'"')?>><?php
+                                    if( $vac['shour'] > 0 || $vac['sweek'] > 0 || $vac['smonth'] > 0 || $vac['svisit'] > 0 ){
+                                        if($vac['shour'] > 0)
+                                            echo join(', ', $vac['posts']) . " - " . $vac['shour'] . ' руб/час';
+                                        elseif($vac['sweek'] > 0)
+                                            echo join(', ', $vac['posts']) . " - " . $vac['sweek'] . ' руб/неделю';
+                                        elseif($vac['smonth'] > 0)
+                                            echo join(', ', $vac['posts']) . " - " . $vac['smonth'] . ' руб/мес';
+                                        elseif($vac['svisit'] > 0)
+                                            echo join(', ', $vac['posts']) . " - " . $vac['svisit'] . ' руб/посещение';
+                                    }?>
+                                </a>
+                                <div class="psv__table-block <?=($vac['ispremium']?'psv__table-premium':'')?>">
+                                    <div class="psv-table__param-block">
+                                        <div class="psv__param ico1">
+                                            <div class="psv-table__param-name">
+                                                <b>Краткое описание вакансии:</b>
+                                            </div>
+                                            <div class="psv-table__param-val"><?=$vac['title']?></div>
                                         </div>
-                                        <div class="psv-table__param-val"><?=$vac['title']?></div>
-                                    </div> 
-                                    <?  // эти константы взяты наобум по стилям   
-                                        if($vac['isman']) $sex = 6;
-                                        if($vac['iswoman']) $sex = 7; 
-                                        if($vac['isman'] && $vac['iswoman']) $sex = 2;
-                                    ?>
-                                    <div class="psv__param ico<?=$sex?>">
-                                        <div class="psv-table__param-name">
-                                            <b>Пол:</b>
+                                        <?  // эти константы взяты наобум по стилям
+                                            if($vac['isman']) $sex = 6;
+                                            if($vac['iswoman']) $sex = 7;
+                                            if($vac['isman'] && $vac['iswoman']) $sex = 2;
+                                        ?>
+                                        <div class="psv__param ico<?=$sex?>">
+                                            <div class="psv-table__param-name">
+                                                <b>Пол:</b>
+                                            </div>
+                                            <div class="psv-table__param-val"><?
+                                            if($sex==2) echo "Мужчины и женщины";
+                                            elseif($sex==6) echo "Мужчины";
+                                            else echo "Женщины";
+                                            ?></div>
                                         </div>
-                                        <div class="psv-table__param-val"><?
-                                        if($sex==2) echo "Мужчины и женщины";
-                                        elseif($sex==6) echo "Мужчины";
-                                        else echo "Женщины";
-                                        ?></div>
+                                        <div class="psv__param ico3">
+                                            <div class="psv-table__param-name">
+                                                <b>Город:</b>
+                                            </div>
+                                            <div class="psv-table__param-val" data-city="<?=join(', ', $vac['city'])?>">
+                                                <?php
+                                                    //join(', ', $vac['city']); //test new vacancy view
+                                                    echo join(', ', array_slice($vac['city'], 0, 3));
+                                                ?>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="psv__param ico4">
+                                            <div class="psv-table__param-name">
+                                                <b>Вид занятости:</b>
+                                            </div>
+                                            <div class="psv-table__param-val"><?=$vac['istemp'] ? 'Постоянная' : 'Временная'?></div>
+                                        </div>
+                                        <div class="psv__param ico5">
+                                            <div class="psv-table__param-name">
+                                                <b>Открыта по:</b>
+                                            </div>
+                                            <div class="psv-table__param-val"><?=$vac['remdate']?></div>
+                                        </div>
                                     </div>
-                                    <div class="psv__param ico3">
-                                        <div class="psv-table__param-name">
-                                            <b>Город:</b>
-                                        </div>
-                                        <div class="psv-table__param-val"><?=join(', ', $vac['city'])?></div>
+                                    <div class="psv-table__logo">
+                                        <a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $vac['uid']?>" class="psv-table__logo-link">
+                                            <img
+                                                alt='Работодатель <?= $vac['coname'] ?> prommu.com'
+                                                src="<?=Share::getPhoto(3, $vac['logo'], 'medium')?>">
+                                        </a>
+                                        <a class="psv-table__logo-name" href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $vac['uid']?>"><?=$vac['coname']?></a>
                                         <div class="clearfix"></div>
                                     </div>
-                                    <div class="psv__param ico4">
-                                        <div class="psv-table__param-name">
-                                            <b>Вид занятости:</b>
-                                        </div>
-                                        <div class="psv-table__param-val"><?=$vac['istemp'] ? 'Постоянная' : 'Временная'?></div>
-                                    </div>
-                                    <div class="psv__param ico5">
-                                        <div class="psv-table__param-name">
-                                            <b>Открыта по:</b>
-                                        </div>
-                                        <div class="psv-table__param-val"><?=$vac['remdate']?></div>
-                                    </div>                                  
-                                </div>
-                                <div class="psv-table__logo">
-                                    <a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $vac['uid']?>" class="psv-table__logo-link">
-                                        <img 
-                                            alt='Работодатель <?= $vac['coname'] ?> prommu.com'
-                                            src="<?=Share::getPhoto(3, $vac['logo'], 'medium')?>">
-                                    </a>
-                                    <a class="psv-table__logo-name" href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $vac['uid']?>"><?=$vac['coname']?></a>
                                     <div class="clearfix"></div>
+                                    <a href="<?=MainConfig::$PAGE_VACANCY . DS . $vac['id']?>" class="psv-table__link">Подробнее</a>
+                                    <a href="javascript:void(0)" class="psv-table__link psv-list__responce-btn" data-id="<?=$vac['id']?>">ОТКЛИКНУТЬСЯ</a>
                                 </div>
-                                <div class="clearfix"></div>
-                                <a href="<?=MainConfig::$PAGE_VACANCY . DS . $vac['id']?>" class="psv-table__link">Подробнее</a>
-                                <a href="javascript:void(0)" class="psv-table__link psv-list__responce-btn" data-id="<?=$vac['id']?>">ОТКЛИКНУТЬСЯ</a>
-                            </div>                            
+                            </div>
                         </div>
                         <?php if( $cnt % 2 == 0 ): ?>
                             <div class="psv__separator2"></div>
