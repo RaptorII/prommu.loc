@@ -59,6 +59,7 @@
     padding: 5px;
 }
 
+/*
 #DiContent .psv-table__city:hover:after {
     content: attr(data-city);
     position: absolute;
@@ -68,7 +69,7 @@
     transition: cubic-bezier(0.47, 0, 0.745, 0.715);
     z-index: 10;
 
-}
+}*/
 
 .psv__table-block {
     display: flex;
@@ -83,6 +84,18 @@
 .psv__param.ico3:hover {
     overflow: visible;
 }
+
+#DiContent .psv__param.ico3:hover .psv-table__city:after {
+    content: attr(data-city);
+    position: absolute;
+    width: 100%;
+    height: auto;
+    top: 0;
+    transition: cubic-bezier(0.47, 0, 0.745, 0.715);
+    z-index: 10;
+
+}
+
 /* end fix */
 </style>
 <?php 
