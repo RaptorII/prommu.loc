@@ -36,6 +36,28 @@
     flex: 1 1 auto;
 }
 
+#DiContent .psv__table-item {padding: 0 4px 8px}
+
+#DiContent .psv__table-item-wrap {
+    position: relative;
+}
+
+#DiContent .psv__table-item-wrap:after {
+    content: attr(data-city);
+    position: absolute;
+    width: 100%;
+    height: auto;
+    top: 0;
+}
+
+#DiContent .psv__table-item-wrap:hover:after {
+    content: attr(data-city);
+    position: absolute;
+    width: 100%;
+    height: auto;
+    top: 50%;
+}
+
 /*#DiContent .psv-table__title-premium.psv-table__title:before {
     content: '';
     position: absolute;
@@ -81,10 +103,7 @@
 }
 
 .psv-table__param-block .psv__param.ico3:hover:after {
-    content: attr(data-city);
-    position: absolute;
-    width: 100%;
-    height: auto;
+
 }
 /* end fix */
     </style>
@@ -485,8 +504,8 @@
                 <div class="row psv__table-list">
                     <?php $cnt=1; ?>
                     <?php foreach($viData['vacs'] as $key => $vac): ?>
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
-                            <div class="psv__table-item">
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 psv__table-item">
+                            <div class="psv__table-item-wrap">
                                 <a href="<?= MainConfig::$PAGE_VACANCY . DS . $vac['id'] ?>" class="psv-table__title<?=($vac['ispremium']?' psv-table__title-premium js-g-hashint" title="Премиум вакансия"':'"')?>><?php
                                     if( $vac['shour'] > 0 || $vac['sweek'] > 0 || $vac['smonth'] > 0 || $vac['svisit'] > 0 ){
                                         if($vac['shour'] > 0)
