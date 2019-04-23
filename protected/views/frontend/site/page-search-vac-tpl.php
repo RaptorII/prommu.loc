@@ -58,9 +58,10 @@
     height: auto;
     top: 10px;
     opacity: 0;
-    transition: all .1s cubic-bezier(0.47, 0, 0.745, 0.715);
+    transition: all .2s cubic-bezier(0.47, 0, 0.745, 0.715);
     background: white;
-    padding: 5px;
+    margin: -1px 0 0 -5px;
+    padding: 0 4px;
     border: 1px solid grey;
 }
 
@@ -84,9 +85,8 @@
     height: auto;
     top: 0;
     opacity: 1;
-    transition: all .1s cubic-bezier(0.47, 0, 0.745, 0.715);
+    transition: all .2s cubic-bezier(0.47, 0, 0.745, 0.715);
     z-index: 10;
-
 }
 
 /* end fix */
@@ -523,11 +523,25 @@
                                             <div class="psv-table__param-name">
                                                 <b>Город:</b>
                                             </div>
-                                            <div class="psv-table__param-val psv-table__city" data-city="<?=join(', ', $vac['city'])?>">
-                                                <?php
-                                                    echo join(', ', array_slice($vac['city'], 0, 3));
-                                                ?>
-                                            </div>
+                                            <?php
+                                                if (count($vac['city'])>3) {
+                                                    ?>
+                                                    <div class="psv-table__param-val psv-table__city"
+                                                         data-city="<?= join(', ', $vac['city']) ?>">
+                                                        <?php
+                                                        echo join(', ', array_slice($vac['city'], 0, 3));
+                                                        ?>
+                                                    </div>
+                                                    <?php
+                                                } else {
+                                            ?>
+                                                <div class="psv-table__param-val psv-table__city">
+                                                    <?= join(', ', array_slice($vac['city'], 0, 3));?>
+                                                </div>
+                                            <?php
+                                                }
+                                            ?>
+
                                             <div class="clearfix"></div>
                                         </div>
                                         <div class="psv__param ico4">
