@@ -29,10 +29,11 @@
 }
 
 #DiContent .page-search-vacancy .psv-table__title {
-    min-height: 85px;
-    max-height: 85px;
+    /*min-height: 85px;
+    max-height: 85px;*/
     position: relative;
     overflow: hidden;
+    flex: 1 1 auto;
 }
 
 #DiContent .psv__table-item {padding: 0 4px 8px}
@@ -40,6 +41,8 @@
 #DiContent .psv__table-item-wrap {
     position: relative;
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 #DiContent .psv-table__city {
@@ -59,22 +62,10 @@
     padding: 5px;
 }
 
-/*
-#DiContent .psv-table__city:hover:after {
-    content: attr(data-city);
-    position: absolute;
-    width: 100%;
-    height: auto;
-    top: 0;
-    transition: cubic-bezier(0.47, 0, 0.745, 0.715);
-    z-index: 10;
-
-}*/
-
 .psv__table-block {
     display: flex;
     flex-direction: column;
-    height: calc( 100% - 85px );
+    /*height: calc( 100% - 85px );*/
 }
 
 .psv-table__param-block {
@@ -97,7 +88,7 @@
 }
 
 /* end fix */
-</style>
+</style>s
 <?php 
 	// если не моб устройство
 	//endif; 
