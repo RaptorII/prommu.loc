@@ -29,8 +29,6 @@
 }
 
 #DiContent .page-search-vacancy .psv-table__title {
-    /*min-height: 85px;
-    max-height: 85px;*/
     position: relative;
     overflow: hidden;
     flex: 1 1 auto;
@@ -59,7 +57,7 @@
     height: auto;
     top: 10px;
     opacity: 0;
-    transition: all .5s cubic-bezier(0.47, 0, 0.745, 0.715);
+    transition: all .1s cubic-bezier(0.47, 0, 0.745, 0.715);
     background: white;
     padding: 5px;
     border: 1px solid grey;
@@ -68,7 +66,6 @@
 .psv__table-block {
     display: flex;
     flex-direction: column;
-    /*height: calc( 100% - 85px );*/
 }
 
 .psv-table__param-block {
@@ -86,7 +83,7 @@
     height: auto;
     top: 0;
     opacity: 1;
-    transition: all .5s cubic-bezier(0.47, 0, 0.745, 0.715);
+    transition: all .1s cubic-bezier(0.47, 0, 0.745, 0.715);
     z-index: 10;
 
 }
