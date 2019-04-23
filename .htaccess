@@ -1,0 +1,34 @@
+RewriteEngine on
+RewriteBase /
+
+# if a directory or a file exists, use it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+# otherwise forward it to index.php
+RewriteRule . index.php
+
+# im files
+RewriteCond %{REQUEST_URI} ^(.*)content/protected/im(.*)$ [NC]
+RewriteCond %{HTTP_HOST} ^(.*)$
+RewriteRule ^(.*)$ https://%1/imfiles?f=$1 [R,L]
+RewriteCond %{REQUEST_URI} ^(.*)content/im(.*)$ [NC]
+RewriteCond %{HTTP_HOST} ^(.*)$
+RewriteRule ^(.*)$ https://%1/imfiles?f=$1 [R,L]
+
+#RedirectMatch (/images/.*\.jpg)$ https://prommu.com$1
+#RedirectMatch (/images/.*\.png)$ https://prommu.com$1
+
+#<filesMatch "\.(css|js)$">
+#	Header set Cache-Control "max-age=604800"
+#</filesMatch>
+#<filesMatch "\.(ttf|otf)$">
+#	Header set Cache-Control "max-age=31536000"
+#</filesMatch>
+
+RewriteCond %{REQUEST_URI} ^/rabotodatel$
+RewriteRule ^.*$ http://prommu.dev/about/empl? [R=301,L]
+RewriteCond %{REQUEST_URI} ^/soiskatelyam$
+RewriteRule ^.*$ http://prommu.dev/about/prom? [R=301,L]
+
+RedirectMatch (/images/.\.jpg)$ https://prommu.com$1
+RedirectMatch (/images/.\.png)$ https://prommu.com$1
