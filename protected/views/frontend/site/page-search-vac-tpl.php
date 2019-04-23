@@ -29,6 +29,7 @@
 }
 
 #DiContent .page-search-vacancy .psv-table__title {
+    min-height: auto;
     position: relative;
     overflow: hidden;
     flex: 1 1 auto;
