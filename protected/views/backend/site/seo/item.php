@@ -16,7 +16,7 @@
 				</label>
 				<? if(intval($viData['id'])): ?>
 					<br><br>
-					<a href="https://<?=$viData['example']?>" target="_blank"><b>Проверить страницу</b></a>
+					<a href="<?=$viData['example']?>" target="_blank"><b>Проверить страницу</b></a>
 				<? endif; ?>
 				<div class="bs-callout bs-callout-warning">На страницу могут распространятся другие правила, которые перекроют действие параметра "Индексировать страницу"</div>
 				<label class="d-label">

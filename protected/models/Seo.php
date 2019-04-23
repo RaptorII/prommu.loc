@@ -920,7 +920,7 @@ class Seo extends CActiveRecord
           
         if($idCity==$objDomain->id)
         {
-            $arRes['example'] = $objDomain->url;
+            $arRes['example'] = "https://" . $objDomain->url;
             $table = $objDomain->seo;
         }
         elseif(is_array($arSubdomains[$idCity]))
