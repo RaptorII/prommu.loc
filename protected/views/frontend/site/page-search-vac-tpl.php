@@ -30,10 +30,9 @@
 
 #DiContent .page-search-vacancy .psv-table__title {
     min-height: 75px;
-    /*max-height: 75px;*/
+    max-height: 75px;
     position: relative;
     overflow: hidden;
-    flex: 1 1 auto;
 }
 
 #DiContent .psv__table-item {padding: 0 4px 8px}
@@ -549,7 +548,7 @@
                                                 <?php
                                                     //join(', ', $vac['city']); //test new vacancy view
                                                     echo join(', ', array_slice($vac['city'], 0, 3));
-                                                    echo "mod";
+                                                    //echo "mod";
                                                 ?>
                                             </div>
                                             <div class="clearfix"></div>
