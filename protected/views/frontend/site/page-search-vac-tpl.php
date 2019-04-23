@@ -42,7 +42,7 @@
     height: 100%;
 }
 
-#DiContent psv-table__city:after {
+#DiContent .psv-table__city:after {
     content: attr(data-city);
     display: block;
     position: absolute;
@@ -51,7 +51,7 @@
     top: 0;
 }
 
-#DiContent psv-table__city::hover:after {
+#DiContent .psv-table__city:hover:after {
     content: attr(data-city);
     position: absolute;
     width: 100%;
