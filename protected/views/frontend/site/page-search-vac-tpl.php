@@ -70,40 +70,6 @@
 
 }
 
-/*#DiContent .psv-table__title-premium.psv-table__title:before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 15px;
-    width: 100%;
-    background: rgba(255,255,255,0);
-    background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(171,184,32,1) 51%, rgba(171,184,32,1) 100%);
-    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,0)), color-stop(51%, rgba(171,184,32,1)), color-stop(100%, rgba(171,184,32,1)));
-    background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(171,184,32,1) 51%, rgba(171,184,32,1) 100%);
-    background: -o-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(171,184,32,1) 51%, rgba(171,184,32,1) 100%);
-    background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(171,184,32,1) 51%, rgba(171,184,32,1) 100%);
-    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(171,184,32,1) 51%, rgba(171,184,32,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#abb820', GradientType=0 );
-}*/
-
-/*#DiContent .psv-table__title:before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 15px;
-    width: 100%;
-    background: rgba(255,255,255,0);
-    background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(235,235,235,1) 51%, rgba(235,235,235,1) 100%);
-    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,0)), color-stop(51%, rgba(235,235,235,1)),color-stop(100%, rgba(235,235,235,1)));
-    background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(235,235,235,1) 51%, rgba(235,235,235,1) 100%);
-    background: -o-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(235,235,235,1) 51%, rgba(235,235,235,1) 100%);
-    background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(235,235,235,1) 51%, rgba(235,235,235,1) 100%);
-    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(235,235,235,1) 51%, rgba(235,235,235,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ebebeb', GradientType=0 );
-}*/
-
 .psv__table-block {
     display: flex;
     flex-direction: column;
@@ -114,11 +80,11 @@
     flex: 1 1 auto;
 }
 
-.psv-table__param-block .psv__param.ico3:hover:after {
-
+.psv-table__param:hover {
+    overflow: visible;
 }
 /* end fix */
-    </style>
+</style>
 <?php 
 	// если не моб устройство
 	//endif; 
