@@ -44,7 +44,7 @@
 
 #DiContent .psv-table__city {
     position: relative;
-    z-index: 1;
+    z-index: 2;
 }
 
 #DiContent .psv-table__city:after {
