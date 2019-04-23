@@ -58,7 +58,7 @@
     width: 100%;
     height: auto;
     top: 50px;
-    transition: all cubic-bezier(0.47, 0, 0.745, 0.715);
+    transition: all .5s cubic-bezier(0.47, 0, 0.745, 0.715);
     background: white;
     padding: 5px;
     border: 1px solid grey;
@@ -84,7 +84,7 @@
     width: 100%;
     height: auto;
     top: 0;
-    transition: all cubic-bezier(0.47, 0, 0.745, 0.715);
+    transition: all .5s cubic-bezier(0.47, 0, 0.745, 0.715);
     z-index: 10;
 
 }
