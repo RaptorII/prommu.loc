@@ -530,6 +530,7 @@
                                                 <?php
                                                     //join(', ', $vac['city']); //test new vacancy view
                                                     echo join(', ', array_slice($vac['city'], 0, 3));
+                                                    echo "mod";
                                                 ?>
                                             </div>
                                             <div class="clearfix"></div>
