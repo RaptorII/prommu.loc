@@ -535,7 +535,7 @@
                                                     <?php
                                                 } else {
                                             ?>
-                                                <div class="psv-table__param-val psv-table__city">
+                                                <div class="psv-table__param-val">
                                                     <?= join(', ', array_slice($vac['city'], 0, 3));?>
                                                 </div>
                                             <?php
