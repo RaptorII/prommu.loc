@@ -80,7 +80,7 @@
     flex: 1 1 auto;
 }
 
-.psv-table__param:hover {
+.psv__param.ico3:hover {
     overflow: visible;
 }
 /* end fix */
