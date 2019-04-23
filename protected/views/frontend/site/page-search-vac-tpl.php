@@ -74,6 +74,10 @@
     flex: 1 1 auto;
 }
 
+.psv-table__param-block .psv__param.ico3 .psv-table__param-val {
+    display: block;
+}
+
 .psv-table__param-block .psv__param.ico3:hover {
     overflow: visible;
 }
