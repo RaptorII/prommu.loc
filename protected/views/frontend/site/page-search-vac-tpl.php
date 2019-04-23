@@ -46,9 +46,12 @@
     content: attr(data-city);
     display: block;
     position: absolute;
-    width: 100%;
+    width: 80%;
     height: auto;
-    top: 0;
+    top: 50px;
+    transition: cubic-bezier(0.47, 0, 0.745, 0.715);
+    background: white;
+    padding: 5px;
 }
 
 #DiContent .psv-table__city:hover:after {
@@ -56,7 +59,9 @@
     position: absolute;
     width: 100%;
     height: auto;
-    top: 50%;
+    top: 20px;
+    transition: cubic-bezier(0.47, 0, 0.745, 0.715);
+
 }
 
 /*#DiContent .psv-table__title-premium.psv-table__title:before {
