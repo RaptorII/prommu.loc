@@ -46,6 +46,7 @@
 }
 
 #DiContent .psv-table__city {
+    display: block;
     position: relative;
     z-index: 2;
 }
@@ -57,9 +58,10 @@
     width: 100%;
     height: auto;
     top: 50px;
-    transition: cubic-bezier(0.47, 0, 0.745, 0.715);
+    transition: all cubic-bezier(0.47, 0, 0.745, 0.715);
     background: white;
     padding: 5px;
+    border: 1px solid grey;
 }
 
 .psv__table-block {
@@ -82,13 +84,13 @@
     width: 100%;
     height: auto;
     top: 0;
-    transition: cubic-bezier(0.47, 0, 0.745, 0.715);
+    transition: all cubic-bezier(0.47, 0, 0.745, 0.715);
     z-index: 10;
 
 }
 
 /* end fix */
-</style>s
+</style>
 <?php 
 	// если не моб устройство
 	//endif; 
