@@ -1546,10 +1546,77 @@ class SiteController extends Controller
     }
     public function actionSeo()
     {
-        if(strpos($this->user_access, "SEO") === false) {
+        if(!self::isAuth() || strpos($this->user_access, "SEO") === false)
+        {
             $this->render('access');
             return;
-        } 
+        }
+
+        $rq = Yii::app()->getRequest();
+        $bUrl = Yii::app()->request->baseUrl;
+        $gcs = Yii::app()->getClientScript();
+        $id = $rq->getParam('id');
+
+        $model = new Seo;
+        $data = array();
+
+        if(isset($id))
+        {
+            if($rq->getParam('delete')==1)
+            {
+                $model->deleteItem($rq);
+                $this->redirect(['seo']); 
+            }
+
+            if($rq->isPostRequest)
+            {
+                $data = $model->setDataItem($rq);
+                $data['redirect'] && $this->redirect(['seo']);
+            }
+            else
+            {
+                $data = $model->getDataItem($rq);
+            }
+
+            $gcs->registerCssFile($bUrl . '/css/template.css');
+            $this->setPageTitle('Редактирование страницы');
+            $this->breadcrumbs = array(
+                'СЕО'=>['sect?p=seo'],
+                'Мета данные'=>['/seo'],
+                '2'=>'Редактирование страницы'
+            );
+            $this->render('seo/item',['viData'=>$data,'model'=>$model]); 
+        }
+        else
+        {
+            $data['domain'] = Subdomain::domain();
+            $data['subdomains'] = Subdomain::getCacheData()->data;
+            $data['dir'] = $rq->getParam('dir')=='asc' ? 'desc' : 'asc';
+            $data['head'] = array(
+                    'id' => 'ID',
+                    'url' => 'Url',
+                    'meta_title' => 'Title',
+                    'mdate' => 'Дата изменения'
+                );
+
+            $this->setPageTitle('Мета данные');
+            $this->breadcrumbs = array('СЕО'=>['sect?p=seo'],'1'=>'Мета данные');
+
+            if($rq->isAjaxRequest)
+            {
+                $this->renderPartial('seo/list_table',['viData'=>$data,'model'=>$model]);
+            }
+            else
+            {
+                $bUrl = Yii::app()->request->baseUrl;
+                $gcs = Yii::app()->getClientScript();
+                $gcs->registerCssFile($bUrl . '/css/template.css');
+                $this->render('seo/list',['viData'=>$data,'model'=>$model]); 
+            }
+        }
+
+/*
+
         $model = new Seo('search');
         $model->unsetAttributes();
         if($_GET['seo']){
@@ -1562,7 +1629,7 @@ class SiteController extends Controller
             $this->setPageTitle('Редактирование СЕО');
             $this->breadcrumbs = array('СЕО'=>array('sect?p=seo'),'1'=>'Фильтр');
             $this->render('seo/list', array('model' => $model));
-        } 
+        } */
     }
 
     /**

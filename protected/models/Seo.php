@@ -10,6 +10,9 @@
  */
 class Seo extends CActiveRecord
 {
+    public $offset;
+    public $limit;
+
     public function exist($idOrUrl)
     {
         $table = Subdomain::getCacheData()->seo;
@@ -865,5 +868,199 @@ class Seo extends CActiveRecord
         }
         else
             return false;
+    }
+    /**
+     * @param string $table name of seo table
+     * @return array ['cnt','pages','items']
+     */
+    public function getDataList($table)
+    {
+        $db = Yii::app()->db;
+        $rq = Yii::app()->getRequest();
+        $sort = $rq->getParam('sort');
+        $dir = $rq->getParam('dir');
+        $order = (!empty($sort) && !empty($dir)) ? "$sort $dir" : "id desc";
+        $arRes = array();
+
+        $arRes['cnt'] = $db->createCommand()
+                            ->select('count(id)')
+                            ->from($table)
+                            ->queryScalar();
+
+        $arRes['pages'] = new CPagination($arRes['cnt']);
+        $arRes['pages']->pageSize = 20;
+        $arRes['pages']->applyLimit($this);
+
+        $arRes['items'] = $db->createCommand()
+                            ->select("
+                                id,
+                                url,
+                                DATE_FORMAT(mdate,'%H:%i %d.%m.%y') mdate,
+                                meta_title")
+                            ->from($table)
+                            ->offset($this->offset)
+                            ->limit($this->limit)
+                            ->order($order)
+                            ->queryAll();
+
+        return $arRes;
+    }
+    /**
+     * @param object $obj - request
+     * @return array ['id','item']
+     */
+    public function getDataItem($obj)
+    {
+        $db = Yii::app()->db;
+        $arRes = ['item'=>[]];
+        $arRes['id'] = intval($obj->getParam('id'));
+        $idCity = $obj->getParam('table');
+        $objDomain = Subdomain::domain();
+        $arSubdomains = Subdomain::getCacheData()->data;
+          
+        if($idCity==$objDomain->id)
+        {
+            $arRes['example'] = $objDomain->url;
+            $table = $objDomain->seo;
+        }
+        elseif(is_array($arSubdomains[$idCity]))
+        {
+            $table = $arSubdomains[$idCity]['seo'];
+            $arRes['example'] = $arSubdomains[$idCity]['url'];
+        }
+        else 
+            return false;
+
+        if(isset($table))
+        {
+            $arRes['item'] = $db->createCommand()
+                                ->select("*")
+                                ->from($table)
+                                ->where('id=:id',[':id'=>$arRes['id']])
+                                ->queryRow();
+
+            $arRes['example'] = $arRes['example'] . $arRes['item']['url'];
+        }
+        return $arRes;
+    }
+    /**
+     * @param object $obj - request
+     * @return array ['id','item','error','messages']
+     */
+    public function setDataItem($obj)
+    {
+        $db = Yii::app()->db;
+        $arRes = array('error'=>false,'item'=>[],'messages'=>[]);
+        // id
+        $arRes['id'] = $obj->getParam('id');
+        // index
+        $arRes['item']['index'] = $obj->getParam('index');
+        // h1
+        $arRes['item']['seo_h1'] = filter_var(
+                        trim($obj->getParam('seo_h1')),
+                        FILTER_SANITIZE_FULL_SPECIAL_CHARS
+                    );
+        // url
+        $arRes['item']['url'] = filter_var(
+                        trim($obj->getParam('url')),
+                        FILTER_SANITIZE_FULL_SPECIAL_CHARS
+                    );
+        // title
+        $arRes['item']['meta_title'] = filter_var(
+                        trim($obj->getParam('meta_title')),
+                        FILTER_SANITIZE_FULL_SPECIAL_CHARS
+                    );
+        // description
+        $arRes['item']['meta_description'] = filter_var(
+                        trim($obj->getParam('meta_description')),
+                        FILTER_SANITIZE_FULL_SPECIAL_CHARS
+                    );
+        // keywords
+        $arRes['item']['meta_keywords'] = $obj->getParam('meta_keywords');
+
+        $idCity = $obj->getParam('table');
+        $objDomain = Subdomain::domain();
+        $arSubdomains = Subdomain::getCacheData()->data;
+
+        if($idCity==$objDomain->id)
+            $table = $objDomain->seo;
+        elseif(is_array($arSubdomains[$idCity]))
+            $table = $arSubdomains[$idCity]['seo'];
+        else 
+        {
+            $arRes['messages'][] = 'Некорректная таблица БД. Вернитесь на страницу списка';
+        }
+
+        if(empty($arRes['item']['url']))
+            $arRes['messages'][] = 'поле "URL" обязательно для заполнения';
+        else
+        {
+            $query = $db->createCommand()
+                        ->select("id")
+                        ->from($table)
+                        ->where(['like', 'url', $arRes['item']['url']])
+                        ->queryScalar();
+            if($query && !intval($arRes['id']))
+                $arRes['messages'][] = 'Запись с таким урлом уже существует';
+        }
+
+
+
+        if(count($arRes['messages'])) // error
+        {
+            $arRes['error'] = true;
+            return $arRes;
+        }
+
+        if(!intval($arRes['id'])) // insert
+        {
+            $arRes['item']['mdate'] = date("Y-m-d h-i-s");
+            $result = $db->createCommand()
+                        ->insert($table, $arRes['item']);
+        }
+        else // update
+        {
+            $arRes['item']['crdate'] = date("Y-m-d h-i-s");
+            $result = $db->createCommand()
+                        ->update($table, $arRes['item'], 'id=:id', [':id'=>$arRes['id']]);
+        }
+
+        if($result)
+        {
+            Yii::app()->cache->flush(); // Удаляем закешированные данные
+            Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
+            return array('redirect' => true);
+        }
+        else
+        {
+            Yii::app()->user->setFlash('danger', 'Ошибка сохранения');
+            return array('redirect' => true);
+        }
+
+        return $arRes;
+    }
+    /**
+     * @param object $obj - request
+     */
+    public function deleteItem($obj)
+    {
+        $id = $obj->getParam('id');
+        $idCity = $obj->getParam('table');
+        $objDomain = Subdomain::domain();
+        $arSubdomains = Subdomain::getCacheData()->data;
+          
+        if($idCity==$objDomain->id)
+            $table = $objDomain->seo;
+        elseif(is_array($arSubdomains[$idCity]))
+            $table = $arSubdomains[$idCity]['seo'];
+        else
+            return false;
+
+        $result = Yii::app()->db->createCommand()
+                    ->delete($table, 'id=:id', [':id'=>$id]);
+        if($result)
+            Yii::app()->user->setFlash('success', 'Данные успешно удалены');
+        else
+            Yii::app()->user->setFlash('danger', 'Ошибка удаления');
     }
 }

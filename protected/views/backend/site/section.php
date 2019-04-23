@@ -195,7 +195,7 @@
 			<li>
 				<a href="<?=$hUrl?>seo">
 					<i class="glyphicon glyphicon-filter"></i>
-					<span>SEO фильтр</span>
+					<span>Мета данные</span>
 				</a>
 			</li>
 
