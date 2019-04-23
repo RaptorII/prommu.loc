@@ -533,7 +533,7 @@
                                                     <div class="psv-table__param-val psv-table__city"
                                                          data-city="<?= join(', ', $vac['city']) ?>">
                                                         <?php
-                                                        echo join(', ', array_slice($vac['city'], 0, 3));
+                                                        echo join(', ', array_slice($vac['city'], 0, 3)).'...';
                                                         ?>
                                                     </div>
                                                     <?php
