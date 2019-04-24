@@ -256,11 +256,11 @@ class User extends CActiveRecord
 		$attr['skype'] = $data['skype'];
 		$attr['fb'] = $data['fb'];
 		$attr['icq'] = $data['icq'];
-		foreach($attr as $key=>$val) {
+		foreach($attr['userAttribs'] as $key=>$val) {
 			Yii::app()->db->createCommand()
 				->update('user_attribs', array(
-					'val' => $val,
-				), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
+					'val' => $val['val'],
+				), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $val['key']));
 		}
 
 		Yii::app()->db->createCommand()
