@@ -80,10 +80,12 @@ class CodeReview extends CActiveRecord
 		if(!intval($id)) // insert
 		{
 			$this->cdate = $time;
+			$this->tags = ''; // !!!!!!!!!!!!!!
 			$this->setIsNewRecord(true);
 		}
 		else // update
 		{
+			$this->tags = ''; // !!!!!!!!!!!!!!
 			$this->id = $id;
 		}
 
