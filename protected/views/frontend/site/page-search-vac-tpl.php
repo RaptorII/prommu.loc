@@ -74,12 +74,17 @@
     flex: 1 1 auto;
 }
 
+.psv-table__param-block .psv__param {
+    min-height: 34px;
+    margin-bottom: 0;
+}
+
 .psv-table__param-block .psv__param.ico3 {
     min-height: 38px;
 }
 
 .psv-table__param-block .psv__param.ico3 .psv-table__param-val {
-    //display: block;
+    /*display: block;*/
 }
 
 .psv-table__param-block .psv__param.ico3:hover {
