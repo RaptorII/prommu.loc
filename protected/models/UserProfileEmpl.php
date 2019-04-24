@@ -1,4 +1,4 @@
-<?php
+getProfileDataAPI<?php
 
 /**
  * Date: 18.02.2016
@@ -433,7 +433,8 @@ class UserProfileEmpl extends UserProfile
                 u.email,
                 u.crdate,
                 u.is_online,
-                u.mdate
+                u.mdate,
+                u.contact,
             FROM employer e
             INNER JOIN user u ON u.id_user = e.id_user
             WHERE e.id_user = {$id}";
