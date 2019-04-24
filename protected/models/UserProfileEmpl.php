@@ -434,7 +434,7 @@ class UserProfileEmpl extends UserProfile
                 u.crdate,
                 u.is_online,
                 u.mdate,
-                u.contact,
+                e.contact,
             FROM employer e
             INNER JOIN user u ON u.id_user = e.id_user
             WHERE e.id_user = {$id}";
