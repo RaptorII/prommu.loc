@@ -9,6 +9,7 @@
 		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/javascript/javascript.js', CClientScript::POS_HEAD);
 		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/css/css.js', CClientScript::POS_HEAD);
 		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/vbscript/vbscript.js', CClientScript::POS_HEAD);
+        Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/clike/clike.js', CClientScript::POS_HEAD);
 		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/php/php.js', CClientScript::POS_HEAD);
 		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/htmlmixed/htmlmixed.js', CClientScript::POS_HEAD);
 		Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl . '/js/nicEdit.js', CClientScript::POS_HEAD);
@@ -90,26 +91,39 @@
 			myNicEditor.addInstance('description-edit');
 			myNicEditor.setPanel('description-edit-panel');
 			//
-    	function initMirror()
-    	{
-				var mixedMode = {
-							name: "htmlmixed",
-							scriptTypes: [
-								{matches: /\/x-handlebars-template|\/x-mustache/i, mode: null},
-								{matches: /(text|application)\/(x-)?vb(a|script)/i,mode: "vbscript"}
-							]
-						};
+			//
+			//
+            /**
+             * php-mode on to CodeMirror
+             * 24.04.2019 Karpenko M.
+             * TODO: clear coments after tester;
+             */
+            function initMirror()
+            {
+                /*var mixedMode = {
+                            name: "htmlmixed",
+                            scriptTypes: [
+                                {matches: /\/x-handlebars-template|\/x-mustache/i, mode: null},
+                                {matches: /(text|application)\/(x-)?vb(a|script)/i,mode: "vbscript"},
+                                {matches: /(text|application)\/(x-)?vb(a|script)/i,mode: "vbscript"},
+                            ]
+                        };
+                */
 
-				return CodeMirror.fromTextArea(
-								document.getElementById('transform-code'),
-								{
-									lineNumbers: true,
-									matchBrackets: true,
-									mode: mixedMode,
-									indentUnit: 2
-								}
-							);
-			}
+                return CodeMirror.fromTextArea(
+                    document.getElementById('transform-code'),
+                    {
+                        lineNumbers: true,
+                        matchBrackets: true,
+                        autoCloseBrackets: true,
+                        //mode: mixedMode,
+                        mode: "application/x-httpd-php",
+                        indentUnit: 2
+                    }
+                );
+
+            }
+
 		});
 	</script>
 <? endif; ?>

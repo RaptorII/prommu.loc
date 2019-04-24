@@ -3109,3 +3109,30 @@ Stack trace:
 REQUEST_URI=/vacancy
 HTTP_REFERER=http://prommu.loc/user/chats
 ---
+2019/04/24 09:10:24 [error] [exception.CException] CException: CMemCache требуется загруженное расширение PHP memcache. in /home/user/www/2019/prommu.loc/framework/caching/CMemCache.php:116
+Stack trace:
+#0 /home/user/www/2019/prommu.loc/framework/caching/CMemCache.php(89): CMemCache->getMemCache()
+#1 /home/user/www/2019/prommu.loc/framework/base/CModule.php(394): CMemCache->init()
+#2 /home/user/www/2019/prommu.loc/framework/web/CUrlManager.php(216): CModule->getComponent('cache')
+#3 /home/user/www/2019/prommu.loc/framework/web/CUrlManager.php(206): CUrlManager->processRules()
+#4 /home/user/www/2019/prommu.loc/framework/base/CModule.php(394): CUrlManager->init()
+#5 /home/user/www/2019/prommu.loc/framework/base/CApplication.php(531): CModule->getComponent('urlManager')
+#6 /home/user/www/2019/prommu.loc/framework/web/CWebApplication.php(140): CApplication->getUrlManager()
+#7 /home/user/www/2019/prommu.loc/framework/base/CApplication.php(185): CWebApplication->processRequest()
+#8 /home/user/www/2019/prommu.loc/protected/behaviors/WebApplicationEndBehavior.php(23): CApplication->run()
+#9 /home/user/www/2019/prommu.loc/framework/base/CComponent.php(261): WebApplicationEndBehavior->runEnd('backend')
+#10 /home/user/www/2019/prommu.loc/admin/index.php(18): CComponent->__call('runEnd', Array)
+#11 {main}
+REQUEST_URI=/admin/ideas
+HTTP_REFERER=http://prommu.loc/admin/
+---
+2019/04/24 10:26:10 [error] [exception.CHttpException.404] CHttpException: Невозможно обработать запрос "assets/d9253312/contents.css". in /home/user/www/2019/prommu.loc/framework/web/CWebApplication.php:286
+Stack trace:
+#0 /home/user/www/2019/prommu.loc/framework/web/CWebApplication.php(141): CWebApplication->runController('assets/d9253312...')
+#1 /home/user/www/2019/prommu.loc/framework/base/CApplication.php(185): CWebApplication->processRequest()
+#2 /home/user/www/2019/prommu.loc/protected/behaviors/WebApplicationEndBehavior.php(23): CApplication->run()
+#3 /home/user/www/2019/prommu.loc/framework/base/CComponent.php(261): WebApplicationEndBehavior->runEnd('backend')
+#4 /home/user/www/2019/prommu.loc/admin/index.php(18): CComponent->__call('runEnd', Array)
+#5 {main}
+REQUEST_URI=/admin/assets/d9253312/contents.css
+---

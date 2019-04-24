@@ -3,17 +3,21 @@
 	<div class="alert danger">Данные отсутствуют</div>
 <? else: ?>
 	<?
-		$codeMirror = Yii::app()->request->baseUrl . '/plugins/codemirror/';
-		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'lib/codemirror.js', CClientScript::POS_HEAD);
-		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/xml/xml.js', CClientScript::POS_HEAD);
-		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/javascript/javascript.js', CClientScript::POS_HEAD);
-		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/css/css.js', CClientScript::POS_HEAD);
-		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/vbscript/vbscript.js', CClientScript::POS_HEAD);
+        $codeMirror = Yii::app()->request->baseUrl . '/plugins/codemirror/';
+        Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'lib/codemirror.js', CClientScript::POS_HEAD);
+        Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/xml/xml.js', CClientScript::POS_HEAD);
+        Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'addon/edit/matchbrackets.js', CClientScript::POS_HEAD);
+        Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/javascript/javascript.js', CClientScript::POS_HEAD);
+        Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/css/css.js', CClientScript::POS_HEAD);
+        Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/vbscript/vbscript.js', CClientScript::POS_HEAD);
+        Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/clike/clike.js', CClientScript::POS_HEAD);
         Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/php/php.js', CClientScript::POS_HEAD);
-		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/htmlmixed/htmlmixed.js', CClientScript::POS_HEAD);
-		Yii::app()->getClientScript()->registerCssFile($codeMirror . 'lib/codemirror.css');
-		
-		$item = $viData['item'];
+        Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/htmlmixed/htmlmixed.js', CClientScript::POS_HEAD);
+        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl . '/js/nicEdit.js', CClientScript::POS_HEAD);
+        Yii::app()->getClientScript()->registerCssFile($codeMirror . 'lib/codemirror.css');
+
+
+    $item = $viData['item'];
 		!is_object($item) && $item = (object) [];
 
 		if(empty($item->body))
@@ -133,6 +137,7 @@
 	<script type="text/javascript">
 		jQuery(function($){
 			var iframe = document.getElementById('iframe-html');
+			/*
 			var mixedMode = {
 						name: "htmlmixed",
 						scriptTypes: [
@@ -150,6 +155,30 @@
 								indentUnit: 2
 							}
 						);
+            */
+
+            /**
+             * php-mode on to CodeMirror
+             * 24.04.2019 Karpenko M.
+             * TODO: clear coments after tester;
+             */
+            function initMirror()
+            {
+                return CodeMirror.fromTextArea(
+                    document.getElementById('transform-code'),
+                    {
+                        lineNumbers: true,
+                        matchBrackets: true,
+                        autoCloseBrackets: true,
+                        //mode: mixedMode,
+                        mode: "application/x-httpd-php",
+                        indentUnit: 2
+                    }
+                );
+
+            }
+
+            initMirror();
 
 			iframe = iframe.contentWindow || ( iframe.contentDocument.document || iframe.contentDocument);
 			iframe.document.open();
