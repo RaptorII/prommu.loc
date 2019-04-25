@@ -26,11 +26,11 @@ echo '<input type="hidden" id="curr_status" name="curr_status">';
 $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'dvgrid',
                 'dataProvider'=>$model->search(),
-                 'itemsCssClass' => 'table table-bordered table-hover dataTable',
-                  'htmlOptions'=>array('class'=>'table table-hover', 'name'=>'my-grid', 'style'=>    'padding: 10px; overflow: scroll;'),
+                'itemsCssClass' => 'table table-bordered table-hover dataTable',
+                'htmlOptions'=>array('class'=>'table table-hover', 'name'=>'my-grid', 'style'=>    'padding: 10px; overflow: scroll;'),
                 'filter' => $model,
                 'columns'=>array(
-                  array(
+                array(
             'class'=>'CCheckBoxColumn',
             'selectableRows' => 2,
             'checkBoxHtmlOptions' => array('class' => 'checkclass'),

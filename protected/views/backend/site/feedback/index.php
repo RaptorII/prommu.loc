@@ -33,9 +33,9 @@ echo '<input type="hidden" id="curr_status" name="curr_status">';
 $this->widget('zii.widgets.grid.CGridView', array(
         'id'=>'dvgrid',
         'dataProvider'=>$model->search(),
-         'itemsCssClass' => 'table table-bordered table-hover dataTable',
-        'htmlOptions' => array('class' => 'table table-hover', 'name' => 'my-grid'),
-        
+        'itemsCssClass' => 'table table-bordered table-hover dataTable',
+        //'htmlOptions' => array('class' => 'table table-hover', 'name' => 'my-grid'),
+        'htmlOptions'=>array('class'=>'table table-hover', 'name'=>'my-grid', 'style' =>    'padding: 10px;  overflow: scroll;'),
         'columns'=>array(
           array(
             'header' => 'Номер',
