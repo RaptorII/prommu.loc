@@ -39,6 +39,7 @@ class Api
                 ///PROFILE BLOCK
                 case 'user_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getUserData(); break;
                 case 'edit_prof' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->updateProf(); break;
+                case 'attrib_get' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getAttrib(); break;
                 case 'post_get' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPost(); break;
                 case 'city_get' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getCity(); break;
                 case 'vacancy_search' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getVacancy(); break;
@@ -118,6 +119,28 @@ class Api
        
         $status = $this->error_refuse($data);
         header("HTTP/1.1 " . $status . " " . $this->requestStatus($status));
+        return $data;
+    }
+    
+    public function getAttrib(){
+        $sql = "SELECT 
+                d.name
+              , d.type
+              , d.id_par idpar
+              , d.key
+            FROM user_attr_dict d 
+            ORDER BY a.id_attr";
+        $res = Yii::app()->db->createCommand($sql)->queryAll();
+
+
+        foreach ($res as $key => $val)
+        {
+            $attr[$val['key']] = $val;
+        } // end foreach
+        
+        $data['userAttribs'] = $attr;
+        
+        
         return $data;
     }
     
