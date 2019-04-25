@@ -395,21 +395,21 @@ class User extends CActiveRecord
 					), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
 				
     			} else {
-    			     $userdict = Yii::app()->db->createCommand()
-            			->select('*')
-            			->from('user_attr_dict')
-                        ->where("key=:key", array(':key'=>$key))
-            			->queryRow();
+    			 //    $userdict = Yii::app()->db->createCommand()
+        //     			->select('*')
+        //     			->from('user_attr_dict')
+        //                 ->where("key=:key", array(':key'=>$key))
+        //     			->queryRow();
             			
-    			    Yii::app()->db->createCommand()
-                    ->insert('user_attribs', array(
-                        'id_attr' => $userdict->id,
-                        'type' => $userdict->type,
-                        'val' => $val,
-                        'key' => $key,
-                        'id_us' => $id,
-                        'crdate' => date("Y-m-d H:i:s")
-                    ));
+    			 //   Yii::app()->db->createCommand()
+        //             ->insert('user_attribs', array(
+        //                 'id_attr' => $userdict->id,
+        //                 'type' => $userdict->type,
+        //                 'val' => $val,
+        //                 'key' => $key,
+        //                 'id_us' => $id,
+        //                 'crdate' => date("Y-m-d H:i:s")
+        //             ));
     			}
 				
 			}
