@@ -302,16 +302,16 @@ class User extends CActiveRecord
 			&&
 			strpos($data['email'], "@") !== false 
 		){
-			$content = file_get_contents(Yii::app()->basePath . "/views/mails/private-manager.html");
-			$content = str_replace('#EMPLOYER#', $data['firstname'].' '.$data['lastname'], $content);
-			$content = str_replace('#MANAGER#', "Светлана", $content);
-			$content = str_replace('#MANAGER_FIO#', "Гусева Светлана", $content);
-			$content = str_replace('#PHONE#', "+74996535185", $content);
-			$content = str_replace('#PHONE_MOB#', "+74996535185", $content);
-			$content = str_replace('#EMAIL#',"account_manager1@prommu.com", $content);
-			$content = str_replace('#COMPANY#', $data['name'], $content);
+// 			$content = file_get_contents(Yii::app()->basePath . "/views/mails/private-manager.html");
+// 			$content = str_replace('#EMPLOYER#', $data['firstname'].' '.$data['lastname'], $content);
+// 			$content = str_replace('#MANAGER#', "Светлана", $content);
+// 			$content = str_replace('#MANAGER_FIO#', "Гусева Светлана", $content);
+// 			$content = str_replace('#PHONE#', "+74996535185", $content);
+// 			$content = str_replace('#PHONE_MOB#', "+74996535185", $content);
+// 			$content = str_replace('#EMAIL#',"account_manager1@prommu.com", $content);
+// 			$content = str_replace('#COMPANY#', $data['name'], $content);
 
-			$result = Share::sendmail($data['email'], "Prommu: Аккаунт Менеджер", $content);
+// 			$result = Share::sendmail($data['email'], "Prommu: Аккаунт Менеджер", $content);
 
 			Yii::app()->db->createCommand()
 				->update(
@@ -354,11 +354,12 @@ class User extends CActiveRecord
 					'ismoder' => $data['ismoder'],
 					'isblocked' => $data['isblocked'],
 					'city' => $data['city'],
+					'contact' => $data['contact'],
 					), 'id_user=:id_user', array(':id_user' => $id));
 			
 
 			$attr = array();	
-			// $attr['post'] = $data['post'];
+			$attr = $data['userAttribs'];
 			
 			foreach($attr as $key=>$val) {
 				Yii::app()->db->createCommand()
