@@ -368,11 +368,6 @@ class User extends CActiveRecord
 	public function updateEmployerApi($data, $id) {
 		if(empty($id) || $id<=0) return null;
 	
-	
-	
-			// Update table user_attribs
-	
-
 			Yii::app()->db->createCommand()
 				->update('employer', array(
 					'name' => $data['name'],
@@ -386,9 +381,7 @@ class User extends CActiveRecord
 			
 
 			$attr = $data['userAttribs'];
-			   
-			   
-			
+
 			foreach($attr as $key=>$val) {
 				Yii::app()->db->createCommand()
 					->update('user_attribs', array(
