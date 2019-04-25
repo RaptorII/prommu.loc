@@ -370,6 +370,55 @@ class User extends CActiveRecord
 			return array('error'=>0,  'message'=>'success' ,'sendmail'=>0);
 		}
 	}
+	
+	
+	public function updateEmployerApi($data, $id) {
+		if(empty($id) || $id<=0) return null;
+	
+	
+	
+			// Update table user_attribs
+			if(isset($data['email'])) {
+				$res = Yii::app()->db->createCommand()
+					->update('user', array(
+						'email' => $data['email'],
+						'ismoder' => $data['ismoder'],
+						'isblocked' => $data['isblocked'],
+						'date_login' => date('Y-m-d H:i:s'),
+					), 'id_user=:id_user', array(':id_user' => $id));
+			}
+			Yii::app()->db->createCommand()
+				->update('user', array(
+					'ismoder' => $data['ismoder'],
+					'isblocked' => $data['isblocked'],
+				), 'id_user=:id_user', array(':id_user' => $id));
+
+			Yii::app()->db->createCommand()
+				->update('employer', array(
+					'name' => $data['name'],
+					'type' => $data['type'],
+					'firstname' => $data['firstname'],
+					'lastname' => $data['lastname'],
+					'position' => $data['post'],
+					'ismoder' => $data['ismoder'],
+					'isblocked' => $data['isblocked'],
+					'city' => $data['city'],
+					'contact' => $data['contact'],
+					), 'id_user=:id_user', array(':id_user' => $id));
+			
+
+			$attr = array();	
+			$attr = $data['userAttribs'];
+			
+			foreach($attr as $key=>$val) {
+				Yii::app()->db->createCommand()
+					->update('user_attribs', array(
+						'val' => $val,
+					), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
+			}
+			return array('error'=>0,  'message'=>'success' ,'sendmail'=>0);
+		
+	}
 
 	public function getUsers($type)
 	{
