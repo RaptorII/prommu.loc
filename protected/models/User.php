@@ -274,13 +274,40 @@ class User extends CActiveRecord
 				
 			), 'id_user=:id_user', array(':id_user' => $id));
         
-        $attr = $data['userAttribs'];
-			   
+       $attr = $data['userAttribs'];
+
 			foreach($attr as $key=>$val) {
-				Yii::app()->db->createCommand()
+			    $result = Yii::app()->db->createCommand()
+    			->select('*')
+    			->from('user_attribs')
+                ->where("id_us=:id_user and `key`=:key", array(':id_user'=>$id, ':key'=>$key))
+    			->queryRow();
+    			if($result['key'] == $key){
+    			    Yii::app()->db->createCommand()
 					->update('user_attribs', array(
 						'val' => $val,
 					), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
+				
+    			} else {
+
+            		$userdict = Yii::app()->db->createCommand()
+                        ->select('d.id , d.type, d.key')
+                        ->from('user_attr_dict d')
+                        ->where('d.key = :key', array(':key' => $key))
+                        ->queryRow();
+
+            			
+    			    Yii::app()->db->createCommand()
+                    ->insert('user_attribs', array(
+                        'id_attr' => $userdict['id'],
+                        'type' => $userdict['type'],
+                        'val' => $val,
+                        'key' => $key,
+                        'id_us' => $id,
+                        'crdate' => date("Y-m-d H:i:s")
+                    ));
+    			}
+				
 			}
 			
         return array('error'=>0,  'message'=>'success' ,'sendmail'=>0); 
