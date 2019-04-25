@@ -389,6 +389,7 @@ class User extends CActiveRecord
                 ->where("id_us=:id_user and `key`=:key", array(':id_user'=>$id, ':key'=>$key))
     			->queryRow();
     			
+    			var_dump($result);
     			if(count($result)){
     			    Yii::app()->db->createCommand()
 					->update('user_attribs', array(
