@@ -383,10 +383,26 @@ class User extends CActiveRecord
 			$attr = $data['userAttribs'];
 
 			foreach($attr as $key=>$val) {
-				Yii::app()->db->createCommand()
+			    $result = Yii::app()->db->createCommand()
+    			->select('val')
+    			->from('user_attribs')
+                ->where("id_us=:id_user and `key`=:key", array(':id_user'=>$id, ':key'=>$key))
+    			->queryRow();
+    			
+    			if(count($result)){
+    			    Yii::app()->db->createCommand()
 					->update('user_attribs', array(
 						'val' => $val,
 					), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
+    			} else {
+    			    Yii::app()->db->createCommand()
+                    ->insert('user_attribs', array(
+                        'val' => $val,
+                        'key' => $key,
+                        'id_us' => $id,
+                    ));
+    			}
+				
 			}
 			return array('error'=>0,  'message'=>'success' ,'sendmail'=>0);
 		
