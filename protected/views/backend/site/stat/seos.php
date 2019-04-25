@@ -1,5 +1,5 @@
 
-<div class="table table-hover" name="my-grid" style="padding: 10px;" id="dvgrid">
+<div class="table table-hover" name="my-grid" style="padding: 10px; overflow: scroll;" id="dvgrid">
 <div class="summary">SEO monitoring</div>
 <table class="table table-bordered table-hover dataTable">
 <thead>
