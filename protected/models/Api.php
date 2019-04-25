@@ -128,8 +128,7 @@ class Api
               , d.type
               , d.id_par idpar
               , d.key
-            FROM user_attr_dict d 
-            ORDER BY a.id_attr";
+            FROM user_attr_dict d";
         $res = Yii::app()->db->createCommand($sql)->queryAll();
 
 
