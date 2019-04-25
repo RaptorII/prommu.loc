@@ -129,7 +129,7 @@ return array(
             //'class'=>'system.caching.CDummyCache', // заглушка без кеша
             //'class'=>'system.caching.CFileCache',
             'class'=>'system.caching.CMemCache',
-            'useMemcached' => true,
+            //'useMemcached' => true,
             'servers'=>array(
                 array('host'=>'127.0.0.1', 'port'=>11211, 'weight'=>100),
             ),
@@ -200,7 +200,7 @@ return array(
             'connectionString' => 'mysql:host=localhost;dbname=promo_dev',
             'emulatePrepare' => true,
             'username' => 'root',
-            'password' => 'bvgthbz', //'WWFf57EfyY4fcaFh',
+            'password' => 'WWFf57EfyY4fcaFh',
             'charset' => 'utf8',
             'enableProfiling' => true,
             'enableParamLogging' => true,
