@@ -3630,7 +3630,7 @@ public function vac(){
                 {
                     // получаем данные пользователя
                     case 'profile' : $data['profile'] = $Profile->getProfileDataAPI(['id' => $idus]);
-                        if( !array_values($data['profile']['userAttribs'])[0]['id_attr'] ) $data['profile']['userAttribs'] = [] ;
+                        // if( !array_values($data['profile']['userAttribs'])[0]['id_attr'] ) $data['profile']['userAttribs'] = [] ;
                         break;
                         
                        
