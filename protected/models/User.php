@@ -393,7 +393,9 @@ class User extends CActiveRecord
 					->update('user_attribs', array(
 						'val' => $val,
 					), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
+					return array('error'=>0,  'message'=>'success_upd' ,'sendmail'=>0);
     			} else {
+    			    
     			    Yii::app()->db->createCommand()
                     ->insert('user_attribs', array(
                         'id_attr' => 1,
@@ -402,10 +404,11 @@ class User extends CActiveRecord
                         'key' => $key,
                         'id_us' => $id,
                     ));
+                    return array('error'=>0,  'message'=>'successs' ,'sendmail'=>0);
     			}
 				
 			}
-			return array('error'=>0,  'message'=>'success' ,'sendmail'=>0);
+			return array('error'=>0,  'message'=>'successs_insert' ,'sendmail'=>0);
 		
 	}
 
