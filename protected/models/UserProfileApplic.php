@@ -159,7 +159,7 @@ class UserProfileApplic extends UserProfile
 
         // считываем характеристики пользователя
         $sql = "SELECT DATE_FORMAT(r.birthday,'%d.%m.%Y') as bday -- , DATE_FORMAT(r.birthday,'%d') as bd
-              , r.id_user, r.isman , r.ismed , r.smart, r.ishasavto , r.aboutme , r.firstname , r.lastname , r.photo
+              , r.id_user, r.isman , r.ismed , r.smart, r.ishasavto , r.aboutme , r.firstname , r.lastname , r.photo, r.card, r.cardPrommu
               , a.val , a.id_attr
               , d.name , d.type , d.id_par idpar , d.key
               , u.email, u.is_online, u.mdate
@@ -194,7 +194,9 @@ class UserProfileApplic extends UserProfile
             'lastname' => $val['lastname'],
             'photo' => $val['photo'],
             'email' => $val['email'],
-            'mdate' => $val['mdate']
+            'mdate' => $val['mdate'],
+            'card' => $val['card'],
+            'cardPrommu' => $val['cardPrommu'],
         ]; 
 
 
