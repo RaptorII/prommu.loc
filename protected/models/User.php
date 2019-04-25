@@ -388,17 +388,17 @@ class User extends CActiveRecord
     			->from('user_attribs')
                 ->where("id_us=:id_user and `key`=:key", array(':id_user'=>$id, ':key'=>$key))
     			->queryRow();
-    			if($result->val == $val){
+    			if($result->key == $key){
     			    Yii::app()->db->createCommand()
 					->update('user_attribs', array(
 						'val' => $val,
 					), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
-					return array('error'=>0,  'message'=>'success_upd' ,'sendmail'=>0);
+				
     			} else {
     			     $user_attr_dict = Yii::app()->db->createCommand()
             			->select('*')
             			->from('user_attr_dict')
-                        ->where("`key`=:key", array(':key'=>$key))
+                        ->where("key=:key", array(':key'=>$key))
             			->queryRow();
             			
     			    Yii::app()->db->createCommand()
@@ -410,11 +410,10 @@ class User extends CActiveRecord
                         'id_us' => $id,
                         'crdate' => date("Y-m-d H:i:s")
                     ));
-                    return array('error'=>0,  'message'=>'successs' ,'sendmail'=>0);
     			}
 				
 			}
-			return array('error'=>0,  'message'=>'successs_insert' ,'sendmail'=>0);
+			return array('error'=>0,  'message'=>'success' ,'sendmail'=>0);
 		
 	}
 
