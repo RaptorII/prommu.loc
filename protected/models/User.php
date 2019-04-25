@@ -388,7 +388,7 @@ class User extends CActiveRecord
     			->from('user_attribs')
                 ->where("id_us=:id_user and `key`=:key", array(':id_user'=>$id, ':key'=>$key))
     			->queryRow();
-    			if(count($result)){
+    			if($result->val == $val){
     			    Yii::app()->db->createCommand()
 					->update('user_attribs', array(
 						'val' => $val,
@@ -398,8 +398,6 @@ class User extends CActiveRecord
     			    
     			    Yii::app()->db->createCommand()
                     ->insert('user_attribs', array(
-                        'id_attr' => 1,
-                        'type' => 0,
                         'val' => $val,
                         'key' => $key,
                         'id_us' => $id,
