@@ -21,7 +21,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'dvgrid',
     'dataProvider' => $model->search(),
      'itemsCssClass' => 'table table-bordered table-hover dataTable',
-     'htmlOptions' => array('class' => 'table table-bordered table-hover dataTable', 'name' => 'my-grid'),
+     'htmlOptions' => array('class' => 'table table-bordered table-hover dataTable', 'name' => 'my-grid', 'style'=> 'padding: 10px; overflow: scroll;'),
     // 'htmlOptions'=>array('class'=>'table table-hover', 'name'=>'my-grid', 'style'=>    'padding: 10px;'),
     'filter' => $model,
     'enablePagination' => true,
