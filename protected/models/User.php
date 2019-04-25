@@ -384,7 +384,7 @@ class User extends CActiveRecord
 
 			foreach($attr as $key=>$val) {
 			    $result = Yii::app()->db->createCommand()
-    			->select('val')
+    			->select('*')
     			->from('user_attribs')
                 ->where("id_us=:id_user and `key`=:key", array(':id_user'=>$id, ':key'=>$key))
     			->queryRow();
