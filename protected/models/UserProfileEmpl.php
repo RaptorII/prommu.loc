@@ -1,4 +1,4 @@
-getProfileDataAPI<?php
+<?php
 
 /**
  * Date: 18.02.2016
