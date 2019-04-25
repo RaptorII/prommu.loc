@@ -1,9 +1,9 @@
 <?php
 /**
  * Работа с API
- * Date: 19.10.16
- * Time: 16:30
- * Greskod
+ * Date: 26.04.19
+ * Time: 02:22
+ * Grescode
  */
 class Api
 {
@@ -27,30 +27,35 @@ class Api
         {
             switch( strtolower($apiMethod) )
             {
-                case 'auth_user' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->authUser(); break;
+                /// VERSION 26.04.2019
+                
+                ///FIRST BLOCK
                 case 'register' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->registerUsers(); break;
+                case 'user_restorepass' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->restorePass(); break;
                 case 'faq' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getFaq(); break;
                 case 'auth' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->authUsers(); break;
                 case 'feedback' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->feedback(); break;
-                case 'user_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getUserData(); break;
                 
-                case 'push' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPush(); break;
-                case 'export' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->export(); break;
-                case 'user_restorepass' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->restorePass(); break;
+                ///PROFILE BLOCK
+                case 'user_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getUserData(); break;
+                case 'edit_prof' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->updateProf(); break;
                 case 'post_get' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPost(); break;
                 case 'city_get' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getCity(); break;
                 case 'vacancy_search' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getVacancy(); break;
-                case 'vacancy_own' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getVacancyOwn(); break;
-                case 'vacancy_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getVacancyDataView(); break;
                 case 'empl_search' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getEmplSearch(); break;
                 case 'promo_search' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPromoSearch(); break;
+                
+                
+                case 'push' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPush(); break;
+                case 'export' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->export(); break;
+                case 'vacancy_own' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getVacancyOwn(); break;
+                case 'vacancy_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getVacancyDataView(); break;
                 case 'response_set' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setResponse(); break;
                 case 'response_data' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->dataResponse(); break;
                 case 'chat_theme_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getChatThemes(); break;
                 case 'cotypes_get' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getCotypes(); break;
                 case 'vacancy_data' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getVacancyData(); break;
                 case 'send_mess' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setMess(); break;
-                case 'edit_prof' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->updateProf(); break;
                 case 'set_vk' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->setCommAndRate(); break;
                 case 'rere' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rere(); break;
                 case 'vacancy_act' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacAct(); break;
