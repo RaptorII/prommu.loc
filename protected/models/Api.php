@@ -2708,14 +2708,7 @@ public function vac(){
         $res= Yii::app()->db->createCommand($sql)->queryScalar();
         if($res==3){
         $User = new User();
-        $data = $User->updateEmployer($cloud,$idus);
-        // $post = $cloud['post'];
-        // $mob = $cloud['mob'];
-        // $isnews = $cloud['isnews'];
-        // $id = $idus;
-        // $figaro = compact('post', 'mob', 'isnew', 'id');
-        // $UserEmpl = new UserProfileEmpl($profile);
-        // $data = $UserEmpl->saveUserAttribs($figaro);
+        $data = $User->updateEmployerApi($cloud,$idus);
     }
     elseif($res==2) {
         $User = new User();
