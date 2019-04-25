@@ -244,24 +244,8 @@ class User extends CActiveRecord
 	public function updatePromo($data, $id) {
 		if(empty($id) || $id<=0) return null;
 
-		//Контактная информация
-		$attr = array();
-		$attr['email'] = $data['email'];
-		$attr['viber'] = $data['viber'];
-		$attr['exp'] = $data['exp'];
-		//$attr['mob'] = $data['mob'];
-		$attr['addmob'] = $data['addmob'];
-		$attr['vk'] = $data['vk'];
-		$attr['custcont'] = $data['custcont'];
-		$attr['skype'] = $data['skype'];
-		$attr['fb'] = $data['fb'];
-		$attr['icq'] = $data['icq'];
-		foreach($attr['userAttribs'] as $key=>$val) {
-			Yii::app()->db->createCommand()
-				->update('user_attribs', array(
-					'val' => $val['val'],
-				), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $val['key']));
-		}
+
+
 
 		Yii::app()->db->createCommand()
 			->update('user', array(
@@ -289,7 +273,16 @@ class User extends CActiveRecord
 				'comment' => $data['comment'],
 				
 			), 'id_user=:id_user', array(':id_user' => $id));
-    
+        
+        $attr = $data['userAttribs'];
+			   
+			foreach($attr as $key=>$val) {
+				Yii::app()->db->createCommand()
+					->update('user_attribs', array(
+						'val' => $val,
+					), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
+			}
+			
         return array('error'=>0,  'message'=>'success' ,'sendmail'=>0); 
 	}
 
@@ -395,7 +388,7 @@ class User extends CActiveRecord
 			$attr = $data['userAttribs'];
 			   
 			   
-			var_dump($data);
+			
 			foreach($attr as $key=>$val) {
 				Yii::app()->db->createCommand()
 					->update('user_attribs', array(
