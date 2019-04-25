@@ -123,8 +123,9 @@ class Api
     }
     
     public function getAttrib(){
-        $sql = "SELECT 
-                d.name
+        $sql = "SELECT
+                d.id
+              , d.name
               , d.type
               , d.id_par idpar
               , d.key
