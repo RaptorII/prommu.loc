@@ -63,6 +63,19 @@
     $title = $title=='prommu.com' ? 'Администрирование PROMMU' : $title;
   ?>
   <title><?php echo $title; ?></title>
+
+  <?php
+  /**
+   * При наведении на счетчик должны выпадать
+   * варианты новых не просмотренных данных
+   * Если убрать - будут выпадать при клике
+   */
+  ?>
+  <style>
+    .dropdown:hover > .dropdown-menu {
+      display: block;
+    }
+  </style>
 </head>
 <body class="skin-blue sidebar-mini sidebar-collapse">
 <div class="wrapper">
@@ -77,9 +90,6 @@
       <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"></a>
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-       
-         
-
 
           <!-- Notifications Menu -->
           <!-- <li class="dropdown notifications-menu">
@@ -147,7 +157,11 @@
               <span class="hidden-xs"> Обратная связь</span>
                <span class="label label-danger"><?=$model['cnt']?></span>
             </a>
-            <ul class="dropdown-menu" style="max-height:520px;overflow:overlay">
+            <ul class="dropdown-menu" style="max-height:520px;overflow:hidden">
+            <?
+               // wtf overflow:overlay?
+               // <ul class="dropdown-menu" style="max-height:520px;overflow:overlay">
+            ?>
               <!-- The user image in the menu -->
               <? foreach ($model['items'] as $id => $v) :?>
                 <li style="padding:0px;height: auto;" class="user-header">
@@ -198,13 +212,11 @@
             <ul class="dropdown-menu">
              <?for($i = 0; $i < $counP; $i++):?>
               <li style="padding:0px;height: auto;" class="user-header">
-          
-              
+
                 <?
                  echo '<a style=" white-space: unset;   background-color: #e1e3e9;" href="/admin/site/PromoEdit/' . $modelP[$i]['idus']. '" rel="tooltip" data-placement="top" title="Ответить"><p>'.$modelP[$i]['id'].'-'.$modelP[$i]['firstname'].' '.$modelP[$i]['lastname'].'</p></a>';
                 ?>
               
-            
               </li>
               <? endfor;?>
             </ul>
@@ -790,7 +802,7 @@
   echo "<pre>";
   print_r(Yii::app()->controller->route); 
   echo "</pre>";
-  */
+*/
 ?>
     <!-- Main content -->
     <section class="content">
