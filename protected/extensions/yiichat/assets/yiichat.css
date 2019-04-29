@@ -1,0 +1,97 @@
+.yiichat .exceded {
+	color: red;
+}
+
+.yiichat .posts {
+	border: 1px dotted #eee;
+	display: block;
+	margin-bottom: 10px;
+	padding: 3px;
+	/*overflow-x: hidden;
+	overflow-y: scroll;
+	height: 200px;*/
+}
+
+.yiichat .posts .post {
+	display: block;
+	margin-bottom: 10px;
+	overflow: auto;
+}
+.yiichat-post-myown {
+}
+.yiichat .posts .post .track .time {
+}
+.yiichat .posts .post .track .owner {
+}
+/*
+*   CUSTOM
+*/
+.yiichat{ margin: 30px 0; }
+.yiichat .you textarea{
+	display: block;
+	width: 100%;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.42857143;
+	color: #555;
+	background-color: #fff;
+	background-image: none;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+}
+.yiichat .you button:focus,
+.yiichat .you textarea:focus{ outline: none; }
+.yiichat .you button{
+	min-width: 150px;
+	min-height: 34px;
+	color: #fff;
+	border-radius: 3px;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	border: 1px solid transparent;
+	background-color: #00a65a;
+	border-color: #008d4c;
+	font-family: 'Lato', Calibri, Arial, sans-serif;
+	font-size: 14px;
+	font-weight: 400;
+}
+.yiichat .you button:hover,
+.yiichat .you button:active{
+	background-color: #008d4c;
+	border-color: #398439;
+}
+.yiichat .posts .post{
+	border-radius: 3px;
+}
+.yiichat .posts .post .track .owner img{
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	margin-right: 5px;
+}
+.yiichat .posts .post .track .owner{
+	text-align: right;
+}
+.yiichat .posts .post.yiichat-post-myown .track .owner{
+	text-align: left;
+}
+.yiichat .posts .post .track {
+	color: #333;
+	overflow: auto;
+	margin: 0 0 5px;
+	padding: 0 10px;
+	display: block;
+}
+.yiichat .text{
+	background-color: #fefefe;
+	padding: 5px;
+	border-radius: 5px;
+}
+.yiichat .posts .post{
+	border: none;
+	padding: 0;
+}
+/*
+.yiichat .posts .post:not(.yiichat-post-myown){
+	margin-top: 30px;
+}*/
