@@ -108,28 +108,38 @@ class UserAdm extends CActiveRecord
 	public function getAdmin($id)
 	{
 		$result = Yii::app()->db->createCommand()
-    			->select("u.id, u.login, u.email, u.access, u.isblocked, u.status")
-    			->from('user_adm u')
-		    	->where('u.id=:id', array(':id'=>$id))
-		    	->queryRow();
+								->select("id,
+									login, 
+									email,
+									name,
+									surname,
+									access, 
+									isblocked, 
+									status")
+								->from('user_adm')
+								->where('id=:id', [':id'=>$id])
+								->queryRow();
 
-    	return $result;
+		return $result;
 	}
 
-	public function updateAdmin($data, $id) {
+	public function updateAdmin($data, $id)
+	{
 		if(empty($id) || $id<=0) return null;
 
-	
-
 		Yii::app()->db->createCommand()
-			->update('user_adm', array(
-				'access' => $data['access'],
-				'login' => $data['login'],
-				'email' => $data['email'],
-				// 'passw' => $data['passw'],
-			), 'id=:id', array(':id' => $id));
-	
-
+			->update(
+				'user_adm', 
+				[
+					'access' => $data['access'],
+					'login' => $data['login'],
+					'email' => $data['email'],
+					'name' => $data['name'],
+					'surname' => $data['surname'],
+				],
+				'id=:id',
+				[':id' => $id]
+			);
 	}
 
 	
@@ -142,4 +152,29 @@ class UserAdm extends CActiveRecord
 
       return $result['access'];
 	}
+	/**
+	 * @param $id - user_adm
+	 *  admin name
+	 */
+	public function getUser($id)
+	{
+		$arRes = array();
+		$arRes['user'] = $this::model()->findByPk($id);
+		if(is_object($arRes['user']))
+		{
+			$arRes['fullname'] = $arRes['user']->name . ' ' . $arRes['user']->surname;
+			empty(trim($arRes['fullname'])) && $arRes['fullname'] = 'Пользователь';
+			empty($arRes['user']->photo) && $arRes['user']->photo = 'default.jpg';
+			$arRes['photo'] =  '/admin/images/users/' . $arRes['user']->photo;
+
+			return $arRes;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	/**
+	 *  admin photo
+	 */
 }

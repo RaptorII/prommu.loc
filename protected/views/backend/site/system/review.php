@@ -14,9 +14,9 @@
 		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/htmlmixed/htmlmixed.js', CClientScript::POS_HEAD);
 		Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl . '/js/nicEdit.js', CClientScript::POS_HEAD);
 		Yii::app()->getClientScript()->registerCssFile($codeMirror . 'lib/codemirror.css');
-
 		$item = $viData['item'];
-		!is_object($item) && $item = (object) [];
+		!is_object($item) && $item = (object) ['chat_id'=>time().rand(1000,9999)];
+		$bAccess = Yii::app()->user->id==$item->author_id || !intval($viData['id']);
 	?>
 	<? if($viData['error'] && isset($viData['messages'])): ?>
 		<div class="alert danger">- <?=implode('<br>- ', $viData['messages']) ?></div>
@@ -31,7 +31,7 @@
 							<div class="col-xs-12">
 								<label class="d-label">
 									<span>Название</span>
-									<input type="text" name="name" class="form-control" autocomplete="off" value="<?=$item->name?>">
+										<input type="text" name="name" class="form-control" autocomplete="off" value="<?=$item->name?>">
 								</label>
 								<label class="d-label">
 									<span>Описание</span>
@@ -52,11 +52,34 @@
 				</label>
 				<div class="pull-right">
 					<a href="<?=$this->createUrl('')?>" class="btn btn-success d-indent">Назад</a>
-					<button type="submit" class="btn btn-success d-indent" id="btn_submit">Сохранить</button>
+					<? if($bAccess): ?>
+						<button type="submit" class="btn btn-success d-indent" id="btn_submit">Сохранить</button>
+					<? endif; ?>
 				</div>
+				<input type="hidden" value="<?=$item->chat_id?>" name="chat_id">
 			</form>
 		</div>
 	</div>
+	<?
+	//
+	?>
+	<?
+		$this->widget(
+			'YiiChatWidget',
+			array(
+				'chat_id' => $item->chat_id,
+				'identity' => Yii::app()->user->id,
+				'selector' => '#admin_chat',
+				'minPostLen' => 2,
+				'maxPostLen' => 512,
+				'sendButtonText' => 'Отправить',
+				'model' => new ChatHandler(),
+				'data'=>'',
+				'onSuccess' => new CJavaScriptExpression("function(code, text, post_id){}"),
+				'onError' => new CJavaScriptExpression("function(errorcode, info){}")
+			));
+	?>
+	<div id="admin_chat"></div>
 	<?
 	//
 	?>
@@ -70,60 +93,59 @@
 		}
 		#transform-code>div:nth-child(2),
 		#description-edit>div:nth-child(2),
+		#yiichat_area>div:nth-child(2),
 		.controls.input-append>div{ border: 0 !important; }
 		.nicEdit-main:focus{ outline: none; }
-		#description-edit-panel .nicEdit-button{ background-image: url("/jslib/nicedit/nicEditorIcons.gif") !important; }
+		#description-edit-panel .nicEdit-button,
+		#yiichat_area_panel .nicEdit-button{ 
+			background-image: url("/jslib/nicedit/nicEditorIcons.gif") !important; 
+		}
 		.CodeMirror{ min-height: 425px; }
 	</style>
 	<?
 	//
 	?>
 	<script type="text/javascript">
+		'use strict'
+		var myNicEditor = new nicEditor(
+					{
+						maxHeight: 200, 
+						buttonList: ['bold','italic','underline','left','center','right','justify','ol','ul'] 
+					}
+				);
+
 		jQuery(function($){
 			var myCodeMirror = initMirror();
-			var myNicEditor = new nicEditor(
-						{
-							maxHeight: 600, 
-							buttonList: ['bold','italic','underline','left','center','right','justify','ol','ul'] 
-						}
-					);
-
-			myNicEditor.addInstance('description-edit');
-			myNicEditor.setPanel('description-edit-panel');
 			//
+			if($('#description-edit').is('*'))
+			{
+				myNicEditor.addInstance('description-edit');
+				myNicEditor.setPanel('description-edit-panel');				
+			}
 			//
-			//
-            /**
-             * php-mode on to CodeMirror
-             * 24.04.2019 Karpenko M.
-             * TODO: clear coments after tester;
-             */
-            function initMirror()
-            {
-                /*var mixedMode = {
-                            name: "htmlmixed",
-                            scriptTypes: [
-                                {matches: /\/x-handlebars-template|\/x-mustache/i, mode: null},
-                                {matches: /(text|application)\/(x-)?vb(a|script)/i,mode: "vbscript"},
-                                {matches: /(text|application)\/(x-)?vb(a|script)/i,mode: "vbscript"},
-                            ]
-                        };
-                */
-
-                return CodeMirror.fromTextArea(
-                    document.getElementById('transform-code'),
-                    {
-                        lineNumbers: true,
-                        matchBrackets: true,
-                        autoCloseBrackets: true,
-                        //mode: mixedMode,
-                        mode: "application/x-httpd-php",
-                        indentUnit: 2
-                    }
-                );
-
-            }
-
+			setTimeout(function(){
+				console.log($('#yiichat_area'));
+				myNicEditor.addInstance('yiichat_area');
+				myNicEditor.setPanel('yiichat_area_panel');
+			},500);
+			/**
+			 * php-mode on to CodeMirror
+			 * 24.04.2019 Karpenko M.
+			 * TODO: clear coments after tester;
+			 */
+			function initMirror()
+			{
+		    return CodeMirror.fromTextArea(
+	        document.getElementById('transform-code'),
+	        {
+	          lineNumbers: true,
+            matchBrackets: true,
+            autoCloseBrackets: true,
+            mode: "application/x-httpd-php",
+            indentUnit: 2
+	        }
+		    );
+			}
 		});
 	</script>
 <? endif; ?>

@@ -28,6 +28,7 @@ return CMap::mergeArray(
         'import' => array(
             'application.models.admin.*',
             'application.models.mailing.*',
+            'application.extensions.yiichat.*',
         ),
     )
 );

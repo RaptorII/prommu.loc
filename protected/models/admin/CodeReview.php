@@ -61,6 +61,8 @@ class CodeReview extends CActiveRecord
 		$this->description = trim($obj->getParam('description'));
 		// code
 		$this->code = trim($obj->getParam('code'));
+		// chat_id
+		$this->chat_id = trim($obj->getParam('chat_id'));
 		
 		empty($this->name) && $arRes['messages'][] = 'поле "Название" должно быть заполнено';
 		empty($this->description) && $arRes['messages'][] = 'поле "Описание" должно быть заполнено';
@@ -80,6 +82,7 @@ class CodeReview extends CActiveRecord
 		if(!intval($id)) // insert
 		{
 			$this->cdate = $time;
+			$this->author_id = Yii::app()->user->id;
 			$this->tags = ''; // !!!!!!!!!!!!!!
 			$this->setIsNewRecord(true);
 		}

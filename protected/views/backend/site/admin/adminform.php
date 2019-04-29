@@ -32,6 +32,20 @@ echo '  <span class="add-on"></span>';
 echo '</div></div>';
 
 echo '<div class="control-group">
+      <label class="control-label">Имя</label>
+        <div class="controls input-append">';
+echo CHtml::textField('UserAdm[name]', $data['name'], array('class'=>'form-control'));
+echo '  <span class="add-on"></span>';
+echo '</div></div>';
+
+echo '<div class="control-group">
+      <label class="control-label">Фамилия</label>
+        <div class="controls input-append">';
+echo CHtml::textField('UserAdm[surname]', $data['surname'], array('class'=>'form-control'));
+echo '  <span class="add-on"></span>';
+echo '</div></div>';
+
+echo '<div class="control-group">
       <label class="control-label">Доступы</label>
         <div class="controls input-append">';
 echo CHtml::textField('UserAdm[access]', $data['access'], array('class'=>'form-control'));

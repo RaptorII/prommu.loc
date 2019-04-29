@@ -322,20 +322,20 @@
           <li class="dropdown user user-menu">
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <?
+                $model = new UserAdm();
+                $user = $model->getUser(Yii::app()->user->id);
+              ?>
               <!-- The user image in the navbar-->
-              <img src="<?php echo Yii::app()->request->baseUrl; ?>/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+              <img src="<?=$user['photo']?>" class="user-image" alt="<?=$user['fullname']?>">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
-              <span class="hidden-xs">PROMMU ADMIN</span>
+              <span class="hidden-xs"><?=$user['user']->name?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">
-                <img src="<?php echo Yii::app()->request->baseUrl; ?>/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
-
-                <p>
-                  PROMMU ADMIN - АДМИНИСТРАТОР САЙТА
-                  <small><?php echo $today = date("H:i:s"); ?> </small>
-                </p>
+                <img src="<?=$user['photo']?>" class="img-circle" alt="<?=$user['fullname']?>">
+                <p><?=$user['fullname']?><small><?=date("H:i:s")?></small></p>
               </li>
               <!-- Menu Body -->
               <!-- <li class="user-body">
@@ -354,7 +354,7 @@
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
+                  <a href="/admin/site/AdminEdit/<?=Yii::app()->user->id?>" class="btn btn-default btn-flat">Профиль</a>
                 </div>
                 <div class="pull-right">
                   <a href="<?php echo Yii::app()->homeUrl?>site/logout"  class="btn btn-default btn-flat">Выход</a>
@@ -379,12 +379,12 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="<?php echo Yii::app()->request->baseUrl; ?>/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+          <img src="<?=$user['photo']?>" class="img-circle" alt="<?=$user['fullname']?>">
         </div>
         <div class="pull-left info">
-          <p>PROMMU ADMIN</p>
+          <p><?=$user['fullname']?></p>
           <!-- Status -->
-          <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+          <a href="/admin/site/AdminEdit/<?=Yii::app()->user->id?>"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
 

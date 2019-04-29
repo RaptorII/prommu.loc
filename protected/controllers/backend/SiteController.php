@@ -27,6 +27,7 @@ class SiteController extends Controller
             'page'=>array(
                 'class'=>'CViewAction',
             ),
+            'yiichat'=>array('class'=>'YiiChatAction'),
         );
         
     }
@@ -1614,22 +1615,6 @@ class SiteController extends Controller
                 $this->render('seo/list',['viData'=>$data,'model'=>$model]); 
             }
         }
-
-/*
-
-        $model = new Seo('search');
-        $model->unsetAttributes();
-        if($_GET['seo']){
-            $title = 'Страницы сайта';
-            $this->setPageTitle($title);
-            $this->breadcrumbs = array('СЕО'=>array('sect?p=seo'),'1'=>$title);
-            $this->render('seo/seos', array('model' => $model));
-        }
-        else{
-            $this->setPageTitle('Редактирование СЕО');
-            $this->breadcrumbs = array('СЕО'=>array('sect?p=seo'),'1'=>'Фильтр');
-            $this->render('seo/list', array('model' => $model));
-        } */
     }
 
     /**

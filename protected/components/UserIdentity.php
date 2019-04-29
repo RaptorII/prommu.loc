@@ -23,7 +23,7 @@ class UserIdentity extends CUserIdentity
 
 		// Производим стандартную аутентификацию, описанную в руководстве.
         $user = UserAdm::model()->find('LOWER(login)=?', array(strtolower($this->username)));
-        if(($user===null) or (md5($this->password)!==$user->passw)) {
+        if(($user===null) or (md5($this->password)!==$user->passw) or $user->isblocked) {
             $this->errorCode = self::ERROR_USERNAME_INVALID;
         } else {
             // В качестве идентификатора будем использовать id, а не username,
