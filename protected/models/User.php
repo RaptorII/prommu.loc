@@ -274,6 +274,28 @@ class User extends CActiveRecord
 				
 			), 'id_user=:id_user', array(':id_user' => $id));
         
+        $city = Yii::app()->db->createCommand()
+    			->select('*')
+    			->from('user_city')
+                ->where("id_user=:id_user", array(':id_user'=>$id))
+    			->queryRow();
+    			
+    		if(count($city)){
+    		    
+    		   Yii::app()->db->createCommand()
+					->update('user_city', array(
+						'id_city' => $data['city'],
+					), "id_user=:id_user", array(':id_user' => $id));
+				
+    		} else {
+    		    
+    		    Yii::app()->db->createCommand()
+                    ->insert('user_city', array(
+                        'id_user' => $id,
+                        'id_city' => $data['city'],
+                    ));
+    		}
+    		
         $attr = $data['userAttribs'];
         Yii::app()->db->createCommand()->delete('user_attribs', 'id_us=:id_user', array(':id_user' => $id));
             foreach($attr as $key=>$val) {
@@ -408,8 +430,33 @@ class User extends CActiveRecord
 					'position' => $data['position'],
 					'web' => $data['web'],
 					), 'id_user=:id_user', array(':id_user' => $id));
-			
-
+			   
+			   
+			///city
+            
+            $city = Yii::app()->db->createCommand()
+    			->select('*')
+    			->from('user_city')
+                ->where("id_user=:id_user", array(':id_user'=>$id))
+    			->queryRow();
+    			
+    		if(count($city)){
+    		    
+    		   Yii::app()->db->createCommand()
+					->update('user_city', array(
+						'id_city' => $data['city'],
+					), "id_user=:id_user", array(':id_user' => $id));
+				
+    		} else {
+    		    
+    		    Yii::app()->db->createCommand()
+                    ->insert('user_city', array(
+                        'id_user' => $id,
+                        'id_city' => $data['city'],
+                    ));
+    		}
+    		
+    		///attribs
 			$attr = $data['userAttribs'];
 		
             Yii::app()->db->createCommand()->delete('user_attribs', 'id_us=:id_user', array(':id_user' => $id));
