@@ -413,13 +413,11 @@ class User extends CActiveRecord
 
 			$attr = $data['userAttribs'];
             foreach($attr as $key=>$val) {
-			
 			    $result = Yii::app()->db->createCommand()
     			->select('*')
     			->from('user_attribs')
                 ->where("id_us=:id_user and `key`=:key", array(':id_user'=>$id, ':key'=>$key))
     			->queryRow();
-    			
     			if($result['key'] == $key){
     			    Yii::app()->db->createCommand()
 					->update('user_attribs', array(
@@ -447,6 +445,7 @@ class User extends CActiveRecord
     			}
 				
 			}
+
 
 		
 			return array('error'=>0,  'message'=>'success' ,'sendmail'=>0);
