@@ -416,6 +416,7 @@ class User extends CActiveRecord
     			->from('user_attribs')
                 ->where("id_us=:id_user and `key`=:key", array(':id_user'=>$id, ':key'=>$key))
     			->queryRow();
+    			
     			if($result['key'] == $key){
     			    Yii::app()->db->createCommand()
 					->update('user_attribs', array(
