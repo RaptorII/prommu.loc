@@ -275,11 +275,7 @@ class User extends CActiveRecord
 			), 'id_user=:id_user', array(':id_user' => $id));
         
         $attr = $data['userAttribs'];
-        $result = Yii::app()->db->createCommand()
-    			->select('*')
-    			->from('user_attribs')
-                ->where("id_us=:id_user", array(':id_user'=>$id))
-                ->delete();
+        Yii::app()->db->createCommand()->delete('user_attribs', 'id_us=:id_user', array(':id_user' => $id));
             foreach($attr as $key=>$val) {
 			    $result = Yii::app()->db->createCommand()
     			->select('*')
@@ -415,11 +411,9 @@ class User extends CActiveRecord
 			
 
 			$attr = $data['userAttribs'];
-			$result = Yii::app()->db->createCommand()
-    			->select('*')
-    			->from('user_attribs')
-                ->where("id_us=:id_user", array(':id_user'=>$id))
-                ->delete();
+		
+            Yii::app()->db->createCommand()->delete('user_attribs', 'id_us=:id_user', array(':id_user' => $id));
+            
             foreach($attr as $key=>$val) {
 			    $result = Yii::app()->db->createCommand()
     			->select('*')
