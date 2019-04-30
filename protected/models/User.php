@@ -275,9 +275,7 @@ class User extends CActiveRecord
 			), 'id_user=:id_user', array(':id_user' => $id));
         
         $attr = $data['userAttribs'];
-			   
-				foreach($attr as $key=>$val) {
-				
+            foreach($attr as $key=>$val) {
 			    $result = Yii::app()->db->createCommand()
     			->select('*')
     			->from('user_attribs')
