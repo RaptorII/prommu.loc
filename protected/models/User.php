@@ -377,6 +377,8 @@ class User extends CActiveRecord
 					'position' => $data['post'],
 					'city' => $data['city'],
 					'contact' => $data['contact'],
+					'position' => $data['position'],
+					'web' => $data['web'],
 					), 'id_user=:id_user', array(':id_user' => $id));
 			
 
