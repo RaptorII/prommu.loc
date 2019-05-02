@@ -3749,8 +3749,8 @@ WHERE id_vac = {$inVacId}";
             if(!isset($arT[$id]['responded']))
             {
                 $arT[$id]['responded'] = 0;
-                $arT[$id]['approved'] = 0;
                 $arT[$id]['response_date'] = '';
+                $arT[$id]['approved'] = 0;
                 if(is_array($arRes['responses'][$id]))
                 {
                     $arRespDates = [];

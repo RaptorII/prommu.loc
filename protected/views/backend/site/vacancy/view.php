@@ -2,61 +2,8 @@
   $bUrl = Yii::app()->request->baseUrl;
   $gcs = Yii::app()->getClientScript();
   $gcs->registerCssFile($bUrl . '/css/template.css');
+  $gcs->registerCssFile($bUrl . '/css/vacancy/list.css');
 ?>
-<style type="text/css">
-    .label-important {
-        background: #dd4b39;
-    }
-    input {
-        border: #ecf0f5;
-        width:80px;
-    }
-    #export_form input[type="radio"]{
-        width: 20px;
-        vertical-align: middle;
-        margin: 0;
-    }
-    #export_form{
-        width: 100%;
-        max-width: 400px;
-        position: absolute;
-        top: 250;
-        left: -200px;
-        margin-left: 50%;
-        padding: 15px;
-        background: #ffffff;
-        border-radius: 5px;
-        z-index: 1100;
-        display: none;
-    }
-    .bg_veil{
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        background: rgba(0,0,0,.6);
-        z-index: 1099;
-        display: none;
-    }
-    .export_form-radio{
-        display:flex;
-    }
-    .export_form-close{
-        position: absolute;
-        color: #ffffff;
-        background-color: #222d32;
-        width: 30px;
-        text-align: center;
-        line-height: 32px;
-        border-radius: 50%;
-        cursor: pointer;
-        right: -20px;
-        top: -20px;
-        font-size: 20px;
-        height: 30px;
-    }
-</style>
 <?
 //
 ?>
@@ -357,7 +304,11 @@
                     $this->widget('zii.widgets.jui.CJuiDatePicker',array(
                         'name'=>'export_beg_date',
                         'options'=>['changeMonth'=>true],
-                        'htmlOptions'=>['id'=>'export_beg_date','class'=>'form-control']
+                        'htmlOptions'=>[
+                            'id'=>'export_beg_date',
+                            'class'=>'form-control',
+                            'autocomplete'=>'off'
+                        ]
                     ));
                 ?>
             </label>  
@@ -369,7 +320,11 @@
                     $this->widget('zii.widgets.jui.CJuiDatePicker',array(
                         'name'=>'export_end_date',
                         'options'=>['changeMonth'=>true],
-                        'htmlOptions'=>['id'=>'export_end_date','class'=>'form-control']
+                        'htmlOptions'=>[
+                            'id'=>'export_end_date',
+                            'class'=>'form-control',
+                            'autocomplete'=>'off'
+                        ]
                     ));
                 ?>
             </label>  
