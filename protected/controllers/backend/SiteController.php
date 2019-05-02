@@ -580,6 +580,16 @@ class SiteController extends Controller
                 $this->render('vacancy/vacancy', array('model'=>$model));
             }
             else{
+                if(Yii::app()->getRequest()->getParam('export_xls')=='Y')
+                {
+                    $model = new Vacancy();
+                    $data = $model->exportVacancies();
+                    if(!$data)
+                    {
+                        $this->redirect(['vacancy']);
+                    }
+                    Xls::makeFile($data['head'],$data['items'],'export_vacancies'); 
+                }
                 $title = 'Действующие';
                 $this->setPageTitle($title);
                 $this->breadcrumbs = array('Вакансии'=>array('sect?p=vac'), '1'=>$title,);
@@ -1530,13 +1540,6 @@ class SiteController extends Controller
             $this->render('users/cardsview', array('model'=>$model));
         }
         */
-    }
-
-    public function actionExportVacancy()
-    {
-        $model = new Vacancy;
-        $res = $model->exportVacancyCSV();
-        //print_r($res);
     }
 
     public function actionExportEmpl()
