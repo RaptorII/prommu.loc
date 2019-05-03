@@ -293,7 +293,10 @@ class Ideas extends ARModel
                         'id_user' => $id,
                         'comment' => $comment,
                         'date_comment' => date("Y-m-d H-i-s"),
-                        'hidden' => $id ? 1 : 0
+                        'hidden' => $id ? 1 : 0,
+                        'isread' => 0,
+                        'notification' => 0,
+
                     ));
 
         return $res;
@@ -312,7 +315,7 @@ class Ideas extends ARModel
         return Yii::app()->db->createCommand()
             ->update(
                 'ideas_attrib', 
-                array('hidden' => !$res['hidden']),
+                array('hidden' => (integer) !$res['hidden']),
                 'id=:id', 
                 array(':id'=>$id)
             );
