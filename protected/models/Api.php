@@ -132,11 +132,32 @@ class Api
             FROM user_attr_dict d";
         $res = Yii::app()->db->createCommand($sql)->queryAll();
 
-
-        foreach ($res as $key => $val)
-        {
-            $attr[$val['key']] = $val;
-        } // end foreach
+    
+        for($i = 0; $i < count($res); $i ++){
+            if($res[$i]['id_par'] !=0 ){
+                $id_par = $res[$i]['id_par'];
+                $sql = "SELECT
+                    d.id
+                  , d.name
+                  , d.type
+                  , d.id_par idpar
+                  , d.key
+                 FROM user_attr_dict d
+                 WHERE id={$id_par}";
+                $parent = Yii::app()->db->createCommand($sql)->queryRow();
+            
+                $attr[$parent['name']][] = $res[$i];
+            } else {
+                $attr[$res['name']] = $res[$i];
+            }
+        }
+        
+        
+        // foreach ($res as $key => $val)
+        // {
+            
+        //     $attr[$val['key']] = $val;
+        // } // end foreach
         
         $data['userAttribs'] = $attr;
         
