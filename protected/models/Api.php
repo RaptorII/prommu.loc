@@ -153,7 +153,7 @@ class Api
                   , d.id_par idpar
                   , d.key
                  FROM user_attr_dict d
-                 WHERE id_pat={$id_par}";
+                 WHERE id_par={$id_par}";
                 $child = Yii::app()->db->createCommand($sql)->queryRow();
                 
                 $attr[$parent['key']] = [];
