@@ -85,6 +85,12 @@
 				'type' => 'raw',
 				'filter' => ''
 			),
+            array(
+				'name' => 'Непросмотренные комментарии',
+				'value' => 'getIdeaIsReadCnt($data->id)',
+				'type' => 'raw',
+				'filter' => ''
+			),
 			array(
 				'class'=>'CButtonColumn',
 				'deleteConfirmation'=>"js:'Запись ID = '+$(this).parent().parent().children(':first-child').text()+' будет удалена! Продолжить?'",
@@ -119,6 +125,13 @@
 		$sql = "SELECT COUNT(DISTINCT id)
 				FROM ideas_attrib 
 				WHERE comment IS NOT NULL AND hidden=1 AND id_idea={$id}";
+        return Yii::app()->db->createCommand($sql)->queryScalar();
+	};
+
+	function getIdeaIsReadCnt($id){
+		$sql = "SELECT COUNT(DISTINCT id)
+				FROM ideas_attrib 
+				WHERE comment IS NOT NULL AND isread=0 AND id_idea={$id}";
         return Yii::app()->db->createCommand($sql)->queryScalar();
 	};
 
