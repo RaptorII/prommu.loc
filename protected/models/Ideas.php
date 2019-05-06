@@ -192,13 +192,25 @@ class Ideas extends ARModel
 
         $res = Yii::app()->db->createCommand($sql)->queryRow();
 
-        $sql = "SELECT ai.id, ai.id_user, ai.comment, ai.hidden,
+        $sql = "SELECT ai.id, ai.id_user, ai.comment, ai.hidden, ai.isread,
                     DATE_FORMAT(ai.date_comment, '%d.%m.%Y %T') date_comment 
                 FROM ideas_attrib ai
                 WHERE ai.comment IS NOT NULL AND ai.id_idea = $id
                 ORDER BY ai.date_comment DESC";
 
         $res['comments'] = Yii::app()->db->createCommand($sql)->queryAll();
+
+        // Сброс счётчика коментариев при просмотре Идей в админ-панели
+        Yii::app()->db->createCommand()
+            ->update('ideas_attrib',
+                    array(
+                        'isread' => 1,
+
+                    ),
+                    'id_idea=:id',
+                    array(':id'=>$id)
+            );
+        // Конец сброса счётчика
 
         $arUserIdies = array();
         $arUserIdies[] = $res['id_user'];
@@ -219,9 +231,10 @@ class Ideas extends ARModel
         $sql = "SELECT COUNT(DISTINCT id) FROM ideas WHERE ismoder = 0 {$filter}";
         $cnt1 = Yii::app()->db->createCommand($sql)->queryScalar();
 
+        // select all unread comments
         $sql = "SELECT COUNT(DISTINCT id)
                     FROM ideas_attrib 
-                    WHERE comment IS NOT NULL AND hidden=1";
+                    WHERE comment IS NOT NULL AND isread=0";
         $cnt2 = Yii::app()->db->createCommand($sql)->queryScalar();
 
         return array('ideas'=>$cnt1, 'comments'=>$cnt2);
