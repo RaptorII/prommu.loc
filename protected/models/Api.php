@@ -146,7 +146,7 @@ class Api
                  WHERE id={$id_par}";
                 $parent = Yii::app()->db->createCommand($sql)->queryRow();
             
-                $attr[$parent['name']][] = $res[$i];
+                $attr[$parent['key']][] = $res[$i];
             } else {
                 $attr[$res['name']] = $res[$i];
             }
