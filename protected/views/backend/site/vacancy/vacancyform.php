@@ -1,10 +1,75 @@
-<?php
-Yii::app()->getClientScript()->registerCoreScript('jquery');
-Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl.'/js/ajaxfileupload.js', CClientScript::POS_HEAD);
+<?
+  $bUrl = Yii::app()->request->baseUrl;
+  $gcs = Yii::app()->getClientScript();
+  $gcs->registerCssFile($bUrl . '/css/template.css');
+  $vacancy = $viData['item'];
+?>
+<div class="row">
+    <?if(!is_array($vacancy)):?>
+        <div class="col-xs-12">
+            <div class="alert danger">Данные отсутствуют</div>
+        </div>
+    <?else:?>
+        <div class="col-xs-12">
+            <h3>Редактирование вакансии №<?=$viData['id']?></h3><br>
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-2"></div>
+        <div class="col-xs-12 col-sm-10 col-md-8">
+            <? echo CHtml::form($id,'post',['class'=>'form-horizontal']); ?>
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="d-indent">
+                        <span>Дата создания:</span> <b><?=date('H:i d.m.y',$vacancy['crdate'])?></b>
+                    </div>
+                    <div class="d-indent">
+                        <span>Дата модерации:</span> <b><?=date('H:i d.m.y',$vacancy['mdate'])?></b>
+                    </div>
+                    <div class="d-indent">
+                        <span>Дата начала работ:</span>!!!!!!!!!!!!!!!! <b><?=$viData['vac']['cbdate']?></b>
+                    </div>
+                    <div class="d-indent">
+                        <span>Дата завершения работ:</span> <b><?=date('d.m.y',$vacancy['remdate'])?></b>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <div class="d-indent">
+                        <span>Просмотров:</span> <b><?=$viData['views']?></b>
+                    </div>
+                    <div class="d-indent">
+                        <span>Откликов:</span> <b><?=$viData['responses']['cnt']?></b>
+                    </div>
+                    <div class="d-indent">
+                        <span>Утвержденных:</span> <b><?=$viData['responses']['approved']?></b>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-xs-12 col-md-6">
+                    <label class="d-label">
+                       <span>Название</span>
+                       <? echo CHtml::textField('Vacancy[title]', $vacancy['title'], ['class'=>'form-control']); ?>
+                    </label> 
+                    <div class="d-indent">
+                        <span>Должности:</span><br><b><?=implode(',<br>',$viData['posts'])?></b>
+                    </div>
 
-echo "<pre style='display:none'>";
-print_r($data); 
-echo "</pre>";
+
+                </div>
+                <div class="col-xs-12 col-md-6"></div>
+            </div>
+            <? echo CHtml::endForm(); ?>
+            <?
+    echo "<pre>";
+    print_r($viData); 
+    echo "</pre>";
+            ?>  
+        </div>
+        <div class="hidden-xs col-sm-1 col-md-2"></div>
+    <? endif; ?>
+</div>
+<?php
+
+
+
 
 echo CHtml::form($id,'post',array('enctype'=>'multipart/form-data', 'class'=>'form-horizontal'));
 echo '<div class="row">';

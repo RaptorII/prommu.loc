@@ -18,9 +18,6 @@ class Vacancy extends ARModel
 
     /** @var UserProfile */
     private $Profile;
-
-
-
     /**
      * @param UserProfile $Profile
      */
@@ -36,7 +33,21 @@ class Vacancy extends ARModel
         return 'empl_vacations';
     }
 
-        public function searchvac()
+    public static function model($className=__CLASS__)
+    {
+        return parent::model($className);
+    }
+
+    public function rules()
+    {
+        return array(
+            array('id, id_empl, title, remdate,crdate, city, status', 'required'),
+            array('id', 'numerical', 'integerOnly'=>true),
+            array('id, id_empl, title, remdate,crdate, city, status, index, meta_title, meta_h1, meta_description', 'safe', 'on'=>'search')
+        );
+    }
+
+    public function searchvac()
     {
         // Warning: Please modify the following code to remove attributes that
         // should not be searched.
@@ -54,25 +65,12 @@ class Vacancy extends ARModel
         $criteria->compare('meta_title',$this->meta_title, true);
         $criteria->compare('meta_description',$this->meta_description, true);
         $criteria->compare('index',$this->index, true);
+        
         return new CActiveDataProvider('Vacancy', array(
             'criteria'=>$criteria,
             'pagination' => array('pageSize' => 20,),
             'sort' => ['defaultOrder'=>'mdate desc'],
         ));
-    }
-
-public function rules()
-    {
-        // NOTE: you should only define rules for those attributes that
-        // will receive user inputs.
-        return array(
-            array('id, id_empl, title, remdate,crdate, city, status', 'required'),
-           array('id', 'numerical', 'integerOnly'=>true),
-            // array('name, firstname,lastname, city', 'length', 'max'=>64),
-            // array('email','email'),
-            array('id, id_empl, title, remdate,crdate, city, status, index, meta_title, meta_h1, meta_description', 'safe', 'on'=>'search'),
-        );
-
     }
 
     public function setAnalytic($id){
@@ -592,20 +590,8 @@ public function rules()
 
                 $data['vac'][0]['city'] = $tmp;
 
-                $btime = $etime = '';
-                if( $val['btime'] )
-                {
-                    $h = floor($val['btime'] / 60);
-                    $m = $val['btime'] - $h * 60;
-                    $btime = sprintf('%d:%02d', $h, $m);
-                }
-
-                if( $val['etime'] )
-                {
-                    $h = floor($val['etime'] / 60);
-                    $m = $val['etime'] - $h * 60;
-                    $etime = sprintf('%d:%02d', $h, $m);
-                } // endif
+                $btime = $this->getTime($val['btime']);
+                $etime = $this->getTime($val['etime']);
 
                 // периоды локаций
                 if( $val['tbdate'] ) $data['vac'][0]['loctime'][$val['lid']][md5($val['perHash'])] = array($val['tbdate'], $val['tedate'], $btime, $etime);
@@ -2836,18 +2822,8 @@ WHERE id_vac = {$inVacId}";
         $arRes['location'][$k]['id_metro'] = $arM;
         unset($arRes['location'][$k]['id_metros']);
         // преобразуем время
-        if($v['btime'])
-        {
-          $h = floor($v['btime'] / 60);
-          $m = $v['btime'] - $h * 60;
-          $arRes['location'][$k]['btime']=sprintf('%d:%02d',$h,$m);
-        }
-        if($v['etime'])
-        {
-          $h = floor($v['etime'] / 60);
-          $m = $v['etime'] - $h * 60;
-          $arRes['location'][$k]['etime']=sprintf('%d:%02d',$h,$m);
-        }
+        $arRes['location'][$k]['btime'] = $this->getTime($v['btime']);
+        $arRes['location'][$k]['etime'] = $this->getTime($v['etime']);
       }
       $arMetro = array_unique($arMetro);
       if(count($arMetro))
@@ -3434,19 +3410,8 @@ WHERE id_vac = {$inVacId}";
 
         foreach ($arRes['periods'] as &$v)
         {
-            // преобразуем время
-            if($v['btime'])
-            {
-                $h = floor($v['btime'] / 60);
-                $m = $v['btime'] - $h * 60;
-                $v['btime']=sprintf('%d:%02d',$h,$m);
-            }
-            if($v['etime'])
-            {
-                $h = floor($v['etime'] / 60);
-                $m = $v['etime'] - $h * 60;
-                $v['etime']=sprintf('%d:%02d',$h,$m);
-            }
+            $v['btime'] = $this->getTime($v['btime']);
+            $v['etime'] = $this->getTime($v['etime']);
         }
 
         $arRes['user'] = Share::getUsers([$arRes['item']['employer']]);
@@ -3768,5 +3733,163 @@ WHERE id_vac = {$inVacId}";
         $arRes['items'] = $arT;
 
         return $arRes;
+    }
+    /**
+     * @param $id_vacancy - id_vacancy
+     */
+    public function getVacancyAdmin($id_vacancy)
+    {
+        $db = Yii::app()->db;
+        $arRes = array();
+        $arRes['id'] = $id_vacancy;
+        $arRes['item'] = $db->createCommand()
+                    ->select("*,
+                        UNIX_TIMESTAMP(crdate) crdate,
+                        UNIX_TIMESTAMP(mdate) mdate,
+                        UNIX_TIMESTAMP(bdate) bdate,
+                        UNIX_TIMESTAMP(edate) edate,
+                        UNIX_TIMESTAMP(remdate) remdate
+                        ")
+                    ->from('empl_vacations')
+                    ->where('id=:id',[':id'=>$id_vacancy])
+                    ->queryRow();
+
+        if(!is_array($arRes['item']))
+            return $arRes;
+        // отклики
+        $model = new ResponsesEmpl();
+        $arRes['responses'] = $model->getVacResponsesCnt($id_vacancy);
+        // просмотры
+        $model = new Termostat();
+        $arRes['views'] = $model->getTermostatCount($id_vacancy);
+        // атрибуты
+        $arRes['properties'] = $db->createCommand()
+                    ->select("ea.*, uad.name dname, uad.id_par, uad.postself")
+                    ->from('empl_attribs ea')
+                    ->join('user_attr_dict uad','uad.id=ea.id_attr')
+                    ->where('ea.id_vac=:id',[':id'=>$id_vacancy])
+                    ->queryAll();
+        // должности
+        $arRes['posts'] = array();
+        for($i=0,$n=count($arRes['properties']); $i<$n; $i++)
+        {
+            if($arRes['properties'][$i]['id_par']==110)
+            $arRes['posts'][] =  $arRes['properties'][$i]['dname'];
+        }
+        // города
+        $arRes['city'] = $this->getCities($id_vacancy);
+        // locations
+        $arRes['locations'] = $this->getLocations($id_vacancy);
+
+   /*     $arRes['locations'] = Yii::app()->db->createCommand()
+                    ->select("*,
+                        UNIX_TIMESTAMP(elt.bdate) bdate, 
+                        UNIX_TIMESTAMP(elt.edate) edate")
+                    ->from('empl_locations el')
+                    ->join('emplv_loc_times elt','elt.id_loc=el.id')
+                    ->where('el.id_vac=:id',[':id'=>$id_vacancy])
+                    ->queryAll();
+
+
+
+        $begWorkDate = reset($v['city'])[1]; // дата начала первого города
+        $endWorkDate = reset($v['city'])[2]; // дата окончания первого города
+        foreach ($v['city'] as $c) {
+            if (strtotime($c[1]) < strtotime($begWorkDate))
+                $begWorkDate = $c[1];
+            if (strtotime($c[2]) > strtotime($endWorkDate))
+                $endWorkDate = $c[2];
+            if (isset($v['location'][$c[3]]))
+                foreach ($v['location'][$c[3]] as $l)
+                    if (isset($v['loctime'][$l['id']]))
+                        foreach ($v['loctime'][$l['id']] as $t) {
+                            if (strtotime($t[0]) < strtotime($begWorkDate))
+                                $begWorkDate = $t[0];
+                            if (strtotime($t[1]) > strtotime($endWorkDate))
+                                $endWorkDate = $t[1];
+                        }
+        }*/
+
+
+        return $arRes;
+    }
+    /**
+     * @param $id_vacancy - id_vacancy
+     */
+    private function getCities($id_vacancy)
+    {
+        $arRes = array();
+        if(!$id_vacancy)
+            return $arRes;
+
+        $query = Yii::app()->db->createCommand()
+                    ->select("ec.id,
+                        UNIX_TIMESTAMP(ec.bdate) bdate, 
+                        UNIX_TIMESTAMP(ec.edate) edate,
+                        ec.id_city,
+                        c.name city")
+                    ->from('empl_city ec')
+                    ->join('city c','c.id_city = ec.id_city')
+                    ->where('ec.id_vac=:id',[':id'=>$id_vacancy])
+                    ->queryAll();
+
+        for($i=0,$n=count($query); $i<$n; $i++)
+        {
+            $arRes[$query[$i]['id']] = $query[$i];
+        }
+
+        return $arRes;
+    }
+    /**
+     * @param $id_vacancy - id_vacancy
+     */
+    private function getLocations($id_vacancy)
+    {
+        $arRes = array();
+        if(!$id_vacancy)
+            return $arRes;
+
+        $query = Yii::app()->db->createCommand()
+                    ->select("*,
+                        UNIX_TIMESTAMP(elt.bdate) bdate, 
+                        UNIX_TIMESTAMP(elt.edate) edate")
+                    ->from('empl_locations el')
+                    ->join('emplv_loc_times elt','elt.id_loc=el.id')
+                    ->where('el.id_vac=:id',[':id'=>$id_vacancy])
+                    ->queryAll();
+
+        for($i=0,$n=count($query); $i<$n; $i++)
+        {
+            $arTemp = $arRes[$query[$i]['id']];
+            $arTemp['id'] = $query[$i]['id'];
+            $arTemp['id_city'] = $query[$i]['id_city'];
+            $arTemp['id_metro'] = $query[$i]['id_metro'];
+            $arTemp['id_metros'] = $query[$i]['id_metros'];
+            $arTemp['name'] = $query[$i]['name'];
+            $arTemp['addr'] = $query[$i]['addr'];
+            $arTemp['periods'][] = [
+                    'bdate' => $query[$i]['bdate'],
+                    'edate' => $query[$i]['edate'],
+                    'btime' => $this->getTime($query[$i]['btime']),
+                    'etime' => $this->getTime($query[$i]['etime'])
+                ];
+            $arRes[$query[$i]['id']] = $arTemp;
+        }
+
+        return $arRes;
+    }
+    /**
+     * @param $time - integer from `emplv_loc_times` table
+     */
+    private function getTime($time)
+    {
+        $result = '';
+        if($time)
+        {
+            $h = floor($time / 60);
+            $m = $time - $h * 60;
+            $result = sprintf('%d:%02d', $h, $m);
+        }
+        return $result;
     }
 }

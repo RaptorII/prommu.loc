@@ -849,7 +849,8 @@ class ResponsesEmpl extends Responses
                 MainConfig::$VACANCY_RESPONDED => 0, // Откликнувшиеся
                 MainConfig::$VACANCY_DEFERRED => 0, // Отложенные
                 MainConfig::$VACANCY_REJECTED => 0, // Отклоненные
-                MainConfig::$VACANCY_REFUSED => 0 // Отказавшиеся
+                MainConfig::$VACANCY_REFUSED => 0, // Отказавшиеся
+                'cnt' => 0
             ];
         // общий чат
         $model = new VacDiscuss();

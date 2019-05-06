@@ -1,10 +1,27 @@
 .label-important {
     background: #dd4b39;
 }
-input {
-    border: #ecf0f5;
-    width:80px;
+/*
+* table
+*/
+.dataTable{
+
 }
+.dataTable .checkclass{ margin: 0 }
+.dataTable thead>tr:not(.filters) th{ text-align: center }
+.dataTable thead>tr.filters>td{ padding: 0 } 
+.filters input{
+    width: 100%;
+    max-width: 100%;
+    border: 1px solid #d6d6d6; 
+}
+.dataTable tbody tr td{ text-align: center }
+.dataTable tr .checkbox-column{ width: 2% }
+.dataTable tr .column_id{ width: 4% }
+.dataTable tr .column_id_empl{ width: 4% }
+/*
+* export form
+*/
 #export_form input[type="radio"]{
     width: 20px;
     vertical-align: middle;

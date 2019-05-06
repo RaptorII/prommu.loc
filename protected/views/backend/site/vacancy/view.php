@@ -24,7 +24,7 @@
           'id'=>'dvgrid',
           'dataProvider'=>$model->searchvac(),
           'itemsCssClass' => 'table table-bordered table-hover dataTable',
-          'htmlOptions'=>array('class'=>'table table-hover', 'name'=>'my-grid', 'style' =>    'padding: 10px;  overflow: scroll;'),
+          'htmlOptions'=>array('class'=>'table table-hover', 'name'=>'my-grid'/*, 'style' =>    'padding: 10px;  overflow: scroll;'*/),
           'filter'=>$model,  
           'enablePagination' => true,
           'columns'=>array(
@@ -35,61 +35,65 @@
                         'value' => '$data->id_user',
                     ),
                     array(
-                        'header'=>'Вакансия',
+                        'header'=>'ID',
                         'name' => 'id',
                         'value' => '$data->id',
                         'type' => 'html',
-                        'htmlOptions' => array('style' => 'width: 50px; text-align: center;'),
+                        'htmlOptions' => ['class'=>'column_id']
                     ),
                     array(
-                        'header'=>'Работодатель',
+                        'header'=>'Компания',
                         'name' => 'id_empl',
                         'type'=>'raw',
-                        'value'=>'CHtml::tag("span",array(),GetEmployerName($data->id_empl) . " (" . $data->id_empl . ")")',
-                        'htmlOptions' => array('style' => 'width: 50px; text-align: center;')
+                        'value'=>'1',//'CHtml::tag("span",array(),GetEmployerName($data->id_empl))',
+                        'htmlOptions' => []
+                    ),
+                    array(
+                        'header'=>'ID компании',
+                        'name' => 'id_empl',
+                        'value' => '$data->id_empl',
+                        'type' => 'html',
+                        'htmlOptions' => ['class'=>'column_id_empl']
                     ),
                     array(
                         'header'=>'Название',
                         'name' => 'title',
                         'value' => 'ShowVacancy($data->id, $data->title)',
                         'type' => 'html',
-                        'htmlOptions' => array('style' => 'width: 50px; text-align: center;'),
+                        'htmlOptions' => array('style' => 'width: 300px; text-align: center;'),
 
                     ),
                     array(
                         'header'=>'Город',
                         'name' => 'city',
                         'type'=>'raw',
-                        'value'=>'CHtml::tag("span",array(),implode(", ", GetVacCities($data->id)))',
-                        'htmlOptions' => array('style' => 'width: 50px; text-align: center;')
+                        'value'=>'1',//'CHtml::tag("span",array(),implode(", ", GetVacCities($data->id)))',
+                        'htmlOptions' => array('style' => 'width: 300px; text-align: center;')
                     ),
                     array(
-                        'header'=>'Создана',
+                        'header'=>'Дата создания',
                         'name' => 'crdate',
-                        'value' => '$data->crdate',
-                        'type' => 'html',
-                        'htmlOptions' => array('style' => 'width: 50px; text-align: center;'),
+                        'type' => 'raw',
+                        'value' => 'Share::getPrettyDate($data->crdate,false,true)'
                     ),
                     array(
                         'header'=>'Дата изменения',
                         'name' => 'mdate',
-                        'value' => '$data->mdate',
-                        'type' => 'html',
-                        'htmlOptions' => array('style' => 'width: 50px; text-align: center;'),
+                        'type' => 'raw',
+                        'value' => 'Share::getPrettyDate($data->mdate,false,true)'
                     ),
                     array(
-                        'header'=>'Деактив',
+                        'header'=>'Дата завершения',
                         'name' => 'remdate',
-                        'value' => '$data->remdate',
-                        'type' => 'html',
-                        'htmlOptions' => array('style' => 'width: 50px; text-align: center;'),
+                        'type' => 'raw',
+                        'value' => 'Share::getDate(strtotime($data->remdate),"d.m.y")'
                     ),
                     array(
                         'header'=>'Статус',
                         'name' => 'status',
                         'value' => 'ShowStatus($data->id,$data->status)',
                         'type' => 'raw',
-                        'htmlOptions' => array('style' => 'width: 50px; text-align: center;'),
+                        'htmlOptions' => array('style' => 'width: 300px; text-align: center;'),
 
                     ),
                     array(
@@ -97,7 +101,7 @@
                         'name' => 'ismoder',
                         'value' => 'ShowStatusModer($data->id,$data->ismoder)',
                         'type' => 'raw',
-                        'htmlOptions' => array('style' => 'width: 50px; text-align: center;'),
+                        'htmlOptions' => array('style' => 'width: 300px; text-align: center;'),
 
                     ),
                     array(
@@ -105,14 +109,14 @@
                     'value' => 'ShowEdit($data->id)',
                     'type' => 'raw',
                     'filter' => '',
-                    'htmlOptions' => array('style' => 'width: 50px; text-align: center;', 'class' => 'sorting', 'background-color'=> 'antiquewhite')
+                    'htmlOptions' => array('style' => 'width: 300px; text-align: center;', 'class' => 'sorting', 'background-color'=> 'antiquewhite')
                   ),
                      array(
                     'name' => 'Удалить',
                     'value' => 'ShowDelete($data->id, $data->id_user)',
                     'type' => 'raw',
                     'filter' => '',
-                    'htmlOptions' => array('style' => 'width: 50px; text-align: center;', 'class' => 'sorting', 'background'=> '#ef0018')
+                    'htmlOptions' => array('style' => 'width:200px;text-align:center;', 'class' => 'sorting', 'background'=> '#ef0018')
                 ),
 
         )));
@@ -208,12 +212,6 @@
 </div> 
 <!-- <a href="#" onclick="export_send()">Экспорт в Excel</a> -->
 <script type="text/javascript">
-    function export_send() {
-        document.forms['form'].method = 'POST';
-        document.forms['form'].action = "/admin/site/ExportVacancy";
-        document.forms['form'].submit();
-    }
-
     function doStatusModer(id, st) {
         $("#curr_status").val(st);
         $("#form").attr("action", "/admin/site/VacancyChangeModer/" + id);

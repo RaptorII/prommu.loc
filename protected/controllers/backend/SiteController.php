@@ -976,30 +976,32 @@ class SiteController extends Controller
 
     public function actionVacancyEdit($id)
     {
-        // if($this->user_access != 1) {
-        //  $this->render('access');
-        //  return;
-        // }
-        if(self::isAuth()) {
-            $model = new Vacancy;
-            if(!empty($_POST['Vacancy'])) {
-                if($_POST['Vacancy']['ageto'] == 0) {
-                    $_POST['Vacancy']['ageto'] == $_POST['Vacancy']['agefrom'];
-                }
-                $model->updateVacancy($id, $_POST['Vacancy']);
+        if(!self::isAuth() /*|| strpos($this->user_access, "vacancy") == false*/)
+        {
+            $this->render('access');
+            return;
+        }
 
-                $model->unsetAttributes();  // clear any default values
-                $model->searchvac();
-                $model->status=1;
-                $this->render('vacancy/view', array('model'=>$model));
-
+        $model = new Vacancy;
+        if(!empty($_POST['Vacancy'])) // сохранение
+        {
+            if($_POST['Vacancy']['ageto'] == 0)
+            {
+                $_POST['Vacancy']['ageto'] == $_POST['Vacancy']['agefrom'];
             }
-            else{
-            // --- вывод формы
-                $data = $model->getVacancyData($id);
-                $title = 'Редактирование вакансии '.$id;
-                $this->setPageTitle($title);
-                $this->breadcrumbs = $data['vac']['status'] != 0
+            $model->updateVacancy($id, $_POST['Vacancy']);
+
+            $model->unsetAttributes();  // clear any default values
+            $model->searchvac();
+            $model->status=1;
+            $this->render('vacancy/view', array('model'=>$model));
+        }
+        else
+        {
+            $data = $model->getVacancyAdmin($id);
+            $title = 'Редактирование вакансии '.$id;
+            $this->setPageTitle($title);
+            $this->breadcrumbs = $data['vac']['status'] != 0
                 ? array(
                     'Вакансии'=>array('sect?p=vac'),
                     'Действующие'=>array('vacancy'), 
@@ -1010,8 +1012,7 @@ class SiteController extends Controller
                     'Брошенные'=>array('vacancymail'), 
                     '1'=>$title,
                 );
-            $this->render('vacancy/vacancyform', array('id'=>$id, 'data'=>$data));
-        }
+            $this->render('vacancy/vacancyform', ['viData'=>$data]);
         }
     }
 
