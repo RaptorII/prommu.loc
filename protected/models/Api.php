@@ -134,8 +134,8 @@ class Api
 
     
         for($i = 0; $i < count($res); $i ++){
-            if($res[$i]['id_par'] !=0 ){
-                $id_par = $res[$i]['id_par'];
+            if($res[$i]['idpar'] !=0 ){
+                $id_par = $res[$i]['idpar'];
                 $sql = "SELECT
                     d.id
                   , d.name
@@ -147,10 +147,9 @@ class Api
                 $parent = Yii::app()->db->createCommand($sql)->queryRow();
             
                 $attr[$parent['name']][] = $res[$i];
-            } 
-            // else {
-            //     $attr[$res['name']] = $res[$i];
-            // }
+            } else {
+                $attr[$res['name']] = $res[$i];
+            }
         }
         
         
