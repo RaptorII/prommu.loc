@@ -31,7 +31,7 @@ class ApiController extends AppController
         $Api = new Api();
         $data = $Api->apiProcess();
 //        error_code access_token
-        echo CJSON::encode($data);
+        echo json_encode($data);
         Yii::app()->end();
     }
 
