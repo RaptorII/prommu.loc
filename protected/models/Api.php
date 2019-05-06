@@ -148,7 +148,7 @@ class Api
             
                 $attr[$parent['key']][] = $res[$i];
             } else {
-                $attr[$res['key']] = $res[$i];
+                $attr[$res[$i]['key']] = $res[$i];
             }
         }
         
