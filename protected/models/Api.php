@@ -145,7 +145,7 @@ class Api
                  FROM user_attr_dict d
                  WHERE id={$id_par}";
                 $parent = Yii::app()->db->createCommand($sql)->queryRow();
-                $attr[$parent['key']] = [];
+                //$attr[$parent['key']] = [];
                 array_push($attr[$parent['key']], $res[$i]);
                 //$attr[$parent['key']][] = $res[$i];
             } else {
