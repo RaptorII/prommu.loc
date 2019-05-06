@@ -31,7 +31,7 @@
 		'htmlOptions'=>array(
 			'class'=>'table table-hover', 
 			'name'=>'my-grid', 
-			'style'=>'padding: 10px;'
+			'style'=>'padding: 10px; overflow: scroll;'
 		),
 		'filter' => $model,
 		'enablePagination' => true,
