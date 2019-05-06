@@ -259,6 +259,9 @@ class User extends CActiveRecord
 			->update('resume', array(
 				'firstname' => $data['firstname'],
 				'lastname' => $data['lastname'],
+				'smart' => $data['smart'],
+				'cardPrommu' => $data['cardPrommu'],
+				'card' => $data['card'],
 				'birthday' => Share::dateFormatToMySql($data['birthday']),
 				'ismed' => $data['ismed'],
 				'ishasavto' => $data['ishasavto'],
