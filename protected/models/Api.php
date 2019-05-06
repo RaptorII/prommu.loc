@@ -147,9 +147,10 @@ class Api
                 $parent = Yii::app()->db->createCommand($sql)->queryRow();
             
                 $attr[$parent['name']][] = $res[$i];
-            } else {
-                $attr[$res['name']] = $res[$i];
-            }
+            } 
+            // else {
+            //     $attr[$res['name']] = $res[$i];
+            // }
         }
         
         
