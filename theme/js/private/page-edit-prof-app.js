@@ -1280,7 +1280,7 @@ jQuery(function($){
 		(
 			$(document).scrollTop() > posContentList
 			&&
-			$(window).width() > 750
+			$(window).width() > 767
 		)
 		? $('.epa__logo-name-list').addClass('fixed')
 		: $('.epa__logo-name-list').removeClass('fixed');

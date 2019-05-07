@@ -45,6 +45,7 @@
       <?php echo $form->labelEx($model,'password', array('class'=>'control-label')); ?>
       <?php echo $form->passwordField($model,'password', array('class' => 'form-control', 'placeholder'=>'Ваш пароль')); ?>
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+          <?php echo $form->error($model,'password'); ?>
       </div>
       <div class="row">
         <div class="col-xs-8">
@@ -67,11 +68,16 @@
 <!-- /.login-box -->
 
 <!-- jQuery 2.2.3 -->
-<script src="<?php echo Yii::app()->request->baseUrl; ?>/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!--<script src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/plugins/jQuery/jquery-2.2.3.min.js"></script>-->
+
 <!-- Bootstrap 3.3.6 -->
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/bootstrap/js/bootstrap.min.js"></script>
+
 <!-- iCheck -->
 <script src="<?php echo Yii::app()->request->baseUrl; ?>/plugins/iCheck/icheck.min.js"></script>
+
+<!--<script src="--><?php //echo Yii::app()->request->baseUrl; ?><!--/../js/jquery-ui-1.10.3.custom.min.js"></script>-->
+
 <script>
   $(function () {
     $('input').iCheck({

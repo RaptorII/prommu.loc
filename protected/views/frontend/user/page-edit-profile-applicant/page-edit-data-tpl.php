@@ -727,8 +727,9 @@
       <div class="epa__post-name">NEWNAME</div>
       <div class="epa__post-close"></div>
       <label class="epa__label epa__payment">
-        <span class="epa__label-name">Ожидаемая оплата: <em>руб</em></span>
+        <span class="epa__label-name">Ожидаемая оплата: </span>
         <input type="text" name="post[NEWID][payment]" value="" class="epa__input epa__required" data-name="Ожидаемая оплата">
+        <em>руб</em>
       </label>
       <label class="epa__label epa__select">
         <input type="text" name="epa-str-period" value="Час" class="epa__input epa__post-period" disabled>
