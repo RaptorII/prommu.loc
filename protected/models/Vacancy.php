@@ -14,7 +14,16 @@ class Vacancy extends ARModel
     static public $SCOPE_ACTIVE_N_MODER = 2;
     /** @var int актуальные */
     static public $SCOPE_ACTUAL = 3;
-
+    /** @var array варианты опыта */
+    public static $EXPERIENCE = array(
+            1 => 'Без опыта', 
+            2 => 'До 1 месяца', 
+            3 => 'От 1 до 3 месяцев', 
+            4 => 'От 3 до 6 месяцев', 
+            5 => 'От 6 до 12 месяцев', 
+            6 => 'от 1 до 2-х лет', 
+            7 => 'Более 2-х лет'
+        );
 
     /** @var UserProfile */
     private $Profile;
@@ -690,16 +699,19 @@ class Vacancy extends ARModel
 
     public function updateVacancy($id, $data)
     {
-        if(isset($data['cur_status']))
-        {
-            $data['ismoder'] = $data['cur_status']==100 ? $data['cur_status'] : 0;
-            unset($data['cur_status']);            
-        }
-        else // сохранение вакансии
-        {
-            $data['index'] = (isset($data['index']) ? : 0);
-            $data['ismoder'] = (empty($data['ismoder']) ? 0 : $data['ismoder']);
-        }
+        $data['ismoder'] = intval($data['ismoder']);
+        $data['status'] = intval($data['status']);
+        $data['ispremium'] = intval($data['ispremium']);
+        $data['isman'] = intval($data['isman']);
+        $data['iswoman'] = intval($data['iswoman']);
+        $data['istemp'] = intval($data['istemp']);
+        $data['ismed'] = intval($data['ismed']);
+        $data['isavto'] = intval($data['isavto']);
+        $data['smart'] = intval($data['smart']);
+        $data['card'] = intval($data['card']);
+        $data['cardPrommu'] = intval($data['cardPrommu']);
+        $data['index'] = intval($data['index']);
+
         Yii::app()->db->createCommand()
             ->update('empl_vacations', $data, 'id=:id', [':id'=>$id]);
 
@@ -3743,15 +3755,16 @@ WHERE id_vac = {$inVacId}";
         $arRes = array();
         $arRes['id'] = $id_vacancy;
         $arRes['item'] = $db->createCommand()
-                    ->select("*,
-                        UNIX_TIMESTAMP(crdate) crdate,
-                        UNIX_TIMESTAMP(mdate) mdate,
-                        UNIX_TIMESTAMP(bdate) bdate,
-                        UNIX_TIMESTAMP(edate) edate,
-                        UNIX_TIMESTAMP(remdate) remdate
-                        ")
-                    ->from('empl_vacations')
-                    ->where('id=:id',[':id'=>$id_vacancy])
+                    ->select("ev.*,
+                        UNIX_TIMESTAMP(ev.crdate) crdate,
+                        UNIX_TIMESTAMP(ev.mdate) mdate,
+                        UNIX_TIMESTAMP(ev.bdate) bdate,
+                        UNIX_TIMESTAMP(ev.edate) edate,
+                        UNIX_TIMESTAMP(ev.remdate) remdate,
+                        e.name coname")
+                    ->from('empl_vacations ev')
+                    ->join('employer e','e.id_user=ev.id_user')
+                    ->where('ev.id=:id',[':id'=>$id_vacancy])
                     ->queryRow();
 
         if(!is_array($arRes['item']))
@@ -3763,53 +3776,32 @@ WHERE id_vac = {$inVacId}";
         $model = new Termostat();
         $arRes['views'] = $model->getTermostatCount($id_vacancy);
         // атрибуты
-        $arRes['properties'] = $db->createCommand()
+        $query = $db->createCommand()
                     ->select("ea.*, uad.name dname, uad.id_par, uad.postself")
                     ->from('empl_attribs ea')
                     ->join('user_attr_dict uad','uad.id=ea.id_attr')
                     ->where('ea.id_vac=:id',[':id'=>$id_vacancy])
                     ->queryAll();
         // должности
-        $arRes['posts'] = array();
-        for($i=0,$n=count($arRes['properties']); $i<$n; $i++)
+        $arRes['properties'] = $arRes['item']['post'] = array();
+        for($i=0,$n=count($query); $i<$n; $i++)
         {
-            if($arRes['properties'][$i]['id_par']==110)
-            $arRes['posts'][] =  $arRes['properties'][$i]['dname'];
+            if($query[$i]['id_par']==110)
+                $arRes['item']['post'][] =  $query[$i]['dname'];
+            $arRes['properties'][$query[$i]['key']] = $query[$i];
         }
         // города
-        $arRes['city'] = $this->getCities($id_vacancy);
+        $arRes['cities'] = $this->getCities($id_vacancy);
+        reset($arRes['cities']);
+        $arRes['item']['city'] = [key($arRes['cities'])=>[current($arRes['cities'])['city']]]; // для СЕО
         // locations
         $arRes['locations'] = $this->getLocations($id_vacancy);
+        $arRes['dates'] = $this->getRealDates($arRes['cities'],$arRes['locations']);
 
-   /*     $arRes['locations'] = Yii::app()->db->createCommand()
-                    ->select("*,
-                        UNIX_TIMESTAMP(elt.bdate) bdate, 
-                        UNIX_TIMESTAMP(elt.edate) edate")
-                    ->from('empl_locations el')
-                    ->join('emplv_loc_times elt','elt.id_loc=el.id')
-                    ->where('el.id_vac=:id',[':id'=>$id_vacancy])
-                    ->queryAll();
-
-
-
-        $begWorkDate = reset($v['city'])[1]; // дата начала первого города
-        $endWorkDate = reset($v['city'])[2]; // дата окончания первого города
-        foreach ($v['city'] as $c) {
-            if (strtotime($c[1]) < strtotime($begWorkDate))
-                $begWorkDate = $c[1];
-            if (strtotime($c[2]) > strtotime($endWorkDate))
-                $endWorkDate = $c[2];
-            if (isset($v['location'][$c[3]]))
-                foreach ($v['location'][$c[3]] as $l)
-                    if (isset($v['loctime'][$l['id']]))
-                        foreach ($v['loctime'][$l['id']] as $t) {
-                            if (strtotime($t[0]) < strtotime($begWorkDate))
-                                $begWorkDate = $t[0];
-                            if (strtotime($t[1]) > strtotime($endWorkDate))
-                                $endWorkDate = $t[1];
-                        }
-        }*/
-
+        $model = new ServiceCloud();
+        $model->limit = 10000;
+        $arRes['services'] = $model->getVacData($id_vacancy);
+        $arRes['seo'] = Seo::getMetaForVac($arRes['item']);
 
         return $arRes;
     }
@@ -3858,13 +3850,26 @@ WHERE id_vac = {$inVacId}";
                     ->where('el.id_vac=:id',[':id'=>$id_vacancy])
                     ->queryAll();
 
+        $arMetro = array();
         for($i=0,$n=count($query); $i<$n; $i++)
         {
             $arTemp = $arRes[$query[$i]['id']];
             $arTemp['id'] = $query[$i]['id'];
             $arTemp['id_city'] = $query[$i]['id_city'];
-            $arTemp['id_metro'] = $query[$i]['id_metro'];
-            $arTemp['id_metros'] = $query[$i]['id_metros'];
+            $arM = array();
+            if($query[$i]['id_metro']>0)
+            {
+                $arM[] = $query[$i]['id_metro'];
+                $arMetro[] = $query[$i]['id_metro'];
+            }
+            if(!empty($query[$i]['id_metros']))
+            {
+                $arT = explode(',',$query[$i]['id_metros']);
+                $arMetro = array_merge($arMetro, $arT);
+                $arM = array_merge($arM, $arT);
+            }
+            $arTemp['id_metro'] = $arM;
+            $arTemp['metro'] = [];
             $arTemp['name'] = $query[$i]['name'];
             $arTemp['addr'] = $query[$i]['addr'];
             $arTemp['periods'][] = [
@@ -3874,6 +3879,25 @@ WHERE id_vac = {$inVacId}";
                     'etime' => $this->getTime($query[$i]['etime'])
                 ];
             $arRes[$query[$i]['id']] = $arTemp;
+        }
+
+        if(!count($arMetro))
+            return $arRes;
+
+        $query = Yii::app()->db->createCommand()
+                    ->select("id, name")
+                    ->from('metro')
+                    ->where(['in','id',$arMetro])
+                    ->queryAll();
+
+        foreach ($arRes as $id => $v)
+        {
+            if(!count($v['id_metro']))
+                continue;
+
+            for($j=0,$n=count($query); $j<$n; $j++)
+                if(in_array($query[$j]['id'],$v['id_metro']))
+                    $arRes[$id]['metro'][] = $query[$j]['name'];
         }
 
         return $arRes;
@@ -3891,5 +3915,30 @@ WHERE id_vac = {$inVacId}";
             $result = sprintf('%d:%02d', $h, $m);
         }
         return $result;
+    }
+    /**
+     * @param $arCities array - (bdate[unix], edate[unix])
+     * @param $arLocations array - (periods - array(bdate[unix],edate[unix]))
+     * @return array ('bdate'[unix],'edate'[unix])
+     */
+    public function getRealDates($arCities, $arLocations)
+    {
+        $begDate = reset($arCities)['bdate']; // дата начала первого города
+        $endDate = reset($arCities)['edate']; // дата окончания первого города
+        foreach ($arCities as $id_city => $c)
+        {
+            $c['bdate'] < $begDate && $begDate = $c['bdate'];
+            $c['edate'] > $endDate && $endDate = $c['edate'];
+
+            if (isset($arLocations))
+                foreach ($arLocations as $id_loc => $l)
+                    if (isset($l['periods']))
+                        foreach ($l['periods'] as $p)
+                        {
+                            $p['bdate'] < $begDate && $begDate = $p['bdate'];
+                            $p['edate'] > $endDate && $endDate = $p['edate'];
+                        }
+        }
+        return array('bdate' => $begDate, 'edate' => $endDate);
     }
 }

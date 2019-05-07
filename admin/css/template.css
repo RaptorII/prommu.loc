@@ -147,3 +147,17 @@
   cursor: pointer;
 }
 .clearfix{ clear: both; }
+/*
+*   nicEdit
+*/
+.nicEdit-button{ 
+  background-image: url("/jslib/nicedit/nicEditorIcons.gif") !important; 
+}
+.nicEdit-main {
+  margin: 0 !important;
+  padding: 4px;
+  width: 100% !important;
+  border-top: 1px solid #e3e3e3 !important;
+  background: #fff;
+}
+.nicEdit-main:focus{ outline: none; }

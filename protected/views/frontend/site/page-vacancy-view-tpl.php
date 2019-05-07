@@ -354,14 +354,13 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                             //  Опыт работы
                             ?>
                             <div class="erv__label erv__select" data-info="Опыт работы *">
-                                <?php $arExp = array(1 => 'Без опыта', 2 => 'До 1 месяца', 3 => 'От 1 до 3 месяцев', 4 => 'От 3 до 6 месяцев', 5 => 'От 6 до 12 месяцев', 6 => 'от 1 до 2-х лет', 7 => 'Более 2-х лет') ?>
                                 <input type="text" name="str-expirience" class="erv__input erv__required"
                                        placeholder="Опыт работы *" id="rv-expirience"
-                                       value="<?= $arExp[$viData['vac']['exp']] ?>" disabled>
+                                       value="<?=Vacancy::$EXPERIENCE[$viData['vac']['exp']] ?>" disabled>
                                 <div class="erv__veil" id="rv-expirience-veil"></div>
                                 <ul class="erv__select-list" id="rv-expirience-list">
                                     <i class="erv__select-list-icon">OK</i>
-                                    <?php foreach ($arExp as $k => $v): ?>
+                                    <?php foreach (Vacancy::$EXPERIENCE as $k => $v): ?>
                                         <li>
                                             <input type="radio" name="expirience" value="<?= $k ?>"
                                                    id="expirience-<?= $k ?>"
@@ -1062,9 +1061,8 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                     <?php endif; ?>
                     <?php if ($vacancy['exp']): ?>
                         <div class="sv__attributes-item ico3">
-                            <?php $arExp = array(1 => 'Без опыта', 2 => 'До 1 месяца', 3 => 'От 1 до 3 месяцев', 4 => 'От 3 до 6 месяцев', 5 => 'От 6 до 12 месяцев', 6 => 'от 1 до 2-х лет', 7 => 'Более 2-х лет') ?>
                             <div class="sv__attributes-name"><b>Опыт работы:</b></div>
-                            <div class="sv__attributes-val"><?= $arExp[$vacancy['exp']] ?></div>
+                            <div class="sv__attributes-val"><?=Vacancy::$EXPERIENCE[$vacancy['exp']] ?></div>
                             <div class="clearfix"></div>
                         </div>
                     <?php endif; ?>

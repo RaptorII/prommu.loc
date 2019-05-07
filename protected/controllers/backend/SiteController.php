@@ -985,16 +985,9 @@ class SiteController extends Controller
         $model = new Vacancy;
         if(!empty($_POST['Vacancy'])) // сохранение
         {
-            if($_POST['Vacancy']['ageto'] == 0)
-            {
-                $_POST['Vacancy']['ageto'] == $_POST['Vacancy']['agefrom'];
-            }
             $model->updateVacancy($id, $_POST['Vacancy']);
-
-            $model->unsetAttributes();  // clear any default values
-            $model->searchvac();
-            $model->status=1;
-            $this->render('vacancy/view', array('model'=>$model));
+            Yii::app()->user->setFlash('success', 'Вакансия изменена');
+            $this->redirect(['site/vacancy']);
         }
         else
         {
