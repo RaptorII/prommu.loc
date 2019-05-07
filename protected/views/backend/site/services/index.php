@@ -35,7 +35,14 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'selectableRows' => 2,
             'checkBoxHtmlOptions' => array('class' => 'checkclass'),
             'value' => '$data->id',
-        ),    
+        ), 
+                  array(
+                        'header' => 'Статус',
+                        'name' => 'status',
+                        'value' => 'ShowStatus($data->status)',
+                        'type' => 'raw',
+                        
+                    ),
                   array(
                         'header' => 'Пользователь',
                         'name' => 'id_user',
@@ -43,13 +50,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
                         'type' => 'raw',
                         
                     ),
-                  // array(
-                  //       'header' => 'Вакансия',
-                  //       'name' => 'vacancy',
-                  //       'value' => 'ShowVac($data->vacancy)',
-                  //       'type' => 'raw',
-                        
-                  //   ),
                   array(
                         'header' => 'Тип',
                         'name' => 'type',
@@ -98,70 +98,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                         'value' => '$data->user',
                         'type' => 'raw',
                         
-                    ),
-                  array(
-                        'header' => 'Статус',
-                        'name' => 'status',
-                        'value' => 'ShowStatus($data->status)',
-                        'type' => 'raw',
-                        
-                    ),
-                  // array(
-                  //       'header' => 'Тип',
-                  //       'name' => 'type',
-                  //       'value' => 'ShowType($data->type)',
-                  //       'type' => 'raw',
-                        
-                  //   ),
-                  // array(
-                  //       'header' => 'Источник',
-                  //       'name' => 'transition',
-                  //       'value' => '$data->transition',
-                  //       'type' => 'raw',
-                        
-                  //   ),
-                  // array(
-                  //       'header' => 'Канал',
-                  //       'name' => 'canal',
-                  //       'value' => '$data->canal',
-                  //       'type' => 'raw',
-                       
-                  //   ),
-                  // array(
-                  //       'header' => 'Кампания',
-                  //       'name' => 'campaign',
-                  //       'value' => 'ShowKey($data->campaign)',
-                  //       'type' => 'raw',
-                        
-                  //   ),
-                  //  array(
-                  //       'header' => 'Контент',
-                  //       'name' => 'content',
-                  //       'value' => 'ShowKey($data->content)',
-                  //       'type' => 'raw',
-                        
-                  //   ), 
-                  //  array(
-                  //       'header' => 'Ключевое слово',
-                  //       'name' => 'keywords',
-                  //       'value' => '$data->keywords',
-                  //       'type' => 'raw',
-                        
-                  //   ),
-                  //  array(
-                  //       'header' => 'Email',
-                  //       'name' => 'id',
-                  //       'value' => 'ShowEmail($data->id_us)',
-                  //       'type' => 'raw',
-                        
-                  //   ),
-                  // array(
-                  //       'header' => 'Дата',
-                  //       'name' => 'id',
-                  //       'value' => '$data->date',
-                  //       'type' => 'raw',
-                        
-                  //   ),   
+                    )  
                 ),
             ));
 
