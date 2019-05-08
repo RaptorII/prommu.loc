@@ -799,10 +799,11 @@ class Share
     /**
      * @param $date string - BD data
      * @param $time string - BD data
+     * @param $time bolean
      * @return string
      * красивая дата
      */
-    public static function getPrettyDate($date, $time=false)
+    public static function getPrettyDate($date, $time=false, $long=false)
     {
         if(!$time)
         {
@@ -817,7 +818,7 @@ class Share
         }
 
         $unixCur = mktime(0,0,0);
-        $resDate = date('G:i',$unixDT);
+        $resDate = date(($long ? 'H:i' : 'G:i'),$unixDT);
         $dateY = date('Y',$unixD);
         $arMonths = array(
                 1=>'января',2=>'февраля',3=>'марта',
@@ -827,15 +828,22 @@ class Share
             );
         
         if($unixCur==$unixD)
-            $resDate .= ''; 
-        elseif($unixCur == ($unixD+(60*60*24)))
-            $resDate .= ' вчера';
+            $resDate .= '';
+        elseif(!$short)
+        {
+            $resDate .= ' ' . date('d',$unixD) . '.' . date('m',$unixD);
+            date('Y')!=$dateY && ($resDate .= '.' . date('y',$unixD));
+        }
         else
-            $resDate .= ' ' . date('d',$unixD) . ' ' 
-                        . $arMonths[date('n',$unixD)];
+        {
+            if($unixCur == ($unixD+(60*60*24)))
+                $resDate .= ' вчера';
+            else
+                $resDate .= ' ' . date('d',$unixD) . ' ' 
+                            . $arMonths[date('n',$unixD)];
 
-        if(date('Y')!=$dateY)
-            $resDate .= ' ' . $dateY;
+            date('Y')!=$dateY && ($resDate .= ' ' . $dateY);
+        }
 
         return $resDate;
     }
@@ -884,5 +892,13 @@ class Share
         echo '<span class="js-g-hashint" title="Всего">' . ($pos+$neg) 
             . '</span> ( <span class="-green js-g-hashint" title="Положительный">' . $pos 
             . '</span> / <span class="-red js-g-hashint" title="Отрицательный">' . $neg . '</span> )';
+    }
+    /**
+     * @param $date - integer (unix time)
+     * @param $format - string
+     */
+    public static function getDate($date, $format = 'd.m.Y G:i')
+    {
+        return !empty($date) ? date($format, $date) : ' - ';
     }
 }
