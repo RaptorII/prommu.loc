@@ -156,7 +156,7 @@ var YiiChat = function(options){
 	var send = you.find('button');
 	var msg = you.find('textarea');
 	send.click(function(){
-		var text = myNicEditor.nicInstances[1].getContent().trim();//jQuery.trim(msg.val());
+		var text = nicEditorChat.nicInstances[0].getContent().trim();//jQuery.trim(msg.val());
 		if(text.length<options.minPostLen){
 			options.onError('very_short_text',text);
 		}else
@@ -165,7 +165,7 @@ var YiiChat = function(options){
 		}
 		else
 		{
-			myNicEditor.nicInstances[1].setContent('');
+			nicEditorChat.nicInstances[0].setContent('');
 			actionPost(text, function(ok){
 				if(ok==true){
 					msg.val("");
@@ -195,5 +195,15 @@ var YiiChat = function(options){
 	}
 	actionInit(scroll);
 	launchTimer();
+
+	var nicEditorParams = {
+				maxHeight: 200, 
+				buttonList: ['bold','italic','underline','left','center','right','justify','ol','ul'] 
+			},
+			nicEditorChat = new nicEditor(nicEditorParams);
+
+	nicEditorChat.addInstance('yiichat_area');
+	nicEditorChat.setPanel('yiichat_area_panel');
+
 	};
 } //end

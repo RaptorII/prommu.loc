@@ -1,0 +1,36 @@
+.nicEdit-main {
+	margin: 0 !important;
+	padding: 4px;
+	width: 100% !important;
+	border-top: 1px solid #e3e3e3 !important;
+	background: #fff;
+}
+#transform-code>div:nth-child(2),
+#description-edit>div:nth-child(2),
+#yiichat_area>div:nth-child(2),
+.controls.input-append>div{ border: 0 !important; }
+.nicEdit-main:focus{ outline: none; }
+#description-edit-panel .nicEdit-button,
+#yiichat_area_panel .nicEdit-button{ 
+	background-image: url("/jslib/nicedit/nicEditorIcons.gif") !important; 
+}
+.CodeMirror{ min-height: 425px; }
+/* */
+.tags_block{
+	width: 240px;
+	max-width: 100%;
+	position: relative;
+	padding-right: 40px;
+}
+.tags_block .btn-success{
+	min-width: 34px;
+	position: absolute;
+	right: 0px;
+}
+.template-table{ 
+	background-color: #FFFFFF;
+	font-size: 14px;
+}
+.template-table td:first-child{ width: 25% }
+.template-table tbody tr td,.template-table tbody tr th{ padding: 5px; }
+.template-table tbody tr:nth-child(odd){ background-color: #f4f4f4 }

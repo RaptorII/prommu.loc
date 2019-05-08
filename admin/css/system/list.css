@@ -1,0 +1,21 @@
+#search_form{
+	position: relative;
+	padding-right: 45px;
+}
+#search_form .btn{
+	min-width: 34px;
+	position: absolute;
+	right: 0;
+	top: 0px;
+}
+#search_form .clear{
+	padding: 6px;
+	position: absolute;
+	top: 4px;
+	right: 50px;
+	color: #ffffff;
+	background-color: grey;
+	border-radius: 50%;
+	cursor: pointer;
+	display: none;
+}

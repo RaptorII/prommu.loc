@@ -13,6 +13,8 @@
 		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/php/php.js', CClientScript::POS_HEAD);
 		Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/htmlmixed/htmlmixed.js', CClientScript::POS_HEAD);
 		Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl . '/js/nicEdit.js', CClientScript::POS_HEAD);
+		Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl . '/js/system/item.js', CClientScript::POS_END);
+		Yii::app()->getClientScript()->registerCssFile(Yii::app()->request->baseUrl . '/css/system/item.css');
 		Yii::app()->getClientScript()->registerCssFile($codeMirror . 'lib/codemirror.css');
 		$item = $viData['item'];
 		!is_object($item) && $item = (object) ['chat_id'=>time().rand(1000,9999)];
@@ -23,23 +25,70 @@
 	<? endif; ?>
 	<div class="row">
 		<div class="col-xs-12">
-			<form action="" method="POST" id="notification-form">
+			<? if($bAccess): ?>
+				<form action="" method="POST" id="form">
+					<div class="row">
+						<div class="hidden-xs col-sm-1 col-md-3"></div>
+						<div class="col-xs-12 col-sm-10 col-md-6">
+							<div class="row">
+								<div class="col-xs-12">
+									<label class="d-label">
+										<span>Название</span>
+											<input type="text" name="name" class="form-control" autocomplete="off" value="<?=$item->name?>">
+									</label>
+									<label class="d-label">
+										<span>Описание</span>
+										<div id="description-edit-panel"></div>
+										<textarea name="description" class="d-textarea form-control" id="description-edit"><?=$item->description?></textarea>
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="hidden-xs col-sm-1 col-md-3"></div>
+					</div>
+					<?
+					//
+					?>				
+					<label class="d-label">
+						<span>Код</span>
+						<textarea name="code" class="d-textarea" id="transform-code"><?=$item->code?></textarea>
+					</label>
+					<?
+					//
+					?>
+					<div class="d-label">
+						<span>Теги</span>
+						<div class="tags_block">
+							<div class="btn btn-success">+</div>
+							<? if(!empty($item->tags)): ?>
+								<? $arTags = explode(' ',$item->tags); ?>
+								<? foreach ($arTags as $v): ?>
+									<input type="text" name="tags[]" class="form-control" value="<?=$v?>">
+								<? endforeach; ?>
+							<? else: ?>
+								<input type="text" name="tags[]" class="form-control">
+							<? endif; ?>
+						</div>
+					</div>
+					<div class="pull-right">
+						<a href="<?=$this->createUrl('')?>" class="btn btn-success d-indent">Назад</a>
+						<button type="submit" class="btn btn-success d-indent" id="btn_submit">Сохранить</button>
+					</div>
+					<input type="hidden" value="<?=$item->chat_id?>" name="chat_id">
+				</form>
+			<?
+			// not author
+			?>
+			<? else: ?>
 				<div class="row">
 					<div class="hidden-xs col-sm-1 col-md-3"></div>
 					<div class="col-xs-12 col-sm-10 col-md-6">
-						<div class="row">
-							<div class="col-xs-12">
-								<label class="d-label">
-									<span>Название</span>
-										<input type="text" name="name" class="form-control" autocomplete="off" value="<?=$item->name?>">
-								</label>
-								<label class="d-label">
-									<span>Описание</span>
-									<div id="description-edit-panel"></div>
-									<textarea name="description" class="d-textarea form-control" id="description-edit"><?=$item->description?></textarea>
-								</label>
-							</div>
-						</div>
+						<table class="table table-bordered template-table">
+							<tbody>
+								<tr><td><b>Название</b></td><td><?=$item->name?></td></tr>
+								<tr><td colspan="2"><b>Описание</b><br><div><?echo $item->description?></div></td></tr>
+								<tr><td><b>Теги</b></td><td><?=$item->tags?></td></tr>		
+						</table>
 					</div>
 					<div class="hidden-xs col-sm-1 col-md-3"></div>
 				</div>
@@ -52,12 +101,8 @@
 				</label>
 				<div class="pull-right">
 					<a href="<?=$this->createUrl('')?>" class="btn btn-success d-indent">Назад</a>
-					<? if($bAccess): ?>
-						<button type="submit" class="btn btn-success d-indent" id="btn_submit">Сохранить</button>
-					<? endif; ?>
 				</div>
-				<input type="hidden" value="<?=$item->chat_id?>" name="chat_id">
-			</form>
+			<? endif; ?>
 		</div>
 	</div>
 	<?
@@ -83,69 +128,10 @@
 	<?
 	//
 	?>
-	<style type="text/css">
-		.nicEdit-main {
-			margin: 0 !important;
-			padding: 4px;
-			width: 100% !important;
-			border-top: 1px solid #e3e3e3 !important;
-			background: #fff;
-		}
-		#transform-code>div:nth-child(2),
-		#description-edit>div:nth-child(2),
-		#yiichat_area>div:nth-child(2),
-		.controls.input-append>div{ border: 0 !important; }
-		.nicEdit-main:focus{ outline: none; }
-		#description-edit-panel .nicEdit-button,
-		#yiichat_area_panel .nicEdit-button{ 
-			background-image: url("/jslib/nicedit/nicEditorIcons.gif") !important; 
-		}
-		.CodeMirror{ min-height: 425px; }
-	</style>
-	<?
-	//
-	?>
-	<script type="text/javascript">
-		'use strict'
-		var myNicEditor = new nicEditor(
-					{
-						maxHeight: 200, 
-						buttonList: ['bold','italic','underline','left','center','right','justify','ol','ul'] 
-					}
-				);
-
-		jQuery(function($){
-			var myCodeMirror = initMirror();
-			//
-			if($('#description-edit').is('*'))
-			{
-				myNicEditor.addInstance('description-edit');
-				myNicEditor.setPanel('description-edit-panel');				
-			}
-			//
-			setTimeout(function(){
-				console.log($('#yiichat_area'));
-				myNicEditor.addInstance('yiichat_area');
-				myNicEditor.setPanel('yiichat_area_panel');
-			},500);
-			/**
-			 * php-mode on to CodeMirror
-			 * 24.04.2019 Karpenko M.
-			 * TODO: clear coments after tester;
-			 */
-			function initMirror()
-			{
-		    return CodeMirror.fromTextArea(
-	        document.getElementById('transform-code'),
-	        {
-	          lineNumbers: true,
-            matchBrackets: true,
-            autoCloseBrackets: true,
-            mode: "application/x-httpd-php",
-            indentUnit: 2
-	        }
-		    );
-			}
-		});
-	</script>
+	<? if(!$bAccess): ?>
+		<style type="text/css">
+			.CodeMirror-cursors{ visibility: hidden !important; }
+			.CodeMirror-code{ cursor: default !important; }
+		</style>
+	<? endif; ?>
 <? endif; ?>

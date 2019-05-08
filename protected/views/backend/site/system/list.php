@@ -1,3 +1,9 @@
+<?
+  $bUrl = Yii::app()->request->baseUrl;
+  $gcs = Yii::app()->getClientScript();
+  $gcs->registerCssFile($bUrl . '/css/system/list.css');
+  $gcs->registerScriptFile($bUrl . '/js/system/list.js',CClientScript::POS_HEAD);
+?>
 <div class="row">
 	<div class="col-xs-12 notifications">
 		<h3><?=$this->pageTitle?></h3>
@@ -19,21 +25,30 @@
 						<div class="bs-callout bs-callout-info">&laquo;Рецензия кода — это возможность обмениваться знаниями и принимать осмысленные инженерные решения. Но это невозможно, если автор воспринимает обсуждение как персональную атаку на него самого&raquo;</div>
 						<div class="pull-right">
 							<a href="<?=$this->createUrl('',['type'=>'review','id'=>0])?>" class="btn btn-success">Создать</a>
+							<div class="d-indent"></div>
 						</div>
 						<div class="clearfix"></div>
+						<div id="search_form">
+							<input type="text" name="q" class="form-control">
+							<div class="btn btn-success glyphicon glyphicon-search"></div>
+							<div class="clear glyphicon glyphicon-remove"></div>
+							<div class="d-indent"></div>
+						</div>
 						<?
 							$model = new CodeReview;
 							$this->widget(
 								'zii.widgets.grid.CGridView', 
 								array(
+									'id'=>'review_table',
 									'dataProvider' => $model->search(),
 									'itemsCssClass' => 'table table-bordered table-hover custom-table',
 									'htmlOptions'=>array('class'=>'system-module','data-type'=>'review'),
-									//'filter' => $model,
+									'filter' => $model,
 									'enablePagination' => true,
 									'columns' => array(
 											array(
 												'header'=>'ID',
+												'filter'=>'',
 												'name' => 'id',
 												'value' => '$data->id',
 												'type' => 'raw',
@@ -46,7 +61,15 @@
 												'type' => 'raw'
 											),
 											array(
+												'header'=>'Автор',
+												'name' => 'author',
+												'value' => '$data->user ? $data->user->surname : " - "',
+												'type' => 'raw',
+												'htmlOptions'=>['style'=>'width:15%']
+											),
+											array(
 												'header'=>'Дата изменения',
+												'filter'=>'',
 												'name' => 'mdate',
 												'value' => 'CodeReview::getDate($data->mdate)',
 												'type' => 'raw',
@@ -54,6 +77,7 @@
 											),
 											array(
 												'header'=>'Дата создания',
+												'filter'=>'',
 												'name' => 'cdate',
 												'value' => 'CodeReview::getDate($data->cdate)',
 												'type' => 'raw',
@@ -69,20 +93,3 @@
 		</div>
   </div>
 </div>
-<script type="text/javascript">
-	'use strict'
-	jQuery(function($){
-		$(document).on(
-			'click',
-			'.system-module tbody td',
-			function(e){ 
-				var parent = $(this).closest('.system-module')[0],
-						type = parent.dataset.type,
-						id = $(this).siblings('td').eq(0).text(),
-						url = '/admin/system/' + id + '?type=' + type;
-
-				if(!$(this).hasClass('empty'))
-					$(location).attr('href',url);
-			});
-	});
-</script>

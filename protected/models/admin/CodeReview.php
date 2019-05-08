@@ -5,6 +5,8 @@ class CodeReview extends CActiveRecord
 	public $limit;
 	public $view;
 	public $pageTitle;
+	public $author;
+	public $search_field;
 
 	function __construct($reviewId=0)
 	{
@@ -22,18 +24,77 @@ class CodeReview extends CActiveRecord
 	{
 		return 'system_development_review';
 	}
+
+	public function rules()
+	{
+		return array(
+				array('name, author','safe','on'=>'search')
+			);
+	}
+
+	function relations()
+	{
+		return array(
+				'user'=>array(self::BELONGS_TO,'userAdm','author_id')
+			);
+	}
 	/** 
 	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
 	 */
 	public function search()
 	{
+		$condition = [];
 		$criteria = new CDbCriteria;
+		$criteria->with = array('user');
+		// search
+		$criteria->compare('user.surname',$this->author, true);
+		$search = filter_var($_GET['search'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		if(!empty($search))
+		{
+			$criteria->condition = '(t.tags like :q) or (t.name like :q) 
+				or (t.description like :q) or (t.code like :q)';
+			$criteria->params = [':q'=>"%{$search}%"];
+		}
+		else
+		{
+			$surname = filter_var($_GET['CodeReview']['author'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			if(!empty($surname))
+			{
+				$condition[] = 'user.surname like :surname';
+				$criteria->params[':surname'] = "%{$surname}%";
+				$this->author = $surname;
+			}
+			// name
+			$criteria->compare('t.name',$this->name, true);
+			$name = filter_var($_GET['CodeReview']['name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			if(!empty($name))
+			{
+				$condition[] = 't.name like :name';
+				$criteria->params[':name'] = "%{$name}%";
+				$this->name = $name;
+			}
+
+			if(count($condition))
+			{
+				$criteria->condition = implode(' and ', $condition);
+			}		
+		}
+
 		return new CActiveDataProvider(
 				get_class($this), 
 				array(
 					'criteria' => $criteria,
 					'pagination' => ['pageSize' => $this->limit],
-					'sort' => ['defaultOrder' => 'id desc']
+					'sort' => [
+						'defaultOrder' => 't.id desc',
+						'attributes'=>[
+							'author'=>[
+								'asc'=>'user.surname',
+								'desc'=>'user.surname DESC',
+							],
+							'*',
+						]
+					]
 				)
 			);
 	}
@@ -63,10 +124,19 @@ class CodeReview extends CActiveRecord
 		$this->code = trim($obj->getParam('code'));
 		// chat_id
 		$this->chat_id = trim($obj->getParam('chat_id'));
+		$arTags = $obj->getParam('tags');
+		$arT = [];
+		for ($i=0,$n=count($arTags); $i<$n; $i++)
+		{ 
+			$tag = filter_var($arTags[$i],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			strlen($tag) && $arT[] = $tag;
+		}
+		$this->tags = count($arT) ? implode(' ',$arT) : '';
 		
 		empty($this->name) && $arRes['messages'][] = 'поле "Название" должно быть заполнено';
 		empty($this->description) && $arRes['messages'][] = 'поле "Описание" должно быть заполнено';
 		empty($this->code) && $arRes['messages'][] = 'поле "Код" должно быть заполнено';
+		empty($this->tags) && $arRes['messages'][] = 'Для улучшения поиска необходимо ввести теги';
 
 		if(count($arRes['messages'])) // error
 		{
@@ -83,12 +153,10 @@ class CodeReview extends CActiveRecord
 		{
 			$this->cdate = $time;
 			$this->author_id = Yii::app()->user->id;
-			$this->tags = ''; // !!!!!!!!!!!!!!
 			$this->setIsNewRecord(true);
 		}
 		else // update
 		{
-			$this->tags = ''; // !!!!!!!!!!!!!!
 			$this->id = $id;
 		}
 
