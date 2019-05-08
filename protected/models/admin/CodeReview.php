@@ -43,7 +43,7 @@ class CodeReview extends CActiveRecord
 	 */
 	public function search()
 	{
-		$condition = [];
+		$condition = ['t.in_archive=0'];
 		$criteria = new CDbCriteria;
 		$criteria->with = array('user');
 		// search
@@ -72,12 +72,12 @@ class CodeReview extends CActiveRecord
 				$condition[] = 't.name like :name';
 				$criteria->params[':name'] = "%{$name}%";
 				$this->name = $name;
-			}
+			}	
+		}
 
-			if(count($condition))
-			{
-				$criteria->condition = implode(' and ', $condition);
-			}		
+		if(count($condition))
+		{
+			$criteria->condition = implode(' and ', $condition);
 		}
 
 		return new CActiveDataProvider(
@@ -124,6 +124,9 @@ class CodeReview extends CActiveRecord
 		$this->code = trim($obj->getParam('code'));
 		// chat_id
 		$this->chat_id = trim($obj->getParam('chat_id'));
+		// in_archive
+		$this->in_archive = intval($obj->getParam('in_archive'));
+
 		$arTags = $obj->getParam('tags');
 		$arT = [];
 		for ($i=0,$n=count($arTags); $i<$n; $i++)
@@ -136,12 +139,20 @@ class CodeReview extends CActiveRecord
 		empty($this->name) && $arRes['messages'][] = 'поле "Название" должно быть заполнено';
 		empty($this->description) && $arRes['messages'][] = 'поле "Описание" должно быть заполнено';
 		empty($this->code) && $arRes['messages'][] = 'поле "Код" должно быть заполнено';
-		empty($this->tags) && $arRes['messages'][] = 'Для улучшения поиска необходимо ввести теги';
+		empty($this->tags) && $arRes['messages'][] = 'для улучшения поиска необходимо ввести теги';
 
 		if(count($arRes['messages'])) // error
 		{
 			$arRes['error'] = true;
-			$arRes['item'] = $this;
+			$objItem = $this->getData($id)['item'];
+			if(intval($id) && is_object($objItem))
+			{
+				$arRes['item'] = $objItem;
+			}
+			else
+			{
+				$arRes['item'] = $this;
+			}
 
 			return $arRes;
 		}

@@ -33,6 +33,10 @@
 							<div class="row">
 								<div class="col-xs-12">
 									<label class="d-label">
+										<span>Удалить ревью</span>
+										<input type="checkbox" name="in_archive" value="1" <?=$item->in_archive ? 'checked' : ''?>>
+									</label>
+									<label class="d-label">
 										<span>Название</span>
 											<input type="text" name="name" class="form-control" autocomplete="off" value="<?=$item->name?>">
 									</label>
