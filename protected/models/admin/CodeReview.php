@@ -51,8 +51,8 @@ class CodeReview extends CActiveRecord
 		$search = filter_var($_GET['search'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		if(!empty($search))
 		{
-			$criteria->condition = '(t.tags like :q) or (t.name like :q) 
-				or (t.description like :q) or (t.code like :q)';
+			$condition[] = '((t.tags like :q) or (t.name like :q) 
+				or (t.description like :q) or (t.code like :q))';
 			$criteria->params = [':q'=>"%{$search}%"];
 		}
 		else
