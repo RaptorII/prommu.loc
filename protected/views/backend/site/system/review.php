@@ -87,7 +87,13 @@
 							<tbody>
 								<tr><td><b>Название</b></td><td><?=$item->name?></td></tr>
 								<tr><td colspan="2"><b>Описание</b><br><div><?echo $item->description?></div></td></tr>
-								<tr><td><b>Теги</b></td><td><?=$item->tags?></td></tr>		
+								<tr><td><b>Теги</b></td><td><?
+									if(strlen($item->tags))
+									{
+										$arTags = explode(' ', $item->tags);
+										echo implode(', ', $arTags);
+									}
+								?></td></tr>		
 						</table>
 					</div>
 					<div class="hidden-xs col-sm-1 col-md-3"></div>
