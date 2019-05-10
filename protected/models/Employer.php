@@ -388,15 +388,25 @@ class Employer extends ARModel
 
     public function getEmplAdmin()
     {
-        $sql = "SELECT r.id, r.id_user idus, name , r.logo, r.rate, r.rate_neg
-                , cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate
-                , (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.id_promo = r.id) comment_count
-                
+        $sql = "
+            SELECT
+              r.id,
+              r.id_user idus,
+              name,
+              r.logo,
+              r.rate,
+              r.rate_neg,
+              cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg AS SIGNED)) avg_rate,
+              (SELECT COUNT(id)
+               FROM comments mm
+               WHERE mm.iseorp = 0 AND mm.id_promo = r.id) comment_count
+            
             FROM employer r
-            INNER JOIN user u ON u.id_user = r.id_user 
-            WHERE u.ismoder = 0  AND u.crdate >= CURDATE()
+              INNER JOIN user u ON u.id_user = r.id_user
+            WHERE r.is_new = 1 AND u.crdate >= CURDATE()
             ORDER BY r.id DESC
-            LIMIT 1000";
+            LIMIT 1000
+        ";
         $result = Yii::app()->db->createCommand($sql)
         ->queryAll();
 
@@ -617,5 +627,18 @@ class Employer extends ARModel
         //print "\xEF\xBB\xBF"; // UTF-8 BOM
         readfile($file_name); // считываем файл
         //unlink($file_name); // удаляем файл. то есть когда вы сохраните файл на локальном компе, то после он удалится с сервера
+    }
+
+    /**
+     * setViewed
+     * @return model
+     */
+    public function setViewed($id) {
+        return Yii::app()->db->createCommand()->update(
+            $this->tableName(),
+            ['is_new' => 0],
+            'id_user=:id',
+            [':id' => $id]
+        );
     }
 }

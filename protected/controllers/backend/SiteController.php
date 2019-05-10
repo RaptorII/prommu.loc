@@ -929,6 +929,7 @@ class SiteController extends Controller
     // Админка промоутер
     public function actionPromoEdit($id)
     {
+        //die("GOPA!");
         if(strpos($this->user_access, "Соискатели") === true) {
             $this->render('access');
             return;
@@ -945,6 +946,7 @@ class SiteController extends Controller
                 $this->redirect(array('site/users'));
             }
 
+            (new Promo)->setViewed($id);
             // --- вывод формы
             $data = $model->getUser($id);
             $title = 'Профиль соискателя';
@@ -991,6 +993,7 @@ class SiteController extends Controller
         }
         else
         {
+            $model->setViewed($id);
             $data = $model->getVacancyAdmin($id);
             $title = 'Редактирование вакансии '.$id;
             $this->setPageTitle($title);
@@ -1152,6 +1155,7 @@ class SiteController extends Controller
                 $this->redirect(array('site/empl'));
             }
 
+            (new Employer)->setViewed($id);
             // --- вывод формы
             $data = $model->getUserEmpl($id);
             $title = 'Профиль работодателя';
@@ -1811,6 +1815,7 @@ class SiteController extends Controller
                 $this->redirect('/admin/site/ideas');
             }
             else{
+                $model->setViewed($id);
                 $data = $model->getIdeaForAdmin($id);
                 $title = 'Редактирование идеи/предложения '.$id;
                 $this->setPageTitle($title);

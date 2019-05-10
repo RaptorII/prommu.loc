@@ -652,12 +652,27 @@ class Promo extends ARModel
      public function getApplicAdmin()
     {
 
-        $sql = "SELECT DISTINCT r.id, r.id_user idus, r.photo, r.firstname, r.lastname, r.isman, DATE_FORMAT(r.birthday,'%d.%m.%Y') as birthday,
-                cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate, r.rate, r.rate_neg, photo,
-                (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 1 AND mm.id_promo = r.id) comment_count
+        $sql = "
+            SELECT DISTINCT
+              r.id,
+              r.id_user idus,
+              r.photo,
+              r.firstname,
+              r.lastname,
+              r.isman,
+              DATE_FORMAT(r.birthday, '%d.%m.%Y') birthday,
+              cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg AS SIGNED)) avg_rate,
+              r.rate,
+              r.rate_neg,
+              photo,
+              (SELECT COUNT(id)
+               FROM comments mm
+               WHERE mm.iseorp = 1 AND mm.id_promo = r.id) comment_count
             FROM resume r
-            INNER JOIN user u ON r.id_user = u.id_user AND u.ismoder = 0  AND u.crdate >= CURDATE()
-            ORDER BY id DESC, id DESC";
+              INNER JOIN user u ON r.id_user = u.id_user AND r.is_new = 1 AND u.crdate >= CURDATE()
+            ORDER BY id DESC, id DESC 
+        ";
+
         $result = Yii::app()->db->createCommand($sql)->queryAll();
 
         return $result;
@@ -725,5 +740,17 @@ class Promo extends ARModel
         unset($arIdies, $i, $arPosts);
 
         return $arApp;      
+    }
+    /**
+     * setViewed
+     * @return model
+     */
+    public function setViewed($id) {
+        return Yii::app()->db->createCommand()->update(
+            $this->tableName(),
+            ['is_new' => 0],
+            'id_user=:id',
+            [':id' => $id]
+        );
     }
 }

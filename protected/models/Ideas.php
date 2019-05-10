@@ -451,5 +451,30 @@ class Ideas extends ARModel
         }
         return $arRes;
     }
+
+    /**
+     * Get new Ideas list
+     * @return model
+     */
+    public function getNewIdeas() {
+        return Yii::app()->db->createCommand()
+            ->select('id, name')
+            ->from('ideas')
+            ->where('is_new = 1')
+            ->queryAll();
+    }
+
+    /**
+    * setViewed
+    * @return model
+    */
+    public function setViewed($id) {
+        return Yii::app()->db->createCommand()->update(
+            $this->tableName(),
+            ['is_new' => 0],
+            'id=:id',
+            [':id' => $id]
+        );
+    }
 }
 ?>

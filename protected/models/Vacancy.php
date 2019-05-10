@@ -1897,7 +1897,7 @@ WHERE id_vac = {$inVacId}";
 
 
 
-    /**
+     /**
      * @param $inIdVac - id вакансии
      * @param $idus - пользватель создавший вакансию
      * @param $inStatus - статус отклика
@@ -1970,7 +1970,6 @@ WHERE id_vac = {$inVacId}";
         /**
          * Выделяем все выборки вакансий в один класс, для того, чтобы если изменится условия выборки - можно было быстро везде поменять
          */
-
 
         // Получаем работодателей для поиска
         if( $inParams['page'] == 'searchvac' ) return $this->getVacancySearchemplPage($inParams);
@@ -2109,7 +2108,7 @@ WHERE id_vac = {$inVacId}";
               INNER JOIN empl_attribs ea ON ea.id_vac = e.id 
               INNER JOIN user u ON e.id_user = u.id_user
               WHERE e.status = 1
-                AND e.ismoder = 0 AND e.crdate >= CURDATE() 
+                AND e.is_new = 1 AND e.crdate >= CURDATE() 
               ORDER BY e.ispremium DESC, e.id DESC 
             ) t1 ON t1.id = e.id
             
@@ -3940,5 +3939,18 @@ WHERE id_vac = {$inVacId}";
                         }
         }
         return array('bdate' => $begDate, 'edate' => $endDate);
+    }
+
+    /**
+     * setViewed
+     * @return model
+     */
+    public function setViewed($id) {
+        return Yii::app()->db->createCommand()->update(
+            $this->tableName(),
+            ['is_new' => 0],
+            'id=:id',
+            [':id' => $id]
+        );
     }
 }
