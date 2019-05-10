@@ -43,7 +43,8 @@ class CodeReview extends CActiveRecord
 	 */
 	public function search()
 	{
-		$condition = ['t.in_archive=0'];
+		$get = Yii::app()->getRequest()->getParam('CodeReview');
+		$condition = ['t.in_archive='.(isset($get['in_archive']) ? $get['in_archive'] : 0)];
 		$criteria = new CDbCriteria;
 		$criteria->with = array('user');
 		// search
@@ -57,7 +58,7 @@ class CodeReview extends CActiveRecord
 		}
 		else
 		{
-			$surname = filter_var($_GET['CodeReview']['author'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$surname = filter_var($get['author'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 			if(!empty($surname))
 			{
 				$condition[] = 'user.surname like :surname';
@@ -66,7 +67,7 @@ class CodeReview extends CActiveRecord
 			}
 			// name
 			$criteria->compare('t.name',$this->name, true);
-			$name = filter_var($_GET['CodeReview']['name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$name = filter_var($get['name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 			if(!empty($name))
 			{
 				$condition[] = 't.name like :name';

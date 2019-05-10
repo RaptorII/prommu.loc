@@ -149,11 +149,13 @@
 .custom-table .checkclass{ margin: 0 }
 .custom-table thead>tr:not(.filters) th{ text-align: center }
 .custom-table thead>tr.filters>td{ padding: 0 } 
-.custom-table .filters input{
+.custom-table .filters input,
+.custom-table .filters select{
     width: 100%;
     max-width: 100%;
     border: 1px solid #d6d6d6; 
 }
+.custom-table .filters select{ height: 26px; }
 /*
 *
 */

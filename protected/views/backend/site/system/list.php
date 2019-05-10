@@ -82,6 +82,19 @@
 												'value' => 'CodeReview::getDate($data->cdate)',
 												'type' => 'raw',
 												'htmlOptions'=>['style'=>'width:10%']
+											),
+											array(
+												'header'=>'Архив',
+												'filter'=>CHtml::dropDownList(
+                                            'CodeReview[in_archive]', 
+                                            isset($_GET['CodeReview']['in_archive']) 
+                                            	? $_GET['CodeReview']['in_archive'] : 0, 
+                                            ['0'=>'Активные', '1'=>'Архив']
+                                        ),
+												'name' => 'in_archive',
+												'value' => '$data->in_archive ? "Архив" : "Активная"',
+												'type' => 'raw',
+												'htmlOptions'=>['style'=>'width:10%']
 											)
 										)
 									)
