@@ -301,81 +301,89 @@ class User extends CActiveRecord
     		
         $attr = $data['userAttribs'];
         Yii::app()->db->createCommand()->delete('user_attribs', 'id_us=:id_user', array(':id_user' => $id));
+        
             foreach($attr as $key=>$val) {
-			    $result = Yii::app()->db->createCommand()
-    			->select('*')
-    			->from('user_attribs')
-                ->where("id_us=:id_user and `key`=:key", array(':id_user'=>$id, ':key'=>$key))
-    			->queryRow();
-    			if($result['key'] == $key){
-    			    Yii::app()->db->createCommand()
-					->update('user_attribs', array(
-						'val' => $val,
-					), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
-				
-    			} else {
-
-            		$userdict = Yii::app()->db->createCommand()
-                        ->select('d.id , d.type, d.key')
-                        ->from('user_attr_dict d')
-                        ->where('d.key = :key', array(':key' => $key))
-                        ->queryRow();
-
-            			
-    			    Yii::app()->db->createCommand()
-                    ->insert('user_attribs', array(
-                        'id_attr' => $userdict['id'],
-                        'type' => $userdict['type'],
-                        'val' => $val,
-                        'key' => $key,
-                        'id_us' => $id,
-                        'crdate' => date("Y-m-d H:i:s")
-                    ));
-    			}
+                
+                if($val != 'null'){
+    			    $result = Yii::app()->db->createCommand()
+        			->select('*')
+        			->from('user_attribs')
+                    ->where("id_us=:id_user and `key`=:key", array(':id_user'=>$id, ':key'=>$key))
+        			->queryRow();
+        			if($result['key'] == $key){
+        			    Yii::app()->db->createCommand()
+    					->update('user_attribs', array(
+    						'val' => $val,
+    					), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
+    				
+        			} else {
+    
+                		$userdict = Yii::app()->db->createCommand()
+                            ->select('d.id , d.type, d.key')
+                            ->from('user_attr_dict d')
+                            ->where('d.key = :key', array(':key' => $key))
+                            ->queryRow();
+    
+                			
+        			    Yii::app()->db->createCommand()
+                        ->insert('user_attribs', array(
+                            'id_attr' => $userdict['id'],
+                            'type' => $userdict['type'],
+                            'val' => $val,
+                            'key' => $key,
+                            'id_us' => $id,
+                            'crdate' => date("Y-m-d H:i:s")
+                        ));
+        			}
+                }
 				
 			}
             
         $body = $data['bodyAttribs'];
         
         foreach($body as $key=>$val) {
-			    $result = Yii::app()->db->createCommand()
-    			->select('*')
-    			->from('user_attribs')
-                ->where("id_us=:id_user and `key`=:key", array(':id_user'=>$id, ':key'=>$key))
-    			->queryRow();
-    			
-    			if($result['key'] == $key){
-    			    
-    			    $userdict = Yii::app()->db->createCommand()
-                        ->select('d.id , d.type, d.key')
-                        ->from('user_attr_dict d')
-                        ->where('d.id = :key', array(':key' => $val))
-                        ->queryRow();
-                        
-    			    Yii::app()->db->createCommand()
-					->update('user_attribs', array(
-						'val' => $userdict['name'],
-					), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
-				
-    			} else {
-
-            		$userdict = Yii::app()->db->createCommand()
-                        ->select('d.id , d.type, d.key')
-                        ->from('user_attr_dict d')
-                        ->where('d.id = :key', array(':key' => $val))
-                        ->queryRow();
-
-            			
-    			    Yii::app()->db->createCommand()
-                    ->insert('user_attribs', array(
-                        'id_attr' => $userdict['id'],
-                        'type' => $userdict['type'],
-                        'val' => $val,
-                        'key' => $key,
-                        'id_us' => $id,
-                        'crdate' => date("Y-m-d H:i:s")
-                    ));
-    			}
+            
+                if($val != 'null'){
+                    $result = Yii::app()->db->createCommand()
+        			->select('*')
+        			->from('user_attribs')
+                    ->where("id_us=:id_user and `key`=:key", array(':id_user'=>$id, ':key'=>$key))
+        			->queryRow();
+        			
+        			if($result['key'] == $key){
+        			    
+        			    $userdict = Yii::app()->db->createCommand()
+                            ->select('d.id , d.type, d.key')
+                            ->from('user_attr_dict d')
+                            ->where('d.id = :key', array(':key' => $val))
+                            ->queryRow();
+                            
+        			    Yii::app()->db->createCommand()
+    					->update('user_attribs', array(
+    						'val' => $userdict['name'],
+    					), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
+    				
+        			} else {
+    
+                		$userdict = Yii::app()->db->createCommand()
+                            ->select('d.id , d.type, d.key')
+                            ->from('user_attr_dict d')
+                            ->where('d.id = :key', array(':key' => $val))
+                            ->queryRow();
+    
+                			
+        			    Yii::app()->db->createCommand()
+                        ->insert('user_attribs', array(
+                            'id_attr' => $userdict['id'],
+                            'type' => $userdict['type'],
+                            'val' => $val,
+                            'key' => $key,
+                            'id_us' => $id,
+                            'crdate' => date("Y-m-d H:i:s")
+                        ));
+        			}
+                }
+			    
 				
 			}
 			
