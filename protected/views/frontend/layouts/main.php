@@ -474,7 +474,7 @@
                                 <!--  <a href="<?=MainConfig::$LINK_TO_APP_STORE?>" rel="nofollow" class="appstore-bottom-link" target="_blank"></a>-->
                                 <!--</div>-->
                               </div>
-                              <div class="col-xs-7 col-sm-2 col-lg-2 join-us">
+                              <div class="col-xs-12 col-sm-2 col-lg-2 join-us">
                                 <div class="social footer__social">
                                     <p class="footer__social-text">Присоединяйтесь к нам: </p>
                                     <div class="social_icons">

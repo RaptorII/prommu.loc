@@ -2108,7 +2108,7 @@ WHERE id_vac = {$inVacId}";
               INNER JOIN empl_attribs ea ON ea.id_vac = e.id 
               INNER JOIN user u ON e.id_user = u.id_user
               WHERE e.status = 1
-                AND e.is_new = 1 AND e.crdate >= CURDATE() 
+                AND e.is_new = 1 #AND e.crdate >= CURDATE()  
               ORDER BY e.ispremium DESC, e.id DESC 
             ) t1 ON t1.id = e.id
             
@@ -2119,6 +2119,9 @@ WHERE id_vac = {$inVacId}";
             JOIN employer em ON em.id_user = e.id_user
             ORDER BY e.ispremium DESC, e.id DESC
             LIMIT 1000";
+
+        // 2111 strt... # AND e.is_new = 1 AND e.crdate >= CURDATE() # think abuot this on free time
+
         $res = Yii::app()->db->createCommand($sql);
         $data= $res->queryAll();
         return $data;

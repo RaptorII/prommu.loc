@@ -39,6 +39,7 @@ $curId = $this->action->id;
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="language" content="en"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php
     if ($_SERVER['SERVER_NAME'] == 'prommu.dev') $icon = "fav-loc.ico";
     elseif ($_SERVER['SERVER_NAME'] == 'dev.prommu.com') $icon = "fav-dev.ico";
