@@ -304,7 +304,7 @@ class User extends CActiveRecord
         
             foreach($attr as $key=>$val) {
                 
-                if($val != NULL){
+                if(!empty($val)){
     			    $result = Yii::app()->db->createCommand()
         			->select('*')
         			->from('user_attribs')
@@ -343,7 +343,7 @@ class User extends CActiveRecord
         
         foreach($body as $key=>$val) {
             
-                if($val != NULL){
+                if(!empty($val)){
                     $result = Yii::app()->db->createCommand()
         			->select('*')
         			->from('user_attribs')
