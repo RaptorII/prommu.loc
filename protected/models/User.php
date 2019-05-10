@@ -336,7 +336,6 @@ class User extends CActiveRecord
 			}
             
         $body = $data['bodyAttribs'];
-        Yii::app()->db->createCommand()->delete('user_attribs', 'id_us=:id_user', array(':id_user' => $id));
         
         foreach($body as $key=>$val) {
 			    $result = Yii::app()->db->createCommand()
