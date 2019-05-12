@@ -25,6 +25,9 @@ class Vacancy extends ARModel
             7 => 'Более 2-х лет'
         );
 
+    public $company_search;
+    public $responses;
+
     /** @var UserProfile */
     private $Profile;
     /**
@@ -50,35 +53,64 @@ class Vacancy extends ARModel
     public function rules()
     {
         return array(
-            array('id, id_empl, title, remdate,crdate, city, status', 'required'),
-            array('id', 'numerical', 'integerOnly'=>true),
-            array('id, id_empl, title, remdate,crdate, city, status, index, meta_title, meta_h1, meta_description', 'safe', 'on'=>'search')
+            array('id, id_user, title, remdate, crdate, city, status, ismoder, company_search, in_archive', 'required'),
+            array('id, id_user', 'numerical', 'integerOnly'=>true),
+            array('id, id_user, title, remdate, crdate, city, status, ismoder, company_search','safe','on'=>'search')
         );
+    }
+
+    function relations()
+    {
+        return array(
+                'employer'=>array(self::BELONGS_TO,'Employer','id_empl'),
+                'empl_city'=>array(self::BELONGS_TO,'Employer','id_empl')
+            );
     }
 
     public function searchvac()
     {
-        // Warning: Please modify the following code to remove attributes that
-        // should not be searched.
-
-        $criteria=new CDbCriteria;
-        $criteria->compare('id',$this->id, true);
-        $criteria->compare('id_empl',$this->id_empl, true);
-        $criteria->compare('city',$this->city, true);
-        $criteria->compare('crdate',$this->crdate, true);
-        $criteria->compare('mdate',$this->mdate, true);
-        $criteria->compare('remdate',$this->remdate, true);
-        $criteria->compare('title',$this->title, true);
-        $criteria->compare('status',$this->status, true);
-        $criteria->compare('meta_h1',$this->meta_h1, true);
-        $criteria->compare('meta_title',$this->meta_title, true);
-        $criteria->compare('meta_description',$this->meta_description, true);
-        $criteria->compare('index',$this->index, true);
+        $condition = [];
+        $GetVac = Yii::app()->getRequest()->getParam('Vacancy');
         
+        $criteria=new CDbCriteria;
+        $criteria->with = array('employer');
+
+        $criteria->compare('employer.name',$this->company_search, true);
+        $criteria->compare('t.id', $this->id, true);
+        $criteria->compare('t.id_user', $this->id_user, true);
+        $criteria->compare('t.crdate', $this->crdate, true);
+        $criteria->compare('t.mdate', $this->mdate, true);
+        $criteria->compare('t.remdate', $this->remdate, true);
+        $criteria->compare('t.title', $this->title, true);
+        $criteria->compare('t.status', $this->status, true);
+        $criteria->compare('t.in_archive', $this->in_archive, true);
+        if(strlen($GetVac['ismoder']))
+        {
+            $condition[] = 't.ismoder='.$GetVac['ismoder'];
+        }
+        $this->setDateQuery('crdate','b_crdate','e_crdate',$condition);
+        $this->setDateQuery('mdate','b_mdate','e_mdate',$condition);
+        $this->setDateQuery('remdate','b_remdate','e_remdate',$condition,false);
+
+        
+        if(count($condition))
+        {
+            $criteria->condition = implode(' and ', $condition);
+        }
+
         return new CActiveDataProvider('Vacancy', array(
             'criteria'=>$criteria,
-            'pagination' => array('pageSize' => 20,),
-            'sort' => ['defaultOrder'=>'mdate desc'],
+            'pagination' => array('pageSize' => 20),
+            'sort' => [
+                'defaultOrder'=>'t.mdate desc',
+                'attributes'=>array(
+                    'company_search'=>array(
+                        'asc'=>'employer.name',
+                        'desc'=>'employer.name DESC',
+                    ),
+                    '*',
+                )
+            ],
         ));
     }
 
@@ -711,6 +743,7 @@ class Vacancy extends ARModel
         $data['card'] = intval($data['card']);
         $data['cardPrommu'] = intval($data['cardPrommu']);
         $data['index'] = intval($data['index']);
+        $data['in_archive'] = intval($data['in_archive']);
 
         Yii::app()->db->createCommand()
             ->update('empl_vacations', $data, 'id=:id', [':id'=>$id]);

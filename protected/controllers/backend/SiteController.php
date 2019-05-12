@@ -560,42 +560,49 @@ class SiteController extends Controller
 
   }
 
-  public function actionVacancy()
+    public function actionVacancy()
     {
-    if(strpos($this->user_access, "Вакансии") === false) {
+        if(!self::isAuth() || strpos($this->user_access, "Вакансии") === false)
+        {
             $this->render('access');
             return;
-        } 
-            $model = new Vacancy;
-            $model->unsetAttributes();  // clear any default values
-            $model->searchvac();
-            $model->status=1;
-            if(isset($_GET['Vacancy'])){
-                $model->attributes=$_GET['Vacancy'];
-            }
-            if($_GET['seo']){ 
-                $title = 'Вакансии';
-                $this->setPageTitle($title);
-                $this->breadcrumbs = array('СЕО'=>array('sect?p=seo'), '1'=>$title,);
-                $this->render('vacancy/vacancy', array('model'=>$model));
-            }
-            else{
-                if(Yii::app()->getRequest()->getParam('export_xls')=='Y')
+        }
+
+        $model = new Vacancy;
+        $model->unsetAttributes();  // clear any default values
+        $model->searchvac();
+        $model->status=1;
+
+        if(isset($_GET['Vacancy']))
+        {
+            $model->attributes=$_GET['Vacancy'];
+        }
+        if($_GET['seo'])
+        { 
+            $title = 'Вакансии';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('СЕО'=>array('sect?p=seo'), '1'=>$title,);
+            $this->render('vacancy/vacancy', array('model'=>$model));
+        }
+        else
+        {
+            if(Yii::app()->getRequest()->getParam('export_xls')=='Y')
+            {
+                $model = new Vacancy();
+                $data = $model->exportVacancies();
+                if(!$data)
                 {
-                    $model = new Vacancy();
-                    $data = $model->exportVacancies();
-                    if(!$data)
-                    {
-                        $this->redirect(['vacancy']);
-                    }
-                    Xls::makeFile($data['head'],$data['items'],'export_vacancies'); 
+                    $this->redirect(['vacancy']);
                 }
-                $title = 'Действующие';
-                $this->setPageTitle($title);
-                $this->breadcrumbs = array('Вакансии'=>array('sect?p=vac'), '1'=>$title,);
-                $this->render('vacancy/view', array('model'=>$model));
+                Xls::makeFile($data['head'],$data['items'],'export_vacancies'); 
             }
-        }           
+            
+            $title = 'Действующие';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('Вакансии'=>array('sect?p=vac'), '1'=>$title,);
+            $this->render('vacancy/view', array('model'=>$model));
+        }
+    }           
     
     public function actionVacCloud()
     {

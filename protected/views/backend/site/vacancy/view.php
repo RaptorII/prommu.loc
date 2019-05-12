@@ -3,6 +3,13 @@
   $gcs = Yii::app()->getClientScript();
   $gcs->registerCssFile($bUrl . '/css/template.css');
   $gcs->registerCssFile($bUrl . '/css/vacancy/list.css');
+  $gcs->registerScriptFile($bUrl . '/js/vacancy/list.js', CClientScript::POS_HEAD);
+  Yii::app()->clientScript->registerScript(
+    're-install-date-picker',
+    "function reinstallDatePicker(id, data){
+      $('.grid_date').datepicker(jQuery.extend(jQuery.datepicker.regional['ru'],{changeMonth:true}));
+    }");
+  $GetVac = Yii::app()->getRequest()->getParam('Vacancy');
 ?>
 <?
 //
@@ -18,268 +25,244 @@
         <div class="clearfix"></div>
         <br>
         <?php
-        echo CHtml::form('/admin/site/UserUpdate?id=0','POST',array("id"=>"form"));
-        echo '<input type="hidden" id="curr_status" name="curr_status">';
         $this->widget('zii.widgets.grid.CGridView', array(
-          'id'=>'dvgrid',
+          'id'=>'vacancy_table',
           'dataProvider'=>$model->searchvac(),
-          'itemsCssClass' => 'table table-bordered table-hover dataTable',
-          'htmlOptions'=>array('class'=>'table table-hover', 'name'=>'my-grid'/*, 'style' =>    'padding: 10px;  overflow: scroll;'*/),
+          'itemsCssClass' => 'table table-bordered table-hover dataTable custom-table',
+          'htmlOptions'=>array('class'=>'table table-hover', 'name'=>'my-grid'),
           'filter'=>$model,  
+          'afterAjaxUpdate' => 'reinstallDatePicker',
           'enablePagination' => true,
           'columns'=>array(
                     array(
-                        'class'=>'CCheckBoxColumn',
-                        'selectableRows' => 2,
-                        'checkBoxHtmlOptions' => array('class' => 'checkclass'),
-                        'value' => '$data->id_user',
+                      'class' => 'CCheckBoxColumn',
+                      'selectableRows' => 2,
+                      'checkBoxHtmlOptions' => array('class' => 'checkclass'),
+                      'value' => '$data->id_user',
+                      'htmlOptions' => ['class'=>'column_checkbox']
                     ),
                     array(
-                        'header'=>'ID',
-                        'name' => 'id',
-                        'value' => '$data->id',
-                        'type' => 'html',
-                        'htmlOptions' => ['class'=>'column_id']
+                      'header' => 'ID',
+                      'name' => 'id',
+                      'value' => '$data->id',
+                      'type' => 'html',
+                      'htmlOptions' => ['class'=>'column_id']
                     ),
                     array(
-                        'header'=>'Компания',
-                        'name' => 'id_empl',
-                        'type'=>'raw',
-                        'value'=>'1',//'CHtml::tag("span",array(),GetEmployerName($data->id_empl))',
-                        'htmlOptions' => []
+                      'header' => 'Компания',
+                      'name' => 'company_search',
+                      'type' => 'html',
+                      'value' => 'getLink("/admin/EmplEdit/" . $data->id_user, $data->employer->name)',
+                      'htmlOptions' => ['class'=>'column_company']
                     ),
                     array(
-                        'header'=>'ID компании',
-                        'name' => 'id_empl',
-                        'value' => '$data->id_empl',
-                        'type' => 'html',
-                        'htmlOptions' => ['class'=>'column_id_empl']
+                      'header' => 'ID компании',
+                      'name' => 'id_user',
+                      'value' => '$data->id_user',
+                      'type' => 'html',
+                      'htmlOptions' => ['class'=>'column_id_user']
                     ),
                     array(
-                        'header'=>'Название',
-                        'name' => 'title',
-                        'value' => 'ShowVacancy($data->id, $data->title)',
-                        'type' => 'html',
-                        'htmlOptions' => array('style' => 'width: 300px; text-align: center;'),
-
+                      'header' => 'Название',
+                      'name' => 'title',
+                      'value' => 'getLink("/admin/VacancyEdit/" . $data->id, $data->title)',
+                      'type' => 'html',
+                      'htmlOptions' => ['class'=>'column_title']
                     ),
                     array(
-                        'header'=>'Город',
-                        'name' => 'city',
-                        'type'=>'raw',
-                        'value'=>'1',//'CHtml::tag("span",array(),implode(", ", GetVacCities($data->id)))',
-                        'htmlOptions' => array('style' => 'width: 300px; text-align: center;')
+                      'header' => 'Город',
+                      'type' => 'raw',
+                      'filter' => '',
+                      'value' => 'getVacancyCities($data->id)',
+                      'htmlOptions' => ['class'=>'column_city']
                     ),
                     array(
-                        'header'=>'Дата создания',
-                        'name' => 'crdate',
-                        'type' => 'raw',
-                        'value' => 'Share::getPrettyDate($data->crdate,false,true)'
+                      'header' => 'Должность',
+                      'type' => 'raw',
+                      'filter' => '',
+                      'value' => 'getVacancyPosts($data->id)',
+                      'htmlOptions' => ['class'=>'column_post']
                     ),
                     array(
-                        'header'=>'Дата изменения',
-                        'name' => 'mdate',
-                        'type' => 'raw',
-                        'value' => 'Share::getPrettyDate($data->mdate,false,true)'
+                      'header' => 'Дата создания',
+                      'filter' => getDatePickers($this, 'b_crdate', 'e_crdate'),
+                      'name' => 'crdate',
+                      'type' => 'html',
+                      'value' => 'Share::getPrettyDate($data->crdate,false,true)',
+                      'htmlOptions' => ['class'=>'column_cdate']
                     ),
                     array(
-                        'header'=>'Дата завершения',
-                        'name' => 'remdate',
-                        'type' => 'raw',
-                        'value' => 'Share::getDate(strtotime($data->remdate),"d.m.y")'
+                      'header' => 'Дата изменения',
+                      'filter' => getDatePickers($this, 'b_mdate', 'e_mdate'),
+                      'name' => 'mdate',
+                      'type' => 'raw',
+                      'value' => 'Share::getPrettyDate($data->mdate,false,true)',
+                      'htmlOptions' => ['class'=>'column_mdate']
                     ),
                     array(
-                        'header'=>'Статус',
-                        'name' => 'status',
-                        'value' => 'ShowStatus($data->id,$data->status)',
-                        'type' => 'raw',
-                        'htmlOptions' => array('style' => 'width: 300px; text-align: center;'),
-
+                      'header' => 'Дата завершения',
+                      'filter' => getDatePickers($this, 'b_remdate', 'e_remdate'),
+                      'name' => 'remdate',
+                      'type' => 'raw',
+                      'value' => 'Share::getDate(strtotime($data->remdate),"d.m.y")',
+                      'htmlOptions' => ['class'=>'column_rdate']
                     ),
                     array(
-                        'header'=>'Модерация',
-                        'name' => 'ismoder',
-                        'value' => 'ShowStatusModer($data->id,$data->ismoder)',
-                        'type' => 'raw',
-                        'htmlOptions' => array('style' => 'width: 300px; text-align: center;'),
-
+                      'header' => 'Статус',
+                      'filter' => CHtml::dropDownList(
+                                          'Vacancy[status]', 
+                                          isset($GetVac['status']) ? $GetVac['status'] : 1, 
+                                          ['0'=>'Неактивные', '1'=>'Активные']
+                                      ),
+                      'name' => 'status',
+                      'value' => 'getSelect($data, "status", [0=>"не активна",1=>"активна"])',
+                      'type' => 'raw',
+                      'htmlOptions' => ['class'=>'column_status']
                     ),
                     array(
-                    'name' => 'Редактор',
-                    'value' => 'ShowEdit($data->id)',
-                    'type' => 'raw',
-                    'filter' => '',
-                    'htmlOptions' => array('style' => 'width: 300px; text-align: center;', 'class' => 'sorting', 'background-color'=> 'antiquewhite')
-                  ),
-                     array(
-                    'name' => 'Удалить',
-                    'value' => 'ShowDelete($data->id, $data->id_user)',
-                    'type' => 'raw',
-                    'filter' => '',
-                    'htmlOptions' => array('style' => 'width:200px;text-align:center;', 'class' => 'sorting', 'background'=> '#ef0018')
-                ),
-
+                      'header' => 'Модерация',
+                      'filter' => CHtml::dropDownList(
+                                          'Vacancy[ismoder]', 
+                                          isset($GetVac['ismoder']) ? $GetVac['ismoder'] : '', 
+                                          [''=>'Все','0'=>'В работе','100'=>'Просмотреные']
+                                      ),
+                      'name' => 'ismoder',
+                      'value' => 'getSelect($data, "ismoder", [0=>"в работе",100=>"просмотрена"])',
+                      'type' => 'raw',
+                      'htmlOptions' => ['class'=>'column_ismoder']
+                    ),
+                    array(
+                      'header' => 'Архив',
+                      'filter' => CHtml::dropDownList(
+                                          'Vacancy[in_archive]', 
+                                          isset($GetVac['in_archive']) ? $GetVac['in_archive'] : '0', 
+                                          ['0'=>'Активные','1'=>'Архив']
+                                      ),
+                      'value' => 'getSelect($data, "in_archive", [1=>"архив",0=>"активна"])',
+                      'type' => 'raw',
+                      'htmlOptions' => ['class'=>'column_archive']
+                    ),
+                    array(
+                      'value' => 'getLink("/admin/VacancyEdit/" . $data->id, "Редактировать", true)',
+                      'type' => 'raw',
+                      'htmlOptions' => ['class'=>'column_edit']
+                    ),
+                    array(
+                      'header' => '',
+                      'type' => 'raw',
+                      'filter' => '',
+                      'value' => 'getResponses($data->id)',
+                      'htmlOptions' => ['class'=>'column_response']
+                    )
         )));
-        echo CHtml::submitButton('Создать',array("class"=>"btn btn-success","id"=>"btn_submit", "style"=>"visibility:hidden"));
-
-        function ShowStatus($id, $stat)
+        //
+        //
+        //
+        // ссылка
+        function getLink($link, $name, $is_btn=false)
         {
-        $status = ['не активна','активна'];
-            $st_ico = ["label-warning", "label-success"];
-            $html = 
-            '<div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  title="статус: ' . $status[$stat] . '">
-            <span class="label ' . $st_ico[$stat] . '">'.$status[$stat] .'</span>
-            <span class="caret"></span>
-            </button>';
-            $html .= '<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">';
-            for ($i = 0; $i < 2; $i++) {
-                $html .= '<li ><a href = "#" onclick = "doStatusModer(' . $id . ', ' . $i . ')" ><span class="label ' . $st_ico[$i] . '"><i class="icon-star icon-white"></i></span> ' . $status[$i] . '</a></li >';
-            }
-            $html .= '</ul></div>';
-            return $html;
-        }
+            if(!$name)
+                return ' - ';
 
-        function ShowVacancy($id, $title){
-           return  "<a href='/admin/site/VacancyEdit/$id'>$title</a> ";
+            return  "<a href='$link' " . ($is_btn ? 'class="btn btn-default"' : '') . ">$name</a> ";
         }
-        function ShowStatusModer($id, $stat)
+        // города
+        function getVacancyCities($id)
         {
-            if($stat == 100){
-                $stat = 1;
-            }
-            elseif($stat == 200){
-                $stat = 0;
-            }
-            else $stat = 0;
-            $status = ['не просмотрена','просмотрена'];
-            $st_ico = ["label-warning", "label-success"];
-            $html = 
-            '<div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  title="статус: ' . $status[$stat] . '">
-            <span class="label ' . $st_ico[$stat] . '">'.$status[$stat].'</span>
-            <span class="caret"></span>
-            </button>';
-            $html .= '<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">';
-            for ($i = 0; $i < 2; $i++) {
-                if($i == 0){
-                $stat = 200;
-            }
-            elseif($i == 1){
-                $stat = 100;
-            }
-                $html .= '<li ><a href = "#" onclick = "doStatus(' . $id . ', ' . $stat . ')" ><span class="label ' . $st_ico[$i] . '"><i class="icon-star icon-white"></i></span> ' . $status[$i] . '</a></li >';
-            }
-            $html .= '</ul></div>';
-            return $html;
-        }
+            $query = Yii::app()->db->createCommand()
+                        ->select('c.name')
+                        ->from('empl_city ec')
+                        ->join('city c','ec.id_city=c.id_city')
+                        ->where('ec.id_vac=:id',[':id'=>$id])
+                        ->queryColumn();
 
-        function ShowEdit($id) {
-            return  '<button type="button" class="btn btn-default"><a href="/admin/site/VacancyEdit/' . $id . '">Редактировать</a></button> ';
+            if(!count($query))
+                return ' - ';
+            else
+                return implode(',<br>', $query);
         }
+        // должности
+        function getVacancyPosts($id)
+        {
+            $query = Yii::app()->db->createCommand()
+                        ->select('uad.name')
+                        ->from('empl_attribs ea')
+                        ->join('user_attr_dict uad','uad.id=ea.id_attr')
+                        ->where(
+                            'ea.id_vac=:id and uad.id_par=110',
+                            [':id'=>$id]
+                        )
+                        ->queryColumn();
 
-        function ShowDelete($idvac, $iduser) {
-            return  '<button type="button" onclick = "doDelete(' . $idvac . ',' . $iduser . ')" class="btn btn-default">Удалить</button> ';
-
+            if(!count($query))
+                return ' - ';
+            else
+                return implode(',<br>', $query);
         }
-        function GetEmployerName($id){
-            $emp = Yii::app()->db->createCommand()
-                ->select('name')
-                ->from('employer')
-                ->where('id=:id', array(':id'=>$id))
-                ->queryRow();
-            return  html_entity_decode($emp['name']);
-        }
-        function GetVacCities($id){
-            $arCities = Yii::app()->db->createCommand()
-                ->select('c.name')
-                ->from('empl_city ec')
-                ->where('id_vac=:id', array(':id'=>$id))
-                ->join('city c','ec.id_city=c.id_city')
-                ->limit(1000)
-                ->queryAll();
+        // datepickers
+        function getDatePickers($obj,$n1,$n2)
+        {
+          $arr = ['class' => 'grid_date','autocomplete'=>'off'];
+          $html = '<div class="date_range">'
+                . $obj->widget('zii.widgets.jui.CJuiDatePicker',
+                    [
+                      'name'=>$n1,
+                      'value'=>Yii::app()->getRequest()->getParam($n1),
+                      'options'=>['changeMonth'=>true],
+                      'htmlOptions'=>$arr
+                    ],
+                    true)
+                . '<div class="separator"> - </div>'
+                . $obj->widget('zii.widgets.jui.CJuiDatePicker',
+                    [
+                      'name'=>$n2,
+                      'value'=>Yii::app()->getRequest()->getParam($n2),
+                      'options'=>['changeMonth'=>true],
+                      'htmlOptions'=>$arr
+                    ],
+                    true)
+                . '</div>';
 
-            $arRes = array();
-            if(sizeof($arCities)>0)
-                foreach($arCities as $k => $val)
-                    array_push($arRes, $val['name']);
-
-            return $arRes;
+          return $html;     
         }
-        echo CHtml::endForm();
+        // responses
+        function getResponses($id)
+        {
+          $arResponses = (new ResponsesEmpl())->getVacResponsesCnt($id);
+          $views = (new Termostat())->getTermostatCount($id);
+          return '<div title="Просмотров"><span class="glyphicon glyphicon-eye-open">' . $views . '</span></div>'
+                  . '<div title="Откликов"><span class="glyphicon glyphicon-user">' . $arResponses['cnt'] . '</span></div>'
+                  . '<div title="Утвержденных"><span class="glyphicon glyphicon-thumbs-up">' . $arResponses['approved'] . '</span></div>'; 
+        }
+        // get select
+        function getSelect($data, $name, $arr)
+        {
+          $randId = rand(0,999);
+          $w = key($arr);
+          $html = '<div class="dropdown select_update">'
+            . '<button class="btn btn-default dropdown-toggle" type="button" id="'
+              . $randId . '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">'
+              . '<span class="label label-' . ($data->$name==$w?'warning':'success') . '">' . $arr[$data->$name] . '</span> '
+              . '<span class="caret"></span>'
+            . '</button>'
+            . '<ul class="dropdown-menu" aria-labelledby="' . $randId . '">';
+
+          foreach ($arr as $k => $v)
+          {
+            $html .= '<li class="label label-' . ($k==$w?'warning':'success') 
+              . '" data-id="' . $data->id . '" data-param="' 
+              . $name . '" data-value="' . $k . '">' . $v . '</li>';
+          }
+
+          $html .= '</ul></div>';
+
+          return $html;
+        }
         ?>
     </div>
 </div> 
-<!-- <a href="#" onclick="export_send()">Экспорт в Excel</a> -->
-<script type="text/javascript">
-    function doStatusModer(id, st) {
-        $("#curr_status").val(st);
-        $("#form").attr("action", "/admin/site/VacancyChangeModer/" + id);
-        $("#btn_submit").click();
-    }
-
-    function doStatus(id, st) {
-        $("#curr_status").val(st);
-        $("#form").attr("action", "/admin/site/VacancyModer/" + id);
-        $("#btn_submit").click();
-    }
-
-    function doDelete(idvac,iduser) {
-        $("#form").attr("action", "/admin/site/VacancyDelete/?id=" + idvac + '&id_user=' + iduser);
-        $("#btn_submit").click();
-    }
-
-    function create() {
-        document.forms['form'].method = 'POST';
-        document.forms['form'].action = "/admin/site/VacancyCreate/" ;
-        document.forms['form'].submit();
-    }
-    //
-    //
-    //
-    $(function(){
-        // datepicker
-        $('#export_beg_date').on("change", function(){ changeDate(1) });
-        $('#export_end_date').on("change", function(){ changeDate(2) });
-
-        $(document).on(
-            'click',
-            '#export_beg_date,#export_end_date', 
-            function(){ 
-                if (!$(this).hasClass('hasDatepicker')) { 
-                    $(this).datepicker(); $(this).datepicker('show'); 
-                }
-        }); 
-
-        function changeDate(cnt)
-        {
-            var date1 = $('#export_beg_date').datepicker('getDate'),
-                date2 = $('#export_end_date').datepicker('getDate');
-
-            if(cnt==1)
-            {
-                $('#export_beg_date').datepicker('setDate',date1);
-                $('#export_end_date').datepicker("option","minDate",date1);   
-            }
-            else
-            {
-                $('#export_end_date').datepicker('setDate',date2);
-                $('#export_beg_date').datepicker("option","maxDate",date2);                
-            }
-        }
-        // popup
-        $('.export_btn').click(function(){
-            $('#export_form').fadeIn();
-            $('.bg_veil').fadeIn();
-        });
-        $('.bg_veil,.export_form-close,.export_start_btn').click(function(){
-            $('#export_form').fadeOut();
-            $('.bg_veil').fadeOut();
-        });
-    });
-</script>
 <?
-//
+// XLS popup
 ?>
 <form method="POST" action="/admin/vacancy?export_xls=Y" id="export_form">
     <label class="d-label">

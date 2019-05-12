@@ -4,21 +4,67 @@
 /*
 * table
 */
-.dataTable{
-
-}
+.table.table-hover{ overflow: overlay; }
 .dataTable .checkclass{ margin: 0 }
 .dataTable thead>tr:not(.filters) th{ text-align: center }
-.dataTable thead>tr.filters>td{ padding: 0 } 
-.filters input{
-    width: 100%;
-    max-width: 100%;
-    border: 1px solid #d6d6d6; 
-}
+.dataTable thead>tr.filters>td{ 
+    padding: 0;
+    vertical-align: middle;
+} 
 .dataTable tbody tr td{ text-align: center }
-.dataTable tr .checkbox-column{ width: 2% }
-.dataTable tr .column_id{ width: 4% }
-.dataTable tr .column_id_empl{ width: 4% }
+
+.dataTable tr .checkbox-column,
+.dataTable tr .column_id,
+.dataTable tr .column_id_user,
+.dataTable tr .column_response{ 
+    width: 2%;
+}
+.dataTable tr .column_city{
+    white-space: nowrap; 
+}
+.dataTable tr .column_cdate,
+.dataTable tr .column_mdate,
+.dataTable tr .column_rdate{
+    width: 3%;
+}
+.dataTable tr .column_status,
+.dataTable tr .column_ismoder,
+.dataTable tr .column_archive,
+.dataTable tr .column_edit{
+    padding: 0;
+}
+
+.date_range .separator{ 
+    text-align: center;
+    line-height: 10px;
+}
+.dataTable .dropdown-menu{
+    margin: 0;
+    padding: 0;
+    min-width: 100px;
+}
+.dataTable .dropdown-menu li{
+    width: 100px;
+    margin: 5px;
+    padding: 5px;
+    display: block;
+    cursor: pointer;
+}
+.dataTable .dropdown-menu li:hover{ opacity: 0.7 }
+.date_range input{ text-align: center; }
+.custom-table .filters .date_range input{ min-width: 90px; }
+.custom-table tbody tr:hover td:not(.empty){
+    cursor: default;
+    color: inherit;
+}
+.column_response .glyphicon{
+    color: #3c8dbc;
+    font-size: 16px;
+    padding-bottom: 5px;
+}
+.column_response .glyphicon:before{
+    padding-right: 5px;
+}
 /*
 * export form
 */

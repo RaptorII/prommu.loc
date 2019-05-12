@@ -452,4 +452,24 @@ class AjaxController extends CController {
 
     echo CJSON::encode($result);
   }
+  /**
+   * Изменение вакансии
+   */
+  public function actionVacancy()
+  {
+    $arRes = array('error'=>true,'message'=>'Ошибка');
+    if (Yii::app()->user->isGuest)
+    {
+      echo CJSON::encode($arRes);
+      return;
+    }
+
+    $data = Yii::app()->getRequest()->getParam('data');
+    $data = json_decode($data, true, 5, JSON_BIGINT_AS_STRING);
+    $model = new Vacancy;
+    $model->updateVacancy($data['id'], [$data['param']=>$data['value']]);
+    $arRes['error'] = false;
+
+    echo CJSON::encode($arRes);
+  }
 }

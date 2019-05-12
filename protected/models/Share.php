@@ -829,10 +829,10 @@ class Share
         
         if($unixCur==$unixD)
             $resDate .= '';
-        elseif(!$short)
+        elseif($long)
         {
             $resDate .= ' ' . date('d',$unixD) . '.' . date('m',$unixD);
-            date('Y')!=$dateY && ($resDate .= '.' . date('y',$unixD));
+            $resDate .= '.' . date('y',$unixD);
         }
         else
         {
@@ -900,5 +900,21 @@ class Share
     public static function getDate($date, $format = 'd.m.Y G:i')
     {
         return !empty($date) ? date($format, $date) : ' - ';
+    }
+    /**
+     * @param $str - string (d.m.Y)
+     * @return string db date
+     */
+    public static function checkFormatDate($str)
+    {
+        if(substr_count($str, '.')==2)
+        {
+            list($d, $m, $y) = explode('.', $str);
+            if(checkdate($m, $d, $y))
+            {
+                return "$y-$m-$d";
+            }
+        }
+        return false;
     }
 }
