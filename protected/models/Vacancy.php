@@ -114,6 +114,26 @@ class Vacancy extends ARModel
         ));
     }
 
+    private function setDateQuery($name, $p1, $p2, &$arr, $time=true)
+    {
+        $rq = Yii::app()->getRequest();
+        $d1 = Share::checkFormatDate($rq->getParam($p1));
+        $d2 = Share::checkFormatDate($rq->getParam($p2));
+        if($d1 && $d2)
+        {
+            $arr[] = "t.{$name} between '{$d1}" . ($time ? " 00:00:00'" : "'")
+                        . " and '{$d2}" . ($time ? " 23:59:59'" : "'");
+        }
+        elseif($d1)
+        {
+            $arr[] = "t.{$name} >= '{$d1}" . ($time ? " 00:00:00'" : "'");
+        }
+        elseif($d2)
+        {
+            $arr[] = "t.{$name} <= '{$d2}" . ($time ? " 23:59:59'" : "'");
+        }
+    }
+
     public function setAnalytic($id){
         $res = Yii::app()->db->createCommand()
                  ->update('vacancy_count', array(
