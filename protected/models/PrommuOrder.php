@@ -630,7 +630,7 @@ class PrommuOrder {
         $arBD = Yii::app()->db->createCommand()
             ->select("c.region")
             ->from('empl_city ec')
-            ->leftjoin('empl_vacations ev', 'ev.id=ec.id_vac AND ev.status=1')
+            ->leftjoin('empl_vacations ev', 'ev.id=ec.id_vac AND ev.status=1 AND ev.in_archive=0')
             ->leftjoin('city c', 'c.id_city=ec.id_city')
             ->where('ev.id_user=:id',array(':id'=>$id))
             ->queryAll();

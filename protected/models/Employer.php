@@ -59,7 +59,7 @@ class Employer extends ARModel
                     FROM empl_vacations e
                     INNER JOIN vacation_stat s ON e.id = s.id_vac 
                         AND s.isresponse IN(1,2) 
-                    WHERE e.id_user = {$id}
+                    WHERE e.id_user = {$id} AND e.in_archive=0
                     ORDER BY s.id DESC";
         /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);
@@ -126,7 +126,7 @@ class Employer extends ARModel
             JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
             JOIN employer em ON em.id_user = e.id_user 
             JOIN user u ON em.id_user = u.id_user 
-            WHERE em.id_user ={$id} AND e.status = 1 AND  DATE(et.bdate) BETWEEN '{$dateStart}' AND '{$dateTomor}' AND e.count = 0
+            WHERE em.id_user ={$id} AND e.status=1 AND e.in_archive=0 AND DATE(et.bdate) BETWEEN '{$dateStart}' AND '{$dateTomor}' AND e.count = 0
             GROUP BY  e.id DESC";
             $rest = Yii::app()->db->createCommand($sql);
             $rest = $rest->queryAll();;
@@ -349,7 +349,7 @@ class Employer extends ARModel
                    e.rate_neg,
                    (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.isneg = 0 AND mm.isactive = 1 AND mm.id_empl = e.id) commpos,
                    (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.isneg = 1 AND mm.isactive = 1 AND mm.id_empl = e.id) commneg
-                   ,(SELECT COUNT(*) cou FROM empl_vacations v WHERE v.id_user = e.id_user AND v.status = 1 AND v.ismoder = 100) vaccount
+                   ,(SELECT COUNT(*) cou FROM empl_vacations v WHERE v.id_user = e.id_user AND v.status = 1 AND v.ismoder = 100 AND v.in_archive=0) vaccount
                    ,e.logo,
                    DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate,
                    DATE_FORMAT(e.mdate, '%d.%m.%Y') mdate

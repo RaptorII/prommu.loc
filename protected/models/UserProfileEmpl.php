@@ -331,7 +331,7 @@ class UserProfileEmpl extends UserProfile
                     ->select("count(*)")
                     ->from('empl_vacations')
                     ->where(
-                        'id_user=:id and status=1 and ismoder=100 and remdate>=now()',
+                        'id_user=:id and status=1 and ismoder=100 and in_archive=0 and remdate>=now()',
                         [':id'=>$id_user]
                     )
                     ->queryScalar();
@@ -1225,13 +1225,13 @@ class UserProfileEmpl extends UserProfile
         $sql = "SELECT v.id, v.title, DATE_FORMAT(v.crdate, '%d.%m.%Y') crdate, DATE_FORMAT(v.remdate, '%d.%m.%Y') remdate,
             (SELECT COUNT(id) FROM emplv_discuss ed WHERE ed.id_vac=v.id) discuss_cnt
             FROM empl_vacations v
-            WHERE v.id_user = {$id} AND v.status = 1 AND v.ismoder = 100
+            WHERE v.id_user = {$id} AND v.status = 1 AND v.ismoder = 100 AND v.in_archive=0
             ORDER BY v.id DESC
             LIMIT 9";
         $res = Yii::app()->db->createCommand($sql)->queryAll();
         $data['jobs'] = $res;
 
-        $sql = "SELECT COUNT(*) FROM empl_vacations v WHERE v.id_user = {$id} AND v.status = 1 AND v.ismoder = 100";
+        $sql = "SELECT COUNT(*) FROM empl_vacations v WHERE v.id_user = {$id} AND v.status = 1 AND v.ismoder = 100 AND v.in_archive=0";
         $res = Yii::app()->db->createCommand($sql)->queryScalar();
         $data['count'] = $res;
 

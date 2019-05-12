@@ -244,6 +244,7 @@ class Sitemap extends CActiveRecord
             WHERE e.remdate > NOW()
               AND e.status = 1
               AND e.ismoder = 100
+              AND e.in_archive=0
             ORDER BY e.crdate DESC";
         /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);

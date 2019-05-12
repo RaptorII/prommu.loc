@@ -640,7 +640,7 @@ class User extends CActiveRecord
 	            LEFT JOIN emplv_loc_times t ON l.id = t.id_loc
 	            LEFT JOIN employer e ON e.id_user = v.id_user
 	            WHERE v.id_user = {$id}
-	            AND (v.status = 1)
+	            AND v.status=1 AND v.in_archive=0
 	            ORDER BY v.id DESC";
         
         $res = Yii::app()->db->createCommand($sql)->queryAll();

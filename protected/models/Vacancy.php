@@ -436,7 +436,7 @@ class Vacancy extends ARModel
             LEFT JOIN emplv_loc_times t ON l.id = t.id_loc
             LEFT JOIN employer e ON e.id_user = v.id_user
             WHERE v.id_user = {$idus}
-            AND (v.status = 1)
+            AND v.status=1 AND v.in_archive=0
             ORDER BY v.id DESC
             ";
         
@@ -481,7 +481,7 @@ class Vacancy extends ARModel
             LEFT JOIN employer e ON e.id_user = v.id_user
             WHERE v.id_user = {$idus}
             AND (v.ispremium = 0)
-            AND v.status = 1
+            AND v.status = 1 AND v.in_archive=0
             ORDER BY v.id DESC
             ";
         
@@ -504,7 +504,7 @@ class Vacancy extends ARModel
         $idus = $this->Profile->id ?: Share::$UserProfile->exInfo->id;
 
         // читаем вакансии
-        $sql = "SELECT COUNT(*) cou FROM empl_vacations v WHERE v.id_user = {$idus} AND v.status = 1";
+        $sql = "SELECT COUNT(*) cou FROM empl_vacations v WHERE v.id_user = {$idus} AND v.status=1 AND v.in_archive=0";
         return Yii::app()->db->createCommand($sql)->queryScalar();
     }
 
@@ -2571,7 +2571,7 @@ WHERE id_vac = {$inVacId}";
             FROM empl_vacations v
             INNER JOIN ( SELECT v.id FROM empl_vacations v WHERE v.id_user = {$idus} ORDER BY v.id DESC 
                 {$limit} ) t1 ON t1.id = v.id 
-            WHERE v.id_user = {$idus} AND (v.status=1) AND (v.ismoder=100)
+            WHERE v.id_user = {$idus} AND (v.status=1) AND (v.ismoder=100) AND v.in_archive=0
             ORDER BY v.id DESC
             ";
         $data = Yii::app()->db->createCommand($sql)->queryAll();
@@ -2622,7 +2622,7 @@ WHERE id_vac = {$inVacId}";
             FROM empl_vacations v
             INNER JOIN ( SELECT v.id FROM empl_vacations v WHERE v.id_user = {$idus} ORDER BY v.id DESC 
                 {$limit} ) t1 ON t1.id = v.id 
-            WHERE v.id_user = {$idus} AND (v.status=1) AND (v.ismoder=100)
+            WHERE v.id_user = {$idus} AND (v.status=1) AND (v.ismoder=100) AND v.in_archive=0
             ORDER BY v.id DESC
             ";
         $data = Yii::app()->db->createCommand($sql)->queryAll();
@@ -2747,7 +2747,7 @@ WHERE id_vac = {$inVacId}";
       $arId = Yii::app()->db->createCommand()
                 ->select('id')
                 ->from('empl_vacations')
-                ->where('status=1 AND ismoder=100'/* AND remdate>=NOW()'*/) // убираем remdate для повышения эффективности
+                ->where('status=1 AND ismoder=100 AND in_archive=0'/* AND remdate>=NOW()'*/) // убираем remdate для повышения эффективности
                 //->order('ispremium DESC, id DESC')
                 ->queryColumn();
 

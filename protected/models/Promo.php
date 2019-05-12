@@ -116,7 +116,7 @@ class Promo extends ARModel
             JOIN employer em ON em.id_user = e.id_user 
             JOIN user u ON em.id_user = u.id_user 
 
-            WHERE e.status = 1 AND  DATE(et.bdate) BETWEEN '{$dateStart}' AND '{$dateTomor}'
+            WHERE e.status=1 AND e.in_archive=0 AND DATE(et.bdate) BETWEEN '{$dateStart}' AND '{$dateTomor}'
             GROUP BY  e.id DESC";
             $rest = Yii::app()->db->createCommand($sql);
             $rest = $rest->queryAll();;

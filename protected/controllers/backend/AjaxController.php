@@ -469,6 +469,7 @@ class AjaxController extends CController {
     $model = new Vacancy;
     $model->updateVacancy($data['id'], [$data['param']=>$data['value']]);
     $arRes['error'] = false;
+    $arRes['message'] = 'Вакансия изменена';
 
     echo CJSON::encode($arRes);
   }

@@ -162,7 +162,7 @@ function ShowPhoto($photo)
 function ShowVaccount($id_user)
 {
         // читаем вакансии
-        $sql = "SELECT COUNT(*) cou FROM empl_vacations v WHERE v.id_user = {$id_user} AND v.status = 1 AND v.ismoder = 100";
+        $sql = "SELECT COUNT(*) cou FROM empl_vacations v WHERE v.id_user = {$id_user} AND v.status = 1 AND v.ismoder = 100 AND v.in_archive=0";
         return Yii::app()->db->createCommand($sql)->queryScalar();
 }
 
