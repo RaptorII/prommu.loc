@@ -175,7 +175,7 @@
                                 <div class='rate'>
                                     <span class="js-g-hashint" title="Всего"><?=($val['rate'] + $val['rate_neg'])?></span>
                                     (<span class="-green js-g-hashint" title="Положительный"><?=$val['rate']?></span> 
-                                    / <span class="-red js-g-hashint" title="Отрицательный"><?=$val['rate_neg']?></b>)
+                                    / <span class="-red js-g-hashint" title="Отрицательный"><?=$val['rate_neg']?></span>)
                                 </div>
                             </div>
                         </div>

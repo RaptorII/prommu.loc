@@ -253,10 +253,10 @@
 .how-block__item .how-block__icon.icon2{background-position:0 -76px;}
 .how-block__item .how-block__icon.icon3{background-position:0 -148px;}
 #DiContent .how-block__item.locate{margin:0 18px 30px;padding-top:25px;width:inherit;border-bottom:1px solid #d7d7d7;border-top:1px solid #d7d7d7;}
-#DiContent .header.h-indent.vacancies__title h2{margin-bottom:25px;}
+#DiContent .header.h-indent.vacancies__title h2{margin-bottom:25px;font-weight: 600;}
 #DiContent .header.h-indent.vacancies__title h2 a{font-size:50px;color:#ff8300;font-family:'RobotoCondensedLight', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;vertical-align:middle;}
 #DiContent .header.h-indent.vacancies__title h2 span{position:relative;}
-#DiContent .header.h-indent.vacancies__title h2 span:before{content:'';width:83px;height:74px;display:inline-block;background:url(/theme/pic/main-page/mob-index-icons-2.png) 83px 0% no-repeat;background-position:0 -226px;vertical-align:middle;}
+#DiContent .header.h-indent.vacancies__title h2 span:before{content:'';width:95px;height:74px;display:inline-block;background:url(/theme/pic/main-page/mob-index-icons-2.png) 83px 0% no-repeat;background-position:0 -226px;vertical-align:middle;}
 #DiContent.page-index .m-wrapper__btn.m-wrapper__whiteo-btn.m-detail-list-btn{width:50%;margin:0 auto 38px;min-width:300px;color:#ff8300;}
 #DiContent.page-index .m-wrapper__btn.m-wrapper__white-btn.m-detail-list-btn:hover,
 #DiContent.page-index .m-wrapper__btn.m-wrapper__whiteo-btn.m-detail-list-btn:hover,
@@ -267,7 +267,7 @@
 .services,
 .about-block,
 .m-bottom-registration{max-width:640px;margin:0 auto;}
-#DiContent .header.h-indent.applicants__title h2{margin-bottom:10px;}
+#DiContent .header.h-indent.applicants__title h2{margin-bottom:10px;font-weight: 600;}
 #DiContent .header.h-indent.applicants__title h2 a{font-size:50px;color:#abb820;font-family:'RobotoCondensedLight', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;vertical-align:middle;line-height:normal;}
 #DiContent .header.h-indent.applicants__title h2 span{position:relative;}
 #DiContent .header.h-indent.applicants__title h2 span:before{content:'';width:92px;height:86px;display:inline-block;background:url(/theme/pic/main-page/mob-index-icons-2.png) 92px 0% no-repeat;background-position:0 -315px;vertical-align:middle;}

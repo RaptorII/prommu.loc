@@ -686,13 +686,16 @@ class Promo extends ARModel
                 'scope' => Promo::$SCOPE_HAS_PHOTO, 
                 'alias' => 'r'
             ]);
-        $sql = "SELECT DISTINCT r.id, u.is_online, r.id_user idus, 
+        $sql = "SELECT DISTINCT r.id, u.is_online, 
+                    r.id_user idus, 
                     r.photo, r.firstname, r.lastname, 
                     r.isman, DATE_FORMAT(r.birthday,'%d.%m.%Y') as birthday,
                     cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate,
                     r.rate, r.rate_neg, photo, 
                     (SELECT COUNT(id) FROM comments mm 
-                    WHERE mm.iseorp = 1 AND mm.id_promo = r.id) comment_count
+                    WHERE mm.iseorp = 1 AND mm.id_promo = r.id) comment_count,
+                    (SELECT COUNT(id) FROM comments mm
+                    WHERE mm.isneg = 1 AND mm.id_promo = r.id) comment_neg
                 FROM resume r
                 INNER JOIN user_mech m ON r.id_user = m.id_us
                 INNER JOIN user_city ci ON r.id_user = ci.id_user 
