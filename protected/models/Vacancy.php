@@ -751,19 +751,22 @@ class Vacancy extends ARModel
 
     public function updateVacancy($id, $data)
     {
-        $data['ismoder'] = intval($data['ismoder']);
-        $data['status'] = intval($data['status']);
-        $data['ispremium'] = intval($data['ispremium']);
-        $data['isman'] = intval($data['isman']);
-        $data['iswoman'] = intval($data['iswoman']);
-        $data['istemp'] = intval($data['istemp']);
-        $data['ismed'] = intval($data['ismed']);
-        $data['isavto'] = intval($data['isavto']);
-        $data['smart'] = intval($data['smart']);
-        $data['card'] = intval($data['card']);
-        $data['cardPrommu'] = intval($data['cardPrommu']);
-        $data['index'] = intval($data['index']);
-        $data['in_archive'] = intval($data['in_archive']);
+        if(!Yii::app()->request->isAjaxRequest)
+        {
+            $data['ismoder'] = intval($data['ismoder']);
+            $data['status'] = intval($data['status']);
+            $data['ispremium'] = intval($data['ispremium']);
+            $data['isman'] = intval($data['isman']);
+            $data['iswoman'] = intval($data['iswoman']);
+            $data['istemp'] = intval($data['istemp']);
+            $data['ismed'] = intval($data['ismed']);
+            $data['isavto'] = intval($data['isavto']);
+            $data['smart'] = intval($data['smart']);
+            $data['card'] = intval($data['card']);
+            $data['cardPrommu'] = intval($data['cardPrommu']);
+            $data['index'] = intval($data['index']);
+            $data['in_archive'] = intval($data['in_archive']);
+        }
 
         Yii::app()->db->createCommand()
             ->update('empl_vacations', $data, 'id=:id', [':id'=>$id]);
