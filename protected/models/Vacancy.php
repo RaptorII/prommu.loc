@@ -2341,7 +2341,7 @@ WHERE id_vac = {$inVacId}";
 			$conditions = $arVac['conditions'];
 			$requirements = $arVac['requirements'];
 			$duties = $arVac['duties'];
-			$linki = Subdomain::site() . MainConfig::$PAGE_VACANCY . $arVac['id'];
+			$linki = Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $arVac['id'];
 			$vacType = ($arVac['istemp'] ? 'временная' : 'постоянная') . ' работа';
 
       $message =

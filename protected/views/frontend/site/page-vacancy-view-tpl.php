@@ -292,7 +292,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                                             <span>Опубликовать в Telegram</span>
                                         </a>
                                     <? endif; ?>
-                                    <? $link = "?id={$viData['vac']['id']}&service="; ?>
+                                    <? $link = "?id={$viData['vac']['id']}&service"; ?>
                                     <a href='<?= MainConfig::$PAGE_ORDER_SERVICE . "$link=push"?>'
                                        class="erv__services-soc prmu-btn"><span>PUSH информирование</span></a>   
                                     <span>Платные услуги</span>
