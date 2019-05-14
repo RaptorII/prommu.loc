@@ -245,7 +245,7 @@ class User extends CActiveRecord
 		if(empty($id) || $id<=0) return null;
 
 
-
+        var_dump($cloud);
 
 		Yii::app()->db->createCommand()
 			->update('user', array(
