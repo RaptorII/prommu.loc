@@ -228,7 +228,7 @@ class UserProfileApplic extends UserProfile
         $i = 0;
         foreach ($res as $key => $val):
             
-            $wdays[$i]['idcity'] = $val['idcity'];
+            $wdays[$i]['id_city'] = $val['idcity'];
             $wdays[$i]['wday'] = $val['wday'];
             $wdays[$i]['timeb'] = $val['timeb'];
             $wdays[$i]['timee'] = $val['timee'];
