@@ -1298,7 +1298,7 @@ var IndServ = (function () {
                     navigationText: ['', ''],
                 };
 
-            if(w >= (768 - 17)){
+            if(w >= (768 - 0)){
                 if($sliderApp.hasClass('off') || e.type=='load'){
                     props.singleItem = false;
                     props.items = 6;

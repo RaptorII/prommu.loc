@@ -74,7 +74,7 @@ $(function(){
   });
   // прячем фильтр для моб. разрешения
   $(window).on('load resize',function(){
-    if($(window).width() < '751')
+    if($(window).width() < '768')
       $('.filter__vis').hasClass('active') ? $form.show() : $form.hide(); 
     else
       $form.show();
