@@ -244,9 +244,6 @@ class User extends CActiveRecord
 	public function updatePromo($data, $id) {
 		if(empty($id) || $id<=0) return null;
 
-
-        var_dump($data);
-
 		Yii::app()->db->createCommand()
 			->update('user', array(
 				'ismoder' => $data['ismoder'],
