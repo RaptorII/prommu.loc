@@ -2983,7 +2983,9 @@ WHERE id_vac = {$inVacId}";
         else
             $arT[$id]['salary'] = $v['svisit'] * 22;// * 22 рабочих дня в месяце
         $arT[$id]['requirements'] = htmlspecialchars($v['requirements'],ENT_XML1);
+        $arT[$id]['requirements'] = mb_convert_case($arT[$id]['requirements'], MB_CASE_LOWER, "UTF-8");
         $arT[$id]['duties'] = htmlspecialchars($v['duties'],ENT_XML1);
+        $arT[$id]['duties'] = mb_convert_case($arT[$id]['duties'], MB_CASE_LOWER, "UTF-8");
         $arSalary = [];
         $v['svisit']>0 && $arSalary[] = $v['svisit'] . ' за посещение';
         $v['smonth']>0 && $arSalary[] = $v['smonth'] . ' в месяц';
