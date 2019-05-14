@@ -36,6 +36,40 @@
         color: #abb820;
         text-decoration: none;
     }
+    /*css applicants item poss*/
+    #DiContent .applicants__item-pos {
+        display: block;
+        position: relative;
+        z-index: 2;
+    }
+    #DiContent .applicants__item-pos.applicants__item-open:hover:after {
+        content: attr(data-itempos);
+        display: block;
+        position: absolute;
+        top: 10px;
+        opacity: 1;
+        transition: all .2s cubic-bezier(.47,0,.745,.715);
+        background: #fff;
+        margin: -10px 0 0 -5px;
+        padding: 0 4px;
+        border: 1px solid grey;
+        z-index: 10;
+    }
+    #DiContent .applicants__item-pos.applicants__item-open:after {
+        content: attr(data-itempos);
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: auto;
+        top: 0;
+        opacity: 0;
+        transition: all .2s cubic-bezier(.47,0,.745,.715);
+        background: #fff;
+        margin: 0 0 0 -5px;
+        padding: 0 4px;
+    }
+
+    /*end*/
     /* css services icons on main-page */
     .page-index .services__item:before {
         content: '';
@@ -265,7 +299,17 @@
 									<a class="applicants__item-name applicants__item-lastname" href="<?=$item['datail-url']?>"><?=$item['lastname']?></a>
                                     <a class="applicants__item-name bold" href="<?=$item['datail-url']?>"><?=$item['birthday']?></a>
 									<div class="applicants__item-line"></div>
-									<div class="applicants__item-pos"><?=$item['positions']?></div>
+                                    <?php
+                                    if (count(explode(", ", $item['positions'])) > 2) {
+                                    ?>
+									<div class="applicants__item-pos applicants__item-open" data-itempos="<?=$item['positions'];?>">
+                                        <?=implode( array_slice((explode(", ", $item['positions'])), 0, 2), ', ') . '...';?>
+                                    </div>
+                                    <?php } else { ?>
+                                        <div class="applicants__item-pos">
+                                            <?=$item['positions'] . '.';?>
+                                        </div>
+                                    <?php } ?>
 									<div class="companies__item-com-rate">
 										<?if($item['rate_count']>0):?>
 										<div class="companies__item-rating">
