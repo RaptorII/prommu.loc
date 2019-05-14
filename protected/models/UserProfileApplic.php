@@ -225,14 +225,15 @@ class UserProfileApplic extends UserProfile
         $res = Yii::app()->db->createCommand($sql)->queryAll();
         
         // "workDays":[{"id_city":1307, "timeb":880, "timee":900, "day":2}]
-        
+        $i = 0;
         foreach ($res as $key => $val):
             
-            $wdays[]['idcity'] = $val['idcity'];
-            $wdays[]['wday'] = $val['wday'];
-            $wdays[]['timeb'] = $val['timeb'];
-            $wdays[]['timee'] = $val['timee'];
+            $wdays[$i]['idcity'] = $val['idcity'];
+            $wdays[$i]['wday'] = $val['wday'];
+            $wdays[$i]['timeb'] = $val['timeb'];
+            $wdays[$i]['timee'] = $val['timee'];
             
+            $i++;
         endforeach;
         
         $data['workDays'] = $wdays;
