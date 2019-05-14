@@ -385,10 +385,8 @@ class User extends CActiveRecord
 			}
 			
 			
-            for($i = 0; $i<= count($data['workDays']); $i++){
-                    if(isset($data['workDays'][$i])){
-                        $insData[] = array('id_city' => $data['workDays'][$i]->id_city, 'id_us' => $id, 'wday' => $data['workDays'][$i]->day, 'timeb' => $data['workDays'][$i]->timeb, 'timee' => $data['workDays'][$i]->timee);
-                    }
+            for($i = 0; $i < count($data['workDays']); $i++){
+                $insData[] = array('id_city' => $data['workDays'][$i]->id_city, 'id_us' => $id, 'wday' => $data['workDays'][$i]->day, 'timeb' => $data['workDays'][$i]->timeb, 'timee' => $data['workDays'][$i]->timee);
             }
 
             if( count($insData) ){
