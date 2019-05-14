@@ -257,8 +257,8 @@ class ImEmpl extends Im
                         'crdate' => date("Y-m-d H:i:s"),
                     ));
 
-                    $mailCloud = new MailCloud();
-                    $mailCloud->mailerMess($idusp,$idTm, 3);
+                    //$mailCloud = new MailCloud();
+                    //$mailCloud->mailerMess($idusp,$idTm, 3);
             // if($vid) {
             //     $propss = array(
             //     'id' =>  $id ?: Share::$UserProfile->id,

@@ -164,10 +164,6 @@
         <a class='ppp__btn' href='<?= MainConfig::$PAGE_SETTINGS ?>' style="margin-bottom: 10px">Настройки профиля</a>
         <a class='ppp__btn' href='<?= MainConfig::$PAGE_CHATS_LIST ?>'>Мои сообщения</a>
       <?php elseif( Share::$UserProfile->type == 3 && $ismoder): ?>
-        <? /* ?><div class='btn-update btn-orange-sm-wr'>
-          <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_IM . '?new=' . $idus ?>'>Отправить сообщение</a>
-        </div>
-          <br /><?*/?>
         <div class='js-btn-invite btn-white-green-wr'>
           <a href='#'>Пригласить на вакансию</a>
         </div>

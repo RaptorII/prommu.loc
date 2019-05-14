@@ -368,15 +368,6 @@ foreach ($viData['posts'] as $p)
                                     <?php endif; ?>
                                 </div>
                             </div>
-                            <div class='row'>
-                                <div class='col-xs-12 col-md-8 col-md-push-4 no-margin'>
-                                    <?php /* if( Share::$UserProfile->type == 3 ): ?>
-		                                <div class='btn-message'>
-		                                    <a href='<?= MainConfig::$PAGE_IM . '?new=' . $val['id_user'] ?>'>Написать сообщение</a>
-		                                </div>
-		                            <?php endif;*/ ?>
-                                </div>
-                            </div>
                         </div>
                     <?php endforeach; ?>
                 </div>

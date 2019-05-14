@@ -214,8 +214,8 @@ class ImApplic extends Im
                         'crdate' => date("Y-m-d H:i:s"),
                     ));
 
-                $mailCloud = new MailCloud();
-                $mailCloud->mailerMess($ids['iduse'], $idTm, 2);
+                //$mailCloud = new MailCloud();
+                //$mailCloud->mailerMess($ids['iduse'], $idTm, 2);
 
             }
             // endif

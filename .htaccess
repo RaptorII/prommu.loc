@@ -30,6 +30,9 @@ RedirectMatch (/images/articles/.*\.png)$ https://prommu.com$1
 #</filesMatch>
 
 RewriteCond %{REQUEST_URI} ^/rabotodatel$
-RewriteRule ^.*$ http://prommu.dev/about/empl? [R=301,L]
+RewriteRule ^.*$ https://prommu.dev/about/empl? [R=301,L]
 RewriteCond %{REQUEST_URI} ^/soiskatelyam$
-RewriteRule ^.*$ http://prommu.dev/about/prom? [R=301,L]
+RewriteRule ^.*$ https://prommu.dev/about/prom? [R=301,L]
+
+RewriteCond %{REQUEST_URI} ^/user/im$
+RewriteRule ^.*$ https://prommu.dev/user/chats? [R=301,L]
