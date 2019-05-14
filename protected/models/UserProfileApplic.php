@@ -219,7 +219,22 @@ class UserProfileApplic extends UserProfile
             ORDER BY npp DESC";
         $data['userPhotos'] = Yii::app()->db->createCommand($sql)->queryAll();
         if( count($data['userPhotos']) == 1 && !$data['userPhotos'][0]['id'] ) $data['userPhotos'] = array();
-
+        
+        $dayNames = array('Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс');
+        $sql = "SELECT t.id_city idcity, t.wday, t.timeb, t.timee FROM user_wtime t WHERE t.id_us = {$id}";
+        $res = Yii::app()->db->createCommand($sql)->queryAll();
+        foreach ($res as $key => $val):
+            $val['wdayName'] = $dayNames[$val['wday']-1];
+            $h = floor($val['timeb'] / 60);
+            $m = $val['timeb'] - $h * 60;
+            $val['timeb'] = sprintf('%d:%02d', $h, $m);
+            $h = floor($val['timee'] / 60);
+            $m = $val['timee'] - $h * 60;
+            $val['timee'] = sprintf('%d:%02d', $h, $m);
+            $wdays[$val['idcity']][$val['wday']] = $val;
+        endforeach;
+        $data['workDays'] = $wdays;
+        
         return $data;
     }
 
