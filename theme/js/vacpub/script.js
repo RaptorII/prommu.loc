@@ -84,7 +84,7 @@ $(function(){
         errors = true; 
     });
 
-    if(!$('#av-posts-select [name="posts[]"]').length){
+    if(!($('#av-posts-select [name="posts[]"]').length || $('[name="post-self"]').length)){
       addErr('.fav__select-posts');
       errors = true; 
     }
