@@ -42,8 +42,8 @@ jQuery(function($){
 		{
 			!v.length ? $(this).addClass('error') : $(this).removeClass('error');			
 		}
-	});
-	$('#EdName').on('change', function(){
+	})
+	.on('change', function(){
 		var v = this.value.trim();
 		this.value = v;
 		if(bEmplForm)
@@ -53,12 +53,22 @@ jQuery(function($){
 				?	$(this).addClass('error') 
 				:	$(this).removeClass('error');
 		}
+		else
+		{
+			!v.length ? $(this).addClass('error') : $(this).removeClass('error');	
+		}
 	});
 	// фамилия
 	$('#EdLname').on('input', function(){ // first symbol to upper case
-		var $it = $(this);
-		$it.val($it.val().charAt(0).toUpperCase() + $it.val().slice(1).toLowerCase());
-		$it.val()=='' ? $it.addClass('error') : $it.removeClass('error');
+		var v = this.value;
+		this.value = (v.charAt(0).toUpperCase() + v.slice(1).toLowerCase());
+		v = this.value.trim();
+		!v.length ? $(this).addClass('error') : $(this).removeClass('error');
+	})
+	.on('change', function(){
+		var v = this.value.trim();
+		this.value = v;
+		!v.length ? $(this).addClass('error') : $(this).removeClass('error');	
 	});
 	// email
 	$('#EdEmail').on('input', function(){ // first symbol to upper case
@@ -125,9 +135,18 @@ jQuery(function($){
 			MainScript.buttonLoading(this,true);
 		}
 
-		$('#EdName').val()==='' ? $('#EdName').addClass('error') : $('#EdName').removeClass('error');
-		$('#EdLname').val()==='' ? $('#EdLname').addClass('error') : $('#EdLname').removeClass('error');
-		$('#agreement-inp').is(':checked') ? $('#agreement-lab').removeClass('error') : $('#agreement-lab').addClass('error');
+		!$('#EdName').val().trim().length 
+			? $('#EdName').addClass('error') 
+			: $('#EdName').removeClass('error');
+		if(!bEmplForm)
+		{
+			!$('#EdLname').val().trim().length 
+				? $('#EdLname').addClass('error') 
+				: $('#EdLname').removeClass('error');
+		}
+		$('#agreement-inp').is(':checked') 
+			? $('#agreement-lab').removeClass('error') 
+			: $('#agreement-lab').addClass('error');
 
 
 
