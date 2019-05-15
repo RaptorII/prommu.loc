@@ -61,6 +61,7 @@ class SiteController extends AppController
             Cache::setData($data);
         }
         //
+        var_dump($data['data']['vacancies']);
         $this->render(
           'index', 
           array('content' => $data['data'], 'city'=>$city)
