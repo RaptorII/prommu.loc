@@ -5,8 +5,9 @@ jQuery(function($){
 		epattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i,
 		startCheckEmail = false,
 		$psw = $('#EdPass'),
-		$cnfPsw = $('#EdPassRep');
-	// имя	
+		$cnfPsw = $('#EdPassRep'),
+		bEmplForm = $form.attr('id')=='F1registerEmpl';
+	
 	$('#phone-code').show();
 	if($('[name="type-reg"]:checked').val()==2){
 		$email.hide().val('').attr('data-field-check','');
@@ -16,13 +17,42 @@ jQuery(function($){
 		$form.prop('action',$form.data('phone'));
 	}
 
-	$('#EdName').on('input', function(){
-		var $it = $(this);
-		if($form.attr('id')=='F1registerEmpl')
-			$it.val($it.val().charAt(0).toUpperCase() + $it.val().slice(1));
+	// имя
+	var firstInput = true;
+	$('#EdName').on('input', function()
+	{
+		var v = this.value;
+
+		if(bEmplForm)
+			this.value = (v.charAt(0).toUpperCase() + v.slice(1));
 		else
-			$it.val($(this).val().charAt(0).toUpperCase() + $it.val().slice(1).toLowerCase());
-		$it.val()=='' ? $it.addClass('error') : $it.removeClass('error');
+			this.value = (v.charAt(0).toUpperCase() + v.slice(1).toLowerCase());
+
+		v = this.value.trim();
+
+		if(bEmplForm)
+		{
+			if(v.length>=3)
+				firstInput = false;
+			((!v.length || v.length<3) && !firstInput) 
+				? $(this).addClass('error') 
+				: $(this).removeClass('error');
+		}
+		else
+		{
+			!v.length ? $(this).addClass('error') : $(this).removeClass('error');			
+		}
+	});
+	$('#EdName').on('change', function(){
+		var v = this.value.trim();
+		this.value = v;
+		if(bEmplForm)
+		{
+			firstInput = false;
+			(!v.length || v.length<3) 
+				?	$(this).addClass('error') 
+				:	$(this).removeClass('error');
+		}
 	});
 	// фамилия
 	$('#EdLname').on('input', function(){ // first symbol to upper case
