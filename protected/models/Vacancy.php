@@ -2230,7 +2230,7 @@ WHERE id_vac = {$inVacId}";
         $sql = "SELECT * FROM empl_vacations_cachelist ORDER BY id";
         $data = Yii::app()->db->createCommand($sql)->queryAll();
     
-        var_dump($data);
+        //var_dump($data);
         foreach ($data as $key => &$vac) {
             $vac['detail_url'] = MainConfig::$PAGE_VACANCY . DS . $vac['id'];
             $vac['payment'] = '';
