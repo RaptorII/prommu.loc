@@ -1,7 +1,10 @@
-<? 
-  Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'vacpub/style.css');
-  Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScript::POS_END); 
-  Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'vacpub/script.js', CClientScript::POS_END);
+<?
+  $bUrl = Yii::app()->baseUrl;
+  $gcs = Yii::app()->getClientScript();
+  $gcs->registerCssFile($bUrl . MainConfig::$CSS . 'vacpub/style.css');
+  $gcs->registerCssFile($bUrl . MainConfig::$CSS . 'dist/jquery-ui.min.css'); 
+  $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/nicEdit.js', CClientScript::POS_END); 
+  $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'vacpub/script.js', CClientScript::POS_END);
 
   $arCopy = $viData['copy_vacacancy']['vac'];
   $arCopyAttr = $viData['copy_vacacancy']['vacAttribs'];
@@ -348,42 +351,25 @@
     // ГОРОД
     ?>
     <div class="fav__label">
-        <span class="fav__hint fav__hint-vacname">Добавьте все города, в которых Вам необходимо набрать нужный персонал</span>
-    <div class="fav__select-cities" id="multyselect-cities"></div>
+      <span class="fav__hint fav__hint-vacname">Добавьте все города, в которых Вам необходимо набрать нужный персонал</span>
+      <div class="fav__select-cities" id="multyselect-cities"></div>
     </div>
-    <?
-    // Дата начала работ
-    ?>
-    <div class="fav__label fav__select">
-        <span class="fav__hint fav__hint-vacname">Укажите дату начала работы по проекту без привязки к городу</span>
-        <input type="text" name="cibdate" class="fav__input fav__required" placeholder="Дата начала работ по проекту*" id="av-cibdate">
-        <div class="fav__veil" id="av-cibdate-veil"></div>
-        <div class="fav__calendar">
-            <div id="av-begin-err">Дата начала не корректна</div>              
-            <table id="calendar-begin" class="fav__calendar-table">
-                <thead>
-                    <tr><td class="month-left">‹<td colspan="5" class="month-name"><td class="month-right">›</tr>
-                    <tr><td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс</tr>
-                <tbody>
-            </table>
-        </div>
-    </div>
-    <?
-    // Дата окончания работ
-    ?>
-    <div class="fav__label fav__select">
-        <span class="fav__hint fav__hint-vacname">Укажите дату последнего дня работы по проекту без привязки к городу</span>  
-        <input type="text" name="ciedate" class="fav__input fav__required" placeholder="Дата окончания работ по проекту*" id="av-ciedate">
-        <div class="fav__veil" id="av-ciedate-veil"></div>
-        <div class="fav__calendar">
-            <div id="av-end-err">Дата окончания не корректна</div>
-            <table id="calendar-end" class="fav__calendar-table">
-                <thead>
-                    <tr><td class="month-left">‹<td colspan="5" class="month-name"><td class="month-right">›</tr>
-                    <tr><td>Пн<td>Вт<td>Ср<td>Чт<td>Пт<td>Сб<td>Вс</tr>
-                <tbody>
-            </table>
-        </div>
+    <div class="fav__date row">
+      <div class="fav__hint col-xs-6">Укажите дату начала работы по проекту без привязки к городу</div>
+      <div class="fav__hint col-xs-6">Укажите дату последнего дня работы по проекту без привязки к городу</div>
+      <div class="clearfix"></div>
+       <?
+      // Дата начала работ
+      ?>     
+      <div class="fav__label fav__select col-xs-6">
+        <input type="text" name="cibdate" id="calendar_cibdate" class="fav__input fav__calendar fav__required" autocomplete="off">
+      </div>
+      <?
+      // Дата окончания работ
+      ?>
+      <div class="fav__label fav__select col-xs-6">
+          <input type="text" name="ciedate" id="calendar_ciedate" class="fav__input fav__calendar fav__required" autocomplete="off">
+      </div>
     </div>
     <?
     // Временная работа или постоянная

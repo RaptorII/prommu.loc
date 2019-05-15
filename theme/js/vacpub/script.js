@@ -1,15 +1,11 @@
 $(function(){
-  var 
-    dateBeg = {'year': 0, 'month': 0, 'day': 0},
-    dateEnd = {'year': 0, 'month': 0, 'day': 0},
-    titleLen = 70,//  Заголовок не более 70и символов
-    ageLen = 2,//  Возраст = 2 цифры
-    ageMinLimit = 14, // Возраст от 14 лет
-    curDate = new Date(),
-    arSelect = ['expirience','paylims'];
+  var titleLen = 70,//  Заголовок не более 70и символов
+      ageLen = 2,//  Возраст = 2 цифры
+      ageMinLimit = 14, // Возраст от 14 лет
+      arSelect = ['expirience','paylims'];
 
   //  события поля заголовок
-  $('#va-vac-title').on('keyup', function(){
+  $('#va-vac-title').on('input', function(){
     var val = $(this).val();
     if(val.length>titleLen) 
       $(this).val(val.substr(0,titleLen));
@@ -22,20 +18,6 @@ $(function(){
       else if($(e.target).is('#av-'+arSelect[i]+'-list i') || !$(e.target).closest('#av-'+arSelect[i]+'-list').length)
         $('#av-'+arSelect[i]+'-list').fadeOut();
     }
-    // манипулируем календарями
-    if(e.target.id=='av-cibdate-veil'){
-      $(e.target).siblings('.fav__calendar').fadeIn();
-      $('#av-ciedate').siblings('.fav__calendar').fadeOut();
-    }
-    else if(!$(e.target).closest('.fav__calendar').length)
-      $('#av-cibdate').siblings('.fav__calendar').fadeOut();
-
-    if(e.target.id=='av-ciedate-veil'){
-      $(e.target).siblings('.fav__calendar').fadeIn();
-      $('#av-cibdate').siblings('.fav__calendar').fadeOut();
-    }
-    else if(!$(e.target).closest('.fav__calendar').length)
-      $('#av-ciedate').siblings('.fav__calendar').fadeOut();
   });
   // изменение типа опыта
   $('#av-expirience-list input').on('change',function(){ 
@@ -132,127 +114,6 @@ $(function(){
   $('.nicEdit-main.fav__required').on('keyup', function(){ checkField(this) });
   //
   //
-  //
-  Calendar("calendar-begin", curDate.getFullYear(), curDate.getMonth());
-  Calendar("calendar-end", curDate.getFullYear(), curDate.getMonth());
-  //  выбор даты
-  $(document).on('click', '.fav__calendar-table .day', function(){ checkDate(this) });
-  //  переключаем месяцы
-  $('.month-left').click(function(e){
-    var idTable = $(this).closest('table').prop('id'),
-      monthName = document.querySelector('#'+idTable+' .month-name');
-    Calendar(idTable, monthName.dataset.year, parseFloat(monthName.dataset.month)-1);
-  });
-  $('.month-right').click(function(e){ 
-    var idTable = $(this).closest('table').prop('id'),
-      monthName = document.querySelector('#'+idTable+' .month-name');
-    Calendar(idTable, monthName.dataset.year, parseFloat(monthName.dataset.month)+1);
-  });
-  //    calendar
-  function Calendar(id, year, month){
-    var Dlast = new Date(year,month+1,0).getDate(),
-      D = new Date(year,month,Dlast),
-      DNlast = new Date(D.getFullYear(),D.getMonth(),Dlast).getDay(),
-      DNfirst = new Date(D.getFullYear(),D.getMonth(),1).getDay(),
-      calendar = '<tr>',
-      month=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],
-      date = new Date();
-    if(DNfirst != 0){
-      for(var  i = 1; i < DNfirst; i++) calendar += '<td>';
-    }else{
-      for(var  i = 0; i < 6; i++) calendar += '<td>';
-    }
-    for(var  i = 1; i <= Dlast; i++){
-      newDate = new Date(D.getFullYear(),D.getMonth(),i);
-      if(i==date.getDate() && D.getFullYear()==date.getFullYear() && D.getMonth()==date.getMonth()){ // today
-        calendar += '<td class="day today">' + i;
-      }
-      else if(Math.ceil((newDate - date)/(1000 * 60 * 60 * 24))<=0){ // переводим милисекунды в дни
-        calendar += '<td class="day past">' + i;
-      }
-      else{
-        calendar += '<td class="day">' + i;
-      }
-      if(new Date(D.getFullYear(),D.getMonth(),i).getDay() == 0) {
-        calendar += '<tr>';
-      }
-    }
-    for(var i = DNlast; i < 7; i++) calendar += '<td>&nbsp;';
-    document.querySelector('#'+id+' tbody').innerHTML = calendar;
-    monthName = document.querySelector('#'+id+' .month-name');
-    monthName.innerHTML = month[D.getMonth()] +' '+ D.getFullYear();
-    monthName.dataset.month = D.getMonth();
-    monthName.dataset.year = D.getFullYear();
-    if(document.querySelectorAll('#'+id+' tbody tr').length < 6){ // всегда 6 строк
-      document.querySelector('#'+id+' tbody').innerHTML += '<tr><td class="empty">&nbsp;<td class="empty">&nbsp;<td class="empty">&nbsp;<td class="empty">&nbsp;<td class="empty">&nbsp;<td class="empty">&nbsp;<td>&nbsp;';
-    }
-  }
-  //
-  function checkDate(elem){
-    var idTable = $(elem).closest('table').prop('id'),
-      date = document.querySelector('#'+idTable+' .month-name'),
-      newDate = new Date(date.dataset.year, date.dataset.month, Number($(elem).text()));
-    dateBeg['year']!=0 ? begDate = new Date(dateBeg['year'],dateBeg['month'],dateBeg['day']) : begDate = 0;
-    dateEnd['year']!=0 ? endDate = new Date(dateEnd['year'],dateEnd['month'],dateEnd['day']) : endDate = 0;
-
-    if(idTable=="calendar-begin"){ // дата начала
-      if(diffDate(newDate,curDate) >= 0){ // не прошедшая ли дата
-        if(endDate){  // дата окончания уже есть
-          diffDate(endDate,newDate) >= 0 // а вдруг позже даты окончания
-          ? setDate(dateBeg, newDate, elem, 'begin')
-          : $('#av-begin-err').show();
-        }
-        else{
-          setDate(dateBeg, newDate, elem, 'begin');
-          Calendar("calendar-end", parseFloat(newDate.getFullYear()), parseFloat(newDate.getMonth()));
-        }
-      }
-      else{
-        $('#av-begin-err').show();
-      }
-      if(endDate && diffDate(endDate,begDate) > 0)
-        $('#av-end-err').hide();
-      checkField('#av-cibdate');
-    }
-    if(idTable=="calendar-end"){  // дата окончания
-      if(diffDate(newDate,curDate) >= 0){ // не прошедшая ли дата
-        if(begDate){  // дата начала уже есть
-          diffDate(newDate,begDate) >= 0 // а вдруг раньше даты начала
-          ? setDate(dateEnd, newDate, elem, 'end')
-          : $('#av-end-err').show();
-        }
-        else{
-          setDate(dateEnd, newDate, elem, 'end');
-          Calendar("calendar-begin", parseFloat(newDate.getFullYear()), parseFloat(newDate.getMonth()));
-        }
-      }
-      else{
-        $('#av-end-err').show();
-      }
-      if(begDate && diffDate(begDate,curDate) >= 0)
-        $('#av-begin-err').hide();
-      checkField('#av-ciedate');
-    }
-  }
-  //
-  function diffDate(date1, date2){
-    miliToDay = 1000 * 60 * 60 * 24;// переводим милисекунды в дни
-    return Math.ceil((date1 - date2) / miliToDay);
-  }
-  //
-  function setDate(obj, date, e, type){
-    obj['year'] = Number(date.getFullYear());
-    obj['month'] = Number(date.getMonth());
-    obj['day'] = Number(date.getDate());
-    str = ('0' + obj['day']).slice(-2) + '.' + ('0' + (obj['month'] + 1)).slice(-2) + '.' + obj['year'];
-    var calendar = $(e).closest('.fav__calendar');
-    $(calendar).siblings('input').val(str);
-    $(calendar).fadeOut();
-    $('#av-'+type+'-err').hide();
-    arDays = $('#calendar-'+type+' .day');
-    $.each(arDays, function(){ $(this).removeClass('select') });
-    $(e).addClass('select');
-  }
   //
   function checkField(e){
     var val = $(e).val(),
@@ -617,5 +478,34 @@ $(function(){
     for(var i=0, len=split.length; i<len; i++)
       split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
     $(e).val(split.join('-'));
+  }
+  /*
+  * 15.05.19
+  */
+  $(".fav__calendar").datepicker({
+    minDate: 0,
+    maxDate: '+2M',
+    beforeShow: function(){
+      $('#ui-datepicker-div').addClass('custom-calendar');
+    }
+  })
+  .on("change", function(){ changeDates(this) });
+
+  function changeDates(e)
+  {
+    var arCalendars = $(".fav__calendar"),
+        date1 = $(arCalendars[0]).datepicker('getDate'),
+        date2 = $(arCalendars[1]).datepicker('getDate');
+
+    if($(e).is(arCalendars[0]))
+    {
+      $(arCalendars[0]).datepicker('setDate',date1);
+      $(arCalendars[1]).datepicker("option","minDate",date1);   
+    }
+    else
+    {
+      $(arCalendars[1]).datepicker('setDate',date2);
+      $(arCalendars[0]).datepicker("option","maxDate",date2);                
+    }
   }
 });

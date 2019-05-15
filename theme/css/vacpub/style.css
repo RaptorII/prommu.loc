@@ -356,67 +356,6 @@ input:checked + .fav__label-checkbox:after{ content: '\2714'; }
 	cursor: pointer;
 }
 /*
-*	calendar
-*/
-.fav__calendar{
-	width: 100%;
-	padding: 20px 0;
-	background-color: rgba(52, 52, 52, 0.6);
-	position: absolute;
-	z-index: 2;
-	bottom: 0;
-	left: 0;
-	display: none;
-}
-.fav__calendar-table{
-	width: 100%;
-	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-	font-size: 14px;
-	text-align: center;
-	color: #FFFFFF;
-}
-.fav__calendar-table td{ line-height: 27px }
-.fav__calendar-table tbody td{ cursor: pointer; }
-.fav__calendar-table thead tr:nth-child(1) td:nth-child(1):hover, 
-.fav__calendar-table thead tr:nth-child(1) td:nth-child(3):hover{ cursor: pointer; }
-.fav__calendar-table tbody td:nth-child(n+6), .fav__calendar-table .holiday{ color: #ff8300; }
-.fav__calendar-table .day{
-	-webkit-transition: all .3s ease-out;
-	-moz-transition: all .3s ease-out;
-	-o-transition: all .3s ease-out;
-	transition: all .3s ease-out;	
-}
-.fav__calendar-table .day.today,
-.fav__calendar-table .day.today:hover{ 
-	background-color: rgba(171, 184, 32, 0.5);
-	color: #FFFFFF;
-}
-.fav__calendar-table .day.select,
-.fav__calendar-table .day.select:hover{ 
-	background-color: rgba(255, 131, 0, 0.5); 
-	color: #FFFFFF;
-}
-.fav__calendar-table .day:hover{ background-color: rgba(255, 255, 255, 0.2) }
-.fav__calendar-table .empty:hover{ 
-	background-color: transparent;
-	cursor: default;
-}
-.fav__calendar-table .past:hover{
-	background-color: rgba(255, 0, 0, 0.5);
-	cursor: no-drop;
-}
-#av-begin-err,
-#av-end-err{
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	background-color: rgba(255,0,0,0.5);
-	text-align: center;
-	color: #FFFFFF;
-	display: none;
-}
-/*
 *		editor
 */
 #DiContent.page-vacpub .nicEdit-button{
@@ -749,3 +688,13 @@ input:checked + .fav__label-checkbox:after{ content: '\2714'; }
 #add-new-vac:hover{
 	background-color: rgba(52, 52, 52, 0.5);
 }
+/*
+*		15.05.19
+*/
+.fav__date .fav__hint{
+	width: 50%;
+	display: block;
+	padding-bottom: 15px;
+	text-align: center;
+}
+.fav__date .fav__select:after{ right: 15px; }
