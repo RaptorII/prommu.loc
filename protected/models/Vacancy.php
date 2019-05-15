@@ -2227,7 +2227,7 @@ WHERE id_vac = {$inVacId}";
         //     JOIN employer em ON em.id_user = e.id_user
         //     ORDER BY e.ispremium DESC, e.id DESC";
     
-        $sql = "SELECT * FROM empl_vacations_cachelist WHERE id_city RLIKE '[[:<:]]".$strCities."[[:>:]]' ORDER BY id";
+        $sql = "SELECT * FROM empl_vacations_cachelist ORDER BY id";
         $data = Yii::app()->db->createCommand($sql)->queryAll();
     
         var_dump($data);
