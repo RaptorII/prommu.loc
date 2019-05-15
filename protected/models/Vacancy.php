@@ -2192,44 +2192,45 @@ WHERE id_vac = {$inVacId}";
     {
         $strCities = Subdomain::getCacheData()->strCitiesIdes;
         
-        $sql = "SELECT e.id, e.ispremium, e.istemp,
-              DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
-              e.shour,
-              e.sweek,
-              e.smonth,
-              e.isman,
-              e.iswoman,
-              DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate,
-              c1.id_city, c2.name AS ciname, c1.citycu,
-              ea.id_attr,
-              d.name AS pname,
-              em.name coname,
-              ifnull(em.logo, '') logo
-            FROM empl_vacations e 
-            INNER JOIN (
-              SELECT DISTINCT e.id
-              FROM empl_vacations e
-              INNER JOIN empl_city c ON c.id_vac = e.id
-                AND c.id_city IN({$strCities})
-              INNER JOIN empl_attribs ea ON ea.id_vac = e.id
-              INNER JOIN user u ON e.id_user = u.id_user
-              WHERE e.status = 1
-                AND e.ismoder = 100
-                AND e.remdate < UNIX_TIMESTAMP(CURDATE())
-              ORDER BY e.ispremium DESC, e.id DESC 
-              LIMIT 12
-            ) t1 ON t1.id = e.id
+        // $sql = "SELECT e.id, e.ispremium, e.istemp,
+        //       DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
+        //       e.shour,
+        //       e.sweek,
+        //       e.smonth,
+        //       e.isman,
+        //       e.iswoman,
+        //       DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate,
+        //       c1.id_city, c2.name AS ciname, c1.citycu,
+        //       ea.id_attr,
+        //       d.name AS pname,
+        //       em.name coname,
+        //       ifnull(em.logo, '') logo
+        //     FROM empl_vacations e 
+        //     INNER JOIN (
+        //       SELECT DISTINCT e.id
+        //       FROM empl_vacations e
+        //       INNER JOIN empl_city c ON c.id_vac = e.id
+        //         AND c.id_city IN({$strCities})
+        //       INNER JOIN empl_attribs ea ON ea.id_vac = e.id
+        //       INNER JOIN user u ON e.id_user = u.id_user
+        //       WHERE e.status = 1
+        //         AND e.ismoder = 100
+        //         AND e.remdate < UNIX_TIMESTAMP(CURDATE())
+        //       ORDER BY e.ispremium DESC, e.id DESC 
+        //       LIMIT 12
+        //     ) t1 ON t1.id = e.id
             
-            LEFT JOIN empl_city c1 ON c1.id_vac = e.id 
-            LEFT JOIN city c2 ON c2.id_city = c1.id_city
-            JOIN empl_attribs ea ON ea.id_vac = e.id
-            JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
-            JOIN employer em ON em.id_user = e.id_user
-            ORDER BY e.ispremium DESC, e.id DESC";
+        //     LEFT JOIN empl_city c1 ON c1.id_vac = e.id 
+        //     LEFT JOIN city c2 ON c2.id_city = c1.id_city
+        //     JOIN empl_attribs ea ON ea.id_vac = e.id
+        //     JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
+        //     JOIN employer em ON em.id_user = e.id_user
+        //     ORDER BY e.ispremium DESC, e.id DESC";
     
-        //$sql = "SELECT * FROM empl_vacations_cachelist WHERE id_city RLIKE '[[:<:]]".$strCities."[[:>:]]' ORDER BY id";
+        $sql = "SELECT * FROM empl_vacations_cachelist WHERE id_city RLIKE '[[:<:]]".$strCities."[[:>:]]' ORDER BY id";
         $data = Yii::app()->db->createCommand($sql)->queryAll();
-
+    
+        var_dump($data);
         foreach ($data as $key => &$vac) {
             $vac['detail_url'] = MainConfig::$PAGE_VACANCY . DS . $vac['id'];
             $vac['payment'] = '';
