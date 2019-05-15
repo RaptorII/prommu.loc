@@ -135,13 +135,13 @@ function ShowStatus($vac)
 
 function ShowEmpl($empl)
 {
-   return "<a href='https://prommu.com/admin/site/EmplEdit/$empl'> $empl</a>";
+   return "<a href='/admin/site/EmplEdit/$empl'> $empl</a>";
 
 }
 
 function ShowVac($vac)
 {
-   return "<a href='https://prommu.com/admin/site/VacancyEdit/$vac'>$vac</a>";
+   return "<a href='/admin/site/VacancyEdit/$vac'>$vac</a>";
 
 }
 
@@ -159,7 +159,7 @@ function ShowName($id)
             $ids = $user[0]['id'];
             
          
-             return "<a href='https://prommu.com/admin/site/EmplEdit/$id'> $fio</a>";
+             return "<a href='/admin/site/EmplEdit/$id'> $fio</a>";
 
 }
 
