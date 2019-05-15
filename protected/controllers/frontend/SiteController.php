@@ -60,8 +60,7 @@ class SiteController extends AppController
             $data['data']['couArt'] = $articles->getArticlesCount();
             Cache::setData($data);
         }
-        //
-        var_dump($data['data']['vacancies']);
+       
         $this->render(
           'index', 
           array('content' => $data['data'], 'city'=>$city)
