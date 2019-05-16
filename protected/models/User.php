@@ -395,16 +395,15 @@ class User extends CActiveRecord
                 $res = $command->execute();
             }
             
-            var_dump($data['userMech']);
+           
             for($i = 0; $i < count($data['userMech']); $i++)
             {
-                $insDatas[] = array('id_us' => $id, 'id_mech' => $data['userMech'][$i]->id_mech, 'isshow' => '0', 'namme' => '', 'pay' => $data['userMech'][$i]->pay, 'pay_type' => $data['userMech'][$i]->paylims, 'crdate' => date("Y-m-d H:i:s"));
+                Yii::app()->db->createCommand()>delete('user_mech', array('and', 'id_us=:id_user', 'isshow='.$data['userMech'][$i]->isshow), array(':id_user' => $id));
+                $insDatas[] = array('id_us' => $id, 'id_mech' => $data['userMech'][$i]->id_mech, 'isshow' => $data['userMech'][$i]->isshow, 'namme' => '', 'pay' => $data['userMech'][$i]->pay, 'pay_type' => $data['userMech'][$i]->paylims, 'crdate' => date("Y-m-d H:i:s"));
             } // end foreach
 
             if( count($insDatas) ){
-                Yii::app()->db->createCommand()
-                    ->delete('user_mech', array('and', 'id_us=:id_user', 'isshow=0'), array(':id_user' => $id));
-                $command = $builder->createMultipleInsertCommand('user_mech', $insDatas);
+                $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('user_mech', $insDatas);
                 $command->execute();
             }
 			
