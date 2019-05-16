@@ -395,7 +395,7 @@ class User extends CActiveRecord
                 $res = $command->execute();
             }
             
-            
+            var_dump($data['userMech']);
             for($i = 0; $i < count($data['userMech']); $i++)
             {
                 $insDatas[] = array('id_us' => $id, 'id_mech' => $data['userMech'][$i]->id_mech, 'isshow' => '0', 'namme' => '', 'pay' => $data['userMech'][$i]->pay, 'pay_type' => $data['userMech'][$i]->paylims, 'crdate' => date("Y-m-d H:i:s"));
