@@ -2191,6 +2191,7 @@ WHERE id_vac = {$inVacId}";
    private function getVacanciesIndexPage()
     {
         $strCities = Subdomain::getCacheData()->strCitiesIdes;
+        /*
         $sql = "SELECT e.id, e.ispremium, e.istemp,
               DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
               e.shour,
@@ -2225,6 +2226,8 @@ WHERE id_vac = {$inVacId}";
             JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
             JOIN employer em ON em.id_user = e.id_user
             ORDER BY e.ispremium DESC, e.id DESC";
+        */
+        $sql = "SELECT * FROM empl_vacations_cachelist ORDER BY id LIMIT 12";
         $data = Yii::app()->db->createCommand($sql)->queryAll();
 
         foreach ($data as $key => &$vac) {

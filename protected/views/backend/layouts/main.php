@@ -4,9 +4,6 @@
 } else { ?>
 
 <?
-$hUrl = Yii::app()->homeUrl;
-$curId = $this->action->id;
-
 $model = new Feedback;
 $model = $model->getDatAdmin();
 
@@ -17,6 +14,10 @@ $counV = count($modelVac);
 $modelP = new Promo;
 $modelP = $modelP->getApplicAdmin();
 $counP = count($modelP);
+
+$modelS = new PrommuOrder;
+$modelS = $modelS->getOrderAdmin();
+$counS = count($modelS);
 
 $modelR = new Employer;
 $modelR = $modelR->getEmplAdmin();
@@ -31,14 +32,8 @@ $arCommentsCnt['all'] += $arCommentsCnt['aboutus_reviews'];
 $arIdeas    = (new Ideas)->getNewIdeas();
 $arIdeasCnt = count($arIdeas);
 
-/**
- * For counters in Services
- */
-$modelS = new PrommuOrder;
-$modelS = $modelS->getOrderAdmin();
-$counS = count($modelS);
-
-
+$hUrl = Yii::app()->homeUrl;
+$curId = $this->action->id;
 ?>
 <html>
 <head>
@@ -793,6 +788,15 @@ $counS = count($modelS);
                     <a href="<?= $hUrl ?>reviews">
                         <i class="glyphicon glyphicon-heart"></i>
                         <span>Отзывы о нас</span>
+                    </a>
+                </li>
+                <?
+                // File manager
+                ?>
+                <li class="<?= ($curId == 'filemanager' ? 'active' : '') ?>">
+                    <a href="<?= $hUrl ?>filemanager">
+                        <i class="glyphicon glyphicon-folder-open"></i>
+                        <span>Файловый менеджер</span>
                     </a>
                 </li>
             </ul>

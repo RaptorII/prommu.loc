@@ -1309,7 +1309,7 @@ class Auth
 
         // CAPTCHA
         $model = new Settings;
-        $use_recaptcha = $model->getData()->register_captcha;
+        $use_recaptcha = boolval($model->getDataByCode('register_captcha'));
         if($use_recaptcha==true)
         {
             $recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
@@ -1725,7 +1725,7 @@ class Auth
 
         // CAPTCHA
         $model = new Settings;
-        $use_recaptcha = $model->getData()->register_captcha;
+        $use_recaptcha = boolval($model->getDataByCode('register_captcha'));
         if($use_recaptcha==true)
         {
             $recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
