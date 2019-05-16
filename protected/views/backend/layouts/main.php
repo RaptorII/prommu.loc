@@ -97,6 +97,10 @@ $cntPOSMS = count($modelPOSms); // count sms
         .navbar-nav .user-header {
             white-space: unset;
         }
+        .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
+            height: 50vh;
+            overflow-y: scroll;
+        }
 
     </style>
 </head>
