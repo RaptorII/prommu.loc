@@ -4,6 +4,9 @@
 } else { ?>
 
 <?
+$hUrl = Yii::app()->homeUrl;
+$curId = $this->action->id;
+
 $model = new Feedback;
 $model = $model->getDatAdmin();
 
@@ -14,10 +17,6 @@ $counV = count($modelVac);
 $modelP = new Promo;
 $modelP = $modelP->getApplicAdmin();
 $counP = count($modelP);
-
-$modelS = new PrommuOrder;
-$modelS = $modelS->getOrderAdmin();
-$counS = count($modelS);
 
 $modelR = new Employer;
 $modelR = $modelR->getEmplAdmin();
@@ -32,8 +31,14 @@ $arCommentsCnt['all'] += $arCommentsCnt['aboutus_reviews'];
 $arIdeas    = (new Ideas)->getNewIdeas();
 $arIdeasCnt = count($arIdeas);
 
-$hUrl = Yii::app()->homeUrl;
-$curId = $this->action->id;
+/**
+ * For counters in Services
+ */
+$modelS = new PrommuOrder;
+$modelS = $modelS->getOrderAdmin();
+$counS = count($modelS);
+
+
 ?>
 <html>
 <head>
