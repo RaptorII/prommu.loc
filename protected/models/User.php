@@ -398,11 +398,11 @@ class User extends CActiveRecord
            
             for($i = 0; $i < count($data['userMech']); $i++)
             {
-                Yii::app()->db->createCommand()>delete('user_mech', array('and', 'id_us=:id_user', 'isshow=:isshow'), array(':id_user' => $id, ':isshow' => $data['userMech'][$i]->isshow));
                 $insDatas[] = array('id_us' => $id, 'id_mech' => $data['userMech'][$i]->id_mech, 'isshow' => $data['userMech'][$i]->isshow, 'namme' => '', 'pay' => $data['userMech'][$i]->pay, 'pay_type' => $data['userMech'][$i]->paylims, 'crdate' => date("Y-m-d H:i:s"));
             } // end foreach
 
             if( count($insDatas) ){
+                Yii::app()->db->createCommand()>delete('user_mech', array('and', 'id_us=:id_user', 'isshow=:isshow'), array(':id_user' => $id, ':isshow' => 0));
                 $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('user_mech', $insDatas);
                 $command->execute();
             }
