@@ -790,6 +790,15 @@ $curId = $this->action->id;
                         <span>Отзывы о нас</span>
                     </a>
                 </li>
+                <?
+                // File manager
+                ?>
+                <li class="<?= ($curId == 'filemanager' ? 'active' : '') ?>">
+                    <a href="<?= $hUrl ?>filemanager">
+                        <i class="glyphicon glyphicon-folder-open"></i>
+                        <span>Файловый менеджер</span>
+                    </a>
+                </li>
             </ul>
             <!-- /.sidebar-menu -->
         </section>
