@@ -238,9 +238,7 @@ class UserProfileApplic extends UserProfile
         
         $data['workDays'] = $wdays;
         
-        $sql = "SELECT r.id
-              , um.isshow, um.pay, um.pay_type,
-              , d.name, um.id_mech
+        $sql = "SELECT um.isshow, um.pay, um.pay_type, d.name, um.id_mech
             FROM resume r
             INNER JOIN user_mech um ON um.id_us = r.id_user
             LEFT JOIN user_attr_dict d1 ON d1.id = um.id_attr
