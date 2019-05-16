@@ -612,7 +612,7 @@ class UserController extends AppController
         else
         {
             $model = new Settings;
-            $data['use_recaptcha'] = boolval($model->getDataByCode('register_captcha'));
+            $data['use_recaptcha'] = $model->getData()->register_captcha;
         }
 
         if( $type == '1' )

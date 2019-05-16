@@ -27,7 +27,7 @@ class SiteController extends Controller
             'page'=>array(
                 'class'=>'CViewAction',
             ),
-            'yiichat'=>array('class'=>'YiiChatAction')
+            'yiichat'=>array('class'=>'YiiChatAction'),
         );
         
     }
@@ -2025,15 +2025,5 @@ class SiteController extends Controller
         $gcs->registerCssFile($bUrl . '/css/template.css');
 
         $this->render($view, ['viData' => $data]);  
-    }
-
-
-
-    public function actionFilemanager()
-    {
-        $title = 'Файловый менеджер';
-        $this->setPageTitle($title);
-        $this->breadcrumbs = [1 => $title];
-        $this->render('filemanager/index'); 
     }
 }

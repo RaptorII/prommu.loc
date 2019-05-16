@@ -1,8 +1,4 @@
-<? 
-	Yii::app()->getClientScript()->registerCssFile(Yii::app()->request->baseUrl . '/css/template.css');
-	$model = new Settings;
-	$arData = $model->getData();
-?>
+<? Yii::app()->getClientScript()->registerCssFile(Yii::app()->request->baseUrl . '/css/template.css'); ?>
 <div class="row">
 	<div class="col-xs-12 settings">
 		<h2>Настройки</h2>
@@ -27,23 +23,13 @@
 						<div>
 							<form method="POST">
 								<?
-
+									$model = new Settings;
+									$data = $model->getData();
 								?>
-								<? foreach ($arData as $obj): ?>
-									<? if($obj->code=='register_captcha'): ?>
-										<label class="d-label">
-											<span><?=$obj->comment?> : </span>
-											<input type="checkbox" name="<?=$obj->code?>" value="1" <?=($obj->value ? 'checked="checked"' : '')?>>
-										</label>
-									<? endif; ?>
-									<br>
-									<? if($obj->code=='files_root'): ?>
-										<label class="d-label">
-											<span><?=$obj->comment?> : </span>
-											<input type="text" name="<?=$obj->code?>" value="<?=$obj->value?>" class="form-control">
-										</label>
-									<? endif; ?>
-								<? endforeach; ?>
+								<label class="d-label">
+									<span>Использовать капчу при регистрации пользователей : </span>
+									<input type="checkbox" name="register_captcha" value="1" <?=($data->register_captcha ? 'checked="checked"' : '')?>>
+								</label>
 								<br>
 								<br>
 								<br>
