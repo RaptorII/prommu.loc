@@ -402,7 +402,7 @@ class User extends CActiveRecord
             } // end foreach
 
             if( count($insDatas) ){
-                Yii::app()->db->createCommand()>delete('user_mech', array('and', 'id_us=:id_user', 'isshow=:isshow'), array(':id_user' => $id, ':isshow' => 0));
+                Yii::app()->db->createCommand()>delete('user_mech', array('and', 'id_us=:id_user', 'isshow=0'), array(':id_user' => $id));
                 $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('user_mech', $insDatas);
                 $command->execute();
             }
