@@ -238,6 +238,32 @@ class UserProfileApplic extends UserProfile
         
         $data['workDays'] = $wdays;
         
+        $sql = "SELECT r.id
+              , um.isshow, um.pay, um.pay_type pt, um.pay_type, um.id_attr, um.mech
+              , d1.name pname
+              , d.name val, d.id idpost
+            FROM resume r
+            INNER JOIN user_mech um ON um.id_us = r.id_user
+            LEFT JOIN user_attr_dict d1 ON d1.id = um.id_attr
+            INNER JOIN user_attr_dict d ON d.id = um.id_mech 
+            WHERE r.id_user = {$id}
+            ORDER BY um.isshow, val";
+        $res = Yii::app()->db->createCommand($sql)->queryAll();
+
+        foreach ($res as $key => $val)
+        {
+            if( $val['pay_type'] == 1 ) $res[$key]['paylims'] ='руб/неделю';
+            elseif( $val['pay_type'] == 2 ) $res[$key]['paylims'] ='руб/месяц';
+            else $res[$key]['paylims'] ='руб/час';
+
+            if( $val['isshow'] ) $exp[] = $val['val'];
+
+            if( !$val['isshow'] ) $flagPF || $flagPF = 1;
+        } // end foreach
+        
+        $data['userMech'] = $res;
+        
+        
         return $data;
     }
 
