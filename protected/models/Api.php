@@ -164,7 +164,14 @@ class Api
             }
         }
         
-        
+        $days = array("1" => "Понедельник","2" => "Вторник","3" => "Среда","4" => "Четверг","5" => "Пятница","6" => "Суббота","7" => "Воскресенье");
+        $attr['workDays']  = [];
+        for($i = 1; $i < count($days); $i ++){
+            $day['id'] = $i;
+            $day['name'] = $days[$i];
+            $attr['workDays'][] = $day;
+            
+        }
         // foreach ($res as $key => $val)
         // {
             
