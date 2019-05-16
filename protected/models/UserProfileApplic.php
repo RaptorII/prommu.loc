@@ -244,7 +244,7 @@ class UserProfileApplic extends UserProfile
             LEFT JOIN user_attr_dict d1 ON d1.id = um.id_attr
             INNER JOIN user_attr_dict d ON d.id = um.id_mech 
             WHERE r.id_user = {$id}
-            ORDER BY um.isshow, val";
+            ORDER BY um.isshow";
         $res = Yii::app()->db->createCommand($sql)->queryAll();
 
         foreach ($res as $key => $val)
