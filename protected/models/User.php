@@ -398,7 +398,7 @@ class User extends CActiveRecord
             
             for($i = 0; $i < count($data['userMech']); $i++)
             {
-                $insDatas[] = array('id_us' => $id, 'id_mech' => $data['userMech'][$i]->id_mech, 'isshow' => '0', 'mech' => $data['userMech'][$i]->name, 'pay' => $data['userMech'][$i]->pay, 'pay_type' => $data['userMech'][$i]->paylims, 'crdate' => date("Y-m-d H:i:s"));
+                $insDatas[] = array('id_us' => $id, 'id_mech' => $data['userMech'][$i]->id_mech, 'isshow' => '0', 'pay' => $data['userMech'][$i]->pay, 'pay_type' => $data['userMech'][$i]->paylims, 'crdate' => date("Y-m-d H:i:s"));
             } // end foreach
 
             if( count($insDatas) ){
