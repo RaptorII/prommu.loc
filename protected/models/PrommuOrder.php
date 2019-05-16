@@ -2,12 +2,12 @@
 
 class PrommuOrder {
 
-     public function getOrderAdmin()
+     public function getOrderAdminSms()
     {
 
         $sql = "SELECT DISTINCT r.name as id, r.type
             FROM service_cloud r
-            WHERE r.date >= CURDATE()
+            WHERE r.is_new = 1 AND  r.type = 'sms'
             ORDER BY id DESC, id DESC";
         $result = Yii::app()->db->createCommand($sql)->queryAll();
 

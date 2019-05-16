@@ -2178,6 +2178,7 @@ WHERE id_vac = {$inVacId}";
             JOIN empl_attribs ea ON ea.id_vac = e.id
             JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
             JOIN employer em ON em.id_user = e.id_user
+            GROUP BY e.id
             ORDER BY e.ispremium DESC, e.id DESC
             LIMIT 1000";
 

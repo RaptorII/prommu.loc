@@ -20,7 +20,7 @@
 					<div class="col-xs-12 col-sm-6 services__prev">
 						<div class="services__item-icon <?=$m['icon']?>"></div>
 						<? $cnt = iconv_strlen($m['name'],'UTF-8'); ?>
-						<div class="services__item-label upper<?=($cnt>30?' small':'')?>"><?=$m['name']?></div>
+						<div class="services__item-label upper subsmall<?=($cnt>30?' small':'')?>"><?=$m['name']?></div>
 						<div class="services__item-descr"><?=$m['anons']?></div>
 					</div>
 					<div class="col-xs-12 col-sm-6 services__detail">
@@ -73,7 +73,7 @@
 					<div class="col-xs-12 col-sm-6 services__parent">
 						<div class="services__item-icon <?=$m['icon']?>"></div>
 						<? $cnt = iconv_strlen($m['name'],'UTF-8'); ?>
-						<div class="services__item-label upper<?=($cnt>30?' subsmall':'')?>"><?=$m['name']?></div>
+						<div class="services__item-label upper subsmall<?=($cnt>30?' subsmall':'')?>"><?=$m['name']?></div>
 					</div>
 					<div class="clearfix"></div>
 					<? foreach ($viData['menu'][$m['id']] as $s): ?>

@@ -37,14 +37,20 @@
 	left: 15px;
 	z-index: 2;
 }
-.services__item-icon.premium-vacancy{ background-position: 0 -58px;  }
-.services__item-icon.invitations{ background-position: 0 -116px;  }
-.services__item-icon.geolocation-staff{ background-position: 0 -174px;  }
-.services__item-icon.personal-manager-outsourcing{ background-position: 0 -232px;  }
-.services__item-icon.outstaffing{ background-position: 0 -290px;  }
-.services__item-icon.prommu_card{ background-position: 0 -348px;  }
-.services__item-icon.medical-record{ background-position: 0 -406px;  }
-.services__item-icon.api-key-prommu{ background-position: 0 -464px;  }
+.services__item-icon.premium-vacancy{ background-position: 0 -58px;}
+.services__item-icon.invitations{ background-position: 0 -116px;}
+@media (max-width: 767px){
+	.services__item-icon.invitations {
+		background-position: 0 -116px;
+		top: 0;
+	}
+}
+.services__item-icon.geolocation-staff{ background-position: 0 -174px;}
+.services__item-icon.personal-manager-outsourcing{ background-position: 0 -232px;}
+.services__item-icon.outstaffing{ background-position: 0 -290px;}
+.services__item-icon.prommu_card{ background-position: 0 -348px;}
+.services__item-icon.medical-record{ background-position: 0 -406px;}
+.services__item-icon.api-key-prommu{ background-position: 0 -464px;}
 .services__item-label{
 	padding: 10px 15px 10px 57px;
 	margin-left: 8px;

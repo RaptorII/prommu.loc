@@ -4,6 +4,9 @@
 } else { ?>
 
 <?
+$hUrl = Yii::app()->homeUrl;
+$curId = $this->action->id;
+
 $model = new Feedback;
 $model = $model->getDatAdmin();
 
@@ -14,10 +17,6 @@ $counV = count($modelVac);
 $modelP = new Promo;
 $modelP = $modelP->getApplicAdmin();
 $counP = count($modelP);
-
-$modelS = new PrommuOrder;
-$modelS = $modelS->getOrderAdmin();
-$counS = count($modelS);
 
 $modelR = new Employer;
 $modelR = $modelR->getEmplAdmin();
@@ -32,8 +31,15 @@ $arCommentsCnt['all'] += $arCommentsCnt['aboutus_reviews'];
 $arIdeas    = (new Ideas)->getNewIdeas();
 $arIdeasCnt = count($arIdeas);
 
-$hUrl = Yii::app()->homeUrl;
-$curId = $this->action->id;
+/**
+ * Понеслась по второму кругу
+ * Counters for Services 16.05.2019
+ */
+$modelPOSms = new PrommuOrder;
+$modelPOSms = $modelPOSms->getOrderAdminSms();
+$cntPOSMS = count($modelPOSms); // count sms
+
+
 ?>
 <html>
 <head>
@@ -82,6 +88,16 @@ $curId = $this->action->id;
         .dropdown:hover > .dropdown-menu {
             display: block;
         }
+        .navbar-nav>.user-menu>.dropdown-menu>li.user-header {
+            padding: 5px 0;
+            height: auto;
+            text-align: left;
+            background-color: #e1e3e9;
+        }
+        .navbar-nav .user-header {
+            white-space: unset;
+        }
+
     </style>
 </head>
 <body class="skin-blue sidebar-mini sidebar-collapse">
@@ -286,26 +302,94 @@ $curId = $this->action->id;
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <span class="label label-danger"><?= $counS ?></span>
+                            <span class="label label-danger"><?= $cntPOSMS ?></span>
                             <span class="hidden-xs">Услуги</span>
                         </a>
+<!--                        <ul class="dropdown-menu">-->
+<!--                            --><?// for ($i = 0; $i < $counS; $i++): ?>
+<!--                                <li style="padding:0px;height: auto;" class="user-header">-->
+<!---->
+<!--                                    --><?//
+//                                    if ($modelS[$i]['type'] == "vacancy") {
+//                                        $modelS[$i]['type'] = "Услуга Премиум Вакансия";
+//                                    } elseif ($modelS[$i]['type'] == "sms") {
+//                                        $modelS[$i]['type'] = "Услуга Смс Рассылка";
+//                                    }
+//
+//                                    echo '<a style=" white-space: unset;   background-color: #e1e3e9;" href="/admin/site/services/" rel="tooltip" data-placement="top" title="Ответить"><p>Вакансия ' . $modelS[$i]['id'] . '-' . $modelS[$i]['type'] . '</p></a>';
+//
+//                                    ?>
+<!---->
+<!--                                </li>-->
+<!--                            --><?// endfor; ?>
+<!--                        </ul>-->
                         <ul class="dropdown-menu">
-                            <? for ($i = 0; $i < $counS; $i++): ?>
-                                <li style="padding:0px;height: auto;" class="user-header">
-
-                                    <?
-                                    if ($modelS[$i]['type'] == "vacancy") {
-                                        $modelS[$i]['type'] = "Услуга Премиум Вакансия";
-                                    } elseif ($modelS[$i]['type'] == "sms") {
-                                        $modelS[$i]['type'] = "Услуга Смс Рассылка";
-                                    }
-
-                                    echo '<a style=" white-space: unset;   background-color: #e1e3e9;" href="/admin/site/services/" rel="tooltip" data-placement="top" title="Ответить"><p>Вакансия ' . $modelS[$i]['id'] . '-' . $modelS[$i]['type'] . '</p></a>';
-
-                                    ?>
-
-                                </li>
-                            <? endfor; ?>
+                            <li class="user-header">
+                                <a href="<?= $hUrl ?>services?type=vacancy">
+                                    <i class="glyphicon glyphicon-star-empty"></i>
+                                    <span>Премиум</span>
+                                </a>
+                            </li>
+                            <li class="user-header">
+                                <a href="<?= $hUrl ?>services?type=email">
+                                    <i class="glyphicon">@</i>
+                                    <span>Электронная почта</span>
+                                </a>
+                            </li>
+                            <li class="user-header">
+                                <a href="<?= $hUrl ?>services?type=push">
+                                    <i class="glyphicon glyphicon-comment"></i>
+                                    <span>PUSH уведомления</span>
+                                </a>
+                            </li>
+                            <li class="user-header">
+                                <a href="<?= $hUrl ?>services?type=sms">
+                                    <i class="glyphicon glyphicon-envelope"></i>
+                                    <span>SMS информирование</span>
+                                </a>
+                            </li>
+                            <li class="user-header">
+                                <a href="<?= $hUrl ?>services?type=repost">
+                                    <i class="glyphicon glyphicon-bullhorn"></i>
+                                    <span>Соцсети</span>
+                                </a>
+                            </li>
+                            <li class="user-header">
+                                <a href="#" onclick="alert('Страница в разработке'); return false">
+                                    <i class="glyphicon glyphicon-globe"></i>
+                                    <span>Геолокация</span>
+                                </a>
+                            </li>
+                            <li class="user-header">
+                                <a href="<?= $hUrl ?>servicess?type=outsourcing">
+                                    <i class="glyphicon glyphicon-check"></i>
+                                    <span>Аутсорсинг</span>
+                                </a>
+                            </li>
+                            <li class="user-header">
+                                <a href="<?= $hUrl ?>servicess?type=outstaffing">
+                                    <i class="glyphicon glyphicon-edit"></i>
+                                    <span>Аутстаффинг</span>
+                                </a>
+                            </li>
+                            <li class="user-header">
+                                <a href="<?= $hUrl ?>cards">
+                                    <i class="glyphicon glyphicon-credit-card"></i>
+                                    <span>Карта Prommu</span>
+                                </a>
+                            </li>
+                            <li class="user-header">
+                                <a href="<?= $hUrl ?>medcards">
+                                    <i class="glyphicon glyphicon-plus-sign"></i>
+                                    <span>Мед. книга</span>
+                                </a>
+                            </li>
+                            <li class="user-header">
+                                <a href="<?= $hUrl ?>servicess?type=api">
+                                    <i class="glyphicon glyphicon-cog"></i>
+                                    <span>API</span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li class="dropdown user user-menu">

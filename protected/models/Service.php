@@ -241,4 +241,13 @@ class Service extends CActiveRecord
         readfile($file_name); // считываем файл
 
     }
+
+    public function setViewed($id, $cnd) {
+        return Yii::app()->db->createCommand()->update(
+            $this->tableName(),
+            ['is_new' => $cnd],
+            'id=:id',
+            [':id' => $id]
+        );
+    }
 }

@@ -908,6 +908,13 @@ class SiteController extends Controller
          $this->render('users/cardsview', array('model'=>$model1));
     }
 
+    public function actionServicesSetViewed($id)
+    {
+        $model = new Service;
+        $model->setViewed($id, $_POST['curr_cnd']);
+        $this->redirect(array('services?type='. $_POST['type']));
+    }
+
     public function actionMedCardResetStatus($id)
     {
         $model = new MedRequest;
