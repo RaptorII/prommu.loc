@@ -93,9 +93,19 @@ $cntPOSMS = count($modelPOSms); // count sms
             height: auto;
             text-align: left;
             background-color: #e1e3e9;
+            position: relative;
+        }
+        .navbar-nav .user-header .label.label-danger{
+            position: absolute;
+            top: 10px;
+            right: 5px;
+            height: 15px;
+            line-height: 14px;
         }
         .navbar-nav .user-header {
             white-space: unset;
+            padding: 0;
+            height: auto;
         }
         .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
             max-height: 50vh;
@@ -189,15 +199,15 @@ $cntPOSMS = count($modelPOSms); // count sms
 
                             <!-- The user image in the menu -->
                             <? foreach ($model['items'] as $id => $v) : ?>
-                                <li style="padding:0px;height: auto;" class="user-header">
+                                <li class="user-header">
                                     <a
                                             style="white-space:unset;background-color:#e1e3e9"
                                             href="/admin/site/<?= (!$v['type'] ? 'mail/' . $id : 'update/' . $v['chat']) ?>"
                                             rel="tooltip"
                                             data-placement="top"
                                             title="Ответить">
-                                        <p style="margin:0;text-align:left"><?= $id . ' - ' . $v['title'] ?>
-                                            <b>(<?= $v['cnt'] ?>)</b></p>
+                                        <?= $id . ' - ' . $v['title'] ?>
+                                            <b>(<?= $v['cnt'] ?>)</b>
                                     </a>
                                 </li>
                             <? endforeach; ?>
@@ -215,10 +225,10 @@ $cntPOSMS = count($modelPOSms); // count sms
 
                         <ul class="dropdown-menu">
                             <? for ($i = 0; $i < $counV; $i++): ?>
-                                <li style="padding:0px;height: auto;" class="user-header">
+                                <li class="user-header">
 
                                     <?
-                                    echo '<a style="white-space: unset; background-color: #e1e3e9;" href="/admin/site/VacancyEdit/' . $modelVac[$i]['id'] . '" rel="tooltip" data-placement="top" title="Ответить"><p>' . $modelVac[$i]['id'] . '-' . $modelVac[$i]['title'] . '</p></a>';
+                                    echo '<a style="white-space: unset; background-color: #e1e3e9;" href="/admin/site/VacancyEdit/' . $modelVac[$i]['id'] . '" rel="tooltip" data-placement="top" title="Ответить">' . $modelVac[$i]['id'] . '-' . $modelVac[$i]['title'] . '</a>';
                                     ?>
 
                                 </li>
@@ -237,10 +247,10 @@ $cntPOSMS = count($modelPOSms); // count sms
 
                         <ul class="dropdown-menu">
                             <? for ($i = 0; $i < $counP; $i++): ?>
-                                <li style="padding:0px;height: auto;" class="user-header">
+                                <li class="user-header">
 
                                     <?
-                                    echo '<a style=" white-space: unset;   background-color: #e1e3e9;" href="/admin/site/PromoEdit/' . $modelP[$i]['idus'] . '" rel="tooltip" data-placement="top" title="Ответить"><p>' . $modelP[$i]['id'] . '-' . $modelP[$i]['firstname'] . ' ' . $modelP[$i]['lastname'] . '</p></a>';
+                                    echo '<a style=" white-space: unset;   background-color: #e1e3e9;" href="/admin/site/PromoEdit/' . $modelP[$i]['idus'] . '" rel="tooltip" data-placement="top" title="Ответить">' . $modelP[$i]['id'] . '-' . $modelP[$i]['firstname'] . ' ' . $modelP[$i]['lastname'] . '</a>';
                                     ?>
 
                                 </li>
@@ -257,7 +267,7 @@ $cntPOSMS = count($modelPOSms); // count sms
                         </a>
                         <ul class="dropdown-menu">
                             <? for ($i = 0; $i < $counR; $i++): ?>
-                                <li style="padding:0px;height: auto;" class="user-header">
+                                <li class="user-header">
 
                                     <?
                                     echo '<a style="white-space: unset; background-color: #e1e3e9;" href="/admin/site/EmplEdit/' . $modelR[$i]['idus'] . '" rel="tooltip" data-placement="top" title="Ответить"><p>' . $modelR[$i]['id'] . '-' . $modelR[$i]['name'] . '</p></a>';
@@ -275,28 +285,28 @@ $cntPOSMS = count($modelPOSms); // count sms
                             </a>
                             <ul class="dropdown-menu">
                                 <? if ($arCommentsCnt['emp_reviews']): ?>
-                                    <li style="padding:0px;height: auto;" class="user-header">
+                                    <li class="user-header">
                                         <a style="white-space:unset;background-color:#e1e3e9;"
                                            href="/admin/comments?type=1" rel="tooltip" data-placement="top"
                                            title="Просмотреть">
-                                            <p>О соискателях (<?= $arCommentsCnt['emp_reviews'] ?>)</p>
+                                           О соискателях (<?= $arCommentsCnt['emp_reviews'] ?>)
                                         </a>
                                     </li>
                                 <? endif; ?>
                                 <? if ($arCommentsCnt['app_reviews']): ?>
-                                    <li style="padding:0px;height: auto;" class="user-header">
+                                    <li class="user-header">
                                         <a style="white-space:unset;background-color:#e1e3e9;"
                                            href="/admin/comments?type=0" rel="tooltip" data-placement="top"
                                            title="Просмотреть">
-                                            <p>О работодателях (<?= $arCommentsCnt['app_reviews'] ?>)</p>
+                                           О работодателях (<?= $arCommentsCnt['app_reviews'] ?>)
                                         </a>
                                     </li>
                                 <? endif; ?>
                                 <? if ($arCommentsCnt['aboutus_reviews']): ?>
-                                    <li style="padding:0px;height: auto;" class="user-header">
+                                    <li class="user-header">
                                         <a style="white-space:unset;background-color:#e1e3e9;" href="/admin/reviews"
                                            rel="tooltip" data-placement="top" title="Просмотреть">
-                                            <p>О ресурсе (<?= $arCommentsCnt['aboutus_reviews'] ?>)</p>
+                                            О ресурсе (<?= $arCommentsCnt['aboutus_reviews'] ?>)
                                         </a>
                                     </li>
                                 <? endif; ?>
@@ -315,66 +325,77 @@ $cntPOSMS = count($modelPOSms); // count sms
                                     <i class="glyphicon glyphicon-star-empty"></i>
                                     <span>Премиум</span>
                                 </a>
+                                <span class="label label-danger"><?= $cntPOSMS ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>services?type=email">
                                     <i class="glyphicon">@</i>
                                     <span>Электронная почта</span>
                                 </a>
+                                <span class="label label-danger"><?= $cntPOSMS ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>services?type=push">
                                     <i class="glyphicon glyphicon-comment"></i>
                                     <span>PUSH уведомления</span>
                                 </a>
+                                <span class="label label-danger"><?= $cntPOSMS ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>services?type=sms">
                                     <i class="glyphicon glyphicon-envelope"></i>
                                     <span>SMS информирование</span>
                                 </a>
+                                <span class="label label-danger"><?= $cntPOSMS ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>services?type=repost">
                                     <i class="glyphicon glyphicon-bullhorn"></i>
                                     <span>Соцсети</span>
                                 </a>
+                                <span class="label label-danger"><?= $cntPOSMS ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="#" onclick="alert('Страница в разработке'); return false">
                                     <i class="glyphicon glyphicon-globe"></i>
                                     <span>Геолокация</span>
                                 </a>
+                                <span class="label label-danger"><?= $cntPOSMS ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>servicess?type=outsourcing">
                                     <i class="glyphicon glyphicon-check"></i>
                                     <span>Аутсорсинг</span>
                                 </a>
+                                <span class="label label-danger"><?= $cntPOSMS ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>servicess?type=outstaffing">
                                     <i class="glyphicon glyphicon-edit"></i>
                                     <span>Аутстаффинг</span>
                                 </a>
+                                <span class="label label-danger"><?= $cntPOSMS ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>cards">
                                     <i class="glyphicon glyphicon-credit-card"></i>
                                     <span>Карта Prommu</span>
                                 </a>
+                                <span class="label label-danger"><?= $cntPOSMS ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>medcards">
                                     <i class="glyphicon glyphicon-plus-sign"></i>
                                     <span>Мед. книга</span>
                                 </a>
+                                <span class="label label-danger"><?= $cntPOSMS ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>servicess?type=api">
                                     <i class="glyphicon glyphicon-cog"></i>
                                     <span>API</span>
                                 </a>
+                                <span class="label label-danger"><?= $cntPOSMS ?></span>
                             </li>
                         </ul>
                     </li>
@@ -393,7 +414,7 @@ $cntPOSMS = count($modelPOSms); // count sms
 <!--                            </li>-->
 
                             <? foreach ($arIdeas as $idea):  ?>
-                                <li style="padding:0px;height: auto;" class="user-header">
+                                <li class="user-header">
 
                                     <a style="white-space:unset;background-color:#e1e3e9;text-align:left" href="<?= $hUrl.'ideaedit/'.$idea['id']; ?>" rel="tooltip" data-placement="top">
                                         <?= $idea['name'] ?>
