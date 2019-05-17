@@ -822,7 +822,7 @@
 }
 .ico1 .psv-table__param-val:after{
 	content: '';
-	height: 19px;
+	height: 0px;
 	position: absolute;
 	left: 0;
 	right: 0;
