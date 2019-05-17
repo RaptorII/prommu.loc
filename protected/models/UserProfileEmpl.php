@@ -165,12 +165,22 @@ class UserProfileEmpl extends UserProfile
                 if( $max < $val['npp'] ) $max = $val['npp'];
             } // end foreach
 
+            $arRating = Share::$UserProfile->getRateCount();
+            
             Yii::app()->db->createCommand()
-                ->update('employer', array(
-                    'logo' => $photos[$ind]['photo'],
-                ), 'id = :id', array(':id' => $eid));
-
-
+                ->update(
+                    'employer', 
+                    array(
+                        'logo' => $photos[$ind]['photo'],
+                        'mdate' => date('Y-m-d H:i:s'),
+                        'rate' => $arRating[0],
+                        'rate_neg' => $arRating[1],
+                        'ismoder' => 0,
+                        'is_new' => 1
+                    ), 
+                    'id = :id', 
+                    array(':id' => $eid)
+                );
 
             Yii::app()->db->createCommand()
                 ->update('user_photos', array(
@@ -721,7 +731,8 @@ class UserProfileEmpl extends UserProfile
                     'ismoder' => 0,
                     'mdate' => date('Y-m-d H:i:s'),
                     'rate' => $arRating[0],
-                    'rate_neg' => $arRating[1]
+                    'rate_neg' => $arRating[1],
+                    'is_new' => 1
                 );
 
                 $res = Yii::app()->db->createCommand()

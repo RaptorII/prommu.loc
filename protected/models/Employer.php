@@ -237,7 +237,7 @@ class Employer extends ARModel
         return new CActiveDataProvider('Employer', array(
             'criteria'=>$criteria,
             'pagination' => array('pageSize' => 100,),
-            'sort' => ['defaultOrder'=>'crdate desc'],
+            'sort' => ['defaultOrder'=>'ismoder asc, mdate desc'],
         ));
     }
 
