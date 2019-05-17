@@ -56,6 +56,9 @@ class Settings extends CActiveRecord
 		$value = filter_var($obj->getParam('files_root'),FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		$this::model()->updateAll(['value'=>$value], "code='files_root'");
 
+		$value = filter_var($obj->getParam('files_url'),FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$this::model()->updateAll(['value'=>$value], "code='files_url'");
+
 		Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
 
 		$arRes = Cache::getData(self::$cacheID);

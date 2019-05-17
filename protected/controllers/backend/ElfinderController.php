@@ -10,6 +10,7 @@ class ElfinderController extends CController
                 'class' => 'ext.elFinder.ElFinderConnectorAction',
                 'settings' => array(
                     'root' => $model->getDataByCode('files_root'),
+                    'URL' => $model->getDataByCode('files_url'),
                     'rootAlias' => 'Files',
                     'mimeDetect' => 'none'
                 )

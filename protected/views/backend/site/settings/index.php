@@ -26,9 +26,6 @@
 						<h4>Общее</h4>
 						<div>
 							<form method="POST">
-								<?
-
-								?>
 								<? foreach ($arData as $obj): ?>
 									<? if($obj->code=='register_captcha'): ?>
 										<label class="d-label">
@@ -36,13 +33,13 @@
 											<input type="checkbox" name="<?=$obj->code?>" value="1" <?=($obj->value ? 'checked="checked"' : '')?>>
 										</label>
 									<? endif; ?>
-									<br>
-									<? if($obj->code=='files_root'): ?>
+									<? if(in_array($obj->code,['files_root','files_url'])): ?>
 										<label class="d-label">
 											<span><?=$obj->comment?> : </span>
 											<input type="text" name="<?=$obj->code?>" value="<?=$obj->value?>" class="form-control">
 										</label>
 									<? endif; ?>
+									<br>
 								<? endforeach; ?>
 								<br>
 								<br>
