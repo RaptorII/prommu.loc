@@ -70,7 +70,7 @@
                                 <?php
                                 if (count($vac['city'])>2) {
                                     ?>
-                                    <div class="psv-table__param-val psv-table__city"
+                                    <div class="psv-list__param-val"
                                          data-city="<?= join(', ', $vac['city']) ?>">
                                         <?php
                                         echo join(', ', array_slice($vac['city'], 0, 2)).'...';
