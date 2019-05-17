@@ -384,13 +384,7 @@ class UserProfileApplic extends UserProfile
             // save main logo to db
             $pathinfo = pathinfo(Yii::app()->session['uplLogo']['file']);
 
-            Yii::app()->db->createCommand()
-                ->update(
-                    'resume', 
-                    ['photo' => $pathinfo['filename'], 'ismoder' => 0],
-                    'id_user = :id_user', 
-                    [':id_user' => $id]
-                );
+            $this->updateForPhoto($id_resume, $pathinfo['filename']);
 
             Yii::app()->db->createCommand()
                 ->insert('user_photos', array(
@@ -456,12 +450,7 @@ class UserProfileApplic extends UserProfile
         if( $photosData['cou'] < $this->photosMax )
         {
             // crop logo, make thumbs
-
-            Yii::app()->db->createCommand()
-                ->update('resume', array(
-                    'photo' => $props['data'],
-                ), 'id = :id', array(':id' => $id_resume));
-
+            $this->updateForPhoto($id_resume, $props['data']);
 
             Yii::app()->db->createCommand()
                 ->insert('user_photos', array(
@@ -506,21 +495,12 @@ class UserProfileApplic extends UserProfile
             $res = (new UploadLogo())->delPhoto($photos[$ind]['photo']);
 
             // делаем предыдущую фотку главной
-            if( $photos[$ind]['ismain'] )
+            if( $photos[$ind]['ismain'] && count($photos)>1 )
             {
-                if( count($photos) > 1 )
-                {
-                    Yii::app()->db->createCommand()
-                        ->update('resume', array(
-                            'photo' => $photos[1]['photo'],
-                        ), 'id = :id', array(':id' => $id_resume));
-                }
-            } // endif
-        } // endif
+                $this->updateForPhoto($id_resume, $photos[1]['photo']);
+            }
+        }
     }
-
-
-
     /**
      * Сделать фото основным
      */
@@ -547,21 +527,7 @@ class UserProfileApplic extends UserProfile
                 if( $max < $val['npp'] ) $max = $val['npp'];
             } // end foreach
 
-            $arRating = Share::$UserProfile->getRateCount();
-
-            Yii::app()->db->createCommand()
-                ->update('resume', 
-                    array(
-                        'photo' => $photos[$ind]['photo'],
-                        'mdate' => date('Y-m-d H:i:s'),
-                        'rate' => $arRating[0],
-                        'rate_neg' => $arRating[1],
-                        'ismoder' => 0,
-                        'is_new' => 1
-                    ),
-                    'id = :id', 
-                    array(':id' => $id_resume)
-                );
+            $this->updateForPhoto($id_resume, $photos[$ind]['photo']);
 
             Yii::app()->db->createCommand()
                 ->update('user_photos', array(
@@ -569,9 +535,31 @@ class UserProfileApplic extends UserProfile
                 ), 'id = :id', array(':id' => $photos[$ind]['id']));
         } // endif
     }
+    /**
+     * @param $id integer id resume
+     * @param $photo string photo resume
+     */
+    private function updateForPhoto($id,$photo)
+    {
+        $arRating = Share::$UserProfile->getRateCount();
 
-
-
+        Yii::app()->db->createCommand()
+            ->update('resume', 
+                array(
+                    'photo' => $photo,
+                    'mdate' => date('Y-m-d H:i:s'),
+                    'rate' => $arRating[0],
+                    'rate_neg' => $arRating[1],
+                    'ismoder' => 0,
+                    'is_new' => 1
+                ), 
+                'id=:id', 
+                [':id'=>$id]
+            );
+    }
+    /**
+     * 
+     */
     public function saveProfileData()
     {
         $id = $this->exInfo->id;

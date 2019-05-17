@@ -45,14 +45,8 @@ class UserProfileEmpl extends UserProfile
 
             // save main logo to db
             $pathinfo = pathinfo(Yii::app()->session['uplLogo']['file']);
-
-            Yii::app()->db->createCommand()
-                ->update(
-                    'employer', 
-                    ['logo' => $pathinfo['filename'], 'ismoder' => 0],
-                    'id_user = :id_user', 
-                    [':id_user' => $id]
-                );
+            
+            $this->updateForPhoto($eid, $pathinfo['filename']);
 
             Yii::app()->db->createCommand()
                 ->insert('user_photos', array(
@@ -117,12 +111,7 @@ class UserProfileEmpl extends UserProfile
         if( $photosData['cou'] < $this->photosMax )
         {
             // crop logo, make thumbs
-
-            Yii::app()->db->createCommand()
-                ->update('employer', array(
-                    'logo' => $props['data'],
-                ), 'id = :id', array(':id' => $eid));
-
+            $this->updateForPhoto($eid, $props['data']);
 
             Yii::app()->db->createCommand()
                 ->insert('user_photos', array(
@@ -131,7 +120,6 @@ class UserProfileEmpl extends UserProfile
                     'npp' => $photosData['npp'] + 1,
                     'photo' => $props['data'],
                 ));
-
         }
         else
         {
@@ -165,22 +153,7 @@ class UserProfileEmpl extends UserProfile
                 if( $max < $val['npp'] ) $max = $val['npp'];
             } // end foreach
 
-            $arRating = Share::$UserProfile->getRateCount();
-            
-            Yii::app()->db->createCommand()
-                ->update(
-                    'employer', 
-                    array(
-                        'logo' => $photos[$ind]['photo'],
-                        'mdate' => date('Y-m-d H:i:s'),
-                        'rate' => $arRating[0],
-                        'rate_neg' => $arRating[1],
-                        'ismoder' => 0,
-                        'is_new' => 1
-                    ), 
-                    'id = :id', 
-                    array(':id' => $eid)
-                );
+            $this->updateForPhoto($eid, $photos[$ind]['photo']);
 
             Yii::app()->db->createCommand()
                 ->update('user_photos', array(
@@ -210,46 +183,34 @@ class UserProfileEmpl extends UserProfile
             $res = (new UploadLogo())->delPhoto($photos[$ind]['photo']);
 
             // делаем предыдущую фотку главной
-            if( $photos[$ind]['ismain'] )
+            if( $photos[$ind]['ismain'] && count($photos)>1)
             {
-                if( count($photos) > 1 )
-                {
-                    Yii::app()->db->createCommand()
-                        ->update('employer', array(
-                            'logo' => $photos[1]['photo'],
-                        ), 'id = :id', array(':id' => $eid));
-                }
-            } // endif
-        } // endif
+                $this->updateForPhoto($eid, $photos[1]['photo']);
+            }
+        }
     }
+    /**
+     * @param $id integer id employer
+     * @param $photo string logo employer
+     */
+    private function updateForPhoto($id,$photo)
+    {
+        $arRating = Share::$UserProfile->getRateCount();
 
-//     public function proccessLogo()
-//     {
-//         $id = Share::$UserProfile->id;
-//         $eid = Share::$UserProfile->exInfo->eid;
-
-//         // crop logo, make thumbs
-//         $UploadLogo = (new UploadLogo());
-// //        $UploadLogo->delPhoto(Share::$UserProfile->exInfo->logo);
-//         $cropRes = $UploadLogo->processCropLogo();
-
-//         // save main logo to db
-//         $pathinfo = pathinfo(Yii::app()->session['uplLogo']['file']);
-
-// //        Yii::app()->db->createCommand()
-// //            ->update('employer', array(
-// //                'logo' => $pathinfo['filename'],
-// //            ), 'id = :id', array(':id' => $eid));
-
-
-// //        $pathinfo = pathinfo($cropRes['file']);
-// //        $cropRes['idfile'] = $pathinfo['filename'];
-
-//         return $cropRes;
-//     }
-
-
-
+        Yii::app()->db->createCommand()
+            ->update('employer', 
+                array(
+                    'logo' => $photo,
+                    'mdate' => date('Y-m-d H:i:s'),
+                    'rate' => $arRating[0],
+                    'rate_neg' => $arRating[1],
+                    'ismoder' => 0,
+                    'is_new' => 1
+                ), 
+                'id=:id', 
+                [':id'=>$id]
+            );
+    }
     /**
      * Получаем рейтинг работодателя
      */
