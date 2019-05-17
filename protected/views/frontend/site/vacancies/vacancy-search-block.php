@@ -67,24 +67,12 @@
                                 <div class="psv-list__param-name">
                                     <b>Город:</b>
                                 </div>
+                                <div class="psv-list__param-val">
                                 <?php
-                                if (count($vac['city'])>2) {
-                                    ?>
-                                    <div class="psv-list__param-val"
-                                         data-city="<?= join(', ', $vac['city']) ?>">
-                                        <?php
-                                        echo join(', ', array_slice($vac['city'], 0, 2)).'...';
-                                        ?>
-                                    </div>
-                                    <?php
-                                } else {
-                                    ?>
-                                    <div class="psv-table__param-val">
-                                        <?= join(', ', array_slice($vac['city'], 0, 2));?>
-                                    </div>
-                                    <?php
-                                }
+                                    echo join(', ', $vac['city']).'.';
                                 ?>
+                                </div>
+
                                 <div class="clearfix"></div>
                             </div>
                             <div class="psv__param ico4">
