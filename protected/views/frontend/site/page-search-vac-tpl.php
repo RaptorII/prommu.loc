@@ -25,11 +25,7 @@
 	//endif;
 
 ?>
-<pre>
-    <?php
-    echo print_r($viData);
-    ?>
-</pre>
+
 <div class='row page-search-vacancy'>
     <div class="psv__veil"></div>
     <div class="col-xs-12">        
