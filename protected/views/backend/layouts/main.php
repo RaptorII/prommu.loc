@@ -88,6 +88,9 @@ $cntPOSMS = count($modelPOSms); // count sms
         .dropdown:hover > .dropdown-menu {
             display: block;
         }
+        .dropdown-menu {
+            margin: 0;
+        }
         .navbar-nav>.user-menu>.dropdown-menu>li.user-header {
             padding: 5px 0;
             height: auto;
