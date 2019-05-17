@@ -22,8 +22,14 @@
 </style>
 <?php 
 	// если не моб устройство
-	//endif; 
+	//endif;
+
 ?>
+<pre>
+    <?php
+    echo print_r($viData);
+    ?>
+</pre>
 <div class='row page-search-vacancy'>
     <div class="psv__veil"></div>
     <div class="col-xs-12">        
@@ -367,7 +373,24 @@
                                         <div class="psv-table__param-name">
                                             <b>Город:</b>
                                         </div>
-                                        <div class="psv-table__param-val"><?=join(', ', $vac['city'])?></div>
+                                        <?php
+                                        if (count($vac['city'])>2) {
+                                            ?>
+                                            <div class="psv-table__param-val psv-table__city"
+                                                 data-city="<?= join(', ', $vac['city']) ?>">
+                                                <?php
+                                                echo join(', ', array_slice($vac['city'], 0, 2)).'...';
+                                                ?>
+                                            </div>
+                                            <?php
+                                        } else {
+                                            ?>
+                                            <div class="psv-table__param-val">
+                                                <?= join(', ', array_slice($vac['city'], 0, 2));?>
+                                            </div>
+                                            <?php
+                                        }
+                                        ?>
                                         <div class="clearfix"></div>
                                     </div>
                                     <div class="psv__param ico4">

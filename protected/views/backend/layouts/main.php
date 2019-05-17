@@ -37,7 +37,7 @@ $arIdeasCnt = count($arIdeas);
  */
 $modelPOSms = new PrommuOrder;
 $modelPOSms = $modelPOSms->getOrderAdminSms();
-$cntPOSMS = count($modelPOSms); // count sms
+$cntPOSMS   = count($modelPOSms); // count sms
 
 
 ?>
@@ -77,20 +77,22 @@ $cntPOSMS = count($modelPOSms); // count sms
     ?>
     <title><?php echo $title; ?></title>
 
-    <?php
-    /**
-     * При наведении на счетчик должны выпадать
-     * варианты новых не просмотренных данных
-     * Если убрать - будут выпадать при клике
-     */
-    ?>
     <style>
+        <?php
+            /**
+             * При наведении на счетчик должны выпадать
+             * .dropdown:hover > .dropdown-menu
+             * варианты новых не просмотренных данных
+             * Если убрать - будут выпадать при клике
+             */
+        ?>
         .dropdown:hover > .dropdown-menu {
             display: block;
         }
         .dropdown-menu {
             margin: 0;
         }
+
         .navbar-nav>.user-menu>.dropdown-menu>li.user-header {
             padding: 5px 0;
             height: auto;
