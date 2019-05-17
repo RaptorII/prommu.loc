@@ -435,7 +435,6 @@
     <span class="fav__hint fav__hint-epilog">Все поля необходимо заполнить. После сохранения, в режим редактирования, вы сможете добавить дополнительную информацию и опубликовать вакансию.</span>
     <input type="hidden" name="blockpub" value="pub"/>
     <input type="hidden" name="save" value="1"/>
-    <input type="hidden" name="date-autounpublish" id="av-pdate">
     <div class="center">
       <button type="submit" class="fav__submit prmu-btn prmu-btn_normal">
         <span>СОХРАНИТЬ</span>

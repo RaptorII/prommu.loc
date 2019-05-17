@@ -1040,7 +1040,7 @@ class Vacancy extends ARModel
                 'crdate' => date("Y-m-d H:i:s"),
                 'mdate' => date("Y-m-d H:i:s"),
             ));
-            $fields['remdate'] = date('Y-m-d 23:59:59', strtotime($inProps['remdate'] ?: Yii::app()->getRequest()->getParam('date-autounpublish')));
+            $fields['remdate'] = date('Y-m-d 23:59:59', strtotime($inProps['remdate'] ?: Yii::app()->getRequest()->getParam('ciedate')));
 
             $res = Yii::app()->db->createCommand()
                 ->insert('empl_vacations', $fields);

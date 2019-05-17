@@ -594,7 +594,7 @@ class SiteController extends Controller
                 {
                     $this->redirect(['vacancy']);
                 }
-                Xls::makeFile($data['head'],$data['items'],'export_vacancies'); 
+                Yexcel::makeExcel($data['head'],$data['items'],'export_vacancies'); 
             }
             
             $title = 'Действующие';

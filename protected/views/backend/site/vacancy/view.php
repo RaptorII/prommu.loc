@@ -204,6 +204,9 @@
         {
           $arr = ['class' => 'grid_date','autocomplete'=>'off'];
           $html = '<div class="date_range">'
+                . '<div class="input_' . $n1 . '"></div>'
+                . '<div class="separator">-</div>'
+                . '<div class="input_' . $n2 . '"></div>'
                 . $obj->widget('zii.widgets.jui.CJuiDatePicker',
                     [
                       'name'=>$n1,
@@ -212,7 +215,6 @@
                       'htmlOptions'=>$arr
                     ],
                     true)
-                . '<div class="separator"> - </div>'
                 . $obj->widget('zii.widgets.jui.CJuiDatePicker',
                     [
                       'name'=>$n2,

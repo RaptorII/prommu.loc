@@ -77,7 +77,6 @@ $(function(){
     $('#av-requirements').val($(arElems[0]).html());
     $('#av-duties').val($(arElems[1]).html());
     $('#av-conditions').val($(arElems[2]).html());
-    $('#av-pdate').val($('#av-ciedate').val());
 
     $.each($('.fav__required'), function(){ 
       if(!checkField(this))
