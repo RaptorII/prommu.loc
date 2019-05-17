@@ -822,15 +822,16 @@
 }
 .ico1 .psv-table__param-val:after{
 	content: '';
-	height: 0px;
+	height: 20px;
 	position: absolute;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background: transparent;
+	/*background: transparent;
 	background: -moz-linear-gradient(top, transparent 0%, #FFFFFF 100%);
 	background: -webkit-linear-gradient(top, transparent 0%,#FFFFFF 100%);
-	background: linear-gradient(to bottom, transparent 0%,#FFFFFF 100%);
+	background: linear-gradient(to bottom, transparent 0%,#FFFFFF 100%);*/
+	background: url(/theme/pic/vacancy/trnspToWhiteGRT.png) 0 0 repeat-x;
 }
 #DiContent .page-search-vacancy .psv-table__link{
     display: block;
