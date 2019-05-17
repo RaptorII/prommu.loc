@@ -98,7 +98,7 @@ $cntPOSMS = count($modelPOSms); // count sms
             white-space: unset;
         }
         .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
-            height: 50vh;
+            max-height: 50vh;
             overflow-y: scroll;
         }
 
@@ -185,7 +185,7 @@ $cntPOSMS = count($modelPOSms); // count sms
                             <span class="hidden-xs"> Обратная связь</span>
                             <span class="label label-danger"><?= $model['cnt'] ?></span>
                         </a>
-                        <ul class="dropdown-menu" style="max-height:520px;overflow:hidden">
+                        <ul class="dropdown-menu">
 
                             <!-- The user image in the menu -->
                             <? foreach ($model['items'] as $id => $v) : ?>
@@ -309,24 +309,6 @@ $cntPOSMS = count($modelPOSms); // count sms
                             <span class="label label-danger"><?= $cntPOSMS ?></span>
                             <span class="hidden-xs">Услуги</span>
                         </a>
-<!--                        <ul class="dropdown-menu">-->
-<!--                            --><?// for ($i = 0; $i < $counS; $i++): ?>
-<!--                                <li style="padding:0px;height: auto;" class="user-header">-->
-<!---->
-<!--                                    --><?//
-//                                    if ($modelS[$i]['type'] == "vacancy") {
-//                                        $modelS[$i]['type'] = "Услуга Премиум Вакансия";
-//                                    } elseif ($modelS[$i]['type'] == "sms") {
-//                                        $modelS[$i]['type'] = "Услуга Смс Рассылка";
-//                                    }
-//
-//                                    echo '<a style=" white-space: unset;   background-color: #e1e3e9;" href="/admin/site/services/" rel="tooltip" data-placement="top" title="Ответить"><p>Вакансия ' . $modelS[$i]['id'] . '-' . $modelS[$i]['type'] . '</p></a>';
-//
-//                                    ?>
-<!---->
-<!--                                </li>-->
-<!--                            --><?// endfor; ?>
-<!--                        </ul>-->
                         <ul class="dropdown-menu">
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>services?type=vacancy">
