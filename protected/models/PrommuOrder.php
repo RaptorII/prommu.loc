@@ -2,19 +2,58 @@
 
 class PrommuOrder {
 
-     public function getOrderAdminSms()
-    {
+    public function getOrderAdminCnt() {
 
-        $sql = "SELECT DISTINCT r.name as id, r.type
+        $sqlSms = "SELECT DISTINCT r.name as id, r.type
             FROM service_cloud r
             WHERE r.is_new = 1 AND  r.type = 'sms'
             ORDER BY id DESC, id DESC";
-        $result = Yii::app()->db->createCommand($sql)->queryAll();
 
-        return $result;
+        $sqlEmail = "SELECT DISTINCT r.name as id, r.type
+            FROM service_cloud r
+            WHERE r.is_new = 1 AND  r.type = 'email'
+            ORDER BY id DESC, id DESC";
+
+        $sqlPush = "SELECT DISTINCT r.name as id, r.type
+            FROM service_cloud r
+            WHERE r.is_new = 1 AND  r.type = 'push'
+            ORDER BY id DESC, id DESC";
+
+        $sqlRepost = "SELECT DISTINCT r.name as id, r.type
+            FROM service_cloud r
+            WHERE r.is_new = 1 AND  r.type = 'repost'
+            ORDER BY id DESC, id DESC";
+
+        $sqlVacancy = "SELECT DISTINCT r.name as id, r.type
+            FROM service_cloud r
+            WHERE r.is_new = 1 AND  r.type = 'vacancy'
+            ORDER BY id DESC, id DESC";
+
+        $sqlApi = "SELECT DISTINCT r.name as id, r.type
+            FROM service_cloud r
+            WHERE r.is_new = 1 AND  r.type = 'api'
+            ORDER BY id DESC, id DESC";
+
+        $resultSms     = Yii::app()->db->createCommand($sqlSms)->queryAll();
+        $resultEmail   = Yii::app()->db->createCommand($sqlEmail)->queryAll();
+        $resultPush    = Yii::app()->db->createCommand($sqlPush)->queryAll();
+        $resultRepost  = Yii::app()->db->createCommand($sqlRepost)->queryAll();
+        $resultVacancy = Yii::app()->db->createCommand($sqlVacancy)->queryAll();
+        $resultApi     = Yii::app()->db->createCommand($sqlApi)->queryAll();
+
+        return $result[] = array(
+            'modelPOSms' => $resultSms,
+            'modelPOEml' => $resultEmail,
+            'modelPOPsh' => $resultPush,
+            'modelPORpt' => $resultRepost,
+            'modelPOVcc' => $resultVacancy,
+            'modelPOApi' => $resultApi,
+            'modelPOCntAll' => count($resultApi) + count($resultSms) + count($resultEmail) + count($resultPush) + count($resultRepost) + count($resultVacancy),
+        );
+
     }
     //Определение цены использования услуги
-     public function servicePrice($arId, $service){
+     public function servicePrice($arId, $service) {
         if(!sizeof($arId) || empty($service))
             return -1;
 

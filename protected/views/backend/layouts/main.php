@@ -35,12 +35,31 @@ $arIdeasCnt = count($arIdeas);
  * Понеслась по второму кругу
  * Counters for Services 16.05.2019
  */
-$modelPOSms = new PrommuOrder;
-$modelPOSms = $modelPOSms->getOrderAdminSms();
-$cntPOSMS   = count($modelPOSms); // count sms
+// sms
+// email
+// push
+// repost
+// vacancy
+// api
+
+$modelPOCntrCloud = new PrommuOrder;
+$modelPOCntrCloud = $modelPOCntrCloud->getOrderAdminCnt();
+
+$cntPOSMS = count($modelPOCntrCloud['modelPOSms']); // count sms
+$cntPOEml = count($modelPOCntrCloud['modelPOEml']); // count email
+$cntPOPsh = count($modelPOCntrCloud['modelPOPsh']); // count push
+$cntPORpt = count($modelPOCntrCloud['modelPORpt']); // count report
+$cntPOVcc = count($modelPOCntrCloud['modelPOVcc']); // count vacancy
+$cntPOApi = count($modelPOCntrCloud['modelPOApi']); // count api
+$cntPO    = $modelPOCntrCloud['modelPOCntAll'];     // count summ all counts
+
 
 
 ?>
+<!--<pre>-->
+<!--    --><?// echo print_r($modelPOCntrCloud['modelPOCntAll']);?>
+<!--    --><?// echo $cntPO?>
+<!--</pre>-->
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -321,7 +340,7 @@ $cntPOSMS   = count($modelPOSms); // count sms
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <span class="label label-danger"><?= $cntPOSMS ?></span>
+                            <span class="label label-danger"><?= $cntPO ?></span>
                             <span class="hidden-xs">Услуги</span>
                         </a>
                         <ul class="dropdown-menu">
@@ -330,21 +349,21 @@ $cntPOSMS   = count($modelPOSms); // count sms
                                     <i class="glyphicon glyphicon-star-empty"></i>
                                     <span>Премиум</span>
                                 </a>
-                                <span class="label label-danger"><?= $cntPOSMS ?></span>
+                                <span class="label label-danger"><?= $cntPOVcc ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>services?type=email">
                                     <i class="glyphicon">@</i>
                                     <span>Электронная почта</span>
                                 </a>
-                                <span class="label label-danger"><?= $cntPOSMS ?></span>
+                                <span class="label label-danger"><?= $cntPOEml ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>services?type=push">
                                     <i class="glyphicon glyphicon-comment"></i>
                                     <span>PUSH уведомления</span>
                                 </a>
-                                <span class="label label-danger"><?= $cntPOSMS ?></span>
+                                <span class="label label-danger"><?= $cntPOPsh ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>services?type=sms">
@@ -358,7 +377,7 @@ $cntPOSMS   = count($modelPOSms); // count sms
                                     <i class="glyphicon glyphicon-bullhorn"></i>
                                     <span>Соцсети</span>
                                 </a>
-                                <span class="label label-danger"><?= $cntPOSMS ?></span>
+                                <span class="label label-danger"><?= $cntPORpt ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="#" onclick="alert('Страница в разработке'); return false">
@@ -400,7 +419,7 @@ $cntPOSMS   = count($modelPOSms); // count sms
                                     <i class="glyphicon glyphicon-cog"></i>
                                     <span>API</span>
                                 </a>
-                                <span class="label label-danger"><?= $cntPOSMS ?></span>
+                                <span class="label label-danger"><?= $cntPOApi ?></span>
                             </li>
                         </ul>
                     </li>
