@@ -19,10 +19,11 @@
 </style>
 
 
-
 <?php 
 echo CHtml::form('/admin/site/UserUpdate?id=0', 'POST', array("id" => "form"));
+echo '<input type="hidden" id="curr_cnd" name="curr_cnd">';
 echo '<input type="hidden" id="curr_status" name="curr_status">';
+echo '<input type="hidden" id="type" name="type" value="'.$_GET['type'].'">';
 $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'dvgrid',
                 'dataProvider'=>$model->search(),
@@ -56,6 +57,12 @@ $this->widget('zii.widgets.grid.CGridView', array(
                         'value' => 'ShowType($data->type)',
                         'type' => 'raw',
                         
+                    ),
+                    array(
+                        'header' => 'Состояние',
+                        'name' => 'is_new',
+                        'value' => 'ShowCondition($data->is_new, $data->id)',
+                        'type' => 'raw',
                     ),
                   array(
                         'header' => 'Телефон',
@@ -268,12 +275,41 @@ function ShowEdit($id,$number) {
     else 
         return  '<a style ="background: #00c0ef;" href="/admin/site/update/' . $id . '" rel="tooltip" data-placement="top" title="Ответить"><span class="label label-inverse"><i class="icon-edit icon-white"></i></span></a>&nbsp;';
 }
+
+function ShowCondition($cnd, $service_id)
+{
+
+    $conditions = ["просмотрен","новый"];
+    $icon = ["label-warning", "label-success"];
+    $html = '<div class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  title="статус: ' . $conditions[$cnd] . '">
+    <span class="label ' . $icon[$cnd] . '">' . $conditions[$cnd] . '</span>
+    <span class="caret"></span>
+  </button>';
+
+    $html .= '<ul class="dropdown-menu" style="position: absolute;top: 100%;left: -73px;" aria-labelledby="dropdownMenu1">';
+    for ($i = 0; $i < count($conditions); $i++) {
+        $html .= '<li><a href = "void(0);" onclick = "setViewed(' . $service_id . ', ' . $i . ');return false;" ><span class="label ' . $icon[$i] . '"><i class="icon-off icon-white"></i></span> ' . $conditions[$i] . '</a></li >';
+    }
+    $html .= '</ul></div>';
+    return $html;
+}
+echo CHtml::submitButton('Обновить',array("class"=>"btn btn-success","id"=>"btn_submit", "style"=>"visibility:hidden"));
 echo CHtml::endForm();
 ?>
         </div>
         <div style="display: -webkit-inline-box;"><p>* Добавлено отображение аналитики ВК и FB</p></div>
 
     </div>
+<script type="text/javascript">
+    function setViewed(id, cnd) {
+        $("#curr_cnd").val(cnd);
+        $("#form").attr("action", "/admin/site/ServicessSetViewed/" + id);
+        $("#btn_submit").click();
+    }
+
+
+</script>
 
 </div>
 

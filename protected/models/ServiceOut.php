@@ -241,4 +241,20 @@ class ServiceOut extends CActiveRecord
         readfile($file_name); // считываем файл
 
     }
+
+    public function getNewCnt($type){
+        return  $this->countByAttributes(['is_new'=> 1, 'type' => $type]);
+    }
+
+    public function setViewed($id, $type, $cnd) {
+        return Yii::app()->db->createCommand()->update(
+            $this->tableName(),
+            ['is_new' => $cnd],
+            'id=:id AND type=:type',
+            [
+                ':id' => $id,
+                ':type' => $type
+            ]
+        );
+    }
 }

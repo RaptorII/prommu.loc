@@ -106,6 +106,7 @@ class SiteController extends Controller
     public function actionMenuform()
     {
         $model=new MenuTree;
+
         $this->render('menu/view',array('model'=>$model));
     }
 
@@ -370,7 +371,6 @@ class SiteController extends Controller
 
      public function actionAdmin()
     {   
-        
             if(strpos($this->user_access, "Администраторы") === false) {
             $this->render('access');
             return;
@@ -889,10 +889,7 @@ class SiteController extends Controller
         $model->CardStatus($id, $curr_status);
         // $model->unsetAttributes();  /
 
-
-        $model1 = new UserCard('search');
-        $model1->unsetAttributes();
-         $this->render('users/cardsview', array('model'=>$model1));
+        $this->redirect(array('cards'));
     }
 
     public function actionMedCardStatus($id)
@@ -900,12 +897,8 @@ class SiteController extends Controller
         $model = new MedRequest;
         $curr_status = intval($_POST['curr_status']);
         $model->CardStatus($id, $curr_status);
-        // $model->unsetAttributes();  /
 
-
-        $model1 = new MedCard('search');
-        $model1->unsetAttributes();
-         $this->render('users/cardsview', array('model'=>$model1));
+        $this->redirect(array('medcards'));
     }
 
     public function actionServicesSetViewed($id)
@@ -913,6 +906,13 @@ class SiteController extends Controller
         $model = new Service;
         $model->setViewed($id, $_POST['curr_cnd']);
         $this->redirect(array('services?type='. $_POST['type']));
+    }
+
+    public function actionServicessSetViewed($id)
+    {
+        $model = new ServiceOut;
+        $model->setViewed($id, $_POST['type'], $_POST['curr_cnd']);
+        $this->redirect(array('servicess?type='. $_POST['type']));
     }
 
     public function actionMedCardResetStatus($id)
@@ -1319,7 +1319,7 @@ class SiteController extends Controller
             if(strpos($this->user_access, "Соискатели") === false) {
             $this->render('access');
             return;
-        } 
+        }
             if(self::isAuth()) {
 
             $model = new Promo;
@@ -1386,7 +1386,7 @@ class SiteController extends Controller
         if(strpos($this->user_access, "Услуги") === false) {
             $this->render('access');
             return;
-        } 
+        }
             if(self::isAuth()) {
             $model = new ServiceOut();
             $model->unsetAttributes();  // clear any default values

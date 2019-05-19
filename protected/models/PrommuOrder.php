@@ -4,52 +4,16 @@ class PrommuOrder {
 
     public function getOrderAdminCnt() {
 
-        $sqlSms = "SELECT DISTINCT r.name as id, r.type
-            FROM service_cloud r
-            WHERE r.is_new = 1 AND  r.type = 'sms'
-            ORDER BY id DESC, id DESC";
+        $sql = "SELECT count(id) as cnt, type FROM service_cloud WHERE is_new = 1 GROUP BY type";
+        $res     = Yii::app()->db->createCommand($sql)->queryAll();
+        $counters = [];
 
-        $sqlEmail = "SELECT DISTINCT r.name as id, r.type
-            FROM service_cloud r
-            WHERE r.is_new = 1 AND  r.type = 'email'
-            ORDER BY id DESC, id DESC";
+        foreach($res as $item) {
+            $counters[$item['type']] = $item['cnt'];
+            $counters['all'] += $item['cnt'];
+        }
 
-        $sqlPush = "SELECT DISTINCT r.name as id, r.type
-            FROM service_cloud r
-            WHERE r.is_new = 1 AND  r.type = 'push'
-            ORDER BY id DESC, id DESC";
-
-        $sqlRepost = "SELECT DISTINCT r.name as id, r.type
-            FROM service_cloud r
-            WHERE r.is_new = 1 AND  r.type = 'repost'
-            ORDER BY id DESC, id DESC";
-
-        $sqlVacancy = "SELECT DISTINCT r.name as id, r.type
-            FROM service_cloud r
-            WHERE r.is_new = 1 AND  r.type = 'vacancy'
-            ORDER BY id DESC, id DESC";
-
-        $sqlApi = "SELECT DISTINCT r.name as id, r.type
-            FROM service_cloud r
-            WHERE r.is_new = 1 AND  r.type = 'api'
-            ORDER BY id DESC, id DESC";
-
-        $resultSms     = Yii::app()->db->createCommand($sqlSms)->queryAll();
-        $resultEmail   = Yii::app()->db->createCommand($sqlEmail)->queryAll();
-        $resultPush    = Yii::app()->db->createCommand($sqlPush)->queryAll();
-        $resultRepost  = Yii::app()->db->createCommand($sqlRepost)->queryAll();
-        $resultVacancy = Yii::app()->db->createCommand($sqlVacancy)->queryAll();
-        $resultApi     = Yii::app()->db->createCommand($sqlApi)->queryAll();
-
-        return $result[] = array(
-            'modelPOSms' => $resultSms,
-            'modelPOEml' => $resultEmail,
-            'modelPOPsh' => $resultPush,
-            'modelPORpt' => $resultRepost,
-            'modelPOVcc' => $resultVacancy,
-            'modelPOApi' => $resultApi,
-            'modelPOCntAll' => count($resultApi) + count($resultSms) + count($resultEmail) + count($resultPush) + count($resultRepost) + count($resultVacancy),
-        );
+        return $counters;
 
     }
     //Определение цены использования услуги

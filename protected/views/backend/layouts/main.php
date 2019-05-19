@@ -4,6 +4,7 @@
 } else { ?>
 
 <?
+//die($test);
 $hUrl = Yii::app()->homeUrl;
 $curId = $this->action->id;
 
@@ -35,23 +36,33 @@ $arIdeasCnt = count($arIdeas);
  * Понеслась по второму кругу
  * Counters for Services 16.05.2019
  */
-// sms
-// email
-// push
-// repost
-// vacancy
-// api
 
-$modelPOCntrCloud = new PrommuOrder;
-$modelPOCntrCloud = $modelPOCntrCloud->getOrderAdminCnt();
+$modelPOSrvCloud = new PrommuOrder;
+$modelMedCard = new MedCard;
+$modelPrmCard = new UserCard;
+$modelServiceOut = new ServiceOut;
 
-$cntPOSMS = count($modelPOCntrCloud['modelPOSms']); // count sms
-$cntPOEml = count($modelPOCntrCloud['modelPOEml']); // count email
-$cntPOPsh = count($modelPOCntrCloud['modelPOPsh']); // count push
-$cntPORpt = count($modelPOCntrCloud['modelPORpt']); // count report
-$cntPOVcc = count($modelPOCntrCloud['modelPOVcc']); // count vacancy
-$cntPOApi = count($modelPOCntrCloud['modelPOApi']); // count api
-$cntPO    = $modelPOCntrCloud['modelPOCntAll'];     // count summ all counts
+
+$promoCounters = $modelPOSrvCloud->getOrderAdminCnt();
+
+$cntPOSMS = $promoCounters['sms']; // count sms
+$cntPOEml = $promoCounters['email']; // count email
+$cntPOPsh = $promoCounters['push']; // count push
+$cntPORpt = $promoCounters['repost']; // count repost
+$cntPOVcc = $promoCounters['vacancy']; // count vacancy
+$cntPOApi = $promoCounters['api']; // count api
+
+$cntPrmCrd = $modelPrmCard->getNewCnt();
+
+$cntMedCrd = $modelMedCard->getNewCnt();
+
+$cntOutSrc = $modelServiceOut->getNewCnt('outsourcing');
+$cntOutStf = $modelServiceOut->getNewCnt('outstaffing');
+
+$cntGeoLct = 0; // in work at 19.04.2019;
+
+
+$cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutSrc + $cntOutStf;     // count summ all counts
 
 
 
@@ -384,35 +395,35 @@ $cntPO    = $modelPOCntrCloud['modelPOCntAll'];     // count summ all counts
                                     <i class="glyphicon glyphicon-globe"></i>
                                     <span>Геолокация</span>
                                 </a>
-                                <span class="label label-danger"><?= $cntPOSMS ?></span>
+                                <span class="label label-danger"><?= $cntGeoLct ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>servicess?type=outsourcing">
                                     <i class="glyphicon glyphicon-check"></i>
                                     <span>Аутсорсинг</span>
                                 </a>
-                                <span class="label label-danger"><?= $cntPOSMS ?></span>
+                                <span class="label label-danger"><?= $cntOutSrc ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>servicess?type=outstaffing">
                                     <i class="glyphicon glyphicon-edit"></i>
                                     <span>Аутстаффинг</span>
                                 </a>
-                                <span class="label label-danger"><?= $cntPOSMS ?></span>
+                                <span class="label label-danger"><?= $cntOutStf ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>cards">
                                     <i class="glyphicon glyphicon-credit-card"></i>
                                     <span>Карта Prommu</span>
                                 </a>
-                                <span class="label label-danger"><?= $cntPOSMS ?></span>
+                                <span class="label label-danger"><?= $cntPrmCrd ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>medcards">
                                     <i class="glyphicon glyphicon-plus-sign"></i>
                                     <span>Мед. книга</span>
                                 </a>
-                                <span class="label label-danger"><?= $cntPOSMS ?></span>
+                                <span class="label label-danger"><?= $cntMedCrd ?></span>
                             </li>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>servicess?type=api">

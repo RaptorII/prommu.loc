@@ -134,6 +134,11 @@ class MedCard extends CActiveRecord
             'sort' => ['defaultOrder'=>'id desc'],
 		));
 	}
+
+    public function getNewCnt() {
+        return  $this->countByAttributes(['status'=> 0]);
+
+    }
 }
 		// should not be searched.
 
