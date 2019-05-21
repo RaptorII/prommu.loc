@@ -47,11 +47,11 @@ class User extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('login, passw, email, confirm', 'required'),
-			array('booble_index, status, isblocked', 'numerical', 'integerOnly'=>true),
+			array('id_user, login, passw, email, confirm', 'required'),
+			array('booble_index, status, isblocked, id_user', 'numerical', 'integerOnly'=>true),
 			array('login, passw', 'length', 'max'=>64),
 			array('email','email'),
-			array('id_user, login, email, booble_index, status, isblocked', 'safe', 'on'=>'search'),
+			array('id_user, login, email, booble_index, status, isblocked, search_name, search_moder', 'safe', 'on'=>'search'),
 		);
 
 	}
@@ -61,10 +61,10 @@ class User extends CActiveRecord
 	 */
 	public function relations()
 	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
 		return array(
-		);
+				'employer'=>array(self::HAS_ONE, 'Employer', 'id_user'),
+				'resume'=>array(self::HAS_ONE, 'Promo', 'id_user')
+			);
 	}
 
 	/**
@@ -136,8 +136,112 @@ class User extends CActiveRecord
 			'sort' => ['defaultOrder'=>'access_time desc'],
 		));
 	}
+	/**
+	 * 
+	 */
+	public $search_name;
+	public $search_cdate;
+	public $search_mdate;
+	public $search_moder;
+  public function searchAll()
+  {
+  	$condition = [];
+  	$GUser = Yii::app()->getRequest()->getParam('User');
+		$criteria=new CDbCriteria;
+		$criteria->with = array('employer','resume');
+		$criteria->together = true;
 
+		$criteria->compare('t.id_user',$this->id_user, true);
+		$condition[] = '(employer.id_user is not null or resume.id_user is not null)';
+		// id_user
+		$value = intval($GUser['id_user']);
+		if($value)
+		{
+			$condition[] = "(t.id_user={$value})";
+			$this->id_user = $value;
+		}
+		// status
+		$value = intval($GUser['status']);
+		if($value)
+		{
+			$condition[] = "(t.status={$value})";
+			$this->status = $value;
+		}
+		// name, firsname, lastname
+		$value = filter_var($GUser['search_name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		if(!empty($value))
+		{
+			$condition[] = '((employer.name like :q) 
+				or (resume.firstname like :q) 
+				or (resume.lastname like :q))';
+			$criteria->params = [':q'=>"%{$value}%"];
+			$this->search_name = $value;
+		}
+		// dates
+		$this->setDateQuery('mdate','mdate','b_mdate','e_mdate',$condition);
+		$this->setDateQuery('crdate','date_public','b_cdate','e_cdate',$condition);
+		// isblocked
+		$value = $GUser['isblocked'];
+		if(in_array($value, ['0','1','2','3','4']))
+		{
+			$condition[]="(t.isblocked={$value})";
+		}
+		// moder
+		$value = $GUser['search_moder'];
+		if(in_array($value, ['0','1']))
+		{
+			$condition[]="(employer.ismoder={$value} or resume.ismoder={$value})";
+		}
+		//
+		if(count($condition))
+		{
+			$criteria->condition = implode(' and ', $condition);
+		}
 
+		return new CActiveDataProvider(
+				'User', 
+				array(
+					'criteria' => $criteria,
+					'pagination' => ['pageSize' => 20],
+					'sort' => ['defaultOrder'=>'t.id_user desc']
+				)
+			);
+  }
+  /**
+   * 
+   */
+	private function setDateQuery($n1, $n2, $p1, $p2, &$arr, $time=true)
+	{
+		$rq = Yii::app()->getRequest();
+		$d1 = Share::checkFormatDate($rq->getParam($p1));
+		$d2 = Share::checkFormatDate($rq->getParam($p2));
+		if($d1 && $d2)
+		{
+			$arr[] = "(employer.{$n1} between '{$d1} 00:00:00' and '{$d2} 23:59:59'"
+				. "or resume.{$n2} between '{$d1} 00:00:00' and '{$d2} 23:59:59')";
+		}
+		elseif($d1)
+		{
+			$arr[] = "(employer.{$n1}>='{$d1} 00:00:00' or resume.{$n2}>='{$d1} 00:00:00')";
+		}
+		elseif($d2)
+		{
+			$arr[] = "(employer.{$n1}<='{$d2} 23:59:59' or resume.{$n2}<='{$d2} 23:59:59')";
+		}
+	}
+  /**
+   * 
+   */
+	public static function getIsBlockedArray()
+	{
+		return [
+				'активен',
+				'заблокирован',
+				'ожидает активации',
+				'активирован',
+				'не отображается'
+			];
+  }
 	// *** Services ***
 	public function blocked($id, $st)
 	{

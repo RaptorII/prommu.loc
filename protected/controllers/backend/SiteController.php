@@ -52,7 +52,21 @@ class SiteController extends Controller
         return true;
 
     }
-
+    /**
+     * @param $module - string
+     */
+    private function checkAccess($module=false)
+    {
+        if(
+            Yii::app()->user->isGuest
+            ||
+            ($module && strpos($this->user_access, $module)===false)
+        )
+        {
+            $this->actionLogin();
+            Yii::app()->end();
+        }
+    }
     /**
      * This is the action to handle external exceptions.
      */
@@ -1855,41 +1869,34 @@ class SiteController extends Controller
     */
     public function actionSect()
     {
-        if(self::isAuth()) {
-            $this->render('section', array()); 
-        }
+        $this->checkAccess();
+        $this->render('section'); 
     }
     /**
      *      Раздел настроек
      */
     public function actionSettings()
     {
-        if(self::isAuth() /*|| strpos($this->user_access, "settings") == false*/)
+        $this->checkAccess();
+        $title = 'Настройки';
+        $this->setPageTitle($title);
+        $this->breadcrumbs = array('1'=>$title);    
+
+        $rq = Yii::app()->getRequest();
+        if($rq->isPostRequest)
         {
-            $title = 'Настройки';
-            $this->setPageTitle($title);
-            $this->breadcrumbs = array('1'=>$title);    
-
-            $rq = Yii::app()->getRequest();
-            if($rq->isPostRequest)
-            {
-                $model = new Settings;
-                $data = $model->setData($rq);
-            }
-
-            $this->render('settings/index', array('data' => $data));
+            $model = new Settings;
+            $data = $model->setData($rq);
         }
+
+        $this->render('settings/index', array('data' => $data));
     }
     /**
      *      Раздел уведомлений
      */
     public function actionNotifications()
     {
-        if(!self::isAuth() /*|| strpos($this->user_access, "notifications") == false*/)
-        {
-            $this->render('access');
-            return;
-        }
+        $this->checkAccess();
 
         $rq = Yii::app()->getRequest();
 
@@ -1944,11 +1951,7 @@ class SiteController extends Controller
     */
     public function actionSystem()
     {
-        if(!self::isAuth() /*|| strpos($this->user_access, "system") == false*/)
-        {
-            $this->render('access');
-            return;
-        }
+        $this->checkAccess();
 
         $rq = Yii::app()->getRequest();
 
@@ -1998,11 +2001,7 @@ class SiteController extends Controller
      */
     public function actionReviews()
     {
-        if(!self::isAuth() /*|| strpos($this->user_access, "system") == false*/)
-        {
-            $this->render('access');
-            return;
-        }
+        $this->checkAccess();
 
         $rq = Yii::app()->getRequest();
         $id = $rq->getParam('id');
@@ -2033,14 +2032,26 @@ class SiteController extends Controller
 
         $this->render($view, ['viData' => $data]);  
     }
-
-
-
+    /**
+     * 
+     */
     public function actionFilemanager()
     {
+        $this->checkAccess();
         $title = 'Файловый менеджер';
         $this->setPageTitle($title);
         $this->breadcrumbs = [1 => $title];
         $this->render('filemanager/index'); 
+    }
+    /**
+     * 
+     */
+    public function actionAll_users()
+    {
+        $this->checkAccess();
+        $title = 'Все пользователи';
+        $this->setPageTitle($title);
+        $this->breadcrumbs = [1 => $title];
+        $this->render('users/list'); 
     }
 }

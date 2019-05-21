@@ -545,6 +545,15 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
 
             <ul class="sidebar-menu">
                 <li class="header">НАВИГАТОР</li>
+                <?
+                // Все пользователи
+                ?>
+                <li class="<?= ($curId == 'all-users' ? 'active' : '') ?>">
+                    <a href="<?= $hUrl ?>all-users">
+                        <i class="glyphicon glyphicon-list-alt"></i>
+                        <span>Все пользователи</span>
+                    </a>
+                </li>
                 <?php
                 // users
                 ?>

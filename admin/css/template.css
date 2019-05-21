@@ -174,3 +174,12 @@
   background: #fff;
 }
 .nicEdit-main:focus{ outline: none; }
+/*
+* filter date range
+*/
+.filter_date_range{
+  width: 100%;
+  height: 26px;
+  display: flex;
+}
+.filter_date_range input{ width: 85px !important; }
