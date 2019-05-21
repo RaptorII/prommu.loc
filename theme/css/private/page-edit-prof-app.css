@@ -235,12 +235,18 @@
 }
 #DiContent .epa__post-detail .epa__input.epa__required {
 	width: 100%;
+	position: relative;
+	text-align: right;
 }
 #DiContent .epa__input.epa__post-period {
 	position: absolute;
 }
+#DiContent .edit-profile-applicant .epa__soc-ok .epa__input{
+	width: 33%;
+}
 #DiContent .edit-profile-applicant .epa__input{
 	/*c*/
+	width: auto;
 	height: 33px;
 	line-height: 33px;
 	font-size: 14px;
@@ -1012,6 +1018,11 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	top: 0;
 	left: 0;
 }
+
+.epa__input.epa__required {
+	position: absolute;
+	padding: 0;
+}
 /*
 *		MEDIA
 */
@@ -1048,6 +1059,10 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	}
 	#DiContent .edit-profile-applicant .epa__period:nth-child(2n+1){ margin-right: 1% }
 	#DiContent .edit-profile-applicant .epa__period:nth-child(2n){ margin-left: 1% }
+	#DiContent .edit-profile-applicant .epa__city-item .epa__period {
+		width: 100%;
+		float: left;
+	}
 	.epa__days-checkboxes{
 		width: 100%;
 		display: table;
@@ -1110,7 +1125,17 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	.edit-profile-applicant .epa__header-title,
 	.edit-profile-applicant .epa__content{ padding: 0 0 0 200px }
 	.epa__content-title{ max-width: 630px; }
-	/*.epa__content-module{ max-width: 440px; }*/
+	.epa__content-module{ max-width: 630px; }
+
+	#DiContent input[type=text] {
+		width: auto;
+	}
+
+	#DiContent .edit-profile-applicant .epa__checkbox.epa__checkbox-famale {
+		width: 100%;
+		text-align: right;
+	}
+
 }
 @media (min-width: 1200px){
 	#DiContent .edit-profile-applicant .epa__label.epa__select{ margin-bottom: 10px }
@@ -1484,6 +1509,11 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 #DiContent .epa__label.epa__payment{
 	display: flex;
 	align-items: center;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	/*align-items: stretch;*/
+	align-content: stretch;
 }
 #DiContent .epa__date .epa__label-name,
 #DiContent .epa__payment .epa__label-name{
@@ -1512,7 +1542,7 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 }
 .epa__period-error{
 	position: absolute;
-	left: 110px;
+	left: 115px;
 	right: 40px;
 	top: 0;
 	line-height: 33px;
@@ -1531,3 +1561,8 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	border: 1px solid #EBEBEB;
 }
 .epa__period.error .epa__period-error{ display: flex; }
+
+#DiContent .edit-profile-applicant .epa__checkbox.epa__checkbox-news {
+	display: block;
+	float: none;
+}

@@ -240,7 +240,7 @@
               </div>
               <div class="epa__attr-block2">
                 <input type="radio" name="sex" id="epa-female" class="epa__hidden" value="0" <?=($gender ? '' : 'checked')?>>
-                <label class="epa__checkbox" for="epa-female">Женщина</label> 
+                <label class="epa__checkbox epa__checkbox-famale" for="epa-female">Женщина</label>
                 <input type="checkbox" name="promm" id="epa-pcard" class="epa__hidden" value="1" <?=($attr['cardPrommu'] ? 'checked' : '')?>>
                 <label class="epa__checkbox" for="epa-pcard">Наличие банковской карты Prommu</label>
                 <input type="checkbox" name="card" id="epa-card" class="epa__hidden" value="1" <?=($attr['card'] ? 'checked' : '')?>>
@@ -703,7 +703,7 @@
             ?>
             <div class="epa__attr-block">
                 <input type="checkbox" name="user-attribs[isnews]" id="epa-isnews" class="epa__hidden" value="1" <?=$isNews ? 'checked' : ''?>>
-                <label class="epa__checkbox" for="epa-isnews">Получать новости об изменениях и новых возможностях на сайте</label>
+                <label class="epa__checkbox epa__checkbox-news" for="epa-isnews">Получать новости об изменениях и новых возможностях на сайте</label>
             </div>
 
             <div class="epa__req-list">Необходимо заполнить: <div></div></div>
