@@ -137,6 +137,10 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
             height: 15px;
             line-height: 14px;
         }
+        .navbar-nav .user-header a{
+            white-space:unset;
+        }
+
         .navbar-nav .user-header {
             white-space: unset;
             padding: 0;
@@ -145,6 +149,14 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
         .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
             max-height: 50vh;
             overflow-y: scroll;
+        }
+        .navbar-custom-menu>.navbar-nav>li>.dropdown-menu.dropdown-user {
+            overflow-y: auto;
+        }
+
+        .navbar-custom-menu>.navbar-nav>li>.dropdown-menu.dropdown-user .user-header{
+            text-align: center;
+            background-color: #abb820;
         }
 
     </style>
@@ -451,7 +463,7 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
                             <? foreach ($arIdeas as $idea):  ?>
                                 <li class="user-header">
 
-                                    <a style="white-space:unset;background-color:#e1e3e9;text-align:left" href="<?= $hUrl.'ideaedit/'.$idea['id']; ?>" rel="tooltip" data-placement="top">
+                                    <a href="<?= $hUrl.'ideaedit/'.$idea['id']; ?>" rel="tooltip" data-placement="top">
                                         <?= $idea['name'] ?>
                                     </a>
 
@@ -479,7 +491,7 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
                             <!-- hidden-xs hides the username on small devices so only the image appears. -->
                             <span class="hidden-xs"><?= $user['user']->name ?></span>
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu dropdown-user">
                             <!-- The user image in the menu -->
                             <li class="user-header">
                                 <img src="<?= $user['photo'] ?>" class="img-circle" alt="<?= $user['fullname'] ?>">
@@ -487,21 +499,7 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
                                     <small><?= date("H:i:s") ?></small>
                                 </p>
                             </li>
-                            <!-- Menu Body -->
-                            <!-- <li class="user-body">
-                              <div class="row">
-                                <div class="col-xs-4 text-center">
-                                  <a href="#">Followers</a>
-                                </div>
-                                <div class="col-xs-4 text-center">
-                                  <a href="#">Sales</a>
-                                </div>
-                                <div class="col-xs-4 text-center">
-                                  <a href="#">Friends</a>
-                                </div>
-                                </div>
-                            </li> -->
-                            <!-- Menu Footer-->
+
                             <li class="user-footer">
                                 <div class="pull-left">
                                     <a href="/admin/site/AdminEdit/<?= Yii::app()->user->id ?>"

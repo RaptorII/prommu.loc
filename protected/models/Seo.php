@@ -782,7 +782,7 @@ class Seo extends CActiveRecord
         $sex = $arParams['isman'] ? 'мужской' : 'женский'; // пол
         $title = 'Резюме ' . $vacanciesTitle 
             . ' в ' . $citiesTitle . ' - поиск сотрудников на ' 
-            . Subdomain::getSubdomain($arParams['cities'])['name'];
+            . Subdomain::getSubdomain($arParams['cities'])['name']; // to-page applicant-profile-own-tpl
 
         $description = "Резюме:" . $vacancies 
             . ' ищет работу ' . $cities . ', ' . $wage . " возраст: " 
