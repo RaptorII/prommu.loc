@@ -1125,7 +1125,10 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	.edit-profile-applicant .epa__header-title,
 	.edit-profile-applicant .epa__content{ padding: 0 0 0 200px }
 	.epa__content-title{ max-width: 630px; }
-	.epa__content-module{ max-width: 630px; }
+	.epa__content-module {
+		max-width: 630px;
+		padding-right: 100px;
+	}
 
 	#DiContent input[type=text] {
 		width: auto;

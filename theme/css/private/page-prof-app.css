@@ -388,7 +388,10 @@
     color: #ABB837;
     font-family: RobotoCondensedBold, RobotoCondensedRegular, verdana, arial;
 }
-.ppp__post-name span{ display: table-cell }
+.ppp__post-name span{
+    display: table-cell;
+    padding-left: 5px;
+}
 .ppp__post-item {
     margin-bottom: 30px;
     width: 100%;
@@ -437,6 +440,7 @@
     position: relative;
 }
 .ppp__checkbox{
+    text-align: right;
     padding-right: 22px;
     margin-bottom: 22px;
     position: relative;
