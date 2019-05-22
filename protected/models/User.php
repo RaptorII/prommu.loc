@@ -148,7 +148,7 @@ class User extends CActiveRecord
 		$dir = Yii::app()->getRequest()->getParam('dir');
 		$arRes = [
 				'id' => [],
-				'limit' => 50,
+				'limit' => 20,
 				'items' => []
 			];
 		$arRes['offset'] = ($page-1) * $arRes['limit'];
