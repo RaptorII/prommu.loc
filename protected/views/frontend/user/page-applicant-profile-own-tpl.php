@@ -384,12 +384,14 @@
                 <span class="ppp__field-val"><?=$post['pname']?></span>
               </div>
             </div>
-            <?php $i++;?>
-            <?php if($i%2==0):?>
-              <div class="ppp__clear-two"></div>
-            <?php elseif($i%3==0):?>
-              <div class="ppp__clear-three"></div>
-            <?php endif; ?>
+            <?php
+//                $i++;
+//                if($i%2==0):
+//                    echo'<div class="ppp__clear-two"></div>';
+//                elseif($i%3==0):
+//                    echo'<div class="ppp__clear-three"></div>';
+//                endif;
+            ?>
           <?php endforeach; ?>
           <div class="clearfix"></div>
         </div>
