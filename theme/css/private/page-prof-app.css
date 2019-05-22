@@ -367,21 +367,32 @@
 }
 .ppp__about-val{ 
     text-align: justify;
-    word-break: break-word;
+    word-break: break-all;
 }
 /*  */
-.ppp__post-list{ margin: 25px 0 0 }
+.ppp__post-list {
+    margin: 25px 0 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: stretch;
+    align-items: stretch;
+}
 .ppp__post-name{ 
     padding: 0 10px 20px;
-    min-height: 60px;
+    flex: 1 1 100%;
+    display: flex;
 }
 .ppp__post-name b{
     color: #ABB837;
     font-family: RobotoCondensedBold, RobotoCondensedRegular, verdana, arial;
-    display: table-cell;
 }
 .ppp__post-name span{ display: table-cell }
-.ppp__post-item{ margin-bottom: 30px }
+.ppp__post-item {
+    margin-bottom: 30px;
+    width: 100%;
+}
 /*  */
 .ppp__city-list{ counter-reset: cities }
 .ppp__city-title{
@@ -435,6 +446,9 @@
     color: #343434;
     font-family: RobotoCondensedRegular, verdana, arial;
     cursor: pointer;
+}
+#DiContent .ppp__day .ppp__checkbox {
+    cursor: default;
 }
 .ppp__checkbox:after{
     content: '';
@@ -692,7 +706,7 @@
 .upp__img-block-more a{
     width: 100%;
     padding: 0 5px;
-    display: block;`
+    display: block;
 }
 .upp__img-block-more img{
     width: 100%;
@@ -785,11 +799,21 @@ a.upp__project-info{ width: 65px }
         margin: 0 0 25px -30px;
     }
     .ppp__post-item{
-        width: 50%;
-        float: left;
+        width: calc(50% - 5px);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        flex: 0 1 auto;
     }
-    .ppp__post-item:nth-child(2n+1){ padding-right: 10px }
-    .ppp__post-item:nth-child(2n){ padding-left: 10px }
+    .ppp__post-item:nth-child(2n+1) {
+        margin-right: 10px
+    }
+    /*.ppp__post-item:nth-child(2n+1) {*/
+        /*padding-right: 10px */
+    /*}*/
+    /*.ppp__post-item:nth-child(2n){*/
+        /*padding-left: 10px */
+    /*}*/
     .ppp__period-list .ppp__field{
         width: 49%;
         float: left;
@@ -818,7 +842,7 @@ a.upp__project-info{ width: 65px }
     .ppp__clear-two{ clear: both } 
 }
 @media (min-width: 992px){
-    .ppp__module{ padding-right: 100px }
+    .ppp__module{ padding-right: 100px; }
     .for-guest .ppp__post-list .ppp__clear-two{ clear: initial } 
     .for-guest .ppp__post-list .ppp__clear-three{ clear: both }
     .for-guest .ppp__post-list .ppp__post-item{ width: 33.33%; }
