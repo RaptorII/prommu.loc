@@ -2052,6 +2052,13 @@ class SiteController extends Controller
         $title = 'Все пользователи';
         $this->setPageTitle($title);
         $this->breadcrumbs = [1 => $title];
-        $this->render('users/list'); 
+        if(Yii::app()->request->isAjaxRequest)
+        {
+            $this->renderPartial('users/list-all-ajax'); 
+        }
+        else
+        {
+            $this->render('users/list-all');  
+        }
     }
 }

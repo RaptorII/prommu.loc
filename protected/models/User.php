@@ -51,7 +51,7 @@ class User extends CActiveRecord
 			array('booble_index, status, isblocked, id_user', 'numerical', 'integerOnly'=>true),
 			array('login, passw', 'length', 'max'=>64),
 			array('email','email'),
-			array('id_user, login, email, booble_index, status, isblocked, search_name, search_moder', 'safe', 'on'=>'search'),
+			array('id_user, login, email, booble_index, status, isblocked', 'safe', 'on'=>'search'),
 		);
 
 	}
@@ -62,8 +62,8 @@ class User extends CActiveRecord
 	public function relations()
 	{
 		return array(
-				'employer'=>array(self::HAS_ONE, 'Employer', 'id_user'),
-				'resume'=>array(self::HAS_ONE, 'Promo', 'id_user')
+				'employer'=>array(self::HAS_MANY, 'Employer', 'id_user'),
+				'resume'=>array(self::HAS_MANY, 'Promo', 'id_user')
 			);
 	}
 
@@ -139,94 +139,128 @@ class User extends CActiveRecord
 	/**
 	 * 
 	 */
-	public $search_name;
-	public $search_cdate;
-	public $search_mdate;
-	public $search_moder;
   public function searchAll()
   {
-  	$condition = [];
-  	$GUser = Yii::app()->getRequest()->getParam('User');
-		$criteria=new CDbCriteria;
-		$criteria->with = array('employer','resume');
-		$criteria->together = true;
+		$db = Yii::app()->db;
+		$arGet = Yii::app()->getRequest()->getParam('User');
+		$page = Yii::app()->getRequest()->getParam('page');
+		$sort = Yii::app()->getRequest()->getParam('sort');
+		$dir = Yii::app()->getRequest()->getParam('dir');
+		$arRes = [
+				'id' => [],
+				'limit' => 50,
+				'items' => []
+			];
+		$arRes['offset'] = ($page-1) * $arRes['limit'];
+		$arRes['offset']<0 && $arRes['offset']=0;
 
-		$criteria->compare('t.id_user',$this->id_user, true);
-		$condition[] = '(employer.id_user is not null or resume.id_user is not null)';
+		$order = empty($sort) ? "u.id_user desc" : "u.$sort $dir";
+		$condition = ['(e.id_user is not null or r.id_user is not null)'];
+		$params = [];
 		// id_user
-		$value = intval($GUser['id_user']);
-		if($value)
-		{
-			$condition[] = "(t.id_user={$value})";
-			$this->id_user = $value;
-		}
+		$value = filter_var($arGet['id_user'], FILTER_SANITIZE_NUMBER_INT);
+		$value>0 && $condition[]="u.id_user={$value}";
 		// status
-		$value = intval($GUser['status']);
-		if($value)
+		$value = $arGet['status'];
+		if(in_array($value, ['2','3']))
 		{
-			$condition[] = "(t.status={$value})";
-			$this->status = $value;
+			$condition[] = "(u.status={$value})";
 		}
 		// name, firsname, lastname
-		$value = filter_var($GUser['search_name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$value = filter_var($arGet['name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		if(!empty($value))
 		{
-			$condition[] = '((employer.name like :q) 
-				or (resume.firstname like :q) 
-				or (resume.lastname like :q))';
-			$criteria->params = [':q'=>"%{$value}%"];
-			$this->search_name = $value;
+			$condition[] = '((e.name like :q) 
+				or (r.firstname like :q) 
+				or (r.lastname like :q))';
+			$params[':q'] = "%{$value}%";
 		}
-		// dates
-		$this->setDateQuery('mdate','mdate','b_mdate','e_mdate',$condition);
-		$this->setDateQuery('crdate','date_public','b_cdate','e_cdate',$condition);
+		// date creating
+		$this->setDateQuery('crdate','date_public','cbdate','cedate',$condition);
+		// date moderation
+		$this->setDateQuery('mdate','mdate','mbdate','medate',$condition);
 		// isblocked
-		$value = $GUser['isblocked'];
+		$value = $arGet['isblocked'];
 		if(in_array($value, ['0','1','2','3','4']))
 		{
-			$condition[]="(t.isblocked={$value})";
+			$condition[] = "(u.isblocked={$value})";
 		}
-		// moder
-		$value = $GUser['search_moder'];
+		// ismoder
+		$value = $arGet['ismoder'];
 		if(in_array($value, ['0','1']))
 		{
-			$condition[]="(employer.ismoder={$value} or resume.ismoder={$value})";
+			$condition[] = "(e.ismoder={$value} or r.ismoder={$value})";
 		}
 		//
-		if(count($condition))
+  	$condition = implode(' and ',$condition);
+		$arRes['id'] = $db->createCommand()
+										->selectDistinct('u.id_user')
+										->from('user u')
+										->leftjoin('employer e','e.id_user=u.id_user')
+										->leftjoin('resume r','r.id_user=u.id_user')
+										->where($condition,$params)
+										->order($order)
+										->queryColumn();
+
+		if(!count($arRes['id']))
+			return $arRes;
+
+		$arId = [];
+		for ($i=$arRes['offset'], $n=count($arRes['id']); $i<$n; $i++ )
 		{
-			$criteria->condition = implode(' and ', $condition);
+			if(($i < ($arRes['offset'] + $arRes['limit'])) && isset($arRes['id'][$i]))
+				$arId[] = $arRes['id'][$i];
 		}
 
-		return new CActiveDataProvider(
-				'User', 
-				array(
-					'criteria' => $criteria,
-					'pagination' => ['pageSize' => 20],
-					'sort' => ['defaultOrder'=>'t.id_user desc']
-				)
-			);
+		$arRes['items'] = $db->createCommand()
+												->select('
+													u.id_user, 
+													u.status, 
+													e.name,
+													r.firstname,
+													r.lastname,
+													e.crdate ecdate,
+													r.date_public rcdate,
+													e.mdate emdate,
+													r.mdate rmdate,
+													u.isblocked,
+													u.ismoder,
+													u.messenger,
+													u.is_online')
+												->from('user u')
+												->leftjoin('employer e','e.id_user=u.id_user')
+												->leftjoin('resume r','r.id_user=u.id_user')
+												->where(['in','u.id_user',$arId])
+												->order($order)
+												->queryAll();
+
+		$arRes['pages'] = new CPagination(count($arRes['id']));
+		$arRes['pages']->pageSize = $arRes['limit'];
+		$objPager = (object)['limit'=>$arRes['limit'],'offset'=>$arRes['offset']];
+		$arRes['pages']->applyLimit($objPager);
+
+		return $arRes;
   }
   /**
    * 
    */
-	private function setDateQuery($n1, $n2, $p1, $p2, &$arr, $time=true)
+	private function setDateQuery($n1, $n2, $p1, $p2, &$arr)
 	{
 		$rq = Yii::app()->getRequest();
 		$d1 = Share::checkFormatDate($rq->getParam($p1));
 		$d2 = Share::checkFormatDate($rq->getParam($p2));
 		if($d1 && $d2)
 		{
-			$arr[] = "(employer.{$n1} between '{$d1} 00:00:00' and '{$d2} 23:59:59'"
-				. "or resume.{$n2} between '{$d1} 00:00:00' and '{$d2} 23:59:59')";
+			$arr[] = "(e.{$n1} between '{$d1} 00:00:00' and '{$d2} 23:59:59'"
+				. "or r.{$n2} between '{$d1} 00:00:00' and '{$d2} 23:59:59')";
 		}
 		elseif($d1)
 		{
-			$arr[] = "(employer.{$n1}>='{$d1} 00:00:00' or resume.{$n2}>='{$d1} 00:00:00')";
+			$arr[] = "(e.{$n1}>='{$d1} 00:00:00' or r.{$n2}>='{$d1} 00:00:00')";
 		}
 		elseif($d2)
 		{
-			$arr[] = "(employer.{$n1}<='{$d2} 23:59:59' or resume.{$n2}<='{$d2} 23:59:59')";
+			$arr[] = "(e.{$n1}<='{$d2} 23:59:59' or r.{$n2}<='{$d2} 23:59:59')";
 		}
 	}
   /**
