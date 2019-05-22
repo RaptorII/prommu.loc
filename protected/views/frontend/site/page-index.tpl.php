@@ -243,7 +243,7 @@
 									<? endif; ?>
 									<!--noindex-->
 									<div class="vacancies-item__content">
-										<h3 class="vacancies-item__content-title"><?echo join(', ', $vac['posts'])?></h3>
+										<h3 class="vacancies-item__content-title"><?=$vac['title']?></h3>
 										<div class="vacancies-item__content-middle">
 											<div>
 												<div class="vacancies-item__content-gender">
