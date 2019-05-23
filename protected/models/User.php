@@ -192,44 +192,20 @@ class User extends CActiveRecord
 			$condition[] = "(e.ismoder={$value} or r.ismoder={$value})";
 		}
 		//
-		$condition = implode(' and ',$condition);
-		$arId = [];
-		$limit = 5000;
-		$offset = 0;
-		//
-		do
-		{
-			$arId = $db->createCommand()
+  	$condition = implode(' and ',$condition);
+		$arRes['id'] = $db->createCommand()
 										->selectDistinct('u.id_user')
 										->from('user u')
 										->leftjoin('employer e','e.id_user=u.id_user')
 										->leftjoin('resume r','r.id_user=u.id_user')
 										->where($condition,$params)
 										->order($order)
-										->offset($offset)
-										->limit($limit)
 										->queryColumn();
-
-			$offset+=$limit;
-			$arRes['id'] = array_merge($arRes['id'],$arId);
-		}
-		while(count($arId)==$limit);
-
-		$arId = [];
-  	
-		/*$arRes['id'] = $db->createCommand()
-										->selectDistinct('u.id_user')
-										->from('user u')
-										->leftjoin('employer e','e.id_user=u.id_user')
-										->leftjoin('resume r','r.id_user=u.id_user')
-										->where($condition,$params)
-										->order($order)
-										->queryColumn();*/
 
 		if(!count($arRes['id']))
 			return $arRes;
 
-		
+		$arId = [];
 		for ($i=$arRes['offset'], $n=count($arRes['id']); $i<$n; $i++ )
 		{
 			if(($i < ($arRes['offset'] + $arRes['limit'])) && isset($arRes['id'][$i]))
