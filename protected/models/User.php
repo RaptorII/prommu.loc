@@ -141,7 +141,6 @@ class User extends CActiveRecord
 	 */
   public function searchAll()
   {
-		$db = Yii::app()->db;
 		$arGet = Yii::app()->getRequest()->getParam('User');
 		$page = Yii::app()->getRequest()->getParam('page');
 		$sort = Yii::app()->getRequest()->getParam('sort');
@@ -154,52 +153,68 @@ class User extends CActiveRecord
 		$arRes['offset'] = ($page-1) * $arRes['limit'];
 		$arRes['offset']<0 && $arRes['offset']=0;
 
-		$order = empty($sort) ? "u.id_user desc" : "u.$sort $dir";
-		$condition = ['(e.id_user is not null or r.id_user is not null)'];
-		$params = [];
+		$order = empty($sort) ? "id_user desc" : "$sort $dir";
+		$rCondition = ["r.id_user is not null"];
+		$eCondition = ["e.id_user is not null"];
 		// id_user
 		$value = filter_var($arGet['id_user'], FILTER_SANITIZE_NUMBER_INT);
-		$value>0 && $condition[]="u.id_user={$value}";
+		if($value>0)
+		{
+			$rCondition[]="r.id_user={$value}";
+			$eCondition[]="e.id_user={$value}";
+		}
 		// status
 		$value = $arGet['status'];
 		if(in_array($value, ['2','3']))
 		{
-			$condition[] = "(u.status={$value})";
+			$rCondition[]="u.status={$value}";
+			$eCondition[]="u.status={$value}";
 		}
 		// name, firsname, lastname
 		$value = filter_var($arGet['name'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		if(!empty($value))
 		{
-			$condition[] = '((e.name like :q) 
-				or (r.firstname like :q) 
-				or (r.lastname like :q))';
-			$params[':q'] = "%{$value}%";
+			$rCondition[]="(r.firstname like '%{$value}%' or r.lastname like '%{$value}%')";
+			$eCondition[]="e.name like '%{$value}%'";
 		}
 		// date creating
-		$this->setDateQuery('crdate','date_public','cbdate','cedate',$condition);
+		$value = $this->setDateQuery('r','date_public','cbdate','cedate');
+		!empty($value) && $rCondition[] = $value;
+		$value = $this->setDateQuery('e','crdate','cbdate','cedate');
+		!empty($value) && $eCondition[] = $value;
 		// date moderation
-		$this->setDateQuery('mdate','mdate','mbdate','medate',$condition);
+		$value = $this->setDateQuery('r','mdate','mbdate','medate');
+		!empty($value) && $rCondition[] = $value;
+		$value = $this->setDateQuery('e','mdate','mbdate','medate');
+		!empty($value) && $eCondition[] = $value;
 		// isblocked
 		$value = $arGet['isblocked'];
 		if(in_array($value, ['0','1','2','3','4']))
 		{
-			$condition[] = "(u.isblocked={$value})";
+			$rCondition[]="u.isblocked={$value}";
+			$eCondition[]="u.isblocked={$value}";
 		}
 		// ismoder
 		$value = $arGet['ismoder'];
 		if(in_array($value, ['0','1']))
 		{
-			$condition[] = "(e.ismoder={$value} or r.ismoder={$value})";
+			$rCondition[]="r.ismoder={$value}";
+			$eCondition[]="e.ismoder={$value}";
 		}
 		//
-  	$condition = implode(' and ',$condition);
-		$arRes['id'] = $db->createCommand()
-										->selectDistinct('u.id_user')
+  	$rCondition = implode(' and ',$rCondition);
+  	$eCondition = implode(' and ',$eCondition);
+  	
+		$arRes['id'] = Yii::app()->db->createCommand()
+										->select('u.id_user')
 										->from('user u')
-										->leftjoin('employer e','e.id_user=u.id_user')
-										->leftjoin('resume r','r.id_user=u.id_user')
-										->where($condition,$params)
+										->rightjoin('resume r','r.id_user=u.id_user')
+										->where($rCondition)
 										->order($order)
+										->union("SELECT u.id_user 
+															FROM user u 
+															RIGHT JOIN employer e ON e.id_user=u.id_user 
+															WHERE {$eCondition}")
 										->queryColumn();
 
 		if(!count($arRes['id']))
@@ -212,7 +227,7 @@ class User extends CActiveRecord
 				$arId[] = $arRes['id'][$i];
 		}
 
-		$arRes['items'] = $db->createCommand()
+		$arRes['items'] = Yii::app()->db->createCommand()
 												->select('
 													u.id_user, 
 													u.status, 
@@ -231,7 +246,7 @@ class User extends CActiveRecord
 												->leftjoin('employer e','e.id_user=u.id_user')
 												->leftjoin('resume r','r.id_user=u.id_user')
 												->where(['in','u.id_user',$arId])
-												->order($order)
+												->order("u.$order")
 												->queryAll();
 
 		$arRes['pages'] = new CPagination(count($arRes['id']));
@@ -244,23 +259,22 @@ class User extends CActiveRecord
   /**
    * 
    */
-	private function setDateQuery($n1, $n2, $p1, $p2, &$arr)
+	private function setDateQuery($prefix, $column, $p1, $p2)
 	{
 		$rq = Yii::app()->getRequest();
 		$d1 = Share::checkFormatDate($rq->getParam($p1));
 		$d2 = Share::checkFormatDate($rq->getParam($p2));
 		if($d1 && $d2)
 		{
-			$arr[] = "(e.{$n1} between '{$d1} 00:00:00' and '{$d2} 23:59:59'"
-				. "or r.{$n2} between '{$d1} 00:00:00' and '{$d2} 23:59:59')";
+			return "({$prefix}.{$column} between '{$d1} 00:00:00' and '{$d2} 23:59:59')";
 		}
 		elseif($d1)
 		{
-			$arr[] = "(e.{$n1}>='{$d1} 00:00:00' or r.{$n2}>='{$d1} 00:00:00')";
+			return "{$prefix}.{$column} >= '{$d1} 00:00:00'";
 		}
 		elseif($d2)
 		{
-			$arr[] = "(e.{$n1}<='{$d2} 23:59:59' or r.{$n2}<='{$d2} 23:59:59')";
+			return "{$prefix}.{$column} <= '{$d2} 23:59:59'";
 		}
 	}
   /**

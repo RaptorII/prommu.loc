@@ -28,6 +28,10 @@
 		left: 0;
 		z-index: 2;
 	}
+	.table_form .custom-table tbody tr:hover td:not(.empty){
+		color: initial;
+		cursor: initial;
+	}
 </style>
 <h3><?=$this->pageTitle?></h3>
 <form class="table_form">
@@ -38,14 +42,14 @@
 			?>
 			<tr>
 				<th><a class="sort-link" data-value="id_user" href="javascript:void(0)">ID USER</a></th>
-				<th><a class="sort-link" data-value="status" href="javascript:void(0)">Тип</a></th>
+				<th>Тип</th>
 				<th>Наименование</th>
 				<th>Дата создания</th>
 				<th>Дата изменения</th>
-				<th><a class="sort-link" data-value="isblocked" href="javascript:void(0)">Статус</a></th>
-				<th><a class="sort-link" data-value="ismoder" href="javascript:void(0)">Модерация</a></th>
-				<th><a class="sort-link" data-value="messenger" href="javascript:void(0)">Соцсети</a></th>
-				<th><a class="sort-link" data-value="is_online" href="javascript:void(0)">В_сети</a></th>
+				<th>Статус</th>
+				<th>Модерация</th>
+				<th>Соцсети</th>
+				<th>В_сети</th>
 				<th>Профиль</th>
 			</tr>
 			<?

@@ -36,12 +36,15 @@ class AdminView
 	 * @param $name - string
 	 * @param $is_btn - bool
 	 */
-	function getLink($link, $name, $is_btn=false)
+	public static function getLink($link, $name, $is_btn=false)
 	{
 		if(!$name)
 			return ' - ';
 
 		return  "<a href='$link' " . ($is_btn ? 'class="btn btn-default"' : '') . ">$name</a> ";
 	}
+	/**
+	 * 
+	 */
 }
 ?>
