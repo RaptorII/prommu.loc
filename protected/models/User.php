@@ -961,13 +961,9 @@ class User extends CActiveRecord
         	69=>'edu'
         );
         $res = array();
-        if(count($arAppNames))
-        {
-	        foreach ($arAppNames as $item)
-	        	$res[$item['id']] = $item['name']; 
-	        $arAppNames = $res;       	
-        }
-        
+        foreach ($arAppNames as $item)
+        	$res[$item['id']] = $item['name'];
+        $arAppNames = $res;
         //
         // языки словаря
         $sql = "SELECT d.id, d.name
@@ -976,12 +972,9 @@ class User extends CActiveRecord
                 ORDER BY name";
         $arLangs = Yii::app()->db->createCommand($sql)->queryAll();
         $res = array();
-        if(count($arLangs))
-        {
-	        foreach ($arLangs as $item)
-	        	$res[$item['id']] = $item['name'];
-	        $arLangs = $res;
-	      }
+        foreach ($arLangs as $item)
+        	$res[$item['id']] = $item['name'];
+        $arLangs = $res;
         //
         // свойства
 		$attr = Yii::app()->db->createCommand()
@@ -989,23 +982,16 @@ class User extends CActiveRecord
 			->from('user_attribs')
 			->where('id_us=:id', array(':id'=>$id))
 			->queryAll();
-
 		$arr_at = [];
-		if(count($attr))
-		{
-			foreach($attr as $at)
-			{
-				if(!empty($at['key']))
-				{
-					if(in_array($at['key'], $arAppear))
-						$arr_at[$at['key']] = $arAppNames[$at['id_attr']];
-					else
-						$arr_at[$at['key']] = $at['val'];
-				}
-				elseif(array_key_exists($at['id_attr'], $arLangs))
-				{
-					$arr_at['lang'][$at['id_attr']] = $arLangs[$at['id_attr']];
-				}
+		foreach($attr as $at) {
+			if(!empty($at['key'])) {
+				if(in_array($at['key'], $arAppear))
+					$arr_at[$at['key']] = $arAppNames[$at['id_attr']];
+				else
+					$arr_at[$at['key']] = $at['val'];
+			}
+			elseif(array_key_exists($at['id_attr'], $arLangs)) {
+				$arr_at['lang'][$at['id_attr']] = $arLangs[$at['id_attr']];
 			}
 		}
 		$result['attr']=$arr_at;
@@ -1045,40 +1031,33 @@ class User extends CActiveRecord
             ORDER BY um.isshow, val";
         $res = Yii::app()->db->createCommand($sql)->queryAll();
 
-        if(count($res))
+        foreach ($res as $key => $val)
         {
-	        foreach ($res as $key => $val)
-	        {
-	        	switch ($val['pay_type']) {
-	        		case 0: $res[$key]['pay_type'] ='руб. в час'; break;
-	        		case 1: $res[$key]['pay_type'] ='руб. в неделю'; break;
-	        		case 2: $res[$key]['pay_type'] ='руб. в месяц'; break;
-	        		case 3: $res[$key]['pay_type'] ='руб. за посещение'; break;
-	        	}
-	        } // end foreach
-        }
-
+        	switch ($val['pay_type']) {
+        		case 0: $res[$key]['pay_type'] ='руб. в час'; break;
+        		case 1: $res[$key]['pay_type'] ='руб. в неделю'; break;
+        		case 2: $res[$key]['pay_type'] ='руб. в месяц'; break;
+        		case 3: $res[$key]['pay_type'] ='руб. за посещение'; break;
+        	}
+        } // end foreach
         $result['user_posts'] = $res;
 
 				$result['posts'] = array();
-				if(count($result['user_posts']))
-				{
-					foreach($result['user_posts'] as $post){
-						$result['posts'][$post['idpost']]['val'] = $post['val'];
-						if(!$post['isshow']){
-							$result['posts'][$post['idpost']]['pay'] = $post['pay']>0 
-							? round($post['pay']) 
-							: '';
-		        	switch ($post['pt']) {
-		        		case 0: $result['posts'][$post['idpost']]['pt'] ='Час'; break;
-		        		case 1: $result['posts'][$post['idpost']]['pt'] ='Неделю'; break;
-		        		case 2: $result['posts'][$post['idpost']]['pt'] ='Месяц'; break;
-		        		case 3: $result['posts'][$post['idpost']]['pt'] ='Посещение'; break;
-		        	}
-						}
-						if($post['isshow'])
-							$result['posts'][$post['idpost']]['pname'] = $post['pname'];
+				foreach($result['user_posts'] as $post){
+					$result['posts'][$post['idpost']]['val'] = $post['val'];
+					if(!$post['isshow']){
+						$result['posts'][$post['idpost']]['pay'] = $post['pay']>0 
+						? round($post['pay']) 
+						: '';
+	        	switch ($post['pt']) {
+	        		case 0: $result['posts'][$post['idpost']]['pt'] ='Час'; break;
+	        		case 1: $result['posts'][$post['idpost']]['pt'] ='Неделю'; break;
+	        		case 2: $result['posts'][$post['idpost']]['pt'] ='Месяц'; break;
+	        		case 3: $result['posts'][$post['idpost']]['pt'] ='Посещение'; break;
+	        	}
 					}
+					if($post['isshow'])
+						$result['posts'][$post['idpost']]['pname'] = $post['pname'];
 				}
 				//
         // read cities
@@ -1092,33 +1071,25 @@ class User extends CActiveRecord
         $res = Yii::app()->db->createCommand($sql)->queryAll();
 
         $result['user_cities'] = array();
-        if(count($res))
+        foreach ($res as $key => $val)
         {
-	        foreach ($res as $key => $val)
-	        {
-	            $cityPrint[$val['id']] = $val['name'];
-	            $result['user_cities'][$val['id']] = array(
-	            	'id' => $val['id'], 
-	            	'name' => $val['name'], 
-	            	'ismetro' => $val['ismetro'], 
-	            	'region' => $val['region']
-	            );
-	        }
+            $cityPrint[$val['id']] = $val['name'];
+            $result['user_cities'][$val['id']] = array(
+            	'id' => $val['id'], 
+            	'name' => $val['name'], 
+            	'ismetro' => $val['ismetro'], 
+            	'region' => $val['region']
+            );
         }
-
         //
         // read metro
         $sql = "SELECT m.id, m.id_city idcity, m.name FROM user_metro um
                 LEFT JOIN metro m ON um.id_metro = m.id
                 WHERE um.id_us = {$id} ORDER BY name";
         $res = Yii::app()->db->createCommand($sql)->queryAll();
-
-        if(count($res))
-        {
-	        foreach ($res as $key => $val):
-	            $metro[$val['id']] = array('idcity' => $val['idcity'], 'name' => $val['name']);
-	        endforeach;
-	      }
+        foreach ($res as $key => $val):
+            $metro[$val['id']] = array('idcity' => $val['idcity'], 'name' => $val['name']);
+        endforeach;
         $result['user_metros'] = $metro;
         //
         // read week times
@@ -1126,19 +1097,16 @@ class User extends CActiveRecord
         $sql = "SELECT t.id_city idcity, t.wday, t.timeb, t.timee FROM user_wtime t WHERE t.id_us = {$id}";
         $wdays = array();
         $res = Yii::app()->db->createCommand($sql)->queryAll();
-        if(count($res))
-        {
-	        foreach ($res as $key => $val):
-	            $val['wdayName'] = $dayNames[$val['wday']-1];
-	            $h = floor($val['timeb'] / 60);
-	            $m = $val['timeb'] - $h * 60;
-	            $val['timeb'] = sprintf('%d:%02d', $h, $m);
-	            $h = floor($val['timee'] / 60);
-	            $m = $val['timee'] - $h * 60;
-	            $val['timee'] = sprintf('%d:%02d', $h, $m);
-	            $wdays[$val['idcity']][$val['wday']] = $val;
-	        endforeach;
-	      }
+        foreach ($res as $key => $val):
+            $val['wdayName'] = $dayNames[$val['wday']-1];
+            $h = floor($val['timeb'] / 60);
+            $m = $val['timeb'] - $h * 60;
+            $val['timeb'] = sprintf('%d:%02d', $h, $m);
+            $h = floor($val['timee'] / 60);
+            $m = $val['timee'] - $h * 60;
+            $val['timee'] = sprintf('%d:%02d', $h, $m);
+            $wdays[$val['idcity']][$val['wday']] = $val;
+        endforeach;
         $result['worktime'] = $wdays;
         $result['days'] = array(
         	1=>'ПН', 
@@ -1164,15 +1132,11 @@ class User extends CActiveRecord
             ORDER BY v.id DESC
             LIMIT 9";
         $res = Yii::app()->db->createCommand($sql)->queryAll();
-
-        if(count($res))
-        {
-	        foreach ($res as $key => $job) {
-	        	$result['jobs'][$key] = $job;
-				$result['jobs'][$key]['link'] = '/admin/site/VacancyEdit/' . $job['id'];
-				$result['jobs'][$key]['empl'] = '/admin/site/EmplEdit/' . $job['idus'];
-	        }
-	      }
+        foreach ($res as $key => $job) {
+        	$result['jobs'][$key] = $job;
+			$result['jobs'][$key]['link'] = '/admin/site/VacancyEdit/' . $job['id'];
+			$result['jobs'][$key]['empl'] = '/admin/site/EmplEdit/' . $job['idus'];
+        }
 
         $sql = "SELECT COUNT(vs.id) cou
 			FROM empl_vacations v
