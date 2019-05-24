@@ -448,119 +448,141 @@ class User extends CActiveRecord
                     ));
     		}
     		
-        $attr = $data['userAttribs'];
-        Yii::app()->db->createCommand()->delete('user_attribs', 'id_us=:id_user', array(':id_user' => $id));
+    		if(count($data['userAttribs']))
+    		{
+        	$attr = $data['userAttribs'];
+        	Yii::app()->db->createCommand()->delete(
+	        		'user_attribs',
+	        		'id_us=:id_user',
+	        		array(':id_user' => $id)
+	        	);
         
-            foreach($attr as $key=>$val) {
-                
-                if(!empty($val)){
-    			    $result = Yii::app()->db->createCommand()
-        			->select('*')
-        			->from('user_attribs')
-                    ->where("id_us=:id_user and `key`=:key", array(':id_user'=>$id, ':key'=>$key))
-        			->queryRow();
-        			if($result['key'] == $key){
-        			    Yii::app()->db->createCommand()
-    					->update('user_attribs', array(
-    						'val' => $val,
-    					), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
-    				
-        			} else {
-    
-                		$userdict = Yii::app()->db->createCommand()
-                            ->select('d.id , d.type, d.key')
-                            ->from('user_attr_dict d')
-                            ->where('d.key = :key', array(':key' => $key))
-                            ->queryRow();
-    
-                			
-        			    Yii::app()->db->createCommand()
-                        ->insert('user_attribs', array(
-                            'id_attr' => $userdict['id'],
-                            'type' => $userdict['type'],
-                            'val' => $val,
-                            'key' => $key,
-                            'id_us' => $id,
-                            'crdate' => date("Y-m-d H:i:s")
-                        ));
-        			}
-                }
-				
-			}
-            
-        $body = $data['bodyAttribs'];
-        
-        foreach($body as $key=>$val) {
-            
-                if(!empty($val)){
-                    $result = Yii::app()->db->createCommand()
-        			->select('*')
-        			->from('user_attribs')
-                    ->where("id_us=:id_user and `key`=:key", array(':id_user'=>$id, ':key'=>$key))
-        			->queryRow();
-        			
-        			if($result['key'] == $key){
-        			    
-        			    $userdict = Yii::app()->db->createCommand()
-                            ->select('d.id , d.type, d.key')
-                            ->from('user_attr_dict d')
-                            ->where('d.id = :key', array(':key' => $val))
-                            ->queryRow();
-                            
-        			    Yii::app()->db->createCommand()
-    					->update('user_attribs', array(
-    						'val' => $userdict['name'],
-    					), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
-    				
-        			} else {
-    
-                		$userdict = Yii::app()->db->createCommand()
-                            ->select('d.id , d.type, d.key')
-                            ->from('user_attr_dict d')
-                            ->where('d.id = :key', array(':key' => $val))
-                            ->queryRow();
-    
-                			
-        			    Yii::app()->db->createCommand()
-                        ->insert('user_attribs', array(
-                            'id_attr' => $userdict['id'],
-                            'type' => $userdict['type'],
-                            'val' => $val,
-                            'key' => $key,
-                            'id_us' => $id,
-                            'crdate' => date("Y-m-d H:i:s")
-                        ));
-        			}
-                }
-			    
-				
-			}
-			
-			
-            for($i = 0; $i < count($data['workDays']); $i++){
-                $insData[] = array('id_city' => $data['workDays'][$i]->id_city, 'id_us' => $id, 'wday' => $data['workDays'][$i]->day, 'timeb' => $data['workDays'][$i]->timeb, 'timee' => $data['workDays'][$i]->timee);
-            }
-
-            if( count($insData) ){
-                Yii::app()->db->createCommand()->delete('user_wtime', 'id_us=:id_user', array(':id_user' => $id));
-                $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('user_wtime', $insData);
-                $res = $command->execute();
-            }
-            
-           
-            for($i = 0; $i < count($data['userMech']); $i++)
+          foreach($attr as $key=>$val)
+          {
+              
+            if(!empty($val))
             {
-                $insDatas[] = array('id_us' => $id, 'id_mech' => $data['userMech'][$i]->id_mech, 'isshow' => $data['userMech'][$i]->isshow, 'namme' => '', 'pay' => $data['userMech'][$i]->pay, 'pay_type' => $data['userMech'][$i]->paylims, 'crdate' => date("Y-m-d H:i:s"));
-            } // end foreach
+  			    	$result = Yii::app()->db->createCommand()
+													->select('*')
+													->from('user_attribs')
+													->where(
+														"id_us=:id_user and `key`=:key",
+														array(':id_user'=>$id, ':key'=>$key)
+													)
+													->queryRow();
+      			if($result['key'] == $key)
+      			{
+							Yii::app()->db->createCommand()
+								->update(
+										'user_attribs',
+										array('val' => $val),
+										"id_us=:id_user and `key`=:key",
+										array(':id_user' => $id, ':key' => $key)
+									);
+      			}
+      			else 
+      			{
+							$userdict = Yii::app()->db->createCommand()
+														->select('d.id , d.type, d.key')
+														->from('user_attr_dict d')
+														->where('d.key = :key', array(':key' => $key))
+														->queryRow();
 
-            if( count($insDatas) ){
-                Yii::app()->db->createCommand()
-                ->delete('user_mech', array('and', 'id_us=:id_user', 'isshow=0'), array(':id_user' => $id));
-                $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('user_mech', $insDatas);
-                $command->execute();
+      			    Yii::app()->db->createCommand()
+                      ->insert('user_attribs', array(
+                          'id_attr' => $userdict['id'],
+                          'type' => $userdict['type'],
+                          'val' => $val,
+                          'key' => $key,
+                          'id_us' => $id,
+                          'crdate' => date("Y-m-d H:i:s")
+                      ));
+      				}
             }
+					}
+        }
+
+    		if(count($data['bodyAttribs']))
+    		{
+        	$body = $data['bodyAttribs'];
+
+					foreach($body as $key=>$val)
+					{
+						if(!empty($val))
+						{
+							$result = Yii::app()->db->createCommand()
+													->select('*')
+													->from('user_attribs')
+													->where(
+														"id_us=:id_user and `key`=:key", 
+														array(':id_user'=>$id, ':key'=>$key)
+													)
+													->queryRow();
+
+							if($result['key'] == $key)
+							{
+								$userdict = Yii::app()->db->createCommand()
+															->select('d.id , d.type, d.key')
+															->from('user_attr_dict d')
+															->where('d.id = :key', array(':key' => $val))
+															->queryRow();
+
+								Yii::app()->db->createCommand()->update(
+									'user_attribs',
+									array('val' => $userdict['name']),
+									"id_us=:id_user and `key`=:key",
+									array(':id_user' => $id, ':key' => $key)
+								);
+							}
+							else
+							{
+								$userdict = Yii::app()->db->createCommand()
+															->select('d.id , d.type, d.key')
+															->from('user_attr_dict d')
+															->where('d.id = :key', array(':key' => $val))
+															->queryRow();
+
+								Yii::app()->db->createCommand()
+									->insert(
+											'user_attribs', 
+											array(
+												'id_attr' => $userdict['id'],
+												'type' => $userdict['type'],
+												'val' => $val,
+												'key' => $key,
+												'id_us' => $id,
+												'crdate' => date("Y-m-d H:i:s")
+											)
+										);
+							}
+						}
+					}
+    		}
 			
-        return array('error'=>0,  'message'=>'success' ,'sendmail'=>0); 
+    for($i = 0; $i < count($data['workDays']); $i++){
+        $insData[] = array('id_city' => $data['workDays'][$i]->id_city, 'id_us' => $id, 'wday' => $data['workDays'][$i]->day, 'timeb' => $data['workDays'][$i]->timeb, 'timee' => $data['workDays'][$i]->timee);
+    }
+
+    if( count($insData) ){
+        Yii::app()->db->createCommand()->delete('user_wtime', 'id_us=:id_user', array(':id_user' => $id));
+        $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('user_wtime', $insData);
+        $res = $command->execute();
+    }
+    
+   
+    for($i = 0; $i < count($data['userMech']); $i++)
+    {
+        $insDatas[] = array('id_us' => $id, 'id_mech' => $data['userMech'][$i]->id_mech, 'isshow' => $data['userMech'][$i]->isshow, 'namme' => '', 'pay' => $data['userMech'][$i]->pay, 'pay_type' => $data['userMech'][$i]->paylims, 'crdate' => date("Y-m-d H:i:s"));
+    } // end foreach
+
+    if( count($insDatas) ){
+        Yii::app()->db->createCommand()
+        ->delete('user_mech', array('and', 'id_us=:id_user', 'isshow=0'), array(':id_user' => $id));
+        $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('user_mech', $insDatas);
+        $command->execute();
+    }
+			
+    return array('error'=>0,  'message'=>'success' ,'sendmail'=>0); 
 	}
 
 
@@ -939,9 +961,13 @@ class User extends CActiveRecord
         	69=>'edu'
         );
         $res = array();
-        foreach ($arAppNames as $item)
-        	$res[$item['id']] = $item['name'];
-        $arAppNames = $res;
+        if(count($arAppNames))
+        {
+	        foreach ($arAppNames as $item)
+	        	$res[$item['id']] = $item['name']; 
+	        $arAppNames = $res;       	
+        }
+        
         //
         // языки словаря
         $sql = "SELECT d.id, d.name
@@ -950,9 +976,12 @@ class User extends CActiveRecord
                 ORDER BY name";
         $arLangs = Yii::app()->db->createCommand($sql)->queryAll();
         $res = array();
-        foreach ($arLangs as $item)
-        	$res[$item['id']] = $item['name'];
-        $arLangs = $res;
+        if(count($arLangs))
+        {
+	        foreach ($arLangs as $item)
+	        	$res[$item['id']] = $item['name'];
+	        $arLangs = $res;
+	      }
         //
         // свойства
 		$attr = Yii::app()->db->createCommand()
@@ -960,16 +989,23 @@ class User extends CActiveRecord
 			->from('user_attribs')
 			->where('id_us=:id', array(':id'=>$id))
 			->queryAll();
+
 		$arr_at = [];
-		foreach($attr as $at) {
-			if(!empty($at['key'])) {
-				if(in_array($at['key'], $arAppear))
-					$arr_at[$at['key']] = $arAppNames[$at['id_attr']];
-				else
-					$arr_at[$at['key']] = $at['val'];
-			}
-			elseif(array_key_exists($at['id_attr'], $arLangs)) {
-				$arr_at['lang'][$at['id_attr']] = $arLangs[$at['id_attr']];
+		if(count($attr))
+		{
+			foreach($attr as $at)
+			{
+				if(!empty($at['key']))
+				{
+					if(in_array($at['key'], $arAppear))
+						$arr_at[$at['key']] = $arAppNames[$at['id_attr']];
+					else
+						$arr_at[$at['key']] = $at['val'];
+				}
+				elseif(array_key_exists($at['id_attr'], $arLangs))
+				{
+					$arr_at['lang'][$at['id_attr']] = $arLangs[$at['id_attr']];
+				}
 			}
 		}
 		$result['attr']=$arr_at;
@@ -1009,33 +1045,40 @@ class User extends CActiveRecord
             ORDER BY um.isshow, val";
         $res = Yii::app()->db->createCommand($sql)->queryAll();
 
-        foreach ($res as $key => $val)
+        if(count($res))
         {
-        	switch ($val['pay_type']) {
-        		case 0: $res[$key]['pay_type'] ='руб. в час'; break;
-        		case 1: $res[$key]['pay_type'] ='руб. в неделю'; break;
-        		case 2: $res[$key]['pay_type'] ='руб. в месяц'; break;
-        		case 3: $res[$key]['pay_type'] ='руб. за посещение'; break;
-        	}
-        } // end foreach
+	        foreach ($res as $key => $val)
+	        {
+	        	switch ($val['pay_type']) {
+	        		case 0: $res[$key]['pay_type'] ='руб. в час'; break;
+	        		case 1: $res[$key]['pay_type'] ='руб. в неделю'; break;
+	        		case 2: $res[$key]['pay_type'] ='руб. в месяц'; break;
+	        		case 3: $res[$key]['pay_type'] ='руб. за посещение'; break;
+	        	}
+	        } // end foreach
+        }
+
         $result['user_posts'] = $res;
 
 				$result['posts'] = array();
-				foreach($result['user_posts'] as $post){
-					$result['posts'][$post['idpost']]['val'] = $post['val'];
-					if(!$post['isshow']){
-						$result['posts'][$post['idpost']]['pay'] = $post['pay']>0 
-						? round($post['pay']) 
-						: '';
-	        	switch ($post['pt']) {
-	        		case 0: $result['posts'][$post['idpost']]['pt'] ='Час'; break;
-	        		case 1: $result['posts'][$post['idpost']]['pt'] ='Неделю'; break;
-	        		case 2: $result['posts'][$post['idpost']]['pt'] ='Месяц'; break;
-	        		case 3: $result['posts'][$post['idpost']]['pt'] ='Посещение'; break;
-	        	}
+				if(count($result['user_posts']))
+				{
+					foreach($result['user_posts'] as $post){
+						$result['posts'][$post['idpost']]['val'] = $post['val'];
+						if(!$post['isshow']){
+							$result['posts'][$post['idpost']]['pay'] = $post['pay']>0 
+							? round($post['pay']) 
+							: '';
+		        	switch ($post['pt']) {
+		        		case 0: $result['posts'][$post['idpost']]['pt'] ='Час'; break;
+		        		case 1: $result['posts'][$post['idpost']]['pt'] ='Неделю'; break;
+		        		case 2: $result['posts'][$post['idpost']]['pt'] ='Месяц'; break;
+		        		case 3: $result['posts'][$post['idpost']]['pt'] ='Посещение'; break;
+		        	}
+						}
+						if($post['isshow'])
+							$result['posts'][$post['idpost']]['pname'] = $post['pname'];
 					}
-					if($post['isshow'])
-						$result['posts'][$post['idpost']]['pname'] = $post['pname'];
 				}
 				//
         // read cities
@@ -1049,25 +1092,33 @@ class User extends CActiveRecord
         $res = Yii::app()->db->createCommand($sql)->queryAll();
 
         $result['user_cities'] = array();
-        foreach ($res as $key => $val)
+        if(count($res))
         {
-            $cityPrint[$val['id']] = $val['name'];
-            $result['user_cities'][$val['id']] = array(
-            	'id' => $val['id'], 
-            	'name' => $val['name'], 
-            	'ismetro' => $val['ismetro'], 
-            	'region' => $val['region']
-            );
+	        foreach ($res as $key => $val)
+	        {
+	            $cityPrint[$val['id']] = $val['name'];
+	            $result['user_cities'][$val['id']] = array(
+	            	'id' => $val['id'], 
+	            	'name' => $val['name'], 
+	            	'ismetro' => $val['ismetro'], 
+	            	'region' => $val['region']
+	            );
+	        }
         }
+
         //
         // read metro
         $sql = "SELECT m.id, m.id_city idcity, m.name FROM user_metro um
                 LEFT JOIN metro m ON um.id_metro = m.id
                 WHERE um.id_us = {$id} ORDER BY name";
         $res = Yii::app()->db->createCommand($sql)->queryAll();
-        foreach ($res as $key => $val):
-            $metro[$val['id']] = array('idcity' => $val['idcity'], 'name' => $val['name']);
-        endforeach;
+
+        if(count($res))
+        {
+	        foreach ($res as $key => $val):
+	            $metro[$val['id']] = array('idcity' => $val['idcity'], 'name' => $val['name']);
+	        endforeach;
+	      }
         $result['user_metros'] = $metro;
         //
         // read week times
@@ -1075,16 +1126,19 @@ class User extends CActiveRecord
         $sql = "SELECT t.id_city idcity, t.wday, t.timeb, t.timee FROM user_wtime t WHERE t.id_us = {$id}";
         $wdays = array();
         $res = Yii::app()->db->createCommand($sql)->queryAll();
-        foreach ($res as $key => $val):
-            $val['wdayName'] = $dayNames[$val['wday']-1];
-            $h = floor($val['timeb'] / 60);
-            $m = $val['timeb'] - $h * 60;
-            $val['timeb'] = sprintf('%d:%02d', $h, $m);
-            $h = floor($val['timee'] / 60);
-            $m = $val['timee'] - $h * 60;
-            $val['timee'] = sprintf('%d:%02d', $h, $m);
-            $wdays[$val['idcity']][$val['wday']] = $val;
-        endforeach;
+        if(count($res))
+        {
+	        foreach ($res as $key => $val):
+	            $val['wdayName'] = $dayNames[$val['wday']-1];
+	            $h = floor($val['timeb'] / 60);
+	            $m = $val['timeb'] - $h * 60;
+	            $val['timeb'] = sprintf('%d:%02d', $h, $m);
+	            $h = floor($val['timee'] / 60);
+	            $m = $val['timee'] - $h * 60;
+	            $val['timee'] = sprintf('%d:%02d', $h, $m);
+	            $wdays[$val['idcity']][$val['wday']] = $val;
+	        endforeach;
+	      }
         $result['worktime'] = $wdays;
         $result['days'] = array(
         	1=>'ПН', 
@@ -1110,11 +1164,15 @@ class User extends CActiveRecord
             ORDER BY v.id DESC
             LIMIT 9";
         $res = Yii::app()->db->createCommand($sql)->queryAll();
-        foreach ($res as $key => $job) {
-        	$result['jobs'][$key] = $job;
-			$result['jobs'][$key]['link'] = '/admin/site/VacancyEdit/' . $job['id'];
-			$result['jobs'][$key]['empl'] = '/admin/site/EmplEdit/' . $job['idus'];
-        }
+
+        if(count($res))
+        {
+	        foreach ($res as $key => $job) {
+	        	$result['jobs'][$key] = $job;
+				$result['jobs'][$key]['link'] = '/admin/site/VacancyEdit/' . $job['id'];
+				$result['jobs'][$key]['empl'] = '/admin/site/EmplEdit/' . $job['idus'];
+	        }
+	      }
 
         $sql = "SELECT COUNT(vs.id) cou
 			FROM empl_vacations v
