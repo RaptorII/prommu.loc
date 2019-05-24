@@ -588,7 +588,7 @@ class User extends CActiveRecord
 
 	public function updateEmployer($data, $id) {
 		if(empty($id) || $id<=0) return null;
-	
+
 		if(
 			isset($data['send-private-manager-mail'])
 			&&
@@ -650,8 +650,8 @@ class User extends CActiveRecord
 					), 'id_user=:id_user', array(':id_user' => $id));
 			
 
-			$attr = array();	
-			$attr = $data['userAttribs'];
+			//$attr = array();
+			$attr[] = $data['userAttribs'];
 			
 			foreach($attr as $key=>$val) {
 				Yii::app()->db->createCommand()
