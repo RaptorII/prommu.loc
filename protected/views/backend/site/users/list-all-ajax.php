@@ -25,8 +25,8 @@
 			<td style="width:1%"><?=getValue($item,"messenger")?></td>
 			<td style="width:1%"><?=getValue($item,"is_online")?></td>
 			<td style="width:1%">
-				<a href="/admin/EmplEdit/21887" class="glyphicon glyphicon-edit" title="редактировать"></a>
-				<a href="/ankety/21887" class="glyphicon glyphicon-new-window" target="_blank" title="профиль"></a>
+				<a href="/admin/EmplEdit/<?=$item['id_user']?>" class="glyphicon glyphicon-edit" title="редактировать"></a>
+				<a href="/ankety/<?=$item['id_user']?>" class="glyphicon glyphicon-new-window" target="_blank" title="профиль"></a>
 			</td>
 		</tr>
 	<? endforeach; ?>
