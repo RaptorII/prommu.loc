@@ -34,13 +34,13 @@
           'afterAjaxUpdate' => 'reinstallDatePicker',
           'enablePagination' => true,
           'columns'=>array(
-                    array(
+                    /*array(
                       'class' => 'CCheckBoxColumn',
                       'selectableRows' => 2,
                       'checkBoxHtmlOptions' => array('class' => 'checkclass'),
                       'value' => '$data->id_user',
                       'htmlOptions' => ['class'=>'column_checkbox']
-                    ),
+                    ),*/
                     array(
                       'header' => 'ID',
                       'name' => 'id',
@@ -52,7 +52,7 @@
                       'header' => 'Компания',
                       'name' => 'company_search',
                       'type' => 'html',
-                      'value' => 'getLink("/admin/EmplEdit/" . $data->id_user, $data->employer->name)',
+                      'value' => 'AdminView::getLink("/admin/EmplEdit/{$data->employer->id_user}",$data->employer->name)',
                       'htmlOptions' => ['class'=>'column_company']
                     ),
                     array(
@@ -65,7 +65,7 @@
                     array(
                       'header' => 'Название',
                       'name' => 'title',
-                      'value' => 'getLink("/admin/VacancyEdit/" . $data->id, $data->title)',
+                      'value' => '!empty($data->title) ? $data->title : "-"',
                       'type' => 'html',
                       'htmlOptions' => ['class'=>'column_title']
                     ),
@@ -85,7 +85,7 @@
                     ),
                     array(
                       'header' => 'Дата создания',
-                      'filter' => getDatePickers($this, 'b_crdate', 'e_crdate'),
+                      'filter' => AdminView::filterDateRange($this,'b_crdate','e_crdate'),
                       'name' => 'crdate',
                       'type' => 'html',
                       'value' => 'Share::getPrettyDate($data->crdate,false,true)',
@@ -93,7 +93,7 @@
                     ),
                     array(
                       'header' => 'Дата изменения',
-                      'filter' => getDatePickers($this, 'b_mdate', 'e_mdate'),
+                      'filter' => AdminView::filterDateRange($this,'b_mdate','e_mdate'),
                       'name' => 'mdate',
                       'type' => 'raw',
                       'value' => 'Share::getPrettyDate($data->mdate,false,true)',
@@ -101,7 +101,7 @@
                     ),
                     array(
                       'header' => 'Дата завершения',
-                      'filter' => getDatePickers($this, 'b_remdate', 'e_remdate'),
+                      'filter' => AdminView::filterDateRange($this,'b_remdate','e_remdate'),
                       'name' => 'remdate',
                       'type' => 'raw',
                       'value' => 'Share::getDate(strtotime($data->remdate),"d.m.y")',
@@ -143,7 +143,7 @@
                       'htmlOptions' => ['class'=>'column_archive']
                     ),
                     array(
-                      'value' => 'getLink("/admin/VacancyEdit/" . $data->id, "Редактировать", true)',
+                      'value' => 'getLinks($data->id)',
                       'type' => 'raw',
                       'htmlOptions' => ['class'=>'column_edit']
                     ),
@@ -158,14 +158,6 @@
         //
         //
         //
-        // ссылка
-        function getLink($link, $name, $is_btn=false)
-        {
-            if(!$name)
-                return ' - ';
-
-            return  "<a href='$link' " . ($is_btn ? 'class="btn btn-default"' : '') . ">$name</a> ";
-        }
         // города
         function getVacancyCities($id)
         {
@@ -199,34 +191,6 @@
             else
                 return implode(',<br>', $query);
         }
-        // datepickers
-        function getDatePickers($obj,$n1,$n2)
-        {
-          $arr = ['class' => 'grid_date','autocomplete'=>'off'];
-          $html = '<div class="date_range">'
-                . '<div class="input_' . $n1 . '"></div>'
-                . '<div class="separator">-</div>'
-                . '<div class="input_' . $n2 . '"></div>'
-                . $obj->widget('zii.widgets.jui.CJuiDatePicker',
-                    [
-                      'name'=>$n1,
-                      'value'=>Yii::app()->getRequest()->getParam($n1),
-                      'options'=>['changeMonth'=>true],
-                      'htmlOptions'=>$arr
-                    ],
-                    true)
-                . $obj->widget('zii.widgets.jui.CJuiDatePicker',
-                    [
-                      'name'=>$n2,
-                      'value'=>Yii::app()->getRequest()->getParam($n2),
-                      'options'=>['changeMonth'=>true],
-                      'htmlOptions'=>$arr
-                    ],
-                    true)
-                . '</div>';
-
-          return $html;     
-        }
         // responses
         function getResponses($id)
         {
@@ -259,6 +223,14 @@
           $html .= '</ul></div>';
 
           return $html;
+        }
+        // edit links
+        function getLinks($id)
+        {
+          return '<div><a href="/admin/VacancyEdit/' . $id 
+            . '" class="glyphicon glyphicon-edit" title="редактировать"></a> '
+            . '<a href="/vacancy/' . $id
+            . '" class="glyphicon glyphicon-new-window" target="_blank" title="вакансия"></a></div>';
         }
         ?>
     </div>

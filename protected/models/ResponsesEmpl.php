@@ -1050,4 +1050,38 @@ class ResponsesEmpl extends Responses
 
         return $arRes;
     }
+    /**
+     * 
+     */
+    public function getVacResponsesAdmin($id_vacancy)
+    {
+        $arRes = [
+                MainConfig::$VACANCY_APPROVED => [],
+                'users' => [],
+                'items' => []
+            ];
+
+        $arRes['items'] = Yii::app()->db->createCommand()
+                    ->select("vs.status, vs.isresponse, r.id_user")
+                    ->from('vacation_stat vs')
+                    ->leftjoin('resume r','r.id=vs.id_promo')
+                    ->where('vs.id_vac=:id',[':id'=>$id_vacancy])
+                    ->queryAll();
+
+        if(!count($arRes['items']))
+            return $arRes;
+
+        $arId = array();
+        foreach ($arRes['items'] as $v)
+        {
+            // утвержденные
+            if($v['status'] > self::$STATUS_EMPLOYER_ACCEPT)
+                $arRes[MainConfig::$VACANCY_APPROVED][] = $v;
+            // id_user
+            $arId[] = $v['id_user'];
+        }
+        $arRes['users'] = Share::getUsers($arId);
+
+        return $arRes;
+    }
 }

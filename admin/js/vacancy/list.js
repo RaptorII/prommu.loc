@@ -59,4 +59,21 @@ $(function(){
       });
     }
   });
+  //
+  $('.content').on('click','.column_id',function(){ openVacancy(this) });
+  $('.content').on('click','.column_id_user',function(){ openVacancy(this) });
+  $('.content').on('click','.column_title',function(){ openVacancy(this) });
+  $('.content').on('click','.column_city',function(){ openVacancy(this) });
+  $('.content').on('click','.column_post',function(){ openVacancy(this) });
+  $('.content').on('click','.column_cdate',function(){ openVacancy(this) });
+  $('.content').on('click','.column_mdate',function(){ openVacancy(this) });
+  $('.content').on('click','.column_rdate',function(){ openVacancy(this) });
+  //
+  function openVacancy()
+  {
+    var row = $(arguments[0]).closest('tr'),
+        id = $(row).find('td').first().text();
+
+    location.href = '/admin/VacancyEdit/'+id;
+  }
 });

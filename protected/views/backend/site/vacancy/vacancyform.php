@@ -29,7 +29,7 @@
           <a href="#tab_services" aria-controls="tab_services" role="tab" data-toggle="tab">Услуги</a>
         </li>
         <li>
-          <a href="#tab_seo" aria-controls="tab_seo" role="tab" data-toggle="tab">СЕО</a>
+          <a href="#tab_seo" aria-controls="tab_seo" role="tab" data-toggle="tab">SEO</a>
         </li>
       </ul>
     </div>
@@ -63,10 +63,36 @@
                   <span>Просмотров:</span> <b><?=$viData['views']?></b>
                 </div>
                 <div class="d-indent">
-                  <span>Откликов:</span> <b><?=$viData['responses']['cnt']?></b>
+                  <span>Откликов:</span> <b><?=count($viData['responses']['items'])?></b>
+                  <? if(count($viData['responses']['items'])): ?>
+                    <div>
+                      <?
+                        $arRes = [];
+                        foreach ($viData['responses']['items'] as $v)
+                        {
+                          $arUser = $viData['responses']['users'][$v['id_user']];
+                          $arRes[] = '<a href="/admin/PromoEdit/' . $v['id_user'] . '">' . $arUser['name'] . '</a>';
+                        }
+                        echo implode(', ', $arRes);
+                      ?>
+                    </div>
+                  <? endif; ?>
                 </div>
                 <div class="d-indent">
-                  <span>Утвержденных:</span> <b><?=$viData['responses']['approved']?></b>
+                  <span>Утвержденных:</span> <b><?=count($viData['responses']['approved'])?></b>
+                  <? if(count($viData['responses']['approved'])): ?>
+                    <div>
+                      <?
+                        $arRes = [];
+                        foreach ($viData['responses']['approved'] as $v)
+                        {
+                          $arUser = $viData['responses']['users'][$v['id_user']];
+                          $arRes[] = '<a href="/admin/PromoEdit/' . $v['id_user'] . '">' . $arUser['name'] . '</a>';
+                        }
+                        echo implode(', ', $arRes);
+                      ?>
+                    </div>
+                  <? endif; ?>
                 </div>
               </div>
             </div>
@@ -288,10 +314,12 @@
           // Услуги
           ?> 
           <div role="tabpanel" class="tab-pane fade" id="tab_services">
+            <? $serviceCnt = 0; ?>
             <h4>Данные по услугам</h4>
             <label class="d-label">
               <span>Премиум</span>
               <? echo CHtml::CheckBox('Vacancy[ispremium]',$vacancy['ispremium'],['value'=>'1']); ?>
+              <? $vacancy['ispremium'] && $serviceCnt++; ?>
             </label>
             <label class="d-label">
               <span>Email - <?=count($viData['services']['email']['items'])?></span>
@@ -311,6 +339,7 @@
                   </div>
                 <? endforeach; ?>
               </div>
+              <? $serviceCnt++; ?>
             <? endif; ?>
 
             <label class="d-label">
@@ -331,6 +360,7 @@
                   </div>
                 <? endforeach; ?>
               </div>
+              <? $serviceCnt++; ?>
             <? endif; ?>
 
             <label class="d-label">
@@ -351,14 +381,42 @@
                   </div>
                 <? endforeach; ?>
               </div>
+              <? $serviceCnt++; ?>
             <? endif; ?>
 
+            <label class="d-label">
+              <span>Репост в ВК</span>
+              <span class="glyphicon glyphicon-<?=(substr($vacancy['repost'],0,1)=='1')?'check':'unchecked'?>"></span>
+              <? if (!empty($vacancy['vk_link'])): ?>
+                <a href="<?=$vacancy['vk_link']?>" target="_blank" class="glyphicon glyphicon-link"></a>
+                <? $serviceCnt++; ?>
+              <? endif; ?>
+            </label>
+
+            <label class="d-label">
+              <span>Репост в Facebook</span>
+              <span class="glyphicon glyphicon-<?=(substr($vacancy['repost'],1,1)=='1')?'check':'unchecked'?>"></span>
+              <? if (!empty($vacancy['fb_link'])): ?>
+                <a href="<?=$vacancy['fb_link']?>" target="_blank" class="glyphicon glyphicon-link"></a>
+                <? $serviceCnt++; ?>
+              <? endif; ?>
+            </label>
+
+            <label class="d-label">
+              <span>Репост в Telegram</span>
+              <span class="glyphicon glyphicon-<?=(substr($vacancy['repost'],2,1)=='1')?'check':'unchecked'?>"></span>
+              <? if (!empty($vacancy['tl_link'])): ?>
+                <a href="<?=$vacancy['tl_link']?>" target="_blank" class="glyphicon glyphicon-link"></a>
+                <? $serviceCnt++; ?>
+              <? endif; ?>
+            </label>
+            <a href="/admin/services?Service[name]=<?=$viData['id']?>" target="_blank">Транзакции по вакансии</a>
           </div>
           <?
-          // СЕО
+          // SEO
           ?>  
           <div role="tabpanel" class="tab-pane fade" id="tab_seo">
-            <h4>СЕО</h4>
+            <h4>SEO</h4>
             <label class="d-label">
               <span>Запретить индексацию</span>
               <? echo CHtml::CheckBox('Vacancy[index]',$vacancy['index'],['value'=>'1']); ?>

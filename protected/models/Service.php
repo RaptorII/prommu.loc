@@ -102,6 +102,13 @@ class Service extends CActiveRecord
 
         $criteria=new CDbCriteria;
 
+        $get = Yii::app()->getRequest()->getParam('Service');
+        if(intval($get['name']))
+        {
+            $criteria->condition = "name={$get['name']}";
+            $this->name = $get['name'];
+        }
+
         $criteria->compare('id',$this->id,true);
         $criteria->compare('name',$this->name, true);
         $criteria->compare('type',$this->type,true);

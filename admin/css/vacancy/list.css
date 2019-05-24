@@ -29,11 +29,11 @@
 }
 .dataTable tr .column_status,
 .dataTable tr .column_ismoder,
-.dataTable tr .column_archive,
-.dataTable tr .column_edit{
+.dataTable tr .column_archive{
     padding: 0;
 }
-
+.dataTable tr .column_edit div{ display: flex; }
+.dataTable tr .column_edit a{ padding: 0 5px; }
 .date_range .separator{ 
     text-align: center;
     line-height: 10px;
@@ -53,7 +53,13 @@
 .dataTable .dropdown-menu li:hover{ opacity: 0.7 }
 .date_range input{ text-align: center; }
 .custom-table .filters .date_range input{ min-width: 90px; }
-.custom-table tbody tr:hover td:not(.empty){
+.custom-table tbody tr:hover td.column_checkbox:not(.empty),
+.custom-table tbody tr:hover td.column_company:not(.empty),
+.custom-table tbody tr:hover td.column_status:not(.empty),
+.custom-table tbody tr:hover td.column_ismoder:not(.empty),
+.custom-table tbody tr:hover td.column_archive:not(.empty),
+.custom-table tbody tr:hover td.column_edit:not(.empty),
+.custom-table tbody tr:hover td.column_response:not(.empty){
     cursor: default;
     color: inherit;
 }
@@ -65,6 +71,7 @@
 .column_response .glyphicon:before{
     padding-right: 5px;
 }
+.column_company a{ text-decoration: underline; }
 /*
 * export form
 */

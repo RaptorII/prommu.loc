@@ -25,7 +25,7 @@ class SearchRule extends CBaseUrlRule {
             if($path[0]=='vacancy')
             {
                 $length = count($path);
-                if($length>1 && stripos($path[1],"?")===false) // страница отдельной вакансии
+                if($length>1 && stripos($path[1],"?")===false && intval($path[1])>0) // страница отдельной вакансии
                 {
                     $_GET['id'] = intval($path[1]);
                     if(count($path)==3) // страница секций

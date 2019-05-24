@@ -62,8 +62,7 @@ class Vacancy extends ARModel
     function relations()
     {
         return array(
-                'employer'=>array(self::BELONGS_TO,'Employer','id_empl'),
-                'empl_city'=>array(self::BELONGS_TO,'Employer','id_empl')
+                'employer'=>array(self::BELONGS_TO,'Employer','id_empl')
             );
     }
 
@@ -100,7 +99,7 @@ class Vacancy extends ARModel
 
         return new CActiveDataProvider('Vacancy', array(
             'criteria'=>$criteria,
-            'pagination' => array('pageSize' => 20),
+            'pagination' => array('pageSize' => 10),
             'sort' => [
                 'defaultOrder'=>'t.mdate desc',
                 'attributes'=>array(
@@ -3866,7 +3865,7 @@ WHERE id_vac = {$inVacId}";
             return $arRes;
         // отклики
         $model = new ResponsesEmpl();
-        $arRes['responses'] = $model->getVacResponsesCnt($id_vacancy);
+        $arRes['responses'] = $model->getVacResponsesAdmin($id_vacancy);
         // просмотры
         $model = new Termostat();
         $arRes['views'] = $model->getTermostatCount($id_vacancy);
