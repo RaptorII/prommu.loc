@@ -1072,6 +1072,7 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	}
 	#DiContent .edit-profile-applicant .epa__checkbox{
 		float: right;
+		width: 100%;
 	}
 	.epa__attr-block2{ 
 		width: 50%;

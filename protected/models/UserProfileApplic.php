@@ -253,9 +253,12 @@ class UserProfileApplic extends UserProfile
             elseif( $val['pay_type'] == 2 ) $res[$key]['paylims'] ='руб/месяц';
             else $res[$key]['paylims'] ='руб/час';
 
+            $flagPF = 0; //test it 27.05.2019
+
             if( $val['isshow'] ) $exp[] = $val['val'];
 
-            if( !$val['isshow'] ) $flagPF || $flagPF = 1;
+            if( !$val['isshow'] )
+                $flagPF || $flagPF = 1;
         } // end foreach
         
         $data['userMech'] = $res;
@@ -339,7 +342,7 @@ class UserProfileApplic extends UserProfile
 
         return array('pointRate' => $pointRate,
                 'rate' => $rate,
-                'full' => $full,
+                'full' => $full, //undefined?
                 'countRate' => $rate[0] - $rate[1],
                 'maxPointRate' => $maxPointRate,
                 'rateNames' => $inData['rateNames'],
@@ -1185,6 +1188,7 @@ class UserProfileApplic extends UserProfile
         $data['rating'] = $this->getPointRate($inID);
         $data['lastJobs'] = $this->getLastJobs($inIDpromo);
         $data['userInfo'] = $this->getUserInfo($inID);
+
         if( $data['userInfo']['userMetro'] ) {
             foreach ($data['userInfo']['userMetro'] as $val) { $metro[] = $val['name']; }
             $data['userInfo']['userMetro'] = array($data['userInfo']['userMetro'], join(', ', $metro));

@@ -93,7 +93,7 @@ class Promo extends ARModel
             }
             if($res[$i]['crdate'] == date("m.d.Y")){
                 $result['vacancyStart'] = $res[$i]['id']."&";
-                $dateStart++;
+                $dateStarts++;
                 $result['cnt']++;
             }
             !empty($res[$i]['firstname']) && $name = $res[$i]['firstname'];
