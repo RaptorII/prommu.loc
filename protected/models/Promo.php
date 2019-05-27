@@ -234,7 +234,7 @@ class Promo extends ARModel
         return new CActiveDataProvider('Promo', array(
             'criteria'=>$criteria,
             'pagination' => array('pageSize' => 100,),
-            'sort' => ['defaultOrder'=>'ismoder asc, mdate desc'],
+            'sort' => ['defaultOrder'=>'mdate desc'],
         ));
     }
   

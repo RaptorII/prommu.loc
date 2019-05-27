@@ -7,7 +7,7 @@ class Yexcel
 	 * @param $arRows - array
 	 * @param $fName - string
 	 */
-	public static function makeExcel($arHead, $arRows, $fName='xls_file')
+	public static function makeExcel($arHead, $arRows, $fName='xls_file', $arAutoSize=false)
 	{
 		if(!count($arHead) || !count($arRows)	|| empty(trim($fName)))
 			return false;
@@ -32,13 +32,14 @@ class Yexcel
 		// head
 		$row = 1;
 		reset($arCols);
-		foreach ($arHead as $v)
+		foreach ($arHead as $k => $v)
 		{
 			$cell = current($arCols).$row;
 			$objSheet->setCellValue($cell, $v);
 			self::setCellBackground($yexcel, $cell, 'ABB837');
 			self::setCellFontColor($yexcel, $cell, 'FFFFFF');
-			$objSheet->getColumnDimension(current($arCols))->setAutoSize(true);
+			if(!$arAutoSize || (is_array($arAutoSize) && in_array($k, $arAutoSize)))
+				$objSheet->getColumnDimension(current($arCols))->setAutoSize(true);
 			next($arCols);
 		}
 		// body
@@ -50,7 +51,7 @@ class Yexcel
 			{
 				$cell = current($arCols).$row;
 				$objSheet->setCellValue($cell, $v);
-				$objSheet->getColumnDimension(current($arCols))->setAutoSize(true);
+				//$objSheet->getColumnDimension(current($arCols))->setAutoSize(true);
 				next($arCols);
 			}
 		}
