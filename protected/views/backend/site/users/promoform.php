@@ -424,7 +424,7 @@ echo '<div role="tabpanel" class="tab-pane fade" id="tab_seo">';
         . '<label class="control-label">meta_title</label>';
         $text = html_entity_decode($data['meta_title']);
         $text = strip_tags($text);     
-        echo CHtml::textArea(
+        /*echo CHtml::textArea(
             'User[meta_title]', 
             $text, 
             array(
@@ -432,14 +432,14 @@ echo '<div role="tabpanel" class="tab-pane fade" id="tab_seo">';
                 'cols' => 40,
                 'class'=>'form-control'
             )
-        )
-        . '</div>';
+        )*/
+        echo $text . '</div>';
 
     echo '<div class="control-group medium-bl">'
         . '<label class="control-label">meta_h1</label>';
         $text = html_entity_decode($data['meta_h1']);
         $text = strip_tags($text);     
-        echo CHtml::textArea(
+        /*echo CHtml::textArea(
             'User[meta_h1]', 
             $text, 
             array(
@@ -447,14 +447,14 @@ echo '<div role="tabpanel" class="tab-pane fade" id="tab_seo">';
                 'cols' => 40,
                 'class'=>'form-control'
             )
-        )
-        . '</div>';
+        )*/
+        echo $text . '</div>';
 
     echo '<div class="control-group medium-bl">'
         . '<label class="control-label">meta_description</label>';
         $text = html_entity_decode($data['meta_description']);
         $text = strip_tags($text);     
-        echo CHtml::textArea(
+        /*echo CHtml::textArea(
             'User[meta_description]', 
             $text, 
             array(
@@ -462,8 +462,8 @@ echo '<div role="tabpanel" class="tab-pane fade" id="tab_seo">';
                 'cols' => 40,
                 'class'=>'form-control'
             )
-        )
-        . '</div>';
+        )*/
+        echo $text . '</div>';
 
     echo '<div class="control-group medium-bl">'
         . '<label class="control-label">Комментарий администратора</label>';

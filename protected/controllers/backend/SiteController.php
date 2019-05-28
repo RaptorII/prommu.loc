@@ -576,11 +576,7 @@ class SiteController extends Controller
 
     public function actionVacancy()
     {
-        if(!self::isAuth() || strpos($this->user_access, "Вакансии") === false)
-        {
-            $this->render('access');
-            return;
-        }
+        $this->checkAccess('Вакансии');
 
         $model = new Vacancy;
         $model->unsetAttributes();  // clear any default values
@@ -608,7 +604,7 @@ class SiteController extends Controller
                 {
                     $this->redirect(['vacancy']);
                 }
-                Yexcel::makeExcel($data['head'],$data['items'],'export_vacancies'); 
+                Yexcel::makeExcel($data['head'],$data['items'],'export_vacancies',$data['autosize']); 
             }
             
             $title = 'Действующие';
@@ -1006,11 +1002,7 @@ class SiteController extends Controller
 
     public function actionVacancyEdit($id)
     {
-        if(!self::isAuth() /*|| strpos($this->user_access, "vacancy") == false*/)
-        {
-            $this->render('access');
-            return;
-        }
+        $this->checkAccess('Вакансии');
 
         $model = new Vacancy;
         if(!empty($_POST['Vacancy'])) // сохранение

@@ -2774,7 +2774,7 @@ WHERE id_vac = {$inVacId}";
       $arId = Yii::app()->db->createCommand()
                 ->select('id')
                 ->from('empl_vacations')
-                ->where('status=1 AND ismoder=100'/* AND remdate>=NOW()'*/) // убираем remdate для повышения эффективности
+                ->where('status=1 AND ismoder=100 AND in_archive=0'/* AND remdate>=NOW()'*/) // убираем remdate для повышения эффективности
                 //->order('ispremium DESC, id DESC')
                 ->queryColumn();
 
