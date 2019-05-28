@@ -2627,6 +2627,7 @@ public function vac(){
             FROM user r
             WHERE r.id_user = {$idus}";
         $res= Yii::app()->db->createCommand($sql)->queryScalar();
+        $message = 'Error get api data';
         if($res == 3){
             $Logo = new UploadLogo($profile);
             $data = $Logo->processUploadedLogoEmpl($_FILES['photo']);
@@ -2634,12 +2635,16 @@ public function vac(){
                 ->update('employer', array(
                     'logo' => $data,
                 ), 'id_user = :id', array(':id' => $idus));
+                
+            $message = $data;
             }
         elseif($res == 2){
             $Logo = new UploadLogo($profile);
             $data = $Logo->processUploadedLogoPromo($_FILES['photo']);
+            $message = $data;
             $User = new UserProfileApplic($profile);
             $dat = $User->sendLogo(compact('id', 'data'));
+            
         }
         } catch (Exception $e)
             {
