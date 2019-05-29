@@ -2708,7 +2708,7 @@ public function vac(){
         $path = "/images/".$id."/tmp/";
             
         file_put_contents("/var/www/files_prommu".$path.$file, $current);
-        var_dump($profile);
+        
         if($profile->type == 3){
             
             $eid = $profile->exInfo->eid;
@@ -2718,10 +2718,11 @@ public function vac(){
             $photosData = Yii::app()->db->createCommand($sql);
             $photosData = $photosData->queryRow();
             
+            var_dump($photosData);
             if(!empty($photosData['npp'])){
                  $photosData['npp'] = 0;
             }
-            
+
             Yii::app()->db->createCommand()
                 ->insert('user_photos', array(
                     'id_empl' => $eid,
@@ -2739,11 +2740,10 @@ public function vac(){
             
             $id_resume = $profile->exInfo->id_resume;
             
-            
             $sql = "SELECT MAX(p.npp) npp, COUNT(*) cou FROM user_photos p WHERE p.id_resume = {$id_resume}";
             $photosData = Yii::app()->db->createCommand($sql);
             $photosData = $photosData->queryRow();
-            
+            var_dump($photosData);
             if(!empty($photosData['npp'])){
                  $photosData['npp'] = 0;
             }
