@@ -2693,116 +2693,79 @@ public function vac(){
      {
 
         $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $photo = Yii::app()->getRequest()->getParam('photo');
+        $photo = json_decode(Yii::app()->getRequest()->getParam('photo'),1);
         
         
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         $id = $idus;
         
-        $current =  base64_decode($photo);
+        for($i = 0; $i < count($photo); $i ++){
+            
         
-        mkdir("/var/www/files_prommu/images/".$id, 0700);
-        mkdir("/var/www/files_prommu/images/".$id."/tmp/", 0700);
-        $name = date('YmdHis').rand(100,1000);
-        $file = $name . ".jpg";
-        $path = "/images/".$id."/tmp/";
+            $current =  base64_decode($photo[$i]);
             
-        file_put_contents("/var/www/files_prommu".$path.$file, $current);
-        
-        if($profile->type == 3){
+            mkdir("/var/www/files_prommu/images/".$id, 0700);
+            mkdir("/var/www/files_prommu/images/".$id."/tmp/", 0700);
+            $name = date('YmdHis').rand(100,1000);
+            $file = $name . ".jpg";
+            $path = "/images/".$id."/tmp/";
+                
+            file_put_contents("/var/www/files_prommu".$path.$file, $current);
             
-            $eid = $profile->exInfo->eid;
-            
-            
-            $sql = "SELECT MAX(p.npp) npp, COUNT(*) cou FROM user_photos p WHERE p.id_empl = {$eid}";
-            $photosData = Yii::app()->db->createCommand($sql);
-            $photosData = $photosData->queryRow();
-            
-            
-            if(!empty($photosData['npp'])){
-                 $photosData['npp'] = 0;
-            }
-
-            Yii::app()->db->createCommand()
-                ->insert('user_photos', array(
-                    'id_empl' => $eid,
-                    'id_user' => $id,
-                    'npp' => $photosData['npp'] + 1,
-                    'photo' => $name,
-                ));
+            if($profile->type == 3){
+                
+                $eid = $profile->exInfo->eid;
                 
                 
-            $message = $file;
-            $error = '0';
-
-
-        } elseif($profile->type == 2){
-            
-            $id_resume = $profile->exInfo->id_resume;
-            
-            $sql = "SELECT MAX(p.npp) npp, COUNT(*) cou FROM user_photos p WHERE p.id_promo = {$id_resume}";
-            $photosData = Yii::app()->db->createCommand($sql);
-            $photosData = $photosData->queryRow();
-            
-            var_dump($photosData);
-            if(!empty($photosData['npp'])){
-                 $photosData['npp'] = 0;
-            }
-           
-            Yii::app()->db->createCommand()
-                ->insert('user_photos', array(
-                    'id_promo' => $id_resume,
-                    'id_user' => $id,
-                    'npp' => $photosData['npp'] + 1,
-                    'photo' => $name,
-                ));
+                $sql = "SELECT MAX(p.npp) npp, COUNT(*) cou FROM user_photos p WHERE p.id_empl = {$eid}";
+                $photosData = Yii::app()->db->createCommand($sql);
+                $photosData = $photosData->queryRow();
                 
-            $message = $file;
-            $error = '0';
-
-        }
-        // var_dump($profile);
-        // $sql = "SELECT r.status
-        //     FROM user r
-        //     WHERE r.id_user = {$idus}";
-        // $res= Yii::app()->db->createCommand($sql)->queryScalar();
- 
-        // $sql = "SELECT MAX(p.npp) npp, COUNT(*) cou FROM user_photos p WHERE p.id_empl = {$eid}";
-        // /** @var $res CDbCommand */
-        // $photosData = Yii::app()->db->createCommand($sql);
-        // $photosData = $photosData->queryRow();
-
-
-        // $current =  base64_decode($photo);
-        
-        // mkdir("/var/www/files_prommu/images/".$id, 0700);
-        // mkdir("/var/www/files_prommu/images/".$id."/tmp/", 0700);
-        // $name = date('YmdHis').rand(100,1000);
-        // $file = $name . ".jpg";
-        // $path = "/images/".$id."/tmp/";
-        
-        // file_put_contents("/var/www/files_prommu".$path.$file, $current);
-        
-        // if($res == 2){
-        //     $types = 'resume';
-        //     $value = 'photo';
-        //     $rest = $file;
-        // } else {
-        //     $types = 'employer'; 
-        //     $value = 'logo';
-        //     $rest = $name;
-        // }
-        
-        // Yii::app()->db->createCommand()
-        //             ->update($types, array(
-        //                 $value => $rest,
-        //             ), 'id_user = :id', array(':id' => $id));  
-
+                
+                if(!empty($photosData['npp'])){
+                     $photosData['npp'] = 0;
+                }
     
-        // $message = $file;
-        // $error = '0';
-               
+                Yii::app()->db->createCommand()
+                    ->insert('user_photos', array(
+                        'id_empl' => $eid,
+                        'id_user' => $id,
+                        'npp' => $photosData['npp'] + 1,
+                        'photo' => $name,
+                    ));
+                    
+                    
+                $message = $file;
+                $error = '0';
+    
+    
+            } elseif($profile->type == 2){
                 
+                $id_resume = $profile->exInfo->id_resume;
+                
+                $sql = "SELECT MAX(p.npp) npp, COUNT(*) cou FROM user_photos p WHERE p.id_promo = {$id_resume}";
+                $photosData = Yii::app()->db->createCommand($sql);
+                $photosData = $photosData->queryRow();
+                
+                var_dump($photosData);
+                if(!empty($photosData['npp'])){
+                     $photosData['npp'] = 0;
+                }
+               
+                Yii::app()->db->createCommand()
+                    ->insert('user_photos', array(
+                        'id_promo' => $id_resume,
+                        'id_user' => $id,
+                        'npp' => $photosData['npp'] + 1,
+                        'photo' => $name,
+                    ));
+                    
+                $message = $file;
+                $error = '0';
+    
+            }
+        }
+        
         } catch (Exception $e)
             {
             $error = abs($e->getCode());
