@@ -253,9 +253,9 @@
 												<div class="vacancies__item-payment"><?=$vac['payment']?></div>
 												<div class="clearfix"></div>
 											</div>
-											<?= var_dump($vac['city']);?>
+											
 											<div class="vacancies__item-info">
-                                                <b>Город: </b><? echo(' '.$vac['city'].'.'); ?><br>
+                                                <b>Город: </b><? echo join(' '.$vac['city'].'.'); ?><br>
 												<b>Вид работы:</b><?=$vac['work_type']?><br>
 												<b>Период:</b><?=$vac['period']?>
 											</div>											
