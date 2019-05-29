@@ -2616,7 +2616,9 @@ public function vac(){
 
     public function photoEdit()
     {
-    $error = '-101';
+        $error = '-101';
+        $message = 'Error get api data';
+       
      try
      {
 
@@ -2630,13 +2632,30 @@ public function vac(){
             FROM user r
             WHERE r.id_user = {$idus}";
         $res= Yii::app()->db->createCommand($sql)->queryScalar();
+ 
+ 
+        $current =  base64_decode($photo);
         
-        $message = 'Error get api data';
-        $error = '-101';
-        Share::$UserProfile->type == $res;
-        $data = (new UploadLogo())->processUploadedLogoApi($photo, $id, $res);
-               
-        $message = $data;
+        mkdir("/var/www/files_prommu/images/".$id, 0700);
+        mkdir("/var/www/files_prommu/images/".$id."/tmp/", 0700);
+        $file = date('YmdHis').rand(100,1000) . ".jpg";
+        $path = "/images/".$id."/tmp/";
+        
+        $res = file_put_contents("/var/www/files_prommu".$path.$file, $current);
+        
+        if($type == 2){
+            $type = 'resume';
+        } else {
+            $type = 'employer'; 
+        }
+        
+        Yii::app()->db->createCommand()
+                    ->update($resume, array(
+                        'logo' => $file,
+                    ), 'id_user = :id', array(':id' => $id));  
+
+    
+        $message = $file;
         $error = '0';
                
                 
