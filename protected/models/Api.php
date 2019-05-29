@@ -2709,7 +2709,7 @@ public function vac(){
         
         Yii::app()->db->createCommand()
                     ->update($types, array(
-                        $value => "",
+                        $value => null,
                     ), 'id_user = :id', array(':id' => $id));  
 
     
