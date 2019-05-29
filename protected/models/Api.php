@@ -2644,7 +2644,7 @@ public function vac(){
                 $error = '0';
                 }
             elseif($res == 2){
-                var_dump($profile);
+                
                 $Logo = new UploadLogo($profile);
                 
                 $data = $Logo->processUploadedLogoPromoApi($_FILES, $id);
