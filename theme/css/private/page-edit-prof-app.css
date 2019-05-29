@@ -1524,10 +1524,15 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	/*align-items: stretch;*/
 	align-content: stretch;
 }
-#DiContent .epa__date .epa__label-name,
-#DiContent .epa__payment .epa__label-name{
+#DiContent .epa__date .epa__label-name{
 	position: static;
 	padding: 0;
+	white-space: nowrap;
+}
+#DiContent .epa__payment .epa__label-name{
+	position: absolute;
+	top: 0;
+	left: 10px;
 	white-space: nowrap;
 }
 #DiContent .epa__date .epa__input{ padding: 0 10px; }
