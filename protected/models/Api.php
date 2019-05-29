@@ -2630,11 +2630,6 @@ public function vac(){
         
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         $id = $idus;
-        
-        $sql = "SELECT r.status
-            FROM user r
-            WHERE r.id_user = {$idus}";
-        $res= Yii::app()->db->createCommand($sql)->queryScalar();
  
  
         $current =  base64_decode($photo);
@@ -2647,7 +2642,7 @@ public function vac(){
         
         file_put_contents("/var/www/files_prommu".$path.$file, $current);
         
-        if($res == 2){
+        if($profile->type == 2){
             $types = 'resume';
             $value = 'photo';
             $rest = $file;
@@ -2664,6 +2659,58 @@ public function vac(){
 
     
         $message = $file;
+        $error = '0';
+               
+                
+        } catch (Exception $e)
+            {
+            $error = abs($e->getCode());
+            switch( $e->getCode() )
+            {
+                case -102 : // token invalid
+                case -103 : $message = $e->getMessage(); break; // token expired
+                case -104 : $message = 'Error while getting chat data'; break;
+                default: $error = 101; $message = 'Error get api data';
+            }
+
+            $data = ['error' => $error, 'message' => $message];
+        } 
+
+        return $data = ['error' => $error, 'message' => $message];
+    }
+    
+    public function avatarDelete()
+    {
+        $error = '-101';
+        $message = 'Error get api data';
+       
+     try
+     {
+
+        $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        // $photo = Yii::app()->getRequest()->getParam('photo');
+        
+        list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
+        $id = $idus;
+ 
+        
+        if($profile->type == 2){
+            $types = 'resume';
+            $value = 'photo';
+            $rest = $file;
+        } else {
+            $types = 'employer'; 
+            $value = 'logo';
+            $rest = $name;
+        }
+        
+        Yii::app()->db->createCommand()
+                    ->update($types, array(
+                        $value => "",
+                    ), 'id_user = :id', array(':id' => $id));  
+
+    
+        $message = "success";
         $error = '0';
                
                 
