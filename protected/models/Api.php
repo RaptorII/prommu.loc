@@ -1,4 +1,4 @@
-<?php
+ƒ<?php
 /**
  * Работа с API
  * Date: 26.04.19
@@ -2642,17 +2642,17 @@ public function vac(){
         $file = $name . ".jpg";
         $path = "/images/".$id."/tmp/";
         
-        $res = file_put_contents("/var/www/files_prommu".$path.$file, $current);
+        file_put_contents("/var/www/files_prommu".$path.$file, $current);
         
-        if($type == 2){
-            $type = 'resume';
+        if($res == 2){
+            $types = 'resume';
         } else {
-            $type = 'employer'; 
+            $types = 'employer'; 
         }
         
         Yii::app()->db->createCommand()
-                    ->update($type, array(
-                        'photo' => $name,
+                    ->update($types, array(
+                        'photo' => $file,
                     ), 'id_user = :id', array(':id' => $id));  
 
     
