@@ -203,7 +203,7 @@ class UserProfileApplic extends UserProfile
             'aboutme' => $val['aboutme'],
             'firstname' => $val['firstname'],
             'lastname' => $val['lastname'],
-            'photo' => $val['photo'],
+            'photo' => "https://files.prommu.com/images/".$val['id_user']."/tmp/".$val['photo'],
             'email' => $val['email'],
             'mdate' => $val['mdate'],
             'card' => $val['card'],
@@ -224,7 +224,6 @@ class UserProfileApplic extends UserProfile
         $sql = "SELECT t.id_city idcity, t.wday, t.timeb, t.timee FROM user_wtime t WHERE t.id_us = {$id}";
         $res = Yii::app()->db->createCommand($sql)->queryAll();
         
-        // "workDays":[{"id_city":1307, "timeb":880, "timee":900, "day":2}]
         $i = 0;
         foreach ($res as $key => $val):
             
