@@ -1,4 +1,4 @@
-ƒ<?php
+<?php
 /**
  * Работа с API
  * Date: 26.04.19
@@ -2646,13 +2646,17 @@ public function vac(){
         
         if($res == 2){
             $types = 'resume';
+            $value = 'photo';
+            $rest = $file;
         } else {
             $types = 'employer'; 
+            $value = 'logo';
+            $rest = $name;
         }
         
         Yii::app()->db->createCommand()
                     ->update($types, array(
-                        'photo' => $file,
+                        $value => $rest,
                     ), 'id_user = :id', array(':id' => $id));  
 
     
