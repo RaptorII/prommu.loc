@@ -2699,9 +2699,9 @@ public function vac(){
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         $id = $idus;
         
+        var_dump($photo);
         for($i = 0; $i < count($photo); $i ++){
             
-        
             $current =  base64_decode($photo[$i]);
             
             mkdir("/var/www/files_prommu/images/".$id, 0700);
@@ -2747,7 +2747,6 @@ public function vac(){
                 $photosData = Yii::app()->db->createCommand($sql);
                 $photosData = $photosData->queryRow();
                 
-                var_dump($photosData);
                 if(!empty($photosData['npp'])){
                      $photosData['npp'] = 0;
                 }
