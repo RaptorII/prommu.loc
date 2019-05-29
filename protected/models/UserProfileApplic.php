@@ -192,7 +192,11 @@ class UserProfileApplic extends UserProfile
                 
             }
         } // end foreach
-
+    
+        if(!empty($val['photo'])){
+            $photo = "https://files.prommu.com/images/".$val['id_user']."/tmp/".$val['photo'];
+        }
+        
         $data['applicInfo'] = [
             'bday' => $val['bday'],
             'id_user' => $val['id_user'],
@@ -203,7 +207,7 @@ class UserProfileApplic extends UserProfile
             'aboutme' => $val['aboutme'],
             'firstname' => $val['firstname'],
             'lastname' => $val['lastname'],
-            'photo' => "https://files.prommu.com/images/".$val['id_user']."/tmp/".$val['photo'],
+            'photo' => $photo,
             'email' => $val['email'],
             'mdate' => $val['mdate'],
             'card' => $val['card'],
