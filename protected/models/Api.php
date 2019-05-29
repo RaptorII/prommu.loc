@@ -2638,7 +2638,8 @@ public function vac(){
         
         mkdir("/var/www/files_prommu/images/".$id, 0700);
         mkdir("/var/www/files_prommu/images/".$id."/tmp/", 0700);
-        $file = date('YmdHis').rand(100,1000) . ".jpg";
+        $name = date('YmdHis').rand(100,1000);
+        $file = $name . ".jpg";
         $path = "/images/".$id."/tmp/";
         
         $res = file_put_contents("/var/www/files_prommu".$path.$file, $current);
@@ -2650,8 +2651,8 @@ public function vac(){
         }
         
         Yii::app()->db->createCommand()
-                    ->update($resume, array(
-                        'logo' => $file,
+                    ->update('user_photos', array(
+                        'photo' => $name,
                     ), 'id_user = :id', array(':id' => $id));  
 
     
