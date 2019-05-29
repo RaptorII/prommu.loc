@@ -2642,7 +2642,7 @@ public function vac(){
             }
         elseif($res == 2){
             $Logo = new UploadLogo($profile);
-            $data = $Logo->processUploadedLogoPromo($_FILES['photo']);
+            $data = $Logo->processUploadedLogoPromoApi($_FILES, $id);
             $User = new UserProfileApplic($profile);
             $dat = $User->sendLogo(compact('id', 'data'));
             $message = $data;
