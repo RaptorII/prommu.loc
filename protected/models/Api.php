@@ -2723,6 +2723,10 @@ public function vac(){
                     'npp' => $photosData['npp'] + 1,
                     'photo' => $name,
                 ));
+                
+                
+            $message = $file;
+            $error = '0';
 
 
         } elseif($profile->type == 2){
@@ -2739,6 +2743,9 @@ public function vac(){
                     'npp' => $photosData['npp'] + 1,
                     'photo' => $name,
                 ));
+                
+            $message = $file;
+            $error = '0';
 
         }
         // var_dump($profile);
