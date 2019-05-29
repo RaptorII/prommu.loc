@@ -2832,6 +2832,59 @@ public function vac(){
         return $data = ['error' => $error, 'message' => $message];
     }
     
+    public function photoDelete()
+    {
+        $error = '-101';
+        $message = 'Error get api data';
+       
+     try
+     {
+
+        $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $photo = Yii::app()->getRequest()->getParam('photo');
+        
+        list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
+        $id = $idus;
+ 
+        // Yii::app()->db->createCommand()
+        //         ->delete('user_mech', array('and', 'id_us=:id_user', 'isshow=0'), array(':id_user' => $id));
+
+        if($profile->type == 2){
+            $types = 'resume';
+            $value = 'photo';
+            $rest = $file;
+        } else {
+            $types = 'employer'; 
+            $value = 'logo';
+            $rest = $name;
+        }
+        
+        Yii::app()->db->createCommand()
+                    ->update($types, array(
+                        $value => null,
+                    ), 'id_user = :id', array(':id' => $id));  
+
+    
+        $message = "success";
+        $error = '0';
+               
+                
+        } catch (Exception $e)
+            {
+            $error = abs($e->getCode());
+            switch( $e->getCode() )
+            {
+                case -102 : // token invalid
+                case -103 : $message = $e->getMessage(); break; // token expired
+                case -104 : $message = 'Error while getting chat data'; break;
+                default: $error = 101; $message = 'Error get api data';
+            }
+
+            $data = ['error' => $error, 'message' => $message];
+        } 
+
+        return $data = ['error' => $error, 'message' => $message];
+    }
 
     public function composTer()
     {
