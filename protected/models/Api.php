@@ -2711,7 +2711,7 @@ public function vac(){
             $path = "/images/".$id."/tmp/";
                 
             file_put_contents("/var/www/files_prommu".$path.$file, $current);
-            
+            $message = [];
             if($profile->type == 3){
                 
                 $eid = $profile->exInfo->eid;
