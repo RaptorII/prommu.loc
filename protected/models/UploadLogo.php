@@ -100,89 +100,32 @@ class UploadLogo extends Model
         else return $this->processCropLogoEmpl();
     }
     
-    public function processUploadedLogoApi($_FILES, $user)
+    public function processUploadedLogoApi($photo, $id, $type)
     {
         
         $message = "Ошибка загрузки файла, обновите страницу и попробуйте еще раз";
-        if( $_FILES['photo']['size'] > 5242880 || $_FILES['photo']['size'] == 0 ) $ret = array('error' => 1, 'message' => 'Неправильный размер файла!');
-        else
-        {
-            $ext = substr($_FILES['photo']['name'], 1 + strrpos($_FILES['photo']['name'], "."));
-            $fn = date('YmdHis').rand(100,1000) . ".jpg";
-            // $path = "/images/company/tmp/";
-            // $newFullFn = Subdomain::domainRoot() . $path . $fn;
-            
-            $path = "/images/".$user."/tmp/";
-            $this->createUserDir($user);
-            $newFullFn = $this->domainFiles(). $path . $fn;
-            
-            if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
-            {
-                $imgProps = getimagesize($newFullFn);
-                if( $imgProps[0] > 4500 || $imgProps[1] > 4500 )
-                {
-                    $flag = 1;
-                    $message = "Изображение превышает размер в 4500х4500 пикселей";
-                }
-                elseif( $imgProps[0] < 400 || $imgProps[1] < 400 ){
-                    $flag = 1;
-                    $message = "Минимальное разрешение изображения - 400x400 пикселей";
-                }
-                else
-                {
-                    $defSize = 1600;
-                    if( (int) ($ret = $this->imgResizeToRect($newFullFn, $newFullFn, "image/jpeg", $defSize)) > 0 )
-                    {
-                    }
-                    else
-                    {
-                    } // endif;
-                } // endif
-            }
-            else
-            {
-                $flag = 1;
-                $code = -101;
-            } // endif
-            if( $flag )
-            {
-                $ret = array('error' => 1, 'message' => $message, 'ret' => $ret, 'code' => $code);
-            }
-            else
-            {
-                Yii::app()->session['uplLogo'] = array('path' => "/images/".$user."/tmp/", 'file' => $fn);
-                $ret = array('error' => 0, 'file' => "/images/".$user."/tmp/" . $fn);
-            } // endif
-        } // endif
-
-        $message = "WARNING!";
-        $pathTmp = $path;
-        $file =  $fn;
-        if( file_exists($this->domainFiles() . $pathTmp . $file) )
-        {
-            $path = "/images/".$user."/";
-            $res = $this->imgCrop($this->domainFiles(). $pathTmp . $file, $this->domainFiles(). $path . $file,
-                    array('x1' => 0,
-                        'y1' => 0,
-                        'width' => 400,
-                        'height' => 400,
-                        'rotate' => 0
-                        )
-                );
-            $pathinfo = pathinfo($this->domainFiles(). $pathTmp . $file);
-            $this->imgResizeToRect($this->domainFiles(). $path . $file, $this->domainFiles(). $path . $pathinfo['filename']  . '100.jpg', "image/jpeg", 220);
-            $this->imgResizeToRect($this->domainFiles().  $path . $file, $this->domainFiles(). $path . $pathinfo['filename']  . '400.jpg', "image/jpeg", 400);
-            $this->saveAsJpeg($this->domainFiles().  $pathTmp . $file, $this->domainFiles().  $path . $pathinfo['filename'] . '000.jpg');
-
-            unlink($this->domainFiles().  $path . $file);
+        
+        $current =  base64_decode($photo);
+        
+        mkdir("/var/www/files_prommu/images/".$id, 0700);
+        mkdir("/var/www/files_prommu/images/".$id."/tmp/", 0700);
+        $file = date('YmdHis').rand(100,1000) . ".jpg";
+        $path = "/images/".$id."/tmp/";
+        
+        $res = file_put_contents("/var/www/files_prommu".$path.$file, $current);
+        
+        if($type == 2){
+            $type = 'resume';
+        } else {
+            $type = 'employer'; 
         }
-        else
-        {
-            $flag = 1;
-        } 
+        
+        Yii::app()->db->createCommand()
+                    ->update($resume, array(
+                        'logo' => $file,
+                    ), 'id_user = :id', array(':id' => $id));   
 
-
-        return $pathinfo['filename'];
+        return $file;
     }
     
     public function processUploadedLogoEmpl()
