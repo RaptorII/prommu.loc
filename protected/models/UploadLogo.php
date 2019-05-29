@@ -276,10 +276,10 @@ class UploadLogo extends Model
         
         $message = "Ошибка загрузки файла, обновите страницу и попробуйте еще раз";
         
-         $path = "/images/".$user."/tmp/";
-            $this->createUserDir($user);
-            $newFullFn = $this->domainFiles(). $path . $fn;
-            
+        $path = "/images/".$user."/tmp/";
+        $this->createUserDir($user);
+        $newFullFn = $this->domainFiles(). $path . $fn;
+        var_dump($_FILES);
         if( $_FILES['photo']['size'] > 5242880 || $_FILES['photo']['size'] == 0 ) $ret = array('error' => 1, 'message' => 'Неправильный размер файла!');
         else
         {
