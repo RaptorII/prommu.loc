@@ -2633,11 +2633,11 @@ public function vac(){
         
         $message = 'Error get api data';
         $error = '-101';
-        
-        // $data = (new UploadLogo())->processUploadedLogoApi($photo, $id, $res);
+        Share::$UserProfile->type == $res;
+        $data = (new UploadLogo())->processUploadedLogoApi($photo, $id, $res);
                
-        // $message = $data;
-        // $error = '0';
+        $message = $data;
+        $error = '0';
                
                 
         } catch (Exception $e)
