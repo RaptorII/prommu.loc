@@ -2735,7 +2735,7 @@ public function vac(){
                     ));
                     
                     
-                $message = $file;
+                $message[] = "https://files.prommu.com/images/".$id."/tmp/".$file;
                 $error = '0';
     
     
@@ -2759,7 +2759,7 @@ public function vac(){
                         'photo' => $name,
                     ));
                     
-                $message = $file;
+                $message[] = "https://files.prommu.com/images/".$id."/tmp/".$file;
                 $error = '0';
     
             }
