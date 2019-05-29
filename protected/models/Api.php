@@ -2625,18 +2625,16 @@ public function vac(){
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         $id = $idus;
         
-        
         $current =  base64_decode($photo);
-        
-        var_dump($current);
         
         mkdir("/var/www/files_prommu/images/".$id, 0700);
         mkdir("/var/www/files_prommu/images/".$id."/tmp/", 0700);
         
         $path = "/images/".$id."/tmp/";
         
-        file_put_contents("/var/www/files_prommu".$path, $current);
+        $res = file_put_contents("/var/www/files_prommu".$path, $current);
         
+        var_dump($res);
         $sql = "SELECT r.status
             FROM user r
             WHERE r.id_user = {$idus}";
