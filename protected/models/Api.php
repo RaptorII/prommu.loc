@@ -62,7 +62,10 @@ class Api
                 case 'vacancy_act' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacAct(); break;
                 case 'vacancy_pub' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacationPub(); break;
                 case 'invite_set' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setInvite(); break;
-                case 'photo' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->photoEdit(); break;
+                
+                case 'set_avatar' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->avatarEdit(); break;
+                case 'set_photo' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->photoEdit(); break;
+                
                 case 'data_help' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getHelp(); break;
                 case 'send_push' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setPush(); break;
                 case 'send_topic' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setTopics(); break;
@@ -2614,7 +2617,7 @@ public function vac(){
         return $data;
     }
 
-    public function photoEdit()
+    public function avatarEdit()
     {
         $error = '-101';
         $message = 'Error get api data';
@@ -2679,6 +2682,80 @@ public function vac(){
         } 
 
         return $data = ['error' => $error, 'message' => $message];
+    }
+    
+    public function photoEdit()
+    {
+        $error = '-101';
+        $message = 'Error get api data';
+       
+     try
+     {
+
+        $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $photo = Yii::app()->getRequest()->getParam('photo');
+        
+        
+        list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
+        $id = $idus;
+        
+        var_dump($profile);
+        // $sql = "SELECT r.status
+        //     FROM user r
+        //     WHERE r.id_user = {$idus}";
+        // $res= Yii::app()->db->createCommand($sql)->queryScalar();
+ 
+        // $sql = "SELECT MAX(p.npp) npp, COUNT(*) cou FROM user_photos p WHERE p.id_empl = {$eid}";
+        // /** @var $res CDbCommand */
+        // $photosData = Yii::app()->db->createCommand($sql);
+        // $photosData = $photosData->queryRow();
+
+
+        // $current =  base64_decode($photo);
+        
+        // mkdir("/var/www/files_prommu/images/".$id, 0700);
+        // mkdir("/var/www/files_prommu/images/".$id."/tmp/", 0700);
+        // $name = date('YmdHis').rand(100,1000);
+        // $file = $name . ".jpg";
+        // $path = "/images/".$id."/tmp/";
+        
+        // file_put_contents("/var/www/files_prommu".$path.$file, $current);
+        
+        // if($res == 2){
+        //     $types = 'resume';
+        //     $value = 'photo';
+        //     $rest = $file;
+        // } else {
+        //     $types = 'employer'; 
+        //     $value = 'logo';
+        //     $rest = $name;
+        // }
+        
+        // Yii::app()->db->createCommand()
+        //             ->update($types, array(
+        //                 $value => $rest,
+        //             ), 'id_user = :id', array(':id' => $id));  
+
+    
+        // $message = $file;
+        // $error = '0';
+               
+                
+        } catch (Exception $e)
+            {
+            $error = abs($e->getCode());
+            switch( $e->getCode() )
+            {
+                case -102 : // token invalid
+                case -103 : $message = $e->getMessage(); break; // token expired
+                case -104 : $message = 'Error while getting chat data'; break;
+                default: $error = 101; $message = 'Error get api data';
+            }
+
+            $data = ['error' => $error, 'message' => $message];
+        } 
+
+        // return $data = ['error' => $error, 'message' => $message];
     }
     
 
