@@ -2731,8 +2731,8 @@ public function vac(){
 
         } elseif($profile->type == 2){
             
-            $eid = $profile->exInfo->id_resume;
-            $sql = "SELECT MAX(p.npp) npp, COUNT(*) cou FROM user_photos p WHERE p.id_resume = {$eid}";
+            $id_resume = $profile->exInfo->id_resume;
+            $sql = "SELECT MAX(p.npp) npp, COUNT(*) cou FROM user_photos p WHERE p.id_resume = {$id_resume}";
             $photosData = Yii::app()->db->createCommand($sql);
             $photosData = $photosData->queryRow();
             
