@@ -2627,14 +2627,14 @@ public function vac(){
         
         
         $current =  base64_decode($photo);
-        $res = file_put_contents($file, $current);
+        
         
         
         mkdir("/var/www/files_prommu/images/".$id, 0700);
         mkdir("/var/www/files_prommu/images/".$id."/tmp/", 0700);
         $path = "/images/".$id."/tmp/";
         
-        file_put_contents("/var/www/files_prommu".$path, $res);
+        file_put_contents("/var/www/files_prommu".$path, $current);
         
         $sql = "SELECT r.status
             FROM user r
