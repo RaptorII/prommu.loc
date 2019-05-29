@@ -219,7 +219,7 @@ class UserProfileApplic extends UserProfile
             ORDER BY npp DESC";
         $data['userPhotos'] = Yii::app()->db->createCommand($sql)->queryAll();
         
-        for($i = 0; $i < $data['userPhotos']; $i ++){
+        for($i = 0; $i < count($data['userPhotos']); $i ++){
             $data['userPhotos'][$i]['photo'] = "https://files.prommu.com/images/".$id."/tmp/".$data['userPhotos'][$i]['photo'].".jpg";
             
         }
