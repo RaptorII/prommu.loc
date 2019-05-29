@@ -2621,8 +2621,20 @@ public function vac(){
      {
 
         $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $photo = Yii::app()->getRequest()->getParam('photo');
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         $id = $idus;
+        
+        
+        $current =  base64_decode($photo);
+        $res = file_put_contents($file, $current);
+        
+        
+        mkdir("/var/www/files_prommu/images/".$id, 0700);
+        mkdir("/var/www/files_prommu/images/".$id."/tmp/", 0700);
+        $path = "/images/".$id."/tmp/";
+        
+        file_put_contents("/var/www/files_prommu".$path, $res);
         
         $sql = "SELECT r.status
             FROM user r
