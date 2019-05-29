@@ -258,6 +258,11 @@
 	padding: 0 0 0 5px;
 	font-family: RobotoCondensedRegular, RobotoRegular, verdana, arial;
 }
+#DiContent .edit-profile-applicant .epa__period-list .epa__input{
+	position: absolute;
+	top: 0;
+	left: 110px;
+}
 /*
 #DiContent .epa__firstname .epa__input{ padding-left: 35px }
 #DiContent .epa__lastname .epa__input{ padding-left: 65px }
