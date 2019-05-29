@@ -2718,6 +2718,10 @@ public function vac(){
             $photosData = Yii::app()->db->createCommand($sql);
             $photosData = $photosData->queryRow();
             
+            if(!empty($photosData['npp'])){
+                 $photosData['npp'] = 0;
+            }
+            
             Yii::app()->db->createCommand()
                 ->insert('user_photos', array(
                     'id_empl' => $eid,
@@ -2740,6 +2744,10 @@ public function vac(){
             $photosData = Yii::app()->db->createCommand($sql);
             $photosData = $photosData->queryRow();
             
+            if(!empty($photosData['npp'])){
+                 $photosData['npp'] = 0;
+            }
+           
             Yii::app()->db->createCommand()
                 ->insert('user_photos', array(
                     'id_promo' => $id_resume,
