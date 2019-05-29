@@ -2628,10 +2628,11 @@ public function vac(){
         
         $current =  base64_decode($photo);
         
-        
+        var_dump($current);
         
         mkdir("/var/www/files_prommu/images/".$id, 0700);
         mkdir("/var/www/files_prommu/images/".$id."/tmp/", 0700);
+        
         $path = "/images/".$id."/tmp/";
         
         file_put_contents("/var/www/files_prommu".$path, $current);
