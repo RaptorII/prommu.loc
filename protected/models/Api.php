@@ -2622,6 +2622,7 @@ public function vac(){
 
         $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $photo = Yii::app()->getRequest()->getParam('photo');
+        
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         $id = $idus;
         
@@ -2633,16 +2634,12 @@ public function vac(){
         $message = 'Error get api data';
         $error = '-101';
         
-        
-        $Logo = new UploadLogo($profile);
-        $data = $Logo->processUploadedLogoApi($photo, $id, $res);
+        $data = (new UploadLogo())->processUploadedLogoApi($photo, $id, $res);
                
         $message = $data;
         $error = '0';
                
                 
-            
-        
         } catch (Exception $e)
             {
             $error = abs($e->getCode());
