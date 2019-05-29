@@ -2625,16 +2625,6 @@ public function vac(){
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         $id = $idus;
         
-        $current =  base64_decode($photo);
-        
-        mkdir("/var/www/files_prommu/images/".$id, 0700);
-        mkdir("/var/www/files_prommu/images/".$id."/tmp/", 0700);
-        $file = time().".jpg";
-        $path = "/images/".$id."/tmp/";
-        
-        $res = file_put_contents("/var/www/files_prommu".$path.$file, $current);
-        
-        var_dump($res);
         $sql = "SELECT r.status
             FROM user r
             WHERE r.id_user = {$idus}";
@@ -2643,30 +2633,15 @@ public function vac(){
         $message = 'Error get api data';
         $error = '-101';
         
-            if($res == 3){
-                $Logo = new UploadLogo($profile);
-                $data = $Logo->processUploadedLogoApi($_FILES, $id);
-                Yii::app()->db->createCommand()
-                    ->update('employer', array(
-                        'logo' => $data,
-                    ), 'id_user = :id', array(':id' => $idus));
-                    
-                $message = $data;
-                $error = '0';
-                }
-            elseif($res == 2){
+        
+        $Logo = new UploadLogo($profile);
+        $data = $Logo->processUploadedLogoApi($photo, $id, $res);
+               
+        $message = $data;
+        $error = '0';
+               
                 
-                $Logo = new UploadLogo($profile);
-                
-                $data = $Logo->processUploadedLogoPromoApi($_FILES, $id);
-                
-                
-                // $User = new UserProfileApplic($profile);
-                // $dat = $User->sendLogo(compact('id', 'data'));
-                $message = $data;
-                $error = '0';
-                
-            }
+            
         
         } catch (Exception $e)
             {
