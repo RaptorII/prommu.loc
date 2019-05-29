@@ -212,7 +212,7 @@ class UserProfileApplic extends UserProfile
 
 
         // считываем фото пользователя
-        $sql = "SELECT p.id, p.photo, CASE WHEN p.photo = r.photo THEN 1 ELSE 0 END ismain
+        $sql = "SELECT p.id, p.photo
             FROM resume r
             LEFT JOIN user_photos p ON p.id_promo = r.id
             WHERE r.id_user = {$id}
