@@ -2629,7 +2629,7 @@ public function vac(){
         
         mkdir("/var/www/files_prommu/images/".$id, 0700);
         mkdir("/var/www/files_prommu/images/".$id."/tmp/", 0700);
-        $file = time();
+        $file = time().".jpg";
         $path = "/images/".$id."/tmp/";
         
         $res = file_put_contents("/var/www/files_prommu".$path.$file, $current);
