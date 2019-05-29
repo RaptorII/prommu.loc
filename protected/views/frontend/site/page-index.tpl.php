@@ -254,7 +254,7 @@
 												<div class="clearfix"></div>
 											</div>
 											<div class="vacancies__item-info">
-                                                <b>Город: </b><? echo(' '.$vac['city'].'.'); ?><br>
+                                                <b>Город: </b><? echo(','.$vac['city'].'.'); ?><br>
 												<b>Вид работы:</b><?=$vac['work_type']?><br>
 												<b>Период:</b><?=$vac['period']?>
 											</div>											
