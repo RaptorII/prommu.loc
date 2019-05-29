@@ -2699,7 +2699,7 @@ public function vac(){
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         $id = $idus;
         
-        var_dump($photo);
+        $message = [];
         for($i = 0; $i < count($photo); $i ++){
             
             $current =  base64_decode($photo[$i]);
@@ -2711,7 +2711,7 @@ public function vac(){
             $path = "/images/".$id."/tmp/";
                 
             file_put_contents("/var/www/files_prommu".$path.$file, $current);
-            $message = [];
+            
             if($profile->type == 3){
                 
                 $eid = $profile->exInfo->eid;
@@ -2735,7 +2735,7 @@ public function vac(){
                     ));
                     
                     
-                $message[] = "https://files.prommu.com/images/".$id."/tmp/".$file;
+                $message[] = urlencode("https://files.prommu.com/images/".$id."/tmp/".$file);
                 $error = '0';
     
     
@@ -2759,7 +2759,7 @@ public function vac(){
                         'photo' => $name,
                     ));
                     
-                $message[] = "https://files.prommu.com/images/".$id."/tmp/".$file;
+                $message[] = urlencode("https://files.prommu.com/images/".$id."/tmp/".$file);
                 $error = '0';
     
             }
