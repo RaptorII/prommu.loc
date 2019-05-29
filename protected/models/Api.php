@@ -2699,7 +2699,49 @@ public function vac(){
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         $id = $idus;
         
-        var_dump($profile);
+        $current =  base64_decode($photo);
+        
+        mkdir("/var/www/files_prommu/images/".$id, 0700);
+        mkdir("/var/www/files_prommu/images/".$id."/tmp/", 0700);
+        $name = date('YmdHis').rand(100,1000);
+        $file = $name . ".jpg";
+        $path = "/images/".$id."/tmp/";
+            
+        file_put_contents("/var/www/files_prommu".$path.$file, $current);
+            
+        if($profile->type == 3){
+            
+            $eid = $profile->exInfo->eid;
+            $sql = "SELECT MAX(p.npp) npp, COUNT(*) cou FROM user_photos p WHERE p.id_empl = {$eid}";
+            $photosData = Yii::app()->db->createCommand($sql);
+            $photosData = $photosData->queryRow();
+            
+            Yii::app()->db->createCommand()
+                ->insert('user_photos', array(
+                    'id_empl' => $eid,
+                    'id_user' => $id,
+                    'npp' => $photosData['npp'] + 1,
+                    'photo' => $name,
+                ));
+
+
+        } elseif($profile->type == 2){
+            
+            $eid = $profile->exInfo->id_resume;
+            $sql = "SELECT MAX(p.npp) npp, COUNT(*) cou FROM user_photos p WHERE p.id_resume = {$eid}";
+            $photosData = Yii::app()->db->createCommand($sql);
+            $photosData = $photosData->queryRow();
+            
+            Yii::app()->db->createCommand()
+                ->insert('user_photos', array(
+                    'id_promo' => $id_resume,
+                    'id_user' => $id,
+                    'npp' => $photosData['npp'] + 1,
+                    'photo' => $name,
+                ));
+
+        }
+        // var_dump($profile);
         // $sql = "SELECT r.status
         //     FROM user r
         //     WHERE r.id_user = {$idus}";
