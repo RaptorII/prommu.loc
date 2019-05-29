@@ -2631,7 +2631,7 @@ public function vac(){
         $error = '-101';
         if($res == 3){
             $Logo = new UploadLogo($profile);
-            $data = $Logo->processUploadedLogoApi($_FILES['photo'], $id);
+            $data = $Logo->processUploadedLogoApi($_FILES, $id);
             Yii::app()->db->createCommand()
                 ->update('employer', array(
                     'logo' => $data,
