@@ -46,6 +46,8 @@ class Api
                 case 'empl_search' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getEmplSearch(); break;
                 case 'promo_search' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPromoSearch(); break;
                 
+                case 'set_avatar' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->avatarEdit(); break;
+                case 'set_photo' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->photoEdit(); break;
                 case 'del_avatar' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->avatarDelete(); break;
                 case 'del_photo' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->photoDelete(); break;
                 
