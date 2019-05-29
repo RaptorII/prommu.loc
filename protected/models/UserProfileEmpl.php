@@ -412,6 +412,7 @@ class UserProfileEmpl extends UserProfile
             INNER JOIN user u ON u.id_user = e.id_user
             WHERE e.id_user = {$id}";
         $res = Yii::app()->db->createCommand($sql)->queryRow();
+        $res['logo'] = "https://files.prommu.com/images/".$res['id_user']."/tmp/".$res['logo'].".jpg";
         $data['emplInfo'] = $res;
         $rest = "SELECT ci.id_city id, ci.name, co.id_co, co.name coname
             FROM user_city uc
