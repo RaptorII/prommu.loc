@@ -2623,35 +2623,40 @@ public function vac(){
         $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         $id = $idus;
+        
         $sql = "SELECT r.status
             FROM user r
             WHERE r.id_user = {$idus}";
         $res= Yii::app()->db->createCommand($sql)->queryScalar();
+        
         $message = 'Error get api data';
         $error = '-101';
-        if($res == 3){
-            $Logo = new UploadLogo($profile);
-            $data = $Logo->processUploadedLogoApi($_FILES, $id);
-            Yii::app()->db->createCommand()
-                ->update('employer', array(
-                    'logo' => $data,
-                ), 'id_user = :id', array(':id' => $idus));
-                
-            $message = $data;
-            $error = '0';
-            }
-        elseif($res == 2){
-            $Logo = new UploadLogo($profile);
         
-            $data = $Logo->processUploadedLogoPromoApi($_FILES, $id);
-            
-            
-            // $User = new UserProfileApplic($profile);
-            // $dat = $User->sendLogo(compact('id', 'data'));
-            $message = $data;
-            $error = '0';
-            
-        }
+            if($res == 3){
+                $Logo = new UploadLogo($profile);
+                $data = $Logo->processUploadedLogoApi($_FILES, $id);
+                Yii::app()->db->createCommand()
+                    ->update('employer', array(
+                        'logo' => $data,
+                    ), 'id_user = :id', array(':id' => $idus));
+                    
+                $message = $data;
+                $error = '0';
+                }
+            elseif($res == 2){
+                var_dump($profile);
+                $Logo = new UploadLogo($profile);
+                
+                $data = $Logo->processUploadedLogoPromoApi($_FILES, $id);
+                
+                
+                // $User = new UserProfileApplic($profile);
+                // $dat = $User->sendLogo(compact('id', 'data'));
+                $message = $data;
+                $error = '0';
+                
+            }
+        
         } catch (Exception $e)
             {
             $error = abs($e->getCode());
