@@ -46,6 +46,8 @@ class Api
                 case 'empl_search' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getEmplSearch(); break;
                 case 'promo_search' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPromoSearch(); break;
                 
+                case 'del_avatar' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->avatarDelete(); break;
+                case 'del_photo' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->photoDelete(); break;
                 
                 case 'push' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPush(); break;
                 case 'export' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->export(); break;
@@ -63,8 +65,7 @@ class Api
                 case 'vacancy_pub' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacationPub(); break;
                 case 'invite_set' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setInvite(); break;
                 
-                case 'set_avatar' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->avatarEdit(); break;
-                case 'set_photo' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->photoEdit(); break;
+                
                 
                 case 'data_help' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getHelp(); break;
                 case 'send_push' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setPush(); break;
