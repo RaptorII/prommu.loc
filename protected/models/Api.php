@@ -2651,7 +2651,7 @@ public function vac(){
         }
         
         Yii::app()->db->createCommand()
-                    ->update('user_photos', array(
+                    ->update($type, array(
                         'photo' => $name,
                     ), 'id_user = :id', array(':id' => $id));  
 
