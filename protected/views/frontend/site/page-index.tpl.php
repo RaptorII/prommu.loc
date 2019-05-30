@@ -255,7 +255,7 @@
 											</div>
 											
 											<div class="vacancies__item-info">
-                                                <b>Город: </b><? echo join(' '.$vac['city'].'.'); ?><br>
+                                                <b>Город: </b><?=join(', ', $vac['city'])?><br>
 												<b>Вид работы:</b><?=$vac['work_type']?><br>
 												<b>Период:</b><?=$vac['period']?>
 											</div>											
