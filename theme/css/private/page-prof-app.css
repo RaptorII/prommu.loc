@@ -6,10 +6,44 @@
     width: 100%;
     max-width: 810px;
     margin: 25px auto 0;
-    padding: 0 15px;
+    padding: 0;
     color: #343434;
     font-family: RobotoCondensedRegular, RobotoRegular, verdana, arial;
     display: table;
+}
+@media (min-width: 450px){
+    #DiTop #DiContent .private-profile-page {
+        padding: 0 15px;
+    }
+}
+@media (max-width: 450px) {
+    #DiContent.page-applicant-profile-own .affective-perc {
+        width: 130px;
+    }
+
+    #DiContent.page-ankety .affective-perc .text,
+    #DiContent.page-applicant-profile-own .affective-perc .text {
+        width: 110px;
+    }
+    .ppp__content .ppp__content-title:before {
+        content: '';
+        display: block;
+        transform: translateX(calc(50% - 13px));
+        width: 100%;
+    }
+    .ppp__logo .ppp__logo-main {
+        width: 80%;
+        margin: 0 auto 15px auto;
+    }
+    .ppp__checkboxes .ppp__attr-block2 {
+        width: 45%;
+        float: right;
+    }
+    .ppp__field-target-vacancy .ppp__field-val,
+    .ppp__field-target-vacancy .ppp__field-name {
+        width: auto;
+        display: block;
+    }
 }
 #DiTop #DiContent .private-profile-page.for-guest{ max-width: 991px }
 #DiContent .private-profile-page .ppp__btn{

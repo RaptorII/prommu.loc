@@ -789,35 +789,44 @@ class UserProfileApplic extends UserProfile
         return $res;
     }
 
-
-
     /**
      * Целевая вакансия
      */
     private function saveUserPosts()
     {
         $id = $this->exInfo->id;
-
         $posts = Yii::app()->getRequest()->getParam('post');
-
         $builder=Yii::app()->db->schema->commandBuilder;
         $insData = array();
 
-        if( $posts )
-        {
-            foreach ($posts as $key => $val)
-            {
-                $insData[] = array('id_us' => $id, 'id_mech' => $key, 'isshow' => '0', 'mech' => $val['name'], 'pay' => $val['payment'], 'pay_type' => $val['hwm'], 'crdate' => date("Y-m-d H:i:s"));
+        if ($posts) {
+            foreach ($posts as $key => $val) {
+                $insData[] = array(
+                    'id_us' => $id,
+                    'id_mech' => $key,
+                    'isshow' => '0',
+                    'mech' => $val['name'],
+                    'pay' => $val['payment'],
+                    'pay_type' => $val['hwm'],
+                    'crdate' => date("Y-m-d H:i:s")
+                );
             } // end foreach
 
+            Yii::app()
+                ->db
+                ->createCommand()
+                ->delete('user_mech',
+                    array(
+                        'and',
+                        'id_us=:id_user',
+                        'isshow=0'),
+                    array(':id_user' => $id)
+                );
 
-            Yii::app()->db->createCommand()
-                ->delete('user_mech', array('and', 'id_us=:id_user', 'isshow=0'), array(':id_user' => $id));
             $command = $builder->createMultipleInsertCommand('user_mech', $insData);
             $command->execute();
         } // endif
     }
-
 
 
     // сохраняем атрибуты пользователя

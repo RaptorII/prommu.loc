@@ -362,7 +362,7 @@
     <div class="ppp__module-title"><h2>ЦЕЛЕВАЯ ВАКАНСИЯ</h2></div>
     <div class="ppp__module">
       <div class="ppp__field<?=($isBlocked && !$info['userDolj'][1] && $flagOwnProfile?' error':'')?>">
-        <span class="ppp__field-name">Целевые вакансии:</span>
+        <span class="ppp__field-name ppp__field-target-vacancy">Целевые вакансии:</span>
         <span class="ppp__field-val"><?=$info['userDolj'][1]?></span>
       </div>
       <?php if(sizeof($arPosts) && $info['userDolj'][1]): ?>
