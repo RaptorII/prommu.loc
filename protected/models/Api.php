@@ -2743,16 +2743,16 @@ public function vac(){
      {
 
         $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $photo = json_decode(Yii::app()->getRequest()->getParam('photo'),1);
+        $photo = Yii::app()->getRequest()->getParam('photo');
         
         
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         $id = $idus;
         
         $message = [];
-        for($i = 0; $i < count($photo); $i ++){
+        
             
-            $current =  base64_decode($photo[$i]);
+            $current =  base64_decode($photo);
             
             mkdir("/var/www/files_prommu/images/".$id, 0700);
             mkdir("/var/www/files_prommu/images/".$id."/tmp/", 0700);
@@ -2813,7 +2813,7 @@ public function vac(){
                 $error = '0';
     
             }
-        }
+        
         
         } catch (Exception $e)
             {
