@@ -271,7 +271,7 @@ echo CHtml::endForm();
 
 </script>
         </div>
-        <div style="display: -webkit-inline-box;"><p>* Добавлено отображение аналитики ВК и FB</p></div>
+        <div style="display: inline-block;"><p>* Добавлено отображение аналитики ВК и FB</p></div>
 
     </div>
 

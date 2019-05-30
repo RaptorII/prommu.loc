@@ -441,24 +441,34 @@ class SiteController extends Controller
         }
     }
 
-     public function actionSeos()
-    {
+    /**
+     * Not used. MB kill?
+     * 30.05.2019 Karpenko MV
+     * @return array model
+     */
+    public function actionSeos() {
         if(self::isAuth()) {
-           
-        $Api = new Api();
-        //Словарь
-        $dict = $Api->getPost();
-        $city = $Api->getCity();
-        //Поиск 
-        $vacancy = $Api->getVacancy();
-        $promo = $Api->getPromoSearch();
-        $empl = $Api->getEmplSearch();
-  
+
+            $Api = new Api();
+            //Словарь
+            $dict = $Api->getPost();
+            $city = $Api->getCity();
+            //Поиск
+            $vacancy = $Api->getVacancy();
+            $promo = $Api->getPromoSearch();
+            $empl = $Api->getEmplSearch();
+
+            $items[] = [
+                'empl' =>  $empl,
+                'promo' =>  $promo,
+                'vacancy' =>  $vacancy,
+                'city' =>  $city,
+                'dict' =>  $dict,
+            ];
 
             $this->render('stat/seos', array('items'=>$items));
         }
     }
-
 
     public function actionMonitoring()
     {

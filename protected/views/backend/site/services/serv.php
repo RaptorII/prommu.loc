@@ -298,7 +298,7 @@ echo CHtml::submitButton('Обновить',array("class"=>"btn btn-success","id
 echo CHtml::endForm();
 ?>
         </div>
-        <div style="display: -webkit-inline-box;"><p>* Добавлено отображение аналитики ВК и FB</p></div>
+        <div style="display: inline-block;"><p>* Добавлено отображение аналитики ВК и FB</p></div>
 
     </div>
 <script type="text/javascript">
