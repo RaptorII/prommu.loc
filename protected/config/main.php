@@ -25,6 +25,7 @@ return array(
         'ext.lightopenid.*',
         'ext.eauth.*',
         'ext.eauth.services.*',
+        'ext.yiiUpload.*',
     ),
 
     // используемые приложением поведения

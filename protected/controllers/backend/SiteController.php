@@ -27,7 +27,8 @@ class SiteController extends Controller
             'page'=>array(
                 'class'=>'CViewAction',
             ),
-            'yiichat'=>array('class'=>'YiiChatAction')
+            'yiichat'=>array('class'=>'YiiChatAction'),
+            'yiiupload'=>array('class'=>'YiiUploadAction')
         );
         
     }
