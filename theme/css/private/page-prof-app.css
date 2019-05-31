@@ -39,10 +39,20 @@
         width: 45%;
         float: right;
     }
-    .ppp__field-target-vacancy .ppp__field-val,
-    .ppp__field-target-vacancy .ppp__field-name {
+    .ppp__field .ppp__field-target-vacancy,
+    .ppp__field .ppp__field-target-vacancy {
         width: auto;
         display: block;
+    }
+    .ppp__checkboxes .ppp__attr-block1,
+    .ppp__checkboxes .ppp__attr-block2 {
+        width: auto;
+        display: block;
+        float: unset;
+    }
+    .ppp__checkboxes .ppp__checkbox{
+        display: block;
+        float: unset;
     }
 }
 #DiTop #DiContent .private-profile-page.for-guest{ max-width: 991px }

@@ -183,6 +183,15 @@
 	-o-transition: box-shadow .3s ease-out;
 	transition: box-shadow .3s ease-out;
 }
+@media (max-width: 450px) {
+	#DiContent .edit-profile-applicant .epa__label{
+		padding: 0 7px;
+	}
+	.epa__label.epa__email .epa__label-name {
+		width: 40%;
+		line-height: 20px;
+	}
+}
 #DiContent .edit-profile-applicant .epa__label.epa__select{ padding: 0 30px 0 10px; }
 #DiContent .edit-profile-applicant .epa__label.off{ display: none }
 #DiContent .edit-profile-applicant .epa__label.epa__soc-other,
@@ -1494,6 +1503,11 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
     background-position: 10px 50% ;
     margin-right: 0px;
 	font-family: RobotoCondensedRegular, RobotoRegular, verdana, arial;
+}
+@media (max-width: 450px){
+	.country-phone-selected {
+		padding: 0 2px 0 0;
+	}
 }
 .country-phone-selected img{
     margin: 10px 5px;

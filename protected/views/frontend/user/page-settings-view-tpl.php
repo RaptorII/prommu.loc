@@ -86,6 +86,7 @@
 					<label for="s-p-email" class="set-priv__label">E-mail</label>
 					<input type="text" class="set-priv__input" id="s-p-email" name="email" value="<?=$viData['email']?>" autocomplete="off" maxlength="30" />
 					<span class="set-priv__veil"></span>
+<!--					<span class="edit-ico glyphicon glyphicon-edit"></span>-->
 					<div class="set-priv__btn">сохранить</div>
 				</div>
 				<div class="settings-priv__field settings-priv__ecode" id="email-code">
@@ -95,7 +96,8 @@
 				<div class="settings-priv__field" id="psw-inp">
 					<label for="s-p-password" class="set-priv__label">Пароль</label>
 					<input type="password" class="set-priv__input" id="s-p-password" name="old-psw" value="password" autocomplete="off" placeholder="Введите старый пароль" />
-					<span class="set-priv__veil"></span>
+<!--                    <span class="edit-ico glyphicon glyphicon-edit"></span>-->
+                    <span class="set-priv__veil"></span>
 					<div class="set-priv__psw"></div>
 				</div>
 				<div id="new-psw-inp">
@@ -122,7 +124,8 @@
 					
 <?/*
 					<input type="text" class="set-priv__input" id="s-p-phone" name="phone" value="<?=$viData['phone']?>" placeholder="+7(___) __-__-__" /> */?>
-					<span class="set-priv__veil"></span>
+<!--                    <span class="edit-ico glyphicon glyphicon-edit"></span>-->
+                    <span class="set-priv__veil"></span>
 					<div class="set-priv__btn">сохранить</div>
 				</div>
 				<div class="settings-priv__field settings-priv__ecode" id="phone-code-inp">

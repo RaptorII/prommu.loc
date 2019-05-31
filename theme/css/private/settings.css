@@ -137,6 +137,11 @@
 	padding: 10px 75px 10px 25px;
 	margin: 0 auto 15px;
 }
+.settings-priv__wrap .edit-ico {
+	position: absolute;
+	top: 10px;
+	right: 7px;
+}
 .settings-notif__list{
 	padding: 10px 15px;
 	margin-bottom: 35px;
@@ -650,8 +655,35 @@
 	.set-ntf__email{ margin: 5px 10px }
 	.set-ntf__push{ margin: 5px 17px 5px 10px }
 }
+
 @media (min-width: 992px){
 	.settings-main__select{ padding: 10px 10px 10px 20px }
 	.settings-main__wrap{ padding: 5px 30px }
 	.settings-notif__switch{ display: table-cell }
 }
+
+@media (max-width: 450px) {
+	.settings-notif__wrap {
+		padding: 5px 10px;
+	}
+	.settings-priv__wrap{
+		padding: 5px 70px 5px 25px;
+	}
+	.set-priv__veil,
+	.set-priv__btn,
+	.set-priv__cod-btn {
+		top: 35px;
+	}
+	#DiContent .settings-priv__field {
+		/*display: block;*/
+	}
+	#DiContent .settings-page .set-priv__input {
+		width: 100%;
+		display: table;
+	}
+	#DiContent .set-priv__label {
+		width: 100%;
+		display: block;
+	}
+}
+
