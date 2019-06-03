@@ -2340,9 +2340,9 @@ WHERE id_vac = {$inVacId}";
 					$coast = $arVac['shour'] . " руб/час";
 			}
 			// message
-			$conditions = $arVac['conditions'];
-			$requirements = $arVac['requirements'];
-			$duties = $arVac['duties'];
+			$conditions = html_entity_decode($arVac['conditions']);
+			$requirements = html_entity_decode($arVac['requirements']);
+			$duties = html_entity_decode($arVac['duties']);
 			$linki = Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $arVac['id'];
 			$vacType = ($arVac['istemp'] ? 'временная' : 'постоянная') . ' работа';
 
