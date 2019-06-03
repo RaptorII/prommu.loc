@@ -65,6 +65,12 @@
 	background: url(/theme/pic/feedback-page/feedback_arrow_icon.png) 14px 15px no-repeat;
 	z-index: 0;
 }
+.g-recaptcha-parent:after {
+	content: '';
+	display: table;
+	width: 100%;
+	clear: both;
+}
 #DiContent.page-feedback .feedback-page__select,
 #DiContent.page-feedback .feedback-page__input,
 #DiContent.page-feedback .feedback-page__textarea{
@@ -116,7 +122,7 @@
 	font-size: 16px;
 	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 	position: relative;
-	z-index: 1;
+	z-index: 10;
 	border: none;
 	-webkit-transition: all 0.3s ease-out;
 	-moz-transition: all 0.3s ease-out;

@@ -107,25 +107,26 @@
 		<div class="paa-event__item pa__module">
 			<div class="paa-event__item-content">
 				<div class="paa-event__item-name"><span>Просмотренных вакансий</span></div>
-				<div class="paa-event__item-count"><span>Количество использований: <i><?=$viData['cnt_views']?></i></span></div>
+				<div class="paa-event__item-count"><span><i><?=$viData['cnt_views']?></i></span></div>
 			</div>
+
 		</div>
 		<div class="paa-event__item pa__module">
 			<div class="paa-event__item-content">
 				<div class="paa-event__item-name"><span>Приглашения на вакансию от работодателя</span></div>
-				<div class="paa-event__item-count"><span>Количество использований: <i><?=$viData['cnt_invitations']?></i></span></div>
+				<div class="paa-event__item-count"><span><i><?=$viData['cnt_invitations']?></i></span></div>
 			</div>
 		</div>
 		<div class="paa-event__item pa__module">
 			<div class="paa-event__item-content">
 				<div class="paa-event__item-name"><span>Самостоятельных кликов на размещенные вакансии</span></div>
-				<div class="paa-event__item-count"><span>Количество использований: <i><?=$viData['cnt_requests']?></i></span></div>
+				<div class="paa-event__item-count"><span><i><?=$viData['cnt_requests']?></i></span></div>
 			</div>
 		</div>
 		<div class="paa-event__item pa__module">
 			<div class="paa-event__item-content">
 				<div class="paa-event__item-name"><span>Отработанных (утвержденных) вакансий</span></div>
-				<div class="paa-event__item-count"><span>Количество использований: <i><?=$viData['cnt_approved']?></i></span></div>
+				<div class="paa-event__item-count"><span><i><?=$viData['cnt_approved']?></i></span></div>
 			</div>
 		</div>
 	</div>

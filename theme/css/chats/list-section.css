@@ -69,7 +69,7 @@
 }
 .chat__item-user{
 	display: flex;
-	width: 300px;
+	/*width: 300px;*/
 	align-items: center;
 }
 .chat__item-info{
@@ -82,6 +82,7 @@
 }
 .chat__item-data{
 	margin-left: 15px;
+	width: 150px;
 }
 
 .chat__user{
@@ -302,4 +303,14 @@
 	-moz-transition: all ease-out .3s;
 	-o-transition: all ease-out .3s;
 	transition: all ease-out .3s;
+}
+
+.chat-list__wrap {
+	overflow-x: scroll;
+}
+
+@media( min-width: 768px) {
+	.chat-list__wrap {
+		overflow-x: unset;
+	}
 }

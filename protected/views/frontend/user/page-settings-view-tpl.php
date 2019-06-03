@@ -49,7 +49,14 @@
 							</li>
 						</ul>
 					</div>
-					<?php if(Share::$UserProfile->type==2): ?>
+					<?php
+                    /**
+                     * Hide exchange gender
+                     * in config profile;
+                     * 3.05.2019
+                     */
+                    /*    if(Share::$UserProfile->type==2):
+                    ?>
 						<div class="settings-main__select">
 							<span class="set-main__select-name">Пол</span>
 							<div class="set-main__select-val"><?=($set->sex ? 'Мужской' : 'Женский')?></div>	
@@ -64,7 +71,7 @@
 								</li>
 							</ul>
 						</div>
-					<? endif; ?>
+					<? endif; */?>
 				</div>
 				<div class="clearfix"></div>
 			</div>

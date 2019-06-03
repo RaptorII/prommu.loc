@@ -819,6 +819,7 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 .epa__city-title{ 
 	position: relative;
 	padding-bottom: 20px;
+	z-index: 0;
 }
 .epa__city-title:before{
 	position: absolute;
@@ -939,7 +940,7 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	height: 20px;
 	position: absolute;
 	top: 7px;
-	right: 17px;
+	right: 10px;
 	border: 2px solid #ebebeb;
 	background: #FFFFFF url(/theme/pic/private/edit-profile-icon.png) -1px -1px no-repeat;
 	cursor: pointer;
@@ -947,6 +948,11 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	-moz-transition: all .3s ease-out;
 	-o-transition: all .3s ease-out;
 	transition: all .3s ease-out;
+	z-index: 10;
+}
+.epa__metro-close,
+.epa__city-del{
+	right: 0;
 }
 .epa__period-close:hover,
 .epa__metro-close:hover,
@@ -975,7 +981,11 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	cursor: pointer;
 	font-weight: bold;
 }
-.epa__city-item{ margin-bottom: 10px }
+.epa__city-item {
+	margin-bottom: 10px;
+	position: relative;
+	z-index: 0;
+}
 .epa__city-item:first-child .epa__city-del{ display: none }
 .epa__city-item:first-child .epa__city-title:before{ right: 0 }
 .epa__mess-hint{
@@ -983,7 +993,7 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	background-color: rgba(52, 52, 52, 0.6);
 	position: absolute;
 	top: 45px;
-	right: 0px;
+	right: 0;
 	width: 100%;
 	padding: 5px 10px;
 	color: #FFFFFF;

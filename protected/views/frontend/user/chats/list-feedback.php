@@ -17,24 +17,26 @@
 				<span class="js-g-hashint noread" title="Не прочитано"><?=$viData['cnt-mess-noread']?></span>
 			<? endif; ?>
 		</h2>
-		<? foreach ($viData['items'] as $id => $item): ?>
-			<a href="<?=MainConfig::$PAGE_CHATS_LIST_FEEDBACK . DS . $id?>" class="chat__item">
-				<div class="chat__item-user">
-						<div class="chat__item-logo">
-							<img src="<?=$viData['users'][$item['user']]['src']?>" alt="<?=$viData['users'][$item['user']]['name']?>">
-						</div>
-                        <div class="chat__item-data">
-                            <div class="chat__title"><?=$item['title']?></div>
-                            <div class="chat__user"><?=$viData['users'][$item['user']]['name']?></div>
-                        </div>
-				</div>
-                <div class="chat__item-info">
-                    <div class="chat__info-item"><div>Всего сообщений:</div><div><?=$item['cnt-mess']?></div></div>
-                    <div class="chat__info-item"><div>Не прочитано:</div><div><?=$item['cnt-noread']?></div></div>
-                    <div class="chat__info-item"><div>Направление:</div><div><?=$viData['directs'][$item['direct']]['name']?></div></div>
-                </div>
-			</a>
-		<? endforeach ?>
+        <div class="chat-list__wrap">
+            <? foreach ($viData['items'] as $id => $item): ?>
+                <a href="<?=MainConfig::$PAGE_CHATS_LIST_FEEDBACK . DS . $id?>" class="chat__item">
+                    <span class="chat__item-user">
+                            <span class="chat__item-logo">
+                                <img src="<?=$viData['users'][$item['user']]['src']?>" alt="<?=$viData['users'][$item['user']]['name']?>">
+                            </span>
+                            <span class="chat__item-data">
+                                <span class="chat__title"><?=$item['title']?></span>
+                                <span class="chat__user"><?=$viData['users'][$item['user']]['name']?></span>
+                            </span>
+                    </span>
+                    <span class="chat__item-info">
+                        <span class="chat__info-item"><span>Всего сообщений:</span><div><?=$item['cnt-mess']?></div></span>
+                        <span class="chat__info-item"><span>Не прочитано:</span><div><?=$item['cnt-noread']?></div></span>
+                        <span class="chat__info-item"><span>Направление:</span><div><?=$viData['directs'][$item['direct']]['name']?></div></span>
+                    </span>
+                </a>
+            <? endforeach ?>
+        </div>
 		<? // display pagination
 			$this->widget('CLinkPager', array(
 				'pages' => $viData['pages'],

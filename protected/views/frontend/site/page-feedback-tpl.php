@@ -68,7 +68,16 @@
                 <label class="feedback-page__label">
                     <textarea name="text" data-field-check='name:Текст,empty' id='MText' placeholder="Сообщение" class="feedback-page__textarea" title="Сообщение"><?=($viData['text'] ? $viData['text'] : '')?></textarea>
                 </label>
-                <div class="g-recaptcha" data-sitekey="6Lf2oE0UAAAAAKL5IvtsS1yytkQDqIAPg1t-ilNB"></div>
+                <div class="clearfix"></div>
+                <? if($viData['use_recaptcha']==true): ?>
+                    <div class="g-recaptcha-parent">
+                        <?php if( $viData['element'] == 'recaptcha' ): ?>
+                            <span class="red"><?= $viData['hint'] ?></span>
+                        <?php endif; ?>
+                        <div class="g-recaptcha" data-sitekey="6Lf2oE0UAAAAAKL5IvtsS1yytkQDqIAPg1t-ilNB"></div>
+                    </div>
+                <? endif; ?>
+                <div class="clearfix"></div>
                 <button type="submit" class="feedback-page__button">Отправить</button>
                 <div class="clearfix"></div>
                 <input type="hidden" name="autotype" value="<?= Share::$UserProfile->type ?>"/>
