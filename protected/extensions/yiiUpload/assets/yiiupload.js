@@ -7,6 +7,12 @@ var YiiUpload = (function () {
 	YiiUpload.prototype.files;
 	YiiUpload.prototype.inputs;
 	YiiUpload.prototype.btns;
+	YiiUpload.prototype.editor;
+	YiiUpload.prototype.cropperCnt;
+	YiiUpload.prototype.objCropper;
+	YiiUpload.prototype.cropOptions;
+	YiiUpload.prototype.cropParams;
+	YiiUpload.prototype.bComplete;
 
 	function YiiUpload()
 	{
@@ -16,23 +22,32 @@ var YiiUpload = (function () {
 	YiiUpload.prototype.init = function ()
 	{
 		let self = this,
-				cropperObj,
-				cropOptions = {},
-				cropParams = {
-						aspectRatio: 1/1,
-						viewMode: 1,
-						zoomable: true,
-						rotatable: true,
-						background: false,
-						guides: false,
-						highlight: false,
-						minCropBoxWidth: 200,
-						minCropBoxHeight: 200,
-						preview: '.YiiUpload__editor-prev',
-						crop: function(e){ cropOptions=e.detail }
-					};
+				bWebCam = arguments[0].useWebcam;
+
+		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+		window.URL.createObjectURL = window.URL.createObjectURL || window.URL.webkitCreateObjectURL || window.URL.mozCreateObjectURL || window.URL.msCreateObjectURL;
+		if(typeof navigator.getUserMedia==='undefined')
+		{
+			bWebCam = false;
+		}
 
 		self.params = arguments[0];
+		self.cropperCnt = 0;
+		self.cropOptions = [];
+		self.cropParams = {
+				aspectRatio: 1/1,
+				viewMode: 1,
+				zoomable: true,
+				rotatable: true,
+				background: false,
+				guides: false,
+				highlight: false,
+				minCropBoxWidth: 200,
+				minCropBoxHeight: 200,
+				preview: '.YiiUpload__editor-prev-item',
+				crop: function(e){ self.changeCropField(e.detail) }
+			};
+		self.bComplete = false;
 
 		$('.YiiUpload__call-btn').on('click',function(){
 			$('body').append('<div class="YiiUpload__block">'
@@ -40,21 +55,31 @@ var YiiUpload = (function () {
 				+ '<form class="YiiUpload__form">'
 					+ '<div class="YiiUpload__form-close YiiUpload__close"></div>'
 					+ '<div class="YiiUpload__form-content">'
-						+ '<div class="YiiUpload__form-title">Загурзка файлов' 
-							+ (self.params.fileFormat.length 
-								? ' (' + self.params.fileFormat.join(', ') 
-								+ ')' : '') + '</div>'
+						+ '<div class="YiiUpload__form-title"></div>'
 						+ '<div class="YiiUpload__form-body">'
 							+ '<div class="YiiUpload__form-errors"></div>'
 							+ '<div class="YiiUpload__form-result"></div>'
 							+ '<div class="YiiUpload__editor">'
 								+ '<div class="YiiUpload__editor-field"></div>'
-								+ '<div class="YiiUpload__editor-prev"></div>'
+								+ '<div class="YiiUpload__editor-prev">'
+									+ '<div class="YiiUpload__editor-prev-item YiiUpload__editor-prev-lg"></div>'
+									+ '<div class="YiiUpload__editor-prev-item YiiUpload__editor-prev-sm"></div>'
+								+ '</div>'
 								+ '<div class="YiiUpload__editor-panel">'
 									+ '<div class="YiiUpload__editor_l-rotate" title="Повернуть на 90 градусов влево"></div>'
-									+ '<div class="YiiUpload__editor-r-rotate" title="Повернуть на 90 градусов вправо"></div>'
-									+ '<div class="YiiUpload__editor-success" title="Сохранить"></div>'
+									+ '<div class="YiiUpload__editor_r-rotate" title="Повернуть на 90 градусов вправо"></div>'
+									+ '<div class="YiiUpload__crop" title="Сохранить"></div>'
 								+	'</div>'
+							+ '</div>'
+							+ '<div class="YiiUpload__camera">'
+								+ '<div class="YiiUpload__camera-mess"></div>'
+								+ '<video autoplay playsinline></video>'
+								+ '<canvas></canvas>'
+								+ '<div class="YiiUpload__camera-btns">'
+									+ '<div class="YiiUpload__camera-shoot"></div>'
+									+ '<div class="YiiUpload__camera-done"></div>'
+									+ '<div class="YiiUpload__camera-reset"></div>'
+								+ '</div>'
 							+ '</div>'
 							+ '<div class="YiiUpload__form-files"></div>'
 							+ '<div class="YiiUpload__form-inputs"></div>'
@@ -71,20 +96,35 @@ var YiiUpload = (function () {
 			self.files = document.querySelector('.YiiUpload__form-files');
 			self.inputs = document.querySelector('.YiiUpload__form-inputs');
 			self.btns = document.querySelector('.YiiUpload__form-btns');
+			self.editor = document.querySelector('.YiiUpload__editor');
+			self.cropperCnt = 0;
+			self.setTitle();
 			self.addInput();
-			self.addButtons(['open']);
-
+			self.addButtons(bWebCam?['open','snapshot']:['open']);
 			$(self.block).fadeIn();
 			$('body').css({overflow:'hidden'});
 		});
+		//
 		// event popup
+		//
 		$('body').on('click','.YiiUpload__block',function(e){
+			//
+			//
 			if($(e.target).hasClass('YiiUpload__close')) // close popup
 			{
-				$(self.block).fadeOut();
-				setTimeout(function(){ $(self.block).remove(); },500);
-				$('body').css({overflow:'inherit'});
+				let result = true;
+				if(!self.bComplete)
+					result = confirm('Данные не сохранятся. Вы уверены?');
+
+				if(result)
+				{
+					$(self.block).fadeOut();
+					setTimeout(function(){ $(self.block).remove(); },500);
+					$('body').css({overflow:'inherit'});
+				}
 			}
+			//
+			//
 			if($(e.target).hasClass('YiiUpload__delete')) // remove file
 			{
 				let fileName = $(e.target).closest('div')[0],
@@ -104,16 +144,26 @@ var YiiUpload = (function () {
 				// проверяем на допустимое кол-во загружаемых файлов
 				if($('.YiiUpload__form-input').length==1)
 				{
-					self.addButtons(['open']);
+					self.addButtons(bWebCam?['open','snapshot']:['open']);
 				}
 				else if(self.params.fileLimit>1 && $('.YiiUpload__form-input').length<=self.params.fileLimit)
 				{
-					self.addButtons(['open','send']);
+					self.addButtons(bWebCam?['open','snapshot','send']:['open','send']);
 				}
 				else // лимит по файлам достигнут
 				{
 					self.addButtons(['send']);
 				}
+			}
+			//
+			//
+			if($(e.target).hasClass('YiiUpload__snapshot')) // get snapshot
+			{
+				navigator.getUserMedia(
+						{ audio:false, video:true }, 
+						function(e){ self.getStream(e) }, 
+						function(e){ self.streamError(e) }
+					);
 			}
 		})
 		.on('click','.YiiUpload__open',function(e){ // select file
@@ -129,7 +179,9 @@ var YiiUpload = (function () {
 			self.setError();
 			if(arName!=null && arName[1].length && arName[2].length)
 			{
-				let name = arName[1] + '.' + arName[2];
+				let name = arName[1] + '.' + arName[2],
+						format = arName[2].toLowerCase();
+
 				$.each(arInput, function(){
 					let tf = this.files[0];
 					if(
@@ -146,7 +198,7 @@ var YiiUpload = (function () {
 					$(this).val('');
 					return;
 				}
-				if($.inArray(arName[2],self.params.fileFormat)<0) // проверяем формат на корректность
+				if($.inArray(format,self.params.fileFormat)<0) // проверяем формат на корректность
 				{
 					self.setError("- у файла '" + name + "' некорректный формат");
 					$(this).val('');
@@ -196,7 +248,7 @@ var YiiUpload = (function () {
 						$(self.files).html('');
 						$(self.inputs).html('');
 						self.addInput();
-						self.addButtons(['open','send']);
+						self.addButtons(['open']);
 					}
 					else // есть успешно загруженные файлы
 					{
@@ -215,74 +267,24 @@ var YiiUpload = (function () {
 							{
 								self.setError('- нет изображений для редактирования');
 								self.addButtons(['close']);
+								self.bComplete = true;
 							}
 							else // если все же есть
 							{
 								$('.YiiUpload__editor-field').append(arImg);
-								arImg = $('.YiiUpload__editor-field img');
-								$.each(arImg,function(i,e){
-									i>0 && $(this).css({display:'none'});
-								});
-
-
-
-								$(arImg[0]).load(function(){
-									cropperObj = new Cropper(arImg[0], cropParams);
-									$('.YiiUpload__editor_r-rotate').click(function(){ cropperObj.rotate(90) });
-									$('.YiiUpload__editor_l-rotate').click(function(){ cropperObj.rotate(-90) });
-								});
-
-
-								//cropperObj = new Cropper(arImg[0], cropParams);
-								$('.YiiUpload__editor').show();
+								self.setCropper();
 							}
 							$(self.files).html('');
 							$(self.result).html('');
 							$(self.inputs).html('');
 							self.addButtons();
-							$('.YiiUpload__form-title').text('Выберите область для отображения');	
+							self.setTitle('Выберите область для отображения');
+							self.bComplete = false;
 						}
 						else // завершаем обработку
 						{
-							let str = r.success.length>1
-										? 'Успешно загруженныe файлы:'
-										: 'Успешно загруженный файл:',
-									result = '<p class="YiiUpload__green">'+str+'</p>';
-
-							$.each(r.success, function(){
-								result += '<p>' + this.oldname + '</p>';
-								if(self.params.showTags==true) // если надо вывести теги
-								{
-									result += '<label><span>Ссылка</span>'
-												+ '<input type="text" name="link" disabled/>'
-											+ '</label>'
-											+ '<label><span>HTML ссылка</span>'
-												+ '<input type="text" name="html_link" disabled/>'
-											+ '</label>';
-									$(self.result).append(result);
-									result = '';
-
-									$(self.result).find('input:eq(-2)').val(this.path);
-									$(self.result).find('input:eq(-1)').val(this.linkTag);
-
-									if(this.isImg==true) // если файл - картинка
-									{
-										result += '<label><span>HTML картинка</span>'
-												+ '<input type="text" name="html_img" disabled/>'
-											+ '</label>';
-										$(self.result).append(result);
-										result = '';
-										$(self.result).find('input:eq(-1)').val(this.imgTag);	
-									}
-								}
-								$(self.result).append(result);
-							});
-							
-							$(self.files).html('');
-							$(self.inputs).html('');
-							self.addButtons(['close']);
+							self.setSuccess(r.success);
 						}
-						console.log(r);
 					}
 					$(self.block).removeClass('loading');
 				},
@@ -293,10 +295,123 @@ var YiiUpload = (function () {
 					$(self.inputs).html('');
 					self.addButtons(['close']);
 					$(self.block).removeClass('loading');
+					self.bComplete = true;
 				}
 			});
+		})
+		.on('click','.YiiUpload__crop',function(e){ // send file
+			self.cropperCnt++;
+			self.setCropper();
 		});
 	};
+	// croper edit step
+	YiiUpload.prototype.setCropper = function ()
+	{
+		let self = this,
+				arImages = $('.YiiUpload__editor-field>img');
+
+		if(self.cropperCnt==arImages.length)
+		{
+			$(self.block).addClass('loading');
+			$.each(arImages,function(i,e){
+				self.cropOptions[i]['name'] = $(this).data('name');	
+				self.cropOptions[i]['oldName'] = $(this).attr('alt');	
+			});
+			$.ajax({
+				url: self.params.action,
+				data: {state:'edit', data:self.cropOptions},
+				type: 'POST',
+				success: function(r)
+				{
+					r = JSON.parse(r);
+					self.setError();
+					self.setSuccess(r.success);
+					$(self.block).removeClass('loading');
+				},
+				error: function() // если вернуло статус!=200
+				{
+					self.setError('- системная ошибка. Обратитесь к администратору');
+					$(self.files).html('');
+					$(self.inputs).html('');
+					self.addButtons(['close']);
+					$(self.block).removeClass('loading');
+					self.bComplete = true;
+				}
+			});
+			return;
+		}
+
+		$.each(arImages,function(i,e){
+			i==self.cropperCnt ? $(this).show() : $(this).hide();
+		});
+
+		if(self.objCropper)
+		{
+			$('body').off('click','.YiiUpload__editor_r-rotate');
+			$('body').off('click','.YiiUpload__editor_l-rotate');
+			self.objCropper.destroy();
+		}
+
+		self.objCropper = new Cropper(arImages[self.cropperCnt], self.cropParams);
+
+		$('body').on('click','.YiiUpload__editor_r-rotate',function(){
+			self.objCropper.rotate(90)
+		});
+		$('body').on('click','.YiiUpload__editor_l-rotate',function(){ 
+			self.objCropper.rotate(-90)
+		});
+		$('.YiiUpload__editor').fadeIn();
+	}
+	//
+	YiiUpload.prototype.setSuccess = function ()
+	{
+		let self = this,
+				str = arguments[0].length>1
+					? 'Успешно загруженныe файлы:'
+					: 'Успешно загруженный файл:',
+				result = '<p class="YiiUpload__green">'+str+'</p>';
+
+		$.each(arguments[0], function(){
+			result += '<p>' + this.oldname + '</p>';
+			if(self.params.showTags==true) // если надо вывести теги
+			{
+				result += '<label><span>Ссылка</span>'
+							+ '<input type="text" name="link" disabled/>'
+						+ '</label>'
+						+ '<label><span>HTML ссылка</span>'
+							+ '<input type="text" name="html_link" disabled/>'
+						+ '</label>';
+				$(self.result).append(result);
+				result = '';
+
+				$(self.result).find('input:eq(-2)').val(this.path);
+				$(self.result).find('input:eq(-1)').val(this.linkTag);
+
+				if(this.isImg==true) // если файл - картинка
+				{
+					result += '<label><span>HTML картинка</span>'
+							+ '<input type="text" name="html_img" disabled/>'
+						+ '</label>';
+					$(self.result).append(result);
+					result = '';
+					$(self.result).find('input:eq(-1)').val(this.imgTag);	
+				}
+			}
+		});
+		$(self.result).append(result);
+		
+		$(self.files).html('');
+		$(self.inputs).html('');
+		$(self.editor).html('');
+		self.setTitle();
+		self.addButtons(['close']);
+		self.bComplete = true;
+	}
+	//
+	YiiUpload.prototype.changeCropField = function ()
+	{
+		this.cropOptions[this.cropperCnt]=arguments[0];
+	}
 	// set errors
 	YiiUpload.prototype.setError = function ()
 	{
@@ -306,7 +421,7 @@ var YiiUpload = (function () {
 	YiiUpload.prototype.addButtons = function ()
 	{
 		let self = this,
-				objBtns = {open:'Выбрать файл', send:'Отправить', close:'Хорошо'};
+				objBtns = {open:'Выбрать файл', send:'Отправить', close:'Хорошо',snapshot:'Сделать снимок'};
 
 		$(self.btns).html('');
 		if(typeof arguments[0]!=='object')
@@ -324,6 +439,103 @@ var YiiUpload = (function () {
 		let self = this;
 		$(self.inputs).append('<input type="file" name="upload[]" class="YiiUpload__form-input">');
 	}
-	//
+	// set popup title
+	YiiUpload.prototype.setTitle = function ()
+	{
+		let self = this,
+				result = arguments[0];
+
+		if(typeof result!=='string')
+		{
+			result = 'Загурзка файлов' + (self.params.fileFormat.length 
+				? ' (' + self.params.fileFormat.join(', ') + ')' : '');
+		}
+		$('.YiiUpload__form-title').text(result);
+	}
+	// get stream from webcam
+	YiiUpload.prototype.getStream = function (stream)
+	{ 
+		let video = document.querySelector('.YiiUpload__camera video');
+		let browser;
+		let dataBrowser = [
+					{ string:navigator.userAgent, subString:"Chrome", identity:"Chrome" }, 
+					{ string:navigator.userAgent, subString:"OmniWeb", versionSearch:"OmniWeb/", identity:"OmniWeb" }, 
+					{ string:navigator.vendor, subString:"Apple", identity:"Safari", versionSearch:"Version" }, 
+					{ prop:window.opera, identity:"Opera", versionSearch:"Version" }, 
+					{ string:navigator.vendor, subString:"iCab", identity:"iCab" }, 
+					{ string:navigator.vendor, subString:"KDE", identity:"Konqueror" }, 
+					{ string:navigator.userAgent, subString:"Firefox", identity:"Firefox" }, 
+					{ string:navigator.vendor, subString:"Camino", identity:"Camino" }, 
+					{ string:navigator.userAgent, subString:"Netscape", identity:"Netscape" }, 
+					{ string:navigator.userAgent, subString:"MSIE", identity:"Internet Explorer", versionSearch:"MSIE" }, 
+					{ string:navigator.userAgent, subString:"Gecko", identity:"Mozilla", versionSearch:"rv" }, 
+					{ string:navigator.userAgent, subString:"Mozilla", identity:"Netscape", versionSearch: "Mozilla" },
+					{ string:navigator.vendor, subString:"Apple", identity:"Safari", versionSearch:"Version" }
+				];
+
+		for (var i=0;i<data.length;i++)
+		{ 
+			var dataString = data[i].string; 
+			var dataProp = data[i].prop; 
+			if (dataString){ 
+				if (dataString.indexOf(data[i].subString) != -1) 
+					browser = data[i].identity;
+			} 
+			else if (dataProp) 
+				browser = data[i].identity; 
+		}
+
+		if(browser=='Safari')
+		{
+			video.srcObject = stream;
+			video.play();
+		}
+		else{ video.srcObject = stream }
+		/*setTimeout(function(){
+			$mess.text('');
+			$load.fadeOut();
+			$snapshot.fadeIn();
+			$snapBtn.show();
+		},500);*/
+	};
+	//	show errrors by navigator
+	YiiUpload.prototype.streamError = function(e)
+	{
+		console.log(e);
+		if(typeof e!='underfined')
+		{
+			let error = false;
+			if(e['name']==='PermissionDeniedError' || e['name']==='NotAllowedError')
+			{
+				this.setError('- для съемки необходим доступ к вебкамере');
+				error = true;
+			}
+			if(e['name']==='DevicesNotFoundError')
+			{
+				this.setError('- камера не найдена');
+				error = true;
+			}
+			if(e['name']==='ConstraintNotSatisfiedError')
+			{
+				this.setError('- решение не поддерживается вашим устройством');
+				error = true;
+			}
+			
+			if(!error)
+			{
+				$('.YiiUpload__camera-mess').text('В верхней части появится запрос на использование вебкамеры');
+				$('.YiiUpload__camera').fadeIn();
+				$(self.files).hide();
+				$(self.btns).hide();
+			}
+			else
+			{
+				$('.YiiUpload__camera').hide();
+				$(self.files).fadeIn();
+				$(self.btns).fadeIn();
+			}
+		}
+	};
+
 	return YiiUpload;
 }());

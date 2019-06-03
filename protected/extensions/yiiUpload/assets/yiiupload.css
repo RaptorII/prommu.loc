@@ -144,6 +144,7 @@
 .YiiUpload__form-errors{
 	color: red;
 	font-size: 16px;
+	margin-bottom: 15px;
 }
 /* files */
 .YiiUpload__form-files div{ padding-bottom: 5px }
@@ -187,11 +188,25 @@
 	height: 280px;
 }
 .YiiUpload__editor-prev{
-	width: 200px;
+	width: 185px;
 	text-align: center;
 	position: relative;
 	left: -100px;
 	margin-left: 50%;
+}
+.YiiUpload__editor-prev-item{
+	margin-bottom: 20px;
+	border-radius: 50%;
+	overflow: hidden;
+	display: inline-block;
+}
+.YiiUpload__editor-prev-lg{
+	width: 185px;
+	height: 200px;
+}
+.YiiUpload__editor-prev-sm{
+	width: 70px;
+	height: 70px;
 }
 .YiiUpload__editor-panel{
 	width: 100%;
@@ -207,10 +222,9 @@
 	background: #ff8300 url(sprite.png) no-repeat;
 	border-radius: 5px;
 }
-.YiiUpload__editor-panel .YiiUpload__editor_l-rotate{ background-position: 4px -51px; }
-.YiiUpload__editor-panel .YiiUpload__editor-r-rotate{ background-position: 4px -74px; }
-.YiiUpload__editor-panel .YiiUpload__editor-success{ background-position: 4px -99px; }
-
+.YiiUpload__editor-panel .YiiUpload__editor_l-rotate{ background-position: 0 -50px; }
+.YiiUpload__editor-panel .YiiUpload__editor_r-rotate{ background-position: 0 -74px; }
+.YiiUpload__editor-panel .YiiUpload__crop{ background-position: 0 -99px; }
 @media (min-width: 768px){
 	.YiiUpload__editor-field{
 		width: 338px;
@@ -223,7 +237,7 @@
 		left: 0;
 	}
 	.YiiUpload__editor-panel{
-		width: 200px;
+		width: 185px;
 		display: inline-block;
 		float: right;
 	}
@@ -234,3 +248,5 @@
 		height: 538px;
 	}
 }
+/* snapshot */
+.YiiUpload__camera{ display: none; }
