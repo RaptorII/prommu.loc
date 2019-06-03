@@ -1,0 +1,1 @@
+<div class="YiiUpload__call-btn"><span><?=$this->callButtonText?></span></div>
