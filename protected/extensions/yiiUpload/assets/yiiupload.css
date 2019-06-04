@@ -250,3 +250,8 @@
 }
 /* snapshot */
 .YiiUpload__camera{ display: none; }
+.YiiUpload__camera video{
+	width: 100%;
+	height: auto;
+}
+.YiiUpload__camera canvas{ display: none; }

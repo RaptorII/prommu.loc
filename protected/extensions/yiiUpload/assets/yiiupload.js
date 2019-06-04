@@ -8,6 +8,7 @@ var YiiUpload = (function () {
 	YiiUpload.prototype.inputs;
 	YiiUpload.prototype.btns;
 	YiiUpload.prototype.editor;
+	YiiUpload.prototype.camera;
 	YiiUpload.prototype.cropperCnt;
 	YiiUpload.prototype.objCropper;
 	YiiUpload.prototype.cropOptions;
@@ -72,14 +73,8 @@ var YiiUpload = (function () {
 								+	'</div>'
 							+ '</div>'
 							+ '<div class="YiiUpload__camera">'
-								+ '<div class="YiiUpload__camera-mess"></div>'
 								+ '<video autoplay playsinline></video>'
 								+ '<canvas></canvas>'
-								+ '<div class="YiiUpload__camera-btns">'
-									+ '<div class="YiiUpload__camera-shoot"></div>'
-									+ '<div class="YiiUpload__camera-done"></div>'
-									+ '<div class="YiiUpload__camera-reset"></div>'
-								+ '</div>'
 							+ '</div>'
 							+ '<div class="YiiUpload__form-files"></div>'
 							+ '<div class="YiiUpload__form-inputs"></div>'
@@ -97,6 +92,7 @@ var YiiUpload = (function () {
 			self.inputs = document.querySelector('.YiiUpload__form-inputs');
 			self.btns = document.querySelector('.YiiUpload__form-btns');
 			self.editor = document.querySelector('.YiiUpload__editor');
+			self.camera = document.querySelector('.YiiUpload__camera');
 			self.cropperCnt = 0;
 			self.setTitle();
 			self.addInput();
@@ -159,9 +155,10 @@ var YiiUpload = (function () {
 			//
 			if($(e.target).hasClass('YiiUpload__snapshot')) // get snapshot
 			{
+				$(self.block).addClass('loading');
 				navigator.getUserMedia(
 						{ audio:false, video:true }, 
-						function(e){ self.getStream(e) }, 
+						function(e){ self.getStream(e) },
 						function(e){ self.streamError(e) }
 					);
 			}
@@ -421,7 +418,15 @@ var YiiUpload = (function () {
 	YiiUpload.prototype.addButtons = function ()
 	{
 		let self = this,
-				objBtns = {open:'Выбрать файл', send:'Отправить', close:'Хорошо',snapshot:'Сделать снимок'};
+				objBtns = {
+					open:'Выбрать файл', 
+					send:'Отправить', 
+					close:'Хорошо',
+					snapshot:'Сделать снимок',
+					wc_done:'Сохранить',
+					wc_reset:'Заново',
+					wc_shoot:'Сделать снимок'
+				};
 
 		$(self.btns).html('');
 		if(typeof arguments[0]!=='object')
@@ -455,9 +460,10 @@ var YiiUpload = (function () {
 	// get stream from webcam
 	YiiUpload.prototype.getStream = function (stream)
 	{ 
-		let video = document.querySelector('.YiiUpload__camera video');
-		let browser;
-		let dataBrowser = [
+		let browser,
+				self = this,
+				video = document.querySelector('.YiiUpload__camera video'),
+				dataBrowser = [
 					{ string:navigator.userAgent, subString:"Chrome", identity:"Chrome" }, 
 					{ string:navigator.userAgent, subString:"OmniWeb", versionSearch:"OmniWeb/", identity:"OmniWeb" }, 
 					{ string:navigator.vendor, subString:"Apple", identity:"Safari", versionSearch:"Version" }, 
@@ -473,16 +479,16 @@ var YiiUpload = (function () {
 					{ string:navigator.vendor, subString:"Apple", identity:"Safari", versionSearch:"Version" }
 				];
 
-		for (var i=0;i<data.length;i++)
+		for (let i=0;i<dataBrowser.length;i++)
 		{ 
-			var dataString = data[i].string; 
-			var dataProp = data[i].prop; 
+			let dataString = dataBrowser[i].string; 
+			let dataProp = dataBrowser[i].prop; 
 			if (dataString){ 
-				if (dataString.indexOf(data[i].subString) != -1) 
-					browser = data[i].identity;
+				if (dataString.indexOf(dataBrowser[i].subString) != -1) 
+					browser = dataBrowser[i].identity;
 			} 
 			else if (dataProp) 
-				browser = data[i].identity; 
+				browser = dataBrowser[i].identity; 
 		}
 
 		if(browser=='Safari')
@@ -490,51 +496,43 @@ var YiiUpload = (function () {
 			video.srcObject = stream;
 			video.play();
 		}
-		else{ video.srcObject = stream }
-		/*setTimeout(function(){
-			$mess.text('');
-			$load.fadeOut();
-			$snapshot.fadeIn();
-			$snapBtn.show();
-		},500);*/
+		else
+		{ 
+			video.srcObject = stream;
+		}
+
+		setTimeout(function(){
+			$(self.block).removeClass('loading');
+			$(self.camera).fadeIn();
+			$(self.files).hide();
+			self.addButtons(['wc_shoot']);
+		},500);
 	};
 	//	show errrors by navigator
-	YiiUpload.prototype.streamError = function(e)
+	YiiUpload.prototype.streamError = function (e)
 	{
-		console.log(e);
+		let self = this;
+		
 		if(typeof e!='underfined')
 		{
-			let error = false;
+			console.log(e['name']);
 			if(e['name']==='PermissionDeniedError' || e['name']==='NotAllowedError')
 			{
-				this.setError('- для съемки необходим доступ к вебкамере');
-				error = true;
+				self.setError('- для съемки необходим доступ к вебкамере');
 			}
 			if(e['name']==='DevicesNotFoundError')
 			{
-				this.setError('- камера не найдена');
-				error = true;
+				self.setError('- камера не найдена');
 			}
 			if(e['name']==='ConstraintNotSatisfiedError')
 			{
-				this.setError('- решение не поддерживается вашим устройством');
-				error = true;
-			}
-			
-			if(!error)
-			{
-				$('.YiiUpload__camera-mess').text('В верхней части появится запрос на использование вебкамеры');
-				$('.YiiUpload__camera').fadeIn();
-				$(self.files).hide();
-				$(self.btns).hide();
-			}
-			else
-			{
-				$('.YiiUpload__camera').hide();
-				$(self.files).fadeIn();
-				$(self.btns).fadeIn();
+				self.setError('- решение не поддерживается вашим устройством');
 			}
 		}
+		$(self.camera).hide();
+		$(self.files).fadeIn();
+		$(self.btns).fadeIn();
+		$(self.block).removeClass('loading');
 	};
 
 	return YiiUpload;
