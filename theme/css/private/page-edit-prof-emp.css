@@ -240,10 +240,12 @@
 .epe-logo__load{
     background: #ff8300;
     float: left;
+	border-radius: 5px;
 }
 .epe-logo__webcam{ 
     background: #a0bb00;
     float: right;
+	border-radius: 5px;
 }
 .epe-logo__load:before,
 .epe-logo__webcam:before{
@@ -265,11 +267,13 @@
     background: #a0bb00;
     -webkit-transform: scaleX(0);
     transform: scaleX(0);
+	border-radius: 5px;
 }
 .epe-logo__webcam:before{
     background: #ff8300;
     -webkit-transform: scaleX(1);
     transform: scaleX(1);
+	border-radius: 5px;
 }
 .epe-logo__load:hover:before{
     -webkit-transform: scaleX(1);
@@ -462,7 +466,7 @@
 #F1compprof.edit-profile-employer .epe__input-name{ padding-left: 150px }
 #F1compprof.edit-profile-employer .epe__input-type{ padding-left: 110px }
 #F1compprof.edit-profile-employer .epe__input-site{ padding-left: 80px }
-#F1compprof.edit-profile-employer .epe__input-contact{ padding-left: 110px }
+#F1compprof.edit-profile-employer .epe__input-contact{ padding-left: 125px }
 #F1compprof.edit-profile-employer .epe__input-fname{ padding-left: 90px }
 #F1compprof.edit-profile-employer .epe__input-lname{ padding-left: 110px }
 #F1compprof.edit-profile-employer .epe__input-mail{ padding-left: 90px }
@@ -978,4 +982,24 @@ input:checked + .epe__checkbox:after{ content: '\2714' }
 	.epe__header-title{ padding: 0 0 0 20% }
 	.epe__header-title{ text-align: left }
 	.epe__logo{ display: table-cell }
+}
+
+@media (max-width: 460px){
+	.epe__label-name {
+		padding-left: 5px;
+	}
+	#F1compprof.edit-profile-employer .epe__input-name{ padding-left: 70px }
+	#F1compprof.edit-profile-employer .epe__input-type{ padding-left: 90px }
+	#F1compprof.edit-profile-employer .epe__input-site{ padding-left: 60px }
+	#F1compprof.edit-profile-employer .epe__input-contact{ padding-left: 105px }
+	#F1compprof.edit-profile-employer .epe__input-fname{ padding-left: 70px }
+	#F1compprof.edit-profile-employer .epe__input-lname{ padding-left: 100px }
+	#F1compprof.edit-profile-employer .epe__input-mail{ padding-left: 70px }
+	#F1compprof.edit-profile-employer .epe__input-soc{ padding-left: 95px }
+	#F1compprof.edit-profile-employer .epe__input-pos{ padding-left: 120px }
+	#F1compprof.edit-profile-employer .epe__input-city{ padding-left: 40px }
+	#F1compprof.edit-profile-employer .epe__input-inn{ padding-left: 25px }
+	.country-phone-selected {
+		padding: 0px 2px 0px 0px;
+	}
 }

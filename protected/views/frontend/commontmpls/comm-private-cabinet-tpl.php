@@ -23,6 +23,28 @@
                 <div class="center red">Необходимо перейти в редактирование профиля и заполнить необходимые поля. После этого ваш профиль будет отображаться в общем списке работодателей и поиске на сайте, а также вы сможете размещать вакансии. <? echo Share::$UserProfile->checkRequiredFields()['mess']?></div>
             <?php endif; ?>
             <div class="col-xs-12">
+                <div class="header-user-info">
+                    <!--                    -->
+                    <div class="small-menu__profile">
+                        <?php $user = Yii::app()->session['au_us_data']; ?>
+                        <a class="small-menu__username" href="<?=MainConfig::$PAGE_PROFILE?>" data-id="<?=$user->id?>">
+                            <span>
+                                <?php
+                                if($user->firstname || $user->lastname):
+                                    echo $user->firstname . ' ' . $user->lastname;
+                                else:
+                                    echo $user->name;
+                                endif;
+                                ?>
+                            </span>
+                        </a>
+                        <a class="small-menu__btn" href="<?=MainConfig::$PAGE_LOGOUT?>">
+                            <b class="header-info__btn">ВЫХОД</b>
+                        </a>
+                    </div>
+                    <div class="clearfix"></div>
+                    <!--                    -->
+                </div>
                 <div class="content-header">Личный кабинет работодателя</div>
                 <div class="content-header-line"></div>
             </div>

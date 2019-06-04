@@ -44,7 +44,7 @@
               <div class="epe-data__title"><h2>ОСНОВНАЯ ИНФОРМАЦИЯ</h2></div>
               <div class="epe-data__module">
                 <label class="epe__label">
-                  <span class="epe__label-name">Название компании:</span>
+                  <span class="epe__label-name">Компания:</span>
                   <input type='text' name='name' value="<?=$viData['info']['name']?>" class="epe__input epe__input-name epe__required" autocomplete="off">
                 </label>
                 <div class="epe__label epe__select">
@@ -113,7 +113,7 @@
 
 
                 <label class="epe__label epe__email" data-error="Указанный e-mail адрес уже используется в системе" for="epe-email">
-                  <span class="epe__label-name">Ваша email:</span>
+                  <span class="epe__label-name">Ваш email:</span>
                   <input type='text' name='email' value="<?=$viData['info']['email']?>" class="epe__input epe__input-mail epe__required" id="epe-email" autocomplete="off">
                   <span class="epe__confirm<?=($viData['info']['confirmEmail'] && !empty($viData['info']['email'])?' complete':'')?>" id="conf-email">
                     <?php if($viData['info']['confirmEmail'] && !empty($viData['info']['email'])): ?>

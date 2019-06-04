@@ -277,8 +277,8 @@
                 <span class="epa__label-name">Код:</span>
                 <input type='text' name='confirm-code' value="" class="epa__input" id="conf-phone-inp" maxlength="6">
               </label>
-              <dir class="epa__confirm-btn hvr-sweep-to-right">ПРОВЕРИТЬ</dir>
-              <dir class="clearfix"></dir>
+              <div class="epa__confirm-btn hvr-sweep-to-right">ПРОВЕРИТЬ</div>
+              <div class="clearfix"></div>
             </div>
             <?php 
               if(sizeof($arAdPhones) && !empty($attr['phone'])): 
@@ -309,14 +309,42 @@
                 <span class="epa__label-name">Код:</span>
                 <input type='text' name='confirm-code' value="" class="epa__input" id="conf-email-inp" maxlength="6">
               </label>
-              <dir class="epa__confirm-btn hvr-sweep-to-right">ПРОВЕРИТЬ</dir>
-              <dir class="clearfix"></dir>
+              <div class="epa__confirm-btn hvr-sweep-to-right">ПРОВЕРИТЬ</div>
+              <div class="clearfix"></div>
             </div>
+
+            <span class="epa__label-name">Мессенджеры:</span>
+<!--              skype-->
             <label class="epa__label epa__skype">
               <span class="epa__label-name">Skype:</span>
               <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'skype') ?>
               <input type="text" name="user-attribs[skype]" value="<?=($id ? $attrAll[$id]['val'] : '')?>" class="epa__input">
             </label>
+
+<!-- Other messengers-->
+            <label class="epa__label epa__mess-viber <?=empty($attrAll[$idViber]['val'])?'off':''?>">
+              <span class="epa__label-name epa__phone-name">Viber:</span>
+              <input type="text" name="user-attribs[viber]" value="<?=$attrAll[$idViber]['val']?>" class="epa__input epa__phone phone-input" autocomplete="off">
+              <ul class="phone-list"></ul>
+            </label>
+            <label class="epa__label epa__mess-wapp <?=empty($attrAll[$idWhatsApp]['val'])?'off':''?>">
+              <span class="epa__label-name epa__phone-name">WhatsApp:</span>
+              <input type="text" name="user-attribs[whatsapp]" value="<?=$attrAll[$idWhatsApp]['val']?>" class="epa__input epa__phone phone-input" autocomplete="off">
+              <ul class="phone-list"></ul>
+            </label>
+            <label class="epa__label epa__mess-tele <?=empty($attrAll[$idTelegram]['val'])?'off':''?>">
+              <span class="epa__label-name epa__phone-name">Telegram:</span>
+              <input type="text" name="user-attribs[telegram]" value="<?=$attrAll[$idTelegram]['val']?>" class="epa__input epa__phone phone-input" autocomplete="off">
+              <ul class="phone-list"></ul>
+            </label>
+            <label class="epa__label epa__mess-allo <?=empty($attrAll[$idGoogleAllo]['val'])?'off':''?>">
+              <span class="epa__label-name epa__phone-name">Google Allo:</span>
+              <input type="text" name="user-attribs[googleallo]" value="<?=$attrAll[$idGoogleAllo]['val']?>" class="epa__input epa__phone phone-input" autocomplete="off">
+              <ul class="phone-list"></ul>
+            </label>
+
+<!-- Social netvorks-->
+            <span class="epa__label-name">Социальные сети:</span>
             <label class="epa__label epa__soc-vk">
               <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'vk') ?>
               <span class="epa__label-name">Страница ВКонтакте (сылка):</span>
@@ -342,7 +370,12 @@
               <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'google') ?>  
               <input type="text" name="user-attribs[google]" value="<?=($id ? $attrAll[$id]['val'] : '')?>" class="epa__input" placeholder="your@gmail.com" id="epa-gmail">
             </label>
-            <?php if(!empty($attr['phone'])): ?>
+            <?php
+            /**
+             * shut down Messenger list
+             * 4.06.2019
+             */
+            if(!empty($attr['phone'])&&(1==2)): ?>
               <div class="epa__label epa__messenger epa__select">
                 <span class="epa__label-name">Мессенджеры:</span>
                 <input type="text" name="epa-str-mess" value="<?=implode(',',$arMess)?>" class="epa__input" id="epa-str-messenger" disabled>
@@ -518,7 +551,13 @@
                   <b><?=$city['name']?></b>
                 <?php endforeach; ?>               
               </div>
-              <span class="epa__add-city-btn epa__city-btn js-g-hashint" title="Добавить город" >+</span>      
+              <?php
+                /**
+                * shut down button 'Add City'
+                * 04.06.2018
+                */
+                //<span class="epa__add-city-btn epa__city-btn js-g-hashint" title="Добавить город" >+</span>
+              ?>
             </div>
             <div class="epa__cities-block-list">
               <?php foreach($arUserCities as $city): ?>
@@ -580,7 +619,13 @@
                 </div>
               <?php endforeach; ?>
             </div>
-            <span class="epa__btn epa__add-city-btn">Добавить город</span>
+            <?php
+            /**
+             * shut down button 'Add City'
+             * 04.06.2018
+             */
+            //<span class="epa__btn epa__add-city-btn">Добавить город</span>
+            ?>
             <div class="clearfix"></div>
             <div class="center">
               <button type="submit" class="epa__save-btn prmu-btn prmu-btn_normal">

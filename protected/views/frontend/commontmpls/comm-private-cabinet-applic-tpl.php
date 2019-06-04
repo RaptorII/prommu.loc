@@ -45,6 +45,7 @@
                     <!--                    -->
                 </div>
                 <div class="content-header">Личный кабинет соискателя</div>
+                <div class="content-header-line"></div>
             </div>
         </div>
         <div class="row content-menu-box mt20">       

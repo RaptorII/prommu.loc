@@ -99,6 +99,7 @@
 .ppp__btn:hover:before{
     -webkit-transform: scaleX(1);
     transform: scaleX(1);
+    border-radius: 5px;
 }
 /*  */
 .ppp__logo{
@@ -815,8 +816,18 @@ a.upp__project-info{ width: 65px }
     display: table-cell;
     vertical-align: middle;
     padding-left: 3px;
+    text-align: right;
 }
-.ppp__field.ppp__post-exp{ min-height: 50px }
+.ppp__field.ppp__post-field .ppp__field-val{
+    width: 100%;
+    text-align: right;
+}
+.ppp__field.ppp__post-exp .ppp__field-val{
+    text-align: left;
+}
+.ppp__field.ppp__post-exp{
+    min-height: 50px;
+}
 .ppp__post-item .ppp__field-val{
     padding: 7px 0;
     line-height: normal;

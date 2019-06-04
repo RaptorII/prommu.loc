@@ -361,13 +361,22 @@
     ?>
     <div class="ppp__module-title"><h2>ЦЕЛЕВАЯ ВАКАНСИЯ</h2></div>
     <div class="ppp__module">
-      <div class="ppp__field<?=($isBlocked && !$info['userDolj'][1] && $flagOwnProfile?' error':'')?>">
-        <span class="ppp__field-name ppp__field-target-vacancy">Целевые вакансии:</span>
-        <span class="ppp__field-val ppp__field-target-vacancy"><?=$info['userDolj'][1]?></span>
-      </div>
+        <?php
+        /**
+        * Shut down  viewed Target Vacancy
+        * 4.05.2019
+        */
+        if (1==2 ) {
+        ?>
+            <div class="ppp__field<?=($isBlocked && !$info['userDolj'][1] && $flagOwnProfile?' error':'')?>">
+                <span class="ppp__field-name ppp__field-target-vacancy">Целевые вакансии:</span>
+                <span class="ppp__field-val ppp__field-target-vacancy"><?=$info['userDolj'][1]?></span>
+            </div>
+        <?php } ?>
+
       <?php if(sizeof($arPosts) && $info['userDolj'][1]): ?>
         <div class="ppp__post-list">
-          <?php $i=0; ?> 
+          <?php //$i=0; ?>
           <?php foreach ($arPosts as $post): ?> 
             <div class="ppp__post-item">
               <div class="ppp__post-name"><b>Должность: </b><span><?=$post['val']?></span></div>
