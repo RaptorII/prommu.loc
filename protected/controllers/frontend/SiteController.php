@@ -31,6 +31,7 @@ class SiteController extends AppController
             'page' => array(
                 'class' => 'CViewAction',
             ),
+            'yiiupload'=>array('class'=>'YiiUploadAction')
         );
     }
 

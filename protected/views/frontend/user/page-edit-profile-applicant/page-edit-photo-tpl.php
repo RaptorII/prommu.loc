@@ -10,6 +10,7 @@
     </div>
     <?php if( count($viData['userInfo']['userPhotos']) < MainConfig::$APPLICANT_MAX_PHOTOS ): ?>
         <p class="photo-pages__alert">Добавляйте только свои личные фото, иначе Вы не сможете пройти модерацию! Спасибо за понимание!</p>
+        <? $this->widget('YiiUploadWidget',Share::$UserProfile->arYiiUpload); ?>
         <div class="photo-pages__btn-block" id="load-img-module">
             <div class="photo-pages__load" id="btn-load-image">Загрузить фото</div>
             <div class="photo-pages__webcam" id="btn-get-snapshot">Сделать снимок</div>

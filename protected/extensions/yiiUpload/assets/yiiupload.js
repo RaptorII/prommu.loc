@@ -14,6 +14,7 @@ var YiiUpload = (function () {
 	YiiUpload.prototype.cropOptions;
 	YiiUpload.prototype.cropParams;
 	YiiUpload.prototype.bComplete;
+	YiiUpload.prototype.bFinish;
 	YiiUpload.prototype.snapshots = [];
 	YiiUpload.prototype.signatureLen = 50; // допустимая длина подписи
 	YiiUpload.prototype.ajaxResult;
@@ -52,9 +53,11 @@ var YiiUpload = (function () {
 				crop: function(e){ self.changeCropField(e.detail) }
 			};
 		self.bComplete = false;
+		self.bFinish = false;
 
 		$('.YiiUpload__call-btn').on('click',function(){
-			$('body').append('<div class="YiiUpload__block">'
+			$('body').append('<div class="YiiUpload__block'
+				+ (self.params.cssClassForm!=false ? (' '+self.params.cssClassForm) : '') + '">'
 				+ '<div class="YiiUpload__close"><div class="YiiUpload__close">'
 				+ '<form class="YiiUpload__form">'
 					+ '<div class="YiiUpload__form-close YiiUpload__close"></div>'
@@ -555,6 +558,7 @@ var YiiUpload = (function () {
 		self.setTitle();
 		self.addButtons(['close']);
 		self.bComplete = true;
+		self.bFinish = true;
 	}
 	//
 	//
@@ -698,7 +702,13 @@ var YiiUpload = (function () {
 	{
 		let self = this;
 		$(self.block).removeClass('loading').fadeOut();
-		setTimeout(function(){ $(self.block).remove(); },500);
+		setTimeout(function(){
+			$(self.block).remove();
+			if(self.bFinish==true && self.params.reloadAfterUpload)
+			{
+				location.reload()
+			}
+		},500);
 		$('body').css({overflow:'inherit'});
 		self.bComplete = true;
 	}

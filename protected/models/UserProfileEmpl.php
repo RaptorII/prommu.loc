@@ -20,6 +20,9 @@ class UserProfileEmpl extends UserProfile
         $this->photosMax = MainConfig::$EMPLOYER_MAX_PHOTOS;
 
         $this->viewTpl = MainConfig::$VIEWS_COMPANY_PROFILE_OWN;
+        // YiiUpload
+        $this->arYiiUpload['imgDimensions'] = ['30'=>30,'100'=>220,'169'=>169,'400'=>400];
+        $this->arYiiUpload['objSave'] = $this;
     }
 
 
@@ -1653,5 +1656,50 @@ class UserProfileEmpl extends UserProfile
                     );               
             }
         }
+    }
+    /**
+     *  сохранение данных с помощью виджета
+     * @param $arData - array ['files'=>[0=>['name','oldname','path','linkTag','isImg','imgTag','signature']...]]
+     */
+    public function savePhoto($arData)
+    {
+        $query = Yii::app()->db->createCommand()
+                    ->select('MAX(npp) npp, COUNT(*) cnt')
+                    ->from('user_photos')
+                    ->where('id_empl=:id',[':id'=>$this->exInfo->eid])
+                    ->queryRow();
+
+        // проверяем на допустимое кол-во фото
+        if($query['cnt']>=$this->photosMax || !count($arData['files']))
+        {
+            return false;
+        }
+
+        $arInsert = array();
+        for ($i=0, $n=count($arData['files']); $i<$n; $i++)
+        {
+            // загружаем только допустимое кол-во
+            if(($i + 1 + $query['cnt'])>=$this->photosMax) 
+                continue;
+
+            $file = pathinfo($arData['files'][$i]['name'], PATHINFO_FILENAME);
+            // первое фото ставим главным
+            $i==0 && $this->updateForPhoto($this->exInfo->eid, $file);
+
+            $arInsert[] = [
+                    'id_empl' => $this->exInfo->eid,
+                    'id_user' => $this->id,
+                    'npp' => ++$query['npp'],
+                    'photo' => $file,
+                    'signature' => $arData['files'][$i]['signature']
+                ];
+        }
+        // записываем в user_photos одним запросом
+        Share::multipleInsert(['user_photos'=>$arInsert]);
+        // устанавливаем что нужна модерация
+        Yii::app()->db->createCommand()
+            ->update('user', ['ismoder'=>0], 'id_user=:id', [':id'=>$this->id]);
+        // уведомляем админа по почте
+        Mailing::set(1, ['id_user'=>$this->id], 3);
     }
 }

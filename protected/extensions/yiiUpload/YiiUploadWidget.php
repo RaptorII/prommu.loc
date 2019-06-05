@@ -22,6 +22,11 @@ class YiiUploadWidget extends CWidget
 	public $imgOrigSuFFix; // string - for edit images, rotated but not resized images
 	public $useWebcam; // boolean - get images from camera of user device
 	public $imageSignature; // boolean - added signature for the file
+	public $objSave; // object - save photos object
+	public $objSaveMethod; // string - name of save method in object $objSave
+	public $cssClassButton; // string - custom styles for main button
+	public $cssClassForm; // string - custom styles for popup
+	public $reloadAfterUpload; // boolean - reload page after upload and close popup
 
 	public  $defaultController='/site';
 
@@ -58,6 +63,11 @@ class YiiUploadWidget extends CWidget
 		!isset($this->imageEditor) && $this->imageEditor = false;
 		!isset($this->useWebcam) && $this->useWebcam = false;
 		!isset($this->imageSignature) && $this->imageSignature = false;
+		!is_object($this->objSave) && $this->objSave = false;
+		!isset($this->objSaveMethod) && $this->objSaveMethod = false;
+		!isset($this->cssClassButton) && $this->cssClassButton = false;
+		!isset($this->cssClassForm) && $this->cssClassForm = false;
+		!isset($this->reloadAfterUpload) && $this->reloadAfterUpload = false;
 	}
 
 	public function run()
@@ -74,6 +84,8 @@ class YiiUploadWidget extends CWidget
 				'imageEditor' => $this->imageEditor,
 				'useWebcam' => $this->useWebcam,
 				'imageSignature' => $this->imageSignature,
+				'cssClassForm' => $this->cssClassForm,
+				'reloadAfterUpload' => $this->reloadAfterUpload
 			));
 		$s = Yii::app()->session;
 		$s['yiiUpload'] = [
@@ -90,7 +102,9 @@ class YiiUploadWidget extends CWidget
 				'maxFileSize' => $this->maxFileSize,
 				'imgDimensions' => $this->imgDimensions,
 				'imgOrigSuFFix' => $this->imgOrigSuFFix,
-				'useWebcam' => $this->useWebcam
+				'useWebcam' => $this->useWebcam,
+				'objSave' => $this->objSave,
+				'objSaveMethod' => $this->objSaveMethod
 			];
 		$var_id = rand(1000,9999);
 		Yii::app()->getClientScript()->registerScript("yii_upload_script_".$var_id,
@@ -123,10 +137,15 @@ class YiiUploadWidget extends CWidget
 		if(isset($_FILES['upload']))
 		{
 			$arRes = $this->checkImages($_FILES['upload'], $s['yiiUpload']);
+			if($s['yiiUpload']['imageEditor']==true)
+			{
+				$this->saveData(['files'=>$arRes['success']], $s['yiiUpload']);
+			}
 		}
 		elseif($_POST['state']=='edit')
 		{
 			$arRes = $this->editImages($_POST['data'], $s['yiiUpload']);
+			$this->saveData(['files'=>$arRes['success']], $s['yiiUpload']);
 		}
 		elseif($_POST['state']=='delete')
 		{
@@ -317,7 +336,8 @@ class YiiUploadWidget extends CWidget
 					$arData[$i]['name'], 
 					$arData[$i]['oldName'], 
 					$arParams['fileUrl'] . $arData[$i]['name'], 
-					$imgProps
+					$imgProps,
+					$arData[$i]['signature']
 				);
 
 			imagedestroy($image);
@@ -342,6 +362,19 @@ class YiiUploadWidget extends CWidget
 			}
 		}
 		return [];
+	}
+	/**
+	 * @param $arData - array()
+	 * @param $arParams - array()
+	 */
+	private function saveData($arData, $arParams)
+	{
+		if($arParams['objSave']==false || $arParams['objSaveMethod']==false)
+			return false;
+
+		$object = $arParams['objSave'];
+		$method = $arParams['objSaveMethod'];
+		return $object->$method($arData);
 	}
 	/**
 	 * @param $path - string
@@ -427,7 +460,7 @@ class YiiUploadWidget extends CWidget
 	/**
 	 * 
 	 */
-	private function getSuccess($newName, $oldName, $path, $bImg)
+	private function getSuccess($newName, $oldName, $path, $bImg, $signature='')
 	{
 		return [
 				'name' => $newName, 
@@ -435,7 +468,8 @@ class YiiUploadWidget extends CWidget
 				'path' => $path,
 				'linkTag' => '<a href="' . $path . '" target="_blank">' . $oldName . '</a>',
 				'isImg' => (boolean) $bImg,
-				'imgTag' => $bImg ? '<img src="' . $path . '" alt="' . $oldName . '" data-name="' . $newName . '"/>' : ''
+				'imgTag' => $bImg ? '<img src="' . $path . '" alt="' . $oldName . '" data-name="' . $newName . '"/>' : '',
+				'signature' => $signature
 			];
 	}
 	/**

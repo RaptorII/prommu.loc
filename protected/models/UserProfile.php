@@ -21,6 +21,8 @@ abstract class UserProfile extends CModel
     public $offset;
 
     public $viewTpl;
+    // YiiUpload params
+    public $arYiiUpload;
 
 
 
@@ -31,6 +33,24 @@ abstract class UserProfile extends CModel
 
         $this->limit = MainConfig::$DEF_PAGE_LIMIT;
         $this->offset = 0;
+        // YiiUpload
+        $settings = new Settings;
+        $this->arYiiUpload = [
+                'fileLimit' => 5,
+                'fileFormat' => ['jpg','jpeg','png'],
+                'callButtonText' => 'Загрузить фото',
+                'useWebcam' => true,
+                'minImageSize' => 400,
+                'maxImageSize' => 4500,
+                'imageEditor' => true,
+                'maxFileSize' => 10, // в мегабайтах(по умолчанию 5)
+                'imageSignature' => true, // разрешить подпись фото
+                'imgOrigSuFFix' => '000', // суфикс к заголовку измененного, возможно повернутого но не обрезаного изображения
+                'filePath' => $settings->getDataByCode('files_root') . 'users/' . $this->id,
+                'fileUrl' => $settings->getDataByCode('files_url') . 'users/' . $this->id,
+                'objSaveMethod' => 'savePhoto',
+                'reloadAfterUpload' => true
+            ];
     }
 
 

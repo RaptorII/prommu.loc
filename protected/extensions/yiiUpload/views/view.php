@@ -1,1 +1,1 @@
-<div class="YiiUpload__call-btn"><span><?=$this->callButtonText?></span></div>
+<div class="YiiUpload__call-btn<?=($this->cssClassButton ? ' '.$this->cssClassButton : '')?>"><span><?=$this->callButtonText?></span></div>
