@@ -126,9 +126,14 @@ var YiiUpload = (function () {
 			if($(e.target).hasClass('YiiUpload__delete')) // remove file
 			{
 				let fileName = $(e.target).closest('div')[0],
+						sIndex = $(fileName).data('snapshot'),
 						cnt = $('.YiiUpload__form-files div').index(fileName),
 						input = $('.YiiUpload__form-input:eq('+cnt+')');
 
+				if(sIndex!=undefined) // удаление снимка
+				{
+					delete self.snapshots[sIndex];
+				}
 				$(fileName).remove();
 				if((cnt+1)==($('.YiiUpload__form-input').length)) // последний инпут должен существовать всегда
 				{
@@ -158,6 +163,7 @@ var YiiUpload = (function () {
 			if($(e.target).hasClass('YiiUpload__snapshot')) // start snapshot
 			{
 				$(self.block).addClass('loading');
+				self.setError();
 				navigator.getUserMedia(
 						{ audio:false, video:true }, 
 						function(e){ self.getStream(e) },
@@ -186,8 +192,6 @@ var YiiUpload = (function () {
 					$('.YiiUpload__camera img').attr('src',imageDataURL).show();
 					self.addButtons(['wc_done','wc_reset']);
 				}
-
-
 			}
 			//
 			//
@@ -212,7 +216,8 @@ var YiiUpload = (function () {
 				$(self.camera).hide();
 				$(self.files).fadeIn();
 				self.addInput();
-				$(self.files).append('<div><span>' 
+				$(self.files).append('<div data-snapshot="'
+					+ (self.snapshots.length-1) + '"><span>' 
 					+ name + '</span><i class="YiiUpload__delete"></i></div>');
 
 				if($('.YiiUpload__form-input').length==1)
@@ -252,15 +257,21 @@ var YiiUpload = (function () {
 				let name = arName[1] + '.' + arName[2],
 						format = arName[2].toLowerCase();
 
-				$.each(arInput, function(){
-					let tf = this.files[0];
-					if(
-						!$(input).is(this) && 
-						tf.name===f.name && 
-						tf.size==f.size && 
-						tf.type===f.type
-					)
-						bUnique = false;
+				$.each(arInput, function(i, e){
+					let parent = $('.YiiUpload__form-files div:eq('+i+')'), // проверяем только загруженные файлы
+							sIndex = $(parent).data('snapshot');
+
+					if(sIndex==undefined)
+					{
+						let tf = this.files[0];
+						if(
+							!$(input).is(this) && 
+							tf.name===f.name && 
+							tf.size==f.size && 
+							tf.type===f.type
+						)
+							bUnique = false;
+					}
 				});
 				if(!bUnique) // файл уже выбран в другом инпуте
 				{
@@ -280,7 +291,7 @@ var YiiUpload = (function () {
 				if(self.params.fileLimit>1 && $('.YiiUpload__form-input').length<self.params.fileLimit)
 				{
 					self.addInput();
-					self.addButtons(['open','send']);
+					self.addButtons(bWebCam?['open','snapshot','send']:['open','send']);
 				}
 				else // лимит по файлам достигнут
 				{
@@ -296,6 +307,13 @@ var YiiUpload = (function () {
 		.on('click','.YiiUpload__send',function(e){ // send file
 			let form = $('.YiiUpload__form')[0],
 					formData = new FormData(form);
+
+			if(self.snapshots.length)
+			{
+				$.each(self.snapshots, function(){
+					formData.append('upload[]',this);
+				});
+			}
 
 			$(self.block).addClass('loading');
 
