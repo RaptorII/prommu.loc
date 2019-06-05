@@ -438,31 +438,60 @@
           <div class="epa__content-title"><h2>Целевая вакансия</h2></div>
           <div class="epa__content-module">
             <h3 class="epa__posts-title">Выберите должности, на которых желаете работать</h3>
-            <div class="epa__posts-list">
-              <?php 
-                foreach($arPosts as $post)
-                  if($post['checked']!='')
-                    echo '<b> ' . $post['newname'] . '</b>';
-              ?>            
-            </div>     
+            <?php
+//                echo '<div class="epa__posts-list">';
+//
+//                foreach($arPosts as $post)
+//                  if($post['checked']!='')
+//                    echo '<b> ' . $post['newname'] . '</b>';
+//
+//                echo '</div>';
+            ?>
             <div class="epa__label epa__posts epa__select">
               <span class="epa__label-name">Должность:</span>
+
+              <ul id="epa-list-posts" class="epa__select-list epa__select-lst-vsbl" >
+                <?php foreach($arPosts as $post):?>
+                  <li>
+                    <input type="checkbox" name="donjnost[]" value="<?=$post['id']?>" id="epa-post-<?=$post['id']?>" <?=$post['checked']?>>
+                    <label for="epa-post-<?=$post['id']?>"><?=$post['newname']?><b></b></label>
+                  </li>
+                <?php endforeach;?>
+              </ul>
+
+
+
+                <?php
+                /*
+                ?>
               <input type="text" name="epa-str-posts" value="<?=$strPosts?>" class="epa__input" id="epa-str-posts" disabled>
               <div class="epa__label-veil" id="epa-veil-posts"></div>
-              <ul class="epa__select-list" id="epa-list-posts">
-                  <i class="epa__select-list-icon">OK</i>
+                */
+                ?>
+              <?php
+                  /*
+                  <ul class="epa__select-list" id="epa-list-posts">
+                      <i class="epa__select-list-icon">OK</i>
+                  */
+              ?>
                   <?php foreach($arPosts as $post):?>
+                  <?php
+                  /*
                     <li>
                       <input type="checkbox" name="donjnost[]" value="<?=$post['id']?>" id="epa-post-<?=$post['id']?>" <?=$post['checked']?>>
                       <label for="epa-post-<?=$post['id']?>"><?=$post['newname']?><b></b></label>
-                    </li> 
+                    </li>
+                  */
+                    ?>
                   <?php endforeach;?>
                   <?/*<li class="epa__posts-new" id="epa-posts-add"><span>Другая вакансия</span></li>
                   <li class="epa__posts-new" id="epa-posts-save">
                     <input type="text" name="epa-new-vac" id="epa-posts-field">
                     <span>Сохранить</span>
                   </li>*/?>
-              </ul>
+              <?php
+                  //</ul>
+              ?>
             </div>
             <div class="epa__post-detail">
               <?php foreach($arPosts as $post): ?>

@@ -19,7 +19,16 @@ jQuery(function($){
 		arIdCities = [];
 		arNewPosts = [];
 		arSelectMetroes = [];
-		arSelect = ['messenger', 'hcolor', 'hlen', 'ycolor', 'chest', 'waist', 'thigh', 'posts', 'education', 'language'];
+		arSelect = ['messenger',
+				'hcolor',
+				'hlen',
+				'ycolor',
+				'chest',
+				'waist',
+				'thigh',
+            	//'posts', // list of vacancy <ul id="epa-list-posts"> in
+				'education',
+				'language'];
 		cropOptions = {};
 		cropperObj = null,
 		oldPhone = $('#phone-code').val(),
