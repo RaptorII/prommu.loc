@@ -500,11 +500,12 @@ class UserController extends AppController
 
     public function actionAuth()
     {
-        $res = $this->doAuth();
+        //$res = $this->doAuth();
 
 
         // auth ok
-        if( $res['auth'] )
+        //if( $res['auth'] )
+        if( Share::$UserProfile->id )
         {
             $type = Share::$UserProfile->type;
             if( $type == 2 || $type == 3 ) $this->redirect(MainConfig::$PAGE_PROFILE);
@@ -512,7 +513,8 @@ class UserController extends AppController
 
         // auth fail
         } else {
-            Yii::app()->user->setFlash('auErrMess', $res['message']);
+            //Yii::app()->user->setFlash('auErrMess', $res['message']);
+            Yii::app()->user->setFlash('auErrMess', 'Login failed');
             $this->redirect(MainConfig::$PAGE_LOGIN);
         } // endif
     }

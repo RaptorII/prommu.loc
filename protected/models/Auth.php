@@ -836,38 +836,40 @@ class Auth
             ->where('u.id_user=:id_user', array(':id_user' => $user->id_user))
             ->queryRow();
 
-        if ($usRes['wid'] > 0)
-        {
-            $res = Yii::app()->db->createCommand()
-                ->update('user_work', array(
-                    'token' => $token,
-                    'date_login' => date('Y-m-d H:i:s'),
-                ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
-                
-            $res = Yii::app()->db->createCommand()
-                ->update('user', array(
-                    'mdate' => date('Y-m-d H:i:s'),
-                    'is_online' => 1,
-                ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
-        
-        
-        } else {
+//        if ($usRes['wid'] > 0)
+//        {
+//            $res = Yii::app()->db->createCommand()
+//                //->update('user_work', array(
+//                ->insert('user_work', array(
+//                    'token' => $token,
+//                    'date_login' => date('Y-m-d H:i:s'),
+//                ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
+//
+//            $res = Yii::app()->db->createCommand()
+//                ->update('user', array(
+//                    'mdate' => date('Y-m-d H:i:s'),
+//                    'is_online' => 1,
+//                ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
+//
+//
+//        } else {
+
+
             $res = Yii::app()->db->createCommand()
                 ->insert('user_work', array(
                     'token' => $token,
                     'uid' => $uid,
                     'id_user' => $usRes['id'],
-                    'date_login' => date('Y-m-d H:i:s'),
+                    'date_login' => '',
                 ));
-                
+
             $res = Yii::app()->db->createCommand()
                 ->update('user', array(
                     'mdate' => date('Y-m-d H:i:s'),
                     'is_online' => 1,
                 ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
-        
-                
-        }
+
+        //}
 
 
         $usData = (object)$usRes;
