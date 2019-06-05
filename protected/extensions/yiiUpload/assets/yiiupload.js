@@ -15,6 +15,8 @@ var YiiUpload = (function () {
 	YiiUpload.prototype.cropParams;
 	YiiUpload.prototype.bComplete;
 	YiiUpload.prototype.snapshots = [];
+	YiiUpload.prototype.signatureLen = 50; // допустимая длина подписи
+	YiiUpload.prototype.ajaxResult;
 
 	function YiiUpload()
 	{
@@ -112,13 +114,45 @@ var YiiUpload = (function () {
 			{
 				let result = true;
 				if(!self.bComplete)
-					result = confirm('Данные не сохранятся. Вы уверены?');
-
-				if(result)
 				{
-					$(self.block).fadeOut();
-					setTimeout(function(){ $(self.block).remove(); },500);
-					$('body').css({overflow:'inherit'});
+					result = confirm('Данные не сохранятся. Вы уверены?');
+				}
+
+				if(!result)
+				{
+					return;
+				}
+				//
+				if(self.bComplete)
+				{
+					self.closeForm();
+					return;			
+				}
+				//
+				if(self.ajaxResult==undefined)
+				{
+					self.closeForm();
+					return;
+				}
+				//
+				if(self.ajaxResult.success.length) // удаляем файлы на сервере, если такие найдены
+				{
+					let data = {state:'delete',data:[]};
+					$.each(self.ajaxResult.success, function(){
+						data.data.push(this.name);
+					});
+
+					$.ajax({
+						url: self.params.action,
+						data: data,
+						type: 'POST',
+						success: function(){ self.closeForm() },
+						error: function(){ self.closeForm() }
+					});
+				}
+				else
+				{
+					self.closeForm();
 				}
 			}
 			//
@@ -326,6 +360,7 @@ var YiiUpload = (function () {
 				success: function(r)
 				{
 					r = JSON.parse(r);
+					self.ajaxResult = r;
 					if(r.error.length) // если есть ошибки
 					{
 						self.setError($.parseHTML(r.error.join('</br>')));
@@ -346,7 +381,14 @@ var YiiUpload = (function () {
 								if(this.isImg==true)
 								{
 									imgCnt++;
-									arImg.push(this.imgTag);
+									let image = this.imgTag;
+
+									if(self.params.imageSignature==true) // добавляем текстовое поле для подписи
+									{
+										image += '<input type="text" placeholder="Подпись">';
+									}
+									arImg.push(image);
+
 								}
 							});
 
@@ -389,6 +431,14 @@ var YiiUpload = (function () {
 		.on('click','.YiiUpload__crop',function(e){ // send file
 			self.cropperCnt++;
 			self.setCropper();
+		})
+		.on('input','.YiiUpload__editor-field>input',function(e){ // ввод подписи
+			let value = $(this).val().substr(0, self.signatureLen);
+			$(this).val(value);
+		})
+		.on('blur','.YiiUpload__editor-field>input',function(e){ // ввод подписи
+			let value = $(this).val().trim();
+			$(this).val(value);
 		});
 	};
 	//
@@ -396,14 +446,19 @@ var YiiUpload = (function () {
 	YiiUpload.prototype.setCropper = function ()
 	{
 		let self = this,
-				arImages = $('.YiiUpload__editor-field>img');
+				arImages = $('.YiiUpload__editor-field>img'),
+				arInput = $('.YiiUpload__editor-field>input');
 
-		if(self.cropperCnt==arImages.length)
+		if(self.cropperCnt==arImages.length) // последнее изображение отредактировано, можно отправлять данные
 		{
 			$(self.block).addClass('loading');
 			$.each(arImages,function(i,e){
 				self.cropOptions[i]['name'] = $(this).data('name');	
-				self.cropOptions[i]['oldName'] = $(this).attr('alt');	
+				self.cropOptions[i]['oldName'] = $(this).attr('alt');
+				if(self.params.imageSignature==true) // добавляем подпись изображений в 
+				{
+					self.cropOptions[i]['signature'] = $(arInput[i]).val();
+				}
 			});
 			$.ajax({
 				url: self.params.action,
@@ -412,6 +467,7 @@ var YiiUpload = (function () {
 				success: function(r)
 				{
 					r = JSON.parse(r);
+					self.ajaxResult = r;
 					self.setError();
 					self.setSuccess(r.success);
 					$(self.block).removeClass('loading');
@@ -431,17 +487,21 @@ var YiiUpload = (function () {
 
 		$.each(arImages,function(i,e){
 			i==self.cropperCnt ? $(this).show() : $(this).hide();
+			if(self.params.imageSignature==true) // прячем инпуты, если надо
+			{
+				i==self.cropperCnt ? $(arInput[i]).show() : $(arInput[i]).hide();
+			}
 		});
 
-		if(self.objCropper)
+		if(self.objCropper) // убираем обработчики с предыдущего изображения
 		{
 			$('body').off('click','.YiiUpload__editor_r-rotate');
 			$('body').off('click','.YiiUpload__editor_l-rotate');
 			self.objCropper.destroy();
 		}
-
+		// устанавливаем кропер на следующее изображение
 		self.objCropper = new Cropper(arImages[self.cropperCnt], self.cropParams);
-
+		// устанавливаем обработчики поворотов
 		$('body').on('click','.YiiUpload__editor_r-rotate',function(){
 			self.objCropper.rotate(90)
 		});
@@ -632,6 +692,16 @@ var YiiUpload = (function () {
 		$(self.files).fadeIn();
 		$(self.block).removeClass('loading');
 	};
+	//
+	//	close popup
+	YiiUpload.prototype.closeForm = function ()
+	{
+		let self = this;
+		$(self.block).removeClass('loading').fadeOut();
+		setTimeout(function(){ $(self.block).remove(); },500);
+		$('body').css({overflow:'inherit'});
+		self.bComplete = true;
+	}
 
 	return YiiUpload;
 }());

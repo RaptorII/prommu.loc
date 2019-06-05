@@ -21,6 +21,7 @@ class YiiUploadWidget extends CWidget
 	public $imgDimensions; // array - for edit images ['title suffix' => 'size']
 	public $imgOrigSuFFix; // string - for edit images, rotated but not resized images
 	public $useWebcam; // boolean - get images from camera of user device
+	public $imageSignature; // boolean - added signature for the file
 
 	public  $defaultController='/site';
 
@@ -56,6 +57,7 @@ class YiiUploadWidget extends CWidget
 		$this->maxFileSize = intval($this->maxFileSize) ? $this->maxFileSize : 5;
 		!isset($this->imageEditor) && $this->imageEditor = false;
 		!isset($this->useWebcam) && $this->useWebcam = false;
+		!isset($this->imageSignature) && $this->imageSignature = false;
 	}
 
 	public function run()
@@ -70,7 +72,8 @@ class YiiUploadWidget extends CWidget
 				'showTags'=>$this->showTags,
 				'fileFormat' => $this->fileFormat,
 				'imageEditor' => $this->imageEditor,
-				'useWebcam' => $this->useWebcam
+				'useWebcam' => $this->useWebcam,
+				'imageSignature' => $this->imageSignature,
 			));
 		$s = Yii::app()->session;
 		$s['yiiUpload'] = [
@@ -115,71 +118,85 @@ class YiiUploadWidget extends CWidget
 	public function runAction()
 	{
 		$s = Yii::app()->session;
-		$arRes = ['error'=>[],'items'=>[],'success'=>[]];
+		$arRes = [];
 
-		if($_POST['state']=='edit')
+		if(isset($_FILES['upload']))
+		{
+			$arRes = $this->checkImages($_FILES['upload'], $s['yiiUpload']);
+		}
+		elseif($_POST['state']=='edit')
 		{
 			$arRes = $this->editImages($_POST['data'], $s['yiiUpload']);
-			echo CJSON::encode($arRes);
-			Yii::app()->end();		
+		}
+		elseif($_POST['state']=='delete')
+		{
+			$this->deleteImages($_POST['data'], $s['yiiUpload']);
 		}
 
-		$arFiles = $_FILES['upload'];
-		$url = $s['yiiUpload']['fileUrl'];
-		$result = $this->existenceDir($s['yiiUpload']['filePath']);
+		echo CJSON::encode($arRes);
+		Yii::app()->end();
+	}
+	/**
+	 * @param $arData - array()
+	 * @param $arParams - array()
+	 */
+	private function checkImages($arData, $arParams)
+	{
+		$arRes = ['error'=>[],'items'=>[],'success'=>[]];
+
+		$result = $this->existenceDir($arParams['filePath']);
 		if(!$result)
 		{
 			$arRes['error'][] = '- ошибка сохранения, обратитесь к администратору';
-			echo CJSON::encode($arRes);
-			Yii::app()->end();
+			return $arRes;
 		}
 
-		$n = count($arFiles['error']);
-		$mSize = $s['yiiUpload']['maxFileSize'] * 1024 * 1024;
+		$n = count($arData['error']);
+		$mSize = $arParams['maxFileSize'] * 1024 * 1024; // переводим в байты
 		for($i=0; $i<$n; $i++)
 		{
-			if(!$arFiles['size'][$i]) // наш пустой инпут
+			if(!$arData['size'][$i]) // наш пустой инпут
 				continue;
 
-			$fName = $arFiles["name"][$i];
+			$fName = $arData["name"][$i];
 			$info = new SplFileInfo($fName);
 			$type = mb_strtolower($info->getExtension());
 			$arRes['items'][] = $fName;
 
-			if($arFiles['error'][$i]) // ошибка передачи файла на сервер
+			if($arData['error'][$i]) // ошибка передачи файла на сервер
 			{
 				$arRes['error'][] = "- ошибка передачи файла '{$fName}' на сервер";
 				continue;
 			}
-			if($arFiles['size'][$i]>$mSize) // ошибка передачи файла на сервер
+			if($arData['size'][$i]>$mSize) // ошибка передачи файла на сервер
 			{
 				$arRes['error'][] = "Размер файла '{$fName}' больше допустимого значения ({$mSize}Мб)";
 				continue;
 			}
 
-			if(!in_array($type,$s['yiiUpload']['fileFormat'])) // проверяем формат на корректность
+			if(!in_array($type,$arParams['fileFormat'])) // проверяем формат на корректность
 			{
 				$arRes['error'][] = "- у файла '{$fName}' некорректный формат";
 				continue;
 			}
 
 			$newName = date('YmdHis') . rand(1000,9999) . '.' . $type;
-			$filePath = $s['yiiUpload']['filePath'] . $newName;
-			$src = $url . $newName;
-			$result = move_uploaded_file($arFiles["tmp_name"][$i], $filePath);
+			$filePath = $arParams['filePath'] . $newName;
+			$src = $arParams['fileUrl'] . $newName;
+			$result = move_uploaded_file($arData["tmp_name"][$i], $filePath);
 			if($result) // файл успешно перемещен
 			{
 				$fSize = getimagesize($filePath);
 				if($fSize)
 				{
-					$size = $s['yiiUpload']['minImageSize']; // проверяем на минимальную ширину/высоту
+					$size = $arParams['minImageSize']; // проверяем на минимальную ширину/высоту
 					if($size>0 && ($fSize[0]<$size || $fSize[1]<$size))
 					{
 						$arRes['error'][] = "- файл '{$fName}' меньше допустимого значения ({$size}x{$size})";
 						unlink($filePath);
 						continue;
 					}
-					$size = $s['yiiUpload']['maxImageSize']; // проверяем на максимальную ширину/высоту
+					$size = $arParams['maxImageSize']; // проверяем на максимальную ширину/высоту
 					if($size>0 && ($fSize[0]>$size || $fSize[1]>$size))
 					{
 						$arRes['error'][] = "- файл '{$fName}' больше допустимого значения ({$size}x{$size})";
@@ -195,90 +212,7 @@ class YiiUploadWidget extends CWidget
 				$arRes['error'][] = "- ошибка загрузки файла '{$fName}' на сервер";
 			}
 		}
-		
-		echo CJSON::encode($arRes);
-		Yii::app()->end();
-	}
-	/**
-	 * @param $path - string
-	 */
-	private function existenceDir($path)
-	{
-		$arPath = explode('/',$path);
-		$dirPath = '';
-		$arRes = true;
-		for ($i=0, $n=count($arPath); $i<$n; $i++)
-		{
-			$dirPath .= $arPath[$i] . '/';
-			if(!is_dir($dirPath))
-			{
-				$arRes = mkdir($dirPath, $this->dirPermission);
-			}
-			if(!$arRes)
-				break;
-		}
 		return $arRes;
-	}
-	/**
-	* @param $inPath - string, path to file input
-	* @param $outPath - string, path to file output
-	* @param $size - integer, maximum size
-	*/
-	private function resizeImage($inPath, $outPath, $size)
-	{
-		$quality = 90;
-		$imgProps = getimagesize($inPath); // Get dimensions
-		list($oldW, $oldH) = $imgProps;
-		$ratioOrig = $oldW / $oldH;
-
-		if( $ratioOrig > 1 ) // альбомный
-		{
-			$newW = ($oldW>$size) ? $size : $oldW;
-			$newH = ($oldW>$size) ? ($newW/$ratioOrig) : $oldH;
-		}
-		else // портретный
-		{
-			$newH = ($oldH>$size) ? $size : $oldH;
-			$newW = ($oldH>$size) ? ($newH*$ratioOrig) : $oldW;
-		}
-		//  Создание нового полноцветного изображения
-		$image_p = imagecreatetruecolor($newW, $newH);
-		if(!$image_p){ $this->log('resizeImage():01'); return; }
-
-		switch($imgProps['mime'])
-		{
-			case "image/jpeg": 
-				$image = imagecreatefromjpeg($inPath);
-				if(!$image){ $this->log('resizeImage():02'); return; }
-				break;
-			case "image/pjpeg": 
-				$image = imagecreatefromjpeg($inPath);
-				if(!$image){ $this->log('resizeImage():03'); return; }
-				break;
-			case "image/png":
-				$image = imagecreatefrompng($inPath);
-				if(!$image){ $this->log('resizeImage():04'); return; }
-				break;
-			case "image/x-png":
-				$image = imagecreatefrompng($inPath);
-				if(!$image){ $this->log('resizeImage():05'); return; }			
-				break;
-			case "image/gif":
-				$image = imagecreatefromgif($inPath);
-				if(!$image){ $this->log('resizeImage():06'); return; }
-				break;
-			default:
-				$this->log('resizeImage():07');
-				return;
-				break;
-		}
-		// Копирование и изменение размера изображения с ресемплированием
-		$result = imagecopyresampled($image_p, $image, 0, 0, 0, 0, $newW, $newH, $oldW, $oldH); 
-		if(!$result){ $this->log('resizeImage():08'); return; }
-		$result = imagejpeg($image_p, $outPath, $quality); // записываем изображение в файл
-		if(!$result){ $this->log('resizeImage():09'); return; }
-		imagedestroy($image_p);
-		imagedestroy($image);
 	}
 	/**
 	 * @param $arData - array()
@@ -392,6 +326,103 @@ class YiiUploadWidget extends CWidget
 			unlink($inOutFile);
 		}
 		return $arRes;
+	}
+	/**
+	 * @param $arData - array()
+	 * @param $arParams - array()
+	 */
+	private function deleteImages($arData, $arParams)
+	{
+		for ($i=0, $n=count($arData); $i<$n; $i++)
+		{
+			$path = $arParams['filePath'] . $arData[$i];
+			if(file_exists($path))
+			{
+				unlink($path);
+			}
+		}
+		return [];
+	}
+	/**
+	 * @param $path - string
+	 */
+	private function existenceDir($path)
+	{
+		$arPath = explode('/',$path);
+		$dirPath = '';
+		$arRes = true;
+		for ($i=0, $n=count($arPath); $i<$n; $i++)
+		{
+			$dirPath .= $arPath[$i] . '/';
+			if(!is_dir($dirPath))
+			{
+				$arRes = mkdir($dirPath, $this->dirPermission);
+			}
+			if(!$arRes)
+				break;
+		}
+		return $arRes;
+	}
+	/**
+	* @param $inPath - string, path to file input
+	* @param $outPath - string, path to file output
+	* @param $size - integer, maximum size
+	*/
+	private function resizeImage($inPath, $outPath, $size)
+	{
+		$quality = 90;
+		$imgProps = getimagesize($inPath); // Get dimensions
+		list($oldW, $oldH) = $imgProps;
+		$ratioOrig = $oldW / $oldH;
+
+		if( $ratioOrig > 1 ) // альбомный
+		{
+			$newW = ($oldW>$size) ? $size : $oldW;
+			$newH = ($oldW>$size) ? ($newW/$ratioOrig) : $oldH;
+		}
+		else // портретный
+		{
+			$newH = ($oldH>$size) ? $size : $oldH;
+			$newW = ($oldH>$size) ? ($newH*$ratioOrig) : $oldW;
+		}
+		//  Создание нового полноцветного изображения
+		$image_p = imagecreatetruecolor($newW, $newH);
+		if(!$image_p){ $this->log('resizeImage():01'); return; }
+
+		switch($imgProps['mime'])
+		{
+			case "image/jpeg": 
+				$image = imagecreatefromjpeg($inPath);
+				if(!$image){ $this->log('resizeImage():02'); return; }
+				break;
+			case "image/pjpeg": 
+				$image = imagecreatefromjpeg($inPath);
+				if(!$image){ $this->log('resizeImage():03'); return; }
+				break;
+			case "image/png":
+				$image = imagecreatefrompng($inPath);
+				if(!$image){ $this->log('resizeImage():04'); return; }
+				break;
+			case "image/x-png":
+				$image = imagecreatefrompng($inPath);
+				if(!$image){ $this->log('resizeImage():05'); return; }			
+				break;
+			case "image/gif":
+				$image = imagecreatefromgif($inPath);
+				if(!$image){ $this->log('resizeImage():06'); return; }
+				break;
+			default:
+				$this->log('resizeImage():07');
+				return;
+				break;
+		}
+		// Копирование и изменение размера изображения с ресемплированием
+		$result = imagecopyresampled($image_p, $image, 0, 0, 0, 0, $newW, $newH, $oldW, $oldH); 
+		if(!$result){ $this->log('resizeImage():08'); return; }
+		$result = imagejpeg($image_p, $outPath, $quality); // записываем изображение в файл
+		if(!$result){ $this->log('resizeImage():09'); return; }
+		imagedestroy($image_p);
+		imagedestroy($image);
 	}
 	/**
 	 * 
