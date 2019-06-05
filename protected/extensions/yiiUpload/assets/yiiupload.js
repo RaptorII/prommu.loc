@@ -14,6 +14,7 @@ var YiiUpload = (function () {
 	YiiUpload.prototype.cropOptions;
 	YiiUpload.prototype.cropParams;
 	YiiUpload.prototype.bComplete;
+	YiiUpload.prototype.snapshots = [];
 
 	function YiiUpload()
 	{
@@ -75,6 +76,7 @@ var YiiUpload = (function () {
 							+ '<div class="YiiUpload__camera">'
 								+ '<video autoplay playsinline></video>'
 								+ '<canvas></canvas>'
+								+ '<img src="">'
 							+ '</div>'
 							+ '<div class="YiiUpload__form-files"></div>'
 							+ '<div class="YiiUpload__form-inputs"></div>'
@@ -153,7 +155,7 @@ var YiiUpload = (function () {
 			}
 			//
 			//
-			if($(e.target).hasClass('YiiUpload__snapshot')) // get snapshot
+			if($(e.target).hasClass('YiiUpload__snapshot')) // start snapshot
 			{
 				$(self.block).addClass('loading');
 				navigator.getUserMedia(
@@ -161,6 +163,77 @@ var YiiUpload = (function () {
 						function(e){ self.getStream(e) },
 						function(e){ self.streamError(e) }
 					);
+			}
+			//
+			//
+			if($(e.target).hasClass('YiiUpload__wc_shoot')) // get snapshot
+			{
+				let canvas = document.querySelector('.YiiUpload__camera canvas'),
+						video = document.querySelector('.YiiUpload__camera video'),
+						width = video.videoWidth,
+						height = video.videoHeight,           
+						context = canvas.getContext('2d'); // Объект для работы с canvas
+
+				// Установка размеров canvas идентичных с video
+				canvas.width = width;
+				canvas.height = height;
+				// Отрисовка текущего кадра с video в canvas
+				context.drawImage(video, 0, 0, width, height);
+				// Преобразование кадра в изображение dataURL
+				let imageDataURL = canvas.toDataURL('image/png');
+				if(imageDataURL.length>6)
+				{
+					$('.YiiUpload__camera img').attr('src',imageDataURL).show();
+					self.addButtons(['wc_done','wc_reset']);
+				}
+
+
+			}
+			//
+			//
+			if($(e.target).hasClass('YiiUpload__wc_done')) // end snapshot
+			{
+				let image = $('.YiiUpload__camera img'),
+						src = $(image).attr('src'),
+						arr = src.split(','),
+						mime = arr[0].match(/:(.*?);/)[1],
+						bstr = atob(arr[1]),
+						n = bstr.length,
+						u8arr = new Uint8Array(n),
+						name = 'Снимок-с-камеры_' + (self.snapshots.length+1) + '.png',
+						file;
+
+				while(n--)
+				{ u8arr[n] = bstr.charCodeAt(n); };
+				file = new File([u8arr], name, {type:mime});
+				self.snapshots.push(file);
+
+				$(image).hide();
+				$(self.camera).hide();
+				$(self.files).fadeIn();
+				self.addInput();
+				$(self.files).append('<div><span>' 
+					+ name + '</span><i class="YiiUpload__delete"></i></div>');
+
+				if($('.YiiUpload__form-input').length==1)
+				{
+					self.addButtons(bWebCam?['open','snapshot']:['open']);
+				}
+				else if(self.params.fileLimit>1 && $('.YiiUpload__form-input').length<=self.params.fileLimit)
+				{
+					self.addButtons(bWebCam?['open','snapshot','send']:['open','send']);
+				}
+				else // лимит по файлам достигнут
+				{
+					self.addButtons(['send']);
+				}
+			}
+			//
+			//
+			if($(e.target).hasClass('YiiUpload__wc_reset')) // reset snapshot
+			{
+				$('.YiiUpload__camera img').hide();
+				self.addButtons(['wc_shoot']);
 			}
 		})
 		.on('click','.YiiUpload__open',function(e){ // select file
@@ -238,7 +311,6 @@ var YiiUpload = (function () {
 					if(r.error.length) // если есть ошибки
 					{
 						self.setError($.parseHTML(r.error.join('</br>')));
-						self.params.onError('event_send','load-error');
 					}
 					if(r.error.length==r.items.length) // ошибки на всех файлах
 					{
@@ -301,6 +373,7 @@ var YiiUpload = (function () {
 			self.setCropper();
 		});
 	};
+	//
 	// croper edit step
 	YiiUpload.prototype.setCropper = function ()
 	{
@@ -360,6 +433,7 @@ var YiiUpload = (function () {
 		$('.YiiUpload__editor').fadeIn();
 	}
 	//
+	//
 	YiiUpload.prototype.setSuccess = function ()
 	{
 		let self = this,
@@ -405,15 +479,18 @@ var YiiUpload = (function () {
 		self.bComplete = true;
 	}
 	//
+	//
 	YiiUpload.prototype.changeCropField = function ()
 	{
 		this.cropOptions[this.cropperCnt]=arguments[0];
 	}
+	//
 	// set errors
 	YiiUpload.prototype.setError = function ()
 	{
 		$(this.errors).html(arguments[0]!=null ? arguments[0] : '');
 	}
+	//
 	// set buttons
 	YiiUpload.prototype.addButtons = function ()
 	{
@@ -438,12 +515,14 @@ var YiiUpload = (function () {
 				+ this + '">' + objBtns[this] + '</div>');
 		});
 	}
+	//
 	// add inputs
 	YiiUpload.prototype.addInput = function ()
 	{
 		let self = this;
 		$(self.inputs).append('<input type="file" name="upload[]" class="YiiUpload__form-input">');
 	}
+	//
 	// set popup title
 	YiiUpload.prototype.setTitle = function ()
 	{
@@ -457,6 +536,7 @@ var YiiUpload = (function () {
 		}
 		$('.YiiUpload__form-title').text(result);
 	}
+	//
 	// get stream from webcam
 	YiiUpload.prototype.getStream = function (stream)
 	{ 
@@ -508,6 +588,7 @@ var YiiUpload = (function () {
 			self.addButtons(['wc_shoot']);
 		},500);
 	};
+	//
 	//	show errrors by navigator
 	YiiUpload.prototype.streamError = function (e)
 	{
@@ -531,7 +612,6 @@ var YiiUpload = (function () {
 		}
 		$(self.camera).hide();
 		$(self.files).fadeIn();
-		$(self.btns).fadeIn();
 		$(self.block).removeClass('loading');
 	};
 

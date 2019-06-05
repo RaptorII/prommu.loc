@@ -249,9 +249,17 @@
 	}
 }
 /* snapshot */
-.YiiUpload__camera{ display: none; }
+.YiiUpload__camera{ position: relative; }
+.YiiUpload__camera,
+.YiiUpload__camera canvas,
+.YiiUpload__camera img{ display: none; }
+.YiiUpload__camera img{
+	position: absolute;
+	top: 0;
+	left: 0;	
+}
+.YiiUpload__camera img,
 .YiiUpload__camera video{
 	width: 100%;
 	height: auto;
 }
-.YiiUpload__camera canvas{ display: none; }
