@@ -2208,7 +2208,7 @@ WHERE id_vac = {$inVacId}";
             INNER JOIN (
               SELECT DISTINCT e.id
               FROM empl_vacations e
-              INNER JOIN empl_city c ON c.id_vac = e.id AND c.id_city != 1838
+              INNER JOIN empl_city c ON c.id_vac = e.id AND c.id_city IN({$strCities})
               INNER JOIN empl_attribs ea ON ea.id_vac = e.id
               INNER JOIN user u ON e.id_user = u.id_user
               WHERE e.status = 1
@@ -2218,7 +2218,7 @@ WHERE id_vac = {$inVacId}";
             ) t1 ON t1.id = e.id
             
             LEFT JOIN empl_city c1 ON c1.id_vac = e.id 
-            LEFT JOIN city c2 ON c2.id_city = c1.id_city  AND c2.region != 1838
+            LEFT JOIN city c2 ON c2.id_city = c1.id_city
             JOIN empl_attribs ea ON ea.id_vac = e.id
             JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
             JOIN employer em ON em.id_user = e.id_user
