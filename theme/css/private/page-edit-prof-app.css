@@ -542,6 +542,11 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	padding: 0 50px 0 25px;
 	position: relative;
 }
+@media(max-width: 450px) {
+	.epa__select-list.epa__select-lst-vsbl li {
+		padding: 0 5px 0 5px;
+	}
+}
 .epa__select-list b{
 	display: block;
 	border-top: 1px dotted #FFFFFF;
@@ -578,7 +583,7 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	-moz-transition: all .3s ease-out;
 	-o-transition: all .3s ease-out;
 	transition: all .3s ease-out;
-	z-index: 1;
+	z-index: 111;
 }
 .epa__select-list-icon:hover{ background-color: rgba(255,255,255,0.2) }
 #DiContent .epa__select-list input{ display: none; }
@@ -1106,8 +1111,8 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 		width: 49%;
 		float: left;
 	}
-	#DiContent .edit-profile-applicant .epa__period:nth-child(2n+1){ margin-right: 1% }
-	#DiContent .edit-profile-applicant .epa__period:nth-child(2n){ margin-left: 1% }
+	/*#DiContent .edit-profile-applicant .epa__period:nth-child(2n+1){ margin-right: 1% }*/
+	/*#DiContent .edit-profile-applicant .epa__period:nth-child(2n){ margin-left: 1% }*/
 	#DiContent .edit-profile-applicant .epa__city-item .epa__period {
 		width: 100%;
 		float: left;
@@ -1598,6 +1603,7 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 #DiContent .epa__payment .epa__input.error{
 	box-shadow: inset 0px 0px 3px red;
 	border: 1px solid red;
+	margin-left: 130px;
 }
 .epa__payment em{
 	line-height: 33px;

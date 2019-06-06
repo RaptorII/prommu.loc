@@ -4,6 +4,71 @@
     display: block;
     border-bottom: 1px solid #212121;
 }
+/*Fixed*/
+.personal-acc__menu.fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #fff;
+    z-index: 10;
+    border-bottom: 1px solid transparent;
+    filter: drop-shadow(0 0 0.55rem #000000);
+}
+.personal-acc__menu.fixed .personal-acc__menu-wrap {
+    display: flex;
+}
+#DiContent .personal-acc__menu.fixed .pa__menu-link {
+    font-size: 0;
+}
+#DiContent .personal-acc__menu.fixed .pa__menu-link i {
+    width: 30px;
+    //height: 18px;
+}
+/*
+#DiContent .personal-acc__menu.fixed .pa__menu-link i:before,
+#DiContent .personal-acc__menu.fixed .pa__menu-link i:after {
+    //background-size: 110%;
+}
+
+.personal-acc__menu.fixed .pa__menu-20.applicant i:before,
+.personal-acc__menu.fixed .pa__menu-20.applicant i:after {
+    background-position: 0 3px;
+}
+.personal-acc__menu.fixed .pa__menu-75.applicant i:before,
+.personal-acc__menu.fixed .pa__menu-75.applicant i:after {
+    background-position: 0 -47px;
+}
+.personal-acc__menu.fixed .pa__menu-23.applicant i:before,
+.personal-acc__menu.fixed .pa__menu-23.applicant i:after {
+    background-position: 0 -96px;
+}
+.personal-acc__menu.fixed .pa__menu-84.applicant i:before,
+.personal-acc__menu.fixed .pa__menu-84.applicant i:after {
+    background-position: 0 -344px;
+}
+.personal-acc__menu.fixed .pa__menu-84.applicant i:before,
+.personal-acc__menu.fixed .pa__menu-84.applicant i:after {
+    background-position: 0 -344px;
+}
+.personal-acc__menu.fixed .pa__menu-21.applicant i:before,
+.personal-acc__menu.fixed .pa__menu-21.applicant i:after {
+    background-position: 0 -146px;
+}
+.personal-acc__menu.fixed .pa__menu-78.applicant i:before,
+.personal-acc__menu.fixed .pa__menu-78.applicant i:after {
+    background-position: 0 -293px;
+}
+.personal-acc__menu.fixed .pa__menu-80.applicant i:before,
+.personal-acc__menu.fixed .pa__menu-80.applicant i:after {
+    background-position: 0 -589px;
+}
+.personal-acc__menu.fixed .pa__menu-83.applicant i:before,
+.personal-acc__menu.fixed .pa__menu-83.applicant i:after {
+    background-position: 0 -490px;
+}
+*/
+
+/*End Fixed*/
 #DiContent .pa__menu-link{
     display: block;
     vertical-align: middle;
@@ -164,6 +229,7 @@
     }
     .pa__menu-link:before,
     .pa__menu-link:last-child:after{ display: none }
+
 }
 @media (min-width: 1200px){
     .pa__menu-item-icon{ width: 30px }

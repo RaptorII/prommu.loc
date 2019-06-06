@@ -51,25 +51,27 @@
         <div class="row content-menu-box mt20">       
             <div class="col-xs-12 submenu-block">
                 <div class="personal-acc__menu">
-                    <?php $mactive = ContentPlus::getActionID(); ?>
-                    <?php foreach (Share::$viewData['menu'] as $key => $val): ?>
-                        <?php if(!$val['hidden']): ?>
-                            <?
-                                $ep = filter_var(Yii::app()->getRequest()->getParam('ep'), FILTER_SANITIZE_NUMBER_INT);
-                                $active ='';
-                                if(strpos($val['link'], 'ep=1')>0)
-                                    $ep ? $active='active' : $active='';
-                                else
-                                    $active = strpos($val['link'], $mactive) === false ? '' : 'active';
-                            ?>
-                            <a href="/<?= $val['link'] ?>" class="pa__menu-link pa__menu-<?=$val['id']?> applicant <?= $active ?>">
-                                <span class="pa__menu-item">
-                                    <span class="pa__menu-item-icon"><i></i></span>
-                                    <span class="pa__menu-item-text"><?= $val['name'] ?></span>
-                                </span>
-                            </a>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
+                    <div class="personal-acc__menu-wrap">
+                        <?php $mactive = ContentPlus::getActionID(); ?>
+                        <?php foreach (Share::$viewData['menu'] as $key => $val): ?>
+                            <?php if(!$val['hidden']): ?>
+                                <?
+                                    $ep = filter_var(Yii::app()->getRequest()->getParam('ep'), FILTER_SANITIZE_NUMBER_INT);
+                                    $active ='';
+                                    if(strpos($val['link'], 'ep=1')>0)
+                                        $ep ? $active='active' : $active='';
+                                    else
+                                        $active = strpos($val['link'], $mactive) === false ? '' : 'active';
+                                ?>
+                                <a href="/<?= $val['link'] ?>" class="pa__menu-link pa__menu-<?=$val['id']?> applicant <?= $active ?>">
+                                    <span class="pa__menu-item">
+                                        <span class="pa__menu-item-icon"><i></i></span>
+                                        <span class="pa__menu-item-text"><?= $val['name'] ?></span>
+                                    </span>
+                                </a>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
             </div>
         </div>

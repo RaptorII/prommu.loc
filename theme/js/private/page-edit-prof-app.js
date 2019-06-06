@@ -155,7 +155,7 @@ jQuery(function($){
 		var val = $('#epa-posts-save input').val();
 		if(val!==''){
 			id = randomInt();
-			html = 	'<li>'+
+			c = 	'<li>'+
 						'<input type="checkbox" name="donjnost[]" value="'+id+'" data-name="'+val+'" id="epa-post-'+id+'" checked>'+
 						'<label for="epa-post-'+id+'">'+val+'<b></b></label>'+
 					'</li>';
@@ -510,17 +510,20 @@ jQuery(function($){
 	$(cityM).on('blur', '.epa__period input', function(){
 		var val = $(this).val(),
 			label = $(this).closest('.epa__label');
-		if(val!==''){
-			arVals = val.split('до');
-			if(arVals.length==1){
-				$(this).val('');
-				addErr(label);
-			}
-			else if(getNum(arVals[0]).length==0 || getNum(arVals[1]).length==0){
-				$(this).val('');
-				addErr(label);				
-			}
-		}
+
+        addErr(label);
+
+		if(val!=='') {
+            arVals = val.split('до');
+            if (arVals.length == 1) {
+                $(this).val('');
+                addErr(label);
+            }
+            else if (getNum(arVals[0]).length == 0 || getNum(arVals[1]).length == 0) {
+                $(this).val('');
+                addErr(label);
+            }
+        }
 	});
 	//	проверка ввода ЗП
 	$('.epa__post-detail').on('keyup', '.epa__payment input', function(){
@@ -733,7 +736,7 @@ jQuery(function($){
 					}
 				});
 				$('#epa-edit-form').submit();
-				//console.log($('#epa-edit-form').serializeArray());
+				console.log($('#epa-edit-form').serializeArray());
 			}
 		}
 	});
@@ -783,7 +786,7 @@ jQuery(function($){
 			postBlock = $('#epa-post-single').html(),
 			arPostBlock = $('.epa__post-detail').find('.epa__post-block'),
 			arPostsName = [],
-			arPostId = []
+			arPostId = [],
 			arPostsNewId = [],
 			htmlStr = '',
 			htmlBlock = '';
@@ -812,7 +815,7 @@ jQuery(function($){
 		$('#epa-str-posts').val(arPostsName);
 		//	добавляем зелен. должность
 		$.each(arPostsName, function(){ htmlStr += '<b> ' + this + '</b>' });
-		$('.epa__posts-list').html(htmlStr);	
+		$('.epa__posts-list').html(htmlStr);
 		// выбираем ID к удалению
 		var arTemp = [];
 		$.each(arPostId, function(){
@@ -836,8 +839,10 @@ jQuery(function($){
 			temp = temp.replace('NEWNAME',this.name);
 			htmlBlock += temp;
 		});
+
 		// добавляем блоки
-		$('.epa__post-detail .clearfix').before(htmlBlock);
+		//$('.epa__post-detail .clearfix').before(htmlBlock); //в конец
+        $('.epa__post-detail').prepend(htmlBlock); //в начало
 	}
 	function randomInt(){
 		var min = 1000,
@@ -1003,6 +1008,7 @@ jQuery(function($){
 			}	
 		}
 		else if($(label).hasClass('epa__period')){ // поле установки подходящего времени в дни недели
+
 			if(val.length>8){ // 8 минимум
 				var arVals = val.split('до');
 				if(arVals.length==2)
@@ -1294,7 +1300,22 @@ jQuery(function($){
 		? $('.epa__logo-name-list').addClass('fixed')
 		: $('.epa__logo-name-list').removeClass('fixed');
 	}
-	//
+
+    //fixed menu in personal account
+    var posAccMenu = $('.personal-acc__menu').offset().top - 100;
+    $(window).on('resize scroll',scrollAccMenu);
+    scrollAccMenu();
+    function scrollAccMenu() {
+        (
+            $(document).scrollTop() > posAccMenu
+            &&
+            $(window).width() < 768
+        )
+            ? $('.personal-acc__menu').addClass('fixed')
+            : $('.personal-acc__menu').removeClass('fixed');
+    }
+
+    //
 	// начальное выделение полей
 	//
 	$.each($('.epa__post-detail .epa__required'), function(){ checkField(this) });
