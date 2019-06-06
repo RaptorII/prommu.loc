@@ -117,7 +117,7 @@
                                   <a href='<?= MainConfig::$PAGE_PROFILE_COMMON . DS . $val['id_user'] ?>'>
                                       <img 
                                       	alt='Работодатель <?= $val['name'] ?> prommu.com' 
-                                      	src="<?=Share::getPhoto(3, $val['logo'])?>">
+                                      	src="<?=Share::getPhoto($val['id_user'],3,$val['logo'])?>">
 										<?php if($val['is_online']): ?>
 											<span class="empl-list__item-onl"><span>В сети</span></span>
 										<?php endif; ?>

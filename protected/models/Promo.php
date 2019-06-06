@@ -733,7 +733,7 @@ class Promo extends ARModel
             $i['rate_count'] = $i['rate'] + $i['rate_neg'];
             $i['comment-url'] = MainConfig::$PAGE_COMMENTS . DS . $i['idus'];
             $i['datail-url'] = MainConfig::$PAGE_PROFILE_COMMON . DS . $i['idus'];
-            $i['logo'] = Share::getPhoto(2, $i['photo'], 'small', $i['isman']);
+            $i['logo'] = Share::getPhoto($i['id_user'], 2, $i['photo'], 'small', $i['isman']);
             $i['birthday'] = date('Y') - date('Y', strtotime($i['birthday']));
             $i['birthday'] = $i['birthday'] . ' ' 
                 . Share::endingYears($i['birthday']);

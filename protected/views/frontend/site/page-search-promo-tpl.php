@@ -282,7 +282,7 @@ foreach ($viData['posts'] as $p)
                                             <a href='<?= MainConfig::$PAGE_PROFILE_COMMON . DS . $val['id_user'] ?>'>
                                                 <img 
                                                     alt='Соискатель <?= $val['firstname'] . ' ' . $val['lastname'] ?> prommu.com' 
-                                                    src="<?=Share::getPhoto(2, $val['photo'], 'small', $val['sex'])?>">
+                                                    src="<?=Share::getPhoto($val['id_user'],2,$val['photo'],'xmedium',$val['sex'])?>">
                                                 <?php if ($val['is_online']): ?>
                                                     <span class="promo-list__item-onl"><span>В сети</span></span>
                                                 <?php endif; ?>
@@ -386,7 +386,7 @@ foreach ($viData['posts'] as $p)
                                     <a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $val['id_user']?>">
                                         <img 
                                             alt='<?="Соискатель {$val['firstname']} {$val['lastname']} prommu.com "?>' 
-                                            src="<?=Share::getPhoto(2, $val['photo'], 'small', $val['sex'])?>">
+                                            src="<?=Share::getPhoto($val['id_user'],2,$val['photo'],'xmedium',$val['sex'])?>">
                                         <?php if($val['is_online']): ?>
                                             <span class="promo-list__item-onl"><span>В сети</span></span>
                                         <?php endif; ?>

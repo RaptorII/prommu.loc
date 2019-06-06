@@ -683,49 +683,39 @@ class Share
         return ($year ? 'лет' : 'дней');
     }
     /**
-    * @param $type number - user`s type
+    * @param $id_user integer - id_user
+    * @param $type integer - user`s type
     * @param $photo string - id`s photo 
     * @param $size string - ['small', 'medium', 'big']
-    * @param $gender number(0|1)
+    * @param $gender integer(0|1)
     * @return string
     * Доп метод для формирования ссылки на картинку
     */
-    public static function getPhoto($type, $photo, $size='small', $gender=0)
+    public static function getPhoto($id_user, $type, $photo, $size='small', $gender=0)
     {
-        $src = DS . 
-            ($type==2 ? MainConfig::$PATH_APPLIC_LOGO : MainConfig::$PATH_EMPL_LOGO)
-            . DS;
-        if($type==2) // applicant
+        $suffix = '169.jpg';
+        switch ($size)
         {
-            if($photo)
-                switch ($size) {
-                    case 'small': $src .= $photo . '100.jpg'; break;
-                    case 'medium': $src .= $photo . '400.jpg'; break;
-                    case 'big': $src .= $photo . '000.jpg'; break;
-                }
-            else
-                $src .= $gender ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F;
-
-            if(!file_exists(Subdomain::domainRoot() . $src)) // if FILE not found
-            {
-                $src = DS . MainConfig::$PATH_APPLIC_LOGO . DS
-                    . ($gender ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F);
-            }
+            case 'xsmall': $suffix = '30.jpg'; break;
+            case 'small': $suffix = '169.jpg'; break;
+            case 'xmedium': $suffix = '100.jpg'; break;
+            case 'medium': $suffix = '400.jpg'; break;
+            case 'big': $suffix = '000.jpg'; break;
         }
-        if($type==3) // employer
+        $str = 'users/' . $id_user . DS . $photo . $suffix;
+        $path = Settings::getFilesRoot() . $str;
+        $src = Settings::getFilesUrl() . $str;
+        if((!$photo || !file_exists($path)))
         {
-            if($photo)
-                switch ($size) {
-                    case 'small': $src .= $photo . '100.jpg'; break;
-                    case 'medium': $src .= $photo . '400.jpg'; break;
-                    case 'big': $src .= $photo . '000.jpg'; break;
-                }
-            else
-                $src .= MainConfig::$DEF_LOGO;
-
-            if(!file_exists(Subdomain::domainRoot() . $src)) // if FILE not found
+            if(self::isApplicant($type))
             {
-                $src = DS . MainConfig::$PATH_EMPL_LOGO . DS . MainConfig::$DEF_LOGO;
+                $src = $gender 
+                    ? MainConfig::$LOGO_APPLICANT_MALE 
+                    : MainConfig::$LOGO_APPLICANT_FEMALE;   
+            }
+            if(self::isEmployer($type))
+            {
+                $src = MainConfig::$LOGO_EMPLOYER;
             }
         }
         return $src;
@@ -772,7 +762,7 @@ class Share
                         'email' => $v['email'],
                         'status' => $v['status'],
                         'name' => $v['app_name'],
-                        'src' => self::getPhoto(2,$v['app_photo'],'small',$v['isman']),
+                        'src' => self::getPhoto($v['id_user'],2,$v['app_photo'],'small',$v['isman']),
                         'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user']
                     );
             }
@@ -783,7 +773,7 @@ class Share
                         'email' => $v['email'],
                         'status' => $v['status'],
                         'name' => $v['emp_name'],
-                        'src' => self::getPhoto(3,$v['emp_photo']),
+                        'src' => self::getPhoto($v['id_user'],3,$v['emp_photo']),
                         'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user']
                     );
             }

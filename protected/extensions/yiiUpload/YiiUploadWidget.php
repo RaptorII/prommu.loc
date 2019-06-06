@@ -42,11 +42,6 @@ class YiiUploadWidget extends CWidget
 		//
 		// default values
 		//
-		/*
-		$this->minFileLimit = intval($this->minFileLimit)>=1 ? intval($this->minFileLimit) : 1;
-		$this->maxFileLimit = intval($this->maxFileLimit)>1 ? intval($this->maxFileLimit) : 1;
-		$this->minFileLimit>$this->maxFileLimit && $this->maxFileLimit = $this->minFileLimit;
-		*/
 		$this->fileLimit = intval($this->fileLimit)>1 ? intval($this->fileLimit) : 1;
 		!is_array($this->fileFormat) && $this->fileFormat = [];
 		empty($this->callButtonText) && $this->callButtonText = 'Upload';
@@ -364,7 +359,7 @@ class YiiUploadWidget extends CWidget
 		return [];
 	}
 	/**
-	 * @param $arData - array()
+	 * @param $arData - array ['files'=>[0=>['name','oldname','path','linkTag','isImg','imgTag','signature']...]]
 	 * @param $arParams - array()
 	 */
 	private function saveData($arData, $arParams)

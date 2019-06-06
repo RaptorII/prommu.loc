@@ -91,15 +91,15 @@
   <div class="ppp__logo">
     <div class="ppp__logo-main">
       <? if($attr['photo']): ?>
-        <a href="<?=Share::getPhoto(2, $attr['photo'], 'big', $attr['isman']);?>" class="js-g-hashint ppp-logo-main__link ppp__logo-full" title="<?=$h1title?>">
+        <a href="<?=Share::getPhoto($attr['id_user'], 2, $attr['photo'], 'big', $attr['isman']);?>" class="js-g-hashint ppp-logo-main__link ppp__logo-full" title="<?=$h1title?>">
           <img 
-            src="<?=Share::getPhoto(2, $attr['photo'], 'medium', $attr['isman']);?>"
+            src="<?=Share::getPhoto($attr['id_user'], 2, $attr['photo'], 'medium', $attr['isman']);?>"
             alt='Соискатель <?=$attr['lastname']?> prommu.com'
             class="ppp-logo-main__img">
         </a>
       <? else: ?>
         <img 
-          src="<?=Share::getPhoto(2, $attr['photo'], 'medium', $attr['isman']);?>"
+          src="<?=Share::getPhoto($attr['id_user'], 2, $attr['photo'], 'medium', $attr['isman']);?>"
           alt='Соискатель <?=$attr['lastname']?> prommu.com'
           class="ppp-logo-main__img">
       <? endif; ?>
@@ -144,9 +144,9 @@
         foreach($info['userPhotos'] as $photo):
           if($photo['ismain']==0): ?>
             <div class="ppp-logo__item">
-              <a href="<?=Share::getPhoto(2, $photo['photo'], 'big', $attr['isman'])?>" class="ppp-logo-item__link ppp__logo-full">
+              <a href="<?=Share::getPhoto($attr['id_user'], 2, $photo['photo'], 'big', $attr['isman'])?>" class="ppp-logo-item__link ppp__logo-full">
                 <img 
-                  src="<?=Share::getPhoto(2, $photo['photo'], 'small', $attr['isman'])?>" 
+                  src="<?=Share::getPhoto($attr['id_user'], 2, $photo['photo'], 'small', $attr['isman'])?>" 
                   alt="Соискатель <?=$attr['lastname']?> prommu.com" 
                   class="ppp-logo-item__img">
               </a>
@@ -243,11 +243,7 @@
             <div class="ppp__work-item">
               <div class="ppp-work-item__logo">
                 <a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $work['idus']?>">
-                  <?php if($work['logo']): ?>
-                    <img src="<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . $work['logo'] . '100.jpg';?>" alt="Работодатель <?=$work['name']?> prommu.com" class="js-g-hashint" title="<?=$work['name']?>">
-                  <?php else: ?>
-                    <img src="<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . 'logo.png'; ?>" alt="">
-                  <?php endif; ?>
+                  <img src="<?=Share::getPhoto($work['idus'], 3, $work['logo'])?>" alt="Работодатель <?=$work['name']?> prommu.com" class="js-g-hashint" title="<?=$work['name']?>">
                 </a>
               </div>
               <div class="ppp-work-item__data">

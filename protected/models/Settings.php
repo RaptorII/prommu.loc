@@ -46,6 +46,48 @@ class Settings extends CActiveRecord
 		return $result;
 	}
 	/**
+	 * получение корня файлового сервера
+	 */
+	public static function getFilesRoot()
+	{
+		$data = Cache::getData(self::$cacheID);
+		if($data['data']===false)
+		{
+			$data['data'] = self::model()->findAll();
+			Cache::setData($data, self::$cacheTime);
+		}
+	
+		foreach ($data['data'] as $obj)
+		{
+			if($obj->code!=='files_root')
+				continue;
+
+			return $obj->value;
+		}
+		return false;
+	}
+	/**
+	 * получение урла файлового сервера
+	 */
+	public static function getFilesUrl()
+	{
+		$data = Cache::getData(self::$cacheID);
+		if($data['data']===false)
+		{
+			$data['data'] = self::model()->findAll();
+			Cache::setData($data, self::$cacheTime);
+		}
+	
+		foreach ($data['data'] as $obj)
+		{
+			if($obj->code!=='files_url')
+				continue;
+
+			return $obj->value;
+		}
+		return false;
+	}
+	/**
 	*		Запись данных
 	*/
 	public function setData($obj)

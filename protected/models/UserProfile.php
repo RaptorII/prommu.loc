@@ -24,7 +24,8 @@ abstract class UserProfile extends CModel
     // YiiUpload params
     public $arYiiUpload;
 
-
+    public $filesRoot;
+    public $filesUrl;
 
     function __construct($inProps)
     {
@@ -33,8 +34,10 @@ abstract class UserProfile extends CModel
 
         $this->limit = MainConfig::$DEF_PAGE_LIMIT;
         $this->offset = 0;
+
+        $this->filesRoot = Settings::getFilesRoot() . 'users/' . $this->id;
+        $this->filesUrl = Settings::getFilesUrl() . 'users/' . $this->id;
         // YiiUpload
-        $settings = new Settings;
         $this->arYiiUpload = [
                 'fileLimit' => 5,
                 'fileFormat' => ['jpg','jpeg','png'],
@@ -46,8 +49,8 @@ abstract class UserProfile extends CModel
                 'maxFileSize' => 10, // в мегабайтах(по умолчанию 5)
                 'imageSignature' => true, // разрешить подпись фото
                 'imgOrigSuFFix' => '000', // суфикс к заголовку измененного, возможно повернутого но не обрезаного изображения
-                'filePath' => $settings->getDataByCode('files_root') . 'users/' . $this->id,
-                'fileUrl' => $settings->getDataByCode('files_url') . 'users/' . $this->id,
+                'filePath' => $this->filesRoot,
+                'fileUrl' => $this->filesUrl,
                 'objSaveMethod' => 'savePhoto',
                 'reloadAfterUpload' => true
             ];

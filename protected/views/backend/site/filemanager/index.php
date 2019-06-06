@@ -20,3 +20,24 @@
 		left: -190px!important;	
 	}
 </style>
+<?
+	$this->widget(
+		'YiiUploadWidget',
+		[
+			'fileLimit' => 5,
+			'fileFormat' => ['jpg','jpeg','png'],
+			'callButtonText' => 'Upload',
+			'useWebcam' => true,
+			'minImageSize' => 400,
+			'maxImageSize' => 4500,
+			'imageEditor' => false,
+			'maxFileSize' => 10, // в мегабайтах(по умолчанию 5)
+			'imageSignature' => true,
+			'showTags' => true, // отобразить урл и теги для добавления в статьи итд(для админа)
+			'imgDimensions' => ['100'=>220,'169'=>169,'400'=>400], // для измененных изображений ['суфикс к заголовку' => 'размер']
+			'imgOrigSuFFix' => '000', // суфикс к заголовку измененного, возможно повернутого но не измененного в размере изображения
+			'filePath' => Settings::getFilesRoot() . 'test',
+			'fileUrl' => Settings::getFilesUrl() . 'test'
+		]
+	);
+?>

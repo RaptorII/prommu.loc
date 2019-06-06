@@ -27,6 +27,9 @@ class MainConfig
 
     public static $PATH_EMPL_LOGO = 'images/company/tmp';
     public static $PATH_APPLIC_LOGO = 'images/applic';
+    public static $LOGO_APPLICANT_MALE = '/theme/pic/logo_applicant_male.jpg';
+    public static $LOGO_APPLICANT_FEMALE = '/theme/pic/logo_applicant_female.jpg';
+    public static $LOGO_EMPLOYER = '/theme/pic/logo_employer.jpg';
     public static $PATH_CSS = 'theme/css';
     public static $CSS = '/theme/css/';
     public static $JS = '/theme/js/';

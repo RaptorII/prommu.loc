@@ -800,7 +800,7 @@ class Vacancy extends ARModel
             $arRes = array();
             foreach ($arApplicants as $u)
             {
-                $u['src'] = $host . Share::getPhoto(2,$u['photo'],'small',$u['isman']);
+                $u['src'] = $host . Share::getPhoto(2,$u['photo'],'xsmall',$u['isman']);
                 $u['link'] = $host . MainConfig::$PAGE_PROFILE_COMMON . '/' . $u['id_user'];
                 $u['name'] = trim($u['firstname'] . ' ' . $u['lastname']);
                 $datetime = new DateTime($u['birthday']);
@@ -2203,7 +2203,8 @@ WHERE id_vac = {$inVacId}";
               ea.id_attr,
               d.name AS pname,
               em.name coname,
-              ifnull(em.logo, '') logo
+              ifnull(em.logo, '') logo,
+              e.id_user
             FROM empl_vacations e 
             INNER JOIN (
               SELECT DISTINCT e.id
@@ -2226,7 +2227,6 @@ WHERE id_vac = {$inVacId}";
         $res = Yii::app()->db->createCommand($sql);
         $data= $res->queryAll();
 
-
         foreach ($data as $key => &$vac) {
             $vac['detail_url'] = MainConfig::$PAGE_VACANCY . DS . $vac['id'];
             $vac['payment'] = '';
@@ -2240,7 +2240,7 @@ WHERE id_vac = {$inVacId}";
             elseif(($pay = round($vac['svisit'],0)) > 0)
                 $vac['payment'] = $pay . ' руб/пос';
 
-            $vac['logo_src'] = Share::getPhoto(3, $vac['logo']);
+            $vac['logo_src'] = Share::getPhoto($vac['id_user'], 3, $vac['logo']);
             $vac['period'] = ' с ' . $vac['crdate'] 
                 . ($vac['remdate'] ? ' по ' . $vac['remdate'] : '');
             $vac['work_type'] = $vac['istemp'] ? 'Постоянная' : 'Временная';

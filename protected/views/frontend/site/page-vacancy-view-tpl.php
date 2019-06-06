@@ -156,7 +156,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                         </div>
                     </div>
                     <div class='col-xs-12 col-sm-4 col-lg-3'>
-                        <img src="<?=Share::getPhoto(3,Share::$UserProfile->exInfo->logo)?>"
+                        <img src="<?=Share::getPhoto($viData['vac']['idus'], Share::$UserProfile->type, $viData['vac']['logo'])?>"
                              class="erv__logo js-g-hashint" title="<?= $name ?>"/>
                         <div class="clearfix"></div>
                         <span class="erv__tab-link link5">Просмотров (<?= $viData['views'] ?>)</span><br>
@@ -953,7 +953,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
             <div class='col-xs-12 col-sm-4 single-vacancy__logo'>
                 <a href="<?= MainConfig::$PAGE_PROFILE_COMMON . DS . $vacancy['idus'] ?>" class="sv__logo-link">
                     <img 
-                        src="<?=Share::getPhoto(3, $vacancy['logo'], 'medium');?>"
+                        src="<?=Share::getPhoto($vacancy['idus'], 3, $vacancy['logo'], 'xmedium');?>"
                         class="sv__logo-img"
                         alt="<?= "Работодатель {$vacancy['coname']} prommu.com" ?>">
                 </a>

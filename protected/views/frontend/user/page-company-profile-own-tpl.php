@@ -23,16 +23,16 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
         <?php $hasphoto = $viData['userInfo']['logo']; ?>
         <?php if( $hasphoto ): ?>
           <a 
-            href="<?=Share::getPhoto(3, $hasphoto, 'big')?>"
+            href="<?=Share::getPhoto($id, 3, $hasphoto, 'big')?>"
             class="js-g-hashint upp__img-block-main-link profile__logo-full"
             title="<?=$viData['userInfo']['name']?>">
             <img 
-              src="<?=Share::getPhoto(3, $hasphoto, 'small')?>"
+              src="<?=Share::getPhoto($id, 3, $hasphoto, 'small')?>"
               alt="Работодатель <?=$viData['userInfo']['name']?> prommu.com">
           </a>
         <?php else: ?>
           <img 
-            src="<?=Share::getPhoto(3, $hasphoto, 'small')?>"
+            src="<?=Share::getPhoto($id, 3, $hasphoto, 'small')?>"
             alt="Работодатель <?=$viData['userInfo']['name']?> prommu.com">
         <?php endif; ?>
         <?if( $flagOwnProfile ):?>
@@ -47,10 +47,10 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
       <?php foreach ($viData['userPhotos'] as $key => $val): ?>
         <div class="upp__img-block-more <?=($i>2?'off':'')?>">
           <a 
-            href="<?=Share::getPhoto(3, $val['photo'], 'big')?>" 
+            href="<?=Share::getPhoto($id, 3, $val['photo'], 'big')?>" 
             class="profile__logo-full">
             <img 
-              src="<?=Share::getPhoto(3, $val['photo'], 'small')?>"
+              src="<?=Share::getPhoto($id, 3, $val['photo'], 'small')?>"
               alt="Соискатель <?=$viData['userInfo']['name']?> prommu.com">
           </a>
         </div>
