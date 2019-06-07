@@ -191,7 +191,9 @@
                         </div>
                         <div class="clearfix"></div>
                         <a href="<?=MainConfig::$PAGE_VACANCY . DS . $vac['id']?>" class="psv-table__link">Подробнее</a>
-                        <a href="javascript:void(0)" class="psv-table__link psv-list__responce-btn" data-id="<?=$vac['id']?>">ОТКЛИКНУТЬСЯ</a>
+                        <? if(Share::isApplicant()): ?>
+                            <a href="javascript:void(0)" class="psv-table__link psv-list__responce-btn" data-id="<?=$vac['id']?>">ОТКЛИКНУТЬСЯ</a>
+                        <? endif; ?>
                     </div>                            
                 </div>
                 <?php if( $cnt % 2 == 0 ): ?>
@@ -293,7 +295,9 @@
                             </div>
                             <div class="clearfix"></div>
                             <a href="<?=MainConfig::$PAGE_VACANCY . DS . $vac['id']?>" class="psv-table__link">Подробнее</a>
-                            <a href="javascript:void(0)" class="psv-table__link psv-list__responce-btn" data-id="<?=$vac['id']?>">ОТКЛИКНУТЬСЯ</a>
+                            <? if(Share::isApplicant()): ?>
+                                <a href="javascript:void(0)" class="psv-list__link psv-list__responce-btn" data-id="<?=$vac['id']?>">ОТКЛИКНУТЬСЯ</a>
+                            <? endif; ?>
                         </div>
                     </div>
                 </div>
