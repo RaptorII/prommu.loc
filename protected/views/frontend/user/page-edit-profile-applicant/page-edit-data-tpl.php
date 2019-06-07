@@ -991,16 +991,30 @@
           <p class="rp-content1__descr">Для того, чтобы Вашу анкету увидели все работодатели, чтобы начать искать работу и откликаться на вакансии необходимо заполнить обязательные данные о себе</p>
           <div class="rp-content1__logo">
             <span class="rp-content1__logo-img">
-              <img src="/theme/pic/register-popup-page/register_popup_r_logo.png" id="applicant-img">
+              <? 
+                $src = Share::getPhoto($attr['id_user'],2,$attr['photo'],'small',$attr['isman']);
+                if(strrpos($src,'logo_applicant')!==false)
+                {
+                  $src = '/theme/pic/register-popup-page/register_popup_r_logo.png';
+                }
+              ?>
+              <img src="<?=Share::getPhoto($attr['id_user'],2,$attr['photo'],'small',$attr['isman'])?>" id="applicant-img">
             </span>
             <span class="rp-content1__text">Добавление Вашей фотографии повысит привлекательность анкеты и увеличит шансы что работодатель выберет именно Вас<span class="rp-content1__warning">Добавляйте только свои личные фото, иначе Вы не сможете пройти модерацию! Спасибо за понимание!</span></span>
-            <input type="hidden" name="logo" id="HiLogo" class="<?//required-inp?>"/>
           </div>
-          <div class="rp-content1__btn-block" id="load-img-module">
-            <div class="rp-btn-block__load js-g-hashint" id="btn-load-image" title="Выбрать изображение"></div>
-            <div class="rp-btn-block__webcam js-g-hashint" id="btn-get-snapshot" title="Сделать снимок"></div>
-            <div class="clearfix"></div>
-          </div>
+          <? $cntPhotos = count($viData['userInfo']['userPhotos']); ?>
+          <? if( $cntPhotos < Share::$UserProfile->photosMax ): ?>
+            <?
+              $arYiiUpload = Share::$UserProfile->arYiiUpload;
+              $difPhotos = Share::$UserProfile->photosMax - $cntPhotos;
+              // если доступно к загрузке менее 5и фото
+              $arYiiUpload['fileLimit']>$difPhotos && $arYiiUpload['fileLimit']=$difPhotos;
+              $arYiiUpload['cssClassButton']='rp-content1__upload';
+            ?>
+            <div class="rp-content1__btn-block center">
+              <? $this->widget('YiiUploadWidget',$arYiiUpload); ?>
+            </div>
+          <? endif; ?>
           <div class="rp-content1__inputs">
             <?
             // birthday

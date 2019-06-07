@@ -941,7 +941,7 @@ body{ background: rgba(0, 0, 0, 0.31)!important; }
         text-align: center;
     }
     .rp-content1__btn-block{
-        width: 200px;
+        width: 250px;
         margin: 0 auto 20px;
     }
     .rp-content1__push{ text-align: center }
@@ -1025,3 +1025,8 @@ body{ background: rgba(0, 0, 0, 0.31)!important; }
     border-radius: 5px;
 }
 .prmu__popup div a:last-child:hover{ background: red; }
+/* */
+.YiiUpload__call-btn.rp-content1__upload{
+    width: 100%;
+    margin: 0;
+}

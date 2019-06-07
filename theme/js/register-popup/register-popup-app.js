@@ -413,16 +413,6 @@ $(function(){
   //  отправка пуш настроек на основную форму
   $('.bg_veil').click(function(){ sendPushData() });
   $('.push-popup__form').submit(function(){ return sendPushData() });
-  //  таймер проверки загрузки фото
-  setInterval(function (e){
-    if($('#HiLogo').val() != ''){
-      $('#applicant-img').attr('src','/images/applic/'+$('#HiLogo').val()+'400.jpg');
-      remEr('.rp-content1__logo-img');
-      let error = false;
-      $.each(arInputs, function(){ if(!checkFieldEasy(this)) error = true; });
-      //(!error && !$('.error').length) ? remEr('#applicant-btn','off') : addEr('#applicant-btn','off');
-    }
-  }, 1000);
   /*
   *     Финкции
   */

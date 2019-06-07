@@ -288,14 +288,6 @@ $(function(){
   //  отправка пуш настроек на основную форму
   $('.bg_veil').click(function(){ sendPushData() });
   $('.push-popup__form').submit(function(){ return sendPushData() });
-  //  таймер проверки загрузки фото
-  setInterval(function (e){
-    if($('#HiLogo').val() != ''){
-      $('#company-img').attr('src','/images/company/tmp/'+$('#HiLogo').val()+'400.jpg');
-      remEr('.rp-content1__logo-img');
-      $.each(arInputs, function(){ checkFieldEasy(this) });
-    }
-  }, 1000);
   /*
   *     Финкции
   */
@@ -326,16 +318,4 @@ $(function(){
   //  визуализация ошибок
   function addEr(e, style='error'){ $(e).addClass(style) }
   function remEr(e, style='error'){ $(e).removeClass(style) }
-  //  проверка полей
-  function checkField(e){
-    var val = $(e).val(), erBlock = e;
-    if($(e).is('#HiLogo')){ erBlock='.rp-content1__logo-img' }
-    if($(e).is('#phone-code')){ erBlock='.country-phone' } 
-
-    (val=='' || val==null) ? addEr(erBlock) : remEr(erBlock);
-  }
-  function checkFieldEasy(e){
-    if($(e).val()=='' || $(e).val()==null) return false;
-    else return true;
-  }
 }); 

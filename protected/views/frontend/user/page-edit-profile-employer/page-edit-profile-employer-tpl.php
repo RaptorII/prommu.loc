@@ -3,8 +3,6 @@
   Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
 ?>
 <meta name="robots" content="noindex">
-
-
 <?php if(empty($_GET['uid'])):?>
   <?
     Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-edit-prof-emp.css');
@@ -283,16 +281,29 @@
           <p class="rp-content1__descr">Для того, чтобы ваши вакансии увидели все соискатели, а также , чтобы самостоятельно начать приглашать соискателей необходимо заполнить обязательные данные о вашей компании</p>
           <div class="rp-content1__logo">
             <span class="rp-content1__logo-img">
-              <img src="/theme/pic/register-popup-page/register_popup_r_logo.png" id="company-img">
+              <? 
+                $src = Share::getPhoto($viData['info']['idus'],3,$viData['info']['logo']);
+                if(strrpos($src,'logo_employer')!==false)
+                {
+                  $src = '/theme/pic/register-popup-page/register_popup_r_logo.png';
+                }
+              ?>
+              <img src="<?=$src?>" id="company-img">
             </span>
             <span class="rp-content1__logo-text">Добавление логотипа повысит узнаваемость бренда среди соискателей<span class="rp-content1__warning">Добавляйте пожалуйста логотип своей компании или личные фото. В случае несоответствия фотографий Вы не сможете пройти модерацию! Спасибо за понимание!</span></span>
-            <input type="hidden" name="logo" id="HiLogo" class="required-inp" value="<?=(!empty($viData['info']['logo']) ? $viData['info']['logo'] : '')?>" />
           </div>
-          <div class="rp-content1__btn-block" id="load-img-module">        
-            <div class="rp-btn-block__load js-g-hashint" id="btn-load-image" title="Выбрать изображение"></div>
-            <div class="rp-btn-block__webcam js-g-hashint" id="btn-get-snapshot" title="Сделать снимок"></div>
-            <div class="clearfix"></div>
-          </div>
+          <? if( $viData['userPhotosCnt'] < Share::$UserProfile->photosMax ): ?>
+            <?
+              $arYiiUpload = Share::$UserProfile->arYiiUpload;
+              $difPhotos = Share::$UserProfile->photosMax - $viData['userPhotosCnt'];
+              // если доступно к загрузке менее 5и фото
+              $arYiiUpload['fileLimit']>$difPhotos && $arYiiUpload['fileLimit']=$difPhotos;
+              $arYiiUpload['cssClassButton']='rp-content1__upload';
+            ?>
+            <div class="rp-content1__btn-block center">
+              <? $this->widget('YiiUploadWidget',$arYiiUpload); ?>
+            </div>
+          <? endif; ?>
           <?
           // phone
           ?>
