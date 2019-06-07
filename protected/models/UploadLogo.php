@@ -38,7 +38,7 @@ class UploadLogo extends Model
             // $path = "/images/company/tmp/";
             // $newFullFn = Subdomain::domainRoot() . $path . $fn;
             
-            $path = "/images/".$this->dirUser()."/tmp/";
+            $path = "/users/".$this->dirUser()."/tmp/";
             $this->createUserDir($this->dirUser());
             $newFullFn = $this->domainFiles(). $path . $fn;
             
@@ -79,8 +79,8 @@ class UploadLogo extends Model
             }
             else
             {
-                Yii::app()->session['uplLogo'] = array('path' => "/images/{$this->dirUser()}/tmp/", 'file' => $fn);
-                    $arRes = array('error' => 0, 'file' => "/images/{$this->dirUser()}/tmp/" . $fn);
+                Yii::app()->session['uplLogo'] = array('path' => "/users/{$this->dirUser()}/tmp/", 'file' => $fn);
+                    $arRes = array('error' => 0, 'file' => "/users/{$this->dirUser()}/tmp/" . $fn);
             } // endif
         } // endif
 //        $sql = "SELECT s.id, s.name, DATE_FORMAT(s.crdate, '%d.%m.%Y') crdate
@@ -107,10 +107,10 @@ class UploadLogo extends Model
         
         $current =  base64_decode($photo);
         
-        mkdir("/var/www/files_prommu/images/".$id, 0700);
-        mkdir("/var/www/files_prommu/images/".$id."/tmp/", 0700);
+        mkdir("/var/www/files_prommu/users/".$id, 0700);
+        mkdir("/var/www/files_prommu/users/".$id."/tmp/", 0700);
         $file = date('YmdHis').rand(100,1000) . ".jpg";
-        $path = "/images/".$id."/tmp/";
+        $path = "/users/".$id."/tmp/";
         
         $res = file_put_contents("/var/www/files_prommu".$path.$file, $current);
         
@@ -140,7 +140,7 @@ class UploadLogo extends Model
             // $path = "/images/company/tmp/";
             // $newFullFn = Subdomain::domainRoot() . $path . $fn;
             
-            $path = "/images/".$this->dirUser()."/tmp/";
+            $path = "/users/".$this->dirUser()."/tmp/";
             $this->createUserDir($this->dirUser());
             $newFullFn = $this->domainFiles(). $path . $fn;
             
@@ -178,8 +178,8 @@ class UploadLogo extends Model
             }
             else
             {
-                Yii::app()->session['uplLogo'] = array('path' => "/images/".$this->dirUser()."/tmp/", 'file' => $fn);
-                $ret = array('error' => 0, 'file' => "/images/".$this->dirUser()."/tmp/" . $fn);
+                Yii::app()->session['uplLogo'] = array('path' => "/users/".$this->dirUser()."/tmp/", 'file' => $fn);
+                $ret = array('error' => 0, 'file' => "/users/".$this->dirUser()."/tmp/" . $fn);
             } // endif
         } // endif
 
@@ -188,7 +188,7 @@ class UploadLogo extends Model
         $file =  $fn;
         if( file_exists($this->domainFiles() . $pathTmp . $file) )
         {
-            $path = "/images/".$this->dirUser()."/";
+            $path = "/users/".$this->dirUser()."/";
             $res = $this->imgCrop($this->domainFiles(). $pathTmp . $file, $this->domainFiles(). $path . $file,
                     array('x1' => 0,
                         'y1' => 0,
@@ -214,23 +214,23 @@ class UploadLogo extends Model
     }
 
     
-    public function processUploadedLogoPromoApi($_FILES, $user)
+    public function processUploadedLogoPromoApi($files, $user)
     {
         
         $message = "Ошибка загрузки файла, обновите страницу и попробуйте еще раз";
         
-        $path = "/images/".$user."/tmp/";
+        $path = "/users/".$user."/tmp/";
         $this->createUserDir($user);
         $newFullFn = $this->domainFiles(). $path . $fn;
-        var_dump($_FILES);
-        if( $_FILES['photo']['size'] > 5242880 || $_FILES['photo']['size'] == 0 ) $ret = array('error' => 1, 'message' => 'Неправильный размер файла!');
+        var_dump($files);
+        if( $files['photo']['size'] > 5242880 || $files['photo']['size'] == 0 ) $ret = array('error' => 1, 'message' => 'Неправильный размер файла!');
         else
         {
-            $ext = substr($_FILES['photo']['name'], 1 + strrpos($_FILES['photo']['name'], "."));
+            $ext = substr($files['photo']['name'], 1 + strrpos($files['photo']['name'], "."));
             $fn = date('YmdHis').rand(100,1000) . ".jpg";
             
             
-            if( move_uploaded_file($_FILES["photo"]["tmp_name"], $newFullFn) )
+            if( move_uploaded_file($files["photo"]["tmp_name"], $newFullFn) )
             {
                 $imgProps = getimagesize($newFullFn);
                 if( $imgProps[0] > 4500 || $imgProps[1] > 4500 )
@@ -264,8 +264,8 @@ class UploadLogo extends Model
             }
             else
             {
-                Yii::app()->session['uplLogo'] = array('path' => "/images/".$user."/tmp/", 'file' => $fn);
-                $ret = array('error' => 0, 'file' => "/images/".$user."/tmp/" . $fn);
+                Yii::app()->session['uplLogo'] = array('path' => "/users/".$user."/tmp/", 'file' => $fn);
+                $ret = array('error' => 0, 'file' => "/users/".$user."/tmp/" . $fn);
             } // endif
         } // endif
 
@@ -274,7 +274,7 @@ class UploadLogo extends Model
         $file =  $fn;
         if( file_exists($this->domainFiles() . $pathTmp . $file) )
         {
-            $path = "/images/".$user."/";
+            $path = "/users/".$user."/";
             $res = $this->imgCrop($this->domainFiles(). $pathTmp . $file, $this->domainFiles(). $path . $file,
                     array('x1' => 0,
                         'y1' => 0,
@@ -310,7 +310,7 @@ class UploadLogo extends Model
             $ext = substr($_FILES['photo']['name'], 1 + strrpos($_FILES['photo']['name'], "."));
             $fn = date('YmdHis').rand(100,1000) . ".jpg";
             
-            $path = "/images/".$this->dirUser()."/tmp/";
+            $path = "/users/".$this->dirUser()."/tmp/";
             $this->createUserDir($this->dirUser());
             $newFullFn = $this->domainFiles(). $path . $fn;
             
@@ -348,8 +348,8 @@ class UploadLogo extends Model
             }
             else
             {
-                Yii::app()->session['uplLogo'] = array('path' => "/images/".$this->dirUser()."/tmp/", 'file' => $fn);
-                $ret = array('error' => 0, 'file' => "/images/".$this->dirUser()."/tmp/" . $fn);
+                Yii::app()->session['uplLogo'] = array('path' => "/users/".$this->dirUser()."/tmp/", 'file' => $fn);
+                $ret = array('error' => 0, 'file' => "/users/".$this->dirUser()."/tmp/" . $fn);
             } // endif
         } // endif
 
@@ -358,7 +358,7 @@ class UploadLogo extends Model
         $file =  $fn;
         if( file_exists($this->domainFiles() . $pathTmp . $file) )
         {
-            $path = "/images/".$this->dirUser()."/";
+            $path = "/users/".$this->dirUser()."/";
             $res = $this->imgCrop($this->domainFiles(). $pathTmp . $file, $this->domainFiles(). $path . $file,
                     array('x1' => 0,
                         'y1' => 0,
@@ -400,7 +400,7 @@ class UploadLogo extends Model
         $file = Yii::app()->session['uplLogo']['file'];
         if( file_exists($this->domainFiles(). $pathTmp . $file) )
         {
-            $path = "/images/{$this->imgPath}/";
+            $path = "/users/{$this->imgPath}/";
             $res = $this->imgCrop($this->domainFiles(). $pathTmp . $file, $this->domainFiles(). $path . $file,
                     array('x1' => $x1,
                         'y1' => $y1,
@@ -498,19 +498,14 @@ class UploadLogo extends Model
     /**
      * Удалить все файлы определенного фото соискателя
      */
-    public function delPhoto($inId)
+    public function delPhoto($path)
     {
-        if(Share::$UserProfile->type == 2) // applicant
-            $path = "/images/{$this->imgPath}/";
-        else
-            $path = "/images/{$this->imgPath}/tmp/";
-
-        file_exists(Subdomain::domainRoot() . $path . $inId . '.jpg') && unlink(Subdomain::domainRoot() . $path . $inId . '.jpg');
-        file_exists(Subdomain::domainRoot() . $path . $inId . '30.jpg') && unlink(Subdomain::domainRoot() . $path . $inId . '30.jpg');
-        file_exists(Subdomain::domainRoot() . $path . $inId . '100.jpg') && unlink(Subdomain::domainRoot() . $path . $inId . '100.jpg');
-        file_exists(Subdomain::domainRoot() . $path . $inId . '169.jpg') && unlink(Subdomain::domainRoot() . $path . $inId . '169.jpg');
-        file_exists(Subdomain::domainRoot() . $path . $inId . '400.jpg') &&  unlink(Subdomain::domainRoot() . $path . $inId . '400.jpg');
-        file_exists(Subdomain::domainRoot() . $path . $inId . '000.jpg') &&  unlink(Subdomain::domainRoot() . $path . $inId . '000.jpg');
+        file_exists($path . '.jpg') && unlink($path . '.jpg');
+        file_exists($path . '30.jpg') && unlink($path . '30.jpg');
+        file_exists($path . '100.jpg') && unlink($path . '100.jpg');
+        file_exists($path . '169.jpg') && unlink($path . '169.jpg');
+        file_exists($path . '400.jpg') &&  unlink($path . '400.jpg');
+        file_exists($path . '000.jpg') &&  unlink($path . '000.jpg');
     }
 
 
@@ -747,8 +742,8 @@ class UploadLogo extends Model
     }
     
     public function createUserDir($cloud){
-        mkdir($this->domainFiles()."/images/".$cloud, 0700);
-        mkdir($this->domainFiles()."/images/".$cloud."/tmp/", 0700);
+        mkdir($this->domainFiles()."/users/".$cloud, 0700);
+        mkdir($this->domainFiles()."/users/".$cloud."/tmp/", 0700);
     }
 
     /**
@@ -765,7 +760,7 @@ class UploadLogo extends Model
         // $newFullFn = Subdomain::domainRoot() . $path . $fn;
         
         
-        $path = "/images/".$this->dirUser()."/tmp/";
+        $path = "/users/".$this->dirUser()."/tmp/";
         $this->createUserDir($this->dirUser());
         $newFullFn = $this->domainFiles(). $path . $fn;
         
@@ -791,8 +786,8 @@ class UploadLogo extends Model
                     $arRes = array('error' => 1, 'message' => 'Минимальное разрешение изображения - 400x400 пикселей');
                 }
                 else{
-                    Yii::app()->session['uplLogo'] = array('path' => "/images/".$this->dirUser()."/tmp/", 'file' => $fn);
-                    $arRes = array('error' => 0, 'file' => "/images/".$this->dirUser()."/tmp/" . $fn);
+                    Yii::app()->session['uplLogo'] = array('path' => "/users/".$this->dirUser()."/tmp/", 'file' => $fn);
+                    $arRes = array('error' => 0, 'file' => "/users/".$this->dirUser()."/tmp/" . $fn);
                 }
             }
         }

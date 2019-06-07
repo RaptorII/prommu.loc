@@ -26,11 +26,17 @@
             <img src='<?=$viData['info']['src']?>' alt="<?=$viData['info']['name']?>">
             <a href="<?=MainConfig::$PAGE_EDIT_PROFILE . '?ep=1'?>" class="epe__logo-edit">Изменить аватар</a>
           </div>
-          <div class="epe-logo__btn-block" id="load-img-module">
-            <div class="epe-logo__load js-g-hashint" id="btn-load-image" title="Выбрать изображение"></div>
-            <div class="epe-logo__webcam js-g-hashint" id="btn-get-snapshot" title="Сделать снимок"></div>
-            <div class="clearfix"></div>
-          </div>
+          <? if( $viData['userPhotosCnt'] < Share::$UserProfile->photosMax ): ?>
+            <?
+              $arYiiUpload = Share::$UserProfile->arYiiUpload;
+              $difPhotos = Share::$UserProfile->photosMax - $viData['userPhotosCnt'];
+              // если доступно к загрузке менее 5и фото
+              $arYiiUpload['fileLimit']>$difPhotos && $arYiiUpload['fileLimit']=$difPhotos;
+            ?>
+            <div class="center">
+              <? $this->widget('YiiUploadWidget',$arYiiUpload); ?>
+            </div>
+          <? endif; ?>
           <?php if(!$viData['info']['confirmEmail'] && !empty($viData['info']['email'])): ?>
             <div class="confirm-user email">Необходимо подтвердить почту</div>
           <?php endif; ?>
@@ -227,7 +233,6 @@
                     <span>Сохранить изменения</span>
                   </button>
                 </div>
-                <input type="hidden" name="logo" id="HiLogo"/>
                 <input type="hidden" name="savest" value="1"/>
               </div>
             </div>
@@ -475,4 +480,3 @@
     </div>
   </div>
 <?php endif; ?>
-<?php require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/popup-load-img.php'; ?>

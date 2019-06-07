@@ -57,13 +57,6 @@ jQuery(function($){
 	});
 	// собираем выбранные телефоны
 	updateArSelectPhones();
-	// установка изображения
-	var imgTimer = setInterval(function(e){ 
-		if($("#HiLogo").val() != ''){
-			location.reload();
-			clearTimeout(imgTimer);
-		} 
-	}, 1000);
 	//
 	$(document).on('click', function(e){
 		var it = e.target;

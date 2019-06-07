@@ -129,13 +129,6 @@ jQuery(function($){
 	//
 	// получаем номер
 	function getNum(value){ return value.replace(/\D+/g,'') }
-	//	установка фото
-	var imgTimer = setInterval(function(e){ 
-		if($("#HiLogo").val() != ''){
-			location.reload();
-			clearTimeout(imgTimer);
-		} 
-	}, 1000);
 	// additional functions
 	function addErr(e){ 
 		$(e).addClass('error');

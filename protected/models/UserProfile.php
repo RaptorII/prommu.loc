@@ -21,6 +21,8 @@ abstract class UserProfile extends CModel
     public $offset;
 
     public $viewTpl;
+
+    public $photosMax; // макс кол-во фоток у соискателя
     // YiiUpload params
     public $arYiiUpload;
 

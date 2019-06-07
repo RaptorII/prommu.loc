@@ -224,3 +224,5 @@
     .photos__item-link:hover ~ .photos__item-select,
     .photos__item-link:hover ~ .photos__item-delete{ opacity: 0.7 }
 }
+/* */
+.YiiUpload__call-btn.photo-pages__upload{ margin: 0 0 30px; }

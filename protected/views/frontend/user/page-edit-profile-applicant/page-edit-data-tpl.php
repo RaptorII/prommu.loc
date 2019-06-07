@@ -8,13 +8,6 @@
 
   $attrAll = $viData['userInfo']['userAttribs'];
   $attr = array_values($attrAll)[0];
-  
-  // photo
-  $logoLink = DS . MainConfig::$PATH_APPLIC_LOGO . DS;
-  $logoSize = '400.jpg';
-  if($attr['photo']) $logoLink .= $attr['photo'] . $logoSize;
-  elseif($_GET['photo']) $logoLink .= $_GET['photo'] . $logoSize;
-  else $logoLink .= $attr['isman']  ? 'logo.jpg' : 'logo_f.jpg';
   // city
   //if(!sizeof($_GET['city']))
     $arUserCities = $viData['userInfo']['userCities'][0];
@@ -162,9 +155,7 @@
     <div class="err-msg-block">При сохранении данных профиля произошла ошибка. <?= $viErrorData['msg'] ?></div>
   <?php endif; ?>
   <script type="text/javascript">
-    var logoLink='<?=DS . MainConfig::$PATH_APPLIC_LOGO . DS?>', 
-        logoSize='<?=$logoSize?>',
-        arCities = <?=json_encode($arCities)?>,
+    var arCities = <?=json_encode($arCities)?>,
         arMetroes = <?=json_encode($arMetroes)?>,
         selectPhoneCode = <?=json_encode($attr['phone-code'])?>;
   </script>
@@ -175,15 +166,21 @@
     <div class="epa__content">
       <div class="epa__content-logo">
         <div class="epa__logo-content">
-          <img src="<?=$logoLink?>" alt="" id="epa-logo" class="epa__logo-img">
-          <input type="hidden" name="logo" id='HiLogo'>
+          <img src="<?=Share::getPhoto($attr['id_user'],2,$attr['photo'],'medium',$attr['isman'])?>" alt="" id="epa-logo" class="epa__logo-img">
           <a href="<?=MainConfig::$PAGE_EDIT_PROFILE . '?ep=1'?>" class="epa__logo-edit">Изменить аватар</a>
         </div>
-        <div class="epa-logo__btn-block" id="load-img-module">
-          <div class="epa-logo__load js-g-hashint" id="btn-load-image" title="Выбрать изображение"></div>
-          <div class="epa-logo__webcam js-g-hashint" id="btn-get-snapshot" title="Сделать снимок"></div>
-          <div class="clearfix"></div>
-        </div> 
+        <? $cntPhotos = count($viData['userInfo']['userPhotos']); ?>
+        <? if( $cntPhotos < Share::$UserProfile->photosMax ): ?>
+          <?
+            $arYiiUpload = Share::$UserProfile->arYiiUpload;
+            $difPhotos = Share::$UserProfile->photosMax - $cntPhotos;
+            // если доступно к загрузке менее 5и фото
+            $arYiiUpload['fileLimit']>$difPhotos && $arYiiUpload['fileLimit']=$difPhotos;
+          ?>
+          <div class="center">
+            <? $this->widget('YiiUploadWidget',$arYiiUpload); ?>
+          </div>
+        <? endif; ?>
         <?php if(!$attr['confirmEmail'] && !empty($attr['email'])): ?>
           <div class="confirm-user email">Необходимо подтвердить почту</div>
         <?php endif; ?>

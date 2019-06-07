@@ -1,11 +1,4 @@
 $(function(){
-	var reloadTimer = setInterval(function (e){ 
-		if($("#HiLogo").val()!= ''){
-			clearInterval(reloadTimer);
-			location.reload(true);
-		} 
-	}, 1000);
-	//
 	$(".photos__item-delete").click(function(e){ 
 		if(!confirm("Вы хотите удалить фото?"))
 			e.preventDefault(); 

@@ -7,8 +7,6 @@
 
 class UserProfileEmpl extends UserProfile
 {
-    private $photosMax; // макс кол-во фоток у работодателя
-
     function __construct($inProps)
     {
         parent::__construct($inProps);
@@ -183,7 +181,7 @@ class UserProfileEmpl extends UserProfile
         {
             Yii::app()->db->createCommand()->delete('user_photos', '`id`=:id', array(':id' => $id));
 
-            $res = (new UploadLogo())->delPhoto($photos[$ind]['photo']);
+            $res = (new UploadLogo())->delPhoto($this->filesRoot . DS . $photos[$ind]['photo']);
 
             // делаем предыдущую фотку главной
             if( $photos[$ind]['ismain'] && count($photos)>1)
@@ -926,8 +924,8 @@ class UserProfileEmpl extends UserProfile
             foreach ($arRes['userPhotos'] as &$v)
             {
                 $v['ismain'] = $v['logo']==$v['photo'];
-                $v['src_small'] = Share::getPhoto($type,$v['photo'],'small');
-                $v['src_big'] = Share::getPhoto($type,$v['photo'],'big');
+                $v['src_small'] = Share::getPhoto($id, $type,$v['photo'],'medium');
+                $v['src_big'] = Share::getPhoto($id, $type,$v['photo'],'big');
             }
             unset($v);
 
@@ -956,11 +954,19 @@ class UserProfileEmpl extends UserProfile
                         ->where('e.id_user=:idus', [':idus'=>$id])
                         ->queryRow();
 
+        $arRes['userPhotosCnt'] = Yii::app()->db->createCommand()
+                            ->select('count(up.id)')
+                            ->from('user_photos up')
+                            ->rightjoin('employer e', 'e.id=up.id_empl')
+                            ->where('e.id_user=:id',[':id'=>$id])
+                            ->queryScalar();
+
         // вычисляем настоящий урл для фото
         $arRes['info']['src'] = Share::getPhoto(
+                                        $arRes['info']['idus'],
                                         $type, 
                                         $arRes['info']['logo'], 
-                                        'small');
+                                        'xmedium');
         // отсекаем телефон в логине
         $arRes['info']['email'] = filter_var(
                                         $arRes['info']['email'],
@@ -1679,7 +1685,7 @@ class UserProfileEmpl extends UserProfile
         for ($i=0, $n=count($arData['files']); $i<$n; $i++)
         {
             // загружаем только допустимое кол-во
-            if(($i + 1 + $query['cnt'])>=$this->photosMax) 
+            if(($i + 1 + $query['cnt'])>$this->photosMax) 
                 continue;
 
             $file = pathinfo($arData['files'][$i]['name'], PATHINFO_FILENAME);

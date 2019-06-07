@@ -11,8 +11,6 @@ class UserProfileApplic extends UserProfile
     private $profileFillMax;
     private $wDays;
     private $idCities; // ID городов из блоков интерфейса
-    private $photosMax; // макс кол-во фоток у соискателя
-
 
     function __construct($inProps)
     {
@@ -506,7 +504,7 @@ class UserProfileApplic extends UserProfile
         {
             Yii::app()->db->createCommand()->delete('user_photos', '`id`=:id', array(':id' => $id));
 
-            $res = (new UploadLogo())->delPhoto($photos[$ind]['photo']);
+            $res = (new UploadLogo())->delPhoto($this->filesRoot . DS . $photos[$ind]['photo']);
 
             // делаем предыдущую фотку главной
             if( $photos[$ind]['ismain'] && count($photos)>1 )
@@ -1764,7 +1762,7 @@ class UserProfileApplic extends UserProfile
         for ($i=0, $n=count($arData['files']); $i<$n; $i++)
         {
             // загружаем только допустимое кол-во
-            if(($i + 1 + $query['cnt'])>=$this->photosMax) 
+            if(($i + 1 + $query['cnt'])>$this->photosMax) 
                 continue;
 
             $file = pathinfo($arData['files'][$i]['name'], PATHINFO_FILENAME);
