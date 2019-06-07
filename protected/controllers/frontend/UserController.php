@@ -514,7 +514,7 @@ class UserController extends AppController
         // auth fail
         } else {
             //Yii::app()->user->setFlash('auErrMess', $res['message']);
-            Yii::app()->user->setFlash('auErrMess', 'Login failed');
+            Yii::app()->user->setFlash('auErrMess', 'Неверный логин или пароль!');
             $this->redirect(MainConfig::$PAGE_LOGIN);
         } // endif
     }
