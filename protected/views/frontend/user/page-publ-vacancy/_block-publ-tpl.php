@@ -19,6 +19,10 @@
       );
   }*/
 ?>
+<?//= '<pre>'; ?>
+<!--    --><?//= 'tut'?>
+<!--    --><?php //print_r($arCopy);?>
+<?//= '</pre>'; ?>
 <script type="text/javascript">
   var arPosts = <?=json_encode($viData['posts'])?>;
   var arSelectCity = <?=json_encode($viData['usercity'])?>;

@@ -252,7 +252,7 @@ a.btn-02:hover, button.btn-02:hover { background: #abb820; color: #fff; }
 
 #DiTopMenuWrapp .top-menu-wr { position: relative; float: left; margin-left: 0px; width: 32px; height: 39px; z-index: 20; }
 
-#DiTopMenuWrapp .top-menu-wr.-autopopup:hover .csson { display: block; }
+#DiTopMenuWrapp .top-menu-wr.-autopopup:hover .csson { display: table; }
 
 #DiTopMenuWrapp .top-menu-wr a.menu { display: block; position: absolute; width: 32px; height: 33px; top: 3px; }
 

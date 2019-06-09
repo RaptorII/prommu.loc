@@ -370,7 +370,7 @@
 	min-width: 163px;
 	position: relative;
 }
-.epa__select:after{
+/*.epa__select:after{
 	content: '';
 	display: block;
 	position: absolute;
@@ -380,8 +380,8 @@
 	right: 0;
 	background: url(/theme/pic/private/add-vac-select.png) 50% no-repeat;
 	z-index: 0;
-}
-.epa__calendar-select.epa__select:after{ right: 5% }
+}*/
+/*.epa__calendar-select.epa__select:after{ right: 5% }*/
 .epa__select.white:after{ background: url(/theme/pic/private/add-vac-select-white.png) 50% no-repeat }
 .epa__calendar-table{
     width: 100%;
