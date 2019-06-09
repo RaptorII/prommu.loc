@@ -42,7 +42,10 @@
     // Должность
     ?>
     <div class="fav__label fav__select-hint">
-      <span class="fav__hint fav__hint-vacname">Выберите одну или несколько должностей, которые необходимы Вам для запуска проекта</span>
+        <?php
+        //<span class="fav__hint fav__hint-vacname">Выберите одну или несколько должностей, которые необходимы Вам для запуска проекта</span>
+        ?>
+      <span class="fav__hint fav__hint-vacname">Выберите <span style="color: black">одну</span> должность, которая необходима Вам для начала работы над проектом.</span>
       <div class="fav__select-posts">
         <? if($bCopy): // дублировать ?>
           <span style="display:none">Должность *</span>

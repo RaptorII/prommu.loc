@@ -189,15 +189,20 @@ $(function(){
     $(e).removeClass('error');
     return true;
   }
+
   /*
   *
   */  // новый ввод вакансий
-  $('#av-posts-select').click(function(e){ 
-    if(!$(e.target).is('i')){
-      $('#av-posts-list').fadeIn();
-      $('#av-posts-list input').focus();   
-    }
-  });
+    $('#av-posts-select').click(function (e) {
+        //console.log(+getSelectedPosts());
+        if ( +getSelectedPosts()<1 ) {
+            if (!$(e.target).is('i')) {
+                $('#av-posts-list').fadeIn();
+                $('#av-posts-list input').focus();
+            }
+        }
+      });
+
   $('#av-posts-list input').bind('input focus blur', function(e){
     var arResult = [],
         content = '',
