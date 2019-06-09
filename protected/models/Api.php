@@ -1319,6 +1319,7 @@ class Api
 
          $date = filter_var(Yii::app()->getRequest()->getParam('date'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
          $bdate = filter_var(Yii::app()->getRequest()->getParam('bdate'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+         $bdate = date('Y-m-d', strtotime($bdate. ' + 1 days'));
          $domen = Yii::app()->getRequest()->getParam('domen');
         //print_r($ids);
          if($date == "week"){
