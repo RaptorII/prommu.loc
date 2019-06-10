@@ -1326,7 +1326,7 @@ class UserProfileApplic extends UserProfile
 
 
         // считываем фото пользователя
-        $sql = "SELECT p.id, p.photo, CASE WHEN p.photo = r.photo THEN 1 ELSE 0 END ismain
+        $sql = "SELECT p.id, p.photo, p.signature, CASE WHEN p.photo = r.photo THEN 1 ELSE 0 END ismain
             FROM resume r
             LEFT JOIN user_photos p ON p.id_promo = r.id
             WHERE r.id_user = {$id}
@@ -1779,6 +1779,46 @@ class UserProfileApplic extends UserProfile
         }
         // записываем в user_photos одним запросом
         Share::multipleInsert(['user_photos'=>$arInsert]);
+        // устанавливаем что нужна модерация
+        Yii::app()->db->createCommand()
+            ->update('user', ['ismoder'=>0], 'id_user=:id', [':id'=>$this->id]);
+        // уведомляем админа по почте
+        Mailing::set(1, ['id_user'=>$this->id], 2);
+    }
+    /**
+     *  сохранение данных с помощью виджета
+     * @param $arData - array ['files'=>[0=>['name','oldname','path','linkTag','isImg','imgTag','signature']...]]
+     */
+    public function editPhoto($arData)
+    {
+        $query = Yii::app()->db->createCommand()
+                    ->select('MAX(npp) npp, COUNT(*) cnt')
+                    ->from('user_photos')
+                    ->where('id_promo=:id',[':id'=>$this->exInfo->id_resume])
+                    ->queryRow();
+
+        // проверяем на допустимое кол-во фото
+        if($query['cnt']>=$this->photosMax)
+        {
+            return false;
+        }
+
+        $arFile = reset($arData['files']);
+        $oldPhoto = pathinfo($arFile['oldname'], PATHINFO_FILENAME);
+
+        Yii::app()->db->createCommand()
+            ->update(
+                'user_photos',
+                [
+                    'photo' => pathinfo($arFile['name'], PATHINFO_FILENAME),
+                    'signature'=>filter_var(
+                        $arFile['signature'],
+                        FILTER_SANITIZE_FULL_SPECIAL_CHARS
+                    )
+                ],
+                "id_user=:id AND photo='{$oldPhoto}'",
+                [':id'=>$this->id]
+            );
         // устанавливаем что нужна модерация
         Yii::app()->db->createCommand()
             ->update('user', ['ismoder'=>0], 'id_user=:id', [':id'=>$this->id]);

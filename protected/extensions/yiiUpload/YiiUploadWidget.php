@@ -27,11 +27,13 @@ class YiiUploadWidget extends CWidget
 	public $cssClassButton; // string - custom styles for main button
 	public $cssClassForm; // string - custom styles for popup
 	public $reloadAfterUpload; // boolean - reload page after upload and close popup
+	public $arEditImage; // array - array with data for edit image
 
 	public  $defaultController='/site';
 
 	private $_action;
 	private $_baseUrl;
+	public  $instanceId;
 	private $dirPermission = 0700; // permission for dir in creating
 	private $defaultImgSize = 1600; // image size in defaukt
 	
@@ -44,7 +46,7 @@ class YiiUploadWidget extends CWidget
 		//
 		$this->fileLimit = intval($this->fileLimit)>1 ? intval($this->fileLimit) : 1;
 		!is_array($this->fileFormat) && $this->fileFormat = [];
-		empty($this->callButtonText) && $this->callButtonText = 'Upload';
+		!isset($this->callButtonText) && $this->callButtonText = 'Upload';
 		!isset($this->showTags) && $this->showTags = false;
 		!isset($this->minImageSize) && $this->minImageSize = 0;
 		!isset($this->maxImageSize) && $this->maxImageSize = 0;
@@ -63,27 +65,34 @@ class YiiUploadWidget extends CWidget
 		!isset($this->cssClassButton) && $this->cssClassButton = false;
 		!isset($this->cssClassForm) && $this->cssClassForm = false;
 		!isset($this->reloadAfterUpload) && $this->reloadAfterUpload = false;
+		!isset($this->arEditImage) && $this->arEditImage = false;
+		!isset($GLOBALS['yiiUploadCnt']) ? $GLOBALS['yiiUploadCnt']=1 : $GLOBALS['yiiUploadCnt']++;
 	}
 
 	public function run()
 	{
+		$this->instanceId = $GLOBALS['yiiUploadCnt']; // unique ID
 		// this 'dummy' argument is required to provide urlmanager support...
-		$this->_action = array($this->defaultController.'/yiiupload','dummy'=>'@');
+		//$this->_action = array($this->defaultController.'/yiiupload','dummy'=>'@');
+		$this->_action = $this->defaultController.'/yiiupload?dummy=%40&id=' . $this->instanceId;
 
 		$options = CJavaScript::encode(array(
 				'fileLimit'=>$this->fileLimit,
 				'callButtonText'=>$this->callButtonText,
-				'action'=>CHtml::normalizeUrl($this->_action),
+				//'action'=>CHtml::normalizeUrl($this->_action),
+				'action'=>$this->_action,
 				'showTags'=>$this->showTags,
 				'fileFormat' => $this->fileFormat,
 				'imageEditor' => $this->imageEditor,
 				'useWebcam' => $this->useWebcam,
 				'imageSignature' => $this->imageSignature,
 				'cssClassForm' => $this->cssClassForm,
-				'reloadAfterUpload' => $this->reloadAfterUpload
+				'reloadAfterUpload' => $this->reloadAfterUpload,
+				'instanceId' => $this->instanceId,
+				'arEditImage' => $this->arEditImage
 			));
-		$s = Yii::app()->session;
-		$s['yiiUpload'] = [
+		$s = Yii::app()->session['yiiUpload'];
+		$s[$this->instanceId] = [
 				'filePath' => substr($this->filePath,-1)!="/" 
 					? $this->filePath."/" 
 					: $this->filePath,
@@ -101,9 +110,10 @@ class YiiUploadWidget extends CWidget
 				'objSave' => $this->objSave,
 				'objSaveMethod' => $this->objSaveMethod
 			];
-		$var_id = rand(1000,9999);
-		Yii::app()->getClientScript()->registerScript("yii_upload_script_".$var_id,
-			"	var upload_{$var_id} = new YiiUpload({$options});");
+		Yii::app()->session['yiiUpload'] = $s;
+		
+		Yii::app()->getClientScript()->registerScript("yii_upload_script_".$this->instanceId,
+			"	var upload_{$this->instanceId} = new YiiUpload({$options});");
 
 		$this->render('view');
 	}
@@ -126,25 +136,31 @@ class YiiUploadWidget extends CWidget
 
 	public function runAction()
 	{
-		$s = Yii::app()->session;
+		$s = Yii::app()->session['yiiUpload'];
+		$instanceId = Yii::app()->getRequest()->getParam('id');
 		$arRes = [];
 
 		if(isset($_FILES['upload']))
 		{
-			$arRes = $this->checkImages($_FILES['upload'], $s['yiiUpload']);
-			if($s['yiiUpload']['imageEditor']==true)
+			$arRes = $this->checkImages($_FILES['upload'], $s[$instanceId]);
+			if($s[$instanceId]['imageEditor']==true)
 			{
-				$this->saveData(['files'=>$arRes['success']], $s['yiiUpload']);
+				$this->saveData(['files'=>$arRes['success']], $s[$instanceId]);
 			}
+		}
+		elseif($_POST['state']=='full')
+		{
+			$arRes = $this->editImages($_POST['data'], $s[$instanceId]);
+			$this->saveData(['files'=>$arRes['success']], $s[$instanceId]);
 		}
 		elseif($_POST['state']=='edit')
 		{
-			$arRes = $this->editImages($_POST['data'], $s['yiiUpload']);
-			$this->saveData(['files'=>$arRes['success']], $s['yiiUpload']);
+			$arRes = $this->onlyEditImages($_POST['data'], $s[$instanceId]);
+			$this->saveData(['files'=>$arRes['success']], $s[$instanceId]);
 		}
 		elseif($_POST['state']=='delete')
 		{
-			$this->deleteImages($_POST['data'], $s['yiiUpload']);
+			$this->deleteImages($_POST['data'], $s[$instanceId]);
 		}
 
 		echo CJSON::encode($arRes);
@@ -346,6 +362,31 @@ class YiiUploadWidget extends CWidget
 	 * @param $arData - array()
 	 * @param $arParams - array()
 	 */
+	private function onlyEditImages($arData, $arParams)
+	{
+		$arFile = reset($arData);
+		$arFile['name'] = date('YmdHis') . rand(1000,9999) . '.jpg';
+		$filePathWithoutExt = $arParams['filePath'] . $arFile['oldName'];
+		$filePathFull = $arParams['filePath'] 
+			. $arFile['oldName'] . $arParams['imgOrigSuFFix'] . '.jpg';
+		$filePath = $arParams['filePath'] . $arFile['name'];
+		$image = imagecreatefromjpeg($filePathFull);
+		if(!$image){ $this->log('onlyEditImages():01'); return; }
+		$result = imagejpeg($image, $filePath, 100);
+		if(!$result){ $this->log('onlyEditImages():02'); return; }
+		unlink($filePathFull);
+		foreach ($arParams['imgDimensions'] as $suffix => $size)
+		{
+			unlink($filePathWithoutExt . $suffix . '.jpg');
+		}
+		$arFile['oldName'] .= '.jpg';
+
+		return $this->editImages([0=>$arFile], $arParams);;
+	}
+	/**
+	 * @param $arData - array()
+	 * @param $arParams - array()
+	 */
 	private function deleteImages($arData, $arParams)
 	{
 		for ($i=0, $n=count($arData); $i<$n; $i++)
@@ -479,7 +520,7 @@ class YiiUploadWidget extends CWidget
 		else
 		{
 			$user = Share::$UserProfile->id;
-			$user = (empty($user) ? ' user:' : ' user:guest') . $user . ' ';
+			$user = (isset($user) ? ' user:' : ' user:guest') . $user . ' ';
 		}
 
 		$result = date('Y-m-d H:i:s') . $user . $log . PHP_EOL;

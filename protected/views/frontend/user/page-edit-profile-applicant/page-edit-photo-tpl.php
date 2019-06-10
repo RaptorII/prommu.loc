@@ -27,17 +27,31 @@
   <? endif; ?>
   <div class="row photo-list">   
     <? if($cntPhotos): ?>
+      <?
+        $arYiiUpload2 = $arYiiUpload;
+        $arYiiUpload2['cssClassButton']='photos__item-edit';
+        $arYiiUpload2['callButtonText']='';
+        $arYiiUpload2['objSaveMethod']='editPhoto';
+      ?>
       <? foreach ($viData['userInfo']['userPhotos'] as $key => $val): ?>
         <div class="col-xs-12 col-sm-4 col-lg-3">
           <div class="photos__item <?=$val['ismain']==1 ? "main" : ''?>">
-            <a href="<?=Share::GetPhoto($profile['id_user'],2,$val['photo'],'big',$profile['isman'])?>" class="photos__item-link">
-              <img src="<?=Share::GetPhoto($profile['id_user'],2,$val['photo'],'medium',$profile['isman'])?>" alt="" class="photos__item-img">
+            <a href="<?=Share::GetPhoto($profile['id_user'],2,$val['photo'],'big',$profile['isman'])?>" class="photos__item-link" title="<?=$val['signature']?>">
+              <img src="<?=Share::GetPhoto($profile['id_user'],2,$val['photo'],'medium',$profile['isman'])?>" class="photos__item-img" alt="<?=$val['signature']?>">
             </a>
             <? if($val['ismain']): ?>
               <span class="photos__item-select active"></span>
             <? else: ?>
               <a href="<?=$this->ViewModel->replaceInUrl('','dm',$val['id'])?>" class="photos__item-select js-g-hashint" title="Установить"></a>
             <? endif; ?>
+            <?
+              $arYiiUpload2['arEditImage'] = [
+                  'url'=>Share::GetPhoto($profile['id_user'],2,$val['photo'],'big',$profile['isman']),
+                  'signature'=>$val['signature']?:'',
+                  'name'=>$val['photo']
+                ];
+              $this->widget('YiiUploadWidget',$arYiiUpload2); 
+            ?>
             <? if(count($viData['userInfo']['userPhotos']) > 1): ?>
               <a href="<?=$this->ViewModel->replaceInUrl('','del',$val['id'])?>" class="photos__item-delete js-g-hashint" title="Удалить"></a>
             <? endif; ?>

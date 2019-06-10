@@ -82,7 +82,7 @@
 	height: 100%;
 	width: 0;
 }
-.YiiUpload__block.loading>div::after{
+.YiiUpload__block.loading::after{
 	content: '';
 	display: block;
 	position: absolute;

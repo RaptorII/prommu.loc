@@ -913,7 +913,7 @@ class UserProfileEmpl extends UserProfile
         if(Yii::app()->getRequest()->getParam('ep')==1) // для страницы Мои фото этого достаточно
         {
             $arRes['userPhotos'] = Yii::app()->db->createCommand()
-                            ->select('up.id, up.photo, e.logo')
+                            ->select('up.id, up.photo, up.signature, e.logo')
                             ->from('user_photos up')
                             ->rightjoin('employer e', 'e.id=up.id_empl')
                             ->where('e.id_user=:id',[':id'=>$id])
@@ -1697,7 +1697,10 @@ class UserProfileEmpl extends UserProfile
                     'id_user' => $this->id,
                     'npp' => ++$query['npp'],
                     'photo' => $file,
-                    'signature' => $arData['files'][$i]['signature']
+                    'signature' => filter_var(
+                        $arData['files'][$i]['signature'],
+                        FILTER_SANITIZE_FULL_SPECIAL_CHARS
+                    )
                 ];
         }
         // записываем в user_photos одним запросом
@@ -1707,5 +1710,45 @@ class UserProfileEmpl extends UserProfile
             ->update('user', ['ismoder'=>0], 'id_user=:id', [':id'=>$this->id]);
         // уведомляем админа по почте
         Mailing::set(1, ['id_user'=>$this->id], 3);
+    }
+    /**
+     *  сохранение данных с помощью виджета
+     * @param $arData - array ['files'=>[0=>['name','oldname','path','linkTag','isImg','imgTag','signature']...]]
+     */
+    public function editPhoto($arData)
+    {
+        $query = Yii::app()->db->createCommand()
+                    ->select('MAX(npp) npp, COUNT(*) cnt')
+                    ->from('user_photos')
+                    ->where('id_promo=:id',[':id'=>$this->exInfo->eid])
+                    ->queryRow();
+
+        // проверяем на допустимое кол-во фото
+        if($query['cnt']>=$this->photosMax)
+        {
+            return false;
+        }
+
+        $arFile = reset($arData['files']);
+        $oldPhoto = pathinfo($arFile['oldname'], PATHINFO_FILENAME);
+
+        Yii::app()->db->createCommand()
+            ->update(
+                'user_photos',
+                [
+                    'photo' => pathinfo($arFile['name'], PATHINFO_FILENAME),
+                    'signature'=>filter_var(
+                        $arFile['signature'],
+                        FILTER_SANITIZE_FULL_SPECIAL_CHARS
+                    )
+                ],
+                "id_user=:id AND photo='{$oldPhoto}'",
+                [':id'=>$this->id]
+            );
+        // устанавливаем что нужна модерация
+        Yii::app()->db->createCommand()
+            ->update('user', ['ismoder'=>0], 'id_user=:id', [':id'=>$this->id]);
+        // уведомляем админа по почте
+        Mailing::set(1, ['id_user'=>$this->id], 2);
     }
 }
