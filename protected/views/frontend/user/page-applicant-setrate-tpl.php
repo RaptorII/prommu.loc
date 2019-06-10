@@ -1,9 +1,4 @@
 <? $saveResp = $this->ViewModel->getViewData()->saveResp; ?>
-<?/*
-    echo '<pre>';
-    print_r($viData); 
-    echo '</pre>';  
-*/?>
 <? if( $saveResp['saved'] == 1 ): ?>
     <div class="center">
       <h1 class="reviews-block__title"><?= $saveResp['message'] ?></h1>
@@ -71,11 +66,11 @@
       <div class="reviews-applicant-item">
         <div class="row">
           <div class="col-xs-12 col-sm-3">
-            <?php if(Share::isApplicant()): ?>
-              <img src="<?=DS.MainConfig::$PATH_EMPL_LOGO.DS.(!$viData['user']['logo'] ?  'logo.png' : $viData['user']['logo'].'400.jpg')?>" class="rai__img  js-g-hashint" title="<?= $viData['user']['username'] ?>">
-            <?php else: ?>
-              <img src="<?=DS.MainConfig::$PATH_APPLIC_LOGO.DS.(!$viData['user']['logo'] ? MainConfig::$DEF_LOGO : $viData['user']['logo'].'400.jpg')?>" class="rai__img  js-g-hashint" title="<?= $viData['user']['username'] ?>">     
-            <?php endif; ?>
+            <? if(Share::isApplicant()): ?>
+              <img src="<?=Share::getPhoto($viData['user']['idusempl'],3,$viData['user']['logo'])?>" class="rai__img  js-g-hashint" title="<?=$viData['user']['username']?>">
+            <? else: ?>
+              <img src="<?=Share::getPhoto($viData['user']['iduspromo'],2,$viData['user']['logo'],'small',$viData['user']['isman'])?>" class="rai__img  js-g-hashint" title="<?= $viData['user']['username'] ?>">     
+            <? endif; ?>
           </div>
           <div class="col-xs-12 col-sm-9">
             <form action="" method="post" id="F1rate"> 

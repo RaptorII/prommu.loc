@@ -1,124 +1,10 @@
-<?php 
-/*
-<div class='row'>
-
-  <div class='col-xs-12'>
-    <?php if($viData): ?>
-      <div class="responses">
-        <div class="responses__header">
-          <h1 class="responses__header-title">Выставить оценку / Оставить отзыв персоналу, который работал на моих вакансиях</h1>
-        </div>    
-        <div class="responses__list">
-          <?php foreach ($viData as $id => $vac): ?>
-            <div class="responses__item">
-              <a class='responses__item-title' href='<?=MainConfig::$PAGE_VACANCY . DS . $id?>' target="_blank"><?=$vac['title']?><span class="js-hashint responses__item-bdate" title="Дата публикации"><?=$vac['bdate']?></span><span class="responses__item-status js-hashint" title="Статус вакансии"><?=($vac['status'] ? 'Открытая вакансия' : 'Закрытая вакансия')?></span></a>
-              <?php foreach ($vac['resps'] as $idus => $user):?>
-                <div class="responses__item-resps<?=(($user['status']==0 && $user['isresponse']==1) ? ' active' : '')?>">
-                  <div class="responses__resps-content">
-                    <div class="responses__resps-logo">
-                      <?php if( $user['id_vac'] ): ?>
-                        <img src=<?echo DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!$user['photo'] ? ($user['sex'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F) : $user['photo'].'100.jpg')?> alt="">
-                        <span class="responses__cmplt-rate js-hashint" title="Рейтинг уже выставлен"></span>
-                      <?php else: ?>
-                        <a href="<?= MainConfig::$PAGE_SETRATE . DS . $id . DS . $idus ?>" class="js-hashint" title="Оставить отзыв соискателю">
-                          <img src=<?echo DS . MainConfig::$PATH_APPLIC_LOGO . DS . (!$user['photo'] ? ($user['sex'] ? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F) : $user['photo'].'100.jpg')?> alt="">
-                        </a>
-                      <?php endif; ?>
-                    </div>
-                    <div class="responses__resps-data">
-                      <span class="js-hashint" title="номер заявки">(#<?=$user['sid']?>) </span>
-                      <?php if( $user['id_vac'] ): ?>
-                        <span class='black-orange'><?= $user['name'] ?></span>  
-                      <?php else: ?>
-                        <a class='black-orange js-hashint' href="<?= MainConfig::$PAGE_SETRATE . DS . $id . DS . $idus ?>" title="Оставить отзыв соискателю"><?= $user['name'] ?></a>  
-                      <?php endif; ?>                 
-                    </div>                    
-                  </div>
-                  <span class='responses__resps-date js-hashint' title="Дата заявки"> <?= $user['rdate'] ?> </span>
-                  <div class="controls" data-sid="<?= $user['sid'] ?>">
-                    <?php if( $user['status'] == '0'  ): ?>
-                      <div class="btn-black-02-wr"><a href="#" class="view js-hashint" title="Отметить заявку как просмотренная">Просмотреть</a></div>
-                    <?php endif; ?>
-                    <?php if( in_array($user['status'], [6,7]) ): ?>
-                        <?php if( $user['id_vac'] ): ?>
-                          <span>Вы выставили рейтинг данному соискателю</span>
-                        <?php else: ?>
-                          <a href="<?= MainConfig::$PAGE_SETRATE . DS . $id . DS . $idus ?>" class="responses__btn js-hashint" title="Оставить отзыв соискателю">Оставить отзыв</a>
-                        <?php endif; ?>
-                    <?php endif; ?>
-                    <?php if( $user['status'] == '1' || $user['status'] == '0' ): ?>
-                      <div class="btn-green-02-wr">
-                        <a href="#" class="apply js-hashint" title="Подтвердить заявку на вакансию">Утвердить</a>
-                      </div>
-                      <div class="btn-red-02-wr">
-                        <a href="#" class="cancel js-hashint" title="Отклонить заявку на вакансию">Отклонить</a>
-                      </div>
-                    <?php endif; ?>
-                    <?php if( $user['status'] != '4' && $user['status'] != 5 ): ?>
-                      <span class="status hide hint js-hashint" title="Заявка на вакансию подтверждена, ожидайте ответа соискателя">Заявка на вакансию подтверждена</span>
-                    <?php endif; ?>
-                    <?php if( $user['isresponse'] == 1 && $user['status'] == 4 ): ?>
-                      <div class="hint js-hashint" title="Заявка на вакансию подтверждена, ожидайте ответа соискателя">Заявка на вакансию подтверждена</div>
-                    <?php elseif( $user['isresponse'] == 2 && in_array($user['status'], [2,4]) ): ?>
-                      <div class="hint js-hashint" title="Вы отправили приглашение соискателю на вакансию, ожидайте его решения">Приглашение на вакансию отправлено</div>
-                    <?php endif; ?>
-                    <?php if( $user['isresponse'] == 1 && in_array($user['status'], [5]) ): ?>
-                      <span>Заявка на вакансию подтверждена обеими сторонами</span>
-                    <?php elseif( $user['isresponse'] == 2 && in_array($user['status'], [5]) ): ?>
-                      <span>Приглашение на вакансию принято соискателем</span>
-                    <?php endif; ?>
-                  </div>
-                </div>
-              <?php endforeach ?>
-            </div>
-          <?php endforeach; ?>
-        </div>
-      </div>
-      <br />
-      <br />
-      <?php
-        // display pagination
-        $this->widget('CLinkPager', array(
-          'pages' => $pages,
-          'htmlOptions' => array('class' => 'paging-wrapp'),
-          'firstPageLabel' => '1',
-          'prevPageLabel' => 'Назад',
-          'nextPageLabel' => 'Вперед',
-          'header' => '',
-      )) ?>     
-    <?php else: ?>
-      <div class="reviews-lock">
-        <h2 class="rev-lock__title">Уважаемый работодатель,</h2>
-        <p class="rev-lock__text">К сожалению Вы еще не опубликовали ни одной вакансии. (если вакансии есть опубликованные которые по времени еще актуальны - Вы еще не утвердили на свою вакансию ни одного Соискателя).<br><br>Для того чтобы иметь возможность оставить отзыв или выставить Рейтинг - Вам необходимо разместить вакансию в Личном кабинете и утвердить Соискателей, которые отозвались на нее.<br><br>После завершения работы по выбранной вакансии Вы сможете оставить отзыв и оценить всех работников по вопросам которые больше всего интересуют Работодателей - что в дальнейшем поможет другим Вашим коллегам и нашему сервису выявлять лучших или недобросовестных Соискателей.</p>
-        <br>
-        <div class="row rev-lock__emp">
-          <div class="col-xs-12 col-sm-6">
-            <p class="rev-lock__text">Оцениваем Соискателя по таким вопросам:</p>
-            <ul class="rev-lock__list">
-              <li class="rev-lock__list-item"><span>Качество выполненной работы</span></li>
-              <li class="rev-lock__list-item"><span>Контактность</span></li>
-              <li class="rev-lock__list-item"><span>Пунктуальность</span></li>
-            </ul>
-          </div>
-          <div class="col-xs-12 col-sm-6">
-            <div class="rev-lock__social"></div>
-            <div class="rev-lock__planet"></div>
-          </div>
-        </div>
-        <div class="rev-lock__logo"></div>
-        <span class="rev-lock__signature">С наилучшими пожеланиями, команда Промму</span>   
-      </div>
-    <?php endif; ?>
-  </div>
-</div>
-*/?>
 <div class='row'>
   <div class='col-xs-12'>
+    <br/><br/>
     <div class='header-021'>
       <b>Заявки на мои вакансии</b>
     </div>
-    <br />
-    <br />
+    <br/>
 <?php if( $viData['resps'] ): ?>
     <div class="responses">
       <?php foreach ($viData['resps'] as $key => $val): ?>
@@ -133,7 +19,7 @@
                         <div class="inner">
                             <div class="col-xs-12 col-sm-5 empl">
                                 <div class="logo">
-                                    <img src="<?= Yii::app()->Controller->ViewModel->getHtmlLogo($val['photo'], ViewModel::$LOGO_TYPE_APPLIC) ?>" alt="">
+                                    <img src="<?=Share::getPhoto($val['idusr'],2,$val['photo'],'small',$val['isman'])?>" alt="<?=$val['name']?>">
                                 </div>
                               <div class="empl-data">
                                   <div class='fio'>

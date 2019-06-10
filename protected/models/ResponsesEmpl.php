@@ -714,7 +714,7 @@ class ResponsesEmpl extends Responses
                 s.id sid, s.status, s.mdate
                 , e.id, e.title, e.edate
                 , ru.email emailpromo, ru.id_user iduspromo
-                , r.id pid, CONCAT(r.firstname, ' ', r.lastname) username, r.photo logo
+                , r.id pid, CONCAT(r.firstname, ' ', r.lastname) username, r.photo logo, r.isman
                 , rd.id_user, r.rate app_rate, r.rate_neg app_rate_neg
             FROM vacation_stat s
             INNER JOIN empl_vacations e ON e.id = s.id_vac

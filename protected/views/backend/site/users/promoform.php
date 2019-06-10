@@ -9,10 +9,6 @@ $gcs->registerScriptFile('/jslib/magnific-popup/jquery.magnific-popup.min.js', C
 $bUrl = Yii::app()->request->baseUrl;
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/css/template.css');
 
-echo "<pre style='display:none'>";
-print_r($data); 
-echo "</pre>";
-
 echo '<div class="row">';
 echo '<div class="col-xs-12 col-sm-9 col-sm-offset-3 col-md-6 col-md-offset-2">'
     . '<h2>Редактирование соискателя #' . $data['id_user'] . '</h2>'
