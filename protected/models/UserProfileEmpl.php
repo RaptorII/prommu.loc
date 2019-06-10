@@ -303,7 +303,7 @@ class UserProfileEmpl extends UserProfile
                     ->select("count(*)")
                     ->from('empl_vacations')
                     ->where(
-                        'id_user=:id and status=1 and ismoder=100 and in_archive=0 and remdate>=now()',
+                        'id_user=:id and status=0 and ismoder=100 and in_archive=0 and remdate>=now()',
                         [':id'=>$id_user]
                     )
                     ->queryScalar();

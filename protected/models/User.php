@@ -770,15 +770,14 @@ class User extends CActiveRecord
     		->select("r.id, u.id_user, u.login, u.passw, 
     			u.email, u.access_time, u.status, 
     			u.isblocked, u.ismoder, r.firstname,
-    			r.logo, r.lastname, r.name, r.type, r.city"
+    			r.logo, r.lastname, r.name, r.type, r.city, r.rate, r.rate_neg"
     		)
 			->leftjoin('employer r', 'r.id_user=u.id_user')
     		->from('user u')
 		    ->where('u.id_user=:id', array(':id'=>$id))
 		    ->queryRow();
 
-		$result['src'] = '/' . MainConfig::$PATH_EMPL_LOGO . '/' 
-			. (!$result['logo'] ? 'logo.png' : $result['logo'] . '100.jpg');
+		$result['src'] = Share::getPhoto($result['id_user'],3,$result['logo']);
 
 		$attr = Yii::app()->db->createCommand()
 			->select("*")
@@ -795,18 +794,18 @@ class User extends CActiveRecord
 		//
 		// photo
 		$result['photos'] = Yii::app()->db->createCommand()
-			->select("p.id, p.photo")
+			->select("p.id, p.photo, p.signature")
 			->from('employer r')
 			->leftjoin('user_photos p', 'p.id_empl = r.id')
 			->where('r.id=:id', array(':id'=>$result['id']))
 			->queryAll();
 
-		if(sizeof($result['photos'])){
-			foreach($result['photos'] as &$item){
-                $item['orig'] = '/' . MainConfig::$PATH_EMPL_LOGO 
-                	. '/' . $item['photo'] . '000.jpg';	
-				$item['photo'] = '/' . MainConfig::$PATH_EMPL_LOGO 
-                	. '/' . $item['photo'] . '400.jpg';
+		if(sizeof($result['photos']))
+		{
+			foreach($result['photos'] as &$item)
+			{
+				$item['orig'] = Share::getPhoto($result['id_user'], 3, $item['photo'], 'big');
+				$item['photo'] = Share::getPhoto($result['id_user'], 3, $item['photo'], 'medium');
 			}
 			unset($item);
 		}

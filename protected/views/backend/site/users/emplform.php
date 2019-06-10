@@ -21,6 +21,7 @@ echo '<div class="col-xs-12"><div class="row">';
                 . '<li><a href="#tab_photo" aria-controls="tab_photo" role="tab" data-toggle="tab">Фото</a></li>'
                 . '<li><a href="#tab_vacs" aria-controls="tab_vacs" role="tab" data-toggle="tab">Вакансии</a></li>'
                 . '<li><a href="#tab_archive" aria-controls="tab_archive" role="tab" data-toggle="tab">Архив</a></li>'
+                . '<li><a href="#tab_rating" aria-controls="tab_rating" role="tab" data-toggle="tab">Рейтинг</a></li>'
             . '</ul>'
         . '</div>';
     echo '<div class="col-xs-12 col-sm-9 col-md-6">';
@@ -189,8 +190,9 @@ echo '<div role="tabpanel" class="tab-pane fade in" id="tab_photo">';
         foreach ($data['photos'] as $key => $item)
         {
             echo '<div class="col-xs-12 col-sm-6 col-md-4 photos__item">'
-                . '<a class="photos__item-link" href="' . $item['orig'] . '">' 
-                . CHtml::image($item['photo'])
+                . '<a class="photos__item-link" href="' . $item['orig'] 
+                . '" title="' . $item['signature'] . '">' 
+                . CHtml::image($item['photo'],$item['signature'])
                 . '</a>'
                 . '</div>';
         }        
@@ -329,6 +331,124 @@ echo '<div role="tabpanel" class="tab-pane fade in" id="tab_archive">';
         echo '<div class="col-xs-12">У работодателя нет активных вакансий</div>';
     }
     echo '</div>';
+echo '</div>';
+/* 
+*       RATING 
+*/
+echo '<div role="tabpanel" class="tab-pane fade in" id="tab_rating">';
+    echo '<h3>Рейтинг</h3><div class="row"><div class="col-xs-12">';
+    echo Share::getRating($data['rate'],$data['rate_neg']) . '<br><br>';
+    echo '<table class="table table-bordered custom-table">
+            <thead>
+              <tr>
+                <th>Параметр</th>
+                <th>Описание</th>
+                <th>Значения</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Соблюдение сроков оплаты</td>
+                <td>за одну отработанную вакансию</td>
+                <td>+10, 0, -10</td>
+              </tr>
+              <tr>
+                <td>Размер оплаты</td>
+                <td>за одну отработанную вакансию</td>
+                <td>+10, 0, -10</td>
+              </tr>
+              <tr>
+                <td>Четкость постановки задач</td>
+                <td>за одну отработанную вакансию</td>
+                <td>+10, 0, -10</td>
+              </tr>
+              <tr>
+                <td>Четкость требований</td>
+                <td>за одну отработанную вакансию</td>
+                <td>+10, 0, -10</td>
+              </tr>
+              <tr>
+                <td>Контактность</td>
+                <td>за одну отработанную вакансию</td>
+                <td>+10, 0, -10</td>
+              </tr>
+              <tr><td colspan="3"></td></tr>
+              <tr>
+                <td>Отзыв</td>
+                <td>за одну отработанную вакансию</td>
+                <td>+20, -20</td>
+              </tr>
+              <tr><td colspan="3"></td></tr>
+              <tr>
+                <td>Время на сайте</td>
+                <td>за время с начала регистрации</td>
+                <td>кол-во лет * 5</td>
+              </tr>
+              <tr><td colspan="3"></td></tr>
+              <tr>
+                <td>Отработанных вакансий</td>
+                <td>за завершенную вакансию(бонус за каждую такую вакансию)</td>
+                <td>+1</td>
+              </tr>
+              <tr><td colspan="3"></td></tr>
+              <tr>
+                <td>Параметр профиля "Сайт"</td>
+                <td>за заполненное поле</td>
+                <td>+1</td>
+              </tr>
+              <tr>
+                <td>Параметр профиля "Инн"</td>
+                <td>за заполненное поле</td>
+                <td>+2</td>
+              </tr>
+              <tr>
+                <td>Параметр профиля "Юридический адрес"</td>
+                <td>за заполненное поле</td>
+                <td>+2</td>
+              </tr>
+              <tr>
+                <td>Параметр профиля "Городской телефон"</td>
+                <td>за заполненное поле</td>
+                <td>+2</td>
+              </tr>
+              <tr>
+                <td>Параметр профиля "Мессенджер"(viber)</td>
+                <td>за заполненное поле</td>
+                <td>+1</td>
+              </tr>
+              <tr>
+                <td>Параметр профиля "Мессенджер"(whatsapp)</td>
+                <td>за заполненное поле</td>
+                <td>+1</td>
+              </tr>
+              <tr>
+                <td>Параметр профиля "Мессенджер"(telegram)</td>
+                <td>за заполненное поле</td>
+                <td>+1</td>
+              </tr>
+              <tr>
+                <td>Параметр профиля "Мессенджер"(googleallo)</td>
+                <td>за заполненное поле</td>
+                <td>+1</td>
+              </tr>
+              <tr>
+                <td>Параметр профиля "Лого"</td>
+                <td>за загруженное фото</td>
+                <td>+2</td>
+              </tr>
+              <tr>
+                <td>Подтверждение Email</td>
+                <td>за подтвержденную почту</td>
+                <td>+2</td>
+              </tr>
+              <tr>
+                <td>Подтверждение телефона</td>
+                <td>за подтвержденный телефон</td>
+                <td>+2</td>
+              </tr>
+            </tbody>
+          </table>';
+    echo '</div></div>';
 echo '</div>';
             /*
             *

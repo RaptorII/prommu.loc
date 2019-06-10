@@ -964,35 +964,27 @@ class SiteController extends Controller
     // Админка промоутер
     public function actionPromoEdit($id)
     {
-        //die("GOPA!");
-        if(strpos($this->user_access, "Соискатели") === true) {
-            $this->render('access');
-            return;
-        } 
-        
-        if(self::isAuth()) {
-            $model = new User;
-            if(!empty($_POST['User'])) {
-                $model->updatePromo($_POST['User'], $id);
-                $model = new Promo;
-                $model->unsetAttributes();  // clear any default values
-                $model->searchpr();
-        
-                $this->redirect(array('site/users'));
-            }
+        $this->checkAccess("Соискатели");
 
-            (new Promo)->setViewed($id);
-            // --- вывод формы
-            $data = $model->getUser($id);
-            $title = 'Профиль соискателя';
-            $this->setPageTitle($title);
-            $this->breadcrumbs = array(
-                'Соискатели' => array('sect?p=app'), 
-                'Зарегистрированные'=>array('users'),
-                '1'=>$title
-            );
-            $this->render('users/promoform', array('id'=>$id, 'data'=>$data));
+        $model = new User;
+
+        if(!empty($_POST['User']))
+        {
+            $model->updatePromo($_POST['User'], $id);
+            $this->redirect(['site/users']);
         }
+
+        (new Promo)->setViewed($id);
+        // --- вывод формы
+        $data = $model->getUser($id);
+        $title = 'Профиль соискателя';
+        $this->setPageTitle($title);
+        $this->breadcrumbs = array(
+            'Соискатели' => array('sect?p=app'), 
+            'Зарегистрированные'=>array('users'),
+            '1'=>$title
+        );
+        $this->render('users/promoform', array('id'=>$id, 'data'=>$data));
     }
 
    public function actionVacancyCreate()
@@ -1174,31 +1166,28 @@ class SiteController extends Controller
 
     public function actionEmplEdit($id)
     {
-        // if($this->user_access != 1) {
-        //  $this->render('access');
-        //  return;
-        // }
-        if(self::isAuth()) {
-            $model = new User;
-            if(!empty($_POST['User'])) {
+        $this->checkAccess();
 
-                $model->updateEmployer($_POST['User'], $id);
-                $this->redirect(array('site/empl'));
-            }
+        $model = new User;
+        if(!empty($_POST['User']))
+        {
 
-            (new Employer)->setViewed($id);
-            // --- вывод формы
-            $data = $model->getUserEmpl($id);
-            $title = 'Профиль работодателя';
-            $this->setPageTitle($title);
-            $this->breadcrumbs = array(
-                'Работодатели' => array('sect?p=emp'), 
-                'Зарегистрированные'=>array('empl'),
-                '1'=>$title
-            );
-
-            $this->render('users/emplform', array('id'=>$id, 'data'=>$data));
+            $model->updateEmployer($_POST['User'], $id);
+            $this->redirect(array('site/empl'));
         }
+
+        (new Employer)->setViewed($id);
+        // --- вывод формы
+        $data = $model->getUserEmpl($id);
+        $title = 'Профиль работодателя';
+        $this->setPageTitle($title);
+        $this->breadcrumbs = array(
+            'Работодатели' => array('sect?p=emp'), 
+            'Зарегистрированные'=>array('empl'),
+            '1'=>$title
+        );
+
+        $this->render('users/emplform', ['id'=>$id, 'data'=>$data]);
     }
 
    public function actionPromoChangeModer($id)
