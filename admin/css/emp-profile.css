@@ -74,9 +74,8 @@ h4{
 	padding: 35px 0 0 10px;
 	display: block;
 }
-.custom-table tr{
-    background-color: #ffffff;
-}
+.custom-table tr{ background-color: #ffffff; }
+.custom-table td:last-child{ white-space: nowrap; }
 .user__logo img,
 .photos__item img{ border-radius: 50% }
 #tab_rating .-green{ color: green; }

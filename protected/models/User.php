@@ -926,7 +926,7 @@ class User extends CActiveRecord
     				r.comment, r.firstname,r.photo, r.lastname, 
     				DATE_FORMAT(r.birthday,'%d.%m.%Y') as birthday, 
     				r.ismed, r.ishasavto, r.isman, r.aboutme,
-    				r.smart, r.card, r.cardPrommu")
+    				r.smart, r.card, r.cardPrommu, r.rate, r.rate_neg")
 				->leftjoin('resume r', 'r.id_user=u.id_user')
     			->from('user u')
 		    	->where('u.id_user=:id', array(':id'=>$id))
@@ -938,9 +938,7 @@ class User extends CActiveRecord
 			return ['error'=>1];
 		}
 
-		$result['src'] = '/' . MainConfig::$PATH_APPLIC_LOGO 
-			. '/' . ($result['photo'] ? $result['photo'] . '400.jpg' : ($result['isman']
-			? MainConfig::$DEF_LOGO : MainConfig::$DEF_LOGO_F));
+		$result['src'] = Share::getPhoto($result['id_user'],2,$result['photo'],'small',$result['isman']);
 		$result['years'] = date('Y') -  date('Y', strtotime($result['birthday']));
 		$result['years'] .= ' ' . Share::endingYears($result['years']); // возраст
 		//
@@ -997,18 +995,18 @@ class User extends CActiveRecord
 		//
 		// photo
 		$result['photos'] = Yii::app()->db->createCommand()
-			->select("p.id, p.photo")
+			->select("p.id, p.photo, p.signature")
 			->from('resume r')
 			->leftjoin('user_photos p', 'p.id_promo = r.id')
 			->where('p.id_user=:id', array(':id'=>$id))
 			->queryAll();
 
-		if(sizeof($result['photos'])){
-			foreach($result['photos'] as $key => &$item){
-				$item['orig'] = '/' . MainConfig::$PATH_APPLIC_LOGO 
-					. '/' . $item['photo'] . '000.jpg';	
-				$item['photo'] = '/' . MainConfig::$PATH_APPLIC_LOGO 
-					. '/' . $item['photo'] . '400.jpg';			
+		if(sizeof($result['photos']))
+		{
+			foreach($result['photos'] as $key => &$item)
+			{
+				$item['orig'] = Share::getPhoto($result['id_user'],2,$item['photo'],'big',$result['isman']);
+				$item['photo'] = Share::getPhoto($result['id_user'],2,$item['photo'],'medium',$result['isman']);			
 			}
 			unset($item);
 		}

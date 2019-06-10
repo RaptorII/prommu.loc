@@ -24,6 +24,7 @@ echo '<div class="col-xs-12"><div class="row">';
                 . '<li><a href="#tab_seo" aria-controls="tab_seo" role="tab" data-toggle="tab">СЕО</a></li>'
                 . '<li><a href="#tab_photo" aria-controls="tab_photo" role="tab" data-toggle="tab">Фото</a></li>'
                 . '<li><a href="#tab_vacs" aria-controls="tab_vacs" role="tab" data-toggle="tab">Отработанные вакансии</a></li>'
+                . '<li><a href="#tab_rating" aria-controls="tab_rating" role="tab" data-toggle="tab">Рейтинг</a></li>'
             . '</ul>'
         . '</div>';
     echo '<div class="col-xs-12 col-sm-9 col-md-6">';
@@ -490,8 +491,9 @@ echo '<div role="tabpanel" class="tab-pane fade" id="tab_photo">';
         foreach ($data['photos'] as $key => $item)
         {
             echo '<div class="col-xs-12 col-sm-6 col-md-4 photos__item">'
-                . '<a class="photos__item-link" href="' . $item['orig'] . '">' 
-                . CHtml::image($item['photo'])
+                . '<a class="photos__item-link" href="' . $item['orig'] 
+                . '" title="' . $item['signature'] . '">' 
+                . CHtml::image($item['photo'],$item['signature'])
                 . '</a>'
                 . '</div>';
         }        
@@ -524,6 +526,77 @@ echo '<div role="tabpanel" class="tab-pane fade" id="tab_vacs">';
         echo '<div class="col-xs-12">соискатель еще не работал</div>';
     }
 echo '</div></div>';
+/* 
+*       RATING 
+*/
+echo '<div role="tabpanel" class="tab-pane fade in" id="tab_rating">';
+    echo '<h3>Рейтинг</h3><div class="row"><div class="col-xs-12">';
+    echo Share::getRating($data['rate'],$data['rate_neg']) . '<br><br>';
+    echo '<table class="table table-bordered custom-table">
+            <thead>
+              <tr>
+                <th>Параметр</th>
+                <th>Описание</th>
+                <th>Значения</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Качество выполненной работы(рейтинг)</td>
+                <td>за одну отработанную вакансию</td>
+                <td>+50, 0, -50</td>
+              </tr>
+              <tr>
+                <td>Контактность(рейтинг)</td>
+                <td>за одну отработанную вакансию</td>
+                <td>+50, 0, -50</td>
+              </tr>
+              <tr>
+                <td>Пунктуальность(рейтинг)</td>
+                <td>за одну отработанную вакансию</td>
+                <td>+50, 0, -50</td>
+              </tr>
+              <tr><td colspan="3"></td></tr>
+              <tr>
+                <td>Отзыв</td>
+                <td>за одну отработанную вакансию</td>
+                <td>+40, -40</td>
+              </tr>
+              <tr><td colspan="3"></td></tr>
+              <tr>
+                <td>Время на сайте</td>
+                <td>за время с начала регистрации</td>
+                <td>< 1 года = +2<br>1 - 2 года = +3<br>> 2 лет = +5</td>
+              </tr>
+              <tr><td colspan="3"></td></tr>
+              <tr>
+                <td>Отработанных вакансий</td>
+                <td>за завершенные вакансии, в которых утвержден соискатель</td>
+                <td>1-3в. = +1<br>4-10в. = +2<br>11-25в. = +3<br>26-50в. = +4<br>>50в. = +5</td>
+              </tr>
+              <tr><td colspan="3"></td></tr>
+              <tr>
+                <td>Параметр профиля "Фото"</td>
+                <td>за загруженные фото</td>
+                <td>1 фото = 1<br>> 1 фото = 2</td>
+              </tr>
+              <tr>
+                <td>Подтверждение Email</td>
+                <td>за подтвержденную почту</td>
+                <td>+2</td>
+              </tr>
+              <tr>
+                <td>Подтверждение телефона</td>
+                <td>за подтвержденный телефон</td>
+                <td>+2</td>
+              </tr>
+            </tbody>
+          </table>';
+    echo '</div></div>';
+echo '</div>';
+            /*
+            *
+            */
             /*
             *
             */

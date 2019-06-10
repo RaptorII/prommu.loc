@@ -109,8 +109,9 @@ class UserProfileApplic extends UserProfile
                     ->join('user_photos up','up.id_user=u.id_user')
                     ->where('u.id_user=:id',[':id'=>$id_user])
                     ->queryAll();
-        // по ТЗ если больше 1 фото => 2 бала, если 1 фото => 1 бал         
-        !empty($query[0]['mainphoto']) && $arRes[0] += count($query);
+        // по ТЗ если больше 1 фото => 2 бала, если 1 фото => 1 бал 
+        count($query)>1 && $arRes[0] += 2;
+        count($query)==1 && $arRes[0] += 1;
         $arRes[0] += $query[0]['confirmEmail']; // по ТЗ
         $arRes[0] += $query[0]['confirmPhone']; // по ТЗ
 

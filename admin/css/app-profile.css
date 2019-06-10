@@ -76,3 +76,9 @@ h4{
 	padding: 35px 0 0 10px;
 	display: block;
 }
+.user__logo img,
+.photos__item img{ border-radius: 50% }
+#tab_rating .-green{ color: green; }
+#tab_rating .-red{ color: red; }
+#tab_rating .js-g-hashint{ font-weight: bold; }
+.custom-table td:last-child{ white-space: nowrap; }

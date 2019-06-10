@@ -984,7 +984,7 @@ class SiteController extends Controller
             'Зарегистрированные'=>array('users'),
             '1'=>$title
         );
-        $this->render('users/promoform', array('id'=>$id, 'data'=>$data));
+        $this->render('users/promoform', ['id'=>$id, 'data'=>$data]);
     }
 
    public function actionVacancyCreate()
