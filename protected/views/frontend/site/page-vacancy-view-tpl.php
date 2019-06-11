@@ -128,10 +128,10 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                             <? if ($viData['vac']['cannot-publish']==true): // не заполнены обязательные поля ?>
                                 <p class="erv__header-warning">Необходимо заполнить все обязательные поля *</p>
                             <? else: ?>
-<!--                                --><?// if($isArchiveVac): // архивная вакансия ?>
+                                <? if($isArchiveVac): // архивная вакансия ?>
                                     <a href='<?=MainConfig::$PAGE_VACPUB . "?copy_id={$viData['vac']['id']}" ?>'
                                        class="erv__header-btn prmu-btn"><span>Дублировать вакансию</span></a>
-<!--                                --><?// else: // вакансии зи раздела "Активные" ?>
+                                <? else: // вакансии зи раздела "Активные" ?>
                                     <? if($isCompleteVac): // Завершенные вакансии без рейтинга ?>
                                         <a href='<?=MainConfig::$PAGE_REVIEWS?>' class="erv__header-btn prmu-btn">
                                             <span>Оценить персонал</span>
@@ -935,7 +935,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
         </div>
         <? // блоки для управления локациями
         require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/site/vacancies/vacancy-edit-blocks.php'; ?>
-<!--    --><?php //else: ?>
+    <?php else: ?>
         <?
         /*
         *
@@ -1285,4 +1285,4 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
             </div>
         </div>
     <?php endif; ?>
-<?php //endif; ?>
+<?php endif; ?>
