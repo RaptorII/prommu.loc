@@ -554,7 +554,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 .erv-city__label-name span{
 	position: relative;
 	font-size: 14px;
-	color: #A0A0A0;
+	color: #a0a0a0;
 	font-family: RobotoCondensed-Regular, verdana, arial;
 	background-color: #FFFFFF;
 	z-index: 1;

@@ -128,10 +128,10 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                             <? if ($viData['vac']['cannot-publish']==true): // не заполнены обязательные поля ?>
                                 <p class="erv__header-warning">Необходимо заполнить все обязательные поля *</p>
                             <? else: ?>
-                                <? if($isArchiveVac): // архивная вакансия ?>
+<!--                                --><?// if($isArchiveVac): // архивная вакансия ?>
                                     <a href='<?=MainConfig::$PAGE_VACPUB . "?copy_id={$viData['vac']['id']}" ?>'
                                        class="erv__header-btn prmu-btn"><span>Дублировать вакансию</span></a>
-                                <? else: // вакансии зи раздела "Активные" ?>
+<!--                                --><?// else: // вакансии зи раздела "Активные" ?>
                                     <? if($isCompleteVac): // Завершенные вакансии без рейтинга ?>
                                         <a href='<?=MainConfig::$PAGE_REVIEWS?>' class="erv__header-btn prmu-btn">
                                             <span>Оценить персонал</span>
@@ -380,10 +380,10 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                             ?>
                             <div class="erv__label erv__label-tbl"
                                  data-focus="Значение 'от' должно быть больше 14 и меньше значения 'до'">
-                                <div>
-                                    <span class="erv__input-name">Возраст</span>
+                                <div class="erv__label-wrap">
+                                    <span class="erv__input-name">Возраст <span style="color:red;">*</span></span>
                                     <label class="erv__label-age">
-                                        <span class="erv__input-name">от*</span>
+                                        <span class="erv__input-name">от</span>
                                         <input type="text" name="age-from"
                                                class="erv__input erv__required erv__input-mini"
                                                id="rv-age-from" value="<?= $viData['vac']['agefrom'] ?>">
@@ -399,8 +399,8 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                                 <?
                                 //  ПОЛ
                                 ?>
-                                <div>
-                                    <span class="erv__input-name">Пол *</span>
+                                <div class="erv__label-wrap">
+                                    <span class="erv__input-name">Пол <span style="color:red;">*</span></span>
                                     <input type="checkbox" name="mans" class="erv__input erv__required erv__hidden"
                                            id="rv-sex-man" value="1" <?= ($viData['vac']['isman'] ? 'checked' : '') ?>>
                                     <label class="erv__label-checkbox" for="rv-sex-man">Мужчина</label>
@@ -414,17 +414,17 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                             //  Прочее
                             ?>
                             <div class="erv__label erv__label-tbl">
-                                <div>
+                                <div class="erv__label-wrap">
                                     <input type="checkbox" name="ismed" class="erv__input erv__hidden" id="rv-med-note"
                                            value="1" <?= ($viData['vac']['ismed'] ? 'checked' : '') ?>>
                                     <label class="erv__label-checkbox" for="rv-med-note">Медкнижка</label>
                                 </div>
-                                <div>
+                                <div class="erv__label-wrap">
                                     <input type="checkbox" name="isavto" class="erv__input erv__hidden" id="rv-auto"
                                            value="1" <?= ($viData['vac']['isavto'] ? 'checked' : '') ?>>
                                     <label class="erv__label-checkbox" for="rv-auto">Автомобиль</label>
                                 </div>
-                                <div>
+                                <div class="erv__label-wrap">
                                     <input type="checkbox" name="smart" class="erv__input erv__hidden" id="rv-smart"
                                            value="1" <?= ($viData['vac']['smart'] ? 'checked' : '') ?>>
                                     <label class="erv__label-checkbox" for="rv-smart">Смартфон</label>
@@ -647,7 +647,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                             <a href="<?= MainConfig::$PAGE_VACANCY_EDIT . DS . $viData['vac']['id'] ?>?bl=2"
                                class="erv__module-reg js-g-hashint" title="Править данные"></a>
                             <div class="erv__label erv__salary">
-                                <div class="erv__input-name erv__salary-name">Заработная плата *</div>
+                                <div class="erv__input-name erv__salary-name">Заработная плата <span style="color:red;">*</span></div>
                                 <div class="erv__salary-inputs">
                                     <label class="erv__input-name erv__quarter-item">
                                         <input type="text" class="erv__input erv__required erv__input-salary"
@@ -935,7 +935,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
         </div>
         <? // блоки для управления локациями
         require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/site/vacancies/vacancy-edit-blocks.php'; ?>
-    <?php else: ?>
+<!--    --><?php //else: ?>
         <?
         /*
         *
@@ -1285,4 +1285,4 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
             </div>
         </div>
     <?php endif; ?>
-<?php endif; ?>
+<?php //endif; ?>

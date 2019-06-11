@@ -1264,3 +1264,26 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	.erv-city__label-name:after{ display: block }
 	.erv-city__label-input{ width: 250px }
 }
+
+
+@media  (max-width: 767px) {
+	#DiContent.page-vacancy .erv__label-checkbox,
+	.erv__label:before,
+	.erv__label-half:before,
+	.erv__label-half input::placeholder,
+	.erv__input-name,
+	.erv__label-checkbox,
+	.erv__input-name,
+	.erv-city__label-name span {color: #5A5A5A;}
+
+}
+@media  (min-width: 768px) {
+	#DiContent.page-vacancy .erv__label-checkbox,
+	.erv__label:before,
+	.erv__label-half:before,
+	.erv__input-name,
+	.erv__label-checkbox,
+	.erv__input-name,
+	.erv-city__label-name span {color: #A0A0A0;}
+
+}
