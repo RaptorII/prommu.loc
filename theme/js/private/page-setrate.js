@@ -1,77 +1,144 @@
+'use strict'
 $(function(){
-	var arRate = $('.rai__table tr');
-	//
-	//	event send form
-	//
-	$('.rai__btn').click(function(e){
-		e.preventDefault();
-		
-		checkRates();
-		checkReviews();
-		checkTextField();
+	// tab evant
+	$('.rai__b-subtitle').click(function(){
+		let parent = $(this).closest('.rai__b-tab'),
+				content = $(this).siblings('.rai__b-tab-content');
 
-		errors = $('.error');
-		if(errors.length==0){
-			$('#F1rate').submit();
+		if($(parent).hasClass('enable'))
+		{
+			$(content).fadeOut();
+			setTimeout(function(){ $(parent).removeClass('enable') },500);
+		}
+		else
+		{
+			$(content).fadeIn();
+			setTimeout(function(){ $(parent).addClass('enable') },500);
 		}
 	});
-	$('.rai__table input').change(function(){ checkRates(this) });
-	$('.rai__review-area').keyup(function(){ checkTextField(this) });		
+	//
+	// events
+	//
+	// rating
+	$('.rai-table__cnt input').change(function(){
+		checkRating(false);
+	});
+	// submit
+	$('#send_rating').click(function(e){
+		e.preventDefault();
+		let rating = checkRating(true),
+				review = checkReview(1),
+				reviewPromu = checkReview(2),
+				arErrors = $('#form_rating .error');
+
+		if(!rating && !review && !reviewPromu)
+		{
+			console.log(0);
+			$('.rai__b-tab').addClass('enable');
+			$('.rai__b-tab-content').fadeIn();
+			return false;
+		}
+		if(arErrors.length)
+		{
+			return false;
+		}
+		$('#form_rating').submit();
+	});
+	// input in textarea
+	$('.rai__review-area').on('input',function(){
+		let v = $(this).val().trim();
+		!v.length ? $(this).addClass('error') : $(this).removeClass('error');
+	});
+	// blur of textarea
+	$('.rai__review-area').on('blur',function(){
+		let v = $(this).val().trim();
+		$(this).val(v);
+	});
 	//
 	//	functions
 	//
-	function checkRates(e=false){
-		for(var i=0; i<arRate.length; i++){
-			var bChecked = false,
-				bFlag = false,
-				arInputs = $(arRate[i]).find('input');
+	function checkRating(isSendForm)
+	{
+		let arRate = $('.rai__table input'),
+				tab = $('.rai__b-tab:eq(0)'),
+				arRows = $('.rai__table tr'),
+				arCheckedRows = [],
+				cnt = 0;
 
-			for(var j=0; j<arInputs.length; j++){
-				bChecked = arInputs[j].checked ? true : bChecked;
-				bFlag = $(e).is(arInputs[j]) ? true : bFlag;
-			}	
-
-			if(!e){
-				(bChecked && !e) 
-				? $(arRate[i]).removeClass('error') 
-				: $(arRate[i]).addClass('error');			
-			}
-			else if(bChecked && bFlag){
-				$(arRate[i]).removeClass('error');
-			}
-		}
-	}
-	function checkReviews(){
-		var arItems = $('.rai__review-input'),
-				arLabels = $('.rai__review-label');
-
-		if(!arItems[0].checked && !arItems[1].checked){
-			$(arLabels[0]).addClass('error');
-			$(arLabels[1]).addClass('error');
-		}
-		else{
-			$(arLabels[0]).removeClass('error');
-			$(arLabels[1]).removeClass('error');
-		}
-		if(!arItems[2].checked && !arItems[3].checked){
-			$(arLabels[2]).addClass('error');
-			$(arLabels[3]).addClass('error');
-		}
-		else{
-			$(arLabels[2]).removeClass('error');
-			$(arLabels[3]).removeClass('error');
-		}
-	}
-	function checkTextField(){
-		var arItems = $('.rai__review-area');
-
-		if(typeof arguments[0] == 'object')
-			arItems = [arguments[0]];
-
-		$.each(arItems, function(){
-			$(this).val().trim()!=''
-				? $(this).removeClass('error')
-				: $(this).addClass('error');
+		$.each(arRate, function(i,e){
+			$(this).is(':checked') && arCheckedRows.push(Math.floor(i/3));
 		});
+
+		if(!arCheckedRows.length) // ничего не чекалось
+		{
+			$.each(arRows, function(){
+				$(this).removeClass('error');
+			});
+			return false;
+		}
+		else if(arRows.length!=arCheckedRows.length) // если что-то чекнуто
+		{
+			if(isSendForm==true) // показываем ошибки только если отправляется форма
+			{
+				$.each(arRows,function(i,e){
+					$.inArray(i, arCheckedRows)<0
+						? $(this).addClass('error')
+						: $(this).removeClass('error');
+				});
+				$(tab).addClass('enable');
+				$(tab).find('.rai__b-tab-content').fadeIn();
+			}
+			else
+			{
+				$.each(arRows,function(i,e){
+					$.inArray(i, arCheckedRows)>=0 && $(this).removeClass('error');
+				});
+			}
+			return true;
+		}
+		else if(arRows.length==arCheckedRows.length) // если все чекнуто
+		{
+			$.each(arRows,function(i,e){
+				$.inArray(i, arCheckedRows)>=0 && $(this).removeClass('error');
+			});
+			return true;
+		}
+		return false;
+	}
+
+	function checkReview(num)
+	{
+		let tab = $('.rai__b-tab:eq('+num+')'),
+				arRadio = $(tab).find('input'),
+				arLabel = $(tab).find('label'),
+				area = $(tab).find('textarea'),
+				length = $(area).val().trim().length;
+
+		if($(arRadio[0]).is(':checked') || $(arRadio[1]).is(':checked'))
+		{
+			$(arLabel).removeClass('error');
+			if(!length)
+			{
+				$(area).addClass('error');
+				$(tab).addClass('enable');
+				$(tab).find('.rai__b-tab-content').fadeIn();
+			}
+		}
+		else if(length)
+		{
+			$(area).removeClass('error');
+			if(!$(arRadio[0]).is(':checked') && !$(arRadio[1]).is(':checked'))
+			{
+				$(arLabel).addClass('error');
+				$(tab).addClass('enable');
+				$(tab).find('.rai__b-tab-content').fadeIn();
+			}
+		}
+
+		if(!$(arRadio[0]).is(':checked') && !$(arRadio[1]).is(':checked') && !length)
+		{
+			return false;
+		}
+		return true;
 	}
 });

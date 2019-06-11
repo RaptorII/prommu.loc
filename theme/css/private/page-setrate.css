@@ -362,48 +362,58 @@ body #DiSiteWrapp{ height: initial; }*/
 .rai__review-area:-moz-placeholder           {color:#B8B8B8;}
 .rai__review-area:-ms-input-placeholder      {color:#B8B8B8;}
 .rai__review-area:focus{ outline: none; }
-.rai__btn{
-	width: 100%;
-	max-width: 195px;
-	height: 30px;
-	line-height: 30px;
-	padding: 0;
-	font-size: 16px;
-	outline: none;
-	background: #ABB820;
-	border: none;
-	color: #FFFFFF;
-	position: relative;
-	z-index: 1;
-	float: right;
-}
-.rai__btn:before{
-	content: "";
-	position: absolute;
-	z-index: -1;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: #FF6500;
-	-webkit-transform: scaleX(0);
-	transform: scaleX(0);
-	-webkit-transform-origin: 0 50%;
-	transform-origin: 0 50%;
-	-webkit-transition-property: transform;
-	transition-property: transform;
-	-webkit-transition-duration: 0.3s;
-	transition-duration: 0.3s;
-	-webkit-transition-timing-function: ease-out;
-	transition-timing-function: ease-out;
-}
-.rai__btn:hover:before{
-	-webkit-transform: scaleX(1);
-	transform: scaleX(1);	
-}
 #DiContent .reviews-block__title{
 	font-size: 26px;
 	font-weight: normal;
 	margin: 35px 0;
 	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 }
+/* 10-06-2019 */
+.rai__b-tab{
+	margin-bottom: 15px;
+}
+.rai__b-subtitle{
+	background-color: #ededed;
+	padding: 15px 50px 15px 15px;
+	margin: 0;
+	border-radius: 20px;
+	cursor: pointer;
+	position: relative;
+}
+.rai__b-subtitle:after{
+	content: '';
+	width: 15px;
+	height: 15px;
+	position: absolute;
+	top: calc(50% - 7px);
+	right: 17px;
+	background: url(/theme/pic/ico-tri-b.png);
+	-moz-transform: rotate(-90deg);
+	-ms-transform: rotate(-90deg);
+	-webkit-transform: rotate(-90deg);
+	-o-transform: rotate(-90deg);
+	transform: rotate(-90deg);
+	background-size: contain;
+	-webkit-transition: all .3s ease-out;
+	-moz-transition: all .3s ease-out;
+	-o-transition: all .3s ease-out;
+	transition: all .3s ease-out;
+}
+.enable .rai__b-subtitle:after{
+	-moz-transform: rotate(0deg);
+	-ms-transform: rotate(0deg);
+	-webkit-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	transform: rotate(0deg);
+}
+.rai__b-tab-content{
+	padding: 15px 15px 0;
+	margin: 0 20px;
+	position: relative;
+	border: 3px solid #ededed;
+	border-top: 0px;
+	border-bottom-left-radius: 15px;
+	border-bottom-right-radius: 15px;
+	display: none;
+}
+#DiContent .rai__review-area{ border-radius: 5px; }
