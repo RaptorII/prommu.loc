@@ -51,7 +51,7 @@ class Api
                 case 'del_avatar' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->avatarDelete(); break;
                 case 'del_photo' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->photoDelete(); break;
                 
-                case 'push' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPush(); break;
+                case 'push' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getTest(); break;
                 case 'export' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->export(); break;
                 case 'vacancy_own' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getVacancyOwn(); break;
                 case 'vacancy_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getVacancyDataView(); break;
@@ -128,6 +128,12 @@ class Api
         return $data;
     }
     
+    public function getTest(){
+        $model = new Employer();
+        $data = $model->exportEmployers();
+        var_dump($data);
+        Yexcel::makeExcel($data['head'],$data['items'],'export_empls',$data['autosize']);
+    }
     public function getAttrib(){
         $sql = "SELECT
                 d.id
