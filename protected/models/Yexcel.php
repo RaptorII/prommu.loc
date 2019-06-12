@@ -9,7 +9,7 @@ class Yexcel
 	 */
 	public static function makeExcel($arHead, $arRows, $fName='xls_file', $arAutoSize=false)
 	{
-		if(!count($arHead) || !count($arRows)	|| empty(trim($fName)))
+		if(!count($arHead)	|| empty(trim($fName)))
 			return false;
 
 		$phpExcelPath = Yii::getPathOfAlias('ext.yexcel.Classes');
