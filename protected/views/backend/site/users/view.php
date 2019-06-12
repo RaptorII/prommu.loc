@@ -17,7 +17,7 @@
     width: 94px;
 }
 </style>
-<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="#" target="_blank" onclick="export_send()">Экспорт в Excell</a>
+
 <a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="#" target="" onclick="export_delete()">Покончить с ними</a>
 <?php
 echo CHtml::form('/admin/site/UserUpdate?id=0', 'POST', array("id" => "form"));
@@ -233,3 +233,66 @@ echo CHtml::endForm();
     }
     
 </script>
+
+<form method="POST" action="/admin/users?export_xls=Y" id="export_form">
+    <label class="d-label">
+        <span>Даты регистрации</span>
+        <input type="radio" name="export_date" value="create" checked>
+    </label>
+    <div class="row">
+        <div class="col-xs-6">
+            <label class="d-label">
+                <span>Период с</span>
+                <?php
+                    $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                        'name'=>'export_beg_date',
+                        'options'=>['changeMonth'=>true],
+                        'htmlOptions'=>[
+                            'id'=>'export_beg_date',
+                            'class'=>'form-control',
+                            'autocomplete'=>'off'
+                        ]
+                    ));
+                ?>
+            </label>  
+        </div>
+        <div class="col-xs-6">
+            <label class="d-label">
+                <span>по</span>
+                <?php
+                    $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                        'name'=>'export_end_date',
+                        'options'=>['changeMonth'=>true],
+                        'htmlOptions'=>[
+                            'id'=>'export_end_date',
+                            'class'=>'form-control',
+                            'autocomplete'=>'off'
+                        ]
+                    ));
+                ?>
+            </label>  
+        </div>
+        <div class="hidden-xs col-sm-6"></div>
+    </div>
+    <br>
+    <div class="export_form-radio">
+        <label class="d-label">
+            <span>все</span>
+            <input type="radio" name="export_status" value="all" checked>
+        </label>
+        <label class="d-label">
+            <span>активные</span>
+            <input type="radio" name="export_status" value="active">
+        </label>                
+        <label class="d-label">
+            <span>не активные</span>
+            <input type="radio" name="export_status" value="no_active">
+        </label>
+    </div>
+    <br>
+    <div class="text-center">
+        <button type="submit" class="btn btn-success export_start_btn">Выгрузить</button>
+    </div>
+    <div class="export_form-close">&#10006</div>
+</form>
+<div class="bg_veil"></div>
