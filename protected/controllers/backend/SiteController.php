@@ -367,8 +367,20 @@ class SiteController extends Controller
             $this->render('access');
             return;
         } 
-
+    
             $model = new Employer;
+            
+            if(Yii::app()->getRequest()->getParam('export_xls')=='Y')
+            {
+               
+                $data = $model->exportEmployers();
+                if(!$data)
+                {
+                    $this->redirect(['empl']);
+                }
+                Yexcel::makeExcel($data['head'],$data['items'],'export_empls',$data['autosize']); 
+            }
+            
             $model->unsetAttributes();  // clear any default values
             $model->status=3;
             $model->searchempl();
@@ -1333,6 +1345,17 @@ class SiteController extends Controller
             $model->searchpr();
             if(isset($_GET['Promo'])){
                 $model->attributes=$_GET['Promo'];
+            }
+            
+            if(Yii::app()->getRequest()->getParam('export_xls')=='Y')
+            {
+               
+                $data = $model->exportPromos();
+                if(!$data)
+                {
+                    $this->redirect(['users']);
+                }
+                Yexcel::makeExcel($data['head'],$data['items'],'export_promos',$data['autosize']); 
             }
             
             if($_GET['seo']){
