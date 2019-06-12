@@ -372,7 +372,7 @@ class SiteController extends Controller
             
             if(Yii::app()->getRequest()->getParam('export_xls')=='Y')
             {
-               
+                $model = new Employer;
                 $data = $model->exportEmployers();
                 if(!$data)
                 {
