@@ -374,10 +374,10 @@ class SiteController extends Controller
             {
                
                 $data = $model->exportEmployers();
-                if(!$data)
-                {
-                    $this->redirect(['empl']);
-                }
+                // if(!$data)
+                // {
+                //     $this->redirect(['empl']);
+                // }
                 Yexcel::makeExcel($data['head'],$data['items'],'export_empls',$data['autosize']); 
             }
             
