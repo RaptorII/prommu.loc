@@ -1,5 +1,13 @@
 <img style="padding-top:-24px; padding-left: 44%;" src="/admin/logo-sm.png">
 <h3 class="box-title">Администрирование соискателей</h3>
+<br>
+        <div class="pull-right">
+            <?/*<a href="javascript:void(0)" class="btn btn-success" onclick="create()">Создание вакансии</a>*/?>
+            <a href="javascript:void(0)" class="btn btn-success export_btn">Экспорт в Excell</a>
+        </div>
+        <div class="clearfix"></div>
+<br>
+
 <style type="text/css">
     .label-important {
         background: #dd4b39;
