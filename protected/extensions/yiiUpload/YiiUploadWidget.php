@@ -35,7 +35,7 @@ class YiiUploadWidget extends CWidget
 	private $_baseUrl;
 	public  $instanceId;
 	private $dirPermission = 0700; // permission for dir in creating
-	private $defaultImgSize = 1600; // image size in defaukt
+	private $defaultImgSize = 1600; // image size in default
 	
 	public function init()
 	{
