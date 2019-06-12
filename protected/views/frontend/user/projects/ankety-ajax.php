@@ -15,7 +15,7 @@
 				<div class='comm-logo'>
 				<img 
 					alt="<?='Соискатель '.$item['firstname'].' '.$item['lastname'].' prommu.com'?>" 
-					src='<?=Share::getPhoto(2, $item['photo'], 'medium', $item['sex'])?>'>
+					src='<?=Share::getPhoto($item['id_user'], 2, $item['photo'], 'medium', $item['sex'])?>'>
 				<br>
 				<br>
 				<b class="name"><? echo $item['firstname'] . ' ' . $item['lastname'] . ', ' . $item['age']?></b>

@@ -15,7 +15,7 @@
 					<div class="comm-logo__img">
 						<img 
 							alt="<?='Соискатель '.$item['firstname'].' '.$item['lastname'].' prommu.com'?>" 
-							src="<?=Share::getPhoto(2,$item['photo'],'small',$item['sex'])?>">
+							src="<?=Share::getPhoto($item['id_user'],2,$item['photo'],'small',$item['sex'])?>">
 						<? if ($item['is_online']): ?>
 							<span class="promo-list__item-onl"><span>В сети</span></span>
 						<? endif; ?>
