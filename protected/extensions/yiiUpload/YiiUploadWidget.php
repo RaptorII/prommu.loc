@@ -34,7 +34,7 @@ class YiiUploadWidget extends CWidget
 	private $_action;
 	private $_baseUrl;
 	public  $instanceId;
-	private $dirPermission = 0700; // permission for dir in creating
+	private $dirPermission = 0755; // permission for dir in creating
 	private $defaultImgSize = 1600; // image size in default
 	
 	public function init()
@@ -257,7 +257,10 @@ class YiiUploadWidget extends CWidget
 		{ 
 			$arRes['items'][] = $arData[$i]['oldName'];
 			$filePath = $arParams['filePath'] . $arData[$i]['name'];
-			$filePathWithoutExt = substr($filePath, 0, (strlen($filePath)-4)); // without '.jpg'
+			$info = new SplFileInfo($arData[$i]['name']);
+			$type = mb_strtolower($info->getExtension());
+			$typeLen = strlen($type) + 1; // прибавляем точку
+			$filePathWithoutExt = substr($filePath, 0, (strlen($filePath)-$typeLen)); // without '.<type>'
 			$inOutFile = $filePathWithoutExt . 'tmp.jpg';
 
 			if(!file_exists($filePath))
