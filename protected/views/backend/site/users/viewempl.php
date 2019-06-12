@@ -29,6 +29,11 @@
         width: 60px;
     }
     .manager.glyphicon-envelope{ cursor:pointer }
+    .user_logo img{
+        width: 100%;
+        height: auto;
+        border-radius: 50%;
+    }
 </style>
 <a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="#" target="" onclick="export_delete()">Покончить с ними</a>
 <?php
@@ -50,12 +55,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'checkBoxHtmlOptions' => array('class' => 'checkclass'),
             'value' => '$data->id_user',
         ),
-        // array(
-        //     'header'=>'Добавлен',
-        //     'name' => 'admin',
-        //     'value' => '$data->admin',
-        //     'type' => 'raw',
-        // ),
         array(
             'header' => 'id',
             'name' => 'id',
@@ -88,9 +87,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type' => 'raw',
         ),
         array(
-            'header'=> 'Лого',
-            'name' => 'type',
-            'value' => 'ShowLogo($data->logo)',
+            'header'=> 'Фото',
+            'name' => 'logo',
+            'value' => 'ShowLogo($data->id_user,$data->logo)',
             'type' => 'raw',
         ),
         array(
@@ -117,7 +116,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'name' => 'ismoder',
             'value' => 'ShowStatus($data->id_user, $data->ismoder)',
             'type' => 'raw',
-            // 'htmlOptions' => array('style' => 'width: 50px; text-align: center;', 'class' => 'sorting')
         ),
      array(
           'header'=>'Статус',
@@ -145,8 +143,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type' => 'html',
             'htmlOptions' => array('style' => 'text-align:center;vertical-align:middle'),
             'filter' => '',
-        ),      
-
+        ),
 )));
 
 echo CHtml::submitButton('Создать',array("class"=>"btn btn-success","id"=>"btn_submit", "style"=>"visibility:hidden"));
@@ -154,12 +151,12 @@ echo CHtml::endForm();
 
 
 
-function ShowLogo($photo)
+function ShowLogo($id_user,$photo)
 {   
-    if($photo !=''){
-       return  '<a target="_black" href="/images/company/tmp/' . $photo . '400.jpg" type="button" class="btn btn-default">Лого</a> ';
-    }
-    else  return  'нету ';
+    $src = Share::getPhoto($id_user,2,$photo,'small');
+    $srcBig = Share::getPhoto($id_user,2,$photo,'big');
+    return (!$srcBig ? '-' 
+        : CHtml::link(CHtml::image($src),$srcBig,['class'=>'user_logo']));
 }
 
 function ShowBlocked($blocked, $id_user)

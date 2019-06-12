@@ -29,6 +29,17 @@
     border: #ecf0f5;
     width: 94px;
 }
+    .user_logo{
+        width: 70px;
+        max-width: 70px;
+        display: block;
+        margin: 0 auto;
+    }
+    .user_logo img{
+        width: 100%;
+        height: auto;
+        border-radius: 50%;
+    }
 </style>
 
 <a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="#" target="" onclick="export_delete()">Покончить с ними</a>
@@ -49,12 +60,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'checkBoxHtmlOptions' => array('class' => 'checkclass'),
             'value' => '$data->id_user',
         ),
-        //  array(
-        //     'header'=>'Добавлен',
-        //     'name' => 'admin',
-        //     'value' => '$data->admin',
-        //     'type' => 'raw',
-        // ),
         array(
             'header'=>'Соискатель',
             'name' => 'id',
@@ -82,8 +87,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
        array(
             'header'=>'Фото',
             'name' => 'photo',
-            'value' => 'ShowPhoto($data->photo)',
-            'type' => 'raw',
+            'value' => 'ShowPhoto($data->id_user,$data->photo, $data->isman)',
+            'type' => 'html',
         ),
        array(
             'header'=>'Город',
@@ -172,12 +177,12 @@ function ShowBirthday($id, $birthday)
    else return $birthday;
 }
 
-function ShowPhoto($photo)
-{   
-    if($photo !=''){
-       return  '<a target="_black" href="/images/applic/' . $photo . '400.jpg" type="button" class="btn btn-default">Фото</a> ';
-    }
-    else  return  'нету ';
+function ShowPhoto($id_user,$photo,$sex)
+{
+    $src = Share::getPhoto($id_user,2,$photo,'small',$sex);
+    $srcBig = Share::getPhoto($id_user,2,$photo,'big',$sex);
+    return (!$srcBig ? '-' 
+        : CHtml::link(CHtml::image($src),$srcBig,['class'=>'user_logo']));
 }
 
 function ShowVaccount($id_user)

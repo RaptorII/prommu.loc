@@ -220,6 +220,8 @@ class Promo extends ARModel
 
         $criteria=new CDbCriteria;
         $criteria->compare('id',$this->id, true);
+        $criteria->compare('id_user',$this->id, true);
+        $criteria->compare('isman',$this->id, true);
         $criteria->compare('firstname',$this->firstname, true);
         $criteria->compare('lastname',$this->lastname, true); 
         $criteria->compare('city',$this->city, true);
