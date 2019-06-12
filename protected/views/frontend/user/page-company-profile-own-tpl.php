@@ -20,21 +20,20 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
   <div class='col-xs-12 col-sm-4 col-lg-3 no-md-relat ppe__logo'>
     <div class="upp__img-block">
       <div class="upp__img-block-main">
-        <?php $hasphoto = $viData['userInfo']['logo']; ?>
-        <?php if( $hasphoto ): ?>
+        <?
+          $bigSrc = Share::getPhoto($id, 3, $viData['userInfo']['logo'], 'big');
+          $src = Share::getPhoto($id, 3, $viData['userInfo']['logo'], 'small');
+        ?>
+        <? if($viData['userInfo']['logo'] && $bigSrc): ?>
           <a 
-            href="<?=Share::getPhoto($id, 3, $hasphoto, 'big')?>"
+            href="<?=$bigSrc?>"
             class="js-g-hashint upp__img-block-main-link profile__logo-full"
             title="<?=$viData['userInfo']['name']?>">
-            <img 
-              src="<?=Share::getPhoto($id, 3, $hasphoto, 'small')?>"
-              alt="Работодатель <?=$viData['userInfo']['name']?> prommu.com">
+            <img src="<?=$src?>" alt="Работодатель <?=$viData['userInfo']['name']?> prommu.com">
           </a>
-        <?php else: ?>
-          <img 
-            src="<?=Share::getPhoto($id, 3, $hasphoto, 'small')?>"
-            alt="Работодатель <?=$viData['userInfo']['name']?> prommu.com">
-        <?php endif; ?>
+        <? else: ?>
+          <img src="<?=$src?>" alt="Работодатель <?=$viData['userInfo']['name']?> prommu.com">
+        <? endif; ?>
         <?if( $flagOwnProfile ):?>
           <a href="/user/editprofile?ep=1" class="upp__change-logo">Изменить аватар</a>
         <?php elseif($viData['userInfo']['is_online']): ?>
@@ -44,13 +43,17 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
     </div>
     <div class="upp__logo-more">
       <? $i=0; ?>
-      <?php foreach ($viData['userPhotos'] as $key => $val): ?>
+      <? foreach ($viData['userPhotos'] as $key => $val): ?>
+        <?
+          $bigSrc = Share::getPhoto($id, 3, $val['photo'], 'big');
+          $src = Share::getPhoto($id, 3, $val['photo'], 'small');
+          if(!$val['photo'] || !$bigSrc)
+            continue;
+        ?>
         <div class="upp__img-block-more <?=($i>2?'off':'')?>">
-          <a 
-            href="<?=Share::getPhoto($id, 3, $val['photo'], 'big')?>" 
-            class="profile__logo-full">
+          <a href="<?=$bigSrc?>" class="profile__logo-full">
             <img 
-              src="<?=Share::getPhoto($id, 3, $val['photo'], 'small')?>"
+              src="<?=$src?>"
               alt="Соискатель <?=$viData['userInfo']['name']?> prommu.com">
           </a>
         </div>
@@ -58,7 +61,7 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
           <span class="upp-logo-more__link">Смотреть еще</span>
         <? endif; ?>
         <? $i++; ?>
-      <?php endforeach; ?>
+      <? endforeach; ?>
       <div class="clearfix"></div> 
     </div>
     <? if(!$flagOwnProfile): ?>

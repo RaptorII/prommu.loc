@@ -717,6 +717,7 @@ class Share
             {
                 $src = MainConfig::$LOGO_EMPLOYER;
             }
+            $size=='big' && $src=false; // если фото нет то полноэкранно ничего не показываем
         }
         return $src;
     }

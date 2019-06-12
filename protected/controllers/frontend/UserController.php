@@ -1800,4 +1800,13 @@ class UserController extends AppController
                 ));
       
     }
+    /**
+     *  самозанятый
+     */
+    public function actionSelf_employed()
+    {
+        Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
+        $this->render('self-employed');
+    }
+    
 }

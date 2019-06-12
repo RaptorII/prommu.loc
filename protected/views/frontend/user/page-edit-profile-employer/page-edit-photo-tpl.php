@@ -32,27 +32,34 @@
         $arYiiUpload2['callButtonText']='';
         $arYiiUpload2['objSaveMethod']='editPhoto';
       ?>
-      <? foreach ($viData['userPhotos'] as $key => $val): ?>
+      <? foreach ($viData['userPhotos'] as $key => $v): ?>
         <div class="col-xs-12 col-sm-4 col-lg-3">
-          <div class="photos__item <?=$val['ismain']==1 ? "main" : ''?>">
-            <a href="<?=$val['src_big']?>" class="photos__item-link" title="<?=$val['signature']?>">
-              <img src="<?=$val['src_small']?>" alt="<?=$val['signature']?>" class="photos__item-img">
-            </a>
-            <? if($val['ismain']): ?>
-              <span class="photos__item-select active"></span>
+          <div class="photos__item <?=$v['ismain']==1 ? "main" : ''?>">
+            <? if(!$v['photo'] || !$v['src_big']): // фото отсутствует и не редактируется ?>
+              <span class="photos__item-nolink" title="<?=$v['signature']?>">
+                <img src="<?=$v['src_small']?>" class="photos__item-img" alt="<?=$v['signature']?>">
+              </span>
             <? else: ?>
-              <a href="<?=$this->ViewModel->replaceInUrl('','dm',$val['id'])?>" class="photos__item-select js-g-hashint" title="Установить"></a>
+              <a href="<?=$v['src_big']?>" class="photos__item-link" title="<?=$v['signature']?>">
+                <img src="<?=$v['src_small']?>" alt="<?=$v['signature']?>" class="photos__item-img">
+              </a>
+              <? // кнопка редактирования фото
+                $arYiiUpload2['arEditImage'] = [
+                    'url' => $v['src_big'],
+                    'signature' => $v['signature'],
+                    'name' => $v['photo']
+                  ];
+                $this->widget('YiiUploadWidget',$arYiiUpload2); 
+              ?>
+              <? if(!$v['ismain']): // показываем что можно установить в качестве лого ?>
+                <a href="<?=$this->ViewModel->replaceInUrl('','dm',$v['id'])?>" class="photos__item-select js-g-hashint" title="Установить"></a>
+              <? endif; ?>
             <? endif; ?>
-            <?
-              $arYiiUpload2['arEditImage'] = [
-                  'url'=>$val['src_big'],
-                  'signature'=>$val['signature'],
-                  'name'=>$val['photo']
-                ];
-              $this->widget('YiiUploadWidget',$arYiiUpload2); 
-            ?>
-            <? if(count($viData['userPhotos']) > 1): ?>
-              <a href="<?=$this->ViewModel->replaceInUrl('','del',$val['id'])?>" class="photos__item-delete js-g-hashint" title="Удалить"></a>
+            <? if($v['ismain']): // показываем что это лого ?>
+              <span class="photos__item-select active"></span>
+            <? endif; ?>
+            <? if(count($viData['userPhotos']) > 1): // удалять можно если фото больше чем 1 ?>
+              <a href="<?=$this->ViewModel->replaceInUrl('','del',$v['id'])?>" class="photos__item-delete js-g-hashint" title="Удалить"></a>
             <? endif; ?>
           </div>
         </div>

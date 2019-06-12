@@ -277,4 +277,6 @@ class MainConfig
     public static $PAGE_APPLICANT_VACS_LIST = '/user/vacancies';
     public static $PAGE_APPLICANT_VACS_LIST_ARCHIVE = '/user/vacancies/archive';
     public static $VIEW_APPLICANT_VACS_ITEM = 'vacancies/applicant-item';
+    /* */
+    public static $VIEW_SELF_EMPLOYED = 'self_employed';
 }

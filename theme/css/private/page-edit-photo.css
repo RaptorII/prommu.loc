@@ -166,6 +166,7 @@
     margin: 0 auto 30px;
     position: relative;
 }
+.photos__item .photos__item-nolink,
 .photos__item .photos__item-link{
     width: 100%;
     display: block;
@@ -179,6 +180,7 @@
     transition: all .5s ease-out;
 }
 .photos__item a:focus{ outline: none }
+.photos__item.main .photos__item-nolink:after,
 .photos__item.main .photos__item-link:after{
     content: '';
     display: block;
@@ -225,6 +227,7 @@
     .photos__item-delete,
     .YiiUpload__call-btn.photos__item-edit{ opacity: 0 }
     .photos__item-link:hover ~ .photos__item-select,
+    .photos__item-nolink:hover ~ .photos__item-delete,
     .photos__item-link:hover ~ .photos__item-delete,
     .photos__item-link:hover ~ .YiiUpload__call-btn.photos__item-edit{ opacity: 0.7 }
 }

@@ -33,27 +33,38 @@
         $arYiiUpload2['callButtonText']='';
         $arYiiUpload2['objSaveMethod']='editPhoto';
       ?>
-      <? foreach ($viData['userInfo']['userPhotos'] as $key => $val): ?>
+      <? foreach ($viData['userInfo']['userPhotos'] as $key => $v): ?>
+        <?
+          $bigSrc = Share::getPhoto($profile['id_user'],2,$v['photo'],'big',$profile['isman']);
+          $src = Share::getPhoto($profile['id_user'],2,$v['photo'],'medium',$profile['isman']);
+        ?>
         <div class="col-xs-12 col-sm-4 col-lg-3">
-          <div class="photos__item <?=$val['ismain']==1 ? "main" : ''?>">
-            <a href="<?=Share::GetPhoto($profile['id_user'],2,$val['photo'],'big',$profile['isman'])?>" class="photos__item-link" title="<?=$val['signature']?>">
-              <img src="<?=Share::GetPhoto($profile['id_user'],2,$val['photo'],'medium',$profile['isman'])?>" class="photos__item-img" alt="<?=$val['signature']?>">
-            </a>
-            <? if($val['ismain']): ?>
-              <span class="photos__item-select active"></span>
+          <div class="photos__item <?=$v['ismain']==1 ? "main" : ''?>">
+            <? if(!$v['photo'] || !$bigSrc): // фото отсутствует и не редактируется ?>
+              <span class="photos__item-nolink" title="<?=$v['signature']?>">
+                <img src="<?=$src?>" class="photos__item-img" alt="<?=$v['signature']?>">
+              </span>
             <? else: ?>
-              <a href="<?=$this->ViewModel->replaceInUrl('','dm',$val['id'])?>" class="photos__item-select js-g-hashint" title="Установить"></a>
+              <a href="<?=$bigSrc?>" class="photos__item-link" title="<?=$v['signature']?>">
+                <img src="<?=$src?>" class="photos__item-img" alt="<?=$v['signature']?>">
+              </a>
+              <? // кнопка редактирования фото
+                $arYiiUpload2['arEditImage'] = [
+                    'url' => $bigSrc,
+                    'signature' => $v['signature']?:'',
+                    'name' => $v['photo']
+                  ];
+                $this->widget('YiiUploadWidget',$arYiiUpload2); 
+              ?>
+              <? if(!$v['ismain']): // показываем что можно установить в качестве лого ?>
+                <a href="<?=$this->ViewModel->replaceInUrl('','dm',$v['id'])?>" class="photos__item-select js-g-hashint" title="Установить"></a>
+              <? endif; ?>
             <? endif; ?>
-            <?
-              $arYiiUpload2['arEditImage'] = [
-                  'url'=>Share::GetPhoto($profile['id_user'],2,$val['photo'],'big',$profile['isman']),
-                  'signature'=>$val['signature']?:'',
-                  'name'=>$val['photo']
-                ];
-              $this->widget('YiiUploadWidget',$arYiiUpload2); 
-            ?>
-            <? if(count($viData['userInfo']['userPhotos']) > 1): ?>
-              <a href="<?=$this->ViewModel->replaceInUrl('','del',$val['id'])?>" class="photos__item-delete js-g-hashint" title="Удалить"></a>
+            <? if($v['ismain']): // показываем что это лого ?>
+              <span class="photos__item-select active"></span>
+            <? endif; ?>
+            <? if(count($viData['userInfo']['userPhotos']) > 1): // удалять можно если фото больше чем 1 ?>
+              <a href="<?=$this->ViewModel->replaceInUrl('','del',$v['id'])?>" class="photos__item-delete js-g-hashint" title="Удалить"></a>
             <? endif; ?>
           </div>
         </div>

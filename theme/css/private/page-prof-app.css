@@ -293,6 +293,7 @@
 .ppp-work-item__logo img{
     display: block;
     width: 100%;
+    border-radius: 50%;
 }
 .ppp-work-item__data{
     display: table-cell;

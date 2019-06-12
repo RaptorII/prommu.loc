@@ -90,16 +90,20 @@
   <?php else: ?>
   <div class="ppp__logo">
     <div class="ppp__logo-main">
-      <? if($attr['photo']): ?>
-        <a href="<?=Share::getPhoto($attr['id_user'], 2, $attr['photo'], 'big', $attr['isman']);?>" class="js-g-hashint ppp-logo-main__link ppp__logo-full" title="<?=$h1title?>">
+      <? 
+        $bigSrc = Share::getPhoto($attr['id_user'], 2, $attr['photo'], 'big', $attr['isman']);
+        $src = Share::getPhoto($attr['id_user'], 2, $attr['photo'], 'medium', $attr['isman']);
+      ?>
+      <? if($attr['photo'] && $bigSrc): ?>
+        <a href="<?=$bigSrc?>" class="js-g-hashint ppp-logo-main__link ppp__logo-full" title="<?=$h1title?>">
           <img 
-            src="<?=Share::getPhoto($attr['id_user'], 2, $attr['photo'], 'medium', $attr['isman']);?>"
+            src="<?=$src?>"
             alt='Соискатель <?=$attr['lastname']?> prommu.com'
             class="ppp-logo-main__img">
         </a>
       <? else: ?>
         <img 
-          src="<?=Share::getPhoto($attr['id_user'], 2, $attr['photo'], 'medium', $attr['isman']);?>"
+          src="<?=$src?>"
           alt='Соискатель <?=$attr['lastname']?> prommu.com'
           class="ppp-logo-main__img">
       <? endif; ?>
@@ -139,23 +143,28 @@
       <?php endif; ?>
     <?endif;?>
     <div class="ppp__logo-more">
-      <?php 
-        $i=0;
-        foreach($info['userPhotos'] as $photo):
-          if($photo['ismain']==0): ?>
-            <div class="ppp-logo__item">
-              <a href="<?=Share::getPhoto($attr['id_user'], 2, $photo['photo'], 'big', $attr['isman'])?>" class="ppp-logo-item__link ppp__logo-full">
-                <img 
-                  src="<?=Share::getPhoto($attr['id_user'], 2, $photo['photo'], 'small', $attr['isman'])?>" 
-                  alt="Соискатель <?=$attr['lastname']?> prommu.com" 
-                  class="ppp-logo-item__img">
-              </a>
-            </div>
-            <?php $i++;
-            if($i==6) break; 
-            if($i==3) echo '<div class="clearfix"></div>';
-          endif;
-        endforeach; ?>
+      <? $i=0; ?>
+      <? foreach($info['userPhotos'] as $v): ?>
+        <?
+          $bigSrc = Share::getPhoto($attr['id_user'], 2, $v['photo'], 'big', $attr['isman']);
+          $src = Share::getPhoto($attr['id_user'], 2, $v['photo'], 'small', $attr['isman']);
+          if(!$v['photo'] || !$bigSrc || $v['ismain']) // если фото нет или фото главное
+            continue;
+        ?>
+        <div class="ppp-logo__item">
+          <a href="<?=$bigSrc?>" class="ppp-logo-item__link ppp__logo-full">
+            <img 
+              src="<?=$src?>" 
+              alt="Соискатель <?=$attr['lastname']?> prommu.com" 
+              class="ppp-logo-item__img">
+          </a>
+        </div>
+        <?
+          $i++;
+          if($i==6) break; 
+          if($i==3) echo '<div class="clearfix"></div>';
+        ?>
+      <? endforeach; ?>
       <div class="clearfix"></div>     
     </div>    
     <div class='center-box'>
