@@ -1,5 +1,25 @@
+<?
+  $bUrl = Yii::app()->request->baseUrl;
+  $gcs = Yii::app()->getClientScript();
+  $gcs->registerCssFile($bUrl . '/css/template.css');
+  $gcs->registerCssFile($bUrl . '/css/vacancy/list.css');
+  $gcs->registerScriptFile($bUrl . '/js/vacancy/list.js', CClientScript::POS_HEAD);
+  Yii::app()->clientScript->registerScript(
+    're-install-date-picker',
+    "function reinstallDatePicker(id, data){
+      $('.grid_date').datepicker(jQuery.extend(jQuery.datepicker.regional['ru'],{changeMonth:true}));
+    }");
+?>
+
 <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=1.0, user-scalable=no">
 <img style="padding-top: : -24px; padding-left: 44%;" src="/admin/logo-sm.png"><h3>Администрирование работодателей</h3>
+<br>
+        <div class="pull-right">
+            <a href="javascript:void(0)" class="btn btn-success export_btn">Экспорт в Excell</a>
+        </div>
+        <div class="clearfix"></div>
+<br>
+
 <style type="text/css">
     .label-important {
         background: #dd4b39;
@@ -10,7 +30,6 @@
     }
     .manager.glyphicon-envelope{ cursor:pointer }
 </style>
-<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="#" target="_blank" onclick="export_send()">Экспорт в Excell</a>
 <a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="#" target="" onclick="export_delete()">Покончить с ними</a>
 <?php
 
@@ -307,3 +326,66 @@ function getManagerMail($e, $id){
         })
     });
 </script>
+
+<form method="POST" action="/admin/empl?export_xls=Y" id="export_form">
+    <label class="d-label">
+        <span>Даты регистрации</span>
+        <input type="radio" name="export_date" value="create" checked>
+    </label>
+    <div class="row">
+        <div class="col-xs-6">
+            <label class="d-label">
+                <span>Период с</span>
+                <?php
+                    $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                        'name'=>'export_beg_date',
+                        'options'=>['changeMonth'=>true],
+                        'htmlOptions'=>[
+                            'id'=>'export_beg_date',
+                            'class'=>'form-control',
+                            'autocomplete'=>'off'
+                        ]
+                    ));
+                ?>
+            </label>  
+        </div>
+        <div class="col-xs-6">
+            <label class="d-label">
+                <span>по</span>
+                <?php
+                    $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                        'name'=>'export_end_date',
+                        'options'=>['changeMonth'=>true],
+                        'htmlOptions'=>[
+                            'id'=>'export_end_date',
+                            'class'=>'form-control',
+                            'autocomplete'=>'off'
+                        ]
+                    ));
+                ?>
+            </label>  
+        </div>
+        <div class="hidden-xs col-sm-6"></div>
+    </div>
+    <br>
+    <div class="export_form-radio">
+        <label class="d-label">
+            <span>все</span>
+            <input type="radio" name="export_status" value="all" checked>
+        </label>
+        <label class="d-label">
+            <span>активные</span>
+            <input type="radio" name="export_status" value="active">
+        </label>                
+        <label class="d-label">
+            <span>не активные</span>
+            <input type="radio" name="export_status" value="no_active">
+        </label>
+    </div>
+    <br>
+    <div class="text-center">
+        <button type="submit" class="btn btn-success export_start_btn">Выгрузить</button>
+    </div>
+    <div class="export_form-close">&#10006</div>
+</form>
+<div class="bg_veil"></div>
