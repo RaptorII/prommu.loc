@@ -20,7 +20,7 @@
 	?>
 	<div class='col-xs-12 col-sm-4 col-lg-3'>
 		<div class="evl__logo">
-			<img src="<?=Share::getPhoto(3,$arUser['logo']);?>" class="evl-logo__img js-g-hashint" title="<?=$arUser['name']?>">
+			<img src="<?=Share::getPhoto($arUser['id_user'],3,$arUser['logo']);?>" class="evl-logo__img js-g-hashint" title="<?=$arUser['name']?>">
 			<ul class="evl-logo__stars"><li class="full"></li></ul>
 			<span class="evl-logo__subtitle"><?=Share::getRating($arUser['rate'], $arUser['rate_neg'])?></span>
 			<? if($cntComments): ?>
