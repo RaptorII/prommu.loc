@@ -687,53 +687,53 @@ class Employer extends ARModel
         $conditions = $params = [];
         $rq = Yii::app()->getRequest();
         
-        $dateType = $rq->getParam('export_date');
-        $bDate = $rq->getParam('export_beg_date');
-        $eDate = $rq->getParam('export_end_date');
-        $status = $rq->getParam('export_status');
-        $bDate = date('Y-m-d',strtotime($bDate));
-        $eDate = date('Y-m-d',strtotime($eDate));
+        // $dateType = $rq->getParam('export_date');
+        // $bDate = $rq->getParam('export_beg_date');
+        // $eDate = $rq->getParam('export_end_date');
+        // $status = $rq->getParam('export_status');
+        // $bDate = date('Y-m-d',strtotime($bDate));
+        // $eDate = date('Y-m-d',strtotime($eDate));
 
-        if($bDate!='1970-01-01')
-        {
-            switch ($dateType)
-            {
-                case 'create': 
-                    $conditions[] = 'ev.crdate>=:bdate';
-                    $params[':bdate'] = $bDate . ' 00:00:00';
-                    break;
-                case 'begin': 
-                    $conditions[] = 'ec.bdate>=:bdate';
-                    $params[':bdate'] = $bDate . ' 00:00:00';
-                    break;
-                case 'end': 
-                    $conditions[] = 'ev.remdate>=:bdate';
-                    $params[':bdate'] = $bDate;
-                    break;
-            }   
-        }
-        if($eDate!='1970-01-01')
-        {
-            switch ($dateType)
-            {
-                case 'create': 
-                    $conditions[] = 'ev.crdate<=:edate';
-                    $params[':edate'] = $eDate . ' 23:59:59';
-                    break;
-                case 'begin': 
-                    $conditions[] = 'ec.bdate<=:edate';
-                    $params[':edate'] = $eDate . ' 23:59:59';
-                    break;
-                case 'end': 
-                    $conditions[] = 'ev.remdate<=:edate';
-                    $params[':edate'] = $eDate;
-                    break;
-            }   
-        }
-        if($status!='all')
-        {
-            $conditions[] = 'ev.status=' . ($status=='active' ? '1' : '0');
-        }
+        // if($bDate!='1970-01-01')
+        // {
+        //     switch ($dateType)
+        //     {
+        //         case 'create': 
+        //             $conditions[] = 'ev.crdate>=:bdate';
+        //             $params[':bdate'] = $bDate . ' 00:00:00';
+        //             break;
+        //         case 'begin': 
+        //             $conditions[] = 'ec.bdate>=:bdate';
+        //             $params[':bdate'] = $bDate . ' 00:00:00';
+        //             break;
+        //         case 'end': 
+        //             $conditions[] = 'ev.remdate>=:bdate';
+        //             $params[':bdate'] = $bDate;
+        //             break;
+        //     }   
+        // }
+        // if($eDate!='1970-01-01')
+        // {
+        //     switch ($dateType)
+        //     {
+        //         case 'create': 
+        //             $conditions[] = 'ev.crdate<=:edate';
+        //             $params[':edate'] = $eDate . ' 23:59:59';
+        //             break;
+        //         case 'begin': 
+        //             $conditions[] = 'ec.bdate<=:edate';
+        //             $params[':edate'] = $eDate . ' 23:59:59';
+        //             break;
+        //         case 'end': 
+        //             $conditions[] = 'ev.remdate<=:edate';
+        //             $params[':edate'] = $eDate;
+        //             break;
+        //     }   
+        // }
+        // if($status!='all')
+        // {
+        //     $conditions[] = 'ev.status=' . ($status=='active' ? '1' : '0');
+        // }
 
         // $arId = $db->createCommand()
         //                         ->select("ev.id")
