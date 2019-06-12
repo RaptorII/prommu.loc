@@ -1,3 +1,16 @@
+<?
+  $bUrl = Yii::app()->request->baseUrl;
+  $gcs = Yii::app()->getClientScript();
+  $gcs->registerCssFile($bUrl . '/css/template.css');
+  $gcs->registerCssFile($bUrl . '/css/vacancy/list.css');
+  $gcs->registerScriptFile($bUrl . '/js/vacancy/list.js', CClientScript::POS_HEAD);
+  Yii::app()->clientScript->registerScript(
+    're-install-date-picker',
+    "function reinstallDatePicker(id, data){
+      $('.grid_date').datepicker(jQuery.extend(jQuery.datepicker.regional['ru'],{changeMonth:true}));
+    }");
+?>
+
 <img style="padding-top:-24px; padding-left: 44%;" src="/admin/logo-sm.png">
 <h3 class="box-title">Администрирование соискателей</h3>
 <br>
