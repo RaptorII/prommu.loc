@@ -631,6 +631,274 @@ class Employer extends ARModel
         readfile($file_name); // считываем файл
         //unlink($file_name); // удаляем файл. то есть когда вы сохраните файл на локальном компе, то после он удалится с сервера
     }
+    
+        /**
+     * экспорт вакансий в админке
+     */
+    public function exportVacancies()
+    {
+        $offset = 0;
+        $limit = 100; // вакансий за 1 итерацию
+        $arRes = array(
+            'items'=>[],
+            'city'=>[],
+            'responses'=>[],
+            'employers'=>[],
+            'views'=>[],
+            'head' => [
+                'ID',
+                'Название компании',
+                'ФИО контактного лица',
+                'Тип компании',
+                'Сайт (урл)',
+                'Фото Ава',
+                'Доп Фото (количество)',
+                'Страна',
+                'Город',
+                'Область',
+                'Тлф',
+                'Е-Меил',
+                'Skype',
+                'WhatsApp',
+                'Viber',
+                'Telegram',
+                'Messeger',
+                'Дата и Время регистрации',
+                'Дата и время Модерации',
+                'Дата и время изменений',
+                'Дата и время Модерации изменений',
+                'Дата и время последнего посещения сайта',
+                'Сколько на сайте всего',
+                'Сколько на сайте Онлайн',
+                'Количество созданных В.',
+                'Количество активных В.',
+                'Количество архивных В.',
+                'Количетсво откликов на В.',
+                'Количество отклонений на В.',
+                'Свои Оценки',
+                'Свои Отзывы',
+                'Оставленные оценки по С.',
+                'Оставленные отзывы по С.',
+                'Использование услуг'
+              ],
+            'autosize' => [0,1,2,3,6,7,8,9,10,11,12,13,14,16]
+          );
+        $db = Yii::app()->db;
+        $conditions = $params = [];
+        $rq = Yii::app()->getRequest();
+        
+        $dateType = $rq->getParam('export_date');
+        $bDate = $rq->getParam('export_beg_date');
+        $eDate = $rq->getParam('export_end_date');
+        $status = $rq->getParam('export_status');
+        $bDate = date('Y-m-d',strtotime($bDate));
+        $eDate = date('Y-m-d',strtotime($eDate));
+
+        if($bDate!='1970-01-01')
+        {
+            switch ($dateType)
+            {
+                case 'create': 
+                    $conditions[] = 'ev.crdate>=:bdate';
+                    $params[':bdate'] = $bDate . ' 00:00:00';
+                    break;
+                case 'begin': 
+                    $conditions[] = 'ec.bdate>=:bdate';
+                    $params[':bdate'] = $bDate . ' 00:00:00';
+                    break;
+                case 'end': 
+                    $conditions[] = 'ev.remdate>=:bdate';
+                    $params[':bdate'] = $bDate;
+                    break;
+            }   
+        }
+        if($eDate!='1970-01-01')
+        {
+            switch ($dateType)
+            {
+                case 'create': 
+                    $conditions[] = 'ev.crdate<=:edate';
+                    $params[':edate'] = $eDate . ' 23:59:59';
+                    break;
+                case 'begin': 
+                    $conditions[] = 'ec.bdate<=:edate';
+                    $params[':edate'] = $eDate . ' 23:59:59';
+                    break;
+                case 'end': 
+                    $conditions[] = 'ev.remdate<=:edate';
+                    $params[':edate'] = $eDate;
+                    break;
+            }   
+        }
+        if($status!='all')
+        {
+            $conditions[] = 'ev.status=' . ($status=='active' ? '1' : '0');
+        }
+
+        // $arId = $db->createCommand()
+        //                         ->select("ev.id")
+        //                         ->from('empl_vacations ev')
+        //                         ->join('empl_city ec','ec.id_vac=ev.id')
+        //                         ->where(implode(' and ',$conditions), $params)
+        //                         ->order('ev.id desc')
+        //                         ->queryColumn();
+
+        // $n = count($arId);
+        // if(!$n)
+        // {
+        //   Yii::app()->user->setFlash('danger', 'Вакансий не найдено');
+        //   return false;
+        // }
+
+        // while ($offset <= $n)
+        // {
+        //   $arNewId = array();
+        //   for ($i = $offset; $i < $n; $i ++)
+        //   {
+        //     if(($i < ($offset + $limit)) && isset($arId[$i]))
+        //       $arNewId[] = $arId[$i];
+        //   }
+        //   //
+        //   // main info
+        //   $query = $db->createCommand()
+        //               ->select("ev.id,
+        //                   ev.id_user,
+        //                   ev.title,
+        //                   ev.index,
+        //                   UNIX_TIMESTAMP(ev.crdate) crdate,
+        //                   UNIX_TIMESTAMP(ev.mdate) mdate,
+        //                   DATE_FORMAT(ev.bdate,'%H:%i %d.%m.%Y') pubdate,
+        //                   DATE_FORMAT(ev.remdate,'%d.%m.%Y') remdate,
+        //                   uad.name post")
+        //               ->from('empl_vacations ev')
+        //               ->leftjoin('empl_attribs ea','ea.id_vac=ev.id')
+        //               ->leftjoin('user_attr_dict uad','uad.id=ea.id_attr')
+        //               ->where(
+        //                 [
+        //                     'and',
+        //                     'uad.id_par=110', // только атрибут должности
+        //                     ['in','ev.id',$arNewId]
+        //                 ]
+        //               )
+        //               ->queryAll();
+        //   $arRes['items'] = array_merge($arRes['items'],$query);
+        //   //
+        //   // cities
+        //   $query = $db->createCommand()
+        //               ->select("ec.id_vac, 
+        //                   c.name,
+        //                   DATE_FORMAT(ec.bdate,'%d.%m.%Y') bdate")
+        //               ->from('empl_city ec')
+        //               ->join('city c','c.id_city=ec.id_city')
+        //               ->where(['in','ec.id_vac',$arNewId])
+        //               ->order('bdate asc')
+        //               ->queryAll();
+
+        //   for ($i=0, $n=count($query); $i<$n; $i++)
+        //     $arRes['city'][$query[$i]['id_vac']][] = $query[$i];
+        //   //
+        //   // responses
+        //   $query = $db->createCommand()
+        //               ->select("id_vac,
+        //                 status,
+        //                 DATE_FORMAT(date,'%H:%i %d.%m.%Y') date")
+        //               ->from('vacation_stat')
+        //               ->where(['in','id_vac',$arNewId])
+        //               ->queryAll();
+
+        //   for ($i=0, $n=count($query); $i<$n; $i++)
+        //         $arRes['responses'][$query[$i]['id_vac']][] = $query[$i];
+
+        //   $offset += $limit;
+        // }
+        // //
+        // // работодатели
+        // $arUser = array();
+        // foreach ($arRes['items'] as $v)
+        //   $arUser[] = $v['id_user'];
+
+        // $query = $db->createCommand()
+        //           ->select("e.id_user, e.name, uc.id_city city, c.region")
+        //           ->from('employer e')
+        //           ->leftjoin('user_city uc','uc.id_user=e.id_user')
+        //           ->leftjoin('city c','c.id_city=uc.id_city')
+        //           ->where(['in','e.id_user',$arUser])
+        //           ->queryAll();
+
+        // foreach ($query as $v)
+        //     $arRes['employers'][$v['id_user']] = $v;
+        // //
+        // // просмотры
+        // $arRes['views'] = Termostat::getTermostatVacanciesViews($arId);
+        // //
+        // // собираем все воедино
+        // $arT = array();
+        // foreach ($arRes['items'] as $k => $v)
+        // {
+        //     $id = $v['id'];
+        //     $employer = $arRes['employers'][$v['id_user']];
+        //     $arT[$id]['id'] = $id;
+        //     $arT[$id]['company'] = $employer['name'];
+        //     $arT[$id]['id_company'] = $v['id_user'];
+        //     $arT[$id]['title'] = $v['title'];
+
+        //     if(!isset($arT[$id]['posts']))
+        //         $arT[$id]['posts'] = $v['post'];
+        //     else
+        //         $arT[$id]['posts'] .= ', ' . $v['post'];
+
+        //     if(!isset($arT[$id]['cities']))
+        //     {
+        //       $arT[$id]['cities'] = '';
+        //       $arCity = array();
+        //       for ($i=0, $n=count($arRes['city'][$id]); $i<$n; $i++)
+        //         $arCity[] = $arRes['city'][$id][$i]['name'];
+        //       $arT[$id]['cities'] = implode(', ', $arCity);
+        //     }
+        //     if(!isset($arT[$id]['domain']))
+        //     {
+        //         $arT[$id]['domain'] = '';
+        //         // список доменов имеет смысл только если открыта для индексации
+        //         if(!$v['index'])
+        //         {
+        //             foreach (Subdomain::getCacheData()->data as $s)
+        //                 if($employer['region']==$s['id'])
+        //                     $arT[$id]['domain'] = $s['url'];
+
+        //             if($employer['region']==Subdomain::domain()->id)
+        //                 $arT[$id]['domain'] = Subdomain::domainSite();
+        //         }
+        //     }
+        //     $arT[$id]['create_date'] = date('d.m.Y',$v['crdate']);
+        //     $arT[$id]['create_time'] = date('G:i',$v['crdate']);
+        //     $arT[$id]['moder_date'] = date('d.m.Y',$v['mdate']);
+        //     $arT[$id]['moder_time'] = date('G:i',$v['mdate']);
+        //     $arT[$id]['pubdate'] = $v['pubdate'];
+        //     $arT[$id]['remdate'] = $v['remdate'];
+        //     $arT[$id]['views'] = $arRes['views'][$id]['count'];
+        //     if(!isset($arT[$id]['responded']))
+        //     {
+        //         $arT[$id]['responded'] = 0;
+        //         $arT[$id]['response_date'] = '';
+        //         $arT[$id]['approved'] = 0;
+        //         if(is_array($arRes['responses'][$id]))
+        //         {
+        //             $arRespDates = [];
+        //             foreach ($arRes['responses'][$id] as $r)
+        //             {
+        //                 $arT[$id]['responded']++;
+        //                 $arRespDates[] = $r['date'];
+        //                 if($r['status']>=Responses::$STATUS_APPLICANT_ACCEPT)
+        //                     $arT[$id]['approved']++;
+        //             }
+        //             $arT[$id]['response_date'] = implode(',  ', $arRespDates);
+        //         }
+        //     }
+        // }
+        // $arRes['items'] = $arT;
+
+        return $arRes;
+    }
 
     /**
      * setViewed
