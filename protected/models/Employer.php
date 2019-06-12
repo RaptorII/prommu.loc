@@ -735,33 +735,34 @@ class Employer extends ARModel
         }
         
          
-        while ($offset <= $n)
-        {
-              $arNewId = array();
-              for ($i = $offset; $i < $n; $i ++)
-              {
-                if(($i < ($offset + $limit)) && isset($arId[$i]))
-                  $arNewId[] = $arId[$i];
-              }
-        }
+        // while ($offset <= $n)
+        // {
+        //       $arNewId = array();
+        //       for ($i = $offset; $i < $n; $i ++)
+        //       {
+        //         if(($i < ($offset + $limit)) && isset($arId[$i]))
+        //           $arNewId[] = $arId[$i];
+        //       }
+        // }
         
-        $query = $db->createCommand()
-                  ->select("e.id, e.id_user, e.name, uc.id_city city, c.region")
-                  ->from('employer e')
-                  ->leftjoin('user_city uc','uc.id_user=e.id_user')
-                  ->leftjoin('city c','c.id_city=uc.id_city')
-                  ->where(['in','e.id',$arNewId])
-                  ->queryAll();
+        
+        // $query = $db->createCommand()
+        //           ->select("e.id, e.id_user, e.name, uc.id_city city, c.region")
+        //           ->from('employer e')
+        //           ->leftjoin('user_city uc','uc.id_user=e.id_user')
+        //           ->leftjoin('city c','c.id_city=uc.id_city')
+        //           ->where(['in','e.id',$arNewId])
+        //           ->queryAll();
                   
-        $arT = array();
-        foreach ($query as $k => $v)
-        {
-            $id = $v['id'];
-            $arT[$id]['id'] = $id;
+        // $arT = array();
+        // foreach ($query as $k => $v)
+        // {
+        //     $id = $v['id'];
+        //     $arT[$id]['id'] = $id;
             
-        }
+        // }
         
-         $arRes['items'] = $arT;
+         $arRes['items'] = $arId;
          
         return $arRes;
     }
