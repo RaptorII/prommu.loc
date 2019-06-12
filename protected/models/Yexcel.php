@@ -43,18 +43,18 @@ class Yexcel
 			next($arCols);
 		}
 		// body
-// 		foreach ($arRows as $arRow)
-// 		{
-// 			$row++;
-// 			reset($arCols);
-// 			foreach ($arRow as $v)
-// 			{
-// 				$cell = current($arCols).$row;
-// 				$objSheet->setCellValue($cell, $v);
-// 				//$objSheet->getColumnDimension(current($arCols))->setAutoSize(true);
-// 				next($arCols);
-// 			}
-// 		}
+		foreach ($arRows as $arRow)
+		{
+			$row++;
+			reset($arCols);
+			foreach ($arRow as $v)
+			{
+				$cell = current($arCols).$row;
+				$objSheet->setCellValue($cell, $v);
+				//$objSheet->getColumnDimension(current($arCols))->setAutoSize(true);
+				next($arCols);
+			}
+		}
 
 		header('Content-Disposition: attachment; filename="' . $fName . '.xlsx"');
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
