@@ -600,7 +600,7 @@ class User extends CActiveRecord
 // 			$content = str_replace('#MANAGER_FIO#', "Гусева Светлана", $content);
 // 			$content = str_replace('#PHONE#', "+74996535185", $content);
 // 			$content = str_replace('#PHONE_MOB#', "+74996535185", $content);
-// 			$content = str_replace('#EMAIL#',"mikekarpenko@gmail.com", $content);
+// 			$content = str_replace('#EMAIL#',"account_manager1@prommu.com", $content);
 // 			$content = str_replace('#COMPANY#', $data['name'], $content);
 //
 // 			$result = Share::sendmail($data['email'], "Prommu: Аккаунт Менеджер", $content);
