@@ -721,7 +721,7 @@ class Employer extends ARModel
         }
         
         $arId = $db->createCommand()
-                                ->select("e.id, e.name, e.contact, e.type")
+                                ->select("e.id, e.name, e.contact, e.type, e.web, e.logo")
                                 ->from('employer e')
                                 ->where(implode(' and ',$conditions), $params)
                                 ->order('e.id desc')
@@ -762,6 +762,17 @@ class Employer extends ARModel
             $arT[$id]['name'] = $v['name'];
             $arT[$id]['contact'] = $v['contact'];
             $arT[$id]['type'] = $v['type'];
+            $arT[$id]['web'] = $v['web'];
+            $arT[$id]['logo'] = "https://files.prommu.com/".$v['logo'].'.jpg';
+            $arT[$id]['photo'] = "photo";
+            $arT[$id]['country'] = "country";
+            $arT[$id]['city'] = "city";
+            $arT[$id]['region'] = "region";
+            $arT[$id]['phone'] = "phone";
+            $arT[$id]['email'] = "email";
+            $arT[$id]['skype'] = "skype";
+            $arT[$id]['skype'] = "skype";
+            $arT[$id]['skype'] = "skype";
             
         }
         
