@@ -800,7 +800,7 @@ class Vacancy extends ARModel
             $arRes = array();
             foreach ($arApplicants as $u)
             {
-                $u['src'] = $host . Share::getPhoto(2,$u['photo'],'xsmall',$u['isman']);
+                $u['src'] = Share::getPhoto($u['id_user'],2,$u['photo'],'small',$u['isman']);
                 $u['link'] = $host . MainConfig::$PAGE_PROFILE_COMMON . '/' . $u['id_user'];
                 $u['name'] = trim($u['firstname'] . ' ' . $u['lastname']);
                 $datetime = new DateTime($u['birthday']);
@@ -2240,7 +2240,7 @@ WHERE id_vac = {$inVacId}";
             elseif(($pay = round($vac['svisit'],0)) > 0)
                 $vac['payment'] = $pay . ' руб/пос';
 
-            $vac['logo_src'] = Share::getPhoto($vac['id_user'], 3, $vac['logo']);
+            $vac['logo_src'] = Share::getPhoto($vac['id_user'], 3, $vac['logo'], 'xsmall');
             $vac['period'] = ' с ' . $vac['crdate'] 
                 . ($vac['remdate'] ? ' по ' . $vac['remdate'] : '');
             $vac['work_type'] = $vac['istemp'] ? 'Постоянная' : 'Временная';
