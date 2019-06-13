@@ -721,7 +721,7 @@ class Employer extends ARModel
         }
         
         $arId = $db->createCommand()
-                                ->select("e.id, e.id_user")
+                                ->select("e.id, e.name, e.contact, e.type")
                                 ->from('employer e')
                                 ->where(implode(' and ',$conditions), $params)
                                 ->order('e.id desc')
@@ -755,12 +755,15 @@ class Employer extends ARModel
         //           ->queryAll();
                   
         // $arT = array();
-        // foreach ($query as $k => $v)
-        // {
-        //     $id = $v['id'];
-        //     $arT[$id]['id'] = $id;
+        foreach ($arId as $k => $v)
+        {
+            $id = $v['id'];
+            $arT[$id]['id'] = $id;
+            $arT[$id]['name'] = $v['name'];
+            $arT[$id]['contact'] = $v['contact'];
+            $arT[$id]['type'] = $v['type'];
             
-        // }
+        }
         
          $arRes['items'] = $arId;
          
