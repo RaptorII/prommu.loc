@@ -1037,38 +1037,38 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                         ?>
                         <div class="sv__attributes-item ico<?= $sex ?>">
                             <div class="sv__attributes-name"><b>Пол:</b></div>
-                            <div class="sv__attributes-val"><?
+                            <div class="sv__attributes-val"><span><?
                                 if ($sex == 16) echo "Мужчины и женщины";
                                 elseif ($sex == 15) echo "Мужчины";
                                 else echo "Женщины";
-                                ?></div>
+                                ?></span></div>
                             <div class="clearfix"></div>
                         </div>
                     <?php endif; ?>
                     <?php if ($vacancy['agefrom'] || $vacancy['ageto']): ?>
                         <div class="sv__attributes-item ico2">
                             <div class="sv__attributes-name"><b>Возраст:</b></div>
-                            <div class="sv__attributes-val"><?
+                            <div class="sv__attributes-val"><span><?
                                 if ($vacancy['agefrom'] && $vacancy['ageto'])
                                     echo 'от ' . $vacancy['agefrom'] . ' до ' . $vacancy['ageto'] . endingR($vacancy['ageto']);
                                 elseif ($vacancy['agefrom'])
                                     echo 'от ' . $vacancy['agefrom'] . endingR($vacancy['agefrom']);
                                 elseif ($vacancy['ageto'])
                                     echo 'до ' . $vacancy['ageto'] . endingR($vacancy['ageto']);
-                                ?></div>
+                                ?></span></div>
                             <div class="clearfix"></div>
                         </div>
                     <?php endif; ?>
                     <?php if ($vacancy['exp']): ?>
                         <div class="sv__attributes-item ico3">
                             <div class="sv__attributes-name"><b>Опыт работы:</b></div>
-                            <div class="sv__attributes-val"><?=Vacancy::$EXPERIENCE[$vacancy['exp']] ?></div>
+                            <div class="sv__attributes-val"><span><?=Vacancy::$EXPERIENCE[$vacancy['exp']] ?></span></div>
                             <div class="clearfix"></div>
                         </div>
                     <?php endif; ?>
                     <div class="sv__attributes-item ico4">
                         <div class="sv__attributes-name"><b>Вид занятости:</b></div>
-                        <div class="sv__attributes-val"><?= $vacancy['istemp'] ? 'Постоянная' : 'Временная' ?></div>
+                        <div class="sv__attributes-val"><span><?= $vacancy['istemp'] ? 'Постоянная' : 'Временная' ?></span></div>
                         <div class="clearfix"></div>
                     </div>
 
@@ -1076,76 +1076,91 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                     <?php if ($attr[10]['val']): ?>
                         <div class="sv__attributes-item ico5">
                             <div class="sv__attributes-name"><b>Вес:</b></div>
-                            <div class="sv__attributes-val">от <?= $attr[10]['val'] ?> кг.</div>
+                            <div class="sv__attributes-val"><span>от <?= $attr[10]['val'] ?> кг.</span></div>
                             <div class="clearfix"></div>
                         </div>
                     <?php endif; ?>
                     <?php if ($attr[9]['val']): ?>
                         <div class="sv__attributes-item ico6">
                             <div class="sv__attributes-name"><b>Рост:</b></div>
-                            <div class="sv__attributes-val">от <?= $attr[9]['val'] ?> см.</div>
+                            <div class="sv__attributes-val"><span>от <?= $attr[9]['val'] ?> см.</span></div>
                             <div class="clearfix"></div>
                         </div>
                     <?php endif; ?>
                     <?php if ($data = $viData['vacAttribs'][$this->ViewModel->isInArray($viData['vacAttribs'], 'idpar', 14)]['name']): ?>
                         <div class="sv__attributes-item ico7">
                             <div class="sv__attributes-name"><b>Объем груди:</b></div>
-                            <div class="sv__attributes-val"><?= $data ?></div>
+                            <div class="sv__attributes-val"><span><?= $data ?></span></div>
                             <div class="clearfix"></div>
                         </div>
                     <?php endif; ?>
                     <?php if ($data = $viData['vacAttribs'][$this->ViewModel->isInArray($viData['vacAttribs'], 'idpar', 15)]['name']): ?>
                         <div class="sv__attributes-item ico8">
                             <div class="sv__attributes-name"><b>Объем талии:</b></div>
-                            <div class="sv__attributes-val"><?= $data ?></div>
+                            <div class="sv__attributes-val"><span><?= $data ?></span></div>
                             <div class="clearfix"></div>
                         </div>
                     <?php endif; ?>
                     <?php if ($data = $viData['vacAttribs'][$this->ViewModel->isInArray($viData['vacAttribs'], 'idpar', 11)]['name']): ?>
                         <div class="sv__attributes-item ico9">
                             <div class="sv__attributes-name"><b>Цвет волос:</b></div>
-                            <div class="sv__attributes-val"><?= $data ?></div>
+                            <div class="sv__attributes-val"><span><?= $data ?></span></div>
                             <div class="clearfix"></div>
                         </div>
                     <?php endif; ?>
                     <?php if ($data = $viData['vacAttribs'][$this->ViewModel->isInArray($viData['vacAttribs'], 'idpar', 13)]['name']): ?>
                         <div class="sv__attributes-item ico10">
                             <div class="sv__attributes-name"><b>Цвет глаз:</b></div>
-                            <div class="sv__attributes-val"><?= $data ?></div>
+                            <div class="sv__attributes-val"><span><?= $data ?></span></div>
                             <div class="clearfix"></div>
                         </div>
                     <?php endif; ?>
                     <?php if ($data = $viData['vacAttribs'][$this->ViewModel->isInArray($viData['vacAttribs'], 'idpar', 12)]['name']): ?>
                         <div class="sv__attributes-item ico14">
                             <div class="sv__attributes-name"><b>Длина волос:</b></div>
-                            <div class="sv__attributes-val"><?= $data ?></div>
+                            <div class="sv__attributes-val"><span><?= $data ?></span></div>
                             <div class="clearfix"></div>
                         </div>
                     <?php endif; ?>
                     <?php if ($data = $viData['vacAttribs'][$this->ViewModel->isInArray($viData['vacAttribs'], 'idpar', 16)]['name']): ?>
                         <div class="sv__attributes-item ico13">
                             <div class="sv__attributes-name"><b>Объем бедер:</b></div>
-                            <div class="sv__attributes-val"><?= $data ?></div>
+                            <div class="sv__attributes-val"><span><?= $data ?></span></div>
                             <div class="clearfix"></div>
                         </div>
                     <?php endif; ?>
                 </div>
                 <div class="sv__checkbox-attr">
-                    <?php if ($vacancy['ismed']): ?>
-                        <div class="sv__checkbox-attr-item med">Медкнижка</div>
-                    <?php endif; ?>
-                    <?php if ($vacancy['isavto']): ?>
-                        <div class="sv__checkbox-attr-item auto">Автомобиль</div>
-                    <?php endif; ?>
-                    <?php if ($vacancy['smart']): ?>
-                        <div class="sv__checkbox-attr-item smart">Смартфон</div>
-                    <?php endif; ?>
-                    <?php if ($vacancy['cardPrommu']): ?>
-                        <div class="sv__checkbox-attr-item pcard">Банк. карта Prommu</div>
-                    <?php endif; ?>
-                    <?php if ($vacancy['card']): ?>
-                        <div class="sv__checkbox-attr-item card">Банк. карта</div>
-                    <?php endif; ?>
+                    <? if ($vacancy['ismed']): ?>
+                        <div class="sv__checkbox-attr-item med">
+                            <i></i>
+                            <span>Медкнижка</span>
+                        </div>
+                    <? endif; ?>
+                    <? if ($vacancy['isavto']): ?>
+                        <div class="sv__checkbox-attr-item auto">
+                            <i></i>
+                            <span>Автомобиль</span>
+                        </div>
+                    <? endif; ?>
+                    <? if ($vacancy['smart']): ?>
+                        <div class="sv__checkbox-attr-item smart">
+                            <i></i>
+                            <span>Смартфон</span>
+                        </div>
+                    <? endif; ?>
+                    <? if ($vacancy['cardPrommu']): ?>
+                        <div class="sv__checkbox-attr-item pcard">
+                            <i></i>
+                            <span>Банковская карта Prommu</span>
+                        </div>
+                    <? endif; ?>
+                    <? if ($vacancy['card']): ?>
+                        <div class="sv__checkbox-attr-item card">
+                            <i></i>
+                            <span>Банковская карта</span>
+                        </div>
+                    <? endif; ?>
                     <div class="clearfix"></div>
                 </div>
 
@@ -1173,7 +1188,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                     <?php if ($data = $viData['vacAttribs'][$this->ViewModel->isInArray($viData['vacAttribs'], 'idpar', 131)]): ?>
                         <div class="sv__attributes-item ico12">
                             <div class="sv__attributes-name"><b>Сроки оплаты:</b></div>
-                            <div class="sv__attributes-val"><?= $data['name'] ?></div>
+                            <div class="sv__attributes-val"><span><?= $data['name'] ?></span></div>
                             <div class="clearfix"></div>
                         </div>
                     <?php endif; ?>
@@ -1265,18 +1280,20 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                         <div class="sv__textblock-text"><?= html_entity_decode($vacancy['requirements']) ?></div>
                     </div>
                 <?php endif; ?>
-                <?php if ($vacancy['conditions']): ?>
+                <? $str = html_entity_decode($vacancy['conditions']); ?>
+                <? if (strlen($str) && $str!=='<br>'): ?>
                     <div class="sv__textblock">
                         <div class="sv__textblock-title ico2"><span>Условия</span></div>
-                        <div class="sv__textblock-text"><?= html_entity_decode($vacancy['conditions']) ?></div>
+                        <div class="sv__textblock-text"><?=$str?></div>
                     </div>
-                <?php endif; ?>
-                <?php if ($vacancy['duties']): ?>
+                <? endif; ?>
+                <? $str = html_entity_decode($vacancy['duties']); ?>
+                <? if (strlen($str) && $str!=='<br>'): ?>
                     <div class="sv__textblock">
                         <div class="sv__textblock-title ico3"><span>Обязанности</span></div>
-                        <div class="sv__textblock-text"><?= html_entity_decode($vacancy['duties']) ?></div>
+                        <div class="sv__textblock-text"><?=$str?></div>
                     </div>
-                <?php endif; ?>
+                <? endif; ?>
                 <div class="center">
                     <div class="sv__data-responce prmu-btn prmu-btn_normal" data-id="<?=$vacancy['id']?>">
                         <span>ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ</span>

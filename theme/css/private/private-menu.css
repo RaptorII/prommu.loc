@@ -231,6 +231,12 @@
     .pa__menu-link:last-child:after{ display: none }
 
 }
+@media (min-width: 992px){
+    .personal-acc__menu-wrap{
+        display: table;
+        width: 100%;
+    }
+}
 @media (min-width: 1200px){
     .pa__menu-item-icon{ width: 30px }
     .pa__menu-link i{ margin: 0 auto }

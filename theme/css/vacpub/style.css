@@ -588,6 +588,7 @@ input:checked + .fav__label-checkbox:after{ content: '\2714'; }
 }
 #av-posts-list li:first-child:hover{ background-color: transparent; }
 #DiContent .fav__select-posts #av-posts-list input{
+	width: 100%;
 	height: 33px;
 	padding: 0 35px 0 15px;
 	color: #343434;

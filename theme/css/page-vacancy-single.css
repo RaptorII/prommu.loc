@@ -90,30 +90,22 @@
 .sv__data-pubdate-item b{ padding-left: 5px }
 /*	*/
 #DiContent .sv__data-subtitle{
-	position: relative;
-	margin: 0 0 15px;
+	margin: 25px 0;
 	position: relative;
 	display: block;
+	text-align: center;
 }
 #DiContent .sv__data-subtitle h3{
 	display: inline-block;
 	margin: 0;
-	padding: 0 10px;
+	padding: 0;
 	color: #ABB837;
 	background-color: #FFFFFF;
 	text-transform: uppercase;
 	font-weight: normal;
-	font-size: 14px;
+	font-size: 18px;
 	position: relative;
 	z-index: 1;
-}
-#DiContent .sv__data-subtitle:after{
-	content: '';
-	width: 100%;
-	position: absolute;
-	top: 11px;
-	left: 0;
-	border-top: 1px solid #ABB837;
 }
 .sv__attributes-item{
 	width: 100%;
@@ -148,7 +140,7 @@
 .sv__attributes-item.ico15:before{ background-position: 0px -630px }
 .sv__attributes-item.ico16:before{ background-position: 0px -660px }
 .sv__attributes-name{
-	width: 65%;
+	width: 48%;
 	float: left;
 	line-height: 35px;
 	font-size: 14px;
@@ -164,39 +156,49 @@
 .sv__attributes-name:before{
 	content: '';
 	top: 22px;
-	right: 2px;
+	right: -90%;
 	left: 0;
 	border-top: 1px dotted #343434;
 	position: absolute;
 	z-index: 0;
 }
 .sv__attributes-val{
-	width: 35%;
+	width: 52%;
 	float: left;
 	padding-top: 8px;
 	font-size: 14px;
+	text-align: right;
+}
+.sv__attributes-val span{
+	background-color: #FFFFFF;
+	position: relative;
 }
 .sv__attributes,
 .sv__checkbox-attr,
 .sv__textblock{ margin: 15px 0 }
-.sv__checkbox-attr-item{
-	width: 33.33%;
-	float: left;
-	vertical-align: middle;
+.sv__checkbox-attr{
+	display: flex;
+	flex-wrap: wrap;
 }
-.sv__checkbox-attr-item:after{
-	content: '';
-	width: 41px;
+.sv__checkbox-attr-item{ 
+	padding: 0 0 5px;
+	display: flex;
+	align-items: center;
+	width: 100%;
+}
+.sv__checkbox-attr-item i{
+	width: 34px;
 	height: 34px;
 	vertical-align: middle;
 	display: inline-block;
 	background: url(/theme/pic/vacancy/vacancy-sprite-big.png) 0 0 no-repeat;
+	margin-right: 5px;
 }
-.sv__checkbox-attr-item.med:after{ background-position: 7px 0px }
-.sv__checkbox-attr-item.auto:after{ background-position: 7px -34px }
-.sv__checkbox-attr-item.smart:after{ background-position: 7px -68px }
-.sv__checkbox-attr-item.pcard:after{ background-position: 3px -138px }
-.sv__checkbox-attr-item.card:after{ background-position: 3px -174px }
+.sv__checkbox-attr-item.med i{ background-position: 0px 0px }
+.sv__checkbox-attr-item.auto i{ background-position: 0px -34px }
+.sv__checkbox-attr-item.smart i{ background-position: 0px -68px }
+.sv__checkbox-attr-item.pcard i{ background-position: 0px -138px }
+.sv__checkbox-attr-item.card i{ background-position: 0px -174px }
 .sv__textblock-title{
 	padding-left: 30px;
 	margin: 20px 0 15px;
@@ -247,15 +249,15 @@
 /*	*/
 .sv__data-line{
 	width: 100%;
-	margin: 15px 0;
+	margin: 5px 0;
 	border-top: 1px solid #CDCDCD;
 }
 .sv__data-city{
 	width: 100%;
 	min-height: 35px;
-	padding-left: 35px;
+	padding-left: 25px;
 	position: relative;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 }
 .sv__data-city:before {
     content: '';
@@ -270,20 +272,10 @@
 .sv__data-city.loc:before{ background-position: 0px -390px }
 .sv__data-city.addr:before{ background-position: 0px -420px }
 .sv__data-city.time:before{ background-position: 0px -450px }
-.sv__data-city:after{
-	content: '';
-	top: 22px;
-	right: 45%;
-	left: 35px;
-	border-top: 1px dotted #343434;
-	position: absolute;
-	z-index: 0;
-}
 .city.sv__data-city:after{ right: 30% }
 .sv__data-city-name{
-	width: 50%;
-	float: left;
 	position: relative;
+	display: block;
 }
 .city .sv__data-city-name{ width: 60% }
 .sv__data-city-name span{
@@ -298,7 +290,7 @@
 	z-index: 1;
 }
 .sv__data-city-val{
-	max-width: 50%;
+	max-width: 55%;
 	float: left;
 	font-size: 18px;
 	text-transform: uppercase;
@@ -520,7 +512,12 @@
 .sv__data-city.addr .sv__data-city-val{ font-weight: normal }
 .sv__data-city.loc .sv__data-city-val,
 .sv__data-city.addr .sv__data-city-val,
-.sv__data-city.time .sv__data-city-val{ padding-right: 0 }
+.sv__data-city.time .sv__data-city-val{ 
+	padding: 0;
+	float: none;
+	max-width: initial;
+	line-height: inherit;
+}
 .sv__data-city.loc .sv__data-city-val:after,
 .sv__data-city.addr .sv__data-city-val:after,
 .sv__data-city.time .sv__data-city-val:after{ display: none; }
@@ -559,21 +556,10 @@
 .vac__error .sv__textblock-text{
 	border: 1px solid red;
 }
-/*
-*		MEDIA
-*/
-@media (min-width: 768px){
-	#DiContent .single-vacancy__logo{
-		width: 30%;
-	}
-	#DiContent .single-vacancy__data{
-		width: 70%;
-		padding-left: 0;
-	}
+.city .sv__data-city-name{
+	display: none;
 }
-/*
-*
-*/
+.sv__data-city.city:after{ content: initial; }
 .sv__data-main,
 .sv__data-responce{ margin-bottom: 15px; }
 .sv__data-responce{ 
@@ -585,4 +571,68 @@
 .sv__data-responce span{
 	display: inline-block;
 	padding: 5px;
+}
+.sv__data-city.city .sv__data-city-val{ max-width: initial; }
+/*
+*		MEDIA
+*/
+@media (min-width: 768px){
+	#DiContent .single-vacancy__logo{
+		width: 30%;
+	}
+	#DiContent .single-vacancy__data{
+		width: 70%;
+		padding-left: 0;
+	}
+	.sv__checkbox-attr-item{ width: 50%; }
+	.city .sv__data-city-name{ display: block; }
+	.sv__data-city.city:after{ content: ''; }
+	.sv__data-city.city .sv__data-city-val{ max-width: 50%; }
+	.sv__data-city:after{
+		content: '';
+		top: 22px;
+		right: 50%;
+		left: 35px;
+		border-top: 1px dotted #343434;
+		position: absolute;
+		z-index: 0;
+	}
+	.sv__data-city{ padding-left: 35px; }
+	.sv__data-city-name{
+		width: 45%;
+		float: left;
+	}
+	.sv__data-city.loc .sv__data-city-val,
+	.sv__data-city.addr .sv__data-city-val,
+	.sv__data-city.time .sv__data-city-val{ 
+		padding: 0 20px 0 5px;
+		max-width: 55%;
+		float: left;
+		line-height: 35px;
+	}
+	#DiContent .sv__data-subtitle:after{
+		content: '';
+		width: 100%;
+		position: absolute;
+		top: 11px;
+		left: 0;
+		border-top: 1px solid #ABB837;
+	}
+	#DiContent .sv__data-subtitle{
+		margin: 0 0 15px;
+		text-align: left;
+	}
+	#DiContent .sv__data-subtitle h3{
+		padding: 0 10px;
+		font-size: 14px;
+	}
+	.sv__attributes-name{ width: 65%; }
+	.sv__attributes-val{ 
+		width: 35%;
+		text-align: left;
+	}
+	.sv__attributes-name:before{ right: 2px; }
+	.sv__data-city{ margin-bottom: 20px; }
+	.sv__data-line{ margin: 15px 0; }
+	.sv__checkbox-attr-item{ padding: 0 5px 5px; }
 }
