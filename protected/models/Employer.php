@@ -787,7 +787,13 @@ class Employer extends ARModel
             $arT[$id]['countarchivevac'] = "countarchivevac";
             $arT[$id]['countinvitevac'] = "countinvitevac";
             $arT[$id]['countresponsevac'] = "countresponsevac";
+            $arT[$id]['countrefusedvac'] = "countrefusedvac";
+            $arT[$id]['countrating'] = "countrating";
+            $arT[$id]['feedback'] = "feedback";
             
+            $arT[$id]['countratingpromo'] = "countrating";
+            $arT[$id]['feedbackpromo'] = "feedback";
+            $arT[$id]['services'] = "services";
         }
         
          $arRes['items'] = $arId;
