@@ -144,7 +144,7 @@ echo '<div class="control-group small-bl">'
                 . CHtml::textField(
                     'User[email]', 
                     $data['email'], 
-                    array('class'=>'form-control','disabled'=>true)
+                    array('class'=>'form-control','disabled'=>false)
                 )
             . '</div>';
     echo '<div class="control-group small-bl">'

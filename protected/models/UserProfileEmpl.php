@@ -720,6 +720,7 @@ class UserProfileEmpl extends UserProfile
                 );
                 Share::sendmail("prommu.servis@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);
                 Share::sendmail("susgresk@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);
+                //Share::sendmail("mikekarpenko@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);
             }
             if($bFlashFlag)
             {
@@ -1290,13 +1291,12 @@ class UserProfileEmpl extends UserProfile
                 'ismoder' => 1,
 //              'date_login' => date('Y-m-d H:i:s'),
             ), 'id_user=:id_user', array(':id_user' => $id));
-    }
+        }
 
             Yii::app()->db->createCommand()
             ->update('user_city', array(
                 'id_city' => $data['city'],
                 ), 'id_user=:id_user', array(':id_user' => $id));
-
 
             Yii::app()->db->createCommand()
             ->update('employer', array(
@@ -1308,7 +1308,6 @@ class UserProfileEmpl extends UserProfile
                 'type' => $data['type'],
                 ), 'id_user=:id_user', array(':id_user' => $id));
 
-
         $attr = array();
 
         foreach($attr['userAttribs'] as $key=>$val) {
@@ -1317,8 +1316,6 @@ class UserProfileEmpl extends UserProfile
                     'val' => $val['val'],
                 ), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $val['key']));
         }
-
-
 
         return array('error' => 0, 'message'=>'Saved successfully');
     }

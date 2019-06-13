@@ -600,10 +600,12 @@ class User extends CActiveRecord
 // 			$content = str_replace('#MANAGER_FIO#', "Гусева Светлана", $content);
 // 			$content = str_replace('#PHONE#', "+74996535185", $content);
 // 			$content = str_replace('#PHONE_MOB#', "+74996535185", $content);
-// 			$content = str_replace('#EMAIL#',"account_manager1@prommu.com", $content);
+// 			$content = str_replace('#EMAIL#',"mikekarpenko@gmail.com", $content);
 // 			$content = str_replace('#COMPANY#', $data['name'], $content);
-
+//
 // 			$result = Share::sendmail($data['email'], "Prommu: Аккаунт Менеджер", $content);
+
+
 
 			Yii::app()->db->createCommand()
 				->update(
@@ -627,9 +629,15 @@ class User extends CActiveRecord
 						'email' => $data['email'],
 						'ismoder' => $data['ismoder'],
 						'isblocked' => $data['isblocked'],
-						'date_login' => date('Y-m-d H:i:s'),
+						//'date_login' => date('Y-m-d H:i:s'),
 					), 'id_user=:id_user', array(':id_user' => $id));
 			}
+
+			if (isset($data['ismoder'])) {
+                $message = sprintf("Ваша анкета прошла модерацию.");
+                Share::sendmail($data['email'], "Prommu.com Модерация пользователя" . $id, $message);
+            }
+
 			Yii::app()->db->createCommand()
 				->update('user', array(
 					'ismoder' => $data['ismoder'],
@@ -648,9 +656,7 @@ class User extends CActiveRecord
 					'city' => $data['city'],
 					'contact' => $data['contact'],
 					), 'id_user=:id_user', array(':id_user' => $id));
-			
 
-			//$attr = array();
 			$attr[] = $data['userAttribs'];
 			
 			foreach($attr as $key=>$val) {
