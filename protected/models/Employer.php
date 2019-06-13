@@ -721,7 +721,7 @@ class Employer extends ARModel
         }
         
         $arId = $db->createCommand()
-                                ->select("e.id, e.name, e.contact, e.type, e.web, e.logo")
+                                ->select("e.id, e.name, e.contact, e.type, e.web, e.logo, e.crdate, e.mdate")
                                 ->from('employer e')
                                 ->where(implode(' and ',$conditions), $params)
                                 ->order('e.id desc')
@@ -771,8 +771,22 @@ class Employer extends ARModel
             $arT[$id]['phone'] = "phone";
             $arT[$id]['email'] = "email";
             $arT[$id]['skype'] = "skype";
-            $arT[$id]['skype'] = "skype";
-            $arT[$id]['skype'] = "skype";
+            $arT[$id]['whatsapp'] = "whatsapp";
+            $arT[$id]['viber'] = "viber";
+            $arT[$id]['telegram'] = "telegram";
+            $arT[$id]['messenger'] = "messenger";
+            $arT[$id]['crdate'] = $v['crdate'];
+            $arT[$id]['mdate'] = $v['mdate'];
+            $arT[$id]['edate'] = $v['mdate'];
+            $arT[$id]['dedate'] = $v['mdate'];
+            $arT[$id]['online'] = $v['mdate'];
+            $arT[$id]['daysfromsite'] = "daysfromsite";
+            $arT[$id]['daysonline'] = "daysonline";
+            $arT[$id]['countvac'] = "countvac";
+            $arT[$id]['countactivevac'] = "countactivevac";
+            $arT[$id]['countarchivevac'] = "countarchivevac";
+            $arT[$id]['countinvitevac'] = "countinvitevac";
+            $arT[$id]['countresponsevac'] = "countresponsevac";
             
         }
         
