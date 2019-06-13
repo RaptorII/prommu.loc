@@ -24,15 +24,19 @@ class Feedback extends Model
         return  $data;
     }
 
-		public function getDatAdmin()
+    public function getDatAdmin()
 		{
 			$arRes = ['cnt'=>0,'items'=>[]];
 			$arCId = array();
 			$arMess = Yii::app()->db->createCommand()
 								->select("id, id_theme")
 								->from('chat')
-								->where('(id_usp=2054 AND is_resp=1 AND is_read=0) OR' // 2054 - ID админстратора для Р, 
-												. '(id_use=1766 AND is_resp=0 AND is_read=0)') // 1766 - ID админстратора для С, 
+								->where('(id_usp=2054 
+								    AND is_read=0)
+								    OR' // 2054 - ID админстратора для Р,
+                                    .'(id_use=1766
+                                    AND is_resp=0
+                                    AND is_read=0)') // 1766 - ID админстратора для С,
 								->order('id desc')
 								->queryAll();
 
@@ -56,7 +60,7 @@ class Feedback extends Model
 				$arF['chat'] = $v['chat'];
 				!isset($arF['cnt']) && $arF['cnt'] = 0;
 				if(!$v['is_smotr']) {
-					$arRes['cnt']++;
+					//$arRes['cnt']++;
 					$arF['cnt']++;
 				}
 
@@ -65,6 +69,8 @@ class Feedback extends Model
 						
 				$arRes['items'][$v['id']] = $arF;
 			}
+            $arRes['cnt'] = count($arRes['items']);
+
 			return  $arRes;
     }
 
