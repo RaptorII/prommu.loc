@@ -1682,7 +1682,9 @@ class UserProfileEmpl extends UserProfile
         }
 
         $arInsert = array();
-        for ($i=0, $n=count($arData['files']); $i<$n; $i++)
+        $n=count($arData['files']);
+        $npp = $query['npp'] + $n;
+        for ($i=0; $i<$n; $i++)
         {
             // загружаем только допустимое кол-во
             if(($i + 1 + $query['cnt'])>$this->photosMax) 
@@ -1695,7 +1697,7 @@ class UserProfileEmpl extends UserProfile
             $arInsert[] = [
                     'id_empl' => $this->exInfo->eid,
                     'id_user' => $this->id,
-                    'npp' => ++$query['npp'],
+                    'npp' => $npp--,
                     'photo' => $file,
                     'signature' => filter_var(
                         $arData['files'][$i]['signature'],
@@ -1745,6 +1747,23 @@ class UserProfileEmpl extends UserProfile
                 "id_user=:id AND photo='{$oldPhoto}'",
                 [':id'=>$this->id]
             );
+        // если это был лого то надо поправить и employer
+        $isLogo = Yii::app()->db->createCommand()
+                    ->select('id_user')
+                    ->from('employer')
+                    ->where("logo='{$oldPhoto}'")
+                    ->queryScalar();
+
+        if($isLogo)
+        {
+            Yii::app()->db->createCommand()
+                ->update(
+                    'employer',
+                    ['logo' => pathinfo($arFile['name'], PATHINFO_FILENAME)],
+                    'id_user=:id',
+                    [':id' => $this->id]
+                );
+        }
         // устанавливаем что нужна модерация
         Yii::app()->db->createCommand()
             ->update('user', ['ismoder'=>0], 'id_user=:id', [':id'=>$this->id]);
