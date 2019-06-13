@@ -381,11 +381,14 @@ class Vacancy extends ARModel
                         FILTER_SANITIZE_NUMBER_INT
                     );
 
-        $arArchive = $this->getEmpVacanciesIdList(Share::$UserProfile->id)['archive'];
+        /*$arArchive = $this->getEmpVacanciesIdList(Share::$UserProfile->id)['archive'];
         if(in_array($copyId, $arArchive))
+        {*/
+        if($copyId>0)
         {
             $data['copy_vacacancy'] = $this->getVacancyView($copyId);
         }
+        //}
 
         return $data;
     }
