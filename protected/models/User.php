@@ -769,7 +769,7 @@ class User extends CActiveRecord
 		$result = Yii::app()->db->createCommand()
     		->select("r.id, u.id_user, u.login, u.passw, 
     			u.email, u.access_time, u.status, 
-    			u.isblocked, u.ismoder, r.firstname,
+    			u.isblocked, u.ismoder, r.firstname, r.contact,
     			r.logo, r.lastname, r.name, r.type, r.city, r.rate, r.rate_neg"
     		)
 			->leftjoin('employer r', 'r.id_user=u.id_user')

@@ -72,6 +72,14 @@ echo '<div role="tabpanel" class="tab-pane fade active in" id="tab_profile">';
                     array('class'=>'form-control')
                 )
             . '</div>';
+    echo '<div class="control-group small-bl">'
+            . '<label class="control-label">ИНН</label>'
+                . CHtml::textField(
+                    'User[inn]',
+                    $data['attr']['inn'],
+                    array('class'=>'form-control')
+                )
+            . '</div>';
     echo '<div class="control-group">'
         . '<label class="control-label">Тип компании</label><div class="controls input-append">'
             . CHtml::radioButtonList(
@@ -120,6 +128,14 @@ echo '<div role="tabpanel" class="tab-pane fade active in" id="tab_profile">';
                 . CHtml::textField(
                     'User[lastname]', 
                     $data['lastname'], 
+                    array('class'=>'form-control')
+                )
+            . '</div>';
+echo '<div class="control-group small-bl">'
+            . '<label class="control-label">Контактное лицо</label>'
+                . CHtml::textField(
+                    'User[contact]',
+                    $data['contact'],
                     array('class'=>'form-control')
                 )
             . '</div>';

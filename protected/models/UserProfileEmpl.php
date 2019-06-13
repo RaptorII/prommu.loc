@@ -46,7 +46,7 @@ class UserProfileEmpl extends UserProfile
 
             // save main logo to db
             $pathinfo = pathinfo(Yii::app()->session['uplLogo']['file']);
-            
+
             $this->updateForPhoto($eid, $pathinfo['filename']);
 
             Yii::app()->db->createCommand()
@@ -61,7 +61,7 @@ class UserProfileEmpl extends UserProfile
                 ->update('user', array(
                     'ismoder' => 0,
                 ), 'id_user=:id_user', array(':id_user' => $id));
-                
+
 
             $pathinfo = pathinfo($cropRes['file']);
             $cropRes['idfile'] = $pathinfo['filename'];
@@ -79,8 +79,8 @@ class UserProfileEmpl extends UserProfile
     }
 
     public function sendLogo($props=[])
-    {  
-        // $id = $props['id']; 
+    {
+        // $id = $props['id'];
         $id = Share::$UserProfile->id;
         $eid = Share::$UserProfile->exInfo->eid;
         $sql = "SELECT  r.id
@@ -98,8 +98,8 @@ class UserProfileEmpl extends UserProfile
             'id' => $val['id'],
             'id_user' => $val['id_user'],
         ];
-        
-    
+
+
         $id = $dat['id_user'];
         $id_resume = $dat['id'];
 
@@ -199,7 +199,7 @@ class UserProfileEmpl extends UserProfile
         $arRating = Share::$UserProfile->getRateCount();
 
         Yii::app()->db->createCommand()
-            ->update('employer', 
+            ->update('employer',
                 array(
                     'logo' => $photo,
                     'mdate' => date('Y-m-d H:i:s'),
@@ -207,8 +207,8 @@ class UserProfileEmpl extends UserProfile
                     'rate_neg' => $arRating[1],
                     'ismoder' => 0,
                     'is_new' => 1
-                ), 
-                'id=:id', 
+                ),
+                'id=:id',
                 [':id'=>$id]
             );
     }
@@ -319,7 +319,7 @@ class UserProfileEmpl extends UserProfile
                     ->join('employer e','e.id_user=u.id_user')
                     ->join('user_attribs ua','ua.id_us=u.id_user')
                     ->where('u.id_user=:id',[':id'=>$id_user])
-                    ->queryAll();   
+                    ->queryAll();
 
         $info = reset($query);
         $flag = false;
@@ -530,7 +530,7 @@ class UserProfileEmpl extends UserProfile
             $pointRate[$val['id_point']][0] += $val['rate'];
             $pointRate[$val['id_point']][1] += abs($val['rate_neg']);
         } // end foreach
-       
+
        $neg = $rate[1];
         if($neg != 0) {
              $full = ($rate[0] - $rate[1])/5;
@@ -559,15 +559,15 @@ class UserProfileEmpl extends UserProfile
         $id = $this->exInfo->id;
         $res = $this->checkFieldsProfile();
 
-    
+
         if($res['err'])// неправильно заполнены поля
         {
-            return $res;   
+            return $res;
         }
         else // *** Сохраняем данные пользователя ***
         {
             $rq = Yii::app()->getRequest();
-            
+
             $name = filter_var($rq->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $fname = filter_var($rq->getParam('fname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $lname = filter_var($rq->getParam('lname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -602,7 +602,7 @@ class UserProfileEmpl extends UserProfile
             $data = $res;
 
             $oldEmail = filter_var($data['email'], FILTER_VALIDATE_EMAIL); // при условии что email на email похож
-            if($oldEmail!='' && $oldEmail != $email){ 
+            if($oldEmail!='' && $oldEmail != $email){
                 $res = Yii::app()->db->createCommand()
                 ->update('user', array(
                     'confirmEmail' => 0,
@@ -617,7 +617,7 @@ class UserProfileEmpl extends UserProfile
                 $arrs.='Фамилия|';
                 $bFlashFlag = true;
             }
-           
+
             if($data['type'] != $companyType){
                 $arrs.='Тип компании|';
                 $bFlashFlag = true;
@@ -637,7 +637,7 @@ class UserProfileEmpl extends UserProfile
                 $arrs.='О компании|';
                 $bFlashFlag = true;
             }
-            
+
             if($data['employer_contact'] != $emplcontact){
                 $arrs.='Отображение контактных данных|';
                 $bFlashFlag = true;
@@ -654,7 +654,7 @@ class UserProfileEmpl extends UserProfile
             ///API
 
             // save resume
-            
+
             // сохраняем лого
             if($logo)
             {
@@ -719,7 +719,7 @@ class UserProfileEmpl extends UserProfile
                    $link
                 );
                 Share::sendmail("prommu.servis@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);
-                Share::sendmail("susgresk@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);     
+                Share::sendmail("susgresk@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);
             }
             if($bFlashFlag)
             {
@@ -964,8 +964,8 @@ class UserProfileEmpl extends UserProfile
         // вычисляем настоящий урл для фото
         $arRes['info']['src'] = Share::getPhoto(
                                         $arRes['info']['idus'],
-                                        $type, 
-                                        $arRes['info']['logo'], 
+                                        $type,
+                                        $arRes['info']['logo'],
                                         'xmedium');
         // отсекаем телефон в логине
         $arRes['info']['email'] = filter_var(
@@ -996,7 +996,7 @@ class UserProfileEmpl extends UserProfile
                 $v['phone-code'] = substr($v['phone'], 0, $pos);
                 if(empty($v['phone-code']))
                     $v['phone-code'] = 7; // по умолчанию Рашка
-                $v['phone'] = substr($v['phone'], $pos);  
+                $v['phone'] = substr($v['phone'], $pos);
                 $arRes['phone'] = $v['phone'];
                 $arRes['phone-code'] = $v['phone-code'];
             }
@@ -1009,7 +1009,7 @@ class UserProfileEmpl extends UserProfile
 
         }
         $arRes['messengers'] = implode(',',$arMess);
-        
+
 
         // считываем типы пользователя
         $arRes['cotype'] = Yii::app()->db->createCommand()
@@ -1060,9 +1060,9 @@ class UserProfileEmpl extends UserProfile
             }
 
             Yii::app()->db->createCommand()
-                    ->update('user_city', 
-                        ['id_city' => $cityId], 
-                        'id_user=:id', 
+                    ->update('user_city',
+                        ['id_city' => $cityId],
+                        'id_user=:id',
                         [':id' => $id]
                     );
             $arRes['userCities']['id_city'] = $cityId;
@@ -1121,7 +1121,7 @@ class UserProfileEmpl extends UserProfile
         }
 
         if(!$phoneCode && !$arRes['phone-code'])
-        { 
+        {
             $arGeo = (new Geo())->getUserGeo();
             foreach($arRes['countries'] as $v)
                 $arGeo['country']==$v['id'] && $arRes['phone-code'] = $v['phone'];
@@ -1296,8 +1296,8 @@ class UserProfileEmpl extends UserProfile
             ->update('user_city', array(
                 'id_city' => $data['city'],
                 ), 'id_user=:id_user', array(':id_user' => $id));
-        
-        
+
+
             Yii::app()->db->createCommand()
             ->update('employer', array(
                 'name' => $data['name'],
@@ -1307,7 +1307,7 @@ class UserProfileEmpl extends UserProfile
                 'phone' => $data['mob'],
                 'type' => $data['type'],
                 ), 'id_user=:id_user', array(':id_user' => $id));
-        
+
 
         $attr = array();
 
@@ -1317,8 +1317,8 @@ class UserProfileEmpl extends UserProfile
                     'val' => $val['val'],
                 ), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $val['key']));
         }
-    
-    
+
+
 
         return array('error' => 0, 'message'=>'Saved successfully');
     }
@@ -1330,7 +1330,7 @@ class UserProfileEmpl extends UserProfile
         $id =  $this->exInfo->id;
 
         $attrs =  Yii::app()->getRequest()->getParam('user-attribs');
-    
+
 
         $insData = array();
         !isset($attrs['isnews']) && $attrs['isnews']=0;
@@ -1345,7 +1345,7 @@ class UserProfileEmpl extends UserProfile
 
             if( $res['type'] == 3 )
             {
-                
+
                 $insData[] = array('id_us' => $id, 'id_attr' => $val, 'key' => $res['key'], 'type' => '3', 'crdate' => date('Y-m-d H:i:s'));
             }
             else
@@ -1366,8 +1366,8 @@ class UserProfileEmpl extends UserProfile
                     }
                 }
                 $insData[] = array('id_us' => $id, 'id_attr' => $res['id'], 'key' => $res['key'], 'type' => $res['type'], 'val' => $val, 'crdate' => date('Y-m-d H:i:s'));
-            } 
-        } 
+            }
+        }
 
         $keys = join(',', $keys);
         $sql = "DELETE user_attribs FROM user_attribs 
@@ -1385,7 +1385,7 @@ class UserProfileEmpl extends UserProfile
         {
             $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('user_attribs', $insData);
             $command->execute();
-        } 
+        }
     }
 
 
@@ -1457,7 +1457,7 @@ class UserProfileEmpl extends UserProfile
         $sql = "SELECT d.id, d.type, d.name FROM user_attr_dict d WHERE d.id_par = 101 ORDER BY id";
         $data['cotype'] = Yii::app()->db->createCommand($sql)->queryAll();
         foreach ($data['cotype'] as $key => &$val)
-            if( $data['emplInfo']['type'] == $val['id'] ) 
+            if( $data['emplInfo']['type'] == $val['id'] )
                 $val['selected'] = 1;
 
         // read cities
@@ -1468,7 +1468,7 @@ class UserProfileEmpl extends UserProfile
             WHERE uc.id_user = {$id}";
         $data['userCities'] = Yii::app()->db->createCommand($sql)->queryAll();
 
-        return $data;       
+        return $data;
     }
     /*
     *   Проверка уникальности почты. Вызывается в ajaxController
@@ -1504,8 +1504,8 @@ class UserProfileEmpl extends UserProfile
                 ->update('user', array(
                         'email' => $email,
                         'mdate' => date('Y-m-d H:i:s'),
-                    ), 
-                    'id_user=:id', 
+                    ),
+                    'id_user=:id',
                     array(':id' => $idus)
                 );
             if(!$res)
@@ -1527,8 +1527,8 @@ class UserProfileEmpl extends UserProfile
                     ->update('user', array(
                             'passw' => $newPsw,
                             'mdate' => date('Y-m-d H:i:s'),
-                        ), 
-                        'id_user=:id', 
+                        ),
+                        'id_user=:id',
                         array(':id' => $idus)
                     );
                 if(!$res)
@@ -1536,15 +1536,15 @@ class UserProfileEmpl extends UserProfile
             }
             else{
                 $arResult = array('error'=>1,'mess'=>'Старый пароль не подходит','type'=>'psw');
-            }        
+            }
         }
         elseif(strlen($phone)>0){
             $arResult['type'] = 'phone';
             $res = Yii::app()->db->createCommand()
 
-                ->update('user_attribs', 
-                    array('val' => $phone), 
-                    'id_us=:id AND id_attr=1', 
+                ->update('user_attribs',
+                    array('val' => $phone),
+                    'id_us=:id AND id_attr=1',
                     array(':id' => $idus)
                 );
             if(!$res)
@@ -1624,7 +1624,7 @@ class UserProfileEmpl extends UserProfile
         {
             $db->createCommand()
                  ->update('user_city',
-                    ['id_city'=>$data['city']], 
+                    ['id_city'=>$data['city']],
                     'id_user=:id_user',
                     [':id_user'=>$id]
                 );
@@ -1633,13 +1633,13 @@ class UserProfileEmpl extends UserProfile
         if(isset($data['contact']))
         {
             $db->createCommand()
-                ->update('employer', 
+                ->update('employer',
                     [
                         'contact' => $data['contact'],
                         'firstname' => $data['contact'],
                         'lastname' => $data['contact']
                     ],
-                    'id_user=:id_user', 
+                    'id_user=:id_user',
                     [':id_user'=>$id]
                 );
         }
@@ -1655,11 +1655,11 @@ class UserProfileEmpl extends UserProfile
             if(in_array($data['companyType'], $arCompany))
             {
                 $db->createCommand()
-                    ->update('employer', 
+                    ->update('employer',
                         ['type' => $data['companyType']],
-                        'id_user=:id_user', 
+                        'id_user=:id_user',
                         [':id_user'=>$id]
-                    );               
+                    );
             }
         }
     }
@@ -1687,7 +1687,7 @@ class UserProfileEmpl extends UserProfile
         for ($i=0; $i<$n; $i++)
         {
             // загружаем только допустимое кол-во
-            if(($i + 1 + $query['cnt'])>$this->photosMax) 
+            if(($i + 1 + $query['cnt'])>$this->photosMax)
                 continue;
 
             $file = pathinfo($arData['files'][$i]['name'], PATHINFO_FILENAME);
