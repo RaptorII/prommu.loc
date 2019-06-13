@@ -67,10 +67,10 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
 
 ?>
 <!--<pre>-->
-<!--<!--    -->--><?//// echo print_r($model);?>
-<!--<!--    -->--><?//// echo ($model);?>
-<!--<!--    -->--><?//// echo print_r($modelPOCntrCloud['modelPOCntAll']);?>
-<!--<!--    -->--><?//// echo $cntPO?>
+<!--    --><?// echo print_r($model);?>
+<!--    --><?// echo ($model);?>
+<!--    --><?// echo print_r($modelPOCntrCloud['modelPOCntAll']);?>
+<!--    --><?// echo $cntPO?>
 <!--</pre>-->
 <html>
 <head>
