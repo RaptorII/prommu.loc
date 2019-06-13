@@ -721,7 +721,7 @@ class Employer extends ARModel
         }
         
         $arId = $db->createCommand()
-                                ->select("e.id")
+                                ->select("e.id, e.id_user")
                                 ->from('employer e')
                                 ->where(implode(' and ',$conditions), $params)
                                 ->order('e.id desc')
