@@ -725,7 +725,7 @@ class Employer extends ARModel
                                 ->from('employer e')
                                 ->where(implode(' and ',$conditions), $params)
                                 ->order('e.id desc')
-                                ->queryColumn();
+                                ->queryAll();
 
         $n = count($arId);
         if(!$n)
