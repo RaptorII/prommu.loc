@@ -472,6 +472,11 @@ jQuery(function($){
 			$(item).find('.epa__input').on('input',function(){
 				checkPeriod(this);
 			});
+
+            $.each($(item).find('.epa__input'),function(){
+                checkField(this);
+            });
+
 		}
 		else{
 			var arItems = $(perList).find('.epa__period');
@@ -691,7 +696,7 @@ jQuery(function($){
           }
         });
 			}
-console.log(arErrors);
+		//console.log(arErrors);
 			if(!errors && !arErrors.length){
 				var arPosts = $('#epa-list-posts input'),
 					arCityItems = $('#city-module .epa__city-item'),
@@ -836,6 +841,10 @@ console.log(arErrors);
 		// добавляем блоки
 		//$('.epa__post-detail .clearfix').before(htmlBlock); //в конец
         $('.epa__post-detail').prepend(htmlBlock); //в начало
+
+        $.each($('.epa__post-detail input'),function(){
+            checkField(this);
+        });
 	}
 	function randomInt(){
 		var min = 1000,

@@ -138,11 +138,12 @@ echo '<div role="tabpanel" class="tab-pane fade active in" id="tab_profile">';
     echo '<div class="control-group small-bl">'
             . '<label class="control-label">Телефон</label>'
                 . CHtml::textField(
-                    'attr[mob]', 
+                    'User[mob]',
                     $data['attr']['mob'], 
                     array(
                         'class'=>'form-control',
-                        'disabled'=>true
+                        //'disabled'=>true
+                        'readonly'=>'false',
                     )
                 )
             . '</div>';

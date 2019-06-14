@@ -403,7 +403,20 @@ class User extends CActiveRecord
 				'isblocked' => $data['isblocked'],
 			), 'id_user=:id_user', array(':id_user' => $id));
 
-// 		//Основная информация
+        if(isset($data['email'])) {
+            Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'email' => $data['email'],
+                ), 'id_user=:id_user', array(':id_user' => $id));
+
+            //email to promo
+            if (isset($data['ismoder'])) {
+                $message = sprintf("Ваша анкета прошла модерацию.");
+                Share::sendmail($data['email'], "Prommu.com Модерация соискателя" . $id, $message);
+            }
+        }
+
+ 		//Основная информация
 		Yii::app()->db->createCommand()
 			->update('resume', array(
 				'firstname' => $data['firstname'],
@@ -423,32 +436,35 @@ class User extends CActiveRecord
 				'meta_h1'=> $data['meta_h1'],
 				'meta_description'=> $data['meta_description'],
 				'comment' => $data['comment'],
+                'is_new' => (integer) !$data['ismoder'],
 				
 			), 'id_user=:id_user', array(':id_user' => $id));
-        
-        $city = Yii::app()->db->createCommand()
-    			->select('*')
-    			->from('user_city')
-                ->where("id_user=:id_user", array(':id_user'=>$id))
-    			->queryRow();
-    			
-    		if(count($city)){
-    		    
-    		   Yii::app()->db->createCommand()
-					->update('user_city', array(
-						'id_city' => $data['city'],
-					), "id_user=:id_user", array(':id_user' => $id));
-				
-    		} else {
-    		    
-    		    Yii::app()->db->createCommand()
+
+        if (isset($data['city'])) {
+            $city = Yii::app()->db->createCommand()
+                ->select('*')
+                ->from('user_city')
+                ->where("id_user=:id_user", array(':id_user' => $id))
+                ->queryRow();
+
+            if (count($city)) {
+
+                Yii::app()->db->createCommand()
+                    ->update('user_city', array(
+                        'id_city' => $data['city'],
+                    ), "id_user=:id_user", array(':id_user' => $id));
+
+            } else {
+
+                Yii::app()->db->createCommand()
                     ->insert('user_city', array(
                         'id_user' => $id,
                         'id_city' => $data['city'],
                     ));
-    		}
+            }
+        }
     		
-    		if(count($data['userAttribs']))
+        if(count($data['userAttribs']))
     		{
         	$attr = $data['userAttribs'];
         	Yii::app()->db->createCommand()->delete(
@@ -457,49 +473,49 @@ class User extends CActiveRecord
 	        		array(':id_user' => $id)
 	        	);
         
-          foreach($attr as $key=>$val)
-          {
-              
-            if(!empty($val))
+            foreach($attr as $key=>$val)
             {
-  			    	$result = Yii::app()->db->createCommand()
-													->select('*')
-													->from('user_attribs')
-													->where(
-														"id_us=:id_user and `key`=:key",
-														array(':id_user'=>$id, ':key'=>$key)
-													)
-													->queryRow();
-      			if($result['key'] == $key)
-      			{
-							Yii::app()->db->createCommand()
-								->update(
-										'user_attribs',
-										array('val' => $val),
-										"id_us=:id_user and `key`=:key",
-										array(':id_user' => $id, ':key' => $key)
-									);
-      			}
-      			else 
-      			{
-							$userdict = Yii::app()->db->createCommand()
-														->select('d.id , d.type, d.key')
-														->from('user_attr_dict d')
-														->where('d.key = :key', array(':key' => $key))
-														->queryRow();
 
-      			    Yii::app()->db->createCommand()
-                      ->insert('user_attribs', array(
-                          'id_attr' => $userdict['id'],
-                          'type' => $userdict['type'],
-                          'val' => $val,
-                          'key' => $key,
-                          'id_us' => $id,
-                          'crdate' => date("Y-m-d H:i:s")
-                      ));
-      				}
+                if(!empty($val))
+                {
+                        $result = Yii::app()->db->createCommand()
+                                                        ->select('*')
+                                                        ->from('user_attribs')
+                                                        ->where(
+                                                            "id_us=:id_user and `key`=:key",
+                                                            array(':id_user'=>$id, ':key'=>$key)
+                                                        )
+                                                        ->queryRow();
+                    if($result['key'] == $key)
+                    {
+                        Yii::app()->db->createCommand()
+                            ->update(
+                                'user_attribs',
+                                array('val' => $val),
+                                "id_us=:id_user and `key`=:key",
+                                array(':id_user' => $id, ':key' => $key)
+                                );
+                    }
+                    else {
+                        $userdict = Yii::app()->db
+                            ->createCommand()
+                            ->select('d.id , d.type, d.key')
+                            ->from('user_attr_dict d')
+                            ->where('d.key = :key', array(':key' => $key))
+                            ->queryRow();
+
+                        Yii::app()->db->createCommand()
+                            ->insert('user_attribs', array(
+                            'id_attr' => $userdict['id'],
+                            'type' => $userdict['type'],
+                            'val' => $val,
+                            'key' => $key,
+                            'id_us' => $id,
+                            'crdate' => date("Y-m-d H:i:s")
+                        ));
+                    }
+                }
             }
-					}
         }
 
     		if(count($data['bodyAttribs']))
@@ -633,9 +649,10 @@ class User extends CActiveRecord
 					), 'id_user=:id_user', array(':id_user' => $id));
 			}
 
+			//email to employer
 			if (isset($data['ismoder'])) {
                 $message = sprintf("Ваша анкета прошла модерацию.");
-                Share::sendmail($data['email'], "Prommu.com Модерация пользователя" . $id, $message);
+                Share::sendmail($data['email'], "Prommu.com Модерация работодаля" . $id, $message);
             }
 
 			Yii::app()->db->createCommand()

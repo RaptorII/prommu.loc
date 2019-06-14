@@ -44,6 +44,7 @@
   foreach ($arMetroes as $m){
     $arTemp[$m['id_city']][$m['id']] = $m['name'];
   }
+
   $arMetroes = $arTemp;
   //  birthday
   /*if($_GET['birthday']){
@@ -799,7 +800,7 @@
       <div class="epa__post-close"></div>
       <label class="epa__label epa__payment">
         <span class="epa__label-name">Ожидаемая оплата: </span>
-        <input type="text" name="post[NEWID][payment]" value="" class="epa__input epa__required " data-name="Ожидаемая оплата">
+        <input type="text" name="post[NEWID][payment]" value="" class="epa__input epa__required " data-name="Ожидаемая оплата" autocomplete="off">
         <em>руб</em>
       </label>
       <label class="epa__label epa__select">
@@ -895,7 +896,7 @@
       <span class="epa__period-close"></span>
       <div class="epa__period-error"><span>С</span><b></b><span>до</span><b></b></div>
       <span class="epa__label-name"><i></i>, Время дня:</span>
-      <input type="text" name="time[NEWID][NEWDAY]" class="epa__input epa__required" autocomplete="off">
+      <input type="text" name="time[NEWID][NEWDAY]" class="epa__input epa__required" c>
     </div>
   </div>
   <?//  *****************  //?>
