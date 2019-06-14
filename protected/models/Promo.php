@@ -841,7 +841,7 @@ class Promo extends ARModel
         }
         
         $arId = $db->createCommand()
-                                ->select("e.id, e.firstname, e.lastname, e.type, e.web, e.logo, e.crdate, e.mdate")
+                                ->select("e.id, e.firstname, e.lastname, e.date_public, e.mdate, e.photo")
                                 ->from('resume e')
                                 ->where(implode(' and ',$conditions), $params)
                                 ->order('e.id desc')
@@ -855,35 +855,22 @@ class Promo extends ARModel
         }
         
          
-        // while ($offset <= $n)
-        // {
-        //       $arNewId = array();
-        //       for ($i = $offset; $i < $n; $i ++)
-        //       {
-        //         if(($i < ($offset + $limit)) && isset($arId[$i]))
-        //           $arNewId[] = $arId[$i];
-        //       }
-        // }
-        
-        
-        // $query = $db->createCommand()
-        //           ->select("e.id, e.id_user, e.name, uc.id_city city, c.region")
-        //           ->from('employer e')
-        //           ->leftjoin('user_city uc','uc.id_user=e.id_user')
-        //           ->leftjoin('city c','c.id_city=uc.id_city')
-        //           ->where(['in','e.id',$arNewId])
-        //           ->queryAll();
-                  
-        // $arT = array();
+
         foreach ($arId as $k => $v)
         {
+            $time = $this->getOnlineTime($v['id']);
+            
+            $now = time(); 
+            $your_date = strtotime($v['date_public']); 
+            $datediff = $now - $your_date; 
+            
+            $days = floor($datediff / (60 * 60 * 24)); 
+
             $arT[$id]['id'] = $v['id'];
             $arT[$id]['fio'] = $v['firstname'].' '.$v['lastname'];
             $arT[$id]['birthday'] = $v['birthday'];
             $arT[$id]['photo'] = "https://files.prommu.com/users/".$v['id'].'/'.$v['photo'].'.jpg';
-            $arT[$id]['type'] = $v['type'];
-            $arT[$id]['web'] = $v['web'];
-            $arT[$id]['photo'] = "photo";
+            $arT[$id]['photocount'] = 1;
             $arT[$id]['country'] = "country";
             $arT[$id]['city'] = "city";
             $arT[$id]['region'] = "region";
@@ -894,13 +881,13 @@ class Promo extends ARModel
             $arT[$id]['viber'] = "viber";
             $arT[$id]['telegram'] = "telegram";
             $arT[$id]['messenger'] = "messenger";
-            $arT[$id]['crdate'] = $v['crdate'];
+            $arT[$id]['crdate'] = $v['date_public'];
             $arT[$id]['mdate'] = $v['mdate'];
             $arT[$id]['edate'] = $v['mdate'];
             $arT[$id]['dedate'] = $v['mdate'];
             $arT[$id]['online'] = $v['mdate'];
-            $arT[$id]['daysfromsite'] = "daysfromsite";
-            $arT[$id]['daysonline'] = "daysonline";
+            $arT[$id]['daysfromsite'] = $days;
+            $arT[$id]['daysonline'] = $time['time'];
             $arT[$id]['countvac'] = "countvac";
             $arT[$id]['countactivevac'] = "countactivevac";
             $arT[$id]['countarchivevac'] = "countarchivevac";
@@ -922,6 +909,23 @@ class Promo extends ARModel
         
     }
     
+    
+    public function getOnlineTime($idus){
+        
+        $res = [];
+        
+        $result = Yii::app()->db->createCommand()
+                                ->select("uw.date_login")
+                                ->from('user_work uw')
+                                ->where('uw.id_user=:id_user', array(':id_user' => $idus))
+                                ->order('e.id desc')
+                                ->queryAll();
+        
+        $res['time'] = count($result)*15;
+        $res['date_login'] = $result[count($result)-1];
+        
+        return $res;
+    }
     /**
      * setViewed
      * @return model
