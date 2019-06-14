@@ -794,7 +794,6 @@ class Employer extends ARModel
             $arT[$id]['feedback'] = "feedback";
             
             $arT[$id]['countratingpromo'] = "countrating";
-            $arT[$id]['feedbackpromo'] = "feedback";
             $arT[$id]['services'] = "services";
         }
         
