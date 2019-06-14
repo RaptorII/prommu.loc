@@ -806,8 +806,119 @@ class Promo extends ARModel
         $db = Yii::app()->db;
         $conditions = $params = [];
         $rq = Yii::app()->getRequest();
+        
+                $dateType = $rq->getParam('export_date');
+        $bDate = $rq->getParam('export_beg_date');
+        $eDate = $rq->getParam('export_end_date');
+        $status = $rq->getParam('export_status');
+        $bDate = date('Y-m-d',strtotime($bDate));
+        $eDate = date('Y-m-d',strtotime($eDate));
 
+        if($bDate!='1970-01-01')
+        {
+            switch ($dateType)
+            {
+                case 'create': 
+                    $conditions[] = 'e.crdate>=:bdate';
+                    $params[':bdate'] = $bDate . ' 00:00:00';
+                    break;
+            }   
+        }
+        if($eDate!='1970-01-01')
+        {
+            switch ($dateType)
+            {
+                case 'create': 
+                    $conditions[] = 'e.crdate<=:edate';
+                    $params[':edate'] = $eDate . ' 23:59:59';
+                    break;
+            }   
+        }
+        
+        if($status!='all')
+        {
+            $conditions[] = 'e.ismoder=' . ($status=='active' ? '1' : '0');
+        }
+        
+        $arId = $db->createCommand()
+                                ->select("e.id, e.name, e.contact, e.type, e.web, e.logo, e.crdate, e.mdate")
+                                ->from('employer e')
+                                ->where(implode(' and ',$conditions), $params)
+                                ->order('e.id desc')
+                                ->queryAll();
+
+        $n = count($arId);
+        if(!$n)
+        {
+          Yii::app()->user->setFlash('danger', 'Работодателей не найдено');
+          return false;
+        }
+        
+         
+        // while ($offset <= $n)
+        // {
+        //       $arNewId = array();
+        //       for ($i = $offset; $i < $n; $i ++)
+        //       {
+        //         if(($i < ($offset + $limit)) && isset($arId[$i]))
+        //           $arNewId[] = $arId[$i];
+        //       }
+        // }
+        
+        
+        // $query = $db->createCommand()
+        //           ->select("e.id, e.id_user, e.name, uc.id_city city, c.region")
+        //           ->from('employer e')
+        //           ->leftjoin('user_city uc','uc.id_user=e.id_user')
+        //           ->leftjoin('city c','c.id_city=uc.id_city')
+        //           ->where(['in','e.id',$arNewId])
+        //           ->queryAll();
+                  
+        // $arT = array();
+        foreach ($arId as $k => $v)
+        {
+            $id = $v['id'];
+            $arT[$id]['id'] = $id;
+            $arT[$id]['name'] = $v['name'];
+            $arT[$id]['contact'] = $v['contact'];
+            $arT[$id]['type'] = $v['type'];
+            $arT[$id]['web'] = $v['web'];
+            $arT[$id]['logo'] = "https://files.prommu.com/".$v['logo'].'.jpg';
+            $arT[$id]['photo'] = "photo";
+            $arT[$id]['country'] = "country";
+            $arT[$id]['city'] = "city";
+            $arT[$id]['region'] = "region";
+            $arT[$id]['phone'] = "phone";
+            $arT[$id]['email'] = "email";
+            $arT[$id]['skype'] = "skype";
+            $arT[$id]['whatsapp'] = "whatsapp";
+            $arT[$id]['viber'] = "viber";
+            $arT[$id]['telegram'] = "telegram";
+            $arT[$id]['messenger'] = "messenger";
+            $arT[$id]['crdate'] = $v['crdate'];
+            $arT[$id]['mdate'] = $v['mdate'];
+            $arT[$id]['edate'] = $v['mdate'];
+            $arT[$id]['dedate'] = $v['mdate'];
+            $arT[$id]['online'] = $v['mdate'];
+            $arT[$id]['daysfromsite'] = "daysfromsite";
+            $arT[$id]['daysonline'] = "daysonline";
+            $arT[$id]['countvac'] = "countvac";
+            $arT[$id]['countactivevac'] = "countactivevac";
+            $arT[$id]['countarchivevac'] = "countarchivevac";
+            $arT[$id]['countinvitevac'] = "countinvitevac";
+            $arT[$id]['countresponsevac'] = "countresponsevac";
+            $arT[$id]['countrefusedvac'] = "countrefusedvac";
+            $arT[$id]['countrating'] = "countrating";
+            $arT[$id]['feedback'] = "feedback";
+            
+            $arT[$id]['countratingpromo'] = "countrating";
+            $arT[$id]['services'] = "services";
+        }
+        
+         $arRes['items'] = $arT;
+         
         return $arRes;
+        
     }
     
     /**
