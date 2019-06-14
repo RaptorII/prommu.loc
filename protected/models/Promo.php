@@ -819,7 +819,7 @@ class Promo extends ARModel
             switch ($dateType)
             {
                 case 'create': 
-                    $conditions[] = 'e.crdate>=:bdate';
+                    $conditions[] = 'e.date_public>=:bdate';
                     $params[':bdate'] = $bDate . ' 00:00:00';
                     break;
             }   
@@ -829,7 +829,7 @@ class Promo extends ARModel
             switch ($dateType)
             {
                 case 'create': 
-                    $conditions[] = 'e.crdate<=:edate';
+                    $conditions[] = 'e.date_public<=:edate';
                     $params[':edate'] = $eDate . ' 23:59:59';
                     break;
             }   
