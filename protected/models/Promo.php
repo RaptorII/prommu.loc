@@ -807,7 +807,7 @@ class Promo extends ARModel
         $conditions = $params = [];
         $rq = Yii::app()->getRequest();
         
-                $dateType = $rq->getParam('export_date');
+        $dateType = $rq->getParam('export_date');
         $bDate = $rq->getParam('export_beg_date');
         $eDate = $rq->getParam('export_end_date');
         $status = $rq->getParam('export_status');
@@ -841,8 +841,8 @@ class Promo extends ARModel
         }
         
         $arId = $db->createCommand()
-                                ->select("e.id, e.name, e.contact, e.type, e.web, e.logo, e.crdate, e.mdate")
-                                ->from('employer e')
+                                ->select("e.id, e.firstname, e.lastname, e.type, e.web, e.logo, e.crdate, e.mdate")
+                                ->from('resume e')
                                 ->where(implode(' and ',$conditions), $params)
                                 ->order('e.id desc')
                                 ->queryAll();
@@ -850,7 +850,7 @@ class Promo extends ARModel
         $n = count($arId);
         if(!$n)
         {
-          Yii::app()->user->setFlash('danger', 'Работодателей не найдено');
+          Yii::app()->user->setFlash('danger', 'Соискателей не найдено');
           return false;
         }
         
@@ -877,13 +877,12 @@ class Promo extends ARModel
         // $arT = array();
         foreach ($arId as $k => $v)
         {
-            $id = $v['id'];
-            $arT[$id]['id'] = $id;
-            $arT[$id]['name'] = $v['name'];
-            $arT[$id]['contact'] = $v['contact'];
+            $arT[$id]['id'] = $v['id'];
+            $arT[$id]['fio'] = $v['firstname'].' '.$v['lastname'];
+            $arT[$id]['birthday'] = $v['birthday'];
+            $arT[$id]['photo'] = "https://files.prommu.com/users/".$v['id'].'/'.$v['photo'].'.jpg';
             $arT[$id]['type'] = $v['type'];
             $arT[$id]['web'] = $v['web'];
-            $arT[$id]['logo'] = "https://files.prommu.com/".$v['logo'].'.jpg';
             $arT[$id]['photo'] = "photo";
             $arT[$id]['country'] = "country";
             $arT[$id]['city'] = "city";
@@ -911,6 +910,8 @@ class Promo extends ARModel
             $arT[$id]['countrating'] = "countrating";
             $arT[$id]['feedback'] = "feedback";
             
+            $arT[$id]['countratingpromo'] = "countrating";
+            $arT[$id]['services'] = "services";
             $arT[$id]['countratingpromo'] = "countrating";
             $arT[$id]['services'] = "services";
         }
