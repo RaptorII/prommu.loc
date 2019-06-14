@@ -798,7 +798,7 @@ class Employer extends ARModel
             $arT[$id]['services'] = "services";
         }
         
-         $arRes['items'] = $arId;
+         $arRes['items'] = $arT;
          
         return $arRes;
     }
