@@ -918,7 +918,7 @@ class Promo extends ARModel
                                 ->select("uw.date_login")
                                 ->from('user_work uw')
                                 ->where('uw.id_user=:id_user', array(':id_user' => $idus))
-                                ->order('e.id desc')
+                                ->order('uw.id desc')
                                 ->queryAll();
         
         $res['time'] = count($result)*15;
