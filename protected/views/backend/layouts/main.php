@@ -33,7 +33,6 @@ $arIdeas    = (new Ideas)->getNewIdeas();
 $arIdeasCnt = count($arIdeas);
 
 /**
- * Понеслась по второму кругу
  * Counters for Services 16.05.2019
  */
 

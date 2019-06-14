@@ -908,7 +908,7 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	position: absolute;
 	top: 34px;
 	left: 0;
-	z-index: 2;
+	z-index: 11;
 	font-family: RobotoCondensed-Regular, verdana, arial;
 	font-size: 14px;
 	color: #FFFFFF;

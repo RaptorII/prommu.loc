@@ -799,7 +799,7 @@
       <div class="epa__post-close"></div>
       <label class="epa__label epa__payment">
         <span class="epa__label-name">Ожидаемая оплата: </span>
-        <input type="text" name="post[NEWID][payment]" value="" class="epa__input epa__required error" data-name="Ожидаемая оплата">
+        <input type="text" name="post[NEWID][payment]" value="" class="epa__input epa__required " data-name="Ожидаемая оплата">
         <em>руб</em>
       </label>
       <label class="epa__label epa__select">
@@ -891,7 +891,7 @@
   </div>
   <?//  *****************  //?>
   <div id="add-day-period">
-    <div class="epa__label epa__period error" data-id="NEWDAY">
+    <div class="epa__label epa__period" data-id="NEWDAY">
       <span class="epa__period-close"></span>
       <div class="epa__period-error"><span>С</span><b></b><span>до</span><b></b></div>
       <span class="epa__label-name"><i></i>, Время дня:</span>

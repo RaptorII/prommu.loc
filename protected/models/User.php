@@ -652,6 +652,7 @@ class User extends CActiveRecord
 					'lastname' => $data['lastname'],
 					'position' => $data['post'],
 					'ismoder' => $data['ismoder'],
+                    'is_new' => (integer) !$data['ismoder'],
 					'isblocked' => $data['isblocked'],
 					'city' => $data['city'],
 					'contact' => $data['contact'],

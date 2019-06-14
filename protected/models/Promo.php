@@ -671,7 +671,10 @@ class Promo extends ARModel
                FROM comments mm
                WHERE mm.iseorp = 1 AND mm.id_promo = r.id) comment_count
             FROM resume r
-              INNER JOIN user u ON r.id_user = u.id_user AND r.is_new = 1 AND u.crdate >= CURDATE()
+              INNER JOIN user u ON r.id_user = u.id_user 
+              AND r.is_new = 1 
+              #OR r.ismoder = 0 
+              #AND u.crdate >= CURDATE()
             ORDER BY id DESC, id DESC 
         ";
 

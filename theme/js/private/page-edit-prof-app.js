@@ -148,7 +148,7 @@ jQuery(function($){
 		var val = $('#epa-posts-save input').val();
 		if(val!==''){
 			id = randomInt();
-			c = 	'<li>'+
+			html = 	'<li>'+
 						'<input type="checkbox" name="donjnost[]" value="'+id+'" data-name="'+val+'" id="epa-post-'+id+'" checked>'+
 						'<label for="epa-post-'+id+'">'+val+'<b></b></label>'+
 					'</li>';
@@ -504,7 +504,7 @@ jQuery(function($){
 		var val = $(this).val(),
 			label = $(this).closest('.epa__label');
 
-        addErr(label);
+        //addErr(label);
 
 		if(val!=='') {
             arVals = val.split('до');
@@ -691,7 +691,7 @@ jQuery(function($){
           }
         });
 			}
-
+console.log(arErrors);
 			if(!errors && !arErrors.length){
 				var arPosts = $('#epa-list-posts input'),
 					arCityItems = $('#city-module .epa__city-item'),
@@ -729,7 +729,7 @@ jQuery(function($){
 					}
 				});
 				$('#epa-edit-form').submit();
-				console.log($('#epa-edit-form').serializeArray());
+				//console.log($('#epa-edit-form').serializeArray());
 			}
 		}
 	});
@@ -1000,7 +1000,8 @@ jQuery(function($){
 				}, 500);
 			}	
 		}
-		else if($(label).hasClass('epa__period')){ // поле установки подходящего времени в дни недели
+		else
+			if($(label).hasClass('epa__period')){ // поле установки подходящего времени в дни недели
 
 			if(val.length>8){ // 8 минимум
 				var arVals = val.split('до');
@@ -1368,7 +1369,7 @@ jQuery(function($){
 	$(document).click(function(e){
 		if($(e.target).closest('.epa__period-error').length || $(e.target).is('.epa__period-error'))
 		{
-			let main = $(e.target).closest('.epa__period')[0],
+			var main = $(e.target).closest('.epa__period')[0],
 					input = $(main).find('.epa__input');
 			$(input).focus();
 			remErr(main);

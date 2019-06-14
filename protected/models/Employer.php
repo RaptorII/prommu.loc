@@ -403,7 +403,9 @@ class Employer extends ARModel
             
             FROM employer r
               INNER JOIN user u ON u.id_user = r.id_user
-            WHERE r.is_new = 1 AND u.crdate >= CURDATE()
+            WHERE r.is_new = 1 
+            #OR r.ismoder = 0  
+            #AND u.crdate >= CURDATE()
             ORDER BY r.id DESC
             LIMIT 1000
         ";
