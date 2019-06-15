@@ -129,10 +129,10 @@ class Api
     }
     
     public function getTest(){
-        $model = new Employer();
-        $data = $model->exportEmployers();
+        $model = new Promo();
+        $data = $model->getUserExcelInfo(38679);
         var_dump($data);
-        Yexcel::makeExcel($data['head'],$data['items'],'export_empls',$data['autosize']);
+        
     }
     public function getAttrib(){
         $sql = "SELECT
