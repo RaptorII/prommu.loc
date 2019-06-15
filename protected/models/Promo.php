@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by wind
+ * Created by Prommu
  * Date: 17.02.16
  * Time: 22:22
  */
@@ -841,7 +841,7 @@ class Promo extends ARModel
         }
         
         $arId = $db->createCommand()
-                                ->select("e.id, e.firstname,e.birthday, e.lastname, e.date_public, e.mdate, e.photo, e.card, e.cardPrommu,
+                                ->select("e.id, e.id_user, e.firstname,e.birthday, e.lastname, e.date_public, e.mdate, e.photo, e.card, e.cardPrommu,
                                           e.ismed, e.ishasavto, e.smart")
                                 ->from('resume e')
                                 ->where(implode(' and ',$conditions), $params)
@@ -872,9 +872,15 @@ class Promo extends ARModel
             $arT[$id]['birthday'] = $v['birthday'];
             $arT[$id]['photo'] = "https://files.prommu.com/users/".$v['id'].'/'.$v['photo'].'.jpg';
             $arT[$id]['photocount'] = 1;
-            $arT[$id]['country'] = "country";
-            $arT[$id]['city'] = "city";
-            $arT[$id]['region'] = "region";
+            
+            ///city
+            $city = $this->getCityUserExcel($v['id_user']);
+            
+            $arT[$id]['country'] = $city['coname'];
+            $arT[$id]['city'] = $city['name'];
+            $arT[$id]['region'] = $city['region'];
+            
+            ///contact
             $arT[$id]['phone'] = "phone";
             $arT[$id]['email'] = "email";
             $arT[$id]['skype'] = "skype";
@@ -934,11 +940,33 @@ class Promo extends ARModel
                                 ->order('uw.id desc')
                                 ->queryAll();
         
-        $res['time'] = count($result)*15;
+        $res['time'] = count($result)*3;
         $res['date_login'] = $result[count($result)-1];
         
         return $res;
     }
+    
+    public function getCityUserExcel($idus){
+        
+        $sql = "SELECT ci.id_city id, ci.name, co.id_co, co.name coname, ci.ismetro, uc.street, uc.addinfo, ci.region
+            FROM user_city uc
+            LEFT JOIN city ci ON uc.id_city = ci.id_city
+            LEFT JOIN country co ON co.id_co = ci.id_co
+            WHERE uc.id_user = {$idus}";
+        $res = Yii::app()->db->createCommand($sql)->queryRow();
+        
+        
+        $region = Yii::app()->db->createCommand()
+            ->select('name')
+            ->from('city')
+            ->where('id_city like :id_city', array(':id_city'=>$res['region']))
+            ->limit(1)
+            ->queryRow();
+            
+        $res['region'] = $region['name'];
+        return $res;
+    }
+    
     /**
      * setViewed
      * @return model
