@@ -882,6 +882,8 @@ class Promo extends ARModel
             $arT[$id]['viber'] = "viber";
             $arT[$id]['telegram'] = "telegram";
             $arT[$id]['messenger'] = "messenger";
+            
+            ///дата создания
             $arT[$id]['crdate'] = $v['date_public'];
             $arT[$id]['mdate'] = $v['mdate'];
             $arT[$id]['edate'] = $v['mdate'];
@@ -889,6 +891,7 @@ class Promo extends ARModel
             $arT[$id]['online'] = $v['mdate'];
             $arT[$id]['daysfromsite'] = $days;
             $arT[$id]['daysonline'] = $time['time'];
+            
             $arT[$id]['countvac'] = "countvac";
             $arT[$id]['countactivevac'] = "countactivevac";
             
@@ -897,18 +900,18 @@ class Promo extends ARModel
             $arT[$id]['countinvitevac'] = "countinvitevac";
             $arT[$id]['countresponsevac'] = "countresponsevac";
             $arT[$id]['countrefusedvac'] = "countrefusedvac";
-            $arT[$id]['countrating'] = "countrating";
+            
             
             ///рейтинг
+            $arT[$id]['countrating'] = "countrating";
             $arT[$id]['feedback'] = "feedback";
             $arT[$id]['countratingpromo'] = "countrating";
             $arT[$id]['services'] = "services";
-            $arT[$id]['countratingpromo'] = "countrating";
             
             
             ///наличие атрибутов
             $arT[$id]['ismed'] = $v['ismed'];
-            $arT[$id]['cardPrommu'] = $v['cardPrommi'];
+            $arT[$id]['cardPrommu'] = $v['cardPrommu'];
             $arT[$id]['card'] = $v['card'];
             $arT[$id]['smart'] = $v['smart'];
             $arT[$id]['ishasavto'] = $v['ishasavto'];
