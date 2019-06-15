@@ -841,7 +841,8 @@ class Promo extends ARModel
         }
         
         $arId = $db->createCommand()
-                                ->select("e.id, e.firstname,e.birthday, e.lastname, e.date_public, e.mdate, e.photo")
+                                ->select("e.id, e.firstname,e.birthday, e.lastname, e.date_public, e.mdate, e.photo, e.card, e.cardPrommu,
+                                          e.ismed, e.ishasavto, e.smart")
                                 ->from('resume e')
                                 ->where(implode(' and ',$conditions), $params)
                                 ->order('e.id desc')
@@ -865,7 +866,7 @@ class Promo extends ARModel
             $datediff = $now - $your_date; 
             
             $days = floor($datediff / (60 * 60 * 24)); 
-
+            $id = $v['id'];
             $arT[$id]['id'] = $v['id'];
             $arT[$id]['fio'] = $v['firstname'].' '.$v['lastname'];
             $arT[$id]['birthday'] = $v['birthday'];
@@ -890,17 +891,27 @@ class Promo extends ARModel
             $arT[$id]['daysonline'] = $time['time'];
             $arT[$id]['countvac'] = "countvac";
             $arT[$id]['countactivevac'] = "countactivevac";
+            
+            ///вакансия
             $arT[$id]['countarchivevac'] = "countarchivevac";
             $arT[$id]['countinvitevac'] = "countinvitevac";
             $arT[$id]['countresponsevac'] = "countresponsevac";
             $arT[$id]['countrefusedvac'] = "countrefusedvac";
             $arT[$id]['countrating'] = "countrating";
-            $arT[$id]['feedback'] = "feedback";
             
+            ///рейтинг
+            $arT[$id]['feedback'] = "feedback";
             $arT[$id]['countratingpromo'] = "countrating";
             $arT[$id]['services'] = "services";
             $arT[$id]['countratingpromo'] = "countrating";
-            $arT[$id]['services'] = "services";
+            
+            
+            ///наличие атрибутов
+            $arT[$id]['ismed'] = $v['ismed'];
+            $arT[$id]['cardPrommu'] = $v['cardPrommi'];
+            $arT[$id]['card'] = $v['card'];
+            $arT[$id]['smart'] = $v['smart'];
+            $arT[$id]['ishasavto'] = $v['ishasavto'];
         }
         
          $arRes['items'] = $arT;
