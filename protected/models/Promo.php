@@ -841,7 +841,7 @@ class Promo extends ARModel
         }
         
         $arId = $db->createCommand()
-                                ->select("e.id, e.firstname, e.lastname, e.date_public, e.mdate, e.photo")
+                                ->select("e.id, e.firstname,e.birthday, e.lastname, e.date_public, e.mdate, e.photo")
                                 ->from('resume e')
                                 ->where(implode(' and ',$conditions), $params)
                                 ->order('e.id desc')
