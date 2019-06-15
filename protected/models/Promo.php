@@ -906,7 +906,6 @@ class Promo extends ARModel
             $arT[$id]['countrating'] = "countrating";
             $arT[$id]['feedback'] = "feedback";
             $arT[$id]['countratingpromo'] = "countrating";
-            $arT[$id]['services'] = "services";
             
             
             ///наличие атрибутов
