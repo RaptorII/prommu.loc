@@ -898,20 +898,19 @@ class Promo extends ARModel
             $arT[$id]['daysfromsite'] = $days;
             $arT[$id]['daysonline'] = $time['time'];
             
-            $arT[$id]['countvac'] = "countvac";
-            $arT[$id]['countactivevac'] = "countactivevac";
-            
             ///вакансия
-            $arT[$id]['countarchivevac'] = "countarchivevac";
-            $arT[$id]['countinvitevac'] = "countinvitevac";
-            $arT[$id]['countresponsevac'] = "countresponsevac";
-            $arT[$id]['countrefusedvac'] = "countrefusedvac";
+            $arT[$id]['countvac'] = "";
+            $arT[$id]['countactivevac'] = "";
+            $arT[$id]['countarchivevac'] = "";
+            $arT[$id]['countinvitevac'] = "";
+            $arT[$id]['countresponsevac'] = "";
+            $arT[$id]['countrefusedvac'] = "";
             
             
             ///рейтинг
-            $arT[$id]['countrating'] = "countrating";
-            $arT[$id]['feedback'] = "feedback";
-            $arT[$id]['countratingpromo'] = "countrating";
+            $arT[$id]['countrating'] = "";
+            $arT[$id]['feedback'] = "";
+            $arT[$id]['countratingpromo'] = "";
             
             
             ///наличие атрибутов
