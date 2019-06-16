@@ -966,6 +966,25 @@ class Promo extends ARModel
         return $res;
     }
     
+    
+    public function getUserExcelInfo($idus){
+        
+        $sql = "SELECT DATE_FORMAT(r.birthday,'%d.%m.%Y') as bday -- , DATE_FORMAT(r.birthday,'%d') as bd
+              , r.id_user, r.isman , r.ismed , r.smart, r.ishasavto , r.aboutme , r.firstname , r.lastname , r.photo, r.card, r.cardPrommu
+              , a.val , a.id_attr
+              , d.name , d.type , d.id_par idpar , d.key
+              , u.email, u.is_online, u.mdate
+            FROM resume r
+            LEFT JOIN user u ON u.id_user = r.id_user
+            LEFT JOIN user_attribs a ON r.id_user = a.id_us
+            LEFT JOIN user_attr_dict d ON a.id_attr = d.id
+            WHERE r.id_user = {$idus}
+            ORDER BY a.id_attr";
+        $res = Yii::app()->db->createCommand($sql)->queryAll();
+
+        return $res;
+    }
+    
     /**
      * setViewed
      * @return model
