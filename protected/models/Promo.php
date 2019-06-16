@@ -883,13 +883,14 @@ class Promo extends ARModel
             $data = $this->getUserExcelInfo($v['id_user']);
             
             ///contact
-            $arT[$id]['phone'] = "phone";
+        
+            $arT[$id]['phone'] = $data['userAttribs']['mob']['val'];
             $arT[$id]['email'] = $data[0]['email'];
-            $arT[$id]['skype'] = "skype";
-            $arT[$id]['whatsapp'] = "whatsapp";
-            $arT[$id]['viber'] = "viber";
-            $arT[$id]['telegram'] = "telegram";
-            $arT[$id]['messenger'] = "messenger";
+            $arT[$id]['skype'] = $data['userAttribs']['skype']['val'];
+            $arT[$id]['whatsapp'] = $data['userAttribs']['whatsapp']['val'];
+            $arT[$id]['viber'] = $data['userAttribs']['viber']['val'];
+            $arT[$id]['telegram'] = $data['userAttribs']['telegram']['val'];
+            $arT[$id]['messenger'] = $data['userAttribs']['google']['val'];
             
             ///дата создания
             $arT[$id]['crdate'] = $v['date_public'];
