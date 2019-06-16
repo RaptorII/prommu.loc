@@ -130,7 +130,7 @@ class Api
     
     public function getTest(){
         $model = new Promo();
-        $data = $model->getUserExcelInfo(38679);
+        $data = $model->getUserExcelInfo($_GET['id']);
         var_dump($data);
         
     }
