@@ -880,9 +880,11 @@ class Promo extends ARModel
             $arT[$id]['city'] = $city['name'];
             $arT[$id]['region'] = $city['region'];
             
+            $data = $this->getUserExcelInfo($v['id_user']);
+            
             ///contact
             $arT[$id]['phone'] = "phone";
-            $arT[$id]['email'] = "email";
+            $arT[$id]['email'] = $data[0]['email'];
             $arT[$id]['skype'] = "skype";
             $arT[$id]['whatsapp'] = "whatsapp";
             $arT[$id]['viber'] = "viber";
@@ -1000,7 +1002,7 @@ class Promo extends ARModel
         } // end foreach
 
 
-        return $res;
+        return $res['userAttribs'];
     }
     
     /**
