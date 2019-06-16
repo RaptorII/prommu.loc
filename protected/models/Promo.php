@@ -837,7 +837,7 @@ class Promo extends ARModel
         
         if($status!='all')
         {
-            $conditions[] = 'e.ismoder=' . ($status=='active' ? '1' : '0');
+            $conditions[] = 'e.status =' . ($status=='active' ? '1' : '0');
         }
         
         $arId = $db->createCommand()
