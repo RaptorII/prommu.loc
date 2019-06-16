@@ -1002,7 +1002,7 @@ class Promo extends ARModel
         } // end foreach
 
 
-        return $res['userAttribs'];
+        return $res;
     }
     
     /**
