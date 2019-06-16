@@ -981,8 +981,26 @@ class Promo extends ARModel
             WHERE r.id_user = {$idus}
             ORDER BY a.id_attr";
         $res = Yii::app()->db->createCommand($sql)->queryAll();
+        
+        
+        foreach ($res as $key => $val)
+        {
+            if($val['idpar'] == 0){
+                $data['userAttribs'][$val['key']] = ['val' => $val['val'], 'id_attr' => $val['id_attr'], 'name' => $val['name'], 'type' => $val['type'], 'idpar' => $val['idpar'], 'key' => $val['key'],];
+            } else {
+                $userdict = Yii::app()->db->createCommand()
+                        ->select('d.id , d.type, d.key, d.name')
+                        ->from('user_attr_dict d')
+                        ->where('d.id = :id', array(':id' => $val['idpar']))
+                        ->queryRow();
+                
+                $data['userAttribs'][$userdict['key']] = ['val' => $val['val'], 'id_attr' => $val['id_attr'], 'name' => $val['name'], 'type' => $val['type'], 'idpar' => $val['idpar'], 'key' => $val['key'],];
+                
+            }
+        } // end foreach
 
-        return $res;
+
+        return $data;
     }
     
     /**
