@@ -661,6 +661,11 @@ class User extends CActiveRecord
 					'isblocked' => $data['isblocked'],
 				), 'id_user=:id_user', array(':id_user' => $id));
 
+//			echo '<pre>';
+//			 print_r($data);
+//			echo '</pre>';
+//			die();
+
 			Yii::app()->db->createCommand()
 				->update('employer', array(
 					'name' => $data['name'],
@@ -673,6 +678,7 @@ class User extends CActiveRecord
 					'isblocked' => $data['isblocked'],
 					'city' => $data['city'],
 					'contact' => $data['contact'],
+					'aboutme' => $data['aboutme'],
 					), 'id_user=:id_user', array(':id_user' => $id));
 
 			$attr[] = $data['userAttribs'];
@@ -793,7 +799,7 @@ class User extends CActiveRecord
 		$result = Yii::app()->db->createCommand()
     		->select("r.id, u.id_user, u.login, u.passw, 
     			u.email, u.access_time, u.status, 
-    			u.isblocked, u.ismoder, r.firstname, r.contact,
+    			u.isblocked, u.ismoder, r.firstname, r.contact, r.aboutme,
     			r.logo, r.lastname, r.name, r.type, r.city, r.rate, r.rate_neg"
     		)
 			->leftjoin('employer r', 'r.id_user=u.id_user')

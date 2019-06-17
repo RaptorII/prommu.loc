@@ -195,6 +195,17 @@ echo '<div class="control-group small-bl">'
                     array('class'=>'form-control','disabled'=>true)
                 )
             . '</div>';
+    echo '<div class="control-group small-bl">'
+            . '<label class="control-label">О компании</label>'
+                . CHtml::textArea(
+                    'User[aboutme]',
+                    $data['aboutme'],
+                    [
+                        'class'=>'form-control',
+                        //'disabled'=>true,
+                    ]
+                )
+            . '</div>';
 echo '</div>';
 /* 
 *       PHOTO
