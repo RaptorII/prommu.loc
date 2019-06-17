@@ -83,10 +83,4 @@
         display: none;
     }
 }
-@media (min-width: 990px) {
-    #DiContent .content-block {
-        margin: 20px auto 0 auto;
-        width: 80%
-    }
-}
 </style>
