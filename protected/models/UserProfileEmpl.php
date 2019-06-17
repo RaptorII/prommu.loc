@@ -1514,7 +1514,7 @@ class UserProfileEmpl extends UserProfile
             $newPsw = md5($newPsw);
 
             $user = Yii::app()->db->createCommand()
-                ->select('u.passw')
+                ->select('u.passw, u.email')
                 ->from('user u')
                 ->where('u.id_user=:id', array(':id' => $idus))
                 ->queryRow();
@@ -1528,8 +1528,13 @@ class UserProfileEmpl extends UserProfile
                         'id_user=:id',
                         array(':id' => $idus)
                     );
-                if(!$res)
-                    $arResult = array('error'=>1,'mess'=>'Ошибка сохранения пароля','type'=>'psw');
+
+                if(!$res) {
+                    $arResult = array('error' => 1, 'mess' => 'Ошибка сохранения пароля', 'type' => 'psw');
+                } else {
+                    $message = sprintf("Ваш пароль успешно изменён.");
+                    Share::sendmail($user['email'], "Prommu.com Изменение пароля " . $idus, $message);
+                }
             }
             else{
                 $arResult = array('error'=>1,'mess'=>'Старый пароль не подходит','type'=>'psw');
