@@ -1,3 +1,22 @@
+<style type="text/css">
+	#DiContent.page-responses .responses .row.-new .border{ margin: 0 }
+	@media (min-width: 768px){
+		#DiContent.page-responses .responses>div:nth-child(even) .row,
+		#DiContent.page-responses .responses>div:nth-child(even) .row .inner{ background: #f2f2f2; }
+	}
+	.content-block{ position: relative; }
+	.content-block.load:before{
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		background: rgba(255,255,255,.7) url(/theme/pic/vacancy/loading.gif) center center no-repeat;
+		background-size: 80px;
+		z-index: 21;
+	}
+</style>
 <br/>
 <div class='header-021'>
   <b>Мои заявки на вакансии</b>
@@ -9,7 +28,8 @@
   <div class="responses">
     <?php foreach ($viData['resps'] as $key => $val): ?>
       <?php if( $val['status'] == 3 ) continue; ?>
-      <div class="row <?= $val['status'] == '4' ? '-new' : '' ?>">
+      <div class="col-xs-12">
+      	<div class="row <?= $val['status'] == '4' ? '-new' : '' ?>">
           <div class="border">
               <?php if( $val['status'] == '4' ): ?>
                   <div class="label-new">Новая</div>
@@ -66,8 +86,10 @@
                   </div>
               </div>
           </div>
+        </div>
       </div>
     <?php endforeach; ?>
+    <div class="clear"></div>
   </div>
   <br />
   <br />
