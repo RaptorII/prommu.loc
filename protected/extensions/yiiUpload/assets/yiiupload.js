@@ -44,6 +44,7 @@ var YiiUpload = (function () {
 				aspectRatio: 1/1,
 				viewMode: 1,
 				zoomable: true,
+				zoomOnWheel: false,
 				rotatable: true,
 				background: false,
 				guides: false,
