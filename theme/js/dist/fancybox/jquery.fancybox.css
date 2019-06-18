@@ -41,3 +41,11 @@
   text-align: right;
   margin-top: 20px;
 }
+
+@media screen and (max-width: 450px) {
+  .prmu__popup {
+    max-width: 320px;
+    padding: 30px 10px;
+  }
+}
+
