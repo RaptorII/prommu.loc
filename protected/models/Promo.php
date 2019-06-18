@@ -750,7 +750,7 @@ class Promo extends ARModel
         return $arApp;      
     }
     
-        /**
+            /**
      * экспорт соискателей в админке
      */
     public function exportPromos()
@@ -811,6 +811,8 @@ class Promo extends ARModel
         $bDate = $rq->getParam('export_beg_date');
         $eDate = $rq->getParam('export_end_date');
         $status = $rq->getParam('export_status');
+        $phones = $rq->getParam('export_phone');
+        
         $bDate = date('Y-m-d',strtotime($bDate));
         $eDate = date('Y-m-d',strtotime($eDate));
 
@@ -835,15 +837,18 @@ class Promo extends ARModel
             }   
         }
         
+        
         if($status!='all')
         {
-            $conditions[] = 'e.status =' . ($status=='active' ? '1' : '0');
+            $conditions[] = 'u.ismoder =' . ($status=='active' ? '1' : '0');
         }
+        
         
         $arId = $db->createCommand()
                                 ->select("e.id, e.id_user, e.firstname,e.birthday, e.lastname, e.date_public, e.mdate, e.photo, e.card, e.cardPrommu,
                                           e.ismed, e.ishasavto, e.smart")
                                 ->from('resume e')
+                                ->join('user u', 'u.id_user=e.id_user')
                                 ->where(implode(' and ',$conditions), $params)
                                 ->order('e.id desc')
                                 ->queryAll();
@@ -856,72 +861,79 @@ class Promo extends ARModel
         }
         
          
-
+    
         foreach ($arId as $k => $v)
         {
-            $time = $this->getOnlineTime($v['id']);
-            
-            $now = time(); 
-            $your_date = strtotime($v['date_public']); 
-            $datediff = $now - $your_date; 
-            
-            $days = floor($datediff / (60 * 60 * 24)); 
-            $id = $v['id'];
-            $arT[$id]['id'] = $v['id'];
-            $arT[$id]['fio'] = $v['firstname'].' '.$v['lastname'];
-            $arT[$id]['birthday'] = $v['birthday'];
-            $arT[$id]['photo'] = "https://files.prommu.com/users/".$v['id'].'/'.$v['photo'].'.jpg';
-            $arT[$id]['photocount'] = 1;
-            
-            ///city
-            $city = $this->getCityUserExcel($v['id_user']);
-            
-            $arT[$id]['country'] = $city['coname'];
-            $arT[$id]['city'] = $city['name'];
-            $arT[$id]['region'] = $city['region'];
             
             $data = $this->getUserExcelInfo($v['id_user']);
+            $time = $this->getOnlineTime($v['id']);
             
-            ///contact
-        
-            $arT[$id]['phone'] = $data['userAttribs']['mob']['val'];
-            $arT[$id]['email'] = $data[0]['email'];
-            $arT[$id]['skype'] = $data['userAttribs']['skype']['val'];
-            $arT[$id]['whatsapp'] = $data['userAttribs']['whatsapp']['val'];
-            $arT[$id]['viber'] = $data['userAttribs']['viber']['val'];
-            $arT[$id]['telegram'] = $data['userAttribs']['telegram']['val'];
-            $arT[$id]['messenger'] = $data['userAttribs']['google']['val'];
-            
-            ///дата создания
-            $arT[$id]['crdate'] = $v['date_public'];
-            $arT[$id]['mdate'] = $v['mdate'];
-            $arT[$id]['edate'] = $v['mdate'];
-            $arT[$id]['dedate'] = $v['mdate'];
-            $arT[$id]['online'] = $v['mdate'];
-            $arT[$id]['daysfromsite'] = $days;
-            $arT[$id]['daysonline'] = $time['time'];
-            
-            ///вакансия
-            $arT[$id]['countvac'] = "";
-            $arT[$id]['countactivevac'] = "";
-            $arT[$id]['countarchivevac'] = "";
-            $arT[$id]['countinvitevac'] = "";
-            $arT[$id]['countresponsevac'] = "";
-            $arT[$id]['countrefusedvac'] = "";
-            
-            
-            ///рейтинг
-            $arT[$id]['countrating'] = "";
-            $arT[$id]['feedback'] = "";
-            $arT[$id]['countratingpromo'] = "";
-            
-            
-            ///наличие атрибутов
-            $arT[$id]['ismed'] = $v['ismed'];
-            $arT[$id]['cardPrommu'] = $v['cardPrommu'];
-            $arT[$id]['card'] = $v['card'];
-            $arT[$id]['smart'] = $v['smart'];
-            $arT[$id]['ishasavto'] = $v['ishasavto'];
+            if(!empty($data['userAttribs']['mob']['val']) && $time['time'] != 0){
+                
+                
+                
+                $now = time(); 
+                $your_date = strtotime($v['date_public']); 
+                $datediff = $now - $your_date; 
+                
+                $days = floor($datediff / (60 * 60 * 24)); 
+                $id = $v['id'];
+                $arT[$id]['id'] = $v['id'];
+                $arT[$id]['fio'] = $v['firstname'].' '.$v['lastname'];
+                $arT[$id]['birthday'] = $v['birthday'];
+                if($v['photo']){
+                    $arT[$id]['photo'] = "https://files.prommu.com/users/".$v['id'].'/'.$v['photo'].'.jpg';
+                } else $arT[$id]['photo'] = "";
+    
+                $arT[$id]['photocount'] = 1;
+                
+                ///city
+                $city = $this->getCityUserExcel($v['id_user']);
+                
+                $arT[$id]['country'] = $city['coname'];
+                $arT[$id]['city'] = $city['name'];
+                $arT[$id]['region'] = $city['region'];
+                
+                ///contact
+                $arT[$id]['phone'] = $data['userAttribs']['mob']['val'];
+                $arT[$id]['email'] = $data[0]['email'];
+                $arT[$id]['skype'] = $data['userAttribs']['skype']['val'];
+                $arT[$id]['whatsapp'] = $data['userAttribs']['whatsapp']['val'];
+                $arT[$id]['viber'] = $data['userAttribs']['viber']['val'];
+                $arT[$id]['telegram'] = $data['userAttribs']['telegram']['val'];
+                $arT[$id]['messenger'] = $data['userAttribs']['google']['val'];
+                
+                ///дата создания
+                $arT[$id]['crdate'] = $v['date_public'];
+                $arT[$id]['mdate'] = $v['mdate'];
+                $arT[$id]['edate'] = $v['mdate'];
+                $arT[$id]['dedate'] = $v['mdate'];
+                $arT[$id]['online'] = $v['mdate'];
+                $arT[$id]['daysfromsite'] = $days;
+                $arT[$id]['daysonline'] = $time['time'];
+                
+                ///вакансия
+                $arT[$id]['countvac'] = "";
+                $arT[$id]['countactivevac'] = "";
+                $arT[$id]['countarchivevac'] = "";
+                $arT[$id]['countinvitevac'] = "";
+                $arT[$id]['countresponsevac'] = "";
+                $arT[$id]['countrefusedvac'] = "";
+                
+                
+                ///рейтинг
+                $arT[$id]['countrating'] = "";
+                $arT[$id]['feedback'] = "";
+                $arT[$id]['countratingpromo'] = "";
+                
+                
+                ///наличие атрибутов
+                $arT[$id]['ismed'] = $v['ismed'];
+                $arT[$id]['cardPrommu'] = $v['cardPrommu'];
+                $arT[$id]['card'] = $v['card'];
+                $arT[$id]['smart'] = $v['smart'];
+                $arT[$id]['ishasavto'] = $v['ishasavto'];
+            }
         }
         
          $arRes['items'] = $arT;
