@@ -1806,7 +1806,21 @@ class UserController extends AppController
     public function actionSelf_employed()
     {
         Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
-        $this->render('self-employed');
+        $data = array();
+        $data['inn'] = Share::$UserProfile->getUserAttribute(['key'=>'self_employed']);
+        if(!$data['inn'])
+        {
+            $model = new PagesContent;
+            $lang = Yii::app()->session['lang'];
+            $data['agreement'] = $model->getPageContent('conditions', $lang);
+            $this->setBreadcrumbsEx(
+                ['Профиль', MainConfig::$PAGE_PROFILE],
+                ['Как стать самозанятым', MainConfig::$VIEW_SELF_EMPLOYED]
+            );
+            $this->setPageTitle('Как стать самозанятым');
+        }
+
+        $this->render('self-employed',['viData'=>$data]);
     }
     
 }

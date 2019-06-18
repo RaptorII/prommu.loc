@@ -1,4 +1,4 @@
- <script src="https://www.google.com/jsapi"></script>
+<script src="https://www.google.com/jsapi"></script>
 <?php
   $attr = array_values($viData['userInfo']['userAttribs'])[0];
   $idPromo = $attr['id'];
@@ -215,6 +215,11 @@
           <span class="ppp__subtitle">Общий рейтинг</span>
           <ul class="ppp__star-block"><li class="full"></li></ul> 
           <span class="ppp__subtitle"><?=Share::getRating($attr['rate'],$attr['rate_neg'])?></span>
+        </div>
+        <div class="ppp__self-employed">
+        <a href="<?=MainConfig::$VIEW_SELF_EMPLOYED?>" class="prmu-btn prmu-btn_normal">
+          <span><?=($info['self_employed']?'Личный счет':'Стать самозанятым')?></span>
+        </a>
         </div>
         <hr class="ppp__line">
         <table class="upp__table">

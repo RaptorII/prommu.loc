@@ -229,6 +229,83 @@ abstract class UserProfile extends CModel
         }
         return false;   
     }
+    /**
+     * @param $arr - array [ column => value ]
+     */
+    public function getUserAttribute($arr)
+    {
+        $conditions = $params = array();
+        if(!is_array($arr))
+        {
+          return false;
+        }
+        else
+        {
+          foreach ($arr as $key => $value)
+          {
+            $conditions[] = "ua.$key=:$key";
+            $params[":$key"] = $value;
+          }
+        }
+        if(!isset($conditions['ua.id_us']))
+        {
+          $conditions[] = "ua.id_us=:id_us";
+          $params[":id_us"] = $this->id;
+        }
+        $conditions = implode(' AND ',$conditions);
+
+        $arRes = Yii::app()->db->createCommand()
+                    ->select('ua.id_us,
+                        ua.id_attr,
+                        ua.key,
+                        ua.val,
+                        ua.crdate,
+                        uad.id_par,
+                        uad.name,
+                        uad.postself')
+                    ->from('user_attribs ua')
+                    ->leftjoin('user_attr_dict uad','uad.id=ua.id_attr')
+                    ->where($conditions,$params)
+                    ->queryAll();
+
+        return (count($arRes) ? $arRes : false);
+    }
+    /**
+     * @param $column - string
+     * @param $arr - array [ key => value ]
+     */
+    /*public function getUserAttribute($column, $arr)
+    {
+      if(!is_array($arr))
+      {
+        return false;
+      }
+
+      $query = Yii::app()->db->createCommand()
+                ->select('id, key, id_attr, val')
+                ->from('user_attribs')
+                ->where('id_us=:id_us',[':id_us'=>$this->id])
+                ->queryAll();
+
+      if(count($query))
+      {
+
+      }
+
+
+      $arInsert = array();
+      foreach ($arr as $key => $value)
+      {
+        $arInsert[] = array(
+            'id_us'=>$this->id,
+            'id_us'=>$this->id,
+          );
+      }
+      Share::multipleInsert(['user_attribs'=>$arInsert]);
+
+
+
+    }*/
 }
 
 

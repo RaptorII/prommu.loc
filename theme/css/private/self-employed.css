@@ -1,0 +1,118 @@
+#DiContent .self-employed,
+#DiContent .self-employed *{
+    font-family: RobotoCondensed-Regular, verdana, arial;
+    font-size: 16px;
+}
+#DiContent .self-employed h1{
+    font-size: 26px;
+    font-weight: normal;
+    margin: 30px 0;
+    text-align: center;
+}
+/* tabs */
+.self-employed__tab{
+    margin-bottom: 15px;
+}
+.self-employed__tab-title{
+    background-color: #ededed;
+    padding: 15px 50px 15px 15px;
+    margin: 0;
+    border-radius: 20px;
+    cursor: pointer;
+    position: relative;
+}
+.self-employed__tab-title:after{
+    content: '';
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    top: calc(50% - 7px);
+    right: 17px;
+    background: url(/theme/pic/ico-tri-b.png);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+    background-size: contain;
+    -webkit-transition: all .3s ease-out;
+    -moz-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+    transition: all .3s ease-out;
+}
+.enable .self-employed__tab-title:after {
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+}
+.self-employed__tab-content{
+    padding: 15px;
+    margin: 0 20px;
+    position: relative;
+    border: 3px solid #ededed;
+    border-top: 0px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    display: none;
+}
+/* checkboxes */
+.self-employed_label{
+    width: 100%;
+    max-width: 250px;
+    min-height: 25px;
+    display: inline-block;
+    margin: 0;
+    cursor: pointer;
+    position: relative;
+    padding-left: 30px;
+    margin: 0 15px 15px;
+}
+.self-employed_label-text{
+    padding: 0;
+}
+.self-employed input:focus{ outline:none; }
+#DiContent .self-employed_label input[type="checkbox"]{ display: none; }
+#DiContent .self-employed_label-text input{
+    width: 165px;
+    background: none;
+    border: 1px solid #c8c8c8;
+    border-radius: 2px;
+}
+.self-employed_checkbox{
+    height: 25px;
+    width: 25px;
+    background: none;
+    border: 1px solid #c8c8c8;
+    border-radius: 2px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    -webkit-transition: all .3s ease-out;
+    -moz-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+    transition: all .3s ease-out;
+}
+.self-employed_label span{ vertical-align: middle; }
+.self-employed_checkbox span {
+    width: 11px;
+    height: 11px;
+    margin: 6px;
+    display: block;
+}
+.self-employed_label input:checked + .self-employed_checkbox span { background: #abb820; }
+#form_btn{ display: none; }
+/* loading */
+.content-block{ position: relative; }
+.content-block.load:before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(255,255,255,.7) url(/theme/pic/vacancy/loading.gif) center center no-repeat;
+    background-size: 80px;
+    z-index: 21;
+}

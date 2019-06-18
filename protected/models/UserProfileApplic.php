@@ -1277,7 +1277,7 @@ class UserProfileApplic extends UserProfile
 
     private function getUserInfo($inID = 0)
     {
-        $id = $inID ?: $this->exInfo->id;
+        $id = $inID ?: $this->id;
 
         // считываем характеристики пользователя
         $sql = "SELECT DATE_FORMAT(r.birthday,'%d.%m.%Y') as bday, r.id
@@ -1294,11 +1294,15 @@ class UserProfileApplic extends UserProfile
             ORDER BY a.id_attr";
         $res = Yii::app()->db->createCommand($sql)->queryAll();
 
-        foreach ($res as $key => $val){
-            $attr[$val['id_attr']] = $val;
+        $attr = array();
+        foreach ($res as $key => $val)
+        {
+            !empty($val['id_attr']) && $attr[$val['id_attr']]=$val;
         }
+        !count($attr) && $attr=$res;
 
-        foreach ($attr as $k => $attrib){
+        foreach ($attr as $k => $attrib)
+        {
             if( 
                 ($attrib['id_attr'] <> 0 // без общего 
                 && $attrib['key'] <> 'icq' // без ICQ 
@@ -1309,6 +1313,9 @@ class UserProfileApplic extends UserProfile
                 in_array($attrib['idpar'], [11,12,13,14,15,16,69]) // для параметров с выбором
             )
                 $this->profileFill++;
+            //
+            $data['self_employed'] = false;
+            $attrib['key']=='self_employed' && $data['self_employed']=$attrib['val'];
         }
         // меняем данные для изменения кодов телефона
         if(!empty($attr[1]['val']))
@@ -1323,8 +1330,6 @@ class UserProfileApplic extends UserProfile
         }
 
         $data['userAttribs'] = $attr;
-
-
 
         // считываем фото пользователя
         $sql = "SELECT p.id, p.photo, p.signature, CASE WHEN p.photo = r.photo THEN 1 ELSE 0 END ismain

@@ -985,4 +985,45 @@ class AjaxController extends AppController
             Share::$UserProfile->savePopupData($data);
         }
     }
+    /**
+     *
+     */
+    public function actionSelf_employed()
+    {
+        $arRes = array('error'=>true,'response'=>[],'info'=>[]);
+
+        if(Share::isApplicant())
+        {
+            $arData = array();
+            $arData['inn'] = Yii::app()->getRequest()->getParam('inn');
+            $arData['requestDate'] = date('Y-m-d');
+
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => MainConfig::$RESOURCE_SELF_EMPLOYED,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => http_build_query($arData)
+            ));
+            $arRes['response'] = curl_exec($curl);
+            $arRes['response'] = json_decode($arRes['response']);
+            if (!curl_errno($curl))
+            {
+                $arRes['info'] = curl_getinfo($curl);
+                $arRes['error'] = true;
+            }
+            else
+            {
+
+
+                $arRes['error'] = false;
+            }
+
+            curl_close($curl);
+        }
+
+        echo CJSON::encode($arRes);
+        Yii::app()->end();
+    }
+
 }
