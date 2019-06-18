@@ -905,16 +905,40 @@ $(function(){
       }
     }
   });
+
+  //  считаем выбранные должности
+    function getSelectedPosts(){
+        var arId = [];
+        $.each($('#ev-posts-select li'), function(){ arId.push(String($(this).data('id'))) });
+        return arId;
+    }
   /*
   *
   */  // новый ввод вакансий
-  $('#ev-posts-select').click(function(e){ 
-    if(!$(e.target).is('i')){
-      $('#ev-posts-list').fadeIn();
-      $('#ev-posts-list input').focus();
-    }
-  });
-  $('#ev-posts-list input').bind('input focus blur', function(e){
+    $('#ev-posts-select').click(function (e) {
+        if ( +getSelectedPosts()==0 ) {
+            if (!$(e.target).is('i')) {
+                $('#ev-posts-list').fadeIn();
+                $('#ev-posts-list input').focus();
+            }
+        }
+        if ( +getSelectedPosts()>0 ) {
+            $('body').append('<div class="prmu__popup">' +
+                '<p>'+'<span>Выберите <span style="color:#ff921d">одну</span> должность, которая необходима Вам для ' +
+                'начала работы над проектом.</span>'+' Создав вакансию, можно продублировать её и указать новую ' +
+                'должность с помощью кнопки <span style="color:#ff921d">"ДУБЛИРОВАТЬ ВАКАНСИЮ"</span> которая ' +
+                'находится во вкладке "Мои вакансии"</p>' +
+                '</div>'),
+                $.fancybox.open({
+                    src: "body>div.prmu__popup",
+                    type: 'inline',
+                    touch: false,
+                    afterClose: function(){ $('body>div.prmu__popup').remove() }
+                });
+        }
+    });
+
+    $('#ev-posts-list input').bind('input focus blur', function(e){
     var arResult = [],
       content = '',
       $pList = $('#ev-posts-list'),

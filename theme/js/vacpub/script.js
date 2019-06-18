@@ -195,11 +195,25 @@ $(function(){
   */  // новый ввод вакансий
     $('#av-posts-select').click(function (e) {
         //console.log(+getSelectedPosts());
-        if ( +getSelectedPosts()<1 ) {
+        if ( +getSelectedPosts()==0 ) {
             if (!$(e.target).is('i')) {
                 $('#av-posts-list').fadeIn();
                 $('#av-posts-list input').focus();
             }
+        }
+        if ( +getSelectedPosts()>0 ) {
+            $('body').append('<div class="prmu__popup">' +
+                '<p>'+'<span>Выберите <span style="color:#ff921d">одну</span> должность, которая необходима Вам для ' +
+                'начала работы над проектом.</span>'+' Создав вакансию, можно продублировать её и указать новую ' +
+                'должность с помощью кнопки <span style="color:#ff921d">"ДУБЛИРОВАТЬ ВАКАНСИЮ"</span> которая ' +
+                'находится во вкладке "Мои вакансии"</p>' +
+            '</div>'),
+            $.fancybox.open({
+                src: "body>div.prmu__popup",
+                type: 'inline',
+                touch: false,
+                afterClose: function(){ $('body>div.prmu__popup').remove() }
+            });
         }
       });
 
