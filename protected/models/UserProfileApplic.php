@@ -196,7 +196,7 @@ class UserProfileApplic extends UserProfile
         } // end foreach
     
         if(!empty($val['photo'])){
-            $photo = "https://files.prommu.com/images/".$val['id_user']."/tmp/".$val['photo'];
+            $photo = "https://files.prommu.com/users/".$val['id_user']."/".$val['photo'];
         }
         
         $data['applicInfo'] = [
@@ -226,7 +226,7 @@ class UserProfileApplic extends UserProfile
         $data['userPhotos'] = Yii::app()->db->createCommand($sql)->queryAll();
         
         for($i = 0; $i < count($data['userPhotos']); $i ++){
-            $data['userPhotos'][$i]['photo'] = "https://files.prommu.com/images/".$id."/tmp/".$data['userPhotos'][$i]['photo'].".jpg";
+            $data['userPhotos'][$i]['photo'] = "https://files.prommu.com/users/".$id."/".$data['userPhotos'][$i]['photo'].".jpg";
             
         }
         if( count($data['userPhotos']) == 1 && !$data['userPhotos'][0]['id'] ) $data['userPhotos'] = array();
