@@ -60,7 +60,7 @@ class UserTokens extends CActiveRecord
             if( !$ut ) throw new ExceptionApi('Token invalid', -102);
 
             foreach (array_keys($ut->getMetaData()->columns) as $key => $val) $usData[$val] = $ut->$val;
-            if( strtotime($usData['date_login']) + 86400 < time() ) throw new ExceptionApi('Token expired', -103);
+            // if( strtotime($usData['date_login']) + 86400 < time() ) throw new ExceptionApi('Token expired', -103);
         } else {
             throw new ExceptionApi('Token invalid', -102);
         } // endif
