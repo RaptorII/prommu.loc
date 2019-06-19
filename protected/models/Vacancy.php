@@ -387,9 +387,34 @@ class Vacancy extends ARModel
         if($copyId>0)
         {
             $data['copy_vacacancy'] = $this->getVacancyView($copyId);
+            $data['copy_vacacancy']['vac']['post'] = '';
+
+            $user = Share::$UserProfile->exInfo;
+            $user->name = trim($user->name);
+            empty($user->name) && $user->name = 'пользователь';
+
+            Yii::app()->user
+                ->setFlash('prommu_flash',
+                    "<div class='big-flash'>
+                        <p>Уважаемый «" . $user->name . "»!</p>
+                        <p>Вы только что продублировали вакансию на сервис Prommu.</p> 
+                        <p>После закрытия этого информационного окна, Вам нужно  
+                        <span style='color:#ff921d;'>дополнить</span> поле 'должность' 
+                        и указать срок актуальности вакансии.</p> 
+                        <p>После этого необходимо нажать кнопку 
+                        <span style='color:#ff921d;'>«ОПУБЛИКОВАТЬ ВАКАНСИЮ»</span>.</p>
+                        <p>Просмотреть и отредактировать данную вакансию Вы можете в любой момент 
+                        времени в личном кабинете - категория 
+                        <span style='color:#ff921d;'>«МОИ ВАКАНСИИ»</span>.</p> 
+                        <p>Быстрого и лёгкого поиска Вам персонала.</p>
+                        <i>С найлучшими пожеланиями команда Промму!</i>
+                    </div>");
         }
         //}
-
+//echo "<pre>";
+//print_r($data);
+//echo "</pre>";
+//die();
         return $data;
     }
 
