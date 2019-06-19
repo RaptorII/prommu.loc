@@ -21,6 +21,7 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
     <div class="upp__img-block">
       <div class="upp__img-block-main">
         <?
+          $cookieView = Yii::app()->request->cookies['popup_photo']->value;
           $bigSrc = Share::getPhoto($id, 3, $viData['userInfo']['logo'], 'big');
           $src = Share::getPhoto($id, 3, $viData['userInfo']['logo'], 'small');
         ?>
@@ -33,6 +34,14 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
           </a>
         <? else: ?>
           <img src="<?=$src?>" alt="Работодатель <?=$viData['userInfo']['name']?> prommu.com">
+          <?
+            if($flagOwnProfile && !$cookieView) // предупреждение, что нет фоток
+            {
+              Yii::app()->request->cookies['popup_photo'] = new CHttpCookie('popup_photo', 1);
+              $message = '<p>У вас не загружено еще ни одной фотографии.<br>Добавляйте пожалуйста логотип своей компании или личные фото. В случае несоответствия фотографий Вы не сможете пройти модерацию! Спасибо за понимание!</p>';
+              Yii::app()->user->setFlash('prommu_flash', $message);    
+            }
+          ?>
         <? endif; ?>
         <?if( $flagOwnProfile ):?>
           <a href="/user/editprofile?ep=1" class="upp__change-logo">Изменить аватар</a>
@@ -339,15 +348,3 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
       </div>
     <? endif; ?>
 </div>
-<?
-  $cookieView = Yii::app()->request->cookies['popup_photo']->value;
-  $fullPath = Subdomain::domainRoot() . DS . MainConfig::$PATH_EMPL_LOGO 
-    . DS . $viData['userInfo']['logo'] . '400.jpg';
-
-  if($flagOwnProfile && !file_exists($fullPath) && !$cookieView)
-  {
-    Yii::app()->request->cookies['popup_photo'] = new CHttpCookie('popup_photo', 1);
-    $message = '<p>У вас не загружено еще ни одной фотографии.<br>Добавляйте пожалуйста логотип своей компании или личные фото. В случае несоответствия фотографий Вы не сможете пройти модерацию! Спасибо за понимание!</p>';
-    Yii::app()->user->setFlash('prommu_flash', $message);    
-  }
-?>

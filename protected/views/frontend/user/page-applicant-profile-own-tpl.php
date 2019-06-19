@@ -91,6 +91,7 @@
   <div class="ppp__logo">
     <div class="ppp__logo-main">
       <? 
+      	$cookieView = Yii::app()->request->cookies['popup_photo']->value;
         $bigSrc = Share::getPhoto($attr['id_user'], 2, $attr['photo'], 'big', $attr['isman']);
         $src = Share::getPhoto($attr['id_user'], 2, $attr['photo'], 'medium', $attr['isman']);
       ?>
@@ -106,6 +107,14 @@
           src="<?=$src?>"
           alt='Соискатель <?=$attr['lastname']?> prommu.com'
           class="ppp-logo-main__img">
+        <? 
+          if($flagOwnProfile && !$cookieView) // предупреждение, что нет фоток
+          {
+            Yii::app()->request->cookies['popup_photo'] = new CHttpCookie('popup_photo', 1);
+            $message = '<p>У вас не загружено еще ни одной фотографии.<br>Добавляйте пожалуйста логотип своей компании или личные фото. В случае несоответствия фотографий Вы не сможете пройти модерацию! Спасибо за понимание!</p>';
+            Yii::app()->user->setFlash('prommu_flash', $message);
+          }
+        ?>
       <? endif; ?>
 
       <?php if(!$flagOwnProfile && $attr['is_online']): ?>
@@ -589,16 +598,4 @@
       <p class="message">У вас нет активных вакансий. Для создания вакансии перейдите на <a href="<?= MainConfig::$PAGE_VACPUB ?>">эту страницу</a></p>
   </script>
   <template id='TPLAddComment'></template>
-<?
-  $cookieView = Yii::app()->request->cookies['popup_photo']->value;
-  $fullPath = Subdomain::domainRoot() . DS . MainConfig::$PATH_APPLIC_LOGO 
-    . DS . $attr['photo'] . '100.jpg';
-
-  if($flagOwnProfile && !file_exists($fullPath) && !$cookieView)
-  {
-    Yii::app()->request->cookies['popup_photo'] = new CHttpCookie('popup_photo', 1);
-    $message = '<p>У вас не загружено еще ни одной фотографии.<br>Добавляйте пожалуйста логотип своей компании или личные фото. В случае несоответствия фотографий Вы не сможете пройти модерацию! Спасибо за понимание!</p>';
-    Yii::app()->user->setFlash('prommu_flash', $message);    
-  }
-?>
 <? endif; ?>
