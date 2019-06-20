@@ -409,10 +409,7 @@ class Vacancy extends ARModel
                     </div>");
         }
         //}
-//echo "<pre>";
-//print_r($data);
-//echo "</pre>";
-//die();
+
         return $data;
     }
 

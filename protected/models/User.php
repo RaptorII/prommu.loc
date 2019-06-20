@@ -241,7 +241,8 @@ class User extends CActiveRecord
 													u.isblocked,
 													u.ismoder,
 													u.messenger,
-													u.is_online')
+													u.is_online
+                                                    ')
 												->from('user u')
 												->leftjoin('employer e','e.id_user=u.id_user')
 												->leftjoin('resume r','r.id_user=u.id_user')

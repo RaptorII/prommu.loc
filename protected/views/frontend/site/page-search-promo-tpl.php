@@ -347,7 +347,7 @@ foreach ($viData['posts'] as $p)
                                     <div class='vacancies'>
                                         <h3>Целевые вакансии:</h3>
                                         <?php
-                                        $curr = array('руб/час', 'руб/неделю', 'руб/мес',);
+                                        $curr = array('руб/час', 'руб/нед', 'руб/мес', 'руб/пос',);
                                         foreach ($val['post'] as $key2 => $val2):
                                             ?>
                                             <?= $val2[0] ?>

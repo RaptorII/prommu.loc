@@ -83,4 +83,12 @@
         display: none;
     }
 }
+@media (max-width: 450px) {
+    #DiContent.page-ankety .list-view .vacancies {
+        display: block;
+    }
+    #DiContent.page-ankety .list-view .appl-list-item-box {
+        padding: 5px 15px 0 15px;
+    }
+}
 </style>
