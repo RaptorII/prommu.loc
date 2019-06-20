@@ -83,6 +83,11 @@
         display: none;
     }
 }
+@media (min-width: 990px) {
+    #DiContent.page-ankety .list-view .vacancies {
+        width: 80%;
+    }
+}
 @media (max-width: 450px) {
     #DiContent.page-ankety .list-view .vacancies {
         display: block;
@@ -93,9 +98,33 @@
 }
 
 #DiContent.page-ankety .list-view .vacancies {
+    display: block;
     position: relative;
     z-index: 1;
 }
-.over__hint
+.vacancies .over__hint {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    /*display: none;*/
+    opacity: 0;
+    z-index: 0;
+    transition: all ease-out 0.3s;
+    border: 1px solid #e3e3e3;
+    padding: 5px;
+}
+
+.vacancies:focus .over__hint,
+.vacancies:hover .over__hint {
+    top: 25px;
+    opacity: 1;
+    display: block;
+    z-index: 2;
+    transition: all ease-out 0.3s;
+    border: 1px solid #e3e3e3;
+    background: white;
+    padding: 5px;
+}
 
 </style>
