@@ -347,11 +347,26 @@ foreach ($viData['posts'] as $p)
                                     <div class='vacancies'>
                                         <h3>Целевые вакансии:</h3>
                                         <?php
-                                        $curr = array('руб/час', 'руб/нед', 'руб/мес', 'руб/пос',);
-                                        foreach ($val['post'] as $key2 => $val2):
-                                            ?>
-                                            <?= $val2[0] ?>
-                                            <div class='price'><?= $val2[1] . ' ' . $curr[$val2[2]] ?></div><br>
+                                            $curr = array('руб/час', 'руб/нед', 'руб/мес', 'руб/пос',);
+                                            $i=0;
+                                            foreach ($val['post'] as $key2 => $val2):
+
+                                            if ($i<2) {
+                                                $i++;
+                                                ?>
+                                                <?= $val2[0] ?>
+                                                <div class='price'><?= $val2[1] . ' ' . $curr[$val2[2]] ?></div><br>
+                                                <?php
+                                            } elseif ($i>=2) {
+                                                $i++;
+                                                ?>
+                                                <div class="over__hint">
+                                                    <?= $val2[0] ?>
+                                                    <div class='price'><?= $val2[1] . ' ' . $curr[$val2[2]] ?></div><br>
+                                                </div>
+                                        <?php
+                                            }
+                                        ?>
                                         <?php endforeach; ?>
                                     </div>
                                     <div class='place'>

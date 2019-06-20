@@ -91,4 +91,11 @@
         padding: 5px 15px 0 15px;
     }
 }
+
+#DiContent.page-ankety .list-view .vacancies {
+    position: relative;
+    z-index: 1;
+}
+.over__hint
+
 </style>
