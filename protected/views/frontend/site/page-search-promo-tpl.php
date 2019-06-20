@@ -351,7 +351,7 @@ foreach ($viData['posts'] as $p)
                                             $j=0;
                                             foreach ($val['post'] as $key2 => $val2):
 
-                                                if ($i<2) {
+                                                if ($j<2) {
                                                     $j++;
                                                     ?>
                                                     <?= $val2[0] ?>
