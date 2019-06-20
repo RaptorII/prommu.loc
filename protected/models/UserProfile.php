@@ -231,8 +231,9 @@ abstract class UserProfile extends CModel
     }
     /**
      * @param $arr - array [ column => value ]
+     * @param $id_user - integer
      */
-    public function getUserAttribute($arr)
+    public function getUserAttribute($arr, $id_user=false)
     {
         $conditions = $params = array();
         if(!is_array($arr))
@@ -250,7 +251,7 @@ abstract class UserProfile extends CModel
         if(!isset($conditions['ua.id_us']))
         {
           $conditions[] = "ua.id_us=:id_us";
-          $params[":id_us"] = $this->id;
+          $params[":id_us"] = ($id_user ?: $this->id);
         }
         $conditions = implode(' AND ',$conditions);
 
@@ -271,41 +272,61 @@ abstract class UserProfile extends CModel
         return (count($arRes) ? $arRes : false);
     }
     /**
-     * @param $column - string
-     * @param $arr - array [ key => value ]
+     * @param $key - string
+     * @param $value - mixed
+     * @param $id_user - integer
      */
-    /*public function getUserAttribute($column, $arr)
+    public function setUserAttribute($key, $value, $id_user=false)
     {
-      if(!is_array($arr))
-      {
-        return false;
-      }
+        $id_user = ($id_user ?: $this->id);
+        if(empty($key) || empty($value))
+            return false;
 
-      $query = Yii::app()->db->createCommand()
-                ->select('id, key, id_attr, val')
-                ->from('user_attribs')
-                ->where('id_us=:id_us',[':id_us'=>$this->id])
-                ->queryAll();
+        $dict = Yii::app()->db->createCommand()
+                    ->select("*")
+                    ->from("user_attr_dict uad")
+                    ->where("uad.key=:key",[":key"=>$key])
+                    ->queryRow();
 
-      if(count($query))
-      {
+        if(!isset($dict['id']))
+            return false;
 
-      }
+        $query = Yii::app()->db->createCommand()
+                    ->select('*')
+                    ->from('user_attribs')
+                    ->where(
+                        'id_attr=:id_attr and id_us=:id_user',
+                        [':id_attr'=>$dict['id'],':id_user'=>$id_user]
+                    )
+                    ->queryRow();
 
+        if(isset($query['id_attr']))
+        {
+             return Yii::app()->db->createCommand()
+                    ->update(
+                        'user_attribs',
+                        [
+                            'val'=>$value,
+                            'crdate'=>date('Y-m-d H:i:s')
+                        ],
+                        'id_attr=:id_attr and id_us=:id_user',
+                        [':id_attr'=>$dict['id'],':id_user'=>$id_user]
+                    );
+        }
 
-      $arInsert = array();
-      foreach ($arr as $key => $value)
-      {
-        $arInsert[] = array(
-            'id_us'=>$this->id,
-            'id_us'=>$this->id,
-          );
-      }
-      Share::multipleInsert(['user_attribs'=>$arInsert]);
-
-
-
-    }*/
+        return Yii::app()->db->createCommand()
+                    ->insert(
+                        'user_attribs',
+                        [
+                            'id_us' => $id_user,
+                            'id_attr' => $dict['id'],
+                            'key' => $dict['key'],
+                            'type' => $dict['type'],
+                            'val' => $value,
+                            'crdate'=>date('Y-m-d H:i:s')
+                        ]
+                    );
+    }
 }
 
 

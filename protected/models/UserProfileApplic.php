@@ -1851,52 +1851,41 @@ class UserProfileApplic extends UserProfile
         Mailing::set(1, ['id_user'=>$this->id], 2);
     }
     /**
-     *
+     * Проверяем ИНН самозанятого
      */
     public function checkSelfEmployed(&$arRes)
     {
         $arProxy = array(
-            //'1.10.189.100:50169',
-            //'1.10.188.205:33304',
-            //'1.10.189.157:47921',
-            //'1.20.101.201:45863',
-            '1.10.185.8:42106', // есть контакт
-            //'1.179.206.161:56057',
-            //'1.2.169.49:36061',
-            '1.20.101.124:55264', // есть контакт
-            //'1.20.100.195:61802',
-            //'1.2.169.93:31001',
-            //'1.20.103.171:57198',
-            //'1.10.185.133:58552',
-            //'1.20.103.57:44971',
-            //'1.20.99.23:54067', Connection refused
-            //'1.186.192.242:37562', Timed out
-            //'1.202.245.84:8080', Recv failure: Connection was reset
-            //'1.179.164.233:58387',
-            '1.20.99.89:31799', // есть контакт
-            //'1.10.189.113:50058',
-            //'1.20.96.111:45555'
+            '87.225.90.97:3128',
+            '5.140.233.65:60437',
+            '46.0.126.134:3128',
+            '217.107.197.177:30436',
+            '87.103.234.116:3128',
+            '78.31.73.222:8080',
+            '1.10.185.8:42106',
+            '1.20.101.124:55264',
+            '1.20.99.89:31799',
+            '176.117.233.184:8080',
+            '94.242.55.108:10010',
+            '46.63.162.171:8080',
+            '31.15.87.197:53281',
+            '79.98.212.14:3128',
+            '91.214.70.99:3128'
         );
         $inn = filter_var(Yii::app()->getRequest()->getParam('inn'), FILTER_SANITIZE_NUMBER_INT);
         $date = date('Y-m-d');
         $sData = "{\n \"inn\": \"$inn\",\n\"requestDate\": \"$date\"\n}";
-
-
-
-
-        $ch = curl_init(MainConfig::$RESOURCE_SELF_EMPLOYED);
-
         $options = array(
-            //CURLOPT_HTTPHEADER => array('Content-type: application/x-www-form-urlencoded'),
             CURLOPT_USERAGENT => "Mozilla/4.0 (Windows; U; Windows NT 5.0; En; rv:1.8.0.2) Gecko/20070306 Firefox/1.0.0.4",
             CURLINFO_HEADER_OUT => true,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_CONNECTTIMEOUT => 31,
+            CURLOPT_TIMEOUT => 20,
+            CURLOPT_CONNECTTIMEOUT => 20,
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => $sData,
             CURLOPT_HTTPPROXYTUNNEL => true,
-            CURLOPT_PROXY => $arProxy[array_rand($arProxy)],
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_HTTPHEADER => array(
                 "Accept: */*",
                 "Cache-Control: no-cache",
@@ -1907,48 +1896,16 @@ class UserProfileApplic extends UserProfile
             )
         );
 
-        if(strtolower(substr(MainConfig::$RESOURCE_SELF_EMPLOYED, 0, 5)) == 'https')
-        {
-            $options[CURLOPT_SSL_VERIFYPEER] = $options[CURLOPT_SSL_VERIFYHOST] = false;
-        }
-
-        curl_setopt_array($ch, $options);
-        $arRes['response'] = curl_exec($ch);
-        $arRes['response'] = json_decode($arRes['response']);
-        $error = curl_error($ch);
-        $arRes['error'] = ($error ?: false);
-        $arRes['headers'] = curl_getinfo($ch);
-        curl_close($ch);
-
-        /*
-        $inn = filter_var(Yii::app()->getRequest()->getParam('inn'), FILTER_SANITIZE_NUMBER_INT);
-        $date = date('Y-m-d');
-        $sData = "{\n \"inn\": \"$inn\",\n\"requestDate\": \"$date\"\n}";
-
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-                CURLOPT_URL => MainConfig::$RESOURCE_SELF_EMPLOYED,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => $sData,
-                CURLOPT_ENCODING => "",
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "POST",
-                CURLOPT_HTTPHEADER => array(
-                    "Accept: *",
-                    "Cache-Control: no-cache",
-                    "Connection: keep-alive",
-                    "Content-Type: application/json",
-                    "Host: statusnpd.nalog.ru",
-                    "cache-control: no-cache"
-                )
-            ));
-        $arRes['response'] = curl_exec($curl);
-        $arRes['response'] = json_decode($arRes['response']);
-        $error = curl_error($curl);
-        $arRes['error'] = ($error ?: false);
-        curl_close($curl);*/
+        do {
+            $options[CURLOPT_PROXY] = $arProxy[array_rand($arProxy)];
+            $ch = curl_init(MainConfig::$RESOURCE_SELF_EMPLOYED);
+            curl_setopt_array($ch, $options);
+            $arRes['response'] = curl_exec($ch);
+            $arRes['response'] = json_decode($arRes['response']);
+            $error = curl_error($ch);
+            $arRes['error'] = ($error ?: false);
+            //$arRes['headers'] = curl_getinfo($ch);
+            curl_close($ch);
+        }while($arRes['error']!=false);
     }
 }

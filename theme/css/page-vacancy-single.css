@@ -198,7 +198,8 @@
 .sv__checkbox-attr-item.auto i{ background-position: 0px -34px }
 .sv__checkbox-attr-item.smart i{ background-position: 0px -68px }
 .sv__checkbox-attr-item.pcard i{ background-position: 0px -138px }
-.sv__checkbox-attr-item.card i{ background-position: 0px -174px }
+.sv__checkbox-attr-item.card i{ background-position: 0px -172px }
+.sv__checkbox-attr-item.self_employed i{ background-position: 0px -204px }
 .sv__textblock-title{
 	padding-left: 30px;
 	margin: 20px 0 15px;

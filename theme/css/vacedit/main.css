@@ -1588,3 +1588,15 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 @media (min-width: 768px) {
 
 }
+/* */
+.erv__label-flex{
+	margin: 0 -15px 20px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+.erv__label-flex .erv__label-wrap{
+	display: block;
+	width: initial;
+	padding: 0 15px 15px;
+}

@@ -345,6 +345,14 @@ class SearchVac extends Model
             }
         }
 
+        if(isset($data['self_employed']))
+        {
+          if($data['self_employed'] == 1){
+            $url[] = 'self_employed';
+            $cnt++;
+          }
+        }
+
         // age
         if((isset($data['af']) && (int)$data['af'] > 0) || (isset($data['at']) && (int)$data['at'] > 0))
         {
@@ -390,6 +398,8 @@ class SearchVac extends Model
          if( Yii::app()->getRequest()->getParam('smart') || $inProps['filter']['smart']  ) $data['smart'] = $inProps['filter']['smart'] ?: Yii::app()->getRequest()->getParam('smart');
         if( Yii::app()->getRequest()->getParam('pcard') || $inProps['filter']['cardPrommu']  ) $data['cardPrommu'] = $inProps['filter']['cardPrommu'] ?: Yii::app()->getRequest()->getParam('pcard');
         if( Yii::app()->getRequest()->getParam('bcard') || $inProps['filter']['card']  ) $data['card'] = $inProps['filter']['card'] ?: Yii::app()->getRequest()->getParam('bcard');
+        if( Yii::app()->getRequest()->getParam('self_employed') || $inProps['filter']['self_employed']  )
+          $data['self_employed'] = $inProps['filter']['self_employed'] ?: Yii::app()->getRequest()->getParam('self_employed');
         // должность в ручную
         if( !Yii::app()->getRequest()->getParam('poall') && ($s1 = filter_var(Yii::app()->getRequest()->getParam('poself'), FILTER_SANITIZE_FULL_SPECIAL_CHARS)) ) $data['selfPost'] = $s1;
         // занятость
@@ -442,12 +452,17 @@ class SearchVac extends Model
             $filter[] = ' e.smart = 1';
         }
 
+        if( !empty($data['self_employed']) )
+        {
+          $filter[] = ' e.self_employed = 1';
+        }
+
         if( !empty($data['cardPrommu']) )
             $filter[] = ' e.cardPrommu = 1';
 
         if( !empty($data['card']) )
             $filter[] = ' e.card = 1';
-        
+
         // posts filter
         if( !empty($data['posts']) )
         {

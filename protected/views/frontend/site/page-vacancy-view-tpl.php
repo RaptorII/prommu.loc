@@ -413,7 +413,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                             <?
                             //  Прочее
                             ?>
-                            <div class="erv__label erv__label-tbl">
+                            <div class="erv__label erv__label-flex">
                                 <div class="erv__label-wrap">
                                     <input type="checkbox" name="ismed" class="erv__input erv__hidden" id="rv-med-note"
                                            value="1" <?= ($viData['vac']['ismed'] ? 'checked' : '') ?>>
@@ -428,6 +428,11 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                                     <input type="checkbox" name="smart" class="erv__input erv__hidden" id="rv-smart"
                                            value="1" <?= ($viData['vac']['smart'] ? 'checked' : '') ?>>
                                     <label class="erv__label-checkbox" for="rv-smart">Смартфон</label>
+                                </div>
+                                <div class="erv__label-wrap">
+                                    <input type="checkbox" name="self_employed" class="erv__input erv__hidden" id="rv-self_employed"
+                                           value="1" <?= ($viData['vac']['self_employed'] ? 'checked' : '') ?>>
+                                    <label class="erv__label-checkbox" for="rv-self_employed">Самозанятый</label>
                                 </div>
                             </div>
                             <?
@@ -1148,6 +1153,12 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                             <i></i>
                             <span>Смартфон</span>
                         </div>
+                    <? endif; ?>
+                    <? if ($vacancy['self_employed']): ?>
+                      <div class="sv__checkbox-attr-item self_employed">
+                          <i></i>
+                          <span>Самозанятый</span>
+                      </div>
                     <? endif; ?>
                     <? if ($vacancy['cardPrommu']): ?>
                         <div class="sv__checkbox-attr-item pcard">

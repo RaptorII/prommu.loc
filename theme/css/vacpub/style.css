@@ -665,9 +665,6 @@ input:checked + .fav__label-checkbox:after{ content: '\2714'; }
 		right: -270px;
 	}
 }
-/*
-*		10-09-2018
-*/
 #add-new-vac{
 	width: 130px;
 	line-height: 27px;
@@ -689,9 +686,6 @@ input:checked + .fav__label-checkbox:after{ content: '\2714'; }
 #add-new-vac:hover{
 	background-color: rgba(52, 52, 52, 0.5);
 }
-/*
-*		15.05.19
-*/
 .fav__date .fav__hint{
 	width: 50%;
 	display: block;
@@ -699,3 +693,12 @@ input:checked + .fav__label-checkbox:after{ content: '\2714'; }
 	text-align: center;
 }
 .fav__date .fav__select:after{ right: 15px; }
+/* */
+.fav__four-list{
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	margin: 0 -15px;
+}
+.fav__four-item{ padding: 0 15px 20px; }
+.fav__four-item .fav__label-checkbox{ margin: 0 }

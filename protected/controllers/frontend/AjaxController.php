@@ -986,7 +986,7 @@ class AjaxController extends AppController
         }
     }
     /**
-     *
+     *  проверка самозанятого
      */
     public function actionSelf_employed()
     {

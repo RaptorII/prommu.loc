@@ -181,8 +181,8 @@
     <?
     // Прочее
     ?>
-    <div class="fav__label fav__third-list">
-      <div class="fav__third-item">
+    <div class="fav__label fav__four-list">
+      <div class="fav__four-item">
         <input 
         type="checkbox" 
         name="ismed" 
@@ -192,7 +192,7 @@
         <?=$arCopy['ismed'] ? 'checked' : ''?>>
         <label class="fav__label-checkbox" for="av-med-note">Медкнижка</label>    
       </div>
-      <div class="fav__third-item">
+      <div class="fav__four-item">
         <input 
         type="checkbox" 
         name="isavto" 
@@ -200,17 +200,27 @@
         id="av-auto"
         value="1"
         <?=$arCopy['isavto'] ? 'checked' : ''?>>
-        <label class="fav__label-checkbox" for="av-auto">Автомобиль</label>    
+        <label class="fav__label-checkbox" for="av-auto">Автомобиль</label>
       </div>
-      <div class="fav__third-item">
-        <input 
-        type="checkbox" 
-        name="smart" 
-        class="fav__input fav__hidden" 
-        id="av-smart" 
+      <div class="fav__four-item">
+        <input
+        type="checkbox"
+        name="smart"
+        class="fav__input fav__hidden"
+        id="av-smart"
         value="1"
         <?=$arCopy['smart'] ? 'checked' : ''?>>
-        <label class="fav__label-checkbox" for="av-smart">Смартфон</label>    
+        <label class="fav__label-checkbox" for="av-smart">Смартфон</label>
+      </div>
+      <div class="fav__four-item">
+        <input
+            type="checkbox"
+            name="self_employed"
+            class="fav__input fav__hidden"
+            id="av-self_employed"
+            value="1"
+            <?=$arCopy['self_employed'] ? 'checked' : ''?>>
+        <label class="fav__label-checkbox" for="av-self_employed">Самозанятый</label>
       </div>
     </div>
     <div class="fav__label">

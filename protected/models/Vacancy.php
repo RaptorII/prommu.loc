@@ -577,6 +577,7 @@ class Vacancy extends ARModel
                    e.svisit,
                    e.isman,
                    e.smart,
+                   e.self_employed,
                    e.iswoman,
                    e.repost,
                    e.vk_link,
@@ -620,7 +621,7 @@ class Vacancy extends ARModel
             $sql = "SELECT e.id,e.city, e.ismoder, e.ispremium, e.title, e.requirements, e.duties, e.conditions, e.istemp,e.cardPrommu, e.card, e.repost,e.index, e.meta_h1, e.meta_title, e.meta_description,e.comment,
                        DATE_FORMAT(e.bdate, '%d.%m.%Y') bdate,
                        DATE_FORMAT(e.edate, '%d.%m.%Y') edate,
-                       e.shour, e.sweek, e.smart, e.smonth, e.svisit, e.isman, e.iswoman, e.exp, e.id_user idus, e.iscontshow,
+                       e.shour, e.sweek, e.smart, e.self_employed, e.smonth, e.svisit, e.isman, e.iswoman, e.exp, e.id_user idus, e.iscontshow,
                        DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
                        e.ismed, e.isavto, e.contacts, e.agefrom, e.ageto, e.status, e.vk_link, e.fb_link, e.tl_link,
                        DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
@@ -1020,6 +1021,7 @@ class Vacancy extends ARModel
             $fields['ismed'] = $inProps['ismed'] ?: filter_var(Yii::app()->getRequest()->getParam('ismed'), FILTER_SANITIZE_NUMBER_INT);
             $fields['isavto'] = $inProps['isavto'] ?: filter_var(Yii::app()->getRequest()->getParam('isavto'), FILTER_SANITIZE_NUMBER_INT);
             $fields['smart'] = $inProps['smart'] ?: filter_var(Yii::app()->getRequest()->getParam('smart'), FILTER_SANITIZE_NUMBER_INT);
+            $fields['self_employed'] = $inProps['self_employed'] ?: filter_var(Yii::app()->getRequest()->getParam('self_employed'), FILTER_SANITIZE_NUMBER_INT);
             $fields['card'] = $inProps['card'] ?: filter_var(Yii::app()->getRequest()->getParam('bank-card'), FILTER_SANITIZE_NUMBER_INT);
             $fields['cardPrommu'] = $inProps['cardPrommu'] ?: filter_var(Yii::app()->getRequest()->getParam('card-prommu'), FILTER_SANITIZE_NUMBER_INT);
             // bl2
@@ -1104,6 +1106,7 @@ class Vacancy extends ARModel
             $fields['ismed'] = filter_var(Yii::app()->getRequest()->getParam('ismed'), FILTER_SANITIZE_NUMBER_INT);
             $fields['isavto'] = filter_var(Yii::app()->getRequest()->getParam('isavto'), FILTER_SANITIZE_NUMBER_INT);
             $fields['smart'] = $inProps['smart'] ?: filter_var(Yii::app()->getRequest()->getParam('smart'), FILTER_SANITIZE_NUMBER_INT);
+            $fields['self_employed'] = $inProps['self_employed'] ?: filter_var(Yii::app()->getRequest()->getParam('self_employed'), FILTER_SANITIZE_NUMBER_INT);
             // сохраняем атрибуты вакансии
             $this->saveVacAttribs($idvac);
 
@@ -1172,6 +1175,7 @@ class Vacancy extends ARModel
             $fields['ismed'] = filter_var(Yii::app()->getRequest()->getParam('ismed'), FILTER_SANITIZE_NUMBER_INT);
             $fields['isavto'] = filter_var(Yii::app()->getRequest()->getParam('isavto'), FILTER_SANITIZE_NUMBER_INT);
             $fields['smart'] = $inProps['smart'] ?: filter_var(Yii::app()->getRequest()->getParam('smart'), FILTER_SANITIZE_NUMBER_INT);
+            $fields['self_employed'] = $inProps['self_employed'] ?: filter_var(Yii::app()->getRequest()->getParam('self_employed'), FILTER_SANITIZE_NUMBER_INT);
             $fields['requirements'] = filter_var(Yii::app()->getRequest()->getParam('requirements'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $fields['duties'] = filter_var(Yii::app()->getRequest()->getParam('duties'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $fields['conditions'] = filter_var(Yii::app()->getRequest()->getParam('conditions'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);

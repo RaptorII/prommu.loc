@@ -351,7 +351,8 @@ class ResponsesApplic extends Responses
                         ageto, 
                         isman, 
                         iswoman, 
-                        status")
+                        status,
+                        self_employed")
                     ->from('empl_vacations')
                     ->where("id=:id", [":id" => $id])
                     ->queryRow();
@@ -420,6 +421,16 @@ class ResponsesApplic extends Responses
             {
                 $arRes['message'] = 'Вы не подходите на даную ваканию по параметру “Возраст соискателя”';
                 return $arRes;
+            }
+            // Статус Самозанятый
+            $self_employed = Share::$UserProfile->getUserAttribute(
+              ['key'=>'self_employed'],
+              Share::$UserProfile->id
+            );
+            if(!$self_employed && $arVacancy['self_employed'])
+            {
+              $arRes['message'] = 'Нам очень жаль, но на эту вакансию требуются соискатели со статусом “Самозанятый”';
+              return $arRes;
             }
             // города пользователя
             $arUserCities = Yii::app()->db->createCommand()

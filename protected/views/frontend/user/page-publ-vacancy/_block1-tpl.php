@@ -84,18 +84,26 @@
     <?
     //  Прочее
     ?>
-    <div class="erv__label erv__label-tbl">
-        <div>
-            <input type="checkbox" name="ismed" class="erv__input erv__hidden" id="rv-med-note" value="1" <?=($viData['vac']['ismed'] ? 'checked' : '')?>>
-            <label class="erv__label-checkbox" for="rv-med-note">Медкнижка</label>    
+    <div class="erv__label erv__label-flex">
+        <div class="erv__label-wrap">
+            <input type="checkbox" name="ismed" class="erv__input erv__hidden" id="rv-med-note"
+                   value="1" <?= ($viData['vac']['ismed'] ? 'checked' : '') ?>>
+            <label class="erv__label-checkbox" for="rv-med-note">Медкнижка</label>
         </div>
-        <div>
-            <input type="checkbox" name="isavto" class="erv__input erv__hidden" id="rv-auto" value="1" <?=($viData['vac']['isavto'] ? 'checked' : '')?>>
-            <label class="erv__label-checkbox" for="rv-auto">Автомобиль</label>    
+        <div class="erv__label-wrap">
+            <input type="checkbox" name="isavto" class="erv__input erv__hidden" id="rv-auto"
+                   value="1" <?= ($viData['vac']['isavto'] ? 'checked' : '') ?>>
+            <label class="erv__label-checkbox" for="rv-auto">Автомобиль</label>
         </div>
-        <div>
-            <input type="checkbox" name="smart" class="erv__input erv__hidden" id="rv-smart" value="1" <?=($viData['vac']['smart'] ? 'checked' : '')?>>
-            <label class="erv__label-checkbox" for="rv-smart">Смартфон</label>    
+        <div class="erv__label-wrap">
+            <input type="checkbox" name="smart" class="erv__input erv__hidden" id="rv-smart"
+                   value="1" <?= ($viData['vac']['smart'] ? 'checked' : '') ?>>
+            <label class="erv__label-checkbox" for="rv-smart">Смартфон</label>
+        </div>
+        <div class="erv__label-wrap">
+            <input type="checkbox" name="self_employed" class="erv__input erv__hidden" id="rv-self_employed"
+                   value="1" <?= ($viData['vac']['self_employed'] ? 'checked' : '') ?>>
+            <label class="erv__label-checkbox" for="rv-self_employed">Самозанятый</label>
         </div>
     </div>
     <?

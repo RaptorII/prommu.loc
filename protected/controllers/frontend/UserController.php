@@ -1810,6 +1810,13 @@ class UserController extends AppController
         $data['inn'] = Share::$UserProfile->getUserAttribute(['key'=>'self_employed']);
         if(!$data['inn'])
         {
+            if(Yii::app()->request->isPostRequest) // записываем данные
+            {
+                $inn = filter_var(Yii::app()->getRequest()->getParam('inn'), FILTER_SANITIZE_NUMBER_INT);
+                Share::$UserProfile->setUserAttribute('self_employed',$inn);
+                Yii::app()->user->setFlash('prommu_flash','Статус сохранен, Вы молодец!');
+                $this->redirect(MainConfig::$PAGE_PROFILE);
+            }
             $model = new PagesContent;
             $lang = Yii::app()->session['lang'];
             $data['agreement'] = $model->getPageContent('conditions', $lang);
@@ -1818,6 +1825,14 @@ class UserController extends AppController
                 ['Как стать самозанятым', MainConfig::$VIEW_SELF_EMPLOYED]
             );
             $this->setPageTitle('Как стать самозанятым');
+        }
+        else
+        {
+            $this->setBreadcrumbsEx(
+                ['Профиль', MainConfig::$PAGE_PROFILE],
+                ['Личный счет', MainConfig::$VIEW_SELF_EMPLOYED]
+            );
+            $this->setPageTitle('Личный счет');
         }
 
         $this->render('self-employed',['viData'=>$data]);

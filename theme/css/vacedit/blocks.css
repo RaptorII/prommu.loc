@@ -1287,3 +1287,15 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	.erv-city__label-name span {color: #A0A0A0;}
 
 }
+/* */
+.erv__label-flex{
+	margin: 0 -15px 20px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+.erv__label-flex .erv__label-wrap{
+	display: block;
+	width: initial;
+	padding: 0 15px 15px;
+}

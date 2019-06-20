@@ -12,7 +12,7 @@
         <li>Установите официальное приложение <a href="https://play.google.com/store/apps/details?id=com.gnivts.selfemployed&hl=ru" rel="nofollow" target="_blank">"Мой налог"</a> или перейдите по этой <a href="https://lknpd.nalog.ru/auth/login" rel="nofollow" target="_blank">ссылке</a> и зарегистрируйтесь в качестве самозанятого</li>
         <li>Вернитесь на эту страницу и завершите идентификацию</li>
     </ol>
-    <form id="self_employed_form">
+    <form id="self_employed_form" method="post">
         <div class="self-employed__tab">
             <div class="self-employed__tab-title"><?=$viData['agreement']['name']?></div>
             <div class="self-employed__tab-content"><?echo $viData['agreement']['html']?></div>
@@ -51,7 +51,7 @@
         ?>
         <label class="self-employed_label self-employed_label-text">
             <span>ИНН</span>
-            <input type="text" id="inn_input" name="inn">
+            <input type="text" id="inn_input" name="inn" autocomplete="off">
         </label>
         <?
         //
@@ -63,6 +63,7 @@
         </div>
     </form>
 <? else: ?>
-    Личный счет
+    <h1>Личный счет</h1>
+    <h2>Страница в разработке</h2>
 <? endif; ?>
 </div>
