@@ -867,8 +867,8 @@ class Promo extends ARModel
             
             $data = $this->getUserExcelInfo($v['id_user']);
             $time = $this->getOnlineTime($v['id']);
-            
-            if(!empty($data['userAttribs']['mob']['val']) && $time['time'] != 0){
+            //!empty($data['userAttribs']['mob']['val']) && 
+            if($time['time'] != 0){
                 
                 
                 
@@ -878,6 +878,7 @@ class Promo extends ARModel
                 
                 $days = floor($datediff / (60 * 60 * 24)); 
                 $id = $v['id'];
+                $id_user = $v['id_user'];
                 $arT[$id]['id'] = $v['id'];
                 $arT[$id]['fio'] = $v['firstname'].' '.$v['lastname'];
                 $arT[$id]['birthday'] = $v['birthday'];
@@ -913,11 +914,43 @@ class Promo extends ARModel
                 $arT[$id]['daysonline'] = $time['time'];
                 
                 ///вакансия
-                $arT[$id]['countvac'] = "";
-                $arT[$id]['countactivevac'] = "";
-                $arT[$id]['countarchivevac'] = "";
-                $arT[$id]['countinvitevac'] = "";
-                $arT[$id]['countresponsevac'] = "";
+                
+                $sql = "SELECT COUNT(id)
+								FROM termostat_analytic
+								WHERE user = {$id_user} 
+									AND type = 'vacancy'";
+			    $countvac = Yii::app()->db->createCommand($sql)->queryScalar();
+			    
+			    $sql = "SELECT COUNT(id)
+								FROM vacation_stat
+								WHERE id_promo = {$id} 
+									AND isresponse = 1";
+			    $countactivevac = Yii::app()->db->createCommand($sql)->queryScalar();
+			    
+			    $sql = "SELECT COUNT(id)
+								FROM vacation_stat
+								WHERE id_promo = {$id} 
+									AND status IN (5,6,7)";
+			    $countarchivevac = Yii::app()->db->createCommand($sql)->queryScalar();
+			    
+			    $sql = "SELECT COUNT(id)
+								FROM vacation_stat
+								WHERE id_promo = {$id} 
+									AND status IN (3)";
+			    $countinvitevac = Yii::app()->db->createCommand($sql)->queryScalar();
+			    
+			    
+			    $sql = "SELECT COUNT(id)
+								FROM vacation_stat
+								WHERE id_promo = {$id} 
+									AND status IN (7)";
+			    $countresponsevac = Yii::app()->db->createCommand($sql)->queryScalar();
+			
+                $arT[$id]['countvac'] = $countvac;
+                $arT[$id]['countactivevac'] = $countactivevac;
+                $arT[$id]['countarchivevac'] = $countarchivevac;
+                $arT[$id]['countinvitevac'] = $countinvitevac;
+                $arT[$id]['countresponsevac'] = $countresponsevac;
                 $arT[$id]['countrefusedvac'] = "";
                 
                 
@@ -1017,6 +1050,7 @@ class Promo extends ARModel
 
         return $res;
     }
+    
     
     /**
      * setViewed
