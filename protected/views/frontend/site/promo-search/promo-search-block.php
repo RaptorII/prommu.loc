@@ -101,11 +101,11 @@
                                 <h3>Целевые вакансии:</h3>
                                 <?php
                                 $curr = array('руб/час', 'руб/нед', 'руб/мес', 'руб/пос',);
-                                $i=0;
+                                $j=0;
                                 foreach ($val['post'] as $key2 => $val2):
 
-                                    if ($i<2) {
-                                        $i++;
+                                    if ($j<2) {
+                                        $j++;
                                         ?>
                                         <?= $val2[0] ?>
                                         <div class='price'>
@@ -113,18 +113,18 @@
                                         </div><br>
                                         <?php
                                     }
-                                    if ($i==2){
+                                    if ($j==2){
                                         echo '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve" style="width: 20px; height: 20px;">
 
 <path transform="rotate(90 256 256)" d="M90,256c0,91.755,74.258,166,166,166c91.755,0,166-74.259,166-166c0-91.755-74.258-166-166-166   C164.245,90,90,164.259,90,256z M462,256c0,113.771-92.229,206-206,206S50,369.771,50,256S142.229,50,256,50S462,142.229,462,256z    M199.955,168.598l32.263-32.107L352.154,257L232.218,377.51l-32.263-32.107L287.937,257L199.955,168.598z"/>
 
 </svg>';
-                                        $i++;
+                                        $j++;
                                     }
                                     ?>
                                 <?php endforeach; ?>
                                 <?php
-                                if ($i>=2) {
+                                if ($j>=2) {
                                     echo'<div class="over__hint">';
                                     foreach ($val['post'] as $key2 => $val2): ?>
 
@@ -135,8 +135,9 @@
 
                                     <?php
                                     endforeach;
+                                    echo '</div>';
                                 }
-                                echo '</div>';
+
                                 ?>
 
                             </div>
