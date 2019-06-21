@@ -47,6 +47,9 @@ $(function(){
             type: 'POST',
             url: '/ajax/Self_employed',
             data: 'inn=' + $('#inn_input').val(),
+            complete: function() {
+                $('.content-block').removeClass('load');
+            },
             success: function(r)
             {
                 r = JSON.parse(r);
@@ -80,9 +83,6 @@ $(function(){
                         afterClose: function(){ $('body>div.prmu__popup').remove() }
                     });
                 }
-            },
-            complete: function() {
-                $('.content-block').removeClass('load');
             }
         });
     });
