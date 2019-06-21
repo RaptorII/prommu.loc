@@ -1805,7 +1805,7 @@ class UserController extends AppController
      */
     public function actionSelf_employed()
     {
-        Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
+        !Share::isApplicant() && $this->redirect(MainConfig::$PAGE_LOGIN);
         $data = array();
         $data['inn'] = Share::$UserProfile->getUserAttribute(['key'=>'self_employed']);
         if(!$data['inn'])
