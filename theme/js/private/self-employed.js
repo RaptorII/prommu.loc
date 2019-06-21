@@ -47,17 +47,14 @@ $(function(){
             type: 'POST',
             url: '/ajax/Self_employed',
             data: 'inn=' + $('#inn_input').val(),
-            complete: function() {
-                $('.content-block').removeClass('load');
-            },
             success: function(r)
             {
                 r = JSON.parse(r);
                 let message = '';
 
-                $('.content-block').removeClass('load');
                 if(r.error==true)
                 {
+                    $('.content-block').removeClass('load');
                     message = 'Непредвиденная ошибка. Пожалуйста обратитесь к администратору';
                 }
                 else
@@ -69,6 +66,7 @@ $(function(){
                     }
                     else
                     {
+                        $('.content-block').removeClass('load');
                         message = r.response.message;
                     }
                 }
