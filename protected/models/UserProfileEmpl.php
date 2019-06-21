@@ -1770,6 +1770,6 @@ class UserProfileEmpl extends UserProfile
         Yii::app()->db->createCommand()
             ->update('user', ['ismoder'=>0], 'id_user=:id', [':id'=>$this->id]);
         // уведомляем админа по почте
-        Mailing::set(1, ['id_user'=>$this->id], 2);
+        Mailing::set(1, ['id_user'=>$this->id], 3);
     }
 }

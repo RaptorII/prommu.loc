@@ -57,7 +57,7 @@
         //
         ?>
         <div class="center">
-            <div class="self-employed_btn prmu-btn prmu-btn_normal" id="form_btn">
+            <div class="self-employed_btn prmu-btn prmu-btn_normal disable" id="form_btn">
                 <span>Начать</span>
             </div>
         </div>

@@ -27,21 +27,14 @@ $(function(){
         $(this).val(v);
         checkSend();
     });
-    //
-    function checkSend()
-    {
-        let length = $('#inn_input').val().length,
-            chBox1 = $('[name="agreement"]').is(':checked'),
-            chBox2 = $('[name="oferta"]').is(':checked'),
-            chBox3 = $('[name="market_oferta"]').is(':checked');
-
-        if(length==INNLenth && chBox1 && chBox2 && chBox3)
-            $('#form_btn').show()
-        else
-            $('#form_btn').hide();
-    }
     // submit
     $('#form_btn').click(function(){
+        if($(this).hasClass('disable'))
+        {
+            showFancyPopup('Необходимо отметить все галочки и ввести ИНН');
+            return false;
+        }
+
         $('.content-block').addClass('load');
         $.ajax({
             type: 'POST',
@@ -73,13 +66,7 @@ $(function(){
 
                 if(message.length)
                 {
-                    $('body').append('<div class="prmu__popup"><p>'+message+'</p></div>'),
-                    $.fancybox.open({
-                        src: "body>div.prmu__popup",
-                        type: 'inline',
-                        touch: false,
-                        afterClose: function(){ $('body>div.prmu__popup').remove() }
-                    });
+                    showFancyPopup(message);
                 }
             }
         });
@@ -92,4 +79,32 @@ $(function(){
             return false;
         }
     });
+    //
+    function showFancyPopup(m)
+    {
+        $('body').append('<div class="prmu__popup"><p>'+m+'</p></div>'),
+        $.fancybox.open({
+            src: "body>div.prmu__popup",
+            type: 'inline',
+            touch: false,
+            afterClose: function(){ $('body>div.prmu__popup').remove() }
+        });
+    }
+    //
+    function checkSend()
+    {
+        let length = $('#inn_input').val().length,
+            chBox1 = $('[name="agreement"]').is(':checked'),
+            chBox2 = $('[name="oferta"]').is(':checked'),
+            chBox3 = $('[name="market_oferta"]').is(':checked');
+
+        if(length==INNLenth && chBox1 && chBox2 && chBox3)
+        {
+            $('#form_btn').removeClass('disable');
+        }
+        else
+        {
+            $('#form_btn').addClass('disable');
+        }
+    }
 });
