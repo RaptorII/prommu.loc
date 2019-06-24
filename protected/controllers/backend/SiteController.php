@@ -363,10 +363,10 @@ class SiteController extends Controller
     public function actionServicePrice()
     {
         if(self::isAuth()) {
-            if(strpos($this->user_access, "Цены") === false) {
-                $this->render('access');
-                return;
-            }    
+            // if(strpos($this->user_access, "Цены") === false) {
+            //     $this->render('access');
+            //     return;
+            // }    
     
             $model = new ServicePrice;
             
