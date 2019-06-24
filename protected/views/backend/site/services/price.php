@@ -13,8 +13,6 @@
 </style>
 
 
-
-<?php 
 echo CHtml::form('/admin/site/UserUpdate?id=0', 'POST', array("id" => "form"));
 echo '<input type="hidden" id="curr_status" name="curr_status">';
 echo '<input type="hidden" id="curr_cnd" name="curr_cnd">';
