@@ -40,7 +40,7 @@ class ServicePrice extends ARModel {
         return new CActiveDataProvider('ServicePrice', array(
             'criteria'=>$criteria,
             'pagination' => array('pageSize' => 100,),
-            'sort' => ['defaultOrder'=>'id desc'],
+            'sort' => ['defaultOrder'=>'id asc'],
         ));
     }
 
