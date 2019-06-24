@@ -812,7 +812,7 @@ class Promo extends ARModel
         $eDate = $rq->getParam('export_end_date');
         
         $birthbDate = $rq->getParam('birthday_beg_date');
-        $birtheDate = $rq->getParam('birthdayt_end_date');
+        $birtheDate = $rq->getParam('birthday_end_date');
         
         $status = $rq->getParam('export_status');
         $phones = $rq->getParam('export_phone');
