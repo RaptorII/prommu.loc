@@ -293,6 +293,46 @@ echo CHtml::endForm();
         <div class="hidden-xs col-sm-6"></div>
     </div>
     <br>
+    <label class="d-label">
+        <span>Даты рождения</span>
+        <input type="radio" name="export_date" value="create" checked>
+    </label>
+    <div class="row">
+        <div class="col-xs-6">
+            <label class="d-label">
+                <span>Период с</span>
+                <?php
+                    $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                        'name'=>'birthday_beg_date',
+                        'options'=>['changeMonth'=>true],
+                        'htmlOptions'=>[
+                            'id'=>'birthday_beg_date',
+                            'class'=>'form-control',
+                            'autocomplete'=>'off'
+                        ]
+                    ));
+                ?>
+            </label>  
+        </div>
+        <div class="col-xs-6">
+            <label class="d-label">
+                <span>по</span>
+                <?php
+                    $this->widget('zii.widgets.jui.CJuiDatePicker',array(
+                        'name'=>'birthday_end_date',
+                        'options'=>['changeMonth'=>true],
+                        'htmlOptions'=>[
+                            'id'=>'birthday_end_date',
+                            'class'=>'form-control',
+                            'autocomplete'=>'off'
+                        ]
+                    ));
+                ?>
+            </label>  
+        </div>
+        <div class="hidden-xs col-sm-6"></div>
+    </div>
+    <br>
     <div class="export_form-radio">
         <label class="d-label">
             <span>все</span>
