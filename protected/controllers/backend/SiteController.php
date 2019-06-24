@@ -358,7 +358,32 @@ class SiteController extends Controller
         $model->DeleteContent($id);
         $this->render('pages/view',array('model'=>$model->getAllPages()));
     }
+    
+        // **** Управление пользователями (блокировка, смена пароля) ****
+    public function actionServicePrice()
+    {
+        if(self::isAuth()) {
+            if(strpos($this->user_access, "Цены") === false) {
+                $this->render('access');
+                return;
+            }    
+    
+            $model = new ServicePrice;
+            
+            
+            $model->unsetAttributes();  // clear any default values
+            $model->search();
+            // if(isset($_GET['Employer'])){
+            //     $model->attributes=$_GET['Employer'];
+            // }
+            $title = 'Цены на услуги';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('Цены на услуги' => array('sect?p=emp'), '1'=>$title);
+            $this->render('users/viewempl',array('model'=>$model));
+        }
 
+    }
+    
     // **** Управление пользователями (блокировка, смена пароля) ****
     public function actionEmpl()
     {
