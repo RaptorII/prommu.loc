@@ -1,6 +1,6 @@
 <?php
 
-class ServicePrice extends ARModel {{
+class ServicePrice extends ARModel {
     
     /**
 	 * @return string the associated database table name
@@ -15,7 +15,7 @@ class ServicePrice extends ARModel {{
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('id, price, comment, service, region, valute),
+            array('id, price, comment, service, region, valute'),
             array('id, price, region', 'numerical', 'integerOnly'=>true),
             array('valute', 'length', 'max'=>64),
         
