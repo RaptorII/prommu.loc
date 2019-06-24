@@ -379,7 +379,7 @@ class SiteController extends Controller
             $title = 'Цены на услуги';
             $this->setPageTitle($title);
             $this->breadcrumbs = array('Цены на услуги' => array('sect?p=emp'), '1'=>$title);
-            $this->render('users/viewempl',array('model'=>$model));
+            $this->render('services/price',array('model'=>$model));
         }
 
     }
