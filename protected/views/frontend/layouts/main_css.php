@@ -97,10 +97,14 @@
     }
 }
 
+#DiContent.page-ankety .list-view .vacancies:hover {
+    overflow: unset;
+}
 #DiContent.page-ankety .list-view .vacancies {
     display: block;
     position: relative;
     z-index: 1;
+    overflow: hidden;
 }
 .vacancies .over__hint {
     position: absolute;

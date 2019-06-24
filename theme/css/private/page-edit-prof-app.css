@@ -1550,6 +1550,10 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	.country-phone-selected {
 		padding: 0 2px 0 0;
 	}
+	.epa__content-logo .epa__logo-content {
+		width: 80%;
+		margin: 0 auto 15px auto;
+	}
 }
 .country-phone-selected img{
     margin: 10px 5px;
