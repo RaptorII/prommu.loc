@@ -856,7 +856,7 @@ class Promo extends ARModel
             switch ($dateType)
             {
                 case 'create': 
-                    $conditions[] = 'e.birthdayc<=:esdate';
+                    $conditions[] = 'e.birthday<=:esdate';
                     $params[':esdate'] = $eDate . ' 23:59:59';
                     break;
             }   
