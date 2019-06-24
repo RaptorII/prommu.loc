@@ -301,33 +301,14 @@ echo CHtml::endForm();
         <div class="col-xs-6">
             <label class="d-label">
                 <span>Период с</span>
-                <?php
-                    $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                        'name'=>'birthday_beg_date',
-                        'options'=>['changeMonth'=>true],
-                        'htmlOptions'=>[
-                            'id'=>'birthday_beg_date',
-                            'class'=>'form-control',
-                            'autocomplete'=>'off'
-                        ]
-                    ));
-                ?>
+                <input type="date" name="birthday_beg_date">
             </label>  
         </div>
         <div class="col-xs-6">
             <label class="d-label">
                 <span>по</span>
-                <?php
-                    $this->widget('zii.widgets.jui.CJuiDatePicker',array(
-                        'name'=>'birthday_end_date',
-                        'options'=>['changeMonth'=>true],
-                        'htmlOptions'=>[
-                            'id'=>'birthday_end_date',
-                            'class'=>'form-control',
-                            'autocomplete'=>'off'
-                        ]
-                    ));
-                ?>
+                <input type="date" name="birthday_end_date">
+                
             </label>  
         </div>
         <div class="hidden-xs col-sm-6"></div>
