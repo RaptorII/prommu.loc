@@ -15,7 +15,7 @@ class ServicePrice extends ARModel {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('id, price, comment, service, region, valute'),
+            array('id, price, comment, service, region, valute','required'),
             array('id, price, region', 'numerical', 'integerOnly'=>true),
             array('valute', 'length', 'max'=>64),
         
