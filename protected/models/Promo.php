@@ -810,6 +810,10 @@ class Promo extends ARModel
         $dateType = $rq->getParam('export_date');
         $bDate = $rq->getParam('export_beg_date');
         $eDate = $rq->getParam('export_end_date');
+        
+        $birthbDate = $rq->getParam('birthday_beg_date');
+        $birtheDate = $rq->getParam('birthdayt_end_date');
+        
         $status = $rq->getParam('export_status');
         $phones = $rq->getParam('export_phone');
         
@@ -833,6 +837,27 @@ class Promo extends ARModel
                 case 'create': 
                     $conditions[] = 'e.date_public<=:edate';
                     $params[':edate'] = $eDate . ' 23:59:59';
+                    break;
+            }   
+        }
+        
+        if($birthbDate!='1970-01-01')
+        {
+            switch ($dateType)
+            {
+                case 'create': 
+                    $conditions[] = 'e.birthday>=:bsdate';
+                    $params[':bsdate'] = $bDate . ' 00:00:00';
+                    break;
+            }   
+        }
+        if($birtheDate!='1970-01-01')
+        {
+            switch ($dateType)
+            {
+                case 'create': 
+                    $conditions[] = 'e.birthdayc<=:esdate';
+                    $params[':esdate'] = $eDate . ' 23:59:59';
                     break;
             }   
         }
