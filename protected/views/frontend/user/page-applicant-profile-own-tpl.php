@@ -383,7 +383,7 @@
         <?php
         /**
         * Shut down  viewed Target Vacancy
-        * 4.05.2019
+        * 4.06.2019
         */
         if (1==2 ) {
         ?>
