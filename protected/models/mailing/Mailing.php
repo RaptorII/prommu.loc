@@ -135,7 +135,19 @@ class Mailing extends CActiveRecord
 										'pattern' => "/#PAGE_RATE#/",
 										'value' => Subdomain::site() . DS . MainConfig::$PAGE_RATE,
 										'description' => "Страница просмотра рейтинга"
-									)
+									),
+              14 => array(
+                  'name' => "#PAGE_ADMIN_EDIT_PROFILE_APP#",
+                  'pattern' => "/#PAGE_ADMIN_EDIT_PROFILE_APP#/",
+                  'value' => Subdomain::site() . '/admin/PromoEdit',
+                  'description' => "Страница редактирования профиля соискателя(без ID)"
+              ),
+              15 => array(
+                'name' => "#PAGE_ADMIN_EDIT_PROFILE_EMP#",
+                'pattern' => "/#PAGE_ADMIN_EDIT_PROFILE_EMP#/",
+                'value' => Subdomain::site() . '/admin/EmplEdit',
+                'description' => "Страница редактирования профиля работодателя(без ID)"
+              )
 				);
 	}
 	/**

@@ -66,7 +66,7 @@ class UserProfileEmpl extends UserProfile
             $pathinfo = pathinfo($cropRes['file']);
             $cropRes['idfile'] = $pathinfo['filename'];
 
-            Mailing::set(1, ['id_user'=>$id], 3);
+            Mailing::set(1, ['id_user'=>$id], self::$EMPLOYER);
         }
         else
         {
@@ -579,8 +579,7 @@ class UserProfileEmpl extends UserProfile
             $logo = filter_var($rq->getParam('logo'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $aboutme = filter_var($rq->getParam('aboutme'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-            $arrs = '';
-            $bFlashFlag = false;
+            $arFields = [];
 
             $sql = "SELECT u.email, u.confirmEmail
               , e.id,
@@ -608,40 +607,14 @@ class UserProfileEmpl extends UserProfile
                     'confirmEmail' => 0,
                 ), 'id_user=:id_user', array(':id_user' => $id));
             }
+            $data['firstname']!=$fname && $arFields[] = 'Имя';
+            $data['lastname']!=$lname && $arFields[] = 'Фамилия';
+            $data['type']!=$companyType && $arFields[] = 'Тип компании';
+            $data['name']!=$name && $arFields[] = 'Название компании';
+            $data['contact']!=$contact && $arFields[] = 'Контактное лицо';
+            $data['aboutme']!=$aboutme && $arFields[] = 'О компании';
+            $data['employer_contact']!=$emplcontact && $arFields[] = 'Отображение контактных данных';
 
-            if($data['firstname'] != $fname){
-                $arrs.='Имя|';
-                $bFlashFlag = true;
-            }
-            if($data['lastname'] != $lname){
-                $arrs.='Фамилия|';
-                $bFlashFlag = true;
-            }
-
-            if($data['type'] != $companyType){
-                $arrs.='Тип компании|';
-                $bFlashFlag = true;
-            }
-
-            if($data['name'] != $name){
-                $arrs.='Название|';
-                $bFlashFlag = true;
-            }
-
-            if($data['contact'] != $contact){
-                $arrs.='Контактное лицо|';
-                $bFlashFlag = true;
-            }
-
-            if($data['aboutme'] != $aboutme){
-                $arrs.='О компании|';
-                $bFlashFlag = true;
-            }
-
-            if($data['employer_contact'] != $emplcontact){
-                $arrs.='Отображение контактных данных|';
-                $bFlashFlag = true;
-            }
             ///API
             //             $fieldsApi = array(
             //                 'firstName' => $fname,
@@ -652,17 +625,6 @@ class UserProfileEmpl extends UserProfile
             //             $res = Yii::app()->db->createCommand()
             //                 ->update('user_api', $fieldsApi, 'id=:id', array(':id' => $id));
             ///API
-
-            // save resume
-
-            // сохраняем лого
-            if($logo)
-            {
-                $fields['logo'] = $logo;
-                //$this->copyLogoFiles($logo);
-                //$UploadLogo = (new UploadLogo());
-                //$UploadLogo->delPhoto(Share::$UserProfile->exInfo->logo);
-            }
 
             // сохраняем атрибуты пользователя
             $this->saveUserAttribs();
@@ -677,29 +639,30 @@ class UserProfileEmpl extends UserProfile
                     'mdate' => date('Y-m-d H:i:s'),
                 ), 'id_user=:id_user', array(':id_user' => $id));
 
-            $link = Subdomain::site() . '/admin/site/EmplEdit'. DS .$id;
-
-            if($arrs != '')
+            if(count($arFields))
             {
                 $arRating = Share::$UserProfile->getRateCount();
 
-                $fields = array(
-                    'name' => $name,
-                    'firstname' => $fname,
-                    'lastname' => $lname,
-                    'contact' => $contact,
-                    'employer_contact' => $emplcontact,
-                    'type' => $companyType,
-                    'aboutme' => $aboutme,
-                    'ismoder' => 0,
-                    'mdate' => date('Y-m-d H:i:s'),
-                    'rate' => $arRating[0],
-                    'rate_neg' => $arRating[1],
-                    'is_new' => 1
-                );
-
-                $res = Yii::app()->db->createCommand()
-                    ->update('employer', $fields, 'id_user=:id_user', array(':id_user' => $id));
+                Yii::app()->db->createCommand()
+                  ->update(
+                    'employer',
+                    [
+                      'name' => $name,
+                      'firstname' => $fname,
+                      'lastname' => $lname,
+                      'contact' => $contact,
+                      'employer_contact' => $emplcontact,
+                      'type' => $companyType,
+                      'aboutme' => $aboutme,
+                      'ismoder' => 0,
+                      'mdate' => date('Y-m-d H:i:s'),
+                      'rate' => $arRating[0],
+                      'rate_neg' => $arRating[1],
+                      'is_new' => 1
+                    ],
+                    'id_user=:id_user',
+                    [':id_user' => $id]
+                  );
                 // save user
                 $res = Yii::app()->db->createCommand()
                     ->update('user', array(
@@ -709,21 +672,17 @@ class UserProfileEmpl extends UserProfile
                         'mdate' => date('Y-m-d H:i:s'),
                     ), 'id_user=:id_user', array(':id_user' => $id));
 
-                $message = sprintf("Пользователь <a href='%s'>%s</a> изменил данные профиля.
-                    <br />
-                     Изменены поля: $arrs
-                    <br />
-                    Перейти на модерацию работодателя <a href='%s'>по ссылке</a>.",
-                    Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . $id,
-                    Share::$UserProfile->exInfo->name,
-                   $link
+                $name = $data['firstname'] . ' ' . $data['lastname'];
+                empty(trim($name)) && $name = "Пользователь";
+                Mailing::set(
+                  17,
+                  [
+                    'name_user' => $name,
+                    'id_user' => $id,
+                    'fields_user' => implode(', ',$arFields)
+                  ],
+                  self::$EMPLOYER
                 );
-                Share::sendmail("prommu.servis@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);
-                Share::sendmail("susgresk@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);
-                //Share::sendmail("mikekarpenko@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);
-            }
-            if($bFlashFlag)
-            {
                 $message = '<p>Анкета отправлена на модерацию.<br>Модерация занимает до 15 минут в рабочее время. О результатах проверки - Вам прийдет уведомление на эл. почту</p>';
                 Yii::app()->user->setFlash('prommu_flash', $message);
             }
@@ -1488,7 +1447,8 @@ class UserProfileEmpl extends UserProfile
     /*
     *   Сохранение настроек
     */
-    public function saveSettings($idus){
+    public function saveSettings($idus)
+    {
         $email = filter_var(Yii::app()->getRequest()->getParam('email'), FILTER_VALIDATE_EMAIL);
         $phone = Yii::app()->getRequest()->getParam('phone');
         $oldPsw = Yii::app()->getRequest()->getParam('oldpsw');
@@ -1506,7 +1466,7 @@ class UserProfileEmpl extends UserProfile
                     array(':id' => $idus)
                 );
             if(!$res)
-                $arResult = array('error'=>1,'mess'=>'Ошибка сохранения почты','type'=>'email');
+                $arResult = ['error'=>1,'mess'=>'Ошибка сохранения почты','type'=>'email'];
         }
         elseif(strlen($oldPsw)>0 && strlen($newPsw)>0){ // пароль
             $arResult['type'] = 'psw';
@@ -1529,15 +1489,17 @@ class UserProfileEmpl extends UserProfile
                         array(':id' => $idus)
                     );
 
-                if(!$res) {
-                    $arResult = array('error' => 1, 'mess' => 'Ошибка сохранения пароля', 'type' => 'psw');
-                } else {
-                    $message = sprintf("Ваш пароль успешно изменён.");
-                    Share::sendmail($user['email'], "Prommu.com Изменение пароля " . $idus, $message);
+                if(!$res)
+                {
+                  $arResult = ['error'=>1, 'mess'=>'Ошибка сохранения пароля', 'type'=>'psw'];
+                }
+                else
+                {
+                  Mailing::set(18,['email_user'=>$user['email'], 'id_user'=>$idus]);
                 }
             }
             else{
-                $arResult = array('error'=>1,'mess'=>'Старый пароль не подходит','type'=>'psw');
+                $arResult = ['error'=>1, 'mess'=>'Старый пароль не подходит', 'type'=>'psw'];
             }
         }
         elseif(strlen($phone)>0){
@@ -1550,7 +1512,7 @@ class UserProfileEmpl extends UserProfile
                     array(':id' => $idus)
                 );
             if(!$res)
-                $arResult = array('error'=>1,'mess'=>'Ошибка сохранения телефона','type'=>'phone');
+                $arResult = ['error'=>1,'mess'=>'Ошибка сохранения телефона', 'type'=>'phone'];
         }
         return $arResult;
     }
@@ -1713,7 +1675,7 @@ class UserProfileEmpl extends UserProfile
         Yii::app()->db->createCommand()
             ->update('user', ['ismoder'=>0], 'id_user=:id', [':id'=>$this->id]);
         // уведомляем админа по почте
-        Mailing::set(1, ['id_user'=>$this->id], 3);
+        Mailing::set(1, ['id_user'=>$this->id], self::$EMPLOYER);
     }
     /**
      *  сохранение данных с помощью виджета
@@ -1770,6 +1732,6 @@ class UserProfileEmpl extends UserProfile
         Yii::app()->db->createCommand()
             ->update('user', ['ismoder'=>0], 'id_user=:id', [':id'=>$this->id]);
         // уведомляем админа по почте
-        Mailing::set(1, ['id_user'=>$this->id], 3);
+        Mailing::set(1, ['id_user'=>$this->id], self::$EMPLOYER);
     }
 }

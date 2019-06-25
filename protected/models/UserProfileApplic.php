@@ -416,7 +416,7 @@ class UserProfileApplic extends UserProfile
             $pathinfo = pathinfo($cropRes['file']);
             $cropRes['idfile'] = $pathinfo['filename'];
           
-            Mailing::set(1, ['id_user'=>$id], 2);
+            Mailing::set(1, ['id_user'=>$id], self::$APPLICANT);
         }
         else
         {
@@ -613,25 +613,11 @@ class UserProfileApplic extends UserProfile
             WHERE r.id_user = {$id}
             ORDER BY a.id_attr";
             $res = Yii::app()->db->createCommand($sql)->queryAll();
-             $arrs = '';
-            if($res[0]['firstname'] != $name){
-                $arrs.='Имя|';
-            } 
-            if($res[0]['lastname'] != $lastname){
-                $arrs.='Фамилия|';
-            }
-            if($res[0]['birthday'] != $birthday){
-                $arrs.='День рождения|';
-            }
-            // if($res[0]['ismed'] != $hasmedbook){
-            //     $arrs.='Мед.карта|';
-            // }
-            // if($res[0]['ishasavto'] != $hasavto){
-            //     $arrs.='Авто|';
-            // }
-            // if($res[0]['smart'] != $smart){
-            //     $arrs.='Смартфон|';
-            // }
+            $arFields = [];
+            $res[0]['firstname']!=$name && $arFields[] = 'Имя';
+            $res[0]['lastname']!=$lastname && $arFields[] = 'Фамилия';
+            $res[0]['birthday']!=$birthday && $arFields[] = 'День рождения';
+
             $oldEmail = filter_var($res[0]['email'], FILTER_VALIDATE_EMAIL); // при условии что email на email похож
             if($oldEmail!='' && $oldEmail != $email){ 
                 $resе = Yii::app()->db->createCommand()
@@ -641,9 +627,7 @@ class UserProfileApplic extends UserProfile
                         array(':id_user' => Share::$UserProfile->id)
                     );
             }
-            if($res[0]['aboutme'] != $aboutme){
-                $arrs.='Информация о себе|';
-            }
+            $res[0]['aboutme']!=$aboutme && $arFields[] = 'Информация о себе';
 
             $arRating = Share::$UserProfile->getRateCount();
 
@@ -706,21 +690,19 @@ class UserProfileApplic extends UserProfile
                 'mdate' => date('Y-m-d H:i:s'),
             ), 'id_user=:id_user', array(':id_user' => $id));
 
-        if($arrs != '')
+        if(count($arFields))
         {
-            $link = Subdomain::site() . '/admin/site/PromoEdit'. DS .$id;
-            $message = sprintf("Пользователь <a href='%s'>%s</a> изменил данные профиля.
-                <br />
-                Изменены поля: $arrs
-                <br />
-                Перейти на модерацию соискателя <a href='%s'>по ссылке</a>.",
-                Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . $id,
-                $name,
-               $link
-            );
-          
-            Share::sendmail("prommu.servis@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);
-            Share::sendmail("susgresk@gmail.com", "Prommu.com Изменение профиля юзера" . $id, $message);  
+          $name = "$name $lastname";
+          empty(trim($name)) && $name = "Пользователь";
+          Mailing::set(
+            17,
+            [
+              'name_user' => $name,
+              'id_user' => $id,
+              'fields_user' => implode(', ',$arFields)
+            ],
+            self::$APPLICANT
+          );
         } 
 
         $message = '<p>Анкета отправлена на модерацию.<br>Модерация занимает до 15 минут в рабочее время. О результатах проверки - Вам прийдет уведомление на эл. почту</p>';
@@ -1542,7 +1524,8 @@ class UserProfileApplic extends UserProfile
     /*
     *   Сохранение настроек
     */
-    public function saveSettings($idus){
+    public function saveSettings($idus)
+    {
         $email = filter_var(Yii::app()->getRequest()->getParam('email'), FILTER_VALIDATE_EMAIL);
         $phone = Yii::app()->getRequest()->getParam('phone');
         $oldPsw = Yii::app()->getRequest()->getParam('oldpsw');
@@ -1568,7 +1551,7 @@ class UserProfileApplic extends UserProfile
             $newPsw = md5($newPsw);
 
             $user = Yii::app()->db->createCommand()
-                ->select('u.passw')
+                ->select('u.passw, u.email')
                 ->from('user u')
                 ->where('u.id_user=:id', array(':id' => $idus))
                 ->queryRow();
@@ -1582,8 +1565,15 @@ class UserProfileApplic extends UserProfile
                         'id_user=:id', 
                         array(':id' => $idus)
                     );
+
                 if(!$res)
-                    $arResult = array('error'=>1,'mess'=>'Ошибка сохранения пароля','type'=>'psw');
+                {
+                  $arResult = ['error'=>1, 'mess'=>'Ошибка сохранения пароля', 'type'=>'psw'];
+                }
+                else
+                {
+                  Mailing::set(18, ['email_user'=>$user['email'], 'id_user'=>$idus]);
+                }
             }
             else{
                 $arResult = array('error'=>1,'mess'=>'Старый пароль не подходит','type'=>'psw');
@@ -1791,7 +1781,7 @@ class UserProfileApplic extends UserProfile
         Yii::app()->db->createCommand()
             ->update('user', ['ismoder'=>0], 'id_user=:id', [':id'=>$this->id]);
         // уведомляем админа по почте
-        Mailing::set(1, ['id_user'=>$this->id], 2);
+        Mailing::set(1, ['id_user'=>$this->id], self::$APPLICANT);
     }
     /**
      *  сохранение данных с помощью виджета
@@ -1848,7 +1838,7 @@ class UserProfileApplic extends UserProfile
         Yii::app()->db->createCommand()
             ->update('user', ['ismoder'=>0], 'id_user=:id', [':id'=>$this->id]);
         // уведомляем админа по почте
-        Mailing::set(1, ['id_user'=>$this->id], 2);
+        Mailing::set(1, ['id_user'=>$this->id], self::$APPLICANT);
     }
     /**
      * Проверяем ИНН самозанятого

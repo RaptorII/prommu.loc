@@ -28,6 +28,9 @@ abstract class UserProfile extends CModel
 
     public $filesRoot;
     public $filesUrl;
+    // constant
+    public static $APPLICANT = 2;
+    public static $EMPLOYER = 3;
 
     function __construct($inProps)
     {

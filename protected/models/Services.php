@@ -96,53 +96,24 @@ class Services extends Model
                 'crdate' => date("Y-m-d H:i:s"),
             ));
 
-
-        $message = sprintf("На сайте <a href='http://%s'>http://%1$01s</a> Заказ  услуг
-                <br/>
-                 <br/>
-                Услуга: <b>%s</b>  
-                <br/>
-                <br/>
-                Пользователь: <b>%s</b>  
-                <br/>
-                Тема: <b>%s</b>  
-                <br/>
-                Email: <b>%s</b>  
-                <br/>
-                <br/>
-                 ----------------------------------------------------------
-                <br/>
-                Тип трафика: <b>%s</b>  
-                <br/>
-                Источник: <b>%s</b>  
-                <br/>
-                Канал: <b>%s</b>  
-                <br/>
-                Кампания: <b>%s</b>  
-                <br/>
-                Контент: <b>%s</b>  
-                <br/>
-                Ключевые слова: <b>%s</b>  
-                <br/>
-                Точка входа: <b>%s</b>  
-                <br/>
-                Реферер: <b>%s</b>
-                <br/>
-                Roistat: <b>%s</b>  ",
-            Subdomain::getSiteName(),$id, $fio, $tel, $email, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $roistat);
-
-        $emails[0] = "denisgresk@gmail.com";
-        $emails[1] = "man.market2@gmail.com";
-        $emails[2] = "prommu.servis@gmail.com";
-        $emails[3] = "e.market.easss@gmail.com"; 
-        $emails[4] = "projekt.sergey@gmail.com";
-        $emails[5] = "manag_reports@euro-asian.ru";
-        $emails[6] = "e.marketing@euro-asian.ru";
-        $emails[7] = "site.adm@euro-asian.ru";
-        for($i = 0; $i <count($emails); $i++){
-            Share::sendmail($emails[$i], "Prommu: заказ услуг", trim($message));
-       
-        }
+        Mailing::set(
+          19,
+          [
+            'service_id' => $id,
+            'name_user' => $fio,
+            'service_theme' => $tel,
+            'service_email' => $email,
+            'service_traffic' => $referer,
+            'service_transition' => $transition,
+            'service_canal' => $canal,
+            'service_campaign' => $campaign,
+            'service_content' => $content,
+            'service_keywords' => $keywords,
+            'service_point' => $point,
+            'service_referer' => $last_referer,
+            'service_roistat' => $roistat
+          ]
+        );
 
         return array('res' => $res);
     }
