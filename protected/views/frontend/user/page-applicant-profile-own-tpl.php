@@ -340,7 +340,7 @@
       <? endif; ?>
       <? if($isBlocked && $flagOwnProfile && !$attr['email']): // предупреждение владельца о пустых полях ?>
         <div class="ppp__field error">
-          <span class="ppp__field-name">Электронная почта:</span>
+          <span class="ppp__field-name">Email:</span>
           <span class="ppp__field-val"></span>
         </div>
       <? endif; ?>
@@ -353,7 +353,7 @@
         <? endif; ?>
         <? if(!empty($attr['email'])): ?>
           <div class="ppp__field">
-            <span class="ppp__field-name">Электронная почта:</span>
+            <span class="ppp__field-name">Email:</span>
             <span class="ppp__field-val"><?=$attr['email']?></span>
           </div>
         <? endif; ?>

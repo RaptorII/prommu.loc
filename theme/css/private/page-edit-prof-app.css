@@ -188,10 +188,10 @@
 	#DiContent .edit-profile-applicant .epa__label{
 		padding: 0 7px;
 	}
-	.epa__label.epa__email .epa__label-name {
-		width: 40%;
-		line-height: 20px;
-	}
+	/*.epa__label.epa__email .epa__label-name {*/
+		/*width: 33%;*/
+		/*line-height: 20px;*/
+	/*}*/
 }
 #DiContent .edit-profile-applicant .epa__label.epa__select{ padding: 0 30px 0 10px; }
 #DiContent .edit-profile-applicant .epa__label.off{ /*display: none*/ }

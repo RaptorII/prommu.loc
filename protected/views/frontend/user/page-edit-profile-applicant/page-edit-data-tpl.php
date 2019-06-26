@@ -291,7 +291,7 @@
               endif; 
             ?>
             <div class="epa__label epa__email" data-error="Указанный e-mail адрес уже используется в системе">
-              <span class="epa__label-name">Электронная почта:</span>
+              <span class="epa__label-name">Email:</span>
               <input type="text" name="email" value="<?=$attr['email']?>" class="epa__input epa__required" placeholder="your@email.com" id="epa-email" data-name="Электронная почта">
               <span class="epa__confirm<?=($attr['confirmEmail'] && !empty($attr['email'])?' complete':'')?>" id="conf-email">
                 <?php if($attr['confirmEmail'] && !empty($attr['email'])): ?>

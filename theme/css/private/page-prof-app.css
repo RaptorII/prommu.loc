@@ -46,9 +46,13 @@
     }
     .ppp__checkboxes .ppp__attr-block1,
     .ppp__checkboxes .ppp__attr-block2 {
-        width: auto;
+        /*width: auto;*/
         display: block;
-        float: unset;
+        /*float: unset;*/
+        width: 44%;
+    }
+    .ppp__checkboxes .ppp__attr-block1 {
+        float: left;
     }
     .ppp__checkboxes .ppp__checkbox{
         display: block;
