@@ -12,61 +12,105 @@
     background: #fff;
     z-index: 10;
     border-bottom: 1px solid transparent;
-    filter: drop-shadow(0 0 0.55rem #000000);
+    filter: drop-shadow(0 0 0.15rem #3e3e3e);
 }
 .personal-acc__menu.fixed .personal-acc__menu-wrap {
     display: flex;
+    max-width: 320px;
+    margin: 0 auto;
 }
 #DiContent .personal-acc__menu.fixed .pa__menu-link {
     font-size: 0;
 }
 #DiContent .personal-acc__menu.fixed .pa__menu-link i {
     width: 30px;
-    //height: 18px;
+    /*height: 18px;*/
 }
-/*
-#DiContent .personal-acc__menu.fixed .pa__menu-link i:before,
-#DiContent .personal-acc__menu.fixed .pa__menu-link i:after {
-    //background-size: 110%;
+/*#DiContent .personal-acc__menu.fixed .pa__menu-link i:before,*/
+/*#DiContent .personal-acc__menu.fixed .pa__menu-link i:after {*/
+    /*background-position: 8px;*/
+/*}*/
+#DiContent .personal-acc__menu.fixed .pa__menu-item-icon {
+    width: 34px;
+    background: #fff;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid #abb820;
+    transition: all .3s ease-out;
+}
+#DiContent .personal-acc__menu.fixed .pa__menu-link:before,
+#DiContent .personal-acc__menu.fixed .pa__menu-link:after {
+    content: none;
 }
 
-.personal-acc__menu.fixed .pa__menu-20.applicant i:before,
+.personal-acc__menu.fixed .applicant i:before,
+.personal-acc__menu.fixed .applicant i:after{
+    transition: all .3s ease-out;
+}
+
+.personal-acc__menu.fixed .pa__menu-20.applicant i:before{
+    background-position: 8px 0;
+}
 .personal-acc__menu.fixed .pa__menu-20.applicant i:after {
-    background-position: 0 3px;
+    background-position: 8px -12px;
 }
-.personal-acc__menu.fixed .pa__menu-75.applicant i:before,
+
+.personal-acc__menu.fixed .pa__menu-75.applicant i:before{
+    background-position: 8px -24px;
+}
 .personal-acc__menu.fixed .pa__menu-75.applicant i:after {
-    background-position: 0 -47px;
+    background-position: 8px -36px;
 }
-.personal-acc__menu.fixed .pa__menu-23.applicant i:before,
+
+.personal-acc__menu.fixed .pa__menu-23.applicant i:before {
+    background-position: 8px -48px;
+}
 .personal-acc__menu.fixed .pa__menu-23.applicant i:after {
-    background-position: 0 -96px;
+    background-position: 8px -60px;
 }
-.personal-acc__menu.fixed .pa__menu-84.applicant i:before,
+
+.personal-acc__menu.fixed .pa__menu-84.applicant i:before {
+    background-position: 8px -168px;
+}
 .personal-acc__menu.fixed .pa__menu-84.applicant i:after {
-    background-position: 0 -344px;
+    background-position: 8px -180px;
 }
-.personal-acc__menu.fixed .pa__menu-84.applicant i:before,
+
+.personal-acc__menu.fixed .pa__menu-84.applicant i:before {
+
+}
 .personal-acc__menu.fixed .pa__menu-84.applicant i:after {
-    background-position: 0 -344px;
+
 }
-.personal-acc__menu.fixed .pa__menu-21.applicant i:before,
+
+.personal-acc__menu.fixed .pa__menu-21.applicant i:before {
+    background-position: 8px -72px;
+}
 .personal-acc__menu.fixed .pa__menu-21.applicant i:after {
-    background-position: 0 -146px;
+    background-position: 8px -84px;
 }
-.personal-acc__menu.fixed .pa__menu-78.applicant i:before,
+
+.personal-acc__menu.fixed .pa__menu-78.applicant i:before {
+    background-position: 8px -144px;
+}
 .personal-acc__menu.fixed .pa__menu-78.applicant i:after {
-    background-position: 0 -293px;
+    background-position: 8px -156px;
 }
-.personal-acc__menu.fixed .pa__menu-80.applicant i:before,
+
+.personal-acc__menu.fixed .pa__menu-80.applicant i:before {
+    background-position: 8px -288px;
+}
 .personal-acc__menu.fixed .pa__menu-80.applicant i:after {
-    background-position: 0 -589px;
+    background-position: 8px -300px;
 }
-.personal-acc__menu.fixed .pa__menu-83.applicant i:before,
+
+.personal-acc__menu.fixed .pa__menu-83.applicant i:before {
+    background-position: 8px -240px;
+}
 .personal-acc__menu.fixed .pa__menu-83.applicant i:after {
-    background-position: 0 -490px;
+    background-position: 8px -252px;
 }
-*/
+
 
 /*End Fixed*/
 #DiContent .pa__menu-link{
