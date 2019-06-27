@@ -662,11 +662,6 @@ class User extends CActiveRecord
 					'isblocked' => $data['isblocked'],
 				), 'id_user=:id_user', array(':id_user' => $id));
 
-//			echo '<pre>';
-//			 print_r($data);
-//			echo '</pre>';
-//			die();
-
 			Yii::app()->db->createCommand()
 				->update('employer', array(
 					'name' => $data['name'],
