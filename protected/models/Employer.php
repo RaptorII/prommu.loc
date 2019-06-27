@@ -824,11 +824,7 @@ class Employer extends ARModel
 								AND status = 0 AND ismoder = 0";
 			    $countarchivevac = Yii::app()->db->createCommand($sql)->queryScalar();
 			    
-			    $sql = "SELECT COUNT(id)
-								FROM empl_vacations
-								WHERE id_user = {$id_user} 
-									AND status = 1 AND ismoder = 100";
-			    $countactivevac = Yii::app()->db->createCommand($sql)->queryScalar();
+			    
 			    
 			    $sql = "SELECT COUNT(id)
 								FROM service_cloud
@@ -845,7 +841,7 @@ class Employer extends ARModel
 			    
                 $arT[$id]['countvac'] = $countvac;
                 $arT[$id]['countactivevac'] = $countactivevac;
-                $arT[$id]['countarchivevac'] = $countarchivevac;
+                $arT[$id]['countarchivevac'] = $countvac-$countactivevac;
                 $arT[$id]['countinvitevac'] = "countinvitevac";
                 $arT[$id]['countresponsevac'] = "countresponsevac";
                 $arT[$id]['countrefusedvac'] = "countrefusedvac";
