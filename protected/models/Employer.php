@@ -771,6 +771,7 @@ class Employer extends ARModel
                 } else $logo = "";
                 
                 $id = $v['id'];
+                $id_user = $v['id_user'];
                 $arT[$id]['id'] = $id;
                 $arT[$id]['name'] = $v['name'];
                 $arT[$id]['contact'] = $v['contact'];
