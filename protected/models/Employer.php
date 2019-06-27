@@ -778,9 +778,12 @@ class Employer extends ARModel
                 $arT[$id]['web'] = $v['web'];
                 $arT[$id]['logo'] = $logo;
                 $arT[$id]['photo'] = 0;
-                $arT[$id]['country'] = "country";
-                $arT[$id]['city'] = "city";
-                $arT[$id]['region'] = "region";
+                
+                $city = $this->getCityUserExcel($v['id_user']);
+                
+                $arT[$id]['country'] = $city['coname'];
+                $arT[$id]['city'] = $city['name'];
+                $arT[$id]['region'] = $city['region'];
                 
                 $data = $this->getUserExcelInfo($v['id_user']);
     
@@ -838,6 +841,27 @@ class Employer extends ARModel
         $res['time'] = count($result)*3;
         $res['date_login'] = $result[count($result)-1];
         
+        return $res;
+    }
+    
+    public function getCityUserExcel($idus){
+        
+        $sql = "SELECT ci.id_city id, ci.name, co.id_co, co.name coname, ci.ismetro, uc.street, uc.addinfo, ci.region
+            FROM user_city uc
+            LEFT JOIN city ci ON uc.id_city = ci.id_city
+            LEFT JOIN country co ON co.id_co = ci.id_co
+            WHERE uc.id_user = {$idus}";
+        $res = Yii::app()->db->createCommand($sql)->queryRow();
+        
+        
+        $region = Yii::app()->db->createCommand()
+            ->select('name')
+            ->from('city')
+            ->where('id_city like :id_city', array(':id_city'=>$res['region']))
+            ->limit(1)
+            ->queryRow();
+            
+        $res['region'] = $region['name'];
         return $res;
     }
     
