@@ -844,7 +844,7 @@ class Employer extends ARModel
 			        
 			        $id_vac = $vacs[$i]['id'];
 			        
-			        $countresponsevac = $this->getStatusInvite($countresponsevac,$id_vac, "AND isreponse = 1");
+			        $countresponsevac = $this->getStatusInvite($countresponsevac,$id_vac, "AND isresponse = 1");
 			        
 			        $countrefusedvac = $this->getStatusInvite($countrefusedvac,$id_vac, "AND status = 3");
 			    }
