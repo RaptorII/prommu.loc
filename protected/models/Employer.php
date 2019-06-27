@@ -823,7 +823,11 @@ class Employer extends ARModel
 								WHERE id_user = {$id_user}
 								AND status = 0 AND ismoder = 0";
 			    $countarchivevac = Yii::app()->db->createCommand($sql)->queryScalar();
-			    
+			       
+			    $sql = "SELECT id
+								FROM empl_vacations
+								WHERE id_user = {$id_user}";
+			    $vacs = Yii::app()->db->createCommand($sql)->queryAll();
 			    
 			    
 			    $sql = "SELECT COUNT(id)
@@ -832,23 +836,29 @@ class Employer extends ARModel
 									AND status = 1 ";
 			    $services = Yii::app()->db->createCommand($sql)->queryScalar();
 			    
-		
-			 //   $sql = "SELECT COUNT(id)
-				// 				FROM vacation_stat
-				// 				WHERE id_promo = {$id} 
-				// 					AND status IN (7)";
-			 //   $countresponsevac = Yii::app()->db->createCommand($sql)->queryScalar();
+			    $countinvitevac = 0;
+			    $countresponsevac = 0;
+			    $countrefusedvac = 0;
 			    
-                $arT[$id]['countvac'] = $countvac;
-                $arT[$id]['countactivevac'] = $countactivevac;
-                $arT[$id]['countarchivevac'] = $countvac-$countactivevac;
-                $arT[$id]['countinvitevac'] = "countinvitevac";
-                $arT[$id]['countresponsevac'] = "countresponsevac";
-                $arT[$id]['countrefusedvac'] = "countrefusedvac";
+			    for($i = 0; $i < count($vacs); $i++){
+			        
+			        $id_vac = $vacs[$i]['id'];
+			        
+			        $countresponsevac = $this->getStatusInvite($countresponsevac,$id_vac, "AND isreponse = 1");
+			        
+			        $countrefusedvac = $this->getStatusInvite($countrefusedvac,$id_vac, "AND status = 3");
+			    }
+			
+			    
+                $arT[$id]['countvac'] = $this->getStatusVacationExcel($id_user, "");
+                $arT[$id]['countactivevac'] = $this->getStatusVacationExcel($id_user, "AND status = 1 AND ismoder = 100");
+                $arT[$id]['countarchivevac'] = $this->getStatusVacationExcel($id_user, "AND status = 0 AND ismoder = 0");
+                $arT[$id]['countinvitevac'] = $countinvitevac;
+                $arT[$id]['countrefusedvac'] = $countrefusedvac;
                 
                 $arT[$id]['countrating'] = 0;
                 $arT[$id]['feedback'] = 0;
-                
+                $arT[$id]['feedbackpromo'] = 0;
                 $arT[$id]['countratingpromo'] = 0;
                 $arT[$id]['services'] = $services;
                 
@@ -858,6 +868,24 @@ class Employer extends ARModel
          $arRes['items'] = $arT;
          
         return $arRes;
+    }
+    
+    public function getStatusInvite($count,$id_vac, $param){
+        $sql = "SELECT COUNT(id)
+				FROM vacation_stat
+				WHERE id_vac = {$id_vac} {$param}";
+		$count =  $count + Yii::app()->db->createCommand($sql)->queryScalar();
+    }
+    
+    public function getStatusVacationExcel($idus, $param){
+      
+	  
+	    $sql = "SELECT COUNT(id)
+			 FROM empl_vacations
+			 WHERE id_user = {$idus} {$param}";
+	    $res = Yii::app()->db->createCommand($sql)->queryScalar();
+	
+	    return $res;
     }
     
     public function getOnlineTime($idus){
