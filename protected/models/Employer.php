@@ -805,19 +805,55 @@ class Employer extends ARModel
                 $arT[$id]['daysfromsite'] = $days;
                 $arT[$id]['daysonline'] = $time['time'];
                 
-               
-                $arT[$id]['countvac'] = "countvac";
-                $arT[$id]['countactivevac'] = "countactivevac";
-                $arT[$id]['countarchivevac'] = "countarchivevac";
+                
+                $sql = "SELECT COUNT(id)
+								FROM empl_vacations
+								WHERE id_user = {$id_user}";
+			    $countvac = Yii::app()->db->createCommand($sql)->queryScalar();
+			    
+			    $sql = "SELECT COUNT(id)
+								FROM empl_vacations
+								WHERE id_user = {$id_user}
+								AND status = 1 AND ismoder = 100";
+			    $countactivevac = Yii::app()->db->createCommand($sql)->queryScalar();
+			    
+			    $sql = "SELECT COUNT(id)
+								FROM empl_vacations
+								WHERE id_user = {$id_user}
+								AND status = 0 AND ismoder = 100";
+			    $countarchivevac = Yii::app()->db->createCommand($sql)->queryScalar();
+			    
+			    $sql = "SELECT COUNT(id)
+								FROM vacation_stat
+								WHERE id_user = {$id_user} 
+									AND status = 1 AND ismoder = 100";
+			    $countactivevac = Yii::app()->db->createCommand($sql)->queryScalar();
+			    
+			    $sql = "SELECT COUNT(id)
+								FROM service_cloud
+								WHERE id_user = {$id_user} 
+									AND status = 1 ";
+			    $services = Yii::app()->db->createCommand($sql)->queryScalar();
+			    
+		
+			 //   $sql = "SELECT COUNT(id)
+				// 				FROM vacation_stat
+				// 				WHERE id_promo = {$id} 
+				// 					AND status IN (7)";
+			 //   $countresponsevac = Yii::app()->db->createCommand($sql)->queryScalar();
+			    
+                $arT[$id]['countvac'] = $countvac;
+                $arT[$id]['countactivevac'] = $countactivevac;
+                $arT[$id]['countarchivevac'] = $countarchivevac;
                 $arT[$id]['countinvitevac'] = "countinvitevac";
                 $arT[$id]['countresponsevac'] = "countresponsevac";
                 $arT[$id]['countrefusedvac'] = "countrefusedvac";
                 
-                $arT[$id]['countrating'] = "countrating";
-                $arT[$id]['feedback'] = "feedback";
+                $arT[$id]['countrating'] = 0;
+                $arT[$id]['feedback'] = 0;
                 
-                $arT[$id]['countratingpromo'] = "countrating";
-                $arT[$id]['services'] = "services";
+                $arT[$id]['countratingpromo'] = 0;
+                $arT[$id]['services'] = $services;
                 
             }
         }
