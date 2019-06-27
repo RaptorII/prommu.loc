@@ -853,7 +853,7 @@ class Employer extends ARModel
                 $arT[$id]['countvac'] = $this->getStatusVacationExcel($id_user, "");
                 $arT[$id]['countactivevac'] = $this->getStatusVacationExcel($id_user, "AND status = 1 AND ismoder = 100");
                 $arT[$id]['countarchivevac'] = $this->getStatusVacationExcel($id_user, "AND status = 0 AND ismoder = 0");
-                $arT[$id]['countinvitevac'] = $countinvitevac;
+                $arT[$id]['countinvitevac'] = $countresponsevac;
                 $arT[$id]['countrefusedvac'] = $countrefusedvac;
                 
                 $arT[$id]['countrating'] = 0;
