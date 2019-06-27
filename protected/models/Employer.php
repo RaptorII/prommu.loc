@@ -719,12 +719,13 @@ class Employer extends ARModel
         
         if($status!='all')
         {
-            $conditions[] = 'e.ismoder=' . ($status=='active' ? '1' : '0');
+            $conditions[] = 'u.ismoder=' . ($status=='active' ? '1' : '0');
         }
         
         $arId = $db->createCommand()
-                                ->select("e.id, e.name, e.contact, e.type, e.web, e.logo, e.crdate, e.mdate")
+                                ->select("e.id, e.id_user, e.name, e.contact, e.type, e.web, e.logo, e.crdate, e.mdate, u.email")
                                 ->from('employer e')
+                                ->join('user u', 'u.id_user=e.id_user')
                                 ->where(implode(' and ',$conditions), $params)
                                 ->order('e.id desc')
                                 ->queryAll();
@@ -759,49 +760,123 @@ class Employer extends ARModel
         // $arT = array();
         foreach ($arId as $k => $v)
         {
-            $id = $v['id'];
-            $arT[$id]['id'] = $id;
-            $arT[$id]['name'] = $v['name'];
-            $arT[$id]['contact'] = $v['contact'];
-            $arT[$id]['type'] = $v['type'];
-            $arT[$id]['web'] = $v['web'];
-            $arT[$id]['logo'] = "https://files.prommu.com/".$v['logo'].'.jpg';
-            $arT[$id]['photo'] = "photo";
-            $arT[$id]['country'] = "country";
-            $arT[$id]['city'] = "city";
-            $arT[$id]['region'] = "region";
-            $arT[$id]['phone'] = "phone";
-            $arT[$id]['email'] = "email";
-            $arT[$id]['skype'] = "skype";
-            $arT[$id]['whatsapp'] = "whatsapp";
-            $arT[$id]['viber'] = "viber";
-            $arT[$id]['telegram'] = "telegram";
-            $arT[$id]['messenger'] = "messenger";
-            $arT[$id]['crdate'] = $v['crdate'];
-            $arT[$id]['mdate'] = $v['mdate'];
-            $arT[$id]['edate'] = $v['mdate'];
-            $arT[$id]['dedate'] = $v['mdate'];
-            $arT[$id]['online'] = $v['mdate'];
-            $arT[$id]['daysfromsite'] = "daysfromsite";
-            $arT[$id]['daysonline'] = "daysonline";
-            $arT[$id]['countvac'] = "countvac";
-            $arT[$id]['countactivevac'] = "countactivevac";
-            $arT[$id]['countarchivevac'] = "countarchivevac";
-            $arT[$id]['countinvitevac'] = "countinvitevac";
-            $arT[$id]['countresponsevac'] = "countresponsevac";
-            $arT[$id]['countrefusedvac'] = "countrefusedvac";
-            $arT[$id]['countrating'] = "countrating";
-            $arT[$id]['feedback'] = "feedback";
             
-            $arT[$id]['countratingpromo'] = "countrating";
-            $arT[$id]['services'] = "services";
+            $data = $this->getUserExcelInfo($v['id_user']);
+            $time = $this->getOnlineTime($v['id_user']);
+            
+            if($time['time'] != 0){
+                
+                if($v['logo']){
+                        $logo = "https://files.prommu.com/users/".$v['id'].'/'.$v['logo'].'.jpg';
+                } else $logo = "";
+                
+                $id = $v['id'];
+                $arT[$id]['id'] = $id;
+                $arT[$id]['name'] = $v['name'];
+                $arT[$id]['contact'] = $v['contact'];
+                $arT[$id]['type'] = $v['type'];
+                $arT[$id]['web'] = $v['web'];
+                $arT[$id]['logo'] = $logo;
+                $arT[$id]['photo'] = 0;
+                $arT[$id]['country'] = "country";
+                $arT[$id]['city'] = "city";
+                $arT[$id]['region'] = "region";
+                
+                $data = $this->getUserExcelInfo($v['id_user']);
+    
+                ///attribs
+                $arT[$id]['phone'] = $data['userAttribs']['mob']['val'];
+                $arT[$id]['email'] = $data[0]['email'];
+                $arT[$id]['skype'] = $data['userAttribs']['skype']['val'];
+                $arT[$id]['whatsapp'] = $data['userAttribs']['whatsapp']['val'];
+                $arT[$id]['viber'] = $data['userAttribs']['viber']['val'];
+                $arT[$id]['telegram'] = $data['userAttribs']['telegram']['val'];
+                $arT[$id]['messenger'] = $data['userAttribs']['google']['val'];
+                ///
+                
+                $arT[$id]['crdate'] = $v['crdate'];
+                $arT[$id]['mdate'] = $v['mdate'];
+                $arT[$id]['edate'] = $v['mdate'];
+                $arT[$id]['dedate'] = $v['mdate'];
+                $arT[$id]['online'] = $v['mdate'];
+                $arT[$id]['daysfromsite'] = $days;
+                $arT[$id]['daysonline'] = $time['time'];
+                
+               
+                $arT[$id]['countvac'] = "countvac";
+                $arT[$id]['countactivevac'] = "countactivevac";
+                $arT[$id]['countarchivevac'] = "countarchivevac";
+                $arT[$id]['countinvitevac'] = "countinvitevac";
+                $arT[$id]['countresponsevac'] = "countresponsevac";
+                $arT[$id]['countrefusedvac'] = "countrefusedvac";
+                
+                $arT[$id]['countrating'] = "countrating";
+                $arT[$id]['feedback'] = "feedback";
+                
+                $arT[$id]['countratingpromo'] = "countrating";
+                $arT[$id]['services'] = "services";
+                
+            }
         }
         
          $arRes['items'] = $arT;
          
         return $arRes;
     }
+    
+    public function getOnlineTime($idus){
+        
+        $res = [];
+        
+        $result = Yii::app()->db->createCommand()
+                                ->select("uw.date_login")
+                                ->from('user_work uw')
+                                ->where('uw.id_user=:id_user', array(':id_user' => $idus))
+                                ->order('uw.id desc')
+                                ->queryAll();
+        
+        $res['time'] = count($result)*3;
+        $res['date_login'] = $result[count($result)-1];
+        
+        return $res;
+    }
+    
+    public function getUserExcelInfo($idus){
+        
+        $sql = "SELECT DATE_FORMAT(r.birthday,'%d.%m.%Y') as bday -- , DATE_FORMAT(r.birthday,'%d') as bd
+              , r.id_user, r.isman , r.ismed , r.smart, r.ishasavto , r.aboutme , r.firstname , r.lastname , r.photo, r.card, r.cardPrommu
+              , a.val , a.id_attr
+              , d.name , d.type , d.id_par idpar , d.key
+              , u.email, u.is_online, u.mdate
+            FROM resume r
+            LEFT JOIN user u ON u.id_user = r.id_user
+            LEFT JOIN user_attribs a ON r.id_user = a.id_us
+            LEFT JOIN user_attr_dict d ON a.id_attr = d.id
+            WHERE r.id_user = {$idus}
+            ORDER BY a.id_attr";
+        $res = Yii::app()->db->createCommand($sql)->queryAll();
+        
+        
+        foreach ($res as $key => $val)
+        {
+            if($val['idpar'] == 0){
+                $res['userAttribs'][$val['key']] = ['val' => $val['val'], 'id_attr' => $val['id_attr'], 'name' => $val['name'], 'type' => $val['type'], 'idpar' => $val['idpar'], 'key' => $val['key'],];
+            } else {
+                $userdict = Yii::app()->db->createCommand()
+                        ->select('d.id , d.type, d.key, d.name')
+                        ->from('user_attr_dict d')
+                        ->where('d.id = :id', array(':id' => $val['idpar']))
+                        ->queryRow();
+                
+                $res['userAttribs'][$userdict['key']] = ['val' => $val['val'], 'id_attr' => $val['id_attr'], 'name' => $val['name'], 'type' => $val['type'], 'idpar' => $val['idpar'], 'key' => $val['key'],];
+                
+            }
+        } // end foreach
 
+
+        return $res;
+    }
+    
     /**
      * setViewed
      * @return model
