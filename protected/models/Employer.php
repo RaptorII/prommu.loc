@@ -825,7 +825,7 @@ class Employer extends ARModel
 			    $countarchivevac = Yii::app()->db->createCommand($sql)->queryScalar();
 			    
 			    $sql = "SELECT COUNT(id)
-								FROM vacation_stat
+								FROM empl_vacations
 								WHERE id_user = {$id_user} 
 									AND status = 1 AND ismoder = 100";
 			    $countactivevac = Yii::app()->db->createCommand($sql)->queryScalar();
