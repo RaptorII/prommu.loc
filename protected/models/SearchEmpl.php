@@ -61,7 +61,7 @@ class SearchEmpl extends Model
             $data['empls'][$val['id']]['employer_id'] = $val['id'];
             $data['empls'][$val['id']]['name'] = $val['name'];
             $data['empls'][$val['id']]['type'] = $val['tname'];
-            $data['empls'][$val['id']]['logo'] = "https://files.prommu.com/users/".$val['id_user']."/".$val['logo'];
+            $data['empls'][$val['id']]['logo'] = "https://files.prommu.com/users/".$val['id_user']."/".$val['logo'].".jpg";
             
             if( !isset($data['empls'][$val['id']])) $data['empls'][$val['id']] = array('city' => array()) ;
             $data['empls'][$val['id']]['city']['id'] = $val['id_city'];
