@@ -2641,20 +2641,22 @@ public function vac(){
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         $id = $idus;
  
- 
-        $current =  base64_decode($photo);
         
-        mkdir("/var/www/files_prommu/users/".$id, 0700);
-        mkdir("/var/www/files_prommu/users/".$id, 0700);
-        $name = date('YmdHis').rand(100,1000);
-        $file = $name . ".jpg";
-        $path = "/users/".$id;
         
-        $res = file_put_contents("/var/www/files_prommu".$path.$file, $current);
-        
-        // if(!@getimagesize("https://files.prommu.com/users/".$id."/".$file)){
-        //     return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
-        // }
+       $current =  base64_decode($photo);
+            
+            mkdir("/var/www/files_prommu/users/".$id, 0700);
+            mkdir("/var/www/files_prommu/users/".$id."/tmp/", 0700);
+            $name = date('YmdHis').rand(100,1000);
+            $file = $name . ".jpg";
+            $path = "/users/".$id."/";
+                
+            file_put_contents("/var/www/files_prommu".$path.$file, $current);
+            
+            if(!@getimagesize("https://files.prommu.com/users/".$id."/".$file)){
+                return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
+            }
+            
             
         
         if($profile->type == 2){
