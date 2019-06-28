@@ -62,8 +62,50 @@ class SearchVac extends Model
 
         return $data;
     }
+    
+    public function getVacationsAPI($props = [])
+    {
+        $filter = $props['filter'] ?: [];
+        $filter = $this->renderSQLFilter(['filter' => $filter]);
+
+        $data = $this->searchVacationsAPI($filter, $props['profile']);
+        $data = array_merge($data, $this->getFilterData());
+
+        return $data;
+    }
+
+    private function searchVacationsAPI($filter = '', $props=[])
+    {
+        $limit = $this->limit;
+        $offset = $this->offset;
+        $profile = $props['profile'];
+        try
+        {
+            $res = (new Vacancy())->getVacanciesQueries(array('page' => 'searchapi', 'filter' => $filter, 'offset' => $offset, 'limit' => $limit, 'profile'=>$profile));
+
+        }
+        catch (Exception $e) {
+            return array('error' => $e->getMessage());
+        } // endtry
 
 
+        $data['vacs'] = array();
+        foreach ($res as $key => $val)
+        {
+            if( !isset($data['vacs'][$val['id']])) $data['vacs'][$val['id']] = array('city' => array(), 'posts' => array(), 'metroes' => array()) ;
+            $data['vacs'][$val['id']]['city'][$val['id_city']] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
+            $data['vacs'][$val['id']]['posts'][$val['id_attr']] = $val['pname'];
+            if( $val['mid'] ) $data['vacs'][$val['id']]['metroes'][$val['mid']] = $val['mname'];
+            $data['vacs'][$val['id']] = array_merge($data['vacs'][$val['id']], $val);
+            $data['vacs'][$val['id']]['posts'][$val['id_attr']] = $val['pname'];
+        } // end foreach
+
+        $i = 1;
+        $ret['vacs'] = array();
+        foreach ($data['vacs'] as $key => $val) { $ret['vacs'][$i] = $val; $i++; }
+
+        return $ret;
+    }
 
     // получение кол-ва вакансий
     public function searchVacationsCount($props = [])
