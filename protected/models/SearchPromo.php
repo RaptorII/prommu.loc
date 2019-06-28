@@ -33,9 +33,7 @@ class SearchPromo extends Model
         $offset = $this->offset;
         $arId = array();
         // находим нужные ID по пагинации
-        for( $i=$offset, $n=sizeof($arAllId); $i<$n; $i++ )
-            ( $i < ($offset + $limit) ) && $arId[] = $arAllId[$i];
-
+    
         try {
             $arPromo = (new Promo())->getApplicantsQueries(
                 array(
