@@ -3082,6 +3082,7 @@ public function vac(){
 
         // получаем данные страницы
         $SearchPromo = new SearchPromo();
+        $arAllId = $SearchPromo->searchPromosCount($filter);
         $cnt = sizeof($arAllId);
         $pages = new CPagination($cnt);
         $pages->pageSize = $limit;
@@ -3089,7 +3090,7 @@ public function vac(){
 
         
         // отсеивать из ответа работодателей
-        $data = array_values($SearchPromo->getPromosAPI(0, $filter)['promo']);
+        $data = array_values($SearchPromo->getPromosAPI($arAllId, 0, $filter)['promo']);
         $data = array_merge(['promos' => $data, 'pageCount' => $pages->pageCount]);
         
         return array_merge($data);
