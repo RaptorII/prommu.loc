@@ -3089,7 +3089,7 @@ public function vac(){
 
         
         // отсеивать из ответа работодателей
-        $data = array_values($SearchPromo->getPromos(0, $filter)['promo']);
+        $data = array_values($SearchPromo->getPromosAPI(0, $filter)['promo']);
         $data = array_merge(['promos' => $data, 'pageCount' => $pages->pageCount]);
         
         return array_merge($data);
