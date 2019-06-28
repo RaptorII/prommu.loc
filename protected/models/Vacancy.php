@@ -2140,7 +2140,7 @@ WHERE id_vac = {$inVacId}";
 
     }
     
-    public function getVacancySearchemplAPI($inParams)
+    public function getVacancySearchAPI($inParams)
     {
          $filter = $inParams['filter'];
         $limit = (int)$inParams['limit'] > 0 ? "LIMIT {$inParams['offset']}, {$inParams['limit']}" : '';
