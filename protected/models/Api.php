@@ -2651,11 +2651,10 @@ public function vac(){
         $path = "/users/".$id;
         
         $res = file_put_contents("/var/www/files_prommu".$path.$file, $current);
-        var_dump($res);
-        echo $current;
-        if(!@getimagesize("https://files.prommu.com/users/".$id."/".$file)){
-            return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
-        }
+        
+        // if(!@getimagesize("https://files.prommu.com/users/".$id."/".$file)){
+        //     return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
+        // }
             
         
         if($profile->type == 2){
