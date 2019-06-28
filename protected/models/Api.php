@@ -2637,8 +2637,7 @@ public function vac(){
 
         $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $photo = Yii::app()->getRequest()->getParam('photo');
-        file_put_contents('photo.txt', date('d.m.Y H:i')."\t".$photo."\n", FILE_APPEND | LOCK_EX);
-            
+          
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         $id = $idus;
  
@@ -2652,6 +2651,9 @@ public function vac(){
         $path = "/users/".$id;
         
         file_put_contents("/var/www/files_prommu".$path.$file, $current);
+        
+        if(@getimagesize( "https://files.prommu.com/users/".$id."/".$file)) 
+            return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
         
         if($profile->type == 2){
             $types = 'resume';
@@ -2768,6 +2770,9 @@ public function vac(){
             $path = "/users/".$id."/";
                 
             file_put_contents("/var/www/files_prommu".$path.$file, $current);
+            
+            if(@getimagesize( "https://files.prommu.com/users/".$id."/".$file)) 
+                return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
             
             if($profile->type == 3){
                 
