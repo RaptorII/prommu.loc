@@ -14,7 +14,52 @@ class SearchPromo extends Model
 
         return $data;
     }
+    
+    public function getPromosAPI($isEmplOnly = 0,$props = [])
+    {
+        $filter = $this->renderSQLFilter(['filter' => $props['filter']]);
 
+        $data = $this->searchPromosAPI($filter);
+        if( !$isEmplOnly ) $data = array_merge($data, $this->getFilterData());
+
+        return $data;
+    }
+
+
+    
+    private function searchPromosAPI($filter)
+    {
+        $limit = $this->limit;
+        $offset = $this->offset;
+        $arId = array();
+        // находим нужные ID по пагинации
+        for( $i=$offset, $n=sizeof($arAllId); $i<$n; $i++ )
+            ( $i < ($offset + $limit) ) && $arId[] = $arAllId[$i];
+
+        try {
+            $arPromo = (new Promo())->getApplicantsQueries(
+                array(
+                    'page' => 'searchpromo', 
+                    'table' => $filter['table'], 
+                    'filter' => $filter['filter'], 
+                    'offset' => $offset, 
+                    'limit' => $limit,
+                    'arId' => $arId
+                )
+            );
+
+            $i = 1;
+            foreach ($arPromo as $p) {
+                $arRes['promo'][$i] = $p;
+                $i++; 
+            }
+        }
+        catch (Exception $e) {
+            return array('error' => $e->getMessage());
+        } // endtry
+
+        return $arRes;
+    }
 
 
     // поиск соискателей на главной
