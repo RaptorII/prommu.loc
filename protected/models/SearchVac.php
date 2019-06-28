@@ -87,17 +87,45 @@ class SearchVac extends Model
         catch (Exception $e) {
             return array('error' => $e->getMessage());
         } // endtry
-
+    
+        
 
         $data['vacs'] = array();
         foreach ($res as $key => $val)
         {
-            if( !isset($data['vacs'][$val['id']])) $data['vacs'][$val['id']] = array('city' => array(), 'posts' => array(), 'metroes' => array()) ;
-            $data['vacs'][$val['id']]['city'][$val['id_city']] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
-            $data['vacs'][$val['id']]['posts'][$val['id_attr']] = $val['pname'];
+            if( !isset($data['vacs'][$val['id']])) $data['vacs'][$val['id']] = array('city' => array(), 'posts' => array()) ;
+            
+            ///city
+            $data['vacs'][$val['id']]['city']['id'] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
+            $data['vacs'][$val['id']]['city']['name'] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
+            ///
+            
+            ///owner
+            $data['vacs'][$val['id']]['owner']['id'] = $val['uid'];
+            $data['vacs'][$val['id']]['owner']['name'] = $val['coname'];
+            $data['vacs'][$val['id']]['owner']['logo'] = "https://files.prommu.com/users/".$val['uid']."/".$val['logo'];
+            ///
+            
+            ///posts
+            $data['vacs'][$val['id']]['posts']['id'] = $val['id_attr'];
+            $data['vacs'][$val['id']]['posts']['name'] = $val['pname'];
+            ///
+            
+            ///attribs
+            $data['vacs'][$val['id']]['is_premium'] = $val['ispremium'];
+            $data['vacs'][$val['id']]['is_active'] = 1;
+            $data['vacs'][$val['id']]['created_at'] = $val['crdate'];
+            $data['vacs'][$val['id']]['removed_at'] = $val['remdate'];
+            $data['vacs'][$val['id']]['salary_hour'] = $val['shour'];
+            $data['vacs'][$val['id']]['salary_week'] = $val['sweek'];
+            $data['vacs'][$val['id']]['salary_month'] = $val['smonth'];
+            $data['vacs'][$val['id']]['salary_visit'] = $val['svisit'];
+            
+            //
+          
             if( $val['mid'] ) $data['vacs'][$val['id']]['metroes'][$val['mid']] = $val['mname'];
             $data['vacs'][$val['id']] = array_merge($data['vacs'][$val['id']], $val);
-            $data['vacs'][$val['id']]['posts'][$val['id_attr']] = $val['pname'];
+        
         } // end foreach
 
         $i = 1;
