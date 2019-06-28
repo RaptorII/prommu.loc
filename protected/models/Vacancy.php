@@ -2145,8 +2145,8 @@ WHERE id_vac = {$inVacId}";
          $filter = $inParams['filter'];
         $limit = (int)$inParams['limit'] > 0 ? "LIMIT {$inParams['offset']}, {$inParams['limit']}" : '';
        // var_dump($limit);
-        $sql = "SELECT e.id, e.ispremium, e.title, e.requirements, e.duties, e.conditions, e.istemp,
-                   DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
+        $sql = "SELECT e.id, e.ispremium as is_premium, e.title, e.requirements, e.duties, e.conditions, e.istemp,
+                   DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate as removed_at,
                    e.shour,
                    e.sweek,
                    e.smonth,
@@ -2154,7 +2154,7 @@ WHERE id_vac = {$inVacId}";
                    e.isman,
                    e.smart,
                    e.iswoman,
-                   DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
+                   DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate as created_at
                    
               , c1.id_city, c2.name AS ciname, c1.citycu
               , ea.id_attr
