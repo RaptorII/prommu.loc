@@ -3767,7 +3767,6 @@ public function vac(){
         $filter = $filter ? get_object_vars(json_decode(base64_decode($filter))) : null;
         $id = filter_var(Yii::app()->getRequest()->getParam('id', 0), FILTER_SANITIZE_NUMBER_INT);
         $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
-        // $limit = $limit == 0 || $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
 
 
         // читаем фильтр
@@ -3801,7 +3800,7 @@ public function vac(){
         $pages->pageSize = $limit;
         $pages->applyLimit($SearchVac);
 
-        $data = array_values($SearchVac->getVacations($filter)['vacs']);
+        $data = array_values($SearchVac->getVacationsAPI($filter)['vacs']);
         // отсеивать из ответа вакансии
             if(!empty($id))
             {
@@ -3810,9 +3809,6 @@ public function vac(){
                 $idvac = $data[$key]['id'];
                 $data[$key]['response']= $Vacancy->getVacancyViews($idvac, $id)['response']['response'];
 
-                // if($data[$key]['response'] == 0) {
-                //     unset($data[$key]);
-                // }
              }
         }
     
