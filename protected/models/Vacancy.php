@@ -2084,6 +2084,8 @@ WHERE id_vac = {$inVacId}";
 
         // Получаем работодателей для поиска
         if( $inParams['page'] == 'searchvac' ) return $this->getVacancySearchemplPage($inParams);
+        
+        if( $inParams['page'] == 'searchapi' ) return $this->getVacancySearchAPI($inParams);
 
 
         if( $inParams['page'] == 'invite' )
@@ -2137,7 +2139,62 @@ WHERE id_vac = {$inVacId}";
 
 
     }
+    
+    public function getVacancySearchemplAPI($inParams)
+    {
+         $filter = $inParams['filter'];
+        $limit = (int)$inParams['limit'] > 0 ? "LIMIT {$inParams['offset']}, {$inParams['limit']}" : '';
+       // var_dump($limit);
+        $sql = "SELECT e.id, e.ispremium, e.title, e.requirements, e.duties, e.conditions, e.istemp,
+                   DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
+                   e.shour,
+                   e.sweek,
+                   e.smonth,
+                   e.svisit,
+                   e.isman,
+                   e.smart,
+                   e.iswoman,
+                   DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
+                   
+              , c1.id_city, c2.name AS ciname, c1.citycu
+              , ea.id_attr
+              , d.name AS pname
+              , em.id_user uid, em.name coname, ifnull(em.logo, '') logo
+            FROM empl_vacations e 
+            INNER JOIN (
+              SELECT DISTINCT e.id
+              FROM empl_vacations e
+              INNER JOIN empl_city c ON c.id_vac = e.id 
+              INNER JOIN user u ON e.id_user = u.id_user 
+              INNER JOIN empl_attribs ea ON ea.id_vac = e.id
+              {$filter['table']}
+              {$filter['filter']}  AND e.status = 1 AND e.ismoder = 100 AND e.remdate >= now()
+              ORDER BY e.ispremium DESC, e.id DESC 
+              {$limit}  
+            ) t1 ON t1.id = e.id
+            
+            LEFT JOIN empl_city c1 ON c1.id_vac = e.id 
+            LEFT JOIN city c2 ON c2.id_city = c1.id_city 
+            JOIN empl_attribs ea ON ea.id_vac = e.id
+            JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
+            JOIN employer em ON em.id_user = e.id_user
+            ORDER BY e.ispremium DESC, e.mdate DESC
+            LIMIT 100";
+        $res = Yii::app()->db->createCommand($sql);
+        $data= $res->queryAll();
+        foreach ($data as $key => $value) {
+            if(time() > strtotime($value['remdate'])){
 
+                $res = Yii::app()->db->createCommand()
+                    ->update('empl_vacations', array( 'status' => 0,
+                        'ismoder' => 0, 
+                    ), 'id = :id', array(':id' => $value['id']));
+            }
+        }
+        
+
+        return $data;
+    }
 
     public function getVacancySearchemplPage($inParams)
     {
