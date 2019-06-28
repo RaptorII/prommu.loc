@@ -3082,16 +3082,16 @@ public function vac(){
 
         // получаем данные страницы
         $SearchPromo = new SearchPromo();
-        $arAllId = $SearchPromo->searchPromosCount($filter);
         $cnt = sizeof($arAllId);
         $pages = new CPagination($cnt);
         $pages->pageSize = $limit;
         $pages->applyLimit($SearchPromo);
 
-
+        
         // отсеивать из ответа работодателей
-        $data = $SearchPromo->getPromos($arAllId, 0, $filter);
-
+        $data = array_values($SearchPromo->getPromos(0, $filter)['promo']);
+        $data = array_merge(['promos' => $data, 'pageCount' => $pages->pageCount]);
+        
         return array_merge($data);
     }
 
