@@ -56,20 +56,22 @@ class SearchEmpl extends Model
         $data['empls'] = array();
         foreach ($res as $key => $val)
         {
-            if( !isset($data['empls'][$val['id']])) $data['empls'][$val['id']] = array('city' => array()) ;
             
             $data['empls'][$val['id']]['user_id'] = $val['id_user'];
             $data['empls'][$val['id']]['employer_id'] = $val['id'];
             $data['empls'][$val['id']]['name'] = $val['name'];
             $data['empls'][$val['id']]['type'] = $val['tname'];
             
+            if( !isset($data['empls'][$val['id']])) $data['empls'][$val['id']] = array('city' => array()) ;
+            $data['empls'][$val['id']]['city']['id'] = $val['id_city'];
+            $data['empls'][$val['id']]['city']['name'] = $val['ciname'];
+            
             $data['empls'][$val['id']]['created_at'] = $val['crdate'];
             $data['empls'][$val['id']]['updated_at'] = $val['mdate'];
             $data['empls'][$val['id']]['is_online'] = $val['is_online'];
             $data['empls'][$val['id']]['vacancy_count'] = $val['vaccount'];
             
-            $data['empls'][$val['id']]['city']['id'] = $val['id_city'];
-            $data['empls'][$val['id']]['city']['name'] = $val['ciname'];
+            
 
 
         } // end foreach
@@ -98,7 +100,7 @@ class SearchEmpl extends Model
 
         $res = Yii::app()->db->createCommand($sql);
 
-        return $res->queryAll();
+        return $res->queryScalar();
     }
 
 
