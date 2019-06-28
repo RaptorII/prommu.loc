@@ -3132,7 +3132,9 @@ public function vac(){
 
 
         // отсеивать из ответа работодателей
-        $data = $SearchEmpl->getEmployersAPI(0, $filter);
+        $data = array_values($SearchEmpl->getEmployersAPI(0, $filter)['empls']);
+        $data = array_merge(['employers' => $data, 'pageCount' => $pages->pageCount]);
+
 
         return array_merge($data);
     }
