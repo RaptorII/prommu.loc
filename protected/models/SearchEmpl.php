@@ -56,27 +56,27 @@ class SearchEmpl extends Model
         $data['empls'] = array();
         foreach ($res as $key => $val)
         {
-            if( !isset($data['empls'][$val['id']])) $data['empls'][$val['id']] = array('city' => array(), 'post' => array(), 'metroes' => array()) ;
-            $data['empls'][$val['id']]['city'][$val['id_city']] = $val['ciname'];
-//            $data['empls'][$val['id']]['post'][$val['id_attr']] = $val['pname'];
-            if( $val['mid'] ) $data['empls'][$val['id']]['metroes'][$val['mid']] = $val['mname'];
-            $data['empls'][$val['id']] = array_merge($data['empls'][$val['id']], $val);
+            if( !isset($data['empls'][$val['id']])) $data['empls'][$val['id']] = array('city' => array()) ;
+            
+            $data['empls'][$val['id']]['user_id'] = $val['id_user'];
+            $data['empls'][$val['id']]['employer_id'] = $val['id'];
+            $data['empls'][$val['id']]['name'] = $val['name'];
+            $data['empls'][$val['id']]['type'] = $val['tname'];
+            
+            $data['empls'][$val['id']]['created_at'] = $val['crdate'];
+            $data['empls'][$val['id']]['updated_at'] = $val['mdate'];
+            $data['empls'][$val['id']]['is_online'] = $val['is_online'];
+            $data['empls'][$val['id']]['vacancy_count'] = $val['vaccount'];
+            
+            $data['empls'][$val['id']]['city']['id'] = $val['id_city'];
+            $data['empls'][$val['id']]['city']['name'] = $val['ciname'];
 
-            // дописать вывод дней, месяцев, лет
-            if( !$data['empls'][$val['id']]['exp'] )
-            {
-                $datetime2 = new DateTime();
-                $datetime1 = (new DateTime())->createFromFormat('d.m.Y', $val['crdate']);
-                $interval = $datetime1->diff($datetime2);
-                $diff = floor($interval->format('%a') / 365); $type = 3;
-                if( !$diff ) { $diff = floor($interval->format('%a') / 30); $type = 2; }
-                if( !$diff ) { $diff = floor($interval->format('%a')); $type = 1; }
-                $data['empls'][$val['id']]['exp'] = array($diff, $type);
-            } // endif
+
         } // end foreach
 
         $i = 1;
         $ret['empls'] = array();
+        
         foreach ($data['empls'] as $key => $val) { $ret['empls'][$i] = $val; $i++; }
 
 
