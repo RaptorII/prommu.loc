@@ -95,15 +95,20 @@ class SearchVac extends Model
         {
             if( !isset($data['vacs'][$val['id']])) $data['vacs'][$val['id']] = array('city' => array(), 'posts' => array()) ;
             
-            ///city
-            $data['vacs'][$val['id']]['city']['id'] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
-            $data['vacs'][$val['id']]['city']['name'] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
-            ///
             
-            ///owner
+            ///attribs
+            $data['vacs'][$val['id']]['id'] = $val['id'];
+            $data['vacs'][$val['id']]['titile'] = $val['title'];
+            
+             ///owner
             $data['vacs'][$val['id']]['owner']['id'] = $val['uid'];
             $data['vacs'][$val['id']]['owner']['name'] = $val['coname'];
             $data['vacs'][$val['id']]['owner']['logo'] = "https://files.prommu.com/users/".$val['uid']."/".$val['logo'];
+            ///
+            
+            ///city
+            $data['vacs'][$val['id']]['city']['id'] = $val['id_city'];
+            $data['vacs'][$val['id']]['city']['name'] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
             ///
             
             ///posts
@@ -111,11 +116,16 @@ class SearchVac extends Model
             $data['vacs'][$val['id']]['posts']['name'] = $val['pname'];
             ///
             
-            ///attribs
-            $data['vacs'][$val['id']]['is_premium'] = $val['ispremium'];
-            $data['vacs'][$val['id']]['is_active'] = 1;
             $data['vacs'][$val['id']]['created_at'] = $val['crdate'];
             $data['vacs'][$val['id']]['removed_at'] = $val['remdate'];
+            
+            $data['vacs'][$val['id']]['is_premium'] = $val['ispremium'];
+            $data['vacs'][$val['id']]['is_active'] = 1;
+            
+            $data['vacs'][$val['id']]['requirements'] = $val['requirements'];
+            $data['vacs'][$val['id']]['conditions'] = $val['conditions'];
+            $data['vacs'][$val['id']]['duties'] = $val['duties'];
+            
             $data['vacs'][$val['id']]['salary_hour'] = $val['shour'];
             $data['vacs'][$val['id']]['salary_week'] = $val['sweek'];
             $data['vacs'][$val['id']]['salary_month'] = $val['smonth'];
@@ -123,8 +133,8 @@ class SearchVac extends Model
             
             //
           
-            if( $val['mid'] ) $data['vacs'][$val['id']]['metroes'][$val['mid']] = $val['mname'];
-            $data['vacs'][$val['id']] = array_merge($data['vacs'][$val['id']], $val);
+            // if( $val['mid'] ) $data['vacs'][$val['id']]['metroes'][$val['mid']] = $val['mname'];
+            // $data['vacs'][$val['id']] = array_merge($data['vacs'][$val['id']], $val);
         
         } // end foreach
 
