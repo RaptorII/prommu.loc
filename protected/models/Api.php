@@ -2669,7 +2669,7 @@ public function vac(){
                     ), 'id_user = :id', array(':id' => $id));  
 
     
-        $message = $file;
+        $message = "https://files.prommu.com/users/".$id."/".$file;
         $error = '0';
                
                 
