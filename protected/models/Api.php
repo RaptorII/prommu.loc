@@ -3828,7 +3828,7 @@ public function vac(){
              }
         }
     
-           $data = array_merge(['vacations' => $data, 'pageCount' => $pages->pageCount]);
+           $data = array_merge(['vacancy' => $data, 'pageCount' => $pages->pageCount]);
 
         return array_merge($data);
     }
