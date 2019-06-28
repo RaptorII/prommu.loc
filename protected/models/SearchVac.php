@@ -98,7 +98,7 @@ class SearchVac extends Model
             
             ///attribs
             $data['vacs'][$val['id']]['id'] = $val['id'];
-            $data['vacs'][$val['id']]['titile'] = $val['title'];
+            $data['vacs'][$val['id']]['title'] = $val['title'];
             
              ///owner
             $data['vacs'][$val['id']]['owner']['id'] = $val['uid'];
