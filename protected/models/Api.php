@@ -2650,8 +2650,9 @@ public function vac(){
         $file = $name . ".jpg";
         $path = "/users/".$id;
         
-        file_put_contents("/var/www/files_prommu".$path.$file, $current);
-        
+        $res = file_put_contents("/var/www/files_prommu".$path.$file, $current);
+        var_dump($res);
+        echo $current;
         if(!@getimagesize("https://files.prommu.com/users/".$id."/".$file)){
             return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
         }
