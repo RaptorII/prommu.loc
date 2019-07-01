@@ -3103,8 +3103,10 @@ public function vac(){
      */
     public function getEmplSearch()
     {
-        $filter = Yii::app()->getRequest()->getParam('filter');
-        $filter = $filter ? get_object_vars(json_decode(base64_decode($filter))) : null;
+        $cities = Yii::app()->getRequest()->getParam('city');
+        $cotype = Yii::app()->getRequest()->getParam('type');
+        $qs = Yii::app()->getRequest()->getParam('name');
+      
         $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
 
         $limit = $limit == 0 || $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
@@ -3113,10 +3115,10 @@ public function vac(){
         if( $filter )
         {
             // фильтр по типу
-            $cotype = $filter['cotype'] ? array_combine($filter['cotype'], $filter['cotype']) : null;
+            $cotype = $cotype ? array_combine($cotype, $cotype) : null;
             // фильтр городов
-            $cities = $filter['city'] ? array_combine($filter['city'], $filter['city']) : null;
-            $qs = $filter['qs'] ?: null;
+            $cities = $cities ? array_combine($cities, $cities) : null;
+            $qs = $qs ?: null;
             $filter = ['filter' => compact('cotype', 'cities', 'qs')];
         }
         else
