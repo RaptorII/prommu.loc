@@ -3110,7 +3110,7 @@ public function vac(){
       
         $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
 
-        $limit = $limit == 0 || $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
+        $limit = $limit == 50 || $limit > 50 ? 50 : $limit;
 
         // читаем фильтр
         if( $filter )
