@@ -3130,7 +3130,6 @@ public function vac(){
             $filter = [];
         } // endif
     
-        var_dump($SearchEmpl->searchEmployersCount($filter));
         // получаем данные страницы
         $SearchEmpl = new SearchEmpl();
         $pages = new CPagination($SearchEmpl->searchEmployersCount($filter));
