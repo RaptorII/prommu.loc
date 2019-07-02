@@ -3107,7 +3107,6 @@ public function vac(){
         $cotype = Yii::app()->getRequest()->getParam('type');
         $qs = Yii::app()->getRequest()->getParam('name');
         $page = filter_var(Yii::app()->getRequest()->getParam('page', 0), FILTER_SANITIZE_NUMBER_INT);
-      
         $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
 
 
@@ -3126,11 +3125,11 @@ public function vac(){
             $filter = [];
         } // endif
     
-
+        var_dump($SearchEmpl->searchEmployersCount($filter));
         // получаем данные страницы
         $SearchEmpl = new SearchEmpl();
         $pages = new CPagination($SearchEmpl->searchEmployersCount($filter));
-        $pages->pageSize = $limit;
+        $pages->pageSize = 50;
         $pages->applyLimit($SearchEmpl);
         
     
