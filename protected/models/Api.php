@@ -3102,22 +3102,27 @@ public function vac(){
      * @return array
      */
     public function getEmplSearch()
-    {
+    {   
+        
+        $filter = Yii::app()->getRequest()->getParam('filter');
+        $filter = $filter ? get_object_vars(json_decode($filter)) : null;
+        
         $cities = Yii::app()->getRequest()->getParam('city');
         $cotype = Yii::app()->getRequest()->getParam('type');
         $qs = Yii::app()->getRequest()->getParam('name');
         $page = filter_var(Yii::app()->getRequest()->getParam('page', 0), FILTER_SANITIZE_NUMBER_INT);
-        $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
+        $limit = filter_var(Yii::app()->getRequest()->getParam('limit', MainConfig::$DEF_PAGE_API_LIMIT), FILTER_SANITIZE_NUMBER_INT);
+        $limit = $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
 
 
         // читаем фильтр
         if( $filter )
         {
             // фильтр по типу
-            $cotype = $cotype ? array_combine($cotype, $cotype) : null;
+            $cotype = $filter['cotype'] ? array_combine($filter['cotype'], $filter['cotype']) : null;
             // фильтр городов
-            $cities = $cities ? array_combine($cities, $cities) : null;
-            $qs = $qs ?: null;
+            $cities = $filter['city'] ? array_combine($filter['city'], $filter['city']) : null;
+            $qs = $filter['qs'] ?: null;
             $filter = ['filter' => compact('cotype', 'cities', 'qs')];
         }
         else
