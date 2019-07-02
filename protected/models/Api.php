@@ -3106,6 +3106,7 @@ public function vac(){
         $cities = Yii::app()->getRequest()->getParam('city');
         $cotype = Yii::app()->getRequest()->getParam('type');
         $qs = Yii::app()->getRequest()->getParam('name');
+        $page = Yii::app()->getRequest()->getParam('page') ? Yii::app()->getRequest()->getParam('page'):1 ;
       
         $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
 
@@ -3132,11 +3133,12 @@ public function vac(){
         $pages = new CPagination($SearchEmpl->searchEmployersCount($filter));
         $pages->pageSize = $limit;
         $pages->applyLimit($SearchEmpl);
-
+        
+    
 
         // отсеивать из ответа работодателей
         $data = array_values($SearchEmpl->getEmployersAPI(0, $filter)['empls']);
-        $data = array_merge(['employers' => $data, 'pageCount' => $pages->pageCount]);
+        $data = array_merge(['employers' => $data, 'pageCount' => $pages->pageCount,'currentPage' => $page]);
 
 
         return array_merge($data);
