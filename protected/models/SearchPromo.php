@@ -46,7 +46,7 @@ class SearchPromo extends Model
             return array('error' => $e->getMessage());
         } // endtry
         
-        
+        var_dump($res);
         $data['promo'] = array();
         foreach ($res as $key => $val)
         {
