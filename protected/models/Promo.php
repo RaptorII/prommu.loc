@@ -586,7 +586,8 @@ class Promo extends ARModel
         for ( $i=0, $n=sizeof($sqlC); $i<$n; $i++ ){
             !empty($sqlC[$i]['name'])
             &&
-            $arP[$sqlC[$i]['id_user']]['city'][$sqlC[$i]['id']] = $sqlC[$i]['name'];
+            $arP[$sqlC[$i]['id_user']]['city']['name'] = $sqlC[$i]['name'];
+            $arP[$sqlC[$i]['id_user']]['city']['id'] = $sqlC[$i]['id'];
         }
 
         $sqlM = Yii::app()->db->createCommand()
