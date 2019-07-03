@@ -50,7 +50,7 @@ class SearchPromo extends Model
         $data['promo'] = array();
         foreach ($res as $key => $val)
         {
-            if( !isset($data['promo'][$val['id']])) $data['promo'][$val['id']] = array('city' => array(), 'posts' => array()) ;
+            // if( !isset($data['promo'][$val['id']])) $data['promo'][$val['id']] = array('city' => array(), 'posts' => array()) ;
             
             
             ///attribs
@@ -58,16 +58,16 @@ class SearchPromo extends Model
             $data['promo'][$val['id']]['id_user'] = (int)$val['id_user'];
             
             $data['promo'][$val['id']]['first_name'] = $val['firstname'];
-            $data['promo'][$val['id']]['photo'] = "https://files.prommu.com/users/".$val['id_user']."/".$val['photo'].".jpg";
+            $data['promo'][$val['id']]['photo'] = $val['photo'] ? "https://files.prommu.com/users/".$val['id_user']."/".$val['photo'].".jpg" : NULL;
             
              ///owner
-            $data['promo'][$val['id']]['birhtday'] = $val['birhtday'];
+            $data['promo'][$val['id']]['birthday'] = $val['birthday'];
             $data['promo'][$val['id']]['age'] = (int)$val['age'];
             $data['promo'][$val['id']]['projects'] = (int)$val['projects'];
             
             ///city
-            $data['promo'][$val['id']]['city']['id'] = (int)$val['id_city'];
-            $data['promo'][$val['id']]['city']['name'] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
+            $data['promo'][$val['id']]['city']['id'] = (int)$val['id'];
+            $data['promo'][$val['id']]['city']['name'] = $val['id'] > 0 ? $val['name'] : $val['name'];
             ///
             
             
