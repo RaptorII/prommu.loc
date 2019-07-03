@@ -80,6 +80,8 @@ class SearchPromo extends Model
             $data['promo'][$val['id']]['card'] = (int)$val['card'];
             $data['promo'][$val['id']]['card_prommu'] = (int)$val['card_prommu'];
             
+            $data['promo'][$val['id']]['rate']['positive_rate'] = (int)$val['rate'];
+            $data['promo'][$val['id']]['rate']['negative_rate'] = (int)$val['rate_neg'];
             ///
             
             // ///posts
