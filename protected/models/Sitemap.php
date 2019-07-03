@@ -127,7 +127,7 @@ class Sitemap extends CActiveRecord
         if( $pagesStatic[7] )
         {
             $s1 = '/feedback';
-            $mages['feedback'] = array('loc' => Yii::app()->createAbsoluteUrl($s1), 'lastmod' => date('c', strtotime($pagesStatic[7]['mdate'])), 'priority' => 0.5, 'changefreq' => $freq->m);
+            $mages['feedback'] = array('loc' => Yii::app()->createAbsoluteUrl($s1), 'lastmod' => date('c', strtotime($pagesStatic[7]['mdate'])), 'priority' => 0.5, 'changefreq' => $freq->w);
             $this->dburls[] = array('name' => 'Обратная связь', 'link' => Yii::app()->createAbsoluteUrl($s1), 'level' => 0, 'crdate' => date("Y-m-d H:i:s"));
         }
         $this->dburls[] = array('name' => 'Обратная связь', 'link' => Yii::app()->createAbsoluteUrl($s1), 'level' => 0, 'crdate' => date("Y-m-d H:i:s"));
