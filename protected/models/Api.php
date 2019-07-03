@@ -3802,6 +3802,7 @@ public function vac(){
             $af = $filter['af'] ?: null;
             $at = $filter['at'] ?: null;
             $sex = $filter['sex'] ?: null;
+            
             $filter = ['filter' => compact('post', 'city', 'sr', 'sphf', 'spht', 'spwf', 'spwt', 'spmf', 'spmt', 'af', 'at', 'sex')];
         }
         else
