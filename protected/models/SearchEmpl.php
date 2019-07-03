@@ -57,20 +57,20 @@ class SearchEmpl extends Model
         foreach ($res as $key => $val)
         {
             
-            $data['empls'][$val['id']]['user_id'] = $val['id_user'];
-            $data['empls'][$val['id']]['employer_id'] = $val['id'];
+            $data['empls'][$val['id']]['user_id'] = (int)$val['id_user'];
+            $data['empls'][$val['id']]['employer_id'] = (int)$val['id'];
             $data['empls'][$val['id']]['name'] = $val['name'];
             $data['empls'][$val['id']]['type'] = $val['tname'];
             $data['empls'][$val['id']]['logo'] = "https://files.prommu.com/users/".$val['id_user']."/".$val['logo'].".jpg";
             
             if( !isset($data['empls'][$val['id']])) $data['empls'][$val['id']] = array('city' => array()) ;
-            $data['empls'][$val['id']]['city']['id'] = $val['id_city'];
+            $data['empls'][$val['id']]['city']['id'] = (int)$val['id_city'];
             $data['empls'][$val['id']]['city']['name'] = $val['ciname'];
             
             $data['empls'][$val['id']]['created_at'] = $val['crdate'];
             $data['empls'][$val['id']]['updated_at'] = $val['mdate'];
-            $data['empls'][$val['id']]['is_online'] = $val['is_online'];
-            $data['empls'][$val['id']]['vacancy_count'] = $val['vaccount'];
+            $data['empls'][$val['id']]['is_online'] = (int)$val['is_online'];
+            $data['empls'][$val['id']]['vacancy_count'] = (int)$val['vaccount'];
             
             
 
