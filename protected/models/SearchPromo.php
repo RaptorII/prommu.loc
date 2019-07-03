@@ -58,6 +58,7 @@ class SearchPromo extends Model
             $data['promo'][$val['id']]['id_user'] = (int)$val['id_user'];
             
             $data['promo'][$val['id']]['first_name'] = $val['firstname'];
+            $data['promo'][$val['id']]['last_name'] = $val['lastname'];
             $data['promo'][$val['id']]['photo'] = $val['photo'] ? "https://files.prommu.com/users/".$val['id_user']."/".$val['photo'].".jpg" : NULL;
             
              ///owner
@@ -66,8 +67,8 @@ class SearchPromo extends Model
             $data['promo'][$val['id']]['projects'] = (int)$val['projects'];
             
             ///city
-            $data['promo'][$val['id']]['city']['id'] = (int)$val['id'];
-            $data['promo'][$val['id']]['city']['name'] = $val['id'] > 0 ? $val['name'] : $val['name'];
+            $data['promo'][$val['id']]['city']['id'] = (int)$val['city']['id'];
+            $data['promo'][$val['id']]['city']['name'] = $val['city']['name'];
             ///
             
             
