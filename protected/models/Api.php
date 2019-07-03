@@ -215,14 +215,13 @@ class Api
     
     public function testInfo(){
         
-        $email = Yii::app()->getRequest()->getParam('email');
-        $sql = "SELECT id_user
-            FROM user
-            WHERE login LIKE '%{$email}%' 
-            ";
-        $res = Yii::app()->db->createCommand($sql)->queryRow();
+        $filter = [];
+        $SearchEmpl = new SearchEmpl();
+        $pages = new CPagination($SearchEmpl->searchEmployersCount($filter));
+        $pages->pageSize = $limit;
+        $pages->applyLimit($SearchEmpl);
         
-        return $res;
+        return $pages;
     }
     
     public function services(){
