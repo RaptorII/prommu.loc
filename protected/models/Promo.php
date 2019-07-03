@@ -571,10 +571,10 @@ class Promo extends ARModel
 
         for ( $i=0, $n=sizeof($sqlP); $i<$n; $i++ )
             $arP[$sqlP[$i]['id_user']]['post'][] = array(
-                    "id"=> $sqlP[$i]['id'],
+                    "id"=> (int)$sqlP[$i]['id'],
                     "name" => $sqlP[$i]['name'],
-                    "pay" => $sqlP[$i]['pay'],
-                    "pay_type" => $sqlP[$i]['pay_type']
+                    "pay" => (float)$sqlP[$i]['pay'],
+                    "pay_type" => (int)$sqlP[$i]['pay_type']
                 );
 
         $sqlC = Yii::app()->db->createCommand()
