@@ -180,7 +180,7 @@ class SearchEmpl extends Model
 
         // city filter
         if( !empty($data['cities']) ) 
-            $filter[] = 'uc.id_city IN ('.join(',',$data['cities']).')';
+            $filter[] = 'uc.id_city IN ('.$data['cities'].')';
         else
             $filter[] = 'uc.id_city IN ('.Subdomain::getCacheData()->strCitiesIdes.')';
         // company type
