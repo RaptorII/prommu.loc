@@ -67,6 +67,10 @@ class SearchEmpl extends Model
             $data['empls'][$val['id']]['city']['id'] = (int)$val['id_city'];
             $data['empls'][$val['id']]['city']['name'] = $val['ciname'];
             
+            $data['empls'][$val['id']]['rate']['positive_rate'] = (int)$val['rate'];
+            $data['empls'][$val['id']]['rate']['negative_rate'] = (int)$val['rate_neg'];
+            
+            
             $data['empls'][$val['id']]['created_at'] = $val['crdate'];
             $data['empls'][$val['id']]['updated_at'] = $val['mdate'];
             $data['empls'][$val['id']]['is_online'] = (int)$val['is_online'];
