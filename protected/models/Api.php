@@ -3135,10 +3135,6 @@ public function vac(){
         $pages->pageSize = 50;
         $pages->applyLimit($SearchEmpl);
         
-        var_dump($SearchEmpl->searchEmployersCount($filter));
-        
-    
-
         // отсеивать из ответа работодателей
         $data = array_values($SearchEmpl->getEmployersAPI(0, $filter)['empls']);
         $data = array_merge(['employers' => $data, 'pageCount' => $pages->pageCount,'currentPage' => (int)$page ? (int)$page : 1]);
