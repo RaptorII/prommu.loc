@@ -39,26 +39,69 @@ class SearchPromo extends Model
 
 
         try {
-            $arPromo = (new Promo())->getApplicantsQueries(
-                array(
-                    'page' => 'searchpromo', 
-                    'table' => $filter['table'], 
-                    'filter' => $filter['filter'], 
-                    'offset' => $offset, 
-                    'limit' => $limit,
-                    'arId' => $arId
-                )
-            );
+            $res = (new Promo())->getApplicantsQueries(array('page' => 'searchpromo', 'table' => $filter['table'], 'filter' => $filter['filter'], 'offset' => $offset, 'limit' => $limit,'arId' => $arId));
 
-            $i = 1;
-            foreach ($arPromo as $p) {
-                $arRes['promo'][$i] = $p;
-                $i++; 
-            }
         }
         catch (Exception $e) {
             return array('error' => $e->getMessage());
         } // endtry
+        
+        
+        $data['promo'] = array();
+        foreach ($res as $key => $val)
+        {
+            if( !isset($data['promo'][$val['id']])) $data['promo'][$val['id']] = array('city' => array(), 'posts' => array()) ;
+            
+            
+            ///attribs
+            $data['promo'][$val['id']]['id'] = (int)$val['id'];
+            $data['promo'][$val['id']]['id_user'] = (int)$val['id_user'];
+            
+            $data['promo'][$val['id']]['first_name'] = $val['firstname'];
+            $data['promo'][$val['id']]['photo'] = "https://files.prommu.com/users/".$val['id_user']."/".$val['photo'].".jpg";
+            
+             ///owner
+            $data['promo'][$val['id']]['birhtday'] = $val['birhtday'];
+            $data['promo'][$val['id']]['age'] = (int)$val['age'];
+            $data['promo'][$val['id']]['projects'] = (int)$val['projects'];
+            
+            ///city
+            $data['promo'][$val['id']]['city']['id'] = (int)$val['id_city'];
+            $data['promo'][$val['id']]['city']['name'] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
+            ///
+            
+            
+            $data['promo'][$val['id']]['is_man'] = (int)$val['isman'];
+            $data['promo'][$val['id']]['is_med'] = (int)$val['ismed'];
+            $data['promo'][$val['id']]['is_hasavto'] = (int)$val['ishasavto'];
+            $data['promo'][$val['id']]['smart'] = (int)$val['smart'];
+            $data['promo'][$val['id']]['card'] = (int)$val['card'];
+            $data['promo'][$val['id']]['card_prommu'] = (int)$val['card_prommu'];
+            
+            ///
+            
+            // ///posts
+            // $data['vacs'][$val['id']]['posts']['id'] = (int)$val['id_attr'];
+            // $data['vacs'][$val['id']]['posts']['name'] = $val['pname'];
+            // ///
+            
+            $data['vacs'][$val['id']]['created_at'] = $val['date_public'];
+            $data['vacs'][$val['id']]['moder_at'] = $val['mdates'];
+            
+            
+            //
+          
+            // if( $val['mid'] ) $data['vacs'][$val['id']]['metroes'][$val['mid']] = $val['mname'];
+            // $data['vacs'][$val['id']] = array_merge($data['vacs'][$val['id']], $val);
+        
+        } // end foreach
+
+        $i = 1;
+        $ret['promo'] = array();
+        foreach ($data['promo'] as $key => $val) { $ret['promo'][$i] = $val; $i++; }
+
+        return $ret;
+
 
         return $arRes;
     }
