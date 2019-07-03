@@ -3135,6 +3135,8 @@ public function vac(){
         $pages->pageSize = 50;
         $pages->applyLimit($SearchEmpl);
         
+        var_dump($SearchEmpl->searchEmployersCount($filter));
+        
     
 
         // отсеивать из ответа работодателей
