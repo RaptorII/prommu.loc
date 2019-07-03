@@ -117,7 +117,7 @@ class SearchPromo extends Model
                     {$filter['filter']}
                 ORDER BY r.mdate DESC ";
         /** @var $res CDbCommand */
-        $query = Yii::app()->db->createCommand($sql)->queryColumn();
+        $query = Yii::app()->db->createCommand($sql)->queryScalar();
 
         return $query;
     }
