@@ -3116,7 +3116,7 @@ public function vac(){
 
 
         // читаем фильтр
-        if( $filter )
+        if( $cities || $cotype ||  $qs )
         {
                 
             $filter = ['filter' => compact('cotype', 'cities', 'qs')];
