@@ -3109,6 +3109,7 @@ public function vac(){
         $cities = Yii::app()->getRequest()->getParam('city');
         $cotype = Yii::app()->getRequest()->getParam('type');
         $qs = Yii::app()->getRequest()->getParam('name');
+        
         $page = filter_var(Yii::app()->getRequest()->getParam('page', 0), FILTER_SANITIZE_NUMBER_INT);
         $limit = filter_var(Yii::app()->getRequest()->getParam('limit', MainConfig::$DEF_PAGE_API_LIMIT), FILTER_SANITIZE_NUMBER_INT);
         $limit = $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
@@ -3117,11 +3118,7 @@ public function vac(){
         // читаем фильтр
         if( $filter )
         {
-            // фильтр по типу
-            $cotype = $filter['cotype'] ? array_combine($filter['cotype'], $filter['cotype']) : null;
-            // фильтр городов
-            $cities = $filter['city'] ? array_combine($filter['city'], $filter['city']) : null;
-            $qs = $filter['qs'] ?: null;
+                
             $filter = ['filter' => compact('cotype', 'cities', 'qs')];
         }
         else
