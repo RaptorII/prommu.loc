@@ -97,39 +97,39 @@ class SearchVac extends Model
             
             
             ///attribs
-            $data['vacs'][$val['id']]['id'] = $val['id'];
+            $data['vacs'][$val['id']]['id'] = (int)$val['id'];
             $data['vacs'][$val['id']]['title'] = $val['title'];
             
              ///owner
-            $data['vacs'][$val['id']]['owner']['id'] = $val['uid'];
+            $data['vacs'][$val['id']]['owner']['id'] = (int)$val['uid'];
             $data['vacs'][$val['id']]['owner']['name'] = $val['coname'];
             $data['vacs'][$val['id']]['owner']['logo'] = "https://files.prommu.com/users/".$val['uid']."/".$val['logo'].".jpg";
             ///
             
             ///city
-            $data['vacs'][$val['id']]['city']['id'] = $val['id_city'];
+            $data['vacs'][$val['id']]['city']['id'] = (int)$val['id_city'];
             $data['vacs'][$val['id']]['city']['name'] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
             ///
             
             ///posts
-            $data['vacs'][$val['id']]['posts']['id'] = $val['id_attr'];
+            $data['vacs'][$val['id']]['posts']['id'] = (int)$val['id_attr'];
             $data['vacs'][$val['id']]['posts']['name'] = $val['pname'];
             ///
             
             $data['vacs'][$val['id']]['created_at'] = $val['crdate'];
             $data['vacs'][$val['id']]['removed_at'] = $val['remdate'];
             
-            $data['vacs'][$val['id']]['is_premium'] = $val['ispremium'];
+            $data['vacs'][$val['id']]['is_premium'] = (int)$val['ispremium'];
             $data['vacs'][$val['id']]['is_active'] = 1;
             
             $data['vacs'][$val['id']]['requirements'] = $val['requirements'];
             $data['vacs'][$val['id']]['conditions'] = $val['conditions'];
             $data['vacs'][$val['id']]['duties'] = $val['duties'];
             
-            $data['vacs'][$val['id']]['salary_hour'] = $val['shour'];
-            $data['vacs'][$val['id']]['salary_week'] = $val['sweek'];
-            $data['vacs'][$val['id']]['salary_month'] = $val['smonth'];
-            $data['vacs'][$val['id']]['salary_visit'] = $val['svisit'];
+            $data['vacs'][$val['id']]['salary_hour'] = (float)$val['shour'];
+            $data['vacs'][$val['id']]['salary_week'] = (float)$val['sweek'];
+            $data['vacs'][$val['id']]['salary_month'] = (float)$val['smonth'];
+            $data['vacs'][$val['id']]['salary_visit'] = (float)$val['svisit'];
             
             //
           
