@@ -95,7 +95,7 @@ class Api
                 case 'maleor' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->maleor(); break;
                 case 'testpay' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testPay(); break;
                 case 'services' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->services(); break;
-                case 'import' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->testInfo(); break;
+                case 'import' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testInfo(); break;
                 case 'rest_one_day': $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getRestOneDay(); break;
                 
                 
