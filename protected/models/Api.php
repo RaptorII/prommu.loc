@@ -218,7 +218,7 @@ class Api
         $filter = [];
         $SearchEmpl = new SearchEmpl();
         $pages = new CPagination($SearchEmpl->searchEmployersCount($filter));
-        $pages->pageSize = $limit;
+        $pages->pageSize = 50;
         $pages->applyLimit($SearchEmpl);
         
         return $pages;
