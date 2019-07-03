@@ -91,12 +91,12 @@ class SearchEmpl extends Model
     {
         $filter = $this->renderSQLFilter(['filter' => $props['filter']]);
 
-        $sql = "SELECT DISTINCT e.id_user idus
+        $sql = "SELECT COUNT(e.id_user)
               FROM employer e
               INNER JOIN user_city uc ON e.id_user = uc.id_user
               INNER JOIN user u ON u.id_user = e.id_user
 
-              {$filter} AND u.ismoder = 1 
+              {$filter} AND u.ismoder = 1
               ORDER BY e.id DESC";
 
         $res = Yii::app()->db->createCommand($sql);
