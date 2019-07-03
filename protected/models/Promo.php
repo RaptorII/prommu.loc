@@ -570,10 +570,11 @@ class Promo extends ARModel
                     ->queryAll();
 
         for ( $i=0, $n=sizeof($sqlP); $i<$n; $i++ )
-            $arP[$sqlP[$i]['id_user']]['post'][$sqlP[$i]['id']] = array(
-                    $sqlP[$i]['name'],
-                    $sqlP[$i]['pay'],
-                    $sqlP[$i]['pay_type']
+            $arP[$sqlP[$i]['id_user']]['post'][] = array(
+                    "id"=> $sqlP[$i]['id'],
+                    "name" => $sqlP[$i]['name'],
+                    "pay" => $sqlP[$i]['pay'],
+                    "pay_type" => $sqlP[$i]['pay_type']
                 );
 
         $sqlC = Yii::app()->db->createCommand()
