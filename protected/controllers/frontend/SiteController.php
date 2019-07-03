@@ -166,10 +166,10 @@ class SiteController extends AppController
                     $data['data']['pages']->applyLimit($SearchEmpl);
                     $data['data']['viData'] = $SearchEmpl->getEmployers(1);
                     $data['data']['viData']['count'] = $arCount;
-                    $data['data']['redirect'] = '';//Subdomain::ajaxFilterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
+                    $data['data']['redirect'] = '';
                     Cache::setData($data);
                 }
-                 //var_dump($data['data']);
+
                 $this->renderPartial(
                     MainConfig::$VIEWS_SEARCH_EMPL_AJAX_BLOCK,
                     $data['data'], 
@@ -179,7 +179,6 @@ class SiteController extends AppController
             }
         }
         else{
-            //Subdomain::filterRedirect($_GET['cities'],Share::$UserProfile->id,Share::$UserProfile->type);
             $this->setBreadcrumbs($title = "Поиск работодателей", MainConfig::$PAGE_SEARCH_EMPL);
 
             $data = Cache::getData();
@@ -202,13 +201,12 @@ class SiteController extends AppController
                 }
                 Cache::setData($data);
             }
-            //var_dump($data['data']);
+
+            $h1 = (!empty($data['data']['seo']['seo_h1']) ? $data['data']['seo']['seo_h1'] : $title);
+
             $this->render($this->ViewModel->pageSearchEmpl,
                     $data['data'],
-                    array(
-                        'htmlTitle' => $title,
-                        'pageTitle' => '<h1>' . ($h1 ? $h1 : $title) .'</h1>'
-                    )
+                    ['pageTitle' => '<h1>' . $h1 .'</h1>']
                 );
         }
     }
@@ -362,6 +360,17 @@ class SiteController extends AppController
 
                 !empty($data['data']['seo']['meta_title']) && $title = $data['data']['seo']['meta_title'];
                 !empty($data['data']['seo']['seo_h1']) && $h1 = $data['data']['seo']['seo_h1'];
+                // устанавливаем отдельные хлебные крошки для должностей
+                $arSelectPost = [];
+                foreach ($data['data']['viData']['posts'] as $key => $v)
+                {
+                    $v['selected'] && $arSelectPost[] = $key;
+                }
+                if(count($arSelectPost)==1)
+                {
+                    $post = $data['data']['viData']['posts'][reset($arSelectPost)]['name'];
+                    !empty($post) && $this->setBreadcrumbsEx([$post, Yii::app()->request->url]);      
+                }
 
                 $this->render($this->ViewModel->pageSearchPromo,
                         $data['data'],
@@ -580,6 +589,17 @@ class SiteController extends AppController
                                             );
                 !empty($data['data']['seo']['meta_title']) && $title = $data['data']['seo']['meta_title'];
                 !empty($data['data']['seo']['seo_h1']) && $h1 = $data['data']['seo']['seo_h1'];
+                // устанавливаем отдельные хлебные крошки для должностей
+                $arSelectPost = [];
+                foreach ($data['data']['viData']['posts'] as $key => $v)
+                {
+                    $v['selected'] && $arSelectPost[] = $key;
+                }
+                if(count($arSelectPost)==1)
+                {
+                    $post = $data['data']['viData']['posts'][reset($arSelectPost)]['name'];
+                    !empty($post) && $this->setBreadcrumbsEx([$post, Yii::app()->request->url]);      
+                }
 
                 $this->render(
                     $this->ViewModel->pageSearchVac,
