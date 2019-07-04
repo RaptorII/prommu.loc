@@ -945,6 +945,7 @@ class SiteController extends AppController
 
         if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('name') )
         {
+
             $res = $Feedback->saveData();
             if($res['ERROR'])
             {

@@ -18,6 +18,12 @@
 			<? endif; ?>
 		</h2>
         <div class="chat-list__wrap">
+            <?php
+//                echo '<pre>';
+//                    print_r($viData['items']);
+//                echo '<pre>';
+                //die();
+            ?>
             <? foreach ($viData['items'] as $id => $item): ?>
                 <a href="<?=MainConfig::$PAGE_CHATS_LIST_FEEDBACK . DS . $id?>" class="chat__item">
                     <span class="chat__item-user">

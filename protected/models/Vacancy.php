@@ -2502,7 +2502,7 @@ WHERE id_vac = {$inVacId}";
         $message .= "👇ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ 👇\n\n👌Cсылка: $linki";
 
         $sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?parse_mode=HTML&chat_id=@prommucom&text=" . urlencode($message) . "&disable_web_page_preview=true";
-        file_get_contents($sendto);
+        //file_get_contents($sendto);
         //
         $arVacUpdate['tl_link'] = "https://t.me/prommucom";
         $arCloudUpdate[] = array(

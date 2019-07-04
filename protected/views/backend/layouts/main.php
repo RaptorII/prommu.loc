@@ -190,7 +190,6 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
                             <? foreach ($model['items'] as $id => $v) : ?>
                                 <li class="user-header">
                                     <a
-                                            style="white-space:unset;background-color:#e1e3e9"
                                             href="/admin/site/<?= (!$v['type'] ? 'mail/' . $id : 'update/' . $v['chat']) ?>"
                                             rel="tooltip"
                                             data-placement="top"
@@ -275,8 +274,7 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
                             <ul class="dropdown-menu">
                                 <? if ($arCommentsCnt['emp_reviews']): ?>
                                     <li class="user-header">
-                                        <a style="white-space:unset;background-color:#e1e3e9;"
-                                           href="/admin/comments?type=1" rel="tooltip" data-placement="top"
+                                        <a href="/admin/comments?type=1" rel="tooltip" data-placement="top"
                                            title="Просмотреть">
                                            О соискателях (<?= $arCommentsCnt['emp_reviews'] ?>)
                                         </a>
@@ -284,8 +282,7 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
                                 <? endif; ?>
                                 <? if ($arCommentsCnt['app_reviews']): ?>
                                     <li class="user-header">
-                                        <a style="white-space:unset;background-color:#e1e3e9;"
-                                           href="/admin/comments?type=0" rel="tooltip" data-placement="top"
+                                        <a href="/admin/comments?type=0" rel="tooltip" data-placement="top"
                                            title="Просмотреть">
                                            О работодателях (<?= $arCommentsCnt['app_reviews'] ?>)
                                         </a>
@@ -293,7 +290,7 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
                                 <? endif; ?>
                                 <? if ($arCommentsCnt['aboutus_reviews']): ?>
                                     <li class="user-header">
-                                        <a style="white-space:unset;background-color:#e1e3e9;" href="/admin/reviews"
+                                        <a href="/admin/reviews"
                                            rel="tooltip" data-placement="top" title="Просмотреть">
                                             О ресурсе (<?= $arCommentsCnt['aboutus_reviews'] ?>)
                                         </a>

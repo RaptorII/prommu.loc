@@ -10,6 +10,7 @@
         dataLayer.push({
             'event' : type
         });
+
     </script>
 <?php else: ?>
     <?php
@@ -21,8 +22,8 @@
     ?>
     <div class='row'>
         <div class='col-xs-12'>
-            <form action='' id='F1feedback' method='post' class="feedback-page__form">
-                <h1 class="feedback-page__title">обратная связь</h1>
+            <form action='' id='F2feedback' method='post' class="feedback-page__form">
+                <h1 class="feedback-page__title">Обратная связь</h1>
                 <?php if(!empty($error)): ?>
                 <div class="error-block -center -red"><?=$error?></div>
             <?php endif; ?>
@@ -51,13 +52,24 @@
                     <input data-field-check='name:Email,empty,email' id='EdEmail' name='email' type='text' value="<?=($viData['email'] ? $viData['email'] : Share::$UserProfile->exInfo->email )?>" class="feedback-page__input" placeholder="Email" title="Email">
                 </label>
 
+                <?php if($isUser): ?>
+                    <label class="feedback-page__label">
+                        <select data-field-check='name:Тема,empty,max:100' id='IdFdBck' name='feedback' class="feedback-page__input" placeholder="Выберите тему" title="Выберите тему">
+                            <option selected disabled>Выберите тему</option>
+                            <option value="0" >Новая тема</option>
+                            <?foreach ($viData['feedbacks'] as $value):?>
+                                <option value="<?=$value['id']?>"><?=$value['theme']?></option>
+                            <?endforeach;?>
+                        </select>
+                    </label>
+                <?php endif; ?>
+
                 <label class="feedback-page__label">
                     <input data-field-check='name:Тема,empty,max:100' id='EdTheme' name='theme' type='text' class="feedback-page__input" placeholder="Тематика запроса" title="Тематика запроса" value="<?=($viData['theme'] ? $viData['theme'] : '')?>">
                 </label>
 
-
                 <label class="feedback-page__label">
-                    <select data-field-check='name:Направление,empty,max:100' id='EdWay' name='direct' type='text' class="feedback-page__input" placeholder="Направление запроса" title="Направление запроса">
+                    <select data-field-check='name:Направление,empty,max:100' id='EdWay' name='direct' class="feedback-page__input" placeholder="Направление запроса" title="Направление запроса">
                         <option value="0" selected disabled>Направление запроса</option>
                         <?foreach ($viData['directs'] as $key => $value):?>
                             <option value="<?=$value['id']?>"><?=$value['name']?></option>
@@ -76,8 +88,8 @@
                         <?php endif; ?>
                         <div class="g-recaptcha" data-sitekey="6Lf2oE0UAAAAAKL5IvtsS1yytkQDqIAPg1t-ilNB"></div>
                     </div>
+                    <div class="clearfix"></div>
                 <? endif; ?>
-                <div class="clearfix"></div>
                 <button type="submit" class="feedback-page__button">Отправить</button>
                 <div class="clearfix"></div>
                 <input type="hidden" name="autotype" value="<?= Share::$UserProfile->type ?>"/>
@@ -93,4 +105,13 @@
             </form>
         </div>
     </div>
+    <script>
+
+    </script>
 <?php endif; ?>
+
+<pre>
+    <?php print_r($viData);?>
+</pre>
+
+<?// die; ?>

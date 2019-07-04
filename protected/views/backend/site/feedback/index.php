@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container-fluid">
   <div class="row">
     <div class="span11">
       <img style="padding-top: : -24px; padding-left: 44%;" src="/admin/logo-sm.png"><h3>Администрирование заявок</h3>
@@ -34,8 +34,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         'id'=>'dvgrid',
         'dataProvider'=>$model->search(),
         'itemsCssClass' => 'table table-bordered table-hover dataTable',
-        //'htmlOptions' => array('class' => 'table table-hover', 'name' => 'my-grid'),
-        'htmlOptions'=>array('class'=>'table table-hover', 'name'=>'my-grid', 'style' =>    'padding: 10px;  overflow: scroll;'),
+        'htmlOptions'=>array('class'=>'table table-hover', 'name'=>'my-grid', 'style' => 'padding: 10px;  overflow: scroll;'),
         'columns'=>array(
           array(
             'header' => 'Номер',
@@ -73,7 +72,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'filter' => '',
           ),
           array(
-            'header' => 'Проблема',
+            'header' => 'Статус',
             'name' => 'name',
             'value' => 'ShowStatus($data->id,$data->status)',
             'type' => 'raw',
@@ -99,7 +98,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
 echo CHtml::submitButton('Создать',array("class"=>"btn btn-success","id"=>"btn_submit", "style"=>"visibility:hidden"));
 function ShowType($type)
 {
-  $user;
+  $user=0;
   switch ($type) {
     case 0: $user='Гость'; break;
     case 2: $user='Cоискатель'; break;

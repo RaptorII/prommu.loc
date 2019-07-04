@@ -14,11 +14,28 @@ class Feedback extends Model
      public function getDatas($id)
     {
 
-
         // $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
 
         $sql = "SELECT f.id, f.type, f.theme,f.chat, f.email, f.text, f.name, DATE_FORMAT(f.crdate, '%d.%m.%Y') crdate
                 FROM feedback f WHERE f.id = {$id}";
+        $res = Yii::app()->db->createCommand($sql);
+        $data = $res->queryAll();
+        return  $data;
+    }
+
+    public function getUserFeedbacks($id)
+    {
+
+        $sql = "SELECT
+                  f.id,
+                  f.theme,
+                  f.direct,
+                 #f.chat,
+                  DATE_FORMAT(f.crdate, '%d.%m.%Y') crdate
+                FROM feedback f
+                WHERE f.pid = {$id} 
+                ORDER BY f.crdate DESC";
+
         $res = Yii::app()->db->createCommand($sql);
         $data = $res->queryAll();
         return  $data;
@@ -60,8 +77,8 @@ class Feedback extends Model
 				$arF['chat'] = $v['chat'];
 				!isset($arF['cnt']) && $arF['cnt'] = 0;
 				if(!$v['is_smotr']) {
-					//$arRes['cnt']++;
-					$arF['cnt']++;
+					$arRes['cnt']++;
+					//$arF['cnt']++;
 				}
 
 				foreach ($arMess as $m)
@@ -86,7 +103,7 @@ class Feedback extends Model
 						FILTER_SANITIZE_FULL_SPECIAL_CHARS
 					),
 					'theme' => filter_var(
-						Yii::app()->getRequest()->getParam('name'), 
+						Yii::app()->getRequest()->getParam('theme'),
 						FILTER_SANITIZE_FULL_SPECIAL_CHARS
 					),
 					'email' => filter_var(
@@ -100,6 +117,10 @@ class Feedback extends Model
 				);
 
 			$arRes['directs'] = $this->getDirects();
+
+			if (Share::$UserProfile->id) {
+                $arRes['feedbacks'] = $this->getUserFeedbacks(Share::$UserProfile->id);
+            }
 
 			return $arRes;
     }
@@ -138,6 +159,12 @@ class Feedback extends Model
 			$text = substr($text, 0, 5000);
 			$roistat = (isset($_COOKIE['roistat_visit'])) ? $_COOKIE['roistat_visit'] : "(none)";
 
+			/** $fdbk - feedback to exist talk
+             *  from view page-feebback-tpl.php
+             *  @return integer
+             */
+            $fdbk = filter_var(Yii::app()->getRequest()->getParam('feedback'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
 			$arErrors = false;
 			if(empty($id) && $app == 0) { // CAPTCHA
 				$recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
@@ -166,32 +193,39 @@ class Feedback extends Model
 				{
 					$arErrors = array('ERROR'=>'captcha','MESSAGE'=>'Необходимо пройти проверку "Я не робот"');
 				}        	
-      }
+            }
+
       if(!$arErrors)
       {
-				$arFeedback = array(
-										'type' => $autotype,
-										'name' => $name,
-										'theme' => $theme,
-										'text' => $text,
-										'email' => $emails,
-										'pid' => $id,
-										'direct' => $direct
-									);
+            $arFeedback = array(
+                'type'   => $autotype,
+                'name'   => $name,
+                'theme'  => $theme,
+                'text'   => $text,
+                'email'  => $emails,
+                'pid'    => $id,
+                'direct' => $direct
+            );
 
-				$arFeedbackNew = array(
-										'crdate' => date("Y-m-d H:i:s"),
-										'content' => $content,
-										'referer' => $referer,
-										'last_referer' => $last_referer,
-										'point' => $point,
-										'keywords' => $keywords,
-										'canal' => $canal, 
-										'campaign' => $campaign,
-										'transition' => $transition,
-									);
+            $arFeedbackNew = array(
+                'crdate'   => date("Y-m-d H:i:s"),
+                'content'  => $content,
+                'referer'  => $referer,
+                'last_referer' => $last_referer,
+                'point'    => $point,
+                'keywords' => $keywords,
+                'canal'    => $canal,
+                'campaign' => $campaign,
+                'transition' => $transition,
+            );
+//        echo('<pre>');
+//            print_r($arFeedback);
+//            print_r($arFeedbackNew);
+//        echo('<pre>');
+          //die('1');
 
-      	if(in_array($autotype, [2,3]))
+
+        if(in_array($autotype, [2,3])&&($fdbk==0))
       	{ // только зареганым
 					$feedback = Yii::app()->db->createCommand()
 												->select('id, chat')
