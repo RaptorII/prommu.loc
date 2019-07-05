@@ -221,51 +221,102 @@ class Feedback extends Model
 //        echo('<pre>');
 //            print_r($arFeedback);
 //            print_r($arFeedbackNew);
+//
+//            echo ($autotype .'<br>');
+//            echo ($app .'<br>');
+//            echo ($type .'<br>');
+//            echo ($name .'<br>');
+//            echo ($theme .'<br>');
+//            echo ($emails .'<br>');
+//            echo ($text .'<br>');
+//            echo ($referer .'<br>');
+//            echo ($canal .'<br>');
+//            echo ($campaign .'<br>');
+//            echo ($content .'<br>');
+//            echo ($id .'<br>');
+//            echo ($keywords .'<br>');
+//            echo ($point .'<br>');
+//            echo ($last_referer .'<br>');
+//            echo ($direct .'<br>');
+//            echo ($text .'<br>');
+//            echo ($roistat .'<br>');
+//            echo ($fdbk .'<br>');
+//
 //        echo('<pre>');
-          //die('1');
+//          die('1');
 
+
+        $Im = ($autotype==2 ? (new ImEmpl()) : (new ImApplic()));
 
         if(in_array($autotype, [2,3])&&($fdbk==0))
       	{ // только зареганым
-					$feedback = Yii::app()->db->createCommand()
-												->select('id, chat')
-												->from('feedback f')
-												->where('pid=:id AND chat>0',array(':id'=>$id))
-												->queryRow();
+            //тут раздуплить логику
 
-					$arChat = array(
-											'message' => "Добрый день, $name. Ваш вопрос '$text' на рассмотрении",
-											'new' => $id, 
-											'idus' => ($autotype==2 ? 1766 : 2054),
-											'idTm' => $theme, 
-											'theme' => $theme,
-											'original' => $text
-										);
+            $arChat = array(
+                'message' => "Добрый день, $name. Ваш вопрос '$text' на рассмотрении",
+                'new' => $id,
+                'idus' => ($autotype == 2 ? 1766 : 2054),
+                'idTm' => $theme,
+                'theme' => $theme,
+                'original' => $text
+            );
 
-					$Im = ($autotype==2 ? (new ImEmpl()) : (new ImApplic()));
-					if(intval($feedback['chat'])>0)
-					{ // если зареганый юзер уже общался с админом
-						$arChat['new'] = 0;
-						$arChat['idTm'] = $feedback['chat'];
-						$arFeedback['chat'] = $feedback['chat'];
+            // не обращался
+            $arFeedback = array_merge($arFeedback, $arFeedbackNew);
+            $idTheme = $Im->sendUserMessages($arChat)['idtm'];
+            $arFeedback['chat'] = $idTheme;
+            $res = Yii::app()->db->createCommand()
+                ->insert('feedback', $arFeedback);
 
-						Yii::app()->db->createCommand()
-							->update('chat_theme', ['title'=>$theme], 'id='.$feedback['chat']);
+        }
+        elseif (in_array($autotype, [2,3])&&($fdbk>0)) {
+            //сюда полученные данные повторного фидбека
+            $feedback = Yii::app()->db->createCommand()
+                ->select('id, chat, theme')
+                ->from('feedback f')
+                ->where('pid=:id AND chat>0',array(':id'=>$id))
+                ->queryRow();
 
-						$res = Yii::app()->db->createCommand()
-							->update('feedback', $arFeedback, 'id='.$feedback['id']);
+            $thm = $feedback['theme'];
 
-						$Im->sendUserMessages($arChat);
-					}
-					else
-					{ // не обращался 
-						$arFeedback = array_merge($arFeedback, $arFeedbackNew);
-						$idTheme = $Im->sendUserMessages($arChat)['idtm'];
-						$arFeedback['chat'] = $idTheme;
-						$res = Yii::app()->db->createCommand()
-										->insert('feedback', $arFeedback);
-					}
-      	}
+            $arChat = array(
+                'message' => "Добрый день, $name. Ваш вопрос '$text' на рассмотрении",
+                'new' => $id,
+                'idus' => ($autotype==2 ? 1766 : 2054),
+                'idTm' => $theme,
+                'theme' => $thm,
+                'original' => $text
+            );
+
+//            echo('<pre>');
+//                print_r($feedback);
+//            echo('</pre>');
+//            die('2');
+
+            //if(intval($feedback['chat'])>0) {
+                // если зареганый юзер уже общался с админом
+                // надо узнать тематику по ИД $fdbk
+                // ещё узнать направление из базы по тематике
+
+                $arChat['new'] = 0;
+                $arChat['idTm'] = $feedback['chat'];
+                $arFeedback['chat'] = $feedback['chat'];
+
+//                Yii::app()->db->createCommand()->update(
+//                    'chat_theme',
+//                    ['title'=>$thm],
+//                    'id='.$fdbk
+//                );
+
+                $res = Yii::app()->db->createCommand()->update(
+                    'feedback',
+                    $arFeedback,
+                    'id='.$fdbk
+                );
+
+                $Im->sendUserMessages($arChat);
+            //}
+        }
         else
         { // ветка для гостей
 					$arFeedback = array_merge($arFeedback, $arFeedbackNew);
@@ -292,19 +343,19 @@ class Feedback extends Model
         Mailing::set(
                     8,
                     array(
-                        'name_user' => $name,
-                        'theme_message' => $theme,
-                        'email_user' => $emails,
-												'text_message' => $text,
-												'referer_seo' => $referer,
-												'transition_seo' => $transition,
-												'canal_seo' => $canal,
-												'campaign_seo' => $campaign,
-												'content_seo' => $content,
-												'keywords_seo' => $keywords,
-												'point_seo' => $point,
-												'l_referer_seo' => $last_referer,
-												'roistat_seo' => $roistat
+                        'name_user'      => $name,
+                        'theme_message'  => $theme,
+                        'email_user'     => $emails,
+                        'text_message'   => $text,
+                        'referer_seo'    => $referer,
+                        'transition_seo' => $transition,
+                        'canal_seo'      => $canal,
+                        'campaign_seo'   => $campaign,
+                        'content_seo'    => $content,
+                        'keywords_seo'   => $keywords,
+                        'point_seo'      => $point,
+                        'l_referer_seo'  => $last_referer,
+                        'roistat_seo'    => $roistat
                     )
                 );
 
