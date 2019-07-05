@@ -223,13 +223,27 @@
                     </div>
                 </div>
                 <div class='filter-label filter-smart'>
-                    <label class='filter-name opened'>Самозанятый</label>
-                    <div class='filter-content opened'>
-                        <div class='radio-box right-box'>
-                            <input id='psv-self_employed' name='self_employed' value='1' type='checkbox' <?= Yii::app()->getRequest()->getParam('self_employed') ? 'checked' : '' ?> class="psv__checkbox-input">
-                            <label class='psv__checkbox-label' for="psv-self_employed">Самозанятый соискатель</label>
-                        </div>
+                  <label class='filter-name opened'>Налоговый статус</label>
+                  <div class='filter-content opened'>
+                    <div class='radio-box right-box'>
+                      <input
+                        id='tax_status_1'
+                        name='self_employed'
+                        value='0'
+                        type='radio'
+                        class="psv__checkbox-input"
+                        <?= !Yii::app()->getRequest()->getParam('self_employed') ? 'checked' : '' ?>>
+                      <label class='psv__checkbox-label' for="tax_status_1">Физическое лицо</label>
+                      <input
+                        id='tax_status_2'
+                        name='self_employed'
+                        value='1'
+                        type='radio'
+                        class="psv__checkbox-input"
+                        <?= Yii::app()->getRequest()->getParam('self_employed') ? 'checked' : '' ?>>
+                      <label class='psv__checkbox-label' for="tax_status_2">Самозанятый</label>
                     </div>
+                  </div>
                 </div>
                 <div class='filter-label filter-card'>
                     <label class='filter-name opened'>Карта</label>

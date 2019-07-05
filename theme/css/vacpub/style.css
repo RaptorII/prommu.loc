@@ -694,11 +694,15 @@ input:checked + .fav__label-checkbox:after{ content: '\2714'; }
 }
 .fav__date .fav__select:after{ right: 15px; }
 /* */
-.fav__four-list{
+.fav__flex-list{
 	display: flex;
 	justify-content: space-between;
 	flex-wrap: wrap;
 	margin: 0 -15px;
 }
-.fav__four-item{ padding: 0 15px 20px; }
-.fav__four-item .fav__label-checkbox{ margin: 0 }
+.fav__flex-item{ padding: 0 15px 20px; }
+.fav__flex-item .fav__label-checkbox{ margin: 0 }
+
+@media (max-width: 470px){
+	.fav__flex-list .fav__input-name{ width:100%; }
+}
