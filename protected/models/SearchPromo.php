@@ -161,6 +161,7 @@ class SearchPromo extends Model
                 INNER JOIN user_city uc ON r.id_user = uc.id_user  
                     {$filter['table']}
                 INNER JOIN user_mech a ON a.id_us = r.id_user
+                INNER JOIN user_attribs ua ON ua.id_us = r.id_user
                     {$filter['filter']}
                 ORDER BY r.mdate DESC ";
         /** @var $res CDbCommand */
@@ -262,54 +263,51 @@ class SearchPromo extends Model
 
     private function renderSQLFilter($inProps = [])
     {
-        $data = array();
+      $data = array();
+      $rq = Yii::app()->getRequest();
+      $arFilter = $inProps['filter'];
+      $filter = ["u.ismoder = 1 AND u.isblocked = 0"];
+      $tables = [];
+
         // города
-        if( Yii::app()->getRequest()->getParam('cities') || $inProps['filter']['cities'] ) $data['cities'] = $inProps['filter']['cities'] ?: Yii::app()->getRequest()->getParam('cities');
+        if( $rq->getParam('cities') || $arFilter['cities'] ) $data['cities'] = $arFilter['cities'] ?: $rq->getParam('cities');
         // posts
-        if(Yii::app()->getRequest()->getParam('posts') || $inProps['filter']['posts'] ) $data['posts'] = $inProps['filter']['posts'] ?: Yii::app()->getRequest()->getParam('posts');
+        if($rq->getParam('posts') || $arFilter['posts'] ) $data['posts'] = $arFilter['posts'] ?: $rq->getParam('posts');
         // sex
-        if( Yii::app()->getRequest()->getParam('sm') || $inProps['filter']['sm']  ) $data['sm'] = $inProps['filter']['sm'] ?: Yii::app()->getRequest()->getParam('sm');
-        if( Yii::app()->getRequest()->getParam('ph') || $inProps['filter']['ph']  ) $data['ph'] = $inProps['filter']['ph'] ?: Yii::app()->getRequest()->getParam('ph');
+        if( $rq->getParam('sm') || $arFilter['sm']  ) $data['sm'] = $arFilter['sm'] ?: $rq->getParam('sm');
+        if( $rq->getParam('ph') || $arFilter['ph']  ) $data['ph'] = $arFilter['ph'] ?: $rq->getParam('ph');
 
-        if( Yii::app()->getRequest()->getParam('sf') || $inProps['filter']['sf']  ) $data['sf'] = $inProps['filter']['sf'] ?: Yii::app()->getRequest()->getParam('sf');
+        if( $rq->getParam('sf') || $arFilter['sf']  ) $data['sf'] = $arFilter['sf'] ?: $rq->getParam('sf');
         // medbook n avto
-        if( Yii::app()->getRequest()->getParam('mb') || $inProps['filter']['mb']  ) $data['mb'] = $inProps['filter']['mb'] ?: Yii::app()->getRequest()->getParam('mb');
-        if( Yii::app()->getRequest()->getParam('avto') || $inProps['filter']['avto']  ) $data['avto'] = $inProps['filter']['avto'] ?: Yii::app()->getRequest()->getParam('avto');
-         if( Yii::app()->getRequest()->getParam('smart') || $inProps['filter']['smart']  ) $data['smart'] = $inProps['filter']['smart'] ?: Yii::app()->getRequest()->getParam('smart');
-        if( Yii::app()->getRequest()->getParam('card') || $inProps['filter']['card']  ) $data['card'] = $inProps['filter']['card'] ?: Yii::app()->getRequest()->getParam('card');
-        if( Yii::app()->getRequest()->getParam('cardPrommu') || $inProps['filter']['cardPrommu']  ) $data['cardPrommu'] = $inProps['filter']['cardPrommu'] ?: Yii::app()->getRequest()->getParam('cardPrommu');
+        if( $rq->getParam('mb') || $arFilter['mb']  ) $data['mb'] = $arFilter['mb'] ?: $rq->getParam('mb');
+        if( $rq->getParam('avto') || $arFilter['avto']  ) $data['avto'] = $arFilter['avto'] ?: $rq->getParam('avto');
+         if( $rq->getParam('smart') || $arFilter['smart']  ) $data['smart'] = $arFilter['smart'] ?: $rq->getParam('smart');
+        if( $rq->getParam('card') || $arFilter['card']  ) $data['card'] = $arFilter['card'] ?: $rq->getParam('card');
+        if( $rq->getParam('cardPrommu') || $arFilter['cardPrommu']  ) $data['cardPrommu'] = $arFilter['cardPrommu'] ?: $rq->getParam('cardPrommu');
+        // self_employed
+        $rq->getParam('self_employed') && $data['self_employed'] = $rq->getParam('self_employed');
+        $arFilter['self_employed'] && $data['self_employed'] = $arFilter['self_employed'];
         // Quick search название города или имя,фамилия
-        if( $sq = Yii::app()->getRequest()->getParam('qs')){  $data['qs'] = trim(filter_var($sq, FILTER_SANITIZE_FULL_SPECIAL_CHARS));}
-        elseif($inProps['filter']['qs']) {
-            $data['qs'] = $inProps['filter']['qs'];
-
+        if( $sq = $rq->getParam('qs')){  $data['qs'] = trim(filter_var($sq, FILTER_SANITIZE_FULL_SPECIAL_CHARS));}
+        elseif($arFilter['qs']) {
+            $data['qs'] = $arFilter['qs'];
         }
-         $salradio = filter_var(Yii::app()->getRequest()->getParam('sr', $inProps['filter']['sr'] ?: 0), FILTER_SANITIZE_NUMBER_INT);
-        if( $salradio == 1 && (($int = filter_var(Yii::app()->getRequest()->getParam('sphf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['sphf'])) ) $data['salHourF'] = $int;
-        if( $salradio == 1 && (($int = filter_var(Yii::app()->getRequest()->getParam('spht'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spht'])) ) $data['salHourT'] = $int;
-        if( $salradio == 2 && (($int = filter_var(Yii::app()->getRequest()->getParam('spwf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spwf'])) ) $data['salWeekF'] = $int;
-        if( $salradio == 2 && (($int = filter_var(Yii::app()->getRequest()->getParam('spwt'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spwt'])) ) $data['salWeekT'] = $int;
-        if( $salradio == 3 && (($int = filter_var(Yii::app()->getRequest()->getParam('spmf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spmf'])) ) $data['salMonF'] = $int;
-        if( $salradio == 3 && (($int = filter_var(Yii::app()->getRequest()->getParam('spmt'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spmt'])) ) $data['salMonT'] = $int;
-        if( $salradio == 4 && (($int = filter_var(Yii::app()->getRequest()->getParam('spvf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spvf'])) ) $data['salVisitF'] = $int;
-        if( $salradio == 4 && (($int = filter_var(Yii::app()->getRequest()->getParam('spvt'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spvt'])) ) $data['salVisitT'] = $int;
-
-          
+        $salradio = filter_var($rq->getParam('sr', $arFilter['sr'] ?: 0), FILTER_SANITIZE_NUMBER_INT);
+        if( $salradio == 1 && (($int = filter_var($rq->getParam('sphf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $arFilter['sphf'])) ) $data['salHourF'] = $int;
+        if( $salradio == 1 && (($int = filter_var($rq->getParam('spht'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $arFilter['spht'])) ) $data['salHourT'] = $int;
+        if( $salradio == 2 && (($int = filter_var($rq->getParam('spwf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $arFilter['spwf'])) ) $data['salWeekF'] = $int;
+        if( $salradio == 2 && (($int = filter_var($rq->getParam('spwt'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $arFilter['spwt'])) ) $data['salWeekT'] = $int;
+        if( $salradio == 3 && (($int = filter_var($rq->getParam('spmf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $arFilter['spmf'])) ) $data['salMonF'] = $int;
+        if( $salradio == 3 && (($int = filter_var($rq->getParam('spmt'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $arFilter['spmt'])) ) $data['salMonT'] = $int;
+        if( $salradio == 4 && (($int = filter_var($rq->getParam('spvf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $arFilter['spvf'])) ) $data['salVisitF'] = $int;
+        if( $salradio == 4 && (($int = filter_var($rq->getParam('spvt'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $arFilter['spvt'])) ) $data['salVisitT'] = $int;
 
         // age
-        if(Yii::app()->getRequest()->getParam('af') || $inProps['filter']['af'])
-            $data['ageFrom'] = $inProps['filter']['af'] ?: Yii::app()->getRequest()->getParam('af');
-        if(Yii::app()->getRequest()->getParam('at') || $inProps['filter']['at'])
-            $data['ageTo'] = $inProps['filter']['at'] ?: Yii::app()->getRequest()->getParam('at');
-        //if( $inProps['filter']['af'] ) $data['ageFrom'] = $inProps['filter']['af'];
-        // age to
-        //if( $inProps['filter']['at'] ) $data['ageTo'] = $inProps['filter']['at'];
+        if($rq->getParam('af') || $arFilter['af'])
+            $data['ageFrom'] = $arFilter['af'] ?: $rq->getParam('af');
+        if($rq->getParam('at') || $arFilter['at'])
+            $data['ageTo'] = $arFilter['at'] ?: $rq->getParam('at');
 
-        $filter = [];
-        $tables = [];
-        
-        $filter[] = "u.ismoder = 1 AND u.isblocked = 0";
-        
         // quick search
         if( !empty($data['qs']) ) {
             // фильтр по фио
@@ -336,12 +334,6 @@ class SearchPromo extends Model
         {
             $filter[] = 'a.id_mech IN ('.join(',',$data['posts']).')';
         }
-        
-        // if( !empty($data['payto']) || !empty($data['payfrom']))
-        // {   
-        //     if(empty($data['type'])) $data['type'] = 0;
-        //     $filter[] = 'a.id_attr = 0 AND a.isshow = 0 AND a.pay > '.$data['payto'].' AND a.pay < '.$data['payfrom'].' AND a.pay_type = '.$data['type'];
-        // }
         
         if( isset($data['salHourF']) ) $filter[] = "a.pay >= {$data['salHourF']}";
         if( isset($data['salHourT']) ) $filter[] = "a.pay <= {$data['salHourT']}";
@@ -371,9 +363,6 @@ class SearchPromo extends Model
             $filter[] = "( 
                 ( YEAR(CURRENT_DATE) - YEAR(r.birthday) ) - ( DATE_FORMAT(CURRENT_DATE, '%m%d') < DATE_FORMAT(r.birthday, '%m%d') )
             ) <= {$data['ageTo']}";
-            //$filter[] = "r.age <= {$data['ageTo']}";
-
-
 
         // medbook
         if( !empty($data['mb']) )
@@ -401,10 +390,12 @@ class SearchPromo extends Model
         {
             $filter[] = ' r.cardPrommu = 1';
         }
+      // self_employed
+      !empty($data['self_employed']) && $filter[]=" (ua.key='self_employed' AND ua.val IS NOT NULL)";
 
-        $filter = count($filter) ? 'WHERE ' . join(' and ', $filter) : '';
+      $filter = count($filter) ? 'WHERE ' . join(' and ', $filter) : '';
 
-        return array('filter' => $filter, 'table' => join(' ', $tables));
+      return array('filter' => $filter, 'table' => join(' ', $tables));
     }
 
 
@@ -592,6 +583,12 @@ class SearchPromo extends Model
         if(isset($data['cardPrommu']))
         {
             $url[] = 'cardprommu';
+            $cnt++;
+        }
+
+        if(isset($data['self_employed']) && $data['self_employed']==1)
+        {
+            $url[] = 'self_employed';
             $cnt++;
         }
         // pages

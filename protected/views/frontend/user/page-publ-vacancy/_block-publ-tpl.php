@@ -181,8 +181,8 @@
     <?
     // Прочее
     ?>
-    <div class="fav__label fav__four-list">
-      <div class="fav__four-item">
+    <div class="fav__label fav__flex-list">
+      <div class="fav__flex-item">
         <input 
         type="checkbox" 
         name="ismed" 
@@ -192,7 +192,7 @@
         <?=$arCopy['ismed'] ? 'checked' : ''?>>
         <label class="fav__label-checkbox" for="av-med-note">Медкнижка</label>    
       </div>
-      <div class="fav__four-item">
+      <div class="fav__flex-item">
         <input 
         type="checkbox" 
         name="isavto" 
@@ -202,7 +202,7 @@
         <?=$arCopy['isavto'] ? 'checked' : ''?>>
         <label class="fav__label-checkbox" for="av-auto">Автомобиль</label>
       </div>
-      <div class="fav__four-item">
+      <div class="fav__flex-item">
         <input
         type="checkbox"
         name="smart"
@@ -212,15 +212,28 @@
         <?=$arCopy['smart'] ? 'checked' : ''?>>
         <label class="fav__label-checkbox" for="av-smart">Смартфон</label>
       </div>
-      <div class="fav__four-item">
+    </div>
+    <div class="fav__label fav__flex-list">
+      <span class="fav__flex-item fav__input-name">Налоговый статус</span>
+      <div class="fav__flex-item">
         <input
-            type="checkbox"
-            name="self_employed"
-            class="fav__input fav__hidden"
-            id="av-self_employed"
-            value="1"
-            <?=$arCopy['self_employed'] ? 'checked' : ''?>>
-        <label class="fav__label-checkbox" for="av-self_employed">Самозанятый</label>
+          type="radio"
+          name="self_employed"
+          class="fav__input fav__hidden"
+          id="tax_status_1"
+          value="0"
+          <?= !$arCopy['self_employed'] ? 'checked' : '' ?>>
+        <label class="fav__label-checkbox" for="tax_status_1">Физическое лицо</label>
+      </div>
+      <div class="fav__flex-item">
+        <input
+          type="radio"
+          name="self_employed"
+          class="fav__input fav__hidden"
+          id="tax_status_2"
+          value="1"
+          <?= $arCopy['self_employed'] ? 'checked' : '' ?>>
+        <label class="fav__label-checkbox" for="tax_status_2">Самозанятый</label>
       </div>
     </div>
     <div class="fav__label">

@@ -382,7 +382,17 @@ class SearchRule extends CBaseUrlRule {
                 );
                 continue;
             }
-            
+
+            if($v == 'self_employed')
+            {
+                $templateUrlParams['others']++;
+                $outData['self_employed'] = array(
+                    'raw' => $v,
+                    'param' => 'self_employed=1'
+                );
+                continue;
+            }
+
             if($v == 'ph')
             {
                 $templateUrlParams['others']++;

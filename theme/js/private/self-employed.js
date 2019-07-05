@@ -1,7 +1,6 @@
 'use strict'
 $(function(){
-    var INNLenth = 12,
-        bSuccess = false;
+    var INNLenth = 12;
     // tabs
     $('.self-employed__tab-title').click(function(){
         let parent = $(this).closest('.self-employed__tab'),
@@ -31,7 +30,8 @@ $(function(){
     $('#form_btn').click(function(){
         if($(this).hasClass('disable'))
         {
-            showFancyPopup('Необходимо отметить все галочки и ввести ИНН');
+            //showFancyPopup('Необходимо отметить все галочки и ввести ИНН');
+            showFancyPopup('Необходимо огласится с условиями и ввести ИНН');
             return false;
         }
 
@@ -98,7 +98,7 @@ $(function(){
             chBox2 = $('[name="oferta"]').is(':checked'),
             chBox3 = $('[name="market_oferta"]').is(':checked');
 
-        if(length==INNLenth && chBox1 && chBox2 && chBox3)
+        if(length==INNLenth && chBox1 /*&& chBox2 && chBox3*/)
         {
             $('#form_btn').removeClass('disable');
         }

@@ -226,9 +226,15 @@
           <span class="ppp__subtitle"><?=Share::getRating($attr['rate'],$attr['rate_neg'])?></span>
         </div>
         <div class="ppp__self-employed">
-        <a href="<?=MainConfig::$VIEW_SELF_EMPLOYED?>" class="prmu-btn prmu-btn_normal">
-          <span><?=($info['self_employed']?'Личный счет':'Стать самозанятым')?></span>
-        </a>
+            <a href="<?=MainConfig::$VIEW_SELF_EMPLOYED?>" class="prmu-btn prmu-btn_normal">
+              <span><?=($info['self_employed']?'Личный счет':'Стать самозанятым')?></span>
+            </a>
+            <? if(!$info['self_employed']): ?>
+                <span class="ppp__self-employed-question prmu-btn prmu-btn_normal"><span>?</span></span>
+            <? endif; ?>
+            <div class="ppp__self-employed-message prmu__popup" id="self_employed_message">
+                <p>Развернутый ответ почему нужен статус "Самозанятого"</p>
+            </div>
         </div>
         <hr class="ppp__line">
         <table class="upp__table">

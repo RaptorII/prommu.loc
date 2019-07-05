@@ -1101,4 +1101,17 @@ a.upp__project-info{ width: 65px }
     float: none;
     cursor: default;
 }
-.ppp__self-employed .prmu-btn{ margin-top: 20px }
+.ppp__self-employed{
+    padding: 20px 0 0;
+    margin: 0 -15px;
+    display: flex;
+    align-items: center;
+}
+.prmu-btn.prmu-btn_normal{ margin: 0 15px 15px; }
+.ppp__self-employed .ppp__self-employed-question{
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+    margin: 0 15px 15px 0;
+}
+#self_employed_message{ display: none }

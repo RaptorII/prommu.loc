@@ -24,7 +24,7 @@
         </label>
         <?
         //
-        ?>
+        /*?>
         <div class="self-employed__tab">
             <div class="self-employed__tab-title"><? echo 'Оферта'; ?></div>
             <div class="self-employed__tab-content"><? echo 'Текст оферты'; ?></div>
@@ -45,12 +45,13 @@
             <span>Я прочитал и даю согласие</span>
             <input type="checkbox" name="market_oferta">
             <span class="self-employed_checkbox"><span></span></span>
-        </label><br>
-        <?
+        </label>
+        <?*/
         //
         ?>
+        <br>
         <label class="self-employed_label self-employed_label-text">
-            <span>ИНН</span>
+            <span>Введите свой ИНН для проверки Вашего статуса</span>
             <input type="text" id="inn_input" name="inn" autocomplete="off">
         </label>
         <?
@@ -58,7 +59,7 @@
         ?>
         <div class="center">
             <div class="self-employed_btn prmu-btn prmu-btn_normal disable" id="form_btn">
-                <span>Начать</span>
+                <span>Начать проверку</span>
             </div>
         </div>
     </form>

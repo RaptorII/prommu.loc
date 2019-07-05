@@ -429,11 +429,28 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                                            value="1" <?= ($viData['vac']['smart'] ? 'checked' : '') ?>>
                                     <label class="erv__label-checkbox" for="rv-smart">Смартфон</label>
                                 </div>
-                                <div class="erv__label-wrap">
-                                    <input type="checkbox" name="self_employed" class="erv__input erv__hidden" id="rv-self_employed"
-                                           value="1" <?= ($viData['vac']['self_employed'] ? 'checked' : '') ?>>
-                                    <label class="erv__label-checkbox" for="rv-self_employed">Самозанятый</label>
-                                </div>
+                            </div>
+                            <div class="erv__label erv__label-flex">
+                              <div class="erv__label-wrap">
+                                <input
+                                    type="radio"
+                                    name="self_employed"
+                                    class="erv__input erv__hidden"
+                                    id="tax_status_1"
+                                    value="0"
+                                    <?= !$viData['vac']['self_employed'] ? 'checked' : '' ?>>
+                                <label class="erv__label-checkbox" for="tax_status_1">Физическое лицо</label>
+                              </div>
+                              <div class="erv__label-wrap">
+                                <input
+                                  type="radio"
+                                  name="self_employed"
+                                  class="erv__input erv__hidden"
+                                  id="tax_status_2"
+                                  value="1"
+                                  <?= $viData['vac']['self_employed'] ? 'checked' : '' ?>>
+                                <label class="erv__label-checkbox" for="tax_status_2">Самозанятый</label>
+                              </div>
                             </div>
                             <?
                             //  Характеристики

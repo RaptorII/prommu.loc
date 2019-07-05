@@ -287,6 +287,30 @@ foreach ($viData['posts'] as $p)
                         </div>
                     </div>
                 </div>
+                <div class='psa__filter-block filter-card'>
+                    <div class='psa__filter-name opened'>Налоговый статус</div>
+                    <div class='psa__filter-content opened'>
+                        <div class='right-box'>
+                            <? $self_employed = Yii::app()->getRequest()->getParam('self_employed'); ?>
+                            <input
+                                id='tax_status_1'
+                                name='self_employed'
+                                value='0'
+                                type='radio'
+                                class="psa__checkbox-input"
+                                <?=(!$self_employed ? 'checked' : '')?>>
+                            <label class='psa__checkbox-label' for="tax_status_1">Физическое лицо</label>
+                            <input
+                                id='tax_status_2'
+                                name='self_employed'
+                                value='1'
+                                type='radio'
+                                class="psa__checkbox-input"
+                                <?=($self_employed ? 'checked' : '')?>>
+                            <label class='psa__checkbox-label' for="tax_status_2">Самозанятый</label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
