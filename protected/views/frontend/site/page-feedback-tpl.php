@@ -109,9 +109,3 @@
 
     </script>
 <?php endif; ?>
-
-<pre>
-    <?php print_r($viData);?>
-</pre>
-
-<?// die; ?>

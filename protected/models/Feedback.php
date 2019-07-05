@@ -139,64 +139,64 @@ class Feedback extends Model
      */
     public function saveData()
     {
-			$autotype = filter_var(Yii::app()->getRequest()->getParam('autotype'), FILTER_SANITIZE_NUMBER_INT);
-			$app = filter_var(Yii::app()->getRequest()->getParam('app'), FILTER_SANITIZE_NUMBER_INT);
-			$type = filter_var(Yii::app()->getRequest()->getParam('type', 0), FILTER_SANITIZE_NUMBER_INT);
-			$name = filter_var(Yii::app()->getRequest()->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$theme = filter_var(Yii::app()->getRequest()->getParam('theme'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$emails = filter_var(Yii::app()->getRequest()->getParam('email'), FILTER_SANITIZE_EMAIL);
-			$text = filter_var(Yii::app()->getRequest()->getParam('text'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$referer = filter_var(Yii::app()->getRequest()->getParam('referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$transition = filter_var(Yii::app()->getRequest()->getParam('transition'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$canal = filter_var(Yii::app()->getRequest()->getParam('canal'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$campaign = filter_var(Yii::app()->getRequest()->getParam('campaign'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$content = filter_var(Yii::app()->getRequest()->getParam('content'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$keywords = filter_var(Yii::app()->getRequest()->getParam('keywords'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$point = filter_var(Yii::app()->getRequest()->getParam('point'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$last_referer = filter_var(Yii::app()->getRequest()->getParam('last_referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$direct = filter_var(Yii::app()->getRequest()->getParam('direct'), FILTER_SANITIZE_NUMBER_INT);
-			$text = substr($text, 0, 5000);
-			$roistat = (isset($_COOKIE['roistat_visit'])) ? $_COOKIE['roistat_visit'] : "(none)";
+        $autotype = filter_var(Yii::app()->getRequest()->getParam('autotype'), FILTER_SANITIZE_NUMBER_INT);
+        $app = filter_var(Yii::app()->getRequest()->getParam('app'), FILTER_SANITIZE_NUMBER_INT);
+        $type = filter_var(Yii::app()->getRequest()->getParam('type', 0), FILTER_SANITIZE_NUMBER_INT);
+        $name = filter_var(Yii::app()->getRequest()->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $theme = filter_var(Yii::app()->getRequest()->getParam('theme'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $emails = filter_var(Yii::app()->getRequest()->getParam('email'), FILTER_SANITIZE_EMAIL);
+        $text = filter_var(Yii::app()->getRequest()->getParam('text'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $referer = filter_var(Yii::app()->getRequest()->getParam('referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $transition = filter_var(Yii::app()->getRequest()->getParam('transition'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $canal = filter_var(Yii::app()->getRequest()->getParam('canal'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $campaign = filter_var(Yii::app()->getRequest()->getParam('campaign'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $content = filter_var(Yii::app()->getRequest()->getParam('content'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $keywords = filter_var(Yii::app()->getRequest()->getParam('keywords'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $point = filter_var(Yii::app()->getRequest()->getParam('point'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $last_referer = filter_var(Yii::app()->getRequest()->getParam('last_referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $direct = filter_var(Yii::app()->getRequest()->getParam('direct'), FILTER_SANITIZE_NUMBER_INT);
+        $text = substr($text, 0, 5000);
+        $roistat = (isset($_COOKIE['roistat_visit'])) ? $_COOKIE['roistat_visit'] : "(none)";
 
-			/** $fdbk - feedback to exist talk
-             *  from view page-feebback-tpl.php
-             *  @return integer
-             */
-            $fdbk = filter_var(Yii::app()->getRequest()->getParam('feedback'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        /** $fdbk - feedback to exist talk
+         *  from view page-feebback-tpl.php
+         *  @integer
+         */
+        $fdbk = filter_var(Yii::app()->getRequest()->getParam('feedback'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-			$arErrors = false;
-			if(empty($id) && $app == 0) { // CAPTCHA
-				$recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
-				if(!empty($recaptcha))
-				{
-					$google_url="https://www.google.com/recaptcha/api/siteverify";
-					$secret='6Lf2oE0UAAAAAPkKWuPxJl0cuH7tOM2OoVW5k6yH';
-					$ip=$_SERVER['REMOTE_ADDR'];
-					$url=$google_url."?secret=".$secret."&response=".$recaptcha."&remoteip=".$ip;
-					//
-					$curl = curl_init();
-					curl_setopt($curl, CURLOPT_URL, $url);
-					curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-					curl_setopt($curl, CURLOPT_TIMEOUT, 10);
-					curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.16) Gecko/20110319 Firefox/3.6.16");
-					$res = curl_exec($curl);
-					curl_close($curl);
-					//
-					$res = json_decode($res, true);//reCaptcha введена
-					if(!$res['success']) // wrong captcha
-					{
-					  $arErrors = array('ERROR'=>'captcha','MESSAGE'=>'Вы допустили ошибку при прохождении проверки "Я не робот"');
-					}
-				}
-				else
-				{
-					$arErrors = array('ERROR'=>'captcha','MESSAGE'=>'Необходимо пройти проверку "Я не робот"');
-				}        	
+        $arErrors = false;
+        if(empty($id) && $app == 0) { // CAPTCHA
+            $recaptcha = Yii::app()->getRequest()->getParam('g-recaptcha-response');
+            if(!empty($recaptcha))
+            {
+                $google_url="https://www.google.com/recaptcha/api/siteverify";
+                $secret='6Lf2oE0UAAAAAPkKWuPxJl0cuH7tOM2OoVW5k6yH';
+                $ip=$_SERVER['REMOTE_ADDR'];
+                $url=$google_url."?secret=".$secret."&response=".$recaptcha."&remoteip=".$ip;
+                //
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_URL, $url);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+                curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.16) Gecko/20110319 Firefox/3.6.16");
+                $res = curl_exec($curl);
+                curl_close($curl);
+                //
+                $res = json_decode($res, true);//reCaptcha введена
+                if(!$res['success']) // wrong captcha
+                {
+                  $arErrors = array('ERROR'=>'captcha','MESSAGE'=>'Вы допустили ошибку при прохождении проверки "Я не робот"');
+                }
             }
+            else
+            {
+                $arErrors = array('ERROR'=>'captcha','MESSAGE'=>'Необходимо пройти проверку "Я не робот"');
+            }
+        }
 
-      if(!$arErrors)
-      {
+        if(!$arErrors)
+        {
             $arFeedback = array(
                 'type'   => $autotype,
                 'name'   => $name,
@@ -218,95 +218,43 @@ class Feedback extends Model
                 'campaign' => $campaign,
                 'transition' => $transition,
             );
-//        echo('<pre>');
-//            print_r($arFeedback);
-//            print_r($arFeedbackNew);
-//
-//            echo ($autotype .'<br>');
-//            echo ($app .'<br>');
-//            echo ($type .'<br>');
-//            echo ($name .'<br>');
-//            echo ($theme .'<br>');
-//            echo ($emails .'<br>');
-//            echo ($text .'<br>');
-//            echo ($referer .'<br>');
-//            echo ($canal .'<br>');
-//            echo ($campaign .'<br>');
-//            echo ($content .'<br>');
-//            echo ($id .'<br>');
-//            echo ($keywords .'<br>');
-//            echo ($point .'<br>');
-//            echo ($last_referer .'<br>');
-//            echo ($direct .'<br>');
-//            echo ($text .'<br>');
-//            echo ($roistat .'<br>');
-//            echo ($fdbk .'<br>');
-//
-//        echo('<pre>');
-//          die('1');
 
-
-        $Im = ($autotype==2 ? (new ImEmpl()) : (new ImApplic()));
-
-        if(in_array($autotype, [2,3])&&($fdbk==0))
-      	{ // только зареганым
-            //тут раздуплить логику
-
-            $arChat = array(
-                'message' => "Добрый день, $name. Ваш вопрос '$text' на рассмотрении",
-                'new' => $id,
-                'idus' => ($autotype == 2 ? 1766 : 2054),
-                'idTm' => $theme,
-                'theme' => $theme,
-                'original' => $text
-            );
-
-            // не обращался
-            $arFeedback = array_merge($arFeedback, $arFeedbackNew);
-            $idTheme = $Im->sendUserMessages($arChat)['idtm'];
-            $arFeedback['chat'] = $idTheme;
-            $res = Yii::app()->db->createCommand()
-                ->insert('feedback', $arFeedback);
-
-        }
-        elseif (in_array($autotype, [2,3])&&($fdbk>0)) {
-            //сюда полученные данные повторного фидбека
-            $feedback = Yii::app()->db->createCommand()
-                ->select('id, chat, theme')
-                ->from('feedback f')
-                ->where('pid=:id AND chat>0',array(':id'=>$id))
-                ->queryRow();
-
-            $thm = $feedback['theme'];
+            $Im = ($autotype==2 ? (new ImEmpl()) : (new ImApplic()));
 
             $arChat = array(
                 'message' => "Добрый день, $name. Ваш вопрос '$text' на рассмотрении",
                 'new' => $id,
                 'idus' => ($autotype==2 ? 1766 : 2054),
                 'idTm' => $theme,
-                'theme' => $thm,
+                'theme' => $theme,
                 'original' => $text
             );
 
-//            echo('<pre>');
-//                print_r($feedback);
-//            echo('</pre>');
-//            die('2');
-
-            //if(intval($feedback['chat'])>0) {
-                // если зареганый юзер уже общался с админом
-                // надо узнать тематику по ИД $fdbk
-                // ещё узнать направление из базы по тематике
+            if(in_array($autotype, [2,3])&&($fdbk==0)) // только зареганым // не обращался
+            {
+                $arFeedback = array_merge($arFeedback, $arFeedbackNew);
+                $idTheme = $Im->sendUserMessages($arChat)['idtm'];
+                $arFeedback['chat'] = $idTheme;
+                $res = Yii::app()->db->createCommand()
+                    ->insert('feedback', $arFeedback);
+            }
+            elseif (in_array($autotype, [2,3])&&($fdbk>0)) { // если зареганый юзер уже общался с админом
+                $feedback = Yii::app()->db->createCommand()
+                    ->select('id, chat, theme')
+                    ->from('feedback f')
+                    ->where('pid=:id AND id=:fbdk AND chat>0',
+                        [
+                         ':id'  => $id,
+                         ':fbdk'=> $fdbk
+                        ]
+                    )
+                    ->queryRow();
 
                 $arChat['new'] = 0;
                 $arChat['idTm'] = $feedback['chat'];
+                $arChat['theme'] = $feedback['theme'];
                 $arFeedback['chat'] = $feedback['chat'];
-
-//                Yii::app()->db->createCommand()->update(
-//                    'chat_theme',
-//                    ['title'=>$thm],
-//                    'id='.$fdbk
-//                );
+                $arFeedback['theme'] = $feedback['theme'];
 
                 $res = Yii::app()->db->createCommand()->update(
                     'feedback',
@@ -315,19 +263,18 @@ class Feedback extends Model
                 );
 
                 $Im->sendUserMessages($arChat);
-            //}
-        }
-        else
-        { // ветка для гостей
-					$arFeedback = array_merge($arFeedback, $arFeedbackNew);
-          $res = Yii::app()->db->createCommand()
-									->insert('feedback', $arFeedback);
-					$idFeedback = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
-					$mess = '"' . $text . '"';
-					$texs = "Пользователь $name оставил обращение по обратной связи: $mess. Необходима модерация https://prommu.com/admin/site/mail/$idFeedback";
-					$sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=$texs";
-					file_get_contents($sendto);
-        }
+            }
+            else
+            { // ветка для гостей
+                        $arFeedback = array_merge($arFeedback, $arFeedbackNew);
+              $res = Yii::app()->db->createCommand()
+                                        ->insert('feedback', $arFeedback);
+                        $idFeedback = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
+                        $mess = '"' . $text . '"';
+                        $texs = "Пользователь $name оставил обращение по обратной связи: $mess. Необходима модерация https://prommu.com/admin/site/mail/$idFeedback";
+                        $sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=$texs";
+                        file_get_contents($sendto);
+            }
 
         $name = trim($name);
         empty($name) && $name = 'пользователь';
@@ -382,7 +329,7 @@ class Feedback extends Model
         $criteria->compare('text',$this->text,true);
         $criteria->compare('crdate',$this->crdate,true);
         $criteria->compare('pid',$this->pid);
-         $criteria->compare('chat',$this->chat);
+        $criteria->compare('chat',$this->chat);
         $criteria->compare('is_smotr',$this->is_smotr);
         $criteria->compare('date_smotr',$this->date_smotr,true);
 
