@@ -1760,6 +1760,7 @@ class UserController extends AppController
                     $data = $model->getFeedbackChats();
                     $feedback = new Feedback;
                     $data['directs'] = $feedback->getDirects();
+                    $data['statuses'] = $feedback->getStatus();
                 }
 
                 break;

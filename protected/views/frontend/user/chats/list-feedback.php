@@ -36,9 +36,15 @@
                             </span>
                     </span>
                     <span class="chat__item-info">
-                        <span class="chat__info-item"><span>Всего сообщений:</span><div><?=$item['cnt-mess']?></div></span>
-                        <span class="chat__info-item"><span>Не прочитано:</span><div><?=$item['cnt-noread']?></div></span>
-                        <span class="chat__info-item"><span>Направление:</span><div><?=$viData['directs'][$item['direct']]['name']?></div></span>
+                        <span class="chat__info-item"><span>Всего сообщений:</span><span><?=$item['cnt-mess']?></span></span>
+                        <span class="chat__info-item"><span>Не прочитано:</span><span><?=$item['cnt-noread']?></span></span>
+                        <span class="chat__info-item"><span>Направление:</span><span><?=$viData['directs'][$item['direct']]['name']?></span></span>
+                        <span class="chat__info-item">
+                            <span>Статус:</span>
+                            <span>
+                                <?=$viData['statuses'][$item['id']]['status']?>
+                            </span>
+                        </span>
                     </span>
                 </a>
             <? endforeach ?>
@@ -61,3 +67,11 @@
 		</div>
 	<? endif; ?>
 </div>
+
+<?php
+
+echo '<pre>';
+    print_r($viData);
+echo '</pre>';
+
+?>

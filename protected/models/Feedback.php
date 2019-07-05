@@ -113,8 +113,8 @@ class Feedback extends Model
 					'text' => filter_var(
 						Yii::app()->getRequest()->getParam('text'), 
 						FILTER_SANITIZE_FULL_SPECIAL_CHARS
-					)
-				);
+					),
+            );
 
 			$arRes['directs'] = $this->getDirects();
 
@@ -126,7 +126,7 @@ class Feedback extends Model
     }
 
     public function setFeedback($cloud){
-   
+
         Yii::app()->db->createCommand()
             ->update('feedback', array(
                 'chat' => $cloud['chat'],
@@ -444,4 +444,17 @@ class Feedback extends Model
 
 		return $arRes;
 	}
+
+    /**
+     * @return mixed
+     */
+    public function getStatus() {
+        $sql = Yii::app()->db->createCommand()
+            ->select('chat, status')
+            ->from('feedback')
+            ->queryAll();
+        foreach ($sql as $item)
+            $status[$item['chat']] = $item;
+        return $status;
+    }
 }
