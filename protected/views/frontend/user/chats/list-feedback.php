@@ -2,6 +2,8 @@
 	$bUrl = Yii::app()->baseUrl . '/theme/';
 	Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/chats/list-section.css');
 	Yii::app()->getClientScript()->registerScriptFile($bUrl.'js/chats/list.js', CClientScript::POS_END);
+
+    $status = ["новый","просмотрен", "отменен", "обработка", "не хватает данных", "выполнен"];
 ?>
 <div class="chat-list feedback">
 	<a href="<?=MainConfig::$PAGE_CHATS_LIST?>" class="chat-list__btn-link"><span><</span> Назад</a>
@@ -18,12 +20,6 @@
 			<? endif; ?>
 		</h2>
         <div class="chat-list__wrap">
-            <?php
-//                echo '<pre>';
-//                    print_r($viData['items']);
-//                echo '<pre>';
-                //die();
-            ?>
             <? foreach ($viData['items'] as $id => $item): ?>
                 <a href="<?=MainConfig::$PAGE_CHATS_LIST_FEEDBACK . DS . $id?>" class="chat__item">
                     <span class="chat__item-user">
@@ -42,7 +38,7 @@
                         <span class="chat__info-item">
                             <span>Статус:</span>
                             <span>
-                                <?=$viData['statuses'][$item['id']]['status']?>
+                                <?=$status[$viData['statuses'][$item['id']]['status']]?>
                             </span>
                         </span>
                     </span>
@@ -69,9 +65,9 @@
 </div>
 
 <?php
-
-echo '<pre>';
-    print_r($viData);
-echo '</pre>';
-
-?>
+//
+//echo '<pre>';
+//    print_r($viData);
+//echo '</pre>';
+//
+//?>
