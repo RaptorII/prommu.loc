@@ -5,39 +5,39 @@
 <div class="chat__all">
     <h1>Сообщения</h1>
     <a href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES?>" class="chat__item">
-        <div class="chat__item-name">Сообщения по вакансиям</div>
-        <div class="chat__item-info">
-            <div class="chat__info-col">
-                <div class="chat__info-header">Кол-во участников</div>
-                <div class="chat__info-descr"><?=$viData['vacancies']['cnt-users']?></div>
-            </div>
-            <div class="chat__info-col">
-                <div class="chat__info-header">Сообщений</div>
-                <div class="chat__info-descr"><?=$viData['vacancies']['cnt-mess']?></div>
-            </div>
+        <span class="chat__item-name">Сообщения по вакансиям</span>
+        <span class="chat__item-info">
+            <span class="chat__info-col">
+                <span class="chat__info-header">Кол-во участников</span>
+                <span class="chat__info-descr"><?=$viData['vacancies']['cnt-users']?></span>
+            </span>
+            <span class="chat__info-col">
+                <span class="chat__info-header">Сообщений</span>
+                <span class="chat__info-descr"><?=$viData['vacancies']['cnt-mess']?></span>
+            </span>
             <? if($viData['vacancies']['cnt-noread']>0): ?>
-                <div class="chat__info-col">
-                    <div class="chat__info-header">Не прочитанные</div>
-                    <div class="chat__info-descr chat__info-noread"><?=$viData['vacancies']['cnt-noread']?></div>
-                </div>
+                <span class="chat__info-col">
+                    <span class="chat__info-header">Не прочитанные</span>
+                    <span class="chat__info-descr chat__info-noread"><?=$viData['vacancies']['cnt-noread']?></span>
+                </span>
             <? endif; ?>
-        </div>
+        </span>
     </a>
 
     <a href="<?=MainConfig::$PAGE_CHATS_LIST_FEEDBACK?>" class="chat__item">
-        <div class="chat__item-name">Обратная связь</div>
-        <div class="chat__item-info">
-            <div class="chat__info-col"></div>
-            <div class="chat__info-col">
-                <div class="chat__info-header">Сообщений</div>
-                <div class="chat__info-descr"><?=$viData['feedback']['cnt-mess']?></div>
-            </div>
+        <span class="chat__item-name">Обратная связь</span>
+        <span class="chat__item-info">
+            <span class="chat__info-col"></span>
+            <span class="chat__info-col">
+                <span class="chat__info-header">Сообщений</span>
+                <span class="chat__info-descr"><?=$viData['feedback']['cnt-mess']?></span>
+            </span>
             <? if($viData['feedback']['cnt-noread']>0): ?>
-                <div class="chat__info-col">
-                    <div class="chat__info-header">Не прочитанные</div>
-                    <div class="chat__info-descr chat__info-noread"><?=$viData['feedback']['cnt-noread']?></div>
-                </div>
+                <span class="chat__info-col">
+                    <span class="chat__info-header">Не прочитанные</span>
+                    <span class="chat__info-descr chat__info-noread"><?=$viData['feedback']['cnt-noread']?></span>
+                </span>
             <? endif; ?>
-        </div>
+        </span>
     </a>
 </div>

@@ -24,6 +24,15 @@
             <div class="col-xs-12">
                 <div class="header-user-info">
                     <!--                    -->
+                    <?php $link = MainConfig::$PAGE_CHATS_LIST ?>
+                    <a href="<?=$link?>" class="small-menu__item notice<?=(strpos($curUrl,$link)!==false ? ' current' : '')?>" id="sm-notice-cnt">
+                                                <span class="small-menu__circle">
+                                                    <b class="small-menu__cnt">0</b>
+                                                    <i></i>
+                                                </span>
+                        <span class="small-menu__name">СООБЩЕНИЯ</span>
+                    </a>
+                    <!--                    -->
                     <div class="small-menu__profile">
                         <?php $user = Yii::app()->session['au_us_data']; ?>
                         <a class="small-menu__username" href="<?=MainConfig::$PAGE_PROFILE?>" data-id="<?=$user->id?>">

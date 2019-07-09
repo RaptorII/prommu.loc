@@ -1,3 +1,7 @@
+.chat__all {
+	overflow-x: scroll;
+}
+
 .chat__all h1{
 	margin: 30px 0 50px;
 	text-align: center;
@@ -10,7 +14,7 @@
 	font-size: 12px;
 	box-sizing: content-box;
 	overflow: hidden;
-	display: flex;
+	display: inline-flex;
 }
 
 .chat__all .chat__item-info{
