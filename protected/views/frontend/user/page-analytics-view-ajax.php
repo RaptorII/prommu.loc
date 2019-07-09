@@ -47,35 +47,35 @@
 				<div class="pa-service__list">
 					<div class="pa-service__item">
 						<span class="pa-service__item-name premium">Премиум-вакансии</span>
-						<span class="pa-service__item-cnt"><span>Количество использований: </span><b><?=$viData['services']['vacancy']?></b></span>
+						<span class="pa-service__item-cnt"><b><?=$viData['services']['vacancy']?></b></span>
 					</div>
 					<div class="pa-service__item">
 						<span class="pa-service__item-name email">Электронная почта</span>
-						<span class="pa-service__item-cnt"><span>Количество использований: </span><b><?=$viData['services']['email']?></b></span>
+						<span class="pa-service__item-cnt"><b><?=$viData['services']['email']?></b></span>
 					</div>
 					<div class="pa-service__item">
 						<span class="pa-service__item-name push">PUSH уведомления</span>
-						<span class="pa-service__item-cnt"><span>Количество использований: </span><b><?=$viData['services']['push']?></b></span>
+						<span class="pa-service__item-cnt"><b><?=$viData['services']['push']?></b></span>
 					</div>
 					<div class="pa-service__item">
 						<span class="pa-service__item-name sms">SMS информирование</span>
-						<span class="pa-service__item-cnt"><span>Количество использований: </span><b><?=$viData['services']['sms']?></b></span>
+						<span class="pa-service__item-cnt"><b><?=$viData['services']['sms']?></b></span>
 					</div>
 					<div class="pa-service__item">
 						<span class="pa-service__item-name outsource">Личный менеджер и аутсорсинг персонала</span>
-						<span class="pa-service__item-cnt"><span>Количество использований: </span><b><?=$viData['services']['outsourcing'] ?></b></span>
+						<span class="pa-service__item-cnt"><b><?=$viData['services']['outsourcing'] ?></b></span>
 					</div>
 					<div class="pa-service__item">
 						<span class="pa-service__item-name oustaff">Аутстаффинг персонала</span>
-						<span class="pa-service__item-cnt"><span>Количество использований: </span><b><?=$viData['services']['outstaffing']?></b></span>
+						<span class="pa-service__item-cnt"><b><?=$viData['services']['outstaffing']?></b></span>
 					</div>
 					<div class="pa-service__item">
 						<span class="pa-service__item-name share">Группы социальных сетей PROMMU</span>
-						<span class="pa-service__item-cnt"><span>Количество использований: </span><b><?=$viData['services']['repost']?></b></span>
+						<span class="pa-service__item-cnt"><b><?=$viData['services']['repost']?></b></span>
 					</div>
 					<div class="pa-service__item">
 						<span class="pa-service__item-name api">Получение API ключа</span>
-						<span class="pa-service__item-cnt"><span>Количество использований: </span><b><?=$viData['services']['api']?></b></span>
+						<span class="pa-service__item-cnt"><b><?=$viData['services']['api']?></b></span>
 					</div>
 				</div>
 			</div>

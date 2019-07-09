@@ -55,7 +55,7 @@
             <span class="rev-lock__signature">С наилучшими пожеланиями, команда Промму</span>
           <?php endif; ?> 
         </div>
-      </div>
+      </di v>
     <?php 
     /*
     *

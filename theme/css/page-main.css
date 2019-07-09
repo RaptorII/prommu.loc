@@ -223,7 +223,7 @@
 .articles-news,
 .how-block__item .vacancy>br{display:none;}
 #DiContent#DiContent{padding:0 12px;}
-#DiContent .container{padding:0 15px;max-width:inherit;}
+#DiContent .container{padding:0 15px;max-width:450px;}
 #DiContent .header.h-indent.first h2{padding:0 0 45px;margin:0 18px 40px;border-bottom:1px solid #d7d7d7;}
 #DiContent .header.h-indent span{padding:0px;}
 #DiContent .how-block__title{margin:0 0 40px;}

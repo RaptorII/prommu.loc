@@ -132,7 +132,6 @@ var ServicesList = (function () {
 }());
 
 $(function(){
-    new ServicesList();
 
     //fixed menu in personal account
     var posAccMenu = $('.personal-acc__menu').offset().top - 100;

@@ -417,3 +417,11 @@
     top: 14px;
     left: 17px;
 }
+
+@media(max-width:450px){
+    #DiContent.page-ankety .row {
+        position: relative;
+        max-width: 320px;
+        margin: 0 auto;
+    }
+}
