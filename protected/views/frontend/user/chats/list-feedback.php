@@ -3,7 +3,7 @@
 	Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/chats/list-section.css');
 	Yii::app()->getClientScript()->registerScriptFile($bUrl.'js/chats/list.js', CClientScript::POS_END);
 
-    $status = ["новый","просмотрен", "отменен", "обработка", "не хватает данных", "выполнен"];
+    $status = ['обработка','дубль','передан в отдел','ожидание ответа','спам','решено'];
 ?>
 <div class="chat-list feedback">
 	<a href="<?=MainConfig::$PAGE_CHATS_LIST?>" class="chat-list__btn-link"><span><</span> Назад</a>
