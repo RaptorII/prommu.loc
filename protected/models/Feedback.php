@@ -221,17 +221,17 @@ class Feedback extends Model
 
             $Im = ($autotype==2 ? (new ImEmpl()) : (new ImApplic()));
 
-            $arChat = array(
-                'message' => "Добрый день, $name. Ваш вопрос '$text' на рассмотрении",
-                'new' => $id,
-                'idus' => ($autotype==2 ? 1766 : 2054),
-                'idTm' => $theme,
-                'theme' => $theme,
-                'original' => $text
-            );
+            if(in_array($autotype, [2,3])&&($fdbk==0)) { // только зареганым // не обращался
 
-            if(in_array($autotype, [2,3])&&($fdbk==0)) // только зареганым // не обращался
-            {
+                $arChat = array(
+                    'message' => "Добрый день, $name. Ваш вопрос '$text' на рассмотрении",
+                    'new' => $id,
+                    'idus' => ($autotype==2 ? 1766 : 2054),
+                    'idTm' => $theme,
+                    'theme' => $theme,
+                    'original' => $text
+                );
+
                 $arFeedback = array_merge($arFeedback, $arFeedbackNew);
                 $idTheme = $Im->sendUserMessages($arChat)['idtm'];
                 $arFeedback['chat'] = $idTheme;
@@ -239,6 +239,16 @@ class Feedback extends Model
                     ->insert('feedback', $arFeedback);
             }
             elseif (in_array($autotype, [2,3])&&($fdbk>0)) { // если зареганый юзер уже общался с админом
+
+                $arChat = array(
+                    'message' => $text,
+                    'new' => $id,
+                    'idus' => ($autotype==2 ? 1766 : 2054),
+                    'idTm' => $theme,
+                    'theme' => $theme,
+                    'original' => $text
+                );
+
                 $feedback = Yii::app()->db->createCommand()
                     ->select('id, chat, theme')
                     ->from('feedback f')
@@ -262,7 +272,12 @@ class Feedback extends Model
                     'id='.$fdbk
                 );
 
-                $Im->sendUserMessages($arChat);
+                if ($autotype==2) {
+                    $is_resp = 0;
+                } else {
+                    $is_resp = 1;
+                }
+                $Im->sendUserMessages($arChat, $is_resp);
             }
             else
             { // ветка для гостей

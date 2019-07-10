@@ -150,7 +150,7 @@ class ImEmpl extends Im
     /**
      * Отправляем сообщение пользователя
      */
-    public function sendUserMessages($inProps = [])
+    public function sendUserMessages($inProps = [], $is_resp)
     {
         $message = $inProps['message'] ?: filter_var(Yii::app()->getRequest()->getParam('m', 0), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         //id чата
@@ -251,7 +251,7 @@ class ImEmpl extends Im
                         'id_use' =>  $id ?: Share::$UserProfile->id,
                         'id_usp' => $ids['idusp'] ?: $idusp,
                         'message' => $message,
-                        'is_resp' => 1,
+                        'is_resp' => $is_resp,
                         'is_read' => 0,
                         'files' => $themeFiles,
                         'crdate' => date("Y-m-d H:i:s"),
