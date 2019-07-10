@@ -244,7 +244,7 @@ class ImApplic extends Im
                 $mess = '"' . (isset($inProps['original']) ? $inProps['original'] : strip_tags($message)) . '"';
                 $text = "Зарегистрированный пользователь обратился по обратной связи: $mess. Необходима модерация https://prommu.com/admin/site/update/$idTm";
                 $sendto = "https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=$text";
-                //file_get_contents($sendto);
+                file_get_contents($sendto);
             }
 
             return array_merge($this->getNewMessData($idTm, $lastMessId), array('theme' => $theme, 'idtm' => $idTm));
