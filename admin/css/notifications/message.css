@@ -1,0 +1,88 @@
+#notification-form hr{
+  margin: 5px 0;
+  border-color: #d2d6de;
+}
+#receivers_list{
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 2;
+  background-color: #ffffff;
+  border: 1px solid #d2d6de;
+  border-top: none;
+}
+#receivers_list .item,
+#receivers_result .item{
+  width: calc(50% - 10px);
+  display: table;
+  margin: 5px;
+  padding: 5px;
+  background-color: #ecf0f5;
+  border-radius: 10px;
+  float: left;
+}
+#receivers_result .item{
+  border: 1px solid #d2d6de;
+  position: relative;
+}
+#receivers_list img,
+#receivers_result img{
+  width: 70px;
+  height: 70px;
+  display: table-cell;
+  border-radius: 50%;
+}
+#receivers_list img,
+#receivers_list b{ cursor: pointer; }
+#receivers_list .info,
+#receivers_result .info{
+  width: 80%;
+  display: table-cell;
+  vertical-align: middle;
+  padding: 0 10px;
+}
+#receivers_list .links,
+#receivers_result .links{
+  width: 10%;
+  display: table-cell;
+  vertical-align: middle;
+}
+#receivers_list .links a,
+#receivers_result .links a{
+  font-size: 18px;
+  margin: 5px 0;
+}
+#receivers_result i{
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-style: normal;
+  color: #ffffff;
+  background-color: red;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  border-radius: 50%;
+  cursor: pointer;
+}
+#receivers_load{ position: relative; }
+#receivers_load.load:after{
+  content: '';
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 27px;
+  right: 3px;
+  background: url(/theme/pic/vacancy/loading.gif) no-repeat;
+  background-size: contain;
+}
+#receivers_result .readed{ color:red }
+#receivers_result .readed.success{ color:#abb820 }
+@media(max-width: 767px)
+{
+	#receivers_list .item, #receivers_result .item{ width: calc(100% - 10px); }
+}

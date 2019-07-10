@@ -1,6 +1,9 @@
 <?php
-
-error_reporting(E_ALL ^ E_NOTICE);
+/*
+define('YII_ENABLE_ERROR_HANDLER', false);
+define('YII_ENABLE_EXCEPTION_HANDLER', false);
+error_reporting(E_ALL);
+*/
 define('DS', '/');
 // путь до фреймворка и нужного нам конфига
 //$yii = dirname(__FILE__).'/framework/yii.php';

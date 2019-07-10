@@ -31,7 +31,7 @@ class Mailing extends CActiveRecord
 		$sort = (get_class($this)=='Mailing' ? 'id' : 'mdate') . ' desc';
 		$criteria = new CDbCriteria;
 		return new CActiveDataProvider(
-				get_class($this), 
+				get_class($this),
 				array(
 					'criteria' => $criteria,
 					'pagination' => ['pageSize' => $this->limit],
@@ -291,11 +291,12 @@ class Mailing extends CActiveRecord
 	}
 	/**
 	 * @param $event - number ID
-	 * @param $arParams - array()
-	 * @param $usertype - number (2,3,0=default)
+	 * @param $arParams - array() параметры, которые подставляются в тело письма в соответствии с полем params
+   * @param $usertype - number (2,3,0=default) надо если в массиве параметров значение зависит от типа пользователя
+   * @param $arEmails - array() если указывать почту в этом параметре, то поле receiver с БД не используется
 	 * Распарсиваем ВСЕ строки и выполняем подмену констант с постановкой сформированного письма в очередь в активном шаблоне
 	 */
-  public static function set($event, $arParams, $usertype=0)
+  public static function set($event, $arParams, $usertype=0, $arEmails=[])
   {
 		$arPatterns = array();
 		$arRes = self::getCacheData();
@@ -347,9 +348,16 @@ class Mailing extends CActiveRecord
 				}
 			}
 
-			// меняем константы в получателях
-			$receivers = preg_replace($arPatterns, $arValues, $objEvent->receiver);
-			$arReceivers = explode(",", $receivers);
+			if(!count($arEmails))
+      {
+        // меняем константы в получателях
+        $receivers = preg_replace($arPatterns, $arValues, $objEvent->receiver);
+        $arReceivers = explode(",", $receivers);
+      }
+      else
+      {
+        $arReceivers = $arEmails;
+      }
 			// меняем константы в заголовке
 			$title = preg_replace($arPatterns, $arValues, $objEvent->title);
 			// меняем константы в теле письма

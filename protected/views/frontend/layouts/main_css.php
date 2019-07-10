@@ -135,5 +135,204 @@
     background: white;
     padding: 5px;
 }
-
+/* admin notifications */
+@media (min-width: 768px){
+  .admin_notifications_veil{
+    opacity: .87;
+    background: #1e1e1e;
+    transition-duration: inherit;
+    transition-property: opacity;
+    transition-timing-function: cubic-bezier(.22,.61,.36,1);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 100;
+  }
+  .admin_notifications{
+    bottom:40px;
+    right:0px;
+    position:fixed;
+    z-index: 101;
+    cursor: pointer;
+    display: none;
+  }
+  .admin_notifications_list{
+    width: 100%;
+    max-width: 260px;
+    position: fixed;
+    bottom: 170px;
+    right: 30px;
+    padding: 15px 15px 0;
+    z-index: 102;
+    background-color: #abb820;
+    color: #ffffff;
+    border-radius: 10px;
+  }
+  .admin_notifications_list:after{
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: -30px;
+    right: 55px;
+    width: 0;
+    height: 0;
+    border-left: 30px solid transparent;
+    border-right: 0px solid transparent;
+    border-top: 30px solid #abb820;
+  }
+  .admin_notifications_list .item{
+    display: inline-block;
+    cursor: pointer;
+    word-break: break-word;
+    padding-bottom: 15px;
+  }
+  .admin_notifications_list .item:hover{ color: #f68000; }
+  .admin_notifications .img-circle{
+    background-color: #abb820;
+    box-sizing:content-box;
+    -webkit-box-sizing:content-box;
+  }
+  .admin_notifications .circlephone{
+    box-sizing:content-box;
+    -webkit-box-sizing:content-box;
+    border: 2px solid #abb820;
+    width:150px;
+    height:150px;
+    bottom:-25px;
+    right:10px;
+    position:absolute;
+    -webkit-border-radius:100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+    opacity: .5;
+    -webkit-animation: circle-anim 2.4s infinite ease-in-out !important;
+    -moz-animation: circle-anim 2.4s infinite ease-in-out !important;
+    -ms-animation: circle-anim 2.4s infinite ease-in-out !important;
+    -o-animation: circle-anim 2.4s infinite ease-in-out !important;
+    animation: circle-anim 2.4s infinite ease-in-out !important;
+    -webkit-transition: all .5s;-moz-transition: all .5s;
+    -o-transition: all .5s;transition: all 0.5s;
+    transform-origin: center;
+  }
+  .admin_notifications .circle-fill{
+    box-sizing:content-box;
+    -webkit-box-sizing:content-box;
+    background-color: #abb820;
+    width:100px;
+    height:100px;
+    bottom:0px;
+    right:35px;
+    position:absolute;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+    border: 2px solid transparent;
+    -webkit-animation: circle-fill-anim 2.3s infinite ease-in-out;
+    -moz-animation: circle-fill-anim 2.3s infinite ease-in-out;
+    -ms-animation: circle-fill-anim 2.3s infinite ease-in-out;
+    -o-animation: circle-fill-anim 2.3s infinite ease-in-out;
+    animation: circle-fill-anim 2.3s infinite ease-in-out;
+    -webkit-transition: all .5s;-moz-transition: all .5s;
+    -o-transition: all .5s;transition: all 0.5s;
+    transform-origin: center;
+  }
+  .admin_notifications .img-circle{
+    box-sizing:content-box;
+    -webkit-box-sizing:content-box;
+    width:72px;
+    height:72px;
+    bottom: 14px;
+    right: 49px;
+    position:absolute;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+    border: 2px solid transparent;opacity: .7;
+    transform-origin: center;
+  }
+  .admin_notifications .img-circleblock{
+    box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    width: 51px;
+    height: 51px;
+    background-image: url(/theme/pic/services-page/sms-service-mes-icon.png);
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    animation-name: tossing;
+    -webkit-animation-name: tossing;
+    animation-duration: 1.5s;
+    -webkit-animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    -webkit-animation-iteration-count: infinite;
+    top: 10px;
+    left: 10px;
+    position: absolute;
+    transform-origin: center;
+  }
+  .admin_notifications .img-circle:hover{opacity: 1;}
+  @keyframes pulse {0% {transform: scale(0.9);opacity: 1;}
+    50% {transform: scale(1); opacity: 1; }
+    100% {transform: scale(0.9);opacity: 1;}}
+  @-webkit-keyframes pulse {0% {-webkit-transform: scale(0.95);opacity: 1;}
+    50% {-webkit-transform: scale(1);opacity: 1;}
+    100% {-webkit-transform: scale(0.95);opacity: 1;}}
+  @keyframes tossing {
+    0% {transform: rotate(-8deg);}
+    50% {transform: rotate(8deg);}
+    100% {transform: rotate(-8deg);}}
+  @-webkit-keyframes tossing {
+    0% {-webkit-transform: rotate(-8deg);}
+    50% {-webkit-transform: rotate(8deg);}
+    100% {-webkit-transform: rotate(-8deg);}}
+  @-moz-keyframes circle-anim {
+    0% {-moz-transform: rotate(0deg) scale(0.5) skew(1deg);opacity: .1;-moz-opacity: .1;-webkit-opacity: .1;-o-opacity: .1;}
+    30% {-moz-transform: rotate(0deg) scale(0.7) skew(1deg);opacity: .5;-moz-opacity: .5;-webkit-opacity: .5;-o-opacity: .5;}
+    100% {-moz-transform: rotate(0deg) scale(1) skew(1deg);opacity: .6;-moz-opacity: .6;-webkit-opacity: .6;-o-opacity: .1;}}
+  @-webkit-keyframes circle-anim {
+    0% {-webkit-transform: rotate(0deg) scale(0.5) skew(1deg);-webkit-opacity: .1;}
+    30% {-webkit-transform: rotate(0deg) scale(0.7) skew(1deg);-webkit-opacity: .5;}
+    100% {-webkit-transform: rotate(0deg) scale(1) skew(1deg);-webkit-opacity: .1;}}
+  @-o-keyframes circle-anim {
+    0% {-o-transform: rotate(0deg) kscale(0.5) skew(1deg);-o-opacity: .1;}
+    30% {-o-transform: rotate(0deg) scale(0.7) skew(1deg);-o-opacity: .5;}
+    100% {-o-transform: rotate(0deg) scale(1) skew(1deg);-o-opacity: .1;}}
+  @keyframes circle-anim {
+    0% {transform: rotate(0deg) scale(0.5) skew(1deg);opacity: .1;}
+    30% {transform: rotate(0deg) scale(0.7) skew(1deg);opacity: .5;}
+    100% {transform: rotate(0deg) scale(1) skew(1deg);
+      opacity: .1;}}
+  @-moz-keyframes circle-fill-anim {
+    0% {-moz-transform: rotate(0deg) scale(0.7) skew(1deg);opacity: .2;}
+    50% {-moz-transform: rotate(0deg) -moz-scale(1) skew(1deg);opacity: .2;}
+    100% {-moz-transform: rotate(0deg) scale(0.7) skew(1deg);opacity: .2;}}
+  @-webkit-keyframes circle-fill-anim {
+    0% {-webkit-transform: rotate(0deg) scale(0.7) skew(1deg);opacity: .2;  }
+    50% {-webkit-transform: rotate(0deg) scale(1) skew(1deg);opacity: .2;  }
+    100% {-webkit-transform: rotate(0deg) scale(0.7) skew(1deg);opacity: .2;}}
+  @-o-keyframes circle-fill-anim {
+    0% {-o-transform: rotate(0deg) scale(0.7) skew(1deg);opacity: .2;}
+    50% {-o-transform: rotate(0deg) scale(1) skew(1deg);opacity: .2;}
+    100% {-o-transform: rotate(0deg) scale(0.7) skew(1deg);opacity: .2;}}
+  @keyframes circle-fill-anim {
+    0% {transform: rotate(0deg) scale(0.7) skew(1deg);opacity: .2;}
+    50% {transform: rotate(0deg) scale(1) skew(1deg);opacity: .2;}
+    100% {transform: rotate(0deg) scale(0.7) skew(1deg);opacity: .2;}}
+}
+.admin_notifications.active .circlephone,
+.admin_notifications.active .circle-fill{ display: none; }
+.admin_notifications.active .img-circle{ opacity: 1; }
+.admin_notifications.active .img-circleblock{ animation-name: inherit; }
+.admin_notifications_mess h3,
+.admin_notifications_mess p{ word-break: break-word }
+.admin_notifications_mess p{ white-space: pre-line; }
+.admin_notifications_mess span{
+  display: inline-block;
+  padding: 5px 20px;
+  background-color: #f68000;
+  cursor: pointer;
+  border-radius: 5px;
+}
 </style>

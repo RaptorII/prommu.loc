@@ -778,6 +778,10 @@ class Share
                         'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user']
                     );
             }
+            if(isset($arRes[$v['id_user']]) && empty($arRes[$v['id_user']]['name']))
+            {
+                $arRes[$v['id_user']]['name'] = '(безымянный)';
+            }
             if(in_array($v['id_user'], [1766,2054]))
             {
                 $arRes[$v['id_user']]['name'] = 'Администрация Prommu';

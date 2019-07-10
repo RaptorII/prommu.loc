@@ -1000,5 +1000,37 @@ class AjaxController extends AppController
         echo CJSON::encode($arRes);
         Yii::app()->end();
     }
+    /**
+     *  проверка ообщений от админа
+     */
+    public function actionAdminMessages()
+    {
+      $arRes = ['error'=>true];
+      if(Share::isGuest())
+      {
+        $arRes['is_guest'] = true;
+        echo CJSON::encode($arRes);
+        Yii::app()->end();
+      }
+      $data = Yii::app()->getRequest()->getParam('data');
+      $data = json_decode($data, true, 5, JSON_BIGINT_AS_STRING);
+      if(!empty($data['agree']))
+      {
+        $id = intval($data['agree']);
+        $model = new AdminMessageReceiver();
+        $result = $model->setReaded($id,Share::$UserProfile->id);
+        $arRes['id'] = $id;
+        $arRes['id2'] = Share::$UserProfile->id;
+        $arRes['error'] = !$result;
+      }
+      else
+      {
+        $model = new AdminMessage();
+        $arRes['items'] = $model->getNewMessages(Share::$UserProfile->id);
+        $arRes['error'] = $arRes['items']==false;
+      }
 
+      echo CJSON::encode($arRes);
+      Yii::app()->end();
+    }
 }

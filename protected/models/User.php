@@ -1362,4 +1362,142 @@ class User extends CActiveRecord
 		readfile($file_name); // считываем файл
 
 	}
+  /*
+   * @param $search - mixed(string | number) - поисковой ввод
+   * @param $limit - number - ограничение по кол-ву
+   * @param $arWithout - array - массив id_user, которые нужно исключить
+   */
+	public static function searchUsers($search, $limit=20, $arWithout=[])
+  {
+    $arRes = [];
+    if( is_numeric($search) )
+    {
+      $query = Yii::app()->db->createCommand()
+        ->selectDistinct("u.id_user,
+          u.email,
+          u.status, 
+          r.isman,
+          CONCAT(r.firstname,' ',r.lastname) app_name,
+          r.photo app_photo,
+          e.name emp_name,    
+          e.logo emp_photo")
+        ->from('user u')
+        ->leftjoin('resume r','r.id_user=u.id_user')
+        ->leftjoin('employer e','e.id_user=u.id_user')
+        ->where([
+          'and',
+          'u.id_user='.$search,
+          ['not in','u.id_user',$arWithout]
+        ])
+        ->limit($limit)
+        ->queryAll();
+    }
+    else
+    {
+      $arQ = explode(' ', $search);
+      $n=count($arQ);
+      $arWhere = [];
+
+      if($n==2)
+      {
+        $arWhere[] = "((r.lastname LIKE '%" . $arQ[0] . "%') AND (r.firstname LIKE '%" . $arQ[1] . "%'))";
+        $arWhere[] = "((r.lastname LIKE '%" . $arQ[1] . "%') AND (r.firstname LIKE '%" . $arQ[0] . "%'))";
+        $arWhere[] = "((e.name LIKE '%" . $arQ[0] . "%') AND (e.name LIKE '%" . $arQ[1] . "%'))";
+        $arWhere[] = "((e.name LIKE '%" . $arQ[1] . "%') AND (e.name LIKE '%" . $arQ[0] . "%'))";
+        $arWhere[] = "((e.lastname LIKE '%" . $arQ[0] . "%') AND (e.firstname LIKE '%" . $arQ[1] . "%'))";
+        $arWhere[] = "((e.lastname LIKE '%" . $arQ[1] . "%') AND (e.firstname LIKE '%" . $arQ[0] . "%'))";
+      }
+      elseif($n>2)
+      {
+        $arWhere[] = "(r.lastname LIKE '%" . $search . "%')";
+        $arWhere[] = "(e.name LIKE '%" . $search . "%')";
+        $arWhere[] = "(e.lastname LIKE '%" . $search . "%')";
+        $arWhere[] = "(r.firstname LIKE '%" . $search . "%')";
+        $arWhere[] = "(e.firstname LIKE '%" . $search . "%')";
+      }
+      else
+      {
+        for($i=0; $i<$n; $i++)
+        {
+          $arWhere[] = "(r.lastname LIKE '%" . $arQ[$i] . "%')";
+          $arWhere[] = "(e.name LIKE '%" . $arQ[$i] . "%')";
+          $arWhere[] = "(e.lastname LIKE '%" . $arQ[$i] . "%')";
+          $arWhere[] = "(r.firstname LIKE '%" . $arQ[$i] . "%')";
+          $arWhere[] = "(e.firstname LIKE '%" . $arQ[$i] . "%')";
+        }
+      }
+
+      $sql = "SELECT DISTINCT u.id_user,
+                    u.email,
+                    u.status, 
+                    r.isman,
+                    CONCAT(r.firstname,' ',r.lastname) app_name,
+                    r.photo app_photo,
+                    e.name emp_name,    
+                    e.logo emp_photo
+                FROM user u
+                LEFT JOIN resume r ON r.id_user=u.id_user
+                LEFT JOIN employer e ON e.id_user=u.id_user
+                WHERE (" . implode(' || ', $arWhere) . ")"
+                  . (count($arWithout) ? ' AND u.id_user NOT IN (' . implode(',',$arWithout) . ')' : '') . "
+                ORDER BY CASE 
+                WHEN r.lastname LIKE '{$search}' THEN 0
+                WHEN e.name LIKE '{$search}' THEN 1
+                WHEN e.lastname LIKE '{$search}' THEN 2
+                WHEN r.firstname LIKE '{$search}' THEN 3
+                WHEN e.firstname LIKE '{$search}' THEN 4
+                WHEN r.lastname LIKE '{$search}%' THEN 5
+                WHEN e.name LIKE '{$search}%' THEN 6
+                WHEN e.lastname LIKE '{$search}%' THEN 7
+                WHEN r.firstname LIKE '{$search}%' THEN 8
+                WHEN e.firstname LIKE '{$search}%' THEN 9
+                WHEN r.lastname LIKE '%{$search}%' THEN 10
+                WHEN e.lastname LIKE '%{$search}%' THEN 11
+                WHEN e.name LIKE '%{$search}%' THEN 12
+                WHEN r.firstname LIKE '%{$search}%' THEN 13
+                WHEN e.firstname LIKE '%{$search}%' THEN 14
+                ELSE 15 END
+                LIMIT {$limit}";
+      $query = Yii::app()->db->createCommand($sql)->queryAll();
+    }
+
+    if(count($query))
+    {
+      foreach ($query as $i => $v)
+      {
+        if($v['status']==2)
+        {
+          $arRes[$i] = array(
+            'id' => $v['id_user'],
+            'email' => $v['email'],
+            'status' => $v['status'],
+            'name' => $v['app_name'],
+            'src' => Share::getPhoto($v['id_user'],2,$v['app_photo'],'small',$v['isman']),
+            'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user']
+          );
+        }
+        if($v['status']==3)
+        {
+          $arRes[$i] = array(
+            'id' => $v['id_user'],
+            'email' => $v['email'],
+            'status' => $v['status'],
+            'name' => $v['emp_name'],
+            'src' => Share::getPhoto($v['id_user'],3,$v['emp_photo']),
+            'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user']
+          );
+        }
+        if(isset($arRes[$i]) && empty($arRes[$i]['name']))
+        {
+          $arRes[$i]['name'] = '(безымянный)';
+        }
+        if(in_array($v['id_user'], [1766,2054]))
+        {
+          $arRes[$i]['name'] = 'Администрация Prommu';
+          $arRes[$i]['src'] = '/theme/pic/prommu-adm.jpg';
+        }
+      }
+    }
+    return $arRes;
+  }
 }

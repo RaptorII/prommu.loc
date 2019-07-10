@@ -482,6 +482,8 @@ echo '</div>';
             */
             echo '</div><br/><br/>'; //tab-content
             echo '<div style="float:right;  display:inline;">'
+                . '<a href="/admin/notifications/0?type=message&id_user=' . $data['id_user'] . '" class="btn btn-success">Написать пользователю</a>'
+                . '&nbsp;&nbsp;'
                 . CHtml::submitButton(
                     'Сохранить',
                     array(

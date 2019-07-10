@@ -473,4 +473,27 @@ class AjaxController extends CController {
 
     echo CJSON::encode($arRes);
   }
+  /**
+   * Поиск пользователей
+   */
+  public function actionSearchUsers()
+  {
+    $arRes = ['error'=>true, 'message'=>'Ошибка'];
+    if (Yii::app()->user->isGuest)
+    {
+      echo CJSON::encode($arRes);
+      return;
+    }
+
+    $data = Yii::app()->getRequest()->getParam('data');
+    $data = json_decode($data, true, 5, JSON_BIGINT_AS_STRING);
+    $arRes['items'] = User::searchUsers($data['search'],20, $data['selected']);
+    $arRes['error'] = false;
+    if(!count($arRes['items']))
+    {
+      $arRes['message'] = 'Ничего не найдено';
+    }
+
+    echo CJSON::encode($arRes);
+  }
 }

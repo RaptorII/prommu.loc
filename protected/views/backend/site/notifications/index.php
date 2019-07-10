@@ -1,19 +1,23 @@
+<? $anchor = Yii::app()->request->getParam('anchor'); ?>
 <div class="row">
 	<div class="col-xs-12 notifications">
 		<h3><?=$this->pageTitle?></h3>
 		<div class="row">
 			<div class="col-xs-12 col-sm-3 col-md-2">
 				<ul class="nav user__menu" role="tablist" id="tablist">
-					<li class="active">
+          <li class="<?=($anchor=='tab_messages' || empty($anchor)) ? 'active' : ''?>">
+            <a href="#tab_messages" aria-controls="tab_messages" role="tab" data-toggle="tab">Сообщения в публичку</a>
+          </li>
+					<li class="<?=$anchor=='tab_event' ? 'active' : ''?>">
 						<a href="#tab_event" aria-controls="tab_event" role="tab" data-toggle="tab">События</a>
 					</li>
-					<li>
+					<li class="<?=$anchor=='tab_letter' ? 'active' : ''?>">
 						<a href="#tab_letter" aria-controls="tab_letter" role="tab" data-toggle="tab">Рассылки</a>
 					</li>
-					<li>
+					<li class="<?=$anchor=='tab_template' ? 'active' : ''?>">
 						<a href="#tab_template" aria-controls="tab_template" role="tab" data-toggle="tab">Шаблоны</a>
 					</li>
-					<li>
+					<li class="<?=$anchor=='tab_system' ? 'active' : ''?>">
 						<a href="#tab_system" aria-controls="tab_system" role="tab" data-toggle="tab">Отправка</a>
 					</li>
 			  </ul>
@@ -23,7 +27,51 @@
 			?>
 			<div class="col-xs-12 col-sm-9 col-md-10">
 				<div class="tab-content">
-					<div role="tabpanel" class="tab-pane fade active in" id="tab_event">
+          <div role="tabpanel" class="tab-pane fade<?=($anchor=='tab_messages' || empty($anchor)) ? ' active in' : ''?>" id="tab_messages">
+            <h4>Сообщения в публичку</h4>
+            <div class="pull-right">
+              <a href="<?=$this->createUrl('',['type'=>'message','id'=>0])?>" class="btn btn-success">Создать сообщение</a>
+            </div>
+            <div class="clearfix"></div>
+            <?
+            $model = new AdminMessage;
+            $this->widget(
+              'zii.widgets.grid.CGridView',
+              array(
+                'dataProvider' => $model->search(),
+                'itemsCssClass' => 'table table-bordered table-hover custom-table',
+                'htmlOptions'=>array('class'=>'notif-module','data-type'=>'message'),
+                //'filter' => $model,
+                'enablePagination' => true,
+                'columns' => array(
+                  array(
+                    'header'=>'ID',
+                    'name' => 'id',
+                    'value' => '$data->id',
+                    'type' => 'raw',
+                    'htmlOptions'=>['style'=>'width:5%']
+                  ),
+                  array(
+                    'header'=>'Заголовок',
+                    'name' => 'title',
+                    'value' => '$data->title',
+                    'type' => 'raw',
+                    'htmlOptions'=>['style'=>'width:90%']
+                  ),
+                  array(
+                    'header'=>'Дата',
+                    'name' => 'date',
+                    'value' => 'Mailing::getDate($data->date)',
+                    'type' => 'raw',
+                    'htmlOptions'=>['style'=>'width:5%']
+                  )
+                )
+              )
+            );
+            ?>
+          </div>
+
+					<div role="tabpanel" class="tab-pane fade<?=$anchor=='tab_event' ? ' active in' : ''?>" id="tab_event">
 						<h4>События</h4>
 						<div class="bs-callout bs-callout-warning">Внимание, данные кешируются. При изменении события кеш меняется. При добавлении через БД нужно сбрасывать кеш в разделе "Настройки сайта"</div>
 						<?
@@ -69,7 +117,7 @@
 							);
 						?>
 					</div>
-					<div role="tabpanel" class="tab-pane fade" id="tab_letter">
+					<div role="tabpanel" class="tab-pane fade<?=$anchor=='tab_letter' ? ' active in' : ''?>" id="tab_letter">
 						<h4>Рассылки</h4>
 						<div class="pull-right">
 							<a href="<?=$this->createUrl('',['type'=>'letter','id'=>0])?>" class="btn btn-success">Создать рассылку</a>
@@ -111,7 +159,7 @@
 							);
 						?>
 					</div>
-					<div role="tabpanel" class="tab-pane fade" id="tab_template">
+					<div role="tabpanel" class="tab-pane fade<?=$anchor=='tab_template' ? ' active in' : ''?>" id="tab_template">
 						<h4>Шаблоны</h4>
 						<div class="pull-right">
 							<a href="<?=$this->createUrl('',['type'=>'template','id'=>0])?>" class="btn btn-success">Создать шаблон</a>
@@ -160,7 +208,7 @@
 							);
 						?>
 					</div>
-					<div role="tabpanel" class="tab-pane fade" id="tab_system">
+					<div role="tabpanel" class="tab-pane fade<?=$anchor=='tab_system' ? ' active in' : ''?>" id="tab_system">
 						<h4>Отправка</h4>
 						<div class="bs-callout bs-callout-info">Срочные сообщения отправляются в первую очередь, потом происходит отправка по порядку(id)<br>Отправка из очереди происходит каждые 5 минут. За одну итерацию отправляется до 300 писем(настраивается разработчиком)</div>
 						<?
@@ -248,5 +296,13 @@
 				if(!$(this).hasClass('empty'))
 					$(location).attr('href',url);
 			});
+		$('#tablist a').on('click',function(){
+		  var link = this.href,
+          start = link.indexOf('#') + 1,
+          anchor = link.substr(start, link.length - start),
+          newLink = location.protocol + '//' + location.host + location.pathname + '?anchor=' + anchor;
+
+      window.history.pushState('object or string', 'page name', newLink);
+    });
 	});
 </script>

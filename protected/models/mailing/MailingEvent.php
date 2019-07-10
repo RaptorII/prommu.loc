@@ -135,6 +135,119 @@ class MailingEvent extends Mailing
 										'description' => "Ссылка на профиль пользователя в админке"
 									)
 		)
+
+
+
+	подборочка готовых параметров
+
+	$ppp = 		array(
+			'email_user' => array(
+										'name' => "#EMAIL_USER#",
+										'pattern' => "/#EMAIL_USER#/",
+										'description' => "Email пользователя сайта"
+									),
+			'name_user' => array(
+										'name' => "#NAME_USER#",
+										'pattern' => "/#NAME_USER#/",
+										'description' => "Имя пользователя сайта"
+									),
+			'analytic_period' => array(
+										'name' => "#ANALYTIC_PERIOD#",
+										'pattern' => "/#ANALYTIC_PERIOD#/",
+										'description' => "Период расчета аналитики"
+									),
+			'cnt_vacancy_public' => array(
+										'name' => "#ANALYTIC_VAC_PUBLIC#",
+										'pattern' => "/#ANALYTIC_VAC_PUBLIC#/",
+										'description' => "Опубликованых вакансий"
+									),
+			'cnt_vacancy_views' => array(
+										'name' => "#ANALYTIC_VAC_VIEWS#",
+										'pattern' => "/#ANALYTIC_VAC_VIEWS#/",
+										'description' => "Кол-во просмотров вакансий"
+									),
+			'cnt_vacancy_responce' => array(
+										'name' => "#ANALYTIC_VAC_RESPONCE#",
+										'pattern' => "/#ANALYTIC_VAC_RESPONCE#/",
+										'description' => "Кол-во откликов на вакансии"
+									),
+			'cnt_vacancy_invite' => array(
+										'name' => "#ANALYTIC_VAC_INVIT#",
+										'pattern' => "/#ANALYTIC_VAC_INVIT#/",
+										'description' => "Кол-во приглашений на вакансии"
+									),
+			'vacancy_list' => array(
+										'name' => "#VACANCY_LIST#",
+										'pattern' => "/#VACANCY_LIST#/",
+										'description' => "Список вакансий"
+									),
+			'cnt_services' => array(
+										'name' => "#ANALYTIC_SERVICE_CNT#",
+										'pattern' => "/#ANALYTIC_SERVICE_CNT#/",
+										'description' => "Кол-во использованных услуг"
+									),
+			'service_list' => array(
+										'name' => "#SERVICE_LIST#",
+										'pattern' => "/#SERVICE_LIST#/",
+										'description' => "Список использованных услуг"
+									),
+			'cnt_views' => array(
+										'name' => "#ANALYTIC_CNT_VIEWS#",
+										'pattern' => "/#ANALYTIC_CNT_VIEWS#/",
+										'description' => "Кол-во просмотров"
+									),
+			'analytic_schedule_src' => array(
+										'name' => "#SCHEDULE_SRC#",
+										'pattern' => "/#SCHEDULE_SRC#/",
+										'description' => "Картинка с графиком"
+									)
+			'email_user' => array(
+										'name' => "#EMAIL_USER#",
+										'pattern' => "/#EMAIL_USER#/",
+										'description' => "Email пользователя сайта"
+									),
+			'name_user' => array(
+										'name' => "#NAME_USER#",
+										'pattern' => "/#NAME_USER#/",
+										'description' => "Имя работодателя"
+									),
+			'name_applicant' => array(
+										'name' => "#NAME_APPLICANT#",
+										'pattern' => "/#NAME_APPLICANT#/",
+										'description' => "Имя соискателя"
+									),
+			'id_applicant' => array(
+										'name' => "#ID_APPLICANT#",
+										'pattern' => "/#ID_APPLICANT#/",
+										'description' => "ID соискателя"
+									),
+			'link_profile' => array(
+										'name' => "#LINK_PROFILE#",
+										'pattern' => "/#LINK_PROFILE#/",
+										'value' => '#SITE##PAGE_PROFILE_COMMON#/#ID_APPLICANT#',
+										'breplace' => true,
+										'description' => "Ссылка на профиль соискателя"
+									),
+			'id_vacancy' => array(
+										'name' => "#ID_VACANCY#",
+										'pattern' => "/#ID_VACANCY#/",
+										'description' => "ID вакансии"
+									),
+			'title_vacancy' => array(
+										'name' => "#TITLE_VACANCY#",
+										'pattern' => "/#TITLE_VACANCY#/",
+										'description' => "Заголовок вакансии"
+									),
+			'link_vacancy' => array(
+										'name' => "#LINK_VACANCY#",
+										'pattern' => "/#LINK_VACANCY#/",
+										'value' => '#PAGE_USER_VACANCY#/#ID_VACANCY#',
+										'breplace' => true,
+										'description' => "Ссылка на вакансию"
+									)
+		);
+
+echo serialize($ppp);
 	*/
 }
 ?>

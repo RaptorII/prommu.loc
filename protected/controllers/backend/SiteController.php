@@ -1948,10 +1948,11 @@ class SiteController extends Controller
 
         switch ($type)
         {
-            case 'system': $model = new Mailing; break;
-            case 'event': $model = new MailingEvent; break;
-            case 'letter': $model = new MailingLetter; break;
-            case 'template': $model = new MailingTemplate; break;
+          case 'system': $model = new Mailing; break;
+          case 'event': $model = new MailingEvent; break;
+          case 'letter': $model = new MailingLetter; break;
+          case 'template': $model = new MailingTemplate; break;
+          case 'message': $model = new AdminMessage; break;
         }
 
         if(isset($id))

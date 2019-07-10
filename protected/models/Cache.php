@@ -31,4 +31,11 @@ class Cache
         
         Yii::app()->cache->set($data['id'], $data['data'], $time);
     }
+    /**
+     * @param $id string - cache ID
+     */
+    public static function deleteData($id)
+    {
+        Yii::app()->cache->delete($id);
+    }
 }
