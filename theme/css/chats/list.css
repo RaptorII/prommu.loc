@@ -52,3 +52,16 @@
 {
 	color:white;
 }
+
+.chat__all .chat__info-descr {
+	display: block;
+}
+
+@media (min-width: 767px) {
+	.chat__all {
+		overflow-x: hidden;
+	}
+	.chat__all .chat__item{
+		display: flex;
+	}
+}
