@@ -120,8 +120,8 @@ class SearchVac extends Model
             $data['vacs'][$val['id']]['removed_at'] = $val['remdate'];
                 
            
-            $data['vacs'][$val['id']]['is_man'] = (boolean)$val['is_man'];
-            $data['vacs'][$val['id']]['is_wooman'] = (boolean)$val['is_wooman'];
+            $data['vacs'][$val['id']]['is_man'] = (boolean)$val['isman'];
+            $data['vacs'][$val['id']]['is_woman'] = (boolean)$val['iswoman'];
             
            
             
