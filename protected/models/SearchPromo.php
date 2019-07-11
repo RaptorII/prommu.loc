@@ -89,8 +89,12 @@ class SearchPromo extends Model
             // $data['vacs'][$val['id']]['posts']['name'] = $val['pname'];
             // ///
             
-            $data['vacs'][$val['id']]['created_at'] = $val['date_public'];
-            $data['vacs'][$val['id']]['moder_at'] = $val['mdates'];
+            $data['promo'][$val['id']]['is_online'] = (boolean)$val['is_online'];
+            
+            $data['promo'][$val['id']]['created_at'] = $val['date_public'];
+            $data['promo'][$val['id']]['moder_at'] = $val['mdates'];
+            
+            
             
             
             //
