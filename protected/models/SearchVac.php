@@ -118,8 +118,15 @@ class SearchVac extends Model
             
             $data['vacs'][$val['id']]['created_at'] = $val['crdate'];
             $data['vacs'][$val['id']]['removed_at'] = $val['remdate'];
+                
+            if($val['isman']){
+                $data['vacs'][$val['id']]['is_man'] = true;
+            } else {
+                $data['vacs'][$val['id']]['is_man'] = false;
+            }
             
-            $data['vacs'][$val['id']]['is_premium'] = (int)$val['ispremium'];
+            
+            $data['vacs'][$val['id']]['is_premium'] = (boolean)$val['ispremium'];
             $data['vacs'][$val['id']]['is_active'] = 1;
             
             $data['vacs'][$val['id']]['requirements'] = $val['requirements'];
