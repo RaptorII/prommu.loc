@@ -3061,6 +3061,10 @@ public function vac(){
         $filter['qs'] = Yii::app()->getRequest()->getParam('qs');
         $filter['af'] = Yii::app()->getRequest()->getParam('af');
         $filter['at'] = Yii::app()->getRequest()->getParam('at');
+        $filter['card'] = Yii::app()->getRequest()->getParam('card');
+        $filter['cardPrommu'] = Yii::app()->getRequest()->getParam('card_prommu');
+        $filter['self_employed'] = Yii::app()->getRequest()->getParam('self_employed');
+        
         $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
 
         $limit = $limit == 0 || $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
@@ -3080,14 +3084,17 @@ public function vac(){
             $qs = $filter['qs'] ?: null;
             $af = $filter['af'] ?: null;
             $at = $filter['at'] ?: null;
-            $filter = ['filter' => compact('posts', 'cities', 'qs', 'sm', 'sf', 'mb', 'avto', 'af','at', 'api')];
+            $card = $filter['card'] ?: null;
+            $cardPrommu = $filter['cardPrommu'] ?: null;
+            $self_employed = $filter['self_employed'] ?: null;
+            $filter = ['filter' => compact('posts', 'cities', 'qs', 'sm', 'sf', 'mb', 'avto', 'af','at', 'api', 'card', 'cardPrommu', 'self_employed')];
         }
         else
         {
             $filter = [];
         } // endif
     
-
+        var_dump($filter);
         // получаем данные страницы
         $SearchPromo = new SearchPromo();
         $arAllId = $SearchPromo->searchPromosCount($filter);
