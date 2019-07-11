@@ -3822,11 +3822,36 @@ public function vac(){
 
        public function getVacancy()
     {
-        $filter = Yii::app()->getRequest()->getParam('filter');
-        $filter = $filter ? get_object_vars(json_decode(base64_decode($filter))) : null;
+        $filter = [];
+        
         $id = filter_var(Yii::app()->getRequest()->getParam('id', 0), FILTER_SANITIZE_NUMBER_INT);
         $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
-
+        
+        ///
+        $filter['sphf'] = Yii::app()->getRequest()->getParam('salary_hour_from');
+        $filter['spht'] = Yii::app()->getRequest()->getParam('salary_hour_to');
+        
+        $filter['spwf'] = Yii::app()->getRequest()->getParam('salary_week_from');
+        $filter['spwt'] = Yii::app()->getRequest()->getParam('salary_week_from');
+        
+        $filter['spmf'] = Yii::app()->getRequest()->getParam('salary_month_from');
+        $filter['spmt'] = Yii::app()->getRequest()->getParam('salary_month_from');
+        
+        $filter['spvf'] = Yii::app()->getRequest()->getParam('salary_visit_from');
+        $filter['spvt'] = Yii::app()->getRequest()->getParam('salary_visit_from');
+        
+        $filter['smart'] = Yii::app()->getRequest()->getParam('smart');
+        $filter['posts'] = Yii::app()->getRequest()->getParam('posts');
+        $filter['city'] = Yii::app()->getRequest()->getParam('city');
+        $filter['qs'] = Yii::app()->getRequest()->getParam('name');
+        
+        $filter['af'] = Yii::app()->getRequest()->getParam('age_from');
+        $filter['at'] = Yii::app()->getRequest()->getParam('age_to');
+        
+        $filter['card'] = Yii::app()->getRequest()->getParam('card');
+        $filter['cardPrommu'] = Yii::app()->getRequest()->getParam('card_prommu');
+        $filter['self_employed'] = Yii::app()->getRequest()->getParam('self_employed');
+        
 
         // читаем фильтр
         if( $filter )
@@ -3842,11 +3867,18 @@ public function vac(){
             $spwt = $filter['spwt'] ?: null;
             $spmf = $filter['spmf'] ?: null;
             $spmt = $filter['spmt'] ?: null;
+            $svmf = $filter['svmf'] ?: null;
+            $svmt = $filter['svmt'] ?: null;
             $af = $filter['af'] ?: null;
             $at = $filter['at'] ?: null;
+            $smart = $filter['smart'] ?: null;
             $sex = $filter['sex'] ?: null;
+            $self_employed = $filter['self_employed'] ?: null;
+            $card = $filter['card'] ?: null;
+            $cardPrommu = $filter['cardPrommu'] ?: null;
             
-            $filter = ['filter' => compact('post', 'city', 'sr', 'sphf', 'spht', 'spwf', 'spwt', 'spmf', 'spmt', 'af', 'at', 'sex')];
+            
+            $filter = ['filter' => compact('post', 'city', 'sr', 'sphf', 'spht', 'spwf', 'spwt', 'spmf', 'spmt', 'af', 'at', 'sex', 'smart', 'card', 'cardPrommu','self_employed')];
         }
         else
         {
