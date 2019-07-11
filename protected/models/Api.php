@@ -3050,7 +3050,7 @@ public function vac(){
 
     public function getPromoSearch()
     {
-        $filter = Yii::app()->getRequest()->getParam('filter');
+        $filter = [];
         $filter['api'] = Yii::app()->getRequest()->getParam('api');
         $filter['sm'] = Yii::app()->getRequest()->getParam('sm');
         $filter['sf'] = Yii::app()->getRequest()->getParam('sf');
@@ -3066,7 +3066,7 @@ public function vac(){
         $limit = $limit == 0 || $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
 
         // читаем фильтр
-        if( $filter )
+        if($filter)
         {
             $api = $filter['api'] ?: null;
             // фильтр по типу
