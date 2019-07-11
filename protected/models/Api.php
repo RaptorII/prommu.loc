@@ -3052,15 +3052,28 @@ public function vac(){
     {
         $filter = [];
         $filter['api'] = Yii::app()->getRequest()->getParam('api');
-        $filter['sm'] = Yii::app()->getRequest()->getParam('sm');
-        $filter['sf'] = Yii::app()->getRequest()->getParam('sf');
-        $filter['mb'] = Yii::app()->getRequest()->getParam('mb');
-        $filter['avto'] = Yii::app()->getRequest()->getParam('avto');
+        ///
+        $filter['sphf'] = Yii::app()->getRequest()->getParam('salary_hour_from');
+        $filter['spht'] = Yii::app()->getRequest()->getParam('salary_hour_to');
+        
+        $filter['spwf'] = Yii::app()->getRequest()->getParam('salary_week_from');
+        $filter['spwt'] = Yii::app()->getRequest()->getParam('salary_week_from');
+        
+        $filter['spmf'] = Yii::app()->getRequest()->getParam('salary_month_from');
+        $filter['spmt'] = Yii::app()->getRequest()->getParam('salary_month_from');
+        
+        $filter['spvf'] = Yii::app()->getRequest()->getParam('salary_visit_from');
+        $filter['spvt'] = Yii::app()->getRequest()->getParam('salary_visit_from');
+        
+        
+        //
+        $filter['mb'] = Yii::app()->getRequest()->getParam('med_book');
+        $filter['avto'] = Yii::app()->getRequest()->getParam('car');
         $filter['posts'] = Yii::app()->getRequest()->getParam('posts');
         $filter['city'] = Yii::app()->getRequest()->getParam('city');
-        $filter['qs'] = Yii::app()->getRequest()->getParam('qs');
-        $filter['af'] = Yii::app()->getRequest()->getParam('af');
-        $filter['at'] = Yii::app()->getRequest()->getParam('at');
+        $filter['qs'] = Yii::app()->getRequest()->getParam('name');
+        $filter['af'] = Yii::app()->getRequest()->getParam('age_from');
+        $filter['at'] = Yii::app()->getRequest()->getParam('age_to');
         $filter['card'] = Yii::app()->getRequest()->getParam('card');
         $filter['cardPrommu'] = Yii::app()->getRequest()->getParam('card_prommu');
         $filter['self_employed'] = Yii::app()->getRequest()->getParam('self_employed');
@@ -3074,8 +3087,19 @@ public function vac(){
         {
             $api = $filter['api'] ?: null;
             // фильтр по типу
-            $sm = $filter['sm'] ?: null;
-            $sf = $filter['sf'] ?: null;
+            
+            $sphf = $filter['sphf'] ?: null;
+            $spht = $filter['spht'] ?: null;
+            
+            $spwf = $filter['spwf'] ?: null;
+            $spwt = $filter['spwt'] ?: null;
+            
+            $spmf = $filter['spmf'] ?: null;
+            $spmt = $filter['spmt'] ?: null;
+            
+            $spvf = $filter['spvf'] ?: null;
+            $spvt = $filter['spvt'] ?: null;
+            
             $mb = $filter['mb'] ?: null;
             $avto = $filter['avto'] ?: null;
             $posts = $filter['posts'] ? array_combine($filter['posts'], $filter['posts']) : null;
@@ -3087,7 +3111,7 @@ public function vac(){
             $card = $filter['card'] ?: null;
             $cardPrommu = $filter['cardPrommu'] ?: null;
             $self_employed = $filter['self_employed'] ?: null;
-            $filter = ['filter' => compact('posts', 'cities', 'qs', 'sm', 'sf', 'mb', 'avto', 'af','at', 'api', 'card', 'cardPrommu', 'self_employed')];
+            $filter = ['filter' => compact('posts', 'cities', 'qs', 'sphf', 'spht','spwf','spwt','spmf','spmt','spvf','spvt', 'mb', 'avto', 'af','at', 'api', 'card', 'cardPrommu', 'self_employed')];
         }
         else
         {
