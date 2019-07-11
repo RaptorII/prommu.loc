@@ -25,7 +25,6 @@ class Feedback extends Model
 
     public function getUserFeedbacks($id)
     {
-
         $sql = "SELECT
                   f.id,
                   f.theme,
@@ -77,8 +76,8 @@ class Feedback extends Model
 				$arF['chat'] = $v['chat'];
 				!isset($arF['cnt']) && $arF['cnt'] = 0;
 				if(!$v['is_smotr']) {
-					$arRes['cnt']++;
-					//$arF['cnt']++;
+					//$arRes['cnt']++;
+					$arF['cnt']++;
 				}
 
 				foreach ($arMess as $m)

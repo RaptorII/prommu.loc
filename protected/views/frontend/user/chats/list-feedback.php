@@ -63,11 +63,3 @@
 		</div>
 	<? endif; ?>
 </div>
-
-<?php
-//
-//echo '<pre>';
-//    print_r($viData);
-//echo '</pre>';
-//
-//?>

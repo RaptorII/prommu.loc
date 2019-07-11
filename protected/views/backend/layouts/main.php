@@ -4,7 +4,7 @@
 } else { ?>
 
 <?
-//die($test);
+
 $hUrl = Yii::app()->homeUrl;
 $curId = $this->action->id;
 

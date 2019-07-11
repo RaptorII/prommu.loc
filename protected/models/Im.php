@@ -79,7 +79,7 @@ abstract class Im extends Model
             if(count($arC))
             {
                 $query = Yii::app()->db->createCommand()
-                            ->select('chat, theme, direct, status')
+                            ->select('chat, theme, direct')
                             ->from('feedback')
                             ->where(['in','chat',$arC])
                             ->queryAll();
