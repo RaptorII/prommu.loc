@@ -3130,7 +3130,7 @@ public function vac(){
         
         // отсеивать из ответа работодателей
         $data = array_values($SearchPromo->getPromosAPI($arAllId, 0, $filter)['promo']);
-        $data = array_merge(['promos' => $data, 'pageCount' => $pages->pageCount]);
+        $data = array_merge(['promos' => $data, 'pageCount' => $pages->pageCount,'currentPage' => (int)$page ? (int)$page : 1]);
         
         return array_merge($data);
     }
