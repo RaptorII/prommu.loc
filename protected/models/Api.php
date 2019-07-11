@@ -3051,7 +3051,16 @@ public function vac(){
     public function getPromoSearch()
     {
         $filter = Yii::app()->getRequest()->getParam('filter');
-        $filter = $filter ? get_object_vars(json_decode(base64_decode($filter))) : null;
+        $filter['api'] = Yii::app()->getRequest()->getParam('api');
+        $filter['sm'] = Yii::app()->getRequest()->getParam('sm');
+        $filter['sf'] = Yii::app()->getRequest()->getParam('sf');
+        $filter['mb'] = Yii::app()->getRequest()->getParam('mb');
+        $filter['avto'] = Yii::app()->getRequest()->getParam('avto');
+        $filter['posts'] = Yii::app()->getRequest()->getParam('posts');
+        $filter['city'] = Yii::app()->getRequest()->getParam('city');
+        $filter['qs'] = Yii::app()->getRequest()->getParam('qs');
+        $filter['af'] = Yii::app()->getRequest()->getParam('af');
+        $filter['at'] = Yii::app()->getRequest()->getParam('at');
         $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
 
         $limit = $limit == 0 || $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
