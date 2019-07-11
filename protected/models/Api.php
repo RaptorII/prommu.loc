@@ -3118,7 +3118,7 @@ public function vac(){
             $filter = [];
         } // endif
     
-        var_dump($filter);
+       
         // получаем данные страницы
         $SearchPromo = new SearchPromo();
         $arAllId = $SearchPromo->searchPromosCount($filter);
