@@ -73,12 +73,12 @@ class SearchPromo extends Model
             $data['promo'][$val['id']]['post'] = $res[$val['id_user']]['post'];
             
             
-            $data['promo'][$val['id']]['is_man'] = (int)$val['isman'];
-            $data['promo'][$val['id']]['is_med'] = (int)$val['ismed'];
-            $data['promo'][$val['id']]['is_hasavto'] = (int)$val['ishasavto'];
-            $data['promo'][$val['id']]['smart'] = (int)$val['smart'];
-            $data['promo'][$val['id']]['card'] = (int)$val['card'];
-            $data['promo'][$val['id']]['card_prommu'] = (int)$val['card_prommu'];
+            $data['promo'][$val['id']]['is_man'] = (boolean)$val['isman'];
+            $data['promo'][$val['id']]['is_med'] = (boolean)$val['ismed'];
+            $data['promo'][$val['id']]['is_hasavto'] = (boolean)$val['ishasavto'];
+            $data['promo'][$val['id']]['smart'] = (boolean)$val['smart'];
+            $data['promo'][$val['id']]['card'] = (boolean)$val['card'];
+            $data['promo'][$val['id']]['card_prommu'] = (boolean)$val['card_prommu'];
             
             $data['promo'][$val['id']]['rate']['positive_rate'] = (int)$val['rate'];
             $data['promo'][$val['id']]['rate']['negative_rate'] = (int)$val['rate_neg'];
