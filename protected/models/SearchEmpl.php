@@ -73,7 +73,7 @@ class SearchEmpl extends Model
             
             $data['empls'][$val['id']]['created_at'] = $val['crdate'];
             $data['empls'][$val['id']]['updated_at'] = $val['mdate'];
-            $data['empls'][$val['id']]['is_online'] = (int)$val['is_online'];
+            $data['empls'][$val['id']]['is_online'] = (boolean)$val['is_online'];
             $data['empls'][$val['id']]['vacancy_count'] = (int)$val['vaccount'];
             
             
