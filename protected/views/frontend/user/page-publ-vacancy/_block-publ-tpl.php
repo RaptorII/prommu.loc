@@ -213,29 +213,6 @@
         <label class="fav__label-checkbox" for="av-smart">Смартфон</label>
       </div>
     </div>
-    <div class="fav__label fav__flex-list">
-      <span class="fav__flex-item fav__input-name">Налоговый статус</span>
-      <div class="fav__flex-item">
-        <input
-          type="radio"
-          name="self_employed"
-          class="fav__input fav__hidden"
-          id="tax_status_1"
-          value="0"
-          <?= !$arCopy['self_employed'] ? 'checked' : '' ?>>
-        <label class="fav__label-checkbox" for="tax_status_1">Физическое лицо</label>
-      </div>
-      <div class="fav__flex-item">
-        <input
-          type="radio"
-          name="self_employed"
-          class="fav__input fav__hidden"
-          id="tax_status_2"
-          value="1"
-          <?= $arCopy['self_employed'] ? 'checked' : '' ?>>
-        <label class="fav__label-checkbox" for="tax_status_2">Самозанятый</label>
-      </div>
-    </div>
     <div class="fav__label">
       <div class="fav__both-item">
         <input 
@@ -258,6 +235,29 @@
         <label class="fav__label-checkbox" for="av-bank-card">Наличие банковской карты</label>    
       </div>
       <div class="clearfix"></div>
+    </div>
+    <span class="fav-b1__title"><h3>Налоговый статус</h3></span>
+    <div class="fav__label fav__flex-list">
+      <div class="fav__flex-item">
+        <input
+          type="radio"
+          name="self_employed"
+          class="fav__input fav__hidden"
+          id="tax_status_1"
+          value="0"
+          <?= !$arCopy['self_employed'] ? 'checked' : '' ?>>
+        <label class="fav__label-checkbox" for="tax_status_1">Физическое лицо</label>
+      </div>
+      <div class="fav__flex-item">
+        <input
+          type="radio"
+          name="self_employed"
+          class="fav__input fav__hidden"
+          id="tax_status_2"
+          value="1"
+          <?= $arCopy['self_employed'] ? 'checked' : '' ?>>
+        <label class="fav__label-checkbox" for="tax_status_2">Самозанятый</label>
+      </div>
     </div>
     <?
     // Заработная плата

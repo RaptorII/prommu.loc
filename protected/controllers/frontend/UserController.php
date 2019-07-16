@@ -90,71 +90,83 @@ class UserController extends AppController
             }
 
         }
-        if($method == "pay"){
-            $data['result']['message'] = "Запрос успешно обработан";
-            $data = json_encode($data);
-            echo $data;
-            
-            $model = new PrommuOrder();
-            $unitpayId = $_GET['params']['unitpayId'];
-            $account = $_GET['params']['account'];
-            $arr = explode(".", $account);
-            $account = $arr[0];
-            $count = count($arr);
+        if ($method == "pay")
+        {
+          $model = new PrommuOrder();
+          $arParams = explode(".", $_GET['params']['account']);
+          $id_user = $arParams[0]; // service_cloud => id_user
+          $id_vacancy = $arParams[1]; // service_cloud => name
+          $serviceType = $arParams[2]; // service_cloud => type
+          $transaction = $arParams[3]; // service_cloud => stack
 
-             $sql = "SELECT ru.email
-            FROM user ru
-            WHERE ru.id_user = {$account}";
-        /** @var $res CDbCommand */
-            $res = Yii::app()->db->createCommand($sql);
-            $rest = $res->queryRow();
+          $email = Yii::app()->db->createCommand()
+            ->select('email')
+            ->from('user')
+            ->where('id_user=:id',[':id'=>$id_user])
+            ->queryScalar();
+          // уведомление для работодателя
+          Mailing::set(20, ['email_user' => $email]);
+
+          if (in_array($serviceType, ['email', 'sms', 'push']))
+          {
+            $model->autoOrder($serviceType, $transaction, $id_user, $id_vacancy);
+          }
+          else // услуга Премиум
+          {
+            $arIdVacs = $queryVacs = [];
+            for ($i=1, $n=count($arParams); $i<$n; $i++)
+            {
+              $arIdVacs[] = $arParams[$i];
+              $queryVacs[] = 'name like ' . $arParams[$i];
+            }
 
 
-            $content = file_get_contents(Yii::app()->basePath . "/views/mails/app/services.html");
-                  // $content = str_replace('#APPNAME#', "пользователь", $content);
-                  $content = str_replace('#SERVICENAME#', "успешно подключена", $content);
-                 $content = str_replace('#SERVICEACTION#', "и отображается во вкладке услуги" , $content);
-                 $content = str_replace('#SERVICELINK#', "https://prommu.com/services", $content);
+            $query = Yii::app()->db->createCommand()
+              ->select('count(*)')
+              ->from('empl_vacantions')
+              ->where(
+                'and',
+                ['in','id',$arIdVacs],
+                ['id_user=:id',[':id'=>$id_user]]
+              )
+              ->queryScalar();
 
-              Share::sendmail($rest['email'], "Prommu.com. Действие по услугам", $content);
+            if($query==count($arIdVacs)) // все вакансии данного Р
+            {
+              Yii::app()->db->createCommand()
+                ->update(
+                  'service_cloud',
+                  ['status' => 1],
+                  'id_user like :id AND name=:name',
+                  [':id' => "$id_user", ':name' => "$id_vacancy"]
+                );
 
-            if($arr[2] == "sms"){
-                
-                $name = $arr[1];
-                $user = $arr[3];
-                $model->autoOrder($arr[2], $user, $account, $name);
+              //$queryVacs
+            }
 
-            } elseif($arr[2] == "vacancy") {
-            for ($i = $count; $i > 0 ; $i --) {
-                $name = $arr[$i];
 
-                 $res = Yii::app()->db->createCommand()
-                ->update('service_cloud', array(
-                    'status'=> 1,
-                ), 'id_user=:id_user AND name=:name', array(':id_user' => "$account", ':name' => "$name"));
 
-                $result = Yii::app()->db->createCommand()
-                ->update('empl_vacations', array(
+
+            for ($i = $count; $i > 0; $i--)
+            {
+              $name = $arr[$i];
+
+
+
+              Yii::app()->db->createCommand()
+                ->update(
+                  'empl_vacations',
+                  [
                     'ispremium' => 1,
                     'crdate' => date("Y-m-d"),
                     'mdate' => date("Y-m-d"),
-                ), 'id=:id', array(':id' => $name));
-
-                }
-            } elseif($arr[2] == "push") {
-            
-                $name = $arr[1];
-                $user = $arr[3];
-                $model->autoOrder($arr[2], $user, $account, $name);
-
-            } elseif($arr[2] == "email") {
-                
-                $name = $arr[1];
-                $user = $arr[3];
-                $model->autoOrder($arr[2], $user, $account, $name);
+                  ],
+                  'id=:id',
+                  [':id' => $id_vacancy]
+                );
             }
-            
-
+          }
+          echo json_encode(['result'=>['message'=>'Запрос успешно обработан']]);
         }
       }
 
@@ -1838,5 +1850,18 @@ class UserController extends AppController
 
         $this->render('self-employed',['viData'=>$data]);
     }
-    
+    /**
+    *  Проверка самозанятого
+    */
+    public function actionCheck_self_employed()
+    {
+      !Share::isEmployer() && $this->redirect(MainConfig::$PAGE_LOGIN);
+
+      $this->setBreadcrumbsEx(
+        ['Профиль', MainConfig::$PAGE_PROFILE],
+        ['Проверка налогового статуса соискателя', MainConfig::$VIEW_CHECK_SELF_EMPLOYED]
+      );
+      $this->setPageTitle('Проверка налогового статуса');
+      $this->render('check-self-employed');
+    }
 }

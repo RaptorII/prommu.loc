@@ -60,6 +60,7 @@ foreach ($viData['posts'] as $p)
         background: white;
         border: 1px solid;
     }
+    #DiContent.page-ankety .med-avto .ico-self-employed{ background: url(/theme/pic/ico-form.png) -4px -804px no-repeat; }
 </style>
 <?php
 // если не моб устройство
@@ -450,6 +451,9 @@ foreach ($viData['posts'] as $p)
                                             <?php if ($val['ishasavto'] === '1'): ?>
                                                 <div class="ico ico-med js-g-hashint" title="Есть медкнижка"></div>
                                             <?php endif; ?>
+                                            <? if(!empty($val['attribs']['self_employed'])): ?>
+                                              <div class="ico ico-self-employed js-g-hashint" title="Самозанятый"></div>
+                                            <? endif; ?>
                                         </div>
                                     <?php endif; ?>
                                     <div class='vacancies'>
@@ -543,6 +547,9 @@ foreach ($viData['posts'] as $p)
                                             <? endif; ?>
                                             <? if ($val['ismed'] === '1'): ?>
                                                 <div class="ico ico-med js-g-hashint" title="Есть медкнижка"></div>
+                                            <? endif; ?>
+                                            <? if(!empty($val['attribs']['self_employed'])): ?>
+                                              <div class="ico ico-self-employed js-g-hashint" title="Самозанятый"></div>
                                             <? endif; ?>
                                         </div>
                                     </div>

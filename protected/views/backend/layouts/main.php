@@ -485,11 +485,27 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
                 <?
                 // Все пользователи
                 ?>
-                <li class="<?= ($curId == 'all-users' ? 'active' : '') ?>">
-                    <a href="<?= $hUrl ?>all-users">
+                <? $bUsersSection = in_array($curId,['all_users','self_employed']); ?>
+                <li class="treeview <?= ($bUsersSection ? 'active' : '') ?>">
+                  <a href="#">
+                    <i class="glyphicon glyphicon-list-alt"></i>
+                    <span>Пользователи</span>
+                    <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                  </a>
+                  <ul class="treeview-menu<?= $bUsersSection ? ' menu-open' : '' ?>"<?= !$bUsersSection ? ' style="display:none"' : '' ?>>
+                    <li class="<?= ($curId=='all_users' ? 'active' : '') ?>">
+                      <a href="<?= $hUrl ?>all-users">
                         <i class="glyphicon glyphicon-list-alt"></i>
                         <span>Все пользователи</span>
-                    </a>
+                      </a>
+                    </li>
+                    <li class="<?= ($curId=='self_employed' ? 'active' : '') ?>">
+                      <a href="<?= $hUrl ?>self-employed">
+                        <i class="glyphicon glyphicon-barcode"></i>
+                        <span>Проверка ИНН</span>
+                      </a>
+                    </li>
+                  </ul>
                 </li>
                 <?php
                 // users

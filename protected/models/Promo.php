@@ -557,6 +557,17 @@ class Promo extends ARModel
             $arIdPromo[] = $sql[$i]['id'];
         }
 
+        $arAttr = Yii::app()->db->createCommand()
+          ->select("id_us, key, val")
+          ->from('user_attribs')
+          ->where(['in', 'id_us', $arId])
+          ->queryAll();
+
+        foreach ($arAttr as $v)
+        {
+          !empty($v['key']) && $arP[$v['id_us']]['attribs'][$v['key']]=$v['val'];
+        }
+
         $sqlP = Yii::app()->db->createCommand()
                     ->select("
                         um.id_us id_user, 

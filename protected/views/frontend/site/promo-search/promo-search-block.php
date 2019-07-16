@@ -95,6 +95,9 @@
                                     <?php if( $val['ishasavto'] === '1' ): ?>
                                         <div class="ico ico-med js-g-hashint" title="Есть медкнижка"></div>
                                     <?php endif; ?>
+                                    <? if(!empty($val['attribs']['self_employed'])): ?>
+                                      <div class="ico ico-self-employed js-g-hashint" title="Самозанятый"></div>
+                                    <? endif; ?>
                                 </div>
                             <?php endif; ?>
                             <div class='vacancies'>
@@ -189,6 +192,9 @@
                                     <?if($val['ismed'] === '1'):?>
                                         <div class="ico ico-med js-g-hashint" title="Есть медкнижка"></div>
                                     <?endif;?>
+                                    <? if(!empty($val['attribs']['self_employed'])): ?>
+                                      <div class="ico ico-self-employed js-g-hashint" title="Самозанятый"></div>
+                                    <? endif; ?>
                                 </div>
                             </div>
                             <div class='hr'>

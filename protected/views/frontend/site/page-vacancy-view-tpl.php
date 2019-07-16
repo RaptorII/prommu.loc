@@ -198,6 +198,8 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                                 </ul>
                             </div>
                         <? endif; ?>
+                        <a href="<?=MainConfig::$VIEW_CHECK_SELF_EMPLOYED?>" class="erv__tab-link link9">проверка налогового статуса</a><br>
+
                     </div>
                     <div class='col-xs-12 col-sm-8 col-lg-9'>
                         <?

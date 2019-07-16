@@ -496,4 +496,20 @@ class AjaxController extends CController {
 
     echo CJSON::encode($arRes);
   }
+  /**
+   *  проверка самозанятого
+   */
+  public function actionSelf_employed()
+  {
+    $arRes = array('error'=>true,'response'=>[]);
+
+    if(!Yii::app()->user->isGuest)
+    {
+      $model = new User();
+      $model->checkSelfEmployed($arRes);
+    }
+
+    echo CJSON::encode($arRes);
+    Yii::app()->end();
+  }
 }

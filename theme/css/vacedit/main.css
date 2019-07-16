@@ -805,7 +805,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 #DiContent.page-vacancy .erv__tab-link.link6:before{ background-position: 0px -89px }
 #DiContent.page-vacancy .erv__tab-link.link7:before{ background-position: 0px -106px }
 #DiContent.page-vacancy .erv__tab-link.link8:before{ background-position: 0px -124px }
-
+#DiContent.page-vacancy .erv__tab-link.link9:before{ background-position: 0px -145px }
 /*
 *		MEDIA
 */

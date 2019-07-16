@@ -137,6 +137,9 @@
       <?php if($attr['confirmPhone'] || $attr['confirmEmail']): ?>
         <div class="confirmed-user js-g-hashint" title="Личность соискателя является подлинной">ПРОВЕРЕН</div>
       <?php endif; ?>
+      <? if(!empty($info['self_employed'])): ?>
+        <div class="self_employed-user js-g-hashint" title="Налоговый статус соискателя">САМОЗАНЯТЫЙ</div>
+      <? endif; ?>
       <?php if($cntComments): ?>
         <div class="ppp__logo-comm">
           <span class="ppp__subtitle">Отзывы:</span> 

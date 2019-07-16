@@ -193,40 +193,29 @@ class SiteController extends Controller
 
     public function actionPagesForm()
     {
-        $share = new Share;
-        $lang = "ru";
-        $pagetype = '';
-        if(!empty($_POST['pagetype'])) $pagetype = $_POST['pagetype'];
-        if(!empty($_GET['pagetype'])) $pagetype = $_GET['pagetype'];
+      $this->checkAccess();
 
-        $model=new PagesContent;
-        $id = 0;
-        if(isset($_POST['id'])) $id = $_POST['id'];
-        //print_r($_POST);die;
-        if(isset($_POST['PagesContent']))
+      $rq = Yii::app()->getRequest();
+      $id = intval($rq->getParam('id'));
+      $type = $rq->getParam('pagetype');
+      $model = new PagesContent;
+
+      if ($rq->getParam('PagesContent'))
+      {
+        $model->attributes = $rq->getParam('PagesContent');
+        $model->SaveContent($id, $model, $_POST['PagesContent']['link'], 'ru', $type);
+
+        switch ($type)
         {
-            //print_r($_POST['PagesContent']);die;
-            // Save to base
-            $model->attributes=$_POST['PagesContent'];
-            $model->SaveContent($id,$model,$_POST['PagesContent']['link'],$lang, $pagetype);
-            if($_POST['pagetype'] == 'news') {
-                $model = new Pages;
-                $this->render('pages/newsview', array('model' => $model));
-            } elseif($_POST['pagetype'] == 'articles') {
-                $model = new Pages;
-                $this->render('pages/artsview', array('model' => $model));
-            }else 
-            {
-
-
-                $this->render('pages/view', array('model' => $model));
-            }
-            return;
+          case 'news': $view = 'pages/newsview'; break;
+          case 'articles': $view = 'pages/artsview'; break;
+          default: $view = 'pages/view'; break;
         }
-        if(self::isAuth())
-           $this->render('pages/form',array('model'=>$model,'id'=>$id, 'pagetype'=>$pagetype));
-        //self::isAuth(array('pages/form',array('model'=>$model, 'id'=>$id)));
+        $this->render($view, ['model' => new Pages()]);
+        return;
+      }
 
+      $this->render('pages/form',['model'=>$model,'id'=>$id, 'pagetype'=>$type]);
     }
     
     public function actionComments()
@@ -2074,7 +2063,7 @@ class SiteController extends Controller
         $this->render($view, ['viData' => $data]);  
     }
     /**
-     * 
+     * Файловый менеджер
      */
     public function actionFilemanager()
     {
@@ -2085,7 +2074,7 @@ class SiteController extends Controller
         $this->render('filemanager/index'); 
     }
     /**
-     * 
+     * Все пользователи
      */
     public function actionAll_users()
     {
@@ -2095,11 +2084,22 @@ class SiteController extends Controller
         $this->breadcrumbs = [1 => $title];
         if(Yii::app()->request->isAjaxRequest)
         {
-            $this->renderPartial('users/list-all-ajax'); 
+            $this->renderPartial('users/list-all-ajax');
         }
         else
         {
-            $this->render('users/list-all');  
+            $this->render('users/list-all');
         }
+    }
+    /*
+     * Проверка самозанятого
+     */
+    public function actionSelf_employed()
+    {
+      $this->checkAccess();
+      $title = 'Проверка ИНН';
+      $this->setPageTitle($title);
+      $this->breadcrumbs = [1 => $title];
+      $this->render('self_employed/index');
     }
 }

@@ -951,6 +951,7 @@ a.upp__project-info{ width: 65px }
 /*
 *
 */
+.self_employed-user,
 .confirmed-user{
     max-width: 100px;
     height: 30px;
@@ -963,6 +964,10 @@ a.upp__project-info{ width: 65px }
     line-height: 30px;
     text-align: left;
     position: relative;
+}
+.self_employed-user{
+    background: url(/theme/pic/vacancy/vacancy-sprite-big.png) 0 0 no-repeat;
+    background-position: 0 -243px;
 }
 /*
 *
