@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-xs-12 col-sm-8 news-single">
-        <span class="img"><img src="/images/news/<?= $viData['data']['img'] ?>" title="<?=$viData['data']['name']?>" alt="<?=$viData['data']['name']?>"></span>
+        <span class="img"><img src="<?=Settings::getFilesUrl() . 'news/' . $viData['data']['img'] . News::$BIG_IMG?>" title="<?=$viData['data']['name']?>" alt="<?=$viData['data']['name']?>"></span>
         <div class="text"><?= $viData['data']['html'] ?></div>
         <div class="social">
         <?php /*
@@ -18,7 +18,7 @@
                  <? else:?>
             <div class="news-popular">
                 <div class="big"><a href="<?= MainConfig::$PAGE_NEWS . DS . $val['link'] ?>"><?= $val['name'] ?></a></div>
-                <a href="<?= MainConfig::$PAGE_NEWS . DS . $val['link'] ?>" class="img"><img src="/images/news/<?= $val['imgSM'] ?>" alt=""><i></i></a>
+                <a href="<?= MainConfig::$PAGE_NEWS . DS . $val['link'] ?>" class="img"><img src="<?=Settings::getFilesUrl() . 'news/' . $val['img'] . News::$SMALL_IMG?>" alt=""><i></i></a>
                <!--  <div class="text"><?= $val['anons'] ?></div> -->
                 <div class="date"><?= $val['crdate'] ?></div>
             </div>

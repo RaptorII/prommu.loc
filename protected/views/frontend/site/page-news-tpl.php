@@ -2,8 +2,7 @@
     <?php foreach ($viData as $key => $val): ?>
         <div class="col-xs-12 col-sm-4 col-md-4 news-block news-list__item">
             <a href="<?= MainConfig::$PAGE_NEWS . DS . $val['link'] ?>" class="img news-list__img-link">
-                <!--img src="/images/news/<?= $val['imgSM'] ?>" alt=""-->
-                <div class="news-list__img" style="background-image: url(/images/news/<?= $val['imgSM']?>)"></div>
+                <div class="news-list__img" style="background-image: url(<?=Settings::getFilesUrl() . 'news/' . $val['img'] . News::$SMALL_IMG?>)"></div>
                 <i></i>
             </a>
             <div class="big news-list__text-block">

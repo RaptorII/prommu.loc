@@ -1,4 +1,7 @@
-<?php $image = getimagesize('https://prommu.com/images/articles/'.$viData['data']['img']); ?>
+<?php
+  $src = Settings::getFilesUrl() . MainConfig::$PAGE_ARTICLES . DS . $viData['data']['img'] . Articles::$BIG_IMG;
+  $imgDimensions = getimagesize($src);
+?>
 <div class="row" itemscope itemtype="http://schema.org/BlogPosting">
     <link itemprop="mainEntityOfPage" itemscope href="<?echo 'https://prommu.com' . $_SERVER['REQUEST_URI']?>"/>
     <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization" style="display: none;">
@@ -21,11 +24,11 @@
                 itemprop="image url" 
                 title="<?=$viData['data']['name']?>" 
                 alt="<?=$viData['data']['name']?>"
-                width="<?=$image[0]?>"
-                height="<?=$image[1]?>"
-                src="https://prommu.com/images/articles/<?= $viData['data']['img'] ?>"/>
-            <meta itemprop="width" content="<?=$image[0]?>">
-            <meta itemprop="height" content="<?=$image[1]?>">
+                width="<?=$imgDimensions[0]?>"
+                height="<?=$imgDimensions[1]?>"
+                src="<?=$src?>"/>
+            <meta itemprop="width" content="<?=$imgDimensions[0]?>">
+            <meta itemprop="height" content="<?=$imgDimensions[1]?>">
         </span>
         <div class="text"><?= $viData['data']['html'] ?></div>
         <div class="date"><?= $viData['data']['crdate'] ?></div>
@@ -41,7 +44,7 @@
             <? else:?>
             <div class="news-popular"> 
                 <div class="big"><a href="<?= MainConfig::$PAGE_ARTICLES . DS . $val['link'] ?>"><?= $val['name'] ?></a></div>
-                <a href="<?= MainConfig::$PAGE_ARTICLES . DS . $val['link'] ?>" class="img"><img src="/images/articles/<?= $val['imgSM'] ?>" alt=""><i></i></a>
+                <a href="<?= MainConfig::$PAGE_ARTICLES . DS . $val['link'] ?>" class="img"><img src="<?=Settings::getFilesUrl() . MainConfig::$PAGE_ARTICLES . DS . $val['img'] . Articles::$SMALL_IMG?>" alt=""><i></i></a>
                <!--  <div class="text"><?= $val['anons'] ?></div> -->
                 <div class="date"><?= $val['crdate'] ?></div>
             </div>

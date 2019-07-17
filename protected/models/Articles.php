@@ -6,6 +6,8 @@
 
 class Articles extends Model
 {
+  public static $SMALL_IMG = '350.jpg';
+  public static $BIG_IMG = '000.jpg';
     /**
      * Получаем новости
      */

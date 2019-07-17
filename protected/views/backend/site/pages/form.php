@@ -1,4 +1,10 @@
 <?php
+$bUrl = Yii::app()->request->baseUrl;
+Yii::app()->getClientScript()
+  ->registerCssFile($bUrl . '/css/template.css');
+Yii::app()->getClientScript()
+  ->registerScriptFile($bUrl . '/js/ckeditor/ckeditor.js', CClientScript::POS_HEAD);
+$smallImgWidth = 350; // ширина маленького изображения для статей
 if($pagetype=='news')
 {
 	$title = 'Редактирование новости ' . $id;
@@ -9,6 +15,8 @@ if($pagetype=='news')
 		'1'=>$title
 	); 
     echo '<h3><i>'.$title.'</i></h3>';
+  $filePath = Settings::getFilesRoot() . 'news/';
+  $fileUrl = Settings::getFilesUrl() . 'news/';
 } 
 elseif($pagetype=='articles')
 {
@@ -19,7 +27,9 @@ elseif($pagetype=='articles')
 		'Управление статьями'=>array('articlespages'),
 		'1'=>$title
 	); 
-	echo '<h3><i>Редактирование статьи</i></h3>';
+	echo "<h3>$title</h3>";
+  $filePath = Settings::getFilesRoot() . 'articles/';
+  $fileUrl = Settings::getFilesUrl() . 'articles/';
 } 
 elseif($pagetype=='about')
 {
@@ -41,207 +51,232 @@ elseif($pagetype=='prom')
 }
 else 
 {
-    echo '<h3><i>Настройка страницы сайта</i></h3>';
+    echo '<h3>Настройка страницы сайта</h3>';
 }
-echo '<div class="content">';
 
-  Yii::app()->getClientScript()->registerCoreScript('jquery');
-  Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl.'/js/ajaxfileupload.js', CClientScript::POS_HEAD);
+$share = new Share;
+$lang = $share->getLang();
 
-  $share = new Share;
-  $lang = $share->getLang();
+$pg = new PagesContent;
+$result = $pg->getContent($lang, $id);
 
-  $pg = new PagesContent;
-  $result = $pg->getContent($lang, $id);
+$result2 = new Pages;
+if($id>0)
+{
+  $result2 = Pages::model()->findByPk($id);
+  $model = $result;
+}
+?>
+<div class="row">
+  <div class="col-xs-12">
+    <?
+      echo CHtml::form('','post');
+      echo CHtml::hiddenField('field_lang', $lang);
+      echo CHtml::hiddenField('pagetype', $pagetype);
+      echo CHtml::hiddenField('PagesContent[img]', $result->img);
+    ?>
+    <div class="row">
+      <div class="hidden-xs col-sm-1 col-md-3"></div>
+      <div class="col-xs-12 col-sm-10 col-md-6">
+        <div class="row">
+          <div class="col-xs-12">
+            <label class="d-label">
+              <span>Язык: <?=$lang?></span>
+            </label>
+            <label class="d-label">
+              <span>Скрыть:</span>
+              <input type="checkbox" name="PagesContent[hidden]" value="1" <?=($result->hidden ? 'checked="checked"' : '')?>>
+            </label>
+            <label class="d-label">
+              <span>Ссылка</span>
+              <input type="text" name="PagesContent[link]" class="form-control" value="<?=$result2->link?>">
+            </label>
+            <label class="d-label">
+              <span>Название</span>
+              <input type="text" name="PagesContent[name]" class="form-control" value="<?=$result->name?>">
+            </label>
+            <? if(in_array($pagetype,['articles','news'])): ?>
+              <label class="d-label">
+                <span>Анонс</span>
+                <textarea name="PagesContent[anons]" class="form-control"><?=$result->anons?></textarea>
+              </label>
+            <? endif; ?>
+            <div class="row">
+              <? if($pagetype=='articles'): ?>
+                <div class="col-xs-12 col-sm-6">
+                  <label class="d-label" id="preview_img">
+                    <span>Изображение анонса</span>
+                    <?
+                      $imgPath = Settings::getFilesRoot() . 'articles/' . $result->img . $smallImgWidth . '.jpg';
+                      $imgSrc = Settings::getFilesUrl() . 'articles/' . $result->img . $smallImgWidth . '.jpg';
+                      if(file_exists($imgPath))
+                      {
+                        echo '<img src="' . $imgSrc . '">';
+                      }
+                    ?>
+                    <input type="hidden" name="PagesContent[img]" class="form-control" value="<?=$result->img?>">
+                  </label>
+                  <?
+                    $this->widget(
+                      'YiiUploadWidget',
+                      [
+                        'fileFormat' => ['jpg','jpeg','png'],
+                        'imgDimensions' => [(string)$smallImgWidth => $smallImgWidth],
+                        'callButtonText' => 'Загрузить',
+                        'cssClassButton' => 'preview_btn',
+                        'maxFileSize' => 10,
+                        'jsMethodAfterUpload' => 'afterUploadPreviewImage',
+                        'filePath' => $filePath,
+                        'fileUrl' => $fileUrl
+                      ]
+                    );
+                  ?>
+                </div>
+              <? elseif ($pagetype=='news'): ?>
+                <div class="col-xs-12 col-sm-6">
+                  <label class="d-label" id="preview_img">
+                    <span>Изображение анонса</span>
+                    <?
+                    $imgPath = Settings::getFilesRoot() . 'news/' . $result->img . $smallImgWidth . '.jpg';
+                    $imgSrc = Settings::getFilesUrl() . 'news/' . $result->img . $smallImgWidth . '.jpg';
+                    if(file_exists($imgPath))
+                    {
+                      echo '<img src="' . $imgSrc . '">';
+                    }
+                    ?>
+                    <input type="hidden" name="PagesContent[img]" class="form-control" value="<?=$result->img?>">
+                  </label>
+                  <?
+                  $this->widget(
+                    'YiiUploadWidget',
+                    [
+                      'fileFormat' => ['jpg','jpeg','png'],
+                      'imgDimensions' => [(string)$smallImgWidth => $smallImgWidth],
+                      'callButtonText' => 'Загрузить',
+                      'cssClassButton' => 'preview_btn',
+                      'maxFileSize' => 10,
+                      'jsMethodAfterUpload' => 'afterUploadPreviewImage',
+                      'filePath' => $filePath,
+                      'fileUrl' => $fileUrl
+                    ]
+                  );
+                  ?>
+                </div>
+              <? endif; ?>
+              <div class="col-xs-12 <?=in_array($pagetype,['articles','news']) ? 'col-sm-6' : ''?>">
+                <label class="d-label">
+                  <span>Дата публикации</span>
+                  <?
+                  echo $this->widget(
+                    'zii.widgets.jui.CJuiDatePicker',
+                    [
+                      'model'=>$result,
+                      'attribute'=>'pubdate',
+                      'options'=>
+                        [
+                          'dateFormat'=>'yy-mm-dd 00:00:00',
+                          'timeFormat'=>'hh:mm:ss',
+                          'minDate'=>'Today'
+                        ],
+                      'htmlOptions'=>['class'=>'form-control']
+                    ],
+                    true
+                  );
+                  ?>
+                </label>
+              </div>
+            </div>
+            <?
+            //
+            ?>
+            <label class="d-label">
+              <span>Титл страницы(мета данные)</span>
+              <input type="text" name="PagesContent[meta_title]" class="form-control" value="<?=$result->meta_title?>">
+            </label>
+            <label class="d-label">
+              <span>Description(мета данные)</span>
+              <textarea name="PagesContent[meta_description]" class="form-control"><?=$result->meta_description?></textarea>
+            </label>
+            <label class="d-label">
+              <span>Ключевые слова(мета данные)</span>
+              <input type="text" name="PagesContent[meta_keywords]" class="form-control" value="<?=$result->meta_keywords?>">
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="hidden-xs col-sm-1 col-md-3"></div>
+      <div class="col-xs-12">
+        <?
+          if(in_array($pagetype,['articles','news']))
+          {?>
+            <div class="bs-callout bs-callout-warning">Для загрузки изображения в тело текста необходимо:<br>
+              <ol>
+                <li>Загрузить изображение на сервер используя кнопку "Загрузить фото в текст статьи"(есть возможность загрузить несколько фото сразу). По завершению процедуры появится окно со ссылкой на картинку и заготовками html тегов</li>
+                <li>Копируем ссылку на картинку(1е поле)</li>
+                <li>Устанавливаем в текстовом редакторе курсор, где необходимо расположить картинку</li>
+                <li>В панели инструментов текстового редактора выбираем функцию "Изображение"</li>
+                <li>Во вкладке "Данные об изображении" в поле "Ссылка" вставляем ссылку на нашу картинку</li>
+                <li>Во вкладке "Дополнительно" в поле "Класс CSS" добавляем текст "single_article_img". Это необходимо для выравнивания изображения</li>
+              </ol>
+            </div>
+            <?
+            $this->widget(
+              'YiiUploadWidget',
+              [
+                'fileLimit' => 10,
+                'fileFormat' => ['jpg','jpeg','png'],
+                'imgDimensions' => [],
+                'maxFileSize' => 10,
+                'callButtonText' => 'Загрузить фото в текст статьи',
+                'showTags' => true,
+                'filePath' => $filePath,
+                'fileUrl' => $fileUrl
+              ]
+            );
+          }
+        ?>
+        <label class="d-label">
+          <span>Текст</span>
+        </label>
+        <textarea name="PagesContent[html]" class="form-control" id="detail_area"><?=$result->html?></textarea>
+        <div class="pull-right">
+          <? if($pagetype=='articles'): ?>
+            <a href="<?=$this->createUrl('/articlespages')?>" class="btn btn-success d-indent">Назад</a>
+          <? elseif($pagetype=='news'): ?>
+            <a href="<?=$this->createUrl('/newspages')?>" class="btn btn-success d-indent">Назад</a>
+          <? else: ?>
+            <a href="<?=$this->createUrl('/pages')?>" class="btn btn-success d-indent">Назад</a>
+          <? endif; ?>
+          <button type="submit" class="btn btn-success d-indent">Сохранить</button>
+        </div>
+      </div>
+    </div>
+    <? echo CHtml::endForm(); ?>
+  </div>
+</div>
+<script>
+  'use strict'
+  jQuery(function($){
+    CKEDITOR.replace('detail_area');
+    CKEDITOR.config.height = '750px';
+  });
+  var fileUrl = '<?=$fileUrl?>';
+  var filSuffix = '<?=$smallImgWidth?>';
+  var afterUploadPreviewImage = function()
+  {
+    var objImage = arguments[0][0],
+        nameWithoutSuffix = objImage.name.split('.').slice(0, -1).join('.'),
+        src = fileUrl + nameWithoutSuffix + filSuffix + '.jpg';
 
-  $result2 = new Pages;
-  if($id>0){
-  	$result2 = Pages::model()->findByPk($id);
-  	$model = $result;
+    $('#preview_img input').val(nameWithoutSuffix);
+    $('#preview_img img').remove();
+    $('#preview_img').append('<img src="' + src + '">');
   }
-echo CHtml::label('Язык: '.$lang, 'lang');
-
-echo CHtml::form('','post',array('enctype'=>'multipart/form-data', 'class'=>'form-horizontal'));
-echo CHtml::hiddenField('field_lang', $lang, array('type'=>"hidden"));
-echo CHtml::hiddenField('pagetype', $pagetype, array('type'=>"hidden"));
-
-echo '<div class="control-group">
-      <label class="control-label">Скрыть</label>
-	    <div class="controls input-append">';
-echo CHtml::CheckBox('PagesContent[hidden]',$result->hidden, array (
-                                        'value'=>'1', 'style'=>'width:700px;'
-                                        ));
-echo '</div>
-	    </div>';
-
-echo '<div class="control-group">
-      <label class="control-label">Ссылка</label>
-	    <div class="controls input-append">';
-echo CHtml::textField('PagesContent[link]', $result2->link, array('class'=>'form-control', 'style'=>'width:700px;'));
-echo '  <span class="add-on"><i class="icon-tag"></i></span>';
-echo '</div>
-	    </div>';
-
-echo '<div class="control-group">
-      <label class="control-label">Название</label>
-	    <div class="controls input-append">';
-echo CHtml::textField('PagesContent[name]', $result->name, array('class'=>'form-control', 'style'=>'width:700px;'));
-echo '  <span class="add-on"><i class="icon-tag"></i></span>';
-echo '</div>
-	    </div>';
-
-
-echo '<div class="control-group">
-      <label class="control-label">Анонс</label>
-	    <div class="controls input-append">';
-echo CHtml::textArea('PagesContent[anons]', $result->anons, array('class'=>'form-control', 'style'=>'width:700px;'));
-echo '  <span class="add-on"><i class="icon-tag"></i></span>';
-echo '</div>
-	    </div>';
-
-
-echo '<div class="control-group">
-      <label class="control-label">Html</label>
-	    <div class="controls" style="width:700px">';
-$this->widget('application.extensions.ckeditor.CKEditor', array(
-'model'=>$model,
-'attribute'=>'html',
-'language'=>'ru',
-'editorTemplate'=>'full',
-'width'=>'50%',
-));
-
-echo '</div></div>';
-
-echo CHtml::hiddenField('PagesContent[img]', $result->img, array('class'=>'form-control', 'id'=>'fimg', 'style'=>'width:700px;'));
-?>
-<!-- Uploader -->
-<?php if(in_array($pagetype, ['about','prom','empl'])): ?>
-	<input type="hidden" name="fileToUpload" value="">
-<?php else: ?>
-	<div class="control-group">
-		<label class="control-label">Изображение</label>
-		<div class="controls input-append">
-			<img id="loading" src="/images/loading.gif" style="display:none;">
-			<table cellpadding="0" cellspacing="0" class="tableForm">
-				<thead><tr><th>Выберите изображение</th></tr></thead>
-				<tbody><tr><td><input id="fileToUpload" type="file" name="fileToUpload" /></td></tr></tbody>
-				<tfoot>
-					<tr>
-						<td><button class="btn" id="buttonUpload" onclick="return ajaxFileUpload();">Загрузить</button></td>
-					</tr>
-				</tfoot>
-			</table>
-		</div>
-		<div id="msg" class="alert alert-message span6 offset4"></div>
-		<img id="img_page" src="/images/<?php echo $pagetype.'/'.$result->img; ?>" class="span6 offset4"/>
-	</div>
-<?php endif; ?>
-<?php
-echo '<div class="control-group">
-      <label class="control-label">Дата публикации</label>
-	    <div class="controls input-append">';
-//echo CHtml::date_time_set('PagesContent[name]', $result->name, array('class'=>'admform span5'));
-echo $this->widget('zii.widgets.jui.CJuiDatePicker', array('model'=>$result, 'attribute'=>'pubdate','language'=>'ru', 'id'=>'pubdate', 'options'=>array('dateFormat'=>'yy-mm-dd 00:00:00', 'timeFormat'=>'hh:mm:ss', 'minDate'=>'Today'),), true);
-
-echo '  <span class="add-on"><i class="icon-tag"></i></span>';
-echo '</div>
-	    </div>';
-
-
-echo '<div class="control-group">
-      <label class="control-label">Мета: Название страницы</label>
-	    <div class="controls input-append">';
-echo CHtml::textField('PagesContent[meta_title]', $result->meta_title, array('class'=>'form-control', 'style'=>'width:700px;'));
-echo '  <span class="add-on"><i class="icon-hand-right"></i></span>';
-echo '</div>
-	    </div>';
-
-echo '<div class="control-group">
-      <label class="control-label">Мета: Описание</label>
-	    <div class="controls input-append">';
-echo CHtml::textArea('PagesContent[meta_description]', $result->meta_description, array('rows'=>4, 'style'=>'width:700px;','id'=>'meta_description', 'class'=>'form-control'));
-echo '</div>
-	    </div>';
-
-echo '<div class="control-group">
-      <label class="control-label">Мета: ключевые слова</label>
-	    <div class="controls input-append">';
-echo CHtml::textField('PagesContent[meta_keywords]', $result->meta_keywords, array('class'=>'form-control', 'style'=>'width:700px;'));
-echo '  <span class="add-on"><i class="icon-tasks"></i></span>';
-echo '</div>
-	    </div>';
-
-
-
-
-
-echo '<div class="control-group">';
-echo '<div style="float:right;  display:inline;">';
-echo CHtml::submitButton('Сохранить',array("class"=>"btn btn-success", "id"=>"btn_submit"));
-echo '&nbsp;&nbsp;';
-echo CHtml::tag('input',array("id"=>"btn_cancel", "type"=>"button", "value"=>"Отмена", "class"=>"btn btn-warning"));
-echo '</div></div>';
-
-//$this->endWidget();
-echo CHtml::endForm();
-?>
-
-<script type="text/javascript">
-
-$(document).ready(function(){
-	$('#btn_cancel').click(function(){
-    $("#form").attr("action","/admin/site/pages");
-    $("#btn_submit").click();
-    });
-});
-
-
-$("#93_textInput").val("text");
-	function ajaxFileUpload()
-	{
-		$("#loading")
-		.ajaxStart(function(){
-			$(this).show();
-		})
-		.ajaxComplete(function(){
-			$(this).hide();
-		});
-
-		$.ajaxFileUpload
-		(
-			{
-				url:'/uploads/doajaxpageupload.php?pagetype=<?php echo $pagetype;?>',
-				secureuri:false,
-				fileElementId:'fileToUpload',
-				dataType: 'json',
-				data:{name:'logan', id:'id'},
-				success: function (data, status)
-				{
-					if(typeof(data.error) != 'undefined')
-					{
-						if(data.error != '')
-						{
-							alert(data.error);
-						}else
-						{
-							$('#msg').html($('#msg').html()+data.msg);
-                            $("#img_page").attr("src", "/images/<?php echo $pagetype;?>/"+data.name);
-                            $('#fimg').val(data.name);
-						}
-					}
-				},
-				error: function (data, status, e)
-				{
-					alert(e);
-				}
-			}
-		)
-
-		return false;
-
-	}
-
 </script>
-</div>
-</div>
+<style>
+  .YiiUpload__call-btn.preview_btn{ margin: -5px 0 5px 0; }
+  #preview_img img{
+    width: 100%;
+    padding-bottom: 5px;
+  }
+</style>

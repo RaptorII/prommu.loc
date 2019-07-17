@@ -28,6 +28,7 @@ class YiiUploadWidget extends CWidget
 	public $cssClassForm; // string - custom styles for popup
 	public $reloadAfterUpload; // boolean - reload page after upload and close popup
 	public $arEditImage; // array - array with data for edit image
+  public $jsMethodAfterUpload; // JS method, call after upload file
 
 	public  $defaultController='/site';
 
@@ -67,7 +68,8 @@ class YiiUploadWidget extends CWidget
 		!isset($this->reloadAfterUpload) && $this->reloadAfterUpload = false;
 		!isset($this->arEditImage) && $this->arEditImage = false;
 		!isset($GLOBALS['yiiUploadCnt']) ? $GLOBALS['yiiUploadCnt']=1 : $GLOBALS['yiiUploadCnt']++;
-	}
+    !isset($this->jsMethodAfterUpload) && $this->jsMethodAfterUpload = false;
+  }
 
 	public function run()
 	{
@@ -89,7 +91,8 @@ class YiiUploadWidget extends CWidget
 				'cssClassForm' => $this->cssClassForm,
 				'reloadAfterUpload' => $this->reloadAfterUpload,
 				'instanceId' => $this->instanceId,
-				'arEditImage' => $this->arEditImage
+        'arEditImage' => $this->arEditImage,
+        'jsMethodAfterUpload' => $this->jsMethodAfterUpload
 			));
 		$s = Yii::app()->session['yiiUpload'];
 		$s[$this->instanceId] = [
@@ -108,7 +111,8 @@ class YiiUploadWidget extends CWidget
 				'imgOrigSuFFix' => $this->imgOrigSuFFix,
 				'useWebcam' => $this->useWebcam,
 				'objSave' => $this->objSave,
-				'objSaveMethod' => $this->objSaveMethod
+				'objSaveMethod' => $this->objSaveMethod,
+        'showTags'=>$this->showTags
 			];
 		Yii::app()->session['yiiUpload'] = $s;
 		
@@ -140,7 +144,7 @@ class YiiUploadWidget extends CWidget
 		$instanceId = Yii::app()->getRequest()->getParam('id');
 		$arRes = [];
 
-		if(isset($_FILES['upload']))
+		if(isset($_FILES['upload'])) // только загрузка файлов
 		{
 			$arRes = $this->checkImages($_FILES['upload'], $s[$instanceId]);
 			if($s[$instanceId]['imageEditor']==true)
@@ -148,17 +152,17 @@ class YiiUploadWidget extends CWidget
 				$this->saveData(['files'=>$arRes['success']], $s[$instanceId]);
 			}
 		}
-		elseif($_POST['state']=='full')
+		elseif($_POST['state']=='full') // загрузка и редактирование файлов
 		{
 			$arRes = $this->editImages($_POST['data'], $s[$instanceId]);
 			$this->saveData(['files'=>$arRes['success']], $s[$instanceId]);
 		}
-		elseif($_POST['state']=='edit')
+		elseif($_POST['state']=='edit') // только редактирование файлов
 		{
 			$arRes = $this->onlyEditImages($_POST['data'], $s[$instanceId]);
 			$this->saveData(['files'=>$arRes['success']], $s[$instanceId]);
 		}
-		elseif($_POST['state']=='delete')
+		elseif($_POST['state']=='delete') // удаление файлов
 		{
 			$this->deleteImages($_POST['data'], $s[$instanceId]);
 		}
@@ -200,7 +204,7 @@ class YiiUploadWidget extends CWidget
 			}
 			if($arData['size'][$i]>$mSize) // ошибка передачи файла на сервер
 			{
-				$arRes['error'][] = "Размер файла '{$fName}' больше допустимого значения ({$mSize}Мб)";
+				$arRes['error'][] = "Размер файла '{$fName}' больше допустимого значения (" . $arParams['maxFileSize'] . "Мб)";
 				continue;
 			}
 
@@ -213,6 +217,10 @@ class YiiUploadWidget extends CWidget
 			$newName = date('YmdHis') . rand(1000,9999) . '.' . $type;
 			$filePath = $arParams['filePath'] . $newName;
 			$src = $arParams['fileUrl'] . $newName;
+      $info = new SplFileInfo($filePath);
+      $type = mb_strtolower($info->getExtension());
+      $typeLen = strlen($type) + 1; // прибавляем точку
+      $filePathWithoutExt = substr($filePath, 0, (strlen($filePath)-$typeLen)); // without '.<type>'
 			$result = move_uploaded_file($arData["tmp_name"][$i], $filePath);
 			if($result) // файл успешно перемещен
 			{
@@ -233,7 +241,22 @@ class YiiUploadWidget extends CWidget
 						unlink($filePath);
 						continue;
 					}
-					$this->resizeImage($filePath, $filePath, $this->defaultImgSize); // сжимаем до допустимых размеров
+					if($arParams['showTags']==false)
+          {
+            $this->resizeImage($filePath, "{$filePathWithoutExt}{$arParams['imgOrigSuFFix']}.jpg", $this->defaultImgSize);
+            if(count($arParams['imgDimensions'])) // если теги выводить не надо, но надо несколько вариантов изображения
+            {
+              foreach ($arParams['imgDimensions'] as $suffix => $size)
+              {
+                $this->resizeImage($filePath, "{$filePathWithoutExt}{$suffix}.jpg", $size);
+              }
+            }
+            unlink($filePath);
+          }
+          else
+          {
+            $this->resizeImage($filePath, $filePath, $this->defaultImgSize); // сжимаем до допустимых размеров
+          }
 				}
 				$arRes['success'][] = $this->getSuccess($newName, $fName, $src, $fSize);
 			}

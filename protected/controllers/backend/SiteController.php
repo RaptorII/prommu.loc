@@ -312,33 +312,25 @@ class SiteController extends Controller
 
     public function actionPageUpdate($id)
     {
-        $model=new PagesContent;
-        $pagetype = '';
-        if(!empty($_POST['pagetype'])) $pagetype = $_POST['pagetype'];
-        if(!empty($_GET['pagetype'])) $pagetype = $_GET['pagetype'];
+      $model = new PagesContent();
+      $pagetype = Yii::app()->getRequest()->getParam('pagetype');
+      $params = Yii::app()->getRequest()->getParam('PagesContent');
 
+      if(count($params))
+      {
 
-        if(isset($_POST['PagesContent']))
-        {
-            
-            $model->attributes=$_POST['PagesContent'];
-            
-            $model->SaveContent($id,$model,$_POST['PagesContent']['link'],"ru");
-        
-            if($pagetype == 'news') {
-                $model = new Pages;
-                $this->render('pages/newsview', array('model' => $model));
-            } elseif($pagetype == 'articles'){
-                $model = new Pages;
-                $this->render('pages/artsview', array('model' => $model));
-            }else{
-                $this->render('pages/view', array('model' => $model));
-            }
+        $model->attributes = $params;
+        $model->SaveContent($id, $model, $params['link'],"ru");
+        Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
 
-            return;
-        }
+        $pagetype=='news' && $this->redirect('/admin/newspages');
+        $pagetype=='articles' && $this->redirect('/admin/articlespages');
+      }
+      else
+      {
         $this->setPageTitle('Настройка страницы сайта');
-        $this->render('pages/form',array('model'=>$model,'id'=>$id, 'pagetype' =>$pagetype));
+        $this->render('pages/form',['model'=>$model,'id'=>$id, 'pagetype' =>$pagetype]);
+      }
     }
 
     public function actionPageDelete($id)

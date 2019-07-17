@@ -1,4 +1,8 @@
-<h3><i>Управление страницами новостей</i></h3>
+<?
+Yii::app()->getClientScript()
+  ->registerCssFile(Yii::app()->request->baseUrl . '/css/template.css');
+?>
+<h3>Управление страницами новостей</h3>
 <?php
 echo CHtml::form('/admin/site/pagesform','POST',array("id"=>"form"));
 
