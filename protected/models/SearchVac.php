@@ -676,7 +676,7 @@ class SearchVac extends Model
         
         if( !empty($data['isavto']) )
         {
-            $filter[] = ' e.ishasavto = 1';
+            $filter[] = ' e.isavto = 1';
         }
 
         if( !empty($data['smart']) )
