@@ -1119,4 +1119,16 @@ a.upp__project-info{ width: 65px }
     display: inline-block;
     margin: 0 15px 15px 0;
 }
-#self_employed_message{ display: none }
+#self_employed_message{
+    display: none;
+    max-width: 600px;
+}
+#self_employed_message h3{ font-size: 20px; }
+#self_employed_message p{
+    font-size: 16px;
+    text-align: justify;
+}
+#self_employed_message ul{
+    font-size: 16px;
+    text-align: left;
+}
