@@ -3846,6 +3846,7 @@ public function vac(){
         $filter['qs'] = Yii::app()->getRequest()->getParam('name');
         
         $filter['is_man'] = Yii::app()->getRequest()->getParam('is_man');
+        $filter['is_temp'] = Yii::app()->getRequest()->getParam('is_temp');
         $filter['is_woman'] = Yii::app()->getRequest()->getParam('is_woman');
         
         $filter['af'] = Yii::app()->getRequest()->getParam('age_from');
@@ -3864,6 +3865,7 @@ public function vac(){
             // фильтр городов
             $city = $filter['city'] ?: null;
             $sr = $filter['sr'] ?: null;
+            $istemp = $filter['is_temp'] ?: null;
             $sphf = $filter['sphf'] ?: null;
             $spht = $filter['spht'] ?: null;
             $spwf = $filter['spwf'] ?: null;
@@ -3883,7 +3885,7 @@ public function vac(){
             $qs = $filter['qs'] ?: null;
             
             
-            $filter = ['filter' => compact('posts', 'city', 'sr','qs', 'sphf', 'spht', 'spwf', 'spwt', 'spmf', 'spmt', 'af', 'at', 'is_man','is_woman', 'smart', 'card', 'cardPrommu','self_employed')];
+            $filter = ['filter' => compact('posts', 'istemp', 'city', 'sr','qs', 'sphf', 'spht', 'spwf', 'spwt', 'spmf', 'spmt', 'af', 'at', 'is_man','is_woman', 'smart', 'card', 'cardPrommu','self_employed')];
         }
         else
         {
