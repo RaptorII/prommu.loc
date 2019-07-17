@@ -523,12 +523,10 @@ class SearchVac extends Model
             $filter[] = "e.title LIKE '%{$data['qs']}%'";
         }
         
-        var_dump($data['cities']);
-        
         // city filter
         if( !empty($data['cities']) )
         {
-            $filter[] = "c.id_city IN (".implode(',',$data['cities']).')';
+            $filter[] = "c.id_city IN (".join(',',$data['cities']).')';
         }
         else
         {
