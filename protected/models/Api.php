@@ -3889,7 +3889,7 @@ public function vac(){
             $qs = $filter['qs'] ?: null;
             
             
-            $filter = ['filter' => compact('posts', 'istemp', 'city', 'sr','qs', 'sphf', 'spht', 'spwf', 'spwt', 'spmf', 'spmt', 'af', 'at', 'is_man','is_woman', 'smart', 'card', 'cardPrommu','self_employed')];
+            $filter = ['filter' => compact('posts', 'istemp', 'ismed', 'isavto', 'city', 'sr','qs', 'sphf', 'spht', 'spwf', 'spwt', 'spmf', 'spmt', 'af', 'at', 'is_man','is_woman', 'smart', 'card', 'cardPrommu','self_employed')];
         }
         else
         {
