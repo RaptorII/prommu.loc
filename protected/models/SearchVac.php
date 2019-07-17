@@ -128,6 +128,8 @@ class SearchVac extends Model
             
             $data['vacs'][$val['id']]['is_premium'] = (boolean)$val['ispremium'];
             $data['vacs'][$val['id']]['is_active'] = 1;
+            $data['vacs'][$val['id']]['card'] = (boolean)$val['card'];
+            $data['vacs'][$val['id']]['card_prommu'] = (boolean)$val['cardPrommu'];
             
             $data['vacs'][$val['id']]['requirements'] = $val['requirements'];
             $data['vacs'][$val['id']]['conditions'] = $val['conditions'];
