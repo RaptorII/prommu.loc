@@ -128,14 +128,17 @@ class SearchVac extends Model
             
             $data['vacs'][$val['id']]['is_premium'] = (boolean)$val['ispremium'];
             $data['vacs'][$val['id']]['is_active'] = 1;
-            $data['vacs'][$val['id']]['card'] = (boolean)$val['card'];
-            $data['vacs'][$val['id']]['card_prommu'] = (boolean)$val['cardPrommu'];
             $data['vacs'][$val['id']]['is_med'] = (boolean)$val['ismed'];
             $data['vacs'][$val['id']]['is_hasavto'] = (boolean)$val['isavto'];
+            $data['vacs'][$val['id']]['is_temp'] =  (boolean)$val['istemp'];
+            $data['vacs'][$val['id']]['card'] = (boolean)$val['card'];
+            $data['vacs'][$val['id']]['card_prommu'] = (boolean)$val['cardPrommu'];
+            
             
             $data['vacs'][$val['id']]['requirements'] = $val['requirements'];
             $data['vacs'][$val['id']]['conditions'] = $val['conditions'];
             $data['vacs'][$val['id']]['duties'] = $val['duties'];
+            
             
             $data['vacs'][$val['id']]['salary_hour'] = (float)$val['shour'];
             $data['vacs'][$val['id']]['salary_week'] = (float)$val['sweek'];
