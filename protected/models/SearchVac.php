@@ -477,7 +477,7 @@ class SearchVac extends Model
         // analyse parameters
         $data = array();
         // quicksearch
-        if( ($s1 = filter_var(Yii::app()->getRequest()->getParam('qs'), FILTER_SANITIZE_FULL_SPECIAL_CHARS)) ) $data['qs'] = $s1 ? $s1 : $inProps['filter']['qs'];
+        if( ($s1 = filter_var(Yii::app()->getRequest()->getParam('qs'), FILTER_SANITIZE_FULL_SPECIAL_CHARS)) || $inProps['filter']['qs'] ) $data['qs'] = $s1 ? $s1 : $inProps['filter']['qs'];
         // города
         if( Yii::app()->getRequest()->getParam('cities') || $inProps['filter']['city'] ) $data['cities'] = $inProps['filter']['city'] ?: Yii::app()->getRequest()->getParam('cities');
         // все должности
