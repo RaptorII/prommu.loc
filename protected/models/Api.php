@@ -3103,7 +3103,7 @@ public function vac(){
             $spvt = $filter['spvt'] ?: null;
             
             $mb = $filter['mb'] ?: null;
-            $avto = $filter['avto'] ?: null;
+            $isavto = $filter['avto'] ?: null;
             $posts = $filter['posts'] ? array_combine($filter['posts'], $filter['posts']) : null;
             // фильтр городов
             $cities = $filter['city'] ? array_combine($filter['city'], $filter['city']) : null;
@@ -3847,6 +3847,8 @@ public function vac(){
         
         $filter['is_man'] = Yii::app()->getRequest()->getParam('is_man');
         $filter['is_temp'] = Yii::app()->getRequest()->getParam('is_temp');
+        $filter['is_med'] = Yii::app()->getRequest()->getParam('is_med');
+        $filter['is_hasavto'] = Yii::app()->getRequest()->getParam('is_hasavto');
         $filter['is_woman'] = Yii::app()->getRequest()->getParam('is_woman');
         
         $filter['af'] = Yii::app()->getRequest()->getParam('age_from');
@@ -3866,6 +3868,8 @@ public function vac(){
             $city = $filter['city'] ?: null;
             $sr = $filter['sr'] ?: null;
             $istemp = $filter['is_temp'] ?: null;
+            $ismed = $filter['is_med'] ?: null;
+            $isavto = $filter['is_hasavto'] ?: null;
             $sphf = $filter['sphf'] ?: null;
             $spht = $filter['spht'] ?: null;
             $spwf = $filter['spwf'] ?: null;
