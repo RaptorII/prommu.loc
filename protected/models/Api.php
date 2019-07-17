@@ -3841,8 +3841,8 @@ public function vac(){
         $filter['spvt'] = Yii::app()->getRequest()->getParam('salary_visit_from');
         
         $filter['smart'] = Yii::app()->getRequest()->getParam('smart');
-        $filter['post'] = explode(",",Yii::app()->getRequest()->getParam('post'));
-        $filter['city'] = explode(",", Yii::app()->getRequest()->getParam('city'));
+        $filter['post'] = Yii::app()->getRequest()->getParam('post') ? explode(",",Yii::app()->getRequest()->getParam('post')) :"";
+        $filter['city'] = Yii::app()->getRequest()->getParam('city') ? explode(",",Yii::app()->getRequest()->getParam('city')) :"";;
         $filter['qs'] = Yii::app()->getRequest()->getParam('name');
         
         $filter['is_man'] = Yii::app()->getRequest()->getParam('is_man');
