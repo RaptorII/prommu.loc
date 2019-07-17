@@ -553,7 +553,7 @@ class SearchVac extends Model
         // posts filter
         if( !empty($data['posts']) )
         {
-            foreach ($data['posts'] as $key => &$val) { $val = $key; } // end foreach;
+            // foreach ($data['posts'] as $key => &$val) { $val = $key; } // end foreach;
             $filterPost = ' ea.id_attr IN ('.join(',', $data['posts']).')';
         }
         
