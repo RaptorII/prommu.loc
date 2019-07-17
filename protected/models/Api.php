@@ -3915,7 +3915,7 @@ public function vac(){
              }
         }
     
-           $data = array_merge(['vacancy' => $data, 'pageCount' => $pages->pageCount]);
+           $data = array_merge(['vacancy' => $data, 'pageCount' => $pages->pageCount,'currentPage' => (int)$page ? (int)$page : 1]);
 
         return array_merge($data);
     }
