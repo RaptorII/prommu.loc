@@ -490,7 +490,7 @@ class SearchVac extends Model
         // должность в ручную
         if( !Yii::app()->getRequest()->getParam('poall') && ($s1 = filter_var(Yii::app()->getRequest()->getParam('poself'), FILTER_SANITIZE_FULL_SPECIAL_CHARS)) ) $data['selfPost'] = $s1;
         // занятость
-        if( ($int = filter_var(Yii::app()->getRequest()->getParam('bt'), FILTER_SANITIZE_NUMBER_INT)) != 3 && $int ) $data['busyType'] = $int - 1;
+        if( (($int = filter_var(Yii::app()->getRequest()->getParam('bt'), FILTER_SANITIZE_NUMBER_INT)) != 3 && $int) || $inProps['filter']['istemp'] ) $data['busyType'] = $int ? $int - 1 : $inProps['filter']['istemp'] ;
 
         // пол
         $int = filter_var(Yii::app()->getRequest()->getParam('sex'), FILTER_SANITIZE_NUMBER_INT);
