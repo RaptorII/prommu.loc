@@ -131,6 +131,7 @@ class SearchVac extends Model
             $data['vacs'][$val['id']]['is_med'] = (boolean)$val['ismed'];
             $data['vacs'][$val['id']]['is_hasavto'] = (boolean)$val['isavto'];
             $data['vacs'][$val['id']]['is_temp'] =  (boolean)$val['istemp'];
+            $data['vacs'][$val['id']]['smart'] = (boolean)$val['smart'];
             $data['vacs'][$val['id']]['card'] = (boolean)$val['card'];
             $data['vacs'][$val['id']]['card_prommu'] = (boolean)$val['cardPrommu'];
             
