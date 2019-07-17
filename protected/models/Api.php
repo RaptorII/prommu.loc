@@ -3880,9 +3880,10 @@ public function vac(){
             $self_employed = $filter['self_employed'] ?: null;
             $card = $filter['card'] ?: null;
             $cardPrommu = $filter['cardPrommu'] ?: null;
+            $qs = $filter['qs'] ?: null;
             
             
-            $filter = ['filter' => compact('posts', 'city', 'sr', 'sphf', 'spht', 'spwf', 'spwt', 'spmf', 'spmt', 'af', 'at', 'is_man','is_woman', 'smart', 'card', 'cardPrommu','self_employed')];
+            $filter = ['filter' => compact('posts', 'city', 'sr','qs', 'sphf', 'spht', 'spwf', 'spwt', 'spmf', 'spmt', 'af', 'at', 'is_man','is_woman', 'smart', 'card', 'cardPrommu','self_employed')];
         }
         else
         {
