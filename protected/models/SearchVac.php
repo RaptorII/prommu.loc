@@ -618,9 +618,9 @@ class SearchVac extends Model
         if( Yii::app()->getRequest()->getParam('cities') || $inProps['filter']['city'] ) $data['cities'] = $inProps['filter']['city'] ?: Yii::app()->getRequest()->getParam('cities');
         // все должности
         if( !Yii::app()->getRequest()->getParam('poall') || $inProps['filter']['posts'] ) $data['posts'] = $inProps['filter']['posts'] ?: Yii::app()->getRequest()->getParam('post');
-        if( Yii::app()->getRequest()->getParam('smart') || $inProps['filter']['smart']  ) $data['smart'] = $inProps['filter']['smart'] ?: Yii::app()->getRequest()->getParam('smart');
-        if( Yii::app()->getRequest()->getParam('ismed') || $inProps['filter']['ismed']  ) $data['ismed'] = $inProps['filter']['ismed'] ?: Yii::app()->getRequest()->getParam('ismed');
-        if( Yii::app()->getRequest()->getParam('isavto') || $inProps['filter']['isavto']  ) $data['isavto'] = $inProps['filter']['isavto'] ?: Yii::app()->getRequest()->getParam('isavto');
+        if( Yii::app()->getRequest()->getParam('smart') || $inProps['filter']['smart']  ) $data['smart'] = $inProps['filter']['smart'];
+        if( Yii::app()->getRequest()->getParam('ismed') || $inProps['filter']['ismed']  ) $data['ismed'] = $inProps['filter']['ismed'];
+        if( Yii::app()->getRequest()->getParam('isavto') || $inProps['filter']['isavto']  ) $data['isavto'] = $inProps['filter']['isavto'];
         if( Yii::app()->getRequest()->getParam('pcard') || $inProps['filter']['cardPrommu']  ) $data['cardPrommu'] = $inProps['filter']['cardPrommu'] ?: Yii::app()->getRequest()->getParam('pcard');
         if( Yii::app()->getRequest()->getParam('bcard') || $inProps['filter']['card']  ) $data['card'] = $inProps['filter']['card'] ?: Yii::app()->getRequest()->getParam('bcard');
         if( Yii::app()->getRequest()->getParam('self_employed') || $inProps['filter']['self_employed']  )
