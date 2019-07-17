@@ -45,25 +45,25 @@
                   <? if(isset($viData['receiver_new'])): ?>
                     <? $arUser = $viData['users'][$viData['receiver_new']]; ?>
                     <div class="item" data-id="<?=$viData['receiver_new']?>">
-                      <img src="<?=$arUser['src']?>" alt="<?=$arUser['name']?>">
+                      <img src="<?=$arUser['src']?>" alt="<?=$arUser['name']?>" title="Добавлен в список получателей">
                       <div class="info">
-                        <b><?=$arUser['name']?></b><br>
+                        <b title="Добавлен в список получателей"><?=$arUser['name']?></b><br>
                         <span><?=(Share::isApplicant($arUser['status']) ? 'соискатель' : 'работодатель')?></span>
                       </div>
                       <div class="links">
-                        <a href="/admin/<?=(Share::isApplicant($arUser['status']) ? 'PromoEdit/' : 'EmplEdit/') . $viData['receiver_new']?>" class="glyphicon glyphicon-edit" target="_blank" title="в вдминке"></a>'
-                        <a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $viData['receiver_new']?>" class="glyphicon glyphicon-new-window" target="_blank" title="в публичке"></a>'
+                        <a href="/admin/<?=(Share::isApplicant($arUser['status']) ? 'PromoEdit/' : 'EmplEdit/') . $viData['receiver_new']?>" class="glyphicon glyphicon-edit" target="_blank" title="Ссылка на профиль в вдминистративной части сайта"></a>
+                        <a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $viData['receiver_new']?>" class="glyphicon glyphicon-new-window" target="_blank" title="Ссылка на профиль в публичной части сайта"></a>
                       </div>
                       <input type="hidden" name="receivers[]" value="<?=$viData['receiver_new']?>">
-                      <i class="glyphicon glyphicon-remove"></i>
+                      <i class="glyphicon glyphicon-remove" title="Удалить из списка получателей"></i>
                     </div>
                   <? elseif(count($viData['receivers'])): ?>
                     <? foreach($viData['receivers'] as $v): ?>
                       <? $arUser = $viData['users'][$v['id_user']]; ?>
                       <div class="item" data-id="<?=$v['id_user']?>">
-                        <img src="<?=$arUser['src']?>" alt="<?=$arUser['name']?>">
+                        <img src="<?=$arUser['src']?>" alt="<?=$arUser['name']?>" title="Добавлен в список получателей">
                         <div class="info">
-                          <b><?=$arUser['name']?></b><br>
+                          <b title="Добавлен в список получателей"><?=$arUser['name']?></b><br>
                           <span><?=(Share::isApplicant($arUser['status']) ? 'соискатель' : 'работодатель')?></span>
                           <div class="readed<?=(!empty($v['readed'])?' success':'')?>">
                             <? if(!empty($v['readed'])): ?>
@@ -74,8 +74,8 @@
                           </div>
                         </div>
                         <div class="links">
-                          <a href="/admin/<?=(Share::isApplicant($arUser['status']) ? 'PromoEdit/' : 'EmplEdit/') . $v['id_user']?>" class="glyphicon glyphicon-edit" target="_blank" title="в вдминке"></a>'
-                          <a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user']?>" class="glyphicon glyphicon-new-window" target="_blank" title="в публичке"></a>'
+                          <a href="/admin/<?=(Share::isApplicant($arUser['status']) ? 'PromoEdit/' : 'EmplEdit/') . $v['id_user']?>" class="glyphicon glyphicon-edit" target="_blank" title="Ссылка на профиль в вдминистративной части сайта"></a>
+                          <a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user']?>" class="glyphicon glyphicon-new-window" target="_blank" title="Ссылка на профиль в публичной части сайта"></a>
                         </div>
                         <input type="hidden" name="receivers[]" value="<?=$v['id_user']?>">
                       </div>

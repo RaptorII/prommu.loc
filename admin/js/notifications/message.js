@@ -90,6 +90,8 @@ jQuery(function($){
 
       $(item).remove();
       $(parent).append(html);
+      $(parent).find('img').attr('title','Добавлен в список получателей');
+      $(parent).find('.info b').attr('title','Добавлен в список получателей');
       $('#receivers_list').hide();
 
       $('#receivers_result').append(parent);
