@@ -3860,9 +3860,9 @@ public function vac(){
         if( $filter )
         {
             // фильтр должностей
-            $post = $filter['post'] ? array_combine($filter['post'], $filter['post']) : null;
+            $post = $filter['post'] ?: null;
             // фильтр городов
-            $city = $filter['city'] ? array_combine($filter['city'], $filter['city']) : null;
+            $city = $filter['city'] ?: null;
             $sr = $filter['sr'] ?: null;
             $sphf = $filter['sphf'] ?: null;
             $spht = $filter['spht'] ?: null;
