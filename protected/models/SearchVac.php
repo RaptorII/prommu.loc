@@ -538,6 +538,7 @@ class SearchVac extends Model
         {
             $filter[] = ' e.smart = 1';
         }
+        
 
         if( !empty($data['self_employed']) )
         {
@@ -609,11 +610,14 @@ class SearchVac extends Model
         if( Yii::app()->getRequest()->getParam('cities') || $inProps['filter']['city'] ) $data['cities'] = $inProps['filter']['city'] ?: Yii::app()->getRequest()->getParam('cities');
         // все должности
         if( !Yii::app()->getRequest()->getParam('poall') || $inProps['filter']['posts'] ) $data['posts'] = $inProps['filter']['posts'] ?: Yii::app()->getRequest()->getParam('post');
-         if( Yii::app()->getRequest()->getParam('smart') || $inProps['filter']['smart']  ) $data['smart'] = $inProps['filter']['smart'] ?: Yii::app()->getRequest()->getParam('smart');
+        if( Yii::app()->getRequest()->getParam('smart') || $inProps['filter']['smart']  ) $data['smart'] = $inProps['filter']['smart'] ?: Yii::app()->getRequest()->getParam('smart');
+        if( Yii::app()->getRequest()->getParam('smart') || $inProps['filter']['ishasavto']  ) $data['ishasavto'] = $inProps['filter']['ishasavto'] ?: Yii::app()->getRequest()->getParam('ishasavto');
         if( Yii::app()->getRequest()->getParam('pcard') || $inProps['filter']['cardPrommu']  ) $data['cardPrommu'] = $inProps['filter']['cardPrommu'] ?: Yii::app()->getRequest()->getParam('pcard');
         if( Yii::app()->getRequest()->getParam('bcard') || $inProps['filter']['card']  ) $data['card'] = $inProps['filter']['card'] ?: Yii::app()->getRequest()->getParam('bcard');
         if( Yii::app()->getRequest()->getParam('self_employed') || $inProps['filter']['self_employed']  )
           $data['self_employed'] = $inProps['filter']['self_employed'] ?: Yii::app()->getRequest()->getParam('self_employed');
+          
+          
         // должность в ручную
         if( !Yii::app()->getRequest()->getParam('poall') && ($s1 = filter_var(Yii::app()->getRequest()->getParam('poself'), FILTER_SANITIZE_FULL_SPECIAL_CHARS)) ) $data['selfPost'] = $s1;
         // занятость
@@ -659,7 +663,11 @@ class SearchVac extends Model
         {
             $filter[] = 'c.id_city IN ('.Subdomain::getCacheData()->strCitiesIdes.')';
         }
-
+    
+        if( !empty($data['ishasavto']) )
+        {
+            $filter[] = ' e.ishasavto = 1';
+        }
 
         if( !empty($data['smart']) )
         {
