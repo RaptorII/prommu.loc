@@ -66,7 +66,7 @@ class SearchVac extends Model
     public function getVacationsAPI($props = [])
     {
         $filter = $props['filter'] ?: [];
-        $filter = $this->renderSQLFilter(['filter' => $filter]);
+        $filter = $this->renderSQLFilterAPI(['filter' => $filter]);
 
         $data = $this->searchVacationsAPI($filter, $props['profile']);
         $data = array_merge($data, $this->getFilterData());
@@ -598,7 +598,133 @@ class SearchVac extends Model
         return $filterData;
     }
 
+    
+    private function renderSQLFilterAPI($inProps = [])
+    {
+        // analyse parameters
+        $data = array();
+        // quicksearch
+        if( ($s1 = filter_var(Yii::app()->getRequest()->getParam('qs'), FILTER_SANITIZE_FULL_SPECIAL_CHARS)) || $inProps['filter']['qs'] ) $data['qs'] = $s1 ? $s1 : $inProps['filter']['qs'];
+        // города
+        if( Yii::app()->getRequest()->getParam('cities') || $inProps['filter']['city'] ) $data['cities'] = $inProps['filter']['city'] ?: Yii::app()->getRequest()->getParam('cities');
+        // все должности
+        if( !Yii::app()->getRequest()->getParam('poall') || $inProps['filter']['posts'] ) $data['posts'] = $inProps['filter']['posts'] ?: Yii::app()->getRequest()->getParam('post');
+         if( Yii::app()->getRequest()->getParam('smart') || $inProps['filter']['smart']  ) $data['smart'] = $inProps['filter']['smart'] ?: Yii::app()->getRequest()->getParam('smart');
+        if( Yii::app()->getRequest()->getParam('pcard') || $inProps['filter']['cardPrommu']  ) $data['cardPrommu'] = $inProps['filter']['cardPrommu'] ?: Yii::app()->getRequest()->getParam('pcard');
+        if( Yii::app()->getRequest()->getParam('bcard') || $inProps['filter']['card']  ) $data['card'] = $inProps['filter']['card'] ?: Yii::app()->getRequest()->getParam('bcard');
+        if( Yii::app()->getRequest()->getParam('self_employed') || $inProps['filter']['self_employed']  )
+          $data['self_employed'] = $inProps['filter']['self_employed'] ?: Yii::app()->getRequest()->getParam('self_employed');
+        // должность в ручную
+        if( !Yii::app()->getRequest()->getParam('poall') && ($s1 = filter_var(Yii::app()->getRequest()->getParam('poself'), FILTER_SANITIZE_FULL_SPECIAL_CHARS)) ) $data['selfPost'] = $s1;
+        // занятость
+        if( (($int = filter_var(Yii::app()->getRequest()->getParam('bt'), FILTER_SANITIZE_NUMBER_INT)) != 3 && $int) || $inProps['filter']['istemp'] ) $data['busyType'] = $int ? $int - 1 : $inProps['filter']['istemp'] ;
 
+        // пол
+        $int = filter_var(Yii::app()->getRequest()->getParam('sex'), FILTER_SANITIZE_NUMBER_INT);
+        $int || ($int = $inProps['filter']['sex']);
+        if( $int != 3 && $int ) $data['sex'] = $int;
+        // age from
+        if( ($int = filter_var(Yii::app()->getRequest()->getParam('af'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['af']) ) $data['ageFrom'] = $int;
+        // age to
+        if( ($int = filter_var(Yii::app()->getRequest()->getParam('at'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['at']) ) $data['ageTo'] = $int;
+
+        // salary
+        $salradio = filter_var(Yii::app()->getRequest()->getParam('sr', $inProps['filter']['sr'] ?: 0), FILTER_SANITIZE_NUMBER_INT);
+        if( (($int = filter_var(Yii::app()->getRequest()->getParam('sphf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['sphf'])) ) $data['salHourF'] = $int;
+        if( (($int = filter_var(Yii::app()->getRequest()->getParam('spht'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spht'])) ) $data['salHourT'] = $int;
+        if( (($int = filter_var(Yii::app()->getRequest()->getParam('spwf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spwf'])) ) $data['salWeekF'] = $int;
+        if((($int = filter_var(Yii::app()->getRequest()->getParam('spwt'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spwt'])) ) $data['salWeekT'] = $int;
+        if((($int = filter_var(Yii::app()->getRequest()->getParam('spmf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spmf'])) ) $data['salMonF'] = $int;
+        if((($int = filter_var(Yii::app()->getRequest()->getParam('spmt'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spmt'])) ) $data['salMonT'] = $int;
+        if( (($int = filter_var(Yii::app()->getRequest()->getParam('spvf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spvf'])) ) $data['salVisitF'] = $int;
+        if(  (($int = filter_var(Yii::app()->getRequest()->getParam('spvt'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $inProps['filter']['spvt'])) ) $data['salVisitT'] = $int;
+        // addmetro
+        if( filter_var(Yii::app()->getRequest()->getParam('addmetro'), FILTER_SANITIZE_NUMBER_INT) ) $data['metro'] = 1;
+
+        // create filter string
+        $filter = [];
+        $table = [];
+        // QS
+          // QS
+        if( !empty($data['qs']) ) {
+            $filter[] = "e.title LIKE '%{$data['qs']}%'";
+        }
+        
+        // city filter
+        if( !empty($data['cities']) )
+        {
+            $filter[] = "c.id_city IN (".join(',',$data['cities']).')';
+        }
+        else
+        {
+            $filter[] = 'c.id_city IN ('.Subdomain::getCacheData()->strCitiesIdes.')';
+        }
+
+
+        if( !empty($data['smart']) )
+        {
+            $filter[] = ' e.smart = 1';
+        }
+
+        if( !empty($data['self_employed']) )
+        {
+          $filter[] = ' e.self_employed = 1';
+        }
+
+        if( !empty($data['cardPrommu']) )
+            $filter[] = ' e.cardPrommu = 1';
+
+        if( !empty($data['card']) )
+            $filter[] = ' e.card = 1';
+
+        // posts filter
+        if( !empty($data['posts']) )
+        {
+            // foreach ($data['posts'] as $key => &$val) { $val = $key; } // end foreach;
+            $filterPost = ' ea.id_attr IN ('.join(',', $data['posts']).')';
+        }
+        
+        
+        $s1 = '';
+        if( $filterPost ) $s1 = $filterPost;
+        if( $filterPost && $filterPostSelf) $s1 .= ' OR ';
+        $s1 .= $filterPostSelf;
+        if( $filterPost || $filterPostSelf) $filter[] = "({$s1})";
+
+        // тип занятости
+        if( isset($data['busyType']) ) $filter[] = "e.istemp = {$data['busyType']}";
+        // пол
+        if( isset($data['sex']) )
+        {
+            $field = $data['sex'] == 1 ? 'isman' : 'iswoman' ;
+            $filter[] = "e.{$field} = 1";
+        }
+        // age
+        if( isset($data['ageFrom']) ) 
+            $filter[] = "e.agefrom >= {$data['ageFrom']}";
+        if( isset($data['ageTo']) ) {
+            $filter[] = "e.agefrom <= {$data['ageTo']}";
+            $filter[] = "e.ageto <= {$data['ageTo']}";
+        }
+
+        // salary
+        if( isset($data['salHourF']) ) $filter[] = "e.shour >= {$data['salHourF']}";
+        if( isset($data['salHourT']) ) $filter[] = "e.shour <= {$data['salHourT']}";
+        if( isset($data['salWeekF']) ) $filter[] = "e.sweek >= {$data['salWeekF']}";
+        if( isset($data['salWeekT']) ) $filter[] = "e.sweek <= {$data['salWeekT']}";
+        if( isset($data['salMonF']) ) $filter[] = "e.smonth >= {$data['salMonF']}";
+        if( isset($data['salMonT']) ) $filter[] = "e.smonth <= {$data['salMonT']}";
+        if( isset($data['salVisitF']) ) $filter[] = "e.svisit >= {$data['salVisitF']}";
+        if( isset($data['salVisitT']) ) $filter[] = "e.svisit <= {$data['salVisitT']}";
+
+        $filter = count($filter) ? 'WHERE ' . join(' and ', $filter) : '';
+
+        $filterData['table'] = join(' \n', $table);
+        $filterData['filter'] = $filter;
+        //var_dump($filterData);
+        return $filterData;
+    }
+    
 
     private function searchVacations($filter = '', $props=[])
     {
