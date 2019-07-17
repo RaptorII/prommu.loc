@@ -2157,6 +2157,7 @@ WHERE id_vac = {$inVacId}";
                    e.ismed,
                    e.isavto,
                    e.card,
+                   e.smart,
                    e.cardPrommu,
                    DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
                    
