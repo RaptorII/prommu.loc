@@ -45,14 +45,14 @@ jQuery(function($){
             var html = '';
             $.each(result.items, function(){
               html += '<div class="item" data-id="' + this.id + '">'
-                + '<img src="' + this.src + '" alt="' + this.name + '">'
+                + '<img src="' + this.src + '" alt="' + this.name + '" title="Добавить в список получателей">'
                 + '<div class="info">'
-                  + '<b>' + this.name + '</b><br>'
+                  + '<b title="Добавить в список получателей">' + this.name + '</b><br>'
                   + '<span>' + (this.status==='2' ? 'соискатель' : 'работодатель') + '</span>'
                 + '</div>'
                 + '<div class="links">'
-                  + '<a href="/admin/' + (this.status==='2' ? 'PromoEdit/' : 'EmplEdit/') + this.id + '" class="glyphicon glyphicon-edit" target="_blank" title="в вдминке"></a>'
-                  + '<a href="/ankety/' + this.id + '" class="glyphicon glyphicon-new-window" target="_blank" title="в публичке"></a>'
+                  + '<a href="/admin/' + (this.status==='2' ? 'PromoEdit/' : 'EmplEdit/') + this.id + '" class="glyphicon glyphicon-edit" target="_blank" title="Ссылка на профиль в вдминистративной части сайта"></a>'
+                  + '<a href="/ankety/' + this.id + '" class="glyphicon glyphicon-new-window" target="_blank" title="Ссылка на профиль в публичной части сайта"></a>'
                 + '</div>'
                 + '</div>';
             });
@@ -86,7 +86,7 @@ jQuery(function($){
       var item = $(e.target).closest('.item'),
           parent = $(item).clone(),
           id = $(parent).data('id'),
-          html = '<input type="hidden" name="receivers[]" value="' + id + '"><i class="glyphicon glyphicon-remove"></i>';
+          html = '<input type="hidden" name="receivers[]" value="' + id + '"><i class="glyphicon glyphicon-remove" title="Удалить из списка получателей"></i>';
 
       $(item).remove();
       $(parent).append(html);

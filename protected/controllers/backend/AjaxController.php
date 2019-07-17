@@ -487,7 +487,7 @@ class AjaxController extends CController {
 
     $data = Yii::app()->getRequest()->getParam('data');
     $data = json_decode($data, true, 5, JSON_BIGINT_AS_STRING);
-    $arRes['items'] = User::searchUsers($data['search'],20, $data['selected']);
+    $arRes['items'] = User::searchUsers($data['search'],10, $data['selected']);
     $arRes['error'] = false;
     if(!count($arRes['items']))
     {

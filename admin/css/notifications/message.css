@@ -53,6 +53,7 @@
 #receivers_result .links a{
   font-size: 18px;
   margin: 5px 0;
+  display: block;
 }
 #receivers_result i{
   width: 20px;
