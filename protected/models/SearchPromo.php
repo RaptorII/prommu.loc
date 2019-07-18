@@ -17,7 +17,7 @@ class SearchPromo extends Model
     
     public function getPromosAPI($arAllId, $isEmplOnly = 0,$props = [])
     {
-        $filter = $this->renderSQLFilter(['filter' => $props['filter']]);
+        $filter = $this->renderSQLFilterAPI(['filter' => $props['filter']]);
 
         $data = $this->searchPromosAPI($arAllId,$filter);
         if( !$isEmplOnly ) $data = array_merge($data, $this->getFilterData());
@@ -402,7 +402,142 @@ class SearchPromo extends Model
       return array('filter' => $filter, 'table' => join(' ', $tables));
     }
 
+    private function renderSQLFilterAPI($inProps = [])
+    {
+      $data = array();
+      $rq = Yii::app()->getRequest();
+      $arFilter = $inProps['filter'];
+      $filter = ["u.ismoder = 1 AND u.isblocked = 0"];
+      $tables = [];
 
+        // города
+        if( $rq->getParam('cities') || $arFilter['cities'] ) $data['cities'] = $arFilter['cities'] ?: $rq->getParam('cities');
+        // posts
+        if($rq->getParam('posts') || $arFilter['posts'] ) $data['posts'] = $arFilter['posts'] ?: $rq->getParam('posts');
+        // sex
+        if( $rq->getParam('sm') || $arFilter['sm']  ) $data['sm'] = $arFilter['sm'] ?: $rq->getParam('sm');
+        if( $rq->getParam('ph') || $arFilter['ph']  ) $data['ph'] = $arFilter['ph'] ?: $rq->getParam('ph');
+
+        if( $rq->getParam('sf') || $arFilter['sf']  ) $data['sf'] = $arFilter['sf'] ?: $rq->getParam('sf');
+        // medbook n avto
+        if( $rq->getParam('mb') || $arFilter['mb']  ) $data['mb'] = $arFilter['mb'] ?: $rq->getParam('mb');
+        if( $rq->getParam('avto') || $arFilter['avto']  ) $data['avto'] = $arFilter['avto'] ?: $rq->getParam('avto');
+         if( $rq->getParam('smart') || $arFilter['smart']  ) $data['smart'] = $arFilter['smart'] ?: $rq->getParam('smart');
+        if( $rq->getParam('card') || $arFilter['card']  ) $data['card'] = $arFilter['card'] ?: $rq->getParam('card');
+        if( $rq->getParam('cardPrommu') || $arFilter['cardPrommu']  ) $data['cardPrommu'] = $arFilter['cardPrommu'] ?: $rq->getParam('cardPrommu');
+        // self_employed
+        $rq->getParam('self_employed') && $data['self_employed'] = $rq->getParam('self_employed');
+        $arFilter['self_employed'] && $data['self_employed'] = $arFilter['self_employed'];
+        // Quick search название города или имя,фамилия
+        if( $sq = $rq->getParam('qs')){  $data['qs'] = trim(filter_var($sq, FILTER_SANITIZE_FULL_SPECIAL_CHARS));}
+        elseif($arFilter['qs']) {
+            $data['qs'] = $arFilter['qs'];
+        }
+        $salradio = filter_var($rq->getParam('sr', $arFilter['sr'] ?: 0), FILTER_SANITIZE_NUMBER_INT);
+        if( $salradio == 1 && (($int = filter_var($rq->getParam('sphf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $arFilter['sphf'])) ) $data['salHourF'] = $int;
+        if( $salradio == 1 && (($int = filter_var($rq->getParam('spht'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $arFilter['spht'])) ) $data['salHourT'] = $int;
+        if( $salradio == 2 && (($int = filter_var($rq->getParam('spwf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $arFilter['spwf'])) ) $data['salWeekF'] = $int;
+        if( $salradio == 2 && (($int = filter_var($rq->getParam('spwt'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $arFilter['spwt'])) ) $data['salWeekT'] = $int;
+        if( $salradio == 3 && (($int = filter_var($rq->getParam('spmf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $arFilter['spmf'])) ) $data['salMonF'] = $int;
+        if( $salradio == 3 && (($int = filter_var($rq->getParam('spmt'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $arFilter['spmt'])) ) $data['salMonT'] = $int;
+        if( $salradio == 4 && (($int = filter_var($rq->getParam('spvf'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $arFilter['spvf'])) ) $data['salVisitF'] = $int;
+        if( $salradio == 4 && (($int = filter_var($rq->getParam('spvt'), FILTER_SANITIZE_NUMBER_INT)) || ($int = $arFilter['spvt'])) ) $data['salVisitT'] = $int;
+
+        // age
+        if($rq->getParam('af') || $arFilter['af'])
+            $data['ageFrom'] = $arFilter['af'] ?: $rq->getParam('af');
+        if($rq->getParam('at') || $arFilter['at'])
+            $data['ageTo'] = $arFilter['at'] ?: $rq->getParam('at');
+
+        // quick search
+        if( !empty($data['qs']) ) {
+            // фильтр по фио
+            $filter[] = "r.lastname like '".$data['qs']."%'";
+        }
+
+        // city filter
+        if( !empty($data['cities']) )
+        {
+            $filter[] = 'uc.id_city IN ('.join(',',$data['cities']).')';
+        }
+        else
+        {
+            $filter[] = 'uc.id_city IN ('.Subdomain::getCacheData()->strCitiesIdes.')';
+        }
+
+        if( !empty($data['ph']) )
+        {
+            $filter[] = "ua.key = 'mob' AND ua.val <> 0";
+        }
+
+        // posts
+        if( !empty($data['posts']) )
+        {
+            $filter[] = 'a.id_mech IN ('.join(',',$data['posts']).')';
+        }
+        
+        if( isset($data['salHourF']) ) $filter[] = "a.pay >= {$data['salHourF']}";
+        if( isset($data['salHourT']) ) $filter[] = "a.pay <= {$data['salHourT']}";
+        if( isset($data['salWeekF']) ) $filter[] = "a.pay >= {$data['salWeekF']}";
+        if( isset($data['salWeekT']) ) $filter[] = "a.pay <= {$data['salWeekT']}";
+        if( isset($data['salMonF']) ) $filter[] = "a.pay >= {$data['salMonF']}";
+        if( isset($data['salMonT']) ) $filter[] = "a.pay <= {$data['salMonT']}";
+        if( isset($data['salVisitF']) ) $filter[] = "a.pay >= {$data['salVisitF']}";
+        if( isset($data['salVisitT']) ) $filter[] = "a.pay >= {$data['salVisitT']}";
+        if( $data['salHourF'] > 0 ||  $data['salHourT'] > 0 || $data['salWeekF'] > 0|| $data['salWeekT']> 0 || 
+       $data['salMonF']> 0 ||$data['salMonT']> 0 || $data['salVisitF']> 0 || $data['salHourF']> 0 ){
+            $type = (int)$salradio-1;
+            $filter[] = "a.id_attr = 0 AND a.isshow = 0 AND a.pay_type = {$type}";
+        }
+         
+        // sex
+        if( !empty($data['sf']) && empty($data['sm']) || empty($data['sf']) && !empty($data['sm']) )
+        {
+            $filter[] = 'r.isman = ' . ($data['sm'] ? '1' : '0');
+        }
+
+        if( isset($data['ageFrom']) && $data['ageFrom']>0 )
+            $filter[] = "( 
+                ( YEAR(CURRENT_DATE) - YEAR(r.birthday) ) - ( DATE_FORMAT(CURRENT_DATE, '%m%d') < DATE_FORMAT(r.birthday, '%m%d') )
+            ) >= {$data['ageFrom']}";
+        if( isset($data['ageTo']) && $data['ageTo']>0 )
+            $filter[] = "( 
+                ( YEAR(CURRENT_DATE) - YEAR(r.birthday) ) - ( DATE_FORMAT(CURRENT_DATE, '%m%d') < DATE_FORMAT(r.birthday, '%m%d') )
+            ) <= {$data['ageTo']}";
+
+        // medbook
+        if( !empty($data['mb']) )
+        {
+            $filter[] = ' r.ismed = 1';
+        }
+
+        // avto
+        if( !empty($data['avto']) )
+        {
+            $filter[] = ' r.ishasavto = 1';
+        }
+
+        if( !empty($data['smart']) )
+        {
+            $filter[] = ' r.smart = 1';
+        }
+
+        if( !empty($data['card']) )
+        {
+            $filter[] = ' r.card = 1';
+        }
+
+        if( !empty($data['cardPrommu']) )
+        {
+            $filter[] = ' r.cardPrommu = 1';
+        }
+      // self_employed
+      !empty($data['self_employed']) && $filter[]=" (ua.key='self_employed' AND ua.val IS NOT NULL)";
+
+      $filter = count($filter) ? 'WHERE ' . join(' and ', $filter) : '';
+
+      return array('filter' => $filter, 'table' => join(' ', $tables));
+    }
 
     private function searchPromos($arAllId, $filter)
     {
