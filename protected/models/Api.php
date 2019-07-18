@@ -3207,7 +3207,7 @@ public function vac(){
             $spvf = $filter['spvf'] ?: null;
             $spvt = $filter['spvt'] ?: null;
             
-            $mb = $filter['mb'] ?: null;
+            $ismed = $filter['mb'] ?: null;
             $isavto = $filter['avto'] ?: null;
             $posts = $filter['posts'] ? array_combine($filter['posts'], $filter['posts']) : null;
             // фильтр городов
@@ -3219,7 +3219,7 @@ public function vac(){
             $card = $filter['card'] ?: null;
             $cardPrommu = $filter['cardPrommu'] ?: null;
             $self_employed = $filter['self_employed'] ?: null;
-            $filter = ['filter' => compact('posts', 'cities', 'qs','smart', 'sphf', 'spht','spwf','spwt','spmf','spmt','spvf','spvt', 'mb', 'avto', 'af','at', 'api', 'card', 'cardPrommu', 'self_employed')];
+            $filter = ['filter' => compact('posts', 'cities', 'qs','smart', 'sphf', 'spht','spwf','spwt','spmf','spmt','spvf','spvt', 'mb', 'isavto', 'ismde', 'af','at', 'api', 'card', 'cardPrommu', 'self_employed')];
         }
         else
         {
