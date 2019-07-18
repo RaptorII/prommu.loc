@@ -201,7 +201,7 @@ return array(
             'connectionString' => 'mysql:host=localhost;dbname=promo_dev',
             'emulatePrepare' => true,
             'username' => 'root',
-            'password' => 'WWFf57EfyY4fcaFh', //
+            'password' => 'WWFf57EfyY4fcaFh',
             'charset' => 'utf8',
             'enableProfiling' => true,
             'enableParamLogging' => true,
