@@ -128,6 +128,111 @@ class Api
         return $data;
     }
     
+     /**
+     * Получаем список вакансий c фильтрацией
+     * @return array
+     */
+
+       public function getVacancy()
+    {
+        $filter = [];
+        
+        $id = filter_var(Yii::app()->getRequest()->getParam('id', 0), FILTER_SANITIZE_NUMBER_INT);
+        $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
+        
+        ///
+        $filter['sphf'] = Yii::app()->getRequest()->getParam('salary_hour_from');
+        $filter['spht'] = Yii::app()->getRequest()->getParam('salary_hour_to');
+        
+        $filter['spwf'] = Yii::app()->getRequest()->getParam('salary_week_from');
+        $filter['spwt'] = Yii::app()->getRequest()->getParam('salary_week_from');
+        
+        $filter['spmf'] = Yii::app()->getRequest()->getParam('salary_month_from');
+        $filter['spmt'] = Yii::app()->getRequest()->getParam('salary_month_from');
+        
+        $filter['spvf'] = Yii::app()->getRequest()->getParam('salary_visit_from');
+        $filter['spvt'] = Yii::app()->getRequest()->getParam('salary_visit_from');
+        
+        $filter['smart'] = Yii::app()->getRequest()->getParam('smart');
+        $filter['posts'] = Yii::app()->getRequest()->getParam('post') ? explode(",",Yii::app()->getRequest()->getParam('post')) :"";
+        $filter['city'] = Yii::app()->getRequest()->getParam('city') ? explode(",",Yii::app()->getRequest()->getParam('city')) :"";;
+        $filter['qs'] = Yii::app()->getRequest()->getParam('name');
+        
+        $filter['is_man'] = Yii::app()->getRequest()->getParam('is_man');
+        $filter['is_temp'] = Yii::app()->getRequest()->getParam('is_temp');
+        $filter['is_med'] = Yii::app()->getRequest()->getParam('is_med');
+        $filter['is_hasavto'] = Yii::app()->getRequest()->getParam('is_hasavto');
+        $filter['is_woman'] = Yii::app()->getRequest()->getParam('is_woman');
+        
+        $filter['af'] = Yii::app()->getRequest()->getParam('age_from');
+        $filter['at'] = Yii::app()->getRequest()->getParam('age_to');
+        
+        $filter['card'] = Yii::app()->getRequest()->getParam('card');
+        $filter['cardPrommu'] = Yii::app()->getRequest()->getParam('card_prommu');
+        $filter['self_employed'] = Yii::app()->getRequest()->getParam('self_employed');
+        
+
+        // читаем фильтр
+        if( $filter )
+        {
+            // фильтр должностей
+            $posts = $filter['posts'] ?: null;
+            // фильтр городов
+            $city = $filter['city'] ?: null;
+            $sr = $filter['sr'] ?: null;
+            $istemp = $filter['is_temp'] ?: null;
+            $ismed = $filter['is_med'] ?: null;
+            $isavto = $filter['is_hasavto'] ?: null;
+            $sphf = $filter['sphf'] ?: null;
+            $spht = $filter['spht'] ?: null;
+            $spwf = $filter['spwf'] ?: null;
+            $spwt = $filter['spwt'] ?: null;
+            $spmf = $filter['spmf'] ?: null;
+            $spmt = $filter['spmt'] ?: null;
+            $svmf = $filter['svmf'] ?: null;
+            $svmt = $filter['svmt'] ?: null;
+            $af = $filter['af'] ?: null;
+            $at = $filter['at'] ?: null;
+            $smart = $filter['smart'] ?: null;
+            $is_man = $filter['is_man'] ?: null;
+            $is_wooman = $filter['is_woman'] ?: null;
+            $self_employed = $filter['self_employed'] ?: null;
+            $card = $filter['card'] ?: null;
+            $cardPrommu = $filter['cardPrommu'] ?: null;
+            $qs = $filter['qs'] ?: null;
+            
+            
+            $filter = ['filter' => compact('posts', 'istemp', 'ismed', 'isavto', 'city', 'sr','qs', 'sphf', 'spht', 'spwf', 'spwt', 'spmf', 'spmt', 'af', 'at', 'is_man','is_woman', 'smart', 'card', 'cardPrommu','self_employed')];
+        }
+        else
+        {
+            $filter = [];
+        } // endif
+
+
+        // получаем данные страницы
+        $SearchVac = new SearchVac();
+        $pages = new CPagination($SearchVac->searchVacationsCount($filter));
+        $pages->pageSize = $limit;
+        $pages->applyLimit($SearchVac);
+
+        $data = array_values($SearchVac->getVacationsAPI($filter)['vacs']);
+        // отсеивать из ответа вакансии
+            if(!empty($id))
+            {
+                $Vacancy = new Vacancy();
+                foreach($data as $key => $val){
+                $idvac = $data[$key]['id'];
+                $data[$key]['response']= $Vacancy->getVacancyViews($idvac, $id)['response']['response'];
+
+             }
+        }
+    
+           $data = array_merge(['vacancy' => $data, 'pageCount' => $pages->pageCount,'currentPage' => (int)$page ? (int)$page : 1]);
+
+        return array_merge($data);
+    }
+    
     public function getTest(){
         $model = new Promo();
         $data = $model->getUserExcelInfo($_GET['id']);
@@ -3103,7 +3208,7 @@ public function vac(){
             $spvt = $filter['spvt'] ?: null;
             
             $mb = $filter['mb'] ?: null;
-            $avto = $filter['avto'] ?: null;
+            $isavto = $filter['avto'] ?: null;
             $posts = $filter['posts'] ? array_combine($filter['posts'], $filter['posts']) : null;
             // фильтр городов
             $cities = $filter['city'] ? array_combine($filter['city'], $filter['city']) : null;
@@ -3815,103 +3920,6 @@ public function vac(){
 
 
 
-    /**
-     * Получаем список вакансий c фильтрацией
-     * @return array
-     */
-
-       public function getVacancy()
-    {
-        $filter = [];
-        
-        $id = filter_var(Yii::app()->getRequest()->getParam('id', 0), FILTER_SANITIZE_NUMBER_INT);
-        $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
-        
-        ///
-        $filter['sphf'] = Yii::app()->getRequest()->getParam('salary_hour_from');
-        $filter['spht'] = Yii::app()->getRequest()->getParam('salary_hour_to');
-        
-        $filter['spwf'] = Yii::app()->getRequest()->getParam('salary_week_from');
-        $filter['spwt'] = Yii::app()->getRequest()->getParam('salary_week_from');
-        
-        $filter['spmf'] = Yii::app()->getRequest()->getParam('salary_month_from');
-        $filter['spmt'] = Yii::app()->getRequest()->getParam('salary_month_from');
-        
-        $filter['spvf'] = Yii::app()->getRequest()->getParam('salary_visit_from');
-        $filter['spvt'] = Yii::app()->getRequest()->getParam('salary_visit_from');
-        
-        $filter['smart'] = Yii::app()->getRequest()->getParam('smart');
-        $filter['posts'] = Yii::app()->getRequest()->getParam('posts');
-        $filter['city'] = Yii::app()->getRequest()->getParam('city');
-        $filter['qs'] = Yii::app()->getRequest()->getParam('name');
-        
-        $filter['is_man'] = Yii::app()->getRequest()->getParam('is_man');
-        $filter['is_woman'] = Yii::app()->getRequest()->getParam('is_woman');
-        
-        $filter['af'] = Yii::app()->getRequest()->getParam('age_from');
-        $filter['at'] = Yii::app()->getRequest()->getParam('age_to');
-        
-        $filter['card'] = Yii::app()->getRequest()->getParam('card');
-        $filter['cardPrommu'] = Yii::app()->getRequest()->getParam('card_prommu');
-        $filter['self_employed'] = Yii::app()->getRequest()->getParam('self_employed');
-        
-
-        // читаем фильтр
-        if( $filter )
-        {
-            // фильтр должностей
-            $post = $filter['post'] ? array_combine($filter['post'], $filter['post']) : null;
-            // фильтр городов
-            $city = $filter['city'] ? array_combine($filter['city'], $filter['city']) : null;
-            $sr = $filter['sr'] ?: null;
-            $sphf = $filter['sphf'] ?: null;
-            $spht = $filter['spht'] ?: null;
-            $spwf = $filter['spwf'] ?: null;
-            $spwt = $filter['spwt'] ?: null;
-            $spmf = $filter['spmf'] ?: null;
-            $spmt = $filter['spmt'] ?: null;
-            $svmf = $filter['svmf'] ?: null;
-            $svmt = $filter['svmt'] ?: null;
-            $af = $filter['af'] ?: null;
-            $at = $filter['at'] ?: null;
-            $smart = $filter['smart'] ?: null;
-            $is_man = $filter['is_man'] ?: null;
-            $is_wooman = $filter['is_woman'] ?: null;
-            $self_employed = $filter['self_employed'] ?: null;
-            $card = $filter['card'] ?: null;
-            $cardPrommu = $filter['cardPrommu'] ?: null;
-            
-            
-            $filter = ['filter' => compact('post', 'city', 'sr', 'sphf', 'spht', 'spwf', 'spwt', 'spmf', 'spmt', 'af', 'at', 'is_man','is_woman', 'smart', 'card', 'cardPrommu','self_employed')];
-        }
-        else
-        {
-            $filter = [];
-        } // endif
-
-
-        // получаем данные страницы
-        $SearchVac = new SearchVac();
-        $pages = new CPagination($SearchVac->searchVacationsCount($filter));
-        $pages->pageSize = $limit;
-        $pages->applyLimit($SearchVac);
-
-        $data = array_values($SearchVac->getVacationsAPI($filter)['vacs']);
-        // отсеивать из ответа вакансии
-            if(!empty($id))
-            {
-                $Vacancy = new Vacancy();
-                foreach($data as $key => $val){
-                $idvac = $data[$key]['id'];
-                $data[$key]['response']= $Vacancy->getVacancyViews($idvac, $id)['response']['response'];
-
-             }
-        }
-    
-           $data = array_merge(['vacancy' => $data, 'pageCount' => $pages->pageCount]);
-
-        return array_merge($data);
-    }
 
 
     /**

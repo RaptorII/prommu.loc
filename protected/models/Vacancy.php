@@ -2154,6 +2154,11 @@ WHERE id_vac = {$inVacId}";
                    e.isman,
                    e.smart,
                    e.iswoman,
+                   e.ismed,
+                   e.isavto,
+                   e.card,
+                   e.smart,
+                   e.cardPrommu,
                    DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
                    
               , c1.id_city, c2.name AS ciname, c1.citycu
@@ -2209,6 +2214,10 @@ WHERE id_vac = {$inVacId}";
                    e.svisit,
                    e.isman,
                    e.smart,
+                   e.card,
+                   e.cardPrommu,
+                   e.ismed,
+                   e.isavto,
                    e.iswoman,
                    DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
                    
