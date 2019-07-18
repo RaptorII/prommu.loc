@@ -994,7 +994,8 @@ class AjaxController extends AppController
 
         if(Share::isApplicant())
         {
-            Share::$UserProfile->checkSelfEmployed($arRes);
+          $model = new User();
+          $model->checkSelfEmployed($arRes);
         }
 
         echo CJSON::encode($arRes);
