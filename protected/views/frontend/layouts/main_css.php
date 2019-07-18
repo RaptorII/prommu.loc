@@ -357,20 +357,4 @@
     left: 15px;
   }
 }
-/*
-*
- */
-.page-index .posts__item img{
-  width:100%;
-  height:255px;
-  object-fit:cover
-}
-.page-index  .posts__item-title{
-  font-size: 15px;
-  height: 50px;
-  border-bottom: 1px solid;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  border-color: #c0cc4b;
-}
 </style>

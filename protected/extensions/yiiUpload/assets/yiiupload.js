@@ -44,6 +44,7 @@ var YiiUpload = (function () {
       aspectRatio: 1/1,
       viewMode: 1,
       zoomable: true,
+      zoomOnWheel: false,
       rotatable: true,
       background: false,
       guides: false,
@@ -104,10 +105,41 @@ var YiiUpload = (function () {
       self.btns = document.querySelector('.YiiUpload__form-btns');
       self.editor = document.querySelector('.YiiUpload__editor');
       self.camera = document.querySelector('.YiiUpload__camera');
-      self.cropperCnt = 0;
-      self.setTitle();
-      self.addInput();
-      self.addButtons(self.bWebCam?['open','snapshot']:['open']);
+
+      if(typeof self.params.arEditImage === 'object') // only edit photo
+      {
+        let file = self.params.arEditImage;
+
+        self.setTitle('Выберите область для отображения');
+
+        $.ajax({
+          url: file.url,
+          type:'HEAD',
+          success: function()
+          {
+            let html = '<img src="' + file.url
+              + '" data-name="' + file.name + '" alt="'
+              + file.name + '"><input type="text" value="'
+              + file.signature + '" placeholder="Подпись">';
+
+            $('.YiiUpload__editor-field').append(html);
+            self.setCropper('edit');
+          },
+          error: function()
+          {
+            self.setError('- нет изображений для редактирования');
+            self.addButtons(['close']);
+            self.bComplete = true;
+          },
+        });
+      }
+      else // apload and edit photo
+      {
+        self.setTitle();
+        self.addInput();
+        self.addButtons(self.bWebCam?['open','snapshot']:['open']);
+      }
+
       $(self.block).fadeIn();
       $('body').css({overflow:'hidden'});
       self.createEvents();
@@ -118,6 +150,7 @@ var YiiUpload = (function () {
   YiiUpload.prototype.setCropper = function ()
   {
     let self = this,
+      state = arguments[0],
       arImages = $('.YiiUpload__editor-field>img'),
       arInput = $('.YiiUpload__editor-field>input');
 
@@ -134,7 +167,7 @@ var YiiUpload = (function () {
       });
       $.ajax({
         url: self.params.action,
-        data: {state:'edit', data:self.cropOptions},
+        data: {state:state, data:self.cropOptions},
         type: 'POST',
         success: function(r)
         {
@@ -695,7 +728,7 @@ var YiiUpload = (function () {
                 else // если все же есть
                 {
                   $('.YiiUpload__editor-field').append(arImg);
-                  self.setCropper();
+                  self.setCropper('full');
                 }
                 $(self.files).html('');
                 $(self.result).html('');
@@ -724,7 +757,7 @@ var YiiUpload = (function () {
       })
       .on('click','.YiiUpload__crop',function(e){ // send file
         self.cropperCnt++;
-        self.setCropper();
+        self.setCropper((typeof self.params.arEditImage==='object' ? 'edit' : 'full'));
       })
       .on('input','.YiiUpload__editor-field>input',function(e){ // ввод подписи
         let value = $(this).val().substr(0, self.signatureLen);

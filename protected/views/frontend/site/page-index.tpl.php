@@ -139,6 +139,22 @@ echo '</pre>';*/
     .page-index  .services__item:nth-child(9):before { background-position: -5px -244px;}
     .page-index .services__item:nth-child(10):before { background-position: -4px -325px;}
     /* end sevices icons */
+  /*
+  *
+  */
+  .page-index .posts__item img{
+    width:100%;
+    height:255px;
+    object-fit:cover
+  }
+  .page-index  .posts__item-title{
+    font-size: 15px;
+    height: 50px;
+    border-bottom: 1px solid;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-color: #c0cc4b;
+  }
 }
 
 </style>

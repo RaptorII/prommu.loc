@@ -112,6 +112,7 @@ class YiiUploadWidget extends CWidget
 				'useWebcam' => $this->useWebcam,
 				'objSave' => $this->objSave,
 				'objSaveMethod' => $this->objSaveMethod,
+        'withEditorStep'=>$this->imageEditor,
         'showTags'=>$this->showTags
 			];
 		Yii::app()->session['yiiUpload'] = $s;
@@ -241,7 +242,7 @@ class YiiUploadWidget extends CWidget
 						unlink($filePath);
 						continue;
 					}
-					if($arParams['showTags']==false)
+					if(!$arParams['withEditorStep'] && !$arParams['showTags'])
           {
             $this->resizeImage($filePath, "{$filePathWithoutExt}{$arParams['imgOrigSuFFix']}.jpg", $this->defaultImgSize);
             if(count($arParams['imgDimensions'])) // если теги выводить не надо, но надо несколько вариантов изображения
