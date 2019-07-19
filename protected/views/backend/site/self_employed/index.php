@@ -1,14 +1,16 @@
 <h3><?=$this->pageTitle?></h3>
 <div class="row">
   <div class="col-xs-12">
-    <div class="d-label">
-      <div class="inn_block">
-        <div class="btn btn-success">+</div>
-        <div class="input"><input type="text" name="inn[]" class="form-control"></div>
+    <form id="self_employed_form">
+      <div class="d-label">
+        <div class="inn_block">
+          <div class="btn btn-success">+</div>
+          <div class="input"><input type="text" name="inn[]" class="form-control"></div>
+        </div>
       </div>
-    </div>
-    <br>
-    <span class="btn btn-success d-indent" id="check_inn">Проверить</span>
+      <br>
+      <span class="btn btn-success d-indent" id="check_inn">Проверить</span>
+    </form>
   </div>
 </div>
 <style>
@@ -81,8 +83,41 @@
       if(arValid.length)
       {
         var cnt = 0;
-        ajaxRequest(arValid, cnt);
+        //ajaxRequest(arValid, cnt);
         $('#check_inn').hide();
+
+
+        $.ajax({
+          type: 'POST',
+          url: '/admin/ajax/Self_employed',
+          data: $('#self_employed_form').serialize(),
+          success: function(r)
+          {
+            r = JSON.parse(r);
+            console.log(r);
+            /*let message = '';
+
+            if(r.error==true)
+            {
+              $(parent).removeClass('load');
+              message = 'Непредвиденная ошибка. Пожалуйста обратитесь к администратору';
+            }
+            else
+            {
+              $(parent).removeClass('load');
+              message = r.response.message;
+            }
+            $(parent).remove('span').append('<span>' + message + '</span>');
+            if($(arValid[cnt+1]).is('*'))
+            {
+              ajaxRequest(arValid, cnt+1);
+            }
+            else
+            {
+              $('#check_inn').show();
+            }*/
+          }
+        });
       }
     });
 

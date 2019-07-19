@@ -506,7 +506,8 @@ class AjaxController extends CController {
     if(!Yii::app()->user->isGuest)
     {
       $model = new User();
-      $model->checkSelfEmployed($arRes);
+      //$model->checkSelfEmployed($arRes);
+      $model->checkMultiSelfEmployed($arRes);
     }
 
     echo CJSON::encode($arRes);

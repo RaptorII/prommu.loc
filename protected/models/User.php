@@ -1558,4 +1558,65 @@ class User extends CActiveRecord
       curl_close($ch);
     }while($arRes['error']!=false);
   }
+  /**
+   * Проверяем ИНН самозанятого
+   */
+  public function checkMultiSelfEmployed(&$arRes)
+  {
+    $arProxy = array(
+      '87.225.90.97:3128',
+      '5.140.233.65:60437',
+      '46.0.126.134:3128',
+      '217.107.197.177:30436',
+      '87.103.234.116:3128',
+      '78.31.73.222:8080',
+      '1.10.185.8:42106',
+      '1.20.101.124:55264',
+      '1.20.99.89:31799',
+      '176.117.233.184:8080',
+      '94.242.55.108:10010',
+      '46.63.162.171:8080',
+      '31.15.87.197:53281',
+      '79.98.212.14:3128',
+      '91.214.70.99:3128'
+    );
+    $arInn = Yii::app()->getRequest()->getParam('inn');
+    $date = date('Y-m-d');
+    $arCurlParams = [];
+
+    if(!count($arInn))
+      return;
+
+    // собираем параметры
+    foreach ($arInn as $inn)
+    {
+      $arCurlParams[] = array(
+        CURLOPT_USERAGENT => "Mozilla/4.0 (Windows; U; Windows NT 5.0; En; rv:1.8.0.2) Gecko/20070306 Firefox/1.0.0.4",
+        CURLINFO_HEADER_OUT => true,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 20,
+        CURLOPT_CONNECTTIMEOUT => 20,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => "{\n \"inn\": \"$inn\",\n\"requestDate\": \"$date\"\n}",
+        CURLOPT_HTTPPROXYTUNNEL => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_HTTPHEADER => array(
+          "Accept: */*",
+          "Cache-Control: no-cache",
+          "Connection: keep-alive",
+          "Content-Type: application/json",
+          "Host: statusnpd.nalog.ru",
+          "cache-control: no-cache"
+        )
+      );
+    }
+    // запускаем потоки
+    foreach ($arInn as $key => $inn)
+    {
+      $thread = new MultiThread($inn, $arCurlParams[$key], $arProxy);
+      $thread->start() && $thread->join();
+      $arRes['result'][] = $thread->result;
+    }
+  }
 }
