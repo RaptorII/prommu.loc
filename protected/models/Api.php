@@ -37,6 +37,7 @@ class Api
                 case 'feedback' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->feedback(); break;
                 
                 ///PROFILE BLOCK
+                case 'profile' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getProfile(); break;
                 case 'user_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getUserData(); break;
                 case 'edit_prof' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->updateProf(); break;
                 case 'attrib_get' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getAttrib(); break;
@@ -132,7 +133,119 @@ class Api
      * Получаем список вакансий c фильтрацией
      * @return array
      */
+    
+    public function getProfile(){
+        
+    $res['user']['id'] = 12345;
+    $res['user']['first_name'] = "Test";
+    $res['user']['last_name'] = "api";
+    $res['user']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+    
+    $res['overall_rating']['sum'] = 20;
+    $res['overall_rating']['positive'] = 30;
+    $res['overall_rating']['negative'] = 10;
+    $res['overall_rating']['applicant_summary']['punctuality'] = 10;
+    $res['overall_rating']['applicant_summary']['contact'] = 10;
+    $res['overall_rating']['applicant_summary']['quality'] = 30;
+    
+    $res['overall_rating']['employer_summary']['payment_deadlines'] = 30;
+    $res['overall_rating']['employer_summary']['payment_amount'] = 30;
+    $res['overall_rating']['employer_summary']['clarity_requirements'] = 30;
+    $res['overall_rating']['employer_summary']['clarity_tasks'] = 30;
+    $res['overall_rating']['employer_summary']['contact'] = 30;
+    
+    $res['photos']['id'] = 234234243;
+    $res['photos']['is_avatar'] = true;
+    $res['photos']['url'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+    
+    
+    $res['rating_employer']['vacancy']['id'] = 234234243;
+    $res['rating_employer']['vacancy']['owner']['id'] = 12345;
+    $res['rating_employer']['vacancy']['owner']['first_name'] = "TEST";
+    $res['rating_employer']['vacancy']['owner']['last_name'] = "api";
+    $res['rating_employer']['vacancy']['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+    
+    $res['rating_employer']['vacancy']['city']['id'] = 1307;
+    $res['rating_employer']['vacancy']['city']['name'] = "Москва";
+    
+    $res['rating_employer']['vacancy']['title'] = "Промоутер";
+    $res['rating_employer']['vacancy']['description'] = "Ты должен раздавать листовкy";
+    $res['rating_employer']['vacancy']['is_active'] = true;
+    $res['rating_employer']['vacancy']['is_premium'] = true;
+    $res['rating_employer']['vacancy']['salary_hour'] = 13000;
+    $res['rating_employer']['vacancy']['salary_week'] = 13000;
+    $res['rating_employer']['vacancy']['salary_month'] = 130000;
+    $res['rating_employer']['vacancy']['salary_visit'] = 000;
+    $res['rating_employer']['vacancy']['created_at'] = "1995-09-07T10:40:52Z";
+    $res['rating_employer']['vacancy']['updated_at'] = "1995-09-07T10:40:52Z";
+    
+    $res['rating_employer']['rating'] = 1;
+    $res['rating_employer']['payment_deadlines'] = 1;
+    $res['rating_employer']['payment_deadlines'] = 1;
+    $res['rating_employer']['payment_amount'] = 1;
+    $res['rating_employer']['clarity_requirements'] = 1;
+    $res['rating_employer']['clarity_tasks'] = 1;
+    $res['rating_employer']['contact'] = 1;
+    
+    
+    $res['rating_applicant']['vacancy']['id'] = 234234243;
+    $res['rating_applicant']['vacancy']['owner']['id'] = 12345;
+    $res['rating_applicant']['vacancy']['owner']['first_name'] = "TEST";
+    $res['rating_applicant']['vacancy']['owner']['last_name'] = "api";
+    $res['rating_applicant']['vacancy']['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+    
+    $res['rating_applicant']['vacancy']['city']['id'] = 1307;
+    $res['rating_applicant']['vacancy']['city']['name'] = "Москва";
+    
+    $res['rating_applicant']['vacancy']['title'] = "Промоутер";
+    $res['rating_applicant']['vacancy']['description'] = "Ты должен раздавать листовкy";
+    $res['rating_applicant']['vacancy']['is_active'] = true;
+    $res['rating_applicant']['vacancy']['is_premium'] = true;
+    $res['rating_applicant']['vacancy']['salary_hour'] = 13000;
+    $res['rating_applicant']['vacancy']['salary_week'] = 13000;
+    $res['rating_applicant']['vacancy']['salary_month'] = 130000;
+    $res['rating_applicant']['vacancy']['salary_visit'] = 000;
+    $res['rating_applicant']['vacancy']['created_at'] = "1995-09-07T10:40:52Z";
+    $res['rating_applicant']['vacancy']['updated_at'] = "1995-09-07T10:40:52Z";
+    
+    $res['rating_applicant']['rating'] = 1;
+    $res['rating_applicant']['punctuality'] = 1;
+    $res['rating_applicant']['contact'] = 1;
+    $res['rating_applicant']['quality'] = 1;
+    
+    
+    $res['reviews'][0]['owner']['id'] = 12345;
+    $res['reviews'][0]['owner']['first_name'] = "TEST";
+    $res['reviews'][0]['owner']['last_name'] = "api";
+    $res['reviews'][0]['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+    $res['reviews'][0]['data'] = "Lorem ipsum bla bla bla this is a review bla bla bla";
+    $res['reviews'][0]['created_at'] = "1995-09-07T10:40:52Z";
+    $res['reviews'][0]['updated_at'] = "1995-09-07T10:40:52Z";
 
+
+    
+    $res['vacancies'][0]['id'] = 234234243;
+    $res['vacancies'][0]['owner']['id'] = 12345;
+    $res['vacancies'][0]['owner']['first_name'] = "TEST";
+    $res['vacancies'][0]['owner']['last_name'] = "api";
+    $res['vacancies'][0]['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+    
+    $res['vacancies'][0]['city']['id'] = 1307;
+    $res['vacancies'][0]['city']['name'] = "Москва";
+    
+    $res['vacancies'][0]['title'] = "Промоутер";
+    $res['vacancies'][0]['description'] = "Ты должен раздавать листовкy";
+    $res['vacancies'][0]['is_active'] = true;
+    $res['vacancies'][0]['is_premium'] = true;
+    $res['vacancies'][0]['salary_hour'] = 13000;
+    $res['vacancies'][0]['salary_week'] = 13000;
+    $res['vacancies'][0]['salary_month'] = 130000;
+    $res['vacancies'][0]['salary_visit'] = 000;
+    $res['vacancies'][0]['created_at'] = "1995-09-07T10:40:52Z";
+    $res['vacancies'][0]['updated_at'] = "1995-09-07T10:40:52Z";
+    
+
+    }
        public function getVacancy()
     {
         $filter = [];
