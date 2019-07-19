@@ -217,33 +217,37 @@ class PagesContent extends CActiveRecord
    //          $content->save();
 
 		}
-		else {
+		else
+		{
 			// Update
 			$result = Yii::app()->db->createCommand()
-    			->select('id, page_id')
-    			->from('pages_content')
-    			->where('page_id=:pid and lang=:lang', array(':pid'=>$id, ':lang'=>'ru'))
-    			->queryRow();
+				->select('id, page_id')
+				->from('pages_content')
+				->where(
+					'page_id=:pid and lang=:lang', 
+					[':pid'=>$id, ':lang'=>'ru']
+				)
+				->queryRow();
 
-    		if($result['id']>0)
-    		{		
+			if($result['id']>0)
+			{		
+				Yii::app()->db->createCommand()
+		      ->update(
+		      	'pages_content', 
+						[
+							'name'=>$content['name'],
+							'html'=>$content['html'],
+							'anons'=>$content['anons'],
+							'img'=>$content['img'],
+							'pubdate'=>$content['pubdate'],
+							'hidden'=>intval($content['hidden'])
+						],
+						'page_id=:id and lang=:lang',
+						[':id'=>$id,  ':lang'=>'ru']
+					);
 
-			Yii::app()->db->createCommand()
-            ->update('pages_content', array(
-            'name'=>$content['name'],
-            'html'=>$content['html'],
-            'anons'=>$content['anons'],
-            'img'=>$content['img'],
-            'pubdate'=>$content['pubdate']),
-                'page_id=:id and lang=:lang', array(':id'=>$id,  ':lang'=>'ru'));
-
-            Yii::app()->db->createCommand()
-            ->update('pages', array(
-            'link'=>$link,),
-                'id=:id', array(':id'=>$id));
-
-           
-		
+				Yii::app()->db->createCommand()
+					->update('pages', ['link'=>$link], 'id=:id', [':id'=>$id]);
 			}
 		}
 	}

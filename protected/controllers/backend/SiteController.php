@@ -179,18 +179,18 @@ class SiteController extends Controller
             $this->render('menu/view',array('model'=>$model,'menu_type'=>1));
  
     }
-
+    /**
+     * 
+     */
     public function actionPages()
     {
-        $model=new Pages;
-        $id = 0;
-        //if(isset($_POST['field_id'])) $id = $_POST['field_id'];
-        if(self::isAuth())
-            $this->render('pages/view',array('model'=>$model,'id'=>$id));
-        //self::isAuth(array('pages/view',array('model'=>$model, 'id'=>$id)));
+    	$this->checkAccess();
+
+    	$this->render('pages/view',['model'=>new Pages(), 'id'=>0]);
     }
-
-
+    /**
+     * 
+     */
     public function actionPagesForm()
     {
       $this->checkAccess();
@@ -199,23 +199,26 @@ class SiteController extends Controller
       $id = intval($rq->getParam('id'));
       $type = $rq->getParam('pagetype');
       $model = new PagesContent;
+      $params = $rq->getParam('PagesContent');
 
-      if ($rq->getParam('PagesContent'))
+      if (count($params))
       {
-        $model->attributes = $rq->getParam('PagesContent');
-        $model->SaveContent($id, $model, $_POST['PagesContent']['link'], 'ru', $type);
+				$model->attributes = $params;
+				$model->SaveContent($id, $model, $params['link'], 'ru', $type);
+				Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
 
-        switch ($type)
-        {
-          case 'news': $view = 'pages/newsview'; break;
-          case 'articles': $view = 'pages/artsview'; break;
-          default: $view = 'pages/view'; break;
-        }
-        $this->render($view, ['model' => new Pages()]);
-        return;
+				if($type=='news')
+					$this->redirect('/admin/newspages');
+				elseif($type=='articles')
+					$this->redirect('/admin/articlespages');
+				else
+					$this->redirect('/admin/pages');
       }
-
-      $this->render('pages/form',['model'=>$model,'id'=>$id, 'pagetype'=>$type]);
+      else
+      {
+        $this->setPageTitle('Настройка страницы сайта');
+        $this->render('pages/form',['model'=>$model,'id'=>$id, 'pagetype'=>$type]);
+      }
     }
     
     public function actionComments()
@@ -256,40 +259,29 @@ class SiteController extends Controller
            $this->render('rating/view', array('model'=>$model));
        }
    }
-   
-
+   	/**
+   	 * 
+   	 */
     public function actionArticlesPages()
     {
-        $model=new Pages;
-        $id = 0;
-        if(strpos($this->user_access, "Статьи") === false) {
-            $this->render('access');
-            return;
-        } 
-        if(self::isAuth()){
-            $title = 'Управление статьями';
-            $this->setPageTitle($title);
-            $this->breadcrumbs = array('СЕО'=>array('sect?p=seo'),'1'=>$title); 
-            $this->render('pages/artsview',array('model'=>$model,'id'=>$id));
-        }
-        //self::isAuth(array('pages/view',array('model'=>$model, 'id'=>$id)));
-    }
+			$this->checkAccess('Статьи');
 
+			$title = 'Управление статьями';
+			$this->setPageTitle($title);
+			$this->breadcrumbs = ['СЕО'=>['sect?p=seo'],'1'=>$title]; 
+			$this->render('pages/artsview',['model'=>new Pages(),'id'=>0]);
+    }
+    /**
+     * 
+     */
     public function actionNewsPages()
     {
-        $model=new Pages;
-        $id = 0;
-       if(strpos($this->user_access, "Новости") === false) {
-            $this->render('access');
-            return;
-        } 
-        if(self::isAuth()){
-            $title = 'Управление новостями';
-            $this->setPageTitle($title);
-            $this->breadcrumbs = array('Дополнительно'=>array('sect?p=add'),'1'=>$title); 
-            $this->render('pages/newsview',array('model'=>$model,'id'=>$id));
-        }
-        //self::isAuth(array('pages/view',array('model'=>$model, 'id'=>$id)));
+			$this->checkAccess('Новости');
+
+			$title = 'Управление новостями';
+			$this->setPageTitle($title);
+			$this->breadcrumbs = ['Дополнительно'=>['sect?p=add'],'1'=>$title]; 
+			$this->render('pages/newsview',['model'=>new Pages(),'id'=>0]);
     }
 
     public function actionMenuTree()
@@ -309,35 +301,54 @@ class SiteController extends Controller
             $this->render('menuTree/view',array('model'=>$model));
         //self::isAuth(array('menuTree/view',array('model'=>$model)));
     }
-
+    /**
+     * 
+     */
     public function actionPageUpdate($id)
     {
-      $model = new PagesContent();
-      $pagetype = Yii::app()->getRequest()->getParam('pagetype');
-      $params = Yii::app()->getRequest()->getParam('PagesContent');
+			$this->checkAccess();
 
-      if(count($params))
-      {
+			$model = new PagesContent();
+			$type = Yii::app()->getRequest()->getParam('pagetype');
+			$params = Yii::app()->getRequest()->getParam('PagesContent');
 
-        $model->attributes = $params;
-        $model->SaveContent($id, $model, $params['link'],"ru");
-        Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
+			if(count($params))
+			{
+				$model->attributes = $params;
+				$model->SaveContent($id, $model, $params['link'],"ru");
+				Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
 
-        $pagetype=='news' && $this->redirect('/admin/newspages');
-        $pagetype=='articles' && $this->redirect('/admin/articlespages');
-      }
-      else
-      {
-        $this->setPageTitle('Настройка страницы сайта');
-        $this->render('pages/form',['model'=>$model,'id'=>$id, 'pagetype' =>$pagetype]);
-      }
+				if($type=='news')
+					$this->redirect('/admin/newspages');
+				elseif($type=='articles')
+					$this->redirect('/admin/articlespages');
+				else
+					$this->redirect('/admin/pages');
+			}
+			else
+			{
+				$this->setPageTitle('Настройка страницы сайта');
+				$this->render('pages/form',['model'=>$model,'id'=>$id, 'pagetype' =>$type]);
+			}
     }
-
+    /**
+     * 
+     */
     public function actionPageDelete($id)
     {
-        $model= new PagesContent;
-        $model->DeleteContent($id);
-        $this->render('pages/view',array('model'=>$model->getAllPages()));
+    	$this->checkAccess();
+
+			$model = new PagesContent;
+			$model->DeleteContent($id);
+			$type = Yii::app()->getRequest()->getParam('pagetype');
+			Yii::app()->user->setFlash('success', 'Данные успешно удалены');
+
+			if($type=='news')
+				$this->redirect('/admin/newspages');
+			elseif($type=='articles')
+				$this->redirect('/admin/articlespages');
+			else
+				$this->redirect('/admin/pages');
     }
     
         // **** Управление пользователями (блокировка, смена пароля) ****
