@@ -255,7 +255,7 @@ class Api
        public function getVacancy()
     {
         $filter = [];
-        
+        $page = filter_var(Yii::app()->getRequest()->getParam('page', 0), FILTER_SANITIZE_NUMBER_INT);
         $id = filter_var(Yii::app()->getRequest()->getParam('id', 0), FILTER_SANITIZE_NUMBER_INT);
         $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
         
