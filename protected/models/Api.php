@@ -3185,51 +3185,32 @@ public function vac(){
     public function getPost()
     {
 
-        //    $sql = "SELECT r.status
-        //     FROM user r";
-        // $res= Yii::app()->db->createCommand($sql)->queryRow();
-        // return $res;
-        // $data['isblocked'] = 0;
+               $error = '-101';
+        try
+        {
+            // читаем типы копании
+            $sql = "SELECT d.id, d.name name
+                FROM user_attr_dict d
+                WHERE d.id_par = 110
+                ORDER BY d.name
+                ";
+            $data = Yii::app()->db->createCommand($sql)->queryAll();
 
-        // $res = Yii::app()->db->createCommand()
-        //     ->update('user', $data, $value);
-        // return $data[0]['name'];
 
-        $sql = "SELECT DISTINCT r.id, r.id_user idus, r.photo, r.firstname, r.lastname, r.isman
-                , cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate, r.rate, r.rate_neg, photo
-            FROM resume r
-            INNER JOIN user u ON r.id_user = u.id_user AND u.ismoder = 1
-            AND ( u.isblocked = 3)
-        
-            ORDER BY avg_rate DESC, id DESC
-            LIMIT 1000";
-        $result = Yii::app()->db->createCommand($sql)->queryAll();
-        foreach ($result as $key => $value) {
-                $props = array(
-                'id_us' => $value['idus'],
-                'id_mech' => rand(111,119),
-                'isshow' => 0, 
-                'crdate' => date("Y-m-d H:i:s"),
+        } catch (Exception $e)
+        {
+            $error = abs($e->getCode());
+            switch( $e->getCode() )
+            {
+                case -102 : $message = 'Error while getting chat data'; break;
+                default: $error = 101; $message = 'Error get api data';
+            }
 
-                );
+            $data = ['error' => $error, 'message' => $message];
+        } // endtry
 
-                $res = Yii::app()->db->createCommand()
-                ->insert('user_mech', $props);
+        return $data;
 
-                Yii::app()->db->createCommand()
-                ->update('resume', array(
-                    'isblocked' => 0,
-                ), 'id = :id', array(':id' => $value['id']));
-
-                Yii::app()->db->createCommand()
-                ->update('user', array(
-                    'isblocked' => 0,
-                ), 'id_user = :id', array(':id' => $value['idus']));
-
-            
-
-        }
-        return $result;
     }
 
     public function updateProf() 
