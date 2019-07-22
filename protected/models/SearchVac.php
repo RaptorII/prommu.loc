@@ -172,7 +172,7 @@ class SearchVac extends Model
                 {$filter['table']}
                 INNER JOIN empl_attribs ea ON ea.id_vac = e.id  
                 {$filter['filter']}
-                AND e.status = 1 AND e.ismoder = 100 AND e.in_archive=0
+                AND e.status = 1 AND e.ismoder = 100 AND e.in_archive=0 AND e.remdate >= CURDATE()
                 ORDER BY e.ispremium DESC, e.id DESC ";
 
         $res = Yii::app()->db->createCommand($sql);

@@ -469,23 +469,27 @@ class SiteController extends AppController
                 ]
                 )) // секции конкретной вакансии
             {
-                Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
-                if($isOwner)
-                {
-                    $data = $model->getInfo($id, false);
-                    $view = 'vacancy/index';
-                }
-                else
-                    throw new CHttpException(404, 'Error');
+              Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
+              $data = $model->getVacancyView($id);
+              if($data['error']==1 || $data['vac']['in_archive'])
+                throw new CHttpException(404, 'Error');
+              if($isOwner)
+              {
+                $data = $model->getInfo($id, false);
+                $view = 'vacancy/index';
+              }
+              else
+                throw new CHttpException(404, 'Error');
             }
             else
             {
                 $data = $model->getVacancyView($id);
+
                 if($isOwner) // для владельца проверка на отношение вакансии к архиву
                 {
                     $data['archive'] = $model->getEmpVacanciesIdList($id_user)['archive'];
                 }
-                if($data['error'] == 1)
+                if($data['error']==1 || $data['vac']['in_archive'])
                     throw new CHttpException(404, 'Error'); 
                 // индексируем только если владелец вакансии с этого региона
                 $res = Yii::app()->db->createCommand()

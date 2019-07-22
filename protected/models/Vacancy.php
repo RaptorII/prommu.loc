@@ -619,7 +619,7 @@ class Vacancy extends ARModel
         if( $inIdVac )
         {
             // получение данных вакансии
-            $sql = "SELECT e.id,e.city, e.ismoder, e.ispremium, e.title, e.requirements, e.duties, e.conditions, e.istemp,e.cardPrommu, e.card, e.repost,e.index, e.meta_h1, e.meta_title, e.meta_description,e.comment,
+            $sql = "SELECT e.id,e.city, e.ismoder, e.ispremium, e.title, e.requirements, e.duties, e.conditions, e.istemp,e.cardPrommu, e.card, e.repost,e.index, e.meta_h1, e.meta_title, e.meta_description,e.comment, e.in_archive,
                        DATE_FORMAT(e.bdate, '%d.%m.%Y') bdate,
                        DATE_FORMAT(e.edate, '%d.%m.%Y') edate,
                        e.shour, e.sweek, e.smart, e.self_employed, e.smonth, e.svisit, e.isman, e.iswoman, e.exp, e.id_user idus, e.iscontshow,
@@ -2234,7 +2234,7 @@ WHERE id_vac = {$inVacId}";
               INNER JOIN user u ON e.id_user = u.id_user 
               INNER JOIN empl_attribs ea ON ea.id_vac = e.id
               {$filter['table']}
-              {$filter['filter']}  AND e.status = 1 AND e.ismoder = 100 AND e.remdate >= now()
+              {$filter['filter']} AND e.status = 1 AND e.ismoder = 100 AND e.in_archive=0 AND e.remdate >= CURDATE()
               ORDER BY e.ispremium DESC, e.id DESC 
               {$limit}  
             ) t1 ON t1.id = e.id
@@ -2248,16 +2248,6 @@ WHERE id_vac = {$inVacId}";
             LIMIT 100";
         $res = Yii::app()->db->createCommand($sql);
         $data= $res->queryAll();
-        foreach ($data as $key => $value) {
-            if(time() > strtotime($value['remdate'])){
-
-                $res = Yii::app()->db->createCommand()
-                    ->update('empl_vacations', array( 'status' => 0,
-                        'ismoder' => 0, 
-                    ), 'id = :id', array(':id' => $value['id']));
-            }
-        }
-        
 
         return $data;
     }
@@ -3301,7 +3291,7 @@ WHERE id_vac = {$inVacId}";
         $arVac = Yii::app()->db->createCommand()
                     ->select("id,status,if(remdate>=CURRENT_DATE(),0,1) archive_date")
                     ->from('empl_vacations')
-                    ->where('id_user=:id',[':id' => $id_user])
+                    ->where('id_user=:id AND in_archive=0',[':id' => $id_user])
                     ->queryAll();
 
         if(!count($arVac))
@@ -3364,6 +3354,11 @@ WHERE id_vac = {$inVacId}";
             if($i < ($this->offset + $this->limit))
                 $arId[] = $arRes[$type][$i];
 
+        $arRes['items'] = [];
+
+        if(!count($arId))
+          return $arRes;
+
         $arRes['items'] = Yii::app()->db->createCommand()
                     ->select("id,
                         title,
@@ -3374,7 +3369,7 @@ WHERE id_vac = {$inVacId}";
                         DATE_FORMAT(remdate,'%d.%m.%Y') remdate,
                         if(remdate>=CURRENT_DATE(),0,1) archive_date")
                     ->from('empl_vacations')
-                    ->where(['in','id',$arId])
+                    ->where('in_archive=0 and id IN(' . implode(',',$arId) . ')')
                     ->order('id desc')
                     ->queryAll();
 
