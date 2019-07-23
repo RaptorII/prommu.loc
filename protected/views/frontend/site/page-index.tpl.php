@@ -1,24 +1,36 @@
-<?/*
+<?
 $ppp = 		array(
+  'email_user' => array(
+    'name' => "#EMAIL_USER#",
+    'pattern' => "/#EMAIL_USER#/",
+    'description' => "Email пользователя сайта"
+  ),
+  'name_applicant' => array(
+    'name' => "#NAME_APP#",
+    'pattern' => "/#NAME_APP#/",
+    'description' => "Имя соискателя(если установлено)"
+  ),
   'id_user' => array(
     'name' => "#ID_USER#",
     'pattern' => "/#ID_USER#/",
     'description' => "ID пользователя сайта"
   ),
-  'name_user' => array(
-    'name' => "#NAME_USER#",
-    'pattern' => "/#NAME_USER#/",
-    'description' => "Имя работодателя(если установлено)"
-  ),
-  'company_user' => array(
-    'name' => "#COMPANY_USER#",
-    'pattern' => "/#COMPANY_USER#/",
-    'description' => "Название компании работодателя"
+  'link_profile' => array(
+    'name' => "#LINK_PROFILE#",
+    'pattern' => "/#LINK_PROFILE#/",
+    'value' => '#SITE##PAGE_PROFILE_COMMON#/#ID_USER#',
+    'breplace' => true,
+    'description' => "Ссылка на профиль пользователя"
   ),
   'id_vacancy' => array(
     'name' => "#ID_VACANCY#",
     'pattern' => "/#ID_VACANCY#/",
     'description' => "ID вакансии"
+  ),
+  'title_vacancy' => array(
+    'name' => "#TITLE_VACANCY#",
+    'pattern' => "/#TITLE_VACANCY#/",
+    'description' => "Заголовок вакансии"
   ),
   'link_vacancy' => array(
     'name' => "#LINK_VACANCY#",
@@ -27,17 +39,19 @@ $ppp = 		array(
     'breplace' => true,
     'description' => "Ссылка на вакансию"
   ),
-  'title_vacancy' => array(
-    'name' => "#TITLE_VACANCY#",
-    'pattern' => "/#TITLE_VACANCY#/",
-    'description' => "Заголовок вакансии"
-  ),
+  'link_vacancy_approved' => array(
+    'name' => "#LINK_VACANCY_APPROVED#",
+    'pattern' => "/#LINK_VACANCY_APPROVED#/",
+    'value' => '#PAGE_USER_VACANCY#/#ID_VACANCY#/approved',
+    'breplace' => true,
+    'description' => "Ссылка на информацию вакансии(утвержденнные)"
+  )
 );
 $ppp = serialize($ppp);
 echo '<pre>';
 print_r($ppp);
 echo '</pre>';
-*/
+
 /*
 $aaa = "a:3:{s:7:\"id_user\";a:3:{s:4:\"name\";s:9:\"#ID_USER#\";s:7:\"pattern\";s:11:\"/#ID_USER#/\";s:11:\"description\";s:38:\"ID пользователя сайта\";}s:12:\"link_profile\";a:5:{s:4:\"name\";s:14:\"#LINK_PROFILE#\";s:7:\"pattern\";s:16:\"/#LINK_PROFILE#/\";s:5:\"value\";s:37:\"#SITE##PAGE_PROFILE_COMMON#/#ID_USER#\";s:8:\"breplace\";b:1;s:11:\"description\";s:57:\"Ссылка на профиль пользователя\";}s:18:\"link_profile_admin\";a:5:{s:4:\"name\";s:20:\"#LINK_PROFILE_ADMIN#\";s:7:\"pattern\";s:22:\"/#LINK_PROFILE_ADMIN#/\";s:5:\"value\";a:2:{i:2;s:37:\"#SITE#/admin/site/PromoEdit/#ID_USER#\";i:3;s:36:\"#SITE#/admin/site/EmplEdit/#ID_USER#\";}s:8:\"breplace\";b:1;s:11:\"description\";s:75:\"Ссылка на профиль пользователя в админке\";}}";*/
 /*$asd = unserialize($ppp);

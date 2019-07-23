@@ -28,7 +28,7 @@
 						</tbody>
 					</table>
 					<div class="pull-right">
-						<a href="<?=$this->createUrl('')?>" class="btn btn-success d-indent">Назад</a>
+						<a href="<?=$this->createUrl('',['anchor'=>'tab_system'])?>" class="btn btn-success d-indent">Назад</a>
 					</div>			
 				</div>
 				<div class="hidden-xs col-sm-1 col-md-3"></div>

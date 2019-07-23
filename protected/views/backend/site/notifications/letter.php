@@ -146,7 +146,7 @@
 				</div>
 				<iframe id="iframe-html"></iframe>
 				<div class="pull-right">
-					<a href="<?=$this->createUrl('')?>" class="btn btn-success d-indent">Назад</a>
+					<a href="<?=$this->createUrl('',['anchor'=>'tab_letter'])?>" class="btn btn-success d-indent">Назад</a>
 					<label class="btn btn-success d-indent">
 						<span>Сохранить</span>
 						<input type="radio" name="event_type" value="save" class="hide submit-btn">

@@ -114,7 +114,7 @@
 				</div>
 				<iframe id="iframe-html"></iframe>
 				<div class="pull-right">
-					<a href="<?=$this->createUrl('')?>" class="btn btn-success d-indent">Назад</a>
+					<a href="<?=$this->createUrl('',['anchor'=>'tab_template'])?>" class="btn btn-success d-indent">Назад</a>
 					<button type="submit" class="btn btn-success d-indent">Сохранить</button>
 				</div>
 			</form>

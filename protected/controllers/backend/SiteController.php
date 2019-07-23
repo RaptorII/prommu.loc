@@ -1958,7 +1958,7 @@ class SiteController extends Controller
             else
             {
                 $data = $model->setData($rq);
-                $data['redirect'] && $this->redirect(['notifications']);
+                $data['redirect'] && $this->redirect(['notifications','anchor'=>'tab_'.$type]);
             }
 
             $data['id'] = $id;

@@ -147,6 +147,13 @@ class Mailing extends CActiveRecord
                 'pattern' => "/#PAGE_ADMIN_EDIT_PROFILE_EMP#/",
                 'value' => Subdomain::site() . '/admin/EmplEdit',
                 'description' => "Страница редактирования профиля работодателя(без ID)"
+              ),
+              16 => array(
+                'name' => "#PAGE_USER_VACANCY_REFUSED#",
+                'pattern' => "/#PAGE_USER_VACANCY_REFUSED#/",
+                'value' => Subdomain::site() . MainConfig::$PAGE_VACANCY . '#ID_VACANCY#' . DS . MainConfig::$VACANCY_REFUSED,
+                'breplace' => true,
+                'description' => "Информационная страница вакансии 'Отклоненные'"
               )
 				);
 	}

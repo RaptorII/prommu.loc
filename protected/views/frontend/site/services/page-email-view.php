@@ -95,7 +95,7 @@ if(!$rq->getParam('vacancy')):?>
 					Добрый день, <ФИО><br>
 					Работодатель <span><?=$viData['emp']['name']?>
 					<a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $viData['emp']['id_user']?>">
-						<img src="<?= DS . MainConfig::$PATH_EMPL_LOGO . DS . ($viData['emp']['logo'] ? $viData['emp']['logo'] . '100.jpg' : 'logo.png') ?>">
+						<img src="<?=Share::getPhoto($viData['emp']['id_user'], UserProfile::$EMPLOYER ,$viData['emp']['logo'])?>">
 					</a></span><br> приглашает Вас на вакансию <a href="https://prommu.com/vacancy/<?=$vacancy?>">&laquo;<?=$vac['title']?>&raquo;</a>
 					<? if($cntPosts==1): ?>
 						на должность:<br><?=$vac['pname']?><br>

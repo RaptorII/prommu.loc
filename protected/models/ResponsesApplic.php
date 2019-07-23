@@ -23,118 +23,96 @@ class ResponsesApplic extends Responses
      */
     public function setResponseStatus($props = [])
     {
-        // if( Yii::app()->getRequest()->requestType != 'POST' ) $ret = array('error' => 1);
-        $idres = $props['idres'] ?: filter_var(Yii::app()->getRequest()->getParam('idres'), FILTER_SANITIZE_NUMBER_INT);
-        $status = $props['status'] ?: filter_var(Yii::app()->getRequest()->getParam('s'), FILTER_SANITIZE_NUMBER_INT);
-        $idus = $props['idus'] ?: Share::$UserProfile->exInfo->id;
+      $rq = Yii::app()->getRequest();
+      $idres = $props['idres'] ?: filter_var($rq->getParam('idres'), FILTER_SANITIZE_NUMBER_INT);
+      $status = $props['status'] ?: filter_var($rq->getParam('s'), FILTER_SANITIZE_NUMBER_INT);
+      $idus = $props['idus'] ?: Share::$UserProfile->exInfo->id;
 
-        // проверяем, что заявка пренадлежит этому пользователю пользователю
-        $sql = "SELECT s.id sid, s.status, s.id_vac
-            , u.email, e.id_user
-            , e.id, e.title
-            , r.isman, em.name
-            FROM vacation_stat s
-            INNER JOIN resume r ON r.id = s.id_promo
-            INNER JOIN empl_vacations e ON e.id = s.id_vac
-            INNER JOIN employer em ON e.id_user = em.id_user
-            INNER JOIN user u ON u.id_user = e.id_user
-            WHERE r.id_user = {$idus} AND s.id = {$idres}";
-        /** @var $res CDbCommand */
-        $vacData = Yii::app()->db->createCommand($sql);
-        $vacData = $vacData->queryRow();
+      // проверяем, что заявка пренадлежит этому пользователю пользователю
+      $sql = "SELECT s.id sid, s.status, s.id_vac
+          , u.email, e.id_user
+          , e.id, e.title
+          , r.isman, em.name
+          FROM vacation_stat s
+          INNER JOIN resume r ON r.id = s.id_promo
+          INNER JOIN empl_vacations e ON e.id = s.id_vac
+          INNER JOIN employer em ON e.id_user = em.id_user
+          INNER JOIN user u ON u.id_user = e.id_user
+          WHERE r.id_user = {$idus} AND s.id = {$idres}";
+      /** @var $res CDbCommand */
+      $vacData = Yii::app()->db->createCommand($sql)->queryRow();
 
-        // if response exists
-        if( $vacData['sid'] )
+      if( $vacData['sid'] ) // заявка найдена
+      {
+        Yii::app()->db->createCommand()
+          ->update(
+            'vacation_stat',
+            [
+              'status' => $status,
+              'mdate' => date('Y-m-d H:i:s')
+            ],
+            'id = :id',
+            [':id' => $idres]
+          );
+
+        $applicantName = Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname;
+        empty(trim($applicantName)) && $applicantName='пользователь';
+        $employerName = $vacData['name'];
+        empty(trim($employerName)) && $employerName='пользователь';
+
+        if($status == 3)
         {
-            $res = Yii::app()->db->createCommand()
-                ->update('vacation_stat', array( 'status' => $status,
-                    'mdate' => date('Y-m-d H:i:s'),
-                ), 'id = :id', array(':id' => $idres));
-            $ret = array('error' => 0, 'res' => $res);
-            if($status == 3){
-                 $content = file_get_contents(Yii::app()->basePath . "/views/mails/emp/app-refused-part.html");
-                  $content = str_replace('#APPNAME#', Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname, $content);
-                  $content = str_replace('#EMPNAME#', $vacData['name'], $content);
-                 $content = str_replace('#APPLINK#',  Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
-                 $content = str_replace('#VACID#', $vacData['id_vac'], $content);
-                 $content = str_replace('#VACNAME#', $vacData['title'], $content);
-                 $content = str_replace('#RESPLINK#',Subdomain::site() . MainConfig::$PAGE_RESPONSES, $content);
-                 $content = str_replace('#VACLINK#',  Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $vacData['id_vac'], $content);
-      
-              Share::sendmail($vacData['email'], "Prommu: заявка на вакансию отклонена", $content);
+          Mailing::set(
+            22,
+            [
+              'email_user' => $vacData['email'],
+              'name_user' => $employerName,
+              'name_applicant' => $applicantName,
+              'id_user' => Share::$UserProfile->id,
+              'id_vacancy' => $vacData['id_vac'],
+              'title_vacancy' => $vacData['title']
+            ]
+          );
 
-                return array ('error' => 0, 'message' => 'Вы отклонили приглашение на вакансию');
-            }
+          return ['error' => 0, 'message' => 'Вы отклонили приглашение на вакансию'];
+        }
+        if($status == 5)
+        {
+          Mailing::set(
+            23,
+            [
+              'email_user' => $vacData['email'],
+              'name_applicant' => $applicantName,
+              'id_user' => Share::$UserProfile->id,
+              'id_vacancy' => $vacData['id_vac'],
+              'title_vacancy' => $vacData['title']
+            ]
+          );
 
-            if($status == 5){
-                 $content = file_get_contents(Yii::app()->basePath . "/views/mails/emp/app-confirmed-part.html");
-                 $content = str_replace('#APPNAME#', Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname, $content);
-                 $content = str_replace('#APPLINK#',  Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
-                 $content = str_replace('#VACID#', $vacData['id_vac'], $content);
-                 $content = str_replace('#VACNAME#', $vacData['title'], $content);
-                 $content = str_replace('#RESPLINK#',Subdomain::site() . MainConfig::$PAGE_RESPONSES, $content);
-                 $content = str_replace('#VACLINK#',  Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $vacData['id_vac'], $content);
-      
-           Share::sendmail($vacData['email'], "Prommu: заявка на вакансию подтверждена", $content);
+          $sql = "SELECT r.new_respond
+              FROM push_config r
+              WHERE r.id=" . $vacData['id_user'];
+          $res = Yii::app()->db->createCommand($sql)->queryScalar();
 
-            
-            }
-
-
-            if( $status == 5)
-            {
-                // $message = "<div>Работодатель и Вы утвердили заявку на вакансию. <br>Ожидайте дальнейших инструкций от работодателя</div>";
-                // $this->approveVacAfterAction(array('fio' => Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname,
-                //     'email' => $vacData['email'],
-                //     'title' => $vacData['title'],
-                //     'id' => $vacData['id'],
-                //     'isman' => $vacData['isman'],
-                //     'idus' => $idus,
-                // ));
-
-                $vacId = $vacData['id_vac'];
-            $sql = "SELECT e.id_user
-            FROM empl_vacations e 
-            WHERE e.id= {$vacId}";
-        /** @var $res CDbCommand */
-        $vacRes = Yii::app()->db->createCommand($sql);
-        $employer = $vacRes->queryScalar();
-
-             $ids = $employer;
-        $sql = "SELECT r.new_respond
-            FROM push_config r
-            WHERE r.id = {$ids}";
-            $res = Yii::app()->db->createCommand($sql)->queryScalar(); 
-            if($res == 2) {
+          if($res == 2)
+          {
             $sql = "SELECT r.push
             FROM user_push r
-            WHERE r.id = {$ids}";
-            $res = Yii::app()->db->createCommand($sql)->queryRow(); 
+            WHERE r.id=" . $vacData['id_user'];
+            $push = Yii::app()->db->createCommand($sql)->queryRow();
 
-            if($res) {
-                $type = "respond";
-                $api = new Api();
-                $api->getPush($res['push'], $type);
-            
-                    }
-                }
-    
+            if($push)
+            {
+              $api = new Api();
+              $api->getPush($push, "respond");
             }
-   
-            return array('error' => 0, 'message' => $message);
-        
-        } // endif
-
-        else
-        {
-            $ret = array('error' => 1);
-        } // endif
-
-        return $ret;
+          }
+          return ['error' => 0, 'message' => 'Вы подтвердили участие на предложенной вакансии'];
+        }
+        return ['error' => 0];
+      }
+      return ['error' => 1];
     }
-
-
-
     /**
      * Новые одобренные заявки
      */
@@ -541,249 +519,238 @@ class ResponsesApplic extends Responses
     /**
      * 
      */
-    public function saveRateDatas($props = [])
+  public function saveRateDatas($props = [])
+  {
+    $id = $props['idvac'] ?: filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
+    $message = $props['message'] ?: filter_var(Yii::app()->getRequest()->getParam('comment'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $type = $props['type'] ?: filter_var(Yii::app()->getRequest()->getParam('type'), FILTER_SANITIZE_NUMBER_INT);
+    $rates = $props['rate'] ?: Yii::app()->getRequest()->getParam('rate');
+    $idus = $props['idus'] ?: Share::$UserProfile->exInfo->id;
+    $figaro = compact('idus', 'id');
+    $vacData =  $this->getVacStat($figaro);
+    if( $vacData['status'] == 6 )
     {
-        $id = $props['idvac'] ?: filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
-        $message = $props['message'] ?: filter_var(Yii::app()->getRequest()->getParam('comment'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $type = $props['type'] ?: filter_var(Yii::app()->getRequest()->getParam('type'), FILTER_SANITIZE_NUMBER_INT);
-        $rates = $props['rate'] ?: Yii::app()->getRequest()->getParam('rate');
-        $idus = $props['idus'] ?: Share::$UserProfile->exInfo->id;
-        $figaro = compact('idus', 'id');
-        $vacData =  $this->getVacStat($figaro);
-        if( $vacData['status'] == 6 )
-        {
-            // save rating
-            foreach ($rates as $key => $val)
-            {
-                $fields['id_user'] = $vacData['idusempl'];
-                $fields['id_vac'] = $id;
-                $fields['id_userf'] = $idus;
-                $fields['id_point'] = $key;
-                $fields['point'] = $val;
-                $fields['crdate'] = date("Y-m-d H:i:s");
+      // save rating
+      foreach ($rates as $key => $val)
+      {
+        $fields['id_user'] = $vacData['idusempl'];
+        $fields['id_vac'] = $id;
+        $fields['id_userf'] = $idus;
+        $fields['id_point'] = $key;
+        $fields['point'] = $val;
+        $fields['crdate'] = date("Y-m-d H:i:s");
 //                !YII_DEBUG &&
-                    $res = Yii::app()->db->createCommand()
-                        ->insert('rating_details', $fields);
-            } // end foreach
+        $res = Yii::app()->db->createCommand()
+          ->insert('rating_details', $fields);
+      } // end foreach
 
-            $rate = (new ProfileFactory())->makeProfile(array('id' => $vacData['idusempl'], 'type' => 3))->getRateCount($vacData['idusempl']);
+      $rate = (new ProfileFactory())->makeProfile(array('id' => $vacData['idusempl'], 'type' => 3))->getRateCount($vacData['idusempl']);
 //            !YII_DEBUG &&
-                $res = Yii::app()->db->createCommand()
-                    ->update('employer', array(
-                        'rate' => $rate[0],
-                        'rate_neg' => $rate[1],
-                    ), 'id_user = :iduser', array(':iduser' => $vacData['idusempl']));
+      $res = Yii::app()->db->createCommand()
+        ->update('employer', array(
+          'rate' => $rate[0],
+          'rate_neg' => $rate[1],
+        ), 'id_user = :iduser', array(':iduser' => $vacData['idusempl']));
 
-
-            // Отправляем письмо уведомление о новом рейтинге
-            $content = file_get_contents(Yii::app()->basePath . "/views/mails/emp/new-review.html");
-                  $content = str_replace('#APPNAME#', Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname, $content);
-                 $content = str_replace('#APPLINK#',  Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
-                 $content = str_replace('#VACID#', $vacData['id_vac'], $content);
-                 $content = str_replace('#VACNAME#', $vacData['title'], $content);
-                 $content = str_replace('#RATELINK#',Subdomain::site() . DS . MainConfig::$PAGE_RATE, $content);
-                 $content = str_replace('#VACLINK#',  Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $vacData['id_vac'], $content);
-      
-              Share::sendmail($vacData['emailempl'], "Prommu.com. Новый рейтинг", $content);
-
-           
-
-            // оставляем отзыв
-            if( $message )
-            {
-                $fields = array('id_promo' => $vacData['pid']);
-                $fields['id_empl'] = $vacData['eid'];
-                $fields['message'] = $message;
-                $fields['isneg'] = $type == 1 ? 0 : 1;
-                $fields['iseorp'] = 0;
-                $fields['crdate'] = date("Y-m-d H:i:s");
+      // письмо для работодателя
+      $name = Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname;
+      empty(trim($name)) && $name = 'пользователь';
+      Mailing::set(
+        16,
+        array(
+          'email_user' => $vacData['emailempl'],
+          'name_user' => $name,
+          'name_applicant' => Share::$UserProfile->exInfo->name,
+          'id_applicant' => Share::$UserProfile->exInfo->id,
+          'id_vacancy' => $vacData['id_vac'],
+          'title_vacancy' => $vacData['title']
+        )
+      );
+      // оставляем отзыв
+      if( $message )
+      {
+        $fields = array('id_promo' => $vacData['pid']);
+        $fields['id_empl'] = $vacData['eid'];
+        $fields['message'] = $message;
+        $fields['isneg'] = $type == 1 ? 0 : 1;
+        $fields['iseorp'] = 0;
+        $fields['crdate'] = date("Y-m-d H:i:s");
 //                !YII_DEBUG &&
-                    $res = Yii::app()->db->createCommand()
-                        ->insert('comments', $fields);
-
-                // Отправляем письмо уведомление о новом отзыве
-                 $content = file_get_contents(Yii::app()->basePath . "/views/mails/emp/new-review.html");
-                  $content = str_replace('#EMPNAME#', Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname, $content);
-                 $content = str_replace('#APPLINK#',  Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . Share::$UserProfile->exInfo->id, $content);
-                 $content = str_replace('#VACID#', $vacData['id_vac'], $content);
-                 $content = str_replace('#VACNAME#', $vacData['title'], $content);
-                 $content = str_replace('#RATELINK#',Subdomain::site() . DS . MainConfig::$PAGE_RATE, $content);
-                 $content = str_replace('#VACLINK#',  Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $vacData['id_vac'], $content);
-      
-              Share::sendmail($vacData['emailempl'], "Prommu.com. Новый рейтинг", $content);
-
-            } // endif
+        $res = Yii::app()->db->createCommand()
+          ->insert('comments', $fields);
+      } // endif
 
 
-            // устанавливаем статус
-            $res = Yii::app()->db->createCommand()
-                ->update('vacation_stat', array( 'status' => 7,
-                    'mdate' => date('Y-m-d H:i:s'),
-                ), 'id = :id', array(':id' => $vacData['sid']));
-            $ret = array('error' => 0, 'res' => $res);
+      // устанавливаем статус
+      $res = Yii::app()->db->createCommand()
+        ->update('vacation_stat', array( 'status' => 7,
+          'mdate' => date('Y-m-d H:i:s'),
+        ), 'id = :id', array(':id' => $vacData['sid']));
+      $ret = array('error' => 0, 'res' => $res);
 
-            if( $message ) $s1 = "Ваш отзыв отправлен на модерацию, после проверки админстратором он будет отображаться у соискателя";
-        $ids = $vacData['idusempl'];
-        $sql = "SELECT r.new_rate
+      if( $message ) $s1 = "Ваш отзыв отправлен на модерацию, после проверки админстратором он будет отображаться у соискателя";
+      $ids = $vacData['idusempl'];
+      $sql = "SELECT r.new_rate
             FROM push_config r
             WHERE r.id = {$ids}";
-            $res = Yii::app()->db->createCommand($sql)->queryScalar(); 
-            if($res == 2) {
-            $sql = "SELECT r.push
+      $res = Yii::app()->db->createCommand($sql)->queryScalar();
+      if($res == 2) {
+        $sql = "SELECT r.push
             FROM user_push r
             WHERE r.id = {$ids}";
-            $res = Yii::app()->db->createCommand($sql)->queryRow(); 
+        $res = Yii::app()->db->createCommand($sql)->queryRow();
 
-            if($res) {
-                $type = "rate";
-                $api = new Api();
-                $api->getPush($res['push'], $type);
-            
-                    }
-                }
-            return array('saved' => 1, 'message' => "Спасибо за ваш ответ. {$s1}");
+        if($res) {
+          $type = "rate";
+          $api = new Api();
+          $api->getPush($res['push'], $type);
 
-
-
-        } else {
-            if( $vacData['status'] == 7 ) $message = 'Вы уже выставили отзыв по данной вакансии';
-            else $message = 'Вы не можете оставить отзыв по данной вакансии';
-
-            return array('error' => 1, 'message' => $message);
         }
+      }
+      return array('saved' => 1, 'message' => "Спасибо за ваш ответ. {$s1}");
+
+
+
+    } else {
+      if( $vacData['status'] == 7 ) $message = 'Вы уже выставили отзыв по данной вакансии';
+      else $message = 'Вы не можете оставить отзыв по данной вакансии';
+
+      return array('error' => 1, 'message' => $message);
     }
+  }
     /**
      * выставление рейтинга и отзыва на странице setrate
      */
-    public function saveRateData($props = [])
-    {
-        $db = Yii::app()->db;
-        $rq = Yii::app()->getRequest();
+  public function saveRateData($props = [])
+  {
+    $db = Yii::app()->db;
+    $rq = Yii::app()->getRequest();
 
-        $id = $props['idvac'] ?: filter_var($rq->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
-        $message = $props['message'] ?: filter_var($rq->getParam('comment'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $type = $props['type'] ?: filter_var($rq->getParam('type'), FILTER_SANITIZE_NUMBER_INT);
-        $rates = $props['rate'] ?: $rq->getParam('rate');
-        $idus = $props['id'] ?: Share::$UserProfile->exInfo->id;
-        $about_us = filter_var($rq->getParam('about_us'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $recommend = filter_var($rq->getParam('recommend'), FILTER_SANITIZE_NUMBER_INT);
+    $id = $props['idvac'] ?: filter_var($rq->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
+    $message = $props['message'] ?: filter_var($rq->getParam('comment'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $type = $props['type'] ?: filter_var($rq->getParam('type'), FILTER_SANITIZE_NUMBER_INT);
+    $rates = $props['rate'] ?: $rq->getParam('rate');
+    $idus = $props['id'] ?: Share::$UserProfile->exInfo->id;
+    $about_us = filter_var($rq->getParam('about_us'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $recommend = filter_var($rq->getParam('recommend'), FILTER_SANITIZE_NUMBER_INT);
 
-        $vacData =  $this->getVacStatus($id);
+    $vacData =  $this->getVacStatus($id);
 
-        if(in_array($vacData['status'],[self::$STATUS_BEFORE_RATING,self::$STATUS_EMPLOYER_RATED]))
-        { // рейтинг возможно выставить только если статус завершения вакансии или рабтодатель выставил рейтинг
-            $arInsert = array();
-            foreach ($rates as $key => $val)
-            {
-                $arInsert[] = array(
-                        'id_user' => $vacData['idusempl'],
-                        'id_vac' => $id,
-                        'id_userf' => $idus,
-                        'id_point' => $key,
-                        'point' => $val[0],
-                        'crdate' => date("Y-m-d H:i:s")
-                    );
-            }
-            if(count($arInsert))
-            {
-                Share::multipleInsert(['rating_details'=>$arInsert]);
-            }
-            // письмо для работодателя
-            $name = Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname;
-            empty(trim($name)) && $name = 'пользователь';
-            Mailing::set(
-                    16,
-                    array(
-                        'email_user' => $vacData['emailempl'],
-                        'name_user' => $name,
-                        'name_applicant' => Share::$UserProfile->exInfo->name,
-                        'id_applicant' => Share::$UserProfile->exInfo->id,
-                        'id_vacancy' => $id,
-                        'title_vacancy' => $vacData['title']
-                    )
-                );
-            // Обновляем общий рейтинг работодателя в таблице employer
-            $rate = (new ProfileFactory())->makeProfile(['id'=>$vacData['idusempl'], 'type'=>3])->getRateCount($vacData['idusempl']);
-            $db->createCommand()
-                ->update(
-                    'employer', 
-                    ['rate'=>$rate[0], 'rate_neg'=>$rate[1]],
-                    'id_user=:iduser',
-                    [':iduser'=>$vacData['idusempl']]
-                );
-            // оставляем отзыв
-            if( $message )
-            {
-                $db->createCommand()->insert(
-                        'comments',
-                        [
-                            'id_promo' => $vacData['pid'],
-                            'id_empl' => $vacData['eid'],
-                            'message' => $message,
-                            'isneg' => ($type==1 ? 0 : 1),
-                            'iseorp' => 0,
-                            'crdate' => date("Y-m-d H:i:s")
-                        ]
-                    );
-            }
-            // отзыв о сайте
-            if(!empty($recommend))
-            {
-                $db->createCommand()->insert(
-                        'comments_about_us',
-                        [
-                            'id_user' => Share::$UserProfile->exInfo->id,
-                            'message' => $about_us,
-                            'is_negative' => ($recommend==1 ? 0 : 1),
-                            'cdate' => time()
-                        ]
-                    );
-            }
-            // устанавливаем статус
-            $status = ($vacData['status']==self::$STATUS_BEFORE_RATING 
-                ? self::$STATUS_APPLICANT_RATED
-                : self::$STATUS_FULL_RATING); // полный статус только после того как оценит работодатель
-            $db->createCommand()->update(
-                'vacation_stat', 
-                ['status'=>$status, 'mdate'=>date('Y-m-d H:i:s')],
-                'id = :id',
-                [':id' => $vacData['sid']]
-            );
-            // пуш уведомление для работодателя
-            $ids = $vacData['idusempl'];
-            $sql = "SELECT r.new_rate
+    if(in_array($vacData['status'],[self::$STATUS_BEFORE_RATING,self::$STATUS_EMPLOYER_RATED]))
+    { // рейтинг возможно выставить только если статус завершения вакансии или рабтодатель выставил рейтинг
+      $arInsert = array();
+      foreach ($rates as $key => $val)
+      {
+        $arInsert[] = [
+          'id_user' => $vacData['idusempl'],
+          'id_vac' => $id,
+          'id_userf' => $idus,
+          'id_point' => $key,
+          'point' => $val[0],
+          'crdate' => date("Y-m-d H:i:s")
+        ];
+      }
+      if(count($arInsert))
+      {
+        Share::multipleInsert(['rating_details'=>$arInsert]);
+      }
+      // письмо для работодателя
+      $name = Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname;
+      empty(trim($name)) && $name = 'пользователь';
+      Mailing::set(
+        16,
+        array(
+          'email_user' => $vacData['emailempl'],
+          'name_user' => $name,
+          'name_applicant' => Share::$UserProfile->exInfo->name,
+          'id_applicant' => Share::$UserProfile->exInfo->id,
+          'id_vacancy' => $id,
+          'title_vacancy' => $vacData['title']
+        )
+      );
+      // Обновляем общий рейтинг работодателя в таблице employer
+      $rate = (new ProfileFactory())->makeProfile(['id'=>$vacData['idusempl'], 'type'=>3])->getRateCount($vacData['idusempl']);
+      $db->createCommand()
+        ->update(
+          'employer',
+          ['rate'=>$rate[0], 'rate_neg'=>$rate[1]],
+          'id_user=:iduser',
+          [':iduser'=>$vacData['idusempl']]
+        );
+      // оставляем отзыв
+      if( $message )
+      {
+        $db->createCommand()->insert(
+          'comments',
+          [
+            'id_promo' => $vacData['pid'],
+            'id_empl' => $vacData['eid'],
+            'message' => $message,
+            'isneg' => ($type==1 ? 0 : 1),
+            'iseorp' => 0,
+            'crdate' => date("Y-m-d H:i:s")
+          ]
+        );
+      }
+      // отзыв о сайте
+      if(!empty($recommend))
+      {
+        $db->createCommand()->insert(
+          'comments_about_us',
+          [
+            'id_user' => Share::$UserProfile->exInfo->id,
+            'message' => $about_us,
+            'is_negative' => ($recommend==1 ? 0 : 1),
+            'cdate' => time()
+          ]
+        );
+      }
+      // устанавливаем статус
+      $status = ($vacData['status']==self::$STATUS_BEFORE_RATING
+        ? self::$STATUS_APPLICANT_RATED
+        : self::$STATUS_FULL_RATING); // полный статус только после того как оценит работодатель
+      $db->createCommand()->update(
+        'vacation_stat',
+        ['status'=>$status, 'mdate'=>date('Y-m-d H:i:s')],
+        'id = :id',
+        [':id' => $vacData['sid']]
+      );
+      // пуш уведомление для работодателя
+      $sql = "SELECT r.new_rate
                         FROM push_config r
-                        WHERE r.id = {$ids}";
-            $res = $db->createCommand($sql)->queryScalar(); 
-            if($res == 2)
-            {
-                $sql = "SELECT r.push
+                        WHERE r.id=" . $vacData['idusempl'];
+      $res = $db->createCommand($sql)->queryScalar();
+      if($res == 2)
+      {
+        $sql = "SELECT r.push
                             FROM user_push r
-                            WHERE r.id = {$ids}";
-                $res = $db->createCommand($sql)->queryRow(); 
+                            WHERE r.id=" . $vacData['idusempl'];
+        $push = $db->createCommand($sql)->queryScalar();
 
-                if($res)
-                {
-                    $api = new Api();
-                    $api->getPush($res['push'], "rate");
-                
-                }
-            }
-            $message = ($message
-                ? " Ваш отзыв отправлен на модерацию, после проверки администратором он будет отображаться у работодателя"
-                : "");
-            return array('saved' => 1, 'message' => "Спасибо за ваш ответ.$message");
-        }
-        else
+        if($push)
         {
-            if($vacData['status']==self::$STATUS_APPLICANT_RATED)
-                $message = 'Вы уже выставили отзыв по данной вакансии';
-            else
-                $message = 'Вы не можете оставить отзыв по данной вакансии';
-
-            return array('error' => 1, 'message' => $message);
+          $api = new Api();
+          $api->getPush($push, "rate");
         }
+      }
+
+      return [
+        'saved' => 1,
+        'message' => "Спасибо за ваш ответ." . !empty($message)
+          ? " Ваш отзыв отправлен на модерацию, после проверки администратором он будет отображаться у работодателя"
+          : ""
+      ];
     }
+    else
+    {
+      return [
+        'error' => 1,
+        'message' => $vacData['status']==self::$STATUS_APPLICANT_RATED
+          ? 'Вы уже выставили отзыв по данной вакансии'
+          : 'Вы не можете оставить отзыв по данной вакансии'
+      ];
+    }
+  }
 
 
 

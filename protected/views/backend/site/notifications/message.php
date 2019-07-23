@@ -105,7 +105,7 @@
         ?>
         <div class="bs-callout bs-callout-warning">Наличие выбранных получателей произведет отправку сообщения при сохранении</div>
         <div class="pull-right">
-          <a href="<?=$this->createUrl('')?>" class="btn btn-success d-indent">Назад</a>
+          <a href="<?=$this->createUrl('',['anchor'=>'tab_messages'])?>" class="btn btn-success d-indent">Назад</a>
           <button type="submit" class="btn btn-success d-indent">Сохранить</button>
         </div>
       </form>
