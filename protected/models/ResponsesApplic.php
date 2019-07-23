@@ -429,7 +429,7 @@ class ResponsesApplic extends Responses
             );
             if(!$self_employed && $arVacancy['self_employed'])
             {
-              $arRes['message'] = 'Нам очень жаль, но на эту вакансию требуются соискатели со статусом “Самозанятый”<br>Для утверждения в качестве самозанятого перейдите <br>по <a href="' . MainConfig::$VIEW_CHECK_SELF_EMPLOYED . '">этой ссылке</a>';
+              $arRes['message'] = 'Нам очень жаль, но на эту вакансию требуются соискатели со статусом “Самозанятый”<br>Для утверждения в качестве самозанятого перейдите <br>по <a href="' . MainConfig::$VIEW_SELF_EMPLOYED . '">этой ссылке</a>';
               return $arRes;
             }
             // города пользователя

@@ -992,7 +992,7 @@ class AjaxController extends AppController
     {
         $arRes = array('error'=>true,'response'=>[]);
 
-        if(Share::isApplicant())
+        if(!Share::isGuest())
         {
           $model = new User();
           $model->checkSelfEmployed($arRes);

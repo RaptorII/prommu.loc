@@ -83,11 +83,11 @@
       if(arValid.length)
       {
         var cnt = 0;
-        //ajaxRequest(arValid, cnt);
+        ajaxRequest(arValid, cnt);
         $('#check_inn').hide();
 
 
-        $.ajax({
+        /*$.ajax({
           type: 'POST',
           url: '/admin/ajax/Self_employed',
           data: $('#self_employed_form').serialize(),
@@ -95,7 +95,7 @@
           {
             r = JSON.parse(r);
             console.log(r);
-            /*let message = '';
+            let message = '';
 
             if(r.error==true)
             {
@@ -115,9 +115,9 @@
             else
             {
               $('#check_inn').show();
-            }*/
+            }
           }
-        });
+        });*/
       }
     });
 

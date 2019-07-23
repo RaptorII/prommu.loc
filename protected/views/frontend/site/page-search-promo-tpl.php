@@ -443,7 +443,7 @@ foreach ($viData['posts'] as $p)
                                         </div>
                                     </div>
                                     <br>
-                                    <?php if ($val['ismed'] === '1' || $val['ishasavto'] === '1'): ?>
+                                    <?php if ($val['ismed'] === '1' || $val['ishasavto'] === '1' || !empty($val['attribs']['self_employed'])): ?>
                                         <div class="med-avto">
                                             <?php if ($val['ismed'] === '1'): ?>
                                                 <div class="ico ico-avto js-g-hashint" title="Есть автомобиль"></div>

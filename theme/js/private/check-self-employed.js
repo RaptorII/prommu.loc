@@ -47,7 +47,7 @@ jQuery(function($){
     $(parent).addClass('load');
     $.ajax({
       type: 'POST',
-      url: '/admin/ajax/Self_employed',
+      url: '/ajax/Self_employed',
       data: 'inn=' + $(self).val(),
       success: function(r)
       {

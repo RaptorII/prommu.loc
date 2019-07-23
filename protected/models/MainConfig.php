@@ -278,7 +278,7 @@ class MainConfig
     public static $PAGE_APPLICANT_VACS_LIST_ARCHIVE = '/user/vacancies/archive';
     public static $VIEW_APPLICANT_VACS_ITEM = 'vacancies/applicant-item';
     /* */
-    public static $VIEW_SELF_EMPLOYED = 'self_employed';
+    public static $VIEW_SELF_EMPLOYED = '/user/self_employed';
     public static $VIEW_CHECK_SELF_EMPLOYED = '/user/check_self_employed';
     public static $RESOURCE_SELF_EMPLOYED = 'https://statusnpd.nalog.ru/api/v1/tracker/taxpayer_status';
 }
