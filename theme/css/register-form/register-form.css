@@ -153,33 +153,47 @@
     top: -15px;
     left: 46px;
 }
-.employer .reg-form__label{ background: url("/theme/pic/register-form/r-reg-form-icons.png") 0 0 no-repeat; }
-.reg-form__label.emp1{ background-position: 0 8px; }
-.reg-form__label.emp2{ background-position: 0 -29px; }
-.reg-form__label.emp3{ background-position: 0 -73px; }
-.reg-form__label.emp4{ background-position: 0 -114px; }
-.reg-form__label.emp2.mob{ 
-   background: url("/theme/pic/register-form/s-reg-form-icons.png") 0 0 no-repeat;
-   background-position: 0 -195px;
+.employer .reg-form__label:before{
+    content: '';
+    font-family: "PrommuFont";
+    font-size: 35px;
+    color: var(--color-green);
+    position: absolute;
+    left: 0;
+    top: -5px;
 }
-.competitor .reg-form__label{ background: url("/theme/pic/register-form/s-reg-form-icons.png") 0 0 no-repeat; }
+.reg-form__label.emp1:before{ content: '\e98f'; }
+.reg-form__label.emp2:before{ content: '\e973'; }
+.reg-form__label.emp3:before{ content: '\e98b'; }
+.reg-form__label.emp4:before{ content: '\e990'; }
+.reg-form__label.emp2.mob:before{ content: '\e976';}
+
+.competitor .reg-form__label:before{
+    content: '';
+    font-family: "PrommuFont";
+    font-size: 35px;
+    color: var(--color-green);
+    position: absolute;
+    left: 0;
+    top: -5px;
+
+}
 .reg-form__label.com1{
-    background-position: 0 7px;
     width: 60%;
     float: left;
 }
+.reg-form__label.com1:before{
+    content: '\e953';
+}
 .reg-form__label.com2{
-    background-position: -27px 0;
     width: 40%;
     float: left;
 }
 #DiContent .register__reg-form .reg-form__label.com2{ padding-left: 28px; }
-.reg-form__label.com3{ background-position: 0 -29px; }
-.reg-form__label.com3.mob{ background-position: 0 -195px; }
-.reg-form__label.com4{
-    background-position: 0 -238px;
-    width: 60%;
-    float: left;
+.reg-form__label.com3:before{ content: '\e973'; }
+.reg-form__label.com3.mob:before{ content: '\e976'; }
+.reg-form__label.com4:before{
+
 }
 #DiContent .register__reg-form .reg-form__label.com4{ padding: 7px 0 7px 46px; }
 #DiContent .register__reg-form .reg-form__label.com5{ padding: 7px 0 7px 34px; }
@@ -188,8 +202,9 @@
     width: 40%;
     float: left;
 }
-.reg-form__label.com6{ background-position: 0 -73px; }
-.reg-form__label.com7{ background-position: 0 -114px; }
+.reg-form__label.com6:before{ content: '\e98b'; }
+.reg-form__label.com7:before{ content: '\e990'; }
+
 .reg-form__label-name{ padding-right: 11px; }
 #DiContent .reg-form__label .reg-form__label-radio{
     width: 59px;

@@ -108,14 +108,22 @@
 	font-size: 16px;
 }
 .pa-count__list-item{
-	background: url(/theme/pic/analytics/analytics-sprite.png) no-repeat;
 	padding-left: 30px;
 	line-height: 16px;
 	margin-bottom: 9px;
+	position: relative;
 }
-.pa-count__list-item.ico1{ background-position: 0 0 }
-.pa-count__list-item.ico2{ background-position: 0 -16px }
-.pa-count__list-item.ico3{ background-position: 0 -32px }
+.pa-count__list-item:before{
+	content: '';
+	font-family: 'PrommuFont';
+	font-size: 25px;
+	color: var(--color-dark);
+	position: absolute;
+	left: 5px;
+}
+.pa-count__list-item.ico1:before{ content: "\e904"}
+.pa-count__list-item.ico2:before{ content: "\e907"}
+.pa-count__list-item.ico3:before{ content: "\e906"}
 .pa-count__list-item span{ color: #ff6500 }
 /*	*/
 .pa__list{ margin-bottom: 50px }
@@ -193,23 +201,25 @@
 }
 .pa-service__item-name:before{ 
 	content: '';
+	font-family: 'PrommuFont';
+	font-size: 35px;
+	color: var(--color-green);
 	width: 35px;
 	height: 50px;
 	position: absolute;
 	top: 0;
 	left: 0;
-	background: url(/theme/pic/analytics/analytics-service-sprite.png) no-repeat;
 }
-.pa-service__item-name.premium:before{ background-position: 0 5px }
-.pa-service__item-name.share:before{ background-position: 0 -48px }
-.pa-service__item-name.geo:before{ background-position: 0 -100px }
-.pa-service__item-name.outsource:before{ background-position: 0 -150px }
-.pa-service__item-name.oustaff:before{ background-position: 0 -200px }
-.pa-service__item-name.card:before{ background-position: 0 -245px }
-.pa-service__item-name.api:before{ background-position: 0 -295px }
-.pa-service__item-name.email:before{ background-position: 0 -351px }
-.pa-service__item-name.push:before{ background-position: 0 -411px }
-.pa-service__item-name.sms:before{ background-position: 0 -469px }
+.pa-service__item-name.premium:before  { content: "\e920"}
+.pa-service__item-name.share:before    { content: "\e92a"}
+.pa-service__item-name.geo:before      { content: "\e91f"}
+.pa-service__item-name.outsource:before{ content: "\e927"}
+.pa-service__item-name.oustaff:before  { content: "\e91e"}
+.pa-service__item-name.card:before     { content: "\e950"}
+.pa-service__item-name.api:before      { content: "\e91d"}
+.pa-service__item-name.email:before    { content: "\e924"}
+.pa-service__item-name.push:before     { content: "\e91f"}
+.pa-service__item-name.sms:before      { content: "\e922"}
 .pa-service__item-cnt{
 	display: table-cell;
 	font-size: 16px;

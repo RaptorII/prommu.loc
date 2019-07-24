@@ -223,14 +223,16 @@
     z-index: -1;
 }
 .fav-b1__title-who:before{
-	content: '';
+	content: '\e905';
+	font-family: "PrommuFont";
+	font-size: 25px;
+	color: var(--color-green);
 	display: block;
 	width: 28px;
 	height: 29px;
 	position: absolute;
 	top: 0;
 	left: 0;
-	background: url(/theme/pic/private/add-vac-who.png) no-repeat;
 	z-index: 2
 }
 .fav__hint{ 

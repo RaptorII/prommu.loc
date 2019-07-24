@@ -24,14 +24,27 @@
 	content: '';
 	width: 24px;
 	height: 24px;
+	border-radius: 50%;
 	display: block;
 	position: absolute;
 	top: 0;
 	left: 0;
-	background: url(/theme/pic/settings/sprite.png) 0 0 no-repeat;
+	background: var(--color-green);
 }
-.settings-priv__title span:before{ background-position: 0 -24px }
-.settings-notif__title span:before{ background-position: 0 -48px }
+.settings-main__title span:after,
+.settings-priv__title span:after,
+.settings-notif__title span:after{
+	content: '';
+	font-family: "PrommuFont";
+	color: var(--color-white);
+	font-size: 18px;
+	position: absolute;
+	left: 3px;
+	top: 0px;
+}
+.settings-main__title span:after { content: '\e934'; }
+.settings-priv__title span:after { content: '\e952'; top: -2px}
+.settings-notif__title span:after{ content: '\e91f'; font-size: 24px; left: 0px; top: 2px;}
 /*
 *
 */
@@ -290,17 +303,32 @@
 	color: #adadad;
 }
 .settings-priv__field b{
-	width: 15px;
-	height: 15px;
+	width: 18px;
+	height: 18px;
 	display: block;
 	position: absolute;
 	top: 10px;
 	left: -20px;
-	background: #ff0000 url(/theme/pic/settings/sprite.png) 1px -73px no-repeat;
+	background: var(--color-red);
 	border-radius: 10px;
 }
-.settings-priv__field.confirm b{ 
-	background: #abb93d url(/theme/pic/settings/sprite.png) -11px -83px no-repeat;
+.settings-priv__field b:before{
+	content: "?";
+	font-size: 14px;
+	line-height: 14px;
+	color: var(--color-white);
+	padding-left: 6px;
+}
+.settings-priv__field.confirm b:before{
+	content: "\e966";
+	font-family: "PrommuFont";
+	font-size: 14px;
+	line-height: 14px;
+	color: var(--color-white);
+	padding-left: 2px;
+}
+.settings-priv__field.confirm b{
+	background: var(--color-green);
 	cursor: default;
 }
 .settings-priv__field b>p{
@@ -530,16 +558,26 @@
 .set-ntf__push{
 	width: 20px;
 	height: 20px;
+	border-radius: 50%;
 	float: right;
-	background: url(/theme/pic/settings/sprite.png) no-repeat;
+	background: var(--color-green);
 }
-.set-ntf__email{ 
-	background-position: 0 -120px;
-	margin: 5px 10px;
+.set-ntf__email{margin: 5px 10px;}
+.set-ntf__push{margin: 5px 7px 5px 0;}
+.set-ntf__email:before{
+	content:'@';
+	color: var(--color-white);
+	font-size: 17px;
+	line-height: 17px;
+	padding-left: 3px;
 }
-.set-ntf__push{
-	background-position: 0 -100px;
-	margin: 5px 7px 5px 0;
+.set-ntf__push:before {
+	content:'\e91f';
+	font-family: "PrommuFont";
+	color: var(--color-white);
+	font-size: 22px;
+	line-height: 23px;
+	padding-left: 0px;
 }
 /*
 *

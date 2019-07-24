@@ -1,3 +1,7 @@
+<?
+Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/page-empl-assessment.js', CClientScript::POS_END);
+?>
+
 <div class="row">
 	<div class="col-xs-12">
 		<?

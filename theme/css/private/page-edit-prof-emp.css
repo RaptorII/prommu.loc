@@ -340,11 +340,13 @@
 	text-align: center;
 }
 .epe__header-title:before {
-	content: '';
+	content: '\e913';
+	font-family: "PrommuFont";
 	display: inline-block;
+	font-size: 25px;
+	color: var(--color-green);
 	width: 27px;
 	height: 27px;
-	background: url(/theme/pic/private/vac-list-user-icon.png) no-repeat;
 	vertical-align: middle;
 	margin-right: 5px;
 }
@@ -652,21 +654,21 @@ input:checked + .epe__checkbox:after{ content: '\2714' }
 .epe__confirm:hover{ background: rgba(171,184,55,1) }
 .epe__confirm.complete{ background: rgba(171,184,55,0.5) }
 .epe__confirm:before{
-	content: '';
+	content: '?';
 	display: block;
 	position: absolute;
 	top: 7px;
 	right: 7px;
 	bottom: 7px;
 	left: 7px;
-	background: url(/theme/pic/private/not-confirm.png) 1px 0px no-repeat;
 	z-index: 0;
 	font-size: 20px;
-	color: #ffffff; 
+	color: var(--color-red);
 }
 .epe__confirm.complete:before{
 	content: '\2714';
 	background-image: none;
+	color: var(--color-white);
 }
 .epe__confirm.loading{
 	opacity: 1;
@@ -732,11 +734,14 @@ input:checked + .epe__checkbox:after{ content: '\2714' }
 	cursor: pointer;
 }
 .confirm-user:before{
-	content: '';
+	content: '\e993';
+	font-family: "PrommuFont";
+	font-size: 30px;
+	line-height: 30px;
+	color: var(--color-red);
 	display: block;
 	width: 30px;
 	height: 30px;
-	background: url(/theme/pic/profile/confirm-user.png) 0 -30px no-repeat;
 	position: absolute;
 	top: 0;
 	left: 0;

@@ -5,6 +5,7 @@ $(function(){
 
 		ModalWindow.open({ content: form, action: { active: 0 }, additionalStyle:'dark-ver' });
 	});
+
 	//
 	$('.send_to_archive').click(function(){
 		var linkApproved = $(this).data('approved'),
@@ -23,4 +24,19 @@ $(function(){
 			afterClose: function(){ $('body>div.prmu__popup').remove() }
 		});
 	});
+
+	//fixed menu in personal account
+	var posAccMenu = $('.personal-acc__menu').offset().top - 100;
+	$(window).on('resize scroll',scrollAccMenu);
+	scrollAccMenu();
+	function scrollAccMenu() {
+		(
+			$(document).scrollTop() > posAccMenu
+			&&
+			$(window).width() < 768
+		)
+			? $('.personal-acc__menu').addClass('fixed')
+			: $('.personal-acc__menu').removeClass('fixed');
+	}
+
 });

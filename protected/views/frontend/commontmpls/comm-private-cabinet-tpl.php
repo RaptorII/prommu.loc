@@ -29,7 +29,7 @@
                     <a href="<?=$link?>" class="small-menu__item notice<?=(strpos($curUrl,$link)!==false ? ' current' : '')?>" id="sm-notice-cnt">
                                                 <span class="small-menu__circle">
                                                     <b class="small-menu__cnt">0</b>
-                                                    <i></i>
+                                                    <span class="small-menu__icon icn-envelope-prommu color-white"></span>
                                                 </span>
                         <span class="small-menu__name">СООБЩЕНИЯ</span>
                     </a>

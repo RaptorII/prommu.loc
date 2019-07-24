@@ -517,19 +517,29 @@
 	line-height: 19px;
 }
 .psv__view-block{ margin-bottom: 15px }
+.psv__view-list{
+	font-size: 24px;
+}
+.psv__view-table{
+	font-size: 30px;
+	line-height: 35px;
+}
 .psv__view-list,
 .psv__view-table{
-	width: 19px;
+	width: 24px;
 	height: 15px;
 	display: block;
-	margin-left: 8px;
 	float: right;
-	background: url(/theme/pic/vacancy/srch-vac-sprite.png) 0 0 no-repeat;
 }
-.psv__view-list{ background-position: 0 0; }
-.psv__view-table{ background-position: 0 -30px; }
-.psv__view-list.active{ background-position: 0 -15px; }
-.psv__view-table.active{ background-position: 0 -45px; }
+.psv__view-list:after,
+.psv__view-table:after{
+	font-family: "PrommuFont";
+	content: '';
+}
+.psv__view-list:after{ content: '\e96a'; color: var(--color-grey);}
+.psv__view-table:after{ content: '\e972'; color: var(--color-grey);}
+.psv__view-list.active:after{ content: '\e96a'; color: var(--color-green); }
+.psv__view-table.active:after{ content: '\e972'; color: var(--color-green); }
 .psv__nothing{
 	color: #343434;
 	font-size: 18px;
@@ -670,29 +680,35 @@
 }
 .psv__param:before{
 	content: '';
+	font-family: "PrommuFont";
+	font-size: 20px;
 	width: 30px;
 	height: 20px;
 	display: block;
 	position: absolute;
-	top: 3px;
-	left: 5px;
-	background: url(/theme/pic/vacancy/srch-vac-sprite.png) 0 -80px no-repeat;
+	top: -1px;
+	left: 10px;
+	line-height: 24px;
 }
-.psv__param.ico1:before{ background-position: 7px -100px }
-.psv__param.ico2:before{ background-position: 0px -140px }
-.psv__param.ico3:before{ background-position: 7px -180px }
-.psv__param.ico4:before{ background-position: 7px -220px }
-.psv__param.ico5:before{ background-position: 7px -260px }
-.psv__param.ico6:before{ background-position: 7px -300px }
-.psv__param.ico7:before{ background-position: 7px -340px }
+.psv__param.ico1:before{ content: '\e977'; color: var(--color-l2-grey); }
+.psv__param.ico2:before{ content: '\e98e'; color: var(--color-l2-grey); font-size: 28px; }
+.psv__param.ico3:before{ content: '\e97f'; color: var(--color-l2-grey); }
+.psv__param.ico4:before{ content: '\e97b'; color: var(--color-l2-grey); }
+.psv__param.ico5:before{ content: '\e96b'; color: var(--color-l2-grey); }
+.psv__param.ico6:before{ content: '\e901'; color: var(--color-l2-grey); }
+.psv__param.ico7:before{ content: '\e900'; color: var(--color-l2-grey); }
 
-.psv__list-item-premium .psv__param.ico1:before{ background-position: 7px -80px }
-.psv__list-item-premium .psv__param.ico2:before{ background-position: 0px -120px }
-.psv__list-item-premium .psv__param.ico3:before{ background-position: 7px -160px }
-.psv__list-item-premium .psv__param.ico4:before{ background-position: 7px -200px }
-.psv__list-item-premium .psv__param.ico5:before{ background-position: 7px -240px }
-.psv__list-item-premium .psv__param.ico6:before{ background-position: 7px -280px }
-.psv__list-item-premium .psv__param.ico7:before{ background-position: 7px -320px }
+.psv__list-item-premium .psv__param.ico1:before{ content: '\e977'; color: var(--color-green); }
+.psv__list-item-premium .psv__param.ico2:before{ content: '\e98e'; color: var(--color-green); font-size: 28px; }
+.psv__list-item-premium .psv__param.ico3:before{ content: '\e97f'; color: var(--color-green); }
+.psv__list-item-premium .psv__param.ico4:before{ content: '\e97b'; color: var(--color-green); }
+.psv__list-item-premium .psv__param.ico5:before{ content: '\e96b'; color: var(--color-green); }
+.psv__list-item-premium .psv__param.ico6:before{ content: '\e901'; color: var(--color-green); }
+.psv__list-item-premium .psv__param.ico7:before{ content: '\e900'; color: var(--color-green); }
+
+.psv__table-block .psv__param:before{
+	line-height: 12px;
+}
 
 .psv-list__param-name{
 	width: 40%;
@@ -935,22 +951,25 @@
 }
 .psv__checkbox-label:after,
 .psv__radio-label:after{
-	content: '';
-	    display: block;
+	display: block;
     position: absolute;
     width: 30px;
     height: 29px;
     right: 0;
     top: 0;
-    background: transparent url(/theme/pic/ico-form.png) 0 -116px no-repeat;
+	font-family: 'PrommuFont' !important;
+	content: '\e98a';
+	color: var(--color-ll-grey);
 }
 .psv__checkbox-label:hover:after,
 .psv__radio-label:hover:after{
-	background: transparent url(/theme/pic/ico-form.png) 0 -435px no-repeat;
+	content: '\e98a';
+	color: var(--color-ll-grey);
 }
 input:checked + .psv__checkbox-label:after,
 input:checked + .psv__radio-label:after{
-    background-position: 0 -87px;
+	content: '\e989';
+	color: var(--color-green);
 }
 .filter-dolj .psv__checkbox-label:nth-child(2){ margin-bottom: 20px }
 /*

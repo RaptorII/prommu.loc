@@ -116,29 +116,32 @@
 }
 .sv__attributes-item:before{
 	content: '';
+	font-family: "PrommuFont";
+	color: var(--color-green);
+	font-size: 25px;
+	line-height: 30px;
 	width: 30px;
 	height: 30px;
 	position: absolute;
 	top: 2px;
 	left: 0;
-	background: url(/theme/pic/vacancy/vacancy-sprite-small.png) 0 0 no-repeat;
 }
-.sv__attributes-item.ico1:before{ background-position: 0px 0px }
-.sv__attributes-item.ico2:before{ background-position: 0px -30px }
-.sv__attributes-item.ico3:before{ background-position: 0px -60px }
-.sv__attributes-item.ico4:before{ background-position: 0px -90px }
-.sv__attributes-item.ico5:before{ background-position: 0px -120px }
-.sv__attributes-item.ico6:before{ background-position: 0px -150px }
-.sv__attributes-item.ico7:before{ background-position: 0px -180px }
-.sv__attributes-item.ico8:before{ background-position: 0px -210px }
-.sv__attributes-item.ico9:before{ background-position: 0px -240px }
-.sv__attributes-item.ico10:before{ background-position: 0px -270px }
-.sv__attributes-item.ico11:before{ background-position: 0px -300px }
-.sv__attributes-item.ico12:before{ background-position: 0px -330px }
-.sv__attributes-item.ico13:before{ background-position: 0px -568px }
-.sv__attributes-item.ico14:before{ background-position: 0px -600px }
-.sv__attributes-item.ico15:before{ background-position: 0px -630px }
-.sv__attributes-item.ico16:before{ background-position: 0px -660px }
+.sv__attributes-item.ico1:before { content: '\e900'; }
+.sv__attributes-item.ico2:before { content: '\e995'; }
+.sv__attributes-item.ico3:before { content: '\e998'; }
+.sv__attributes-item.ico4:before { content: '\e996'; }
+.sv__attributes-item.ico5:before { content: '\e99c'; }
+.sv__attributes-item.ico6:before { content: '\e994'; }
+.sv__attributes-item.ico7:before { content: '\e997'; }
+.sv__attributes-item.ico8:before { content: '\e99e'; }
+.sv__attributes-item.ico9:before { content: '\e999'; }
+.sv__attributes-item.ico10:before{ content: '\e904'; }
+.sv__attributes-item.ico11:before{ content: '\e944'; font-size: 30px; left: -3px; }
+.sv__attributes-item.ico12:before{ content: '\e97a'; }
+.sv__attributes-item.ico13:before{ content: '\e97f'; }
+.sv__attributes-item.ico14:before{ content: '\e979'; }
+.sv__attributes-item.ico15:before{ content: '\e982'; }
+.sv__attributes-item.ico16:before{ content: '\e98e'; }
 .sv__attributes-name{
 	width: 48%;
 	float: left;
@@ -191,15 +194,30 @@
 	height: 34px;
 	vertical-align: middle;
 	display: inline-block;
-	background: url(/theme/pic/vacancy/vacancy-sprite-big.png) 0 0 no-repeat;
 	margin-right: 5px;
 }
-.sv__checkbox-attr-item.med i{ background-position: 0px 0px }
-.sv__checkbox-attr-item.auto i{ background-position: 0px -34px }
-.sv__checkbox-attr-item.smart i{ background-position: 0px -68px }
-.sv__checkbox-attr-item.pcard i{ background-position: 0px -138px }
-.sv__checkbox-attr-item.card i{ background-position: 0px -172px }
-.sv__checkbox-attr-item.self_employed i{ background-position: 0px -204px }
+.sv__checkbox-attr-item i:after{
+	content: '';
+	font-family: "PrommuFont";
+	font-size: 35px;
+	line-height: 35px;
+	color: var(--color-green);
+}
+.sv__checkbox-attr-item.med   i:after { content: '\e969'; }
+.sv__checkbox-attr-item.auto  i:after { content: '\e956'; }
+.sv__checkbox-attr-item.smart i:after { content: '\e976'; }
+.sv__checkbox-attr-item.pcard i:after { content: '\e96d'; }
+.sv__checkbox-attr-item.card  i:after { content: '\e96c'; }
+
+.sv__checkbox-attr-item.self_employed i{
+	width: 34px;
+	height: 34px;
+	vertical-align: middle;
+	display: inline-block;
+	margin-right: 5px;
+	background: url(/theme/pic/vacancy/vacancy-sprite-big.png) 0 0 no-repeat;
+	background-position: 0px -204px
+}
 .sv__textblock-title{
 	padding-left: 30px;
 	margin: 20px 0 15px;
@@ -216,16 +234,37 @@
 }
 .sv__textblock-title:before{
 	content: '';
+	font-family: "PrommuFont";
+	color: var(--color-green);
+	font-size: 25px;
+	line-height: 22px;
 	width: 25px;
 	height: 20px;
 	position: absolute;
-	top: 0px;
+	top: 0;
 	left: 0;
-	background: url(/theme/pic/vacancy/vacancy-sprite-small.png) 0 0 no-repeat;
 }
-.sv__textblock-title.ico1:before{ background-position: 0px -485px }
-.sv__textblock-title.ico2:before{ background-position: 0px -515px }
-.sv__textblock-title.ico3:before{ background-position: 0px -544px }
+.sv__textblock-title.ico1:before{
+	content: '!';
+	color: var(--color-white);
+	top: -3px;
+	left: 8px;
+	z-index: 1;
+}
+.sv__textblock-title.ico1:after{
+	content: '';
+	width: 25px;
+	height: 25px;
+	background: var(--color-green);
+	position: absolute;
+	border-radius: 50%;
+	left: 0;
+	top: -3px;
+	z-index: 0;
+}
+.sv__textblock-title.ico2:before{ content: '\e99d'; }
+.sv__textblock-title.ico3:before{ content: '\e977'; }
+
 .sv__textblock-title:after{
 	content: '';
 	height: 9px;
@@ -262,17 +301,20 @@
 }
 .sv__data-city:before {
     content: '';
+	font-family: "PrommuFont";
+	color: var(--color-green);
+	font-size: 25px;
     width: 25px;
     height: 30px;
     position: absolute;
     top: 2px;
     left: 0;
-    background: url(/theme/pic/vacancy/vacancy-sprite-small.png) 0 0 no-repeat;
 }
-.sv__data-city.city:before{ background-position: 0px -360px }
-.sv__data-city.loc:before{ background-position: 0px -390px }
-.sv__data-city.addr:before{ background-position: 0px -420px }
-.sv__data-city.time:before{ background-position: 0px -450px }
+.sv__data-city.city:before{ content: '\e97f'; top: -3px; left: -5px; }
+.sv__data-city.loc:before { content: '\e979'; }
+.sv__data-city.addr:before{ content: '\e97c'; }
+.sv__data-city.time:before{ content: '\e996'; }
+
 .city.sv__data-city:after{ right: 30% }
 .sv__data-city-name{
 	position: relative;

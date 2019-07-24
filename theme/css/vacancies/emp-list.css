@@ -63,11 +63,20 @@
 	width: 15px;
 	height: 15px;
 	display: inline-block;
-	background: url(/theme/pic/reviews-page/reviews_sprite.png) 0 -16px no-repeat;
 }
-.evl-logo__stars li.full{ background-position: 0 0; }
-.evl-logo__stars li.empty{ background-position: 0 -16px; }
-.evl-logo__stars li.half{ background-position: 0 -32px; }
+.evl-logo__stars li:after{
+	font-family: "PrommuFont";
+	content: "";
+	font-size: 15px;
+	color: var(--color-orange);
+	line-height: 15px;
+}
+.evl-logo__stars li.full:after { content: "\e94e"; }
+.evl-logo__stars li.empty:after{ content: "\e94d"; }
+.evl-logo__stars li.half:after { content: "\e94f"; }
+
+
+
 .evl-logo__subtitle{ text-transform: uppercase }
 .evl-logo__review{
 	width: 22px;

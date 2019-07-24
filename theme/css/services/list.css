@@ -31,26 +31,40 @@
 	width: 58px;
 	height: 58px;
 	border-radius: 50%;
-	background: #abb92a url(/theme/pic/services-page/new-services-icons.png) no-repeat;
+	background: #abb92a;
 	position: absolute;
 	top: -8px;
 	left: 15px;
 	z-index: 2;
 }
-.services__item-icon.premium-vacancy{ background-position: 0 -58px;}
-.services__item-icon.invitations{ background-position: 0 -116px;}
+.services__item-icon:after {
+	font-family: "PrommuFont";
+	content: '';
+	color: var(--color-white);
+	font-size: 40px;
+	left: 50%;
+	transform: translateX(-50%);
+	position: absolute;
+}
+.services__item-icon.creation-vacancy:after{ content: '\e949'; }
+.services__item-icon.premium-vacancy:after{
+	content: '\e920';
+	font-size: 48px;
+	top: -6px;
+}
+.services__item-icon.invitations:after{ content: '\e92a';}
 @media (max-width: 767px){
 	.services__item-icon.invitations {
 		background-position: 0 -116px;
 		top: 0;
 	}
 }
-.services__item-icon.geolocation-staff{ background-position: 0 -174px;}
-.services__item-icon.personal-manager-outsourcing{ background-position: 0 -232px;}
-.services__item-icon.outstaffing{ background-position: 0 -290px;}
-.services__item-icon.prommu_card{ background-position: 0 -348px;}
-.services__item-icon.medical-record{ background-position: 0 -406px;}
-.services__item-icon.api-key-prommu{ background-position: 0 -464px;}
+.services__item-icon.geolocation-staff:after{ content: '\e926'; }
+.services__item-icon.personal-manager-outsourcing:after{ content: '\e927'; }
+.services__item-icon.outstaffing:after{ content: '\e91e'; }
+.services__item-icon.prommu_card:after{ content: '\e921'; }
+.services__item-icon.medical-record:after{ content: '\e931'; }
+.services__item-icon.api-key-prommu:after{ content: '\e91d'; }
 .services__item-label{
 	padding: 10px 15px 10px 57px;
 	margin-left: 8px;
@@ -153,19 +167,22 @@
 	overflow: hidden;
 }
 .services__sub-label:before{
+	font-family: "PrommuFont";
 	content: '';
 	width: 48px;
 	height: 48px;
 	border-radius: 50%;
-	background: #abb92a url(/theme/pic/services-page/new-services-icons.png) no-repeat;
-	position: absolute;
-	top: -3px;
+	background: #abb92a;
+	top: 0;
 	left: 0;
+	color: var(--color-white);
+	font-size: 30px;
+	position: absolute;
 }
-.services__sub-label.email-invitation:before{ background-position: 0 -522px }
-.services__sub-label.push-notification:before{ background-position: 0 -570px }
-.services__sub-label.sms-informing-staff:before{ background-position: 0 -618px }
-.services__sub-label.publication-vacancy-social-net:before{ background-position: 0 -666px }
+.services__sub-label.email-invitation:before{ content: '\e923'; }
+.services__sub-label.push-notification:before{ content: '\e91f'; }
+.services__sub-label.sms-informing-staff:before{ content: '\e92f'; }
+.services__sub-label.publication-vacancy-social-net:before{ content: '\e928'; }
 .services__sub-descr{ padding: 0 0 10px 10px; }
 .services__detail-sub, .services__order-sub{ margin-top: 55px; }
 .services__price-order{ 

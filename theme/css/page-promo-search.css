@@ -169,34 +169,38 @@
 	transform: scaleX(1);
 }
 #DiContent .psa__checkbox-input{ display: none }
-#DiContent .psa__checkbox-label{
+#DiContent .psa__checkbox-label {
 	display: block;
 	position: relative;
 	height: 29px;
 	line-height: 29px;
 	padding-right: 35px;
 	cursor: pointer;
-	font-size: 14px;
-	color: #A0A0A0;
-	font-family: RobotoCondensed-Regular, verdana, arial;
-	text-transform: none;
+	font-size: 13.33px;
+	color: #a0a0a0;
+	text-transform: none
 }
-.psa__checkbox-label:after{
-	content: '';
+.psa__checkbox-label:after {
 	display: block;
 	position: absolute;
 	width: 30px;
 	height: 29px;
 	right: 0;
 	top: 0;
-	background: transparent url(/theme/pic/ico-form.png) 0 -116px no-repeat;
+	font-size: 30px;
+	font-family: 'PrommuFont' !important;
+	content: '\e98a';
+	color: var(--color-ll-grey);
 }
-.psa__checkbox-label:hover:after{
-	background: transparent url(/theme/pic/ico-form.png) 0 -435px no-repeat;
+.psa__checkbox-label:hover:after {
+	content: '\e98a';
+	color: var(--color-ll-grey);
 }
-input:checked + .psa__checkbox-label:after{
-    background-position: 0 -87px;
+input:checked + .psa__checkbox-label:after {
+	content: '\e989';
+	color: var(--color-green);
 }
+
 .psa__content{
 	margin-top: 0;
 	font-family: RobotoCondensed-Regular, verdana, arial;

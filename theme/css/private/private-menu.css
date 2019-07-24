@@ -24,12 +24,8 @@
 }
 #DiContent .personal-acc__menu.fixed .pa__menu-link i {
     width: 30px;
-    /*height: 18px;*/
 }
-/*#DiContent .personal-acc__menu.fixed .pa__menu-link i:before,*/
-/*#DiContent .personal-acc__menu.fixed .pa__menu-link i:after {*/
-    /*background-position: 8px;*/
-/*}*/
+
 #DiContent .personal-acc__menu.fixed .pa__menu-item-icon {
     width: 34px;
     background: #fff;
@@ -47,72 +43,8 @@
 .personal-acc__menu.fixed .applicant i:after{
     transition: all .3s ease-out;
 }
-
-.personal-acc__menu.fixed .pa__menu-20.applicant i:before{
-    background-position: 8px 0;
-}
-.personal-acc__menu.fixed .pa__menu-20.applicant i:after {
-    background-position: 8px -12px;
-}
-
-.personal-acc__menu.fixed .pa__menu-75.applicant i:before{
-    background-position: 8px -24px;
-}
-.personal-acc__menu.fixed .pa__menu-75.applicant i:after {
-    background-position: 8px -36px;
-}
-
-.personal-acc__menu.fixed .pa__menu-23.applicant i:before {
-    background-position: 8px -48px;
-}
-.personal-acc__menu.fixed .pa__menu-23.applicant i:after {
-    background-position: 8px -60px;
-}
-
-.personal-acc__menu.fixed .pa__menu-84.applicant i:before {
-    background-position: 8px -168px;
-}
-.personal-acc__menu.fixed .pa__menu-84.applicant i:after {
-    background-position: 8px -180px;
-}
-
-.personal-acc__menu.fixed .pa__menu-84.applicant i:before {
-
-}
-.personal-acc__menu.fixed .pa__menu-84.applicant i:after {
-
-}
-
-.personal-acc__menu.fixed .pa__menu-21.applicant i:before {
-    background-position: 8px -72px;
-}
-.personal-acc__menu.fixed .pa__menu-21.applicant i:after {
-    background-position: 8px -84px;
-}
-
-.personal-acc__menu.fixed .pa__menu-78.applicant i:before {
-    background-position: 8px -144px;
-}
-.personal-acc__menu.fixed .pa__menu-78.applicant i:after {
-    background-position: 8px -156px;
-}
-
-.personal-acc__menu.fixed .pa__menu-80.applicant i:before {
-    background-position: 8px -288px;
-}
-.personal-acc__menu.fixed .pa__menu-80.applicant i:after {
-    background-position: 8px -300px;
-}
-
-.personal-acc__menu.fixed .pa__menu-83.applicant i:before {
-    background-position: 8px -240px;
-}
-.personal-acc__menu.fixed .pa__menu-83.applicant i:after {
-    background-position: 8px -252px;
-}
-
-
 /*End Fixed*/
+
 #DiContent .pa__menu-link{
     display: block;
     vertical-align: middle;
@@ -163,76 +95,48 @@
 .pa__menu-item-icon{ width: 18px }
 .pa__menu-link i{
     display: block;
-    width: 15px;
-    height: 12px;
     position: relative;
     text-align: center;
 }
-.pa__menu-link i:before,
-.pa__menu-link i:after{
+.pa__menu-link i:before {
+    font-family: PrommuFont;
     content: '';
     display: block;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: url(/theme/pic/private/private-menu-sprite.png) 0 0 no-repeat;
+    font-size: 16px;
     -webkit-transition: opacity .3s ease-out;
     -moz-transition: opacity .3s ease-out;
     -o-transition: opacity .3s ease-out;
     transition: opacity .3s ease-out;
 }
-.pa__menu-link i:before{ opacity: 1 }
-.pa__menu-link i:after{ opacity: 0 }
-.pa__menu-link.active i:before{ opacity: 0 }
-.pa__menu-link:hover i:before{ opacity: 0 }
-.pa__menu-link.active i:after{ opacity: 1 }
-.pa__menu-link:hover i:after{ opacity: 1 }
 
-.pa__menu-20.applicant i:before{ background-position: 0 0px }
-.pa__menu-20.applicant i:after{ background-position: 0 -12px }
-.pa__menu-75.applicant i:before{ background-position: 0 -24px }
-.pa__menu-75.applicant i:after{ background-position: 0 -36px }
-.pa__menu-23.applicant i:before{ background-position: 0 -48px }
-.pa__menu-23.applicant i:after{ background-position: 0 -60px }
-.pa__menu-78.applicant i:before{ background-position: 0 -144px }
-.pa__menu-78.applicant i:after{ background-position: 0 -156px }
-.pa__menu-21.applicant i:before{ background-position: 0 -72px }
-.pa__menu-21.applicant i:after{ background-position: 0 -84px }
-.pa__menu-22.applicant i:before{ background-position: 0 -96px }
-.pa__menu-22.applicant i:after{ background-position: 0 -108px }
-.pa__menu-25.applicant i:before{ background-position: 0 -120px }
-.pa__menu-25.applicant i:after{ background-position: 0 -132px }
-.pa__menu-80.applicant i:before{ background-position: 0 -288px }
-.pa__menu-80.applicant i:after{ background-position: 0 -300px }
-.pa__menu-83.applicant i:before{ background-position: 0 -240px }
-.pa__menu-83.applicant i:after{ background-position: 0 -252px }
-.pa__menu-82.applicant i:before{ background-position: 0 -168px }
-.pa__menu-82.applicant i:after{ background-position: 0 -180px }
-.pa__menu-84.applicant i:before{ background-position: 0 -168px }
-.pa__menu-84.applicant i:after{ background-position: 0 -180px }
+.employer i:before,
+.applicant i:before {
+    font-style: normal;
+    padding: 0 5px;
+}
 
-.pa__menu-15.employer i:before{ background-position: 0 0px }
-.pa__menu-15.employer i:after{ background-position: 0 -12px }
-.pa__menu-76.employer i:before{ background-position: 0 -24px }
-.pa__menu-76.employer i:after{ background-position: 0 -36px }
-.pa__menu-16.employer i:before{ background-position: 0 -264px }
-.pa__menu-16.employer i:after{ background-position: 0 -276px }
-.pa__menu-17.employer i:before{ background-position: 0 -168px }
-.pa__menu-17.employer i:after{ background-position: 0 -180px }
-.pa__menu-18.employer i:before{ background-position: 0 -312px }
-.pa__menu-18.employer i:after{ background-position: 0 -324px }
-.pa__menu-14.employer i:before{ background-position: 0 -192px }
-.pa__menu-14.employer i:after{ background-position: 0 -204px }
-.pa__menu-79.employer i:before{ background-position: 0 -144px }
-.pa__menu-79.employer i:after{ background-position: 0 -156px }
-.pa__menu-19.employer i:before{ background-position: 0 -120px }
-.pa__menu-19.employer i:after{ background-position: 0 -132px }
-.pa__menu-27.employer i:before{ background-position: 0 -240px }
-.pa__menu-27.employer i:after{ background-position: 0 -252px }
-.pa__menu-81.employer i:before{ background-position: 0 -288px }
-.pa__menu-81.employer i:after{ background-position: 0 -300px }
+.pa__menu-20.applicant i:before{ content: '\e953'; }
+.pa__menu-75.applicant i:before{ content: '\e947'; }
+.pa__menu-23.applicant i:before{ content: '\e94a'; }
+.pa__menu-78.applicant i:before{ content: '\e90f'; }
+.pa__menu-21.applicant i:before{ content: '\e982'; }
+.pa__menu-22.applicant i:before{ content: ''; }
+.pa__menu-25.applicant i:before{ content: ''; }
+.pa__menu-80.applicant i:before{ content: '\e950'; }
+.pa__menu-83.applicant i:before{ content: '\e935'; }
+.pa__menu-82.applicant i:before{ content: ''; }
+.pa__menu-84.applicant i:before{ content: '\e945'; }
+
+.pa__menu-15.employer i:before{ content: '\e953'; }
+.pa__menu-76.employer i:before{ content: '\e947'; }
+.pa__menu-16.employer i:before{ content: '\e94a'; }
+.pa__menu-17.employer i:before{ content: '\e945'; }
+.pa__menu-18.employer i:before{ content: '\e982'; }
+.pa__menu-14.employer i:before{ content: ''; }
+.pa__menu-79.employer i:before{ content: '\e90f'; }
+.pa__menu-19.employer i:before{ content: ''; }
+.pa__menu-27.employer i:before{ content: '\e935'; }
+.pa__menu-81.employer i:before{ content: '\e950'; }
 
 /*  */
 #DiContent .analytics-link{
@@ -358,7 +262,7 @@
     transition: top 0.3s ease;
     -webkit-transition: top 0.3s ease;
     -webkit-backface-visibility: hidden;
-    -webkit-perspective: 1000;
+    -webkit-perspective: 1000px;
     -webkit-transform: translate3d(0,0,0);
     cursor: pointer;
     background: none;

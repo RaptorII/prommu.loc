@@ -140,15 +140,16 @@ body #DiSiteWrapp{ height: initial; }*/
 	display: inline-block;
 	vertical-align: middle;
 }
-.rai__star-block li{
-	width: 15px;
-	height: 15px;
-	display: inline-block;
-	background: url(/theme/pic/reviews-page/reviews_sprite.png) 0 -16px no-repeat;
+.rai__star-block li:after{
+	font-family: "PrommuFont";
+	content: "";
+	font-size: 15px;
+	color: var(--color-orange);
+	line-height: 15px;
 }
-.rai__star-block li.full{ background-position: 0 0; }
-.rai__star-block li.empty{ background-position: 0 -16px; }
-.rai__star-block li.half{ background-position: 0 -32px; }
+.rai__star-block li.full:after { content: "\e94e"; }
+.rai__star-block li.empty:after{ content: "\e94d"; }
+.rai__star-block li.half:after { content: "\e94f"; }
 .rai__line{
 	margin: 15px 0 20px;
 	width: 100%;

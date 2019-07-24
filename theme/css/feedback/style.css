@@ -37,13 +37,15 @@
 	line-height: 40px;
 }
 .feedback-page__title:before{
-	content: "";
+	content: "\e903";
+	font-family: 'PrommuFont';
+	font-size: 45px;
+	color: var(--color-green);
 	width: 39px;
 	height: 40px;
 	position: absolute;
 	top: 0;
 	left: 0;
-	background: url(/theme/pic/feedback-page/feedback_title_icon.png) 0 0 no-repeat;
 	z-index: 0;
 }
 .feedback-page__label{

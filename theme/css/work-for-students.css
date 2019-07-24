@@ -70,19 +70,21 @@
 	width: 90px;
 	height: 85px;
 	margin: 0 auto 20px;
-	background: url(/theme/pic/work-for-students/prolog-icons.png) 0 0 no-repeat;
 }
-.wfs-prolog-item__img.ico1{ background-position: 0 0; }
-.wfs-prolog-item__img.ico2{ background-position: 0 -85px; }
-.wfs-prolog-item__img.ico3{ background-position: 0 -170px; }
-.wfs-prolog-item__img.ico4{ background-position: 0 -255px; }
-.wfs-prolog-item__text{
-	font-size: 15px;
-	color: #646464;
-	text-align: center;
-	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-	line-height: 18px;
+.wfs-prolog-item__img:after{
+	font-family: "PrommuFont";
+	content: '';
+	color: var(--color-green);
+	font-size: 90px;
+	top: -15px;
+	position: absolute;
 }
+.wfs-prolog-item__img.ico1:after{ content: '\e95b' }
+.wfs-prolog-item__img.ico2:after{ content: '\e95c' }
+.wfs-prolog-item__img.ico3:after{ content: '\e959' }
+.wfs-prolog-item__img.ico4:after{ content: '\e957' }
+
+
 /*
 *		grey block
 */
@@ -155,14 +157,21 @@
 	width: 90px;
 	height: 105px;
 	margin: 0 auto 10px;
-	background: url(/theme/pic/work-for-students/prolog-icons.png) 0 0 no-repeat;
 }
-.wfs-services-item__img.ico1{ background-position: 0 -340px; }
-.wfs-services-item__img.ico2{ background-position: 0 -445px; }
-.wfs-services-item__img.ico3{ background-position: 0 -550px; }
-.wfs-services-item__img.ico4{ background-position: 0 -655px; }
-.wfs-services-item__img.ico5{ background-position: 0 -759px; }
-.wfs-services-item__img.ico6{ background-position: 0 -865px; }
+.wfs-services-item__img:after{
+	font-family: "PrommuFont";
+	content: '';
+	color: var(--color-green);
+	font-size: 90px;
+	top: -15px;
+	position: absolute;
+}
+.wfs-services-item__img.ico1{  content: '\e95b'  }
+.wfs-services-item__img.ico2{  content: '\e95b'  }
+.wfs-services-item__img.ico3{  content: '\e95b'  }
+.wfs-services-item__img.ico4{  content: '\e95b'  }
+.wfs-services-item__img.ico5{  content: '\e95b'  }
+.wfs-services-item__img.ico6{  content: '\e95b'  }
 .wfs-services-item__name{
 	min-height: 60px;
 	border-bottom: 3px solid #cae100;
@@ -171,6 +180,7 @@
 	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 	line-height: 24px;
 }
+
 .wfs-services-item__text{
 	font-family: 'RobotoCondensedLight', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 	line-height: 22px;
@@ -402,24 +412,29 @@
 	margin: 10px auto 70px;	
 }
 
-
-
 .wfs-advantages__list{ padding: 0 30px 0 30px; }
 .wfs-advantages__list .wfs-advantages__item{ padding: 0 0 45px; }
 .wfs-advantages-item__img{
-    margin: 0 auto;
-    width: 90px;
-    display: block;
+	margin: 0 auto;
+	width: 90px;
+	display: block;
 	height: 88px;
 	min-width: 120px;
-	background: url(/theme/pic/work-for-students/prolog-icons.png) 0 0 no-repeat;
 	vertical-align: top;
 }
-.wfs-advantages-item__img.ico1{ background-position: 0 -980px; }
-.wfs-advantages-item__img.ico2{ background-position: 0 -1068px; }
-.wfs-advantages-item__img.ico3{ background-position: 0 -1156px; }
-.wfs-advantages-item__img.ico4{ background-position: 0 -1244px; }
-.wfs-advantages-item__img.ico5{ background-position: 0 -1332px; }
+.wfs-advantages-item__img:after{
+	font-family: "PrommuFont";
+	content: '';
+	color: var(--color-green);
+	font-size: 97px;
+	top: -25px;
+	position: absolute;
+}
+.wfs-advantages-item__img.ico1:after{ content: '\e955' }
+.wfs-advantages-item__img.ico2:after{ content: '\e98d' }
+.wfs-advantages-item__img.ico3:after{ content: '\e958' }
+.wfs-advantages-item__img.ico4:after{ content: '\e95d' }
+.wfs-advantages-item__img.ico5:after{ content: '\e95a' }
 .wfs-advantages-item__info{
 	width: 100%;
 	padding-top: 20px;
@@ -547,18 +562,6 @@
 	-webkit-transform: scaleX(1);
 	transform: scaleX(1);
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 @media (min-width: 768px){
 	.work-for-students__wrapper{

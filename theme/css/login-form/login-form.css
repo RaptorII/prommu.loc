@@ -52,7 +52,16 @@
     margin: 0 0 24px;
     padding-left: 46px;
     position: relative;
-    background: url("/theme/pic/auth-form/auth-form-icons.png") 0 0 no-repeat;
+    /*background: url("/theme/pic/auth-form/auth-form-icons.png") 0 0 no-repeat;*/
+}
+.auth-form__label.pass:after{
+	font-family: "PrommuFont";
+	content: '\e98b';
+	font-size: 30px;
+	color: var(--color-green);
+	position: absolute;
+	left: 0;
+	top: 0;
 }
 #DiContent .auth-form__form .auth-form__label{ margin: 0 0 24px; }
 .auth-form__label.email{
@@ -60,17 +69,15 @@
 }
 .auth-form__label.email{ background: none; }
 .auth-form__label.email:before{
-	content: '';
-	width: 44px;
-	height: 40px;
-	display: block;
+	font-family: "PrommuFont";
+	content: '\e98c';
+	font-size: 50px;
+	color: var(--color-green);
 	position: absolute;
 	left: -10px;
-	top: -2px;
-	background: #FFFFFF url(/theme/pic/auth-form/auth-form-icons.png) no-repeat;
-	background-position: 0px 0px;
+	top: -15px;
 }
-.auth-form__label.pass{ background-position: -18px -56px; }
+
 .auth-form__label.remember{
 	width: 150px;
 	height: inherit;   
@@ -84,15 +91,31 @@
 #DiContent .auth-form__form .auth-form__label.remember{ margin: 0 auto; }
 .auth-form__checkbox{  
     width: 30px;
-    height: 29px;
+    height: 30px;
     position: absolute;
     left: 0;
-    top: 4px;
- 	background: transparent url(/theme/pic/ico-form.png) 0px -116px no-repeat;  
+    top: 0;
 }
-.remember:hover .auth-form__checkbox{ background-position: 0 -435px; }
+.auth-form__checkbox:after{
+	font-family: "PrommuFont";
+	content: "\e98a";
+	font-size: 30px;
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	left: 0;
+	top: -2px;
+	color: var(--color-l2-grey);
+}
+.remember:hover .auth-form__checkbox:after{
+	content: '\e989';
+	color: var(--color-ll-grey);
+}
 #DiContent .auth-form__label.remember input{ display: none }
-.remember input:checked + .auth-form__checkbox{ background-position: 0 -87px; }
+.remember input:checked + .auth-form__checkbox:after{
+	content: '\e989';
+	color: var(--color-green);
+}
 #DiContent .auth-form__form .auth-form__input{
 	height: 39px;
 	background-color: #ffffff;
@@ -352,14 +375,13 @@ media
     box-shadow: 0px 0px 5px 0px red;
 }
 .auth-form__selection label:after{
-    content: '';
-    width: 25px;
-    height: 25px;
+	font-family: PrommuFont;
+	color: var(--color-green);
+	font-size: 25px;
     top: 0;
     right: 0;
-    background: url("/theme/pic/auth-form/auth-form-icons.png") 0 0 no-repeat;
     display: block;
     position: absolute;
 }
-.auth-form__selection label:first-child:after{ background-position: 4px -93px }
-.auth-form__selection label:last-child:after{ background-position: 0px -124px }
+.auth-form__selection label:first-child:after{ content: '\e936'; }
+.auth-form__selection label:last-child:after{ content: '\e976'; font-size: 35px;}

@@ -2327,17 +2327,9 @@ input#CBvacancy_titleText {width: 151px;}
 .benefits__icon{
   width: 78px;
   height: 78px;
-  background: url(/theme/pic/main-page/index-icons.png) 100% 0% no-repeat;
   margin: 0 auto;
+  position: relative;
 }
-.benefits__icon.icon1{ background-position: 0 0; }
-.benefits__icon.icon2{ background-position: 0 -78px; }
-.benefits__icon.icon3{ background-position: 0 -156px; }
-.benefits__icon.icon4{ background-position: 0 -234px; }
-.benefits__icon.icon5{ background-position: 0 -312px; }
-.benefits__icon.icon6{ background-position: 0 -390px; }
-.benefits__icon.icon7{ background-position: 0 -468px; }
-.benefits__icon.icon8{ background-position: 0 -546px; }
 .indent-block{
   width: 12.5%;
   position: relative;
@@ -3306,15 +3298,6 @@ h1.main-h1{ font-size: 26px; }
 .small-menu__item.current .small-menu__circle:after{
   opacity: 1;
   box-shadow: inset 0px 2px 5px 2px rgba(0, 0, 0, 0.2);
-}
-.small-menu__circle i{
-  position: absolute;
-  top: 12px;
-  right: 11px;
-  bottom: 12px;
-  left: 11px;
-  background: url(/theme/pic/private/little-menu-sprite.png) no-repeat;
-  z-index: 3;
 }
 .vacancy .small-menu__circle i{ background-position: 0 0 }
 .rate .small-menu__circle i{ background-position: 1px -13px }

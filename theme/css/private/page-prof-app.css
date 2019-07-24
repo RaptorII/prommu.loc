@@ -186,15 +186,16 @@
     display: inline-block;
     vertical-align: middle;
 }
-.ppp__star-block li{
-    width: 15px;
-    height: 15px;
-    display: inline-block;
-    background: url(/theme/pic/reviews-page/reviews_sprite.png) 0 -16px no-repeat;
+.ppp__star-block li:after{
+    font-family: "PrommuFont";
+    content: "";
+    font-size: 15px;
+    color: var(--color-orange);
+    line-height: 15px;
 }
-.ppp__star-block li.full{ background-position: 0 0; }
-.ppp__star-block li.empty{ background-position: 0 -16px; }
-.ppp__star-block li.half{ background-position: 0 -32px; }
+.ppp__star-block li.full:after { content: "\e94e"; }
+.ppp__star-block li.empty:after{ content: "\e94d"; }
+.ppp__star-block li.half:after { content: "\e94f"; }
 .ppp__line{
     margin: 15px 0 20px;
     width: 100%;
@@ -628,11 +629,17 @@
     width: 15px;
     height: 15px;
     display: inline-block;
-    background: url(/theme/pic/reviews-page/reviews_sprite.png) 0 -16px no-repeat;
 }
-.upp__star-block li.full{ background-position: 0 0; }
-.upp__star-block li.empty{ background-position: 0 -16px; }
-.upp__star-block li.half{ background-position: 0 -32px; }
+.upp__star-block li:after{
+    font-family: "PrommuFont";
+    content: "";
+    font-size: 15px;
+    color: var(--color-orange);
+    line-height: 15px;
+}
+.upp__star-block li.full:after { content: "\e94e"; }
+.upp__star-block li.empty:after{ content: "\e94d"; }
+.upp__star-block li.half:after { content: "\e94f"; }
 #DiContent .upp__btn-rating-list{
     padding: 0;
     font-size: 16px;
@@ -956,8 +963,6 @@ a.upp__project-info{ width: 65px }
     max-width: 100px;
     height: 30px;
     margin: 20px auto;
-    padding-left: 35px;
-    background: url(/theme/pic/profile/confirm-user.png) no-repeat;
     color: #abb820;
     font-size: 12px;
     cursor: default;
@@ -965,9 +970,18 @@ a.upp__project-info{ width: 65px }
     text-align: left;
     position: relative;
 }
-.self_employed-user{
-    background: url(/theme/pic/vacancy/vacancy-sprite-big.png) 0 0 no-repeat;
-    background-position: 0 -243px;
+.self_employed-user:before,
+.confirmed-user:before{
+    content: '\e993';
+    font-family: "PrommuFont";
+    font-size: 30px;
+    line-height: 30px;
+    color: var(--color-green);
+    cursor: default;
+    text-align: left;
+    position: relative;
+    top: 8px;
+    left: -5px;
 }
 /*
 *

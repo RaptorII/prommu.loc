@@ -66,11 +66,14 @@
 	text-decoration: underline;
 }
 .epa__header-title:before{
-	content: '';
+	content: '\e913';
+	font-family: "PrommuFont";
+	font-size: 27px;
+	line-height: 27px;
+	color: var(--color-green);
 	display: inline-block;
 	width: 27px;
 	height: 27px;
-	background: url(/theme/pic/private/vac-list-user-icon.png) no-repeat;
 	vertical-align: middle;
 	margin-right: 5px;
 }
@@ -758,7 +761,6 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	right: 5px;
 }
 .epa__post-name{
-	/*color: #343434;*/
 	margin-bottom: 20px;
 	padding-right: 20px;
 	flex: 1 1 auto;
@@ -773,12 +775,20 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	position: absolute;
 	top: 30px;
 	border: 2px solid #c9c9c9;
-	background: #FFFFFF url(/theme/pic/private/edit-profile-icon.png) -1px -1px no-repeat;
+	background: #FFFFFF;
 	cursor: pointer;
 	-webkit-transition: all .3s ease-out;
 	-moz-transition: all .3s ease-out;
 	-o-transition: all .3s ease-out;
 	transition: all .3s ease-out;	
+}
+.epa__post-close:after{
+	content:'\e97d';
+	font-family: "PrommuFont";
+	color: var(--color-l2-grey);
+	font-size: 20px;
+	line-height: 17px;
+	margin-left: -2px;
 }
 .epa__post-close:hover{ background-color: #fd9595; }
 #DiContent .epa__post-block .epa__select-list input{
@@ -1063,11 +1073,14 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 	cursor: pointer;
 }
 .confirm-user:before{
-	content: '';
+	content: '\e993';
+	font-family: "PrommuFont";
+	font-size: 30px;
+	line-height: 30px;
+	color: var(--color-red);
 	display: block;
 	width: 30px;
 	height: 30px;
-	background: url(/theme/pic/profile/confirm-user.png) 0 -30px no-repeat;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -1324,17 +1337,18 @@ input:checked + .epa__checkbox:after{ content: '\2714' }
 .epa__confirm:hover{ background: rgba(171,184,55,1) }
 .epa__confirm.complete{ background: rgba(171,184,55,0.5) }
 .epa__confirm:before{
-	content: '';
+	content: '?';
 	display: block;
 	position: absolute;
 	top: 7px;
 	right: 7px;
 	bottom: 7px;
 	left: 7px;
-	background: url(/theme/pic/private/not-confirm.png) 1px 0px no-repeat;
+	/*background: url(/theme/pic/private/not-confirm.png) 1px 0px no-repeat;*/
 	z-index: 0;
-	font-size: 20px;
-	color: #ffffff; 
+	font-size: 22px;
+	font-weight: 600;
+	color: var(--color-red);
 }
 .epa__confirm.complete:before{
 	content: '\2714';

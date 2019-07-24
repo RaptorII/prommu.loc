@@ -77,15 +77,10 @@
     .m-wrapper__white-btn:hover{border-color:#ff8300;}
     .m-wrapper__whiteo-btn:hover{border-color:#bbc823;}
     .m-wrapper__btn:hover:before{-webkit-transform:scaleX(1);transform:scaleX(1);}
-    .how-block__item .how-block__icon{background:url(../pic/main-page/mob-index-icons-2.png) 83px 0% no-repeat;width:83px;height:60px;margin-bottom:25px;}
-    .how-block__item .how-block__icon.icon1{background-position:0 0;}
-    .how-block__item .how-block__icon.icon2{background-position:0 -76px;}
-    .how-block__item .how-block__icon.icon3{background-position:0 -148px;}
     #DiContent .how-block__item.locate{margin:0 18px 30px;padding-top:25px;width:inherit;border-bottom:1px solid #d7d7d7;border-top:1px solid #d7d7d7;}
     #DiContent .header.h-indent.vacancies__title h2{margin-bottom:25px; font-weight: 600}
     #DiContent .header.h-indent.vacancies__title h2 a{font-size:50px;color:#ff8300;font-family:'RobotoCondensedLight', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;vertical-align:middle;}
     #DiContent .header.h-indent.vacancies__title h2 span{position:relative;}
-    #DiContent .header.h-indent.vacancies__title h2 span:before{content:'';width:95px;height:74px;display:inline-block;background:url(../pic/main-page/mob-index-icons-2.png) 83px 0% no-repeat;background-position:0 -226px;vertical-align:middle;}
     #DiContent.page-index .m-wrapper__btn.m-wrapper__whiteo-btn.m-detail-list-btn{width:50%;margin:0 auto 38px;min-width:300px;color:#ff8300;}
     #DiContent.page-index .m-wrapper__btn.m-wrapper__white-btn.m-detail-list-btn:hover,
     #DiContent.page-index .m-wrapper__btn.m-wrapper__whiteo-btn.m-detail-list-btn:hover,
@@ -99,7 +94,6 @@
     #DiContent .header.h-indent.applicants__title h2{margin-bottom:10px;font-weight: 600}
     #DiContent .header.h-indent.applicants__title h2 a{font-size:50px;color:#abb820;font-family:'RobotoCondensedLight', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;vertical-align:middle;line-height:normal;}
     #DiContent .header.h-indent.applicants__title h2 span{position:relative;}
-    #DiContent .header.h-indent.applicants__title h2 span:before{content:'';width:92px;height:86px;display:inline-block;background:url(../pic/main-page/mob-index-icons-2.png) 92px 0% no-repeat;background-position:0 -315px;vertical-align:middle;}
     .applicants__list,
     .companies__list{width:calc(100% + 24px);margin:0 -12px;}
     .applicants__item:nth-child(2n),
@@ -121,7 +115,7 @@
     #DiContent.page-index .applicants__item-com,
     #DiContent.page-index .companies__item-com{font-size:18px;text-decoration:underline;font-family:'RobotoCondensedRegular', Calibri, Arial, sans-serif;float:right;margin:5px 30px 0 0;}
     .applicants__item-rating,
-    .companies__item-rating{height:28px;display:inline-block;font-size:18px;font-family:'RobotoCondensedRegular', Calibri, Arial, sans-serif;padding-left:30px;background:url(../pic/main-page/star.png) 0 0 no-repeat;background-position:0 -2px;line-height:28px;}
+    .companies__item-rating{height:28px;display:inline-block;font-size:18px;font-family:'RobotoCondensedRegular', Calibri, Arial, sans-serif;padding-left:0;line-height:28px;}
     .applicants__item-rating span,
     .companies__item-rating span{cursor:default;}
     .applicants__item-rating .rating-positive,
@@ -132,12 +126,10 @@
     #DiContent .header.h-indent.companies__title h2{padding:35px 0 10px;border-top:1px solid #d7d7d7;}
     #DiContent .header.h-indent.companies__title h2 a{font-size:50px;color:#646464;font-family:'RobotoCondensedLight', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;vertical-align:middle;line-height:normal;}
     #DiContent .header.h-indent.companies__title h2 span{position:relative;}
-    #DiContent .header.h-indent.companies__title h2 span:before{content:'';width:98px;height:62px;display:inline-block;background:url(../pic/main-page/mob-index-icons-2.png) 92px 0% no-repeat;background-position:0 -405px;vertical-align:middle;}
     #DiContent.page-index .m-wrapper__btn.m-wrapper__whiteg-btn.m-detail-list-btn{width:50%;margin:25px auto 28px;min-width:300px;color:#656565;border:2px solid #656565;}
     #DiContent.page-index .m-wrapper__btn.m-wrapper__whiteg-btn.m-detail-list-btn:hover{border:2px solid #ff8300;}
     #DiContent .services__title{margin:0 auto;width:100%;max-width:604px;padding:35px 0 45px;border-top:1px solid #d7d7d7;text-align:center;font-weight:normal;line-height:normal;}
     .services__title .services__link{font-size:50px;color:#646464 !important;font-family:'RobotoCondensedLight', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;text-transform:uppercase;vertical-align:top;}
-    .services__link:before{content:'';width:77px;height:57px;display:inline-block;background:url(../pic/main-page/mob-index-icons-2.png) 57px 0% no-repeat;background-position:0 -468px;}
     .page-index .services__list{-webkit-column-count:2;-moz-column-count:2;column-count:2;padding:0;margin-bottom:45px;list-style:none;}
     .page-index .services__item{padding-left:45px;min-height:60px;position:relative;}
     .page-index .services__item:before{content:'';width:14px;height:14px;display:block;position:absolute;left:21px;top:3px;background-color:#abb820;}
@@ -145,7 +137,6 @@
     #DiContent .header.h-indent.about-block__title{padding:30px 0 0;width:100%;max-width:604px;margin:0 auto;border-top:1px solid #d7d7d7;}
     #DiContent .about-block__title h2 a{font-size:50px;color:#646464;font-family:'RobotoCondensedLight', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;vertical-align:middle;}
     #DiContent .about-block__title h2 span{position:relative;font-size:50px;}
-    #DiContent .about-block__title h2 span:before{content:'';width:89px;height:69px;display:inline-block;background:url(../pic/main-page/mob-index-icons-2.png) 69px 0% no-repeat;background-position:0 -532px;vertical-align:middle;}
     .about-block__text,
     .about-block__text *{color:#646464 !important;font-size:18px !important;font-family:'RobotoCondensedRegular', Calibri, Arial, sans-serif !important;}
     .m-bottom-reg__line{width:100%;max-width:604px;border-top:1px solid #d7d7d7;padding:0 12px 35px;margin:0 auto;}
