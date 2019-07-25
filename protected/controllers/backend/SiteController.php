@@ -198,21 +198,20 @@ class SiteController extends Controller
       $rq = Yii::app()->getRequest();
       $id = intval($rq->getParam('id'));
       $type = $rq->getParam('pagetype');
-      $model = new PagesContent;
       $params = $rq->getParam('PagesContent');
+      $model = new PagesContent;
 
       if (count($params))
       {
-				$model->attributes = $params;
-				$model->SaveContent($id, $model, $params['link'], 'ru', $type);
-				Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
+        $model->SaveContent($id, $params, $type);
+        Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
 
-				if($type=='news')
-					$this->redirect('/admin/newspages');
-				elseif($type=='articles')
-					$this->redirect('/admin/articlespages');
-				else
-					$this->redirect('/admin/pages');
+        if($type=='news')
+            $this->redirect('/admin/newspages');
+        elseif($type=='articles')
+            $this->redirect('/admin/articlespages');
+        else
+            $this->redirect('/admin/pages');
       }
       else
       {
@@ -306,30 +305,30 @@ class SiteController extends Controller
      */
     public function actionPageUpdate($id)
     {
-			$this->checkAccess();
+      $this->checkAccess();
 
-			$model = new PagesContent();
-			$type = Yii::app()->getRequest()->getParam('pagetype');
-			$params = Yii::app()->getRequest()->getParam('PagesContent');
+      $rq = Yii::app()->getRequest();
+      $type = $rq->getParam('pagetype');
+      $params = $rq->getParam('PagesContent');
+      $model = new PagesContent;
 
-			if(count($params))
-			{
-				$model->attributes = $params;
-				$model->SaveContent($id, $model, $params['link'],"ru");
-				Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
+      if(count($params))
+      {
+        $model->SaveContent($id, $params);
+        Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
 
-				if($type=='news')
-					$this->redirect('/admin/newspages');
-				elseif($type=='articles')
-					$this->redirect('/admin/articlespages');
-				else
-					$this->redirect('/admin/pages');
-			}
-			else
-			{
-				$this->setPageTitle('Настройка страницы сайта');
-				$this->render('pages/form',['model'=>$model,'id'=>$id, 'pagetype' =>$type]);
-			}
+        if($type=='news')
+          $this->redirect('/admin/newspages');
+        elseif($type=='articles')
+          $this->redirect('/admin/articlespages');
+        else
+          $this->redirect('/admin/pages');
+      }
+      else
+      {
+        $this->setPageTitle('Настройка страницы сайта');
+        $this->render('pages/form',['model'=>$model,'id'=>$id, 'pagetype' =>$type]);
+      }
     }
     /**
      * 

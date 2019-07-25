@@ -170,84 +170,83 @@ class PagesContent extends CActiveRecord
 		}
 	}
 
-	public function SaveContent($id,$content,$link,$lang, $pagetype = ''){
-		$lang = "ru";
-
-		$content['html'] = self::ClearHeaders($content['html']);		
-
-		if($id == 0)
+	public function SaveContent($id, $params, $pagetype = '')
+	{
+		if(empty(trim($params['link'])))
 		{
-			// New
-			if($pagetype == 'news'){
-				$group_id = 2;
-			}elseif($pagetype == 'articles'){
-				$group_id = 99;
+			$params['link'] = trim($params['name']);
+			if(preg_match('/[^A-Za-z0-9_\-]/', $params['link']))
+			{
+				$params['link'] = str_seo_url($params['link']);
+				$params['link'] = preg_replace('/[^A-Za-z0-9_\-]/', '', $params['link']);
 			}
-			else $group_id = 1;
-           
-
-			$command = Yii::app()->db->createCommand();
-			$link = $content->name;
-			
-			if (preg_match('/[^A-Za-z0-9_\-]/', $link)) {
-    		$link = str_seo_url(trim($link));
-    		$link = preg_replace('/[^A-Za-z0-9_\-]/', '', $link);
-			}
-			$command->insert('pages', array(
-    		'link'=>$link,
-                'group_id'=>$group_id
-			));
-			$id = Yii::app()->db->lastInsertID;
-
-			$content->page_id = $id;
-			$content->lang = $lang;
-
-			$content->save();
-
-			if($lang=='ru')
-				$lang='ru';
 			else
-				$lang='ru';
-
-			// $content = new PagesContent();
-
-			// $content->page_id = $id;
-			// $content->lang = $lang;
-
-   //          $content->save();
-
+			{
+				$params['link'] = rand(1111111111,9999999999);
+			}
 		}
-		else
+
+		if($id == 0) // создание контента
 		{
-			// Update
-			$result = Yii::app()->db->createCommand()
-				->select('id, page_id')
+			switch ($pagetype)
+			{
+				case 'news': $group_id=2; break;
+				case 'articles': $group_id=99; break;
+				default: $group_id=1; break;
+			}
+			// сохраняем в pages
+			Yii::app()->db->createCommand()->insert(
+				'pages', 
+				['link'=>$params['link'], 'group_id'=>$group_id]
+			);
+			// Сохраняем в pages_content
+			$this->page_id = Yii::app()->db->lastInsertID;
+			$this->hidden = intval($params['hidden']);
+			$this->name = filter_var($params['name'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$this->anons = filter_var($params['anons'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$this->html = self::ClearHeaders($params['html']);
+			$this->img = filter_var($params['img'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$this->meta_title = filter_var($params['meta_title'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$this->meta_description = filter_var($params['meta_description'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$this->meta_keywords = filter_var($params['meta_keywords'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$this->pubdate = filter_var($params['pubdate'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$this->mdate = date('Y-m-d H:i:s');
+			$this->imganons = NULL;
+			$this->lang = 'ru';
+			$this->crdate = date('Y-m-d H:i:s');
+			$this->digest = 0;
+			$this->setIsNewRecord(true);
+			$this->save();
+		}
+		else // обновление контента
+		{
+			$content_id = Yii::app()->db->createCommand()
+				->select('id')
 				->from('pages_content')
-				->where(
-					'page_id=:pid and lang=:lang', 
-					[':pid'=>$id, ':lang'=>'ru']
-				)
-				->queryRow();
+				->where('page_id=:pid', [':pid'=>$id])
+				->queryScalar();
 
-			if($result['id']>0)
-			{		
+			if($content_id>0)
+			{
+				// сохраняем в pages
 				Yii::app()->db->createCommand()
-		      ->update(
-		      	'pages_content', 
-						[
-							'name'=>$content['name'],
-							'html'=>$content['html'],
-							'anons'=>$content['anons'],
-							'img'=>$content['img'],
-							'pubdate'=>$content['pubdate'],
-							'hidden'=>intval($content['hidden'])
-						],
-						'page_id=:id and lang=:lang',
-						[':id'=>$id,  ':lang'=>'ru']
-					);
-
-				Yii::app()->db->createCommand()
-					->update('pages', ['link'=>$link], 'id=:id', [':id'=>$id]);
+					->update('pages', ['link'=>$params['link']], 'id=:id', [':id'=>$id]);
+				// Сохраняем в pages_content
+				self::model()->updateByPk(
+					$content_id,
+					[
+						'hidden' => intval($params['hidden']),
+						'name' => filter_var($params['name'],FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+						'anons' => filter_var($params['anons'],FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+						'html' => self::ClearHeaders($params['html']),
+						'img' => filter_var($params['img'],FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+						'meta_title' => filter_var($params['meta_title'],FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+						'meta_description' => filter_var($params['meta_description'],FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+						'meta_keywords' => filter_var($params['meta_keywords'],FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+						'pubdate' => filter_var($params['pubdate'],FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+						'mdate' => date('Y-m-d H:i:s')
+					]
+				);
 			}
 		}
 	}
