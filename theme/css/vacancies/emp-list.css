@@ -124,9 +124,11 @@
 	vertical-align: middle;
 }
 .evl-vacancies__item-info{ width: 20% }
-#DiContent .evl-vacancies__item-info span a{
+#DiContent .evl-vacancies__item-info span a,
+#DiContent .evl-vacancies__item-info span b{
 	text-decoration: underline;
 	font-weight: bold;
+	color: #abb820;
 }
 .evl-vacancies__empty{
 	color: #343434;
@@ -319,7 +321,10 @@ span.evl__tabs-link.enable{ cursor: default; }
 	text-align: center;
 	white-space: nowrap;
 }
-.vac-item__info-item>span{ padding: 0 5px }
+.vac-item__info-item>span{
+	display: block;
+	text-align: right;
+}
 .evl-vacancies__item-btns{ 
 	padding-top: 7px;
 	display: flex;
@@ -365,6 +370,10 @@ span.evl__tabs-link.enable{ cursor: default; }
 	.evl-vacancies__item-info{ width: 30% }
 	.evl-vacancies__item-info,
 	.evl-vacancies__item-btns{ vertical-align: top }
+	.vac-item__info-item>span{
+		padding: 0 5px;
+		display: inline;
+	}
 }
 /*
 *	POPAP

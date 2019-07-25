@@ -282,239 +282,223 @@ class ResponsesApplic extends Responses
      */
     public function setVacationResponse($inProps = [])
     {
-        $id = $inProps['idvac'] 
-            ?: filter_var(
-                    Yii::app()->getRequest()->getParam('id'), 
-                    FILTER_SANITIZE_NUMBER_INT
-                );
-        $sresponse = $inProps['second_response'] 
-            ?: filter_var(
-                    Yii::app()->getRequest()->getParam('sresponse'), 
-                    FILTER_SANITIZE_NUMBER_INT
-                );
+      $db = Yii::app()->db;
+      $rq = Yii::app()->getRequest();
 
-        $arRes = array(
-                    'error' => 1,
-                    'message' => 'Произошла ошибка во время подачи заявки на вакансию. Попробуйте позже'
-                );
-        $Profile = $this->Profile ?: Share::$UserProfile;
-        $idPromo = $Profile->exInfo->id_resume;
+      $arMess = [
+        'error_vacancy' => "Неправильный номер вакансии",
+        'error_vacancy_status' => "Вакансия находится на стадии модерации. Попробуйте позже",
+        'error_system' => "Произошла ошибка во время подачи заявки на вакансию. Попробуйте позже",
+        'error_user_moder' => "<p>Нам очень жаль, но Ваша анкета еще не прошла модерацию :(</p> "
+          . "<p>Как только модератор пропустит Вашу анкету - Вы получите оповещение в Личном "
+          . "кабинете, а также на электронную почту</p>",
+        'error_has_response' => 'Вы уже подавали заявку на эту вакансию'
+          . ($rq->getParam('url')!='list'
+            ? '<br>Чтобы откликнуться на другие вакансии - <a href="'
+          . MainConfig::$PAGE_SEARCH_VAC . '">жмите сюда</a>' : ''),
+        'error_has_invite' => 'Вы уже были приглашены на эту вакансию'
+          . ($rq->getParam('url')!='list'
+            ? '<br>Чтобы откликнуться на другие вакансии - <a href="'
+          . MainConfig::$PAGE_SEARCH_VAC . '">жмите сюда</a>' : ''),
+        'error_sex' => 'Вы не подходите на даную ваканию по параметру “Пол соискателя женский”',
+        'error_age' => 'Вы не подходите на даную ваканию по параметру “Возраст соискателя”',
+        'error_self_employed' => 'Нам очень жаль, но на эту вакансию требуются соискатели '
+          . 'со статусом “Самозанятый”<br>Для утверждения в качестве самозанятого перейдите <br>по <a href="'
+          . MainConfig::$VIEW_SELF_EMPLOYED . '">этой ссылке</a>',
+        'error_city' => 'Вы не подходите на даную ваканию по параметру “Город”',
+        'success_repeat' => 'Заявка на вакансию направлена работодателю повторно. '
+          . 'Как только работодатель примет решение - вы получите '
+          . 'уведомление в личном кабинете',
+        'success' => 'Заявка на вакансию направлена работодателю. '
+          . 'Как только работодатель примет решение - вы получите '
+          . 'уведомление в личном кабинете'
+      ];
+      $id = $inProps['idvac'] ?: filter_var($rq->getParam('id'),FILTER_SANITIZE_NUMBER_INT);
+      $sresponse = $inProps['second_response'] ?: filter_var($rq->getParam('sresponse'),FILTER_SANITIZE_NUMBER_INT);
+      $arRes = ['error'=>1, 'message'=>$arMess['error_system']];
+      $Profile = $this->Profile ?: Share::$UserProfile;
+      $idPromo = $Profile->exInfo->id_resume;
 
-        if(!$id) // bad vacancy
-        {
-            $arRes['message'] = 'Неправильный номер вакансии';
-            return $arRes;
-        }
+      // ищем данные по вакансии
+      $arVacancy = $db->createCommand()
+        ->select("id,
+                      id_user,
+                      title, 
+                      agefrom, 
+                      ageto, 
+                      isman, 
+                      iswoman, 
+                      status,
+                      self_employed")
+        ->from('empl_vacations')
+        ->where("id=:id", [":id" => $id])
+        ->queryRow();
 
-        $arApp = Yii::app()->db->createCommand()
-                    ->select('r.isman, r.birthday, u.ismoder')
-                    ->from('resume r')
-                    ->leftjoin('user u','u.id_user=r.id_user')
-                    ->where('r.id_user=:id', [':id'=>Share::$UserProfile->id])
-                    ->queryRow();
-
-        if(!$arApp['ismoder']) // not moder applicant
-        {
-            $arRes['message'] = '<p>Нам очень жаль, но Ваша анкета еще не прошла модерацию :(</p>'
-                . '<p>Как только модератор пропустит Вашу анкету - Вы получите оповещение в Личном '
-                . 'кабинете, а также на электронную почту</p>';
-            return $arRes;
-        }
-        // search vacancy
-        $arVacancy = Yii::app()->db->createCommand()
-                    ->select("id,
-                        id_user,
-                        title, 
-                        agefrom, 
-                        ageto, 
-                        isman, 
-                        iswoman, 
-                        status,
-                        self_employed")
-                    ->from('empl_vacations')
-                    ->where("id=:id", [":id" => $id])
-                    ->queryRow();
-
-        if(!$arVacancy['id']) // bad vacancy
-        {
-            $arRes['message'] = 'Неправильный номер вакансии';
-            return $arRes;
-        }
-        if($arVacancy['status']<1) // закрытая вакансия
-        {
-            $arRes['message'] = 'Вакансия находится на стадии модерации. Попробуйте позже';
-            return $arRes;
-        }
-
-        // search responces of this user on current vacancy
-        $query = Yii::app()->db->createCommand()
-                    ->select('*')
-                    ->from('vacation_stat')
-                    ->where(
-                        'id_vac=:id AND id_promo=:id_promo',
-                        [":id_promo"=>$idPromo, ":id"=>$id]
-                    )
-                    ->queryRow();
-
-        if($query['id'] && $query['second_response'])
-        {
-            if($query['response']==1)
-            {
-                $arRes['message'] = '<p>Вы уже подавали заявку на эту вакансию</p>'
-                    . '<p>Чтобы откликнуться на другие вакансии - <a href="'
-                    . MainConfig::$PAGE_SEARCH_VAC . '">жмите сюда</a></p>';               
-            }
-            else
-            {
-                $arRes['message'] = '<p>Вы уже были приглашены на эту вакансию</p>'
-                    . '<p>Чтобы откликнуться на другие вакансии - <a href="'
-                    . MainConfig::$PAGE_SEARCH_VAC . '">жмите сюда</a></p>';
-            }
-
-            return $arRes;
-        }
-        else
-        {
-            // проверка пола
-            if(!$arVacancy['isman'] && $arApp['isman'] && $inData['iswoman'])
-            {
-                $arRes['message'] = 'Вы не подходите на даную ваканию по параметру “Пол соискателя женский”';
-                return $arRes;
-            }
-            elseif($inData['isman'] && !$arApp['isman'] && !$inData['iswoman'])
-            {
-                $arRes['message'] = 'Вы не подходите на даную ваканию по параметру “Пол соискателя мужской”';
-                return $arRes;
-            }
-            // проверка возраста
-            $datetime = new DateTime($arApp['birthday']);
-            $interval = $datetime->diff(new DateTime(date("Y-m-d")));
-            $years = $interval->format("%Y");
-
-            if(
-                ($arVacancy['agefrom']>0 && $arVacancy['agefrom']>$years)
-                ||
-                ($arVacancy['ageto']>0 && $arVacancy['ageto']<$years)
-            )
-            {
-                $arRes['message'] = 'Вы не подходите на даную ваканию по параметру “Возраст соискателя”';
-                return $arRes;
-            }
-            // Статус Самозанятый
-            $self_employed = Share::$UserProfile->getUserAttribute(
-              ['key'=>'self_employed'],
-              Share::$UserProfile->id
-            );
-            if(!$self_employed && $arVacancy['self_employed'])
-            {
-              $arRes['message'] = 'Нам очень жаль, но на эту вакансию требуются соискатели со статусом “Самозанятый”<br>Для утверждения в качестве самозанятого перейдите <br>по <a href="' . MainConfig::$VIEW_SELF_EMPLOYED . '">этой ссылке</a>';
-              return $arRes;
-            }
-            // города пользователя
-            $arUserCities = Yii::app()->db->createCommand()
-                        ->select("id_city")
-                        ->from('user_city')
-                        ->where(
-                            "id_user=:id", 
-                            [":id"=>Share::$UserProfile->id]
-                        )
-                        ->queryColumn();
-            // города вакансии
-            $arVacCities = Yii::app()->db->createCommand()
-                        ->select("id_city")
-                        ->from('empl_city')
-                        ->where("id_vac=:id", [":id"=>$id])
-                        ->queryColumn();
-
-            if(count($arUserCities) && count($arVacCities))
-            {
-                $hasCity = false;
-                foreach ($arUserCities as $city)
-                    if(in_array($city, $arVacCities))
-                        $hasCity = true;
-
-                if(!$hasCity)
-                {
-                    $arRes['message'] = 'Вы не подходите на даную ваканию по параметру “Город”';
-                    return $arRes;                   
-                }
-            }
-            // повторная отправка
-            if($sresponse==$idPromo && !$query['second_response']) 
-            {
-                Yii::app()->db->createCommand()
-                    ->update('vacation_stat', 
-                        [
-                            'isresponse' => 1,
-                            'status' => 0,
-                            'second_response' => 1,
-                            'mdate' => date('Y-m-d H:i:s')
-                        ],
-                        'id=:id',
-                        [':id' => $query['id']]
-                    );
-                $arRes['message'] = 'Заявка на вакансию направлена работодателю повторно. '
-                    . 'Как только работодатель примет решение - вы получите '
-                    . 'уведомление в личном кабинете';          
-            }
-            else // Добавляем заявку на вакансию
-            {
-                Yii::app()->db->createCommand()
-                    ->insert(
-                        'vacation_stat', 
-                        array(
-                            'id_promo' => $idPromo,
-                            'id_vac' => $id,
-                            'isresponse' => 1,
-                            'date' => date('Y-m-d H:i:s'),
-                        )
-                    );
-                $arRes['message'] = 'Заявка на вакансию направлена работодателю. '
-                    . 'Как только работодатель примет решение - вы получите '
-                    . 'уведомление в личном кабинете';
-            }
-            // Находим email работодателя
-            $email = Yii::app()->db->createCommand()
-                        ->select('email')
-                        ->from('user')
-                        ->where('id_user=:id', [':id' => $arVacancy['id_user']])
-                        ->queryScalar();
-            // Письмо пользователю 
-            $name = trim(Share::$UserProfile->exInfo->firstname);
-            empty($name) && $name = 'пользователь';
-            Mailing::set(
-                    9,
-                    array(
-                        'email_user' => $email,
-                        'name_user' => $name,
-                        'id_user' => Share::$UserProfile->id,
-                        'id_vacancy' => $id,  
-                        'name_vacancy' => $arVacancy['title']
-                    )
-                );
-            // push
-            $config = Yii::app()->db->createCommand()
-                        ->select('new_invite')
-                        ->from('push_config')
-                        ->where('id=:id', [':id' => $arVacancy['id_user']])
-                        ->queryScalar();
-
-            $push = Yii::app()->db->createCommand()
-                        ->select('push')
-                        ->from('user_push')
-                        ->where('id=:id', [':id' => $arVacancy['id_user']])
-                        ->queryScalar();
-
-            if($config==2 && $push)
-            {
-                $api = new Api();
-                $api->getPush($push, 'invite');
-            }
-
-            $arRes['error'] = 0;
-        }
-
+      if(!$arVacancy['id']) // bad vacancy
+      {
+        $arRes['message'] = $arMess['error_vacancy'];
         return $arRes;
+      }
+      if($arVacancy['status']<1) // закрытая вакансия
+      {
+        $arRes['message'] = $arMess['error_vacancy_status'];
+        return $arRes;
+      }
+
+      $arApp = $db->createCommand()
+                  ->select('r.isman, r.birthday, u.ismoder')
+                  ->from('resume r')
+                  ->leftjoin('user u','u.id_user=r.id_user')
+                  ->where('r.id_user=:id', [':id'=>$Profile->id])
+                  ->queryRow();
+
+      if(!$arApp['ismoder']) // непромодерированый соискатель
+      {
+          $arRes['message'] = $arMess['error_user_moder'];
+          return $arRes;
+      }
+      // Проверяем наличие заявок от этого С
+      $query = $db->createCommand()
+                  ->select('*')
+                  ->from('vacation_stat')
+                  ->where(
+                      'id_vac=:id AND id_promo=:id_promo',
+                      [":id_promo"=>$idPromo, ":id"=>$id]
+                  )
+                  ->queryRow();
+
+      if($query['id']) // уже есть одна заявка
+      {
+        if($sresponse==$idPromo && !$query['second_response']) // можно отправить повторно
+        {
+          Yii::app()->db->createCommand()
+            ->update('vacation_stat',
+              [
+                'isresponse' => 1,
+                'status' => 0,
+                'second_response' => 1,
+                'mdate' => date('Y-m-d H:i:s')
+              ],
+              'id=:id',
+              [':id' => $query['id']]
+            );
+          ResponsesHistory::setData($query['id'], $Profile->id, $query['status'], 0);
+          $arRes['error'] = 0;
+          $arRes['message'] = $arMess['success_repeat'];
+        }
+        else // повторно не отправлялась, но не подходит
+        {
+          $arRes['error'] = 1;
+          $arRes['message'] = $query['isresponse']==1
+            ? $arMess['error_has_response']
+            : $arMess['error_has_invite'];
+        }
+      }
+      else // новая заявка
+      {
+        // проверка пола
+        if(!$arVacancy['isman'] && $arApp['isman'] && $inData['iswoman'])
+        {
+          $arRes['message'] = $arMess['error_sex'];
+          return $arRes;
+        }
+        elseif($inData['isman'] && !$arApp['isman'] && !$inData['iswoman'])
+        {
+          $arRes['message'] = $arMess['error_sex'];
+          return $arRes;
+        }
+        // проверка возраста
+        $datetime = new DateTime($arApp['birthday']);
+        $interval = $datetime->diff(new DateTime(date("Y-m-d")));
+        $years = $interval->format("%Y");
+        if(
+          ($arVacancy['agefrom']>0 && $arVacancy['agefrom']>$years)
+          ||
+          ($arVacancy['ageto']>0 && $arVacancy['ageto']<$years)
+        )
+        {
+          $arRes['message'] = $arMess['error_age'];
+          return $arRes;
+        }
+        // Статус Самозанятый
+        $self_employed = Share::$UserProfile->getUserAttribute(
+          ['key'=>'self_employed'],
+          Share::$UserProfile->id
+        );
+        if(!$self_employed && $arVacancy['self_employed'])
+        {
+          $arRes['message'] = $arMess['error_self_employed'];
+          return $arRes;
+        }
+        // города пользователя
+        $arUserCities = $db->createCommand()
+                    ->select("id_city")
+                    ->from('user_city')
+                    ->where(
+                        "id_user=:id",
+                        [":id"=>Share::$UserProfile->id]
+                    )
+                    ->queryColumn();
+        // города вакансии
+        $arVacCities = $db->createCommand()
+                    ->select("id_city")
+                    ->from('empl_city')
+                    ->where("id_vac=:id", [":id"=>$id])
+                    ->queryColumn();
+
+        if(count($arUserCities) && count($arVacCities))
+        {
+          $hasCity = false;
+          foreach ($arUserCities as $city)
+          {
+            in_array($city, $arVacCities) && $hasCity=true;
+          }
+
+          if(!$hasCity)
+          {
+            $arRes['message'] = $arMess['error_city'];
+            return $arRes;
+          }
+        }
+        // Добавляем заявку на вакансию
+        $db->createCommand()
+            ->insert(
+                'vacation_stat',
+                [
+                  'id_promo' => $idPromo,
+                  'id_vac' => $id,
+                  'isresponse' => 1,
+                  'date' => date('Y-m-d H:i:s'),
+                ]
+            );
+        $lastId = Yii::app()->db->getLastInsertID();
+        ResponsesHistory::setData($lastId, $Profile->id, 100, 0);
+        $arRes['message'] = $arMess['success'];
+        // Находим email работодателя
+        $email = $db->createCommand()
+                    ->select('email')
+                    ->from('user')
+                    ->where('id_user=:id', [':id' => $arVacancy['id_user']])
+                    ->queryScalar();
+        // Письмо пользователю
+        $name = trim(Share::$UserProfile->exInfo->firstname);
+        empty($name) && $name = 'пользователь';
+        Mailing::set(
+                9,
+                array(
+                    'email_user' => $email,
+                    'name_user' => $name,
+                    'id_user' => Share::$UserProfile->id,
+                    'id_vacancy' => $id,
+                    'name_vacancy' => $arVacancy['title']
+                )
+            );
+        // push
+        PushChecker::setPushMess($arVacancy['id_user'], 'invite');
+        $arRes['error'] = 0;
+      }
+
+      return $arRes;
     }
     /**
      * 

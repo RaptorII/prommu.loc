@@ -217,6 +217,7 @@ class Vacancy extends ARModel
 
         $query = $db->createCommand() // ищем подходящие по статусу вакансии
                             ->select("vs.id,
+                                vs.status,
                                 vs.mdate,
                                 vs.id_vac,
                                 ev.title,
@@ -295,16 +296,30 @@ class Vacancy extends ARModel
                         $message . 'соискателями: <br>' . implode('<br>',$arLink)
                     );
             }
-            if(count($arId)) // делаем заявки завершенными
+            if(count($arId))
             {
-                $db->createCommand()->update(
-                        'vacation_stat', 
-                        [
-                            'status' => Responses::$STATUS_BEFORE_RATING,
-                            'mdate' => date('Y-m-d H:i:s')
-                        ], 
-                        ['in','id',$arId]
-                    );
+              // фиксируем в истории
+              $arInsert = [];
+              foreach($query as $v)
+              {
+                $arInsert[] = [
+                  'id_response' => $v['id'],
+                  'id_user' => Im::$ADMIN_APPLICANT,
+                  'status_before' => Responses::$STATUS_APPLICANT_ACCEPT,
+                  'status_after' => Responses::$STATUS_BEFORE_RATING,
+                  'date' => time()
+                ];
+              }
+              Share::multipleInsert([ResponsesHistory::$table => $arInsert]);
+              // делаем заявки завершенными
+              $db->createCommand()->update(
+                    'vacation_stat',
+                    [
+                      'status' => Responses::$STATUS_BEFORE_RATING,
+                      'mdate' => date('Y-m-d H:i:s')
+                    ],
+                    ['in','id',$arId]
+                  );
             }
         }
         // делаем вакансии неактивными
@@ -3375,25 +3390,26 @@ WHERE id_vac = {$inVacId}";
 
         foreach ($arRes['items'] as &$v)
         {
-            !isset($v['responded']) && $v['responded']=0;
-            foreach ($arRes['apps'] as $s)
+          !isset($v[MainConfig::$VACANCY_RESPONDED]) && $v[MainConfig::$VACANCY_RESPONDED]=0;
+          !isset($v[MainConfig::$VACANCY_APPROVED]) && $v[MainConfig::$VACANCY_APPROVED]=0;
+          foreach ($arRes['apps'] as $s)
+          {
+            if ($s['id_vac'] == $v['id'])
             {
-                if($s['id_vac']==$v['id'])
-                {
-                    if(in_array($s['status'],
-                        [Responses::$STATUS_NEW,
-                        Responses::$STATUS_EMPLOYER_ACCEPT]))
-                    {
-                        $v['responded']++; // считаем откликнувшихся
-                    }
-                    if(in_array($s['status'],
-                        [Responses::$STATUS_BEFORE_RATING,
-                        Responses::$STATUS_APPLICANT_RATED]))
-                    {
-                        $v['need_rating'] = true; // проверяем необходимость оценить С
-                    }
-                }
+              if ($s['status'] >= Responses::$STATUS_APPLICANT_ACCEPT) // утвержденные
+              {
+                $v[MainConfig::$VACANCY_APPROVED]++;
+              }
+              if (in_array($s['status'],
+                [Responses::$STATUS_BEFORE_RATING,
+                  Responses::$STATUS_APPLICANT_RATED]))
+              {
+                $v['need_rating'] = true; // проверяем необходимость оценить С
+              }
+              // Откликнувшиеся это все те кто откликнулся на вакансию (и не важно утвердили или отложили его)
+              $v[MainConfig::$VACANCY_RESPONDED]++;
             }
+          }
             $t = strtotime($v['remdate']) - mktime(0,0,0);
             $t = $t / 86400;
             $v['left_days_cnt'] = $t;
@@ -3997,7 +4013,7 @@ WHERE id_vac = {$inVacId}";
                         UNIX_TIMESTAMP(ev.bdate) bdate,
                         UNIX_TIMESTAMP(ev.edate) edate,
                         UNIX_TIMESTAMP(ev.remdate) remdate,
-                        e.name coname")
+                        e.name coname, logo")
                     ->from('empl_vacations ev')
                     ->join('employer e','e.id_user=ev.id_user')
                     ->where('ev.id=:id',[':id'=>$id_vacancy])
@@ -4005,12 +4021,29 @@ WHERE id_vac = {$inVacId}";
 
         if(!is_array($arRes['item']))
             return $arRes;
+
         // отклики
         $model = new ResponsesEmpl();
         $arRes['responses'] = $model->getVacResponsesAdmin($id_vacancy);
+        if(count($arRes['responses']['users']))
+        {
+          $arRes['responses']['users'][$arRes['item']['id_user']] = [
+            'id' => $arRes['item']['id_user'],
+            'status' => UserProfile::$EMPLOYER,
+            'name' => $arRes['item']['coname'],
+            'src' => Share::getPhoto(
+              $arRes['item']['id_user'],
+              UserProfile::$EMPLOYER,
+              $arRes['item']['logo']),
+            'profile_admin' => '/admin/EmplEdit/' . $arRes['item']['id_user']
+          ];
+        }
         // просмотры
         $model = new Termostat();
         $arRes['views'] = $model->getTermostatCount($id_vacancy);
+        // история заявок
+        $model = new ResponsesHistory();
+        $arRes['responses_history'] = $model->getAllData($arRes['responses']['items']);
         // атрибуты
         $query = $db->createCommand()
                     ->select("ea.*, uad.name dname, uad.id_par, uad.postself")

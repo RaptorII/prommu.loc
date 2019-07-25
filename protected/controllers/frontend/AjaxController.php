@@ -343,13 +343,15 @@ class AjaxController extends AppController
      */
     public function actionSetResponseStatus()
     {
-        if( in_array(Share::$UserProfile->type, [2,3]) )
-        {
-            $response = Share::$UserProfile->type == 2 ? new ResponsesApplic() : new ResponsesEmpl();
-            $res = $response->setResponseStatus();
-            echo CJSON::encode($res);
-        } // endif
-        Yii::app()->end();
+      if(!Share::isGuest())
+      {
+        $model = Share::isApplicant()
+          ? new ResponsesApplic()
+          : new ResponsesEmpl();
+        $arRes = $model->setResponseStatus();
+        echo CJSON::encode($arRes);
+      }
+      Yii::app()->end();
     }
 
 

@@ -10,6 +10,8 @@ class PushChecker extends Model
     /** @var  UserProfile */
     protected $Profile;
 
+    private static $STATUS_DISABLE = 1;
+    private static $STATUS_ENABLE = 2;
 
     function __construct($Profile = null)
     {
@@ -89,5 +91,29 @@ class PushChecker extends Model
         $data['newcomments'] = $res->queryScalar();
 
         return $data;
+    }
+    /**
+     * @param $id_user - integer
+     * @param $type - string
+     */
+    public static function setPushMess($id_user, $type)
+    {
+      $config = Yii::app()->db->createCommand()
+        ->select('new_invite')
+        ->from('push_config')
+        ->where('id=:id', [':id'=>$id_user])
+        ->queryScalar();
+
+      $key = Yii::app()->db->createCommand()
+        ->select('push')
+        ->from('user_push')
+        ->where('id=:id', [':id'=>$id_user])
+        ->queryScalar();
+
+      if($config==self::$STATUS_ENABLE && $key)
+      {
+        $api = new Api();
+        $api->getPush($key, $type);
+      }
     }
 }

@@ -2,6 +2,7 @@
   $bUrl = Yii::app()->request->baseUrl;
   $gcs = Yii::app()->getClientScript();
   $gcs->registerCssFile($bUrl . '/css/template.css');
+  $gcs->registerCssFile($bUrl . '/css/vacancy/item.css');
   $gcs->registerScriptFile($bUrl . '/js/nicEdit.js', CClientScript::POS_HEAD);
   $vacancy = $viData['item'];
 ?>
@@ -30,6 +31,9 @@
         </li>
         <li>
           <a href="#tab_seo" aria-controls="tab_seo" role="tab" data-toggle="tab">SEO</a>
+        </li>
+        <li>
+          <a href="#tab_history" aria-controls="tab_history" role="tab" data-toggle="tab">История заявок</a>
         </li>
       </ul>
     </div>
@@ -71,7 +75,7 @@
                         foreach ($viData['responses']['items'] as $v)
                         {
                           $arUser = $viData['responses']['users'][$v['id_user']];
-                          $arRes[] = '<a href="/admin/PromoEdit/' . $v['id_user'] . '">' . $arUser['name'] . '</a>';
+                          $arRes[] = '<a href="' . $arUser['profile_admin'] . '">' . $arUser['name'] . '</a>';
                         }
                         echo implode(', ', $arRes);
                       ?>
@@ -87,7 +91,7 @@
                         foreach ($viData['responses']['approved'] as $v)
                         {
                           $arUser = $viData['responses']['users'][$v['id_user']];
-                          $arRes[] = '<a href="/admin/PromoEdit/' . $v['id_user'] . '">' . $arUser['name'] . '</a>';
+                          $arRes[] = '<a href="' . $arUser['profile_admin'] . '">' . $arUser['name'] . '</a>';
                         }
                         echo implode(', ', $arRes);
                       ?>
@@ -434,6 +438,40 @@
               <div class="d-indent"><?=$viData['seo']['meta_description']?></div>
             </label>
           </div>
+          <?
+          // История
+          ?>
+          <div role="tabpanel" class="tab-pane fade" id="tab_history">
+            <h4>История заявок</h4>
+            <? if(count($viData['responses_history']['items'])): ?>
+              <div class="history__list">
+                <? foreach($viData['responses_history']['items'] as $r): ?>
+                  <div class="history__list-response"><b>Заявка №<?=$r['id']?></b></div>
+                  <table>
+                    <? foreach($r['items'] as $v): ?>
+                      <? $arUser = $viData['responses']['users'][$v['id_user']]; ?>
+                      <tr>
+                        <td class="history__item-user">
+                          <a href="<?=$arUser['profile_admin']?>">
+                            <img src="<?=$arUser['src']?>">
+                            <b><?=$arUser['name']?></b>
+                          </a>
+                        </td>
+                        <td class="history__item-info"><?=ResponsesHistory::getState(
+                          $v['status_before'],
+                          $v['status_after'],
+                          $r['isresponse'],
+                          $r['second_response']
+                          )?></td>
+                        <td class="history__item-date"><?=Share::getDate($v['date'])?></td>
+                      </tr>
+                    <? endforeach; ?>
+                  </table>
+                <? endforeach; ?>
+              </div>
+            <? else: ?>
+              <p>История не найдена</p>
+            <? endif; ?>
         </div>
         <?
         //
@@ -471,47 +509,3 @@
     </script>
   <? endif; ?>
 </div>
-<style type="text/css">
-  .vacancy__loc ul{
-    list-style: none;
-    padding-left: 15px;
-  }
-  .vacancy__loc li{
-    border-bottom: 1px solid #c5c5c5;
-    padding-bottom: 5px;
-    margin-bottom: 5px;
-  }
-  .app_project__location{
-    border-top: 1px solid #c5c5c5;
-    padding-top: 5px;
-    margin-top: 5px;
-  }
-  .vacancy__loc li:last-child{ border: none }
-  .vacancy__city td{ padding: 5px; }
-  .vacancy__item h4{
-    margin: 30px 0 10px; 
-    text-transform: uppercase;
-    font-size: 20px;
-  }
-  #panel_requirements + div,
-  #panel_duties + div,
-  #panel_conditions + div{ 
-    width: 100%!important;
-    min-height: 200px!important;
-  }
-  .nicEdit-main{ min-height: 198px!important; }
-  .services__list{
-    margin: 10px -15px 30px;
-  }
-  .services__list a{
-    padding: 0 0 20px;
-    display: block;
-    text-align: center;
-    font-size: 18px;
-  }
-  .services__list img{
-    width: 100%;
-    border-radius: 50%;
-    padding-bottom: 10px;
-  }
-</style>

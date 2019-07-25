@@ -756,7 +756,7 @@ class Share
 
         foreach ($sql as $v)
         {
-            if($v['status']==2)
+            if($v['status']==UserProfile::$APPLICANT)
             {
                 $arRes[$v['id_user']] = array(
                         'id' => $v['id_user'],
@@ -764,10 +764,11 @@ class Share
                         'status' => $v['status'],
                         'name' => $v['app_name'],
                         'src' => self::getPhoto($v['id_user'],2,$v['app_photo'],'small',$v['isman']),
-                        'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user']
+                        'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user'],
+                        'profile_admin' => '/admin/PromoEdit/' . $v['id_user']
                     );
             }
-            if($v['status']==3)
+            if($v['status']==UserProfile::$EMPLOYER)
             {
                 $arRes[$v['id_user']] = array(
                         'id' => $v['id_user'],
@@ -775,9 +776,11 @@ class Share
                         'status' => $v['status'],
                         'name' => $v['emp_name'],
                         'src' => self::getPhoto($v['id_user'],3,$v['emp_photo']),
-                        'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user']
+                        'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user'],
+                        'profile_admin' => '/admin/EmplEdit/' . $v['id_user']
                     );
             }
+
             if(isset($arRes[$v['id_user']]) && empty($arRes[$v['id_user']]['name']))
             {
                 $arRes[$v['id_user']]['name'] = '(безымянный)';

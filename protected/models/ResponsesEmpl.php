@@ -23,9 +23,11 @@ class ResponsesEmpl extends Responses
      */
     public function setResponseStatus($props=[])
     {
-        if( Yii::app()->getRequest()->requestType != 'POST' ) $ret = array('error' => 1);
-        $idres = $props['idres'] ?: filter_var(Yii::app()->getRequest()->getParam('idres'), FILTER_SANITIZE_NUMBER_INT);
-        $status = $props['status'] ?: filter_var(Yii::app()->getRequest()->getParam('s'), FILTER_SANITIZE_NUMBER_INT);
+      $db = Yii::app()->db;
+      $rq = Yii::app()->getRequest();
+        if( $rq->requestType != 'POST' ) $ret = array('error' => 1);
+        $idres = $props['idres'] ?: filter_var($rq->getParam('idres'), FILTER_SANITIZE_NUMBER_INT);
+        $status = $props['status'] ?: filter_var($rq->getParam('s'), FILTER_SANITIZE_NUMBER_INT);
         $idus = $props['idus'] ?: Share::$UserProfile->exInfo->id;
 
 
@@ -39,15 +41,19 @@ class ResponsesEmpl extends Responses
             INNER JOIN user u ON u.id_user = r.id_user
             WHERE e.id_user = {$idus}";
         /** @var $res CDbCommand */
-        $vacData = Yii::app()->db->createCommand($sql);
-        $vacData = $vacData->queryRow();
+        $vacData = $db->createCommand($sql)->queryRow();
 
         // if response exists
         if( $vacData['id'] )
         {
-            $res = Yii::app()->db->createCommand()
-                ->update('vacation_stat', array( 'status' => $status, 'mdate' => date('Y-m-d H:i:s')
-                ), 'id = :id', array(':id' => $idres));
+            $res = $db->createCommand()
+                ->update(
+                  'vacation_stat',
+                  ['status'=>$status, 'mdate'=>date('Y-m-d H:i:s')],
+                  'id=:id',
+                  [':id'=>$idres]
+                );
+            ResponsesHistory::setData($idres, $idus, $vacData['status'], $status);
             $ret = array('error' => 0, 'res' => $res);
             $ret = array_merge($ret, $this->getVacancyResponsesCounts($vacData['id']));
 
@@ -65,47 +71,28 @@ class ResponsesEmpl extends Responses
             }
         
            
-            if(
-                ( !($vacData['status'] == 4) && $status == 4 )
-                ||
-                ( !($vacData['status'] == 5) && $status == 5 )
-            ) 
-            {
-                $this->approveVacAfterAction($vacData);
-
-            $idPromo = $vacData['promo'];
-            $sql = "SELECT r.id_user
-                FROM resume r
-                WHERE r.id = {$idPromo}";
-                $res = Yii::app()->db->createCommand($sql);
-                $id = $res->queryScalar();
-
-            $ids = $id;
-            $sql = "SELECT r.new_respond
-            FROM push_config r
-            WHERE r.id = {$ids}";
-            $res = Yii::app()->db->createCommand($sql)->queryScalar(); 
-            if($res == 2) {
-            $sql = "SELECT r.push
-            FROM user_push r
-            WHERE r.id = {$ids}";
-            $res = Yii::app()->db->createCommand($sql)->queryRow(); 
-
-            if($res) {
-                $type = "respond";
-                $api = new Api();
-                $api->getPush($res['push'], $type);
-            
-                    }
-                }
-            }
-        }
-        else
+        if(
+          ( $vacData['status']!=self::$STATUS_EMPLOYER_ACCEPT && $status==self::$STATUS_EMPLOYER_ACCEPT )
+          ||
+          ( $vacData['status']!=self::$STATUS_APPLICANT_ACCEPT && $status==self::$STATUS_APPLICANT_ACCEPT )
+        )
         {
-            $ret = array('error' => 1);
-        } // endif
+          $this->approveVacAfterAction($vacData);
+          $id_user = $db->createCommand()
+                      ->select('id_user')
+                      ->from('resume')
+                      ->where('id=:id',[':id'=>$vacData['promo']])
+                      ->queryScalar();
+          // push
+          PushChecker::setPushMess($id_user, 'respond');
+        }
+      }
+      else
+      {
+        $ret = ['error' => 1];
+      }
 
-        return $ret;
+      return $ret;
     }
 
 
@@ -1062,16 +1049,16 @@ class ResponsesEmpl extends Responses
             ];
 
         $arRes['items'] = Yii::app()->db->createCommand()
-                    ->select("vs.status, vs.isresponse, r.id_user")
-                    ->from('vacation_stat vs')
-                    ->leftjoin('resume r','r.id=vs.id_promo')
-                    ->where('vs.id_vac=:id',[':id'=>$id_vacancy])
-                    ->queryAll();
+          ->select("vs.*, r.id_user")
+          ->from('vacation_stat vs')
+          ->leftjoin('resume r','r.id=vs.id_promo')
+          ->where('vs.id_vac=:id',[':id'=>$id_vacancy])
+          ->queryAll();
 
         if(!count($arRes['items']))
             return $arRes;
 
-        $arId = array();
+        $arId = array(Im::$ADMIN_APPLICANT, Im::$ADMIN_EMPLOYER);
         foreach ($arRes['items'] as $v)
         {
             // утвержденные

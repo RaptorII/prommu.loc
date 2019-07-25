@@ -1,4 +1,4 @@
-<? 
+<?
   Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'vacancies/emp-list.css');
   Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'vacancies/emp-list.js', CClientScript::POS_END);
 
@@ -72,12 +72,13 @@
 							<a class='evl-vacancies__item-name' href='<?= MainConfig::$PAGE_VACANCY . DS . $v['id'] ?>'><?=$v['title']?></a>
 							<div class="evl-vacancies__item-info">
 								<div class="vac-item__info-item">
-									<span>Отклики: 
-										<a 
-											class="js-g-hashint"
-											title="Отклики детально"
-											href="<?=MainConfig::$PAGE_VACANCY . DS . $v['id'] . DS . MainConfig::$VACANCY_RESPONDED?>"
-											><?=$v['responded']?></a>
+									<span>Отклики: <b><?=$v[MainConfig::$VACANCY_RESPONDED]?></b></span>
+                  <span>Утвержденные:
+										<a
+                      class="js-g-hashint"
+                      title="Утвержденные детально"
+                      href="<?=MainConfig::$PAGE_VACANCY . DS . $v['id'] . DS . MainConfig::$VACANCY_APPROVED?>"
+                    ><?=$v[MainConfig::$VACANCY_APPROVED]?></a>
 									</span>
 									<span>Просмотры:
 										<a 
