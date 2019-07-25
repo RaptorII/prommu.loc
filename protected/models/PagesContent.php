@@ -200,23 +200,27 @@ class PagesContent extends CActiveRecord
 				['link'=>$params['link'], 'group_id'=>$group_id]
 			);
 			// Сохраняем в pages_content
-			$this->page_id = Yii::app()->db->lastInsertID;
-			$this->hidden = intval($params['hidden']);
-			$this->name = filter_var($params['name'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$this->anons = filter_var($params['anons'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$this->html = self::ClearHeaders($params['html']);
-			$this->img = filter_var($params['img'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$this->meta_title = filter_var($params['meta_title'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$this->meta_description = filter_var($params['meta_description'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$this->meta_keywords = filter_var($params['meta_keywords'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$this->pubdate = filter_var($params['pubdate'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-			$this->mdate = date('Y-m-d H:i:s');
-			$this->imganons = NULL;
-			$this->lang = 'ru';
-			$this->crdate = date('Y-m-d H:i:s');
-			$this->digest = 0;
-			$this->setIsNewRecord(true);
-			$this->save();
+			$page_id = Yii::app()->db->lastInsertID;
+			Yii::app()->db->createCommand()->insert(
+				'pages_content', 
+				[
+					'page_id' => $page_id,
+					'hidden' => intval($params['hidden']),
+					'name' => filter_var($params['name'],FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+					'anons' => filter_var($params['anons'],FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+					'html' => self::ClearHeaders($params['html']),
+					'img' => filter_var($params['img'],FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+					'meta_title' => filter_var($params['meta_title'],FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+					'meta_description' => filter_var($params['meta_description'],FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+					'meta_keywords' => filter_var($params['meta_keywords'],FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+					'pubdate' => filter_var($params['pubdate'],FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+					'mdate' => date('Y-m-d H:i:s'),
+					'imganons' => NULL,
+					'lang' => 'ru',
+					'crdate' => date('Y-m-d H:i:s'),
+					'digest' => 0
+				]
+			);
 		}
 		else // обновление контента
 		{

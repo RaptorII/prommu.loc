@@ -335,19 +335,11 @@ class SiteController extends Controller
      */
     public function actionPageDelete($id)
     {
-    	$this->checkAccess();
+      $this->checkAccess();
 
-			$model = new PagesContent;
-			$model->DeleteContent($id);
-			$type = Yii::app()->getRequest()->getParam('pagetype');
-			Yii::app()->user->setFlash('success', 'Данные успешно удалены');
-
-			if($type=='news')
-				$this->redirect('/admin/newspages');
-			elseif($type=='articles')
-				$this->redirect('/admin/articlespages');
-			else
-				$this->redirect('/admin/pages');
+      $model= new PagesContent;
+      $model->DeleteContent($id);
+      $this->render('pages/view',array('model'=>$model->getAllPages()));
     }
     
         // **** Управление пользователями (блокировка, смена пароля) ****
