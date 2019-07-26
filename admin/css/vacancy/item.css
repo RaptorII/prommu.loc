@@ -1,0 +1,61 @@
+.vacancy__loc ul{
+  list-style: none;
+  padding-left: 15px;
+}
+.vacancy__loc li{
+  border-bottom: 1px solid #c5c5c5;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+}
+.app_project__location{
+  border-top: 1px solid #c5c5c5;
+  padding-top: 5px;
+  margin-top: 5px;
+}
+.vacancy__loc li:last-child{ border: none }
+.vacancy__city td{ padding: 5px; }
+.vacancy__item h4{
+  margin: 30px 0 10px;
+  text-transform: uppercase;
+  font-size: 20px;
+}
+#panel_requirements + div,
+#panel_duties + div,
+#panel_conditions + div{
+  width: 100%!important;
+  min-height: 200px!important;
+}
+.nicEdit-main{ min-height: 198px!important; }
+.services__list{
+  margin: 10px -15px 30px;
+}
+.services__list a{
+  padding: 0 0 20px;
+  display: block;
+  text-align: center;
+  font-size: 18px;
+}
+.services__list img{
+  width: 100%;
+  border-radius: 50%;
+  padding-bottom: 10px;
+}
+/* */
+.history__list table{
+  width:100%;
+  font-size: 14px;
+}
+.history__list{ padding-bottom: 30px; }
+.history__list-response{ padding-bottom: 15px; }
+.history__list td{ padding-bottom: 5px; }
+.history__item-user{ width: 230px; }
+.history__item-user img{
+  width: 30px;
+  border-radius: 50%;
+}
+.history__item-user b{
+  display: inline-block;
+  padding: 0 5px;
+}
+.history__item-date{ width:120px; }
+.history__item-info span{ color: #b9b9b9 }
