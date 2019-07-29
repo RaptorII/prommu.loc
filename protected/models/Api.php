@@ -157,6 +157,8 @@ class Api
     $res['overall_rating']['positive'] = 30;
     $res['overall_rating']['negative'] = 10;
     
+    $res['photos'] = [];
+    
     $res['photos']['id'] = 234234243;
     $res['photos']['is_avatar'] = true;
     $res['photos']['url'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
@@ -166,6 +168,7 @@ class Api
         $res['overall_rating']['applicant_summary']['contact'] = 10;
         $res['overall_rating']['applicant_summary']['quality'] = 30;
         
+        $res['rating_applicant'] = [];
         $res['rating_applicant']['vacancy']['id'] = 234234243;
         $res['rating_applicant']['vacancy']['owner']['id'] = 12345;
         $res['rating_applicant']['vacancy']['owner']['first_name'] = "TEST";
@@ -218,6 +221,8 @@ class Api
         $res['overall_rating']['employer_summary']['clarity_requirements'] = 30;
         $res['overall_rating']['employer_summary']['clarity_tasks'] = 30;
         $res['overall_rating']['employer_summary']['contact'] = 30;
+        
+        $res['rating_employer'] = [];
         
         $res['rating_employer']['vacancy']['id'] = 234234243;
         $res['rating_employer']['vacancy']['owner']['id'] = 12345;
