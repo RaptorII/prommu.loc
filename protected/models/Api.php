@@ -4001,17 +4001,16 @@ public function vac(){
     {
         $error = '-101';
         try
-        {
-            $filter = Yii::app()->getRequest()->getParam('filter');
-            $filter = $filter ? get_object_vars(json_decode(base64_decode($filter))) : null;
+        {   
+            
             $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $limit = filter_var(Yii::app()->getRequest()->getParam('limit', MainConfig::$DEF_PAGE_API_LIMIT), FILTER_SANITIZE_NUMBER_INT);
-
+            
             $limit = $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
-            // проверка токена, получаем профиль
-            $this->checkAccessToken($accessToken);
-            // получаем данные страницы
+            list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
             $Vacancy = new Vacancy($this->Profile);
+            $data = $Vacancy->getVacancyOwner($idus);
+            
             // results per page
             $pages=new CPagination($Vacancy->getVacanciesCount());
             $pages->pageSize = $limit;
@@ -4019,7 +4018,8 @@ public function vac(){
 
 
             // отсеивать из ответа вакансии
-            $data = $Vacancy->getVacancies()['vacs'];
+            
+            
 
         } catch (Exception $e)
         {
