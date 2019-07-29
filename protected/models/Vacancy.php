@@ -619,63 +619,59 @@ class Vacancy extends ARModel
         $data['vacs'] = array();
         foreach ($res as $key => $val)
         {
-            if( !isset($data['vacs'][$val['id']])) $data['vacs'][$val['id']] = array('city' => array(), 'posts' => array()) ;
+            if( !isset($data)) $data= array('city' => array(), 'posts' => array()) ;
             
             
             ///attribs
-            $data['vacs'][$val['id']]['id'] = (int)$val['id'];
-            $data['vacs'][$val['id']]['title'] = $val['title'];
+            $data['id'] = (int)$val['id'];
+            $data['title'] = $val['title'];
             
              ///owner
-            $data['vacs'][$val['id']]['owner']['id'] = (int)$val['uid'];
-            $data['vacs'][$val['id']]['owner']['name'] = $val['coname'];
-            $data['vacs'][$val['id']]['owner']['logo'] = "https://files.prommu.com/users/".$val['uid']."/".$val['logo'].".jpg";
+            $data['owner']['id'] = (int)$val['uid'];
+            $data['owner']['name'] = $val['coname'];
+            $data['owner']['logo'] = "https://files.prommu.com/users/".$val['uid']."/".$val['logo'].".jpg";
             ///
             
             ///city
-            $data['vacs'][$val['id']]['city']['id'] = (int)$val['id_city'];
-            $data['vacs'][$val['id']]['city']['name'] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
+            $data['city']['id'] = (int)$val['id_city'];
+            $data['city']['name'] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
             ///
             
             ///posts
-            $data['vacs'][$val['id']]['posts']['id'] = (int)$val['id_attr'];
-            $data['vacs'][$val['id']]['posts']['name'] = $val['pname'];
+            $data['posts']['id'] = (int)$val['id_attr'];
+            $data['posts']['name'] = $val['pname'];
             ///
             
-            $data['vacs'][$val['id']]['created_at'] = $val['crdate'];
-            $data['vacs'][$val['id']]['removed_at'] = $val['remdate'];
+            $data['created_at'] = $val['crdate'];
+            $data['removed_at'] = $val['remdate'];
                 
            
-            $data['vacs'][$val['id']]['is_man'] = (boolean)$val['isman'];
-            $data['vacs'][$val['id']]['is_woman'] = (boolean)$val['iswoman'];
+            $data['is_man'] = (boolean)$val['isman'];
+            $data['is_woman'] = (boolean)$val['iswoman'];
             
            
             
             
-            $data['vacs'][$val['id']]['is_premium'] = (boolean)$val['ispremium'];
-            $data['vacs'][$val['id']]['is_active'] = 1;
-            $data['vacs'][$val['id']]['is_med'] = (boolean)$val['ismed'];
-            $data['vacs'][$val['id']]['is_hasavto'] = (boolean)$val['isavto'];
-            $data['vacs'][$val['id']]['is_temp'] =  (boolean)$val['istemp'];
-            $data['vacs'][$val['id']]['smart'] = (boolean)$val['smart'];
-            $data['vacs'][$val['id']]['card'] = (boolean)$val['card'];
-            $data['vacs'][$val['id']]['card_prommu'] = (boolean)$val['cardPrommu'];
+            $data['is_premium'] = (boolean)$val['ispremium'];
+            $data['is_active'] = 1;
+            $data['is_med'] = (boolean)$val['ismed'];
+            $data['is_hasavto'] = (boolean)$val['isavto'];
+            $data['is_temp'] =  (boolean)$val['istemp'];
+            $data['smart'] = (boolean)$val['smart'];
+            $data['card'] = (boolean)$val['card'];
+            $data['card_prommu'] = (boolean)$val['cardPrommu'];
             
             
-            $data['vacs'][$val['id']]['requirements'] = $val['requirements'];
-            $data['vacs'][$val['id']]['conditions'] = $val['conditions'];
-            $data['vacs'][$val['id']]['duties'] = $val['duties'];
+            $data['requirements'] = $val['requirements'];
+            $data['conditions'] = $val['conditions'];
+            $data['duties'] = $val['duties'];
             
             
-            $data['vacs'][$val['id']]['salary_hour'] = (float)$val['shour'];
-            $data['vacs'][$val['id']]['salary_week'] = (float)$val['sweek'];
-            $data['vacs'][$val['id']]['salary_month'] = (float)$val['smonth'];
-            $data['vacs'][$val['id']]['salary_visit'] = (float)$val['svisit'];
+            $data['salary_hour'] = (float)$val['shour'];
+            $data['salary_week'] = (float)$val['sweek'];
+            $data['salary_month'] = (float)$val['smonth'];
+            $data['salary_visit'] = (float)$val['svisit'];
             
-            //
-          
-            // if( $val['mid'] ) $data['vacs'][$val['id']]['metroes'][$val['mid']] = $val['mname'];
-            // $data['vacs'][$val['id']] = array_merge($data['vacs'][$val['id']], $val);
         
         } // end foreach
 
