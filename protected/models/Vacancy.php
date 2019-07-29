@@ -585,25 +585,25 @@ class Vacancy extends ARModel
 
         if( $inId )
         {
-        $sql = "SELECT e.id, e.ispremium, e.status, e.ismoder, e.title, e.requirements, e.duties, e.conditions, e.istemp,
-                   DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,e.agefrom, e.ageto, u.email,
+        $sql = "SELECT e.id, e.ispremium, e.title, e.requirements, e.duties, e.conditions, e.istemp,
+                   DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
                    e.shour,
                    e.sweek,
                    e.smonth,
                    e.svisit,
                    e.isman,
                    e.smart,
-                   e.self_employed,
+                   e.card,
+                   e.cardPrommu,
+                   e.ismed,
+                   e.isavto,
                    e.iswoman,
-                   e.repost,
-                   e.vk_link,
-                   e.fb_link,
-                   e.tl_link,
                    DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
+                   
               , c1.id_city, c2.name AS ciname, c1.citycu
-              , ea.id_attr, em.id_user, em.name
-              , d.name AS pname, d.postself
-              , ifnull(em.logo, '') logo
+              , ea.id_attr
+              , d.name AS pname
+              , em.id_user uid, em.name coname, ifnull(em.logo, '') logo
             FROM empl_vacations e 
             LEFT JOIN empl_city c1 ON c1.id_vac = e.id 
             LEFT JOIN city c2 ON c2.id_city = c1.id_city 
@@ -615,14 +615,74 @@ class Vacancy extends ARModel
             ORDER BY e.ispremium DESC, e.id DESC";
             $res = Yii::app()->db->createCommand($sql);
             $res = $res->queryAll();
-        //      foreach ($res as $key => $val)
-        // {
-        //     if( !isset($data['vac_data'][$val['id']]) ) $data['vac_data'][$val['id']] = array_merge($val, array('id' => $val['id']));
-        // } // end foreach
+        
+        $data['vacs'] = array();
+        foreach ($res as $key => $val)
+        {
+            if( !isset($data['vacs'][$val['id']])) $data['vacs'][$val['id']] = array('city' => array(), 'posts' => array()) ;
+            
+            
+            ///attribs
+            $data['vacs'][$val['id']]['id'] = (int)$val['id'];
+            $data['vacs'][$val['id']]['title'] = $val['title'];
+            
+             ///owner
+            $data['vacs'][$val['id']]['owner']['id'] = (int)$val['uid'];
+            $data['vacs'][$val['id']]['owner']['name'] = $val['coname'];
+            $data['vacs'][$val['id']]['owner']['logo'] = "https://files.prommu.com/users/".$val['uid']."/".$val['logo'].".jpg";
+            ///
+            
+            ///city
+            $data['vacs'][$val['id']]['city']['id'] = (int)$val['id_city'];
+            $data['vacs'][$val['id']]['city']['name'] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
+            ///
+            
+            ///posts
+            $data['vacs'][$val['id']]['posts']['id'] = (int)$val['id_attr'];
+            $data['vacs'][$val['id']]['posts']['name'] = $val['pname'];
+            ///
+            
+            $data['vacs'][$val['id']]['created_at'] = $val['crdate'];
+            $data['vacs'][$val['id']]['removed_at'] = $val['remdate'];
+                
+           
+            $data['vacs'][$val['id']]['is_man'] = (boolean)$val['isman'];
+            $data['vacs'][$val['id']]['is_woman'] = (boolean)$val['iswoman'];
+            
+           
+            
+            
+            $data['vacs'][$val['id']]['is_premium'] = (boolean)$val['ispremium'];
+            $data['vacs'][$val['id']]['is_active'] = 1;
+            $data['vacs'][$val['id']]['is_med'] = (boolean)$val['ismed'];
+            $data['vacs'][$val['id']]['is_hasavto'] = (boolean)$val['isavto'];
+            $data['vacs'][$val['id']]['is_temp'] =  (boolean)$val['istemp'];
+            $data['vacs'][$val['id']]['smart'] = (boolean)$val['smart'];
+            $data['vacs'][$val['id']]['card'] = (boolean)$val['card'];
+            $data['vacs'][$val['id']]['card_prommu'] = (boolean)$val['cardPrommu'];
+            
+            
+            $data['vacs'][$val['id']]['requirements'] = $val['requirements'];
+            $data['vacs'][$val['id']]['conditions'] = $val['conditions'];
+            $data['vacs'][$val['id']]['duties'] = $val['duties'];
+            
+            
+            $data['vacs'][$val['id']]['salary_hour'] = (float)$val['shour'];
+            $data['vacs'][$val['id']]['salary_week'] = (float)$val['sweek'];
+            $data['vacs'][$val['id']]['salary_month'] = (float)$val['smonth'];
+            $data['vacs'][$val['id']]['salary_visit'] = (float)$val['svisit'];
+            
+            //
+          
+            // if( $val['mid'] ) $data['vacs'][$val['id']]['metroes'][$val['mid']] = $val['mname'];
+            // $data['vacs'][$val['id']] = array_merge($data['vacs'][$val['id']], $val);
+        
+        } // end foreach
 
-        // }
-        // else {
-        //    $data=  array('error' => '1', 'message' => 'Error data');    
+        $i = 1;
+        $ret['vacs'] = array();
+        foreach ($data['vacs'] as $key => $val) { $ret['vacs'][$i] = $val; $i++; }
+        
         }
 
         return $res;
