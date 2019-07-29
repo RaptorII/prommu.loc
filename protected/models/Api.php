@@ -47,6 +47,13 @@ class Api
                 case 'empl_search' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getEmplSearch(); break;
                 case 'promo_search' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPromoSearch(); break;
                 
+                ///VACANCY
+                case 'vacancy_publish' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacancyPublish(); break;
+                case 'vacancy_edit' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacancyEdit(); break;
+                case 'vacancy_owner' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacancyOwner(); break;
+                case 'vacancy_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacancyGet(); break;
+                
+                ///PHOTO    
                 case 'set_avatar' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->avatarEdit(); break;
                 case 'set_photo' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->photoEdit(); break;
                 case 'del_avatar' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->avatarDelete(); break;
@@ -65,7 +72,7 @@ class Api
                 case 'set_vk' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->setCommAndRate(); break;
                 case 'rere' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rere(); break;
                 case 'vacancy_act' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacAct(); break;
-                case 'vacancy_pub' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacationPub(); break;
+                
                 case 'invite_set' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setInvite(); break;
                 
                 
@@ -3802,36 +3809,48 @@ public function vac(){
     }
 
 
-    public function vacationPub()
+    public function vacancyPublish()
     {
         $error = '-101';
         try
         {   
             $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $cloud = Yii::app()->getRequest()->getParam('cloud');
-            $cloud = $cloud ? get_object_vars(json_decode($cloud)) : null;
-            $title = $cloud['title'];
-            $agefrom = $cloud['agefrom'];
-            $ageto = $cloud['ageto'];
-            $agefrom = $cloud['agefrom'];
-            $isman = $cloud['isman'];
-            $iswoman = $cloud['iswoman'];
-            $istemp = $cloud['istemp'];
-            $shour = $cloud['shour'];
-            $ismed = $cloud['ismed'];
-            $isavto = $cloud['isavto'];
-            $remdate = $cloud['remdate'];
-            $istemp = $cloud['istemp'];
-            $posts = $cloud['posts'];
-            $city = $cloud['city'];
-            $bdate = $cloud['bdate'];
-            $edate = $cloud['edate'];
-            $idvac = $cloud['idvac'];
+            
+            
+            /// ATTRIB
+            $title = Yii::app()->getRequest()->getParam('title');
+            $posts = Yii::app()->getRequest()->getParam('posts');
+            $requirements = Yii::app()->getRequest()->getParam('requirements');
+            $duties = Yii::app()->getRequest()->getParam('duties');
+            $conditions = Yii::app()->getRequest()->getParam('conditions');
+            $exp = Yii::app()->getRequest()->getParam('exp');
+            
+            $agefrom = Yii::app()->getRequest()->getParam('agefrom');
+            $ageto = Yii::app()->getRequest()->getParam('ageto');
+            $smart = Yii::app()->getRequest()->getParam('smart');
+            $istemp = Yii::app()->getRequest()->getParam('istemp');
+            $ismed = Yii::app()->getRequest()->getParam('ismed');
+            $isavto = Yii::app()->getRequest()->getParam('isavto');
+            $card = Yii::app()->getRequest()->getParam('card');
+            $cardPrommu = Yii::app()->getRequest()->getParam('cardPrommu');
+            
+            ///PAY
+            
+            $shour = Yii::app()->getRequest()->getParam('shour');
+            $sweek = Yii::app()->getRequest()->getParam('sweek');
+            $smonth = Yii::app()->getRequest()->getParam('smonth');
+            $svisit = Yii::app()->getRequest()->getParam('svisit');
+            
+            ///CITY
+            
+            $cities = Yii::app()->getRequest()->getParam('city');
+            $bdate = Yii::app()->getRequest()->getParam('bdate');
+            $edate = Yii::app()->getRequest()->getParam('edate');
 
             list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
-            $figaro = compact('title','agefrom','ageto','isman', 'iswoman',  'istemp', 'shour', 'ismed', 'isavto', 'remdate','posts', 'city','bdate','edate','pub', 'idvac', 'idus');
+            $figaro = compact('title','agefrom','ageto','isman', 'iswoman',  'istemp', 'shour', 'ismed', 'isavto','posts', 'city','bdate','edate','pub', 'idus');
             $Vacancy = new Vacancy($profile);
-            $data = $Vacancy->saveVacData($figaro);   
+            $data = $Vacancy->saveVacpubData($figaro);   
             
            } catch (Exception $e)
         {
@@ -3946,7 +3965,7 @@ public function vac(){
     }
 
 
-    public function getVacancyData()
+    public function vacancyGet()
     {
         $error = '-101';
         try
@@ -3978,7 +3997,7 @@ public function vac(){
      * Получаем список моих вакансий
      * @return array
      */
-    public function getVacancyOwn()
+    public function vacancyOwner()
     {
         $error = '-101';
         try
