@@ -4002,14 +4002,14 @@ public function vac(){
         $error = '-101';
         try
         {   
-            
+            $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
             $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $limit = filter_var(Yii::app()->getRequest()->getParam('limit', MainConfig::$DEF_PAGE_API_LIMIT), FILTER_SANITIZE_NUMBER_INT);
             
             $limit = $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
             list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
             $Vacancy = new Vacancy($this->Profile);
-            $data = $Vacancy->getVacancyOwner($idus);
+            $data = $Vacancy->getVacancyOwner($id);
             
             // results per page
             $pages=new CPagination($Vacancy->getVacanciesCount());
