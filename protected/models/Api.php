@@ -166,7 +166,7 @@ class Api
         $res['overall_rating']['applicant_summary']['punctuality'] = 10;
         $res['overall_rating']['applicant_summary']['contact'] = 10;
         $res['overall_rating']['applicant_summary']['quality'] = 30;
-        
+        $res['rating_applicant'] = $res['rating_applicant'][0];
         $res['rating_applicant']['vacancy']['id'] = 234234243;
         $res['rating_applicant']['vacancy']['owner']['id'] = 12345;
         $res['rating_applicant']['vacancy']['owner']['first_name'] = "TEST";
