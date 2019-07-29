@@ -166,31 +166,31 @@ class Api
         $res['overall_rating']['applicant_summary']['punctuality'] = 10;
         $res['overall_rating']['applicant_summary']['contact'] = 10;
         $res['overall_rating']['applicant_summary']['quality'] = 30;
-        $res['rating_applicant'] = $res['rating_applicant'][0];
-        $res['rating_applicant']['vacancy']['id'] = 234234243;
-        $res['rating_applicant']['vacancy']['owner']['id'] = 12345;
-        $res['rating_applicant']['vacancy']['owner']['first_name'] = "TEST";
-        $res['rating_applicant']['vacancy']['owner']['last_name'] = "api";
-        $res['rating_applicant']['vacancy']['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
         
-        $res['rating_applicant']['vacancy']['city']['id'] = 1307;
-        $res['rating_applicant']['vacancy']['city']['name'] = "Москва";
+        $res['rating_applicant'][0]['vacancy']['id'] = 234234243;
+        $res['rating_applicant'][0]['vacancy']['owner']['id'] = 12345;
+        $res['rating_applicant'][0]['vacancy']['owner']['first_name'] = "TEST";
+        $res['rating_applicant'][0]['vacancy']['owner']['last_name'] = "api";
+        $res['rating_applicant'][0]['vacancy']['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
         
-        $res['rating_applicant']['vacancy']['title'] = "Промоутер";
-        $res['rating_applicant']['vacancy']['description'] = "Ты должен раздавать листовкy";
-        $res['rating_applicant']['vacancy']['is_active'] = true;
-        $res['rating_applicant']['vacancy']['is_premium'] = true;
-        $res['rating_applicant']['vacancy']['salary_hour'] = 13000;
-        $res['rating_applicant']['vacancy']['salary_week'] = 13000;
-        $res['rating_applicant']['vacancy']['salary_month'] = 130000;
-        $res['rating_applicant']['vacancy']['salary_visit'] = 000;
-        $res['rating_applicant']['vacancy']['created_at'] = "1995-09-07T10:40:52Z";
-        $res['rating_applicant']['vacancy']['updated_at'] = "1995-09-07T10:40:52Z";
+        $res['rating_applicant'][0]['vacancy']['city']['id'] = 1307;
+        $res['rating_applicant'][0]['vacancy']['city']['name'] = "Москва";
         
-        $res['rating_applicant']['rating'] = 1;
-        $res['rating_applicant']['punctuality'] = 1;
-        $res['rating_applicant']['contact'] = 1;
-        $res['rating_applicant']['quality'] = 1;
+        $res['rating_applicant'][0]['vacancy']['title'] = "Промоутер";
+        $res['rating_applicant'][0]['vacancy']['description'] = "Ты должен раздавать листовкy";
+        $res['rating_applicant'][0]['vacancy']['is_active'] = true;
+        $res['rating_applicant'][0]['vacancy']['is_premium'] = true;
+        $res['rating_applicant'][0]['vacancy']['salary_hour'] = 13000;
+        $res['rating_applicant'][0]['vacancy']['salary_week'] = 13000;
+        $res['rating_applicant'][0]['vacancy']['salary_month'] = 130000;
+        $res['rating_applicant'][0]['vacancy']['salary_visit'] = 000;
+        $res['rating_applicant'][0]['vacancy']['created_at'] = "1995-09-07T10:40:52Z";
+        $res['rating_applicant'][0]['vacancy']['updated_at'] = "1995-09-07T10:40:52Z";
+        
+        $res['rating_applicant'][0]['rating'] = 1;
+        $res['rating_applicant'][0]['punctuality'] = 1;
+        $res['rating_applicant'][0]['contact'] = 1;
+        $res['rating_applicant'][0]['quality'] = 1;
         
         $res['vacancies'][0]['id'] = 234234243;
         $res['vacancies'][0]['owner']['id'] = 12345;
@@ -220,35 +220,33 @@ class Api
         $res['overall_rating']['employer_summary']['clarity_tasks'] = 30;
         $res['overall_rating']['employer_summary']['contact'] = 30;
         
-        $res['rating_employer'] = [];
+        $res['rating_employer'][0]['vacancy']['id'] = 234234243;
+        $res['rating_employer'][0]['vacancy']['owner']['id'] = 12345;
+        $res['rating_employer'][0]['vacancy']['owner']['first_name'] = "TEST";
+        $res['rating_employer'][0]['vacancy']['owner']['last_name'] = "api";
+        $res['rating_employer'][0]['vacancy']['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
         
-        $res['rating_employer']['vacancy']['id'] = 234234243;
-        $res['rating_employer']['vacancy']['owner']['id'] = 12345;
-        $res['rating_employer']['vacancy']['owner']['first_name'] = "TEST";
-        $res['rating_employer']['vacancy']['owner']['last_name'] = "api";
-        $res['rating_employer']['vacancy']['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+        $res['rating_employer'][0]['vacancy']['city']['id'] = 1307;
+        $res['rating_employer'][0]['vacancy']['city']['name'] = "Москва";
         
-        $res['rating_employer']['vacancy']['city']['id'] = 1307;
-        $res['rating_employer']['vacancy']['city']['name'] = "Москва";
+        $res['rating_employer'][0]['vacancy']['title'] = "Промоутер";
+        $res['rating_employer'][0]['vacancy']['description'] = "Ты должен раздавать листовкy";
+        $res['rating_employer'][0]['vacancy']['is_active'] = true;
+        $res['rating_employer'][0]['vacancy']['is_premium'] = true;
+        $res['rating_employer'][0]['vacancy']['salary_hour'] = 13000;
+        $res['rating_employer'][0]['vacancy']['salary_week'] = 13000;
+        $res['rating_employer'][0]['vacancy']['salary_month'] = 130000;
+        $res['rating_employer'][0]['vacancy']['salary_visit'] = 000;
+        $res['rating_employer'][0]['vacancy']['created_at'] = "1995-09-07T10:40:52Z";
+        $res['rating_employer'][0]['vacancy']['updated_at'] = "1995-09-07T10:40:52Z";
         
-        $res['rating_employer']['vacancy']['title'] = "Промоутер";
-        $res['rating_employer']['vacancy']['description'] = "Ты должен раздавать листовкy";
-        $res['rating_employer']['vacancy']['is_active'] = true;
-        $res['rating_employer']['vacancy']['is_premium'] = true;
-        $res['rating_employer']['vacancy']['salary_hour'] = 13000;
-        $res['rating_employer']['vacancy']['salary_week'] = 13000;
-        $res['rating_employer']['vacancy']['salary_month'] = 130000;
-        $res['rating_employer']['vacancy']['salary_visit'] = 000;
-        $res['rating_employer']['vacancy']['created_at'] = "1995-09-07T10:40:52Z";
-        $res['rating_employer']['vacancy']['updated_at'] = "1995-09-07T10:40:52Z";
-        
-        $res['rating_employer']['rating'] = 1;
-        $res['rating_employer']['payment_deadlines'] = 1;
-        $res['rating_employer']['payment_deadlines'] = 1;
-        $res['rating_employer']['payment_amount'] = 1;
-        $res['rating_employer']['clarity_requirements'] = 1;
-        $res['rating_employer']['clarity_tasks'] = 1;
-        $res['rating_employer']['contact'] = 1;
+        $res['rating_employer'][0]['rating'] = 1;
+        $res['rating_employer'][0]['payment_deadlines'] = 1;
+        $res['rating_employer'][0]['payment_deadlines'] = 1;
+        $res['rating_employer'][0]['payment_amount'] = 1;
+        $res['rating_employer'][0]['clarity_requirements'] = 1;
+        $res['rating_employer'][0]['clarity_tasks'] = 1;
+        $res['rating_employer'][0]['contact'] = 1;
     
     }
     
