@@ -489,7 +489,7 @@ class SearchVac extends Model
         // города
         if( Yii::app()->getRequest()->getParam('cities') || $inProps['filter']['city'] ) $data['cities'] = $inProps['filter']['city'] ?: Yii::app()->getRequest()->getParam('cities');
         // все должности
-        if( !Yii::app()->getRequest()->getParam('poall') || $inProps['filter']['posts'] ) $data['posts'] = $inProps['filter']['posts'] ?: Yii::app()->getRequest()->getParam('post');
+        if( !Yii::app()->getRequest()->getParam('poall') || $inProps['filter']['post'] ) $data['posts'] = $inProps['filter']['post'] ?: Yii::app()->getRequest()->getParam('post');
          if( Yii::app()->getRequest()->getParam('smart') || $inProps['filter']['smart']  ) $data['smart'] = $inProps['filter']['smart'] ?: Yii::app()->getRequest()->getParam('smart');
         if( Yii::app()->getRequest()->getParam('pcard') || $inProps['filter']['cardPrommu']  ) $data['cardPrommu'] = $inProps['filter']['cardPrommu'] ?: Yii::app()->getRequest()->getParam('pcard');
         if( Yii::app()->getRequest()->getParam('bcard') || $inProps['filter']['card']  ) $data['card'] = $inProps['filter']['card'] ?: Yii::app()->getRequest()->getParam('bcard');
@@ -562,8 +562,8 @@ class SearchVac extends Model
         // posts filter
         if( !empty($data['posts']) )
         {
-            // foreach ($data['posts'] as $key => &$val) { $val = $key; } // end foreach;
-            $filterPost = ' ea.id_attr IN ('.join(',', $data['posts']).')';
+          $arPostId = array_keys($data['posts']);
+          $filterPost = ' ea.id_attr IN ('.join(',', $arPostId).')';
         }
         
         

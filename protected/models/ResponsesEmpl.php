@@ -616,26 +616,16 @@ class ResponsesEmpl extends Responses
                 'id = :id',
                 [':id' => $vacData['sid']]
             );
+            // фиксируем в истории
+            ResponsesHistory::setData(
+              $vacData['sid'],
+              Share::$UserProfile->exInfo->id,
+              $vacData['status'],
+              $status
+            );
             // пуш уведомление для соискателя
-            $ids = $vacData['iduspromo'];
-            $sql = "SELECT r.new_rate
-                        FROM push_config r
-                        WHERE r.id = {$ids}";
-            $res = $db->createCommand($sql)->queryScalar(); 
-            if($res == 2)
-            {
-                $sql = "SELECT r.push
-                            FROM user_push r
-                            WHERE r.id = {$ids}";
-                $res = $db->createCommand($sql)->queryRow(); 
+            PushChecker::setPushMess($vacData['iduspromo'],'rate');
 
-                if($res)
-                {
-                    $api = new Api();
-                    $api->getPush($res['push'], "rate");
-                
-                }
-            }
             $message = ($message
                 ? " Ваш отзыв отправлен на модерацию, после проверки администратором он будет отображаться у соискателя"
                 : "");

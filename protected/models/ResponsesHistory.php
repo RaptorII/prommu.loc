@@ -9,14 +9,19 @@
 class ResponsesHistory
 {
   public static $table = 'vacation_stat_history';
-
-  public static function setData($response, $id_user, $statusBefore, $statusAfter)
+  /**
+   * @param $id_response
+   * @param $id_user
+   * @param $statusBefore
+   * @param $statusAfter
+   */
+  public static function setData($id_response, $id_user, $statusBefore, $statusAfter)
   {
     Yii::app()->db->createCommand()
       ->insert(
         self::$table,
         [
-          'id_response' => $response,
+          'id_response' => $id_response,
           'id_user' => $id_user,
           'status_before' => $statusBefore,
           'status_after' => $statusAfter,
@@ -29,7 +34,7 @@ class ResponsesHistory
    */
   public function getAllData($arResponses)
   {
-    $arRes = ['items'=>[]];
+    $arRes = ['items'=>[],'cnt'=>0];
     if(!count($arResponses))
       return $arRes;
 
@@ -54,6 +59,7 @@ class ResponsesHistory
     foreach ($query as $v)
     {
       $arRes['items'][$v['id_response']]['items'][$v['id']] = $v;
+      $arRes['cnt']++;
     }
 
     return $arRes;
@@ -94,11 +100,11 @@ class ResponsesHistory
     {
       switch ($status)
       {
-        case 0: $result='Работодатель пригласил'; break;
+        case 0: $result='Соискатель отозвался'; break;
         case 1: $result='Работодатель просмотрел(отложил)'; break;
         case 2: $result='Соискатель просмотрел'; break;
         case 3: $result='Соискатель отклонил'; break;
-        case 4: $result='Соискатель утвердил'; break;
+        case 4: $result='Работодатель пригласил'; break;
         case 5: $result='Утверждено обоими'; break;
         case 6: $result='Проект завершен(ожидание рейтинга)'; break;
         case 7: $result='Работодатель выставил рейтинг(отзыв)'; break;
@@ -115,7 +121,7 @@ class ResponsesHistory
         case 1: $result='Работодатель просмотрел(отложил)'; break;
         case 2: $result='Соискатель просмотрел'; break;
         case 3: $result='Работодатель отклонил'; break;
-        case 4: $result='Работодатель утвердил'; break;
+        case 4: $result='Работодатель пригласил'; break;
         case 5: $result='Утверждено обоими'; break;
         case 6: $result='Проект завершен(ожидание рейтинга)'; break;
         case 7: $result='Работодатель выставил рейтинг(отзыв)'; break;

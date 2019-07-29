@@ -51,9 +51,10 @@ class ResponsesApplic extends Responses
               'status' => $status,
               'mdate' => date('Y-m-d H:i:s')
             ],
-            'id = :id',
+            'id=:id',
             [':id' => $idres]
           );
+        ResponsesHistory::setData($idres, $idus, $vacData['status'], $status);
 
         $applicantName = Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname;
         empty(trim($applicantName)) && $applicantName='пользователь';
@@ -89,24 +90,8 @@ class ResponsesApplic extends Responses
             ]
           );
 
-          $sql = "SELECT r.new_respond
-              FROM push_config r
-              WHERE r.id=" . $vacData['id_user'];
-          $res = Yii::app()->db->createCommand($sql)->queryScalar();
+          PushChecker::setPushMess($vacData['id_user'],'respond');
 
-          if($res == 2)
-          {
-            $sql = "SELECT r.push
-            FROM user_push r
-            WHERE r.id=" . $vacData['id_user'];
-            $push = Yii::app()->db->createCommand($sql)->queryRow();
-
-            if($push)
-            {
-              $api = new Api();
-              $api->getPush($push, "respond");
-            }
-          }
           return ['error' => 0, 'message' => 'Вы подтвердили участие на предложенной вакансии'];
         }
         return ['error' => 0];
@@ -699,24 +684,15 @@ class ResponsesApplic extends Responses
         'id = :id',
         [':id' => $vacData['sid']]
       );
+      // фиксируем в истории
+      ResponsesHistory::setData(
+        $vacData['sid'],
+        Share::$UserProfile->exInfo->id,
+        $vacData['status'],
+        $status
+      );
       // пуш уведомление для работодателя
-      $sql = "SELECT r.new_rate
-                        FROM push_config r
-                        WHERE r.id=" . $vacData['idusempl'];
-      $res = $db->createCommand($sql)->queryScalar();
-      if($res == 2)
-      {
-        $sql = "SELECT r.push
-                            FROM user_push r
-                            WHERE r.id=" . $vacData['idusempl'];
-        $push = $db->createCommand($sql)->queryScalar();
-
-        if($push)
-        {
-          $api = new Api();
-          $api->getPush($push, "rate");
-        }
-      }
+      PushChecker::setPushMess($vacData['idusempl'],'rate');
 
       return [
         'saved' => 1,
@@ -757,14 +733,25 @@ class ResponsesApplic extends Responses
             }
             else
             {
-                $res = Yii::app()->db->createCommand()
-                    ->insert('vacation_stat', array(
-                        'id_promo' => $idPromo,
-                        'id_vac' => $id,
-                        'isresponse' => 2,
-                        'status' => 4,
-                        'date' => date('Y-m-d H:i:s'),
-                ));
+              Yii::app()->db->createCommand()
+                ->insert(
+                  'vacation_stat',
+                  [
+                    'id_promo' => $idPromo,
+                    'id_vac' => $id,
+                    'isresponse' => Responses::$STATE_INVITE,
+                    'status' => Responses::$STATUS_EMPLOYER_ACCEPT,
+                    'date' => date('Y-m-d H:i:s'),
+                  ]
+                );
+
+              $lastId = Yii::app()->db->getLastInsertID();
+              ResponsesHistory::setData(
+                $lastId,
+                Share::$UserProfile->exInfo->id,
+                100,
+                Responses::$STATUS_EMPLOYER_ACCEPT
+              );
                 
                 $sql = "SELECT ru.email, r.firstname, r.lastname, e.title
                 FROM vacation_stat s
@@ -824,29 +811,12 @@ class ResponsesApplic extends Responses
                 $content = preg_replace($arPre, $arRes, $content);
                 Share::sendmail($Q1['email'], "Prommu.com. Приглашение на вакансию", $content);
 
-        $sql = "SELECT e.id_user id
+                $sql = "SELECT e.id_user
                         FROM resume e
-                        WHERE e.id = {$idPromo} ";
-        $res = Yii::app()->db->createCommand($sql);
-        $resx = $res->queryRow();
-        $ids = $resx['id'];
-        $sql = "SELECT r.new_invite
-            FROM push_config r
-            WHERE r.id = {$ids}";
-            $res = Yii::app()->db->createCommand($sql)->queryScalar(); 
-            if($res == 2) {
-            $sql = "SELECT r.push
-            FROM user_push r
-            WHERE r.id = {$ids}";
-            $res = Yii::app()->db->createCommand($sql)->queryRow(); 
+                        WHERE e.id = {$idPromo}";
+                $id_user = Yii::app()->db->createCommand($sql)->queryScalar();
+                PushChecker::setPushMess($id_user, 'respond');
 
-            if($res) {
-                $type = "respond";
-                $api = new Api();
-                $api->getPush($res['push'], $type);
-            
-                    }
-                }
                 return ['error' => 100, 'message' => 'Приглашение отправлено пользователю, ожидайте ответа'];
             } // endif
         }

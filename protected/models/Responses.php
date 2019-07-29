@@ -48,6 +48,9 @@ abstract class Responses extends Model
      */
     abstract public function getStatus($isResponse, $status);
 
+    public static $STATE_RESPONSE = 1; // isresponse - отклик
+    public static $STATE_INVITE = 2; // isresponse - приглашение
+
     public static $STATUS_NEW = 0; // новая заявка
     public static $STATUS_VIEW = 1; // просмотренная(отложеная)
     //public static $STATUS_??? = 2; // ???

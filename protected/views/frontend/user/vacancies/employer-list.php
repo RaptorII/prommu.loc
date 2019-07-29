@@ -95,10 +95,17 @@
 										<? elseif($v['left_days_cnt']==0): ?>Дата окончания: <b>Сегодня</b><? endif; ?>
 									</div>
 									<? if($v['need_rating']): ?>
-										<div class="vac-item__info-item">
+										<div class="vac-item__info-item vac-item__info-item-btns">
 											<a href="<?=MainConfig::$PAGE_REVIEWS?>" class="prmu-btn">
 												<span>Оценить персонал</span>
 											</a>
+                      <span
+                        class="prmu-btn send_to_archive"
+                        data-approved="<?=MainConfig::$PAGE_VACANCY . DS . $v['id'] . DS . MainConfig::$VACANCY_APPROVED?>"
+                        data-reviews="<?=MainConfig::$PAGE_REVIEWS?>"
+                      >
+                        <span>В архив</span>
+                      </span>
 										</div>
 									<? endif; ?>
 								<? endif; ?>

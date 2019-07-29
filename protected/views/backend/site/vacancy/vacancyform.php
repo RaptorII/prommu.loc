@@ -442,8 +442,8 @@
           // История
           ?>
           <div role="tabpanel" class="tab-pane fade" id="tab_history">
-            <h4>История заявок</h4>
-            <? if(count($viData['responses_history']['items'])): ?>
+            <h4>История заявок (<?=$viData['responses_history']['cnt']?>)</h4>
+            <? if($viData['responses_history']['cnt']): ?>
               <div class="history__list">
                 <? foreach($viData['responses_history']['items'] as $r): ?>
                   <div class="history__list-response"><b>Заявка №<?=$r['id']?></b></div>
