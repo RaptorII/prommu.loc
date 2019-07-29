@@ -616,7 +616,6 @@ class Vacancy extends ARModel
             $res = Yii::app()->db->createCommand($sql);
             $res = $res->queryAll();
         
-        $data['vacs'] = array();
         foreach ($res as $key => $val)
         {
             if( !isset($data)) $data= array('city' => array(), 'posts' => array()) ;
