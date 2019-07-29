@@ -683,7 +683,7 @@ class Vacancy extends ARModel
         $ret['vacs'] = array();
         foreach ($data['vacs'] as $key => $val) { $ret['vacs'][$i] = $val; $i++; }
         
-        return $data;
+        return $ret;
         }
 
         return $res;
