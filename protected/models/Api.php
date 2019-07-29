@@ -158,16 +158,15 @@ class Api
     $res['overall_rating']['negative'] = 10;
     
     
-    $res['photos'][]['id'] = 234234243;
-    $res['photos'][]['is_avatar'] = true;
-    $res['photos'][]['url'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+    $res['photos'][0]['id'] = 234234243;
+    $res['photos'][0]['is_avatar'] = true;
+    $res['photos'][0]['url'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
     
     if($profile->type == 2){
         $res['overall_rating']['applicant_summary']['punctuality'] = 10;
         $res['overall_rating']['applicant_summary']['contact'] = 10;
         $res['overall_rating']['applicant_summary']['quality'] = 30;
         
-        $res['rating_applicant'] = [];
         $res['rating_applicant']['vacancy']['id'] = 234234243;
         $res['rating_applicant']['vacancy']['owner']['id'] = 12345;
         $res['rating_applicant']['vacancy']['owner']['first_name'] = "TEST";
