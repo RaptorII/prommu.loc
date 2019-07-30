@@ -133,6 +133,17 @@ echo '<div role="tabpanel" class="tab-pane fade active in" id="tab_profile">';
             . '</div>';
     echo '</div></div><br/>';
 
+    if(!empty($data['attr']['self_employed']))
+    {
+        echo '<h4>НАЛОГОВЫЙ СТАТУС</h4>';
+        echo '<div class="row"><div class="col-xs-12">';
+            echo '<div class="control-group">'
+                . '<span class="glyphicon glyphicon-check"></span>'
+                . ' <label class="control-label">Самозанятый</label>'
+                . '</div>';
+        echo '</div></div><br/>';
+    }
+
 
     echo '<h4>КОНТАКТНАЯ ИНФОРМАЦИЯ</h4>';
     echo '<div class="control-group small-bl">'

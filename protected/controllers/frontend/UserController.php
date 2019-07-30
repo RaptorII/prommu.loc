@@ -794,26 +794,33 @@ class UserController extends AppController
 
     public function actionResponses()
     {
-         // no profile for guest
-        in_array(Share::$UserProfile->type, [2,3]) || $this->redirect(MainConfig::$PAGE_LOGIN);
+      // no profile for guest
+      Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
+
         $tab = Yii::app()->getRequest()->getParam('tab');
         $activeFilterLink = $tab == 'invites' ? 1 : 0;
         $vac = explode("&", $_GET['vacancy']);
         $coun = count($vac);
-        if(Share::$UserProfile->type == 3) {
-            for($i = 0; $i < $coun; $i ++) {
+
+        if(Share::isEmployer())
+        {
+            for($i = 0; $i < $coun; $i ++){
                 Yii::app()->db->createCommand()
                 ->update('vacation_stat', array(
                 'id_jobs'=> 1),
                     'id_vac=:id_vac', array(':id_vac'=>$vac[$i]));
             }
-        } elseif(Share::$UserProfile->type == 2) {
+        }
+        elseif(Share::isApplicant())
+        {
             for($i = 0; $i < $coun; $i ++) {
                 Yii::app()->db->createCommand()
                 ->update('vacation_stat', array(
                 'isend'=> 1),
                     'id_vac=:id_vac', array(':id_vac'=>$vac[$i]));
             }
+
+          UserNotifications::resetApplicantCnt();
         }
         $Responses = Share::$UserProfile->type == 2 ? new ResponsesApplic() : new ResponsesEmpl();
 
@@ -1827,7 +1834,7 @@ class UserController extends AppController
             {
                 $inn = filter_var(Yii::app()->getRequest()->getParam('inn'), FILTER_SANITIZE_NUMBER_INT);
                 Share::$UserProfile->setUserAttribute('self_employed',$inn);
-                Yii::app()->user->setFlash('prommu_flash','Статус сохранен, Вы молодец!');
+                Yii::app()->user->setFlash('prommu_flash','Спасибо что подтвердили статус. Теперь Ваш профиль стал более конкурентным среди других Соискателей');
                 $this->redirect(MainConfig::$PAGE_PROFILE);
             }
             $model = new PagesContent;
