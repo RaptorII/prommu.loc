@@ -645,6 +645,7 @@ class ResponsesEmpl extends Responses
             );
             // пуш уведомление для соискателя
             PushChecker::setPushMess($vacData['iduspromo'],'rate');
+
             // добавляем уведомление для Р
             UserNotifications::setDataByVac($vacData['iduspromo'],$id,UserNotifications::$APP_NEW_RATING);
 

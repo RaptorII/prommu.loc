@@ -38,5 +38,4 @@ $(function(){
 			? $('.personal-acc__menu').addClass('fixed')
 			: $('.personal-acc__menu').removeClass('fixed');
 	}
-
 });

@@ -54,6 +54,7 @@ class ResponsesApplic extends Responses
             'id=:id',
             [':id' => $idres]
           );
+
         // фиксируем в истории
         ResponsesHistory::setData($idres, $idus, $vacData['status'], $status);
 
@@ -104,6 +105,11 @@ class ResponsesApplic extends Responses
           );
           PushChecker::setPushMess($vacData['id_user'],'respond');
 
+<<<<<<< HEAD
+=======
+          PushChecker::setPushMess($vacData['id_user'],'respond');
+
+>>>>>>> conflict emp-list.js
           return ['error' => 0, 'message' => 'Вы подтвердили участие на предложенной вакансии'];
         }
         return ['error' => 0];
@@ -720,8 +726,11 @@ class ResponsesApplic extends Responses
       );
       // пуш уведомление для работодателя
       PushChecker::setPushMess($vacData['idusempl'],'rate');
+<<<<<<< HEAD
       // добавляем уведомление для Р
       UserNotifications::setDataByVac($vacData['idusempl'],$id,UserNotifications::$EMP_NEW_RATING);
+=======
+>>>>>>> conflict emp-list.js
 
       return [
         'saved' => 1,
@@ -780,8 +789,13 @@ class ResponsesApplic extends Responses
                 Share::$UserProfile->exInfo->id,
                 100,
                 Responses::$STATUS_EMPLOYER_ACCEPT
+<<<<<<< HEAD
               ); // фиксируем в истории
 
+=======
+              );
+                
+>>>>>>> conflict emp-list.js
                 $sql = "SELECT ru.email, r.firstname, r.lastname, e.title
                 FROM vacation_stat s
                 INNER JOIN empl_vacations e ON e.id = s.id_vac
@@ -845,12 +859,15 @@ class ResponsesApplic extends Responses
                         WHERE e.id = {$idPromo}";
                 $id_user = Yii::app()->db->createCommand($sql)->queryScalar();
                 PushChecker::setPushMess($id_user, 'respond');
+<<<<<<< HEAD
                 // уведомление С в ЛК
                 UserNotifications::setDataByVac(
                   $id_user,
                   $id,
                   UserNotifications::$APP_INVITATIONS
                 );
+=======
+>>>>>>> conflict emp-list.js
 
                 return ['error' => 100, 'message' => 'Приглашение отправлено пользователю, ожидайте ответа'];
             } // endif
