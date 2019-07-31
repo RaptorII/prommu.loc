@@ -70,7 +70,7 @@ class SearchPromo extends Model
             $data['promo'][$val['id']]['city']['id'] = (int)$res[$val['id_user']]['city']['id'];
             $data['promo'][$val['id']]['city']['name'] = $res[$val['id_user']]['city']['name'];
             
-            $data['promo'][$val['id']]['metro'] = $res[$val['id_user']]['metro'];
+            $data['promo'][$val['id']]['metro'] = $res[$val['id_user']]['metroes'];
             ///
             
             $data['promo'][$val['id']]['post'] = $res[$val['id_user']]['post'];
