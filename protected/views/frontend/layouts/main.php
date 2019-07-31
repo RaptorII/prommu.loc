@@ -201,7 +201,7 @@
 	                                            <div class="small-menu__item<?=($curUrl==MainConfig::$PAGE_VACPUB ? ' current' : '')?>">
 	                                              <a href="<?=MainConfig::$PAGE_VACPUB?>" class="addvac">
 	                                                <span class="small-menu__circle">
-                                                        <span class="icn-plus-prommu color-white"></span>
+                                                        <span class="small-menu__icon icn-plus-prommu color-white"></span>
                                                     </span>
 	                                              	<span class="small-menu__name">ДОБАВИТЬ ВАКАНСИЮ</span>
 	                                              </a>
@@ -216,7 +216,9 @@
                                             <? if(Share::isApplicant()): ?>
                                                 <div class="small-menu__item<?=($curUrl==MainConfig::$PAGE_APPLICANT_VACS_LIST ? ' current' : '')?>">
                                                   <a href="<?=MainConfig::$PAGE_APPLICANT_VACS_LIST?>" class="addvac">
-                                                    <span class="small-menu__circle"><i></i></span>
+                                                    <span class="small-menu__circle">
+                                                        <span class="small-menu__icon icn-prj-prommu color-white"></span>
+                                                    </span>
                                                     <span class="small-menu__name">ПРОЕКТЫ</span>
                                                   </a>
                                                 </div>
@@ -225,7 +227,7 @@
                                                 <a href="<?=$link?>">
                                                     <span class="small-menu__circle">
                                                         <b class="small-menu__cnt"><?=$arNotif['cnt']?></b>
-                                                        <i></i>
+                                                        <span class="small-menu__icon icn-group-plus-prommu color-white"></span>
                                                     </span>
                                                     <span class="small-menu__name">ВАКАНСИИ</span>
                                                 </a>
@@ -248,14 +250,6 @@
                                                      <? endforeach; ?>
                                                    <? endforeach; ?>
                                                  <? endif; ?>
-
-
-
-
-
-
-
-
 
 
 	                                                	<? if(Share::$UserProfile->type==3): ?>
@@ -373,7 +367,7 @@
                                             <a href="<?=$link?>" class="small-menu__item rate<?=($curUrl==$link ? ' current' : '')?>" id="sm-rate-cnt">
                                                 <span class="small-menu__circle">
                                                     <b class="small-menu__cnt">0</b>
-                                                    <i></i>
+                                                    <span class="small-menu__icon icn-trend-prommu color-white"></span>
                                                 </span>
                                                 <span class="small-menu__name">ОТЗЫВЫ И РЕЙТИНГИ</span>
                                             </a>
@@ -381,13 +375,15 @@
                                             <a href="<?=$link?>" class="small-menu__item notice<?=(strpos($curUrl,$link)!==false ? ' current' : '')?>" id="sm-notice-cnt">
                                                 <span class="small-menu__circle">
                                                     <b class="small-menu__cnt">0</b>
-                                                    <i></i>
+                                                    <span class="small-menu__icon icn-envelope-prommu color-white"></span>
                                                 </span>
                                                 <span class="small-menu__name">СООБЩЕНИЯ</span>
                                             </a>
                                             <?php $link = MainConfig::$PAGE_SETTINGS ?>
                                             <a href="<?=$link?>" class="small-menu__item settings<?=($curUrl==$link ? ' current' : '')?>">
-                                                <span class="small-menu__circle"><i></i></span>
+                                                <span class="small-menu__circle">
+                                                    <span class="small-menu__icon icn-cogs-double-prommu color-white"></span>
+                                                </span>
                                                 <span class="small-menu__name">НАСТРОЙКИ</span>
                                             </a>
                                         </div>
