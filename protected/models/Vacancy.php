@@ -807,7 +807,7 @@ class Vacancy extends ARModel
                   , ea.id_attr
                   , d.name AS pname, d.postself
                   , m.id mid, m.name mname
-                  , em.id eid, em.name coname, em.logo
+                  , em.id eid, em.name coname, em.logo, em.ismoder user_moder
                   , l.id lid, l.npp lnpp, l.name lname, l.addr, l.id_city lidcity, l.id_metros
                   , DATE_FORMAT(t.bdate, '%d.%m.%Y') tbdate
                   , DATE_FORMAT(t.edate, '%d.%m.%Y') tedate

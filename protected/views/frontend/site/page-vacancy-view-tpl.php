@@ -124,36 +124,39 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                     <input type="hidden" name="block" value='vacpage'>
                     <input type="hidden" name="save" value='1'>
                     <div class="col-xs-12">
-                        <div class="erv__header">
-                            <? if ($viData['vac']['cannot-publish']==true): // не заполнены обязательные поля ?>
-                                <p class="erv__header-warning">Необходимо заполнить все обязательные поля *</p>
+                      <div class="erv__header">
+                        <? if ($viData['vac']['cannot-publish']==true): // не заполнены обязательные поля ?>
+                          <p class="erv__header-warning">Необходимо заполнить все обязательные поля *</p>
+                        <? else: ?>
+                          <? if($isCompleteVac): // Завершенные вакансии без рейтинга ?>
+                            <a href='<?=MainConfig::$PAGE_VACPUB . "?copy_id={$viData['vac']['id']}" ?>'
+                               class="erv__header-btn prmu-btn"><span>Дублировать вакансию</span></a>
+                            <a href='<?=MainConfig::$PAGE_REVIEWS?>' class="erv__header-btn prmu-btn">
+                              <span>Оценить персонал</span>
+                            </a>
+                          <? else: ?>
+                            <? if(!$viData['vac']['user_moder'] && !$viData['vac']['status']): ?>
+                              <span class="erv__not-publ" style="max-width:initial">Для публикации вакансий необходимо пройти модерацию</span>
+                            <? elseif (!$viData['vac']['status']): ?>
+                              <span class="erv__not-publ">Вакансия не опубликована</span>
+                              <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}" ?>'
+                                 class="erv__header-btn prmu-btn"><span>Опубликовать вакансию</span></a>
+                              <a href='<?=MainConfig::$PAGE_VACPUB . "?copy_id={$viData['vac']['id']}" ?>'
+                                 class="erv__header-btn prmu-btn"><span>Дублировать вакансию</span></a>
                             <? else: ?>
-<!--                                --><?// if($isArchiveVac): // архивная вакансия ?>
-                                    <a href='<?=MainConfig::$PAGE_VACPUB . "?copy_id={$viData['vac']['id']}" ?>'
-                                       class="erv__header-btn prmu-btn"><span>Дублировать вакансию</span></a>
-<!--                                --><?// else: // вакансии зи раздела "Активные" ?>
-                                    <? if($isCompleteVac): // Завершенные вакансии без рейтинга ?>
-                                        <a href='<?=MainConfig::$PAGE_REVIEWS?>' class="erv__header-btn prmu-btn">
-                                            <span>Оценить персонал</span>
-                                        </a>
-                                    <? else: ?>
-                                        <? if (!$viData['vac']['status']): ?>
-                                            <span class="erv__not-publ">Вакансия не опубликована</span>
-                                            <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}" ?>'
-                                               class="erv__header-btn prmu-btn"><span>Опубликовать вакансию</span></a>
-                                        <? else: ?>
-                                            <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}&d=1" ?>'
-                                               class="erv__header-btn prmu-btn"><span>Снять с публикации</span></a>
-                                        <? endif; ?>
-                                        <? if ($isModerVac): ?>
-                                            <div class="evl__to-project-btn prmu-btn" data-id="<?=$viData['vac']['id']?>">
-                                                <span>Перевести в проект</span>
-                                            </div>
-                                        <? endif; ?>
-                                    <? endif; ?>
-<!--                                --><?// endif; ?>
+                              <a href='/<?= MainConfig::$PAGE_VACACTIVATE . "?id={$viData['vac']['id']}&d=1" ?>'
+                                 class="erv__header-btn prmu-btn"><span>Снять с публикации</span></a>
+                              <a href='<?=MainConfig::$PAGE_VACPUB . "?copy_id={$viData['vac']['id']}" ?>'
+                                 class="erv__header-btn prmu-btn"><span>Дублировать вакансию</span></a>
                             <? endif; ?>
-                        </div>
+                            <? if ($isModerVac): ?>
+                              <div class="evl__to-project-btn prmu-btn" data-id="<?=$viData['vac']['id']?>">
+                                <span>Перевести в проект</span>
+                              </div>
+                            <? endif; ?>
+                          <? endif; ?>
+                        <? endif; ?>
+                      </div>
                     </div>
                     <div class='col-xs-12 col-sm-4 col-lg-3'>
                         <img src="<?=Share::getPhoto($viData['vac']['idus'], Share::$UserProfile->type, $viData['vac']['logo'])?>"
