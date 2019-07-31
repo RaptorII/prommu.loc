@@ -497,9 +497,15 @@
                                     <!--noindex-->
                                     <p class="footer__social-text">Присоединяйтесь к нам: </p>
                                     <div class="social_icons">
-                                        <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icon fb js-g-hashint" title="Facebook" target="_blank"><b></b><i></i></a>
-                                        <a href="<?=MainConfig::$PROMMU_VKONTAKTE?>" rel="nofollow" class="icon vk js-g-hashint" title="Vkontakte" target="_blank"><b></b><i></i></a>
-                                        <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" rel="nofollow" class="icon tl js-g-hashint" title="Telegram" target="_blank"><b></b><i></i></a>
+                                        <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icon icon55 js-g-hashint" title="Facebook" target="_blank">
+                                            <span class="icn-facebook-icon-prommu color-white"></span>
+                                        </a>
+                                        <a href="<?=MainConfig::$PROMMU_VKONTAKTE?>" rel="nofollow" class="icon icon55 js-g-hashint" title="Vkontakte" target="_blank">
+                                            <span class="icn-vk-icon-prommu color-white"></span>
+                                        </a>
+                                        <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" rel="nofollow" class="icon icon55 js-g-hashint" title="Telegram" target="_blank">
+                                            <span class="icn-telegram-icon color-white"></span>
+                                        </a>
                                     </div>
                                     <!--/noindex-->
                                 </div>
