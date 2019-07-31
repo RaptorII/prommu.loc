@@ -161,6 +161,11 @@
     <? $this->renderPartial('../layouts/header_partial/' . $SubdomainCache->id); // data for every site ?>
 </head>
 <body class="<?= $this->ViewModel->getViewData('addBodyClass') ?>">
+<?
+//UserNotifications::setVacancyDateNotificetions();
+
+?>
+
     <? $this->renderPartial('../layouts/body_partial/' . $SubdomainCache->id); // data for every site ?>
         <div class="hint-box"><b class="tri"></b><span></span></div>
         <div id="DiLoading"><img src="<?= MainConfig::$IMG_LOADING2 ?>" alt=""></div>
@@ -192,17 +197,6 @@
                                 <?php else: ?>
                                     <div class="small-menu">
                                         <div class="small-menu__list">
-                                            <?php
-                                                $link = MainConfig::$PAGE_RESPONSES;
-                                                if(Share::$UserProfile->type==3){
-                                                	$notif = (new Employer())->getNotifications();
-                                                }
-                                                else{
-                                                	$notif = (new Promo())->getNotifications();
-                                                }
-                                                $vacClass = $curUrl==$link ? ' current' : '';
-                                                $vacClass .= $notif['cnt'] ? ' active' : '';
-                                            ?>
                                             <? if(Share::isEmployer()): ?>
 	                                            <div class="small-menu__item<?=($curUrl==MainConfig::$PAGE_VACPUB ? ' current' : '')?>">
 	                                              <a href="<?=MainConfig::$PAGE_VACPUB?>" class="addvac">
@@ -211,6 +205,12 @@
 	                                              </a>
 	                                            </div>
                                           	<? endif; ?>
+                                            <?
+                                              $arNotif = UserNotifications::getNotifications();
+                                              $link = MainConfig::$PAGE_RESPONSES;
+                                              $vacClass = $curUrl==$link ? ' current' : '';
+                                              $vacClass .= $arNotif['cnt'] ? ' active' : '';
+                                            ?>
                                             <? if(Share::isApplicant()): ?>
                                                 <div class="small-menu__item<?=($curUrl==MainConfig::$PAGE_APPLICANT_VACS_LIST ? ' current' : '')?>">
                                                   <a href="<?=MainConfig::$PAGE_APPLICANT_VACS_LIST?>" class="addvac">
@@ -222,16 +222,41 @@
                                             <div class="small-menu__item vacancy<?=$vacClass?>" id="sm-vac-cnt">
                                                 <a href="<?=$link?>">
                                                     <span class="small-menu__circle">
-                                                        <b class="small-menu__cnt"><?=$notif['cnt']?></b>
+                                                        <b class="small-menu__cnt"><?=$arNotif['cnt']?></b>
                                                         <i></i>
                                                     </span>
                                                     <span class="small-menu__name">ВАКАНСИИ</span>
                                                 </a>
                                                <ul class="small-menu__submenu">
+                                                 <? if(!$arNotif['cnt']): ?>
+                                                   <li>Нет уведомлений</li>
+                                                 <? else: ?>
+                                                   <? foreach ($arNotif['items'] as $key => $n): ?>
+                                                     <li class="small-menu__submenu-item">
+                                                       <span class="active">
+                                                          <span><?=$n['name']?></span><i><?=$n['cnt']?></i>
+                                                       </span>
+                                                     </li>
+                                                     <? foreach ($n['items'] as $v): ?>
+                                                       <li>
+                                                         <a href="<?=$v['link']?>" class="active">
+                                                           <span><?=$v['vacancy']?></span><i><?=$v['cnt']?></i>
+                                                         </a>
+                                                       </li>
+                                                     <? endforeach; ?>
+                                                   <? endforeach; ?>
+                                                 <? endif; ?>
+
+
+
+
+
+
+
+
+
+
 	                                                	<? if(Share::$UserProfile->type==3): ?>
-	                                                    <? if(!$notif['cnt']): ?>
-	                                                    	<li>Нет уведомлений</li>
-		                                                	<? else: ?>
 		                                                		<? if($notif['countInvite']): ?>
 	                                              					<li class="small-menu__submenu-item">
 	                                              						<span class="active">
@@ -314,11 +339,7 @@
 	                                              						</li>
 	                                              					<? endforeach; ?>
 		                                                    <? endif; ?>
-	                                              			<? endif; ?>
                                                     <? else: ?>
-                                                        <? if(!$notif['cnt']): ?>
-                                                        	<li>Нет уведомлений</li>
-	                                                	<? else: ?>
 	                                                		<?php if($notif['countResponse']): ?>
 	                                                			<? $link =  "/user/responses/?tab=invites&vacancy=".$notif['vacancyResponse'];?>
 	                                                        	<li><a href="<?=$link?>" class="active"><span>Приглашение на вакансию Работодателем</span><i><?=$notif['countResponse']?></i></a></li>
@@ -343,7 +364,6 @@
 	                                                        	<? $link =  "/user/responses/?vacancy=".$notif['vacancyStart'];?>
 	                                                        	<li><a href="<?=$link?>" class="active"><span>Старт работы по утвержденной вакансии сегодня</span><i><?=$notif['dateStart']?></i></a></li>
 	                                                        <?php endif; ?>
-	                                                    <?php endif; ?>   
                                                     <?php endif; ?>
                                                 </ul>
                                             </div>

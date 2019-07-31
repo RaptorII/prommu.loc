@@ -32,7 +32,7 @@ class ResponsesEmpl extends Responses
 
 
         // проверяем, что вакансия пренадлежит этому пользователю
-        $sql = "SELECT e.id, e.title, e.id_user, s.id_promo promo, r.firstname, r.lastname
+        $sql = "SELECT e.id, e.title, e.id_user, s.id_promo promo, r.firstname, r.lastname, r.id_user app_user
                , u.email
                , s.id sid, s.status
             FROM empl_vacations e
@@ -53,11 +53,30 @@ class ResponsesEmpl extends Responses
                   'id=:id',
                   [':id'=>$idres]
                 );
+            // фиксируем в истории
             ResponsesHistory::setData($idres, $idus, $vacData['status'], $status);
+            // отправляем уведомление для С
+            if($status==Responses::$STATUS_REJECT)
+            {
+              UserNotifications::setDataByVac(
+                $vacData['app_user'],
+                $vacData['id'],
+                UserNotifications::$APP_REFUSALS
+              );
+            }
+            if($status==Responses::$STATUS_APPLICANT_ACCEPT)
+            {
+              UserNotifications::setDataByVac(
+                $vacData['app_user'],
+                $vacData['id'],
+                UserNotifications::$APP_CONFIRMATIONS
+              );
+            }
             $ret = array('error' => 0, 'res' => $res);
             $ret = array_merge($ret, $this->getVacancyResponsesCounts($vacData['id']));
 
-            if(!($vacData['status'] == 3) && $status == 3) {
+            if(!($vacData['status'] == Responses::$STATUS_REJECT) && $status == Responses::$STATUS_REJECT)
+            {
                 $content = file_get_contents(Yii::app()->basePath . "/views/mails/app/emp-failure.html");
                 $content = str_replace('#APPNAME#', $vacData['firstname'].' '.$vacData['lastname'], $content);
                 $content = str_replace('#EMPCOMPANY#',  Share::$UserProfile->exInfo->name, $content);

@@ -721,16 +721,25 @@ class UserController extends AppController
             
             if($id>0)
             {
-                if(!$model->hasAppAccess($id, $id_resume))
-                    throw new CHttpException(404, 'Error');
+              if(!$model->hasAppAccess($id, $id_resume))
+                throw new CHttpException(404, 'Error');
 
-                $view = $this->ViewModel->pageVacancyItem;
-                $data['viData'] = $model->getAppVacancy($id, $id_resume);
-                $title = $data['viData']['item']['title'];
-                $this->setBreadcrumbsEx(
-                    ['Мои проекты', $link],
-                    [$title, $link . DS . $id ]
-                );
+              $view = $this->ViewModel->pageVacancyItem;
+              // сбрасываем уведомления
+              UserNotifications::resetCounters(
+                [
+                  UserNotifications::$APP_START_VACANCY,
+                  UserNotifications::$APP_START_VACANCY_TOMORROW,
+                ],
+                $id
+              );
+
+              $data['viData'] = $model->getAppVacancy($id, $id_resume);
+              $title = $data['viData']['item']['title'];
+              $this->setBreadcrumbsEx(
+                ['Мои проекты', $link],
+                [$title, $link . DS . $id ]
+              );
             }
             else
             {
@@ -819,8 +828,12 @@ class UserController extends AppController
                 'isend'=> 1),
                     'id_vac=:id_vac', array(':id_vac'=>$vac[$i]));
             }
-
-          UserNotifications::resetApplicantCnt();
+          // очищаем счетчик
+          UserNotifications::resetCounters([
+            UserNotifications::$APP_INVITATIONS,
+            UserNotifications::$APP_CONFIRMATIONS,
+            UserNotifications::$APP_REFUSALS
+          ]);
         }
         $Responses = Share::$UserProfile->type == 2 ? new ResponsesApplic() : new ResponsesEmpl();
 

@@ -86,6 +86,7 @@ class Cron
                     $termostat = new Termostat;
                     $termostat->sendEmailNotifications(); // рассылка аналитики за месяц 1го числа каждого месяца
                     Im::sendEmailNotifications(); // рассылке уведомлений о наличии непрочитанных сообщений в чатах за прошедший день
+                    UserNotifications::setVacancyDateNotificetions(); // установка и сброс уведомлений для пользователя в ЛК по вакансиям
                 break;
             case '12':
                     $model = new Yandex();

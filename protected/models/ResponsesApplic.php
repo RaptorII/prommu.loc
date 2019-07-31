@@ -54,6 +54,7 @@ class ResponsesApplic extends Responses
             'id=:id',
             [':id' => $idres]
           );
+        // фиксируем в истории
         ResponsesHistory::setData($idres, $idus, $vacData['status'], $status);
 
         $applicantName = Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname;
@@ -61,7 +62,7 @@ class ResponsesApplic extends Responses
         $employerName = $vacData['name'];
         empty(trim($employerName)) && $employerName='пользователь';
 
-        if($status == 3)
+        if($status==Responses::$STATUS_REJECT)
         {
           Mailing::set(
             22,
@@ -74,10 +75,16 @@ class ResponsesApplic extends Responses
               'title_vacancy' => $vacData['title']
             ]
           );
+          // уведомление для Р в ЛК
+          UserNotifications::setDataByVac(
+            $vacData['id_user'],
+            $vacData['id'],
+            UserNotifications::$EMP_REFUSALS
+          );
 
           return ['error' => 0, 'message' => 'Вы отклонили приглашение на вакансию'];
         }
-        if($status == 5)
+        if($status==Responses::$STATUS_APPLICANT_ACCEPT)
         {
           Mailing::set(
             23,
@@ -89,7 +96,12 @@ class ResponsesApplic extends Responses
               'title_vacancy' => $vacData['title']
             ]
           );
-
+          // уведомление для Р в ЛК
+          UserNotifications::setDataByVac(
+            $vacData['id_user'],
+            $vacData['id'],
+            UserNotifications::$EMP_APPROVAL
+          );
           PushChecker::setPushMess($vacData['id_user'],'respond');
 
           return ['error' => 0, 'message' => 'Вы подтвердили участие на предложенной вакансии'];
@@ -367,7 +379,15 @@ class ResponsesApplic extends Responses
               'id=:id',
               [':id' => $query['id']]
             );
+          // фиксируем в истории
           ResponsesHistory::setData($query['id'], $Profile->id, $query['status'], 0);
+          // добавляем уведомление Р
+          UserNotifications::setDataByVac(
+            $arVacancy['id_user'],
+            $arVacancy['id'],
+            UserNotifications::$EMP_RESPONSES
+          );
+
           $arRes['error'] = 0;
           $arRes['message'] = $arMess['success_repeat'];
         }
@@ -457,7 +477,14 @@ class ResponsesApplic extends Responses
                 ]
             );
         $lastId = Yii::app()->db->getLastInsertID();
+        // фиксируем в истории
         ResponsesHistory::setData($lastId, $Profile->id, 100, 0);
+        // добавляем уведомление Р
+        UserNotifications::setDataByVac(
+          $arVacancy['id_user'],
+          $arVacancy['id'],
+          UserNotifications::$EMP_RESPONSES
+        );
         $arRes['message'] = $arMess['success'];
         // Находим email работодателя
         $email = $db->createCommand()
@@ -751,8 +778,8 @@ class ResponsesApplic extends Responses
                 Share::$UserProfile->exInfo->id,
                 100,
                 Responses::$STATUS_EMPLOYER_ACCEPT
-              );
-                
+              ); // фиксируем в истории
+
                 $sql = "SELECT ru.email, r.firstname, r.lastname, e.title
                 FROM vacation_stat s
                 INNER JOIN empl_vacations e ON e.id = s.id_vac
@@ -816,6 +843,12 @@ class ResponsesApplic extends Responses
                         WHERE e.id = {$idPromo}";
                 $id_user = Yii::app()->db->createCommand($sql)->queryScalar();
                 PushChecker::setPushMess($id_user, 'respond');
+                // уведомление С в ЛК
+                UserNotifications::setDataByVac(
+                  $id_user,
+                  $id,
+                  UserNotifications::$APP_INVITATIONS
+                );
 
                 return ['error' => 100, 'message' => 'Приглашение отправлено пользователю, ожидайте ответа'];
             } // endif

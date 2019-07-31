@@ -476,6 +476,24 @@ class SiteController extends AppController
               if($isOwner)
               {
                 $data = $model->getInfo($id, false);
+                // сбрасываем счетчики при наличии
+                $arCounters = [];
+                if($section==MainConfig::$VACANCY_RESPONDED)
+                {
+                  $arCounters[] = UserNotifications::$EMP_RESPONSES;
+                }
+                if($section==MainConfig::$VACANCY_APPROVED)
+                {
+                  $arCounters[] = UserNotifications::$EMP_APPROVAL;
+                }
+                if($section==MainConfig::$VACANCY_REFUSED)
+                {
+                  $arCounters[] = UserNotifications::$EMP_REFUSALS;
+                }
+                if(count($arCounters))
+                {
+                  UserNotifications::resetCounters($arCounters, $id);
+                }
                 $view = 'vacancy/index';
               }
               else
@@ -487,7 +505,12 @@ class SiteController extends AppController
 
                 if($isOwner) // для владельца проверка на отношение вакансии к архиву
                 {
-                    $data['archive'] = $model->getEmpVacanciesIdList($id_user)['archive'];
+                  // сбрасываем счетчики при наличии
+                  UserNotifications::resetCounters(
+                    [UserNotifications::$EMP_START_VACANCY,UserNotifications::$EMP_END_VACANCY],
+                    $id
+                  );
+                  $data['archive'] = $model->getEmpVacanciesIdList($id_user)['archive'];
                 }
                 if($data['error']==1 || $data['vac']['in_archive'])
                     throw new CHttpException(404, 'Error'); 
