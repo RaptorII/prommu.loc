@@ -610,7 +610,7 @@ class Promo extends ARModel
                     ->queryAll();
 
         for ( $i=0, $n=sizeof($sqlM); $i<$n; $i++ ) {
-            !empty($sqlM[$i]['name']){
+            if(!empty($sqlM[$i]['name'])){
                 $arP[$sqlM[$i]['id_user']]['metroes']['id'] = $sqlM[$i]['id'];
                 $arP[$sqlM[$i]['id_user']]['metroes']['name'] = $sqlM[$i]['name'];   
             }
