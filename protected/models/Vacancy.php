@@ -251,7 +251,7 @@ class Vacancy extends ARModel
             foreach ($arT as $id_vac => $arV)
             {
                 $arItem = reset($arV['items']);
-                $arLink = array();
+                $arLink = $arApp = array();
                 $message = "Завершение вакансии №" . $id_vac . " “" . $arItem['title'] 
                     . "” сегодня.<br>Просим оценить ваше сотрудничество с ";
                 $title = 'Завершение проекта';
@@ -278,6 +278,7 @@ class Vacancy extends ARModel
                             $title,
                             $message . 'работодателем <a href="' . $linkRate . '">' . $arUsers[$v['id_emp']]['name'] . '</a>'
                         );
+                    $arApp[] = $v['id_app'];
                 }
                 Mailing::set( // письмо работодателю
                     14,
@@ -295,22 +296,23 @@ class Vacancy extends ARModel
                         $title,
                         $message . 'соискателями: <br>' . implode('<br>',$arLink)
                     );
+              // добавляем уведомления с предложением выставить рейтинг для С
+              if(count($arApp))
+              {
+                UserNotifications::setDataByVac($arApp,$id_vac,UserNotifications::$APP_SET_RATING);
+              }
+              // добавляем уведомления с предложением выставить рейтинг для Р
+              UserNotifications::setDataByVac(
+                $arItem['id_emp'],
+                $id_vac,
+                UserNotifications::$EMP_SET_RATING,
+                count($arApp)
+              );
             }
             if(count($arId))
             {
               // фиксируем в истории
-              $arInsert = [];
-              foreach($query as $v)
-              {
-                $arInsert[] = [
-                  'id_response' => $v['id'],
-                  'id_user' => Im::$ADMIN_APPLICANT,
-                  'status_before' => Responses::$STATUS_APPLICANT_ACCEPT,
-                  'status_after' => Responses::$STATUS_BEFORE_RATING,
-                  'date' => time()
-                ];
-              }
-              Share::multipleInsert([ResponsesHistory::$table => $arInsert]);
+              ResponsesHistory::setDataAfterVacEnd($query);
               // делаем заявки завершенными
               $db->createCommand()->update(
                     'vacation_stat',
@@ -989,6 +991,8 @@ class Vacancy extends ARModel
         $filter = ['filter' => $arData['filter']];
         $model = new SearchPromo();
         $arAllId = $model->searchPromosCount($filter);
+        // подходящим юзерам отправляем сообщение в ЛК
+        UserNotifications::setNewVacanciesNotifications($arAllId,$id);
         $pages = new CPagination(count($arAllId));
         $pages->pageSize = 20;
         $pages->applyLimit($model);

@@ -14,6 +14,7 @@ class ResponsesHistory
    * @param $id_user
    * @param $statusBefore
    * @param $statusAfter
+   * Фиксируем историю по одному событию, по одной заявке
    */
   public static function setData($id_response, $id_user, $statusBefore, $statusAfter)
   {
@@ -30,7 +31,31 @@ class ResponsesHistory
       );
   }
   /**
-   * @param $arResponses - array (ID from vacanction_stat)
+   * @param $arResponses
+   * @return bool
+   * Меняем историю при завершении вакансий для каждой заявки
+   */
+  public static function setDataAfterVacEnd($arResponses)
+  {
+    if(!count($arResponses))
+      return false;
+
+    $arInsert = [];
+    foreach($arResponses as $v)
+    {
+      $arInsert[] = [
+        'id_response' => $v['id'],
+        'id_user' => Im::$ADMIN_APPLICANT,
+        'status_before' => Responses::$STATUS_APPLICANT_ACCEPT,
+        'status_after' => Responses::$STATUS_BEFORE_RATING,
+        'date' => time()
+      ];
+    }
+    Share::multipleInsert([self::$table => $arInsert]);
+  }
+  /**
+   * @param $arResponses - array (ID from vacation_stat)
+   * Получаем историю по массиву заявок
    */
   public function getAllData($arResponses)
   {
@@ -71,6 +96,7 @@ class ResponsesHistory
    * @param $response1 - vacation_stat => isresponse
    * @param $response2 - vacation_stat => isresponse
    * @return string
+   * Метод, чтобы лучше выводить историю в админке
    */
   public static function getState($status1, $status2, $response1, $response2)
   {
@@ -92,6 +118,7 @@ class ResponsesHistory
    * @param $status - vacation_stat => status
    * @param $response - vacation_stat => isresponse
    * @return string
+   * Вспомогательный метод для админки
    */
   public static function getStatusState($status, $response)
   {

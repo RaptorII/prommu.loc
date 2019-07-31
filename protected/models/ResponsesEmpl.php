@@ -635,6 +635,7 @@ class ResponsesEmpl extends Responses
                 'id = :id',
                 [':id' => $vacData['sid']]
             );
+
             // фиксируем в истории
             ResponsesHistory::setData(
               $vacData['sid'],
@@ -644,6 +645,8 @@ class ResponsesEmpl extends Responses
             );
             // пуш уведомление для соискателя
             PushChecker::setPushMess($vacData['iduspromo'],'rate');
+            // добавляем уведомление для Р
+            UserNotifications::setDataByVac($vacData['iduspromo'],$id,UserNotifications::$APP_NEW_RATING);
 
             $message = ($message
                 ? " Ваш отзыв отправлен на модерацию, после проверки администратором он будет отображаться у соискателя"

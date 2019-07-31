@@ -720,6 +720,8 @@ class ResponsesApplic extends Responses
       );
       // пуш уведомление для работодателя
       PushChecker::setPushMess($vacData['idusempl'],'rate');
+      // добавляем уведомление для Р
+      UserNotifications::setDataByVac($vacData['idusempl'],$id,UserNotifications::$EMP_NEW_RATING);
 
       return [
         'saved' => 1,

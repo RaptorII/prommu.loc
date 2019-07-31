@@ -15,6 +15,8 @@ class UserNotifications
   public static $EMP_REFUSALS = 'emp_refusals';
   public static $EMP_START_VACANCY = 'emp_start_today';
   public static $EMP_END_VACANCY = 'emp_end_today';
+  public static $EMP_SET_RATING = 'emp_set_rating';
+  public static $EMP_NEW_RATING = 'emp_new_rating';
 
   public static $APP_INVITATIONS = 'app_invitations';
   public static $APP_NEW_VACANCIES = 'app_new_vacancies';
@@ -22,6 +24,8 @@ class UserNotifications
   public static $APP_REFUSALS = 'app_refusals';
   public static $APP_START_VACANCY_TOMORROW = 'app_start_tomorrow';
   public static $APP_START_VACANCY = 'app_start_today';
+  public static $APP_SET_RATING = 'app_set_rating';
+  public static $APP_NEW_RATING = 'app_new_rating';
   /**
    * @return array
    * Получаем счетчик уведомлений со ссылками для авторизованных пользователей в шапке сайта
@@ -52,15 +56,19 @@ class UserNotifications
         self::buildArray($arRes, $v, self::$EMP_REFUSALS);
         self::buildArray($arRes, $v, self::$EMP_START_VACANCY);
         self::buildArray($arRes, $v, self::$EMP_END_VACANCY);
+        self::buildArray($arRes, $v, self::$EMP_SET_RATING);
+        self::buildArray($arRes, $v, self::$EMP_NEW_RATING);
       }
       if (Share::isApplicant())
       {
         self::buildArray($arRes, $v, self::$APP_INVITATIONS);
-        //self::buildArray($arRes, $v, self::$APP_NEW_VACANCIES);
+        self::buildArray($arRes, $v, self::$APP_NEW_VACANCIES);
         self::buildArray($arRes, $v, self::$APP_CONFIRMATIONS);
         self::buildArray($arRes, $v, self::$APP_REFUSALS);
         self::buildArray($arRes, $v, self::$APP_START_VACANCY_TOMORROW);
         self::buildArray($arRes, $v, self::$APP_START_VACANCY);
+        self::buildArray($arRes, $v, self::$APP_SET_RATING);
+        self::buildArray($arRes, $v, self::$APP_NEW_RATING);
       }
     }
 
@@ -81,13 +89,17 @@ class UserNotifications
       self::$EMP_REFUSALS => 'Отказ в участии на вакансию',
       self::$EMP_START_VACANCY => 'Начало проекта сегодня',
       self::$EMP_END_VACANCY => 'Завершение проекта сегодня',
+      self::$EMP_SET_RATING => 'Оцените соискателя',
+      self::$EMP_NEW_RATING => 'Соискатель Вас оценил',
 
       self::$APP_INVITATIONS => 'Приглашение на вакансию Работодателем',
       self::$APP_NEW_VACANCIES => 'Появление новой вакансии',
       self::$APP_CONFIRMATIONS => 'Подтверждение заявки на участие в вакансии',
       self::$APP_REFUSALS => 'Отказ в участии на вакансию',
       self::$APP_START_VACANCY_TOMORROW => 'Старт работы по утвержденной вакансии за 1 день',
-      self::$APP_START_VACANCY => 'Старт работы по утвержденной вакансии сегодня'
+      self::$APP_START_VACANCY => 'Старт работы по утвержденной вакансии сегодня',
+      self::$APP_SET_RATING => 'Оцените Работодателя',
+      self::$APP_NEW_RATING => 'Работодатель Вас оценил',
     ];
 
     $l = MainConfig::$PAGE_VACANCY . DS . $item['id_vacancy'];
@@ -97,88 +109,137 @@ class UserNotifications
       self::$EMP_REFUSALS => $l . DS . MainConfig::$VACANCY_REFUSED,
       self::$EMP_START_VACANCY => $l,
       self::$EMP_END_VACANCY => $l,
+      self::$EMP_SET_RATING => $l,
+      self::$EMP_NEW_RATING => $l,
 
       self::$APP_INVITATIONS => Yii::app()->createUrl(MainConfig::$PAGE_RESPONSES,['tab'=>'invites']),
-      //self::$APP_NEW_VACANCIES => Yii::app()->createUrl(MainConfig::$PAGE_RESPONSES,['tab'=>'invites']),
+      self::$APP_NEW_VACANCIES => $l,
       self::$APP_CONFIRMATIONS => Yii::app()->createUrl(MainConfig::$PAGE_RESPONSES),
       self::$APP_REFUSALS => Yii::app()->createUrl(MainConfig::$PAGE_RESPONSES),
       self::$APP_START_VACANCY_TOMORROW => MainConfig::$PAGE_APPLICANT_VACS_LIST . DS . $item['id_vacancy'],
-      self::$APP_START_VACANCY => MainConfig::$PAGE_APPLICANT_VACS_LIST . DS . $item['id_vacancy']
+      self::$APP_START_VACANCY => MainConfig::$PAGE_APPLICANT_VACS_LIST . DS . $item['id_vacancy'],
+      self::$APP_SET_RATING => MainConfig::$PAGE_APPLICANT_VACS_LIST . DS . $item['id_vacancy'],
+      self::$APP_NEW_RATING => MainConfig::$PAGE_APPLICANT_VACS_LIST . DS . $item['id_vacancy'],
     ];
 
     if($item[$field]>0) // Подтверждение заявки на участие в вакансии
     {
       $arRes['items'][$field]['name'] = $arNames[$field];
       !isset($arRes['items'][$field]['cnt']) && $arRes['items'][$field]['cnt']=0;
-      $arRes['items'][$field]['cnt'] =+ $item[$field];
+      $arRes['items'][$field]['cnt'] += $item[$field];
       $arRes['items'][$field]['items'][] = [
         'vacancy' => $item['title'],
         'link' => $arLinks[$field],
         'cnt' => $item[$field]
       ];
-      $arRes['cnt'] =+ $item[$field];
+      $arRes['cnt'] += $item[$field];
     }
   }
+
   /**
-   * @param $arParams
-   * @return mixed
-   * Универсальный метод по выбору одной строки из БД по заданным параметрам
+   * @param $id_user
+   * @param $id_vacancy
+   * @return CDbDataReader|mixed
+   * Выборка данных по пользователю(пользователям) и вакансии
    */
-  private static function getData($arParams)
+  private static function getData($id_user, $id_vacancy)
   {
-    $conditions = $params = [];
-    $cnt=1;
-
-    foreach ($arParams as $key => $v)
+    if(is_array($id_user))
     {
-      $conditions[] = $key . '=:key' . $cnt;
-      $params[':key' . $cnt] = $v;
-      $cnt++;
+      return Yii::app()->db->createCommand()
+        ->select('*')
+        ->from(self::$table)
+        ->where(
+          [
+            'and',
+            'id_vacancy=:id_vacancy',
+            ['in','id_user',$id_user]
+          ],
+          [':id_vacancy'=>$id_vacancy]
+        )
+        ->queryAll();
     }
-
-    $conditions = implode(' and ', $conditions);
-
-    return Yii::app()->db->createCommand()
-      ->select('*')
-      ->from(self::$table)
-      ->where($conditions, $params)
-      ->queryRow();
+    else
+    {
+      return Yii::app()->db->createCommand()
+        ->select('*')
+        ->from(self::$table)
+        ->where(
+          'id_user=:id_user and id_vacancy=:id_vacancy',
+          [':id_user'=>$id_user,':id_vacancy'=>$id_vacancy]
+        )
+        ->queryRow();
+    }
   }
   /**
    * @param $id_user
    * @param $id_vacancy
    * @param $cnt
-   * @return mixed
-   * Установка уведомления для пользователя
-   * (используется в основном в методах действий пользователя оппонента по вакансии)
+   * @return int
+   * Установка уведомления для пользователя(пользователей) по вакансии
+   * (используется в основном в методах действий пользователя оппонента по вакансии или при завершении вакансии)
    */
-  public static function setDataByVac($id_user, $id_vacancy, $cnt)
+  public static function setDataByVac($id_user, $id_vacancy, $cnt, $value=0)
   {
-    $data = self::getData(['id_user'=>$id_user, 'id_vacancy'=>$id_vacancy]);
+    $data = self::getData($id_user, $id_vacancy);
 
-    if(isset($data['id']))
+    if(is_array($id_user)) // массив пользователей
     {
-      $data[$cnt]++;
-      $result = Yii::app()->db->createCommand()
-        ->update(
-          self::$table,
-          $data,
-          'id=:id',
-          [':id'=>$data['id']]
-        );
-    }
-    else
-    {
-      $result = Yii::app()->db->createCommand()
-        ->insert(
-          self::$table,
-          [
-            'id_user' => $id_user,
+      if(count($data)) // меняем много записей
+      {
+        $arId = $arInsert = [];
+        foreach ($data as $key => $v)
+        {
+          $arId[] = $v['id'];
+          $arInsert[$key] = $v;
+          $arInsert[$key][$cnt] = ($value ?: 1);
+        }
+        Yii::app()->db->createCommand() // удаляем записи, чтоб уложиться в 2 запроса
+          ->delete(self::$table,['in','id',$arId]);
+
+        $result = Share::multipleInsert([self::$table => $arInsert]);
+      }
+      if(count($data) != count($id_user)) // добавляем записи, если кол-во не совпадает(или 0)
+      {
+        $arInsert = [];
+        foreach ($id_user as $v)
+        {
+          $arInsert[] = [
+            'id_user' => $v,
             'id_vacancy' => $id_vacancy,
-            $cnt => 1,
+            $cnt => ($value ?: 1),
             'date_created' => time()
-          ]
-        );
+          ];
+        }
+        $result = Share::multipleInsert([self::$table => $arInsert]);
+      }
+    }
+    else // один пользователь
+    {
+      if(isset($data['id'])) // меняем одну запись
+      {
+        $data[$cnt] = ($value ?: 1);
+        $result = Yii::app()->db->createCommand()
+          ->update(
+            self::$table,
+            $data,
+            'id=:id',
+            [':id'=>$data['id']]
+          );
+      }
+      else // добавляем одну запись
+      {
+        $result = Yii::app()->db->createCommand()
+          ->insert(
+            self::$table,
+            [
+              'id_user' => $id_user,
+              'id_vacancy' => $id_vacancy,
+              $cnt => ($value ?: 1),
+              'date_created' => time()
+            ]
+          );
+      }
     }
 
     return $result;
@@ -313,6 +374,52 @@ class UserNotifications
         [self::$APP_START_VACANCY_TOMORROW => 1],
         ['in','id_vacancy',$arCnt['tomorrow']]
       );
+    }
+  }
+
+  public static function setNewVacanciesNotifications($arIdUser, $id_vacancy)
+  {
+    if(!count($arIdUser) || !$id_vacancy)
+      return false;
+
+    $arInsert = $arId = [];
+    $query = self::getData($arIdUser,$id_vacancy);
+    if(count($query))
+    {
+      foreach ($query as $v)
+      {
+        $arId[] = $v['id_user'];
+      }
+    }
+
+    foreach ($arIdUser as $id_user)
+    {
+      if(count($arId)) // выбираем по каким вакансиям уже есть записи
+      {
+        if(!in_array($id_user,$arId)) // собираем юзеров, у которых нет записей
+        {
+          $arInsert[] = [
+            'id_vacancy' => $id_vacancy,
+            'id_user' => $id_user,
+            self::$APP_NEW_VACANCIES => 1,
+            'date_created' => time()
+          ];
+        }
+      }
+      else // добавляем в массив для создания записи
+      {
+        $arInsert[] = [
+          'id_vacancy' => $id_vacancy,
+          'id_user' => $id_user,
+          self::$APP_NEW_VACANCIES => 1,
+          'date_created' => time()
+        ];
+      }
+    }
+
+    if(count($arInsert)) // создаем новые записи
+    {
+      Share::multipleInsert([self::$table => $arInsert]);
     }
   }
 }
