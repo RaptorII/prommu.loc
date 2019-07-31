@@ -70,6 +70,12 @@ class SearchEmpl extends Model
             $data['empls'][$val['id']]['rate']['positive_rate'] = (int)$val['rate'];
             $data['empls'][$val['id']]['rate']['negative_rate'] = (int)$val['rate_neg'];
             
+            $data['empls'][$val['id']]['response']['positive_response'] = 0;
+            $data['empls'][$val['id']]['response']['negative_response'] = 0;
+            
+            $data['empls'][$val['id']]['rate_sum']['positive_response'] = (int)$val['rate'] - (int)$val['rate_neg'];
+            
+            
             
             $data['empls'][$val['id']]['created_at'] = $val['crdate'];
             $data['empls'][$val['id']]['updated_at'] = $val['mdate'];
