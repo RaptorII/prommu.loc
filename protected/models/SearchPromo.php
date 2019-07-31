@@ -83,7 +83,10 @@ class SearchPromo extends Model
             $data['promo'][$val['id']]['rate']['positive_rate'] = (int)$val['rate'];
             $data['promo'][$val['id']]['rate']['negative_rate'] = (int)$val['rate_neg'];
             ///
+            $data['promo'][$val['id']]['response']['positive_response'] = 0;
+            $data['promo'][$val['id']]['response']['negative_response'] = 0;
             
+            $data['empls'][$val['id']]['rate_sum']['positive_response'] = (int)$val['rate'] - (int)$val['rate_neg'];
             // ///posts
             // $data['vacs'][$val['id']]['posts']['id'] = (int)$val['id_attr'];
             // $data['vacs'][$val['id']]['posts']['name'] = $val['pname'];
