@@ -200,7 +200,9 @@
                                             <? if(Share::isEmployer()): ?>
 	                                            <div class="small-menu__item<?=($curUrl==MainConfig::$PAGE_VACPUB ? ' current' : '')?>">
 	                                              <a href="<?=MainConfig::$PAGE_VACPUB?>" class="addvac">
-	                                                <span class="small-menu__circle"><i></i></span>
+	                                                <span class="small-menu__circle">
+                                                        <span class="icn-plus-prommu color-white"></span>
+                                                    </span>
 	                                              	<span class="small-menu__name">ДОБАВИТЬ ВАКАНСИЮ</span>
 	                                              </a>
 	                                            </div>
