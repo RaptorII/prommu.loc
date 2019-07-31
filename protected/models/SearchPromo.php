@@ -46,7 +46,7 @@ class SearchPromo extends Model
             return array('error' => $e->getMessage());
         } // endtry
         
-        var_dump($res);
+        // var_dump($res);
         $data['promo'] = array();
         foreach ($res as $key => $val)
         {
@@ -69,6 +69,8 @@ class SearchPromo extends Model
             ///city
             $data['promo'][$val['id']]['city']['id'] = (int)$res[$val['id_user']]['city']['id'];
             $data['promo'][$val['id']]['city']['name'] = $res[$val['id_user']]['city']['name'];
+            
+            $data['promo'][$val['id']]['metro'] = (int)$res[$val['id_user']]['metro'];
             ///
             
             $data['promo'][$val['id']]['post'] = $res[$val['id_user']]['post'];
