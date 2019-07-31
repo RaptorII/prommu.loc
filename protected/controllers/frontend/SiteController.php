@@ -505,18 +505,20 @@ class SiteController extends AppController
 
                 if($isOwner) // для владельца проверка на отношение вакансии к архиву
                 {
-                  // сбрасываем счетчики для Р при наличии
+                  // сбрасываем счетчики при наличии
                   UserNotifications::resetCounters(
                     [UserNotifications::$EMP_START_VACANCY,UserNotifications::$EMP_END_VACANCY],
                     $id
                   );
                   $data['archive'] = $model->getEmpVacanciesIdList($id_user)['archive'];
                 }
+
                 if(Share::isApplicant())
                 {
                   // сбрасываем счетчики для С при наличии
                   UserNotifications::resetCounters([UserNotifications::$APP_NEW_VACANCIES],$id);
                 }
+
                 if($data['error']==1 || $data['vac']['in_archive'])
                     throw new CHttpException(404, 'Error'); 
                 // индексируем только если владелец вакансии с этого региона

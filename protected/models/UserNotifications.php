@@ -17,7 +17,6 @@ class UserNotifications
   public static $EMP_END_VACANCY = 'emp_end_today';
   public static $EMP_SET_RATING = 'emp_set_rating';
   public static $EMP_NEW_RATING = 'emp_new_rating';
-
   public static $APP_INVITATIONS = 'app_invitations';
   public static $APP_NEW_VACANCIES = 'app_new_vacancies';
   public static $APP_CONFIRMATIONS = 'app_confirmations';
@@ -26,6 +25,7 @@ class UserNotifications
   public static $APP_START_VACANCY = 'app_start_today';
   public static $APP_SET_RATING = 'app_set_rating';
   public static $APP_NEW_RATING = 'app_new_rating';
+
   /**
    * @return array
    * Получаем счетчик уведомлений со ссылками для авторизованных пользователей в шапке сайта
@@ -63,6 +63,7 @@ class UserNotifications
       {
         self::buildArray($arRes, $v, self::$APP_INVITATIONS);
         self::buildArray($arRes, $v, self::$APP_NEW_VACANCIES);
+        //self::buildArray($arRes, $v, self::$APP_NEW_VACANCIES);
         self::buildArray($arRes, $v, self::$APP_CONFIRMATIONS);
         self::buildArray($arRes, $v, self::$APP_REFUSALS);
         self::buildArray($arRes, $v, self::$APP_START_VACANCY_TOMORROW);
@@ -91,7 +92,6 @@ class UserNotifications
       self::$EMP_END_VACANCY => 'Завершение проекта сегодня',
       self::$EMP_SET_RATING => 'Оцените соискателя',
       self::$EMP_NEW_RATING => 'Соискатель Вас оценил',
-
       self::$APP_INVITATIONS => 'Приглашение на вакансию Работодателем',
       self::$APP_NEW_VACANCIES => 'Появление новой вакансии',
       self::$APP_CONFIRMATIONS => 'Подтверждение заявки на участие в вакансии',
@@ -100,6 +100,7 @@ class UserNotifications
       self::$APP_START_VACANCY => 'Старт работы по утвержденной вакансии сегодня',
       self::$APP_SET_RATING => 'Оцените Работодателя',
       self::$APP_NEW_RATING => 'Работодатель Вас оценил',
+      self::$APP_START_VACANCY => 'Старт работы по утвержденной вакансии сегодня'
     ];
 
     $l = MainConfig::$PAGE_VACANCY . DS . $item['id_vacancy'];
@@ -120,13 +121,20 @@ class UserNotifications
       self::$APP_START_VACANCY => MainConfig::$PAGE_APPLICANT_VACS_LIST . DS . $item['id_vacancy'],
       self::$APP_SET_RATING => MainConfig::$PAGE_APPLICANT_VACS_LIST . DS . $item['id_vacancy'],
       self::$APP_NEW_RATING => MainConfig::$PAGE_APPLICANT_VACS_LIST . DS . $item['id_vacancy'],
+
+      self::$APP_INVITATIONS => Yii::app()->createUrl(MainConfig::$PAGE_RESPONSES,['tab'=>'invites']),
+      //self::$APP_NEW_VACANCIES => Yii::app()->createUrl(MainConfig::$PAGE_RESPONSES,['tab'=>'invites']),
+      self::$APP_CONFIRMATIONS => Yii::app()->createUrl(MainConfig::$PAGE_RESPONSES),
+      self::$APP_REFUSALS => Yii::app()->createUrl(MainConfig::$PAGE_RESPONSES),
+      self::$APP_START_VACANCY_TOMORROW => MainConfig::$PAGE_APPLICANT_VACS_LIST . DS . $item['id_vacancy'],
+      self::$APP_START_VACANCY => MainConfig::$PAGE_APPLICANT_VACS_LIST . DS . $item['id_vacancy']
     ];
 
     if($item[$field]>0) // Подтверждение заявки на участие в вакансии
     {
       $arRes['items'][$field]['name'] = $arNames[$field];
       !isset($arRes['items'][$field]['cnt']) && $arRes['items'][$field]['cnt']=0;
-      $arRes['items'][$field]['cnt'] += $item[$field];
+      $arRes['items'][$field]['cnt'] =+ $item[$field];
       $arRes['items'][$field]['items'][] = [
         'vacancy' => $item['title'],
         'link' => $arLinks[$field],
@@ -170,6 +178,33 @@ class UserNotifications
         )
         ->queryRow();
     }
+      $arRes['cnt'] =+ $item[$field];
+    }
+  }
+  /**
+   * @param $arParams
+   * @return mixed
+   * Универсальный метод по выбору одной строки из БД по заданным параметрам
+   */
+  private static function getData($arParams)
+  {
+    $conditions = $params = [];
+    $cnt=1;
+
+    foreach ($arParams as $key => $v)
+    {
+      $conditions[] = $key . '=:key' . $cnt;
+      $params[':key' . $cnt] = $v;
+      $cnt++;
+    }
+
+    $conditions = implode(' and ', $conditions);
+
+    return Yii::app()->db->createCommand()
+      ->select('*')
+      ->from(self::$table)
+      ->where($conditions, $params)
+      ->queryRow();
   }
   /**
    * @param $id_user
@@ -240,6 +275,37 @@ class UserNotifications
             ]
           );
       }
+   * @return mixed
+   * Установка уведомления для пользователя
+   * (используется в основном в методах действий пользователя оппонента по вакансии)
+   */
+  public static function setDataByVac($id_user, $id_vacancy, $cnt)
+  {
+    $data = self::getData(['id_user'=>$id_user, 'id_vacancy'=>$id_vacancy]);
+
+    if(isset($data['id']))
+    {
+      $data[$cnt]++;
+      $result = Yii::app()->db->createCommand()
+        ->update(
+          self::$table,
+          $data,
+          'id=:id',
+          [':id'=>$data['id']]
+        );
+    }
+    else
+    {
+      $result = Yii::app()->db->createCommand()
+        ->insert(
+          self::$table,
+          [
+            'id_user' => $id_user,
+            'id_vacancy' => $id_vacancy,
+            $cnt => 1,
+            'date_created' => time()
+          ]
+        );
     }
 
     return $result;

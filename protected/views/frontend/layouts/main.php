@@ -200,9 +200,7 @@
                                             <? if(Share::isEmployer()): ?>
 	                                            <div class="small-menu__item<?=($curUrl==MainConfig::$PAGE_VACPUB ? ' current' : '')?>">
 	                                              <a href="<?=MainConfig::$PAGE_VACPUB?>" class="addvac">
-	                                                <span class="small-menu__circle">
-                                                        <span class="small-menu__icon icn-plus-prommu color-white"></span>
-                                                    </span>
+	                                                <span class="small-menu__circle"><i></i></span>
 	                                              	<span class="small-menu__name">ДОБАВИТЬ ВАКАНСИЮ</span>
 	                                              </a>
 	                                            </div>
@@ -216,9 +214,7 @@
                                             <? if(Share::isApplicant()): ?>
                                                 <div class="small-menu__item<?=($curUrl==MainConfig::$PAGE_APPLICANT_VACS_LIST ? ' current' : '')?>">
                                                   <a href="<?=MainConfig::$PAGE_APPLICANT_VACS_LIST?>" class="addvac">
-                                                    <span class="small-menu__circle">
-                                                        <span class="small-menu__icon icn-prj-prommu color-white"></span>
-                                                    </span>
+                                                    <span class="small-menu__circle"><i></i></span>
                                                     <span class="small-menu__name">ПРОЕКТЫ</span>
                                                   </a>
                                                 </div>
@@ -226,8 +222,8 @@
                                             <div class="small-menu__item vacancy<?=$vacClass?>" id="sm-vac-cnt">
                                                 <a href="<?=$link?>">
                                                     <span class="small-menu__circle">
-                                                        <b class="small-menu__cnt"><?=$notif['cnt']?></b>
-                                                        <span class="small-menu__icon icn-group-plus-prommu color-white"></span>
+                                                        <b class="small-menu__cnt"><?=$arNotif['cnt']?></b>
+                                                        <i></i>
                                                     </span>
                                                     <span class="small-menu__name">ВАКАНСИИ</span>
                                                 </a>
@@ -375,7 +371,7 @@
                                             <a href="<?=$link?>" class="small-menu__item rate<?=($curUrl==$link ? ' current' : '')?>" id="sm-rate-cnt">
                                                 <span class="small-menu__circle">
                                                     <b class="small-menu__cnt">0</b>
-                                                    <span class="small-menu__icon icn-trend-prommu color-white"></span>
+                                                    <i></i>
                                                 </span>
                                                 <span class="small-menu__name">ОТЗЫВЫ И РЕЙТИНГИ</span>
                                             </a>
@@ -383,15 +379,13 @@
                                             <a href="<?=$link?>" class="small-menu__item notice<?=(strpos($curUrl,$link)!==false ? ' current' : '')?>" id="sm-notice-cnt">
                                                 <span class="small-menu__circle">
                                                     <b class="small-menu__cnt">0</b>
-                                                    <span class="small-menu__icon icn-envelope-prommu color-white"></span>
+                                                    <i></i>
                                                 </span>
                                                 <span class="small-menu__name">СООБЩЕНИЯ</span>
                                             </a>
                                             <?php $link = MainConfig::$PAGE_SETTINGS ?>
                                             <a href="<?=$link?>" class="small-menu__item settings<?=($curUrl==$link ? ' current' : '')?>">
-                                                <span class="small-menu__circle">
-                                                    <span class="small-menu__icon icn-cog-prommu color-white"></span>
-                                                </span>
+                                                <span class="small-menu__circle"><i></i></span>
                                                 <span class="small-menu__name">НАСТРОЙКИ</span>
                                             </a>
                                         </div>
@@ -505,15 +499,9 @@
                                     <!--noindex-->
                                     <p class="footer__social-text">Присоединяйтесь к нам: </p>
                                     <div class="social_icons">
-                                        <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icon icon55 js-g-hashint" title="Facebook" target="_blank">
-                                            <span class="icn-facebook-icon-prommu color-white"></span>
-                                        </a>
-                                        <a href="<?=MainConfig::$PROMMU_VKONTAKTE?>" rel="nofollow" class="icon icon55 js-g-hashint" title="Vkontakte" target="_blank">
-                                            <span class="icn-vk-icon-prommu color-white"></span>
-                                        </a>
-                                        <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" rel="nofollow" class="icon icon55 js-g-hashint" title="Telegram" target="_blank">
-                                            <span class="icn-telegram-icon color-white"></span>
-                                        </a>
+                                        <a href="<?=MainConfig::$PROMMU_FACEBOOK?>" rel="nofollow" class="icon fb js-g-hashint" title="Facebook" target="_blank"><b></b><i></i></a>
+                                        <a href="<?=MainConfig::$PROMMU_VKONTAKTE?>" rel="nofollow" class="icon vk js-g-hashint" title="Vkontakte" target="_blank"><b></b><i></i></a>
+                                        <a href="<?=MainConfig::$PROMMU_TELEGRAM?>" rel="nofollow" class="icon tl js-g-hashint" title="Telegram" target="_blank"><b></b><i></i></a>
                                     </div>
                                     <!--/noindex-->
                                 </div>
