@@ -612,7 +612,8 @@ class Promo extends ARModel
         for ( $i=0, $n=sizeof($sqlM); $i<$n; $i++ ) {
             !empty($sqlM[$i]['name'])
             &&
-            $arP[$sqlM[$i]['id_user']]['metroes'][$sqlM[$i]['id']] = $sqlM[$i]['name'];
+            $arP[$sqlM[$i]['id_user']]['metroes']['id'] = $sqlM[$i]['id'];
+            $arP[$sqlM[$i]['id_user']]['metroes']['name'] = $sqlM[$i]['name'];
         }
 
         $where = 'vs.id_promo IN(' . implode(',', $arIdPromo) . ') AND ' 
