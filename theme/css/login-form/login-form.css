@@ -166,9 +166,9 @@
 .auth-form__social-link{
     display: block;
     height: 56px;
-    padding-left: 78px;
     margin-bottom: 10px;
-    background: url("/theme/pic/register-form/reg-social.png") 0 0 no-repeat;    
+	padding-left: 65px;
+	position: relative;
 }
 .auth-form__social-link:focus{ outline: none; }
 .auth-form__social-link:last-child{ margin-bottom: 0; }
@@ -184,13 +184,22 @@
 	font-family: 'LatoLight', Calibri, Arial, sans-serif;
 	text-decoration: underline;
 }
-.auth-form__social-link.fb{ background-position: 0 0; }
-.auth-form__social-link.vk{ background-position: 0 -56px; }
-.auth-form__social-link.ml{ background-position: 0 -112px; }
-.auth-form__social-link.od{ background-position: 0 -168px; }
-.auth-form__social-link.go{ background-position: 0 -224px; }
-.auth-form__social-link.in{ background-position: 0 -280px; }
-.auth-form__social-link.ya{ background-position: 0 -336px; }
+.auth-form__social-link:before {
+	content: '';
+	font-family: "PrommuFont";
+	font-size: 50px;
+	line-height: 50px;
+	position: absolute;
+	left: 0;
+	top: 5px;
+}
+.auth-form__social-link.fb:before{ content: '\e832'; }
+.auth-form__social-link.vk:before{ content: '\e833'; }
+.auth-form__social-link.ml:before{ content: '\e9a0'; }
+.auth-form__social-link.od:before{ content: '\e9a1'; }
+.auth-form__social-link.go:before{ content: '\e99f'; }
+.auth-form__social-link.in:before{ content: '\e9a3'; }
+.auth-form__social-link.ya:before{ content: '\e9a2'; }
 #DiContent .auth-form__social .auth-form__social-link.disable{
     filter: grayscale(100%);
     cursor: no-drop;

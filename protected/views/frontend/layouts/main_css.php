@@ -527,7 +527,6 @@
     transform: translateX(-50%);
 }
 
-
 .icn-arrow-upd-prommu:before {
     content: "\e994";
 }
@@ -567,12 +566,6 @@
 .icn-orden-cross-prommu:before {
     content: "\e993";
 }
-.icn-wm-prommu:before {
-    content: "\e98e";
-}
-.icn-s-prommu:before {
-    content: "\e98d";
-}
 .icn-arrow-down-l-prommu:before {
     content: "\e984";
 }
@@ -603,7 +596,7 @@
 .icn-checked-prommu:before {
     content: "\e966";
 }
-icn-sqrt-checked-prommu:before {
+.icn-sqrt-checked-prommu:before {
     content: "\e989";
 }
 .icn-sqrt-prommu:before {
@@ -708,6 +701,9 @@ icn-sqrt-checked-prommu:before {
 .icn-prommu:before {
     content: "\e955";
 }
+.icn-s-prommu:before {
+    content: "\e98d";
+}
 .icn-android-prommu:before {
     content: "\e981";
 }
@@ -804,8 +800,23 @@ icn-sqrt-checked-prommu:before {
 .icn-man-m-prommu:before {
     content: "\e901";
 }
+.icn-wm-prommu:before {
+    content: "\e98e";
+}
 .icn-phone-bell-prommu:before {
     content: "\e902";
+}
+.icn-gmail-prommu:before {
+    content: "\e99f";
+}
+.icn-mru-prommu:before {
+    content: "\e9a0";
+}
+.icn-ok-prommu:before {
+    content: "\e9a1";
+}
+.icn-yandex-prommu:before {
+    content: "\e9a2";
 }
 .icn-facebook-icon-prommu:before {
     content: "\e832";
@@ -1002,6 +1013,9 @@ icn-sqrt-checked-prommu:before {
 .icn-plus-prommu:before {
     content: "\e93e";
 }
+.icn-prj-prommu:before {
+    content: "\e980";
+}
 .icn-portfolio-prommu:before {
     content: "\e93f";
 }
@@ -1014,10 +1028,5 @@ icn-sqrt-checked-prommu:before {
 .icn-trend-prommu:before {
     content: "\e942";
 }
-.icn-prj-prommu:before {
-    content: "\e980";
-}
-
-
 /* end  CSS Prommu Font*/
 </style>

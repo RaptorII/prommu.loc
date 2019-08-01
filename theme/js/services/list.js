@@ -131,19 +131,22 @@ var ServicesList = (function () {
     return ServicesList;
 }());
 
-$(function(){
+$(function fix() {
 
     //fixed menu in personal account
-    var posAccMenu = $('.personal-acc__menu').offset().top - 100;
-    $(window).on('resize scroll',scrollAccMenu);
-    scrollAccMenu();
-    function scrollAccMenu() {
-        (
-            $(document).scrollTop() > posAccMenu
-            &&
-            $(window).width() < 768
-        )
-            ? $('.personal-acc__menu').addClass('fixed')
-            : $('.personal-acc__menu').removeClass('fixed');
+    if ( $(window).width() < 768 ) {
+        var posAccMenu = $('.personal-acc__menu').offset().top - 100;
+        $(window).on('resize scroll', scrollAccMenu);
+        scrollAccMenu();
+
+        function scrollAccMenu() {
+            (
+                $(document).scrollTop() > posAccMenu
+                &&
+                $(window).width() < 768
+            )
+                ? $('.personal-acc__menu').addClass('fixed')
+                : $('.personal-acc__menu').removeClass('fixed');
+        }
     }
 });

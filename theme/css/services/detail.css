@@ -36,26 +36,26 @@
 }
 .service__title.small{ font-size: 30px; }
 .service__title:before{
-	content: '';
+	content: '\e949';
+	font-family: "PrommuFont";
+	font-size: 50px;
+	line-height: 58px;
 	height: 58px;
-	background: url(/theme/pic/services-page/new-services-icons.png) no-repeat;
-	background-position: center 0;
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	right: 0px;
+	display: block;
+	text-align: center;
+	margin: 0 auto;
 }
-.premium-vacancy .service__title:before{ background-position: center -58px;  }
-.geolocation-staff .service__title:before{ background-position: center -174px;  }
-.personal-manager-outsourcing .service__title:before{ background-position: center -232px;  }
-.outstaffing .service__title:before{ background-position: center -290px;  }
-.prommu_card .service__title:before{ background-position: center -348px;  }
-.medical-record .service__title:before{ background-position: center -406px;  }
-.api-key-prommu .service__title:before{ background-position: center -464px;  }
-.email-invitation .service__title:before{ background-position: center -714px }
-.push-notification .service__title:before{ background-position: center -772px }
-.sms-informing-staff .service__title:before{ background-position: center -830px }
-.publication-vacancy-social-net .service__title:before{ background-position: center -888px }
+.premium-vacancy .service__title:before               { content: '\e920'; }
+.geolocation-staff .service__title:before             { content: '\e926'; }
+.personal-manager-outsourcing .service__title:before  { content: '\e927'; }
+.outstaffing .service__title:before                   { content: '\e91e'; }
+.prommu_card .service__title:before                   { content: '\e921'; }
+.medical-record .service__title:before                { content: '\e931'; }
+.api-key-prommu .service__title:before                { content: '\e91d'; }
+.email-invitation .service__title:before              { content: '\e923'; }
+.push-notification .service__title:before             { content: '\e91f'; }
+.sms-informing-staff .service__title:before           { content: '\e92f'; }
+.publication-vacancy-social-net .service__title:before{ content: '\e929'; }
 .service__price{
 	width: 100%;
 	background-color: #f0f3f6;
