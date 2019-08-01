@@ -466,6 +466,7 @@
 	color: #FFFFFF;
 	font-size: 16px;
 	text-align: center;
+	border-radius: 10px;
 }
 #DiSiteWrapp #DiContent #MWwrapper .header{
 	border: none;
@@ -482,26 +483,33 @@
 	font-weight: normal;
 }
 #DiSiteWrapp #DiContent #MWwrapper .mw-close{
-    width: 29px;
-    height: 29px;
-    background: none;
-    border: 1px solid #FFFFFF;
-    border-radius: 15px;
-    top: 11px;
-    right: 11px;
+	width: 29px;
+	height: 29px;
+	background: none;
+	border-radius: 15px;
+	top: 11px;
+	right: 11px;
 }
 #DiSiteWrapp #DiContent #MWwrapper .mw-close:before{
-    content: 'X';
-    width: 28px;
-    line-height: 28px;
-    display: block;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    color: #FFFFFF;
-    font-size: 18px;
-    text-align: center;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+	content: '\e97d';
+	font-family: "PrommuFont";
+	width: 28px;
+	line-height: 28px;
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: var(--color-l2-grey);
+	font-size: 18px;
+	text-align: center;
+	transition: background-color .25s;
+	border-radius: 50%
+}
+#DiSiteWrapp #DiContent #MWwrapper .mw-close:hover:before{
+	color: #555;
+	background: #eee;
+	transition: background-color .25s;
+	border-radius: 50%
 }
 .without__comments{
 	background: #ffffff;
