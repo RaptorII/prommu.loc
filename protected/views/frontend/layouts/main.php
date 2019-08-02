@@ -231,137 +231,30 @@
                                                     </span>
                                                     <span class="small-menu__name">ВАКАНСИИ</span>
                                                 </a>
-                                               <ul class="small-menu__submenu">
-                                                 <? if(!$arNotif['cnt']): ?>
-                                                   <li class="small-menu__submenu-nothing">Нет уведомлений</li>
-                                                 <? else: ?>
-                                                   <? foreach ($arNotif['items'] as $key => $n): ?>
-                                                     <li class="small-menu__submenu-item">
+                                              <ul class="small-menu__submenu">
+                                                <? if (!$arNotif['cnt']): ?>
+                                                  <li class="small-menu__submenu-nothing">Нет уведомлений</li>
+                                                <? else: ?>
+                                                  <? foreach ($arNotif['items'] as $key => $n): ?>
+                                                    <li class="small-menu__submenu-item">
                                                        <span class="active">
-                                                          <span><?=$n['name']?></span><i><?=$n['cnt']?></i>
+                                                          <span><?= $n['name'] ?></span>
+                                                         <i><?=($n['cnt']>100 ? '99+' : $n['cnt'])?></i>
                                                        </span>
-                                                     </li>
-                                                     <? foreach ($n['items'] as $v): ?>
-                                                       <li>
-                                                         <a href="<?=$v['link']?>" class="active">
-                                                           <span><?=$v['vacancy']?></span><i><?=$v['cnt']?></i>
-                                                         </a>
-                                                       </li>
-                                                     <? endforeach; ?>
-                                                   <? endforeach; ?>
-                                                 <? endif; ?>
-
-
-	                                                	<? if(Share::$UserProfile->type==3): ?>
-		                                                		<? if($notif['countInvite']): ?>
-	                                              					<li class="small-menu__submenu-item">
-	                                              						<span class="active">
-	                                              							<span>Отлик на вакансию</span>
-	                                              							<i><?=$notif['countInvite']?></i>
-	                                              						</span>
-	                                              					</li>
-	                                              					<? foreach ($notif['vacancyInvite'] as $id => $v): ?>
-	                                              						<li>
-	                                              							<a href="<?=$v['link']?>" class="active">
-	                                              								<span><?=$v['name']?></span>
-	                                              								<i><?=$v['cnt']?></i>
-	                                              							</a>
-	                                              						</li>
-	                                              					<? endforeach; ?>
-		                                                    <? endif; ?>
-		                                                    <? // ?>
-		                                                		<? if($notif['countPlus']): ?>
-	                                              					<li class="small-menu__submenu-item">
-	                                              						<span class="active">
-	                                              							<span>Подтверждение заявки на участие в вакансии</span>
-	                                              							<i><?=$notif['countPlus']?></i>
-	                                              						</span>
-	                                              					</li>
-	                                              					<? foreach ($notif['vacancyPlus'] as $id => $v): ?>
-	                                              						<li>
-	                                              							<a href="<?=$v['link']?>" class="active">
-	                                              								<span><?=$v['name']?></span>
-	                                              								<i><?=$v['cnt']?></i>
-	                                              							</a>
-	                                              						</li>
-	                                              					<? endforeach; ?>
-		                                                    <? endif; ?>
-		                                                    <? // ?>
-		                                                		<? if($notif['countMinus']): ?>
-	                                              					<li class="small-menu__submenu-item">
-	                                              						<span class="active">
-	                                              							<span>Отказ в участии на вакансию</span>
-	                                              							<i><?=$notif['countMinus']?></i>
-	                                              						</span>
-	                                              					</li>
-	                                              					<? foreach ($notif['vacancyMinus'] as $id => $v): ?>
-	                                              						<li>
-	                                              							<a href="<?=$v['link']?>" class="active">
-	                                              								<span><?=$v['name']?></span>
-	                                              								<i><?=$v['cnt']?></i>
-	                                              							</a>
-	                                              						</li>
-	                                              					<? endforeach; ?>
-		                                                    <? endif; ?>
-		                                                    <? // ?>
-		                                                		<? if($notif['dateStart']): ?>
-	                                              					<li class="small-menu__submenu-item">
-	                                              						<span class="active">
-	                                              							<span>Начало проекта сегодня</span>
-	                                              							<i><?=$notif['dateStart']?></i>
-	                                              						</span>
-	                                              					</li>
-	                                              					<? foreach ($notif['vacancyStart'] as $id => $v): ?>
-	                                              						<li>
-	                                              							<a href="<?=$v['link']?>" class="active">
-	                                              								<span><?=$v['name']?></span>
-	                                              							</a>
-	                                              						</li>
-	                                              					<? endforeach; ?>
-		                                                    <? endif; ?>
-		                                                    <? // ?>
-		                                                		<? if($notif['dateEnd']): ?>
-	                                              					<li class="small-menu__submenu-item">
-	                                              						<span class="active">
-	                                              							<span>Завершение проекта сегодня</span>
-	                                              							<i><?=$notif['dateEnd']?></i>
-	                                              						</span>
-	                                              					</li>
-	                                              					<? foreach ($notif['vacancyEnd'] as $id => $v): ?>
-	                                              						<li>
-	                                              							<a href="<?=$v['link']?>" class="active">
-	                                              								<span><?=$v['name']?></span>
-	                                              							</a>
-	                                              						</li>
-	                                              					<? endforeach; ?>
-		                                                    <? endif; ?>
-                                                    <? else: ?>
-	                                                		<?php if($notif['countResponse']): ?>
-	                                                			<? $link =  "/user/responses/?tab=invites&vacancy=".$notif['vacancyResponse'];?>
-	                                                        	<li><a href="<?=$link?>" class="active"><span>Приглашение на вакансию Работодателем</span><i><?=$notif['countResponse']?></i></a></li>
-	                                                        <?php endif; ?>
-	                                                        <?php if($notif['newVac']): ?>
-
-	                                                        	<li><a href="<?=$link?>" class="active"><span>Появление новой вакансии</span><i><?=$notif['newVac']?></i></a></li>
-	                                                        <?php endif; ?>
-	                                                        <?php if($notif['countPlus']): ?>
-	                                                        	<? $link =  "/user/responses/?vacancy=".$notif['vacancyPlus'];?>
-	                                                        	<li><a href="<?=$link?>" class="active"><span>Подтверждение заявки на участие в вакансии</span><i><?=$notif['countPlus']?></i></a></li>
-	                                                        <?php endif; ?>
-	                                                        <?php if($notif['countMinus']): ?>
-	                                                        	<? $link =  "/user/responses/?vacancy=".$notif['vacancyMinus'];?>
-	                                                        	<li><a href="<?=$link?>" class="active"><span>Отказ в участии на вакансию</span><i><?=$notif['countMinus']?></i></a></li>
-	                                                        <?php endif; ?>
-	                                                        <?php if($notif['tommorowStart']): ?>
-	                                                        	<? $link =  "/user/responses/?vacancy=".$notif['vacancyTommorow'];?>
-	                                                        	<li><a href="<?=$link?>" class="active"><span>Старт работы по утвержденной вакансии за 1 день</span><i><?=$notif['tommorowStart']?></i></a></li>
-	                                                        <?php endif; ?>
-	                                                        <?php if($notif['dateStart']): ?>
-	                                                        	<? $link =  "/user/responses/?vacancy=".$notif['vacancyStart'];?>
-	                                                        	<li><a href="<?=$link?>" class="active"><span>Старт работы по утвержденной вакансии сегодня</span><i><?=$notif['dateStart']?></i></a></li>
-	                                                        <?php endif; ?>
-                                                    <?php endif; ?>
-                                                </ul>
+                                                    </li>
+                                                    <? foreach ($n['items'] as $v): ?>
+                                                      <li>
+                                                        <a href="<?= $v['link'] ?>" class="active">
+                                                          <span><?= $v['vacancy'] ?></span>
+                                                          <? if ($v['cnt'] > 1): ?>
+                                                            <i><?=($v['cnt']>100 ? '99+' : $v['cnt'])?></i>
+                                                          <? endif; ?>
+                                                        </a>
+                                                      </li>
+                                                    <? endforeach; ?>
+                                                  <? endforeach; ?>
+                                                <? endif; ?>
+                                              </ul>
                                             </div>
                                             <?php $link = '/'.MainConfig::$PAGE_RATE ?>
                                             <a href="<?=$link?>" class="small-menu__item rate<?=($curUrl==$link ? ' current' : '')?>" id="sm-rate-cnt">

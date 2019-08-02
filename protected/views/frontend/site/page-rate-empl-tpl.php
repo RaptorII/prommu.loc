@@ -182,35 +182,45 @@ $arUser = $arUser[$userId];
                 <h2>Рейтинг выставленный соискателями</h2>
                 <br />
                 <div class='row'>
-                    <?php foreach ($viData['rateByUser'] as $key => $val): ?>
-                        <?php $debug && ($debug++); !$debug && $debug = 1;  ?>
-                        <div class="rate-wrapper col-xs-12 col-sm-6 col-lg-4">
-                            <div class="rate-block clearfix <?= array_values($val)[0]['new'] < 0 ? '-new' : '' ?> <?= in_array($debug, [1,2]) ? '-new':'' ?>">
-                                <div class="inner">
-                                    <?php if( array_values($val)[0]['new'] < 0 || in_array($debug, [1,2]) ): ?>
-                                        <div class="new-labl">Новый</div>
-                                    <?php endif; ?>
-                                    <div class="logo">
-                                        <a href="<?= MainConfig::$PAGE_PROFILE_COMMON . DS . array_values($val)[0]['idus'] ?>">
-                                            <img src="<?= $this->ViewModel->getHtmlLogo(array_values($val)[0]['photo'], ViewModel::$LOGO_TYPE_APPLIC) ?>" alt="">
-                                        </a>
-                                    </div>
-                                    <div class="company">
-                                        <div class="fio">
-                                            <a href="<?= MainConfig::$PAGE_PROFILE_COMMON . DS . array_values($val)[0]['idus'] ?>" class="black-green">
-                                                <?= array_values($val)[0]['fio'] ?>
-                                            </a>
-                                        </div>
-                                        <div class="rates">
-                                            <?php foreach ($val as $key2 => $val2): ?>
-                                                <div class="point <?= "p" . $val2['point'] ?> js-g-hashint -js-g-hintleft" title="Оценка <?= (int)$val2['point'] === 1 ? 'положительная' : ((int)$val2['point'] === 0 ? 'нейтральная' : 'отрицательная') ?>"><?= $viData['rating']['rateNames'][$key2] ?></div><br />
-                                            <?php endforeach; ?>
-                                        </div>
-                                    </div>
-                                </div>
+                  <?php foreach ($viData['rateByUser'] as $key => $val): ?>
+                    <?php
+                    $debug && ($debug++);
+                    !$debug && $debug = 1;
+                    $arItem = reset($val);
+                    ?>
+                    <div class="rate-wrapper col-xs-12 col-sm-6 col-lg-4">
+                      <div
+                        class="rate-block clearfix <?= $arItem['new'] < 0 ? '-new' : '' ?> <?= in_array($debug, [1, 2]) ? '-new' : '' ?>">
+                        <div class="inner">
+                          <?php if ($arItem['new'] < 0 || in_array($debug, [1, 2])): ?>
+                            <div class="new-labl">Новый</div>
+                          <?php endif; ?>
+                          <div class="logo">
+                            <a href="<?= MainConfig::$PAGE_PROFILE_COMMON . DS . $arItem['idus'] ?>">
+                              <img
+                                src="<?=Share::getPhoto($arItem['idus'],UserProfile::$APPLICANT,$arItem['photo'],'small',$arItem['isman'])?>"
+                                alt="<?=$arItem['fio']?>">
+                            </a>
+                          </div>
+                          <div class="company">
+                            <div class="fio">
+                              <a href="<?= MainConfig::$PAGE_PROFILE_COMMON . DS . $arItem['idus'] ?>"
+                                 class="black-green">
+                                <?= $arItem['fio'] ?>
+                              </a>
                             </div>
+                            <div class="rates">
+                              <?php foreach ($val as $key2 => $val2): ?>
+                                <div class="point <?= "p" . $val2['point'] ?> js-g-hashint -js-g-hintleft"
+                                     title="Оценка <?= (int)$val2['point'] === 1 ? 'положительная' : ((int)$val2['point'] === 0 ? 'нейтральная' : 'отрицательная') ?>"><?= $viData['rating']['rateNames'][$key2] ?></div>
+                                <br/>
+                              <?php endforeach; ?>
+                            </div>
+                          </div>
                         </div>
-                    <?php endforeach; ?>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
                 </div>
             <?php endif; ?>
 

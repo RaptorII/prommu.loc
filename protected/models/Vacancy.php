@@ -306,7 +306,7 @@ class Vacancy extends ARModel
                 $arItem['id_emp'],
                 $id_vac,
                 UserNotifications::$EMP_SET_RATING,
-                count($arApp)
+                $arApp
               );
             }
             if(count($arId))

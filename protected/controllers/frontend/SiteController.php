@@ -1062,6 +1062,16 @@ class SiteController extends AppController
         $Rate = $Profile->makeRate(array('id' => $id, 'userProfile' => Share::$UserProfile));
         $data = $Rate->getViewData();
 
+        // сбрасываем счетчики уведомлений ЛК
+        if(Share::isApplicant())
+        {
+          UserNotifications::resetCounters([UserNotifications::$APP_NEW_RATING]);
+        }
+        if(Share::isEmployer())
+        {
+          UserNotifications::resetCounters([UserNotifications::$EMP_NEW_RATING]);
+        }
+
         $this->setBreadcrumbsEx(array('Рейтинг пользователя', MainConfig::$PAGE_PROFILE_COMMON . DS . $id));
 
         $this->render($Rate->viewTpl,

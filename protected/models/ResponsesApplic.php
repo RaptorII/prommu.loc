@@ -232,7 +232,7 @@ class ResponsesApplic extends Responses
         $sql = "SELECT e.id, e.title
               , DATE_FORMAT(e.crdate, '%d.%m.%Y') bdate
               , em.name, em.id_user idusr, em.logo logo
-              , s.id sid, s.status, DATE_FORMAT(s.date, '%d.%m.%Y') rdate
+              , s.id sid, s.status, DATE_FORMAT(s.date, '%d.%m.%Y') rdate, s.isresponse, s.second_response
             FROM empl_vacations e
             INNER JOIN vacation_stat s ON e.id = s.id_vac AND s.isresponse = {$isresponse} AND s.status <> 2
             INNER JOIN employer em ON em.id_user = e.id_user

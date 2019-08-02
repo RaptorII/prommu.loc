@@ -1,3 +1,6 @@
+<?
+$model = new ResponsesApplic();
+?>
 <style type="text/css">
 	#DiContent.page-responses .responses .row.-new .border{ margin: 0 }
 	@media (min-width: 768px){
@@ -23,11 +26,11 @@
 </div>
 <br/>
 <div class='filter btn-green-02-wr'>
-  <a class="resp <?= (int)$activeFilterLink == 0 ? 'active' : 'gray-green' ?>" href='<?= $this->ViewModel->replaceInUrl(Yii::app()->request->url, 'tab', '') ?>'>Мои заявки</a><a class="inv <?= (int)$activeFilterLink == 1 ? 'active' : 'gray-green' ?>" href='<?= $this->ViewModel->replaceInUrl(Yii::app()->request->url, 'tab', 'invites') ?>'>Мои приглашения</a>
+  <a class="resp <?= (int)$activeFilterLink == 0 ? 'active' : 'gray-green' ?>" href='<?= $this->ViewModel->replaceInUrl(Yii::app()->request->url, 'tab', '') ?>'>Мои отклики</a><a class="inv <?= (int)$activeFilterLink == 1 ? 'active' : 'gray-green' ?>" href='<?= $this->ViewModel->replaceInUrl(Yii::app()->request->url, 'tab', 'invites') ?>'>Мои приглашения</a>
 </div> 
   <div class="responses">
     <?php foreach ($viData['resps'] as $key => $val): ?>
-      <?php if( $val['status'] == 3 ) continue; ?>
+      <?php //if( $val['status'] == 3 ) continue; ?>
       <div class="col-xs-12">
       	<div class="row <?= $val['status'] == '4' ? '-new' : '' ?>">
           <div class="border">
@@ -59,26 +62,29 @@
                               <div class="controls" data-sid="<?= $val['sid'] ?>">
                                 <?php if( $val['status'] == 4 ): ?>
                                   <div class="btn-green-02-wr"><a href="#" class="apply" data-status="Подтверждена обеими сторонами">Согласен работать</a></div>
-                                  <!--<span class="status js-applied" style="display: none">Подтверждена обеими сторонами</span>-->
                                   <div class="btn-red-02-wr"><a href="#" class="js-cancel">Отклонить</a></div>
                                 <?php endif; ?>
-                                <?php if( $val['status'] == 4 && (int)$activeFilterLink != 1 ): ?>
+                                <?php if( $val['status'] == 4 && !$activeFilterLink): ?>
                                   <span class="status hint js-hashint" title="Ваша заявка на вакансию подтверждена работодателем, нажмите согласен, если хотите работать на этой вакансии">Подтверждена</span>&nbsp;&nbsp;
-                                <?php else: ?>
-                                  <span class="status hint"></span>
                                 <?php endif; ?>
-                                <?php /*if( $val['status'] == 6 ): ?>
-                                  <div class="btn-black-02-wr"><a href="<?= MainConfig::$PAGE_SETRATE . DS . $val['id'] ?>" class="comment">Оставить отзыв</a></div>&nbsp;&nbsp;
-                                <?php endif;*/ ?>
-                                <?php if( $val['status'] < 4 ): ?>
-                                  <span class="status"> Заявка на вакансию подана </span>
-                                <?php endif; ?>
-                                <?php if( in_array($val['status'], [5]) ): ?>
+                                <?php if($val['status']==Responses::$STATUS_APPLICANT_ACCEPT): ?>
                                   <span class="status">Подтверждена обеими сторонами</span>
                                 <?php endif; ?>
                                 <?php /*if( in_array($val['status'], [7]) ): ?>
                                   <span class="status">Вы выставили рейтинг по этой вакансии</span>
                                 <?php endif;*/ ?>
+                                <? if(in_array(
+                                      $val['status'],
+                                      [
+                                        Responses::$STATUS_NEW,
+                                        Responses::$STATUS_REJECT,
+                                        Responses::$STATUS_BEFORE_RATING,
+                                        Responses::$STATUS_EMPLOYER_RATED,
+                                        Responses::$STATUS_APPLICANT_RATED,
+                                        Responses::$STATUS_FULL_RATING
+                                      ])): ?>
+                                  <span class="status"><?=$model->getStatus($val['isresponse'],$val['status'])?></span>
+                                <? endif; ?>
                               </div>
                           </div>
                           <div class="clear"></div>

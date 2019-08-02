@@ -872,9 +872,28 @@ class UserController extends AppController
         }
         else
         {
-            $id = (Share::isEmployer() ? $viData['user']['pid'] : $viData['user']['eid']);
-            $idUs = (Share::isEmployer() ? $viData['user']['iduspromo'] : $viData['user']['idusempl']);
-            $data = $Responses->loadRatingPageDatas($id, $idUs);
+          if(Share::isEmployer())
+          {
+            $id = $viData['user']['pid'];
+            $idUs = $viData['user']['iduspromo'];
+            // сбрасываем уведомление для Р
+            UserNotifications::resetCounters(
+              [UserNotifications::$EMP_SET_RATING],
+              $viData['user']['id'],
+              $idUs
+            );
+          }
+          else
+          {
+            $id = $viData['user']['eid'];
+            $idUs = $viData['user']['idusempl'];
+            // сбрасываем уведомление для С
+            UserNotifications::resetCounters(
+              [UserNotifications::$APP_SET_RATING],
+              $viData['user']['id']
+            );
+          }
+          $data = $Responses->loadRatingPageDatas($id, $idUs);
         }
 
         $this->render(
