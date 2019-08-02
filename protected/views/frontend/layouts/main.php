@@ -518,7 +518,7 @@
                     <!--Tegs-->
                     <div class="row footer__module" style="display: block">
                         <a href="<?=MainConfig::$PAGE_OTHERCITIES?>" class="footer__cities-link" rel="nofollow" >Работа в других городах</a>
-                        <? /*
+                        <?
                             //
                             // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! только индексируемые города
                             //
@@ -528,7 +528,7 @@
                             <? if(in_array($id, $arIndexCities) && $id!=$SubdomainCache->id): ?>
                                 <a href="<?=$site['url']?>" class="footer__cities-link"><?=$site['city']?></a>
                             <? endif; ?>
-                        <? endforeach;*/ ?>
+                        <? endforeach; ?>
                     </div>
                 </div>
                 <div id="copyright" class="">

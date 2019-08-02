@@ -5,7 +5,7 @@
   //
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! только индексируемые города
   //
-  $arIndexCities = [1838,1307,1449,571,1973,149,437,684,2260,1879,2243,2300,2339,2467,2127,1072];
+  $arIndexCities = [149,499,1251,1252,1260,2260,684,1279,10785,1285,1301,1309,1315,9256,1322,1612,1327,1332,1335,1336,1879,1344,1346,2243,2300,2339,1369,2373,1381,1384,2467];
   $arCities = [];
   foreach ($SubdomainCache->data as $id => $v)
   {
@@ -24,7 +24,7 @@
         <input type="text" id="search_field">
       </form>
       <div id="cities_block">
-        <? $col = ($cnt<=10 ? 1 : 2); ?>
+        <? $col = 1;//($cnt<=10 ? 1 : 2); ?>
         <ul class="othercities_list col-<?=$col?>">
           <? foreach ($arCities as $id => $site): ?>
             <li class="othercities_item">
