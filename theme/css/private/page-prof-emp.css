@@ -500,6 +500,9 @@ a.upp__project-info{ width: 65px }
 	top: 8px;
 	left: -5px;
 }
+.self_employed-user:before {
+	content: '\e967';
+}
 #DiSiteWrapp #DiContent #MWwrapper .mw-win.dark-ver{ 
 	width: 350px;
 	left: -175px; 
