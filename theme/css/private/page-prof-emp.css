@@ -489,7 +489,7 @@ a.upp__project-info{ width: 65px }
 }
 .self_employed-user:before,
 .confirmed-user:before{
-	content: '\e993';
+	content: '\e992';
 	font-family: "PrommuFont";
 	font-size: 30px;
 	color: var(--color-green);
