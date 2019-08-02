@@ -1504,7 +1504,19 @@ class SiteController extends AppController
     */
     public function actionOthercities()
     {
-        $this->render(MainConfig::$VIEW_OTHERCITIES, array());
+      $seo = (new Seo())->exist('/othercities');
+
+      $this->setBreadcrumbsEx([$seo['seo_h1'], MainConfig::$PAGE_OTHERCITIES]);
+
+      $this->render(
+        MainConfig::$VIEW_OTHERCITIES,
+        [],
+        [
+          'pageTitle' => '<h1>' . $seo['seo_h1'] . '</h1>',
+          'htmlTitle' => $seo['meta_title'],
+          'pageMetaDesription' => $seo['meta_description']
+        ]
+      );
     }
     /**
      *      Генерация YVL для яндекса

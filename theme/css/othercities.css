@@ -1,0 +1,25 @@
+#DiContent .othercities label{
+  line-height: 33px;
+  font-size: 14px;
+  font-family: RobotoCondensedBold, RobotoCondensedRegular, verdana, arial;
+}
+#DiContent .othercities input{
+  width: 100%;
+  max-width: 350px;
+  height: 35px;
+  border: 1px solid #EBEBEB;
+  font-size: 14px;
+  color: #343434;
+  background-color: transparent;
+  padding: 0 15px;
+  font-family: RobotoCondensedRegular, RobotoRegular, verdana, arial;
+}
+#DiContent .othercities input:focus{ outline: none }
+#cities_form{ margin: 0 0 30px; }
+#cities_block ul{ padding-left: 20px; }
+#cities_block.col-1 ul{ column-count: 1; }
+#cities_block.col-2 ul{ column-count: 2; }
+.othercities_item-empty{
+  display: none;
+  list-style: none;
+}

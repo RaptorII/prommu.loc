@@ -48,9 +48,9 @@ $ppp = 		array(
   )
 );
 $ppp = serialize($ppp);
-echo '<pre>';
+/*echo '<pre>';
 print_r($ppp);
-echo '</pre>';
+echo '</pre>';*/
 
 /*
 $aaa = "a:3:{s:7:\"id_user\";a:3:{s:4:\"name\";s:9:\"#ID_USER#\";s:7:\"pattern\";s:11:\"/#ID_USER#/\";s:11:\"description\";s:38:\"ID пользователя сайта\";}s:12:\"link_profile\";a:5:{s:4:\"name\";s:14:\"#LINK_PROFILE#\";s:7:\"pattern\";s:16:\"/#LINK_PROFILE#/\";s:5:\"value\";s:37:\"#SITE##PAGE_PROFILE_COMMON#/#ID_USER#\";s:8:\"breplace\";b:1;s:11:\"description\";s:57:\"Ссылка на профиль пользователя\";}s:18:\"link_profile_admin\";a:5:{s:4:\"name\";s:20:\"#LINK_PROFILE_ADMIN#\";s:7:\"pattern\";s:22:\"/#LINK_PROFILE_ADMIN#/\";s:5:\"value\";a:2:{i:2;s:37:\"#SITE#/admin/site/PromoEdit/#ID_USER#\";i:3;s:36:\"#SITE#/admin/site/EmplEdit/#ID_USER#\";}s:8:\"breplace\";b:1;s:11:\"description\";s:75:\"Ссылка на профиль пользователя в админке\";}}";*/
