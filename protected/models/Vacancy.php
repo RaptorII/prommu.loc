@@ -634,13 +634,14 @@ class Vacancy extends ARModel
             ///
             
             ///city
-            $data['city']['id'] = (int)$val['id_city'];
-            $data['city']['name'] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
+          
+            $data['city'][0]['id'] = (int)$val['id_city'];
+            $data['city'][0]['name'] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
             ///
             
             ///posts
-            $data['posts']['id'] = (int)$val['id_attr'];
-            $data['posts']['name'] = $val['pname'];
+            $data['posts'][0]['id'] = (int)$val['id_attr'];
+            $data['posts'][0]['name'] = $val['pname'];
             ///
             
             $data['created_at'] = $val['crdate'];
