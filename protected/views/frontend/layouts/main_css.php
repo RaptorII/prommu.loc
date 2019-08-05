@@ -527,6 +527,18 @@
     transform: translateX(-50%);
 }
 
+.icn-heart-idea-prommu:before {
+    content: "\e9a4";
+}
+.icn-lamp-prommu:before {
+    content: "\e9a5";
+}
+.icn-vopr-prommu:before {
+    content: "\e9a6";
+}
+.icn-voskl-prommu:before {
+    content: "\e9a7";
+}
 .icn-arrow-upd-prommu:before {
     content: "\e994";
 }
