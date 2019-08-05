@@ -753,8 +753,6 @@ class Vacancy extends ARModel
             $data[$val['id']]['is_man'] = (boolean)$val['isman'];
             $data[$val['id']]['is_woman'] = (boolean)$val['iswoman'];
             
-           
-            
             
             $data[$val['id']]['is_premium'] = (boolean)$val['ispremium'];
             $data[$val['id']]['is_active'] = 1;
@@ -785,7 +783,7 @@ class Vacancy extends ARModel
 
         $i = 1;
         $ret['vacs'] = array();
-        foreach ($data as $key => $val) { $ret['vacs'][$i] = $val; $i++; }
+        foreach ($data as $key => $val) { $ret['vacs'][] = $val; $i++; }
 
         return $ret;
             
