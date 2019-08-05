@@ -737,13 +737,13 @@ class Vacancy extends ARModel
             ///
             
             ///city
-            $data[$val['id']][0]['city']['id'] = (int)$val['id_city'];
-            $data[$val['id']][0]['city']['name'] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
+            $data[$val['id']]['city'][0]['id'] = (int)$val['id_city'];
+            $data[$val['id']]['city'][0]['name'] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
             ///
             
             ///posts
-            $data[$val['id']][0]['posts']['id'] = (int)$val['id_attr'];
-            $data[$val['id']][0]['posts']['name'] = $val['pname'];
+            $data[$val['id']]['posts'][0]['id'] = (int)$val['id_attr'];
+            $data[$val['id']]['posts'][0]['name'] = $val['pname'];
             ///
             
             $data[$val['id']]['created_at'] = $val['crdate'];
@@ -784,10 +784,13 @@ class Vacancy extends ARModel
         } // end foreach
 
         
-            return $data;
+            
         }
+        $i = 1;
+        $ret['vacs'] = array();
+        foreach ($data['vacs'] as $key => $val) { $ret['vacs'][$i] = $val; $i++; }
 
-        return $res;
+        return $ret;
 
     }
     
