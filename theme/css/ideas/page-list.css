@@ -122,7 +122,7 @@
 	line-height: 26px;
 	color: #ffffff;
 	font-size: 16px;
-	padding: 0 5px 0 30px;
+	padding: 0 6px 0 36px;
 	border-radius: 5px;
 	background: #abb92a;
 	margin: 5px 0;
@@ -136,7 +136,7 @@
 	line-height: 26px;
 	color: var(--color-white);
 	position: absolute;
-	left: 0;
+	left: 6px;
 	top: 1px;
 }
 .idea__item-rneg{

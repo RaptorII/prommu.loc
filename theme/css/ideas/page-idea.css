@@ -201,7 +201,7 @@
 	line-height: 26px;
 	color: #ffffff;
 	font-size: 16px;
-	padding: 0 5px 0 30px;
+	padding: 0 6px 0 36px;
 	border-radius: 5px;
 	background: #abb92a;
 	margin: 5px 0;
@@ -215,7 +215,7 @@
 	line-height: 26px;
 	color: var(--color-white);
 	position: absolute;
-	left: 0;
+	left: 6px;
 	top: 1px;
 }
 .idea__item-rneg{
@@ -329,33 +329,50 @@
 	line-height: 24px;
 	padding: 0 5px 0 30px;
 	display: inline-block;
-	color: #ffffff;
+	position: relative;
+	color: var(--color-dark);
 	font-size: 16px;
 	border-radius: 5px;
-	background: url(/theme/pic/ideas/ideas-list-sprite.png) 7px -105px no-repeat;
-	-webkit-filter: invert(100%);
-	filter: invert(100%);
-	border: 1px solid #ffffff;
+	border: 1px solid var(--color-dark);
 	-webkit-transition: all .3s ease-out;
 	-moz-transition: all .3s ease-out;
 	-o-transition: all .3s ease-out;
 	transition: all .3s ease-out;
 }
-.idea__set-rating .idea__set-rpos{ margin-right: 7px }
-.idea__set-rating .idea__set-rneg{
-	background: url(/theme/pic/ideas/ideas-list-sprite.png) 7px -131px no-repeat;
+.idea__set-rating .idea__set-rpos{
+	margin-right: 7px
 }
+.idea__set-rating .idea__set-rneg{
+	margin-right: 7px
+}
+.idea__set-rating .idea__set-rpos:before,
+.idea__set-rating .idea__set-rneg:before {
+	content: '';
+	font-family: "PrommuFont";
+	font-size: 26px;
+	line-height: 26px;
+	position: absolute;
+	left: 0;
+}
+.idea__set-rating .idea__set-rpos:before { content: '\e970'; }
+.idea__set-rating .idea__set-rneg:before { content: '\e96f'; }
+
+.idea__set-rating .idea__set-rpos:hover:before { color: var(--color-white); transition: color .3s ease-out;}
+.idea__set-rating .idea__set-rneg:hover:before { color: var(--color-white); transition: color .3s ease-out;}
+
 .idea__set-rating.active .idea__set-rpos,
 .idea__set-rating.active .idea__set-rneg{ cursor:pointer }
 .idea__set-rating.active .idea__set-rpos:hover{
 	border: 1px solid #abb92a;
 	background-color: #abb92a;
+	color: var(--color-white);
 	-webkit-filter: invert(0);
 	filter: invert(0);
 }
 .idea__set-rating.active .idea__set-rneg:hover{
 	border: 1px solid #dc1e1e;
 	background-color: #dc1e1e;
+	color: var(--color-white);
 	-webkit-filter: invert(0);
 	filter: invert(0);
 }
