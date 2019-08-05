@@ -3817,7 +3817,7 @@ public function vac(){
         {   
             $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             
-            var_dump(Yii::app()->getRequest()->getParam());
+            var_dump(Yii::app()->request->getRawBody());
             /// ATTRIB
             $title = Yii::app()->getRequest()->getParam('title');
             $posts = Yii::app()->getRequest()->getParam('posts');
