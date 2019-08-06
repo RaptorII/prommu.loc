@@ -107,13 +107,13 @@ class SearchVac extends Model
             ///
             
             ///city
-            $data['vacs'][$val['id']]['city']['id'] = (int)$val['id_city'];
-            $data['vacs'][$val['id']]['city']['name'] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
+            $data['vacs'][$val['id']]['city'][0]['id'] = (int)$val['id_city'];
+            $data['vacs'][$val['id']]['city'][0]['name'] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
             ///
             
             ///posts
-            $data['vacs'][$val['id']]['posts']['id'] = (int)$val['id_attr'];
-            $data['vacs'][$val['id']]['posts']['name'] = $val['pname'];
+            $data['vacs'][$val['id']]['posts'][0]['id'] = (int)$val['id_attr'];
+            $data['vacs'][$val['id']]['posts'][0]['name'] = $val['pname'];
             ///
             
             $data['vacs'][$val['id']]['created_at'] = $val['crdate'];
