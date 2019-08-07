@@ -3813,7 +3813,13 @@ public function vac(){
     public function vacancyPublish()
     {
         $error = '-101';
-        var_dump(Yii::app()->getRequest());
+        
+        $headers = Yii::app()->request->headers;
+
+        // возвращает значения заголовка Accept
+        $accept = $headers->get('Accept');
+
+        var_dump($headers);
         return;
         try
         {   
