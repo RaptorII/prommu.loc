@@ -3815,8 +3815,8 @@ public function vac(){
         $error = '-101';
         try
         {   
-            $accessToken = Yii::app()->response->getHeaders()->get('access_token');
-            var_dump($accessToken);
+            $accessToken =Yii::app()->getRequest()->getHeaders()->get('access_token');
+            echo $accessToken;
             $data = CJSON::decode(Yii::app()->request->getRawBody());
             /// ATTRIB
             $title = Yii::app()->getRequest()->getParam('title');
