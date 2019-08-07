@@ -3816,7 +3816,7 @@ public function vac(){
         try
         {   
             $accessToken =Yii::app()->getRequest()->getHeaders()->get('access_token');
-            echo $accessToken;
+            var_dump(Yii::app()->request->headers); 
             $data = CJSON::decode(Yii::app()->request->getRawBody());
             /// ATTRIB
             $title = Yii::app()->getRequest()->getParam('title');
