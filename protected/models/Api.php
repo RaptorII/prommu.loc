@@ -3813,10 +3813,12 @@ public function vac(){
     public function vacancyPublish()
     {
         $error = '-101';
+        var_dump(Yii::app()->request->headers);
+        return;
         try
         {   
             $accessToken =Yii::app()->getRequest()->getHeaders()->get('access_token');
-            var_dump(Yii::app()->request->headers); 
+             
             $data = CJSON::decode(Yii::app()->request->getRawBody());
             /// ATTRIB
             $title = Yii::app()->getRequest()->getParam('title');
