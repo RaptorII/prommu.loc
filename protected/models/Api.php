@@ -3813,7 +3813,7 @@ public function vac(){
     public function vacancyPublish()
     {
         $error = '-101';
-        var_dump(Yii::app()->request->headers);
+        var_dump(Yii::app()->getRequest());
         return;
         try
         {   
