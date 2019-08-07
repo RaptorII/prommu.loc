@@ -3850,8 +3850,8 @@ public function vac(){
 
             list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
             $figaro = compact('title','agefrom','ageto','isman', 'iswoman',  'istemp', 'shour', 'ismed', 'isavto','posts', 'city','bdate','edate','pub', 'idus');
-            $Vacancy = new Vacancy($profile);
-            $data = $Vacancy->saveVacpubData($figaro);   
+            // $Vacancy = new Vacancy($profile);
+            // $data = $Vacancy->saveVacpubData($figaro);   
             
            } catch (Exception $e)
         {
