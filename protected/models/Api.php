@@ -3813,11 +3813,8 @@ public function vac(){
     public function vacancyPublish()
     {
         $error = '-101';
-        
-        $http_request = new CHttpRequest();
-        $content_type = $http_request->header('access_token');
 
-        var_dump($content_type);
+        var_dump(Yii::app()->request->acceptTypes);
         return;
         try
         {   
