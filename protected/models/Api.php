@@ -3814,12 +3814,10 @@ public function vac(){
     {
         $error = '-101';
         
-        $headers = Yii::app()->request->headers;
+        $http_request = new CHttpRequest();
+        $content_type = $http_request->header('access_token');
 
-        // возвращает значения заголовка Accept
-        $accept = $headers->get('Accept');
-
-        var_dump($headers);
+        var_dump($content_type);
         return;
         try
         {   
