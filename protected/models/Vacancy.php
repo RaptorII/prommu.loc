@@ -1739,7 +1739,7 @@ class Vacancy extends ARModel
         return array('idvac' => $idvac);
     }
     
-    private function saveVacPosts($inVacId, $data)
+    private function saveVacPostsApi($inVacId, $data)
     {
         $id = $data['idus'];
 
