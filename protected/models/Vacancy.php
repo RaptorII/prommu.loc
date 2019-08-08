@@ -1752,9 +1752,6 @@ class Vacancy extends ARModel
             $insData[] = array('id_vac' => $inVacId, 'id_attr' => $val['id'], 'key' => $val['id']);
 
         } // end foreach
-        
-        var_dump($data['posts']);
-        var_dump($insData);
 
         $sql = "DELETE empl_attribs FROM empl_attribs 
                 INNER JOIN user_attr_dict d ON d.id = 110
