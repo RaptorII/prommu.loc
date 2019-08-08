@@ -617,7 +617,8 @@ class Vacancy extends ARModel
             ORDER BY e.ispremium DESC, e.id DESC";
             $res = Yii::app()->db->createCommand($sql);
             $res = $res->queryAll();
-        
+            
+            var_dump($res);
         foreach ($res as $key => $val)
         {
             if( !isset($data)) $data= array('city' => array(), 'posts' => array()) ;
