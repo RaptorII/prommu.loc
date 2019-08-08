@@ -1535,6 +1535,7 @@ class Vacancy extends ARModel
         $idus = $inProps['idus'];
         $idvac = $inProps['id'];
        
+        
         $arrs = '';
         if($idvac) {
         $sql = "SELECT e.id, e.ispremium, e.status, e.title, e.requirements, e.duties, e.conditions, e.istemp,
@@ -1561,6 +1562,8 @@ class Vacancy extends ARModel
             ORDER BY e.ispremium DESC, e.id DESC";
             $res = Yii::app()->db->createCommand($sql);
             $resVac = $res->queryAll();
+            
+            
         }   
 
             // bl1
@@ -1625,9 +1628,16 @@ class Vacancy extends ARModel
             ));
             
             $fields['remdate'] = date('Y-m-d 23:59:59', strtotime($fields['edate']));
-
-            $res = Yii::app()->db->createCommand()
+    
+            if($inProps['id']){
+                $res = Yii::app()->db->createCommand()
+                ->update('empl_vacations', $fields
+                    ,'id = :id', array(':id' => $inProps['id']) );
+            } else {
+                $res = Yii::app()->db->createCommand()
                 ->insert('empl_vacations', $fields);
+            }
+            
 
             $flagNew = 1;
             $idvac = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
