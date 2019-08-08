@@ -1532,7 +1532,7 @@ class Vacancy extends ARModel
     
     public function saveVacpubDataApi($inProps)
     {
-        $idus = Share::$UserProfile->exInfo->id;
+        $idus = $inProps['idus'];
         $idvac = $inProps['id'];
        
         $arrs = '';
@@ -1579,7 +1579,7 @@ class Vacancy extends ARModel
             $fields['isavto'] = $inProps['is_hasavto'];
             $fields['smart'] = $inProps['smart'];
             $fields['self_employed'] = $inProps['self_employed'];
-            $fields['card'] = $inProps['duties'];
+            $fields['card'] = $inProps['card'];
             $fields['cardPrommu'] = $inProps['card_prommu'];
             
             
@@ -1621,7 +1621,7 @@ class Vacancy extends ARModel
             //
             $fields['status'] = 0;
             $fields = array_merge($fields, array( 'id_user' => $idus,
-                'id_empl' => Share::$UserProfile->exInfo->eid,
+                'id_empl' => $inProps['id_empl'],
                 'crdate' => date("Y-m-d H:i:s"),
                 'mdate' => date("Y-m-d H:i:s"),
             ));
