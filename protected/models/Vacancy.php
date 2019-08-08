@@ -655,7 +655,7 @@ class Vacancy extends ARModel
             
             
             $data['is_premium'] = (boolean)$val['ispremium'];
-            $data['is_active'] = 1;
+            $data['is_active'] = true;
             $data['is_med'] = (boolean)$val['ismed'];
             $data['is_hasavto'] = (boolean)$val['isavto'];
             $data['is_temp'] =  (boolean)$val['istemp'];
