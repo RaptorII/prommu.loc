@@ -458,6 +458,7 @@ class Vacancy extends ARModel
 
         return $data;
     }
+    
     /**
      * получаем данные для "Мом вакансии" и приглашение на вакансии
      */
@@ -761,7 +762,7 @@ class Vacancy extends ARModel
             
             
             $data[$val['id']]['is_premium'] = (boolean)$val['ispremium'];
-            $data[$val['id']]['is_active'] = 1;
+            $data[$val['id']]['is_active'] = true;
             $data[$val['id']]['is_med'] = (boolean)$val['ismed'];
             $data[$val['id']]['is_hasavto'] = (boolean)$val['isavto'];
             $data[$val['id']]['is_temp'] =  (boolean)$val['istemp'];
