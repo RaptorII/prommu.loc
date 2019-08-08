@@ -3818,7 +3818,8 @@ public function vac(){
             $accessToken = Yii::app()->getRequest()->getParam('access_token');
              
             $data = CJSON::decode(Yii::app()->request->getRawBody());
-
+            
+            var_dump($data);
             list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
             
             $Vacancy = new Vacancy($profile);
