@@ -1530,7 +1530,7 @@ class Vacancy extends ARModel
     }
 
     
-    public function saveVacpubDataApi($inProps = [])
+    public function saveVacpubDataApi($inProps)
     {
         $idus = Share::$UserProfile->exInfo->id;
         $idvac = $inProps['id'];
@@ -1561,7 +1561,9 @@ class Vacancy extends ARModel
             ORDER BY e.ispremium DESC, e.id DESC";
             $res = Yii::app()->db->createCommand($sql);
             $resVac = $res->queryAll();
-        }
+        }   
+        
+        var_dump($inProps);
 
             // bl1
             $fields['title'] = $inProps['title'];
