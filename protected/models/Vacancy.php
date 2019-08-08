@@ -1562,8 +1562,6 @@ class Vacancy extends ARModel
             $res = Yii::app()->db->createCommand($sql);
             $resVac = $res->queryAll();
         }   
-        
-        var_dump($inProps);
 
             // bl1
             $fields['title'] = $inProps['title'];
