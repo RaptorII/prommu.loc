@@ -1633,43 +1633,15 @@ class Vacancy extends ARModel
             $flagNew = 1;
             $idvac = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
 //             // сохраняем должности
-//             $postt = $this->saveVacPosts($idvac);
+            $postt = $this->saveVacPostsApi($idvac,$inProps);
 //             // сохраняем атрибуты вакансии
 //             $this->saveVacAttribs($idvac);
 //             // сохраняем города
-//             $idcity = $this->saveCities($idvac);
+            $idcity = $this->saveCitiesApi($idvac, $inProps);
 //             // сохраняем локации
 //             $this->saveLocations($idvac, $idcity);
 
-//         } elseif( $block == 'vacpage' ){
-//             $fields['title'] = filter_var(Yii::app()->getRequest()->getParam('vacancy-title'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-//             // сохраняем должности
-//             $this->saveVacPosts($idvac);
-//             // есть ли опыт
-//             $fields['exp'] = Yii::app()->getRequest()->getParam('expirience');
-//             $fields['agefrom'] = filter_var(Yii::app()->getRequest()->getParam('age-from'), FILTER_SANITIZE_NUMBER_INT);
-//             $fields['ageto'] = filter_var(Yii::app()->getRequest()->getParam('age-to'), FILTER_SANITIZE_NUMBER_INT);
-//             $fields['isman'] = filter_var(Yii::app()->getRequest()->getParam('mans'), FILTER_SANITIZE_NUMBER_INT);
-//             $fields['iswoman'] = filter_var(Yii::app()->getRequest()->getParam('wonem'), FILTER_SANITIZE_NUMBER_INT);
-//             $fields['ismed'] = filter_var(Yii::app()->getRequest()->getParam('ismed'), FILTER_SANITIZE_NUMBER_INT);
-//             $fields['isavto'] = filter_var(Yii::app()->getRequest()->getParam('isavto'), FILTER_SANITIZE_NUMBER_INT);
-//             $fields['smart'] = $inProps['smart'] ?: filter_var(Yii::app()->getRequest()->getParam('smart'), FILTER_SANITIZE_NUMBER_INT);
-//             $fields['self_employed'] = $inProps['self_employed'] ?: filter_var(Yii::app()->getRequest()->getParam('self_employed'), FILTER_SANITIZE_NUMBER_INT);
-//             $fields['requirements'] = filter_var(Yii::app()->getRequest()->getParam('requirements'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-//             $fields['duties'] = filter_var(Yii::app()->getRequest()->getParam('duties'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-//             $fields['conditions'] = filter_var(Yii::app()->getRequest()->getParam('conditions'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            
-//             $filter = function($val) { return preg_match("/([0-9]+)[.,]?([0-9]{0,2})/", $val, $res) ? $res[1].'.'.$res[2] : 0; };
-//             $fields['shour'] = filter_var(Yii::app()->getRequest()->getParam('salary-rub-hour'), FILTER_CALLBACK, array('options' => $filter));
-//             $fields['sweek'] = filter_var(Yii::app()->getRequest()->getParam('salary-rub-week'), FILTER_CALLBACK, array('options' => $filter));
-//             $fields['smonth'] = filter_var(Yii::app()->getRequest()->getParam('salary-rub-month'), FILTER_CALLBACK, array('options' => $filter));
-//             $fields['svisit'] = filter_var(Yii::app()->getRequest()->getParam('salary-rub-visit'), FILTER_CALLBACK, array('options' => $filter));
-//             $fields['cardPrommu'] = filter_var(Yii::app()->getRequest()->getParam('card-prommu'), FILTER_SANITIZE_NUMBER_INT);
-//             $fields['card'] = filter_var(Yii::app()->getRequest()->getParam('bank-card'), FILTER_SANITIZE_NUMBER_INT);
-//             $fields['istemp'] = $inProps['istemp'] ?: filter_var(Yii::app()->getRequest()->getParam('busyType'), FILTER_SANITIZE_NUMBER_INT);
-//             // дата завершения
-//             $remdate = filter_var(Yii::app()->getRequest()->getParam('remdate'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-//             $arRemdate = explode('.', $remdate);
+
 //             if(checkdate($arRemdate[1], $arRemdate[0], $arRemdate[2]))
 //             {
 //                 $fields['remdate'] = "{$arRemdate[2]}-{$arRemdate[1]}-{$arRemdate[0]}";
@@ -1746,87 +1718,77 @@ class Vacancy extends ARModel
         
         
 
-//          $content = file_get_contents(Yii::app()->basePath . "/views/mails/app/emp-changing-vac.html");
-//                   $content = str_replace('#APPNAME#', "администратор", $content);
-//                  $content = str_replace('#EMPCOMPANY#', Share::$UserProfile->exInfo->name, $content);
-//                  $content = str_replace('#VACID#', $idvac, $content);
-//                  $content = str_replace('#VACNAME#', $fields['title'], $content);
-//                  $content = str_replace('#VACPARAMLIST#', $arrs, $content);
-//                  $content = str_replace('#VACLINK#', Subdomain::site() . '/admin/site/VacancyEdit'. DS .$idvac, $content);
+        //  $content = file_get_contents(Yii::app()->basePath . "/views/mails/app/emp-changing-vac.html");
+        //           $content = str_replace('#APPNAME#', "администратор", $content);
+        //          $content = str_replace('#EMPCOMPANY#', Share::$UserProfile->exInfo->name, $content);
+        //          $content = str_replace('#VACID#', $idvac, $content);
+        //          $content = str_replace('#VACNAME#', $fields['title'], $content);
+        //          $content = str_replace('#VACPARAMLIST#', $arrs, $content);
+        //          $content = str_replace('#VACLINK#', Subdomain::site() . '/admin/site/VacancyEdit'. DS .$idvac, $content);
                
-//          $email[0] = "susgresk@gmail.com";
-//         $email[1] = "prommu.servis@gmail.com";
-//         $email[2] = "denisgresk@gmail.com";
-//         for($i = 0; $i <3; $i++){
-//           Share::sendmail($email[$i], "Prommu.com Изменение вакансии №" . $idvac, $content);
+        //  $email[0] = "susgresk@gmail.com";
+        // $email[1] = "prommu.servis@gmail.com";
+        // $email[2] = "denisgresk@gmail.com";
+        // for($i = 0; $i <3; $i++){
+        //   Share::sendmail($email[$i], "Prommu.com Изменение вакансии №" . $idvac, $content);
        
-//         }
-//       }
-//     }
-//         }
-//         $showFlash = false;
-//         if($flagNew){
-//             $message = 'Ваша вакансия сохранена, но не отображается.<br/>
-//                         Для того, чтобы вакансия отображалась, Вам необходимо 
-//                         при помощи редактирования и существующих подсказок, 
-//                         добавить всю необходимую информацию к публикуемой вакансии.<br/>
-//                         После этого нажмите кнопку "Опубликовать вакансию"
-//                         ';
-//             $showFlash = true;
-//         }
-//         else{
-//             $res = Yii::app()->db->createCommand()
-//                 ->select('status')
-//                 ->from('empl_vacations v')
-//                 ->where('v.id = :id AND v.id_user = :idus', array(':id' => $idvac, ':idus' => Share::$UserProfile->id))
-//                 ->queryRow();
-//             $showFlash = $res['status'];          
-//             $message = 'Данные успешно сохранены и направлены на модерацию. Обычно это занимает до 15 минут в рабочее время.';
-//         }
-//         if($showFlash){
-//           Yii::app()->user->setFlash('prommu_flash', $message);  
-//         }
-//         if($blockpub == 'pub')
-//         {
-//             $user = Share::$UserProfile->exInfo;
-//             $user->name = trim($user->name);
-//             empty($user->name) && $user->name = 'пользователь';
-            
-//             Yii::app()->user
-//                 ->setFlash('prommu_flash',
-//                     "<div class='big-flash'>
-//                         <p>Уважаемый «" . $user->name . "»!</p>
-//                         <p>Вы только что добавили новую вакансию на сервис Prommu. 
-//                         На данном этапе она еще не опубликована на сервисе.</p> 
-//                         <p>После закрытия этого информационного окна, Вы можете посмотреть 
-//                         добавленную информацию, изменить, дополнить, 
-//                         <span style='color:#ff921d;'>продублировать</span> ее с указанием адресов 
-//                         работы и других необходимых данных.</p> 
-//                         <p>После этого необходимо нажать кнопку 
-//                         <span style='color:#ff921d;'>«ОПУБЛИКОВАТЬ ВАКАНСИЮ»</span>.</p>
-//                         <p>По окончанию модерации (в рабочее время до 15 минут) Ваша вакансия 
-//                         будет размещена на сервисе.</p> 
-//                         <p>Просмотреть и отредактировать данную вакансию Вы можете в любой момент 
-//                         времени в личном кабинете - категория 
-//                         <span style='color:#ff921d;'>«МОИ ВАКАНСИИ»</span>.</p> 
-//                         <p>Быстрого и лёгкого поиска Вам персонала.</p>
-//                         <i>С найлучшими пожеланиями команда Промму!</i>
-//                     </div>");
+        // }
 
-//             Mailing::set(
-//                         3,
-//                         array(
-//                             'email_user' => $user->email,
-//                             'company_user' => $user->name,
-//                             'id_vacancy' => $idvac
-//                         )
-//                     );
-//         }
+
         
         return array('idvac' => $idvac);
     }
     
+    private function saveVacPosts($inVacId, $data)
+    {
+        $id = $data['idus'];
 
+        $posts = $data['posts'];
+       
+        $insData = array();
+        foreach ($posts as $key => $val)
+        {
+            // prepare posts
+            $insData[] = array('id_vac' => $inVacId, 'id_attr' => $va['id'], 'key' => $val['name']);
+
+        } // end foreach
+
+
+        $sql = "DELETE empl_attribs FROM empl_attribs 
+                INNER JOIN user_attr_dict d ON d.id = 110
+                INNER JOIN user_attr_dict d1 ON empl_attribs.id_attr = d1.id AND d1.id_par = d.id
+                WHERE id_vac = {$inVacId}";
+        Yii::app()->db->createCommand($sql)->execute();
+        $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('empl_attribs', $insData);
+        $command->execute();
+        return $posts;
+    }
+    
+    private function saveCitiesApi($inVacId, $data)
+    {
+        
+        $bdate = date('Y-m-d', strtotime($data['date_start']));//date("Y-m-d");
+        $edate = date('Y-m-d', strtotime($data['date_end']));//date("Y-m-d");
+
+         Yii::app()->db->createCommand()->delete('empl_city', 'id_vac=:idvac', array(':idvac' => $inVacId));
+         
+       foreach ($data['city'] as $key => $val)
+       {
+             $res = Yii::app()->db->createCommand()
+                        ->insert('empl_city', array(
+                            'id_vac' => $inVacId,
+                            'id_city' => $val['id'],
+                            'bdate' => $bdate,
+                            'edate' => $edate,
+                        ));
+
+            $id_city = $val['id'];
+        } // endif
+
+        return "1307";
+
+    }
+    
     /**
      * Активировать вакансию
      */
