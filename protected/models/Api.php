@@ -3821,40 +3821,11 @@ public function vac(){
             $accessToken = Yii::app()->getRequest()->getParam('access_token');
              
             $data = CJSON::decode(Yii::app()->request->getRawBody());
-            /// ATTRIB
-            $title = Yii::app()->getRequest()->getParam('title');
-            $posts = Yii::app()->getRequest()->getParam('posts');
-            $requirements = Yii::app()->getRequest()->getParam('requirements');
-            $duties = Yii::app()->getRequest()->getParam('duties');
-            $conditions = Yii::app()->getRequest()->getParam('conditions');
-            $exp = Yii::app()->getRequest()->getParam('exp');
-            
-            $agefrom = Yii::app()->getRequest()->getParam('agefrom');
-            $ageto = Yii::app()->getRequest()->getParam('ageto');
-            $smart = Yii::app()->getRequest()->getParam('smart');
-            $istemp = Yii::app()->getRequest()->getParam('istemp');
-            $ismed = Yii::app()->getRequest()->getParam('ismed');
-            $isavto = Yii::app()->getRequest()->getParam('isavto');
-            $card = Yii::app()->getRequest()->getParam('card');
-            $cardPrommu = Yii::app()->getRequest()->getParam('cardPrommu');
-            
-            ///PAY
-            
-            $shour = Yii::app()->getRequest()->getParam('shour');
-            $sweek = Yii::app()->getRequest()->getParam('sweek');
-            $smonth = Yii::app()->getRequest()->getParam('smonth');
-            $svisit = Yii::app()->getRequest()->getParam('svisit');
-            
-            ///CITY
-            
-            $cities = Yii::app()->getRequest()->getParam('city');
-            $bdate = Yii::app()->getRequest()->getParam('bdate');
-            $edate = Yii::app()->getRequest()->getParam('edate');
 
             list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
-            $figaro = compact('title','agefrom','ageto','isman', 'iswoman',  'istemp', 'shour', 'ismed', 'isavto','posts', 'city','bdate','edate','pub', 'idus');
+            
             $Vacancy = new Vacancy($profile);
-            $data = $Vacancy->saveVacpubData($figaro);   
+            $data = $Vacancy->saveVacpubDataApi($data);   
             
            } catch (Exception $e)
         {
