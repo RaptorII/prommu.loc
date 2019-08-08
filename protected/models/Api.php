@@ -3822,7 +3822,7 @@ public function vac(){
             list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
             var_dump($data);
             $Vacancy = new Vacancy($profile);
-            
+            $datas['id_empl'] = $data['tokens']['id'];
             $data = $Vacancy->saveVacpubDataApi($datas);   
             
            } catch (Exception $e)
