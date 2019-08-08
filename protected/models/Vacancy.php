@@ -1629,7 +1629,7 @@ class Vacancy extends ARModel
             $res = Yii::app()->db->createCommand()
                 ->insert('empl_vacations', $fields);
 
-//             $flagNew = 1;
+            $flagNew = 1;
             $idvac = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
 //             // сохраняем должности
 //             $postt = $this->saveVacPosts($idvac);
@@ -1640,17 +1640,6 @@ class Vacancy extends ARModel
 //             // сохраняем локации
 //             $this->saveLocations($idvac, $idcity);
 
-//             ///API
-//             if($fields['isman'] == 1)
-//                 $male = 'MALE';
-//             else
-//                 $male = 'FEMALE';
-
-//             $Q1 = Yii::app()->db->createCommand()
-//                 ->select("v.id")
-//                 ->from('user_api v')
-//                 ->where('v.id = :id ', array(':id' => Share::$UserProfile->id))
-//                 ->queryRow();
 //         } elseif( $block == 'vacpage' ){
 //             $fields['title'] = filter_var(Yii::app()->getRequest()->getParam('vacancy-title'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 //             // сохраняем должности
