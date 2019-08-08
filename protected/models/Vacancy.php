@@ -652,7 +652,8 @@ class Vacancy extends ARModel
             $data['is_woman'] = (boolean)$val['iswoman'];
             
            
-            
+            $data['age_from'] = (int)$val['agefrom'];
+            $data['age_to'] = (int)$val['ageto'];
             
             $data['is_premium'] = (boolean)$val['ispremium'];
             $data['is_active'] = true;
@@ -662,6 +663,8 @@ class Vacancy extends ARModel
             $data['smart'] = (boolean)$val['smart'];
             $data['card'] = (boolean)$val['card'];
             $data['card_prommu'] = (boolean)$val['cardPrommu'];
+            $data['self_employed'] = (boolean)$val['self_employed'];
+          
             
             
             $data['requirements'] = $val['requirements'];
