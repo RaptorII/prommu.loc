@@ -3817,13 +3817,13 @@ public function vac(){
         {   
             $accessToken = Yii::app()->getRequest()->getParam('access_token');
              
-            $data = CJSON::decode(Yii::app()->request->getRawBody());
+            $datas = CJSON::decode(Yii::app()->request->getRawBody());
             
             list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
             
             $Vacancy = new Vacancy($profile);
             
-            $data = $Vacancy->saveVacpubDataApi($data);   
+            $data = $Vacancy->saveVacpubDataApi($datas);   
             
            } catch (Exception $e)
         {
