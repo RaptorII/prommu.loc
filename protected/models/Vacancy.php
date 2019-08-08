@@ -1749,7 +1749,7 @@ class Vacancy extends ARModel
         foreach ($posts as $key => $val)
         {
             // prepare posts
-            $insData[] = array('id_vac' => $inVacId, 'id_attr' => $val['id'], 'key' => $val['name']);
+            $insData[] = array('id_vac' => $inVacId, 'id_attr' => $val['id'], 'key' => $val['id']);
 
         } // end foreach
         
