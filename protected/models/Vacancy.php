@@ -1529,7 +1529,313 @@ class Vacancy extends ARModel
         return array('idvac' => $idvac);
     }
 
+    
+    public function saveVacpubDataApi($inProps = [])
+    {
+        $idus = Share::$UserProfile->exInfo->id;
+        $idvac = $inProps['id'];
+       
+        $arrs = '';
+        if($idvac) {
+        $sql = "SELECT e.id, e.ispremium, e.status, e.title, e.requirements, e.duties, e.conditions, e.istemp,
+                   DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,e.agefrom, e.ageto,
+                   e.shour,
+                   e.sweek,
+                   e.smonth,
+                   e.isman,
+                   e.smart,
+                   e.iswoman,
+                   e.repost,
+                   DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
+              , c1.id_city, c2.name AS ciname, c1.citycu
+              , ea.id_attr
+              , d.name AS pname, d.postself
+              , ifnull(em.logo, '') logo
+            FROM empl_vacations e 
+            LEFT JOIN empl_city c1 ON c1.id_vac = e.id 
+            LEFT JOIN city c2 ON c2.id_city = c1.id_city 
+            JOIN empl_attribs ea ON ea.id_vac = e.id
+            JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
+            JOIN employer em ON em.id_user = e.id_user
+            WHERE e.id= {$idvac}
+            ORDER BY e.ispremium DESC, e.id DESC";
+            $res = Yii::app()->db->createCommand($sql);
+            $resVac = $res->queryAll();
+        }
 
+            // bl1
+            $fields['title'] = $inProps['title'];
+            $fields['exp'] = $inProps['experience'];
+            $fields['requirements'] = $inProps['requirements'];
+            $fields['duties'] = $inProps['duties'];
+            $fields['conditions'] = $inProps['conditions'];
+            $fields['agefrom'] = $inProps['agefrom'];
+            $fields['ageto'] = $inProps['ageto'];
+            $fields['isman'] = $inProps['isman'];
+            $fields['iswoman'] = $inProps['iswoman'];
+            $fields['ismed'] = $inProps['ismed'];
+            $fields['isavto'] = $inProps['isavto'];
+            $fields['smart'] = $inProps['smart'];
+            $fields['self_employed'] = $inProps['self_employed'];
+            $fields['card'] = $inProps['duties'];
+            $fields['cardPrommu'] = $inProps['cardPrommu'];
+            
+            
+            $fields['shour'] = $inProps['shour'];
+            $fields['sweek'] = $inProps['sweek'];
+            $fields['smonth'] = $inProps['smonth'];
+            $fields['svisit'] = $inProps['svisit'];
+            //bl3
+            $dateWorkStart = $inProps['dateStart'];
+            $dateWorkEnd = $inProps['dateEnd'];
+            
+            $fields = array_merge($fields, array(
+               'bdate' => date('Y-m-d', strtotime($dateWorkStart)),
+               'edate' => date('Y-m-d', strtotime($dateWorkEnd)),
+            ));
+            
+            $fields['istemp'] = $inProps['istemp'];
+     
+     
+            $vk = $inProps['vk'];
+            $fb = $inProps['fb'];
+            $tl = $inProps['tl'];
+            
+            
+            if($fb){
+                $fields['repost'] = '010';
+            }
+            if($vk){
+                $fields['repost'] = '100';
+            }
+            if($tl){
+                $fields['repost'] = '001';
+            }
+            if($vk && $fb && $tl) $fields['repost'] = '111';
+            if($vk && $fb && !$tl) $fields['repost'] = '110';
+            if(!$vk && $fb && $tl) $fields['repost'] = '011';
+            if($vk && !$fb && $tl) $fields['repost'] = '101';
+
+            //
+            $fields['status'] = 0;
+            $fields = array_merge($fields, array( 'id_user' => $idus,
+                'id_empl' => Share::$UserProfile->exInfo->eid,
+                'crdate' => date("Y-m-d H:i:s"),
+                'mdate' => date("Y-m-d H:i:s"),
+            ));
+            
+            $fields['remdate'] = date('Y-m-d 23:59:59', strtotime($inProps['remdate']));
+
+            $res = Yii::app()->db->createCommand()
+                ->insert('empl_vacations', $fields);
+
+//             $flagNew = 1;
+            $idvac = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
+//             // сохраняем должности
+//             $postt = $this->saveVacPosts($idvac);
+//             // сохраняем атрибуты вакансии
+//             $this->saveVacAttribs($idvac);
+//             // сохраняем города
+//             $idcity = $this->saveCities($idvac);
+//             // сохраняем локации
+//             $this->saveLocations($idvac, $idcity);
+
+//             ///API
+//             if($fields['isman'] == 1)
+//                 $male = 'MALE';
+//             else
+//                 $male = 'FEMALE';
+
+//             $Q1 = Yii::app()->db->createCommand()
+//                 ->select("v.id")
+//                 ->from('user_api v')
+//                 ->where('v.id = :id ', array(':id' => Share::$UserProfile->id))
+//                 ->queryRow();
+//         } elseif( $block == 'vacpage' ){
+//             $fields['title'] = filter_var(Yii::app()->getRequest()->getParam('vacancy-title'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+//             // сохраняем должности
+//             $this->saveVacPosts($idvac);
+//             // есть ли опыт
+//             $fields['exp'] = Yii::app()->getRequest()->getParam('expirience');
+//             $fields['agefrom'] = filter_var(Yii::app()->getRequest()->getParam('age-from'), FILTER_SANITIZE_NUMBER_INT);
+//             $fields['ageto'] = filter_var(Yii::app()->getRequest()->getParam('age-to'), FILTER_SANITIZE_NUMBER_INT);
+//             $fields['isman'] = filter_var(Yii::app()->getRequest()->getParam('mans'), FILTER_SANITIZE_NUMBER_INT);
+//             $fields['iswoman'] = filter_var(Yii::app()->getRequest()->getParam('wonem'), FILTER_SANITIZE_NUMBER_INT);
+//             $fields['ismed'] = filter_var(Yii::app()->getRequest()->getParam('ismed'), FILTER_SANITIZE_NUMBER_INT);
+//             $fields['isavto'] = filter_var(Yii::app()->getRequest()->getParam('isavto'), FILTER_SANITIZE_NUMBER_INT);
+//             $fields['smart'] = $inProps['smart'] ?: filter_var(Yii::app()->getRequest()->getParam('smart'), FILTER_SANITIZE_NUMBER_INT);
+//             $fields['self_employed'] = $inProps['self_employed'] ?: filter_var(Yii::app()->getRequest()->getParam('self_employed'), FILTER_SANITIZE_NUMBER_INT);
+//             $fields['requirements'] = filter_var(Yii::app()->getRequest()->getParam('requirements'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+//             $fields['duties'] = filter_var(Yii::app()->getRequest()->getParam('duties'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+//             $fields['conditions'] = filter_var(Yii::app()->getRequest()->getParam('conditions'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            
+//             $filter = function($val) { return preg_match("/([0-9]+)[.,]?([0-9]{0,2})/", $val, $res) ? $res[1].'.'.$res[2] : 0; };
+//             $fields['shour'] = filter_var(Yii::app()->getRequest()->getParam('salary-rub-hour'), FILTER_CALLBACK, array('options' => $filter));
+//             $fields['sweek'] = filter_var(Yii::app()->getRequest()->getParam('salary-rub-week'), FILTER_CALLBACK, array('options' => $filter));
+//             $fields['smonth'] = filter_var(Yii::app()->getRequest()->getParam('salary-rub-month'), FILTER_CALLBACK, array('options' => $filter));
+//             $fields['svisit'] = filter_var(Yii::app()->getRequest()->getParam('salary-rub-visit'), FILTER_CALLBACK, array('options' => $filter));
+//             $fields['cardPrommu'] = filter_var(Yii::app()->getRequest()->getParam('card-prommu'), FILTER_SANITIZE_NUMBER_INT);
+//             $fields['card'] = filter_var(Yii::app()->getRequest()->getParam('bank-card'), FILTER_SANITIZE_NUMBER_INT);
+//             $fields['istemp'] = $inProps['istemp'] ?: filter_var(Yii::app()->getRequest()->getParam('busyType'), FILTER_SANITIZE_NUMBER_INT);
+//             // дата завершения
+//             $remdate = filter_var(Yii::app()->getRequest()->getParam('remdate'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+//             $arRemdate = explode('.', $remdate);
+//             if(checkdate($arRemdate[1], $arRemdate[0], $arRemdate[2]))
+//             {
+//                 $fields['remdate'] = "{$arRemdate[2]}-{$arRemdate[1]}-{$arRemdate[0]}";
+//             }
+
+//             // сохраняем атрибуты вакансии
+//             $this->saveVacAttribs($idvac);
+
+//             if($resVac['title'] != $fields['title']){
+//                 $arrs .= 'Название|';
+//             }
+//              if($resVac['ageto'] != $fields['ageto']){
+//                 $arrs .= 'Возраст от|';
+//             }
+            
+//             if($resVac['shour'] != $fields['shour']){
+//                 $arrs .= 'Почасовая оплата|';
+//             }
+           
+
+//             if($resVac['requirements'] != $fields['requirements']){
+//                 $arrs .= 'Требования|';
+//             }
+//             if($resVac['duties'] != $fields['duties']){
+//                 $arrs .= 'Обязанности|';
+//             }
+//             if($resVac['conditions'] != $fields['conditions']){
+//                 $arrs .= 'Условия|';
+//             }
+//         }
+//         else
+//         {
+
+
+
+//             // сохраняем языки
+// //            $this->saveUserLang($idvac);
+//         } // endif
+
+
+//         // редактирование
+//         if( $fields && $idvac )
+//         {
+//             unset($fields['id_user']);
+//             $fields['mdate'] = date("Y-m-d H:i:s");
+//             $fields['ismoder'] = 0;
+//             $res = Yii::app()->db->createCommand()
+//                 ->update('empl_vacations', $fields
+//                     ,'id = :id', array(':id' => $idvac) );
+//         if($arrs != ''){
+//           $sql = "SELECT ru.email, r.firstname, r.lastname
+//             FROM vacation_stat s
+//             INNER JOIN empl_vacations e ON e.id = s.id_vac
+//             INNER JOIN resume r ON s.id_promo = r.id
+//             INNER JOIN user ru ON ru.id_user = r.id_user
+//             WHERE s.status IN(5,6) AND e.id = {$idvac}";
+//         /** @var $res CDbCommand */
+//         $res = Yii::app()->db->createCommand($sql);
+//         $rest = $res->queryAll();
+
+//         if($rest!= ""){
+//             for($i = 0; $i < count($rest); $i ++){
+//                 $content = file_get_contents(Yii::app()->basePath . "/views/mails/app/emp-changing-vac.html");
+//                   $content = str_replace('#APPNAME#', $rest[$i]['firstname'] . ' ' . $rest[$i]['lastname'], $content);
+//                  $content = str_replace('#EMPCOMPANY#', Share::$UserProfile->exInfo->name, $content);
+//                  $content = str_replace('#VACID#', $idvac, $content);
+//                  $content = str_replace('#VACNAME#', $fields['title'], $content);
+//                  $content = str_replace('#VACPARAMLIST#', $arrs, $content);
+//                  $content = str_replace('#VACLINK#',  Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $idvac, $content);
+//               if(strpos($rest[$i]['email'], "@") !== false)
+//               Share::sendmail($rest[$i]['email'], "Prommu.com Изменение вакансии №" .$idvac, $content);
+//             }
+
+        
+        
+
+//          $content = file_get_contents(Yii::app()->basePath . "/views/mails/app/emp-changing-vac.html");
+//                   $content = str_replace('#APPNAME#', "администратор", $content);
+//                  $content = str_replace('#EMPCOMPANY#', Share::$UserProfile->exInfo->name, $content);
+//                  $content = str_replace('#VACID#', $idvac, $content);
+//                  $content = str_replace('#VACNAME#', $fields['title'], $content);
+//                  $content = str_replace('#VACPARAMLIST#', $arrs, $content);
+//                  $content = str_replace('#VACLINK#', Subdomain::site() . '/admin/site/VacancyEdit'. DS .$idvac, $content);
+               
+//          $email[0] = "susgresk@gmail.com";
+//         $email[1] = "prommu.servis@gmail.com";
+//         $email[2] = "denisgresk@gmail.com";
+//         for($i = 0; $i <3; $i++){
+//           Share::sendmail($email[$i], "Prommu.com Изменение вакансии №" . $idvac, $content);
+       
+//         }
+//       }
+//     }
+//         }
+//         $showFlash = false;
+//         if($flagNew){
+//             $message = 'Ваша вакансия сохранена, но не отображается.<br/>
+//                         Для того, чтобы вакансия отображалась, Вам необходимо 
+//                         при помощи редактирования и существующих подсказок, 
+//                         добавить всю необходимую информацию к публикуемой вакансии.<br/>
+//                         После этого нажмите кнопку "Опубликовать вакансию"
+//                         ';
+//             $showFlash = true;
+//         }
+//         else{
+//             $res = Yii::app()->db->createCommand()
+//                 ->select('status')
+//                 ->from('empl_vacations v')
+//                 ->where('v.id = :id AND v.id_user = :idus', array(':id' => $idvac, ':idus' => Share::$UserProfile->id))
+//                 ->queryRow();
+//             $showFlash = $res['status'];          
+//             $message = 'Данные успешно сохранены и направлены на модерацию. Обычно это занимает до 15 минут в рабочее время.';
+//         }
+//         if($showFlash){
+//           Yii::app()->user->setFlash('prommu_flash', $message);  
+//         }
+//         if($blockpub == 'pub')
+//         {
+//             $user = Share::$UserProfile->exInfo;
+//             $user->name = trim($user->name);
+//             empty($user->name) && $user->name = 'пользователь';
+            
+//             Yii::app()->user
+//                 ->setFlash('prommu_flash',
+//                     "<div class='big-flash'>
+//                         <p>Уважаемый «" . $user->name . "»!</p>
+//                         <p>Вы только что добавили новую вакансию на сервис Prommu. 
+//                         На данном этапе она еще не опубликована на сервисе.</p> 
+//                         <p>После закрытия этого информационного окна, Вы можете посмотреть 
+//                         добавленную информацию, изменить, дополнить, 
+//                         <span style='color:#ff921d;'>продублировать</span> ее с указанием адресов 
+//                         работы и других необходимых данных.</p> 
+//                         <p>После этого необходимо нажать кнопку 
+//                         <span style='color:#ff921d;'>«ОПУБЛИКОВАТЬ ВАКАНСИЮ»</span>.</p>
+//                         <p>По окончанию модерации (в рабочее время до 15 минут) Ваша вакансия 
+//                         будет размещена на сервисе.</p> 
+//                         <p>Просмотреть и отредактировать данную вакансию Вы можете в любой момент 
+//                         времени в личном кабинете - категория 
+//                         <span style='color:#ff921d;'>«МОИ ВАКАНСИИ»</span>.</p> 
+//                         <p>Быстрого и лёгкого поиска Вам персонала.</p>
+//                         <i>С найлучшими пожеланиями команда Промму!</i>
+//                     </div>");
+
+//             Mailing::set(
+//                         3,
+//                         array(
+//                             'email_user' => $user->email,
+//                             'company_user' => $user->name,
+//                             'id_vacancy' => $idvac
+//                         )
+//                     );
+//         }
+        
+        return array('idvac' => $idvac);
+    }
+    
 
     /**
      * Активировать вакансию
