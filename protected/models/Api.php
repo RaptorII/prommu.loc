@@ -3820,7 +3820,12 @@ public function vac(){
             $datas = CJSON::decode(Yii::app()->request->getRawBody());
             
             list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
-           
+            
+            if($profile->type == 2){
+                $error = 101; $message = 'Error get api data';
+                return  $data = ['error' => $error, 'message' => $message];
+            }
+            
             $Vacancy = new Vacancy($profile);
             
             $datas['id_empl'] = $data['tokens']['id'];
