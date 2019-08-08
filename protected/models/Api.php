@@ -3819,10 +3819,10 @@ public function vac(){
              
             $data = CJSON::decode(Yii::app()->request->getRawBody());
             
-            var_dump($data['title']);
             list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
             
             $Vacancy = new Vacancy($profile);
+            
             $data = $Vacancy->saveVacpubDataApi($data);   
             
            } catch (Exception $e)
