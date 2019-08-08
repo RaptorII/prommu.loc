@@ -3813,9 +3813,6 @@ public function vac(){
     public function vacancyPublish()
     {
         $error = '-101';
-
-        var_dump(Yii::app()->request->acceptTypes);
-        return;
         try
         {   
             $accessToken = Yii::app()->getRequest()->getParam('access_token');
