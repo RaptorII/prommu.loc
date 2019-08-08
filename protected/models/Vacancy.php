@@ -1569,37 +1569,37 @@ class Vacancy extends ARModel
             $fields['requirements'] = $inProps['requirements'];
             $fields['duties'] = $inProps['duties'];
             $fields['conditions'] = $inProps['conditions'];
-            $fields['agefrom'] = $inProps['agefrom'];
-            $fields['ageto'] = $inProps['ageto'];
-            $fields['isman'] = $inProps['isman'];
-            $fields['iswoman'] = $inProps['iswoman'];
-            $fields['ismed'] = $inProps['ismed'];
-            $fields['isavto'] = $inProps['isavto'];
+            $fields['agefrom'] = $inProps['age_from'];
+            $fields['ageto'] = $inProps['age_to'];
+            $fields['isman'] = $inProps['is_man'];
+            $fields['iswoman'] = $inProps['is_woman'];
+            $fields['ismed'] = $inProps['is_med'];
+            $fields['isavto'] = $inProps['is_hasavto'];
             $fields['smart'] = $inProps['smart'];
             $fields['self_employed'] = $inProps['self_employed'];
             $fields['card'] = $inProps['duties'];
-            $fields['cardPrommu'] = $inProps['cardPrommu'];
+            $fields['cardPrommu'] = $inProps['card_prommu'];
             
             
-            $fields['shour'] = $inProps['shour'];
-            $fields['sweek'] = $inProps['sweek'];
-            $fields['smonth'] = $inProps['smonth'];
-            $fields['svisit'] = $inProps['svisit'];
+            $fields['shour'] = $inProps['salary_hour'];
+            $fields['sweek'] = $inProps['salary_week'];
+            $fields['smonth'] = $inProps['salary_month'];
+            $fields['svisit'] = $inProps['salary_visit'];
             //bl3
-            $dateWorkStart = $inProps['dateStart'];
-            $dateWorkEnd = $inProps['dateEnd'];
+            $dateWorkStart = $inProps['date_start'];
+            $dateWorkEnd = $inProps['date_end'];
             
             $fields = array_merge($fields, array(
                'bdate' => date('Y-m-d', strtotime($dateWorkStart)),
                'edate' => date('Y-m-d', strtotime($dateWorkEnd)),
             ));
             
-            $fields['istemp'] = $inProps['istemp'];
+            $fields['istemp'] = $inProps['is_temp'];
      
      
-            $vk = $inProps['vk'];
-            $fb = $inProps['fb'];
-            $tl = $inProps['tl'];
+            $vk = $inProps['repost_vk'];
+            $fb = $inProps['repost_fb'];
+            $tl = $inProps['repost_tl'];
             
             
             if($fb){
@@ -1624,7 +1624,7 @@ class Vacancy extends ARModel
                 'mdate' => date("Y-m-d H:i:s"),
             ));
             
-            $fields['remdate'] = date('Y-m-d 23:59:59', strtotime($inProps['remdate']));
+            $fields['remdate'] = date('Y-m-d 23:59:59', strtotime($fields['edate']));
 
             $res = Yii::app()->db->createCommand()
                 ->insert('empl_vacations', $fields);
