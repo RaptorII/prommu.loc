@@ -1395,6 +1395,8 @@ class SiteController extends Controller
             $api = new Api();
             $api->ideas();
             $model = new Analytic;
+            $stat =  $model->getAnalityc();
+
             $model->unsetAttributes();  // clear any default values
             $model->search();
             $model->active=1;
@@ -1413,7 +1415,7 @@ class SiteController extends Controller
             }
             $this->setPageTitle($title);
             $this->breadcrumbs = array('Аналитика'=>array('sect?p=analytic'),'1'=>$brdcrmbs);          
-            $this->render('analytic/index', array('model'=>$model));
+            $this->render('analytic/index', array('model'=>$model, 'stat' => $stat));
         }
     }
 
