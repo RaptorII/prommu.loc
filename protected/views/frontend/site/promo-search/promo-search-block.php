@@ -105,14 +105,13 @@
                                 <?php
                                 $curr = array('руб/час', 'руб/нед', 'руб/мес', 'руб/пос',);
                                 $j=0;
-                                foreach ($val['post'] as $key2 => $val2):
-
+                                foreach ($val['post'] as $val2):
                                     if ($j<2) {
                                         $j++;
                                         ?>
-                                        <?= $val2[0] ?>
+                                        <?= $val2['name'] ?>
                                         <div class='price'>
-                                            <?= $val2[1] . ' ' . $curr[$val2[2]] ?>
+                                            <?= $val2['pay'] . ' ' . $curr[$val2['pay_type']] ?>
                                         </div><br>
                                         <?php
                                     }
@@ -130,12 +129,10 @@
                                 if ($j>=2) {
                                     echo'<div class="over__hint">';
                                     foreach ($val['post'] as $key2 => $val2): ?>
-
-                                        <?= $val2[0]; ?>
+                                        <?= $val2['name']; ?>
                                         <div class='price'>
-                                            <?= $val2[1] . ' ' . $curr[$val2[2]] ?>
+                                            <?= $val2['pay'] . ' ' . $curr[$val2['pay_type']] ?>
                                         </div><br>
-
                                     <?php
                                     endforeach;
                                     echo '</div>';
