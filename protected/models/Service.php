@@ -132,7 +132,240 @@ class Service extends CActiveRecord
     {
         return parent::model($className);
     }
+    
+    /**
+     * экспорт соискателей в админке
+     */
+    public function exportServices()
+    {
+        $offset = 0;
+        $limit = 100; // вакансий за 1 итерацию
+        $arRes = array(
+            'items'=>[],
+            'city'=>[],
+            'responses'=>[],
+            'employers'=>[],
+            'views'=>[],
+            'head' => [
+                'ID Компании',
+                'Название компании',
+                'Название В.',
+                'ID В.',
+                'ID У.',
+                'Название У.',
+                'Платная / Бесплатная',
+                'Стоимость',
+                'Домены использования У.',
+                'Дата и время создание У.',
+                'Дата и время оплаты У.',
+                'Дата и время отработки Услуги',
+                'Повторный заказ У.',
+                'Стоимость за повторный',
+                'Дата снятия У.',
+              ],
+            'autosize' => [0,1,2,3,6,7,8,9,10,11,12,13,14]
+          );
+          
+        $db = Yii::app()->db;
+        $conditions = $params = [];
+        $rq = Yii::app()->getRequest();
+        
+        $dateType = $rq->getParam('export_date');
+        $bDate = $rq->getParam('export_beg_date');
+        $eDate = $rq->getParam('export_end_date');
+        
+        $birthbDate = $rq->getParam('birthday_beg_date');
+        $birtheDate = $rq->getParam('birthday_end_date');
+        
+        $status = $rq->getParam('export_status');
+        $phones = $rq->getParam('export_phone');
+        
+        $bDate = date('Y-m-d',strtotime($bDate));
+        $eDate = date('Y-m-d',strtotime($eDate));
+        
+        $birthbDate = date('Y-m-d',strtotime($birthbDate));
+        $birtheDate = date('Y-m-d',strtotime($birtheDate));
 
+        if($bDate!='1970-01-01')
+        {
+            switch ($dateType)
+            {
+                case 'create': 
+                    $conditions[] = 'e.date_public>=:bdate';
+                    $params[':bdate'] = $bDate . ' 00:00:00';
+                    break;
+            }   
+        }
+        if($eDate!='1970-01-01')
+        {
+            switch ($dateType)
+            {
+                case 'create': 
+                    $conditions[] = 'e.date_public<=:edate';
+                    $params[':edate'] = $eDate . ' 23:59:59';
+                    break;
+            }   
+        }
+        
+        if($birthbDate!='1970-01-01')
+        {
+            switch ($dateType)
+            {
+                case 'create': 
+                    $conditions[] = 'e.birthday>=:bsdate';
+                    $params[':bsdate'] = $birthbDate . ' 00:00:00';
+                    break;
+            }   
+        }
+        if($birtheDate!='1970-01-01')
+        {
+            switch ($dateType)
+            {
+                case 'create': 
+                    $conditions[] = 'e.birthday<=:esdate';
+                    $params[':esdate'] = $birtheDate . ' 23:59:59';
+                    break;
+            }   
+        }
+        
+        
+        if($status!='all')
+        {
+            $conditions[] = 'u.ismoder =' . ($status=='active' ? '1' : '0');
+        }
+        
+        
+        $arId = $db->createCommand()
+                                ->select("e.id, e.id_user, e.firstname,e.birthday, e.lastname, e.date_public, e.mdate, e.photo, e.card, e.cardPrommu,
+                                          e.ismed, e.ishasavto, e.smart")
+                                ->from('resume e')
+                                ->join('user u', 'u.id_user=e.id_user')
+                                ->where(implode(' and ',$conditions), $params)
+                                ->order('e.id desc')
+                                ->queryAll();
+
+        $n = count($arId);
+        if(!$n)
+        {
+          Yii::app()->user->setFlash('danger', 'Соискателей не найдено');
+          return false;
+        }
+        
+         
+    
+        foreach ($arId as $k => $v)
+        {
+            
+            
+            $time = $this->getOnlineTime($v['id']);
+            //!empty($data['userAttribs']['mob']['val']) && 
+           
+                
+                
+                $data = $this->getUserExcelInfo($v['id_user']);
+                $now = time(); 
+                $your_date = strtotime($v['date_public']); 
+                $datediff = $now - $your_date; 
+                
+                $days = floor($datediff / (60 * 60 * 24)); 
+                $id = $v['id'];
+                $id_user = $v['id_user'];
+                $arT[$id]['id'] = $v['id'];
+                $arT[$id]['fio'] = $v['firstname'].' '.$v['lastname'];
+                $arT[$id]['birthday'] = $v['birthday'];
+                if($v['photo']){
+                    $arT[$id]['photo'] = "https://files.prommu.com/users/".$v['id'].'/'.$v['photo'].'.jpg';
+                } else $arT[$id]['photo'] = "";
+    
+                $arT[$id]['photocount'] = 1;
+                
+                ///city
+                $city = $this->getCityUserExcel($v['id_user']);
+                
+                $arT[$id]['country'] = $city['coname'];
+                $arT[$id]['city'] = $city['name'];
+                $arT[$id]['region'] = $city['region'];
+                
+                ///contact
+                $arT[$id]['phone'] = $data['userAttribs']['mob']['val'];
+                $arT[$id]['email'] = $data[0]['email'];
+                $arT[$id]['skype'] = $data['userAttribs']['skype']['val'];
+                $arT[$id]['whatsapp'] = $data['userAttribs']['whatsapp']['val'];
+                $arT[$id]['viber'] = $data['userAttribs']['viber']['val'];
+                $arT[$id]['telegram'] = $data['userAttribs']['telegram']['val'];
+                $arT[$id]['messenger'] = $data['userAttribs']['google']['val'];
+                
+                ///дата создания
+                $arT[$id]['crdate'] = $v['date_public'];
+                $arT[$id]['mdate'] = $v['mdate'];
+                $arT[$id]['edate'] = $v['mdate'];
+                $arT[$id]['dedate'] = $v['mdate'];
+                $arT[$id]['online'] = $v['mdate'];
+                $arT[$id]['daysfromsite'] = $days;
+                $arT[$id]['daysonline'] = $time['time'];
+                
+                ///вакансия
+                
+                $sql = "SELECT COUNT(id)
+								FROM termostat_analytic
+								WHERE user = {$id_user} 
+									AND type = 'vacancy'";
+			    $countvac = Yii::app()->db->createCommand($sql)->queryScalar();
+			    
+			    $sql = "SELECT COUNT(id)
+								FROM vacation_stat
+								WHERE id_promo = {$id} 
+									AND isresponse = 1";
+			    $countactivevac = Yii::app()->db->createCommand($sql)->queryScalar();
+			    
+			    $sql = "SELECT COUNT(id)
+								FROM vacation_stat
+								WHERE id_promo = {$id} 
+									AND status IN (5,6,7)";
+			    $countarchivevac = Yii::app()->db->createCommand($sql)->queryScalar();
+			    
+			    $sql = "SELECT COUNT(id)
+								FROM vacation_stat
+								WHERE id_promo = {$id} 
+									AND status IN (3)";
+			    $countinvitevac = Yii::app()->db->createCommand($sql)->queryScalar();
+			    
+			    
+			    $sql = "SELECT COUNT(id)
+								FROM vacation_stat
+								WHERE id_promo = {$id} 
+									AND status IN (7)";
+			    $countresponsevac = Yii::app()->db->createCommand($sql)->queryScalar();
+			
+                $arT[$id]['countvac'] = $countvac;
+                $arT[$id]['countactivevac'] = $countactivevac;
+                $arT[$id]['countarchivevac'] = $countarchivevac;
+                $arT[$id]['countinvitevac'] = $countinvitevac;
+                $arT[$id]['countresponsevac'] = $countresponsevac;
+                $arT[$id]['countrefusedvac'] = "";
+                
+                
+                ///рейтинг
+                $arT[$id]['countrating'] = "";
+                $arT[$id]['feedback'] = "";
+                $arT[$id]['countratingpromo'] = "";
+                
+                
+                ///наличие атрибутов
+                $arT[$id]['ismed'] = $v['ismed'];
+                $arT[$id]['cardPrommu'] = $v['cardPrommu'];
+                $arT[$id]['card'] = $v['card'];
+                $arT[$id]['smart'] = $v['smart'];
+                $arT[$id]['ishasavto'] = $v['ishasavto'];
+            
+        }
+        
+         $arRes['items'] = $arT;
+         
+        return $arRes;
+        
+    }
+    
     public function exportAnalytic()
     {
                 $data = Yii::app()->db->createCommand()
