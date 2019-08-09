@@ -137,7 +137,7 @@
 .sv__attributes-item.ico9:before { content: '\e999'; }
 .sv__attributes-item.ico10:before{ content: '\e904'; }
 .sv__attributes-item.ico11:before{ content: '\e944'; font-size: 30px; left: -3px; }
-.sv__attributes-item.ico12:before{ content: '\e97a'; }
+.sv__attributes-item.ico12:before{ content: '\e97a'; font-size: 30px; left: -3px; }
 .sv__attributes-item.ico13:before{ content: '\e97f'; }
 .sv__attributes-item.ico14:before{ content: '\e979'; }
 .sv__attributes-item.ico15:before{ content: '\e982'; }
@@ -199,25 +199,17 @@
 .sv__checkbox-attr-item i:after{
 	content: '';
 	font-family: "PrommuFont";
-	font-size: 35px;
+	font-size: 32px;
 	line-height: 35px;
-	color: var(--color-green);
+	color: var(--color-l-grey);
 }
 .sv__checkbox-attr-item.med   i:after { content: '\e969'; }
 .sv__checkbox-attr-item.auto  i:after { content: '\e956'; }
 .sv__checkbox-attr-item.smart i:after { content: '\e976'; }
 .sv__checkbox-attr-item.pcard i:after { content: '\e96d'; }
 .sv__checkbox-attr-item.card  i:after { content: '\e96c'; }
+.sv__checkbox-attr-item.self_employed i:after {content: '\e967';}
 
-.sv__checkbox-attr-item.self_employed i{
-	width: 34px;
-	height: 34px;
-	vertical-align: middle;
-	display: inline-block;
-	margin-right: 5px;
-	background: url(/theme/pic/vacancy/vacancy-sprite-big.png) 0 0 no-repeat;
-	background-position: 0px -204px
-}
 .sv__textblock-title{
 	padding-left: 30px;
 	margin: 20px 0 15px;
@@ -236,7 +228,7 @@
 	content: '';
 	font-family: "PrommuFont";
 	color: var(--color-green);
-	font-size: 25px;
+	font-size: 20px;
 	line-height: 22px;
 	width: 25px;
 	height: 20px;
@@ -247,14 +239,14 @@
 .sv__textblock-title.ico1:before{
 	content: '!';
 	color: var(--color-white);
-	top: -3px;
+	top: -5px;
 	left: 8px;
 	z-index: 1;
 }
 .sv__textblock-title.ico1:after{
 	content: '';
-	width: 25px;
-	height: 25px;
+	width: 22px;
+	height: 22px;
 	background: var(--color-green);
 	position: absolute;
 	border-radius: 50%;
@@ -310,7 +302,7 @@
     top: 2px;
     left: 0;
 }
-.sv__data-city.city:before{ content: '\e97f'; top: -3px; left: -5px; }
+.sv__data-city.city:before{ content: '\e97f'; top: -6px; left: -4px; font-size: 32px; }
 .sv__data-city.loc:before { content: '\e979'; }
 .sv__data-city.addr:before{ content: '\e97c'; }
 .sv__data-city.time:before{ content: '\e996'; }
