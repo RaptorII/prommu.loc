@@ -71,11 +71,11 @@
 .auth-form__label.email:before{
 	font-family: "PrommuFont";
 	content: '\e98c';
-	font-size: 50px;
+	font-size: 45px;
 	color: var(--color-green);
 	position: absolute;
 	left: -10px;
-	top: -15px;
+	top: -13px;
 }
 
 .auth-form__label.remember{
@@ -388,9 +388,9 @@ media
 	color: var(--color-green);
 	font-size: 25px;
     top: 0;
-    right: 0;
+    left: -47px;
     display: block;
     position: absolute;
 }
-.auth-form__selection label:first-child:after{ content: '\e936'; }
+.auth-form__selection label:first-child:after{ content: '\e936'; font-size: 35px;}
 .auth-form__selection label:last-child:after{ content: '\e976'; font-size: 35px;}

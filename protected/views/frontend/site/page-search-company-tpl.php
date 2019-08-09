@@ -7,7 +7,7 @@
     #DiContent .pse__checkbox-label {
         display: block;
         position: relative;
-        height: 29px;
+        height: 33px;
         line-height: 29px;
         padding-right: 35px;
         cursor: pointer;
@@ -22,7 +22,7 @@
         height: 29px;
         right: 0;
         top: 0;
-        font-size: 30px;
+        font-size: 28px;
         font-family: 'PrommuFont' !important;
         content: '\e98a';
         color: var(--color-ll-grey);

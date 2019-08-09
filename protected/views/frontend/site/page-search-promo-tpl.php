@@ -15,9 +15,9 @@ foreach ($viData['posts'] as $p)
 #DiContent .psa__checkbox-label {
     display: block;
     position: relative;
-    height: 29px;
-    line-height: 29px;
-    padding-right: 35px;
+    height: 33px;
+    line-height: 10px;
+    padding: 6px 35px 0 0;
     cursor: pointer;
     font-size: 13.33px;
     color: #a0a0a0;
@@ -30,8 +30,8 @@ foreach ($viData['posts'] as $p)
     width: 30px;
     height: 29px;
     right: 0;
-    top: 0;
-    font-size: 30px;
+    top: 9px;
+    font-size: 28px;
     font-family: 'PrommuFont' !important;
     content: '\e98a';
     color: var(--color-ll-grey);
