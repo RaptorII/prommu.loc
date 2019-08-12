@@ -30,7 +30,7 @@
             font-family: 'PrommuFont' !important;
             content: '\e98a';
             color: var(--color-ll-grey);
-            font-size: 30px;
+            font-size: 28px;
         }
         .psv__checkbox-label:hover:after,
         .psv__radio-label:hover:after{
