@@ -170,11 +170,13 @@
     overflow: hidden;
 }
 .ppp__content-title:before{
-    content: '';
+    content: '\e913';
+    font-family: "PrommuFont";
+    color: var(--color-green);
+    font-size: 23px;
     display: inline-block;
     width: 27px;
     height: 27px;
-    background: url(/theme/pic/private/vac-list-user-icon.png) no-repeat;
     vertical-align: middle;
     margin-right: 5px;
 }
@@ -880,12 +882,6 @@ a.upp__project-info{ width: 65px }
     .ppp__post-item:nth-child(2n+1) {
         margin-right: 10px
     }
-    /*.ppp__post-item:nth-child(2n+1) {*/
-        /*padding-right: 10px */
-    /*}*/
-    /*.ppp__post-item:nth-child(2n){*/
-        /*padding-left: 10px */
-    /*}*/
     .ppp__period-list .ppp__field{
         width: 49%;
         float: left;
