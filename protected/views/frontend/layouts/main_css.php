@@ -557,6 +557,9 @@
     transform: translateX(-50%);
 }
 
+.icn-group-plus-two-pommu:before {
+    content: "\e9a8";
+}
 .icn-heart-idea-prommu:before {
     content: "\e9a4";
 }

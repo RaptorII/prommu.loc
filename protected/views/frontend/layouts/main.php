@@ -227,7 +227,7 @@
                                                 <a href="<?=$link?>">
                                                     <span class="small-menu__circle">
                                                         <b class="small-menu__cnt"><?=$arNotif['cnt']?></b>
-                                                        <span class="small-menu__icon icn-group-plus-prommu color-white"></span>
+                                                        <span class="small-menu__icon icn-group-plus-two-prommu color-white"></span>
                                                     </span>
                                                     <span class="small-menu__name">ВАКАНСИИ</span>
                                                 </a>
