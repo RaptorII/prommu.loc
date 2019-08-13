@@ -526,6 +526,14 @@
     left: 0;
 }
 
+.small-menu__icon.icn-group-plus-two-prommu:before {
+    content: "\e9a8";
+    font-size: 22px;
+    position: absolute;
+    top: -4px;
+    left: -9px;
+}
+
 /* CSS Prommu Font */
 @font-face {
     font-family: 'PrommuFont';
