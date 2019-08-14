@@ -144,9 +144,14 @@ class Api
     public function getProfile(){
     
     $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $id = Yii::app()->getRequest()->getParam('id');
         
-        
-    list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
+    if($accessToken){
+        list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
+    } else {
+        $profile = (new ProfileFactory())->makeProfile(['id' => $id]);
+    }
+    
         
     $res['user']['id'] = 12345;
     $res['user']['first_name'] = "Test";
