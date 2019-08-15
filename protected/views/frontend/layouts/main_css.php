@@ -369,6 +369,16 @@
     right: 0;
     top: 0;
 }
+@media (min-width: 768px) and (max-width: 992px) {
+    #DiTopMenuWrapp .top-menu-wr__submenu>a:after {
+        font-family: "PrommuFont";
+        content: '\e912';
+        font-size: 13px;
+        position: absolute;
+        right: -5px;
+        top: 0;
+    }
+}
 
 #DiContent .comm-logo .comments,
 #DiContent .comm-logo .rate {
