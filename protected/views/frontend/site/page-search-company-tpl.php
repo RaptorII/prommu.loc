@@ -31,7 +31,7 @@
         content: '\e98a';
         color: var(--color-ll-grey);
     }
-    input:checked + .psa__checkbox-label:after {
+    input:checked + .pse__checkbox-label:after {
         content: '\e989';
         color: var(--color-green);
     }
