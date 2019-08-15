@@ -587,6 +587,11 @@ input:checked + .fav__label-checkbox:after{ content: '\2714'; }
 #av-posts-list li:first-child{ 
 	padding: 0;
 	position: relative;
+	/*
+	!!! Скрытие добавления новой вакансии
+	 */
+	height: 0;
+	overflow: hidden;
 }
 #av-posts-list li:first-child:hover{ background-color: transparent; }
 #DiContent .fav__select-posts #av-posts-list input{

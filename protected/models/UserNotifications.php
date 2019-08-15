@@ -77,9 +77,9 @@ class UserNotifications
       $arIdUser = [];
       foreach ($query as $key => $v) // собираем ID оискателей
       {
-        if(strpos($v[self::$EMP_SET_RATING],',')!==false)
+        $query[$key][self::$EMP_SET_RATING] = explode(',',$v[self::$EMP_SET_RATING]);
+        if(!empty(reset($query[$key][self::$EMP_SET_RATING])))
         {
-          $query[$key][self::$EMP_SET_RATING] = explode(',',$v[self::$EMP_SET_RATING]);
           $arIdUser = array_merge($arIdUser, $query[$key][self::$EMP_SET_RATING]);
         }
         else
@@ -106,8 +106,10 @@ class UserNotifications
       }
     }
 
-    foreach ($query as $v) {
-      if (Share::isEmployer()) {
+    foreach ($query as $v)
+    {
+      if (Share::isEmployer())
+      {
         self::buildArray($arRes, $v, self::$EMP_RESPONSES);
         self::buildArray($arRes, $v, self::$EMP_APPROVAL);
         self::buildArray($arRes, $v, self::$EMP_REFUSALS);
@@ -116,7 +118,8 @@ class UserNotifications
         self::buildArray($arRes, $v, self::$EMP_SET_RATING);
         self::buildArray($arRes, $v, self::$EMP_NEW_RATING);
       }
-      if (Share::isApplicant()) {
+      if (Share::isApplicant())
+      {
         self::buildArray($arRes, $v, self::$APP_INVITATIONS);
         self::buildArray($arRes, $v, self::$APP_NEW_VACANCIES);
         self::buildArray($arRes, $v, self::$APP_CONFIRMATIONS);
@@ -200,7 +203,7 @@ class UserNotifications
       $arRes['items'][$field]['cnt'] += $item[$field];
       $arRes['cnt'] += $item[$field];
 
-      if($field==self::$APP_SET_RATING)
+      if($field==self::$APP_SET_RATING || $field==self::$APP_NEW_RATING)
       {
         $arRes['items'][$field]['items'][] = [
           'vacancy' => $item['title'] . ' (' . $item['employer'] . ')',
@@ -310,7 +313,7 @@ class UserNotifications
     {
       if(isset($data['id'])) // меняем одну запись
       {
-        $data[$cnt] = ($value ? implode(',',$value) : ($v[$cnt]+1));
+        $data[$cnt] = ($value ? implode(',',$value) : ($data[$cnt]+1));
         $result = Yii::app()->db->createCommand()
           ->update(
             self::$table,
