@@ -6,9 +6,22 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl = Yii::app()->baseUrl . 
 Yii::app()->getClientScript()->registerCssFile('/jslib/magnific-popup/magnific-popup-min.css');
 Yii::app()->getClientScript()->registerScriptFile('/jslib/magnific-popup/jquery.magnific-popup.min.js', CClientScript::POS_END);
 
+
+//$modelFdb = new Feedback;
+//$modelFdb = $modelFdb->getDatAdmin();
+
+$fdbck = new Feedback();
+$fdbck = $fdbck->getUserFeedbacks($data['id_user']);//(15642);//
+
 echo '<pre style="display:none">';
-print_r($data);
+//print_r($data);
+//print_r($modelFdb);
+//print_r($feedback);
 echo '</pre>';
+
+
+
+
 
 echo '<div class="row">';
 echo '<div class="col-xs-12 col-sm-9 col-sm-offset-3 col-md-6 col-md-offset-2">'
@@ -22,6 +35,7 @@ echo '<div class="col-xs-12"><div class="row">';
                 . '<li><a href="#tab_vacs" aria-controls="tab_vacs" role="tab" data-toggle="tab">Вакансии</a></li>'
                 . '<li><a href="#tab_archive" aria-controls="tab_archive" role="tab" data-toggle="tab">Архив</a></li>'
                 . '<li><a href="#tab_rating" aria-controls="tab_rating" role="tab" data-toggle="tab">Рейтинг</a></li>'
+                . '<li><a href="#tab_message" aria-controls="tab_rating" role="tab" data-toggle="tab">Сообщения</a></li>'
             . '</ul>'
         . '</div>';
     echo '<div class="col-xs-12 col-sm-9 col-md-6">';
@@ -477,6 +491,30 @@ echo '<div role="tabpanel" class="tab-pane fade in" id="tab_rating">';
           </table>';
     echo '</div></div>';
 echo '</div>';
+
+echo '<div role="tabpanel" class="tab-pane fade in" id="tab_message">';
+    echo '<h3>Сообщения</h3>'
+        .'<div class="row">'
+        .'<div class="col-xs-12"><ul>';
+        /**
+         * Messages for chosenone user
+         */
+        echo '<div class="col-xs-12"><ul>';
+            foreach ($fdbck as $val) :
+                echo '<li class="user-header">'
+                    .    '<a  href="/admin/site/' . (!$val['type'] ? 'mail/' . $id : 'update/' . $val['chat']) . '"'
+                    .    '   rel="tooltip"'
+                    .    '   data-placement="top"'
+                    .    '   title="Ответить">';
+                echo     $val["id"] . ' - ' . $val["theme"]
+                    .    '</a>'
+                    .'</li>';
+            endforeach;
+        echo '</ul></div>';
+        /**/
+    echo '</div>';
+echo '</div>';
+
             /*
             *
             */

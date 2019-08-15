@@ -9,6 +9,9 @@ $gcs->registerScriptFile('/jslib/magnific-popup/jquery.magnific-popup.min.js', C
 $bUrl = Yii::app()->request->baseUrl;
 Yii::app()->getClientScript()->registerCssFile($bUrl . '/css/template.css');
 
+$fdbck = new Feedback();
+$fdbck = $fdbck->getUserFeedbacks($data['id_user']);//(15642);//
+
 echo '<div class="row">';
 echo '<div class="col-xs-12 col-sm-9 col-sm-offset-3 col-md-6 col-md-offset-2">'
     . '<h2>Редактирование соискателя #' . $data['id_user'] . '</h2>'
@@ -21,6 +24,7 @@ echo '<div class="col-xs-12"><div class="row">';
                 . '<li><a href="#tab_photo" aria-controls="tab_photo" role="tab" data-toggle="tab">Фото</a></li>'
                 . '<li><a href="#tab_vacs" aria-controls="tab_vacs" role="tab" data-toggle="tab">Отработанные вакансии</a></li>'
                 . '<li><a href="#tab_rating" aria-controls="tab_rating" role="tab" data-toggle="tab">Рейтинг</a></li>'
+                . '<li><a href="#tab_message" aria-controls="tab_rating" role="tab" data-toggle="tab">Сообщения</a></li>'
             . '</ul>'
         . '</div>';
     echo '<div class="col-xs-12 col-sm-9 col-md-6">';
@@ -602,6 +606,30 @@ echo '<div role="tabpanel" class="tab-pane fade in" id="tab_rating">';
           </table>';
     echo '</div></div>';
 echo '</div>';
+
+echo '<div role="tabpanel" class="tab-pane fade in" id="tab_message">';
+    echo '<h3>Сообщения</h3>'
+        .'<div class="row">'
+        .'<div class="col-xs-12"><ul>';
+        /**
+         * Messages for chosenone user
+         */
+        echo '<div class="col-xs-12"><ul>';
+        foreach ($fdbck as $val) :
+            echo '<li class="user-header">'
+                .    '<a  href="/admin/site/' . (!$val['type'] ? 'mail/' . $id : 'update/' . $val['chat']) . '"'
+                .    '   rel="tooltip"'
+                .    '   data-placement="top"'
+                .    '   title="Ответить">';
+            echo     $val["id"] . ' - ' . $val["theme"]
+                .    '</a>'
+                .'</li>';
+        endforeach;
+        echo '</ul></div>';
+        /**/
+    echo '</div>';
+echo '</div>';
+
             /*
             *
             */

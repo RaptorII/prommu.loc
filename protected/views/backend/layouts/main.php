@@ -44,12 +44,12 @@ $modelServiceOut = new ServiceOut;
 
 $promoCounters = $modelPOSrvCloud->getOrderAdminCnt();
 
-$cntPOSMS = $promoCounters['sms']; // count sms
-$cntPOEml = $promoCounters['email']; // count email
-$cntPOPsh = $promoCounters['push']; // count push
-$cntPORpt = $promoCounters['repost']; // count repost
+$cntPOSMS = $promoCounters['sms'];     // count sms
+$cntPOEml = $promoCounters['email'];   // count email
+$cntPOPsh = $promoCounters['push'];    // count push
+$cntPORpt = $promoCounters['repost'];  // count repost
 $cntPOVcc = $promoCounters['vacancy']; // count vacancy
-$cntPOApi = $promoCounters['api']; // count api
+$cntPOApi = $promoCounters['api'];     // count api
 
 $cntPrmCrd = $modelPrmCard->getNewCnt();
 
@@ -181,21 +181,19 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
 <!--                        <a href="--><?//=$hUrl. 'feedback'?><!--" class="dropdown-toggle" >-->
                             <!-- The user image in the navbar-->
                             <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                            <span class="hidden-xs"> Обратная связь</span>
+                            <span class="hidden-xs">Обратная связь</span>
                             <span class="label label-danger"><?= $model['cnt'] ?></span>
                         </a>
                         <ul class="dropdown-menu">
 
-                            <!-- The user image in the menu -->
                             <? foreach ($model['items'] as $id => $v) : ?>
                                 <li class="user-header">
-                                    <a
-                                            href="/admin/site/<?= (!$v['type'] ? 'mail/' . $id : 'update/' . $v['chat']) ?>"
-                                            rel="tooltip"
-                                            data-placement="top"
-                                            title="Ответить">
+                                    <a  href="/admin/site/<?= (!$v['type'] ? 'mail/' . $id : 'update/' . $v['chat']) ?>"
+                                        rel="tooltip"
+                                        data-placement="top"
+                                        title="Ответить">
                                         <?= $id . ' - ' . $v['title'] ?>
-                                            <b>(<?= $v['cnt'] ?>)</b>
+                                        <b>(<?= $v['cnt'] ?>)</b>
                                     </a>
                                 </li>
                             <? endforeach; ?>
@@ -206,7 +204,6 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 <!--                        <a href="--><?//=$hUrl. 'vacancy'?><!--" class="dropdown-toggle">-->
                             <span class="label label-danger"><?= $counV ?></span>
-                            <!-- The user image in the navbar-->
                             <!-- hidden-xs hides the username on small devices so only the image appears. -->
                             <span class="hidden-xs">Вакансии </span>
                         </a>

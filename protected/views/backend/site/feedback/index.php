@@ -1,3 +1,10 @@
+<?php
+//echo"<pre>";
+//print_r($data);
+//die('test');
+//echo"</pre>";
+?>
+
 <div class="container-fluid">
   <div class="row">
     <div class="span11">
@@ -27,6 +34,7 @@
     background-color: #ff7373;
 }
 </style>
+
 <?php 
 echo CHtml::form('/admin/site/UserUpdate?id=0','POST',array("id"=>"form"));
 echo '<input type="hidden" id="curr_status" name="curr_status">';

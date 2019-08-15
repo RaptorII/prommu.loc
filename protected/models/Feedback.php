@@ -29,7 +29,8 @@ class Feedback extends Model
                   f.id,
                   f.theme,
                   f.direct,
-                 #f.chat,
+                  f.chat,
+                  f.type,
                   DATE_FORMAT(f.crdate, '%d.%m.%Y') crdate
                 FROM feedback f
                 WHERE f.pid = {$id} 
