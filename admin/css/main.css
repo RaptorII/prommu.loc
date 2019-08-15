@@ -38,3 +38,23 @@
 		min-width: 200px;
 	}
 }
+
+.user__msg{
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.user__msg-theme{
+	min-width: 60%;
+	max-width: 60%;
+	border-bottom: 1px dotted;
+}
+.user__msg-theme,
+.user__msg-icon{
+	display: inline-block;
+}
+.user__msg .fa-pencil-square-o {
+	padding-left: 15px;
+	font-size: 25px;
+	line-height: 40px;
+}

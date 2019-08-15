@@ -6,10 +6,6 @@ Yii::app()->getClientScript()->registerScriptFile($bUrl = Yii::app()->baseUrl . 
 Yii::app()->getClientScript()->registerCssFile('/jslib/magnific-popup/magnific-popup-min.css');
 Yii::app()->getClientScript()->registerScriptFile('/jslib/magnific-popup/jquery.magnific-popup.min.js', CClientScript::POS_END);
 
-
-//$modelFdb = new Feedback;
-//$modelFdb = $modelFdb->getDatAdmin();
-
 $fdbck = new Feedback();
 $fdbck = $fdbck->getUserFeedbacks($data['id_user']);//(15642);//
 
@@ -495,22 +491,25 @@ echo '</div>';
 echo '<div role="tabpanel" class="tab-pane fade in" id="tab_message">';
     echo '<h3>Сообщения</h3>'
         .'<div class="row">'
-        .'<div class="col-xs-12"><ul>';
+        .'<div class="col-xs-12"><ul';
         /**
          * Messages for chosenone user
          */
-        echo '<div class="col-xs-12"><ul>';
+        echo '<div class="col-xs-12">';
             foreach ($fdbck as $val) :
-                echo '<li class="user-header">'
+                echo '<ul class="user__msg">';
+                echo '<li class="user__msg-theme">'
+                     .$val["id"] . ' - ' . $val["theme"]
+                    .'</li>';
+                echo '<li class="user__msg-icon">'
                     .    '<a  href="/admin/site/' . (!$val['type'] ? 'mail/' . $id : 'update/' . $val['chat']) . '"'
                     .    '   rel="tooltip"'
                     .    '   data-placement="top"'
                     .    '   title="Ответить">';
-                echo     $val["id"] . ' - ' . $val["theme"]
-                    .    '</a>'
-                    .'</li>';
+                echo '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>'
+                    .    '</a></ul>';
             endforeach;
-        echo '</ul></div>';
+        echo '</div>';
         /**/
     echo '</div>';
 echo '</div>';
@@ -520,7 +519,7 @@ echo '</div>';
             */
             echo '</div><br/><br/>'; //tab-content
             echo '<div style="float:right;  display:inline;">'
-                . '<a href="/admin/notifications/0?type=message&id_user=' . $data['id_user'] . '" class="btn btn-success">Написать пользователю</a>'
+                . '<a href="/admin/notifications/0?type=message&id_user=' . $data['id_user'] . '" class="btn btn-success">Уведомление</a>'
                 . '&nbsp;&nbsp;'
                 . CHtml::submitButton(
                     'Сохранить',
