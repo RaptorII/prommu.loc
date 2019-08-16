@@ -111,6 +111,7 @@ class Subdomain
 			$query->where(['not like', 'url', self::getSiteName()]);
 		}
 
+		$query->order('sort asc, id asc');
 		$result = $query->queryAll();
 
 		foreach ($result as $d)

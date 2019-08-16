@@ -405,18 +405,12 @@
                 <div id="footer-tegs" class="container">
                     <!--Tegs-->
                     <div class="row footer__module" style="display: block">
-                        <a href="<?=MainConfig::$PAGE_OTHERCITIES?>" class="footer__cities-link" rel="nofollow" >Работа в других городах</a>
-                        <?
-                            //
-                            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! только индексируемые города
-                            //
-                            $arIndexCities = [1838,1307,1449,571,1973,437,2127,1072];
-                        ?>
                         <? foreach ($SubdomainCache->data as $id => $site): ?>
-                            <? if(in_array($id, $arIndexCities) && $id!=$SubdomainCache->id): ?>
+                            <? if($site['in_footer'] && $id!=$SubdomainCache->id): ?>
                                 <a href="<?=$site['url']?>" class="footer__cities-link"><?=$site['city']?></a>
                             <? endif; ?>
                         <? endforeach; ?>
+                        <a href="<?=MainConfig::$PAGE_OTHERCITIES?>" class="footer__cities-link" rel="nofollow" >Работа в других городах</a>
                     </div>
                 </div>
                 <div id="copyright" class="">

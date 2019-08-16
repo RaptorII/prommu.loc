@@ -2,14 +2,10 @@
   Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'othercities.css');
   Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'othercities.js', CClientScript::POS_END);
   $SubdomainCache = Subdomain::getCacheData();
-  //
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! только индексируемые города
-  //
-  $arIndexCities = [149,499,1251,1252,1260,2260,684,1279,10785,1285,1301,1309,1315,9256,1322,1612,1327,1332,1335,1336,1879,1344,1346,2243,2300,2339,1369,2373,1381,1384,2467];
   $arCities = [];
   foreach ($SubdomainCache->data as $id => $v)
   {
-    if(in_array($id, $arIndexCities) && $id!=$SubdomainCache->id)
+    if($id!=$SubdomainCache->id)
     {
       $arCities[$id] = $v;
     }
@@ -31,7 +27,7 @@
               <a href="<?=$site['url']?>"><?=$site['city']?></a>
             </li>
           <? endforeach; ?>
-          <li class="othercities_item-empty">Город не найден</li>
+          <li class="othercities_item-empty">К сожалению такой город не имеет поддомена</li>
         </ul>
       </div>
     <? else: ?>
