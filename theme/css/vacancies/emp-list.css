@@ -454,10 +454,10 @@ span.evl__tabs-link.enable{ cursor: default; }
 .evl__service-popup a:hover{ opacity: 0.7 }
 .evl__service-popup a:before{
 	content: '';
+	font-family: "PrommuFont";
 	width: 33px;
 	height: 33px;
 	display: block;
-	background: #ff8300 url(/theme/pic/vacancy/vac-list-service-sprite.png) no-repeat;
 	-webkit-transition: all 0.3s ease-out;
 	-moz-transition: all 0.3s ease-out;
 	-o-transition: all 0.3s ease-out;
@@ -465,16 +465,18 @@ span.evl__tabs-link.enable{ cursor: default; }
 	position: absolute;
 	top: 0;
 	left: 0;
+	font-size: 31px;
+	line-height: 33px;
 }
-.evl__service-popup .evl-vacancies__premium:before{ background-position: 0 -33px }
-.evl__service-popup .evl-vacancies__vk:before{ background-position: 0 -66px }
-.evl__service-popup .evl-vacancies__fb:before{ background-position: 0 -99px }
-.evl__service-popup .evl-vacancies__tl:before{ background-position: 0 0 }
-.evl__service-popup .evl-vacancies__sms:before{ background-position: 0 -132px }
-.evl__service-popup .evl-vacancies__email:before{ background-position: 0 -231px }
-.evl__service-popup .evl-vacancies__atsrc:before{ background-position: 0 -165px }
-.evl__service-popup .evl-vacancies__outstf:before{ background-position: 0 -198px }
-.evl__service-popup .evl-vacancies__push:before{ background-position: 1px -300px }
+.evl__service-popup .evl-vacancies__premium:before{ content: '\e920'; }
+.evl__service-popup .evl-vacancies__vk:before     { content: '\e833'; }
+.evl__service-popup .evl-vacancies__fb:before     { content: '\e832'; }
+.evl__service-popup .evl-vacancies__tl:before     { content: '\e834'; }
+.evl__service-popup .evl-vacancies__sms:before    { content: '\e92f'; }
+.evl__service-popup .evl-vacancies__email:before  { content: '\e924'; }
+.evl__service-popup .evl-vacancies__atsrc:before  { content: '\e91e'; }
+.evl__service-popup .evl-vacancies__outstf:before { content: '\e927'; }
+.evl__service-popup .evl-vacancies__push:before   { content: '\e902'; }
 #DiContent #MWwrapper .mw-win.dark-ver .header{
 	margin: 0;
 	border: none;
@@ -493,7 +495,6 @@ span.evl__tabs-link.enable{ cursor: default; }
 	text-transform: none;
 	text-align: left;
 }
-
 
 .vac-item__info-item-btns .prmu-btn {
 	display: block;
