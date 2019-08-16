@@ -12,7 +12,7 @@ jQuery(function($){
 		if(s==='0' || s==='3' || s==='5') arRes.push({'s':1, 't':'Отложить'});
 		if(s==='0' || s==='1' || s==='5') arRes.push({'s':3, 't':'Отклонить'});
 
-		$.each(arRes, function(){ content += '<span data-st=' + this.s + '>' + this.t + '</span>' });
+		$.each(arRes, function(){ content += '<span class="btn__orange" data-st=' + this.s + '>' + this.t + '</span>' });
 		$(sBlock).empty().html(content);
 		//$('.change-btn').fadeOut();
 	});

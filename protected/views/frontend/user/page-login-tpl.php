@@ -51,7 +51,7 @@
           <span class="auth-form__checkbox"></span>
         </label>
         <div class='btn-auth btn-orange-wr'>
-            <button class='hvr-sweep-to-right auth-form__btn' type='submit'>Вход</button>
+            <button class='hvr-sweep-to-right auth-form__btn btn__orange' type='submit'>Вход</button>
         </div>
         <div class="auth-form__restore">
           <a href='/<?= MainConfig::$PAGE_PASS_RESTORE ?>'>Забыли пароль?</a>

@@ -181,9 +181,9 @@
     </div>    
     <div class='center-box'>
       <?php if( $flagOwnProfile ): ?>
-        <a class='ppp__btn' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>' style="margin-bottom: 10px">Редактировать профиль</a>
-        <a class='ppp__btn' href='<?= MainConfig::$PAGE_SETTINGS ?>' style="margin-bottom: 10px">Настройки профиля</a>
-        <a class='ppp__btn' href='<?= MainConfig::$PAGE_CHATS_LIST ?>'>Мои сообщения</a>
+        <a class='ppp__btn btn__orange' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>' style="margin-bottom: 10px">Редактировать профиль</a>
+        <a class='ppp__btn btn__orange' href='<?= MainConfig::$PAGE_SETTINGS ?>' style="margin-bottom: 10px">Настройки профиля</a>
+        <a class='ppp__btn btn__orange' href='<?= MainConfig::$PAGE_CHATS_LIST ?>'>Мои сообщения</a>
       <?php elseif( Share::$UserProfile->type == 3 && $ismoder): ?>
         <div class='js-btn-invite btn-white-green-wr'>
           <a href='#'>Пригласить на вакансию</a>
@@ -191,7 +191,7 @@
       <?php endif; ?>
       <?php  if(Share::$UserProfile->type == 3 && !$ismoder):?>
         <div class='btn-update btn-orange-sm-wr'>
-          <a class='hvr-sweep-to-right' href='#'>Невозможно отправить сообщение</a>
+          <a class='hvr-sweep-to-right btn__orange' href='#'>Невозможно отправить сообщение</a>
           <h3 class='unpubl'>Отправлять сообщения и приглашения на вакансию можно только при успешном прохождении модерации</h3>
         </div>
         
@@ -332,7 +332,7 @@
           endfor; ?>
         </div>
         <?php if($cntComments>2): ?>
-          <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>" class="ppp__btn ppp__allreview-btn">все отзывы</a>
+          <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>" class="ppp__btn ppp__allreview-btn btn__orange">все отзывы</a>
         <?php endif; ?>
       <?php endif; ?>
     <?php endif; ?>
@@ -585,7 +585,7 @@
     </div>
   <div class='center-box'>
     <?php if( $flagOwnProfile ): ?>
-      <a class='ppp__btn' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>' style="max-width:250px;margin:0 auto 10px">Редактировать профиль</a>
+      <a class='ppp__btn btn__orange' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>' style="max-width:250px;margin:0 auto 10px">Редактировать профиль</a>
     <?php endif; ?>
   </div>
   </div>

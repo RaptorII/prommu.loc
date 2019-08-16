@@ -275,7 +275,7 @@
                 <span class="epa__label-name">Код:</span>
                 <input type='text' name='confirm-code' value="" class="epa__input" id="conf-phone-inp" maxlength="6">
               </label>
-              <div class="epa__confirm-btn hvr-sweep-to-right">ПРОВЕРИТЬ</div>
+              <div class="epa__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
               <div class="clearfix"></div>
             </div>
             <?php 
@@ -307,7 +307,7 @@
                 <span class="epa__label-name">Код:</span>
                 <input type='text' name='confirm-code' value="" class="epa__input" id="conf-email-inp" maxlength="6">
               </label>
-              <div class="epa__confirm-btn hvr-sweep-to-right">ПРОВЕРИТЬ</div>
+              <div class="epa__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
               <div class="clearfix"></div>
             </div>
 

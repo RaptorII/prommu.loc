@@ -134,7 +134,7 @@ input:checked + .psa__checkbox-label:after {
         <?php if (Share::$UserProfile->type == 3): ?>
             <div class="psa__header">
                 <h1 class="psa__header-name"><?= Share::$UserProfile->exInfo->name ?></h1>
-                <a class='psa__btn psa__header-btn' href='<?= MainConfig::$PAGE_VACPUB ?>'>Добавить вакансию</a>
+                <a class='psa__btn psa__header-btn btn__orange' href='<?= MainConfig::$PAGE_VACPUB ?>'>Добавить вакансию</a>
             </div>
         <?php endif; ?>
     </div>
@@ -152,7 +152,7 @@ input:checked + .psa__checkbox-label:after {
                     <div class='psa__filter-content opened'>
                         <input name='qs' type='text' title="Введите фамилию" value="<?= $viData['qs'] ?>"
                                class="psa__input">
-                        <div class="psa__filter-btn">ОК</div>
+                        <div class="psa__filter-btn btn__orange">ОК</div>
                         <div class="clearfix"></div>
                     </div>
                 </div>
@@ -296,7 +296,7 @@ input:checked + .psa__checkbox-label:after {
                         </div>
                         <input id='psa-salary-type' name='sr' type='hidden'
                                value="<?= ($_GET['sr'] ? $_GET['sr'] : 1) ?>">
-                        <div class="psa__filter-btn">ОК</div>
+                        <div class="psa__filter-btn btn__orange">ОК</div>
                         <div class="clearfix"></div>
                     </div>
                 </div>
@@ -313,7 +313,7 @@ input:checked + .psa__checkbox-label:after {
                                 <input name='at' type='text' value="<?= $_GET['at'] ?>" class="psa__input">
                             </label>
                             <div class="clearfix"></div>
-                            <div class="psa__filter-btn">ОК</div>
+                            <div class="psa__filter-btn btn__orange">ОК</div>
                             <div class="clearfix"></div>
                         </div>
                     </div>

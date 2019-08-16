@@ -25,7 +25,7 @@
                      <input type="hidden" name="phone" value="<?= $_GET['phone']?>"/>
                 </label>
                 <div class="btn-orange-sm-wr">
-                    <button type="submit" class="hvr-sweep-to-right">Далее</button>
+                    <button type="submit" class="hvr-sweep-to-right btn__orange">Далее</button>
                 </div>
                 <div class="repeat-sending">Отправить код еще раз</div>
                 <input type="hidden" class="referer" name="referer" value="">

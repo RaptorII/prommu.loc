@@ -359,7 +359,7 @@
                                         </div>
                                         <div class='col-xs-12 col-sm-6'>
                                             <div class='btn-reply btn-orange-sm-wr'>
-                                                <a class='hvr-sweep-to-right' href='/vacancy/<?= $val['id'] ?>'>Откликнуться <?= $type ?></a>
+                                                <a class='hvr-sweep-to-right btn__orange' href='/vacancy/<?= $val['id'] ?>'>Откликнуться <?= $type ?></a>
                                             </div>
                                         </div>
                                     </div>

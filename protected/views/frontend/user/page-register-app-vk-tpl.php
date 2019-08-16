@@ -23,7 +23,7 @@
     <? endforeach;?>
 
         <div class='btn-reg btn-orange-wr'>
-          <button class='hvr-sweep-to-right' type='submit'>Оплатить</button>
+          <button class='hvr-sweep-to-right btn__orange' type='submit'>Оплатить</button>
         </div>
   
       <input type="hidden" class="referer" name="referer" value="">
@@ -64,7 +64,7 @@
     <? endforeach;?>
 
         <div class='btn-reg btn-orange-wr'>
-          <button class='hvr-sweep-to-right' type='submit'>Оплатить</button>
+          <button class='hvr-sweep-to-right btn__orange' type='submit'>Оплатить</button>
         </div>
   
       <input type="hidden" class="referer" name="referer" value="">

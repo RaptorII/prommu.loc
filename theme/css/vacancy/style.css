@@ -54,9 +54,6 @@
 .control-block-cont span{
 	display: inline-block;
 	cursor: pointer;
-	padding: 5px;
-	border: 1px solid #000000;
-	border-radius: 5px;
 	margin: 0 5px 5px 0;
 	font-size: 12px;
 }
@@ -241,6 +238,9 @@
 /*
 * INVITED
 */
+.vacancy_info{
+	overflow-x: auto;
+}
 .vacancy_info, .vacancy_info *{ font-family: RobotoCondensedRegular, Calibri, Arial, sans-serif; }
 .vacancy_info h1{
 	font-size: 26px;

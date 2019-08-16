@@ -368,7 +368,7 @@
 			</div>
 		</div>
 		<div class="col-xs-12 btn-orange-sm-wr">
-			<button type="submit" class="hvr-sweep-to-right" id="settings-save">СОХРАНИТЬ</button>
+			<button type="submit" class="hvr-sweep-to-right btn__orange" id="settings-save">СОХРАНИТЬ</button>
 		</div>
 	</form>
 </div>

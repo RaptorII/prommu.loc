@@ -46,7 +46,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/pag
 												<span class="status hint"></span>
 											<? endif; ?>
 											<? if(in_array($v['status'], [Responses::$STATUS_BEFORE_RATING,Responses::$STATUS_EMPLOYER_RATED])): ?>
-												<a href="<?= MainConfig::$PAGE_SETRATE . DS . $v['id_vacancy'] ?>" class="responses__btn">Оставить отзыв</a>
+												<a href="<?= MainConfig::$PAGE_SETRATE . DS . $v['id_vacancy'] ?>" class="responses__btn btn__orange">Оставить отзыв</a>
 											<? endif;?>
 											<? if( $v['status'] < 4 ): ?>
 												<span> Заявка на вакансию подана </span>
@@ -154,7 +154,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/pag
 												<? if($v['status']==Responses::$STATUS_EMPLOYER_RATED): ?>
 													<span>Вы выставили рейтинг данному соискателю</span>
 												<? else: ?>
-													<a href="<?=$linkSetrate?>" class="responses__btn js-g-hashint" title="Оставить отзыв соискателю">Оставить отзыв</a>
+													<a href="<?=$linkSetrate?>" class="responses__btn js-g-hashint btn__orange" title="Оставить отзыв соискателю">Оставить отзыв</a>
 												<? endif; ?>
 											<? endif; ?>
 											<? if( $v['status'] == '1' || $v['status'] == '0' ): ?>

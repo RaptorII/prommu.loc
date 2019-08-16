@@ -3,7 +3,7 @@
     <div class='pse__filter-name opened'>Название компании</div>
     <div class='pse__filter-content opened'>
       <input name='qs' type='text' title="Введите фамилию" value="<?=$viData['get']['qs'][0]?>" class="pse__input">
-      <div class="pse__filter-btn">ОК</div>
+      <div class="pse__filter-btn btn__orange">ОК</div>
       <div class="clearfix"></div>
     </div>
   </div>

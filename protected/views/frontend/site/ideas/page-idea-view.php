@@ -51,7 +51,7 @@
 							<div class="idea__set-rpos js-g-hashint" title="Поддерживаю"><?=$viData['posrating']?></div>
 							<div class="idea__set-rneg js-g-hashint" title="Не поддерживаю"><?=$viData['negrating']?></div>
 						</div>
-						<div class="idea__set-comment">Написать комментарий</div>
+						<div class="idea__set-comment btn__orange">Написать комментарий</div>
 						<form id="comment-form">
 							<textarea placeholder="Текст комментария"></textarea>
 							<button type="submit" class="new-idea__btn" id="add-comment">Отправить</button>

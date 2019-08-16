@@ -329,11 +329,11 @@
                               <span><noindex>Сервис №1 в поиске временной работы и персонала для BTL и Event-мероприятий</noindex></span>
                           </div>
                           <div class="enter">
-                            <a class="feedback" href="<?=MainConfig::$PAGE_FEEDBACK?>">Обратная связь</a>
+                            <a class="feedback btn__orange" href="<?=MainConfig::$PAGE_FEEDBACK?>">Обратная связь</a>
                             <?php if(!in_array(Share::$UserProfile->type, [2,3])): ?>
-                            	<a href="<?= MainConfig::$PAGE_LOGIN ?>" class="enter__login enter__link" data-toggle="modal">Вход</a>
+                            	<a href="<?= MainConfig::$PAGE_LOGIN ?>" class="enter__login enter__link btn__green" data-toggle="modal">Вход</a>
 	                            <div class="enter__register">
-	                              <a href="#reg_select" class="enter__register-link enter__link" onclick="ClearCookie()" data-toggle="modal">Регистрация <i></i></a>
+	                              <a href="#reg_select" class="enter__register-link enter__link btn__green" onclick="ClearCookie()" data-toggle="modal">Регистрация <i></i></a>
 	                              <ul>
 	                                <li><a href="<?= Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2')) ?>" class="items">Я работодатель</a></li>
 	                                <li><a href="<?= Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1')) ?>" class="items">Я ищу работу</a></li>

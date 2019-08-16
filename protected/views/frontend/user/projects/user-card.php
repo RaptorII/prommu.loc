@@ -194,7 +194,7 @@ $viData['PHOTO'] = $model -> getPhoto('2', $viData ,'medium');
                 <form>
                     <textarea class="ppp__module-feedback" name="message"></textarea>
                     <div class="btn-auth btn-orange-wr">
-                        <button class="hvr-sweep-to-right auth-form__btn" type="submit">Отправить</button>
+                        <button class="hvr-sweep-to-right auth-form__btn btn__orange" type="submit">Отправить</button>
                     </div>
                 </form>
 

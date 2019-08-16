@@ -35,8 +35,8 @@
     <div class="col-xs-12 col-sm-6">
         <div class="img-01">
             <?php if( Share::$UserProfile->type != 2 ): ?>
-                <div class="btn-wrapp btn-orange-fix-wr"><a href="<?= Share::$UserProfile->type == 3 ? MainConfig::$PAGE_VACPUB : MainConfig::$PAGE_REGISTER ?>" class="hvr-sweep-to-right">опубликовать<br/>вакансию</a></div>
-<!--                    <div class="btn-wrapp"><a href="?p=publ-vacancy" class="btn-big-swipe hvr-sweep-to-right">опубликовать<br/>вакансию</a></div>-->
+                <div class="btn-wrapp btn-orange-fix-wr"><a href="<?= Share::$UserProfile->type == 3 ? MainConfig::$PAGE_VACPUB : MainConfig::$PAGE_REGISTER ?>" class="hvr-sweep-to-right btn__orange">опубликовать<br/>вакансию</a></div>
+<!--                    <div class="btn-wrapp"><a href="?p=publ-vacancy" class="btn-big-swipe hvr-sweep-to-right btn__orange">опубликовать<br/>вакансию</a></div>-->
             <?php endif; ?>
         </div>
     </div>
@@ -50,7 +50,7 @@
     <div class="col-xs-12 col-sm-6">
         <div class="img-02">
             <?php if( Share::$UserProfile->type != 3 ): ?>
-                <div class="btn-wrapp"><a href="<?= MainConfig::$PAGE_SEARCH_VAC ?>" class="btn-big-swipe hvr-sweep-to-right">найти<br/>вакансию</a></div>
+                <div class="btn-wrapp"><a href="<?= MainConfig::$PAGE_SEARCH_VAC ?>" class="btn-big-swipe hvr-sweep-to-right btn__orange">найти<br/>вакансию</a></div>
             <?php endif; ?>
         </div>
     </div>

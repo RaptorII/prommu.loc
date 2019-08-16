@@ -23,7 +23,7 @@ $(document).ready(function() {
       <b class='-green'><?= count($viData['vacs']) ?></b>
     </div>
     <div class='btn-add btn-orange-sm-wr'>
-      <a class='hvr-sweep-to-right' href='<?= MainConfig::$PAGE_VACPUB ?>'>Добавить вакансию</a>
+      <a class='hvr-sweep-to-right btn__orange' href='<?= MainConfig::$PAGE_VACPUB ?>'>Добавить вакансию</a>
     </div>
     <br>
     <br>

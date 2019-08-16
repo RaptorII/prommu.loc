@@ -133,7 +133,7 @@
                     <span class="epe__label-name">Проверочный код:</span>
                     <input type='text' name='confirm-code' value="" class="epe__input" id="conf-email-inp" maxlength="6" autocomplete="off">
                   </label>
-                  <dir class="epe__confirm-btn hvr-sweep-to-right">ПРОВЕРИТЬ</dir>
+                  <dir class="epe__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</dir>
                   <dir class="clearfix"></dir>
                 </div>
                 <div class="epe__label">
@@ -153,7 +153,7 @@
                     <span class="epe__label-name">Проверочный код:</span>
                     <input type='text' name='confirm-code' value="" class="epe__input" id="conf-phone-inp" maxlength="6" autocomplete="off">
                   </label>
-                  <dir class="epe__confirm-btn hvr-sweep-to-right">ПРОВЕРИТЬ</dir>
+                  <dir class="epe__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</dir>
                   <dir class="clearfix"></dir>
                 </div>
                 <label class="epe__label">

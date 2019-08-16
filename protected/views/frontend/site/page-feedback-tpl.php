@@ -90,7 +90,7 @@
                     </div>
                     <div class="clearfix"></div>
                 <? endif; ?>
-                <button type="submit" class="feedback-page__button">Отправить</button>
+                <button type="submit" class="feedback-page__button btn__orange">Отправить</button>
                 <div class="clearfix"></div>
                 <input type="hidden" name="autotype" value="<?= Share::$UserProfile->type ?>"/>
                 <input type="hidden" class="id" name="id" value="<?= Share::$UserProfile->exInfo->id ?>">

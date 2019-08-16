@@ -472,6 +472,7 @@
 	color: #FFFFFF;
 	text-align: center;
 	text-transform: uppercase;
+	border-radius: 4px;
 	font-size: 14px;
 	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 	position: relative;
@@ -490,6 +491,7 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
+	border-radius: 4px;
 	background: #ABB837;
 	-webkit-transform: scaleX(0);
 	transform: scaleX(0);
@@ -691,17 +693,17 @@
 	line-height: 24px;
 }
 .psv__param.ico1:before{ content: '\e977'; color: var(--color-l2-grey); }
-.psv__param.ico2:before{ content: '\e98e'; color: var(--color-l2-grey); font-size: 28px; }
-.psv__param.ico3:before{ content: '\e97f'; color: var(--color-l2-grey); }
-.psv__param.ico4:before{ content: '\e97b'; color: var(--color-l2-grey); }
+.psv__param.ico2:before{ content: '\e98e'; color: var(--color-l2-grey); font-size: 28px; left: 5px; }
+.psv__param.ico3:before{ content: '\e97f'; color: var(--color-l2-grey); font-size: 24px; left: 8px; }
+.psv__param.ico4:before{ content: '\e97b'; color: var(--color-l2-grey); font-size: 18px; left: 11px }
 .psv__param.ico5:before{ content: '\e96b'; color: var(--color-l2-grey); }
 .psv__param.ico6:before{ content: '\e901'; color: var(--color-l2-grey); }
 .psv__param.ico7:before{ content: '\e900'; color: var(--color-l2-grey); }
 
 .psv__list-item-premium .psv__param.ico1:before{ content: '\e977'; color: var(--color-green); }
-.psv__list-item-premium .psv__param.ico2:before{ content: '\e98e'; color: var(--color-green); font-size: 28px; }
-.psv__list-item-premium .psv__param.ico3:before{ content: '\e97f'; color: var(--color-green); }
-.psv__list-item-premium .psv__param.ico4:before{ content: '\e97b'; color: var(--color-green); }
+.psv__list-item-premium .psv__param.ico2:before{ content: '\e98e'; color: var(--color-green); font-size: 28px; left: 5px; }
+.psv__list-item-premium .psv__param.ico3:before{ content: '\e97f'; color: var(--color-green); font-size: 24px; left: 8px; }
+.psv__list-item-premium .psv__param.ico4:before{ content: '\e97b'; color: var(--color-green); font-size: 18px; left: 11px }
 .psv__list-item-premium .psv__param.ico5:before{ content: '\e96b'; color: var(--color-green); }
 .psv__list-item-premium .psv__param.ico6:before{ content: '\e901'; color: var(--color-green); }
 .psv__list-item-premium .psv__param.ico7:before{ content: '\e900'; color: var(--color-green); }

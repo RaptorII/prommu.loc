@@ -47,7 +47,7 @@
       <?php if(Share::$UserProfile->type == 3): ?>
           <div class="pse__header">
               <h1 class="pse__header-name"><?=Share::$UserProfile->exInfo->name?></h1>
-              <a class='pse__btn pse__header-btn' href='<?= MainConfig::$PAGE_VACPUB ?>'>Добавить вакансию</a>
+              <a class='pse__btn pse__header-btn btn__orange' href='<?= MainConfig::$PAGE_VACPUB ?>'>Добавить вакансию</a>
           </div>
       <?php endif; ?>
   </div>
@@ -64,7 +64,7 @@
           <div class='pse__filter-name opened'>Название компании</div>
           <div class='pse__filter-content opened'>
             <input name='qs' type='text' title="Введите фамилию" value="<?=$_GET['qs']?>" class="pse__input">
-            <div class="pse__filter-btn">ОК</div>
+            <div class="pse__filter-btn btn__orange">ОК</div>
             <div class="clearfix"></div>
           </div>
         </div>

@@ -56,7 +56,7 @@ $this->pageTitle = $title;
     <?php endif; ?>
     <div class="clearfix"></div>
         <div class='btn-reg btn-orange-wr'>
-          <button class='hvr-sweep-to-right' type='submit' id="reg-fb-btn">Зарегистрироваться</button>
+          <button class='hvr-sweep-to-right btn__orange' type='submit' id="reg-fb-btn">Зарегистрироваться</button>
         </div>
       </div>
       <input type="hidden" class="referer" name="referer" value="">
