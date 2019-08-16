@@ -62,16 +62,18 @@ class Api
                 case 'del_avatar' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->avatarDelete(); break;
                 case 'del_photo' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->photoDelete(); break;
                 
+                ///CHATS
+                case 'chats' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getChatThemes(); break;
+                case 'send' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setMess(); break;
+                
                 case 'push' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getTest(); break;
                 case 'export' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->export(); break;
                 case 'vacancy_own' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getVacancyOwn(); break;
                 case 'vacancy_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getVacancyDataView(); break;
                 case 'response_set' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setResponse(); break;
                 case 'response_data' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->dataResponse(); break;
-                case 'chat_theme_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getChatThemes(); break;
                 case 'cotypes_get' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getCotypes(); break;
                 case 'vacancy_data' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getVacancyData(); break;
-                case 'send_mess' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setMess(); break;
                 case 'set_vk' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->setCommAndRate(); break;
                 case 'rere' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rere(); break;
                 case 'vacancy_act' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacAct(); break;
