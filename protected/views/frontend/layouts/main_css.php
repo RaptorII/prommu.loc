@@ -409,6 +409,13 @@
     left: 0;
     top: 5px;
 }
+.company-list-item-box .com-rate{
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.company-list-item-box .com-rate span{
+    font-weight: 400;
+}
 
 /*Buttons*/
 :root {
