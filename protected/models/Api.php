@@ -3478,11 +3478,11 @@ public function vac(){
             $retRa= Yii::app()->db->createCommand($sql)->queryScalar();
             
             // if($retRa == 2){
-            //     $sql = "SELECT r.id
-            //     FROM resume r
-            //     WHERE r.id_user = {$idus}";
-            //     $res = Yii::app()->db->createCommand($sql);
-            //     $id = $res->queryScalar();
+                $sql = "SELECT r.id
+                FROM resume r
+                WHERE r.id_user = {$idus}";
+                $res = Yii::app()->db->createCommand($sql);
+                $id = $res->queryScalar();
                 $type = $retRa;
                 $figaro = compact('id');
 
