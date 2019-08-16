@@ -53,6 +53,9 @@ class Api
                 case 'vacancy_owner' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacancyOwner(); break;
                 case 'vacancy_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacancyGet(); break;
                 
+                ///PROJECTS
+                case 'projects' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->dataResponse(); break;
+                
                 ///PHOTO    
                 case 'set_avatar' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->avatarEdit(); break;
                 case 'set_photo' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->photoEdit(); break;
@@ -3461,36 +3464,36 @@ public function vac(){
         try
         {
             $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $cloud = Yii::app()->getRequest()->getParam('cloud');
-            $cloud = $cloud ? get_object_vars(json_decode($cloud)) : null;
+            // $cloud = Yii::app()->getRequest()->getParam('cloud');
+            // $cloud = $cloud ? get_object_vars(json_decode($cloud)) : null;
             $limit = filter_var(Yii::app()->getRequest()->getParam('limit', MainConfig::$DEF_PAGE_API_LIMIT), FILTER_SANITIZE_NUMBER_INT);
             $limit = $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
 
             // проверка токена, получаем профиль
             list($idus, $profile, $dat) = $this->checkAccessToken($accessToken);
-            $profile->setUserData();
+            // $profile->setUserData();
             $sql = "SELECT r.status
             FROM user r
             WHERE r.id_user = {$idus}";
             $retRa= Yii::app()->db->createCommand($sql)->queryScalar();
-            if($retRa == 2){
-                $sql = "SELECT r.id
-                FROM resume r
-                WHERE r.id_user = {$idus}";
-                $res = Yii::app()->db->createCommand($sql);
-                $id = $res->queryScalar();
-                $type = $cloud['type'];
+            // if($retRa == 2){
+            //     $sql = "SELECT r.id
+            //     FROM resume r
+            //     WHERE r.id_user = {$idus}";
+            //     $res = Yii::app()->db->createCommand($sql);
+            //     $id = $res->queryScalar();
+                $type = $retRa;
                 $figaro = compact('id', 'type');
 
                 $Response = new ResponsesApplic($profile);
                 $data['resps'] = $Response->getResponsess($figaro);
-            }
-            elseif($retRa == 3){
-                $id = $idus;
-                $figaro = compact('id');
-                $Response = new ResponsesEmpl($profile);
-                $data['resps'] = $Response->getResponsess($figaro);
-            }
+            // }
+            // elseif($retRa == 3){
+            //     $id = $idus;
+            //     $figaro = compact('id');
+            //     $Response = new ResponsesEmpl($profile);
+            //     $data['resps'] = $Response->getResponsess($figaro);
+            // }
 
             if( (int)$data['error'] > 0 ) throw new ExceptionApi($data['message'], -104);
           
