@@ -73,7 +73,9 @@ class SiteController extends AppController
     {
         $action = ContentPlus::getActionID();
         if ($action != '') {
-            if($action=='help' || $action=='support' || $action=='students'){
+             $arNoIndex = array('help','support','students', 'razrabotchikam','contacts','tips1','about');
+            if(in_array($action, $arNoIndex)){
+
                 throw new CHttpException(404, 'Error');
             }
             elseif($action=='work-for-students'){
@@ -999,7 +1001,6 @@ class SiteController extends AppController
 
         if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('name') )
         {
-
             $res = $Feedback->saveData();
             if($res['ERROR'])
             {

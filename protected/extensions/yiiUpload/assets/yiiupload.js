@@ -320,7 +320,7 @@ var YiiUpload = (function () {
 
     if(typeof result!=='string')
     {
-      result = 'Загурзка файлов' + (self.params.fileFormat.length
+      result = 'Загрузка файлов' + (self.params.fileFormat.length
         ? ' (' + self.params.fileFormat.join(', ') + ')' : '');
     }
     $('.YiiUpload__form-title').text(result);

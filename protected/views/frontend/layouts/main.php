@@ -161,11 +161,6 @@
     <? $this->renderPartial('../layouts/header_partial/' . $SubdomainCache->id); // data for every site ?>
 </head>
 <body class="<?= $this->ViewModel->getViewData('addBodyClass') ?>">
-<?
-//UserNotifications::setVacancyDateNotificetions();
-
-?>
-
     <? $this->renderPartial('../layouts/body_partial/' . $SubdomainCache->id); // data for every site ?>
         <div class="hint-box"><b class="tri"></b><span></span></div>
         <div id="DiLoading"><img src="<?= MainConfig::$IMG_LOADING2 ?>" alt=""></div>

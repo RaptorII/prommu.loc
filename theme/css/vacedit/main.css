@@ -1122,7 +1122,15 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	border: none;
 	display: none;
 }
-#ev-posts-list li:first-child{ padding: 0 }
+#ev-posts-list li:first-child{ 
+	padding: 0;
+	/*
+	!!! Скрытие добавления новой вакансии
+	*/
+	position: relative;
+	height: 0;
+	overflow: hidden;
+}
 #ev-posts-list li:first-child:hover{ background-color: transparent; }
 #DiContent .fav__select-posts #ev-posts-list input{
 	height: 33px;
