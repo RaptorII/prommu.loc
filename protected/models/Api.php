@@ -3476,6 +3476,7 @@ public function vac(){
             FROM user r
             WHERE r.id_user = {$idus}";
             $retRa= Yii::app()->db->createCommand($sql)->queryScalar();
+            
             // if($retRa == 2){
             //     $sql = "SELECT r.id
             //     FROM resume r
@@ -3483,7 +3484,7 @@ public function vac(){
             //     $res = Yii::app()->db->createCommand($sql);
             //     $id = $res->queryScalar();
                 $type = $retRa;
-                $figaro = compact('id', 'type');
+                $figaro = compact('id');
 
                 $Response = new ResponsesApplic($profile);
                 $data['resps'] = $Response->getResponsess($figaro);
