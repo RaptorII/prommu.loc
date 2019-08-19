@@ -23,16 +23,21 @@ jQuery(function($){
 
 		res = (s==='3' ? confirm('Вы действительно хотите отклонить заявку') : true);
 
-		if(res){
+		$('#DiContent .content-block').addClass('load');
+
+		if(res)
+		{
 			$.post(MainConfig.AJAX_POST_SETRESPONSESTATUS, { idres:main.dataset.sid, s:s }, function(d){
 				d = JSON.parse(d);
-				if(!d.error){
+				if(!d.error)
+				{
 					if(s==='5')
 						showPopupMess('Утверждено', 'Заявка успешно утверждена');
 					else if(s==='1')
 						showPopupMess('Отложено', 'Заявка отложена и перенесена в раздел "Отложенные"');
 					else
 						showPopupMess('Отклонено', 'Заявка отклонена и перенесена в раздел "Отклоненные"');
+					$('#DiContent .content-block').removeClass('load');
 				}
 			});
 		}
