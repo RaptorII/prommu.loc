@@ -357,7 +357,12 @@
     left: 15px;
   }
 }
-
+.posts__item img {
+    width:100%;
+    display:block;
+    object-fit:cover;
+    height:230px;
+}
 #DiTopMenuWrapp .top-menu-wr__submenu>a {
     position: relative;
 }
