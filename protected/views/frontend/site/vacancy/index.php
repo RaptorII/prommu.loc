@@ -152,7 +152,7 @@
                                 <span class="responses__btn change-btn hide__button-change btn__orange">Изменить</span>
                             <? endif; ?>
                             <? if($v['status'] > Responses::$STATUS_EMPLOYER_ACCEPT): // писать только утвержденным ?>
-                                <a href="<?= MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $id . DS . $v['idusr'] ?>" class="responses__btn">Написать сообщение</a>
+                                <a href="<?= MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $id . DS . $v['idusr'] ?>" class="responses__btn btn__green">Написать сообщение</a>
                             <? endif; ?>
                             <? if (in_array($v['status'], [Responses::$STATUS_BEFORE_RATING, Responses::$STATUS_APPLICANT_RATED])): ?>
                                 <a href="<?=MainConfig::$PAGE_SETRATE . DS . $id . DS . $v['idusr']?>"

@@ -51,14 +51,14 @@
 								<? if($vacancy['access_to_answer']): ?>
 									<div class="app-projects__right-bl center">
 										<span 
-											class="app-projects__item-btn change_status status_accept" 
+											class="app-projects__item-btn change_status status_accept btn__orange"
 											data-id="<?=$vacancy['vstatus_id']?>"
 											data-status="<?=Responses::$STATUS_APPLICANT_ACCEPT?>" <?// татус принятия заявки ?>
 											>Принять</span>
 									</div>
 									<div class="app-projects__right-bl center">
 										<span 
-											class="app-projects__item-btn change_status status_reject" 
+											class="app-projects__item-btn change_status status_reject btn__orange"
 											data-id="<?=$vacancy['vstatus_id']?>"
 											data-status="<?=Responses::$STATUS_REJECT?>" <?// татус отклонения заявки ?>
 											>Отклонить</span>
@@ -68,24 +68,24 @@
 										<div class="app-projects__right-bl center">
 											<a 
 												href="<?=MainConfig::$PAGE_SETRATE . DS . $vacancy['id']?>" 
-												class="app-projects__item-btn">Оценить работодателя</a>
+												class="app-projects__item-btn btn__orange">Оценить работодателя</a>
 										</div>
 									<? endif; ?>
 									<? $link = MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vacancy['id']; ?>
 									<div class="app-projects__right-bl center">
 										<a 
 											href="<?=$link?>" 
-											class="app-projects__item-btn">Общий чат</a>
+											class="app-projects__item-btn btn__orange">Общий чат</a>
 									</div>
 									<div class="app-projects__right-bl center">
 										<a 
 											href="<?=$link . DS . $vacancy['employer']?>" 
-											class="app-projects__item-btn">Личный чат</a>
+											class="app-projects__item-btn btn__orange">Личный чат</a>
 									</div>
 								<? elseif($vacancy['second_response']): ?>
 									<div class="app-projects__right-bl center">
 										<span 
-											class="app-projects__item-btn second_response" 
+											class="app-projects__item-btn second_response btn__orange"
 											data-id="<?=$vacancy['id']?>"
 											data-sresponse="<?=Share::$UserProfile->exInfo->id_resume?>"
 											>Отозваться повторно</span>
@@ -97,10 +97,10 @@
 								<div class="app-projects__right-bl center">Статус : <b>Приглашение принято</b></div>
 								<? $link = MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vacancy['id']; ?>
 								<div class="app-projects__right-bl center">
-									<a href="<?=$link?>" class="app-projects__item-btn">Общий чат</a>
+									<a href="<?=$link?>" class="app-projects__item-btn btn__orange">Общий чат</a>
 								</div>
 								<div class="app-projects__right-bl center">
-									<a href="<?=$link . DS . $vacancy['employer']?>" class="app-projects__item-btn">Личный чат</a>
+									<a href="<?=$link . DS . $vacancy['employer']?>" class="app-projects__item-btn btn__orange">Личный чат</a>
 								</div>
 							</div>
 							<div class="status_reject-content tmpl">
@@ -108,7 +108,7 @@
 								<? if(!$vacancy['sresponse']): ?>
 									<div class="app-projects__right-bl center">
 										<span 
-											class="app-projects__item-btn second_response" 
+											class="app-projects__item-btn second_response btn__orange"
 											data-id="<?=$vacancy['id']?>"
 											data-sresponse="<?=Share::$UserProfile->exInfo->id_resume?>"
 											>Отозваться повторно</span>
