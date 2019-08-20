@@ -21,6 +21,7 @@ class News extends Model
             FROM pages p
             INNER JOIN pages_content pc ON p.id = pc.page_id AND lang = '{$lang}'
             WHERE p.group_id = 2
+            AND pc.pubdate <= CURDATE() 
             ORDER BY pc.pubdate DESC
             LIMIT {$this->offset}, {$this->limit}";
         /** @var $res CDbCommand */

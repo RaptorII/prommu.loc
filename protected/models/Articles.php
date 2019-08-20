@@ -37,7 +37,8 @@ class Articles extends Model
               , DATE_FORMAT(pc.pubdate, '%d.%m.%Y') pubdate
             FROM pages p
             INNER JOIN pages_content pc ON p.id = pc.page_id AND lang = '{$lang}'
-            WHERE p.group_id = 99 
+            WHERE p.group_id = 99
+            AND pc.pubdate <= CURDATE() 
             ORDER BY pc.pubdate DESC
             LIMIT {$this->offset}, {$this->limit}";
         /** @var $res CDbCommand */

@@ -22,7 +22,7 @@ class Cardprommu extends Model
             FROM pages p
             INNER JOIN pages_content pc ON p.id = pc.page_id AND lang = '{$lang}'
             WHERE p.group_id = 2
-            ORDER BY crdate DESC
+            ORDER BY pc.crdate DESC
             LIMIT {$this->offset}, {$this->limit}";
         /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);
