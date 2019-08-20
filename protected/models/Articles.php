@@ -38,7 +38,7 @@ class Articles extends Model
             FROM pages p
             INNER JOIN pages_content pc ON p.id = pc.page_id AND lang = '{$lang}'
             WHERE p.group_id = 99 
-            ORDER BY id DESC
+            ORDER BY pc.pubdate DESC
             LIMIT {$this->offset}, {$this->limit}";
         /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);
