@@ -4,6 +4,9 @@
   $gcs->registerCssFile($bUrl . '/css/template.css');
   $gcs->registerCssFile($bUrl . '/css/vacancy/item.css');
   $gcs->registerScriptFile($bUrl . '/js/nicEdit.js', CClientScript::POS_HEAD);
+  $gcs->registerScriptFile($bUrl . '/js/vacancy/item.js', CClientScript::POS_END);
+  $anchor = Yii::app()->request->getParam('anchor');
+  $section = Yii::app()->request->getParam('section');
   $vacancy = $viData['item'];
 ?>
 <div class="row vacancy__item">
@@ -17,22 +20,25 @@
     </div>
     <div class="col-xs-12 col-sm-3 col-md-2">
       <ul class="nav user__menu" role="tablist" id="tablist">
-        <li class="active">
+        <li class="<?=(($anchor=='tab_main' || empty($anchor)) && empty($section)) ? 'active' : ''?>">
           <a href="#tab_main" aria-controls="tab_main" role="tab" data-toggle="tab">Общее</a>
         </li>
-        <li>
+        <li class="<?=$anchor=='tab_descr' ? 'active' : ''?>">
           <a href="#tab_descr" aria-controls="tab_descr" role="tab" data-toggle="tab">Описание</a>
         </li>
-        <li>
+        <li class="<?=$anchor=='tab_index' ? 'active' : ''?>">
           <a href="#tab_index" aria-controls="tab_index" role="tab" data-toggle="tab">Адрес и время работы</a>
         </li>
-        <li>
+        <li class="<?=$anchor=='tab_services' ? 'active' : ''?>">
           <a href="#tab_services" aria-controls="tab_services" role="tab" data-toggle="tab">Услуги</a>
         </li>
-        <li>
+        <li class="<?=$anchor=='tab_seo' ? 'active' : ''?>">
           <a href="#tab_seo" aria-controls="tab_seo" role="tab" data-toggle="tab">SEO</a>
         </li>
-        <li>
+        <li class="<?=($anchor=='tab_responses' || !empty($section)) ? 'active' : ''?>">
+          <a href="#tab_responses" aria-controls="tab_responses" role="tab" data-toggle="tab">Заявки</a>
+        </li>
+        <li class="<?=$anchor=='tab_history' ? 'active' : ''?>">
           <a href="#tab_history" aria-controls="tab_history" role="tab" data-toggle="tab">История заявок</a>
         </li>
       </ul>
@@ -42,11 +48,11 @@
     ?>
     <div class="col-xs-12 col-sm-6 col-md-8">
       <? echo CHtml::form($id,'post',['class'=>'form-horizontal']); ?>
-        <div class="tab-content">
+        <div class="tab-content" id="content">
           <?
           // Main
           ?> 
-          <div role="tabpanel" class="tab-pane fade active in" id="tab_main">
+          <div role="tabpanel" class="tab-pane fade<?=(($anchor=='tab_main' || empty($anchor)) && empty($section)) ? ' active in' : ''?>" id="tab_main">
             <div class="row">
               <div class="col-xs-12 col-md-6">
                 <div class="d-indent">
@@ -61,11 +67,12 @@
                 <div class="d-indent">
                   <span>Дата завершения работ:</span> <b><?=date('d.m.y',$vacancy['remdate'])?></b>
                 </div>
-              </div>
-              <div class="col-xs-12 col-md-6">
                 <div class="d-indent">
                   <span>Просмотров:</span> <b><?=$viData['views']?></b>
                 </div>
+              </div>
+              <div class="col-xs-12 col-md-6">
+                <?/*?>
                 <div class="d-indent">
                   <span>Откликов:</span> <b><?=count($viData['responses']['items'])?></b>
                   <? if(count($viData['responses']['items'])): ?>
@@ -98,6 +105,7 @@
                     </div>
                   <? endif; ?>
                 </div>
+                <?*/?>
               </div>
             </div>
             <div class="row">
@@ -236,7 +244,7 @@
           <?
           // Описание
           ?> 
-          <div role="tabpanel" class="tab-pane fade" id="tab_descr">
+          <div role="tabpanel" class="tab-pane fade<?=$anchor=='tab_descr' ? ' active in' : ''?>" id="tab_descr">
             <h4>Описание работы</h4>
             <label class="d-label">
               <span>Требования</span>
@@ -257,7 +265,7 @@
           <?
           //
           ?> 
-          <div role="tabpanel" class="tab-pane fade" id="tab_index">
+          <div role="tabpanel" class="tab-pane fade<?=$anchor=='tab_index' ? ' active in' : ''?>" id="tab_index">
             <h4>Адрес и время работы</h4>
             <div class="vacancy__loc">
               <ul>
@@ -317,7 +325,7 @@
           <?
           // Услуги
           ?> 
-          <div role="tabpanel" class="tab-pane fade" id="tab_services">
+          <div role="tabpanel" class="tab-pane fade<?=$anchor=='tab_services' ? ' active in' : ''?>" id="tab_services">
             <? $serviceCnt = 0; ?>
             <h4>Данные по услугам</h4>
             <label class="d-label">
@@ -419,7 +427,7 @@
           <?
           // SEO
           ?>  
-          <div role="tabpanel" class="tab-pane fade" id="tab_seo">
+          <div role="tabpanel" class="tab-pane fade<?=$anchor=='tab_seo' ? ' active in' : ''?>" id="tab_seo">
             <h4>SEO</h4>
             <label class="d-label">
               <span>Запретить индексацию</span>
@@ -439,9 +447,126 @@
             </label>
           </div>
           <?
+          // Заявки
+          ?>
+          <div role="tabresponses" class="tab-pane fade<?=($anchor=='tab_responses' || !empty($section)) ? ' active in' : ''?>" id="tab_responses">
+            <?
+              if(Yii::app()->request->isAjaxRequest)
+              {
+                ob_get_clean();
+              }
+              $arResp = $viData['responses'];
+            ?>
+            <div class="responses__tabs">
+              <a href="<?=$this->createUrl('',['section'=>MainConfig::$VACANCY_APPROVED, 'id'=>$viData['id']])?>"
+                 class="<?=($arResp['section']==MainConfig::$VACANCY_APPROVED ? ' active' : '')?>"><?
+                echo 'Утвержденные ' . ($arResp['cnt'][MainConfig::$VACANCY_APPROVED] ? "({$arResp['cnt'][MainConfig::$VACANCY_APPROVED]})" : "");
+                ?></a>
+              <a href="<?=$this->createUrl('',['section'=>MainConfig::$VACANCY_INVITED, 'id'=>$viData['id']])?>"
+                 class="<?=($arResp['section']==MainConfig::$VACANCY_INVITED ? ' active' : '')?>"><?
+                echo 'Приглашенные ' . ($arResp['cnt'][MainConfig::$VACANCY_INVITED] ? "({$arResp['cnt'][MainConfig::$VACANCY_INVITED]})" : "");
+                ?></a>
+              <a href="<?=$this->createUrl('',['section'=>MainConfig::$VACANCY_RESPONDED, 'id'=>$viData['id']])?>"
+                 class="<?=($arResp['section']==MainConfig::$VACANCY_RESPONDED ? ' active' : '')?>"><?
+                echo 'Откликнувшиеся ' . ($arResp['cnt'][MainConfig::$VACANCY_RESPONDED] ? "({$arResp['cnt'][MainConfig::$VACANCY_RESPONDED]})" : "");
+                ?></a>
+              <a href="<?=$this->createUrl('',['section'=>MainConfig::$VACANCY_DEFERRED, 'id'=>$viData['id']])?>"
+                 class="<?=($arResp['section']==MainConfig::$VACANCY_DEFERRED ? ' active' : '')?>"><?
+                echo 'Отложенные ' . ($arResp['cnt'][MainConfig::$VACANCY_DEFERRED] ? "({$arResp['cnt'][MainConfig::$VACANCY_DEFERRED]})" : "");
+                ?></a>
+              <a href="<?=$this->createUrl('',['section'=>MainConfig::$VACANCY_REJECTED, 'id'=>$viData['id']])?>"
+                 class="<?=($arResp['section']==MainConfig::$VACANCY_REJECTED ? ' active' : '')?>"><?
+                echo 'Отклоненные ' . ($arResp['cnt'][MainConfig::$VACANCY_REJECTED] ? "({$arResp['cnt'][MainConfig::$VACANCY_REJECTED]})" : "");
+                ?></a>
+              <a href="<?=$this->createUrl('',['section'=>MainConfig::$VACANCY_REFUSED, 'id'=>$viData['id']])?>"
+                 class="<?=($arResp['section']==MainConfig::$VACANCY_REFUSED ? ' active' : '')?>"><?
+                echo 'Отказавшиеся ' . ($arResp['cnt'][MainConfig::$VACANCY_REFUSED] ? "({$arResp['cnt'][MainConfig::$VACANCY_REFUSED]})" : "");
+                ?></a>
+            </div>
+            <? if($arResp['section']==MainConfig::$VACANCY_INVITED): ?>
+              <?
+              // вкладка с приглашенными
+              ?>
+              <? if(!count($arResp['items'])): ?>
+                <p>Нет приглашений</p>
+              <? else: ?>
+                <table class="responses__table">
+                  <thead>
+                  <tr><th>Соискатель<th>Дата приглашения<th>Статус<th>Тип</tr>
+                  </thead>
+                  <tbody>
+                    <? foreach ($arResp['items'] as $v): ?>
+                      <? $arUser = $arResp['users'][$v['user']]; ?>
+                      <tr>
+                        <td>
+                          <a href="<?=$arUser['profile_admin']?>" target="_blank">
+                            <img src="<?=$arUser['src']?>" alt="<?=$arUser['name']?>">
+                            <b><?=$arUser['name']?></b>
+                          </a>
+                        </td>
+                        <td><?=$v['date']?></td>
+                        <td><?=$v['status']?></td>
+                        <td><?=$v['type']?></td>
+                      </tr>
+                    <? endforeach; ?>
+                    <tr>
+                      <td colspan="4">
+                        <div class="pager">
+                          <? $this->widget('CLinkPager', ['pages' => $arResp['pages']]); ?>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              <? endif; ?>
+            <? else: ?>
+              <?
+              // остальные вкладки
+              ?>
+              <? if (count($arResp['items'])): ?>
+                <? $model = new ResponsesEmpl(); ?>
+                <table class="responses__table">
+                  <thead>
+                  <tr><th>Соискатель<th>Дата отклика<th>Статус</tr>
+                  </thead>
+                  <tbody>
+                  <? foreach ($arResp['items'] as $v): ?>
+                    <? $arUser = $arResp['users'][$v['user']]; ?>
+                    <tr>
+                      <td>
+                        <a href="<?=$arUser['profile_admin']?>" target="_blank">
+                          <img src="<?=$arUser['src']?>" alt="<?=$arUser['name']?>">
+                          <b><?=$arUser['name']?></b>
+                        </a>
+                      </td>
+                      <td><?=$v['rdate']?></td>
+                      <td><?=$model->getStatus($v['isresponse'],$v['status'])?></td>
+                    </tr>
+                  <? endforeach; ?>
+                  <tr>
+                    <td colspan="3">
+                      <div class="pager">
+                        <? $this->widget('CLinkPager', ['pages' => $arResp['pages']]); ?>
+                      </div>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              <? else: ?>
+                <p>Нет заявок</p>
+              <? endif; ?>
+            <? endif; ?>
+            <?
+            if(Yii::app()->request->isAjaxRequest)
+            {
+              die();
+            }
+            ?>
+          </div>
+          <?
           // История
           ?>
-          <div role="tabpanel" class="tab-pane fade" id="tab_history">
+          <div role="tabpanel" class="tab-pane fade<?=$anchor=='tab_history' ? ' active in' : ''?>" id="tab_history">
             <h4>История заявок (<?=$viData['responses_history']['cnt']?>)</h4>
             <? if($viData['responses_history']['cnt']): ?>
               <div class="history__list">
@@ -449,7 +574,7 @@
                   <div class="history__list-response"><b>Заявка №<?=$r['id']?></b></div>
                   <table>
                     <? foreach($r['items'] as $v): ?>
-                      <? $arUser = $viData['responses']['users'][$v['id_user']]; ?>
+                      <? $arUser = $viData['responses_history']['users'][$v['id_user']]; ?>
                       <tr>
                         <td class="history__item-user">
                           <a href="<?=$arUser['profile_admin']?>">
@@ -485,27 +610,5 @@
       <? echo CHtml::endForm(); ?>
     </div>
     <div class="col-xs-12 col-sm-3 col-md-2"></div>
-    <script type="text/javascript">
-      'use strict'
-      var nicEditorParams = {
-              maxHeight: 200, 
-              buttonList: ['bold','italic','underline','left','center','right','justify','ol','ul'] 
-            },
-          nicEditorReq = new nicEditor(nicEditorParams),
-          nicEditorDuties = new nicEditor(nicEditorParams),
-          nicEditorCond = new nicEditor(nicEditorParams),
-          nicEditorComment = new nicEditor(nicEditorParams);
-
-      jQuery(function($){
-        nicEditorReq.addInstance('area_requirements');
-        nicEditorReq.setPanel('panel_requirements');
-        nicEditorDuties.addInstance('area_duties');
-        nicEditorDuties.setPanel('panel_duties');
-        nicEditorCond.addInstance('area_conditions');
-        nicEditorCond.setPanel('panel_conditions');
-        nicEditorComment.addInstance('area_comment');
-        nicEditorComment.setPanel('panel_comment');
-      });
-    </script>
   <? endif; ?>
 </div>

@@ -4186,7 +4186,7 @@ WHERE id_vac = {$inVacId}";
         $arRes['pages'] = new CPagination($arRes['cnt'][$section]);
         $arRes['pages']->pageSize = 20; // 20 юзеров на странице
         $arRes['pages']->applyLimit($responses);
-        $arRes = array_merge($arRes, $responses->getVacResponses($id_vacancy));
+        $arRes = array_merge($arRes, $responses->getVacResponses($id_vacancy,$section));
 
         return $arRes;
     }
@@ -4464,27 +4464,39 @@ WHERE id_vac = {$inVacId}";
             return $arRes;
 
         // отклики
-        $model = new ResponsesEmpl();
-        $arRes['responses'] = $model->getVacResponsesAdmin($id_vacancy);
-        if(count($arRes['responses']['users']))
-        {
-          $arRes['responses']['users'][$arRes['item']['id_user']] = [
-            'id' => $arRes['item']['id_user'],
-            'status' => UserProfile::$EMPLOYER,
-            'name' => $arRes['item']['coname'],
-            'src' => Share::getPhoto(
-              $arRes['item']['id_user'],
-              UserProfile::$EMPLOYER,
-              $arRes['item']['logo']),
-            'profile_admin' => '/admin/EmplEdit/' . $arRes['item']['id_user']
-          ];
-        }
+        $arRes['responses'] = [];
+        $responses = new ResponsesEmpl();
+        $arRes['responses']['cnt'] = $responses->getVacResponsesCnt($id_vacancy);
+        $section = Yii::app()->getRequest()->getParam('section');
+        empty($section) && $section=MainConfig::$VACANCY_APPROVED;
+        $arRes['responses']['pages'] = new CPagination($arRes['responses']['cnt'][$section]);
+        $arRes['responses']['pages']->pageSize = 2; // 20 юзеров на странице
+        $arRes['responses']['pages']->applyLimit($responses);
+        $arRes['responses']['section'] = Yii::app()->getRequest()->getParam('section');
+        $arRes['responses']['section'] = ($arRes['responses']['section'] ?: MainConfig::$VACANCY_APPROVED);
+        $arRes['responses'] = array_merge(
+          $arRes['responses'],
+          $responses->getVacResponses($id_vacancy, $arRes['responses']['section'])
+        );
         // просмотры
         $model = new Termostat();
         $arRes['views'] = $model->getTermostatCount($id_vacancy);
         // история заявок
         $model = new ResponsesHistory();
-        $arRes['responses_history'] = $model->getAllData($arRes['responses']['items']);
+        $arRes['responses_history'] = $model->getAllData($id_vacancy);
+        if(count($arRes['responses_history']['users']))
+        {
+         $arRes['responses_history']['users'][$arRes['item']['id_user']] = [
+           'id' => $arRes['item']['id_user'],
+           'status' => UserProfile::$EMPLOYER,
+           'name' => $arRes['item']['coname'],
+           'src' => Share::getPhoto(
+             $arRes['item']['id_user'],
+             UserProfile::$EMPLOYER,
+             $arRes['item']['logo']),
+           'profile_admin' => '/admin/EmplEdit/' . $arRes['item']['id_user']
+         ];
+        }
         // атрибуты
         $query = $db->createCommand()
                     ->select("ea.*, uad.name dname, uad.id_par, uad.postself")

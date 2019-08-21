@@ -53,18 +53,22 @@ class ResponsesHistory
     }
     Share::multipleInsert([self::$table => $arInsert]);
   }
+
   /**
-   * @param $arResponses - array (ID from vacation_stat)
-   * Получаем историю по массиву заявок
+   * @param $id_vacancy - integer
+   * @return array
+   * Получаем историю по массиву заявкам
    */
-  public function getAllData($arResponses)
+  public function getAllData($id_vacancy)
   {
-    $arRes = ['items'=>[],'cnt'=>0];
-    if(!count($arResponses))
+    $arRes = ['items'=>[], 'users'=>[], 'cnt'=>0];
+    $arResponses = Responses::getResponsesByVacancy($id_vacancy);
+    if(!count($arResponses['items']))
       return $arRes;
 
     $arId = [];
-    foreach ($arResponses as $v)
+    $arRes['users'] = $arResponses['users'];
+    foreach ($arResponses['items'] as $v)
     {
       $arId[] = $v['id'];
       $arRes['items'][$v['id']] = $v;

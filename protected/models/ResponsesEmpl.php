@@ -876,17 +876,18 @@ class ResponsesEmpl extends Responses
             // Отклонение, отказ
             if($v['status']==self::$STATUS_REJECT)
             {
-                $v['isresponse']==1 && $arRes[MainConfig::$VACANCY_REJECTED]++;
-                $v['isresponse']==2 && $arRes[MainConfig::$VACANCY_REFUSED]++;
+                $v['isresponse']==Responses::$STATE_INVITE && $arRes[MainConfig::$VACANCY_REJECTED]++;
+                $v['isresponse']==Responses::$STATE_RESPONSE && $arRes[MainConfig::$VACANCY_REFUSED]++;
             }
             // утвержденные
             if($v['status'] > self::$STATUS_EMPLOYER_ACCEPT)
                 $arRes[MainConfig::$VACANCY_APPROVED]++;
             // откликнувшиеся
-            if(in_array($v['status'],[self::$STATUS_NEW,self::$STATUS_EMPLOYER_ACCEPT]))
+            //if(in_array($v['status'],[self::$STATUS_NEW,self::$STATUS_EMPLOYER_ACCEPT]))
+            if($v['isresponse']==Responses::$STATE_RESPONSE)
                 $arRes[MainConfig::$VACANCY_RESPONDED]++;
             // приглашения
-            $v['isresponse']==2 && $arRes[MainConfig::$VACANCY_INVITED]++;
+            $v['isresponse']==Responses::$STATE_RESPONSE && $arRes[MainConfig::$VACANCY_INVITED]++;
         }
         $arRes['cnt'] = count($query);
 
@@ -895,11 +896,10 @@ class ResponsesEmpl extends Responses
     /**
      * 
      */
-    public function getVacResponses($id_vacancy)
+    public function getVacResponses($id_vacancy, $section)
     {
         $arRes = array();
         $db = Yii::app()->db;
-        $section = Yii::app()->getRequest()->getParam('section');
         $condition = 'vs.id_vac=:id AND ';
         $filter = [':id'=>$id_vacancy];
 
@@ -920,13 +920,13 @@ class ResponsesEmpl extends Responses
         if($section==MainConfig::$VACANCY_REJECTED) // Отклонение
         {
             $condition .= 'vs.isresponse=:response AND vs.status=:status';
-            $filter[':response'] = 1;
+            $filter[':response'] = Responses::$STATE_RESPONSE;
             $filter[':status'] = self::$STATUS_REJECT;
         }
         if($section==MainConfig::$VACANCY_REFUSED) // Отказ
         {
             $condition .= 'vs.isresponse=:response AND vs.status=:status';
-            $filter[':response'] = 2;
+            $filter[':response'] = Responses::$STATE_INVITE;
             $filter[':status'] = self::$STATUS_REJECT;
         }
         if($section==MainConfig::$VACANCY_APPROVED) // Утвержденные
@@ -936,9 +936,11 @@ class ResponsesEmpl extends Responses
         }
         if($section==MainConfig::$VACANCY_RESPONDED) // Откликнувшиеся
         {
-            $condition .= '(vs.status=:status1 OR vs.status=:status2)';
+            $condition .= 'vs.isresponse=:response';
+            $filter[':response'] = Responses::$STATE_RESPONSE;
+            /*$condition .= '(vs.status=:status1 OR vs.status=:status2)';
             $filter[':status1'] = self::$STATUS_NEW;
-            $filter[':status2'] = self::$STATUS_EMPLOYER_ACCEPT;
+            $filter[':status2'] = self::$STATUS_EMPLOYER_ACCEPT;*/
         }
         if($section!=MainConfig::$VACANCY_INVITED)
         {
@@ -1010,7 +1012,7 @@ class ResponsesEmpl extends Responses
                         $arSC[] = $v['sc_id'];
                     }
                     //
-                    if(!in_array($v['vs_id'], $arVS)  &&  $v['isresponse']==2)
+                    if(!in_array($v['vs_id'], $arVS)  &&  $v['isresponse']==Responses::$STATE_INVITE)
                     {
                         $arT[] = array(
                             'user' => $v['vs_user'],
@@ -1047,40 +1049,6 @@ class ResponsesEmpl extends Responses
                 $arId[] = $v['user'];
             $arRes['users'] = Share::getUsers($arId);
         }
-
-        return $arRes;
-    }
-    /**
-     * 
-     */
-    public function getVacResponsesAdmin($id_vacancy)
-    {
-        $arRes = [
-                MainConfig::$VACANCY_APPROVED => [],
-                'users' => [],
-                'items' => []
-            ];
-
-        $arRes['items'] = Yii::app()->db->createCommand()
-          ->select("vs.*, r.id_user")
-          ->from('vacation_stat vs')
-          ->leftjoin('resume r','r.id=vs.id_promo')
-          ->where('vs.id_vac=:id',[':id'=>$id_vacancy])
-          ->queryAll();
-
-        if(!count($arRes['items']))
-            return $arRes;
-
-        $arId = array(Im::$ADMIN_APPLICANT, Im::$ADMIN_EMPLOYER);
-        foreach ($arRes['items'] as $v)
-        {
-            // утвержденные
-            if($v['status'] > self::$STATUS_EMPLOYER_ACCEPT)
-                $arRes[MainConfig::$VACANCY_APPROVED][] = $v;
-            // id_user
-            $arId[] = $v['id_user'];
-        }
-        $arRes['users'] = Share::getUsers($arId);
 
         return $arRes;
     }

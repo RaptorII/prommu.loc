@@ -61,4 +61,29 @@ abstract class Responses extends Model
     public static $STATUS_EMPLOYER_RATED = 7; // работодатель выставил рейтинг
     public static $STATUS_APPLICANT_RATED = 8; // соискатель выставил рейтинг
     public static $STATUS_FULL_RATING = 9; // все выставили рейтинг
+
+    public static function getResponsesByVacancy($id_vacancy)
+    {
+      $arRes = [ 'users' => [], 'items' => [] ];
+
+      $arRes['items'] = Yii::app()->db->createCommand()
+        ->select("vs.*, r.id_user")
+        ->from('vacation_stat vs')
+        ->leftjoin('resume r','r.id=vs.id_promo')
+        ->where('vs.id_vac=:id',[':id'=>$id_vacancy])
+        ->queryAll();
+
+      if(!count($arRes['items']))
+        return $arRes;
+
+      $arId = [Im::$ADMIN_APPLICANT, Im::$ADMIN_EMPLOYER];
+
+      foreach ($arRes['items'] as $v)
+      {
+        $arId[] = $v['id_user'];
+      }
+      $arRes['users'] = Share::getUsers($arId);
+
+      return $arRes;
+    }
 }
