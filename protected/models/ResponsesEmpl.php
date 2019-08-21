@@ -883,11 +883,9 @@ class ResponsesEmpl extends Responses
             if($v['status'] > self::$STATUS_EMPLOYER_ACCEPT)
                 $arRes[MainConfig::$VACANCY_APPROVED]++;
             // откликнувшиеся
-            //if(in_array($v['status'],[self::$STATUS_NEW,self::$STATUS_EMPLOYER_ACCEPT]))
-            if($v['isresponse']==Responses::$STATE_RESPONSE)
-                $arRes[MainConfig::$VACANCY_RESPONDED]++;
+            $v['isresponse']==Responses::$STATE_RESPONSE && $arRes[MainConfig::$VACANCY_RESPONDED]++;
             // приглашения
-            $v['isresponse']==Responses::$STATE_RESPONSE && $arRes[MainConfig::$VACANCY_INVITED]++;
+            $v['isresponse']==Responses::$STATE_INVITE && $arRes[MainConfig::$VACANCY_INVITED]++;
         }
         $arRes['cnt'] = count($query);
 
