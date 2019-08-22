@@ -22,9 +22,15 @@
 		$params = unserialize($item->params);
 
 		if(empty($item->text))
-			$item->text = 'Соделжимое письма';
+			$item->text = 'Содержимое письма';
 		// if new letter => in template
 		!isset($item->in_template) && $item->in_template = 1;
+
+//		echo "<pre>";
+//		print_r($viData);
+//		print_r($item);
+//		print_r($params);
+//		echo "</pre>";
 	?>
 	<? if($viData['error'] && isset($viData['messages'])): ?>
 		<div class="alert danger">- <?=implode('<br>- ', $viData['messages']) ?></div>

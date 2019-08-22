@@ -5,9 +5,9 @@
 		<div class="row">
 			<div class="col-xs-12 col-sm-3 col-md-2">
 				<ul class="nav user__menu" role="tablist" id="tablist">
-          <li class="<?=($anchor=='tab_messages' || empty($anchor)) ? 'active' : ''?>">
-            <a href="#tab_messages" aria-controls="tab_messages" role="tab" data-toggle="tab">Сообщения в публичку</a>
-          </li>
+                    <li class="<?=($anchor=='tab_messages' || empty($anchor)) ? 'active' : ''?>">
+                        <a href="#tab_messages" aria-controls="tab_messages" role="tab" data-toggle="tab">Сообщения в публичку</a>
+                    </li>
 					<li class="<?=$anchor=='tab_event' ? 'active' : ''?>">
 						<a href="#tab_event" aria-controls="tab_event" role="tab" data-toggle="tab">События</a>
 					</li>
