@@ -1,0 +1,8 @@
+.filter__position .filter__content-all,
+.filter__position .filter__content-label {
+    display: unset;
+}
+
+.tpempl__filter-content .tpempl__filter-label {
+    display: unset;
+}

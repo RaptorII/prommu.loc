@@ -14,6 +14,9 @@
         Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/php/php.js', CClientScript::POS_HEAD);
         Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/htmlmixed/htmlmixed.js', CClientScript::POS_HEAD);
         Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl . '/js/nicEdit.js', CClientScript::POS_HEAD);
+        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl . '/js/filterNotifications.js', CClientScript::POS_HEAD);
+
+        Yii::app()->getClientScript()->registerCssFile(Yii::app()->request->baseUrl  . '/css/notifications/filterNotifications.css');
         Yii::app()->getClientScript()->registerCssFile($codeMirror . 'lib/codemirror.css');
 
 
@@ -26,11 +29,17 @@
 		// if new letter => in template
 		!isset($item->in_template) && $item->in_template = 1;
 
-//		echo "<pre>";
-//		print_r($viData);
+
+    /**
+     *
+     */
+
+
+		echo "<pre>";
+		print_r($viData['cotypes']);
 //		print_r($item);
-//		print_r($params);
-//		echo "</pre>";
+//		print_r();
+		echo "</pre>";
 	?>
 	<? if($viData['error'] && isset($viData['messages'])): ?>
 		<div class="alert danger">- <?=implode('<br>- ', $viData['messages']) ?></div>
@@ -45,6 +54,13 @@
 							<?
 							//
 							?>
+                            <div class="col-xs-12">
+                                <label class="d-label">
+                                    <input type="checkbox" name="user_all" value="0" >
+                                    <span>Всем</span>
+                                </label>
+                                <hr>
+                            </div>
 							<div class="col-xs-12">
 								<label class="d-label">
 									<input type="checkbox" name="user_status[]" value="0"
@@ -97,9 +113,145 @@
 										<?=$params['subscribe']?'checked="checked"':''?>>
 									<span>Подписанным на новости об изменениях и новых возможностях на сайте</span>
 								</label>
+                                <hr>
 							</div>
 							<?
-							//
+							//***
+                            // с возможностью выбрать всех в выбранном фильтре и без него
+							?>
+                            <div class="col-xs-12">
+                                <div class="filter filter__cities">
+                                    <label class="filter__name ">Город</label>
+                                    <div class="filter__content">
+                                        <div class="filter__select-cities" id="filter-city" data-city="1">
+                                            <ul class="filter__city-select">
+                                                <li data-id="0">
+                                                    <input type="text" name="fc" class="city-inp" autocomplete="off" >
+                                                </li>
+                                            </ul>
+                                            <ul class="filter__city-list" style="display: none;">
+                                                <li data-id="10783" data-metro="0">Великий Новгород</li>
+                                                <li data-id="1232" data-metro="0">Белые Столбы</li>
+                                                <li data-id="1231" data-metro="0">Белоомут</li>
+                                                <li data-id="1230" data-metro="0">Барыбино</li>
+                                                <li data-id="1229" data-metro="0">Балашиха</li>
+                                                <li data-id="1228" data-metro="0">Бакшеево</li>
+                                                <li data-id="1227" data-metro="0">Ашитково</li>
+                                                <li data-id="1226" data-metro="0">Архангельское</li>
+                                                <li data-id="1225" data-metro="0">Апрелевка</li>
+                                                <li data-id="1224" data-metro="0">Алабино</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="filter filter__sex">
+                                    <label class="filter__name">
+                                        Пол
+                                    </label>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-6 col-md-4">
+                                            <input name="sex[]" value="1" type="checkbox"
+                                                   id="pos-1" class="user__sex-m"
+                                                <?= ((count($params['sex']) && in_array(1, $params['sex'])) ? 'checked="checked"' : '') ?>>
+                                            <label class="filter__content-label"
+                                                   for="pos-1">Мужской</label>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-4">
+                                            <input name="sex[]" value="0" type="checkbox"
+                                                   id="pos-0" class="user__sex-w"
+                                                <?= ((count($params['sex']) && in_array(0, $params['sex'])) ? 'checked="checked"' : '') ?>>
+                                            <label class="filter__content-label"
+                                                   for="pos-0">Женский</label>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="filter filter__age">
+                                    <label class="filter__name">
+                                        Возраст
+                                    </label>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-6 col-md-4">
+                                            <label class="d-label" >
+                                                <span>От</span>
+                                                <input type="text" name="age-start" value="<?=$params['age-start']?>">
+                                            </label>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-4">
+                                            <label class="d-label">
+                                                <span>До</span>
+                                                <input type="text" name="age-stop" value="<?=$params['age-stop']?>">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="row filter filter__position">
+                                    <label class="filter__name">
+                                        Должность
+                                    </label>
+                                    <!--/*-->
+                                    <div class="filter__content">
+                                        <div class="col-xs-12">
+                                            <input id="filter__content-all" name="poall" type="checkbox" class="filter__content-all">
+                                            <label class="filter__content-all" for="filter__content-all">Выбрать все / снять все</label>
+                                        </div>
+
+                                        <?php
+                                        foreach ($viData['positions'] as $position) {
+                                            ?>
+                                            <div class="col-xs-12 col-sm-6">
+                                                <input name="position[]" value="<?= $position['id'] ?>" type="checkbox"
+                                                       id="pos-<?= $position['id'] ?>" class="filter__content-input"
+                                                    <?= ((count($params['position']) && in_array($position['id'], $params['position'])) ? 'checked="checked"' : '') ?>>
+                                                <label class="filter__content-label"
+                                                       for="pos-<?= $position['id'] ?>"><?= $position['name'] ?></label>
+                                            </div>
+                                        <?php } ?>
+
+                                    </div>
+                                </div>
+                                <!--*/-->
+                                <hr>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="row filter filter__tpempl">
+                                    <label class="filter__name">
+                                        Тип работодателя
+                                    </label>
+                                    <div class="tpempl__filter-block">
+                                        <div class="tpempl__filter-content">
+                                            <div class="col-xs-12">
+                                                <input name="cotype-all" type="checkbox" id="cotype-all" class="cotype__filter-input">
+                                                <label class="cotype__filter-label cotype__filter-all" for="cotype-all">Выбрать все / снять все</label>
+                                            </div>
+
+                                            <?php
+                                            foreach ($viData['cotypes'] as $cotype) {
+                                                ?>
+                                                <div class="col-xs-12 col-sm-6 col-md-4">
+                                                    <input name="cotype[]" value="<?= $cotype['id'] ?>" type="checkbox"
+                                                           id="cotype-<?= $cotype['id'] ?>" class="cotype__filter-input"
+                                                        <?= ((count($params['cotype']) && in_array($cotype['id'], $params['cotype'])) ? 'checked="checked"' : '') ?>>
+                                                    <label class="cotype-<?= $cotype['id'] ?>" for="cotype"><?= $cotype['name'] ?></label>
+                                                </div>
+                                            <?php } ?>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+
+                            <?
+							//***
 							?>
 							<div class="col-xs-12">
 								<div class="bs-callout bs-callout-warning">Если не выбрать тип пользователя - отправка будет выполнятся только по полю Email</div>
@@ -113,6 +265,7 @@
 									<input type="text" name="title" class="form-control" autocomplete="off" value="<?=$item->title?>">
 								</label>
 							</div>
+
 							<?
 							//
 							?>
@@ -194,6 +347,36 @@
 	</style>
 	<?
 	//
+    /**
+     * List of Buttons for buttonList option for nicEditor
+     *
+        'bold'
+        'italic'
+        'underline'
+        'left'
+        'center'
+        'right'
+        'justify'
+        'ol'
+        'ul'
+        'subscript'
+        'superscript'
+        'strikethrough'
+        'removeformat'
+        'indent'
+        'outdent'
+        'hr'
+        'image'
+        'upload' * requires nicUpload
+        'forecolor'
+        'bgcolor'
+        'link' * requires nicLink
+        'unlink' * requires nicLink
+        'fontSize' * requires nicSelect
+        'fontFamily' * requires nicSelect
+        'fontFormat' * requires nicSelect
+        'xhtml' * required nicCode
+    */
 	?>
 	<script type="text/javascript">
 		jQuery(function($){
@@ -203,8 +386,20 @@
 					replace = "<?=MailingTemplate::$CONTENT?>",
 					myNicEditor = new nicEditor(
 						{
-							maxHeight: 600, 
-							buttonList: ['bold','italic','underline','left','center','right','justify','ol','ul'] 
+							maxHeight: 600,
+							buttonList: [
+							    'bold',
+                                'italic',
+                                'underline',
+                                'left',
+                                'center',
+                                'right',
+                                'justify',
+                                'ol',
+                                'ul',
+                                'image',
+                                'upload',
+                            ],
 						}
 					);
 			// get format

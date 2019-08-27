@@ -24,6 +24,17 @@ class MailingLetter extends Mailing
 		$template = new MailingTemplate;
 		$arRes['template'] = $template->getActiveTemplate();
 		$arRes['item'] = $this::model()->findByPk($id);
+        $dataModelSV = new SearchVac;
+        $arRes['positions'] = $dataModelSV->getOccupations(); // select position list of employers (tri roky bez urozayyu)
+
+        // select cotype of Applications (chotiry roky bez urozayyu, Petya Bumper)
+        $arRes['cotypes'] = Yii::app()->
+            db->createCommand("
+                SELECT d.id, d.type, d.name 
+                FROM user_attr_dict d 
+                WHERE d.id_par = 101 
+                ORDER BY id
+        ")->queryAll();
 
 		return $arRes;
 	}
@@ -40,6 +51,15 @@ class MailingLetter extends Mailing
 		$arParams['moder'] = $obj->getParam('user_moder');
 		// subscribe
 		$arParams['subscribe'] = $obj->getParam('user_subscribe');
+        // position
+        $arParams['position'] = $obj->getParam('position');
+        // cotype
+        $arParams['cotype'] = $obj->getParam('cotype');
+        // cotype
+        $arParams['sex'] = $obj->getParam('sex');
+        // age
+        $arParams['age-start'] = $obj->getParam('age-start');
+        $arParams['age-stop'] = $obj->getParam('age-stop');
 		// emails
 		$this->receiver = filter_var(
 		                $obj->getParam('receiver'),
@@ -117,6 +137,21 @@ class MailingLetter extends Mailing
 				$arCond[] = 'u.ismoder IN(' . implode(',',$arParams['moder']) . ')';
 			if(!empty($arParams['subscribe']))
 				$arCond[] = "ua.key='isnews' AND ua.val=1";
+            if(count($arParams['position']))
+                $arCond[] = 'um.id_mech IN(' . implode(',',$arParams['position']) . ')';
+            if(count($arParams['cotype']))
+                $arCond[] = 'uad.id_par IN(' . implode(',',$arParams['cotype']) . ')';
+            if(count($arParams['sex']))
+                $arCond[] = 'r.id_user IN(' . implode(',',$arParams['sex']) . ')';
+            if(count($arParams['age-start']) && count($arParams['age-stop'])) {
+                $sql = "Floor(DateDiff(d, birthday, GetDate()) / 365.25)  Between "
+                    . $arParams['age-start']
+                    . " AND "
+                    .  $arParams['age-stop'] . " )";
+
+                $arCond[] = 'r.id_user IN(' . $sql . ')';
+
+            }
 
 			if(count($arCond))
 			{
@@ -125,8 +160,12 @@ class MailingLetter extends Mailing
 								->select("u.id_user, u.email")
 								->from('user u')
 								->leftjoin('user_attribs ua','ua.id_us=u.id_user')
+								->leftjoin('user_mech um','um.id_us=u.id_user')
+								->leftjoin('user_attr_dict uad','uad.id_par=u.id_user')
+								->leftjoin('resume r','r.id_user=u.id_user')
 								->where($strCond)
 								->order('u.id_user desc')
+                                //->group('u.id_user')
 								->queryAll();
 
 				foreach ($sql as $v)
@@ -145,10 +184,10 @@ class MailingLetter extends Mailing
 			{
 				// помещаем письмо в шаблон	
 				$this->in_template && $this->text = str_replace(
-																								MailingTemplate::$CONTENT,
-																								$this->text,
-																								$arRes['template']->body
-																							);
+                    MailingTemplate::$CONTENT,
+                    $this->text,
+                    $arRes['template']->body
+                );
 
 				$this->setToMailing($arReceiver, $this->title, $this->text);
 				$arRes['redirect'] = true;
