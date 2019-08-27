@@ -251,22 +251,22 @@ Function.prototype.closureListener = function() {
 
 var nicEditorConfig = bkClass.extend({
 	buttons : {
-		'bold' : {name : __('Click to Bold'), command : 'Bold', tags : ['B','STRONG'], css : {'font-weight' : 'bold'}, key : 'b'},
-		'italic' : {name : __('Click to Italic'), command : 'Italic', tags : ['EM','I'], css : {'font-style' : 'italic'}, key : 'i'},
-		'underline' : {name : __('Click to Underline'), command : 'Underline', tags : ['U'], css : {'text-decoration' : 'underline'}, key : 'u'},
-		'left' : {name : __('Left Align'), command : 'justifyleft', noActive : true},
-		'center' : {name : __('Center Align'), command : 'justifycenter', noActive : true},
-		'right' : {name : __('Right Align'), command : 'justifyright', noActive : true},
-		'justify' : {name : __('Justify Align'), command : 'justifyfull', noActive : true},
-		'ol' : {name : __('Insert Ordered List'), command : 'insertorderedlist', tags : ['OL']},
-		'ul' : 	{name : __('Insert Unordered List'), command : 'insertunorderedlist', tags : ['UL']},
-		'subscript' : {name : __('Click to Subscript'), command : 'subscript', tags : ['SUB']},
-		'superscript' : {name : __('Click to Superscript'), command : 'superscript', tags : ['SUP']},
-		'strikethrough' : {name : __('Click to Strike Through'), command : 'strikeThrough', css : {'text-decoration' : 'line-through'}},
-		'removeformat' : {name : __('Remove Formatting'), command : 'removeformat', noActive : true},
-		'indent' : {name : __('Indent Text'), command : 'indent', noActive : true},
-		'outdent' : {name : __('Remove Indent'), command : 'outdent', noActive : true},
-		'hr' : {name : __('Horizontal Rule'), command : 'insertHorizontalRule', noActive : true}
+		'bold' : {name : __('Жирный'), command : 'Bold', tags : ['B','STRONG'], css : {'font-weight' : 'bold'}, key : 'b'},
+		'italic' : {name : __('Наклонный'), command : 'Italic', tags : ['EM','I'], css : {'font-style' : 'italic'}, key : 'i'},
+		'underline' : {name : __('Подчеркнуть'), command : 'Underline', tags : ['U'], css : {'text-decoration' : 'underline'}, key : 'u'},
+		'left' : {name : __('Влево'), command : 'justifyleft', noActive : true},
+		'center' : {name : __('По центру'), command : 'justifycenter', noActive : true},
+		'right' : {name : __('Вправо'), command : 'justifyright', noActive : true},
+		'justify' : {name : __('Выравнивание'), command : 'justifyfull', noActive : true},
+		'ol' : {name : __('Маркированый список'), command : 'insertorderedlist', tags : ['OL']},
+		'ul' : 	{name : __('Нумерованый список'), command : 'insertunorderedlist', tags : ['UL']},
+		'subscript' : {name : __('Подписаться'), command : 'subscript', tags : ['SUB']},
+		'superscript' : {name : __('Прочитать'), command : 'superscript', tags : ['SUP']},
+		'strikethrough' : {name : __('Перечеркнутый'), command : 'strikeThrough', css : {'text-decoration' : 'line-through'}},
+		'removeformat' : {name : __('Убрать форматирование'), command : 'removeformat', noActive : true},
+		'indent' : {name : __('Отступ текста'), command : 'indent', noActive : true},
+		'outdent' : {name : __('Удалить отступ'), command : 'outdent', noActive : true},
+		'hr' : {name : __('Горизонтальная черта'), command : 'insertHorizontalRule', noActive : true}
 	},
 	iconsPath : '../nicEditorIcons.gif',
 	buttonList : ['save','bold','italic','underline','left','center','right','justify','ol','ul','fontSize','fontFamily','fontFormat','indent','outdent','image','upload','link','unlink','forecolor','bgcolor'],
@@ -274,7 +274,6 @@ var nicEditorConfig = bkClass.extend({
 	
 });
 /* END CONFIG */
-
 
 var nicEditors = {
 	nicPlugins : [],

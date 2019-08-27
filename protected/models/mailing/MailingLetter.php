@@ -26,6 +26,18 @@ class MailingLetter extends Mailing
 		$arRes['item'] = $this::model()->findByPk($id);
         $dataModelSV = new SearchVac;
         $arRes['positions'] = $dataModelSV->getOccupations(); // select position list of employers (tri roky bez urozayyu)
+        $params = unserialize($arRes['item']['params']);
+        $arRes['selected_cities'] = [];
+        if(count($params['cities'])) {
+            $arRes['selected_cities'] = Yii::app()->db
+                ->createCommand()
+                ->select('id_city, name')
+                ->from('city')
+                ->where('id_city in ('.implode(',', $params['cities']).')')
+                ->queryAll();
+        }
+
+        print_r($arRes['cities']);
 
         // select cotype of Applications (chotiry roky bez urozayyu, Petya Bumper)
         $arRes['cotypes'] = Yii::app()->
@@ -53,6 +65,8 @@ class MailingLetter extends Mailing
 		$arParams['subscribe'] = $obj->getParam('user_subscribe');
         // position
         $arParams['position'] = $obj->getParam('position');
+        //cities
+        $arParams['cities'] = $obj->getParam('cities');
         // cotype
         $arParams['cotype'] = $obj->getParam('cotype');
         // cotype
