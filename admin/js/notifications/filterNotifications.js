@@ -37,8 +37,6 @@ document.addEventListener('DOMContentLoaded', function(){
     var elP = document.querySelector('#filter__content-all');
     var itemP = document.querySelectorAll('.filter__content-input');
 
-    // console.log(itemP);
-
     if(elP) {
         elP.addEventListener("click", function() {
             if (elP.checked==true) {
@@ -56,8 +54,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
     var elCT = document.querySelector('#cotype-all');
     var itemCT = document.querySelectorAll('.cotype__filter-input');
-
-    console.log(itemCT);
 
     if(elCT) {
         elCT.addEventListener("click", function() {
