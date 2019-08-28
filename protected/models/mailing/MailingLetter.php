@@ -151,6 +151,10 @@ class MailingLetter extends Mailing
 				$arCond[] = 'u.ismoder IN(' . implode(',',$arParams['moder']) . ')';
 			if(!empty($arParams['subscribe']))
 				$arCond[] = "ua.key='isnews' AND ua.val=1";
+
+            if(count($arParams['cities']))
+                $arCond[] = 'uc.user_city IN(' . implode(',',$arParams['cities']) . ')';
+
             if(count($arParams['position']))
                 $arCond[] = 'um.id_mech IN(' . implode(',',$arParams['position']) . ')';
             if(count($arParams['cotype']))
@@ -177,6 +181,7 @@ class MailingLetter extends Mailing
 								->leftjoin('user_mech um','um.id_us=u.id_user')
 								->leftjoin('user_attr_dict uad','uad.id_par=u.id_user')
 								->leftjoin('resume r','r.id_user=u.id_user')
+								->leftjoin('user_city uc','uc.id_user=u.id_user')
 								->where($strCond)
 								->order('u.id_user desc')
                                 //->group('u.id_user')

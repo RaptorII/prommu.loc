@@ -14,7 +14,7 @@
         Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/php/php.js', CClientScript::POS_HEAD);
         Yii::app()->getClientScript()->registerScriptFile($codeMirror . 'mode/htmlmixed/htmlmixed.js', CClientScript::POS_HEAD);
         Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl . '/js/nicEdit.js', CClientScript::POS_HEAD);
-        //Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl . '/js/notifications/filterNotifications.js', CClientScript::POS_HEAD);
+        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl . '/js/notifications/filterNotifications.js', CClientScript::POS_HEAD);
 
         Yii::app()->getClientScript()->registerCssFile(Yii::app()->request->baseUrl  . '/css/notifications/filterNotifications.css');
         Yii::app()->getClientScript()->registerCssFile($codeMirror . 'lib/codemirror.css');
@@ -35,11 +35,11 @@
      */
 
 
-		echo "<pre>";
+//		echo "<pre>";
 //		print_r($viData['cotypes']);
 //		print_r($item);
 //		print_r();
-		echo "</pre>";
+//		echo "</pre>";
 	?>
 	<? if($viData['error'] && isset($viData['messages'])): ?>
 		<div class="alert danger">- <?=implode('<br>- ', $viData['messages']) ?></div>
@@ -56,7 +56,7 @@
 							?>
                             <div class="col-xs-12">
                                 <label class="d-label">
-                                    <input type="checkbox" name="user_all" value="0" >
+                                    <input type="checkbox" name="user_all" >
                                     <span>Всем</span>
                                 </label>
                                 <hr>
@@ -128,31 +128,6 @@
                                         </div>
                                     </div>
                                 </div>
-<!--                                <div class="filter filter__cities">-->
-<!--                                    <label class="filter__name ">Город</label>-->
-<!--                                    <div class="filter__content">-->
-<!--                                        <div class="filter__select-cities" id="filter-city" data-city="1">-->
-<!--                                            <ul class="filter__city-select">-->
-<!--                                                <li data-id="0">-->
-<!--                                                    <input type="text" name="fc" class="city-inp" autocomplete="off" >-->
-<!--                                                </li>-->
-<!--                                            </ul>-->
-<!--                                            <ul class="filter__city-list" style="display: none;">-->
-<!--                                                <li data-id="10783" data-metro="0">Великий Новгород</li>-->
-<!--                                                <li data-id="1232" data-metro="0">Белые Столбы</li>-->
-<!--                                                <li data-id="1231" data-metro="0">Белоомут</li>-->
-<!--                                                <li data-id="1230" data-metro="0">Барыбино</li>-->
-<!--                                                <li data-id="1229" data-metro="0">Балашиха</li>-->
-<!--                                                <li data-id="1228" data-metro="0">Бакшеево</li>-->
-<!--                                                <li data-id="1227" data-metro="0">Ашитково</li>-->
-<!--                                                <li data-id="1226" data-metro="0">Архангельское</li>-->
-<!--                                                <li data-id="1225" data-metro="0">Апрелевка</li>-->
-<!--                                                <li data-id="1224" data-metro="0">Алабино</li>-->
-<!--                                            </ul>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                    <hr>-->
-<!--                                </div>-->
                             </div>
                             <div class="col-xs-12">
                                 <div class="filter filter__sex">
@@ -187,13 +162,25 @@
                                         <div class="col-xs-12 col-sm-6 col-md-4">
                                             <label class="d-label" >
                                                 <span>От</span>
-                                                <input type="text" name="age-start" value="<?=$params['age-start']?>">
+                                                <input
+                                                        type="number"
+                                                        name="age-start"
+                                                        min="15"
+                                                        max="100"
+                                                        required
+                                                        value="<?=$params['age-start']?>">
                                             </label>
                                         </div>
                                         <div class="col-xs-12 col-sm-6 col-md-4">
                                             <label class="d-label">
                                                 <span>До</span>
-                                                <input type="text" name="age-stop" value="<?=$params['age-stop']?>">
+                                                <input
+                                                        type="number"
+                                                        name="age-stop"
+                                                        min="16"
+                                                        max="101"
+                                                        required
+                                                        value="<?=$params['age-stop']?>">
                                             </label>
                                         </div>
                                     </div>
@@ -237,7 +224,7 @@
                                     <div class="tpempl__filter-block">
                                         <div class="tpempl__filter-content">
                                             <div class="col-xs-12">
-                                                <input name="cotype-all" type="checkbox" id="cotype-all" class="cotype__filter-input">
+                                                <input name="cotype-all" type="checkbox" id="cotype-all" class="cotype__filter-all">
                                                 <label class="cotype__filter-label cotype__filter-all" for="cotype-all">Выбрать все / снять все</label>
                                             </div>
 
@@ -502,7 +489,6 @@
             /**
              * php-mode on to CodeMirror
              * 24.04.2019 Karpenko M.
-             * TODO: clear coments after tester;
              */
             function initMirror()
             {
@@ -587,7 +573,7 @@
                     sec = e.type==='focus' ? 1 : 1000;
 
                 // делаем ширину поля по содержимому, чтобы не занимало много места
-                $input.val(val).css({width:(val.length * 10 + 5)+'px'});
+                $input.val(val).css({width: 50 +'%'});
                 bShowCityList = true;
                 clearTimeout(cityTimer);
                 cityTimer = setTimeout(function(){

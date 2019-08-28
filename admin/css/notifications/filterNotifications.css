@@ -16,6 +16,7 @@
     flex-direction: row;
     justify-content: start;
     flex-wrap: wrap;
+    /*flex-flow: wrap-reverse;*/
     margin: 0;
     list-style: none;
     border: 1px solid #ebebeb;
@@ -27,7 +28,7 @@
 }
 
 .city-select, .filter-city-select li:not([data-id="0"]) {
-    display: inline-block;
+    order: 2;
     padding: 3px 20px 3px 5px;
     margin: 2px 0 2px 6px;
     background-color: rgba(52,52,52,.6);
@@ -35,6 +36,10 @@
     line-height: 18px;
     border-radius: 5px;
     position: relative;
+}
+.city-select, .filter-city-select li[data-id="0"] {
+    order: 1;
+    width: 100%;
 }
 .filter-city-select b {
     top: 5px;
@@ -66,10 +71,12 @@
 }
 #filter-city .filter-city-select input {
     padding: 0;
-    border: none;
     background: 0 0;
     margin: 2px 0 2px 6px;
     height: 29px;
+    width: 50%;
+    background: white;
+    border: 1px solid grey;
 }
 .select-list {
     max-height: 300px;
@@ -103,4 +110,8 @@
     -moz-transition: all .3s ease-out;
     -o-transition: all .3s ease-out;
     transition: all .3s ease-out;
+}
+
+.psa__filter-name.opened {
+    font-weight: 600;
 }
