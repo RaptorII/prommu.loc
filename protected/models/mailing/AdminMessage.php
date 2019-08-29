@@ -75,12 +75,12 @@ class AdminMessage extends CActiveRecord
    */
   public function setData($obj)
   {
-      echo '<pre>';
-        print_r($obj->getParam('id'));
-        print_r($obj->getParam('receivers'));
-        print_r($obj->getParam('receivers_old'));
-      echo '</pre>';
-      die();
+//      echo '<pre>';
+//        print_r($obj->getParam('id'));
+//        print_r($obj->getParam('receivers'));
+//        print_r($obj->getParam('receivers_old'));
+//      echo '</pre>';
+      //die();
 
     $arParams = array();
     $arRes = array('error'=>false);

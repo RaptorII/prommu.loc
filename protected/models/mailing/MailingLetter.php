@@ -37,7 +37,7 @@ class MailingLetter extends Mailing
                 ->queryAll();
         }
 
-        print_r($arRes['cities']);
+        //print_r($arRes['cities']);
 
         // select cotype of Applications (chotiry roky bez urozayyu, Petya Bumper)
         $arRes['cotypes'] = Yii::app()->
