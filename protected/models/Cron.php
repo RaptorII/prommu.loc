@@ -92,6 +92,11 @@ class Cron
                     $model = new Yandex();
                     $model->generateFile(); // формируем вакансии для Яндекс Работа 2 раза в день
                 break;
+
+            case '20':
+                $m = new UserNotifications;
+                $m::setMSGForHaveNTEmailUsers(); // формируем вакансии для Яндекс Работа 2 раза в день
+                break;
         }
         $vacancy = new Vacancy();
         $vacancy->chkVacsEnds(); // завершение вакансий выполняем каждый час

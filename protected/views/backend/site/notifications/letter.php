@@ -34,12 +34,12 @@
      *
      */
 
-
-//		echo "<pre>";
+		echo "<pre>";
 //		print_r($viData['cotypes']);
 //		print_r($item);
-//		print_r();
-//		echo "</pre>";
+		print_r($query);
+		echo "</pre>";
+
 	?>
 	<? if($viData['error'] && isset($viData['messages'])): ?>
 		<div class="alert danger">- <?=implode('<br>- ', $viData['messages']) ?></div>

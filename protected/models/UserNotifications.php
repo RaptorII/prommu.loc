@@ -545,4 +545,53 @@ class UserNotifications
       Share::multipleInsert([self::$table => $arInsert]);
     }
   }
+
+    /**
+     * Set message notifications for not have email users
+     * Work once at 24 hours.
+     * Dublicate 48 hours and autoreset.
+     */
+    public static function setMSGForHaveNTEmailUsers() {
+
+        $query = "
+            SELECT
+                u.id_user,
+                u.email,
+                u.crdate,
+                u.mdate
+            FROM
+                user u
+            WHERE
+                DATE(u.crdate) >= NOW() - INTERVAL 1 DAY
+                or 
+                DATE(u.mdate) >= NOW() - INTERVAL 1 DAY
+        ";
+        $query = Yii::app()->db->createCommand($query)->queryAll();
+
+        if(!count($query)){
+            return;
+        } else {
+            foreach ($query as $user){
+                $email = $user['email'];
+                if (!preg_match("/^(?:[a-z0-9]+(?:[-_.]?[a-z0-9]+)?@[a-z0-9_.-]+(?:\.?[a-z0-9]+)?\.[a-z]{2,5})$/i", $email)) {
+                    /**
+                     * Отправить сообщение в паблик о некорректности емейла.
+                     */
+                    $result['users']['id_user'] = $user['id_user'];
+                    $result['title'] = 'Сообщение от администрации Prommu.com';
+                    $result['text'] = '<p>Уважаемый пользователь портала Prommu.com, будьте добры заполнить 
+                                       поле e-mail в вашем профиле.</p>
+                                       <p>Заранее спасибо!</p>';
+
+                }
+            }
+            $admMsg = new AdminMessage();
+
+            if (isset($result)) {
+                return $admMsg->sendDataByCron($result);
+            }
+        }
+
+
+    }
 }

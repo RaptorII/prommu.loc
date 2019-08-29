@@ -75,6 +75,13 @@ class AdminMessage extends CActiveRecord
    */
   public function setData($obj)
   {
+      echo '<pre>';
+        print_r($obj->getParam('id'));
+        print_r($obj->getParam('receivers'));
+        print_r($obj->getParam('receivers_old'));
+      echo '</pre>';
+      die();
+
     $arParams = array();
     $arRes = array('error'=>false);
     // title
@@ -194,4 +201,81 @@ class AdminMessage extends CActiveRecord
     Cache::setData($arRes, $this->cacheTime);
     return $arRes;
   }*/
+
+    /**
+     *	Send data by Cron to Users
+     */
+    public function sendDataByCron($obj)
+    {
+        //$arParams = [];
+        $arRes = array('error'=>false);
+        // title
+        $this->title = $obj['title'];
+        // text
+        $this->text = $obj['text'];
+
+//        if(empty($this->title) || empty($this->text))
+//            $arRes['messages'][] = 'поля "Заголовок" и "Текст письма" должны быть заполнены';
+
+//        if(count($arRes['messages'])) // error
+//        {
+//            $arRes['error'] = true;
+//            $arRes['item'] = $this;
+//            return $arRes;
+//        }
+        // Сохраняем в любом случае
+        $time = time();
+        $this->date = $time;
+        //подумать над ИД, откуда взять. А может мы его хитрым следующим кодом получим.
+        $id = $obj['id'];
+
+        if(!intval($id)) // insert
+        {
+            $this->date = $time;
+            $this->setIsNewRecord(true); //вот этим самым кодом и получим ИД
+        }
+        else // update
+        {
+            $this->id = $id;
+        }
+
+        if($this->save())
+        {
+            $arRes['redirect'] = true;
+            Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
+        }
+        else
+        {
+            $arRes['redirect'] = true;
+            Yii::app()->user->setFlash('danger', 'Ошибка сохранения');
+        }
+
+        $arReceivers = $obj['users'];
+        $arReceiversOld = $obj['users_old']; //?
+        if(count($arReceivers))
+        {
+            $arInsert = [];
+            !intval($id) && $id=$this->id;
+
+            foreach ($arReceivers as $id_user)
+            {
+                if(count($arReceiversOld))
+                {
+                    if(!in_array($id_user,$arReceiversOld))
+                    {
+                        $arInsert[] = ['id_user'=>$id_user,'id_message'=>$id];
+                    }
+                }
+                else
+                {
+                    $arInsert[] = ['id_user'=>$id_user,'id_message'=>$id];
+                }
+            }
+
+            Share::multipleInsert(['admin_message_receiver'=>$arInsert]);
+        }
+
+        return $arRes;
+    }
+
 }
