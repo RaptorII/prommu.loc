@@ -573,7 +573,8 @@ class UserNotifications
         } else {
             foreach ($query as $user){
                 $email = $user['email'];
-                if (!preg_match("/^(?:[a-z0-9]+(?:[-_.]?[a-z0-9]+)?@[a-z0-9_.-]+(?:\.?[a-z0-9]+)?\.[a-z]{2,5})$/i", $email)) {
+                if ((!preg_match("/^(?:[a-z0-9]+(?:[-_.]?[a-z0-9]+)?@[a-z0-9_.-]+(?:\.?[a-z0-9]+)?\.[a-z]{2,5})$/i", $email))
+                    || ( $email = '' )){
                     /**
                      * Отправить сообщение в паблик о некорректности емейла.
                      */
