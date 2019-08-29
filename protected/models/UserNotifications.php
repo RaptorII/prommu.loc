@@ -576,14 +576,13 @@ class UserNotifications
                 if ((!preg_match("/^(?:[a-z0-9]+(?:[-_.]?[a-z0-9]+)?@[a-z0-9_.-]+(?:\.?[a-z0-9]+)?\.[a-z]{2,5})$/i", $email))
                     || ( $email = '' )){
                     /**
-                     * Отправить сообщение в паблик о некорректности емейла.
+                     * Send messages to users who did not approve the email
                      */
-                    $result['users']['id_user'] = $user['id_user'];
-                    $result['title'] = 'Сообщение от администрации Prommu.com';
-                    $result['text'] = '<p>Уважаемый пользователь портала Prommu.com, будьте добры заполнить 
-                                       поле e-mail в вашем профиле.</p>
-                                       <p>Заранее спасибо!</p>';
-
+                    $result['users'][] = $user['id_user'];
+                    $result['title'] = 'Администрация';
+                    $result['text'] = 'Уважаемый пользователь, будьте добры заполнить 
+                                       поле e-mail в вашем профиле.
+                                       Заранее спасибо!';
                 }
             }
             $admMsg = new AdminMessage();

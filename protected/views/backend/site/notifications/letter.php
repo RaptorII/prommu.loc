@@ -34,35 +34,12 @@
      *
      */
 
-    $query = "
-            SELECT
-                u.id_user,
-                u.email,
-                u.crdate,
-                u.mdate
-            FROM
-                user u
-            WHERE
-                DATE(u.crdate) >= NOW() - INTERVAL 1 DAY
-                or 
-                DATE(u.mdate) >= NOW() - INTERVAL 1 DAY
-        ";
-    $query = Yii::app()->db->createCommand($query)->queryAll();
-		echo "<pre>";
+//    echo "<pre>";
 //		print_r($viData['cotypes']);
 //		print_r($item);
-		print_r($query);
-		echo "</pre>";
+//    print_r($result);
+//    echo "</pre>";
 
-		foreach ($query as $user){
-            $email = $user['email'];
-            if ((!preg_match("/^(?:[a-z0-9]+(?:[-_.]?[a-z0-9]+)?@[a-z0-9_.-]+(?:\.?[a-z0-9]+)?\.[a-z]{2,5})$/i", $email))
-                || ($email == '')) {
-
-                echo "Адрес указан не правильно.". $email .'</br>';
-
-            }
-        };
 	?>
 	<? if($viData['error'] && isset($viData['messages'])): ?>
 		<div class="alert danger">- <?=implode('<br>- ', $viData['messages']) ?></div>

@@ -212,15 +212,14 @@ class AdminMessage extends CActiveRecord
         $this->title = $obj['title'];
         $this->text = $obj['text'];
 
-        // Сохраняем в любом случае
+        // Save
         $time = time();
         $this->date = $time;
-        //подумать над ИД, откуда взять. А может мы его хитрым следующим кодом получим.
         $id = $obj['id'];
 
         if(!intval($id)) { // insert
             $this->date = $time;
-            $this->setIsNewRecord(true); //вот этим самым кодом и получим ИД
+            $this->setIsNewRecord(true);
         } else {
             $this->id = $id; // update
         }
@@ -234,22 +233,13 @@ class AdminMessage extends CActiveRecord
         }
 
         $arReceivers = $obj['users'];
-        $arReceiversOld = $obj['users_old']; //?
 
         if(count($arReceivers)) {
-
             $arInsert = [];
             !intval($id) && $id=$this->id;
 
             foreach ($arReceivers as $id_user) {
-                if(count($arReceiversOld))
-                {
-                    if(!in_array($id_user,$arReceiversOld)) {
-                        $arInsert[] = ['id_user'=>$id_user,'id_message'=>$id];
-                    }
-                } else {
                     $arInsert[] = ['id_user'=>$id_user,'id_message'=>$id];
-                }
             }
 
             Share::multipleInsert(['admin_message_receiver'=>$arInsert]);
