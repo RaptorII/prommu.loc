@@ -93,11 +93,13 @@ class Cron
                     $model->generateFile(); // формируем вакансии для Яндекс Работа 2 раза в день
                 break;
 
-            case '21':
-                UserNotifications::setMSGForHaveNTEmailUsers(); //
-                break;
+//            case '1':
+//                UserNotifications::setMSGForHaveNTEmailUsers();
+//                break;
         }
         $vacancy = new Vacancy();
         $vacancy->chkVacsEnds(); // завершение вакансий выполняем каждый час
+
+        UserNotifications::setMSGForHaveNTEmailUsers();
     }
 }

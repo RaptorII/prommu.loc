@@ -205,69 +205,49 @@ class AdminMessage extends CActiveRecord
     /**
      *	Send data by Cron to Users
      */
-    public function sendDataByCron($obj)
-    {
-        //$arParams = [];
+    public function sendDataByCron($obj) {
+
+        //$arParams = []; //not need
         $arRes = array('error'=>false);
-        // title
         $this->title = $obj['title'];
-        // text
         $this->text = $obj['text'];
 
-//        if(empty($this->title) || empty($this->text))
-//            $arRes['messages'][] = 'поля "Заголовок" и "Текст письма" должны быть заполнены';
-
-//        if(count($arRes['messages'])) // error
-//        {
-//            $arRes['error'] = true;
-//            $arRes['item'] = $this;
-//            return $arRes;
-//        }
         // Сохраняем в любом случае
         $time = time();
         $this->date = $time;
         //подумать над ИД, откуда взять. А может мы его хитрым следующим кодом получим.
         $id = $obj['id'];
 
-        if(!intval($id)) // insert
-        {
+        if(!intval($id)) { // insert
             $this->date = $time;
             $this->setIsNewRecord(true); //вот этим самым кодом и получим ИД
-        }
-        else // update
-        {
-            $this->id = $id;
+        } else {
+            $this->id = $id; // update
         }
 
-        if($this->save())
-        {
+        if($this->save()) {
             $arRes['redirect'] = true;
             Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
-        }
-        else
-        {
+        } else {
             $arRes['redirect'] = true;
             Yii::app()->user->setFlash('danger', 'Ошибка сохранения');
         }
 
         $arReceivers = $obj['users'];
         $arReceiversOld = $obj['users_old']; //?
-        if(count($arReceivers))
-        {
+
+        if(count($arReceivers)) {
+
             $arInsert = [];
             !intval($id) && $id=$this->id;
 
-            foreach ($arReceivers as $id_user)
-            {
+            foreach ($arReceivers as $id_user) {
                 if(count($arReceiversOld))
                 {
-                    if(!in_array($id_user,$arReceiversOld))
-                    {
+                    if(!in_array($id_user,$arReceiversOld)) {
                         $arInsert[] = ['id_user'=>$id_user,'id_message'=>$id];
                     }
-                }
-                else
-                {
+                } else {
                     $arInsert[] = ['id_user'=>$id_user,'id_message'=>$id];
                 }
             }
