@@ -609,7 +609,7 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
                 $enable = ($curId == 'sect' && $_GET['p'] == 'service') ? true : $enable;
                 ?>
                 <li class="<?= ($enableE ? 'active' : '') ?>">
-                    <a href="<?= $hUrl ?>stat"">
+                    <a href="<?= $hUrl ?>stat">
                         <i class="glyphicon glyphicon-briefcase"></i>
                         <span>Статистика</span>
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
