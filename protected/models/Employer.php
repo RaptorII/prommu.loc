@@ -1,8 +1,5 @@
 <?php
-/**
- * Created by Vlasakh
- * Date: 26.08.16
- */
+
 
 class Employer extends ARModel
 {
@@ -867,7 +864,7 @@ class Employer extends ARModel
         
          $arRes['items'] = $arT;
          
-         var_dump($arRes);
+         
         return $arRes;
     }
     
