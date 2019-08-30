@@ -867,6 +867,7 @@ class Employer extends ARModel
         
          $arRes['items'] = $arT;
          
+         var_dump($arRes);
         return $arRes;
     }
     
