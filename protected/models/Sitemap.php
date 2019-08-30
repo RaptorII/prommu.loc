@@ -385,7 +385,7 @@ class Sitemap extends CActiveRecord
             $urls[] = $val;
         }
         ///услуги 
-        $bdUrls[] = array('name' => 'Услуги', 'link' => Yii::app()->createAbsoluteUrl(DS . MainConfig::$PAGE_SERVICES), 'level' => 0, 'crdate' => date("Y-m-d H:i:s"));
+        $bdUrls[] = array('name' => 'Услуги', 'link' => Yii::app()->createAbsoluteUrl(MainConfig::$PAGE_SERVICES), 'level' => 0, 'crdate' => date("Y-m-d H:i:s"));
          $this->dburls[] = array('name' => "Наши услуги", 'link' => Yii::app()->createAbsoluteUrl('/services'), 'level' => 0, 'crdate' => date("Y-m-d H:i:s"));
          $this->dburls[] = array('name' => "Работа для студентов", 'link' => Yii::app()->createAbsoluteUrl('/work-for-students'), 'level' => 1, 'crdate' => date("Y-m-d H:i:s"));
         // Выбираем даты всех услуг

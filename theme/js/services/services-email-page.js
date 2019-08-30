@@ -363,16 +363,73 @@ $(function(){
   /*
   *   PAGE 3
   */
+  var radioLegal = false;
   $('#email_pay_btn').click(function(e){
     e.preventDefault();
-    if(MainScript.isButtonLoading(this))
+
+    if((radioLegal && checkInp($('.payment__input'))) || !radioLegal)
     {
-      return false;
+      if(MainScript.isButtonLoading(this))
+        return false;
+      else
+      {
+        MainScript.buttonLoading(this,true);
+        $('.smss__result-form').submit();
+      }
+    }
+  });
+  //  переключаем action в зависимости от типа лица
+  $('.payment-form__radio-input').change(function(e){
+    if($(this).val()=='legal')
+    {
+      $('#payment-legal').fadeIn();
+      $('.smss__result-form').prop('action', $('.smss__result-form').data('leg'));
+      radioLegal = true;
+    }
+    if($(this).val()=='individual')
+    {
+      $('#payment-legal').fadeOut();
+      $('.smss__result-form').prop('action', $('.smss__result-form').data('ind'));
+      radioLegal = false;
+    }
+  });
+  //  проверяем поля
+  $('.payment__input').on('input',function(){ checkInp(this) });
+  $('#legal-inn, #legal-kpp, #legal-index').on('input',function(){
+    var v = this.value.replace (/\D/, '');
+
+    $(this).val(v);
+  } );
+  //
+  function checkInp(e)
+  {
+    var result = true;
+    if(e.length!=undefined)
+    {
+      e.each(function(){
+        if(!($(this).val().trim().length))
+        {
+          $(this).addClass('error');
+          result = false;
+        }
+        else
+        {
+          $(this).removeClass('error');
+        }
+      });
     }
     else
     {
-      MainScript.buttonLoading(this,true);
-      $('.smss__result-form').submit();
+      if(!($(e).val().trim().length))
+      {
+        $(e).addClass('error');
+        result = false;
+      }
+      else
+      {
+        $(e).removeClass('error');
+      }
     }
-  });
+    return result;
+  }
 })

@@ -38,32 +38,125 @@ class Services extends Model
      */
     public function getServices()
     {
-        $data = array();
-        $lang = Yii::app()->session['lang'];
+      $arRes = $arIdUsers = $arIdVac = [];
 
-        $sql = "SELECT p.id, p.link, pc.name, pc.anons, 
-                pc.html, pc.img, pc.imganons
-            FROM pages p
-            INNER JOIN pages_content pc ON p.id = pc.page_id AND pc.lang = '{$lang}'
-            WHERE p.group_id = 3 
-            ORDER BY npp ";
-        $res = Yii::app()->db->createCommand($sql)->queryAll();
+      $query = Yii::app()->db->createCommand()
+        ->select(
+          'p.id,
+          p.link, 
+          pc.name, 
+          pc.anons, 
+          pc.html, 
+          pc.img, 
+          pc.imganons')
+        ->from('pages p')
+        ->join(
+          'pages_content pc',
+          'p.id = pc.page_id AND pc.lang=:lang',
+          [':lang'=>Yii::app()->session['lang']]
+          )
+        ->where('p.group_id=3')
+        ->order('npp')
+        ->queryAll();
 
-        // получаем меню услуг
-        $menu = $this->getMenu();
-
-        foreach ($menu as $m) {
-            $m['icon'] = str_replace('/services/', '', $m['link']);
-            foreach ($res as $s) {
-                $data['services'][$s['id']] = $s;       
-                if($m['icon']==$s['link'] || $m['icon']=='invitations') {
-                    $m['anons'] = $s['anons'];
-                    $data['menu'][$m['parent_id']][$m['id']] =  $m; 
-                }
-            }
+      // получаем меню услуг
+      $menu = $this->getMenu();
+      // объединение с меню
+      foreach ($menu as $m)
+      {
+        $m['icon'] = str_replace('/services/', '', $m['link']);
+        foreach ($query as $s)
+        {
+          $arRes['services'][$s['id']] = $s;
+          if($m['icon']==$s['link'] || $m['icon']=='invitations')
+          {
+            $m['anons'] = $s['anons'];
+            $arRes['menu'][$m['parent_id']][$m['id']] =  $m;
+          }
         }
+      }
+      //
+      if(!Share::isGuest())
+      {
+        $id_user = Share::$UserProfile->exInfo->id;
+        $arRes['history'] = ['items'=>[], 'users'=>[], 'vacancies'=>[], 'cnt'=>0];
 
-        return $data;
+        $model = new ServiceCloud();
+        $arRes['history']['items'] = $model->getDataByUser($id_user, true);
+
+        $arRes['history']['items'] = array_merge(
+          $arRes['history']['items'],
+          (new MedRequest())->getMedBookByUser($id_user, true),
+          (new CardRequest())->getCardByUser($id_user, true)
+        );
+
+        if(Share::isEmployer())
+        {
+          // собираем услуги с таболицы outstaffing
+          $arRes['history']['items'] = array_merge(
+            $arRes['history']['items'],
+            $this->getOutstaffingByUser($id_user, true)
+          );
+          // собираем публикации вакансий
+          $model = new Vacancy();
+          $arVacs = $model->getVacanciesByUser($id_user);
+          if(count($arVacs))
+          {
+            foreach ($arVacs as $v)
+            {
+              $arRes['history']['items'][] = [
+                'id_user' => $id_user,
+                'vacancy' => $v['id'],
+                'type' => 'vacpub',
+                'name' => 'Размещение вакансии',
+                'date' => $v['crdate'],
+                'title' => $v['title']
+              ];
+
+              $arRes['history']['vacancies'][$v['id']] = $v;
+            }
+          }
+        }
+        // сортируем по дате заказа
+        usort(
+          $arRes['history']['items'],
+          function($a, $b){ return strtotime($b['date']) - strtotime($a['date']); }
+          );
+        $arRes['history']['cnt'] = count($arRes['history']['items']);
+        //
+        if($arRes['history']['cnt']>0)
+        {
+          foreach ($arRes['history']['items'] as &$v)
+          {
+            if(in_array($v['type'],['email','push','sms']) && !empty($v['data']['user'])) // service_cloud
+            {
+              $arT = explode(',',$v['data']['user']);
+              foreach ($arT as $u)
+              {
+                if(intval($u))
+                {
+                  $arIdUsers[] = intval($u);
+                  $v['users'][] = intval($u);
+                }
+              }
+            }
+            if(in_array($v['type'],['email','push','sms','repost','vacancy','outsourcing','outstaffing']))
+            {
+              !empty($v['vacancy']) && $arIdVac[]=$v['vacancy'];
+            }
+
+            if(!empty($v['data']['legal']))
+            {
+              $v['payment_legal'] = MainConfig::$PAGE_LEGAL_ENTITY_RECEIPT . $v['data']['legal'];
+            }
+          }
+          //
+          $arRes['history']['users'] = Share::getUsers($arIdUsers);
+        }
+        unset($v);
+      }
+
+      return $arRes;
     }
 
 
@@ -170,6 +263,7 @@ class Services extends Model
         }
 //        $data['files'] = $files;
         $data['files'] = json_encode($files);
+        $data['id_user'] = (!Share::isGuest() ? Share::$UserProfile->exInfo->id : null);
 
         $res = Yii::app()->db->createCommand()
             ->insert('card_request', $data);
@@ -281,5 +375,77 @@ class Services extends Model
                                                 )->format('d.m.Y');
         }
         return $arRes;
+    }
+    /**
+     * @param $id_user - integer
+     * @param $buildArray - bool
+     * @return array
+     */
+    public function getOutstaffingByUser($id_user, $buildArray=false)
+    {
+      $arRes = [];
+      $query = Yii::app()->db->createCommand()
+        ->select('*')
+        ->from('outstaffing o')
+        ->where('id=:id',[':id'=>$id_user])
+        ->order('date desc')
+        ->queryAll();
+
+      if(count($query))
+      {
+        if($buildArray)
+        {
+          foreach ($query as $v)
+          {
+            $arService = [];
+            !empty($v['rezident']) && $arService[]=$v['rezident'];
+            !empty($v['nrezident']) && $arService[]=$v['nrezident'];
+            !empty($v['consult']) && $arService[]=$v['consult'];
+            !empty($v['advertising']) && $arService[]=$v['advertising'];
+            !empty($v['control']) && $arService[]=$v['control'];
+
+            $arRes[] = [
+              'id_user' => $v['id'],
+              'vacancy' => $v['vacancy'],
+              'type' => $v['type'],
+              'name' => self::getServiceName($v['type']),
+              'date' => $v['date'],
+              'cost' => 0,
+              'data' => [
+                'phone' => $v['phone'],
+                'email' => $v['email'],
+                'text' => $v['text'],
+              ],
+              'services' => $arService
+            ];
+          }
+        }
+        else
+        {
+          $arRes = $query;
+        }
+      }
+
+      return $arRes;
+    }
+
+    public static function getServiceName($code)
+    {
+      switch ($code)
+      {
+        case 'vacancy': $name = 'Премиум вакансия'; break;
+        case 'repost': $name = 'Публикация в соцсетях'; break;
+        case 'email': $name = 'Электронная почта'; break;
+        case 'push': $name = 'PUSH уведомления'; break;
+        case 'sms': $name = 'SMS информирование'; break;
+        case 'api': $name = 'Получение API ключа'; break;
+        case 'outsourcing': $name = 'Личный менеджер и аутсорсинг персонала'; break;
+        case 'outstaffing': $name = 'Аутстаффинг персонала'; break;
+        case 'card': $name = 'Получение корпоративной карты Prommu'; break;
+        case 'medbook': $name = 'Получение медицинской книги'; break;
+        default: $name = 'Услуга'; break;
+      }
+
+      return $name;
     }
 }

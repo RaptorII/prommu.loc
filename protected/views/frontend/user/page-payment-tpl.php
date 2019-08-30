@@ -90,30 +90,7 @@
 				<?php $result = $viData['app_count'] * $viData['mes_count'] * $viData['price']; ?>
 				<span id="payment-result"><?=$result?>рублей</span>			
 			<?endif;?>
-			<span class="payment-form__type-name">тип плательщика</span>
-			<label class="payment-form__radio-label">
-				<input name="personal" type="radio" value="individual" class="payment-form__radio-input" checked>
-				<span class="payment-form__radio-block"></span>
-				<span class="payment-form__radio-name">Физическое лицо</span>
-			</label>
-			<br>
-			<label class="payment-form__radio-label">
-				<input name="personal" type="radio" value="legal" class="payment-form__radio-input">
-				<span class="payment-form__radio-block"></span>
-				<span class="payment-form__radio-name">Юридическое лицо</span>
-			</label>
-			<div class="payment-form__legal" id="payment-legal">
-				<span class="payment-form__type-name">ДАННЫЕ ЮРИДИЧЕСКОГО ЛИЦА</span>
-				<label class="payment__label" title="Название предприятия">
-					<input type="text" name="name" placeholder="Название предприятия" value="<?=Share::$UserProfile->exInfo->name?>" class="payment__input" id="legal-name"/>
-				</label>
-				<label class="payment__label" title="ИНН">
-					<input type="text" name="inn" placeholder="ИНН" class="payment__input" id="legal-inn" />
-				</label>
-				<label class="payment__label" title="КПП">
-					<input type="text" name="kpp" placeholder="КПП" class="payment__input" id="legal-kpp" />
-				</label>
-			</div>
+      <? $this->renderPartial('../site/services/legal-fields',['viData'=>$viData]); ?>
 			<div class="center">
 				<br>
 				<button type="submit" class="payment-form__btn prmu-btn prmu-btn_normal" id="payment-btn"><span>СФОРМИРОВАТЬ СЧЕТ</span></button>

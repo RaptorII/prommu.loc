@@ -1,3 +1,4 @@
+'use strict'
 var ServicesList = (function () {
 
     function ServicesList() {
@@ -5,16 +6,31 @@ var ServicesList = (function () {
         self.init();
     }
     ServicesList.prototype.init = function () {
-        var self = this;
-        $(".order-service a").click(function (e) { self.onOrderServiceClickFn(e, this); });
-        //
-        $('.user.creation-vacancy').click(function(){
-            $.fancybox.open({
-                src: '.creation-vacancy_mess.prmu__popup',
-                type: 'inline',
-                touch: false
-            });
+      var self = this;
+      $(".order-service a").click(function (e) {
+        self.onOrderServiceClickFn(e, this);
+      });
+      //
+      $('.user.creation-vacancy').click(function () {
+        $.fancybox.open({
+          src: '.creation-vacancy_mess.prmu__popup',
+          type: 'inline',
+          touch: false
         });
+      });
+      // Переключаем между секциями
+      $('.services__sections-item').click(function () {
+        $('#' + this.dataset.section).fadeIn();
+        $('.services__sections').fadeOut();
+      });
+      $('.services__back').click(function(){
+        var main = $(this).closest('.disable');
+
+        $(main).fadeOut();
+        $('.services__sections').fadeIn();
+      });
+
+
 
         if(typeof arSuccessMess === 'undefined' || arSuccessMess == null)
             return;
@@ -130,7 +146,14 @@ var ServicesList = (function () {
 
     return ServicesList;
 }());
+//
+//
+//
+$(document).ready(function () {
+  new ServicesList();
+});
 
+/*
 $(function fix() {
 
     //fixed menu in personal account
@@ -149,4 +172,4 @@ $(function fix() {
                 : $('.personal-acc__menu').removeClass('fixed');
         }
     }
-});
+});*/

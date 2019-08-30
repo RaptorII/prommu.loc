@@ -4676,4 +4676,16 @@ WHERE id_vac = {$inVacId}";
             [':id' => $id]
         );
     }
+    /**
+     * @param $id_user
+     * @return array
+     */
+    public function getVacanciesByUser($id_user)
+    {
+      return Yii::app()->db->createCommand()
+        ->select('*')
+        ->from($this->tableName())
+        ->where('id_user=:id',[':id'=>$id_user])
+        ->queryAll();
+    }
 }

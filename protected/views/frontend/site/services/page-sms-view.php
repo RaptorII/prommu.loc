@@ -90,7 +90,7 @@ if(!$rq->getParam('vacancy')):?>
 	</div>
 <?
 /*
-*		Выбор соискателей
+*		Переход к оплате
 */
 ?>
 <?php else: ?>
@@ -111,6 +111,7 @@ if(!$rq->getParam('vacancy')):?>
 				</table>
 				<?$result = $appCount * $viData['price'];?>
 				<span class="smss-result__result"><?echo $appCount . ' * ' . $viData['price'] . ' = ' . $result . 'рублей'?></span>
+        <? $this->renderPartial('../site/services/legal-fields',['viData'=>$viData]); ?>
 				<br>
 				<br>
 				<div class="center">

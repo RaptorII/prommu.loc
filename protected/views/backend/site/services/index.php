@@ -105,12 +105,12 @@ $this->widget('zii.widgets.grid.CGridView',
                         'value' => '$data->user',
                         'type' => 'raw',
                     ),
-                    /*array(
-                        'header' => 'Text',
-                        'name' => 'text',
-                        'value' => '$data->text',
+                    array(
+                        'header' => 'Юр. счет',
+                        'name' => 'legal',
+                        'value' => 'AdminView::getLink(MainConfig::$PAGE_LEGAL_ENTITY_RECEIPT."{$data->legal}",$data->legal)',
                         'type' => 'raw',
-                    ),*/
+                    ),
                 ),
         ));
 

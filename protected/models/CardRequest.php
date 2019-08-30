@@ -298,4 +298,44 @@ class CardRequest {
         //unlink($file_name); // удаляем файл. то есть когда вы сохраните файл на локальном компе, то после он удалится с сервера
 
     }
+  /**
+   * @param $id_user - integer
+   * @param $buildArray - bool
+   * @return array
+   */
+  public function getCardByUser($id_user, $buildArray=false)
+  {
+    $arRes = [];
+    $query = Yii::app()->db->createCommand()
+      ->select('*')
+      ->from('card_request')
+      ->where('id_user=:id',[':id'=>$id_user])
+      ->order('crdate desc')
+      ->queryAll();
+
+    if(count($query))
+    {
+      if($buildArray)
+      {
+        foreach ($query as $v)
+        {
+          $arRes[] = [
+            'id_user' => $v['id_user'],
+            'vacancy' => false,
+            'type' => 'card',
+            'name' => Services::getServiceName('card'),
+            'date' => $v['crdate'],
+            'cost' => 0,
+            'data' => []
+          ];
+        }
+      }
+      else
+      {
+        $arRes = $query;
+      }
+    }
+
+    return $arRes;
+  }
 }

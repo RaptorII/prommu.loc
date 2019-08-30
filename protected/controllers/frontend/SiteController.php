@@ -820,28 +820,30 @@ class SiteController extends AppController
      */
     public function actionServices()
     {
-        $type = Share::$UserProfile->type;
-        Subdomain::guestRedirect($type);
-        $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        Subdomain::guestRedirect(Share::$UserProfile->type);
+        $id = filter_var(
+          Yii::app()->getRequest()->getParam('id'),
+          FILTER_SANITIZE_FULL_SPECIAL_CHARS
+        );
         $services = new Services();
-        $PrommuOrder = new PrommuOrder();
-        $prices = $PrommuOrder->getPricesData();
+        $order = new PrommuOrder();
+        $prices = $order->getPricesData();
 
-        if( $id )
+        if( !empty($id) )
         {
             $data = $services->getServiceData($id);
-            switch ($id){
+            switch ($id)
+            {
                 case 'creation-vacancy':
                 case 'premium-vacancy':
                 case 'email-invitation':
                 case 'push-notification':
                 case 'sms-informing-staff':
-                case 'publication-vacancy-social-net':       
+                case 'publication-vacancy-social-net':
                 case 'personal-manager-outsourcing':
                 case 'outstaffing':
                 case 'api-key-prommu':
-                    if($type==2)
-                        $this->redirect(DS.MainConfig::$PAGE_SERVICES);
+                    Share::isApplicant() && $this->redirect(MainConfig::$PAGE_SERVICES);
                     $view = MainConfig::$VIEWS_SERVICE_VIEW; 
                     break; 
                 case 'geolocation-staff':
@@ -852,12 +854,12 @@ class SiteController extends AppController
                 case 'conditions':
                     $model = new PagesContent;
                     $lang = Yii::app()->session['lang'];
-                    $content = $model->getPageContent($id, $lang);
-                    $this->breadcrumbs = array($content['name'] => array(MainConfig::$PAGE_PAGES . DS . $content['link']));
+                    $data = $model->getPageContent($id, $lang);
+                    $this->breadcrumbs = [$data['name']=>[MainConfig::$PAGE_PAGES . DS . $data['link']]];
                     $this->render(
                         MainConfig::$VIEWS_DB_PAGES, 
-                        array('content' => $content), 
-                        array('pageTitle' => $content['name'], 'htmlTitle' => $content['name'])
+                        ['content' => $data],
+                        ['pageTitle' => $data['name'], 'htmlTitle' => $data['name']]
                     );
                     return;
                     break;                  
@@ -868,30 +870,30 @@ class SiteController extends AppController
         }
         else
         {
-            $data = $services->getServices();
-            $PrommuOrder = new PrommuOrder();
-            $prices['prices'] = $PrommuOrder->getVacRegions($prices['prices']);
-            $view = MainConfig::$VIEWS_SERVICES;
+          $data = $services->getServices();
+          $prices['prices'] = $order->getVacRegions($prices['prices']);
+          $view = MainConfig::$VIEWS_SERVICES;
         }
 
-        $seoModel = new Seo();
-        $seo = $seoModel->exist(DS.MainConfig::$PAGE_SERVICES);
-        $this->setBreadcrumbs($seo['seo_h1'], MainConfig::$PAGE_SERVICES);
+        $seo = new Seo();
+        $meta = $seo->exist(MainConfig::$PAGE_SERVICES);
+        $this->setBreadcrumbs($meta['seo_h1'], MainConfig::$PAGE_SERVICES);
 
-        if($id) {
-            $url = DS . MainConfig::$PAGE_SERVICES . DS . $id;
-            $seo = $seoModel->exist($url);
-            $this->setBreadcrumbsEx([$seo['seo_h1'], $url]);
+        if(!empty($id))
+        {
+          $url = MainConfig::$PAGE_SERVICES . DS . $id;
+          $meta = $seo->exist($url);
+          $this->setBreadcrumbsEx([$meta['seo_h1'], $url]);
         }
 
         $this->render(
-            $view, 
-            array('viData' => $data, 'id' => $id, 'prices' => $prices),
-            array(
-                'pageTitle' => '<h1>' . $seo['seo_h1'] . '</h1>', 
-                'htmlTitle' => $seo['meta_title'],
-                'pageMetaDesription' => htmlspecialchars_decode($seo['meta_description'])
-            )
+          $view,
+          ['viData'=>$data, 'id'=>$id, 'prices'=>$prices],
+          [
+            'pageTitle' => '<h1>' . $meta['seo_h1'] . '</h1>',
+            'htmlTitle' => $meta['meta_title'],
+            'pageMetaDesription' => htmlspecialchars_decode($meta['meta_description'])
+          ]
         );
     }
 

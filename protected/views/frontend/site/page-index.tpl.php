@@ -622,7 +622,7 @@ echo '</pre>';*/
 					<div class="services">
 						<div class="clearfix"></div>
 						<h2 class="services__title">
-							<a href="<?=DS.MainConfig::$PAGE_SERVICES?>" class="services__link">
+							<a href="<?=MainConfig::$PAGE_SERVICES?>" class="services__link">
                                 <i class="icon90 icn-square-prommu color-orange"></i>
                                 <span>услуги</span>
                             </a>

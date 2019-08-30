@@ -23,6 +23,7 @@ class MedRequest {
                     'pay' => $cloud['pay'],
                     'comment' => $cloud['comment'],
                     'crdate' => date("Y-m-d h-i-s"),
+                    'id_user' => (!Share::isGuest() ? Share::$UserProfile->exInfo->id : null)
                 ));
         Yii::app()->user->setFlash('success', '1');
 
@@ -245,4 +246,44 @@ class MedRequest {
 
         return $arRes;
     }
+  /**
+   * @param $id_user - integer
+   * @param $buildArray - bool
+   * @return array
+   */
+  public function getMedBookByUser($id_user, $buildArray=false)
+  {
+    $arRes = [];
+    $query = Yii::app()->db->createCommand()
+      ->select('*')
+      ->from('med_request')
+      ->where('id_user=:id',[':id'=>$id_user])
+      ->order('crdate desc')
+      ->queryAll();
+
+    if(count($query))
+    {
+      if($buildArray)
+      {
+        foreach ($query as $v)
+        {
+          $arRes[] = [
+            'id_user' => $v['id_user'],
+            'vacancy' => false,
+            'type' => 'medbook',
+            'name' => Services::getServiceName('medbook'),
+            'date' => $v['crdate'],
+            'cost' => 0,
+            'data' => []
+          ];
+        }
+      }
+      else
+      {
+        $arRes = $query;
+      }
+    }
+
+    return $arRes;
+  }
 }

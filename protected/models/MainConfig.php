@@ -132,7 +132,7 @@ class MainConfig
     public static $PAGE_FAQ = '/about/faqv';
     public static $PAGE_EMPL_INFO = '/about/empl';
     public static $PAGE_PROMO_INFO = '/about/prom';
-    public static $PAGE_SERVICES = 'services';
+    public static $PAGE_SERVICES = '/services';
     public static $PAGE_COMMENTS = 'comments';
     public static $PAGE_PAGES = '';
     public static $PAGE_ABOUT = '/about';
@@ -146,7 +146,7 @@ class MainConfig
     public static $PAGE_NEW_PASS = 'new-pass';
     public static $PAGE_CONDITIONS = '/services/conditions';
 
-    /* SERVIES */
+    /* SERVICES */
     public static $PAGE_SERVICES_PREMIUM = '/services/premium-vacancy';
     public static $PAGE_SERVICES_SHARES = '/services/#';
     public static $PAGE_SERVICES_PUSH = '/services/push-notification';
@@ -159,8 +159,8 @@ class MainConfig
     public static $PAGE_SERVICES_API = '/services/api-key-prommu';
     public static $PAGE_SERVICES_MEDICAL = '/services/medical-record';
     public static $PAGE_SERVICES_EMAIL = '/services/email-invitation';
-    /* SERVIES  VIEWS */
-    public static $VIEWS_SERVICES = 'services/page-services-list-view';
+    /* SERVICES  VIEWS */
+    public static $VIEWS_SERVICES = 'services/list';
     public static $VIEWS_SERVICE_VIEW = 'services/page-service-view';
     public static $VIEWS_SERVICE_PREMIUM_VIEW = 'services/page-premium-view';
     public static $VIEWS_SERVICE_PUSH_VIEW = 'services/page-push-view';
@@ -281,4 +281,9 @@ class MainConfig
     public static $VIEW_SELF_EMPLOYED = '/user/self_employed';
     public static $VIEW_CHECK_SELF_EMPLOYED = '/user/check_self_employed';
     public static $RESOURCE_SELF_EMPLOYED = 'https://statusnpd.nalog.ru/api/v1/tracker/taxpayer_status';
+    /* */
+    public static $PAGE_LEGAL_ENTITY_RECEIPT = '/user/legal_entity_receipt/';
+    public static $VIEW_LEGAL_ENTITY_RECEIPT = 'legal-entity-receipt';
+
+
 }

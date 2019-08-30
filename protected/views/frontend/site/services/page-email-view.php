@@ -86,40 +86,31 @@ if(!$rq->getParam('vacancy')):?>
 		<div class="col-xs-12">
 			<form action="<?=MainConfig::$PAGE_PAYMENT?>" method="POST" class="smss__result-form">
 				<h1 class="smss-result__title">ТЕКСТ РАССЫЛКИ</h1>
-				<?
-					$vac = $viData['vac'][0];
-					$cntPosts = sizeof($viData['vac']);
-					$arPosts = array();
-				?>
 				<div class="smss-result__text">
 					Добрый день, <ФИО><br>
-					Работодатель <span><?=$viData['emp']['name']?>
-					<a href="<?=MainConfig::$PAGE_PROFILE_COMMON . DS . $viData['emp']['id_user']?>">
-						<img src="<?=Share::getPhoto($viData['emp']['id_user'], UserProfile::$EMPLOYER ,$viData['emp']['logo'])?>">
-					</a></span><br> приглашает Вас на вакансию <a href="https://prommu.com/vacancy/<?=$vacancy?>">&laquo;<?=$vac['title']?>&raquo;</a>
-					<? if($cntPosts==1): ?>
-						на должность:<br><?=$vac['pname']?><br>
+					Работодатель <span><?=$viData['user']['name']?>
+					<a href="<?=Subdomain::site() . MainConfig::$PAGE_PROFILE_COMMON . DS . $viData['user']['id']?>">
+						<img src="<?=$viData['user']['src']?>">
+					</a></span><br> приглашает Вас на вакансию <a href="<?=Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $vacancy?>">&laquo;<?=$viData['vac']['title']?>&raquo;</a>
+					<? if(sizeof($viData['vac']['posts'])==1): ?>
+						на должность:<br><?=reset($viData['vac']['posts'])['name']?><br>
 					<? else: ?>
 						на должности:<br> <?
-						foreach ($viData['vac'] as $k => $v) 
-							if(!in_array($v['id_attr'], $arPosts)) {
-								echo  ($k+1) . ') ' . $v['pname'] . ($k<($cntPosts-1)?';<br>':'');
-								$arPosts[] = $v['id_attr'];
-							}
+						foreach ($viData['vac']['posts'] as $k => $v)
+								echo  ($k+1) . ') ' . $v['name'] . ($k<(sizeof($viData['vac']['posts'])-1)?';<br>':'');
 						?>
 					<? endif; ?>
-						<br>
 						Заработная плата:<br> 
-						<? if( $vac['shour'] > 0 )
-							echo '- ' . $vac['shour'] . ' руб/час<br/>';
-						if( $vac['sweek'] > 0 )
-							echo '- ' . $vac['sweek'] . ' руб/неделю<br/>';
-						if( $vac['smonth'] > 0 )
-							echo '- ' . $vac['smonth'] . ' руб/месяц<br/>';
-						if( $vac['svisit'] > 0 )
-							echo '- ' . $vac['svisit'] . ' руб/посещение<br/>';
+						<? if( $viData['vac']['salary_hour'] > 0 )
+							echo '- ' . $viData['vac']['salary_hour'] . ' руб/час<br/>';
+						if( $viData['vac']['salary_week'] > 0 )
+							echo '- ' . $viData['vac']['salary_week'] . ' руб/неделю<br/>';
+						if( $viData['vac']['salary_month'] > 0 )
+							echo '- ' . $viData['vac']['salary_month'] . ' руб/месяц<br/>';
+						if( $viData['vac']['salary_visit'] > 0 )
+							echo '- ' . $viData['vac']['salary_visit'] . ' руб/посещение<br/>';
 						?><br>
-						Если интересно - за более детальной информацией переходи по <a class="smss-result__text-link" href="<?=MainConfig::$PAGE_VACANCY?>">ссылке</a>
+						Если интересно - за более детальной информацией переходи по <a class="smss-result__text-link" href="<?=Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $vacancy?>">ссылке</a>
 				</div>
 				</br></br>
 				<h1 class="smss-result__title">Стоимость услуги</h1>
@@ -133,7 +124,10 @@ if(!$rq->getParam('vacancy')):?>
 						<td><?=$viData['price']?> руб.</td>
 					</tr>
 				</table>
-				<span class="smss-result__result"></span></br>
+				<span class="smss-result__result"></span>
+        <? $this->renderPartial('../site/services/legal-fields',['viData'=>$viData]); ?>
+        <br>
+        <br>
 				<div class="center">
 					<button class="prmu-btn prmu-btn_normal" id="email_pay_btn">
 						<span>Перейти к оплате</span>

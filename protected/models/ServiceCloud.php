@@ -96,4 +96,58 @@ class ServiceCloud
 
 		return $arRes;
 	}
+  /**
+   * @param $id_user - integer
+   * @param $buildArray - bool
+   * @param $limit - integer
+   * @return array
+   */
+	public function getDataByUser($id_user, $buildArray=false, $limit=20)
+  {
+    $arRes = [];
+    $this->limit = $limit;
+
+    $query = Yii::app()->db->createCommand()
+      ->select('*')
+      ->from('service_cloud')
+      ->where('id_user=:id',[':id'=>$id_user])
+      ->order('id desc')
+      ->limit($limit)
+      ->offset($this->offset)
+      ->queryAll();
+
+    if(count($query))
+    {
+      if($buildArray)
+      {
+        foreach ($query as $v)
+        {
+          $arRes[] = [
+            'id' => $v['id'],
+            'id_user' => $v['id_user'],
+            'vacancy' => $v['name'],
+            'type' => $v['type'],
+            'name' => Services::getServiceName($v['type']),
+            'date' => $v['date'],
+            'cost' => $v['sum'],
+            'data' => [
+              'bdate' => $v['bdate'],
+              'edate' => $v['edate'],
+              'status' => $v['status'],
+              //'key' => $v['key'],
+              //'text' => $v['text'],
+              'user' => $v['user'],
+              'legal' => $v['legal']
+            ],
+          ];
+        }
+      }
+      else
+      {
+        $arRes = $query;
+      }
+    }
+
+    return $arRes;
+  }
 }

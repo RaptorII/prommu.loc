@@ -89,96 +89,97 @@ class PrommuOrder {
          return $link;
 
     }
-    
-    public function autoOrder($type, $stack, $account, $vacancy){
-        if($type == 'email'){
-            $res = Yii::app()->db->createCommand()
-                ->update('service_cloud', array(
-                    'status'=> 1,
-                ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$vacancy", ':stack'=> $stack));
-                
-                $sql = "SELECT  e.user
-                FROM service_cloud e
-                WHERE e.stack = {$stack}";
-                $user = Yii::app()->db->createCommand($sql)->queryAll();
-                
-                $user = exolode(',', $user);
-                 $sql = "SELECT  e.title
-                FROM empl_vacations e
-                WHERE e.id = {$name}";
-                $vacancy = Yii::app()->db->createCommand($sql)->queryAll();
+  /**
+   * @param $serviceType - тип услуги
+   * @param $transaction - номер транзакции
+   * @param $id_user - id_user заказчика вакансии
+   * @param $id_vacancy - ID вакансии
+   */
+  public function autoOrder($serviceType, $transaction, $id_user, $id_vacancy)
+  {
+    // устанавливаем статус Оплачено
+    Yii::app()->db->createCommand()
+      ->update(
+        'service_cloud',
+        ['status'=>1],
+        'stack=:stack',
+        [':stack'=>$transaction]
+      );
+    // все данные о заказе
+    $arService = Yii::app()->db->createCommand()
+      ->select('*')
+      ->from('service_cloud')
+      ->where('stack=:stack',[':stack'=>$transaction])
+      ->queryRow();
+    $arIdUsers = explode(',', $arService['user']);
 
-                 $sql = "SELECT  u.email, e.name, e.firstname, e.lastname
-                    FROM employer e
-                    LEFT JOIN user u ON u.id_user = e.id_user
-                    WHERE e.id_user = {$account}";
-                $empl = Yii::app()->db->createCommand($sql)->queryAll();
-                
-                for($i = 0; $i < count($user); $i ++){
-                    $sql = "SELECT  e.id, u.email, e.firstname, e.lastname
-                    FROM resume e
-                    LEFT JOIN user u ON u.id_user = e.id_user
-                    WHERE e.id_user = {$user['user'][$i]}";
-                    $resume = Yii::app()->db->createCommand($sql)->queryAll();
-                    
-                    $message = '<p style="font-size:16px;"Работодатель'.$account.' '.$empl[0]['lastname'].' '.$empl[0]['firstname'].'<br/> </p>
-                    <br/>
+    if($arService['status']==0)
+      return;
 
-                    <p style=" font-size:16px;">
-                     <br/>Компания: '.$empl[0]['name'].'<br/>
-                  Приглашает на вакансию:  '.$name.' '.$vacancy[0]['title'].'<br/>
-                  Ссылка на вакансию:  <a href="https://prommu.com/vacancy/'.$name.'">'.$vacancy[0]['title'].'</a><br/>
+    if ($serviceType == 'email')
+    {
+      // собираем емейлы С
+      $arEmails = Yii::app()->db->createCommand()
+        ->select('email')
+        ->from('user')
+        ->where(['in','id_user',$arIdUsers])
+        ->queryColumn();
+      // для письма нужен заголовок вакансии
+      $vacancyTitle = Yii::app()->db->createCommand()
+        ->select('title')
+        ->from('empl_vacations')
+        ->where('id=:id',[':id'=>$id_vacancy])
+        ->queryScalar();
+      // для письма инфа о Р
+      $arEmployer = Yii::app()->db->createCommand()
+        ->select('e.name, e.firstname, e.lastname, u.email')
+        ->from('employer e')
+        ->leftJoin('user u','u.id_user=e.id_user')
+        ->where('e.id_user=:id',[':id'=>$id_user])
+        ->queryRow();
 
-                    <br/>';
-                    if(strpos($resume[0]['email'], "@") !== false){
-                        Share::sendmail($empl[0]['email'], "Prommu.com. Приглашение На Вакансию", $message);
-                        Share::sendmail('denisgresk@gmail.com', "Prommu.com. Приглашение На Вакансию", $message);
-                    }
-                    
-                }
-                
-
-            
-        } elseif($type == 'sms'){
-            $res = Yii::app()->db->createCommand()
-                ->update('service_cloud', array(
-                    'status'=> 1,
-                ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$vacancy", ':stack'=> $stack));
-                
-                 $sql = "SELECT  e.user,e.key
-                FROM service_cloud e
-                WHERE e.stack = {$stack}";
-                $user = Yii::app()->db->createCommand($sql)->queryAll();
-                $users = exolode(',', $user['user']);
-                for($i = 0; $i < count($users); $i ++){
-                    $api = new Api();
-                    $api->teleProm($users[$i], $user['key']);
-                }
-                
-        } elseif($type == 'push'){
-           $res = Yii::app()->db->createCommand()
-                ->update('service_cloud', array(
-                    'status'=> 1,
-                ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$vacancy", ':stack'=> $stack));
-
-                $link = "https://prommu.com/vacancy/$user";
-                $text = "Работодатель приглашает на вакансию";
-
-                $sql = "SELECT r.push
-                FROM user_push r
-                WHERE r.id = {$user}";
-                $res = Yii::app()->db->createCommand($sql)->queryRow();
-                
-                if($res) {
-                $type = "vacancy";
-                $api = new Api();
-                $api->getPushApi($res['push'], $type, $text, $link);
-
-                
-                }
-        }
-
+      $arEmails[] = 'denisgresk@gmail.com'; // Добавляем в рассылку Денчика
+      Mailing::set(
+        21,
+        [
+          'id_user' => $id_user,
+          'name_user' => $arEmployer['lastname'] . ' ' . $arEmployer['firstname'],
+          'company_user' => $arEmployer['name'],
+          'id_vacancy' => $id_vacancy,
+          'title_vacancy' => $vacancyTitle
+        ],
+        UserProfile::$APPLICANT,
+        $arEmails
+      );
     }
+    elseif ($serviceType == 'sms')
+    {
+      for ($i=0, $n=count($arIdUsers); $i<$n; $i++)
+      {
+        $api = new Api();
+        $api->teleProm($arIdUsers[$i], $arService['key']);
+      }
+    }
+    elseif ($serviceType == 'push')
+    {
+      $query = Yii::app()->db->createCommand()
+        ->select('push')
+        ->from('user_push')
+        ->where(['in','id',$arIdUsers])
+        ->queryColumn();
+
+      for($i=0, $n=count($query); $i<$n; $i++)
+      {
+        $api = new Api();
+        $api->getPushApi(
+          $query[$i],
+          'vacancy',
+          'Работодатель приглашает на вакансию',
+          Subdomain::site() . MainConfig::$PAGE_VACANCY . DS . $id_vacancy
+        );
+      }
+    }
+  }
     
     public function serviceOrderSms($id_user,$sum, $status, $postback, $from, $to, $name,$type, $text, $id, $stack){
 
@@ -203,21 +204,23 @@ class PrommuOrder {
                Вакансия: '.$name.' '.$vacancy[0]['title'].'
                     <br/>';
             Share::sendmail('denisgresk@gmail.com', "Prommu.com. Заказ Услуги Смс Информирование!", $message);
-            $res = Yii::app()->db->createCommand()
-                        ->insert('service_cloud', array('id_user' => $id_user,
-                                'name' => $name,
-                                'type' => $type, 
-                                'bdate' => $from,
-                                'edate' => $to,
-                                'status' => $status,
-                                'sum' => $sum,
-                                'text' => $text,
-                                'user' => $id,
-                                'stack' => $stack
-                            ));
+            $result = Yii::app()->db->createCommand()
+              ->insert('service_cloud', array('id_user' => $id_user,
+                      'name' => $name,
+                      'type' => $type,
+                      'bdate' => $from,
+                      'edate' => $to,
+                      'status' => $status,
+                      'sum' => $sum,
+                      'text' => $text,
+                      'user' => $id,
+                      'stack' => $stack
+                  ));
+            // записываем инфу, если юр. лицо
+            $result && $result=Yii::app()->db->getLastInsertID();
         } else {
 
-            $res = Yii::app()->db->createCommand()
+          $result = Yii::app()->db->createCommand()
                 ->update('service_cloud', array(
                     'status' => $status,
                 ), 'id_user=:id_user AND sum=:sum', array(':id_user' => $id_user, ':sum' => $sum));
@@ -250,14 +253,14 @@ class PrommuOrder {
 
         }
 
-
+      return $result;
     }
 
     public function serviceOrderEmail($id_user,$sum, $status, $postback, $from, $to, $name,$type, $text, $id,$stack){
 
         if($postback == 0) {
-           
-            $res = Yii::app()->db->createCommand()
+
+          $result = Yii::app()->db->createCommand()
                         ->insert('service_cloud', array('id_user' => $id_user,
                                 'name' => $name,
                                 'type' => $type, 
@@ -269,11 +272,10 @@ class PrommuOrder {
                                 'user' => $id,
                                 'stack' => $stack
                             ));
-                            
-
+          // записываем инфу, если юр. лицо
+          $result && $result=Yii::app()->db->getLastInsertID();
         } else {
-
-            $res = Yii::app()->db->createCommand()
+          $result = Yii::app()->db->createCommand()
                 ->update('service_cloud', array(
                     'status' => $status,
                 ), 'id_user=:id_user AND sum=:sum', array(':id_user' => $id_user, ':sum' => $sum));
@@ -307,65 +309,67 @@ class PrommuOrder {
 
         }
 
-
+      return $result;
     }
 
-	public function serviceOrder($id_user,$sum, $status, $postback, $from, $to, $name,$type){
+	public function serviceOrder($id_user,$sum, $status, $postback, $from, $to, $name,$type)
+  {
+    if($postback == 0)
+    {
+      $to = date( 'Y-m-d', strtotime($to));
+      $from = date( 'Y-m-d H:i', strtotime($from));
 
-        if($postback == 0) {
-                
+      $result = Yii::app()->db->createCommand()
+              ->insert(
+                'service_cloud',
+                [
+                  'id_user' => $id_user,
+                  'name' => $name,
+                  'type' => $type,
+                  'bdate' => $from,
+                  'edate' => $to,
+                  'status' => $status,
+                  'sum' => $sum,
+                  'date' => date("Y-m-d H:i:s")
+                ]
+              );
+      // записываем инфу, если юр. лицо
+      $result && $result=Yii::app()->db->getLastInsertID();
+    }
+    else
+    {
+      $result = Yii::app()->db->createCommand()
+            ->update(
+              'service_cloud',
+              ['status'=>$status],
+              'id_user=:id_user AND sum=:sum',
+              [':id_user'=>$id_user, ':sum'=>$sum]
+            );
 
-            $to = date( 'Y-m-d', strtotime($to)); 
-            $from = date( 'Y-m-d H:i', strtotime($from)); 
+      $title = Yii::app()->db->createCommand()
+        ->select('title')
+        ->from('empl_vacations')
+        ->where('id=:id',[':id'=>$name])
+        ->queryScalar();
 
-        	$res = Yii::app()->db->createCommand()
-                        ->insert('service_cloud', array('id_user' => $id_user,
-                                'name' => $name,
-                                'type' => $type, 
-                                'bdate' => $from,
-                                'edate' => $to,
-                                'status' => $status,
-                                'sum' => $sum,
-                                'date' => date("Y-m-d"),
-                            ));
-           
-        } else {
+      $arUser = Share::getUsers([$id_user])[0];
 
-        	$res = Yii::app()->db->createCommand()
-                ->update('service_cloud', array(
-                    'status' => $status,
-                ), 'id_user=:id_user AND sum=:sum', array(':id_user' => $id_user, ':sum' => $sum));
+      $message = '<p style="font-size:16px;">На сайте prommu.com была оплачена услуга Премиум Вакансия</p>
+              <br/><p style=" font-size:16px;">
+         Пользователь: ' . $id_user . ' <br/>
+          <br/>Компания: ' . $arUser['name'] . '<br/>
+         Вакансия: ' . $name . ' ' . $title . '<br/>';
 
-            $sql = "SELECT  e.title
-                FROM empl_vacations e
-                WHERE e.id = {$name}";
-            $vacancy = Yii::app()->db->createCommand($sql)->queryAll();
+      Share::sendmail('denisgresk@gmail.com', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
+      Share::sendmail('dsale_1@plan-o-gram.ru', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
+      Share::sendmail('prommu.servis@gmail.com', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
+      Share::sendmail('Job@mandarin-agency.ru', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
+      Share::sendmail('e.market.easss@gmail.com', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
+      Share::sendmail('client@btl-me.ru', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
+      Share::sendmail('prommucom@gmail.com', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
+    }
 
-             $sql = "SELECT  u.email, e.name, e.firstname, e.lastname 
-                FROM employer e
-                LEFT JOIN user u ON u.id_user = e.id_user
-                WHERE e.id_user = {$id_user}";
-            $empl = Yii::app()->db->createCommand($sql)->queryAll();
-
-            $message = '<p style="font-size:16px;">На сайте prommu.com была оплачена услуга Премиум Вакансия</p>
-                    <br/>
-
-                <p style=" font-size:16px;">
-               Пользователь: '.$id_user.' '.$empl[0]['lastname'].' '.$empl[0]['firstname'].'<br/>
-                <br/>Компания: '.$empl[0]['name'].'<br/>
-               Вакансия: '.$name.' '.$vacancy[0]['title'].'
-                    <br/>';
-            Share::sendmail('denisgresk@gmail.com', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
-            Share::sendmail('dsale_1@plan-o-gram.ru', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
-            Share::sendmail('prommu.servis@gmail.com', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
-            Share::sendmail('Job@mandarin-agency.ru', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
-            Share::sendmail('e.market.easss@gmail.com', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
-            Share::sendmail('client@btl-me.ru', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
-            Share::sendmail('prommucom@gmail.com', "Prommu.com. Заказ Услуги Премиум Вакансия!", $message);
-
-        }
-
-
+    return $result;
 	}
 
 
@@ -467,59 +471,176 @@ class PrommuOrder {
     /*
     *       Заказ услуги Премиум
     */
-    public function orderPremium($arVacs, $vacPrice, $employer) {
-        if(!isset($employer))
-            return false;
+    public function orderPremium($arVacs, $vacPrice, $employer)
+    {
+      if(!isset($employer))
+        return false;
 
-        $arBDate = Yii::app()->getRequest()->getParam('from');
-        $arEDate = Yii::app()->getRequest()->getParam('to');
-        $strVacs = implode('.', $arVacs);
-        $account = $employer . '.' . $strVacs;
-        $day = 60 * 60 * 24;
-        $mainPrice = 0;
+      $arRes = [];
+      $arRes['strVacancies'] = implode('.', $arVacs);
+      $arRes['account'] = $employer . '.' . $arRes['strVacancies'];
 
-        for($i=0, $n=sizeof($arVacs); $i<$n; $i++) {
-            $from = strtotime($arBDate[$i]);
-            $to = strtotime($arEDate[$i]);
-            $days = ($to - $from) / $day;
-            $price = $vacPrice * $days;
-            $this->serviceOrder(
-                    $employer,
-                    $price,
-                    0, 
-                    0, 
-                    $arBDate[$i], 
-                    $arEDate[$i], 
-                    $arVacs[$i], 
-                    'vacancy'
-                );
-            $mainPrice += $price;
-        }
-        return $this->createPayLink($account, $strVacs, $mainPrice);
+      $arRes['cost'] = 0;
+      $arRes['id'] = [];
+      $arBDate = Yii::app()->getRequest()->getParam('from');
+      $arEDate = Yii::app()->getRequest()->getParam('to');
+      $day = 60 * 60 * 24;
+
+      for($i=0, $n=sizeof($arVacs); $i<$n; $i++)
+      {
+        $from = strtotime($arBDate[$i]);
+        $to = strtotime($arEDate[$i]);
+        $days = ($to - $from) / $day;
+        $price = intval($vacPrice * $days);
+        $arRes['id'][] = $this->serviceOrder(
+          $employer,
+          $price,
+          0,
+          0,
+          $arBDate[$i],
+          $arEDate[$i],
+          $arVacs[$i],
+          'vacancy'
+        );
+        $arRes['cost'] += $price;
+      }
+
+      return $arRes;
+    }
+    /**
+     * @param $arServices
+     * @return code
+     */
+    public function setLegalEntityReceipt($arServices)
+    {
+      $rq = Yii::app()->getRequest();
+      if($rq->getParam('personal')!=='legal')
+        return;
+
+      $index = filter_var($rq->getParam('index'), FILTER_SANITIZE_NUMBER_INT);
+      $city = filter_var($rq->getParam('city'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $detail = filter_var($rq->getParam('detail'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $index = "$index, г.$city, ул.$detail";
+      $code = time();
+
+      Yii::app()->db->createCommand()
+        ->update('service_cloud', ['legal'=>$code], ['in','id',$arServices]);
+
+      $result = Yii::app()->db->createCommand()
+        ->insert(
+          'payment_legal',
+          [
+            'code' => $code,
+            'id_user' => Share::$UserProfile->exInfo->id,
+            'company' => filter_var($rq->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+            'inn' => filter_var($rq->getParam('inn'), FILTER_SANITIZE_NUMBER_INT),
+            'kpp' => filter_var($rq->getParam('kpp'), FILTER_SANITIZE_NUMBER_INT),
+            'email' => filter_var($rq->getParam('email'), FILTER_SANITIZE_EMAIL),
+            'index' => $index,
+            'with_nds' => $rq->getParam('with_nds')==1
+          ]
+        );
+
+      $result && $result=$code;
+
+      Yii::app()->user->setFlash(
+        'prommu_flash',
+        "Ожидаем от Вас оплаты по <a href='" . MainConfig::$PAGE_LEGAL_ENTITY_RECEIPT . $result . "' target='_blank'>счету</a>. "
+        . "Оплата зачисляется автоматически. В назначинии обязательно указывайте Ваш ID и номер счета."
+      );
+
+      return $result;
+    }
+    /**
+     * @param $code
+     * @return array|bool
+     */
+    public function getLegalEntityReceipt($code)
+    {
+      $NDS = 18; // НДС
+      $arRes = Yii::app()->db->createCommand()
+        ->select('*')
+        ->from('payment_legal')
+        ->where('code=:code',[':code'=>$code])
+        ->queryRow();
+
+      if(!is_array($arRes))
+        return false;
+
+      $query = Yii::app()->db->createCommand()
+        ->select('*')
+        ->from('service_cloud')
+        ->where(['in','legal',$code])
+        ->queryAll();
+
+      $arRes['cost'] = 0;
+      $arRes['services'] = [];
+      foreach ($query as $v)
+      {
+        $arRes['cost'] += $v['sum'];
+        $v['title'] = Services::getServiceName($v['type']);
+        $v['cost'] = $v['sum'] . ',00';
+        $arRes['services'][] = $v;
+      }
+
+      $arRes['cost'] = round($arRes['cost']);
+      if($arRes['with_nds'])
+      {
+        $arRes['nds'] = ($arRes['cost'] / 100) * $NDS;
+        $arRes['nds'] = $arRes['nds'] . ',00';
+        $arRes['total_cost'] = round($arRes['cost'] + $arRes['nds']);
+        $arRes['total_cost_str'] = number2string($arRes['total_cost']) . ' 00 копеек';
+        $arRes['total_cost'] = $arRes['total_cost'] . ',00';
+      }
+      else
+      {
+        $arRes['total_cost_str'] = number2string($arRes['cost']) . ' 00 копеек';
+        $arRes['total_cost'] = $arRes['cost'] . ',00';
+      }
+
+      $arRes['cost'] = $arRes['cost'] . ',00';
+
+      $arMonths = array(
+        1=>'января',2=>'февраля',3=>'марта',
+        4=>'апреля',5=>'мая',6=>'июня',
+        7=>'июля',8=>'августа',9=>'сентября',
+        10=>'октября',11=>'ноября',12=>'декабря'
+      );
+
+      $arRes['date1'] = date('d',$arRes['code']) . ' '
+        . $arMonths[date('n',$arRes['code'])] . ' '
+        . date('Y',$arRes['code']) . ' г';
+      $arRes['date2'] = date('d/m/y',$arRes['code']);
+      $arRes['date3'] = date('d.m.Y',$arRes['code']);
+      $arRes['last_date'] = date('d.m.Y',(5*86400 + $arRes['code']));
+
+      return $arRes;
     }
     /*
     *       Заказ услуги Email рассылка
     */
-    public function orderEmail($vacancy, $vacPrice, $employer) {
-        $arApps = Yii::app()->getRequest()->getParam('users');
-        $date = date("Y-m-d h-i-s");
-        $stack = time();
-           $this->serviceOrderEmail(
-                    $employer,
-                    $vacPrice,
-                    0, 
-                    0, 
-                    $date,
-                    $date, 
-                    $vacancy, 
-                    'email', 
-                    $vacancy, 
-                    $arApps,
-                    $stack
-                );
-        $account = $employer . '.' . $vacancy . '.email.' .$stack;
+    public function orderEmail($vacancy, $vacPrice, $employer)
+    {
+      $arRes = [];
+      $arApps = Yii::app()->getRequest()->getParam('users');
+      $date = date("Y-m-d h-i-s");
+      $stack = time();
+      $arRes['id'] = $this->serviceOrderEmail(
+        $employer,
+        $vacPrice,
+        0,
+        0,
+        $date,
+        $date,
+        $vacancy,
+        'email',
+        $vacancy,
+        $arApps,
+        $stack
+      );
+      $arRes['account'] = $employer . '.' . $vacancy . '.email.' . $stack;
 
-        return $this->createPayLink($account, $vacancy,  $vacPrice);
+      return $arRes;
     }
     /*
     *       Заказ услуги Push рассылка
@@ -548,36 +669,35 @@ class PrommuOrder {
     /*
     *       Заказ услуги Push рассылка
     */
-    public function orderSms($vacancy, $vacPrice, $employer) {
-        if(!isset($employer))
-            return false;
+    public function orderSms($vacancy, $price, $employer)
+    {
+      if(!isset($employer))
+          return false;
 
-        $arApps = Yii::app()->getRequest()->getParam('users');
-        $sumArr = count(explode(',',$arApps));
-        $stack = time();
-        $text = Yii::app()->getRequest()->getParam('text');
-        $date = date("Y-m-d h-i-s");
-        $mainPrice = 0;
+      $arRes = [];
+      $stack = time();
+      $date = date("Y-m-d h-i-s");
+      $arApps = Yii::app()->getRequest()->getParam('users');
+      $text = Yii::app()->getRequest()->getParam('text');
+      $arRes['cost'] = $price * count(Share::explode($arApps));
 
-       
-            $this->serviceOrderSms(
-                    $employer,
-                    $vacPrice, 
-                    0, 
-                    0, 
-                    $date,
-                    $date,
-                    $vacancy, 
-                    'sms', 
-                    $text, 
-                    $arApps,
-                    $stack
-                );
-            $mainPrice= $vacPrice*$sumArr;
-       
-        $account = $employer . '.' . $vacancy . '.sms.' . $stack;
+      $arRes['id'] = $this->serviceOrderSms(
+          $employer,
+          $arRes['cost'],
+          0,
+          0,
+          $date,
+          $date,
+          $vacancy,
+          'sms',
+          $text,
+          $arApps,
+          $stack
+        );
 
-        return $this->createPayLink($account, $vacancy, $mainPrice);
+      $arRes['account'] = $employer . '.' . $vacancy . '.sms.' . $stack;
+
+      return $arRes;
     }
     /*
     *       Конвертация регионов таблиц city и service_prices

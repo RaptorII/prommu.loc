@@ -34,7 +34,7 @@ class UserController extends AppController
         $order = new PrommuOrder();
         $order->outstaffing($_POST);
         Yii::app()->user->setFlash('success', '1');
-        $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+        $this->redirect(MainConfig::$PAGE_SERVICES);
       }
 
 
@@ -910,80 +910,115 @@ class UserController extends AppController
     public function actionPayment()
     {
         // no profile for guest
-        in_array(Share::$UserProfile->type, [2,3]) || $this->redirect(MainConfig::$PAGE_LOGIN);
+        Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
 
-        if(!Yii::app()->getRequest()->isPostRequest)
+        $rq = Yii::app()->getRequest();
+        if(!$rq->isPostRequest)
             throw new CHttpException(404, 'Error');
 
         $model = new PrommuOrder();
         $view = MainConfig::$PAGE_PAYMENT_VIEW;
-        $service = Yii::app()->getRequest()->getParam('service');
-        $vac = Yii::app()->getRequest()->getParam('vacancy');
-        $emp = Yii::app()->getRequest()->getParam('employer');
+        $service = $rq->getParam('service');
+        $vac = $rq->getParam('vacancy');
+        $emp = $rq->getParam('employer');
         $price = $model->servicePrice($vac, $service);
-        
-        
-        switch ($service) {
+
+        switch ($service)
+        {
             case 'premium-vacancy':
-                if($price > 0) { // оплата услуги
-                    $pLink = $model->orderPremium($vac, $price, $emp);
-                    if($pLink)
-                        $this->redirect($pLink);
+              if($price>0)
+              { // оплата услуги
+                $data = $model->orderPremium($vac, $price, $emp);
+                if($rq->getParam('personal')==='individual') // физ лица
+                {
+                  $link = $model->createPayLink($data['account'], $data['strVacancies'], $data['cost']);
+                  $link && $this->redirect($link);
                 }
-                else { // бесплатно или без цены
-                    $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+                if($rq->getParam('personal')==='legal') // юр лица
+                {
+                  $model->setLegalEntityReceipt($data['id']);
+                  $this->redirect(MainConfig::$PAGE_SERVICES);
                 }
-                break;
+              }
+              else
+              { // бесплатно или без цены
+                $this->redirect(MainConfig::$PAGE_SERVICES);
+              }
+              break;
 
             case 'email-invitation':
-                if($price > 0) { // оплата услуги
-                    $pLink = $model->orderEmail($vac, $price, $emp);
-                    $this->redirect($pLink);
+                if($price > 0)
+                { // оплата услуги
+                  $data = $model->orderEmail($vac, $price, $emp);
+                  if($rq->getParam('personal')==='individual') // физ лица
+                  {
+                    $link = $model->createPayLink($data['account'], $vac, $price);
+                    $link && $this->redirect($link);
+                  }
+                  if($rq->getParam('personal')==='legal')  // юр лица
+                  {
+                    $model->setLegalEntityReceipt($data['id']);
+                    $this->redirect(MainConfig::$PAGE_SERVICES);
+                  }
                 }
                 else { // бесплатно или без цены
-                    $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+                    $this->redirect(MainConfig::$PAGE_SERVICES);
                 }
                 break;
 
             case 'push-notification':
                 if($price > 0) { // оплата услуги
-                    $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+                    $this->redirect(MainConfig::$PAGE_SERVICES);
                 }
                 else { // бесплатно или без цены
                     $model->orderPush($vac, $price, $emp);
                     Yii::app()->user->setFlash('success', array('event'=>'push'));
-                    $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+                    $this->redirect(MainConfig::$PAGE_SERVICES);
                 }
                 break;
 
             case 'sms-informing-staff':
-                if($price > 0) { // оплата услуги
-                    $pLink = $model->orderSms($vac, $price, $emp);
-                    if($pLink)
-                        $this->redirect($pLink);
+              if($price > 0)
+              { // оплата услуги
+                $data = $model->orderSms($vac, $price, $emp);
+                if($rq->getParam('personal')==='individual') // физ лица
+                {
+                  $link = $model->createPayLink($data['account'], $vac, $data['cost']);
+                  $link && $this->redirect($link);
                 }
-                else { // бесплатно или без цены
-                    $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+                if($rq->getParam('personal')==='legal')  // юр лица
+                {
+                  $model->setLegalEntityReceipt($data['id']);
+                  $this->redirect(MainConfig::$PAGE_SERVICES);
                 }
-                break;
+              }
+              else
+              { // бесплатно или без цены
+                $this->redirect(MainConfig::$PAGE_SERVICES);
+              }
+              break;
 
             case 'publication-vacancy-social-net':
                 if($price > 0) { // оплата услуги
-                    $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+                    $this->redirect(MainConfig::$PAGE_SERVICES);
                 }
                 else { // бесплатно или без цены
                     $model->orderSocial($vac, $price, $emp);
                     Yii::app()->user->setFlash('success', array('event'=>'push'));
-                    $this->redirect(DS . MainConfig::$PAGE_SERVICES);
+                    $this->redirect(MainConfig::$PAGE_SERVICES);
                 }
                 break;
         }
 
+        $arUser = reset(Share::getUsers([Share::$UserProfile->exInfo->id]));
+        $arUser['inn'] = Share::$UserProfile->getUserAttribute(['key'=>'inn']);
+        isset($arUser['inn'][0]['val']) && $arUser['inn']=$arUser['inn'][0]['val'];
         $data = array(
                 'service' => $service, 
                 'vacancy' => $vac,
                 'price' => $price,
-                'employer' => $emp
+                'employer' => $emp,
+                'user' => $arUser
             );
         $this->render($view, array('viData' => $data));
     }
@@ -1550,23 +1585,21 @@ class UserController extends AppController
         $Services = new Services();
         $title = 'Услуги портала Prommu.com';
         $this->setBreadcrumbs($title, MainConfig::$PAGE_SERVICES);
-        $serviceLink = DS.MainConfig::$PAGE_SERVICES;
         $type = Share::$UserProfile->type;
         $data = $Services->getServiceData($id);
         $data = array_merge(array('service' => $data), $Services->getServices($id));
         switch ($id){
             case 'premium-vacancy':
-                if($type==2 || !in_array($type, [2,3]))
-                    $this->redirect($serviceLink);
+                !Share::isEmployer() && $this->redirect(MainConfig::$PAGE_SERVICES);
 
                 $view = MainConfig::$VIEWS_SERVICE_PREMIUM_VIEW;
                 $vac = new Vacancy();
                 $data = $vac->getModerVacs();
                 break;
 
-            case 'email-invitation':  
-                if($type==2 || !in_array($type, [2,3]))
-                    $this->redirect($serviceLink);
+            case 'email-invitation':
+                !Share::isEmployer() && $this->redirect(MainConfig::$PAGE_SERVICES);
+
                 $vac = Yii::app()->getRequest()->getParam('vacancy');
                 $model = new PrommuOrder;
                 $data['price'] = $model->servicePrice($vac, $id);
@@ -1574,6 +1607,9 @@ class UserController extends AppController
                 if(Yii::app()->getRequest()->getParam('users') && $data['price']>=0){
                     $data['emp'] = Share::$UserProfile->getProfileDataView()['userInfo'];
                     $data['vac'] = (new Vacancy())->getVacancyInfo($vac);
+                    $data['user'] = reset(Share::getUsers([Share::$UserProfile->exInfo->id]));
+                    $attr = Share::$UserProfile->getUserAttribute(['key'=>'inn']);
+                    isset($attr[0]['val']) && $data['user']['inn']=$attr[0]['val'];
                     $view = MainConfig::$VIEWS_SERVICE_EMAIL;
                 }
                 elseif(Yii::app()->request->isAjaxRequest){
@@ -1595,8 +1631,7 @@ class UserController extends AppController
                 break;
 
             case 'push-notification':
-                if($type==2 || !in_array($type, [2,3]))
-                    $this->redirect($serviceLink);
+                !Share::isEmployer() && $this->redirect(MainConfig::$PAGE_SERVICES);
 
                 if(Yii::app()->getRequest()->getParam('users')){
                     $view = MainConfig::$VIEWS_SERVICE_PUSH_VIEW;
@@ -1620,17 +1655,21 @@ class UserController extends AppController
                 break;
 
             case 'sms-informing-staff':
-                if($type==2 || !in_array($type, [2,3]))
-                    $this->redirect($serviceLink);
+                !Share::isEmployer() && $this->redirect(MainConfig::$PAGE_SERVICES);
 
                 $vacancy = Yii::app()->getRequest()->getParam('vacancy');
 
-                if(Yii::app()->getRequest()->getParam('workers')){
+                if(Yii::app()->getRequest()->getParam('workers'))
+                {
                     $model = new PrommuOrder;
                     $data['price'] = $model->servicePrice($vacancy,$id);
+                    $data['user'] = reset(Share::getUsers([Share::$UserProfile->exInfo->id]));
+                    $attr = Share::$UserProfile->getUserAttribute(['key'=>'inn']);
+                    isset($attr[0]['val']) && $data['user']['inn']=$attr[0]['val'];
                     $view = MainConfig::$VIEWS_SERVICE_SMS_VIEW;
                 }
-                elseif(Yii::app()->request->isAjaxRequest){
+                elseif(Yii::app()->request->isAjaxRequest)
+                {
                     $this->renderPartial(
                         MainConfig::$VIEWS_SERVICE_ANKETY_AJAX,
                         array('viData' => (new Services())->getFilteredPromos()), 
@@ -1639,7 +1678,8 @@ class UserController extends AppController
                     );
                     return;
                 }
-                else{
+                else
+                {
                     $view = MainConfig::$VIEWS_SERVICE_SMS_VIEW;
                     $data = $vacancy 
                         ? (new Services())->prepareFilterData()
@@ -1649,20 +1689,20 @@ class UserController extends AppController
 
             case 'publication-vacancy-social-net':
                 if($type==2 || !in_array($type, [2,3]))
-                    $this->redirect($serviceLink);
+                    $this->redirect(MainConfig::$PAGE_SERVICES);
 
                 $data = (new Vacancy())->postToSocialService();
                 if(isset($data['vacs'])) {
                     $view = MainConfig::$VIEWS_SERVICE_DUPLICATION;
                 }
                 else{
-                    $this->redirect($serviceLink);
+                    $this->redirect(MainConfig::$PAGE_SERVICES);
                 }
                 break;
 
             case 'outstaffing':
                 if($type==2)
-                    $this->redirect($serviceLink);
+                    $this->redirect(MainConfig::$PAGE_SERVICES);
                 $vac = new Vacancy();
                 $data = $vac->getVacanciesPrem();
                 $view = MainConfig::$VIEWS_SERVICE_OUTSTAFFING_VIEW;
@@ -1670,7 +1710,7 @@ class UserController extends AppController
 
             case 'personal-manager-outsourcing':
                 if($type==2 || !in_array($type, [2,3]))
-                    $this->redirect($serviceLink);
+                    $this->redirect(MainConfig::$PAGE_SERVICES);
                 $vac = new Vacancy();
                 $data = $vac->getVacanciesPrem();
                 $view = MainConfig::$VIEWS_SERVICE_OUTSOURCING_VIEW;
@@ -1681,7 +1721,7 @@ class UserController extends AppController
                 $data = $services->getServiceData($id);
                 if( Yii::app()->getRequest()->getParam('save') ) {
                     $services->orderPrommu();
-                    $this->redirect($serviceLink);
+                    $this->redirect(MainConfig::$PAGE_SERVICES);
                 }
                 $Upluni = new Uploaduni();
                 $data = array_merge($data, $Upluni->init());
@@ -1694,7 +1734,7 @@ class UserController extends AppController
 
             case 'api-key-prommu':
                 if($type==2 || !in_array($type, [2,3]))
-                    $this->redirect($serviceLink);
+                    $this->redirect(MainConfig::$PAGE_SERVICES);
                 $view = MainConfig::$VIEWS_SERVICE_API_VIEW;
                 break;
                
@@ -1902,5 +1942,16 @@ class UserController extends AppController
       );
       $this->setPageTitle('Проверка налогового статуса');
       $this->render('check-self-employed');
+    }
+    /**
+     *
+     */
+    public function actionLegal_entity_receipt()
+    {
+      $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
+      $model = new PrommuOrder();
+      $data = $model->getLegalEntityReceipt($id);
+      !$data && $this->redirect(DS);
+      $this->renderPartial(MainConfig::$VIEW_LEGAL_ENTITY_RECEIPT,['viData'=>$data]);
     }
 }

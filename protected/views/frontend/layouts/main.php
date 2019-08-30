@@ -47,7 +47,7 @@
 					$action =  substr($controller, strpos($controller, '/'));
 					$action=='/index' && $action = '/';
 					$script = Yii::app()->getClientScript();
-        	$arOptimizPages = array(DS, MainConfig::$PAGE_WORK_FOR_STUDENTS, MainConfig::$PAGE_SEARCH_EMPL, MainConfig::$PAGE_VACANCY, MainConfig::$PAGE_SEARCH_PROMO, DS.MainConfig::$PAGE_SERVICES);
+        	$arOptimizPages = array(DS, MainConfig::$PAGE_WORK_FOR_STUDENTS, MainConfig::$PAGE_SEARCH_EMPL, MainConfig::$PAGE_VACANCY, MainConfig::$PAGE_SEARCH_PROMO, MainConfig::$PAGE_SERVICES);
         		// array with optimization
             $script->registerScriptFile($baseUrl . '/theme/js/dist/libs.js', CClientScript::POS_HEAD);
             $script->registerScriptFile($baseUrl . '/jslib/sourcebuster.min.js', in_array($action, $arOptimizPages) 
@@ -357,7 +357,7 @@
 		                              </div>
 		                              <div class="col-sm-6 col-lg-4">
 		                                <a href="<?=MainConfig::$PAGE_WORK_FOR_STUDENTS?>" rel="nofollow" class="footer__big-menu-link"><ins>Работа для студентов</ins></a>
-		                                <a href="<? echo '/' . MainConfig::$PAGE_SERVICES?>" rel="nofollow" class="footer__big-menu-link"><ins>Услуги</ins></a>
+		                                <a href="<?=MainConfig::$PAGE_SERVICES?>" rel="nofollow" class="footer__big-menu-link"><ins>Услуги</ins></a>
 		                                <a href="<?=MainConfig::$PAGE_IDEAS_LIST?>" rel="nofollow" class="footer__big-menu-link"><ins>Идеи и предложения</ins></a>
 		                              </div>
 		                              <div class="col-sm-6 col-lg-2">

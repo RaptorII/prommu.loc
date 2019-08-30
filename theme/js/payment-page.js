@@ -14,26 +14,31 @@ var Payment = (function (){
         Payment.winObj = self;
 
       // Проверяем поля
-      $('#legal-inn').mask('9999999999');
-      $('#legal-kpp').mask('999999999');
+      //$('#legal-inn').mask('9999999999');
+      //$('#legal-kpp').mask('999999999');
 
       //  переключаем action в зависимости от типа лица
       $('.payment-form__radio-input').change(function(e){ 
-        if($(this).val()=='legal'){
+        if($(this).val()=='legal')
+        {
           $('#payment-legal').fadeIn();
           $('#payment-form').prop('action', $('#payment-form').data('leg'));
           radioLegal = true;
         }
-        else{         
+        if($(this).val()=='individual')
+        {
           $('#payment-legal').fadeOut();
           $('#payment-form').prop('action', $('#payment-form').data('ind'));
           radioLegal = false;
         } 
       });
       //  проверяем поля
-      $('#legal-name').keyup(function(){ checkInp(this, 1) });
-      $('#legal-inn').keyup(function(){ checkInp(this, 1) });
-      $('#legal-kpp').keyup(function(){ checkInp(this, 1) });    
+      $('.payment__input').on('input',function(){ checkInp(this) });
+      $('#legal-inn, #legal-kpp, #legal-index').on('input',function(){
+        var v = this.value.replace (/\D/, '');
+
+        $(this).val(v);
+      } );
       // проверяем форму
       setInterval(function(){
         flagDate = true;
@@ -226,16 +231,36 @@ var Payment = (function (){
         return real+' дней';
       }
       //
-      function checkInp(e, err=0){
-        var val = $(e).val();
-        if(val==''){
-          if(err){ $(e).addClass('error') };
-          return false;
+      function checkInp(e)
+      {
+        var result = true;
+        if(e.length!=undefined)
+        {
+          e.each(function(){
+            if(!($(this).val().trim().length))
+            {
+              $(this).addClass('error');
+              result = false;
+            }
+            else
+            {
+              $(this).removeClass('error');
+            }
+          });
         }
-        else{
-          if(err){ $(e).removeClass('error') };
-          return true;
+        else
+        {
+          if(!($(e).val().trim().length))
+          {
+            $(e).addClass('error');
+            result = false;
+          }
+          else
+          {
+            $(e).removeClass('error');
+          }
         }
+        return result;
       }
       //
       //
@@ -254,12 +279,10 @@ var Payment = (function (){
         }
 
         if(
-          (radioLegal&&flagDate&&checkInp('#legal-inn')&&checkInp('#legal-kpp')&&checkInp('#legal-name'))
+          (radioLegal && flagDate && checkInp($('.payment__input')))
           ||
           (!radioLegal&&flagDate)
         ){
-          console.log(111);
-
           if(MainScript.isButtonLoading(this))
             return false;
           else

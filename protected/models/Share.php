@@ -915,4 +915,21 @@ class Share
         }
         return false;
     }
+    /**
+     * @param $str string
+     * @return array
+     */
+    public static function explode($str)
+    {
+      $arRes = [];
+      if(strpos($str,',')===false)
+      {
+        $arRes[] = $str;
+      }
+      else
+      {
+        $arRes = explode(',',$str);
+      }
+      return $arRes;
+    }
 }
