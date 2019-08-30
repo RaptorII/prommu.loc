@@ -674,8 +674,8 @@ class UserProfileEmpl extends UserProfile
 
                 $name = $data['firstname'] . ' ' . $data['lastname'];
                 empty(trim($name)) && $name = "Пользователь";
-                Mailing::set(
-                  17,
+                // Письмо админу о изменении профиля пользователем
+                Mailing::set(17,
                   [
                     'name_user' => $name,
                     'id_user' => $id,

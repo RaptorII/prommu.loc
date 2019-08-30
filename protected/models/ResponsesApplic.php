@@ -65,8 +65,8 @@ class ResponsesApplic extends Responses
 
         if($status==Responses::$STATUS_REJECT)
         {
-          Mailing::set(
-            22,
+          // Письмо работодателю об отклонении заявки
+          Mailing::set(22,
             [
               'email_user' => $vacData['email'],
               'name_user' => $employerName,
@@ -87,8 +87,8 @@ class ResponsesApplic extends Responses
         }
         if($status==Responses::$STATUS_APPLICANT_ACCEPT)
         {
-          Mailing::set(
-            23,
+          // Письмо работодателю о принятии приглашения на вакансию
+          Mailing::set(23,
             [
               'email_user' => $vacData['email'],
               'name_applicant' => $applicantName,
@@ -494,19 +494,18 @@ class ResponsesApplic extends Responses
                     ->from('user')
                     ->where('id_user=:id', [':id' => $arVacancy['id_user']])
                     ->queryScalar();
-        // Письмо пользователю
+        // Письмо работодателю об отклике на вакансию
         $name = trim(Share::$UserProfile->exInfo->firstname);
         empty($name) && $name = 'пользователь';
-        Mailing::set(
-                9,
-                array(
-                    'email_user' => $email,
-                    'name_user' => $name,
-                    'id_user' => Share::$UserProfile->id,
-                    'id_vacancy' => $id,
-                    'name_vacancy' => $arVacancy['title']
-                )
-            );
+        Mailing::set(9,
+          [
+            'email_user' => $email,
+            'name_user' => $name,
+            'id_user' => Share::$UserProfile->id,
+            'id_vacancy' => $id,
+            'name_vacancy' => $arVacancy['title']
+          ]
+        );
         // push
         PushChecker::setPushMess($arVacancy['id_user'], 'invite');
         $arRes['error'] = 0;
@@ -549,20 +548,18 @@ class ResponsesApplic extends Responses
           'rate' => $rate[0],
           'rate_neg' => $rate[1],
         ), 'id_user = :iduser', array(':iduser' => $vacData['idusempl']));
-
-      // письмо для работодателя
+      // письмо работодателю о новом отзыве
       $name = Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname;
       empty(trim($name)) && $name = 'пользователь';
-      Mailing::set(
-        16,
-        array(
+      Mailing::set(16,
+        [
           'email_user' => $vacData['emailempl'],
           'name_user' => $name,
           'name_applicant' => Share::$UserProfile->exInfo->name,
           'id_applicant' => Share::$UserProfile->exInfo->id,
           'id_vacancy' => $vacData['id_vac'],
           'title_vacancy' => $vacData['title']
-        )
+        ]
       );
       // оставляем отзыв
       if( $message )
@@ -652,19 +649,18 @@ class ResponsesApplic extends Responses
       {
         Share::multipleInsert(['rating_details'=>$arInsert]);
       }
-      // письмо для работодателя
+      // письмо работодателю о новом отзыве
       $name = Share::$UserProfile->exInfo->firstname . ' ' . Share::$UserProfile->exInfo->lastname;
       empty(trim($name)) && $name = 'пользователь';
-      Mailing::set(
-        16,
-        array(
+      Mailing::set(16,
+        [
           'email_user' => $vacData['emailempl'],
           'name_user' => $name,
           'name_applicant' => Share::$UserProfile->exInfo->name,
           'id_applicant' => Share::$UserProfile->exInfo->id,
           'id_vacancy' => $id,
           'title_vacancy' => $vacData['title']
-        )
+        ]
       );
       // Обновляем общий рейтинг работодателя в таблице employer
       $rate = (new ProfileFactory())->makeProfile(['id'=>$vacData['idusempl'], 'type'=>3])->getRateCount($vacData['idusempl']);
@@ -745,129 +741,107 @@ class ResponsesApplic extends Responses
   }
 
 
+  /**
+   * @param array $props
+   * @return array
+   */
+  public function invite($props=[])
+  {
+    $id_vacancy = $props['idvac'] ?: filter_var(
+      Yii::app()->getRequest()->getParam('id'),
+      FILTER_SANITIZE_NUMBER_INT
+    );
+    $idPromo = $props['id'] ?: filter_var(
+      Yii::app()->getRequest()->getParam('idPromo'),
+      FILTER_SANITIZE_NUMBER_INT
+    );
 
-    public function invite($props=[])
+    if(!$id_vacancy || !$idPromo)
+      return [
+        'error' => -101,
+        'message' => 'Ошибка запроса. Пожалуйста обновите страницу!'
+      ];
+
+    $query = Yii::app()->db->createCommand()
+      ->select('vs.id, ev.title')
+      ->from('vacation_stat vs')
+      ->join('empl_vacations ev','vs.id_vac=ev.id')
+      ->where(
+        'vs.id_promo=:idp AND vs.id_vac=:idvac',
+        [':idp'=>$idPromo, ':idvac'=>$id_vacancy]
+      )
+      ->queryRow();
+    // Добавляем приглашение на вакансию
+    if( isset($query['id']) )
     {
-        $id = $props['idvac'] ?: filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
-        $idPromo = $props['id'] ?: filter_var(Yii::app()->getRequest()->getParam('idPromo'), FILTER_SANITIZE_NUMBER_INT);
-
-        if( $id )
-        {
-            $res = Yii::app()->db->createCommand()
-                ->select("id")
-                ->from('vacation_stat v')
-                ->where('id_promo = :idp AND id_vac = :idvac', array(':idp' => $idPromo, ':idvac' => $id))
-                ->queryRow();
-            // Добавляем приглашение на вакансию
-            if( $res['id'] )
-            {
-                return ['error' => -101, 'message' => 'Вы уже  отправили приглашение этому пользователю на данную вакансию, ожидайте ответа'];
-            }
-            else
-            {
-              Yii::app()->db->createCommand()
-                ->insert(
-                  'vacation_stat',
-                  [
-                    'id_promo' => $idPromo,
-                    'id_vac' => $id,
-                    'isresponse' => Responses::$STATE_INVITE,
-                    'status' => Responses::$STATUS_EMPLOYER_ACCEPT,
-                    'date' => date('Y-m-d H:i:s'),
-                  ]
-                );
-
-              $lastId = Yii::app()->db->getLastInsertID();
-              ResponsesHistory::setData(
-                $lastId,
-                Share::$UserProfile->exInfo->id,
-                100,
-                Responses::$STATUS_EMPLOYER_ACCEPT
-
-              ); // фиксируем в истории
-
-                $sql = "SELECT ru.email, r.firstname, r.lastname, e.title
-                FROM vacation_stat s
-                INNER JOIN empl_vacations e ON e.id = s.id_vac
-                INNER JOIN resume r ON s.id_promo = r.id
-                INNER JOIN user ru ON ru.id_user = r.id_user
-                WHERE r.id = {$idPromo} AND e.id = {$id}";
-                $res = Yii::app()->db->createCommand($sql);
-                $Q1 = $res->queryRow();
-
-                $arPre = array('/#APPNAME#/',
-                    '/#EMPCOMPANY#/','/#EMPLINK#/','/#EMPSRC#/',
-                    '/#VACID#/','/#VACNAME#/','/#VACPOSTS#/',
-                    '/#VACSALARY#/','/#RESPLINK#/','/#VACLINK#/'
-                );
-
-                $emp = Share::$UserProfile->getProfileDataView()['userInfo'];
-                $vac = (new Vacancy())->getVacancyInfo($id);
-                $host = Subdomain::site();
-                $arRes = array(
-                    $Q1['firstname'].' '.$Q1['lastname'], // #APPNAME#
-                    $emp['name'], // #EMPCOMPANY#
-                    $host.MainConfig::$PAGE_PROFILE_COMMON.'/'.$emp['id_user'],
-                    $host.'/'.MainConfig::$PATH_EMPL_LOGO.'/'.($emp['logo']?$emp['logo'].'100.jpg':'logo.png'),
-                    $id, // #VACID#
-                    $vac[0]['title'] // #VACNAME#
-                );
-                $cntPosts = sizeof($vac);
-                $arPosts = array();
-                $posts = '';
-                if($cntPosts==1) {
-                    $posts = 'на должность:<br>' . $vac[0]['pname'] . '<br>';
-                }
-                else {
-                    $posts = 'на должности:<br>';
-                    foreach ($vac as $k => $v)
-                        if(!in_array($v['id_attr'], $arPosts)) {
-                            $posts .= ($k+1) . ') ' . $v['pname'] . ($k<($cntPosts-1)?';<br>':'');
-                            $arPosts[] = $v['id_attr'];
-                        }
-                }
-                $arRes[] = $posts; // #VACPOSTS#
-                $salary = '';
-                if($vac[0]['shour'] > 0)
-                    $salary .= '- ' . $vac[0]['shour'] . ' руб/час<br/>';
-                if($vac[0]['sweek'] > 0)
-                    $salary .= '- ' . $vac[0]['sweek'] . ' руб/неделю<br/>';
-                if($vac[0]['smonth'] > 0)
-                    $salary .= '- ' . $vac[0]['smonth'] . ' руб/месяц<br/>';
-                if($vac[0]['svisit'] > 0)
-                    $salary .= '- ' . $vac[0]['svisit'] . ' руб/посещение<br/>';
-                $arRes[] = $salary; // #VACSALARY#
-                $arRes[] = $host.'/'.MainConfig::$PAGE_RESPONSES; // #RESPLINK#
-                $arRes[] = $host.MainConfig::$PAGE_VACANCY.'/'.$id; // #VACLINK#
-
-                $content = file_get_contents(Yii::app()->basePath . "/views/mails/app/invitation-to-vac.html");
-                $content = preg_replace($arPre, $arRes, $content);
-                Share::sendmail($Q1['email'], "Prommu.com. Приглашение на вакансию", $content);
-
-                $sql = "SELECT e.id_user
-                        FROM resume e
-                        WHERE e.id = {$idPromo}";
-                $id_user = Yii::app()->db->createCommand($sql)->queryScalar();
-                PushChecker::setPushMess($id_user, 'respond');
-
-                // уведомление С в ЛК
-                UserNotifications::setDataByVac(
-                  $id_user,
-                  $id,
-                  UserNotifications::$APP_INVITATIONS
-                );
-
-                return ['error' => 100, 'message' => 'Приглашение отправлено пользователю, ожидайте ответа'];
-            } // endif
-        }
-        else
-        {
-        } // endif
-
+      return [
+        'error' => -101,
+        'message' => 'Вы уже  отправили приглашение этому пользователю на данную вакансию, ожидайте ответа'
+      ];
     }
+    else
+    {
+      Yii::app()->db->createCommand()
+        ->insert(
+          'vacation_stat',
+          [
+            'id_promo' => $idPromo,
+            'id_vac' => $id_vacancy,
+            'isresponse' => Responses::$STATE_INVITE,
+            'status' => Responses::$STATUS_EMPLOYER_ACCEPT,
+            'date' => date('Y-m-d H:i:s'),
+          ]
+        );
+      $lastId = Yii::app()->db->getLastInsertID();
+      // фиксируем в истории
+      ResponsesHistory::setData(
+        $lastId,
+        Share::$UserProfile->exInfo->id,
+        100,
+        Responses::$STATUS_EMPLOYER_ACCEPT
+      );
+      // достаем заголовок вакансии
+      $title = Yii::app()->db->createCommand()
+        ->select('title')
+        ->from('empl_vacations')
+        ->where('id=:id', [':id'=>$id_vacancy])
+        ->queryScalar();
+      // достаем информацию о С
+      $arUser = Yii::app()->db->createCommand()
+        ->select('u.id_user, u.email')
+        ->from('resume r')
+        ->join('user u','u.id_user=r.id_user')
+        ->where('r.id=:id', [':id'=>$idPromo])
+        ->queryRow();
+      // отправляем email для С
+      Mailing::set(21,
+        [
+          'email_user' => $arUser['email'],
+          'id_user' => Share::$UserProfile->id,
+          'name_user' => Share::$UserProfile->exInfo->efio ?: 'Пользователь',
+          'company_user' => Share::$UserProfile->exInfo->name,
+          'id_vacancy' => $id_vacancy,
+          'title_vacancy' => $title,
+        ]
+      );
 
+      PushChecker::setPushMess($arUser['id_user'], 'respond');
+      // уведомление С в ЛК
+      UserNotifications::setDataByVac(
+        $arUser['id_user'],
+        $id_vacancy,
+        UserNotifications::$APP_INVITATIONS
+      );
 
-
+      return [
+        'error' => 100,
+        'message' => 'Приглашение отправлено пользователю, ожидайте ответа'
+      ];
+    }
+  }
+  /**
+   * @param $inData
+   */
     private function approveVacAfterAction($inData)
     {
 

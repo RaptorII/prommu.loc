@@ -694,8 +694,8 @@ class UserProfileApplic extends UserProfile
         {
           $name = "$name $lastname";
           empty(trim($name)) && $name = "Пользователь";
-          Mailing::set(
-            17,
+          // письмо администратору об изменении профиля
+          Mailing::set(17,
             [
               'name_user' => $name,
               'id_user' => $id,

@@ -56,69 +56,49 @@ class AjaxController extends AppController
         Yii::app()->end();
     }
     
-     public function actionRestorecode(){
-        $code = rand(111111, 999999);
-        $phone = $_POST['phone'];
-        $email = $_POST['email'];
+  public function actionRestorecode()
+  {
+    $code = rand(111111, 999999);
+    $phone = Yii::app()->getRequest()->getParam('phone');
+    $email = Yii::app()->getRequest()->getParam('email');
+    $arInsert = [
+      'id' => $code,
+      'code' => $code,
+      'date' => date("Y-m-d h-i-s"),
+    ];
 
-        if($email){
-             $message = sprintf("Ваш код подтверждения: %s ",$code);
-       
- 
-           Share::sendmail($email, "Prommu.com Код подтверждения", $message);
-
-        $res = Yii::app()->db->createCommand()->delete('activate', 'phone=:phone', array(':phone'=> "$email"));
-        $rest = Yii::app()->db->createCommand()
-                        ->insert('activate', array('id' => $code,
-                            'id' => $code,
-                            'code' => $code,
-                            'phone' => $email,
-                            'date' => date("Y-m-d h-i-s"),
-                            ));
-
-        }
-        elseif($phone) {
-
-
-        $res = Yii::app()->db->createCommand()->delete('activate', 'phone=:phone', array(':phone'=> "$phone"));
-        $rest = Yii::app()->db->createCommand()
-                        ->insert('activate', array('id' => $code,
-                            'id' => $code,
-                            'code' => $code,
-                            'phone' => $phone,
-                            'date' => date("Y-m-d h-i-s"),
-                            ));
-
-        $postdata = array( 
-        'phone' => $phone,
-        'code' =>  $code, 
-        ); 
-        $post = http_build_query($postdata); 
-        $ch = curl_init("https://prommu.com/api.teles_test"); 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-        curl_setopt($ch, CURLOPT_POST, 1); 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post); 
-        $response = curl_exec($ch); 
-        curl_close($ch); 
-
-         
-
-         if($_GET['auth'] == 1) {
-             $res = Yii::app()->db->createCommand()
-            ->select('id')
-            ->from('user')
-            ->where('email=:email', array(':email'=>$email))
-            ->queryRow();
-
-            $auth = new Auth();
-            $auth->Authorize(['id' => $cloud['id']]);
-
-
-         }
-         echo CJSON::encode($response);
-     }
-
+    if(!empty($email))
+    {
+      $arInsert['phone'] = $email;
+      // Письмо с кодом для пользователя
+      Mailing::set(24, ['email_user'=>$email, 'code'=>$code]);
     }
+    elseif(!empty($phone))
+    {
+      $arInsert['phone'] = $phone;
+
+      $post = http_build_query(['phone'=>$phone, 'code'=>$code]);
+      $ch = curl_init("https://prommu.com/api.teles_test");
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($ch, CURLOPT_POST, 1);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+      $response = curl_exec($ch);
+      curl_close($ch);
+
+      echo CJSON::encode($response);
+    }
+
+    if(isset($arInsert['phone']))
+    {
+      Yii::app()->db->createCommand()->delete(
+        'activate',
+        'phone=:phone',
+        [':phone'=> $arInsert['phone']]
+      );
+
+      Yii::app()->db->createCommand()->insert('activate', $arInsert);
+    }
+  }
 
     public function actionConfirm(){
 

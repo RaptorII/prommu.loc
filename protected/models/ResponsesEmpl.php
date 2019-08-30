@@ -576,18 +576,17 @@ class ResponsesEmpl extends Responses
             {
                 Share::multipleInsert(['rating_details'=>$arInsert]);
             }
-            // письмо для соискателя
-            Mailing::set(
-                    15,
-                    array(
-                        'email_user' => $vacData['emailpromo'],
-                        'name_user' => $vacData['username'],
-                        'name_company' => Share::$UserProfile->exInfo->name,
-                        'id_company' => Share::$UserProfile->exInfo->id,
-                        'id_vacancy' => $id,
-                        'title_vacancy' => $vacData['title']
-                    )
-                );
+            // письмо соискателю о новом отзыве
+            Mailing::set(15,
+              [
+                'email_user' => $vacData['emailpromo'],
+                'name_user' => $vacData['username'],
+                'name_company' => Share::$UserProfile->exInfo->name,
+                'id_company' => Share::$UserProfile->exInfo->id,
+                'id_vacancy' => $id,
+                'title_vacancy' => $vacData['title']
+              ]
+            );
             // Обновляем общий рейтинг соискателя в таблице resume
             $rate = (new ProfileFactory())->makeProfile(['id'=>$vacData['iduspromo'], 'type'=>2])->getRateCount($vacData['iduspromo']);
 

@@ -292,32 +292,25 @@ class Feedback extends Model
 
             $name = trim($name);
             empty($name) && $name = 'пользователь';
-            // уведомление юзеру
-            Mailing::set(
-                7,
-                array(
-                    'email_user' => $emails,
-                    'name_user'  => $name
-                )
-            );
-            // уведомления админам
-            Mailing::set(
-                8,
-                array(
-                    'name_user'      => $name,
-                    'theme_message'  => $theme,
-                    'email_user'     => $emails,
-                    'text_message'   => $text,
-                    'referer_seo'    => $referer,
-                    'transition_seo' => $transition,
-                    'canal_seo'      => $canal,
-                    'campaign_seo'   => $campaign,
-                    'content_seo'    => $content,
-                    'keywords_seo'   => $keywords,
-                    'point_seo'      => $point,
-                    'l_referer_seo'  => $last_referer,
-                    'roistat_seo'    => $roistat
-                )
+            // письмо юзеру
+            Mailing::set(7, ['email_user'=>$emails, 'name_user'=>$name]);
+            // письмо админам
+            Mailing::set(8,
+              [
+                'name_user'      => $name,
+                'theme_message'  => $theme,
+                'email_user'     => $emails,
+                'text_message'   => $text,
+                'referer_seo'    => $referer,
+                'transition_seo' => $transition,
+                'canal_seo'      => $canal,
+                'campaign_seo'   => $campaign,
+                'content_seo'    => $content,
+                'keywords_seo'   => $keywords,
+                'point_seo'      => $point,
+                'l_referer_seo'  => $last_referer,
+                'roistat_seo'    => $roistat
+              ]
             );
 
             Yii::app()->user->setFlash('prommu_flash', 'Ваше обращение принято в обработку. После обработки вашего письма нашими менеджерами, мы свяжемся с вами');

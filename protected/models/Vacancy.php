@@ -258,15 +258,15 @@ class Vacancy extends ARModel
                 $linkRate = Subdomain::site() . MainConfig::$PAGE_SETRATE . DS . $id_vac;
                 foreach ($arV['items'] as $v)
                 {
-                    Mailing::set( // письмо соискателю
-                        13,
-                        array(
+                    // письмо соискателю
+                    Mailing::set(13,
+                        [
                             'email_user' => $arUsers[$v['id_app']]['email'],
                             'id_vacancy' => $id_vac,
                             'title_vacancy' => $v['title'],
                             'id_company' => $v['id_emp'],
                             'name_company' => $arUsers[$v['id_emp']]['name']
-                        )
+                        ]
                     );
                     $arId[] = $v['id'];
                     $name = $arUsers[$v['id_app']]['name'];
@@ -280,8 +280,8 @@ class Vacancy extends ARModel
                         );
                     $arApp[] = $v['id_app'];
                 }
-                Mailing::set( // письмо работодателю
-                    14,
+                // письмо работодателю
+                Mailing::set(14,
                     array(
                         'email_user' => $arUsers[$arItem['id_emp']]['email'],
                         'id_vacancy' => $id_vac,
@@ -1057,15 +1057,14 @@ class Vacancy extends ARModel
             $url = $host . MainConfig::$PAGE_SEARCH_PROMO;
         }
         // письмо работодателю
-        Mailing::set(
-            10,
-            array(
+        Mailing::set(10,
+            [
                 'email_user' => $arData['vacancy']['email'],
                 'id_vacancy' => $id,
                 'title_vacancy' => $arData['vacancy']['title'],
                 'applicants_list' => $appList,
                 'link_ankety_filter' => $url
-            )
+            ]
         );
         // репостим
         $this->VkRepost($id, $arData['vacancy']['repost']);
@@ -1525,13 +1524,12 @@ class Vacancy extends ARModel
                         <i>С найлучшими пожеланиями команда Промму!</i>
                     </div>");
 
-            Mailing::set(
-                        3,
-                        array(
+            Mailing::set(3,
+                        [
                             'email_user' => $user->email,
                             'company_user' => $user->name,
                             'id_vacancy' => $idvac
-                        )
+                        ]
                     );
         }
         
@@ -1856,28 +1854,26 @@ class Vacancy extends ARModel
                     // Письмо пользователю 
                     $user->efio = trim($user->efio);
                     empty($user->efio) && $user->efio = 'пользователь';
-                    Mailing::set(
-                                4,
-                                array(
+                    Mailing::set(4,
+                                [
                                     'email_user' => $user->email,
                                     'name_user' => $user->efio,
                                     'name_vacancy' => $Q1['title'],
                                     'id_vacancy' => $id,
-                                )
+                                ]
                             );
                 } // endif
 
                 // Письмо админу 
                 $user->name = trim($user->name);
                 empty($user->name) && $user->name = 'компания';
-                Mailing::set(
-                            5,
-                            array(
+                Mailing::set(5,
+                            [
                                 'id_user' => $user->id,
                                 'company_user' => $user->name,
                                 'name_vacancy' => $Q1['title'],
                                 'id_vacancy' => $id,
-                            )
+                            ]
                         );
 
                 $message = 'Ваша вакансия отправлена на модерацию – и будет опубликована в ближайшее время. Обычно это занимает до 15 минут в рабочее время.';

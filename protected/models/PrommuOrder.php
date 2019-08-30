@@ -137,10 +137,9 @@ class PrommuOrder {
         ->leftJoin('user u','u.id_user=e.id_user')
         ->where('e.id_user=:id',[':id'=>$id_user])
         ->queryRow();
-
+      // Письмо для С о том, что его приглашают на работу
       $arEmails[] = 'denisgresk@gmail.com'; // Добавляем в рассылку Денчика
-      Mailing::set(
-        21,
+      Mailing::set(21,
         [
           'id_user' => $id_user,
           'name_user' => $arEmployer['lastname'] . ' ' . $arEmployer['firstname'],

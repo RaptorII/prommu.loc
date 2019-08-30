@@ -188,9 +188,8 @@ class Services extends Model
                 'email' => $email,
                 'crdate' => date("Y-m-d H:i:s"),
             ));
-
-        Mailing::set(
-          19,
+        // Письмо админу о заказе услуги
+        Mailing::set(19,
           [
             'service_id' => $id,
             'name_user' => $fio,

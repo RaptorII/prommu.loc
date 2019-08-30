@@ -57,13 +57,8 @@ class RestorePass
             if(strripos($email, "@"))
             {
                 $link .= "&uid=" . $User->id_user;
-                Mailing::set(
-                            6,
-                            array(
-                                'email_user' => $email,
-                                'link_restore_pass' => $link
-                            )
-                        );
+                // письмо юзеру для воссановления пароля
+                Mailing::set(6, ['email_user'=>$email, 'link_restore_pass'=>$link]);
             }
             else
             {
