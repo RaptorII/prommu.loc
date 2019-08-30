@@ -13,20 +13,21 @@
 
     </script>
 <?php else: ?>
-    <?php
-        $isUser = in_array(Share::$UserProfile->type, [2,3]);
-        if(!$isUser){
-            Yii::app()->getClientScript()->registerScriptFile('https://www.google.com/recaptcha/api.js', CClientScript::POS_END);
-        }
-        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/feedback/script.js', CClientScript::POS_END);
-    ?>
+    <!--                --><?php
+    $isUser = in_array(Share::$UserProfile->type, [2,3]);
+    //if(!$isUser)
+    //{
+        Yii::app()->getClientScript()->registerScriptFile('https://www.google.com/recaptcha/api.js', CClientScript::POS_END);
+    //}
+    Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/feedback/script.js', CClientScript::POS_END);
+    ?><!--                -->
     <div class='row'>
         <div class='col-xs-12'>
             <form action='' id='F2feedback' method='post' class="feedback-page__form">
                 <h1 class="feedback-page__title">Обратная связь</h1>
                 <?php if(!empty($error)): ?>
-                <div class="error-block -center -red"><?=$error?></div>
-            <?php endif; ?>
+                    <div class="error-block -center -red"><?=$error?></div>
+                <?php endif; ?>
                 <?php if(!$isUser): ?>
                     <label class="feedback-page__label feedback-page__label-select">
                         <select name="type" id="CBtype" class="feedback-page__select" title="Выберите тип запроса" equired>
@@ -44,7 +45,7 @@
                     }
                     if(!empty(Share::$UserProfile->exInfo->firstname)){
                         $name .= ' '.Share::$UserProfile->exInfo->firstname;
-                    } 
+                    }
                     ?>
                     <input data-field-check='name:Имя,empty,max:100' id='EdName' name='name' type='text' value="<?=($viData['name'] ? $viData['name'] : $name)?>" class="feedback-page__input" placeholder="Имя" title="Имя">
                 </label>
@@ -81,7 +82,7 @@
                     <textarea name="text" data-field-check='name:Текст,empty' id='MText' placeholder="Сообщение" class="feedback-page__textarea" title="Сообщение"><?=($viData['text'] ? $viData['text'] : '')?></textarea>
                 </label>
                 <div class="clearfix"></div>
-                <? if($viData['use_recaptcha']==true): ?>
+<!--                --><?// if($viData['use_recaptcha']==true): ?>
                     <div class="g-recaptcha-parent">
                         <?php if( $viData['element'] == 'recaptcha' ): ?>
                             <span class="red"><?= $viData['hint'] ?></span>
@@ -89,7 +90,7 @@
                         <div class="g-recaptcha" data-sitekey="6Lf2oE0UAAAAAKL5IvtsS1yytkQDqIAPg1t-ilNB"></div>
                     </div>
                     <div class="clearfix"></div>
-                <? endif; ?>
+<!--                --><?// endif; ?>
                 <button type="submit" class="feedback-page__button btn__orange">Отправить</button>
                 <div class="clearfix"></div>
                 <input type="hidden" name="autotype" value="<?= Share::$UserProfile->type ?>"/>
@@ -105,7 +106,4 @@
             </form>
         </div>
     </div>
-    <script>
-
-    </script>
 <?php endif; ?>
