@@ -549,49 +549,133 @@ class UserNotifications
     /**
      * Set message notifications for not have email users
      * Work once at 24 hours.
-     * Dublicate 48 hours and autoreset.
+     *
+     * @return array|void
      */
     public static function setMSGForHaveNTEmailUsers() {
 
-        $query = "
+        // not have email end moderation job seekers
+        $queryMail = "
             SELECT
                 u.id_user,
                 u.email,
                 u.crdate,
-                u.mdate
+                u.mdate,
+                u.status,
+                r.ismoder
             FROM
                 user u
+            INNER JOIN 
+                resume r ON r.id_user=u.id_user    
             WHERE
-                DATE(u.crdate) >= NOW() - INTERVAL 1 DAY
+                DATE(u.crdate) >= NOW() - INTERVAL 1 DAY 
                 or 
-                DATE(u.mdate) >= NOW() - INTERVAL 1 DAY
+                DATE(u.mdate) >= NOW() - INTERVAL 1 DAY 
+            GROUP BY u.id_user
         ";
-        $query = Yii::app()->db->createCommand($query)->queryAll();
+        $queryMail = Yii::app()->db->createCommand($queryMail)->queryAll();
 
-        if(!count($query)){
-            return;
-        } else {
-            foreach ($query as $user){
+        if(count($queryMail)){
+
+            foreach ($queryMail as $user){
                 $email = $user['email'];
                 if ((!preg_match("/^(?:[a-z0-9]+(?:[-_.]?[a-z0-9]+)?@[a-z0-9_.-]+(?:\.?[a-z0-9]+)?\.[a-z]{2,5})$/i", $email))
                     || ( $email = '' )){
                     /**
-                     * Send messages to users who did not approve the email
+                     * Send messages to users who did not enter the email
                      */
-                    $result['users'][] = $user['id_user'];
-                    $result['title'] = 'Администрация';
-                    $result['text'] = 'Уважаемый пользователь, будьте добры заполнить 
+                    $resultm['users'][] = $user['id_user'];
+                    $resultm['title'] = 'Администрация';
+                    $resultm['text'] = 'Уважаемый пользователь, будьте добры заполнить 
                                        поле e-mail в вашем профиле.
                                        Заранее спасибо!';
                 }
             }
-            $admMsg = new AdminMessage();
+            $admMsgM = new AdminMessage();
 
-            if (isset($result)) {
-                return $admMsg->sendDataByCron($result);
+            // send notifications
+            if (isset($resultm)) {
+                $admMsgM->sendDataByCron($resultm);
             }
+
+            foreach ($queryMail as $user){
+                $status = $user['status'];
+                $ismoder = $user['ismoder'];
+                if ( ($status == 2) && ($ismoder != 1)){
+                    /**
+                     * Send messages to users who did not enter moderation information
+                     */
+                    $resultjs['users'][] = $user['id_user'];
+                    $resultjs['title'] = 'Администрация';
+                    $resultjs['text'] = 'Уважаемый пользователь, заполните '.
+                                       'поля, необходимые для модерации:'.
+                                       '<ul style="text-align:left">'.
+                                           '<li>имя и фамилия</li>'.
+                                           '<li>год рождения</li>'.
+                                           '<li>Фото(допускается и без него, на фото не природа, '.
+                                           'не больше одной личности, не анимация и т.д)</li>'.
+                                           '<li>номер телефона и эмейл</li>'.
+                                           '<li>целевая вакансия</li>'.
+                                           '<li>раздел "О себе"</li>'.
+                                       '<ul>';
+                }
+            }
+            $admMsgJS = new AdminMessage();
+            if (isset($resultjs)) {
+                $admMsgJS->sendDataByCron($resultjs);
+            }
+
         }
 
+        $queryEmpl = "
+            SELECT
+                u.id_user,
+                u.email,
+                u.crdate,
+                u.mdate,
+                u.status,
+                e.ismoder
+            FROM
+                user u
+            INNER JOIN 
+                employer e ON e.id_user=u.id_user    
+            WHERE
+                (
+                DATE(u.crdate) >= NOW() - INTERVAL 1 DAY 
+                or 
+                DATE(u.mdate) >= NOW() - INTERVAL 1 DAY
+                ) and u.status = 3 
+                
+            GROUP BY u.id_user
+        ";
+        $queryEmpl = Yii::app()->db->createCommand($queryEmpl)->queryAll();
+
+        if(count($queryEmpl)) {
+
+            foreach ($queryEmpl as $user){
+                $ismoder = $user['ismoder'];
+                if ( $ismoder != 1 ){
+                    /**
+                     * Send messages to employer who did not enter moderation information
+                     */
+                    $resulte['users'][] = $user['id_user'];
+                    $resulte['title'] = 'Администрация';
+                    $resulte['text'] = 'Уважаемый пользователь, заполните '.
+                                       'поля в вашем профиле, необходимые для модерации:'.
+                                       '<ul style="text-align:left">'.
+                                           '<li>название компании</li>'.
+                                           '<li>логотип - желаельно</li>'.
+                                           '<li>номер телефона и эмейл</li>'.
+                                           '<li>имя контактного лица</li>'.
+                                           '<li>контактный номер телефона</li>'.
+                                       '<ul>';
+                }
+            }
+            $admMsgE = new AdminMessage();
+            if (isset($resulte)) {
+                $admMsgE->sendDataByCron($resulte);
+            }
+        }
 
     }
 }

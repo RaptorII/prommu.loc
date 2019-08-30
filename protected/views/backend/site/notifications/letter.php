@@ -29,17 +29,6 @@
 		// if new letter => in template
 		!isset($item->in_template) && $item->in_template = 1;
 
-
-    /**
-     *
-     */
-
-//    echo "<pre>";
-//		print_r($viData['cotypes']);
-//		print_r($item);
-//    print_r($result);
-//    echo "</pre>";
-
 	?>
 	<? if($viData['error'] && isset($viData['messages'])): ?>
 		<div class="alert danger">- <?=implode('<br>- ', $viData['messages']) ?></div>
@@ -117,7 +106,6 @@
 							</div>
 							<?
 							//***
-                            // с возможностью выбрать всех в выбранном фильтре и без него
 							?>
                             <div class="col-xs-12">
                                 <div class='psa__filter-block filter-cities'>
