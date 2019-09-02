@@ -7,7 +7,7 @@
 		echo '<div class="control-group">Дата создания: ' . $data['crdate'] . '</div>';
 		echo '<div class="control-group">Дата модерации: ' . $data['mdate'] . '</div>';
 		$author = $data['users'][$data['id_user']];
-		$link = getProfile($author['type'], $author['id']);
+		$link = getProfile($author['status'], $author['id']);
 		echo '<div class="control-group">Автор: <a href="' . $link . '" target="_blank">' . $author['name'] . '</a></div>';
 		echo '<div><span class="glyphicon glyphicon-thumbs-up"></span> ' . $data['posrating'];
 		echo '<div><span class="glyphicon glyphicon-thumbs-down"></span> ' . $data['negrating'];

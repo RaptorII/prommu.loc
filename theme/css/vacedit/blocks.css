@@ -96,6 +96,7 @@
 	z-index: 2;
 }
 .erv__module{
+	min-width: 320px;
 	min-height: 115px;
 	padding: 20px 100px 0 0;
 	margin-bottom: 40px;
@@ -313,9 +314,9 @@
 .erv__label-tbl{ 
 	width: 100%;
 	display: table;
-	padding: 0 10px;
+	/*padding: 0 10px;*/
 }
-.erv__label-tbl>div{ display: table-cell }
+.erv__label-tbl>div{ margin-bottom: 20px; }
 .erv__label-tbl div:last-child{ text-align: right; }
 .erv__input-name,
 #DiContent.page-vacedit .erv__label-checkbox{
@@ -380,7 +381,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	margin-left: 6%;
 }
 #DiContent.page-vacedit .erv__input.erv__input-salary{
-    width: 38px;
+    width: 48px;
     height: 20px;
     padding: 0 1px;
     display: inline-block;
@@ -1283,6 +1284,24 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 		display: inline-block;
 	}
 }
+@media  (min-width: 768px) {
+	#DiContent.page-vacancy .erv__label-checkbox,
+	.erv__label:before,
+	.erv__label-half:before,
+	.erv__input-name,
+	.erv__label-checkbox,
+	.erv__input-name,
+	.erv-city__label-name span {color: #A0A0A0;}
+	.erv__label-tbl>div>span:first-child{
+		display: block;
+		margin-bottom: 5px;
+	}
+	.erv__label-tbl>div{
+		display: table-cell;
+		vertical-align: top;
+		margin-bottom: 0;
+	}
+}
 @media (min-width: 992px){
 	.erv-city__label{ display: table; }
 	.erv-city__label:before{ top: 1px; }
@@ -1295,6 +1314,10 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	.erv-city__time{ margin-left: 5px; }
 	.erv-city__label-name:after{ display: block }
 	.erv-city__label-input{ width: 250px }
+	.erv__label-tbl>div>span:first-child {
+		display: initial;
+		margin-bottom: 0;
+	}
 }
 
 
@@ -1307,17 +1330,23 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	.erv__label-checkbox,
 	.erv__input-name,
 	.erv-city__label-name span {color: #5A5A5A;}
-
-}
-@media  (min-width: 768px) {
-	#DiContent.page-vacancy .erv__label-checkbox,
-	.erv__label:before,
-	.erv__label-half:before,
-	.erv__input-name,
-	.erv__label-checkbox,
-	.erv__input-name,
-	.erv-city__label-name span {color: #A0A0A0;}
-
+	.erv__label-flex.erv__label-flex-full .erv__label-wrap{
+		width: 100%;
+		text-align: left;
+	}
+	.erv__label-wrap {
+		display: table;
+		width: 100%;
+		text-align: right;
+	}
+	.erv__input-name{
+		display: table-cell;
+		text-align: left;
+		line-height: 10px;
+		margin-bottom: 25px;
+	}
+	.erv__label-age { margin: 0 0 0 10px; }
+	.erv__module{ padding: 20px 60px 0 0; }
 }
 /* */
 .erv__label-flex{

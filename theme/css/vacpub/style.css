@@ -712,4 +712,5 @@ input:checked + .fav__label-checkbox:after{ content: '\2714'; }
 
 @media (max-width: 470px){
 	.fav__flex-list .fav__input-name{ width:100%; }
+	.av__flex-list-full .fav__flex-item{ width: 100%; }
 }

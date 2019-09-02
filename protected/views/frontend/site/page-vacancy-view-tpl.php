@@ -418,7 +418,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                             <?
                             //  Прочее
                             ?>
-                            <div class="erv__label erv__label-flex">
+                            <div class="erv__label erv__label-flex erv__label-flex-full">
                                 <div class="erv__label-wrap">
                                     <input type="checkbox" name="ismed" class="erv__input erv__hidden" id="rv-med-note"
                                            value="1" <?= ($viData['vac']['ismed'] ? 'checked' : '') ?>>

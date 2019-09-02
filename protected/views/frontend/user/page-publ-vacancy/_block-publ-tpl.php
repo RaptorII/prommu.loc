@@ -181,7 +181,7 @@
     <?
     // Прочее
     ?>
-    <div class="fav__label fav__flex-list">
+    <div class="fav__label fav__flex-list av__flex-list-full">
       <div class="fav__flex-item">
         <input 
         type="checkbox" 

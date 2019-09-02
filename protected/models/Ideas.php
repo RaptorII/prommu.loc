@@ -385,43 +385,17 @@ class Ideas extends ARModel
     */
     private function getUsers($arIdies)
     {
-        $arResult = array();
+      $arRes = Share::getUsers($arIdies);
+      $arRes[0] = [// admin
+        'id' => 0,
+        'status' => 1,
+        'name' => 'Администрация',
+        'src' => '/theme/pic/prommu-adm.jpg',
+        'profile' => 'javascript:void(0)',
+        'is_online' => 0
+      ];
 
-        if(sizeof($arIdies)){
-            $arIdies = array_unique($arIdies);
-            $strId = implode(',', $arIdies);
-            $sql = "SELECT u.id_user id, u.status type, r.photo, 
-                r.firstname, r.lastname, u.is_online, r.isman
-                FROM resume r
-                INNER JOIN user u ON r.id_user = u.id_user
-                WHERE r.id_user IN({$strId})";
-                $arApps = Yii::app()->db->createCommand($sql)->queryAll();
-
-            foreach($arApps as $user) {
-                $arResult[$user['id']] = $this->drawUpUser($user);
-            }
-
-            $sql = "SELECT u.id_user id, u.status type, r.logo, 
-                r.name, u.is_online
-                FROM employer r
-                INNER JOIN user u ON r.id_user = u.id_user
-                WHERE r.id_user IN({$strId})";
-                $arEmps = Yii::app()->db->createCommand($sql)->queryAll();
-
-            foreach($arEmps as $user) {
-                $arResult[$user['id']] = $this->drawUpUser($user);
-            }
-            $arResult[0] = array( // admin
-                    'id' => 0,
-                    'type' => 1,
-                    'name' => 'Администрация',
-                    'src' => '/images/prommu.jpg',
-                    'profile' => 'javascript:void(0)',
-                    'is_online' => 0
-                );       
-        }
-
-        return $arResult;
+      return $arRes;
     }
     /*
     *       Формирование массива пользователей

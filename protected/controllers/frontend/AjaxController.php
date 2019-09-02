@@ -303,7 +303,7 @@ class AjaxController extends AppController
         elseif(Share::isEmployer()) // employer
         {
             $result['message'] = 'Нам очень жаль:( но Вы зарегистрированы '
-                . 'как работодатель и не можете отзываться на вакансию';
+                . 'как работодатель и не можете откликнуться на вакансию';
         }
         else // guest
         {

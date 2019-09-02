@@ -59,7 +59,7 @@
     //  Возраст
     ?>
     <div class="erv__label erv__label-tbl" data-focus="Значение 'от' должно быть больше 14 и меньше значения 'до'">
-        <div>
+        <div class="erv__label-wrap">
             <span class="erv__input-name">Возраст</span>
             <label class="erv__label-age">
                 <span class="erv__input-name">от*</span>
@@ -73,7 +73,7 @@
         <?
         //  ПОЛ
         ?>
-        <div>
+        <div class="erv__label-wrap">
             <span class="erv__input-name">Пол *</span>
             <input type="checkbox" name="mans" class="erv__input erv__required erv__hidden" id="rv-sex-man" value="1" <?=($viData['vac']['isman'] ? 'checked' : '')?>>
             <label class="erv__label-checkbox" for="rv-sex-man">Мужчина</label>   
@@ -84,7 +84,7 @@
     <?
     //  Прочее
     ?>
-    <div class="erv__label erv__label-flex">
+    <div class="erv__label erv__label-flex erv__label-flex-full">
         <div class="erv__label-wrap">
             <input type="checkbox" name="ismed" class="erv__input erv__hidden" id="rv-med-note"
                    value="1" <?= ($viData['vac']['ismed'] ? 'checked' : '') ?>>
