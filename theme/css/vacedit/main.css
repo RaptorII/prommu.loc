@@ -349,7 +349,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	position: relative;
 }
 #DiContent.page-vacancy .erv__input.erv__input-salary{
-    width: 38px;
+    width: 48px;
     height: 20px;
     padding: 0 1px;
     display: inline-block;
@@ -1273,10 +1273,6 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 		display: initial;
 		white-space: initial;
 	}
-	.erv__label-tbl{
-		padding: 0 10px;
-	}
-
 }
 @media (max-width: 767px){
 	#reg-vac-form .col-xs-12.col-sm-4.col-lg-3,
@@ -1301,7 +1297,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 .erv__label-title{
 	width: 100%;
 	max-width: 475px;
-	margin: 20px 0 0 0;
+	margin: 0;
 	padding: 0 0 20px 0;
 	font-size: 24px;
 	color: #ABB837;
@@ -1516,9 +1512,6 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 #DiContent .erv__services .erv__services-soc.prmu-btn.link:hover{ background-color: rgba(255,101,0,.5) }
 
 @media (min-width: 768px){
-	.erv__label-title {
-		margin: 0;
-	}
 	.erv__not-publ{
 		display: inline-block;
 		margin: 0;
@@ -1625,10 +1618,10 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 	.erv__quarter-item .erv__input-name {
 		display: unset;
 	}
-}
-
-@media (min-width: 768px) {
-
+	.erv__label-flex.erv__label-flex-full .erv__label-wrap{
+		width: 100%;
+		text-align: left;
+	}
 }
 /* */
 .erv__label-flex{
