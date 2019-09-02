@@ -169,8 +169,9 @@ class MailingLetter extends Mailing
 //
 //                $arCond[] = 'r.id_user IN(' . $sql . ')';
 //            }
-            print_r($arCond);
-            die();
+
+//            print_r($arCond);
+//            die();
 
 			if(count($arCond))
 			{
