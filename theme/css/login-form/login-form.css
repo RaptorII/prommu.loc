@@ -325,13 +325,15 @@ media
         margin-bottom: 10px;
         float: left;
     }
-    .auth-form__social-link.fb{ background-position: 50% 0; }
-    .auth-form__social-link.vk{ background-position: 50% -56px; }
-    .auth-form__social-link.ml{ background-position: 50% -112px; }
-    .auth-form__social-link.od{ background-position: 50% -168px; }
-    .auth-form__social-link.go{ background-position: 50% -224px; }
-    .auth-form__social-link.in{ background-position: 50% -280px; }
-    .auth-form__social-link.ya{ background-position: 50% -336px; }
+	.auth-form__social-link:before {
+		content: '';
+		font-family: "PrommuFont";
+		font-size: 50px;
+		line-height: 50px;
+		display: block;
+		text-align: center;
+		position: unset;
+	}
     .auth-form__label-name{
         font-size: 20px;
         line-height: 25px;

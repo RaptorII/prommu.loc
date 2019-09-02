@@ -1301,7 +1301,7 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 .erv__label-title{
 	width: 100%;
 	max-width: 475px;
-	margin: 0;
+	margin: 20px 0 0 0;
 	padding: 0 0 20px 0;
 	font-size: 24px;
 	color: #ABB837;
@@ -1516,6 +1516,9 @@ input:checked + .erv__label-checkbox:after{ content: '\2714'; }
 #DiContent .erv__services .erv__services-soc.prmu-btn.link:hover{ background-color: rgba(255,101,0,.5) }
 
 @media (min-width: 768px){
+	.erv__label-title {
+		margin: 0;
+	}
 	.erv__not-publ{
 		display: inline-block;
 		margin: 0;

@@ -452,6 +452,10 @@ border: 0;padding: 0;}body{margin:0}article,aside,details,figcaption,figure,foot
     border-radius: 4px;
     font-family: RobotoCondensed-Regular, verdana, arial;
 }
+#footer-head .btn__orange,
+#footer-head .btn__green{
+    padding: 5px 10px!important;
+}
 .btn__orange,
 .btn__green{
     transition: var(--main-trans);
