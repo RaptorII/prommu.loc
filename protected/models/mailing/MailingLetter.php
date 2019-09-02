@@ -161,15 +161,16 @@ class MailingLetter extends Mailing
                 $arCond[] = 'uad.id_par IN(' . implode(',',$arParams['cotype']) . ')';
             if(count($arParams['sex']))
                 $arCond[] = 'r.id_user IN(' . implode(',',$arParams['sex']) . ')';
-            if(count($arParams['age-start']) && count($arParams['age-stop'])) {
-                $sql = "Floor(DateDiff(d, birthday, GetDate()) / 365.25)  Between "
-                    . $arParams['age-start']
-                    . " AND "
-                    .  $arParams['age-stop'] . " )";
-
-                $arCond[] = 'r.id_user IN(' . $sql . ')';
-
-            }
+//            if(count($arParams['age-start']>=14) && count($arParams['age-stop']<=100)) {
+//                $sql = "Floor(DateDiff(d, birthday, GetDate()) / 365.25)  Between "
+//                    . $arParams['age-start']
+//                    . " AND "
+//                    .  $arParams['age-stop'] . " )";
+//
+//                $arCond[] = 'r.id_user IN(' . $sql . ')';
+//            }
+            print_r($arCond);
+            die();
 
 			if(count($arCond))
 			{
