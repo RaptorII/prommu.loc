@@ -197,9 +197,9 @@ class MailingLetter extends Mailing
                     //->group('u.id_user')
                     ->queryAll();
 
-                echo('<pre>');
-                    print_r($sql);
-                echo('</pre>');
+//                echo('<pre>');
+//                    print_r($sql);
+//                echo('</pre>');
                 //die();
 
 				foreach ($sql as $v)
