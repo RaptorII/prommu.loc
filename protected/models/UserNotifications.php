@@ -384,9 +384,12 @@ class UserNotifications
       }
       $arUpdate = $query;
     }
-
-    return Yii::app()->db->createCommand()
-      ->update(self::$table, $arUpdate, $conditions, $params);
+    if($arUpdate)
+    {
+      return Yii::app()->db->createCommand()
+        ->update(self::$table, $arUpdate, $conditions, $params);
+    }
+    return false;
   }
   /**
    * Метод для крона, который устанавливает временные уведомления и сбрасывает ненужнае при наличии
