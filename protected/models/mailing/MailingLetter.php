@@ -160,8 +160,8 @@ class MailingLetter extends Mailing
 			if(!empty($arParams['subscribe']))
 				$arCond[] = "ua.key='isnews' AND ua.val=1";
 
-//            if(count($arParams['cities']))
-//                $arCond[] = 'uc.user_city IN(' . implode(',',$arParams['cities']) . ')';
+            if(count($arParams['cities']))
+                $arCond[] = 'uc.id_city IN(' . implode(',',$arParams['cities']) . ')';
 
             if(count($arParams['position']))
                 $arCond[] = 'um.id_mech IN(' . implode(',',$arParams['position']) . ')';
@@ -170,48 +170,37 @@ class MailingLetter extends Mailing
             if(count($arParams['sex']))
                 $arCond[] = 'r.id_user IN(' . implode(',',$arParams['sex']) . ')';
 
-//            if(!empty($arParams['age-start']) && !empty($arParams['age-stop'])) {
-//                $sql = "Floor(DateDiff(d, birthday, GetDate()) / 365.25)  Between "
-//                    . $arParams['age-start']
-//                    . " AND "
-//                    .  $arParams['age-stop'] . " )";
-//
-//                $arCond[] = 'r.id_user IN(' . $sql . ')';
-//            }
+            if(!empty($arParams['age-start']) && !empty($arParams['age-stop'])) {
+                $sql = "( ( ( YEAR(CURRENT_DATE) - YEAR(r.birthday) ) - ( DATE_FORMAT(CURRENT_DATE, '%m%d') < DATE_FORMAT(r.birthday, '%m%d') )  ) BETWEEN "
+                    . $arParams['age-start']
+                    . " AND "
+                    .  $arParams['age-stop']
+                    . ")";
 
-//            echo('<pre>');
-//            print_r($arCond);
-//            echo('</pre>');
-//            echo('</br>');
-//            die();
+                $arCond[] = $sql ;
+            }
 
 			if(count($arCond))
 			{
 				$strCond = implode(' AND ', $arCond);
 
-//                echo('<pre>');
-//                    print_r($strCond);
-//                echo('</pre>');
-                //die();
-
 				$sql = Yii::app()->db->createCommand()
-								->select("u.id_user, u.email")
-								->from('user u')
-								->leftjoin('user_attribs ua','ua.id_us=u.id_user')
-								->leftjoin('user_mech um','um.id_us=u.id_user')
-								->leftjoin('user_attr_dict uad','uad.id_par=u.id_user')
-								->leftjoin('resume r','r.id_user=u.id_user')
-								->leftjoin('user_city uc','uc.id_user=u.id_user')
-								->where($strCond)
-								->order('u.id_user desc')
-                                //->group('u.id_user')
-								->queryAll();
+                    ->select("u.id_user, u.email, r.birthday ")
+                    ->from('user u')
+                    ->leftjoin('user_attribs ua','ua.id_us=u.id_user')
+                    ->leftjoin('user_mech um','um.id_us=u.id_user')
+                    ->leftjoin('user_attr_dict uad','uad.id_par=u.id_user')
+                    ->leftjoin('resume r','r.id_user=u.id_user')
+                    ->leftjoin('user_city uc','uc.id_user=u.id_user')
+                    ->where($strCond)
+                    ->order('u.id_user desc')
+                    //->group('u.id_user')
+                    ->queryAll();
 
                 echo('<pre>');
                     print_r($sql);
-                    echo "tut";
                 echo('</pre>');
-                die();
+                //die();
 
 				foreach ($sql as $v)
 				{
