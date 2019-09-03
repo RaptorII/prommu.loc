@@ -62,14 +62,14 @@
 								<div class="row">
 									<div class="col-xs-12 col-md-6">
 										<label class="d-label">
-											<input type="checkbox" name="user_status[]" value="2"
+											<input type="checkbox" name="user_status[]" value="2" class="job_seeker"
 											<?=((count($params['status']) && in_array(2,$params['status']))?'checked="checked"':'')?>>
 											<span>Соискателям</span>
 										</label>
 									</div>
 									<div class="col-xs-12 col-md-6">
 										<label class="d-label">
-											<input type="checkbox" name="user_status[]" value="3"
+											<input type="checkbox" name="user_status[]" value="3" class="job_Employer"
 											<?=((count($params['status']) && in_array(3,$params['status']))?'checked="checked"':'')?>>
 											<span>Работодателям</span>
 										</label>

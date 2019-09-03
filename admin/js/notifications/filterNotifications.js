@@ -5,6 +5,42 @@
 
 document.addEventListener('DOMContentLoaded', function(){
 
+    var jobEmployer = document.querySelector('.job_employer');
+    var jobSeeker = document.querySelector('.job_seeker');
+    var filterPosition = document.querySelector('.filter__position');
+    var filterTpempl = document.querySelector('.filter__tpempl');
+
+    if(jobEmployer || jobSeeker) {
+
+        if (jobEmployer.checked==false){
+            filterTpempl.style.display = "none";
+        }
+        if (jobSeeker.checked==false){
+            console.log('none2');
+            filterPosition.style.display = "none";
+        }
+
+        jobEmployer.addEventListener("click", function () {
+            if (jobEmployer.checked==true){
+                filterTpempl.style.display = '';
+            }
+            if (jobEmployer.checked==false) {
+                filterTpempl.style.display = 'none';
+            }
+
+        });
+
+        jobSeeker.addEventListener("click", function () {
+            if (jobSeeker.checked==true){
+                filterPosition.style.display = '';
+            }
+            if (jobSeeker.checked==false) {
+                filterPosition.style.display = 'none';
+            }
+        });
+    }
+
+
     var el = document.querySelector('input[name="user_all"]');
     var itemU = document.querySelectorAll('input[name="user_status[]"]');
     var itemM = document.querySelectorAll('input[name="user_moder[]"]');

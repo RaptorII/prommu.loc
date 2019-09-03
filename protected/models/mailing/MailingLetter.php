@@ -25,7 +25,7 @@ class MailingLetter extends Mailing
 		$arRes['template'] = $template->getActiveTemplate();
 		$arRes['item'] = $this::model()->findByPk($id);
         $dataModelSV = new SearchVac;
-        $arRes['positions'] = $dataModelSV->getOccupations(); // select position list of employers (tri roky bez urozayyu)
+        $arRes['positions'] = $dataModelSV->getOccupations(); // select position list of employers
         $params = unserialize($arRes['item']['params']);
         $arRes['selected_cities'] = [];
         if(count($params['cities'])) {
@@ -39,7 +39,7 @@ class MailingLetter extends Mailing
 
         //print_r($arRes['cities']);
 
-        // select cotype of Applications (chotiry roky bez urozayyu, Petya Bumper)
+        // select cotype of Applications
         $arRes['cotypes'] = Yii::app()->
             db->createCommand("
                 SELECT d.id, d.type, d.name 
@@ -69,15 +69,23 @@ class MailingLetter extends Mailing
         $arParams['cities'] = $obj->getParam('cities');
         // cotype
         $arParams['cotype'] = $obj->getParam('cotype');
-        // cotype
+        // gender
         $arParams['sex'] = $obj->getParam('sex');
+
         // age
-        $arParams['age-start'] = $obj->getParam('age-start');
-        $arParams['age-stop'] = $obj->getParam('age-stop');
+        $arParams['age-start'] = filter_var(
+            $obj->getParam('age-start'),
+            FILTER_SANITIZE_NUMBER_INT
+        );
+        $arParams['age-stop'] = filter_var(
+            $obj->getParam('age-stop'),
+            FILTER_SANITIZE_NUMBER_INT
+        );
+
 		// emails
 		$this->receiver = filter_var(
-		                $obj->getParam('receiver'),
-		                FILTER_SANITIZE_FULL_SPECIAL_CHARS
+		                $obj->getParam('receiver'), // email
+		                FILTER_SANITIZE_EMAIL
 		            );
 		$arReceiver = $this->getEmailArray($this->receiver);
 		// title
@@ -152,8 +160,8 @@ class MailingLetter extends Mailing
 			if(!empty($arParams['subscribe']))
 				$arCond[] = "ua.key='isnews' AND ua.val=1";
 
-            if(count($arParams['cities']))
-                $arCond[] = 'uc.user_city IN(' . implode(',',$arParams['cities']) . ')';
+//            if(count($arParams['cities']))
+//                $arCond[] = 'uc.user_city IN(' . implode(',',$arParams['cities']) . ')';
 
             if(count($arParams['position']))
                 $arCond[] = 'um.id_mech IN(' . implode(',',$arParams['position']) . ')';
@@ -161,7 +169,8 @@ class MailingLetter extends Mailing
                 $arCond[] = 'uad.id_par IN(' . implode(',',$arParams['cotype']) . ')';
             if(count($arParams['sex']))
                 $arCond[] = 'r.id_user IN(' . implode(',',$arParams['sex']) . ')';
-//            if(count($arParams['age-start']>=14) && count($arParams['age-stop']<=100)) {
+
+//            if(!empty($arParams['age-start']) && !empty($arParams['age-stop'])) {
 //                $sql = "Floor(DateDiff(d, birthday, GetDate()) / 365.25)  Between "
 //                    . $arParams['age-start']
 //                    . " AND "
@@ -170,12 +179,21 @@ class MailingLetter extends Mailing
 //                $arCond[] = 'r.id_user IN(' . $sql . ')';
 //            }
 
+//            echo('<pre>');
 //            print_r($arCond);
+//            echo('</pre>');
+//            echo('</br>');
 //            die();
 
 			if(count($arCond))
 			{
 				$strCond = implode(' AND ', $arCond);
+
+//                echo('<pre>');
+//                    print_r($strCond);
+//                echo('</pre>');
+                //die();
+
 				$sql = Yii::app()->db->createCommand()
 								->select("u.id_user, u.email")
 								->from('user u')
@@ -188,6 +206,12 @@ class MailingLetter extends Mailing
 								->order('u.id_user desc')
                                 //->group('u.id_user')
 								->queryAll();
+
+                echo('<pre>');
+                    print_r($sql);
+                    echo "tut";
+                echo('</pre>');
+                die();
 
 				foreach ($sql as $v)
 				{
