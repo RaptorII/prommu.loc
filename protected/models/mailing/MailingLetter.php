@@ -182,7 +182,7 @@ class MailingLetter extends Mailing
 
 			if(count($arCond))
 			{
-				$strCond = implode(' AND ', $arCond);
+				$strCond = implode(' AND ', $arCond) . ' AND u.email IS NOT NULL ';
 
 				$sql = Yii::app()->db->createCommand()
                     ->select("u.id_user, u.email, r.birthday ")
@@ -199,6 +199,7 @@ class MailingLetter extends Mailing
 
 //                echo('<pre>');
 //                    print_r($strCond);
+//                    echo "</br>";
 //                    print_r($sql);
 //                echo('</pre>');
 //                die();
@@ -249,5 +250,5 @@ class MailingLetter extends Mailing
 //                    left join resume r ON r.id_user=u.id_user
 //                    left join user_city uc ON uc.id_user=u.id_user
 //                    where
-//                    u.status IN(2) AND u.ismoder IN(0) AND r.isman IN(0)
+//                    u.status IN(2) AND u.ismoder IN(0) AND r.isman IN(0) AND u.email IS NOT NULL
 ?>
