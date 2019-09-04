@@ -110,7 +110,8 @@ class Services extends Model
                 'type' => 'vacpub',
                 'name' => 'Размещение вакансии',
                 'date' => $v['crdate'],
-                'title' => $v['title']
+                'title' => $v['title'],
+                'status' => (($v['status']&&$v['ismoder'])?'Активна':($v['ismoder']?'Неактивна':'В процессе модерации'))
               ];
 
               $arRes['history']['vacancies'][$v['id']] = $v;
@@ -151,7 +152,7 @@ class Services extends Model
             }
           }
           //
-          $arRes['history']['users'] = Share::getUsers($arIdUsers);
+          //$arRes['history']['users'] = Share::getUsers($arIdUsers);
         }
         unset($v);
       }
@@ -410,6 +411,7 @@ class Services extends Model
               'name' => self::getServiceName($v['type']),
               'date' => $v['date'],
               'cost' => 0,
+              'status' => ($v['is_new']?'В обработке':'Выполнена'),
               'data' => [
                 'phone' => $v['phone'],
                 'email' => $v['email'],

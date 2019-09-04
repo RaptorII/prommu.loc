@@ -274,6 +274,7 @@ class MedRequest {
             'name' => Services::getServiceName('medbook'),
             'date' => $v['crdate'],
             'cost' => 0,
+            'status' => self::getAdminStatus($v['status']),
             'data' => []
           ];
         }
@@ -285,5 +286,22 @@ class MedRequest {
     }
 
     return $arRes;
+  }
+  /**
+   * @param $status - card_request => processed
+   * @return string
+   */
+  public static function getAdminStatus($status)
+  {
+    switch ($status)
+    {
+      case 1: $result='Просмотрено администратором'; break;
+      case 2: $result='Отменена'; break;
+      case 3: $result='В обработке'; break;
+      case 4: $result='Не хватает данных'; break;
+      case 5: $result='Выполнена'; break;
+      default: $result='Новая'; break;
+    }
+    return $result;
   }
 }

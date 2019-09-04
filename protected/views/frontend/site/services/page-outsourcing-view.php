@@ -18,12 +18,16 @@
 				?>
 				<h2 class="outstaffing-service__title">ВЫБЕРИТЕ КОНТАКТНЫЕ ДАННЫЕ, ПО КОТОРЫМ С ВАМИ СВЯЖЕТСЯ НАШ МЕНЕДЖЕР</h2>
 				<form action="/user/outstaffing" method="POST" id="outstaffing-form" class="outstaffing-contact-form">
-					<input type="checkbox" name="phone" value="<?=$phone?>" id="os-phone" class="os__contact-input">
-					<label for="os-phone" class="os__contact-label"><?=$phone?></label>
-					<br>
-					<input type="checkbox" name="email" value="<?=$email?>" id="os-email" class="os__contact-input">
-					<label for="os-email" class="os__contact-label"><?=$email?></label>
-					<br>
+          <? if(!empty($phone)): ?>
+            <input type="checkbox" name="phone" value="<?=$phone?>" id="os-phone" class="os__contact-input">
+            <label for="os-phone" class="os__contact-label"><?=$phone?></label>
+            <br>
+          <? endif; ?>
+          <? if(!empty($email)): ?>
+            <input type="checkbox" name="email" value="<?=$email?>" id="os-email" class="os__contact-input">
+            <label for="os-email" class="os__contact-label"><?=$email?></label>
+            <br>
+          <? endif; ?>
 					<input type="checkbox" name="other" value="other" id="os-other" class="os__contact-input">
 					<label for="os-other"  class="os__contact-label">Свой вариант для связи</label>
 					<br>

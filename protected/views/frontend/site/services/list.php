@@ -9,6 +9,11 @@ $arCustom = ['outstaffing','personal-manager-outsourcing','medical-record']; // 
 $arGuest = ['prommu_card','medical-record']; // для гостя
 $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
 ?>
+<?/*
+echo '<pre>';
+print_r($viData['history']);
+echo '</pre>';
+*/?>
 <div class="row">
   <div class="col-xs-12 services">
     <?
@@ -67,7 +72,7 @@ $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
               //
               ?>
               <? if(isset($v['status'])): ?>
-                Состояние: <?=($v['status'] ? 'Выполнено' : 'Ожидает оплаты')?><br>
+                Состояние: <?=$v['status']?><br>
               <? endif; ?>
               <?
               //
@@ -89,15 +94,9 @@ $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
               //
               ?>
               <? if(isset($v['users'])): ?>
-                Приглашенные:<br>
-                <div class="history__item-users row">
-                  <? foreach ($v['users'] as $id_user): ?>
-                    <? $arUser = $viData['history']['users'][$id_user]; ?>
-                    <a href="<?=$arUser['profile']?>" target="_blank">
-                      <img src="<?=$arUser['src']?>" alt="<?=$arUser['name']?>">
-                      <b><?=$arUser['name']?></b>
-                    </a>
-                  <? endforeach; ?>
+                <div class="history__item-users" data-id="<?=$v['id']?>">
+                  <div class="history__users-name">Приглашенные: <?=count($v['users'])?></div>
+                  <div class="history__users-ajax"></div>
                 </div>
               <? endif; ?>
             </div>

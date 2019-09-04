@@ -45,6 +45,16 @@ border: 0;padding: 0;}body{margin:0}article,aside,details,figcaption,figure,foot
 			text-transform: uppercase;
 			font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 		}
+    /* */
+    .prmu-load{
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.7) url(/theme/pic/vacancy/loading.gif) center no-repeat;
+    }
 
 		.yiiLog{position:absolute;top:0;z-index:300;display:none}.yiiLog td{padding:0 5px}.yiiLog td:first-child{word-break:break-all}.btn-loading{width:64px;display:inline-block;position:absolute;top:0;cursor:wait;z-index:2}.btn-loading div{position:absolute;width:10px;height:10px;border-radius:50%;background:#fff;animation-timing-function:cubic-bezier(0,1,1,0)}.btn-loading div:nth-child(1){left:6px;animation:btn-loading1 .6s infinite}.btn-loading div:nth-child(2){left:6px;animation:btn-loading2 .6s infinite}.btn-loading div:nth-child(3){left:26px;animation:btn-loading2 .6s infinite}.btn-loading div:nth-child(4){left:45px;animation:btn-loading3 .6s infinite}@keyframes btn-loading1{0%{transform:scale(0)}100%{transform:scale(1)}}@keyframes btn-loading3{0%{transform:scale(1)}100%{transform:scale(0)}}@keyframes btn-loading2{0%{transform:translate(0,0)}100%{transform:translate(19px,0)}}
 

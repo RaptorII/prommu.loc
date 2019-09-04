@@ -584,6 +584,49 @@ class Vacancy extends ARModel
 
         return $this->getVacancyDatasss($idvac, $idus);
     }
+    /**
+     * @param $inId integer - emp_vacations => id
+     * @return mixed
+     * Метод для сайта (не для API)
+     */
+    public function getVacancyInfoOrig($inId)
+    {
+      if( $inId )
+      {
+        $sql = "SELECT e.id, e.ispremium, e.status, e.ismoder, e.title, e.requirements, e.duties, e.conditions, e.istemp,
+                     DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,e.agefrom, e.ageto, u.email,
+                     e.shour,
+                     e.sweek,
+                     e.smonth,
+                     e.svisit,
+                     e.isman,
+                     e.smart,
+                     e.self_employed,
+                     e.iswoman,
+                     e.repost,
+                     e.vk_link,
+                     e.fb_link,
+                     e.tl_link,
+                     DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate
+                , c1.id_city, c2.name AS ciname, c1.citycu
+                , ea.id_attr, em.id_user, em.name
+                , d.name AS pname, d.postself
+                , ifnull(em.logo, '') logo
+              FROM empl_vacations e 
+              LEFT JOIN empl_city c1 ON c1.id_vac = e.id 
+              LEFT JOIN city c2 ON c2.id_city = c1.id_city 
+              JOIN empl_attribs ea ON ea.id_vac = e.id
+              JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
+              JOIN employer em ON em.id_user = e.id_user
+              JOIN user u ON u.id_user = em.id_user
+              WHERE e.id= {$inId}
+              ORDER BY e.ispremium DESC, e.id DESC";
+        $res = Yii::app()->db->createCommand($sql);
+        $res = $res->queryAll();
+      }
+
+      return $res;
+    }
 
 
     public function getVacancyInfo($inId){
@@ -2812,7 +2855,7 @@ WHERE id_vac = {$inVacId}";
 
     public function VkRepost($id, $repost)
     {
-      $result = $this->getVacancyInfo($id);
+      $result = $this->getVacancyInfoOrig($id);
       $arVac = reset($result);
       $arCity = $arPost = $arVacUpdate = $arCloudUpdate = array();
       // cities
@@ -3011,7 +3054,7 @@ WHERE id_vac = {$inVacId}";
         $message .= "👇ОТКЛИКНУТЬСЯ НА ВАКАНСИЮ 👇\n\n👌Cсылка: $linki";
 
         $sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?parse_mode=HTML&chat_id=@prommucom&text=" . urlencode($message) . "&disable_web_page_preview=true";
-        file_get_contents($sendto);
+       // file_get_contents($sendto);
         //
         $arVacUpdate['tl_link'] = "https://t.me/prommucom";
         $arCloudUpdate[] = array(
@@ -3061,7 +3104,7 @@ WHERE id_vac = {$inVacId}";
       {
         $arVacUpdate['repost'] = $repost;
         Yii::app()->db->createCommand()
-          ->update('empl_vacations', $arVacUpdate, 'id = :id', [':id' => $id]);
+          ->update('empl_vacations', $arVacUpdate, 'id=:id', [':id' => $id]);
         Share::multipleInsert(['service_cloud'=>$arCloudUpdate]);
       }                  
     }

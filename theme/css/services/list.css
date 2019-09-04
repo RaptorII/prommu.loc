@@ -281,17 +281,18 @@
 	margin-bottom: 10px;
 	position: relative;
 }
-.history__item-users{
+.history__users-list{
 	display: flex;
-	width: 100%;
 	flex-wrap: wrap;
 }
-.history__item-users a{
+.history__users-list a{
 	width: 33.3333%;
 	padding: 0 15px 10px;
+	display: flex;
+	align-items: center;
 }
-.history__item-users b{}
-.history__item-users img{
+.history__users-list b{ padding-left: 10px; }
+.history__users-list img{
 	width: 70px;
 	border-radius: 50%;
 	border: 2px solid var(--color-green);
@@ -331,3 +332,53 @@
 .history__item-icon.card:after{ content: '\e921'; }
 .history__item-icon.api:after{ content: '\e91d'; }
 .history__item-icon.vacpub:after{ content: '\e949'; }
+.history__users-name{
+	background-color: #f5f5f5;
+	padding: 15px 50px 15px 15px;
+	border-radius: 20px;
+	cursor: pointer;
+	position: relative;
+	border: 1px solid #a0a0a0;
+	position: relative;
+	z-index: 2;
+}
+.history__users-name:after {
+	content: '';
+	width: 15px;
+	height: 15px;
+	position: absolute;
+	top: calc(50% - 7px);
+	right: 17px;
+	background: url(/theme/pic/ico-tri-b.png);
+	-moz-transform: rotate(-90deg);
+	-ms-transform: rotate(-90deg);
+	-webkit-transform: rotate(-90deg);
+	-o-transform: rotate(-90deg);
+	transform: rotate(-90deg);
+	background-size: contain;
+	-webkit-transition: all .3s ease-out;
+	-moz-transition: all .3s ease-out;
+	-o-transition: all .3s ease-out;
+	transition: all .3s ease-out;
+}
+.history__users-name.active:after {
+	-moz-transform: rotate(0deg);
+	-ms-transform: rotate(0deg);
+	-webkit-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	transform: rotate(0deg);
+}
+.history__users-ajax{
+	padding: 30px 15px 15px;
+	background-color: #ffffff;
+	margin: -15px 15px 0;
+	border: 1px solid #a0a0a0;
+	border-radius: 15px;
+	display: none;
+	position: relative;
+	z-index: 1;
+}
+.history__users-ajax .paging-wrapp{
+	margin: 15px 0 0;
+	padding: 0;
+}

@@ -1084,83 +1084,13 @@ class UserController extends AppController
         }
     }
     /**
-     * 
+     *  Заказ услуги API
      */
     public function actionApi()
     {
-        $api = $_GET['api'];
-        $id = Share::$UserProfile->id;
-        $name = Share::$UserProfile->fio;
-
-          $sql = "SELECT  u.email
-                FROM employer e
-                LEFT JOIN user u ON u.id_user = e.id_user
-                WHERE e.id_user = {$id}";
-         $resultat = Yii::app()->db->createCommand($sql)->queryAll();
-
-        $idus = 2054;
-         $sql = "SELECT ca.id
-                FROM  chat_theme ca
-                WHERE ca.id_use = {$id} AND ca.id_usp = {$idus}";
-        /** @var $res CDbCommand */
-        $res = Yii::app()->db->createCommand($sql);
-        $data = $res->queryAll();
-        // return $data;
-        // var_dump($data[0]['id']);
-        if(!$data[0]['id']){
-            if($api == 1 || $api == 2){
-        $texts = "Здравствуйте, я PROMMU BOT. Метод https://prommu.com/api.promo_search подготовлен. Документация выгружена в файл по ссылке https://prommu.com/api-help#PROMO_SEARCH.
-            При использовании API ресурсами сервиса PROMMU вы соглашаетесь с пользовательским соглашением и принимаете условия использования https://prommu.com/api-private";
-            $message = $texts;
-            $new = $id;
-
-            $idTm = $theme;
-            $Im = new ImApplic();
-            $figaro = compact('message', 'new', 'idus','idTm', 'theme');
-            $resu = $Im->sendUserMessages($figaro);
-
-             $res = Yii::app()->db->createCommand()
-            ->insert('feedback', array(
-                'type' => 3,
-                'name' => 'API'.$name,
-                'theme' => 'API запрос',
-                'text' => 'Запрос на выгрузку',
-                'email' => $resultat[0]['email'],
-                'crdate' => date("Y-m-d"),
-                'chat' => $resu['idtm'] ));
-
-        }
-
-        }
-        else {
-
-             $texts = " Метод https://prommu.com/api.promo_search подготовлен. Документация выгружена в файл по ссылке https://prommu.com/api-help#PROMO_SEARCH.
-            При использовании API ресурсами сервиса PROMMU вы соглашаетесь с пользовательским соглашением и принимаете условия использования https://prommu.com/api-private";
-            $message = $texts;
-            $new = 0;
-
-            $idTm = $data[0]['id'];
-            $Im = new ImApplic();
-            $figaro = compact('message', 'new', 'idus','idTm');
-            $resu = $Im->sendUserMessages($figaro);
-
-
-
-        }
-         Yii::app()->db->createCommand()
-                        ->insert('service_cloud', array('id_user' => $id,
-                                'name' => $id,
-                                'type' => "api",
-                                'bdate' => date("Y-m-d h-i-s"),
-                                'edate' => date("Y-m-d h-i-s"),
-                                'status' => 1,
-                                'sum' => 0,
-                                'text' => "Запрос на выгрузку API",
-                                'user' => "api"
-                            ));
-
-        Yii::app()->user->setFlash('prommu_flash', 'Ваша заявка на формирование запроса команд API сформирована. Все нужные команды Вы сможете взять из сформировавшегося окна диалогов. Также в нём можно будет задать вопросы администратору по возникшим техническим вопросам');
-        $this->redirect(MainConfig::$PAGE_CHATS_LIST_FEEDBACK);
+      $model = new ServiceCloud();
+      $model->orderApi();
+      $this->redirect(MainConfig::$PAGE_CHATS_LIST_FEEDBACK);
     }
     /*
     *   Страница настроек
@@ -1606,7 +1536,7 @@ class UserController extends AppController
 
                 if(Yii::app()->getRequest()->getParam('users') && $data['price']>=0){
                     $data['emp'] = Share::$UserProfile->getProfileDataView()['userInfo'];
-                    $data['vac'] = (new Vacancy())->getVacancyInfo($vac);
+                    $data['vac'] = (new Vacancy())->getVacancyInfoOrig($vac);
                     $data['user'] = reset(Share::getUsers([Share::$UserProfile->exInfo->id]));
                     $attr = Share::$UserProfile->getUserAttribute(['key'=>'inn']);
                     isset($attr[0]['val']) && $data['user']['inn']=$attr[0]['val'];

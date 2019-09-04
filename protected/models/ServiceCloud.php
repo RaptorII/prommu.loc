@@ -130,10 +130,10 @@ class ServiceCloud
             'name' => Services::getServiceName($v['type']),
             'date' => $v['date'],
             'cost' => $v['sum'],
+            'status' => ($v['status'] ? 'Выполнено' : 'Ожидает оплаты'),
             'data' => [
               'bdate' => $v['bdate'],
               'edate' => $v['edate'],
-              'status' => $v['status'],
               //'key' => $v['key'],
               //'text' => $v['text'],
               'user' => $v['user'],
@@ -149,5 +149,102 @@ class ServiceCloud
     }
 
     return $arRes;
+  }
+  /**
+   * @param $id_user - integer (user => id_user)
+   * @param int $limit - integer
+   * @return array
+   */
+  public function getServiceUsers($id_service, $id_user, $limit=30)
+  {
+    $this->limit = $limit;
+    $query = Yii::app()->db->createCommand()
+      ->select('user')
+      ->from('service_cloud')
+      ->where(
+        'id=:id and id_user=:id_user',
+        [':id'=>$id_service, ':id_user'=>$id_user]
+      )
+      ->order('id desc')
+      ->limit($this->limit)
+      ->offset($this->offset)
+      ->queryScalar();
+
+    $arRes = ['items'=>[],'pages'=>[]];
+    $arId = Share::explode($query);
+
+    if(count($arId))
+    {
+      rsort($arId);
+      $arRes['pages'] = new CPagination(count($arId));
+      $arRes['pages']->pageSize = $limit;
+      $arRes['pages']->applyLimit($this);
+      $arResId = [];
+
+      for($i=$this->offset, $n=count($arId); $i<$n; $i++)
+        if($i<($this->offset+$this->limit))
+          $arResId[] = $arId[$i];
+
+      $arRes['items'] = Share::getUsers($arResId);
+    }
+
+    return $arRes;
+  }
+  /**
+   *
+   */
+  public function orderApi()
+  {
+    $api = Yii::app()->getRequest()->getParam('api');
+    $id_user = Share::$UserProfile->id;
+
+    if(in_array($api, [1,2]))
+    {
+      $arChat = [
+        'idus' => Im::$ADMIN_APPLICANT,
+        'theme' => 'API запрос',
+        'message' => "Здравствуйте, я PROMMU BOT. Метод https://prommu.com/api.promo_search подготовлен. "
+          . "Документация выгружена в файл по ссылке https://prommu.com/api-help#PROMO_SEARCH. "
+          . "При использовании API ресурсами сервиса PROMMU вы соглашаетесь с пользовательским соглашением и принимаете условия использования https://prommu.com/api-private",
+        'new' => $id_user
+      ];
+      $Im = new ImApplic();
+      $resu = $Im->sendUserMessages($arChat);
+
+      Yii::app()->db->createCommand()
+        ->insert(
+          'feedback',
+          [
+            'type' => UserProfile::$EMPLOYER,
+            'name' => 'API ' . Share::$UserProfile->exInfo->name,
+            'theme' => 'API запрос',
+            'text' => 'Запрос на выгрузку',
+            'email' => Share::$UserProfile->exInfo->email,
+            'crdate' => date("Y-m-d"),
+            'chat' => $resu['idtm']
+          ]
+        );
+    }
+
+    Yii::app()->db->createCommand()
+      ->insert(
+        'service_cloud',
+        [
+          'id_user' => $id_user,
+          'name' => $id_user,
+          'type' => "api",
+          'bdate' => date("Y-m-d h-i-s"),
+          'edate' => date("Y-m-d h-i-s"),
+          'status' => 1,
+          'sum' => 0,
+          'text' => "Запрос на выгрузку API",
+          'user' => "api"
+        ]
+      );
+
+    Yii::app()->user->setFlash(
+      'prommu_flash',
+      'Ваша заявка на формирование запроса команд API сформирована. Все нужные команды Вы сможете взять из сформировавшегося окна диалогов. Также в нём можно будет задать вопросы администратору по возникшим техническим вопросам'
+    );
   }
 }

@@ -1,4 +1,22 @@
 <?
+/*
+$arr = "a:9:{s:10:\"email_user\";a:3:{s:4:\"name\";s:12:\"#EMAIL_USER#\";s:7:\"pattern\";s:14:\"/#EMAIL_USER#/\";s:11:\"description\";s:41:\"Email пользователя сайта\";}s:9:\"name_user\";a:3:{s:4:\"name\";s:11:\"#NAME_USER#\";s:7:\"pattern\";s:13:\"/#NAME_USER#/\";s:11:\"description\";s:64:\"Имя работодателя(если установлено)\";}s:14:\"name_applicant\";a:3:{s:4:\"name\";s:10:\"#NAME_APP#\";s:7:\"pattern\";s:12:\"/#NAME_APP#/\";s:11:\"description\";s:60:\"Имя соискателя(если установлено)\";}s:7:\"id_user\";a:3:{s:4:\"name\";s:9:\"#ID_USER#\";s:7:\"pattern\";s:11:\"/#ID_USER#/\";s:11:\"description\";s:38:\"ID пользователя сайта\";}s:12:\"link_profile\";a:5:{s:4:\"name\";s:14:\"#LINK_PROFILE#\";s:7:\"pattern\";s:16:\"/#LINK_PROFILE#/\";s:5:\"value\";s:37:\"#SITE##PAGE_PROFILE_COMMON#/#ID_USER#\";s:8:\"breplace\";b:1;s:11:\"description\";s:57:\"Ссылка на профиль пользователя\";}s:10:\"id_vacancy\";a:3:{s:4:\"name\";s:12:\"#ID_VACANCY#\";s:7:\"pattern\";s:14:\"/#ID_VACANCY#/\";s:11:\"description\";s:19:\"ID вакансии\";}s:13:\"title_vacancy\";a:3:{s:4:\"name\";s:15:\"#TITLE_VACANCY#\";s:7:\"pattern\";s:17:\"/#TITLE_VACANCY#/\";s:11:\"description\";s:35:\"Заголовок вакансии\";}s:12:\"link_vacancy\";a:5:{s:4:\"name\";s:14:\"#LINK_VACANCY#\";s:7:\"pattern\";s:16:\"/#LINK_VACANCY#/\";s:5:\"value\";s:32:\"#PAGE_USER_VACANCY#/#ID_VACANCY#\";s:8:\"breplace\";b:1;s:11:\"description\";s:34:\"Ссылка на вакансию\";}s:20:\"link_vacancy_refused\";a:5:{s:4:\"name\";s:22:\"#LINK_VACANCY_REFUSED#\";s:7:\"pattern\";s:24:\"/#LINK_VACANCY_REFUSED#/\";s:5:\"value\";s:40:\"#PAGE_USER_VACANCY#/#ID_VACANCY#/refused\";s:8:\"breplace\";b:1;s:11:\"description\";s:79:\"Ссылка на информацию вакансии(отклоненные)\";}}";
+$arr = unserialize($arr);
+
+$newArr = [
+  'email_user' => array(
+    'name' => "#EMAIL_USER#",
+    'pattern' => "/#EMAIL_USER#/",
+    'description' => "Email пользователя сайта"
+  )
+];
+$newArr = serialize($newArr);
+
+echo '<pre>';
+print_r($newArr);
+echo '</pre>';
+*/
+
 	header('Content-Type: text/html; charset=utf-8');
 	$baseUrl = Yii::app()->baseUrl;
 	$curUrl = Yii::app()->request->requestUri;

@@ -820,81 +820,92 @@ class SiteController extends AppController
      */
     public function actionServices()
     {
-        Subdomain::guestRedirect(Share::$UserProfile->type);
-        $id = filter_var(
-          Yii::app()->getRequest()->getParam('id'),
-          FILTER_SANITIZE_FULL_SPECIAL_CHARS
-        );
-        $services = new Services();
-        $order = new PrommuOrder();
-        $prices = $order->getPricesData();
-
-        if( !empty($id) )
+      if(Yii::app()->request->isAjaxRequest)
+      {
+        $event = Yii::app()->getRequest()->getParam('event');
+        if($event=='service_users')
         {
-            $data = $services->getServiceData($id);
-            switch ($id)
-            {
-                case 'creation-vacancy':
-                case 'premium-vacancy':
-                case 'email-invitation':
-                case 'push-notification':
-                case 'sms-informing-staff':
-                case 'publication-vacancy-social-net':
-                case 'personal-manager-outsourcing':
-                case 'outstaffing':
-                case 'api-key-prommu':
-                    Share::isApplicant() && $this->redirect(MainConfig::$PAGE_SERVICES);
-                    $view = MainConfig::$VIEWS_SERVICE_VIEW; 
-                    break; 
-                case 'geolocation-staff':
-                case 'prommu_card':
-                case 'medical-record':
-                    $view = MainConfig::$VIEWS_SERVICE_VIEW; 
-                    break;
-                case 'conditions':
-                    $model = new PagesContent;
-                    $lang = Yii::app()->session['lang'];
-                    $data = $model->getPageContent($id, $lang);
-                    $this->breadcrumbs = [$data['name']=>[MainConfig::$PAGE_PAGES . DS . $data['link']]];
-                    $this->render(
-                        MainConfig::$VIEWS_DB_PAGES, 
-                        ['content' => $data],
-                        ['pageTitle' => $data['name'], 'htmlTitle' => $data['name']]
-                    );
-                    return;
-                    break;                  
-                default:
-                    throw new CHttpException(404, 'Error'); 
-                    break;
-            }
-        }
-        else
-        {
-          $data = $services->getServices();
-          $prices['prices'] = $order->getVacRegions($prices['prices']);
-          $view = MainConfig::$VIEWS_SERVICES;
+          $this->renderPartial('services/list-service-users-ajax');
         }
 
-        $seo = new Seo();
-        $meta = $seo->exist(MainConfig::$PAGE_SERVICES);
-        $this->setBreadcrumbs($meta['seo_h1'], MainConfig::$PAGE_SERVICES);
+        return;
+      }
 
-        if(!empty($id))
-        {
-          $url = MainConfig::$PAGE_SERVICES . DS . $id;
-          $meta = $seo->exist($url);
-          $this->setBreadcrumbsEx([$meta['seo_h1'], $url]);
-        }
+      Subdomain::guestRedirect(Share::$UserProfile->type);
+      $id = filter_var(
+        Yii::app()->getRequest()->getParam('id'),
+        FILTER_SANITIZE_FULL_SPECIAL_CHARS
+      );
+      $services = new Services();
+      $order = new PrommuOrder();
+      $prices = $order->getPricesData();
 
-        $this->render(
-          $view,
-          ['viData'=>$data, 'id'=>$id, 'prices'=>$prices],
-          [
-            'pageTitle' => '<h1>' . $meta['seo_h1'] . '</h1>',
-            'htmlTitle' => $meta['meta_title'],
-            'pageMetaDesription' => htmlspecialchars_decode($meta['meta_description'])
-          ]
-        );
+      if( !empty($id) )
+      {
+          $data = $services->getServiceData($id);
+          switch ($id)
+          {
+              case 'creation-vacancy':
+              case 'premium-vacancy':
+              case 'email-invitation':
+              case 'push-notification':
+              case 'sms-informing-staff':
+              case 'publication-vacancy-social-net':
+              case 'personal-manager-outsourcing':
+              case 'outstaffing':
+              case 'api-key-prommu':
+                  Share::isApplicant() && $this->redirect(MainConfig::$PAGE_SERVICES);
+                  $view = MainConfig::$VIEWS_SERVICE_VIEW;
+                  break;
+              case 'geolocation-staff':
+              case 'prommu_card':
+              case 'medical-record':
+                  $view = MainConfig::$VIEWS_SERVICE_VIEW;
+                  break;
+              case 'conditions':
+                  $model = new PagesContent;
+                  $lang = Yii::app()->session['lang'];
+                  $data = $model->getPageContent($id, $lang);
+                  $this->breadcrumbs = [$data['name']=>[MainConfig::$PAGE_PAGES . DS . $data['link']]];
+                  $this->render(
+                      MainConfig::$VIEWS_DB_PAGES,
+                      ['content' => $data],
+                      ['pageTitle' => $data['name'], 'htmlTitle' => $data['name']]
+                  );
+                  return;
+                  break;
+              default:
+                  throw new CHttpException(404, 'Error');
+                  break;
+          }
+      }
+      else
+      {
+        $data = $services->getServices();
+        $prices['prices'] = $order->getVacRegions($prices['prices']);
+        $view = MainConfig::$VIEWS_SERVICES;
+      }
+
+      $seo = new Seo();
+      $meta = $seo->exist(MainConfig::$PAGE_SERVICES);
+      $this->setBreadcrumbs($meta['seo_h1'], MainConfig::$PAGE_SERVICES);
+
+      if(!empty($id))
+      {
+        $url = MainConfig::$PAGE_SERVICES . DS . $id;
+        $meta = $seo->exist($url);
+        $this->setBreadcrumbsEx([$meta['seo_h1'], $url]);
+      }
+
+      $this->render(
+        $view,
+        ['viData'=>$data, 'id'=>$id, 'prices'=>$prices],
+        [
+          'pageTitle' => '<h1>' . $meta['seo_h1'] . '</h1>',
+          'htmlTitle' => $meta['meta_title'],
+          'pageMetaDesription' => htmlspecialchars_decode($meta['meta_description'])
+        ]
+      );
     }
 
     public function actionAbout(){

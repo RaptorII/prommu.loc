@@ -29,23 +29,71 @@ var ServicesList = (function () {
         $(main).fadeOut();
         $('.services__sections').fadeIn();
       });
+      // листаем по юзерам
+      $('.history__users-name').click(function(){
+        var main = $(this).closest('.history__item-users')[0],
+            content = $(main).find('.history__users-ajax');
 
+        if($(main).hasClass('enable')) // скрыть
+        {
+          $(this).removeClass('active');
+          setTimeout(function(){ $(main).removeClass('enable') },300);
+          $(content).fadeOut();
+        }
+        if(!$(main).hasClass('enable')) // показать
+        {
+          if(!$(content).text().length)
+          {
+            self.getUsers(content, {service:main.dataset.id, event:'service_users'});
+          }
+          else
+          {
+            $(content).fadeIn();
+          }
+          $(this).addClass('active');
+          setTimeout(function(){ $(main).addClass('enable') },300);
+        }
+      });
+      // пагинация для юзеров
+      $('.history__users-ajax').on('click','.paging-wrapp a',function(e){
+        e.preventDefault();
+        var main = $(e.target).closest('.history__item-users')[0],
+            content = $(main).find('.history__users-ajax');
 
+        self.getUsers(content, e.target.href);
+      });
+      //
+      if(typeof arSuccessMess === 'undefined' || arSuccessMess == null)
+          return;
 
-        if(typeof arSuccessMess === 'undefined' || arSuccessMess == null)
-            return;
-
-        if(arSuccessMess.event==='social')
-            var itm = $('.repost-to-social-form').clone();
-        else if(arSuccessMess.event==='email' || arSuccessMess.event==='push')
-            var itm = $('.email-invitation-form').clone();
-        else if(arSuccessMess.event==='free')
-            var itm = $('.services-finish-form.free').clone();
-        else
-            var itm = $('.services-finish-form.payable').clone();
-        itm.toggleClass('services-form tmpl');
-        ModalWindow.open({ content: itm, action: { active: 0 }, additionalStyle:'dark-ver' });
+      if(arSuccessMess.event==='social')
+          var itm = $('.repost-to-social-form').clone();
+      else if(arSuccessMess.event==='email' || arSuccessMess.event==='push')
+          var itm = $('.email-invitation-form').clone();
+      else if(arSuccessMess.event==='free')
+          var itm = $('.services-finish-form.free').clone();
+      else
+          var itm = $('.services-finish-form.payable').clone();
+      itm.toggleClass('services-form tmpl');
+      ModalWindow.open({ content: itm, action: { active: 0 }, additionalStyle:'dark-ver' });
     };
+    //
+    ServicesList.prototype.getUsers = function(e, data)
+    {
+      console.log(typeof data);
+
+      MainScript.stateLoading(true);
+      $.ajax({
+        data: (typeof data=='object' ? data : ''),
+        url: (typeof data=='string' ? data : ''),
+        success: function (result)
+        {
+          $(e).html(result).fadeIn();
+          MainScript.stateLoading(false);
+        }
+      });
+    }
+    //
     ServicesList.prototype.onOrderCreateFn = function (e, that) {
         var self = this;
         var $that = $(that);
