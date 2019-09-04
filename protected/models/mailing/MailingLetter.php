@@ -168,7 +168,7 @@ class MailingLetter extends Mailing
             if(count($arParams['cotype']))
                 $arCond[] = 'uad.id_par IN(' . implode(',',$arParams['cotype']) . ')';
             if(count($arParams['sex']))
-                $arCond[] = 'r.id_user IN(' . implode(',',$arParams['sex']) . ')';
+                $arCond[] = 'r.isman IN(' . implode(',',$arParams['sex']) . ')';
 
             if(!empty($arParams['age-start']) && !empty($arParams['age-stop'])) {
                 $sql = "( ( ( YEAR(CURRENT_DATE) - YEAR(r.birthday) ) - ( DATE_FORMAT(CURRENT_DATE, '%m%d') < DATE_FORMAT(r.birthday, '%m%d') )  ) BETWEEN "
@@ -198,9 +198,10 @@ class MailingLetter extends Mailing
                     ->queryAll();
 
 //                echo('<pre>');
+//                    print_r($strCond);
 //                    print_r($sql);
 //                echo('</pre>');
-                //die();
+//                die();
 
 				foreach ($sql as $v)
 				{
@@ -237,4 +238,16 @@ class MailingLetter extends Mailing
 		return $arRes;
 	}
 }
+?>
+<?php
+//SELECT
+//u.id_user, u.email, r.birthday
+//                    from user u
+//                    left join user_attribs ua ON ua.id_us=u.id_user
+//                    left join user_mech um ON um.id_us=u.id_user
+//                    left join user_attr_dict uad ON uad.id_par=u.id_user
+//                    left join resume r ON r.id_user=u.id_user
+//                    left join user_city uc ON uc.id_user=u.id_user
+//                    where
+//                    u.status IN(2) AND u.ismoder IN(1) AND r.id_user IN(0)
 ?>
