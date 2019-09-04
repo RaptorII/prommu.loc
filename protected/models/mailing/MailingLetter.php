@@ -249,5 +249,5 @@ class MailingLetter extends Mailing
 //                    left join resume r ON r.id_user=u.id_user
 //                    left join user_city uc ON uc.id_user=u.id_user
 //                    where
-//                    u.status IN(2) AND u.ismoder IN(1) AND r.id_user IN(0)
+//                    u.status IN(2) AND u.ismoder IN(0) AND r.isman IN(0)
 ?>

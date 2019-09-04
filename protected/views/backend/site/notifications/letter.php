@@ -81,14 +81,14 @@
 								<div class="row">
 									<div class="col-xs-12 col-md-6">
 										<label class="d-label">
-											<input type="checkbox" name="user_moder[]" value="0" 
+											<input type="checkbox" name="user_moder[]" value="1"
 												<?=((count($params['moder']) && in_array(0, $params['moder']))?'checked="checked"':'')?>>
 											<span>Промодерированым</span>
 										</label>
 									</div>
 									<div class="col-xs-12 col-md-6">
 										<label class="d-label">
-											<input type="checkbox" name="user_moder[]" value="1"
+											<input type="checkbox" name="user_moder[]" value="0"
 												<?=((count($params['moder']) && in_array(1,$params['moder']))?'checked="checked"':'')?>>
 											<span>Не промодерированым</span>
 										</label>	
