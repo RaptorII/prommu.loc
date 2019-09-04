@@ -187,13 +187,13 @@ class MailingLetter extends Mailing
 				$sql = Yii::app()->db->createCommand()
                     ->select("u.id_user, u.email, r.birthday ")
                     ->from('user u')
-                    ->leftjoin('user_attribs ua','ua.id_us=u.id_user')
+                    //->leftjoin('user_attribs ua','ua.id_us=u.id_user')
                     ->leftjoin('user_mech um','um.id_us=u.id_user')
                     ->leftjoin('user_attr_dict uad','uad.id_par=u.id_user')
                     ->leftjoin('resume r','r.id_user=u.id_user')
                     ->leftjoin('user_city uc','uc.id_user=u.id_user')
                     ->where($strCond)
-                    ->order('u.id_user desc')
+                    //->order('u.id_user desc')
                     //->group('u.id_user')
                     ->queryAll();
 
