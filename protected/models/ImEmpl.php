@@ -251,7 +251,7 @@ class ImEmpl extends Im
                         'id_use' =>  $id ?: Share::$UserProfile->id,
                         'id_usp' => $ids['idusp'] ?: $idusp,
                         'message' => $message,
-                        'is_resp' => (integer) $is_resp,
+                        'is_resp' => 1,
                         'is_read' => 0,
                         'files' => $themeFiles,
                         'crdate' => date("Y-m-d H:i:s"),

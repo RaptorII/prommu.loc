@@ -228,7 +228,7 @@ class Feedback extends Model
                 $arChat = array(
                     'message' => "Добрый день, $name. Ваш вопрос '$text' на рассмотрении",
                     'new' => $id,
-                    'idus' => (Share::isEmployer($autotype) ? 1766 : 2054),
+                    'idus' => (Share::isEmployer($autotype) ? 2054 : 1766 ),
                     'idTm' => $theme,
                     'theme' => $theme,
                     'original' => $text
@@ -246,7 +246,7 @@ class Feedback extends Model
                 $arChat = array(
                     'message' => $text,
                     'new' => $id,
-                    'idus' => (Share::isEmployer($autotype) ? 1766 : 2054),
+                    'idus' => (Share::isEmployer($autotype) ? 2054 : 1766 ),
                     'idTm' => $theme,
                     'theme' => $theme,
                     'original' => $text
