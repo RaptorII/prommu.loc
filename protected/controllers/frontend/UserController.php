@@ -1782,6 +1782,11 @@ class UserController extends AppController
                     $feedback = new Feedback;
                     $data['directs'] = $feedback->getDirects();
                     $data['statuses'] = $feedback->getStatus();
+
+//                    echo '<pre>';
+//                    print_r($data);
+//                    echo '</pre>';
+//                    die();
                 }
 
                 break;

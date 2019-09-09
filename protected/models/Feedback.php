@@ -167,7 +167,7 @@ class Feedback extends Model
         $fdbk = filter_var($rq->getParam('feedback'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
         $arErrors = false;
-        //if(empty($id) && $app == 0){ // CAPTCHA
+        if(empty($id) && $app == 0){ // CAPTCHA
             $recaptcha = $rq->getParam('g-recaptcha-response');
             if(!empty($recaptcha))
             {
@@ -194,7 +194,7 @@ class Feedback extends Model
             {
                 $arErrors = array('ERROR'=>'captcha','MESSAGE'=>'Необходимо пройти проверку "Я не робот"');
             }
-       // }
+        }
 
         if(!$arErrors)
         {

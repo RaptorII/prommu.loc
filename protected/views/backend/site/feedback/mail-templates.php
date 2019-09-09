@@ -89,7 +89,7 @@
         height: 200px;
     }
     .direct-chat-text.chat-admin{
-        margin: 5px 0 0 50px;
+        margin: 15px 0 0 50px;
         background: #dce57e;
         border: 1px solid #dce57e;
     }

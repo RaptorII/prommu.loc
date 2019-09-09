@@ -60,7 +60,7 @@ abstract class Im extends Model
         $filter .= $this->isApp
             ? 'c.id_usp=:id AND c.id_use=:adm'
             : 'c.id_use=:id AND c.id_usp=:adm';
-        $params = array(':id'=>$user->id,':adm'=>$this->adminId);
+        $params = [':id'=>$user->id, ':adm'=>$this->adminId];
         $arRes = Yii::app()->db->createCommand()
                     ->select($select)
                     ->from('chat c')
@@ -68,6 +68,28 @@ abstract class Im extends Model
                     ->where($filter,$params)
                     ->order('c.id desc')
                     ->queryAll();
+
+        $sql = "SELECT
+                    {$select}
+                FROM
+                    chat c
+                LEFT JOIN
+                      chat_theme ct
+                    ON
+                      ct.id=c.id_theme
+                WHERE {$filter}, {$params}";
+//        Yii::app()->db->createCommand($sql)->queryAll();
+
+
+        echo '<pre>';
+        print_r($sql);
+            echo('<br>');
+        print_r($user->id);
+            echo('<br>');
+        echo($this->adminId);
+        echo('<br>');
+        echo '</pre>';
+        die();
 
         if(!$isMain && count($arRes))
         {
@@ -196,6 +218,12 @@ abstract class Im extends Model
         $arRes = $arId = $arIdus = $arI = array();
         $arFeedback = $this->getChatsByFeedback(false);
         // без чатов дальше работать нет смысла
+
+//        echo '<pre>';
+//        print_r($arFeedback);
+//        echo '</pre>';
+//        die();
+
         if(!count($arFeedback))
             return $arRes;
 

@@ -8,7 +8,7 @@ echo '<div class="col-md-6 col-xs-12">
 <h3>Чат обратной связи #' . $data['chat']['id'] . '</h3>';
 
 echo '<b>Пользователь: '
-    . CHtml::link($data['user']['name'], $data['user']['link'], array('target'=>'_blank'))
+    . CHtml::link(!empty($data['user']['name']) ? $data['user']['name'] : $data['chat']['name'] , $data['user']['link'], array('target'=>'_blank'))
     . '</b>';
 
 echo '<div class="control-group">
