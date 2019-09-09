@@ -220,7 +220,7 @@ class Feedback extends Model
                 'transition' => $transition,
             );
 
-            $Im = (Share::isEmployer($autotype) ? (new ImEmpl()) : (new ImApplic()));
+            $Im = (Share::isEmployer($autotype) ? (new ImApplic()) : (new ImEmpl()));
 
             if((Share::isEmployer($autotype) || Share::isApplicant($autotype)) && ($fdbk==0))
             { // только зареганым // не обращался
@@ -275,7 +275,7 @@ class Feedback extends Model
                     'id='.$fdbk
                 );
 
-                $is_resp = (Share::isEmployer($autotype) ? 0 : 1);
+                $is_resp = (Share::isEmployer($autotype) ? 1 : 0);
                 $Im->sendUserMessages($arChat, $is_resp);
             }
             else

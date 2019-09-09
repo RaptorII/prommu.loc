@@ -69,28 +69,6 @@ abstract class Im extends Model
                     ->order('c.id desc')
                     ->queryAll();
 
-        $sql = "SELECT
-                    {$select}
-                FROM
-                    chat c
-                LEFT JOIN
-                      chat_theme ct
-                    ON
-                      ct.id=c.id_theme
-                WHERE {$filter}, {$params}";
-//        Yii::app()->db->createCommand($sql)->queryAll();
-
-
-        echo '<pre>';
-        print_r($sql);
-            echo('<br>');
-        print_r($user->id);
-            echo('<br>');
-        echo($this->adminId);
-        echo('<br>');
-        echo '</pre>';
-        die();
-
         if(!$isMain && count($arRes))
         {
             $arC = array();
@@ -218,12 +196,6 @@ abstract class Im extends Model
         $arRes = $arId = $arIdus = $arI = array();
         $arFeedback = $this->getChatsByFeedback(false);
         // без чатов дальше работать нет смысла
-
-//        echo '<pre>';
-//        print_r($arFeedback);
-//        echo '</pre>';
-//        die();
-
         if(!count($arFeedback))
             return $arRes;
 
