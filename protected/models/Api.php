@@ -3616,23 +3616,27 @@ public function vac(){
             // проверка токена, получаем профиль
             list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
             $profile->setUserData();
-
+            
             $sql = "SELECT r.status
             FROM user r
             WHERE r.id_user = {$idus}";
             $res= Yii::app()->db->createCommand($sql)->queryScalar();
+            
             if($res==3){
-            $Response = new ResponsesEmpl($profile);
-            $data = $Response->setResponseStatus(compact('idres', 'idus', 'status'));
+                $Response = new ResponsesEmpl($profile);
+                $data = $Response->setResponseStatus(compact('idres', 'idus', 'status'));
             }
             elseif($res==2) {
-            $res = (new Vacancy($profile))->getVacancyView($idvac)['response'];
-            if( (int)$res['response'] != 1 ) throw new ExceptionApi($res['message'], -104);
-
-            $Response = new ResponsesApplic($profile);
-            $data = $Response->setVacationResponse(compact('idvac'));
-            if( (int)$data['error'] > 0 ) throw new ExceptionApi($data['message'], -104);
-
+                $res = (new Vacancy($profile))->getVacancyView($idvac)['response'];
+                var_dump($res);
+                
+                if( (int)$res['response'] != 1 ) throw new ExceptionApi($res['message'], -104);
+    
+                $Response = new ResponsesApplic($profile);
+                $data = $Response->setVacationResponse(compact('idvac'));
+                var_dump($data);
+                if( (int)$data['error'] > 0 ) throw new ExceptionApi($data['message'], -104);
+    
             }
 
         } catch (Exception $e)
