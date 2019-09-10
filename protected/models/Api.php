@@ -3628,13 +3628,13 @@ public function vac(){
             }
             elseif($res==2) {
                 $res = (new Vacancy($profile))->getVacancyView($idvac)['response'];
-                var_dump($res);
+                
                 
                 if( (int)$res['response'] != 1 ) throw new ExceptionApi($res['message'], -104);
     
                 $Response = new ResponsesApplic($profile);
                 $data = $Response->setVacationResponse(compact('idvac'));
-                var_dump($data);
+                
                 if( (int)$data['error'] > 0 ) throw new ExceptionApi($data['message'], -104);
     
             }
