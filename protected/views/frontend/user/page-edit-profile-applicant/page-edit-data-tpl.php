@@ -1020,13 +1020,13 @@
             <?
             // birthday
             ?>
-            <?if($_GET['birthday'] != "type"):?>
+            <?//if($_GET['birthday'] != "type"):?>
               <div class="rp-content1__inputs-row">
                 <input type="text" name="birthday" id="datepicker" class="custom-calendar rp-content1__inputs-input required-inp" placeholder="Дата рождения" autocomplete="off">
                 <span class="rp-content1__text">Укажите Вашу дату рождения.<br><span class="rp-content1__warning">Возраст должен быть не менее 14 лет</span></span>
                 <div class="clearfix"></div>
               </div>
-            <?endif;?>
+            <?//endif;?>
             <?
             // phone
             ?>

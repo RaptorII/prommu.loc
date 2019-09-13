@@ -94,4 +94,8 @@ jQuery(function($){
 		}
 		
 	});
+	// анимация для соцсетей
+	$('.auth-form__social-link').on('click',function(e){
+		MainScript.stateLoading(true);
+	});
 });

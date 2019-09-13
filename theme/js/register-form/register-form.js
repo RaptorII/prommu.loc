@@ -205,5 +205,8 @@ jQuery(function($){
 		}
 		
 	});
-	
+	// анимация для соцсетей
+	$('.reg-social__link').on('click',function(e){
+		MainScript.stateLoading(true);
+	});
 });
