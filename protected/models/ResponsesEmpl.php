@@ -1044,7 +1044,7 @@ class ResponsesEmpl extends Responses
                 
                 // $arId[] = $v['user'];
                 // $v['status'] = $section;
-                $v['applicant'] = Share::getUsersApi($v['user']);
+                $v['user'] = Share::getUsersApi($v['user']);
             // $arRes['users'] = Share::getUsersApi($arId);
             }
         }
