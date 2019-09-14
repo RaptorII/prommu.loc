@@ -832,7 +832,7 @@ class Share
         {
             if($v['status']==UserProfile::$APPLICANT)
             {
-                $arRes[$v['id_user']] = array(
+                $arRes = array(
                         'id' => $v['id_user'],
                         'status' => $v['status'],
                         'is_online' => $v['is_online'],
@@ -843,7 +843,7 @@ class Share
             }
             if($v['status']==UserProfile::$EMPLOYER)
             {
-                $arRes[$v['id_user']] = array(
+                $arRes = array(
                         'id' => $v['id_user'],
                         'status' => $v['status'],
                         'is_online' => $v['is_online'],
