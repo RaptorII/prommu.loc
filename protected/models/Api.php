@@ -3501,7 +3501,7 @@ public function vac(){
                 case -102 : // token invalid
                 case -104 : // зарезервированоa
                 case -103 : $message = $e->getMessage(); break; // token expired
-                default: $error = 101; $message = $e->getMessage();
+                default: $error = 101; $message = 'Error get api data';
             }
 
             $data = ['error' => $error, 'message' => $message];
