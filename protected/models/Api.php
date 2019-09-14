@@ -3549,8 +3549,7 @@ public function vac(){
                 $id = $res->queryScalar();
 
             $res = (new Vacancy($profile))->getVacancyOwner($idus);
-            var_dump($res);
-            $rest = $res;
+            $rest = $res['vacs'];
             foreach($rest as $key => $val){
                 if($key['id'] == $idvac) {
                     $Response = new ResponsesApplic($profile);
