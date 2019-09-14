@@ -3476,7 +3476,7 @@ public function vac(){
      
 
             $Response = new ResponsesEmpl($profile);
-            $data = $Response->getVacResponses($idvac, $status);
+            $data = $Response->getVacResponsesApi($idvac, $status);
             
 
             if( (int)$data['error'] > 0 ) throw new ExceptionApi($data['message'], -104);
