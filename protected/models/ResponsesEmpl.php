@@ -985,14 +985,6 @@ class ResponsesEmpl extends Responses
         $condition = 'vs.id_vac=:id AND ';
         $filter = [':id'=>$id_vacancy];
 
-        $arRes['vacancy'] = $db->createCommand()
-                            ->select("id,
-                                title,
-                                status,
-                                DATE_FORMAT(crdate, '%d.%m.%Y') bdate")
-                            ->from('empl_vacations')
-                            ->where('id=:id', $filter)
-                            ->queryRow();
 
         if($section==MainConfig::$VACANCY_DEFERRED) // Новые(отложенные)
         {
