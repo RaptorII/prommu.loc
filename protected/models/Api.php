@@ -3476,15 +3476,13 @@ public function vac(){
      
 
             $Response = new ResponsesEmpl($profile);
-            if(!$status){
-                 $data['invited'] = $Response->getVacResponsesApi($idvac, 'invited');
-                $data['approved'] = $Response->getVacResponsesApi($idvac, 'approved');
-                $data['responded'] = $Response->getVacResponsesApi($idvac, 'responded');
-                $data['deferred'] = $Response->getVacResponsesApi($idvac, 'deferred');
-                $data['rejected'] = $Response->getVacResponsesApi($idvac, 'rejected');
-                $data['refused'] = $Response->getVacResponsesApi($idvac, 'refused');
-            } else {
+            if($status){
+            
                 $data = $Response->getVacResponsesApi($idvac, $status);
+            } else {
+                $error = 101; $message = 'Укажите статус получаемых заявок';
+                $data = ['error' => $error, 'message' => $message];
+                return $data;
             }
            
             
