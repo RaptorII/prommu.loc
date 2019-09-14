@@ -965,6 +965,14 @@ class Employer extends ARModel
      * @return model
      */
     public function setViewed($id) {
+        
+        Yii::app()->db->createCommand()->update(
+            'user',
+            ['ismoder' => 2],
+            'id_user=:id',
+            [':id' => $id]
+        );
+        
         return Yii::app()->db->createCommand()->update(
             $this->tableName(),
             ['is_new' => 0],
