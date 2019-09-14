@@ -1038,7 +1038,9 @@ class ResponsesEmpl extends Responses
         {
             $arId = array();
             foreach ($arRes['items'] as $v){
+                var_dump($v);
                 $arId[] = $v['user'];
+                // $v['status'] = $section;
                 $v['applicant'] = Share::getUsersApi($arId);
             // $arRes['users'] = Share::getUsersApi($arId);
             }
