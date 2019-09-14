@@ -1037,7 +1037,7 @@ class ResponsesEmpl extends Responses
         if(count($arRes['items']))
         {
             $arId = array();
-            foreach ($arRes['items'] as $v){
+            foreach ($arRes['items'] as &$v){
                 if($section){
                     $v['status'] = $section;
                 }
