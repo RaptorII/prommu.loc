@@ -1632,6 +1632,8 @@ class Vacancy extends ARModel
             $fields['self_employed'] = $inProps['self_employed'];
             $fields['card'] = $inProps['card'];
             $fields['cardPrommu'] = $inProps['card_prommu'];
+            $fields['ismoder'] = 100;
+            $fields['status'] = 1;
             
             
             $fields['shour'] = $inProps['salary_hour'];
