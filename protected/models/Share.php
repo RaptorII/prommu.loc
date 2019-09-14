@@ -797,6 +797,81 @@ class Share
         }
         return $arRes;
     }
+    
+     /**
+     * @param $arr array id_user`s
+     * @return array
+     * получить данные пользователей по массиву
+     */
+    public static function getUsersApi($arr) 
+    {
+        $arRes = $arT = array();
+        $arr = array_unique($arr);
+
+        foreach ($arr as $v)
+            !empty($v) && $arT[] = $v;
+        $arr = $arT;
+
+        if(!count($arr) || !array_filter($arr))
+            return $arRes;
+
+        $sql = Yii::app()->db->createCommand()
+                ->select("
+                    u.id_user,
+                    u.email,
+                    u.status,
+                    u.is_online, 
+                    r.isman,
+                    CONCAT(r.firstname,' ',r.lastname) app_name,
+                    r.photo app_photo,
+                    e.name emp_name,    
+                    e.logo emp_photo")
+                ->from('user u')
+                ->leftjoin('resume r','r.id_user=u.id_user')
+                ->leftjoin('employer e','e.id_user=u.id_user')
+                ->where(array('in','u.id_user',$arr))
+                ->queryAll();
+
+        foreach ($sql as $v)
+        {
+            if($v['status']==UserProfile::$APPLICANT)
+            {
+                $arRes[$v['id_user']] = array(
+                        'id' => $v['id_user'],
+                        'status' => $v['status'],
+                        'is_online' => $v['is_online'],
+                        'name' => $v['app_name'],
+                        'src' =>"https://files_prommu.com/users/".$v['id_user']."/".$v['app_photo'],
+                        'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user'],
+                        'profile_admin' => '/admin/PromoEdit/' . $v['id_user']
+                    );
+            }
+            if($v['status']==UserProfile::$EMPLOYER)
+            {
+                $arRes[$v['id_user']] = array(
+                        'id' => $v['id_user'],
+                        'status' => $v['status'],
+                        'is_online' => $v['is_online'],
+                        'name' => $v['emp_name'],
+                        'src' =>"https://files_prommu.com/users/".$v['id_user']."/".$v['emp_photo']
+                        
+                    );
+            }
+
+            if(isset($arRes[$v['id_user']]) && empty($arRes[$v['id_user']]['name']))
+            {
+                $arRes[$v['id_user']]['name'] = '(безымянный)';
+            }
+            if(in_array($v['id_user'], [1766,2054]))
+            {
+                $arRes[$v['id_user']]['name'] = 'Администрация Prommu';
+                $arRes[$v['id_user']]['src'] = '/theme/pic/prommu-adm.jpg';
+                unset($arRes[$v['id_user']]['profile']);
+            }
+        }
+        return $arRes;
+    }
+    
     /**
      * @param $date string - BD data
      * @param $time string - BD data
