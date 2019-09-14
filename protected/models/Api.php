@@ -3550,9 +3550,9 @@ public function vac(){
 
             $res = (new Vacancy($profile))->getVacancyInfo($idus);
             var_dump($res);
-            $rest = $res['vac_data'];
+            $rest = $res;
             foreach($rest as $key => $val){
-                if($key == $idvac) {
+                if($key['id'] == $idvac) {
                     $Response = new ResponsesApplic($profile);
                     $data = $Response->invite(compact('idvac', 'id'));
                 }
