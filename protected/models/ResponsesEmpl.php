@@ -1027,7 +1027,7 @@ class ResponsesEmpl extends Responses
         if($section==MainConfig::$VACANCY_INVITED)
         {
             $condition .= 'vs.isresponse=:response';
-            $filter[':response'] = 2;
+            $filter[':response'] = "2";
         }
         
             $arRes['items'] = $db->createCommand()
