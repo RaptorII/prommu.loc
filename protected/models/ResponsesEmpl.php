@@ -885,13 +885,7 @@ class ResponsesEmpl extends Responses
         else // Приглашения
         {
             $query = $db->createCommand()
-                                ->select("sc.id sc_id,
-                                    sc.type,
-                                    sc.name vacancy,
-                                    sc.status sc_status,
-                                    sc.user sc_user,
-                                    DATE_FORMAT(sc.date,'%H:%i %d.%m.%Y') sc_date,
-                                    UNIX_TIMESTAMP(sc.date) usc_date,
+                                ->select("
                                     r.id_user vs_user,
                                     vs.id vs_id,
                                     vs.status vs_status, 
