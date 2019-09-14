@@ -1024,9 +1024,8 @@ class ResponsesEmpl extends Responses
         
             $arRes['items'] = $db->createCommand()
                                 ->select("r.id_user user,
-                                    vs.id sid,
+                                    vs.id response_id,
                                     vs.status, 
-                                    vs.isresponse,
                                     DATE_FORMAT(vs.date, '%d.%m.%Y') rdate")
                                 ->from('vacation_stat vs')
                                 ->join('resume r','r.id=vs.id_promo')
@@ -1039,7 +1038,7 @@ class ResponsesEmpl extends Responses
         {
             $arId = array();
             foreach ($arRes['items'] as $v)
-                $v['user'] = Share::getUsersApi($v['user']);
+                $v['applicant'] = Share::getUsersApi($v['user']);
             // $arRes['users'] = Share::getUsersApi($arId);
         }
 
