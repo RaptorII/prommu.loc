@@ -1041,8 +1041,6 @@ class ResponsesEmpl extends Responses
                                 ->where($condition, $filter)
                                 ->order('vs.id desc')
                                 ->queryAll();
-        
-       var_dump($arRes['items']);
        
 
         if(count($arRes['items']))
@@ -1050,7 +1048,7 @@ class ResponsesEmpl extends Responses
             $arId = array();
             foreach ($arRes['items'] as $v)
                 $arId[] = $v['user'];
-            $arRes['users'] = Share::getUsers($arId);
+            $arRes['users'] = Share::getUsersApi($arId);
         }
 
         return $arRes;
