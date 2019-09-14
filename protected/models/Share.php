@@ -803,17 +803,10 @@ class Share
      * @return array
      * получить данные пользователей по массиву
      */
-    public static function getUsersApi($arr) 
+    public static function getUsersApi($id) 
     {
         $arRes = $arT = array();
-        $arr = array_unique($arr);
 
-        foreach ($arr as $v)
-            !empty($v) && $arT[] = $v;
-        $arr = $arT;
-
-        if(!count($arr) || !array_filter($arr))
-            return $arRes;
 
         $sql = Yii::app()->db->createCommand()
                 ->select("
@@ -829,7 +822,10 @@ class Share
                 ->from('user u')
                 ->leftjoin('resume r','r.id_user=u.id_user')
                 ->leftjoin('employer e','e.id_user=u.id_user')
-                ->where(array('in','u.id_user',$arr))
+                ->where(
+                        'u.id_user=:id',
+                        array(':id'=>$id)
+                    )
                 ->queryAll();
 
         foreach ($sql as $v)
