@@ -3551,7 +3551,7 @@ public function vac(){
             $res = (new Vacancy($profile))->getVacancyOwner($idus);
             $rest = $res['vacs'];
             foreach($rest as $key => $val){
-                if($key['id'] == $idvac) {
+                if($val['id'] == $idvac) {
                     $Response = new ResponsesApplic($profile);
                     $data = $Response->invite(compact('idvac', 'id'));
                 }
