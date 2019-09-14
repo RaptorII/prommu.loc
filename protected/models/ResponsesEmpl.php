@@ -1044,6 +1044,9 @@ class ResponsesEmpl extends Responses
                                 ->offset($this->offset)
                                 ->queryAll();
         
+       var_dump($condition);
+       var_dump($filter);
+       
        
     
 
