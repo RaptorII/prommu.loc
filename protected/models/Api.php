@@ -3476,7 +3476,12 @@ public function vac(){
      
 
             $Response = new ResponsesEmpl($profile);
-            $data = $Response->getVacResponsesApi($idvac, $status);
+            $data['invited'] = $Response->getVacResponsesApi($idvac, 'invited');
+            $data['approved'] = $Response->getVacResponsesApi($idvac, 'approved');
+            $data['responded'] = $Response->getVacResponsesApi($idvac, 'responded');
+            $data['deferred'] = $Response->getVacResponsesApi($idvac, 'deferred');
+            $data['rejected'] = $Response->getVacResponsesApi($idvac, 'rejected');
+            $data['refused'] = $Response->getVacResponsesApi($idvac, 'refused');
             
 
             if( (int)$data['error'] > 0 ) throw new ExceptionApi($data['message'], -104);
