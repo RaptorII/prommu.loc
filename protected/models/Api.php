@@ -3466,6 +3466,8 @@ public function vac(){
         try
         {
             $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $id = Yii::app()->getRequest()->getParam('id');
+            $status = Yii::app()->getRequest()->getParam('status');
             // $cloud = Yii::app()->getRequest()->getParam('cloud');
             // $cloud = $cloud ? get_object_vars(json_decode($cloud)) : null;
             $limit = filter_var(Yii::app()->getRequest()->getParam('limit', MainConfig::$DEF_PAGE_API_LIMIT), FILTER_SANITIZE_NUMBER_INT);
@@ -3488,8 +3490,8 @@ public function vac(){
                 $type = $retRa;
                 $figaro = compact('id');
 
-                $Response = new ResponsesApplic($profile);
-                $data['resps'] = $Response->getResponsess($figaro);
+                $Response = new ResponsesEmpl($profile);
+                $data['responses'] = $Response->getVacancyResponses($id, $status);
             // }
             // elseif($retRa == 3){
             //     $id = $idus;
