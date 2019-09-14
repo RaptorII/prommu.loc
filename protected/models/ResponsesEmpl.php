@@ -977,4 +977,84 @@ class ResponsesEmpl extends Responses
 
         return $arRes;
     }
+    
+    public function getVacResponsesApi($id_vacancy, $section)
+    {
+        $arRes = array();
+        $db = Yii::app()->db;
+        $condition = 'vs.id_vac=:id AND ';
+        $filter = [':id'=>$id_vacancy];
+
+        $arRes['vacancy'] = $db->createCommand()
+                            ->select("id,
+                                title,
+                                status,
+                                DATE_FORMAT(crdate, '%d.%m.%Y') bdate")
+                            ->from('empl_vacations')
+                            ->where('id=:id', $filter)
+                            ->queryRow();
+
+        if($section==MainConfig::$VACANCY_DEFERRED) // Новые(отложенные)
+        {
+            $condition .= 'vs.status=:status';
+            $filter[':status'] = self::$STATUS_VIEW;
+        }
+        if($section==MainConfig::$VACANCY_REJECTED) // Отклонение
+        {
+            $condition .= 'vs.isresponse=:response AND vs.status=:status';
+            $filter[':response'] = Responses::$STATE_RESPONSE;
+            $filter[':status'] = self::$STATUS_REJECT;
+        }
+        if($section==MainConfig::$VACANCY_REFUSED) // Отказ
+        {
+            $condition .= 'vs.isresponse=:response AND vs.status=:status';
+            $filter[':response'] = Responses::$STATE_INVITE;
+            $filter[':status'] = self::$STATUS_REJECT;
+        }
+        if($section==MainConfig::$VACANCY_APPROVED) // Утвержденные
+        {
+            $condition .= 'vs.status>:status';
+            $filter[':status'] = self::$STATUS_EMPLOYER_ACCEPT;
+        }
+        if($section==MainConfig::$VACANCY_RESPONDED) // Откликнувшиеся
+        {
+            $condition .= 'vs.isresponse=:response';
+            $filter[':response'] = Responses::$STATE_RESPONSE;
+            /*$condition .= '(vs.status=:status1 OR vs.status=:status2)';
+            $filter[':status1'] = self::$STATUS_NEW;
+            $filter[':status2'] = self::$STATUS_EMPLOYER_ACCEPT;*/
+        }
+        if($section==MainConfig::$VACANCY_INVITED)
+        {
+            $condition .= 'vs.isresponse=:response';
+            $filter[':response'] = 2;
+        }
+        
+            $arRes['items'] = $db->createCommand()
+                                ->select("r.id_user user,
+                                    vs.id sid,
+                                    vs.status, 
+                                    vs.isresponse,
+                                    DATE_FORMAT(vs.date, '%d.%m.%Y') rdate")
+                                ->from('vacation_stat vs')
+                                ->join('resume r','r.id=vs.id_promo')
+                                ->where($condition, $filter)
+                                ->order('vs.id desc')
+                                ->limit($this->limit)
+                                ->offset($this->offset)
+                                ->queryAll();
+        
+       
+    
+
+        if(count($arRes['items']))
+        {
+            $arId = array();
+            foreach ($arRes['items'] as $v)
+                $arId[] = $v['user'];
+            $arRes['users'] = Share::getUsers($arId);
+        }
+
+        return $arRes;
+    }
 }
