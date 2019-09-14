@@ -986,29 +986,29 @@ class ResponsesEmpl extends Responses
         $filter = [':id'=>$id_vacancy];
 
 
-        if($section==MainConfig::$VACANCY_DEFERRED) // Новые(отложенные)
+        if($section==(string)MainConfig::$VACANCY_DEFERRED) // Новые(отложенные)
         {
             $condition .= 'vs.status=:status';
             $filter[':status'] = self::$STATUS_VIEW;
         }
-        if($section==MainConfig::$VACANCY_REJECTED) // Отклонение
+        if($section==(string)MainConfig::$VACANCY_REJECTED) // Отклонение
         {
             $condition .= 'vs.isresponse=:response AND vs.status=:status';
             $filter[':response'] = Responses::$STATE_RESPONSE;
             $filter[':status'] = self::$STATUS_REJECT;
         }
-        if($section==MainConfig::$VACANCY_REFUSED) // Отказ
+        if($section==(string)MainConfig::$VACANCY_REFUSED) // Отказ
         {
             $condition .= 'vs.isresponse=:response AND vs.status=:status';
             $filter[':response'] = Responses::$STATE_INVITE;
             $filter[':status'] = self::$STATUS_REJECT;
         }
-        if($section==MainConfig::$VACANCY_APPROVED) // Утвержденные
+        if($section==(string)MainConfig::$VACANCY_APPROVED) // Утвержденные
         {
             $condition .= 'vs.status>:status';
             $filter[':status'] = self::$STATUS_EMPLOYER_ACCEPT;
         }
-        if($section==MainConfig::$VACANCY_RESPONDED) // Откликнувшиеся
+        if($section==(string)MainConfig::$VACANCY_RESPONDED) // Откликнувшиеся
         {
             $condition .= 'vs.isresponse=:response';
             $filter[':response'] = Responses::$STATE_RESPONSE;
@@ -1016,7 +1016,7 @@ class ResponsesEmpl extends Responses
             $filter[':status1'] = self::$STATUS_NEW;
             $filter[':status2'] = self::$STATUS_EMPLOYER_ACCEPT;*/
         }
-        if($section==MainConfig::$VACANCY_INVITED)
+        if($section==(string)MainConfig::$VACANCY_INVITED)
         {
             $condition .= 'vs.isresponse=:response';
             $filter[':response'] = "2";
