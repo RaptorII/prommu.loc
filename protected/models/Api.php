@@ -3548,7 +3548,7 @@ public function vac(){
                 $res = Yii::app()->db->createCommand($sql);
                 $id = $res->queryScalar();
 
-            $res = (new Vacancy($profile))->getVacancyInfo($idus);
+            $res = (new Vacancy($profile))->getVacancyOwner($idus);
             var_dump($res);
             $rest = $res;
             foreach($rest as $key => $val){
