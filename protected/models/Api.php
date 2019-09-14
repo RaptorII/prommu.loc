@@ -3549,6 +3549,7 @@ public function vac(){
                 $id = $res->queryScalar();
 
             $res = (new Vacancy($profile))->getVacancyInfo($idus);
+            var_dump($res);
             $rest = $res['vac_data'];
             foreach($rest as $key => $val){
                 if($key == $idvac) {
