@@ -1040,15 +1040,10 @@ class ResponsesEmpl extends Responses
                                 ->join('resume r','r.id=vs.id_promo')
                                 ->where($condition, $filter)
                                 ->order('vs.id desc')
-                                ->limit($this->limit)
-                                ->offset($this->offset)
                                 ->queryAll();
         
-       var_dump($condition);
-       var_dump($filter);
+       var_dump($arRes['items']);
        
-       
-    
 
         if(count($arRes['items']))
         {
