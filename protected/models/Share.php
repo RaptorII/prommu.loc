@@ -841,9 +841,8 @@ class Share
                         'status' => $v['status'],
                         'is_online' => $v['is_online'],
                         'name' => $v['app_name'],
-                        'src' =>"https://files_prommu.com/users/".$v['id_user']."/".$v['app_photo'],
-                        'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user'],
-                        'profile_admin' => '/admin/PromoEdit/' . $v['id_user']
+                        'src' =>"https://files_prommu.com/users/".$v['id_user']."/".$v['app_photo'].".jpg",
+                        
                     );
             }
             if($v['status']==UserProfile::$EMPLOYER)
@@ -853,7 +852,7 @@ class Share
                         'status' => $v['status'],
                         'is_online' => $v['is_online'],
                         'name' => $v['emp_name'],
-                        'src' =>"https://files_prommu.com/users/".$v['id_user']."/".$v['emp_photo']
+                        'src' =>"https://files_prommu.com/users/".$v['id_user']."/".$v['emp_photo'].".jpg",
                         
                     );
             }
