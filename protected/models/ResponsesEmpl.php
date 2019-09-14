@@ -1039,7 +1039,7 @@ class ResponsesEmpl extends Responses
         {
             $arId = array();
             foreach ($arRes['items'] as $v)
-                $v['user'] = Share::getUsersApi($arId);
+                $v['user'] = Share::getUsersApi($v['user']);
             // $arRes['users'] = Share::getUsersApi($arId);
         }
 
