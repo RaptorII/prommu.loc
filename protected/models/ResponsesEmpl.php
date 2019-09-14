@@ -1037,9 +1037,11 @@ class ResponsesEmpl extends Responses
         if(count($arRes['items']))
         {
             $arId = array();
-            foreach ($arRes['items'] as $v)
-                $v['applicant'] = Share::getUsersApi($v['user']);
+            foreach ($arRes['items'] as $v){
+                $arId[] = $v['user'];
+                $v['applicant'] = Share::getUsersApi($arId);
             // $arRes['users'] = Share::getUsersApi($arId);
+            }
         }
 
         return $arRes;
