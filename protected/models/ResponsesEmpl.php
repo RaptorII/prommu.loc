@@ -899,14 +899,14 @@ class ResponsesEmpl extends Responses
                                     UNIX_TIMESTAMP(vs.date) uvs_date,
                                     DATE_FORMAT(vs.date, '%H:%i %d.%m.%Y') vs_date")
                                 ->from('empl_vacations ev')
-                                ->leftjoin('service_cloud sc','sc.name=ev.id')
+                                // ->leftjoin('service_cloud sc','sc.name=ev.id')
                                 ->leftjoin('vacation_stat vs','vs.id_vac=ev.id')
                                 ->leftjoin('resume r','r.id=vs.id_promo')
                                 ->where(
-                                    "ev.id=:id AND (sc.type IN('email','push','sms') or vs.isresponse=2)",
+                                    "ev.id=:id AND vs.isresponse=2)",
                                     [':id'=>$id_vacancy]
                                 )
-                                ->order('vs.date asc, sc.date asc')
+                                ->order('vs.date asc')
                                 ->limit($this->limit)
                                 ->offset($this->offset)
                                 ->queryAll();
