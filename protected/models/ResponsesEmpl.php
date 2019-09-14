@@ -886,6 +886,13 @@ class ResponsesEmpl extends Responses
         {
             $query = $db->createCommand()
                                 ->select("
+                                    sc.id sc_id,
+                                    sc.type,
+                                    sc.name vacancy,
+                                    sc.status sc_status,
+                                    sc.user sc_user,
+                                    DATE_FORMAT(sc.date,'%H:%i %d.%m.%Y') sc_date,
+                                    UNIX_TIMESTAMP(sc.date) usc_date,
                                     r.id_user vs_user,
                                     vs.id vs_id,
                                     vs.status vs_status, 
@@ -893,7 +900,7 @@ class ResponsesEmpl extends Responses
                                     UNIX_TIMESTAMP(vs.date) uvs_date,
                                     DATE_FORMAT(vs.date, '%H:%i %d.%m.%Y') vs_date")
                                 ->from('empl_vacations ev')
-                                // ->leftjoin('service_cloud sc','sc.name=ev.id')
+                                ->leftjoin('service_cloud sc','sc.name=ev.id')
                                 ->leftjoin('vacation_stat vs','vs.id_vac=ev.id')
                                 ->leftjoin('resume r','r.id=vs.id_promo')
                                 ->where(
