@@ -168,7 +168,7 @@ class ResponsesApplic extends Responses
                 vs.status,
                 DATE_FORMAT(vs.date, '%d.%m.%Y') rdate,
                 ev.id id_vacancy,
-                ev.title,
+                ev.title
           FROM vacation_stat vs
           INNER JOIN empl_vacations ev ON ev.id = vs.id_vac
           WHERE vs.id_promo = {$id_resume} AND (vs.isresponse=1 OR vs.isresponse=2)
