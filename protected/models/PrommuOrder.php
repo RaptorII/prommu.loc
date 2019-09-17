@@ -373,99 +373,65 @@ class PrommuOrder {
 
 
 
-    public function outstaffing($data){
-        $id = $data['account'];
-        $sql = "SELECT  r.id, r.firstname, r.lastname, r.name
-            FROM employer r
-            LEFT JOIN user u ON u.id_user = r.id_user
-            WHERE r.id_user = {$id}";
-        $res = Yii::app()->db->createCommand($sql)->queryAll();
+    public function outstaffing($data)
+    {
+      $model = new Vacancy();
+      $arVacs = $model->getVacanciesById($data['vacancy']);
 
-        $name = $res[0]['name'];
-        $firstname = $res[0]['firstname'];
-        $lastname = $res[0]['lastname'];
+      $arInsert = [
+        'id' => $data['account'],
+        'consult' => $data['consultation'],
+        'vacancy' => implode(',',$data['vacancy']),
+        'text' => $data['other-contact'],
+        'email' => ($data['email'] ? $data['email'] : ''),
+        'phone' => ($data['phone'] ? $data['phone'] : ''),
+        'type' => $data['service'],
+        'date' => date('Y-m-d H:i:s')
+      ];
+      $arServices = $arContacts = [];
+      !empty($data['email']) && $arContacts[] = $data['email'];
+      !empty($data['phone']) && $arContacts[] = $data['phone'];
 
+      if ($data['service'] == "outstaffing")
+      {
+        $arInsert['rezident'] = $data['registration-rf'];
+        $arInsert['nrezident'] = $data['registration-mr'];
+        !empty($data['registration-mr']) && $arServices[] = $data['registration-mr'];
+        !empty($data['registration-rf']) && $arServices[] = $data['registration-rf'];
+        !empty($data['consultation']) && $arServices[] = $data['consultation'];
+      }
+      elseif ($data['service'] == "outsourcing")
+      {
+        $arInsert['advertising'] = $data['advertising'];
+        $arInsert['control'] = $data['control'];
+        !empty($data['control']) && $arServices[] = $data['control'];
+        !empty($data['advertising']) && $arServices[] = $data['advertising'];
+        !empty($data['consultation']) && $arServices[] = $data['consultation'];
+      }
+      $strVacs = '';
+      foreach ($arVacs as $v)
+      {
+        $strVacs .= '<a href="' . Mailing::mainParams()[5]['name'] . DS . $v['id']
+          . '" style="color:#abb837">' . $v['title'] . ' (' . $v['id'] . ')</a>,<br>';
+      }
 
-        $email = $data['email'] ? $data['email']:"";
-        $phone = $data['phone'] ? $data['phone']:"";
-        $other = $data['other-contact'];
-        $vacancy = $data['vacancy'][0];
-        $id = $data['account'];
-        $consult = $data['consultation'];
-        $rezident = $data['registration-rf'];
-        $nrezident = $data['registration-mr'];
-        $advertising = $data['advertising'];
-        $control = $data['control'];
-        $type = $data['service'];
+      $name = trim(Share::$UserProfile->exInfo->efio);
+      empty($name) && $name = 'Пользователь';
+      Mailing::set(26,
+        [
+          'service_name' => 'Аутсорсинг',
+          'id_user' => $data['account'],
+          'name_user' => $name,
+          'company_user' => Share::$UserProfile->exInfo->name,
+          'subservices' => implode(',<br>', $arServices),
+          'vacancies' => $strVacs,
+          'contacts_user' => implode(',<br>', $arContacts),
+          'message_user' => $data['other-contact'],
+        ],
+        UserProfile::$EMPLOYER
+      );
 
-        $sql = "SELECT e.title
-            FROM empl_vacations e 
-            WHERE e.id = {$vacancy}";
-        $resu = Yii::app()->db->createCommand($sql)->queryAll();
-        $title = $resu[0]['title'];
-        if($type == "outstaffing") {
-             $res = Yii::app()->db->createCommand()
-                        ->insert('outstaffing', array('id' => $id,
-                                'consult' => $consult,
-                                'rezident' => $rezident, 
-                                'nrezident' => $nrezident,
-                                'vacancy' => $vacancy,
-                                'text' => $other,
-                                'email' => $email,
-                                'phone' => $phone,
-                                'type' => $type,
-                                'date' => date('Y-m-d H:i:s')
-                            ));
-        $message = '<p style="font-size:16px;">На сайте prommu.com был оставлен запрос от клиента по Услуге Аутстаффинг </p>
-                    <br/>
-
-                 <p style=" font-size:16px;">
-                    <br/>
-               Пользователь: ' .$id.' '.$lastname.' '.$firstname.'
-               <br/>Компания: '.$name.'<br/>
-               Услуги: '.$nrezident.', '.$rezident.', '.$consult.' <br/>Вакансия: '.$vacancy.' '.$title.'<br/>
-               Контактные данные: '.$phone.' '.$email.'<br/>
-                Сообщение:'.$other.'</p>';
-            Share::sendmail('denisgresk@gmail.com', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
-            Share::sendmail('dsale_1@plan-o-gram.ru', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
-            Share::sendmail('prommu.servis@gmail.com', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
-            Share::sendmail('Job@mandarin-agency.ru', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
-            Share::sendmail('e.market.easss@gmail.com', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
-            Share::sendmail('client@btl-me.ru', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
-            Share::sendmail('prommucom@gmail.com', "Prommu.com. Заказ Услуги Аутстаффинга!", $message);
-        }
-        elseif($type == "outsourcing") {
-                $res = Yii::app()->db->createCommand()
-                        ->insert('outstaffing', array('id' => $id,
-                                'consult' => $consult,
-                                'advertising' => $advertising, 
-                                'control' => $control,
-                                'vacancy' => $vacancy,
-                                'text' => $other,
-                                'email' => $email,
-                                'phone' => $phone,
-                                'type' => $type,
-                                'date' => date('Y-m-d H:i:s')
-                            ));
-            $message = '<p style="font-size:16px;">На сайте prommu.com был оставлен запрос от клиента по Услуге Аутсорсинг</p>
-                    <br/>
-
-                <p style=" font-size:16px;">
-               Пользователь: '.$id.' '.$lastname.' '.$firstname.'<br/>
-                <br/>Компания: '.$name.'<br/>
-               Услуги: '.$control.', '.$advertising.', '.$consult.'<br/> Вакансия: '.$vacancy.' '.$title.'
-                    <br/>
-                Контактные данные: '.$phone.' '.$email.'<br/>
-                Сообщение:'.$other.'</p>';
-            Share::sendmail('denisgresk@gmail.com', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
-            Share::sendmail('dsale_1@plan-o-gram.ru', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
-            Share::sendmail('prommu.servis@gmail.com', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
-            Share::sendmail('Job@mandarin-agency.ru', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
-            Share::sendmail('e.market.easss@gmail.com', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
-            Share::sendmail('client@btl-me.ru', "Prommu.com. Заказ Услуги Аутсорсинга!", $message);
-            Share::sendmail('prommucom@gmail.com', "Prommu.com. Заказ Услуги Аутстаффинга!", $message);
-        }
-
+      return Yii::app()->db->createCommand()->insert('outstaffing', $arInsert);
     }
     /*
     *       Заказ услуги Премиум

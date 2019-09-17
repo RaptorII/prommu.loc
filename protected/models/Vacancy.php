@@ -4729,4 +4729,16 @@ WHERE id_vac = {$inVacId}";
         ->where('id_user=:id',[':id'=>$id_user])
         ->queryAll();
     }
+    /**
+     * @param $arId
+     * @return array|CDbDataReader
+     */
+    public function getVacanciesById($arId)
+    {
+      return Yii::app()->db->createCommand()
+        ->select('*')
+        ->from($this->tableName())
+        ->where(['in','id',$arId])
+        ->queryAll();
+    }
 }

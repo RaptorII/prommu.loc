@@ -52,8 +52,4 @@
     <div class="service__text"><? echo $viData['service']['html']; ?></div>
   </div>
 </div>
-<div class="hidden">
-  <div class="creation-vacancy_mess prmu__popup">Нам очень жаль, но размещать вакансии могут только зарегистрированные работодатели<br><a href="<?=MainConfig::$PAGE_REGISTER . '?type=3'?>">Зарегистрироваться</a>
-  </div>
-</div>
 <? require __DIR__ . '/popups.php'; ?>

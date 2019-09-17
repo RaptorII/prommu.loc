@@ -19,6 +19,7 @@ return array(
         'application.models.exceptions.*',
         'application.models.project.*',
         'application.models.mailing.*',
+        'application.models.services.*',
         'application.components.*',
         'ext.eoauth.*',
         'ext.eoauth.lib.*',

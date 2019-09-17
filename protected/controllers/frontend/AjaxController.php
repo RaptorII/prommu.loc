@@ -218,9 +218,9 @@ class AjaxController extends AppController
      */
     public function actionCreateServiceOrder()
     {
-        $res = (new Services())->createServiceOrder();
-        echo CJSON::encode($res);
-        Yii::app()->end();
+      $model = new ServiceGuestOrder();
+      echo CJSON::encode($model->setOrder());
+      Yii::app()->end();
     }
 
 

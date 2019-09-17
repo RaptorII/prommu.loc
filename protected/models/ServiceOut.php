@@ -111,7 +111,7 @@ class ServiceOut extends CActiveRecord
         return new CActiveDataProvider($this, array(
             'criteria'=>$criteria,
             'pagination' => array('pageSize' => 50,),
-            'sort' => ['defaultOrder'=>'id desc'],
+            'sort' => ['defaultOrder'=>'date desc'],
         ));
     }
 

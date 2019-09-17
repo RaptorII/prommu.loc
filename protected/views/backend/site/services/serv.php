@@ -169,10 +169,17 @@ function ShowType($vac)
 
 }
 
-function ShowVac($vac)
+function ShowVac($idVacs)
 {
-   return "<a href='https://prommu.com/admin/site/VacancyEdit/$vac'>$vac</a>";
+  $result = '';
+  $arItems = Share::explode($idVacs);
 
+  foreach ($arItems as $v)
+  {
+    $result .= "<a href='/admin/site/VacancyEdit/$v'>$v</a><br>";
+  }
+
+  return $result;
 }
 
 function ShowEmpl($empl)

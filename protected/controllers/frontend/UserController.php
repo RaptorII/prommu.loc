@@ -1515,9 +1515,8 @@ class UserController extends AppController
         $Services = new Services();
         $title = 'Услуги портала Prommu.com';
         $this->setBreadcrumbs($title, MainConfig::$PAGE_SERVICES);
-        $type = Share::$UserProfile->type;
         $data = $Services->getServiceData($id);
-        $data = array_merge(array('service' => $data), $Services->getServices($id));
+        $data = array_merge(['service' => $data], $Services->getServices($id));
         switch ($id){
             case 'premium-vacancy':
                 !Share::isEmployer() && $this->redirect(MainConfig::$PAGE_SERVICES);
@@ -1536,7 +1535,7 @@ class UserController extends AppController
 
                 if(Yii::app()->getRequest()->getParam('users') && $data['price']>=0){
                     $data['emp'] = Share::$UserProfile->getProfileDataView()['userInfo'];
-                    $data['vac'] = (new Vacancy())->getVacancyInfoOrig($vac);
+                    $data['vac'] = (new Vacancy())->getVacancyInfo($vac);
                     $data['user'] = reset(Share::getUsers([Share::$UserProfile->exInfo->id]));
                     $attr = Share::$UserProfile->getUserAttribute(['key'=>'inn']);
                     isset($attr[0]['val']) && $data['user']['inn']=$attr[0]['val'];
@@ -1618,9 +1617,7 @@ class UserController extends AppController
                 break;
 
             case 'publication-vacancy-social-net':
-                if($type==2 || !in_array($type, [2,3]))
-                    $this->redirect(MainConfig::$PAGE_SERVICES);
-
+                !Share::isEmployer() && $this->redirect(MainConfig::$PAGE_SERVICES);
                 $data = (new Vacancy())->postToSocialService();
                 if(isset($data['vacs'])) {
                     $view = MainConfig::$VIEWS_SERVICE_DUPLICATION;
@@ -1631,16 +1628,14 @@ class UserController extends AppController
                 break;
 
             case 'outstaffing':
-                if($type==2)
-                    $this->redirect(MainConfig::$PAGE_SERVICES);
+                !Share::isEmployer() && $this->redirect(MainConfig::$PAGE_SERVICES);
                 $vac = new Vacancy();
                 $data = $vac->getVacanciesPrem();
                 $view = MainConfig::$VIEWS_SERVICE_OUTSTAFFING_VIEW;
                 break;
 
             case 'personal-manager-outsourcing':
-                if($type==2 || !in_array($type, [2,3]))
-                    $this->redirect(MainConfig::$PAGE_SERVICES);
+                !Share::isEmployer() && $this->redirect(MainConfig::$PAGE_SERVICES);
                 $vac = new Vacancy();
                 $data = $vac->getVacanciesPrem();
                 $view = MainConfig::$VIEWS_SERVICE_OUTSOURCING_VIEW;
@@ -1663,8 +1658,7 @@ class UserController extends AppController
                 break;
 
             case 'api-key-prommu':
-                if($type==2 || !in_array($type, [2,3]))
-                    $this->redirect(MainConfig::$PAGE_SERVICES);
+                !Share::isEmployer() && $this->redirect(MainConfig::$PAGE_SERVICES);
                 $view = MainConfig::$VIEWS_SERVICE_API_VIEW;
                 break;
                

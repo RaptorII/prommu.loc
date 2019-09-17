@@ -30,17 +30,12 @@ class Services extends Model
 
         return $data;
     }
-
-
-
     /**
-     * получаем все услуги
+     * @return array|CDbDataReader
      */
-    public function getServices()
+    public function getDataAll()
     {
-      $arRes = $arIdUsers = $arIdVac = [];
-
-      $query = Yii::app()->db->createCommand()
+      return Yii::app()->db->createCommand()
         ->select(
           'p.id,
           p.link, 
@@ -54,10 +49,19 @@ class Services extends Model
           'pages_content pc',
           'p.id = pc.page_id AND pc.lang=:lang',
           [':lang'=>Yii::app()->session['lang']]
-          )
+        )
         ->where('p.group_id=3')
         ->order('npp')
         ->queryAll();
+    }
+    /**
+     * получаем все услуги
+     */
+    public function getServices()
+    {
+      $arRes = $arIdUsers = $arIdVac = [];
+
+      $query = $this->getDataAll();
 
       // получаем меню услуг
       $menu = $this->getMenu();
@@ -159,59 +163,6 @@ class Services extends Model
 
       return $arRes;
     }
-
-
-
-    /**
-     * Сделать заказ на услугу
-     */
-    public function createServiceOrder()
-    {
-        $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
-        $fio = filter_var(Yii::app()->getRequest()->getParam('fio'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $tel = filter_var(Yii::app()->getRequest()->getParam('tel'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $email = filter_var(Yii::app()->getRequest()->getParam('email'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $referer = filter_var(Yii::app()->getRequest()->getParam('referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $transition = filter_var(Yii::app()->getRequest()->getParam('transition'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $canal = filter_var(Yii::app()->getRequest()->getParam('canal'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $campaign = filter_var(Yii::app()->getRequest()->getParam('campaign'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $content = filter_var(Yii::app()->getRequest()->getParam('content'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $keywords = filter_var(Yii::app()->getRequest()->getParam('keywords'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $point = filter_var(Yii::app()->getRequest()->getParam('point'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $last_referer = filter_var(Yii::app()->getRequest()->getParam('last_referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $roistat = (isset($_COOKIE['roistat_visit'])) ? $_COOKIE['roistat_visit'] : "(none)";
-
-        $res = Yii::app()->db->createCommand()
-            ->insert('service_order', array(
-                'id_se' => $id,
-                'fio' => $fio,
-                'tel' => $tel,
-                'email' => $email,
-                'crdate' => date("Y-m-d H:i:s"),
-            ));
-        // Письмо админу о заказе услуги
-        Mailing::set(19,
-          [
-            'service_id' => $id,
-            'name_user' => $fio,
-            'service_theme' => $tel,
-            'service_email' => $email,
-            'service_traffic' => $referer,
-            'service_transition' => $transition,
-            'service_canal' => $canal,
-            'service_campaign' => $campaign,
-            'service_content' => $content,
-            'service_keywords' => $keywords,
-            'service_point' => $point,
-            'service_referer' => $last_referer,
-            'service_roistat' => $roistat
-          ]
-        );
-
-        return array('res' => $res);
-    }
-
-
 
     public function orderPrommu()
     {
@@ -434,6 +385,7 @@ class Services extends Model
     {
       switch ($code)
       {
+        case 'creation-vacancy': $name = 'Создание вакансии'; break;
         case 'vacancy': $name = 'Премиум вакансия'; break;
         case 'repost': $name = 'Публикация в соцсетях'; break;
         case 'email': $name = 'Электронная почта'; break;

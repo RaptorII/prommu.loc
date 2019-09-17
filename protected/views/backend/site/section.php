@@ -90,6 +90,12 @@
 
 		<?php elseif($section=='service'): //Услуги ?>
 			<?php $title = 'Услуги'; ?>
+      <li>
+        <a href="<?=$hUrl?>services?type=guest-order">
+          <i class="glyphicon glyphicon-envelope"></i>
+          <span>Заказ услуг гостями</span>
+        </a>
+      </li>
 			<li>
 				<a href="<?=$hUrl?>services?type=vacancy">
                 	<i class="glyphicon glyphicon-star-empty"></i>

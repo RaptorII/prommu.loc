@@ -50,6 +50,7 @@ $cntPOPsh = $promoCounters['push'];    // count push
 $cntPORpt = $promoCounters['repost'];  // count repost
 $cntPOVcc = $promoCounters['vacancy']; // count vacancy
 $cntPOApi = $promoCounters['api'];     // count api
+$cntOrders = ServiceGuestOrder::getCount();
 
 $cntPrmCrd = $modelPrmCard->getNewCnt();
 
@@ -61,7 +62,7 @@ $cntOutStf = $modelServiceOut->getNewCnt('outstaffing');
 $cntGeoLct = 0; // in work at 19.04.2019;
 
 
-$cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutSrc + $cntOutStf;     // count summ all counts
+$cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutSrc + $cntOutStf + $cntOrders;     // count summ all counts
 
 
 ?>
@@ -303,6 +304,15 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
                             <span class="hidden-xs">Услуги</span>
                         </a>
                         <ul class="dropdown-menu">
+                            <? if($cntOrders): ?>
+                              <li class="user-header">
+                                <a href="<?= $hUrl ?>services?type=guest-order">
+                                  <i class="glyphicon glyphicon-envelope"></i>
+                                  <span>Заказ услуг гостями</span>
+                                </a>
+                                <span class="label label-danger"><?=$cntOrders?></span>
+                              </li>
+                            <? endif; ?>
                             <li class="user-header">
                                 <a href="<?= $hUrl ?>services?type=vacancy">
                                     <i class="glyphicon glyphicon-star-empty"></i>
@@ -622,6 +632,12 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu<?= $enable ? ' menu-open' : '' ?>"<?= !$enable ? ' style="display:none"' : '' ?>>
+                        <li class="<?= ($curId == 'services' && $_GET['type'] == 'guest-order' ? 'active' : '') ?>">
+                          <a href="<?= $hUrl ?>services?type=guest-order">
+                            <i class="glyphicon glyphicon-envelope"></i>
+                            <span>Заказ услуг гостями</span>
+                          </a>
+                        </li>
                         <li class="<?= ($curId == 'services' && $_GET['type'] == 'vacancy' ? 'active' : '') ?>">
                             <a href="<?= $hUrl ?>services?type=vacancy">
                                 <i class="glyphicon glyphicon-star-empty"></i>

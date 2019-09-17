@@ -1421,57 +1421,81 @@ class SiteController extends Controller
 
     public function actionServicess()
     {
+      $this->checkAccess('Услуги');
 
-        if(strpos($this->user_access, "Услуги") === false) {
-            $this->render('access');
-            return;
-        }
-            if(self::isAuth()) {
-            $model = new ServiceOut();
-            $model->unsetAttributes();  // clear any default values
-            $model->search();
-            $title = 'Услуги';
-            if(isset($_GET['type'])) {
-                switch ($_GET['type']) {
-                    case 'outstaffing': $title = 'Заказ аутстаффинга'; break;
-                    case 'outsourcing': $title = 'Заказ аутсорсинга'; break;
-                    case 'api': $title = 'Заказ API'; break;
+      $model = new ServiceOut();
+      $model->unsetAttributes();  // clear any default values
+      $model->search();
+      $title = 'Услуги';
+      if(isset($_GET['type']))
+      {
+          switch ($_GET['type'])
+          {
+              case 'outstaffing': $title = 'Заказ аутстаффинга'; break;
+              case 'outsourcing': $title = 'Заказ аутсорсинга'; break;
+              case 'api': $title = 'Заказ API'; break;
 
-                }
-                $model->type=$_GET['type'];
-            }
-            $this->setPageTitle($title);
-            $this->breadcrumbs = array('Услуги'=>array('sect?p=service'),'1'=>$title);
-            $this->render('services/serv', array('model'=>$model));
-        }
+          }
+          $model->type=$_GET['type'];
+      }
+      $this->setPageTitle($title);
+      $this->breadcrumbs = array('Услуги'=>array('sect?p=service'),'1'=>$title);
+      $this->render('services/serv', array('model'=>$model));
     }
 
     public function actionServices()
     {
+      $this->checkAccess('Услуги');
+      $title = 'Услуги';
+      $arBread = ['Услуги'=>['sect?p=service']];
+      $id = Yii::app()->getRequest()->getParam('id');
+      $type = Yii::app()->getRequest()->getParam('type');
 
-       if(strpos($this->user_access, "Услуги") === false) {
-            $this->render('access');
-            return;
-        } 
-            if(self::isAuth()) {
-            $model = new Service();
-            $model->unsetAttributes();  // clear any default values
-            $model->search();
-            $title = 'Услуги';
-            if(isset($_GET['type'])) {
-                switch ($_GET['type']) {
-                    case 'vacancy': $title = 'Премиум заявки'; break;
-                    case 'sms': $title = 'СМС приглашения'; break;
-                    case 'push': $title = 'PUSH приглашения'; break;
-                    case 'email': $title = 'EMAIL приглашения'; break;
-                    case 'repost': $title = 'Публикации в соцсетях'; break;
-                }
-                $model->type=$_GET['type'];
-            }
-            $this->setPageTitle($title);
-            $this->breadcrumbs = array('Услуги'=>array('sect?p=service'),'1'=>$title);
-            $this->render('services/index', array('model'=>$model));
+      if($type=='guest-order')
+      {
+        $model = new ServiceGuestOrder();
+        $title = 'Заказ услуг гостями';
+        $arBread[$title] = ['services?type=guest-order'];
+        Yii::app()->getClientScript()->registerCssFile(
+          Yii::app()->request->baseUrl . '/css/template.css'
+        );
+
+        if(intval($id)>0)
+        {
+          $title = 'Заказ #' . $id;
+          $arBread[] = $title;
+          $view = 'services/guest-order/item';
+          $model->setAdminViewed($id);
         }
+        else
+        {
+          $view = 'services/guest-order/list';
+        }
+      }
+      else
+      {
+        $model = new Service();
+        $model->unsetAttributes();
+        $model->search();
+        if(!empty($type))
+        {
+          switch ($type)
+          {
+            case 'vacancy': $title = 'Премиум заявки'; break;
+            case 'sms': $title = 'СМС приглашения'; break;
+            case 'push': $title = 'PUSH приглашения'; break;
+            case 'email': $title = 'EMAIL приглашения'; break;
+            case 'repost': $title = 'Публикации в соцсетях'; break;
+          }
+          $model->type=$type;
+          $arBread[] = $title;
+        }
+        $view = 'services/index';
+      }
+
+      $this->setPageTitle($title);
+      $this->breadcrumbs = $arBread;
+      $this->render($view, ['model'=>$model]);
     }
 
     public function actionFeedback()

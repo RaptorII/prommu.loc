@@ -103,7 +103,7 @@ var ServicesList = (function () {
             justReturn: 1
         });
         e.preventDefault();
-        checkFields = new InputFields;
+        var checkFields = new InputFields;
         if(!checkFields.checkPhone('#service-phone')) ret = false;
         if(!checkFields.checkEmail('#service-email')) ret = false;
         if (ret) {
@@ -164,12 +164,19 @@ var ServicesList = (function () {
         else if(type==='publish-vacancy'){
             var itm = $(".services-form.premium-form.vacancy").clone();
             itm.toggleClass('services-form tmpl');
-            ModalWindow.open({ 
-                content: itm, 
-                action: { active: 0 }, 
+            ModalWindow.open({
+                content: itm,
+                action: { active: 0 },
                 additionalStyle:'light-ver vacancy',
                 afterOpen: function () { $(".mw-win").css({position:'fixed', top:'40%'}) }
             });
+        }
+        else if(type==='creation-vacancy'){
+          $.fancybox.open({
+            src: '.creation-vacancy_mess.prmu__popup',
+            type: 'inline',
+            touch: false
+          });
         }
         else{
             $.get(MainConfig.AJAX_GET_GETSERVICE, { id: id }, function (data) {
@@ -177,7 +184,7 @@ var ServicesList = (function () {
                 var itm = $(".form-order-tpl").clone();
                 itm.attr('data-title', data.name);
                 itm.find('#HiId').val(id);
-                checkFields = new InputFields;
+                var checkFields = new InputFields;
                 checkFields.setPhoneMask(itm.find('#service-phone'));
                 itm.toggleClass('form-order-tpl tmpl form-order');
                 ModalWindow.open({ 
@@ -200,24 +207,3 @@ var ServicesList = (function () {
 $(document).ready(function () {
   new ServicesList();
 });
-
-/*
-$(function fix() {
-
-    //fixed menu in personal account
-    if ( $(window).width() < 768 ) {
-        var posAccMenu = $('.personal-acc__menu').offset().top - 100;
-        $(window).on('resize scroll', scrollAccMenu);
-        scrollAccMenu();
-
-        function scrollAccMenu() {
-            (
-                $(document).scrollTop() > posAccMenu
-                &&
-                $(window).width() < 768
-            )
-                ? $('.personal-acc__menu').addClass('fixed')
-                : $('.personal-acc__menu').removeClass('fixed');
-        }
-    }
-});*/

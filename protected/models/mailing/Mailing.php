@@ -85,7 +85,7 @@ class Mailing extends CActiveRecord
 							5 => array(
 										'name' => "#PAGE_ADMIN_USER_VACANCY#",
 										'pattern' => "/#PAGE_ADMIN_USER_VACANCY#/",
-										'value' => '/admin/site/VacancyEdit',
+										'value' => Subdomain::site() . '/admin/site/VacancyEdit',
 										'description' => "Страница вакансии в административной части"
 									),
 							6 => array(
@@ -215,6 +215,7 @@ class Mailing extends CActiveRecord
 		{
 			foreach ($receiver as $email)
 			{
+        $email = trim($email);
 				if(filter_var($email,FILTER_VALIDATE_EMAIL))
 				{
 					$arRes[] = array(
@@ -228,6 +229,7 @@ class Mailing extends CActiveRecord
 		}
 		else // если email один
 		{
+      $receiver = trim($receiver);
 			if(filter_var($receiver,FILTER_VALIDATE_EMAIL))
 			{
 				$arRes[] = array(

@@ -58,40 +58,29 @@
       #DiContent #MWwrapper .loading i, #MWwrapper .loading i { display: block; width: 32px; height: 32px; background: transparent url(/theme/pic/loading1.gif) 0 0 no-repeat; }
       #DiContent #MWwrapper .button-action button,#MWwrapper .button-action button{color:#fff;background:#ff8e15!important;font-size:16px;border:none;border-radius:0;width:100px}.mw-win .order-success{color:#fff;font-size:18px;text-align:center}
   </style>
-<?php 
-  // если не моб устройство
-
-  // endif; 
-?>
 <?
-  $id = Share::$UserProfile->id;
-  $sql = "SELECT s.val phone
-      FROM user_attribs s
-      WHERE s.id_us = {$id}
-      AND s.id_attr = 1";
-  $res = Yii::app()->db->createCommand($sql)->queryScalar();
+//
 ?>
 <form action="" class="form-order-tpl tmpl" id="F1serviceOrder" data-header="Заказать услугу">
-  <input type="hidden" name="id" id="HiId"/>
+  <input type="hidden" name="code" id="HiId"/>
   <label class="field-t2-hor order-service__label icon1" title="Имя и Фамилия">
-    <input type="text" name="fio" placeholder="Имя и Фамилия" data-field-check='name:ФИО,empty' value="<?= Share::$UserProfile->exInfo->lastname ?>" class="order-service__input fio"/>
+    <input type="text" name="fio" placeholder="Имя и Фамилия" class="order-service__input fio" autocomplete="off"/>
   </label>
   <label class="field-t2-hor order-service__label icon2" title="Мобильный телефон">
-    <input data-field-filter='digits:+,( );max:12' type="text" id="service-phone" name="tel" placeholder="Телефон" data-field-check='name:Телефон,empty' value="<?= $res ?>" class="order-service__input"/>
+    <input type="text" id="service-phone" name="tel" placeholder="Телефон" class="order-service__input" autocomplete="off"/>
   </label>
   <label class="field-t2-hor order-service__label icon3" title="Email">
-    <input type="text" name="email" placeholder="Email" value="<?= Share::$UserProfile->exInfo->email ?>" class="order-service__input" id="service-email"/>
+    <input type="text" name="email" placeholder="Email" class="order-service__input" id="service-email"  autocomplete="off"/>
   </label>
   <div class="btn-white-green-2 field-t2-hor">
     <button type="submit" class="btn-order-create order-service__btn">Заказать</button>
     <span class="order-service__btn order-service__btn-reg">
       <ul class="order-service__reg-list">
-        <li><a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2'))?>" class="items">Я работодатель</a></li>
-        <li><a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1'))?>" class="items">Я ищу работу</a></li>
+        <li><a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, ['p' => '2'])?>" class="items">Я работодатель</a></li>
+        <li><a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, ['p' => '1'])?>" class="items">Я ищу работу</a></li>
       </ul>Регистрация
     </span>
   </div>
-  <input type="hidden" class="id" name="id" value="<?= Share::$UserProfile->exInfo->id ?>">
   <input type="hidden" class="referer" name="referer" value="">
   <input type="hidden" class="transition" name="transition" value="">
   <input type="hidden" class="canal" name="canal" value="">
@@ -246,4 +235,12 @@
   <div class="form-str2__header">Ваш запрос по услуге успешно отправлен. Наш менеджер свяжется с Вами в течении ближайшего времени.</div>
   <br>
   <i>С найлучшими пожеланиями команда Промму!</i>
+</div>
+<?
+/*
+
+*/
+?>
+<div class="creation-vacancy_mess prmu__popup tmpl">Нам очень жаль, но размещать вакансии могут только зарегистрированные работодатели<br>
+  <a href="<?=MainConfig::$PAGE_REGISTER . '?type=3'?>">Зарегистрироваться</a>
 </div>

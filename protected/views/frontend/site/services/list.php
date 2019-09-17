@@ -9,11 +9,6 @@ $arCustom = ['outstaffing','personal-manager-outsourcing','medical-record']; // 
 $arGuest = ['prommu_card','medical-record']; // для гостя
 $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
 ?>
-<?/*
-echo '<pre>';
-print_r($viData['history']);
-echo '</pre>';
-*/?>
 <div class="row">
   <div class="col-xs-12 services">
     <?
@@ -145,7 +140,7 @@ echo '</pre>';
                   </div>
                   <div
                     class="services__order order-service"
-                    data-id="<?=$m['id']?>"
+                    data-id="<?=$m['icon']?>"
                     data-type="<?=$m['icon']?>"
                   >
                     <? if(Share::isEmployer() && $m['icon']=='creation-vacancy'): ?>
@@ -206,7 +201,7 @@ echo '</pre>';
                       </div>
                       <div
                         class="services__order order-service"
-                        data-id="<?=$s['id']?>"
+                        data-id="<?=$s['icon']?>"
                         data-type="<?=$s['icon']?>"
                       >
                         <? if(!Share::isGuest() || in_array($s['icon'], $arGuest)): ?>

@@ -206,7 +206,7 @@ class Subdomain
 				$arCnt[$c['region']]++;
 
 		if(!$arCnt[$sId]){ // Редиректим только если вообще нет городов субдомена
-			foreach ($arCnt as $id => $cnt) 
+			foreach ($arCnt as $id => $cnt)
 				if($cnt>0 && $cnt==sizeof($arRes))
 					self::setRedirect($idus, $id, true);
 
@@ -261,7 +261,7 @@ class Subdomain
 					$arCnt[$c['region']]++;
 
 			$sId = self::getId();
-			foreach ($arCnt as $id => $cnt) 
+			foreach ($arCnt as $id => $cnt)
 				if($cnt>0 && $cnt==sizeof($arC) && $id!=$sId) {
 					if(in_array($type, [2,3]))
 						self::setRedirect($idus, $id, true);
@@ -270,7 +270,7 @@ class Subdomain
 						$url = 'Location: ' . $arData[$id]['url'] . $_SERVER['REQUEST_URI'];
 						header($url);
 						exit();
-					}	
+					}
 				}
 		}
 	}
@@ -317,13 +317,13 @@ class Subdomain
 		$sId = self::getId();
 		if($id!=$sId) {
 			$arSub = self::getData();
-			$url = 'Location: ' 
-				. $arSub[$id]['url'] 
+			$url = 'Location: '
+				. $arSub[$id]['url']
 				. str_replace('#ID#', $idus, self::$REDIRECT);
 
 			if($hasParams) {
 				$arUrl = explode('?', $_SERVER['REQUEST_URI']);
-				$url .= substr($arUrl[0], 1); 
+				$url .= substr($arUrl[0], 1);
 				if(strlen($arUrl[1])>0) {
 					$url .= DS . '?' . str_replace('&', ',', $arUrl[1]);
 				}
@@ -369,18 +369,18 @@ class Subdomain
 
 			$arData = self::getData();
 			$sId = self::getId();
-			foreach ($arCnt as $id => $cnt) 
+			foreach ($arCnt as $id => $cnt)
 				if($cnt>0 && $cnt==sizeof($arC) && $id!=$sId) {
 					if(in_array($type, [2,3])) {
 						$url = $arData[$id]['url'] . str_replace('#ID#', $idus, self::$REDIRECT);
 						$arUrl = explode('?', $_SERVER['REQUEST_URI']);
-						$url .= substr($arUrl[0], 1); 
+						$url .= substr($arUrl[0], 1);
 						if(strlen($arUrl[1])>0)
 							$url .= DS . '?' . str_replace('&', ',', $arUrl[1]);
 					}
 					else {
-						$url = $arData[$id]['url'] . $_SERVER['REQUEST_URI'];	
-					}	
+						$url = $arData[$id]['url'] . $_SERVER['REQUEST_URI'];
+					}
 				}
 		}
 		if(strlen($url))
