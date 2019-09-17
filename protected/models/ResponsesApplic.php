@@ -192,7 +192,7 @@ class ResponsesApplic extends Responses
             }
             
     
-            $v['owner'] = Share::getUsers($v['id_user']);
+            $v['owner'] = Share::getUsersApi($v['id_user']);
             
             switch($v['status'])
             {
