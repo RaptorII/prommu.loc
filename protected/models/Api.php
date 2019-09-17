@@ -1120,7 +1120,7 @@ class Api
                 $salt = '$2a$10$'.substr(str_replace('+', '.', base64_encode(pack('N4', mt_rand(), mt_rand(), mt_rand(),mt_rand()))), 0, 22) . '$';
                 
 
-                 $resume = Yii::app()->db->createCommand()
+            $resume = Yii::app()->db->createCommand()
             ->select("u.isman, u.ismed, u.ishasavto,u.id, u.birthday, u.aboutme, u.firstname, u.lastname ")
             ->from('resume u')
             ->leftJoin('user r', 'r.id_user = u.id_user')
@@ -3478,7 +3478,14 @@ public function vac(){
             if($profile->type == 2){
                 $Response = new ResponsesApplic($profile);
                 
-                $data = $Response->getResponsesApi(['id'=> $idus]);
+                $resume = Yii::app()->db->createCommand()
+                ->select("r.id")
+                ->from('resume r')
+                ->leftJoin('user r', 'r.id_user = u.id_user')
+                ->where('u.id_user = :uid', array(':uid' => $idus))
+                ->queryRow();
+            
+                $data = $Response->getResponsesApi(['id'=> $resume['id']]);
                 
                 if($data){ 
                     return $data;
