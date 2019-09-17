@@ -151,6 +151,52 @@ class ResponsesApplic extends Responses
 
         return $res['cou'];
     }
+    
+        /**
+     * получаем заявки пользователя
+     */
+    public function getResponsesApi($props = [])
+    {
+        $id_resume = $props['id'] ?: Share::$UserProfile->exInfo->id_resume;
+        $arRes = ['items' => []];
+
+        $query = Yii::app()->db->createCommand()
+            ->select("vs.id,
+                vs.status,
+                DATE_FORMAT(vs.date, '%d.%m.%Y') rdate,
+                DATE_FORMAT(ev.crdate, '%d.%m.%Y') bdate,
+                ev.id id_vacancy,
+                ev.title,
+                ev.id_user")
+            ->from('vacation_stat vs')
+            ->leftjoin('empl_vacations ev','ev.id=vs.id_vac')
+            ->where(
+                'vs.id_promo=:id AND (vs.isresponse=:s1 OR vs.isresponse=:s2)',
+                [
+                    ':id'=>$id_resume,
+                    ':s1'=>1,
+                    ':s2'=>2
+                ]
+            )
+            ->order('vs.id desc')
+            ->limit($this->limit)
+            ->offset($this->offset)
+            ->queryAll();
+
+        if(!count($query))
+            return $arRes;
+
+        $arId = array();
+        foreach ($query as $v)
+        {
+            $arRes['items'][$v['id_user']][] = $v;
+            $arId[] = $v['id_user'];
+        }
+        $arRes['users'] = Share::getUsers($arId);
+
+        return $arRes;
+    }
+    
     /**
      * получаем заявки пользователя
      */
