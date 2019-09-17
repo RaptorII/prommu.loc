@@ -211,29 +211,30 @@ class ResponsesApplic extends Responses
                 $v['isresponse'] = 'invite';
             }
             
+
             switch($v['status'])
             {
                 case self::$STATUS_NEW: 
-                    $v['status'] = 'Новая'; 
+                    $v['status'] = 'new'; 
                     break;
                 case self::$STATUS_VIEW: 
-                    $v['status'] = 'Отложенная'; 
+                    $v['status'] = 'view'; 
                     break;
                 case self::$STATUS_REJECT: 
-                    $v['status'] = 'Отклонена'; 
+                    $v['status'] = 'rejected'; 
                     break;
                 case self::$STATUS_APPLICANT_ACCEPT: 
-                    $v['status'] = 'Заявка подтверждена'; 
+                    $v['status'] = 'approved';
                     break;
                 case self::$STATUS_BEFORE_RATING: 
-                    $v['status'] = 'Необходима оценка'; 
+                    $v['status'] = 'rating'; 
                     break;
-                case self::$STATUS_APPLICANT_RATED: 
-                    $v['status'] = 'Соискатель Вас оценил'; 
+                case self::$STATUS_EMPLOYER_RATED: 
+                    $v['status'] = 'rating'; 
                     break;
                 case self::$STATUS_EMPLOYER_RATED:
                 case self::$STATUS_FULL_RATING: 
-                    $v['status'] = 'Проект завершен'; 
+                    $v['status'] = 'archive';
                     break;
             }
             
