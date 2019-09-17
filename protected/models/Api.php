@@ -3981,9 +3981,9 @@ public function vac(){
         try
         {   
             $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
-            // $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            // list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
-            $Vacancy = new Vacancy();
+            $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
+            $Vacancy = new Vacancy($profile);
             $data = $Vacancy->getVacancyInfo($id);
             
            } catch (Exception $e)
