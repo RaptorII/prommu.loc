@@ -160,7 +160,10 @@ class ResponsesApplic extends Responses
         $id_resume = $props['id'] ? $props['id'] : Share::$UserProfile->exInfo->id_resume;
         $arRes = ['responses' => []];
         
+        $limit = $this->limit > 0 ? "LIMIT {$this->offset}, {$this->limit}" : '';
+         
         $sql = "SELECT vs.id,
+                vs.isresponse,
                 vs.status,
                 DATE_FORMAT(vs.date, '%d.%m.%Y') rdate,
                 DATE_FORMAT(ev.crdate, '%d.%m.%Y') bdate,
@@ -169,7 +172,8 @@ class ResponsesApplic extends Responses
                 ev.id_user
           FROM vacation_stat vs
           INNER JOIN empl_vacations ev ON ev.id = vs.id_vac
-          WHERE vs.id_promo = {$id_resume} AND (vs.isresponse=1 OR vs.isresponse=2)";
+          WHERE vs.id_promo = {$id_resume} AND (vs.isresponse=1 OR vs.isresponse=2)
+          {$limit}";
      
         $query = Yii::app()->db->createCommand($sql)->queryAll();
       
