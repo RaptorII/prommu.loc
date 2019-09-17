@@ -164,11 +164,11 @@ class ResponsesApplic extends Responses
          
         $sql = "SELECT vs.id as response_id,
                 vs.isresponse,
+                ev.id_user,
                 vs.status,
                 DATE_FORMAT(vs.date, '%d.%m.%Y') rdate,
                 ev.id id_vacancy,
                 ev.title,
-                ev.id_user
           FROM vacation_stat vs
           INNER JOIN empl_vacations ev ON ev.id = vs.id_vac
           WHERE vs.id_promo = {$id_resume} AND (vs.isresponse=1 OR vs.isresponse=2)
@@ -176,27 +176,7 @@ class ResponsesApplic extends Responses
      
         $query = Yii::app()->db->createCommand($sql)->queryAll();
       
-        // $query = Yii::app()->db->createCommand()
-        //     ->select("vs.id,
-        //         vs.status,
-        //         DATE_FORMAT(vs.date, '%d.%m.%Y') rdate,
-        //         DATE_FORMAT(ev.crdate, '%d.%m.%Y') bdate,
-        //         ev.id id_vacancy,
-        //         ev.title,
-        //         ev.id_user")
-        //     ->from('vacation_stat vs')
-        //     ->leftjoin('empl_vacations ev','ev.id=vs.id_vac')
-        //     ->where(
-        //         'vs.id_promo=:id AND (vs.isresponse=1 OR vs.isresponse=2)',
-        //         [
-        //             ':id'=>$id_resume,
-        //         ]
-        //     )
-        //     ->order('vs.id desc')
-        //     ->limit($this->limit)
-        //     ->offset($this->offset)
-        //     ->queryAll();
-        
+       
         
         if(!count($query))
             return $arRes;
@@ -211,7 +191,9 @@ class ResponsesApplic extends Responses
                 $v['isresponse'] = 'invite';
             }
             
-
+    
+            $v['owner'] = Share::getUsers($v['id_user']);
+            
             switch($v['status'])
             {
                 case self::$STATUS_NEW: 
