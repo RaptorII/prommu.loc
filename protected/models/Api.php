@@ -3478,7 +3478,7 @@ public function vac(){
             if($profile->type == 2){
                 $Response = new ResponsesApplic($profile);
                 
-                $data = $Response->getResponsesRating(['id'=> $idus]);
+                $data = $Response->getResponsesApi(['id'=> $idus]);
                 
                 if($data){ 
                     return $data;
