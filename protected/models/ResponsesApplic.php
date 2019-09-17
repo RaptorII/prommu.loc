@@ -184,9 +184,7 @@ class ResponsesApplic extends Responses
         $query = Yii::app()->db->createCommand()
             ->select("vs.id,
                 vs.status,
-                DATE_FORMAT(vs.date, '%d.%m.%Y') rdate,
-                DATE_FORMAT(ev.crdate, '%d.%m.%Y') bdate,
-             ")
+                DATE_FORMAT(vs.date, '%d.%m.%Y') rdate")
             ->from('vacation_stat vs')
             ->where(
                 'vs.id_promo=:id AND (vs.isresponse=1 OR vs.isresponse=2)',
