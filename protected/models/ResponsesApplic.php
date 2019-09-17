@@ -159,7 +159,20 @@ class ResponsesApplic extends Responses
     {
         $id_resume = $props['id'] ? $props['id'] : Share::$UserProfile->exInfo->id_resume;
         $arRes = ['responses' => []];
-
+        
+        $sql = "SELECT vs.id,
+                vs.status,
+                DATE_FORMAT(vs.date, '%d.%m.%Y') rdate,
+                DATE_FORMAT(ev.crdate, '%d.%m.%Y') bdate,
+                ev.id id_vacancy,
+                ev.title,
+                ev.id_user
+          FROM vacation_stat vs
+          INNER JOIN empl_vacations ev ON ev.id = vs.id_vac
+          WHERE vs.id_promo = {$id_resume} AND (vs.isresponse=1 OR vs.isresponse=2)";
+     
+        $query = Yii::app()->db->createCommand($sql)->queryRow();
+      
         // $query = Yii::app()->db->createCommand()
         //     ->select("vs.id,
         //         vs.status,
