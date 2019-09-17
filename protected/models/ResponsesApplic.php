@@ -204,12 +204,13 @@ class ResponsesApplic extends Responses
         $arId = array();
         foreach ($query as &$v)
         {
-            $arRes['responses'][] = $v;
-            if($v['isreponse'] == 1){
+            
+            if($v['isresponse'] == 1){
                 $v['isresponse'] = 'response';
             } else {
                 $v['isresponse'] = 'invite';
             }
+            
             switch($v['status'])
             {
                 case self::$STATUS_NEW: 
@@ -235,6 +236,8 @@ class ResponsesApplic extends Responses
                     $v['status'] = 'Проект завершен'; 
                     break;
             }
+            
+            $arRes['responses'][] = $v;
 
         }
        
