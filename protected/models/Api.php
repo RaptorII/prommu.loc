@@ -3543,7 +3543,7 @@ public function vac(){
             $idvac = filter_var(Yii::app()->getRequest()->getParam('idvac', 0), FILTER_SANITIZE_NUMBER_INT);
             $id = filter_var(Yii::app()->getRequest()->getParam('id', 0), FILTER_SANITIZE_NUMBER_INT);
             $idres = filter_var(Yii::app()->getRequest()->getParam('idres', 0), FILTER_SANITIZE_NUMBER_INT);
-            $status = filter_var(Yii::app()->getRequest()->getParam('status', 0), FILTER_SANITIZE_NUMBER_INT);
+            $status = Yii::app()->getRequest()->getParam('status');
             $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             // проверка токена, получаем профиль
             list($idus, $profile, $dat) = $this->checkAccessToken($accessToken);
