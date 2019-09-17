@@ -3479,9 +3479,8 @@ public function vac(){
                 $Response = new ResponsesApplic($profile);
                 
                 $resume = Yii::app()->db->createCommand()
-                ->select("r.id")
-                ->from('resume r')
-                ->leftJoin('user r', 'r.id_user = u.id_user')
+                ->select("u.id")
+                ->from('resume u')
                 ->where('u.id_user = :uid', array(':uid' => $idus))
                 ->queryRow();
             
