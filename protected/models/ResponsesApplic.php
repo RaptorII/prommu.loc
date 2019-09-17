@@ -157,7 +157,7 @@ class ResponsesApplic extends Responses
      */
     public function getResponsesApi($props = [])
     {
-        $id_resume = $props['id'] ? $props['id']: Share::$UserProfile->exInfo->id_resume;
+        $id_resume = $props['id'] ? $props['id'] : Share::$UserProfile->exInfo->id_resume;
         $arRes = ['items' => []];
 
         $query = Yii::app()->db->createCommand()
