@@ -3474,17 +3474,33 @@ public function vac(){
             // проверка токена, получаем профиль
             list($idus, $profile, $dat) = $this->checkAccessToken($accessToken);
      
-
-            $Response = new ResponsesEmpl($profile);
-            if($status){
             
-                $data = $Response->getVacResponsesApi($idvac, $status);
-            } else {
-                $error = 101; $message = 'Укажите статус получаемых заявок';
-                $data = ['error' => $error, 'message' => $message];
-                return $data;
-            }
+            if($profile->type == 2){
+                $Response = new ResponsesApplic($profile);
+                
+                $data = $Response->getResponsesRating(['id'=> $idus]);
+                
+                if($data){ 
+                    return $data;
+                } else {
+                    $error = 101; $message = 'Укажите статус получаемых заявок';
+                    $data = ['error' => $error, 'message' => $message];
+                    return $data;
+                }
            
+            } else {
+                $Response = new ResponsesEmpl($profile);
+                if($status){
+                
+                    $data = $Response->getVacResponsesApi($idvac, $status);
+                } else {
+                    $error = 101; $message = 'Укажите статус получаемых заявок';
+                    $data = ['error' => $error, 'message' => $message];
+                    return $data;
+                }
+            }
+        
+            
             
 
             if( (int)$data['error'] > 0 ) throw new ExceptionApi($data['message'], -104);
