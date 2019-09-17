@@ -182,7 +182,10 @@ class ResponsesApplic extends Responses
             ->limit($this->limit)
             ->offset($this->offset)
             ->queryAll();
-
+    
+        var_dump($id_resume);
+        var_dump($query);
+        
         if(!count($query))
             return $arRes;
 
