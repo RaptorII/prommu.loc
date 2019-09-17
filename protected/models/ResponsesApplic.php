@@ -171,11 +171,9 @@ class ResponsesApplic extends Responses
             ->from('vacation_stat vs')
             ->leftjoin('empl_vacations ev','ev.id=vs.id_vac')
             ->where(
-                'vs.id_promo=:id AND (vs.isresponse=:s1 OR vs.isresponse=:s2)',
+                'vs.id_promo=:id AND (vs.isresponse=1 OR vs.isresponse=2)',
                 [
                     ':id'=>$id_resume,
-                    ':s1'=>1,
-                    ':s2'=>2
                 ]
             )
             ->order('vs.id desc')
