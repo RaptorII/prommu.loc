@@ -396,6 +396,48 @@ media
     #DiContent.page-phone .message.red{ padding: 0 38px 20px 38px; }
 }
 @media (max-width: 500px){
+    #DiContent.page-register .register-wrapp {
+        display: flex;
+        flex-direction: column;
+    }
+    .register__reg-form {
+        order: 2;
+
+    }
+    .register__reg-social {
+        order: 1;
+    }
+    .reg-header__pic,
+    .competitor .reg-header__pic,
+    .register__preview {
+        display: none;
+    }
+    #DiContent .register__reg-header,
+    #DiContent .competitor .register__reg-header {
+        min-height: 0;
+        padding: 0;
+    }
+    .reg-social__link {
+        text-decoration: none;
+    }
+    .reg-social__link:before {
+        content: '';
+        font-family: "PrommuFont";
+        font-size: 50px;
+        line-height: 50px;
+        display: block;
+        text-align: center;
+        position: unset;
+    }
+    #DiContent .register__reg-social .reg-social__link{
+        text-decoration: none;
+    }
+    .register__preview {
+        padding-bottom: 20px;
+        text-align: center;
+    }
+}
+@media (max-width: 500px){
     .employer .register__reg-header{ padding: 0 0 160px; }
     .employer .reg-header__pic{
         left: calc(50% - 80px);
@@ -468,6 +510,11 @@ media
         width: 100%;
         padding-left: 46px;
     }
+
+    #DiContent#DiContent#DiContent {
+        padding: 0 10px 20px;
+    }
+
 }
 
 .reg-form__selection{

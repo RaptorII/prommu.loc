@@ -6,7 +6,7 @@
   Yii::app()->getClientScript()->registerScriptFile($bUrl.'/theme/js/phone-codes/script.js', CClientScript::POS_END);
 ?>
 <div class='row'>
-  <div class='col-xs-12'>
+  <div class='col-xs-12 auth-form__wrap'>
     <div class="row auth-form__header">
         <div class="col-xs-12 col-sm-8"><h1 class='auth-form__title'>Вход на сайт</h1></div>
         <div class="col-xs-12 col-sm-4"></div>

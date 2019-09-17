@@ -217,15 +217,25 @@
     .vacancies__item-info{height:88px;}
     #DiContent.page-index .vacancies__list .vacancies__item .border{height:360px;}
 }
-@media (max-width:499px){#DiContent.page-index .vacancies__list .vacancies__item{width:300px;margin:10px auto 30px;float:none;}
+@media (max-width:499px){
+    #DiContent.page-index .vacancies__list .vacancies__item{
+        width:300px;
+        margin:10px auto 30px;
+        float:none;
+    }
+    #DiContent#DiContent{
+        padding:0 12px 20px;
+    }
 }
+
 @media (max-width:440px){.applicants__item-rating,
 .companies__item-rating{display:block;}
     #DiContent.page-index .applicants__item-com,
     #DiContent.page-index .companies__item-com{float:none;display:block;margin:5px 30px 0 0;}
     .page-index .services__list{-webkit-column-count:1;-moz-column-count:1;column-count:1;}
 }
-@media (min-width:500px){.m-title__orange{font-size:92px;line-height:92px;}
+@media (min-width:500px){
+    .m-title__orange{font-size:92px;line-height:92px;}
     .m-title__green{font-size:34px;}
     .m-title__grey{font-size:27px;}
 }

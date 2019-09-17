@@ -339,8 +339,22 @@ media
         line-height: 25px;
         vertical-align: bottom;
     }
-    #DiContent .auth-form__form{ padding: 0 0px 25px; }
+    #DiContent .auth-form__form{ padding: 0 0 25px; }
     #DiContent .auth-form__social{ padding: 0 15px 30px; }
+
+	.auth-form__preview {
+		display: none;
+	}
+	.auth-form__wrap {
+		display: flex;
+		flex-direction: column;
+	}
+	.auth-form__form {
+		order: 2;
+	}
+	.auth-form__social {
+		order: 1;
+	}
 }
 /*
 *
