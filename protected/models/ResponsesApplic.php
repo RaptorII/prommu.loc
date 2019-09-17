@@ -171,7 +171,7 @@ class ResponsesApplic extends Responses
           INNER JOIN empl_vacations ev ON ev.id = vs.id_vac
           WHERE vs.id_promo = {$id_resume} AND (vs.isresponse=1 OR vs.isresponse=2)";
      
-        $query = Yii::app()->db->createCommand($sql)->queryRow();
+        $query = Yii::app()->db->createCommand($sql)->queryAll();
       
         // $query = Yii::app()->db->createCommand()
         //     ->select("vs.id,
@@ -194,10 +194,6 @@ class ResponsesApplic extends Responses
         //     ->offset($this->offset)
         //     ->queryAll();
         
-        
-            
-        var_dump($id_resume);
-        var_dump($query);
         
         if(!count($query))
             return $arRes;
