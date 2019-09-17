@@ -202,16 +202,39 @@ class ResponsesApplic extends Responses
             return $arRes;
 
         $arId = array();
-        foreach ($query as $v)
+        foreach ($query as &$v)
         {
             $arRes['responses'][] = $v;
-            // switch($v['status']){
-            //     case MainConfig::$VACANCY_APPROVED:
-            //         &$v['status'] = 'app'
-            //         break;
-            //     case " ":
-            //         break;
-            // }
+            if($v['isreponse'] == 1){
+                $v['isresponse'] = 'response';
+            } else {
+                $v['isresponse'] = 'invite';
+            }
+            switch($v['status'])
+            {
+                case self::$STATUS_NEW: 
+                    $v['status'] = 'Новая'; 
+                    break;
+                case self::$STATUS_VIEW: 
+                    $v['status'] = 'Отложенная'; 
+                    break;
+                case self::$STATUS_REJECT: 
+                    $v['status'] = 'Отклонена'; 
+                    break;
+                case self::$STATUS_APPLICANT_ACCEPT: 
+                    $v['status'] = 'Заявка подтверждена'; 
+                    break;
+                case self::$STATUS_BEFORE_RATING: 
+                    $v['status'] = 'Необходима оценка'; 
+                    break;
+                case self::$STATUS_APPLICANT_RATED: 
+                    $v['status'] = 'Соискатель Вас оценил'; 
+                    break;
+                case self::$STATUS_EMPLOYER_RATED:
+                case self::$STATUS_FULL_RATING: 
+                    $v['status'] = 'Проект завершен'; 
+                    break;
+            }
 
         }
        
