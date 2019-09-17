@@ -158,18 +158,36 @@ class ResponsesApplic extends Responses
     public function getResponsesApi($props = [])
     {
         $id_resume = $props['id'] ? $props['id'] : Share::$UserProfile->exInfo->id_resume;
-        $arRes = ['items' => []];
+        $arRes = ['responses' => []];
 
+        // $query = Yii::app()->db->createCommand()
+        //     ->select("vs.id,
+        //         vs.status,
+        //         DATE_FORMAT(vs.date, '%d.%m.%Y') rdate,
+        //         DATE_FORMAT(ev.crdate, '%d.%m.%Y') bdate,
+        //         ev.id id_vacancy,
+        //         ev.title,
+        //         ev.id_user")
+        //     ->from('vacation_stat vs')
+        //     ->leftjoin('empl_vacations ev','ev.id=vs.id_vac')
+        //     ->where(
+        //         'vs.id_promo=:id AND (vs.isresponse=1 OR vs.isresponse=2)',
+        //         [
+        //             ':id'=>$id_resume,
+        //         ]
+        //     )
+        //     ->order('vs.id desc')
+        //     ->limit($this->limit)
+        //     ->offset($this->offset)
+        //     ->queryAll();
+        
         $query = Yii::app()->db->createCommand()
             ->select("vs.id,
                 vs.status,
                 DATE_FORMAT(vs.date, '%d.%m.%Y') rdate,
                 DATE_FORMAT(ev.crdate, '%d.%m.%Y') bdate,
-                ev.id id_vacancy,
-                ev.title,
-                ev.id_user")
+             ")
             ->from('vacation_stat vs')
-            ->leftjoin('empl_vacations ev','ev.id=vs.id_vac')
             ->where(
                 'vs.id_promo=:id AND (vs.isresponse=1 OR vs.isresponse=2)',
                 [
@@ -180,7 +198,7 @@ class ResponsesApplic extends Responses
             ->limit($this->limit)
             ->offset($this->offset)
             ->queryAll();
-    
+            
         var_dump($id_resume);
         var_dump($query);
         
