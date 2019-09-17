@@ -96,7 +96,7 @@ class ServiceGuestOrder extends CActiveRecord
     // Письмо админу о заказе услуги
     Mailing::set(19,
       [
-        'service_id' => Services::getServiceName($code),
+        'service_id' => self::getServiceName($code),
         'name_user' => $fio,
         'service_theme' => $tel,
         'service_email' => $email,
