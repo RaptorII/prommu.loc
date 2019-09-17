@@ -3577,6 +3577,7 @@ public function vac(){
             }
         }
         elseif($retRa==2) {
+            
             $sql = "SELECT s.status
             FROM vacation_stat s 
             WHERE s.id= {$idres}
@@ -3584,12 +3585,13 @@ public function vac(){
             $res = Yii::app()->db->createCommand($sql);
             $res = $res->queryScalar();
 
-            if($status == 5  || $status == 3 )
+            if($status == 'approved'  || $status == 'rejected' )
             {     
-
-            $Response = new ResponsesApplic($profile);
-            $data = $Response->setResponseStatus(compact('idres', 'status', 'idus'));
-        }
+                if($status == 'approved') $status == 5;
+                if($status == 'rejected') $status == 3;
+                $Response = new ResponsesApplic($profile);
+                $data = $Response->setResponseStatus(compact('idres', 'status', 'idus'));
+            }
         else {
              $data = ['error' => '1', 'message' => 'No permission!'];
         }
