@@ -162,11 +162,10 @@ class ResponsesApplic extends Responses
         
         $limit = $this->limit > 0 ? "LIMIT {$this->offset}, {$this->limit}" : '';
          
-        $sql = "SELECT vs.id,
+        $sql = "SELECT vs.id as response_id,
                 vs.isresponse,
                 vs.status,
                 DATE_FORMAT(vs.date, '%d.%m.%Y') rdate,
-                DATE_FORMAT(ev.crdate, '%d.%m.%Y') bdate,
                 ev.id id_vacancy,
                 ev.title,
                 ev.id_user
@@ -205,10 +204,17 @@ class ResponsesApplic extends Responses
         $arId = array();
         foreach ($query as $v)
         {
-            $arRes['items'][$v['id_user']][] = $v;
-            $arId[] = $v['id_user'];
+            $arRes['responses'][] = $v;
+            // switch($v['status']){
+            //     case MainConfig::$VACANCY_APPROVED:
+            //         &$v['status'] = 'app'
+            //         break;
+            //     case " ":
+            //         break;
+            // }
+
         }
-        $arRes['users'] = Share::getUsers($arId);
+       
 
         return $arRes;
     }
