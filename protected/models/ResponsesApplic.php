@@ -194,21 +194,7 @@ class ResponsesApplic extends Responses
         //     ->offset($this->offset)
         //     ->queryAll();
         
-        $query = Yii::app()->db->createCommand()
-            ->select("vs.id,
-                vs.status,
-                DATE_FORMAT(vs.date, '%d.%m.%Y') rdate")
-            ->from('vacation_stat vs')
-            ->where(
-                'vs.id_promo=:id AND (vs.isresponse=1 OR vs.isresponse=2)',
-                [
-                    ':id'=>$id_resume,
-                ]
-            )
-            ->order('vs.id desc')
-            ->limit($this->limit)
-            ->offset($this->offset)
-            ->queryAll();
+        
             
         var_dump($id_resume);
         var_dump($query);
