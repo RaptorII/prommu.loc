@@ -3585,10 +3585,10 @@ public function vac(){
             $res = Yii::app()->db->createCommand($sql);
             $res = $res->queryScalar();
 
-            if($status == 'approved'  || $status == 'rejected' )
+            if($status == "approved"  || $status == "rejected" )
             {     
-                if($status == 'approved') $status == 5;
-                if($status == 'rejected') $status == 3;
+                if($status == "approved") $status == 5;
+                if($status == "rejected") $status == 3;
                 $Response = new ResponsesApplic($profile);
                 $data = $Response->setResponseStatus(compact('idres', 'status', 'idus'));
             }
