@@ -101,7 +101,7 @@
                 //
                 ?>
                 <div class='btn-reg btn-orange-wr'>
-                    <button class='hvr-sweep-to-right reg-form__btn btn__orange' type='submit'>Зарегистрироваться</button>
+                    <button class='hvr-sweep-to-right reg-form__btn btn__orange' type='submit'>Зарегистрироваться1</button>
                 </div>
                 <input  name='type' type='hidden'  value="3" >
                 <input type="hidden" class="referer" name="referer" value="">
