@@ -1,19 +1,19 @@
 <style type="text/css">
   @font-face {
     font-family: 'RobotoCondensed';
-    src: local('Roboto Condensed'), local('RobotoCondensed-Regular'), url('/theme/fonts/Robotocondensed.woff2') format('woff2'), url('/theme/fonts/Robotocondensed.woff') format('woff'), url('/theme/fonts/Robotocondensed.ttf') format('truetype');
+    src: local('Roboto Condensed'), local('RobotoCondensed-Regular'), url('/theme/fonts/RobotoCondensed.woff2') format('woff2'), url('/theme/fonts/RobotoCondensed.woff') format('woff'), url('/theme/fonts/RobotoCondensed.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
   }
   @font-face {
     font-family: 'RobotoCondensedLight';
-    src: local('Roboto Condensed Light'), local('RobotoCondensed-Light'), url('/theme/fonts/RobotocondensedLight.woff2') format('woff2'), url('/theme/fonts/RobotocondensedLight.woff') format('woff'), url('/theme/fonts/RobotocondensedLight.ttf') format('truetype');
+    src: local('Roboto Condensed Light'), local('RobotoCondensed-Light'), url('/theme/fonts/RobotoCondensedLight.woff2') format('woff2'), url('/theme/fonts/RobotoCondensedLight.woff') format('woff'), url('/theme/fonts/RobotoCondensedLight.ttf') format('truetype');
     font-weight: 300;
     font-style: normal;
   }
   @font-face {
     font-family: 'RobotoCondensedBold';
-    src: local('Roboto Condensed Bold'), local('RobotoCondensed-Bold'), url('/theme/fonts/RobotocondensedBold.woff2') format('woff2'), url('/theme/fonts/RobotocondensedBold.woff') format('woff'), url('/theme/fonts/RobotocondensedBold.ttf') format('truetype');
+    src: local('Roboto Condensed Bold'), local('RobotoCondensed-Bold'), url('/theme/fonts/RobotoCondensedBold.woff2') format('woff2'), url('/theme/fonts/RobotoCondensedBold.woff') format('woff'), url('/theme/fonts/RobotoCondensedBold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
   }
