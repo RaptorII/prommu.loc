@@ -7,13 +7,13 @@
   }
   @font-face {
     font-family: 'RobotoCondensedLight';
-    src: local('Roboto Condensed Light'), local('RobotoCondensed-Light'), url('/theme/fonts/Robotocondensedlight.woff2') format('woff2'), url('/theme/fonts/Robotocondensedlight.woff') format('woff'), url('/theme/fonts/Robotocondensedlight.ttf') format('truetype');
+    src: local('Roboto Condensed Light'), local('RobotoCondensed-Light'), url('/theme/fonts/RobotocondensedLight.woff2') format('woff2'), url('/theme/fonts/RobotocondensedLight.woff') format('woff'), url('/theme/fonts/RobotocondensedLight.ttf') format('truetype');
     font-weight: 300;
     font-style: normal;
   }
   @font-face {
     font-family: 'RobotoCondensedBold';
-    src: local('Roboto Condensed Bold'), local('RobotoCondensed-Bold'), url('/theme/fonts/Robotocondensedbold.woff2') format('woff2'), url('/theme/fonts/Robotocondensedbold.woff') format('woff'), url('/theme/fonts/Robotocondensedbold.ttf') format('truetype');
+    src: local('Roboto Condensed Bold'), local('RobotoCondensed-Bold'), url('/theme/fonts/RobotocondensedBold.woff2') format('woff2'), url('/theme/fonts/RobotocondensedBold.woff') format('woff'), url('/theme/fonts/RobotocondensedBold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
   }
