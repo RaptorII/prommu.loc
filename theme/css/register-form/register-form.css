@@ -1,27 +1,6 @@
 /*
   register forms
  */
-@font-face {
-  font-family: 'LatoMedium';
-  src: url(/theme/fonts/Lato-Medium.eot);
-  src: local('LatoMedium'), url(/theme/fonts/Lato-Medium.ttf), url(/theme/fonts/Lato-Medium.woff), url(/theme/fonts/Lato-Medium.woff2);
-}
-@font-face {
-  font-family: 'LatoRegular';
-  src: url(/theme/fonts/Lato-Regular.eot);
-  src: local('LatoRegular'), url(/theme/fonts/Lato-Regular.ttf), url(/theme/fonts/Lato-Regular.woff), url(/theme/fonts/Lato-Regular.woff2);
-}
-@font-face {
-  font-family: 'LatoThin';
-  src: url(/theme/fonts/Lato-Thin.eot);
-  src: local('LatoThin'), url(/theme/fonts/Lato-Thin.ttf), url(/theme/fonts/Lato-Thin.woff), url(/theme/fonts/Lato-Thin.woff2);
-}
-@font-face {
-  font-family: 'LatoLight';
-  src: url(/theme/fonts/Lato-Light.eot);
-  src: local('LatoLight'), url(/theme/fonts/Lato-Light.ttf), url(/theme/fonts/Lato-Light.woff), url(/theme/fonts/Lato-Light.woff2);
-}
-
 .register__reg-header{
   position: relative;
   border-bottom: 1px solid #c8c8c8;
