@@ -1,119 +1,156 @@
 #DiTop .breadcrumbs,
 .row.content-header-box.mt20,
-.row.content-menu-box.mt20{
-	display: none;
+.row.content-menu-box.mt20 {
+  display: none;
 }
-#DiContent .payment{
-	width: 100%;
-	max-width: 450px;
-	margin: 30px auto 60px;
-	float: none;
+
+#DiContent .payment {
+  width: 100%;
+  max-width: 450px;
+  margin: 30px auto 60px;
+  float: none;
 }
-.payment__title{
-	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-	font-size: 24px;
-	color: #646464;
-	margin: 0;
-	position: relative;
-	line-height: 40px;
+
+.payment__title {
+  font-size: 24px;
+  color: #646464;
+  margin: 0;
+  position: relative;
+  line-height: 40px;
 }
+
 /*
 *		CALENDAR
 */
-.payment__date-border{
-	width: 100%;
-	padding: 10px;
-	border: 1px solid #EBEBEB;
-	float: left;
+.payment__date-border {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #EBEBEB;
+  float: left;
 }
-.payment__date-border.error{ border: 1px solid red; }
-.payment__calendar{
-	width: 100%;
-	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-	font-size: 14px;
-	text-align: center;
-	color: #646464;
+
+.payment__date-border.error {
+  border: 1px solid red;
 }
-.payment__calendar thead tr:last-child{
+
+.payment__calendar {
+  width: 100%;
+  font-size: 14px;
+  text-align: center;
+  color: #646464;
+}
+
+.payment__calendar thead tr:last-child {
 
 }
-.payment__calendar thead tr:nth-child(1) td:nth-child(2){
+
+.payment__calendar thead tr:nth-child(1) td:nth-child(2) {
 }
-.payment__calendar tbody td{ cursor: pointer; }
-.payment__calendar thead tr:nth-child(1) td:nth-child(1):hover, 
-.payment__calendar thead tr:nth-child(1) td:nth-child(3):hover{ cursor: pointer; }
-.payment__calendar tbody td:nth-child(n+6), .payment__calendar .holiday{ color: #ff8300; }
+
+.payment__calendar tbody td {
+  cursor: pointer;
+}
+
+.payment__calendar thead tr:nth-child(1) td:nth-child(1):hover,
+.payment__calendar thead tr:nth-child(1) td:nth-child(3):hover {
+  cursor: pointer;
+}
+
+.payment__calendar tbody td:nth-child(n+6), .payment__calendar .holiday {
+  color: #ff8300;
+}
+
 .payment__calendar .day.today,
-.payment__calendar .day.today:hover{ 
-	background-color: #abb820; 
-	color: #FFFFFF;
+.payment__calendar .day.today:hover {
+  background-color: #abb820;
+  color: #FFFFFF;
 }
+
 .payment__calendar .day.select,
-.payment__calendar .day.select:hover{ 
-	background-color: #ff8300; 
-	color: #FFFFFF;
+.payment__calendar .day.select:hover {
+  background-color: #ff8300;
+  color: #FFFFFF;
 }
-.payment__calendar .day:hover{ background-color: #e6e6e6; }
-.payment__calendar .empty:hover{ 
-	background-color: transparent;
-	cursor: default;
+
+.payment__calendar .day:hover {
+  background-color: #e6e6e6;
 }
-.payment__calendar .past:hover{
-	background-color: red;
-	cursor: no-drop;
+
+.payment__calendar .empty:hover {
+  background-color: transparent;
+  cursor: default;
 }
-.payment__date-id{
-	color: #646464;
-	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-	font-size: 16px;
+
+.payment__calendar .past:hover {
+  background-color: red;
+  cursor: no-drop;
 }
-.payment__date-calendar{
-	width: 50%;
-	float: left;
-	position: relative;
-	padding: 12px 0 0;
+
+.payment__date-id {
+  color: #646464;
+  font-size: 16px;
 }
-.payment__date-calendar.begin{ padding-right: 5px; }
-.payment__date-calendar.end{ padding-left: 5px; }
-.payment__date-error{
-	font-size: 12px;
-	color: red;
-	line-height: 12px;
-	display: none;
-	position: absolute;
-	top: 0;
+
+.payment__date-calendar {
+  width: 50%;
+  float: left;
+  position: relative;
+  padding: 12px 0 0;
 }
-.payment__date-name{
-	color: #646464;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-	font-size: 16px;
-	margin: 0 0 10px;
-	display: block;	
+
+.payment__date-calendar.begin {
+  padding-right: 5px;
 }
+
+.payment__date-calendar.end {
+  padding-left: 5px;
+}
+
+.payment__date-error {
+  font-size: 12px;
+  color: red;
+  line-height: 12px;
+  display: none;
+  position: absolute;
+  top: 0;
+}
+
+.payment__date-name {
+  color: #646464;
+  font-size: 16px;
+  margin: 0 0 10px;
+  display: block;
+}
+
 /*
 *
 */
-.payment-form__table{ 
-	width: 100%;
-	color: #646464;
-	font-size: 16px;
-	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-	margin-bottom: 30px;
+.payment-form__table {
+  width: 100%;
+  color: #646464;
+  font-size: 16px;
+  margin-bottom: 30px;
 }
-.payment-form__table tr td:last-child{ text-align: right; }
-.payment-form__result{
-	color: #646464;
-	font-size: 24px;
-	font-family: 'RobotoCondensedBold', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-	margin-bottom: 10px;
+
+.payment-form__table tr td:last-child {
+  text-align: right;
 }
-.payment-form__period{
-	margin-bottom: 10px;
+
+.payment-form__result {
+  color: #646464;
+  font-size: 24px;
+  font-family: "RobotoCondensedBold", sans-serif, verdana;
+  margin-bottom: 10px;
 }
-#payment-result{
-	text-align: left;
-	padding: 10px 0 0;
-	font-size: 30px;
-	color: #abb820;
-	font-family: 'RobotoCondensedBold', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+
+.payment-form__period {
+  margin-bottom: 10px;
+}
+
+#payment-result {
+  text-align: left;
+  padding: 10px 0 0;
+  font-size: 30px;
+  color: #abb820;
+  font-family: "RobotoCondensedBold", sans-serif, verdana;
 }

@@ -3,7 +3,6 @@
 	font-size: 26px;
 	font-weight: normal;
 	margin: 0 0 35px;
-	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 }
 .services-duplication ul{
 	padding-left: 15px;
@@ -33,7 +32,6 @@
 	background: #fff;
 	text-transform: uppercase;
 	font-style: normal;
-	font-family: RobotoCondensed-Regular,verdana,arial;
 	text-align: center;
 }
 #DiContent .sd__tabs .sd__tabs-link.active{
@@ -68,7 +66,7 @@
 	color: #646464;
 	font-style: normal;
 	text-transform: uppercase;
-	font-family: 'RobotoCondensedBold', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+	font-family: "RobotoCondensedBold", sans-serif, verdana;
 }
 .sd__vacancy-inputs{
 	padding: 5px 5px 0;
@@ -126,7 +124,6 @@
 	width: 100%;
 	color: #646464;
 	font-size: 16px;
-	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 	margin-bottom: 20px;
 }
 .result__form .result__result{
@@ -134,7 +131,7 @@
 	padding: 10px 0 0;
 	font-size: 30px;
 	color: #abb820;
-	font-family: 'RobotoCondensedBold', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+	font-family: "RobotoCondensedBold", sans-serif, verdana;
 	font-style: normal;
 }
 .result__btn{
@@ -147,7 +144,6 @@
 	background-color: #ff8300;
 	color: #FFFFFF;
 	font-size: 18px;
-	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 	position: relative;
 	z-index: 1;
 	-webkit-transition: all 0.3s ease-out;

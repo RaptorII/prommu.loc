@@ -1,15 +1,17 @@
-.check-inn__block{
+.check-inn__block {
   padding-left: 30px;
   position: relative;
 }
-.check-inn__block .prmu-btn{
+
+.check-inn__block .prmu-btn {
   margin: 0;
   position: absolute;
   left: 0;
   top: 24px;
   width: 27px;
 }
-#DiContent .check-inn__block input{
+
+#DiContent .check-inn__block input {
   height: 35px;
   border: 1px solid #EBEBEB;
   line-height: 33px;
@@ -20,21 +22,32 @@
   padding: 0 15px;
   max-width: 200px;
   width: 100%;
-  font-family: RobotoCondensedRegular, RobotoRegular, verdana, arial;
   margin-bottom: 5px;
 }
-#DiContent .check-inn__block input.error{
+
+#DiContent .check-inn__block input.error {
   box-shadow: inset 0px 0px 3px red;
   border: 1px solid red;
 }
-#DiContent .check-inn__block input:focus{ outline: none }
-#check_inn{ margin: 30px 0; }
-#DiContent .check-inn__block label{
-  font-size: 14px;
-  font-family: RobotoCondensedBold, RobotoCondensedRegular, verdana, arial;
+
+#DiContent .check-inn__block input:focus {
+  outline: none
 }
-.check-inn__block-input{ position: relative }
-.check-inn__block-input.load:before{
+
+#check_inn {
+  margin: 30px 0;
+}
+
+#DiContent .check-inn__block label {
+  font-size: 14px;
+  font-family: "RobotoCondensedBold", sans-serif, verdana;
+}
+
+.check-inn__block-input {
+  position: relative
+}
+
+.check-inn__block-input.load:before {
   content: '';
   width: 30px;
   height: 30px;
@@ -44,7 +57,8 @@
   background: url(/theme/pic/vacancy/loading.gif) no-repeat;
   background-size: contain;
 }
-.check-inn__block-input span{
+
+.check-inn__block-input span {
   padding: 0 0 5px 5px;
   display: inline-block;
 }

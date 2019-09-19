@@ -1,103 +1,131 @@
-.service-med-record{
-	width: 100%;
-	max-width: 740px;
-	margin: 50px auto 0;
+.service-med-record {
+  width: 100%;
+  max-width: 740px;
+  margin: 50px auto 0;
 }
+
 #DiContent #smr-form input,
 #DiContent #smr-form button,
 #DiContent #smr-form select,
 #DiContent #smr-form a,
-#DiContent #smr-form textarea:focus{ outline: none }
-.service-med-record #smr-form{
-	width: 100%;
-	max-width: 445px;
-	margin: 0 auto;
-	position: relative;
+#DiContent #smr-form textarea:focus {
+  outline: none
 }
-.smr__title{
-	text-align: center;
-	color: #636363;
-	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
-	margin: 0 0 30px;
-	font-size: 22px;
+
+.service-med-record #smr-form {
+  width: 100%;
+  max-width: 445px;
+  margin: 0 auto;
+  position: relative;
 }
-.smr__label{
-	width: 100%;
-	margin-bottom: 22px;
-	display: inline-block;
-	position: relative;
+
+.smr__title {
+  text-align: center;
+  color: #636363;
+  margin: 0 0 30px;
+  font-size: 22px;
 }
-.smr__select-block:before{
-	content: '';
-	width: 8px;
-	height: 5px;
-	position: absolute;
-	top: 15px;
-	right: 12px;
-	background: url(/theme/pic/register-popup-page/registr_popup_arrow_icon.png) no-repeat;
-	z-index: 0;
+
+.smr__label {
+  width: 100%;
+  margin-bottom: 22px;
+  display: inline-block;
+  position: relative;
 }
-#DiContent #smr-form .smr__input{
-	width: 100%;
-	height: 35px;
-	padding: 0 15px;
-	background-color: transparent;
-	border: 1px solid #EBEBEB;
-	font-size: 14px;
-	color: #646464;
-	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+
+.smr__select-block:before {
+  content: '';
+  width: 8px;
+  height: 5px;
+  position: absolute;
+  top: 15px;
+  right: 12px;
+  background: url(/theme/pic/register-popup-page/registr_popup_arrow_icon.png) no-repeat;
+  z-index: 0;
 }
-#DiContent #smr-form .smr__input.error{
-	border: 1px solid red;
+
+#DiContent #smr-form .smr__input {
+  width: 100%;
+  height: 35px;
+  padding: 0 15px;
+  background-color: transparent;
+  border: 1px solid #EBEBEB;
+  font-size: 14px;
+  color: #646464;
 }
-#DiContent #smr-form .smr__textarea{
-	min-height: 130px;
-	padding: 10px 15px;
-	resize: none;
-	margin-bottom: 8px;
+
+#DiContent #smr-form .smr__input.error {
+  border: 1px solid red;
 }
-#DiContent #smr-form .service__btn{
-	width: 100%;
-	max-width: 445px;
-	margin: 0 auto 40px;
+
+#DiContent #smr-form .smr__textarea {
+  min-height: 130px;
+  padding: 10px 15px;
+  resize: none;
+  margin-bottom: 8px;
 }
-#DiContent #smr-form .smr__select{
-	padding: 0 30px 0 15px;
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	position: relative;
-	z-index: 1;
-	cursor: pointer;
+
+#DiContent #smr-form .service__btn {
+  width: 100%;
+  max-width: 445px;
+  margin: 0 auto 40px;
 }
-.smr__girl{
-	width: 100%;
-	max-width: 247px;
-	height: 333px;
-	background: url(/theme/pic/services-page/med-record-bg.jpg) no-repeat;
-	background-size: contain;
+
+#DiContent #smr-form .smr__select {
+  padding: 0 30px 0 15px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
 }
+
+.smr__girl {
+  width: 100%;
+  max-width: 247px;
+  height: 333px;
+  background: url(/theme/pic/services-page/med-record-bg.jpg) no-repeat;
+  background-size: contain;
+}
+
 /*
 *		13.11.2018
 */
-.country-phone{
-	display: table;
-	height: 35px;
-	padding: 0 15px 0 0; 
-	border: 1px solid #EBEBEB;
-	font-size: 14px;
-	border-radius: 1px;
-	font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+.country-phone {
+  display: table;
+  height: 35px;
+  padding: 0 15px 0 0;
+  border: 1px solid #EBEBEB;
+  font-size: 14px;
+  border-radius: 1px;
 }
-.country-phone-selected{
-	height: 33px;
-	line-height: 33px;
+
+.country-phone-selected {
+  height: 33px;
+  line-height: 33px;
 }
-.country-phone-selected img{
-	margin: 11px 5px 12px;
+
+.country-phone-selected img {
+  margin: 11px 5px 12px;
 }
-#phone-code::-webkit-input-placeholder{ color:#757575; }
-#phone-code::-moz-placeholder{color:#757575;}
-#phone-code:-moz-placeholder{color:#757575;}
-#phone-code:-ms-input-placeholder{color:#757575;}
-.country-phone.error{ box-shadow:none }
+
+#phone-code::-webkit-input-placeholder {
+  color: #757575;
+}
+
+#phone-code::-moz-placeholder {
+  color: #757575;
+}
+
+#phone-code:-moz-placeholder {
+  color: #757575;
+}
+
+#phone-code:-ms-input-placeholder {
+  color: #757575;
+}
+
+.country-phone.error {
+  box-shadow: none
+}

@@ -1,154 +1,262 @@
 .service,
-.service *{
-	color: #212121;
-	font-family: RobotoCondensed-Regular, verdana, arial;
+.service * {
+  color: #212121;
 }
-.service__img{
-	width: 100%;
-	padding: 15px;
-	margin-bottom: 20px;
-	background-color: #abb92a;
-	background-position: 50%;
-	background-size: cover;
-	border-radius: 15px;
-}
-.service__img.creation-vacancy{ background-image: url(/theme/pic/services-page/publish-vacancy.jpg) }
-.service__img.premium-vacancy{ background-image: url(/theme/pic/services-page/premium-vacancy.jpg) }
-.service__img.geolocation-staff{ background-image: url(/theme/pic/services-page/geolocation-staff.jpg) }
-.service__img.personal-manager-outsourcing{ background-image: url(/theme/pic/services-page/personal-manager-outsourcing.jpg) }
-.service__img.outstaffing{ background-image: url(/theme/pic/services-page/outstaffing.jpg) }
-.service__img.prommu_card{ background-image: url(/theme/pic/services-page/prommu_card.jpg) }
-.service__img.medical-record{ background-image: url(/theme/pic/services-page/medical-record.jpg) }
-.service__img.api-key-prommu{ background-image: url(/theme/pic/services-page/api-key-prommu.jpg) }
-.service__img.email-invitation{ background-image: url(/theme/pic/services-page/email-invitation.jpg) }
-.service__img.push-notification{ background-image: url(/theme/pic/services-page/push-notification.jpg) }
-.service__img.sms-informing-staff{ background-image: url(/theme/pic/services-page/sms-informing-staff.jpg) }
-.service__img.publication-vacancy-social-net{ background-image: url(/theme/pic/services-page/publication-vacancy-social-net.jpg) }
 
-.service__title{
-	max-width: 420px;
-	padding-top: 50px;
-	color: #ffffff;
-	font-size: 36px;
-	text-align: center;
-	text-transform: uppercase;
-	position: relative;
+.service__img {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: #abb92a;
+  background-position: 50%;
+  background-size: cover;
+  border-radius: 15px;
 }
-.service__title.small{ font-size: 30px; }
-.service__title:before{
-	content: '\e949';
-	font-family: "PrommuFont";
-	font-size: 50px;
-	line-height: 58px;
-	height: 58px;
-	display: block;
-	text-align: center;
-	margin: 0 auto;
+
+.service__img.creation-vacancy {
+  background-image: url(/theme/pic/services-page/publish-vacancy.jpg)
 }
-.premium-vacancy .service__title:before               { content: '\e920'; }
-.geolocation-staff .service__title:before             { content: '\e926'; }
-.personal-manager-outsourcing .service__title:before  { content: '\e927'; }
-.outstaffing .service__title:before                   { content: '\e91e'; }
-.prommu_card .service__title:before                   { content: '\e921'; }
-.medical-record .service__title:before                { content: '\e931'; }
-.api-key-prommu .service__title:before                { content: '\e91d'; }
-.email-invitation .service__title:before              { content: '\e923'; }
-.push-notification .service__title:before             { content: '\e91f'; }
-.sms-informing-staff .service__title:before           { content: '\e92f'; }
-.publication-vacancy-social-net .service__title:before{ content: '\e929'; }
-.service__price{
-	width: 100%;
-	background-color: #f0f3f6;
-	border-radius: 15px;
-	margin-bottom: 20px;
-	padding: 10px 20px 0;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	flex-wrap: wrap;
+
+.service__img.premium-vacancy {
+  background-image: url(/theme/pic/services-page/premium-vacancy.jpg)
 }
-.service__text{ padding: 0 5px; }
+
+.service__img.geolocation-staff {
+  background-image: url(/theme/pic/services-page/geolocation-staff.jpg)
+}
+
+.service__img.personal-manager-outsourcing {
+  background-image: url(/theme/pic/services-page/personal-manager-outsourcing.jpg)
+}
+
+.service__img.outstaffing {
+  background-image: url(/theme/pic/services-page/outstaffing.jpg)
+}
+
+.service__img.prommu_card {
+  background-image: url(/theme/pic/services-page/prommu_card.jpg)
+}
+
+.service__img.medical-record {
+  background-image: url(/theme/pic/services-page/medical-record.jpg)
+}
+
+.service__img.api-key-prommu {
+  background-image: url(/theme/pic/services-page/api-key-prommu.jpg)
+}
+
+.service__img.email-invitation {
+  background-image: url(/theme/pic/services-page/email-invitation.jpg)
+}
+
+.service__img.push-notification {
+  background-image: url(/theme/pic/services-page/push-notification.jpg)
+}
+
+.service__img.sms-informing-staff {
+  background-image: url(/theme/pic/services-page/sms-informing-staff.jpg)
+}
+
+.service__img.publication-vacancy-social-net {
+  background-image: url(/theme/pic/services-page/publication-vacancy-social-net.jpg)
+}
+
+.service__title {
+  max-width: 420px;
+  padding-top: 50px;
+  color: #ffffff;
+  font-size: 36px;
+  text-align: center;
+  text-transform: uppercase;
+  position: relative;
+}
+
+.service__title.small {
+  font-size: 30px;
+}
+
+.service__title:before {
+  content: '\e949';
+  font-family: "PrommuFont";
+  font-size: 50px;
+  line-height: 58px;
+  height: 58px;
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.premium-vacancy .service__title:before {
+  content: '\e920';
+}
+
+.geolocation-staff .service__title:before {
+  content: '\e926';
+}
+
+.personal-manager-outsourcing .service__title:before {
+  content: '\e927';
+}
+
+.outstaffing .service__title:before {
+  content: '\e91e';
+}
+
+.prommu_card .service__title:before {
+  content: '\e921';
+}
+
+.medical-record .service__title:before {
+  content: '\e931';
+}
+
+.api-key-prommu .service__title:before {
+  content: '\e91d';
+}
+
+.email-invitation .service__title:before {
+  content: '\e923';
+}
+
+.push-notification .service__title:before {
+  content: '\e91f';
+}
+
+.sms-informing-staff .service__title:before {
+  content: '\e92f';
+}
+
+.publication-vacancy-social-net .service__title:before {
+  content: '\e929';
+}
+
+.service__price {
+  width: 100%;
+  background-color: #f0f3f6;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  padding: 10px 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.service__text {
+  padding: 0 5px;
+}
+
 .service__text,
-.service__text *{
-	font-family: RobotoCondensed-Regular, verdana, arial !important;
-	font-size: 16px;
-	text-align: justify;
+.service__text * {
+  font-size: 16px;
+  text-align: justify;
 }
-.service__text p{ margin: 0 0 13px }
-.order-service{
-	width: 100%;
+
+.service__text p {
+  margin: 0 0 13px
 }
-#DiContent .order-service a{
-	width: 100%;
-	display: block;
-	font-size: 18px;
-	padding: 11px 0;
-	margin-bottom: 10px;
-	text-align: center;
-	color: #f0f3f6;
-	background-color: #abb92a;
-	border: 2px solid #abb92a;
-	border-radius: 15px;
+
+.order-service {
+  width: 100%;
 }
-#DiContent .order-service a:hover{
-	background-color: #f0f3f6;
-	color: #abb92a;
+
+#DiContent .order-service a {
+  width: 100%;
+  display: block;
+  font-size: 18px;
+  padding: 11px 0;
+  margin-bottom: 10px;
+  text-align: center;
+  color: #f0f3f6;
+  background-color: #abb92a;
+  border: 2px solid #abb92a;
+  border-radius: 15px;
 }
-.service__price-item{
-	display: inline-block;
-	background-color: #ee7e00;
-	padding: 3px 20px;
-	margin:  0 10px 10px;
-	text-align: center;
-	border-radius: 15px;
+
+#DiContent .order-service a:hover {
+  background-color: #f0f3f6;
+  color: #abb92a;
 }
-.service__price-item b{
-	font-size: 24px;
-	color: #ffffff;
+
+.service__price-item {
+  display: inline-block;
+  background-color: #ee7e00;
+  padding: 3px 20px;
+  margin: 0 10px 10px;
+  text-align: center;
+  border-radius: 15px;
 }
-.service__price-item span{
-	font-size: 18px;
-	color: #ffffff;
+
+.service__price-item b {
+  font-size: 24px;
+  color: #ffffff;
 }
-.service__price-item .free{
-	padding: 20px 0;
-	display: inline-block;
+
+.service__price-item span {
+  font-size: 18px;
+  color: #ffffff;
 }
-.service__price-list{ 
-	width: 100%;
-	text-align: center;
+
+.service__price-item .free {
+  padding: 20px 0;
+  display: inline-block;
 }
+
+.service__price-list {
+  width: 100%;
+  text-align: center;
+}
+
 /*
 *			MEDIA
 */
-@media (min-width: 768px){
-	.service__img{
-		min-height: 350px;
-		padding: 50px 15px;
-	}
-	.order-service{ max-width: 190px }
-	.service__title{ 
-		margin-top: 25px;
-		font-size: 48px;
-	}
-	.service__title.small{ font-size: 40px; }
-	.service__price{ flex-wrap: nowrap }
-	.service__price-list{ 
-		width: initial;
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-	}
-	.service__price-item{ 
-		margin: 0 20px 10px 0;
-	}
-	.service__price-item.many{
-		margin: 0 10px 10px 0;
-	}
+@media (min-width: 768px) {
+  .service__img {
+    min-height: 350px;
+    padding: 50px 15px;
+  }
+
+  .order-service {
+    max-width: 190px
+  }
+
+  .service__title {
+    margin-top: 25px;
+    font-size: 48px;
+  }
+
+  .service__title.small {
+    font-size: 40px;
+  }
+
+  .service__price {
+    flex-wrap: nowrap
+  }
+
+  .service__price-list {
+    width: initial;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .service__price-item {
+    margin: 0 20px 10px 0;
+  }
+
+  .service__price-item.many {
+    margin: 0 10px 10px 0;
+  }
 }
-@media (min-width: 992px){
-	.service__price-item.many{ width: 240px }
+
+@media (min-width: 992px) {
+  .service__price-item.many {
+    width: 240px
+  }
 }
-@media (min-width: 1200px){
-	.service__price-item.many{ width: 200px }
+
+@media (min-width: 1200px) {
+  .service__price-item.many {
+    width: 200px
+  }
 }

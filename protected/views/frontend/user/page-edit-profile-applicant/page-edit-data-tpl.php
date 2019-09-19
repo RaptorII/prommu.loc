@@ -1206,5 +1206,3 @@
     </div>
   </div>
 <?endif;?>
-<?php require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/user/popup-load-img.php'; ?>
-

@@ -14,7 +14,7 @@
     margin: 0;
     font-size: 18px;
     color: #FFFFFF;
-    font-family: 'RobotoCondensedBold', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+    font-family: "RobotoCondensedBold", sans-serif, verdana;
 }
 #DiContent .rp-header__close-btn{
     width: 50px;
@@ -66,7 +66,6 @@
     font-size: 14px;
     color: #3C3C3C;
     line-height: 16px;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     text-align: center;
     margin: 0;
     padding-bottom: 30px;
@@ -95,7 +94,7 @@
 .rp-content1__text{
     display: table-cell;
     vertical-align: middle;
-    font-family: 'RobotoCondensedLight', 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
+    font-family: "RobotoCondensedLight", sans-serif, verdana;
     font-size: 16px;
     color: #646464;
     line-height: 15px;
@@ -126,7 +125,6 @@
     border: 1px solid #B6B6B6;  
     color: #646464;
     background-color: transparent;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     font-size: 14px;
     box-shadow: none;
 }
@@ -188,7 +186,6 @@
     padding: 0 20px;
     color: #646464;
     background-color: transparent;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     font-size: 14px;
     box-shadow: none;   
 }
@@ -197,22 +194,18 @@
 .rp-content1__inputs-input::-webkit-input-placeholder{
     color:#646464;
     font-size: 14px;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 }
 .rp-content1__inputs-input::-moz-placeholder{
     color:#646464;
     font-size: 14px;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 }
 .rp-content1__inputs-input:-moz-placeholder{
     color:#646464;
     font-size: 14px;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 }
 .rp-content1__inputs-input:-ms-input-placeholder{
     color:#646464;
     font-size: 14px;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
 }
 #DiTop #DiContent .rp-content1__inputs-input:focus,
 #DiTop #DiContent .rp-content1__inputs-select:focus{ outline: none; }
@@ -240,7 +233,6 @@
     text-align: center;
     background-color: #FF8300;
     border: none;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     position: relative;
     z-index: 1;
     -webkit-transition: all 0.3s ease-out;
@@ -287,7 +279,6 @@
 .rp-content1__push-text{
     color: #3d3d3d;
     font-size: 15px;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     margin: 0;
     display: inline-block;
     vertical-align: middle;
@@ -296,7 +287,6 @@
 }
 .rp-content1__push-props{
     color: #ff8300;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     text-decoration: underline;
     display: none;
     cursor: pointer;
@@ -399,7 +389,6 @@
 }
 #DiContent .rp-content2__title{
     max-width: 380px;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     color: #a0bb00;
     font-size: 14px;
     line-height: 18px;
@@ -418,7 +407,6 @@
     font-size: 16px;
     color: #3D3D3D;
     line-height: 14px;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     margin: 0 0 40px;
     text-align: center;
     text-transform: uppercase;
@@ -449,7 +437,6 @@
 .rp-c2-possibility__item-text{
     color: #3C3C3C;
     font-size: 14px;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     text-transform: uppercase;
     line-height: 21px;
     display: inline-block;
@@ -508,7 +495,6 @@
 .pp-form__checkbox-name{
     color: #3d3d3d;
     font-size: 18px;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     margin: 0;
     display: table-cell;
     vertical-align: middle;
@@ -529,7 +515,6 @@
     border: 1px solid #a0bb00;
     background: transparent;
     color: #646464;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     font-size: 16px;
     box-shadow: none;
     -webkit-appearance: none;
@@ -550,7 +535,6 @@
 .pp-form__text{
     color: #3d3d3d;
     text-align: center;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     font-size: 20px;
     display: block;
     padding-bottom: 10px; 
@@ -568,7 +552,6 @@
     text-align: center;
     background-color: #FF8300;
     border: none;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     position: relative;
     z-index: 1;
     -webkit-transition: all 0.3s ease-out;
@@ -606,7 +589,6 @@
     height: 43px;
     margin: 0 auto 10px;
     color: #646464;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     font-size: 16px;
     border-bottom: 1px solid #a0bb00;
     overflow: hidden;
@@ -653,7 +635,6 @@
     display: inline-block;
 }
 #DiContent .pp-form__select-list label{
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     font-size: 16px;
 }
 .pp-form__select-list input:focus{ outline: none; }
@@ -782,7 +763,6 @@ body{ background: rgba(0, 0, 0, 0.31)!important; }
     border-top: none;
     color: #646464;
     font-size: 14px;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     display: none;
     z-index: 3;
 }
@@ -883,7 +863,6 @@ body{ background: rgba(0, 0, 0, 0.31)!important; }
     border: 1px solid #B6B6B6;
     color: #646464;
     background-color: transparent;
-    font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
     font-size: 14px;
     border-radius: 0px;
 }

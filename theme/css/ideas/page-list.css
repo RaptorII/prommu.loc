@@ -13,7 +13,6 @@
 	height: 48px;
 	border: 1px solid #cecece;
 	padding: 0 15px;
-	font-family: RobotoCondensed-Regular,verdana,arial;
 	font-size: 16px;
 }
 .ideas__search input::-webkit-input-placeholder{color:#b5b5b5}
@@ -33,7 +32,6 @@
 	padding: 0 15px;
 	position: relative;
 	z-index: 1;
-	font-family: RobotoCondensed-Regular,verdana,arial;
 }
 .ideas__btn b{ font-size: 16px }
 #DiContent .ideas__search .ideas__btn:before{

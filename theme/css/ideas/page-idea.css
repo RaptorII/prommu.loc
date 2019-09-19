@@ -30,7 +30,6 @@
 	box-shadow: inset 0px 5px 22px -10px;
 	outline: none;
 	font-size: 18px;
-	font-family: RobotoCondensed-Regular,verdana,arial;
 }
 #new-idea .new-idea__text.error{ border: 1px solid red }
 #new-idea input::-webkit-input-placeholder{color:#b5b5b5}
@@ -53,7 +52,7 @@
     white-space: nowrap;
     position: relative;
     z-index: 1;
-    font-family: RobotoCondensed-Regular,verdana,arial;
+
 	outline: none;
 	border: none;
 }
@@ -90,7 +89,6 @@
 	position: relative;
 	background: #abb92a;
 	border-radius: 5px;
-	font-family: RobotoCondensed-Regular,verdana,arial;
 }
 #new-idea .ideas__select.error{ border: 1px solid red }
 .ideas__select span{
@@ -289,9 +287,6 @@
 	background: url(/theme/pic/vacancy/loading.gif) no-repeat;
 	margin-left: 50%;
 }
-.idea__module{
-	font-family: RobotoCondensed-Regular,verdana,arial;
-}
 .idea__description{
 	background: #ffffff;
 	padding: 25px 18px 30px;
@@ -478,7 +473,6 @@
 	box-shadow: inset 0px 5px 22px -10px;
 	outline: none;
 	font-size: 18px;
-	font-family: RobotoCondensed-Regular,verdana,arial;
 }
 #comment-form textarea.error{ border:1px solid red }
 #comment-form textarea::-webkit-input-placeholder{color:#b5b5b5}

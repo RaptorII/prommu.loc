@@ -38,7 +38,6 @@
 	border: none!important;
 	border-bottom: 1px solid #c8c8c8!important;
 	line-height: 28px;
-	font-family: 'LatoRegular', Calibri, Arial, sans-serif;
 }
 .country-phone-option span {float: right; color: #999999; min-width: 66px; text-align: right;}
 .country-phone-option:hover span, .country-phone-option.hovered span {color: #000;}
@@ -52,7 +51,6 @@
 	padding: 0px 20px 0px 0;
 	border: 1px solid #c8c8c8;
 	border-radius: 2px;
-	font-family: 'LatoRegular', Calibri, Arial, sans-serif;
 	font-size: 14px;
 	display: none;
 	-webkit-transition: all .3s ease-out;
@@ -87,7 +85,6 @@
 	line-height: 28px;
 	font-size: 14px;
 	color: #cfcfcf;
-	font-family: 'LatoRegular', Calibri, Arial, sans-serif;
 }
 
 .flag.flag-ad {background-position: -16px 0}

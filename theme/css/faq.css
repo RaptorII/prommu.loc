@@ -12,8 +12,8 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
   padding: 0;
@@ -22,41 +22,43 @@ time, mark, audio, video {
   font: inherit;
   vertical-align: baseline;
 }
+
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
+article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section, main {
   display: block;
 }
+
 ol, ul {
   list-style: none;
 }
+
 blockquote, q {
   quotes: none;
 }
+
 blockquote:before, blockquote:after,
 q:before, q:after {
   content: '';
   content: none;
 }
+
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-/*
-*
-*/
 
 *::after, *::before {
   content: '';
 }
+
 a:before,
 a:after,
 ins:before,
-ins:after{ content: none; }
-body {
-  font-family: RobotoCondensed-Regular,verdana,arial;
-  color: #4e5359;
+ins:after {
+  content: none;
 }
+
 body::after {
   /* overlay layer visible on small devices when the right panel slides in */
   position: fixed;
@@ -72,6 +74,7 @@ body::after {
   transition: opacity .3s 0s, visibility 0s .3s;
   z-index: 20;
 }
+
 body.cd-overlay::after {
   visibility: visible;
   opacity: 1;
@@ -79,6 +82,7 @@ body.cd-overlay::after {
   -moz-transition: opacity .3s 0s, visibility 0s 0s;
   transition: opacity .3s 0s, visibility 0s 0s;
 }
+
 @media only screen and (min-width: 768px) {
   body::after {
     display: none;
@@ -102,6 +106,7 @@ header {
   text-align: center;
   background-color: #a9c056;
 }
+
 header h1 {
   color: #ffffff;
   -webkit-font-smoothing: antialiased;
@@ -109,11 +114,13 @@ header h1 {
   font-size: 20px;
   font-size: 1.25rem;
 }
+
 @media only screen and (min-width: 1024px) {
   header {
     height: 240px;
     line-height: 240px;
   }
+
   header h1 {
     font-size: 36px;
     font-size: 2.25rem;
@@ -126,11 +133,13 @@ header h1 {
   max-width: 1024px;
   margin: 4em auto;
 }
+
 .cd-faq:after {
   content: "";
   display: table;
   clear: both;
 }
+
 @media only screen and (min-width: 768px) {
   .cd-faq {
     position: relative;
@@ -138,19 +147,23 @@ header h1 {
     box-shadow: none;
   }
 }
+
 .cd-faq-categories li:last-child a {
   border-bottom: none;
 }
+
 @media only screen and (min-width: 768px) {
   .cd-faq-categories {
     width: 20%;
     float: left;
   }
+
   .no-js .cd-faq-categories {
     width: 100%;
     margin-bottom: 2em;
   }
 }
+
 @media only screen and (min-width: 1024px) {
   .cd-faq-categories {
     position: absolute;
@@ -159,10 +172,12 @@ header h1 {
     width: 200px;
     z-index: 2;
   }
+
   .cd-faq-categories.is-fixed {
     /* top and left value assigned in jQuery */
     position: fixed;
   }
+
   .no-js .cd-faq-categories {
     position: relative;
   }
@@ -190,6 +205,7 @@ header h1 {
   -moz-transition: -moz-transform .3s;
   transition: transform .3s;
 }
+
 .cd-faq-items.slide-in {
   -webkit-transform: translateZ(0) translateX(0%);
   -moz-transform: translateZ(0) translateX(0%);
@@ -198,6 +214,7 @@ header h1 {
   transform: translateZ(0) translateX(0%);
   z-index: 21;
 }
+
 .no-js .cd-faq-items {
   position: static;
   height: auto;
@@ -208,6 +225,7 @@ header h1 {
   -o-transform: translateX(0);
   transform: translateX(0);
 }
+
 @media only screen and (min-width: 768px) {
   .cd-faq-items {
     position: static;
@@ -224,12 +242,14 @@ header h1 {
     background: transparent;
   }
 }
+
 @media only screen and (min-width: 1024px) {
   .cd-faq-items {
     float: none;
     width: 100%;
     padding-left: 220px;
   }
+
   .no-js .cd-faq-items {
     padding-left: 0;
   }
@@ -257,6 +277,7 @@ header h1 {
   -moz-transition: right 0.4s;
   transition: right 0.4s;
 }
+
 .cd-close-panel::before, .cd-close-panel::after {
   /* close icon in CSS */
   position: absolute;
@@ -267,6 +288,7 @@ header h1 {
   width: 18px;
   background: #6c7d8e;
 }
+
 .cd-close-panel::before {
   -webkit-transform: rotate(45deg);
   -moz-transform: rotate(45deg);
@@ -274,6 +296,7 @@ header h1 {
   -o-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+
 .cd-close-panel::after {
   -webkit-transform: rotate(-45deg);
   -moz-transform: rotate(-45deg);
@@ -281,10 +304,12 @@ header h1 {
   -o-transform: rotate(-45deg);
   transform: rotate(-45deg);
 }
+
 #DiContent .cd-close-panel.move-left {
   right: 30px;
   color: #4e5359;
 }
+
 @media only screen and (min-width: 768px) {
   .cd-close-panel {
     display: none;
@@ -295,18 +320,22 @@ header h1 {
   /* hide group not selected */
   display: none;
 }
+
 .cd-faq-group.selected {
   display: block;
 }
+
 .cd-faq-group .cd-faq-title {
   background: transparent;
   box-shadow: none;
   border: none;
   margin: 1em 0;
 }
+
 .no-touch .cd-faq-group .cd-faq-title:hover {
   box-shadow: none;
 }
+
 .cd-faq-group .cd-faq-title h2 {
   text-transform: uppercase;
   font-size: 12px;
@@ -314,14 +343,17 @@ header h1 {
   font-weight: 700;
   color: #bbbbc7;
 }
+
 .no-js .cd-faq-group {
   display: block;
 }
+
 @media only screen and (min-width: 768px) {
   .cd-faq-group {
     /* all groups visible */
     display: block;
   }
+
   .cd-faq-group > li {
     margin-bottom: 6px;
     background: #EDEDED;
@@ -332,17 +364,21 @@ header h1 {
     -o-transition: all .3s ease-out;
     transition: all .3s ease-out;
   }
+
   .no-touch .cd-faq-group > li:hover {
     box-shadow: 0 1px 10px rgba(108, 125, 142, 0.3);
     border: 1px solid #abb820;
   }
-  .no-touch .cd-faq-group > li:first-child:hover{
+
+  .no-touch .cd-faq-group > li:first-child:hover {
     box-shadow: none;
-    border: none;   
+    border: none;
   }
+
   .cd-faq-group .cd-faq-title {
     margin: 2em 0 1em;
   }
+
   .cd-faq-group:first-child .cd-faq-title {
     margin-top: 0;
   }
@@ -354,6 +390,7 @@ header h1 {
   margin: 1.6em 0 .4em;
   line-height: 1.2;
 }
+
 @media only screen and (min-width: 768px) {
   .cd-faq-trigger {
     font-size: 24px;
@@ -362,6 +399,7 @@ header h1 {
     margin: 0;
     padding: 24px 72px 24px 24px;
   }
+
   .cd-faq-trigger::before, .cd-faq-trigger::after {
     /* arrow icon on the right */
     position: absolute;
@@ -379,6 +417,7 @@ header h1 {
     -moz-transition-duration: 0.2s;
     transition-duration: 0.2s;
   }
+
   .cd-faq-trigger::before {
     -webkit-transform: rotate(45deg);
     -moz-transform: rotate(45deg);
@@ -387,6 +426,7 @@ header h1 {
     transform: rotate(45deg);
     right: 32px;
   }
+
   .cd-faq-trigger::after {
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);
@@ -394,6 +434,7 @@ header h1 {
     -o-transform: rotate(-45deg);
     transform: rotate(-45deg);
   }
+
   .content-visible .cd-faq-trigger::before {
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);
@@ -401,6 +442,7 @@ header h1 {
     -o-transform: rotate(-45deg);
     transform: rotate(-45deg);
   }
+
   .content-visible .cd-faq-trigger::after {
     -webkit-transform: rotate(45deg);
     -moz-transform: rotate(45deg);
@@ -415,27 +457,30 @@ header h1 {
     display: none;
     padding: 0 24px 30px;
   }
+
   .no-js .cd-faq-content {
     display: block;
   }
 }
 
-.cd-faq-categories a{
+.cd-faq-categories a {
   padding: 0px 10px;
   margin: 0 auto 10px;
   display: block;
   position: relative;
   border-radius: 20px;
-  background-color: rgba(171,184,32,.5);
+  background-color: rgba(171, 184, 32, .5);
   transition: all .3s ease-out;
   text-align: center;
 }
+
 .cd-faq-categories a:hover,
-.cd-faq-categories a.selected{
-  background-color: rgba(255,101,0,.5);
+.cd-faq-categories a.selected {
+  background-color: rgba(255, 101, 0, .5);
 }
-.cd-faq-categories a:after, 
-.cd-faq-categories a:before{
+
+.cd-faq-categories a:after,
+.cd-faq-categories a:before {
   content: '';
   position: absolute;
   border-radius: 20px;
@@ -444,11 +489,13 @@ header h1 {
   bottom: 3px;
   left: 3px;
 }
-.cd-faq-categories a:before{
+
+.cd-faq-categories a:before {
   background: #abb837;
   z-index: 1;
 }
-.cd-faq-categories a:after{
+
+.cd-faq-categories a:after {
   z-index: 1;
   opacity: 0;
   background: #ff921d;
@@ -457,18 +504,21 @@ header h1 {
   -o-transition: all .3s ease-out;
   transition: all .3s ease-out;
 }
+
 .cd-faq-categories a:hover:after,
-.cd-faq-categories a.selected:after{
+.cd-faq-categories a.selected:after {
   opacity: 1;
 }
-.cd-faq-categories a>b{ 
+
+.cd-faq-categories a > b {
   font-size: 18px;
   line-height: 50px;
   color: #fff;
   position: relative;
   z-index: 2;
 }
-#DiContent .cd-close-panel.move-left{
+
+#DiContent .cd-close-panel.move-left {
   border: 1px solid #abb820;
   border-radius: 10px;
   padding: 0 5px;

@@ -1,13 +1,16 @@
-#payment-legal{ display: none; }
-.payment-form__type-name{
+#payment-legal {
+  display: none;
+}
+
+.payment-form__type-name {
   text-transform: uppercase;
   color: #646464;
-  font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
   font-size: 16px;
   margin: 20px 0 10px;
   display: block;
 }
-.payment-form__radio-label{
+
+.payment-form__radio-label {
   height: 25px;
   display: inline-block !important;
   position: relative;
@@ -17,10 +20,12 @@
   cursor: pointer;
   font-size: 14px;
 }
-#DiContent .payment-form__radio-input{
+
+#DiContent .payment-form__radio-input {
   display: none;
 }
-.payment-form__radio-block{
+
+.payment-form__radio-block {
   height: 25px;
   width: 25px;
   background: #FFFFFF;
@@ -30,7 +35,8 @@
   left: 0;
   top: 0;
 }
-.payment-form__radio-block:before{
+
+.payment-form__radio-block:before {
   content: '';
   width: 11px;
   height: 11px;
@@ -39,30 +45,44 @@
   top: 6px;
   display: block;
 }
-.payment-form__radio-name{
+
+.payment-form__radio-name {
   color: #646464;
-  font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
   vertical-align: sub;
 }
-#DiContent .payment-form__radio-label input:checked + .payment-form__radio-block:before{ background: #abb820; }
-.payment-form__radio-label:hover .payment-form__radio-block:before{ background-color: #e6e6e6; }
-#payment-btn:disabled{
+
+#DiContent .payment-form__radio-label input:checked + .payment-form__radio-block:before {
+  background: #abb820;
+}
+
+.payment-form__radio-label:hover .payment-form__radio-block:before {
+  background-color: #e6e6e6;
+}
+
+#payment-btn:disabled {
   cursor: no-drop;
 }
-.payment__label{
+
+.payment__label {
   width: 100%;
   display: block;
   margin-bottom: 16px;
   position: relative;
 }
-#DiContent #payment-legal .payment__input{
+
+#DiContent #payment-legal .payment__input {
   width: 100%;
   color: #646464;
   font-size: 14px;
   border: 1px solid #ebebeb;
-  font-family: 'RobotoCondensedRegular', Calibri, Arial, sans-serif;
   background-color: #FFFFFF;
   line-height: normal;
 }
-#DiContent #payment-legal .payment__input.error{ border: 1px solid red; }
-.payment__input:focus{ outline: none; }
+
+#DiContent #payment-legal .payment__input.error {
+  border: 1px solid red;
+}
+
+.payment__input:focus {
+  outline: none;
+}

@@ -1,7 +1,7 @@
 #DiContent .othercities label{
   line-height: 33px;
   font-size: 14px;
-  font-family: RobotoCondensedBold, RobotoCondensedRegular, verdana, arial;
+  font-family: "RobotoCondensedBold", sans-serif, verdana;
 }
 #DiContent .othercities input{
   width: 100%;
@@ -12,7 +12,6 @@
   color: #343434;
   background-color: transparent;
   padding: 0 15px;
-  font-family: RobotoCondensedRegular, RobotoRegular, verdana, arial;
 }
 #DiContent .othercities input:focus{ outline: none }
 #cities_form{ margin: 0 0 30px; }

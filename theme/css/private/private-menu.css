@@ -53,7 +53,6 @@
     color: #212121;
     position: relative;
     padding: 5px 3px;
-    font-family: RobotoCondensed-Regular, verdana, arial;
 }
 #DiContent .applicant.pa__menu-link.active,
 #DiContent .applicant.pa__menu-link:hover,
@@ -108,7 +107,6 @@
     -o-transition: opacity .3s ease-out;
     transition: opacity .3s ease-out;
 }
-
 .employer i:before,
 .applicant i:before {
     font-style: normal;
@@ -137,29 +135,6 @@
 .pa__menu-19.employer i:before{ content: ''; }
 .pa__menu-27.employer i:before{ content: '\e935'; }
 .pa__menu-81.employer i:before{ content: '\e950'; }
-
-/*  */
-#DiContent .analytics-link{
-    line-height: 27px;
-    display: inline-block;
-    vertical-align: bottom;
-    color: #abb820;
-    font-size: 16px;
-    padding: 0 5px 0 35px;
-    font-family: RobotoCondensedBold, RobotoCondensedRegular, verdana, arial;
-    position: relative;
-    display: none;
-}
-#DiContent .analytics-link:hover{ color: #abb820 }
-#DiContent .analytics-link:before{
-    content: '';
-    width: 22px;
-    height: 15px;
-    position: absolute;
-    top: 6px;
-    left: 5px;
-    background: url(/theme/pic/analytics/analytics-link.png) no-repeat;
-}
 /*
 *   MEDIA
 */
