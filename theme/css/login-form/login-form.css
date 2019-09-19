@@ -177,7 +177,9 @@
     text-decoration: underline;
     display: inline-block;
 }
-#DiContent .register__reg-social .auth-form__social-link:hover{ color: #abb820; }
+#DiContent .register__reg-social .auth-form__social-link:hover{
+	color: #abb820;
+}
 .auth-form__social-link span{ 
 	line-height: 56px; 
 	font-size: 16px;
@@ -192,6 +194,7 @@
 	position: absolute;
 	left: 0;
 	top: 5px;
+	transition: var(--main-trans);
 }
 .auth-form__social-link.fb:before{ content: '\e832'; }
 .auth-form__social-link.vk:before{ content: '\e833'; }
@@ -200,6 +203,15 @@
 .auth-form__social-link.go:before{ content: '\e99f'; }
 .auth-form__social-link.in:before{ content: '\e9a3'; }
 .auth-form__social-link.ya:before{ content: '\e9a2'; }
+
+#DiContent .auth-form__social-link:hover.fb{ color: #315c99; }
+#DiContent .auth-form__social-link:hover.vk{ color: #4d76a1; }
+#DiContent .auth-form__social-link:hover.ml{ color: #1463a6; }
+#DiContent .auth-form__social-link:hover.od{ color: #f88b02; }
+#DiContent .auth-form__social-link:hover.go{ color: #dd4b3e; }
+#DiContent .auth-form__social-link:hover.in{ color: #0275b6; }
+#DiContent .auth-form__social-link:hover.ya{ color: #dc0919; }
+
 #DiContent .auth-form__social .auth-form__social-link.disable{
     filter: grayscale(100%);
     cursor: no-drop;
@@ -320,8 +332,18 @@ media
 }
 @media (max-width: 500px){
     .auth-form__social-link-block{ display: block; }
+	.auth-form__social-link-block:before {
+		content: 'Быстрый вход через соцсети:';
+		display: block;
+		text-align: center;
+		padding-bottom: 30px;
+		font-size: 14px;
+		font-weight: 400;
+
+	}
+	#DiContent .auth-form__header h1.auth-form__title{ text-align: center; }
     #DiContent .auth-form__social .auth-form__social-link{
-        width: 50%;
+        width: 33%;
         margin-bottom: 10px;
         float: left;
     }

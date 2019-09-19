@@ -412,6 +412,15 @@ media
     .register__preview {
         display: none;
     }
+    .register__reg-social:before {
+        content: 'Быстрая регистрация через соцсети:';
+        display: block;
+        text-align: center;
+        padding-bottom: 30px;
+        font-size: 14px;
+        font-weight: 400;
+
+    }
     #DiContent .register__reg-header,
     #DiContent .competitor .register__reg-header {
         min-height: 0;
@@ -438,6 +447,12 @@ media
     }
 }
 @media (max-width: 500px){
+    .reg-header__point {
+        display: none;
+    }
+    .reg-header__title {
+        padding: 0;
+    }
     .employer .register__reg-header{ padding: 0 0 160px; }
     .employer .reg-header__pic{
         left: calc(50% - 80px);
@@ -485,7 +500,7 @@ media
     */
     .reg-social__link-block{ display: block; }
     #DiContent .register__reg-social .reg-social__link{
-        width: 50%;
+        width: 33%;
         margin-bottom: 10px;
         float: left;
     }
