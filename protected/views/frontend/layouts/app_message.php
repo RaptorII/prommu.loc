@@ -15,23 +15,6 @@
     <div class="app-message__play"></div>
 </div>
 <style type="text/css">
-    @font-face{ 
-        font-family: 'Roboto-Regular'; 
-        src: url('/theme/fonts/Roboto-Regular.eot') format('truetype'); 
-        src: local('Roboto-Regular'), 
-        url(/theme/fonts/Roboto-Regular.ttf), 
-        url(/theme/fonts/Roboto-Regular.otf), 
-        url(/theme/fonts/Roboto-Regular.woff),
-        url(/theme/fonts/Roboto-Regular.woff2); 
-    }
-    @font-face{ 
-        font-family: 'RobotoCondensedBold'; 
-        src: url(/theme/fonts/RobotoCondensedBold.eot); 
-        src: local('RobotoCondensedBold'), 
-        url(/theme/fonts/RobotoCondensedBold.ttf), 
-        url(/theme/fonts/RobotoCondensedBold.woff), 
-        url(/theme/fonts/RobotoCondensedBold.woff2); }
-
     html, body { width: 100%; height: 100% !important; }
     body { 
         position: relative; 
