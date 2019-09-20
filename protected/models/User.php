@@ -177,6 +177,13 @@ class User extends CActiveRecord
 			$rCondition[]="(r.firstname like '%{$value}%' or r.lastname like '%{$value}%')";
 			$eCondition[]="e.name like '%{$value}%'";
 		}
+		$value = trim($arGet['email']);
+		$value = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		if(!empty($value))
+		{
+			$rCondition[]="u.email like '%{$value}%'";
+			$eCondition[]="u.email like '%{$value}%'";
+		}
 		// date creating
 		$value = $this->setDateQuery('r','date_public','cbdate','cedate');
 		!empty($value) && $rCondition[] = $value;
@@ -230,7 +237,8 @@ class User extends CActiveRecord
 		$arRes['items'] = Yii::app()->db->createCommand()
 												->select('
 													u.id_user, 
-													u.status, 
+													u.status,
+													u.email, 
 													e.name,
 													r.firstname,
 													r.lastname,
@@ -241,8 +249,7 @@ class User extends CActiveRecord
 													u.isblocked,
 													u.ismoder,
 													u.messenger,
-													u.is_online
-                                                    ')
+													u.is_online')
 												->from('user u')
 												->leftjoin('employer e','e.id_user=u.id_user')
 												->leftjoin('resume r','r.id_user=u.id_user')

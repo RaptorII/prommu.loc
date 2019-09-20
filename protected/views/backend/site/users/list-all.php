@@ -44,6 +44,7 @@
 				<th><a class="sort-link" data-value="id_user" href="javascript:void(0)">ID USER</a></th>
 				<th>Тип</th>
 				<th>Наименование</th>
+				<th>Email</th>
 				<th>Дата создания</th>
 				<th>Дата изменения</th>
 				<th>Статус</th>
@@ -65,6 +66,7 @@
 					</select>
 				</td>
 				<td><input name="User[name]" type="text"></td>
+				<td><input name="User[email]" type="text"></td>
 				<td>
 					<div class="filter_date_range">
 						<?php

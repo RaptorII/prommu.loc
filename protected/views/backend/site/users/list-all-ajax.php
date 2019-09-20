@@ -18,6 +18,7 @@
 			<td style="width:2%"><?=$item['id_user']?></td>
 			<td style="width:2%"><?=getValue($item,"status")?></td>
 			<td style="width:30%"><?=getValue($item,"name")?></td>
+			<td style="width:30%"><?=getValue($item,"email")?></td>
 			<td style="width:2%"><?=getValue($item,"cdate")?></td>
 			<td style="width:2%"><?=getValue($item,"mdate")?></td>
 			<td style="width:10%"><?=getValue($item,"isblocked")?></td>
@@ -87,6 +88,9 @@
 				case 'name':
 					$result = trim("{$arr['firstname']} {$arr['lastname']}");
 					break;
+				case 'email':
+					$result = trim($arr['email']);
+					break;
 				case 'status':
 					$result = '<span class="glyphicon glyphicon-user" title="соискатель"></span>';
 					break;
@@ -113,6 +117,9 @@
 			{
 				case 'name':
 					$result = trim($arr['name']);
+					break;
+				case 'email':
+					$result = trim($arr['email']);
 					break;
 				case 'status':
 					$result = '<span class="glyphicon glyphicon-briefcase" title="работодатель"></span>';
