@@ -4,11 +4,12 @@
 }
 
 .services {
-  margin-top: 15px
+  margin-top: 15px;
+  min-height: 160px;
 }
 
 .services__item {
-  position: relative;
+  margin-bottom: 15px;
 }
 
 .services > div {

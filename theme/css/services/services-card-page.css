@@ -84,6 +84,9 @@
   position: relative;
   z-index: 1;
   cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .pr-card__form-label {

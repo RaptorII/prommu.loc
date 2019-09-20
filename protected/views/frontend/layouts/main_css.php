@@ -11081,9 +11081,7 @@
   }
 
   #DiContent .cd-faq-trigger.cd-faq-trigger-title {
-    font-family: inherit;
     cursor: pointer;
-    font-weight: 400;
     color: #abb820
   }
 
