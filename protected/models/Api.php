@@ -64,6 +64,7 @@ class Api
                 
                 ///CHATS
                 case 'chats' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getChatThemes(); break;
+                case 'chat' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getChatMessage(); break;
                 case 'send' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setMess(); break;
                 
                 case 'push' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getTest(); break;
