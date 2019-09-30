@@ -4741,4 +4741,15 @@ WHERE id_vac = {$inVacId}";
         ->where(['in','id',$arId])
         ->queryAll();
     }
+  /**
+   * @param $id - integer
+   * @param $arParams - array(key => value)
+   * @return mixed
+   */
+  public function updateParam($id, $arParams)
+  {
+    $result = self::model()->updateByPk($id, $arParams);
+
+    return $result;
+  }
 }

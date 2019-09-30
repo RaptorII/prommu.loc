@@ -43,8 +43,13 @@ class AdminView
 
 		return  "<a href='$link' " . ($is_btn ? 'class="btn btn-default"' : '') . ">$name</a> ";
 	}
-	/**
-	 * 
-	 */
+  /**
+   * @param $value - string
+   * @return string
+   */
+  public static function getStr($value)
+  {
+    return (!empty($value) ? $value : '-');
+  }
 }
 ?>

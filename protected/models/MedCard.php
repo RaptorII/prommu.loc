@@ -113,6 +113,16 @@ class MedCard extends CActiveRecord
 		// should not be searched.
 
 		$criteria=new CDbCriteria;
+		$arCondition = [];
+		$param = Yii::app()->getRequest()->getParam('MedCard');
+
+		$this->regaddr = $param['regaddr'];
+		$this->pay = $param['pay'];
+		
+		if(count($arCondition))
+		{
+			$criteria->condition = implode(',', $arCondition);
+		}
 
 		$criteria->compare('id',$this->id,true);
 		$criteria->compare('status',$this->status);
@@ -120,7 +130,7 @@ class MedCard extends CActiveRecord
 		$criteria->compare('fff',$this->fff,true);
 		$criteria->compare('iii',$this->iii,true);
 		$criteria->compare('ooo',$this->ooo,true);
-		$criteria->compare('pay',$this->pay);
+		$criteria->compare('pay',$this->pay,true);
 		$criteria->compare('tel',$this->tel,true);
 		$criteria->compare('email',$this->email,true);
 		$criteria->compare('regaddr',$this->regaddr,true);
@@ -135,11 +145,42 @@ class MedCard extends CActiveRecord
 		));
 	}
 
-    public function getNewCnt() {
+    public function getNewCnt()
+    {
         return  $this->countByAttributes(['status'=> 0]);
+    }
+    /**
+    *
+    */
+    public static function getIndex($all=false)
+    {
+    	$arRes = [
+    		'На Новослободской' => 'На Новослободской',
+    		'На Таганке' => 'На Таганке',
+    		'На Киевской' => 'На Киевской',
+    		'На Курской' => 'На Курской'
+    	];
+    	if($all)
+    	{
+    		array_unshift($arRes, 'Все');
+    	}
 
+    	return (!empty($key) ? $arRes[$key] : $arRes);
+    }
+    /**
+    *
+    */
+    public static function getPayType($all=false)
+    {
+    	$arRes = [
+    		'Сервису Промму' => 'Сервису Промму',
+    		'Наличными в Медицинском центре' => 'Наличными в Медицинском центре'
+    	];
+    	if($all)
+    	{
+    		array_unshift($arRes, 'Все');
+    	}
+
+    	return (!empty($key) ? $arRes[$key] : $arRes);
     }
 }
-		// should not be searched.
-
-		

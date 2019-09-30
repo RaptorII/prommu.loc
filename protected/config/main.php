@@ -152,7 +152,12 @@ return array(
                 'api' => 'api/index',
                 'cron.<cron:[a-z_]+>' => 'cron/cron',
                 'cron' => 'cron/index',
-                
+                '<controller:service>' => 'service/index',
+                '<controller:service>/<action:[\w-]+>'=>'<controller>/<action>',
+                '<controller:service>/<action:(service_order|card_request|med_request)>/<id:\d+>'=>'<controller>/<action>',
+                '<controller:service>/<action:(service_cloud|outstaffing)>/<service:[\w-]+>'=>'<controller>/<action>',
+                '<controller:service>/<action:(service_cloud|outstaffing)>/<service:[\w-]+>/<id:\d+>'=>'<controller>/<action>',
+
                 'gii'=>'gii',
                 'gii/<controller:\w+>'=>'gii/<controller>',
                 'gii/<controller:\w+>/<action:\w+>'=>'gii/<controller>/<action>',

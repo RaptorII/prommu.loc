@@ -27,6 +27,8 @@ class Services extends Model
         // получаем должности
         $sql = "SELECT m.id , m.`key` , m.name val FROM user_attr_dict m WHERE m.id_par = 110  ORDER BY val";
         $data['posts'] = Yii::app()->db->createCommand($sql)->queryAll();
+        $data['file_path'] = UserCard::$FILE_PATH;
+        $data['small_img_suffix'] = UserCard::$SMALL_IMG_SUFFIX;
 
         return $data;
     }
@@ -166,76 +168,45 @@ class Services extends Model
 
     public function orderPrommu()
     {
-//        $data['name'] = filter_var(Yii::app()->getRequest()->getParam('company'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $data['post'] = filter_var(Yii::app()->getRequest()->getParam('post'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-//        $data['tabn'] = filter_var(Yii::app()->getRequest()->getParam('num'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $data['fff'] = filter_var(Yii::app()->getRequest()->getParam('fff'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $data['iii'] = filter_var(Yii::app()->getRequest()->getParam('nnn'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $data['ooo'] = filter_var(Yii::app()->getRequest()->getParam('ooo'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $ser = explode("-",Yii::app()->getRequest()->getParam('doc-ser'));
+      $rq = Yii::app()->getRequest();
+      $data['post'] = filter_var($rq->getParam('post'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $data['fff'] = filter_var($rq->getParam('fff'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $data['iii'] = filter_var($rq->getParam('nnn'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $data['ooo'] = filter_var($rq->getParam('ooo'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $ser = explode("-",$rq->getParam('doc-ser'));
+      $data['docser'] = $ser[0];
+      $data['docnum'] = $ser[1];
+      $data['docdate'] = $rq->getParam('birthday');
+      $data['docorgname'] = filter_var($rq->getParam('doc-org'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $data['borndate'] =  $rq->getParam('birthday');
+      $data['bornplace'] = filter_var($rq->getParam('bornplace'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $data['regaddr'] = filter_var($rq->getParam('regaddr'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $data['liveaddr'] = filter_var($rq->getParam('addr'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $data['tel'] = filter_var($rq->getParam('tel'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $phoneCode = filter_var($rq->getParam('__phone_prefix'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $data['tel'] = $phoneCode . $data['tel'];
+      $data['docorgcode'] = filter_var($rq->getParam('docorgcode'), FILTER_SANITIZE_NUMBER_INT);
+      $data['comment'] = filter_var($rq->getParam('comment'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $data['crdate'] = date("Y-m-d H:i:s");
+      $arFiles = $rq->getParam('files');
+      $data['files'] = '';
 
-        $data['docser'] = $ser[0];
+      if(count($arFiles))
+      {
+        $data['files'] = implode(',', $arFiles);
+      }
+      $data['id_user'] = (!Share::isGuest() ? Share::$UserProfile->exInfo->id : null);
 
-        $data['docnum'] = $ser[1];
-        $data['docdate'] = Yii::app()->getRequest()->getParam('birthday');
-        $data['docorgname'] = filter_var(Yii::app()->getRequest()->getParam('doc-org'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $data['borndate'] =  Yii::app()->getRequest()->getParam('birthday');
-    
-        $data['bornplace'] = filter_var(Yii::app()->getRequest()->getParam('bornplace'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $data['regaddr'] = filter_var(Yii::app()->getRequest()->getParam('regaddr'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-//        $data['regcountry'] = filter_var(Yii::app()->getRequest()->getParam('regcountry'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $data['liveaddr'] = filter_var(Yii::app()->getRequest()->getParam('addr'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-//        $data['livecountry'] = filter_var(Yii::app()->getRequest()->getParam('country'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $data['tel'] = filter_var(Yii::app()->getRequest()->getParam('tel'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $phoneCode = filter_var(Yii::app()->getRequest()->getParam('__phone_prefix'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $data['tel'] = $phoneCode . $data['tel'];
-        $data['docorgcode'] = filter_var(Yii::app()->getRequest()->getParam('docorgcode'), FILTER_SANITIZE_NUMBER_INT);
-        $data['comment'] = filter_var(Yii::app()->getRequest()->getParam('comment'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $data['crdate'] = date("Y-m-d H:i:s");
+      $result = Yii::app()->db->createCommand()->insert('card_request', $data);
+      if($result)
+      {
+        Yii::app()->user->setFlash(
+          'prommu_flash',
+          'Ваша заявка успешно принята в обработку. Ожидайте, наши менеджеры свяжутся с вами'
+        );
+      }
 
-        // add img files
-        $files = array();
-        $path = "/images/services";
-        $fidest = array();
-        $storedFiles = $_SESSION['uploaduni'] ?: array();
-        foreach ($storedFiles as $key => $val)
-        {
-            foreach ($val as $key2 => $val2)
-            {
-                $info = pathinfo($val2);
-
-                $files[$key][$key2] = "{$path}/" . $info['basename'];
-
-                $fidest[$key]['source'][] = $val2;
-                $fidest[$key]['dest'][] = "{$path}/" . $info['basename'];
-            } // end foreach
-//            $files .= $key . ":" . join(":", $fidest[$key]['dest']) . "\n";
-
-        }
-//        $data['files'] = $files;
-        $data['files'] = json_encode($files);
-        $data['id_user'] = (!Share::isGuest() ? Share::$UserProfile->exInfo->id : null);
-
-        $res = Yii::app()->db->createCommand()
-            ->insert('card_request', $data);
-
-        // копировать сканы
-        $this->imgPath = "services";
-        foreach ($fidest as $key => $val)
-        {
-            foreach ($val['dest'] as $key2 => $val2)
-            {
-                if( copy(MainConfig::$DOC_ROOT . $fidest[$key]['source'][$key2], MainConfig::$DOC_ROOT . $val2) )
-                    unlink(MainConfig::$DOC_ROOT . $fidest[$key]['source'][$key2]);
-            } // end foreach
-        } // end foreach
-
-
-        unset($_SESSION['uploaduni']);
-
-        $message = 'Ваша заявка успешно принята в обработку. Ожидайте, наши менеджеры свяжутся с вами';
-        Yii::app()->user->setFlash('prommu_flash', $message);
-        return array('error' => 0);
+      return ['error' => $result];
     }
 
 

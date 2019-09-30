@@ -1,0 +1,35 @@
+.template-table{
+  background-color: #FFFFFF;
+  font-size: 14px;
+}
+.template-table td:first-child{ width: 25% }
+.template-table tbody tr td,.template-table tbody tr th{ padding: 5px; }
+.template-table tbody tr:nth-child(odd){ background-color: #f4f4f4 }
+/*
+*   service_cloud
+*/
+.applicants_td{
+  max-height: 280px;
+  overflow: hidden;
+  position: relative;
+}
+.applicants_td.active{ height: inherit }
+.applicants_td .btn{
+  position: absolute;
+  top: 246px;
+  right: 0;
+  min-width: initial;
+}
+.service_images{ margin: 0 -5px; }
+.service_images a{
+  display: inline-block;
+  width: 100px;
+  height: 70px;
+  padding: 0 5px;
+  margin-bottom: 10px;
+}
+.service_images img{
+  width: 100%;
+  height: 70px;
+  object-fit: cover;
+}

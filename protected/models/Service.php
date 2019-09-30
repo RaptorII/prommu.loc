@@ -17,6 +17,8 @@
  */
 class Service extends CActiveRecord
 {
+  public $company_search;
+  public $vacancy_search;
     /**
      * @return string the associated database table name
      */
@@ -34,7 +36,7 @@ class Service extends CActiveRecord
         // will receive user inputs.
         return array(
             array('id, name, sum,bdate, edate, status, type, id_user, key, date', 'required'),
-            array('type, name, sum', 'length', 'max'=>100),
+            array('type, name', 'length', 'max'=>100),
             array('name', 'length', 'max'=>50),
             array('date', 'safe'),
             // The following rule is used by search().
@@ -55,10 +57,7 @@ class Service extends CActiveRecord
      */
     public function relations()
     {
-        // NOTE: you may need to adjust the relation name and the related
-        // class name for the relations automatically generated below.
-        return array(
-        );
+      return array();
     }
 
     /**
@@ -98,28 +97,70 @@ class Service extends CActiveRecord
      */
     public function search()
     {
-        // @todo Please modify the following code to remove attributes that should not be searched.
+      $get = Yii::app()->getRequest()->getParam('Service');
+      $criteria=new CDbCriteria;
 
-        $criteria=new CDbCriteria;
+      $criteria->select = 't.*, e.name as company_search, ev.title as vacancy_search';
+      $criteria->join = "LEFT JOIN employer e ON e.id_user=t.id_user "
+       . "LEFT JOIN empl_vacations ev ON ev.id=t.name";
+      $arCondition = [];
 
-        $get = Yii::app()->getRequest()->getParam('Service');
-        if(intval($get['name']))
-        {
-            $criteria->condition = "name={$get['name']}";
-            $this->name = $get['name'];
-        }
+      if(!empty($get['company_search']))
+      {
+        $arCondition[] = "e.name LIKE '%" . $get['company_search'] . "%'";
+        $this->company_search = $get['company_search'];
+      }
+      if(!empty($get['vacancy_search']))
+      {
+        $arCondition[] = "ev.title LIKE '%" . $get['vacancy_search'] . "%'";
+        $this->vacancy_search = $get['vacancy_search'];
+      }
+      if($value=Share::checkFormatDate($get['bdate']))
+      {
+        $arCondition[] = "t.bdate='$value'";
+        $this->bdate = $get['bdate'];
+      }
+      if($value=Share::checkFormatDate($get['edate']))
+      {
+        $arCondition[] = "t.edate='$value'";
+        $this->edate = $get['edate'];
+      }
+      if(in_array($get['stack'],[1,2]))
+      {
+        $arCondition[] = ($get['stack']==1 ? "t.stack<>''" : "t.stack=''");
+        $this->stack = $get['stack'];
+      }
+      if(in_array($get['key'],[1,2]))
+      {
+        $arCondition[] = ($get['key']==1 ? "t.key<>''" : "t.key=''");
+        $this->key = $get['key'];
+      }
+      if(in_array($get['legal'],[1,2]))
+      {
+        $arCondition[] = ($get['legal']==1 ? "t.legal<>''" : "t.legal=''");
+        $this->legal = $get['legal'];
+      }
 
-        $criteria->compare('id',$this->id,true);
-        $criteria->compare('name',$this->name, true);
-        $criteria->compare('type',$this->type,true);
-        $criteria->compare('key',$this->key, true);
-        
+      if(count($arCondition))
+      {
+        $criteria->condition = implode(' and ', $arCondition);
+      }
 
-        return new CActiveDataProvider($this, array(
-            'criteria'=>$criteria,
-            'pagination' => array('pageSize' => 50,),
-            'sort' => ['defaultOrder'=>'id desc'],
-        ));
+      $this->id = $get['id'];
+      $this->sum = $get['sum'];
+      $this->status = $get['status'];
+      $this->is_new = $get['is_new'];
+      $criteria->compare('t.id', $this->id, true);
+      $criteria->compare('t.type', $this->type, true);
+      $criteria->compare('t.sum', $this->sum, true);
+      $criteria->compare('t.status', $this->status, true);
+      $criteria->compare('t.is_new', $this->is_new, true);
+
+      return new CActiveDataProvider($this, array(
+        'criteria' => $criteria,
+        'pagination' => ['pageSize' => 20],
+        'sort' => ['defaultOrder' => 't.is_new desc, t.id desc'],
+      ));
     }
 
     /**
@@ -490,4 +531,72 @@ class Service extends CActiveRecord
             [':id' => $id]
         );
     }
+  /**
+   * @param $id
+   * @return array
+   * Данные о отдельном заказе
+   */
+  public function getOrder($id)
+  {
+    $arRes = [];
+    $arRes['item'] = $this::model()->findByPk($id);
+    if($arRes['item'])
+    {
+      $id_user = $arRes['item']['id_user'];
+      $arRes['employer'] = Share::getUsers([$id_user])[$id_user];
+      $model = new Vacancy();
+      $arRes['vacancy'] = $model->getVacanciesById($arRes['item']['name'])[0];
+      if(in_array($arRes['item']['type'],['email','sms','push']))
+      {
+        $arRes['applicants'] = Share::getUsers(Share::explode($arRes['item']['user']));
+      }
+    }
+
+    return $arRes;
+  }
+  /**
+   * @param $id
+   * @return int
+   */
+  public function setAdminViewed($id)
+  {
+    return $this::model()->updateByPk($id,['is_new'=>0]);
+  }
+  /**
+   * Сохранение услуги и запуск услуги админом
+   */
+  public function setData()
+  {
+    $arParam = Yii::app()->getRequest()->getParam('Service_cloud');
+    $this::model()->updateByPk(
+      $arParam['id'],
+      ['status'=>$arParam['status'], 'key'=>$arParam['key']]
+    );
+    $message = 'Данные успешно сохранены';
+    if($arParam['start_service'])
+    {
+      $stack = time();
+      $this::model()->updateByPk(
+        $arParam['id'],
+        ['status'=>1, 'key'=>'Запустил администратор', 'stack'=>$stack]
+      );
+      if($arParam['service']=='vacancy') // premium
+      {
+        $model = new Vacancy();
+        $model->updateParam($arParam['vacancy'],['ispremium'=>1]);
+      }
+      if(in_array($arParam['service'],['email','sms'])) // email, sms
+      {
+        $model = new PrommuOrder();
+        $model->autoOrder(
+          $arParam['service'],
+          $stack,
+          $arParam['id_user'],
+          $arParam['vacancy']
+        );
+      }
+      $message = 'Услуга "' . Services::getServiceName($arParam['service']) . '" запущена';
+    }
+    Yii::app()->user->setFlash('success', $message);
+  }
 }

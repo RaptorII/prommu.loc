@@ -156,9 +156,23 @@
     border: 1px solid #d6d6d6; 
 }
 .custom-table .filters select{ height: 26px; }
-/*
-*
-*/
+.custom-table .new-row td{ background-color: #ffffc6 }
+.grid-view .pager.pager{ text-align: center }
+.custom-table .dropdown-menu li {
+  width: 100px;
+  margin: 5px;
+  padding: 5px;
+  display: block;
+  cursor: pointer;
+}
+.custom-table .dropdown-menu{
+  margin: 0;
+  padding: 0;
+  min-width: 100px;
+}
+  /*
+  *
+  */
 .clearfix{ clear: both; }
 /*
 *   nicEdit
@@ -183,3 +197,7 @@
   display: flex;
 }
 .filter_date_range input{ width: 85px !important; }
+/*
+*   custom label
+*/
+.label-important{ background: #dd4b39; }

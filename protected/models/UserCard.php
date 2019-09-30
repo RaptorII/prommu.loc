@@ -32,6 +32,9 @@
  */
 class UserCard extends CActiveRecord
 {
+  public static $FILE_PATH = 'services/card/';
+  public static $SMALL_IMG_SUFFIX = 100;
+  public static $IMG_SUFFIX = '000';
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -124,8 +127,15 @@ class UserCard extends CActiveRecord
 	 */
 	public function search()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
+    $get = Yii::app()->getRequest()->getParam('UserCard');
+    $this->id = $get['id'];
+    $this->fff = $get['fff'];
+    $this->tel = $get['tel'];
+    $this->regaddr = $get['regaddr'];
+    if($get['status']!=='all')
+    {
+      $this->status = $get['status'];
+    }
 
 		$criteria=new CDbCriteria;
 
@@ -157,7 +167,8 @@ class UserCard extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
-            'sort' => ['defaultOrder'=>'id desc'],
+        'sort' => ['defaultOrder'=>'id desc'],
+        'pagination' => ['pageSize' => 20],
 		));
 	}
 
@@ -165,4 +176,31 @@ class UserCard extends CActiveRecord
         return  $this->countByAttributes(['status'=> 0]);
 
     }
+  /**
+   * @param $data - array
+   * @return bool|CDbDataReader|mixed|string
+   */
+  public function updateData($data)
+  {
+    $result = self::model()->updateByPk(
+      $data['id'],
+      [$data['field'] => $data['value']]
+    );
+
+    return ($result ? 'Данные успешно обновлены' : 'Ошибка изменения данных');
+  }
+  /**
+   * @param $id
+   * @return int
+   */
+  public function setAdminViewed($id)
+  {
+    $data = $this::model()->findByPk($id);
+    $result = false;
+    if(!$data['status'])
+    {
+      $result = $this::model()->updateByPk($id,['status'=>1]);
+    }
+    return $result;
+  }
 }

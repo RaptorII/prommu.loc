@@ -49,7 +49,7 @@ class ServiceGuestOrder extends CActiveRecord
       array(
         'criteria' => $criteria,
         'pagination' => ['pageSize' => $this->limit],
-        'sort' => ['defaultOrder' => 'id desc']
+        'sort' => ['defaultOrder' => 'is_viewed asc, id desc']
       )
     );
   }

@@ -124,6 +124,7 @@ class PrommuOrder {
         ->from('user')
         ->where(['in','id_user',$arIdUsers])
         ->queryColumn();
+
       // для письма нужен заголовок вакансии
       $vacancyTitle = Yii::app()->db->createCommand()
         ->select('title')

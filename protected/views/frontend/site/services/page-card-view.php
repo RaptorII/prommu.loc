@@ -139,30 +139,27 @@
                 <textarea name="comment" placeholder="Комментарий" class="pr-card__form-input pr-card__form-textarea"></textarea>
               </label>
               <input type="hidden" name="save" id="HiId" value="1"/>
-            </form>
-
-
-            <form method="post" enctype="multipart/form-data" id="F2upload" class="pr-card__upload">
-              <h3 class="pr-card__upload-title">Загрузить скан копии Паспорта</h3>
-              <div class="pr-card__upload-text">(главная страница и страница регистрации) Изображение загружаемое на сайт не должно превышать размер 1 Мб и быть максимум 2500х2500 пикселей. Тип файла для загрузки: JPG или PNG</div>
-              <div id="DiImgs">
-                <?php foreach ($viData['files'] as $key => $val): ?>
-                    <div class="doc-scan uni-img-block">
-                        <span class="uni-delete" data-id="<?= $key ?>"></span>
-                        <a href="<?= $val['orig'] ?>" class="uni-img-link" target="_blank">
-                            <img src="<?= $val['tb'] ?>" alt="" class="uni-img">
-                        </a>
-                    </div>
-                <?php endforeach; ?>
+              <div class="pr-card__upload">
+                <h3 class="pr-card__upload-title">Загрузить скан копии Паспорта</h3>
+                <div class="pr-card__upload-text">(главная страница и страница регистрации) Изображение загружаемое на сайт не должно превышать размер 10 Мб и быть максимум 2500х2500 пикселей. Тип файла для загрузки: JPG или PNG</div>
+                <?
+                $this->widget(
+                  'YiiUploadWidget',
+                  [
+                    'fileFormat' => ['jpg','jpeg','png'],
+                    'imgDimensions' => [(string)$viData['small_img_suffix'] => $viData['small_img_suffix']],
+                    'callButtonText' => 'Загрузить',
+                    'maxFileSize' => 10,
+                    'fileLimit' => 5,
+                    'maxImageSize' => 2500,
+                    'jsMethodAfterUpload' => 'afterUploadPreviewImage',
+                    'filePath' => Settings::getFilesRoot() . $viData['file_path'],
+                    'fileUrl' => Settings::getFilesUrl() . $viData['file_path']
+                  ]
+                );
+                ?>
+                <div class="pr-card__file-list"></div>
               </div>
-              <div class="clear"></div>
-              <div class="message -red"></div>
-              <input type="file" name="img" id="UplImg" multiple="true">
-              <div class="btn-upload">
-                  <button type="button" class="pr-card__upload-btn">Выбрать и загрузить</button>
-                  <span class="loading-ico"><img src="/theme/pic/loading2.gif" alt=""></span>
-              </div>
-              <input type="hidden" name="MAX_FILE_SIZE" value="1048576"  multiple="true">
             </form>
             <div class="center">
               <span class="pr-card__btn off prmu-btn prmu-btn_normal" id="pr-card-btn">
@@ -196,12 +193,22 @@
             <img src="" alt="" class="uni-img">
         </a>
     </div>
-
-<script type="text/javascript">
-  jQuery(function($){
-    G_VARS.uniFiles = <?= json_encode($_SESSION['uploaduni']) ?>;
-  });
-</script>
 <?if(!in_array($arRes['user']['status'], [2,3])){
   require $_SERVER["DOCUMENT_ROOT"] . '/protected/views/frontend/site/services/popups.php';
 }?>
+<script>
+  var fileUrl = '<?=Settings::getFilesUrl() . $viData['file_path']?>';
+  var filSuffix = '<?=$viData['small_img_suffix']?>';
+  var afterUploadPreviewImage = function()
+  {
+    $.each(arguments[0],function(i,e){
+      var nameWithoutSuffix = e.name.split('.').slice(0, -1).join('.'),
+        src = fileUrl + nameWithoutSuffix + filSuffix + '.jpg',
+        image = '<img src="' + src + '" alt="' + e.oldname + '">',
+        input = '<input type="hidden" name="files[]" value="' + nameWithoutSuffix + '">';
+
+      $('.pr-card__file-list').append('<div>' + image + input + '</div>');
+      $('.YiiUpload__call-btn').fadeOut();
+    });
+  }
+</script>
