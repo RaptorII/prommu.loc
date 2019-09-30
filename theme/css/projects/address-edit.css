@@ -1,4 +1,9 @@
-#index.project__module{ display: block }
+#index.project__module {
+  display: block
+}
+
 #DiContent #index .city-field input,
 #DiContent #index .post-field input,
-#DiContent #index .metro-inp{ display: none }
+#DiContent #index .metro-inp {
+  display: none
+}

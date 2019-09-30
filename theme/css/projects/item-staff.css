@@ -1,150 +1,164 @@
-#update-person *,
-#update-person input{ font-family: RobotoCondensed-Regular, verdana, arial }
-#update-person input:focus{ outline: none }
-#DiContent #invitation [type='text']{
-    width: 100%;
-    height: 30px;
-    background: #ffffff;
-    border: 1px solid #cecece;
-    -webkit-transition: all ease-out .3s;
-    -moz-transition: all ease-out .3s;
-    -o-transition: all ease-out .3s;
-    transition: all ease-out .3s;
-    font-size: 14px;
-    outline: none;
-}
-#DiContent #invitation [type='text'].error{
-    border: 1px solid red;
-    box-shadow: 0px 0px 5px 0px red;
-}
-#DiContent #invitation .invite-inp.phone{
-    border: none;
-    padding: 0 0 0 3px;
-    line-height: 30px;
+#update-person input:focus {
+  outline: none
 }
 
-.control__buttons #control__save-btn{
-    border: none;
-    outline: none;
-    line-height: 31px!important;
+#DiContent #invitation [type='text'] {
+  width: 100%;
+  height: 30px;
+  background: #ffffff;
+  border: 1px solid #cecece;
+  -webkit-transition: all ease-out .3s;
+  -moz-transition: all ease-out .3s;
+  -o-transition: all ease-out .3s;
+  transition: all ease-out .3s;
+  font-size: 14px;
+  outline: none;
+}
+
+#DiContent #invitation [type='text'].error {
+  border: 1px solid red;
+  box-shadow: 0px 0px 5px 0px red;
+}
+
+#DiContent #invitation .invite-inp.phone {
+  border: none;
+  padding: 0 0 0 3px;
+  line-height: 30px;
+}
+
+.control__buttons #control__save-btn {
+  border: none;
+  outline: none;
+  line-height: 31px !important;
 }
 
 .project__xls #add-program {
-    display: inline-block;
-    padding: 0 20px 20px 0;
-    text-decoration: underline;
-    background: url(/theme/pic/projects/xls-icon.png) top right no-repeat;
-    font-family: RobotoCondensed-Regular, verdana, arial;
-    color: #abb820;
-    text-decoration: none;
-    transition: .3s all;
-    font-size: 14px;
-    text-decoration: underline;
-    cursor: pointer;
+  display: inline-block;
+  padding: 0 20px 20px 0;
+  text-decoration: underline;
+  background: url(/theme/pic/projects/xls-icon.png) top right no-repeat;
+  color: #abb820;
+  text-decoration: none;
+  transition: .3s all;
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
-.project__xls #add-program:hover{
-    color:#ff6500;
+.project__xls #add-program:hover {
+  color: #ff6500;
 }
 
-.project__header{
-    background-color: #f5f5f5;
-    padding: 0px 15px 0px;
-    box-sizing: border-box;
-    /* display: flex; */
-    /* flex-wrap: nowrap; */
-    margin-bottom: 15px;
-    /* padding-bottom: 0px; */
+.project__header {
+  background-color: #f5f5f5;
+  padding: 0px 15px 0px;
+  box-sizing: border-box;
+  /* display: flex; */
+  /* flex-wrap: nowrap; */
+  margin-bottom: 15px;
+  /* padding-bottom: 0px; */
 }
 
-.project__header .project__header-xls{
-    width: 100%;
-    /*float: left;*/
-    overflow: hidden;
-    padding: 0px;
-    text-align: left;
-    margin-bottom:0px!important;
-    padding-top:5px;
+.project__header .project__header-xls {
+  width: 100%;
+  /*float: left;*/
+  overflow: hidden;
+  padding: 0px;
+  text-align: left;
+  margin-bottom: 0px !important;
+  padding-top: 5px;
 }
-.project__header .project__header-xls label{
-    padding-bottom: 0!important;
-    margin-bottom:7px;
-}
-.project__header .project__header-xls a{
-    padding-left:0!important;
-    padding-bottom: 0!important;
-    margin-bottom:7px;
-}
-.project__header  .project__header-filter{
 
-    width: 100%;
-    /*float: right;*/
-    text-align: center;
+.project__header .project__header-xls label {
+  padding-bottom: 0 !important;
+  margin-bottom: 7px;
+}
+
+.project__header .project__header-xls a {
+  padding-left: 0 !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 7px;
+}
+
+.project__header .project__header-filter {
+
+  width: 100%;
+  /*float: right;*/
+  text-align: center;
 }
 
 /************************************************************/
-#DiContent .prommu__universal-filter .u-filter__item{
+#DiContent .prommu__universal-filter .u-filter__item {
 
-    display: flex;
-    padding-top: 5px;
-    width: 33.3333%;
-    margin-top: 10px;
-    align-items: center;
-}
-
-#DiContent .project__header  .project__header-filter{
-    display: flex;
-    flex-wrap: wrap;
-    /* margin-bottom: 10px; */
-    padding-bottom: 15px;
-}
-.project__control-panel{
-    display: flow-root;
+  display: flex;
+  padding-top: 5px;
+  width: 33.3333%;
+  margin-top: 10px;
+  align-items: center;
 }
 
-.project__header .project__header-xls{
-    width: 225px!important;
-    overflow: hidden;
-    padding: 0px;
-    text-align: left;
-    margin-bottom: 0px!important;
-    padding-top: 5px;
+#DiContent .project__header .project__header-filter {
+  display: flex;
+  flex-wrap: wrap;
+  /* margin-bottom: 10px; */
+  padding-bottom: 15px;
 }
 
-.project__header-xlscontainer{
-    width:80%!important;
-    float:left;
-}
-.program__btns control__buttons{
-    width:40%;
-    float: right;
-}
-#DiContent .project__xls a:last-child{
-    padding: 0;
-}
-.project__header .project__header-xls{
-    width:100%!important;
-}
-.project__header-xls{
-    text-align: left;
-}
-.project__xls #add-program{
-    width:225px!important;
+.project__control-panel {
+  display: flow-root;
 }
 
-.project__xls #add-program a{
-    text-align: left;
+.project__header .project__header-xls {
+  width: 225px !important;
+  overflow: hidden;
+  padding: 0px;
+  text-align: left;
+  margin-bottom: 0px !important;
+  padding-top: 5px;
 }
-#DiContent .project__xls a{
-    /*width:210px!important;/*
-     */
-    width:340px!important;
-    padding-bottom: 10px!important;
+
+.project__header-xlscontainer {
+  width: 80% !important;
+  float: left;
 }
-.project__xls{
-    background: none;
-    padding-top: 0px!important;
-    margin-bottom: 0px;!important;
+
+.program__btns control__buttons {
+  width: 40%;
+  float: right;
+}
+
+#DiContent .project__xls a:last-child {
+  padding: 0;
+}
+
+.project__header .project__header-xls {
+  width: 100% !important;
+}
+
+.project__header-xls {
+  text-align: left;
+}
+
+.project__xls #add-program {
+  width: 225px !important;
+}
+
+.project__xls #add-program a {
+  text-align: left;
+}
+
+#DiContent .project__xls a {
+  /*width:210px!important;/*
+   */
+  width: 340px !important;
+  padding-bottom: 10px !important;
+}
+
+.project__xls {
+  background: none;
+  padding-top: 0px !important;
+  margin-bottom: 0px;
+!important;
 }
 
 /*
@@ -152,142 +166,146 @@
     margin-left: 15px;
 }*/
 
-
-
-
-
-#DiContent .prommu__universal-filter .u-filter__item .u-filter__item-title{
-    display: inline-block;
-    width: 125px;
-    text-align: left;
-}
-#DiContent .prommu__universal-filter .u-filter__item .u-filter__item-data{
-    display: inline-block;
-    width: 170px;
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__item-title {
+  display: inline-block;
+  width: 125px;
+  text-align: left;
 }
 
-.xls-popup{
-    font-size: 16px;    
-}
-.xls-popup-btn{
-    width: 135px;
-    line-height: 33px;
-    color: #fff;
-    font-size: 16px;
-    text-align: center;
-    background: #ff8300;
-    vertical-align: middle;
-    position: relative;
-    z-index: 0;
-    cursor: pointer;
-    margin: 15px auto 0;
-}
-.xls-popup-err{
-    color: #ff8b8b;
-    display: none;
+#DiContent .prommu__universal-filter .u-filter__item .u-filter__item-data {
+  display: inline-block;
+  width: 170px;
 }
 
-u-filter__blockitem{
-    display:block;
-}
-@media screen and (max-width:968px) {
-    #DiContent .prommu__universal-filter .u-filter__item{
-        width: 300px;
-        margin: 3px auto;
-    }
-    .u-filter__blockitem{
-        display:none!important;
-    }
-
-    .project__header-xlscontainer{
-        width:100%!important;
-    }
-    .project__xls{
-        text-align:center!important;
-    }
+.xls-popup {
+  font-size: 16px;
 }
 
+.xls-popup-btn {
+  width: 135px;
+  line-height: 33px;
+  color: #fff;
+  font-size: 16px;
+  text-align: center;
+  background: #ff8300;
+  vertical-align: middle;
+  position: relative;
+  z-index: 0;
+  cursor: pointer;
+  margin: 15px auto 0;
+}
 
-.control__add-container{
-    position: relative;
-    display: inline-block;
-    text-transform: none;
-    line-height: 30px;
-    margin-top:8px;
+.xls-popup-err {
+  color: #ff8b8b;
+  display: none;
+}
+
+u-filter__blockitem {
+  display: block;
+}
+
+@media screen and (max-width: 968px) {
+  #DiContent .prommu__universal-filter .u-filter__item {
+    width: 300px;
+    margin: 3px auto;
+  }
+
+  .u-filter__blockitem {
+    display: none !important;
+  }
+
+  .project__header-xlscontainer {
+    width: 100% !important;
+  }
+
+  .project__xls {
+    text-align: center !important;
+  }
+}
+
+.control__add-container {
+  position: relative;
+  display: inline-block;
+  text-transform: none;
+  line-height: 30px;
+  margin-top: 8px;
 }
 
 .control__add-ul {
-    list-style: none;
-    display: none;
-    position: absolute;
-    top: 30px;
-    margin: 0;
-    padding: 0;
-    border-radius: 2px;
-    border: 1px solid #fff;
-    z-index: 2;
-    width:185px;
-    text-align: center;
+  list-style: none;
+  display: none;
+  position: absolute;
+  top: 30px;
+  margin: 0;
+  padding: 0;
+  border-radius: 2px;
+  border: 1px solid #fff;
+  z-index: 2;
+  width: 185px;
+  text-align: center;
 }
-.control__add-ul li{
-    padding: 0 10px;
-    background: #abb92a;
-    font-size: 14px;
-    /*white-space: nowrap;*/
-    line-height: 24px;
-    color: #ffffff;
-    text-decoration: none;
-    cursor: pointer;
+
+.control__add-ul li {
+  padding: 0 10px;
+  background: #abb92a;
+  font-size: 14px;
+  /*white-space: nowrap;*/
+  line-height: 24px;
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .control__add-ul li:hover {
-    background: #b9c733;
-}
-.control__add-container:hover > .control__add-ul{
-    display: block;
+  background: #b9c733;
 }
 
-.prommu__universal-filter__button{
-    background: none;
-    border: none;
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #383838;
-    border-radius: 5px;
-    color: white;
-    box-sizing: border-box;
-    font-size: 16px;
-    outline: none;
-    text-align: center;
-    cursor:pointer;
+.control__add-container:hover > .control__add-ul {
+  display: block;
 }
 
-.content-block{
-    position: relative;
+.prommu__universal-filter__button {
+  background: none;
+  border: none;
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #383838;
+  border-radius: 5px;
+  color: white;
+  box-sizing: border-box;
+  font-size: 16px;
+  outline: none;
+  text-align: center;
+  cursor: pointer;
 }
 
-.prommu__universal-filter__button:after{
-    content: '\25bc';
-    display: block;
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    line-height: 26px;
-    font-size: 12px;
-    color: white;
+.content-block {
+  position: relative;
 }
 
-.prommu__universal-filter__button.u-filter__close:after{
-    -webkit-transform: rotate(-180deg); //Chrome, Safari
-    -moz-transform: rotate(-180deg); //Firefox
-    -o-transform: rotate(-180deg); //Opera
-    -ms-transform: rotate(-180deg); //IE
-    transform: rotate(-180deg); //браузеры без префексов
-    }
+.prommu__universal-filter__button:after {
+  content: '\25bc';
+  display: block;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  line-height: 26px;
+  font-size: 12px;
+  color: white;
+}
 
-.prommu__universal-filter__buttoncontainer{
-    position: relative;
+.prommu__universal-filter__button.u-filter__close:after {
+  -webkit-transform: rotate(-180deg);
+/ / Chrome, Safari -moz-transform: rotate(- 180 deg);
+/ / Firefox -o-transform: rotate(- 180 deg);
+/ / Opera -ms-transform: rotate(- 180 deg);
+/ / IE transform: rotate(- 180 deg);
+/ / браузеры без префексов
+}
+
+.prommu__universal-filter__buttoncontainer {
+  position: relative;
 }
 
 /************Верстка фильтра*************
@@ -363,4 +381,6 @@ u-filter__blockitem{
 }
 
 */
-.personal__item.fail{ opacity: 0.1 }
+.personal__item.fail {
+  opacity: 0.1
+}

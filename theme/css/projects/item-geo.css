@@ -1,115 +1,127 @@
-.project__module, .project__module *{ font-family: RobotoCondensed-Regular, verdana, arial }
-.project__geo-filter .city-filter{
-	width: 170px;
-	height: 26px;
-	padding: 0 20px 0 10px;
-	border: 1px solid silver;
-	border-radius: 1px;
-	background: #ffffff;
-	line-height: 26px;
-	text-align: left;
-	cursor: pointer;
-	position: relative;
+.project__geo-filter .city-filter {
+  width: 170px;
+  height: 26px;
+  padding: 0 20px 0 10px;
+  border: 1px solid silver;
+  border-radius: 1px;
+  background: #ffffff;
+  line-height: 26px;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
 }
+
 .city-filter .city-list {
-	width: 170px;
-	max-height: 300px;
-	overflow-y: auto;
-	padding: 0;
-	margin: 0;
-	border-top: none;
-	list-style: none;
-	background-color: rgba(52, 52, 52, 0.6);
-	position: absolute;
-	top: 100%;
-	right: -1px;
-	z-index: 2;
-	font-family: RobotoCondensed-Regular, verdana, arial;
-	font-size: 14px;
-	color: #FFFFFF;
-	text-align: left;
-	display: none;
+  width: 170px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0;
+  margin: 0;
+  border-top: none;
+  list-style: none;
+  background-color: rgba(52, 52, 52, 0.6);
+  position: absolute;
+  top: 100%;
+  right: -1px;
+  z-index: 2;
+  font-size: 14px;
+  color: #FFFFFF;
+  text-align: left;
+  display: none;
 }
+
 .city-list li {
-	width: 100%;
-	line-height: 30px;
-	padding: 3px 6px;
-	cursor: pointer;
-	-webkit-transition: all 0.3s ease-out;
-	-moz-transition: all 0.3s ease-out;
-	-o-transition: all 0.3s ease-out;
-	transition: all 0.3s ease-out;
+  width: 100%;
+  line-height: 30px;
+  padding: 3px 6px;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
 }
-.geo-item__cart-data img{ min-width: 175px }
-.geo-item__cart-data{
-	padding-bottom: 0;
+
+.geo-item__cart-data img {
+  min-width: 175px
 }
+
+.geo-item__cart-data {
+  padding-bottom: 0;
+}
+
 /*
 *
 */
-#DiContent .project__geo-filter .u-filter__item{
-	width: 100%;
-	display: flex;
-	align-items: center;
-	margin-bottom: 10px;
-	justify-content: flex-end;
+#DiContent .project__geo-filter .u-filter__item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  justify-content: flex-end;
 }
-#DiContent .project__geo-filter .u-filter__item-title{
-	width: initial;
-	padding: 0 10px;
+
+#DiContent .project__geo-filter .u-filter__item-title {
+  width: initial;
+  padding: 0 10px;
 }
-#DiContent .project__geo-filter .u-filter__item .u-filter__item-data{
-	max-width: 200px;
+
+#DiContent .project__geo-filter .u-filter__item .u-filter__item-data {
+  max-width: 200px;
 }
-#DiContent .project__module .project__geo-filter input{
-	width: 100%;
+
+#DiContent .project__module .project__geo-filter input {
+  width: 100%;
 }
+
 /*
 *		MEDIA
 */
 @media (min-width: 400px) {
-	#DiContent .project__geo-filter .u-filter__item{
-		width: 50%;
-		justify-content: flex-center;
-	}
+  #DiContent .project__geo-filter .u-filter__item {
+    width: 50%;
+    justify-content: flex-center;
+  }
 }
+
 @media (min-width: 768px) {
-	#DiContent .project__geo-filter .u-filter__item{
-		width: 25%;
-		justify-content: flex-start;
-	}
-	#DiContent .project__geo-filter .u-filter__item .u-filter__item-data{
-		margin-right: 10px;
-	}
+  #DiContent .project__geo-filter .u-filter__item {
+    width: 25%;
+    justify-content: flex-start;
+  }
+
+  #DiContent .project__geo-filter .u-filter__item .u-filter__item-data {
+    margin-right: 10px;
+  }
 }
 
-
-#DiContent h2.geo__item-error{
-	text-align:center;
-	color:red;
-}
-.geo__route-map{
-	width:100%;
-	height:300px;
-}
-.geo__item-error{
-	display: none;
+#DiContent h2.geo__item-error {
+  text-align: center;
+  color: red;
 }
 
-
-.geo__table-route{
-	width:100%;
-	font-size: 18px;
+.geo__route-map {
+  width: 100%;
+  height: 300px;
 }
 
-.geo__table-route .table-cell-first{
-	text-align: left;
+.geo__item-error {
+  display: none;
 }
-.geo__table-route th{
-	background: #abb92a;
-	color: #ffffff;
-	padding: 5px 0;
-	font-weight: normal;
-	border-left: 1px solid #dedede;
-	border-right: 1px solid #dedede;
+
+.geo__table-route {
+  width: 100%;
+  font-size: 18px;
+}
+
+.geo__table-route .table-cell-first {
+  text-align: left;
+}
+
+.geo__table-route th {
+  background: #abb92a;
+  color: #ffffff;
+  padding: 5px 0;
+  font-weight: normal;
+  border-left: 1px solid #dedede;
+  border-right: 1px solid #dedede;
 }

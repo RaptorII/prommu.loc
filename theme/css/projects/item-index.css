@@ -1,214 +1,267 @@
-#DiContent .project__addr-filter input:focus{ outline: none }
-#DiContent .content-block{ position: relative }
-.project__module, .project__module *{ font-family: RobotoCondensed-Regular, verdana, arial }
+#DiContent .project__addr-filter input:focus {
+  outline: none
+}
+
+#DiContent .content-block {
+  position: relative
+}
+
 /*
 *
 */
-.city-filter{
-	width: 170px;
-	height: 26px;
-	display: block;
-	padding: 0 20px 0 10px;
-	background: #ffffff;
-	border: 1px solid silver;
-	border-radius: 1px;
-	line-height: 26px;
-	text-align: left;
-	cursor: pointer;
+.city-filter {
+  width: 170px;
+  height: 26px;
+  display: block;
+  padding: 0 20px 0 10px;
+  background: #ffffff;
+  border: 1px solid silver;
+  border-radius: 1px;
+  line-height: 26px;
+  text-align: left;
+  cursor: pointer;
 }
-.addr__header-city .city-list{
-	width: 170px;
-	max-height: 300px;
-	overflow-y: auto;
-	padding: 0;
-	margin: 0;
-	border-top: none;
-	list-style: none;
-	background-color: rgba(52, 52, 52, 0.6);
-	position: absolute;
-	top: 100%;
-	right: 0;
-	z-index: 2;
-	font-family: RobotoCondensed-Regular, verdana, arial;
-	font-size: 14px;
-	color: #FFFFFF;
-	text-align: left;
-	display: none;
+
+.addr__header-city .city-list {
+  width: 170px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0;
+  margin: 0;
+  border-top: none;
+  list-style: none;
+  background-color: rgba(52, 52, 52, 0.6);
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 2;
+  font-size: 14px;
+  color: #FFFFFF;
+  text-align: left;
+  display: none;
 }
-.city-list li{
-	width: 100%;
-	line-height: 30px;
-	padding: 3px 6px;
-	cursor: pointer;
-	-webkit-transition: all 0.3s ease-out;
-	-moz-transition: all 0.3s ease-out;
-	-o-transition: all 0.3s ease-out;
-	transition: all 0.3s ease-out;
+
+.city-list li {
+  width: 100%;
+  line-height: 30px;
+  padding: 3px 6px;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
 }
-.city-list li:hover{ background-color: rgba(255,255,255,0.2) }
-.calendar-filter{
-	position: relative;
+
+.city-list li:hover {
+  background-color: rgba(255, 255, 255, 0.2)
 }
-.calendar-filter>span{
-	width: 170px;
-	height: 26px;
-	padding: 0 20px 0 10px;
-	line-height: 26px;
-	background: #ffffff;
-	border: 1px solid silver;
-	border-radius: 1px;
-	cursor: pointer;
+
+.calendar-filter {
+  position: relative;
 }
+
+.calendar-filter > span {
+  width: 170px;
+  height: 26px;
+  padding: 0 20px 0 10px;
+  line-height: 26px;
+  background: #ffffff;
+  border: 1px solid silver;
+  border-radius: 1px;
+  cursor: pointer;
+}
+
 /*
 *	calendar
 */
-#filter-form .calendar-filter .calendar{
-	width: 100%;
-	min-width: 180px;
-	padding: 10px;
-	position: absolute;
-	top: 0px;
-	right: -45px;
-	background-color: rgba(52, 52, 52, 0.6);
-	z-index: 2;
-	display: none;
-	margin: 0;
+#filter-form .calendar-filter .calendar {
+  width: 100%;
+  min-width: 180px;
+  padding: 10px;
+  position: absolute;
+  top: 0px;
+  right: -45px;
+  background-color: rgba(52, 52, 52, 0.6);
+  z-index: 2;
+  display: none;
+  margin: 0;
 }
-div.calendar:after{ content: '' }
-.calendar table{ 
-	width: 100%;
-	cursor: default;
+
+div.calendar:after {
+  content: ''
 }
-.calendar table td{
-	padding: initial;
-	text-align: center;
-	color: #FFFFFF;
-	-webkit-transition: all 0.3s ease-out;
-	-moz-transition: all 0.3s ease-out;
-	-o-transition: all 0.3s ease-out;
-	transition: all 0.3s ease-out;
+
+.calendar table {
+  width: 100%;
+  cursor: default;
 }
-.calendar tbody td:nth-child(n+6){ color: #ff8300 }
-.calendar td.day:hover{ background-color: rgba(255,255,255,0.2) }
+
+.calendar table td {
+  padding: initial;
+  text-align: center;
+  color: #FFFFFF;
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+}
+
+.calendar tbody td:nth-child(n+6) {
+  color: #ff8300
+}
+
+.calendar td.day:hover {
+  background-color: rgba(255, 255, 255, 0.2)
+}
+
 .calendar tbody td.today,
-.calendar tbody td.today:hover{ 
-	color: #FFFFFF;
-	background-color: rgba(171, 184, 32, 0.5);
+.calendar tbody td.today:hover {
+  color: #FFFFFF;
+  background-color: rgba(171, 184, 32, 0.5);
 }
+
 .calendar tbody td.select,
-.calendar tbody td.select:hover{ 
-	color: #FFFFFF;
-	background-color: rgba(255, 131, 0, 0.5);
+.calendar tbody td.select:hover {
+  color: #FFFFFF;
+  background-color: rgba(255, 131, 0, 0.5);
 }
-.calendar td.nofit:hover{
-    background-color: rgba(255, 0, 0, 0.5);
-    cursor: no-drop;
+
+.calendar td.nofit:hover {
+  background-color: rgba(255, 0, 0, 0.5);
+  cursor: no-drop;
 }
+
 .calendar td.day,
 .calendar td.mleft,
-.calendar td.mright{ cursor: pointer }
-.calendar b{
-	color: #FFFFFF;
-	background-color: red;
-	position: absolute;
-	top: -5px;
-	line-height: normal;
-	right: 0;
-	left: 0;
-	text-align: center;
-	z-index: 2;
-	display: none;
+.calendar td.mright {
+  cursor: pointer
 }
+
+.calendar b {
+  color: #FFFFFF;
+  background-color: red;
+  position: absolute;
+  top: -5px;
+  line-height: normal;
+  right: 0;
+  left: 0;
+  text-align: center;
+  z-index: 2;
+  display: none;
+}
+
 /*
 *
 */
-#DiContent .address__item-title{
-    margin: 0;
-    font-size: 14px;
-    text-transform: none;
-    text-align: center;	
-    padding: 30px 15px 35px;
-    font-weight: normal;
+#DiContent .address__item-title {
+  margin: 0;
+  font-size: 14px;
+  text-transform: none;
+  text-align: center;
+  padding: 30px 15px 35px;
+  font-weight: normal;
 }
-.address__item-title>b{
-	font-size: 24px;
-	text-transform: uppercase;
-	font-weight: bold;
+
+.address__item-title > b {
+  font-size: 24px;
+  text-transform: uppercase;
+  font-weight: bold;
 }
-.address__item-change{
-	cursor: pointer;
-	position: relative;
-	display: inline-block;
-	margin-left: 10px;
+
+.address__item-change {
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  margin-left: 10px;
 }
-.address__item-change span{
-    color: #abb820;
-    font-size: 18px;
-    line-height: 26px;
+
+.address__item-change span {
+  color: #abb820;
+  font-size: 18px;
+  line-height: 26px;
 }
-.address__item-change ul{
-	list-style: none;
-	display: none;
-	position: absolute;
-	top: 26px;
-	left: 0;
-	margin: 0;
-	padding: 0;
-	border-radius: 2px;
-	border: 1px solid #fff;
-	z-index: 2;
+
+.address__item-change ul {
+  list-style: none;
+  display: none;
+  position: absolute;
+  top: 26px;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  border-radius: 2px;
+  border: 1px solid #fff;
+  z-index: 2;
 }
-.address__item-change.loc ul{
-	right: 0;
-	left: inherit;
+
+.address__item-change.loc ul {
+  right: 0;
+  left: inherit;
 }
-.address__item-change li{
-	padding: 0 10px;
-	background: #abb92a;
-	font-size: 14px;
-	white-space: nowrap;
-	line-height: 24px;
+
+.address__item-change li {
+  padding: 0 10px;
+  background: #abb92a;
+  font-size: 14px;
+  white-space: nowrap;
+  line-height: 24px;
 }
+
 .address__item-change li,
-#DiContent .address__item-change li a{ 
-	color: #ffffff;
-	text-decoration: none;
+#DiContent .address__item-change li a {
+  color: #ffffff;
+  text-decoration: none;
 }
-.address__item-change li:hover{ background: #b9c733 }
-.address__item-change:hover span{ text-decoration: underline }
-.address__item-change:hover ul{ display: block }
-.addr__table-cell span{
-	white-space: nowrap;
-	display: inline-block;
+
+.address__item-change li:hover {
+  background: #b9c733
 }
-#DiContent .addresses__btns .addr__save-btn{
-	width: 150px;
+
+.address__item-change:hover span {
+  text-decoration: underline
 }
-.xls-popup{
-	font-size: 16px;	
+
+.address__item-change:hover ul {
+  display: block
 }
-.xls-popup-btn{
-	width: 135px;
-	line-height: 33px;
-	color: #fff;
-	font-size: 16px;
-	text-align: center;
-	background: #ff8300;
-	vertical-align: middle;
-	position: relative;
-	z-index: 0;
-	cursor: pointer;
-	margin: 15px auto 0;
+
+.addr__table-cell span {
+  white-space: nowrap;
+  display: inline-block;
 }
-.xls-popup-err{
-	color: #ff8b8b;
-	display: none;
+
+#DiContent .addresses__btns .addr__save-btn {
+  width: 150px;
 }
+
+.xls-popup {
+  font-size: 16px;
+}
+
+.xls-popup-btn {
+  width: 135px;
+  line-height: 33px;
+  color: #fff;
+  font-size: 16px;
+  text-align: center;
+  background: #ff8300;
+  vertical-align: middle;
+  position: relative;
+  z-index: 0;
+  cursor: pointer;
+  margin: 15px auto 0;
+}
+
+.xls-popup-err {
+  color: #ff8b8b;
+  display: none;
+}
+
 /*
 *		MEDIA
 */
 @media (min-width: 768px) {
-	.calendar-filter>span{
-		width: 90px;
-	}
+  .calendar-filter > span {
+    width: 90px;
+  }
 }
