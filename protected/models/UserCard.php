@@ -167,15 +167,17 @@ class UserCard extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
-        'sort' => ['defaultOrder'=>'id desc'],
+        'sort' => ['defaultOrder'=>'status asc, id desc'],
         'pagination' => ['pageSize' => 20],
 		));
 	}
-
-    public function getNewCnt(){
-        return  $this->countByAttributes(['status'=> 0]);
-
-    }
+  /**
+   * @return bool|CDbDataReader|mixed|string
+   */
+  public static function getAdminCnt()
+  {
+    return  self::model()->countByAttributes(['status'=> 0]);
+  }
   /**
    * @param $data - array
    * @return bool|CDbDataReader|mixed|string

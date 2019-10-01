@@ -20,7 +20,7 @@
     foreach ($arNames as $key => $v)
     {
       $html .= '<li data-id="' .  $id. '" data-value="' . $key
-        . '" data-table="card_request" data-field="status" class="label label-' . $arIcons[$key] . '"> ' . $v . '</li >';
+        . '" data-table="med_request" data-field="status" class="label label-' . $arIcons[$key] . '"> ' . $v . '</li >';
     }
     $html .= '</ul></div>';
     return $html;

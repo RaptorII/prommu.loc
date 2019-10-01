@@ -109,45 +109,49 @@ class MedCard extends CActiveRecord
 	 */
 	public function search()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
-
-		$criteria=new CDbCriteria;
-		$arCondition = [];
+		$criteria = new CDbCriteria;
 		$param = Yii::app()->getRequest()->getParam('MedCard');
 
-		$this->regaddr = $param['regaddr'];
-		$this->pay = $param['pay'];
-		
-		if(count($arCondition))
-		{
-			$criteria->condition = implode(',', $arCondition);
-		}
+		if(intval($param['id']))
+    {
+      $this->id = $param['id'];
+    }
+    $this->fff = $param['fff'];
+    $this->tel = $param['tel'];
+    $this->email = $param['email'];
+    if($param['regaddr']!=='0')
+    {
+      $this->regaddr = $param['regaddr'];
+    }
+    if($param['pay']!=='0')
+    {
+      $this->pay = $param['pay'];
+    }
+    if($param['status']!=='all')
+    {
+      $this->status = $param['status'];
+    }
 
-		$criteria->compare('id',$this->id,true);
-		$criteria->compare('status',$this->status);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('fff',$this->fff,true);
-		$criteria->compare('iii',$this->iii,true);
-		$criteria->compare('ooo',$this->ooo,true);
-		$criteria->compare('pay',$this->pay,true);
-		$criteria->compare('tel',$this->tel,true);
-		$criteria->compare('email',$this->email,true);
-		$criteria->compare('regaddr',$this->regaddr,true);
-		$criteria->compare('crdate',$this->crdate,true);
-		$criteria->compare('comment',$this->comment,true);
-        $criteria->compare('processed',$this->processed,true);
-
+    $criteria->compare('id',$this->id, true);
+    $criteria->compare('fff',$this->fff,true);
+    $criteria->compare('tel',$this->tel,true);
+    $criteria->compare('email',$this->email,true);
+    $criteria->compare('regaddr',$this->regaddr,true);
+    $criteria->compare('pay',$this->pay,true);
+    $criteria->compare('status',$this->status);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
-            'sort' => ['defaultOrder'=>'id desc'],
+      'sort' => ['defaultOrder'=>'status asc, id desc'],
 		));
 	}
 
-    public function getNewCnt()
+    /**
+     * @return bool|CDbDataReader|mixed|string
+     */
+    public static function getAdminCnt()
     {
-        return  $this->countByAttributes(['status'=> 0]);
+        return  self::model()->countByAttributes(['status'=> 0]);
     }
     /**
     *
@@ -183,4 +187,42 @@ class MedCard extends CActiveRecord
 
     	return (!empty($key) ? $arRes[$key] : $arRes);
     }
+  /**
+   * @param $id
+   * @return int
+   */
+  public function setAdminViewed($id)
+  {
+    $data = $this::model()->findByPk($id);
+    $result = false;
+    if(!$data['status'])
+    {
+      $result = $this::model()->updateByPk($id,['status'=>1]);
+    }
+    return $result;
+  }
+  /**
+   * @param $id
+   * @return array
+   */
+  public function getOrder($id)
+  {
+    $arRes = [];
+    $arRes['item'] = $this::model()->findByPk($id);
+
+    return $arRes;
+  }
+  /**
+   * @param $data - array
+   * @return bool|CDbDataReader|mixed|string
+   */
+  public function updateData($data)
+  {
+    $result = self::model()->updateByPk(
+      $data['id'],
+      [$data['field'] => $data['value']]
+    );
+
+    return ($result ? 'Данные успешно обновлены' : 'Ошибка изменения данных');
+  }
 }

@@ -108,17 +108,17 @@ class MedRequest {
     public function updateCard($id, $data)
     {   
         $cloud = $this->getCard($id);
-        $comad = $cloud['comad'];
-        $dates=date("Y-m-d h-i-s");
-        if($data['comad'] != ''){
-           $comads =  $dates." ".$data['comad']."<br/>".$comad;
+
+        if($data['comad'] !== '')
+        {
+           $comads =  date("d.m.Y h:i:s")." ".$data['comad']."<br/>".$cloud['comad'];
         }
-        else $comads = $comad;
-        if($data['status'] == 0){
-            $status = 3;
+        else
+        {
+          $comads = $cloud['comad'];
         }
-        else $status = $data['status'];
-        Yii::app()->db->createCommand()
+
+        $result = Yii::app()->db->createCommand()
             ->update('med_request', array(
                 'name'=>$data['name'],
                 'fff'=>$data['fff'],
@@ -129,10 +129,17 @@ class MedRequest {
                 'regaddr'=>$data['regaddr'],
                 'email'=>$data['email'],
                 'pay'=>$data['pay'],
-                'status'=>$status,
+                'status'=>$data['status'],
                 'comment'=>$data['comment'],
             ), 'id=:id', array(':id'=>$id));
-
+        if($result)
+        {
+          Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
+        }
+        else
+        {
+          Yii::app()->user->setFlash('danger', 'Ошибка сохранения');
+        }
     }
 
 

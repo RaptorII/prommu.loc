@@ -81,14 +81,32 @@ class ServiceController extends Controller
    */
   public function actionCard_request()
   {
-    $this->render('card_request-' . ($this->id ? 'item' : 'list'));
+    if($this->id && Yii::app()->getRequest()->isPostRequest)
+    {
+      $model = new CardRequest;
+      $model->updateCard($this->id, Yii::app()->getRequest()->getParam('Card'));
+      $this->redirect('/admin/service/card_request');
+    }
+    else
+    {
+      $this->render('card_request-' . ($this->id ? 'item' : 'list'));
+    }
   }
   /**
    *  Заказ Медкниги
    */
   public function actionMed_request()
   {
-    $this->render('med_request-' . ($this->id ? 'item' : 'list'));
+    if($this->id && Yii::app()->getRequest()->isPostRequest)
+    {
+      $model = new MedRequest;
+      $model->updateCard($this->id, Yii::app()->getRequest()->getParam('Card'));
+      $this->redirect('/admin/service/med_request');
+    }
+    else
+    {
+      $this->render('med_request-' . ($this->id ? 'item' : 'list'));
+    }
   }
   /**
    *  ajax
@@ -101,6 +119,11 @@ class ServiceController extends Controller
     if($data['table']=='card_request')
     {
       $model = new UserCard();
+      $arRes['message'] = $model->updateData($data);
+    }
+    if($data['table']=='med_request')
+    {
+      $model = new MedCard();
       $arRes['message'] = $model->updateData($data);
     }
     echo CJSON::encode($arRes);

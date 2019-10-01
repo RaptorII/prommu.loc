@@ -11,7 +11,7 @@ jQuery(function($){
       if(!$(this).hasClass('empty'))
         $(location).attr('href',url);
     });
-  // смена статуса у карту
+  // смена статуса у карт
   $(document).on('click','.select_update li',function(){
     var self = this;
 

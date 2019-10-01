@@ -351,7 +351,9 @@ class Services extends Model
 
       return $arRes;
     }
-
+    /*
+     * Глобальное название услуг
+     */
     public static function getServiceName($code)
     {
       switch ($code)
@@ -371,5 +373,133 @@ class Services extends Model
       }
 
       return $name;
+    }
+    /**
+     *  счетчик непросмотренных услуг
+     */
+    public static function getAdminCnt()
+    {
+      $arRes = ['cnt'=>0,'items'=>[]];
+      // service_order
+      $cnt = ServiceGuestOrder::getCount();
+      if($cnt>0)
+      {
+        $arRes['items'][] = [
+          'name' => 'Заказ услаг гостями',
+          'link' => '/admin/service/service_order',
+          'icon' => 'glyphicon-envelope',
+          'cnt' => $cnt
+        ];
+        $arRes['cnt'] += $cnt;
+      }
+      // service_cloud
+      $arOrder = Service::getAdminCnt();
+      if($arOrder['cnt'])
+      {
+        if($arOrder['vacancy']>0) // premium
+        {
+          $arRes['items'][] = [
+            'name' => Services::getServiceName('vacancy'),
+            'link' => '/admin/service/service_cloud/vacancy',
+            'icon' => 'glyphicon-star-empty',
+            'cnt' => $arOrder['vacancy']
+          ];
+        }
+        if($arOrder['email']>0) // email
+        {
+          $arRes['items'][] = [
+            'name' => Services::getServiceName('email'),
+            'link' => '/admin/service/service_cloud/email',
+            'icon' => '',
+            'cnt' => $arOrder['email']
+          ];
+        }
+        if($arOrder['sms']>0) // sms
+        {
+          $arRes['items'][] = [
+            'name' => Services::getServiceName('sms'),
+            'link' => '/admin/service/service_cloud/sms',
+            'icon' => 'glyphicon-envelope',
+            'cnt' => $arOrder['sms']
+          ];
+        }
+        if($arOrder['push']>0) // push
+        {
+          $arRes['items'][] = [
+            'name' => Services::getServiceName('push'),
+            'link' => '/admin/service/service_cloud/push',
+            'icon' => 'glyphicon-comment',
+            'cnt' => $arOrder['push']
+          ];
+        }
+        if($arOrder['repost']>0) // repost
+        {
+          $arRes['items'][] = [
+            'name' => Services::getServiceName('repost'),
+            'link' => '/admin/service/service_cloud/repost',
+            'icon' => 'glyphicon-bullhorn',
+            'cnt' => $arOrder['repost']
+          ];
+        }
+        if($arOrder['api']>0) // api
+        {
+          $arRes['items'][] = [
+            'name' => Services::getServiceName('api'),
+            'link' => '/admin/service/service_cloud/api',
+            'icon' => 'glyphicon-cog',
+            'cnt' => $arOrder['api']
+          ];
+        }
+        $arRes['cnt'] += $arOrder['cnt'];
+      }
+      // outstaffing
+      $arOrder = Outstaffing::getAdminCnt();
+      if($arOrder['cnt'])
+      {
+        if($arOrder['outstaffing']>0) // outstaffing
+        {
+          $arRes['items'][] = [
+            'name' => Services::getServiceName('outstaffing'),
+            'link' => '/admin/service/outstaffing/outstaffing',
+            'icon' => 'glyphicon-edit',
+            'cnt' => $arOrder['outstaffing']
+          ];
+        }
+        if($arOrder['outsourcing']>0) // outsourcing
+        {
+          $arRes['items'][] = [
+            'name' => Services::getServiceName('outsourcing'),
+            'link' => '/admin/service/outstaffing/outsourcing',
+            'icon' => 'glyphicon-check',
+            'cnt' => $arOrder['outsourcing']
+          ];
+        }
+        $arRes['cnt'] += $arOrder['cnt'];
+      }
+      // med_request
+      $cnt = MedCard::getAdminCnt();
+      if($cnt>0)
+      {
+        $arRes['items'][] = [
+          'name' => Services::getServiceName('medbook'),
+          'link' => '/admin/service/med_request',
+          'icon' => 'glyphicon-plus-sign',
+          'cnt' => $cnt
+        ];
+        $arRes['cnt'] += $cnt;
+      }
+      // card_request
+      $cnt = UserCard::getAdminCnt();
+      if($cnt>0)
+      {
+        $arRes['items'][] = [
+          'name' => Services::getServiceName('card'),
+          'link' => '/admin/service/card_request',
+          'icon' => 'glyphicon-credit-card',
+          'cnt' => $cnt
+        ];
+        $arRes['cnt'] += $cnt;
+      }
+      return $arRes;
     }
 }

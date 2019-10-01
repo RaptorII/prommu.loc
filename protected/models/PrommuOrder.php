@@ -1,21 +1,6 @@
 <?php
 
 class PrommuOrder {
-
-    public function getOrderAdminCnt() {
-
-        $sql = "SELECT count(id) as cnt, type FROM service_cloud WHERE is_new = 1 GROUP BY type";
-        $res     = Yii::app()->db->createCommand($sql)->queryAll();
-        $counters = [];
-
-        foreach($res as $item) {
-            $counters[$item['type']] = $item['cnt'];
-            $counters['all'] += $item['cnt'];
-        }
-
-        return $counters;
-
-    }
     //Определение цены использования услуги
      public function servicePrice($arId, $service) {
         if(!sizeof($arId) || empty($service))

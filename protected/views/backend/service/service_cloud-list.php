@@ -25,15 +25,19 @@
       'value' => 'AdminView::getLink("/admin/EmplEdit/".$data->id_user, $data->company_search)',
       'type' => 'raw',
       'htmlOptions' => ['style'=>'width:10%']
-    ],
-    [
+    ]
+  ];
+  //
+  if($service!='api')
+  {
+    $arColumns[] = [
       'header' => 'Вакансия',
       'name' => 'vacancy_search',
       'value' => 'AdminView::getLink("/admin/VacancyEdit/{$data->name}",$data->vacancy_search)',
       'type' => 'raw',
       'htmlOptions' => ['style'=>'width:10%']
-    ]
-  ];
+    ];
+  }
   //
   if(in_array($service,['vacancy','email','sms'])) // платные услуги
   {

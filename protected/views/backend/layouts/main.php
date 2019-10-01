@@ -1,77 +1,39 @@
-<?php /* @var $this Controller */ ?>
-<?php if (Yii::app()->user->isGuest) {
+<?php
+if (Yii::app()->user->isGuest)
+{
     echo $content;
-} else { ?>
+}
+else
+{
+  $hUrl = Yii::app()->homeUrl;
+  $curId = $this->action->id;
 
-<?
+  $model = new Feedback;
+  $model = $model->getDatAdmin();
 
-$hUrl = Yii::app()->homeUrl;
-$curId = $this->action->id;
+  $modelVac = new Vacancy;
+  $modelVac = $modelVac->getVacAdmin();
+  $counV = count($modelVac);
 
-$model = new Feedback;
-$model = $model->getDatAdmin();
+  $modelP = new Promo;
+  $modelP = $modelP->getApplicAdmin();
+  $counP = count($modelP);
 
-$modelVac = new Vacancy;
-$modelVac = $modelVac->getVacAdmin();
-$counV = count($modelVac);
+  $modelR = new Employer;
+  $modelR = $modelR->getEmplAdmin();
+  $counR = count($modelR);// clear any default values
 
-$modelP = new Promo;
-$modelP = $modelP->getApplicAdmin();
-$counP = count($modelP);
+  $comments = new Comment();
+  $arCommentsCnt = $comments->commentsCnt();
+  $comments = new CommentsAboutUs();
+  $arCommentsCnt['aboutus_reviews'] = $comments->commentsCnt();
+  $arCommentsCnt['all'] += $arCommentsCnt['aboutus_reviews'];
 
-$modelR = new Employer;
-$modelR = $modelR->getEmplAdmin();
-$counR = count($modelR);// clear any default values
+  $arIdeas    = (new Ideas)->getNewIdeas();
+  $arIdeasCnt = count($arIdeas);
 
-$comments = new Comment();
-$arCommentsCnt = $comments->commentsCnt();
-$comments = new CommentsAboutUs();
-$arCommentsCnt['aboutus_reviews'] = $comments->commentsCnt();
-$arCommentsCnt['all'] += $arCommentsCnt['aboutus_reviews'];
-
-$arIdeas    = (new Ideas)->getNewIdeas();
-$arIdeasCnt = count($arIdeas);
-
-/**
- * Counters for Services 16.05.2019
- */
-
-$modelPOSrvCloud = new PrommuOrder;
-$modelMedCard = new MedCard;
-$modelPrmCard = new UserCard;
-$modelServiceOut = new ServiceOut;
-
-
-$promoCounters = $modelPOSrvCloud->getOrderAdminCnt();
-
-$cntPOSMS = $promoCounters['sms'];     // count sms
-$cntPOEml = $promoCounters['email'];   // count email
-$cntPOPsh = $promoCounters['push'];    // count push
-$cntPORpt = $promoCounters['repost'];  // count repost
-$cntPOVcc = $promoCounters['vacancy']; // count vacancy
-$cntPOApi = $promoCounters['api'];     // count api
-$cntOrders = ServiceGuestOrder::getCount();
-
-$cntPrmCrd = $modelPrmCard->getNewCnt();
-
-$cntMedCrd = $modelMedCard->getNewCnt();
-
-$cntOutSrc = $modelServiceOut->getNewCnt('outsourcing');
-$cntOutStf = $modelServiceOut->getNewCnt('outstaffing');
-
-$cntGeoLct = 0; // in work at 19.04.2019;
-
-
-$cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutSrc + $cntOutStf + $cntOrders;     // count summ all counts
-
-
+  $arServiceCnt = Services::getAdminCnt();
 ?>
-<!--<pre>-->
-<!--    --><?// echo print_r($model);?>
-<!--    --><?// echo ($model);?>
-<!--    --><?// echo print_r($modelPOCntrCloud['modelPOCntAll']);?>
-<!--    --><?// echo $cntPO?>
-<!--</pre>-->
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -297,101 +259,31 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
                             </ul>
                         </li>
                     <? endif; ?>
-                    <li class="dropdown user user-menu">
+
+                    <? if($arServiceCnt['cnt']>0): ?>
+                      <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <span class="label label-danger"><?= $cntPO ?></span>
-                            <span class="hidden-xs">Услуги</span>
+                          <span class="label label-danger"><?=$arServiceCnt['cnt']?></span>
+                          <span class="hidden-xs">Услуги</span>
                         </a>
                         <ul class="dropdown-menu">
-                            <? if($cntOrders): ?>
-                              <li class="user-header">
-                                <a href="<?= $hUrl ?>services?type=guest-order">
-                                  <i class="glyphicon glyphicon-envelope"></i>
-                                  <span>Заказ услуг гостями</span>
-                                </a>
-                                <span class="label label-danger"><?=$cntOrders?></span>
-                              </li>
-                            <? endif; ?>
+                          <? foreach ($arServiceCnt['items'] as $v): ?>
                             <li class="user-header">
-                                <a href="<?= $hUrl ?>services?type=vacancy">
-                                    <i class="glyphicon glyphicon-star-empty"></i>
-                                    <span>Премиум</span>
-                                </a>
-                                <span class="label label-danger"><?= $cntPOVcc ?></span>
+                              <a href="<?=$v['link']?>">
+                                <? if(!empty($v['icon'])): ?>
+                                  <i class="glyphicon <?=$v['icon']?>"></i>
+                                <? else: ?>
+                                  <i class="glyphicon">@</i>
+                                <? endif; ?>
+                                <span><?=$v['name']?></span>
+                              </a>
+                              <span class="label label-danger"><?=$v['cnt']?></span>
                             </li>
-                            <li class="user-header">
-                                <a href="<?= $hUrl ?>services?type=email">
-                                    <i class="glyphicon">@</i>
-                                    <span>Электронная почта</span>
-                                </a>
-                                <span class="label label-danger"><?= $cntPOEml ?></span>
-                            </li>
-                            <li class="user-header">
-                                <a href="<?= $hUrl ?>services?type=push">
-                                    <i class="glyphicon glyphicon-comment"></i>
-                                    <span>PUSH уведомления</span>
-                                </a>
-                                <span class="label label-danger"><?= $cntPOPsh ?></span>
-                            </li>
-                            <li class="user-header">
-                                <a href="<?= $hUrl ?>services?type=sms">
-                                    <i class="glyphicon glyphicon-envelope"></i>
-                                    <span>SMS информирование</span>
-                                </a>
-                                <span class="label label-danger"><?= $cntPOSMS ?></span>
-                            </li>
-                            <li class="user-header">
-                                <a href="<?= $hUrl ?>services?type=repost">
-                                    <i class="glyphicon glyphicon-bullhorn"></i>
-                                    <span>Соцсети</span>
-                                </a>
-                                <span class="label label-danger"><?= $cntPORpt ?></span>
-                            </li>
-                            <li class="user-header">
-                                <a href="#" onclick="alert('Страница в разработке'); return false">
-                                    <i class="glyphicon glyphicon-globe"></i>
-                                    <span>Геолокация</span>
-                                </a>
-                                <span class="label label-danger"><?= $cntGeoLct ?></span>
-                            </li>
-                            <li class="user-header">
-                                <a href="<?= $hUrl ?>servicess?type=outsourcing">
-                                    <i class="glyphicon glyphicon-check"></i>
-                                    <span>Аутсорсинг</span>
-                                </a>
-                                <span class="label label-danger"><?= $cntOutSrc ?></span>
-                            </li>
-                            <li class="user-header">
-                                <a href="<?= $hUrl ?>servicess?type=outstaffing">
-                                    <i class="glyphicon glyphicon-edit"></i>
-                                    <span>Аутстаффинг</span>
-                                </a>
-                                <span class="label label-danger"><?= $cntOutStf ?></span>
-                            </li>
-                            <li class="user-header">
-                                <a href="<?= $hUrl ?>cards">
-                                    <i class="glyphicon glyphicon-credit-card"></i>
-                                    <span>Карта Prommu</span>
-                                </a>
-                                <span class="label label-danger"><?= $cntPrmCrd ?></span>
-                            </li>
-                            <li class="user-header">
-                                <a href="<?= $hUrl ?>medcards">
-                                    <i class="glyphicon glyphicon-plus-sign"></i>
-                                    <span>Мед. книга</span>
-                                </a>
-                                <span class="label label-danger"><?= $cntMedCrd ?></span>
-                            </li>
-                            <li class="user-header">
-                                <a href="<?= $hUrl ?>servicess?type=api">
-                                    <i class="glyphicon glyphicon-cog"></i>
-                                    <span>API</span>
-                                </a>
-                                <span class="label label-danger"><?= $cntPOApi ?></span>
-                            </li>
+                          <? endforeach; ?>
                         </ul>
-                    </li>
+                      </li>
+                    <? endif; ?>
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -611,13 +503,6 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
                         </li>
                     </ul>
                 </li>
-                <?php
-                // services
-                ?>
-                <?php
-                $enable = in_array($curId, ['services', 'servicess', 'cards', 'CardEdit', 'medcards', 'MedCardEdit']);
-                $enable = ($curId == 'sect' && $_GET['p'] == 'service') ? true : $enable;
-                ?>
                 <li class="<?= ($enableE ? 'active' : '') ?>">
                     <a href="<?= $hUrl ?>stat">
                         <i class="glyphicon glyphicon-briefcase"></i>
@@ -625,6 +510,15 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                 </li>
+                <?php
+                // services
+                ?>
+                <?php
+                  $enable = Yii::app()->controller->uniqueID==='service';
+                  $action = Yii::app()->controller->action->id;
+                  $service = Yii::app()->getRequest()->getParam('service');
+                  $enable = ($curId == 'sect' && $_GET['p'] == 'service') ? true : $enable;
+                ?>
                 <li class="treeview<?= $enable ? ' active' : '' ?>">
                     <a href="#">
                         <i class="glyphicon glyphicon-shopping-cart"></i>
@@ -632,40 +526,40 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu<?= $enable ? ' menu-open' : '' ?>"<?= !$enable ? ' style="display:none"' : '' ?>>
-                        <li class="<?= ($curId == 'services' && $_GET['type'] == 'guest-order' ? 'active' : '') ?>">
-                          <a href="<?= $hUrl ?>services?type=guest-order">
+                        <li class="<?=($action=='service_order' ? 'active' : '')?>">
+                          <a href="<?= $hUrl ?>service/service_order">
                             <i class="glyphicon glyphicon-envelope"></i>
                             <span>Заказ услуг гостями</span>
                           </a>
                         </li>
-                        <li class="<?= ($curId == 'services' && $_GET['type'] == 'vacancy' ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>services?type=vacancy">
+                        <li class="<?=($action=='service_cloud' && $service=='vacancy' ? 'active' : '')?>">
+                            <a href="<?= $hUrl ?>service/service_cloud/vacancy">
                                 <i class="glyphicon glyphicon-star-empty"></i>
-                                <span>Премиум</span>
+                                <span><?=Services::getServiceName('vacancy')?></span>
                             </a>
                         </li>
-                        <li class="<?= ($curId == 'services' && $_GET['type'] == 'email' ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>services?type=email">
+                        <li class="<?=($action=='service_cloud' && $service=='email' ? 'active' : '')?>">
+                            <a href="<?= $hUrl ?>service/service_cloud/email">
                                 <i class="glyphicon">@</i>
-                                <span>Электронная почта</span>
+                                <span><?=Services::getServiceName('email')?></span>
                             </a>
                         </li>
-                        <li class="<?= ($curId == 'services' && $_GET['type'] == 'push' ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>services?type=push">
+                        <li class="<?=($action=='service_cloud' && $service=='push' ? 'active' : '')?>">
+                            <a href="<?= $hUrl ?>service/service_cloud/push">
                                 <i class="glyphicon glyphicon-comment"></i>
-                                <span>PUSH уведомления</span>
+                                <span><?=Services::getServiceName('push')?></span>
                             </a>
                         </li>
-                        <li class="<?= ($curId == 'services' && $_GET['type'] == 'sms' ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>services?type=sms">
+                        <li class="<?=($action=='service_cloud' && $service=='sms' ? 'active' : '')?>">
+                            <a href="<?= $hUrl ?>service/service_cloud/sms">
                                 <i class="glyphicon glyphicon-envelope"></i>
-                                <span>SMS информирование</span>
+                                <span><?=Services::getServiceName('sms')?></span>
                             </a>
                         </li>
-                        <li class="<?= ($curId == 'services' && $_GET['type'] == 'repost' ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>services?type=repost">
+                        <li class="<?=($action=='service_cloud' && $service=='repost' ? 'active' : '')?>">
+                            <a href="<?= $hUrl ?>service/service_cloud/repost">
                                 <i class="glyphicon glyphicon-bullhorn"></i>
-                                <span>Соцсети</span>
+                                <span><?=Services::getServiceName('repost')?></span>
                             </a>
                         </li>
                         <li class="<? //=($curId=='vacancymail'?'active':'')?>">
@@ -674,34 +568,34 @@ $cntPO = $promoCounters['all'] + $cntGeoLct + $cntMedCrd + $cntPrmCrd + $cntOutS
                                 <span>Геолокация</span>
                             </a>
                         </li>
-                        <li class="<?= ($curId == 'servicess' && $_GET['type'] == 'outsourcing' ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>servicess?type=outsourcing">
+                        <li class="<?=($action=='outstaffing' && $service=='outsourcing' ? 'active' : '')?>">
+                            <a href="<?= $hUrl ?>service/outstaffing/outsourcing">
                                 <i class="glyphicon glyphicon-check"></i>
-                                <span>Аутсорсинг</span>
+                                <span><?=Services::getServiceName('outsourcing')?></span>
                             </a>
                         </li>
-                        <li class="<?= ($curId == 'servicess' && $_GET['type'] == 'outstaffing' ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>servicess?type=outstaffing">
+                        <li class="<?=($action=='outstaffing' && $service=='outstaffing' ? 'active' : '')?>">
+                            <a href="<?= $hUrl ?>service/outstaffing/outstaffing">
                                 <i class="glyphicon glyphicon-edit"></i>
-                                <span>Аутстаффинг</span>
+                                <span><?=Services::getServiceName('outstaffing')?></span>
                             </a>
                         </li>
-                        <li class="<?= (in_array($curId, ['cards', 'CardEdit']) ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>cards">
+                        <li class="<?=($action=='card_request' ? 'active' : '')?>">
+                            <a href="<?= $hUrl ?>service/card_request">
                                 <i class="glyphicon glyphicon-credit-card"></i>
-                                <span>Карта Prommu</span>
+                                <span><?=Services::getServiceName('card')?></span>
                             </a>
                         </li>
-                        <li class="<?= (in_array($curId, ['medcards', 'MedCardEdit']) ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>medcards">
+                        <li class="<?=($action=='med_request' ? 'active' : '')?>">
+                            <a href="<?= $hUrl ?>service/med_request">
                                 <i class="glyphicon glyphicon-plus-sign"></i>
-                                <span>Мед. книга</span>
+                                <span><?=Services::getServiceName('medbook')?></span>
                             </a>
                         </li>
-                        <li class="<?= ($curId == 'servicess' && $_GET['type'] == 'api' ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>servicess?type=api">
+                        <li class="<?=($action=='service_cloud' && $service=='api' ? 'active' : '')?>">
+                            <a href="<?= $hUrl ?>service/service_cloud/api">
                                 <i class="glyphicon glyphicon-cog"></i>
-                                <span>API</span>
+                                <span><?=Services::getServiceName('api')?></span>
                             </a>
                         </li>
                     </ul>

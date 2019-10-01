@@ -1,10 +1,9 @@
 <?php
   $id = Yii::app()->getRequest()->getParam('id');
-  $service = Yii::app()->getRequest()->getParam('service');
   $serviceTitle = Services::getServiceName('card');
   $title = 'Заказ #' . $id;
   $this->setPageTitle($title);
-  $backLink = '/service/card_request/'.$service;
+  $backLink = '/service/card_request';
   $this->breadcrumbs = ['Все услуги'=>['/service'], $serviceTitle=>[$backLink], $title];
   $model = new UserCard();
   $model->setAdminViewed($id);
@@ -18,6 +17,7 @@
 
   $gcs->registerCssFile($bUrl . '/css/service/item.css');
   $gcs->registerScriptFile($bUrl . '/js/service/item.js', CClientScript::POS_END);
+  $gcs->registerScriptFile($bUrl . '/js/nicEdit.js', CClientScript::POS_HEAD);
 ?>
 <h3><?=$this->pageTitle?></h3>
 <? if(!is_array($viData) && intval($id)): ?>
@@ -127,7 +127,7 @@
         </label>
         <label class="d-label">
           <span>Дата создания</span>
-          <input class="form-control" value="<?=$viData['crdate']?>" name="Card[crdate]" disabled>
+          <input class="form-control" value="<?=Share::getPrettyDate($viData['crdate'])?>" name="Card[crdate]" disabled>
         </label>
         <label class="d-label">
           <span>Комментарий юзера</span>
@@ -146,7 +146,8 @@
         </label>
         <label class="d-label">
           <span>Комментарий админа</span>
-          <textarea name="Card[comad]" class="form-control"><?=$viData['comad']?></textarea>
+          <div id="comment-panel"></div>
+          <textarea name="Card[comad]" class="form-control" id="comment"><?=$viData['comad']?></textarea>
         </label>
         <? if(!empty($viData['files'])): ?>
           <? $arFiles = explode(',', $viData['files']); ?>

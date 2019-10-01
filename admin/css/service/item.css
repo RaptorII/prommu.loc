@@ -33,3 +33,17 @@
   height: 70px;
   object-fit: cover;
 }
+/*
+*
+*/
+.nicEdit-main {
+  margin: 0 !important;
+  padding: 4px;
+  width: 100% !important;
+  border-top: 1px solid #e3e3e3 !important;
+  background: #fff;
+}
+#transform-code>div:nth-child(2),
+.controls.input-append>div{ border: 0 !important; }
+.nicEdit-main:focus{ outline: none; }
+#transform-code-panel .nicEdit-button{ background-image: url("/jslib/nicedit/nicEditorIcons.gif") !important; }

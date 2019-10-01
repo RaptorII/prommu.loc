@@ -342,31 +342,6 @@ class SiteController extends Controller
       $this->render('pages/view',array('model'=>$model->getAllPages()));
     }
     
-        // **** Управление пользователями (блокировка, смена пароля) ****
-    public function actionServicePrice()
-    {
-        if(self::isAuth()) {
-            // if(strpos($this->user_access, "Цены") === false) {
-            //     $this->render('access');
-            //     return;
-            // }    
-    
-            $model = new ServicePrice;
-            
-            
-            $model->unsetAttributes();  // clear any default values
-            $model->search();
-            // if(isset($_GET['Employer'])){
-            //     $model->attributes=$_GET['Employer'];
-            // }
-            $title = 'Цены на услуги';
-            $this->setPageTitle($title);
-            $this->breadcrumbs = array('Цены на услуги' => array('sect?p=emp'), '1'=>$title);
-            $this->render('services/price',array('model'=>$model));
-        }
-
-    }
-    
     // **** Управление пользователями (блокировка, смена пароля) ****
     public function actionEmpl()
     {
@@ -726,108 +701,16 @@ class SiteController extends Controller
             $this->render('banners/view');
     }
 
-  /**
-   * Modules setup
-   */
-  public function actionModule() {
-        if($this->user_access != 1) {
-                $this->render('access');
-                    return;
+    /**
+     * Modules setup
+     */
+    public function actionModule() {
+          if($this->user_access != 1) {
+                  $this->render('access');
+                      return;
+      }
+      $this->render('module');
     }
-    $this->render('module');
-  }
-
-
-//========= C A R D S ===============
-
-    // **** Управление пользователями (карточки) ****
-    public function actionCards()
-    {
-        if(self::isAuth()) {
-          if(strpos($this->user_access, "Карта") === false) {
-            $this->render('access');
-            return;
-        } 
-            $model = new UserCard('search');
-            $model->unsetAttributes();  // clear any default values
-            if(isset($_GET['User'])){
-                $model->attributes=$_GET['User'];
-            }
-            $title = 'Заказ карты PROMMU';
-            $this->setPageTitle($title);
-            $this->breadcrumbs = array('Услуги'=>array('sect?p=service'),'1'=>$title);
-            $this->render('users/cardsview', array('model'=>$model));
-        }
-
-        //$this->render('users/view');
-    }
-
-    public function actionCardEdit($id)
-    {
-        $model = new CardRequest;
-
-        if(isset($_POST['Card'])) {
-            // обработка формы
-            $model->updateCard($id, $_POST['Card']);
-        }
-
-            // --- вывод формы
-        $data = $model->getCard($id);
-        $title = "Редактирование заказа " . $id;
-        $this->setPageTitle($title);
-        $this->breadcrumbs = array(
-            'Услуги'=>array('sect?p=service'),
-            'Заказ карты PROMMU'=>array('cards'),
-            '1'=>$title
-        ); 
-        $this->render('users/cardform', array('id'=>$id, 'data'=>$data));
-
-    }
-
-     // **** Управление пользователями (карточки) ****
-    public function actionMedCards()
-    {
-        if(self::isAuth()) {
-          if(strpos($this->user_access, "Карта") === false) {
-            $this->render('access');
-            return;
-        } 
-            $model = new MedCard('search');
-            $model->unsetAttributes();  // clear any default values
-            if(isset($_GET['User'])){
-                $model->attributes=$_GET['User'];
-            }
-            $title = 'Заказ медкниги';
-            $this->setPageTitle($title);
-            $this->breadcrumbs = array('Услуги'=>array('sect?p=service'),'1'=>$title);
-            $this->render('users/medcardsview', array('model'=>$model));
-        }
-
-        //$this->render('users/view');
-    }
-
-    public function actionMedCardEdit($id)
-    {
-        $model = new MedRequest;
-
-        if(isset($_POST['Card'])) {
-            // обработка формы
-            $model->updateCard($id, $_POST['Card']);
-        }
-
-            // --- вывод формы
-        $data = $model->getCard($id);
-        $title = "Редактирование заказа " . $id;
-        $this->setPageTitle($title);
-        $this->breadcrumbs = array(
-            'Услуги'=>array('sect?p=service'),
-            'Заказ медкниги'=>array('medcards'),
-            '1'=>$title
-        ); 
-        $this->render('users/medcardform', array('id'=>$id, 'data'=>$data));
-
-    }
-
 
     public function actionMailCloudAll()
     {
@@ -870,46 +753,6 @@ class SiteController extends Controller
         $model->search();
         $this->render('wait/view', array('model'=>$model));
     }
-    
-
-
-    public function actionExportCards()
-    {
-        // if($this->user_access != 1) {
-        //  $this->render('access');
-        //  return;
-        // }
-        //my-grid_c0[]
-        if(!empty($_POST['dvgrid_c0'])) {
-            $checks = $_POST["dvgrid_c0"];
-            //print_r($checks); die;
-            $model = new CardRequest;
-            $model->exportCSV($checks);
-        } else {
-            $model = new UserCard('search');
-            $model->unsetAttributes();  // clear any default values
-            $this->render('users/cardsview', array('model'=>$model));
-        }
-    }
-
-    public function actionExportMedCards()
-    {
-        // if($this->user_access != 1) {
-        //  $this->render('access');
-        //  return;
-        // }
-        //my-grid_c0[]
-        if(!empty($_POST['dvgrid_c0'])) {
-            $checks = $_POST["dvgrid_c0"];
-            //print_r($checks); die;
-            $model = new MedRequest;
-            $model->exportCSV($checks);
-        } else {
-            $model = new MedCard('search');
-            $model->unsetAttributes();  // clear any default values
-            $this->render('users/cardsview', array('model'=>$model));
-        }
-    }
 
     public function actionExportAnalytic()
     {
@@ -922,65 +765,6 @@ class SiteController extends Controller
         
 
     }
-
-    public function actionCardStatus($id)
-    {
-        $model = new CardRequest;
-        $curr_status = intval($_POST['curr_status']);
-        $model->CardStatus($id, $curr_status);
-        // $model->unsetAttributes();  /
-
-        $this->redirect(array('cards'));
-    }
-
-    public function actionMedCardStatus($id)
-    {
-        $model = new MedRequest;
-        $curr_status = intval($_POST['curr_status']);
-        $model->CardStatus($id, $curr_status);
-
-        $this->redirect(array('medcards'));
-    }
-
-    public function actionServicesSetViewed($id)
-    {
-        $model = new Service;
-        $model->setViewed($id, $_POST['curr_cnd']);
-        $this->redirect(array('services?type='. $_POST['type']));
-    }
-
-    public function actionServicessSetViewed($id)
-    {
-        $model = new ServiceOut;
-        $model->setViewed($id, $_POST['type'], $_POST['curr_cnd']);
-        $this->redirect(array('servicess?type='. $_POST['type']));
-    }
-
-    public function actionMedCardResetStatus($id)
-    {
-        $model = new MedRequest;
-        $model->resetCardStatus($id);
-
-
-        // --- вывод формы
-        $model2 = new MedCard('search');
-        //$model->unsetAttributes();  // clear any default values
-        $this->render('users/cardsview', array('model'=>$model2));
-    }
-
-    public function actionCardResetStatus($id)
-    {
-        $model = new CardRequest;
-        $model->resetCardStatus($id);
-
-
-        // --- вывод формы
-        $model2 = new UserCard('search');
-        //$model->unsetAttributes();  // clear any default values
-        $this->render('users/cardsview', array('model'=>$model2));
-    }
-
-  
     // Админка промоутер
     public function actionPromoEdit($id)
     {
@@ -1096,50 +880,6 @@ class SiteController extends Controller
         }
         
     }
-
-
-    public function actionDeleteCard()
-    {
-        // if($this->user_access != 1) {
-        //  $this->render('access');
-        //  return;
-        // }
-        
-        if(!empty($_POST["dvgrid_c0"])) {
-            $checks = $_POST["dvgrid_c0"];
-            $model = new CardRequest;
-            $model->deleteCard($checks);
-            $this->redirect(array('site/cards'));
-        } else {
-            $model = new UserCard('search');
-            $model->unsetAttributes();  // clear any default values
-            $this->render('users/cardsview', array('model'=>$model));
-        }
-        
-        
-    }
-
-    public function actionDeleteMedCard()
-    {
-        // if($this->user_access != 1) {
-        //  $this->render('access');
-        //  return;
-        // }
-        
-        if(!empty($_POST["dvgrid_c0"])) {
-            $checks = $_POST["dvgrid_c0"];
-            $model = new MedRequest;
-            $model->deleteCard($checks);
-            $this->redirect(array('site/medcards'));
-        } else {
-            $model = new MedCard('search');
-            $model->unsetAttributes();  // clear any default values
-            $this->render('users/medcardsview', array('model'=>$model));
-        }
-        
-        
-    }
-
 
     public function actionDeletePromo()
     {
@@ -1419,85 +1159,6 @@ class SiteController extends Controller
         }
     }
 
-    public function actionServicess()
-    {
-      $this->checkAccess('Услуги');
-
-      $model = new ServiceOut();
-      $model->unsetAttributes();  // clear any default values
-      $model->search();
-      $title = 'Услуги';
-      if(isset($_GET['type']))
-      {
-          switch ($_GET['type'])
-          {
-              case 'outstaffing': $title = 'Заказ аутстаффинга'; break;
-              case 'outsourcing': $title = 'Заказ аутсорсинга'; break;
-              case 'api': $title = 'Заказ API'; break;
-
-          }
-          $model->type=$_GET['type'];
-      }
-      $this->setPageTitle($title);
-      $this->breadcrumbs = array('Услуги'=>array('sect?p=service'),'1'=>$title);
-      $this->render('services/serv', array('model'=>$model));
-    }
-
-    public function actionServices()
-    {
-      $this->checkAccess('Услуги');
-      $title = 'Услуги';
-      $arBread = ['Услуги'=>['sect?p=service']];
-      $id = Yii::app()->getRequest()->getParam('id');
-      $type = Yii::app()->getRequest()->getParam('type');
-
-      if($type=='guest-order')
-      {
-        $model = new ServiceGuestOrder();
-        $title = 'Заказ услуг гостями';
-        $arBread[$title] = ['services?type=guest-order'];
-        Yii::app()->getClientScript()->registerCssFile(
-          Yii::app()->request->baseUrl . '/css/template.css'
-        );
-
-        if(intval($id)>0)
-        {
-          $title = 'Заказ #' . $id;
-          $arBread[] = $title;
-          $view = 'services/guest-order/item';
-          $model->setAdminViewed($id);
-        }
-        else
-        {
-          $view = 'services/guest-order/list';
-        }
-      }
-      else
-      {
-        $model = new Service();
-        $model->unsetAttributes();
-        $model->search();
-        if(!empty($type))
-        {
-          switch ($type)
-          {
-            case 'vacancy': $title = 'Премиум заявки'; break;
-            case 'sms': $title = 'СМС приглашения'; break;
-            case 'push': $title = 'PUSH приглашения'; break;
-            case 'email': $title = 'EMAIL приглашения'; break;
-            case 'repost': $title = 'Публикации в соцсетях'; break;
-          }
-          $model->type=$type;
-          $arBread[] = $title;
-        }
-        $view = 'services/index';
-      }
-
-      $this->setPageTitle($title);
-      $this->breadcrumbs = $arBread;
-      $this->render($view, ['model'=>$model]);
-    }
-
     public function actionFeedback()
     {
 
@@ -1601,20 +1262,6 @@ class SiteController extends Controller
         //$model->unsetAttributes();  // clear any default values
         //$model->status=2;
         //$model->search();
-
-
-        /*//my-grid_c0[]
-        if(!empty($_POST['my-grid_c0'])) {
-            $checks = $_POST["my-grid_c0"];
-            //print_r($checks); die;
-            $model = new CardRequest;
-            $model->exportCSV($checks);
-        } else {
-            $model = new User('search');
-            $model->unsetAttributes();  // clear any default values
-            $this->render('users/cardsview', array('model'=>$model));
-        }
-        */
     }
 
     public function actionExportEmpl()

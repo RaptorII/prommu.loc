@@ -134,18 +134,18 @@ class CardRequest {
 
     public function updateCard($id, $data)
     {   
-        $cloud = $this->getCard($id);
-        $comad = $cloud['comad'];
-        $dates=date("Y-m-d h-i-s");
-        if($data['comad'] != ''){
-           $comads =  $dates." ".$data['comad']."<br/>".$comad;
-        }
-        else $comads = $comad;
-        if($data['status'] == 0){
-            $status = 3;
-        }
-        else $status = $data['status'];
-        Yii::app()->db->createCommand()
+      $cloud = $this->getCard($id);
+
+      if($data['comad'] !== '')
+      {
+        $comads =  date("d.m.Y h:i:s")." ".$data['comad']."<br/>".$cloud['comad'];
+      }
+      else
+      {
+        $comads = $cloud['comad'];
+      }
+
+      $result = Yii::app()->db->createCommand()
             ->update('card_request', array(
                 'name'=>$data['name'],
                 'post'=>$data['post'],
@@ -166,10 +166,17 @@ class CardRequest {
                 'regcountry'=>$data['regcountry'],
                 'regaddr'=>$data['regaddr'],
                 'liveaddr'=>$data['liveaddr'],
-                'status'=>$status,
+                'status'=>$data['status'],
                 'comment'=>$data['comment'],
             ), 'id=:id', array(':id'=>$id));
-
+      if($result)
+      {
+        Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
+      }
+      else
+      {
+        Yii::app()->user->setFlash('danger', 'Ошибка сохранения');
+      }
     }
 
 

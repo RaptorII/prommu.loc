@@ -134,4 +134,28 @@ class Outstaffing extends CActiveRecord
 
     return implode(',<br>',$arRes);
   }
+  /**
+   *  счетчик непросмотренных услуг
+   */
+  public static function getAdminCnt()
+  {
+    $arRes = ['cnt'=>0];
+
+    $query = Yii::app()->db->createCommand()
+      ->select('count(id_key) cnt, type')
+      ->from('outstaffing')
+      ->where('is_new=1')
+      ->group('type')
+      ->queryAll();
+
+    if(count($query))
+    {
+      foreach($query as $v)
+      {
+        $arRes[$v['type']] = $v['cnt'];
+        $arRes['cnt'] += $v['cnt'];
+      }
+    }
+    return $arRes;
+  }
 }
