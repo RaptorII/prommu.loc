@@ -145,48 +145,47 @@ class MedCard extends CActiveRecord
       'sort' => ['defaultOrder'=>'status asc, id desc'],
 		));
 	}
+  /**
+   * @return bool|CDbDataReader|mixed|string
+   */
+  public static function getAdminCnt()
+  {
+      return  self::model()->countByAttributes(['status'=> 0]);
+  }
+  /**
+  *
+  */
+  public static function getIndex($all=false)
+  {
+  	$arRes = [
+  		'На Новослободской' => 'На Новослободской',
+  		'На Таганке' => 'На Таганке',
+  		'На Киевской' => 'На Киевской',
+  		'На Курской' => 'На Курской'
+  	];
+  	if($all)
+  	{
+  		array_unshift($arRes, 'Все');
+  	}
 
-    /**
-     * @return bool|CDbDataReader|mixed|string
-     */
-    public static function getAdminCnt()
-    {
-        return  self::model()->countByAttributes(['status'=> 0]);
-    }
-    /**
-    *
-    */
-    public static function getIndex($all=false)
-    {
-    	$arRes = [
-    		'На Новослободской' => 'На Новослободской',
-    		'На Таганке' => 'На Таганке',
-    		'На Киевской' => 'На Киевской',
-    		'На Курской' => 'На Курской'
-    	];
-    	if($all)
-    	{
-    		array_unshift($arRes, 'Все');
-    	}
+  	return (!empty($key) ? $arRes[$key] : $arRes);
+  }
+  /**
+  *
+  */
+  public static function getPayType($all=false)
+  {
+  	$arRes = [
+  		'Сервису Промму' => 'Сервису Промму',
+  		'Наличными в Медицинском центре' => 'Наличными в Медицинском центре'
+  	];
+  	if($all)
+  	{
+  		array_unshift($arRes, 'Все');
+  	}
 
-    	return (!empty($key) ? $arRes[$key] : $arRes);
-    }
-    /**
-    *
-    */
-    public static function getPayType($all=false)
-    {
-    	$arRes = [
-    		'Сервису Промму' => 'Сервису Промму',
-    		'Наличными в Медицинском центре' => 'Наличными в Медицинском центре'
-    	];
-    	if($all)
-    	{
-    		array_unshift($arRes, 'Все');
-    	}
-
-    	return (!empty($key) ? $arRes[$key] : $arRes);
-    }
+  	return (!empty($key) ? $arRes[$key] : $arRes);
+  }
   /**
    * @param $id
    * @return int

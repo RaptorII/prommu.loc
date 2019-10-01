@@ -127,7 +127,7 @@
     <? if(!$flagOwnProfile): ?>
       <div class="ppp-logo-main__active">
         <?if(!$attr['is_online']):?>
-          <span class="disable"><i></i>Был(а) на сервисе: <?=date_format(date_create($attr['mdate']), 'd.m.Y');?></span>
+          <span class="disable">Был<?=$attr['isman']?'':'а'?> на сервисе: <?=date_format(date_create($attr['mdate']), 'd.m.Y');?></span>
         <?endif;?>
       </div>
       <div class="ppp__logo-rating">

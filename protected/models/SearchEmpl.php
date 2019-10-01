@@ -179,7 +179,10 @@ class SearchEmpl extends Model
         if( $param ) $data['cities'] = $param;
         // тип компании
         $param = $inProps['filter']['cotype'] ?: $param = Yii::app()->getRequest()->getParam('cotype');
-        if( $param ) $data['cotype'] = $param;
+        if( $param )
+        {
+          $data['cotype'] = ((is_array($param) && count($param)) ? explode(',', $param) : $param);
+        }
         // Quick search id компании или название
         $param = $inProps['filter']['qs'] ?: $param = Yii::app()->getRequest()->getParam('qs');
         if( $param ) { $data['qs'] = filter_var(trim($param), FILTER_SANITIZE_FULL_SPECIAL_CHARS); }

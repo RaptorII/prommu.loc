@@ -76,7 +76,7 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
     <? if(!$flagOwnProfile): ?>
       <div class="upp-logo-main__active">
         <?if(!$viData['userInfo']['is_online']):?>
-          <span class="disable"><i></i>Был(а) на сервисе: <?=date_format(date_create($viData['userInfo']['mdate']), 'd.m.Y');?></span>
+          <span class="disable">Был(а) на сервисе: <?=date_format(date_create($viData['userInfo']['mdate']), 'd.m.Y');?></span>
         <?endif;?>
       </div>
     <? endif; ?>

@@ -33,31 +33,7 @@ class Share
     }
 
 
-    public function getOnline(){
-        
-        $sql = "SELECT odate, id_user
-                 FROM user
-                 WHERE is_online = 1";
-        $users = Yii::app()->db->createCommand($sql)->queryAll();
-        
-        
-        for ($i=0; $i < count($users); $i++) {
-            
-        	$to_time = strtotime(date("Y-m-d h-i-s"));
-            $from_time = $users[$i]['odate'];
-            $odate =  round(abs($to_time - $from_time) / 60,2);
-        
-        	if($odate > 15) {
-        
-                Yii::app()->db->createCommand()
-                    ->update('user', array(
-            	'is_online' => 0,),
-        		'id_user=:id', array(':id'=>$users[$i]['id_user']));
-        
-            }
-        }
-    }
-    
+
     public function getLangAjax()
     {
         $lang = 'ru';

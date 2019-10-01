@@ -108,42 +108,15 @@
                           <div class='company-logo-wrapp'>
                               <div class='company-logo'>
                                   <a href='<?= MainConfig::$PAGE_PROFILE_COMMON . DS . $val['id_user'] ?>'>
-                                      <img 
-                                      	alt='Работодатель <?= $val['name'] ?> prommu.com' 
+                                      <img
+                                      	alt='Работодатель <?= $val['name'] ?> prommu.com'
                                       	src="<?=Share::getPhoto($val['id_user'],3,$val['logo'])?>">
-										<?php if($val['is_online']): ?>
-											<span class="empl-list__item-onl"><span>В сети</span></span>
-										<?php endif; ?>
+                                      <?php if($val['is_online']): ?>
+                                        <span class="empl-list__item-onl"><span>В сети</span></span>
+                                      <?php endif; ?>
                                   </a>
                               </div>
-
                           </div>
-
-
-                          <div style="text-align: center;margin-top: 10px;margin-bottom: 10px;">
-                              <? if ($val['is_online']): ?>
-                                  <span style="color:#abb820"><i style="
-                display: inline-block;
-                width: 8px;
-                height: 8px;
-                background: #abb820;
-                border-radius: 50%;
-                margin-right: 8px;
-            "></i>В сети</span>
-                              <? else: ?>
-
-                                  <span style="color:#D6D6D6"><i style="
-                display: inline-block;
-                width: 8px;
-                height: 8px;
-                background: #D6D6D6;
-                border-radius: 50%;
-                margin-right: 8px;
-            "></i>Был(а) на сервисе: <?= date_format(date_create($val['mdate']), 'd.m.Y'); ?></span>
-                              <? endif; ?>
-                          </div>
-
-
                       </div>
                       <div class='col-xs-12 col-sm-9 col-lg-10'>
                           <div class='title-block'>

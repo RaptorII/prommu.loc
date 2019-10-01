@@ -40,16 +40,16 @@ class Cron
         return $data;
     }
     
-    public function getRestOneDay(){
-        
-        $Share = new Share();
-        $Share->getOnline();
+    public function getRestOneDay()
+    {
+
     }
     
     
     public function mailBox()
     {
-        return Mailing::send();
+      User::disableUsersOnlineStatus(); // выключаем у юзеров статус "Онлайн"
+      return Mailing::send();
     }
     
     public function getRestOneTest(){

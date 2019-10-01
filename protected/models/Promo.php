@@ -595,11 +595,11 @@ class Promo extends ARModel
                     ->where(array('in', 'uc.id_user', $arId))
                     ->queryAll();
 
-        for ( $i=0, $n=sizeof($sqlC); $i<$n; $i++ ){
-            !empty($sqlC[$i]['name'])
-            &&
-            $arP[$sqlC[$i]['id_user']]['city']['name'] = $sqlC[$i]['name'];
-            $arP[$sqlC[$i]['id_user']]['city']['id'] = $sqlC[$i]['id'];
+        for ( $i=0, $n=sizeof($sqlC); $i<$n; $i++ )
+        {
+          !empty($sqlC[$i]['name'])
+          &&
+          $arP[$sqlC[$i]['id_user']]['city'][$sqlC[$i]['id']] = $sqlC[$i]['name'];
         }
 
         $sqlM = Yii::app()->db->createCommand()
@@ -609,12 +609,11 @@ class Promo extends ARModel
                     ->where(array('in', 'um.id_us', $arId))
                     ->queryAll();
 
-        for ( $i=0, $n=sizeof($sqlM); $i<$n; $i++ ) {
-            if(!empty($sqlM[$i]['name'])){
-                $arP[$sqlM[$i]['id_user']]['metroes']['id'] = $sqlM[$i]['id'];
-                $arP[$sqlM[$i]['id_user']]['metroes']['name'] = $sqlM[$i]['name'];   
-            }
-            
+        for ( $i=0, $n=sizeof($sqlM); $i<$n; $i++ )
+        {
+          !empty($sqlM[$i]['name'])
+          &&
+          $arP[$sqlM[$i]['id_user']]['metroes'][$sqlM[$i]['id']] = $sqlM[$i]['name'];
         }
 
         $where = 'vs.id_promo IN(' . implode(',', $arIdPromo) . ') AND ' 
@@ -658,6 +657,22 @@ class Promo extends ARModel
             $diff = $d2->diff($d1);
             $arP[$idus]['age'] = $diff->y;
             $arP[$idus]['sex'] = $p['isman'];
+            // время на сайте
+            $d2 = new DateTime($p['date_public']);
+            $diff = $d2->diff($d1);
+            $months = ($diff->y * 12) + $diff->m;
+            if($months < 6)
+            {
+              $arP[$idus]['time_on_site'] = 'Новичок';
+            }
+            else if($months < 12)
+            {
+              $arP[$idus]['time_on_site'] = 'Скоро 1 год';
+            }
+            else
+            {
+              $arP[$idus]['time_on_site'] = "Уже {$diff->y} год";
+            }
         }
 
         return $arP;

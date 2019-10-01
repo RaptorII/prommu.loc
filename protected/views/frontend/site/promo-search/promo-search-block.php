@@ -43,31 +43,30 @@
                                     </a>
                                 </div>
 
-                                <div style="text-align: center;margin-top: 10px;margin-bottom: 10px;">
-                                    <? if ($val['is_online']): ?>
-                                        <span style="color:#abb820"><i style="
-                display: inline-block;
-                width: 8px;
-                height: 8px;
-                background: #abb820;
-                border-radius: 50%;
-                margin-right: 8px;
-            "></i>В сети</span>
-                                    <? else: ?>
+                                <div class="alib__img">
+                                  <? $i = 0;
+                                  if (count($photos) > 1) { ?>
+                                    <? foreach ($photos as $photo): ?>
+                                      <?
+                                      $srcImg = Share::getPhoto($val['id_user'], 3, $photo['photo'], 'small');
+                                      ?>
+                                      <? if ($i <= 1): ?>
+                                        <span class="alib__img-wrap">
 
-                                        <span style="color:#D6D6D6"><i style="
-                display: inline-block;
-                width: 8px;
-                height: 8px;
-                background: #D6D6D6;
-                border-radius: 50%;
-                margin-right: 8px;
-            "></i>Был(а) на сервисе: <?= date_format(date_create($val['mdate']), 'd.m.Y'); ?></span>
-                                    <? endif; ?>
+                                                              <img src="<?= $srcImg ?>" alt="Соискатель <?= $viData['userInfo']['name'] ?> prommu.com">
+                                                          </span>
+                                      <? endif; ?>
+                                      <? if ($i > 1): ?>
+                                        <a class="alib__img-link" href='<?= MainConfig::$PAGE_PROFILE_COMMON . DS . $val['id_user'] ?>' data-title="Смотреть больше фото">
+                                          <span class="alib__img-more" >+</span>
+                                        </a>
+                                        <? break; ?>
+                                      <? endif; ?>
+                                      <? $i++; ?>
+                                    <? endforeach;
+                                  } ?>
+                                  <div class="clearfix"></div>
                                 </div>
-
-
-
                             </div>
                         </div>
                         <div class='col-xs-12 col-sm-8'>
@@ -149,6 +148,11 @@
                                     <h3>Метро: <small><?=join(', ',$val['metroes'])?></small></h3>
                                 </div>
                             <?php endif; ?>
+                            <? if (!empty($val['time_on_site'])): ?>
+                              <div class='place'>
+                                <h3>На сайте: <small><?=$val['time_on_site']?></small></h3>
+                              </div>
+                            <? endif; ?>
                         </div>
                     </div>
                 </div>

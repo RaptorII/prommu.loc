@@ -292,15 +292,9 @@ $this->renderPartial('../site/page-search-promo-tpl_css');
             <?php if ($cookieView == 'list'): ?>
                 <div class='list-view'>
                     <?php foreach ($viData['promo'] as $key => $val):
-
                         $usrPrflApp = new UserProfileApplic();
                         $usrPrflApp = $usrPrflApp->getProfileData($val['id_user'],$val['id_user']);
                         $photos = $usrPrflApp['userInfo']['userPhotos'];
-
-//                        echo "<pre>";
-//                            print_r($photos);
-//                        echo "</pre>";
-
                         ?>
                         <div class='appl-list-item-box'>
                             <div class='row'>
@@ -341,32 +335,6 @@ $this->renderPartial('../site/page-search-promo-tpl_css');
                                             } ?>
                                             <div class="clearfix"></div>
                                         </div>
-
-
-                                        <div style="text-align: center;margin-top: 10px;margin-bottom: 10px;">
-                                            <? if ($val['is_online']): ?>
-                                                <span style="color:#abb820"><i style="
-                display: inline-block;
-                width: 8px;
-                height: 8px;
-                background: #abb820;
-                border-radius: 50%;
-                margin-right: 8px;
-            "></i>В сети</span>
-                                            <? else: ?>
-
-                                                <span style="color:#D6D6D6"><i style="
-                display: inline-block;
-                width: 8px;
-                height: 8px;
-                background: #D6D6D6;
-                border-radius: 50%;
-                margin-right: 8px;
-            "></i>Был(а) на сервисе: <?= date_format(date_create($val['mdate']), 'd.m.Y'); ?></span>
-                                            <? endif; ?>
-                                        </div>
-
-
                                     </div>
                                 </div>
                                 <div class='col-xs-12 col-sm-8'>
@@ -443,6 +411,9 @@ $this->renderPartial('../site/page-search-promo-tpl_css');
                                     </div>
                                     <div class='place'>
                                         <h3>Город:
+                                          <?
+                                            $arCities = $val['city']
+                                          ?>
                                             <small><?= join(', ', $val['city']) ?></small>
                                         </h3>
                                     </div>
@@ -453,6 +424,11 @@ $this->renderPartial('../site/page-search-promo-tpl_css');
                                             </h3>
                                         </div>
                                     <?php endif; ?>
+                                    <? if (!empty($val['time_on_site'])): ?>
+                                      <div class='place'>
+                                        <h3>На сайте: <small><?=$val['time_on_site']?></small></h3>
+                                      </div>
+                                    <? endif; ?>
                                 </div>
                             </div>
                         </div>

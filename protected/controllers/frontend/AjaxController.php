@@ -1012,6 +1012,8 @@ class AjaxController extends AppController
         $arRes['items'] = $model->getNewMessages(Share::$UserProfile->id);
         $arRes['error'] = $arRes['items']==false;
       }
+      // Установка статуса юзера "В сети"
+      User::enableUserOnlineStatus(Share::$UserProfile->id);
 
       echo CJSON::encode($arRes);
       Yii::app()->end();

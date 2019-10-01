@@ -1626,4 +1626,53 @@ class User extends CActiveRecord
       $arRes['result'][] = $thread->result;
     }
   }
+  /*
+  *   Выполняется по крону. Устанавливает статус "Не в сети", если от юзера нет активности более часа
+  */
+  public static function disableUsersOnlineStatus()
+  {
+    $query = Yii::app()->db->createCommand()
+      ->select('UNIX_TIMESTAMP(mdate) time, id_user')
+      ->from('user')
+      ->where('is_online=1')
+      ->queryAll();
+
+    if(!count($query))
+    {
+      return;
+    }
+
+    $arIdUser = [];
+    $time = time();
+    foreach ($query as $v)
+    {
+      if( ($time - $v['time']) > 3600 ) // не было активности более часа
+      {
+        $arIdUser[] = $v['id_user'];
+      }
+    }
+
+    if(count($arIdUser))
+    {
+      Yii::app()->db->createCommand()
+        ->update('user', ['is_online'=>0], ['in','id_user',$arIdUser]);
+    }
+  }
+  /**
+   * @param $id_user - integer
+   * Установка статуса юзера "В сети", когда тот просто серфит по сайту(для авторизации и активации метод Auth->AuthorizeNet())
+   * Выполняется в AjaxController->actionAdminMessages()
+   */
+  public static function enableUserOnlineStatus($id_user)
+  {
+    Yii::app()->db->createCommand()
+      ->update('user',
+        [
+          'mdate' => date('Y-m-d H:i:s'),
+          'is_online' => 1
+        ],
+        'id_user=:id_user',
+        [':id_user' => $id_user]
+      );
+  }
 }
