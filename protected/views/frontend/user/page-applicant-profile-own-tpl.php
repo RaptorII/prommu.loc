@@ -126,6 +126,9 @@
     </div>
     <? if(!$flagOwnProfile): ?>
       <div class="ppp-logo-main__active">
+        <span class="disable"><b>На сайте:</b> <?=$info['time_on_site']?></span>
+      </div>
+      <div class="ppp-logo-main__active">
         <?if(!$attr['is_online']):?>
           <span class="disable">Был<?=$attr['isman']?'':'а'?> на сервисе: <?=date_format(date_create($attr['mdate']), 'd.m.Y');?></span>
         <?endif;?>

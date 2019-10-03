@@ -1267,7 +1267,8 @@ class UserProfileApplic extends UserProfile
               , a.val , a.id_attr, u.confirmPhone, u.confirmEmail
               , d.name , d.type , d.id_par idpar , d.key
               , u.email, card, cardPrommu, u.is_online
-              , r.index, r.meta_h1, r.meta_title, r.meta_description, r.rate, r.rate_neg
+              , r.index, r.meta_h1, r.meta_title, r.meta_description, r.rate, r.rate_neg,
+              DATE_FORMAT(r.date_public, '%d.%m.%Y') date_public
             FROM resume r
             LEFT JOIN user u ON u.id_user = r.id_user
             LEFT JOIN user_attribs a ON r.id_user = a.id_us
@@ -1309,6 +1310,24 @@ class UserProfileApplic extends UserProfile
                 $phoneCode = 7; // по умолчанию Рашка
             $attr[1]['phone'] = substr($phone, $pos);
             $attr[1]['phone-code'] = $phoneCode;    
+        }
+        if(!empty($attr[1]['date_public']))
+        {
+            $d2 = new DateTime($attr[1]['date_public']);
+            $diff = $d2->diff($d1);
+            $months = ($diff->y * 12) + $diff->m;
+            if($months < 6)
+            {
+              $data['time_on_site'] = 'Новичок';
+            }
+            else if($months < 12)
+            {
+              $data['time_on_site'] = 'Скоро 1 год';
+            }
+            else
+            {
+              $data['time_on_site'] = "Уже {$diff->y} год";
+            }
         }
 
         $data['userAttribs'] = $attr;

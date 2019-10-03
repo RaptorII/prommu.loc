@@ -1358,11 +1358,29 @@ class UserProfileEmpl extends UserProfile
                 e.rate,
                 e.rate_neg,
                 u.mdate,
-                u.is_online
+                u.is_online,
+                DATE_FORMAT(e.crdate, '%d.%m.%Y') date_public
             FROM employer e
             LEFT JOIN user u ON u.id_user = e.id_user
             WHERE e.id_user = {$id}";
         $res = Yii::app()->db->createCommand($sql)->queryRow();
+
+        // время на сайте
+        $d2 = new DateTime($res['date_public']);
+        $diff = $d2->diff($d1);
+        $months = ($diff->y * 12) + $diff->m;
+        if($months < 6)
+        {
+          $res['time_on_site'] = 'Новичок';
+        }
+        else if($months < 12)
+        {
+          $res['time_on_site'] = 'Скоро 1 год';
+        }
+        else
+        {
+          $res['time_on_site'] = "Уже {$diff->y} год";
+        }
 
         return $res;
     }
