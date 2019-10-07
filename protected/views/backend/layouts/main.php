@@ -145,7 +145,9 @@ else
                             <!-- The user image in the navbar-->
                             <!-- hidden-xs hides the username on small devices so only the image appears. -->
                             <span class="hidden-xs">Обратная связь</span>
-                            <span class="label label-danger"><?= $model['cnt'] ?></span>
+                            <?php if (isset($model['cnt']) && $model['cnt'] != 0) { ?>
+                                <span class="label label-danger"><?= $model['cnt'] ?></span>
+                            <?php } ?>
                         </a>
                         <ul class="dropdown-menu">
 
@@ -165,10 +167,10 @@ else
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-<!--                        <a href="--><?//=$hUrl. 'vacancy'?><!--" class="dropdown-toggle">-->
-                            <span class="label label-danger"><?= $counV ?></span>
-                            <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                            <span class="hidden-xs">Вакансии </span>
+                            <?php if (isset($counV) && $counV != 0) { ?>
+                                <span class="label label-danger"><?= $counV ?></span>
+                            <?php } ?>
+                            <span class="hidden-xs"> Вакансии </span>
                         </a>
 
                         <ul class="dropdown-menu">
@@ -186,10 +188,9 @@ else
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-<!--                        <a href="--><?//=$hUrl. 'users'?><!--" class="dropdown-toggle">-->
-                            <span class="label label-danger"><?= $counP ?></span>
-                            <!-- The user image in the navbar-->
-                            <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                            <?php if (isset($counP) && $counP != 0) { ?>
+                                <span class="label label-danger"><?= $counP ?></span>
+                            <?php } ?>
                             <span class="hidden-xs">Соискатели </span>
                         </a>
 
@@ -208,9 +209,9 @@ else
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <span class="label label-danger"><?= $counR ?></span>
-                            <!-- The user image in the navbar-->
-                            <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                            <?php if (isset($counR) && $counR != 0) { ?>
+                                <span class="label label-danger"><?= $counR ?></span>
+                            <?php } ?>
                             <span class="hidden-xs">Работодатели</span>
                         </a>
                         <ul class="dropdown-menu">
@@ -287,17 +288,13 @@ else
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <span class="label label-danger"><?= ($arIdeasCnt/*+$arIdeas['comments']*/) ?></span>
+                            <?php if (isset($arIdeasCnt) && $arIdeasCnt != 0) { ?>
+                                <span class="label label-danger"><?= $arIdeasCnt ?></span>
+                            <?php } ?>
                             <span class="hidden-xs">Идеи</span>
                         </a>
 
                         <ul class="dropdown-menu">
-<!--                            <li style="padding:0px;height:auto;" class="user-header">-->
-<!--                                <a style="white-space:unset;background-color:#e1e3e9;text-align:left"-->
-<!--                                   href="--><?//= $hUrl ?><!--ideas" rel="tooltip" data-placement="top">Идеи:-->
-<!--                                    (--><?//= $arIdeas['ideas'] ?><!--)</a>-->
-<!--                            </li>-->
-
                             <? foreach ($arIdeas as $idea):  ?>
                                 <li class="user-header">
 
@@ -307,13 +304,6 @@ else
 
                                 </li>
                             <? endforeach; ?>
-
-<!--                            <li style="padding:0px;height:auto;" class="user-header">-->
-<!--                                <a style=" white-space:unset;background-color:#e1e3e9;text-align:left"-->
-<!--                                   href="--><?//= $hUrl ?><!--ideas" rel="tooltip" data-placement="top">Комментарии:-->
-<!--                                    (--><?//= $arIdeas['comments'] ?><!--)</a>-->
-<!--                            </li>-->
-
                         </ul>
                     </li>
                     <!-- User Account Menu -->
