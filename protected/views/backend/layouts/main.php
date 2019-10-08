@@ -265,8 +265,10 @@ else
                       <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                          <span class="label label-danger"><?=$arServiceCnt['cnt']?></span>
                           <span class="hidden-xs">Услуги</span>
+                          <?php if (isset($arServiceCnt['cnt']) && $arServiceCnt['cnt'] != 0) { ?>
+                              <span class="label label-danger"><?= $arServiceCnt['cnt'] ?></span>
+                          <?php } ?>
                         </a>
                         <ul class="dropdown-menu">
                           <? foreach ($arServiceCnt['items'] as $v): ?>
@@ -279,7 +281,10 @@ else
                                 <? endif; ?>
                                 <span><?=$v['name']?></span>
                               </a>
-                              <span class="label label-danger"><?=$v['cnt']?></span>
+                              <span class="label label-danger"><?= $v['cnt'] ?></span>
+                              <?php if (isset($v['name']) && $v['name'] != 0) { ?>
+                                  <span class="label label-danger"><?= $v['name'] ?></span>
+                              <?php } ?>
                             </li>
                           <? endforeach; ?>
                         </ul>
