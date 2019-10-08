@@ -58,7 +58,7 @@
 		$arModer = [0=>"в работе", 1=>"просмотрено"];
 		$arBlLabel = ["success","danger","warning","info","primary"];
 		$result = false;
-		if(in_array($name, ['ismoder','isblocked','messenger','is_online']))
+		if(in_array($name, ['ismoder','isblocked','messenger','is_online','status']))
 		{
 			switch ($name)
 			{
@@ -78,6 +78,9 @@
 						? '<span class="glyphicon glyphicon-ok  text-success" title="онлайн"></span>' 
 						: '<span class="glyphicon glyphicon-remove  text-danger" title="офлайн"></span>';
 					break;
+        case 'status':
+          $result = AdminView::getUserType($arr['status']);
+          break;
 			}
 			return empty($result) || !$result ? ' - ' : $result;
 		}
@@ -90,9 +93,6 @@
 					break;
 				case 'email':
 					$result = trim($arr['email']);
-					break;
-				case 'status':
-					$result = '<span class="glyphicon glyphicon-user" title="соискатель"></span>';
 					break;
 				case 'cdate':
 					$result = Share::getPrettyDate($arr['rcdate'],false,true);
@@ -120,9 +120,6 @@
 					break;
 				case 'email':
 					$result = trim($arr['email']);
-					break;
-				case 'status':
-					$result = '<span class="glyphicon glyphicon-briefcase" title="работодатель"></span>';
 					break;
 				case 'cdate':
 					$result = Share::getPrettyDate($arr['ecdate'],false,true);

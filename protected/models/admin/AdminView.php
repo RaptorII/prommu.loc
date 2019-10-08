@@ -51,5 +51,24 @@ class AdminView
   {
     return (!empty($value) ? $value : '-');
   }
+  /**
+   * @param $type - integer ( 2 || 3 )
+   * @return string - html
+   */
+  public static function getUserType($type)
+  {
+    if(Share::isApplicant($type))
+    {
+      return '<span class="glyphicon glyphicon-user" title="соискатель"></span>';
+    }
+    elseif(Share::isEmployer($type))
+    {
+      return '<span class="glyphicon glyphicon-briefcase" title="работодатель"></span>';
+    }
+    else
+    {
+      return '<span class="glyphicon glyphicon-baby-formula" title="гость"></span>';
+    }
+  }
 }
 ?>

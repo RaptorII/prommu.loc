@@ -150,7 +150,7 @@ class User extends CActiveRecord
 				'limit' => 20,
 				'items' => []
 			];
-		$arRes['offset'] = ($page-1) * $arRes['limit'];
+		$arRes['offset'] = (intval($page)-1) * intval($arRes['limit']);
 		$arRes['offset']<0 && $arRes['offset']=0;
 
 		$order = empty($sort) ? "id_user desc" : "$sort $dir";
@@ -185,15 +185,11 @@ class User extends CActiveRecord
 			$eCondition[]="u.email like '%{$value}%'";
 		}
 		// date creating
-		$value = $this->setDateQuery('r','date_public','cbdate','cedate');
-		!empty($value) && $rCondition[] = $value;
-		$value = $this->setDateQuery('e','crdate','cbdate','cedate');
-		!empty($value) && $eCondition[] = $value;
+		Share::setDateQuery('r','date_public','cbdate','cedate',$rCondition);
+    Share::setDateQuery('e','crdate','cbdate','cedate',$eCondition);
 		// date moderation
-		$value = $this->setDateQuery('r','mdate','mbdate','medate');
-		!empty($value) && $rCondition[] = $value;
-		$value = $this->setDateQuery('e','mdate','mbdate','medate');
-		!empty($value) && $eCondition[] = $value;
+    Share::setDateQuery('r','mdate','mbdate','medate',$rCondition);
+    Share::setDateQuery('e','mdate','mbdate','medate',$eCondition);
 		// isblocked
 		$value = $arGet['isblocked'];
 		if(in_array($value, ['0','1','2','3','4']))
@@ -264,27 +260,6 @@ class User extends CActiveRecord
 
 		return $arRes;
   }
-  /**
-   * 
-   */
-	private function setDateQuery($prefix, $column, $p1, $p2)
-	{
-		$rq = Yii::app()->getRequest();
-		$d1 = Share::checkFormatDate($rq->getParam($p1));
-		$d2 = Share::checkFormatDate($rq->getParam($p2));
-		if($d1 && $d2)
-		{
-			return "({$prefix}.{$column} between '{$d1} 00:00:00' and '{$d2} 23:59:59')";
-		}
-		elseif($d1)
-		{
-			return "{$prefix}.{$column} >= '{$d1} 00:00:00'";
-		}
-		elseif($d2)
-		{
-			return "{$prefix}.{$column} <= '{$d2} 23:59:59'";
-		}
-	}
   /**
    * 
    */

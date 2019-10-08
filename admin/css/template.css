@@ -201,3 +201,7 @@
 *   custom label
 */
 .label-important{ background: #dd4b39; }
+.label-double { background-color: #3c8dbc; }
+.label-otdel { background-color: #9947c6; }
+.label-pending { background-color: #999; }
+.label-spam { background-color: #ff7373; }

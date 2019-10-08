@@ -971,36 +971,6 @@ class SiteController extends Controller
        }
    }
 
-   public function actionFeedbackDelete($id)
-   {
-       // if($this->user_access != 1) {
-          //  $this->render('access');
-          //  return;
-       // }
-       if(self::isAuth()) {
-           $model = new Feedback;
-           $curr_status = intval($_POST['curr_status']);
-           $model->deleteFeedback($id);
-          
-          
-           $this->redirect(array('site/feedback'));
-       }
-   }
-
-   public function actionFeedbackModer($id)
-   {
-       
-       if(self::isAuth()) {
-           $model = new Feedback;
-           $curr_status = intval($_POST['curr_status']);
-           $model->ChangeModer($id, $curr_status);
-           // $model->unsetAttributes();  // clear any default values
-           // $model->search();
-          
-           $this->redirect(array('site/feedback'));
-       }
-   }
-
     public function actionVacancyChangeModer($id)
     {
         
@@ -1082,46 +1052,40 @@ class SiteController extends Controller
 
     public function actionUsers()
     {
-            if(strpos($this->user_access, "Соискатели") === false) {
-            $this->render('access');
-            return;
+      self::checkAccess("Соискатели");
+
+      $model = new Promo;
+      $model->unsetAttributes();  // clear any default values
+      $model->searchpr();
+      if(isset($_GET['Promo']))
+      {
+        $model->attributes=$_GET['Promo'];
+      }
+      // excel
+      if(Yii::app()->getRequest()->getParam('export_xls')=='Y')
+      {
+        $data = $model->exportPromos();
+        if(!$data)
+        {
+          $this->redirect(['users']);
         }
-            if(self::isAuth()) {
+        Yexcel::makeExcel($data['head'],$data['items'],'export_promos',$data['autosize']);
+      }
 
-            $model = new Promo;
-            $model->unsetAttributes();  // clear any default values
-            $model->searchpr();
-            if(isset($_GET['Promo'])){
-                $model->attributes=$_GET['Promo'];
-            }
-            
-            if(Yii::app()->getRequest()->getParam('export_xls')=='Y')
-            {
-               
-                $data = $model->exportPromos();
-                if(!$data)
-                {
-                    $this->redirect(['users']);
-                }
-                Yexcel::makeExcel($data['head'],$data['items'],'export_promos',$data['autosize']); 
-            }
-            
-            if($_GET['seo']){
-                $title = 'Соискатели';
-                $this->setPageTitle($title);
-                $this->breadcrumbs = array('СЕО' => array('sect?p=seo'), '1'=>$title);
-                $this->render('users/promo', array('model'=>$model));
-            }
-            else{
-                $title = 'Зарегистрированные';
-                $this->breadcrumbs = array('Соискатели' => array('sect?p=app'), '1'=>$title);
-                $this->setPageTitle($title);
-                $this->render('users/view', array('model'=>$model));
-            }
-
-        }
-
-        //$this->render('users/view');
+      if($_GET['seo'])
+      {
+        $title = 'Соискатели';
+        $this->setPageTitle($title);
+        $this->breadcrumbs = ['СЕО' => ['sect?p=seo'], $title];
+        $this->render('users/promo', ['model'=>$model]);
+      }
+      else
+      {
+        $title = 'Зарегистрированные';
+        $this->breadcrumbs = ['Соискатели' => ['sect?p=app'], $title];
+        $this->setPageTitle($title);
+        $this->render('users/view', ['model'=>$model]);
+      }
     }
 
     public function actionAnalytic()
@@ -1161,24 +1125,30 @@ class SiteController extends Controller
 
     public function actionFeedback()
     {
-
-        if(strpos($this->user_access, "Обратная связь") === false) {
-            $this->render('access');
-            return;
-        } 
-            if(self::isAuth()) {
-            $model = new FeedbackTreatment;
-            $model->unsetAttributes();  // clear any default values
-            $model->search();
-            // $model->is_smotr=0;
-            // if(isset($_GET['FeedbackTre'])){
-            //  $model->attributes=$_GET['Feedback'];
-            // }
-            $title = 'Обратная связь';
-            $this->setPageTitle($title);
-            $this->breadcrumbs = array($title);
-            $this->render('feedback/index', array('model'=>$model));
-        }
+      $title = 'Обратная связь';
+      $this->checkAccess($title);
+      $rq = Yii::app()->getRequest();
+      $id = $rq->getParam('id');
+      if($rq->isPostRequest)
+      {
+        $arRes = ['message' => 'Ошибка изменения данных'];
+        $data = $rq->getParam('data');
+        $data = json_decode($data, true, 5, JSON_BIGINT_AS_STRING);
+        $model = new Feedback;
+        $arRes['message'] = $model->ChangeModer($data['id'], $data['value']);
+        echo CJSON::encode($arRes);
+        Yii::app()->end();
+      }
+      if($id==='0')
+      {
+        $this->render('feedback/new');
+      }
+      else
+      {
+        $this->setPageTitle($title);
+        $this->breadcrumbs = [$title];
+        $this->render('feedback/list');
+      }
 
     }
 

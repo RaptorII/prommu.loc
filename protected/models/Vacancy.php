@@ -71,7 +71,7 @@ class Vacancy extends ARModel
         $condition = [];
         $GetVac = Yii::app()->getRequest()->getParam('Vacancy');
         
-        $criteria=new CDbCriteria;
+        $criteria = new CDbCriteria;
         $criteria->with = array('employer');
 
         $criteria->compare('employer.name',$this->company_search, true);
@@ -87,11 +87,10 @@ class Vacancy extends ARModel
         {
             $condition[] = 't.ismoder='.$GetVac['ismoder'];
         }
-        $this->setDateQuery('crdate','b_crdate','e_crdate',$condition);
-        $this->setDateQuery('mdate','b_mdate','e_mdate',$condition);
-        $this->setDateQuery('remdate','b_remdate','e_remdate',$condition,false);
+        Share::setDateQuery('t','crdate','b_crdate','e_crdate',$condition);
+        Share::setDateQuery('t','mdate','b_mdate','e_mdate',$condition);
+        Share::setDateQuery('t','remdate','b_remdate','e_remdate',$condition,false);
 
-        
         if(count($condition))
         {
             $criteria->condition = implode(' and ', $condition);
@@ -111,26 +110,6 @@ class Vacancy extends ARModel
                 )
             ],
         ));
-    }
-
-    private function setDateQuery($name, $p1, $p2, &$arr, $time=true)
-    {
-        $rq = Yii::app()->getRequest();
-        $d1 = Share::checkFormatDate($rq->getParam($p1));
-        $d2 = Share::checkFormatDate($rq->getParam($p2));
-        if($d1 && $d2)
-        {
-            $arr[] = "t.{$name} between '{$d1}" . ($time ? " 00:00:00'" : "'")
-                        . " and '{$d2}" . ($time ? " 23:59:59'" : "'");
-        }
-        elseif($d1)
-        {
-            $arr[] = "t.{$name} >= '{$d1}" . ($time ? " 00:00:00'" : "'");
-        }
-        elseif($d2)
-        {
-            $arr[] = "t.{$name} <= '{$d2}" . ($time ? " 23:59:59'" : "'");
-        }
     }
 
     public function setAnalytic($id){

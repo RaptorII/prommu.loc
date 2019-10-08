@@ -981,4 +981,31 @@ class Share
       }
       return $arRes;
     }
+    /**
+     * @param $prefix - псевдоним таблицы
+     * @param $name - название поля таблицы
+     * @param $p1 - параметр даты ОТ (GET | POST)
+     * @param $p2 - параметр даты ДО (GET | POST)
+     * @param $arr - массив, который отправляется в CDbCriteria->condition(ссылка)
+     * @param bool $time - доп. параметр для полей БД без указания времени
+     */
+    public static function setDateQuery($prefix, $name, $p1, $p2, &$arr, $time=true)
+    {
+      $rq = Yii::app()->getRequest();
+      $d1 = Share::checkFormatDate($rq->getParam($p1));
+      $d2 = Share::checkFormatDate($rq->getParam($p2));
+      if($d1 && $d2)
+      {
+        $arr[] = "{$prefix}.{$name} between '{$d1}" . ($time ? " 00:00:00'" : "'")
+          . " and '{$d2}" . ($time ? " 23:59:59'" : "'");
+      }
+      elseif($d1)
+      {
+        $arr[] = "{$prefix}.{$name} >= '{$d1}" . ($time ? " 00:00:00'" : "'");
+      }
+      elseif($d2)
+      {
+        $arr[] = "{$prefix}.{$name} <= '{$d2}" . ($time ? " 23:59:59'" : "'");
+      }
+    }
 }

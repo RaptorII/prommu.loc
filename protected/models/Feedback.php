@@ -350,12 +350,11 @@ class Feedback extends Model
             ->delete('feedback', 'id=:id', array(':id' => $id));
     }
 
-    public function ChangeModer($id, $status){
-
-        $res = Yii::app()->db->createCommand()
-                ->update('feedback', array(
-                    'status' => $status,
-                ), 'id=:id', array(':id' => $id));
+    public function ChangeModer($id, $status)
+    {
+      $result = Yii::app()->db->createCommand()
+        ->update('feedback',['status'=>$status],'id=:id',[':id'=>$id]);
+      return ($result ? 'Данные успешно обновлены' : 'Ошибка изменения данных');
     }
 	/**
 	 *	@param 	number - feedback ID 
@@ -451,17 +450,59 @@ class Feedback extends Model
 
 		return $arRes;
 	}
+  /**
+   * @param int $id
+   * @return array|string
+   */
+	public static function getAdminDirects($id=-1)
+  {
+    $cacheId = 'Feedback_directs';
+    $arRes = Cache::getData($cacheId);
+    if($arRes['data']===false)
+    {
+      $arRes = Cache::getData($cacheId);
+      $arRes['data'] = ['' => 'Все'];
+      $query = Yii::app()->db->createCommand()
+        ->select('id, name')
+        ->from('feedback_direct')
+        ->queryAll();
 
-    /**
-     * @return mixed
-     */
-    public function getStatus() {
-        $sql = Yii::app()->db->createCommand()
-            ->select('chat, status')
-            ->from('feedback')
-            ->queryAll();
-        foreach ($sql as $item)
-            $status[$item['chat']] = $item;
-        return $status;
+      foreach ($query as $v)
+      {
+        $arRes['data'][$v['id']] = $v['name'];
+      }
+      Cache::setData($arRes);
     }
+
+    return ($id<0 ? $arRes['data'] : ($id==0 ? '-' : $arRes['data'][$id]));
+  }
+  /**
+   * @return mixed
+   */
+  public function getStatus() {
+      $sql = Yii::app()->db->createCommand()
+          ->select('chat, status')
+          ->from('feedback')
+          ->queryAll();
+      foreach ($sql as $item)
+          $status[$item['chat']] = $item;
+      return $status;
+  }
+  /**
+   * @param bool $key
+   * @return array|mixed
+   */
+  public static function getAdminStatus($all=true, $key=false)
+  {
+    $arRes = ($all ? ['' => 'Все'] : []);
+
+    $arRes[0] = 'Ожидание модератора';
+    $arRes[1] = 'Дубль';
+    $arRes[2] = 'Не решено';
+    $arRes[3] = 'Ожидание пользователя';
+    $arRes[4] = 'Спам';
+    $arRes[5] = 'Решено';
+
+    return ($key!==false ? $arRes[$key] : $arRes);
+  }
 }

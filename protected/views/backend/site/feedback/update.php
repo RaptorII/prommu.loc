@@ -125,7 +125,7 @@ echo '<div class="span11">';
 echo '<div style="float:right;  display:inline;">';
 echo CHtml::submitButton('Отправить', array("class" => "btn btn-success", "id" => "btn_submit"));
 echo '&nbsp;&nbsp;';
-echo '<a href="/admin/site/feedback/index" class="btn btn-warning" id="btn_cancel">Отмена</a>';
+echo '<a href="/admin/feedback" class="btn btn-warning" id="btn_cancel">Отмена</a>';
 //echo CHtml::tag('input',array("id"=>"btn_cancel", "type"=>"button", "value"=>"Отмена", "class"=>"btn btn-warning"));
 echo '</div>';
 echo '</div>';

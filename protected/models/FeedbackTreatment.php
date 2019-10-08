@@ -89,27 +89,38 @@ class FeedbackTreatment extends CActiveRecord
 	 */
 	public function search()
 	{
-		// @todo Please modify the following code to remove attributes that should not be searched.
+    $get = Yii::app()->getRequest()->getParam('FeedbackTreatment');
+		$criteria = new CDbCriteria;
 
-		$criteria=new CDbCriteria;
+    $this->id = $get['id'];
+    $this->type = $get['type'];
+    $this->pid = $get['pid'];
+    $this->name = $get['name'];
+    $this->direct = $get['direct'];
+    $this->theme = $get['theme'];
+    $this->is_smotr = $get['is_smotr'];
+    $this->status = $get['status'];
+    $arCondition = [];
+    Share::setDateQuery('t','crdate','b_crdate','e_crdate',$arCondition);
+    if(count($arCondition))
+    {
+      $criteria->condition = implode(' and ', $arCondition);
+    }
 
-		$criteria->compare('id',$this->id,true);
-		$criteria->compare('type',$this->type, true);
-		$criteria->compare('name',$this->name,true);
+		$criteria->compare('id',$this->id);
+		$criteria->compare('type',$this->type);
+    $criteria->compare('pid',$this->pid);
+    $criteria->compare('name',$this->name,true);
+    $criteria->compare('direct',$this->direct);
 		$criteria->compare('theme',$this->theme,true);
-		$criteria->compare('email',$this->email,true);
-		$criteria->compare('text',$this->text,true);
-		$criteria->compare('crdate',$this->crdate,true);
-		$criteria->compare('pid',$this->pid);
-		$criteria->compare('is_smotr',$this->is_smotr);
-		$criteria->compare('date_smotr',$this->date_smotr,true);
-		$criteria->compare('chat',$this->chat,true);
+    $criteria->compare('is_smotr',$this->is_smotr);
+    $criteria->compare('status',$this->status);
 
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
-			'pagination' => array('pageSize' => 20,),
-			'sort' => ['defaultOrder'=>'id desc'],
-		));
+		return new CActiveDataProvider($this, [
+			'criteria' => $criteria,
+			'pagination' => ['pageSize' => 20],
+			'sort' => ['defaultOrder'=>'is_smotr asc, id desc']
+		]);
 	}
 
 	/**
