@@ -1,40 +1,94 @@
 <?
     Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl . '/js/templates.js', CClientScript::POS_HEAD);
     Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl . '/js/nicEdit.js', CClientScript::POS_HEAD);
+    Yii::app()->getClientScript()->registerCssFile(Yii::app()->request->baseUrl . '/css/template.css');
+
     $model = new FeedbackTemplate();
     $arTemplates = $model->getTemplates();
 ?>
 <div class="col-md-6 col-xs-12">
     <h3>Шаблоны</h3>
 
-    <div class="control-group">
-        <label class="control-label">Название шаблона</label>
-        <div class="controls input-append">
-            <input class="form-control" id="template_title" type="text" name="template_title">
+    <div class="theme__wrap">
+        <span class="theme__wrap-info">
+            Создание шаблона
+        </span>
+
+        <div class="control-group">
+            <div class="theme__heading">Выберите тему шаблона</div>
+            <select name="theme_sel" id="theme__sel" class="custom-select">
+
+                <option value="None" selected>None</option>
+                <!-- from DB-->
+                <option value="1">достали</option>
+                <option value="2">Ну так, норм</option>
+                <option value="3">Свои пацаны</option>
+                <option value="4">Ну... и так бывает.</option>
+                <option value="5">5</option>
+                <option value="6">Home</option>
+                <!-- end DB-->
+
+            </select>
+
+            <input type="text" id="theme__new-input" class="form-control">
+            <input type="button" id="theme__new-btn" class="btn label-success" value="+">
         </div>
+
+        <div class="control-group">
+            <label class="control-label">Введите название шаблона</label>
+            <div class="controls input-append">
+                <input class="form-control" id="template_title" type="text" name="template_title">
+            </div>
+        </div>
+
+        <div class="control-group" id="template_text">
+            <label class="control-label">Текст шаблона</label>
+            <textarea rows="6" cols="50" class="form-control" id="template_description" name="template_description"></textarea>
+            <div id="template_text-panel"></div>
+            <p></p>
+        </div>
+
+        <div class="templates__control">
+            <div class="btn label-success" id="save-template">Сохранить</div>
+        </div>
+
     </div>
 
-    <div class="control-group" id="template_text">
-        <label class="control-label">Текст шаблона</label>
-        <textarea rows="6" cols="50" class="form-control" id="template_description" name="template_description"></textarea>
-        <div id="template_text-panel"></div>
-        <p></p>
-    </div>
-    
-    <div class="templates__control">
-        <div class="btn label-success" id="save-template">Сохранить</div>
-    </div>
+    <div class="theme__wrap">
+        <span class="theme__wrap-info">
+            Применить шаблон
+        </span>
 
-    <div class="control-group">
-        <label class="control-label">Шаблоны:</label>
-        <div class="templates__block">
-            <? foreach ($arTemplates as $v): ?>
-                <div data-id="<?=$v['id']?>" class="template__item">
-                    <?=$v['name']?>
-                    <b>x</b>
-                    <i><?=html_entity_decode($v['text'])?></i>
-                </div>
-            <? endforeach; ?>
+        <div class="control-group">
+            <div class="theme__heading">Выберите тему шаблона</div>
+            <select name="theme_sel" id="theme__sel-work" class="custom-select">
+
+                <option value="None" selected>None</option>
+                <!-- from DB-->
+                <option value="1">достали</option>
+                <option value="2">Ну так, норм</option>
+                <option value="3">Свои пацаны</option>
+                <option value="4">Ну... и так бывает.</option>
+                <option value="5">5</option>
+                <option value="6">Home</option>
+                <!-- end DB-->
+
+            </select>
+
+
+        </div>
+
+        <div class="control-group">
+            <label class="control-label">Выберите шаблон:</label>
+            <div class="templates__block">
+                <? foreach ($arTemplates as $v): ?>
+                    <div data-id="<?=$v['id']?>" class="template__item">
+                        <?=$v['name']?>
+                        <b>x</b>
+                        <i><?=html_entity_decode($v['text'])?></i>
+                    </div>
+                <? endforeach; ?>
+            </div>
         </div>
     </div>
 

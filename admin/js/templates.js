@@ -28,7 +28,7 @@ var Templates = (function () {
             }
 
             self.addTemplate(title,message);
-        })
+        });
 
         $(".templates__block").on( "click", ".template__item", function() {
             var text = $(this).find('i').html();
@@ -102,4 +102,10 @@ var Templates = (function () {
 
 $(document).ready(function () {
     new Templates();
+
+
+    $("#theme__sel").click(function(){
+        $("#theme__new-btn").append('<option value="' + $("#theme__new-input").val() + '">' + $("#theme__new-input").val() + '</option>');
+    });
+
 });
