@@ -17,17 +17,69 @@ var Templates = (function () {
                 }
             );
 
-        $('#save-template').click(function(){
-            var title = $('#template_title').val(),
-                message = self.NicEditor.nicInstances[1].getContent().trim();
+        $('#theme__sel-work ').click(function(){
 
-            if(!message.length || message==='<br>' || !title.length)
-            {
-                alert('Оба поля должны быть заполнены');
+            var themeId = $('#theme__sel-work').val();
+            // console.log(themeId);
+
+            if (themeId) {
+                self.viewTheme(themeId);
+            }
+        });
+
+        $('#theme__new-btn').click(function(){
+            var themeNew = $('#theme__new-input').val();
+
+            if(!themeNew.length) {
+                alert('Введите новую тему');
                 return false;
+            } else if(confirm('Добавть тему?')) {
+                self.addTmplNewTheme(themeNew);
+            }
+        });
+
+        $('#theme__del-btn').click(function(){
+            var themeDel = $('#theme__sel').val();
+            var themeDelName = $('#theme__sel option:selected').text();
+            // console.log(themeDelName);
+
+            query = confirm('Вы точно хотите удалить выбраную тему?');
+
+            if(query) {
+                $.ajax({
+                    type: 'POST',
+                    url: self.URL,
+                    data: {id: themeDel, type: 'themeDel'},
+                    dataType: 'json',
+                    success: function (value) {
+                        if (value.error == true) return;
+                        $('#theme__sel option:contains("' + themeDelName + '")').remove();
+                        $('#theme__sel-work option:contains("' + themeDelName + '")').remove();
+                    }
+                });
             }
 
-            self.addTemplate(title,message);
+        });
+
+        $('#save-template').click(function(){
+
+            var theme = $('#theme__sel').val();
+            var title = $('#template_title').val();
+            var message = self.NicEditor.nicInstances[1].getContent().trim();
+
+            if(!message.length || message==='<br>' || !title.length) {
+
+                alert('Поля должны быть заполнены');
+                return false;
+
+            } else if(theme == 'None') {
+
+                alert('Выберите тему');
+                return false;
+
+            }
+
+            self.addTemplate(theme, title, message);
         });
 
         $(".templates__block").on( "click", ".template__item", function() {
@@ -62,12 +114,12 @@ var Templates = (function () {
         });
     };
 
-    Templates.prototype.addTemplate = function (title, text) {
+    Templates.prototype.addTemplate = function (theme, title, text) {
         var self = this;
         $.ajax({
             type: 'GET',
             url: self.URL,
-            data: {title: title, text:text, type:'add'},
+            data: {theme: theme, title: title, text: text, type:'add'},
             dataType: 'json',
             success: function (value){
                 if(value.error==true)
@@ -97,15 +149,48 @@ var Templates = (function () {
         });
     };
 
+    Templates.prototype.addTmplNewTheme = function (themeNew) {
+        var self = this;
+        $.ajax({
+            type: 'GET',
+            url: self.URL,
+            data: {themeNew: themeNew, type:'themeNew'},
+            dataType: 'json',
+            success: function (value) {
+                if (value.error==true) return;
+                $("#theme__sel").append('<option>'+themeNew+'</option>').val(themeNew);
+                $("#theme__sel-work").append('<option>'+themeNew+'</option>').val(themeNew);
+            }
+        });
+    };
+
+    Templates.prototype.viewTheme = function (themeId) {
+        var self = this;
+        $.ajax({
+            type: 'GET',
+            url: self.URL,
+            data: {themeId: themeId, type:'themeId'},
+            dataType: 'json',
+            success: function (value) {
+                if (value.error==true) return;
+                if (value) {
+                    $('.templates__block').html(
+                        '<div data-id="" class="template__item"></div>'
+                    );
+                    $.each(value, function(){
+                        $('.templates__block').append(
+                            '<div data-id="' + this.id + '" class="template__item">'
+                            + this.name + '<b>x</b><i>' + this.text + '</i></div>'
+                        );
+                    });
+                }
+            }
+        });
+    };
+
     return Templates;
 }());
 
 $(document).ready(function () {
     new Templates();
-
-
-    $("#theme__sel").click(function(){
-        $("#theme__new-btn").append('<option value="' + $("#theme__new-input").val() + '">' + $("#theme__new-input").val() + '</option>');
-    });
-
 });

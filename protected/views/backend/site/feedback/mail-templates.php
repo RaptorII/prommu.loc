@@ -5,6 +5,7 @@
 
     $model = new FeedbackTemplate();
     $arTemplates = $model->getTemplates();
+
 ?>
 <div class="col-md-6 col-xs-12">
     <h3>Шаблоны</h3>
@@ -20,18 +21,19 @@
 
                 <option value="None" selected>None</option>
                 <!-- from DB-->
-                <option value="1">достали</option>
-                <option value="2">Ну так, норм</option>
-                <option value="3">Свои пацаны</option>
-                <option value="4">Ну... и так бывает.</option>
-                <option value="5">5</option>
-                <option value="6">Home</option>
+                <?php
+                foreach( $model->getThemeSel() as $themeSel){
+                    echo '<option value="' . $themeSel['id'] . '">' . $themeSel['name'] . '</option>';
+                }
+                ?>
                 <!-- end DB-->
 
             </select>
+            <input type="button" id="theme__del-btn" class="btn label-danger" value="-">
 
             <input type="text" id="theme__new-input" class="form-control">
             <input type="button" id="theme__new-btn" class="btn label-success" value="+">
+
         </div>
 
         <div class="control-group">
@@ -65,12 +67,11 @@
 
                 <option value="None" selected>None</option>
                 <!-- from DB-->
-                <option value="1">достали</option>
-                <option value="2">Ну так, норм</option>
-                <option value="3">Свои пацаны</option>
-                <option value="4">Ну... и так бывает.</option>
-                <option value="5">5</option>
-                <option value="6">Home</option>
+                <?php
+                foreach( $model->getThemeSel() as $themeSel){
+                    echo '<option value="' . $themeSel['id'] . '">' . $themeSel['name'] . '</option>';
+                }
+                ?>
                 <!-- end DB-->
 
             </select>

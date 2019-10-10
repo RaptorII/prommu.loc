@@ -8,9 +8,14 @@ class FeedbackTemplate
      */
 	public function getTemplates() {
 
+        $id = filter_var(
+            Yii::app()->getRequest()->getParam('themeId'),FILTER_SANITIZE_NUMBER_INT
+        );
+
 		$arRes = Yii::app()->db->createCommand()
             ->select("*")
             ->from('feedback_admin_template')
+            ->where('theme = :id', [':id' => $id])
             ->order('id desc')
             ->queryAll();
 
@@ -22,6 +27,10 @@ class FeedbackTemplate
      * @throws CException
      */
 	public function addTemplate() {
+
+        $theme = filter_var(
+            Yii::app()->getRequest()->getParam('theme'),FILTER_SANITIZE_FULL_SPECIAL_CHARS
+        );
 
 		$name = filter_var(
                 Yii::app()->getRequest()->getParam('title'),FILTER_SANITIZE_FULL_SPECIAL_CHARS
@@ -35,7 +44,8 @@ class FeedbackTemplate
             'feedback_admin_template',
             array(
                 'name' => $name,
-                'text' => $text
+                'text' => $text,
+                'theme' => (int) $theme
             )
         );
 
@@ -61,6 +71,57 @@ class FeedbackTemplate
         );
 
 		return array( 'error'=>false);
-
 	}
+
+    /**
+     * @return array|CDbDataReader
+     * @throws CException
+     */
+	public function getThemeSel() {
+        return Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('feedback_admin_template_theme')
+            ->order('id')
+            ->queryAll();
+    }
+
+    /**
+     * @return array
+     * @throws CException
+     */
+    public function addThemeSel() {
+
+        $themeName = filter_var(
+            Yii::app()->getRequest()->getParam('themeNew'),FILTER_SANITIZE_FULL_SPECIAL_CHARS
+        );
+
+        Yii::app()->db->createCommand()->insert(
+            'feedback_admin_template_theme',
+            [
+                'name' => $themeName,
+            ]
+        );
+
+        $id = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
+        return array('error'=>false, 'id'=>$id);
+    }
+
+    /**
+     * @return array
+     */
+    public function delThemeSel() {
+
+        $id = filter_var(
+            Yii::app()->getRequest()->getParam('id'),FILTER_SANITIZE_NUMBER_INT
+        );
+
+        Yii::app()->db->createCommand()->delete(
+            'feedback_admin_template_theme',
+            'id=:id',
+            array(':id'=>$id)
+        );
+
+        return array( 'error'=>false);
+
+    }
 }

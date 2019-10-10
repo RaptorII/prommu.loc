@@ -424,10 +424,33 @@ class AjaxController extends CController {
       case 'del':
         $result = $model->delTemplate();
         break;
+      case 'themeNew':
+          $result = $model->addThemeSel();
+        break;
+      case 'themeDel':
+          $result = $model->delThemeSel();
+        break;
+      case 'themeId':
+          $result = $model->getTemplates();
+          //die('themeId');
+        break;
     }
 
     echo CJSON::encode($result);
   }
+    /**
+     *
+     *
+    public function actionNewTmpl()
+    {
+        $result = array('error'=>true);
+        $type = Yii::app()->getRequest()->getParam('themeNew');
+        $model = new FeedbackTemplate();
+
+        $result = $model->addThemeSel();
+
+        echo CJSON::encode($result);
+    }
   /**
    * 
    */
