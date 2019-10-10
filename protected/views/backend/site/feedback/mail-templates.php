@@ -16,6 +16,13 @@
         </span>
 
         <div class="control-group">
+            <div class="theme__heading">Добавить тему шаблона</div>
+
+            <input type="text" id="theme__new-input" class="form-control">
+            <input type="button" id="theme__new-btn" class="btn label-success" value="+">
+        </div>
+
+        <div class="control-group">
             <div class="theme__heading">Выберите тему шаблона</div>
             <select name="theme_sel" id="theme__sel" class="custom-select">
 
@@ -30,10 +37,6 @@
 
             </select>
             <input type="button" id="theme__del-btn" class="btn label-danger" value="-">
-
-            <input type="text" id="theme__new-input" class="form-control">
-            <input type="button" id="theme__new-btn" class="btn label-success" value="+">
-
         </div>
 
         <div class="control-group">

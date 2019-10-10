@@ -432,9 +432,20 @@ class AjaxController extends CController {
         break;
       case 'themeId':
           $result = $model->getTemplates();
-          //die('themeId');
         break;
     }
+
+//    if ($type=='add') {
+//        $result = $model->addTemplate();
+//    } else if ($type=='del') {
+//        $result = $model->delTemplate();
+//    } else if ($type=='themeNew') {
+//        $result = $model->addThemeSel();
+//    }  else if ($type=='themeDel') {
+//        $result = $model->delThemeSel();
+//    } else if ($type=='themeId') {
+//        $result = $model->getTemplates();
+//    }
 
     echo CJSON::encode($result);
   }

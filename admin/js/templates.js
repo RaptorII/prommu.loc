@@ -20,7 +20,6 @@ var Templates = (function () {
         $('#theme__sel-work ').click(function(){
 
             var themeId = $('#theme__sel-work').val();
-            // console.log(themeId);
 
             if (themeId) {
                 self.viewTheme(themeId);
@@ -39,26 +38,13 @@ var Templates = (function () {
         });
 
         $('#theme__del-btn').click(function(){
-            var themeDel = $('#theme__sel').val();
-            var themeDelName = $('#theme__sel option:selected').text();
-            // console.log(themeDelName);
 
+            var themeDel = $('#theme__sel').val();
             query = confirm('Вы точно хотите удалить выбраную тему?');
 
             if(query) {
-                $.ajax({
-                    type: 'POST',
-                    url: self.URL,
-                    data: {id: themeDel, type: 'themeDel'},
-                    dataType: 'json',
-                    success: function (value) {
-                        if (value.error == true) return;
-                        $('#theme__sel option:contains("' + themeDelName + '")').remove();
-                        $('#theme__sel-work option:contains("' + themeDelName + '")').remove();
-                    }
-                });
+                self.dellTmplTheme(themeDel);
             }
-
         });
 
         $('#save-template').click(function(){
@@ -158,10 +144,30 @@ var Templates = (function () {
             dataType: 'json',
             success: function (value) {
                 if (value.error==true) return;
-                $("#theme__sel").append('<option>'+themeNew+'</option>').val(themeNew);
-                $("#theme__sel-work").append('<option>'+themeNew+'</option>').val(themeNew);
+                $("#theme__sel").append('<option value="'+ value.id +'" >'+themeNew+'</optionvalue>').val(themeNew);
+                $("#theme__sel-work").append('<option  value="'+ value.id +'" >'+themeNew+'</option>').val(themeNew);
             }
         });
+    };
+
+    Templates.prototype.dellTmplTheme = function (id) {
+        var self = this;
+
+        $.ajax({
+           type: 'POST',
+           url: self.URL,
+           data: {id: id, type: 'themeDel'},
+           dataType: 'json',
+           success: function (value) {
+               if (value.error == true) return;
+
+               var themeDelName = $('#theme__sel option:selected').text();
+
+               $('#theme__sel option:contains("' + themeDelName + '")').remove();
+               $('#theme__sel-work option:contains("' + themeDelName + '")').remove();
+           }
+        });
+
     };
 
     Templates.prototype.viewTheme = function (themeId) {
