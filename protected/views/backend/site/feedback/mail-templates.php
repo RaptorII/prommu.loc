@@ -7,12 +7,17 @@
     $arTemplates = $model->getTemplates();
 
 ?>
-<div class="col-md-6 col-xs-12">
+
+<div class="theme__slide-btn">
+    Панель шаблонов
+</div>
+
+<div class="col-md-6 col-xs-12" id="theme__panel" style="display: block">
     <h3>Шаблоны</h3>
 
     <div class="theme__wrap">
         <span class="theme__wrap-info">
-            Создание шаблона
+            Добавить тему
         </span>
 
         <div class="control-group">
@@ -21,7 +26,12 @@
             <input type="text" id="theme__new-input" class="form-control">
             <input type="button" id="theme__new-btn" class="btn label-success" value="+">
         </div>
+    </div>
 
+    <div class="theme__wrap">
+        <span class="theme__wrap-info">
+            Создать шаблон
+        </span>
         <div class="control-group">
             <div class="theme__heading">Выберите тему шаблона</div>
             <select name="theme_sel" id="theme__sel" class="custom-select">
@@ -63,6 +73,15 @@
         <span class="theme__wrap-info">
             Применить шаблон
         </span>
+
+        <!-- experiment -->
+        <div class="control-group">
+            <div class="theme__search">
+                <input type="text" name="referal" placeholder="Живой поиск" value="" class="who form-control"  autocomplete="off">
+                <ul class="search_result"></ul>
+            </div>
+        </div>
+        <!-- experiment end -->
 
         <div class="control-group">
             <div class="theme__heading">Выберите тему шаблона</div>

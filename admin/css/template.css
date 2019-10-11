@@ -270,3 +270,32 @@
   border-radius: 20px;
   padding: 0 10px;
 }
+
+.theme__slide-btn {
+    position: absolute;
+    top: 0;
+    right: 30px;
+    border: 1px solid #8aa4af;
+    background: #189124;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.theme__slide-btn:active {
+    box-shadow: 0 3px 0 #00823F;
+    top: 3px;
+}
+
+.theme__search {
+    position: relative;
+}
+.theme__search ul{
+    position: absolute;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #0a5bc4;
+    top: 100%;
+}

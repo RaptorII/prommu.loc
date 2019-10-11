@@ -434,31 +434,18 @@ class AjaxController extends CController {
           $result = $model->getTemplates();
         break;
     }
-
-//    if ($type=='add') {
-//        $result = $model->addTemplate();
-//    } else if ($type=='del') {
-//        $result = $model->delTemplate();
-//    } else if ($type=='themeNew') {
-//        $result = $model->addThemeSel();
-//    }  else if ($type=='themeDel') {
-//        $result = $model->delThemeSel();
-//    } else if ($type=='themeId') {
-//        $result = $model->getTemplates();
-//    }
-
     echo CJSON::encode($result);
   }
     /**
      *
-     *
-    public function actionNewTmpl()
+     */
+    public function actionSearchQuick()
     {
         $result = array('error'=>true);
-        $type = Yii::app()->getRequest()->getParam('themeNew');
-        $model = new FeedbackTemplate();
+        $type = Yii::app()->getRequest()->getParam('referal');
 
-        $result = $model->addThemeSel();
+        $model = new FeedbackTemplate();
+        $result = $model->getTemplatesQuick();
 
         echo CJSON::encode($result);
     }

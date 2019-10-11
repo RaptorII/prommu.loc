@@ -22,6 +22,25 @@ class FeedbackTemplate
 		return $arRes;
 	}
 
+    public function getTemplatesQuick() {
+
+        $name = filter_var(
+            Yii::app()->getRequest()->getParam('referal'), FILTER_SANITIZE_STRING
+        );
+
+        $sql = "
+              SELECT
+                  *
+              FROM
+                feedback_admin_template_theme 
+              WHERE
+                name
+              LIKE
+                '%$name%'
+        ";
+        return Yii::app()->db->createCommand($sql)->queryAll();
+    }
+
     /**
      * @return array
      * @throws CException
