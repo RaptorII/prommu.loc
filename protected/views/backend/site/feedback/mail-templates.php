@@ -12,7 +12,7 @@
     Панель шаблонов
 </div>
 
-<div class="col-md-6 col-xs-12" id="theme__panel" style="display: block">
+<div class="col-md-6 col-xs-12" id="theme__panel" style="display: none;">
     <h3>Шаблоны</h3>
 
     <div class="theme__wrap">
