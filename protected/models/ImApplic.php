@@ -129,6 +129,9 @@ class ImApplic extends Im
 
             Yii::app()->session['imdata'] = $imData;
 
+            $model = new Feedback();
+            $data['feedback'] = $model->checkUserStatusCondition($inChatId);
+
             return $data;
         } else {
             return array('error' => 1, 'message' => 'Диалог не найден');
@@ -138,7 +141,7 @@ class ImApplic extends Im
     /**
      * Отправляем сообщение пользователя
      */
-    public function sendUserMessages($inProps = [], $is_resp)
+    public function sendUserMessages($inProps = [])
     {
         //сообщение
         $message = $inProps['message'] ?: filter_var(Yii::app()->getRequest()->getParam('m', 0), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -208,7 +211,7 @@ class ImApplic extends Im
                         'id_usp' => $id,
                         'id_use' => $ids['iduse'] ?: $iduse,
                         'message' => $message,
-                        'is_resp' => (integer) $is_resp,
+                        'is_resp' => 0,
                         'is_read' => 0,
                         'files' => $themeFiles,
                         'crdate' => date("Y-m-d H:i:s"),
@@ -239,19 +242,29 @@ class ImApplic extends Im
 
                 }
             }
-            // оповещение по Телеграм
-            if ($id == 2054 || $ids == 1766) { // 2054,1766 - ID администратора
-                $mess = '"' . (isset($inProps['original']) ? $inProps['original'] : strip_tags($message)) . '"';
-                $text = "Зарегистрированный пользователь обратился по обратной связи: $mess. Необходима модерация https://prommu.com/admin/site/update/$idTm";
-                $sendto = "https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=$text";
-                file_get_contents($sendto);
-            }
-
-            return array_merge($this->getNewMessData($idTm, $lastMessId), array('theme' => $theme, 'idtm' => $idTm));
-        } else {
-            // не мой
-            return array('error' => 100);
-        } // endif
+          // оповещение по Телеграм
+          if ($id==self::$ADMIN_APPLICANT || $ids==self::$ADMIN_EMPLOYER)
+          {
+            $mess = '"' . (isset($inProps['original']) ? $inProps['original'] : strip_tags($message)) . '"';
+            $text = "Зарегистрированный пользователь обратился по обратной связи: $mess. Необходима модерация https://prommu.com/admin/site/update/$idTm";
+            $sendto = "https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=$text";
+            file_get_contents($sendto);
+            Yii::app()->db->createCommand()
+              ->update('feedback',
+                ['status'=>0,'is_smotr'=>0],
+                'chat=:id_theme',
+                [':id_theme'=>$idTm]
+              );
+          }
+          return array_merge(
+            $this->getNewMessData($idTm, $lastMessId),
+            ['theme'=>$theme, 'idtm'=>$idTm]
+          );
+        }
+        else
+        {
+          return ['error' => 100];
+        }
 
     }
     /**

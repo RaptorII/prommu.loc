@@ -1008,37 +1008,37 @@ class SiteController extends AppController
      */
     public function actionFeedback()
     {
-        $seo = (new Seo())->exist(Yii::app()->request->requestUri);
-        $this->setBreadcrumbs($seo['seo_h1'], MainConfig::$PAGE_FEEDBACK);
-        $Feedback = new Feedback();
+      $seo = (new Seo())->exist(Yii::app()->request->requestUri);
+      $this->setBreadcrumbs($seo['seo_h1'], MainConfig::$PAGE_FEEDBACK);
+      $Feedback = new Feedback();
 
-        if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('name') )
+      if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('name') )
+      {
+        $res = $Feedback->saveData();
+        if($res['ERROR'])
         {
-            $res = $Feedback->saveData();
-            if($res['ERROR'])
-            {
-                $data = array(
-                        'viData' => $Feedback->getData(), 
-                        'error' => $res['MESSAGE'],
-                        'model'=>(new FeedbackAF())
-                    );
-            }
-            elseif(in_array(Share::$UserProfile->type, [2,3]))
-                $this->redirect(MainConfig::$PAGE_CHATS_LIST_FEEDBACK);
-            else
-                $this->redirect(MainConfig::$PAGE_FEEDBACK);
+          $data = [
+            'viData' => $Feedback->getData(),
+            'error' => $res['MESSAGE'],
+            'model'=>(new FeedbackAF())
+          ];
         }
-        if(!$data)
-            $data = array('viData'=>$Feedback->getData(), 'model'=>(new FeedbackAF()));
+        elseif(!Share::isGuest())
+            $this->redirect(MainConfig::$PAGE_CHATS_LIST_FEEDBACK);
+        else
+            $this->redirect(MainConfig::$PAGE_FEEDBACK);
+      }
+      if(!$data)
+          $data = ['viData'=>$Feedback->getData(), 'model'=>(new FeedbackAF())];
 
-        $this->render(
-                $this->ViewModel->pageFeedback, 
-                $data, 
-                array(
-                    'htmlTitle' => $seo['meta_title'],
-                    'pageMetaDesription' => $seo['meta_description']
-                ) 
-            );
+      $this->render(
+        $this->ViewModel->pageFeedback,
+        $data,
+        [
+          'htmlTitle' => $seo['meta_title'],
+          'pageMetaDesription' => $seo['meta_description']
+        ]
+      );
     }
 
     /**

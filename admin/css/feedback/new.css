@@ -1,0 +1,15 @@
+.template-table{
+  background-color: #FFFFFF;
+  font-size: 14px;
+}
+.template-table td:first-child{ width: 25% }
+.template-table tbody tr td,.template-table tbody tr th{ padding: 5px; }
+.template-table tbody tr:nth-child(odd){ background-color: #f4f4f4 }
+#receivers_load.load:after{ top: 2px;}
+#receivers_result .item{
+  display: flex;
+  align-items: center;
+}
+#text_form{
+  min-height:300px;
+}

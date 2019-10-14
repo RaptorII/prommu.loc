@@ -13,14 +13,13 @@
 
     </script>
 <?php else: ?>
-    <!--                --><?php
-    $isUser = in_array(Share::$UserProfile->type, [2,3]);
-    if(!$isUser)
+    <?php
+    if($viData['use_recaptcha']==true)
     {
         Yii::app()->getClientScript()->registerScriptFile('https://www.google.com/recaptcha/api.js', CClientScript::POS_END);
     }
     Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/feedback/script.js', CClientScript::POS_END);
-    ?><!--                -->
+    ?>
     <div class='row'>
         <div class='col-xs-12'>
             <form action='' id='F2feedback' method='post' class="feedback-page__form">
@@ -28,9 +27,9 @@
                 <?php if(!empty($error)): ?>
                     <div class="error-block -center -red"><?=$error?></div>
                 <?php endif; ?>
-                <?php if(!$isUser): ?>
+                <?php if(Share::isGuest()): ?>
                     <label class="feedback-page__label feedback-page__label-select">
-                        <select name="type" id="CBtype" class="feedback-page__select" title="Выберите тип запроса" equired>
+                        <select name="type" id="CBtype" class="feedback-page__input feedback-page__select" title="Выберите тип запроса" equired>
                             <option value="" disabled<?=(!in_array($viData['type'], [2,3]) ? ' selected': '')?>>Тип запроса (Соискатель / Работодатель)</option>
                             <option value="2"<?=($viData['type']==2 ? ' selected': '')?>>Соискатель</option>
                             <option value="3"<?=($viData['type']==3 ? ' selected': '')?>>Работодатель</option>
@@ -53,10 +52,10 @@
                     <input data-field-check='name:Email,empty,email' id='EdEmail' name='email' type='text' value="<?=($viData['email'] ? $viData['email'] : Share::$UserProfile->exInfo->email )?>" class="feedback-page__input" placeholder="Email" title="Email">
                 </label>
 
-                <?php if($isUser): ?>
-                    <label class="feedback-page__label">
-                        <select data-field-check='name:Тема,empty,max:100' id='IdFdBck' name='feedback' class="feedback-page__input" placeholder="Выберите тему" title="Выберите тему">
-                            <option selected disabled>Выберите тему</option>
+                <?php if(!Share::isGuest()): ?>
+                    <label class="feedback-page__label feedback-page__label-select">
+                        <select data-field-check='name:Тема,empty,max:100' id='IdFdBck' name='feedback' class="feedback-page__input feedback-page__select" placeholder="Выберите тему" title="Выберите тему">
+                            <option value="" selected disabled>Выберите тему</option>
                             <option value="0" >Новая тема</option>
                             <?foreach ($viData['feedbacks'] as $value):?>
                                 <option value="<?=$value['id']?>"><?=$value['theme']?></option>
@@ -69,9 +68,9 @@
                     <input data-field-check='name:Тема,empty,max:100' id='EdTheme' name='theme' type='text' class="feedback-page__input" placeholder="Тематика запроса" title="Тематика запроса" value="<?=($viData['theme'] ? $viData['theme'] : '')?>">
                 </label>
 
-                <label class="feedback-page__label">
-                    <select data-field-check='name:Направление,empty,max:100' id='EdWay' name='direct' class="feedback-page__input" placeholder="Направление запроса" title="Направление запроса">
-                        <option value="0" selected disabled>Направление запроса</option>
+                <label class="feedback-page__label feedback-page__label-select">
+                    <select data-field-check='name:Направление,empty,max:100' id='EdWay' name='direct' class="feedback-page__input feedback-page__select" placeholder="Направление запроса" title="Направление запроса">
+                        <option value="" selected disabled>Направление запроса</option>
                         <?foreach ($viData['directs'] as $key => $value):?>
                             <option value="<?=$value['id']?>"><?=$value['name']?></option>
                         <?endforeach;?>

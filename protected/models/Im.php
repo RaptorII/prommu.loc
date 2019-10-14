@@ -486,6 +486,9 @@ abstract class Im extends Model
                 'is_read' => 0,
                 'crdate' => date("Y-m-d H:i:s"),
             ));
+
+        Yii::app()->db->createCommand()
+          ->update('feedback',['status'=>3],'chat=:id_theme',[':id_theme'=>$id]);
     }
     /**
      * @param $id_user int id_user

@@ -1,79 +1,108 @@
 $(function(){
     $('#F2feedback').submit(function(){
-        var pattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i,
-            button = document.querySelector('.feedback-page__button'),
-            $themeInput = $('#EdTheme'),
-            $mailInput = $('#EdEmail'),
-            $textInput = $('#MText'),
-            $wayInput = $('#EdWay'),
-            $fdbkVal = $("#IdFdBck option:selected").val(),
-            arErrors = 0;
+      var pattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i,
+          button = document.querySelector('.feedback-page__button'),
+          $nameInput = $('#EdName'),
+          $mailInput = $('#EdEmail'),
+          $selectTheme = $('#IdFdBck'),
+          selectThemeVal = $selectTheme.find('option:selected').val(),
+          $themeInput = $('#EdTheme'),
+          $direct = $('#EdWay'),
+          directVal = $direct.find('option:selected').val(),
+          $textInput = $('#MText'),
+          arErrors = 0;
 
-        if(MainScript.isButtonLoading(button)){ return false; }
-        else{ MainScript.buttonLoading(button,true); }
-
-        if ($fdbkVal == 0) {
-            if ($wayInput.val() == null) {
-                $wayInput.addClass('error');
-                arErrors++;
-            }
-            else {
-                $wayInput.removeClass('error');
-            }
-
-            if (!$.trim($themeInput.val())) {
-                $themeInput.addClass('error');
-                arErrors++;
-            }
-            else {
-                $themeInput.removeClass('error');
-            }
-        } else {
-            arErrors = 0;
-            $themeInput.removeClass('error');
-            $wayInput.removeClass('error');
-        }
-
-
-        if($mailInput.val() != '')
+      if(MainScript.isButtonLoading(button)){ return false; }
+      else{ MainScript.buttonLoading(button,true); }
+      // name
+      if(!$.trim($nameInput.val()).length)
+      {
+        $nameInput.addClass('error');
+        arErrors++;
+      }
+      else
+      {
+        $nameInput.removeClass('error');
+      }
+      // email
+      if(!pattern.test($mailInput.val()))
+      {
+        $mailInput.addClass('error');
+        arErrors++;
+      }
+      else
+      {
+        $mailInput.removeClass('error');
+      }
+      // direct
+      if (!directVal.length)
+      {
+        $direct.addClass('error');
+        arErrors++;
+      }
+      else
+      {
+        $direct.removeClass('error');
+      }
+      // theme
+      var themeName = $.trim($themeInput.val());
+      if($selectTheme.is('*')) // user
+      {
+        if(!selectThemeVal.length)
         {
-            if(pattern.test($('#EdEmail').val()))
+          $('#IdFdBck').addClass('error');
+          arErrors++;
+        }
+        else
+        {
+          $('#IdFdBck').removeClass('error');
+          $themeInput.removeClass('error');
+          if(selectThemeVal==='0')
+          {
+            if(!themeName.length)
             {
-                $mailInput.removeClass('error');
+              $themeInput.addClass('error');
+              arErrors++;
             }
             else
             {
-                $mailInput.addClass('error');
-                arErrors++;
+              $themeInput.removeClass('error');
             }
+          }
+        }
+      }
+      else // guest
+      {
+        if(!themeName.length)
+        {
+          $themeInput.addClass('error');
+          arErrors++;
         }
         else
         {
-            $mailInput.addClass('error');
-            arErrors++;
+          $themeInput.removeClass('error');
         }
+      }
+      // message
+      if(!$.trim($textInput.val()))
+      {
+        $textInput.addClass('error');
+        arErrors++;
+      }
+      else
+      {
+        $textInput.removeClass('error');
+      }
 
-        if(!$.trim($textInput.val()))
-        {
-            $textInput.addClass('error');
-            arErrors++;
-        }
-        else
-        {
-            $textInput.removeClass('error');
-        }
-
-console.log('arErrors=',arErrors);
-
-        if(arErrors>0)
-        {
-            MainScript.buttonLoading(button,false);
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+      if(arErrors>0)
+      {
+          MainScript.buttonLoading(button,false);
+          return false;
+      }
+      else
+      {
+          return true;
+      }
     });
 
     $('#IdFdBck').change(function(e, value) {

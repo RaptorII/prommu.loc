@@ -927,9 +927,9 @@ class Share
     /**
      * 
      */
-    public static function isGuest()
+    public static function isGuest($param=false)
     {
-        return !(self::isApplicant() || self::isEmployer());
+      return !(self::isApplicant($param) || self::isEmployer($param));
     }
     /**
      * 

@@ -3,7 +3,7 @@
 	Yii::app()->getClientScript()->registerCssFile($bUrl . 'css/chats/list-section.css');
 	Yii::app()->getClientScript()->registerScriptFile($bUrl.'js/chats/list.js', CClientScript::POS_END);
 
-    $status = ['обработка','дубль','передан в отдел','ожидание ответа','спам','решено'];
+  $status = Feedback::getAdminStatus();
 ?>
 <div class="chat-list feedback">
 	<a href="<?=MainConfig::$PAGE_CHATS_LIST?>" class="chat-list__btn-link"><span><</span> Назад</a>
@@ -56,6 +56,12 @@
 				'cssFile' => false
 			));
 		?>
+    <div class="pull-right">
+      <a href="<?=MainConfig::$PAGE_FEEDBACK ?>" class="prmu-btn prmu-btn_normal">
+        <span>Задать вопрос Prommu</span>
+      </a>
+      <div class="clearfix"></div>
+    </div>
 	<? else: ?>
 		<div class="chat-list__empty">
 			<h2>У Вас нет обращений к администрации портала Prommu</h2>

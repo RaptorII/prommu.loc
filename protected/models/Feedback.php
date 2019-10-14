@@ -118,9 +118,11 @@ class Feedback extends Model
 
 			$arRes['directs'] = $this->getDirects();
 
-			if (Share::$UserProfile->id) {
-                $arRes['feedbacks'] = $this->getUserFeedbacks(Share::$UserProfile->id);
-            }
+			if (!Share::isGuest())
+			{
+        $arRes['feedbacks'] = $this->getUserFeedbacks(Share::$UserProfile->id);
+      }
+      $arRes['use_recaptcha'] = true;
 
 			return $arRes;
     }
@@ -220,63 +222,65 @@ class Feedback extends Model
                 'transition' => $transition,
             );
 
-            $Im = (Share::isEmployer($autotype) ? (new ImApplic()) : (new ImEmpl()));
-
-            if((Share::isEmployer($autotype) || Share::isApplicant($autotype)) && ($fdbk==0))
+            if(!Share::isGuest($autotype) && ($fdbk==0))
             { // только зареганым // не обращался
+              $arChat = [
+                  'message' => "Добрый день, $name. Ваш вопрос '$text' на рассмотрении",
+                  'new' => $id,
+                  'idus' => Share::isEmployer($autotype)
+                    ? Im::$ADMIN_APPLICANT
+                    : Im::$ADMIN_EMPLOYER,
+                  'idTm' => $theme,
+                  'theme' => $theme,
+                  'original' => $text
+              ];
 
-                $arChat = array(
-                    'message' => "Добрый день, $name. Ваш вопрос '$text' на рассмотрении",
-                    'new' => $id,
-                    'idus' => (Share::isEmployer($autotype) ? 2054 : 1766 ),
-                    'idTm' => $theme,
-                    'theme' => $theme,
-                    'original' => $text
-                );
-
-                $arFeedback = array_merge($arFeedback, $arFeedbackNew);
-                $idTheme = $Im->sendUserMessages($arChat)['idtm'];
-                $arFeedback['chat'] = $idTheme;
-                $res = Yii::app()->db->createCommand()
-                    ->insert('feedback', $arFeedback);
+              $arFeedback = array_merge($arFeedback, $arFeedbackNew);
+              $Im = Share::isEmployer($autotype) ? (new ImApplic()) : (new ImEmpl());
+              $idTheme = $Im->sendUserMessages($arChat)['idtm'];
+              $arFeedback['chat'] = $idTheme;
+              $res = Yii::app()->db->createCommand()
+                  ->insert('feedback', $arFeedback);
             }
-            elseif((Share::isEmployer($autotype) || Share::isApplicant($autotype)) && ($fdbk>0))
+            elseif(!Share::isGuest($autotype) && ($fdbk>0))
             { // если зареганый юзер уже общался с админом
+              $arChat = array(
+                  'message' => $text,
+                  'new' => Share::isEmployer($autotype)
+                    ? Im::$ADMIN_APPLICANT
+                    : Im::$ADMIN_EMPLOYER,
+                  'idus' => $id,
+                  'idTm' => $theme,
+                  'theme' => $theme,
+                  'original' => $text
+              );
 
-                $arChat = array(
-                    'message' => $text,
-                    'new' => $id,
-                    'idus' => (Share::isEmployer($autotype) ? 2054 : 1766 ),
-                    'idTm' => $theme,
-                    'theme' => $theme,
-                    'original' => $text
-                );
+              $feedback = Yii::app()->db->createCommand()
+                  ->select('id, chat, theme')
+                  ->from('feedback f')
+                  ->where('pid=:id AND id=:fbdk AND chat>0',
+                      [
+                          ':id'  => $id,
+                          ':fbdk'=> $fdbk
+                      ]
+                  )
+                  ->queryRow();
 
-                $feedback = Yii::app()->db->createCommand()
-                    ->select('id, chat, theme')
-                    ->from('feedback f')
-                    ->where('pid=:id AND id=:fbdk AND chat>0',
-                        [
-                            ':id'  => $id,
-                            ':fbdk'=> $fdbk
-                        ]
-                    )
-                    ->queryRow();
+              $arChat['new'] = 0;
+              $arChat['idTm'] = $feedback['chat'];
+              $arChat['theme'] = $feedback['theme'];
+              $arFeedback['chat'] = $feedback['chat'];
+              $arFeedback['theme'] = $feedback['theme'];
+              $arFeedback['status'] = 0; // Обнуляется статус на "Ожидание модератора
+              $arFeedback['is_smotr'] = 0; // Статус меняется на "Новое"
 
-                $arChat['new'] = 0;
-                $arChat['idTm'] = $feedback['chat'];
-                $arChat['theme'] = $feedback['theme'];
-                $arFeedback['chat'] = $feedback['chat'];
-                $arFeedback['theme'] = $feedback['theme'];
-
-                $res = Yii::app()->db->createCommand()->update(
-                    'feedback',
-                    $arFeedback,
-                    'id='.$fdbk
-                );
-
-                $is_resp = (Share::isEmployer($autotype) ? 1 : 0);
-                $Im->sendUserMessages($arChat, $is_resp);
+              $res = Yii::app()->db->createCommand()->update(
+                  'feedback',
+                  $arFeedback,
+                  'id='.$fdbk
+              );
+              $Im = Share::isEmployer($autotype) ? (new ImEmpl()) : (new ImApplic());
+              $Im->sendUserMessages($arChat);
             }
             else
             { // ветка для гостей
@@ -435,17 +439,22 @@ class Feedback extends Model
 											);
 		return $arRes;
 	}
-	/**
-	 * 
-	 */
-	public function getDirects() {
+  /**
+   * @param bool $bAdmin - возвращать с админскими элементами
+   * @return array
+   */
+	public function getDirects($bAdmin=false)
+  {
 		$arRes = array();
-		$sql = Yii::app()->db->createCommand()
+    $query = Yii::app()->db->createCommand()
 						->select("*")
-						->from('feedback_direct')
-						->queryAll();		
+						->from('feedback_direct');
 
-		foreach ($sql as $v)
+		!$bAdmin && $query->where('for_admin=0');
+
+    $query = $query->queryAll();
+
+		foreach ($query as $v)
 			$arRes[$v['id']] = $v;
 
 		return $arRes;
@@ -504,5 +513,127 @@ class Feedback extends Model
     $arRes[5] = 'Решено';
 
     return ($key!==false ? $arRes[$key] : $arRes);
+  }
+  /**
+   * @return array
+   */
+  public function getDataForNewAdminAppeal()
+  {
+    $arRes = ['id_user' => Yii::app()->getRequest()->getParam('id_user')];
+    $arRes['receiver'] = Share::getUsers([$arRes['id_user']])[$arRes['id_user']];
+    $arRes['directs'] = $this->getDirects(true);
+    return $arRes;
+  }
+
+  public function setNewAdminAppeal($params)
+  {
+    $arRes = $this->getDataForNewAdminAppeal();
+    $arRes['errors'] = [];
+    $arRes['id_user'] = $params['receiver'];
+    $arRes['receiver'] = Share::getUsers([$arRes['id_user']])[$arRes['id_user']];
+    if(empty($arRes['receiver']['id']))
+    {
+      $arRes['errors'][] = 'Необходимо выбрать пользователя сайта';
+    }
+    //
+    $arRes['theme'] = filter_var(trim($params['theme']),FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    if(empty($arRes['theme']))
+    {
+      $arRes['errors'][] = 'Необходимо указать тему обращения';
+    }
+    //
+    $arRes['text'] = trim($params['text']);
+    if(empty($arRes['text']))
+    {
+      $arRes['errors'][] = 'Необходимо ввести сообщение пользователю';
+    }
+    //
+    $arRes['direct'] = $params['direct'];
+    // есть ошибки
+    if(count($arRes['errors']))
+    {
+      return $arRes;
+    }
+    // создаем обращение
+    $arChat = [
+      'message' => $arRes['text'],
+      'new' => $arRes['receiver']['id'],
+      'idus' => (
+        Share::isEmployer($arRes['receiver']['status'])
+          ? Im::$ADMIN_APPLICANT
+          : Im::$ADMIN_EMPLOYER
+      ),
+      'idTm' => $arRes['theme'],
+      'theme' => $arRes['theme'],
+      'original' => $arRes['text']
+    ];
+
+    $Im = Share::isEmployer($arRes['receiver']['status'])
+      ? (new ImApplic())
+      : (new ImEmpl());
+    $idChat = $Im->sendUserMessages($arChat)['idtm'];
+
+    Yii::app()->db->createCommand()
+      ->insert('feedback',[
+        'type'   => $arRes['receiver']['status'],
+        'name'   => 'Администратор',
+        'theme'  => $arRes['theme'],
+        'email'  => ($arRes['receiver']['email']?:''),
+        'text'   => $arRes['text'],
+        'crdate' => date("Y-m-d H:i:s"),
+        'pid'    => $arRes['receiver']['id'],
+        'is_smotr' => 1,
+        'status'   => 3,
+        'direct'   => $arRes['receiver']['direct'],
+        'chat'     => $idChat
+      ]);
+    $arRes['errors'] = false;
+    Yii::app()->user->setFlash('success', 'Обращение успешно отправлено');
+    return $arRes;
+  }
+  /**
+   * @param $arr - array(field => value)
+   */
+  public function getFeedback($arr)
+  {
+    if(!count($arr))
+      return false;
+
+    $strCondition = '';
+    $arParams = [];
+    $cnt = 1;
+    foreach ($arr as $key => $v)
+    {
+      $p = ':p' . $cnt;
+      $strCondition .= $key . '=' . $p;
+      $arParams[$p] = $v;
+      $cnt++;
+    }
+
+    return Yii::app()->db->createCommand()
+      ->select('*')
+      ->from('feedback')
+      ->where($strCondition, $arParams)
+      ->queryRow();
+  }
+  /**
+   * @param $chatId
+   * @return bool
+   */
+  public function checkUserStatusCondition($chatId)
+  {
+    $data = $this->getFeedback(['chat'=>$chatId]);
+    $arResult = ['id'=>$data['id'], 'status'=>$data['status'], 'access'=>false];
+    if(in_array($data['status'],[0,3]))
+    {
+      $arResult['access'] = true;
+    }
+    return $arResult;
+  }
+
+  public function setNew($id)
+  {
+    Yii::app()->db->createCommand()
+      ->update('feedback', ['is_smotr'=>0], 'id=:id', [':id'=>$id]);
   }
 }

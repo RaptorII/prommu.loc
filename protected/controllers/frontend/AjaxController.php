@@ -242,17 +242,19 @@ class AjaxController extends AppController
      */
     public function actionSendUserMesages()
     {
-        if( Yii::app()->getRequest()->isPostRequest )
-        {
-            if( Share::$UserProfile->type == 2 ) $Im = new ImApplic();
-            elseif( Share::$UserProfile->type == 3 ) $Im = new ImEmpl();
-            if( $Im )
-            {
-                $res = $Im->sendUserMessages();
-                echo CJSON::encode($res);
-            } // endif
-        } else echo CJSON::encode(array('error' => 101));
-        Yii::app()->end();
+      if( Yii::app()->getRequest()->isPostRequest )
+      {
+        $Im = Share::isApplicant()
+          ? (new ImApplic())
+          : (new ImEmpl());
+        $arResult = $Im->sendUserMessages();
+      }
+      else
+      {
+        $arResult = ['error' => 101];
+      }
+      echo CJSON::encode($arResult);
+      Yii::app()->end();
     }
 
 

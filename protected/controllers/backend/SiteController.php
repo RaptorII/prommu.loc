@@ -768,27 +768,32 @@ class SiteController extends Controller
     // Админка промоутер
     public function actionPromoEdit($id)
     {
-        $this->checkAccess("Соискатели");
+      $this->checkAccess("Соискатели");
 
-        $model = new User;
+      $model = new User;
 
-        if(!empty($_POST['User']))
-        {
-            $model->updatePromo($_POST['User'], $id);
-            $this->redirect(['site/users']);
-        }
+      if(!empty($_POST['User']))
+      {
+          $model->updatePromo($_POST['User'], $id);
+          $this->redirect(['site/users']);
+      }
+      /*if(Yii::app()->getRequest()->isAjaxRequest)
+      {
+        $this->renderPartial('feedback/list-profile');
+        Yii::app()->end();
+      }*/
 
-        (new Promo)->setViewed($id);
-        // --- вывод формы
-        $data = $model->getUser($id);
-        $title = 'Профиль соискателя';
-        $this->setPageTitle($title);
-        $this->breadcrumbs = array(
-            'Соискатели' => array('sect?p=app'), 
-            'Зарегистрированные'=>array('users'),
-            '1'=>$title
-        );
-        $this->render('users/promoform', ['id'=>$id, 'data'=>$data]);
+      (new Promo)->setViewed($id);
+      // --- вывод формы
+      $data = $model->getUser($id);
+      $title = 'Профиль соискателя';
+      $this->setPageTitle($title);
+      $this->breadcrumbs = array(
+          'Соискатели' => array('sect?p=app'),
+          'Зарегистрированные'=>array('users'),
+          '1'=>$title
+      );
+      $this->render('users/promoform', ['id'=>$id, 'data'=>$data]);
     }
 
    public function actionVacancyCreate()
@@ -1129,7 +1134,7 @@ class SiteController extends Controller
       $this->checkAccess($title);
       $rq = Yii::app()->getRequest();
       $id = $rq->getParam('id');
-      if($rq->isPostRequest)
+      if($rq->isPostRequest && $id!=='0')
       {
         $arRes = ['message' => 'Ошибка изменения данных'];
         $data = $rq->getParam('data');
@@ -1141,62 +1146,80 @@ class SiteController extends Controller
       }
       if($id==='0')
       {
-        $this->render('feedback/new');
+        $model = new Feedback;
+
+        if($rq->isPostRequest)
+        {
+          $data = $model->setNewAdminAppeal($rq->getParam('Feedback'));
+          if(!$data['errors'])
+          {
+            $this->redirect($rq->getParam('back')==='profile'
+              ? $data['receiver']['profile_admin'] . '?anchor=tab_feedback'
+              : '/admin/feedback'
+            );
+          }
+        }
+        else
+        {
+          $data = $model->getDataForNewAdminAppeal();
+        }
+        $this->setPageTitle($title);
+        $this->breadcrumbs = [$title];
+        $this->render('feedback/new',['viData'=>$data]);
       }
       else
       {
         $this->setPageTitle($title);
         $this->breadcrumbs = [$title];
-        $this->render('feedback/list');
+        $this->render('feedback/list-feedback');
       }
-
     }
 
     public function actionMail($id)
     {
-        
-        if(!empty($_POST['Feedback']) ) {
-            $model = new Feedback();
-            $model->setFeedback($_POST['Feedback']);
-            $mailer = new MailCloud();
-            $mailer->mailerMail($_POST['Feedback']);
-            $this->redirect(array('site/feedback'));
-        }
-            $model = new Feedback();
-            $data = $model->getDatas($id);
-            $model->setStatusReaded($id,'feedback');
-            $title = 'Ответ на обращение';
-            $this->setPageTitle($title);
-            $this->breadcrumbs = array('Обратная связь'=>array('feedback'),'1'=>$title);
-            $this->render('feedback/mail', array('id'=>$id, 'data'=>$data));
+      $this->checkAccess('Обратная связь');
+
+      if(!empty($_POST['Feedback']) )
+      {
+        $model = new Feedback();
+        $model->setFeedback($_POST['Feedback']);
+        $mailer = new MailCloud();
+        $mailer->mailerMail($_POST['Feedback']);
+        $this->redirect(array('site/feedback'));
+      }
+      $model = new Feedback();
+      $data = $model->getDatas($id);
+      $model->setStatusReaded($id,'feedback');
+      $title = 'Ответ на обращение';
+      $this->setPageTitle($title);
+      $this->breadcrumbs = ['Обратная связь'=>['feedback'], $title];
+      $this->render('feedback/mail', ['id'=>$id, 'data'=>$data]);
     }
 
     public function actionUpdate($id)
     {
-        if(!empty($_POST['Update']) )
-        {
-            $idus = $_POST['Update']['idusp'];
-            if($_POST['usertype']==3)
-                $model = new ImEmpl;
-            else
-                $model = new ImApplic;
-            
-            $model->recordAdminMessage($id, $_POST['Update']['message'], $idus);
-            $_POST['Update']['iduse'] = 2054;
-            $mailer = new MailCloud();
-            $mailer->mailerMail($_POST['Update']);
-            $model = new FeedbackTreatment;
-            $model->unsetAttributes();  // clear any default values
-            $model->search();
-            $this->redirect(array("site/update/$id"));
-        }
-        $model = new Feedback;
-        $data = $model->getAdminData($id);
-        $model->setStatusReaded($id,'chat');
-        $title = 'Ответ на обращение';
-        $this->setPageTitle($title);
-        $this->breadcrumbs = array('Обратная связь'=>array('feedback'),'1'=>$title); 
-        $this->render('feedback/update', array('id'=>$id, 'data'=>$data,));
+      $this->checkAccess('Обратная связь');
+
+      if(!empty($_POST['Update']) )
+      {
+        $idus = $_POST['Update']['idusp'];
+        $model = Share::isApplicant($_POST['usertype']) ? (new ImApplic) : (new ImEmpl);
+        $model->recordAdminMessage($id, $_POST['Update']['message'], $idus);
+        $_POST['Update']['iduse'] = Im::$ADMIN_APPLICANT;
+        $mailer = new MailCloud();
+        $mailer->mailerMail($_POST['Update']);
+        $model = new FeedbackTreatment;
+        $model->unsetAttributes();  // clear any default values
+        $model->search();
+        $this->redirect(["site/update/$id"]);
+      }
+      $model = new Feedback;
+      $data = $model->getAdminData($id);
+      $model->setStatusReaded($id,'chat');
+      $title = 'Ответ на обращение';
+      $this->setPageTitle($title);
+      $this->breadcrumbs = ['Обратная связь'=>['feedback'], $title];
+      $this->render('feedback/update', ['id'=>$id, 'data'=>$data]);
     }
     
 

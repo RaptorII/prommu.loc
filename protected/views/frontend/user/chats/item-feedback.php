@@ -61,12 +61,18 @@
 						<div id="DiMessagesInner">
 							<div id="DiMessages"></div>
 						</div>
+            <? if($viData['feedback']['access']): ?>
+              <div class="mess-block-status">
+                <a href="<?=$this->createUrl(Yii::app()->request->requestUri . '?change_status=Y&status=5&feedback=' . $viData['feedback']['id'])?>" class="prmu-btn prmu-btn_small"><span>Решено</span></a>
+                <a href="<?=$this->createUrl(Yii::app()->request->requestUri . '?change_status=Y&status=2&feedback=' . $viData['feedback']['id'])?>" class="prmu-btn prmu-btn_small"><span>Не решено</span></a>
+              </div>
+            <? endif; ?>
 					</div>
 				</div>
 			</div>
 
 
-
+      <? if($viData['feedback']['access']): ?>
 			<div class='message-box'>
 				<form enctype='multipart/form-data'>
 					<div class='message'>
@@ -116,6 +122,7 @@
             <div class="clear"></div>
         </form>
       </div>
+      <? endif; ?>
 			<div class="mess-box-end"></div>
     </div>
 		<script type="text/javascript">

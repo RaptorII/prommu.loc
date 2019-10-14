@@ -1689,7 +1689,7 @@ class UserController extends AppController
      */
     public function actionChats()
     {
-        in_array(Share::$UserProfile->type, [2,3]) || $this->redirect(MainConfig::$PAGE_LOGIN);
+        Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
 
         $rq = Yii::app()->getRequest();
         $section = filter_var(
@@ -1709,12 +1709,10 @@ class UserController extends AppController
             throw new CHttpException(404, 'Error');
 
         $title = 'Сообщения';
-        $idus = Share::$UserProfile->id;
         $view = MainConfig::$VIEW_CHATS_LIST;
         $page = MainConfig::$PAGE_CHATS_LIST;
         $this->setBreadcrumbs($title, $page);
         $model = Share::$UserProfile->makeChat();
-        $data = array();
 
         switch ($section)
         {
@@ -1766,6 +1764,15 @@ class UserController extends AppController
                 {
                     if(!$model->hasAccess('feedback',$id))
                         throw new CHttpException(404, 'Error');
+
+                    if($rq->getParam('change_status')=='Y')
+                    {
+                      $model = new Feedback();
+                      $model->ChangeModer($rq->getParam('feedback'), $rq->getParam('status'));
+                      $model->setNew($rq->getParam('feedback'));
+                      Yii::app()->user->setFlash('prommu_flash','Статус обращения изменен');
+                      $this->redirect('/user/chats/feedback');
+                    }
 
                     $view = MainConfig::$VIEW_CHATS_ITEM_FEEDBACK;
                     $data = $model->getMessViewData($id);

@@ -26,7 +26,7 @@ jQuery(function($){
         {
           confirm(result.message);
           MainAdmin.bAjaxTimer = false;
-          $.fn.yiiGridView.update("custom_list");
+          $.fn.yiiGridView.update("feedback_list");
         }
       });
     }

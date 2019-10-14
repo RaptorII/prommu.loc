@@ -1,16 +1,16 @@
 <?php
+//
+$bUrl = Yii::app()->request->baseUrl;
 $gcs = Yii::app()->getClientScript();
-$gcs->registerCssFile('/admin/css/app-profile.css');
-$gcs->registerCoreScript('jquery');
-$gcs->registerScriptFile(Yii::app()->request->baseUrl.'/js/ajaxfileupload.js', CClientScript::POS_HEAD);
+//
+$gcs->registerCssFile($bUrl . '/css/app-profile.css');
+$gcs->registerCssFile($bUrl . '/css/template.css');
+$gcs->registerScriptFile($bUrl . '/js/users/item-app.js', CClientScript::POS_END);
 // Magnific Popup
 $gcs->registerCssFile('/jslib/magnific-popup/magnific-popup-min.css');
 $gcs->registerScriptFile('/jslib/magnific-popup/jquery.magnific-popup.min.js', CClientScript::POS_END);
-$bUrl = Yii::app()->request->baseUrl;
-Yii::app()->getClientScript()->registerCssFile($bUrl . '/css/template.css');
-
-$fdbck = new Feedback();
-$fdbck = $fdbck->getUserFeedbacks($data['id_user']);//(15642);//
+//
+$anchor = Yii::app()->request->getParam('anchor');
 
 echo '<div class="row">';
 echo '<div class="col-xs-12 col-sm-9 col-sm-offset-3 col-md-6 col-md-offset-2">'
@@ -19,12 +19,12 @@ echo '<div class="col-xs-12 col-sm-9 col-sm-offset-3 col-md-6 col-md-offset-2">'
 echo '<div class="col-xs-12"><div class="row">';
     echo '<div class="col-xs-12 col-sm-3 col-md-2">'
             . '<ul class="nav user__menu" role="tablist" id="tablist">'
-                . '<li class="active"><a href="#tab_profile" aria-controls="tab_profile" role="tab" data-toggle="tab">Общее</a></li>'
-                . '<li><a href="#tab_seo" aria-controls="tab_seo" role="tab" data-toggle="tab">СЕО</a></li>'
-                . '<li><a href="#tab_photo" aria-controls="tab_photo" role="tab" data-toggle="tab">Фото</a></li>'
-                . '<li><a href="#tab_vacs" aria-controls="tab_vacs" role="tab" data-toggle="tab">Отработанные вакансии</a></li>'
-                . '<li><a href="#tab_rating" aria-controls="tab_rating" role="tab" data-toggle="tab">Рейтинг</a></li>'
-                . '<li><a href="#tab_message" aria-controls="tab_rating" role="tab" data-toggle="tab">Сообщения</a></li>'
+                . '<li class="' . (($anchor=='tab_profile' || empty($anchor)) ? 'active' : '') . '"><a href="#tab_profile" aria-controls="tab_profile" role="tab" data-toggle="tab">Общее</a></li>'
+                . '<li class="' . ($anchor=='tab_seo' ? 'active' : '') . '"><a href="#tab_seo" aria-controls="tab_seo" role="tab" data-toggle="tab">СЕО</a></li>'
+                . '<li class="' . ($anchor=='tab_photo' ? 'active' : '') . '"><a href="#tab_photo" aria-controls="tab_photo" role="tab" data-toggle="tab">Фото</a></li>'
+                . '<li class="' . ($anchor=='tab_vacs' ? 'active' : '') . '"><a href="#tab_vacs" aria-controls="tab_vacs" role="tab" data-toggle="tab">Отработанные вакансии</a></li>'
+                . '<li class="' . ($anchor=='tab_rating' ? 'active' : '') . '"><a href="#tab_rating" aria-controls="tab_rating" role="tab" data-toggle="tab">Рейтинг</a></li>'
+                . '<li class="' . ($anchor=='tab_feedback' ? 'active' : '') . '"><a href="#tab_feedback" aria-controls="tab_feedback" role="tab" data-toggle="tab">Обратная связь</a></li>'
             . '</ul>'
         . '</div>';
     echo '<div class="col-xs-12 col-sm-9 col-md-6">';
@@ -33,7 +33,7 @@ echo '<div class="col-xs-12"><div class="row">';
 /* 
 *       TAB PROFILE 
 */
-echo '<div role="tabpanel" class="tab-pane fade active in" id="tab_profile">';
+echo '<div role="tabpanel" class="tab-pane fade' . (($anchor=='tab_profile' || empty($anchor)) ? ' active in' : '') . '" id="tab_profile">';
     echo '<h3>Общее</h3>';
     echo '<div class="row"><div class="col-xs-12 col-sm-6 user__logo">'
             . CHtml::image($data['src'])
@@ -422,7 +422,7 @@ echo '</div>';
 /*
 *       SEO
 */
-echo '<div role="tabpanel" class="tab-pane fade" id="tab_seo">';
+echo '<div role="tabpanel" class="tab-pane fade' . ($anchor=='tab_seo' ? ' active in' : '') . '" id="tab_seo">';
     echo '<h3>СЕО</h3>';
     echo '<div class="control-group">'
         . CHtml::CheckBox(
@@ -496,7 +496,7 @@ echo '</div>';
 /*
 *       PHOTOS
 */
-echo '<div role="tabpanel" class="tab-pane fade" id="tab_photo">';
+echo '<div role="tabpanel" class="tab-pane fade' . ($anchor=='tab_photo' ? ' active in' : '') . '" id="tab_photo">';
     echo '<h3>Фото</h3><div class="row photo-list">';
     if(sizeof($data['photos']))
     {
@@ -518,7 +518,7 @@ echo '</div>';
 /*
 *       POSITIONS
 */
-echo '<div role="tabpanel" class="tab-pane fade" id="tab_vacs">';
+echo '<div role="tabpanel" class="tab-pane fade' . ($anchor=='tab_vacs' ? ' active in' : '') . '" id="tab_vacs">';
     echo '<h3>Отработанные вакансии: ' . $data['jobs_cnt'] . '</h3><div class="row">';
     if($data['jobs_cnt']>0)
     {
@@ -541,7 +541,7 @@ echo '</div></div>';
 /* 
 *       RATING 
 */
-echo '<div role="tabpanel" class="tab-pane fade in" id="tab_rating">';
+echo '<div role="tabpanel" class="tab-pane fade' . ($anchor=='tab_rating' ? ' active in' : '') . '" id="tab_rating">';
     echo '<h3>Рейтинг</h3><div class="row"><div class="col-xs-12">';
     echo Share::getRating($data['rate'],$data['rate_neg']) . '<br><br>';
     echo '<table class="table table-bordered custom-table">
@@ -606,147 +606,13 @@ echo '<div role="tabpanel" class="tab-pane fade in" id="tab_rating">';
           </table>';
     echo '</div></div>';
 echo '</div>';
-
-echo '<div role="tabpanel" class="tab-pane fade in" id="tab_message">';
-    echo '<h3>Сообщения</h3>'
-        .'<div class="row">'
-        .'<div class="col-xs-12">';
-        /**
-         * Messages for chosenone user
-         */
-        echo '<div class="col-xs-12">';
-        foreach ($fdbck as $val) :
-            echo '<ul class="user__msg">';
-            echo '<li class="user__msg-theme">'
-                .$val["id"] . ' - ' . $val["theme"]
-                .'</li>';
-            echo '<li class="user__msg-icon">'
-                .    '<a  href="/admin/site/' . (!$val['type'] ? 'mail/' . $id : 'update/' . $val['chat']) . '"'
-                .    '   rel="tooltip"'
-                .    '   data-placement="top"'
-                .    '   title="Ответить">';
-            echo '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>'
-                .    '</a></ul>';
-        endforeach;
-        echo '</div>';
-        /**/
-    echo '</div>';
-echo '</div>';
-
-            /*
-            *
-            */
-            /*
-            *
-            */
-            echo '</div><br/><br/>'; //tab-content
-            echo '<div style="float:right;  display:inline;">'
-                . '<a href="/admin/notifications/0?type=message&id_user=' . $data['id_user'] . '" class="btn btn-success">Уведомление</a>'
-                . '&nbsp;&nbsp;'
-                . CHtml::submitButton(
-                    'Сохранить',
-                    array(
-                        "class"=>"btn btn-success", 
-                        "id"=>"btn_submit"
-                    )
-                )
-                . '&nbsp;&nbsp;'
-                . '<a href="/admin/users" class="btn btn-warning" id="btn_cancel">Отмена</a>';
-            echo '</div>';
-        echo CHtml::endForm();
-    echo '</div>';
+/*
+*       Feedback
+*/
+echo '<div role="tabpanel" class="tab-pane fade' . ($anchor=='tab_feedback' ? ' active in' : '') . '" id="tab_feedback">';
+echo '<h3>Обратная связь</h3><div class="row"><div class="col-xs-12">';
+$_GET['FeedbackTreatment']['pid'] = $data['id_user'];
+$this->renderPartial('feedback/list-profile');
+echo '</div></div>';
 echo '</div>';
 ?>
-<script>
-    function Del(key)
-    {
-        if(confirm('Вы действительно хотите удалить документ '+key))
-        {
-            $.ajax({
-                type:'GET',
-                url:'/admin/ajax/DeleteScan?key='+key+'&id=<?php echo $data['id']?>',
-                cache: false,
-                dataType: 'text',
-                success:function (data) {
-                    $("#lst_scan").html(data);
-                },
-                error: function(data){
-                    alert("Download error!");
-                }
-            });
-        }
-    }
-
-
-    function Add(fname)
-    {
-            $.ajax({
-                type:'GET',
-                url:'/admin/ajax/AddScan?id=<?php echo $data['id']?>&fname='+fname,
-                cache: false,
-                dataType: 'text',
-                success:function (data) {
-                    $("#lst_scan").html(data);
-                },
-                error: function(data){
-                    alert("Download error!");
-                }
-            });
-
-    }
-
-
-
-    function ajaxFileUpload()
-    {
-
-        $.ajaxFileUpload
-        (
-            {
-                url:'/uploads/doajaxdocupload.php',
-                secureuri:false,
-                fileElementId:'fileToUpload',
-                dataType: 'json',
-                data:{name:'logan', id:'id'},
-                success: function (data, status)
-                {
-                    if(typeof(data.error) != 'undefined')
-                    {
-                        if(data.error != '')
-                        {
-                            alert(data.error);
-                        }else
-                        {
-                            //alert(data.name);
-                            Add(data.name);
-
-                        }
-                    }
-                },
-                error: function (data, status, e)
-                {
-                    alert(e);
-                }
-            }
-        )
-
-        return false;
-
-    }
-
-    $(function(){
-        $('.photo-list').magnificPopup({
-            delegate: '.photos__item-link',
-            type: 'image',
-            gallery: {
-                enabled: true,
-                preload: [0, 2],
-                navigateByImgClick: true,
-                arrowMarkup: '<button title="%title%" type="button" class="mfp-arrow mfp-arrow-%dir%"></button>',
-                tPrev: '',
-                tNext: '',
-                tCounter: '<span class="mfp-counter">%curr% / %total%</span>'
-            }
-        });
-    });
-</script>

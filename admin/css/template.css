@@ -299,3 +299,18 @@
     border: 1px solid #0a5bc4;
     top: 100%;
 }
+/* Loading */
+section.content.loading{
+  position: relative;
+}
+section.content.loading:before {
+  content: '';
+  background: rgb(236, 240, 245, 0.7) url(/theme/pic/vacancy/loading.gif) center no-repeat;
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+}
