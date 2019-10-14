@@ -40,12 +40,16 @@ echo '<div role="tabpanel" class="tab-pane fade' . (($anchor=='tab_profile' || e
         . '</div><div class="col-xs-12 col-sm-6 user__moder">'
             . '<h4>МОДЕРАЦИЯ</h4>'
             . '<div class="control-group">'                
-                . CHtml::CheckBox(
-                    'User[ismoder]',
-                    $data['ismoder'],
-                    array('value'=>'1')
-                )
-                . '<label class="control-label" for="User_ismoder">Промодерировано</label>'
+                 . CHtml::radioButtonList(
+                        'User[ismoder]',
+                        $data['ismoder'],
+                        array(
+                            0 => 'не промодерирован',
+                            1 => 'промодерирован',
+                            2 => 'обработка',
+                        ),
+                        array()
+                    )
             . '</div>';
 
             echo '<div class="control-group">'
@@ -54,11 +58,10 @@ echo '<div role="tabpanel" class="tab-pane fade' . (($anchor=='tab_profile' || e
                         'User[isblocked]',
                         $data['isblocked'],
                         array(
-                            0 => 'полностью активен',
-                            1 => 'заблокирован',
-                            2 => 'ожидает активации',
-                            3 => 'активирован, но не заполнил все необходимые поля',
-                            4 => 'приостановка показа',
+                            0 => 'Активирован',
+                            1 => 'Заблокирован',
+                            2 => 'Новый',
+                            3 => 'Модерация'
                         ),
                         array()
                     )
@@ -614,5 +617,24 @@ echo '<h3>Обратная связь</h3><div class="row"><div class="col-xs-12
 $_GET['FeedbackTreatment']['pid'] = $data['id_user'];
 $this->renderPartial('feedback/list-profile');
 echo '</div></div>';
+echo '</div>';
+        /*
+        *
+        */
+        echo '</div><br/><br/>'; //tab-content
+        echo '<div style="float:right;  display:inline;">'
+            . '<a href="/admin/notifications/0?type=message&id_user=' . $data['id_user'] . '" class="btn btn-success">Написать пользователю</a>'
+            . '&nbsp;&nbsp;'
+            . CHtml::submitButton(
+                'Сохранить',
+                array(
+                    "class"=>"btn btn-success", 
+                    "id"=>"btn_submit"
+                )
+            )
+            . '&nbsp;&nbsp;'
+            . '<a href="/admin/users" class="btn btn-warning" id="btn_cancel">Отмена</a>';
+        echo '</div>';
+    echo CHtml::endForm();
 echo '</div>';
 ?>

@@ -40,12 +40,16 @@ echo '<div role="tabpanel" class="tab-pane fade' . (($anchor=='tab_profile' || e
         . '</div><div class="col-xs-12 col-sm-6 user__moder">'
             . '<h4>МОДЕРАЦИЯ</h4>'
             . '<div class="control-group">'                
-                . CHtml::CheckBox(
+            . CHtml::radioButtonList(
                     'User[ismoder]',
                     $data['ismoder'],
-                    array('value'=>'1')
+                    array(
+                        0 => 'не промодерирован',
+                        1 => 'промодерирован',
+                        2 => 'обработка',
+                    ),
+                    array()
                 )
-                . '<label class="control-label" for="User_ismoder">Промодерировано</label>'
             . '</div>';
 
             echo '<div class="control-group">'
@@ -54,11 +58,10 @@ echo '<div role="tabpanel" class="tab-pane fade' . (($anchor=='tab_profile' || e
                         'User[isblocked]',
                         $data['isblocked'],
                         array(
-                            0 => 'полностью активен',
-                            1 => 'заблокирован',
-                            2 => 'ожидает активации',
-                            3 => 'активирован, но не заполнил все необходимые поля',
-                            4 => 'приостановка показа',
+                            0 => 'Активирован',
+                            1 => 'Заблокирован',
+                            2 => 'Новый',
+                            3 => 'Модерация'
                         ),
                         array()
                     )
