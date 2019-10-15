@@ -535,26 +535,45 @@ class UserController extends AppController
 
     public function actionRegister()
     {
-        // applicant
-        $getS = Yii::app()->getRequest()->getParam('s');
-        $getP = Yii::app()->getRequest()->getParam('p');
+      !Share::isGuest() && $this->redirect(MainConfig::$PAGE_PROFILE);
+      $gr = Yii::app()->getRequest();
+      $step = $gr->getParam('step');
 
-        if($getS == 2)
-        {
-            $this->setPageTitle('Завершение регистрации');
-            $this->render(MainConfig::$VIEWS_REGISTER_COMPLETE, ['type' => $getS], array('nobc' => '1'));
-        }
-        else
-        {
-            if($getP=='' || $getP=='1' || $getP=='2')
-            {
-                $this->proccessRegister();
-            }
-            else
-            {
-                throw new CHttpException(404, 'Error');
-            }
-        }
+      if(!in_array($step,[1,2,3,4,5,6]))
+      {
+        throw new CHttpException(404, 'Error');
+      }
+      $view = '/user/register/step_' . $step;
+
+      if($gr->isAjaxRequest)
+      {
+        $this->renderPartial($view);
+      }
+      else
+      {
+        $this->renderRegister($view);
+      }
+
+      // applicant
+      /*$getS = Yii::app()->getRequest()->getParam('s');
+      $getP = Yii::app()->getRequest()->getParam('p');
+
+      if($getS == 2)
+      {
+          $this->setPageTitle('Завершение регистрации');
+          $this->render(MainConfig::$VIEWS_REGISTER_COMPLETE, ['type' => $getS], array('nobc' => '1'));
+      }
+      else
+      {
+          if($getP=='' || $getP=='1' || $getP=='2')
+          {
+              $this->proccessRegister();
+          }
+          else
+          {
+              throw new CHttpException(404, 'Error');
+          }
+      }*/
     }
 
 

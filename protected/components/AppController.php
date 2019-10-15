@@ -204,4 +204,47 @@ class AppController extends CController
 
         Share::$cssAsset = get_object_vars($cssAsset);
     }
+
+  public function renderRegister($inView)
+  {
+    if(Yii::app()->controller->id!=='user' || Yii::app()->controller->action->id!=='register')
+    {
+      throw new CHttpException(404, 'Error');
+    }
+
+    $this->layout = '//user/register/index';
+
+    $bUrl = Yii::app()->baseUrl;
+    $Uri = Yii::app()->getRequest()->getRequestUri();
+    $gcs = Yii::app()->getClientScript();
+    $gcs->registerCssFile($bUrl . MainConfig::$CSS  . 'register/style.css');
+    $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'register/script.js', CClientScript::POS_END);
+
+    // set header html title
+    $this->setPageTitle('Регистрация');
+
+    $model = new Seo;
+    $seo = ($model->exist($Uri)?:$model->existTemplate($Uri));
+
+    if($seo['meta_title'])
+    {
+      $this->setPageTitle($seo['meta_title']);
+    }
+    if($seo['meta_keywords'])
+    {
+      $this->ViewModel->setViewData('pageMetaKeywords', $seo['meta_keywords']);
+    }
+    if($seo['meta_description'])
+    {
+      $this->ViewModel->setViewData('pageMetaDesription', $seo['meta_description']);
+    }
+    if($seo['seo_h1'])
+    {
+      $this->ViewModel->setViewData('pageH1', $seo['seo_h1']);
+    }
+
+    $this->ViewModel->init();
+
+    parent::render($inView, null, false);
+  }
 }
