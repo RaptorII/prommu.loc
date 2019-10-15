@@ -208,7 +208,7 @@ class AppController extends CController
    * @param $inView - string
    * @throws CHttpException
    */
-  public function renderRegister($inView)
+  public function renderRegister($inView, $tplData = null)
   {
     if(Yii::app()->controller->id!=='user' || Yii::app()->controller->action->id!=='register')
     {
@@ -219,6 +219,6 @@ class AppController extends CController
     $this->setPageTitle('Регистрация');
     $this->ViewModel->init();
 
-    parent::render($inView, null, false);
+    parent::render($inView, $tplData, false);
   }
 }

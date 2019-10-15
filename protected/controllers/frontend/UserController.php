@@ -536,24 +536,35 @@ class UserController extends AppController
     public function actionRegister()
     {
       !Share::isGuest() && $this->redirect(MainConfig::$PAGE_PROFILE);
-      $gr = Yii::app()->getRequest();
-      $step = $gr->getParam('step');
+
+      $data = [];
+      $model = new UserRegister();
+      $step = $model->getStep();
 
       if(!in_array($step,[1,2,3,4,5,6]))
       {
         throw new CHttpException(404, 'Error');
       }
+
+      if($step==1)
+      {
+        $model = new PagesContent();
+        $lang = Yii::app()->session['lang'];
+        $data['condition'] = $model->getPageContent('conditions',$lang);
+      }
       $view = '/user/register/step_' . $step;
 
-      if($gr->isAjaxRequest)
+      if(Yii::app()->getRequest()->isAjaxRequest)
       {
-        $this->renderPartial($view);
+        $this->renderPartial($view,['viData'=>$data]);
       }
       else
       {
-        $this->renderRegister($view);
+        $this->renderRegister($view,['viData'=>$data]);
       }
-      $analyt = Yii::app()->request->cookies['sbjs_current'];
+
+      //echo md5(time() . rand(1111111,9999999));
+
       // applicant
       /*$getS = Yii::app()->getRequest()->getParam('s');
       $getP = Yii::app()->getRequest()->getParam('p');
