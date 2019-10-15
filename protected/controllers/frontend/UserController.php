@@ -553,7 +553,7 @@ class UserController extends AppController
       {
         $this->renderRegister($view);
       }
-
+      $analyt = Yii::app()->request->cookies['sbjs_current'];
       // applicant
       /*$getS = Yii::app()->getRequest()->getParam('s');
       $getP = Yii::app()->getRequest()->getParam('p');

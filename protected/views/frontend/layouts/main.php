@@ -181,15 +181,10 @@
                                   <? endif;?>
                                 </div>
                                 <?php if( Yii::app()->session['au_us_type'] < 2 ): ?>
-                                        <div class="enter">
-                                            <a href="<?= MainConfig::$PAGE_LOGIN ?>" class="enter__login enter__link" data-toggle="modal">Вход</a><div class="enter__register">
-                                                <a href="#reg_select" class="enter__register-link enter__link" onclick="ClearCookie()" data-toggle="modal">Регистрация <i></i></a>
-                                                <ul>
-                                                    <li><a href="<?= Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2')) ?>" class="items">Я работодатель</a></li>
-                                                    <li><a href="<?= Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1')) ?>" class="items">Я ищу работу</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
+                                  <div class="enter">
+                                    <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_LOGIN)?>" class="prmu-btn"><span>Вход</span></a>
+                                    <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>" class="prmu-btn"><span>Регистрация</span></a>
+                                  </div>
                                 <?php else: ?>
                                     <div class="small-menu">
                                         <div class="small-menu__list">
