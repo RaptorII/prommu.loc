@@ -1,4 +1,24 @@
+<?php // ?>
+<?// if (count($viData['errors'])): ?>
+<!--    <div class="danger">- --><?//= implode('<br>- ', $viData['errors']); ?><!--</div>-->
+<?// endif; ?>
+<!--<form id="register_form">-->
+<!--    <label>-->
+<!--        <span>Я ищу работу</span>-->
+<!--        <input type="radio" value="--><?//= UserProfile::$APPLICANT ?><!--" name="type" class="input-type">-->
+<!--    </label>-->
+<!--    <br>-->
+<!--    <label>-->
+<!--        <span>Я ищу сотрудников</span>-->
+<!--        <input type="radio" value="--><?//= UserProfile::$EMPLOYER ?><!--" name="type" class="input-type">-->
+<!--    </label>-->
+<!--    <br>-->
+<!--    <small>Регистрируясь на ресурсе Prommu Вы даете согласие на обработку своих <a href="#">персональных данных</a>.-->
+<!--    </small>-->
+<!--</form>-->
+<?php // ?>
 <?php
+
 Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . '/snap/snap.svg-min.js');
 ?>
 
@@ -19,29 +39,20 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . '/snap/snap.
 
             <div class="login__container">
                 <p>
-<!--                    <a class="btn-orange" href="/user/register?step=2">-->
-<!--                        Я ищу работу-->
-<!--                        <span class="txt">-->
-<!--                            Я "Валера" и не заметил, что сайт для поиска временной работы, и я ищу работу мечты-->
-<!--                        </span>-->
-<!--                    </a>-->
-
-                    <label class="btn-orange">
-                        <span>Я ищу работу</span>
-                        <input type="radio" value="<?=UserProfile::$APPLICANT?>" name="type" class="input-type">
-                    </label>
+                    <a class="btn-orange" href="/user/register?step=2">
+                        Я ищу работу
+                        <span class="txt">
+                            Я "Валера" и не заметил, что сайт для поиска временной работы, и я ищу работу мечты
+                        </span>
+                    </a>
                 </p>
                 <p>
-<!--                    <a class="btn-orange" href="/user/register?step=3">-->
-<!--                        Я ищу сотрудников-->
-<!--                        <span class="txt">-->
-<!--                            Хочу разместить вакансии и найти сотрудников-->
-<!--                        </span>-->
-<!--                    </a>-->
-                    <label>
-                        <span>Я ищу сотрудников</span>
-                        <input type="radio" value="<?=UserProfile::$EMPLOYER?>" name="type" class="input-type">
-                    </label>
+                    <a class="btn-orange" href="/user/register?step=3">
+                        Я ищу сотрудников
+                        <span class="txt">
+                            Хочу разместить вакансии и найти сотрудников
+                        </span>
+                    </a>
                 </p>
             </div>
         </div>
@@ -62,4 +73,3 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . '/snap/snap.
 <!--    <svg x="0" y="0" class="svg-bg" />-->
 <!--</div>-->
 
->>>>>>> add forms to new reg
