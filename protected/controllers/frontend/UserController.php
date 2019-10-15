@@ -548,21 +548,26 @@ class UserController extends AppController
 
       if($step==1)
       {
-        $model = new PagesContent();
+        $pages = new PagesContent();
         $lang = Yii::app()->session['lang'];
-        $data['condition'] = $model->getPageContent('conditions',$lang);
+        $data['condition'] = $pages->getPageContent('conditions',$lang);
       }
       $view = '/user/register/step_' . $step;
 
       if(Yii::app()->getRequest()->isAjaxRequest)
       {
+        $post = Yii::app()->getRequest()->getParam('data');
+        $data['input'] = json_decode(
+          $post, true, 5, JSON_BIGINT_AS_STRING);
+        $data['errors'] = $model->setDataByStep($step, $data['input']);
+
         $this->renderPartial($view,['viData'=>$data]);
       }
       else
       {
         $this->renderRegister($view,['viData'=>$data]);
       }
-
+      // PHPSESSID
       //echo md5(time() . rand(1111111,9999999));
 
       // applicant

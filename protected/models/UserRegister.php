@@ -39,4 +39,53 @@ class UserRegister
     $value = intval($step) * 1000;
     Yii::app()->request->cookies['urs'] = new CHttpCookie('urs', md5($value . self::$SOUL));
   }
+  /**
+   * @param $step - integer
+   * @param $data - array
+   * @return array - errors
+   */
+  public function setDataByStep($step, $data)
+  {
+    $arErrors = $arData = [];
+    if($step==1)
+    {
+      if(!in_array($data['type'],[UserProfile::$EMPLOYER, UserProfile::$APPLICANT]))
+      {
+        $arErrors[] = 'Неподходящий тип пользователя';
+      }
+      else
+      {
+        $arData['type'] = $data['type'];
+      }
+    }
+
+    if(!$this->setData($arData))
+    {
+      $arErrors[] = 'Ошибка записи данных';
+    }
+    return $arErrors;
+  }
+  /**
+   * @param $arr - array(field => value)
+   * @return bool
+   */
+  private function setData($arr)
+  {
+    $rq = Yii::app()->request;
+    if(!count($arr) || !isset($rq->cookies['PHPSESSID']))
+      return false;
+
+    $hash = $rq->cookies['PHPSESSID']->value;
+    // обновление данных
+    $query = Yii::app()->db->createCommand()
+      ->update('user_register',$arr,'hash=:hash',[':hash'=>$hash]);
+    // создание записи
+    if(!$query)
+    {
+      $arr['hash'] = $hash;
+      $query = Yii::app()->db->createCommand()
+        ->insert('user_register',$arr);
+    }
+    return $query;
+  }
 }

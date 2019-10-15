@@ -16,29 +16,29 @@ var RegisterPage = (function () {
     });
     //
   }
-  //
+  // отправляем аяксом
   RegisterPage.prototype.send = function ()
   {
     $('body').addClass('prmu-load');
     $.ajax({
       type: 'POST',
-      data: arguments[0],
+      data: {data: JSON.stringify(arguments[0])},
       success: function (r){
         $('body').html(r).removeClass('prmu-load');
       }
     });
   };
-  //
+  // собираем данные из инпутов
   RegisterPage.prototype.getData = function ()
   {
     let arForm = $('#register_form').serializeArray(),
-        arResult = [];
+        result = {};
 
     $(arForm).each(function(){
-      arResult[this.name] = this.value;
+      result[this.name] = this.value;
     })
 
-    return arResult;
+    return result;
   }
   //
   return RegisterPage;
