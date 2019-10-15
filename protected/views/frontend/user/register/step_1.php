@@ -1,10 +1,6 @@
-<?
-
-echo '<pre>';
-print_r($viData['errors']);
-echo '</pre>';
-
-?>
+<? if(count($viData['errors'])): ?>
+  <div class="danger">- <?=implode('<br>- ', $viData['errors']); ?></div>
+<? endif; ?>
 <form id="register_form">
   <label>
     <span>Я ищу работу</span>

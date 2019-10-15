@@ -1,3 +1,6 @@
+<? if(count($viData['errors'])): ?>
+  <div class="danger">- <?=implode('<br>- ', $viData['errors']); ?></div>
+<? endif; ?>
 <form id="register_form">
   <? if(Share::isApplicant($viData['input']['type'])): ?>
     <label>
@@ -20,9 +23,4 @@
     <span>Мобильный телефон или электронная почта</span>
     <input type="text" value="<?=$viData['input']['login']?>" name="login" class="input-login" autocomplete="off" placeholder="+7-123-456-78-90 или your-email@mail.ru">
   </label>
-<?
-echo '<pre>';
-print_r($viData);
-echo '</pre>';
-?>
 </form>
