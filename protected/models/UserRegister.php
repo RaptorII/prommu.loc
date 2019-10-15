@@ -88,4 +88,21 @@ class UserRegister
     }
     return $query;
   }
+  /**
+   * @return mixed
+   */
+  public function getData()
+  {
+    $rq = Yii::app()->request;
+    if(!isset($rq->cookies['PHPSESSID']))
+      return false;
+
+    $hash = $rq->cookies['PHPSESSID']->value;
+
+    return Yii::app()->db->createCommand()
+      ->select('*')
+      ->from('user_register')
+      ->where('hash=:hash',[':hash'=>$hash])
+      ->queryRow();
+  }
 }

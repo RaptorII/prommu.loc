@@ -552,14 +552,28 @@ class UserController extends AppController
         $lang = Yii::app()->session['lang'];
         $data['condition'] = $pages->getPageContent('conditions',$lang);
       }
-      $view = '/user/register/step_' . $step;
+      else
+      {
+        $data['input'] = $model->getData();
+        if(!count($data['input']))
+        {
+          $step=1;
+          $model->setStep($step);
+        }
+      }
 
+      $view = '/user/register/step_' . $step;
       if(Yii::app()->getRequest()->isAjaxRequest)
       {
         $post = Yii::app()->getRequest()->getParam('data');
         $data['input'] = json_decode(
           $post, true, 5, JSON_BIGINT_AS_STRING);
         $data['errors'] = $model->setDataByStep($step, $data['input']);
+        if(!count($data['errors']))
+        {
+          $view = '/user/register/step_' . ++$step;
+          $model->setStep($step);
+        }
 
         $this->renderPartial($view,['viData'=>$data]);
       }
