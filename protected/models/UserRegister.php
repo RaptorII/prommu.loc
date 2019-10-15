@@ -21,13 +21,14 @@ class UserRegister
       $cookie = $rq->cookies['urs']->value;
       for ($i=1000; $i<=6000; $i+=1000)
       {
-        md5($i . self::$SOUL)==$cookie && $step=$cookie;
+        md5($i . self::$SOUL)==$cookie && $step=$i;
       }
     }
     else
     {
       $this->setStep(1);
     }
+
     return intval($step/1000);
   }
   /**
