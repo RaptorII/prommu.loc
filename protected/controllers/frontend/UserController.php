@@ -541,7 +541,7 @@ class UserController extends AppController
       $model = new UserRegister();
       $step = $model->getStep();
 
-      if(!in_array($step,[1,2,3,4,5,6]))
+      if(!in_array($step,[1,2,3,4,5,6,'end']))
       {
         throw new CHttpException(404, 'Error');
       }
