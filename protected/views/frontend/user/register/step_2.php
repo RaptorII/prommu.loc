@@ -1,6 +1,10 @@
-<?php /*if (count($viData['errors'])): ?>
+<?php
+/*
+  if (count($viData['errors'])): ?>
   <div class="danger">- <?= implode('<br>- ', $viData['errors']); ?></div>
-<?php endif;*/ ?>
+<?php endif;
+ */
+?>
     <form id="register_form">
 
         <div class="login-wrap">

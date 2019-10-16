@@ -92,7 +92,7 @@ h6.login__header {
 }
 
 .login__logo .logo {
-    /*width: 142px;*/
+    width: 70%;
     /*height: 40px;*/
     display: block;
     margin: 0 auto;
@@ -239,7 +239,7 @@ h6.login__header {
 }
 .btn-orange:hover{
     background: var(--color-orange-2);
-    border-color: var(--color-orange-2);
+    border-color: var(--color-grey);
 }
 .btn-green:hover {
     background: var(--color-green-2);
