@@ -426,3 +426,13 @@ h6.login__header {
     z-index: 0;
 }
 
+@media (max-width: 540px) {
+    .login-wrap,
+    .login__txt,
+    .login {
+        width: 300px;
+    }
+    .login__txt{
+        display: none;
+    }
+}

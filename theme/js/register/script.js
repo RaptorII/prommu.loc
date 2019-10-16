@@ -2,7 +2,7 @@
 /**
  *
  * @type {RegisterPage}
- *
+ */
 var RegisterPage = (function () {
   //
   function RegisterPage()
@@ -50,9 +50,9 @@ var RegisterPage = (function () {
   /*
   *
   */
-  // $(document).ready(function () {
-  //   new RegisterPage();
-  // });
+  $(document).ready(function () {
+    new RegisterPage();
+  });
 
 
 document.addEventListener('DOMContentLoaded', function(){
