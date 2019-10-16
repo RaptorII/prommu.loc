@@ -1,39 +1,6 @@
-//
-<?// if (count($viData['errors'])): ?>
-<!--    <div class="danger">- --><?//= implode('<br>- ', $viData['errors']); ?><!--</div>-->
-<?// endif; ?>
-<!--<form id="register_form">-->
-<!--    --><?// if (Share::isApplicant($viData['input']['type'])): ?>
-<!--        <label>-->
-<!--            <span>Имя</span>-->
-<!--            <input type="text" value="--><?//= $viData['input']['name'] ?><!--" name="name" class="input-name" autocomplete="off"-->
-<!--                   placeholder="Александр">-->
-<!--        </label>-->
-<!--        <br>-->
-<!--        <label>-->
-<!--            <span>Фамилия</span>-->
-<!--            <input type="text" value="--><?//= $viData['input']['surname'] ?><!--" name="surname" class="input-surname"-->
-<!--                   autocomplete="off" placeholder="Иванов">-->
-<!--        </label>-->
-<!--    --><?// elseif (Share::isEmployer($viData['input']['type'])): ?>
-<!--        <label>-->
-<!--            <span>Название компании</span>-->
-<!--            <input type="text" value="--><?//= $viData['input']['name'] ?><!--" name="name" class="input-name" autocomplete="off"-->
-<!--                   placeholder="Евразия">-->
-<!--        </label>-->
-<!--    --><?// endif; ?>
-<!--    <br>-->
-<!--    <label>-->
-<!--        <span>Мобильный телефон или электронная почта</span>-->
-<!--        <input type="text" value="--><?//= $viData['input']['login'] ?><!--" name="login" class="input-login" autocomplete="off"-->
-<!--               placeholder="+7-123-456-78-90 или your-email@mail.ru">-->
-<!--    </label>-->
-<!--</form>-->
-//
-
-<?php
-?>
-
+<?php /*if (count($viData['errors'])): ?>
+  <div class="danger">- <?= implode('<br>- ', $viData['errors']); ?></div>
+<?php endif;*/ ?>
     <form id="register_form">
 
         <div class="login-wrap">
@@ -44,15 +11,20 @@
             <h6 class="login__header">Введите данные</h6>
 
             <div class="login__container">
-
+                <?php if (Share::isApplicant($viData['input']['type'])): ?>
+                  <p>
+                    <input type="text" name="name" value="<?=$viData['input']['name']?>" class="input-name" autocomplete="off" placeholder="Имя">
+                  </p>
+                  <p>
+                    <input type="text" name="surname" value="<?=$viData['input']['surname']?>" class="input-surname" autocomplete="off" placeholder="Фамилия">
+                  </p>
+                <?php elseif (Share::isEmployer($viData['input']['type'])): ?>
+                  <p>
+                    <input type="text" name="name" value="<?=$viData['input']['name']?>" class="input-company" autocomplete="off" placeholder="Название компании">
+                  </p>
+                <?php endif; ?>
                 <p>
-                    <input type="text" placeholder="Имя">
-                </p>
-                <p>
-                    <input type="text" placeholder="Фамилия">
-                </p>
-                <p>
-                    <input type="text" placeholder="Телефон или e-mail">
+                    <input type="text" name="login" value="<?=$viData['input']['login']?>" class="input-login" autocomplete="off" placeholder="Телефон или e-mail">
                 </p>
 
                 <p class="input">

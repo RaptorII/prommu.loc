@@ -12,13 +12,36 @@ var RegisterPage = (function () {
   //
   RegisterPage.prototype.init = function ()
   {
-    let self = this;
-    // step 1
-    $('body').on('change','#register_form .input-type',function(){
+    let self = this,
+        firstInputCompany = true;
+
+    $('body').on('change','#register_form .input-type',function(){ // step 1
       let data = self.getData();
       self.send(data);
+    })
+    .on('input','#register_form .input-name, #register_form .input-surname',function(){ // step 2
+      let v = this.value.replace(/[0-9]/g,'');
+
+      this.value = (v.charAt(0).toUpperCase() + v.slice(1).toLowerCase());
+      v = this.value.trim();
+      !v.length ? $(this).addClass('error') : $(this).removeClass('error');
+    })
+    .on('input','#register_form .input-company',function(){
+      let v = this.value;
+
+      this.value = (v.charAt(0).toUpperCase() + v.slice(1));
+      v = this.value.trim();
+
+      if(v.length>=4)
+      {
+        firstInputCompany = false;
+      }
+
+      ((!v.length || v.length<3) && !firstInputCompany)
+          ? $(this).addClass('error')
+          : $(this).removeClass('error');
+
     });
-    //
   }
   // отправляем аяксом
   RegisterPage.prototype.send = function ()
