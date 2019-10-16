@@ -38,22 +38,24 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . '/snap/snap.
             <h6 class="login__header">Выберите, что вас интересует</h6>
 
             <div class="login__container">
-                <p>
-                    <a class="btn-orange" href="/user/register?step=2">
-                        Я ищу работу
-                        <span class="txt">
-                            Я "Валера" и не заметил, что сайт для поиска временной работы, и я ищу работу мечты
-                        </span>
-                    </a>
+
+                <p class="input">
+                    <label for="radio-1" class="btn-orange">Я ищу работу</label>
+                    <label class="txt">
+                        Я "Валера" и не заметил, что сайт для поиска
+                        временной работы, и я ищу работу мечты
+                    </label>
+                    <input type="radio" name="radio" id="radio-1">
                 </p>
-                <p>
-                    <a class="btn-orange" href="/user/register?step=3">
-                        Я ищу сотрудников
-                        <span class="txt">
-                            Хочу разместить вакансии и найти сотрудников
-                        </span>
-                    </a>
+
+                <p class="input">
+                    <label for="radio-2" class="btn-orange">Я ищу сотрудников</label>
+                    <label class="txt">
+                        Хочу разместить вакансии и найти сотрудников
+                    </label>
+                    <input type="radio" name="radio" id="radio-2">
                 </p>
+
             </div>
         </div>
     </form>

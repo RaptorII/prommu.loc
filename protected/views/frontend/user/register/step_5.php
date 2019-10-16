@@ -8,47 +8,51 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . '/snap/snap.
         <a class="logo" href="/"></a>
     </div>
 
-    <div class="login-wrap">
+    <form id="register_form">
 
-        <svg x="0" y="0" class="svg-bg" />
+        <div class="login-wrap">
 
-        <h2 class="login__header">Регистрация</h2>
-        <h6 class="login__header">Подтвердите e-mail</h6>
+            <svg x="0" y="0" class="svg-bg" />
 
-        <div class="login__container">
-            <p>
-                Введите код из письма
-            </p>
+            <h2 class="login__header">Регистрация</h2>
+            <h6 class="login__header">Подтвердите e-mail</h6>
 
-            <p>
-                <input type="text" placeholder="Введите код из письма">
-            </p>
+            <div class="login__container">
+                <p>
+                    Введите код из письма
+                </p>
 
-            <p>
-                Код подтверждения отправлен на:
-            </p>
-            <p>valeriyTerkin@mail.ru</p>
+                <p>
+                    <input type="text" placeholder="Введите код из письма">
+                </p>
 
-            <p>
-                <a href="">
-                    Отправить повторно
-                </a>
-            </p>
+                <p>
+                    Код подтверждения отправлен на:
+                </p>
+                <p>valeriyTerkin@mail.ru</p>
 
-            <p>
-                <a class="btn-green" href="/user/register?step=6">
-                    Продолжить
-                </a>
-            </p>
+                <p>
+                    <a href="">
+                        Отправить повторно
+                    </a>
+                </p>
 
-            <p>
-                <a class= "back__away" href="#" onClick="backAway()">
-                    Вернуться назад и отредактировать данные
-                </a>
-            </p>
+                <p class="input">
+                    <label for="radio-3" class="btn-green">Продолжить</label>
+                    <input type="radio" name="radio" id="radio-3">
+                </p>
 
+                <p>
+                    <a class= "back__away" href="#" onClick="backAway()">
+                        Вернуться назад и отредактировать данные
+                    </a>
+                </p>
+
+            </div>
         </div>
-    </div>
+
+    </form>
+
     <div class="login__txt">
         <p>
             Регистрация и авторизация означает согласие с

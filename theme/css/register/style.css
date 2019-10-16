@@ -86,7 +86,7 @@ h2.login__header {
     padding-top: 40px;
 }
 h6.login__header {
-    font-size: 13px;
+    font-size: 16px;
     font-weight: 400;
     padding: 0 10px 20px 10px;
 }
@@ -109,16 +109,18 @@ h6.login__header {
 
 }
 .login__container .txt{
-    font-size: 13px;
+    font-size: 15px;
     display: block;
     text-transform: none;
     color: var(--color-black);
     font-weight: normal;
+    text-align: center;
 }
 .login-wrap {
     width: 400px;
     position: absolute;
     border: 1px solid var(--color-l-grey);
+    border-radius: 4px;
     top: 50%;
     transform: translateY(-50%);
 }
@@ -225,6 +227,10 @@ h6.login__header {
 
 .login input[type="submit"]:hover {
     background: var(--color-green);
+}
+
+.login .input input {
+    display: none;
 }
 
 /* Buttons' focus effect */
@@ -417,15 +423,20 @@ h6.login__header {
 /* svg
 */
 .svg-bg {
-    opacity: 0.35;
+    opacity: .4;
     height: 100%;
     width: 100%;
     position: absolute;
+    /*background: var(--color-green);*/
     top: 0;
     left: 0;
     z-index: 0;
 }
 
+
+
+/** Media
+ */
 @media (max-width: 540px) {
     .login-wrap,
     .login__txt,

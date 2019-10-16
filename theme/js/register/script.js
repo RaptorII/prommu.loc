@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 y: random(0, height),
                 width: random(20, 120),
                 height: random(30, 420),
-                opacity: Math.random()
+                opacity: Math.random() / 2 ,
             }, 20000, mina.easeinout);
         });
     }
