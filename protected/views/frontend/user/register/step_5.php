@@ -2,12 +2,6 @@
 Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . '/snap/snap.svg-min.js');
 ?>
 
-<div class="login">
-
-    <div class="login__logo">
-        <a class="logo" href="/"></a>
-    </div>
-
     <form id="register_form">
 
         <div class="login-wrap">
@@ -53,13 +47,3 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . '/snap/snap.
 
     </form>
 
-    <div class="login__txt">
-        <p>
-            Регистрация и авторизация означает согласие с
-            <a href="">“Лицензионным соглашением“</a>,
-            <a href="">“Политикой в области обработки и обеспечения безопасности персональных данных“</a>,
-            а также
-            <a href="">“Соглашением об оказании услуг по содействию в трудоустройстве“</a>.
-        </p>
-    </div>
-</div>

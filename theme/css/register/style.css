@@ -92,12 +92,12 @@ h6.login__header {
 }
 
 .login__logo .logo {
-    width: 142px;
-    height: 40px;
+    /*width: 142px;*/
+    /*height: 40px;*/
     display: block;
-    margin: 0px auto;
+    margin: 0 auto;
     border: 0;
-    background: url(/theme/pic/logo-sm.png) no-repeat;
+    /*background: url(/theme/pic/logo-sm.png) no-repeat;*/
 }
 
 .login__container {
@@ -445,5 +445,16 @@ h6.login__header {
     }
     .login__txt{
         display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .login-wrap{
+        position: relative;
+        top: auto;
+        transform: none;
+    }
+    .login__logo {
+        margin-bottom: 50px;
     }
 }
