@@ -45,7 +45,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . '/snap/snap.
                         Я "Валера" и не заметил, что сайт для поиска
                         временной работы, и я ищу работу мечты
                     </label>
-                    <input type="radio" name="radio" id="radio-1">
+                    <input type="radio" name="type" value="<?= UserProfile::$APPLICANT ?>" id="radio-1" class="input-type">
                 </p>
 
                 <p class="input">
@@ -53,7 +53,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . '/snap/snap.
                     <label class="txt">
                         Хочу разместить вакансии и найти сотрудников
                     </label>
-                    <input type="radio" name="radio" id="radio-2">
+                    <input type="radio" name="type" value="<?= UserProfile::$EMPLOYER ?>" id="radio-2" class="input-type">
                 </p>
 
             </div>
