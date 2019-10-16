@@ -11,6 +11,7 @@ class UserRegister
   public static $SOUL = 987654123;
   /**
    * @return int
+   * получаем шаг регистрации из куков, или устанавливаем шаг 1
    */
   public function getStep()
   {
@@ -33,6 +34,7 @@ class UserRegister
   }
   /**
    * @param $step
+   * устанавливаем новый шаг регистрации в куки
    */
   public function setStep($step)
   {
@@ -40,9 +42,37 @@ class UserRegister
     Yii::app()->request->cookies['urs'] = new CHttpCookie('urs', md5($value . self::$SOUL));
   }
   /**
+   * удаляем шаг из куков
+   */
+  public static function clearStep()
+  {
+    unset(Yii::app()->request->cookies['urs']);
+  }
+  /**
+   * @return bool
+   * проверка запуска процесса регистрации
+   */
+  public static function beginRegister()
+  {
+    $rq = Yii::app()->request;
+    if(!isset($rq->cookies['PHPSESSID']))
+      return false;
+
+    $hash = $rq->cookies['PHPSESSID']->value;
+
+    $result = Yii::app()->db->createCommand()
+      ->select('count(id)')
+      ->from('user_register')
+      ->where('hash=:hash',[':hash'=>$hash])
+      ->queryScalar();
+
+    return boolval($result);
+  }
+  /**
    * @param $step - integer
    * @param $data - array
    * @return array - errors
+   * Проверка полей регистрации
    */
   public function setDataByStep($step, $data)
   {
@@ -68,6 +98,7 @@ class UserRegister
   /**
    * @param $arr - array(field => value)
    * @return bool
+   * запись данных пользователя
    */
   private function setData($arr)
   {
@@ -90,6 +121,7 @@ class UserRegister
   }
   /**
    * @return mixed
+   * получение данных по юзеру
    */
   public function getData()
   {

@@ -71,12 +71,25 @@ class AppController extends CController
 
 
         // модель данных для view шаблона
-        if( Share::$UserProfile->type == 2 ) $view = new ViewModelApplic();
-        elseif( Share::$UserProfile->type == 3 ) $view = new ViewModelEmpl();
+        if( Share::$UserProfile->type == UserProfile::$APPLICANT ) $view = new ViewModelApplic();
+        elseif( Share::$UserProfile->type == UserProfile::$EMPLOYER ) $view = new ViewModelEmpl();
         else $view = new ViewModel();
         $this->ViewModel = $view;
-
-
+        //
+        // если запущен механизм регистрации - то отправляем на регу, пока не зарегается
+        if(!Share::isGuest())
+        {
+          UserRegister::clearStep();
+        }
+        elseif (
+          strripos($_SERVER['REQUEST_URI'],MainConfig::$PAGE_REGISTER)===false
+          &&
+          UserRegister::beginRegister()
+        )
+        {
+          $this->redirect(MainConfig::$PAGE_REGISTER);
+        }
+        //
         // получаем css стили из manifest-a
         $this->obtainCss();
     }
