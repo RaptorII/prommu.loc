@@ -26,10 +26,9 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . '/snap/snap.
             </p>
             <p>+3 745 123-32-32</p>
 
-            <p>
-                <a class="btn-green" href="/user/register?step=6">
-                    Продолжить
-                </a>
+            <p class="input">
+                <label for="radio-4" class="btn-green">Продолжить</label>
+                <input type="radio" name="radio" id="radio-4">
             </p>
 
             <p>

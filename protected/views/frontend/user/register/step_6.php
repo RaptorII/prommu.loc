@@ -24,10 +24,9 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . '/snap/snap.
                 <input type="password" placeholder="и введите повторно">
             </p>
 
-            <p>
-                <a class="btn-green" href="/user/register?step=end">
-                    Продолжить
-                </a>
+            <p class="input">
+                <label for="radio-6" class="btn-green">Продолжить</label>
+                <input type="radio" name="radio" id="radio-6">
             </p>
 
             <p>

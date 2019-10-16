@@ -38,8 +38,8 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . '/snap/snap.
                 </p>
 
                 <p class="input">
-                    <label for="radio-3" class="btn-green">Продолжить</label>
-                    <input type="radio" name="radio" id="radio-3">
+                    <label for="radio-5" class="btn-green">Продолжить</label>
+                    <input type="radio" name="radio" id="radio-5">
                 </p>
 
                 <p>
