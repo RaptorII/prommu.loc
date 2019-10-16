@@ -1,5 +1,4 @@
 <?php
-Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . '/snap/snap.svg-min.js');
 ?>
 
 <form id="register_form">

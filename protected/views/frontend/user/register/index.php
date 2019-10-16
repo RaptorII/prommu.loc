@@ -16,6 +16,9 @@
     $gcs->registerCoreScript('jquery');
     $gcs->registerCssFile($bUrl . MainConfig::$CSS  . 'register/style.css');
     $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'register/script.js', CClientScript::POS_END);
+
+    Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . '/snap/snap.svg-min.js');
+
   ?>
 </head>
 <body>
