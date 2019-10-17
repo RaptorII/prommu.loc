@@ -9,21 +9,21 @@
     <?php if (Share::isApplicant($viData['input']['type'])): ?>
       <p>
         <input type="text" name="name" value="<?=$viData['input']['name']?>" class="input-name" autocomplete="off" placeholder="Имя">
-        <?php if (!empty($viData['error']['name'])): ?>
-          <span class="login__error"><?=$viData['error']['name']?></span>
+        <?php if (!empty($viData['errors']['name'])): ?>
+          <span class="login__error"><?=$viData['errors']['name']?></span>
         <?php endif; ?>
       </p>
       <p>
         <input type="text" name="surname" value="<?=$viData['input']['surname']?>" class="input-surname" autocomplete="off" placeholder="Фамилия">
-        <?php if (!empty($viData['error']['surname'])): ?>
-          <span class="login__error"><?=$viData['error']['surname']?></span>
+        <?php if (!empty($viData['errors']['surname'])): ?>
+          <span class="login__error"><?=$viData['errors']['surname']?></span>
         <?php endif; ?>
       </p>
     <?php elseif (Share::isEmployer($viData['input']['type'])): ?>
       <p>
         <input type="text" name="name" value="<?=$viData['input']['name']?>" class="input-company" autocomplete="off" placeholder="Название компании">
-        <?php if (!empty($viData['error']['name'])): ?>
-          <span class="login__error"><?=$viData['error']['name']?></span>
+        <?php if (!empty($viData['errors']['name'])): ?>
+          <span class="login__error"><?=$viData['errors']['name']?></span>
         <?php endif; ?>
       </p>
     <?php endif; ?>
@@ -35,8 +35,8 @@
         class="input-login"
         autocomplete="off"
         placeholder="Телефон или e-mail">
-      <?php if (!empty($viData['error']['login'])): ?>
-        <span class="login__error"><?=$viData['error']['login']?></span>
+      <?php if (!empty($viData['errors']['login'])): ?>
+        <span class="login__error"><?=$viData['errors']['login']?></span>
       <?php endif; ?>
     </p>
 

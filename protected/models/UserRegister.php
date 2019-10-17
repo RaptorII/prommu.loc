@@ -10,6 +10,9 @@ class UserRegister
 {
   public static $SOUL = 987654123;
   public static $STRLENGTH = 64;
+  //
+  public static $LOGIN_TYPE_EMAIL = 0;
+  public static $LOGIN_TYPE_PHONE = 1;
   /**
    * @return int
    * получаем шаг регистрации из куков, или устанавливаем шаг 1
@@ -134,7 +137,7 @@ class UserRegister
         {
           $data['login'] = '7' . $value;
         }
-        elseif (strlen($value)==11 && in_array(strval($value){0}, ['7','8'])) // RF
+        elseif (strlen($value)==11 && in_array(substr($value,0,1), ['7','8'])) // RF
         {
           $data['login'] = $value;
         }
@@ -144,7 +147,8 @@ class UserRegister
           in_array(substr($value,0,3),['380','375'])
         ) // Ukraine | Belarus
         {
-          $data['login'] = $value;
+          $arData['login'] = $value;
+          $arData['login_type'] = self::$LOGIN_TYPE_PHONE;
         }
         else
         {
@@ -154,6 +158,7 @@ class UserRegister
       else
       {
         $arData['login'] = filter_var($data['login'],FILTER_SANITIZE_EMAIL);
+        $arData['login_type'] = self::$LOGIN_TYPE_EMAIL;
       }
     }
 

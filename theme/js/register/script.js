@@ -16,18 +16,31 @@ var RegisterPage = (function () {
   {
     let self = this;
 
-    $('body').on( // step 1
-      'change','#register_form .input-type',
-      function(){ self.send() })
-    .on('input','#register_form .input-name, #register_form .input-surname',function(){ // step 2
-      self.checkName(this);
-    })
-    .on('input','#register_form .input-company',function(){
-      self.checkCompany(this);
-    })
-    .on('input','#register_form .input-login',function(){
-      self.checkText(this);
-    });
+    $('body')
+      .on( // step 1
+        'change',
+        '#register_form .input-type',
+        function(){ self.send() })
+      .on( // step 2
+        'input',
+        '#register_form .input-name, #register_form .input-surname',
+        function(){ self.checkName(this) })
+      .on(
+        'input',
+        '#register_form .input-company',
+        function(){ self.checkCompany(this) })
+      .on(
+        'input',
+        '#register_form .input-login',
+        function(){ self.checkText(this) })
+      .on(
+        'click',
+        '#register_form .back__away',
+        function(){
+          console.log(111);
+        });
+    //
+
     //
     $('#register_form').submit(function(e){
       let btn = $(this).find('button'),
@@ -146,7 +159,7 @@ var RegisterPage = (function () {
       obj.attr({opacity: Math.random(), transform: 'r30'});
     }
     self.svgPulse(s,width,height);
-    setInterval(function () { self.svgPulse() }, 20000);
+    setInterval(function () { self.svgPulse(s,width,height) }, 20000);
   },
   //
   RegisterPage.prototype.getRandom = function (min, max)
