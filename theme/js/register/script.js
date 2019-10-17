@@ -5,6 +5,8 @@
  */
 var RegisterPage = (function () {
   //
+  RegisterPage.prototype.firstInputCompany = true;
+  //
   function RegisterPage()
   {
     this.init();
@@ -12,51 +14,45 @@ var RegisterPage = (function () {
   //
   RegisterPage.prototype.init = function ()
   {
-    let self = this,
-        firstInputCompany = true;
+    let self = this;
 
-    $('body').on('change','#register_form .input-type',function(){ // step 1
-      self.send();
-    })
+    $('body').on( // step 1
+      'change','#register_form .input-type',
+      function(){ self.send() })
     .on('input','#register_form .input-name, #register_form .input-surname',function(){ // step 2
-      let v = this.value.replace(/[0-9]/g,'');
-
-      this.value = (v.charAt(0).toUpperCase() + v.slice(1).toLowerCase());
-      v = this.value.trim();
-      !v.length ? $(this).addClass('error') : $(this).removeClass('error');
+      self.checkName(this);
     })
     .on('input','#register_form .input-company',function(){
-      let v = this.value;
-
-      this.value = (v.charAt(0).toUpperCase() + v.slice(1));
-      v = this.value.trim();
-
-      if(v.length>=4)
-      {
-        firstInputCompany = false;
-      }
-
-      ((!v.length || v.length<3) && !firstInputCompany)
-          ? $(this).addClass('error')
-          : $(this).removeClass('error');
-
+      self.checkCompany(this);
     });
     //
-    $('#register_form').submit(function(){
-        let step = this.dataset.step;
+    $('#register_form').submit(function(e){
+      let btn = $(this).find('button'),
+          step = Number($(btn).data('step'));
 
-        console.log(this);
-        //self.send();
-        return false;
+      e.preventDefault();
+      if(
+        step==2
+        &&
+        self.checkName($('#register_form .input-name'))
+        &&
+        self.checkName($('#register_form .input-surname'))
+        &&
+        self.checkCompany($('#register_form .input-company'))
+        &&
+        self.checkText($('#register_form .input-login'))
+      )
+      {
+        self.send();
+      }
     });
   }
   // отправляем аяксом
-  RegisterPage.prototype.send = function ()
-  {
+  RegisterPage.prototype.send = function () {
     let arForm = $('#register_form').serializeArray(),
       result = {};
 
-    $(arForm).each(function(){
+    $(arForm).each(function () {
       result[this.name] = this.value;
     });
 
@@ -64,11 +60,58 @@ var RegisterPage = (function () {
     $.ajax({
       type: 'POST',
       data: {data: JSON.stringify(result)},
-      success: function (r){
+      success: function (r) {
         $('body').html(r).removeClass('prmu-load');
       }
     });
-  };
+  }
+  // проверка текстового поля
+  RegisterPage.prototype.checkName = function (input)
+  {
+    if(!$(input).is('*'))
+      return true;
+
+    let v = $(input).val().replace(/[0-9]/g,'');
+
+    $(input).val((v.charAt(0).toUpperCase() + v.slice(1).toLowerCase()));
+    v = $(input).val().trim();
+    !v.length ? $(input).addClass('error') : $(input).removeClass('error');
+
+    return !v.length;
+  }
+  // проверка компании
+  RegisterPage.prototype.checkCompany = function (input)
+  {
+    if(!$(input).is('*'))
+      return true;
+
+    let v = $(input).val();
+
+    $(input).val((v.charAt(0).toUpperCase() + v.slice(1)));
+    v = $(input).val().trim();
+
+    if(v.length>=4)
+    {
+      this.firstInputCompany = false;
+    }
+
+    let result = ((!v.length || v.length<3) && !this.firstInputCompany);
+    result ? $(input).addClass('error') : $(input).removeClass('error');
+
+    return result;
+  }
+  // простая проверка на пустоту
+  RegisterPage.prototype.checkText = function (input)
+  {
+    if(!$(input).is('*'))
+      return true;
+
+    let v = $(input).val().trim();
+
+    v.length ? $(input).addClass('error') : $(input).removeClass('error');
+
+    return v.length;
+  }
   //
   return RegisterPage;
   }());

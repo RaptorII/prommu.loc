@@ -1,10 +1,4 @@
-<?php if (count($viData['errors'])): ?>
-  <div class="danger">- <?= implode('<br>- ', $viData['errors']); ?></div>
-
 <?php
-
-    endif;
-
 //    echo'<pre>';
 //    print_r ($viData);
 //    echo'</pre>';
@@ -22,61 +16,33 @@
                 <?php if (Share::isApplicant($viData['input']['type'])): ?>
                   <p>
                     <input type="text" name="name" value="<?=$viData['input']['name']?>" class="input-name" autocomplete="off" placeholder="Имя">
-                    <?php
-                      if (!$viData['error']) {
-                          ?>
-                          <span class="login__error">
-                                <?='Ой лишенько! Трапилась халепа! Ви ввели неправильне ім\'я або некорректні символи.';?>
-                            </span>
-                          <?php
-                      }
-                    ?>
+                    <?php if (!empty($viData['error']['name'])): ?>
+                      <span class="login__error"><?=$viData['error']['name']?></span>
+                    <?php endif; ?>
                   </p>
                   <p>
                     <input type="text" name="surname" value="<?=$viData['input']['surname']?>" class="input-surname" autocomplete="off" placeholder="Фамилия">
-                    <?php
-                      if (!$viData['error']) {
-                          ?>
-                          <span class="login__error">
-                                <?='Ой лишенько! Трапилась халепа! Ви ввели неправильне ім\'я або некорректні символи.';?>
-                            </span>
-                          <?php
-                      }
-                    ?>
+                    <?php if (!empty($viData['error']['surname'])): ?>
+                      <span class="login__error"><?=$viData['error']['surname']?></span>
+                    <?php endif; ?>
                   </p>
                 <?php elseif (Share::isEmployer($viData['input']['type'])): ?>
                   <p>
                     <input type="text" name="name" value="<?=$viData['input']['name']?>" class="input-company" autocomplete="off" placeholder="Название компании">
-                      <?php
-                        if (!$viData['error']) {
-                            ?>
-                            <span class="login__error">
-                                <?='Ой лишенько! Трапилась халепа! Ви ввели неправильне ім\'я або некорректні символи.';?>
-                            </span>
-                            <?php
-                        }
-                      ?>
+                    <?php if (!empty($viData['error']['name'])): ?>
+                      <span class="login__error"><?=$viData['error']['name']?></span>
+                    <?php endif; ?>
                   </p>
                 <?php endif; ?>
                 <p>
-                    <input type="text" name="login" value="<?=$viData['input']['login']?>" class="input-login" autocomplete="off" placeholder="Телефон или e-mail">
-                    <?php
-                      if (!$viData['error']) {
-                        ?>
-                        <span class="login__error">
-                                <?='Ой лишенько! Трапилась халепа! Ви ввели неправильне ім\'я або некорректні символи.';?>
-                            </span>
-                        <?php
-                      }
-                    ?>
+                  <input type="text" name="login" value="<?=$viData['input']['login']?>" class="input-login" autocomplete="off" placeholder="Телефон или e-mail">
+                  <?php if (!empty($viData['error']['login'])): ?>
+                    <span class="login__error"><?=$viData['error']['login']?></span>
+                  <?php endif; ?>
                 </p>
 
                 <p class="input">
                   <button type="submit" class="btn-green" data-step="2">Продолжить</button>
-                  <?/*
-                    <label for="radio-3" class="btn-green">Продолжить</label>
-                    <input type="radio" name="radio" id="radio-3">
-                  */?>
                 </p>
 
                 <div class="login__social-container">
