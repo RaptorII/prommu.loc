@@ -42,15 +42,10 @@
                             class="input-login input__error"
                             autocomplete="off"
                             placeholder="Телефон или e-mail">
-                    <?php
-                    if (!$viData['error']) {
-                        ?>
-                        <span class="login__error">
-                                <?= 'Ой лишенько! Трапилась халепа! Ви ввели неправильне ім\'я або некорректні символи.'; ?>
-                            </span>
-                        <?php
-                    }
-                    ?>
+
+                    <?php if (!empty($viData['error']['login'])): ?>
+                        <span class="login__error"><?=$viData['error']['login']?></span>
+                    <?php endif; ?>
                 </p>
 
                 <p class="input">
