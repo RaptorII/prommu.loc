@@ -1,10 +1,6 @@
-<?php
-/*
-  if (count($viData['errors'])): ?>
+<?php if (count($viData['errors'])): ?>
   <div class="danger">- <?= implode('<br>- ', $viData['errors']); ?></div>
-<?php endif;
- */
-?>
+<?php endif; ?>
     <form id="register_form">
 
         <div class="login-wrap">
@@ -32,8 +28,11 @@
                 </p>
 
                 <p class="input">
+                  <button type="submit" class="btn-green" data-step="2">Продолжить</button>
+                  <?/*
                     <label for="radio-3" class="btn-green">Продолжить</label>
                     <input type="radio" name="radio" id="radio-3">
+                  */?>
                 </p>
 
                 <div class="login__social-container">

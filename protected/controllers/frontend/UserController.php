@@ -566,8 +566,12 @@ class UserController extends AppController
       if(Yii::app()->getRequest()->isAjaxRequest)
       {
         $post = Yii::app()->getRequest()->getParam('data');
-        $data['input'] = json_decode(
+        $post = json_decode(
           $post, true, 5, JSON_BIGINT_AS_STRING);
+        foreach ($post as $key => $v)
+        {
+          $data['input'][$key] = $v;
+        }
         $data['errors'] = $model->setDataByStep($step, $data['input']);
         if(!count($data['errors']))
         {

@@ -16,8 +16,7 @@ var RegisterPage = (function () {
         firstInputCompany = true;
 
     $('body').on('change','#register_form .input-type',function(){ // step 1
-      let data = self.getData();
-      self.send(data);
+      self.send();
     })
     .on('input','#register_form .input-name, #register_form .input-surname',function(){ // step 2
       let v = this.value.replace(/[0-9]/g,'');
@@ -42,31 +41,34 @@ var RegisterPage = (function () {
           : $(this).removeClass('error');
 
     });
+    //
+    $('#register_form').submit(function(){
+        let step = this.dataset.step;
+
+        console.log(this);
+        //self.send();
+        return false;
+    });
   }
   // отправляем аяксом
   RegisterPage.prototype.send = function ()
   {
+    let arForm = $('#register_form').serializeArray(),
+      result = {};
+
+    $(arForm).each(function(){
+      result[this.name] = this.value;
+    });
+
     $('body').addClass('prmu-load');
     $.ajax({
       type: 'POST',
-      data: {data: JSON.stringify(arguments[0])},
+      data: {data: JSON.stringify(result)},
       success: function (r){
         $('body').html(r).removeClass('prmu-load');
       }
     });
   };
-  // собираем данные из инпутов
-  RegisterPage.prototype.getData = function ()
-  {
-    let arForm = $('#register_form').serializeArray(),
-        result = {};
-
-    $(arForm).each(function(){
-      result[this.name] = this.value;
-    })
-
-    return result;
-  }
   //
   return RegisterPage;
   }());

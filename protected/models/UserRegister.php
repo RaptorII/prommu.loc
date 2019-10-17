@@ -9,6 +9,7 @@
 class UserRegister
 {
   public static $SOUL = 987654123;
+  public static $STRLENGTH = 64;
   /**
    * @return int
    * получаем шаг регистрации из куков, или устанавливаем шаг 1
@@ -77,21 +78,88 @@ class UserRegister
   public function setDataByStep($step, $data)
   {
     $arErrors = $arData = [];
+    //
     if($step==1)
     {
       if(!in_array($data['type'],[UserProfile::$EMPLOYER, UserProfile::$APPLICANT]))
       {
-        $arErrors[] = 'Неподходящий тип пользователя';
+        $arErrors['type'] = 'Неподходящий тип пользователя';
       }
       else
       {
         $arData['type'] = $data['type'];
       }
     }
-
-    if(!$this->setData($arData))
+    //
+    if($step==2)
     {
-      $arErrors[] = 'Ошибка записи данных';
+      $field = Share::isApplicant($data['type']) ? 'Имя' : 'Название компании';
+      $value = filter_var($data['name'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $value = trim($value);
+      if(strlen($value) > self::$STRLENGTH)
+      {
+        $arErrors['name'] = "В поле '{$field}' указано слишком много символов";
+      }
+      elseif(!strlen($value))
+      {
+        $arErrors['name'] = "В поле '{$field}' есть некорректные символы или поле пустое";
+      }
+      else
+      {
+        $arData['name'] = $value;
+      }
+
+      if(Share::isApplicant($data['type']))
+      {
+        $value = filter_var($data['surname'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $value = trim($value);
+        if(strlen($value) > self::$STRLENGTH)
+        {
+          $arErrors['surname'] = "В поле 'Фамилия' указано слишком много символов";
+        }
+        elseif(!strlen($value))
+        {
+          $arErrors['surname'] = "В поле 'Фамилия' есть некорректные символы или поле пустое";
+        }
+        else
+        {
+          $arData['surname'] = $value;
+        }
+      }
+
+      if(!filter_var($data['login'],FILTER_VALIDATE_EMAIL))
+      {
+        $value = preg_replace("/[^0-9]/", '', $data['login']);
+        if(strlen($value)==10) // RF
+        {
+          $data['login'] = '7' . $value;
+        }
+        elseif (strlen($value)==11 && in_array(strval($value){0}, ['7','8'])) // RF
+        {
+          $data['login'] = $value;
+        }
+        elseif(
+          strlen($value)==13
+          &&
+          in_array(substr($value,0,3),['380','375'])
+        ) // Ukraine | Belarus
+        {
+          $data['login'] = $value;
+        }
+        else
+        {
+          $arErrors['login'] = "Введите действительный номер мобильного телефона или эл. адрес";
+        }
+      }
+      else
+      {
+        $arData['login'] = filter_var($data['login'],FILTER_SANITIZE_EMAIL);
+      }
+    }
+
+    if(!count($arErrors) && !$this->setData($arData))
+    {
+      $arErrors['system'] = 'Ошибка записи данных';
     }
     return $arErrors;
   }
@@ -103,7 +171,7 @@ class UserRegister
   private function setData($arr)
   {
     $rq = Yii::app()->request;
-    if(!count($arr) || !isset($rq->cookies['PHPSESSID']))
+    if(!isset($rq->cookies['PHPSESSID']))
       return false;
 
     $hash = $rq->cookies['PHPSESSID']->value;
