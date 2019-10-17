@@ -35,10 +35,22 @@
                   </p>
                 <?php endif; ?>
                 <p>
-                  <input type="text" name="login" value="<?=$viData['input']['login']?>" class="input-login" autocomplete="off" placeholder="Телефон или e-mail">
-                  <?php if (!empty($viData['error']['login'])): ?>
-                    <span class="login__error"><?=$viData['error']['login']?></span>
-                  <?php endif; ?>
+                    <input
+                            type="text"
+                            name="login"
+                            value="<?=$viData['input']['login']?>"
+                            class="input-login input__error"
+                            autocomplete="off"
+                            placeholder="Телефон или e-mail">
+                    <?php
+                    if (!$viData['error']) {
+                        ?>
+                        <span class="login__error">
+                                <?= 'Ой лишенько! Трапилась халепа! Ви ввели неправильне ім\'я або некорректні символи.'; ?>
+                            </span>
+                        <?php
+                    }
+                    ?>
                 </p>
 
                 <p class="input">

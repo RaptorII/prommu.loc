@@ -163,7 +163,6 @@ h6.login__header {
 .login__error {
     font-size: 13px;
     position: absolute;
-    //bottom: 0;
     color: red;
 }
 
@@ -179,6 +178,7 @@ h6.login__header {
     font-weight: 600;
     font-family: inherit;
     font-size: 0.95em;
+    transition: var(--main-trans);
 }
 
 .login input[type="text"],
@@ -193,6 +193,11 @@ h6.login__header {
 .login input[type="email"]:focus,
 .login input[type="password"]:focus {
     border-color: #888;
+}
+
+#register_form .input__error {
+    border: 1px solid red;
+    transition: var(--main-trans);
 }
 
 .btn-green,
