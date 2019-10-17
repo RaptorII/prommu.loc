@@ -182,8 +182,10 @@
                                 </div>
                                 <?php if( Yii::app()->session['au_us_type'] < 2 ): ?>
                                   <div class="enter">
-                                    <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_LOGIN)?>" class="prmu-btn"><span>Вход</span></a>
-                                    <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>" class="prmu-btn"><span>Регистрация</span></a>
+<!--                                    <a href="--><?//=Yii::app()->createUrl(MainConfig::$PAGE_LOGIN)?><!--" class="prmu-btn"><span>Вход</span></a>-->
+                                    <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_LOGIN)?>" class="btn__orange"><span>Вход</span></a>
+<!--                                    <a href="--><?//=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?><!--" class="prmu-btn"><span>Регистрация</span></a>-->
+                                    <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>" class="btn__orange"><span>Регистрация</span></a>
                                   </div>
                                 <?php else: ?>
                                     <div class="small-menu">
