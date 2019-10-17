@@ -68,7 +68,7 @@ var RegisterPage = (function () {
       }
     });
     //
-    self.startSvg();
+    //self.startSvg();
   },
   // отправляем аяксом
   RegisterPage.prototype.send = function () {
@@ -86,7 +86,7 @@ var RegisterPage = (function () {
       data: {data: JSON.stringify(result)},
       success: function (html) {
         $('#register_form').html(html);
-        self.startSvg();
+        //self.startSvg();
         $('body').removeClass('prmu-load');
       }
     });
