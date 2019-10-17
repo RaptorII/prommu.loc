@@ -52,6 +52,7 @@ class Api
                 case 'vacancy_edit' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacancyPublish(); break;
                 case 'vacancy_owner' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacancyOwner(); break;
                 case 'vacancy_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacancyGet(); break;
+                case 'vacancy_promo' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacancyGet(); break;
                 
                 ///PROJECTS
                 case 'projects' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->dataResponse(); break;
