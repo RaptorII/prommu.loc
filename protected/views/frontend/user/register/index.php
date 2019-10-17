@@ -73,9 +73,7 @@
 
         </a>
     </div>
-
-    <?php echo $content; ?>
-
+    <form id="register_form"><?php echo $content; ?></form>
     <div class="login__txt">
         <p>
             Регистрация и авторизация означает согласие с
