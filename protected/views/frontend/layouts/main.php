@@ -329,24 +329,12 @@
                           <div class="enter">
                             <a class="feedback btn__green" href="<?=MainConfig::$PAGE_FEEDBACK?>">Обратная связь</a>
                             <?php if(!in_array(Share::$UserProfile->type, [2,3])): ?>
-                                <?php
-                                /*
-                            	<a href="<?= MainConfig::$PAGE_LOGIN ?>" class="enter__link btn__orange" data-toggle="modal">Вход</a>
-                                    <div class="enter__register">
-                                      <a href="#reg_select" class="enter__register-link enter__link btn__green" onclick="ClearCookie()" data-toggle="modal">Регистрация <i></i></a>
-                                      <ul>
-                                        <li><a href="<?= Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2')) ?>" class="items">Я работодатель</a></li>
-                                        <li><a href="<?= Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1')) ?>" class="items">Я ищу работу</a></li>
-                                      </ul>
-                                    </div>
-                                */
-                                ?>
-                                    <a href="<?= MainConfig::$PAGE_LOGIN ?>" class="reg btn__orange">
-                                        <span>Вход</span>
-                                    </a>
-                                    <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>" class="reg btn__orange">
-                                        <span>Регистрация</span>
-                                    </a>
+                                <a href="<?= MainConfig::$PAGE_LOGIN ?>" class="reg btn__orange">
+                                    <span>Вход</span>
+                                </a>
+                                <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>" class="reg btn__orange">
+                                    <span>Регистрация</span>
+                                </a>
 	                        <? endif; ?>
                           </div>
                       </div>
