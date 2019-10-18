@@ -198,5 +198,18 @@ var RegisterPage = (function () {
 *
 */
 $(document).ready(function () {
+
   new RegisterPage();
+
+  var elems = $('.login-img');
+  elems.each(function(){
+    var elem = $(this);
+    var width = elem.width();
+    var height = elem.height();
+    if(width <= height){
+      elem.addClass(' login-img-vertical ');
+    }else{
+      elem.addClass(' login-img-horizontal ');
+    }
+  })
 });

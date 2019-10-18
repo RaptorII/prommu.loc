@@ -71,7 +71,6 @@ body {
 }
 
 .login__header {
-    background: var(--color-l-grn);
     padding: 20px;
     font-size: 1.4em;
     font-weight: normal;
@@ -117,6 +116,7 @@ h6.login__header {
     text-align: center;
 }
 .login-wrap {
+    background: var(--color-l-grn);
     width: 400px;
     position: absolute;
     border: 1px solid var(--color-l-grey);
@@ -158,12 +158,20 @@ h6.login__header {
 
 .login p {
     padding: 22px 12px;
+}
+.login p.separator,
+.login p.input {
+    padding: 12px;
     position: relative;
 }
 .login__error {
     font-size: 13px;
     position: absolute;
     color: red;
+}
+
+.center {
+    text-align: center;
 }
 
 /*.login a,*/
@@ -198,6 +206,30 @@ h6.login__header {
 #register_form .input__error {
     border: 1px solid red;
     transition: var(--main-trans);
+}
+
+.login__photo {
+    padding-top: 30px;
+}
+.login__photo-img {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 200px;
+    min-height: 150px;
+    min-width: 150px;
+    overflow: hidden;
+    margin: 0 auto;
+    border-radius: 50%;
+    border: 1px solid var(--color-l-grn);
+}
+.login__photo-img .login-img-vertical {
+    max-width: 100%;
+}
+
+.login__photo-img .login-img-horizontal {
+    max-height: 100%;
 }
 
 .btn-green,
