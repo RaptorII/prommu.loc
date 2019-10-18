@@ -157,10 +157,11 @@ h6.login__header {
 }
 
 .login p {
-    padding: 12px;
-}
-.login p + input {
     padding: 22px 12px;
+}
+.login p.separator,
+.login p.input {
+    padding: 12px;
     position: relative;
 }
 .login__error {
