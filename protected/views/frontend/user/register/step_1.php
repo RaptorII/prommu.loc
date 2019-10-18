@@ -26,3 +26,15 @@
 
     </div>
 </div>
+<?php $get = Yii::app()->getRequest(); ?>
+<input type="hidden" class="referer" name="referer" value="<?=$get->getParam('referer')?>">
+<input type="hidden" class="transition" name="transition" value="<?=$get->getParam('transition')?>">
+<input type="hidden" class="canal" name="canal" value="<?=$get->getParam('canal')?>">
+<input type="hidden" class="campaign" name="campaign" value="<?=$get->getParam('campaign')?>">
+<input type="hidden" class="content" name="content" value="<?=$get->getParam('content')?>">
+<input type="hidden" class="keywords" name="keywords" value="<?=$get->getParam('keywords')?>">
+<input type="hidden" class="point" name="point" value="<?=$get->getParam('point')?>">
+<input type="hidden" class="last_referer" name="last_referer" value="<?=$get->getParam('last_referer')?>">
+<input type="hidden" name="ip" value="<?=$_SERVER['HTTP_X_FORWARDED_FOR']?>">
+<input type="hidden" name="pm_source" value="<?=Yii::app()->request->cookies['pm_source']?>">
+<input type="hidden" name="client" value="<?=Yii::app()->request->cookies['_ga']?>">

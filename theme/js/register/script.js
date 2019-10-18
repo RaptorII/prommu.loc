@@ -20,7 +20,10 @@ var RegisterPage = (function () {
       .on( // step 1
         'change',
         '#register_form .input-type',
-        function(){ self.send() })
+        function(){
+          let data = self.getFormData();
+          self.send(data);
+        })
       .on( // step 2
         'input',
         '#register_form .input-name, #register_form .input-surname',
@@ -37,10 +40,11 @@ var RegisterPage = (function () {
         'click',
         '#register_form .back__away',
         function(){
-          console.log(111);
-        });
-    //
+          let btn = $('#register_form').find('button'),
+              step = $(btn).data('step');
 
+          self.send({step:step});
+        });
     //
     $('#register_form').submit(function(e){
       let btn = $(this).find('button'),
@@ -64,26 +68,19 @@ var RegisterPage = (function () {
 
       if(!$('#register_form .input__error').length)
       {
-        self.send();
+        let data = self.getFormData();
+        self.send(data);
       }
     });
     //
     //self.startSvg();
   },
   // отправляем аяксом
-  RegisterPage.prototype.send = function () {
-    let self = this,
-        arForm = $('#register_form').serializeArray(),
-        result = {};
-
-    $(arForm).each(function () {
-      result[this.name] = this.value;
-    });
-
+  RegisterPage.prototype.send = function (data) {
     $('body').addClass('prmu-load');
     $.ajax({
       type: 'POST',
-      data: {data: JSON.stringify(result)},
+      data: {data: JSON.stringify(data)},
       success: function (html) {
         $('#register_form').html(html);
         //self.startSvg();
@@ -180,6 +177,19 @@ var RegisterPage = (function () {
         opacity: Math.random() / 2 ,
       }, 20000, mina.easeinout);
     });
+  },
+  // получение данных с формы
+  RegisterPage.prototype.getFormData = function ()
+  {
+    let self = this,
+        arForm = $('#register_form').serializeArray(),
+        result = {};
+
+    $(arForm).each(function () {
+      result[this.name] = this.value;
+    });
+
+    return result;
   }
   //
   return RegisterPage;

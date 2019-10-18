@@ -566,17 +566,25 @@ class UserController extends AppController
       if(Yii::app()->getRequest()->isAjaxRequest)
       {
         $post = Yii::app()->getRequest()->getParam('data');
-        $post = json_decode(
-          $post, true, 5, JSON_BIGINT_AS_STRING);
-        foreach ($post as $key => $v)
+        $post = json_decode($post, true, 5, JSON_BIGINT_AS_STRING);
+
+        if(isset($post['step']) && in_array($post['step'],[2])) // return button
         {
-          $data['input'][$key] = $v;
+          $model->setStep($post['step']);
+          $view = '/user/register/step_' . $post['step'];
         }
-        $data['errors'] = $model->setDataByStep($step, $data['input']);
-        if(!count($data['errors']))
+        else
         {
-          $view = '/user/register/step_' . ++$step;
-          $model->setStep($step);
+          foreach ($post as $key => $v)
+          {
+            $data['input'][$key] = $v;
+          }
+          $data['errors'] = $model->setDataByStep($step, $data['input']);
+          if(!count($data['errors']))
+          {
+            $view = '/user/register/step_' . ++$step;
+            $model->setStep($step);
+          }
         }
 
         $this->renderPartial($view,['viData'=>$data]);

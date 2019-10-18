@@ -38,8 +38,7 @@ echo '</pre>';
       <p><?=$viData['input']['login']?></p>
     <? endif; ?>
     <p class="input">
-      <label for="radio-4" class="btn-green">Продолжить</label>
-      <input type="radio" name="radio" id="radio-4">
+      <button type="submit" class="btn-green" data-step="2">Продолжить</button>
     </p>
 
     <p>
