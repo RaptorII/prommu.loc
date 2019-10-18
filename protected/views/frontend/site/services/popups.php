@@ -44,13 +44,10 @@
     <p class="form-str1__content-dtext">А для более быстрого поиска персонала для своей вакансии, Вы сможете использовать услугу рассылку СМС сообщений по выбранному персоналу, используя при этом удобные фильтры</p>
     <span class="form-str1__points">по нужному городу</span><br>
     <span class="form-str1__points">по нужным должностям персонала</span>
-    <div class="btn-white-green-2 field-t2-hor">
-      <span class="form-str__btn">
-        <ul class="form-str__btn-list">
-          <li><a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2'))?>" class="item">Я работодатель</a></li>
-          <li><a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1'))?>" class="item">Я ищу работу</a></li>
-        </ul>ЗАРЕГИСТРИРОВАТЬСЯ
-      </span>
+    <div class="field-t2-hor">
+    <span class="form-str__btn btn__orange">
+        <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>"><span>Регистрация</span></a>
+    </span>
     </div>
   </div>
 </div>
@@ -65,14 +62,11 @@
   <div class="form-str1__content">
     <p class="form-str1__content-utext">После регистрации<br>Вы сможете<b>создавать вакансии</b>для поиска необходимого персонала</p>
     <p class="form-str1__content-dtext">А услуга ПРЕМИУМ даст преимущество и выделит Вас среди большого количества остальных работодателей, и ускорит поиск подходящих кандидатов для выполнения Ваших заданий</p>
-    <div class="btn-white-green-2 field-t2-hor">
-      <span class="form-str__btn">
-        <ul class="form-str__btn-list">
-          <li><a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2'))?>" class="item">Я работодатель</a></li>
-          <li><a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1'))?>" class="item">Я ищу работу</a></li>
-        </ul>ЗАРЕГИСТРИРОВАТЬСЯ
-      </span>
-    </div>
+      <div class="field-t2-hor">
+        <span class="form-str__btn btn__orange">
+          <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>"><span>Регистрация</span></a>
+        </span>
+      </div>
   </div>
 </div>
 <?
@@ -86,14 +80,11 @@
   <div class="form-str1__content">
     <p class="form-str1__content-utext">После регистрации<br>Вы сможете<b>создавать вакансии</b>для поиска необходимого персонала</p>
     <p class="form-str1__content-dtext"></p>
-    <div class="btn-white-green-2 field-t2-hor">
-      <span class="form-str__btn">
-        <ul class="form-str__btn-list">
-          <li><a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2'))?>" class="item">Я работодатель</a></li>
-          <li><a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1'))?>" class="item">Я ищу работу</a></li>
-        </ul>ЗАРЕГИСТРИРОВАТЬСЯ
-      </span>
-    </div>
+      <div class="field-t2-hor">
+        <span class="form-str__btn btn__orange">
+          <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>"><span>Регистрация</span></a>
+        </span>
+      </div>
   </div>
 </div>
 <?
@@ -117,14 +108,11 @@
       <i>* При создании Вакансии Вы сможете настраивать нужные оповещения и оставлять включенными только нужные:</i>
     <hr>
   </p>
-  <div class="btn-white-green-2 field-t2-hor">
-    <span class="form-str__btn">
-      <ul class="form-str__btn-list">
-        <li><a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2'))?>" class="item">Я работодатель</a></li>
-        <li><a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1'))?>" class="item">Я ищу работу</a></li>
-      </ul>ЗАРЕГИСТРИРОВАТЬСЯ
-    </span>
-  </div>
+    <div class="field-t2-hor">
+        <span class="form-str__btn btn__orange">
+          <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>"><span>Регистрация</span></a>
+        </span>
+    </div>
 </div>
 <?
 /*

@@ -11,7 +11,7 @@
             <h6 class="login__header">Подтвердите e-mail</h6>
 
             <div class="login__container">
-                <p>
+                <p class="separator">
                     Введите код из письма
                 </p>
 
@@ -19,12 +19,12 @@
                     <input type="text" placeholder="Введите код из письма">
                 </p>
 
-                <p>
+                <p class="separator">
                     Код подтверждения отправлен на:
                 </p>
-                <p>valeriyTerkin@mail.ru</p>
+                <p class="separator">valeriyTerkin@mail.ru</p>
 
-                <p>
+                <p class="separator">
                     <a href="">
                         Отправить повторно
                     </a>
@@ -35,7 +35,7 @@
                     <input type="radio" name="radio" id="radio-5">
                 </p>
 
-                <p>
+                <p class="separator">
                     <a class= "back__away" href="#" onClick="backAway()">
                         Вернуться назад и отредактировать данные
                     </a>

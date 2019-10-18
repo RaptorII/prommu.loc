@@ -24,7 +24,7 @@
                 <input type="radio" name="radio" id="radio-6">
             </p>
 
-            <p>
+            <p class="separator">
                 <a class= "back__away" href="#" onClick="backAway()">
                     Вернуться назад и отредактировать данные
                 </a>

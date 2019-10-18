@@ -96,10 +96,21 @@
 						<h2 class="how-block__title">Зарегистрируйтесь на портале</h2>
 						<p class="how-block__text">Чтобы начать искать работу или размещать вакансии своей компании, вам необходимо зарегистрироваться на портале и заполнить свой профиль.</p>
 						<br/>
+                        <?php
+                        /*
 						<a href="/user/register?p=2"><ins>Регистрация для работодателя</ins></a><br/>
 						<a href="/user/register?p=1"><ins>Регистрация для соискателя</ins></a>
+                        */
+                        ?>
+
+                        <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>" class="reg btn__orange">
+                            <ins>Регистрация</ins>
+                        </a>
 						<?if( Yii::app()->session['au_us_type'] < 2 ):?>
 						<div class="m-how-block__reg-block">
+<!--                            <a href="--><?//=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?><!--" class="m-wrapper__btn m-wrapper__white-btn">-->
+<!--                                <span>Регистрация</span>-->
+<!--                            </a>-->
 							<a href="/user/register?p=2" class="m-wrapper__btn m-wrapper__white-btn">Регистрация для работодателя</a>
 							<a href="/user/register?p=1" class="m-wrapper__btn m-wrapper__whiteo-btn">Регистрация для соискателя</a>
 						</div>

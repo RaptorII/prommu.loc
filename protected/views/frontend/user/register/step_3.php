@@ -19,35 +19,35 @@ echo '</pre>';
         <input type="text" placeholder="Введите код из SMS">
       </p>
 
-      <p>
+      <p class="separator">
         Код подтверждения отправлен на:
       </p>
-      <p><?=$viData['input']['login']?></p>
+      <p class="separator"><?=$viData['input']['login']?></p>
     <? else: ?>
-      <p>
+      <p class="separator">
         Перейдите по ссылке из письма или введите код вручную
       </p>
 
-      <p>
+      <p class="separator">
         <input type="text" placeholder="Введите код из письма">
       </p>
 
-      <p>
+      <p class="separator">
         Код подтверждения отправлен на:
       </p>
-      <p><?=$viData['input']['login']?></p>
+      <p class="separator"><?=$viData['input']['login']?></p>
     <? endif; ?>
     <p class="input">
       <button type="submit" class="btn-green" data-step="2">Продолжить</button>
     </p>
 
-    <p>
+    <p class="separator">
       <a href="">
         Отправить повторно
       </a>
     </p>
 
-    <p>
+    <p class="separator">
       <a class="back__away" href="javascript:void(0)">
         Вернуться назад и отредактировать данные
       </a>

@@ -116,8 +116,10 @@
                     if($_SERVER['REQUEST_URI'] != MainConfig::$PAGE_LOGIN){
                         echo '<li class="item top-menu-wr__login-level"><a href="' . MainConfig::$PAGE_LOGIN . '">Вход</a></li>';
                     }           
-                    echo '<li class="item top-menu-wr__login-level"><a href="' . Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2')) . '">Регистрация работодателя</a></li>';
-                    echo '<li class="item top-menu-wr__login-level"><a href="' . Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1')) . '">Регистрация соискателя</a></li>';
+//                    echo '<li class="item top-menu-wr__login-level"><a href="' . Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2')) . '">Регистрация работодателя</a></li>';
+//                    echo '<li class="item top-menu-wr__login-level"><a href="' . Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1')) . '">Регистрация соискателя</a></li>';
+
+                    echo '<li class="item top-menu-wr__login-level"><a href="' . Yii::app()->createUrl(MainConfig::$PAGE_REGISTER) . '">Регистрация</a></li>';
                 }
                 else{
                     echo '<li class="item top-menu-wr__login-level"><a href="' . MainConfig::$PAGE_LOGOUT . '">Выход</a></li>';
@@ -182,9 +184,7 @@
                                 </div>
                                 <?php if( Yii::app()->session['au_us_type'] < 2 ): ?>
                                   <div class="enter">
-<!--                                    <a href="--><?//=Yii::app()->createUrl(MainConfig::$PAGE_LOGIN)?><!--" class="prmu-btn"><span>Вход</span></a>-->
                                     <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_LOGIN)?>" class="btn__orange"><span>Вход</span></a>
-<!--                                    <a href="--><?//=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?><!--" class="prmu-btn"><span>Регистрация</span></a>-->
                                     <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>" class="btn__orange"><span>Регистрация</span></a>
                                   </div>
                                 <?php else: ?>
@@ -327,16 +327,26 @@
                               <span><noindex>Сервис №1 в поиске временной работы и персонала для BTL и Event-мероприятий</noindex></span>
                           </div>
                           <div class="enter">
-                            <a class="feedback btn__orange" href="<?=MainConfig::$PAGE_FEEDBACK?>">Обратная связь</a>
+                            <a class="feedback btn__green" href="<?=MainConfig::$PAGE_FEEDBACK?>">Обратная связь</a>
                             <?php if(!in_array(Share::$UserProfile->type, [2,3])): ?>
-                            	<a href="<?= MainConfig::$PAGE_LOGIN ?>" class="enter__login enter__link btn__green" data-toggle="modal">Вход</a>
-	                            <div class="enter__register">
-	                              <a href="#reg_select" class="enter__register-link enter__link btn__green" onclick="ClearCookie()" data-toggle="modal">Регистрация <i></i></a>
-	                              <ul>
-	                                <li><a href="<?= Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2')) ?>" class="items">Я работодатель</a></li>
-	                                <li><a href="<?= Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1')) ?>" class="items">Я ищу работу</a></li>
-	                              </ul>
-	                            </div>
+                                <?php
+                                /*
+                            	<a href="<?= MainConfig::$PAGE_LOGIN ?>" class="enter__link btn__orange" data-toggle="modal">Вход</a>
+                                    <div class="enter__register">
+                                      <a href="#reg_select" class="enter__register-link enter__link btn__green" onclick="ClearCookie()" data-toggle="modal">Регистрация <i></i></a>
+                                      <ul>
+                                        <li><a href="<?= Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2')) ?>" class="items">Я работодатель</a></li>
+                                        <li><a href="<?= Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1')) ?>" class="items">Я ищу работу</a></li>
+                                      </ul>
+                                    </div>
+                                */
+                                ?>
+                                    <a href="<?= MainConfig::$PAGE_LOGIN ?>" class="reg btn__orange">
+                                        <span>Вход</span>
+                                    </a>
+                                    <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>" class="reg btn__orange">
+                                        <span>Регистрация</span>
+                                    </a>
 	                        <? endif; ?>
                           </div>
                       </div>
