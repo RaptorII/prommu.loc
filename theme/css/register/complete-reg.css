@@ -43,22 +43,64 @@
 .complete__prof-list li{
     position: relative;
     font-weight: 400;
-
+    margin: 10px 0;
 }
 #DiContent .complete__prof-list {
     list-style: none;
 
 }
 #DiContent .complete__prof-list input{
-    display: none;
+    opacity: 0;
+    width: 100%;
+    height: 15px;
+    position: absolute;
 }
 #DiContent .complete__prof-list label{
     position: relative;
     right: 0;
 }
 
+#DiContent .complete__prof-list label:after{
+    right: 0;
+}
+
+#DiContent .complete__prof .prof-item:after {
+    content: '';
+    font-family: "PrommuFont";
+    width: 20px;
+    height: 20px;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 5px;
+    border: 1px solid var(--color-dark);
+    text-align: center;
+    line-height: 18px;
+    color: #343434;
+    -webkit-transition: all .3s ease-out;
+    -moz-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+    transition: all .3s ease-out;
+    z-index: 10;
+}
+#DiContent .complete__prof-item:checked + .prof-item:after {
+    content: '\e966';
+    color: var(--color-orange);
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
 
 
+#DiContent .complete__prof .prof-item b {
+    border-bottom: 1px dotted var(--color-dark);
+    width: 200px;
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 30px;
+    float: right;
+}
 
 .complete__phone {
 
@@ -137,7 +179,6 @@
     font-size: 20px;
     width: 20px;
     height: 20px;
-
 }
 
 .input {

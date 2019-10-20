@@ -312,8 +312,8 @@
                             for($i=0; $i<10; $i++){
                       ?>
                           <li>
-                              <input type="checkbox" name="donjnost[]" value="<?=$i?>" id="post-<?=$i?>">
-                              <label for="post-<?=$i?>">Агент по привлечению клиентов<b></b></label>
+                              <input type="checkbox" name="donjnost[]" value="<?=$i?>" id="post-<?=$i?>" class="complete__prof-item">
+                              <label for="post-<?=$i?>" class="prof-item">Агент по привлечению клиентов<b></b></label>
                           </li>
 
                       <?php
