@@ -23,7 +23,7 @@
         <?php endif; ?>
 
         <div class="content-block">
-            <?= $content ?>
+            <?= $content; ?>
             
         </div>
     </div>

@@ -96,7 +96,6 @@ h6.login__header {
     display: block;
     margin: 0 auto;
     border: 0;
-    /*background: url(/theme/pic/logo-sm.png) no-repeat;*/
 }
 
 .login__container {
@@ -499,6 +498,6 @@ h6.login__header {
         transform: none;
     }
     .login__logo {
-        margin-bottom: 50px;
+        margin-bottom: 40px;
     }
 }
