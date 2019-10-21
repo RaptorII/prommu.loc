@@ -568,10 +568,18 @@ class UserController extends AppController
         $post = Yii::app()->getRequest()->getParam('data');
         $post = json_decode($post, true, 5, JSON_BIGINT_AS_STRING);
 
-        if(isset($post['step']) && in_array($post['step'],[2])) // return button
+        if(isset($post['step']))
         {
-          $model->setStep($post['step']);
-          $view = '/user/register/step_' . $post['step'];
+          if(in_array($post['step'],[2]) && $post['redirect']==='back') // return button
+          {
+            $model->setStep($post['step']);
+            $view = '/user/register/step_' . $post['step'];
+          }
+          elseif (in_array($post['step'],[2]) && $post['redirect']==='auth') // redirect to login
+          {
+            $model->clearStep();
+            $model->deleteData();
+          }
         }
         else
         {

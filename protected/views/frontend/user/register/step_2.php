@@ -1,3 +1,8 @@
+<?php
+echo '<pre>';
+print_r($viData);
+echo '</pre>';
+?>
 <div class="login-wrap">
 
   <svg x="0" y="0" class="svg-bg" />

@@ -43,7 +43,17 @@ var RegisterPage = (function () {
           let btn = $('#register_form').find('button'),
               step = $(btn).data('step');
 
-          self.send({step:step});
+          self.send({step:step,redirect:'back'});
+        })
+      .on(
+        'click',
+        '#register_form .login__error a',
+        function(e){
+          e.preventDefault();
+          let btn = $('#register_form').find('button'),
+              step = $(btn).data('step');
+
+          self.send({step:step,redirect:'auth',href:this.href});
         });
     //
     $('#register_form').submit(function(e){
@@ -84,7 +94,14 @@ var RegisterPage = (function () {
       success: function (html) {
         $('#register_form').html(html);
         //self.startSvg();
-        $('body').removeClass('prmu-load');
+        if(typeof data.href !=='undefined')
+        {
+          window.location.href = data.href;
+        }
+        else
+        {
+          $('body').removeClass('prmu-load');
+        }
       }
     });
   },

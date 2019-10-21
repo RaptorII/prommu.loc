@@ -90,13 +90,33 @@ class UserRegister
       }
       else
       {
-        $arData['type'] = $data['type'];
+        $arData = [
+          'type' => $data['type'],
+          'referer' => filter_var($data['referer'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'transition' => filter_var($data['transition'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'canal' => filter_var($data['canal'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'campaign' => filter_var($data['campaign'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'content' => filter_var($data['content'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'keywords' => filter_var($data['keywords'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'point' => filter_var($data['point'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'last_referer' => filter_var($data['last_referer'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'ip' => $data['ip'],
+          'pm_source' => $data['pm_source'],
+          'client' => $data['client'],
+          'subdomen' => Subdomain::getId(),
+          'date' => time()
+        ];
+        empty($arData['pm_source']) && $arData['pm_source']='none';
+        $arData['client'] = substr($arData['client'], 6, 100);
+        empty($arData['client']) && $arData['client'] = ' ';
+        empty($arData['ip']) && $arData['ip'] = ' ';
       }
     }
     //
     if($step==2)
     {
-      $field = Share::isApplicant($data['type']) ? 'Имя' : 'Название компании';
+      $arUser = $this->getData();
+      $field = Share::isApplicant($arUser['type']) ? 'Имя' : 'Название компании';
       $value = filter_var($data['name'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
       $value = trim($value);
       if(strlen($value) > self::$STRLENGTH)
@@ -112,7 +132,7 @@ class UserRegister
         $arData['name'] = $value;
       }
 
-      if(Share::isApplicant($data['type']))
+      if(Share::isApplicant($arUser['type']))
       {
         $value = filter_var($data['surname'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $value = trim($value);
@@ -133,15 +153,17 @@ class UserRegister
       if(!filter_var($data['login'],FILTER_VALIDATE_EMAIL))
       {
         $value = preg_replace("/[^0-9]/", '', $data['login']);
+        $isPhone = false;
         if(strlen($value)==10) // RF
         {
-          $data['login'] = '7' . $value;
+          $value = '7' . $value;
+          $isPhone = true;
         }
         elseif (strlen($value)==11 && in_array(substr($value,0,1), ['7','8'])) // RF
         {
-          $data['login'] = $value;
+          $isPhone = true;
         }
-        elseif(
+        /*elseif(
           strlen($value)==13
           &&
           in_array(substr($value,0,3),['380','375'])
@@ -149,23 +171,66 @@ class UserRegister
         {
           $arData['login'] = $value;
           $arData['login_type'] = self::$LOGIN_TYPE_PHONE;
-        }
+        }*/
         else
         {
           $arErrors['login'] = "Введите действительный номер мобильного телефона или эл. адрес";
         }
+
+        $model = new User();
+        $is_user = $model->checkLogin($value,$isPhone);
+        if($is_user)
+        {
+          $arErrors['login'] = "Данный телефон уже используется. <a href=\""
+            . MainConfig::$PAGE_LOGIN . "\">Авторизоваться</a>";
+        }
+        else
+        {
+          $arData['login'] = $value;
+          $arData['login_type'] = self::$LOGIN_TYPE_PHONE;
+          if($arUser['login']!=$value)
+          {
+            $arData['code'] = rand(1111, 9999);
+            $arData['time_code'] = time();
+          }
+        }
       }
       else
       {
-        $arData['login'] = filter_var($data['login'],FILTER_SANITIZE_EMAIL);
-        $arData['login_type'] = self::$LOGIN_TYPE_EMAIL;
+        $value = filter_var($data['login'],FILTER_SANITIZE_EMAIL);
+        $model = new User();
+        $is_user = $model->checkLogin($value);
+        if($is_user)
+        {
+          $arErrors['login'] = "Данный эл. адрес уже используется. <a href=\""
+            . MainConfig::$PAGE_LOGIN . "\">Авторизоваться</a>";
+        }
+        else
+        {
+          $arData['login'] = $value;
+          $arData['login_type'] = self::$LOGIN_TYPE_PHONE;
+          if($arUser['login']!=$value)
+          {
+            $arData['code'] = rand(1111, 9999);
+            $arData['time_code'] = time();
+          }
+        }
       }
     }
 
-    if(!count($arErrors) && !$this->setData($arData))
+    if(!count($arErrors))
     {
-      $arErrors['system'] = 'Ошибка записи данных';
+      $result = $this->setData($arData);
+      if(!$result)
+      {
+        $arErrors['system'] = 'Ошибка записи данных';
+      }
+      elseif($step==2) // отправляем код для подтверждения
+      {
+        $this->sendCode();
+      }
     }
+
     return $arErrors;
   }
   /**
@@ -183,6 +248,7 @@ class UserRegister
     // обновление данных
     $query = Yii::app()->db->createCommand()
       ->update('user_register',$arr,'hash=:hash',[':hash'=>$hash]);
+
     // создание записи
     if(!$query)
     {
@@ -191,6 +257,20 @@ class UserRegister
         ->insert('user_register',$arr);
     }
     return $query;
+  }
+  /**
+   * @return bool
+   */
+  public function deleteData()
+  {
+    $rq = Yii::app()->request;
+    if(!isset($rq->cookies['PHPSESSID']))
+      return false;
+
+    $hash = $rq->cookies['PHPSESSID']->value;
+
+    return Yii::app()->db->createCommand()
+      ->delete('user_register','hash=:hash',[':hash'=>$hash]);
   }
   /**
    * @return mixed
@@ -209,5 +289,39 @@ class UserRegister
       ->from('user_register')
       ->where('hash=:hash',[':hash'=>$hash])
       ->queryRow();
+  }
+
+  private function sendCode()
+  {
+    /*$arData = $this->getData();
+    $token = md5($arData['hash'] . time() . $arData['login']);
+    $arGet = [
+      'type' => $arData['type'],
+      't' => $token,
+      'referer' => $arData['referer'],
+      'transition' => $arData['transition'],
+      'canal' => $arData['canal'],
+      'campaign' => $arData['campaign'],
+      'content' => $arData['content'],
+      'keywords' => $arData['keywords'],
+      'point' => $arData['point'],
+      'last_referer' => $arData['last_referer'],
+      'ip' => $arData['ip'],
+      'client' => $arData['client'],
+      'pm' => $arData['pm_source'],
+    ];
+    $link  = Subdomain::site() . MainConfig::$PAGE_ACTIVATE . '?' . http_build_query($arGet);
+
+    if(Share::isApplicant($arData['type']))
+    {
+      Mailing::set(27,[
+        'user_link' =>  $link,
+
+      ]);
+    }
+    elseif(Share::isEmployer($arData['type']))
+    {
+
+    }*/
   }
 }

@@ -17,6 +17,11 @@ class User extends CActiveRecord
 {
     static public $SCOPE_ACTIVE = 1;
 
+  public static $ISBLOCKED_FULL_ACTIVE = 0;
+  public static $ISBLOCKED_BLOCKED = 1;
+  public static $ISBLOCKED_EXPECT = 2;
+  public static $ISBLOCKED_NOT_FULL_ACTIVE = 3;
+  public static $ISBLOCKED_PAUSE_DISPLAY = 4;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -1649,5 +1654,40 @@ class User extends CActiveRecord
         'id_user=:id_user',
         [':id_user' => $id_user]
       );
+  }
+  /**
+   * @param string $login - user => email
+   * @param bool $isPhone
+   * @return mixed
+   */
+  public function checkLogin($login, $isPhone=false)
+  {
+    $condition = 'email like :login';
+    $arParams = [':login'=>$login];
+    if($isPhone)
+    {
+      $v = '(' . substr($login,1,3) . ')'
+        . substr($login,4,3) . '-'
+        . substr($login,7,2) . '-'
+        . substr($login,9,2);
+
+      $phone1 = '+7' . $v;
+      $phone2 = '+8' . $v;
+
+      $condition .= ' or email like :phone1 or email like :phone2';
+      $arParams[':phone1'] = $phone1;
+      $arParams[':phone2'] = $phone2;
+    }
+
+    $query = Yii::app()->db->createCommand()
+      ->from($this->tableName())
+      ->where($condition, $arParams)
+      ->queryRow();
+
+    if(isset($query['id_user']) && $query['isblocked']!=self::$ISBLOCKED_EXPECT)
+    {
+      return $query['id_user'];
+    }
+    return false;
   }
 }
