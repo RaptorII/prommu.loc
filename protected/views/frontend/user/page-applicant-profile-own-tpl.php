@@ -309,7 +309,7 @@
 
                       <ul id="complete__prof-list" class="complete__prof-list">
                       <?php
-                            for($i=0; $i<10; $i++){
+                            for($i=0; $i<3; $i++){
                       ?>
                           <li>
                               <input type="checkbox" name="donjnost[]" value="<?=$i?>" id="post-<?=$i?>" class="complete__prof-item">

@@ -349,3 +349,22 @@ input:focus ~ .highlight {
         width:0; background:transparent;
     }
 }
+
+@media screen and (max-width: 768px){
+    .complete__cover {
+        column-count: 1;
+    }
+    .complete__gender {
+        display: block;
+    }
+    #DiContent .complete__prof .prof-item b {
+        border: none;
+    }
+    #DiContent .complete__prof-list {
+        margin-left: 0;
+        padding-left: 0;
+    }
+    .complete__gender-radio {
+        padding: 10px 10px 10px 0;
+    }
+}
