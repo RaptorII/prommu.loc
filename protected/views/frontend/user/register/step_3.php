@@ -1,6 +1,6 @@
 <?php
 echo '<pre>';
-print_r($viData);
+//print_r($viData);
 echo '</pre>';
 ?>
 <div class="login-wrap">
@@ -19,32 +19,32 @@ echo '</pre>';
         <input type="text" placeholder="Введите код из SMS">
       </p>
 
-      <p class="separator">
+      <p class="separator center">
         Код подтверждения отправлен на:
       </p>
-      <p class="separator"><?=$viData['input']['login']?></p>
+      <p class="separator center pad0"><?=$viData['input']['login']?></p>
     <? else: ?>
-      <p class="separator">
+      <p class="separator center">
         Перейдите по ссылке из письма или введите код вручную
       </p>
 
-      <p class="separator">
+      <p class="separator center">
         <input type="text" placeholder="Введите код из письма">
       </p>
 
-      <p class="separator">
+      <p class="separator center">
         Код подтверждения отправлен на:
       </p>
-      <p class="separator"><?=$viData['input']['login']?></p>
+      <p class="separator pad0"><?=$viData['input']['login']?></p>
+
     <? endif; ?>
+    <p class="separator">
+      <a class="back__away" href="">
+          Отправить повторно
+      </a>
+    </p>
     <p class="input">
       <button type="submit" class="btn-green" data-step="2">Продолжить</button>
-    </p>
-
-    <p class="separator">
-      <a href="">
-        Отправить повторно
-      </a>
     </p>
 
     <p class="separator">

@@ -94,7 +94,7 @@ h6.login__header {
     width: 70%;
     /*height: 40px;*/
     display: block;
-    margin: 0 auto;
+    margin: 0 auto 40px auto;
     border: 0;
 }
 
@@ -117,11 +117,11 @@ h6.login__header {
 .login-wrap {
     background: var(--color-l-grn);
     width: 400px;
-    position: absolute;
+    position: relative;
     border: 1px solid var(--color-l-grey);
     border-radius: 4px;
-    top: 50%;
-    transform: translateY(-50%);
+    /*top: 50%;*/
+    /*transform: translateY(-50%);*/
 }
 
 .login-wrap:before,
@@ -208,7 +208,7 @@ h6.login__header {
 }
 
 .login__photo {
-    padding-top: 30px;
+    /*padding-top: 30px;*/
 }
 .login__photo-img {
     display:flex;
@@ -275,17 +275,20 @@ h6.login__header {
 .login .input input {
     display: none;
 }
+.login .separator.pad0 {
+    padding: 0;
+}
 
 /* Buttons' focus effect */
 .login input[type="submit"]:focus {
     border-color: var(--color-green);
 }
 .btn-orange:hover{
-    background: var(--color-orange-2);
+    background: var(--color-l-grn);
     border-color: var(--color-grey);
 }
 .btn-green:hover {
-    background: var(--color-green-2);
+    background: var(--color-orange);
     border-color: var(--color-grey);
     color: var(--color-dark);
 }
@@ -295,7 +298,7 @@ h6.login__header {
 }
 .btn-orange:focus{
     transition: var(--main-trans);
-    border-color: var(--color-orange-2);
+    border-color: var(--color-l-grn);
 }
 .btn-grey:focus {
     transition: var(--main-trans);
@@ -314,7 +317,7 @@ h6.login__header {
 }
 
 .register__preview:before {
-    content: 'Войти через социальные сети:';
+    content: attr(data-txt);
     position: absolute;
     display: block;
     background: #ebebeb;
@@ -438,7 +441,7 @@ h6.login__header {
 }
 
 .login__txt {
-    position: absolute;
+    /*position: absolute;*/
     width: 400px;
     bottom: 0;
 }
@@ -487,7 +490,7 @@ h6.login__header {
         width: 300px;
     }
     .login__txt{
-        display: none;
+        /*display: none;*/
     }
 }
 

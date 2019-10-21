@@ -19,13 +19,13 @@
                     <input type="text" placeholder="Введите код из письма">
                 </p>
 
-                <p class="separator">
+                <p class="separator center">
                     Код подтверждения отправлен на:
                 </p>
-                <p class="separator">valeriyTerkin@mail.ru</p>
+                <p class="separator center pad0">valeriyTerkin@mail.ru</p>
 
-                <p class="separator">
-                    <a href="">
+                <p class="separator center">
+                    <a class="back__away" href="">
                         Отправить повторно
                     </a>
                 </p>

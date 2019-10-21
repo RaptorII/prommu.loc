@@ -16,10 +16,16 @@
                 <input type="text" placeholder="Введите код из SMS">
             </p>
 
-            <p class="separator">
+            <p class="separator center">
                 Код подтверждения отправлен на:
             </p>
-            <p class="separator">+3 745 123-32-32</p>
+            <p class="separator center pad0">+3 745 123-32-32</p>
+
+            <p class="separator center">
+                <a class="back__away" href="">
+                    Отправить повторно
+                </a>
+            </p>
 
             <p class="input">
                 <label for="radio-4" class="btn-green">Продолжить</label>

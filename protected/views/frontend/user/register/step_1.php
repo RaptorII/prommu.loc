@@ -10,8 +10,7 @@
         <p class="input">
             <label for="radio-1" class="btn-orange">Я ищу работу</label>
             <label class="txt">
-                Я "Валера" и не заметил, что сайт для поиска
-                временной работы, и я ищу работу мечты
+                Хочу разместить резюме и найти работу мечты
             </label>
             <input type="radio" name="type" value="<?= UserProfile::$APPLICANT ?>" id="radio-1" class="input-type">
         </p>
