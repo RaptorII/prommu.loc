@@ -144,10 +144,7 @@ var RegisterPage = (function () {
         }
         else
         {
-          if(data.send_code==='Y')
-          {
-            self.setTimer();
-          }
+          self.setTimer();
           $('body').removeClass('prmu-load');
         }
       }
@@ -304,6 +301,9 @@ var RegisterPage = (function () {
   // таймер отправки кода
   RegisterPage.prototype.setTimer = function ()
   {
+    if(!$('.repeat-code span').is('*'))
+      return false;
+
     setInterval(function(){
       let main = $('.repeat-code span'),
           sec = Number($(main).text());

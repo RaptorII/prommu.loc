@@ -11,31 +11,43 @@ class UserRegister
   public static $SOUL = 987654123;
   public static $STRLENGTH = 64;
   public static $MIN_PASSWORD_LENGTH = 6;
+  public static $REPEAT_SEND_CODE_TIME = 120; // отсчитываем 120 секунд
   //
   public static $LOGIN_TYPE_EMAIL = 0;
   public static $LOGIN_TYPE_PHONE = 1;
-  /**
-   * @return int
-   * получаем шаг регистрации из куков, или устанавливаем шаг 1
-   */
-  public function getStep()
+
+  public $step;
+  public $user;
+
+  function __construct()
   {
     $rq = Yii::app()->request;
-    $step = 1000;
+    // step
     if(isset($rq->cookies['urs']))
     {
       $cookie = $rq->cookies['urs']->value;
       for ($i=1000; $i<=6000; $i+=1000)
       {
-        md5($i . self::$SOUL)==$cookie && $step=$i;
+        if(md5($i . self::$SOUL)==$cookie)
+        {
+          $this->step = intval($i/1000);
+        }
       }
     }
     else
     {
       $this->setStep(1);
     }
-
-    return intval($step/1000);
+    // user
+    if(isset($rq->cookies['urh']))
+    {
+      $this->user = $rq->cookies['urh']->value;
+    }
+    else
+    {
+      $this->user = md5(time() . rand(1111111,9999999) . self::$SOUL);
+      $rq->cookies['urh'] = new CHttpCookie('urh', $this->user);
+    }
   }
   /**
    * @param $step
@@ -43,6 +55,7 @@ class UserRegister
    */
   public function setStep($step)
   {
+    $this->step = $step;
     $value = intval($step) * 1000;
     Yii::app()->request->cookies['urs'] = new CHttpCookie('urs', md5($value . self::$SOUL));
   }
@@ -52,6 +65,7 @@ class UserRegister
   public static function clearStep()
   {
     unset(Yii::app()->request->cookies['urs']);
+    unset(Yii::app()->request->cookies['urh']);
   }
   /**
    * @return bool
@@ -60,15 +74,16 @@ class UserRegister
   public static function beginRegister()
   {
     $rq = Yii::app()->request;
-    if(!isset($rq->cookies['PHPSESSID']))
+    if(!isset($rq->cookies['urh']))
       return false;
-
-    $hash = $rq->cookies['PHPSESSID']->value;
 
     $result = Yii::app()->db->createCommand()
       ->select('count(id)')
       ->from('user_register')
-      ->where('hash=:hash',[':hash'=>$hash])
+      ->where(
+        'hash=:hash',
+        [':hash'=>$rq->cookies['urh']->value]
+      )
       ->queryScalar();
 
     return boolval($result);
@@ -280,11 +295,7 @@ class UserRegister
       }
     }
 
-    $rq = Yii::app()->request;
-    if(!isset($rq->cookies['PHPSESSID']))
-      return false;
-
-    $arr['hash'] = $rq->cookies['PHPSESSID']->value;
+    $arr['hash'] = $this->user;
 
     return Yii::app()->db->createCommand()
               ->insert('user_register',$arr);
@@ -294,14 +305,8 @@ class UserRegister
    */
   public function deleteData()
   {
-    $rq = Yii::app()->request;
-    if(!isset($rq->cookies['PHPSESSID']))
-      return false;
-
-    $hash = $rq->cookies['PHPSESSID']->value;
-
     return Yii::app()->db->createCommand()
-      ->delete('user_register','hash=:hash',[':hash'=>$hash]);
+      ->delete('user_register','hash=:hash',[':hash'=>$this->user]);
   }
   /**
    * @return mixed
@@ -309,16 +314,10 @@ class UserRegister
    */
   public function getData()
   {
-    $rq = Yii::app()->request;
-    if(!isset($rq->cookies['PHPSESSID']))
-      return false;
-
-    $hash = $rq->cookies['PHPSESSID']->value;
-
     return Yii::app()->db->createCommand()
       ->select('*')
       ->from('user_register')
-      ->where('hash=:hash',[':hash'=>$hash])
+      ->where('hash=:hash',[':hash'=>$this->user])
       ->queryRow();
   }
   /**
@@ -366,7 +365,7 @@ class UserRegister
    */
   public function isTimeToRepeat($time)
   {
-    $timer = $time + 120; // отсчитываем 120 секунд
+    $timer = $time + self::$REPEAT_SEND_CODE_TIME;
     $curTime = time();
     return (($timer > $curTime) ? ($timer - $curTime) : 0);
   }

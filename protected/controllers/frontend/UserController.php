@@ -539,17 +539,13 @@ class UserController extends AppController
 
       $data = [];
       $model = new UserRegister();
-      $step = $model->getStep();
-      /*
-      $step = 3;
-      $model->setStep($step);
-      */
-      if(!in_array($step,[1,2,3,4,5,6,7,'end']))
+
+      if(!in_array($model->step, [1,2,3,4,5,6,7,'end']))
       {
         throw new CHttpException(404, 'Error');
       }
 
-      if($step==1)
+      if($model->step==1)
       {
         $pages = new PagesContent();
         $lang = Yii::app()->session['lang'];
@@ -561,12 +557,11 @@ class UserController extends AppController
 
         if(!is_array($data['input']))
         {
-          $step=1;
-          $model->setStep($step);
+          $model->setStep(1);
         }
       }
 
-      $view = '/user/register/step_' . $step;
+      $view = '/user/register/step_' . $model->step;
       if(Yii::app()->getRequest()->isAjaxRequest)
       {
         $post = Yii::app()->getRequest()->getParam('data');
@@ -580,9 +575,8 @@ class UserController extends AppController
         {
           if(in_array($post['step'],[3,4]) && $post['redirect']==='back') // return button
           {
-            $step = $post['step'] - 1;
-            $model->setStep($step);
-            $view = '/user/register/step_' . $step;
+            $model->setStep($post['step'] - 1);
+            $view = '/user/register/step_' . $model->step;
           }
           elseif (in_array($post['step'],[2]) && $post['redirect']==='auth') // redirect to login
           {
@@ -600,14 +594,14 @@ class UserController extends AppController
           {
             $data['input'][$key] = $v;
           }
-          $data['errors'] = $model->setDataByStep($step, $data['input']);
+          $data['errors'] = $model->setDataByStep($model->step, $data['input']);
           if(!count($data['errors']))
           {
-            $view = '/user/register/step_' . ++$step;
-            $model->setStep($step);
+            $model->setStep($model->step + 1);
+            $view = '/user/register/step_' . $model->step;
           }
 
-          if($step==3)
+          if($model->step==3)
           {
             $data['input'] = $model->getData();
             $data['time_to_repeat'] = $model->isTimeToRepeat($data['input']['time_code']);
@@ -618,7 +612,7 @@ class UserController extends AppController
       }
       else
       {
-        if($step==3)
+        if($model->step==3)
         {
           $data['input'] = $model->getData();
           $data['time_to_repeat'] = $model->isTimeToRepeat($data['input']['time_code']);

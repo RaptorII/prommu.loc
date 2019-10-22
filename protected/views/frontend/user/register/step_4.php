@@ -7,11 +7,17 @@
 
   <div class="login__container">
     <p class="separator center">Пароль должен состоять минимум из шести символов(цифр, букв, знаков препинания)</p>
-    <p>
+    <p class="separator center">
       <input type="password" name="password" class="input-password" autocomplete="off" placeholder="Придумайте пароль">
+      <?php if (!empty($viData['errors']['password'])): ?>
+        <span class="login__error"><?=$viData['errors']['password']?></span>
+      <?php endif; ?>
     </p>
-    <p>
+    <p class="separator center">
       <input type="password" name="r-password" class="input-r-password" autocomplete="off" placeholder="и введите повторно">
+      <?php if (!empty($viData['errors']['r-password'])): ?>
+        <span class="login__error"><?=$viData['errors']['r-password']?></span>
+      <?php endif; ?>
     </p>
 
     <p class="input">
