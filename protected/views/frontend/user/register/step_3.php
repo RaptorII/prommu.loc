@@ -18,7 +18,10 @@ echo '</pre>';
   <div class="login__container">
     <? if($viData['input']['login_type']==UserRegister::$LOGIN_TYPE_PHONE): ?>
       <p>
-        <input type="text" placeholder="Введите код из SMS">
+        <input type="text" value="<?=($viData['input']['confirm_code'] ? $viData['input']['code'] : '')?>" class="input-code" autocomplete="off" placeholder="Введите код из SMS">
+        <?php if (!empty($viData['errors']['code'])): ?>
+          <span class="login__error"><?=$viData['errors']['code']?></span>
+        <?php endif; ?>
       </p>
 
       <p class="separator center">
@@ -31,7 +34,10 @@ echo '</pre>';
       </p>
 
       <p class="separator center">
-        <input type="text" placeholder="Введите код из письма">
+        <input type="text" name="code" value="<?=($viData['input']['confirm_code'] ? $viData['input']['code'] : '')?>" class="input-code" autocomplete="off" placeholder="Введите код из письма">
+        <?php if (!empty($viData['errors']['code'])): ?>
+          <span class="login__error"><?=$viData['errors']['code']?></span>
+        <?php endif; ?>
       </p>
 
       <p class="separator center">
@@ -40,12 +46,14 @@ echo '</pre>';
       <p class="separator pad0"><?=$viData['input']['login']?></p>
 
     <? endif; ?>
-    <p class="separator">
-      <? $isRepeat = $viData['time_to_repeat'] == 0;  ?>
-      <a href="javascript:void(0)" class="repeat_code<?=(!$isRepeat)?' grey':''?>"><?=(!$isRepeat
-          ? 'Повторная отправка кода будет доступна через <span>' . $viData['time_to_repeat'] . '</span>сек.'
-          : 'Отправить повторно')?></a>
-    </p>
+    <? if(!$viData['input']['confirm_code']): ?>
+      <p class="separator">
+        <? $isRepeat = $viData['time_to_repeat'] == 0;  ?>
+        <a href="javascript:void(0)" class="repeat_code<?=(!$isRepeat)?' grey':''?>"><?=(!$isRepeat
+            ? 'Повторная отправка кода будет доступна через <span>' . $viData['time_to_repeat'] . '</span>сек.'
+            : 'Отправить повторно')?></a>
+      </p>
+    <? endif; ?>
     <p class="input">
       <button type="submit" class="btn-green" data-step="3">Продолжить</button>
     </p>

@@ -1,43 +1,28 @@
-<?php
-?>
+<div class="login-wrap">
 
-<form id="register_form">
+  <svg x="0" y="0" class="svg-bg" />
 
-    <div class="login-wrap">
+  <h2 class="login__header">Регистрация</h2>
+  <h6 class="login__header">Создайте пароль</h6>
 
-        <svg x="0" y="0" class="svg-bg" />
+  <div class="login__container">
 
-        <h2 class="login__header">Регистрация</h2>
-        <h6 class="login__header">Подтвердите номер телефона</h6>
+    <p>
+      <input type="password" name="password" class="input-password" autocomplete="off" placeholder="Придумайте пароль">
+    </p>
+    <p>
+      <input type="password" name="r-password" class="input-r-password" autocomplete="off" placeholder="и введите повторно">
+    </p>
 
-        <div class="login__container">
+    <p class="input">
+      <button type="submit" class="btn-green" data-step="4">Продолжить</button>
+    </p>
 
-            <p>
-                <input type="text" placeholder="Введите код из SMS">
-            </p>
+    <p class="separator">
+      <a class="back__away" href="javascript:void(0)">
+        Вернуться назад и отредактировать данные
+      </a>
+    </p>
 
-            <p class="separator center">
-                Код подтверждения отправлен на:
-            </p>
-            <p class="separator center pad0">+3 745 123-32-32</p>
-
-            <p class="separator center">
-                <a class="back__away" href="">
-                    Отправить повторно
-                </a>
-            </p>
-
-            <p class="input">
-                <label for="radio-4" class="btn-green">Продолжить</label>
-                <input type="radio" name="radio" id="radio-4">
-            </p>
-
-            <p class="separator">
-                <a class= "back__away" href="#" onClick="backAway()">
-                    Вернуться назад и отредактировать данные
-                </a>
-            </p>
-
-        </div>
-    </div>
-</form>
+  </div>
+</div>

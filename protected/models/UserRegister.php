@@ -217,6 +217,17 @@ class UserRegister
         }
       }
     }
+    //
+    if($step==3)
+    {
+      $arUser = $this->getData();
+      if(!$arUser['confirm_code'])
+      {
+        $data['code'] == $arUser['code']
+          ? $arData['confirm_code'] = 1
+          : $arErrors['code'] = 'Введен некорректный код подтверждения';
+      }
+    }
 
     if(!count($arErrors))
     {
@@ -319,7 +330,7 @@ class UserRegister
       Mailing::set((Share::isApplicant($arData['type']) ? 27 : 28), [
         'email_user' => $arData['login'],
         'code_user' => $arData['code'],
-        'link_user' => Subdomain::site() . MainConfig::$PAGE_ACTIVATE . '?' . http_build_query($arGet),
+        'link_user' => Subdomain::site() . MainConfig::$PAGE_REGISTER . '?' . http_build_query($arGet),
         'posts_list' => '<li>' . implode('</li><li>', Vacancy::getPostsList()) . '</li>'
       ]);
     }

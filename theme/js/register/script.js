@@ -6,6 +6,8 @@
 var RegisterPage = (function () {
   //
   RegisterPage.prototype.firstInputCompany = true;
+  RegisterPage.prototype.firstInputCode = true;
+  RegisterPage.prototype.codeLength = 4;
   //
   function RegisterPage()
   {
@@ -38,15 +40,6 @@ var RegisterPage = (function () {
         function(){ self.checkText(this) })
       .on(
         'click',
-        '#register_form .back__away',
-        function(){
-          let btn = $('#register_form').find('button'),
-              step = $(btn).data('step');
-
-          self.send({step:step,redirect:'back'});
-        })
-      .on(
-        'click',
         '#register_form .login__error a',
         function(e){
           e.preventDefault();
@@ -54,6 +47,15 @@ var RegisterPage = (function () {
               step = $(btn).data('step');
 
           self.send({step:step,redirect:'auth',href:this.href});
+        })
+      .on( // step 3 | 4
+        'click',
+        '#register_form .back__away',
+        function(){
+          let btn = $('#register_form').find('button'),
+            step = $(btn).data('step');
+
+          self.send({step:step,redirect:'back'});
         })
       .on(
         'click',
@@ -66,7 +68,11 @@ var RegisterPage = (function () {
           {
             self.send({step:step,send_code:'Y'});
           }
-        });
+        })
+      .on(
+        'input',
+        '#register_form .input-code',
+        function(){ self.checkCode(this) });
     //
     $('#register_form').submit(function(e){
       let btn = $(this).find('button'),
@@ -86,6 +92,11 @@ var RegisterPage = (function () {
         self.checkName($('#register_form .input-surname'));
         self.checkCompany($('#register_form .input-company'));
         self.checkText($('#register_form .input-login'));
+      }
+      if(step==3)
+      {
+        self.firstInputCode = false;
+        self.checkCode('#register_form .input-code');
       }
 
       if(!$('#register_form .input__error').length)
@@ -164,6 +175,22 @@ var RegisterPage = (function () {
       return true;
 
     return this.inputError(input, !$(input).val().trim().length);
+  },
+  // проверка кода подтверждения
+  RegisterPage.prototype.checkCode = function (input)
+  {
+    if(!$(input).is('*'))
+      return true;
+
+    let v = $(input).val().replace(/\D/, '').substr(0,this.codeLength),
+        checkCode = v.length==this.codeLength;
+
+    $(input).val(v);
+
+    if(checkCode)
+      this.firstInputCode = false;
+
+    return this.inputError(input, (!checkCode && !this.firstInputCode) || !v.length);
   },
   // утсановка поля
   RegisterPage.prototype.inputError = function (input, error)

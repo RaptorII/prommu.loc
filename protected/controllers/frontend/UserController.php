@@ -540,7 +540,10 @@ class UserController extends AppController
       $data = [];
       $model = new UserRegister();
       $step = $model->getStep();
-
+      /*
+      $step = 3;
+      $model->setStep($step);
+      */
       if(!in_array($step,[1,2,3,4,5,6,7,'end']))
       {
         throw new CHttpException(404, 'Error');
@@ -568,13 +571,18 @@ class UserController extends AppController
       {
         $post = Yii::app()->getRequest()->getParam('data');
         $post = json_decode($post, true, 5, JSON_BIGINT_AS_STRING);
+        if(!count($post))
+        {
+          throw new CHttpException(404, 'Error');
+        }
 
         if(isset($post['step']))
         {
-          if(in_array($post['step'],[3]) && $post['redirect']==='back') // return button
+          if(in_array($post['step'],[3,4]) && $post['redirect']==='back') // return button
           {
-            $model->setStep($post['step']);
-            $view = '/user/register/step_' . $post['step'];
+            $step = $post['step'] - 1;
+            $model->setStep($step);
+            $view = '/user/register/step_' . $step;
           }
           elseif (in_array($post['step'],[2]) && $post['redirect']==='auth') // redirect to login
           {
