@@ -43,17 +43,18 @@ echo '</pre>';
       <p class="separator center">
         Код подтверждения отправлен на:
       </p>
-      <p class="separator pad0"><?=$viData['input']['login']?></p>
+      <p class="separator center pad0"><?=$viData['input']['login']?></p>
 
     <? endif; ?>
     <? if(!$viData['input']['confirm_code']): ?>
       <p class="separator">
         <? $isRepeat = $viData['time_to_repeat'] == 0;  ?>
-        <a href="javascript:void(0)" class="repeat_code<?=(!$isRepeat)?' grey':''?>"><?=(!$isRepeat
+        <a href="javascript:void(0)" class="back__away repeat_code<?=(!$isRepeat)?' grey':''?>"><?=(!$isRepeat
             ? 'Повторная отправка кода будет доступна через <span>' . $viData['time_to_repeat'] . '</span>сек.'
             : 'Отправить повторно')?></a>
       </p>
     <? endif; ?>
+
     <p class="input">
       <button type="submit" class="btn-green" data-step="3">Продолжить</button>
     </p>

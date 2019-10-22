@@ -266,14 +266,14 @@
                         <input type="text" required="">
                         <span class="highlight"></span>
                         <span class="bar"></span>
-                        <label >phone</label>
+                        <label >Телефон</label>
                     </div>
 
                     <div class="complete__city">
                         <input type="text" required="">
                         <span class="highlight"></span>
                         <span class="bar"></span>
-                        <label >city</label>
+                        <label >Город</label>
                     </div>
 
                     <div class="complete__birthday">
