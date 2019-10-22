@@ -540,6 +540,8 @@ class UserController extends AppController
       $data = [];
       $model = new UserRegister();
 
+      $model->checkEmailLink();
+
       if(!in_array($model->step, [1,2,3,4,5,6,7,'end']))
       {
         throw new CHttpException(404, 'Error');

@@ -229,6 +229,7 @@ class UserRegister
           {
             $arData['code'] = rand(1111, 9999);
             $arData['time_code'] = time();
+            $arData['token'] = md5($arData['code'] . $arData['time_code'] . $this->user);
           }
         }
       }
@@ -270,7 +271,7 @@ class UserRegister
       {
         $arErrors['system'] = 'Ошибка записи данных';
       }
-      elseif($step==2) // отправляем код для подтверждения
+      elseif($step==2 && isset($arData['code'])) // отправляем код для подтверждения
       {
         $this->sendCode();
       }
@@ -331,7 +332,7 @@ class UserRegister
     {
       $arGet = [
         'type' => $arData['type'],
-        't' => md5($arData['hash'] . $arData['time_code'] . $arData['code']),
+        't' => $arData['token'],
         'referer' => $arData['referer'],
         'transition' => $arData['transition'],
         'canal' => $arData['canal'],
@@ -369,7 +370,10 @@ class UserRegister
     $curTime = time();
     return (($timer > $curTime) ? ($timer - $curTime) : 0);
   }
-
+  /**
+   * @return array
+   * Повтор отправки кода подтверждения
+   */
   public function repeatSendCode()
   {
     $arRes = [];
@@ -383,5 +387,28 @@ class UserRegister
       $arRes['time_to_repeat'] = $this->isTimeToRepeat($time);
     }
     return $arRes;
+  }
+  /**
+   * @return bool
+   * подтверждение с помощью токена
+   */
+  public function checkEmailLink()
+  {
+    $token = Yii::app()->getRequest()->getParam('t');
+    if(empty($token))
+      return false;
+
+    $query = Yii::app()->db->createCommand()
+      ->select('*')
+      ->from('user_register')
+      ->where('token=:token',[':token'=>$token])
+      ->queryRow();
+
+    if(!isset($query['id']))
+      return false;
+
+    $this->user = $query['hash'];
+    $this->setStep((!empty($query['password']) ? 5 : 4));
+    $this->setData(['confirm_code'=>1]);
   }
 }
