@@ -128,6 +128,9 @@
 }
 
 
+.complete__cover.complete__company {
+    column-count: 1;
+}
 .complete__cover{
     column-count: 2;
 }
@@ -187,6 +190,7 @@
 
 #DiContent .complete__phone,
 #DiContent .complete__email,
+#DiContent .complete__name,
 #DiContent .complete__birthday,
 #DiContent .complete__city {
     position: relative;
@@ -222,6 +226,7 @@
 
 #DiContent .complete__phone input,
 #DiContent .complete__email input,
+#DiContent .complete__name input,
 #DiContent .complete__birthday input,
 #DiContent .complete__city input
 {
@@ -242,6 +247,7 @@ input:focus {
 
 #DiContent .complete__phone label,
 #DiContent .complete__email label,
+#DiContent .complete__name label,
 #DiContent .complete__birthday label,
 #DiContent .complete__city label
 {
@@ -259,10 +265,12 @@ input:focus {
 
 #DiContent .complete__phone input:focus ~ label,
 #DiContent .complete__email input:focus ~ label,
+#DiContent .complete__name input:focus ~ label,
 #DiContent .complete__birthday input:focus ~ label,
 #DiContent .complete__city input:focus ~ label,
 #DiContent .complete__phone input:valid ~ label,
 #DiContent .complete__email input:valid ~ label,
+#DiContent .complete__name input:valid ~ label,
 #DiContent .complete__birthday input:valid ~ label,
 #DiContent .complete__city input:valid ~ label
 {

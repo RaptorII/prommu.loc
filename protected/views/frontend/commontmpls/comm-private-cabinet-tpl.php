@@ -19,9 +19,6 @@
 <div id="DiContent" class="page-<?= $action ?> <?= $this->ViewModel->getViewData()->addContentClass ?><?= ContentPlus::getActionID() ? ' action-' . ContentPlus::getActionID() : '' ?>">
     <div class="container">
         <div class="row content-header-box mt20">
-            <?php if( $action == 'company-profile-own' &&  Share::$UserProfile->exInfo->isblocked == 3 ): ?>
-                <div class="center red">Необходимо перейти в редактирование профиля и заполнить необходимые поля. После этого ваш профиль будет отображаться в общем списке работодателей и поиске на сайте, а также вы сможете размещать вакансии. <? echo Share::$UserProfile->checkRequiredFields()['mess']?></div>
-            <?php endif; ?>
             <div class="col-xs-12">
                 <div class="header-user-info">
                     <!--                    -->

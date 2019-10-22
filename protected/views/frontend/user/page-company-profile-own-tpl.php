@@ -113,8 +113,111 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
   ?>
   <div class='col-xs-12 col-sm-8 col-lg-9 ppe__content'>
     <h2 class="upp__title"><?=$viData['userInfo']['name']?></h2>
+
+      <?php
+      if( ($action = $this->action->getId()) == 'profile' ) $action = 'company-profile-own' ?>
+      <?php
+      /**
+       * form
+       *
+       */
+
+      //css
+      Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS .'register/complete-reg.css');
+
+      if( $action == 'company-profile-own' &&  Share::$UserProfile->exInfo->isblocked == 3 ): ?>
+          <div class="center red" style="display:none; opacity: 0">
+              Необходимо перейти в редактирование профиля и заполнить необходимые поля. После этого ваш профиль будет
+              отображаться в общем списке соискателей и поиске на сайте, а также вы сможете откликаться на понравившиеся
+              вакансии.
+              <? echo Share::$UserProfile->checkRequiredFields()['mess']?>
+          </div>
+
+          <div class="complete__reg">
+              <form id="complete__form">
+                  <div class="complete__wrap">
+
+                      <p class="complete__head center">
+                          Необходимо активировать аккаунт
+                      </p>
+                      <p class="complete__txt center">
+                          Чтобы получить доступ к новым возможностям - укажите данные
+                      </p>
+
+                      <span class="complete__about">Контактное лицо:</span>
+                      <div class="complete__cover complete__company">
+                          <div class="complete__name">
+                              <input type="text" required="">
+                              <span class="highlight"></span>
+                              <span class="bar"></span>
+                              <label >Имя/фамилия</label>
+                          </div>
+
+                          <div class="complete__email">
+                              <input type="text" required="">
+                              <span class="highlight"></span>
+                              <span class="bar"></span>
+                              <label >e-mail</label>
+
+                          </div>
+
+                          <div class="complete__phone">
+                              <input type="text" required="">
+                              <span class="highlight"></span>
+                              <span class="bar"></span>
+                              <label >phone</label>
+                          </div>
+
+                          <div class="complete__city">
+                              <input type="text" required="">
+                              <span class="highlight"></span>
+                              <span class="bar"></span>
+                              <label >city</label>
+                          </div>
+
+                      </div>
+
+                      <span class="complete__about">Тип компании:</span>
+                      <div class="complete__prof">
+
+                          <ul id="complete__prof-list" class="complete__prof-list">
+                              <?php
+                              for($i=0; $i<3; $i++){
+                                  ?>
+                                  <li>
+                                      <input type="checkbox" name="donjnost[]" value="<?=$i?>" id="post-<?=$i?>" class="complete__prof-item">
+                                      <label for="post-<?=$i?>" class="prof-item">Прямой работодатель<b></b></label>
+                                  </li>
+
+                                  <?php
+                              }
+                              ?>
+                          </ul>
+
+
+                      </div>
+
+                      <p class="complete__txt center">
+                          После активации вам станет доступен каталог всех соискателей со всеми функциями
+                      </p>
+
+                      <p class="input center">
+                          <button type="submit" class="btn__orange" data-step="">Активировать профиль</button>
+                      </p>
+
+                  </div>
+              </form>
+          </div>
+      <?php
+      endif;
+      /**
+       * end form
+       */
+
+      ?>
+
     <div class="upp__rating-block">
-      <span class="upp__subtitle">Общий рейтинг</span> 
+      <span class="upp__subtitle">Общий рейтинг </span>
       <ul class="upp__star-block">
         <li class="full"></li>
       </ul>     
