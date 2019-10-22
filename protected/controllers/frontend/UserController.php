@@ -566,7 +566,7 @@ class UserController extends AppController
         }
       }
 
-      $view = '/user/register/step_' . $step;
+      $view = '/user/register/step_' . 3;//$step;
       if(Yii::app()->getRequest()->isAjaxRequest)
       {
         $post = Yii::app()->getRequest()->getParam('data');

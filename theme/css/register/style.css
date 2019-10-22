@@ -167,6 +167,9 @@ h6.login__header {
     font-size: 13px;
     position: absolute;
     color: red;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
 }
 
 .center {

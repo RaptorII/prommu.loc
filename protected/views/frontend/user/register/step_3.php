@@ -38,6 +38,7 @@ echo '</pre>';
         <?php if (!empty($viData['errors']['code'])): ?>
           <span class="login__error"><?=$viData['errors']['code']?></span>
         <?php endif; ?>
+          <span class="login__error"> ыфв фыв  фвфывф в фв фв фыывф в фыв</span>
       </p>
 
       <p class="separator center">
