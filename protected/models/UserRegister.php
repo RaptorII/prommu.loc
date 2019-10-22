@@ -10,6 +10,7 @@ class UserRegister
 {
   public static $SOUL = 987654123;
   public static $STRLENGTH = 64;
+  public static $MIN_PASSWORD_LENGTH = 6;
   //
   public static $LOGIN_TYPE_EMAIL = 0;
   public static $LOGIN_TYPE_PHONE = 1;
@@ -226,6 +227,24 @@ class UserRegister
         $data['code'] == $arUser['code']
           ? $arData['confirm_code'] = 1
           : $arErrors['code'] = 'Введен некорректный код подтверждения';
+      }
+    }
+    //
+    if($step==4)
+    {
+      $value1 = filter_var($data['password'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $value2 = filter_var($data['r-password'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      if($value1 != $value2)
+      {
+        $arErrors['r-password'] = 'Значения полей не совпадают';
+      }
+      if($value1 < self::$MIN_PASSWORD_LENGTH)
+      {
+        $arErrors['password'] = 'Пароль должен состоять минимум из шести символов';
+      }
+      else
+      {
+        $arData['password'] = md5($value1);
       }
     }
 

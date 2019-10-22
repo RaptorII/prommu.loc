@@ -8,6 +8,7 @@ var RegisterPage = (function () {
   RegisterPage.prototype.firstInputCompany = true;
   RegisterPage.prototype.firstInputCode = true;
   RegisterPage.prototype.codeLength = 4;
+  RegisterPage.prototype.passwordLength = 6;
   //
   function RegisterPage()
   {
@@ -72,7 +73,17 @@ var RegisterPage = (function () {
       .on(
         'input',
         '#register_form .input-code',
-        function(){ self.checkCode(this) });
+        function(){ self.checkCode(this)})
+      .on( // step 4
+        'input',
+        '#register_form .input-password',
+        function(){ self.checkPassword(this) })
+      .on(
+        'input',
+        '#register_form .input-r-password',
+        function(){ self.checkPassword(this) });
+    // выключаем копипаст
+    $('#register_form [type="text"]').bind('paste',function(e) { e.preventDefault() });
     //
     $('#register_form').submit(function(e){
       let btn = $(this).find('button'),
@@ -97,6 +108,10 @@ var RegisterPage = (function () {
       {
         self.firstInputCode = false;
         self.checkCode('#register_form .input-code');
+      }
+      if(step==4)
+      {
+        self.checkPassword();
       }
 
       if(!$('#register_form .input__error').length)
@@ -191,6 +206,35 @@ var RegisterPage = (function () {
       this.firstInputCode = false;
 
     return this.inputError(input, (!checkCode && !this.firstInputCode) || !v.length);
+  },
+  // проверка кода подтверждения
+  RegisterPage.prototype.checkPassword = function ()
+  {
+    let input1 = $('.input-password'),
+        input2 = $('.input-r-password');
+
+    if(!$(input1).is('*') && !$(input2).is('*'))
+      return true;
+
+    if(typeof arguments[0] == 'undefined')
+    {
+      this.inputError(input1, !$(input1).val().length);
+      this.inputError(input2, !$(input2).val().length);
+      if( $(input1).val() != $(input2).val() )
+      {
+        this.inputError(input1, 1);
+        this.inputError(input2, 1);
+      }
+      else if($(input1).val().length < this.passwordLength)
+      {
+        this.inputError(input1, 1);
+        this.inputError(input2, 1);
+      }
+    }
+    else
+    {
+      this.inputError(arguments[0], !$(arguments[0]).val().length);
+    }
   },
   // утсановка поля
   RegisterPage.prototype.inputError = function (input, error)

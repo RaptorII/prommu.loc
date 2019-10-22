@@ -6,7 +6,7 @@
   <h6 class="login__header">Создайте пароль</h6>
 
   <div class="login__container">
-
+    <p class="separator center">Пароль должен состоять минимум из шести символов(цифр, букв, знаков препинания)</p>
     <p>
       <input type="password" name="password" class="input-password" autocomplete="off" placeholder="Придумайте пароль">
     </p>
