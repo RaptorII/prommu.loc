@@ -54,6 +54,18 @@ var RegisterPage = (function () {
               step = $(btn).data('step');
 
           self.send({step:step,redirect:'auth',href:this.href});
+        })
+      .on(
+        'click',
+        '#register_form .repeat_code',
+        function(){
+          let btn = $('#register_form').find('button'),
+              step = $(btn).data('step');
+
+          if(!$('.repeat_code').hasClass('grey'))
+          {
+            self.send({step:step,send_code:'Y'});
+          }
         });
     //
     $('#register_form').submit(function(e){
@@ -82,11 +94,17 @@ var RegisterPage = (function () {
         self.send(data);
       }
     });
+    // установка таймера
+    if($('.repeat_code span').is('*'))
+    {
+      self.setTimer();
+    }
     //
     //self.startSvg();
   },
   // отправляем аяксом
   RegisterPage.prototype.send = function (data) {
+    let self = this;
     $('body').addClass('prmu-load');
     $.ajax({
       type: 'POST',
@@ -100,6 +118,10 @@ var RegisterPage = (function () {
         }
         else
         {
+          if(data.send_code==='Y')
+          {
+            self.setTimer();
+          }
           $('body').removeClass('prmu-load');
         }
       }
@@ -207,6 +229,24 @@ var RegisterPage = (function () {
     });
 
     return result;
+  },
+  // таймер отправки кода
+  RegisterPage.prototype.setTimer = function ()
+  {
+    setInterval(function(){
+      let main = $('.repeat_code span'),
+          sec = Number($(main).text());
+
+      sec--;
+      if(sec<=0)
+      {
+        $('.repeat_code').removeClass('grey').html('Отправить повторно');
+      }
+      else
+      {
+        $(main).text(sec);
+      }
+    },1000);
   }
   //
   return RegisterPage;

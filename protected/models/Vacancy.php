@@ -4731,4 +4731,24 @@ WHERE id_vac = {$inVacId}";
 
     return $result;
   }
+  /**
+   * @return array
+   */
+  public static function getPostsList()
+  {
+    $query = Yii::app()->db->createCommand()
+      ->select('id, name')
+      ->from('user_attr_dict')
+      ->where('id_par=110')
+      ->order('npp, name')
+      ->queryAll();
+
+    $arRes = [];
+    foreach ($query as $v)
+    {
+      $arRes[$v['id']] = $v['name'];
+    }
+
+    return $arRes;
+  }
 }

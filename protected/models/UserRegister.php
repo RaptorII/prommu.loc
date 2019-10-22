@@ -208,7 +208,7 @@ class UserRegister
         else
         {
           $arData['login'] = $value;
-          $arData['login_type'] = self::$LOGIN_TYPE_PHONE;
+          $arData['login_type'] = self::$LOGIN_TYPE_EMAIL;
           if($arUser['login']!=$value)
           {
             $arData['code'] = rand(1111, 9999);
@@ -240,23 +240,24 @@ class UserRegister
    */
   private function setData($arr)
   {
+    $arUser = $this->getData();
+    if(intval($arUser['id']))
+    {
+      $this->deleteData();
+      foreach ($arUser as $key => $v)
+      {
+        !isset($arr[$key]) && $arr[$key] = $v;
+      }
+    }
+
     $rq = Yii::app()->request;
     if(!isset($rq->cookies['PHPSESSID']))
       return false;
 
-    $hash = $rq->cookies['PHPSESSID']->value;
-    // обновление данных
-    $query = Yii::app()->db->createCommand()
-      ->update('user_register',$arr,'hash=:hash',[':hash'=>$hash]);
+    $arr['hash'] = $rq->cookies['PHPSESSID']->value;
 
-    // создание записи
-    if(!$query)
-    {
-      $arr['hash'] = $hash;
-      $query = Yii::app()->db->createCommand()
-        ->insert('user_register',$arr);
-    }
-    return $query;
+    return Yii::app()->db->createCommand()
+              ->insert('user_register',$arr);
   }
   /**
    * @return bool
@@ -290,38 +291,68 @@ class UserRegister
       ->where('hash=:hash',[':hash'=>$hash])
       ->queryRow();
   }
-
+  /**
+   * отправка кода для подтверждания
+   */
   private function sendCode()
   {
-    /*$arData = $this->getData();
-    $token = md5($arData['hash'] . time() . $arData['login']);
-    $arGet = [
-      'type' => $arData['type'],
-      't' => $token,
-      'referer' => $arData['referer'],
-      'transition' => $arData['transition'],
-      'canal' => $arData['canal'],
-      'campaign' => $arData['campaign'],
-      'content' => $arData['content'],
-      'keywords' => $arData['keywords'],
-      'point' => $arData['point'],
-      'last_referer' => $arData['last_referer'],
-      'ip' => $arData['ip'],
-      'client' => $arData['client'],
-      'pm' => $arData['pm_source'],
-    ];
-    $link  = Subdomain::site() . MainConfig::$PAGE_ACTIVATE . '?' . http_build_query($arGet);
-
-    if(Share::isApplicant($arData['type']))
+    $arData = $this->getData();
+    // email
+    if($arData['login_type']==self::$LOGIN_TYPE_EMAIL)
     {
-      Mailing::set(27,[
-        'user_link' =>  $link,
+      $arGet = [
+        'type' => $arData['type'],
+        't' => md5($arData['hash'] . $arData['time_code'] . $arData['code']),
+        'referer' => $arData['referer'],
+        'transition' => $arData['transition'],
+        'canal' => $arData['canal'],
+        'campaign' => $arData['campaign'],
+        'content' => $arData['content'],
+        'keywords' => $arData['keywords'],
+        'point' => $arData['point'],
+        'last_referer' => $arData['last_referer'],
+        'ip' => $arData['ip'],
+        'client' => $arData['client'],
+        'pm' => $arData['pm_source'],
+      ];
 
+      Mailing::set((Share::isApplicant($arData['type']) ? 27 : 28), [
+        'email_user' => $arData['login'],
+        'code_user' => $arData['code'],
+        'link_user' => Subdomain::site() . MainConfig::$PAGE_ACTIVATE . '?' . http_build_query($arGet),
+        'posts_list' => '<li>' . implode('</li><li>', Vacancy::getPostsList()) . '</li>'
       ]);
     }
-    elseif(Share::isEmployer($arData['type']))
+    // email
+    if($arData['login_type']==self::$LOGIN_TYPE_PHONE)
     {
+      $arGet = ['phone' => $arData['login'], 'code' => $arData['code']];
+      file_get_contents(Subdomain::site() . MainConfig::$PAGE_SEND_SMS_CODE . '?' . http_build_query($arGet));
+    }
+  }
+  /**
+   * @param $time - unix
+   * @return bool
+   */
+  public function isTimeToRepeat($time)
+  {
+    $timer = $time + 120; // отсчитываем 120 секунд
+    $curTime = time();
+    return (($timer > $curTime) ? ($timer - $curTime) : 0);
+  }
 
-    }*/
+  public function repeatSendCode()
+  {
+    $arRes = [];
+    $arRes['input'] = $this->getData();
+    $arRes['time_to_repeat'] = $this->isTimeToRepeat($arRes['input']['time_code']);
+    if(!$arRes['time_to_repeat'])
+    {
+      $time = time();
+      $this->sendCode();
+      $this->setData(['time_code'=>$time]);
+      $arRes['time_to_repeat'] = $this->isTimeToRepeat($time);
+    }
+    return $arRes;
   }
 }

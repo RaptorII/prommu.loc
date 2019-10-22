@@ -504,3 +504,9 @@ h6.login__header {
         margin-bottom: 40px;
     }
 }
+
+/* */
+.repeat_code.grey{
+    color: var(--color-l2-grey);
+    cursor: no-drop;
+}

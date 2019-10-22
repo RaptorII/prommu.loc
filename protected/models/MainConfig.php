@@ -136,7 +136,10 @@ class MainConfig
     public static $PAGE_COMMENTS = 'comments';
     public static $PAGE_PAGES = '';
     public static $PAGE_ABOUT = '/about';
+    /* API */
     public static $PAGE_API = '/api';
+    public static $PAGE_SEND_SMS_CODE = '/api.teles/';
+    /* */
     public static $PAGE_VACANCIES = 'user/vacancies';
     public static $PAGE_VACARHIVE = 'user/vacarhive';
     public static $PAGE_PROMMUCARD = 'user/prommucard';

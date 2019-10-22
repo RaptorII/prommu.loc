@@ -555,7 +555,8 @@ class UserController extends AppController
       else
       {
         $data['input'] = $model->getData();
-        if(!count($data['input']))
+
+        if(!is_array($data['input']))
         {
           $step=1;
           $model->setStep($step);
@@ -570,7 +571,7 @@ class UserController extends AppController
 
         if(isset($post['step']))
         {
-          if(in_array($post['step'],[2]) && $post['redirect']==='back') // return button
+          if(in_array($post['step'],[3]) && $post['redirect']==='back') // return button
           {
             $model->setStep($post['step']);
             $view = '/user/register/step_' . $post['step'];
@@ -579,6 +580,10 @@ class UserController extends AppController
           {
             $model->clearStep();
             $model->deleteData();
+          }
+          elseif (in_array($post['step'],[3]) && $post['send_code']==='Y')
+          {
+            $data = $model->repeatSendCode();
           }
         }
         else
@@ -593,12 +598,24 @@ class UserController extends AppController
             $view = '/user/register/step_' . ++$step;
             $model->setStep($step);
           }
+
+          if($step==3)
+          {
+            $data['input'] = $model->getData();
+            $data['time_to_repeat'] = $model->isTimeToRepeat($data['input']['time_code']);
+          }
         }
 
         $this->renderPartial($view,['viData'=>$data]);
       }
       else
       {
+        if($step==3)
+        {
+          $data['input'] = $model->getData();
+          $data['time_to_repeat'] = $model->isTimeToRepeat($data['input']['time_code']);
+        }
+
         $this->renderRegister($view,['viData'=>$data]);
       }
       // PHPSESSID
