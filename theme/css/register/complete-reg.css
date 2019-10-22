@@ -94,7 +94,7 @@
 
 #DiContent .complete__prof .prof-item b {
     border-bottom: 1px dotted var(--color-dark);
-    width: 200px;
+    width: 65%;
     display: block;
     position: absolute;
     top: 50%;
@@ -221,7 +221,7 @@
 #DiContent input:valid ~ label {
     font-size:14px;
     color: var(--color-dark);
-    top:-5px;
+    top:-4px;
 }
 
 #DiContent .complete__phone input,
@@ -358,6 +358,12 @@ input:focus ~ .highlight {
     }
 }
 
+@media screen and (max-width: 1200px) {
+    #DiContent .complete__prof .prof-item b {
+        width: 55%;
+    }
+}
+
 @media screen and (max-width: 768px){
     .complete__cover {
         column-count: 1;
@@ -376,3 +382,4 @@ input:focus ~ .highlight {
         padding: 10px 10px 10px 0;
     }
 }
+
