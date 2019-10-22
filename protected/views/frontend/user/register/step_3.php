@@ -49,7 +49,7 @@ echo '</pre>';
     <? if(!$viData['input']['confirm_code']): ?>
       <p class="separator">
         <? $isRepeat = $viData['time_to_repeat'] == 0;  ?>
-        <a href="javascript:void(0)" class="back__away repeat_code<?=(!$isRepeat)?' grey':''?>"><?=(!$isRepeat
+        <a href="javascript:void(0)" class="back__away repeat-code<?=(!$isRepeat)?' grey':''?>"><?=(!$isRepeat
             ? 'Повторная отправка кода будет доступна через <span>' . $viData['time_to_repeat'] . '</span>сек.'
             : 'Отправить повторно')?></a>
       </p>
@@ -60,7 +60,7 @@ echo '</pre>';
     </p>
 
     <p class="separator">
-      <a class="back__away" href="javascript:void(0)">
+      <a class="back__away back-away" href="javascript:void(0)">
         Вернуться назад и отредактировать данные
       </a>
     </p>

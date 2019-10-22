@@ -50,7 +50,7 @@ var RegisterPage = (function () {
         })
       .on( // step 3 | 4
         'click',
-        '#register_form .back__away',
+        '#register_form .back-away',
         function(){
           let btn = $('#register_form').find('button'),
             step = $(btn).data('step');
@@ -59,12 +59,12 @@ var RegisterPage = (function () {
         })
       .on(
         'click',
-        '#register_form .repeat_code',
+        '#register_form .repeat-code',
         function(){
           let btn = $('#register_form').find('button'),
               step = $(btn).data('step');
 
-          if(!$('.repeat_code').hasClass('grey'))
+          if(!$('.repeat-code').hasClass('grey'))
           {
             self.send({step:step,send_code:'Y'});
           }
@@ -106,7 +106,7 @@ var RegisterPage = (function () {
       }
     });
     // установка таймера
-    if($('.repeat_code span').is('*'))
+    if($('.repeat-code span').is('*'))
     {
       self.setTimer();
     }
@@ -261,13 +261,13 @@ var RegisterPage = (function () {
   RegisterPage.prototype.setTimer = function ()
   {
     setInterval(function(){
-      let main = $('.repeat_code span'),
+      let main = $('.repeat-code span'),
           sec = Number($(main).text());
 
       sec--;
       if(sec<=0)
       {
-        $('.repeat_code').removeClass('grey').html('Отправить повторно');
+        $('.repeat-code').removeClass('grey').html('Отправить повторно');
       }
       else
       {

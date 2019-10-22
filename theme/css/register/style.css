@@ -512,7 +512,7 @@ h6.login__header {
 }
 
 /* */
-.repeat_code.grey{
+.repeat-code.grey{
     color: var(--color-l2-grey);
     cursor: no-drop;
 }
