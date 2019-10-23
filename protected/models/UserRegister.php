@@ -8,25 +8,14 @@
 
 class UserRegister
 {
-  public static $SOUL = 987654123;
+  public static $SALT = 987654123;
   public static $STRLENGTH = 64;
   public static $MIN_PASSWORD_LENGTH = 6;
-  public static $REPEAT_SEND_CODE_TIME = 120; // отсчитываем 120 секунд
-  //
+  public static $REPEAT_SEND_CODE_TIME = 120; // seconds before repeat sending confirm code
+  // contact type
   public static $LOGIN_TYPE_EMAIL = 0;
   public static $LOGIN_TYPE_PHONE = 1;
-  //
-  //
-  //
-
-  private function filesRoot()
-  {
-    return Settings::getFilesRoot() . 'users1/' . '1';
-  }
-  private function filesUrl()
-  {
-    return Settings::getFilesUrl() . 'users1/' . '1';
-  }
+  // image
   public static $MAX_FILE_SIZE = 10; // 10 Мб
   public static $FILE_FORMAT = ['jpg','jpeg','png'];
   public static $MIN_IMAGE_SIZE = 400;
@@ -34,10 +23,11 @@ class UserRegister
   public static $DEFAULT_IMAGE_SIZE = 1600;
   public static $DIR_PERMISSIONS = 0755; // permission for dir in creating
   //
-  //
-  //
   public $step;
   public $user;
+  public $data;
+  public $filesRoot;
+  public $filesUrl;
 
   function __construct()
   {
@@ -48,7 +38,7 @@ class UserRegister
       $cookie = $rq->cookies['urs']->value;
       for ($i=1000; $i<=6000; $i+=1000)
       {
-        if(md5($i . self::$SOUL)==$cookie)
+        if(md5($i . self::$SALT)==$cookie)
         {
           $this->step = intval($i/1000);
         }
@@ -65,9 +55,14 @@ class UserRegister
     }
     else
     {
-      $this->user = md5(time() . rand(1111111,9999999) . self::$SOUL);
+      $this->user = md5(time() . rand(1111111,9999999) . self::$SALT);
       $rq->cookies['urh'] = new CHttpCookie('urh', $this->user);
     }
+    //
+    $this->data = $this->getData();
+    //
+    $this->filesRoot = Settings::getFilesRoot() . '/users/' . $this->data['id_user'];
+    $this->filesUrl = Settings::getFilesUrl() . '/users/' . $this->data['id_user'];
   }
   /**
    * @param $step
@@ -77,7 +72,7 @@ class UserRegister
   {
     $this->step = $step;
     $value = intval($step) * 1000;
-    Yii::app()->request->cookies['urs'] = new CHttpCookie('urs', md5($value . self::$SOUL));
+    Yii::app()->request->cookies['urs'] = new CHttpCookie('urs', md5($value . self::$SALT));
   }
   /**
    * удаляем шаг из куков
@@ -509,7 +504,7 @@ class UserRegister
       'ip' => $arUser['ip'],
       'source' => $arUser['pm_source'],
     ]);
-    // resume | employer
+    // resume
     if(Share::isApplicant($arUser['type']))
     {
       $model = new Promo();
@@ -521,7 +516,7 @@ class UserRegister
         'mdate' => $date
       ]);
     }
-
+    // employer
     if(Share::isEmployer($arUser['type']))
     {
       $model = new Employer();
@@ -553,7 +548,7 @@ class UserRegister
   public function saveImage()
   {
     $arRes = ['error'=>[]];
-		$result = $this->existenceDir($this->filesRoot());
+		$result = $this->existenceDir($this->filesRoot);
 		if(!$result)
     {
       $arRes['error'][] = 'Ошибка сохранения, обратитесь к администратору';
@@ -581,8 +576,8 @@ class UserRegister
     }
 
     $newName = date('YmdHis') . rand(1000,9999) . '.' . $type;
-    $filePath = $this->filesRoot() . DS . $newName;
-    $src = $this->filesUrl() . DS . $newName;
+    $filePath = $this->filesRoot . DS . $newName;
+    $src = $this->filesUrl . DS . $newName;
     $result = move_uploaded_file($_FILES['upload']["tmp_name"], $filePath);
     if($result) // файл успешно перемещен
     {

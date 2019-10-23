@@ -563,7 +563,7 @@ class UserController extends AppController
         }
         elseif ($model->step==3)
         {
-          $model->setStep((!empty($data['input']['id_user']) ? 5 : 4));
+          //$model->setStep((!empty($data['input']['id_user']) ? 5 : 4));
         }
       }
 
