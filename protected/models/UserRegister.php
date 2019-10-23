@@ -12,22 +12,22 @@ class UserRegister
   public static $STRLENGTH = 64;
   public static $MIN_PASSWORD_LENGTH = 6;
   public static $REPEAT_SEND_CODE_TIME = 120; // seconds before repeat sending confirm code
+  //
+  public static $STEP_TYPE = 1;
+  public static $STEP_LOGIN = 2;
+  public static $STEP_CODE = 3;
+  public static $STEP_PASSWORD = 4;
+  public static $STEP_AVATAR = 5;
   // contact type
   public static $LOGIN_TYPE_EMAIL = 0;
   public static $LOGIN_TYPE_PHONE = 1;
   // image
-  public static $MAX_FILE_SIZE = 10; // 10 Мб
-  public static $FILE_FORMAT = ['jpg','jpeg','png'];
-  public static $MIN_IMAGE_SIZE = 400;
-  public static $MAX_IMAGE_SIZE = 4500;
   public static $DEFAULT_IMAGE_SIZE = 1600;
   public static $DIR_PERMISSIONS = 0755; // permission for dir in creating
   //
   public $step;
   public $user;
   public $data;
-  public $filesRoot;
-  public $filesUrl;
 
   function __construct()
   {
@@ -35,14 +35,7 @@ class UserRegister
     // step
     if(isset($rq->cookies['urs']))
     {
-      $cookie = $rq->cookies['urs']->value;
-      for ($i=1000; $i<=6000; $i+=1000)
-      {
-        if(md5($i . self::$SALT)==$cookie)
-        {
-          $this->step = intval($i/1000);
-        }
-      }
+      $this->step = self::getStep();
     }
     else
     {
@@ -60,9 +53,6 @@ class UserRegister
     }
     //
     $this->data = $this->getData();
-    //
-    $this->filesRoot = Settings::getFilesRoot() . '/users/' . $this->data['id_user'];
-    $this->filesUrl = Settings::getFilesUrl() . '/users/' . $this->data['id_user'];
   }
   /**
    * @param $step
@@ -73,6 +63,25 @@ class UserRegister
     $this->step = $step;
     $value = intval($step) * 1000;
     Yii::app()->request->cookies['urs'] = new CHttpCookie('urs', md5($value . self::$SALT));
+  }
+  /**
+   * @return int
+   */
+  public static function getStep()
+  {
+    $result = 1;
+    if(isset(Yii::app()->request->cookies['urs']))
+    {
+      $cookie = Yii::app()->request->cookies['urs']->value;
+      for ($i=1000; $i<=6000; $i+=1000)
+      {
+        if(md5($i . self::$SALT)==$cookie)
+        {
+          $result = intval($i/1000);
+        }
+      }
+    }
+    return $result;
   }
   /**
    * удаляем шаг из куков
@@ -527,35 +536,28 @@ class UserRegister
         'crdate' => $date,
       ]);
     }
+    // authorize
+    $model = new Auth();
+    $model->Authorize(['id'=>$id_user]);
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  //
+  //
   //
   // !!!
+  //
+  //
   //
   public function saveImage()
   {
     $arRes = ['error'=>[]];
-		$result = $this->existenceDir($this->filesRoot);
+		$result = $this->existenceDir(Share::$UserProfile->filesRoot);
 		if(!$result)
     {
       $arRes['error'][] = 'Ошибка сохранения, обратитесь к администратору';
       return $arRes['error'];
     }
 
-		$mSize = self::$MAX_FILE_SIZE * 1024 * 1024; // переводим в байты
+		$mSize = Share::$UserProfile->arYiiUpload['maxFileSize'] * 1024 * 1024; // переводим в байты
 
     $fName = $_FILES['upload']['name'];
     $info = new SplFileInfo($fName);
@@ -567,30 +569,31 @@ class UserRegister
     }
     if($_FILES['upload']['size']>$mSize) // ошибка передачи файла на сервер
     {
-      $arRes['error'][] = "Размер файла '{$fName}' больше допустимого значения (" . self::$MAX_FILE_SIZE . "Мб)";
+      $arRes['error'][] = "Размер файла '{$fName}' больше допустимого значения ("
+        . Share::$UserProfile->arYiiUpload['maxFileSize'] . "Мб)";
     }
 
-    if(!in_array($type,self::$FILE_FORMAT)) // проверяем формат на корректность
+    if(!in_array($type,Share::$UserProfile->arYiiUpload['fileFormat'])) // проверяем формат на корректность
     {
       $arRes['error'][] = "У файла '{$fName}' некорректный формат";
     }
 
     $newName = date('YmdHis') . rand(1000,9999) . '.' . $type;
-    $filePath = $this->filesRoot . DS . $newName;
-    $src = $this->filesUrl . DS . $newName;
+    $filePath = Share::$UserProfile->filesRoot . DS . $newName;
+    $src = Share::$UserProfile->filesUrl . DS . $newName;
     $result = move_uploaded_file($_FILES['upload']["tmp_name"], $filePath);
     if($result) // файл успешно перемещен
     {
       $fSize = getimagesize($filePath);
       if($fSize)
       {
-        $size = self::$MIN_IMAGE_SIZE; // проверяем на минимальную ширину/высоту
+        $size = Share::$UserProfile->arYiiUpload['minImageSize']; // проверяем на минимальную ширину/высоту
         if($size>0 && ($fSize[0]<$size || $fSize[1]<$size))
         {
           $arRes['error'][] = "Файл '{$fName}' меньше допустимого значения ({$size}x{$size})";
           unlink($filePath);
         }
-        $size = self::$MAX_IMAGE_SIZE; // проверяем на максимальную ширину/высоту
+        $size = Share::$UserProfile->arYiiUpload['maxImageSize']; // проверяем на максимальную ширину/высоту
         if($size>0 && ($fSize[0]>$size || $fSize[1]>$size))
         {
           $arRes['error'][] = "Файл '{$fName}' больше допустимого значения ({$size}x{$size})";
@@ -670,5 +673,123 @@ class UserRegister
     $result = imagejpeg($image_p, $outPath, $quality); // записываем изображение в файл
     imagedestroy($image_p);
     imagedestroy($image);
+  }
+  /**
+   * @param $arData - array()
+   * @param $arParams - array()
+   */
+  public function editImage($arData)
+  {
+    $quality = 90;
+    $arRes = ['error'=>[],'items'=>[],'success'=>[]];
+
+    $arRes['items'][] = $arData['oldName'];
+    $filePath = Share::$UserProfile->filesUrl . DS . $arData['name'];
+    $info = new SplFileInfo($arData['name']);
+    $type = mb_strtolower($info->getExtension());
+    $typeLen = strlen($type) + 1; // прибавляем точку
+    $filePathWithoutExt = substr($filePath, 0, (strlen($filePath)-$typeLen)); // without '.<type>'
+    $inOutFile = $filePathWithoutExt . 'tmp.jpg';
+
+    //if(!file_exists($filePath))
+    //{	$this->log('editImages():01'); return; }
+
+    $image = imagecreatefromjpeg($filePath);
+    //if(!$image){	$this->log('editImages():02'); return; }
+
+    $imgProps = getimagesize($filePath);
+    list($oldW, $oldH) = $imgProps; // get old width and old height
+    $srcImgW = $oldW;
+    $srcImgH = $oldH;
+    $tmpImgW = $arData['width'];
+    $tmpImgH = $arData['height'];
+    $degrees = $arData['rotate'];
+    $srcX = $arData['x'];
+    $srcY = $arData['y'];
+
+    // Rotate the source image
+    if(is_numeric($degrees) && $degrees != 0)
+    {
+      // PHP's degrees is opposite to CSS's degrees
+      $image = imagerotate( $image, -$degrees, 0);
+      $deg = abs($degrees) % 180;
+      $arc = ($deg > 90 ? (180 - $deg) : $deg) * M_PI / 180;
+      $srcImgW = $oldW * cos($arc) + $oldH * sin($arc);
+      $srcImgH = $oldW * sin($arc) + $oldH * cos($arc);
+      // Fix rotated image miss 1px issue when degrees < 0
+      $srcImgW -= 1;
+      $srcImgH -= 1;
+    }
+
+    if($srcX <= -$tmpImgW || $srcX > $srcImgW)
+    {
+      $srcX = $srcW = $dstX = $dstW = 0;
+    }
+    elseif($srcX <= 0)
+    {
+      $dstX = -$srcX;
+      $srcX = 0;
+      $srcW = $dstW = min($srcImgW, $tmpImgW + $srcX);
+    }
+    elseif($srcX <= $srcImgW)
+    {
+      $dstX = 0;
+      $srcW = $dstW = min($tmpImgW, $srcImgW - $srcX);
+    }
+
+    if($srcW <= 0 || $srcY <= -$tmpImgH || $srcY > $srcImgH)
+    {
+      $srcY = $srcH = $dstY = $dstH = 0;
+    }
+    elseif($srcY <= 0)
+    {
+      $dstY = -$srcY;
+      $srcY = 0;
+      $srcH = $dstH = min($srcImgH, $tmpImgH + $srcY);
+    }
+    elseif($srcY <= $srcImgH)
+    {
+      $dstY = 0;
+      $srcH = $dstH = min($tmpImgH, $srcImgH - $srcY);
+    }
+    // Scale to destination position and size
+    $ratio = $tmpImgW / $dstW;
+    $dstX /= $ratio;
+    $dstY /= $ratio;
+    $dstW /= $ratio;
+    $dstH /= $ratio;
+    //  Создание нового полноцветного изображения
+    $dstImage = imagecreatetruecolor($dstW, $dstH);
+    // Add transparent background to destination image
+    imagefill($dstImage, 0, 0, imagecolorallocate($dstImage, 255, 255, 255));
+    // Копирование и изменение размера изображения с ресемплированием
+    $result = imagecopyresampled($dstImage, $image, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH);
+    //if(!$result){	$this->log('editImages():03'); return; }
+    $result = imagejpeg($dstImage, $inOutFile, $quality); // записываем изображение в файл
+    //if(!$result){ $this->log('editImages():04'); return; }
+    foreach (Share::$UserProfile->arYiiUpload['imgDimensions'] as $suffix => $size)
+    {
+      $this->resizeImage($inOutFile, "{$filePathWithoutExt}{$suffix}.jpg", $size);
+    }
+    $result = imagejpeg($image, $filePathWithoutExt
+      . Share::$UserProfile->arYiiUpload['imgOrigSuFFix'] . ".jpg");
+    //if(!$result){	$this->log('editImages():03'); return; }
+
+    $arRes['success'] = [
+      'name' => $arData['name'],
+      'oldname' => $arData['oldName'],
+      'path' => Share::$UserProfile->filesUrl . DS . $arData['name']
+    ];
+
+    imagedestroy($image);
+    imagedestroy($dstImage);
+    unlink($filePath);
+    unlink($inOutFile);
+/*
+    $object = Share::$UserProfile->arYiiUpload['objSave'];
+    $method = Share::$UserProfile->arYiiUpload['objSaveMethod'];
+    $object->$method( [ 'files' => [$arRes['success']] ] );
+*/
+    return $arRes;
   }
 }

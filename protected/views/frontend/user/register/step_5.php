@@ -21,10 +21,10 @@
         </div>
 
         <p class="separator center">
-          Допустимые форматы фалов <?=implode(', ', UserRegister::$FILE_FORMAT);?>
+          Допустимые форматы фалов <?=implode(', ', Share::$UserProfile->arYiiUpload['fileFormat']);?>
         </p>
         <p class="separator center pad0">
-          Размер не более <?=UserRegister::$MAX_FILE_SIZE?> Мб.
+          Размер не более <?=Share::$UserProfile->arYiiUpload['maxFileSize']?> Мб.
         </p>
 
         <p class="separator center upload-block">

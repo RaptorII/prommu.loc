@@ -575,7 +575,7 @@ class UserController extends AppController
         //
         // !!!
         //
-        if(isset($_FILES['upload'])) // только загрузка файлов
+        if(isset($_FILES['upload']) && $model->step==5) // только загрузка файлов
         {
           $data = $model->saveImage();
           echo CJSON::encode($data);
@@ -588,7 +588,7 @@ class UserController extends AppController
 
         if(isset($post['step']))
         {
-          if(in_array($post['step'],[3,4]) && $post['redirect']==='back') // return button
+          if(in_array($post['step'],[3,4,5]) && $post['redirect']==='back') // return button
           {
             $model->setStep($post['step'] - 1);
             $view = '/user/register/step_' . $model->step;
@@ -601,6 +601,12 @@ class UserController extends AppController
           elseif (in_array($post['step'],[3]) && $post['send_code']==='Y')
           {
             $data = $model->repeatSendCode();
+          }
+          elseif (in_array($post['step'],[5]) && isset($post['width']) && isset($post['height']))
+          {
+            $data = $model->editImage($post);
+            echo CJSON::encode($data);
+            Yii::app()->end();
           }
         }
         else
