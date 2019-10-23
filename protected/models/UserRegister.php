@@ -15,7 +15,27 @@ class UserRegister
   //
   public static $LOGIN_TYPE_EMAIL = 0;
   public static $LOGIN_TYPE_PHONE = 1;
+  //
+  //
+  //
 
+  private function filesRoot()
+  {
+    return Settings::getFilesRoot() . 'users1/' . '1';
+  }
+  private function filesUrl()
+  {
+    return Settings::getFilesUrl() . 'users1/' . '1';
+  }
+  public static $MAX_FILE_SIZE = 10; // 10 Мб
+  public static $FILE_FORMAT = ['jpg','jpeg','png'];
+  public static $MIN_IMAGE_SIZE = 400;
+  public static $MAX_IMAGE_SIZE = 4500;
+  public static $DEFAULT_IMAGE_SIZE = 1600;
+  public static $DIR_PERMISSIONS = 0755; // permission for dir in creating
+  //
+  //
+  //
   public $step;
   public $user;
 
@@ -81,8 +101,8 @@ class UserRegister
       ->select('count(id)')
       ->from('user_register')
       ->where(
-        'hash=:hash',
-        [':hash'=>$rq->cookies['urh']->value]
+        'user=:user',
+        [':user'=>$rq->cookies['urh']->value]
       )
       ->queryScalar();
 
@@ -122,9 +142,38 @@ class UserRegister
           'subdomen' => Subdomain::getId(),
           'date' => time()
         ];
+        // transition
+        $arData['transition'] = explode(",", $arData['transition'])[0];
+        // canal
+        $arData['canal'] = explode(",", $arData['canal'])[0];
+        // campaign
+        $arData['campaign'] = explode(",", $arData['campaign'])[0];
+        // content
+        $arData['content'] = explode(",", $arData['content'])[0];
+        // keywords
+        $model = new Auth();
+        $arData['keywords'] = $model->encoderSys($arData['keywords']);
+        // pm_source
         empty($arData['pm_source']) && $arData['pm_source']='none';
+        // client
         $arData['client'] = substr($arData['client'], 6, 100);
         empty($arData['client']) && $arData['client'] = ' ';
+        // ip
+        $ips  = @$_SERVER['HTTP_CLIENT_IP'];
+        $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+        $remote  = @$_SERVER['REMOTE_ADDR'];
+        if(filter_var($ips, FILTER_VALIDATE_IP))
+        {
+          $arData['ip'] = $ips;
+        }
+        elseif(filter_var($forward, FILTER_VALIDATE_IP))
+        {
+          $arData['ip'] = $forward;
+        }
+        else
+        {
+          $arData['ip'] = $remote;
+        }
         empty($arData['ip']) && $arData['ip'] = ' ';
       }
     }
@@ -238,10 +287,10 @@ class UserRegister
     if($step==3)
     {
       $arUser = $this->getData();
-      if(!$arUser['confirm_code'])
+      if(!$arUser['is_confirm'])
       {
         $data['code'] == $arUser['code']
-          ? $arData['confirm_code'] = 1
+          ? $arData = ['is_confirm'=>1, 'is_confirm_time'=>time()]
           : $arErrors['code'] = 'Введен некорректный код подтверждения';
       }
     }
@@ -260,7 +309,7 @@ class UserRegister
       }
       else
       {
-        $arData['password'] = md5($value1);
+        $this->saveNewUser($value1);
       }
     }
 
@@ -296,7 +345,7 @@ class UserRegister
       }
     }
 
-    $arr['hash'] = $this->user;
+    $arr['user'] = $this->user;
 
     return Yii::app()->db->createCommand()
               ->insert('user_register',$arr);
@@ -307,7 +356,7 @@ class UserRegister
   public function deleteData()
   {
     return Yii::app()->db->createCommand()
-      ->delete('user_register','hash=:hash',[':hash'=>$this->user]);
+      ->delete('user_register','user=:user',[':user'=>$this->user]);
   }
   /**
    * @return mixed
@@ -318,7 +367,7 @@ class UserRegister
     return Yii::app()->db->createCommand()
       ->select('*')
       ->from('user_register')
-      ->where('hash=:hash',[':hash'=>$this->user])
+      ->where('user=:user',[':user'=>$this->user])
       ->queryRow();
   }
   /**
@@ -407,8 +456,224 @@ class UserRegister
     if(!isset($query['id']))
       return false;
 
-    $this->user = $query['hash'];
-    $this->setStep((!empty($query['password']) ? 5 : 4));
-    $this->setData(['confirm_code'=>1]);
+    $this->user = $query['user'];
+    $this->setStep((!empty($query['id_user']) ? 5 : 4));
+    if(!$query['is_confirm'])
+    {
+      $this->setData(['is_confirm'=>1, 'is_confirm_time'=>time()]);
+    }
+  }
+  /**
+   * @param $password
+   * доведение до состояния старой регистрации
+   */
+  private function saveNewUser($password)
+  {
+    $arUser = $this->getData();
+    $date = date('Y-m-d H:i:s');
+    // user
+    $model = new User();
+    $id_user = $model->registerUser([
+      'login' => $arUser['login'],
+      'passw' => md5($password), // !!!!!! небезопасно
+      'email' => $arUser['login'],
+      'status' => $arUser['type'],
+      'isblocked' => $model::$ISBLOCKED_EXPECT,
+      'ismoder' => $model::$ISMODER_INACTIVE,
+      'access_time' => $date,
+      'crdate' => $date,
+      'mdate' => $date
+    ]);
+    //
+    $this->setData(['id_user'=>$id_user]);
+    // analytic
+    $model = new Analytic();
+    $model->registerUser([
+      'id_us' => $id_user,
+      'name' => (Share::isApplicant($arUser['type'])
+        ? $arUser['name'] . ' ' . $arUser['surname']
+        : $arUser['name']),
+      'date' =>  date('Y-m-d H:i:s', $arUser['date']),
+      'type' => $arUser['type'],
+      'referer' => $arUser['referer'],
+      'canal' => $arUser['canal'],
+      'campaign' => $arUser['campaign'],
+      'content' => $arUser['content'],
+      'keywords' => $arUser['keywords'],
+      'transition' => $arUser['transition'],
+      'point' => $arUser['point'],
+      'last_referer' => $arUser['last_referer'],
+      'active' => 0, // !!!
+      'subdomen' => $arUser['subdomen'],
+      'client' => $arUser['client'],
+      'ip' => $arUser['ip'],
+      'source' => $arUser['pm_source'],
+    ]);
+    // resume | employer
+    if(Share::isApplicant($arUser['type']))
+    {
+      $model = new Promo();
+      $model->registerUser([
+        'id_user' => $id_user,
+        'firstname' => $arUser['name'],
+        'lastname' => $arUser['surname'],
+        'date_public' => $date,
+        'mdate' => $date
+      ]);
+    }
+
+    if(Share::isEmployer($arUser['type']))
+    {
+      $model = new Employer();
+      $model->registerUser([
+        'id_user' => $id_user,
+        'name' => $arUser['name'],
+        'type' => $model::$TYPE_DIRECT_EMPLOYER,
+        'crdate' => $date,
+      ]);
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //
+  // !!!
+  //
+  public function saveImage()
+  {
+    $arRes = ['error'=>[]];
+		$result = $this->existenceDir($this->filesRoot());
+		if(!$result)
+    {
+      $arRes['error'][] = 'Ошибка сохранения, обратитесь к администратору';
+      return $arRes['error'];
+    }
+
+		$mSize = self::$MAX_FILE_SIZE * 1024 * 1024; // переводим в байты
+
+    $fName = $_FILES['upload']['name'];
+    $info = new SplFileInfo($fName);
+    $type = mb_strtolower($info->getExtension());
+
+    if($_FILES['upload']['error']) // ошибка передачи файла на сервер
+    {
+      $arRes['error'][] = "Ошибка передачи файла '{$fName}' на сервер";
+    }
+    if($_FILES['upload']['size']>$mSize) // ошибка передачи файла на сервер
+    {
+      $arRes['error'][] = "Размер файла '{$fName}' больше допустимого значения (" . self::$MAX_FILE_SIZE . "Мб)";
+    }
+
+    if(!in_array($type,self::$FILE_FORMAT)) // проверяем формат на корректность
+    {
+      $arRes['error'][] = "У файла '{$fName}' некорректный формат";
+    }
+
+    $newName = date('YmdHis') . rand(1000,9999) . '.' . $type;
+    $filePath = $this->filesRoot() . DS . $newName;
+    $src = $this->filesUrl() . DS . $newName;
+    $result = move_uploaded_file($_FILES['upload']["tmp_name"], $filePath);
+    if($result) // файл успешно перемещен
+    {
+      $fSize = getimagesize($filePath);
+      if($fSize)
+      {
+        $size = self::$MIN_IMAGE_SIZE; // проверяем на минимальную ширину/высоту
+        if($size>0 && ($fSize[0]<$size || $fSize[1]<$size))
+        {
+          $arRes['error'][] = "Файл '{$fName}' меньше допустимого значения ({$size}x{$size})";
+          unlink($filePath);
+        }
+        $size = self::$MAX_IMAGE_SIZE; // проверяем на максимальную ширину/высоту
+        if($size>0 && ($fSize[0]>$size || $fSize[1]>$size))
+        {
+          $arRes['error'][] = "Файл '{$fName}' больше допустимого значения ({$size}x{$size})";
+          unlink($filePath);
+        }
+        $this->resizeImage($filePath, $filePath, self::$DEFAULT_IMAGE_SIZE); // сжимаем до допустимых размеров
+      }
+      $arRes['success'] = [
+        'name' => $newName,
+        'oldname' => $fName,
+        'path' => $src
+      ];
+    }
+    else
+    {
+      $arRes['error'][] = "Ошибка загрузки файла '{$fName}' на сервер";
+    }
+
+    return $arRes;
+  }
+  /**
+   * @param $path - string
+   */
+  private function existenceDir($path)
+  {
+    $arPath = explode('/',$path);
+    $dirPath = '';
+    $arRes = true;
+    for ($i=0, $n=count($arPath); $i<$n; $i++)
+    {
+      $dirPath .= $arPath[$i] . '/';
+      if(!is_dir($dirPath))
+      {
+        $arRes = mkdir($dirPath, self::$DIR_PERMISSIONS);
+      }
+      if(!$arRes)
+        break;
+    }
+    return $arRes;
+  }
+  /**
+   * @param $inPath - string, path to file input
+   * @param $outPath - string, path to file output
+   * @param $size - integer, maximum size
+   */
+  private function resizeImage($inPath, $outPath, $size)
+  {
+    $quality = 90;
+    $imgProps = getimagesize($inPath); // Get dimensions
+    list($oldW, $oldH) = $imgProps;
+    $ratioOrig = $oldW / $oldH;
+
+    if( $ratioOrig > 1 ) // альбомный
+    {
+      $newW = ($oldW>$size) ? $size : $oldW;
+      $newH = ($oldW>$size) ? ($newW/$ratioOrig) : $oldH;
+    }
+    else // портретный
+    {
+      $newH = ($oldH>$size) ? $size : $oldH;
+      $newW = ($oldH>$size) ? ($newH*$ratioOrig) : $oldW;
+    }
+    //  Создание нового полноцветного изображения
+    $image_p = imagecreatetruecolor($newW, $newH);
+
+    switch($imgProps['mime'])
+    {
+      case "image/jpeg": $image = imagecreatefromjpeg($inPath); break;
+      case "image/pjpeg": $image = imagecreatefromjpeg($inPath); break;
+      case "image/png": $image = imagecreatefrompng($inPath); break;
+      case "image/x-png": $image = imagecreatefrompng($inPath); break;
+      case "image/gif": $image = imagecreatefromgif($inPath); break;
+      default: return; break;
+    }
+    // Копирование и изменение размера изображения с ресемплированием
+    $result = imagecopyresampled($image_p, $image, 0, 0, 0, 0, $newW, $newH, $oldW, $oldH);
+    $result = imagejpeg($image_p, $outPath, $quality); // записываем изображение в файл
+    imagedestroy($image_p);
+    imagedestroy($image);
   }
 }

@@ -23,7 +23,9 @@ class User extends CActiveRecord
   public static $ISBLOCKED_NOT_FULL_ACTIVE = 3;
   public static $ISBLOCKED_PAUSE_DISPLAY = 4;
 
-	/**
+  public static $ISMODER_INACTIVE = 0;
+  public static $ISMODER_ACTIVE = 1;
+  /**
 	 * Returns the static model of the specified AR class.
 	 * @return User the static model class
 	 */
@@ -1689,5 +1691,16 @@ class User extends CActiveRecord
       return $query['id_user'];
     }
     return false;
+  }
+  /**
+   * @param $arInsert - array(field => value)
+   * @return bool
+   */
+  public function registerUser($arInsert)
+  {
+    $result = Yii::app()->db->createCommand()
+      ->insert(self::tableName(),$arInsert);
+
+    return ($result ? Yii::app()->db->getLastInsertID() : $result);
   }
 }

@@ -516,3 +516,359 @@ h6.login__header {
     color: var(--color-l2-grey);
     cursor: no-drop;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+* !!!
+*/
+.YiiUpload__call-btn {
+    /*width: 100%;*/
+    /*max-width: 250px;*/
+    text-align: center;
+    margin: 15px auto;
+    border: none;
+    border-radius: 18px;
+    display: inline-block;
+    padding: 3px;
+    position: relative;
+    background-color: rgba(171, 184, 32, .5);
+    -webkit-transition: all .3s ease-out;
+    -moz-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+    transition: all .3s ease-out;
+    cursor: pointer;
+}
+
+.YiiUpload__call-btn:after, .YiiUpload__call-btn:before {
+    content: '';
+    position: absolute;
+    border-radius: 12px;
+    top: 3px;
+    right: 3px;
+    bottom: 3px;
+    left: 3px;
+}
+
+.YiiUpload__call-btn:before {
+    background: #abb837;
+    z-index: 1
+}
+
+.YiiUpload__call-btn:after {
+    z-index: 1;
+    opacity: 0;
+    background: #ff921d;
+    -webkit-transition: all .3s ease-out;
+    -moz-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+    transition: all .3s ease-out;
+}
+
+.YiiUpload__call-btn:hover {
+    background-color: rgba(255, 101, 0, .5)
+}
+
+.YiiUpload__call-btn:hover:after {
+    opacity: 1
+}
+
+.YiiUpload__call-btn span {
+    color: #fff;
+    position: relative;
+    z-index: 2
+}
+
+.YiiUpload__call-btn span {
+    font-size: 16px;
+    line-height: 21px;
+    display: inline-block;
+    padding: 4px 10px;
+    text-transform: uppercase;
+}
+
+.YiiUpload__call-btn:after, .YiiUpload__call-btn:before {
+    border-radius: 15px;
+}
+
+/* */
+.YiiUpload__block {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, .6);
+    z-index: 1099;
+    display: none;
+}
+
+.YiiUpload__block > div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    text-align: center;
+}
+
+.YiiUpload__block > div::before {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+    width: 0;
+}
+
+.YiiUpload__block > div > div {
+    width: 100%;
+    max-width: 800px;
+    padding: 44px 15px;
+    display: inline-block;
+}
+
+/* */
+.YiiUpload__form-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.YiiUpload__form-body {
+    text-align: initial;
+}
+
+/* */
+.YiiUpload__form {
+    width: 100%;
+    padding: 15px;
+    margin: 0;
+    background-color: #ffffff;
+    border-radius: 5px;
+    position: relative;
+}
+
+.YiiUpload__form-close {
+    display: block;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    right: -15px;
+    top: -15px;
+    background: transparent url(/theme/pic/register/sprite.png) 0 0 no-repeat;
+    cursor: pointer;
+}
+
+.YiiUpload__form .YiiUpload__form-input {
+    display: none;
+}
+
+.YiiUpload__form-btns {
+    text-align: center;
+}
+
+.YiiUpload__form-btn {
+    display: inline-block;
+    padding: 5px;
+    margin: 15px 5px 0 5px;
+    border-radius: 5px;
+    color: #ffffff;
+    background-color: #ff8300;
+    cursor: pointer;
+}
+
+.YiiUpload__form-errors {
+    color: red;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+/* files */
+.YiiUpload__form-files div {
+    padding-bottom: 5px
+}
+
+.YiiUpload__form-files span {
+    font-size: 14px;
+    vertical-align: middle;
+    margin-right: 5px;
+    word-break: break-word;
+}
+
+.YiiUpload__delete {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background: transparent url(/theme/pic/register/sprite.png) 0 -32px no-repeat;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+/* result */
+.YiiUpload__green {
+    color: #abb820;
+    font-size: 16px;
+}
+
+.YiiUpload__form-result label {
+    display: block;
+    width: 100%;
+    font-weight: normal;
+}
+
+.YiiUpload__form-result p {
+    margin: 15px 0 0;
+    font-weight: bold;
+}
+
+.YiiUpload__form-result input {
+    width: 100%;
+}
+
+/* editor */
+.YiiUpload__editor {
+    display: none;
+    overflow: hidden;
+}
+
+.YiiUpload__editor-field {
+    width: 100%;
+    height: 355px;
+    margin-bottom: 75px;
+    position: relative;
+}
+
+.YiiUpload__editor-prev {
+    width: 185px;
+    text-align: center;
+    position: relative;
+    left: -100px;
+    margin-left: 50%;
+}
+
+.YiiUpload__editor-prev-item {
+    margin-bottom: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.YiiUpload__editor-prev-lg {
+    width: 185px;
+    height: 200px;
+}
+
+.YiiUpload__editor-prev-sm {
+    width: 70px;
+    height: 70px;
+}
+
+.YiiUpload__editor-panel {
+    width: 100%;
+    text-align: center;
+
+}
+
+.YiiUpload__editor-panel div {
+    width: 28px;
+    height: 28px;
+    display: inline-block;
+    margin: 10px 5px;
+    cursor: pointer;
+    background: #ff8300 url(/theme/pic/register/sprite.png) no-repeat;
+    border-radius: 5px;
+}
+
+.YiiUpload__editor-panel .YiiUpload__editor_l-rotate {
+    background-position: 0 -50px;
+}
+
+.YiiUpload__editor-panel .YiiUpload__editor_r-rotate {
+    background-position: 0 -74px;
+}
+
+.YiiUpload__editor-panel .YiiUpload__crop {
+    background-position: 0 -99px;
+}
+
+.YiiUpload__editor-field input {
+    width: 100%;
+    height: 35px;
+    border: 1px solid #EBEBEB;
+    color: #212121;
+    position: absolute;
+    bottom: -55px;
+    padding: 0 15px;
+    font-size: 14px;
+    line-height: 35px;
+}
+
+.YiiUpload__editor-field input:focus {
+    outline: none;
+}
+
+@media (min-width: 768px) {
+    .YiiUpload__editor-field {
+        width: 338px;
+        height: 413px;
+        float: left;
+    }
+
+    .YiiUpload__editor-prev {
+        float: right;
+        margin-left: 0px;
+        left: 0;
+    }
+
+    .YiiUpload__editor-panel {
+        width: 185px;
+        display: inline-block;
+        float: right;
+    }
+}
+
+@media (min-width: 992px) {
+    .YiiUpload__editor-field {
+        width: 538px;
+        height: 613px;
+    }
+}
+
+/* snapshot */
+.YiiUpload__camera {
+    position: relative;
+}
+
+.YiiUpload__camera,
+.YiiUpload__camera canvas,
+.YiiUpload__camera img {
+    display: none;
+}
+
+.YiiUpload__camera img {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.YiiUpload__camera img,
+.YiiUpload__camera video {
+    width: 100%;
+    height: auto;
+}
+
+.YiiUpload__editor-field img{ max-width:100%; }

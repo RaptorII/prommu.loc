@@ -5,7 +5,7 @@ class Employer extends ARModel
 {
     public static $SCOPE_HAS_LOGO = 1;
 
-
+  public static $TYPE_DIRECT_EMPLOYER = 102; // "Прямой работодатель"
 
 	/**
 	 * @return string the associated database table name
@@ -980,4 +980,16 @@ class Employer extends ARModel
             [':id' => $id]
         );
     }
+
+  /**
+   * @param $arInsert - array(field => value)
+   * @return bool
+   */
+  public function registerUser($arInsert)
+  {
+    $result = Yii::app()->db->createCommand()
+      ->insert(self::tableName(),$arInsert);
+
+    return ($result ? Yii::app()->db->getLastInsertID() : $result);
+  }
 }

@@ -21,17 +21,19 @@
         </div>
 
         <p class="separator center">
-          Допустимые форматы фалов *.jpg и *.png
+          Допустимые форматы фалов <?=implode(', ', UserRegister::$FILE_FORMAT);?>
         </p>
         <p class="separator center pad0">
-          Размер не более 5 Мб
+          Размер не более <?=UserRegister::$MAX_FILE_SIZE?> Мб.
         </p>
 
-        <p class="input">
-          <a href="<?=MainConfig::$PAGE_EDIT_PROFILE . '?ep=1'?>" class="btn-orange">
-            Загрузить фото
-          </a>
+        <p class="separator center upload-block">
+          <span class="btn-orange btn-upload">Загрузить фото</span>
+          <span class="input"><input type="file" name="upload" class="input-upload"></span>
         </p>
+        <?
+
+        ?>
         <? $cntPhotos = count($viData['userInfo']['userPhotos']); ?>
         <? if( $cntPhotos < Share::$UserProfile->photosMax ): ?>
           <?

@@ -11,7 +11,7 @@
   <div class="login__container">
     <? if($viData['input']['login_type']==UserRegister::$LOGIN_TYPE_PHONE): ?>
       <p>
-        <input type="text" value="<?=($viData['input']['confirm_code'] ? $viData['input']['code'] : '')?>" class="input-code" autocomplete="off" placeholder="Введите код из SMS">
+        <input type="text" value="<?=($viData['input']['is_confirm'] ? $viData['input']['code'] : '')?>" class="input-code" autocomplete="off" placeholder="Введите код из SMS">
         <?php if (!empty($viData['errors']['code'])): ?>
           <span class="login__error"><?=$viData['errors']['code']?></span>
         <?php endif; ?>
@@ -27,7 +27,7 @@
       </p>
 
       <p class="separator center">
-        <input type="text" name="code" value="<?=($viData['input']['confirm_code'] ? $viData['input']['code'] : '')?>" class="input-code" autocomplete="off" placeholder="Введите код из письма">
+        <input type="text" name="code" value="<?=($viData['input']['is_confirm'] ? $viData['input']['code'] : '')?>" class="input-code" autocomplete="off" placeholder="Введите код из письма">
         <?php if (!empty($viData['errors']['code'])): ?>
           <span class="login__error"><?=$viData['errors']['code']?></span>
         <?php endif; ?>
@@ -39,7 +39,7 @@
       <p class="separator center pad0"><?=$viData['input']['login']?></p>
 
     <? endif; ?>
-    <? if(!$viData['input']['confirm_code']): ?>
+    <? if(!$viData['input']['is_confirm']): ?>
       <p class="separator">
         <? $isRepeat = $viData['time_to_repeat'] == 0;  ?>
         <a href="javascript:void(0)" class="back__away repeat-code<?=(!$isRepeat)?' grey':''?>"><?=(!$isRepeat

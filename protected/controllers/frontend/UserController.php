@@ -539,9 +539,9 @@ class UserController extends AppController
 
       $data = [];
       $model = new UserRegister();
-
       $model->checkEmailLink();
 
+      //$model->setStep(5);
       if(!in_array($model->step, [1,2,3,4,5,6,7,'end']))
       {
         throw new CHttpException(404, 'Error');
@@ -561,6 +561,10 @@ class UserController extends AppController
         {
           $model->setStep(1);
         }
+        elseif ($model->step==3)
+        {
+          $model->setStep((!empty($data['input']['id_user']) ? 5 : 4));
+        }
       }
 
       $view = '/user/register/step_' . $model->step;
@@ -568,7 +572,16 @@ class UserController extends AppController
       {
         $post = Yii::app()->getRequest()->getParam('data');
         $post = json_decode($post, true, 5, JSON_BIGINT_AS_STRING);
-        if(!count($post))
+        //
+        // !!!
+        //
+        if(isset($_FILES['upload'])) // только загрузка файлов
+        {
+          $data = $model->saveImage();
+          echo CJSON::encode($data);
+          Yii::app()->end();
+        }
+        elseif(!count($post))
         {
           throw new CHttpException(404, 'Error');
         }

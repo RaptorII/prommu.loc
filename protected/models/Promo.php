@@ -1127,4 +1127,15 @@ class Promo extends ARModel
             [':id' => $id]
         );
     }
+  /**
+   * @param $arInsert - array(field => value)
+   * @return bool
+   */
+  public function registerUser($arInsert)
+  {
+    $result = Yii::app()->db->createCommand()
+      ->insert(self::tableName(),$arInsert);
+
+    return ($result ? Yii::app()->db->getLastInsertID() : $result);
+  }
 }

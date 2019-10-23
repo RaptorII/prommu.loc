@@ -11,12 +11,14 @@
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <meta property="og:image" content="https://prommu.com/images/logo.png" />
   <?php
-    $bUrl = Yii::app()->baseUrl;
-    $gcs = Yii::app()->getClientScript();
-    $gcs->registerCoreScript('jquery');
-    $gcs->registerCssFile($bUrl . MainConfig::$CSS  . 'register/style.css');
-    $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'snap/snap.svg-min.js', CClientScript::POS_END);
-    $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'register/script.js', CClientScript::POS_END);
+  $bUrl = Yii::app()->baseUrl;
+  $gcs = Yii::app()->getClientScript();
+  $gcs->registerCoreScript('jquery');
+  $gcs->registerCssFile($bUrl . MainConfig::$CSS  . 'register/style.css');
+  $gcs->registerCssFile($bUrl . MainConfig::$CSS  . 'dist/cropper.min.css');
+  $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'snap/snap.svg-min.js', CClientScript::POS_END);
+  $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/cropper.min.js', CClientScript::POS_END);
+  $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'register/script.js', CClientScript::POS_END);
   ?>
 </head>
 <body>

@@ -9,6 +9,8 @@ var RegisterPage = (function () {
   RegisterPage.prototype.firstInputCode = true;
   RegisterPage.prototype.codeLength = 4;
   RegisterPage.prototype.passwordLength = 6;
+  RegisterPage.prototype.cropOptions;
+  RegisterPage.prototype.cropParams;
   //
   function RegisterPage()
   {
@@ -18,6 +20,22 @@ var RegisterPage = (function () {
   RegisterPage.prototype.init = function ()
   {
     let self = this;
+
+    self.cropOptions = [];
+    self.cropParams = {
+      aspectRatio: 1/1,
+      viewMode: 1,
+      zoomable: true,
+      zoomOnWheel: false,
+      rotatable: true,
+      background: false,
+      guides: false,
+      highlight: false,
+      minCropBoxWidth: 200,
+      minCropBoxHeight: 200,
+      preview: '.YiiUpload__editor-prev-item',
+      crop: function(e){ self.cropOptions=e.detail }
+    };
 
     $('body')
       .on( // step 1
@@ -81,7 +99,97 @@ var RegisterPage = (function () {
       .on(
         'input',
         '#register_form .input-r-password',
-        function(){ self.checkPassword(this) });
+        function(){ self.checkPassword(this) })
+      .on( // form 5
+        'click',
+        '#register_form .btn-upload',
+        function(){
+          $('.input-upload').click();
+        })
+      .on(
+        'change',
+        '#register_form .input-upload',
+        function(){
+          let input = this,
+              form = document.querySelector('#register_form'),
+              formData = new FormData(form);
+
+          /*
+          if(self.snapshots.length)
+          {
+            $.each(self.snapshots, function(){
+              formData.append('upload[]',this);
+            });
+          }
+          */
+
+          $('body').addClass('prmu-load');
+
+          $.ajax({
+            data: formData,
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            success: function(r)
+            {
+              $('body').removeClass('prmu-load');
+              r = JSON.parse(r);
+              if(r.error.length) // если есть ошибки
+              {
+                $('.upload-block').append('<span class="login__error">');
+                $('.login__error').html($.parseHTML(r.error.join('</br>')))
+              }
+              else // есть успешно загруженные файлы
+              {
+                $('.login__error').remove();
+                let image = '<img src="' + r.success.path
+                  + '" alt="' + r.success.oldname + '" data-name="'
+                  + r.success.name + '"/>';
+
+                $('body').append('<div class="YiiUpload__block">'
+                  + '<div class="YiiUpload__close"><div class="YiiUpload__close">'
+                  + '<form class="YiiUpload__form">'
+                  + '<div class="YiiUpload__form-content">'
+                  + '<div class="YiiUpload__form-title">Выберите область для отображения</div>'
+                  + '<div class="YiiUpload__form-body">'
+                  + '<div class="YiiUpload__form-errors"></div>'
+                  + '<div class="YiiUpload__form-result"></div>'
+                  + '<div class="YiiUpload__editor">'
+                  + '<div class="YiiUpload__editor-field"></div>'
+                  + '<div class="YiiUpload__editor-prev">'
+                  + '<div class="YiiUpload__editor-prev-item YiiUpload__editor-prev-lg"></div>'
+                  + '<div class="YiiUpload__editor-prev-item YiiUpload__editor-prev-sm"></div>'
+                  + '</div>'
+                  + '<div class="YiiUpload__editor-panel">'
+                  + '<div class="YiiUpload__editor_l-rotate" title="Повернуть на 90 градусов влево"></div>'
+                  + '<div class="YiiUpload__editor_r-rotate" title="Повернуть на 90 градусов вправо"></div>'
+                  + '<div class="YiiUpload__crop" title="Сохранить"></div>'
+                  +	'</div>'
+                  + '</div>'
+                  + '<div class="YiiUpload__camera">'
+                  + '<video autoplay playsinline></video>'
+                  + '<canvas></canvas>'
+                  + '<img src="">'
+                  + '</div>'
+                  + '</div>'
+                  + '</div>'
+                  + '</form>'
+                  + '</div></div></div>');
+
+                  $('.YiiUpload__editor-field').append(image);
+                  self.setCropper();
+                $('.YiiUpload__block').fadeIn();
+                $('body').css({overflow:'hidden'});
+              }
+            },
+            error: function()
+            {
+              alert('Системная ошибка');
+              $('body').removeClass('prmu-load');
+            }
+          });
+        });
+
     // выключаем копипаст
     $('#register_form [type="text"]').bind('paste',function(e) { e.preventDefault() });
     //
@@ -147,6 +255,10 @@ var RegisterPage = (function () {
           self.setTimer();
           $('body').removeClass('prmu-load');
         }
+      },
+      error: function(){
+        alert('Системная ошибка');
+        $('body').removeClass('prmu-load');
       }
     });
   },
@@ -318,6 +430,69 @@ var RegisterPage = (function () {
         $(main).text(sec);
       }
     },1000);
+  },
+  //
+  RegisterPage.prototype.setCropper = function ()
+  {
+    let self = this,
+        state = arguments[0],
+        image = document.querySelector('.YiiUpload__editor-field img'),
+        arInput = $('.YiiUpload__editor-field>input');
+
+    /*if(self.cropperCnt==arImages.length) // последнее изображение отредактировано, можно отправлять данные
+    {
+      $(self.block).addClass('loading');
+      $.each(arImages,function(i,e){
+        self.cropOptions[i]['name'] = $(this).data('name');
+        self.cropOptions[i]['oldName'] = $(this).attr('alt');
+        if(self.params.imageSignature==true) // добавляем подпись изображений в
+        {
+          self.cropOptions[i]['signature'] = $(arInput[i]).val();
+        }
+      });
+      $.ajax({
+        url: self.params.action,
+        data: {state:state, data:self.cropOptions},
+        type: 'POST',
+        success: function(r)
+        {
+          r = JSON.parse(r);
+          self.ajaxResult = r;
+          self.setError();
+          self.setSuccess(r.success);
+          $(self.block).removeClass('loading');
+        },
+        error: function() // если вернуло статус!=200
+        {
+          self.setError('- системная ошибка. Обратитесь к администратору');
+          $(self.files).html('');
+          $(self.inputs).html('');
+          self.addButtons(['close']);
+          $(self.block).removeClass('loading');
+          self.bComplete = true;
+        }
+      });
+      return;
+    }*/
+
+    $(image).show();
+
+    if(self.objCropper) // убираем обработчики с предыдущего изображения
+    {
+      $('body').off('click','.YiiUpload__editor_r-rotate');
+      $('body').off('click','.YiiUpload__editor_l-rotate');
+      self.objCropper.destroy();
+    }
+    // устанавливаем кропер на следующее изображение
+    self.objCropper = new Cropper(image, self.cropParams);
+    // устанавливаем обработчики поворотов
+    $('body').on('click','.YiiUpload__editor_r-rotate',function(){
+      self.objCropper.rotate(90)
+    });
+    $('body').on('click','.YiiUpload__editor_l-rotate',function(){
+      self.objCropper.rotate(-90)
+    });
+    $('.YiiUpload__editor').fadeIn();
   }
   //
   return RegisterPage;
