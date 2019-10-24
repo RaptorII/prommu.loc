@@ -811,4 +811,27 @@ class UserRegister
 
     return $arRes;
   }
+  /**
+   * @param $arData
+   * @return array
+   * метод для редактирования уже загруженного файла
+   */
+  public function onlyEditImage($arData)
+  {
+    $arData['name'] = date('YmdHis') . rand(1000,9999) . '.jpg';
+    $filePathWithoutExt = $this->profile->filesRoot . DS . $arData['oldName'];
+    $filePathFull = $this->profile->filesRoot
+      . DS . $arData['oldName'] . $this->profile->arYiiUpload['imgOrigSuFFix'] . '.jpg';
+    $filePath = $this->profile->filesRoot . DS . $arData['name'];
+    $image = imagecreatefromjpeg($filePathFull);
+    $result = imagejpeg($image, $filePath, 100);
+    unlink($filePathFull);
+    foreach ($this->profile->arYiiUpload['imgDimensions'] as $suffix => $size)
+    {
+      unlink($filePathWithoutExt . $suffix . '.jpg');
+    }
+    $arData['oldName'] .= '.jpg';
+
+    return $this->editImage($arData);
+  }
 }

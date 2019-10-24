@@ -605,7 +605,9 @@ class UserController extends AppController
           }
           elseif (in_array($post['step'],[5]) && isset($post['width']) && isset($post['height']))
           {
-            $data = $model->editImage($post);
+            $data = $post['edit']==1
+              ? $model->onlyEditImage($post)
+              : $model->editImage($post);
             echo CJSON::encode($data);
             Yii::app()->end();
           }

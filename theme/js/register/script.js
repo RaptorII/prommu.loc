@@ -182,8 +182,9 @@ var RegisterPage = (function () {
           if(this.dataset.big != 'undefined')
           {
             self.createPopup(true,true);
-            $('.YiiUpload__editor-field').html('<img src="'
-              + this.dataset.big + '" data-name="' + this.dataset.name + '">');
+            $('.YiiUpload__editor-field').html('<img src="' + this.dataset.big
+              + '" data-name="' + this.dataset.name
+              + '" alt="' + this.alt + '" data-edit="1">');
             self.setCropper();
           }
 
@@ -441,9 +442,7 @@ var RegisterPage = (function () {
     RegisterPage.prototype.setCropper = function ()
     {
       let self = this,
-        state = arguments[0],
-        image = document.querySelector('.YiiUpload__editor-field img'),
-        arInput = $('.YiiUpload__editor-field>input');
+          image = document.querySelector('.YiiUpload__editor-field img');
 
       $(image).show();
 
@@ -468,8 +467,8 @@ var RegisterPage = (function () {
     RegisterPage.prototype.sendImage = function ()
     {
       let self = this,
-        form = document.querySelector('#register_form'),
-        formData = new FormData(form);
+          form = document.querySelector('#register_form'),
+          formData = new FormData(form);
 
       if(typeof arguments[0]=='object')
       {
@@ -521,6 +520,10 @@ var RegisterPage = (function () {
       self.cropOptions['name'] = $(image).data('name');
       self.cropOptions['oldName'] = $(image).attr('alt');
       self.cropOptions['step'] = 5;
+      if($(image).data('edit')==1)
+      {
+        self.cropOptions['edit'] = 1;
+      }
 
       $('body').addClass('prmu-load');
 
@@ -533,12 +536,10 @@ var RegisterPage = (function () {
 
           if(typeof r.items == 'object')
           {
-            console.log(resultImage);
-            console.log(r);
-            $(resultImage).attr('src',r.items[400]);
-            $(resultImage).attr('alt',r.name+'.jpg');
+            $(resultImage).attr('src',r.items['400']);
+            $(resultImage).attr('alt',r.name);
+            $(resultImage).attr('data-name',r.name);
             $(resultImage).attr('data-big',r.items['000']);
-            $(resultImage).attr('data-name',r.name+'.jpg');
             $(resultImage).addClass('active-logo');
             $('.login__photo-img').removeClass('input__error');
           }

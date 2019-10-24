@@ -23,19 +23,17 @@ $hasPhoto = !empty($userInfo->photo);
             {
               $src = Share::getPhoto($userInfo->id, $userInfo->status, $userInfo->photo);
               $bigSrc = Share::getPhoto($userInfo->id, $userInfo->status, $userInfo->photo, 'big');
-              $name = $userInfo->photo . '.jpg';
             }
             else
             {
               $src = '/theme/pic/register-popup-page/register_popup_r_logo.png'; // Миша, ты обещал картинку, не забудь)
               $bigSrc = '';
-              $name = '';
             }
           ?>
           <img
             src="<?=$src?>"
-            alt="<?=$name?>"
-            data-name="<?=$name?>"
+            alt="<?=$userInfo->photo?>"
+            data-name="<?=$userInfo->photo?>"
             data-big="<?=$bigSrc?>"
             id="login-img"
             class="login-img<?=$hasPhoto?' active-logo':''?>">
