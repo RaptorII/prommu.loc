@@ -295,7 +295,7 @@ jQuery(function($){
 			remErr(cityLabel);
 			main[0].dataset.idcity = res.id!='' ? res.id : main[0].dataset.idcity;
 			checkSelectCity(main);
-			checkAvailabilityMetro(main);
+			//checkAvailabilityMetro(main);
 		}
 	});
 	//  выбор города из списка
@@ -561,6 +561,9 @@ jQuery(function($){
 		$('.epa__email').removeClass('erroremail');
 
 		if(resEmail && nemail!=oldEmail){
+
+			//console.log('tyt');
+
 			clearTimeout(emailTimer);
 			emailTimer = setTimeout(function(){
 				$.ajax({
@@ -659,8 +662,9 @@ jQuery(function($){
 			}, 500);
 		}
 		else{
+			console.log('ne tyt');
 			$.each($(cityM+' .epa__required'), function(){
-				if(!checkField(this)) errors = true; 
+				if(!checkField(this)) {errors = true; };
 			});
 			// $.each($(cityM+' .epa__days-checkboxes'), function(){
 			// 	var checked = false,
@@ -675,7 +679,7 @@ jQuery(function($){
 			// 	}
 			// });
 
-			if(!checkField('[name="about-mself"]')) errors = true; 
+			// if(!checkField('[name="about-mself"]')) {errors = true; console.log('2'); };
 
 			// if(!checkField($('[name="user-attribs[edu]"]'))) errors = true;
 			// if(!checkField($('[name="langs[]"]'))) errors = true;
@@ -699,12 +703,12 @@ jQuery(function($){
         });
 			}
 
-		//console.log(arErrors);
+		// console.log(errors);
 
 			if(!errors && !arErrors.length){
 				var arPosts = $('#epa-list-posts input'),
 					arCityItems = $('#city-module .epa__city-item'),
-					arTimeItems = $('#city-module .epa__period input'),
+					//arTimeItems = $('#city-module .epa__period input'),
 					addInputs = '';
 				$.each(arPosts, function(){ // добавляем массив опыта вакансий
 					if($(this).is(':checked'))

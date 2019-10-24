@@ -223,125 +223,6 @@
     <h2 class="ppp__content-title"><?=$h1title?></h2>
 
     <?php if( ($action = $this->action->getId()) == 'profile' ) $action = 'applicant-profile-own' ?>
-    <?php
-    /**
-    * form
-    *
-    *//*
-
-    //css
-    Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS .'register/complete-reg.css');
-
-    if( $action == 'applicant-profile-own' &&  Share::$UserProfile->exInfo->isblocked == 3 ): ?>
-        <div class="center red" style="display:none;">
-            Необходимо перейти в редактирование профиля и заполнить необходимые поля. После этого ваш профиль будет
-            отображаться в общем списке соискателей и поиске на сайте, а также вы сможете откликаться на понравившиеся
-            вакансии.
-            <? echo Share::$UserProfile->checkRequiredFields()['mess']?>
-        </div>
-
-    <div class="complete__reg">
-        <form id="complete__form">
-            <div class="complete__wrap">
-
-                <p class="complete__head center">
-                    Необходимо активировать аккаунт
-                </p>
-                <p class="complete__txt center">
-                    Чтобы попасть в базу данных и получить доступ к каталогу вакансий укажите данные
-                </p>
-
-                <span class="complete__about">Заполните данные:</span>
-                <div class="complete__cover">
-
-                    <div class="complete__email">
-                        <input type="text" required="">
-                        <span class="highlight"></span>
-                        <span class="bar"></span>
-                        <label >e-mail</label>
-
-                    </div>
-
-                    <div class="complete__phone">
-                        <input type="text" required="">
-                        <span class="highlight"></span>
-                        <span class="bar"></span>
-                        <label >Телефон</label>
-                    </div>
-
-                    <div class="complete__city">
-                        <input type="text" required="">
-                        <span class="highlight"></span>
-                        <span class="bar"></span>
-                        <label >Город</label>
-                    </div>
-
-                    <div class="complete__birthday">
-                        <input type="date" required="">
-                        <span class="highlight"></span>
-                        <span class="bar"></span>
-                    </div>
-
-                </div>
-
-                <span class="complete__about">Укажите пол:</span>
-                <div class="complete__gender">
-
-                    <div class="complete__gender-radio">
-                        <input type="radio" name="type" value="0" id="cg_0" class="complete__gender-item">
-                        <label for="cg_0" class="gender-item">Мужской</label>
-                    </div>
-
-                    <div class="complete__gender-radio">
-                        <input type="radio" name="type" value="1" id="cg_1" class="complete__gender-item">
-                        <label for="cg_1" class="gender-item">Женский</label>
-                    </div>
-
-                    <div class="complete__gender-radio">
-                        <input type="radio" name="type" value="2" id="cg_2" class="complete__gender-item">
-                        <label for="cg_2" class="gender-item">Не определился(лась)</label>
-                    </div>
-
-                </div>
-
-                <span class="complete__about">Желаемая должность:</span>
-                <div class="complete__prof">
-
-                      <ul id="complete__prof-list" class="complete__prof-list">
-                      <?php
-                            for($i=0; $i<3; $i++){
-                      ?>
-                          <li>
-                              <input type="checkbox" name="donjnost[]" value="<?=$i?>" id="post-<?=$i?>" class="complete__prof-item">
-                              <label for="post-<?=$i?>" class="prof-item">Агент по привлечению клиентов<b></b></label>
-                          </li>
-
-                      <?php
-                        }
-                      ?>
-                      </ul>
-
-
-                </div>
-
-                <p class="complete__txt center">
-                    После активации вам станет доступен каталог со свежими вакансиями всех работодателей
-                </p>
-
-                <p class="input center">
-                    <button type="submit" class="btn__orange" data-step="">Активировать профиль</button>
-                </p>
-
-            </div>
-        </form>
-    </div>
-    <?php
-    endif;
-    /**
-    * end form
-    */
-
-    ?>
 
     <?php
     /**
@@ -364,8 +245,6 @@
 
         /**/
 
-        //$attrAll = $viData['data']['userInfo']['userAttribs'];
-        //$attr = array_values($attrAll)[0];
         // city
         $arUserCities = $viData['userInfo']['userCities'][0];
 
@@ -405,23 +284,11 @@
             if (strpos($p['name'], 'admob') !== false && !empty($p['val']))
                 $arAdPhones[] = $p;
 
-        /**/
-
-
-//        echo '<pre>';
-        //print_r($viData);
-        //print_r($viData['data']);
-        //print_r($arCities);
-
-//        echo '</pre>';
-
-        //epa__content epa__content-data
         ?>
 
         <script type="text/javascript">
             let arCities = <?=json_encode($arCities)?>;
         </script>
-
 
         <div class="edit-profile-applicant ">
             <div class="complete__reg">
@@ -583,10 +450,6 @@
                             }
                         }
                     }
-
-                    //      echo '<pre>';
-                    // print_r($viData['data']);
-                    //      echo '</pre>';
 
                     ?>
                     <div class="epa__content-title"><h2>Целевая вакансия</h2></div>
@@ -866,7 +729,6 @@
          * elements
          */
         ?>
-
 
         <?
         //    RATING
@@ -1278,12 +1140,6 @@
   </script>
   <template id='TPLAddComment'></template>
 <? endif; ?>
-
-
-
-
-
-
 
 
 <?
