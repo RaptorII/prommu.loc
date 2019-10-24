@@ -1,3 +1,7 @@
+<?
+$userInfo = $model->profile->exInfo;
+$hasPhoto = !empty($userInfo->photo);
+?>
 <form id="register_form">
 
   <div class="login-wrap">
@@ -11,22 +15,30 @@
 
       <div class="login__photo">
         <p class="center separator">
-          Работодатели оценят вашу открытость
+          <?=(Share::isApplicant($userInfo->status)?'Работодатели':'Соискатели')?> оценят вашу открытость
         </p>
         <div class="login__photo-img">
           <?
-            $userInfo = $model->profile->exInfo;
-            $hasPhoto = !empty($userInfo->photo);
             if($hasPhoto)
             {
               $src = Share::getPhoto($userInfo->id, $userInfo->status, $userInfo->photo);
+              $bigSrc = Share::getPhoto($userInfo->id, $userInfo->status, $userInfo->photo, 'big');
+              $name = $userInfo->photo . '.jpg';
             }
             else
             {
               $src = '/theme/pic/register-popup-page/register_popup_r_logo.png'; // Миша, ты обещал картинку, не забудь)
+              $bigSrc = '';
+              $name = '';
             }
           ?>
-          <img src="<?=$src?>" alt="" id="login-img" class="login-img<?=$hasPhoto?' active-logo':''?>">
+          <img
+            src="<?=$src?>"
+            alt="<?=$name?>"
+            data-name="<?=$name?>"
+            data-big="<?=$bigSrc?>"
+            id="login-img"
+            class="login-img<?=$hasPhoto?' active-logo':''?>">
         </div>
 
         <?php if (!empty($viData['errors']['avatar'])): ?>

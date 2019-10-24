@@ -703,7 +703,7 @@ class UserRegister
   public function editImage($arData)
   {
     $quality = 90;
-    $arRes = ['error'=>[],'items'=>[],'success'=>[]];
+    $arRes = ['error'=>[],'items'=>[]];
 
     $filePath = $this->profile->filesRoot . DS . $arData['name'];
     $info = new SplFileInfo($arData['name']);
@@ -796,7 +796,15 @@ class UserRegister
     imagedestroy($dstImage);
     unlink($filePath);
     unlink($inOutFile);
-
+    // удаляем весь ранее созданный хлам
+    /*
+    $glob = glob($this->profile->filesRoot . DS);
+    foreach ($glob as $file)
+    {
+      file_put_contents(__DIR__ . "/_user_log.txt", print_r($file, true), FILE_APPEND);
+      //unlink($file);
+    }
+    */
     $object = $this->profile->arYiiUpload['objSave'];
     $method = $this->profile->arYiiUpload['objRegisterSaveMethod'];
     $object->$method($arRes['name']);

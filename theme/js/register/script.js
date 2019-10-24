@@ -151,20 +151,17 @@ var RegisterPage = (function () {
         '.YiiUpload__wc_done',
         function(){
           let image = $('.YiiUpload__camera img'),
-            form = $('.YiiUpload__form')[0],
-            formData = new FormData(form),
-            src = $(image).attr('src'),
-            arr = src.split(','),
-            mime = arr[0].match(/:(.*?);/)[1],
-            bstr = atob(arr[1]),
-            n = bstr.length,
-            u8arr = new Uint8Array(n),
-            name = 'snapshot.png',
-            file;
+              src = $(image).attr('src'),
+              arr = src.split(','),
+              mime = arr[0].match(/:(.*?);/)[1],
+              bstr = atob(arr[1]),
+              n = bstr.length,
+              u8arr = new Uint8Array(n),
+              file;
 
           while(n--)
           { u8arr[n] = bstr.charCodeAt(n); };
-          file = new File([u8arr], name, {type:mime});
+          file = new File([u8arr], 'snapshot.png', {type:mime});
           self.sendImage(file);
           $('.YiiUpload__block').hide();
           $('.YiiUpload__camera img').attr('src','');
@@ -177,6 +174,20 @@ var RegisterPage = (function () {
         function(){
           $('.YiiUpload__camera img').hide();
           $('.YiiUpload__form-btns').html('<div class="YiiUpload__form-btn YiiUpload__wc_shoot">Сделать снимок</div>');
+        })
+      .on(
+        'click',
+        '.active-logo',
+        function(){
+          if(this.dataset.big != 'undefined')
+          {
+            self.createPopup(true,true);
+            $('.YiiUpload__editor-field').html('<img src="'
+              + this.dataset.big + '" data-name="' + this.dataset.name + '">');
+            self.setCropper();
+          }
+
+
         });
     // выключаем копипаст
     $('#register_form [type="text"]').bind('paste',function(e) { e.preventDefault() });
@@ -522,13 +533,17 @@ var RegisterPage = (function () {
 
           if(typeof r.items == 'object')
           {
-            $(resultImage)
-              .attr('src',r.items[400])
-              .attr('alt',r.success.name)
-              .addClass('active-logo');
+            console.log(resultImage);
+            console.log(r);
+            $(resultImage).attr('src',r.items[400]);
+            $(resultImage).attr('alt',r.name+'.jpg');
+            $(resultImage).attr('data-big',r.items['000']);
+            $(resultImage).attr('data-name',r.name+'.jpg');
+            $(resultImage).addClass('active-logo');
             $('.login__photo-img').removeClass('input__error');
           }
           self.createPopup(false,false);
+          self.objCropper.destroy();
         },
         error: function()
         {
