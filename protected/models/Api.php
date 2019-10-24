@@ -99,7 +99,7 @@ class Api
                 case 'nicola' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getNicolaDay(); break;
                 case 'mailer' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->mailBox(); break;
                 case 'vacmon' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->vacancyMonitoring(); break;
-                case 'apivk' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->apiVK(); break;
+                case 'social_auth' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->apiVK(); break;
                 case 'log' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testLog(); break;
                 case 'tect' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->teSt(); break;
                 case 'ideas' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->ideas(); break;
