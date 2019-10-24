@@ -6,24 +6,24 @@
   <h6 class="login__header">Введите данные</h6>
 
   <div class="login__container">
-    <?php if (Share::isApplicant($viData['input']['type'])): ?>
+    <?php if (Share::isApplicant($model->data['type'])): ?>
       <p>
-        <input type="text" name="name" value="<?=$viData['input']['name']?>" class="input-name" autocomplete="off" placeholder="Имя">
-        <?php if (!empty($viData['errors']['name'])): ?>
-          <span class="login__error"><?=$viData['errors']['name']?></span>
+        <input type="text" name="name" value="<?=$model->data['name']?>" class="input-name" autocomplete="off" placeholder="Имя">
+        <?php if (!empty($model->errors['name'])): ?>
+          <span class="login__error"><?=$model->errors['name']?></span>
         <?php endif; ?>
       </p>
       <p>
-        <input type="text" name="surname" value="<?=$viData['input']['surname']?>" class="input-surname" autocomplete="off" placeholder="Фамилия">
-        <?php if (!empty($viData['errors']['surname'])): ?>
-          <span class="login__error"><?=$viData['errors']['surname']?></span>
+        <input type="text" name="surname" value="<?=$model->data['surname']?>" class="input-surname" autocomplete="off" placeholder="Фамилия">
+        <?php if (!empty($model->errors['surname'])): ?>
+          <span class="login__error"><?=$model->errors['surname']?></span>
         <?php endif; ?>
       </p>
-    <?php elseif (Share::isEmployer($viData['input']['type'])): ?>
+    <?php elseif (Share::isEmployer($model->data['type'])): ?>
       <p>
-        <input type="text" name="name" value="<?=$viData['input']['name']?>" class="input-company" autocomplete="off" placeholder="Название компании">
-        <?php if (!empty($viData['errors']['name'])): ?>
-          <span class="login__error"><?=$viData['errors']['name']?></span>
+        <input type="text" name="name" value="<?=$model->data['name']?>" class="input-company" autocomplete="off" placeholder="Название компании">
+        <?php if (!empty($model->errors['name'])): ?>
+          <span class="login__error"><?=$model->errors['name']?></span>
         <?php endif; ?>
       </p>
     <?php endif; ?>
@@ -31,12 +31,12 @@
       <input
         type="text"
         name="login"
-        value="<?=$viData['input']['login']?>"
+        value="<?=$model->data['login']?>"
         class="input-login"
         autocomplete="off"
         placeholder="Телефон или e-mail">
-      <?php if (!empty($viData['errors']['login'])): ?>
-        <span class="login__error"><?=$viData['errors']['login']?></span>
+      <?php if (!empty($model->errors['login'])): ?>
+        <span class="login__error"><?=$model->errors['login']?></span>
       <?php endif; ?>
     </p>
 

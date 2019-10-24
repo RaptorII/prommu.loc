@@ -537,119 +537,71 @@ class UserController extends AppController
     {
       !Share::isGuest() && $this->redirect(MainConfig::$PAGE_PROFILE);
 
-      $data = [];
       $model = new UserRegister();
-      $model->checkEmailLink();
+      $model->checkEmailLink(); // проверка на подтверждающаю ссылку из email
+      //$model->setStep(1);
 
-      //$model->setStep(5);
-
-      if(!in_array($model->step, [1,2,3,4,5,'end']))
-      {
-        throw new CHttpException(404, 'Error');
-      }
-
-      if($model->step==1)
-      {
-        $pages = new PagesContent();
-        $lang = Yii::app()->session['lang'];
-        $data['condition'] = $pages->getPageContent('conditions',$lang);
-      }
-      else
-      {
-        $data['input'] = $model->getData();
-
-        if(!is_array($data['input']))
-        {
-          $model->setStep(1);
-        }
-        elseif ($model->step==3)
-        {
-          //$model->setStep((!empty($data['input']['id_user']) ? 5 : 4));
-        }
-      }
-
-      $view = '/user/register/step_' . $model->step;
       if(Yii::app()->getRequest()->isAjaxRequest)
       {
         $post = Yii::app()->getRequest()->getParam('data');
         $post = json_decode($post, true, 5, JSON_BIGINT_AS_STRING);
-        //
-        // !!!
-        //
         if(isset($_FILES['upload']) && $model->step==5) // только загрузка файлов
         {
           $data = $model->saveImage();
           echo CJSON::encode($data);
           Yii::app()->end();
         }
-        elseif(!count($post))
+        elseif(!count($post)) // не пропускаем запрос без данных
         {
           throw new CHttpException(404, 'Error');
         }
 
-        if(isset($post['step']))
+        if(isset($post['step'])) // особые запросы
         {
-          if(in_array($post['step'],[3,4,5]) && $post['redirect']==='back') // return button
+          // return button
+          if(
+            in_array($post['step'],[$model::$STEP_CODE, $model::$STEP_PASSWORD ,$model::$STEP_AVATAR])
+            &&
+            $post['redirect']==='back'
+          )
           {
             $model->setStep($post['step'] - 1);
-            $view = '/user/register/step_' . $model->step;
           }
-          elseif (in_array($post['step'],[2]) && $post['redirect']==='auth') // redirect to login
+          // редирект на авторизацию
+          elseif (in_array($post['step'],[$model::$STEP_LOGIN]) && $post['redirect']==='auth')
           {
             $model->clearStep();
             $model->deleteData();
           }
-          elseif (in_array($post['step'],[3]) && $post['send_code']==='Y')
+          // повтор отправки кода
+          elseif (in_array($post['step'],[$model::$STEP_CODE]) && $post['send_code']==='Y')
           {
-            $data = $model->repeatSendCode();
+            $model->repeatSendCode();
           }
+          // редактирование аватара
           elseif (in_array($post['step'],[5]) && isset($post['width']) && isset($post['height']))
           {
-            $data = $post['edit']==1
+            $data = ($post['edit']==1
               ? $model->onlyEditImage($post)
-              : $model->editImage($post);
+              : $model->editImage($post));
             echo CJSON::encode($data);
             Yii::app()->end();
           }
         }
-        else
+        else // отправка текущей формы
         {
           foreach ($post as $key => $v)
           {
-            $data['input'][$key] = $v;
+            $model->data[$key] = $v;
           }
-          $data['errors'] = $model->setDataByStep($model->step, $data['input']);
-          if(!count($data['errors']))
-          {
-            if($model->step==$model::$STEP_AVATAR)
-            {
-              $model::clearStep();
-            }
-            else
-            {
-              $model->setStep($model->step + 1);
-              $view = '/user/register/step_' . $model->step;
-            }
-          }
-
-          if($model->step==3)
-          {
-            $data['input'] = $model->getData();
-            $data['time_to_repeat'] = $model->isTimeToRepeat($data['input']['time_code']);
-          }
+          $model->setDataByStep();
         }
 
-        $this->renderPartial($view,['viData'=>$data, 'model'=>$model]);
+        $this->renderPartial($model->view, ['model'=>$model]);
       }
-      else
+      else // не AJAX
       {
-        if($model->step==3)
-        {
-          $data['input'] = $model->getData();
-          $data['time_to_repeat'] = $model->isTimeToRepeat($data['input']['time_code']);
-        }
-
-        $this->renderRegister($view,['viData'=>$data, 'model'=>$model]);
+        $this->renderRegister($model->view, ['model'=>$model]);
       }
     }
 

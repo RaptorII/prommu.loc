@@ -12,6 +12,7 @@ var RegisterPage = (function () {
   RegisterPage.prototype.cropOptions;
   RegisterPage.prototype.cropParams;
   RegisterPage.prototype.bWebCam;
+  RegisterPage.prototype.codeTimer;
   //
   function RegisterPage()
   {
@@ -37,6 +38,7 @@ var RegisterPage = (function () {
       preview: '.YiiUpload__editor-prev-item',
       crop: function(e){ self.cropOptions=e.detail }
     };
+    self.codeTimer = false;
 
     self.bWebCam = true;
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
@@ -420,10 +422,11 @@ var RegisterPage = (function () {
     // таймер отправки кода
     RegisterPage.prototype.setTimer = function ()
     {
+      let self = this;
       if(!$('.repeat-code span').is('*'))
         return false;
 
-      setInterval(function(){
+      self.codeTimer = setInterval(function(){
         let main = $('.repeat-code span'),
           sec = Number($(main).text());
 
@@ -431,6 +434,7 @@ var RegisterPage = (function () {
         if(sec<=0)
         {
           $('.repeat-code').removeClass('grey').html('Отправить повторно');
+          clearInterval(self.codeTimer);
         }
         else
         {

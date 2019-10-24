@@ -39,9 +39,9 @@ $hasPhoto = !empty($userInfo->photo);
             class="login-img<?=$hasPhoto?' active-logo':''?>">
         </div>
 
-        <?php if (!empty($viData['errors']['avatar'])): ?>
+        <?php if (!empty($model->errors['avatar'])): ?>
           <p class="separator center">
-            <span class="login__error"><?=$viData['errors']['avatar']?></span>
+            <span class="login__error"><?=$model->errors['avatar']?></span>
           </p>
         <?php endif; ?>
 

@@ -12,6 +12,7 @@ class UserRegister
   public static $STRLENGTH = 64;
   public static $MIN_PASSWORD_LENGTH = 6;
   public static $REPEAT_SEND_CODE_TIME = 120; // seconds before repeat sending confirm code
+  public static $VIEW_TEMPLATE = '/user/register/step_';
   //
   public static $STEP_TYPE = 1;
   public static $STEP_LOGIN = 2;
@@ -28,6 +29,8 @@ class UserRegister
   public $step;
   public $user;
   public $data;
+  public $errors;
+  public $view;
   public $profile;
 
   function __construct()
@@ -37,10 +40,18 @@ class UserRegister
     if(isset($rq->cookies['urs']))
     {
       $this->step = self::getStep();
+      if(!in_array(
+        $this->step,
+        [self::$STEP_TYPE,self::$STEP_LOGIN,self::$STEP_CODE,self::$STEP_PASSWORD,self::$STEP_AVATAR]
+      ))
+      {
+        $this->step = 0;
+        throw new CHttpException(404, 'Error');
+      }
     }
     else
     {
-      $this->setStep(1);
+      $this->setStep(self::$STEP_TYPE);
     }
     // user
     if(isset($rq->cookies['urh']))
@@ -52,9 +63,22 @@ class UserRegister
       $this->user = md5(time() . rand(1111111,9999999) . self::$SALT);
       $rq->cookies['urh'] = new CHttpCookie('urh', $this->user);
     }
-    //
+    // data
     $this->data = $this->getData();
-    //
+    if(!is_array($this->data))
+    {
+      $this->setStep(self::$STEP_TYPE);
+    }
+    if($this->step==self::$STEP_TYPE)
+    {
+      $pages = new PagesContent(); // страница с условиями пользования сайтом
+      $lang = Yii::app()->session['lang'];
+      $this->data['condition'] = $pages->getPageContent('conditions',$lang);
+    }
+    $this->data['time_to_repeat'] = $this->isTimeToRepeat($this->data['time_code']);
+    // view
+    $this->view = self::$VIEW_TEMPLATE . $this->step;
+    // profile
     if($this->data['id_user'])
     {
       $this->profile = (Share::isApplicant($this->data['type'])
@@ -62,6 +86,8 @@ class UserRegister
         : new UserProfileEmpl(['id'=>$this->data['id_user']]));
       $this->profile instanceof UserProfile && $this->profile->setUserData();
     }
+    //
+    $this->errors = [];
   }
   /**
    * @param $step
@@ -70,6 +96,7 @@ class UserRegister
   public function setStep($step)
   {
     $this->step = $step;
+    $this->view = self::$VIEW_TEMPLATE . $step;
     $value = intval($step) * 1000;
     Yii::app()->request->cookies['urs'] = new CHttpCookie('urs', md5($value . self::$SALT));
   }
@@ -122,36 +149,34 @@ class UserRegister
     return boolval($result);
   }
   /**
-   * @param $step - integer
-   * @param $data - array
    * @return array - errors
    * Проверка полей регистрации
    */
-  public function setDataByStep($step, $data)
+  public function setDataByStep()
   {
-    $arErrors = $arData = [];
+    $arData = [];
     //
-    if($step==self::$STEP_TYPE)
+    if($this->step==self::$STEP_TYPE)
     {
-      if(!in_array($data['type'],[UserProfile::$EMPLOYER, UserProfile::$APPLICANT]))
+      if(!in_array($this->data['type'],[UserProfile::$EMPLOYER, UserProfile::$APPLICANT]))
       {
-        $arErrors['type'] = 'Неподходящий тип пользователя';
+        $this->errors['type'] = 'Неподходящий тип пользователя';
       }
       else
       {
         $arData = [
-          'type' => $data['type'],
-          'referer' => filter_var($data['referer'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-          'transition' => filter_var($data['transition'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-          'canal' => filter_var($data['canal'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-          'campaign' => filter_var($data['campaign'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-          'content' => filter_var($data['content'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-          'keywords' => filter_var($data['keywords'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-          'point' => filter_var($data['point'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-          'last_referer' => filter_var($data['last_referer'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-          'ip' => $data['ip'],
-          'pm_source' => $data['pm_source'],
-          'client' => $data['client'],
+          'type' => $this->data['type'],
+          'referer' => filter_var($this->data['referer'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'transition' => filter_var($this->data['transition'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'canal' => filter_var($this->data['canal'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'campaign' => filter_var($this->data['campaign'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'content' => filter_var($this->data['content'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'keywords' => filter_var($this->data['keywords'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'point' => filter_var($this->data['point'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'last_referer' => filter_var($this->data['last_referer'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'ip' => $this->data['ip'],
+          'pm_source' => $this->data['pm_source'],
+          'client' => $this->data['client'],
           'subdomen' => Subdomain::getId(),
           'date' => time()
         ];
@@ -188,49 +213,51 @@ class UserRegister
           $arData['ip'] = $remote;
         }
         empty($arData['ip']) && $arData['ip'] = ' ';
+        $this->data = $arData;
       }
     }
     //
-    if($step==self::$STEP_LOGIN)
+    if($this->step==self::$STEP_LOGIN)
     {
-      $arUser = $this->getData();
-      $field = Share::isApplicant($arUser['type']) ? 'Имя' : 'Название компании';
-      $value = filter_var($data['name'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $field = Share::isApplicant($this->data['type']) ? 'Имя' : 'Название компании';
+      $value = filter_var($this->data['name'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
       $value = trim($value);
       if(strlen($value) > self::$STRLENGTH)
       {
-        $arErrors['name'] = "В поле '{$field}' указано слишком много символов";
+        $this->errors['name'] = "В поле '{$field}' указано слишком много символов";
       }
       elseif(!strlen($value))
       {
-        $arErrors['name'] = "В поле '{$field}' есть некорректные символы или поле пустое";
+        $this->errors['name'] = "В поле '{$field}' есть некорректные символы или поле пустое";
       }
       else
       {
         $arData['name'] = $value;
+        $this->data['name'] = $value;
       }
 
-      if(Share::isApplicant($arUser['type']))
+      if(Share::isApplicant($this->data['type']))
       {
-        $value = filter_var($data['surname'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $value = filter_var($this->data['surname'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $value = trim($value);
         if(strlen($value) > self::$STRLENGTH)
         {
-          $arErrors['surname'] = "В поле 'Фамилия' указано слишком много символов";
+          $this->errors['surname'] = "В поле 'Фамилия' указано слишком много символов";
         }
         elseif(!strlen($value))
         {
-          $arErrors['surname'] = "В поле 'Фамилия' есть некорректные символы или поле пустое";
+          $this->errors['surname'] = "В поле 'Фамилия' есть некорректные символы или поле пустое";
         }
         else
         {
           $arData['surname'] = $value;
+          $this->data['surname'] = $value;
         }
       }
 
-      if(!filter_var($data['login'],FILTER_VALIDATE_EMAIL))
+      if(!filter_var($this->data['login'],FILTER_VALIDATE_EMAIL))
       {
-        $value = preg_replace("/[^0-9]/", '', $data['login']);
+        $value = preg_replace("/[^0-9]/", '', $this->data['login']);
         $isPhone = false;
         if(strlen($value)==10) // RF
         {
@@ -248,77 +275,97 @@ class UserRegister
         ) // Ukraine | Belarus
         {
           $arData['login'] = $value;
+          $this->data['login'] = $arData['login'];
           $arData['login_type'] = self::$LOGIN_TYPE_PHONE;
+          $this->data['login_type'] = $arData['login_type'];
         }*/
         else
         {
-          $arErrors['login'] = "Введите действительный номер мобильного телефона или эл. адрес";
+          $this->errors['login'] = "Введите действительный номер мобильного телефона или эл. адрес";
         }
 
         $model = new User();
         $is_user = $model->checkLogin($value,$isPhone);
         if($is_user)
         {
-          $arErrors['login'] = "Данный телефон уже используется. <a href=\""
+          $this->errors['login'] = "Данный телефон уже используется. <a href=\""
             . MainConfig::$PAGE_LOGIN . "\">Авторизоваться</a>";
         }
         else
         {
           $arData['login'] = $value;
+          $this->data['login'] = $arData['login'];
           $arData['login_type'] = self::$LOGIN_TYPE_PHONE;
-          if($arUser['login']!=$value)
+          $this->data['login_type'] = $arData['login_type'];
+          if($this->data['login']!=$value)
           {
             $arData['code'] = rand(1111, 9999);
+            $this->data['code'] = $arData['code'];
             $arData['time_code'] = time();
+            $this->data['time_code'] = $arData['time_code'];
+            $this->data['time_to_repeat'] = $this->isTimeToRepeat($arData['time_code']);
           }
         }
       }
       else
       {
-        $value = filter_var($data['login'],FILTER_SANITIZE_EMAIL);
+        $value = filter_var($this->data['login'],FILTER_SANITIZE_EMAIL);
         $model = new User();
         $is_user = $model->checkLogin($value);
         if($is_user)
         {
-          $arErrors['login'] = "Данный эл. адрес уже используется. <a href=\""
+          $this->errors['login'] = "Данный эл. адрес уже используется. <a href=\""
             . MainConfig::$PAGE_LOGIN . "\">Авторизоваться</a>";
         }
         else
         {
           $arData['login'] = $value;
+          $this->data['login'] = $arData['login'];
           $arData['login_type'] = self::$LOGIN_TYPE_EMAIL;
-          if($arUser['login']!=$value)
+          $this->data['login_type'] = $arData['login_type'];
+          if($this->data['login']!=$value)
           {
             $arData['code'] = rand(1111, 9999);
+            $this->data['code'] = $arData['code'];
             $arData['time_code'] = time();
+            $this->data['time_code'] = $arData['time_code'];
+            $this->data['time_to_repeat'] = $this->isTimeToRepeat($arData['time_code']);
             $arData['token'] = md5($arData['code'] . $arData['time_code'] . $this->user);
+            $this->data['token'] = $arData['token'];
           }
         }
       }
     }
     //
-    if($step==self::$STEP_CODE)
+    if($this->step==self::$STEP_CODE)
     {
-      $arUser = $this->getData();
-      if(!$arUser['is_confirm'])
+      if(!$this->data['is_confirm'])
       {
-        $data['code'] == $arUser['code']
-          ? $arData = ['is_confirm'=>1, 'is_confirm_time'=>time()]
-          : $arErrors['code'] = 'Введен некорректный код подтверждения';
+        if($this->data['code'] == $this->data['code'])
+        {
+          $arData['is_confirm'] = 1;
+          $this->data['is_confirm'] = 1;
+          $arData['is_confirm_time'] = time();
+          $this->data['is_confirm_time'] = $arData['is_confirm_time'];
+        }
+        else
+        {
+          $this->errors['code'] = 'Введен некорректный код подтверждения';
+        }
       }
     }
     //
-    if($step==self::$STEP_PASSWORD)
+    if($this->step==self::$STEP_PASSWORD)
     {
-      $value1 = filter_var($data['password'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-      $value2 = filter_var($data['r-password'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $value1 = filter_var($this->data['password'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $value2 = filter_var($this->data['r-password'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
       if($value1 != $value2)
       {
-        $arErrors['r-password'] = 'Значения полей не совпадают';
+        $this->errors['r-password'] = 'Значения полей не совпадают';
       }
       if($value1 < self::$MIN_PASSWORD_LENGTH)
       {
-        $arErrors['password'] = 'Пароль должен состоять минимум из шести символов';
+        $this->errors['password'] = 'Пароль должен состоять минимум из шести символов';
       }
       else
       {
@@ -326,33 +373,36 @@ class UserRegister
       }
     }
     //
-    if($step==self::$STEP_AVATAR)
+    if($this->step==self::$STEP_AVATAR)
     {
       if(empty($this->profile->exInfo->photo))
       {
-        $arErrors['avatar'] = 'Необходимо загрузить фото';
+        $this->errors['avatar'] = 'Необходимо загрузить фото';
       }
       else
       {
+        // теперь можно и авторизовать
         $model = new Auth();
         $model->Authorize(['id'=>$this->profile->id]);
       }
     }
 
-    if(!count($arErrors))
+    if(!count($this->errors))
     {
       $result = count($arData) ? $this->setData($arData) : true;
       if(!$result)
       {
-        $arErrors['system'] = 'Ошибка записи данных';
+        $this->errors['system'] = 'Ошибка записи данных';
       }
-      elseif($step==self::$STEP_LOGIN && isset($arData['code'])) // отправляем код для подтверждения
+      elseif($this->step==self::$STEP_LOGIN && isset($arData['code'])) // отправляем код для подтверждения
       {
         $this->sendCode();
       }
+      // переход на следующую ступень(или выход)
+      $this->step==self::$STEP_AVATAR
+        ? self::clearStep()
+        : $this->setStep($this->step + 1);
     }
-
-    return $arErrors;
   }
   /**
    * @param $arr - array(field => value)
@@ -451,17 +501,13 @@ class UserRegister
    */
   public function repeatSendCode()
   {
-    $arRes = [];
-    $arRes['input'] = $this->getData();
-    $arRes['time_to_repeat'] = $this->isTimeToRepeat($arRes['input']['time_code']);
-    if(!$arRes['time_to_repeat'])
+    if( !$this->data['time_to_repeat'] && !$this->data['is_confirm'] )
     {
       $time = time();
       $this->sendCode();
       $this->setData(['time_code'=>$time]);
-      $arRes['time_to_repeat'] = $this->isTimeToRepeat($time);
+      $this->data['time_to_repeat'] = $this->isTimeToRepeat($time);
     }
-    return $arRes;
   }
   /**
    * @return bool
@@ -508,7 +554,9 @@ class UserRegister
       'ismoder' => $model::$ISMODER_INACTIVE,
       'access_time' => $date,
       'crdate' => $date,
-      'mdate' => $date
+      'mdate' => $date,
+      'confirmEmail' => $arUser['login_type']==self::$LOGIN_TYPE_EMAIL,
+      'confirmPhone' => $arUser['login_type']==self::$LOGIN_TYPE_PHONE
     ]);
     //
     $this->setData(['id_user'=>$id_user]);
@@ -558,9 +606,6 @@ class UserRegister
         'crdate' => $date,
       ]);
     }
-    // authorize
-    //$model = new Auth();
-    //$model->Authorize(['id'=>$id_user]);
   }
   //
   //
