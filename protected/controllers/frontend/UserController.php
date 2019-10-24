@@ -541,7 +541,7 @@ class UserController extends AppController
       $model = new UserRegister();
       $model->checkEmailLink();
 
-      $model->setStep(5);
+      //$model->setStep(5);
 
       if(!in_array($model->step, [1,2,3,4,5,'end']))
       {
