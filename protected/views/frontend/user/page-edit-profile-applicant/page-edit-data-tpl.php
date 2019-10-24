@@ -151,6 +151,10 @@
   foreach($attrAll as $p)
     if(strpos($p['name'], 'admob')!==false && !empty($p['val']))
       $arAdPhones[] = $p;
+
+//    echo '<pre>';
+//    print_r($viData);
+//    echo '</pre>';
 ?>
   <?php if( $viErrorData['err'] ): ?>
     <div class="err-msg-block">При сохранении данных профиля произошла ошибка. <?= $viErrorData['msg'] ?></div>

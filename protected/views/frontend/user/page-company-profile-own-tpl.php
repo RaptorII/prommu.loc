@@ -120,7 +120,7 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
       /**
        * form
        *
-       */
+       *//*
 
       //css
       Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS .'register/complete-reg.css');
@@ -172,19 +172,19 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
                               <label >Телефон</label>
                           </div>
 
-                          <div class="complete__city">
-                              <input type="text" required="">
+                          <div class="complete__city epe__label city-field">
+
+                              <input type='text' name='str-city' value="<?=$viData['userCities']['name']?>" class="epe__input epe__input-city" autocomplete="off">
+                              <input type="hidden" name="cities[]" value="<?=$viData['userCities']['id_city']?>" id="id-city">
+
                               <span class="highlight"></span>
                               <span class="bar"></span>
-                              <label >Город</label>
+
+                              <label>Город</label>
+
+                              <ul class="city-list"></ul>
                           </div>
-                          <?php
 
-                            echo '<pre>';
-                                print_r($viData['userAllInfo']['userCities']);
-                            echo '</pre>';
-
-                          ?>
                           <div class="epe__label city-field">
                               <span class="epe__label-name">Город:</span>
                               <span class="city-select"><?=$viData['userCities']['name']?><b></b></span>
@@ -240,177 +240,171 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
 /**
  *
  *
- *//*
-Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css');
-Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
-
-Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-edit-prof-emp.css');
-Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-emp.js', CClientScript::POS_END);
-
-
-
- if( $viErrorData['err'] ): ?>
-      <div class="err-msg-block">При сохранении данных профиля произошла ошибка. <?= $viErrorData['msg'] ?></div>
-      <? endif; ?>
-      <form action='' id='F1compprof' method='post' class="edit-profile-employer">
-          <div class='col-xs-12'>
-              <div class="epe__header">
-                  <h1 class="epe__header-title"><?=$viData['info']['name']?></h1>
-              </div>
-          </div>
-          <div class="col-xs-12 col-md-8 col-md-push-2 epe__content">
-              <div class="row">
-
-                  <div class="epe__data">
-                      <div class="row">
-                          <div class="col-xs-12">
-                              <div class="epe-data__title"><h2>ОСНОВНАЯ ИНФОРМАЦИЯ</h2></div>
-                              <div class="epe-data__module">
-                                  <label class="epe__label">
-                                      <span class="epe__label-name">Компания:</span>
-                                      <input type='text' name='name' value="<?=$viData['info']['name']?>" class="epe__input epe__input-name epe__required" autocomplete="off">
-                                  </label>
-                                  <div class="epe__label epe__select">
-                                      <?php
-                                      $strInp = '';
-                                      $typeName = '';
-                                      foreach($viData['cotype'] as $t){
-                                          $strInp .= '<li><input type="radio" name="companyType" value="' . $t['id'] . '" id="type' . $t['id'] . '"';
-                                          if($_GET['position']==$t['id']){
-                                              $strInp .= ' checked';
-                                              $typeName = $t['name'];
-                                          }
-                                          elseif($t['selected']){
-                                              $strInp .= ' checked';
-                                              $typeName = $t['name'];
-                                          }
-                                          $strInp .= '><label for="type' . $t['id'] . '">' . $t['name'] . '</label></li>';
-                                      }
-                                      ?>
-                                      <span class="epe__label-name">Тип компании:</span>
-                                      <span class="epe__input epe__input-type" id="epe-str-type"><?=$typeName?></span>
-                                      <div class="epe__label-veil" id="epe-veil-type"></div>
-                                      <ul class="epe__select-list" id="epe-list-type"><i class="epe__select-list-icon">ОК</i><?=$strInp?></ul>
-                                  </div>
-                                  <div class="epe__label city-field">
-                                      <span class="epe__label-name">Город:</span>
-                                      <span class="city-select"><?=$viData['userCities']['name']?><b></b></span>
-                                      <input type='text' name='str-city' value="<?=$viData['userCities']['name']?>" class="epe__input epe__input-city" autocomplete="off">
-                                      <input type="hidden" name="cities[]" value="<?=$viData['userCities']['id_city']?>" id="id-city">
-                                      <ul class="city-list"></ul>
-                                  </div>
-                                  <label class="epe__label">
-                                      <span class="epe__label-name">Web Сайт:</span>
-                                      <input type='text' name='user-attribs[site]' value="<?=$viData['attribs']['site']['val']?>" class="epe__input epe__input-site" autocomplete="off">
-                                  </label>
-                              </div>
-                              <?
-                              //
-                              ?>
-                              <div class="epe-data__title"><h2>КОНТАКТНАЯ ИНФОРМАЦИЯ</h2></div>
-                              <div class="epe-data__module">
-                                  <label class="epe__label">
-                                      <span class="epe__label-name">Ваше имя:</span>
-                                      <input type='text' name='fname' value="<?=$viData['info']['firstname']?>" class="epe__input epe__input-fname epe__required" autocomplete="off">
-                                  </label>
-                                  <label class="epe__label">
-                                      <span class="epe__label-name">Ваша фамилия:</span>
-                                      <input type='text' name='lname' value="<?=$viData['info']['lastname']?>" class="epe__input epe__input-lname" autocomplete="off">
-                                  </label>
-                                  <label class="epe__label">
-                                      <span class="epe__label-name">Контактное лицо:</span>
-                                      <input type='text' name='contact' value="<?=$viData['info']['contact']?>" class="epe__input epe__input-contact epe__required" autocomplete="off">
-                                  </label>
-
-                                  <input type='checkbox' name='employerContact' value="1" <?=$viData['info']['employer_contact'] ? 'checked' : '' ?> class="epe__hidden" id="employerContact">
-                                  <label class="epe__checkbox" for="employerContact">Отображать контактные данные</label>
-
-
-                                  <label class="epe__label epe__email" data-error="Указанный e-mail адрес уже используется в системе" for="epe-email">
-                                      <span class="epe__label-name">Ваш email:</span>
-                                      <input type='text' name='email' value="<?=$viData['info']['email']?>" class="epe__input epe__input-mail epe__required" id="epe-email" autocomplete="off">
-                                      <span class="epe__confirm<?=($viData['info']['confirmEmail'] && !empty($viData['info']['email'])?' complete':'')?>" id="conf-email">
-                    <?php if($viData['info']['confirmEmail'] && !empty($viData['info']['email'])): ?>
-                        <p>Почта подтверждена.</p>
-                    <?php else: ?>
-                        <p>Почта не подтверждена. <em>Подтвердить</em></p>
-                    <?php endif; ?>
-                  </span>
-                                  </label>
-                                  <div class="epe__confirm-block" id="conf-email-block">
-                                      <span class="epe__confirm-text">На Вашу почту выслан код для подтверждения. Введите его в это поле!</span>
-                                      <label class="epe__label">
-                                          <span class="epe__label-name">Проверочный код:</span>
-                                          <input type='text' name='confirm-code' value="" class="epe__input" id="conf-email-inp" maxlength="6" autocomplete="off">
-                                      </label>
-                                      <dir class="epe__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</dir>
-                                      <dir class="clearfix"></dir>
-                                  </div>
-                                  <div class="epe__label">
-                                      <span class="epe__label-name epe__phone-name">Телефон:</span>
-                                      <input type='text' name='user-attribs[mob]' value="<?=$viData['phone']?>" class="epe__input epe__phone epe__input-phone" id="phone-code" autocomplete="off">
-                                      <span class="epe__confirm<?=($viData['info']['confirmPhone']?' complete':'')?>" id="conf-phone">
-                    <?php if(!$viData['info']['confirmPhone']): ?>
-                        <p>Телефон не подтвержден. <em>Подтвердить</em></p>
-                    <?php else: ?>
-                        <p>Телефон подтвержден.</p>
-                    <?php endif; ?>
-                  </span>
-                                  </div>
-                                  <div class="epe__confirm-block" id="conf-phone-block">
-                                      <span class="epe__confirm-text">На Ваш телефон выслан код для подтверждения. Введите его в это поле!</span>
-                                      <label class="epe__label">
-                                          <span class="epe__label-name">Проверочный код:</span>
-                                          <input type='text' name='confirm-code' value="" class="epe__input" id="conf-phone-inp" maxlength="6" autocomplete="off">
-                                      </label>
-                                      <div class="epe__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
-                                      <div class="clearfix"></div>
-                                  </div>
-                                  <label class="epe__label">
-                                      <span class="epe__label-name">Городской телефон:</span>
-                                      <input type='text' name='user-attribs[stationaryphone]' value="<?=$viData['attribs']['stationaryphone']['val']?>" class="epe__input epe__input-pos" autocomplete="off">
-                                  </label>
-
-                                  <div class="epe__mess epe__mess-wapp <?=empty($viData['attribs']['whatsapp']['val'])?'off':''?>">
-                                      <div class="epe__label">
-                                          <span class="epe__label-name epe__phone-name">WhatsApp:</span>
-                                          <input type="text" name="user-attribs[whatsapp]" value="<?=$viData['attribs']['whatsapp']['val']?>" class="epe__input epe__phone phone-input" autocomplete="off">
-                                          <ul class="phone-list"></ul>
-                                      </div>
-                                  </div>
-                                  <div class="epe__mess epe__mess-tele <?=empty($viData['attribs']['telegram']['val'])?'off':''?>">
-                                      <div class="epe__label">
-                                          <span class="epe__label-name epe__phone-name">Telegram:</span>
-                                          <input type="text" name="user-attribs[telegram]" value="<?=$viData['attribs']['telegram']['val']?>" class="epe__input epe__phone phone-input" autocomplete="off">
-                                          <ul class="phone-list"></ul>
-                                      </div>
-                                  </div>
-
-
-
-                                  <input type='checkbox' name='user-attribs[isnews]' value="1" <?=$viData['attribs']['isnews']['val'] ? 'checked' : '' ?> class="epe__hidden" id="subscribtion">
-                                  <label class="epe__checkbox" for="subscribtion">Получать новости об изменениях и новых возможностях на сайте</label>
-
-                                  <div class="center">
-                                      <button class='epe__btn prmu-btn prmu-btn_normal' type='submit'>
-                                          <span>Сохранить изменения</span>
-                                      </button>
-                                  </div>
-                                  <input type="hidden" name="savest" value="1"/>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </form>
-
-?>
-<?php
-/**
- *
- *
  */
+
+//echo '<pre>';
+//print_r($viData);
+//echo '</pre>';
+
+if( $action == 'company-profile-own' &&  Share::$UserProfile->exInfo->isblocked == 3 ) {
+
+    Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css');
+    Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
+
+    //css
+    Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS .'register/complete-reg.css');
+
+    Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-edit-prof-emp.css');
+    Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-emp.js', CClientScript::POS_END);
+
+    ?>
+
+    <div class="complete__reg">
+        <form action='' id='F1compprof' method='post' class="edit-profile-employer">
+
+            <p class="complete__head center">
+                Необходимо активировать аккаунт
+            </p>
+            <p class="complete__txt center">
+                Чтобы получить доступ к новым возможностям - укажите данные
+            </p>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="epe-data__title"><h2>ОСНОВНАЯ ИНФОРМАЦИЯ</h2></div>
+                    <div class="epe-data__module">
+                        <label class="epe__label">
+                            <span class="epe__label-name">Компания:</span>
+                            <input type='text' name='name' value="<?= $viData['userInfo']['name'] ?>"
+                                   class="epe__input epe__input-name epe__required" autocomplete="off">
+                        </label>
+                        <div class="epe__label epe__select">
+                            <?php
+                            $strInp = '';
+                            $typeName = '';
+                            foreach ($viData['userAllInfo']['cotype'] as $t) {
+                                $strInp .= '<li><input type="radio" name="companyType" value="' . $t['id'] . '" id="type' . $t['id'] . '"';
+                                if ($_GET['position'] == $t['id']) {
+                                    $strInp .= ' checked';
+                                    $typeName = $t['name'];
+                                } elseif ($t['selected']) {
+                                    $strInp .= ' checked';
+                                    $typeName = $t['name'];
+                                }
+                                $strInp .= '><label for="type' . $t['id'] . '">' . $t['name'] . '</label></li>';
+                            }
+                            ?>
+                            <span class="epe__label-name">Тип компании:</span>
+                            <span class="epe__input epe__input-type" id="epe-str-type"><?= $typeName ?></span>
+                            <div class="epe__label-veil" id="epe-veil-type"></div>
+                            <ul class="epe__select-list" id="epe-list-type"><i
+                                        class="epe__select-list-icon">ОК</i><?= $strInp ?></ul>
+                        </div>
+                        <div class="epe__label city-field">
+                            <span class="epe__label-name">Город:</span>
+                            <span class="city-select"><?= $viData['userAllInfo']['userCities'][0]['name'] ?><b></b></span>
+                            <input type='text' name='str-city' value="<?= $viData['userAllInfo']['userCities'][0]['name'] ?>"
+                                   class="epe__input epe__input-city" autocomplete="off">
+                            <input type="hidden" name="cities[]" value="<?= $viData['userAllInfo']['userCities'][0]['id_city'] ?>"
+                                   id="id-city">
+                            <ul class="city-list"></ul>
+                        </div>
+
+                    </div>
+                    <?
+                    //
+                    ?>
+                    <div class="epe-data__title"><h2>КОНТАКТНАЯ ИНФОРМАЦИЯ</h2></div>
+                    <div class="epe-data__module">
+                        <label class="epe__label">
+                            <span class="epe__label-name">Ваше имя:</span>
+                            <input type='text' name='fname' value="<?= $viData['userAllInfo']['emplInfo']['firstname'] ?>"
+                                   class="epe__input epe__input-fname epe__required" autocomplete="off">
+                        </label>
+                        <label class="epe__label">
+                            <span class="epe__label-name">Ваша фамилия:</span>
+                            <input type='text' name='lname' value="<?= $viData['userAllInfo']['emplInfo']['lastname'] ?>"
+                                   class="epe__input epe__input-lname" autocomplete="off">
+                        </label>
+                        <label class="epe__label">
+                            <span class="epe__label-name">Контактное лицо:</span>
+                            <input type='text' name='contact' value="<?= $viData['userAllInfo']['emplInfo']['contact'] ?>"
+                                   class="epe__input epe__input-contact epe__required" autocomplete="off">
+                        </label>
+
+                        <label class="epe__label epe__email" data-error="Указанный e-mail адрес уже используется в системе"
+                               for="epe-email">
+                            <span class="epe__label-name">Ваш email:</span>
+                            <input type='text' name='email' value="<?= $viData['userAllInfo']['emplInfo']['email'] ?>"
+                                   class="epe__input epe__input-mail epe__required" id="epe-email" autocomplete="off">
+                            <span class="epe__confirm<?= ($viData['userAllInfo']['emplInfo']['confirmEmail'] && !empty($viData['userAllInfo']['emplInfo']['email']) ? ' complete' : '') ?>"
+                                  id="conf-email">
+                            <?php if ($viData['userAllInfo']['emplInfo']['confirmEmail'] && !empty($viData['userAllInfo']['emplInfo']['email'])): ?>
+                                <p>Почта подтверждена.</p>
+                            <?php else: ?>
+                                <p>Почта не подтверждена. <em>Подтвердить</em></p>
+                            <?php endif; ?>
+                            </span>
+                        </label>
+                        <div class="epe__confirm-block" id="conf-email-block">
+                            <span class="epe__confirm-text">На Вашу почту выслан код для подтверждения. Введите его в это поле!</span>
+                            <label class="epe__label">
+                                <span class="epe__label-name">Проверочный код:</span>
+                                <input type='text' name='confirm-code' value="" class="epe__input" id="conf-email-inp"
+                                       maxlength="6" autocomplete="off">
+                            </label>
+                            <div class="epe__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="epe__label">
+                            <span class="epe__label-name epe__phone-name">Телефон:</span>
+                            <input type='text' name='user-attribs[mob]' value="<?= substr($viData['userAllInfo']['userAttribs'][1]['val'], 2,20) ?>"
+                                   class="epe__input epe__phone epe__input-phone" id="phone-code" autocomplete="off">
+                            <span class="epe__confirm<?= ($viData['info']['confirmPhone'] ? ' complete' : '') ?>"
+                                  id="conf-phone">
+                            <?php if (!$viData['info']['confirmPhone']): ?>
+                                <p>Телефон не подтвержден. <em>Подтвердить</em></p>
+                            <?php else: ?>
+                                <p>Телефон подтвержден.</p>
+                            <?php endif; ?>
+                            </span>
+                        </div>
+                        <div class="epe__confirm-block" id="conf-phone-block">
+                            <span class="epe__confirm-text">На Ваш телефон выслан код для подтверждения. Введите его в это поле!</span>
+                            <label class="epe__label">
+                                <span class="epe__label-name">Проверочный код:</span>
+                                <input type='text' name='confirm-code' value="" class="epe__input" id="conf-phone-inp"
+                                       maxlength="6" autocomplete="off">
+                            </label>
+                            <div class="epe__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                         <p class="complete__txt center">
+                          После активации вам станет доступен каталог всех соискателей со всеми функциями
+                        </p>
+
+                        <div class="center">
+                            <button class='epe__btn prmu-btn prmu-btn_normal' type='submit'>
+                                <span>Сохранить изменения</span>
+                            </button>
+                        </div>
+                        <input type="hidden" name="savest" value="1"/>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+
+    <?php
+    /**
+     *
+     *
+     */
+
+} else {
 
 ?>
 
@@ -653,3 +647,5 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/pag
       </div>
     <? endif; ?>
 </div>
+
+<? } ?>

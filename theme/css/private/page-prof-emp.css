@@ -833,7 +833,7 @@ a.upp__project-info {
   display: block;
   font-size: 16px;
   text-transform: uppercase;
-  margin: 10px 0;
+  margin: 10px auto;
   line-height: 34px;
   border-radius: 20px;
 }

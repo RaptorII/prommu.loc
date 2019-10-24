@@ -2079,3 +2079,6 @@ input:checked + .epa__checkbox:after {
   display: block;
   float: none;
 }
+.ppp__content > .edit-profile-applicant {
+  padding: 0;
+}

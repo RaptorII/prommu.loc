@@ -1435,12 +1435,48 @@ class UserProfileEmpl extends UserProfile
                 $val['selected'] = 1;
 
         // read cities
-        $sql = "SELECT ci.id_city id, ci.name, co.id_co, co.name coname, ci.ismetro
-            FROM user_city uc
-            LEFT JOIN city ci ON uc.id_city = ci.id_city
-            LEFT JOIN country co ON co.id_co = ci.id_co
-            WHERE uc.id_user = {$id}";
+        $sql = "
+            SELECT 
+                ci.id_city id, 
+                ci.name, 
+                co.id_co, 
+                co.name coname, 
+                ci.ismetro
+            FROM 
+                user_city uc
+            LEFT JOIN 
+                city ci 
+                ON 
+                uc.id_city = ci.id_city
+            LEFT JOIN 
+                country co 
+                ON 
+                co.id_co = ci.id_co
+            WHERE 
+                uc.id_user = {$id}
+        ";
         $data['userCities'] = Yii::app()->db->createCommand($sql)->queryAll();
+
+        if (isset($data['userCities']) && $data['userCities'] !== '') {
+            $sql = "
+                SELECT
+                    ci.id_city,
+                    ci.name,
+                    uc.id_user
+                FROM
+                    user_city uc
+                LEFT JOIN
+                    city ci
+                ON
+                    uc.id_city = ci.id_city
+                WHERE
+                    uc.id_user = {$id}
+            ";
+        }
+        $data['userCities'] = Yii::app()->db->createCommand($sql)->queryAll();
+
+       // echo $sql;
+       // die();
 
         return $data;
     }

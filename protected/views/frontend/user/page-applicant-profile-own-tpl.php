@@ -227,7 +227,7 @@
     /**
     * form
     *
-    */
+    *//*
 
     //css
     Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS .'register/complete-reg.css');
@@ -343,10 +343,540 @@
 
     ?>
 
-    <?
-    //    RATING
+    <?php
+    /**
+    *
+    *
+    */
+
+    if( $action == 'applicant-profile-own' &&  Share::$UserProfile->exInfo->isblocked == 3 ) {
+
+        Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css');
+        Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
+
+        Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-edit-prof-app.css');
+        Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-app-reg.js', CClientScript::POS_END);
+
+        Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'dist/jquery-ui.min.css');
+
+        //css
+        Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'register/complete-reg.css');
+
+        /**/
+
+        //$attrAll = $viData['data']['userInfo']['userAttribs'];
+        //$attr = array_values($attrAll)[0];
+        // city
+        $arUserCities = $viData['userInfo']['userCities'][0];
+
+        $Q1 = Yii::app()->db->createCommand()
+            ->select('t.id_city id, t.name, t.ismetro, t.id_co')
+            ->from('city t')
+            ->limit(10000);
+        $arCities = $Q1->queryAll();
+        $arTemp = array();
+        foreach ($arCities as $city) {
+            $arTemp[$city['id']] = $city['name'];
+        }
+        // оптимизируем массив городов для JS
+        $arCities = array_unique($arTemp);
+        asort($arCities);
+
+
+        // Телефон
+        if (!$_GET['phone'] && !$attr['phone-code']) { // закрыли попап не сохранив
+            $city = (new Geo())->getUserGeo();
+            foreach ($viData['countries'] as $c) {
+                if ($c['id_co'] == $city['country'])
+                    $attr['phone-code'] = $c['phone'];
+            }
+
+        } else if ($_GET['phone']) {  // пошли через попап
+            $attr['phone'] = urldecode($_GET['phone']);
+            $attr['phone'] = urldecode($_GET['phone']);
+            $attr['phone-code'] = $_GET['__phone_prefix'];
+        }
+        //  email
+        $attr['email'] = filter_var($attr['email'], FILTER_VALIDATE_EMAIL);
+
+        // additional phones
+        $arAdPhones = array();
+        foreach ($attrAll as $p)
+            if (strpos($p['name'], 'admob') !== false && !empty($p['val']))
+                $arAdPhones[] = $p;
+
+        /**/
+
+
+//        echo '<pre>';
+        //print_r($viData);
+        //print_r($viData['data']);
+        //print_r($arCities);
+
+//        echo '</pre>';
+
+        //epa__content epa__content-data
+        ?>
+
+        <script type="text/javascript">
+            let arCities = <?=json_encode($arCities)?>;
+        </script>
+
+
+        <div class="edit-profile-applicant ">
+            <div class="complete__reg">
+                <form action='' method='post' id="epa-edit-form">
+
+                    <div class="epa__content-title"><h2>Основная информация</h2></div>
+                    <div class="epa__content-module" id="main-module">
+                        <label class="epa__label epa__firstname">
+                            <span class="epa__label-name">Имя:</span>
+                            <input type="text" name="name" value="<?= trim($attr['firstname']) ?>"
+                                   class="epa__input epa__required" data-name="Имя">
+                        </label>
+                        <label class="epa__label epa__lastname">
+                            <span class="epa__label-name">Фамилия:</span>
+                            <input type="text" name="lastname" value="<?= trim($attr['lastname']) ?>"
+                                   class="epa__input epa__required" data-name="Фамилия">
+                        </label>
+                        <div class="epa__label epa__date epa__select<?= ($attr['bday'] == '01.01.1970' ? ' error' : '') ?>">
+                            <span class="epa__label-name">Дата рождения:</span>
+                            <input
+                                    type="text"
+                                    name="bdate"
+                                    id="birthday"
+                                    autocomplete="off"
+                                    value="<?= ($attr['bday'] == '01.01.1970' ? '' : $attr['bday']) ?>"
+                                    class="epa__input">
+                        </div>
+                        <?php $gender = (!empty($_GET['sex']) ? $_GET['sex'] : $attr['isman']) ?>
+                        <div class="epa__attr-block">
+                            <div class="epa__attr-block1">
+                                <input type="radio" name="sex" id="epa-male" class="epa__hidden"
+                                       value="1" <?= ($gender ? 'checked' : '') ?>>
+                                <label class="epa__checkbox" for="epa-male">Мужчина</label>
+                            </div>
+                            <div class="epa__attr-block2">
+                                <input type="radio" name="sex" id="epa-female" class="epa__hidden"
+                                       value="0" <?= ($gender ? '' : 'checked') ?>>
+                                <label class="epa__checkbox epa__checkbox-famale" for="epa-female">Женщина</label>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="epa__content-title"><h2>Контактная информация</h2></div>
+                    <div class="epa__content-module" id="contacts-module">
+                        <div class="epa__label">
+                            <span class="epa__label-name epa__phone-name">Телефон:</span>
+                            <input type='text' name='user-attribs[mob]' value="<?= $attr['phone'] ?>"
+                                   class="epa__input epa__phone" id="phone-code">
+                            <span class="epa__add-phone-btn js-g-hashint" title="Добавить еще телефон">+</span>
+                            <span class="epa__confirm<?= ($attr['confirmPhone'] ? ' complete' : '') ?>" id="conf-phone">
+                          <?php if (!$attr['confirmPhone']): ?>
+                              <p>Телефон не подтвержден. <em>Подтвердить</em></p>
+                          <?php else: ?>
+                              <p>Телефон подтвержден.</p>
+                          <?php endif; ?>
+                        </span>
+                        </div>
+                        <div class="epa__confirm-block" id="conf-phone-block">
+                            <span class="epa__confirm-text">На Ваш телефон выслан код для подтверждения. Введите его в это поле!</span>
+                            <label class="epa__label">
+                                <span class="epa__label-name">Код:</span>
+                                <input type='text' name='confirm-code' value="" class="epa__input" id="conf-phone-inp"
+                                       maxlength="6">
+                            </label>
+                            <div class="epa__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <?php
+                        if (sizeof($arAdPhones) && !empty($attr['phone'])):
+                            foreach ($arAdPhones as $phone):
+                                ?>
+                                <label class="epa__label epa__add-phone">
+                                    <span class="epa__label-name epa__phone-name">Доп. Телефон:</span>
+                                    <input type="text" name="user-attribs[<?= $phone['name'] ?>]"
+                                           value="<?= $phone['val'] ?>" class="epa__input epa__phone"
+                                           autocomplete="off">
+                                </label>
+                            <?php
+                            endforeach;
+                        endif;
+                        ?>
+                        <div class="epa__label epa__email"
+                             data-error="Указанный e-mail адрес уже используется в системе">
+                            <span class="epa__label-name">Email:</span>
+                            <input type="text" name="email" value="<?= $attr['email'] ?>"
+                                   class="epa__input epa__required" placeholder="your@email.com" id="epa-email"
+                                   data-name="Электронная почта">
+                            <span class="epa__confirm<?= ($attr['confirmEmail'] && !empty($attr['email']) ? ' complete' : '') ?>"
+                                  id="conf-email">
+                        <?php if ($attr['confirmEmail'] && !empty($attr['email'])): ?>
+                            <p>Почта подтверждена.</p>
+                        <?php else: ?>
+                            <p>Почта не подтверждена. <em>Подтвердить</em></p>
+                        <?php endif; ?>
+                      </span>
+                        </div>
+                        <div class="epa__confirm-block" id="conf-email-block">
+                            <span class="epa__confirm-text">На Вашу почту выслан код для подтверждения. Введите его в это поле!</span>
+                            <label class="epa__label">
+                                <span class="epa__label-name">Код:</span>
+                                <input type='text' name='confirm-code' value="" class="epa__input" id="conf-email-inp"
+                                       maxlength="6">
+                            </label>
+                            <div class="epa__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+
+
+                    <?php
+
+                    // positions
+                    $arPosts2 = array();
+                    $strPosts = '';
+                    foreach ($viData['data']['posts'] as $val) {
+                        $arPosts2[$val['id']] = $val;
+                        $arPosts2[$val['id']]['newname'] = ($val['key'] == 'custpo' ? ('- ' . $val['val'] . ' -') : $val['val']);
+
+                        $arPosts2[$val['id']]['checked'] = '';
+
+                        if ($_GET['position'] == $val['id']) {
+                            $arPosts2[$val['id']]['checked'] = "checked";
+                        } elseif ($val['isshow1'] && !$_GET['npopup']) {// если это не после модального окна, то проверяем
+                            $arPosts2[$val['id']]['checked'] = "checked";
+                        }
+
+                        if ($arPosts2[$val['id']]['checked'] != '') {
+                            $strPosts .= ($strPosts == '' ? '' : ',') . $arPosts[$val['id']]['newname'];
+                        }
+                    }
+                    $arPayment2 = array();
+                    foreach ($viData['userInfo']['userDolj'][0] as $val) {
+                        if ($_GET['npopup'] && $_GET['position']) {
+                            foreach ($arPosts as $k => $v) {
+                                if ($v['checked'] === 'checked') {
+                                    $arPayment2[$_GET['position']]['pt'] = 0;
+                                    $arPayment2[$_GET['position']]['type'] = 'Час';
+                                }
+                            }
+                        } else {
+                            if ($val['pay'] > 0)
+                                $arPayment2[$val['idpost']]['pay'] = round($val['pay']);
+                            $arPayment2[$val['idpost']]['pt'] = $val['pt'];
+                            switch ($val['pt']) {
+                                case 0:
+                                    $arPayment2[$val['idpost']]['type'] = 'Час';
+                                    break;
+                                case 1:
+                                    $arPayment2[$val['idpost']]['type'] = 'Неделя';
+                                    break;
+                                case 2:
+                                    $arPayment2[$val['idpost']]['type'] = 'Месяц';
+                                    break;
+                                case 3:
+                                    $arPayment2[$val['idpost']]['type'] = 'Посещение';
+                                    break;
+                            }
+                        }
+                    }
+
+                    //      echo '<pre>';
+                    // print_r($viData['data']);
+                    //      echo '</pre>';
+
+                    ?>
+                    <div class="epa__content-title"><h2>Целевая вакансия</h2></div>
+                    <div class="epa__content-module">
+                        <h3 class="epa__posts-title">Выберите должности, на которых желаете работать</h3>
+                        <div class="epa__label epa__posts epa__select">
+                            <span class="epa__label-name">Должность:</span>
+                            <ul id="epa-list-posts" class="epa__select-list epa__select-lst-vsbl">
+                                <?php foreach ($arPosts2 as $post): ?>
+                                    <li>
+                                        <input type="checkbox" name="donjnost[]" value="<?= $post['id'] ?>"
+                                               id="epa-post-<?= $post['id'] ?>" <?= $post['checked'] ?>>
+                                        <label for="epa-post-<?= $post['id'] ?>"><?= $post['newname'] ?><b></b></label>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+
+                        <div class="epa__post-detail">
+                            <?php foreach ($arPosts2 as $post): ?>
+                                <?php if ($post['checked'] != ''): ?>
+                                    <div class="epa__post-block" data-id="<?= $post['id'] ?>">
+                                        <div class="epa__post-name"><?= $post['newname'] ?></div>
+                                        <div class="epa__post-close"></div>
+                                        <label class="epa__label epa__payment">
+                                            <span class="epa__label-name">Ожидаемая оплата:</span>
+                                            <input type="text" name="post[<?= $post['id'] ?>][payment]"
+                                                   value="<?= isset($arPayment2[$post['id']]['pay']) ? $arPayment2[$post['id']]['pay'] : '' ?>"
+                                                   class="epa__input epa__required" data-name="Ожидаемая оплата">
+                                            <em>руб</em>
+                                        </label>
+                                        <label class="epa__label epa__select">
+                                            <input type="text" name="epa-str-period"
+                                                   value="<?= $arPayment2[$post['id']]['type'] ?>"
+                                                   class="epa__input epa__post-period" disabled>
+                                            <div class="epa__label-veil epa__post-veil"></div>
+                                            <ul class="epa__select-list epa__post-list">
+                                                <i class="epa__select-list-icon epa__post-btn">OK</i>
+                                                <li>
+                                                    <input type="radio" name="post[<?= $post['id'] ?>][hwm]"
+                                                           value="0" <?= $arPayment2[$post['id']]['pt'] == 0 ? 'checked' : '' ?>>
+                                                    <label>Час</label>
+                                                </li>
+                                                <li>
+                                                    <input type="radio" name="post[<?= $post['id'] ?>][hwm]"
+                                                           value="1" <?= $arPayment2[$post['id']]['pt'] == 1 ? 'checked' : '' ?>>
+                                                    <label>Неделю</label>
+                                                </li>
+                                                <li>
+                                                    <input type="radio" name="post[<?= $post['id'] ?>][hwm]"
+                                                           value="2" <?= $arPayment2[$post['id']]['pt'] == 2 ? 'checked' : '' ?>>
+                                                    <label>Месяц</label>
+                                                </li>
+                                                <li>
+                                                    <input type="radio" name="post[<?= $post['id'] ?>][hwm]"
+                                                           value="3" <?= $arPayment2[$post['id']]['pt'] == 3 ? 'checked' : '' ?>>
+                                                    <label>Посещение</label>
+                                                </li>
+                                            </ul>
+                                        </label>
+                                        <?php
+                                        $arRes = array();
+                                        $name = 'без опыта';
+                                        $checked = false;
+                                        foreach ($viData['data']['expir'] as $val) {
+                                            $arRes[$val['id']] = $val;
+                                            $key = $this->ViewModel->isInArray($viData['data']['userInfo']['userDolj'][0], 'id_attr', $val['id']);
+                                            if ($key > 0 && $viData['data']['userInfo']['userDolj'][0][$key]['idpost'] == $post['id']) {
+                                                $arRes[$val['id']]['checked'] = 'checked';
+                                                $name = $val['name'];
+                                                $checked = true;
+                                            }
+                                        }
+                                        if (!$checked)
+                                            $arRes[32]['checked'] = 'checked';
+                                        ?>
+                                        <label class="epa__label epa__select epa__post-experience">
+                                            <span class="epa__label-name">Опыт работы:</span>
+                                            <input type="text" name="epa-str-period" value="<?= $name ?>"
+                                                   class="epa__input epa__post-period" disabled>
+                                            <div class="epa__label-veil epa__post-veil"></div>
+                                            <ul class="epa__select-list epa__post-list">
+                                                <i class="epa__select-list-icon epa__post-btn">OK</i>
+                                                <?php foreach ($arRes as $val): ?>
+                                                    <li>
+                                                        <input type="radio" name="exp[<?= $post['id'] ?>][level]"
+                                                               value="<?= $val['id'] ?>" <?= $val['checked'] ?>>
+                                                        <label><?= $val['name'] ?><b></b></label>
+                                                    </li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </label>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+
+
+                    <div class="epa__content-title"><h2>Удобное место работы</h2></div>
+                    <div class="epa__content-module" id="city-module">
+                        <div class="epa__cities-list">
+                            <div>
+                                <?php foreach ($arUserCities as $city): ?>
+                                    <b><?= $city['name'] ?></b>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <div class="epa__cities-block-list">
+                            <?php foreach ($arUserCities as $city): ?>
+                                <div class="epa__city-item" data-idcity="<?= $city['id'] ?>">
+                                    <div class="epa__city-title">
+                                        <b>ГОРОД </b>
+                                        <span class="epa__city-del"></span>
+                                    </div>
+                                    <div class="epa__label epa__select epa__city">
+                                        <span class="epa__label-name">Город:</span>
+                                        <span class="epa__city-err">Такой город уже выбран</span>
+                                        <input type="text" name="cityname[]" value="<?= $city['name'] ?>"
+                                               class="epa__input city-input" autocomplete="off">
+                                        <ul class="city-list"></ul>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+
+                    <div class="center">
+                        <button type="submit" class="epa__save-btn prmu-btn prmu-btn_normal">
+                            <span>СОХРАНИТЬ ИЗМЕНЕНИЯ</span>
+                        </button>
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+
+    <?php
+
+
+    /**
+     * end form
+     *
+     */
+
+    /**
+     * elements
+     */
+
     ?>
-    <?php if( $flagOwnProfile ): ?>
+        <div id="epa-post-single">
+            <div class="epa__post-block" data-id="NEWID">
+                <div class="epa__post-name">NEWNAME</div>
+                <div class="epa__post-close"></div>
+                <label class="epa__label epa__payment">
+                    <span class="epa__label-name">Ожидаемая оплата: </span>
+                    <input type="text" name="post[NEWID][payment]" value="" class="epa__input epa__required "
+                           data-name="Ожидаемая оплата" autocomplete="off">
+                    <em>руб</em>
+                </label>
+                <label class="epa__label epa__select">
+                    <input type="text" name="epa-str-period" value="Час" class="epa__input epa__post-period" disabled>
+                    <div class="epa__label-veil epa__post-veil"></div>
+                    <ul class="epa__select-list epa__post-list">
+                        <i class="epa__select-list-icon epa__post-btn">OK</i>
+                        <li>
+                            <input type="radio" name="post[NEWID][hwm]" value="0" checked>
+                            <label>Час</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="post[NEWID][hwm]" value="1">
+                            <label>Неделю</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="post[NEWID][hwm]" value="2">
+                            <label>Месяц</label>
+                        </li>
+                        <li>
+                            <input type="radio" name="post[NEWID][hwm]" value="3">
+                            <label>Посещение</label>
+                        </li>
+                    </ul>
+                </label>
+                <label class="epa__label epa__select epa__post-experience">
+                    <span class="epa__label-name">Опыт работы:</span>
+                    <input type="text" name="epa-str-period" value="без опыта" class="epa__input epa__post-period"
+                           disabled>
+                    <div class="epa__label-veil epa__post-veil"></div>
+                    <ul class="epa__select-list epa__post-list">
+                        <i class="epa__select-list-icon epa__post-btn">OK</i>
+                        <?php foreach ($viData['data']['expir'] as $val): ?>
+                            <li>
+                                <input type="radio" name="exp[NEWID][level]"
+                                       value="<?= $val['id'] ?>" <?= ($val['id'] == 32 ? 'checked' : '') ?>>
+                                <label><?= $val['name'] ?><b></b></label>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </label>
+            </div>
+        </div>
+    <?//  *****************  //?>
+        <div id="add-city-content">
+            <div class="epa__city-item" data-idcity="NEWID">
+                <div class="epa__city-title">
+                    <b>ГОРОД </b>
+                    <span class="epa__city-del"></span>
+                </div>
+                <div class="epa__label epa__select epa__city">
+                    <span class="epa__label-name">Город:</span>
+                    <span class="epa__city-err">Такой город уже выбран</span>
+                    <input type="text" name="cityname[]" value="" class="epa__input city-input" autocomplete="off">
+                    <ul class="city-list"></ul>
+                </div>
+                <h3 class="epa__cities-title">Удобное время работы:</h3>
+                <div class="epa__days-checkboxes">
+                    <div class="epa__day">
+                        <input type="checkbox" name="days[NEWID]" value="1" class="epa__day-input" data-day="ПН">
+                        <label class="epa__checkbox">ПН</label>
+                    </div>
+                    <div class="epa__day">
+                        <input type="checkbox" name="days[NEWID]" value="2" class="epa__day-input" data-day="ВТ">
+                        <label class="epa__checkbox">ВТ</label>
+                    </div>
+                    <div class="epa__day">
+                        <input type="checkbox" name="days[NEWID]" value="3" class="epa__day-input" data-day="СР">
+                        <label class="epa__checkbox">СР</label>
+                    </div>
+                    <div class="epa__day">
+                        <input type="checkbox" name="days[NEWID]" value="4" class="epa__day-input" data-day="ЧВ">
+                        <label class="epa__checkbox">ЧВ</label>
+                    </div>
+                    <div class="epa__day">
+                        <input type="checkbox" name="days[NEWID]" value="5" class="epa__day-input" data-day="ПТ">
+                        <label class="epa__checkbox">ПТ</label>
+                    </div>
+                    <div class="epa__day">
+                        <input type="checkbox" name="days[NEWID]" value="6" class="epa__day-input" data-day="СБ">
+                        <label class="epa__checkbox">СБ</label>
+                    </div>
+                    <div class="epa__day">
+                        <input type="checkbox" name="days[NEWID]" value="7" class="epa__day-input" data-day="ВС">
+                        <label class="epa__checkbox">ВС</label>
+                    </div>
+                </div>
+                <div class="epa__period-list"></div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+
+    <?//  *****************  //?>
+
+        <div id="add-additional-phone">
+            <label class="epa__label epa__add-phone">
+                <span class="epa__label-name epa__phone-name">Доп. Телефон:</span>
+                <input type="text" name="user-attribs[admobNEWNUM]" value="" class="epa__input epa__phone"
+                       autocomplete="off">
+            </label>
+        </div>
+    <?//  *****************  //?>
+        <div id="error_messege" class="tmpl">
+            <div class="prmu__popup">Для того что бы Ваша анкета была доступна для просмотра всем работодателям и Вы
+                могли откликаться на понравившиеся Вам вакансии, необходимо заполнить все обязательные поля, они
+                выделены красной рамкой.<br>Спасибо за понимание
+            </div>
+        </div>
+
+        <?
+
+        /**
+         * elements
+         */
+        ?>
+
+
+        <?
+        //    RATING
+        ?>
+        <?php
+    } else {
+//    if( $action == 'applicant-profile-own' &&  !Share::$UserProfile->exInfo->isblocked == 3 ):
+
+    if( $flagOwnProfile ):
+        ?>
       <div class="ppp__rating">
         <div class="ppp__rating-block">
           <span class="ppp__subtitle">Общий рейтинг</span>
@@ -708,6 +1238,8 @@
         <div class="ppp__subtitle">Не заполнено</div>
       <? endif; ?>
     </div>
+     <?
+    }?>
   <div class='center-box'>
     <?php if( $flagOwnProfile ): ?>
       <a class='ppp__btn btn__orange' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>' style="max-width:250px;margin:0 auto 10px">Редактировать профиль</a>
@@ -746,3 +1278,288 @@
   </script>
   <template id='TPLAddComment'></template>
 <? endif; ?>
+
+
+
+
+
+
+
+
+<?
+/*
+*       POPUP
+*/
+?>
+<?php if(!empty($_GET['uid'])): ?>
+    <?
+    Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'register-popup/register-popup-app.js', CClientScript::POS_END);
+    Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css');
+    Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
+    Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'register-popup/register-popup-app.css');
+    Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'dist/jquery-ui.min.css');
+
+    //$arGeo = (new Geo())->getUserGeo();
+    $arGeo = array('country'=>1);
+    $attr = reset($viData['userInfo']['userAttribs']);
+
+    foreach($viData['countries'] as $v)
+    {
+        if(!empty($attr['val']) && $v['phone']==$attr['phone-code'])
+        { // регистрация через телефон
+            $arGeo['country'] = $v['id_co'];
+            break;
+        }
+        else if(filter_var($attr['email'], FILTER_VALIDATE_EMAIL) && $v['id_co']==$arGeo['country'])
+        { // регистрация через почту
+            $attr['phone-code'] = $v['phone'];
+            break;
+        }
+    }
+
+    if(empty($arGeo['city']) || empty($arGeo['country']))
+    {
+        $cityId = Subdomain::getCacheData()->id;
+        $sql = Yii::app()->db->createCommand()
+            ->select("id_city, name, id_co")
+            ->from('city')
+            ->where('id_city=:id', [':id' => $cityId])
+            ->queryRow();
+
+        $arGeo['country'] = $sql['id_co'];
+        $arGeo['city'] = $sql['name'];
+        $arGeo['id_city'] = $sql['id_city'];
+    }
+    ?>
+    <script type="text/javascript">
+        var selectPhoneCode = <?=json_encode($attr['phone-code'])?>;
+        var country = <?=json_encode($arGeo['country'])?>;
+        var arCountries = <?=json_encode($viData['countries'])?>;
+        var arPosts = <?=json_encode($viData['posts'])?>;
+    </script>
+    <div class="register-popup">
+        <div class="register-popup__veil"></div>
+        <div class="register-popup__header">
+            <h1 class="rp-header__title">ПОЗДРАВЛЯЕМ ВАС С УСПЕШНОЙ РЕГИСТРАЦИЕЙ</h1>
+            <a class="rp-header__close-btn" href="javascript:void(0)">&#10006</a>
+        </div>
+        <div class="register-popup__content1">
+            <div class="rp-content1__block">
+                <form class='js-form register-popup-form' id="popup-form">
+                    <p class="rp-content1__descr">Для того, чтобы Вашу анкету увидели все работодатели, чтобы начать искать работу и откликаться на вакансии необходимо заполнить обязательные данные о себе</p>
+                    <div class="rp-content1__logo">
+    <span class="rp-content1__logo-img">
+      <?
+      $src = Share::getPhoto($attr['id_user'],2,$attr['photo'],'small',$attr['isman']);
+      if(strrpos($src,'logo_applicant')!==false)
+      {
+          $src = '/theme/pic/register-popup-page/register_popup_r_logo.png';
+      }
+      ?>
+      <img src="<?=Share::getPhoto($attr['id_user'],2,$attr['photo'],'small',$attr['isman'])?>" id="applicant-img">
+    </span>
+                        <span class="rp-content1__text">Добавление Вашей фотографии повысит привлекательность анкеты и увеличит шансы что работодатель выберет именно Вас<span class="rp-content1__warning">Добавляйте только свои личные фото, иначе Вы не сможете пройти модерацию! Спасибо за понимание!</span></span>
+                    </div>
+                    <? $cntPhotos = count($viData['userInfo']['userPhotos']); ?>
+                    <? if( $cntPhotos < Share::$UserProfile->photosMax ): ?>
+                        <?
+                        $arYiiUpload = Share::$UserProfile->arYiiUpload;
+                        $difPhotos = Share::$UserProfile->photosMax - $cntPhotos;
+                        // если доступно к загрузке менее 5и фото
+                        $arYiiUpload['fileLimit']>$difPhotos && $arYiiUpload['fileLimit']=$difPhotos;
+                        $arYiiUpload['cssClassButton']='rp-content1__upload';
+                        ?>
+                        <div class="rp-content1__btn-block center">
+                            <? $this->widget('YiiUploadWidget',$arYiiUpload); ?>
+                        </div>
+                    <? endif; ?>
+                    <div class="rp-content1__inputs">
+                        <?
+                        // birthday
+                        ?>
+                        <?//if($_GET['birthday'] != "type"):?>
+                        <div class="rp-content1__inputs-row">
+                            <input type="text" name="birthday" id="datepicker" class="custom-calendar rp-content1__inputs-input required-inp" placeholder="Дата рождения" autocomplete="off">
+                            <span class="rp-content1__text">Укажите Вашу дату рождения.<br><span class="rp-content1__warning">Возраст должен быть не менее 14 лет</span></span>
+                            <div class="clearfix"></div>
+                        </div>
+                        <?//endif;?>
+                        <?
+                        // phone
+                        ?>
+                        <div class="rp-content1__inputs-row">
+                            <input type="text" name="phone" value="<?=$attr['phone']?>" id="phone-code" class="required-inp">
+                            <span class="rp-content1__text">Номер телефона позволит Вам использовать дополнительный функционал сервиса бесплатно.</span>
+                        </div>
+                        <?
+                        // city
+                        ?>
+                        <div class="rp-content1__inputs-row">
+      <span class="rp-content1__select-arrow city">
+        <input type="text" name="city_input" value="<?=$arGeo['city']?>" class="rp-content1__inputs-input city required-inp" id="city_input" autocomplete="off" >
+        <ul id="city_list"></ul>
+        <input type="hidden" name="city" id="city_hidden" value="<?=$arGeo['id_city']?>" data-name="<?=$arGeo['city']?>">
+      </span>
+                            <span class="rp-content1__text">Ваш город</span>
+                            <div class="clearfix"></div>
+                        </div>
+                        <?
+                        // position
+                        ?>
+                        <div class="rp-content1__inputs-row">
+        <span class="rp-content1__select-arrow city">
+          <input
+                  type="text"
+                  name="position_input"
+                  autocomplete="off"
+                  class="rp-content1__inputs-input required-inp"
+                  placeholder="Должность"
+                  id="post_input"
+          >
+          <input type="hidden" name="position" id="post_hidden">
+          <ul id="post_list">
+            <li data-id="0">Список пуст</li>
+            <? foreach($viData['posts'] as $p): ?>
+                <li data-id="<?=$p['id']?>"><?=$p['val']?></li>
+            <? endforeach; ?>
+          </ul>
+        </span>
+                            <span class="rp-content1__text">Укажите должность, на которой вы хотите работать (в анкете можно указать несколько должностей).</span>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="rp-content1__push">
+                        <span class="rp-content1__push-text">Включить PUSH уведомления</span>
+                        <div class="rp-content1__push-switch-block">
+                            <input id="push-checkbox" name="push" value="2" type="checkbox" checked="checked">
+                            <label for="push-checkbox" class="rp-content1__push-label">
+                                <div class="rp-content1__push-switch" data-checked="ДА" data-unchecked="НЕТ"></div>
+                            </label>
+                        </div>
+                        <span class="rp-content1__push-props" id="push-props">настроить</span>
+                    </div>
+
+                    <div class="center">
+                        <button class="prmu-btn prmu-btn_normal" id="form_btn">
+                            <span>Продолжить</span>
+                        </button>
+                    </div>
+                    <input name="all" value="0" type="hidden">
+                    <input name="rate" value="2" type="hidden">
+                    <input name="respond" value="2" type="hidden">
+                    <input name="mess" value="2" type="hidden">
+                    <input name="workday" value="2" type="hidden">
+                    <input type="hidden" name="npopup" value="1">
+                </form>
+            </div>
+        </div>
+        <div class="register-popup__content2">
+            <div class="rp-content2__block">
+                <h2 class="rp-content2__title">Теперь Вы можете найти временную работу, которая полностью отвечает Вашим требованиям</h2>
+                <hr class="rp-content2__line">
+                <p class="rp-content2__descr">Кроме того Вы получате возможность:</p>
+                <div class="rp-c2__possibility-list">
+                    <div class="rp-c2-possibility__item">
+                        <span class="rp-c2-possibility__item-img ico1"></span>
+                        <span class="rp-c2-possibility__item-text">Работать с проверенными работодателями и откликаться на вакансии</span>
+                    </div>
+                    <div class="rp-c2-possibility__item">
+                        <span class="rp-c2-possibility__item-img ico2"></span>
+                        <span class="rp-c2-possibility__item-text">Настроить автоматическое оповещение по вакансиям</span>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="rp-c2-possibility__item">
+                        <span class="rp-c2-possibility__item-img ico3"></span>
+                        <span class="rp-c2-possibility__item-text">Получать PUSH-уведомления и управлять ими</span>
+                    </div>
+                    <div class="rp-c2-possibility__item">
+                        <span class="rp-c2-possibility__item-img ico4"></span>
+                        <span class="rp-c2-possibility__item-text">Оставлять отзывы и комментарии о работодателях</span>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="rp-c2-possibility__item">
+                        <span class="rp-c2-possibility__item-img ico5"></span>
+                        <span class="rp-c2-possibility__item-text">Проставлять рейтинг работодателями, с которыми работали</span>
+                    </div>
+                    <div class="rp-c2-possibility__item">
+                        <span class="rp-c2-possibility__item-img ico6"></span>
+                        <span class="rp-c2-possibility__item-text">Использовать мобильное приложение PROMMU для Android и IOS</span>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <p class="rp-content2__bottom">...и это не полный перечень возможностей нашего сервиса!</p>
+            </div>
+        </div>
+    </div>
+<?
+/*
+*
+*   push properties popup
+*
+*/
+?>
+    <form method="get" id="" class="push-popup__form" action="/user/push">
+        <div class="pp-form__field">
+            <span class="pp-form__checkbox-name">Отключить все оповещения?</span>
+            <div class="pp-form__checkbox events">
+                <input id="all" name="push-1" value="2" type="checkbox">
+                <label for="all" class="pp-form__checkbox-label">
+                    <div class="pp-form__checkbox-switch" data-checked="Да" data-unchecked="Нет"></div>
+                </label>
+            </div>
+        </div>
+        <div class="pp-form__all-props">
+            <hr>
+            <span class="pp-form__text">НАСТРОИТЬ ПУШ УВЕДОМЛЕНИЯ</span>
+            <div class="pp-form__field">
+                <span class="pp-form__checkbox-name">Отзыв/Рейтинг</span>
+                <div class="pp-form__checkbox">
+                    <input id="rate" name="push-4" value="2" type="checkbox" checked>
+                    <label for="rate" class="pp-form__checkbox-label">
+                        <div class="pp-form__checkbox-switch" data-checked="Да" data-unchecked="Нет"></div>
+                    </label>
+                </div>
+            </div>
+            <div class="pp-form__field">
+                <span class="pp-form__checkbox-name">Приглашения на вакансии</span>
+                <div class="pp-form__checkbox">
+                    <input id="respond" name="push-6" value="2" type="checkbox" checked>
+                    <label for="respond" class="pp-form__checkbox-label">
+                        <div class="pp-form__checkbox-switch" data-checked="Да" data-unchecked="Нет"></div>
+                    </label>
+                </div>
+            </div>
+            <div class="pp-form__field">
+                <span class="pp-form__checkbox-name">Сообщения</span>
+                <div class="pp-form__checkbox">
+                    <input id="mess" name="push-7" value="2" type="checkbox" checked>
+                    <label for="mess" class="pp-form__checkbox-label">
+                        <div class="pp-form__checkbox-switch" data-checked="Да" data-unchecked="Нет"></div>
+                    </label>
+                </div>
+            </div>
+            <div class="pp-form__field">
+                <span class="pp-form__checkbox-name">День начала работы на вакансии</span>
+                <div class="pp-form__checkbox">
+                    <input id="workday" name="push-8" value="2" type="checkbox" checked>
+                    <label for="workday" class="pp-form__checkbox-label">
+                        <div class="pp-form__checkbox-switch" data-checked="Да" data-unchecked="Нет"></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <button class="pp-form__button" id="pash-save-btn">Сохранить</button>
+    </form>
+<?
+//
+?>
+    <div class="tmpl rp-header__close-mess">
+        <div class="prmu__popup">Мы заметили, что Вы не заполнили некоторые данные о себе, для поиска работы и для Работодателей которые ищут персонал - они очень важны и мы рекомендуем их заполнить
+            <div>
+                <a href="javascript:void(0)" data-fancybox-close>Заполнить данные</a>
+                <a href="<?=MainConfig::$PAGE_EDIT_PROFILE?>">Идти дальше</a>
+            </div>
+        </div>
+    </div>
+<?endif;?>

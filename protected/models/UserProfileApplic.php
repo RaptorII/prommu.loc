@@ -1199,6 +1199,9 @@ class UserProfileApplic extends UserProfile
         $data['profileEffect'] = floor($this->profileFill / $this->profileFillMax * 100);
         $data['profileEffect'] = $data['profileEffect']>100 ? 100 : $data['profileEffect'];
 
+        //all of u need is love
+        $data['data'] = $this->getProfileEditPageData($data['userInfo']);
+
         return $data;
     }
 

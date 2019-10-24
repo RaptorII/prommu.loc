@@ -67,6 +67,9 @@
                       }
                       $strInp .= '><label for="type' . $t['id'] . '">' . $t['name'] . '</label></li>';
                     }
+//                  echo '<pre>';
+//                  print_r($viData);
+//                  echo '</pre>';
                   ?>
                   <span class="epe__label-name">Тип компании:</span>
                   <span class="epe__input epe__input-type" id="epe-str-type"><?=$typeName?></span>
@@ -133,8 +136,8 @@
                     <span class="epe__label-name">Проверочный код:</span>
                     <input type='text' name='confirm-code' value="" class="epe__input" id="conf-email-inp" maxlength="6" autocomplete="off">
                   </label>
-                  <dir class="epe__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</dir>
-                  <dir class="clearfix"></dir>
+                  <div class="epe__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
+                  <div class="clearfix"></div>
                 </div>
                 <div class="epe__label">
                   <span class="epe__label-name epe__phone-name">Телефон:</span>
@@ -153,8 +156,8 @@
                     <span class="epe__label-name">Проверочный код:</span>
                     <input type='text' name='confirm-code' value="" class="epe__input" id="conf-phone-inp" maxlength="6" autocomplete="off">
                   </label>
-                  <dir class="epe__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</dir>
-                  <dir class="clearfix"></dir>
+                  <div class="epe__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
+                  <div class="clearfix"></div>
                 </div>
                 <label class="epe__label">
                   <span class="epe__label-name">Городской телефон:</span>

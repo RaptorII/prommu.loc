@@ -52,9 +52,10 @@ jQuery(function($){
 			arIdCities.push(this.dataset.idcity);
 	});
 	// собираем выбранные метро
-	$.each($(cityM+' .epa__metro-item [type=hidden]'), function(){
-		arSelectMetroes.push($(this).val());
-	});
+	// $.each($(cityM+' .epa__metro-item [type=hidden]'), function(){
+	// 	arSelectMetroes.push($(this).val());
+	// });
+
 	// собираем выбранные телефоны
 	updateArSelectPhones();
 	//
@@ -79,51 +80,52 @@ jQuery(function($){
 		else if($(it).is('.epa__post-btn') || !$(it).closest('.epa__post-list').length)
 			$('.epa__post-list').fadeOut();
 	});
+
 	// события выбора мессенджера
-	$('#epa-list-messenger input').on('change', function(){
-		var arInputs = $('#epa-list-messenger input'),
-			arMess = [];
-			showHint = false;
-		$.each(arInputs, function(){
-			mess = $(this).data('mess');
-			if($(this).is(':checked')){
-				arMess.push($(this).siblings('label').text());
-				$('.epa__mess-'+mess).removeClass('off');
-				showHint = true;
-			}
-			else{
-				$('.epa__mess-'+mess).addClass('off');
-				$('.epa__mess-'+mess+' input').val('');
-			}
-		});
-		$('#epa-str-messenger').val(arMess);
-		showHint ? $('.epa__mess-hint').removeClass('off') : $('.epa__mess-hint').addClass('off');
-	});
+	// $('#epa-list-messenger input').on('change', function(){
+	// 	var arInputs = $('#epa-list-messenger input'),
+	// 		arMess = [];
+	// 		showHint = false;
+	// 	$.each(arInputs, function(){
+	// 		mess = $(this).data('mess');
+	// 		if($(this).is(':checked')){
+	// 			arMess.push($(this).siblings('label').text());
+	// 			$('.epa__mess-'+mess).removeClass('off');
+	// 			showHint = true;
+	// 		}
+	// 		else{
+	// 			$('.epa__mess-'+mess).addClass('off');
+	// 			$('.epa__mess-'+mess+' input').val('');
+	// 		}
+	// 	});
+	// 	$('#epa-str-messenger').val(arMess);
+	// 	showHint ? $('.epa__mess-hint').removeClass('off') : $('.epa__mess-hint').addClass('off');
+	// });
 	// события изменения внешности
-	$('#epa-list-hcolor input').on('change', function(){ changeRadio('hcolor') }); 
-	$('#epa-list-hlen input').on('change', function(){ changeRadio('hlen') }); 
-	$('#epa-list-ycolor input').on('change', function(){ changeRadio('ycolor') }); 
-	$('#epa-list-chest input').on('change', function(){ changeRadio('chest') }); 
-	$('#epa-list-waist input').on('change', function(){ changeRadio('waist') }); 
-	$('#epa-list-thigh input').on('change', function(){ changeRadio('thigh') });
-	// ввода данных роста и веса
-	$('#epa-height, #epa-weight').keyup(function(){
-		var val = getNum($(this).val());
-		$(this).val(val.substr(0,hwLen));
-	});
-	// событие изменения образования
-	$('#epa-list-education input').on('change', function(){ changeRadio('education') });
+	// $('#epa-list-hcolor input').on('change', function(){ changeRadio('hcolor') });
+	// $('#epa-list-hlen input').on('change', function(){ changeRadio('hlen') });
+	// $('#epa-list-ycolor input').on('change', function(){ changeRadio('ycolor') });
+	// $('#epa-list-chest input').on('change', function(){ changeRadio('chest') });
+	// $('#epa-list-waist input').on('change', function(){ changeRadio('waist') });
+	// $('#epa-list-thigh input').on('change', function(){ changeRadio('thigh') });
+	// // ввода данных роста и веса
+	// $('#epa-height, #epa-weight').keyup(function(){
+	// 	var val = getNum($(this).val());
+	// 	$(this).val(val.substr(0,hwLen));
+	// });
+	// // событие изменения образования
+	// $('#epa-list-education input').on('change', function(){ changeRadio('education') });
 	// события выбора языка
-	$('#epa-list-language input').on('change', function(){
-		var arInputs = $('#epa-list-language input'),
-		arLang = [];
-		$.each(arInputs, function(){
-			if($(this).is(':checked'))
-				arLang.push($(this).siblings('label').text());
-		});
-		$('#epa-str-language').val(arLang);
-	});
-	// события выбора вакансии
+	// $('#epa-list-language input').on('change', function(){
+	// 	var arInputs = $('#epa-list-language input'),
+	// 	arLang = [];
+	// 	$.each(arInputs, function(){
+	// 		if($(this).is(':checked'))
+	// 			arLang.push($(this).siblings('label').text());
+	// 	});
+	// 	$('#epa-str-language').val(arLang);
+	// });
+	// // события выбора вакансии
 	$('#epa-list-posts').on('change', 'input', function(e){
 		var arInputs = $('#epa-list-posts [name="donjnost[]"]:checked');
 		// нельзя удалять послeднюю должность
@@ -136,29 +138,29 @@ jQuery(function($){
 		checkPosts();
 	});
 	//
-	$('.epa__post-detail').on('input', '[type=text]', function(){ checkField(this) });
-	// создать новую должнотсть
-	$('#epa-posts-add span').click(function(){
-		$('#epa-posts-add').hide();
-		$('#epa-posts-save').show();
-		$('#epa-posts-save input').focus();
-	});
+	// $('.epa__post-detail').on('input', '[type=text]', function(){ checkField(this) });
+	// // создать новую должнотсть
+	// $('#epa-posts-add span').click(function(){
+	// 	$('#epa-posts-add').hide();
+	// 	$('#epa-posts-save').show();
+	// 	$('#epa-posts-save input').focus();
+	// });
 	// сохранить новую должность
-	$('#epa-posts-save span').click(function(){
-		var val = $('#epa-posts-save input').val();
-		if(val!==''){
-			id = randomInt();
-			html = 	'<li>'+
-						'<input type="checkbox" name="donjnost[]" value="'+id+'" data-name="'+val+'" id="epa-post-'+id+'" checked>'+
-						'<label for="epa-post-'+id+'">'+val+'<b></b></label>'+
-					'</li>';
-			$('#epa-posts-add').before(html);
-			checkPosts(id);
-			$('#epa-posts-add').show();
-			$('#epa-posts-save').hide();
-			$('#epa-posts-save input').val('');
-		}
-	});
+	// $('#epa-posts-save span').click(function(){
+	// 	var val = $('#epa-posts-save input').val();
+	// 	if(val!==''){
+	// 		id = randomInt();
+	// 		html = 	'<li>'+
+	// 					'<input type="checkbox" name="donjnost[]" value="'+id+'" data-name="'+val+'" id="epa-post-'+id+'" checked>'+
+	// 					'<label for="epa-post-'+id+'">'+val+'<b></b></label>'+
+	// 				'</li>';
+	// 		$('#epa-posts-add').before(html);
+	// 		checkPosts(id);
+	// 		$('#epa-posts-add').show();
+	// 		$('#epa-posts-save').hide();
+	// 		$('#epa-posts-save input').val('');
+	// 	}
+	// });
 	// установка параметров должности
 	$('.epa__post-detail').on('change', '[type=radio]', function(e){
 		var newVal = $(e.target.nextElementSibling).text(),
@@ -195,58 +197,58 @@ jQuery(function($){
 			$(this).val(val.substr(0,strAbout));
 	});
 	//	устанавливаем маски
-	$("#city-module .epa__period .epa__input").on(
-			'input',
-			function(){ checkPeriod(this) }
-		);
-
-	function checkPeriod (e){
-		var v = e.value,
-				l = v.length;
-
-		if(keyCode==8) { //backspace
-			if(l==8 || l==7) {
-				var arV = v.split(' до ');
-				if(arV[0]===v)
-					v = 'С ' + getNum(v).substr(0,2);
-				else if(!getNum(arV[1]).length)
-					v = 'С ' + getNum(v);
-			}
-			if(l==2)
-				v = '';
-		}
-		else {
-			if(!getNum(v).length)
-				v = 'С ';
-			if(l==1 && getNum(v).length==1) 
-				v = 'С ' + getNum(v);
-			if(l==4 && getNum(v).length==2 )
-				v = 'С ' + getNum(v) + ' до ';
-			if(l==4 && getNum(v).length==1)
-				v = (v.substr(-1)==' ' ? 'С ' + getNum(v) + ' до ' : 'С ' + getNum(v));
-			if(l==5) {
-				var s = v.substr(-1);
-				if(getNum(s).length==1) 
-					v = 'С ' + getNum(v).substr(0,2) + ' до ' + s;
-				else if(s==' ') 
-					v = 'С ' + getNum(v) + ' до ';
-				else 
-					v = 'С ' + getNum(v);
-			}
-			if(l>=7) {
-				var arV = v.split(' до ');
-				if(arV[0]===v) {
-					v = 'С ' + getNum(v).substr(0,2) + ' до ' + getNum(v).substr(2,4);
-				}
-				else {
-					v = 'С ' + getNum(arV[0]).substr(0,2) + ' до ' + getNum(arV[1]).substr(0,2);
-				}
-			}
-		}
-
-		e.value = v;
-	}
+	// $("#city-module .epa__period .epa__input").on(
+	// 		'input',
+	// 		function(){ checkPeriod(this) }
+	// 	);
 	//
+	// function checkPeriod (e){
+	// 	var v = e.value,
+	// 			l = v.length;
+	//
+	// 	if(keyCode==8) { //backspace
+	// 		if(l==8 || l==7) {
+	// 			var arV = v.split(' до ');
+	// 			if(arV[0]===v)
+	// 				v = 'С ' + getNum(v).substr(0,2);
+	// 			else if(!getNum(arV[1]).length)
+	// 				v = 'С ' + getNum(v);
+	// 		}
+	// 		if(l==2)
+	// 			v = '';
+	// 	}
+	// 	else {
+	// 		if(!getNum(v).length)
+	// 			v = 'С ';
+	// 		if(l==1 && getNum(v).length==1)
+	// 			v = 'С ' + getNum(v);
+	// 		if(l==4 && getNum(v).length==2 )
+	// 			v = 'С ' + getNum(v) + ' до ';
+	// 		if(l==4 && getNum(v).length==1)
+	// 			v = (v.substr(-1)==' ' ? 'С ' + getNum(v) + ' до ' : 'С ' + getNum(v));
+	// 		if(l==5) {
+	// 			var s = v.substr(-1);
+	// 			if(getNum(s).length==1)
+	// 				v = 'С ' + getNum(v).substr(0,2) + ' до ' + s;
+	// 			else if(s==' ')
+	// 				v = 'С ' + getNum(v) + ' до ';
+	// 			else
+	// 				v = 'С ' + getNum(v);
+	// 		}
+	// 		if(l>=7) {
+	// 			var arV = v.split(' до ');
+	// 			if(arV[0]===v) {
+	// 				v = 'С ' + getNum(v).substr(0,2) + ' до ' + getNum(v).substr(2,4);
+	// 			}
+	// 			else {
+	// 				v = 'С ' + getNum(arV[0]).substr(0,2) + ' до ' + getNum(arV[1]).substr(0,2);
+	// 			}
+	// 		}
+	// 	}
+	//
+	// 	e.value = v;
+	// }
+	// //
 	//  блок для создания города
 	//
 	$('.epa__add-city-btn').on('click', function(){
@@ -353,76 +355,76 @@ jQuery(function($){
 	//
 	//  Ввод метро
 	//
-	$(cityM).on('focus', '.metro-input', function(){ findMetroes(this) });
+	// $(cityM).on('focus', '.metro-input', function(){ findMetroes(this) });
+	// //
+	// $(cityM).on('keyup', '.metro-input', function(){
+	// 	var $it = $(this),
+	// 		find = -1,
+	// 		value = $it.val(),
+	// 		main = $it.closest('.epa__city-item'),
+	// 		metroLabel = $it.closest('.epa__label');
 	//
-	$(cityM).on('keyup', '.metro-input', function(){ 
-		var $it = $(this),
-			find = -1,
-			value = $it.val(),
-			main = $it.closest('.epa__city-item'),
-			metroLabel = $it.closest('.epa__label');
-
-		$.each(arMetroes[main[0].dataset.idcity], function(i, metro){
-			if(value.toLowerCase()==metro.toLowerCase()){
-				find = true;
-				selectMetro($it, i);
-			} 
-		});
-		(find<0 && value!='') ? addErr(metroLabel) : remErr(metroLabel);
-		findMetroes(this);
-	});
+	// 	$.each(arMetroes[main[0].dataset.idcity], function(i, metro){
+	// 		if(value.toLowerCase()==metro.toLowerCase()){
+	// 			find = true;
+	// 			selectMetro($it, i);
+	// 		}
+	// 	});
+	// 	(find<0 && value!='') ? addErr(metroLabel) : remErr(metroLabel);
+	// 	findMetroes(this);
+	// });
+	// //
+	// $(cityM).on('blur', '.metro-input', function(){
+	// 	var $it = $(this),
+	// 		find = -1,
+	// 		value = $it.val(),
+	// 		main = $it.closest('.epa__city-item'),
+	// 		metroLabel = $it.closest('.epa__label');
 	//
-	$(cityM).on('blur', '.metro-input', function(){
-		var $it = $(this),
-			find = -1,
-			value = $it.val(),
-			main = $it.closest('.epa__city-item'),
-			metroLabel = $it.closest('.epa__label');
-
-		$.each(arMetroes[main[0].dataset.idcity], function(i, metro){
-			if(value.toLowerCase()==metro.toLowerCase()){
-				find = i;
-				selectMetro($it, i);
-			}
-		});
-		(find<0 && value!='') ? addErr(metroLabel) : remErr(metroLabel);
-	});
-	//  выбор метро из списка
-	$(cityM).on('click', '.metro-list li', function(){
-		var $it = $(this),
-			metroList = $it.closest('.metro-list'),
-			metroInput = $(metroList).siblings('.metro-input'),
-			metroLabel = $it.closest('.epa__label');
-
-		if(!$it.hasClass('emp')){
-			$(metroInput).val($it.text());
-			metroList.fadeOut();
-			remErr(metroLabel);
-			selectMetro(metroInput, $it.data('val'));
-		}
-		else{ addErr(metroLabel) }  
-	});
-	//  закрываем список метро
-	$(document).click(function(e){
-		if(!$(e.target).closest('.metro-list').length){
-			if($('.metro-input').is(e.target)){
-				// закрываем ненужные списки
-				$.each($('.metro-list'), function(){
-					var input = $(this).siblings('.metro-input');
-					if(!$(input).is(e.target)) $(this).fadeOut();
-				});
-			}
-			else{ $('.metro-list').fadeOut() }
-		}
-	});
-	// удаление метро
-	$(cityM).on('click', '.epa__metro-close', function(){
-		var metroItem = $(this).closest('.epa__metro-item'),
-			id = $(this).siblings('[type=hidden]').val();
-
-		arSelectMetroes.splice(arSelectMetroes.indexOf(id), 1); // удалили из массива выбранных метро
-		metroItem.remove();
-	});
+	// 	$.each(arMetroes[main[0].dataset.idcity], function(i, metro){
+	// 		if(value.toLowerCase()==metro.toLowerCase()){
+	// 			find = i;
+	// 			selectMetro($it, i);
+	// 		}
+	// 	});
+	// 	(find<0 && value!='') ? addErr(metroLabel) : remErr(metroLabel);
+	// });
+	// //  выбор метро из списка
+	// $(cityM).on('click', '.metro-list li', function(){
+	// 	var $it = $(this),
+	// 		metroList = $it.closest('.metro-list'),
+	// 		metroInput = $(metroList).siblings('.metro-input'),
+	// 		metroLabel = $it.closest('.epa__label');
+	//
+	// 	if(!$it.hasClass('emp')){
+	// 		$(metroInput).val($it.text());
+	// 		metroList.fadeOut();
+	// 		remErr(metroLabel);
+	// 		selectMetro(metroInput, $it.data('val'));
+	// 	}
+	// 	else{ addErr(metroLabel) }
+	// });
+	// //  закрываем список метро
+	// $(document).click(function(e){
+	// 	if(!$(e.target).closest('.metro-list').length){
+	// 		if($('.metro-input').is(e.target)){
+	// 			// закрываем ненужные списки
+	// 			$.each($('.metro-list'), function(){
+	// 				var input = $(this).siblings('.metro-input');
+	// 				if(!$(input).is(e.target)) $(this).fadeOut();
+	// 			});
+	// 		}
+	// 		else{ $('.metro-list').fadeOut() }
+	// 	}
+	// });
+	// // удаление метро
+	// $(cityM).on('click', '.epa__metro-close', function(){
+	// 	var metroItem = $(this).closest('.epa__metro-item'),
+	// 		id = $(this).siblings('[type=hidden]').val();
+	//
+	// 	arSelectMetroes.splice(arSelectMetroes.indexOf(id), 1); // удалили из массива выбранных метро
+	// 	metroItem.remove();
+	// });
 	//
 	//		Ввод телефона
 	//
@@ -453,76 +455,76 @@ jQuery(function($){
 	//
 	//
 	// добавление/удаление периода
-	$(cityM).on('change', '.epa__day-input', function(){
-		var main = $(this).closest('.epa__city-item'),
-			perList = $(main).find('.epa__period-list'),
-			content = $('#add-day-period').html(),
-			idDay = $(this).val(),
-			dayName = $(this).data('day'),
-			idCity = main[0].dataset.idcity,
-			prnt = $(this).closest('.epa__days-checkboxes');
-
-		if($(this).is(':checked')){
-			content = content.replace(/NEWDAY/g, idDay);
-			content = content.replace(/NEWID/g, idCity);
-			$(perList).append(content);
-			var item = $(perList).find('.epa__period:eq(-1)');
-			
-			$(item).find('i').text(dayName);
-			$(item).find('.epa__input').on('input',function(){
-				checkPeriod(this);
-			});
-
-            $.each($(item).find('.epa__input'),function(){
-                checkField(this);
-            });
-
-		}
-		else{
-			var arItems = $(perList).find('.epa__period');
-			$.each(arItems, function(){ 
-				if($(this).data('id')==idDay) 
-					$(this).remove(); 
-			});
-		}
-		var checked = false,
-				arL = $(prnt).find('.epa__checkbox');
-		$.each($(prnt).find('.epa__day-input'), function(){
-			if($(this).is(':checked')) checked = true;
-		});
-		checked
-		? $.each(arL, function(){ remErr(this) })
-		: $.each(arL, function(){ addErr(this) });
-	});
+	// $(cityM).on('change', '.epa__day-input', function(){
+	// 	var main = $(this).closest('.epa__city-item'),
+	// 		perList = $(main).find('.epa__period-list'),
+	// 		content = $('#add-day-period').html(),
+	// 		idDay = $(this).val(),
+	// 		dayName = $(this).data('day'),
+	// 		idCity = main[0].dataset.idcity,
+	// 		prnt = $(this).closest('.epa__days-checkboxes');
+	//
+	// 	if($(this).is(':checked')){
+	// 		content = content.replace(/NEWDAY/g, idDay);
+	// 		content = content.replace(/NEWID/g, idCity);
+	// 		$(perList).append(content);
+	// 		var item = $(perList).find('.epa__period:eq(-1)');
+	//
+	// 		$(item).find('i').text(dayName);
+	// 		$(item).find('.epa__input').on('input',function(){
+	// 			checkPeriod(this);
+	// 		});
+	//
+    //         $.each($(item).find('.epa__input'),function(){
+    //             checkField(this);
+    //         });
+	//
+	// 	}
+	// 	else{
+	// 		var arItems = $(perList).find('.epa__period');
+	// 		$.each(arItems, function(){
+	// 			if($(this).data('id')==idDay)
+	// 				$(this).remove();
+	// 		});
+	// 	}
+	// 	var checked = false,
+	// 			arL = $(prnt).find('.epa__checkbox');
+	// 	$.each($(prnt).find('.epa__day-input'), function(){
+	// 		if($(this).is(':checked')) checked = true;
+	// 	});
+	// 	checked
+	// 	? $.each(arL, function(){ remErr(this) })
+	// 	: $.each(arL, function(){ addErr(this) });
+	// });
 	// удаление периода
-	$(cityM).on('click', '.epa__period-close', function(){
-		var main = $(this).closest('.epa__city-item'),
-			period = $(this).closest('.epa__period'),
-			arDays = $(main).find('.epa__days-checkboxes input'),
-			idDay = $(period).data('id');
-
-		$.each(arDays, function(){ if($(this).val()==idDay) $(this).attr('checked',false) });
-		period.remove();
-	});
-	// проверка периода
-	$(cityM).on('blur', '.epa__period input', function(){
-		var val = $(this).val(),
-			label = $(this).closest('.epa__label');
-
-        //addErr(label);
-
-		if(val!=='') {
-            arVals = val.split('до');
-            if (arVals.length == 1) {
-                $(this).val('');
-                addErr(label);
-            }
-            else if (getNum(arVals[0]).length == 0 || getNum(arVals[1]).length == 0) {
-                $(this).val('');
-                addErr(label);
-            }
-        }
-	});
+	// $(cityM).on('click', '.epa__period-close', function(){
+	// 	var main = $(this).closest('.epa__city-item'),
+	// 		period = $(this).closest('.epa__period'),
+	// 		arDays = $(main).find('.epa__days-checkboxes input'),
+	// 		idDay = $(period).data('id');
+	//
+	// 	$.each(arDays, function(){ if($(this).val()==idDay) $(this).attr('checked',false) });
+	// 	period.remove();
+	// });
+	// // проверка периода
+	// $(cityM).on('blur', '.epa__period input', function(){
+	// 	var val = $(this).val(),
+	// 		label = $(this).closest('.epa__label');
+	//
+    //     //addErr(label);
+	//
+	// 	if(val!=='') {
+    //         arVals = val.split('до');
+    //         if (arVals.length == 1) {
+    //             $(this).val('');
+    //             addErr(label);
+    //         }
+    //         else if (getNum(arVals[0]).length == 0 || getNum(arVals[1]).length == 0) {
+    //             $(this).val('');
+    //             addErr(label);
+    //         }
+    //     }
+	// });
 	//	проверка ввода ЗП
 	$('.epa__post-detail').on('keyup', '.epa__payment input', function(){
 		var val = getNum($(this).val());
@@ -538,8 +540,8 @@ jQuery(function($){
 	$('#epa-gmail').change(function(){ checkField(this)	});
 	$('#epa-gmail').change(function(){ checkField(this)	});
 	$('#epa-gmail').change(function(){ checkField(this)	});
-	$('.epa__education [type="radio"], .epa__language [type="checkbox"]')
-		.change(function(){ checkField(this) });
+	// $('.epa__education [type="radio"], .epa__language [type="checkbox"]')
+	// 	.change(function(){ checkField(this) });
 	//
 	$('.epa__save-btn').click(function(e){
 		var self = this,
@@ -660,26 +662,26 @@ jQuery(function($){
 			$.each($(cityM+' .epa__required'), function(){
 				if(!checkField(this)) errors = true; 
 			});
-			$.each($(cityM+' .epa__days-checkboxes'), function(){
-				var checked = false,
-						$p = $(this);
-
-				$.each($p.find('.epa__day-input'), function(){ 
-					if($(this).is(':checked')) checked=true;
-				});
-				if(!checked) {
-					$.each($p.find('.epa__checkbox'), function(){ addErr(this) })
-					errors = true; 
-				}
-			});
+			// $.each($(cityM+' .epa__days-checkboxes'), function(){
+			// 	var checked = false,
+			// 			$p = $(this);
+			//
+			// 	$.each($p.find('.epa__day-input'), function(){
+			// 		if($(this).is(':checked')) checked=true;
+			// 	});
+			// 	if(!checked) {
+			// 		$.each($p.find('.epa__checkbox'), function(){ addErr(this) })
+			// 		errors = true;
+			// 	}
+			// });
 
 			if(!checkField('[name="about-mself"]')) errors = true; 
 
-			if(!checkField($('[name="user-attribs[edu]"]'))) errors = true;
-			if(!checkField($('[name="langs[]"]'))) errors = true;
-			$.each($('.epa__post-detail .epa__required'), function(){
-				if(!checkField(this)) errors = true; 
-			});
+			// if(!checkField($('[name="user-attribs[edu]"]'))) errors = true;
+			// if(!checkField($('[name="langs[]"]'))) errors = true;
+			// $.each($('.epa__post-detail .epa__required'), function(){
+			// 	if(!checkField(this)) errors = true;
+			// });
 
 			checkPhone({'type':'input'});
 
@@ -696,7 +698,9 @@ jQuery(function($){
           }
         });
 			}
+
 		//console.log(arErrors);
+
 			if(!errors && !arErrors.length){
 				var arPosts = $('#epa-list-posts input'),
 					arCityItems = $('#city-module .epa__city-item'),
@@ -711,28 +715,28 @@ jQuery(function($){
 				});
 				$('#epa-edit-form').append(addInputs);	
 
-				$.each(arTimeItems, function(){ 	// преображаем время в достойный вид
-					var val = $(this).val();
-					if(val!=''){
-						arVals = val.split('до');
-						newVal = getNum(arVals[0]) + '-' + getNum(arVals[1]);
-						$(this).val(newVal)
-					}
-				});
+				// $.each(arTimeItems, function(){ 	// преображаем время в достойный вид
+				// 	var val = $(this).val();
+				// 	if(val!=''){
+				// 		arVals = val.split('до');
+				// 		newVal = getNum(arVals[0]) + '-' + getNum(arVals[1]);
+				// 		$(this).val(newVal)
+				// 	}
+				// });
 				
-				var arAllInputs = $('.epa__cities-block-list input');
-				$.each(arAllInputs, function(){
-					var main = $(this).closest('.epa__city-item'),
-						idCity = main[0].dataset.idcity;
-
-					if($(this).closest('.epa__days-checkboxes').length){
-						$(this).attr('name', 'days['+idCity+']');
-					}
-					if($(this).closest('.epa__period-list').length){
-						var day = $(this).attr('name').slice(-3);
-						$(this).attr('name', 'time['+idCity+']'+day);
-					}
-				});
+				// var arAllInputs = $('.epa__cities-block-list input');
+				// $.each(arAllInputs, function(){
+				// 	var main = $(this).closest('.epa__city-item'),
+				// 		idCity = main[0].dataset.idcity;
+				//
+				// 	if($(this).closest('.epa__days-checkboxes').length){
+				// 		$(this).attr('name', 'days['+idCity+']');
+				// 	}
+				// 	if($(this).closest('.epa__period-list').length){
+				// 		var day = $(this).attr('name').slice(-3);
+				// 		$(this).attr('name', 'time['+idCity+']'+day);
+				// 	}
+				// });
 				$('#epa-edit-form').submit();
 				//console.log($('#epa-edit-form').serializeArray());
 			}
@@ -937,43 +941,43 @@ jQuery(function($){
 		$(e).siblings('.metro-list').empty().append(content).fadeIn();
 	}
 	// metro
-	function checkAvailabilityMetro(main){
-		var idcity = main[0].dataset.idcity,
-			cityBlock = $(main).find('.epa__city'),
-			metroBlock = $(main).find('.epa__metro'),
-			metroList = $(main).find('.epa__metro-list');
-
-		if(typeof arMetroes[idcity] === "object" && metroBlock.length==0){
-			$(cityBlock).after($('#add-metro-content').html());
-		}
-		if(typeof arMetroes[idcity] !== "object" && metroBlock.length>0){
-			$(metroBlock).remove();
-			$(metroList).remove();
-		}
-	}
+	// function checkAvailabilityMetro(main){
+	// 	var idcity = main[0].dataset.idcity,
+	// 		cityBlock = $(main).find('.epa__city'),
+	// 		metroBlock = $(main).find('.epa__metro'),
+	// 		metroList = $(main).find('.epa__metro-list');
 	//
-	function selectMetro(input, idMetro){
-		var main = $(input).closest('.epa__city-item'),
-			metroLabel = $(input).closest('.epa__metro'),
-			metroList = $(input).siblings('.metro-list'),
-			metroListBlock = $(main).find('.epa__metro-list'),
-			idCity = main[0].dataset.idcity,
-			nameMetro = arMetroes[idCity][idMetro],
-			html = $('#add-metro-item').html();
-
-		if($.inArray(idMetro,arSelectMetroes)<0)
-			arSelectMetroes.push(String(idMetro)); // добавили в массив выбранных, чтобы не было дублей
-
-		html = html.replace(/IDCITY/g, idCity);
-		html = html.replace(/IDMETRO/g, idMetro);
-		html = html.replace(/NAMEMETRO/g, nameMetro);
-
-		$(metroListBlock).append(html);
-		$(input).val('');
-		$(input).blur();
-		$(metroList).fadeOut();
-		remErr(metroLabel);
-	}
+	// 	if(typeof arMetroes[idcity] === "object" && metroBlock.length==0){
+	// 		$(cityBlock).after($('#add-metro-content').html());
+	// 	}
+	// 	if(typeof arMetroes[idcity] !== "object" && metroBlock.length>0){
+	// 		$(metroBlock).remove();
+	// 		$(metroList).remove();
+	// 	}
+	// }
+	//
+	// function selectMetro(input, idMetro){
+	// 	var main = $(input).closest('.epa__city-item'),
+	// 		metroLabel = $(input).closest('.epa__metro'),
+	// 		metroList = $(input).siblings('.metro-list'),
+	// 		metroListBlock = $(main).find('.epa__metro-list'),
+	// 		idCity = main[0].dataset.idcity,
+	// 		nameMetro = arMetroes[idCity][idMetro],
+	// 		html = $('#add-metro-item').html();
+	//
+	// 	if($.inArray(idMetro,arSelectMetroes)<0)
+	// 		arSelectMetroes.push(String(idMetro)); // добавили в массив выбранных, чтобы не было дублей
+	//
+	// 	html = html.replace(/IDCITY/g, idCity);
+	// 	html = html.replace(/IDMETRO/g, idMetro);
+	// 	html = html.replace(/NAMEMETRO/g, nameMetro);
+	//
+	// 	$(metroListBlock).append(html);
+	// 	$(input).val('');
+	// 	$(input).blur();
+	// 	$(metroList).fadeOut();
+	// 	remErr(metroLabel);
+	// }
 	// check fields
 	function checkField(e){
 		var $it = $(e),
