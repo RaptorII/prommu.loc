@@ -294,6 +294,13 @@
             <div class="complete__reg">
                 <form action='' method='post' id="epa-edit-form">
 
+                    <p class="complete__head center">
+                        Необходимо активировать свой аккаунт
+                    </p>
+                    <p class="complete__txt center">
+                        Чтобы попасть в базу данных и получить доступ к каталогу вакансий - укажите данные
+                    </p>
+
                     <div class="epa__content-title"><h2>Основная информация</h2></div>
                     <div class="epa__content-module" id="main-module">
                         <label class="epa__label epa__firstname">
@@ -584,7 +591,7 @@
 
                     <div class="center">
                         <button type="submit" class="epa__save-btn prmu-btn prmu-btn_normal">
-                            <span>СОХРАНИТЬ ИЗМЕНЕНИЯ</span>
+                            <span>Активировать</span>
                         </button>
                     </div>
 
@@ -1204,16 +1211,16 @@
                 <form class='js-form register-popup-form' id="popup-form">
                     <p class="rp-content1__descr">Для того, чтобы Вашу анкету увидели все работодатели, чтобы начать искать работу и откликаться на вакансии необходимо заполнить обязательные данные о себе</p>
                     <div class="rp-content1__logo">
-    <span class="rp-content1__logo-img">
-      <?
-      $src = Share::getPhoto($attr['id_user'],2,$attr['photo'],'small',$attr['isman']);
-      if(strrpos($src,'logo_applicant')!==false)
-      {
-          $src = '/theme/pic/register-popup-page/register_popup_r_logo.png';
-      }
-      ?>
-      <img src="<?=Share::getPhoto($attr['id_user'],2,$attr['photo'],'small',$attr['isman'])?>" id="applicant-img">
-    </span>
+                        <span class="rp-content1__logo-img">
+                          <?
+                          $src = Share::getPhoto($attr['id_user'],2,$attr['photo'],'small',$attr['isman']);
+                          if(strrpos($src,'logo_applicant')!==false)
+                          {
+                              $src = '/theme/pic/register-popup-page/register_popup_r_logo.png';
+                          }
+                          ?>
+                          <img src="<?=Share::getPhoto($attr['id_user'],2,$attr['photo'],'small',$attr['isman'])?>" id="applicant-img">
+                        </span>
                         <span class="rp-content1__text">Добавление Вашей фотографии повысит привлекательность анкеты и увеличит шансы что работодатель выберет именно Вас<span class="rp-content1__warning">Добавляйте только свои личные фото, иначе Вы не сможете пройти модерацию! Спасибо за понимание!</span></span>
                     </div>
                     <? $cntPhotos = count($viData['userInfo']['userPhotos']); ?>
@@ -1251,11 +1258,11 @@
                         // city
                         ?>
                         <div class="rp-content1__inputs-row">
-      <span class="rp-content1__select-arrow city">
-        <input type="text" name="city_input" value="<?=$arGeo['city']?>" class="rp-content1__inputs-input city required-inp" id="city_input" autocomplete="off" >
-        <ul id="city_list"></ul>
-        <input type="hidden" name="city" id="city_hidden" value="<?=$arGeo['id_city']?>" data-name="<?=$arGeo['city']?>">
-      </span>
+                              <span class="rp-content1__select-arrow city">
+                                <input type="text" name="city_input" value="<?=$arGeo['city']?>" class="rp-content1__inputs-input city required-inp" id="city_input" autocomplete="off" >
+                                <ul id="city_list"></ul>
+                                <input type="hidden" name="city" id="city_hidden" value="<?=$arGeo['id_city']?>" data-name="<?=$arGeo['city']?>">
+                              </span>
                             <span class="rp-content1__text">Ваш город</span>
                             <div class="clearfix"></div>
                         </div>
@@ -1263,23 +1270,23 @@
                         // position
                         ?>
                         <div class="rp-content1__inputs-row">
-        <span class="rp-content1__select-arrow city">
-          <input
-                  type="text"
-                  name="position_input"
-                  autocomplete="off"
-                  class="rp-content1__inputs-input required-inp"
-                  placeholder="Должность"
-                  id="post_input"
-          >
-          <input type="hidden" name="position" id="post_hidden">
-          <ul id="post_list">
-            <li data-id="0">Список пуст</li>
-            <? foreach($viData['posts'] as $p): ?>
-                <li data-id="<?=$p['id']?>"><?=$p['val']?></li>
-            <? endforeach; ?>
-          </ul>
-        </span>
+                            <span class="rp-content1__select-arrow city">
+                              <input
+                                      type="text"
+                                      name="position_input"
+                                      autocomplete="off"
+                                      class="rp-content1__inputs-input required-inp"
+                                      placeholder="Должность"
+                                      id="post_input"
+                              >
+                              <input type="hidden" name="position" id="post_hidden">
+                              <ul id="post_list">
+                                <li data-id="0">Список пуст</li>
+                                <? foreach($viData['posts'] as $p): ?>
+                                    <li data-id="<?=$p['id']?>"><?=$p['val']?></li>
+                                <? endforeach; ?>
+                              </ul>
+                            </span>
                             <span class="rp-content1__text">Укажите должность, на которой вы хотите работать (в анкете можно указать несколько должностей).</span>
                             <div class="clearfix"></div>
                         </div>

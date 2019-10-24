@@ -262,7 +262,7 @@ h6.login__header {
     background: var(--color-orange);
 }
 .btn-green {
-    background: var(--color-l-grn);
+    background: var(--color-green);
     color: var(--color-dark);
 }
 .login input[type="submit"] {
@@ -288,7 +288,7 @@ h6.login__header {
     border-color: var(--color-green);
 }
 .btn-orange:hover{
-    background: var(--color-l-grn);
+    background: var(--color-green);
     border-color: var(--color-grey);
 }
 .btn-green:hover {
