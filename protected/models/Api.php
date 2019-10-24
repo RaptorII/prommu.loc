@@ -741,7 +741,7 @@ class Api
     
         if(empty($code)){
             
-            $res['code'] = -101;
+            $res['error'] = -101;
             $res['message'] = 'Отсутствует параметр code';
             
             return $res;
@@ -749,7 +749,7 @@ class Api
         
         if(empty($promo)){
             
-            $res['code'] = -101;
+            $res['error'] = -101;
             $res['message'] = 'Отсутствует параметр promo';
             
             return $res;
@@ -757,7 +757,7 @@ class Api
         
         if(empty($email)){
             
-            $res['code'] = -101;
+            $res['error'] = -101;
             $res['message'] = 'Отсутствует параметр email';
             
             return $res;
@@ -765,7 +765,7 @@ class Api
         
         if(empty($userid)){
             
-            $res['code'] = -101;
+            $res['error'] = -101;
             $res['message'] = 'Отсутствует параметр userid';
             
             return $res;
