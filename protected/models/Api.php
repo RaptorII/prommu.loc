@@ -739,7 +739,37 @@ class Api
          $email = Yii::app()->getRequest()->getParam('email');
          $userid =  Yii::app()->getRequest()->getParam('userid');
     
-
+        if(empty($code)){
+            
+            $res['code'] = -101;
+            $res['message'] = 'Отсутствует параметр code';
+            
+            return $res;
+        }
+        
+        if(empty($promo)){
+            
+            $res['code'] = -101;
+            $res['message'] = 'Отсутствует параметр promo';
+            
+            return $res;
+        }
+        
+        if(empty($email)){
+            
+            $res['code'] = -101;
+            $res['message'] = 'Отсутствует параметр email';
+            
+            return $res;
+        }
+        
+        if(empty($userid)){
+            
+            $res['code'] = -101;
+            $res['message'] = 'Отсутствует параметр userid';
+            
+            return $res;
+        }
         $usData = Yii::app()->db->createCommand()
                 ->select("u.userid, u.pass, u.email")
                 ->from('user_api u')
