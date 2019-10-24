@@ -3480,7 +3480,7 @@ public function vac(){
             if($profile->type == 2){
                 
                 $Response = new ResponsesApplic($profile);
-                
+            
                 $resume = Yii::app()->db->createCommand()
                 ->select("u.id")
                 ->from('resume u')
@@ -3989,6 +3989,9 @@ public function vac(){
             list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
             $Vacancy = new Vacancy($profile);
             $data = $Vacancy->getVacancyInfo($id);
+            
+            $Response = new ResponsesApplic($profile);
+            $data['responses'] = $Response->getVacStat(['id' => $id, 'idus' => $idus]);
             
            } catch (Exception $e)
         {
