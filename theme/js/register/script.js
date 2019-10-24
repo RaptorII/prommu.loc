@@ -11,6 +11,7 @@ var RegisterPage = (function () {
   RegisterPage.prototype.passwordLength = 6;
   RegisterPage.prototype.cropOptions;
   RegisterPage.prototype.cropParams;
+  RegisterPage.prototype.bWebCam;
   //
   function RegisterPage()
   {
@@ -34,9 +35,29 @@ var RegisterPage = (function () {
       minCropBoxWidth: 200,
       minCropBoxHeight: 200,
       preview: '.YiiUpload__editor-prev-item',
-      crop: function(e){ self.cropOptions=e.detail },
-      step: 5
+      crop: function(e){ self.cropOptions=e.detail }
     };
+
+    self.bWebCam = true;
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+    window.URL.createObjectURL = window.URL.createObjectURL || window.URL.webkitCreateObjectURL || window.URL.mozCreateObjectURL || window.URL.msCreateObjectURL;
+    if(typeof navigator.getUserMedia==='undefined')
+    {
+      self.bWebCam = false;
+    }
+    else if($('.upload-block').is('*'))
+    {
+      $('.upload-block').after('<p class="separator center snapshot-block">'
+       + '<span class="btn-orange btn-snapshot">Сделать снимок</span></p>');
+      $('.btn-snapshot').click(function(){
+        $('body').addClass('prmu-load');
+        navigator.getUserMedia(
+          { audio:false, video:true },
+          function(e){ self.getStream(e) },
+          function(e){ self.streamError(e) }
+        );
+      });
+    }
 
     $('body')
       .on( // step 1
@@ -146,6 +167,10 @@ var RegisterPage = (function () {
       if(step==4)
       {
         self.checkPassword();
+      }
+      if(step==5)
+      {
+        self.checkImage();
       }
 
       if(!$('#register_form .input__error').length)
@@ -270,6 +295,14 @@ var RegisterPage = (function () {
     {
       this.inputError(arguments[0], !$(arguments[0]).val().length);
     }
+  },
+  // проверка кода подтверждения
+  RegisterPage.prototype.checkImage = function ()
+  {
+    if(!$('#login-img').is('*'))
+      return true;
+
+    this.inputError($('.login__photo-img'), !$('#login-img').hasClass('active-logo'));
   },
   // утсановка поля
   RegisterPage.prototype.inputError = function (input, error)
@@ -427,6 +460,8 @@ var RegisterPage = (function () {
         form = document.querySelector('#register_form'),
         formData = new FormData(form);
 
+
+    console.log(11111);
     /*
     if(self.snapshots.length)
     {
@@ -504,10 +539,13 @@ var RegisterPage = (function () {
   RegisterPage.prototype.sendEditImage = function ()
   {
     let self = this,
-        image = document.querySelector('.YiiUpload__editor-field img');
+        image = document.querySelector('.YiiUpload__editor-field img'),
+        resultImage = $('.login__photo-img img');
 
     self.cropOptions['name'] = $(image).data('name');
     self.cropOptions['oldName'] = $(image).attr('alt');
+    self.cropOptions['step'] = 5;
+
     $('body').addClass('prmu-load');
 
     $.ajax({
@@ -516,7 +554,21 @@ var RegisterPage = (function () {
       success: function(r)
       {
         r = JSON.parse(r);
-        console.log(r);
+
+        if(typeof r.items == 'object')
+        {
+          $(resultImage)
+            .attr('src',r.items[400])
+            .attr('alt',r.success.name)
+            .addClass('active-logo');
+          $('.login__photo-img').removeClass('input__error');
+        }
+        $('.YiiUpload__block').fadeOut();
+        setTimeout(function(){
+          $('.YiiUpload__block').remove();
+        },500);
+        $('body').css({overflow:'inherit'});
+        $('#register_form .input-upload').val('');
         $('body').removeClass('prmu-load');
       },
       error: function()
@@ -525,6 +577,82 @@ var RegisterPage = (function () {
         $('body').removeClass('prmu-load');
       }
     });
+  },
+  //
+  // get stream from webcam
+  RegisterPage.prototype.getStream = function (stream)
+  {
+    let browser,
+      self = this,
+      video = document.querySelector('.YiiUpload__camera video'),
+      dataBrowser = [
+        { string:navigator.userAgent, subString:"Chrome", identity:"Chrome" },
+        { string:navigator.userAgent, subString:"OmniWeb", versionSearch:"OmniWeb/", identity:"OmniWeb" },
+        { string:navigator.vendor, subString:"Apple", identity:"Safari", versionSearch:"Version" },
+        { prop:window.opera, identity:"Opera", versionSearch:"Version" },
+        { string:navigator.vendor, subString:"iCab", identity:"iCab" },
+        { string:navigator.vendor, subString:"KDE", identity:"Konqueror" },
+        { string:navigator.userAgent, subString:"Firefox", identity:"Firefox" },
+        { string:navigator.vendor, subString:"Camino", identity:"Camino" },
+        { string:navigator.userAgent, subString:"Netscape", identity:"Netscape" },
+        { string:navigator.userAgent, subString:"MSIE", identity:"Internet Explorer", versionSearch:"MSIE" },
+        { string:navigator.userAgent, subString:"Gecko", identity:"Mozilla", versionSearch:"rv" },
+        { string:navigator.userAgent, subString:"Mozilla", identity:"Netscape", versionSearch: "Mozilla" },
+        { string:navigator.vendor, subString:"Apple", identity:"Safari", versionSearch:"Version" }
+      ];
+
+    for (let i=0;i<dataBrowser.length;i++)
+    {
+      let dataString = dataBrowser[i].string;
+      let dataProp = dataBrowser[i].prop;
+      if (dataString){
+        if (dataString.indexOf(dataBrowser[i].subString) != -1)
+          browser = dataBrowser[i].identity;
+      }
+      else if (dataProp)
+        browser = dataBrowser[i].identity;
+    }
+
+    if(browser=='Safari')
+    {
+      video.srcObject = stream;
+      video.play();
+    }
+    else
+    {
+      video.srcObject = stream;
+    }
+
+    setTimeout(function(){
+      $('body').removeClass('prmu-load');
+      $('.YiiUpload__camera').fadeIn();
+      //self.addButtons(['wc_shoot']);
+    },500);
+  },
+  //
+  //	show errrors by navigator
+  RegisterPage.prototype.streamError = function (e)
+  {
+    let self = this;
+
+    if(typeof e!='underfined')
+    {
+      console.log(e['name']);
+      if(e['name']==='PermissionDeniedError' || e['name']==='NotAllowedError')
+      {
+        self.setError('- для съемки необходим доступ к вебкамере');
+      }
+      if(e['name']==='DevicesNotFoundError')
+      {
+        self.setError('- камера не найдена');
+      }
+      if(e['name']==='ConstraintNotSatisfiedError')
+      {
+        self.setError('- решение не поддерживается вашим устройством');
+      }
+    }
+    $('.YiiUpload__camera').hide();
+    $('body').removeClass('prmu-load');
   }
   //
   return RegisterPage;
@@ -533,18 +661,5 @@ var RegisterPage = (function () {
 *
 */
 $(document).ready(function () {
-
   new RegisterPage();
-
-  var elems = $('.login-img');
-  elems.each(function(){
-    var elem = $(this);
-    var width = elem.width();
-    var height = elem.height();
-    if(width <= height){
-      elem.addClass(' login-img-vertical ');
-    }else{
-      elem.addClass(' login-img-horizontal ');
-    }
-  })
 });

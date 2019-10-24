@@ -1779,7 +1779,7 @@ class UserProfileApplic extends UserProfile
         for ($i=0; $i<$n; $i++)
         {
             // загружаем только допустимое кол-во
-            if(($i + 1 + $query['cnt'])>$this->photosMax) 
+            if(($i + 1 + $query['cnt'])>$this->photosMax)
                 continue;
 
             $file = pathinfo($arData['files'][$i]['name'], PATHINFO_FILENAME);
@@ -1801,6 +1801,26 @@ class UserProfileApplic extends UserProfile
             ->update('user', ['ismoder'=>0], 'id_user=:id', [':id'=>$this->id]);
         // уведомляем админа по почте
         Mailing::set(1, ['id_user'=>$this->id], self::$APPLICANT);
+    }
+    /**
+     *  сохранение одного фото при регистрации
+     * @param $name - string
+     */
+    public function saveRegisterPhoto($name)
+    {
+      Yii::app()->db->createCommand()
+        ->delete('user_photos','id_user=:id',[':id' => $this->id]);
+
+      Yii::app()->db->createCommand()
+        ->insert('user_photos',[
+          'id_promo' => $this->exInfo->id_resume,
+          'id_user' => $this->id,
+          'npp' => 1,
+          'photo' => $name,
+          'signature' => ''
+        ]);
+
+      $this->updateForPhoto($this->exInfo->id_resume, $name);
     }
     /**
      *  сохранение данных с помощью виджета

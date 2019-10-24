@@ -541,8 +541,9 @@ class UserController extends AppController
       $model = new UserRegister();
       $model->checkEmailLink();
 
-      //$model->setStep(5);
-      if(!in_array($model->step, [1,2,3,4,5,6,7,'end']))
+      $model->setStep(5);
+
+      if(!in_array($model->step, [1,2,3,4,5,'end']))
       {
         throw new CHttpException(404, 'Error');
       }
@@ -618,8 +619,15 @@ class UserController extends AppController
           $data['errors'] = $model->setDataByStep($model->step, $data['input']);
           if(!count($data['errors']))
           {
-            $model->setStep($model->step + 1);
-            $view = '/user/register/step_' . $model->step;
+            if($model->step==$model::$STEP_AVATAR)
+            {
+              $model::clearStep();
+            }
+            else
+            {
+              $model->setStep($model->step + 1);
+              $view = '/user/register/step_' . $model->step;
+            }
           }
 
           if($model->step==3)
@@ -629,7 +637,7 @@ class UserController extends AppController
           }
         }
 
-        $this->renderPartial($view,['viData'=>$data]);
+        $this->renderPartial($view,['viData'=>$data, 'model'=>$model]);
       }
       else
       {
@@ -639,31 +647,8 @@ class UserController extends AppController
           $data['time_to_repeat'] = $model->isTimeToRepeat($data['input']['time_code']);
         }
 
-        $this->renderRegister($view,['viData'=>$data]);
+        $this->renderRegister($view,['viData'=>$data, 'model'=>$model]);
       }
-      // PHPSESSID
-      //echo md5(time() . rand(1111111,9999999));
-
-      // applicant
-      /*$getS = Yii::app()->getRequest()->getParam('s');
-      $getP = Yii::app()->getRequest()->getParam('p');
-
-      if($getS == 2)
-      {
-          $this->setPageTitle('Завершение регистрации');
-          $this->render(MainConfig::$VIEWS_REGISTER_COMPLETE, ['type' => $getS], array('nobc' => '1'));
-      }
-      else
-      {
-          if($getP=='' || $getP=='1' || $getP=='2')
-          {
-              $this->proccessRegister();
-          }
-          else
-          {
-              throw new CHttpException(404, 'Error');
-          }
-      }*/
     }
 
 

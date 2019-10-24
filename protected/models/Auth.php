@@ -652,35 +652,38 @@ class Auth
 
      public function doAuth($inParam)
     {
-        // *** Авторизация через форму ***
-        $rType = (new CHttpRequest())->requestType;
-        if( $rType == 'POST'
-                && Yii::app()->getRequest()->getParam('login')
-                && Yii::app()->getRequest()->getParam('passw')
-        )
-        {
-            $res = $this->doLogin(['login' => $inParam->login, 'passw' => $inParam->passw, 'remember' => $inParam->remember]);
-//echo "POST:";print_r($res);
+      $rq = Yii::app()->getRequest();
+      // *** Авторизация через форму ***
+      if( $rq->isPostRequest && $rq->getParam('login') && $rq->getParam('passw') )
+      {
+        $result = $this->doLogin([
+          'login' => $inParam->login,
+          'passw' => $inParam->passw,
+          'remember' => $inParam->remember
+        ]);
+      }
+      else // *** Авторизация через cookie ***
+      {
+        $result = $this->doAuthenicate();
+      }
 
-        // *** Авторизация через cookie ***
-        } else {
-            $res = $this->doAuthenicate();
-        } // endif
+      switch ($result['error'])
+      {
+        case 100 : // Создаём профиль
+          Share::$UserProfile = (new ProfileFactory())->makeProfile([
+            'id' => Yii::app()->session['au_us_data']->id,
+            'type' => Yii::app()->session['au_us_type']
+          ]);
+          Share::$UserProfile instanceof UserProfile && Share::$UserProfile->setUserData();
+          break;
 
-        switch ($res['error'])
-        {
-            // Создаём профиль
-            case 100 : Share::$UserProfile = $Profile = (new ProfileFactory())->makeProfile(array('id' => Yii::app()->session['au_us_data']->id, 'type' => Yii::app()->session['au_us_type']));
-                $Profile instanceof UserProfile && $Profile->setUserData();
-                break;
+        default: // guest
+          Share::$UserProfile = (new ProfileFactory())->makeProfile(['id' => 0]);
+      }
 
-            // guest
-            default: Share::$UserProfile = $Profile = (new ProfileFactory())->makeProfile(array('id' => 0));
-        }
-
-
-        if( $res['error'] < 0 ) return array('auth' => 0, 'message' => $res['message'], 'error' => 1);
-        else return array('auth' => 1,);
+      return ($result['error'] < 0
+        ? ['auth'=>0, 'message'=>$result['message'], 'error'=>1]
+        : ['auth'=>1]);
     }
 
 

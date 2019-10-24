@@ -1696,6 +1696,26 @@ class UserProfileEmpl extends UserProfile
         Mailing::set(1, ['id_user'=>$this->id], self::$EMPLOYER);
     }
     /**
+     *  сохранение одного фото при регистрации
+     * @param $name - string
+     */
+    public function saveRegisterPhoto($name)
+    {
+      Yii::app()->db->createCommand()
+        ->delete('user_photos','id_user=:id',[':id' => $this->id]);
+
+      Yii::app()->db->createCommand()
+        ->insert('user_photos',[
+          'id_promo' => $this->exInfo->id_resume,
+          'id_user' => $this->id,
+          'npp' => 1,
+          'photo' => $name,
+          'signature' => ''
+        ]);
+
+      $this->updateForPhoto($this->exInfo->id_resume, $name);
+    }
+    /**
      *  сохранение данных с помощью виджета
      * @param $arData - array ['files'=>[0=>['name','oldname','path','linkTag','isImg','imgTag','signature']...]]
      */

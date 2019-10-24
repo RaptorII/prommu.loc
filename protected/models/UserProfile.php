@@ -57,6 +57,7 @@ abstract class UserProfile extends CModel
                 'filePath' => $this->filesRoot,
                 'fileUrl' => $this->filesUrl,
                 'objSaveMethod' => 'savePhoto',
+                'objRegisterSaveMethod' => 'saveRegisterPhoto',
                 'reloadAfterUpload' => true
             ];
     }

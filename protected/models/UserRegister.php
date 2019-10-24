@@ -28,6 +28,7 @@ class UserRegister
   public $step;
   public $user;
   public $data;
+  public $profile;
 
   function __construct()
   {
@@ -53,6 +54,14 @@ class UserRegister
     }
     //
     $this->data = $this->getData();
+    //
+    if($this->data['id_user'])
+    {
+      $this->profile = (Share::isApplicant($this->data['type'])
+        ? new UserProfileApplic(['id'=>$this->data['id_user']])
+        : new UserProfileEmpl(['id'=>$this->data['id_user']]));
+      $this->profile instanceof UserProfile && $this->profile->setUserData();
+    }
   }
   /**
    * @param $step
@@ -122,7 +131,7 @@ class UserRegister
   {
     $arErrors = $arData = [];
     //
-    if($step==1)
+    if($step==self::$STEP_TYPE)
     {
       if(!in_array($data['type'],[UserProfile::$EMPLOYER, UserProfile::$APPLICANT]))
       {
@@ -182,7 +191,7 @@ class UserRegister
       }
     }
     //
-    if($step==2)
+    if($step==self::$STEP_LOGIN)
     {
       $arUser = $this->getData();
       $field = Share::isApplicant($arUser['type']) ? 'Имя' : 'Название компании';
@@ -288,7 +297,7 @@ class UserRegister
       }
     }
     //
-    if($step==3)
+    if($step==self::$STEP_CODE)
     {
       $arUser = $this->getData();
       if(!$arUser['is_confirm'])
@@ -299,7 +308,7 @@ class UserRegister
       }
     }
     //
-    if($step==4)
+    if($step==self::$STEP_PASSWORD)
     {
       $value1 = filter_var($data['password'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
       $value2 = filter_var($data['r-password'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -316,15 +325,28 @@ class UserRegister
         $this->saveNewUser($value1);
       }
     }
+    //
+    if($step==self::$STEP_AVATAR)
+    {
+      if(empty($this->profile->exInfo->photo))
+      {
+        $arErrors['avatar'] = 'Необходимо загрузить фото';
+      }
+      else
+      {
+        $model = new Auth();
+        $model->Authorize(['id'=>$this->profile->id]);
+      }
+    }
 
     if(!count($arErrors))
     {
-      $result = $this->setData($arData);
+      $result = count($arData) ? $this->setData($arData) : true;
       if(!$result)
       {
         $arErrors['system'] = 'Ошибка записи данных';
       }
-      elseif($step==2 && isset($arData['code'])) // отправляем код для подтверждения
+      elseif($step==self::$STEP_LOGIN && isset($arData['code'])) // отправляем код для подтверждения
       {
         $this->sendCode();
       }
@@ -537,8 +559,8 @@ class UserRegister
       ]);
     }
     // authorize
-    $model = new Auth();
-    $model->Authorize(['id'=>$id_user]);
+    //$model = new Auth();
+    //$model->Authorize(['id'=>$id_user]);
   }
   //
   //
@@ -550,14 +572,14 @@ class UserRegister
   public function saveImage()
   {
     $arRes = ['error'=>[]];
-		$result = $this->existenceDir(Share::$UserProfile->filesRoot);
+		$result = $this->existenceDir($this->profile->filesRoot);
 		if(!$result)
     {
       $arRes['error'][] = 'Ошибка сохранения, обратитесь к администратору';
       return $arRes['error'];
     }
 
-		$mSize = Share::$UserProfile->arYiiUpload['maxFileSize'] * 1024 * 1024; // переводим в байты
+		$mSize = $this->profile->arYiiUpload['maxFileSize'] * 1024 * 1024; // переводим в байты
 
     $fName = $_FILES['upload']['name'];
     $info = new SplFileInfo($fName);
@@ -570,30 +592,30 @@ class UserRegister
     if($_FILES['upload']['size']>$mSize) // ошибка передачи файла на сервер
     {
       $arRes['error'][] = "Размер файла '{$fName}' больше допустимого значения ("
-        . Share::$UserProfile->arYiiUpload['maxFileSize'] . "Мб)";
+        . $this->profile->arYiiUpload['maxFileSize'] . "Мб)";
     }
 
-    if(!in_array($type,Share::$UserProfile->arYiiUpload['fileFormat'])) // проверяем формат на корректность
+    if(!in_array($type,$this->profile->arYiiUpload['fileFormat'])) // проверяем формат на корректность
     {
       $arRes['error'][] = "У файла '{$fName}' некорректный формат";
     }
 
     $newName = date('YmdHis') . rand(1000,9999) . '.' . $type;
-    $filePath = Share::$UserProfile->filesRoot . DS . $newName;
-    $src = Share::$UserProfile->filesUrl . DS . $newName;
+    $filePath = $this->profile->filesRoot . DS . $newName;
+    $src = $this->profile->filesUrl . DS . $newName;
     $result = move_uploaded_file($_FILES['upload']["tmp_name"], $filePath);
     if($result) // файл успешно перемещен
     {
       $fSize = getimagesize($filePath);
       if($fSize)
       {
-        $size = Share::$UserProfile->arYiiUpload['minImageSize']; // проверяем на минимальную ширину/высоту
+        $size = $this->profile->arYiiUpload['minImageSize']; // проверяем на минимальную ширину/высоту
         if($size>0 && ($fSize[0]<$size || $fSize[1]<$size))
         {
           $arRes['error'][] = "Файл '{$fName}' меньше допустимого значения ({$size}x{$size})";
           unlink($filePath);
         }
-        $size = Share::$UserProfile->arYiiUpload['maxImageSize']; // проверяем на максимальную ширину/высоту
+        $size = $this->profile->arYiiUpload['maxImageSize']; // проверяем на максимальную ширину/высоту
         if($size>0 && ($fSize[0]>$size || $fSize[1]>$size))
         {
           $arRes['error'][] = "Файл '{$fName}' больше допустимого значения ({$size}x{$size})";
@@ -683,19 +705,14 @@ class UserRegister
     $quality = 90;
     $arRes = ['error'=>[],'items'=>[],'success'=>[]];
 
-    $arRes['items'][] = $arData['oldName'];
-    $filePath = Share::$UserProfile->filesUrl . DS . $arData['name'];
+    $filePath = $this->profile->filesRoot . DS . $arData['name'];
     $info = new SplFileInfo($arData['name']);
     $type = mb_strtolower($info->getExtension());
     $typeLen = strlen($type) + 1; // прибавляем точку
     $filePathWithoutExt = substr($filePath, 0, (strlen($filePath)-$typeLen)); // without '.<type>'
     $inOutFile = $filePathWithoutExt . 'tmp.jpg';
 
-    //if(!file_exists($filePath))
-    //{	$this->log('editImages():01'); return; }
-
     $image = imagecreatefromjpeg($filePath);
-    //if(!$image){	$this->log('editImages():02'); return; }
 
     $imgProps = getimagesize($filePath);
     list($oldW, $oldH) = $imgProps; // get old width and old height
@@ -764,32 +781,26 @@ class UserRegister
     imagefill($dstImage, 0, 0, imagecolorallocate($dstImage, 255, 255, 255));
     // Копирование и изменение размера изображения с ресемплированием
     $result = imagecopyresampled($dstImage, $image, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH);
-    //if(!$result){	$this->log('editImages():03'); return; }
     $result = imagejpeg($dstImage, $inOutFile, $quality); // записываем изображение в файл
-    //if(!$result){ $this->log('editImages():04'); return; }
-    foreach (Share::$UserProfile->arYiiUpload['imgDimensions'] as $suffix => $size)
+    $arRes['name'] = pathinfo($arData['name'], PATHINFO_FILENAME);
+    foreach ($this->profile->arYiiUpload['imgDimensions'] as $suffix => $size)
     {
       $this->resizeImage($inOutFile, "{$filePathWithoutExt}{$suffix}.jpg", $size);
+      $arRes['items'][$suffix] = $this->profile->filesUrl . DS . $arRes['name'] . "{$suffix}.jpg";
     }
-    $result = imagejpeg($image, $filePathWithoutExt
-      . Share::$UserProfile->arYiiUpload['imgOrigSuFFix'] . ".jpg");
-    //if(!$result){	$this->log('editImages():03'); return; }
-
-    $arRes['success'] = [
-      'name' => $arData['name'],
-      'oldname' => $arData['oldName'],
-      'path' => Share::$UserProfile->filesUrl . DS . $arData['name']
-    ];
+    $result = imagejpeg($image, $filePathWithoutExt . $this->profile->arYiiUpload['imgOrigSuFFix'] . ".jpg");
+    $arRes['items'][$this->profile->arYiiUpload['imgOrigSuFFix']] = $this->profile->filesUrl
+      . DS . $arRes['name'] . $this->profile->arYiiUpload['imgOrigSuFFix'] . ".jpg";
 
     imagedestroy($image);
     imagedestroy($dstImage);
     unlink($filePath);
     unlink($inOutFile);
-/*
-    $object = Share::$UserProfile->arYiiUpload['objSave'];
-    $method = Share::$UserProfile->arYiiUpload['objSaveMethod'];
-    $object->$method( [ 'files' => [$arRes['success']] ] );
-*/
+
+    $object = $this->profile->arYiiUpload['objSave'];
+    $method = $this->profile->arYiiUpload['objRegisterSaveMethod'];
+    $object->$method($arRes['name']);
+
     return $arRes;
   }
 }

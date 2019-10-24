@@ -69,7 +69,6 @@ class AppController extends CController
         // проверка авторизации
         $this->doAuth();
 
-
         // модель данных для view шаблона
         if( Share::$UserProfile->type == UserProfile::$APPLICANT ) $view = new ViewModelApplic();
         elseif( Share::$UserProfile->type == UserProfile::$EMPLOYER ) $view = new ViewModelEmpl();

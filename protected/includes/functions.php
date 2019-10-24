@@ -241,3 +241,19 @@ function number2string($number)
   // преобразуем переменную в текст и возвращаем из функции, ура!
   return join(' ', $string);
 }
+/*
+ *
+ */
+function display($data, $printR = true)
+{
+  echo '<pre>';
+  if($printR)
+  {
+    print_r($data);
+  }
+  else
+  {
+    var_dump($data);
+  }
+  echo '</pre>';
+}

@@ -1,6 +1,3 @@
-<?php
-?>
-
 <form id="register_form">
 
   <div class="login-wrap">
@@ -17,36 +14,38 @@
           Работодатели оценят вашу открытость
         </p>
         <div class="login__photo-img">
-          <img src="<?=Share::getPhoto($attr['id_user'],2,$attr['photo'],'medium',$attr['isman'])?>" alt="" id="login-img" class="login-img">
+          <?
+            $userInfo = $model->profile->exInfo;
+            $hasPhoto = !empty($userInfo->photo);
+            if($hasPhoto)
+            {
+              $src = Share::getPhoto($userInfo->id, $userInfo->status, $userInfo->photo);
+            }
+            else
+            {
+              $src = '/theme/pic/register-popup-page/register_popup_r_logo.png'; // Миша, ты обещал картинку, не забудь)
+            }
+          ?>
+          <img src="<?=$src?>" alt="" id="login-img" class="login-img<?=$hasPhoto?' active-logo':''?>">
         </div>
 
+        <?php if (!empty($viData['errors']['avatar'])): ?>
+          <p class="separator center">
+            <span class="login__error"><?=$viData['errors']['avatar']?></span>
+          </p>
+        <?php endif; ?>
+
         <p class="separator center">
-          Допустимые форматы фалов <?=implode(', ', Share::$UserProfile->arYiiUpload['fileFormat']);?>
+          Допустимые форматы фалов <?=implode(', ', $model->profile->arYiiUpload['fileFormat']);?>
         </p>
         <p class="separator center pad0">
-          Размер не более <?=Share::$UserProfile->arYiiUpload['maxFileSize']?> Мб.
+          Размер не более <?=$model->profile->arYiiUpload['maxFileSize']?> Мб.
         </p>
 
         <p class="separator center upload-block">
           <span class="btn-orange btn-upload">Загрузить фото</span>
           <span class="input"><input type="file" name="upload" class="input-upload"></span>
         </p>
-        <?
-
-        ?>
-        <? $cntPhotos = count($viData['userInfo']['userPhotos']); ?>
-        <? if( $cntPhotos < Share::$UserProfile->photosMax ): ?>
-          <?
-          $arYiiUpload = Share::$UserProfile->arYiiUpload;
-          $difPhotos = Share::$UserProfile->photosMax - $cntPhotos;
-          // если доступно к загрузке менее 5и фото
-          $arYiiUpload['fileLimit']>$difPhotos && $arYiiUpload['fileLimit']=$difPhotos;
-          ?>
-          <div class="center">
-            <? $this->widget('YiiUploadWidget',$arYiiUpload); ?>
-          </div>
-        <? endif; ?>
-
       </div>
 
       <div class="login__social-container">
@@ -83,12 +82,11 @@
       </div>
 
       <p class="input">
-        <label for="radio-6" class="btn-green">Завершить регистрацию</label>
-        <input type="radio" name="radio" id="radio-6">
+        <button type="submit" class="btn-green" data-step="5">Завершить регистрацию</button>
       </p>
 
       <p class="separator">
-        <a class= "back__away" href="#" onClick="backAway()">
+        <a class="back__away back-away" href="javascript:void(0)">
           Вернуться назад и отредактировать данные
         </a>
       </p>
@@ -97,4 +95,5 @@
 
 
   </div>
+  <input type="hidden" name="href" value="<?=MainConfig::$PAGE_PROFILE?>">
 </form>
