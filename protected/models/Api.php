@@ -3990,8 +3990,8 @@ public function vac(){
             $Vacancy = new Vacancy($profile);
             $data = $Vacancy->getVacancyInfo($id);
             
-            $Response = new ResponsesApplic($profile);
-            $data['responses'] = $Response->getVacStat(['id' => $id, 'idus' => $idus]);
+            // $Response = new ResponsesApplic($profile);
+            // $data['responses'] = $Response->getVacStat(['id' => $id, 'idus' => $idus]);
             
            } catch (Exception $e)
         {
