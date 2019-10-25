@@ -159,6 +159,8 @@ class Api
         $profile = (new ProfileFactory())->makeProfile(['id' => $id]);
     }
     
+    var_dump($profile);
+    
         
     $res['user']['id'] = 12345;
     $res['user']['first_name'] = "Test";
