@@ -246,7 +246,8 @@ if(!in_array(Share::$UserProfile->type, [2,3])): ?>
 //print_r($viData);
 //echo '</pre>';
 
-if( $action == 'company-profile-own' &&  Share::$UserProfile->exInfo->isblocked == 3 ) {
+//if( $action == 'company-profile-own' &&  Share::$UserProfile->exInfo->isblocked == 3 ) {
+if( $action == 'company-profile-own' &&  (Share::$UserProfile->exInfo->isblocked == 3 || Share::$UserProfile->exInfo->isblocked == 2) ) {
 
     Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css');
     Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);

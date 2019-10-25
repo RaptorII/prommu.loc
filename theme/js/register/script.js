@@ -234,7 +234,7 @@ var RegisterPage = (function () {
       self.setTimer();
     }
     //
-    //self.startSvg();
+    self.startSvg();
   },
     // отправляем аяксом
     RegisterPage.prototype.send = function (data) {
