@@ -260,7 +260,7 @@ if( $action == 'company-profile-own' &&  Share::$UserProfile->exInfo->isblocked 
     ?>
 
     <div class="complete__reg">
-        <form action='' id='F1compprof' method='post' class="edit-profile-employer">
+        <form action='user/editprofile' id='F1compprof' method='post' class="edit-profile-employer">
 
             <p class="complete__head center">
                 Необходимо активировать аккаунт

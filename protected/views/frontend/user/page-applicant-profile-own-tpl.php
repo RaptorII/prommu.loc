@@ -292,7 +292,7 @@
 
         <div class="edit-profile-applicant ">
             <div class="complete__reg">
-                <form action='' method='post' id="epa-edit-form">
+                <form action='/user/editprofile' method='post' id="epa-edit-form">
 
                     <p class="complete__head center">
                         Необходимо активировать свой аккаунт
