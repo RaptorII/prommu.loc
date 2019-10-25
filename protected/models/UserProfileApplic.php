@@ -1199,7 +1199,7 @@ class UserProfileApplic extends UserProfile
         $data['profileEffect'] = floor($this->profileFill / $this->profileFillMax * 100);
         $data['profileEffect'] = $data['profileEffect']>100 ? 100 : $data['profileEffect'];
 
-        //all of u need is love
+        //for regForm
         $data['data'] = $this->getProfileEditPageData($data['userInfo']);
 
         return $data;
@@ -1644,8 +1644,8 @@ class UserProfileApplic extends UserProfile
             $arResult['fields'][] = '"Телефон"';
         if(empty($arResult['pos']))
             $arResult['fields'][] = '"Целевые вакансии"';
-        if(empty($arResult['aboutme']))
-            $arResult['fields'][] = '"О себе"';
+        /*if(empty($arResult['aboutme']))
+            $arResult['fields'][] = '"О себе"';*/
 
         if(sizeof($arResult['fields'])>0)
             $arResult['mess'] = 'Необходимо заполнить поля: ' . implode(', ', $arResult['fields']);

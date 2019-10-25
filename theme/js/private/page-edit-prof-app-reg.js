@@ -138,7 +138,7 @@ jQuery(function($){
 		checkPosts();
 	});
 	//
-	// $('.epa__post-detail').on('input', '[type=text]', function(){ checkField(this) });
+	 $('.epa__post-detail').on('input', '[type=text]', function(){ checkField(this) });
 	// // создать новую должнотсть
 	// $('#epa-posts-add span').click(function(){
 	// 	$('#epa-posts-add').hide();
@@ -662,7 +662,7 @@ jQuery(function($){
 			}, 500);
 		}
 		else{
-			console.log('ne tyt');
+			//console.log('ne tyt');
 			$.each($(cityM+' .epa__required'), function(){
 				if(!checkField(this)) {errors = true; };
 			});
@@ -679,7 +679,7 @@ jQuery(function($){
 			// 	}
 			// });
 
-			// if(!checkField('[name="about-mself"]')) {errors = true; console.log('2'); };
+			// if(!checkField('[name="about-mself"]')) {errors = true; /*console.log('2');*/ };
 
 			// if(!checkField($('[name="user-attribs[edu]"]'))) errors = true;
 			// if(!checkField($('[name="langs[]"]'))) errors = true;
@@ -719,19 +719,19 @@ jQuery(function($){
 				});
 				$('#epa-edit-form').append(addInputs);
 
-				$.each(arTimeItems, function(){ 	// преображаем время в достойный вид
-					var val = $(this).val();
-					if(val!=''){
-						arVals = val.split('до');
-						newVal = getNum(arVals[0]) + '-' + getNum(arVals[1]);
-						$(this).val(newVal)
-					}
-				});
+				// $.each(arTimeItems, function(){ 	// преображаем время в достойный вид
+				// 	var val = $(this).val();
+				// 	if(val!=''){
+				// 		arVals = val.split('до');
+				// 		newVal = getNum(arVals[0]) + '-' + getNum(arVals[1]);
+				// 		$(this).val(newVal)
+				// 	}
+				//});
 
-				// var arAllInputs = $('.epa__cities-block-list input');
-				// $.each(arAllInputs, function(){
-				// 	var main = $(this).closest('.epa__city-item'),
-				// 		idCity = main[0].dataset.idcity;
+				 var arAllInputs = $('.epa__cities-block-list input');
+				 $.each(arAllInputs, function(){
+				 	var main = $(this).closest('.epa__city-item'),
+				 		idCity = main[0].dataset.idcity;
 				//
 				// 	if($(this).closest('.epa__days-checkboxes').length){
 				// 		$(this).attr('name', 'days['+idCity+']');
@@ -740,7 +740,7 @@ jQuery(function($){
 				// 		var day = $(this).attr('name').slice(-3);
 				// 		$(this).attr('name', 'time['+idCity+']'+day);
 				// 	}
-				// });
+				 });
 				$('#epa-edit-form').submit();
 				//console.log($('#epa-edit-form').serializeArray());
 			}
