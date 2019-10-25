@@ -152,31 +152,31 @@ class UserRegister
    * @return array - errors
    * Проверка полей регистрации
    */
-  public function setDataByStep()
+  public function setDataByStep($post)
   {
     $arData = [];
     //
     if($this->step==self::$STEP_TYPE)
     {
-      if(!in_array($this->data['type'],[UserProfile::$EMPLOYER, UserProfile::$APPLICANT]))
+      if(!in_array($post['type'],[UserProfile::$EMPLOYER, UserProfile::$APPLICANT]))
       {
         $this->errors['type'] = 'Неподходящий тип пользователя';
       }
       else
       {
         $arData = [
-          'type' => $this->data['type'],
-          'referer' => filter_var($this->data['referer'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-          'transition' => filter_var($this->data['transition'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-          'canal' => filter_var($this->data['canal'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-          'campaign' => filter_var($this->data['campaign'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-          'content' => filter_var($this->data['content'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-          'keywords' => filter_var($this->data['keywords'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-          'point' => filter_var($this->data['point'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-          'last_referer' => filter_var($this->data['last_referer'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-          'ip' => $this->data['ip'],
-          'pm_source' => $this->data['pm_source'],
-          'client' => $this->data['client'],
+          'type' => $post['type'],
+          'referer' => filter_var($post['referer'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'transition' => filter_var($post['transition'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'canal' => filter_var($post['canal'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'campaign' => filter_var($post['campaign'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'content' => filter_var($post['content'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'keywords' => filter_var($post['keywords'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'point' => filter_var($post['point'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'last_referer' => filter_var($post['last_referer'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'ip' => $post['ip'],
+          'pm_source' => $post['pm_source'],
+          'client' => $post['client'],
           'subdomen' => Subdomain::getId(),
           'date' => time()
         ];
@@ -220,45 +220,42 @@ class UserRegister
     if($this->step==self::$STEP_LOGIN)
     {
       $field = Share::isApplicant($this->data['type']) ? 'Имя' : 'Название компании';
-      $value = filter_var($this->data['name'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-      $value = trim($value);
-      if(strlen($value) > self::$STRLENGTH)
+      $this->data['name'] = filter_var($post['name'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $this->data['name'] = trim($this->data['name']);
+      if(strlen($this->data['name']) > self::$STRLENGTH)
       {
         $this->errors['name'] = "В поле '{$field}' указано слишком много символов";
       }
-      elseif(!strlen($value))
+      elseif(!strlen($this->data['name']))
       {
         $this->errors['name'] = "В поле '{$field}' есть некорректные символы или поле пустое";
       }
       else
       {
-        $arData['name'] = $value;
-        $this->data['name'] = $value;
+        $arData['name'] = $this->data['name'];
       }
 
       if(Share::isApplicant($this->data['type']))
       {
-        $value = filter_var($this->data['surname'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $value = trim($value);
-        if(strlen($value) > self::$STRLENGTH)
+        $this->data['surname'] = filter_var($post['surname'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $this->data['surname'] = trim($this->data['surname']);
+        if(strlen($this->data['surname']) > self::$STRLENGTH)
         {
           $this->errors['surname'] = "В поле 'Фамилия' указано слишком много символов";
         }
-        elseif(!strlen($value))
+        elseif(!strlen($this->data['surname']))
         {
           $this->errors['surname'] = "В поле 'Фамилия' есть некорректные символы или поле пустое";
         }
         else
         {
-          $arData['surname'] = $value;
-          $this->data['surname'] = $value;
+          $arData['surname'] = $this->data['surname'];
         }
       }
 
-      if(!filter_var($this->data['login'],FILTER_VALIDATE_EMAIL))
+      if(!filter_var($post['login'],FILTER_VALIDATE_EMAIL))
       {
-        $value = preg_replace("/[^0-9]/", '', $this->data['login']);
-        $isPhone = false;
+        $value = preg_replace("/[^0-9]/", '', $post['login']);
         if(strlen($value)==10) // RF
         {
           $value = '7' . $value;
@@ -281,35 +278,39 @@ class UserRegister
         }*/
         else
         {
+          $isPhone = false;
           $this->errors['login'] = "Введите действительный номер мобильного телефона или эл. адрес";
         }
 
-        $model = new User();
-        $is_user = $model->checkLogin($value,$isPhone);
-        if($is_user)
+        if($isPhone)
         {
-          $this->errors['login'] = "Данный телефон уже используется. <a href=\""
-            . MainConfig::$PAGE_LOGIN . "\">Авторизоваться</a>";
-        }
-        else
-        {
-          $arData['login'] = $value;
-          $this->data['login'] = $arData['login'];
-          $arData['login_type'] = self::$LOGIN_TYPE_PHONE;
-          $this->data['login_type'] = $arData['login_type'];
-          if($this->data['login']!=$value)
+          $model = new User();
+          $is_user = $model->checkLogin($value,$isPhone);
+          if($is_user)
           {
-            $arData['code'] = rand(1111, 9999);
-            $this->data['code'] = $arData['code'];
-            $arData['time_code'] = time();
-            $this->data['time_code'] = $arData['time_code'];
-            $this->data['time_to_repeat'] = $this->isTimeToRepeat($arData['time_code']);
+            $this->errors['login'] = "Данный телефон уже используется. <a href=\""
+              . MainConfig::$PAGE_LOGIN . "\">Авторизоваться</a>";
+          }
+          else
+          {
+            $arData['login'] = $value;
+            $arData['login_type'] = self::$LOGIN_TYPE_PHONE;
+            $this->data['login_type'] = $arData['login_type'];
+            if($this->data['login']!=$value)
+            {
+              $arData['code'] = rand(1111, 9999);
+              $this->data['code'] = $arData['code'];
+              $arData['time_code'] = time();
+              $this->data['time_code'] = $arData['time_code'];
+              $this->data['time_to_repeat'] = $this->isTimeToRepeat($arData['time_code']);
+            }
           }
         }
+        $this->data['login'] = $value;
       }
       else
       {
-        $value = filter_var($this->data['login'],FILTER_SANITIZE_EMAIL);
+        $value = filter_var($post['login'],FILTER_SANITIZE_EMAIL);
         $model = new User();
         $is_user = $model->checkLogin($value);
         if($is_user)
@@ -320,7 +321,6 @@ class UserRegister
         else
         {
           $arData['login'] = $value;
-          $this->data['login'] = $arData['login'];
           $arData['login_type'] = self::$LOGIN_TYPE_EMAIL;
           $this->data['login_type'] = $arData['login_type'];
           if($this->data['login']!=$value)
@@ -334,31 +334,30 @@ class UserRegister
             $this->data['token'] = $arData['token'];
           }
         }
+        $this->data['login'] = $value;
       }
     }
     //
-    if($this->step==self::$STEP_CODE)
+    if($this->step==self::$STEP_CODE && !$this->data['is_confirm'])
     {
-      if(!$this->data['is_confirm'])
+      if($this->data['code'] == $post['code'])
       {
-        if($this->data['code'] == $this->data['code'])
-        {
-          $arData['is_confirm'] = 1;
-          $this->data['is_confirm'] = 1;
-          $arData['is_confirm_time'] = time();
-          $this->data['is_confirm_time'] = $arData['is_confirm_time'];
-        }
-        else
-        {
-          $this->errors['code'] = 'Введен некорректный код подтверждения';
-        }
+        $arData['is_confirm'] = 1;
+        $this->data['is_confirm'] = 1;
+        $arData['is_confirm_time'] = time();
+        $this->data['is_confirm_time'] = $arData['is_confirm_time'];
       }
+      else
+      {
+        $this->errors['code'] = 'Введен некорректный код подтверждения';
+      }
+      $this->data['code'] = $post['code'];
     }
     //
     if($this->step==self::$STEP_PASSWORD)
     {
-      $value1 = filter_var($this->data['password'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-      $value2 = filter_var($this->data['r-password'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $value1 = filter_var($post['password'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      $value2 = filter_var($post['r-password'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
       if($value1 != $value2)
       {
         $this->errors['r-password'] = 'Значения полей не совпадают';
@@ -371,11 +370,17 @@ class UserRegister
       {
         $this->saveNewUser($value1);
       }
+      $this->data['password'] = $post['password'];
+      $this->data['r-password'] = $post['r-password'];
     }
     //
     if($this->step==self::$STEP_AVATAR)
     {
-      if(empty($this->profile->exInfo->photo))
+      if(Share::isApplicant($this->profile) && empty($this->profile->exInfo->photo))
+      {
+        $this->errors['avatar'] = 'Необходимо загрузить фото';
+      }
+      elseif(Share::isEmployer($this->profile) && empty($this->profile->exInfo->logo))
       {
         $this->errors['avatar'] = 'Необходимо загрузить фото';
       }
@@ -529,8 +534,9 @@ class UserRegister
       return false;
 
     $this->user = $query['user'];
-    $this->setStep((!empty($query['id_user']) ? 5 : 4));
-    if(!$query['is_confirm'])
+    Yii::app()->request->cookies['urh'] = new CHttpCookie('urh', $this->user);
+    $this->setStep(!empty($query['id_user']) ? self::$STEP_AVATAR : self::$STEP_PASSWORD);
+    if( !$query['is_confirm'] )
     {
       $this->setData(['is_confirm'=>1, 'is_confirm_time'=>time()]);
     }
@@ -850,9 +856,8 @@ class UserRegister
       //unlink($file);
     }
     */
-    $object = $this->profile->arYiiUpload['objSave'];
-    $method = $this->profile->arYiiUpload['objRegisterSaveMethod'];
-    $object->$method($arRes['name']);
+
+    $this->profile->saveRegisterPhoto($arRes['name']);
 
     return $arRes;
   }

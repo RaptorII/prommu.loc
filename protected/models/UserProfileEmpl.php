@@ -1742,14 +1742,14 @@ class UserProfileEmpl extends UserProfile
 
       Yii::app()->db->createCommand()
         ->insert('user_photos',[
-          'id_promo' => $this->exInfo->id_resume,
+          'id_empl' => $this->exInfo->eid,
           'id_user' => $this->id,
           'npp' => 1,
           'photo' => $name,
           'signature' => ''
         ]);
 
-      $this->updateForPhoto($this->exInfo->id_resume, $name);
+      $this->updateForPhoto($this->exInfo->eid, $name);
     }
     /**
      *  сохранение данных с помощью виджета

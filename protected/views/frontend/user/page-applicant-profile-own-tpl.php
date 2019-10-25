@@ -876,7 +876,9 @@
       </div>
       <div class="ppp__field">
         <span class="ppp__field-name">Дата рождения:</span>
-        <span class="ppp__field-val"><?=DateTime::createFromFormat('d.m.Y', $attr['bday'])->format('d/m/Y');?></span>
+        <? if(!empty($attr['bday'])): ?>
+          <span class="ppp__field-val"><?=DateTime::createFromFormat('d.m.Y', $attr['bday'])->format('d/m/Y');?></span>
+        <? endif; ?>
       </div>
       <? if($isBlocked && $flagOwnProfile && !$attr['val']): // предупреждение владельца о пустых полях ?>
         <div class="ppp__field error">

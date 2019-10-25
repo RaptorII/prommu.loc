@@ -1,6 +1,6 @@
 <?
-$userInfo = $model->profile->exInfo;
-$hasPhoto = !empty($userInfo->photo);
+$exInfo = $model->profile->exInfo;
+$photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->logo;
 ?>
 <form id="register_form">
 
@@ -15,14 +15,14 @@ $hasPhoto = !empty($userInfo->photo);
 
       <div class="login__photo">
         <p class="center separator">
-          <?=(Share::isApplicant($userInfo->status)?'Работодатели':'Соискатели')?> оценят вашу открытость
+          <?=(Share::isApplicant($exInfo->status)?'Работодатели':'Соискатели')?> оценят вашу открытость
         </p>
         <div class="login__photo-img">
           <?
-            if($hasPhoto)
+            if(!empty($photo))
             {
-              $src = Share::getPhoto($userInfo->id, $userInfo->status, $userInfo->photo);
-              $bigSrc = Share::getPhoto($userInfo->id, $userInfo->status, $userInfo->photo, 'big');
+              $src = Share::getPhoto($exInfo->id, $exInfo->status, $photo);
+              $bigSrc = Share::getPhoto($exInfo->id, $exInfo->status, $photo, 'big');
             }
             else
             {
@@ -32,11 +32,11 @@ $hasPhoto = !empty($userInfo->photo);
           ?>
           <img
             src="<?=$src?>"
-            alt="<?=$userInfo->photo?>"
-            data-name="<?=$userInfo->photo?>"
+            alt="<?=$photo?>"
+            data-name="<?=$photo?>"
             data-big="<?=$bigSrc?>"
             id="login-img"
-            class="login-img<?=$hasPhoto?' active-logo':''?>">
+            class="login-img<?=(!empty($photo)?' active-logo':'')?>">
         </div>
 
         <?php if (!empty($model->errors['avatar'])): ?>
