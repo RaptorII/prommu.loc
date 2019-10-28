@@ -79,13 +79,7 @@ class UserRegister
     // view
     $this->view = self::$VIEW_TEMPLATE . $this->step;
     // profile
-    if($this->data['id_user'])
-    {
-      $this->profile = (Share::isApplicant($this->data['type'])
-        ? new UserProfileApplic(['id'=>$this->data['id_user']])
-        : new UserProfileEmpl(['id'=>$this->data['id_user']]));
-      $this->profile instanceof UserProfile && $this->profile->setUserData();
-    }
+    $this->setProfile();
     //
     $this->errors = [];
   }
@@ -147,6 +141,19 @@ class UserRegister
       ->queryScalar();
 
     return boolval($result);
+  }
+
+  private function setProfile($id_user=false)
+  {
+    if(!$id_user && !$this->data['user'])
+      return false;
+
+    $id_user && $this->data['id_user'] = $id_user;
+
+    $this->profile = (Share::isApplicant($this->data['type'])
+      ? new UserProfileApplic(['id'=>$this->data['id_user']])
+      : new UserProfileEmpl(['id'=>$this->data['id_user']]));
+    $this->profile instanceof UserProfile && $this->profile->setUserData();
   }
   /**
    * @return array - errors
@@ -612,6 +619,8 @@ class UserRegister
         'crdate' => $date,
       ]);
     }
+    //
+    $this->setProfile($id_user);
   }
   //
   //
