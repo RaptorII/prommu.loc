@@ -120,7 +120,7 @@ $gcs->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-emp.js', CCli
 ?>
 <div class="col-xs-12 col-sm-6 col-lg-9">
     <div class="complete__reg">
-      <form action='user/editprofile' id='F1compprof' method='post' class="edit-profile-employer">
+      <form action='/user/editprofile' id='F1compprof' method='post' class="edit-profile-employer">
 
         <p class="complete__head center">
           Необходимо активировать аккаунт
