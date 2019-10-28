@@ -16,5 +16,6 @@ class ViewModelApplic extends ViewModel
         $this->pageMessView = MainConfig::$VIEWS_APPLICANT_MESS_VIEW;
         $this->pageVacancies = MainConfig::$VIEW_APPLICANT_VACS_LIST;
         $this->pageVacancyItem = MainConfig::$VIEW_APPLICANT_VACS_ITEM;
+        $this->lastRegisterForm = MainConfig::$VIEWS_APPLICANT_REGISTER_FORM;
     }
 }

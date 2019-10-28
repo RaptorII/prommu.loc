@@ -20,5 +20,6 @@ class ViewModelEmpl extends ViewModel
         $this->pageResponses = MainConfig::$VIEWS_EMPL_RESPONSES;
         $this->pageSetRate = MainConfig::$VIEWS_APPLICANT_SETRATE;
         $this->pageMessView = MainConfig::$VIEWS_EMPL_MESS_VIEW;
+        $this->lastRegisterForm = MainConfig::$VIEWS_EMPLOYER_REGISTER_FORM;
     }
 }

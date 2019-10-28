@@ -233,4 +233,23 @@ class AppController extends CController
 
     parent::render($inView, $tplData, false);
   }
+  /**
+   * перенаправление на вьюху с завершением регистрации
+   */
+  protected function directToCompleteRegistration()
+  {
+    $bSendToRegister = (Share::isGuest()
+      ? false
+      : (Share::$UserProfile->exInfo->isblocked==User::$ISBLOCKED_NOT_FULL_ACTIVE));
+
+    if($bSendToRegister)
+    {
+      $this->setPageTitle('Завершение регистрации');
+      $this->render(
+        $this->ViewModel->lastRegisterForm,
+        ['viData' => Share::$UserProfile->getProfileDataView()]
+      );
+      Yii::app()->end();
+    }
+  }
 }

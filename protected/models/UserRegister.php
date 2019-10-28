@@ -556,7 +556,7 @@ class UserRegister
       'passw' => md5($password), // !!!!!! небезопасно
       'email' => $arUser['login'],
       'status' => $arUser['type'],
-      'isblocked' => $model::$ISBLOCKED_EXPECT,
+      'isblocked' => $model::$ISBLOCKED_NOT_FULL_ACTIVE,
       'ismoder' => $model::$ISMODER_INACTIVE,
       'access_time' => $date,
       'crdate' => $date,

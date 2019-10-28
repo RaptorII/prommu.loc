@@ -137,6 +137,9 @@ class SiteController extends AppController
 
     public function actionSearchEmpl()
     {
+      // проверка регистрации на завершенность
+      $this->directToCompleteRegistration();
+      //
         if(Yii::app()->request->isAjaxRequest){
             $SearchEmpl = new SearchEmpl();
             if(Yii::app()->getRequest()->isPostRequest){
@@ -216,6 +219,9 @@ class SiteController extends AppController
 
     public function actionAnkety()
     {
+        // проверка регистрации на завершенность
+        $this->directToCompleteRegistration();
+        //
         $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
         if(!empty($id))
         {
@@ -449,6 +455,8 @@ class SiteController extends AppController
         $rq = Yii::app()->getRequest();
         $id = $rq->getParam('id');
         $id_user = Share::$UserProfile->id;
+        // проверка регистрации на завершенность
+        $this->directToCompleteRegistration();
         //
         if(isset($id)) // страница конкретной вакансии
         {

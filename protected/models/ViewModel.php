@@ -29,6 +29,7 @@ class ViewModel
     public $pageFeedback;
     public $pageCardprommu;
     public $addContentClass;
+    public $lastRegisterForm;
 
     private $viewData = [];
 

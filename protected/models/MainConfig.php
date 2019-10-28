@@ -287,6 +287,7 @@ class MainConfig
     /* */
     public static $PAGE_LEGAL_ENTITY_RECEIPT = '/user/legal_entity_receipt/';
     public static $VIEW_LEGAL_ENTITY_RECEIPT = 'legal-entity-receipt';
-
-
+    /* NEW REGISTER */
+    public static $VIEWS_APPLICANT_REGISTER_FORM = '/user/register/profile-form_applicant';
+    public static $VIEWS_EMPLOYER_REGISTER_FORM = '/user/register/profile-form_employer';
 }

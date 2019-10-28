@@ -428,28 +428,32 @@ class UserController extends AppController
 
     public function actionProfile()
     {
-        // no profile for guest
-        !in_array(Share::$UserProfile->type, [2,3]) && $this->redirect(MainConfig::$PAGE_LOGIN);
+      // no profile for guest
+      Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
 
-        Subdomain::profileRedirect(Share::$UserProfile->id);
+      Subdomain::profileRedirect(Share::$UserProfile->id);
+      // проверка регистрации на завершенность
+      $this->directToCompleteRegistration();
+      // Magnific Popup
+      Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/jslib/magnific-popup/magnific-popup-min.css');
+      Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/jslib/magnific-popup/jquery.magnific-popup.min.js', CClientScript::POS_END);
+      Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/jquery-ui.min.js', CClientScript::POS_END);
+      Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/jquery.form-validator.min.js', CClientScript::POS_END);
+      Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/jquery.mask.min.js', CClientScript::POS_END);
+      Yii::app()->getClientScript()->registerScriptFile("/theme/js/dev/pages/prof_user.js", CClientScript::POS_END);
 
-        // Magnific Popup
-        Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/jslib/magnific-popup/magnific-popup-min.css');
-        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/jslib/magnific-popup/jquery.magnific-popup.min.js', CClientScript::POS_END);
-        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/jquery-ui.min.js', CClientScript::POS_END);
-        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/jquery.form-validator.min.js', CClientScript::POS_END);
-        Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/jquery.mask.min.js', CClientScript::POS_END);
-        Yii::app()->getClientScript()->registerScriptFile("/theme/js/dev/pages/prof_user.js", CClientScript::POS_END);
+      $this->setBreadcrumbs($title = 'Мой профиль', MainConfig::$PAGE_PROFILE);
+      $this->setPageTitle($title);
 
-        $this->setBreadcrumbs($title = 'Мой профиль', MainConfig::$PAGE_PROFILE);
-        $this->setPageTitle($title);
-
-        $this->ViewModel->addContentClass('page-ankety');
-        $this->render($this->ViewModel->pageProfile,
-                array('viData' => Share::$UserProfile->getProfileDataView(),
-                        'flagOwnProfile' => true,
-                        'idus' => Share::$UserProfile->id,
-                    ));
+      $this->ViewModel->addContentClass('page-ankety');
+      $this->render(
+        $this->ViewModel->pageProfile,
+        [
+          'viData' => Share::$UserProfile->getProfileDataView(),
+          'flagOwnProfile' => true,
+          'idus' => Share::$UserProfile->id
+        ]
+      );
     }
 
 
