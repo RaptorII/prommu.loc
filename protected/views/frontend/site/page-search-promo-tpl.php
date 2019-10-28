@@ -292,8 +292,8 @@ $this->renderPartial('../site/page-search-promo-tpl_css');
             <?php if ($cookieView == 'list'): ?>
                 <div class='list-view'>
                     <?php foreach ($viData['promo'] as $key => $val):
-                        $usrPrflApp = new UserProfileApplic();
-                        $usrPrflApp = $usrPrflApp->getProfileData($val['id_user'],$val['id_user']);
+                        //$usrPrflApp = new UserProfileApplic(); // !!! Разобраться, когда закончим с новой регой
+                        //$usrPrflApp = $usrPrflApp->getProfileData($val['id_user'],$val['id_user']);
                         $photos = $usrPrflApp['userInfo']['userPhotos'];
                         ?>
                         <div class='appl-list-item-box'>
