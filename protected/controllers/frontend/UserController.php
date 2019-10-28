@@ -432,8 +432,19 @@ class UserController extends AppController
       Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
 
       Subdomain::profileRedirect(Share::$UserProfile->id);
-      // проверка регистрации на завершенность
-      $this->directToCompleteRegistration();
+      //
+      // проверка реги на завершенность
+      $bSendToRegister = Share::isSendToRegister();
+      if($bSendToRegister)
+      {
+        echo '1';
+        $this->render(
+          $this->ViewModel->pageProfile,
+          ['viData' => Share::$UserProfile->getProfileDataView()]
+        );
+        Yii::app()->end();
+      }
+      //
       // Magnific Popup
       Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/jslib/magnific-popup/magnific-popup-min.css');
       Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/jslib/magnific-popup/jquery.magnific-popup.min.js', CClientScript::POS_END);

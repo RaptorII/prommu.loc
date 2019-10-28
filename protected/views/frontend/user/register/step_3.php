@@ -11,7 +11,7 @@
   <div class="login__container">
     <? if($model->data['login_type']==UserRegister::$LOGIN_TYPE_PHONE): ?>
       <p>
-        <input type="text" value="<?=($model->data['is_confirm'] ? $model->data['code'] : '')?>" class="input-code" autocomplete="off" placeholder="Введите код из SMS">
+        <input type="text" name="code" value="<?=($model->data['is_confirm'] ? $model->data['code'] : '')?>" class="input-code" autocomplete="off" placeholder="Введите код из SMS">
         <?php if (!empty($model->errors['code'])): ?>
           <span class="login__error"><?=$model->errors['code']?></span>
         <?php endif; ?>
