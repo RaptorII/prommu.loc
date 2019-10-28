@@ -55,17 +55,18 @@ class AjaxController extends AppController
         } // endif
         Yii::app()->end();
     }
-    
+  /**
+   *  верификация контакта, отправка кода (почты/телефона)
+   */
   public function actionRestorecode()
   {
-    $code = rand(111111, 999999);
+    if(Share::isGuest())
+      return false;
+
+    $code = rand(1000, 9999);
     $phone = Yii::app()->getRequest()->getParam('phone');
     $email = Yii::app()->getRequest()->getParam('email');
-    $arInsert = [
-      'id' => $code,
-      'code' => $code,
-      'date' => date("Y-m-d h-i-s"),
-    ];
+    $arInsert = ['code' => $code];
 
     if(!empty($email))
     {
@@ -99,61 +100,67 @@ class AjaxController extends AppController
       Yii::app()->db->createCommand()->insert('activate', $arInsert);
     }
   }
+  /**
+   *  верификация контакта, проверка кода (почты/телефона)
+   */
+  public function actionConfirm()
+  {
+    if(Share::isGuest())
+      return false;
 
-    public function actionConfirm(){
+    $rq = Yii::app()->getRequest();
+    $code = $rq->getParam('code');
+    $phone = $rq->getParam('phone');
+    $email = $rq->getParam('email');
+    $result = 100;
 
-       $code = $_POST['code'];
-       $phone = $_POST['phone'];
-       $email = $_POST['email'];
-        $emails['code'] = '100';
-       if($email) {
-         $res = Yii::app()->db->createCommand()
-            ->select('code')
-            ->from('activate')
-             ->where('phone=:phone', array(':phone'=>$email))
-            ->queryRow();
+    if(!empty($email))
+    {
+      $query = Yii::app()->db->createCommand()
+        ->select('id')
+        ->from('activate')
+        ->where(
+          'email=:email and code=:code',
+          [':email'=>$email, ':code'=>$code]
+        )
+        ->queryScalar();
 
-           
-
-        if($res['code'] == $code && !empty($res)){
-
-            $res = Yii::app()->db->createCommand()
-            ->update('user', array(
-                'confirmEmail' => 1,
-            ), 'email=:email', array(':email' => $email));
-
-            $emails['code'] = '200';
-        }
-        else {
-            $emails['code'] = '100';
-        }
-
-       } elseif($phone){
-
-        $res = Yii::app()->db->createCommand()
-            ->select('code')
-            ->from('activate')
-             ->where('phone=:phone', array(':phone'=>$phone))
-            ->queryRow();
-
-          if($res['code'] == $code && !empty($res)){
-
-            $res = Yii::app()->db->createCommand()
-            ->update('user', array(
-                'confirmPhone' => 1,
-                'login' => "+".$phone,
-            ), 'id_user=:id_user', array(':id_user' => Share::$UserProfile->id));
-
-            $emails['code'] = '200';
-        }
-        else {
-            $emails['code'] = '100';
-        }
+      if($query)
+      {
+        Yii::app()->db->createCommand()->update(
+          'user',
+          ['confirmEmail'=>1],
+          'email=:email',
+          [':email'=>$email]
+        );
+        $result = 200;
+      }
     }
-       
-         echo CJSON::encode($emails);
+    elseif(!empty($phone))
+    {
+      $query = Yii::app()->db->createCommand()
+        ->select('id')
+        ->from('activate')
+        ->where(
+          'phone=:phone and code=:code',
+          [':phone'=>$phone, ':code'=>$code]
+        )
+        ->queryScalar();
 
+      if($query)
+      {
+        Yii::app()->db->createCommand()->update(
+          'user',
+          ['confirmPhone'=>1, 'login'=>"+".$phone],
+          'id_user=:id_user',
+          [':id_user' => Share::$UserProfile->id]
+        );
+        $result = 200;
+      }
     }
+    echo CJSON::encode(['code'=>$result]);
+    Yii::app()->end();
+  }
 
 
 

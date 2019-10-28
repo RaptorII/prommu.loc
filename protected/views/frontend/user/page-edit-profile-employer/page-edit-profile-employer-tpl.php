@@ -134,7 +134,7 @@
                   <span class="epe__confirm-text">На Вашу почту выслан код для подтверждения. Введите его в это поле!</span>
                   <label class="epe__label">
                     <span class="epe__label-name">Проверочный код:</span>
-                    <input type='text' name='confirm-code' value="" class="epe__input" id="conf-email-inp" maxlength="6" autocomplete="off">
+                    <input type='text' name='confirm-code' value="" class="epe__input" id="conf-email-inp" maxlength="4" autocomplete="off">
                   </label>
                   <div class="epe__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
                   <div class="clearfix"></div>
@@ -154,7 +154,7 @@
                   <span class="epe__confirm-text">На Ваш телефон выслан код для подтверждения. Введите его в это поле!</span>
                   <label class="epe__label">
                     <span class="epe__label-name">Проверочный код:</span>
-                    <input type='text' name='confirm-code' value="" class="epe__input" id="conf-phone-inp" maxlength="6" autocomplete="off">
+                    <input type='text' name='confirm-code' value="" class="epe__input" id="conf-phone-inp" maxlength="4" autocomplete="off">
                   </label>
                   <div class="epe__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
                   <div class="clearfix"></div>

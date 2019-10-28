@@ -277,7 +277,7 @@
               <span class="epa__confirm-text">На Ваш телефон выслан код для подтверждения. Введите его в это поле!</span>
               <label class="epa__label">
                 <span class="epa__label-name">Код:</span>
-                <input type='text' name='confirm-code' value="" class="epa__input" id="conf-phone-inp" maxlength="6">
+                <input type='text' name='confirm-code' value="" class="epa__input" id="conf-phone-inp" maxlength="4">
               </label>
               <div class="epa__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
               <div class="clearfix"></div>
@@ -309,7 +309,7 @@
               <span class="epa__confirm-text">На Вашу почту выслан код для подтверждения. Введите его в это поле!</span>
               <label class="epa__label">
                 <span class="epa__label-name">Код:</span>
-                <input type='text' name='confirm-code' value="" class="epa__input" id="conf-email-inp" maxlength="6">
+                <input type='text' name='confirm-code' value="" class="epa__input" id="conf-email-inp" maxlength="4">
               </label>
               <div class="epa__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
               <div class="clearfix"></div>
