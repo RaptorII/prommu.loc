@@ -41,7 +41,7 @@ $arCities = array_unique($arTemp);
 asort($arCities);
 
 echo"<pre>";
-print_r($arCities);
+print_r($arUserCities);
 echo"</pre>";
 
 /*
