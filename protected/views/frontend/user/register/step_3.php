@@ -23,7 +23,10 @@
       <p class="separator center pad0"><?=$model->data['login']?></p>
     <? else: ?>
       <p class="separator center">
-        Перейдите по ссылке из письма или введите код вручную(если письмо не отображается - проверьте раздел "Спам")
+        Перейдите по ссылке из письма или введите код вручную
+      </p>
+      <p class="separator center pad0 hinfo">
+          (если письмо не отображается - проверьте раздел "Спам")
       </p>
 
       <p class="separator center">
@@ -53,9 +56,9 @@
     </p>
 
     <p class="separator">
-      <a class="back__away back-away" href="javascript:void(0)">
+      <a class="back__away" href="javascript:void(0)">
         Вернуться назад и отредактировать данные
       </a>
     </p>
-  </div>
+  </>
 </div>

@@ -6,7 +6,7 @@
   <h6 class="login__header">Создайте пароль</h6>
 
   <div class="login__container">
-    <p class="separator center">Пароль должен состоять минимум из шести символов(цифр, букв, знаков препинания)</p>
+    <p class="separator center">Пароль должен состоять минимум из шести символов (цифр, букв, знаков препинания)</p>
     <p class="separator center">
       <input type="password" name="password" class="input-password" autocomplete="off" placeholder="Придумайте пароль">
       <?php if (!empty($model->errors['password'])): ?>
@@ -25,7 +25,7 @@
     </p>
 
     <p class="separator">
-      <a class="back__away back-away" href="javascript:void(0)">
+      <a class="back__away" href="javascript:void(0)">
         Вернуться назад и отредактировать данные
       </a>
     </p>

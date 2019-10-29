@@ -85,13 +85,13 @@ h2.login__header {
     padding-top: 40px;
 }
 h6.login__header {
-    font-size: 16px;
+    font-size: 0.9rem;
     font-weight: 400;
     padding: 0 10px 20px 10px;
 }
 
 .login__logo .logo {
-    width: 70%;
+    width: 50%;
     /*height: 40px;*/
     display: block;
     margin: 0 auto 40px auto;
@@ -117,11 +117,11 @@ h6.login__header {
 .login-wrap {
     background: var(--color-l-grn);
     width: 400px;
-    position: relative;
+    position: absolute;
     border: 1px solid var(--color-l-grey);
     border-radius: 4px;
-    /*top: 50%;*/
-    /*transform: translateY(-50%);*/
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .login-wrap:before,
@@ -183,7 +183,7 @@ h6.login__header {
     width: 100%;
     border-width: 1px;
     border-style: solid;
-    padding: 16px;
+    padding: 0.7rem;
     outline: 0;
     font-weight: 600;
     font-family: inherit;
@@ -243,11 +243,11 @@ h6.login__header {
     width: 100%;
     border-width: 1px;
     border-style: solid;
-    padding: 16px;
+    padding: 0.7rem;
     outline: 0;
     font-weight: 600;
     font-family: inherit;
-    font-size: 0.95em;
+    font-size: 0.95rem;
     background: var(--color-grey);
     border-color: transparent;
     color: var(--color-white);
@@ -316,7 +316,7 @@ h6.login__header {
     font-size: 15px;
     position: relative;
     background: #ebebeb;
-    margin: 10px 0 15px 0;
+    margin: 10px 0 0px 0;
     height: 30px;
 }
 
@@ -444,10 +444,17 @@ h6.login__header {
     display: none;
 }
 
+.login__social-container.five .reg-social__link {
+    width: 20%;
+}
+
 .login__txt {
-    /*position: absolute;*/
+    position: absolute;
     width: 400px;
     bottom: 0;
+}
+.login__txt p{
+    padding: 0 1rem;
 }
 .login__txt a,
 .login__txt {
@@ -470,6 +477,10 @@ h6.login__header {
     color: var(--color-grey);
 }
 
+.hinfo{
+    color: var(--color-grey);
+    font-size: 13px;
+}
 /* svg
 */
 .svg-bg {

@@ -46,7 +46,7 @@ $photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->l
         <?php endif; ?>
 
         <p class="separator center">
-          Допустимые форматы фалов <?=implode(', ', $model->profile->arYiiUpload['fileFormat']);?>
+          Допустимые форматы файлов <?=implode(', ', $model->profile->arYiiUpload['fileFormat']);?>
         </p>
         <p class="separator center pad0">
           Размер не более <?=$model->profile->arYiiUpload['maxFileSize']?> Мб.
@@ -58,7 +58,7 @@ $photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->l
         </p>
       </div>
 
-      <div class="login__social-container">
+      <div class="login__social-container five">
         <span class="register__preview" data-txt="или загрузи из социальных сетей:"></span>
         <div class="reg-social__link-block" >
           <a href="/user/login?service=facebook" class="reg-social__link fb js-g-hashint" title="facebook" >
@@ -96,7 +96,7 @@ $photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->l
       </p>
 
       <p class="separator">
-        <a class="back__away back-away" href="javascript:void(0)">
+        <a class="back__away" href="javascript:void(0)">
           Вернуться назад и отредактировать данные
         </a>
       </p>
