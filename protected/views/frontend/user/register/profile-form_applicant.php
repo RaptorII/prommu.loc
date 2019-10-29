@@ -1,8 +1,6 @@
 <?php
 
-//echo"<pre>";
-//print_r($viData);
-//echo"</pre>";
+
 
 $gcs = Yii::app()->getClientScript();
 
@@ -33,36 +31,19 @@ foreach ($arCities as $city)
   $arTemp[$city['id']] = $city['name'];
 }
 
-
-
 /*
  *
  */
 // city
-//if(!sizeof($_GET['city']))
-$arUserCities = $viData['userInfo']['userCities'][0];
 
-$Q1 = Yii::app()->db->createCommand()
-    ->select('t.id_city id, t.name, t.ismetro, t.id_co')
-    ->from('city t')
-    ->limit(10000);
-$arCities = $Q1->queryAll();
-$arTemp = array();
-//$_GET['city'] = urldecode($_GET['city']);
-//$_GET['city'] = urldecode($_GET['city']);
-foreach ($arCities as $city){
-    /*if($_GET['city'] == $city['name']){
-      $arUserCities[$city['id']] = $city;
-      $res = Yii::app()->db->createCommand()
-        ->update('user_city', array('id_city' => $city['id']),
-        'id_user=:id_user', array(':id_user' => Share::$UserProfile->exInfo->id));
-        break;
-    }*/
-    $arTemp[$city['id']] = $city['name'];
-}
 // оптимизируем массив городов для JS
 $arCities = array_unique($arTemp);
 asort($arCities);
+
+echo"<pre>";
+print_r($arCities);
+echo"</pre>";
+
 /*
  *
  */
