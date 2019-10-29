@@ -127,7 +127,7 @@
 .ppp__logo {
   width: 100%;
   max-width: 300px;
-  margin: 0 auto 30px;
+  margin: 0 auto 30px auto;
 }
 
 .ppp__logo-main {

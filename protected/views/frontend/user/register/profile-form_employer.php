@@ -246,7 +246,7 @@ $gcs->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-emp.js', CCli
 
               <div class="center">
                 <button class='epe__btn prmu-btn prmu-btn_normal' type='submit'>
-                  <span>Сохранить изменения</span>
+                  <span>Активировать профиль</span>
                 </button>
               </div>
               <input type="hidden" name="savest" value="1"/>

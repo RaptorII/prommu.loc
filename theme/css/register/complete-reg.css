@@ -10,6 +10,12 @@
     border-radius: 4px;
 }
 
+@media screen and (max-width: 450px){
+    .complete__reg {
+        padding: 5px;
+    }
+}
+
 /*#complete__form {*/
 
 /*}*/

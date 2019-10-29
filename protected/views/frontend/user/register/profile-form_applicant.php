@@ -31,6 +31,41 @@ foreach ($arCities as $city)
 {
   $arTemp[$city['id']] = $city['name'];
 }
+
+
+
+/*
+ *
+ */
+// city
+//if(!sizeof($_GET['city']))
+$arUserCities = $viData['userInfo']['userCities'][0];
+
+$Q1 = Yii::app()->db->createCommand()
+    ->select('t.id_city id, t.name, t.ismetro, t.id_co')
+    ->from('city t')
+    ->limit(10000);
+$arCities = $Q1->queryAll();
+$arTemp = array();
+//$_GET['city'] = urldecode($_GET['city']);
+//$_GET['city'] = urldecode($_GET['city']);
+foreach ($arCities as $city){
+    /*if($_GET['city'] == $city['name']){
+      $arUserCities[$city['id']] = $city;
+      $res = Yii::app()->db->createCommand()
+        ->update('user_city', array('id_city' => $city['id']),
+        'id_user=:id_user', array(':id_user' => Share::$UserProfile->exInfo->id));
+        break;
+    }*/
+    $arTemp[$city['id']] = $city['name'];
+}
+// оптимизируем массив городов для JS
+$arCities = array_unique($arTemp);
+asort($arCities);
+/*
+ *
+ */
+
 // Телефон
 $city = (new Geo())->getUserGeo();
 foreach ($viData['countries'] as $c)
@@ -502,10 +537,13 @@ foreach ($attrAll as $p)
         <div class="clearfix"></div>
       </div>
 
+        <p class="complete__txt center">
+            После активации вам станет доступен каталог со свежими вакансиями всех работодателей
+        </p>
 
       <div class="center">
         <button type="submit" class="epa__save-btn prmu-btn prmu-btn_normal">
-          <span>Активировать</span>
+          <span>Активировать профиль</span>
         </button>
       </div>
 

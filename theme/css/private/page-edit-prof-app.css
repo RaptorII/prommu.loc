@@ -231,6 +231,9 @@
     padding: 0 7px;
   }
 
+  .edit-profile-applicant {
+    padding: 0;
+  }
   /*.epa__label.epa__email .epa__label-name {*/
   /*width: 33%;*/
   /*line-height: 20px;*/
