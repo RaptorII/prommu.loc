@@ -50,7 +50,7 @@
     .complete__reg .country-phone-selected img {
         margin: 10px 1px;
     }
-    .complete__reg #DiContent .edit-profile-applicant .epa__input {
+    #DiContent .edit-profile-applicant .complete__reg .epa__input {
         width: 110px;
     }
 }
