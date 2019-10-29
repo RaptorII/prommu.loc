@@ -992,4 +992,13 @@ class Employer extends ARModel
 
     return ($result ? Yii::app()->db->getLastInsertID() : $result);
   }
+  /*
+   * @param $id_user - integer
+   * @return bool
+   */
+  public function deleteRegisterUser($id_user)
+  {
+    return Yii::app()->db->createCommand()
+      ->delete(self::tableName(),'id_user=:id_user',[':id_user'=>$id_user]);
+  }
 }

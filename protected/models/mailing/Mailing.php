@@ -154,6 +154,12 @@ class Mailing extends CActiveRecord
                 'value' => Subdomain::site() . MainConfig::$PAGE_VACANCY . '#ID_VACANCY#' . DS . MainConfig::$VACANCY_REFUSED,
                 'breplace' => true,
                 'description' => "Информационная страница вакансии 'Отклоненные'"
+              ),
+              17 => array(
+                'name' => "#PAGE_USER_PROFILE#",
+                'pattern' => "/#PAGE_USER_PROFILE#/",
+                'value' => Subdomain::site() . MainConfig::$PAGE_PROFILE,
+                'description' => "Страница личного профиля"
               )
 				);
 	}

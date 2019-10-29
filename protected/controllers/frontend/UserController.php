@@ -544,7 +544,10 @@ class UserController extends AppController
       !Share::isGuest() && $this->redirect(MainConfig::$PAGE_PROFILE);
 
       $model = new UserRegister();
-      $model->checkEmailLink(); // проверка на подтверждающаю ссылку из email
+      if($model->checkEmailLink()) // проверка на подтверждающаю ссылку из email
+      {
+        $this->redirect(MainConfig::$PAGE_REGISTER);
+      }
       $rq = Yii::app()->getRequest();
       //$model->setStep(1);
 

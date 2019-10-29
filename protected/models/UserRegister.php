@@ -306,10 +306,16 @@ class UserRegister
             if($this->data['login']!=$value)
             {
               $arData['code'] = rand(1111, 9999);
-              $this->data['code'] = $arData['code'];
+              $this->data['code'] = '';
               $arData['time_code'] = time();
-              $this->data['time_code'] = $arData['time_code'];
               $this->data['time_to_repeat'] = $this->isTimeToRepeat($arData['time_code']);
+              $arData['is_confirm'] = 0;
+              $arData['is_confirm_time'] = false;
+              if($this->data['id_user'])
+              {
+                $arData['id_user'] = false;
+                $this->deleteNewUser();
+              }
             }
           }
         }
@@ -333,12 +339,17 @@ class UserRegister
           if($this->data['login']!=$value)
           {
             $arData['code'] = rand(1111, 9999);
-            $this->data['code'] = $arData['code'];
+            $this->data['code'] = '';
             $arData['time_code'] = time();
-            $this->data['time_code'] = $arData['time_code'];
             $this->data['time_to_repeat'] = $this->isTimeToRepeat($arData['time_code']);
             $arData['token'] = md5($arData['code'] . $arData['time_code'] . $this->user);
-            $this->data['token'] = $arData['token'];
+            $arData['is_confirm'] = 0;
+            $arData['is_confirm_time'] = false;
+            if($this->data['id_user'])
+            {
+              $arData['id_user'] = false;
+              $this->deleteNewUser();
+            }
           }
         }
         $this->data['login'] = $value;
@@ -373,7 +384,7 @@ class UserRegister
       {
         $this->errors['password'] = 'Пароль должен состоять минимум из шести символов';
       }
-      else
+      elseif(!$this->data['id_user'])
       {
         $this->saveNewUser($value1);
       }
@@ -547,6 +558,7 @@ class UserRegister
     {
       $this->setData(['is_confirm'=>1, 'is_confirm_time'=>time()]);
     }
+    return true;
   }
   /**
    * @param $password
@@ -556,6 +568,9 @@ class UserRegister
   {
     $arUser = $this->getData();
     $date = date('Y-m-d H:i:s');
+    $name = (Share::isApplicant($arUser['type'])
+      ? $arUser['name'] . ' ' . $arUser['surname']
+      : $arUser['name']);
     // user
     $model = new User();
     $id_user = $model->registerUser([
@@ -577,9 +592,7 @@ class UserRegister
     $model = new Analytic();
     $model->registerUser([
       'id_us' => $id_user,
-      'name' => (Share::isApplicant($arUser['type'])
-        ? $arUser['name'] . ' ' . $arUser['surname']
-        : $arUser['name']),
+      'name' => $name,
       'date' =>  date('Y-m-d H:i:s', $arUser['date']),
       'type' => $arUser['type'],
       'referer' => $arUser['referer'],
@@ -621,6 +634,61 @@ class UserRegister
     }
     //
     $this->setProfile($id_user);
+    // письмо админу
+    Mailing::set(29,[
+      'id_user' => $id_user,
+      'email_user' => $arUser['login_type']==self::$LOGIN_TYPE_EMAIL
+        ? $arUser['login'] : 'нет',
+      'phone_user' => $arUser['login_type']==self::$LOGIN_TYPE_PHONE
+        ? $arUser['login'] : 'нет',
+      'type_user' => Share::isApplicant($arUser['type'])
+        ? 'Соискатель' : 'Работодатель',
+      'name_user' => $name,
+      'referer_seo' => $arUser['referer'],
+      'transition_seo' => $arUser['transition'],
+      'canal_seo' => $arUser['canal'],
+      'campaign_seo' => $arUser['campaign'],
+      'content_seo' => $arUser['content'],
+      'keywords_seo' => $arUser['keywords'],
+      'point_seo' => $arUser['point'],
+      'l_referer_seo' => $arUser['last_referer'],
+      'ip_seo' => $arUser['ip'],
+      'ga_seo' => $arUser['client'],
+      'pm_source_seo' => $arUser['pm_source'],
+      'subdomain_seo' => Subdomain::getSiteName(),
+    ],$arUser['type']);
+    // письмо юзеру
+    if($arUser['login_type']==self::$LOGIN_TYPE_EMAIL)
+    {
+      Mailing::set(
+        Share::isApplicant($arUser['type']) ? 30 : 31,
+        ['email_user' => $arUser['login']]
+      );
+    }
+  }
+  /**
+   * удаление из старой системы всвязи со сменой логина
+   */
+  private function deleteNewUser()
+  {
+    // user
+    $model = new User();
+    $model->deleteRegisterUser($this->data['id_user']);
+    // analytic
+    $model = new Analytic();
+    $model->deleteRegisterUser($this->data['id_user']);
+    // resume
+    if(Share::isApplicant($this->data['type']))
+    {
+      $model = new Promo();
+      $model->deleteRegisterUser($this->data['id_user']);
+    }
+    // employer
+    if(Share::isEmployer($this->data['type']))
+    {
+      $model = new Employer();
+      $model->deleteRegisterUser($this->data['id_user']);
+    }
   }
   //
   //
