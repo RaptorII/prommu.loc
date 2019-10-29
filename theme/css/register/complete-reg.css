@@ -10,11 +10,6 @@
     border-radius: 4px;
 }
 
-@media screen and (max-width: 450px){
-    .complete__reg {
-        padding: 5px;
-    }
-}
 
 /*#complete__form {*/
 
@@ -44,6 +39,22 @@
     display: block;
     /*margin-top: 20px;*/
 }
+
+
+
+
+@media screen and (max-width: 450px){
+    .complete__reg {
+        padding: 5px;
+    }
+    .complete__reg .country-phone-selected img {
+        margin: 10px 1px;
+    }
+    .complete__reg #DiContent .edit-profile-applicant .epa__input {
+        width: 110px;
+    }
+}
+
 
 
 
