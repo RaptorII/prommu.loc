@@ -15,94 +15,16 @@ $gcs->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-emp.js', CCli
  * photoblock
  */
 ?>
-
 <div class='col-xs-12 col-sm-4 col-lg-3 no-md-relat ppe__logo'>
     <div class="upp__img-block">
         <div class="upp__img-block-main">
-            <?
-            $cookieView = Yii::app()->request->cookies['popup_photo']->value;
-            $bigSrc = Share::getPhoto($id, 3, $viData['userInfo']['logo'], 'big');
-            $src = Share::getPhoto($id, 3, $viData['userInfo']['logo'], 'small');
-            ?>
-            <? if($viData['userInfo']['logo'] && $bigSrc): ?>
-                <a
-                        href="<?=$bigSrc?>"
-                        class="js-g-hashint upp__img-block-main-link profile__logo-full"
-                        title="<?=$viData['userInfo']['name']?>">
-                    <img src="<?=$src?>" alt="Работодатель <?=$viData['userInfo']['name']?> prommu.com">
-                </a>
-            <? else: ?>
-                <img src="<?=$src?>" alt="Работодатель <?=$viData['userInfo']['name']?> prommu.com">
-                <?
-                if($flagOwnProfile && !$cookieView) // предупреждение, что нет фоток
-                {
-                    Yii::app()->request->cookies['popup_photo'] = new CHttpCookie('popup_photo', 1);
-                    $message = '<p>У вас не загружено еще ни одной фотографии.<br>Добавляйте пожалуйста логотип своей компании или личные фото. В случае несоответствия фотографий Вы не сможете пройти модерацию! Спасибо за понимание!</p>';
-                    Yii::app()->user->setFlash('prommu_flash', $message);
-                }
-                ?>
-            <? endif; ?>
-            <?if( $flagOwnProfile ):?>
-                <a href="/user/editprofile?ep=1" class="upp__change-logo">Изменить аватар</a>
-            <?php elseif($viData['userInfo']['is_online']): ?>
-            <span class="upp-logo__item-onl"><span>В сети</span>
-    <?php endif; ?>
+          <img src="<?=Share::getPhoto(
+            $viData['userInfo']['id_user'],
+            UserProfile::$EMPLOYER,
+            $viData['userInfo']['logo'],
+            'medium'
+          );?>" alt="Работодатель <?=$viData['userInfo']['name']?> prommu.com">
         </div>
-    </div>
-    <div class="upp__logo-more">
-        <? $i=0; ?>
-        <? foreach ($viData['userPhotos'] as $key => $val): ?>
-            <?
-            $bigSrc = Share::getPhoto($id, 3, $val['photo'], 'big');
-            $src = Share::getPhoto($id, 3, $val['photo'], 'small');
-            if(!$val['photo'] || !$bigSrc)
-                continue;
-            ?>
-            <div class="upp__img-block-more <?=($i>2?'off':'')?>">
-                <a href="<?=$bigSrc?>" class="profile__logo-full">
-                    <img
-                            src="<?=$src?>"
-                            alt="Соискатель <?=$viData['userInfo']['name']?> prommu.com">
-                </a>
-            </div>
-            <? if($i==3): ?>
-                <span class="upp-logo-more__link">Смотреть еще</span>
-            <? endif; ?>
-            <? $i++; ?>
-        <? endforeach; ?>
-        <div class="clearfix"></div>
-    </div>
-    <? if(!$flagOwnProfile): ?>
-        <div class="upp-logo-main__active">
-            <span class="disable"><b>На сайте:</b> <?=$viData['userInfo']['time_on_site']?></span>
-        </div>
-        <div class="upp-logo-main__active">
-            <?if(!$viData['userInfo']['is_online']):?>
-                <span class="disable">Был(а) на сервисе: <?=date_format(date_create($viData['userInfo']['mdate']), 'd.m.Y');?></span>
-            <?endif;?>
-        </div>
-    <? endif; ?>
-    <div class='center-box'>
-        <?php if(!$flagOwnProfile && ($viData['userAllInfo']['emplInfo']['confirmEmail'] || $viData['userAllInfo']['emplInfo']['confirmPhone'])): ?>
-            <div class="confirmed-user js-g-hashint" title="Личность работодателя является подлинной">ПРОВЕРЕН</div>
-        <?php endif; ?>
-        <?php if( $flagOwnProfile ): ?>
-            <a class='ppe__logo-btn prmu-btn' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>'><span>Редактировать профиль</span></a>
-            <a class='ppe__logo-btn prmu-btn' href='<?= MainConfig::$PAGE_SETTINGS ?>'><span>Настройки профиля</span></a>
-            <a class='ppe__logo-btn prmu-btn' href='<?= MainConfig::$PAGE_CHATS_LIST ?>'><span>Мои сообщения</span></a>
-        <? endif; ?>
-        <? if(Share::isApplicant()): ?>
-            <? if(Share::$UserProfile->hasAccessToChat($id)): ?>
-                <div class="center">
-                    <h3 class='unpubl'>Есть доступные чаты с этим работодателем</h3>
-                    <a href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES?>" class="prmu-btn prmu-btn_normal">
-                        <span>Перейти в чаты</span>
-                    </a>
-                </div>
-            <? else: ?>
-                <h3 class='unpubl'>Сообщения можно писать только, при одобрении работодателем на опубликованной им вакансии</h3>
-            <? endif; ?>
-        <? endif; ?>
     </div>
 </div>
 
