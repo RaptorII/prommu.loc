@@ -16,7 +16,9 @@ $gcs->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-app-reg.js', 
 
 //
 $attr = array_values($viData['userInfo']['userAttribs'])[0];
-
+$idPromo = $attr['id'];
+$info = $viData['userInfo'];
+$h1title = $attr['firstname'] . ' ' . $attr['lastname'];
 // city
 $arUserCities = $viData['userInfo']['userCities'][0];
 
@@ -63,158 +65,33 @@ foreach ($attrAll as $p)
   if (strpos($p['name'], 'admob') !== false && !empty($p['val']))
     $arAdPhones[] = $p;
 ?>
-<?
-/**
- *
- */
-?>
-
-<div class="private-profile-page <?=(!$flagOwnProfile?'for-guest':'')?>">
-    <?php if( $viData['error'] ): ?>
-        <div class="comm-mess-box"><?= $viData['message'] ?></div>
-    <?php else: ?>
-    <div class="ppp__logo">
-        <div class="ppp__logo-main">
-            <?
-            $cookieView = Yii::app()->request->cookies['popup_photo']->value;
-            $bigSrc = Share::getPhoto($attr['id_user'], 2, $attr['photo'], 'big', $attr['isman']);
-            $src = Share::getPhoto($attr['id_user'], 2, $attr['photo'], 'medium', $attr['isman']);
-            ?>
-            <? if($attr['photo'] && $bigSrc): ?>
-                <a href="<?=$bigSrc?>" class="js-g-hashint ppp-logo-main__link ppp__logo-full" title="<?=$h1title?>">
-                    <img
-                            src="<?=$src?>"
-                            alt='Соискатель <?=$attr['lastname']?> prommu.com'
-                            class="ppp-logo-main__img">
-                </a>
-            <? else: ?>
-                <img
-                        src="<?=$src?>"
-                        alt='Соискатель <?=$attr['lastname']?> prommu.com'
-                        class="ppp-logo-main__img">
-                <?
-                if($flagOwnProfile && !$cookieView) // предупреждение, что нет фоток
-                {
-                    Yii::app()->request->cookies['popup_photo'] = new CHttpCookie('popup_photo', 1);
-                    $message = '<p>У вас не загружено еще ни одной фотографии.<br>Добавляйте пожалуйста логотип своей компании или личные фото. В случае несоответствия фотографий Вы не сможете пройти модерацию! Спасибо за понимание!</p>';
-                    Yii::app()->user->setFlash('prommu_flash', $message);
-                }
-                ?>
-            <? endif; ?>
-
-            <?php if(!$flagOwnProfile && $attr['is_online']): ?>
-            <span class="ppp-logo__item-onl"><span>В сети</span>
-      <?php endif; ?>
-                <?if($flagOwnProfile):?>
-                    <a href="<?=MainConfig::$PAGE_EDIT_PROFILE . '?ep=1'?>" class="ppp-logo-main__change">Изменить аватар</a>
-                <?endif;?>
-        </div>
-        <? if(!$flagOwnProfile): ?>
-            <div class="ppp-logo-main__active">
-                <span class="disable"><b>На сайте:</b> <?=$info['time_on_site']?></span>
-            </div>
-            <div class="ppp-logo-main__active">
-                <?if(!$attr['is_online']):?>
-                    <span class="disable">Был<?=$attr['isman']?'':'а'?> на сервисе: <?=date_format(date_create($attr['mdate']), 'd.m.Y');?></span>
-                <?endif;?>
-            </div>
-            <div class="ppp__logo-rating">
-                <ul class="ppp__star-block"><li class="full"></li></ul>
-                <span class="ppp__subtitle"><?=Share::getRating($attr['rate'],$attr['rate_neg'])?></span>
-            </div>
-            <?php if($attr['confirmPhone'] || $attr['confirmEmail']): ?>
-                <div class="confirmed-user js-g-hashint" title="Личность соискателя является подлинной">ПРОВЕРЕН</div>
-            <?php endif; ?>
-            <? if(!empty($info['self_employed'])): ?>
-                <div class="self_employed-user js-g-hashint" title="Налоговый статус соискателя">САМОЗАНЯТЫЙ</div>
-            <? endif; ?>
-            <?php if($cntComments): ?>
-                <div class="ppp__logo-comm">
-                    <span class="ppp__subtitle">Отзывы:</span>
-                    <span class="upp__review upp__review-red js-g-hashint" title="Отрицательные отзывы">
-            <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>" class="upp__link"><?=$viData['lastComments']['count'][1]?></a>
-          </span>
-                    <span class="upp__review upp__review-green js-g-hashint" title="Положительные отзывы">
-            <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>" class="upp__link"><?=$viData['lastComments']['count'][0]?></a>
-          </span>
-                    <span class="ppp__logo-allrev">Всего:</span>
-                    <a href="<?=DS.MainConfig::$PAGE_COMMENTS.DS.$idus?>"><?=$cntComments?></a>
-                </div>
-            <?php endif; ?>
-        <?endif;?>
-        <div class="ppp__logo-more">
-            <? $i=0; ?>
-            <? foreach($info['userPhotos'] as $v): ?>
-                <?
-                $bigSrc = Share::getPhoto($attr['id_user'], 2, $v['photo'], 'big', $attr['isman']);
-                $src = Share::getPhoto($attr['id_user'], 2, $v['photo'], 'small', $attr['isman']);
-                if(!$v['photo'] || !$bigSrc || $v['ismain']) // если фото нет или фото главное
-                    continue;
-                ?>
-                <div class="ppp-logo__item">
-                    <a href="<?=$bigSrc?>" class="ppp-logo-item__link ppp__logo-full">
-                        <img
-                                src="<?=$src?>"
-                                alt="Соискатель <?=$attr['lastname']?> prommu.com"
-                                class="ppp-logo-item__img">
-                    </a>
-                </div>
-                <?
-                $i++;
-                if($i==6) break;
-                if($i==3) echo '<div class="clearfix"></div>';
-                ?>
-            <? endforeach; ?>
-            <div class="clearfix"></div>
-        </div>
-        <div class='center-box'>
-            <?php if( $flagOwnProfile ): ?>
-                <a class='ppp__btn btn__orange' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>' style="margin-bottom: 10px">Редактировать профиль</a>
-                <a class='ppp__btn btn__orange' href='<?= MainConfig::$PAGE_SETTINGS ?>' style="margin-bottom: 10px">Настройки профиля</a>
-                <a class='ppp__btn btn__orange' href='<?= MainConfig::$PAGE_CHATS_LIST ?>'>Мои сообщения</a>
-            <?php elseif( Share::$UserProfile->type == 3 && $ismoder): ?>
-                <div class='js-btn-invite btn-white-green-wr'>
-                    <a href='#'>Пригласить на вакансию</a>
-                </div>
-            <?php endif; ?>
-            <?php  if(Share::$UserProfile->type == 3 && !$ismoder):?>
-                <div class='btn-update btn-orange-sm-wr'>
-                    <a class='hvr-sweep-to-right btn__orange' href='#'>Невозможно отправить сообщение</a>
-                    <h3 class='unpubl'>Отправлять сообщения и приглашения на вакансию можно только при успешном прохождении модерации</h3>
-                </div>
-
-            <?php endif; ?>
-
-
-            <?php if( $flagOwnProfile ): ?>
-                <div class='affective-block'>
-                    <div class='affective-perc'>
-                        <div class='progr' style="width: <?= $viData['profileEffect'] ?>%">
-                            <div class='text'><?= $viData['profileEffect'] ?>%</div>
-                        </div>
-                    </div>
-                    <div class='affective'>Эффективность<br/>размещения</div>
-                </div>
-            <?php endif; ?>
-            <div class="clearfix"></div>
-        </div>
-    </div>
-
-
-<?
-/**
- * end
- */
-?>
-
-
-
-
 <script type="text/javascript">
   let arCities = <?=json_encode($arCities)?>;
 </script>
 
-
+<div class="private-profile-page">
+    <?php if( $viData['error'] ): ?>
+        <div class="comm-mess-box"><?= $viData['message'] ?></div>
+    <?php else: ?>
+    <?
+    /**
+     * блок с аватаром
+     */
+    ?>
+    <div class="ppp__logo">
+      <div class="ppp__logo-main">
+        <img
+          src="<?=Share::getPhoto(
+            $attr['id_user'],
+            UserProfileEmpl::$APPLICANT,
+            $attr['photo'],
+            'medium',
+            $attr['isman']
+          );?>"
+          alt='Соискатель <?=$h1title?> prommu.com'
+          class="ppp-logo-main__img">
+      </div>
+    </div>
 <?php
 /**
  * form
