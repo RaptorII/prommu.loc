@@ -40,9 +40,9 @@ foreach ($arCities as $city)
 $arCities = array_unique($arTemp);
 asort($arCities);
 
-echo"<pre>";
-print_r($arUserCities);
-echo"</pre>";
+//echo"<pre>";
+//print_r($arUserCities);
+//echo"</pre>";
 
 /*
  *
@@ -488,7 +488,7 @@ foreach ($attrAll as $p)
       </div>
 
 
-      <div class="epa__content-title"><h2>Удобное место работы</h2></div>
+      <div class="epa__content-title"><h2>Место работы</h2></div>
       <div class="epa__content-module" id="city-module">
         <div class="epa__cities-list">
           <div>
@@ -498,7 +498,7 @@ foreach ($attrAll as $p)
           </div>
         </div>
         <div class="epa__cities-block-list">
-          <?php foreach ($arUserCities as $city): ?>
+          <?php //foreach ($arUserCities as $city): ?>
             <div class="epa__city-item" data-idcity="<?= $city['id'] ?>">
               <div class="epa__city-title">
                 <b>ГОРОД </b>
@@ -514,7 +514,7 @@ foreach ($attrAll as $p)
 
               <div class="clearfix"></div>
             </div>
-          <?php endforeach; ?>
+          <?php //endforeach; ?>
         </div>
         <div class="clearfix"></div>
       </div>

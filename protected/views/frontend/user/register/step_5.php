@@ -96,7 +96,7 @@ $photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->l
       </p>
 
       <p class="separator">
-        <a class="back__away" href="javascript:void(0)">
+        <a class="back__away back__away" href="javascript:void(0)">
           Вернуться назад и отредактировать данные
         </a>
       </p>
