@@ -19,6 +19,10 @@
   $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'snap/snap.svg-min.js', CClientScript::POS_END);
   $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/cropper.min.js', CClientScript::POS_END);
   $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'register/script.js', CClientScript::POS_END);
+
+  // FANCYBOX
+  $gcs->registerScriptFile(MainConfig::$JS . 'dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
+  $gcs->registerCssFile(MainConfig::$JS . 'dist/fancybox/jquery.fancybox.css');
   ?>
 </head>
 <body>
@@ -78,10 +82,36 @@
     <form id="register_form"><?php echo $content; ?></form>
     <div class="login__txt">
         <p>
-            <a href="">“Пользовательское соглашение“</a>,
+            <span id="my_fancybox" >“ПРАВИЛА ИСПОЛЬЗОВАНИЯ САЙТА“</span>
         </p>
     </div>
 </div>
+
+
+<script type="text/javascript">
+
+    jQuery(function($) {
+
+        $('#my_fancybox').on('click', function() {
+            $.fancybox.open( $('#popup'), {
+                touch: false,
+                toolbar: false,
+                hash: false,
+                clickSlide: false,
+                lang: "ru",
+                i18n: {
+                    ru: {
+                        CLOSE: "Закрыть",
+                        NEXT: "Следующий",
+                        PREV: "Предыдущий",
+                        ERROR: "Ошибка"
+                    }
+                }
+            });
+        });
+    });
+
+</script>
 
 </body>
 </html>

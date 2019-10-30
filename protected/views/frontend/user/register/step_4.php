@@ -32,3 +32,10 @@
 
   </div>
 </div>
+
+
+<div class="popup" id="popup" style="display: none;">
+    <div class="popuptext" id="popup__reg">
+        <?php echo $model->data['condition']['html']; ?>
+    </div>
+</div>

@@ -106,4 +106,12 @@ $photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->l
 
   </div>
   <input type="hidden" name="href" value="<?=MainConfig::$PAGE_PROFILE?>">
+
+
+    <div class="popup" id="popup" style="display: none;">
+        <div class="popuptext" id="popup__reg">
+            <?php echo $model->data['condition']['html']; ?>
+        </div>
+    </div>
+
 </form>

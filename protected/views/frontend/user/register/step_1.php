@@ -37,3 +37,10 @@
 <input type="hidden" name="ip" value="<?=$_SERVER['HTTP_X_FORWARDED_FOR']?>">
 <input type="hidden" name="pm_source" value="<?=Yii::app()->request->cookies['pm_source']?>">
 <input type="hidden" name="client" value="<?=Yii::app()->request->cookies['_ga']?>">
+
+
+<div class="popup" id="popup" style="display: none;">
+    <div class="popuptext" id="popup__reg">
+        <?php echo $model->data['condition']['html']; ?>
+    </div>
+</div>
