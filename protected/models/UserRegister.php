@@ -875,7 +875,7 @@ class UserRegister
 		if(!$result)
     {
       $arRes['error'][] = 'Ошибка сохранения, обратитесь к администратору';
-      return $arRes['error'];
+      return $arRes;
     }
 
 		$mSize = $this->profile->arYiiUpload['maxFileSize'] * 1024 * 1024; // переводим в байты
