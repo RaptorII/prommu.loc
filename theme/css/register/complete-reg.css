@@ -401,3 +401,12 @@
     /*}*/
 /*}*/
 
+
+
+
+/*  */
+#DiContent .edit-profile-applicant .epa__confirm-block .epa__input{
+    padding-left: inherit;
+    line-height: 33px;
+    height: 33px;
+}
