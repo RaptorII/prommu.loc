@@ -40,8 +40,21 @@
     /*margin-top: 20px;*/
 }
 
+#DiContent .epa__save-btn {
+    max-width: 250px;
+    margin-bottom: 30px;
+}
 
+.epe__select-list,
+.epa__select-list {
+    background-color: rgba(52, 52, 52, 1);
+    top: 33px;
+}
 
+.epa__city-title b:after {
+    counter-increment: none;
+    content: none;
+}
 
 @media screen and (max-width: 450px){
     .complete__reg {
@@ -50,12 +63,90 @@
     .complete__reg .country-phone-selected img {
         margin: 10px 1px;
     }
-    #DiContent .edit-profile-applicant .complete__reg .epa__input {
+    #DiContent .edit-profile-applicant .complete__reg .epa__phone {
         width: 110px;
+    }
+    .edit-profile-applicant {
+        max-width: 270px;
+        margin: 0 auto;
+    }
+    #F1compprof.edit-profile-employer .epe__input-contact {
+        padding-left: 115px;
+    }
+    #F1compprof.edit-profile-employer .epe__input-mail {
+        padding-left: 70px;
+    }
+    #F1compprof.edit-profile-employer .epe__label {
+        padding: 0;
+    }
+    #F1compprof.edit-profile-employer .epe__label.epe__select {
+        height: 70px;
+    }
+    #F1compprof.edit-profile-employer .epe__input-type {
+        padding-left: 100px;
     }
 }
 
+@media (min-width: 450px) {
+    .epa__post-block {
+        width: 100%;
+        flex: 0 1 100%;
+    }
+    .epa__attr-block1 {
+        width: 35%;
+    }
+}
 
+@media (min-width: 768px) {
+    .epa__post-block {
+        width: 50%;
+        flex: 0 1 50%;
+    }
+
+    /*#contacts-module,*/
+    #main-module {
+        max-width: none;
+        padding-right: 0;
+    }
+
+    #DiContent .edit-profile-applicant .epa__label.epa__select {
+        padding: 0 10px 0 10px;
+    }
+    #DiContent .epa__date .epa__input {
+        padding: 0 0 0 10px ;
+        width: 85px;
+    }
+
+    /*.edit-profile-applicant #contacts-module .epa__label,*/
+    .edit-profile-applicant #main-module .epa__label {
+        width: 49%;
+        display: inline-block;
+    }
+
+    .epa__attr-block {
+        margin: 0;
+        width: 49%;
+        display: inline-block;
+    }
+    .epa__attr-block2,
+    .epa__attr-block1 {
+        width: 50%;
+    }
+    #DiContent #main-module .epa__attr-block2 label,
+    #DiContent #main-module .epa__attr-block1 label{
+        margin: 0;
+        line-height: 14px;
+    }
+
+
+}
+
+@media (min-width: 990px) {
+    #DiContent .epa__date .epa__input {
+        padding: 0 10px;
+        width: 120px;
+    }
+}
 
 
 /*.complete__prof-list li{*/

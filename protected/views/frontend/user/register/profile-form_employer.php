@@ -3,8 +3,8 @@ $gcs = Yii::app()->getClientScript();
 
 $gcs->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css');
 Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-prof-emp.css');
-$gcs->registerCssFile(MainConfig::$CSS .'register/complete-reg.css');
 $gcs->registerCssFile(MainConfig::$CSS . 'private/page-edit-prof-emp.css');
+$gcs->registerCssFile(MainConfig::$CSS .'register/complete-reg.css');
 
 $gcs->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
 $gcs->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-emp.js', CClientScript::POS_END);
@@ -118,7 +118,7 @@ $gcs->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-emp.js', CCli
  *
  */
 ?>
-<div class="col-xs-12 col-sm-6 col-lg-9">
+<div class="col-xs-12 col-sm-7 col-lg-9">
     <div class="complete__reg">
       <form action='/user/editprofile' id='F1compprof' method='post' class="edit-profile-employer">
 
