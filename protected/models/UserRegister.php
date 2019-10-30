@@ -95,12 +95,23 @@ class UserRegister
     Yii::app()->request->cookies['urs'] = new CHttpCookie('urs', md5($value . self::$SALT));
   }
   /**
+   * @param $step - int
    * @return int
    */
-  public static function getStep()
+  public static function getStep($step = false)
   {
     $result = 1;
-    if(isset(Yii::app()->request->cookies['urs']))
+    if($step)
+    {
+      for ($i=1000; $i<=6000; $i+=1000)
+      {
+        if(md5($i . self::$SALT)==$step)
+        {
+          $result = intval($i/1000);
+        }
+      }
+    }
+    elseif(isset(Yii::app()->request->cookies['urs']))
     {
       $cookie = Yii::app()->request->cookies['urs']->value;
       for ($i=1000; $i<=6000; $i+=1000)
@@ -478,26 +489,10 @@ class UserRegister
     // email
     if($arData['login_type']==self::$LOGIN_TYPE_EMAIL)
     {
-      $arGet = [
-        'type' => $arData['type'],
-        't' => $arData['token'],
-        'referer' => $arData['referer'],
-        'transition' => $arData['transition'],
-        'canal' => $arData['canal'],
-        'campaign' => $arData['campaign'],
-        'content' => $arData['content'],
-        'keywords' => $arData['keywords'],
-        'point' => $arData['point'],
-        'last_referer' => $arData['last_referer'],
-        'ip' => $arData['ip'],
-        'client' => $arData['client'],
-        'pm' => $arData['pm_source'],
-      ];
-
       Mailing::set((Share::isApplicant($arData['type']) ? 27 : 28), [
         'email_user' => $arData['login'],
         'code_user' => $arData['code'],
-        'link_user' => Subdomain::site() . MainConfig::$PAGE_REGISTER . '?' . http_build_query($arGet),
+        'link_user' => self::getEmailLink($arData),
         'posts_list' => '<li>' . implode('</li><li>', Vacancy::getPostsList()) . '</li>'
       ]);
     }
@@ -507,6 +502,43 @@ class UserRegister
       $arGet = ['phone' => $arData['login'], 'code' => $arData['code']];
       file_get_contents(Subdomain::site() . MainConfig::$PAGE_SEND_SMS_CODE . '?' . http_build_query($arGet));
     }
+  }
+  /**
+   * @param $data - array (user_register row)
+   */
+  private static function getEmailLink($data)
+  {
+    $arGet = [
+      'type' => $data['type'],
+      't' => $data['token'],
+      'referer' => $data['referer'],
+      'transition' => $data['transition'],
+      'canal' => $data['canal'],
+      'campaign' => $data['campaign'],
+      'content' => $data['content'],
+      'keywords' => $data['keywords'],
+      'point' => $data['point'],
+      'last_referer' => $data['last_referer'],
+      'ip' => $data['ip'],
+      'client' => $data['client'],
+      'pm' => $data['pm_source'],
+    ];
+    return Subdomain::site() . MainConfig::$PAGE_REGISTER
+      . '?' . http_build_query($arGet);
+  }
+  /**
+   * @param $token - string
+   * @param $step - int | string
+   * @return string
+   */
+  private static function getEmailNotificationLink($token, $step)
+  {
+    $arGet = [
+      't' => $token,
+      's' => md5($step . self::$SALT)
+    ];
+    return Subdomain::site() . MainConfig::$PAGE_REGISTER
+      . '?' . http_build_query($arGet);
   }
   /**
    * @param $time - unix
@@ -539,6 +571,7 @@ class UserRegister
   public function checkEmailLink()
   {
     $token = Yii::app()->getRequest()->getParam('t');
+    $step = Yii::app()->getRequest()->getParam('s');
     if(empty($token))
       return false;
 
@@ -551,14 +584,37 @@ class UserRegister
     if(!isset($query['id']))
       return false;
 
-    $this->user = $query['user'];
-    Yii::app()->request->cookies['urh'] = new CHttpCookie('urh', $this->user);
-    $this->setStep(!empty($query['id_user']) ? self::$STEP_AVATAR : self::$STEP_PASSWORD);
-    if( !$query['is_confirm'] )
+    if(!empty($step))
     {
-      $this->setData(['is_confirm'=>1, 'is_confirm_time'=>time()]);
+      if($step==md5(self::$STEP_AVATAR . self::$SALT))
+      {
+        $this->user = $query['user'];
+        Yii::app()->request->cookies['urh'] = new CHttpCookie('urh', $this->user);
+        $this->setStep(self::$STEP_AVATAR);
+        return MainConfig::$PAGE_REGISTER;
+      }
+      elseif ($step==md5('profile' . self::$SALT))
+      {
+        $model = new Auth();
+        $model->Authorize(['id'=>$query['id_user']]);
+        return MainConfig::$PAGE_PROFILE;
+      }
+      else
+      {
+        return false;
+      }
     }
-    return true;
+    else
+    {
+      $this->user = $query['user'];
+      Yii::app()->request->cookies['urh'] = new CHttpCookie('urh', $this->user);
+      $this->setStep(!empty($query['id_user']) ? self::$STEP_AVATAR : self::$STEP_PASSWORD);
+      if( !$query['is_confirm'] )
+      {
+        $this->setData(['is_confirm'=>1, 'is_confirm_time'=>time()]);
+      }
+      return MainConfig::$PAGE_REGISTER;
+    }
   }
   /**
    * @param $password
@@ -688,6 +744,131 @@ class UserRegister
     {
       $model = new Employer();
       $model->deleteRegisterUser($this->data['id_user']);
+    }
+  }
+  /**
+   * Метод для крона, для отправки писем юзерам с незавершенной регистрацией
+   */
+  public static function setRegisterNotificetions()
+  {
+    $d1 = strtotime('-2 days');
+    $d2 = strtotime('-1 days');
+    $query = Yii::app()->db->createCommand()
+      ->select('*')
+      ->from('user_register')
+      ->where(
+        'date BETWEEN :date1 AND :date2',
+        [':date1'=>$d1, ':date2'=>$d2]
+        )
+      ->queryAll();
+
+    if(!count($query))
+      return false;
+
+    $arIdUser = $arData = [];
+    foreach ($query as $user)
+    {
+      // неподтвержденные email-ы
+      if(!$user['is_confirm'] && $user['login_type']==self::$LOGIN_TYPE_EMAIL)
+      {
+        $event = Share::isApplicant($user['type']) ? 32 : 33;
+        Mailing::set($event,[
+          'email_user' => $user['login'],
+          'code_user' => $user['code'],
+          'link_user' => self::getEmailLink($user)
+        ]);
+      }
+      // собираем юзеров с id_user
+      if(!empty($user['id_user']))
+      {
+        $arIdUser[] = $user['id_user'];
+        $arData[$user['id_user']] = $user;
+      }
+    }
+
+    if(!count($arIdUser))
+      return false;
+
+    $arIdUser = [21926];
+    $arData = [];
+    $arData[21926] = [
+      'login_type' => self::$LOGIN_TYPE_EMAIL,
+      'login' => 'deedddde16@gmail.com',
+      'type' => 2,
+      'token' => 'd09e4b34974b65ae1be0f619c37063c1'
+    ];
+
+
+    // проверка наличия фото у неполностью активных юзеров
+    $query = Yii::app()->db->createCommand()
+      ->select('up.id_user')
+      ->from('user_photos up')
+      ->join('user u','u.id_user=up.id_user')
+      ->where([
+        'and',
+        [
+          'u.isblocked=:isblocked',
+          [':isblocked'=>User::$ISBLOCKED_NOT_FULL_ACTIVE]
+        ],
+        ['in','up.id_user',$arIdUser]
+      ])
+      ->group('id_user')
+      ->queryColumn();
+
+    $arPhoto = [];
+    foreach ($arIdUser as $id_user)
+    {
+      if(
+        !in_array($id_user,$query)
+        &&
+        $arData[$id_user]['login_type']==self::$LOGIN_TYPE_EMAIL
+      )
+      {
+        $event = Share::isApplicant($arData[$id_user]['type']) ? 34 : 35;
+        Mailing::set($event,[
+          'email_user' => $arData[$id_user]['login'],
+          'link_user' => self::getEmailNotificationLink(
+            $arData[$id_user]['token'],
+            self::$STEP_AVATAR
+          )
+        ]);
+        $arPhoto[] = $id_user;
+      }
+    }
+    // проверка неполностью активных пользователей
+    $arNotActive = Yii::app()->db->createCommand()
+      ->select('id_user')
+      ->from('user')
+      ->where([
+        'and',
+        [
+          'isblocked=:isblocked',
+          [':isblocked'=>User::$ISBLOCKED_NOT_FULL_ACTIVE]
+        ],
+        ['in','id_user',$arIdUser]
+      ])
+      ->queryColumn();
+
+    if(count($arNotActive))
+    {
+      foreach ($arNotActive as $id_user)
+      {
+        if(
+          !in_array($id_user,$arPhoto)
+          &&
+          $arData[$id_user]['login_type']==self::$LOGIN_TYPE_EMAIL
+        )
+        {
+          $event = Share::isApplicant($arData[$id_user]['type']) ? 36 : 37;
+          Mailing::set($event,[
+            'email_user' => $arData[$id_user]['login'],
+            'link_user' => self::getEmailNotificationLink(
+              $arData[$id_user]['token'],
+              'profile'
+            )
+          ]);
+        }
+      }
     }
   }
   //

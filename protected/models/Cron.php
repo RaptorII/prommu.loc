@@ -77,25 +77,30 @@ class Cron
      */
     public function getRestOneHour()
     {
+      /*
         $hour = date('G');
         switch ($hour)
         {
-            case '0':
-                    $yandex = new Yandex();
-                    $yandex->generateFile(); // формируем вакансии для Яндекс Работа 2 раза в день
-                    $termostat = new Termostat;
-                    $termostat->sendEmailNotifications(); // рассылка аналитики за месяц 1го числа каждого месяца
-                    Im::sendEmailNotifications(); // рассылке уведомлений о наличии непрочитанных сообщений в чатах за прошедший день
-                    UserNotifications::setVacancyDateNotificetions(); // установка и сброс уведомлений для пользователя в ЛК по вакансиям
-                    UserNotifications::setMSGForHaveNTEmailUsers(); // Send messages to users who did not fill out the email and registration fields
-                break;
-            case '12':
-                    $model = new Yandex();
-                    $model->generateFile(); // формируем вакансии для Яндекс Работа 2 раза в день
-                break;
+          case '0':
+              $yandex = new Yandex();
+              $yandex->generateFile(); // формируем вакансии для Яндекс Работа 2 раза в день
+              $termostat = new Termostat;
+              $termostat->sendEmailNotifications(); // рассылка аналитики за месяц 1го числа каждого месяца
+              Im::sendEmailNotifications(); // рассылке уведомлений о наличии непрочитанных сообщений в чатах за прошедший день
+              UserNotifications::setVacancyDateNotificetions(); // установка и сброс уведомлений для пользователя в ЛК по вакансиям
+              UserNotifications::setMSGForHaveNTEmailUsers(); // Send messages to users who did not fill out the email and registration fields
+              break;
+          case '1':
+            UserRegister::setRegisterNotificetions(); // отправляем напоминающие письма товарищам, незавершившим регистрацию
+            break;
+          case '12':
+            $model = new Yandex();
+            $model->generateFile(); // формируем вакансии для Яндекс Работа 2 раза в день
+            break;
         }
         $vacancy = new Vacancy();
         $vacancy->chkVacsEnds(); // завершение вакансий выполняем каждый час
-
+      */
+      UserRegister::setRegisterNotificetions();
     }
 }
