@@ -254,16 +254,13 @@ foreach ($attrAll as $p)
             value="<?= ($attr['bday'] == '01.01.1970' ? '' : $attr['bday']) ?>"
             class="epa__input">
         </div>
-        <?php $gender = (!empty($_GET['sex']) ? $_GET['sex'] : $attr['isman']) ?>
         <div class="epa__attr-block">
           <div class="epa__attr-block1">
-            <input type="radio" name="sex" id="epa-male" class="epa__hidden"
-                   value="1" <?= ($gender ? 'checked' : '') ?>>
+            <input type="radio" name="sex" id="epa-male" class="epa__hidden" value="1">
             <label class="epa__checkbox" for="epa-male">Мужчина</label>
           </div>
           <div class="epa__attr-block2">
-            <input type="radio" name="sex" id="epa-female" class="epa__hidden"
-                   value="0" <?= ($gender ? '' : 'checked') ?>>
+            <input type="radio" name="sex" id="epa-female" class="epa__hidden" value="0">
             <label class="epa__checkbox epa__checkbox-famale" for="epa-female">Женщина</label>
           </div>
           <div class="clearfix"></div>
