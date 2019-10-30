@@ -743,6 +743,14 @@ class UserRegister
    */
   public static function setRegisterNotificetions()
   {
+    /*
+    $query = Yii::app()->db->createCommand()
+      ->select('*')
+      ->from('user_register')
+      ->where('id=<id>')
+      ->queryAll();
+    */
+
     $d1 = strtotime('-2 days');
     $d2 = strtotime('-1 days');
     $query = Yii::app()->db->createCommand()
@@ -780,16 +788,6 @@ class UserRegister
 
     if(!count($arIdUser))
       return false;
-
-    $arIdUser = [21926];
-    $arData = [];
-    $arData[21926] = [
-      'login_type' => self::$LOGIN_TYPE_EMAIL,
-      'login' => 'deedddde16@gmail.com',
-      'type' => 2,
-      'token' => 'd09e4b34974b65ae1be0f619c37063c1'
-    ];
-
 
     // проверка наличия фото у неполностью активных юзеров
     $query = Yii::app()->db->createCommand()
