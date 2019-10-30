@@ -69,7 +69,7 @@ class UserRegister
     {
       $this->setStep(self::$STEP_TYPE);
     }
-    if($this->step==self::$STEP_TYPE)
+    if(!Yii::app()->getRequest()->isAjaxRequest)
     {
       $pages = new PagesContent(); // страница с условиями пользования сайтом
       $lang = Yii::app()->session['lang'];
