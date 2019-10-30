@@ -90,27 +90,35 @@
 												'name' => 'id',
 												'value' => '$data->id',
 												'type' => 'raw',
-												'htmlOptions'=>['style'=>'width:5%']
+												'htmlOptions'=>['style'=>'width:2%']
 											),
 											array(
 												'header'=>'Тип',
 												'name' => 'type',
 												'value' => 'MailingEvent::$TYPES[$data->type]',
 												'type' => 'raw',
-												'htmlOptions'=>['style'=>'width:10%']
+												'htmlOptions'=>['style'=>'width:3%']
 											),
 											array(
 												'header'=>'Заголовок',
 												'name' => 'title',
 												'value' => '$data->title',
-												'type' => 'raw'
+												'type' => 'raw',
+                        'htmlOptions'=>['style'=>'width:25%']
 											),
+                      array(
+                        'header'=>'Описание',
+                        'name' => 'comment',
+                        'value' => '$data->comment',
+                        'type' => 'raw',
+                        'htmlOptions'=>['style'=>'width:50%']
+                      ),
 											array(
 												'header'=>'Дата изменения',
 												'name' => 'mdate',
 												'value' => 'Mailing::getDate($data->mdate)',
 												'type' => 'raw',
-												'htmlOptions'=>['style'=>'width:20%']
+												'htmlOptions'=>['style'=>'width:10%']
 											)
 										)
 									)

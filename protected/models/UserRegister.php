@@ -489,7 +489,7 @@ class UserRegister
     // email
     if($arData['login_type']==self::$LOGIN_TYPE_EMAIL)
     {
-      Mailing::set((Share::isApplicant($arData['type']) ? 27 : 28), [
+      Mailing::set((Share::isApplicant($arData['type']) ? 28 : 29), [
         'email_user' => $arData['login'],
         'code_user' => $arData['code'],
         'link_user' => self::getEmailLink($arData),
@@ -691,7 +691,7 @@ class UserRegister
     //
     $this->setProfile($id_user);
     // письмо админу
-    Mailing::set(29,[
+    Mailing::set(27,[
       'id_user' => $id_user,
       'email_user' => $arUser['login_type']==self::$LOGIN_TYPE_EMAIL
         ? $arUser['login'] : 'нет',
@@ -713,14 +713,6 @@ class UserRegister
       'pm_source_seo' => $arUser['pm_source'],
       'subdomain_seo' => Subdomain::getSiteName(),
     ],$arUser['type']);
-    // письмо юзеру
-    if($arUser['login_type']==self::$LOGIN_TYPE_EMAIL)
-    {
-      Mailing::set(
-        Share::isApplicant($arUser['type']) ? 30 : 31,
-        ['email_user' => $arUser['login']]
-      );
-    }
   }
   /**
    * удаление из старой системы всвязи со сменой логина
@@ -771,7 +763,7 @@ class UserRegister
       // неподтвержденные email-ы
       if(!$user['is_confirm'] && $user['login_type']==self::$LOGIN_TYPE_EMAIL)
       {
-        $event = Share::isApplicant($user['type']) ? 32 : 33;
+        $event = Share::isApplicant($user['type']) ? 28 : 29;
         Mailing::set($event,[
           'email_user' => $user['login'],
           'code_user' => $user['code'],
@@ -824,7 +816,7 @@ class UserRegister
         $arData[$id_user]['login_type']==self::$LOGIN_TYPE_EMAIL
       )
       {
-        $event = Share::isApplicant($arData[$id_user]['type']) ? 34 : 35;
+        $event = Share::isApplicant($arData[$id_user]['type']) ? 30 : 31;
         Mailing::set($event,[
           'email_user' => $arData[$id_user]['login'],
           'link_user' => self::getEmailNotificationLink(
@@ -859,7 +851,7 @@ class UserRegister
           $arData[$id_user]['login_type']==self::$LOGIN_TYPE_EMAIL
         )
         {
-          $event = Share::isApplicant($arData[$id_user]['type']) ? 36 : 37;
+          $event = Share::isApplicant($arData[$id_user]['type']) ? 32 : 33;
           Mailing::set($event,[
             'email_user' => $arData[$id_user]['login'],
             'link_user' => self::getEmailNotificationLink(
