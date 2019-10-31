@@ -48,7 +48,7 @@
       <span class="register__preview" data-txt="Войти через социальные сети:"></span>
       <div class="reg-social__link-block">
         <a
-          href="<?=$this->createUrl(MainConfig::$PAGE_REGISTER,['service'=>'facebook'])?>"
+          href="<?=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'facebook'])?>"
           class="reg-social__link fb js-g-hashint"
           title="facebook" >
                 <span class="mob-hidden">
@@ -56,7 +56,7 @@
                 </span>
         </a>
         <a
-          href="<?=$this->createUrl(MainConfig::$PAGE_REGISTER,['service'=>'vkontakte'])?>"
+          href="<?=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'vkontakte'])?>"
           class="reg-social__link vk js-g-hashint"
           title="vkontakte.ru" >
                 <span class="mob-hidden">
@@ -64,7 +64,7 @@
                 </span>
         </a>
         <a
-          href="<?=$this->createUrl(MainConfig::$PAGE_REGISTER,['service'=>'mailru'])?>"
+          href="<?=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'mailru'])?>"
           class="reg-social__link ml js-g-hashint"
           title="mail.ru">
                 <span class="mob-hidden">
@@ -72,7 +72,7 @@
                 </span>
         </a>
         <a
-          href="<?=$this->createUrl(MainConfig::$PAGE_REGISTER,['service'=>'odnoklassniki'])?>"
+          href="<?=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'odnoklassniki'])?>"
           class="reg-social__link od js-g-hashint"
           title="odnoklasniki.ru"
         >
@@ -81,7 +81,7 @@
                 </span>
         </a>
         <a
-          href="<?=$this->createUrl(MainConfig::$PAGE_REGISTER,['service'=>'google_oauth'])?>"
+          href="<?=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'google_oauth'])?>"
           class="reg-social__link go js-g-hashint"
           title="google">
                 <span class="mob-hidden">
@@ -89,7 +89,7 @@
                 </span>
         </a>
         <a
-          href="<?=$this->createUrl(MainConfig::$PAGE_REGISTER,['service'=>'yandex_oauth'])?>"
+          href="<?=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'yandex_oauth'])?>"
           class="reg-social__link ya js-g-hashint"
           title="yandex">
                 <span class="mob-hidden">
