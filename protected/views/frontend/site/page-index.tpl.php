@@ -1,11 +1,8 @@
 <? $this->renderPartial('../site/page-index.tpl_css'); ?>
 <div class="m-wrapper">
-	<?if( Yii::app()->session['au_us_type'] < 2 ):?>
+	<?if(Share::isGuest()):?>
 		<div class="m-wrapper__btn-block">
-			<a 
-			href="javascript:void(0)" 
-			class="m-wrapper__btn m-wrapper__green-btn" 
-			onclick="$('html, body').animate({scrollTop: $('#reg-how-block').offset().top - 30});" >Регистрация</a>
+			<a href="<?=MainConfig::$PAGE_REGISTER?>" class="m-wrapper__btn m-wrapper__green-btn">Регистрация</a>
 			<a href="<?=MainConfig::$PAGE_LOGIN?>" class="m-wrapper__btn m-wrapper__white-btn">Вход</a>
 		</div>
 	<?endif;?>
@@ -34,12 +31,12 @@
 							</p>
 						</div>
 						<div class="search-module__left-btn">
-							<?php if(Share::$UserProfile->type==3): ?>
+							<?php if(Share::isEmployer()): ?>
 								<a class="left" href="<?=MainConfig::$PAGE_VACPUB?>">Опубликовать вакансию</a>
 							<?php endif; ?>
-							<?php if(!in_array(Share::$UserProfile->type, [2,3])): ?>
-								<a class="left" href="<?= MainConfig::$PAGE_REGISTER ?>?p=1">Разместить анкету</a>
-								<a class="left" href="<?= MainConfig::$PAGE_REGISTER ?>?p=2">Опубликовать вакансию</a>
+							<?php if(Share::isGuest()): ?>
+								<a class="left" href="<?=MainConfig::$PAGE_REGISTER?>">Разместить анкету</a>
+								<a class="left" href="<?=MainConfig::$PAGE_REGISTER?>">Опубликовать вакансию</a>
 							<?php endif; ?>
 						</div>
 						<div class="search-container">
@@ -61,7 +58,7 @@
 								<a href="<?=MainConfig::$LINK_TO_PLAYMARKET?>" rel="nofollow" class="app-top-link" target="_blank"></a>
 							</div>
 						</div>
-						<?php if( Share::$UserProfile->exInfo->status != 3 ): ?>
+						<?php if(!Share::isEmployer()): ?>
 							<div class="search__right">
 								<p class="search__wrd-module">Например:  
 									<a  class="selectInd search__small" id="#prom" href="javascript:void(0)"><ins class='search-word'>промоутер</ins></a>
@@ -96,25 +93,16 @@
 						<h2 class="how-block__title">Зарегистрируйтесь на портале</h2>
 						<p class="how-block__text">Чтобы начать искать работу или размещать вакансии своей компании, вам необходимо зарегистрироваться на портале и заполнить свой профиль.</p>
 						<br/>
-                        <?php
-                        /*
-						<a href="/user/register?p=2"><ins>Регистрация для работодателя</ins></a><br/>
-						<a href="/user/register?p=1"><ins>Регистрация для соискателя</ins></a>
-                        */
-                        ?>
 
                         <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>" class="reg btn__orange">
                             <ins>Регистрация</ins>
                         </a>
-						<?if( Yii::app()->session['au_us_type'] < 2 ):?>
-						<div class="m-how-block__reg-block">
-<!--                            <a href="--><?//=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?><!--" class="m-wrapper__btn m-wrapper__white-btn">-->
-<!--                                <span>Регистрация</span>-->
-<!--                            </a>-->
-							<a href="/user/register?p=2" class="m-wrapper__btn m-wrapper__white-btn">Регистрация для работодателя</a>
-							<a href="/user/register?p=1" class="m-wrapper__btn m-wrapper__whiteo-btn">Регистрация для соискателя</a>
-						</div>
-						<?endif?>
+						<?/*if(Share::isGuest()):?>
+              <div class="m-how-block__reg-block">
+                <a href="<?=MainConfig::$PAGE_REGISTER?>" class="m-wrapper__btn m-wrapper__white-btn">Регистрация для работодателя</a>
+                <a href="<?=MainConfig::$PAGE_REGISTER?>" class="m-wrapper__btn m-wrapper__whiteo-btn">Регистрация для соискателя</a>
+              </div>
+						<?endif*/?>
 					</div>
 				</div>
 
@@ -584,12 +572,12 @@
 					<div class="m-bottom-registration">
 						<div class="m-bottom-reg__line"></div>
 						<div class="m-wrapper__btn-block">
-							<?php if(Share::$UserProfile->type==3): ?>
+							<?php if(Share::isEmployer()): ?>
 								<a href="<?=MainConfig::$PAGE_VACPUB?>" class="m-wrapper__btn m-wrapper__orange-btn">разместить вакансию</a>
 							<?php endif; ?>
-							<?php if(!in_array(Share::$UserProfile->type, [2,3])): ?>
-								<a href="<?=MainConfig::$PAGE_REGISTER?>?p=1" class="m-wrapper__btn m-wrapper__orange-btn">разместить вакансию</a>
-								<a href="<?=MainConfig::$PAGE_REGISTER?>?p=2" class="m-wrapper__btn m-wrapper__white-btn">разместить анкету</a>
+							<?php if(Share::isGuest()): ?>
+								<a href="<?=MainConfig::$PAGE_REGISTER?>" class="m-wrapper__btn m-wrapper__orange-btn">разместить вакансию</a>
+								<a href="<?=MainConfig::$PAGE_REGISTER?>" class="m-wrapper__btn m-wrapper__white-btn">разместить анкету</a>
 							<?php endif; ?>
 						</div>
 					</div>

@@ -112,16 +112,16 @@
                 if($_SERVER['REQUEST_URI'] != '/'){
                     echo '<li class="item top-menu-wr__main-level"><a href="/">Главная</a></li>';
                 }
-                if( Yii::app()->session['au_us_type'] < 2 ){
-                    if($_SERVER['REQUEST_URI'] != MainConfig::$PAGE_LOGIN){
+                if(Share::isGuest())
+                {
+                    if($_SERVER['REQUEST_URI'] != MainConfig::$PAGE_LOGIN)
+                    {
                         echo '<li class="item top-menu-wr__login-level"><a href="' . MainConfig::$PAGE_LOGIN . '">Вход</a></li>';
-                    }           
-//                    echo '<li class="item top-menu-wr__login-level"><a href="' . Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '2')) . '">Регистрация работодателя</a></li>';
-//                    echo '<li class="item top-menu-wr__login-level"><a href="' . Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1')) . '">Регистрация соискателя</a></li>';
-
-                    echo '<li class="item top-menu-wr__login-level"><a href="' . Yii::app()->createUrl(MainConfig::$PAGE_REGISTER) . '">Регистрация</a></li>';
+                    }
+                    echo '<li class="item top-menu-wr__login-level"><a href="' . MainConfig::$PAGE_REGISTER . '">Регистрация</a></li>';
                 }
-                else{
+                else
+                {
                     echo '<li class="item top-menu-wr__login-level"><a href="' . MainConfig::$PAGE_LOGOUT . '">Выход</a></li>';
                 }
 
