@@ -214,7 +214,7 @@ class Mailing extends CActiveRecord
 	 */
 	public static function setToMailing($receiver,$title,$body,$isUrgent=false)
 	{
-		$arRes = array();
+		$arRes = [];
 		$time = time();
 
 		if(is_array($receiver)) // если email указан массивом
@@ -224,12 +224,13 @@ class Mailing extends CActiveRecord
         $email = trim($email);
 				if(filter_var($email,FILTER_VALIDATE_EMAIL))
 				{
-					$arRes[] = array(
-												'receiver' => $email,
-												'title' => $title,
-												'body' => $body,
-												'cdate' => $time
-											);					
+					$arRes[] = [
+					  'receiver' => $email,
+            'title' => $title,
+            'body' => $body,
+            'cdate' => $time,
+            'is_urgent' => intval($isUrgent)
+          ];
 				}
 			}
 		}
@@ -238,17 +239,50 @@ class Mailing extends CActiveRecord
       $receiver = trim($receiver);
 			if(filter_var($receiver,FILTER_VALIDATE_EMAIL))
 			{
-				$arRes[] = array(
-											'receiver' => $receiver,
-											'title' => $title,
-											'body' => $body,
-											'cdate' => $time
-										);
+				$arRes[] = [
+          'receiver' => $receiver,
+          'title' => $title,
+          'body' => $body,
+          'cdate' => $time,
+          'is_urgent' => intval($isUrgent)
+        ];
 			}
 		}
 
 		if(count($arRes))
-			Share::multipleInsert(['system_event_email'=>$arRes]);
+    {
+      if($isUrgent) // срочные отправляем сразу
+      {
+        $SM = Yii::app()->swiftMailer; // swiftMailer !!!!!!!!!!!!!!!!!!!!!!!
+        $Transport = $SM->smtpTransport('mail.companyreport.net', 25, 'null')
+          ->setUsername('noreply@prommu.com')
+          ->setPassword('1I1OD6iL');
+        $Mailer = $SM->mailer($Transport);
+
+        foreach ($arRes as $k => $v)
+        {
+          $Message = $SM->newMessage($v['title'])
+            ->setFrom(['auto-mailer@prommu.com'=>'Prommu.com'])
+            ->setTo([$v['receiver'] => ''])
+            ->addPart($v['body'],'text/html')
+            ->setBody('');
+
+          $arRes[$k]['rdate'] = $time;
+          $failures = [];
+          if (!$Mailer->send($Message, $failures))
+          {
+            $arRes[$k]['status'] = -1; // устанавливаем статус "Ошибка"
+            $arRes[$k]['result'] = serialize($failures);
+          }
+          else
+          {
+            $arRes[$k]['status'] = 1; // устанавливаем статус "Отправлено"
+            $arRes[$k]['result'] = serialize($failures);
+          }
+        }
+      }
+      Share::multipleInsert(['system_event_email'=>$arRes]);
+    }
 	}
 	/**
 	 * @param $limit - integer (300 in default)
