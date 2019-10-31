@@ -1,7 +1,4 @@
 <?php
-
-
-
 $gcs = Yii::app()->getClientScript();
 
 $gcs->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css');
@@ -16,12 +13,8 @@ $gcs->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-app-reg.js', 
 
 //
 $attr = array_values($viData['userInfo']['userAttribs'])[0];
-$idPromo = $attr['id'];
-$info = $viData['userInfo'];
-$h1title = $attr['firstname'] . ' ' . $attr['lastname'];
 // city
-$arUserCities = $viData['userInfo']['userCities'][0];
-
+$arUserCity = [];
 $arCities = Yii::app()->db->createCommand()
   ->select('t.id_city id, t.name, t.ismetro, t.id_co')
   ->from('city t')
@@ -30,26 +23,22 @@ $arCities = Yii::app()->db->createCommand()
 $arTemp = array();
 foreach ($arCities as $city)
 {
+  if($city['id']==Subdomain::getCacheData()->id)
+  {
+    $arUserCity = [
+      'id' => $city['id'],
+      'name' => $city['name'],
+      'ismetro' => $city['ismetro'],
+      'region' => $city['region']
+    ];
+  }
   $arTemp[$city['id']] = $city['name'];
 }
 
-/*
- *
- */
-// city
 
 // оптимизируем массив городов для JS
 $arCities = array_unique($arTemp);
 asort($arCities);
-
-//echo"<pre>";
-//print_r($arUserCities);
-//echo"</pre>";
-
-/*
- *
- */
-
 // Телефон
 $city = (new Geo())->getUserGeo();
 foreach ($viData['countries'] as $c)
@@ -88,7 +77,7 @@ foreach ($attrAll as $p)
             'medium',
             $attr['isman']
           );?>"
-          alt='Соискатель <?=$h1title?> prommu.com'
+          alt='Соискатель <?=$attr['firstname'] . ' ' . $attr['lastname']?> prommu.com'
           class="ppp-logo-main__img">
       </div>
     </div>
@@ -147,31 +136,17 @@ foreach ($attrAll as $p)
 
         <div class="epa__content-title"><h2>Место работы</h2></div>
         <div class="epa__content-module" id="city-module">
-            <div class="epa__cities-list">
-                <div>
-                    <?php foreach ($arUserCities as $city): ?>
-                        <b><?= $city['name'] ?></b>
-                    <?php endforeach; ?>
-                </div>
-            </div>
             <div class="epa__cities-block-list">
-                <?php //foreach ($arUserCities as $city): ?>
-                <div class="epa__city-item" data-idcity="<?= $city['id'] ?>">
-                    <!--              <div class="epa__city-title">-->
-                    <!--                <b>ГОРОД </b>-->
-                    <!--                <span class="epa__city-del"></span>-->
-                    <!--              </div>-->
+                <div class="epa__city-item" data-idcity="<?= $arUserCity['id'] ?>">
                     <div class="epa__label epa__select epa__city">
                         <span class="epa__label-name">Город:</span>
                         <span class="epa__city-err">Такой город уже выбран</span>
-                        <input type="text" name="cityname[]" value="<?= $city['name'] ?>"
+                        <input type="text" name="cityname[]" value="<?= $arUserCity['name'] ?>"
                                class="epa__input city-input" autocomplete="off">
                         <ul class="city-list"></ul>
                     </div>
-
                     <div class="clearfix"></div>
                 </div>
-                <?php //endforeach; ?>
             </div>
             <div class="clearfix"></div>
         </div>

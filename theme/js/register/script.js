@@ -757,16 +757,15 @@ var RegisterPage = (function () {
           image = $('.YiiUpload__editor-field>img'),
           data = {step:5};
 
-      if(typeof image != 'object')
-        return;
-
-      data.delfile = image[0].dataset.name;
-
+      if(image.length)
+      {
+        data.delfile = image[0].dataset.name;
+        $.ajax({
+          type: 'POST',
+          data: {data: JSON.stringify(data)}
+        });
+      }
       self.createPopup(false,false);
-      $.ajax({
-        type: 'POST',
-        data: {data: JSON.stringify(data)}
-      });
     }
   //
   return RegisterPage;
