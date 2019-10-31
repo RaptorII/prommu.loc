@@ -153,17 +153,17 @@ var RegisterPage = (function () {
         '.YiiUpload__wc_done',
         function(){
           let image = $('.YiiUpload__camera img'),
-              src = $(image).attr('src'),
-              arr = src.split(','),
-              mime = arr[0].match(/:(.*?);/)[1],
-              bstr = atob(arr[1]),
-              n = bstr.length,
-              u8arr = new Uint8Array(n),
-              file;
+            src = $(image).attr('src'),
+            arr = src.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]),
+            n = bstr.length,
+            u8arr = new Uint8Array(n),
+            file;
 
           while(n--)
           { u8arr[n] = bstr.charCodeAt(n); };
-          file = new File([u8arr], 'snapshot.png', {type:mime});
+          file = new Blob([u8arr], {type:mime});
           self.sendImage(file);
           $('.YiiUpload__block').hide();
           $('.YiiUpload__camera img').attr('src','');
@@ -480,7 +480,7 @@ var RegisterPage = (function () {
     RegisterPage.prototype.setCropper = function ()
     {
       let self = this,
-          image = document.querySelector('.YiiUpload__editor-field img');
+        image = document.querySelector('.YiiUpload__editor-field img');
 
       $(image).show();
 
@@ -505,12 +505,12 @@ var RegisterPage = (function () {
     RegisterPage.prototype.sendImage = function ()
     {
       let self = this,
-          form = document.querySelector('#register_form'),
-          formData = new FormData(form);
+        form = document.querySelector('#register_form'),
+        formData = new FormData(form);
 
       if(typeof arguments[0]=='object')
       {
-        formData.append('upload',arguments[0]);
+        formData.append('upload',arguments[0],'snapshot.png');
       }
 
       $('body').addClass('prmu-load');
@@ -753,8 +753,8 @@ var RegisterPage = (function () {
     RegisterPage.prototype.delPhoto = function ()
     {
       let self = this,
-          image = $('.YiiUpload__editor-field>img'),
-          data = {step:5};
+        image = $('.YiiUpload__editor-field>img'),
+        data = {step:5};
 
       if(image.length)
       {
