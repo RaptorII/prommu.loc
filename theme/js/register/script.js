@@ -222,10 +222,9 @@ var RegisterPage = (function () {
         '.YiiUpload__block-subchild', // close popup
         function(e){
           if(!$(e.target).hasClass('YiiUpload__block-subchild'))
-          {
             return;
-          }
-          console.log(e.target);
+
+          self.delPhoto();
         });
     // выключаем копипаст
     $('#register_form [type="text"]').bind('paste',function(e) { e.preventDefault() });
