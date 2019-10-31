@@ -590,12 +590,18 @@ class UserController extends AppController
             $model->repeatSendCode();
           }
           // редактирование аватара
-          elseif (in_array($post['step'],[5]) && isset($post['width']) && isset($post['height']))
+          elseif ($post['step']==$model::$STEP_AVATAR && isset($post['width']) && isset($post['height']))
           {
             $data = ($post['edit']==1
               ? $model->onlyEditImage($post)
               : $model->editImage($post));
             echo CJSON::encode($data);
+            Yii::app()->end();
+          }
+          // удаление файлов
+          elseif ($post['step']==$model::$STEP_AVATAR && isset($post['delfile']))
+          {
+            $model->deleteImage($post['delfile']);
             Yii::app()->end();
           }
         }

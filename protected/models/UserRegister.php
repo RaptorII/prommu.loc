@@ -1132,4 +1132,14 @@ class UserRegister
 
     return $this->editImage($arData);
   }
+
+  public function deleteImage($file)
+  {
+    $path = $this->profile->filesRoot . DS . $file;
+
+    if(file_exists($path))
+    {
+      unlink($path);
+    }
+  }
 }

@@ -189,8 +189,43 @@ var RegisterPage = (function () {
               + '" alt="' + this.alt + '" data-edit="1">');
             self.setCropper();
           }
+        })
+      .on(
+        'click',
+        '.YiiUpload__form-close', // close popup
+        function(e){
+          if(!$(e.target).hasClass('YiiUpload__form-close'))
+            return;
 
+          self.delPhoto();
+        })
+      .on(
+        'click',
+        '.YiiUpload__block', // close popup
+        function(e){
+          if(!$(e.target).hasClass('YiiUpload__block'))
+            return;
 
+          self.delPhoto();
+        })
+      .on(
+        'click',
+        '.YiiUpload__block-child', // close popup
+        function(e){
+          if(!$(e.target).hasClass('YiiUpload__block-child'))
+            return;
+
+          self.delPhoto();
+        })
+      .on(
+        'click',
+        '.YiiUpload__block-subchild', // close popup
+        function(e){
+          if(!$(e.target).hasClass('YiiUpload__block-subchild'))
+          {
+            return;
+          }
+          console.log(e.target);
         });
     // выключаем копипаст
     $('#register_form [type="text"]').bind('paste',function(e) { e.preventDefault() });
@@ -667,8 +702,9 @@ var RegisterPage = (function () {
       if(arguments[0] && !$('.YiiUpload__block').is('*'))
       {
         $('body').append('<div class="YiiUpload__block">'
-          + '<div class="YiiUpload__close"><div class="YiiUpload__close">'
+          + '<div class="YiiUpload__block-child"><div class="YiiUpload__block-subchild">'
           + '<form class="YiiUpload__form">'
+          + '<div class="YiiUpload__form-close"></div>'
           + '<div class="YiiUpload__form-content">'
           + '<div class="YiiUpload__form-title">Выберите область для отображения</div>'
           + '<div class="YiiUpload__form-body">'
@@ -713,6 +749,24 @@ var RegisterPage = (function () {
         $('#register_form .input-upload').val('');
         $('body').removeClass('prmu-load');
       }
+    },
+    //
+    RegisterPage.prototype.delPhoto = function ()
+    {
+      let self = this,
+          image = $('.YiiUpload__editor-field>img'),
+          data = {step:5};
+
+      if(typeof image != 'object')
+        return;
+
+      data.delfile = image[0].dataset.name;
+
+      self.createPopup(false,false);
+      $.ajax({
+        type: 'POST',
+        data: {data: JSON.stringify(data)}
+      });
     }
   //
   return RegisterPage;

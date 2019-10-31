@@ -5,11 +5,14 @@
 .complete__reg {
     border: 1px dotted var(--color-dark);
     padding: 15px;
-    margin: 30px 0;
-    /*background: #f1f8e9;*/
+    margin: 0 0 30px;
+    background: #f7f7f7;
     border-radius: 4px;
 }
-
+#F1compprof .epe-data__title h2,
+#DiContent .epa__content-title h2{
+    background: #f7f7f7;
+}
 
 /*#complete__form {*/
 
@@ -23,7 +26,7 @@
     font-size: 20px;
     font-weight: 600;
     text-transform: uppercase;
-    padding-top: 40px;
+    padding-top: 5px;
     color: var(--color-red);
 }
 
