@@ -48,7 +48,7 @@ abstract class UserProfile extends CModel
                 'fileFormat' => ['jpg','jpeg','png'],
                 'callButtonText' => 'Загрузить фото',
                 'useWebcam' => true,
-                'minImageSize' => 400,
+                'minImageSize' => 350,
                 'maxImageSize' => 4500,
                 'imageEditor' => true,
                 'maxFileSize' => 10, // в мегабайтах(по умолчанию 5)
