@@ -376,6 +376,8 @@ class UserController extends AppController
                                     //$data['photo'] = $pth;
                                     $data['type'] = 3;
                                      ///$data[0] = $pth;
+                                     
+                                     var_dump($data);
                                     if($data['email'] != ""){
                                         $this->actionMessenger($data);
                                     } else $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
@@ -387,6 +389,7 @@ class UserController extends AppController
                                     ///$data['photo'] = $pth;
                                      ///$data[0] = $pth;
                                     $data['type'] = 2;
+                                     var_dump($data);
                                     if($data['email'] != ""){
                                         $this->actionMessenger($data);
                                     } else $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
