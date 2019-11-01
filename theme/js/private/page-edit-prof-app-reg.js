@@ -1345,6 +1345,59 @@ jQuery(function($){
 	checkField('[name="user-attribs[edu]"]');
 	checkField('[name="langs[]"]');
 	checkPhone({type:'input'});
+
+	/**
+	 * Checked Gender
+	 */
+	addErr('.epa__attr-block');
+	if ($("input[name='sex']").is(":checked")) {
+		remErr('.epa__attr-block');
+	}
+
+	$('.epa__attr-block').on("click", function() {
+		if ( $("input[name='sex']").is(":checked") ) {
+			remErr('.epa__attr-block');
+		} else {
+			addErr('.epa__attr-block');
+		}
+	});
+
+	/**
+	 * Checked ListBox for Posts
+	 */
+
+	var postAll = document.querySelectorAll('#epa-list-posts input[name="donjnost[]"]');
+
+	if (postAll) {
+		for (var i = 0; i < postAll.length; i++) {
+			if ( postAll[i].checked == true ) {
+				postChacked = true;
+			}
+		}
+		if (postChacked) {
+			remErr('.epa__label.epa__posts.epa__select');
+		} else {
+			addErr('.epa__label.epa__posts.epa__select');
+		}
+
+	}
+
+	$('.epa__label.epa__posts.epa__select').on("click", function() {
+		if (postAll) {
+			for (var i = 0; i < postAll.length; i++) {
+				if ( postAll[i].checked == true ) {
+					postChacked = true;
+				}
+			}
+			if (postChacked) {
+				remErr('.epa__label.epa__posts.epa__select');
+			} else {
+				addErr('.epa__label.epa__posts.epa__select');
+			}
+
+		}
+	});
+
 	//
 	//
 	// инициализация календаря

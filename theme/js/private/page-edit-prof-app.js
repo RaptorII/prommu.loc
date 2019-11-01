@@ -1333,6 +1333,9 @@ jQuery(function($){
 	checkField('[name="user-attribs[edu]"]');
 	checkField('[name="langs[]"]');
 	checkPhone({type:'input'});
+
+	// console.log('test');
+
 	//
 	//
 	// инициализация календаря

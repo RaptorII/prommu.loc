@@ -13,6 +13,11 @@ $gcs->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-app-reg.js', 
 
 //
 $attr = array_values($viData['userInfo']['userAttribs'])[0];
+
+//echo "<pre>";
+//print_r($attr);
+//echo "</pre>";
+
 // city
 $arUserCity = [];
 $arCities = Yii::app()->db->createCommand()
@@ -110,7 +115,7 @@ foreach ($attrAll as $p)
           <input type="text" name="lastname" value="<?= trim($attr['lastname']) ?>"
                  class="epa__input epa__required" data-name="Фамилия">
         </label>
-        <div class="epa__label epa__date epa__select<?= ($attr['bday'] == '01.01.1970' ? ' error' : '') ?>">
+        <div class="epa__label epa__date epa__select <?=((($attr['bday']=='01.01.1970')||($attr['bday']==''))?' error':'')?>">
           <span class="epa__label-name">Дата рождения:</span>
           <input
             type="text"
@@ -120,13 +125,14 @@ foreach ($attrAll as $p)
             value="<?= ($attr['bday'] == '01.01.1970' ? '' : $attr['bday']) ?>"
             class="epa__input">
         </div>
+
         <div class="epa__attr-block">
           <div class="epa__attr-block1">
-            <input type="radio" name="sex" id="epa-male" class="epa__hidden" value="1">
+            <input type="radio" name="sex" id="epa-male" class="epa__hidden" value="1" <?=($attr['isman'] ? 'checked' : '')?>>
             <label class="epa__checkbox" for="epa-male">Мужчина</label>
           </div>
           <div class="epa__attr-block2">
-            <input type="radio" name="sex" id="epa-female" class="epa__hidden" value="0">
+            <input type="radio" name="sex" id="epa-female" class="epa__hidden" value="0" <?=($attr['isman'] ? '' : 'checked' )?>>
             <label class="epa__checkbox epa__checkbox-famale" for="epa-female">Женщина</label>
           </div>
           <div class="clearfix"></div>

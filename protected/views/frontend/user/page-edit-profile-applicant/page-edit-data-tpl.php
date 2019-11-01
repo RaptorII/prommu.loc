@@ -218,7 +218,7 @@
               <span class="epa__label-name">Фамилия:</span>
               <input type="text" name="lastname" value="<?=trim($attr['lastname'])?>" class="epa__input epa__required" data-name="Фамилия">
             </label>
-            <div class="epa__label epa__date epa__select<?=($attr['bday']=='01.01.1970'?' error':'')?>">
+            <div class="epa__label epa__date epa__select <?=((($attr['bday']=='01.01.1970')||($attr['bday']==''))?' error':'')?>">
               <span class="epa__label-name">Дата рождения:</span>
               <input 
                 type="text" 
