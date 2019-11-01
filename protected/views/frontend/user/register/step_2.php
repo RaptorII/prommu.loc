@@ -47,14 +47,14 @@
     <div class="login__social-container">
       <span class="register__preview"><b>Войти через социальные сети:</b></span>
       <div class="reg-social__link-block">
-        <!--<a
-          href="<?/*=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'facebook'])*/?>"
+        <a
+          href="<?=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'facebook'])?>"
           class="reg-social__link fb js-g-hashint"
           title="facebook" >
                 <span class="mob-hidden">
                     facebook
                 </span>
-        </a>-->
+        </a>
         <a
           href="<?=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'vkontakte'])?>"
           class="reg-social__link vk js-g-hashint"

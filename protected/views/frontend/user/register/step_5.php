@@ -67,11 +67,11 @@ $photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->l
       <div class="login__social-container five">
         <span class="register__preview"><b>или загрузи из социальных сетей:</b></span>
         <div class="reg-social__link-block" >
-          <!--<a href="/user/login?service=facebook" class="reg-social__link fb js-g-hashint" title="facebook" >
+          <a href="/user/login?service=facebook" class="reg-social__link fb js-g-hashint" title="facebook" >
                         <span class="mob-hidden">
                             facebook
                         </span>
-          </a>-->
+          </a>
           <a href="/user/login?service=vkontakte" class="reg-social__link vk js-g-hashint" title="vkontakte.ru" >
                         <span class="mob-hidden">
                             vkontakte.ru
