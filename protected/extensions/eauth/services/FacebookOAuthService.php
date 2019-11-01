@@ -63,7 +63,7 @@ class FacebookOAuthService extends EOAuth2Service {
 	protected function getCodeUrl($redirect_uri) {
 		if (strpos($redirect_uri, '?') !== false) {
 			$url = explode('?', $redirect_uri);
-			$url[0]="https://prommu.com/user/login";
+			$url[0]="https://dev.prommu.com/user/login";
 			$url[1] = preg_replace('#[/]#', '%2F', $url[1]);
 			$redirect_uri = implode('?', $url);
 		}
