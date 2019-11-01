@@ -2,6 +2,12 @@
 $exInfo = $model->profile->exInfo;
 $photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->logo;
 ?>
+<script>
+  var imageParams = {
+    maxFileSize:<?=$model->profile->arYiiUpload['maxFileSize']?>,
+    fileFormat:<?=json_encode($model->profile->arYiiUpload['fileFormat'])?>
+  };
+</script>
 <form id="register_form">
 
   <div class="login-wrap">

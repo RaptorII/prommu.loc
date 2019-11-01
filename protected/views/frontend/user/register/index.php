@@ -82,36 +82,9 @@
     <form id="register_form"><?php echo $content; ?></form>
     <div class="login__txt">
         <p>
-            <span id="my_fancybox" >“ПРАВИЛА ИСПОЛЬЗОВАНИЯ САЙТА“</span>
+            <a href="javascript:void(0)" id="my_fancybox" >ПРАВИЛА ИСПОЛЬЗОВАНИЯ САЙТА</a>
         </p>
     </div>
 </div>
-
-
-<script type="text/javascript">
-
-    jQuery(function($) {
-
-        $('#my_fancybox').on('click', function() {
-            $.fancybox.open( $('#popup'), {
-                touch: false,
-                toolbar: false,
-                hash: false,
-                clickSlide: false,
-                lang: "ru",
-                i18n: {
-                    ru: {
-                        CLOSE: "Закрыть",
-                        NEXT: "Следующий",
-                        PREV: "Предыдущий",
-                        ERROR: "Ошибка"
-                    }
-                }
-            });
-        });
-    });
-
-</script>
-
 </body>
 </html>

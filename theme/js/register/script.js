@@ -228,6 +228,24 @@ var RegisterPage = (function () {
         });
     // выключаем копипаст
     $('#register_form [type="text"]').bind('paste',function(e) { e.preventDefault() });
+    // отображаем правила пользования сайтом
+    $('#my_fancybox').on('click', function() {
+      $.fancybox.open( $('#popup'), {
+        touch: false,
+        toolbar: false,
+        hash: false,
+        clickSlide: false,
+        lang: "ru",
+        i18n: {
+          ru: {
+            CLOSE: "Закрыть",
+            NEXT: "Следующий",
+            PREV: "Предыдущий",
+            ERROR: "Ошибка"
+          }
+        }
+      });
+    });
     //
     $('#register_form').submit(function(e){
       let btn = $(this).find('button'),
@@ -506,11 +524,46 @@ var RegisterPage = (function () {
     {
       let self = this,
         form = document.querySelector('#register_form'),
-        formData = new FormData(form);
+        formData = new FormData(form),
+        bError = false;
 
       if(typeof arguments[0]=='object')
       {
         formData.append('upload',arguments[0],'snapshot.png');
+      }
+      else
+      {
+        let input = $('.input-upload')[0],
+            f = input.files[0],
+            arName = $(input).val().match(/\\([^\\]+)\.([^\.]+)$/);
+
+        if(arName!=null && arName[1].length && arName[2].length)
+        {
+          let name = arName[1] + '.' + arName[2],
+              format = arName[2].toLowerCase();
+
+          if($.inArray(format, imageParams.fileFormat)<0) // проверяем формат на корректность
+          {
+            $('.upload-block').append('<span class="login__error">');
+            $('.login__error').html('У файла некорректный формат');
+            $(input).val('');
+            return;
+          }
+          if((imageParams.maxFileSize * 1024 * 1024) < f.size)
+          {
+            $('.upload-block').append('<span class="login__error">');
+            $('.login__error').html('Размер файла больше допустимого значения (' + imageParams.maxFileSize + 'Мб)');
+            $(input).val('');
+            return;
+          }
+        }
+        else // недопустимое название файла
+        {
+          $('.upload-block').append('<span class="login__error">');
+          $('.login__error').html('Некорректный файл');
+          $(input).val('');
+          return;
+        }
       }
 
       $('body').addClass('prmu-load');
