@@ -793,6 +793,8 @@ class UserController extends AppController
         $this->setPageTitle('Регистрация успешно завершена');
         $arResult = Share::$UserProfile->getProfileDataEdit();
 
+        $this->redirect(MainConfig::$PAGE_PROFILE);
+        
         $this->render($this->ViewModel->pageEditProfile, array('viData'=>$arResult, 'viErrorData'=>$res));
     }
 
