@@ -61,9 +61,9 @@
     <div class="col-xs-12 col-sm-4 auth-form__social">
       <span class="auth-form__preview">Либо войдите через социальные сети:</span>
       <div class="auth-form__social-link-block">
-          <a href="/user/login?service=facebook" class="auth-form__social-link fb js-g-hashint" title="facebook"><span class="mob-hidden">facebook</span></a>
+<!--          <a href="/user/login?service=facebook" class="auth-form__social-link fb js-g-hashint" title="facebook"><span class="mob-hidden">facebook</span></a>-->
           <a href="/user/login?service=vkontakte" class="auth-form__social-link vk js-g-hashint" title="vkontakte.ru"><span class="mob-hidden">vkontakte.ru</span></a>
-          <a href="/user/login?service=mailru" class="auth-form__social-link ml js-g-hashint" title="mail.ru"><span class="mob-hidden">mail.ru</a>
+<!--          <a href="/user/login?service=mailru" class="auth-form__social-link ml js-g-hashint" title="mail.ru"><span class="mob-hidden">mail.ru</a>-->
           <a href="/user/login?service=odnoklassniki" class="auth-form__social-link od js-g-hashint" title="odnoklasniki.ru"><span class="mob-hidden">odnoklasniki.ru</span></a>
           <a href="/user/login?service=google_oauth" class="auth-form__social-link go js-g-hashint" title="google"><span class="mob-hidden">google</span></a>
           <a href="/user/login?service=yandex_oauth" class="auth-form__social-link ya js-g-hashint tooltipstered"><span class="mob-hidden">yandex</span></a>

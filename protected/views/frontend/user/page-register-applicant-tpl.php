@@ -161,9 +161,9 @@
         <div class="col-xs-12 col-sm-4 register__reg-social">
             <span class="register__preview">Либо зарегистрируйтесь через социальные сети:</span>
             <div class="reg-social__link-block">
-                <a href="/user/login?service=facebook" class="reg-social__link fb js-g-hashint" title="facebook" ><span class="mob-hidden">facebook</span></a>
+<!--                <a href="/user/login?service=facebook" class="reg-social__link fb js-g-hashint" title="facebook" ><span class="mob-hidden">facebook</span></a>-->
                 <a href="/user/login?service=vkontakte" class="reg-social__link vk js-g-hashint" title="vkontakte.ru" ><span class="mob-hidden">vkontakte.ru</span></a>
-                <a href="/user/login?service=mailru" class="reg-social__link ml js-g-hashint" title="mail.ru"><span class="mob-hidden">mail.ru</a>
+<!--                <a href="/user/login?service=mailru" class="reg-social__link ml js-g-hashint" title="mail.ru"><span class="mob-hidden">mail.ru</a>-->
                 <a href="/user/login?service=odnoklassniki" class="reg-social__link od js-g-hashint" title="odnoklasniki.ru"><span class="mob-hidden">odnoklasniki.ru</span></a>
                 <a href="/user/login?service=google_oauth" class="reg-social__link go js-g-hashint" title="google"><span class="mob-hidden">google</span></a>
                 <a href="/user/login?service=yandex_oauth" class="reg-social__link ya js-g-hashint" title="yandex"><span class="mob-hidden">yandex</span></a>
