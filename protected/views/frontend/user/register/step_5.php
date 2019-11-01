@@ -65,7 +65,7 @@ $photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->l
       </div>
 
       <div class="login__social-container five">
-        <span class="register__preview" data-txt="или загрузи из социальных сетей:"></span>
+        <span class="register__preview"><b>или загрузи из социальных сетей:</b></span>
         <div class="reg-social__link-block" >
           <a href="/user/login?service=facebook" class="reg-social__link fb js-g-hashint" title="facebook" >
                         <span class="mob-hidden">

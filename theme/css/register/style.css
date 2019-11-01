@@ -317,33 +317,30 @@ h6.login__header {
     font-size: 15px;
     position: relative;
     background: #ebebeb;
-    margin: 10px 0 0px 0;
-    height: 30px;
+    margin: 10px 0;
 }
 
-.register__preview:before {
-    content: attr(data-txt);
-    position: absolute;
-    display: block;
+.register__preview b {
+    position: relative;
+    margin: 0 auto;
+    display: inline-block;
     background: #ebebeb;
     z-index: 1;
     text-align: center;
-    left: 50%;
-    transform: translate(-50%);
-    padding: 0 10px;
-    width: 60%;
+    padding: 0 5px;
+    max-width: 60%;
+    font-weight: normal;
 }
 .register__preview:after {
     position: absolute;
     display: block;
     content: '';
-    width: 95%;
     height: 1px;
-    top: 8px;
-    margin: 0 10px;
+    top: 50%;
+    right: 10px;
+    left: 10px;
     background: var(--color-l-grey);
     z-index: 0;
-
 }
 
 .reg-social__link-block {

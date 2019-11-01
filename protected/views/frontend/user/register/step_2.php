@@ -45,7 +45,7 @@
     </p>
 
     <div class="login__social-container">
-      <span class="register__preview" data-txt="Войти через социальные сети:"></span>
+      <span class="register__preview"><b>Войти через социальные сети:git pull</b></span>
       <div class="reg-social__link-block">
         <a
           href="<?=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'facebook'])?>"
