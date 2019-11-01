@@ -377,10 +377,13 @@ class UserController extends AppController
                                     $data['type'] = 3;
                                      ///$data[0] = $pth;
                                      
-                                     var_dump($data);
-                                    if($data['email'] != ""){
+                                    
+                                      if($data['email'] != ""){
+                                        $data['email'] = rand(11111111,99999999)."@prommu.com";
+                                    }
+                                    
                                         $this->actionMessenger($data);
-                                    } else $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
+                                    
 
                                 } else {
 
@@ -389,10 +392,12 @@ class UserController extends AppController
                                     ///$data['photo'] = $pth;
                                      ///$data[0] = $pth;
                                     $data['type'] = 2;
-                                     var_dump($data);
                                     if($data['email'] != ""){
-                                        $this->actionMessenger($data);
-                                    } else $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
+                                        $data['email'] = rand(11111111,99999999)."@prommu.com";
+                                    }
+                                    
+                                    $this->actionMessenger($data);
+                                    
 
                                 }
                                 $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
