@@ -241,7 +241,7 @@ class UserController extends AppController
     }
 
     public function actionMessenger($cloud){
-        file_put_contents("тест.txt", date('d.m.Y H:i')."\t".var_export($cloud,1)."\n", FILE_APPEND | LOCK_EX);
+        
         if($cloud == "") $cloud = $_GET;
 
         $analyt = Yii::app()->request->cookies['sbjs_current'];
@@ -378,7 +378,7 @@ class UserController extends AppController
                                      ///$data[0] = $pth;
                                      
                                     
-                                      if($data['email'] != ""){
+                                      if($data['email'] == ""){
                                         $data['email'] = rand(11111111,99999999)."@prommu.com";
                                     }
                                     
@@ -392,7 +392,7 @@ class UserController extends AppController
                                     ///$data['photo'] = $pth;
                                      ///$data[0] = $pth;
                                     $data['type'] = 2;
-                                    if($data['email'] != ""){
+                                    if($data['email'] == ""){
                                         $data['email'] = rand(11111111,99999999)."@prommu.com";
                                     }
                                     
