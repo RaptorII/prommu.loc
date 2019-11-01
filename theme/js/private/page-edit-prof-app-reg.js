@@ -1372,6 +1372,9 @@ jQuery(function($){
 		for (var i = 0; i < postAll.length; i++) {
 			if ( postAll[i].checked == true ) {
 				postChacked = true;
+				break;
+			} else {
+				postChacked = false;
 			}
 		}
 		if (postChacked) {

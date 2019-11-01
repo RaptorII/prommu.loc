@@ -128,11 +128,11 @@ foreach ($attrAll as $p)
 
         <div class="epa__attr-block">
           <div class="epa__attr-block1">
-            <input type="radio" name="sex" id="epa-male" class="epa__hidden" value="1" <?=($attr['isman'] ? 'checked' : '')?>>
+            <input type="radio" name="sex" id="epa-male" class="epa__hidden" value="1" >
             <label class="epa__checkbox" for="epa-male">Мужчина</label>
           </div>
           <div class="epa__attr-block2">
-            <input type="radio" name="sex" id="epa-female" class="epa__hidden" value="0" <?=($attr['isman'] ? '' : 'checked' )?>>
+            <input type="radio" name="sex" id="epa-female" class="epa__hidden" value="0" >
             <label class="epa__checkbox epa__checkbox-famale" for="epa-female">Женщина</label>
           </div>
           <div class="clearfix"></div>
