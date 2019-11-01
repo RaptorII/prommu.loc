@@ -137,48 +137,17 @@
 	<script type="text/javascript">
 		jQuery(function($){
 			var iframe = document.getElementById('iframe-html');
-			/*
-			var mixedMode = {
-						name: "htmlmixed",
-						scriptTypes: [
-							{matches: /\/x-handlebars-template|\/x-mustache/i, mode: null},
-							{matches: /(text|application)\/(x-)?vb(a|script)/i,mode: "vbscript"}
-						]
-					};
-
-			var myCodeMirror = CodeMirror.fromTextArea(
-							document.getElementById('transform-code'),
-							{
-								lineNumbers: true,
-								matchBrackets: true,
-								mode: mixedMode,
-								indentUnit: 2
-							}
-						);
-            */
-
-            /**
-             * php-mode on to CodeMirror
-             * 24.04.2019 Karpenko M.
-             * TODO: clear coments after tester;
-             */
-            function initMirror()
-            {
-                return CodeMirror.fromTextArea(
-                    document.getElementById('transform-code'),
-                    {
-                        lineNumbers: true,
-                        matchBrackets: true,
-                        autoCloseBrackets: true,
-                        //mode: mixedMode,
-                        mode: "application/x-httpd-php",
-                        indentUnit: 2
-                    }
-                );
-
-            }
-
-            initMirror();
+      var myCodeMirror = CodeMirror.fromTextArea(
+        document.getElementById('transform-code'),
+        {
+          lineNumbers: true,
+          matchBrackets: true,
+          autoCloseBrackets: true,
+          //mode: mixedMode,
+          mode: "application/x-httpd-php",
+          indentUnit: 2
+        }
+      );
 
 			iframe = iframe.contentWindow || ( iframe.contentDocument.document || iframe.contentDocument);
 			iframe.document.open();
