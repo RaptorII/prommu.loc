@@ -279,7 +279,7 @@ class UserController extends AppController
 
         $Auth = new Auth();
         $register = $Auth->registerAuth($data);
-        $register = new UserRegister();
+        $this->redirect($register);
         // $UserRegister = $register->setStep(4);
         $this->redirect(MainConfig::$PAGE_ACTIVATE);
 
@@ -318,7 +318,7 @@ class UserController extends AppController
 
             $Auth = new Auth();
             $register = $Auth->registerAuth($data);
-            $register = new UserRegister();
+            $this->redirect($register);
             // $UserRegister = $register->setStep(4);
             $this->redirect(MainConfig::$PAGE_ACTIVATE);
         }
