@@ -886,17 +886,17 @@ class UserRegister
 
     if($_FILES['upload']['error']) // ошибка передачи файла на сервер
     {
-      $arRes['error'][] = "Ошибка передачи файла '{$fName}' на сервер";
+      $arRes['error'][] = "Ошибка передачи файла на сервер";
     }
     if($_FILES['upload']['size']>$mSize) // ошибка передачи файла на сервер
     {
-      $arRes['error'][] = "Размер файла '{$fName}' больше допустимого значения ("
+      $arRes['error'][] = "Размер файла больше допустимого значения ("
         . $this->profile->arYiiUpload['maxFileSize'] . "Мб)";
     }
 
     if(!in_array($type,$this->profile->arYiiUpload['fileFormat'])) // проверяем формат на корректность
     {
-      $arRes['error'][] = "У файла '{$fName}' некорректный формат";
+      $arRes['error'][] = "У файла некорректный формат";
     }
 
     $newName = date('YmdHis') . rand(1000,9999) . '.' . $type;
@@ -911,13 +911,13 @@ class UserRegister
         $size = $this->profile->arYiiUpload['minImageSize']; // проверяем на минимальную ширину/высоту
         if($size>0 && ($fSize[0]<$size || $fSize[1]<$size))
         {
-          $arRes['error'][] = "Файл '{$fName}' меньше допустимого значения ({$size}x{$size})";
+          $arRes['error'][] = "Файл меньше допустимого значения ({$size}x{$size})";
           unlink($filePath);
         }
         $size = $this->profile->arYiiUpload['maxImageSize']; // проверяем на максимальную ширину/высоту
         if($size>0 && ($fSize[0]>$size || $fSize[1]>$size))
         {
-          $arRes['error'][] = "Файл '{$fName}' больше допустимого значения ({$size}x{$size})";
+          $arRes['error'][] = "Файл больше допустимого значения ({$size}x{$size})";
           unlink($filePath);
         }
         $this->resizeImage($filePath, $filePath, self::$DEFAULT_IMAGE_SIZE); // сжимаем до допустимых размеров
@@ -930,7 +930,7 @@ class UserRegister
     }
     else
     {
-      $arRes['error'][] = "Ошибка загрузки файла '{$fName}' на сервер";
+      $arRes['error'][] = "Ошибка загрузки файла на сервер";
     }
 
     return $arRes;
