@@ -122,6 +122,7 @@ h6.login__header {
     border-radius: 4px;
     top: 50%;
     transform: translateY(-50%);
+    overflow: hidden;
 }
 
 .login-wrap:before,
@@ -520,6 +521,22 @@ h6.login__header {
     }
     .reg-social__link {
         width: 33.33%;
+    }
+}
+
+@media (max-height: 950px) {
+
+    .login-wrap{
+        position: relative;
+        top: auto;
+        transform: none;
+    }
+    .login__logo {
+        margin-bottom: 40px;
+    }
+    .login__txt{
+        position: relative;
+        margin-top: 40px;
     }
 }
 
