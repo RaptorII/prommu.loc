@@ -6,7 +6,7 @@ $gcs->registerCssFile(MainConfig::$CSS . 'private/page-prof-app.css');
 $gcs->registerCssFile(MainConfig::$CSS . 'private/page-edit-prof-app.css');
 $gcs->registerCssFile(MainConfig::$CSS . 'dist/jquery-ui.min.css');
 $gcs->registerCssFile(MainConfig::$CSS . 'register/complete-reg.css');
-$gcs->registerCssFile(MainConfig::$CSS . 'jslib/bootstrap-datepicker/css/bootstrap-datepicker.min.css');
+//$gcs->registerCssFile(MainConfig::$CSS . 'jslib/bootstrap-datepicker/css/bootstrap-datepicker.min.css');
 
 $gcs->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
 $gcs->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-app-reg.js', CClientScript::POS_END);

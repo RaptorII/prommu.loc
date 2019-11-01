@@ -1365,7 +1365,6 @@ jQuery(function($){
 	/**
 	 * Checked ListBox for Posts
 	 */
-
 	var postAll = document.querySelectorAll('#epa-list-posts input[name="donjnost[]"]');
 
 	if (postAll) {
