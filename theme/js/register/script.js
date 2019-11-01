@@ -704,20 +704,30 @@ var RegisterPage = (function () {
       {
         let error = '';
         console.log(e['name']);
-        if(e['name']==='PermissionDeniedError' || e['name']==='NotAllowedError')
+        switch (e['name'])
         {
-          error = 'Для съемки необходим доступ к вебкамере';
-        }
-        if(e['name']==='DevicesNotFoundError')
-        {
-          error = 'Камера не найдена';
-        }
-        if(e['name']==='ConstraintNotSatisfiedError')
-        {
-          error = 'Решение не поддерживается вашим устройством';
+          case 'PermissionDeniedError':
+          case 'NotAllowedError':
+          case 'SecurityError':
+            error = 'Для съемки необходим доступ к вебкамере';
+            break;
+          case 'DevicesNotFoundError':
+          case 'NotFoundError':
+            error = 'Камера не найдена';
+            break;
+          case 'ConstraintNotSatisfiedError':
+            error = 'Решение не поддерживается вашим устройством';
+            break;
+          case 'SourceUnavailableError':
+            error = 'Камера используется другой программой';
+            break;
         }
         $('.snapshot-error').remove();
-        $('.snapshot-block').append('<p class="separator center snapshot-error"><span class="login__error">' + error + '</span></p>')
+
+        if(error.length)
+        {
+          $('.snapshot-block').append('<p class="separator center snapshot-error"><span class="login__error">' + error + '</span></p>')
+        }
       }
       $('.YiiUpload__camera').hide();
       $('body').removeClass('prmu-load');
