@@ -297,7 +297,7 @@ var RegisterPage = (function () {
         data: {data: JSON.stringify(data)},
         success: function (html) {
           $('#register_form').html(html);
-          //self.startSvg();
+          self.startSvg();
           if(typeof data.href !=='undefined')
           {
             window.location.href = data.href;
