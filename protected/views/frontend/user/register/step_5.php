@@ -7,6 +7,9 @@ $photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->l
     maxFileSize:<?=$model->profile->arYiiUpload['maxFileSize']?>,
     fileFormat:<?=json_encode($model->profile->arYiiUpload['fileFormat'])?>
   };
+  <? if(!Yii::app()->getRequest()->isAjaxRequest): ?>
+    var pageCondition = <?=json_encode($model->data['condition']['html'])?>;
+  <? endif; ?>
 </script>
 <div class="login-wrap">
 
@@ -110,10 +113,3 @@ $photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->l
 
 </div>
 <input type="hidden" name="href" value="<?=MainConfig::$PAGE_PROFILE?>">
-
-
-  <div class="popup" id="popup" style="display: none;">
-      <div class="popuptext" id="popup__reg">
-          <?php echo $model->data['condition']['html']; ?>
-      </div>
-  </div>

@@ -1,3 +1,6 @@
+<? if(!Yii::app()->getRequest()->isAjaxRequest): ?>
+  <script>var pageCondition = <?=json_encode($model->data['condition']['html'])?>;</script>
+<? endif; ?>
 <div class="login-wrap">
 
   <svg x="0" y="0" class="svg-bg" />
@@ -99,11 +102,4 @@
       </div>
     </div>
   </div>
-</div>
-
-
-<div class="popup" id="popup" style="display: none;">
-    <div class="popuptext" id="popup__reg">
-        <?php echo $model->data['condition']['html']; ?>
-    </div>
 </div>
