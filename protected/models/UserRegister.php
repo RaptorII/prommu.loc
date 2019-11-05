@@ -396,7 +396,7 @@ class UserRegister
       {
         $this->errors['r-password'] = 'Значения полей не совпадают';
       }
-      if($value1 < self::$MIN_PASSWORD_LENGTH)
+      if(strlen($value1) < self::$MIN_PASSWORD_LENGTH)
       {
         $this->errors['password'] = 'Пароль должен состоять минимум из шести символов';
       }

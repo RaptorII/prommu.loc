@@ -167,7 +167,13 @@ var RegisterPage = (function () {
           { u8arr[n] = bstr.charCodeAt(n); };
           file = new Blob([u8arr], {type:mime});
           self.sendImage(file);
-          self.video.pause(); // выключаем поток
+          self.video.srcObject.getTracks()[0].stop(); // выключаем поток
+          navigator.getUserMedia(
+            { audio:false, video:false },
+            function(e){ self.getStream(e) },
+            function(e){ self.streamError(e) }
+          );
+          //
           $('.YiiUpload__block').hide();
           $('.YiiUpload__camera img').attr('src','');
           $('.YiiUpload__camera').hide();
@@ -245,7 +251,7 @@ var RegisterPage = (function () {
         {touch:false, toolbar:false, hash:false, clickSlide:false}
       );
     });
-    //
+    // отправка формы
     $('#register_form').submit(function(e){
       let btn = $(this).find('button'),
         step = Number($(btn).data('step'));
@@ -284,7 +290,7 @@ var RegisterPage = (function () {
     {
       self.setTimer();
     }
-    //
+    // запуск анимашки
     self.startSvg();
   },
   // отправляем аяксом
@@ -296,7 +302,9 @@ var RegisterPage = (function () {
       data: {data: JSON.stringify(data)},
       success: function (html) {
         $('#register_form').html(html);
-        self.startSvg();
+        self.startSvg(); // запуск анимашки
+        // выключаем копипаст
+        $('#register_form [type="text"]').bind('paste',function(e) { e.preventDefault() });
         if(typeof data.href !=='undefined')
         {
           window.location.href = data.href;
