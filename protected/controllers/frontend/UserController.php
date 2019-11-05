@@ -241,7 +241,7 @@ class UserController extends AppController
     }
 
     public function actionMessenger($cloud){
-        
+
         if($cloud == "") $cloud = $_GET;
 
         $analyt = Yii::app()->request->cookies['sbjs_current'];
@@ -276,14 +276,9 @@ class UserController extends AppController
         $data['messenger'] = $cloud['id'];
         $data['type'] = $cloud['type'];
         $email =  $cloud['email'];
-
         $Auth = new Auth();
         $register = $Auth->registerAuth($data);
         $this->redirect($register);
-        $register = new UserRegister();
-        $UserRegister = $register->clearStep();
-        $this->redirect(MainConfig::$PAGE_ACTIVATE);
-
     }
 
     public function actionMessnotemail(){
@@ -334,7 +329,6 @@ class UserController extends AppController
         $type =  Yii::app()->request->getQuery('type');
 
         if (isset($serviceName)) {
-
             /** @var $eauth EAuthServiceBase */
             $eauth = Yii::app()->eauth->getIdentity($serviceName);
             $eauth->redirectUrl = Yii::app()->user->returnUrl;
@@ -342,7 +336,6 @@ class UserController extends AppController
 
             try {
                 if ($eauth->authenticate()) {
-
                     // var_dump($eauth->getAttributes());//$eauth->getIsAuthenticated(),
                     $identity = new EAuthUserIdentity($eauth);
 
@@ -594,7 +587,7 @@ class UserController extends AppController
           // редирект на авторизацию
           elseif (in_array($post['step'],[$model::$STEP_LOGIN]) && $post['redirect']==='auth')
           {
-            $model->clearStep();
+            $model::clearStep();
             $model->deleteData();
           }
           // повтор отправки кода
@@ -627,126 +620,7 @@ class UserController extends AppController
       }
       else // не AJAX
       {
-        $service = $rq->getParam('service');
-
-        if (!isset($service)) // обычная регистрация
-        {
-          $this->renderRegister($model->view, ['model'=>$model]);
-          Yii::app()->end();
-        }
-
-        /** @var $eauth EAuthServiceBase */
-        $eauth = Yii::app()->eauth->getIdentity($service);
-        $eauth->redirectUrl = Yii::app()->user->returnUrl;
-        $eauth->cancelUrl = 'dev.prommu.com' . MainConfig::$PAGE_REGISTER;
-        $eauth->cancelUrl = $this->createAbsoluteUrl(MainConfig::$PAGE_REGISTER);
-
-
-        try
-        {
-          if ($eauth->authenticate())
-          {
-             var_dump($eauth->getAttributes());//$eauth->getIsAuthenticated(),
-            $identity = new EAuthUserIdentity($eauth);
-
-            // successful authentication
-            if ($identity->authenticate())
-            {
-              Yii::app()->user->login($identity);
-              if($eauth->getIsAuthenticated()){
-                // var_dump($eauth->getAttributes());
-                $auth = new Auth();
-                $cloud = $auth->authChekin($eauth->getAttributes()['id']);
-                if($cloud)
-                {
-                  $auth->AuthorizeNet(['id' => $cloud['id']]);
-                  $this->redirect(MainConfig::$PAGE_PROFILE);
-                }
-                else
-                {
-                  $data = $eauth->getAttributes();
-                  $model = new User();
-                  $is_user = $model->checkLogin($data['email']);
-
-                  if($is_user)
-                  {
-                    $model->setStep();
-                    $model->data['login'] = $data['email'];
-                    $model->setDataByStep();
-                  }
-                  else
-                  {
-                    if(Share::isEmployer($model->data['type']))
-                    {
-
-                      //$pth = $auth->loadLogoEmpl($eauth->getAttributes()['photo']);
-                      $view = MainConfig::$VIEWS_REGISTER_FB;
-                      //$data['photo'] = $pth;
-                      $data['type'] = $model->data['type'];
-                      ///$data[0] = $pth;
-                      if($data['email'] != "")
-                      {
-                        $this->actionMessenger($data);
-                      }
-                      else
-                        $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
-
-                    }
-                    else
-                    {
-                      /// $pth = $auth->loadLogo($eauth->getAttributes()['photo']);
-                      $view = MainConfig::$VIEWS_REGISTER_FB;
-                      ///$data['photo'] = $pth;
-                      ///$data[0] = $pth;
-                      $data['type'] = $model->data['type'];
-                      if($data['email'] != "")
-                      {
-                        $this->actionMessenger($data);
-                      }
-                      else
-                        $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
-
-                    }
-                    $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
-                  }
-                }
-              }
-            }
-            else
-            {
-              // close popup window and redirect to cancelUrl
-              $eauth->cancel();
-            }
-          }
-          // Something went wrong, redirect to login page
-          $this->redirect(MainConfig::$PAGE_REGISTER);
-        }
-        catch (EAuthException $e)
-        {
-          // save authentication error to session
-          Yii::app()->user->setFlash('error', 'EAuthException: '.$e->getMessage());
-          // close popup window and redirect to cancelUrl
-          $eauth->redirect($eauth->getCancelUrl());
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        $this->renderRegister($model->view, ['model'=>$model]);
       }
     }
 

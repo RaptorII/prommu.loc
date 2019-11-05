@@ -76,7 +76,8 @@ class AppController extends CController
         $this->ViewModel = $view;
         //
         // если запущен механизм регистрации - то отправляем на регу, пока не зарегается
-        if(!Share::isGuest())
+        $service = Yii::app()->getRequest()->getParam('service');
+        if(!Share::isGuest() || in_array($service,['facebook','vkontakte','odnoklassniki','google_oauth','yandex_oauth']))
         {
           UserRegister::clearStep();
         }
