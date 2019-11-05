@@ -2,12 +2,21 @@
 $gcs = Yii::app()->getClientScript();
 
 $gcs->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css');
-Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-prof-emp.css');
+$gcs->registerCssFile(MainConfig::$CSS . 'private/page-prof-emp.css');
 $gcs->registerCssFile(MainConfig::$CSS . 'private/page-edit-prof-emp.css');
 $gcs->registerCssFile(MainConfig::$CSS .'register/complete-reg.css');
 
 $gcs->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
 $gcs->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-emp.js', CClientScript::POS_END);
+
+$arUserCity = Yii::app()->db->createCommand()
+  ->select('id_city, name')
+  ->from('city')
+  ->where(
+    'id_city=:id',
+    [':id'=>Subdomain::getCacheData()->id]
+  )
+  ->queryRow();
 ?>
 
 <?
@@ -66,10 +75,8 @@ $gcs->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-emp.js', CCli
                 $typeName = '';
                 foreach ($viData['userAllInfo']['cotype'] as $t) {
                   $strInp .= '<li><input type="radio" name="companyType" value="' . $t['id'] . '" id="type' . $t['id'] . '"';
-                  if ($_GET['position'] == $t['id']) {
-                    $strInp .= ' checked';
-                    $typeName = $t['name'];
-                  } elseif ($t['selected']) {
+                  if ($t['selected'])
+                  {
                     $strInp .= ' checked';
                     $typeName = $t['name'];
                   }
@@ -84,10 +91,10 @@ $gcs->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-emp.js', CCli
               </div>
               <div class="epe__label city-field">
                 <span class="epe__label-name">Город:</span>
-                <span class="city-select"><?= $viData['userAllInfo']['userCities'][0]['name'] ?><b></b></span>
-                <input type='text' name='str-city' value="<?= $viData['userAllInfo']['userCities'][0]['name'] ?>"
+                <span class="city-select"><?=$arUserCity['name'] ?><b></b></span>
+                <input type='text' name='str-city' value="<?=$arUserCity['name'] ?>"
                        class="epe__input epe__input-city" autocomplete="off">
-                <input type="hidden" name="cities[]" value="<?= $viData['userAllInfo']['userCities'][0]['id_city'] ?>"
+                <input type="hidden" name="cities[]" value="<?=$arUserCity['id_city'] ?>"
                        id="id-city">
                 <ul class="city-list"></ul>
               </div>
