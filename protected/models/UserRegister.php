@@ -239,6 +239,10 @@ class UserRegister
     {
       $field = Share::isApplicant($this->data['type']) ? 'Имя' : 'Название компании';
       $this->data['name'] = filter_var($post['name'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      if(Share::isApplicant($this->data['type']))
+      {
+        $this->data['name'] = preg_replace('/[^a-zA-Zа-яА-ЯЁё]/ui', '',$this->data['name']);
+      }
       $this->data['name'] = trim($this->data['name']);
       if(strlen($this->data['name']) > self::$STRLENGTH)
       {
@@ -256,6 +260,7 @@ class UserRegister
       if(Share::isApplicant($this->data['type']))
       {
         $this->data['surname'] = filter_var($post['surname'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $this->data['surname'] = preg_replace('/[^a-zA-Zа-яА-ЯЁё]/ui', '',$this->data['surname']);
         $this->data['surname'] = trim($this->data['surname']);
         if(strlen($this->data['surname']) > self::$STRLENGTH)
         {
@@ -304,7 +309,7 @@ class UserRegister
         {
           $model = new User();
           $is_user = $model->checkLogin($value,$isPhone);
-          if($is_user)
+          if($is_user && $this->data['id_user']!=$is_user)
           {
             $this->errors['login'] = "Данный телефон уже используется. <a href=\""
               . MainConfig::$PAGE_LOGIN . "\">Авторизоваться</a>";
@@ -337,7 +342,7 @@ class UserRegister
         $value = filter_var($post['login'],FILTER_SANITIZE_EMAIL);
         $model = new User();
         $is_user = $model->checkLogin($value);
-        if($is_user)
+        if($is_user && $this->data['id_user']!=$is_user)
         {
           $this->errors['login'] = "Данный эл. адрес уже используется. <a href=\""
             . MainConfig::$PAGE_LOGIN . "\">Авторизоваться</a>";

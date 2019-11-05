@@ -30,7 +30,7 @@
 <div class="login">
 
     <div class="login__logo">
-        <a class="logo" href="/">
+        <span class="logo">
 
             <svg
                     xmlns:svg="http://www.w3.org/2000/svg"
@@ -77,7 +77,7 @@
                 </g>
             </svg>
 
-        </a>
+        </span>
     </div>
     <form id="register_form"><?php echo $content; ?></form>
     <div class="login__txt">

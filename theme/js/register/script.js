@@ -13,6 +13,7 @@ var RegisterPage = (function () {
   RegisterPage.prototype.cropParams;
   RegisterPage.prototype.bWebCam;
   RegisterPage.prototype.codeTimer;
+  RegisterPage.prototype.video;
   //
   function RegisterPage()
   {
@@ -129,16 +130,17 @@ var RegisterPage = (function () {
         '.YiiUpload__wc_shoot',
         function(){
           let canvas = document.querySelector('.YiiUpload__camera canvas'),
-            video = document.querySelector('.YiiUpload__camera video'),
-            width = video.videoWidth,
-            height = video.videoHeight,
-            context = canvas.getContext('2d');
+              context = canvas.getContext('2d'),
+              width, height;
 
+          self.video = document.querySelector('.YiiUpload__camera video');
+          width = self.video.videoWidth;
+          height = self.video.videoHeight;
           // Установка размеров canvas идентичных с video
           canvas.width = width;
           canvas.height = height;
           // Отрисовка текущего кадра с video в canvas
-          context.drawImage(video, 0, 0, width, height);
+          context.drawImage(self.video, 0, 0, width, height);
           // Преобразование кадра в изображение dataURL
           let imageDataURL = canvas.toDataURL('image/png');
           if(imageDataURL.length>6)
@@ -165,6 +167,7 @@ var RegisterPage = (function () {
           { u8arr[n] = bstr.charCodeAt(n); };
           file = new Blob([u8arr], {type:mime});
           self.sendImage(file);
+          self.video.pause(); // выключаем поток
           $('.YiiUpload__block').hide();
           $('.YiiUpload__camera img').attr('src','');
           $('.YiiUpload__camera').hide();
@@ -317,7 +320,7 @@ var RegisterPage = (function () {
     if(!$(input).is('*'))
       return true;
 
-    let v = $(input).val().replace(/[0-9]/g,'');
+    let v = $(input).val().replace(/[^a-zA-ZА-Яа-яЁё]/gi,'');
 
     $(input).val((v.charAt(0).toUpperCase() + v.slice(1).toLowerCase()));
 
@@ -644,23 +647,24 @@ var RegisterPage = (function () {
   RegisterPage.prototype.getStream = function (stream)
   {
     let browser,
-      self = this,
-      video = document.querySelector('.YiiUpload__camera video'),
-      dataBrowser = [
-        { string:navigator.userAgent, subString:"Chrome", identity:"Chrome" },
-        { string:navigator.userAgent, subString:"OmniWeb", versionSearch:"OmniWeb/", identity:"OmniWeb" },
-        { string:navigator.vendor, subString:"Apple", identity:"Safari", versionSearch:"Version" },
-        { prop:window.opera, identity:"Opera", versionSearch:"Version" },
-        { string:navigator.vendor, subString:"iCab", identity:"iCab" },
-        { string:navigator.vendor, subString:"KDE", identity:"Konqueror" },
-        { string:navigator.userAgent, subString:"Firefox", identity:"Firefox" },
-        { string:navigator.vendor, subString:"Camino", identity:"Camino" },
-        { string:navigator.userAgent, subString:"Netscape", identity:"Netscape" },
-        { string:navigator.userAgent, subString:"MSIE", identity:"Internet Explorer", versionSearch:"MSIE" },
-        { string:navigator.userAgent, subString:"Gecko", identity:"Mozilla", versionSearch:"rv" },
-        { string:navigator.userAgent, subString:"Mozilla", identity:"Netscape", versionSearch: "Mozilla" },
-        { string:navigator.vendor, subString:"Apple", identity:"Safari", versionSearch:"Version" }
-      ];
+        self = this,
+        dataBrowser = [
+          { string:navigator.userAgent, subString:"Chrome", identity:"Chrome" },
+          { string:navigator.userAgent, subString:"OmniWeb", versionSearch:"OmniWeb/", identity:"OmniWeb" },
+          { string:navigator.vendor, subString:"Apple", identity:"Safari", versionSearch:"Version" },
+          { prop:window.opera, identity:"Opera", versionSearch:"Version" },
+          { string:navigator.vendor, subString:"iCab", identity:"iCab" },
+          { string:navigator.vendor, subString:"KDE", identity:"Konqueror" },
+          { string:navigator.userAgent, subString:"Firefox", identity:"Firefox" },
+          { string:navigator.vendor, subString:"Camino", identity:"Camino" },
+          { string:navigator.userAgent, subString:"Netscape", identity:"Netscape" },
+          { string:navigator.userAgent, subString:"MSIE", identity:"Internet Explorer", versionSearch:"MSIE" },
+          { string:navigator.userAgent, subString:"Gecko", identity:"Mozilla", versionSearch:"rv" },
+          { string:navigator.userAgent, subString:"Mozilla", identity:"Netscape", versionSearch: "Mozilla" },
+          { string:navigator.vendor, subString:"Apple", identity:"Safari", versionSearch:"Version" }
+        ];
+
+    self.video = document.querySelector('.YiiUpload__camera video');
 
     for (let i=0;i<dataBrowser.length;i++)
     {
@@ -676,12 +680,12 @@ var RegisterPage = (function () {
 
     if(browser=='Safari')
     {
-      video.srcObject = stream;
-      video.play();
+      self.video.srcObject = stream;
+      self.video.play();
     }
     else
     {
-      video.srcObject = stream;
+      self.video.srcObject = stream;
     }
 
     setTimeout(function(){
@@ -694,8 +698,6 @@ var RegisterPage = (function () {
   //	show errrors by navigator
   RegisterPage.prototype.streamError = function (e)
   {
-    let self = this;
-
     if(typeof e!='undefined')
     {
       let error = '';
