@@ -64,7 +64,7 @@ $photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->l
         <span class="input"><input type="file" name="upload" class="input-upload"></span>
       </p>
     </div>
-
+<?/*?>
     <div class="login__social-container five">
       <span class="register__preview"><b>или загрузи из социальных сетей:</b></span>
       <div class="reg-social__link-block" >
@@ -97,7 +97,7 @@ $photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->l
         </a>
       </div>
     </div>
-
+<?*/?>
     <p class="input">
       <button type="submit" class="btn-green" data-step="5">Завершить регистрацию</button>
     </p>

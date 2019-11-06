@@ -41,55 +41,67 @@ class UserRegister
   public $view;
   public $profile;
 
-  function __construct()
+  function __construct($id_user=false)
   {
-    $rq = Yii::app()->request;
-    // step
-    if(isset($rq->cookies['urs']))
+    if($id_user) // только работа с аватаром
     {
-      $this->step = self::getStep();
-      if(!in_array(
-        $this->step,
-        [self::$STEP_TYPE,self::$STEP_LOGIN,self::$STEP_CODE,self::$STEP_PASSWORD,self::$STEP_AVATAR]
-      ))
+      $this->step = false;
+      $this->user = false;
+      $this->errors = false;
+      $this->view = false;
+      $this->data['type'] = Share::$UserProfile->type;
+      $this->setProfile($id_user);
+    }
+    else // полная регистрация
+    {
+      $rq = Yii::app()->request;
+      // step
+      if(isset($rq->cookies['urs']))
       {
-        $this->step = 0;
-        throw new CHttpException(404, 'Error');
+        $this->step = self::getStep();
+        if(!in_array(
+          $this->step,
+          [self::$STEP_TYPE,self::$STEP_LOGIN,self::$STEP_CODE,self::$STEP_PASSWORD,self::$STEP_AVATAR]
+        ))
+        {
+          $this->step = 0;
+          throw new CHttpException(404, 'Error');
+        }
       }
+      else
+      {
+        $this->setStep(self::$STEP_TYPE);
+      }
+      // user
+      if(isset($rq->cookies['urh']))
+      {
+        $this->user = $rq->cookies['urh']->value;
+      }
+      else
+      {
+        $this->user = md5(time() . rand(1111111,9999999) . self::$SALT);
+        $rq->cookies['urh'] = new CHttpCookie('urh', $this->user);
+      }
+      // data
+      $this->data = $this->getData();
+      if(!is_array($this->data))
+      {
+        $this->setStep(self::$STEP_TYPE);
+      }
+      if(!Yii::app()->getRequest()->isAjaxRequest)
+      {
+        $pages = new PagesContent(); // страница с условиями пользования сайтом
+        $lang = Yii::app()->session['lang'];
+        $this->data['condition'] = $pages->getPageContent('conditions',$lang);
+      }
+      $this->data['time_to_repeat'] = $this->isTimeToRepeat($this->data['time_code']);
+      // view
+      $this->view = self::$VIEW_TEMPLATE . $this->step;
+      // profile
+      $this->setProfile();
+      //
+      $this->errors = [];
     }
-    else
-    {
-      $this->setStep(self::$STEP_TYPE);
-    }
-    // user
-    if(isset($rq->cookies['urh']))
-    {
-      $this->user = $rq->cookies['urh']->value;
-    }
-    else
-    {
-      $this->user = md5(time() . rand(1111111,9999999) . self::$SALT);
-      $rq->cookies['urh'] = new CHttpCookie('urh', $this->user);
-    }
-    // data
-    $this->data = $this->getData();
-    if(!is_array($this->data))
-    {
-      $this->setStep(self::$STEP_TYPE);
-    }
-    if(!Yii::app()->getRequest()->isAjaxRequest)
-    {
-      $pages = new PagesContent(); // страница с условиями пользования сайтом
-      $lang = Yii::app()->session['lang'];
-      $this->data['condition'] = $pages->getPageContent('conditions',$lang);
-    }
-    $this->data['time_to_repeat'] = $this->isTimeToRepeat($this->data['time_code']);
-    // view
-    $this->view = self::$VIEW_TEMPLATE . $this->step;
-    // profile
-    $this->setProfile();
-    //
-    $this->errors = [];
   }
   /**
    * @param $step

@@ -1027,4 +1027,38 @@ class AjaxController extends AppController
       echo CJSON::encode($arRes);
       Yii::app()->end();
     }
+    /**
+     *
+     */
+    public function actionRegisterAvatar()
+    {
+      $rq = Yii::app()->getRequest();
+      if(Share::isGuest() || !$rq->isAjaxRequest)
+      {
+        Yii::app()->end();
+      }
+      $post = $rq->getParam('data');
+      $post = json_decode($post, true, 5, JSON_BIGINT_AS_STRING);
+
+      $model = new UserRegister(Share::$UserProfile->id);
+      if(isset($_FILES['upload'])) // только загрузка файлов
+      {
+        $data = $model->saveImage();
+        echo CJSON::encode($data);
+        Yii::app()->end();
+      }
+      elseif (isset($post['width']) && isset($post['height'])) // редактирование аватара
+      {
+        $data = ($post['edit']==1
+          ? $model->onlyEditImage($post)
+          : $model->editImage($post));
+        echo CJSON::encode($data);
+        Yii::app()->end();
+      }
+      elseif (isset($post['delfile'])) // удаление файлов
+      {
+        $model->deleteImage($post['delfile']);
+        Yii::app()->end();
+      }
+    }
 }
