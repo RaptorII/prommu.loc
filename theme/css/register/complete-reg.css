@@ -50,7 +50,7 @@
 }
 
 #DiContent .epa__save-btn {
-    max-width: 250px;
+    max-width: 75%; /*250px;*/
     margin-bottom: 30px;
 }
 

@@ -556,7 +556,12 @@ h6.login__header {
     white-space: nowrap;
 }
 
-
+.fancybox-inner {
+    margin: 115px;
+}
+.fancybox-slide>* {
+    margin: 0!important;
+}
 
 
 

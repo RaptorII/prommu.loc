@@ -47,59 +47,65 @@
       <button type="submit" class="btn-green" data-step="2">Продолжить</button>
     </p>
 
-    <div class="login__social-container">
-      <span class="register__preview"><b>Войти через социальные сети:</b></span>
-      <div class="reg-social__link-block">
-        <a
-          href="<?=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'facebook'])?>"
-          class="reg-social__link fb js-g-hashint"
-          title="facebook" >
+    <?php
+      if(!Share::isEmployer($model->data['type'])) {
+          ?>
+          <div class="login__social-container">
+              <span class="register__preview"><b>Войти через социальные сети:</b></span>
+              <div class="reg-social__link-block">
+                  <a
+                          href="<?= $this->createUrl(MainConfig::$PAGE_LOGIN, ['service' => 'facebook']) ?>"
+                          class="reg-social__link fb js-g-hashint"
+                          title="facebook">
                 <span class="mob-hidden">
                     facebook
                 </span>
-        </a>
-        <a
-          href="<?=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'vkontakte'])?>"
-          class="reg-social__link vk js-g-hashint"
-          title="vkontakte.ru" >
+                  </a>
+                  <a
+                          href="<?= $this->createUrl(MainConfig::$PAGE_LOGIN, ['service' => 'vkontakte']) ?>"
+                          class="reg-social__link vk js-g-hashint"
+                          title="vkontakte.ru">
                 <span class="mob-hidden">
                     vkontakte.ru
                 </span>
-        </a>
-        <!--<a
-          href="<?/*=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'mailru'])*/?>"
+                  </a>
+                  <!--<a
+          href="<?/*=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'mailru'])*/ ?>"
           class="reg-social__link ml js-g-hashint"
           title="mail.ru">
                 <span class="mob-hidden">
                     mail.ru
                 </span>
         </a>-->
-        <a
-          href="<?=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'odnoklassniki'])?>"
-          class="reg-social__link od js-g-hashint"
-          title="odnoklasniki.ru"
-        >
+                  <a
+                          href="<?= $this->createUrl(MainConfig::$PAGE_LOGIN, ['service' => 'odnoklassniki']) ?>"
+                          class="reg-social__link od js-g-hashint"
+                          title="odnoklasniki.ru"
+                  >
                 <span class="mob-hidden">
                     odnoklasniki.ru
                 </span>
-        </a>
-        <a
-          href="<?=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'google_oauth'])?>"
-          class="reg-social__link go js-g-hashint"
-          title="google">
+                  </a>
+                  <a
+                          href="<?= $this->createUrl(MainConfig::$PAGE_LOGIN, ['service' => 'google_oauth']) ?>"
+                          class="reg-social__link go js-g-hashint"
+                          title="google">
                 <span class="mob-hidden">
                     google
                 </span>
-        </a>
-        <a
-          href="<?=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'yandex_oauth'])?>"
-          class="reg-social__link ya js-g-hashint"
-          title="yandex">
+                  </a>
+                  <a
+                          href="<?= $this->createUrl(MainConfig::$PAGE_LOGIN, ['service' => 'yandex_oauth']) ?>"
+                          class="reg-social__link ya js-g-hashint"
+                          title="yandex">
                 <span class="mob-hidden">
                     yandex
                 </span>
-        </a>
-      </div>
-    </div>
+                  </a>
+              </div>
+          </div>
+          <?php
+      }
+    ?>
   </div>
 </div>
