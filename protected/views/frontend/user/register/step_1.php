@@ -21,7 +21,7 @@
         <p class="input">
             <label for="radio-2" class="btn-orange">Я ищу сотрудников</label>
             <label class="txt">
-                Хочу разместить вакансии и найти сотрудников
+                Хочу разместить вакансию и найти сотрудников
             </label>
             <input type="radio" name="type" value="<?= UserProfile::$EMPLOYER ?>" id="radio-2" class="input-type">
         </p>
