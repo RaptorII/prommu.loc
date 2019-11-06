@@ -43,6 +43,12 @@
     /*margin-top: 20px;*/
 }
 
+.epa__checkbox:after {
+    content: '';
+    right: 10px;
+    border: 1px solid var(--color-grey);
+}
+
 #DiContent .epa__save-btn {
     max-width: 250px;
     margin-bottom: 30px;
@@ -59,54 +65,83 @@
     content: none;
 }
 
+@media screen and (min-width: 768px){
+    #DiContent .edit-profile-applicant .epa__checkbox.epa__checkbox-famale:after {
+        right: 10px;
+    }
+}
+@media screen and (min-width: 990px){
+    #DiContent .edit-profile-applicant .epa__label {
+        border: 1px solid var(--color-grey);
+    }
+
+    #DiContent .edit-profile-applicant .epa__checkbox {
+        float: left;
+        left: 15px;
+    }
+    #DiContent .edit-profile-applicant .epa__checkbox.epa__checkbox-famale:after {
+        right: 30px;
+    }
+    #DiContent .edit-profile-applicant .epa__checkbox.epa__checkbox-famale {
+        left: 15px;
+        text-align: left;
+    }
+}
+
+@media screen and (max-width: 768px){
+    .epa__checkbox:after {
+        content: '';
+        right: 10px;
+    }
+}
 @media screen and (max-width: 450px){
-    .complete__reg {
-        padding: 5px;
-    }
-    .complete__reg .country-phone-selected img {
-        margin: 10px 1px;
-    }
-    #DiContent .edit-profile-applicant .complete__reg .epa__phone {
-        width: 110px;
-    }
-    .edit-profile-applicant {
-        max-width: 270px;
-        margin: 0 auto;
-    }
-    #F1compprof.edit-profile-employer .epe__input-contact {
-        padding-left: 115px;
-    }
-    #F1compprof.edit-profile-employer .epe__input-mail {
-        padding-left: 70px;
-    }
-    #F1compprof.edit-profile-employer .epe__label {
-        padding: 0;
-    }
-    #F1compprof.edit-profile-employer .epe__label.epe__select {
-        height: 70px;
-    }
-    #F1compprof.edit-profile-employer .epe__input-type {
-        padding-left: 100px;
-    }
+.complete__reg {
+padding: 5px;
+}
+.complete__reg .country-phone-selected img {
+margin: 10px 1px;
+}
+#DiContent .edit-profile-applicant .complete__reg .epa__phone {
+width: 110px;
+}
+.edit-profile-applicant {
+max-width: 270px;
+margin: 0 auto;
+}
+#F1compprof.edit-profile-employer .epe__input-contact {
+padding-left: 115px;
+}
+#F1compprof.edit-profile-employer .epe__input-mail {
+padding-left: 70px;
+}
+#F1compprof.edit-profile-employer .epe__label {
+padding: 0;
+}
+#F1compprof.edit-profile-employer .epe__label.epe__select {
+height: 70px;
+}
+#F1compprof.edit-profile-employer .epe__input-type {
+padding-left: 100px;
+}
 }
 
 @media (min-width: 450px) {
-    .epa__post-block {
-        width: 100%;
-        flex: 0 1 100%;
-    }
-    .epa__attr-block1 {
-        width: 35%;
-    }
+.epa__post-block {
+width: 100%;
+flex: 0 1 100%;
+}
+.epa__attr-block1 {
+width: 35%;
+}
 }
 
 @media (min-width: 768px) {
-    .epa__post-block {
-        width: 50%;
-        flex: 0 1 50%;
-    }
+.epa__post-block {
+width: 50%;
+flex: 0 1 50%;
+}
 
-    /*#contacts-module,*/
+/*#contacts-module,*/
     #main-module {
         max-width: none;
         padding-right: 0;
