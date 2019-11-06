@@ -453,6 +453,7 @@ h6.login__header {
 .login__social-container.five .reg-social__link {
     width: 25%; /*33.33%; /*20%;*/
 }
+.login__social-container.five{ display: none; }
 
 .login__txt {
     position: absolute;
