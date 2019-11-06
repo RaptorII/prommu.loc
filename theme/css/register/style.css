@@ -225,7 +225,7 @@ h6.login__header {
     overflow: hidden;
     margin: 0 auto;
     border-radius: 50%;
-    border: 1px solid var(--color-l-grn);
+    border: 2px solid var(--color-l-grn);
 }
 .login__photo-img .login-img-vertical {
     max-width: 100%;
@@ -236,6 +236,12 @@ h6.login__header {
 }
 .login__photo-img img{ width: 100% }
 .login__photo-img img.active-logo{ cursor:pointer }
+
+#register_form .login__photo-img.input__error {
+    border: 2px solid red;
+    transition: var(--main-trans);
+}
+
 .btn-green,
 .btn-orange,
 .btn-grey {
