@@ -446,8 +446,8 @@ var UploadAvatar = (function () {
       self.bWebCam
     )
     {
-      $('.upload-block').after('<p class="snapshot-block">'
-        + '<span class="prmu-btn prmu-btn_normal btn-snapshot">Сделать снимок</span></p>');
+      $('.upload-block').after('<div class="snapshot-block">'
+        + '<div class="prmu-btn prmu-btn_normal btn-snapshot"><span>Сделать снимок</span></div></div>');
       $('.btn-snapshot').click(function(){
         MainScript.stateLoading(true);
         self.createPopup(true,false);
