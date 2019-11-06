@@ -186,17 +186,24 @@ var RegisterPage = (function () {
           $('.YiiUpload__camera img').hide();
           $('.YiiUpload__form-btns').html('<div class="YiiUpload__form-btn YiiUpload__wc_shoot">Сделать снимок</div>');
         })
-      .on(
+      .on( // edit image OR upload image
         'click',
-        '.active-logo',
+        '#login-img',
         function(){
-          if(this.dataset.big != 'undefined')
+          if($(this).hasClass('active-logo'))
           {
-            self.createPopup(true,true);
-            $('.YiiUpload__editor-field').html('<img src="' + this.dataset.big
-              + '" data-name="' + this.dataset.name
-              + '" alt="' + this.alt + '" data-edit="1">');
-            self.setCropper();
+            if(this.dataset.big != 'undefined')
+            {
+              self.createPopup(true,true);
+              $('.YiiUpload__editor-field').html('<img src="' + this.dataset.big
+                + '" data-name="' + this.dataset.name
+                + '" alt="' + this.alt + '" data-edit="1">');
+              self.setCropper();
+            }
+          }
+          else
+          {
+            $('.input-upload').click();
           }
         })
       .on(
@@ -393,8 +400,6 @@ var RegisterPage = (function () {
   // проверка кода подтверждения
   RegisterPage.prototype.checkCode = function (input)
   {
-    console.log(input);
-
     if(!$(input).is('*'))
       return true;
 
@@ -517,6 +522,7 @@ var RegisterPage = (function () {
     if(!$('.repeat-code span').is('*'))
       return false;
 
+    clearInterval(self.codeTimer);
     self.codeTimer = setInterval(function(){
       let main = $('.repeat-code span'),
         sec = Number($(main).text());

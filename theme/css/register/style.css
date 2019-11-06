@@ -234,8 +234,10 @@ h6.login__header {
 .login__photo-img .login-img-horizontal {
     max-height: 100%;
 }
-.login__photo-img img{ width: 100% }
-.login__photo-img img.active-logo{ cursor:pointer }
+.login__photo-img img{
+    width: 100%;
+    cursor:pointer
+}
 
 #register_form .login__photo-img.input__error {
     border: 2px solid red;
@@ -548,7 +550,10 @@ h6.login__header {
     color: var(--color-l2-grey);
     cursor: no-drop;
 }
-
+.repeat-code.grey em{
+    font-style: normal;
+    white-space: nowrap;
+}
 
 
 
