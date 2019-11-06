@@ -1,13 +1,17 @@
 <?php
+$bUrl = Yii::app()->baseUrl;
 $gcs = Yii::app()->getClientScript();
 
-$gcs->registerCssFile(MainConfig::$CSS . 'phone-codes/style.css');
-$gcs->registerCssFile(MainConfig::$CSS . 'private/page-prof-emp.css');
-$gcs->registerCssFile(MainConfig::$CSS . 'private/page-edit-prof-emp.css');
-$gcs->registerCssFile(MainConfig::$CSS .'register/complete-reg.css');
+$gcs->registerCssFile($bUrl . MainConfig::$CSS . 'phone-codes/style.css');
+$gcs->registerCssFile($bUrl . MainConfig::$CSS . 'private/page-prof-emp.css');
+$gcs->registerCssFile($bUrl . MainConfig::$CSS . 'private/page-edit-prof-emp.css');
+$gcs->registerCssFile($bUrl . MainConfig::$CSS  . 'dist/cropper.min.css');
+$gcs->registerCssFile($bUrl . MainConfig::$CSS . 'register/complete-reg.css');
 
-$gcs->registerScriptFile(MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
-$gcs->registerScriptFile(MainConfig::$JS . 'private/page-edit-prof-emp.js', CClientScript::POS_END);
+$gcs->registerScriptFile($bUrl . MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
+$gcs->registerScriptFile($bUrl . MainConfig::$JS . 'private/page-edit-prof-emp.js', CClientScript::POS_END);
+$gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/cropper.min.js', CClientScript::POS_END);
+$gcs->registerScriptFile($bUrl . MainConfig::$JS . 'register/complete-reg.js', CClientScript::POS_END);
 
 $arUserCity = Yii::app()->db->createCommand()
   ->select('id_city, name')
@@ -25,16 +29,51 @@ $arUserCity = Yii::app()->db->createCommand()
  */
 ?>
 <div class='col-xs-12 col-sm-4 col-lg-3 no-md-relat ppe__logo'>
+  <form id="avatar_form">
+    <script>
+      var imageParams = {
+        maxFileSize:<?=Share::$UserProfile->arYiiUpload['maxFileSize']?>,
+        fileFormat:<?=json_encode(Share::$UserProfile->arYiiUpload['fileFormat'])?>
+      };
+    </script>
     <div class="upp__img-block">
-        <div class="upp__img-block-main">
-          <img src="<?=Share::getPhoto(
-            $viData['userInfo']['id_user'],
-            UserProfile::$EMPLOYER,
-            $viData['userInfo']['logo'],
-            'medium'
-          );?>" alt="Работодатель <?=$viData['userInfo']['name']?> prommu.com">
-        </div>
+      <?
+      $exInfo = Share::$UserProfile->exInfo;
+      $photo = Share::isApplicant() ? $exInfo->photo : $exInfo->logo;
+      ?>
+      <? if(empty($photo)): ?>
+        <p class="center">
+          Допустимые форматы файлов <?=implode(', ', Share::$UserProfile->arYiiUpload['fileFormat']);?><br>
+          Размер не более <?=Share::$UserProfile->arYiiUpload['maxFileSize']?> Мб.
+        </p>
+      <? endif; ?>
+      <div class="upp__img-block-main avatar__logo-main">
+        <?
+        if(!empty($photo))
+        {
+          $src = Share::getPhoto($exInfo->id, $exInfo->status, $photo);
+          $bigSrc = Share::getPhoto($exInfo->id, $exInfo->status, $photo, 'big');
+        }
+        else
+        {
+          $src = '/theme/pic/register-popup-page/register_popup_r_logo.png'; // Миша, ты обещал картинку, не забудь)
+          $bigSrc = '';
+        }
+        ?>
+        <img
+          src="<?=$src?>"
+          alt="<?=$photo?>"
+          data-name="<?=$photo?>"
+          data-big="<?=$bigSrc?>"
+          id="login-img"
+          class="ppe__logo-main__img<?=(!empty($photo)?' active-logo':'')?>">
+      </div>
     </div>
+    <p class="upload-block">
+      <span class="prmu-btn prmu-btn_normal btn-upload"><span>Загрузить фото</span></span>
+      <span class="input"><input type="file" name="upload" class="input-upload hide"></span>
+    </p>
+  </form>
 </div>
 
 <?

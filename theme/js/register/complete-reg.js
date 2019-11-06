@@ -179,7 +179,7 @@ var UploadAvatar = (function () {
     if(!$('#login-img').is('*'))
       return true;
 
-    this.inputError($('.ppp__logo-main'), !$('#login-img').hasClass('active-logo'));
+    this.inputError($('.avatar__logo-main'), !$('#login-img').hasClass('active-logo'));
   },
   // утсановка поля
   UploadAvatar.prototype.inputError = function (input, error)
@@ -244,23 +244,23 @@ var UploadAvatar = (function () {
 
         if($.inArray(format, imageParams.fileFormat)<0) // проверяем формат на корректность
         {
-          $('.upload-block').append('<span class="login__error">');
-          $('.login__error').html('У файла некорректный формат');
+          $('.upload-block').append('<span class="avatar__error">');
+          $('.avatar__error').html('У файла некорректный формат');
           $(input).val('');
           return;
         }
         if((imageParams.maxFileSize * 1024 * 1024) < f.size)
         {
-          $('.upload-block').append('<span class="login__error">');
-          $('.login__error').html('Размер файла больше допустимого значения (' + imageParams.maxFileSize + 'Мб)');
+          $('.upload-block').append('<span class="avatar__error">');
+          $('.avatar__error').html('Размер файла больше допустимого значения (' + imageParams.maxFileSize + 'Мб)');
           $(input).val('');
           return;
         }
       }
       else // недопустимое название файла
       {
-        $('.upload-block').append('<span class="login__error">');
-        $('.login__error').html('Некорректный файл');
+        $('.upload-block').append('<span class="avatar__error">');
+        $('.avatar__error').html('Некорректный файл');
         $(input).val('');
         return;
       }
@@ -280,12 +280,12 @@ var UploadAvatar = (function () {
         r = JSON.parse(r);
         if(r.error.length) // если есть ошибки
         {
-          $('.upload-block').append('<span class="login__error">');
-          $('.login__error').html($.parseHTML(r.error.join('</br>')))
+          $('.upload-block').append('<span class="avatar__error">');
+          $('.avatar__error').html($.parseHTML(r.error.join('</br>')))
         }
         else // есть успешно загруженные файлы
         {
-          $('.login__error').remove();
+          $('.avatar__error').remove();
           let image = '<img src="' + r.success.path
             + '" alt="' + r.success.oldname + '" data-name="'
             + r.success.name + '"/>';
@@ -307,7 +307,7 @@ var UploadAvatar = (function () {
   {
     let self = this,
       image = document.querySelector('.YiiUpload__editor-field img'),
-      resultImage = $('.ppp__logo-main img');
+      resultImage = $('.avatar__logo-main img');
 
     self.cropOptions['name'] = $(image).data('name');
     self.cropOptions['oldName'] = $(image).attr('alt');
@@ -334,7 +334,7 @@ var UploadAvatar = (function () {
           $(resultImage).attr('data-name',r.name);
           $(resultImage).attr('data-big',r.items['000']);
           $(resultImage).addClass('active-logo');
-          $('.ppp__logo-main').removeClass('input__error');
+          $('.avatar__logo-main').removeClass('input__error');
         }
         self.createPopup(false,false);
         self.objCropper.destroy();
@@ -427,7 +427,7 @@ var UploadAvatar = (function () {
 
       if(error.length)
       {
-        $('.snapshot-block').append('<p class="separator center snapshot-error"><span class="login__error">' + error + '</span></p>')
+        $('.snapshot-block').append('<p class="separator center snapshot-error"><span class="avatar__error">' + error + '</span></p>')
       }
     }
     $('.YiiUpload__camera').hide();

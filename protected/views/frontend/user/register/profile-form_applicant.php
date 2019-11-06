@@ -92,7 +92,7 @@ foreach ($attrAll as $p)
             Размер не более <?=Share::$UserProfile->arYiiUpload['maxFileSize']?> Мб.
           </p>
         <? endif; ?>
-        <div class="ppp__logo-main">
+        <div class="ppp__logo-main avatar__logo-main">
           <?
           if(!empty($photo))
           {
