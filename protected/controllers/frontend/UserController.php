@@ -556,7 +556,7 @@ class UserController extends AppController
         $this->redirect($redirect);
       }
       $rq = Yii::app()->getRequest();
-      //$model->setStep(1);
+      $urlStep = Yii::app()->getRequest()->getParam('step');
 
       if($rq->isAjaxRequest)
       {
@@ -620,6 +620,16 @@ class UserController extends AppController
       }
       else // не AJAX
       {
+        if(empty($urlStep)) // редиректим на урл со ступенью
+        {
+          $link = MainConfig::$PAGE_REGISTER . DS . UserRegister::$URL_STEPS[$model->step];
+          $this->redirect($link);
+        }
+        elseif($urlStep != UserRegister::$URL_STEPS[$model->step])
+        {
+          $link = MainConfig::$PAGE_REGISTER . DS . UserRegister::$URL_STEPS[$model->step];
+          $this->redirect($link);
+        }
         $this->renderRegister($model->view, ['model'=>$model]);
       }
     }
@@ -676,36 +686,6 @@ class UserController extends AppController
         $this->redirect(MainConfig::$PAGE_PROFILE);
         
         $this->render($this->ViewModel->pageEditProfile, array('viData'=>$arResult, 'viErrorData'=>$res));
-    }
-
-
-
-    private function proccessRegister()
-    {
-        $type = Yii::app()->getRequest()->getParam('p');
-        $data = array();
-
-
-        // register user
-        if( Yii::app()->getRequest()->isPostRequest )
-        {
-            $data = (new Auth())->registerUser($type);
-            if( !$data['error'] ) $this->redirect(Yii::app()->createUrl(MainConfig::$PAGE_REGISTER, array('p' => $type, 's' => 2)));
-        }
-        else
-        {
-            $model = new Settings;
-            $data['use_recaptcha'] = boolval($model->getDataByCode('register_captcha'));
-        }
-
-        if( $type == '1' )
-        {
-            $view = MainConfig::$VIEWS_REGISTER_APPLICANT;
-            Yii::app()->getClientScript()->registerScriptFile('//vk.com/js/api/openapi.js', CClientScript::POS_END);
-
-        } else { $view = MainConfig::$VIEWS_REGISTER_COMPANY; } // endif
-
-        $this->render($view, array('viData' => $data), array('nobc' => '1'));
     }
 
 

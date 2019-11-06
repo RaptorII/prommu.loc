@@ -235,8 +235,6 @@ var RegisterPage = (function () {
 
           self.delPhoto();
         });
-    // выключаем копипаст
-    $('#register_form [type="text"]').bind('paste',function(e) { e.preventDefault() });
     // отображаем правила пользования сайтом
     $('#my_fancybox').on('click', function() {
       if(typeof pageCondition != 'string')
@@ -268,7 +266,7 @@ var RegisterPage = (function () {
       if(step==3)
       {
         self.firstInputCode = false;
-        self.checkCode('#register_form .input-code');
+        self.checkCode($('#register_form .input-code'));
       }
       if(step==4)
       {
@@ -292,6 +290,14 @@ var RegisterPage = (function () {
     }
     // запуск анимашки
     self.startSvg();
+    // проверка копипаста
+    $('.input-name').bind('paste',function() { self.checkName(this) });
+    $('.input-surname').bind('paste',function() { self.checkName(this) });
+    $('.input-company').bind('paste',function() { self.checkCompany(this) });
+    $('.input-login').bind('paste',function() { self.checkText(this) });
+    $('.input-code').bind('paste',function() { self.checkCode(this) });
+    $('.input-password').bind('paste',function() { self.checkPassword() });
+    $('.input-r-password').bind('paste',function() { self.checkPassword() });
   },
   // отправляем аяксом
   RegisterPage.prototype.send = function (data) {
@@ -304,7 +310,7 @@ var RegisterPage = (function () {
         $('#register_form').html(html);
         self.startSvg(); // запуск анимашки
         // выключаем копипаст
-        $('#register_form [type="text"]').bind('paste',function(e) { e.preventDefault() });
+        //$('#register_form [type="text"]').bind('paste',function(e) { e.preventDefault() });
         if(typeof data.href !=='undefined')
         {
           window.location.href = data.href;
@@ -314,6 +320,30 @@ var RegisterPage = (function () {
           self.setTimer();
           self.checkSnapshot();
           $('body').removeClass('prmu-load');
+          // установка правильного урла
+          let newLink = '';
+          $.each(arUrlSteps,function(i,url){
+            let n = location.pathname.indexOf(url);
+            if(n>=0)
+            {
+              newLink = location.pathname.slice(0, n);
+            }
+          });
+          if(newLink.length)
+          {
+            let btn = $('#register_form button'),
+                step = Number($(btn).data('step'));
+            newLink = location.protocol + '//' + location.host + newLink + arUrlSteps[step];
+            window.history.pushState('object or string', 'page name', newLink);
+          }
+          // проверка копипаста
+          $('.input-name').bind('paste',function() { self.checkName(this) });
+          $('.input-surname').bind('paste',function() { self.checkName(this) });
+          $('.input-company').bind('paste',function() { self.checkCompany(this) });
+          $('.input-login').bind('paste',function() { self.checkText(this) });
+          $('.input-code').bind('paste',function() { self.checkCode(this) });
+          $('.input-password').bind('paste',function() { self.checkPassword() });
+          $('.input-r-password').bind('paste',function() { self.checkPassword() });
         }
       },
       error: function(){
@@ -363,10 +393,12 @@ var RegisterPage = (function () {
   // проверка кода подтверждения
   RegisterPage.prototype.checkCode = function (input)
   {
+    console.log(input);
+
     if(!$(input).is('*'))
       return true;
 
-    let v = $(input).val().replace(/\D/, '').substr(0,this.codeLength),
+    let v = $(input).val().replace(/\D+/g, '').substr(0,this.codeLength),
       checkCode = v.length==this.codeLength;
 
     $(input).val(v);

@@ -19,6 +19,14 @@ class UserRegister
   public static $STEP_CODE = 3;
   public static $STEP_PASSWORD = 4;
   public static $STEP_AVATAR = 5;
+  //
+  public static $URL_STEPS = [
+    1 => 'type',
+    2 => 'login',
+    3 => 'code',
+    4 => 'password',
+    5 => 'avatar'
+  ];
   // contact type
   public static $LOGIN_TYPE_EMAIL = 0;
   public static $LOGIN_TYPE_PHONE = 1;
@@ -596,7 +604,7 @@ class UserRegister
         $this->user = $query['user'];
         Yii::app()->request->cookies['urh'] = new CHttpCookie('urh', $this->user);
         $this->setStep(self::$STEP_AVATAR);
-        return MainConfig::$PAGE_REGISTER;
+        return MainConfig::$PAGE_REGISTER . DS . self::$URL_STEPS[self::$STEP_AVATAR];
       }
       elseif ($step==md5('profile' . self::$SALT))
       {
@@ -618,7 +626,8 @@ class UserRegister
       {
         $this->setData(['is_confirm'=>1, 'is_confirm_time'=>time()]);
       }
-      return MainConfig::$PAGE_REGISTER;
+      return MainConfig::$PAGE_REGISTER . DS
+        . self::$URL_STEPS[(!empty($query['id_user']) ? self::$STEP_AVATAR : self::$STEP_PASSWORD)];
     }
   }
   /**

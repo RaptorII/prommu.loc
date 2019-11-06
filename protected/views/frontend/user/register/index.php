@@ -86,5 +86,6 @@
         </p>
     </div>
 </div>
+<script>var arUrlSteps = <?=json_encode(UserRegister::$URL_STEPS)?></script>
 </body>
 </html>
