@@ -168,11 +168,6 @@ var RegisterPage = (function () {
           file = new Blob([u8arr], {type:mime});
           self.sendImage(file);
           self.video.srcObject.getTracks()[0].stop(); // выключаем поток
-          navigator.getUserMedia(
-            { audio:false, video:false },
-            function(e){ self.getStream(e) },
-            function(e){ self.streamError(e) }
-          );
           //
           $('.YiiUpload__block').hide();
           $('.YiiUpload__camera img').attr('src','');
