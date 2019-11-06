@@ -184,9 +184,11 @@ flex: 0 1 50%;
         padding: 0 10px;
         width: 120px;
     }
+
+    .epa__content-module {
+        padding-right: 65px;
+    }
 }
-
-
 /*.complete__prof-list li{*/
     /*position: relative;*/
     /*font-weight: 400;*/

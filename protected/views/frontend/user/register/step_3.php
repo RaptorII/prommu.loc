@@ -49,7 +49,7 @@
       <p class="separator">
         <? $isRepeat = $model->data['time_to_repeat'] == 0;  ?>
         <a href="javascript:void(0)" class="back__away repeat-code<?=(!$isRepeat)?' grey':''?>"><?=(!$isRepeat
-            ? 'Повторная отправка кода будет доступна через <em><span>' . $model->data['time_to_repeat'] . '</span> сек.</em>'
+            ? 'Повторная отправка кода будет доступна через <em><span>' . $model->data['time_to_repeat'] . '</span> &nbsp; сек.</em>'
             : 'Отправить повторно')?></a>
       </p>
     <? endif; ?>

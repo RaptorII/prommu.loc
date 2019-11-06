@@ -1446,11 +1446,12 @@ jQuery(function($){
 	}
 	//
 	$(document).click(function(e){
+
 		if($(e.target).closest('.epa__period-error').length || $(e.target).is('.epa__period-error'))
 		{
 			var main = $(e.target).closest('.epa__period')[0],
 					input = $(main).find('.epa__input');
-			$(input).focus();
+			$(input).toLocaleString('ru');
 			remErr(main);
 		}
 	});
