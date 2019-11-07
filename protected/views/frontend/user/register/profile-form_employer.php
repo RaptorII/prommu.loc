@@ -165,49 +165,12 @@ $arUserCity = Yii::app()->db->createCommand()
                 <span class="epe__label-name">Ваш email:</span>
                 <input type='text' name='email' value="<?= $viData['userAllInfo']['emplInfo']['email'] ?>"
                        class="epe__input epe__input-mail epe__required" id="epe-email" autocomplete="off">
-                <span class="epe__confirm<?= ($viData['userAllInfo']['emplInfo']['confirmEmail'] && !empty($viData['userAllInfo']['emplInfo']['email']) ? ' complete' : '') ?>"
-                      id="conf-email">
-                                <?php if ($viData['userAllInfo']['emplInfo']['confirmEmail'] && !empty($viData['userAllInfo']['emplInfo']['email'])): ?>
-                                  <p>Почта подтверждена.</p>
-                                <?php else: ?>
-                                  <p>Почта не подтверждена. <em>Подтвердить</em></p>
-                                <?php endif; ?>
-                                </span>
               </label>
-              <div class="epe__confirm-block" id="conf-email-block">
-                <span class="epe__confirm-text">На Вашу почту выслан код для подтверждения. Введите его в это поле!</span>
-                <label class="epe__label">
-                  <span class="epe__label-name">Проверочный код:</span>
-                  <input type='text' name='confirm-code' value="" class="epe__input" id="conf-email-inp"
-                         maxlength="6" autocomplete="off">
-                </label>
-                <div class="epe__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
-                <div class="clearfix"></div>
-              </div>
               <div class="epe__label">
                 <span class="epe__label-name epe__phone-name">Телефон:</span>
                 <input type='text' name='user-attribs[mob]' value="<?= substr($viData['userAllInfo']['userAttribs'][1]['val'], 2,20) ?>"
                        class="epe__input epe__phone epe__input-phone" id="phone-code" autocomplete="off">
-                <span class="epe__confirm<?= ($viData['info']['confirmPhone'] ? ' complete' : '') ?>"
-                      id="conf-phone">
-                                <?php if (!$viData['info']['confirmPhone']): ?>
-                                  <p>Телефон не подтвержден. <em>Подтвердить</em></p>
-                                <?php else: ?>
-                                  <p>Телефон подтвержден.</p>
-                                <?php endif; ?>
-                                </span>
               </div>
-              <div class="epe__confirm-block" id="conf-phone-block">
-                <span class="epe__confirm-text">На Ваш телефон выслан код для подтверждения. Введите его в это поле!</span>
-                <label class="epe__label">
-                  <span class="epe__label-name">Проверочный код:</span>
-                  <input type='text' name='confirm-code' value="" class="epe__input" id="conf-phone-inp"
-                         maxlength="6" autocomplete="off">
-                </label>
-                <div class="epe__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
-                <div class="clearfix"></div>
-              </div>
-
               <p class="complete__txt center">
                 После активации вам станет доступен каталог всех соискателей со всеми функциями
               </p>

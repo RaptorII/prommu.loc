@@ -97,7 +97,7 @@ jQuery(function($){
               $('html, body').animate({ scrollTop: $(scrollItem).offset().top-20 }, 1000);
               MainScript.buttonLoading(self,false);
             }
-            if(!errors && !arErrors.length){
+            if(!errors && !arErrors.length && bAvatar){
               $('#F1compprof').submit();
             }
           }
@@ -127,7 +127,7 @@ jQuery(function($){
           }
         });
       }
-      if(!errors && !arErrors.length){
+      if(!errors && !arErrors.length && bAvatar){
         $('#F1compprof').submit();
       }
     }
@@ -222,155 +222,12 @@ jQuery(function($){
     }
   }
   //
-  //
-  //
   getFlagTimer = setInterval(function(){ // ищем флаг страны
     if($('.country-phone-selected>img').is('*')){
       oldFlag = $('.country-phone-selected>img').attr('class');
       clearInterval(getFlagTimer);
     }
   },500);
-  // события верикации
-  $('#conf-email').on('click','em',function(){ restoreCode('email') });
-  $('#conf-phone').on('click','em',function(){ restoreCode('phone') });
-  $('#conf-email-block .epe__confirm-btn').click(function(){ confirmContact('email') });
-  $('#conf-phone-block .epe__confirm-btn').click(function(){ confirmContact('phone') });
-
-  function confirmContact(e){
-    var val = e=='email' ? $('#epe-email').val() : ($('[name="__phone_prefix"]').val() + $('#phone-code').val()),
-      $btn = $('#conf-' + e),
-      $code = $('#conf-' + e + '-inp'),
-      code = $code.val(),
-      $hint = $('.confirm-user.' + e),
-      $block = $('#conf-' + e + '-block'),
-      main = $btn.closest('.epe__label');
-
-    if(code!=''){
-      $btn.addClass('loading').show();
-      $('#conf-mail-block').fadeOut();
-      $.ajax({
-        type: 'POST',
-        url: '/ajax/confirm',
-        data: 'code='+ code + '&' + e + '=' + val,
-        dataType: 'json',
-        success: function(r){
-          $btn.removeClass('loading');
-          if(r.code==200){
-            $btn.addClass('complete');
-            $hint.fadeOut(); // спрятали подсказку под лого
-            if(e=='email'){
-              showPopupMess('E-mail подтвержден','Электронная почта подтверждена');
-              $btn.find('p').text('Почта подтверждена');
-              oldEmail = val;
-              confirmEmail = true;
-            }
-            else{
-              showPopupMess('Телефон подтвержден','Номер телефона подтвержден');
-              $btn.find('p').text('Телефон подтвержден');
-              oldPhone = $('#phone-code').val();
-              selectPhoneCode = $('[name="__phone_prefix"]').val();
-              oldFlag = $('.country-phone-selected>img').attr('class');
-              confirmPhone = true;
-            }
-          }
-          else{
-            $hint.fadeIn(); // показали подсказку под лого
-            if(e=='email'){
-              showPopupMess('Ошибка','Электронная почта не подтверждена');
-              $('#epe-email').val(oldEmail);
-              confirmEmail = false;
-            }
-            else{
-              showPopupMess('Ошибка','Номер телефона не подтвержден');
-              $('#phone-code').val(oldPhone);
-              $('[name="__phone_prefix"]').val(selectPhoneCode);
-              $('.country-phone-selected>img').attr('class',oldFlag);
-              $('.country-phone-selected>span').text('+' + selectPhoneCode);
-              confirmPhone = false;
-            }
-          }
-          $code.val('');
-          $block.fadeOut();
-          $(main).fadeIn();
-        }
-      });
-    }
-  }
-  //
-  function restoreCode(e){
-    var val = e=='email' ? $('#epe-email').val() : ($('[name="__phone_prefix"]').val() + $('#phone-code').val()),
-      check = e==='email' ? $('#epe-email').val() : $('#phone-code').val(),
-      $btn = $('#conf-' + e),
-      $block = $('#conf-' + e + '-block'),
-      main = $btn.closest('.epe__label');
-
-    if(!$btn.hasClass('complete') && !$btn.hasClass('loading')){
-      if(check!=='' && !$(main).hasClass('error')){
-        $btn.fadeOut();
-        $.ajax({
-          type: 'POST',
-          url: '/ajax/restorecode',
-          data: e + '='+ val,
-          success: function(r){
-            if(e=='email')
-              showPopupMess('Проверка почты','На почту выслан код для подтверждения. Введите его в поле "Проверочный код"');
-            else
-              showPopupMess('Проверка телефона','На телефон выслан код для подтверждения. Введите его в поле "Проверочный код"');
-            $block.fadeIn();
-            $(main).fadeOut();
-          }
-        });
-      }
-      else{
-        if(e==='email'){
-          addErr($('#epe-email').closest('.epe__label'));
-        }
-        else{
-          addErr($('#phone-code').closest('.epe__label'));
-        }
-      }
-    }
-  }
-  //
-  $('.confirm-user.email').click(function(){
-    $(this).fadeOut();
-    $('#conf-email em').click();
-  });
-  //
-  $('.confirm-user.phone').click(function(){
-    $(this).fadeOut();
-    $('#conf-phone em').click();
-  });
-  //
-  //
-  //
-  //
-  var timerHintEmail, timerHintPhone;
-  $(document).mousemove(function(e){	// подсказка для подтверждения почты
-    if($(e.target).closest('#conf-email').length || $(e.target).is('#conf-email')){
-      $('#conf-email p').fadeIn(300);
-      clearTimeout(timerHintEmail);
-    };
-    if($(e.target).closest('#conf-phone').length || $(e.target).is('#conf-phone')){
-      $('#conf-phone p').fadeIn(300);
-      clearTimeout(timerHintPhone);
-    }
-  })
-    .mouseout(function(e){	// подсказка для подтверждения телефона
-      if(!$(e.target).closest('#conf-email').length && !$(e.target).is('#conf-email')){
-        clearTimeout(timerHintEmail);
-        timerHintEmail = setTimeout(function(){ $('#conf-email p').fadeOut(300) },500);
-      }
-      if(!$(e.target).closest('#conf-phone').length && !$(e.target).is('#conf-phone')){
-        clearTimeout(timerHintPhone);
-        timerHintPhone = setTimeout(function(){ $('#conf-phone p').fadeOut(300) },500);
-      }
-    });
-  //
-  function showPopupMess(t, m){
-    var html = "<form data-header='" + t + "'>" + m + "</form>";
-    ModalWindow.open({ content: html, action: { active: 0 }, additionalStyle:'dark-ver' });
-  }
   //
   //      ГОРОДА
   //
