@@ -1451,7 +1451,7 @@ jQuery(function($){
 		{
 			var main = $(e.target).closest('.epa__period')[0],
 					input = $(main).find('.epa__input');
-			$(input).toLocaleString('ru');
+			$(input).focus();
 			remErr(main);
 		}
 	});
