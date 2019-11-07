@@ -9,6 +9,7 @@ var UploadAvatar = (function () {
   UploadAvatar.prototype.cropParams;
   UploadAvatar.prototype.bWebCam;
   UploadAvatar.prototype.video;
+  UploadAvatar.prototype.bAjax;
   //
   function UploadAvatar()
   {
@@ -34,6 +35,7 @@ var UploadAvatar = (function () {
       preview: '.YiiUpload__editor-prev-item',
       crop: function(e){ self.cropOptions=e.detail }
     };
+    self.bAjax = false;
 
     self.bWebCam = true;
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
@@ -48,10 +50,7 @@ var UploadAvatar = (function () {
       .on(
         'click',
         '#avatar_form .btn-upload',
-        function(){
-          console.log(1);
-          $('.input-upload').click();
-        })
+        function(){ $('.input-upload').click() })
       .on(
         'change',
         '#avatar_form .input-upload',
@@ -97,6 +96,9 @@ var UploadAvatar = (function () {
             n = bstr.length,
             u8arr = new Uint8Array(n),
             file;
+
+          if(self.bAjax)
+            return;
 
           while(n--)
           { u8arr[n] = bstr.charCodeAt(n); };
@@ -227,6 +229,9 @@ var UploadAvatar = (function () {
       form = document.querySelector('#avatar_form'),
       formData = new FormData(form);
 
+    if(self.bAjax)
+      return;
+
     if(typeof arguments[0]=='object')
     {
       formData.append('upload',arguments[0],'snapshot.png');
@@ -266,6 +271,7 @@ var UploadAvatar = (function () {
       }
     }
 
+    self.bAjax = true;
     MainScript.stateLoading(true);
 
     $.ajax({
@@ -276,6 +282,7 @@ var UploadAvatar = (function () {
       processData: false,
       success: function(r)
       {
+        self.bAjax = false;
         MainScript.stateLoading(false);
         r = JSON.parse(r);
         if(r.error.length) // если есть ошибки
@@ -297,6 +304,7 @@ var UploadAvatar = (function () {
       },
       error: function()
       {
+        self.bAjax = false;
         confirm('Системная ошибка');
         MainScript.stateLoading(false);
       }
@@ -309,6 +317,9 @@ var UploadAvatar = (function () {
       image = document.querySelector('.YiiUpload__editor-field img'),
       resultImage = $('.avatar__logo-main img');
 
+    if(self.bAjax)
+      return;
+
     self.cropOptions['name'] = $(image).data('name');
     self.cropOptions['oldName'] = $(image).attr('alt');
 
@@ -317,6 +328,7 @@ var UploadAvatar = (function () {
       self.cropOptions['edit'] = 1;
     }
 
+    self.bAjax = true;
     MainScript.stateLoading(true);
 
     $.ajax({
@@ -326,7 +338,7 @@ var UploadAvatar = (function () {
       success: function(r)
       {
         r = JSON.parse(r);
-
+        self.bAjax = false;
         if(typeof r.items == 'object')
         {
           $(resultImage).attr('src',r.items['400']);
@@ -341,6 +353,7 @@ var UploadAvatar = (function () {
       },
       error: function()
       {
+        self.bAjax = false;
         confirm('Системная ошибка');
         MainScript.stateLoading(false);
       }

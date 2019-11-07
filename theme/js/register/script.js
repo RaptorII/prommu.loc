@@ -14,6 +14,7 @@ var RegisterPage = (function () {
   RegisterPage.prototype.bWebCam;
   RegisterPage.prototype.codeTimer;
   RegisterPage.prototype.video;
+  RegisterPage.prototype.bAjax;
   //
   function RegisterPage()
   {
@@ -40,6 +41,7 @@ var RegisterPage = (function () {
       crop: function(e){ self.cropOptions=e.detail }
     };
     self.codeTimer = false;
+    self.bAjax = false;
 
     self.bWebCam = true;
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
@@ -304,11 +306,17 @@ var RegisterPage = (function () {
   // отправляем аяксом
   RegisterPage.prototype.send = function (data) {
     let self = this;
+
+    if(self.bAjax)
+      return;
+
+    self.bAjax = true;
     $('body').addClass('prmu-load');
     $.ajax({
       type: 'POST',
       data: {data: JSON.stringify(data)},
       success: function (html) {
+        self.bAjax = false;
         $('#register_form').html(html);
         self.startSvg(); // запуск анимашки
         // выключаем копипаст
@@ -349,6 +357,7 @@ var RegisterPage = (function () {
         }
       },
       error: function(){
+        self.bAjax = false;
         alert('Системная ошибка');
         $('body').removeClass('prmu-load');
       }
@@ -564,8 +573,10 @@ var RegisterPage = (function () {
   {
     let self = this,
       form = document.querySelector('#register_form'),
-      formData = new FormData(form),
-      bError = false;
+      formData = new FormData(form);
+
+    if(self.bAjax)
+      return;
 
     if(typeof arguments[0]=='object')
     {
@@ -606,6 +617,7 @@ var RegisterPage = (function () {
       }
     }
 
+    self.bAjax = true;
     $('body').addClass('prmu-load');
 
     $.ajax({
@@ -615,6 +627,7 @@ var RegisterPage = (function () {
       processData: false,
       success: function(r)
       {
+        self.bAjax = false;
         $('body').removeClass('prmu-load');
         r = JSON.parse(r);
         if(r.error.length) // если есть ошибки
@@ -636,6 +649,7 @@ var RegisterPage = (function () {
       },
       error: function()
       {
+        self.bAjax = false;
         alert('Системная ошибка');
         $('body').removeClass('prmu-load');
       }
@@ -648,6 +662,9 @@ var RegisterPage = (function () {
       image = document.querySelector('.YiiUpload__editor-field img'),
       resultImage = $('.login__photo-img img');
 
+    if(self.bAjax)
+      return;
+
     self.cropOptions['name'] = $(image).data('name');
     self.cropOptions['oldName'] = $(image).attr('alt');
     self.cropOptions['step'] = 5;
@@ -656,6 +673,7 @@ var RegisterPage = (function () {
       self.cropOptions['edit'] = 1;
     }
 
+    self.bAjax = true;
     $('body').addClass('prmu-load');
 
     $.ajax({
@@ -663,6 +681,7 @@ var RegisterPage = (function () {
       type: 'POST',
       success: function(r)
       {
+        self.bAjax = false;
         r = JSON.parse(r);
 
         if(typeof r.items == 'object')
@@ -679,6 +698,7 @@ var RegisterPage = (function () {
       },
       error: function()
       {
+        self.bAjax = false;
         alert('Системная ошибка');
         $('body').removeClass('prmu-load');
       }
