@@ -584,7 +584,6 @@ class UserProfileEmpl extends UserProfile
         $id = $this->exInfo->id;
         $res = $this->checkFieldsProfile();
 
-
         if($res['err'])// неправильно заполнены поля
         {
             return $res;
@@ -603,6 +602,18 @@ class UserProfileEmpl extends UserProfile
             $cityManual = filter_var($rq->getParam('cityManualMulti'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $logo = filter_var($rq->getParam('logo'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $aboutme = filter_var($rq->getParam('aboutme'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+//      echo $name.'</br>';
+//      echo $fname.'</br>';
+//      echo $lname.'</br>';
+//      echo $contact.'</br>';
+//      echo $emplcontact.'</br>';
+//      echo $email.'</br>';
+//      echo $companyType.'</br>';
+//      echo $cityManual.'</br>';
+//      echo $logo.'</br>';
+//      echo $aboutme.'</br>';
+//      die('save');
 
             $arFields = [];
 
@@ -1265,6 +1276,7 @@ class UserProfileEmpl extends UserProfile
         $attrs =  Yii::app()->getRequest()->getParam('user-attribs');
 
 
+
         $insData = array();
         !isset($attrs['isnews']) && $attrs['isnews']=0;
         foreach ($attrs as $key => $val)
@@ -1278,7 +1290,6 @@ class UserProfileEmpl extends UserProfile
 
             if( $res['type'] == 3 )
             {
-
                 $insData[] = array('id_us' => $id, 'id_attr' => $val, 'key' => $res['key'], 'type' => '3', 'crdate' => date('Y-m-d H:i:s'));
             }
             else
@@ -1299,6 +1310,22 @@ class UserProfileEmpl extends UserProfile
                     }
                 }
                 $insData[] = array('id_us' => $id, 'id_attr' => $res['id'], 'key' => $res['key'], 'type' => $res['type'], 'val' => $val, 'crdate' => date('Y-m-d H:i:s'));
+                if($key == "mob-contact" && $val!==''){
+                    $val = '+' . Yii::app()->getRequest()->getParam('__phone_prefix') . $val;
+                    /*Yii::app()->db->createCommand()
+                        ->select('addmob')
+                        ->from('user_attribs')
+                        ->where('id_attr=2 AND id_us=:idus', array(':idus' => Share::$UserProfile->id))
+                        ->queryRow();*/
+                    $insData[] = [
+                        'id_us' => $id,
+                        'id_attr' => $res['id'],
+                        'key' => 'addmob',
+                        'type' => $res['type'],
+                        'val' => $val,
+                        'crdate' => date('Y-m-d H:i:s')
+                    ];
+                }
             }
         }
 
