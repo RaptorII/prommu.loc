@@ -197,23 +197,6 @@ foreach ($attrAll as $p)
           <input type='text' name='user-attribs[mob]' value="<?= $attr['phone'] ?>"
                  class="epa__input epa__phone" id="phone-code">
           <span class="epa__add-phone-btn js-g-hashint" title="Добавить еще телефон">+</span>
-          <span class="epa__confirm<?= ($attr['confirmPhone'] ? ' complete' : '') ?>" id="conf-phone">
-                          <?php if (!$attr['confirmPhone']): ?>
-                            <p>Телефон не подтвержден. <em>Подтвердить</em></p>
-                          <?php else: ?>
-                            <p>Телефон подтвержден.</p>
-                          <?php endif; ?>
-                        </span>
-        </div>
-        <div class="epa__confirm-block" id="conf-phone-block">
-          <span class="epa__confirm-text">На Ваш телефон выслан код для подтверждения. Введите его в это поле!</span>
-          <label class="epa__label">
-            <span class="epa__label-name">Код:</span>
-            <input type='text' name='confirm-code' value="" class="epa__input" id="conf-phone-inp"
-                   maxlength="6">
-          </label>
-          <div class="epa__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
-          <div class="clearfix"></div>
         </div>
         <?php
         if (sizeof($arAdPhones) && !empty($attr['phone'])):
@@ -235,28 +218,8 @@ foreach ($attrAll as $p)
           <input type="text" name="email" value="<?= $attr['email'] ?>"
                  class="epa__input epa__required" placeholder="your@email.com" id="epa-email"
                  data-name="Электронная почта">
-          <span class="epa__confirm<?= ($attr['confirmEmail'] && !empty($attr['email']) ? ' complete' : '') ?>"
-                id="conf-email">
-                        <?php if ($attr['confirmEmail'] && !empty($attr['email'])): ?>
-                          <p>Почта подтверждена.</p>
-                        <?php else: ?>
-                          <p>Почта не подтверждена. <em>Подтвердить</em></p>
-                        <?php endif; ?>
-                      </span>
-        </div>
-        <div class="epa__confirm-block" id="conf-email-block">
-          <span class="epa__confirm-text">На Вашу почту выслан код для подтверждения. Введите его в это поле!</span>
-          <label class="epa__label">
-            <span class="epa__label-name">Код:</span>
-            <input type='text' name='confirm-code' value="" class="epa__input" id="conf-email-inp"
-                   maxlength="6">
-          </label>
-          <div class="epa__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
-          <div class="clearfix"></div>
         </div>
       </div>
-
-
       <?php
 
       // positions

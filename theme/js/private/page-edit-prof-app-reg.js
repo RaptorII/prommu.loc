@@ -8,27 +8,26 @@ jQuery(function($){
     emailTimer = null,
     arSelectPhones = [],
     arErrorsFields = [];
-  arIdCities = [];
-  arNewPosts = [];
-  arSelectMetroes = [];
-  arSelect = [
-  	'messenger',
-    'hcolor',
-    'hlen',
-    'ycolor',
-    'chest',
-    'waist',
-    'thigh',
-    'education',
-    'language'
+
+	arIdCities = [];
+	arNewPosts = [];
+	arSelectMetroes = [];
+	arSelect = [
+		'messenger',
+		'hcolor',
+		'hlen',
+		'ycolor',
+		'chest',
+		'waist',
+		'thigh',
+		'education',
+		'language'
 	];
-  cropOptions = {};
-  cropperObj = null,
-    oldPhone = $('#phone-code').val(),
-    oldFlag = '',
-    keyCode = false,
-    confirmEmail = $('#conf-email').hasClass('complete') ? true : false;
-  confirmPhone = $('#conf-phone').hasClass('complete') ? true : false;
+	cropOptions = {};
+	cropperObj = null;
+	oldPhone = $('#phone-code').val();
+	oldFlag = '';
+	keyCode = false;
 
   $(document).keydown(function(e){ keyCode = e.keyCode });
 
@@ -270,7 +269,6 @@ jQuery(function($){
       epattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i,
       nemail = $('#epa-email').val(),
       bAvatar = $('#login-img').hasClass('active-logo'),
-      resEmail = false,
       errors = false;
 
     e.preventDefault();
@@ -339,7 +337,7 @@ jQuery(function($){
               });
             }
 
-            if(!errors && !arErrors.length && !bAvatar){
+            if(!errors && !arErrors.length && bAvatar){
               var arPosts = $('#epa-list-posts input'),
                 arCityItems = $('#city-module .epa__city-item'),
                 arTimeItems = $('#city-module .epa__period input'),
@@ -406,7 +404,7 @@ jQuery(function($){
         });
       }
 
-      if(!errors && !arErrors.length && !bAvatar){
+      if(!errors && !arErrors.length && bAvatar){
         var arPosts = $('#epa-list-posts input'),
           arCityItems = $('#city-module .epa__city-item'),
           //arTimeItems = $('#city-module .epa__period input'),
@@ -635,9 +633,6 @@ jQuery(function($){
               }
               else{
                 $('.epa__email').removeClass('erroremail error');
-                $('#conf-email').removeClass('complete')
-                  .html('<p>Почта не подтверждена. <em>Подтвердить</em></p>');
-                confirmEmail = false;
               }
             }
           });
@@ -745,145 +740,6 @@ jQuery(function($){
       clearInterval(getFlagTimer);
     }
   },500);
-  // события верикации
-  $('#conf-email').on('click','em',function(){ restoreCode('email') });
-  $('#conf-phone').on('click','em',function(){ restoreCode('phone') });
-  $('#conf-email-block .epa__confirm-btn').click(function(){ confirmContact('email') });
-  $('#conf-phone-block .epa__confirm-btn').click(function(){ confirmContact('phone') });
-
-  function confirmContact(e){
-    var val = e=='email' ? $('#epa-email').val() : ($('[name="__phone_prefix"]').val() + $('#phone-code').val()),
-      $btn = $('#conf-' + e),
-      $code = $('#conf-' + e + '-inp'),
-      code = $code.val(),
-      $hint = $('.confirm-user.' + e),
-      $block = $('#conf-' + e + '-block'),
-      main = $btn.closest('.epa__label');
-
-    if(code!=''){
-      $btn.addClass('loading').show();
-      $('#conf-email-block').fadeOut();
-      $.ajax({
-        type: 'POST',
-        url: '/ajax/confirm',
-        data: 'code='+ code + '&' + e + '=' + val,
-        dataType: 'json',
-        success: function(r){
-          $btn.removeClass('loading');
-          if(r.code==200){
-            $btn.addClass('complete');
-            $hint.fadeOut(); // спрятали подсказку под лого
-            if(e=='email'){
-              showPopupMess('E-mail подтвержден','Электронная почта подтверждена');
-              $btn.find('p').text('Почта подтверждена');
-              oldEmail = val;
-              confirmEmail = true;
-            }
-            else{
-              showPopupMess('Телефон подтвержден','Номер телефона подтвержден');
-              $btn.find('p').text('Телефон подтвержден');
-              oldPhone = $('#phone-code').val();
-              selectPhoneCode = $('[name="__phone_prefix"]').val();
-              oldFlag = $('.country-phone-selected>img').attr('class');
-              confirmPhone = true;
-            }
-          }
-          else{
-            $hint.fadeIn(); // показали подсказку под лого
-            if(e=='email'){
-              showPopupMess('Ошибка','Электронная почта не подтверждена');
-              $('#epa-email').val(oldEmail);
-              confirmEmail = false;
-            }
-            else{
-              showPopupMess('Ошибка','Номер телефона не подтвержден');
-              $('#phone-code').val(oldPhone);
-              $('[name="__phone_prefix"]').val(selectPhoneCode);
-              $('.country-phone-selected>img').attr('class',oldFlag);
-              $('.country-phone-selected>span').text('+' + selectPhoneCode);
-              confirmPhone = false;
-            }
-          }
-          $code.val('');
-          $block.fadeOut();
-          $(main).fadeIn();
-        }
-      });
-    }
-  }
-  //
-  function restoreCode(e){
-    var val = e==='email' ? $('#epa-email').val() : ($('[name="__phone_prefix"]').val() + $('#phone-code').val()),
-      check = e==='email' ? $('#epa-email').val() : $('#phone-code').val(),
-      $btn = $('#conf-' + e),
-      $block = $('#conf-' + e + '-block'),
-      main = $btn.closest('.epa__label');
-
-    if(!$btn.hasClass('complete') && !$btn.hasClass('loading')){
-      if(check!=='' && !$(main).hasClass('error')){
-
-
-
-        $btn.fadeOut();
-        $.ajax({
-          type: 'POST',
-          url: '/ajax/restorecode',
-          data: e + '='+ val,
-          success: function(r){
-            if(e==='email')
-              showPopupMess('Проверка почты','На почту выслан код для подтверждения. Введите его в поле "Проверочный код"');
-            else
-              showPopupMess('Проверка телефона','На телефон выслан код для подтверждения. Введите его в поле "Проверочный код"');
-            $block.fadeIn();
-            $(main).fadeOut();
-          }
-        });
-      }
-      else{
-        if(e==='email'){
-          addErr($('#epa-email').closest('.epa__label'));
-        }
-        else{
-          addErr($('#phone-code').closest('.epa__label'));
-        }
-      }
-    }
-  }
-  //
-  $('.confirm-user.email').click(function(){
-    $(this).fadeOut();
-    $('#conf-email em').click();
-  });
-  //
-  $('.confirm-user.phone').click(function(){
-    $(this).fadeOut();
-    $('#conf-phone em').click();
-  });
-  //
-  //
-  //
-  //
-  var timerHintEmail, timerHintPhone;
-  $(document).mousemove(function(e){	// подсказка для подтверждения почты
-    if($(e.target).closest('#conf-email').length || $(e.target).is('#conf-email')){
-      $('#conf-email p').fadeIn(300);
-      clearTimeout(timerHintEmail);
-    };
-    if($(e.target).closest('#conf-phone').length || $(e.target).is('#conf-phone')){
-      $('#conf-phone p').fadeIn(300);
-      clearTimeout(timerHintPhone);
-    }
-  })
-    .mouseout(function(e){	// подсказка для подтверждения телефона
-      if(!$(e.target).closest('#conf-email').length && !$(e.target).is('#conf-email')){
-        clearTimeout(timerHintEmail);
-        timerHintEmail = setTimeout(function(){ $('#conf-email p').fadeOut(300) },500);
-      }
-      if(!$(e.target).closest('#conf-phone').length && !$(e.target).is('#conf-phone')){
-        clearTimeout(timerHintPhone);
-        timerHintPhone = setTimeout(function(){ $('#conf-phone p').fadeOut(300) },500);
-      }
-    });
   //
   function showPopupMess(t, m){
     var html = "<form data-header='" + t + "'>" + m + "</form>";
@@ -902,11 +758,6 @@ jQuery(function($){
       }
       else{
         remErr($inp.closest('.epa__label'));
-        if($inp.val()!==oldPhone){
-          $('#conf-phone').removeClass('complete')
-            .html('<p>Телефон не подтвержден. <em>Подтвердить</em></p>');
-          confirmPhone = false;
-        }
       }
     }
     if(e.type=='input'){
@@ -915,11 +766,6 @@ jQuery(function($){
       }
       else{
         remErr($inp.closest('.epa__label'));
-        if($inp.val()!==oldPhone){
-          $('#conf-phone').removeClass('complete')
-            .html('<p>Телефон не подтвержден. <em>Подтвердить</em></p>');
-          confirmPhone = false;
-        }
       }
     }
   }
