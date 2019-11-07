@@ -15,6 +15,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/cropper.min.js', CClien
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'register/complete-reg.js', CClientScript::POS_END);
 
 $userInfo = $viData['userAllInfo']['emplInfo'];
+
 ?>
 
 <?
@@ -175,14 +176,14 @@ $userInfo = $viData['userAllInfo']['emplInfo'];
 
               <div class="epe__label">
                 <span class="epe__label-name epe__phone-name">Телефон:</span>
-                <input type='text' name='user-attribs[mob-contact]' value="<?=Share::getPrettyPhone($viData['userAllInfo']['userAttribs'][1]['val'])['phone']?>"
+                <input type='text' name='user-attribs[mob-contact]' value="<?=Share::getPrettyPhone($viData['userAllInfo']['userAttribs'][2]['val'])['phone']?>"
                   class="epe__input epe__phone epe__input-phone" id="phone-code-contact" autocomplete="off">
               </div>
 
               <label class="epe__label epe__email" data-error="Указанный e-mail адрес уже используется в системе"
                 for="epe-email-contact">
                 <span class="epe__label-name">Email:</span>
-                <input type='text' name='email' value="<?=filter_var($userInfo['email'], FILTER_VALIDATE_EMAIL)?>"
+                <input type='text' name='user-attribs[email-contact]' value="<?=filter_var($viData['userAllInfo']['userAttribs'][194]['val'], FILTER_VALIDATE_EMAIL)?>"
                   class="epe__input epe__input-mail epe__required" id="epe-email-contact" autocomplete="off">
               </label>
             </div>

@@ -1274,8 +1274,10 @@ class UserProfileEmpl extends UserProfile
         $id =  $this->exInfo->id;
 
         $attrs =  Yii::app()->getRequest()->getParam('user-attribs');
+        //$atrMail = Yii::app()->getRequest()->getParam('email-contact');
 
-
+//        print_r($attrs);
+//        die();
 
         $insData = array();
         !isset($attrs['isnews']) && $attrs['isnews']=0;
@@ -1309,18 +1311,34 @@ class UserProfileEmpl extends UserProfile
                             ), 'id_user=:id_user', array(':id_user' => Share::$UserProfile->id));
                     }
                 }
-                $insData[] = array('id_us' => $id, 'id_attr' => $res['id'], 'key' => $res['key'], 'type' => $res['type'], 'val' => $val, 'crdate' => date('Y-m-d H:i:s'));
+                $insData[] = array(
+                    'id_us' => $id,
+                    'id_attr' => $res['id'],
+                    'key' => $res['key'],
+                    'type' => $res['type'],
+                    'val' => $val,
+                    'crdate' => date('Y-m-d H:i:s')
+                );
+
                 if($key == "mob-contact" && $val!==''){
+
                     $val = '+' . Yii::app()->getRequest()->getParam('__phone_prefix') . $val;
-                    /*Yii::app()->db->createCommand()
-                        ->select('addmob')
-                        ->from('user_attribs')
-                        ->where('id_attr=2 AND id_us=:idus', array(':idus' => Share::$UserProfile->id))
-                        ->queryRow();*/
+
                     $insData[] = [
                         'id_us' => $id,
-                        'id_attr' => $res['id'],
+                        'id_attr' => '2',
                         'key' => 'addmob',
+                        'type' => $res['type'],
+                        'val' => $val,
+                        'crdate' => date('Y-m-d H:i:s')
+                    ];
+                }
+
+                if($key == "email-contact" && $val!==''){
+                    $insData[] = [
+                        'id_us' => $id,
+                        'id_attr' => '194',
+                        'key' => 'addmail',
                         'type' => $res['type'],
                         'val' => $val,
                         'crdate' => date('Y-m-d H:i:s')
