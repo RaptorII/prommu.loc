@@ -231,6 +231,180 @@ jQuery(function($){
   //
   //      ГОРОДА
   //
+  selectCities({
+    'main' : '#multyselect-cities',
+    'arCity' : arSelectCity,
+    'span' : 'Город *',
+    'inputName' : 'cities[]'
+  });
+  //
+  function selectCities(obj){
+    var $main = $(obj.main).append('<span></span><ul class="cities-select"><li data-id="0"><input type="text" name="c"></li></ul><ul class="cities-list"></ul><b></b>'), // родитель
+      $span = $main.find('span').text(obj.span), // placeholder
+      $select = $main.find('ul').eq(0), // список ввода
+      $input = $select.find('input'), // ввод города
+      $list = $main.find('ul').eq(1), // список выбора
+      $load = $main.find('b'), // тег загрузки
+      bShowCityList = true, // флаг отображения списка городов
+      cityTimer = false; // таймер обращения к серверу для поиска городов
+
+    // добавляем уже выбранный город
+    if(typeof obj.arCity!=='undefined'){
+      content = '<li data-id="' + obj.arCity.id + '">' +
+        obj.arCity.name + '<i></i><input type="hidden" name="' + obj.inputName + '" value="' + obj.arCity.id + '">' +
+        '</li>';
+      $select.prepend(content);
+      $span.hide();
+    }
+    // при клике по блоку фокусируем на поле ввода
+    $select.click(function(e){ if(!$(e.target).is('i')) $input.focus() });
+    $input.click(function(e){ if(!$(e.target).is('i')) $input.focus() })
+    // обработка событий поля ввода
+    $input.bind('input focus blur', function(e){
+      setFirstUpper($input);
+
+      var val = $input.val(),
+        sec = e.type==='focus' ? 1 : 1000;
+
+      $input.val(val).css({width:(val.length * 10 + 5)+'px'});// делаем ширину поля по содержимому, чтобы не занимало много места
+      bShowCityList = true;
+      clearTimeout(cityTimer);
+      cityTimer = setTimeout(function(){
+        setFirstUpper($input);
+
+        var arResult = [],
+          content = '',
+          val = $input.val(),
+          piece = $input.val().toLowerCase();
+
+        arSelectId = getSelectedCities($select);// находим выбранные города
+        if(arSelectId.length) $span.hide(); // показываем или прячем placeholder
+        else val==='' ? $span.show() : $span.hide();
+
+        if(e.type!=='blur'){ // если мы не потеряли фокус
+          if(val===''){ // если ничего не введено
+            $load.show(); // показываем загрузку
+            $.ajax({
+              url: MainConfig.AJAX_GET_VE_GET_CITIES,
+              data: 'idco=' + obj.arCity.id_co + '&query=' + val,
+              dataType: 'json',
+              success: function(res){
+                $.each(res.suggestions, function(){ // список городов если ничего не введено
+                  if($.inArray(this.data, arSelectId)<0)
+                    content += '<li data-id="' + this.data + '">' + this.value + '</li>';
+                });
+                if(bShowCityList)
+                  $list.empty().append(content).fadeIn();
+                else{
+                  $list.empty().append(content).fadeOut();
+                  $input.val('');
+                }
+                $load.hide();
+              }
+            });
+          }
+          else{
+            $load.show();
+            $.ajax({
+              url: MainConfig.AJAX_GET_VE_GET_CITIES,
+              data: 'idco=' + obj.arCity.id_co + '&query=' + val,
+              dataType: 'json',
+              success: function(res){
+                $.each(res.suggestions, function(){ // список городов если что-то введено
+                  word = this.value.toLowerCase();
+                  if(word===piece && $.inArray(this.data, arSelectId)<0 && this.data!=='man'){ // если введен именно город полностью
+                    html =  '<li data-id="' + this.data + '">' + this.value +
+                      '<i></i><input type="hidden" name="' + obj.inputName + '" value="' + this.data + '"/>' +
+                      '</li>';
+                    $select.find('[data-id="0"]').before(html);
+                    remErr($main);
+                    bShowCityList = false;
+                  }
+                  else if(word.indexOf(piece)>=0 && $.inArray(this.data, arSelectId)<0 && this.data!=='man')
+                    arResult.push( {'id':this.data, 'name':this.value} );
+                });
+                arResult.length>0
+                  ? $.each(arResult, function(){ content += '<li data-id="' + this.id + '">' + this.name + '</li>' })
+                  : content = '<li class="emp">Список пуст</li>';
+                if(bShowCityList)
+                  $list.empty().append(content).fadeIn();
+                else{
+                  $list.empty().append(content).fadeOut();
+                  $input.val('');
+                }
+                $load.hide();
+              }
+            });
+          }
+        }
+        else{ // если потерян фокус раньше времени
+          $input.val('');
+          if(getSelectedCities($select).length){
+            $span.hide();
+            remErr($main);
+          }
+          else{
+            $span.show();
+            addErr($main);
+          }
+        }
+      },sec);
+    });
+    // Закрываем список
+    $(document).on('click', function(e){
+      if($(e.target).is('li') && $(e.target).closest($list).length && !$(e.target).hasClass('emp')){ // если кликнули по списку && если это не "Список пуст" &&
+        $(e.target).remove();
+        $span.hide();
+        html =  '<li data-id="' + $(e.target).data('id') + '">' + $(e.target).text() +
+          '<i></i><input type="hidden" name="' + obj.inputName + '" value="' + $(e.target).data('id') + '"/>' +
+          '</li>';
+        $select.find('[data-id="0"]').before(html);
+        remErr($main);
+        $list.fadeOut();
+      }
+      if($(e.target).is('i') && $(e.target).closest($select).length){ // удаление выбраного города из списка
+        $(e.target).closest('li').remove();
+        l = getSelectedCities($select).length;
+        l ? $span.hide() : $span.show();
+        l ? remErr($main) : addErr($main);
+      }
+      if(!$(e.target).is($select) && !$(e.target).closest($select).length){ // закрытие списка
+        bShowCityList = false;
+        $list.fadeOut();
+      }
+    });
+  }
+  function getSelectedCities(ul){
+    var arId = [],
+      arSelected = $(ul).find('li');
+    $.each(arSelected, function(){
+      if($(this).data('id')!=0)
+        arId.push(String($(this).data('id')));
+    });
+    return arId;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   var bAjaxTimer = false;
   $('#F1compprof').on('input', '.epe__input-city', function() { inputCity(this) });
   $('#F1compprof').on('focus', '.epe__input-city', function() { focusCity(this) });

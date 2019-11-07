@@ -1016,7 +1016,11 @@ class Share
     public static function getPrettyPhone($v)
     {
       $arResult = ['code' => '', 'phone' => ''];
-
+      if(strlen($v)==16)
+      {
+        $arResult['code'] = substr($v,0,2);
+        $arResult['phone'] = substr($v, 2);
+      }
       if(strlen($v)==12)
       {
         $arResult['code'] = substr($v,0,2);

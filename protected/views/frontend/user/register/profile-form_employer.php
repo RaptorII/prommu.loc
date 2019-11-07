@@ -15,7 +15,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'register/complete-reg.js', C
 
 $userInfo = $viData['userAllInfo']['emplInfo'];
 $arUserCity = Yii::app()->db->createCommand()
-  ->select('id_city, name')
+  ->select('id_city id, name, id_co')
   ->from('city')
   ->where(
     'id_city=:id',
@@ -36,6 +36,7 @@ $arUserCity = Yii::app()->db->createCommand()
         maxFileSize:<?=Share::$UserProfile->arYiiUpload['maxFileSize']?>,
         fileFormat:<?=json_encode(Share::$UserProfile->arYiiUpload['fileFormat'])?>
       };
+      var arSelectCity = <?=json_encode($arUserCity)?>;
     </script>
     <div class="upp__img-block">
       <?
@@ -131,12 +132,15 @@ $arUserCity = Yii::app()->db->createCommand()
               </div>
               <div class="epe__label city-field">
                 <span class="epe__label-name">Город:</span>
+                <div class="epe__select-cities" id="multyselect-cities"></div>
+                <?/*?>
                 <span class="city-select"><?=$arUserCity['name'] ?><b></b></span>
                 <input type='text' name='str-city' value="<?=$arUserCity['name'] ?>"
                        class="epe__input epe__input-city" autocomplete="off">
                 <input type="hidden" name="cities[]" value="<?=$arUserCity['id_city'] ?>"
                        id="id-city">
                 <ul class="city-list"></ul>
+                <?*/?>
               </div>
 
             </div>
