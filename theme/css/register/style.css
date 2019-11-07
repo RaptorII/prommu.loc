@@ -563,7 +563,11 @@ h6.login__header {
     margin: 0!important;
 }
 
-
+@media screen and (max-width: 600px) {
+    .fancybox-inner {
+        margin: 30px 0;
+    }
+}
 
 
 

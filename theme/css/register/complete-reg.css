@@ -840,7 +840,10 @@ flex: 0 1 50%;
     height: auto;
 }
 
-.ppp__logo .prmu-btn.prmu-btn_normal{ margin: inherit }
+.ppp__logo .prmu-btn.prmu-btn_normal{
+    display: block;
+    margin: 0 auto;
+}
 .ppp-logo-main__img, .ppe__logo-main__img{ cursor:pointer }
 .avatar__error{
     color: var(--color-red);
