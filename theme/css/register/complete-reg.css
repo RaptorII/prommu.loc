@@ -857,12 +857,6 @@ flex: 0 1 50%;
 /*
 *
 */
-/*
-.epe__label.city-field .epe__label-name{
-    position: static;
-    width: 10%;
-    padding: 0 10px 0 0;
-}*/
 #F1compprof .epe__label.city-field{ padding: 0 }
 .epe__select-cities {
     width: 100%;

@@ -14,14 +14,6 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/cropper.min.js', CClien
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'register/complete-reg.js', CClientScript::POS_END);
 
 $userInfo = $viData['userAllInfo']['emplInfo'];
-$arUserCity = Yii::app()->db->createCommand()
-  ->select('id_city id, name, id_co')
-  ->from('city')
-  ->where(
-    'id_city=:id',
-    [':id'=>Subdomain::getCacheData()->id]
-  )
-  ->queryRow();
 ?>
 
 <?
@@ -36,7 +28,7 @@ $arUserCity = Yii::app()->db->createCommand()
         maxFileSize:<?=Share::$UserProfile->arYiiUpload['maxFileSize']?>,
         fileFormat:<?=json_encode(Share::$UserProfile->arYiiUpload['fileFormat'])?>
       };
-      var arSelectCity = <?=json_encode($arUserCity)?>;
+      var arSelectCity = <?=json_encode($viData['cities'])?>;
     </script>
     <div class="upp__img-block">
       <?

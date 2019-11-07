@@ -359,104 +359,163 @@ jQuery(function($){
 		var html = "<form data-header='" + t + "'>" + m + "</form>";
 		ModalWindow.open({ content: html, action: { active: 0 }, additionalStyle:'dark-ver' });
 	}
-	//
-	//      ГОРОДА
-	//
-	var bAjaxTimer = false;
-	$('#F1compprof').on('input', '.epe__input-city', function() { inputCity(this) });
-	$('#F1compprof').on('focus', '.epe__input-city', function() { focusCity(this) });
-	// обрабатываем клики
-	$(document).on('click', function(e) { checkCity(e.target) });
-  //      ввод города
-  inputCity = function (e) {
-    var v = $(e).val();
-    clearTimeout(bAjaxTimer);
-    setFirstUpper(e);
-    bAjaxTimer = setTimeout(function(){ getAjaxCities(v, e) },1000);
-  }
-  //      фокус поля города
-  focusCity = function (e) {
-    var v = $(e).val();
-    $(e).val('').val(v);
-    setFirstUpper(e);
-    getAjaxCities(v, e);
-  };
-  //      запрос списка городов
-  getAjaxCities = function (val, e) {
-    var $e = $(e),
-				list = $e.siblings('.city-list')[0],
-				main = $e.closest('.city-field')[0],
-				mainCity = $e.closest('.city-item')[0],
-				idcity = Number($('#id-city').val()),
-				piece = val.toLowerCase(),
-				content = '';
+  //
+  //      ГОРОДА
+  //
+  selectCities({
+    'main' : '#multyselect-cities',
+    'arCity' : arSelectCity,
+    'span' : 'Город *',
+    'inputName' : 'cities[]'
+  });
+  //
+  function selectCities(obj){
+    var $main = $(obj.main).append('<span></span><ul class="cities-select"><li data-id="0"><input type="text" name="c"></li></ul><ul class="cities-list"></ul><b></b>'), // родитель
+      $span = $main.find('span').text(obj.span), // placeholder
+      $select = $main.find('ul').eq(0), // список ввода
+      $input = $select.find('input'), // ввод города
+      $list = $main.find('ul').eq(1), // список выбора
+      $load = $main.find('b'), // тег загрузки
+      bShowCityList = true, // флаг отображения списка городов
+      cityTimer = false; // таймер обращения к серверу для поиска городов
 
-    $(main).addClass('load'); // загрузка началась
+    // добавляем уже выбранный город
+    if(typeof obj.arCity!=='undefined')
+    {
+      $.each(obj.arCity, function(){
+        content = '<li data-id="' + this.id + '">' +
+          this.name + '<i></i><input type="hidden" name="' + obj.inputName + '" value="' + this.id + '">' +
+          '</li>';
+        $select.prepend(content);
+      });
+      $span.hide();
+    }
+    // при клике по блоку фокусируем на поле ввода
+    $select.click(function(e){ if(!$(e.target).is('i')) $input.focus() });
+    $input.click(function(e){ if(!$(e.target).is('i')) $input.focus() })
+    // обработка событий поля ввода
+    $input.bind('input focus blur', function(e){
+      setFirstUpper($input);
 
-    $.ajax({
-      type: 'POST',
-      url: MainConfig.AJAX_GET_VE_GET_CITIES,
-      data: 'query=' + val,
-      dataType: 'json',
-      success: function(r) {
-        for (var i in r.suggestions) {
-          var item = r.suggestions[i],
-            id = +item.data;
+      var val = $input.val(),
+        sec = e.type==='focus' ? 1 : 1000;
 
-          if(isNaN(item.data))
-            break;
+      $input.val(val).css({width:(val.length * 10 + 5)+'px'});// делаем ширину поля по содержимому, чтобы не занимало много места
+      bShowCityList = true;
+      clearTimeout(cityTimer);
+      cityTimer = setTimeout(function(){
+        setFirstUpper($input);
 
-          if(item.value.toLowerCase().indexOf(piece) >= 0)
-          { // собираем список
-            content += '<li data-id="' + item.data + '">' + item.value + '</li>';
+        var arResult = [],
+          content = '',
+          val = $input.val(),
+          piece = $input.val().toLowerCase();
+
+        arSelectId = getSelectedCities($select);// находим выбранные города
+        if(arSelectId.length) $span.hide(); // показываем или прячем placeholder
+        else val==='' ? $span.show() : $span.hide();
+
+        if(e.type!=='blur'){ // если мы не потеряли фокус
+          if(val===''){ // если ничего не введено
+            $load.show(); // показываем загрузку
+            $.ajax({
+              url: MainConfig.AJAX_GET_VE_GET_CITIES,
+              data: 'idco=' + obj.arCity.id_co + '&query=' + val,
+              dataType: 'json',
+              success: function(res){
+                $.each(res.suggestions, function(){ // список городов если ничего не введено
+                  if($.inArray(this.data, arSelectId)<0)
+                    content += '<li data-id="' + this.data + '">' + this.value + '</li>';
+                });
+                if(bShowCityList)
+                  $list.empty().append(content).fadeIn();
+                else{
+                  $list.empty().append(content).fadeOut();
+                  $input.val('');
+                }
+                $load.hide();
+              }
+            });
+          }
+          else{
+            $load.show();
+            $.ajax({
+              url: MainConfig.AJAX_GET_VE_GET_CITIES,
+              data: 'idco=' + obj.arCity.id_co + '&query=' + val,
+              dataType: 'json',
+              success: function(res){
+                $.each(res.suggestions, function(){ // список городов если что-то введено
+                  word = this.value.toLowerCase();
+                  if(word===piece && $.inArray(this.data, arSelectId)<0 && this.data!=='man'){ // если введен именно город полностью
+                    html =  '<li data-id="' + this.data + '">' + this.value +
+                      '<i></i><input type="hidden" name="' + obj.inputName + '" value="' + this.data + '"/>' +
+                      '</li>';
+                    $select.find('[data-id="0"]').before(html);
+                    remErr($main);
+                    bShowCityList = false;
+                  }
+                  else if(word.indexOf(piece)>=0 && $.inArray(this.data, arSelectId)<0 && this.data!=='man')
+                    arResult.push( {'id':this.data, 'name':this.value} );
+                });
+                arResult.length>0
+                  ? $.each(arResult, function(){ content += '<li data-id="' + this.id + '">' + this.name + '</li>' })
+                  : content = '<li class="emp">Список пуст</li>';
+                if(bShowCityList)
+                  $list.empty().append(content).fadeIn();
+                else{
+                  $list.empty().append(content).fadeOut();
+                  $input.val('');
+                }
+                $load.hide();
+              }
+            });
           }
         }
-        content
-        ? $(list).html(content).fadeIn()
-        : $(list).html('<li class="emp">Список пуст</li>').fadeIn();
-        $(main).removeClass('load'); // загрузка завершена
+        else{ // если потерян фокус раньше времени
+          $input.val('');
+          if(getSelectedCities($select).length){
+            $span.hide();
+            remErr($main);
+          }
+          else{
+            $span.show();
+            addErr($main);
+          }
+        }
+      },sec);
+    });
+    // Закрываем список
+    $(document).on('click', function(e){
+      if($(e.target).is('li') && $(e.target).closest($list).length && !$(e.target).hasClass('emp')){ // если кликнули по списку && если это не "Список пуст" &&
+        $(e.target).remove();
+        $span.hide();
+        html =  '<li data-id="' + $(e.target).data('id') + '">' + $(e.target).text() +
+          '<i></i><input type="hidden" name="' + obj.inputName + '" value="' + $(e.target).data('id') + '"/>' +
+          '</li>';
+        $select.find('[data-id="0"]').before(html);
+        remErr($main);
+        $list.fadeOut();
+      }
+      if($(e.target).is('i') && $(e.target).closest($select).length){ // удаление выбраного города из списка
+        $(e.target).closest('li').remove();
+        l = getSelectedCities($select).length;
+        l ? $span.hide() : $span.show();
+        l ? remErr($main) : addErr($main);
+      }
+      if(!$(e.target).is($select) && !$(e.target).closest($select).length){ // закрытие списка
+        bShowCityList = false;
+        $list.fadeOut();
       }
     });
   }
-  //      фокус инпута и выбор города
-  checkCity = function (e) {
-    var $e = $(e),
-    		cNew = $e.text(),
-      	data = e.dataset,
-				cSelect = $('.city-select'),
-				cInput = $('.epe__input-city'),
-				cList = $('.city-list'),
-				inp = $('#id-city'),
-				id = inp.val(),
-				v = cSelect.text();
-
-   	if( !$e.closest('.city-field').length && !$e.is('.city-field') )
-   	{
-			cSelect.text()==='' ? cSelect.hide() : cSelect.show();
-			cInput.val(v).hide();
-			cList.fadeOut();
-    }
-    else if( $e.is('li') && !$e.hasClass('emp') ) // клик по объектам списка
-		{ // выбираем из списка
-			if(id!=='' && id===data.id)
-			{
-				cInput.val(v).hide();
-				cSelect.show();
-			}
-			else
-			{ // ввод нового города
-				inp.val(data.id);
-				cInput.val(cNew).hide();
-				cSelect.html(cNew+'<b></b>').show();
-			}
-			cList.fadeOut();
-		}
-		else
-		{
-			$e.is('b') && cInput.val('');
-			cInput.show().focus();
-			cSelect.hide();
-		}
+  function getSelectedCities(ul){
+    var arId = [],
+      arSelected = $(ul).find('li');
+    $.each(arSelected, function(){
+      if($(this).data('id')!=0)
+        arId.push(String($(this).data('id')));
+    });
+    return arId;
   }
   //      правильный ввод названия города
   setFirstUpper = function (e) {

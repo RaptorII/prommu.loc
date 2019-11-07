@@ -190,9 +190,9 @@ $this->pageTitle = $title;
               <span class="ppe__field-val"><?=$viData['userAllInfo']['cotype'][$id]['name']?></span>
             </div>
           <?php endif; ?>
-          <div class="ppe__field<?=($isBlocked && !$viData['userAllInfo']['userCities'][0]['name'] ?' error':'')?>">
+          <div class="ppe__field<?=($isBlocked && !count($viData['cities_names']) ?' error':'')?>">
             <span class="ppe__field-name">Город:</span>
-            <span class="ppe__field-val"><?=$viData['userAllInfo']['userCities'][0]['name']?></span>
+            <span class="ppe__field-val"><?=implode(', ', $viData['cities_names']);?></span>
           </div>
           <?php if(strlen($allAttr[99]['val'])>0): ?>
             <div class="ppe__field">

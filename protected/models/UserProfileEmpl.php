@@ -376,7 +376,32 @@ class UserProfileEmpl extends UserProfile
         $data = $this->getProfileData($inID, $inEID);
         $data['userAllInfo'] = $this->getProfileMainData($data['userInfo']['id_user']);
         $data['rating'] = $this->prepareProfileCommonRate($data['rating']);
+        $data['cities'] = Yii::app()->db->createCommand()
+          ->select('c.id_city id, c.name, c.id_co')
+          ->from('user_city uc')
+          ->join('city c','uc.id_city=c.id_city')
+          ->where(
+            'uc.id_user=:id_user',
+            [':id_user'=>$inID]
+          )
+          ->queryAll();
+        if(!count($data['cities']))
+        {
+          $data['cities'] = Yii::app()->db->createCommand()
+            ->select('id_city id, name, id_co')
+            ->from('city')
+            ->where(
+              'id_city=:id',
+              [':id'=>Subdomain::getCacheData()->id]
+            )
+            ->queryAll();
+        }
 
+        $data['cities_names'] = [];
+        foreach ($data['cities'] as $v)
+        {
+          $data['cities_names'][] = $v['name'];
+        }
 
         return $data;
     }
@@ -891,6 +916,33 @@ class UserProfileEmpl extends UserProfile
 
             return $arRes;
         }
+        // список городов по новому
+        $arRes['cities'] = Yii::app()->db->createCommand()
+            ->select('c.id_city id, c.name, c.id_co')
+            ->from('user_city uc')
+            ->join('city c','uc.id_city=c.id_city')
+            ->where(
+              'uc.id_user=:id_user',
+              [':id_user'=>$id]
+            )
+            ->queryAll();
+          if(!count($arRes['cities']))
+          {
+            $arRes['cities'] = Yii::app()->db->createCommand()
+              ->select('id_city id, name, id_co')
+              ->from('city')
+              ->where(
+                'id_city=:id',
+                [':id'=>Subdomain::getCacheData()->id]
+              )
+              ->queryAll();
+          }
+
+        $arRes['cities_names'] = [];
+        foreach ($arRes['cities'] as $v)
+        {
+          $arRes['cities_names'][] = $v['name'];
+        }
 
         // читаем данные из профиля
         $arRes['info'] = Yii::app()->db->createCommand()
@@ -999,86 +1051,11 @@ class UserProfileEmpl extends UserProfile
                         ->queryAll();
 
         // если попап закрыли
-        $uid = filter_var(
-                    Yii::app()->getRequest()->getParam('uid'),
-                    FILTER_SANITIZE_NUMBER_INT
-                );
-        $cityId = filter_var(
-                    Yii::app()->getRequest()->getParam('city'),
-                    FILTER_SANITIZE_FULL_SPECIAL_CHARS
-                );
+
         $phoneCode = filter_var(
                     Yii::app()->getRequest()->getParam('__phone_prefix'),
                     FILTER_SANITIZE_NUMBER_INT
                 );
-
-        if(empty($uid)) // эти проверки только для страницы редактирования профиля
-        {
-            if(!$cityId)
-            {
-                $cityId = Subdomain::getCacheData()->id;
-            }
-
-            Yii::app()->db->createCommand()
-                    ->update('user_city',
-                        ['id_city' => $cityId],
-                        'id_user=:id',
-                        [':id' => $id]
-                    );
-            $arRes['userCities']['id_city'] = $cityId;
-            $arRes['userCities']['name'] = Yii::app()->db->createCommand()
-                    ->select("name")
-                    ->from('city')
-                    ->where('id_city=:id',[':id'=>$cityId])
-                    ->queryScalar();
-        }
-        else // подгон данных для попапа
-        {
-            $arGeo = (new Geo())->getUserGeo();
-            if($arGeo['country']==1) // если РФ
-            {
-                $query = Yii::app()->db->createCommand()
-                            ->select("*")
-                            ->from('city')
-                            ->where(
-                                'name=:name AND id_co=1', // только РФ
-                                [':name'=>$arGeo['city']]
-                            )
-                            ->queryRow();
-            }
-            else // иначе город субдомена
-            {
-                $query = Yii::app()->db->createCommand()
-                            ->select("*")
-                            ->from('city')
-                            ->where(
-                                'id_city=:id',
-                                [':id'=>Subdomain::getCacheData()->id]
-                            )
-                            ->queryRow();
-            }
-
-            $arRes['userCities'] = array(
-                    'id_city' => $query['id_city'],
-                    'name' => $query['name'],
-                    'id_country' => $query['id_co']
-                );
-
-            // Телефон
-            foreach($arRes['countries'] as $v)
-            {
-                if(!empty($arRes['phone']) && $v['phone']==$arRes['phone-code'])
-                { // регистрация через телефон
-                    $arRes['userCities']['id_country'] = $v['id'];
-                    break;
-                }
-                else if($arRes['info']['email'] && $v['id']==$arRes['userCities']['id_country'])
-                { // регистрация через почту
-                    $arRes['phone-code'] = $v['phone'];
-                    $arRes['userCities']['id_country'] = $v['id'];
-                }
-            }
-        }
 
         if(!$phoneCode && !$arRes['phone-code'])
         {
@@ -1474,9 +1451,6 @@ class UserProfileEmpl extends UserProfile
             ";
         }
         $data['userCities'] = Yii::app()->db->createCommand($sql)->queryAll();
-
-       // echo $sql;
-       // die();
 
         return $data;
     }

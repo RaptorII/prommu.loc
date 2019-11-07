@@ -249,11 +249,14 @@ jQuery(function($){
       cityTimer = false; // таймер обращения к серверу для поиска городов
 
     // добавляем уже выбранный город
-    if(typeof obj.arCity!=='undefined'){
-      content = '<li data-id="' + obj.arCity.id + '">' +
-        obj.arCity.name + '<i></i><input type="hidden" name="' + obj.inputName + '" value="' + obj.arCity.id + '">' +
-        '</li>';
-      $select.prepend(content);
+    if(typeof obj.arCity!=='undefined')
+    {
+      $.each(obj.arCity, function(){
+        content = '<li data-id="' + this.id + '">' +
+          this.name + '<i></i><input type="hidden" name="' + obj.inputName + '" value="' + this.id + '">' +
+          '</li>';
+        $select.prepend(content);
+      });
       $span.hide();
     }
     // при клике по блоку фокусируем на поле ввода
@@ -383,124 +386,6 @@ jQuery(function($){
     });
     return arId;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  var bAjaxTimer = false;
-  $('#F1compprof').on('input', '.epe__input-city', function() { inputCity(this) });
-  $('#F1compprof').on('focus', '.epe__input-city', function() { focusCity(this) });
-  // обрабатываем клики
-  $(document).on('click', function(e) { checkCity(e.target) });
-  //      ввод города
-  inputCity = function (e) {
-    var v = $(e).val();
-    clearTimeout(bAjaxTimer);
-    setFirstUpper(e);
-    bAjaxTimer = setTimeout(function(){ getAjaxCities(v, e) },1000);
-  }
-  //      фокус поля города
-  focusCity = function (e) {
-    var v = $(e).val();
-    $(e).val('').val(v);
-    setFirstUpper(e);
-    getAjaxCities(v, e);
-  };
-  //      запрос списка городов
-  getAjaxCities = function (val, e) {
-    var $e = $(e),
-      list = $e.siblings('.city-list')[0],
-      main = $e.closest('.city-field')[0],
-      mainCity = $e.closest('.city-item')[0],
-      idcity = Number($('#id-city').val()),
-      piece = val.toLowerCase(),
-      content = '';
-
-    $(main).addClass('load'); // загрузка началась
-
-    $.ajax({
-      type: 'POST',
-      url: MainConfig.AJAX_GET_VE_GET_CITIES,
-      data: 'query=' + val,
-      dataType: 'json',
-      success: function(r) {
-        for (var i in r.suggestions) {
-          var item = r.suggestions[i],
-            id = +item.data;
-
-          if(isNaN(item.data))
-            break;
-
-          if(item.value.toLowerCase().indexOf(piece) >= 0)
-          { // собираем список
-            content += '<li data-id="' + item.data + '">' + item.value + '</li>';
-          }
-        }
-        content
-          ? $(list).html(content).fadeIn()
-          : $(list).html('<li class="emp">Список пуст</li>').fadeIn();
-        $(main).removeClass('load'); // загрузка завершена
-      }
-    });
-  }
-  //      фокус инпута и выбор города
-  checkCity = function (e) {
-    var $e = $(e),
-      cNew = $e.text(),
-      data = e.dataset,
-      cSelect = $('.city-select'),
-      cInput = $('.epe__input-city'),
-      cList = $('.city-list'),
-      inp = $('#id-city'),
-      id = inp.val(),
-      v = cSelect.text();
-
-    if( !$e.closest('.city-field').length && !$e.is('.city-field') )
-    {
-      cSelect.text()==='' ? cSelect.hide() : cSelect.show();
-      cInput.val(v).hide();
-      cList.fadeOut();
-    }
-    else if( $e.is('li') && !$e.hasClass('emp') ) // клик по объектам списка
-    { // выбираем из списка
-      if(id!=='' && id===data.id)
-      {
-        cInput.val(v).hide();
-        cSelect.show();
-      }
-      else
-      { // ввод нового города
-        inp.val(data.id);
-        cInput.val(cNew).hide();
-        cSelect.html(cNew+'<b></b>').show();
-      }
-      cList.fadeOut();
-    }
-    else
-    {
-      $e.is('b') && cInput.val('');
-      cInput.show().focus();
-      cSelect.hide();
-    }
-  }
   //      правильный ввод названия города
   setFirstUpper = function (e) {
     let split = $(e).val().split(' ');
@@ -513,7 +398,7 @@ jQuery(function($){
     for(let i=0, len=split.length; i<len; i++)
       split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1);
     $(e).val(split.join('-'));
-  }
+  },
   //
   $('[name="user-attribs[stationaryphone]"]').on('input',function(){
     this.value = this.value.replace(/\D+/g,'');
@@ -522,8 +407,4 @@ jQuery(function($){
   // начальное выделение полей
   //
   $.each($('.epe__required'), function(){ checkField(this) });
-
-
-
-
 });
