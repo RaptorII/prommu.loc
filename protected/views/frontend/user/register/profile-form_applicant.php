@@ -15,11 +15,6 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/cropper.min.js', CClien
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'register/complete-reg.js', CClientScript::POS_END);
 //
 $attr = array_values($viData['userInfo']['userAttribs'])[0];
-
-//echo "<pre>";
-//print_r($attr);
-//echo "</pre>";
-
 // city
 $arUserCity = [];
 $arCities = Yii::app()->db->createCommand()
@@ -41,25 +36,9 @@ foreach ($arCities as $city)
   }
   $arTemp[$city['id']] = $city['name'];
 }
-
-
 // оптимизируем массив городов для JS
 $arCities = array_unique($arTemp);
 asort($arCities);
-// Телефон
-$city = (new Geo())->getUserGeo();
-foreach ($viData['countries'] as $c)
-{
-  $c['id_co']==$city['country'] && $attr['phone-code']=$c['phone'];
-}
-// email
-$attr['email'] = filter_var($attr['email'], FILTER_VALIDATE_EMAIL);
-
-// additional phones
-$arAdPhones = array();
-foreach ($attrAll as $p)
-  if (strpos($p['name'], 'admob') !== false && !empty($p['val']))
-    $arAdPhones[] = $p;
 ?>
 <script type="text/javascript">
   let arCities = <?=json_encode($arCities)?>;
@@ -194,30 +173,25 @@ foreach ($attrAll as $p)
       <div class="epa__content-module" id="contacts-module">
         <div class="epa__label">
           <span class="epa__label-name epa__phone-name">Телефон:</span>
-          <input type='text' name='user-attribs[mob]' value="<?= $attr['phone'] ?>"
-                 class="epa__input epa__phone" id="phone-code">
+          <input type='text'
+                 name='user-attribs[mob]'
+                 value="<?=Share::getPrettyPhone($attr['phone'])['phone']?>"
+                 class="epa__input epa__phone"
+                 id="phone-code"
+                 autocomplete="off">
           <span class="epa__add-phone-btn js-g-hashint" title="Добавить еще телефон">+</span>
         </div>
-        <?php
-        if (sizeof($arAdPhones) && !empty($attr['phone'])):
-          foreach ($arAdPhones as $phone):
-            ?>
-            <label class="epa__label epa__add-phone">
-              <span class="epa__label-name epa__phone-name">Доп. Телефон:</span>
-              <input type="text" name="user-attribs[<?= $phone['name'] ?>]"
-                     value="<?= $phone['val'] ?>" class="epa__input epa__phone"
-                     autocomplete="off">
-            </label>
-            <?php
-          endforeach;
-        endif;
-        ?>
         <div class="epa__label epa__email"
              data-error="Указанный e-mail адрес уже используется в системе">
           <span class="epa__label-name">Email:</span>
-          <input type="text" name="email" value="<?= $attr['email'] ?>"
-                 class="epa__input epa__required" placeholder="your@email.com" id="epa-email"
-                 data-name="Электронная почта">
+          <input type="text"
+                 name="email"
+                 value="<?=filter_var($attr['email'], FILTER_VALIDATE_EMAIL)?>"
+                 class="epa__input epa__required"
+                 placeholder="your@email.com"
+                 id="epa-email"
+                 data-name="Электронная почта"
+                 autocomplete="off">
         </div>
       </div>
       <?php

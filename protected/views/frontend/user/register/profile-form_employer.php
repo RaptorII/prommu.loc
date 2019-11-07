@@ -13,6 +13,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'private/page-edit-prof-emp-r
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/cropper.min.js', CClientScript::POS_END);
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'register/complete-reg.js', CClientScript::POS_END);
 
+$userInfo = $viData['userAllInfo']['emplInfo'];
 $arUserCity = Yii::app()->db->createCommand()
   ->select('id_city, name')
   ->from('city')
@@ -146,29 +147,29 @@ $arUserCity = Yii::app()->db->createCommand()
             <div class="epe-data__module">
               <label class="epe__label">
                 <span class="epe__label-name">Ваше имя:</span>
-                <input type='text' name='fname' value="<?= $viData['userAllInfo']['emplInfo']['firstname'] ?>"
+                <input type='text' name='fname' value="<?=$userInfo['firstname'] ?>"
                        class="epe__input epe__input-fname epe__required" autocomplete="off">
               </label>
               <label class="epe__label">
                 <span class="epe__label-name">Ваша фамилия:</span>
-                <input type='text' name='lname' value="<?= $viData['userAllInfo']['emplInfo']['lastname'] ?>"
+                <input type='text' name='lname' value="<?=$userInfo['lastname'] ?>"
                        class="epe__input epe__input-lname" autocomplete="off">
               </label>
               <label class="epe__label">
                 <span class="epe__label-name">Контактное лицо:</span>
-                <input type='text' name='contact' value="<?= $viData['userAllInfo']['emplInfo']['contact'] ?>"
+                <input type='text' name='contact' value="<?=$userInfo['contact'] ?>"
                        class="epe__input epe__input-contact epe__required" autocomplete="off">
               </label>
 
               <label class="epe__label epe__email" data-error="Указанный e-mail адрес уже используется в системе"
                      for="epe-email">
                 <span class="epe__label-name">Ваш email:</span>
-                <input type='text' name='email' value="<?= $viData['userAllInfo']['emplInfo']['email'] ?>"
+                <input type='text' name='email' value="<?=filter_var($userInfo['email'], FILTER_VALIDATE_EMAIL)?>"
                        class="epe__input epe__input-mail epe__required" id="epe-email" autocomplete="off">
               </label>
               <div class="epe__label">
                 <span class="epe__label-name epe__phone-name">Телефон:</span>
-                <input type='text' name='user-attribs[mob]' value="<?= substr($viData['userAllInfo']['userAttribs'][1]['val'], 2,20) ?>"
+                <input type='text' name='user-attribs[mob]' value="<?=Share::getPrettyPhone($viData['userAllInfo']['userAttribs'][1]['val'])['phone']?>"
                        class="epe__input epe__phone epe__input-phone" id="phone-code" autocomplete="off">
               </div>
               <p class="complete__txt center">

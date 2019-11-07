@@ -1008,4 +1008,32 @@ class Share
         $arr[] = "{$prefix}.{$name} <= '{$d2}" . ($time ? " 23:59:59'" : "'");
       }
     }
+    /**
+     * @param $v
+     * @return string
+     * получаем номер телефона РФ
+     */
+    public static function getPrettyPhone($v)
+    {
+      $arResult = ['code' => '', 'phone' => ''];
+
+      if(strlen($v)==12)
+      {
+        $arResult['code'] = substr($v,0,2);
+        $arResult['phone'] = '(' . substr($v,2,3) . ')'
+          . substr($v,5,3) . '-'
+          . substr($v,8,2) . '-'
+          . substr($v,10,2);
+      }
+      elseif(strlen($v)==11)
+      {
+        $arResult['code'] = '+' . substr($v,0,1);
+        $arResult['phone'] = '(' . substr($v,1,3) . ')'
+          . substr($v,4,3) . '-'
+          . substr($v,7,2) . '-'
+          . substr($v,9,2);
+      }
+
+      return $arResult;
+    }
 }

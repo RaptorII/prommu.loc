@@ -1701,7 +1701,25 @@ class User extends CActiveRecord
     $result = Yii::app()->db->createCommand()
       ->insert(self::tableName(),$arInsert);
 
-    return ($result ? Yii::app()->db->getLastInsertID() : $result);
+    $id_user = ($result ? Yii::app()->db->getLastInsertID() : $result);
+
+    if($id_user && $arInsert['confirmPhone']) // записываем телефон
+    {
+      Yii::app()->db->createCommand()
+        ->insert(
+          'user_attribs',
+          [
+            'id_us' => $id_user,
+            'id_attr' => 1,
+            'key' => 'mob',
+            'type' => 0,
+            'val' => $arInsert['login'],
+            'crdate' => date('Y-m-d H:i:s')
+          ]
+        );
+    }
+
+    return $id_user;
   }
   /*
    * @param $id_user - integer
