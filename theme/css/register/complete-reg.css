@@ -848,7 +848,7 @@ flex: 0 1 50%;
     width: 100%;
 }
 
-#register_form .avatar__logo-main.input__error {
+#avatar_form .avatar__logo-main.input__error {
     border: 2px solid red;
     transition: var(--main-trans);
 }
