@@ -9,7 +9,7 @@ $gcs->registerCssFile($bUrl . MainConfig::$CSS  . 'dist/cropper.min.css');
 $gcs->registerCssFile($bUrl . MainConfig::$CSS . 'register/complete-reg.css');
 
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'phone-codes/script.js', CClientScript::POS_END);
-$gcs->registerScriptFile($bUrl . MainConfig::$JS . 'private/page-edit-prof-emp.js', CClientScript::POS_END);
+$gcs->registerScriptFile($bUrl . MainConfig::$JS . 'private/page-edit-prof-emp-reg.js', CClientScript::POS_END);
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/cropper.min.js', CClientScript::POS_END);
 $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'register/complete-reg.js', CClientScript::POS_END);
 
