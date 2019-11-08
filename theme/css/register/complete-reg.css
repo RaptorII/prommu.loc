@@ -993,3 +993,7 @@ flex: 0 1 50%;
 .cities-list li:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
+#avatar_form .prmu-btn.prmu-btn_normal{
+    max-width: 100%;
+    margin: 0 auto 15px;
+}

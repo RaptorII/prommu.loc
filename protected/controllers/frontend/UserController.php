@@ -469,7 +469,10 @@ class UserController extends AppController
     public function actionEditprofile()
     {
         Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN); // no profile for guest
-        
+        //
+        // проверка реги на завершенность
+        $this->directToCompleteRegistration();
+        //
         if( Yii::app()->getRequest()->isPostRequest) // save data
         {
             $res = Share::$UserProfile->saveProfileData();
@@ -693,7 +696,10 @@ class UserController extends AppController
     {
         // no profile for guest
         Share::$UserProfile->type <> 3 && $this->redirect(MainConfig::$PAGE_INDEX);
-
+        //
+        // проверка реги на завершенность
+        $this->directToCompleteRegistration();
+        //
         if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('vacancy-title') )
         {
             $res = (new Vacancy())->saveVacpubData();
@@ -733,7 +739,10 @@ class UserController extends AppController
     public function actionVacancies()
     {
         Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
-
+        //
+        // проверка реги на завершенность
+        $this->directToCompleteRegistration();
+        //
         $data = array();
         $title = '';
         $model = new Vacancy();
@@ -804,7 +813,10 @@ class UserController extends AppController
     public function actionVacarhive()
     {
         !Share::isEmployer() && $this->redirect(MainConfig::$PAGE_LOGIN);
-
+        //
+        // проверка реги на завершенность
+        $this->directToCompleteRegistration();
+        //
         $model = new Vacancy();
         $data = $model->getEmpVacanciesList('archive');
         $data['user'] = Share::$UserProfile->getProfileDataView();
@@ -854,7 +866,10 @@ class UserController extends AppController
     {
       // no profile for guest
       Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
-
+        //
+        // проверка реги на завершенность
+        $this->directToCompleteRegistration();
+        //
         $tab = Yii::app()->getRequest()->getParam('tab');
         $activeFilterLink = $tab == 'invites' ? 1 : 0;
         $vac = explode("&", $_GET['vacancy']);
@@ -1077,7 +1092,10 @@ class UserController extends AppController
     public function actionReviews()
     {
         Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN);
-
+        //
+        // проверка реги на завершенность
+        $this->directToCompleteRegistration();
+        //
         $Responses = Share::isApplicant() ? new ResponsesApplic() : new ResponsesEmpl();
         $pages = new CPagination($Responses->getResponsesRatingCount());
         $pages->pageSize = MainConfig::$DEF_PAGE_LIMIT;
@@ -1099,7 +1117,10 @@ class UserController extends AppController
     {
         if( !Share::isApplicant() && !Share::isEmployer() )
             $this->redirect(MainConfig::$PAGE_LOGIN);
-
+        //
+        // проверка реги на завершенность
+        $this->directToCompleteRegistration();
+        //
         $model = new Termostat;
         $arDates = $model->getDates();
         if(Share::isApplicant())
@@ -1147,7 +1168,10 @@ class UserController extends AppController
     public function actionSettings()
     {
         in_array(Share::$UserProfile->type, [2,3]) || $this->redirect(MainConfig::$PAGE_LOGIN);
-
+        //
+        // проверка реги на завершенность
+        $this->directToCompleteRegistration();
+        //
         $idus = Share::$UserProfile->id;
 
        if($_POST['save']){
