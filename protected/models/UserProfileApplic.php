@@ -1242,12 +1242,16 @@ class UserProfileApplic extends UserProfile
         $data['userDictionaryAttrs'] = Yii::app()->db->createCommand($sql)->queryAll();
 
         // языки словаря
-        $sql = "SELECT d.id, d.id_par idpar, d.type, d.name , a.`key`, a.val
-                FROM user_attr_dict d 
-                LEFT JOIN user_attribs a ON a.id_attr = d.id AND a.id_us = {$id}
-                WHERE d.id_par = 40
-                ORDER BY name";
-        $data['langs'] = Yii::app()->db->createCommand($sql)->queryAll();
+        $data['langs'] = Yii::app()->db->createCommand()
+          ->select('uad.id, uad.id_par idpar, uad.type, uad.name , ua.key, ua.val')
+          ->from('user_attribs ua')
+          ->join(
+            'user_attr_dict uad',
+            'uad.id=ua.id_attr AND ua.id_us=:id',
+            [':id' => $id]
+          )
+          ->where('uad.id_par=40')
+          ->queryAll();
 
         foreach ($data['langs'] as $key => &$val) { if ($val['val'] > 0 ) $data['langsSeled'][$val['id']] = $val['val']; }
 

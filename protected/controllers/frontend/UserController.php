@@ -469,10 +469,7 @@ class UserController extends AppController
     public function actionEditprofile()
     {
         Share::isGuest() && $this->redirect(MainConfig::$PAGE_LOGIN); // no profile for guest
-        //
-        // проверка реги на завершенность
-        $this->directToCompleteRegistration();
-        //
+
         if( Yii::app()->getRequest()->isPostRequest) // save data
         {
             $res = Share::$UserProfile->saveProfileData();
