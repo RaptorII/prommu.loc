@@ -95,11 +95,20 @@
         content: '';
         right: 10px;
     }
+    .container {
+        max-width: 450px;
+    }
+    .no-md-relat.ppe__logo {
+        max-width: 300px;
+    }
 }
 @media screen and (max-width: 450px){
-.complete__reg {
-padding: 5px;
-}
+    .complete__reg {
+        padding: 5px;
+    }
+    .container {
+        max-width: 350px;
+    }
 .complete__reg .country-phone-selected img {
 margin: 10px 1px;
 }
@@ -146,7 +155,7 @@ flex: 0 1 50%;
 /*#contacts-module,*/
     #main-module {
         max-width: none;
-        padding-right: 0;
+        /*padding-right: 0;*/
     }
 
     #DiContent .edit-profile-applicant .epa__label.epa__select {
@@ -184,7 +193,7 @@ flex: 0 1 50%;
 @media (min-width: 990px) {
     #DiContent .epa__date .epa__input {
         padding: 0 10px;
-        width: 120px;
+        width: 95px;
     }
 
     .epa__content-module {

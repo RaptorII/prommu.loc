@@ -603,18 +603,6 @@ class UserProfileEmpl extends UserProfile
             $logo = filter_var($rq->getParam('logo'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $aboutme = filter_var($rq->getParam('aboutme'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-//      echo $name.'</br>';
-//      echo $fname.'</br>';
-//      echo $lname.'</br>';
-//      echo $contact.'</br>';
-//      echo $emplcontact.'</br>';
-//      echo $email.'</br>';
-//      echo $companyType.'</br>';
-//      echo $cityManual.'</br>';
-//      echo $logo.'</br>';
-//      echo $aboutme.'</br>';
-//      die('save');
-
             $arFields = [];
 
             $sql = "SELECT u.email, u.confirmEmail
@@ -1274,10 +1262,6 @@ class UserProfileEmpl extends UserProfile
         $id =  $this->exInfo->id;
 
         $attrs =  Yii::app()->getRequest()->getParam('user-attribs');
-        //$atrMail = Yii::app()->getRequest()->getParam('email-contact');
-
-//        print_r($attrs);
-//        die();
 
         $insData = array();
         !isset($attrs['isnews']) && $attrs['isnews']=0;

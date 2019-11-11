@@ -1210,7 +1210,7 @@ input:checked + .epe__checkbox:after {
 /*
 *		MEDIA
 */
-@media (min-width: 500px) {
+@media (min-width: 990px) {
   #F1compprof.edit-profile-employer .epe__label {
     width: 80%
   }

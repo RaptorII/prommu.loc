@@ -189,7 +189,7 @@ jQuery(function($){
         remErr(cityLabel);
         main[0].dataset.idcity = res.id!='' ? res.id : main[0].dataset.idcity;
         checkSelectCity(main);
-        checkAvailabilityMetro(main);
+        //checkAvailabilityMetro(main);
       }
     }
     else{ addErr(cityLabel) }

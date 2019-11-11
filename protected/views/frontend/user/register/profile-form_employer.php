@@ -84,7 +84,7 @@ $userInfo = $viData['userAllInfo']['emplInfo'];
  *
  */
 ?>
-<div class="col-xs-12 col-sm-7 col-lg-9">
+<div class="col-xs-12 col-sm-7 col-lg-8">
     <div class="complete__reg">
       <form action='/user/editprofile' id='F1compprof' method='post' class="edit-profile-employer">
 
