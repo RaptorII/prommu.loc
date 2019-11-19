@@ -1,3 +1,6 @@
+<?
+  Yii::app()->session['utm'] = false; // сбрасываем ютм метки, уже записали в БД
+?>
 <? if(!Yii::app()->getRequest()->isAjaxRequest): ?>
   <script>var pageCondition = <?=json_encode($model->data['condition']['html'])?>;</script>
 <? endif; ?>
@@ -107,5 +110,12 @@
           <?php
       }
     ?>
+    <? if(!$model->data['id_user']): ?>
+      <p class="separator">
+        <a class="back__away back-away" href="javascript:void(0)">
+          Вернуться назад и отредактировать данные
+        </a>
+      </p>
+    <? endif; ?>
   </div>
 </div>

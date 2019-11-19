@@ -290,4 +290,8 @@ class MainConfig
     /* NEW REGISTER */
     public static $VIEWS_APPLICANT_REGISTER_FORM = '/user/register/profile-form_applicant';
     public static $VIEWS_EMPLOYER_REGISTER_FORM = '/user/register/profile-form_employer';
+    public static $PAGE_AFTER_REGISTER = '/user/lead';
+    public static $PAGE_AFTER_ACTIVATE_PROFILE = '/user/active_profile';
+    public static $PAGE_MESSENGER = '/user/messenger';
+    public static $PAGE_MESSNOTEMAIL = '/user/messnotemail';
 }

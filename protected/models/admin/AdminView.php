@@ -70,5 +70,49 @@ class AdminView
       return '<span class="glyphicon glyphicon-baby-formula" title="гость"></span>';
     }
   }
+  /**
+   * @param $id_user - integer (user => id_user)
+   * @param $type - integer ( 2 | 3 )
+   * @return string
+   */
+  public static function getUserProfileLink($id_user, $type)
+  {
+    if(!$id_user)
+    {
+      return '-';
+    }
+    else
+    {
+      return '<a href="/admin/' . (Share::isApplicant($type) ? 'PromoEdit' : 'EmplEdit')
+        . '/' . $id_user . '" class="glyphicon glyphicon-edit" title="редактировать"></a>';
+    }
+  }
+  /**
+   * @param $id - integer (subdomains => id)
+   * @return string
+   */
+  public static function getSubdomain($id)
+  {
+    if(!$id)
+      return ' - ';
+
+    return Subdomain::getCacheData()->data_list[$id];
+  }
+
+  public static function getRegisterLogin($login, $type)
+  {
+    if(!$login)
+      return ' - ';
+
+    if($type==UserRegister::$LOGIN_TYPE_EMAIL)
+    {
+      return $login;
+    }
+    if($type==UserRegister::$LOGIN_TYPE_PHONE)
+    {
+      $arPhone = Share::getPrettyPhone($login);
+      return $arPhone['code'] . $arPhone['phone'];
+    }
+  }
 }
 ?>

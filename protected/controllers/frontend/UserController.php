@@ -240,85 +240,91 @@ class UserController extends AppController
 
     }
 
-    public function actionMessenger($cloud){
+    public function actionMessenger($cloud)
+    {
+      empty($cloud) && $cloud=$_GET;
 
-        if($cloud == "") $cloud = $_GET;
+      $analyt = Yii::app()->request->cookies['sbjs_current'];
+      $analy = explode("|||", $analyt);
+      $point = $_GET['point'];
+      $last_referer =  $_GET['last_referer'];
+      if(!empty($analyt))
+      {
+        $data = [
+          'canal' => explode("=",$analy[2])[1],
+          'referer' => explode("=",$analy[0])[1],
+          'transition' => explode("=",$analy[1])[1],
+          'campaign' => explode("=",$analy[3])[1],
+          'content' => explode("=",$analy[4])[1],
+          'keywords' => explode("=",$analy[5])[1],
+          'point' => $point,
+          'last_referer' => $last_referer
+        ];
+      }
+      else
+      {
+        $data = [
+          'referer' => '(none)',
+          'transition' => '(none)',
+          'canal' => '(none)',
+          'campaign' => '(none)',
+          'content' => '(none)',
+          'keywords' => '(none)',
+          'point' => '(none)',
+          'last_referer' => '(none)'
+        ];
+      }
 
-        $analyt = Yii::app()->request->cookies['sbjs_current'];
-        $analy = explode("|||", $analyt);
-        if(!empty($analyt)){
-            $data['referer'] = explode("=",$analy[2])[1];
-            $data['transition'] = explode("=",$analy[0])[1];
-            $data['canal'] = explode("=",$analy[1])[1];
-            $data['campaign'] = explode("=",$analy[3])[1];
-            $data['content'] = explode("=",$analy[4])[1];
-            $data['keywords'] = explode("=",$analy[5])[1];
-            $data['point'] = $_GET['point'];
-            $data['last_referer'] = $_GET['last_referer'];
-        } else {
-            $data['referer'] = "(none)";
-            $data['transition'] = "(none)";
-            $data['canal'] = "(none)";
-            $data['campaign'] = "(none)";
-            $data['content'] = "(none)";
-            $data['keywords'] = "(none)";
-            $data['point'] = "(none)";
-            $data['last_referer'] = "(none)";
-        }
-        $data['email'] = $cloud['email'];
-        $data['fname'] = $cloud['fname'] ? $cloud['fname'] : explode(" ", $cloud['name'])[0];
-        $data['lname'] = $cloud['lname'] ? $cloud['lname'] : explode(" ", $cloud['name'])[1];
-        $data['name'] = $data['fname'].' '.$data['lname'];
-        $data['gender'] = $cloud['gender'];
-        $data['birthday'] = $cloud['birthday'];
-        $data['gender'] = $cloud['gender'];
+      $data['email'] = $cloud['email'];
+      $data['fname'] = $cloud['fname'] ? $cloud['fname'] : explode(" ", $cloud['name'])[0];
+      $data['lname'] = $cloud['lname'] ? $cloud['lname'] : explode(" ", $cloud['name'])[1];
+      $data['name'] = $data['fname'].' '.$data['lname'];
+      $data['gender'] = $cloud['gender'];
+      $data['birthday'] = $cloud['birthday'];
+      $data['gender'] = $cloud['gender'];
+      $data['messenger'] = $cloud['id'];
+      $data['type'] = $cloud['type'];
 
-        $data['messenger'] = $cloud['id'];
-        $data['type'] = $cloud['type'];
-        $email =  $cloud['email'];
-        $Auth = new Auth();
-        $register = $Auth->registerAuth($data);
-        $this->redirect($register);
+      $Auth = new Auth();
+      $Auth->registerAuth($data);
+      $this->redirect(MainConfig::$PAGE_AFTER_REGISTER);
     }
 
-    public function actionMessnotemail(){
-        $data['email'] = $_GET['email'];
-        $data['fname'] = $_GET['fname'];
-        $data['lname'] = $_GET['lname'];
-        $data['name'] = $_GET['name'];
-        $data['gender'] = $_GET['gender'];
-        $data['birthday'] = $_GET['birthday'];
-        $data['gender'] = $_GET['gender'];
-        $data['messenger'] = $_GET['messenger'];
-        $data['type'] = $_GET['type'];
-        $data['referer'] = $_GET['referer'];
-        $data['transition'] = $_GET['transition'];
-        $data['canal'] = $_GET['canal'];
-        $data['campaign'] = $_GET['campaign'];
-        $data['content'] = $_GET['content'];
-        $data['keywords'] = $_GET['keywords'];
-        $data['point'] = $_GET['point'];
-        $data['last_referer'] = $_GET['last_referer'];
+    public function actionMessnotemail()
+    {
+      $data['ip'] = $_GET['ip'];
+      $data['client'] = substr(Yii::app()->request->cookies['_ga'], -5, 0);
+      $pm_source = Yii::app()->request->cookies['pm_source'];
+      $data['email'] = $_GET['email'];
+      $data['fname'] = $_GET['fname'];
+      $data['lname'] = $_GET['lname'];
+      $data['name'] = $_GET['name'];
+      $data['gender'] = $_GET['gender'];
+      $data['birthday'] = $_GET['birthday'];
+      $data['messenger'] = $_GET['messenger'];
+      $data['type'] = $_GET['type'];
+      $data['referer'] = $_GET['referer'];
+      $data['transition'] = $_GET['transition'];
+      $data['canal'] = $_GET['canal'];
+      $data['campaign'] = $_GET['campaign'];
+      $data['content'] = $_GET['content'];
+      $data['keywords'] = $_GET['keywords'];
+      $data['point'] = $_GET['point'];
+      $data['last_referer'] = $_GET['last_referer'];
+        
+      $model = new User();
+      $id_user = $model->checkLogin($data['email']);
 
-         $usData = Yii::app()->db->createCommand()
-             ->select("u.email, u.id_user, u.status")
-             ->from('user u')
-             ->where('u.email = :email', array(':email' => $data['email']))
-             ->queryRow();
-
-         if(!empty($usData)) {
-            $link  = Subdomain::site() . '/message';
-            $this->redirect( $link);
-         } else {
-
-
-            $Auth = new Auth();
-            $register = $Auth->registerAuth($data);
-            $this->redirect($register);
-            // $UserRegister = $register->setStep(4);
-            $this->redirect(MainConfig::$PAGE_ACTIVATE);
-        }
-
+      if($id_user)
+      {
+        $this->redirect(Subdomain::site() . MainConfig::$PAGE_SITE_MESSAGE);
+      }
+      else
+      {
+        $Auth = new Auth();
+        $Auth->registerAuth($data);
+        $this->redirect(MainConfig::$PAGE_AFTER_REGISTER);
+      }
     }
 
 
@@ -472,8 +478,19 @@ class UserController extends AppController
 
         if( Yii::app()->getRequest()->isPostRequest) // save data
         {
-            $res = Share::$UserProfile->saveProfileData();
-            if(!$res['err']) $this->redirect(MainConfig::$PAGE_PROFILE);
+            $arResult = Share::$UserProfile->saveProfileData();
+            if(!$arResult['err'])
+            {
+              // после регистрации на секунду заходим на /user/lead для GTM
+              if(Yii::app()->getRequest()->getParam('register_complete')=='Y')
+              {
+                $this->redirect(MainConfig::$PAGE_AFTER_ACTIVATE_PROFILE);
+              }
+              else
+              {
+                $this->redirect(MainConfig::$PAGE_PROFILE);
+              }
+            }
         } 
         elseif( Yii::app()->getRequest()->getParam('del') ) // del photo
         {
@@ -562,7 +579,7 @@ class UserController extends AppController
       {
         $post = $rq->getParam('data');
         $post = json_decode($post, true, 5, JSON_BIGINT_AS_STRING);
-        if(isset($_FILES['upload']) && $model->step==5) // только загрузка файлов
+        if(isset($_FILES['upload']) && $model->step==$model::$STEP_AVATAR) // только загрузка файлов
         {
           $data = $model->saveImage();
           echo CJSON::encode($data);
@@ -577,7 +594,12 @@ class UserController extends AppController
         {
           // return button
           if(
-            in_array($post['step'],[$model::$STEP_CODE, $model::$STEP_PASSWORD ,$model::$STEP_AVATAR])
+            in_array($post['step'],[
+              $model::$STEP_CODE,
+              $model::$STEP_PASSWORD,
+              $model::$STEP_AVATAR,
+              $model::$STEP_LOGIN
+            ])
             &&
             $post['redirect']==='back'
           )
@@ -587,7 +609,7 @@ class UserController extends AppController
           // редирект на авторизацию
           elseif (in_array($post['step'],[$model::$STEP_LOGIN]) && $post['redirect']==='auth')
           {
-            $model::clearStep();
+            $model::clearRegister();
             $model->deleteData();
           }
           // повтор отправки кода
@@ -660,10 +682,10 @@ class UserController extends AppController
      */
     public function actionActivate()
     {
-        $data = (new Auth())->activateUser();
-        Share::$UserProfile->type<1 && $this->redirect($data); // no profile for guest
+        //$data = (new Auth())->activateUser();
+        //Share::$UserProfile->type<1 && $this->redirect($data); // no profile for guest
 
-        $isPopup = Yii::app()->getRequest()->getParam('npopup');
+        /*$isPopup = Yii::app()->getRequest()->getParam('npopup');
         if($isPopup){
             $city = Yii::app()->getRequest()->getParam('city');
             Subdomain::popupRedirect($city,Share::$UserProfile->id);
@@ -681,11 +703,9 @@ class UserController extends AppController
             array($title = 'Редактирование профиля', MainConfig::$PAGE_EDIT_PROFILE)
         );
         $this->setPageTitle('Регистрация успешно завершена');
-        $arResult = Share::$UserProfile->getProfileDataEdit();
-
-        $this->redirect(MainConfig::$PAGE_PROFILE);
-        
-        $this->render($this->ViewModel->pageEditProfile, array('viData'=>$arResult, 'viErrorData'=>$res));
+        $arResult = Share::$UserProfile->getProfileDataEdit();*/
+        //$this->redirect(MainConfig::$PAGE_PROFILE);
+        //$this->render($this->ViewModel->pageEditProfile, array('viData'=>$arResult, 'viErrorData'=>$res));
     }
 
 
@@ -1954,5 +1974,19 @@ class UserController extends AppController
       $data = $model->getLegalEntityReceipt($id);
       !$data && $this->redirect(DS);
       $this->renderPartial(MainConfig::$VIEW_LEGAL_ENTITY_RECEIPT,['viData'=>$data]);
+    }
+    /**
+     *  Страница с ГТМ после регистрации
+     */
+    public function actionLead()
+    {
+      $this->renderRegisterGTM();
+    }
+    /**
+     *  Страница с ГТМ после ктивации профиля
+     */
+    public function actionActive_profile()
+    {
+      $this->renderRegisterGTM();
     }
 }

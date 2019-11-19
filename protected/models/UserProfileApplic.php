@@ -161,10 +161,10 @@ class UserProfileApplic extends UserProfile
 
         // считываем характеристики пользователя
         $sql = "SELECT DATE_FORMAT(r.birthday,'%d.%m.%Y') as bday -- , DATE_FORMAT(r.birthday,'%d') as bd
-              , r.id_user, r.isman , r.ismed , r.smart, r.ishasavto , r.aboutme , r.firstname , r.lastname , r.photo, r.card, r.cardPrommu
+              , r.id_user, r.isman , r.ismed , r.smart, r.ishasavto , r.aboutme , r.firstname , r.lastname , r.photo
               , a.val , a.id_attr
               , d.name , d.type , d.id_par idpar , d.key
-              , u.email, u.is_online, u.mdate
+              , u.email, u.is_online
             FROM resume r
             LEFT JOIN user u ON u.id_user = r.id_user
             LEFT JOIN user_attribs a ON r.id_user = a.id_us
@@ -181,24 +181,9 @@ class UserProfileApplic extends UserProfile
 
         foreach ($res as $key => $val)
         {
-            if($val['idpar'] == 0){
-                $data['userAttribs'][$val['key']] = ['val' => $val['val'], 'id_attr' => $val['id_attr'], 'name' => $val['name'], 'type' => $val['type'], 'idpar' => $val['idpar'], 'key' => $val['key'],];
-            } else {
-                $userdict = Yii::app()->db->createCommand()
-                        ->select('d.id , d.type, d.key, d.name')
-                        ->from('user_attr_dict d')
-                        ->where('d.id = :id', array(':id' => $val['idpar']))
-                        ->queryRow();
-                
-                $data['userAttribs'][$userdict['key']] = ['val' => $val['val'], 'id_attr' => $val['id_attr'], 'name' => $val['name'], 'type' => $val['type'], 'idpar' => $val['idpar'], 'key' => $val['key'],];
-                
-            }
+            $data['userAttribs'][$val['id_attr']] = ['val' => $val['val'], 'id_attr' => $val['id_attr'], 'name' => $val['name'], 'type' => $val['type'], 'idpar' => $val['idpar'], 'key' => $val['key'],];
         } // end foreach
-    
-        if(!empty($val['photo'])){
-            $photo = "https://files.prommu.com/users/".$val['id_user']."/".$val['photo'];
-        }
-        
+
         $data['applicInfo'] = [
             'bday' => $val['bday'],
             'id_user' => $val['id_user'],
@@ -209,71 +194,20 @@ class UserProfileApplic extends UserProfile
             'aboutme' => $val['aboutme'],
             'firstname' => $val['firstname'],
             'lastname' => $val['lastname'],
-            'photo' => $photo,
+            'photo' => $val['photo'],
             'email' => $val['email'],
-            'mdate' => $val['mdate'],
-            'card' => $val['card'],
-            'cardPrommu' => $val['cardPrommu'],
-        ]; 
+        ];
 
 
         // считываем фото пользователя
-        $sql = "SELECT p.id, p.photo
+        $sql = "SELECT p.id, p.photo, CASE WHEN p.photo = r.photo THEN 1 ELSE 0 END ismain
             FROM resume r
             LEFT JOIN user_photos p ON p.id_promo = r.id
             WHERE r.id_user = {$id}
             ORDER BY npp DESC";
         $data['userPhotos'] = Yii::app()->db->createCommand($sql)->queryAll();
-        
-        for($i = 0; $i < count($data['userPhotos']); $i ++){
-            $data['userPhotos'][$i]['photo'] = "https://files.prommu.com/users/".$id."/".$data['userPhotos'][$i]['photo'].".jpg";
-            
-        }
         if( count($data['userPhotos']) == 1 && !$data['userPhotos'][0]['id'] ) $data['userPhotos'] = array();
-        
 
-        $sql = "SELECT t.id_city idcity, t.wday, t.timeb, t.timee FROM user_wtime t WHERE t.id_us = {$id}";
-        $res = Yii::app()->db->createCommand($sql)->queryAll();
-        
-        $i = 0;
-        foreach ($res as $key => $val):
-            
-            $wdays[$i]['id_city'] = $val['idcity'];
-            $wdays[$i]['day'] = $val['wday'];
-            $wdays[$i]['timeb'] = $val['timeb'];
-            $wdays[$i]['timee'] = $val['timee'];
-            
-            $i++;
-        endforeach;
-        
-        $data['workDays'] = $wdays;
-        
-        $sql = "SELECT um.isshow, um.pay, um.pay_type, d.name, um.id_mech
-            FROM resume r
-            INNER JOIN user_mech um ON um.id_us = r.id_user
-            LEFT JOIN user_attr_dict d1 ON d1.id = um.id_attr
-            INNER JOIN user_attr_dict d ON d.id = um.id_mech 
-            WHERE r.id_user = {$id}
-            ORDER BY um.isshow";
-        $res = Yii::app()->db->createCommand($sql)->queryAll();
-
-        foreach ($res as $key => $val)
-        {
-            if( $val['pay_type'] == 1 ) $res[$key]['paylims'] ='руб/неделю';
-            elseif( $val['pay_type'] == 2 ) $res[$key]['paylims'] ='руб/месяц';
-            else $res[$key]['paylims'] ='руб/час';
-
-            $flagPF = 0; //test it 27.05.2019
-
-            if( $val['isshow'] ) $exp[] = $val['val'];
-
-            if( !$val['isshow'] )
-                $flagPF || $flagPF = 1;
-        } // end foreach
-        
-        $data['userMech'] = $res;
-        
-        
         return $data;
     }
 
@@ -352,7 +286,7 @@ class UserProfileApplic extends UserProfile
 
         return array('pointRate' => $pointRate,
                 'rate' => $rate,
-                'full' => $full, //undefined?
+                'full' => $full,
                 'countRate' => $rate[0] - $rate[1],
                 'maxPointRate' => $maxPointRate,
                 'rateNames' => $inData['rateNames'],
@@ -589,8 +523,8 @@ class UserProfileApplic extends UserProfile
             
             $name = filter_var($rq->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $lastname = filter_var($rq->getParam('lastname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $birthday = filter_var($rq->getParam('bdate'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $birthday = date('Y-m-d',strtotime($birthday));
+            $bday = filter_var($rq->getParam('bdate'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $birthday = date('Y-m-d',strtotime($bday));
             $hasmedbook = $rq->getParam('hasmedbook');
             $hasavto = $rq->getParam('hasavto');
             $smart = $rq->getParam('smart');
@@ -680,6 +614,17 @@ class UserProfileApplic extends UserProfile
             $this->saveUserPostsWorked();
             // сохранение языков
             $this->saveUserLang();
+          // переход с формы активации пользователя
+          if(Yii::app()->getRequest()->getParam('register_complete')=='Y')
+          {
+            $arActivate = [
+              'isman' => $sex ? 1 : 0,
+              'gender' => $sex ? 'male' : 'female',
+              'birthday' => $bday
+            ];
+            $model = new UserActivate();
+            $model->updateData($id, $arActivate);
+          }
         } // endif
 
         $res = Yii::app()->db->createCommand()
@@ -705,7 +650,7 @@ class UserProfileApplic extends UserProfile
           );
         } 
 
-        $message = '<p>Анкета отправлена на модерацию.<br>Модерация занимает до 15 минут в рабочее время. О результатах проверки - Вам прийдет уведомление на эл. почту</p>';
+        $message = '<p>Анкета отправлена на модерацию.<br>Модерация занимает до 15 минут в рабочее время. О результатах проверки - Вам придет уведомление на эл. почту</p>';
         Yii::app()->user->setFlash('prommu_flash', $message);
     }
 
@@ -773,18 +718,24 @@ class UserProfileApplic extends UserProfile
         return $res;
     }
 
+
+
     /**
      * Целевая вакансия
      */
     private function saveUserPosts()
     {
         $id = $this->exInfo->id;
+
         $posts = Yii::app()->getRequest()->getParam('post');
+
         $builder=Yii::app()->db->schema->commandBuilder;
         $insData = array();
 
-        if ($posts) {
-            foreach ($posts as $key => $val) {
+        if( $posts )
+        {
+            foreach ($posts as $key => $val)
+            {
                 $insData[] = array(
                     'id_us' => $id,
                     'id_mech' => $key,
@@ -796,6 +747,7 @@ class UserProfileApplic extends UserProfile
                 );
             } // end foreach
 
+
             Yii::app()
                 ->db
                 ->createCommand()
@@ -806,11 +758,11 @@ class UserProfileApplic extends UserProfile
                         'isshow=0'),
                     array(':id_user' => $id)
                 );
-
             $command = $builder->createMultipleInsertCommand('user_mech', $insData);
             $command->execute();
         } // endif
     }
+
 
 
     // сохраняем атрибуты пользователя
@@ -1189,7 +1141,6 @@ class UserProfileApplic extends UserProfile
         $data['rating'] = $this->getPointRate($inID);
         $data['lastJobs'] = $this->getLastJobs($inIDpromo);
         $data['userInfo'] = $this->getUserInfo($inID);
-
         if( $data['userInfo']['userMetro'] ) {
             foreach ($data['userInfo']['userMetro'] as $val) { $metro[] = $val['name']; }
             $data['userInfo']['userMetro'] = array($data['userInfo']['userMetro'], join(', ', $metro));
@@ -1201,6 +1152,9 @@ class UserProfileApplic extends UserProfile
 
         //for regForm
         $data['data'] = $this->getProfileEditPageData($data['userInfo']);
+
+        //for efficiency profile of applicant
+        $data['efficiency'] = $this->getEfficiencyData();
 
         return $data;
     }
@@ -1336,7 +1290,7 @@ class UserProfileApplic extends UserProfile
               $data['time_on_site'] = "Уже {$diff->y} год";
             }
         }
-
+        
         $data['userAttribs'] = $attr;
 
         // считываем фото пользователя
@@ -1452,7 +1406,7 @@ class UserProfileApplic extends UserProfile
     private function getLastJobs($inIDresume = 0)
     {
         $id = $inIDresume ?: $this->exInfo->id_resume;
-
+        if($id) {
         $sql = "SELECT v.id, v.title, DATE_FORMAT(v.crdate, '%d.%m.%Y') crdate, DATE_FORMAT(v.remdate, '%d.%m.%Y') remdate
               , e.id_user idus, e.name, e.logo
             FROM empl_vacations v
@@ -1472,8 +1426,9 @@ class UserProfileApplic extends UserProfile
                   AND " . Vacancy::getScopesCustom(Vacancy::$SCOPE_APPLIC_WORKING, 'vs');
         $res = Yii::app()->db->createCommand($sql)->queryScalar();
         $data['count'] = $res;
-
+    
         return $data;
+        }
     }
 
 
@@ -1550,8 +1505,7 @@ class UserProfileApplic extends UserProfile
     /*
     *   Сохранение настроек
     */
-    public function saveSettings($idus)
-    {
+    public function saveSettings($idus){
         $email = filter_var(Yii::app()->getRequest()->getParam('email'), FILTER_VALIDATE_EMAIL);
         $phone = Yii::app()->getRequest()->getParam('phone');
         $oldPsw = Yii::app()->getRequest()->getParam('oldpsw');
@@ -1577,7 +1531,7 @@ class UserProfileApplic extends UserProfile
             $newPsw = md5($newPsw);
 
             $user = Yii::app()->db->createCommand()
-                ->select('u.passw, u.email')
+                ->select('u.passw')
                 ->from('user u')
                 ->where('u.id_user=:id', array(':id' => $idus))
                 ->queryRow();
@@ -1591,15 +1545,8 @@ class UserProfileApplic extends UserProfile
                         'id_user=:id', 
                         array(':id' => $idus)
                     );
-
                 if(!$res)
-                {
-                  $arResult = ['error'=>1, 'mess'=>'Ошибка сохранения пароля', 'type'=>'psw'];
-                }
-                else
-                {
-                  Mailing::set(18, ['email_user'=>$user['email'], 'id_user'=>$idus]);
-                }
+                    $arResult = array('error'=>1,'mess'=>'Ошибка сохранения пароля','type'=>'psw');
             }
             else{
                 $arResult = array('error'=>1,'mess'=>'Старый пароль не подходит','type'=>'psw');
@@ -1648,8 +1595,8 @@ class UserProfileApplic extends UserProfile
             $arResult['fields'][] = '"Телефон"';
         if(empty($arResult['pos']))
             $arResult['fields'][] = '"Целевые вакансии"';
-        /*if(empty($arResult['aboutme']))
-            $arResult['fields'][] = '"О себе"';*/
+        if(empty($arResult['aboutme']))
+            $arResult['fields'][] = '"О себе"';
 
         if(sizeof($arResult['fields'])>0)
             $arResult['mess'] = 'Необходимо заполнить поля: ' . implode(', ', $arResult['fields']);
@@ -1786,7 +1733,7 @@ class UserProfileApplic extends UserProfile
         for ($i=0; $i<$n; $i++)
         {
             // загружаем только допустимое кол-во
-            if(($i + 1 + $query['cnt'])>$this->photosMax)
+            if(($i + 1 + $query['cnt'])>$this->photosMax) 
                 continue;
 
             $file = pathinfo($arData['files'][$i]['name'], PATHINFO_FILENAME);
@@ -1885,5 +1832,153 @@ class UserProfileApplic extends UserProfile
             ->update('user', ['ismoder'=>0], 'id_user=:id', [':id'=>$this->id]);
         // уведомляем админа по почте
         Mailing::set(1, ['id_user'=>$this->id], self::$APPLICANT);
+    }
+
+    /**
+     * get Efficiency Applicant profile
+     * @return int
+     */
+    public function getEfficiencyData() {
+
+        $data['usrInfo'] = $this->getUserInfo($this->id);
+//      display($data['usrInfo']);
+        //die();
+
+        $efficiency = 0;
+
+        /*main*/
+        If (isset($data['usrInfo']['userAttribs']['1']['photo'])) {
+            $efficiency = $efficiency + 10;
+
+            $id_user = $this->id;
+            $cntFoto = Yii::app()->db->createCommand("
+                SELECT 
+                    count(id) as cnt
+                FROM 
+                    user_photos
+                WHERE 
+                    id_user=${id_user}
+            ")->queryRow();
+            If ($cntFoto['cnt']>=2) {
+                $efficiency = $efficiency + 10;
+            }
+        }
+        If (isset($data['usrInfo']['userAttribs']['1']['firstname'])) {
+            $efficiency = $efficiency + 1;
+        }
+        If (isset($data['usrInfo']['userAttribs']['1']['lastname'])) {
+            $efficiency = $efficiency + 1;
+        }
+        If (isset($data['usrInfo']['userAttribs']['1']['bday'])) {
+            $efficiency = $efficiency + 1;
+        }
+        If (isset($data['usrInfo']['userAttribs']['1']['isman'])) {
+            $efficiency = $efficiency + 1;
+        }
+        if (isset($data['usrInfo']['userAttribs']['1']['ismed']) ||
+            isset($data['usrInfo']['userAttribs']['1']['smart']) ||
+            isset($data['usrInfo']['userAttribs']['1']['card']) ||
+            isset($data['usrInfo']['userAttribs']['1']['ishasavto'])) {
+            $efficiency = $efficiency + 1;
+        }
+
+        /*contact*/
+        If (isset($data['usrInfo']['userAttribs']['1']['phone'])) {
+            $efficiency = $efficiency + 5;
+        }
+        If (isset($data['usrInfo']['userAttribs']['1']['email'])) {
+            $efficiency = $efficiency + 5;
+        }
+        if (isset($data['usrInfo']['userAttribs']['4']['val'])   || //messangers
+            isset($data['usrInfo']['userAttribs']['157']['val']) ||
+            isset($data['usrInfo']['userAttribs']['156']['val']) ||
+            isset($data['usrInfo']['userAttribs']['5']['val'])) {
+            $efficiency = $efficiency + 5;
+        }
+        if (isset($data['usrInfo']['userAttribs']['6']['val']) || //social networks
+            isset($data['usrInfo']['userAttribs']['160']['val']) ||
+            isset($data['usrInfo']['userAttribs']['161']['val']) ||
+            isset($data['usrInfo']['userAttribs']['162']['val']) ||
+            isset($data['usrInfo']['userAttribs']['7']['val'])) {
+            $efficiency = $efficiency + 5;
+        }
+
+        If (count($data['usrInfo']['userDolj']['0']) ) { //заполнены поля должностей
+            $efficiency = $efficiency + 5;
+        }
+        If (isset($data['usrInfo']['userCities']['0'])) {
+            $efficiency = $efficiency + 1;
+        }
+        If (isset($data['usrInfo']['userWdays'])) {
+            $efficiency = $efficiency + 4;
+        }
+
+        /*look*/
+        If (isset($data['usrInfo']['userAttribs']['9']['val'])) {
+            $efficiency = $efficiency + 3;
+        }
+        If (isset($data['usrInfo']['userAttribs']['10']['val'])) {
+            $efficiency = $efficiency + 3;
+        }
+        If (isset($data['usrInfo']['userAttribs']['11']['val'])) {
+            $efficiency = $efficiency + 3;
+        }
+        If (isset($data['usrInfo']['userAttribs']['12']['val'])) {
+            $efficiency = $efficiency + 3;
+        }
+        If (isset($data['usrInfo']['userAttribs']['13']['val'])) {
+            $efficiency = $efficiency + 3;
+        }
+        If (isset($data['usrInfo']['userAttribs']['14']['val'])) {
+            $efficiency = $efficiency + 3;
+        }
+        If (isset($data['usrInfo']['userAttribs']['15']['val'])) {
+            $efficiency = $efficiency + 3;
+        }
+        If (isset($data['usrInfo']['userAttribs']['16']['val'])) {
+            $efficiency = $efficiency + 3;
+        }
+        If (isset($data['usrInfo']['userAttribs']['39']['val'])) {
+            $efficiency = $efficiency + 3;
+        }
+
+        /*more info*/
+        If (isset($data['usrInfo']['userAttribs']['70']['val'])) {
+            $efficiency = $efficiency + 5;
+        }
+        If (isset($data['usrInfo']['userAttribs']['1']['aboutme']))  {
+            $efficiency = $efficiency + 11;
+        }
+        if (isset($data['usrInfo']['userAttribs']['41']['name']) || //language
+            isset($data['usrInfo']['userAttribs']['42']['name']) ||
+            isset($data['usrInfo']['userAttribs']['43']['name']) ||
+            isset($data['usrInfo']['userAttribs']['44']['name']) ||
+            isset($data['usrInfo']['userAttribs']['45']['name']) ||
+            isset($data['usrInfo']['userAttribs']['46']['name']) ||
+            isset($data['usrInfo']['userAttribs']['47']['name']) ||
+            isset($data['usrInfo']['userAttribs']['49']['name']) ||
+            isset($data['usrInfo']['userAttribs']['50']['name']) ||
+            isset($data['usrInfo']['userAttribs']['51']['name']) ||
+            isset($data['usrInfo']['userAttribs']['52']['name']) ||
+            isset($data['usrInfo']['userAttribs']['53']['name']) ||
+            isset($data['usrInfo']['userAttribs']['54']['name']) ||
+            isset($data['usrInfo']['userAttribs']['55']['name']) ||
+            isset($data['usrInfo']['userAttribs']['56']['name']) ||
+            isset($data['usrInfo']['userAttribs']['57']['name']) ||
+            isset($data['usrInfo']['userAttribs']['58']['name']) ||
+            isset($data['usrInfo']['userAttribs']['59']['name']) ||
+            isset($data['usrInfo']['userAttribs']['60']['name']) ||
+            isset($data['usrInfo']['userAttribs']['61']['name']) ||
+            isset($data['usrInfo']['userAttribs']['62']['name']) ||
+            isset($data['usrInfo']['userAttribs']['63']['name']) ||
+            isset($data['usrInfo']['userAttribs']['64']['name']) ||
+            isset($data['usrInfo']['userAttribs']['65']['name']) ||
+            isset($data['usrInfo']['userAttribs']['66']['name']) ||
+            isset($data['usrInfo']['userAttribs']['67']['name']) ||
+            isset($data['usrInfo']['userAttribs']['68']['name'])) {
+            $efficiency = $efficiency + 5;
+        }
+
+        return $efficiency;
     }
 }

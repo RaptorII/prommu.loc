@@ -1,18 +1,20 @@
-<?php Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/theme/css/feedback/style.css'); ?>
+<?php Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'feedback/style.css'); ?>
 <?php if( $mess = Yii::app()->user->getFlash('Message') ): ?>
-    <div class="msg-block"><?= $mess['message'] ?></div>
-    <script type="application/javascript">
-        var type = '<?= $mess['type'] ?>';
-        if( parseInt(type) == 2 ) var type = 'Соискатель';
-        else var type =  'Работодатель';
-
-        window.dataLayer = window.dataLayer || [];
-        dataLayer.push({
-            'event' : type
-        });
-
-    </script>
+  <div class="msg-block"><?= $mess['message'] ?></div>
+  <script type="application/javascript">
+    var type = '<?= $mess['type'] ?>';
+    if( parseInt(type) == 2 ) var type = 'Соискатель';
+    else var type =  'Работодатель';
+    window.dataLayer = window.dataLayer || [];
+    dataLayer.push({'event' : type});
+  </script>
 <?php else: ?>
+  <?
+  display($viData);
+  ?>
+
+
+
     <?php
     if($viData['use_recaptcha']==true)
     {
@@ -26,15 +28,6 @@
                 <h1 class="feedback-page__title">Обратная связь</h1>
                 <?php if(!empty($error)): ?>
                     <div class="error-block -center -red"><?=$error?></div>
-                <?php endif; ?>
-                <?php if(Share::isGuest()): ?>
-                    <label class="feedback-page__label feedback-page__label-select">
-                        <select name="type" id="CBtype" class="feedback-page__input feedback-page__select" title="Выберите тип запроса" equired>
-                            <option value="" disabled<?=(!in_array($viData['type'], [2,3]) ? ' selected': '')?>>Тип запроса (Соискатель / Работодатель)</option>
-                            <option value="2"<?=($viData['type']==2 ? ' selected': '')?>>Соискатель</option>
-                            <option value="3"<?=($viData['type']==3 ? ' selected': '')?>>Работодатель</option>
-                        </select>
-                    </label>
                 <?php endif; ?>
                 <label class="feedback-page__label">
                     <?

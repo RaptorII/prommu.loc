@@ -141,22 +141,21 @@ else
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-<!--                        <a href="--><?//=$hUrl. 'feedback'?><!--" class="dropdown-toggle" >-->
-                            <!-- The user image in the navbar-->
-                            <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                            <span class="hidden-xs">Обратная связь</span>
+                            <span class="hidden-xs"> Обратная связь</span>
                             <?php if (isset($model['cnt']) && $model['cnt'] != 0) { ?>
                                 <span class="label label-danger"><?= $model['cnt'] ?></span>
                             <?php } ?>
                         </a>
                         <ul class="dropdown-menu">
 
+                            <!-- The user image in the menu -->
                             <? foreach ($model['items'] as $id => $v) : ?>
                                 <li class="user-header">
-                                    <a  href="/admin/site/<?= (!$v['type'] ? 'mail/' . $id : 'update/' . $v['chat']) ?>"
-                                        rel="tooltip"
-                                        data-placement="top"
-                                        title="Ответить">
+                                    <a
+                                            href="/admin/site/<?= (!$v['type'] ? 'mail/' . $id : 'update/' . $v['chat']) ?>"
+                                            rel="tooltip"
+                                            data-placement="top"
+                                            title="Ответить">
                                         <?= $id . ' - ' . $v['title'] ?>
                                         <b>(<?= $v['cnt'] ?>)</b>
                                     </a>
@@ -167,10 +166,10 @@ else
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="hidden-xs">Вакансии </span>
                             <?php if (isset($counV) && $counV != 0) { ?>
                                 <span class="label label-danger"><?= $counV ?></span>
                             <?php } ?>
-                            <span class="hidden-xs"> Вакансии </span>
                         </a>
 
                         <ul class="dropdown-menu">
@@ -185,13 +184,14 @@ else
                             <? endfor; ?>
                         </ul>
                     </li>
+                   
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="hidden-xs"> Соискатели </span>
                             <?php if (isset($counP) && $counP != 0) { ?>
                                 <span class="label label-danger"><?= $counP ?></span>
                             <?php } ?>
-                            <span class="hidden-xs">Соискатели </span>
                         </a>
 
                         <ul class="dropdown-menu">
@@ -199,7 +199,7 @@ else
                                 <li class="user-header">
 
                                     <?
-                                    echo '<a style=" white-space: unset;   background-color: #e1e3e9;" href="/admin/site/PromoEdit/' . $modelP[$i]['idus'] . '" rel="tooltip" data-placement="top" title="Ответить">' . $modelP[$i]['id'] . '-' . $modelP[$i]['firstname'] . ' ' . $modelP[$i]['lastname'] . '</a>';
+                                    echo '<a style=" white-space: unset;   background-color: #e1e3e9;" href="/admin/site/PromoEdit/' . $modelP[$i]['idus'] . '" rel="tooltip" data-placement="top" title="Просмотреть">' . $modelP[$i]['id'] . '-' . $modelP[$i]['firstname'] . ' ' . $modelP[$i]['lastname'] . '</a>';
                                     ?>
 
                                 </li>
@@ -209,10 +209,10 @@ else
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="hidden-xs">Работодатели</span>
                             <?php if (isset($counR) && $counR != 0) { ?>
                                 <span class="label label-danger"><?= $counR ?></span>
                             <?php } ?>
-                            <span class="hidden-xs">Работодатели</span>
                         </a>
                         <ul class="dropdown-menu">
                             <? for ($i = 0; $i < $counR; $i++): ?>
@@ -237,7 +237,7 @@ else
                                     <li class="user-header">
                                         <a href="/admin/comments?type=1" rel="tooltip" data-placement="top"
                                            title="Просмотреть">
-                                           О соискателях (<?= $arCommentsCnt['emp_reviews'] ?>)
+                                            О соискателях (<?= $arCommentsCnt['emp_reviews'] ?>)
                                         </a>
                                     </li>
                                 <? endif; ?>
@@ -245,7 +245,7 @@ else
                                     <li class="user-header">
                                         <a href="/admin/comments?type=0" rel="tooltip" data-placement="top"
                                            title="Просмотреть">
-                                           О работодателях (<?= $arCommentsCnt['app_reviews'] ?>)
+                                            О работодателях (<?= $arCommentsCnt['app_reviews'] ?>)
                                         </a>
                                     </li>
                                 <? endif; ?>
@@ -262,43 +262,43 @@ else
                     <? endif; ?>
 
                     <? if($arServiceCnt['cnt']>0): ?>
-                      <li class="dropdown user user-menu">
-                        <!-- Menu Toggle Button -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                          <span class="hidden-xs">Услуги</span>
-                          <?php if (isset($arServiceCnt['cnt']) && $arServiceCnt['cnt'] != 0) { ?>
-                              <span class="label label-danger"><?= $arServiceCnt['cnt'] ?></span>
-                          <?php } ?>
-                        </a>
-                        <ul class="dropdown-menu">
-                          <? foreach ($arServiceCnt['items'] as $v): ?>
-                            <li class="user-header">
-                              <a href="<?=$v['link']?>">
-                                <? if(!empty($v['icon'])): ?>
-                                  <i class="glyphicon <?=$v['icon']?>"></i>
-                                <? else: ?>
-                                  <i class="glyphicon">@</i>
-                                <? endif; ?>
-                                <span><?=$v['name']?></span>
-                              </a>
-                              <span class="label label-danger"><?= $v['cnt'] ?></span>
-                              <?php if (isset($v['name']) && $v['name'] != 0) { ?>
-                                  <span class="label label-danger"><?= $v['name'] ?></span>
-                              <?php } ?>
-                            </li>
-                          <? endforeach; ?>
-                        </ul>
-                      </li>
+                        <li class="dropdown user user-menu">
+                            <!-- Menu Toggle Button -->
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <span class="hidden-xs">Услуги</span>
+                                <?php if (isset($arServiceCnt['cnt']) && $arServiceCnt['cnt'] != 0) { ?>
+                                    <span class="label label-danger"><?= $arServiceCnt['cnt'] ?></span>
+                                <?php } ?>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <? foreach ($arServiceCnt['items'] as $v): ?>
+                                    <li class="user-header">
+                                        <a href="<?=$v['link']?>">
+                                            <? if(!empty($v['icon'])): ?>
+                                                <i class="glyphicon <?=$v['icon']?>"></i>
+                                            <? else: ?>
+                                                <i class="glyphicon">@</i>
+                                            <? endif; ?>
+                                            <span><?=$v['name']?></span>
+                                        </a>
+                                        <span class="label label-danger"><?= $v['cnt'] ?></span>
+                                        <?php if (isset($v['name']) && $v['name'] != 0) { ?>
+                                            <span class="label label-danger"><?= $v['name'] ?></span>
+                                        <?php } ?>
+                                    </li>
+                                <? endforeach; ?>
+                            </ul>
+                        </li>
                     <? endif; ?>
+
                     <li class="dropdown user user-menu">
                         <!-- Menu Toggle Button -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="hidden-xs">Идеи</span>
                             <?php if (isset($arIdeasCnt) && $arIdeasCnt != 0) { ?>
                                 <span class="label label-danger"><?= $arIdeasCnt ?></span>
                             <?php } ?>
-                            <span class="hidden-xs">Идеи</span>
                         </a>
-
                         <ul class="dropdown-menu">
                             <? foreach ($arIdeas as $idea):  ?>
                                 <li class="user-header">
@@ -409,10 +409,12 @@ else
                 $enableA = ($curId == 'wait' && $_GET['type'] == 2) ? true : $enableA;
                 $enableA = ($curId == 'comments' && $_GET['type'] == 1) ? true : $enableA;
                 $enableA = ($curId == 'sect' && $_GET['p'] == 'app') ? true : $enableA;
+                $curId=='register' && Share::isApplicant($_GET['user']) && $enableA=true;
                 $enableE = in_array($curId, ['empl', 'EmplEdit']);
                 $enableE = ($curId == 'wait' && $_GET['type'] == 3) ? true : $enableE;
                 $enableE = ($curId == 'comments' && $_GET['type'] == '0') ? true : $enableE;
                 $enableE = ($curId == 'sect' && $_GET['p'] == 'emp') ? true : $enableE;
+                $curId=='register' && Share::isEmployer($_GET['user']) && $enableE=true;
                 ?>
                 <li class="treeview <?= ($enableA ? 'active' : '') ?>">
                     <a href="#">
@@ -421,25 +423,42 @@ else
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu<?= $enableA ? ' menu-open' : '' ?>"<?= !$enableA ? ' style="display:none"' : '' ?>>
-                        <li class="<?= (in_array($curId, ['users', 'PromoEdit']) ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>users">
-                                <i class="glyphicon glyphicon-ok-circle"></i>
-                                <span>Зарегистрированные</span>
-                            </a>
-                        </li>
-                        <li class="<?= ($curId == 'wait' && $_GET['type'] == 2 ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>wait?type=2">
-                                <i class="glyphicon glyphicon-hourglass"></i>
-                                <span>Брошенные</span>
-                            </a>
-                        </li>
-
-                        <li class="<?= ($curId == 'comments' && $_GET['type'] == 1 ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>comments?type=1">
-                                <i class="glyphicon glyphicon-heart"></i>
-                                <span>Отзывы</span>
-                            </a>
-                        </li>
+                      <li class="<?= (in_array($curId, ['users', 'PromoEdit']) ? 'active' : '') ?>">
+                        <a href="<?= $hUrl ?>users">
+                          <i class="glyphicon glyphicon-ok-circle"></i>
+                          <span>Зарегистрированные</span>
+                        </a>
+                      </li>
+                      <li class="<?=($curId=='register' && Share::isApplicant($_GET['user']) && $_GET['state']=='profile') ? 'active' : ''?>">
+                        <a href="<?=$hUrl . 'register?user=2&state=profile'?>">
+                          <i class="glyphicon glyphicon-registration-mark"></i>
+                          <span>Активация профиля</span>
+                        </a>
+                      </li>
+                      <li class="<?=($curId=='register' && Share::isApplicant($_GET['user']) && $_GET['state']=='avatar') ? 'active' : ''?>">
+                        <a href="<?=$hUrl . 'register?user=2&state=avatar'?>">
+                          <i class="glyphicon glyphicon-registration-mark"></i>
+                          <span>Незаполненное фото</span>
+                        </a>
+                      </li>
+                      <li class="<?=($curId=='register' && Share::isApplicant($_GET['user']) && $_GET['state']=='code') ? 'active' : ''?>">
+                        <a href="<?=$hUrl . 'register?user=2&state=code'?>">
+                          <i class="glyphicon glyphicon-registration-mark"></i>
+                          <span>Не подтвердил код</span>
+                        </a>
+                      </li>
+                      <li class="<?= ($curId == 'wait' && $_GET['type'] == 2 ? 'active' : '') ?>">
+                        <a href="<?= $hUrl ?>wait?type=2">
+                          <i class="glyphicon glyphicon-hourglass"></i>
+                          <span>Брошенные(устар.)</span>
+                        </a>
+                      </li>
+                      <li class="<?= ($curId == 'comments' && $_GET['type'] == 1 ? 'active' : '') ?>">
+                        <a href="<?= $hUrl ?>comments?type=1">
+                          <i class="glyphicon glyphicon-heart"></i>
+                          <span>Отзывы</span>
+                        </a>
+                      </li>
                     </ul>
                 </li>
                 <li class="<?= ($enableE ? 'active' : '') ?>">
@@ -449,24 +468,42 @@ else
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu<?= $enableE ? ' menu-open' : '' ?>"<?= !$enableE ? ' style="display:none"' : '' ?>>
-                        <li class="<?= (in_array($curId, ['empl', 'EmplEdit']) ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>empl">
-                                <i class="glyphicon glyphicon-ok-circle"></i>
-                                <span>Зарегистрированные</span>
-                            </a>
-                        </li>
-                        <li class="<?= ($curId == 'wait' && $_GET['type'] == 3 ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>wait?type=3">
-                                <i class="glyphicon glyphicon-hourglass"></i>
-                                <span>Брошенные</span>
-                            </a>
-                        </li>
-                        <li class="<?= ($curId == 'comments' && $_GET['type'] == 0 ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>comments?type=0">
-                                <i class="glyphicon glyphicon-heart"></i>
-                                <span>Отзывы</span>
-                            </a>
-                        </li>
+                      <li class="<?= (in_array($curId, ['empl', 'EmplEdit']) ? 'active' : '') ?>">
+                        <a href="<?= $hUrl ?>empl">
+                          <i class="glyphicon glyphicon-ok-circle"></i>
+                          <span>Зарегистрированные</span>
+                        </a>
+                      </li>
+                      <li class="<?=($curId=='register' && Share::isEmployer($_GET['user']) && $_GET['state']=='profile') ? 'active' : ''?>">
+                        <a href="<?=$hUrl . 'register?user=3&state=profile'?>">
+                          <i class="glyphicon glyphicon-registration-mark"></i>
+                          <span>Активация профиля</span>
+                        </a>
+                      </li>
+                      <li class="<?=($curId=='register' && Share::isEmployer($_GET['user']) && $_GET['state']=='avatar') ? 'active' : ''?>">
+                        <a href="<?=$hUrl . 'register?user=3&state=avatar'?>">
+                          <i class="glyphicon glyphicon-registration-mark"></i>
+                          <span>Незаполненное фото</span>
+                        </a>
+                      </li>
+                      <li class="<?=($curId=='register' && Share::isEmployer($_GET['user']) && $_GET['state']=='code') ? 'active' : ''?>">
+                        <a href="<?=$hUrl . 'register?user=3&state=code'?>">
+                          <i class="glyphicon glyphicon-registration-mark"></i>
+                          <span>Не подтвердил код</span>
+                        </a>
+                      </li>
+                      <li class="<?= ($curId == 'wait' && $_GET['type'] == 3 ? 'active' : '') ?>">
+                        <a href="<?= $hUrl ?>wait?type=3">
+                          <i class="glyphicon glyphicon-hourglass"></i>
+                          <span>Брошенные</span>
+                        </a>
+                      </li>
+                      <li class="<?= ($curId == 'comments' && $_GET['type'] == 0 ? 'active' : '') ?>">
+                        <a href="<?= $hUrl ?>comments?type=0">
+                          <i class="glyphicon glyphicon-heart"></i>
+                          <span>Отзывы</span>
+                        </a>
+                      </li>
                     </ul>
                 </li>
                 <?php
@@ -497,13 +534,6 @@ else
                             </a>
                         </li>
                     </ul>
-                </li>
-                <li class="<?= ($enableE ? 'active' : '') ?>">
-                    <a href="<?= $hUrl ?>stat">
-                        <i class="glyphicon glyphicon-briefcase"></i>
-                        <span>Статистика</span>
-                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                    </a>
                 </li>
                 <?php
                 // services
@@ -599,8 +629,8 @@ else
                 // ANALYTIC
                 ?>
                 <?php
-                $enable = $curId == 'analytic';
-                $enable = ($curId == 'sect' && $_GET['p'] == 'analytic') ? true : $enable;
+                $enable = in_array($curId, ['analytic','marketinganalytic','analytic_byperiod']);
+                $enable = ($curId == 'sect' && in_array($_GET['p'], ['analytic','marketinganalytic','analytic_byperiod'])) ? true : $enable;
                 ?>
                 <li class="treeview<?= $enable ? ' active' : '' ?>">
                     <a href="#">
@@ -609,24 +639,88 @@ else
                         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                     </a>
                     <ul class="treeview-menu<?= $enable ? ' menu-open' : '' ?>"<?= !$enable ? ' style="display:none"' : '' ?>>
-                        <li class="<?= ($curId == 'analytic' && $_GET['subdomen'] == '' ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>analytic?subdomen=">
+
+                        <li class="<?= ($curId == 'marketinganalytic' ? 'active' : '') ?>">
+                            <a href="<?= $hUrl ?>marketinganalytic">
                                 <i class="glyphicon glyphicon-text-background"></i>
-                                <span>Общая</span>
+                                <span>
+                                    Маркетологи
+                                </span>
                             </a>
                         </li>
-                        <li class="<?= ($curId == 'analytic' && $_GET['subdomen'] == '0' ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>analytic?subdomen=0">
+                        <li class="<?= ($curId == 'analytic_byperiod' && $_GET['type'] == 'all' ? 'active' : '') ?>">
+                            <a href="<?= $hUrl ?>analytic-byperiod?type=all">
                                 <i class="glyphicon glyphicon-text-background"></i>
-                                <span>PROMMU</span>
+                                <span>
+                                    Общая
+                                </span>
                             </a>
                         </li>
-                        <li class="<?= ($curId == 'analytic' && $_GET['subdomen'] == '1' ? 'active' : '') ?>">
-                            <a href="<?= $hUrl ?>analytic?subdomen=1">
+
+                        <?php if (1==1) { ?>
+                            <li class="<?= ($curId == 'analyticbyparams' && $_GET['type'] == 'registrations' ? 'active' : '') ?>">
+                                <a href="<?= $hUrl ?>analyticbyparams?type=registrations">
+                                    <i class="glyphicon glyphicon-text-background"></i>
+                                    <span>
+                                    Регистрации
+                                </span>
+                                </a>
+                            </li>
+                        <?php } ?>
+
+                        <li class="<?= ($curId == 'analyticbyparams' && $_GET['type'] == 'employer' ? 'active' : '') ?>">
+                            <a href="<?= $hUrl ?>analyticbyparams?type=employer">
                                 <i class="glyphicon glyphicon-text-background"></i>
-                                <span>SPB.PROMMU</span>
+                                <span>
+                                    Работодатели
+                                </span>
                             </a>
                         </li>
+                        <li class="<?= ($curId == 'analyticbyparams' && $_GET['type'] == 'applicant' ? 'active' : '') ?>">
+                            <a href="<?= $hUrl ?>analyticbyparams?type=applicant">
+                                <i class="glyphicon glyphicon-text-background"></i>
+                                <span>
+                                    Соискатели
+                                </span>
+                            </a>
+                        </li>
+                        <li class="<?= ($curId == 'analyticbyparams' && $_GET['type'] == 'vacancy' ? 'active' : '') ?>">
+                            <a href="<?= $hUrl ?>analyticbyparams?type=vacancy">
+                                <i class="glyphicon glyphicon-text-background"></i>
+                                <span>
+                                    Вакансии
+                                </span>
+                            </a>
+                        </li>
+
+                        <?php
+                        /**
+                         * Old analitic left menu and urls
+                         *
+                         */
+                        ?>
+<!--                        -->
+<!--                        <li class="--><?//= ($curId == 'analytic' && $_GET['subdomen'] == '0' ? 'active' : '') ?><!--">-->
+<!--                            <a href="--><?//= $hUrl ?><!--analytic?subdomen=0">-->
+<!--                                <i class="glyphicon glyphicon-text-background"></i>-->
+<!--                                <span>PROMMU</span>-->
+<!--                            </a>-->
+<!--                        </li>-->
+<!--                        <li class="--><?//= ($curId == 'analytic' && $_GET['subdomen'] == '1' ? 'active' : '') ?><!--">-->
+<!--                            <a href="--><?//= $hUrl ?><!--analytic?subdomen=1">-->
+<!--                                <i class="glyphicon glyphicon-text-background"></i>-->
+<!--                                <span>SPB.PROMMU</span>-->
+<!--                            </a>-->
+<!--                        </li>-->
+
+                        <?php
+                        /**
+                         * End Old analitic
+                         *
+                         */
+                        ?>
+
+
                     </ul>
                 </li>
                 <?php
@@ -749,6 +843,12 @@ else
                     <a href="<?= $hUrl ?>ideas">
                         <i class="glyphicon glyphicon-leaf"></i>
                         <span>Идеи/Предложения</span>
+                    </a>
+                </li>
+                <li class="<?= (in_array($curId, ['stat', 'statedit']) ? 'active' : '') ?>">
+                    <a href="<?= $hUrl ?>statist">
+                        <i class="glyphicon glyphicon-leaf"></i>
+                        <span>Статистика</span>
                     </a>
                 </li>
                 <?php

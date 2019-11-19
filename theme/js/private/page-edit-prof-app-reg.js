@@ -773,7 +773,7 @@ jQuery(function($){
     //
     //
     // управляем позицией блока содержания
-    var posContentList = $('.epa__logo-name-list').offset().top - 15;
+    /*var posContentList = $('.epa__logo-name-list').offset().top - 15;
     $(window).on('resize scroll', scrollContentList);
     scrollContentList();
 
@@ -785,7 +785,7 @@ jQuery(function($){
       )
         ? $('.epa__logo-name-list').addClass('fixed')
         : $('.epa__logo-name-list').removeClass('fixed');
-    }
+    }*/
   }
 
   if ($(window).width() < 768) {

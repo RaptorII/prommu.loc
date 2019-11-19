@@ -28,15 +28,85 @@
 
     </div>
 </div>
-<?php $get = Yii::app()->getRequest(); ?>
-<input type="hidden" class="referer" name="referer" value="<?=$get->getParam('referer')?>">
-<input type="hidden" class="transition" name="transition" value="<?=$get->getParam('transition')?>">
-<input type="hidden" class="canal" name="canal" value="<?=$get->getParam('canal')?>">
-<input type="hidden" class="campaign" name="campaign" value="<?=$get->getParam('campaign')?>">
-<input type="hidden" class="content" name="content" value="<?=$get->getParam('content')?>">
-<input type="hidden" class="keywords" name="keywords" value="<?=$get->getParam('keywords')?>">
-<input type="hidden" class="point" name="point" value="<?=$get->getParam('point')?>">
-<input type="hidden" class="last_referer" name="last_referer" value="<?=$get->getParam('last_referer')?>">
+<button class="mob-hidden" data-step="1"></button>
+<?php
+$rq = Yii::app()->getRequest();
+$utm = Yii::app()->session['utm'];
+//  transition
+if (!empty($utm->transition))
+  $transition = $utm->transition;
+elseif (!empty($rq->getParam('utm_source')))
+  $transition = $rq->getParam('utm_source');
+else
+  $transition = $model->data['transition'];
+//  canal
+if (!empty($utm->canal))
+  $canal = $utm->canal;
+elseif (!empty($rq->getParam('utm_medium')))
+  $canal = $rq->getParam('utm_medium');
+else
+  $canal = $model->data['canal'];
+//  campaign
+if (!empty($utm->campaign))
+  $campaign = $utm->campaign;
+elseif (!empty($rq->getParam('utm_campaign')))
+  $campaign = $rq->getParam('utm_campaign');
+else
+  $campaign = $model->data['campaign'];
+//  content
+if (!empty($utm->content))
+  $content = $utm->content;
+elseif (!empty($rq->getParam('utm_content')))
+  $content = $rq->getParam('utm_content');
+else
+  $content = $model->data['content'];
+//  keywords
+if (!empty($utm->keywords))
+  $keywords = $utm->keywords;
+elseif (!empty($rq->getParam('utm_term')))
+  $keywords = $rq->getParam('utm_term');
+else
+  $keywords = $model->data['keywords'];
+//  pm_source
+if (!empty($utm->pm_source))
+  $pm_source = $utm->pm_source;
+elseif (!empty($rq->getParam('pm_source')))
+  $pm_source = $rq->getParam('pm_source');
+else
+  $pm_source = $model->data['pm_source'];
+//  referer
+if (!empty($utm->referer))
+  $referer = $utm->referer;
+elseif (!empty($rq->getParam('referer')))
+  $referer = $rq->getParam('referer');
+else
+  $referer = $model->data['referer'];
+//  last_referer
+if (!empty($utm->last_referer))
+  $last_referer = $utm->last_referer;
+elseif (!empty($rq->getParam('last_referer')))
+  $last_referer = $rq->getParam('last_referer');
+else
+  $last_referer = $model->data['last_referer'];
+//  point
+if (!empty($utm->point))
+  $point = $utm->point;
+elseif (!empty($rq->getParam('point')))
+  $point = $rq->getParam('point');
+else
+  $point = $model->data['point'];
+?>
+<input type="hidden" name="transition" value="<?=$transition?>">
+<input type="hidden" name="canal" value="<?=$canal?>">
+<input type="hidden" name="campaign" value="<?=$campaign?>">
+<input type="hidden" name="content" value="<?=$content?>">
+<input type="hidden" name="keywords" value="<?=$keywords?>">
+<input type="hidden" name="pm_source" value="<?=$pm_source?>">
 <input type="hidden" name="ip" value="<?=$_SERVER['HTTP_X_FORWARDED_FOR']?>">
-<input type="hidden" name="pm_source" value="<?=Yii::app()->request->cookies['pm_source']?>">
+<input type="hidden" name="referer" value="<?=$referer?>">
+<input type="hidden" name="last_referer" value="<?=$last_referer?>">
+<input type="hidden" name="point" value="<?=$point?>">
 <input type="hidden" name="client" value="<?=Yii::app()->request->cookies['_ga']?>">
+
+
+   

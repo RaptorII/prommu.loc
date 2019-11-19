@@ -1,5 +1,4 @@
 <?
-
 	header('Content-Type: text/html; charset=utf-8');
 	$baseUrl = Yii::app()->baseUrl;
 	$curUrl = Yii::app()->request->requestUri;
@@ -101,13 +100,13 @@
 
             function ShowRootMenu($lang, $menu, $SubdomainCache)
             {
-								$menuCacheId = $SubdomainCache->host . '/mainMenu';
-								$res = Cache::getData($menuCacheId);
-								if($res['data']===false) {
-									$res['data'] = $menu->getTreeDB(0, $lang, 1, 0); // главное верхнее меню
-									Cache::setData($res, 604800); // кешируем на неделю
-								}
-								$res = $res['data'];
+                                $menuCacheId = $SubdomainCache->host . '/mainMenu';
+                                $res = Cache::getData($menuCacheId);
+                                if($res['data']===false) {
+                                    $res['data'] = $menu->getTreeDB(0, $lang, 1, 0); // главное верхнее меню
+                                    Cache::setData($res, 604800); // кешируем на неделю
+                                }
+                                $res = $res['data'];
                 echo '<ul class="top-menu-wr__menu csson">';
                 if($_SERVER['REQUEST_URI'] != '/'){
                     echo '<li class="item top-menu-wr__main-level"><a href="/">Главная</a></li>';
@@ -191,15 +190,15 @@
                                     <div class="small-menu">
                                         <div class="small-menu__list">
                                             <? if(Share::isEmployer()): ?>
-	                                            <div class="small-menu__item<?=($curUrl==MainConfig::$PAGE_VACPUB ? ' current' : '')?>">
-	                                              <a href="<?=MainConfig::$PAGE_VACPUB?>" class="addvac">
-	                                                <span class="small-menu__circle">
+                                                <div class="small-menu__item<?=($curUrl==MainConfig::$PAGE_VACPUB ? ' current' : '')?>">
+                                                  <a href="<?=MainConfig::$PAGE_VACPUB?>" class="addvac">
+                                                    <span class="small-menu__circle">
                                                         <span class="small-menu__icon icn-plus-prommu color-white"></span>
                                                     </span>
-	                                              	<span class="small-menu__name">ДОБАВИТЬ ВАКАНСИЮ</span>
-	                                              </a>
-	                                            </div>
-                                          	<? endif; ?>
+                                                    <span class="small-menu__name">ДОБАВИТЬ ВАКАНСИЮ</span>
+                                                  </a>
+                                                </div>
+                                            <? endif; ?>
                                             <?
                                               $arNotif = UserNotifications::getNotifications();
                                               $link = MainConfig::$PAGE_RESPONSES;
@@ -253,7 +252,7 @@
                                             <a href="<?=$link?>" class="small-menu__item rate<?=($curUrl==$link ? ' current' : '')?>" id="sm-rate-cnt">
                                                 <span class="small-menu__circle">
                                                     <b class="small-menu__cnt">0</b>
-                                                    <span class="small-menu__icon icn-trend-prommu color-white"></span>
+                                                    <i class="small-menu__icon icn-trend-prommu color-white"></i>
                                                 </span>
                                                 <span class="small-menu__name">ОТЗЫВЫ И РЕЙТИНГИ</span>
                                             </a>
@@ -261,14 +260,14 @@
                                             <a href="<?=$link?>" class="small-menu__item notice<?=(strpos($curUrl,$link)!==false ? ' current' : '')?>" id="sm-notice-cnt">
                                                 <span class="small-menu__circle">
                                                     <b class="small-menu__cnt">0</b>
-                                                    <span class="small-menu__icon icn-envelope-prommu color-white"></span>
+                                                    <i class="small-menu__icon icn-envelope-prommu color-white"></i>
                                                 </span>
                                                 <span class="small-menu__name">СООБЩЕНИЯ</span>
                                             </a>
                                             <?php $link = MainConfig::$PAGE_SETTINGS ?>
                                             <a href="<?=$link?>" class="small-menu__item settings<?=($curUrl==$link ? ' current' : '')?>">
                                                 <span class="small-menu__circle">
-                                                    <span class="small-menu__icon icn-cogs-double-prommu color-white"></span>
+                                                    <i class="small-menu__icon icn-cogs-double-prommu color-white"></i>
                                                 </span>
                                                 <span class="small-menu__name">НАСТРОЙКИ</span>
                                             </a>
@@ -327,15 +326,15 @@
                               <span><noindex>Сервис №1 в поиске временной работы и персонала для BTL и Event-мероприятий</noindex></span>
                           </div>
                           <div class="enter">
-                            <a class="feedback btn__green" href="<?=MainConfig::$PAGE_FEEDBACK?>">Обратная связь</a>
-                            <?php if(!in_array(Share::$UserProfile->type, [2,3])): ?>
-                                <a href="<?= MainConfig::$PAGE_LOGIN ?>" class="reg btn__orange">
-                                    <span>Вход</span>
-                                </a>
-                                <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>" class="reg btn__orange">
-                                    <span>Регистрация</span>
-                                </a>
-	                        <? endif; ?>
+                            <a class="feedback btn__orange" href="<?=MainConfig::$PAGE_FEEDBACK?>">Обратная связь</a>
+                            <?php if(Share::isGuest()): ?>
+                              <a href="<?= MainConfig::$PAGE_LOGIN ?>" class="reg btn__orange">
+                                <span>Вход</span>
+                              </a>
+                              <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>" class="reg btn__orange">
+                                <span>Регистрация</span>
+                              </a>
+                            <? endif; ?>
                           </div>
                       </div>
                     </div>
@@ -345,29 +344,29 @@
                     <div class="row">
                       <!--Content of footer-->
                               <div class="<?//* col-sm-7 col-lg-6*/?>col-xs-12 col-sm-9 col-lg-9 footer__big-menu">
-		                          <div class="menu row">
-		                              <div class="col-sm-6 col-lg-2">
-		                                <a href="<?=MainConfig::$PAGE_VACANCY?>" rel="nofollow" class="footer__big-menu-link"><ins>Вакансии</ins></a>
-		                                <a href="<?=MainConfig::$PAGE_SEARCH_PROMO?>" rel="nofollow" class="footer__big-menu-link"><ins>Анкеты</ins></a>
-		                                <a href="<?=MainConfig::$PAGE_SEARCH_EMPL?>" rel="nofollow" class="footer__big-menu-link"><ins>Компании</ins></a>
-		                              </div>
-		                              <div class="col-sm-6 col-lg-4">
-		                                <a href="<?=MainConfig::$PAGE_WORK_FOR_STUDENTS?>" rel="nofollow" class="footer__big-menu-link"><ins>Работа для студентов</ins></a>
-		                                <a href="<?=MainConfig::$PAGE_SERVICES?>" rel="nofollow" class="footer__big-menu-link"><ins>Услуги</ins></a>
-		                                <a href="<?=MainConfig::$PAGE_IDEAS_LIST?>" rel="nofollow" class="footer__big-menu-link"><ins>Идеи и предложения</ins></a>
-		                              </div>
-		                              <div class="col-sm-6 col-lg-2">
-		                                <a href="<?=MainConfig::$PAGE_ABOUT?>" rel="nofollow" class="footer__big-menu-link"><ins>О нас</ins></a>
-		                                <a href="<?=MainConfig::$PAGE_FAQ?>" rel="nofollow" class="footer__big-menu-link"><ins>FAQ</ins></a>
-		                                <a href="<?=MainConfig::$PAGE_NEWS?>" rel="nofollow" class="footer__big-menu-link"><ins>Новости</ins></a>
-		                              </div>
-		                              <div class="col-sm-6 col-lg-4">
-		                                <a href="<?=MainConfig::$PAGE_ARTICLES?>" rel="nofollow" class="footer__big-menu-link"><ins>Полезные статьи</ins></a>
-		                                <a href="<? echo '/' . MainConfig::$PAGE_SITEMAP?>" class="footer__big-menu-link"><ins>Карта сайта</ins></a>
-		                                <a href="<?=MainConfig::$PAGE_CONDITIONS?>" rel="nofollow" class="footer__big-menu-link"><ins>Правила Сервиса</ins></a>
-		                              </div>
-		                              <div class="clearfix"></div>
-		                          </div>
+                                  <div class="menu row">
+                                      <div class="col-sm-6 col-lg-2">
+                                        <a href="<?=MainConfig::$PAGE_VACANCY?>" rel="nofollow" class="footer__big-menu-link"><ins>Вакансии</ins></a>
+                                        <a href="<?=MainConfig::$PAGE_SEARCH_PROMO?>" rel="nofollow" class="footer__big-menu-link"><ins>Анкеты</ins></a>
+                                        <a href="<?=MainConfig::$PAGE_SEARCH_EMPL?>" rel="nofollow" class="footer__big-menu-link"><ins>Компании</ins></a>
+                                      </div>
+                                      <div class="col-sm-6 col-lg-4">
+                                        <a href="<?=MainConfig::$PAGE_WORK_FOR_STUDENTS?>" rel="nofollow" class="footer__big-menu-link"><ins>Работа для студентов</ins></a>
+                                        <a href="<?=MainConfig::$PAGE_SERVICES?>" rel="nofollow" class="footer__big-menu-link"><ins>Услуги</ins></a>
+                                        <a href="<?=MainConfig::$PAGE_IDEAS_LIST?>" rel="nofollow" class="footer__big-menu-link"><ins>Идеи и предложения</ins></a>
+                                      </div>
+                                      <div class="col-sm-6 col-lg-2">
+                                        <a href="<?=MainConfig::$PAGE_ABOUT?>" rel="nofollow" class="footer__big-menu-link"><ins>О нас</ins></a>
+                                        <a href="<?=MainConfig::$PAGE_FAQ?>" rel="nofollow" class="footer__big-menu-link"><ins>FAQ</ins></a>
+                                        <a href="<?=MainConfig::$PAGE_NEWS?>" rel="nofollow" class="footer__big-menu-link"><ins>Новости</ins></a>
+                                      </div>
+                                      <div class="col-sm-6 col-lg-4">
+                                        <a href="<?=MainConfig::$PAGE_ARTICLES?>" rel="nofollow" class="footer__big-menu-link"><ins>Полезные статьи</ins></a>
+                                        <a href="<? echo '/' . MainConfig::$PAGE_SITEMAP?>" class="footer__big-menu-link"><ins>Карта сайта</ins></a>
+                                        <a href="<?=MainConfig::$PAGE_CONDITIONS?>" rel="nofollow" class="footer__big-menu-link"><ins>Правила Сервиса</ins></a>
+                                      </div>
+                                      <div class="clearfix"></div>
+                                  </div>
                               </div>
                               <div class="hidden-xs hidden-sm col-md-1"></div>
                               <div class="col-xs-5 col-sm-3 col-lg-4 footer__download hidden-xs hidden-sm hidden-md hidden-lg">
@@ -415,16 +414,16 @@
                 </div>
             </div>
         </div>    
-<?
-//
-//
-//
-foreach(Yii::app()->user->getFlashes() as $key => $message)
-{
-    if($key==='prommu_flash')
-    { ?><div class="prmu__popup prommu_flash"><? echo $message;?></div><? }
-}
-?>
+    <?
+    //
+    ?>
+    <? 
+    if(Yii::app()->user->hasFlash('prommu_flash'))
+        foreach(Yii::app()->user->getFlashes() as $key => $message)
+            if($key==='prommu_flash')
+            { ?><div class="prmu__popup prommu_flash"><? echo $message; ?></div><? }
+
+    ?>
 </body>
 </html>
 <?  
@@ -470,7 +469,7 @@ foreach(Yii::app()->user->getFlashes() as $key => $message)
 // }
 ?>
 <script>
-/*$(document).ready(function(){
+$(document).ready(function(){
     setTimeout(function(){
         var name = "_ga"
         var matches = document.cookie.match(new RegExp(
@@ -499,6 +498,6 @@ foreach(Yii::app()->user->getFlashes() as $key => $message)
         });
 
     }, 3000);
-});*/
+});
 </script>
 

@@ -26,7 +26,7 @@
                     <a href="<?=$link?>" class="small-menu__item notice<?=(strpos($curUrl,$link)!==false ? ' current' : '')?>" id="sm-notice-cnt">
                                                 <span class="small-menu__circle">
                                                     <b class="small-menu__cnt">0</b>
-                                                    <span class="small-menu__icon icn-envelope-prommu color-white"></span>
+                                                    <i class="small-menu__icon icn-envelope-prommu color-white"></i>
                                                 </span>
                         <span class="small-menu__name">СООБЩЕНИЯ</span>
                     </a>
@@ -64,12 +64,12 @@
                         <?php foreach (Share::$viewData['menu'] as $key => $val): ?>
                             <?php if(!$val['hidden']): ?>
                                 <?
-                                    $ep = filter_var(Yii::app()->getRequest()->getParam('ep'), FILTER_SANITIZE_NUMBER_INT);
-                                    $active ='';
-                                    if(strpos($val['link'], 'ep=1')>0)
-                                        $ep ? $active='active' : $active='';
-                                    else
-                                        $active = strpos($val['link'], $mactive) === false ? '' : 'active';
+                                $ep = filter_var(Yii::app()->getRequest()->getParam('ep'), FILTER_SANITIZE_NUMBER_INT);
+                                $active ='';
+                                if(strpos($val['link'], 'ep=1')>0)
+                                    $ep ? $active='active' : $active='';
+                                else
+                                    $active = strpos($val['link'], $mactive) === false ? '' : 'active';
                                 ?>
                                 <a href="/<?= $val['link'] ?>" class="pa__menu-link pa__menu-<?=$val['id']?> employer <?=$active?>">
                                     <span class="pa__menu-item">

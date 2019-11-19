@@ -39,10 +39,28 @@
 					<span>Зарегистрированные</span>
 				</a>
 			</li>
+      <li>
+        <a href="<?=$hUrl . 'register?user=2&state=profile'?>">
+          <i class="glyphicon glyphicon-registration-mark"></i>
+          <span>Активация профиля</span>
+        </a>
+      </li>
+      <li>
+        <a href="<?=$hUrl . 'register?user=2&state=avatar'?>">
+          <i class="glyphicon glyphicon-registration-mark"></i>
+          <span>Незаполненное фото</span>
+        </a>
+      </li>
+      <li>
+        <a href="<?=$hUrl . 'register?user=2&state=code'?>">
+          <i class="glyphicon glyphicon-registration-mark"></i>
+          <span>Не подтвердил код</span>
+        </a>
+      </li>
 			<li>
 				<a href="<?=$hUrl?>wait?type=2">
 					<i class="glyphicon glyphicon-hourglass"></i>
-					<span>Брошенные</span>
+					<span>Брошенные(устар.)</span>
 				</a>
 			</li>
 			<li>
@@ -60,10 +78,28 @@
 					<span>Зарегистрированные</span>
 				</a>
 			</li>
+      <li>
+        <a href="<?=$hUrl . 'register?user=3&state=profile'?>">
+          <i class="glyphicon glyphicon-registration-mark"></i>
+          <span>Активация профиля</span>
+        </a>
+      </li>
+      <li>
+        <a href="<?=$hUrl . 'register?user=3&state=avatar'?>">
+          <i class="glyphicon glyphicon-registration-mark"></i>
+          <span>Незаполненное фото</span>
+        </a>
+      </li>
+      <li>
+        <a href="<?=$hUrl . 'register?user=3&state=code'?>">
+          <i class="glyphicon glyphicon-registration-mark"></i>
+          <span>Не подтвердил код</span>
+        </a>
+      </li>
 			<li>
 				<a href="<?=$hUrl?>wait?type=3">
 					<i class="glyphicon glyphicon-hourglass"></i>
-					<span>Брошенные</span>
+					<span>Брошенные(устар.)</span>
 				</a>
 			</li>
 			<li>

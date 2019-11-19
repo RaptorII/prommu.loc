@@ -121,7 +121,6 @@ class SiteController extends Controller
     public function actionMenuform()
     {
         $model=new MenuTree;
-
         $this->render('menu/view',array('model'=>$model));
     }
 
@@ -184,9 +183,9 @@ class SiteController extends Controller
      */
     public function actionPages()
     {
-    	$this->checkAccess();
+        $this->checkAccess();
 
-    	$this->render('pages/view',['model'=>new Pages(), 'id'=>0]);
+        $this->render('pages/view',['model'=>new Pages(), 'id'=>0]);
     }
     /**
      * 
@@ -258,29 +257,29 @@ class SiteController extends Controller
            $this->render('rating/view', array('model'=>$model));
        }
    }
-   	/**
-   	 * 
-   	 */
+    /**
+     * 
+     */
     public function actionArticlesPages()
     {
-			$this->checkAccess('Статьи');
+            $this->checkAccess('Статьи');
 
-			$title = 'Управление статьями';
-			$this->setPageTitle($title);
-			$this->breadcrumbs = ['СЕО'=>['sect?p=seo'],'1'=>$title]; 
-			$this->render('pages/artsview',['model'=>new Pages(),'id'=>0]);
+            $title = 'Управление статьями';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = ['СЕО'=>['sect?p=seo'],'1'=>$title]; 
+            $this->render('pages/artsview',['model'=>new Pages(),'id'=>0]);
     }
     /**
      * 
      */
     public function actionNewsPages()
     {
-			$this->checkAccess('Новости');
+            $this->checkAccess('Новости');
 
-			$title = 'Управление новостями';
-			$this->setPageTitle($title);
-			$this->breadcrumbs = ['Дополнительно'=>['sect?p=add'],'1'=>$title]; 
-			$this->render('pages/newsview',['model'=>new Pages(),'id'=>0]);
+            $title = 'Управление новостями';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = ['Дополнительно'=>['sect?p=add'],'1'=>$title]; 
+            $this->render('pages/newsview',['model'=>new Pages(),'id'=>0]);
     }
 
     public function actionMenuTree()
@@ -350,26 +349,28 @@ class SiteController extends Controller
             $this->render('access');
             return;
         } 
-    
+
             $model = new Employer;
-            
-            if(Yii::app()->getRequest()->getParam('export_xls')=='Y')
-            {
-                $model = new Employer;
-                $data = $model->exportEmployers();
-                if(!$data)
-                {
-                    $this->redirect(['empl']);
-                }
-                Yexcel::makeExcel($data['head'],$data['items'],'export_empls',$data['autosize']); 
-            }
-            
             $model->unsetAttributes();  // clear any default values
             $model->status=3;
             $model->searchempl();
             if(isset($_GET['Employer'])){
                 $model->attributes=$_GET['Employer'];
             }
+            
+            if(Yii::app()->getRequest()->getParam('export_xls')=='Y')
+            {
+                $model = new Employer();
+                $data = $model->exportEmployers();
+             
+                if(!$data)
+                {
+                    $this->redirect(['empl']);
+                }
+                Yexcel::makeExcel($data['head'],$data['items'],'export_empks',$data['autosize']); 
+            }
+            
+            
             $title = 'Зарегистрированные';
             $this->setPageTitle($title);
             $this->breadcrumbs = array('Работодатели' => array('sect?p=emp'), '1'=>$title);
@@ -381,6 +382,7 @@ class SiteController extends Controller
 
      public function actionAdmin()
     {   
+        
             if(strpos($this->user_access, "Администраторы") === false) {
             $this->render('access');
             return;
@@ -454,7 +456,7 @@ class SiteController extends Controller
             $promo = $Api->getPromoSearch();
             $empl = $Api->getEmplSearch();
 
-            $items[] = [
+            $items = [
                 'empl' =>  $empl,
                 'promo' =>  $promo,
                 'vacancy' =>  $vacancy,
@@ -465,6 +467,7 @@ class SiteController extends Controller
             $this->render('stat/seos', array('items'=>$items));
         }
     }
+
 
     public function actionMonitoring()
     {
@@ -701,16 +704,16 @@ class SiteController extends Controller
             $this->render('banners/view');
     }
 
-    /**
-     * Modules setup
-     */
-    public function actionModule() {
-          if($this->user_access != 1) {
-                  $this->render('access');
-                      return;
-      }
-      $this->render('module');
+  /**
+   * Modules setup
+   */
+  public function actionModule() {
+        if($this->user_access != 1) {
+                $this->render('access');
+                    return;
     }
+    $this->render('module');
+  }
 
     public function actionMailCloudAll()
     {
@@ -762,9 +765,9 @@ class SiteController extends Controller
         // }
         $model = new Analytic;
         $model->exportAnalytic();
-        
 
     }
+  
     // Админка промоутер
     public function actionPromoEdit($id)
     {
@@ -777,11 +780,6 @@ class SiteController extends Controller
           $model->updatePromo($_POST['User'], $id);
           $this->redirect(['site/users']);
       }
-      /*if(Yii::app()->getRequest()->isAjaxRequest)
-      {
-        $this->renderPartial('feedback/list-profile');
-        Yii::app()->end();
-      }*/
 
       (new Promo)->setViewed($id);
       // --- вывод формы
@@ -926,33 +924,64 @@ class SiteController extends Controller
  
         $arRes['error'] != 0 && $type = 'danger';
         Yii::app()->user->setFlash($type, $arRes['message']);
-        $this->redirect(['site/vacancy']);
+        $this->redirect(['site/vacancy']);    
     }
 
     public function actionEmplEdit($id)
     {
-        $this->checkAccess();
+        // if($this->user_access != 1) {
+        //  $this->render('access');
+        //  return;
+        // }
+        if(self::isAuth()) {
+            $model = new User;
+            if(!empty($_POST['User'])) {
 
-        $model = new User;
-        if(!empty($_POST['User']))
-        {
+                $model->updateEmployer($_POST['User'], $id);
+                $this->redirect(array('site/empl'));
+            }
 
-            $model->updateEmployer($_POST['User'], $id);
-            $this->redirect(array('site/empl'));
+            (new Employer)->setViewed($id);
+            // --- вывод формы
+            $data = $model->getUserEmpl($id);
+            $title = 'Профиль работодателя';
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array(
+                'Работодатели' => array('sect?p=emp'), 
+                'Зарегистрированные'=>array('empl'),
+                '1'=>$title
+            );
+
+            $this->render('users/emplform', array('id'=>$id, 'data'=>$data));
         }
+    }
+    
+    public function actionAnalytCreate()
+    {
+        // if($this->user_access != 1) {
+        //  $this->render('access');
+        //  return;
+        // }
+        if(self::isAuth()) {
+            // $model = new User;
+            // if(!empty($_POST['User'])) {
 
-        (new Employer)->setViewed($id);
-        // --- вывод формы
-        $data = $model->getUserEmpl($id);
-        $title = 'Профиль работодателя';
-        $this->setPageTitle($title);
-        $this->breadcrumbs = array(
-            'Работодатели' => array('sect?p=emp'), 
-            'Зарегистрированные'=>array('empl'),
-            '1'=>$title
-        );
+            //     $model->updateEmployer($_POST['User'], $id);
+            //     $this->redirect(array('site/empl'));
+            // }
 
-        $this->render('users/emplform', ['id'=>$id, 'data'=>$data]);
+            // --- вывод формы
+            // $data = $model->getUserEmpl($id);
+            // $title = 'Профиль работодателя';
+            // $this->setPageTitle($title);
+            // $this->breadcrumbs = array(
+            //     'Работодатели' => array('sect?p=emp'), 
+            //     'Зарегистрированные'=>array('empl'),
+            //     '1'=>$title
+            // );
+
+            $this->render('analytic/create', array());
+        }
     }
 
    public function actionPromoChangeModer($id)
@@ -1034,6 +1063,11 @@ class SiteController extends Controller
             $model = new User;
             $model->unsetAttributes();
             $title = 'Брошенные регистрации';
+            if(!empty($_POST["dvgrid_c0"])) {
+                    $checks = $_POST["dvgrid_c0"];
+                    $model = new MailCloud;
+                    $model->mailer($checks);
+                }
             if(isset($_GET['type'])) {
                 if($_GET['type']==2){
                     $title = 'Брошенные';
@@ -1093,6 +1127,49 @@ class SiteController extends Controller
       }
     }
 
+    public function actionStatist()
+    {
+
+        if(strpos($this->user_access, "Аналитика") === false) {
+            $this->render('access');
+            return;
+        } 
+        
+        if(self::isAuth()) {
+            
+            $model = new Analytic;
+            $domain = new Subdomain();
+            
+            $stat =  $model->getAnalityc();
+            $model->unsetAttributes();  // clear any default values
+            $model->search();
+            $model->active=1;
+            $model->name != 'NO ACTIVE';
+            $title = 'Общая Статистика';
+            $brdcrmbs = 'Общая';
+            $title = 'Статистика Prommu';
+            $brdcrmbs = 'Prommu';
+            $model->subdomen=$_GET['subdomen'];
+            
+            if(Yii::app()->getRequest()->getParam('export_xls')=='Y')
+            {
+                $model = new Analytic();
+                $data = $model->exportAnalytic();
+              
+                if(!$data)
+                {
+                    $this->redirect(['statist']);
+                }
+                Yexcel::makeExcel($data['head'],$data['items'],'export_statist',$data['autosize']); 
+            }
+            
+            
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('Статистика'=>array('sect?p=analytic'),'1'=>$brdcrmbs);          
+            $this->render('analytic/statist', array('model'=>$model, 'stat'=>$stat, 'domains' => $domain->getData()));
+        }
+    }
+    
     public function actionAnalytic()
     {
 
@@ -1101,30 +1178,164 @@ class SiteController extends Controller
             return;
         } 
         if(self::isAuth()) {
-            $api = new Api();
-            $api->ideas();
-            $model = new Analytic;
-            $stat =  $model->getAnalityc();
+         
 
+            $rq = Yii::app()->getRequest();
+            if(!$rq->isPostRequest)
+            {
+                  $command =  Yii::app()->getRequest()->getParam('command');
+
+                  switch ($command) {
+                      case 'new':
+
+                            $view = 'analytic/create';
+                            $data = [];
+
+                            $title = 'Создание заявки аналитики';
+                            $this->setPageTitle($title);
+                            $this->breadcrumbs = array($title);
+
+                            $bUrl = Yii::app()->request->baseUrl;
+                            $gcs = Yii::app()->getClientScript();
+                            $gcs->registerCssFile($bUrl . '/css/template.css');
+
+                            $this->render($view, ['viData' => $data]); 
+
+                          break;
+                      
+                      default:
+                          # code...
+                          break;
+                  }
+            }
+            else //if (!isset($_POST['is_analitic']))
+            {
+                $model = new Analytic;
+                $model->setRequest($_POST);
+            }
+            
+            // $api = new Api();
+            // $api->ideas();
+            $model = new Analytic;
+            $domain = new Subdomain();
+            $stat = $model->getAnalityc();
             $model->unsetAttributes();  // clear any default values
             $model->search();
             $model->active=1;
             $model->name != 'NO ACTIVE';
-            $title = 'Общая аналитика';
-            $brdcrmbs = 'Общая';
-            if($_GET['subdomen']=='0') {
-                $title = 'Аналитика Prommu';
-                $brdcrmbs = 'Prommu';
-                $model->subdomen=$_GET['subdomen'];
+
+            switch ($_GET['subdomen']) {
+                case '':
+                    $title = 'Общая';
+                    $brdcrmbs = 'Общая аналитика';
+                    $model->subdomen = $_GET['subdomen'];
+                    break;
+                case 0:
+                    $title = 'Работодатели';
+                    $brdcrmbs = 'Работодатели';
+                    $model->subdomen = $_GET['subdomen'];
+                    break;
+                case 1:
+                    $title = 'Соискатели';
+                    $brdcrmbs = 'Соискатели';
+                    $model->subdomen = $_GET['subdomen'];
+                    break;
+                case 2:
+                    $title = 'Вакансии';
+                    $brdcrmbs = 'Вакансии';
+                    $model->subdomen = $_GET['subdomen'];
+                    break;
             }
-            if($_GET['subdomen']=='1') {
-                $title = 'Аналитика SPB';
-                $brdcrmbs = 'SPB';
-                $model->subdomen=$_GET['subdomen'];
-            }
+
+//            echo'<pre>';
+//            print_r($stat);
+            //print_r($_POST);
+//            print_r($_GET);
+//            die('die');
+
             $this->setPageTitle($title);
             $this->breadcrumbs = array('Аналитика'=>array('sect?p=analytic'),'1'=>$brdcrmbs);          
-            $this->render('analytic/index', array('model'=>$model, 'stat' => $stat));
+            $this->render('analytic/index', [
+                'model' => $model,
+                'stat'  => $stat,
+                'domains' => $domain->getData(),
+//                'filters' => [
+//                    'promo'    => Yii::app()->getRequest()->getParam('promo'),
+//                    'employer' => Yii::app()->getRequest()->getParam('employer'),
+//                    'vacancy'  => Yii::app()->getRequest()->getParam('vacancy'),
+//                ],
+            ]);
+        }
+    }
+
+    public function actionMarketingAnalytic() {
+
+        if(strpos($this->user_access, "Аналитика") === false) {
+            $this->render('access');
+            return;
+        }
+
+        if(self::isAuth()) {
+
+            $title = 'Маркетологи';
+            $brdcrmbs = 'Аналитика для маркетологов';
+
+            // вовод старого виджета маркетологам
+            // Ден сказал хз зачем
+
+            $rq = Yii::app()->getRequest();
+            if(!$rq->isPostRequest)
+            {
+                $command =  Yii::app()->getRequest()->getParam('command');
+                echo($command);
+
+                switch ($command) {
+                    case 'new':
+                        die();
+                        $view = 'analytic/create';
+                        $data = [];
+
+                        $title = 'Создание заявки аналитики';
+                        $this->setPageTitle($title);
+                        $this->breadcrumbs = array($title);
+
+                        $bUrl = Yii::app()->request->baseUrl;
+                        $gcs = Yii::app()->getClientScript();
+                        $gcs->registerCssFile($bUrl . '/css/template.css');
+
+                        $this->render($view, ['viData' => $data]);
+
+                        break;
+
+                    default:
+                        # code...
+                        break;
+                }
+            }
+            else
+            {
+                $model = new Analytic;
+                $model->setRequest($_POST);
+            }
+
+            $model = new Analytic;
+            $domain = new Subdomain();
+            $model->unsetAttributes();  // clear any default values
+            $model->search();
+            $model->active=1;
+            $model->name != 'NO ACTIVE';
+
+            $this->setPageTitle($title);
+            $this->breadcrumbs = array('Аналитика'=>array('sect?p=analytic'),'1'=>$brdcrmbs);
+
+            $this->render('analytic/marketing_analytic',
+                [
+                'model' => $model,
+                'domains' => $domain->getData(),
+                'data'  => '',
+                ]
+            );
+
         }
     }
 
@@ -1348,7 +1559,9 @@ class SiteController extends Controller
      */
     public function actionSeoEdit($id)
     {
-        $model = new Seo;
+         if($_GET['subdomen'] == 'spb'){
+            $model = new Seo_spb('search'); 
+        } else $model = new Seo('search');
         $item = $model->exist($id);
 
         if(!$item)
@@ -1362,7 +1575,9 @@ class SiteController extends Controller
      */
     public function actionSeoSave()
     {
-        $model = new Seo;
+         if($_GET['subdomen'] == 'spb'){
+            $model = new Seo_spb('search'); 
+        } else $model = new Seo('search');
         $data = $_POST['data'];
         
     
@@ -1569,7 +1784,7 @@ class SiteController extends Controller
         $this->checkAccess();
         $title = 'Настройки';
         $this->setPageTitle($title);
-        $this->breadcrumbs = array('1'=>$title);    
+        $this->breadcrumbs = array('1'=>$title);
 
         $rq = Yii::app()->getRequest();
         if($rq->isPostRequest)
@@ -1615,6 +1830,7 @@ class SiteController extends Controller
             else
             {
                 $data = $model->setData($rq);
+                var_dump($data);
                 $data['redirect'] && $this->redirect(['notifications','anchor'=>'tab_'.$type]);
             }
 
@@ -1762,4 +1978,198 @@ class SiteController extends Controller
       $this->breadcrumbs = [1 => $title];
       $this->render('self_employed/index');
     }
+    /*
+    *   екшен для метода Analytic->exportAnalytic
+    */
+    public function actionAnalytic_byperiod()
+    {
+        // доступ только админам
+        $this->checkAccess();
+        //
+        $model = new Analytic();
+        $rq = Yii::app()->getRequest();
+        $arRes = [
+            'type' => $rq->getParam('type'),
+            'filter' => [
+                'bdate' => $rq->getParam('export_beg_date'),
+                'edate' => $rq->getParam('export_end_date'),
+                'status' => $rq->getParam('export_status'),
+                'domain' => $rq->getParam('export_domain')
+            ]
+        ];
+        //
+        if(Yii::app()->request->isAjaxRequest) // обновления по аякс
+        {
+            $arRes['items'] = $model->exportAnalytic();
+            $this->renderPartial('analytic/list-ajax',['viData'=>$arRes]);
+        }
+        else // обновление всей страницы
+        {
+            // изначально параметры задаем сами. Ищем данные за сегодня
+            $_GET['export_beg_date'] = $arRes['filter']['bdate'] = date('d.m.Y');
+            $_GET['export_end_date'] = $arRes['filter']['edate'] = date('d.m.Y');
+            $_GET['export_domain'] = 'all';
+            // список доменов для фильтра
+            $arRes['domains'] = array_merge(
+                [(array)Subdomain::domain()],
+                Subdomain::getData()
+            );
+            //
+            switch($arRes['type'])
+            {
+                case 'all':
+                    $title = 'Общая аналитика'; 
+                    $_GET['export_status']='empl_all'; 
+                    break;
+                case 'applicant':
+                    $title = 'Аналитика по соискателям'; 
+                    $_GET['export_status']='promo_all'; 
+                    break;
+                case 'employer':
+                    $title = 'Аналитика по работодателям'; 
+                    $_GET['export_status']='empl_all'; 
+                    break;
+                case 'vacancy': 
+                    $title = 'Аналитика по вакансиям'; 
+                    $_GET['export_status']='vac_all';
+                    break;
+                default: 
+                    $this->redirect('/admin/analytic?subdomen='); 
+                    break;
+            }
+            //
+            $arRes['items'] = $model->exportAnalytic();
+
+            $this->setPageTitle($title);
+            $this->breadcrumbs = [$title];
+            $this->render('analytic/list',['viData'=>$arRes]);
+        }
+    }
+
+    public function actionAnalyticByparams() {
+
+        $this->checkAccess();
+
+        $rq = Yii::app()->getRequest();
+        $arRes = [
+            'type' => $rq->getParam('type'),
+            'filter' => [
+                'bdate' => $rq->getParam('export_beg_date'),
+                'edate' => $rq->getParam('export_end_date'),
+                'status' => $rq->getParam('export_status'),
+                'head' => $rq->getParam('export_head'),
+                'domain' => $rq->getParam('export_domain')
+            ]
+        ];
+
+        switch($arRes['type'])
+        {
+            case 'applicant':
+                $title = 'Аналитика по соискателям';
+                // мускул-запрос по параметрам соискателя
+                $model = new Promo();
+                $arRes['items'] = $model->exportPromosTable($arRes['filter']);
+                break;
+            case 'employer':
+                $title = 'Аналитика по работодателям';
+                // мускул-запрос по параметрам соискателя
+                $model = new Employer();
+                $arRes['items'] = $model->exportEmployersTable($arRes['filter']);
+                break;
+            case 'vacancy':
+                $title = 'Аналитика по вакансиям';
+                // мускул-запрос по параметрам соискателя
+                $model = new Vacancy();
+                $arRes['items'] = $model->exportVacanciesTable($arRes['filter']);
+                break;
+            case 'registrations':
+                $title = 'Аналитика по регистрациям';
+
+                // add domains to filter
+                $arRes['domains'] = array_merge(
+                    [(array)Subdomain::domain()],
+                    Subdomain::getData()
+                );
+                // мускул-запрос по параметрам регистрации
+                $model = new Analytic();
+                $arRes['items'] = $model->exportAnalyticTable($arRes['filter']);
+                break;
+            default:
+                $this->redirect('/admin/analytic?subdomen=');
+                // редирект на мейн анал*, пусть будет, пока будет
+                break;
+        }
+
+//            echo'<pre>';
+//            print_r($arRes['filter']);
+//            echo'</pre>';
+//            die('die');
+
+        if (Yii::app()->request->isAjaxRequest) { // обновления по аякс
+
+            $this->renderPartial('analytic/listparams-ajax',['viData'=>$arRes]);
+
+        } else {
+
+            $_GET['export_beg_date'] = $arRes['filter']['bdate'] = date('d.m.Y');
+            $_GET['export_end_date'] = $arRes['filter']['edate'] = date('d.m.Y');
+
+            $this->setPageTitle($title);
+            $this->breadcrumbs = [$title];
+            $this->render('analytic/list_params',
+                [
+                    'viData' => $arRes,
+                ]
+            );
+        }
+    }
+  /**
+   *  Зарегистрированные по новой реге
+   */
+  public function actionRegister()
+  {
+    $this->checkAccess();
+
+    $arBread = [];
+    $model = new UserRegisterAdmin();
+
+    if(Share::isEmployer($model->getType))
+    {
+      $arBread['Работодатели'] = ['sect?p=emp'];
+    }
+    else
+    {
+      $arBread['Соискатели'] = ['sect?p=app'];
+    }
+
+    $url = '/admin/register?user=';
+    switch ($model->getState)
+    {
+      case UserRegisterAdmin::$STATE_PROFILE:
+        $title = 'Активация профиля';
+        $arBread[$title] = $url .
+          (Share::isEmployer($model->getType) ? '3&state=profile' : '2&state=profile');
+        break;
+      case UserRegisterAdmin::$STATE_AVATAR:
+        $title = 'Незаполненное фото';
+        $arBread[$title] = $url .
+          (Share::isEmployer($model->getType) ? '3&state=avatar' : '2&state=avatar');
+        break;
+      case UserRegisterAdmin::$STATE_CODE:
+        $title = 'Не подтвердил код';
+        $arBread[$title] = $url .
+          (Share::isEmployer($model->getType) ? '3&state=code' : '2&state=code');
+        break;
+    }
+
+    if(intval($model->getId))
+    {
+      $title = 'Просмотр регистрации #' . $model->getId;
+      array_push($arBread,$title);
+    }
+
+    $this->setPageTitle($title);
+    $this->breadcrumbs = $arBread;
+    $this->render($model->view, ['model'=>$model]);
+  }
 }

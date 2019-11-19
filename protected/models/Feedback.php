@@ -7,6 +7,12 @@
 
 class Feedback extends Model
 {
+  public static $DIRECT_ERROR = 1; // Ошибка
+  public static $DIRECT_NOT_UNDERSTAND = 2; // Не пойму как это работает
+  public static $DIRECT_SERVICES = 3; // Услуги
+  public static $DIRECT_COOPERATION = 4; // Предложение по сотрудничеству
+  public static $DIRECT_OTHER = 5; // Другое
+  public static $DIRECT_PROMMU = 6; // Вопрос от сервиса Prommu
     /**
      * получаем данные для формы
      */
@@ -25,20 +31,28 @@ class Feedback extends Model
 
     public function getUserFeedbacks($id)
     {
-        $sql = "SELECT
-                  f.id,
-                  f.theme,
-                  f.direct,
-                  f.chat,
-                  f.type,
-                  DATE_FORMAT(f.crdate, '%d.%m.%Y') crdate
-                FROM feedback f
-                WHERE f.pid = {$id} 
-                ORDER BY f.crdate DESC";
+      $arRes = [];
+      $sql = "SELECT
+                f.id,
+                f.theme,
+                f.direct,
+                f.chat,
+                f.type,
+                DATE_FORMAT(f.crdate, '%d.%m.%Y') crdate
+              FROM feedback f
+              WHERE f.pid = {$id} 
+              ORDER BY f.crdate DESC";
 
-        $res = Yii::app()->db->createCommand($sql);
-        $data = $res->queryAll();
-        return  $data;
+      $query = Yii::app()->db->createCommand($sql)->queryAll();
+      if(count($query))
+      {
+        foreach ($query as $v)
+        {
+          empty($v['direct']) && $v['direct']=5;
+          $arRes[] = $v;
+        }
+      }
+      return $arRes;
     }
 
     public function getDatAdmin()
@@ -144,7 +158,6 @@ class Feedback extends Model
         $rq = Yii::app()->getRequest();
         $autotype = filter_var($rq->getParam('autotype'), FILTER_SANITIZE_NUMBER_INT);
         $app = filter_var($rq->getParam('app'), FILTER_SANITIZE_NUMBER_INT);
-        $type = filter_var($rq->getParam('type', 0), FILTER_SANITIZE_NUMBER_INT);
         $name = filter_var($rq->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $theme = filter_var($rq->getParam('theme'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $emails = filter_var($rq->getParam('email'), FILTER_SANITIZE_EMAIL);
@@ -584,7 +597,7 @@ class Feedback extends Model
         'pid'    => $arRes['receiver']['id'],
         'is_smotr' => 1,
         'status'   => 3,
-        'direct'   => $arRes['receiver']['direct'],
+        'direct'   => $arRes['direct'],
         'chat'     => $idChat
       ]);
     $arRes['errors'] = false;

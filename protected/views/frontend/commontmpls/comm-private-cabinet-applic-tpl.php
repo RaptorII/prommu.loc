@@ -25,7 +25,7 @@
                     <a href="<?=$link?>" class="small-menu__item notice<?=(strpos($curUrl,$link)!==false ? ' current' : '')?>" id="sm-notice-cnt">
                                                 <span class="small-menu__circle">
                                                     <b class="small-menu__cnt">0</b>
-                                                    <span class="small-menu__icon icn-envelope-prommu color-white"></span>
+                                                    <i class="small-menu__icon icn-envelope-prommu color-white"></i>
                                                 </span>
                         <span class="small-menu__name">СООБЩЕНИЯ</span>
                     </a>
@@ -35,11 +35,11 @@
                         <a class="small-menu__username" href="<?=MainConfig::$PAGE_PROFILE?>" data-id="<?=$user->id?>">
                             <span>
                                 <?php
-                                    if($user->firstname || $user->lastname):
-                                        echo $user->firstname . ' ' . $user->lastname;
-                                    else:
-                                        echo $user->name;
-                                    endif;
+                                if($user->firstname || $user->lastname):
+                                    echo $user->firstname . ' ' . $user->lastname;
+                                else:
+                                    echo $user->name;
+                                endif;
                                 ?>
                             </span>
                         </a>
@@ -54,7 +54,7 @@
                 <div class="content-header-line"></div>
             </div>
         </div>
-        <div class="row content-menu-box mt20">       
+        <div class="row content-menu-box mt20">
             <div class="col-xs-12 submenu-block">
                 <div class="personal-acc__menu">
                     <div class="personal-acc__menu-wrap">
@@ -62,12 +62,12 @@
                         <?php foreach (Share::$viewData['menu'] as $key => $val): ?>
                             <?php if(!$val['hidden']): ?>
                                 <?
-                                    $ep = filter_var(Yii::app()->getRequest()->getParam('ep'), FILTER_SANITIZE_NUMBER_INT);
-                                    $active ='';
-                                    if(strpos($val['link'], 'ep=1')>0)
-                                        $ep ? $active='active' : $active='';
-                                    else
-                                        $active = strpos($val['link'], $mactive) === false ? '' : 'active';
+                                $ep = filter_var(Yii::app()->getRequest()->getParam('ep'), FILTER_SANITIZE_NUMBER_INT);
+                                $active ='';
+                                if(strpos($val['link'], 'ep=1')>0)
+                                    $ep ? $active='active' : $active='';
+                                else
+                                    $active = strpos($val['link'], $mactive) === false ? '' : 'active';
                                 ?>
                                 <a href="/<?= $val['link'] ?>" class="pa__menu-link pa__menu-<?=$val['id']?> applicant <?= $active ?>">
                                     <span class="pa__menu-item">

@@ -49,4 +49,31 @@ class UserActivate extends CActiveRecord
         ));
         return $this;
     }
+
+  public function updateData($id_user, $arData)
+  {
+    $data = Yii::app()->db->createCommand()
+      ->select('data')
+      ->from($this::tableName())
+      ->where('id_user=:id',[':id'=>$id_user])
+      ->queryScalar();
+
+    if(!strlen($data) || !count($arData))
+      return false;
+
+    $arJson = json_decode($data, true);
+    foreach ($arData as $k => $v)
+    {
+      $arJson[$k] = $v;
+    }
+    $arJson = json_encode($arJson);
+
+    return Yii::app()->db->createCommand()
+      ->update(
+        $this::tableName(),
+        ['data'=>$arJson],
+        'id_user=:id',
+        [':id'=>$id_user]
+      );
+  }
 }

@@ -145,11 +145,25 @@ class UserRegister
     return $result;
   }
   /**
+   * удаляем процесс регистрации
+   */
+  public static function clearRegister()
+  {
+    self::clearStep();
+    self::clearUser();
+  }
+  /**
    * удаляем шаг из куков
    */
   public static function clearStep()
   {
     unset(Yii::app()->request->cookies['urs']);
+  }
+  /**
+   * удаляем идентификатор юзера из куков
+   */
+  public static function clearUser()
+  {
     unset(Yii::app()->request->cookies['urh']);
   }
   /**
@@ -251,7 +265,56 @@ class UserRegister
           $arData['ip'] = $remote;
         }
         empty($arData['ip']) && $arData['ip'] = ' ';
-        $this->data = $arData;
+        //
+        //
+        // правила от Кутишевского
+        if(!empty($arData['transition'])) // utm_source - empty
+        {
+          if(
+            strripos($arData['transition'],'facebook_smm')!==false
+            ||
+            strripos($arData['transition'],'vk_smm')!==false
+            ||
+            strripos($arData['transition'],'smm_mytarget')!==false
+            ||
+            strripos($arData['transition'],'smm_yellowjob')!==false
+          )
+          {
+            $arData['referer'] = 'smm';
+          }
+          else if(
+            strripos($arData['transition'],'yandex')!==false
+            ||
+            strripos($arData['transition'],'google')!==false
+          )
+          {
+            $arData['referer'] = 'ppc';
+          }
+        }
+        else  // utm_source - not empty
+        {
+          if (empty($arData['last_referer']))
+          {
+            $arData['referer'] = 'direct';
+          }
+          else if (
+              strripos($arData['last_referer'], 'yandex') !== false
+              ||
+              strripos($arData['last_referer'], 'google') !== false
+            )
+          {
+            $arData['referer'] = 'organic';
+          }
+          else
+          {
+            $arData['referer'] = $arData['last_referer'];
+          }
+        }
+        //
+        foreach ($arData as $k => $v)
+        {
+          $this->data[$k] = $v;
+        }
       }
     }
     //
@@ -459,7 +522,7 @@ class UserRegister
       }
       // переход на следующую ступень(или выход)
       $this->step==self::$STEP_AVATAR
-        ? self::clearStep()
+        ? self::clearRegister()
         : $this->setStep($this->step + 1);
     }
   }
@@ -643,10 +706,11 @@ class UserRegister
     }
   }
   /**
-   * @param $password
+   * @param $password - string (user => passw)
+   * @param $messenger - string (user => messenger)
    * доведение до состояния старой регистрации
    */
-  private function saveNewUser($password)
+  private function saveNewUser($password, $messenger='')
   {
     $arUser = $this->getData();
     $date = date('Y-m-d H:i:s');
@@ -666,7 +730,9 @@ class UserRegister
       'crdate' => $date,
       'mdate' => $date,
       'confirmEmail' => $arUser['login_type']==self::$LOGIN_TYPE_EMAIL,
-      'confirmPhone' => $arUser['login_type']==self::$LOGIN_TYPE_PHONE
+      'confirmPhone' => $arUser['login_type']==self::$LOGIN_TYPE_PHONE,
+      'messenger' => $messenger,
+      'ip' => $arUser['ip'] // чтоб при выгрузке не перекрывались поля
     ]);
     //
     $this->setData(['id_user'=>$id_user]);
@@ -685,11 +751,36 @@ class UserRegister
       'transition' => $arUser['transition'],
       'point' => $arUser['point'],
       'last_referer' => $arUser['last_referer'],
-      'active' => 0, // !!!
+      'active' => 1, // !!!
       'subdomen' => $arUser['subdomen'],
       'client' => $arUser['client'],
       'ip' => $arUser['ip'],
       'source' => $arUser['pm_source'],
+    ]);
+    // user_activate
+    $model = new Auth();
+    $arJson = [
+      'canal' => $arUser['canal'],
+      'referer' => $arUser['referer'],
+      'transition' => $arUser['transition'],
+      'campaign' => $arUser['campaign'],
+      'content' => $arUser['content'],
+      'keywords' => $arUser['keywords'],
+      'point' => $arUser['point'],
+      'last_referer' => $arUser['last_referer'],
+      'email' => $arUser['login'],
+      'fname' => $arUser['name'],
+      'lname' => $arUser['surname'],
+      'name'  => $arUser['name'],
+      'messenger' => $messenger,
+      'type' => $arUser['type']
+    ];
+
+    $model->userActivateInsertUpdate([
+      'id_user' => $id_user,
+      'token' => md5($arUser['login'] . $date . md5($password)),
+      'data' => json_encode($arJson),
+      'dt_create' => $date,
     ]);
     // resume
     if(Share::isApplicant($arUser['type']))
@@ -886,6 +977,29 @@ class UserRegister
         }
       }
     }
+  }
+
+  public function saveNewUserFromSocialNetwork($arr)
+  {
+    $loginType = filter_var($arr['email'],FILTER_VALIDATE_EMAIL);
+    $code =  rand(1111, 9999);
+    $time = time();
+
+    $this->setData([
+      'login' => $arr['login'],
+      'login_type' => $loginType,
+      'name' => $arr['name'],
+      'surname' => $arr['surname'],
+      'code' => $code,
+      'token' => md5($code . $time . $this->user),
+      'time_code' => $time,
+      'is_confirm' => 1,
+      'is_confirm_time' => $time,
+      'social' => 1
+    ]);
+
+    $this->saveNewUser($arr['password'], $arr['messenger']);
+    return $this->getData();
   }
   //
   //

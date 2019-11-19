@@ -112,4 +112,4 @@ $photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->l
 
 
 </div>
-<input type="hidden" name="href" value="<?=MainConfig::$PAGE_PROFILE?>">
+<input type="hidden" name="href" value="<?=MainConfig::$PAGE_AFTER_REGISTER?>">

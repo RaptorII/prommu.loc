@@ -46,7 +46,7 @@ class UserProfileEmpl extends UserProfile
 
             // save main logo to db
             $pathinfo = pathinfo(Yii::app()->session['uplLogo']['file']);
-
+            
             $this->updateForPhoto($eid, $pathinfo['filename']);
 
             Yii::app()->db->createCommand()
@@ -61,7 +61,7 @@ class UserProfileEmpl extends UserProfile
                 ->update('user', array(
                     'ismoder' => 0,
                 ), 'id_user=:id_user', array(':id_user' => $id));
-
+                
 
             $pathinfo = pathinfo($cropRes['file']);
             $cropRes['idfile'] = $pathinfo['filename'];
@@ -79,8 +79,8 @@ class UserProfileEmpl extends UserProfile
     }
 
     public function sendLogo($props=[])
-    {
-        // $id = $props['id'];
+    {  
+        // $id = $props['id']; 
         $id = Share::$UserProfile->id;
         $eid = Share::$UserProfile->exInfo->eid;
         $sql = "SELECT  r.id
@@ -98,8 +98,8 @@ class UserProfileEmpl extends UserProfile
             'id' => $val['id'],
             'id_user' => $val['id_user'],
         ];
-
-
+        
+    
         $id = $dat['id_user'];
         $id_resume = $dat['id'];
 
@@ -199,7 +199,7 @@ class UserProfileEmpl extends UserProfile
         $arRating = Share::$UserProfile->getRateCount();
 
         Yii::app()->db->createCommand()
-            ->update('employer',
+            ->update('employer', 
                 array(
                     'logo' => $photo,
                     'mdate' => date('Y-m-d H:i:s'),
@@ -207,8 +207,8 @@ class UserProfileEmpl extends UserProfile
                     'rate_neg' => $arRating[1],
                     'ismoder' => 0,
                     'is_new' => 1
-                ),
-                'id=:id',
+                ), 
+                'id=:id', 
                 [':id'=>$id]
             );
     }
@@ -370,41 +370,42 @@ class UserProfileEmpl extends UserProfile
      */
     public function getProfileDataView($inID = 0, $inEID = 0)
     {
-        if( !$inID ) $inID = $this->id;
-        if( !$inEID ) $inEID = $this->exInfo->eid;
+      if( !$inID ) $inID = $this->id;
+      if( !$inEID ) $inEID = $this->exInfo->eid;
 
-        $data = $this->getProfileData($inID, $inEID);
-        $data['userAllInfo'] = $this->getProfileMainData($data['userInfo']['id_user']);
-        $data['rating'] = $this->prepareProfileCommonRate($data['rating']);
+      $data = $this->getProfileData($inID, $inEID);
+      $data['userAllInfo'] = $this->getProfileMainData($data['userInfo']['id_user']);
+      $data['rating'] = $this->prepareProfileCommonRate($data['rating']);
+      $data['cities'] = Yii::app()->db->createCommand()
+        ->select('c.id_city id, c.name, c.id_co')
+        ->from('user_city uc')
+        ->join('city c','uc.id_city=c.id_city')
+        ->where(
+          'uc.id_user=:id_user',
+          [':id_user'=>$inID]
+        )
+        ->queryAll();
+      if(!count($data['cities']))
+      {
         $data['cities'] = Yii::app()->db->createCommand()
-          ->select('c.id_city id, c.name, c.id_co')
-          ->from('user_city uc')
-          ->join('city c','uc.id_city=c.id_city')
+          ->select('id_city id, name, id_co')
+          ->from('city')
           ->where(
-            'uc.id_user=:id_user',
-            [':id_user'=>$inID]
+            'id_city=:id',
+            [':id'=>Subdomain::getCacheData()->id]
           )
           ->queryAll();
-        if(!count($data['cities']))
-        {
-          $data['cities'] = Yii::app()->db->createCommand()
-            ->select('id_city id, name, id_co')
-            ->from('city')
-            ->where(
-              'id_city=:id',
-              [':id'=>Subdomain::getCacheData()->id]
-            )
-            ->queryAll();
-        }
+      }
 
-        $data['cities_names'] = [];
-        foreach ($data['cities'] as $v)
-        {
-          $data['cities_names'][] = $v['name'];
-        }
+      $data['cities_names'] = [];
+      foreach ($data['cities'] as $v)
+      {
+        $data['cities_names'][] = $v['name'];
+      }
 
-        return $data;
+      return $data;
     }
+
 
 
 
@@ -423,22 +424,18 @@ class UserProfileEmpl extends UserProfile
               , e.id,
                 e.id_user idus,
                 e.type,
-                e.name, 
-                e.web,
-                e.position,
+                e.name,
                 e.firstname,
                 e.lastname,
                 e.logo,
                 u.email,
                 u.crdate,
                 u.is_online,
-                u.mdate,
-                e.contact
+                u.mdate
             FROM employer e
             INNER JOIN user u ON u.id_user = e.id_user
             WHERE e.id_user = {$id}";
         $res = Yii::app()->db->createCommand($sql)->queryRow();
-        if(!empty($res['logo'])) $res['logo'] = "https://files.prommu.com/users/".$res['idus']."/".$res['logo'].".jpg";
         $data['emplInfo'] = $res;
         $rest = "SELECT ci.id_city id, ci.name, co.id_co, co.name coname
             FROM user_city uc
@@ -468,7 +465,7 @@ class UserProfileEmpl extends UserProfile
         foreach ($res as $key => $val)
         {
 //            $val['val'] != '' ?: $val['val'] = $val['name'];
-            $attr[$val['key']] = $val;
+            $attr[$val['id_attr']] = $val;
         } // end foreach
         $data['userAttribs'] = $attr;
 
@@ -555,7 +552,7 @@ class UserProfileEmpl extends UserProfile
             $pointRate[$val['id_point']][0] += $val['rate'];
             $pointRate[$val['id_point']][1] += abs($val['rate_neg']);
         } // end foreach
-
+       
        $neg = $rate[1];
         if($neg != 0) {
              $full = ($rate[0] - $rate[1])/5;
@@ -584,14 +581,15 @@ class UserProfileEmpl extends UserProfile
         $id = $this->exInfo->id;
         $res = $this->checkFieldsProfile();
 
+    
         if($res['err'])// неправильно заполнены поля
         {
-            return $res;
+            return $res;   
         }
         else // *** Сохраняем данные пользователя ***
         {
             $rq = Yii::app()->getRequest();
-
+            
             $name = filter_var($rq->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $fname = filter_var($rq->getParam('fname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $lname = filter_var($rq->getParam('lname'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -638,7 +636,7 @@ class UserProfileEmpl extends UserProfile
             $data['contact']!=$contact && $arFields[] = 'Контактное лицо';
             $data['aboutme']!=$aboutme && $arFields[] = 'О компании';
             $data['employer_contact']!=$emplcontact && $arFields[] = 'Отображение контактных данных';
-
+            
             ///API
             //             $fieldsApi = array(
             //                 'firstName' => $fname,
@@ -880,6 +878,9 @@ class UserProfileEmpl extends UserProfile
         $data['lastComments'] = $this->getLastComments($inEID);
         $data['userPhotos'] = $this->getUserPhotos($inEID);
 
+        //for efficiency profile of applicant
+        $data['efficiency'] = $this->getEfficiencyData();
+
         return $data;
     }
 
@@ -915,33 +916,6 @@ class UserProfileEmpl extends UserProfile
 
             return $arRes;
         }
-        // список городов по новому
-        $arRes['cities'] = Yii::app()->db->createCommand()
-            ->select('c.id_city id, c.name, c.id_co')
-            ->from('user_city uc')
-            ->join('city c','uc.id_city=c.id_city')
-            ->where(
-              'uc.id_user=:id_user',
-              [':id_user'=>$id]
-            )
-            ->queryAll();
-          if(!count($arRes['cities']))
-          {
-            $arRes['cities'] = Yii::app()->db->createCommand()
-              ->select('id_city id, name, id_co')
-              ->from('city')
-              ->where(
-                'id_city=:id',
-                [':id'=>Subdomain::getCacheData()->id]
-              )
-              ->queryAll();
-          }
-
-        $arRes['cities_names'] = [];
-        foreach ($arRes['cities'] as $v)
-        {
-          $arRes['cities_names'][] = $v['name'];
-        }
 
         // читаем данные из профиля
         $arRes['info'] = Yii::app()->db->createCommand()
@@ -975,8 +949,8 @@ class UserProfileEmpl extends UserProfile
         // вычисляем настоящий урл для фото
         $arRes['info']['src'] = Share::getPhoto(
                                         $arRes['info']['idus'],
-                                        $type,
-                                        $arRes['info']['logo'],
+                                        $type, 
+                                        $arRes['info']['logo'], 
                                         'xmedium');
         // отсекаем телефон в логине
         $arRes['info']['email'] = filter_var(
@@ -1007,7 +981,7 @@ class UserProfileEmpl extends UserProfile
                 $v['phone-code'] = substr($v['phone'], 0, $pos);
                 if(empty($v['phone-code']))
                     $v['phone-code'] = 7; // по умолчанию Рашка
-                $v['phone'] = substr($v['phone'], $pos);
+                $v['phone'] = substr($v['phone'], $pos);  
                 $arRes['phone'] = $v['phone'];
                 $arRes['phone-code'] = $v['phone-code'];
             }
@@ -1020,7 +994,7 @@ class UserProfileEmpl extends UserProfile
 
         }
         $arRes['messengers'] = implode(',',$arMess);
-
+        
 
         // считываем типы пользователя
         $arRes['cotype'] = Yii::app()->db->createCommand()
@@ -1050,17 +1024,95 @@ class UserProfileEmpl extends UserProfile
                         ->queryAll();
 
         // если попап закрыли
-
+        $uid = filter_var(
+                    Yii::app()->getRequest()->getParam('uid'),
+                    FILTER_SANITIZE_NUMBER_INT
+                );
+        $cityId = filter_var(
+                    Yii::app()->getRequest()->getParam('city'),
+                    FILTER_SANITIZE_FULL_SPECIAL_CHARS
+                );
         $phoneCode = filter_var(
                     Yii::app()->getRequest()->getParam('__phone_prefix'),
                     FILTER_SANITIZE_NUMBER_INT
                 );
 
-        if(!$phoneCode && !$arRes['phone-code'])
+        if(empty($uid)) // эти проверки только для страницы редактирования профиля
         {
+            if(!$cityId)
+            {
+                $cityId = Subdomain::getCacheData()->id;
+            }
+
+            Yii::app()->db->createCommand()
+                    ->update('user_city', 
+                        ['id_city' => $cityId], 
+                        'id_user=:id', 
+                        [':id' => $id]
+                    );
+            $arRes['userCities']['id_city'] = $cityId;
+            $arRes['userCities']['name'] = Yii::app()->db->createCommand()
+                    ->select("name")
+                    ->from('city')
+                    ->where('id_city=:id',[':id'=>$cityId])
+                    ->queryScalar();
+        }
+        else // подгон данных для попапа
+        {
+            $arGeo = (new Geo())->getUserGeo();
+            if($arGeo['country']==1) // если РФ
+            {
+                $query = Yii::app()->db->createCommand()
+                            ->select("*")
+                            ->from('city')
+                            ->where(
+                                'name=:name AND id_co=1', // только РФ
+                                [':name'=>$arGeo['city']]
+                            )
+                            ->queryRow();
+            }
+            else // иначе город субдомена
+            {
+                $query = Yii::app()->db->createCommand()
+                            ->select("*")
+                            ->from('city')
+                            ->where(
+                                'id_city=:id',
+                                [':id'=>Subdomain::getCacheData()->id]
+                            )
+                            ->queryRow();
+            }
+
+            $arRes['userCities'] = array(
+                    'id_city' => $query['id_city'],
+                    'name' => $query['name'],
+                    'id_country' => $query['id_co']
+                );
+
+            // Телефон
+            foreach($arRes['countries'] as $v)
+            {
+                if(!empty($arRes['phone']) && $v['phone']==$arRes['phone-code'])
+                { // регистрация через телефон
+                    $arRes['userCities']['id_country'] = $v['id'];
+                    break;
+                }
+                else if($arRes['info']['email'] && $v['id']==$arRes['userCities']['id_country'])
+                { // регистрация через почту
+                    $arRes['phone-code'] = $v['phone'];
+                    $arRes['userCities']['id_country'] = $v['id'];
+                }
+            }
+        }
+
+        if(!$phoneCode && !$arRes['phone-code'])
+        { 
+            /*
             $arGeo = (new Geo())->getUserGeo();
             foreach($arRes['countries'] as $v)
                 $arGeo['country']==$v['id'] && $arRes['phone-code'] = $v['phone'];
+            */
+            $arRes['phone-code'] = 7;
         }
 
         return $arRes;
@@ -1226,13 +1278,14 @@ class UserProfileEmpl extends UserProfile
                 'ismoder' => 1,
 //              'date_login' => date('Y-m-d H:i:s'),
             ), 'id_user=:id_user', array(':id_user' => $id));
-        }
+    }
 
             Yii::app()->db->createCommand()
             ->update('user_city', array(
                 'id_city' => $data['city'],
                 ), 'id_user=:id_user', array(':id_user' => $id));
-
+        
+        
             Yii::app()->db->createCommand()
             ->update('employer', array(
                 'name' => $data['name'],
@@ -1242,15 +1295,20 @@ class UserProfileEmpl extends UserProfile
                 'phone' => $data['mob'],
                 'type' => $data['type'],
                 ), 'id_user=:id_user', array(':id_user' => $id));
+        
 
         $attr = array();
-
-        foreach($attr['userAttribs'] as $key=>$val) {
+        $attr['post'] = $data['post'];
+        $attr['mob'] = $data['mob'];
+        $attr['isnews'] = $data['isnews'];
+        foreach($attr as $key=>$val) {
             Yii::app()->db->createCommand()
                 ->update('user_attribs', array(
-                    'val' => $val['val'],
-                ), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $val['key']));
+                    'val' => $val,
+                ), "id_us=:id_user and `key`=:key", array(':id_user' => $id, ':key' => $key));
         }
+    
+    
 
         return array('error' => 0, 'message'=>'Saved successfully');
     }
@@ -1291,7 +1349,7 @@ class UserProfileEmpl extends UserProfile
                     if(!empty($mob['val']) && $mob['val']!=$val){
                         $confMob = Yii::app()->db->createCommand()
                             ->update('user', array(
-                            'confirmPhone' => 0,
+                                'confirmPhone' => 0,
                             ), 'id_user=:id_user', array(':id_user' => Share::$UserProfile->id));
                     }
                 }
@@ -1437,51 +1495,18 @@ class UserProfileEmpl extends UserProfile
         $sql = "SELECT d.id, d.type, d.name FROM user_attr_dict d WHERE d.id_par = 101 ORDER BY id";
         $data['cotype'] = Yii::app()->db->createCommand($sql)->queryAll();
         foreach ($data['cotype'] as $key => &$val)
-            if( $data['emplInfo']['type'] == $val['id'] )
+            if( $data['emplInfo']['type'] == $val['id'] ) 
                 $val['selected'] = 1;
 
         // read cities
-        $sql = "
-            SELECT 
-                ci.id_city id, 
-                ci.name, 
-                co.id_co, 
-                co.name coname, 
-                ci.ismetro
-            FROM 
-                user_city uc
-            LEFT JOIN 
-                city ci 
-                ON 
-                uc.id_city = ci.id_city
-            LEFT JOIN 
-                country co 
-                ON 
-                co.id_co = ci.id_co
-            WHERE 
-                uc.id_user = {$id}
-        ";
+        $sql = "SELECT ci.id_city id, ci.name, co.id_co, co.name coname, ci.ismetro
+            FROM user_city uc
+            LEFT JOIN city ci ON uc.id_city = ci.id_city
+            LEFT JOIN country co ON co.id_co = ci.id_co
+            WHERE uc.id_user = {$id}";
         $data['userCities'] = Yii::app()->db->createCommand($sql)->queryAll();
 
-        if (isset($data['userCities']) && $data['userCities'] !== '') {
-            $sql = "
-                SELECT
-                    ci.id_city,
-                    ci.name,
-                    uc.id_user
-                FROM
-                    user_city uc
-                LEFT JOIN
-                    city ci
-                ON
-                    uc.id_city = ci.id_city
-                WHERE
-                    uc.id_user = {$id}
-            ";
-        }
-        $data['userCities'] = Yii::app()->db->createCommand($sql)->queryAll();
-
-        return $data;
+        return $data;       
     }
     /*
     *   Проверка уникальности почты. Вызывается в ajaxController
@@ -1504,8 +1529,7 @@ class UserProfileEmpl extends UserProfile
     /*
     *   Сохранение настроек
     */
-    public function saveSettings($idus)
-    {
+    public function saveSettings($idus){
         $email = filter_var(Yii::app()->getRequest()->getParam('email'), FILTER_VALIDATE_EMAIL);
         $phone = Yii::app()->getRequest()->getParam('phone');
         $oldPsw = Yii::app()->getRequest()->getParam('oldpsw');
@@ -1518,12 +1542,12 @@ class UserProfileEmpl extends UserProfile
                 ->update('user', array(
                         'email' => $email,
                         'mdate' => date('Y-m-d H:i:s'),
-                    ),
-                    'id_user=:id',
+                    ), 
+                    'id_user=:id', 
                     array(':id' => $idus)
                 );
             if(!$res)
-                $arResult = ['error'=>1,'mess'=>'Ошибка сохранения почты','type'=>'email'];
+                $arResult = array('error'=>1,'mess'=>'Ошибка сохранения почты','type'=>'email');
         }
         elseif(strlen($oldPsw)>0 && strlen($newPsw)>0){ // пароль
             $arResult['type'] = 'psw';
@@ -1531,7 +1555,7 @@ class UserProfileEmpl extends UserProfile
             $newPsw = md5($newPsw);
 
             $user = Yii::app()->db->createCommand()
-                ->select('u.passw, u.email')
+                ->select('u.passw')
                 ->from('user u')
                 ->where('u.id_user=:id', array(':id' => $idus))
                 ->queryRow();
@@ -1541,11 +1565,10 @@ class UserProfileEmpl extends UserProfile
                     ->update('user', array(
                             'passw' => $newPsw,
                             'mdate' => date('Y-m-d H:i:s'),
-                        ),
-                        'id_user=:id',
+                        ), 
+                        'id_user=:id', 
                         array(':id' => $idus)
                     );
-
                 if(!$res)
                 {
                   $arResult = ['error'=>1, 'mess'=>'Ошибка сохранения пароля', 'type'=>'psw'];
@@ -1556,20 +1579,20 @@ class UserProfileEmpl extends UserProfile
                 }
             }
             else{
-                $arResult = ['error'=>1, 'mess'=>'Старый пароль не подходит', 'type'=>'psw'];
-            }
+                $arResult = array('error'=>1,'mess'=>'Старый пароль не подходит','type'=>'psw');
+            }        
         }
         elseif(strlen($phone)>0){
             $arResult['type'] = 'phone';
             $res = Yii::app()->db->createCommand()
 
-                ->update('user_attribs',
-                    array('val' => $phone),
-                    'id_us=:id AND id_attr=1',
+                ->update('user_attribs', 
+                    array('val' => $phone), 
+                    'id_us=:id AND id_attr=1', 
                     array(':id' => $idus)
                 );
             if(!$res)
-                $arResult = ['error'=>1,'mess'=>'Ошибка сохранения телефона', 'type'=>'phone'];
+                $arResult = array('error'=>1,'mess'=>'Ошибка сохранения телефона','type'=>'phone');
         }
         return $arResult;
     }
@@ -1645,7 +1668,7 @@ class UserProfileEmpl extends UserProfile
         {
             $db->createCommand()
                  ->update('user_city',
-                    ['id_city'=>$data['city']],
+                    ['id_city'=>$data['city']], 
                     'id_user=:id_user',
                     [':id_user'=>$id]
                 );
@@ -1654,13 +1677,13 @@ class UserProfileEmpl extends UserProfile
         if(isset($data['contact']))
         {
             $db->createCommand()
-                ->update('employer',
+                ->update('employer', 
                     [
                         'contact' => $data['contact'],
                         'firstname' => $data['contact'],
                         'lastname' => $data['contact']
                     ],
-                    'id_user=:id_user',
+                    'id_user=:id_user', 
                     [':id_user'=>$id]
                 );
         }
@@ -1676,11 +1699,11 @@ class UserProfileEmpl extends UserProfile
             if(in_array($data['companyType'], $arCompany))
             {
                 $db->createCommand()
-                    ->update('employer',
+                    ->update('employer', 
                         ['type' => $data['companyType']],
-                        'id_user=:id_user',
+                        'id_user=:id_user', 
                         [':id_user'=>$id]
-                    );
+                    );               
             }
         }
     }
@@ -1708,7 +1731,7 @@ class UserProfileEmpl extends UserProfile
         for ($i=0; $i<$n; $i++)
         {
             // загружаем только допустимое кол-во
-            if(($i + 1 + $query['cnt'])>$this->photosMax)
+            if(($i + 1 + $query['cnt'])>$this->photosMax) 
                 continue;
 
             $file = pathinfo($arData['files'][$i]['name'], PATHINFO_FILENAME);
@@ -1810,5 +1833,87 @@ class UserProfileEmpl extends UserProfile
             ->update('user', ['ismoder'=>0], 'id_user=:id', [':id'=>$this->id]);
         // уведомляем админа по почте
         Mailing::set(1, ['id_user'=>$this->id], self::$EMPLOYER);
+    }
+
+    /**
+     * get Efficiency Applicant profile
+     * @return int
+     */
+    public function getEfficiencyData() {
+
+        $id_user = $this->exInfo->id;
+        //$id = Share::$UserProfile->exInfo->eid;
+
+        $data['userInfo'] = $this->getUserInfo($id_user);
+        $data['usrInfo'] = $this->getProfileMainData($id_user);
+
+        $efficiency = 0;
+
+        /*main*/
+        If (isset($data['userInfo']['logo'])) {
+            $efficiency = $efficiency + 10;
+
+            $cntFoto = Yii::app()->db->createCommand("
+                SELECT 
+                    count(id) as cnt
+                FROM 
+                    user_photos
+                WHERE 
+                    id_user=${id_user}
+            ")->queryRow();
+            If ($cntFoto['cnt']>=2) {
+                $efficiency = $efficiency + 10;
+            }
+        }
+
+        if (isset($data['usrInfo']['emplInfo']['name'])) {
+            $efficiency = $efficiency + 5;
+        }
+        if (isset($data['usrInfo']['emplInfo']['type'])) {
+            $efficiency = $efficiency + 5;
+        }
+        if (isset($data['usrInfo']['userCities']['0']['name'])) {
+            $efficiency = $efficiency + 5;
+        }
+        if (isset($data['usrInfo']['userAttribs']['99']['val'])) {
+            $efficiency = $efficiency + 5;
+        }
+
+        /*contact*/
+        if (isset($data['usrInfo']['emplInfo']['firstname'])) {
+            $efficiency = $efficiency + 5;
+        }
+        if (isset($data['usrInfo']['emplInfo']['lastname'])) {
+            $efficiency = $efficiency + 5;
+        }
+        if (isset($data['usrInfo']['emplInfo']['contact'])) {
+            $efficiency = $efficiency + 5;
+        }
+        if (isset($data['usrInfo']['userAttribs']['176']['val'])) {
+            $efficiency = $efficiency + 5;
+        }
+        if (isset($data['usrInfo']['userAttribs']['177']['val'])) {
+            $efficiency = $efficiency + 5;
+        }
+        if (isset($data['usrInfo']['emplInfo']['email'])) {
+            $efficiency = $efficiency + 5;
+        }
+        if (isset($data['usrInfo']['userAttribs']['1']['val'])) {
+            $efficiency = $efficiency + 5;
+        }
+        if (isset($data['usrInfo']['userAttribs']['175']['val'])) {
+            $efficiency = $efficiency + 5;
+        }
+        if (isset($data['usrInfo']['userAttribs']['100']['val'])) {
+            $efficiency = $efficiency + 5;
+        }
+
+        if (isset($data['usrInfo']['userAttribs']['157']['val']) ||
+            isset($data['usrInfo']['userAttribs']['156']['val']) ||
+            isset($data['usrInfo']['userAttribs']['158']['val'])) {
+            $efficiency = $efficiency + 5;
+        }
+
+        return $efficiency;
     }
 }

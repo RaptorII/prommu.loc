@@ -82,6 +82,10 @@ var RegisterPage = (function () {
 
           self.send({step:step,redirect:'auth',href:this.href});
         })
+      .on(
+        'click',
+        '#register_form .reg-social__link',
+        function(){ $('body').addClass('prmu-load') })
       .on( // step 3 | 4
         'click',
         '#register_form .back-away',
@@ -484,7 +488,7 @@ var RegisterPage = (function () {
       obj.attr({opacity: Math.random(), transform: 'r30'});
     }
     self.svgPulse(s,width,height);
-    setInterval(function () { self.svgPulse(s,width,height) }, 20000);
+    //setInterval(function () { self.svgPulse(s,width,height) }, 20000);
   },
   //
   RegisterPage.prototype.getRandom = function (min, max)

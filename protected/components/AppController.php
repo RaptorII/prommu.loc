@@ -77,21 +77,85 @@ class AppController extends CController
         //
         // если запущен механизм регистрации - то отправляем на регу, пока не зарегается
         $service = Yii::app()->getRequest()->getParam('service');
-        if(!Share::isGuest() || in_array($service,['facebook','vkontakte','odnoklassniki','google_oauth','yandex_oauth']))
+        $bSocialNetwork = in_array($service,[
+            'facebook',
+            'vkontakte',
+            'odnoklassniki',
+            'google_oauth',
+            'yandex_oauth'
+          ])
+          ||
+          strripos($_SERVER['REQUEST_URI'],MainConfig::$PAGE_MESSENGER)!==false
+          ||
+          strripos($_SERVER['REQUEST_URI'],MainConfig::$PAGE_MESSNOTEMAIL)!==false;
+
+        if(!Share::isGuest() || $bSocialNetwork)
         {
-          UserRegister::clearStep();
+          if($bSocialNetwork)
+          {
+            UserRegister::clearStep();
+          }
+          else
+          {
+            UserRegister::clearRegister();
+          }
         }
-        elseif (
+        /*elseif ( // выключили полезный редиректик(
           strripos($_SERVER['REQUEST_URI'],MainConfig::$PAGE_REGISTER)===false
           &&
           UserRegister::beginRegister()
         )
         {
           $this->redirect(MainConfig::$PAGE_REGISTER);
-        }
+        }*/
         //
         // получаем css стили из manifest-a
         $this->obtainCss();
+        //
+        //  UTM
+        //
+        if(!is_object(Yii::app()->session['utm']))
+        {
+          Yii::app()->session['utm'] = (object)[
+            'transition' => '',
+            'canal' => '',
+            'campaign' => '',
+            'content' => '',
+            'keywords' => '',
+            'pm_source' => '',
+            'last_referer' => '',
+            'point' => '',
+            'referer' => '', // !!!!!!!!!!!!!!!!!!!!!
+          ];
+        }
+        $rq = Yii::app()->getRequest();
+        $v = filter_var($rq->getParam('utm_source'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        !empty($v) && Yii::app()->session['utm']->transition = $v;
+
+        $v = filter_var($rq->getParam('utm_medium'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        !empty($v) && Yii::app()->session['utm']->canal = $v;
+
+        $v = filter_var($rq->getParam('utm_campaign'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        !empty($v) && Yii::app()->session['utm']->campaign = $v;
+
+        $v = filter_var($rq->getParam('utm_content'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        !empty($v) && Yii::app()->session['utm']->content = $v;
+
+        $v = filter_var($rq->getParam('utm_term'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        !empty($v) && Yii::app()->session['utm']->keywords = $v;
+
+        $v = filter_var($rq->getParam('pm_source'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        !empty($v) && Yii::app()->session['utm']->pm_source = $v;
+
+        $v = filter_var($rq->getParam('referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        !empty($v) && Yii::app()->session['utm']->referer = $v;
+
+        Yii::app()->session['utm']->last_referer = $_SERVER['HTTP_REFERER'];
+
+        if(empty(Yii::app()->session['utm']->point))
+        {
+          Yii::app()->session['utm']->point = Subdomain::site() . $_SERVER['REQUEST_URI'];
+        }
     }
 
 
@@ -252,5 +316,11 @@ class AppController extends CController
       );
       Yii::app()->end();
     }
+  }
+
+  protected function renderRegisterGTM()
+  {
+    $this->layout = '//layouts/after_register';
+    parent::render('index');
   }
 }

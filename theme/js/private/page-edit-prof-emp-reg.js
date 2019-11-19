@@ -4,7 +4,6 @@ jQuery(function($){
     oldEmail = $('.epe__input-mail').val(),
     emailTimer = null,
     oldPhone = $('#phone-code').val(),
-    oldPhoneCon = $('#phone-code-contact').val(),
     oldFlag = '',
     confirmEmail = $('#conf-email').hasClass('complete') ? true : false;
   confirmPhone = $('#conf-phone').hasClass('complete') ? true : false;
@@ -55,9 +54,6 @@ jQuery(function($){
   //
   $(document).on('click',function(e){ checkPhone(e) });
   $('#phone-code').on('input',function(e){ checkPhone(e) });
-
-  $(document).on('click',function(e){ checkPhoneCon(e) });
-  $('#phone-code-contact').on('input',function(e){ checkPhoneCon(e) });
   //
   $('.epe__btn').click(function(e){
     var self = this,
@@ -225,40 +221,6 @@ jQuery(function($){
       }
     }
   }
-	function checkPhoneCon(e){
-		var $inp = $('#phone-code-contact'),
-			len = getNum($inp.val()).length,
-			code = $('[name="__phone_prefix"]').val().length;
-
-		if(e.type=='click' && !$(e.target).is('.country-phone') && !$(e.target).closest('.country-phone').length){
-			if((code==3 && len<9) || (code==1 && len<10)){ // UKR || RF
-				addErr($inp.closest('.epe__label'));
-				$inp.val('');
-			}
-			else{
-				remErr($inp.closest('.epe__label'));
-				if($inp.val()!==oldPhoneCon){
-					$('#conf-phone').removeClass('complete')
-						.html('<p>Телефон не подтвержден. <em>Подтвердить</em></p>');
-					confirmPhone = false;
-				}
-			}
-		}
-		else{
-			if((code==3 && len<9) || (code==1 && len<10) || len==0){
-				addErr($inp.closest('.epe__label'));
-			}
-			else{
-				remErr($inp.closest('.epe__label'));
-				if($inp.val()!==oldPhoneCon){
-					$('#conf-phone').removeClass('complete')
-						.html('<p>Телефон не подтвержден. <em>Подтвердить</em></p>');
-					confirmPhone = false;
-				}
-			}
-		}
-	}
-
   //
   getFlagTimer = setInterval(function(){ // ищем флаг страны
     if($('.country-phone-selected>img').is('*')){
