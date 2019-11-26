@@ -955,14 +955,15 @@ class Api
             $userId    = $response->id;
             $inData['inputData']['email'] = $response->default_email;
             $inData['inputData']['pass'] = rand(11111,99999);
+            $inData['inputData']['passrep'] = $inData['inputData']['pass'];
             
             if($response->sex == 'male'){
                 $sex = 1;
             } else $sex = 0;
             
             $inData['inputData']['sex'] = $sex; 
-            $first_name = $response->first_name; 
-            $last_name = $response->last_name;
+            $inData['inputData']['name'] = $response->last_name; 
+            $inData['inputData']['lname'] =  $response->first_name;
             $birthday = $response->birthday; 
             
             $inData['type'] = $promo;
