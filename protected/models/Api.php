@@ -957,6 +957,7 @@ class Api
             $inData['inputData']['email'] = $response->default_email;
             $inData['inputData']['pass'] = rand(11111,99999);
             $inData['inputData']['passrep'] = $inData['inputData']['pass'];
+            $pass = md5($inData['inputData']['pass']);
             
             if($response->sex == 'male'){
                 $sex = 1;
@@ -970,7 +971,7 @@ class Api
             $inData['type'] = $promo;
             
             if($auth->registerUser($inData)['error'] == 0){
-                $res = $Auth->doAPIAuth();
+                $res = $auth->doAPIAuth();
         
         
                 Yii::app()->db->createCommand()
