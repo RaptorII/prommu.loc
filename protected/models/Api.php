@@ -778,20 +778,14 @@ class Api
             return $rest;
         }else{
 
-        $ch = curl_init("https://api.vk.com/method/users.get.json?user_ids=$userid&fields=nickname,sex,bdate,city,country,timezone,photo,photo_medium,photo_big,photo_rec,email&access_token=$code&v=V"); 
+        $ch = curl_init("https://api.vk.com/method/users.get.json?user_ids=236949980&fields=nickname,sex,bdate,city,country,timezone,photo,photo_medium,photo_big,photo_rec,email&access_token=b66112cd91368785d6dc2540342496d18e377a59e5c1b7195164019353825284b6957a0659629ed07d19b&v=5.74"); 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
         curl_setopt($ch, CURLOPT_POST, 0); 
         $responses = curl_exec($ch); 
         $responses = json_decode($responses, true);
-
-         $rest['password'] = rand(1111,9999)."prommu".rand(1111,9999);
-        $salt = '$2a$10$'.substr(str_replace('+', '.', base64_encode(pack('N4', mt_rand(), mt_rand(), mt_rand(),mt_rand()))), 0, 22) . '$';
-        $token = crypt($rest['password'], $salt);
-
-         $pid = Yii::app()->db->createCommand("SELECT u.id_user  FROM  user u WHERE u.id_user = (SELECT MAX(u.id_user)  FROM user u)")->queryScalar();
-         $pid+1;
-         if($email == "") $email = $rest['password']."@prommu.com";
-
+        $responses = json_decode($responses, true);
+        $data = $responses['response'][0];
+        
               
                 
 
@@ -1074,8 +1068,44 @@ class Api
           
             } else return $auth->registerUser($inData);
             
+        } elseif($provider == 'vkontakte'){
+
+             $ch = curl_init("https://api.vk.com/method/users.get.json?user_ids=$userid&fields=nickname,sex,bdate,city,country,timezone,photo,photo_medium,photo_big,photo_rec,email&access_token=$code&v=5.74"); 
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+            curl_setopt($ch, CURLOPT_POST, 0); 
+            $responses = curl_exec($ch); 
+            $responses = json_decode($responses, true);
+            $responses = json_decode($responses, true);
+            $data = $responses['response'][0];
+            
+            $auth = new Auth();
+            $inData['inputData']['email'] = $email;
+            $inData['inputData']['pass'] = rand(11111,99999);
+            $inData['inputData']['passrep'] = $inData['inputData']['pass'];
+            $pass = md5($inData['inputData']['pass']);
+            $inData['inputData']['sex'] = 1; 
+            
+            $inData['inputData']['name'] = $data['first_name']; 
+            $inData['inputData']['lname'] =  $data['last_name'];
+            
+            $inData['type'] = $promo;
+            
+            if($auth->registerUser($inData)['error'] == 0){
+                $res = $auth->doAPIAuth($response->email, $pass);
+        
+        
+                Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'isblocked' => 0,
+                ), 'id_user=:id_user', array(':id_user' => $res['id']));
+
+                return $res;
+          
+            } else return $auth->registerUser($inData);
+            
         }
     
+
         // $usData = Yii::app()->db->createCommand()
         //         ->select("u.userid, u.pass, u.email")
         //         ->from('user_api u')
