@@ -890,7 +890,7 @@ class Api
     public function apiSocial(){
          $code = Yii::app()->getRequest()->getParam('code');
          $promo = Yii::app()->getRequest()->getParam('promo');
-         $email = Yii::app()->getRequest()->getParam('email');
+         $login = Yii::app()->getRequest()->getParam('login');
          $userid =  Yii::app()->getRequest()->getParam('userid');
          $provider =  Yii::app()->getRequest()->getParam('provider');
     
@@ -910,10 +910,10 @@ class Api
             return $res;
         }
         
-        if(empty($email)){
+        if(empty($login)){
             
             $res['error'] = -101;
-            $res['message'] = 'Отсутствует параметр email';
+            $res['message'] = 'Отсутствует параметр login';
             
             return $res;
         }
@@ -952,6 +952,7 @@ class Api
         
             $auth = new Auth();
             
+            
             $userId    = $response->id;
             $inData['inputData']['email'] = $response->default_email;
             $inData['inputData']['pass'] = rand(11111,99999);
@@ -967,9 +968,19 @@ class Api
             $birthday = $response->birthday; 
             
             $inData['type'] = $promo;
+            
+            if($auth->registerUser($inData)['error'] == 0){
+                $res = $Auth->doAPIAuth();
         
-            return $auth->registerUser($inData);
-        }
+        
+                Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'isblocked' => 0,
+                ), 'id_user=:id_user', array(':id_user' => $res['id']));
+
+                return $res;
+          
+            }
        
     
         // $usData = Yii::app()->db->createCommand()
