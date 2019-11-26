@@ -1517,7 +1517,7 @@ class Auth
                         'Активируйте профиль',
                         $template->body
                     );
-                $set = $Mailing->setToMailingNotActive($receiver,$title,$body,$isUrgent=false, $rdate);
+                // $set = $Mailing->setToMailingNotActive($receiver,$title,$body,$isUrgent=false, $rdate);
             }
              ///create mailing event
 
