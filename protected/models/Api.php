@@ -970,20 +970,19 @@ class Api
             
             $inData['type'] = $promo;
             
-            // if($auth->registerUser($inData)['error'] == 0){
-            //     $res = $auth->doAPIAuth($response->default_email, $pass);
+            if($auth->registerUser($inData)['error'] == 0){
+                $res = $auth->doAPIAuth($response->default_email, $pass);
         
         
-            //     Yii::app()->db->createCommand()
-            //     ->update('user', array(
-            //         'isblocked' => 0,
-            //     ), 'id_user=:id_user', array(':id_user' => $res['id']));
+                Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'isblocked' => 0,
+                ), 'id_user=:id_user', array(':id_user' => $res['id']));
 
-            //     return $res;
+                return $res;
           
-            // } else
-            return $auth->registerUser($inData);
-       
+            } else return $auth->registerUser($inData);
+        }
     
         // $usData = Yii::app()->db->createCommand()
         //         ->select("u.userid, u.pass, u.email")
