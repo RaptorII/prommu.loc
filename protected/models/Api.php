@@ -890,7 +890,7 @@ class Api
     public function apiSocial(){
          $code = Yii::app()->getRequest()->getParam('code');
          $promo = Yii::app()->getRequest()->getParam('promo');
-         $login = Yii::app()->getRequest()->getParam('login');
+         $email = Yii::app()->getRequest()->getParam('email');
          $userid =  Yii::app()->getRequest()->getParam('userid');
          $provider =  Yii::app()->getRequest()->getParam('provider');
     
