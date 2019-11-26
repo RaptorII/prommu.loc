@@ -702,13 +702,13 @@ class Auth
      *          pass - md5 пароля
      * @return array
      */
-    public function doAPIAuth()
+    public function doAPIAuth($login, $pass)
     {
         $error = -101;
         try
         {
-            $login = filter_var(Yii::app()->getRequest()->getParam('login'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $pass = filter_var(Yii::app()->getRequest()->getParam('pass'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $login = $login ? $login : filter_var(Yii::app()->getRequest()->getParam('login'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $pass = $pass ? $pass : filter_var(Yii::app()->getRequest()->getParam('pass'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             // *** ПРоверка параметров ***
             if(  !empty($login)
                     && !empty($pass)
