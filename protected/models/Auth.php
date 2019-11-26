@@ -1286,7 +1286,7 @@ class Auth
 
 
         $key = 'pass';
-        $data = Yii::app()->getRequest()->getParam('pass') ? Yii::app()->getRequest()->getParam('pass') : $inputData['inputData']['pass'];
+        $data = Yii::app()->getRequest()->getParam('pass') ? Yii::app()->getRequest()->getParam('pass') : $inputData['pass'];
         if( !$flag_error )
         {
             $element = $key;
