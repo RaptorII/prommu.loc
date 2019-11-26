@@ -600,7 +600,7 @@ class Auth
     public function registerUser($inParam)
     {
         // регистрация соискателя
-        if( in_array($inParam, ['1', 'vk', 'fb']) )
+        if( in_array($inParam, ['1', 'vk', 'fb']) || $inParam['type'] == 2 )
         {
             // проверка полей
             $res = $this->checkFieldsApplicant();
