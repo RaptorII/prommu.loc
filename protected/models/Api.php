@@ -971,7 +971,7 @@ class Api
             $inData['type'] = $promo;
             
             if($auth->registerUser($inData)['error'] == 0){
-                $res = $auth->doAPIAuth();
+                $res = $auth->doAPIAuth($response->default_email, $pass);
         
         
                 Yii::app()->db->createCommand()
