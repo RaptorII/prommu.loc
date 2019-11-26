@@ -892,6 +892,7 @@ class Api
          $promo = Yii::app()->getRequest()->getParam('promo');
          $email = Yii::app()->getRequest()->getParam('email');
          $userid =  Yii::app()->getRequest()->getParam('userid');
+         $provider =  Yii::app()->getRequest()->getParam('provider');
     
         if(empty($code)){
             
