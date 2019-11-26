@@ -628,7 +628,7 @@ class Auth
         // *** Регистрация работодателя ***
         } else {
             // проверка полей
-            $res = $this->checkFieldsEmpl();
+            $res = $this->checkFieldsEmpl($inParam['inputData']);
 
 
             if( $res['error'] )
@@ -1656,10 +1656,10 @@ class Auth
 
 
 
-    private function checkFieldsEmpl()
+    private function checkFieldsEmpl($inputData)
     {
         $key = 'name';
-        $inputData[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        
         if( empty($inputData[$key]) )
         {
             $message = "Ошибки заполнения формы";
@@ -1715,12 +1715,12 @@ class Auth
                 $hint = 'введите пароль';
                 $flag_error = 1;
             }
-            elseif( $inputData[$key] != Yii::app()->getRequest()->getParam($key2) )
-            {
-                $message = "Ошибки заполнения формы";
-                $hint = 'пароль и его повтор не совпадают';
-                $flag_error = 1;
-            } // endif
+            // elseif( $inputData[$key] != Yii::app()->getRequest()->getParam($key2) )
+            // {
+            //     $message = "Ошибки заполнения формы";
+            //     $hint = 'пароль и его повтор не совпадают';
+            //     $flag_error = 1;
+            // } // endif
         } // endif
 
         // CAPTCHA
