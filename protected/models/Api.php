@@ -980,7 +980,7 @@ class Api
 
                 return $res;
           
-            }
+            } else return $auth->registerUser($inData);
        
     
         // $usData = Yii::app()->db->createCommand()
