@@ -1286,7 +1286,7 @@ class Auth
 
 
         $key = 'pass';
-        $data = Yii::app()->getRequest()->getParam('pass');
+        $data = Yii::app()->getRequest()->getParam('pass') ? Yii::app()->getRequest()->getParam('pass') : $inputData['inputData']['pass'];
         if( !$flag_error )
         {
             $element = $key;
@@ -1296,12 +1296,12 @@ class Auth
                 $hint = 'введите пароль';
                 $flag_error = 1;
             }
-            elseif( $data != Yii::app()->getRequest()->getParam('passrep') )
-            {
-                $message = "Ошибки заполнения формы";
-                $hint = 'пароль и его повтор не совпадают';
-                $flag_error = 1;
-            } // endif
+            // elseif( $data != Yii::app()->getRequest()->getParam('passrep')  )
+            // {
+            //     $message = "Ошибки заполнения формы";
+            //     $hint = 'пароль и его повтор не совпадают';
+            //     $flag_error = 1;
+            // } // endif
         } // endif
 
 
