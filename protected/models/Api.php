@@ -982,6 +982,57 @@ class Api
                 return $res;
           
             } else return $auth->registerUser($inData);
+        } elseif($provider == 'facebook'){
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://graph.facebook.com/v2.8/me/?access_token=$code&fields=gender,id,email,%20name,last_name,first_name",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "GET",
+              CURLOPT_HTTPHEADER => array(
+                "Accept: */*",
+                "Accept-Encoding: gzip, deflate",
+                "Cache-Control: no-cache",
+                "Connection: keep-alive",
+                "Host: graph.facebook.com",
+                "Postman-Token: e9d3367e-197c-49d3-83ca-f1a088cdd8f0,2e2ecf1f-8d41-4307-b408-696573b0e3b4",
+                "User-Agent: PostmanRuntime/7.19.0",
+                "cache-control: no-cache"
+              ),
+            ));
+            
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            
+            $response = json_decode($response);
+            
+            $auth = new Auth();
+            $inData['inputData']['email'] = $response->email;
+            $inData['inputData']['pass'] = rand(11111,99999);
+            $inData['inputData']['passrep'] = $inData['inputData']['pass'];
+            $pass = md5($inData['inputData']['pass']);
+            $inData['inputData']['sex'] = 1; 
+            $inData['inputData']['name'] = $response->last_name; 
+            $inData['inputData']['lname'] =  $response->first_name;
+            
+            $inData['type'] = $promo;
+            
+            if($auth->registerUser($inData)['error'] == 0){
+                $res = $auth->doAPIAuth($response->email, $pass);
+        
+        
+                Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'isblocked' => 0,
+                ), 'id_user=:id_user', array(':id_user' => $res['id']));
+
+                return $res;
+          
+            } else return $auth->registerUser($inData);
+            
         }
     
         // $usData = Yii::app()->db->createCommand()
