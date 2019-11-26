@@ -603,7 +603,7 @@ class Auth
         if( in_array($inParam, ['1', 'vk', 'fb']) || $inParam['type'] == 2 )
         {
             // проверка полей
-            $res = $this->checkFieldsApplicant();
+            $res = $this->checkFieldsApplicant($inParam['inputData']);
 
             if( $res['error'] )
             {
@@ -1241,9 +1241,9 @@ class Auth
         return ['error' => $error, 'message' => $message];
     }
 
-    private function checkFieldsApplicant()
+    private function checkFieldsApplicant($inputData)
     {
-        $inputData = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+       
 
         $key = 'name';
         if( empty($inputData[$key]) )
