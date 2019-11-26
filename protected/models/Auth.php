@@ -1355,6 +1355,7 @@ class Auth
                 'message' => $message,
                 'hint' => $hint,
                 'error' => $flag_error,
+                'inputData' => $inputData,
                 'element' => $flag_error ? $element : '',
                 'use_recaptcha' => $use_recaptcha
             );
@@ -1765,6 +1766,7 @@ class Auth
                 'message' => $message,
                 'hint' => $hint,
                 'error' => $flag_error,
+                'inputData' => $inputData,
                 'element' => $flag_error ? $element : '',
                 'use_recaptcha' => $use_recaptcha
             );
