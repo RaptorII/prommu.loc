@@ -1,9 +1,9 @@
 <?php
 /**
  * Работа с API
- * Date: 19.10.16
- * Time: 16:30
- * Greskod
+ * Date: 26.04.19
+ * Time: 02:22
+ * Grescode
  */
 class Api
 {
@@ -12,13 +12,13 @@ class Api
 
     /** @var UserProfile */
     private $Profile;
-    private $idus;      // id пользователя
+    private $idus;
     private $token = null;  
     private $apiKey = 'AAAAOoZQN40:APA91bEgi7ebdOYMEwl60gzbgqFCOxv3gvmiq9hdpl4lE1SLOeCHHHlRah0U5qEHroYznP3MHnm3Ilj-n7ilsf8Rd9J-oEDZYE_3vsFIvqq9XgZrLfL64MWFaaFUVPZ5aIrtfNo3Mt07';
     public $apiUrl = 'https://fcm.googleapis.com/fcm/send';
     public $timeout = 5;
     public $sslVerifyHost = false;
-    public $sslVerifyPeer = false;   //  push токен пользователя
+    public $sslVerifyPeer = false;   
 
     public function apiProcess()
     {
@@ -27,32 +27,63 @@ class Api
         {
             switch( strtolower($apiMethod) )
             {
-                case 'auth_user' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->authUser(); break;
-                case 'auth' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->authUsers(); break;
-                case 'push' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPush(); break;
-                case 'export' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->export(); break;
-                case 'export_feedback' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->exportFeedback(); break;
+                /// VERSION 26.04.2019
+                
+                ///FIRST BLOCK
+                case 'register' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->registerUsers(); break;
                 case 'user_restorepass' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->restorePass(); break;
+                case 'faq' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getFaq(); break;
+                case 'auth' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->authUsers(); break;
+                case 'feedback' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->feedback(); break;
+                
+                ///PROFILE BLOCK
+                case 'profile' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getProfile(); break;
+                case 'user_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getUserData(); break;
+                case 'edit_prof' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->updateProf(); break;
+                case 'attrib_get' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getAttrib(); break;
                 case 'post_get' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPost(); break;
                 case 'city_get' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getCity(); break;
                 case 'vacancy_search' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getVacancy(); break;
-                case 'vacancy_own' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getVacancyOwn(); break;
-                case 'vacancy_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getVacancyDataView(); break;
                 case 'empl_search' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getEmplSearch(); break;
                 case 'promo_search' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getPromoSearch(); break;
+                
+                ///VACANCY
+                case 'vacancy_publish' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacancyPublish(); break;
+                case 'vacancy_edit' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacancyPublish(); break;
+                case 'vacancy_owner' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacancyOwner(); break;
+                case 'vacancy_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacancyGet(); break;
+                case 'vacancy_promo' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacancyGet(); break;
+                
+                ///PROJECTS
+                case 'projects' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->dataResponse(); break;
+                
+                ///PHOTO    
+                case 'set_avatar' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->avatarEdit(); break;
+                case 'set_photo' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->photoEdit(); break;
+                case 'del_avatar' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->avatarDelete(); break;
+                case 'del_photo' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->photoDelete(); break;
+                
+                ///CHATS
+                case 'chats' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getChatThemes(); break;
+                case 'chat' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getChatMessage(); break;
+                case 'send' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setMess(); break;
+                
+                case 'push' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getTest(); break;
+                case 'export' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->export(); break;
+                case 'vacancy_own' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getVacancyOwn(); break;
+                case 'vacancy_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getVacancyDataView(); break;
                 case 'response_set' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setResponse(); break;
                 case 'response_data' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->dataResponse(); break;
-                case 'chat_theme_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getChatThemes(); break;
                 case 'cotypes_get' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getCotypes(); break;
                 case 'vacancy_data' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getVacancyData(); break;
-                case 'send_mess' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setMess(); break;
-                case 'edit_prof' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->updateProf(); break;
                 case 'set_vk' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->setCommAndRate(); break;
                 case 'rere' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rere(); break;
                 case 'vacancy_act' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacAct(); break;
-                case 'vacancy_pub' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->vacationPub(); break;
+                
                 case 'invite_set' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setInvite(); break;
-                case 'photo' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->photoEdit(); break;
+                
+                
+                
                 case 'data_help' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getHelp(); break;
                 case 'send_push' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setPush(); break;
                 case 'send_topic' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setTopics(); break;
@@ -66,24 +97,27 @@ class Api
                 case 'teles' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->teleProms(); break;
                 case 'teles_test' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->telePromsTest(); break;
                 case 'nicola' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getNicolaDay(); break;
-                case 'feedback' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->feedback(); break;
-                case 'mailing' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->mailBox(); break;
+                case 'mailer' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->mailBox(); break;
                 case 'vacmon' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->vacancyMonitoring(); break;
-                case 'apivk' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->apiVK(); break;
+                case 'social_auth' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->apiVK(); break;
+                case 'social_reg' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->apiSocial(); break;
                 case 'log' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testLog(); break;
                 case 'tect' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->teSt(); break;
                 case 'ideas' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->ideas(); break;
-                case 'export_auto' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->autoExport(); break;
-                case 'searchuse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->searchUse(); break;
-                case 'analyticss': $this->checkMethodHeader(self::$HEADER_GET); $data = $this->analyticss(); break;
-                case 'services': $this->checkMethodHeader(self::$HEADER_GET); $data = $this->services(); break;
-                case 'import': $this->checkMethodHeader(self::$HEADER_GET); $data = $this->importProject(); break;
-                case 'auto_mail': $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getAutoMail(); break;
+                case 'export_auto' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->exportAutomize(); break;
+                case 'geo_project' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->geoProject(); break;
+                case 'serchuse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->searchUse(); break;
+                case 'rateuse' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rateUse(); break;
+                case 'maleor' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->maleor(); break;
+                case 'testpay' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testPay(); break;
+                case 'services' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->services(); break;
+                case 'import' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testInfo(); break;
                 case 'rest_one_day': $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getRestOneDay(); break;
-                case 'analit': $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getNameAnonim(); break;
-                case 'repost': $this->checkMethodHeader(self::$HEADER_GET); $data = $this->repost(); break;
-                case 'domains': $this->checkMethodHeader(self::$HEADER_GET); $data = $this->domains(); break;
                 
+                
+                 
+                
+
                 default: throw new ExceptionApi('No such method', 1001);
 
             }
@@ -98,161 +132,423 @@ class Api
                 case -1003 : $message = 'Wrong header'; break;
                 default: $code= 1002; $message = $e->getMessage();
             }
-
+            
+            
             $data = ['error' => $code, 'message' => $message];
+            
         } // endtry
-
+        
+       
+        $status = $this->error_refuse($data);
+        header("Content-type: application/json;charset=utf-8';HTTP/1.1 " . $status . " " . $this->requestStatus($status));
         return $data;
     }
     
-    public function repost(){
-        $Vacancy = new Vacancy();
-        $Vacancy->VkRepost($_GET['id'], $_GET['repost']);
+     /**
+     * Получаем список вакансий c фильтрацией
+     * @return array
+     */
+    
+    public function getProfile(){
+    
+    $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $id = Yii::app()->getRequest()->getParam('id');
+        
+    if($accessToken){
+        list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
+    } else {
+        $profile = (new ProfileFactory())->makeProfile(['id' => $id]);
     }
     
-    public function domains(){
-        $query = Yii::app()->db->createCommand()->select('*')->from('subdomains');
-        $domains = $query->queryAll();
+    var_dump($profile);
+    
         
-        for($i = 0; $i < count($domains); $i ++){
-            var_dump($i);
+    $res['user']['id'] = 12345;
+    $res['user']['first_name'] = "Test";
+    $res['user']['last_name'] = "api";
+    $res['user']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+    
+    $res['overall_rating']['sum'] = 20;
+    $res['overall_rating']['positive'] = 30;
+    $res['overall_rating']['negative'] = 10;
+    
+    
+    $res['photos'][0]['id'] = 234234243;
+    $res['photos'][0]['is_avatar'] = true;
+    $res['photos'][0]['url'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+    
+    if($profile->type == 2){
+        $res['overall_rating']['applicant_summary']['punctuality'] = 10;
+        $res['overall_rating']['applicant_summary']['contact'] = 10;
+        $res['overall_rating']['applicant_summary']['quality'] = 30;
+        
+        $res['rating_applicant'][0]['vacancy']['id'] = 234234243;
+        $res['rating_applicant'][0]['vacancy']['owner']['id'] = 12345;
+        $res['rating_applicant'][0]['vacancy']['owner']['first_name'] = "TEST";
+        $res['rating_applicant'][0]['vacancy']['owner']['last_name'] = "api";
+        $res['rating_applicant'][0]['vacancy']['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+        
+        $res['rating_applicant'][0]['vacancy']['city']['id'] = 1307;
+        $res['rating_applicant'][0]['vacancy']['city']['name'] = "Москва";
+        
+        $res['rating_applicant'][0]['vacancy']['title'] = "Промоутер";
+        $res['rating_applicant'][0]['vacancy']['description'] = "Ты должен раздавать листовкy";
+        $res['rating_applicant'][0]['vacancy']['is_active'] = true;
+        $res['rating_applicant'][0]['vacancy']['is_premium'] = true;
+        $res['rating_applicant'][0]['vacancy']['salary_hour'] = 13000;
+        $res['rating_applicant'][0]['vacancy']['salary_week'] = 13000;
+        $res['rating_applicant'][0]['vacancy']['salary_month'] = 130000;
+        $res['rating_applicant'][0]['vacancy']['salary_visit'] = 000;
+        $res['rating_applicant'][0]['vacancy']['created_at'] = "1995-09-07T10:40:52Z";
+        $res['rating_applicant'][0]['vacancy']['updated_at'] = "1995-09-07T10:40:52Z";
+        
+        $res['rating_applicant'][0]['rating'] = 1;
+        $res['rating_applicant'][0]['punctuality'] = 1;
+        $res['rating_applicant'][0]['contact'] = 1;
+        $res['rating_applicant'][0]['quality'] = 1;
+        
+        $res['vacancies'][0]['id'] = 234234243;
+        $res['vacancies'][0]['owner']['id'] = 12345;
+        $res['vacancies'][0]['owner']['first_name'] = "TEST";
+        $res['vacancies'][0]['owner']['last_name'] = "api";
+        $res['vacancies'][0]['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+        
+        $res['vacancies'][0]['city']['id'] = 1307;
+        $res['vacancies'][0]['city']['name'] = "Москва";
+        
+        $res['vacancies'][0]['title'] = "Промоутер";
+        $res['vacancies'][0]['description'] = "Ты должен раздавать листовкy";
+        $res['vacancies'][0]['is_active'] = true;
+        $res['vacancies'][0]['is_premium'] = true;
+        $res['vacancies'][0]['salary_hour'] = 13000;
+        $res['vacancies'][0]['salary_week'] = 13000;
+        $res['vacancies'][0]['salary_month'] = 130000;
+        $res['vacancies'][0]['salary_visit'] = 000;
+        $res['vacancies'][0]['created_at'] = "1995-09-07T10:40:52Z";
+        $res['vacancies'][0]['updated_at'] = "1995-09-07T10:40:52Z";
+    
+    
+    } elseif($profile->type == 3){
+        $res['overall_rating']['employer_summary']['payment_deadlines'] = 30;
+        $res['overall_rating']['employer_summary']['payment_amount'] = 30;
+        $res['overall_rating']['employer_summary']['clarity_requirements'] = 30;
+        $res['overall_rating']['employer_summary']['clarity_tasks'] = 30;
+        $res['overall_rating']['employer_summary']['contact'] = 30;
+        
+        $res['rating_employer'][0]['vacancy']['id'] = 234234243;
+        $res['rating_employer'][0]['vacancy']['owner']['id'] = 12345;
+        $res['rating_employer'][0]['vacancy']['owner']['first_name'] = "TEST";
+        $res['rating_employer'][0]['vacancy']['owner']['last_name'] = "api";
+        $res['rating_employer'][0]['vacancy']['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+        
+        $res['rating_employer'][0]['vacancy']['city']['id'] = 1307;
+        $res['rating_employer'][0]['vacancy']['city']['name'] = "Москва";
+        
+        $res['rating_employer'][0]['vacancy']['title'] = "Промоутер";
+        $res['rating_employer'][0]['vacancy']['description'] = "Ты должен раздавать листовкy";
+        $res['rating_employer'][0]['vacancy']['is_active'] = true;
+        $res['rating_employer'][0]['vacancy']['is_premium'] = true;
+        $res['rating_employer'][0]['vacancy']['salary_hour'] = 13000;
+        $res['rating_employer'][0]['vacancy']['salary_week'] = 13000;
+        $res['rating_employer'][0]['vacancy']['salary_month'] = 130000;
+        $res['rating_employer'][0]['vacancy']['salary_visit'] = 000;
+        $res['rating_employer'][0]['vacancy']['created_at'] = "1995-09-07T10:40:52Z";
+        $res['rating_employer'][0]['vacancy']['updated_at'] = "1995-09-07T10:40:52Z";
+        
+        $res['rating_employer'][0]['rating'] = 1;
+        $res['rating_employer'][0]['payment_deadlines'] = 1;
+        $res['rating_employer'][0]['payment_deadlines'] = 1;
+        $res['rating_employer'][0]['payment_amount'] = 1;
+        $res['rating_employer'][0]['clarity_requirements'] = 1;
+        $res['rating_employer'][0]['clarity_tasks'] = 1;
+        $res['rating_employer'][0]['contact'] = 1;
+    
+    }
+    
+        $res['reviews'][0]['owner']['id'] = 12345;
+        $res['reviews'][0]['owner']['first_name'] = "TEST";
+        $res['reviews'][0]['owner']['last_name'] = "api";
+        $res['reviews'][0]['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+        $res['reviews'][0]['data'] = "Lorem ipsum bla bla bla this is a review bla bla bla";
+        $res['reviews'][0]['created_at'] = "1995-09-07T10:40:52Z";
+        $res['reviews'][0]['updated_at'] = "1995-09-07T10:40:52Z";
+    
+        return $res;
+    }
+       public function getVacancy()
+    {
+        $filter = [];
+        $page = filter_var(Yii::app()->getRequest()->getParam('page', 0), FILTER_SANITIZE_NUMBER_INT);
+        $id = filter_var(Yii::app()->getRequest()->getParam('id', 0), FILTER_SANITIZE_NUMBER_INT);
+        $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
+        
+        ///
+        $filter['sphf'] = Yii::app()->getRequest()->getParam('salary_hour_from');
+        $filter['spht'] = Yii::app()->getRequest()->getParam('salary_hour_to');
+        
+        $filter['spwf'] = Yii::app()->getRequest()->getParam('salary_week_from');
+        $filter['spwt'] = Yii::app()->getRequest()->getParam('salary_week_from');
+        
+        $filter['spmf'] = Yii::app()->getRequest()->getParam('salary_month_from');
+        $filter['spmt'] = Yii::app()->getRequest()->getParam('salary_month_from');
+        
+        $filter['spvf'] = Yii::app()->getRequest()->getParam('salary_visit_from');
+        $filter['spvt'] = Yii::app()->getRequest()->getParam('salary_visit_from');
+        
+        $filter['smart'] = Yii::app()->getRequest()->getParam('smart');
+        $filter['posts'] = Yii::app()->getRequest()->getParam('post') ? explode(",",Yii::app()->getRequest()->getParam('post')) :"";
+        $filter['city'] = Yii::app()->getRequest()->getParam('city') ? explode(",",Yii::app()->getRequest()->getParam('city')) :"";;
+        $filter['qs'] = Yii::app()->getRequest()->getParam('name');
+        
+        $filter['is_man'] = Yii::app()->getRequest()->getParam('is_man');
+        $filter['is_temp'] = Yii::app()->getRequest()->getParam('is_temp');
+        $filter['is_med'] = Yii::app()->getRequest()->getParam('is_med');
+        $filter['is_hasavto'] = Yii::app()->getRequest()->getParam('is_hasavto');
+        $filter['is_woman'] = Yii::app()->getRequest()->getParam('is_woman');
+        
+        $filter['af'] = Yii::app()->getRequest()->getParam('age_from');
+        $filter['at'] = Yii::app()->getRequest()->getParam('age_to');
+        
+        $filter['card'] = Yii::app()->getRequest()->getParam('card');
+        $filter['cardPrommu'] = Yii::app()->getRequest()->getParam('card_prommu');
+        $filter['self_employed'] = Yii::app()->getRequest()->getParam('self_employed');
+        
+
+        // читаем фильтр
+        if( $filter )
+        {
+            // фильтр должностей
+            $posts = $filter['posts'] ?: null;
+            // фильтр городов
+            $city = $filter['city'] ?: null;
+            $sr = $filter['sr'] ?: null;
+            $istemp = $filter['is_temp'] ?: null;
+            $ismed = $filter['is_med'] ?: null;
+            $isavto = $filter['is_hasavto'] ?: null;
+            $sphf = $filter['sphf'] ?: null;
+            $spht = $filter['spht'] ?: null;
+            $spwf = $filter['spwf'] ?: null;
+            $spwt = $filter['spwt'] ?: null;
+            $spmf = $filter['spmf'] ?: null;
+            $spmt = $filter['spmt'] ?: null;
+            $svmf = $filter['svmf'] ?: null;
+            $svmt = $filter['svmt'] ?: null;
+            $af = $filter['af'] ?: null;
+            $at = $filter['at'] ?: null;
+            $smart = $filter['smart'] ?: null;
+            $is_man = $filter['is_man'] ?: null;
+            $is_wooman = $filter['is_woman'] ?: null;
+            $self_employed = $filter['self_employed'] ?: null;
+            $card = $filter['card'] ?: null;
+            $cardPrommu = $filter['cardPrommu'] ?: null;
+            $qs = $filter['qs'] ?: null;
+            
+            
+            $filter = ['filter' => compact('posts', 'istemp', 'ismed', 'isavto', 'city', 'sr','qs', 'sphf', 'spht', 'spwf', 'spwt', 'spmf', 'spmt', 'af', 'at', 'is_man','is_woman', 'smart', 'card', 'cardPrommu','self_employed')];
         }
+        else
+        {
+            $filter = [];
+        } // endif
+
+
+        // получаем данные страницы
+        $SearchVac = new SearchVac();
+        $pages = new CPagination($SearchVac->searchVacationsCount($filter));
+        $pages->pageSize = $limit;
+        $pages->applyLimit($SearchVac);
+
+        $data = array_values($SearchVac->getVacationsAPI($filter)['vacs']);
+        // отсеивать из ответа вакансии
+            if(!empty($id))
+            {
+                $Vacancy = new Vacancy();
+                foreach($data as $key => $val){
+                $idvac = $data[$key]['id'];
+                $data[$key]['response']= $Vacancy->getVacancyViews($idvac, $id)['response']['response'];
+
+             }
+        }
+    
+           $data = array_merge(['vacancy' => $data, 'pageCount' => $pages->pageCount,'currentPage' => (int)$page ? (int)$page : 1]);
+
+        return array_merge($data);
     }
     
-    public function getRestOneDay(){
-        echo file_exists(getcwd().'/sitemap.xml');
+    public function getTest(){
+        $model = new Analytic();
+        $data = $model->exportAnalytic();
+        
+        
+    }
+    public function getAttrib(){
+        $sql = "SELECT
+                d.id
+              , d.name
+              , d.type
+              , d.id_par idpar
+              , d.key
+            FROM user_attr_dict d";
+        $res = Yii::app()->db->createCommand($sql)->queryAll();
+
     
-        $Share = new Share();
-        $Share->getOnline();
+        for($i = 0; $i < count($res); $i ++){
+            if($res[$i]['idpar'] !=0 ){
+                $id_par = $res[$i]['idpar'];
+                $sql = "SELECT
+                    d.id
+                  , d.name
+                  , d.type
+                  , d.id_par idpar
+                  , d.key
+                 FROM user_attr_dict d
+                 WHERE id={$id_par}";
+                $parent = Yii::app()->db->createCommand($sql)->queryRow();
+                
+                $sql = "SELECT
+                    d.id
+                  , d.name
+                  , d.type
+                  , d.id_par idpar
+                  , d.key
+                 FROM user_attr_dict d
+                 WHERE id_par={$id_par}";
+                $child = Yii::app()->db->createCommand($sql)->queryAll();
+                
+                $attr[$parent['key']] = [];
+                // array_push($attr[$parent['key']], $res[$i]);
+                $attr[$parent['key']] = $child;
+            } else {
+                $attr[$res[$i]['key']] = $res[$i];
+            }
+        }
+        
+        $days = array("1" => "Понедельник","2" => "Вторник","3" => "Среда","4" => "Четверг","5" => "Пятница","6" => "Суббота","7" => "Воскресенье");
+        $attr['workDays']  = [];
+        for($i = 1; $i < count($days); $i ++){
+            $day['id'] = $i;
+            $day['name'] = $days[$i];
+            $attr['workDays'][] = $day;
+            
+        }
+        // foreach ($res as $key => $val)
+        // {
+            
+        //     $attr[$val['key']] = $val;
+        // } // end foreach
+        
+        $data['userAttribs'] = $attr;
+        
+        
+        return $data;
     }
     
-    public function importProject(){
+    public function getFaq(){
+        $type = Yii::app()->getRequest()->getParam('type');
+        if($type == 2) $type = 1;
+        if($type == 3) $type = 2;
        
-       $Analytic = new Analytic();
-       return $Analytic->getAnalityc();
-     }
+        $faq = new Faq();
+        $res = $faq->getFaqAll($type);
+        
+        for($i = 0; $i < count($res); $i++){
+            if($res[$i]["type"] == 2) $res[$i]["type"] = 3;
+            if($res[$i]["type"] == 1) $res[$i]["type"] = 2;
+        }
+        
+        return $res;
+    }
     
-    public function getNameAnonim(){
-         
-         $analit = new Analytic();
-         $result = $analit->exportAnalyticAPI();
-        // $users = Yii::app()->db->createCommand()
-        //     ->select("*")
-        //     ->from('resume r')
-        //     ->where('r.isman=:gender', array(':gender' => $gender))
-        //     ->limit(6000)
-        //     ->queryAll();
+    
+    public function testInfo(){
         
-        // $r = rand(0,200);
-        // $t = rand(0,200);
-        // $result['firstname'] = $users[$r]['firstname'];
-        // $result['lastname'] = $users[$t]['lastname'];
+        $filter = [];
+        $SearchEmpl = new SearchEmpl();
+        $pages = new CPagination($SearchEmpl->searchEmployersCount($filter));
+        $pages->pageSize = 50;
+        $pages->applyLimit($SearchEmpl);
         
-        return $result;
+        return $pages;
     }
     
     public function services(){
-        //{"vacancies": [{"id": "1233","city": "1307"	},{	"id": "1238","city": "1209"}]}
-        $services = Yii::app()->getRequest()->getParam('services');
-        if($services == 'all'){
-            $PrommuOrder = new PrommuOrder();
-            return $PrommuOrder->getPricesData();
-        }
+        $pricess = new PrommuOrder();
+        $prices = $pricess->getPricesData();
+
+         return $prices;
+    }
+    
+    public function registerUsers(){
+        
+       $auth = new Auth();
+       $inData['inputData'] = $_POST;
+       $inData = $_POST;
+       $inData['type'] = $_POST['type'];
+    
+       return $auth->registerUser($inData);
        
-        $result = [];
+    }
     
-        $cities = json_decode(base64_decode(Yii::app()->getRequest()->getParam('cities'), 1),1);
-    
-        $result['prices'] = [];
-        $arr = [];
-       for($j = 0; $j < count($cities['vacancies']); $j ++){
-            $price = 0;
-                
-             $arrCity = explode(",", $cities['vacancies'][$j]['city']);
-            for($i = 0; $i < count($arrCity); $i++){
-               
-                $arRes = Yii::app()->db->createCommand()
-    			->select('c.region')
-    			->from('city c')
-    			->where('c.id_city=:id_city', array(':id_city' => $arrCity[$i]))
-    			->queryAll();
-                
-                if($arRes[0]['region'] == '1307'){
-                    $arPrices = Yii::app()->db->createCommand()
-                    ->select("price")
-                    ->from('service_prices')
-                    ->where(
-                            'service=:service AND region = 1',
-                            array(':service' => $services)
-                        )
-                    ->queryAll();
-                    
-                    $price+= $arPrices[0]['price'];
-
-                } elseif($arRes[0]['region'] == '1838'){
-                      $arPrices = Yii::app()->db->createCommand()
-                    ->select("price")
-                    ->from('service_prices')
-                    ->where(
-                            'service=:service AND region = 2',
-                            array(':service' => $services)
-                        )
-                    ->queryAll();
-                    
-                    $price+= $arPrices[0]['price'];
-                } else {
-                      $arPrices = Yii::app()->db->createCommand()
-                    ->select("price")
-                    ->from('service_prices')
-                    ->where(
-                            'service=:service AND region IN (3,4)',
-                            array(':service' => $services)
-                        )
-                    ->queryAll();
-                    
-                     $price+= $arPrices[0]['price'];
-                    }
-                }
-                
-                
-           
-            
-            $arr['price'] = $price;
-            $arr['id'] = $cities['vacancies'][$j]['id']; 
-            $result['prices'][] = $arr;
-       }
+    public function error_refuse($data){
+        if(!$data['error']){
+             $status = 200;
+        } else {
+             $status = 500;
+        }
         
-        return $result;
-
+        return $status;
     }
     
-  public function getAutoMail(){
-     $test = Yii::app()->getRequest()->getParam('test');
-  
-     $date = date("Y-m-d");
-     if($test == 11){
-        $this->autoExport();
-           $content = $date." - Тестовая автоматическая рассылка PROMMU";
-            Share::mail('denisgresk@gmail.com');
-     }elseif($test == 12) {
-            $content = $date." - Автоматическая рассылка PROMMU";
-            Share::mail('denisgresk@gmail.com,prommucom@gmail.com,e.marketing@euro-asian.ru,manag_reports@euro-asian.ru,man.market@euro-asian.ru,smm.help1@euro-asian.ru,kont.spec@euro-asian.ru,denisgresk@gmail.com ', "Prommu.com Аналитика промму", $content);
-    }
-    
-    }
+    public function rateUse(){
+          
+   $id = Yii::app()->getRequest()->getParam('idus');
+      
+      $sql = "SELECT r.id, r.id_user idus,r.web, name , r.logo, r.rate, r.rate_neg
+                , cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate,
+                 (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.isneg = 0 AND mm.isactive = 1 AND mm.id_empl = r.id) commpos,
+                   (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.isneg = 1 AND mm.isactive = 1 AND mm.id_empl = r.id) commneg
+                , (SELECT COUNT(id) FROM comments mm WHERE mm.iseorp = 0 AND mm.id_promo = r.id) comment_count
+                   ,(SELECT COUNT(*) cou FROM empl_vacations v WHERE v.id_user = r.id_user AND v.status = 1 AND v.ismoder = 100) vaccount
+            FROM employer r
+            WHERE r.id_user = {$id}
+            ORDER BY avg_rate DESC
+            LIMIT 6";
+        $result = Yii::app()->db->createCommand($sql)
+        ->queryAll();
 
-    public function analyticss(){
-         $data = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('analytic a')
-            ->where('a.active=:active AND a.date >:date', array(':active' => 1, ':date'=> '2018.09.01'))
-            ->order("a.id_us desc")
-            ->queryAll();
+        $rate = $result[0]['rate'] + $result[0]['rate_neg'];
+        $rating = $result[0]['commpos'] + $result[0]['commneg'];
+        $rates = ($rate/$rating) * 10;
 
-            return $data;
-    }
+        if($result[0]['vaccount']){
+            $vacancy = 10;
+        }
+
+        if($result[0]['commpos'] - $result[0]['commneg'] > 0){
+            $comment = 25;
+        } 
+
+        if($result[0]['logo']){
+            $logo = 2;
+        }
+        if($result[0]['web']){
+            $web = 2;
+        }
+        $result = $web + $logo + $comment + $rates + $vacancy + 2 + 2;
         
-        public function searchUse(){
+        $model = new Termostat();
+        $arRes['dates'] = $model->getDates();
+        $arRes['services'] = $model->getTermostatServices($id, $arRes['dates']);
+        $arRes['schedule'] = $model->getTermostatEmplCount($id, $arRes['dates']);
+        $arRes['viewsUser'] = $model->getTermostatEmplCount($id, $arRes['dates']);
+
+        var_dump($arRes);
+        echo "Прежний рейтинг работодателя: $result (система рейтинга Prommu Rate )<br/> ";
+        // echo "Прежний рейтинг работодателя: $result + $proc ( services - $proc1, service - $proc2, proc3 - $proc3, proc4 - $proc4 ) (система рейтинга Prommu Rate + Termostat )<br/> ";
+        
+    }
+    
+    public function searchUse(){
         $date = '2018-08-01';
         $bdate = '2018-08-24';
         $data = Yii::app()->db->createCommand()
@@ -293,753 +589,43 @@ class Api
         
     }
     
-    public function autoExport(){
-        $date = filter_var(Yii::app()->getRequest()->getParam('date'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $bdate = filter_var(Yii::app()->getRequest()->getParam('bdate'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $domen = Yii::app()->getRequest()->getParam('domen');
-        $types = Yii::app()->getRequest()->getParam('types');
-        $type = Yii::app()->getRequest()->getParam('type') ? Yii::app()->getRequest()->getParam('type') : 1;
-        if(empty($date) || empty($bdate) || empty($types)){
-        $date = date("Y")."-".date("m")."-01";
-        $bdate =  date("Y-m-d");
-        $types= "register";
-        $domen = '';
-        }
-        if($types == "register"){
-            $this->exportAutomize($type);
-        } elseif($types == "feedback"){
-            $this->exportAutomizeFeedback($type);
-        }elseif($types == "services"){
-            $this->exportAutomizeServices();
-            
-        }
-       
-    }
+    public function excelgets(){
+        Yii::import('ext.yexcel.Yexcel');
+        $sheet_array = Yii::app()->yexcel->readActiveSheet('/var/www/dev.prommu/uploads/prommu_example.xls');
+        //Заголовки
+        $city = "Город";
+        $location = "Локация";
+        $street = "Улица";
+        $home = "Дом";
+        $build = "Здание";
+        $str = "Строение";
+        $date = "Дата работы";
+        $time = "Время работы";
 
-    public function exportAutomize($type){
+        $location = [];
 
-         $date = $date ? $date : filter_var(Yii::app()->getRequest()->getParam('date'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-         $bdate =  $bdate ? $bdate :  filter_var(Yii::app()->getRequest()->getParam('bdate'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-         $bdate = date('Y-m-d', strtotime($bdate. ' + 1 days'));
-         $domen = Yii::app()->getRequest()->getParam('domen');
-          if(empty($date) || empty($bdate)){
-        $date = date("Y")."-".date("m")."-01";
-        $bdate =  date("Y-m-d");
-        $types= "register";
-        $domen = '';
-        }
-            
-         if($date == "week"){
-            $my_time = time() - 604800; 
-            $yester = date("Y-m-d", $my_time); 
-            $data = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('analytic a')
-            ->join('user usr', 'usr.id_user=a.id_us')
-            ->where('a.active=:active AND usr.crdate >:date', array(':active' => 1, ':date'=> $yester))
-            ->order("a.id_us desc")
-            ->queryAll();
-         } elseif($type == 1) {
-               $data = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('analytic a')
-            ->join('user usr', 'usr.id_user=a.id_us')
-            ->where('a.active=:active AND (usr.crdate BETWEEN :date AND :bdate)  AND a.name!=:name AND usr.isblocked!=:isblocked ', array(':active' => 1,':isblocked' => 2, ':date'=> $date, 'bdate'=> $bdate, 'name'=>'NO ACTIVE'))
-            ->order("a.id_us desc")
-            ->group("a.id_us")
-            ->queryAll();
-         } else {
-               $data = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('analytic a')
-            ->join('user usr', 'usr.id_user=a.id_us')
-            ->where('a.active=:active AND (usr.crdate BETWEEN :date AND :bdate)  AND a.name!=:name AND usr.isblocked!=:isblocked AND a.type=:type', array(':active' => 1,':isblocked' => 2, ':date'=> $date, 'bdate'=> $bdate, 'name'=>'NO ACTIVE', 'type'=>$type))
-            ->order("a.id_us desc")
-            ->group("a.id_us")
-            ->queryAll();
-         }
-            
-        $csv_file = '<table border="1">
-            <tr><td style="color:red; background:#E0E0E0">Время'.
-            '</td><td style="color:red; background:#E0E0E0">День'.
-            '</td><td style="color:red; background:#E0E0E0">Месяц'.
-            '</td><td style="color:red; background:#E0E0E0">Год'.
-            '</td><td style="color:red; background:#E0E0E0">Домен'.
-            '</td><td style="color:red; background:#E0E0E0">Идентификатор'.
-            '</td><td style="color:red; background:#E0E0E0">Пользователь'.
-            '</td><td style="color:red; background:#E0E0E0">Контактное лицо'.
-            '</td><td style="color:red; background:#E0E0E0">Тип'.
-            '</td><td style="color:red; background:#E0E0E0">Тип заявки'.
-            '</td><td style="color:red; background:#E0E0E0">Телефон'.
-            '</td><td style="color:red; background:#E0E0E0">Email'.
-            '</td><td style="color:red; background:#E0E0E0">Источник'.
-            '</td><td style="color:red; background:#E0E0E0">Канал'.
-            '</td><td style="color:red; background:#E0E0E0">Кампания'.
-            '</td><td style="color:red; background:#E0E0E0">Контент'.
-            '</td><td style="color:red; background:#E0E0E0">Ключевое слово'.
-            '</td><td style="color:red; background:#E0E0E0">Площадка'.
-            '</td><td style="color:red; background:#E0E0E0">Client ID'.
-            '</td><td style="color:red; background:#E0E0E0">IP адрес'.
-            '</td><td style="color:red; background:#E0E0E0">Статус'.
+        var_dump($sheet_array);
 
-'</td></tr>';
-        
-        foreach ($data as $row) {
-        
-            
-            $csv_file .= '<tr>';
-            $b = "";
-            $b_end = "";
-
-            $type_feed = 'регистрация';
-
-    
-            $transitionArr = 'm.rabota.yandex.ru,rabota.yandex.ru,mytarget,org.telegram.messenger,web.skype.com,r.search.yahoo.com,my.mail.ru,facebook_smm,yandex,google,(direct),facebook_smm,facebook,away.vk.com,yandex.ru,(none),smm_vk,target_my,instagram_smm,instagram.com,go.mail.ru,com.google.android.googlequicksearchbox';
-            $canalArr = 'cpc,traffic,ads_traffic,referral,(none),(typein),posev,multiformat,organic';
-            
-            
-            // if($row['transition'] == ""){
-            // 	$row['transition'] = 'yandex';
-            // }
-            
-            // if($row["canal"] == ""){
-            //     $row["canal"] = 'cpc';  
-            // } 
-            
-            if($row["canal"] == "utm"){
-                $row["canal"] = 'cpc';  
-            } 
-            
-            if($row["transition"] == "(direct)"){
-                $row["canal"] = '(typein)';  
-            } 
-            
-            if(strpos($transitionArr, trim($row['transition'])) === false || strpos($canalArr, trim($row['canal'])) === false){
-            	$transition =  $row['transition'];
-                $canal =  $row["canal"];
-                $referer = $row["referer"];
-                $row["referer"] = $transition;
-                $row["canal"] = $referer;
-                $row['transition'] = $canal;
-            }
-            
-            $row['keywords'] = urldecode($row['keywords']);
-            
+        for($i = 1; $i < count($sheet_array)+1; $i++){
            
 
-                // $ips = Yii::app()->db->createCommand()
-                // ->select("*")
-                // ->from('analytic a')
-                // ->where('a.active=:active AND a.id_us=:id_us', array(':active' => 1, ':id_us'=> $row['id_us']))
-                // ->queryAll();
-                // $ipscount = count($ips);
-                
-                // switch ($ips[$ipscount-1]['subdomen']) {
-                // case '0':
-                //      $domen = 'https://prommu.com';
-                //      break;
-    
-                // case '1':
-                //      $domen = 'https://spb.prommu.com';
-                //      break;
-                 
-                //  default:
-                //      # code...
-                //      break;
-                // }
-                
-                if(strpos($row["point"], "prommu.com")!==false){
-                    $domens = explode("://", $row["point"])[1];
-                    $domen = explode("/", $domens)[0];
-                } else {
-                    $domen = 'prommu.com';
-                }
-                
-                $attribs = Yii::app()->db->createCommand()
-                        ->select("ua.val")
-                        ->from('user_attribs ua')
-                        ->where('ua.key=:key AND ua.id_us = :id_user', array(':key' => 'mob', ':id_user' => $row['id_us']))
-                        ->queryRow();
-                $phone = $attribs['val'];
-
-            if($row['status'] == 2 && $type == 2 || $row['status'] == 2 && $type == 1){
-                $types = "Соискатель";
-                $id_user = $row['id_us'];
-
-                $user = Yii::app()->db->createCommand()
-                ->select("e.firstname, e.lastname, usr.email, e.date_public, e.isman ")
-                ->from('resume e')
-                ->join('user usr', 'usr.id_user=e.id_user')
-                ->where('e.id_user=:id_user', array(':id_user' => $id_user))
-                ->queryRow();
-            
-                    $gender = $user['isman'];    
-                    $firstname = $user['firstname'];
-                    $lastname = $user['lastname'];
-                    
-                    
-                    $email = $user['email'];
-                    $fio = "$firstname ".$lastname;
-                    $ana = 1;
-                    $status = 'активен';
-
-                    if(empty($email) || empty($firstname)){
-                        $user = Yii::app()->db->createCommand()
-                        ->select("ua.data, ua.dt_create, ua.status")
-                        ->from('user_activate ua')
-                        ->where('ua.id_user=:id_user', array(':id_user' => $id_user))
-                        ->queryRow();
-                        $status = 'не активен';
-
-                        $data = json_decode($user['data'], true);
-                        $firstname = $this->encoderSys($data['fname']);
-                        $lastname = $this->encoderSys($data['lname']);
-                        if($user['status'] == 0){
-                            $lastname = $this->encoderSys($data['name']);
-                        }
-                        
-                        $email = $this->encoderSys($data['email']);
-                        $user['date_public'] = $user['dt_create'];
-                    }
-                    
-                    if($firstname == ''){
-                        $firstname = $this->getNameAnonim($gender)['firstname'];
-                        Yii::app()->db->createCommand()
-                                    ->update('resume', array(
-                                           'firstname' => $firstname,
-                                    ), 'id_user=:id_user', array(':id_user' => $id_user));
-                    }
-                    
-                    if($lastname == ''){
-                        $lastname = $this->getNameAnonim($gender)['lastname'];
-                        Yii::app()->db->createCommand()
-                                    ->update('resume', array(
-                                           'lastname' => $lastname,
-                                    ), 'id_user=:id_user', array(':id_user' => $id_user));
-                       
-                    }
-                    
-                    $fio = "$firstname ".$lastname; 
-                    $contact = " ";
-                        
-                    $ip = $row["ip"];
-                    $date1 = explode(" ",$user['date_public'])[0];
-                    $time1 = explode(" ",$user['date_public'])[1];
-                    $day = explode("-", $date1)[2];
-                    $month = explode("-", $date1)[1];
-                    $year = explode("-", $date1)[0];
-                    $csv_file .= '<td>'.$b.$time1.$b_end.
-                    '</td><td>'.$b.$day.$b_end.
-                    '</td><td>'.$b.$month.$b_end.
-                    '</td><td>'.$b.$year.$b_end.
-                    '</td><td>'.$b.$domen.$b_end.
-                    '</td><td>'.$b.$id_user.$b_end.
-                    '</td><td>'.$b.$fio.$b_end.
-                    '</td><td>'.$b.$contact.$b_end.
-                    '</td><td>'.$b.$types.$b_end.
-                    '</td><td>'.$b.$type_feed.$b_end.
-                    '</td><td>'.$b.$phone.$b_end.
-                    '</td><td>'.$b.$email.$b_end.
-                    '</td><td>'.$b.$row["transition"].$b_end.
-                    '</td><td>'.$b.$row["canal"].$b_end.
-                    '</td><td>'.$b.$row["campaign"].$b_end.
-                    '</td><td>'.$b.$row["content"].$b_end.
-                    '</td><td>'.$b.$row["keywords"].$b_end.
-                    '</td><td>'.$b.$row["source"].$b_end.
-                    '</td><td>'.$b.$row['client'].$b_end.
-                    '</td><td>'.$b.$row['ip'].$b_end.
-                    '</td><td>'.$b.$status.$b_end.
-                    '</td></tr>';
-
-
-            } elseif($row['status'] == 3 && $type == 3 || $row['status'] == 3 && $type == 1) {
-            
-                $name = $row['name'];
-                $id_user = $row['id_us'];
-
-                $user = Yii::app()->db->createCommand()
-                ->select("e.name, e.firstname, e.lastname, usr.email, e.crdate")
-                ->from('employer e')
-                ->join('user usr', 'usr.id_user=e.id_user')
-                ->where('e.id_user=:id_user', array(':id_user' => $id_user))
-                ->queryRow();
-
-
-                    $email = $user['email'];
-                    $fio = $user['name'];
-                    $contact = $user['firstname']." ".$user['lastname'];
-                    $types = "Работодатель";
-                    $ana = 1;
-                    $status = 'активен';
-
-                    if(empty($email) || empty($fio)){
-                        $user = Yii::app()->db->createCommand()
-                        ->select("ua.data, ua.dt_create")
-                        ->from('user_activate ua')
-                        ->where('ua.id_user=:id_user', array(':id_user' => $id_user))
-                        ->queryRow();
-
-
-                        $status = 'не активен';
-                        $data = json_decode($user['data'], true);
-                        $firstname = $this->encoderSys($data['fname']);
-                        $lastname = $this->encoderSys($data['lname']);
-                        $name = $this->encoderSys($data['name']);
-                        $fio = $name." ".$firstname." ".$lastname;
-                        $contact = $firstname." ".$lastname;
-                        $email = $data['email'];
-                        $user['crdate'] = $user['dt_create'];
-                     
-                    }
-
-                    $ip = $row["ip"];
-                    $date1 = explode(" ",$user["crdate"])[0];
-                    $time1 = explode(" ",$user["crdate"])[1];
-                    $day = explode("-", $date1)[2];
-                    $month = explode("-", $date1)[1];
-                    $year = explode("-", $date1)[0];
-                    $csv_file .= '<td>'.$b.$time1.$b_end.
-                    '</td><td>'.$b.$day.$b_end.
-                    '</td><td>'.$b.$month.$b_end.
-                    '</td><td>'.$b.$year.$b_end.
-                    '</td><td>'.$b.$domen.$b_end.
-                    '</td><td>'.$b.$id_user.$b_end.
-                    '</td><td>'.$b.$fio.$b_end.
-                    '</td><td>'.$b.$contact.$b_end.
-                    '</td><td>'.$b.$types.$b_end.
-                    '</td><td>'.$b.$type_feed.$b_end.
-                    '</td><td>'.$b.$phone.$b_end.
-                    '</td><td>'.$b.$email.$b_end.
-                    '</td><td>'.$b.$row["transition"].$b_end.
-                    '</td><td>'.$b.$row["canal"].$b_end.
-                    '</td><td>'.$b.$row["campaign"].$b_end.
-                    '</td><td>'.$b.$row["content"].$b_end.
-                    '</td><td>'.$b.$row["keywords"].$b_end.
-                    '</td><td>'.$b.$row["source"].$b_end.
-                    '</td><td>'.$b.$ips[$ipscount-1]['client'].$b_end.
-                    '</td><td>'.$b.$ips[$ipscount-1]['ip'].$b_end.
-                    '</td><td>'.$b.$status.$b_end.
-                    '</td></tr>';
-
-            } 
-
+                $location[] = [
+                    'name' =>  $sheet_array[$i]['B'],
+                    'adres' =>  $sheet_array[$i]['C'].' '.$sheet_array[$i]['D'].' '.$sheet_array[$i]['E'].' '.$sheet_array[$i]['F'],
+                    'id_city' =>  $sheet_array[$i]['A'],
+                    'bdate' =>  explode("-", $sheet_array[$i]['G'])[0],
+                    'edate' =>  explode("-", $sheet_array[$i]['G'])[1],
+                    'btime' => explode("-", $sheet_array[$i]['H'])[0],
+                    'etime' =>  explode("-", $sheet_array[$i]['H'])[1],
+                ];
         }
 
 
-        $csv_file .='</table>';
-        $namefile= date("d")."_".date("m")."_".date("y").'.xls';
-        $file_name = $_SERVER['DOCUMENT_ROOT']."/uploads/$namefile"; // название файла
-        $file = fopen($file_name,"w"); // открываем файл для записи, если его нет, то создаем его в текущей папке, где расположен скрипт
-
-
-        fwrite($file,trim($csv_file)); // записываем в файл строки
-        fclose($file); // закрываем файл
-
-        header('Pragma: no-cache');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Content-Description: File Transfer');
-        //header('Content-Type: text/csv');
-        //header('Content-Disposition: attachment; filename=export.csv;');
-        header('Content-Disposition: attachment; filename='.$namefile);
-        header('Content-transfer-encoding: binary');
-        //header("content-type:application/csv;charset=ANSI");
-        header('Content-Type: text/html; charset=windows-1251');
-        header('Content-Type: application/x-unknown');
-        header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
-        //print "\xEF\xBB\xBF"; // UTF-8 BOM
-        readfile($file_name); // считываем файл
-        
-
-       // $this->exportAutomizeFeedback();
+        return $location;
 
     }
-
-    public function exportAutomizeFeedback($type){
-
-         $date = filter_var(Yii::app()->getRequest()->getParam('date'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-         $bdate = filter_var(Yii::app()->getRequest()->getParam('bdate'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-         $domen = Yii::app()->getRequest()->getParam('domen');
-        //print_r($ids);
-         if($date == "week"){
-            $my_time = time() - 604800; 
-            $yester = date("Y-m-d", $my_time); 
-
-            $data = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('feedback')
-            ->where('crdate >:date', array(':date'=> $yester))
-            ->order("crdate desc")
-            ->queryAll();
-            
-         }
-         else {
-
-             $data = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('feedback')
-            ->where('(crdate BETWEEN :date AND :bdate)', array(':date'=> $date, 'bdate'=> $bdate))
-            ->order("crdate desc")
-            ->queryAll();
-         }
-        
-
-
-         $csv_file = '<table border="1">
-            <tr><td style="color:red; background:#E0E0E0">Время'.
-            '</td><td style="color:red; background:#E0E0E0">День'.
-            '</td><td style="color:red; background:#E0E0E0">Месяц'.
-            '</td><td style="color:red; background:#E0E0E0">Год'.
-            '</td><td style="color:red; background:#E0E0E0">Домен'.
-            '</td><td style="color:red; background:#E0E0E0">Идентификатор'.
-            '</td><td style="color:red; background:#E0E0E0">Пользователь'.
-            '</td><td style="color:red; background:#E0E0E0">Тип'.
-            '</td><td style="color:red; background:#E0E0E0">Тип заявки'.
-            '</td><td style="color:red; background:#E0E0E0">Телефон'.
-            '</td><td style="color:red; background:#E0E0E0">Email'.
-            '</td><td style="color:red; background:#E0E0E0">Источник'.
-            '</td><td style="color:red; background:#E0E0E0">Канал'.
-            '</td><td style="color:red; background:#E0E0E0">Кампания'.
-            '</td><td style="color:red; background:#E0E0E0">Контент'.
-            '</td><td style="color:red; background:#E0E0E0">Ключевое слово'.
-            '</td><td style="color:red; background:#E0E0E0">Площадка'.
-            '</td><td style="color:red; background:#E0E0E0">Client ID'.
-            '</td><td style="color:red; background:#E0E0E0">IP адрес'.
-            '</td><td style="color:red; background:#E0E0E0">Статус'.
-
-'</td></tr>';
-
-
-        
-        foreach ($data as $row) {
-            $csv_file .= '<tr>';
-            $b = "";
-            $b_end = "";
-
-            $domen = 'https://prommu.com';
-            $type_feed = 'обратная связь';
-
-
-            if($row['type'] == 2 && $type == 2){
-
-                $name = $row['name'];
-                $email = $row['email'];
-                $fio = $row['name'];
-                $types = "Соискатель";
-                $ana = 1;
-
-            
-            } elseif($row['type'] == 3 && $type == 3) {
-            
-                $name = $row['name'];
-                $email = $row['email'];
-                $fio = $row['name'];
-                $types = "Работодатель";
-                $ana = 1;
     
 
-            } elseif($row['type'] == 0) {
-            
-                $name = $row['name'];
-                $email = $row['email'];
-                $fio = $row['name'];
-                $types = "Гость";
-                $ana = 1;
-           
-
-            } 
-
-
-
-            if($ana){
-            $keywords = $this->encoderSys($row['keywords']);
-            $date1 = explode(" ",$row["crdate"])[0];
-            $time1 = explode(" ",$row["crdate"])[1];
-            $canal = explode(",", $row["canal"])[0];
-            $transition = explode(",", $row["transition"])[0];
-            $day = explode("-", $date1)[2];
-            $month = explode("-", $date1)[1];
-            $year = explode("-", $date1)[0];
-            $csv_file .= '<td>'.$b.$time1.$b_end.
-                '</td><td>'.$b.$day.$b_end.
-                '</td><td>'.$b.$month.$b_end.
-                '</td><td>'.$b.$year.$b_end.
-                '</td><td>'.$b.$domen.$b_end.
-                '</td><td>'.$b.'(none)'.$b_end.
-                '</td><td>'.$b.$fio.$b_end.
-                '</td><td>'.$b.$types.$b_end.
-                '</td><td>'.$b.$type_feed.$b_end.
-                '</td><td>'.$b.'(none)'.$b_end.
-                '</td><td>'.$b.$email.$b_end.
-                '</td><td>'.$b.$transition.$b_end.
-                '</td><td>'.$b.$canal.$b_end.
-                '</td><td>'.$b.$row["campaign"].$b_end.
-                '</td><td>'.$b.$row["content"].$b_end.
-                '</td><td>'.$b.$keywords.$b_end.
-                '</td><td>'.$b.$row["source"].$b_end.
-                '</td><td>'.$b.$row["client"].$b_end.
-                '</td><td>'.$b.$row["ip"].$b_end.
-                // '</td><td>'.$b.$row["last_referer"].$b_end.
-                // '</td><td>'.$b.$row["date"].$b_end.
-                '</td></tr>';
-            }
-        }
-
-        $csv_file .='</table>';
-        $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/analyt_de.xls'; // название файла
-        $file = fopen($file_name,"w"); // открываем файл для записи, если его нет, то создаем его в текущей папке, где расположен скрипт
-
-
-        fwrite($file,trim($csv_file)); // записываем в файл строки
-        fclose($file); // закрываем файл
-
-       // задаем заголовки. то есть задаем всплывающее окошко, которое позволяет нам сохранить файл.
-        header('Pragma: no-cache');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Content-Description: File Transfer');
-        //header('Content-Type: text/csv');
-        //header('Content-Disposition: attachment; filename=export.csv;');
-        header('Content-Disposition: attachment; filename=analyt_prommu.xls');
-        header('Content-transfer-encoding: binary');
-        //header("content-type:application/csv;charset=ANSI");
-        header('Content-Type: text/html; charset=windows-1251');
-        header('Content-Type: application/x-unknown');
-        header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
-        //print "\xEF\xBB\xBF"; // UTF-8 BOM
-        readfile($file_name); // считываем файл
-
-        // $this->exportAutomizeServices();
-
-    }
-
-    public function exportAutomizeServices(){
-         $date = filter_var(Yii::app()->getRequest()->getParam('date'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-         $bdate = filter_var(Yii::app()->getRequest()->getParam('bdate'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-         $domen = Yii::app()->getRequest()->getParam('domen');
-        //print_r($ids);
-         if($date == "week"){
-            $my_time = time() - 604800; 
-            $yester = date("Y-m-d", $my_time); 
-
-            $data = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('service_cloud')
-            ->where('date >:date', array(':date'=> $yester))
-            ->order("date desc")
-            ->queryAll();
-            
-         }
-         else {
-
-             $data = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('service_cloud')
-            ->where('(date BETWEEN :date AND :bdate)', array(':date'=> $date, 'bdate'=> $bdate))
-            ->order("date desc")
-            ->queryAll();
-         }
-        
-
-
-        $csv_file = '<table border="1">
-            <tr><td style="color:red; background:#E0E0E0">Время'.
-            '</td><td style="color:red; background:#E0E0E0">День'.
-            '</td><td style="color:red; background:#E0E0E0">Месяц'.
-            '</td><td style="color:red; background:#E0E0E0">Год'.
-            '</td><td style="color:red; background:#E0E0E0">Домен'.
-            '</td><td style="color:red; background:#E0E0E0">Идентификатор'.
-            '</td><td style="color:red; background:#E0E0E0">Пользователь'.
-            '</td><td style="color:red; background:#E0E0E0">Контактное лицо'.
-            '</td><td style="color:red; background:#E0E0E0">Тип'.
-            '</td><td style="color:red; background:#E0E0E0">Тип заявки'.
-            '</td><td style="color:red; background:#E0E0E0">Телефон'.
-            '</td><td style="color:red; background:#E0E0E0">Email'.
-            '</td><td style="color:red; background:#E0E0E0">Источник'.
-            '</td><td style="color:red; background:#E0E0E0">Канал'.
-            '</td><td style="color:red; background:#E0E0E0">Кампания'.
-            '</td><td style="color:red; background:#E0E0E0">Контент'.
-            '</td><td style="color:red; background:#E0E0E0">Ключевое слово'.
-            '</td><td style="color:red; background:#E0E0E0">Площадка'.
-            '</td><td style="color:red; background:#E0E0E0">Client ID'.
-            '</td><td style="color:red; background:#E0E0E0">IP адрес'.
-            '</td><td style="color:red; background:#E0E0E0">Статус'.
-
-'</td></tr>';
-
-        
-        foreach ($data as $row) {
-            $csv_file .= '<tr>';
-            $b = "";
-            $b_end = "";
-            $domen = 'https://prommu.com';
-            $type_feed = 'заказ услуг '.$row['type'];           
-           
-            $id_user = $row['id_user'];
-            $user = Yii::app()->db->createCommand()
-            ->select("e.name, e.firstname, e.lastname, usr.email")
-            ->from('employer e')
-            ->join('user usr', 'usr.id_user=e.id_user')
-            ->where('e.id_user=:id_user', array(':id_user' => $id_user))
-            ->queryAll();
-
-             $analyt = Yii::app()->db->createCommand()
-            ->select("a.content, a.keywords, a.campaign, a.canal,
-                a.transition, a.ip, a.client")
-            ->from('analytic a')
-            ->join('user usr', 'usr.id_user=a.id_us')
-            ->where('a.id_us=:id_user', array(':id_user' => $id_user))
-            ->queryAll();
-
-             if($user[0] && $analyt[0]){
-                $email = $user[0]['email'];
-                $fio = $user[0]['name']." ".$user[0]['firstname']." ".$user[0]['lastname'];
-                $contact = $user[0]['firstname']." ".$user[0]['lastname'];
-                $types = "Работодатель";
-                $ana = 1;
-                $keywords = $analyt[0]['keywords'];
-                $content = $analyt[0]['content'];
-                $campaign = $analyt[0]['campaign'];
-                $canal = $analyt[0]['canal'];
-                $transition = $analyt[0]['transition'];
-                $client = $analyt[0]['client'];
-                $ip = $analyt[0]['ip'];
-                $source = $analyt[0]['source'];
-
-                $keywords = $this->encoderSys($keywords);
-                $transition = explode(",", $transition)[0];
-            } elseif ($user[0]) {
-                $email = $user[0]['email'];
-                $fio = $user[0]['name'];
-                $types = "Работодатель";
-                $contact = $user[0]['firstname']." ".$user[0]['lastname'];
-                $ana = 1;
-                $keywords = '(none)';
-                $content = '(none)';
-                $campaign = '(none)';
-                $canal = '(none)';
-                $transition = '(none)';
-                $client = '(none)';
-                $ip = '(none)';
-                $source = '(none)';
-            } else $ana = 0;
-
-
-
-            if($ana){
-            $date1 = explode(" ",$row["date"])[0];
-            $time1 = explode(" ",$row["date"])[1];
-            $canal = explode(",", $canal)[0];
-            $day = explode("-", $date1)[2];
-            $month = explode("-", $date1)[1];
-            $year = explode("-", $date1)[0];
-            $csv_file .= '<td>'.$b.$time1.$b_end.
-                '</td><td>'.$b.$day.$b_end.
-                '</td><td>'.$b.$month.$b_end.
-                '</td><td>'.$b.$year.$b_end.
-                '</td><td>'.$b.$domen.$b_end.
-                '</td><td>'.$b.$id_user.$b_end.
-                '</td><td>'.$b.$fio.$b_end.
-                '</td><td>'.$b.$contact.$b_end.
-                '</td><td>'.$b.$types.$b_end.
-                '</td><td>'.$b.$type_feed.$b_end.
-                '</td><td>'.$b.'(none)'.$b_end.
-                '</td><td>'.$b.$email.$b_end.
-                '</td><td>'.$b.$transition.$b_end.
-                '</td><td>'.$b.$canal.$b_end.
-                '</td><td>'.$b.$campaign.$b_end.
-                '</td><td>'.$b.$content.$b_end.
-                '</td><td>'.$b.$keywords.$b_end.
-                '</td><td>'.$b.$source.$b_end.
-                '</td><td>'.$b.$client.$b_end.
-                '</td><td>'.$b.$ip.$b_end.
-                // '</td><td>'.$b.$row["last_referer"].$b_end.
-                // '</td><td>'.$b.$row["date"].$b_end.
-                '</td></tr>';
-            }
-        }
-
-        $csv_file .='</table>';
-        $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/analyt_de.xls'; // название файла
-        $file = fopen($file_name,"w"); // открываем файл для записи, если его нет, то создаем его в текущей папке, где расположен скрипт
-
-
-        fwrite($file,trim($csv_file)); // записываем в файл строки
-        fclose($file); // закрываем файл
-
-       // задаем заголовки. то есть задаем всплывающее окошко, которое позволяет нам сохранить файл.
-        header('Pragma: no-cache');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Content-Description: File Transfer');
-        //header('Content-Type: text/csv');
-        //header('Content-Disposition: attachment; filename=export.csv;');
-        header('Content-Disposition: attachment; filename=analyt_prommu.xls');
-        header('Content-transfer-encoding: binary');
-        //header("content-type:application/csv;charset=ANSI");
-        header('Content-Type: text/html; charset=windows-1251');
-        header('Content-Type: application/x-unknown');
-        header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
-        //print "\xEF\xBB\xBF"; // UTF-8 BOM
-        readfile($file_name); // считываем файл
-
-    }
-
-    public function encoderSys($eco){
-        
-        $eco = urldecode($eco);
-        $eco = $this->json_fix_cyr($eco);
-        return $eco;
-
-    }
-
-    function json_fix_cyr($json_str) {
-         $cyr_chars = array (
-        '\u0430' => 'а', '\u0410' => 'А',
-        '\u0431' => 'б', '\u0411' => 'Б',
-        '\u0432' => 'в', '\u0412' => 'В',
-        '\u0433' => 'г', '\u0413' => 'Г',
-        '\u0434' => 'д', '\u0414' => 'Д',
-        '\u0435' => 'е', '\u0415' => 'Е',
-        '\u0451' => 'ё', '\u0401' => 'Ё',
-        '\u0436' => 'ж', '\u0416' => 'Ж',
-        '\u0437' => 'з', '\u0417' => 'З',
-        '\u0438' => 'и', '\u0418' => 'И',
-        '\u0439' => 'й', '\u0419' => 'Й',
-        '\u043a' => 'к', '\u041a' => 'К',
-        '\u043b' => 'л', '\u041b' => 'Л',
-        '\u043c' => 'м', '\u041c' => 'М',
-        '\u043d' => 'н', '\u041d' => 'Н',
-        '\u043e' => 'о', '\u041e' => 'О',
-        '\u043f' => 'п', '\u041f' => 'П',
-        '\u0440' => 'р', '\u0420' => 'Р',
-        '\u0441' => 'с', '\u0421' => 'С',
-        '\u0442' => 'т', '\u0422' => 'Т',
-        '\u0443' => 'у', '\u0423' => 'У',
-        '\u0444' => 'ф', '\u0424' => 'Ф',
-        '\u0445' => 'х', '\u0425' => 'Х',
-        '\u0446' => 'ц', '\u0426' => 'Ц',
-        '\u0447' => 'ч', '\u0427' => 'Ч',
-        '\u0448' => 'ш', '\u0428' => 'Ш',
-        '\u0449' => 'щ', '\u0429' => 'Щ',
-        '\u044a' => 'ъ', '\u042a' => 'Ъ',
-        '\u044b' => 'ы', '\u042b' => 'Ы',
-        '\u044c' => 'ь', '\u042c' => 'Ь',
-        '\u044d' => 'э', '\u042d' => 'Э',
-        '\u044e' => 'ю', '\u042e' => 'Ю',
-        '\u044f' => 'я', '\u042f' => 'Я',
- 
-        '\r' => '',
-        '\n' => '<br />',
-        '\t' => ''
-    );
- 
-        foreach ($cyr_chars as $cyr_char_key => $cyr_char) {
-            $json_str = str_replace($cyr_char_key, $cyr_char, $json_str);
-        }
-        return $json_str;
-    }
-    
     public function ideas(){
          $data = Yii::app()->db->createCommand()
             ->select("*")
@@ -1065,16 +651,17 @@ class Api
 
             }
 
+
     }
 
-     public function teSt(){
+ public function teSt(){
       
             // $arr['analyt'] = $rest;
             // $arr['resume'] = $rests;
 
             // return $arr;
-        $lines = file_get_contents('https://prommu.com/protected/models/11.txt');
-      
+        $lines = file_get_contents('https://dev.prommu.com/protected/models/11.txt');
+        echo $lines;
         $liness = explode("зарегистрирован новый пользователь", $lines);
         $count = count($liness);
         $linesss = $liness;
@@ -1110,13 +697,13 @@ class Api
             $sql = "SELECT r.id_us
             FROM analytic r
             WHERE r.id_us = {$users}";
-        	$red = Yii::app()->db->createCommand($sql);
-        	$log = $red->queryRow();
+            $red = Yii::app()->db->createCommand($sql);
+            $log = $red->queryRow();
             echo $log['id_us'];
             if($log['id_us'] == $users) {
-            	  	echo "heee";
+                    echo "heee";
             } else {
-          	
+            
                      $analytData = array('id_us' => $users,
                         'name' => $names,
                         'date' =>  date('Y-m-d H:i:s'),
@@ -1132,14 +719,14 @@ class Api
                         'active' => 1,
                     );
 
-        		$res = Yii::app()->db->createCommand()
+                $res = Yii::app()->db->createCommand()
                         ->insert('analytic', $analytData);
 
 
-        	}
+            }
           }
 
-      		
+            
 
         }
         
@@ -1154,9 +741,31 @@ class Api
          $promo = Yii::app()->getRequest()->getParam('promo');
          $email = Yii::app()->getRequest()->getParam('email');
          $userid =  Yii::app()->getRequest()->getParam('userid');
-         $provider =  Yii::app()->getRequest()->getParam('provider');
     
-
+        if(empty($code)){
+            
+            $res['error'] = -101;
+            $res['message'] = 'Отсутствует параметр code';
+            
+            return $res;
+        }
+        
+        
+        if(empty($email)){
+            
+            $res['error'] = -101;
+            $res['message'] = 'Отсутствует параметр email';
+            
+            return $res;
+        }
+        
+        if(empty($userid)){
+            
+            $res['error'] = -101;
+            $res['message'] = 'Отсутствует параметр userid';
+            
+            return $res;
+        }
         $usData = Yii::app()->db->createCommand()
                 ->select("u.userid, u.pass, u.email")
                 ->from('user_api u')
@@ -1169,32 +778,11 @@ class Api
             return $rest;
         }else{
 
-            if($provider == 'vk') {
-                $ch = curl_init("https://api.vk.com/method/users.get.json?user_ids=$userid&fields=nickname,sex,bdate,city,country,timezone,photo,photo_medium,photo_big,photo_rec,email&access_token=$code&v=V");
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-                curl_setopt($ch, CURLOPT_POST, 0); 
-                $responses = curl_exec($ch); 
-                $responses = json_decode($responses, true);
-
-                $firstname = $responses['response'][0]['first_name'];
-                $lastname = $responses['response'][0]['last_name'];
-
-            } elseif($provider == 'fb'){
-                $ch = curl_init("https://graph.facebook.com/v2.8/$userid?fields=id,name&access_token=$code");
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-                curl_setopt($ch, CURLOPT_POST, 0); 
-                $responses = curl_exec($ch); 
-                $responses = json_decode($responses, true);
-                $photo = "https://graph.facebook.com/$userid/picture?height=400&width=400";
-                $filename = time();
-                file_put_contents("/uploads/{$filename}.jpg", file_get_contents($photo));
-                $f=fopen("{$filename}.jpg","rb");
-                $upload=fread($f,filesize("{$filename}.jpg"));
-    
-                $firstname = explode(' ', $responses['name'])[0];
-                $lastname = explode(' ', $responses['name'])[1];
-            }
-
+        $ch = curl_init("https://api.vk.com/method/users.get.json?user_ids=$userid&fields=nickname,sex,bdate,city,country,timezone,photo,photo_medium,photo_big,photo_rec,email&access_token=$code&v=V"); 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+        curl_setopt($ch, CURLOPT_POST, 0); 
+        $responses = curl_exec($ch); 
+        $responses = json_decode($responses, true);
 
          $rest['password'] = rand(1111,9999)."prommu".rand(1111,9999);
         $salt = '$2a$10$'.substr(str_replace('+', '.', base64_encode(pack('N4', mt_rand(), mt_rand(), mt_rand(),mt_rand()))), 0, 22) . '$';
@@ -1213,9 +801,9 @@ class Api
                 ->insert('user_api', array(
                     'password' => $token,
                     'id' => $pid,
-                    'firstName' => $fistname,
+                    'firstName' => $responses['response'][0]['first_name'],
                     'date' => date('Y-m-d H:i:s'),
-                    'lastName' => $lastname,
+                    'lastName' => $responses['response'][0]['last_name'],
                     'email' =>  $email,
                     'userid' => $userid,
                     'pass' => $rest['password'],
@@ -1250,22 +838,15 @@ class Api
                         'rate' => 0,
                         'city_id' => 1307,
                         'post_id' => 111, ));
-                        
-                    $res = Yii::app()->db->createCommand()
-                        ->insert('photo', array(
-                        'user_id' => $pid,
-                        'image' => $upload,
-                    ));
-                
         } elseif($promo == 0) {
 
             $res = Yii::app()->db->createCommand()
                 ->insert('user_api', array(
                     'password' => $token,
                     'id' => $pid,
-                    'firstName' => $firstname,
+                    'firstName' => $responses['response'][0]['first_name'],
                     'date' => date('Y-m-d H:i:s'),
-                    'lastName' => $lastname,
+                    'lastName' => $responses['response'][0]['last_name'],
                     'email' =>  $email,
                     'userid' => $userid,
                     'pass' => $rest['password'],
@@ -1283,7 +864,7 @@ class Api
                  $res = Yii::app()->db->createCommand()
                     ->insert('employer_company', array(
                         'id' => $pids,
-                        'name' => $lastname,
+                        'name' => $responses['response'][0]['last_name'],
                         'webSite' => 'prommu.com',
                         'city_id' => 1307,
                         'company_type_id' => 102,
@@ -1298,50 +879,197 @@ class Api
                         'post_id' => 112,
                         'user_id' => $pid,
                     ));
-                    
-                    $res = Yii::app()->db->createCommand()
-                        ->insert('photo', array(
-                        'user_id' => $pid,
-                        'image' => $upload,
-                    ));
-                    
         }
        
 
             $rest['email'] = $email;
             return $rest;
         }
+    }
+    
+    public function apiSocial(){
+         $code = Yii::app()->getRequest()->getParam('code');
+         $promo = Yii::app()->getRequest()->getParam('promo');
+         $email = Yii::app()->getRequest()->getParam('email');
+         $userid =  Yii::app()->getRequest()->getParam('userid');
+    
+        if(empty($code)){
+            
+            $res['error'] = -101;
+            $res['message'] = 'Отсутствует параметр code';
+            
+            return $res;
+        }
+        
+        if(empty($promo)){
+            
+            $res['error'] = -101;
+            $res['message'] = 'Отсутствует параметр promo';
+            
+            return $res;
+        }
+        
+        if(empty($email)){
+            
+            $res['error'] = -101;
+            $res['message'] = 'Отсутствует параметр email';
+            
+            return $res;
+        }
+        
+        if(empty($userid)){
+            
+            $res['error'] = -101;
+            $res['message'] = 'Отсутствует параметр userid';
+            
+            return $res;
+        }
+        $usData = Yii::app()->db->createCommand()
+                ->select("u.userid, u.pass, u.email")
+                ->from('user_api u')
+                ->where('u.userid = :user_id', array(':user_id' =>$userid))
+                ->queryRow();
 
+        if($usData['userid'] == $userid) {
+            $rest['email'] = $usData['email'];
+            $rest['password'] = $usData['pass'];
+            return $rest;
+        }else{
+
+        $ch = curl_init("https://api.vk.com/method/users.get.json?user_ids=$userid&fields=nickname,sex,bdate,city,country,timezone,photo,photo_medium,photo_big,photo_rec,email&access_token=$code&v=V"); 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+        curl_setopt($ch, CURLOPT_POST, 0); 
+        $responses = curl_exec($ch); 
+        $responses = json_decode($responses, true);
+
+         $rest['password'] = rand(1111,9999)."prommu".rand(1111,9999);
+        $salt = '$2a$10$'.substr(str_replace('+', '.', base64_encode(pack('N4', mt_rand(), mt_rand(), mt_rand(),mt_rand()))), 0, 22) . '$';
+        $token = crypt($rest['password'], $salt);
+
+         $pid = Yii::app()->db->createCommand("SELECT u.id_user  FROM  user u WHERE u.id_user = (SELECT MAX(u.id_user)  FROM user u)")->queryScalar();
+         $pid+1;
+         if($email == "") $email = $rest['password']."@prommu.com";
+
+              
+                
+
+        if($promo == 1) {
+
+             $res = Yii::app()->db->createCommand()
+                ->insert('user_api', array(
+                    'password' => $token,
+                    'id' => $pid,
+                    'firstName' => $responses['response'][0]['first_name'],
+                    'date' => date('Y-m-d H:i:s'),
+                    'lastName' => $responses['response'][0]['last_name'],
+                    'email' =>  $email,
+                    'userid' => $userid,
+                    'pass' => $rest['password'],
+                ));
+
+             $res = Yii::app()->db->createCommand()
+                ->insert('_user_role', array(
+                    'user_id' => $pid,
+                    'role_id' => 1,
+                    ));
+
+                 $pids = Yii::app()->db->createCommand("SELECT u.id  FROM  resume u WHERE u.id = (SELECT MAX(u.id)  FROM resume u)")->queryScalar();
+                     $pids+1;
+
+                $bdate = explode(".", $responses['response'][0]['bdate']);
+                 $res = Yii::app()->db->createCommand()
+                    ->insert('promo', array(
+                        'id' => $pids,
+                        'sex' => "MALE",
+                        'birthday' => $bdate[2].".".$bdate[1].".".$bdate[0],
+                        'car_exists' => false,
+                        'med_cert_exists' => false, 
+                        'about' => ' ',
+                        'user_id' => $pid,
+                        'pay' => ' '
+                    ));
+
+
+                    $res = Yii::app()->db->createCommand()
+                    ->insert('promo_target_vacancy', array(
+                        'promo_id' => $pids,
+                        'rate' => 0,
+                        'city_id' => 1307,
+                        'post_id' => 111, ));
+        } elseif($promo == 0) {
+
+            $res = Yii::app()->db->createCommand()
+                ->insert('user_api', array(
+                    'password' => $token,
+                    'id' => $pid,
+                    'firstName' => $responses['response'][0]['first_name'],
+                    'date' => date('Y-m-d H:i:s'),
+                    'lastName' => $responses['response'][0]['last_name'],
+                    'email' =>  $email,
+                    'userid' => $userid,
+                    'pass' => $rest['password'],
+                ));
+
+             $res = Yii::app()->db->createCommand()
+                ->insert('_user_role', array(
+                    'user_id' => $pid,
+                    'role_id' => 2,
+                    ));
+
+                $pids = Yii::app()->db->createCommand("SELECT u.id  FROM  employer u WHERE u.id = (SELECT MAX(u.id)  FROM employer u)")->queryScalar();
+                     $pids+1;
+
+                 $res = Yii::app()->db->createCommand()
+                    ->insert('employer_company', array(
+                        'id' => $pids,
+                        'name' => $responses['response'][0]['last_name'],
+                        'webSite' => 'prommu.com',
+                        'city_id' => 1307,
+                        'company_type_id' => 102,
+                    ));
+
+
+                    $res = Yii::app()->db->createCommand()
+                    ->insert('employer_api', array(
+                        'id' => $pids,
+                        'vacancy' => 0,
+                        'company_id' => $pids,
+                        'post_id' => 112,
+                        'user_id' => $pid,
+                    ));
+        }
+       
+
+            $rest['email'] = $email;
+            return $rest;
+        }
     }
 
     public function testLog(){
         $section = file_get_contents('https://prommu.com/protected/runtime/application.log');
         $section = explode("---", $section);
-        
+        echo $section[160];
        $sql = "SELECT r.text
             FROM log r
             WHERE r.id = 1";
         $red = Yii::app()->db->createCommand($sql);
         $log = $red->queryScalar();
-        
-        
+        echo count($section)-2;
          Yii::app()->db->createCommand()
                 ->update('log', array(
                     'text' => count($section)-2,
                 ), 'id = :id', array(':id' => 1));
-                
                 $j = 0;
-                
         for($i = $log; $i < count($section)-1; $i ++) {
             //@prommubag
-            if(strpos($section[$i],"system.db.CDbCommand") ==! false){
-                
+            if(strpos($section[$i], "404") === false || strpos($section[$i], "CDbCommandBuilder") === false){
+            
                 $items[$j] = $section[$i];
                 $module = explode("/var", $items[$j]);
                 $dat = explode("[", $items[$j]);
-                $text = " 🥴 Туууууут тааааакоооооее! Вроде баг, не?  ".$items[$j]." ".$module[1]." детальное описание ошибки - https://prommu.com/admin/site/monitoring";
-              $sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=$text";
-            file_get_contents($sendto);
+                $text = "Что-то сломалось, ".$dat[0]." ".$module[1]." детальное описание ошибки - https://prommu.com/admin/site/monitoring";
+             // $sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=$text";
+             //           file_get_contents($sendto);
                        $j++;
             } else unset($section[$i]);  
             
@@ -1436,17 +1164,95 @@ class Api
 
     }
 
-   
+    public function mailBox()
+    {
+        Im::sendEmailNotifications();
+        $termostat = new Termostat;
+        $termostat->sendEmailNotifications();
 
+        return Mailing::send();
+    }
+    
+    private function requestStatus($code) {
+        $status = array(
+            200 => 'OK',
+            404 => 'Not Found',
+            405 => 'Method Not Allowed',
+            500 => 'Internal Server Error',
+        );
+        return ($status[$code])?$status[$code]:$status[500];
+    }
+    
     public function authUsers()
     {
         $Auth = new Auth();
-        return $Auth->doAPIAuth();
+        $login = Yii::app()->getRequest()->getParam('login');
+        $code = Yii::app()->getRequest()->getParam('code');
+        $res = $Auth->doAPIAuth();
+        
+        if(empty($res['error']) && !empty($code) && $res['status'] == 2){
+            $activate = Yii::app()->db->createCommand()
+            ->select("r.code")
+            ->from('activate r')
+            ->where('r.phone = :login AND r.code = :code', array(':login' => $login, ':code' => $code))
+            ->queryRow();
+            
+            
+            if($activate['code'] == $code){
+                Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'isblocked' => 0,
+                ), 'id_user=:id_user', array(':id_user' => $res['id']));
+
+                return $res;
+            } 
+            else
+            {
+                $res = [];
+                $res['error'] = '102';
+                $res['message'] = 'Некорректный код подтверждения';
+                return $res;
+            }
+        } 
+        elseif(empty($res['error']) && empty($code) && $res['status'] == 2)
+        {
+            $code = rand(1111,9999);
+            $rest = Yii::app()->db->createCommand()
+                                ->insert('activate', array('id' => $code,
+                                    'id' => $code,
+                                    'code' => $code,
+                                    'phone' => $login,
+                                    'email' => $login,
+                                    'date' => date("Y-m-d h-i-s"),
+                                    ));
+                                    
+            if(strpos($login, '@') === false){
+                        
+                $res['code'] = $this->teleProms($login, $code);
+                        
+            } else {
+                $message = '<p style="font-size:16px">Ваш код для потдверждения регистрации <br/><p style="text-align:center">'.$code.'</p></p>';
+                Share::sendmail($login, "Prommu.com. Код подтверждения регистрации", $message);
+            }
+            
+            $res = [];
+            $res['code'] = 1;
+            $res['message'] = 'Отправлен код подтверждения';
+            return $res;
+             
+        } else {
+            
+            return $res;
+        }
+       
+       
     }
 
     public function feedback(){
         $autotype = 0;
-        $type = 0;
+        $app = Yii::app()->getRequest()->getParam('app');
+        $id = Yii::app()->getRequest()->getParam('id');
+        $type = filter_var(Yii::app()->getRequest()->getParam('type'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $theme = "Вопрос в приложении: ";
         $name = filter_var(Yii::app()->getRequest()->getParam('name'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $them = filter_var(Yii::app()->getRequest()->getParam('theme'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -1455,7 +1261,9 @@ class Api
         $theme.=$them;
 
         $Feedback = new Feedback();
-        $Feedback->SaveData();
+        $res = $Feedback->SaveData();
+        
+        return $res;
     }
 
     public function rere()
@@ -1498,7 +1306,7 @@ class Api
                 $salt = '$2a$10$'.substr(str_replace('+', '.', base64_encode(pack('N4', mt_rand(), mt_rand(), mt_rand(),mt_rand()))), 0, 22) . '$';
                 
 
-                 $resume = Yii::app()->db->createCommand()
+            $resume = Yii::app()->db->createCommand()
             ->select("u.isman, u.ismed, u.ishasavto,u.id, u.birthday, u.aboutme, u.firstname, u.lastname ")
             ->from('resume u')
             ->leftJoin('user r', 'r.id_user = u.id_user')
@@ -1710,16 +1518,14 @@ class Api
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post); 
         $response = curl_exec($ch); 
         curl_close($ch); 
-        
-        return $response;
     
 
     }
 
-    public function teleProms(){
+    public function teleProms($telephone = 0, $text = ''){
 
-        $telephone = Yii::app()->getRequest()->getParam('phone');
-        $text = Yii::app()->getRequest()->getParam('code');
+        $telephone = $telephone?:Yii::app()->getRequest()->getParam('phone');
+        $text = $text?:Yii::app()->getRequest()->getParam('code');
         $text = "-PROMMU.COM- $text";
 
 
@@ -1789,148 +1595,6 @@ class Api
 
         return $response;
     
-
-    }
-
-    public function exportFeedback(){
-
-         $date = filter_var(Yii::app()->getRequest()->getParam('date'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-         $bdate = filter_var(Yii::app()->getRequest()->getParam('bdate'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-         $domen = Yii::app()->getRequest()->getParam('domen');
-        //print_r($ids);
-         if($date == "week"){
-            $my_time = time() - 604800; 
-            $yester = date("Y-m-d", $my_time); 
-              $data = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('feedback')
-            ->where('crdate >:date', array(':date'=> $yester))
-            ->order("crdate desc")
-            ->queryAll();
-            
-         }
-         else {
-            $data = Yii::app()->db->createCommand()
-            ->select("*")
-            ->from('feedback')
-            ->where('crdate >:date', array(':date'=> $yester))
-            ->order("crdate desc")
-            ->queryAll();
-         }
-        
-
-            $ac = "Пользователь";
-            $type = "Тип";
-            $referer = "Источник";
-            $Canal = "Канал";
-            $Campaign = "Кампания";
-            $Content = "Контент";
-            $Keywords = "Ключевые слова";
-            $Point = "Поинт";
-            $Last_referer = "Последний реферер";
-            $Name = "Имя/Фамилия";
-            $Date = "Дата";
-            $Email = "Email";
-
-        $csv_file = '<table border="1">
-            <tr><td style="color:red; background:#E0E0E0">'.'ID'.
-            '</td><td style="color:red; background:#E0E0E0">'.$Name.
-            '</td><td style="color:red; background:#E0E0E0">'.$type.
-            '</td><td style="color:red; background:#E0E0E0">'.$referer.
-            '</td><td style="color:red; background:#E0E0E0">'.$Canal.
-            '</td><td style="color:red; background:#E0E0E0">'.$Campaign.
-            '</td><td style="color:red; background:#E0E0E0">'.$Content.
-            '</td><td style="color:red; background:#E0E0E0">'.$Keywords.
-            '</td><td style="color:red; background:#E0E0E0">'.$Email.
-            '</td><td style="color:red; background:#E0E0E0">'.$Date.
-            '</td><td style="color:red; background:#E0E0E0">'.$Point.
-
-
-'</td></tr>';
-
-        foreach ($data as $row) {
-
-
-            $csv_file .= '<tr>';
-            $b = "";
-            $b_end = "";
-            // if ($row["k"]==0) {
-            //     $b = '<b>';
-            //     $b_end = '</b>';
-            // }
-            if($row['type'] == 2){
-                $types = "Соискатель";
-                $id_user = $row['id_us'];
-                $user = Yii::app()->db->createCommand()
-            ->select("e.firstname, e.lastname, usr.email")
-            ->from('resume e')
-            ->join('user usr', 'usr.id_user=e.id_user')
-            ->where('e.id_user=:id_user', array(':id_user' => $id_user))
-            ->queryAll();
-            if($user[0]){
-                $firstname = $user[0]['firstname'];
-                $lastname = $user[0]['lastname'];
-                $email = $user[0]['email'];
-                $fio = "$firstname ".$lastname;
-                $ana = 1;
-            } else $ana = 0;
-
-            
-            }
-            elseif($row['type'] == 3){
-            
-            $name = $row['name'];
-            
-            $id_user = $row['id_us'];
-                $user = Yii::app()->db->createCommand()
-            ->select("e.name, e.firstname, e.lastname, usr.email")
-            ->from('employer e')
-            ->join('user usr', 'usr.id_user=e.id_user')
-            ->where('e.id_user=:id_user', array(':id_user' => $id_user))
-            ->queryAll();
-             if($user[0]){
-                $email = $user[0]['email'];
-                $fio = $user[0]['name']." ".$user[0]['firstname']." ".$user[0]['lastname'];
-                $types = "Работодатель";
-                $ana = 1;
-            } else $ana = 0;
-
-            } 
-
-            if($ana){
-            $csv_file .= '<td>'.$b.$row["name"].$b_end.
-                '</td><td>'.$b.$types.$b_end.
-                '</td><td>'.$b.$row["theme"].$b_end.
-                '</td><td>'.$b.$row["email"].$b_end.
-                '</td><td>'.$b.$row["text"].$b_end.
-                '</td><td>'.$b.$row["date"].$b_end.
-                '</td></tr>';
-            }
-        }
-
-        $csv_file .='</table>';
-        $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/feedback_de.xls'; // название файла
-        $file = fopen($file_name,"w"); // открываем файл для записи, если его нет, то создаем его в текущей папке, где расположен скрипт
-
-
-        fwrite($file,trim($csv_file)); // записываем в файл строки
-        fclose($file); // закрываем файл
-
-       // задаем заголовки. то есть задаем всплывающее окошко, которое позволяет нам сохранить файл.
-        header('Pragma: no-cache');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Content-Description: File Transfer');
-        //header('Content-Type: text/csv');
-        //header('Content-Disposition: attachment; filename=export.csv;');
-        header('Content-Disposition: attachment; filename=feedback_prommu.xls');
-        header('Content-transfer-encoding: binary');
-        //header("content-type:application/csv;charset=ANSI");
-        header('Content-Type: text/html; charset=UTF-8');
-        header('Content-Type: application/x-unknown');
-        header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
-        //print "\xEF\xBB\xBF"; // UTF-8 BOM
-        readfile($file_name); // считываем файл
 
     }
 
@@ -2082,6 +1746,696 @@ class Api
         //print "\xEF\xBB\xBF"; // UTF-8 BOM
         readfile($file_name); // считываем файл
 
+    }
+
+     public function exportAutomize(){
+
+         $date = filter_var(Yii::app()->getRequest()->getParam('date'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+         $bdate = filter_var(Yii::app()->getRequest()->getParam('bdate'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+         $bdate = date('Y-m-d', strtotime($bdate. ' + 1 days'));
+         $domen = Yii::app()->getRequest()->getParam('domen');
+        //print_r($ids);
+         if($date == "week"){
+            $my_time = time() - 604800; 
+            $yester = date("Y-m-d", $my_time); 
+              $data = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('analytic a')
+            ->join('user usr', 'usr.id_user=a.id_us')
+            ->where('a.active=:active AND usr.crdate >:date', array(':active' => 1, ':date'=> $yester))
+            ->order("a.id_us desc")
+            ->queryAll();
+            
+         }
+         else {
+               $data = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('analytic a')
+            ->join('user usr', 'usr.id_user=a.id_us')
+            ->where('a.active=:active AND (usr.crdate BETWEEN :date AND :bdate)  AND a.name!=:name', array(':active' => 1, ':date'=> $date, 'bdate'=> $bdate, 'name'=>'NO ACTIVE'))
+            ->order("a.id_us desc")
+            ->group("a.id_us")
+            ->queryAll();
+         }
+            
+
+
+        $csv_file = '<table border="1">
+            <tr><td style="color:red; background:#E0E0E0">Время'.
+            '</td><td style="color:red; background:#E0E0E0">День'.
+            '</td><td style="color:red; background:#E0E0E0">Месяц'.
+            '</td><td style="color:red; background:#E0E0E0">Год'.
+            '</td><td style="color:red; background:#E0E0E0">Домен'.
+            '</td><td style="color:red; background:#E0E0E0">Идентификатор'.
+            '</td><td style="color:red; background:#E0E0E0">Пользователь'.
+            '</td><td style="color:red; background:#E0E0E0">Тип'.
+            '</td><td style="color:red; background:#E0E0E0">Тип заявки'.
+            '</td><td style="color:red; background:#E0E0E0">Телефон'.
+            '</td><td style="color:red; background:#E0E0E0">Email'.
+            '</td><td style="color:red; background:#E0E0E0">Источник'.
+            '</td><td style="color:red; background:#E0E0E0">Канал'.
+            '</td><td style="color:red; background:#E0E0E0">Кампания'.
+            '</td><td style="color:red; background:#E0E0E0">Контент'.
+            '</td><td style="color:red; background:#E0E0E0">Ключевое слово'.
+            '</td><td style="color:red; background:#E0E0E0">Площадка'.
+            '</td><td style="color:red; background:#E0E0E0">IP адрес'.
+            '</td><td style="color:red; background:#E0E0E0">Client ID'.
+            '</td><td style="color:red; background:#E0E0E0">Статус'.
+
+'</td></tr>';
+        
+        foreach ($data as $row) {
+        
+            
+            $csv_file .= '<tr>';
+            $b = "";
+            $b_end = "";
+
+            $type_feed = 'регистрация';
+
+            switch ($row['subdomen']) {
+            case '0':
+                 $domen = 'https://prommu.com';
+                 break;
+
+            case '1':
+                 $domen = 'https://spb.prommu.com';
+                 break;
+             
+             default:
+                 # code...
+                 break;
+            }
+
+            if(strpos('yandex,yandex.ru,away.vk.com,google,facebook', $row['canal']) !== false) {
+                    $row["canal"] = $row['referer'];
+                    $row["referer"] = $row['transition'];
+                    $row['transition'] = $row['canal']; 
+                                   
+                }
+
+                if(strpos($row["canal"], "cpc") !== false) {
+                    $row["canal"] = explode(" ", $row["canal"])[0];
+                                   
+                }
+              
+
+                $attribs = Yii::app()->db->createCommand()
+                        ->select("ua.val")
+                        ->from('user_attribs ua')
+                        ->where('ua.key=:key AND ua.id_us = :id_user', array(':key' => 'mob', ':id_user' => $row['id_us']))
+                        ->queryRow();
+                $phone = $attribs['val'];
+
+            if($row['type'] == 2){
+                $types = "Соискатель";
+                $id_user = $row['id_us'];
+
+                $user = Yii::app()->db->createCommand()
+                ->select("e.firstname, e.lastname, usr.email, e.date_public ")
+                ->from('resume e')
+                ->join('user usr', 'usr.id_user=e.id_user')
+                ->where('e.id_user=:id_user', array(':id_user' => $id_user))
+                ->queryRow();
+            
+                
+                    $firstname = $user['firstname'];
+                    $lastname = $user['lastname'];
+                    $email = $user['email'];
+                    $fio = "$firstname ".$lastname;
+                    $ana = 1;
+                    $status = 'активен';
+
+                    if(empty($email)){
+                        $user = Yii::app()->db->createCommand()
+                        ->select("ua.data, ua.dt_create, ua.status")
+                        ->from('user_activate ua')
+                        ->where('ua.id_user=:id_user', array(':id_user' => $id_user))
+                        ->queryRow();
+                        $status = 'не активен';
+
+                        $data = json_decode($user['data'], true);
+                        $firstname = $this->encoderSys($data['firstname']);
+                        $lastname = $this->encoderSys($data['lastname']);
+                        if($user['status'] == 0){
+                            $lastname = $this->encoderSys($data['name']);
+                        }
+                        $fio = "$firstname ".$lastname; 
+                        $email = $this->encoderSys($data['email']);
+                        $user['date_public'] = $user['dt_create'];
+                    }
+
+                    $date1 = explode(" ",$user['date_public'])[0];
+                    $time1 = explode(" ",$user['date_public'])[1];
+                    $day = explode("-", $date1)[2];
+                    $month = explode("-", $date1)[1];
+                    $year = explode("-", $date1)[0];
+                    $csv_file .= '<td>'.$b.$time1.$b_end.
+                    '</td><td>'.$b.$day.$b_end.
+                    '</td><td>'.$b.$month.$b_end.
+                    '</td><td>'.$b.$year.$b_end.
+                    '</td><td>'.$b.$domen.$b_end.
+                    '</td><td>'.$b.$id_user.$b_end.
+                    '</td><td>'.$b.$fio.$b_end.
+                    '</td><td>'.$b.$types.$b_end.
+                    '</td><td>'.$b.$type_feed.$b_end.
+                    '</td><td>'.$b.$phone.$b_end.
+                    '</td><td>'.$b.$email.$b_end.
+                    '</td><td>'.$b.$row["transition"].$b_end.
+                    '</td><td>'.$b.$row["canal"].$b_end.
+                    '</td><td>'.$b.$row["campaign"].$b_end.
+                    '</td><td>'.$b.$row["content"].$b_end.
+                    '</td><td>'.$b.$row["keywords"].$b_end.
+                    '</td><td>'.$b.$row["source"].$b_end.
+                    '</td><td>'.$b.$row["ip"].$b_end.
+                    '</td><td>'.$b.$row["client"].$b_end.
+                    '</td><td>'.$b.$status.$b_end.
+                    '</td></tr>';
+
+
+            } elseif($row['type'] == 3) {
+            
+                $name = $row['name'];
+                $id_user = $row['id_us'];
+
+                $user = Yii::app()->db->createCommand()
+                ->select("e.name, e.firstname, e.lastname, usr.email, e.crdate")
+                ->from('employer e')
+                ->join('user usr', 'usr.id_user=e.id_user')
+                ->where('e.id_user=:id_user', array(':id_user' => $id_user))
+                ->queryRow();
+
+
+                    $email = $user['email'];
+                    $fio = $user['name']." ".$user['firstname']." ".$user['lastname'];
+                    $types = "Работодатель";
+                    $ana = 1;
+                    $status = 'активен';
+
+                    if(empty($email)){
+                        $user = Yii::app()->db->createCommand()
+                        ->select("ua.data, ua.dt_create")
+                        ->from('user_activate ua')
+                        ->where('ua.id_user=:id_user', array(':id_user' => $id_user))
+                        ->queryRow();
+
+
+                        $status = 'не активен';
+                        $data = json_decode($user['data'], true);
+                        $firstname = $this->encoderSys($data['firstname']);
+                        $lastname = $this->encoderSys($data['lastname']);
+                        $name = $this->encoderSys($data['name']);
+                        $fio = $name." ".$firstname." ".$lastname;
+                        $email = $data['email'];
+                        $user['crdate'] = $user['dt_create'];
+                     
+                    }
+                    $date1 = explode(" ",$user["crdate"])[0];
+                    $time1 = explode(" ",$user["crdate"])[1];
+                    $day = explode("-", $date1)[2];
+                    $month = explode("-", $date1)[1];
+                    $year = explode("-", $date1)[0];
+                    $csv_file .= '<td>'.$b.$time1.$b_end.
+                    '</td><td>'.$b.$day.$b_end.
+                    '</td><td>'.$b.$month.$b_end.
+                    '</td><td>'.$b.$year.$b_end.
+                    '</td><td>'.$b.$domen.$b_end.
+                    '</td><td>'.$b.$id_user.$b_end.
+                    '</td><td>'.$b.$fio.$b_end.
+                    '</td><td>'.$b.$types.$b_end.
+                    '</td><td>'.$b.$type_feed.$b_end.
+                    '</td><td>'.$b.$phone.$b_end.
+                    '</td><td>'.$b.$email.$b_end.
+                    '</td><td>'.$b.$row["transition"].$b_end.
+                    '</td><td>'.$b.$row["canal"].$b_end.
+                    '</td><td>'.$b.$row["campaign"].$b_end.
+                    '</td><td>'.$b.$row["content"].$b_end.
+                    '</td><td>'.$b.$row["keywords"].$b_end.
+                    '</td><td>'.$b.$row["source"].$b_end.
+                    '</td><td>'.$b.$row["ip"].$b_end.
+                    '</td><td>'.$b.$row["client"].$b_end.
+                    '</td><td>'.$b.$status.$b_end.
+                    '</td></tr>';
+                
+                // else {
+                //     // $user = Yii::app()->db->createCommand()
+                //     // ->select("ua.data")
+                //     // ->from('user_activate ua')
+                //     // ->where('ua.id_user=:id_user', array(':id_user' => $id_user))
+                //     // ->queryRow();
+                //     // $status = 'не активен';
+                //     // $data = json_decode($user['data'], true);
+                //     // $firstname = $this->encoderSys($data['firstname']);
+                //     // $lastname = $this->encoderSys($data['lastname']);
+                //     // $name = $this->encoderSys($data['name']);
+                //     // $fio = $name." ".$firstname." ".$lastname;
+                //     // $email = $data['email'];
+                //     // $row["transition"] = $data['transition'];
+                //     // $row["canal"] = $data['canal'];
+                //     // $row["content"] = $data['content'];
+                //     // $row["campaign"] = $data['campaign'];
+                //     // $row["ip"] = $data['ip'];
+                //     // $row["client"] = $data['client'];
+                //     // $row["source"] = $data['source'];
+                //     // $row["keywords"] = $data['keywords'];
+
+                //     // $date1 = explode(" ",$row["date"])[0];
+                //     // $time1 = explode(" ",$row["date"])[1];
+                //     // $day = explode("-", $date1)[2];
+                //     // $month = explode("-", $date1)[1];
+                //     // $year = explode("-", $date1)[0];
+                //     // $csv_file .= '<td>'.$b.$time1.$b_end.
+                //     // '</td><td>'.$b.$day.$b_end.
+                //     // '</td><td>'.$b.$month.$b_end.
+                //     // '</td><td>'.$b.$year.$b_end.
+                //     // '</td><td>'.$b.$domen.$b_end.
+                //     // '</td><td>'.$b.$id_user.$b_end.
+                //     // '</td><td>'.$b.$fio.$b_end.
+                //     // '</td><td>'.$b.$types.$b_end.
+                //     // '</td><td>'.$b.$type_feed.$b_end.
+                //     // '</td><td>'.$b.$email.$b_end.
+                //     // '</td><td>'.$b.$email.$b_end.
+                //     // '</td><td>'.$b.$row["transition"].$b_end.
+                //     // '</td><td>'.$b.$row["canal"].$b_end.
+                //     // '</td><td>'.$b.$row["campaign"].$b_end.
+                //     // '</td><td>'.$b.$row["content"].$b_end.
+                //     // '</td><td>'.$b.$row["keywords"].$b_end.
+                //     // '</td><td>'.$b.$row["source"].$b_end.
+                //     // '</td><td>'.$b.$row["ip"].$b_end.
+                //     // '</td><td>'.$b.$row["client"].$b_end.
+                //     // '</td><td>'.$b.$status.$b_end.
+                //     // '</td></tr>';
+                // }
+
+
+               
+
+            } 
+
+        }
+
+
+        $csv_file .='</table>';
+        $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/analyt_de.xls'; // название файла
+        $file = fopen($file_name,"w"); // открываем файл для записи, если его нет, то создаем его в текущей папке, где расположен скрипт
+
+
+        fwrite($file,trim($csv_file)); // записываем в файл строки
+        fclose($file); // закрываем файл
+
+       // задаем заголовки. то есть задаем всплывающее окошко, которое позволяет нам сохранить файл.
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Content-Description: File Transfer');
+        //header('Content-Type: text/csv');
+        //header('Content-Disposition: attachment; filename=export.csv;');
+        header('Content-Disposition: attachment; filename=analyt_prommu.xls');
+        header('Content-transfer-encoding: binary');
+        //header("content-type:application/csv;charset=ANSI");
+        header('Content-Type: text/html; charset=windows-1251');
+        header('Content-Type: application/x-unknown');
+        header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
+        //print "\xEF\xBB\xBF"; // UTF-8 BOM
+        readfile($file_name); // считываем файл
+
+        $this->exportAutomizeFeedback();
+
+    }
+
+    public function exportAutomizeFeedback(){
+
+         $date = filter_var(Yii::app()->getRequest()->getParam('date'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+         $bdate = filter_var(Yii::app()->getRequest()->getParam('bdate'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+         $domen = Yii::app()->getRequest()->getParam('domen');
+        //print_r($ids);
+         if($date == "week"){
+            $my_time = time() - 604800; 
+            $yester = date("Y-m-d", $my_time); 
+
+            $data = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('feedback')
+            ->where('crdate >:date', array(':date'=> $yester))
+            ->order("crdate desc")
+            ->queryAll();
+            
+         }
+         else {
+
+             $data = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('feedback')
+            ->where('(crdate BETWEEN :date AND :bdate)', array(':date'=> $date, 'bdate'=> $bdate))
+            ->order("crdate desc")
+            ->queryAll();
+         }
+        
+
+
+        $csv_file = '<table border="1">
+            <tr><td style="color:red; background:#E0E0E0">Время'.
+            '</td><td style="color:red; background:#E0E0E0">День'.
+            '</td><td style="color:red; background:#E0E0E0">Месяц'.
+            '</td><td style="color:red; background:#E0E0E0">Год'.
+            '</td><td style="color:red; background:#E0E0E0">Домен'.
+            '</td><td style="color:red; background:#E0E0E0">Идентификатор'.
+            '</td><td style="color:red; background:#E0E0E0">Пользователь'.
+            '</td><td style="color:red; background:#E0E0E0">Тип'.
+            '</td><td style="color:red; background:#E0E0E0">Тип заявки'.
+            '</td><td style="color:red; background:#E0E0E0">Телефон'.
+            '</td><td style="color:red; background:#E0E0E0">Email'.
+            '</td><td style="color:red; background:#E0E0E0">Источник'.
+            '</td><td style="color:red; background:#E0E0E0">Канал'.
+            '</td><td style="color:red; background:#E0E0E0">Кампания'.
+            '</td><td style="color:red; background:#E0E0E0">Контент'.
+            '</td><td style="color:red; background:#E0E0E0">Ключевое слово'.
+            '</td><td style="color:red; background:#E0E0E0">Площадка'.
+            '</td><td style="color:red; background:#E0E0E0">IP адрес'.
+            '</td><td style="color:red; background:#E0E0E0">Client ID'.
+
+'</td></tr>';
+
+        
+        foreach ($data as $row) {
+            $csv_file .= '<tr>';
+            $b = "";
+            $b_end = "";
+
+            $domen = 'https://prommu.com';
+            $type_feed = 'обратная связь';
+
+
+            if($row['type'] == 2){
+
+                $name = $row['name'];
+                $email = $row['email'];
+                $fio = $row['name'];
+                $types = "Соискатель";
+                $ana = 1;
+
+            
+            } elseif($row['type'] == 3) {
+            
+                $name = $row['name'];
+                $email = $row['email'];
+                $fio = $row['name'];
+                $types = "Работодатель";
+                $ana = 1;
+    
+
+            } elseif($row['type'] == 0) {
+            
+                $name = $row['name'];
+                $email = $row['email'];
+                $fio = $row['name'];
+                $types = "Гость";
+                $ana = 1;
+           
+
+            } 
+
+
+
+            if($ana){
+            $keywords = $this->encoderSys($row['keywords']);
+            $date1 = explode(" ",$row["crdate"])[0];
+            $time1 = explode(" ",$row["crdate"])[1];
+            $canal = explode(",", $row["canal"])[0];
+            $transition = explode(",", $row["transition"])[0];
+            $day = explode("-", $date1)[2];
+            $month = explode("-", $date1)[1];
+            $year = explode("-", $date1)[0];
+            $csv_file .= '<td>'.$b.$time1.$b_end.
+                '</td><td>'.$b.$day.$b_end.
+                '</td><td>'.$b.$month.$b_end.
+                '</td><td>'.$b.$year.$b_end.
+                '</td><td>'.$b.$domen.$b_end.
+                '</td><td>'.$b.'(none)'.$b_end.
+                '</td><td>'.$b.$fio.$b_end.
+                '</td><td>'.$b.$types.$b_end.
+                '</td><td>'.$b.$type_feed.$b_end.
+                '</td><td>'.$b.'(none)'.$b_end.
+                '</td><td>'.$b.$email.$b_end.
+                '</td><td>'.$b.$transition.$b_end.
+                '</td><td>'.$b.$canal.$b_end.
+                '</td><td>'.$b.$row["campaign"].$b_end.
+                '</td><td>'.$b.$row["content"].$b_end.
+                '</td><td>'.$b.$keywords.$b_end.
+                '</td><td>'.$b.$row["ip"].$b_end.
+                '</td><td>'.$b.$row["client"].$b_end.
+                // '</td><td>'.$b.$row["last_referer"].$b_end.
+                // '</td><td>'.$b.$row["date"].$b_end.
+                '</td></tr>';
+            }
+        }
+
+        $csv_file .='</table>';
+        $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/analyt_de.xls'; // название файла
+        $file = fopen($file_name,"w"); // открываем файл для записи, если его нет, то создаем его в текущей папке, где расположен скрипт
+
+
+        fwrite($file,trim($csv_file)); // записываем в файл строки
+        fclose($file); // закрываем файл
+
+       // задаем заголовки. то есть задаем всплывающее окошко, которое позволяет нам сохранить файл.
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Content-Description: File Transfer');
+        //header('Content-Type: text/csv');
+        //header('Content-Disposition: attachment; filename=export.csv;');
+        header('Content-Disposition: attachment; filename=analyt_prommu.xls');
+        header('Content-transfer-encoding: binary');
+        //header("content-type:application/csv;charset=ANSI");
+        header('Content-Type: text/html; charset=windows-1251');
+        header('Content-Type: application/x-unknown');
+        header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
+        //print "\xEF\xBB\xBF"; // UTF-8 BOM
+        readfile($file_name); // считываем файл
+
+        $this->exportAutomizeServices();
+
+    }
+
+    public function exportAutomizeServices(){
+
+         $date = filter_var(Yii::app()->getRequest()->getParam('date'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+         $bdate = filter_var(Yii::app()->getRequest()->getParam('bdate'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+         $domen = Yii::app()->getRequest()->getParam('domen');
+        //print_r($ids);
+         if($date == "week"){
+            $my_time = time() - 604800; 
+            $yester = date("Y-m-d", $my_time); 
+
+            $data = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('service_cloud')
+            ->where('date >:date', array(':date'=> $yester))
+            ->order("date desc")
+            ->queryAll();
+            
+         }
+         else {
+
+             $data = Yii::app()->db->createCommand()
+            ->select("*")
+            ->from('service_cloud')
+            ->where('(date BETWEEN :date AND :bdate)', array(':date'=> $date, 'bdate'=> $bdate))
+            ->order("date desc")
+            ->queryAll();
+         }
+        
+
+
+        $csv_file = '<table border="1">
+            <tr><td style="color:red; background:#E0E0E0">Время'.
+            '</td><td style="color:red; background:#E0E0E0">День'.
+            '</td><td style="color:red; background:#E0E0E0">Месяц'.
+            '</td><td style="color:red; background:#E0E0E0">Год'.
+            '</td><td style="color:red; background:#E0E0E0">Домен'.
+            '</td><td style="color:red; background:#E0E0E0">Идентификатор'.
+            '</td><td style="color:red; background:#E0E0E0">Пользователь'.
+            '</td><td style="color:red; background:#E0E0E0">Тип'.
+            '</td><td style="color:red; background:#E0E0E0">Тип заявки'.
+            '</td><td style="color:red; background:#E0E0E0">Телефон'.
+            '</td><td style="color:red; background:#E0E0E0">Email'.
+            '</td><td style="color:red; background:#E0E0E0">Источник'.
+            '</td><td style="color:red; background:#E0E0E0">Канал'.
+            '</td><td style="color:red; background:#E0E0E0">Кампания'.
+            '</td><td style="color:red; background:#E0E0E0">Контент'.
+            '</td><td style="color:red; background:#E0E0E0">Ключевое слово'.
+            '</td><td style="color:red; background:#E0E0E0">Площадка'.
+            '</td><td style="color:red; background:#E0E0E0">IP адрес'.
+            '</td><td style="color:red; background:#E0E0E0">Client ID'.
+
+'</td></tr>';
+
+        
+        foreach ($data as $row) {
+            $csv_file .= '<tr>';
+            $b = "";
+            $b_end = "";
+            $domen = 'https://prommu.com';
+            $type_feed = 'заказ услуг '.$row['type'];           
+           
+            $id_user = $row['id_user'];
+            $user = Yii::app()->db->createCommand()
+            ->select("e.name, e.firstname, e.lastname, usr.email")
+            ->from('employer e')
+            ->join('user usr', 'usr.id_user=e.id_user')
+            ->where('e.id_user=:id_user', array(':id_user' => $id_user))
+            ->queryAll();
+
+             $analyt = Yii::app()->db->createCommand()
+            ->select("a.content, a.keywords, a.campaign, a.canal,
+                a.transition, a.ip, a.client")
+            ->from('analytic a')
+            ->join('user usr', 'usr.id_user=a.id_us')
+            ->where('a.id_us=:id_user', array(':id_user' => $id_user))
+            ->queryAll();
+
+             if($user[0] && $analyt[0]){
+                $email = $user[0]['email'];
+                $fio = $user[0]['name']." ".$user[0]['firstname']." ".$user[0]['lastname'];
+                $types = "Работодатель";
+                $ana = 1;
+                $keywords = $analyt[0]['keywords'];
+                $content = $analyt[0]['content'];
+                $campaign = $analyt[0]['campaign'];
+                $canal = $analyt[0]['canal'];
+                $transition = $analyt[0]['transition'];
+                $client = $analyt[0]['client'];
+                $ip = $analyt[0]['ip'];
+
+                $keywords = $this->encoderSys($keywords);
+                $transition = explode(",", $transition)[0];
+            } elseif ($user[0]) {
+                $email = $user[0]['email'];
+                $fio = $user[0]['name']." ".$user[0]['firstname']." ".$user[0]['lastname'];
+                $types = "Работодатель";
+                $ana = 1;
+                $keywords = '(none)';
+                $content = '(none)';
+                $campaign = '(none)';
+                $canal = '(none)';
+                $transition = '(none)';
+                $client = '(none)';
+                $ip = '(none)';
+            } else $ana = 0;
+
+
+
+            if($ana){
+            $date1 = explode(" ",$row["date"])[0];
+            $time1 = explode(" ",$row["date"])[1];
+            $canal = explode(",", $canal)[0];
+            $day = explode("-", $date1)[2];
+            $month = explode("-", $date1)[1];
+            $year = explode("-", $date1)[0];
+            $csv_file .= '<td>'.$b.$time1.$b_end.
+                '</td><td>'.$b.$day.$b_end.
+                '</td><td>'.$b.$month.$b_end.
+                '</td><td>'.$b.$year.$b_end.
+                '</td><td>'.$b.$domen.$b_end.
+                '</td><td>'.$b.$id_user.$b_end.
+                '</td><td>'.$b.$fio.$b_end.
+                '</td><td>'.$b.$types.$b_end.
+                '</td><td>'.$b.$type_feed.$b_end.
+                '</td><td>'.$b.'(none)'.$b_end.
+                '</td><td>'.$b.$email.$b_end.
+                '</td><td>'.$b.$transition.$b_end.
+                '</td><td>'.$b.$canal.$b_end.
+                '</td><td>'.$b.$campaign.$b_end.
+                '</td><td>'.$b.$content.$b_end.
+                '</td><td>'.$b.$keywords.$b_end.
+                '</td><td>'.$b.$ip.$b_end.
+                '</td><td>'.$b.$client.$b_end.
+                // '</td><td>'.$b.$row["last_referer"].$b_end.
+                // '</td><td>'.$b.$row["date"].$b_end.
+                '</td></tr>';
+            }
+        }
+
+        $csv_file .='</table>';
+        $file_name = $_SERVER['DOCUMENT_ROOT'].'/content/analyt_de.xls'; // название файла
+        $file = fopen($file_name,"w"); // открываем файл для записи, если его нет, то создаем его в текущей папке, где расположен скрипт
+
+
+        fwrite($file,trim($csv_file)); // записываем в файл строки
+        fclose($file); // закрываем файл
+
+       // задаем заголовки. то есть задаем всплывающее окошко, которое позволяет нам сохранить файл.
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Content-Description: File Transfer');
+        //header('Content-Type: text/csv');
+        //header('Content-Disposition: attachment; filename=export.csv;');
+        header('Content-Disposition: attachment; filename=analyt_prommu.xls');
+        header('Content-transfer-encoding: binary');
+        //header("content-type:application/csv;charset=ANSI");
+        header('Content-Type: text/html; charset=windows-1251');
+        header('Content-Type: application/x-unknown');
+        header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
+        //print "\xEF\xBB\xBF"; // UTF-8 BOM
+        readfile($file_name); // считываем файл
+
+    }
+
+    public function encoderSys($eco){
+        
+        $eco = urldecode($eco);
+        $eco = $this->json_fix_cyr($eco);
+        return $eco;
+
+    }
+
+    function json_fix_cyr($json_str) {
+         $cyr_chars = array (
+        '\u0430' => 'а', '\u0410' => 'А',
+        '\u0431' => 'б', '\u0411' => 'Б',
+        '\u0432' => 'в', '\u0412' => 'В',
+        '\u0433' => 'г', '\u0413' => 'Г',
+        '\u0434' => 'д', '\u0414' => 'Д',
+        '\u0435' => 'е', '\u0415' => 'Е',
+        '\u0451' => 'ё', '\u0401' => 'Ё',
+        '\u0436' => 'ж', '\u0416' => 'Ж',
+        '\u0437' => 'з', '\u0417' => 'З',
+        '\u0438' => 'и', '\u0418' => 'И',
+        '\u0439' => 'й', '\u0419' => 'Й',
+        '\u043a' => 'к', '\u041a' => 'К',
+        '\u043b' => 'л', '\u041b' => 'Л',
+        '\u043c' => 'м', '\u041c' => 'М',
+        '\u043d' => 'н', '\u041d' => 'Н',
+        '\u043e' => 'о', '\u041e' => 'О',
+        '\u043f' => 'п', '\u041f' => 'П',
+        '\u0440' => 'р', '\u0420' => 'Р',
+        '\u0441' => 'с', '\u0421' => 'С',
+        '\u0442' => 'т', '\u0422' => 'Т',
+        '\u0443' => 'у', '\u0423' => 'У',
+        '\u0444' => 'ф', '\u0424' => 'Ф',
+        '\u0445' => 'х', '\u0425' => 'Х',
+        '\u0446' => 'ц', '\u0426' => 'Ц',
+        '\u0447' => 'ч', '\u0427' => 'Ч',
+        '\u0448' => 'ш', '\u0428' => 'Ш',
+        '\u0449' => 'щ', '\u0429' => 'Щ',
+        '\u044a' => 'ъ', '\u042a' => 'Ъ',
+        '\u044b' => 'ы', '\u042b' => 'Ы',
+        '\u044c' => 'ь', '\u042c' => 'Ь',
+        '\u044d' => 'э', '\u042d' => 'Э',
+        '\u044e' => 'ю', '\u042e' => 'Ю',
+        '\u044f' => 'я', '\u042f' => 'Я',
+ 
+        '\r' => '',
+        '\n' => '<br />',
+        '\t' => ''
+    );
+ 
+        foreach ($cyr_chars as $cyr_char_key => $cyr_char) {
+            $json_str = str_replace($cyr_char_key, $cyr_char, $json_str);
+        }
+        return $json_str;
     }
 
 public function vac(){
@@ -2699,34 +3053,61 @@ public function vac(){
 
         return $data;
     }
-
-    public function photoEdit()
+    
+    
+    public function avatarEdit()
     {
-    $error = '-101';
+        $error = '-101';
+        $message = 'Error get api data';
+       
      try
      {
 
         $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $photo = Yii::app()->getRequest()->getParam('photo');
+          
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         $id = $idus;
-        $sql = "SELECT r.status
-            FROM user r
-            WHERE r.id_user = {$idus}";
-        $res= Yii::app()->db->createCommand($sql)->queryScalar();
-        if($res == 3){
-            $Logo = new UploadLogo($profile);
-            $data = $Logo->processUploadedLogoEmpl($_FILES['photo']);
-            Yii::app()->db->createCommand()
-                ->update('employer', array(
-                    'logo' => $data,
-                ), 'id_user = :id', array(':id' => $idus));
+ 
+        
+        
+       $current =  base64_decode($photo);
+            
+            mkdir("/var/www/files_prommu/users/".$id, 0700);
+            mkdir("/var/www/files_prommu/users/".$id."/tmp/", 0700);
+            $name = date('YmdHis').rand(100,1000);
+            $file = $name . ".jpg";
+            $path = "/users/".$id."/";
+                
+            file_put_contents("/var/www/files_prommu".$path.$file, $current);
+            
+            if(!@getimagesize("https://files.prommu.com/users/".$id."/".$file)){
+                unlink("/var/www/files_prommu".$path.$file);
+                return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
             }
-        elseif($res == 2){
-            $Logo = new UploadLogo($profile);
-            $data = $Logo->processUploadedLogoPromo($_FILES['photo']);
-            $User = new UserProfileApplic($profile);
-            $dat = $User->sendLogo(compact('id', 'data'));
+            
+            
+        
+        if($profile->type == 2){
+            $types = 'resume';
+            $value = 'photo';
+            $rest = $file;
+        } else {
+            $types = 'employer'; 
+            $value = 'logo';
+            $rest = $name;
         }
+        
+        Yii::app()->db->createCommand()
+                    ->update($types, array(
+                        $value => $rest,
+                    ), 'id_user = :id', array(':id' => $id));  
+
+    
+        $message = "https://files.prommu.com/users/".$id."/".$file;
+        $error = '0';
+               
+                
         } catch (Exception $e)
             {
             $error = abs($e->getCode());
@@ -2741,9 +3122,217 @@ public function vac(){
             $data = ['error' => $error, 'message' => $message];
         } 
 
-        return $message = "Good Sent";
+        return $data = ['error' => $error, 'message' => $message];
     }
     
+    public function avatarDelete()
+    {
+        $error = '-101';
+        $message = 'Error get api data';
+       
+     try
+     {
+
+        $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        
+        list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
+        $id = $idus;
+ 
+        
+        if($profile->type == 2){
+            $types = 'resume';
+            $value = 'photo';
+            $rest = $file;
+        } else {
+            $types = 'employer'; 
+            $value = 'logo';
+            $rest = $name;
+        }
+        
+        Yii::app()->db->createCommand()
+                    ->update($types, array(
+                        $value => null,
+                    ), 'id_user = :id', array(':id' => $id));  
+
+    
+        $message = "success";
+        $error = '0';
+               
+                
+        } catch (Exception $e)
+            {
+            $error = abs($e->getCode());
+            switch( $e->getCode() )
+            {
+                case -102 : // token invalid
+                case -103 : $message = $e->getMessage(); break; // token expired
+                case -104 : $message = 'Error while getting chat data'; break;
+                default: $error = 101; $message = 'Error get api data';
+            }
+
+            $data = ['error' => $error, 'message' => $message];
+        } 
+
+        return $data = ['error' => $error, 'message' => $message];
+    }
+    
+    public function photoEdit()
+    {
+        $error = '-101';
+        $message = 'Error get api data';
+       
+     try
+     {
+
+        $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $photo = Yii::app()->getRequest()->getParam('photo');
+        
+        
+        list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
+        $id = $idus;
+        
+        $message = [];
+        
+            
+            $current =  base64_decode($photo);
+            
+            mkdir("/var/www/files_prommu/users/".$id, 0700);
+            mkdir("/var/www/files_prommu/users/".$id."/tmp/", 0700);
+            $name = date('YmdHis').rand(100,1000);
+            $file = $name . ".jpg";
+            $path = "/users/".$id."/";
+                
+            file_put_contents("/var/www/files_prommu".$path.$file, $current);
+            
+            if(!@getimagesize("https://files.prommu.com/users/".$id."/".$file)){
+                unlink("/var/www/files_prommu".$path.$file);
+                return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
+            }
+            
+            if($profile->type == 3){
+                
+                $eid = $profile->exInfo->eid;
+                
+                
+                $sql = "SELECT MAX(p.npp) npp, COUNT(*) cou FROM user_photos p WHERE p.id_empl = {$eid}";
+                $photosData = Yii::app()->db->createCommand($sql);
+                $photosData = $photosData->queryRow();
+                
+                
+                if(!empty($photosData['npp'])){
+                     $photosData['npp'] = 0;
+                }
+    
+                Yii::app()->db->createCommand()
+                    ->insert('user_photos', array(
+                        'id_empl' => $eid,
+                        'id_user' => $id,
+                        'npp' => $photosData['npp'] + 1,
+                        'photo' => $name,
+                    ));
+                    
+                    
+                $message[] = "https://files.prommu.com/users/".$id."/".$file;
+                $error = '0';
+    
+    
+            } elseif($profile->type == 2){
+                
+                $id_resume = $profile->exInfo->id_resume;
+                
+                $sql = "SELECT MAX(p.npp) npp, COUNT(*) cou FROM user_photos p WHERE p.id_promo = {$id_resume}";
+                $photosData = Yii::app()->db->createCommand($sql);
+                $photosData = $photosData->queryRow();
+                
+                if(!empty($photosData['npp'])){
+                     $photosData['npp'] = 0;
+                }
+               
+                Yii::app()->db->createCommand()
+                    ->insert('user_photos', array(
+                        'id_promo' => $id_resume,
+                        'id_user' => $id,
+                        'npp' => $photosData['npp'] + 1,
+                        'photo' => $name,
+                    ));
+                    
+                $message[] = "https://files.prommu.com/users/".$id."/".$file;
+                $error = '0';
+    
+            }
+        
+        
+        } catch (Exception $e)
+            {
+            $error = abs($e->getCode());
+            switch( $e->getCode() )
+            {
+                case -102 : // token invalid
+                case -103 : $message = $e->getMessage(); break; // token expired
+                case -104 : $message = 'Error while getting chat data'; break;
+                default: $error = 101; $message = 'Error get api data';
+            }
+
+            $data = ['error' => $error, 'message' => $message];
+        } 
+
+        return $data = ['error' => $error, 'message' => $message];
+    }
+    
+    
+    public function photoDelete()
+    {
+        $error = '-101';
+        $message = 'Error get api data';
+       
+     try
+     {
+
+        $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $photo = Yii::app()->getRequest()->getParam('photo');
+        
+        list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
+        $id = $idus;
+ 
+        // Yii::app()->db->createCommand()
+        //         ->delete('user_mech', array('and', 'id_us=:id_user', 'isshow=0'), array(':id_user' => $id));
+
+        if($profile->type == 2){
+            $types = 'resume';
+            $value = 'photo';
+            $rest = $file;
+        } else {
+            $types = 'employer'; 
+            $value = 'logo';
+            $rest = $name;
+        }
+        
+        Yii::app()->db->createCommand()
+                    ->update($types, array(
+                        $value => null,
+                    ), 'id_user = :id', array(':id' => $id));  
+
+    
+        $message = "success";
+        $error = '0';
+               
+                
+        } catch (Exception $e)
+            {
+            $error = abs($e->getCode());
+            switch( $e->getCode() )
+            {
+                case -102 : // token invalid
+                case -103 : $message = $e->getMessage(); break; // token expired
+                case -104 : $message = 'Error while getting chat data'; break;
+                default: $error = 101; $message = 'Error get api data';
+            }
+
+            $data = ['error' => $error, 'message' => $message];
+        } 
+
+        return $data = ['error' => $error, 'message' => $message];
+    }
 
     public function composTer()
     {
@@ -2800,51 +3389,32 @@ public function vac(){
     public function getPost()
     {
 
-        //    $sql = "SELECT r.status
-        //     FROM user r";
-        // $res= Yii::app()->db->createCommand($sql)->queryRow();
-        // return $res;
-        // $data['isblocked'] = 0;
+               $error = '-101';
+        try
+        {
+            // читаем типы копании
+            $sql = "SELECT d.id, d.name name
+                FROM user_attr_dict d
+                WHERE d.id_par = 110
+                ORDER BY d.name
+                ";
+            $data = Yii::app()->db->createCommand($sql)->queryAll();
 
-        // $res = Yii::app()->db->createCommand()
-        //     ->update('user', $data, $value);
-        // return $data[0]['name'];
 
-        $sql = "SELECT DISTINCT r.id, r.id_user idus, r.photo, r.firstname, r.lastname, r.isman
-                , cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate, r.rate, r.rate_neg, photo
-            FROM resume r
-            INNER JOIN user u ON r.id_user = u.id_user AND u.ismoder = 1
-            AND ( u.isblocked = 3)
-        
-            ORDER BY avg_rate DESC, id DESC
-            LIMIT 1000";
-        $result = Yii::app()->db->createCommand($sql)->queryAll();
-        foreach ($result as $key => $value) {
-                $props = array(
-                'id_us' => $value['idus'],
-                'id_mech' => rand(111,119),
-                'isshow' => 0, 
-                'crdate' => date("Y-m-d H:i:s"),
+        } catch (Exception $e)
+        {
+            $error = abs($e->getCode());
+            switch( $e->getCode() )
+            {
+                case -102 : $message = 'Error while getting chat data'; break;
+                default: $error = 101; $message = 'Error get api data';
+            }
 
-                );
+            $data = ['error' => $error, 'message' => $message];
+        } // endtry
 
-                $res = Yii::app()->db->createCommand()
-                ->insert('user_mech', $props);
+        return $data;
 
-                Yii::app()->db->createCommand()
-                ->update('resume', array(
-                    'isblocked' => 0,
-                ), 'id = :id', array(':id' => $value['id']));
-
-                Yii::app()->db->createCommand()
-                ->update('user', array(
-                    'isblocked' => 0,
-                ), 'id_user = :id', array(':id' => $value['idus']));
-
-            
-
-        }
-        return $result;
     }
 
     public function updateProf() 
@@ -2862,14 +3432,7 @@ public function vac(){
         $res= Yii::app()->db->createCommand($sql)->queryScalar();
         if($res==3){
         $User = new User();
-        $data = $User->updateEmployer($cloud,$idus);
-        // $post = $cloud['post'];
-        // $mob = $cloud['mob'];
-        // $isnews = $cloud['isnews'];
-        // $id = $idus;
-        // $figaro = compact('post', 'mob', 'isnew', 'id');
-        // $UserEmpl = new UserProfileEmpl($profile);
-        // $data = $UserEmpl->saveUserAttribs($figaro);
+        $data = $User->updateEmployerApi($cloud,$idus);
     }
     elseif($res==2) {
         $User = new User();
@@ -2896,35 +3459,78 @@ public function vac(){
 
     public function getPromoSearch()
     {
-        $filter = Yii::app()->getRequest()->getParam('filter');
-        $filter = $filter ? get_object_vars(json_decode(base64_decode($filter))) : null;
+        $filter = [];
+        $filter['api'] = Yii::app()->getRequest()->getParam('api');
+        ///
+        $filter['sphf'] = Yii::app()->getRequest()->getParam('salary_hour_from');
+        $filter['spht'] = Yii::app()->getRequest()->getParam('salary_hour_to');
+        
+        $filter['spwf'] = Yii::app()->getRequest()->getParam('salary_week_from');
+        $filter['spwt'] = Yii::app()->getRequest()->getParam('salary_week_from');
+        
+        $filter['spmf'] = Yii::app()->getRequest()->getParam('salary_month_from');
+        $filter['spmt'] = Yii::app()->getRequest()->getParam('salary_month_from');
+        
+        $filter['spvf'] = Yii::app()->getRequest()->getParam('salary_visit_from');
+        $filter['spvt'] = Yii::app()->getRequest()->getParam('salary_visit_from');
+        
+        
+        //
+        $filter['mb'] = Yii::app()->getRequest()->getParam('is_med');
+        
+        $filter['smart'] = Yii::app()->getRequest()->getParam('smart');
+        $filter['avto'] = Yii::app()->getRequest()->getParam('is_hasavto');
+        $filter['posts'] = Yii::app()->getRequest()->getParam('posts');
+        $filter['city'] = Yii::app()->getRequest()->getParam('city');
+        $filter['qs'] = Yii::app()->getRequest()->getParam('name');
+        $filter['af'] = Yii::app()->getRequest()->getParam('age_from');
+        $filter['at'] = Yii::app()->getRequest()->getParam('age_to');
+        $filter['card'] = Yii::app()->getRequest()->getParam('card');
+        $filter['cardPrommu'] = Yii::app()->getRequest()->getParam('card_prommu');
+        $filter['self_employed'] = Yii::app()->getRequest()->getParam('self_employed');
+        
         $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
 
         $limit = $limit == 0 || $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
 
         // читаем фильтр
-        if( $filter )
+        if($filter)
         {
             $api = $filter['api'] ?: null;
             // фильтр по типу
-            $sm = $filter['sm'] ?: null;
-            $sf = $filter['sf'] ?: null;
-            $mb = $filter['mb'] ?: null;
-            $avto = $filter['avto'] ?: null;
+            
+            $sphf = $filter['sphf'] ?: null;
+            $spht = $filter['spht'] ?: null;
+            
+            $spwf = $filter['spwf'] ?: null;
+            $spwt = $filter['spwt'] ?: null;
+            
+            $spmf = $filter['spmf'] ?: null;
+            $spmt = $filter['spmt'] ?: null;
+            
+            $spvf = $filter['spvf'] ?: null;
+            $spvt = $filter['spvt'] ?: null;
+            
+            $ismed = $filter['mb'] ?: null;
+            $isavto = $filter['avto'] ?: null;
             $posts = $filter['posts'] ? array_combine($filter['posts'], $filter['posts']) : null;
             // фильтр городов
             $cities = $filter['city'] ? array_combine($filter['city'], $filter['city']) : null;
             $qs = $filter['qs'] ?: null;
             $af = $filter['af'] ?: null;
+            $smart = $filter['smart'] ?: null;
             $at = $filter['at'] ?: null;
-            $filter = ['filter' => compact('posts', 'cities', 'qs', 'sm', 'sf', 'mb', 'avto', 'af','at', 'api')];
+            $card = $filter['card'] ?: null;
+            $cardPrommu = $filter['cardPrommu'] ?: null;
+            $self_employed = $filter['self_employed'] ?: null;
+            $filter = ['filter' => compact('posts', 'cities', 'qs','smart', 'sphf', 'spht','spwf','spwt','spmf','spmt','spvf','spvt', 'mb', 'isavto', 'ismde', 'af','at', 'api', 'card', 'cardPrommu', 'self_employed')];
         }
         else
         {
             $filter = [];
         } // endif
     
-
+       
         // получаем данные страницы
         $SearchPromo = new SearchPromo();
         $arAllId = $SearchPromo->searchPromosCount($filter);
@@ -2933,10 +3539,11 @@ public function vac(){
         $pages->pageSize = $limit;
         $pages->applyLimit($SearchPromo);
 
-
+        
         // отсеивать из ответа работодателей
-        $data = $SearchPromo->getPromos($arAllId, 0, $filter);
-
+        $data = array_values($SearchPromo->getPromosAPI($arAllId, 0, $filter)['promo']);
+        $data = array_merge(['promos' => $data, 'pageCount' => $pages->pageCount,'currentPage' => (int)$page ? (int)$page : 1]);
+        
         return array_merge($data);
     }
 
@@ -2946,21 +3553,24 @@ public function vac(){
      * @return array
      */
     public function getEmplSearch()
-    {
+    {   
+        
         $filter = Yii::app()->getRequest()->getParam('filter');
-        $filter = $filter ? get_object_vars(json_decode(base64_decode($filter))) : null;
-        $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
+        $filter = $filter ? get_object_vars(json_decode($filter)) : null;
+        
+        $cities = Yii::app()->getRequest()->getParam('city');
+        $cotype = Yii::app()->getRequest()->getParam('type');
+        $qs = Yii::app()->getRequest()->getParam('name');
+        
+        $page = filter_var(Yii::app()->getRequest()->getParam('page', 0), FILTER_SANITIZE_NUMBER_INT);
+        $limit = filter_var(Yii::app()->getRequest()->getParam('limit', MainConfig::$DEF_PAGE_API_LIMIT), FILTER_SANITIZE_NUMBER_INT);
+        $limit = $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
 
-        $limit = $limit == 0 || $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
 
         // читаем фильтр
-        if( $filter )
+        if( $cities || $cotype ||  $qs )
         {
-            // фильтр по типу
-            $cotype = $filter['cotype'] ? array_combine($filter['cotype'], $filter['cotype']) : null;
-            // фильтр городов
-            $cities = $filter['city'] ? array_combine($filter['city'], $filter['city']) : null;
-            $qs = $filter['qs'] ?: null;
+                
             $filter = ['filter' => compact('cotype', 'cities', 'qs')];
         }
         else
@@ -2968,16 +3578,16 @@ public function vac(){
             $filter = [];
         } // endif
     
-
         // получаем данные страницы
         $SearchEmpl = new SearchEmpl();
         $pages = new CPagination($SearchEmpl->searchEmployersCount($filter));
-        $pages->pageSize = $limit;
+        $pages->pageSize = 50;
         $pages->applyLimit($SearchEmpl);
-
-        var_dump($SearchEmpl->searchEmployersCount($filter));
+        
         // отсеивать из ответа работодателей
-        $data = $SearchEmpl->getEmployers(0, $filter);
+        $data = array_values($SearchEmpl->getEmployersAPI(0, $filter)['empls']);
+        $data = array_merge(['employers' => $data, 'pageCount' => $pages->pageCount,'currentPage' => (int)$page ? (int)$page : 1]);
+
 
         return array_merge($data);
     }
@@ -3042,36 +3652,51 @@ public function vac(){
         try
         {
             $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $cloud = Yii::app()->getRequest()->getParam('cloud');
-            $cloud = $cloud ? get_object_vars(json_decode($cloud)) : null;
+            $idvac = Yii::app()->getRequest()->getParam('id');
+            $status = Yii::app()->getRequest()->getParam('status');
             $limit = filter_var(Yii::app()->getRequest()->getParam('limit', MainConfig::$DEF_PAGE_API_LIMIT), FILTER_SANITIZE_NUMBER_INT);
             $limit = $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
 
             // проверка токена, получаем профиль
             list($idus, $profile, $dat) = $this->checkAccessToken($accessToken);
-            $profile->setUserData();
-            $sql = "SELECT r.status
-            FROM user r
-            WHERE r.id_user = {$idus}";
-            $retRa= Yii::app()->db->createCommand($sql)->queryScalar();
-            if($retRa == 2){
-                $sql = "SELECT r.id
-                FROM resume r
-                WHERE r.id_user = {$idus}";
-                $res = Yii::app()->db->createCommand($sql);
-                $id = $res->queryScalar();
-                $type = $cloud['type'];
-                $figaro = compact('id', 'type');
-
+     
+            
+            if($profile->type == 2){
+                
                 $Response = new ResponsesApplic($profile);
-                $data['resps'] = $Response->getResponsess($figaro);
-            }
-            elseif($retRa == 3){
-                $id = $idus;
-                $figaro = compact('id');
+            
+                $resume = Yii::app()->db->createCommand()
+                ->select("u.id")
+                ->from('resume u')
+                ->where('u.id_user = :uid', array(':uid' => $idus))
+                ->queryRow();
+            
+                $data = $Response->getResponsesApi(['id'=> $resume['id']]);
+                
+                if($data){ 
+                    return $data;
+                } else {
+                    $error = 101; $message = 'Укажите статус получаемых заявок';
+                    $data = ['error' => $error, 'message' => $message];
+                    return $data;
+                }
+           
+            } else {
+                
                 $Response = new ResponsesEmpl($profile);
-                $data['resps'] = $Response->getResponsess($figaro);
+                
+                if($status){
+                
+                    $data = $Response->getVacResponsesApi($idvac, $status);
+                } else {
+                    $error = 101; $message = 'Укажите статус получаемых заявок';
+                    $data = ['error' => $error, 'message' => $message];
+                    return $data;
+                }
             }
+        
+            
+            
 
             if( (int)$data['error'] > 0 ) throw new ExceptionApi($data['message'], -104);
           
@@ -3104,7 +3729,7 @@ public function vac(){
             $idvac = filter_var(Yii::app()->getRequest()->getParam('idvac', 0), FILTER_SANITIZE_NUMBER_INT);
             $id = filter_var(Yii::app()->getRequest()->getParam('id', 0), FILTER_SANITIZE_NUMBER_INT);
             $idres = filter_var(Yii::app()->getRequest()->getParam('idres', 0), FILTER_SANITIZE_NUMBER_INT);
-            $status = filter_var(Yii::app()->getRequest()->getParam('status', 0), FILTER_SANITIZE_NUMBER_INT);
+            $status = urldecode(Yii::app()->getRequest()->getParam('status'));
             $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             // проверка токена, получаем профиль
             list($idus, $profile, $dat) = $this->checkAccessToken($accessToken);
@@ -3123,10 +3748,10 @@ public function vac(){
                 $res = Yii::app()->db->createCommand($sql);
                 $id = $res->queryScalar();
 
-            $res = (new Vacancy($profile))->getVacancyInfo($idus);
-            $rest = $res['vac_data'];
+            $res = (new Vacancy($profile))->getVacancyOwner($idus);
+            $rest = $res['vacs'];
             foreach($rest as $key => $val){
-                if($key == $idvac) {
+                if($val['id'] == $idvac) {
                     $Response = new ResponsesApplic($profile);
                     $data = $Response->invite(compact('idvac', 'id'));
                 }
@@ -3138,6 +3763,7 @@ public function vac(){
             }
         }
         elseif($retRa==2) {
+            
             $sql = "SELECT s.status
             FROM vacation_stat s 
             WHERE s.id= {$idres}
@@ -3145,15 +3771,16 @@ public function vac(){
             $res = Yii::app()->db->createCommand($sql);
             $res = $res->queryScalar();
 
-            if($status == 5  || $status == 3 )
+            if($status == "approved" || $status == "rejected" )
             {     
-
-            $Response = new ResponsesApplic($profile);
-            $data = $Response->setResponseStatus(compact('idres', 'status', 'idus'));
-        }
-        else {
-             $data = ['error' => '1', 'message' => 'No permission!'];
-        }
+                if($status == "approved") $status = 5;
+                if($status == "rejected") $status = 3;
+                $Response = new ResponsesApplic($profile);
+                $data = $Response->setResponseStatus(compact('idres', 'status', 'idus'));
+            }
+            else {
+                 $data = ['error' => '1', 'message' => 'No permission!'];
+            }
 
         }
         } catch (Exception $e)
@@ -3191,23 +3818,27 @@ public function vac(){
             // проверка токена, получаем профиль
             list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
             $profile->setUserData();
-
+            
             $sql = "SELECT r.status
             FROM user r
             WHERE r.id_user = {$idus}";
             $res= Yii::app()->db->createCommand($sql)->queryScalar();
+            
             if($res==3){
-            $Response = new ResponsesEmpl($profile);
-            $data = $Response->setResponseStatus(compact('idres', 'idus', 'status'));
+                $Response = new ResponsesEmpl($profile);
+                $data = $Response->setResponseStatus(compact('idres', 'idus', 'status'));
             }
             elseif($res==2) {
-            $res = (new Vacancy($profile))->getVacancyView($idvac)['response'];
-            if( (int)$res['response'] != 1 ) throw new ExceptionApi($res['message'], -104);
-
-            $Response = new ResponsesApplic($profile);
-            $data = $Response->setVacationResponse(compact('idvac'));
-            if( (int)$data['error'] > 0 ) throw new ExceptionApi($data['message'], -104);
-
+                $res = (new Vacancy($profile))->getVacancyView($idvac)['response'];
+                
+                
+                if( (int)$res['response'] != 1 ) throw new ExceptionApi($res['message'], -104);
+    
+                $Response = new ResponsesApplic($profile);
+                $data = $Response->setVacationResponse(compact('idvac'));
+                
+                if( (int)$data['error'] > 0 ) throw new ExceptionApi($data['message'], -104);
+    
             }
 
         } catch (Exception $e)
@@ -3396,36 +4027,28 @@ public function vac(){
     }
 
 
-    public function vacationPub()
+    public function vacancyPublish()
     {
         $error = '-101';
         try
         {   
-            $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $cloud = Yii::app()->getRequest()->getParam('cloud');
-            $cloud = $cloud ? get_object_vars(json_decode($cloud)) : null;
-            $title = $cloud['title'];
-            $agefrom = $cloud['agefrom'];
-            $ageto = $cloud['ageto'];
-            $agefrom = $cloud['agefrom'];
-            $isman = $cloud['isman'];
-            $iswoman = $cloud['iswoman'];
-            $istemp = $cloud['istemp'];
-            $shour = $cloud['shour'];
-            $ismed = $cloud['ismed'];
-            $isavto = $cloud['isavto'];
-            $remdate = $cloud['remdate'];
-            $istemp = $cloud['istemp'];
-            $posts = $cloud['posts'];
-            $city = $cloud['city'];
-            $bdate = $cloud['bdate'];
-            $edate = $cloud['edate'];
-            $idvac = $cloud['idvac'];
-
+            $accessToken = Yii::app()->getRequest()->getParam('access_token');
+             
+            $datas = CJSON::decode(Yii::app()->request->getRawBody());
+            
             list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
-            $figaro = compact('title','agefrom','ageto','isman', 'iswoman',  'istemp', 'shour', 'ismed', 'isavto', 'remdate','posts', 'city','bdate','edate','pub', 'idvac', 'idus');
+            
+            if($profile->type == 2){
+                $error = 101; $message = 'Error get api data';
+                return  $data = ['error' => $error, 'message' => $message];
+            }
+            
             $Vacancy = new Vacancy($profile);
-            $data = $Vacancy->saveVacData($figaro);   
+            
+            $datas['id_empl'] = $data['tokens']['id'];
+            $datas['idus'] = $data['tokens']['id_user'];
+            
+            $data = $Vacancy->saveVacpubDataApi($datas);   
             
            } catch (Exception $e)
         {
@@ -3540,7 +4163,7 @@ public function vac(){
     }
 
 
-    public function getVacancyData()
+    public function vacancyGet()
     {
         $error = '-101';
         try
@@ -3550,6 +4173,9 @@ public function vac(){
             list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
             $Vacancy = new Vacancy($profile);
             $data = $Vacancy->getVacancyInfo($id);
+            
+            // $Response = new ResponsesApplic($profile);
+            // $data['responses'] = $Response->getVacStat(['id' => $id, 'idus' => $idus]);
             
            } catch (Exception $e)
         {
@@ -3572,21 +4198,20 @@ public function vac(){
      * Получаем список моих вакансий
      * @return array
      */
-    public function getVacancyOwn()
+    public function vacancyOwner()
     {
         $error = '-101';
         try
-        {
-            $filter = Yii::app()->getRequest()->getParam('filter');
-            $filter = $filter ? get_object_vars(json_decode(base64_decode($filter))) : null;
+        {   
+            $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
             $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             $limit = filter_var(Yii::app()->getRequest()->getParam('limit', MainConfig::$DEF_PAGE_API_LIMIT), FILTER_SANITIZE_NUMBER_INT);
-
+            
             $limit = $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
-            // проверка токена, получаем профиль
-            $this->checkAccessToken($accessToken);
-            // получаем данные страницы
+            list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
             $Vacancy = new Vacancy($this->Profile);
+            $data = $Vacancy->getVacancyOwner($id);
+            
             // results per page
             $pages=new CPagination($Vacancy->getVacanciesCount());
             $pages->pageSize = $limit;
@@ -3594,7 +4219,8 @@ public function vac(){
 
 
             // отсеивать из ответа вакансии
-            $data = $Vacancy->getVacancies()['vacs'];
+            
+            
 
         } catch (Exception $e)
         {
@@ -3614,70 +4240,6 @@ public function vac(){
 
 
 
-    /**
-     * Получаем список вакансий c фильтрацией
-     * @return array
-     */
-
-       public function getVacancy()
-    {
-        $filter = Yii::app()->getRequest()->getParam('filter');
-        $filter = $filter ? get_object_vars(json_decode(base64_decode($filter))) : null;
-        $id = filter_var(Yii::app()->getRequest()->getParam('id', 0), FILTER_SANITIZE_NUMBER_INT);
-        $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
-        // $limit = $limit == 0 || $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
-
-
-        // читаем фильтр
-        if( $filter )
-        {
-            // фильтр должностей
-            $post = $filter['post'] ? array_combine($filter['post'], $filter['post']) : null;
-            // фильтр городов
-            $city = $filter['city'] ? array_combine($filter['city'], $filter['city']) : null;
-            $sr = $filter['sr'] ?: null;
-            $sphf = $filter['sphf'] ?: null;
-            $spht = $filter['spht'] ?: null;
-            $spwf = $filter['spwf'] ?: null;
-            $spwt = $filter['spwt'] ?: null;
-            $spmf = $filter['spmf'] ?: null;
-            $spmt = $filter['spmt'] ?: null;
-            $af = $filter['af'] ?: null;
-            $at = $filter['at'] ?: null;
-            $sex = $filter['sex'] ?: null;
-            $filter = ['filter' => compact('post', 'city', 'sr', 'sphf', 'spht', 'spwf', 'spwt', 'spmf', 'spmt', 'af', 'at', 'sex')];
-        }
-        else
-        {
-            $filter = [];
-        } // endif
-
-
-        // получаем данные страницы
-        $SearchVac = new SearchVac();
-        $pages = new CPagination($SearchVac->searchVacationsCount($filter));
-        $pages->pageSize = $limit;
-        $pages->applyLimit($SearchVac);
-
-        $data = array_values($SearchVac->getVacations($filter)['vacs']);
-        // отсеивать из ответа вакансии
-            if(!empty($id))
-            {
-                $Vacancy = new Vacancy();
-                foreach($data as $key => $val){
-                $idvac = $data[$key]['id'];
-                $data[$key]['response']= $Vacancy->getVacancyViews($idvac, $id)['response']['response'];
-
-                // if($data[$key]['response'] == 0) {
-                //     unset($data[$key]);
-                // }
-             }
-        }
-    
-           $data = array_merge(['vacations' => $data, 'pageCount' => $pages->pageCount]);
-
-        return array_merge($data);
-    }
 
 
     /**
@@ -3686,28 +4248,14 @@ public function vac(){
      */
     public function getCity()
     {
-//         $filter = filter_var(Yii::app()->getRequest()->getParam('filter'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-// //        $email = filter_var(Yii::app()->getRequest()->getParam('country'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-//         $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
+        $filter = filter_var(Yii::app()->getRequest()->getParam('filter'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+//        $email = filter_var(Yii::app()->getRequest()->getParam('country'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $limit = filter_var(Yii::app()->getRequest()->getParam('limit', 0), FILTER_SANITIZE_NUMBER_INT);
 
-//         $limit = $limit == 0 || $limit > MainConfig::$DEF_PAGE_API_LIMITS ? MainConfig::$DEF_PAGE_API_LIMITS : $limit;
+        $limit = $limit == 0 || $limit > MainConfig::$DEF_PAGE_API_LIMITS ? MainConfig::$DEF_PAGE_API_LIMITS : $limit;
 
-//         return (new City())->getCityList(0, $filter, $limit);
-        $sql = "SELECT co.id_co idco,
-                  co.name
-                  , uc.id_city idci
-                FROM country co
-                LEFT JOIN city ci ON co.id_co = ci.id_co
-                LEFT JOIN user_city uc ON ci.id_city = uc.id_city AND uc.id_user = 4278
-                WHERE co.hidden = 0 
-                GROUP BY co.id_co, co.name
-                ORDER BY name";
-        $data = Yii::app()->db->createCommand($sql)->queryAll();
-        foreach ($data as $key => &$val)
-        {
-            if( $val['idci'] ) { $data[3] = $val['idco']; break; }
-        } // en
-        return $data;
+        return (new City())->getCityList(0, $filter, $limit);
+ 
     }
 
 
@@ -3717,7 +4265,7 @@ public function vac(){
      */
     public function restorePass()
     {
-        $email = filter_var(Yii::app()->getRequest()->getParam('emailaddr'), FILTER_SANITIZE_EMAIL);
+        $email = filter_var(Yii::app()->getRequest()->getParam('param'), FILTER_SANITIZE_EMAIL);
 
         $RestorePass = new RestorePass();
         $res = $RestorePass->passRestoreRequest(compact('email'));
@@ -3796,15 +4344,19 @@ public function vac(){
                 $Profile = (new ProfileFactory())->makeProfile(['id' => $idus]);
                 $this->Profile = $Profile;
             } // endif
+            
 
+            if(!$Profile->error){
             foreach ($dataTypes as $key => $val)
             {
                 switch( $val )
                 {
                     // получаем данные пользователя
                     case 'profile' : $data['profile'] = $Profile->getProfileDataAPI(['id' => $idus]);
-                        if( !array_values($data['profile']['userAttribs'])[0]['id_attr'] ) $data['profile']['userAttribs'] = [] ;
+                        // if( !array_values($data['profile']['userAttribs'])[0]['id_attr'] ) $data['profile']['userAttribs'] = [] ;
                         break;
+                        
+                       
 
                     // получаем рейтинг пользователя
                     case 'rating' : $res = $Profile->getPointRate($idus);
@@ -3833,6 +4385,8 @@ public function vac(){
                         break;
                 }
             } // end foreach
+        }
+        else $data = ['error' => '-101', 'message' => 'Невозможно получить данные пользователя'];
 
         } catch (Exception $e)
         {
@@ -3846,7 +4400,8 @@ public function vac(){
 
             $data = ['error' => $error, 'message' => $message];
         } // endtry
-
+    
+        
         return $data;
     }
 
@@ -3881,7 +4436,7 @@ public function vac(){
         // ПРоверка домена на актуальность, получение всех данных авторизации
         $data = (new UserTokens())->getUserTokens(['token' => $accessToken]);
         unset($data['tokens']['uid']);
-
+       
         $idus = $inProps['idus'] ?: $data['tokens']['id_user'];
 
         // получаем объект профиля
