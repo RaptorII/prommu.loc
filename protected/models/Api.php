@@ -924,6 +924,52 @@ class Api
             
             return $res;
         }
+        
+        if(empty($provider)){
+            
+            $res['error'] = -101;
+            $res['message'] = 'Отсутствует параметр provider';
+            
+            return $res;
+        }
+        
+        if($provider == 'yandex'){
+            
+            // Получаем информацию о пользователе
+            if ( ! $content = @file_get_contents( 'https://login.yandex.ru/info?format=json&with_openid_identity=1&oauth_token=' . $code ) ) {
+              $error = error_get_last();
+              throw new Exception( 'HTTP request failed. Error: ' . $error['message'] );
+            }
+             
+            $response = json_decode( $content );
+             
+            // Если возникла ошибка
+            if ( isset( $response->error ) ) {
+              throw new Exception( 'При отправке запроса к API возникла ошибка. Error: ' . $response->error . '. Error description: ' . $response->error_description );
+            }
+             
+        
+            $auth = new Auth();
+            
+            $userId    = $response->id;
+            $inData['inputData']['email'] = $response->default_email;
+            $inData['inputData']['pass'] = rand(11111,99999);
+            
+            if($response->sex == 'male'){
+                $sex = 1;
+            } else $sex = 0;
+            
+            $inData['inputData']['sex'] = $sex; 
+            $first_name = $response->first_name; 
+            $last_name = $response->last_name;
+            $birthday = $response->birthday; 
+            
+            $inData['type'] = $promo;
+        
+            return $auth->registerUser($inData);
+        }
+       
+    
         $usData = Yii::app()->db->createCommand()
                 ->select("u.userid, u.pass, u.email")
                 ->from('user_api u')
