@@ -1033,6 +1033,47 @@ class Api
           
             } else return $auth->registerUser($inData);
             
+        } elseif($provider == 'google'){
+
+            $url = "https://www.googleapis.com/oauth2/v1/userinfo";
+            $params = "access_token=$code";
+        
+            $ch = curl_init($url . '?' . $params);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  
+            if (!empty($headers)) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_POST, false);
+            curl_setopt($ch, CURLOPT_VERBOSE, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            
+            $response = json_decode($response);
+            
+            $auth = new Auth();
+            $inData['inputData']['email'] = $response->email;
+            $inData['inputData']['pass'] = rand(11111,99999);
+            $inData['inputData']['passrep'] = $inData['inputData']['pass'];
+            $pass = md5($inData['inputData']['pass']);
+            $inData['inputData']['sex'] = 1; 
+            
+            $inData['inputData']['name'] = $response->email; 
+            $inData['inputData']['lname'] =  $response->email;
+            
+            $inData['type'] = $promo;
+            
+            if($auth->registerUser($inData)['error'] == 0){
+                $res = $auth->doAPIAuth($response->email, $pass);
+        
+        
+                Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'isblocked' => 0,
+                ), 'id_user=:id_user', array(':id_user' => $res['id']));
+
+                return $res;
+          
+            } else return $auth->registerUser($inData);
+            
         }
     
         // $usData = Yii::app()->db->createCommand()
