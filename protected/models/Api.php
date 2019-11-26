@@ -910,10 +910,10 @@ class Api
             return $res;
         }
         
-        if(empty($login)){
+        if(empty($email)){
             
             $res['error'] = -101;
-            $res['message'] = 'Отсутствует параметр login';
+            $res['message'] = 'Отсутствует параметр email';
             
             return $res;
         }
