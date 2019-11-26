@@ -1442,7 +1442,6 @@ class Auth
     private function registerUserFirsStep($inData)
     {
         
-        var_dump($inData);
         $res = $this->userSelect("email = '{$inData['inputData']['email']}'");
         $idUs = $res['id_user'];
         $admin = filter_var(Yii::app()->getRequest()->getParam('admin'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
