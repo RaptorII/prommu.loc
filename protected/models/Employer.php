@@ -21,7 +21,7 @@ class Employer extends ARModel
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('id, name, firstname, city, lastname, logo, type, crdate, ismoder, isblocked', 'required'),
+            array('id, name, firstname, city, lastname, logo, type, crdate, ismoder, isblocked, is_new', 'required'),
             array('id, status, isblocked', 'numerical', 'integerOnly'=>true),
             array('name, firstname,lastname, city, admin', 'length', 'max'=>64),
             // array('email','email'),
@@ -213,12 +213,18 @@ class Employer extends ARModel
         return $res;
     }
 
-        public function searchempl()
+    public function searchempl()
     {
-        // Warning: Please modify the following code to remove attributes that
-        // should not be searched.
+        $criteria = new CDbCriteria;
 
-        $criteria=new CDbCriteria;
+        $get = Yii::app()->getRequest()->getParam('Employer');
+        if(is_array($get))
+        {
+          $this->attributes = $get;
+        }
+        // недорегистрированных не выводим
+        $criteria->condition = 't.isblocked <> ' . User::$ISBLOCKED_NOT_FULL_ACTIVE;
+        //
         $criteria->compare('id',$this->id, true);
         $criteria->compare('firstname',$this->firstname, true);
         $criteria->compare('lastname',$this->lastname, true); 
@@ -231,6 +237,8 @@ class Employer extends ARModel
         $criteria->compare('isblocked',$this->isblocked, true);
         $criteria->compare('mdate',$this->mdate, true);
         $criteria->compare('admin',$this->admin, true);
+        $criteria->compare('is_new',$this->is_new, true);
+
         return new CActiveDataProvider('Employer', array(
             'criteria'=>$criteria,
             'pagination' => array('pageSize' => 100,),
@@ -385,31 +393,17 @@ class Employer extends ARModel
 
     public function getEmplAdmin()
     {
-        $sql = "
-            SELECT
-              r.id,
-              r.id_user idus,
-              name,
-              r.logo,
-              r.rate,
-              r.rate_neg,
-              cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg AS SIGNED)) avg_rate,
-              (SELECT COUNT(id)
-               FROM comments mm
-               WHERE mm.iseorp = 0 AND mm.id_promo = r.id) comment_count
-            
-            FROM employer r
-              INNER JOIN user u ON u.id_user = r.id_user
-            WHERE r.is_new = 1 
-            #OR r.ismoder = 0  
-            #AND u.crdate >= CURDATE()
-            ORDER BY r.id DESC
-            LIMIT 1000
-        ";
-        $result = Yii::app()->db->createCommand($sql)
+      return Yii::app()->db->createCommand()
+        ->select('e.id, u.id_user idus, e.name')
+        ->from('employer e')
+        ->leftJoin('user u','u.id_user=e.id_user')
+        ->where(
+          'e.is_new=1 AND u.isblocked<>:isblocked',
+          [':isblocked'=>User::$ISBLOCKED_NOT_FULL_ACTIVE]
+          )
+        ->order('id desc')
+        ->limit('1000')
         ->queryAll();
-
-        return $result;
     }
 
     private function getEmployersIndexPage()
@@ -964,15 +958,8 @@ class Employer extends ARModel
      * setViewed
      * @return model
      */
-    public function setViewed($id) {
-        
-        Yii::app()->db->createCommand()->update(
-            'user',
-            ['ismoder' => 2],
-            'id_user=:id',
-            [':id' => $id]
-        );
-        
+    public function setViewed($id)
+    {
         return Yii::app()->db->createCommand()->update(
             $this->tableName(),
             ['is_new' => 0],
@@ -991,14 +978,5 @@ class Employer extends ARModel
       ->insert(self::tableName(),$arInsert);
 
     return ($result ? Yii::app()->db->getLastInsertID() : $result);
-  }
-  /*
-   * @param $id_user - integer
-   * @return bool
-   */
-  public function deleteRegisterUser($id_user)
-  {
-    return Yii::app()->db->createCommand()
-      ->delete(self::tableName(),'id_user=:id_user',[':id_user'=>$id_user]);
   }
 }

@@ -39,16 +39,12 @@ echo '<div role="tabpanel" class="tab-pane fade' . (($anchor=='tab_profile' || e
             . CHtml::image($data['src'])
         . '</div><div class="col-xs-12 col-sm-6 user__moder">'
             . '<h4>МОДЕРАЦИЯ</h4>'
-            . '<div class="control-group">'                
+            . '<div class="control-group">'
                  . CHtml::radioButtonList(
                         'User[ismoder]',
                         $data['ismoder'],
-                        array(
-                            0 => 'не промодерирован',
-                            1 => 'промодерирован',
-                            2 => 'обработка',
-                        ),
-                        array()
+                        User::getAdminArrIsmoder(),
+                        []
                     )
             . '</div>';
 
@@ -57,13 +53,8 @@ echo '<div role="tabpanel" class="tab-pane fade' . (($anchor=='tab_profile' || e
                     . CHtml::radioButtonList(
                         'User[isblocked]',
                         $data['isblocked'],
-                        array(
-                            0 => 'Активирован',
-                            1 => 'Заблокирован',
-                            2 => 'Новый',
-                            3 => 'Модерация'
-                        ),
-                        array()
+                        User::getAdminArrIsblocked(),
+                        []
                     )
                 . '</div></div>';
     echo '</div></div>';

@@ -624,6 +624,12 @@ class UserProfileApplic extends UserProfile
             ];
             $model = new UserActivate();
             $model->updateData($id, $arActivate);
+            Yii::app()->db->createCommand()->update(
+              'resume',
+              ['isblocked' => User::$ISBLOCKED_NEW_USER],
+              'id_user=:id_user',
+              [':id_user' => $id]
+            );
           }
         } // endif
 

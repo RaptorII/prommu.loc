@@ -40,7 +40,7 @@ class Promo extends ARModel
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('id, firstname, city, lastname, date_public,birthday, photo, status, isblocked', 'required'),
+            array('id, firstname, city, lastname, date_public,birthday, photo, status, ismoder, isblocked, is_new', 'required'),
             array('id, status, isblocked', 'numerical', 'integerOnly'=>true),
             array('name, firstname,lastname, city, admin', 'length', 'max'=>64),
             // array('email','email'),
@@ -213,15 +213,21 @@ class Promo extends ARModel
         }
     }
 
-   public function searchpr()
+    public function searchpr()
     {
-        // Warning: Please modify the following code to remove attributes that
-        // should not be searched.
+        $criteria = new CDbCriteria;
 
-        $criteria=new CDbCriteria;
+        $get = Yii::app()->getRequest()->getParam('Promo');
+        if(is_array($get))
+        {
+          $this->attributes = $get;
+        }
+        // недорегистрированных не выводим
+        $criteria->condition = 't.isblocked <> ' . User::$ISBLOCKED_NOT_FULL_ACTIVE;
+        //
         $criteria->compare('id',$this->id, true);
-        $criteria->compare('id_user',$this->id, true);
-        $criteria->compare('isman',$this->id, true);
+        $criteria->compare('id_user',$this->id_user, true);
+        $criteria->compare('isman',$this->isman, true);
         $criteria->compare('firstname',$this->firstname, true);
         $criteria->compare('lastname',$this->lastname, true); 
         $criteria->compare('city',$this->city, true);
@@ -231,8 +237,11 @@ class Promo extends ARModel
         $criteria->compare('mdate',$this->mdate, true);
         $criteria->compare('aboutme',$this->aboutme, true);
         $criteria->compare('status',$this->status, true);
+        $criteria->compare('ismoder',$this->ismoder, true);
         $criteria->compare('isblocked',$this->isblocked, true);
         $criteria->compare('admin',$this->admin, true);
+        $criteria->compare('is_new',$this->is_new, true);
+
         return new CActiveDataProvider('Promo', array(
             'criteria'=>$criteria,
             'pagination' => array('pageSize' => 100,),
@@ -683,30 +692,17 @@ class Promo extends ARModel
 
      public function getApplicAdmin()
     {
-
-        $sql = "
-            SELECT DISTINCT
-              r.id,
-              r.id_user idus,
-              r.photo,
-              r.firstname,
-              r.lastname,
-              r.isman,
-              DATE_FORMAT(r.birthday, '%d.%m.%Y') birthday,
-              cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg AS SIGNED)) avg_rate,
-              r.rate,
-              r.rate_neg,
-              photo,
-              (SELECT COUNT(id)
-               FROM comments mm
-               WHERE mm.iseorp = 1 AND mm.id_promo = r.id) comment_count
-            FROM resume r
-              INNER JOIN user u ON r.id_user = u.id_user 
-              AND r.is_new = 1 
-              #OR r.ismoder = 0 
-              #AND u.crdate >= CURDATE()
-            ORDER BY id DESC, id DESC 
-        ";
+       return Yii::app()->db->createCommand()
+        ->select('r.id, u.id_user idus, r.firstname, r.lastname')
+        ->from('resume r')
+        ->leftJoin('user u','u.id_user=r.id_user')
+        ->where(
+          'r.is_new=1 AND u.isblocked<>:isblocked',
+          [':isblocked'=>User::$ISBLOCKED_NOT_FULL_ACTIVE]
+        )
+        ->order('r.id desc')
+        ->limit('1000')
+        ->queryAll();
 
         $result = Yii::app()->db->createCommand($sql)->queryAll();
 
@@ -1111,15 +1107,8 @@ class Promo extends ARModel
      * setViewed
      * @return model
      */
-    public function setViewed($id) {
-        
-        Yii::app()->db->createCommand()->update(
-            'user',
-            ['ismoder' => 2],
-            'id_user=:id',
-            [':id' => $id]
-        );
-        
+    public function setViewed($id)
+    {
         return Yii::app()->db->createCommand()->update(
             $this->tableName(),
             ['is_new' => 0],
@@ -1137,14 +1126,5 @@ class Promo extends ARModel
       ->insert(self::tableName(),$arInsert);
 
     return ($result ? Yii::app()->db->getLastInsertID() : $result);
-  }
-  /*
-   * @param $id_user - integer
-   * @return bool
-   */
-  public function deleteRegisterUser($id_user)
-  {
-    return Yii::app()->db->createCommand()
-      ->delete(self::tableName(),'id_user=:id_user',[':id_user'=>$id_user]);
   }
 }

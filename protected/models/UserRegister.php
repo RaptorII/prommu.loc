@@ -33,12 +33,18 @@ class UserRegister
   // image
   public static $DEFAULT_IMAGE_SIZE = 1600;
   public static $DIR_PERMISSIONS = 0755; // permission for dir in creating
+  public static $EDIT_IMAGE_SUFFIX = '400'; // permission for dir in creating
   //
   public $step;
   public $user;
   public $data;
   public $errors;
   public $view;
+  public $filesRoot;
+  public $filesUrl;
+  //
+  //
+  //
   public $profile;
 
   function __construct($id_user=false)
@@ -51,6 +57,8 @@ class UserRegister
       $this->view = false;
       $this->data['type'] = Share::$UserProfile->type;
       $this->setProfile($id_user);
+      $this->filesRoot = $this->profile->filesRoot;
+      $this->filesUrl = $this->profile->filesUrl;
     }
     else // полная регистрация
     {
@@ -101,6 +109,9 @@ class UserRegister
       $this->setProfile();
       //
       $this->errors = [];
+      //
+      $this->filesRoot = Settings::getFilesRoot() . 'registers/' . $this->data['id'];
+      $this->filesUrl = Settings::getFilesUrl() . 'registers/' . $this->data['id'];
     }
   }
   /**
@@ -268,7 +279,7 @@ class UserRegister
         //
         //
         // правила от Кутишевского
-        if(!empty($arData['transition'])) // utm_source - empty
+        /*if(!empty($arData['transition'])) // utm_source - empty
         {
           if(
             strripos($arData['transition'],'facebook_smm')!==false
@@ -309,7 +320,7 @@ class UserRegister
           {
             $arData['referer'] = $arData['last_referer'];
           }
-        }
+        }*/
         //
         foreach ($arData as $k => $v)
         {
@@ -392,7 +403,7 @@ class UserRegister
         {
           $model = new User();
           $is_user = $model->checkLogin($value,$isPhone);
-          if($is_user && $this->data['id_user']!=$is_user)
+          if($is_user)
           {
             $this->errors['login'] = "Данный телефон уже используется. <a href=\""
               . MainConfig::$PAGE_LOGIN . "\">Авторизоваться</a>";
@@ -410,11 +421,6 @@ class UserRegister
               $this->data['time_to_repeat'] = $this->isTimeToRepeat($arData['time_code']);
               $arData['is_confirm'] = 0;
               $arData['is_confirm_time'] = false;
-              if($this->data['id_user'])
-              {
-                $arData['id_user'] = false;
-                $this->deleteNewUser();
-              }
             }
           }
         }
@@ -425,7 +431,7 @@ class UserRegister
         $value = filter_var($post['login'],FILTER_SANITIZE_EMAIL);
         $model = new User();
         $is_user = $model->checkLogin($value);
-        if($is_user && $this->data['id_user']!=$is_user)
+        if($is_user)
         {
           $this->errors['login'] = "Данный эл. адрес уже используется. <a href=\""
             . MainConfig::$PAGE_LOGIN . "\">Авторизоваться</a>";
@@ -444,11 +450,6 @@ class UserRegister
             $arData['token'] = md5($arData['code'] . $arData['time_code'] . $this->user);
             $arData['is_confirm'] = 0;
             $arData['is_confirm_time'] = false;
-            if($this->data['id_user'])
-            {
-              $arData['id_user'] = false;
-              $this->deleteNewUser();
-            }
           }
         }
         $this->data['login'] = $value;
@@ -483,9 +484,9 @@ class UserRegister
       {
         $this->errors['password'] = 'Пароль должен состоять минимум из шести символов';
       }
-      elseif(!$this->data['id_user'])
+      else
       {
-        $this->saveNewUser($value1);
+        $arData['password'] = md5($value1); // !!!!!! небезопасно
       }
       $this->data['password'] = $post['password'];
       $this->data['r-password'] = $post['r-password'];
@@ -493,17 +494,15 @@ class UserRegister
     //
     if($this->step==self::$STEP_AVATAR)
     {
-      if(Share::isApplicant($this->profile) && empty($this->profile->exInfo->photo))
-      {
-        $this->errors['avatar'] = 'Необходимо загрузить фото';
-      }
-      elseif(Share::isEmployer($this->profile) && empty($this->profile->exInfo->logo))
+      if(empty($this->data['avatar']))
       {
         $this->errors['avatar'] = 'Необходимо загрузить фото';
       }
       else
       {
-        // теперь можно и авторизовать
+        // теперь можно и в лиды
+        $this->saveNewUser();
+        $this->saveNewUserPhoto();
         $model = new Auth();
         $model->Authorize(['id'=>$this->profile->id]);
       }
@@ -696,21 +695,20 @@ class UserRegister
     {
       $this->user = $query['user'];
       Yii::app()->request->cookies['urh'] = new CHttpCookie('urh', $this->user);
-      $this->setStep(!empty($query['id_user']) ? self::$STEP_AVATAR : self::$STEP_PASSWORD);
+      $this->setStep(empty($query['password']) ? self::$STEP_PASSWORD : self::$STEP_AVATAR);
       if( !$query['is_confirm'] )
       {
         $this->setData(['is_confirm'=>1, 'is_confirm_time'=>time()]);
       }
       return MainConfig::$PAGE_REGISTER . DS
-        . self::$URL_STEPS[(!empty($query['id_user']) ? self::$STEP_AVATAR : self::$STEP_PASSWORD)];
+        . self::$URL_STEPS[(empty($query['password']) ? self::$STEP_PASSWORD : self::$STEP_AVATAR)];
     }
   }
   /**
-   * @param $password - string (user => passw)
    * @param $messenger - string (user => messenger)
    * доведение до состояния старой регистрации
    */
-  private function saveNewUser($password, $messenger='')
+  private function saveNewUser($messenger='')
   {
     $arUser = $this->getData();
     $date = date('Y-m-d H:i:s');
@@ -721,7 +719,7 @@ class UserRegister
     $model = new User();
     $id_user = $model->registerUser([
       'login' => $arUser['login'],
-      'passw' => md5($password), // !!!!!! небезопасно
+      'passw' => $arUser['password'],
       'email' => $arUser['login'],
       'status' => $arUser['type'],
       'isblocked' => $model::$ISBLOCKED_NOT_FULL_ACTIVE,
@@ -778,7 +776,7 @@ class UserRegister
 
     $model->userActivateInsertUpdate([
       'id_user' => $id_user,
-      'token' => md5($arUser['login'] . $date . md5($password)),
+      'token' => md5($arUser['login'] . $date . $arUser['password']),
       'data' => json_encode($arJson),
       'dt_create' => $date,
     ]);
@@ -791,7 +789,8 @@ class UserRegister
         'firstname' => $arUser['name'],
         'lastname' => $arUser['surname'],
         'date_public' => $date,
-        'mdate' => $date
+        'mdate' => $date,
+        'isblocked' => User::$ISBLOCKED_NOT_FULL_ACTIVE
       ]);
     }
     // employer
@@ -803,6 +802,7 @@ class UserRegister
         'name' => $arUser['name'],
         'type' => $model::$TYPE_DIRECT_EMPLOYER,
         'crdate' => $date,
+        'isblocked' => User::$ISBLOCKED_NOT_FULL_ACTIVE
       ]);
     }
     //
@@ -832,42 +832,10 @@ class UserRegister
     ],$arUser['type']);
   }
   /**
-   * удаление из старой системы всвязи со сменой логина
-   */
-  private function deleteNewUser()
-  {
-    // user
-    $model = new User();
-    $model->deleteRegisterUser($this->data['id_user']);
-    // analytic
-    $model = new Analytic();
-    $model->deleteRegisterUser($this->data['id_user']);
-    // resume
-    if(Share::isApplicant($this->data['type']))
-    {
-      $model = new Promo();
-      $model->deleteRegisterUser($this->data['id_user']);
-    }
-    // employer
-    if(Share::isEmployer($this->data['type']))
-    {
-      $model = new Employer();
-      $model->deleteRegisterUser($this->data['id_user']);
-    }
-  }
-  /**
    * Метод для крона, для отправки писем юзерам с незавершенной регистрацией
    */
   public static function setRegisterNotificetions()
   {
-    /*
-    $query = Yii::app()->db->createCommand()
-      ->select('*')
-      ->from('user_register')
-      ->where('id=<id>')
-      ->queryAll();
-    */
-
     $d1 = strtotime('-2 days');
     $d2 = strtotime('-1 days');
     $query = Yii::app()->db->createCommand()
@@ -882,11 +850,15 @@ class UserRegister
     if(!count($query))
       return false;
 
-    $arIdUser = $arData = [];
+    $arIdUser = $arData = $arPhoto = [];
+
     foreach ($query as $user)
     {
+      if($user['login_type']!=self::$LOGIN_TYPE_EMAIL)
+        continue;
+
       // неподтвержденные email-ы
-      if(!$user['is_confirm'] && $user['login_type']==self::$LOGIN_TYPE_EMAIL)
+      if(!$user['is_confirm'])
       {
         $event = Share::isApplicant($user['type']) ? 28 : 29;
         Mailing::set($event,[
@@ -895,6 +867,11 @@ class UserRegister
           'link_user' => self::getEmailLink($user)
         ]);
       }
+      // собираем юзеров для напоминалки по фото
+      if($user['is_confirm'] && empty($user['avatar']) && empty($user['id_user']))
+      {
+        $arPhoto[] = $user;
+      }
       // собираем юзеров с id_user
       if(!empty($user['id_user']))
       {
@@ -902,46 +879,23 @@ class UserRegister
         $arData[$user['id_user']] = $user;
       }
     }
-
-    if(!count($arIdUser))
-      return false;
-
+    //
     // проверка наличия фото у неполностью активных юзеров
-    $query = Yii::app()->db->createCommand()
-      ->select('up.id_user')
-      ->from('user_photos up')
-      ->join('user u','u.id_user=up.id_user')
-      ->where([
-        'and',
-        [
-          'u.isblocked=:isblocked',
-          [':isblocked'=>User::$ISBLOCKED_NOT_FULL_ACTIVE]
-        ],
-        ['in','up.id_user',$arIdUser]
-      ])
-      ->group('id_user')
-      ->queryColumn();
-
-    $arPhoto = [];
-    foreach ($arIdUser as $id_user)
+    if(count($arPhoto))
     {
-      if(
-        !in_array($id_user,$query)
-        &&
-        $arData[$id_user]['login_type']==self::$LOGIN_TYPE_EMAIL
-      )
+      foreach ($arPhoto as $user)
       {
-        $event = Share::isApplicant($arData[$id_user]['type']) ? 30 : 31;
+        $event = Share::isApplicant($user['type']) ? 30 : 31;
         Mailing::set($event,[
-          'email_user' => $arData[$id_user]['login'],
+          'email_user' => $user['login'],
           'link_user' => self::getEmailNotificationLink(
-            $arData[$id_user]['token'],
+            $user['token'],
             self::$STEP_AVATAR
           )
         ]);
-        $arPhoto[] = $id_user;
       }
     }
+    //
     // проверка неполностью активных пользователей
     $arNotActive = Yii::app()->db->createCommand()
       ->select('id_user')
@@ -960,21 +914,14 @@ class UserRegister
     {
       foreach ($arNotActive as $id_user)
       {
-        if(
-          !in_array($id_user,$arPhoto)
-          &&
-          $arData[$id_user]['login_type']==self::$LOGIN_TYPE_EMAIL
-        )
-        {
-          $event = Share::isApplicant($arData[$id_user]['type']) ? 32 : 33;
-          Mailing::set($event,[
-            'email_user' => $arData[$id_user]['login'],
-            'link_user' => self::getEmailNotificationLink(
-              $arData[$id_user]['token'],
-              'profile'
-            )
-          ]);
-        }
+        $event = Share::isApplicant($arData[$id_user]['type']) ? 32 : 33;
+        Mailing::set($event,[
+          'email_user' => $arData[$id_user]['login'],
+          'link_user' => self::getEmailNotificationLink(
+            $arData[$id_user]['token'],
+            'profile'
+          )
+        ]);
       }
     }
   }
@@ -995,10 +942,11 @@ class UserRegister
       'time_code' => $time,
       'is_confirm' => 1,
       'is_confirm_time' => $time,
-      'social' => 1
+      'social' => 1,
+      'password' => $arr['password']
     ]);
 
-    $this->saveNewUser($arr['password'], $arr['messenger']);
+    $this->saveNewUser($arr['messenger']);
     return $this->getData();
   }
   //
@@ -1011,14 +959,14 @@ class UserRegister
   public function saveImage()
   {
     $arRes = ['error'=>[]];
-		$result = $this->existenceDir($this->profile->filesRoot);
+		$result = $this->existenceDir($this->filesRoot);
 		if(!$result)
     {
       $arRes['error'][] = 'Ошибка сохранения, обратитесь к администратору';
       return $arRes;
     }
 
-		$mSize = $this->profile->arYiiUpload['maxFileSize'] * 1024 * 1024; // переводим в байты
+		$mSize = UserProfile::$MAX_FILE_SIZE * 1024 * 1024; // переводим в байты
 
     $fName = $_FILES['upload']['name'];
     $info = new SplFileInfo($fName);
@@ -1031,30 +979,30 @@ class UserRegister
     if($_FILES['upload']['size']>$mSize) // ошибка передачи файла на сервер
     {
       $arRes['error'][] = "Размер файла больше допустимого значения ("
-        . $this->profile->arYiiUpload['maxFileSize'] . "Мб)";
+        . UserProfile::$MAX_FILE_SIZE . "Мб)";
     }
 
-    if(!in_array($type,$this->profile->arYiiUpload['fileFormat'])) // проверяем формат на корректность
+    if(!in_array($type,UserProfile::$AR_FILE_FORMAT)) // проверяем формат на корректность
     {
       $arRes['error'][] = "У файла некорректный формат";
     }
 
     $newName = date('YmdHis') . rand(1000,9999) . '.' . $type;
-    $filePath = $this->profile->filesRoot . DS . $newName;
-    $src = $this->profile->filesUrl . DS . $newName;
+    $filePath = $this->filesRoot . DS . $newName;
+    $src = $this->filesUrl . DS . $newName;
     $result = move_uploaded_file($_FILES['upload']["tmp_name"], $filePath);
     if($result) // файл успешно перемещен
     {
       $fSize = getimagesize($filePath);
       if($fSize)
       {
-        $size = $this->profile->arYiiUpload['minImageSize']; // проверяем на минимальную ширину/высоту
+        $size = UserProfile::$MIN_IMAGE_SIZE; // проверяем на минимальную ширину/высоту
         if($size>0 && ($fSize[0]<$size || $fSize[1]<$size))
         {
           $arRes['error'][] = "Файл меньше допустимого значения ({$size}x{$size})";
           unlink($filePath);
         }
-        $size = $this->profile->arYiiUpload['maxImageSize']; // проверяем на максимальную ширину/высоту
+        $size = UserProfile::$MAX_IMAGE_SIZE; // проверяем на максимальную ширину/высоту
         if($size>0 && ($fSize[0]>$size || $fSize[1]>$size))
         {
           $arRes['error'][] = "Файл больше допустимого значения ({$size}x{$size})";
@@ -1137,14 +1085,17 @@ class UserRegister
   }
   /**
    * @param $arData - array()
+   * @param $arDimensions - array(suffix => dimensions)
    * @param $arParams - array()
    */
   public function editImage($arData)
   {
     $quality = 90;
     $arRes = ['error'=>[],'items'=>[]];
-
-    $filePath = $this->profile->filesRoot . DS . $arData['name'];
+    $arDimensions = (!empty($this->data['id_user'])
+      ? $this->profile->arYiiUpload['imgDimensions']
+      : [self::$EDIT_IMAGE_SUFFIX => intval(self::$EDIT_IMAGE_SUFFIX)]);
+    $filePath = $this->filesRoot . DS . $arData['name'];
     $info = new SplFileInfo($arData['name']);
     $type = mb_strtolower($info->getExtension());
     $typeLen = strlen($type) + 1; // прибавляем точку
@@ -1222,14 +1173,14 @@ class UserRegister
     $result = imagecopyresampled($dstImage, $image, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH);
     $result = imagejpeg($dstImage, $inOutFile, $quality); // записываем изображение в файл
     $arRes['name'] = pathinfo($arData['name'], PATHINFO_FILENAME);
-    foreach ($this->profile->arYiiUpload['imgDimensions'] as $suffix => $size)
+    foreach ($arDimensions as $suffix => $size)
     {
       $this->resizeImage($inOutFile, "{$filePathWithoutExt}{$suffix}.jpg", $size);
-      $arRes['items'][$suffix] = $this->profile->filesUrl . DS . $arRes['name'] . "{$suffix}.jpg";
+      $arRes['items'][$suffix] = $this->filesUrl . DS . $arRes['name'] . "{$suffix}.jpg";
     }
-    $result = imagejpeg($image, $filePathWithoutExt . $this->profile->arYiiUpload['imgOrigSuFFix'] . ".jpg");
-    $arRes['items'][$this->profile->arYiiUpload['imgOrigSuFFix']] = $this->profile->filesUrl
-      . DS . $arRes['name'] . $this->profile->arYiiUpload['imgOrigSuFFix'] . ".jpg";
+    $result = imagejpeg($image, $filePathWithoutExt . UserProfile::$ORIGINAL_IMAGE_SUFFIX . ".jpg");
+    $arRes['items'][UserProfile::$ORIGINAL_IMAGE_SUFFIX] = $this->filesUrl
+      . DS . $arRes['name'] . UserProfile::$ORIGINAL_IMAGE_SUFFIX . ".jpg";
 
     imagedestroy($image);
     imagedestroy($dstImage);
@@ -1244,8 +1195,14 @@ class UserRegister
       //unlink($file);
     }
     */
-
-    $this->profile->saveRegisterPhoto($arRes['name']);
+    if(!empty($this->data['id_user']))
+    {
+      $this->profile->saveRegisterPhoto($arRes['name']);
+    }
+    else
+    {
+      $this->setData(['avatar' => $arRes['name']]);
+    }
 
     return $arRes;
   }
@@ -1256,15 +1213,18 @@ class UserRegister
    */
   public function onlyEditImage($arData)
   {
+    $arDimensions = (!empty($this->data['id_user'])
+      ? $this->profile->arYiiUpload['imgDimensions']
+      : [self::$EDIT_IMAGE_SUFFIX => intval(self::$EDIT_IMAGE_SUFFIX)]);
     $arData['name'] = date('YmdHis') . rand(1000,9999) . '.jpg';
-    $filePathWithoutExt = $this->profile->filesRoot . DS . $arData['oldName'];
-    $filePathFull = $this->profile->filesRoot
-      . DS . $arData['oldName'] . $this->profile->arYiiUpload['imgOrigSuFFix'] . '.jpg';
-    $filePath = $this->profile->filesRoot . DS . $arData['name'];
+    $filePathWithoutExt = $this->filesRoot . DS . $arData['oldName'];
+    $filePathFull = $this->filesRoot
+      . DS . $arData['oldName'] . UserProfile::$ORIGINAL_IMAGE_SUFFIX . '.jpg';
+    $filePath = $this->filesRoot . DS . $arData['name'];
     $image = imagecreatefromjpeg($filePathFull);
     $result = imagejpeg($image, $filePath, 100);
     unlink($filePathFull);
-    foreach ($this->profile->arYiiUpload['imgDimensions'] as $suffix => $size)
+    foreach ($arDimensions as $suffix => $size)
     {
       unlink($filePathWithoutExt . $suffix . '.jpg');
     }
@@ -1275,11 +1235,38 @@ class UserRegister
 
   public function deleteImage($file)
   {
-    $path = $this->profile->filesRoot . DS . $file;
+    $path = $this->filesRoot . DS . $file;
 
     if(file_exists($path))
     {
       unlink($path);
     }
+  }
+  /**
+   * Перенос фоток с регистрации в профиль
+   */
+  private function saveNewUserPhoto()
+  {
+    $oldUserImagePath = $this->filesRoot . DS . $this->data['avatar']; // путь к картинкам реги
+    $userImagePath = $this->profile->arYiiUpload['filePath'] . DS . $this->data['avatar']; // путь к картинкам юзера
+    $this->existenceDir($this->profile->arYiiUpload['filePath']); // создаем директорию при необходимости
+    // делаем все форматы обрезанного изображения согласно типа профиля
+    foreach ($this->profile->arYiiUpload['imgDimensions'] as $suffix => $size)
+    {
+      $this->resizeImage(
+        $oldUserImagePath . self::$EDIT_IMAGE_SUFFIX . '.jpg',
+        $userImagePath . "{$suffix}.jpg",
+        $size
+      );
+    }
+    // переносим оригинал изображения в директорию изображений юзера
+    $fullImage = UserProfile::$ORIGINAL_IMAGE_SUFFIX . ".jpg";
+    $image = imagecreatefromjpeg($oldUserImagePath . $fullImage);
+    imagejpeg($image, $userImagePath . $fullImage);
+    // удаляем изображения с директории реги
+    unlink($oldUserImagePath . $suffix . '.jpg');
+    unlink($oldUserImagePath . $fullImage);
+    // сохраняем в профиле новое фото
+    $this->profile->saveRegisterPhoto($this->data['avatar']);
   }
 }

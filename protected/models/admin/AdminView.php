@@ -114,5 +114,63 @@ class AdminView
       return $arPhone['code'] . $arPhone['phone'];
     }
   }
+  /**
+   * @param $value - integer (user => isblocked | user => ismoder)
+   * @param $id_user - integer (user => id_user)
+   * @param $field - string ('isblocked' | 'ismoder')
+   */
+  public static function getUserStatus($value, $id_user, $field)
+  {
+    if($field=='isblocked')
+    {
+      $arr = User::getAdminArrIsblocked();
+      $arIcons = [
+        User::$ISBLOCKED_FULL_ACTIVE => 'success',
+        User::$ISBLOCKED_BLOCKED => 'important',
+        User::$ISBLOCKED_NEW_USER => 'warning',
+        User::$ISBLOCKED_EXPECT => 'info'
+      ];
+    }
+    else
+    {
+      $arr = User::getAdminArrIsmoder();
+      $arIcons = [
+        User::$ISMODER_INACTIVE => 'primary',
+        User::$ISMODER_ACTIVE => 'success',
+        User::$ISMODER_PROCESSING => 'warning'
+      ];
+    }
+
+    $html = '<div class="dropdown select_update">
+      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
+        <span class="label label-' . $arIcons[$value] . '">' . $arr[$value] . '</span>
+        <span class="caret"></span>
+      </button>';
+
+    $html .= '<ul class="dropdown-menu ' . $field . '" aria-labelledby="dropdownMenu1">';
+    foreach ($arr as $key => $v)
+    {
+      $html .= '<li onclick = "' . ($field=='isblocked' ? 'doStatus' : 'doStatusModer') . '(' . $id_user . ', ' . $key
+        . ')" class="label label-' . $arIcons[$key] . '"> ' . $v . '</li >';
+    }
+    $html .= '</ul></div>';
+    return $html;
+  }
+  /**
+   * @param $id_user - user => id_user
+   * @return string
+   * достаем список городов для списка юзеров
+   */
+  public static function getUserCities($id_user)
+  {
+    $query = Yii::app()->db->createCommand()
+      ->select('c.name')
+      ->from('user_city uc')
+      ->join('city c','uc.id_city=c.id_city')
+      ->where('uc.id_user=:id', [':id'=>$id_user])
+      ->queryColumn();
+
+    return (count($query) ? implode(', ',$query) : '-');
+  }
 }
 ?>

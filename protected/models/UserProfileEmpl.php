@@ -707,10 +707,19 @@ class UserProfileEmpl extends UserProfile
                 );
                 $message = '<p>Анкета отправлена на модерацию.<br>Модерация занимает до 15 минут в рабочее время. О результатах проверки - Вам прийдет уведомление на эл. почту</p>';
                 Yii::app()->user->setFlash('prommu_flash', $message);
+
+              if(Yii::app()->getRequest()->getParam('register_complete')=='Y')
+              {
+                Yii::app()->db->createCommand()->update(
+                  'employer',
+                  ['isblocked' => User::$ISBLOCKED_NEW_USER],
+                  'id_user=:id_user',
+                  [':id_user' => $id]
+                );
+              }
             }
         }
     }
-
 
 
     /**

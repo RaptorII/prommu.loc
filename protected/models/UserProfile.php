@@ -31,6 +31,12 @@ abstract class UserProfile extends CModel
     // constant
     public static $APPLICANT = 2;
     public static $EMPLOYER = 3;
+    // images
+    public static $AR_FILE_FORMAT = ['jpg','jpeg','png'];
+    public static $MAX_FILE_SIZE = 10;
+    public static $MIN_IMAGE_SIZE = 350;
+    public static $MAX_IMAGE_SIZE = 4500;
+    public static $ORIGINAL_IMAGE_SUFFIX = '000';
 
     function __construct($inProps)
     {
@@ -45,15 +51,15 @@ abstract class UserProfile extends CModel
         // YiiUpload
         $this->arYiiUpload = [
                 'fileLimit' => 5,
-                'fileFormat' => ['jpg','jpeg','png'],
+                'fileFormat' => self::$AR_FILE_FORMAT,
                 'callButtonText' => 'Загрузить фото',
                 'useWebcam' => true,
-                'minImageSize' => 350,
-                'maxImageSize' => 4500,
+                'minImageSize' => self::$MIN_IMAGE_SIZE,
+                'maxImageSize' => self::$MAX_IMAGE_SIZE,
                 'imageEditor' => true,
-                'maxFileSize' => 10, // в мегабайтах(по умолчанию 5)
+                'maxFileSize' => self::$MAX_FILE_SIZE, // в мегабайтах(по умолчанию 5)
                 'imageSignature' => true, // разрешить подпись фото
-                'imgOrigSuFFix' => '000', // суфикс к заголовку измененного, возможно повернутого но не обрезаного изображения
+                'imgOrigSuFFix' => self::$ORIGINAL_IMAGE_SUFFIX, // суфикс к заголовку измененного, возможно повернутого но не обрезаного изображения
                 'filePath' => $this->filesRoot,
                 'fileUrl' => $this->filesUrl,
                 'objSaveMethod' => 'savePhoto',

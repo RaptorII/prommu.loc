@@ -40,19 +40,26 @@
         height: auto;
         border-radius: 50%;
     }
+    .custom-table .dropdown-menu.ismoder li{
+      width: 130px;
+    }
 </style>
 
-<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="#" target="" onclick="export_delete()">Покончить с ними</a>
+<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="#" target="" onclick="export_delete()">Покончить с ними</a><br><br>
 <?php
 echo CHtml::form('/admin/site/UserUpdate?id=0', 'POST', array("id" => "form"));
 echo '<input type="hidden" id="curr_status" name="curr_status">';
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'dvgrid',
     'dataProvider' => $model->searchpr(),
-     'itemsCssClass' => 'table table-bordered table-hover dataTable',
-    'htmlOptions'=>array('class'=>'table table-hover', 'name'=>'my-grid', 'style'=>    'padding: 10px; overflow: scroll;'),
+    'itemsCssClass' => 'table table-bordered table-hover custom-table',
+    'htmlOptions'=>array('class'=>'table table-hover', 'name'=>'my-grid'),
     'filter' => $model,
     'enablePagination' => true,
+    'rowCssClassExpression' => function($row, $data)
+    {
+      return ($data->is_new ? 'new-row' : '');
+    },
     'columns' => array(
          array(
             'class'=>'CCheckBoxColumn',
@@ -93,7 +100,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
        array(
             'header'=>'Город',
             'name' => 'city',
-            'value' => 'Москва',
+            'value' => 'AdminView::getUserCities($data->id_user)',
+            'filter' => false,
             'type' => 'raw',
         ),
        array(
@@ -109,23 +117,35 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type' => 'raw',
         ),
         array(
-            'header'=>'Модерация',
-            'name' => 'status',
-            'value' => 'ShowStatus($data->id_user, $data->ismoder)',
-            'type' => 'raw'
+          'header'=>'Модерация',
+          'name' => 'status',
+          'type' => 'raw',
+          'filter' => CHtml::dropDownList(
+            'Promo[ismoder]',
+            isset($_GET['Promo']['ismoder']) ? $_GET['Promo']['ismoder'] : '',
+            User::getAdminArrIsmoder(true)
+          ),
+          'value' => 'AdminView::getUserStatus($data->ismoder, $data->id_user, "ismoder")',
+          'htmlOptions' => ['style'=>'width:5%;padding:0']
         ),
         array(
-            'header'=>'Статус',
-            'name' => 'isblocked',
-            'type' => 'raw',
-            'value' => 'ShowBlocked($data->isblocked, $data->id_user, $data->ismoder)',
+          'header'=>'Статус',
+          'name' => 'isblocked',
+          'type' => 'raw',
+          'filter' => CHtml::dropDownList(
+            'Promo[isblocked]',
+            isset($_GET['Promo']['isblocked']) ? $_GET['Promo']['isblocked'] : '',
+            User::getAdminArrIsblocked(true)
+          ),
+          'value' => 'AdminView::getUserStatus($data->isblocked, $data->id_user, "isblocked")',
+          'htmlOptions' => ['style'=>'width:5%;padding:0']
         ),
         array(
             'name' => 'Редактор',
             'value' => 'ShowEdit($data->id_user)',
             'type' => 'raw',
             'filter' => '',
-            'htmlOptions' => array('style' => 'width: 50px; text-align: center;', 'class' => 'sorting')
+            'htmlOptions' => array('style' => 'width:5%;padding:0', 'class' => 'sorting')
         ),
         array(
             'name' => 'Проекты',
@@ -133,33 +153,27 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type' => 'raw',
             'filter' => '',
         ),
-
+        [
+          'header'=>'Просмотрено',
+          'filter' => CHtml::dropDownList(
+            'Promo[is_new]',
+            isset($_GET['Promo']['is_new']) ? $_GET['Promo']['is_new'] : '',
+            [''=>'Все', '1'=>'Новые', '0'=>'Просмотреные']
+          ),
+          'name' => 'is_new',
+          'value' => 'getLabel($data->is_new)',
+          'type' => 'raw',
+          'htmlOptions' => ['style'=>'width:3%']
+        ]
     )));
 
 echo CHtml::submitButton('Создать',array("class"=>"btn btn-success","id"=>"btn_submit", "style"=>"visibility:hidden"));
-
-function ShowBlocked($blocked, $id_user, $ismoder)
+//
+function getLabel($s)
 {
-
-    $block_status = ["полностью активен", "заблокирован", "ожидает активации", "активирован", "остановлен к показу"];
-    $icon = ["label-success", "label-important", "label-warning", "label-info", "label-primary"];
-    $html = '<div class="dropdown">
-  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  title="статус: ' . $block_status[$blocked] . '">
-    <span class="label ' . $icon[$blocked] . '">' . $block_status[$blocked] . '</span>
-    <span class="caret"></span>
-  </button>';
-   
-    $html .= '<ul class="dropdown-menu" style="position: absolute;top: 100%;left: -73px;" aria-labelledby="dropdownMenu1">';
-
-    for ($i = 0; $i < 5; $i++) {
-        if ($i != 2 && $i != 3) {
-            $html .= '<li ><a href = "#" onclick = "doStatus(' . $id_user . ', ' . $i . ')" ><span class="label ' . $icon[$i] . '"><i class="icon-off icon-white"></i></span> ' . $block_status[$i] . '</a></li >';
-        }
-    }
-    $html .= '</ul></div>';
-    return $html;
+  return '<span class="glyphicon ' . ($s ? 'glyphicon-flash' : '') . '"></span>';
 }
-
+//
 function ShowBirthday($id, $birthday)
 {   
     if($birthday == '1970-01-01'){
@@ -190,26 +204,6 @@ function ShowVaccount($id_user)
         // читаем вакансии
         $sql = "SELECT COUNT(*) cou FROM empl_vacations v WHERE v.id_user = {$id_user} AND v.status = 1 AND v.ismoder = 100 AND v.in_archive=0";
         return Yii::app()->db->createCommand($sql)->queryScalar();
-}
-
-
-
-function ShowStatus($id_user, $ismoder)
-{
-$status = ['не обработан','обработан'];
-    $st_ico = ["label-warning", "label-success"];
-    $html = 
-    '<div class="dropdown">
-    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  title="статус: ' . $status[$ismoder] . '">
-    <span class="label ' . $st_ico[$ismoder] . '">' . $status[$ismoder] . '</span>
-    <span class="caret"></span>
-    </button>';
-    $html .= '<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">';
-    for ($i = 0; $i < 2; $i++) {
-        $html .= '<li ><a href = "#" onclick = "doStatusModer(' . $id_user . ', ' . $i . ')" ><span class="label ' . $st_ico[$i] . '"><i class="icon-star icon-white"></i></span> ' . $status[$i] . '</a></li >';
-    }
-    $html .= '</ul></div>';
-    return $html;
 }
 
 function ShowEdit($id) {

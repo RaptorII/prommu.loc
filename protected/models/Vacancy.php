@@ -4490,7 +4490,7 @@ WHERE id_vac = {$inVacId}";
         $section = Yii::app()->getRequest()->getParam('section');
         empty($section) && $section=MainConfig::$VACANCY_APPROVED;
         $arRes['responses']['pages'] = new CPagination($arRes['responses']['cnt'][$section]);
-        $arRes['responses']['pages']->pageSize = 2; // 20 юзеров на странице
+        $arRes['responses']['pages']->pageSize = 20; // 20 юзеров на странице
         $arRes['responses']['pages']->applyLimit($responses);
         $arRes['responses']['section'] = Yii::app()->getRequest()->getParam('section');
         $arRes['responses']['section'] = ($arRes['responses']['section'] ?: MainConfig::$VACANCY_APPROVED);

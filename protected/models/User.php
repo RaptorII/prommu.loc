@@ -22,9 +22,11 @@ class User extends CActiveRecord
   public static $ISBLOCKED_EXPECT = 2;
   public static $ISBLOCKED_NOT_FULL_ACTIVE = 3;
   public static $ISBLOCKED_PAUSE_DISPLAY = 4;
+  public static $ISBLOCKED_NEW_USER = 5;
 
   public static $ISMODER_INACTIVE = 0;
   public static $ISMODER_ACTIVE = 1;
+  public static $ISMODER_PROCESSING = 2;
   /**
 	 * Returns the static model of the specified AR class.
 	 * @return User the static model class
@@ -784,15 +786,23 @@ class User extends CActiveRecord
 		$result = Yii::app()->db->createCommand()
     		->select("r.id, u.id_user, u.login, u.passw, 
     			u.email, u.access_time, u.status, 
-    			u.isblocked, u.ismoder, r.firstname, r.contact, r.aboutme,
-    			r.logo, r.lastname, r.name, r.type, r.city, r.rate, r.rate_neg"
+    			u.isblocked, u.ismoder, r.firstname, r.aboutme,
+    			r.logo, r.lastname, r.name, r.type, r.rate, r.rate_neg, r.contact"
     		)
 			->leftjoin('employer r', 'r.id_user=u.id_user')
     		->from('user u')
 		    ->where('u.id_user=:id', array(':id'=>$id))
 		    ->queryRow();
 
-		$result['src'] = Share::getPhoto($result['id_user'],3,$result['logo']);
+		$result['src'] = Share::getPhoto($result['id_user'],UserProfile::$EMPLOYER,$result['logo']);
+
+    $arCities = Yii::app()->db->createCommand()
+      ->select('c.name')
+      ->from('user_city uc')
+      ->join('city c','uc.id_city=c.id_city')
+      ->where('uc.id_user=:id', [':id'=>$id])
+      ->queryColumn();
+    $result['cities'] = (count($arCities) ? implode(', ',$arCities) : '-');
 
 		$attr = Yii::app()->db->createCommand()
 			->select("*")
@@ -1721,13 +1731,35 @@ class User extends CActiveRecord
 
     return $id_user;
   }
-  /*
-   * @param $id_user - integer
-   * @return bool
+  /**
+   * @param bool $filter
+   * @return array
+   * Список статусов для админки
    */
-  public function deleteRegisterUser($id_user)
+  public static function getAdminArrIsblocked($filter = false)
   {
-    return Yii::app()->db->createCommand()
-      ->delete(self::tableName(),'id_user=:id_user',[':id_user'=>$id_user]);
+    $arRes = [];
+    $filter && $arRes[''] = 'Все';
+    $arRes[self::$ISBLOCKED_FULL_ACTIVE] = 'Активирован';
+    $arRes[self::$ISBLOCKED_BLOCKED] = 'Заблокирован';
+    $arRes[self::$ISBLOCKED_NEW_USER] = 'Новый';
+    $arRes[self::$ISBLOCKED_EXPECT] = 'Модерация';
+
+    return $arRes;
+  }
+  /**
+   * @param bool $filter
+   * @return array
+   * Список статусов модерации для админки
+   */
+  public static function getAdminArrIsmoder($filter = false)
+  {
+    $arRes = [];
+    $filter && $arRes[''] = 'Все';
+    $arRes[self::$ISMODER_INACTIVE] = 'Не промодерирован';
+    $arRes[self::$ISMODER_ACTIVE] = 'Промодерирован';
+    $arRes[self::$ISMODER_PROCESSING] = 'Обработка';
+
+    return $arRes;
   }
 }

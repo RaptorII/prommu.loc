@@ -199,20 +199,23 @@ class Subdomain
 			->where('id_user=:id_user', [':id_user' => $idus])
 			->queryAll();
 
+    if(count($arRes)) // продолжаем только если выбран хоть какой-то город у юзера
+    {
+      $arCnt = array_fill_keys($arId, 0);
+      foreach ($arRes as $c)
+        if(in_array($c['region'], $arId))
+          $arCnt[$c['region']]++;
 
-		$arCnt = array_fill_keys($arId, 0);
-		foreach ($arRes as $c)
-			if(in_array($c['region'], $arId))
-				$arCnt[$c['region']]++;
+      if(!$arCnt[$sId])
+      { // Редиректим только если вообще нет городов субдомена
+        foreach ($arCnt as $id => $cnt)
+          if($cnt>0 && $cnt==sizeof($arRes))
+            self::setRedirect($idus, $id, true);
 
-		if(!$arCnt[$sId]){ // Редиректим только если вообще нет городов субдомена
-			foreach ($arCnt as $id => $cnt) 
-				if($cnt>0 && $cnt==sizeof($arRes))
-					self::setRedirect($idus, $id, true);
-
-			// если никуда не перешли - идем на основной
-			self::setRedirect($idus, 1307, true);
-		}
+        // если никуда не перешли - идем на основной
+        self::setRedirect($idus, 1307, true);
+      }
+    }
 	}
 	/*
 	*

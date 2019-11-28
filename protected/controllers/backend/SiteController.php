@@ -984,27 +984,18 @@ class SiteController extends Controller
         }
     }
 
-   public function actionPromoChangeModer($id)
-   {
-       // if($this->user_access != 1) {
-          //  $this->render('access');
-          //  return;
-       // }
-       if(self::isAuth()) {
-           $model = new Promo;
-           $curr_status = intval($_POST['curr_status']);
-           $model->ChangeModer($id, $curr_status);
-           $model->unsetAttributes();  // clear any default values
-           $model->searchpr();
-           /*
-           if(isset($_GET['User'])){
-               $model->attributes=$_GET['User'];
-           }
-           */
-           $this->render('users/view', array('model'=>$model));
-       }
-   }
-
+  /**
+   * @param $id
+   */
+  public function actionPromoChangeModer($id)
+  {
+    $this->checkAccess('Соискатели');
+    $model = new Promo;
+    $status = Yii::app()->getRequest()->getParam('curr_status');
+    $model->ChangeModer($id, $status);
+    Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
+    $this->redirect('/admin/users');
+  }
     public function actionVacancyChangeModer($id)
     {
         
@@ -1032,24 +1023,18 @@ class SiteController extends Controller
         }
     }
 
-    public function actionEmplChangeModer($id)
-    {
-    
-        if(self::isAuth()) {
-            $model = new Employer;
-            $curr_status = intval($_POST['curr_status']);
-            $model->ChangeModer($id, $curr_status);
-            $model->unsetAttributes();  // clear any default values
-            $model->searchempl();
-            
-            if(isset($_GET['Employer'])){
-                $model->attributes=$_GET['Employer'];
-            }
-            
-            $this->render('users/viewempl', array('model'=>$model));
-        }
-    }
-
+  /**
+   * @param $id
+   */
+  public function actionEmplChangeModer($id)
+  {
+    $this->checkAccess('Работодатели');
+    $model = new Employer;
+    $status = Yii::app()->getRequest()->getParam('curr_status');
+    $model->ChangeModer($id, $status);
+    Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
+    $this->redirect('/admin/empl');
+  }
 
     // **** Управление пользователями (блокировка, смена пароля) ****
 
@@ -1432,30 +1417,29 @@ class SiteController extends Controller
       $this->breadcrumbs = ['Обратная связь'=>['feedback'], $title];
       $this->render('feedback/update', ['id'=>$id, 'data'=>$data]);
     }
-    
-
-
+    /**
+     * @param $id
+     */
     public function actionPromoBlocked($id)
     {
-        $model = new Promo;
-        $curr_status = intval($_POST['curr_status']);
-        $model->blockedPromo($id,$curr_status);
-        $model->unsetAttributes();  // clear any default values
-        $model->searchpr();
-        //$model->UpdateUser($id, $model->attributes);
-        //$this->redirect(array('site/users/view'));
-        $this->render('users/view', array('model'=>$model));
+      $this->checkAccess('Соискатели');
+      $model = new Promo;
+      $status = Yii::app()->getRequest()->getParam('curr_status');
+      $model->blockedPromo($id, $status);
+      Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
+      $this->redirect('/admin/users');
     }
-
-
+    /**
+     * @param $id
+     */
     public function actionEmplBlocked($id)
     {
-        $model = new Employer;
-        $curr_status = intval($_POST['curr_status']);
-        $model->blocked($id,$curr_status);
-        $model->unsetAttributes();  // clear any default values
-        $model->searchempl();
-        $this->render('users/viewempl', array('model'=>$model));
+      $this->checkAccess('Работодатели');
+      $model = new Employer;
+      $status = Yii::app()->getRequest()->getParam('curr_status');
+      $model->blocked($id, $status);
+      Yii::app()->user->setFlash('success', 'Данные успешно сохранены');
+      $this->redirect('/admin/empl');
     }
 
     public function actionExportPromo()

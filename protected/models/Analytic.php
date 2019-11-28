@@ -263,13 +263,4 @@ class Analytic extends CActiveRecord
 
     return ($result ? Yii::app()->db->getLastInsertID() : $result);
   }
-  /*
-   * @param $id_user - integer
-   * @return bool
-   */
-  public function deleteRegisterUser($id_user)
-  {
-    return Yii::app()->db->createCommand()
-      ->delete(self::tableName(),'id_us=:id_user',[':id_user'=>$id_user]);
-  }
 }

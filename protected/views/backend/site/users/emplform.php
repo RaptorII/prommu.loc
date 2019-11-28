@@ -33,6 +33,7 @@ echo '<div class="col-xs-12"><div class="row">';
 /* 
 *       TAB PROFILE 
 */
+
 echo '<div role="tabpanel" class="tab-pane fade' . (($anchor=='tab_profile' || empty($anchor)) ? ' active in' : '') . '" id="tab_profile">';
     echo '<h3>Общее</h3>';
     echo '<div class="row"><div class="col-xs-12 col-sm-6 user__logo">'
@@ -43,12 +44,8 @@ echo '<div role="tabpanel" class="tab-pane fade' . (($anchor=='tab_profile' || e
             . CHtml::radioButtonList(
                     'User[ismoder]',
                     $data['ismoder'],
-                    array(
-                        0 => 'не промодерирован',
-                        1 => 'промодерирован',
-                        2 => 'обработка',
-                    ),
-                    array()
+                    User::getAdminArrIsmoder(),
+                    []
                 )
             . '</div>';
 
@@ -57,13 +54,8 @@ echo '<div role="tabpanel" class="tab-pane fade' . (($anchor=='tab_profile' || e
                     . CHtml::radioButtonList(
                         'User[isblocked]',
                         $data['isblocked'],
-                        array(
-                            0 => 'Активирован',
-                            1 => 'Заблокирован',
-                            2 => 'Новый',
-                            3 => 'Модерация'
-                        ),
-                        array()
+                        User::getAdminArrIsblocked(),
+                        []
                     )
                 . '</div></div>';
     echo '</div></div>';
@@ -104,11 +96,7 @@ echo '<div role="tabpanel" class="tab-pane fade' . (($anchor=='tab_profile' || e
         . '</div></div>';
     echo '<div class="control-group small-bl">'
             . '<label class="control-label">Город</label>'
-                . CHtml::textField(
-                    'User[city]', 
-                    html_entity_decode($data['city']), 
-                    array('class'=>'form-control')
-                )
+            . '<div>' . $data['cities'] . '</div>'
             . '</div>';
     echo '<div class="control-group small-bl">'
             . '<label class="control-label">Сайт</label>'

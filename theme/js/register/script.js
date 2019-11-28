@@ -51,7 +51,46 @@ var RegisterPage = (function () {
       self.bWebCam = false;
     }
     self.checkSnapshot();
-
+    // SEO
+    sbjs.init({
+      domain: domainName,
+      lifetime: 3,
+      callback: function () {
+        if($('[name="referer"]').is('*') && !$('[name="referer"]').val().length)
+        {
+          $('[name="referer"]').val(sbjs.get.current.typ);
+        }
+        if($('[name="transition"]').is('*') && !$('[name="transition"]').val().length)
+        {
+          $('[name="transition"]').val(sbjs.get.current.src);
+        }
+        if($('[name="canal"]').is('*') && !$('[name="canal"]').val().length)
+        {
+          $('[name="canal"]').val(sbjs.get.current.mdm);
+        }
+        if($('[name="campaign"]').is('*') && !$('[name="campaign"]').val().length)
+        {
+          $('[name="campaign"]').val(sbjs.get.current.cmp);
+        }
+        if($('[name="content"]').is('*') && !$('[name="content"]').val().length)
+        {
+          $('[name="content"]').val(sbjs.get.current.cnt);
+        }
+        if($('[name="keywords"]').is('*') && !$('[name="keywords"]').val().length)
+        {
+          $('[name="keywords"]').val(sbjs.get.current.trm);
+        }
+        if($('[name="point"]').is('*') && !$('[name="point"]').val().length)
+        {
+          $('[name="point"]').val(sbjs.get.current_add.ep);
+        }
+        if($('[name="last_referer"]').is('*') && !$('[name="last_referer"]').val().length)
+        {
+          $('[name="last_referer"]').val(sbjs.get.current_add.rf);
+        }
+      }
+    });
+    //
     $('body')
       .on( // step 1
         'change',

@@ -1,15 +1,14 @@
-<?
-$exInfo = $model->profile->exInfo;
-$photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->logo;
-?>
 <script>
   var imageParams = {
-    maxFileSize:<?=$model->profile->arYiiUpload['maxFileSize']?>,
-    fileFormat:<?=json_encode($model->profile->arYiiUpload['fileFormat'])?>
+    maxFileSize:<?=UserProfile::$MAX_FILE_SIZE?>,
+    fileFormat:<?=json_encode(UserProfile::$AR_FILE_FORMAT)?>
   };
   <? if(!Yii::app()->getRequest()->isAjaxRequest): ?>
     var pageCondition = <?=json_encode($model->data['condition']['html'])?>;
   <? endif; ?>
+  // yandex metric
+  //setGoal();
+  function setGoal(){ typeof yaCounter23945542 === 'object' ? yaCounter23945542.reachGoal(4) : setTimeout(function(){ setGoal() },1000); }
 </script>
 <div class="login-wrap">
 
@@ -22,14 +21,23 @@ $photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->l
 
     <div class="login__photo">
       <p class="center separator">
-        <?=(Share::isApplicant($exInfo->status)?'Работодатели':'Соискатели')?> оценят вашу открытость
+        <?=(Share::isApplicant($model->data['type'])?'Работодатели':'Соискатели')?> оценят вашу открытость
       </p>
       <div class="login__photo-img">
         <?
-          if(!empty($photo))
+          if(!empty($model->data['avatar']))
           {
-            $src = Share::getPhoto($exInfo->id, $exInfo->status, $photo);
-            $bigSrc = Share::getPhoto($exInfo->id, $exInfo->status, $photo, 'big');
+            $path = $model->filesRoot . DS . $model->data['avatar'];
+            $url = $model->filesUrl . DS . $model->data['avatar'];
+            $fullImage = UserProfile::$ORIGINAL_IMAGE_SUFFIX . '.jpg';
+            $src = $url . $model::$EDIT_IMAGE_SUFFIX . '.jpg';
+            $bigSrc = $url . $fullImage;
+            if(!file_exists($path . $model::$EDIT_IMAGE_SUFFIX . '.jpg') || !file_exists($path . $fullImage))
+            {
+              $src = '/theme/pic/register-popup-page/register_popup_r_logo.png'; // Миша, ты обещал картинку, не забудь)
+              $bigSrc = '';
+              $model->data['avatar'] = '';
+            }
           }
           else
           {
@@ -39,11 +47,11 @@ $photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->l
         ?>
         <img
           src="<?=$src?>"
-          alt="<?=$photo?>"
-          data-name="<?=$photo?>"
+          alt="<?=$model->data['avatar']?>"
+          data-name="<?=$model->data['avatar']?>"
           data-big="<?=$bigSrc?>"
           id="login-img"
-          class="login-img<?=(!empty($photo)?' active-logo':'')?>">
+          class="login-img<?=(!empty($model->data['avatar'])?' active-logo':'')?>">
       </div>
 
       <?php if (!empty($model->errors['avatar'])): ?>
@@ -53,10 +61,10 @@ $photo = Share::isApplicant($model->profile->type) ? $exInfo->photo : $exInfo->l
       <?php endif; ?>
 
       <p class="separator center">
-        Допустимые форматы файлов <?=implode(', ', $model->profile->arYiiUpload['fileFormat']);?>
+        Допустимые форматы файлов <?=implode(', ', UserProfile::$AR_FILE_FORMAT);?>
       </p>
       <p class="separator center pad0">
-        Размер не более <?=$model->profile->arYiiUpload['maxFileSize']?> Мб.
+        Размер не более <?=UserProfile::$MAX_FILE_SIZE?> Мб.
       </p>
 
       <p class="separator center upload-block">

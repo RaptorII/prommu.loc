@@ -34,8 +34,11 @@
         height: auto;
         border-radius: 50%;
     }
+    .custom-table .dropdown-menu.ismoder li{
+      width: 130px;
+    }
 </style>
-<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="#" target="" onclick="export_delete()">Покончить с ними</a>
+<a style="padding: 10px;background: #00c0ef;color: #f4f4f4;" href="#" target="" onclick="export_delete()">Покончить с ними</a><br><br>
 <?php
 
 echo CHtml::form('/admin/site/UserUpdate?id=0','POST',array("id"=>"form"));
@@ -44,10 +47,14 @@ echo '<input type="hidden" id="curr_id" name="curr_id">';
 $this->widget('zii.widgets.grid.CGridView', array(
   'id'=>'dvgrid',
   'dataProvider'=>$model->searchempl(),
-  'itemsCssClass' => 'table table-bordered table-hover dataTable',
-  'htmlOptions'=>array('class'=>'table table-hover', 'name'=>'my-grid', 'style'=>'padding: 10px; overflow: scroll;'),
+  'itemsCssClass' => 'table table-bordered table-hover custom-table',
+  'htmlOptions'=>array('class'=>'table table-hover', 'name'=>'my-grid'),
   'filter'=>$model,  
   'enablePagination' => true,
+  'rowCssClassExpression' => function($row, $data)
+  {
+    return ($data->is_new ? 'new-row' : '');
+  },
   'columns'=>array(
     array(
             'class'=>'CCheckBoxColumn',
@@ -93,10 +100,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type' => 'raw',
         ),
         array(
-            'header' => 'Город',
-            'name' => 'city',
-            'value' => '$data->city',
-            'type' => 'raw',
+          'header'=>'Город',
+          'name' => 'city',
+          'value' => 'AdminView::getUserCities($data->id_user)',
+          'filter' => false,
+          'type' => 'raw',
         ),
         array(
             'header'=> 'Регистрация',
@@ -110,32 +118,43 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'value' => '$data->mdate',
             'type' => 'raw',
         ),
-        
-     array(
-            'header'=>'Модерация',
-            'name' => 'ismoder',
-            'value' => 'ShowStatus($data->id_user, $data->ismoder)',
-            'type' => 'raw',
+      array(
+        'header'=>'Модерация',
+        'name' => 'status',
+        'type' => 'raw',
+        'filter' => CHtml::dropDownList(
+          'Employer[ismoder]',
+          isset($_GET['Employer']['ismoder']) ? $_GET['Employer']['ismoder'] : '',
+          User::getAdminArrIsmoder(true)
         ),
-     array(
-          'header'=>'Статус',
-          'name' => 'isblocked',
-          'type' => 'raw',
-          'value' => 'ShowBlocked($data->isblocked, $data->id_user)',
-          'htmlOptions' => array('class' => '\"isblocked_".$data->isblocked'),
+        'value' => 'AdminView::getUserStatus($data->ismoder, $data->id_user, "ismoder")',
+        'htmlOptions' => ['style'=>'width:5%;padding:0']
+      ),
+      array(
+        'header'=>'Статус',
+        'name' => 'isblocked',
+        'type' => 'raw',
+        'filter' => CHtml::dropDownList(
+          'Employer[isblocked]',
+          isset($_GET['Employer']['isblocked']) ? $_GET['Employer']['isblocked'] : '',
+          User::getAdminArrIsblocked(true)
+        ),
+        'value' => 'AdminView::getUserStatus($data->isblocked, $data->id_user, "isblocked")',
+        'htmlOptions' => ['style'=>'width:5%;padding:0']
       ),
       array(
             'name' => 'Редактор',
             'value' => 'ShowEdit($data->id_user)',
             'type' => 'raw',
             'filter' => '',
-            'htmlOptions' => array('style' => 'width: 50px; text-align: center;', 'class' => 'sorting', 'background-color'=> 'antiquewhite')
+            'htmlOptions' => array('style' => 'width:5%;padding:0', 'class' => 'sorting', 'background-color'=> 'antiquewhite')
         ),
       array(
             'name' => 'Вакансии',
             'value' => 'ShowVaccount($data->id, $data->id_user)',
             'type' => 'raw',
             'filter' => '',
+            'htmlOptions' => ['style'=>'width:3%']
         ),
       array(
             'name' => 'Письмо менеджера',
@@ -143,14 +162,30 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'type' => 'html',
             'htmlOptions' => array('style' => 'text-align:center;vertical-align:middle'),
             'filter' => '',
+            'htmlOptions' => ['style'=>'width:3%']
         ),
+      [
+        'header'=>'Просмотрено',
+        'filter' => CHtml::dropDownList(
+          'Employer[is_new]',
+          isset($_GET['Employer']['is_new']) ? $_GET['Employer']['is_new'] : '',
+          [''=>'Все', '1'=>'Новые', '0'=>'Просмотреные']
+        ),
+        'name' => 'is_new',
+        'value' => 'getLabel($data->is_new)',
+        'type' => 'raw',
+        'htmlOptions' => ['style'=>'width:3%']
+      ]
 )));
 
 echo CHtml::submitButton('Создать',array("class"=>"btn btn-success","id"=>"btn_submit", "style"=>"visibility:hidden"));
 echo CHtml::endForm();
-
-
-
+//
+function getLabel($s)
+{
+  return '<span class="glyphicon ' . ($s ? 'glyphicon-flash' : '') . '"></span>';
+}
+//
 function ShowLogo($id_user,$photo)
 {   
     $src = Share::getPhoto($id_user,2,$photo,'small');
@@ -159,31 +194,6 @@ function ShowLogo($id_user,$photo)
         : CHtml::link(CHtml::image($src),$srcBig,['class'=>'user_logo']));
 }
 
-function ShowBlocked($blocked, $id_user)
-{
-
-    $block_status = ["активен", "заблокирован", "ожидает активации", "активирован", "остановлен к показу"];
-    $icon = ["label-success", "label-important", "label-warning", "label-info", "label-primary"];
-    $html = '<div class="dropdown">
-  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  title="статус: ' . $block_status[$blocked] . '">
-    <span class="label ' . $icon[$blocked] . '">' . $block_status[$blocked] . '</span>
-    <span class="caret"></span>
-  </button>';
-    if($blocked == 2) {
-        return  $html.'</div>';
-    }
-    $html .= '<ul class="dropdown-menu" style="position: absolute;top: 100%;left: -73px;" aria-labelledby="dropdownMenu1">';
-    if($blocked == 3) {
-        return  $html .= '</ul></div>';
-    }
-    for ($i = 0; $i < 5; $i++) {
-        if ($i != 2 && $i != 3) {
-            $html .= '<li ><a href = "#" onclick = "doStatus(' . $id_user . ', ' . $i . ')" ><span class="label ' . $icon[$i] . '"><i class="icon-off icon-white"></i></span> ' . $block_status[$i] . '</a></li >';
-        }
-    }
-    $html .= '</ul></div>';
-    return $html;
-}
 function ShowVaccount($id,$id_user)
 {
         // читаем вакансии
@@ -223,24 +233,6 @@ function ShowType($type, $id_user)
     }
 
     return $types[0];
-}
-
-function ShowStatus($id_user, $ismoder)
-{
-    $status = ['не обработан','обработан'];
-    $st_ico = ["label-warning", "label-success"];
-    $html = 
-    '<div class="dropdown">
-  	<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"  title="статус: ' . $status[$ismoder] . '">
-    <span class="label ' . $st_ico[$ismoder] . '">' . $status[$ismoder] . '</span>
-    <span class="caret"></span>
-  	</button>';
-  	$html .= '<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">';
-    for ($i = 0; $i < 2; $i++) {
-        $html .= '<li ><a href = "#" onclick = "doStatusModer(' . $id_user . ', ' . $i . ')" ><span class="label ' . $st_ico[$i] . '"><i class="icon-star icon-white"></i></span> ' . $status[$i] . '</a></li >';
-    }
-    $html .= '</ul></div>';
-    return $html;
 }
 
 function ShowEdit($id) {

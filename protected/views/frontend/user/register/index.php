@@ -17,10 +17,10 @@
   $gcs->registerCoreScript('jquery');
   $gcs->registerCssFile($bUrl . MainConfig::$CSS  . 'register/style.css');
   $gcs->registerCssFile($bUrl . MainConfig::$CSS  . 'dist/cropper.min.css');
+  $gcs->registerScriptFile($bUrl . '/jslib/sourcebuster.min.js', CClientScript::POS_END);
   $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'snap/snap.svg-min.js', CClientScript::POS_END);
   $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/cropper.min.js', CClientScript::POS_END);
   $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'register/script.js', CClientScript::POS_END);
-
   // FANCYBOX
   $gcs->registerScriptFile(MainConfig::$JS . 'dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
   $gcs->registerCssFile(MainConfig::$JS . 'dist/fancybox/jquery.fancybox.css');
@@ -87,6 +87,9 @@
             </p>
         </div>
     </div>
-    <script>var arUrlSteps = <?=json_encode(UserRegister::$URL_STEPS)?></script>
+    <script>
+      var arUrlSteps = <?=json_encode(UserRegister::$URL_STEPS)?>;
+      var domainName = "<?=Subdomain::getSiteName()?>";
+    </script>
   </body>
 </html>

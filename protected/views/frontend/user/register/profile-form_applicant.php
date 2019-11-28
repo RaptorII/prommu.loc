@@ -27,12 +27,7 @@ foreach ($arCities as $city)
 {
     if($city['id']==Subdomain::getCacheData()->id)
     {
-        $arUserCity = [
-            'id' => $city['id'],
-            'name' => $city['name'],
-            'ismetro' => $city['ismetro'],
-            'region' => $city['region']
-        ];
+        $arUserCity = ['id' => $city['id'], 'name' => $city['name']];
     }
     $arTemp[$city['id']] = $city['name'];
 }
@@ -75,13 +70,22 @@ asort($arCities);
                     <?
                     if(!empty($photo))
                     {
-                        $src = Share::getPhoto($exInfo->id, $exInfo->status, $photo);
-                        $bigSrc = Share::getPhoto($exInfo->id, $exInfo->status, $photo, 'big');
+                      $path = Share::$UserProfile->filesRoot . DS . $photo;
+                      $url = Share::$UserProfile->filesUrl . DS . $photo;
+                      $fullImage = UserProfile::$ORIGINAL_IMAGE_SUFFIX . '.jpg';
+                      $src = $url . '400.jpg';
+                      $bigSrc = $url . $fullImage;
+                      if(!file_exists($path . '400.jpg') || !file_exists($path . $fullImage))
+                      {
+                        $src = '/theme/pic/register-popup-page/register_popup_r_logo.png';
+                        $bigSrc = '';
+                        $photo = '';
+                      }
                     }
                     else
                     {
-                        $src = '/theme/pic/register-popup-page/register_popup_r_logo.png'; // Миша, ты обещал картинку, не забудь)
-                        $bigSrc = '';
+                      $src = '/theme/pic/register-popup-page/register_popup_r_logo.png';
+                      $bigSrc = '';
                     }
                     ?>
                     <img

@@ -62,16 +62,21 @@ class UserRegisterAdmin extends CActiveRecord
     {
       case self::$STATE_PROFILE:
         $this->is_confirm = 1;
-        $criteria->join = "LEFT JOIN user_photos up ON up.id_user=t.id_user"
-          . " LEFT JOIN user u ON u.id_user=t.id_user";
-        $arCondition[] = "((t.social=0 AND up.photo IS NOT NULL) OR (t.social=1 AND up.photo IS NULL)) "
-          . "AND u.isblocked=" . User::$ISBLOCKED_NOT_FULL_ACTIVE;
+        if(Share::isApplicant($type))
+        {
+          $criteria->join = "LEFT JOIN resume r ON r.id_user=t.id_user";
+          $arCondition[] = "((t.social=0 AND r.photo!='') OR (t.social=1 AND r.photo='')) "
+            . "AND r.isblocked=" . User::$ISBLOCKED_NOT_FULL_ACTIVE;
+        }
+        if(Share::isEmployer($type))
+        {
+          $criteria->join = "LEFT JOIN employer e ON e.id_user=t.id_user";
+          $arCondition[] = "t.avatar IS NOT NULL AND e.isblocked=" . User::$ISBLOCKED_NOT_FULL_ACTIVE;
+        }
         break;
       case self::$STATE_AVATAR:
         $this->is_confirm = 1;
-        $criteria->join = "LEFT JOIN user_photos up ON up.id_user=t.id_user"
-         . " LEFT JOIN user u ON u.id_user=t.id_user";
-        $arCondition[] = "up.photo IS NULL AND u.isblocked=" . User::$ISBLOCKED_NOT_FULL_ACTIVE;
+        $arCondition[] = "t.avatar IS NULL AND t.id_user IS NULL";
         break;
       case self::$STATE_CODE:
         $this->is_confirm = 0;
