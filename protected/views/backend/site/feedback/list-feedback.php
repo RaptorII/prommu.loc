@@ -6,14 +6,14 @@ $gcs->registerScriptFile($bUrl . '/js/feedback/list.js', CClientScript::POS_END)
 $params = Yii::app()->getRequest()->getParam('FeedbackTreatment');
 $arColumns = [
   [
-    'header' => 'ID',
+    'header' => 'ID обращения',
     'name' => 'id',
     'value' => 'getEditLink($data->id,$data->type,$data->chat)',
     'type' => 'raw',
     'htmlOptions' => ['style' => 'width:5%']
   ],
   [
-    'header' => 'Тип',
+    'header' => 'Кто обращается',
     'name' => 'type',
     'value' => 'AdminView::getUserType($data->type)',
     'type' => 'raw',
@@ -44,7 +44,7 @@ $arColumns = [
     'htmlOptions' => ['style'=>'width:25%']
   ],
   [
-    'header' => 'Направление',
+    'header' => 'Направление запроса',
     'name' => 'direct',
     'value' => 'Feedback::getAdminDirects($data->direct)',
     'type' => 'raw',
@@ -56,7 +56,7 @@ $arColumns = [
     'htmlOptions' => ['style'=>'width:15%']
   ],
   [
-    'header' => 'Тема',
+    'header' => 'Тема письма',
     'name' => 'theme',
     'value' => 'AdminView::getStr($data->theme)',
     'type' => 'raw',

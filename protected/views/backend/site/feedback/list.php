@@ -12,7 +12,7 @@
     $link = '/admin/' . (!$type ? 'mail/' . $id : 'update/' . $chat);
     if($icon)
     {
-      return '<a href="' . $link . '" class="glyphicon glyphicon-edit" title="редактировать"></a>';
+      return '<a href="' . $link . '" class="glyphicon glyphicon-edit" title="Ответить"></a>';
     }
     else
     {
