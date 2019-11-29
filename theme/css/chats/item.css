@@ -479,13 +479,12 @@
   padding: 0 10px 35px 10px;
 }
 .mess-block-status{
-  position: absolute;
-  bottom: 0;
+  position: relative;
+  bottom: -35px;
   left: 0;
   right: 0;
   display: flex;
   justify-content: center;
-
 }
 .mess-block-status .prmu-btn{
   margin: 0 15px 5px;

@@ -4,10 +4,10 @@ $(function(){
           button = document.querySelector('.feedback-page__button'),
           $nameInput = $('#EdName'),
           $mailInput = $('#EdEmail'),
-          $selectTheme = $('#IdFdBck'),
+          $selectTheme = $('#feedback_select select'),
           selectThemeVal = $selectTheme.find('option:selected').val(),
           $themeInput = $('#EdTheme'),
-          $direct = $('#EdWay'),
+          $direct = $('#feedback_direct select'),
           directVal = $direct.find('option:selected').val(),
           $textInput = $('#MText'),
           arErrors = 0;
@@ -50,12 +50,12 @@ $(function(){
       {
         if(!selectThemeVal.length)
         {
-          $('#IdFdBck').addClass('error');
+          $('#feedback_select select').addClass('error');
           arErrors++;
         }
         else
         {
-          $('#IdFdBck').removeClass('error');
+          $('#feedback_select select').removeClass('error');
           $themeInput.removeClass('error');
           if(selectThemeVal==='0')
           {
@@ -105,13 +105,25 @@ $(function(){
       }
     });
 
-    $('#IdFdBck').change(function(e, value) {
-        if(e.target.value != 0) {
+    $('#feedback_select select').change(function(e, value) {
+        if(e.target.value != 0)
+        {
            $("#EdTheme").hide();
-           $("#EdWay").hide();
-        } else {
+           $("#feedback_direct").hide();
+           if(typeof arFeedbacks=='object')
+           {
+              $.each(arFeedbacks,function(){
+                if(e.target.value===this.id)
+                {
+                  $("#feedback_direct select option[value=" + this.direct + "]").attr('selected', 'true');
+                }
+              });
+           }
+        }
+        else
+        {
            $("#EdTheme").val("").show();
-           $("#EdWay").show();
+           $("#feedback_direct").show();
         }
     });
 });

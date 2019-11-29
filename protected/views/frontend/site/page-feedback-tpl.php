@@ -9,12 +9,6 @@
     dataLayer.push({'event' : type});
   </script>
 <?php else: ?>
-  <?
-  display($viData);
-  ?>
-
-
-
     <?php
     if($viData['use_recaptcha']==true)
     {
@@ -46,8 +40,8 @@
                 </label>
 
                 <?php if(!Share::isGuest()): ?>
-                    <label class="feedback-page__label feedback-page__label-select">
-                        <select data-field-check='name:Тема,empty,max:100' id='IdFdBck' name='feedback' class="feedback-page__input feedback-page__select" placeholder="Выберите тему" title="Выберите тему">
+                    <label class="feedback-page__label feedback-page__label-select" id="feedback_select">
+                        <select data-field-check='name:Тема,empty,max:100' name='feedback' class="feedback-page__input feedback-page__select" placeholder="Выберите тему" title="Выберите тему">
                             <option value="" selected disabled>Выберите тему</option>
                             <option value="0" >Новая тема</option>
                             <?foreach ($viData['feedbacks'] as $value):?>
@@ -55,14 +49,17 @@
                             <?endforeach;?>
                         </select>
                     </label>
+                    <script>
+                      var arFeedbacks = <?=json_encode($viData['feedbacks'])?>;
+                    </script>
                 <?php endif; ?>
 
                 <label class="feedback-page__label">
-                    <input data-field-check='name:Тема,empty,max:100' id='EdTheme' name='theme' type='text' class="feedback-page__input" placeholder="Тематика запроса" title="Тематика запроса" value="<?=($viData['theme'] ? $viData['theme'] : '')?>">
+                    <input data-field-check='name:Тема,empty,max:100' id='EdTheme' name='theme' type='text' class="feedback-page__input<?=(!Share::isGuest()?' theme_hide':'')?>" placeholder="Тематика запроса" title="Тематика запроса" value="<?=($viData['theme'] ? $viData['theme'] : '')?>">
                 </label>
 
-                <label class="feedback-page__label feedback-page__label-select">
-                    <select data-field-check='name:Направление,empty,max:100' id='EdWay' name='direct' class="feedback-page__input feedback-page__select" placeholder="Направление запроса" title="Направление запроса">
+                <label class="feedback-page__label feedback-page__label-select" id="feedback_direct">
+                    <select data-field-check='name:Направление,empty,max:100' name='direct' class="feedback-page__input feedback-page__select" placeholder="Направление запроса" title="Направление запроса">
                         <option value="" selected disabled>Направление запроса</option>
                         <?foreach ($viData['directs'] as $key => $value):?>
                             <option value="<?=$value['id']?>"><?=$value['name']?></option>

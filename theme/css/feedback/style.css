@@ -1,12 +1,14 @@
 /*
 *		feedback page
 */
+#DiTop{ min-height: initial; }
 #DiContent#DiContent.page-feedback {
   background: url(/theme/pic/feedback-page/feedback_bg.jpg) 50% 100% no-repeat;
   padding: 0 12px 100px;
-  /*height: calc(100vh - 100px);*/
+  height: calc(100vh - 300px);
   position: relative;
-  /*min-height: 600px;*/
+  min-height: 750px;
+  overflow: hidden;
 }
 
 #DiContent.page-feedback .content-block {
@@ -79,7 +81,7 @@
   text-align: center;
   line-height: 35px;
   background: url(/theme/pic/feedback-page/feedback_arrow_icon.png) 14px 15px no-repeat;
-  z-index: 0;
+  z-index: 1;
 }
 
 .g-recaptcha-parent:after {
@@ -121,7 +123,7 @@
   text-overflow: '';
   -ms-appearance: none;
   appearance: none !important;
-  background-color: transparent;
+  background-color: #ffffff;
   position: relative;
   z-index: 1;
 }
@@ -187,15 +189,10 @@
 * 		MEDIA
 */
 @media (min-width: 768px) {
-  #DiContent#DiContent.page-feedback {
-    height: calc(100vh - 100px);
-    min-height: 600px;
-  }
-
   #DiContent.page-feedback:before {
     content: '';
-    width: 100%;
-    max-width: 1170px;
+    width: 1170px;
+    max-width: 100%;
     position: absolute;
     top: 0;
     bottom: 0;
@@ -208,11 +205,12 @@
 
   #DiContent.page-feedback:after {
     content: '';
-    width: 100%;
-    max-width: 1170px;
+    width: 1170px;
+    max-width: 100%;
     position: absolute;
     top: 0;
     bottom: 0;
+    left: 0;
     background: url(/theme/pic/feedback-page/feedback_girl_bg.png) 98% 100% no-repeat;
     z-index: 0;
   }
@@ -243,3 +241,4 @@
 .error-block {
   margin-bottom: 16px;
 }
+#DiContent input.theme_hide{ display: none; }
