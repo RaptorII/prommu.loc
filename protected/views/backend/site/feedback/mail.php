@@ -1,61 +1,30 @@
 <?php
-// print_r($data);
 $_POST['FeedbackTreatment'] ='';
 Yii::app()->getClientScript()->registerCoreScript('jquery');
 Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl.'/js/ajaxfileupload.js', CClientScript::POS_HEAD);
 Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl.'/js/form-checker.js', CClientScript::POS_HEAD);
-// print_r($data);
-echo '<div class="col-md-12">';
-echo '<div class="col-md-6">
-<h3>Чат обратной связи</h3>';
 
+echo '<div class="col-md-12">';
+echo '<div class="col-md-6"><h3>Чат обратной связи #' . $data['id'] . '</h3>';
 
 echo CHtml::form($id,'post',array('enctype'=>'multipart/form-data', 'class'=>'form-horizontal'));
-//echo CHtml::hiddenField('field_lang', $lang, array('type'=>"hidden"));
-//echo CHtml::hiddenField('pagetype', $pagetype, array('type'=>"hidden"));
 
-echo '<h4 style="font-size: 40px;font-weight: 100;">EMAIL</h4>';
 
-echo '<div class="control-group">
-      <label class="control-label">Номер тикета</label>
-        <div class="controls input-append">';
-echo CHtml::textField('Feedback[id]', $data[0]['id'], array('class'=>'form-control'));
-echo '  <span class="add-on"></span>';
-echo '</div></div>';
-
-echo '<div class="control-group">
-      <label class="control-label">Дата поступления</label>
-        <div class="controls input-append">';
-echo $data[0]['crdate'];
-echo '  <span class="add-on"></span>';
-echo '</div></div>';
-
-echo '<div class="control-group">
-      <label class="control-label">Тема</label>
-        <div class="controls input-append">';
-echo CHtml::textField('Feedback[theme]', $data[0]['theme'], array('class'=>'form-control'));
-echo '  <span class="add-on"></span>';
-echo '</div></div>';
-
-echo '<div class="control-group">
-      <label class="control-label">Email</label>
-        <div class="controls input-append">';
-echo CHtml::textField('Feedback[email]', $data[0]['email'], array('class'=>'form-control'));
-echo '  <span class="add-on"></span>';
-echo '</div></div>';
-
-echo '<div class="control-group">
-      <label class="control-label">Текст</label>
-	    <div class="controls input-append">';
-echo CHtml::textArea('Feedback[text]', $data[0]['text'], array('rows' => 6, 'cols' => 50,'class'=>'form-control'));
-echo '  <span class="add-on"></span>';
-echo '</div></div>';
+echo '<label>ID запроса:</label> ' .
+      $data['id'] . '<input type="hidden" name="Feedback[id]" value="' . $data['id'] . '"><br>';
+echo '<label>Дата и время создания обращения:</label> ' . Share::getPrettyDate($data['crdate']) . '<br>';
+echo '<label>Кто обращается:</label> Гость ' . AdminView::getUserType(0) . '<br>';
+echo '<label>ФИО:</label> ' . $data['name'] . '<br>';
+echo '<label>Направление запроса:</label> ' . Feedback::getAdminDirects($data['direct']) . '<br>';
+echo '<label>Тема:</label> ' . $data['theme'] . '<br>';
+echo '<label>Email:</label> ' . $data['email'] . '<br>';
+echo '<label>Текст:</label><div style="border:1px solid #e3e3e3;background-color:#fff;border-radius:3px;margin-bottom:15px;padding:10px">' . $data['text'] . '</div>';
 
 echo '<div class="control-group">
       <label class="control-label">История решения вопроса</label>
       <div class="controls input-append" style="word-break:break-word">';
-echo "Вопрос обратной связи: ".$data[0]['text']."<br>";
-echo "Ответ админа: ".$data[0]['chat'];
+echo "Вопрос обратной связи: ".$data['text']."<br>";
+echo "Ответ админа: ".$data['chat'];
 echo '  <span class="add-on"></span>';
 echo '</div></div>';
 
@@ -64,25 +33,25 @@ echo '<div class="control-group">
 	    <div class="controls input-append">';
 echo CHtml::textArea(
         'Feedback[chat]',
-        $data[0]['chat'], 
+        $data['chat'],
         array('rows'=>6,'cols'=>50,'class'=>'form-control','id'=>'admin-answer')
       );
 echo '<div id="admin-answer-panel"></div>';
 echo '  <span class="add-on"></span><p></p>';
 echo '</div></div>';
 
-echo '<div class="span11">';
-echo '<div style="float:right;  display:inline;">';
-echo CHtml::submitButton('Отправить',array("class"=>"btn btn-success", "id"=>"btn_submit"));
-echo '&nbsp;&nbsp;';
-echo '<a href="/admin/site/mail" class="btn btn-warning" id="btn_cancel">Отмена</a>';
-//echo CHtml::tag('input',array("id"=>"btn_cancel", "type"=>"button", "value"=>"Отмена", "class"=>"btn btn-warning"));
-echo '</div></div></div>';
-
-
-
-
-//$this->endWidget();
+echo '<div class="control-group">
+      <label class="control-label">Статус: </label>' .
+  CHtml::dropDownList('Feedback[status]', $data['status'], Feedback::getAdminStatus(), ['class'=>'form-control','style'=>'max-width:300px']) .
+  '</div><br><br>';
+?>
+<div class="pull-right">
+  <?=CHtml::submitButton('Отправить', ["class" => "btn btn-success", "id" => "btn_submit"])?>
+  <a href="/admin/feedback" class="btn btn-warning" id="btn_cancel">Отмена</a>
+</div>
+<div class="clearfix"></div>
+<?
+echo '</div>';
 echo CHtml::endForm();
 require 'mail-templates.php'; // подключение шаблонов
 ?>

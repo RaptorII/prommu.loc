@@ -4,51 +4,26 @@ Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl .
 Yii::app()->getClientScript()->registerScriptFile(Yii::app()->request->baseUrl.'/js/form-checker.js', CClientScript::POS_HEAD);
 
 echo '<div class="col-md-12">';
-echo '<div class="col-md-6 col-xs-12">
-<h3>Чат обратной связи #' . $data['chat']['id'] . '</h3>';
+echo '<div class="col-md-6 col-xs-12"><h3>Чат обратной связи #' . $data['feedback']['id'] . '</h3>';
 
-echo '<b>Пользователь: '
-    . CHtml::link(!empty($data['user']['name']) ? $data['user']['name'] : $data['chat']['name'] , $data['user']['link'], array('target'=>'_blank'))
-    . '</b>';
+echo  '<label>ID запроса:</label> ' . $data['feedback']['id'] .
+  '<input type="hidden" name="Update[id]" value="' . $data['feedback']['id'] . '"><br>';
+echo '<label>Дата и время создания обращения:</label> ' . Share::getPrettyDate($data['feedback']['crdate']) . '<br>';
+echo '<label>Кто обращается:</label> ' . (Share::isApplicant($data['feedback']['type']) ? 'Соискатель ' : 'Работодатель ') .
+  AdminView::getUserType($data['feedback']['type']) . '<br>';
+echo '<label>ID Пользователя:</label> ' . $data['user']['id'] . '<br>';
+echo '<label>ФИО:</label> '
+  . CHtml::link(!empty($data['user']['fio']) ? $data['user']['fio'] : $data['feedback']['name'] , $data['user']['link'], ['target'=>'_blank'])
+  . '<br>';
+echo '<label>Направление запроса:</label> ' . $data['direct'] . '<br>';
+echo '<label>Тема:</label> ' . $data['feedback']['theme'] . '<br>';
+echo '<label>Email:</label> ' . $data['feedback']['email'] . '<br>';
+echo '<label>Текст:</label><div style="border:1px solid #e3e3e3;background-color:#fff;border-radius:3px;margin-bottom:15px;padding:10px">' . $data['feedback']['text'] . '</div>';
 
-echo '<div class="control-group">
-      <label class="control-label">Номер тикета</label>
-        <div class="controls input-append">';
-echo CHtml::textField('Update[id]', $data['chat']['id'], array('class' => 'form-control'));
-echo '  <span class="add-on"></span>';
-echo '</div></div>';
-
-echo '<div class="control-group">
-      <label class="control-label">Дата поступления</label>
-        <div class="controls input-append">';
-echo $data[0]['crdate'];
-echo '  <span class="add-on"></span>';
-echo '</div></div>';
-
-echo '<div class="control-group">
-      <label class="control-label">Тема</label>
-        <div class="controls input-append">';
-echo CHtml::textField('Update[theme]', $data['chat']['theme'], array('class' => 'form-control'));
-echo '  <span class="add-on"></span>';
-echo '</div></div>';
-
-echo '<div class="control-group">
-      <label class="control-label">Email</label>
-        <div class="controls input-append">';
-echo CHtml::textField('Update[email]', $data['chat']['email'], array('class' => 'form-control'));
-echo '  <span class="add-on"></span>';
-echo '</div></div>';
-
-echo '<div class="control-group">
-      <label class="control-label">Текст</label>
-        <div class="controls input-append">';
-echo CHtml::textArea('Update[text]', $data['chat']['text'], array('rows' => 6, 'cols' => 50, 'class' => 'form-control'));
-echo '  <span class="add-on"></span>';
-echo '</div></div>';
 
 echo CHtml::form($id, 'post', array('enctype' => 'multipart/form-data', 'class' => 'form-horizontal'));
 echo '<div class="box box-primary direct-chat direct-chat-primary">';
-echo '<div class="direct-chat-messages">';
+echo '<div class="direct-chat-messages" style="margin-top:0">';
 foreach ($data['items'] as $item) {
     if($data['user']['type']==2) {
         if(!($item['isresp']==1 && $item['iduse']==1766)) {
@@ -117,24 +92,43 @@ echo CHtml::textArea(
     ($data['message'] ? $data['message'] : '<br>'), 
     array('class' => 'form-control','id'=>'admin-answer')
 );
+
 echo '<div id="admin-answer-panel"></div>';
 echo '  <span class="add-on"><i class="icon-tag"></i></span>';
 echo '</div>
         </div></div>';
-echo '<div class="span11">';
-echo '<div style="float:right;  display:inline;">';
-echo CHtml::submitButton('Отправить', array("class" => "btn btn-success", "id" => "btn_submit"));
-echo '&nbsp;&nbsp;';
-echo '<a href="/admin/feedback" class="btn btn-warning" id="btn_cancel">Отмена</a>';
-//echo CHtml::tag('input',array("id"=>"btn_cancel", "type"=>"button", "value"=>"Отмена", "class"=>"btn btn-warning"));
-echo '</div>';
-echo '</div>';
+
+echo '<div class="control-group"><label class="control-label">Статус: </label><select id="select_status" class="form-control">';
+foreach (Feedback::getAdminStatus() as $key => $v)
+{
+  echo '<option value="' . $key . '" '
+    . ($data['feedback']['status']==$key ? 'selected' : '')
+    . (in_array($key,[2,5]) ? ' disabled' : '') . '>' . $v . '</option>';
+}
+echo '</select></div><br><br>';
+?>
+<div class="pull-right">
+  <?=CHtml::submitButton('Отправить', ["class" => "btn btn-success", "id" => "btn_submit"])?>
+  <a href="/admin/feedback" class="btn btn-warning" id="btn_cancel">Отмена</a>
+</div>
+<div class="clearfix"></div>
+<?
 echo '</div>';
 echo '<input type="hidden" name="usertype" value="'.$data['user']['type'].'">';
 echo '<input type="hidden" name="Update[idusp]" value="'.$data['user']['id'].'">';
-echo '<input type="hidden" name="Update[email]" value="'.$data['chat']['email'].'">';
+echo '<input type="hidden" name="Update[email]" value="'.$data['feedback']['email'].'">';
+
+
+
+
 echo CHtml::endForm();
 require 'mail-templates.php'; // подключение шаблонов
 ?>
 </div>
-
+<style>
+#select_status{ max-width:300px; }
+#select_status option:disabled{
+  color: #cccccc;
+  background-color: #efefef;
+}
+</style>

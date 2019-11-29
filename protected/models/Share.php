@@ -724,6 +724,7 @@ class Share
                     CONCAT(r.firstname,' ',r.lastname) app_name,
                     r.photo app_photo,
                     e.name emp_name,    
+                    CONCAT(e.firstname,' ',e.lastname) emp_fio,  
                     e.logo emp_photo")
                 ->from('user u')
                 ->leftjoin('resume r','r.id_user=u.id_user')
@@ -743,7 +744,8 @@ class Share
                         'name' => $v['app_name'],
                         'src' => self::getPhoto($v['id_user'],2,$v['app_photo'],'small',$v['isman']),
                         'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user'],
-                        'profile_admin' => '/admin/PromoEdit/' . $v['id_user']
+                        'profile_admin' => '/admin/PromoEdit/' . $v['id_user'],
+                        'fio' => $v['app_name'],
                     );
             }
             if($v['status']==UserProfile::$EMPLOYER)
@@ -756,7 +758,9 @@ class Share
                         'name' => $v['emp_name'],
                         'src' => self::getPhoto($v['id_user'],3,$v['emp_photo']),
                         'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user'],
-                        'profile_admin' => '/admin/EmplEdit/' . $v['id_user']
+                        'profile_admin' => '/admin/EmplEdit/' . $v['id_user'],
+                        'fio' => (!empty(trim($v['emp_fio']))
+                        ? trim($v['emp_fio']) : '(без имени)')
                     );
             }
 

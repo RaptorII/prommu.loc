@@ -16,17 +16,13 @@ class Feedback extends Model
     /**
      * получаем данные для формы
      */
-
-     public function getDatas($id)
+    public function getDatas($id)
     {
-
-        // $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
-
-        $sql = "SELECT f.id, f.type, f.theme,f.chat, f.email, f.text, f.name, DATE_FORMAT(f.crdate, '%d.%m.%Y') crdate
-                FROM feedback f WHERE f.id = {$id}";
-        $res = Yii::app()->db->createCommand($sql);
-        $data = $res->queryAll();
-        return  $data;
+      return Yii::app()->db->createCommand()
+        ->select("*")
+        ->from('feedback')
+        ->where('id=:id', [':id'=>$id])
+        ->queryRow();
     }
 
     public function getUserFeedbacks($id)
@@ -378,7 +374,17 @@ class Feedback extends Model
 	 *	@return array [items,user,chat]
 	 *  собираем данные для 
 	 */
-	public function getAdminData($id) {
+	public function getAdminData($id)
+  {
+	  $arRes = [];
+    $arRes['feedback'] = Yii::app()->db->createCommand()
+      ->select("*")
+      ->from('feedback')
+      ->where('chat=:id', [':id'=>$id])
+      ->queryRow();
+
+    $arRes['user'] = reset(Share::getUsers([$arRes['feedback']['pid']]));
+
 		$arRes['items'] = Yii::app()->db->createCommand()
 												->select("
 													c.id,
@@ -395,32 +401,10 @@ class Feedback extends Model
 												->from('chat c')
 												->leftjoin('employer e', 'e.id_user = c.id_use')
 												->leftjoin('resume r', 'r.id_user = c.id_usp')
-												->where('c.id_theme=:id', array(':id'=>$id))
+												->where('c.id_theme=:id', [':id'=>$id])
 												->queryAll();
 
-		$item = $arRes['items'][0];
-		if(!in_array($item['idusp'], [2054,1766])) {
-			$arRes['user'] = array( // applicant
-				'id' => $item['idusp'],
-				'name' => $item['namefrom'],
-				'type' => 2,
-				'link' => '/admin/site/Promoedit/' . $item['idusp'],
-			);
-		}
-		else{
-			$arRes['user'] = array( // employer
-				'id' => $item['iduse'],
-				'name' => $item['nameto'],
-				'type' => 3,
-				'link' => '/admin/site/Empledit/' . $item['iduse'],
-			);
-		}
-
-		$arRes['chat'] = Yii::app()->db->createCommand()
-											->select("id, theme, name, email, text")
-											->from('feedback')
-											->where('chat=:id', array(':id'=>$id))
-											->queryRow();
+		$arRes['direct'] = self::getAdminDirects($arRes['feedback']['direct']);
 
 		return $arRes;
 	}
