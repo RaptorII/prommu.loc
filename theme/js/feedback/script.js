@@ -126,4 +126,14 @@ $(function(){
            $("#feedback_direct").show();
         }
     });
+    //
+    // настраиваем высоту
+    //
+    function backgroundSize(){
+      if($('#DiContent .container').outerHeight() > $('#DiContent').outerHeight())
+      {
+        $('#DiContent').height($('#DiContent .container').outerHeight());
+      }
+    }
+    $(window).on('load resize',backgroundSize);
 });
