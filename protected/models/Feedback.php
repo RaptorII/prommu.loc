@@ -383,7 +383,7 @@ class Feedback extends Model
       ->where('chat=:id', [':id'=>$id])
       ->queryRow();
 
-    $arRes['user'] = reset(Share::getUsers([$arRes['feedback']['pid']]));
+    $arRes['user'] = Share::getUsers([$arRes['feedback']['pid']])[$arRes['feedback']['pid']];
 
 		$arRes['items'] = Yii::app()->db->createCommand()
 												->select("

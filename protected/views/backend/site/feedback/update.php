@@ -13,7 +13,7 @@ echo '<label>Кто обращается:</label> ' . (Share::isApplicant($data[
   AdminView::getUserType($data['feedback']['type']) . '<br>';
 echo '<label>ID Пользователя:</label> ' . $data['user']['id'] . '<br>';
 echo '<label>ФИО:</label> '
-  . CHtml::link(!empty($data['user']['fio']) ? $data['user']['fio'] : $data['feedback']['name'] , $data['user']['link'], ['target'=>'_blank'])
+  . CHtml::link(!empty($data['user']['fio']) ? $data['user']['fio'] : $data['feedback']['name'] , $data['user']['profile_admin'], ['target'=>'_blank'])
   . '<br>';
 echo '<label>Направление запроса:</label> ' . $data['direct'] . '<br>';
 echo '<label>Тема:</label> ' . $data['feedback']['theme'] . '<br>';
