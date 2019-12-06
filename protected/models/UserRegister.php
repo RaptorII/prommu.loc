@@ -13,12 +13,14 @@ class UserRegister
   public static $MIN_PASSWORD_LENGTH = 6;
   public static $REPEAT_SEND_CODE_TIME = 120; // seconds before repeat sending confirm code
   public static $VIEW_TEMPLATE = '/user/register/step_';
-  //
-  public static $STEP_TYPE = 1;
-  public static $STEP_LOGIN = 2;
-  public static $STEP_CODE = 3;
-  public static $STEP_PASSWORD = 4;
-  public static $STEP_AVATAR = 5;
+  // Ступени регистрации (и поле user_register_page_cnt => page)
+  public static $STEP_TYPE = 1; // выбор типа пользователя
+  public static $STEP_LOGIN = 2; // ввод имени фамилии (название компании) и логина
+  public static $STEP_CODE = 3; // ввод подтверждающего кода
+  public static $STEP_PASSWORD = 4; // ввод пароля
+  public static $STEP_AVATAR = 5; // установка аватара
+  public static $PAGE_USER_LEAD = 6; // прокладочная страница /user/lead
+  public static $PAGE_ACTIVE_PROFILE = 7; // прокладочная страница /user/active_profile
   //
   public static $URL_STEPS = [
     1 => 'type',
@@ -257,8 +259,14 @@ class UserRegister
         // pm_source
         empty($arData['pm_source']) && $arData['pm_source']='none';
         // client
-        $arData['client'] = substr($arData['client'], 6, 100);
+   
+        $arData['client'] = Yii::app()->session['client'];
         empty($arData['client']) && $arData['client'] = ' ';
+        // $arData['client'] = substr($arData['client'], 6, 100);
+        // empty($arData['client']) && $arData['client'] = ' ';
+
+        
+    
         // ip
         $ips  = @$_SERVER['HTTP_CLIENT_IP'];
         $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
@@ -943,7 +951,7 @@ class UserRegister
       'is_confirm' => 1,
       'is_confirm_time' => $time,
       'social' => 1,
-      'password' => $arr['password']
+      'password' => md5($arr['password']) // !!!!!! небезопасно
     ]);
 
     $this->saveNewUser($arr['messenger']);

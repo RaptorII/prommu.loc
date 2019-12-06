@@ -383,8 +383,6 @@ class Feedback extends Model
       ->where('chat=:id', [':id'=>$id])
       ->queryRow();
 
-    $arRes['user'] = Share::getUsers([$arRes['feedback']['pid']])[$arRes['feedback']['pid']];
-
 		$arRes['items'] = Yii::app()->db->createCommand()
 												->select("
 													c.id,
@@ -404,8 +402,16 @@ class Feedback extends Model
 												->where('c.id_theme=:id', [':id'=>$id])
 												->queryAll();
 
-		$arRes['direct'] = self::getAdminDirects($arRes['feedback']['direct']);
+    $arRes['user'] = Share::getUsers([$arRes['feedback']['pid']])[$arRes['feedback']['pid']];
+		if(count($arRes['items']))
+    {
+      $id_user = $arRes['items'][0]['isresp']
+        ? $arRes['items'][0]['iduse']
+        : $arRes['items'][0]['idusp'];
+      $arRes['user_appealing'] = Share::getUsers([$id_user])[$id_user];
+    }
 
+		$arRes['direct'] = self::getAdminDirects($arRes['feedback']['direct']);
 		return $arRes;
 	}
 	/**

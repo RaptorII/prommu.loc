@@ -1,5 +1,9 @@
 <?
   Yii::app()->session['utm'] = false; // сбрасываем ютм метки, уже записали в БД
+  if(!count($model->errors))
+  {
+    UserRegisterPageCounter::set($model->step);
+  }
 ?>
 <? if(!Yii::app()->getRequest()->isAjaxRequest): ?>
   <script>var pageCondition = <?=json_encode($model->data['condition']['html'])?>;</script>

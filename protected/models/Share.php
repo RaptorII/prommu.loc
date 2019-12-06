@@ -534,12 +534,15 @@ class Share
 
         $SM = Yii::app()->swiftMailer;
 
-        // Get config
-        $mailHost = '127.0.0.1';
+         // Get config
+         $mailHost = 'mail.companyreport.net';
         $mailPort = 25; // Optional
-
+        $sec = 'null';
         // New transport
-        $Transport = $SM->smtpTransport($mailHost, $mailPort);
+        $Transport = $SM->smtpTransport($mailHost, $mailPort, $sec)
+                ->setUsername('noreply@prommu.com')
+          ->setPassword('1I1OD6iL');
+
 
         $Mailer = $SM->mailer($Transport);
 
@@ -550,16 +553,25 @@ class Share
         $plainTextContent = "";
 
         // New message
-        $Message = $SM
+        $inMail = explode(",", $inMail);
+        for($i = 0; $i < count($inMail); $i ++){
+          $Message = $SM
             ->newMessage($inSubj)
-            ->setFrom(array('auto-mailer@prommu.com' => 'Prommu.com'))
-    //        ->setTo(array('Zotaper@localhost.com' => 'Recipient Name'))
-            ->setTo(array('Zotaper@yandex.ru' => 'Recipient Name'))
+             ->setFrom(array('auto-mailer@prommu.com' => 'Prommu.com'))
+           // ->setTo(array('denisgresk@gmail.com' => 'Analyt'))
+           // ->setTo(array('e.marketing@euro-asian.ru' => 'Analyt'))
+            ->setTo(array($inMail[$i] => 'Analyt'))
+            // ->setTo(array('man.market@euro-asian.ru' => 'Analyt'))
+            // ->setTo(array('smm.help1@euro-asian.ru' => 'Analyt'))
+            // ->setTo(array('kont.spec@euro-asian.ru' => 'Analyt'))
+            //->setTo(array('prommucom@gmail.com' => 'Analyt'))
             ->addPart($content, 'text/html')
+            ->attach(Swift_Attachment::fromPath('/var/www/prommu.prod/uploads/'.date("d")."_".date("m")."_".date("y").'.xls'))
             ->setBody($plainTextContent);
 
         // Send mail
-        $result = $Mailer->send($Message);
+        $result = $Mailer->send($Message);   
+        }
     }
 
 
@@ -576,38 +588,63 @@ class Share
      */
     public static function sendmail($inMail, $inSubj, $inMess, $addParams = array())
     {
-        if(!filter_var($inMail, FILTER_VALIDATE_EMAIL)) // !!! проверка формата почты
-            return false;
+    	if(!filter_var($inMail, FILTER_VALIDATE_EMAIL)) // !!! проверка формата почты
+    		return false;
 
         if( isset($addParams['From']) ) $from = $addParams['From'];
         else $from = array('auto-mailer@prommu.com' => 'Prommu.com');
-//file_put_contents('_sendmail.txt', print_r($inMess, true), FILE_APPEND | LOCK_EX);
+
+//        unset($addParams['from']);
+//        $addParams = (object)$addParams;
+//        $headers[] = "Content-Type: text/html; charset=\"utf-8\"";
+//        $addParams = array_map(function ($k,$v) { return "{$k}: {$v}"; }, array_keys($addParams), $addParams);
+//        $headers = array_merge($headers, $addParams);
+//        mail($inMail, $inSubj, $inMess, join(" \r\n", $headers));
+        //."X-Mailer: PHP/" . phpversion()
+//Yii::app()->getRequest()->hostinfo
+
         $SM = Yii::app()->swiftMailer;
 
+  
         // Get config
-        $mailHost = 'mail.companyreport.net';
+         $mailHost = 'mail.companyreport.net';
         $mailPort = 25; // Optional
         $sec = 'null';
         // New transport
         $Transport = $SM->smtpTransport($mailHost, $mailPort, $sec)
-                        ->setUsername('noreply@prommu.com')
-                        ->setPassword('1I1OD6iL');
+                ->setUsername('noreply@prommu.com')
+          ->setPassword('1I1OD6iL');
 
         $Mailer = $SM->mailer($Transport);
 
         $content = file_get_contents(Yii::app()->basePath . "/views/mails/letter.html");
         $content = str_replace('{{{BODY}}}', $inMess, $content);
-        $plainTextContent = ""; // Plain text content
 
+        // Plain text content
+        $plainTextContent = "";
+
+        // New message
+        $css = '
+            margin: 0 auto; width: 600px;
+        ';
         $Message = $SM
             ->newMessage($inSubj)
             ->setFrom($from)
+//            ->setTo(array('Zotaper@yandex.ru' => 'Test'))
+//            ->setTo(array('Zotaper@localhost.com' => 'Test'))
             ->setTo(array($inMail => ''))
+//            ->addPart($css, 'text/css')
             ->addPart($content, 'text/html')
             ->setBody($plainTextContent);
 
+//        $Message->setCc(array(array('some@address.tld' => 'The Name'),array('another@address.tld' => 'Another Name')));
         if( isset($addParams['Cc']) ) $Message->setCc($addParams['Cc']);
         if( isset($addParams['Bcc']) ) $Message->setBcc($addParams['Bcc']);
+//        if( count($headers) )
+//        {
+//            $MeHeaders = $Message->getHeaders();
+////            array_map(function ($v) use ($MeHeaders) { return $MeHeaders->addTextHeader($v); }, $headers);
+//        } // endif
 
         // Send mail
         return $Mailer->send($Message);
@@ -777,76 +814,6 @@ class Share
         }
         return $arRes;
     }
-    
-     /**
-     * @param $arr array id_user`s
-     * @return array
-     * получить данные пользователей по массиву
-     */
-    public static function getUsersApi($id) 
-    {
-        $arRes = $arT = array();
-
-
-        $sql = Yii::app()->db->createCommand()
-                ->select("
-                    u.id_user,
-                    u.email,
-                    u.status,
-                    u.is_online, 
-                    r.isman,
-                    CONCAT(r.firstname,' ',r.lastname) app_name,
-                    r.photo app_photo,
-                    e.name emp_name,    
-                    e.logo emp_photo")
-                ->from('user u')
-                ->leftjoin('resume r','r.id_user=u.id_user')
-                ->leftjoin('employer e','e.id_user=u.id_user')
-                ->where(
-                        'u.id_user=:id',
-                        array(':id'=>$id)
-                    )
-                ->queryAll();
-
-        foreach ($sql as $v)
-        {
-            if($v['status']==UserProfile::$APPLICANT)
-            {
-                $arRes = array(
-                        'id' => $v['id_user'],
-                        'status' => $v['status'],
-                        'is_online' => $v['is_online'],
-                        'name' => $v['app_name'],
-                        'src' =>"https://files_prommu.com/users/".$v['id_user']."/".$v['app_photo'].".jpg",
-                        
-                    );
-            }
-            if($v['status']==UserProfile::$EMPLOYER)
-            {
-                $arRes = array(
-                        'id' => $v['id_user'],
-                        'status' => $v['status'],
-                        'is_online' => $v['is_online'],
-                        'name' => $v['emp_name'],
-                        'src' =>"https://files_prommu.com/users/".$v['id_user']."/".$v['emp_photo'].".jpg",
-                        
-                    );
-            }
-
-            if(isset($arRes[$v['id_user']]) && empty($arRes[$v['id_user']]['name']))
-            {
-                $arRes[$v['id_user']]['name'] = '(безымянный)';
-            }
-            if(in_array($v['id_user'], [1766,2054]))
-            {
-                $arRes[$v['id_user']]['name'] = 'Администрация Prommu';
-                $arRes[$v['id_user']]['src'] = '/theme/pic/prommu-adm.jpg';
-                unset($arRes[$v['id_user']]['profile']);
-            }
-        }
-        return $arRes;
-    }
-    
     /**
      * @param $date string - BD data
      * @param $time string - BD data

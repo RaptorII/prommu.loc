@@ -22,8 +22,8 @@
         <span itemprop="image" itemscope itemtype="https://schema.org/ImageObject" class="img">
             <img            
                 itemprop="image url" 
-                title="<?=$viData['data']['name']?>" 
-                alt="<?=$viData['data']['name']?>"
+                <?/*title="<?=$viData['data']['name']?>"*/?>
+                <?/*alt="<?=$viData['data']['name']?>"*/?>
                 width="<?=$imgDimensions[0]?>"
                 height="<?=$imgDimensions[1]?>"
                 src="<?=$src?>"/>
@@ -44,7 +44,7 @@
             <? else:?>
             <div class="news-popular"> 
                 <div class="big"><a href="<?= MainConfig::$PAGE_ARTICLES . DS . $val['link'] ?>"><?= $val['name'] ?></a></div>
-                <a href="<?= MainConfig::$PAGE_ARTICLES . DS . $val['link'] ?>" class="img"><img src="<?=Settings::getFilesUrl() . MainConfig::$PAGE_ARTICLES . DS . $val['img'] . Articles::$SMALL_IMG?>" alt=""><i></i></a>
+                <a href="<?= MainConfig::$PAGE_ARTICLES . DS . $val['link'] ?>" class="img"><img src="<?=Settings::getFilesUrl() . MainConfig::$PAGE_ARTICLES . DS . $val['img'] . Articles::$SMALL_IMG?>"><i></i></a>
                <!--  <div class="text"><?= $val['anons'] ?></div> -->
                 <div class="date"><?= $val['crdate'] ?></div>
             </div>

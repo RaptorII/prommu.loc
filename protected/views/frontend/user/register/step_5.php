@@ -1,3 +1,9 @@
+<?
+  if(!count($model->errors))
+  {
+    UserRegisterPageCounter::set($model->step);
+  }
+?>
 <script>
   var imageParams = {
     maxFileSize:<?=UserProfile::$MAX_FILE_SIZE?>,

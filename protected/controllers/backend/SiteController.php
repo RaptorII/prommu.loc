@@ -2156,4 +2156,22 @@ class SiteController extends Controller
     $this->breadcrumbs = $arBread;
     $this->render($model->view, ['model'=>$model]);
   }
+  /**
+   *
+   */
+  public function actionSeo_registers()
+  {
+    $this->checkAccess();
+    $title = 'Подсчет страниц регистраций';
+    $this->setPageTitle($title);
+    $this->breadcrumbs = [1 => $title];
+    if(Yii::app()->request->isAjaxRequest)
+    {
+      $this->renderPartial('seo/list-registers-ajax');
+    }
+    else
+    {
+      $this->render('seo/list-registers');
+    }
+  }
 }

@@ -757,6 +757,12 @@ else
                                 <span>Мета данные</span>
                             </a>
                         </li>
+                        <li class="<?= ($curId == 'seo_registers' ? 'active' : '') ?>">
+                          <a href="<?= $hUrl ?>seo_registers">
+                            <i class="glyphicon glyphicon-registration-mark"></i>
+                            <span>Регистрации</span>
+                          </a>
+                        </li>
                     </ul>
                 </li>
                 <?php

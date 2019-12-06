@@ -1,6 +1,7 @@
 <? if(!Yii::app()->getRequest()->isAjaxRequest): ?>
 <script>var pageCondition = <?=json_encode($model->data['condition']['html'])?>;</script>
 <? endif; ?>
+<? UserRegisterPageCounter::set($model->step); ?>
 <script>
   // yandex metric
   setGoal();

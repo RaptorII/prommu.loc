@@ -1,8 +1,15 @@
+<?
+  UserRegisterPageCounter::setByIdUser(
+    Share::$UserProfile->id,
+    Yii::app()->request->url===MainConfig::$PAGE_AFTER_REGISTER
+      ? UserRegister::$PAGE_USER_LEAD
+      : UserRegister::$PAGE_ACTIVE_PROFILE
+    );
+?>
 <!DOCTYPE html>
 <html lang="ru">
   <head>
     <? $this->renderPartial('../layouts/header_partial/' . Subdomain::getCacheData()->id); // data for every site ?>
-    <?/*?><meta http-equiv="refresh" content="1;<?=Subdomain::site() . MainConfig::$PAGE_PROFILE?>"><?*/?>
     <script type="text/javascript">
       window.onload = function() {
         var link = "<?=MainConfig::$PAGE_PROFILE?>";

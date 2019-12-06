@@ -142,7 +142,7 @@ class ImEmpl extends Im
 
             $model = new Feedback();
             $data['feedback'] = $model->checkUserStatusCondition($inChatId);
-
+            
             return $data;
         }
         else
@@ -323,16 +323,22 @@ class ImEmpl extends Im
           // оповещение по Телеграм
           if ($id==self::$ADMIN_EMPLOYER || $ids==self::$ADMIN_APPLICANT)
           {
-            $mess = '"' . (isset($inProps['original']) ? $inProps['original'] : strip_tags($message)) . '"';
-            $text = "Зарегистрированный пользователь обратился по обратной связи: $mess. Необходима модерация https://prommu.com/admin/site/update/$idTm";
+            if($id==self::$ADMIN_EMPLOYER)
+            {
+              $text = "Администратор написал соискателю https://prommu.com/admin/site/update/$idTm";
+              $arUpdate = ['status'=>3,'is_smotr'=>1];
+            }
+            else
+            {
+              $mess = (isset($inProps['original']) ? $inProps['original'] : $message);
+              $mess = '"' . strip_tags($mess) . '"';
+              $text = "Зарегистрированный пользователь обратился по обратной связи: $mess. Необходима модерация https://prommu.com/admin/site/update/$idTm";
+              $arUpdate = ['status'=>0,'is_smotr'=>0];
+            }
             $sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=$text";
             file_get_contents($sendto);
             Yii::app()->db->createCommand()
-              ->update('feedback',
-                ['status'=>0,'is_smotr'=>0],
-                'chat=:id_theme',
-                [':id_theme'=>$idTm]
-              );
+              ->update('feedback', $arUpdate, 'chat=:id_theme', [':id_theme'=>$idTm]);
           }
           return array_merge(
             $this->getNewMessData($idTm, $lastMessId),

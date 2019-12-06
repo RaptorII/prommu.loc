@@ -9,12 +9,23 @@ echo '<div class="col-md-6 col-xs-12"><h3>Чат обратной связи #' 
 echo  '<label>ID запроса:</label> ' . $data['feedback']['id'] .
   '<input type="hidden" name="Update[id]" value="' . $data['feedback']['id'] . '"><br>';
 echo '<label>Дата и время создания обращения:</label> ' . Share::getPrettyDate($data['feedback']['crdate']) . '<br>';
-echo '<label>Кто обращается:</label> ' . (Share::isApplicant($data['feedback']['type']) ? 'Соискатель ' : 'Работодатель ') .
-  AdminView::getUserType($data['feedback']['type']) . '<br>';
-echo '<label>ID Пользователя:</label> ' . $data['user']['id'] . '<br>';
-echo '<label>ФИО:</label> '
-  . CHtml::link(!empty($data['user']['fio']) ? $data['user']['fio'] : $data['feedback']['name'] , $data['user']['profile_admin'], ['target'=>'_blank'])
-  . '<br>';
+if(in_array($data['user_appealing']['id'],[Im::$ADMIN_EMPLOYER,Im::$ADMIN_APPLICANT]))
+{
+  echo '<label>Кто обращается:</label> Администратор<br>';
+  echo '<label>ID Пользователя:</label> ' . $data['user']['id'] . '<br>';
+  echo '<label>ФИО:</label> '
+    . CHtml::link(!empty($data['user']['fio']) ? $data['user']['fio'] : $data['feedback']['name'] , $data['user']['profile_admin'], ['target'=>'_blank'])
+    . '<br>';
+}
+else
+{
+  echo '<label>Кто обращается:</label> ' . (Share::isApplicant($data['feedback']['type']) ? 'Соискатель ' : 'Работодатель ') .
+    AdminView::getUserType($data['feedback']['type']) . '<br>';
+  echo '<label>ID Пользователя:</label> ' . $data['user']['id'] . '<br>';
+  echo '<label>ФИО:</label> '
+    . CHtml::link(!empty($data['user']['fio']) ? $data['user']['fio'] : $data['feedback']['name'] , $data['user']['profile_admin'], ['target'=>'_blank'])
+    . '<br>';
+}
 echo '<label>Направление запроса:</label> ' . $data['direct'] . '<br>';
 echo '<label>Тема:</label> ' . $data['feedback']['theme'] . '<br>';
 echo '<label>Email:</label> ' . $data['feedback']['email'] . '<br>';

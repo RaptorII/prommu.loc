@@ -81,8 +81,14 @@
 <div id="DiContent"  class="page-index">
 	<div class="container">
 		<div class="row">
+<?/*
+            <div class="index__message-block">
+                Уважаемые пользователи! Доводим до вашего сведения, что <?=date('d.m.Y')?> и <?=date('d.m.Y',strtotime("+1 day"))?> в период с 03:00 до 22:00 по московскому времени на некоторых из серверов «PROMMU» будут проводиться плановые технические работы на оборудовании канального оператора с целью улучшения качества предоставляемых услуг. В связи с этим возможны кратковременные перерывы в работе сервисов. Приносим извинения за доставленные неудобства.
+            </div>
+*/?>
 			<div class="how-block">
-				<a href="<?=MainConfig::$LINK_TO_PLAYMARKET?>" rel="nofollow" class="app-top-mob-link" target="_blank"></a>    
+
+				<a href="<?=MainConfig::$LINK_TO_PLAYMARKET?>" rel="nofollow" class="app-top-mob-link" target="_blank"></a>
 				<div class="header h-indent first"><hr class="line"><h2><span>Как найти работу или персонал<br/> на нашем портале</span></h2></div>
 
 				<div class="col-xs-12 col-sm-4 col-md-3 how-block__item" id='reg-how-block'>
@@ -134,200 +140,204 @@
 				</div>
 				<div class="clearfix"></div>
 			</div>
-			<?php if( count($content['vacancies']) ): ?>
-				<div class="vacancies">
-					<div class="header h-indent vacancies__title"><hr class="line">
+
+            <?php if( count($content['vacancies']) ): ?>
+                <div class="vacancies">
+                    <div class="header h-indent vacancies__title">
+                        <hr class="line">
                         <h2>
                             <i class="icon90 icn-iii-prommu color-green"></i>
                             <span>Вакансии</span>
                         </h2>
                     </div>
-					<div class="container">
-						<div class="vacancies__list">
-							<?php foreach ($content['vacancies'] as $vac):?>
-								<div class="vacancies__item <?=($vac['ispremium']?'premium':'')?>">
-									<? if($vac['ispremium']): ?>
-										<div class="vacancies-item__prem-icon js-g-hashint" title="Премиум вакансия"></div>
-										<div class="vacancies-item__prem-border"></div>
-									<? else: ?>
-										<div class="vacancies-item__norm-border"></div>
-										<div class="vacancies-item__norm-bg"></div>
-									<? endif; ?>
-									<!--noindex-->
-									<div class="vacancies-item__content">
-										<h3 class="vacancies-item__content-title"><?echo join(', ', $vac['posts'])?></h3>
-										<div class="vacancies-item__content-middle">
-											<div>
-												<div class="vacancies-item__content-gender">
-                                                    <span class="icon22 icn-man-m-prommu <?=(!$vac['isman']?' color-l-grey':' color-green')?>"></span>
-                                                    <span class="icon22 icn-woman-m-prommu <?=(!$vac['iswoman']?' color-l-grey':' color-green')?>"></span>
-												</div>
-												<div class="vacancies__item-payment"><?=$vac['payment']?></div>
-												<div class="clearfix"></div>
-											</div>
-											
-											<div class="vacancies__item-info">
-												<b>Город: </b><?=join(', ', $vac['city'])?><br>
-												<b>Вид работы:</b><?=$vac['work_type']?><br>
-												<b>Период:</b><?=$vac['period']?>
-											</div>											
-										</div>
-										<div class="vacancies__item-author">
-											<div class="vacancies__item-author-img">
-												<img src="<?=$vac['logo_src']?>" alt="<?=$vac['coname']?>">
-											</div>
-											<div>
-												<b><?=$vac['coname']?></b>
-												<span>от <?=$vac['crdate']?></span>
-											</div>
-										</div>
-									</div>
-									<!--/noindex-->
-									<a href="<?=$vac['detail_url']?>" class="vacancies__item-link"></a>
-								</div>
-							<?php endforeach; ?>
-						</div>
-					</div>
-					<div class="clearfix"></div>
-					<div class="btn-go-vacancy"><a href="<?= MainConfig::$PAGE_SEARCH_VAC ?>" rel="nofollow" class="btn-01">Смотреть все вакансии</a></div>
-					<a href="<?=MainConfig::$PAGE_SEARCH_VAC?>" rel="nofollow" class="m-wrapper__btn m-wrapper__whiteo-btn m-detail-list-btn">Все вакансии подробнее</a>
-				</div>
-			<?php endif; ?>
-			<?php if( count($content['applicants']) ):?>    
-				<div class="applicants">             
-					<div class="clearfix"></div>
-					<div class="header h-indent applicants__title"><hr class="line">
+                    <div class="container">
+                        <div class="vacancies__list">
+                            <?php foreach ($content['vacancies'] as $vac):?>
+                                <div class="vacancies__item <?=($vac['ispremium']?'premium':'')?>">
+                                    <? if($vac['ispremium']): ?>
+                                        <div class="vacancies-item__prem-icon js-g-hashint" title="Премиум вакансия"></div>
+                                        <div class="vacancies-item__prem-border"></div>
+                                    <? else: ?>
+                                        <div class="vacancies-item__norm-border"></div>
+                                        <div class="vacancies-item__norm-bg"></div>
+                                    <? endif; ?>
+                                    <!--noindex-->
+																		<div class="vacancies-item__content">
+																			<h3 class="vacancies-item__content-title"><?echo join(', ', $vac['posts'])?></h3>
+																			<div class="vacancies-item__content-middle">
+																				<div>
+                                                                                    <div class="vacancies-item__content-gender">
+                                                                                        <span class="icon22 icn-man-m-prommu <?=(!$vac['isman']?' color-l-grey':' color-green')?>"></span>
+                                                                                        <span class="icon22 icn-woman-m-prommu <?=(!$vac['iswoman']?' color-l-grey':' color-green')?>"></span>
+                                                                                    </div>
+																					<div class="vacancies__item-payment"><?=$vac['payment']?></div>
+																					<div class="clearfix"></div>
+																				</div>
+																				
+																				<div class="vacancies__item-info">
+																					<b>Город: </b><?=join(', ', $vac['city'])?><br>
+																					<b>Вид работы:</b><?=$vac['work_type']?><br>
+																					<b>Период:</b><?=$vac['period']?>
+																				</div>											
+																			</div>
+																			<div class="vacancies__item-author">
+																				<div class="vacancies__item-author-img">
+																					<img src="<?=$vac['logo_src']?>" alt="<?=$vac['coname']?>">
+																				</div>
+																				<div>
+																					<b><?=$vac['coname']?></b>
+																					<span>от <?=$vac['crdate']?></span>
+																				</div>
+																			</div>
+																		</div>
+                                    <!--/noindex-->
+                                    <a href="<?=$vac['detail_url']?>" class="vacancies__item-link"></a>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="btn-go-vacancy"><a href="<?= MainConfig::$PAGE_SEARCH_VAC ?>" rel="nofollow" class="btn-01">Смотреть все вакансии</a></div>
+                    <a href="<?=MainConfig::$PAGE_SEARCH_VAC?>" rel="nofollow" class="m-wrapper__btn m-wrapper__whiteo-btn m-detail-list-btn">Все вакансии подробнее</a>
+                </div>
+            <?php endif; ?>
+            <?php if( count($content['applicants']) ):?>
+                <div class="applicants">
+                    <div class="clearfix"></div>
+                    <div class="header h-indent applicants__title">
+                        <hr class="line">
                         <h2>
                             <i class="icon90 icn-lupa-humans-prommu color-orange"></i>
                             <span>Соискатели</span>
                         </h2>
                     </div>
-					<div id="DiEmplSlider" class="applicant applicants__list"> 
-						<?foreach($content['applicants'] as $key => $item):?>
-						<div class="item applicants__item">
-							<div class="m-applicants__item">
-								<a href="<?=$item['datail-url']?>" class="applicants__item-ilink" >
-									<img src="<?=$item['logo']?>" alt="" class="applicants__item-img js-g-hashint" title="<?= $item['firstname'].' '.$item['lastname'] ?>"/>
-									<?php if($item['is_online']): ?>
-										<span class="promo__item-onl"><span>В сети</span>
-									<?php endif; ?>
-								</a>
-								<div class="applicants__item-info">
-									<a class="applicants__item-name" href="<?=$item['datail-url']?>"><?=$item['firstname']?></a>
-									<a class="applicants__item-name applicants__item-lastname" href="<?=$item['datail-url']?>"><?=$item['lastname']?></a>
-                                    <a class="applicants__item-name bold" href="<?=$item['datail-url']?>"><?=$item['birthday']?></a>
-									<div class="applicants__item-line"></div>
-                                    <?php
-                                    if (count(explode(", ", $item['positions'])) > 2) {
-                                    ?>
-									<div class="applicants__item-pos applicants__item-open" data-itempos="<?=$item['positions'];?>">
-                                        <?=implode( array_slice((explode(", ", $item['positions'])), 0, 2), ', ') . '...';?>
-                                    </div>
-                                    <?php } else { ?>
-                                        <div class="applicants__item-pos">
-                                            <?=$item['positions'] . '.';?>
-                                        </div>
-                                    <?php } ?>
-									<div class="companies__item-com-rate">
-										<?if($item['rate_count']>0):?>
-										<div class="companies__item-rating">
-											<span class="rating-count js-g-hashint" title="Всего"><?=$item['rate_count']?></span>
-											( <span class="rating-positive js-g-hashint" title="Положительный"><?=$item['rate']?></span>
-											/ <span class="rating-negative js-g-hashint" title="Отрицательный"><?=$item['rate_neg']?></span> )
-										</div>
-										<?endif;?>
-										<?if($item['comment_count']>0):?>
-                                            <div class="companies__item-com">
-                                                <a href="<?=$item['comment-url']?>" class="com-count js-g-hashint" title="Всего">
-                                                    <?=$item['comment_count']?>
-                                                </a>
-                                                ( <span class="com-positive js-g-hashint" title="Положительный"><?php echo (integer)($item['comment_count'] - $item['comment_neg'])?></span>
-                                                / <span class="com-negative js-g-hashint" title="Отрицательный"><?php  echo $item['comment_neg']; ?></span> )
+                    <div id="DiEmplSlider" class="applicant applicants__list">
+                        <?foreach($content['applicants'] as $key => $item):?>
+                            <div class="item applicants__item">
+                                <div class="m-applicants__item">
+                                    <a href="<?=$item['datail-url']?>" class="applicants__item-ilink" >
+                                        <img src="<?=$item['logo']?>" alt="" class="applicants__item-img js-g-hashint" title="<?= $item['firstname'].' '.$item['lastname'] ?>"/>
+                                        <?php if($item['is_online']): ?>
+                                        <span class="promo__item-onl"><span>В сети</span>
+                                            <?php endif; ?>
+                                    </a>
+                                    <div class="applicants__item-info">
+                                        <a class="applicants__item-name" href="<?=$item['datail-url']?>"><?=$item['firstname']?></a>
+                                        <a class="applicants__item-name applicants__item-lastname" href="<?=$item['datail-url']?>"><?=$item['lastname']?></a>
+                                        <a class="applicants__item-name bold" href="<?=$item['datail-url']?>"><?=$item['birthday']?></a>
+                                        <div class="applicants__item-line"></div>
+                                        <?php
+                                        if (count(explode(", ", $item['positions'])) > 2) {
+                                            ?>
+                                            <div class="applicants__item-pos applicants__item-open" data-itempos="<?=$item['positions'];?>">
+                                                <?=implode( array_slice((explode(", ", $item['positions'])), 0, 2), ', ') . '...';?>
                                             </div>
-										<?endif;?>
-									</div>
-								</div>
-							</div>
-						</div>                      
-						<?endforeach;?>
-					</div>           
-					<div class="btn-go-vacancy"><a href="<?= MainConfig::$PAGE_SEARCH_PROMO ?>" rel="nofollow" class="btn-01">Просмотреть всеx соискателей</a></div>
-					<a href="<?=MainConfig::$PAGE_SEARCH_PROMO?>" rel="nofollow" class="m-wrapper__btn m-wrapper__white-btn m-detail-list-btn">все соискатели подробнее</a>
-				</div>
-			<?php endif; ?>
-
-			<?if( count($content['companies']) ):?>
-			<div class="companies">
-				<div class="clearfix"></div>
-				<div class="header h-indent companies__title"><hr class="line">
-                    <h2>
-                        <i class="icon90 icn-portfolio-prommu color-green"></i>
-                        <span>Работодатели</span>
-                    </h2>
-                </div>
-				<div id="DiEmpl1Slider" class="applicant companies__list">
-					<?foreach($content['companies'] as $key => $item):?>
-					<div class="item companies__item">
-						<div class="m-companies__item">
-							<a href="<?=$item['datail-url']?>" class="companies__item-ilink">
-								<img src="<?=$item['logo']?>" alt="" class="js-g-hashint companies__item-img" title="<?=$item['name']?>"/>
-								<?php if($item['is_online']): ?>
-									<span class="promo__item-onl"><span>В сети</span>
-								<?php endif; ?>
-							</a>
-							<div class="companies__item-info">
-								<a class="companies__item-name" href="<?=$item['datail-url']?>"><?=$item['fullname'];?></a>
-
-								<div class="companies__item-line"></div>
-								<?if(!empty($item['cities'])):?>
-								<div class="companies__item-cities">Город: <?=$item['cities']?></div>
-								<?endif;?>
-								<div class="companies__item-com-rate">
-									<?if($item['rate_count']>0):?>
-									<div class="companies__item-rating">
-										<span class="rating-count js-g-hashint" title="Всего"><?=$item['rate_count']?></span>
-										( <span class="rating-positive js-g-hashint" title="Положительный"><?=$item['rate']?></span>
-										/ <span class="rating-negative js-g-hashint" title="Отрицательный"><?=$item['rate_neg']?></span> )
-									</div>
-									<?endif;?>
-                                    <?if($item['comment_count']>0):?>
-                                        <div class="companies__item-com">
-                                            <a href="<?=$item['comment-url']?>" class="com-count js-g-hashint" title="Всего">
-                                                <?=$item['comment_count']?>
-                                            </a>
-                                            ( <span class="com-positive js-g-hashint" title="Положительный"><?php echo (integer)($item['comment_count'] - $item['comment_neg'])?></span>
-                                            / <span class="com-negative js-g-hashint" title="Отрицательный"><?php  echo $item['comment_neg']; ?></span> )
+                                        <?php } else { ?>
+                                            <div class="applicants__item-pos">
+                                                <?=$item['positions'] . '.';?>
+                                            </div>
+                                        <?php } ?>
+                                        <div class="companies__item-com-rate">
+                                            <?if($item['rate_count']>0):?>
+                                                <div class="companies__item-rating">
+                                                    <span class="rating-count js-g-hashint" title="Всего"><?=$item['rate_count']?></span>
+                                                    ( <span class="rating-positive js-g-hashint" title="Положительный"><?=$item['rate']?></span>
+                                                    / <span class="rating-negative js-g-hashint" title="Отрицательный"><?=$item['rate_neg']?></span> )
+                                                </div>
+                                            <?endif;?>
+                                            <?if($item['comment_count']>0):?>
+                                                <div class="companies__item-com">
+<!--                                                    <a href="--><?//=$item['comment-url']?><!--" class="com-count js-g-hashint" title="Всего">-->
+                                                        <?=$item['comment_count']?>
+<!--                                                    </a>-->
+                                                    ( <span class="com-positive js-g-hashint" title="Положительный"><?php echo (integer)($item['comment_count'] - $item['comment_neg'])?></span>
+                                                    / <span class="com-negative js-g-hashint" title="Отрицательный"><?php  echo (integer) $item['comment_neg']; ?></span> )
+                                                </div>
+                                            <?endif;?>
                                         </div>
-                                    <?endif;?>
-								</div>
-							</div>
-						</div>
-					</div>                           
-					<?endforeach;?>
-				</div> 
-				<div class="btn-go-vacancy"><a href="<?=MainConfig::$PAGE_SEARCH_EMPL?>" rel="nofollow" class="btn-01">Просмотреть всеx работодателей</a></div>
-				<a href="<?=MainConfig::$PAGE_SEARCH_PROMO?>" rel="nofollow" class="m-wrapper__btn m-wrapper__whiteg-btn m-detail-list-btn">все работодатели подробнее</a>
-			</div>
-			<?endif;?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?endforeach;?>
+                    </div>
+                    <div class="btn-go-vacancy"><a href="<?= MainConfig::$PAGE_SEARCH_PROMO ?>" rel="nofollow" class="btn-01">Просмотреть всеx соискателей</a></div>
+                    <a href="<?=MainConfig::$PAGE_SEARCH_PROMO?>" rel="nofollow" class="m-wrapper__btn m-wrapper__white-btn m-detail-list-btn">все соискатели подробнее</a>
+                </div>
+            <?php endif; ?>
 
-			<?if(count($content['vacs'])):?>
-			<div class="main-vacancies-list">
-				<div class="clearfix"></div>
-				<div class="header h-indent">
-					<hr class="line">
-					<h2><span><span class="header--break">Найти работу</span> по следующим <br/> специальностям</span></h2>
-				</div>
-				<div class="vacancy-sections vacancy">
-					<div class="vacancy-sections--center">
-						<?php foreach ($content['vacs'] as $val): ?>
-							<div id="<?= $val['id'];?>">
-								<a href="<?= MainConfig::$PAGE_SEARCH_VAC . "/{$val['comment']}" ?>"><ins><?= $val['name'] ?></ins></a><br/>
-							</div>      
-						<?php endforeach; ?>          
-					</div>
-				</div>
-			</div>
-			<?endif;?>
+            <?if( count($content['companies']) ):?>
+                <div class="companies">
+                    <div class="clearfix"></div>
+                    <div class="header h-indent companies__title">
+                        <hr class="line">
+                        <h2>
+                            <i class="icon90 icn-portfolio-prommu color-green"></i>
+                            <span>Работодатели</span>
+                        </h2>
+                    </div>
+                    <div id="DiEmpl1Slider" class="applicant companies__list">
+                        <?foreach($content['companies'] as $key => $item):?>
+                            <div class="item companies__item">
+                                <div class="m-companies__item">
+                                    <a href="<?=$item['datail-url']?>" class="companies__item-ilink">
+                                        <img src="<?=$item['logo']?>" alt="" class="js-g-hashint companies__item-img" title="<?=$item['name']?>"/>
+                                        <?php if($item['is_online']): ?>
+                                        <span class="promo__item-onl"><span>В сети</span>
+                                            <?php endif; ?>
+                                    </a>
+                                    <div class="companies__item-info">
+                                        <a class="companies__item-name" href="<?=$item['datail-url']?>"><?=$item['fullname'];?></a>
+
+                                        <div class="companies__item-line"></div>
+                                        <?if(!empty($item['cities'])):?>
+                                            <div class="companies__item-cities">Город: <?=$item['cities']?></div>
+                                        <?endif;?>
+                                        <div class="companies__item-com-rate">
+                                            <?if($item['rate_count']>0):?>
+                                                <div class="companies__item-rating">
+                                                    <span class="rating-count js-g-hashint" title="Всего"><?=$item['rate_count']?></span>
+                                                    ( <span class="rating-positive js-g-hashint" title="Положительный"><?=$item['rate']?></span>
+                                                    / <span class="rating-negative js-g-hashint" title="Отрицательный"><?=$item['rate_neg']?></span> )
+                                                </div>
+                                            <?endif;?>
+                                            <?if($item['comment_count']>0):?>
+                                                <div class="companies__item-com">
+<!--                                                    <a href="--><?//=$item['comment-url']?><!--" class="com-count js-g-hashint" title="Всего">-->
+                                                        <?=$item['comment_count']?>
+<!--                                                    </a>-->
+                                                    ( <span class="com-positive js-g-hashint" title="Положительный"><?php echo (integer)($item['comment_count'] - $item['comment_neg'])?></span>
+                                                    / <span class="com-negative js-g-hashint" title="Отрицательный"><?php  echo $item['comment_neg']; ?></span> )
+                                                </div>
+                                            <?endif;?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?endforeach;?>
+                    </div>
+                    <div class="btn-go-vacancy"><a href="<?=MainConfig::$PAGE_SEARCH_EMPL?>" rel="nofollow" class="btn-01">Просмотреть всеx работодателей</a></div>
+                    <a href="<?=MainConfig::$PAGE_SEARCH_PROMO?>" rel="nofollow" class="m-wrapper__btn m-wrapper__whiteg-btn m-detail-list-btn">все работодатели подробнее</a>
+                </div>
+            <?endif;?>
+
+            <?if(count($content['vacs'])):?>
+                <div class="main-vacancies-list" id="specialties">
+                    <div class="clearfix"></div>
+                    <div class="header h-indent">
+                        <hr class="line">
+                        <h2><span><span class="header--break">Найти работу</span> по следующим <br/> специальностям</span></h2>
+                    </div>
+                    <div class="vacancy-sections vacancy">
+                        <div class="vacancy-sections--center">
+                            <?php foreach ($content['vacs'] as $val): ?>
+                                <div id="<?= $val['id'];?>">
+                                    <a href="<?= MainConfig::$PAGE_SEARCH_VAC . "/{$val['comment']}" ?>"><ins><?= $val['name'] ?></ins></a><br/>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            <?endif;?>
 
 			<div class="advantages">
 				<div class="clearfix"></div>
@@ -336,108 +346,108 @@
 					<h2><span>ПОЧЕМУ НА НАШЕМ САЙТЕ ПРОСТО И ЭФФЕКТИВНО<br/>ИСКАТЬ РАБОТУ И ПЕРСОНАЛ?</span></h2>
 				</div>
 				<div class="col-xs-12">
-					<div class="benefits__grid">
-						<div class="benefits__cell">
-							<div class="benefits__icon icon80">
+                    <div class="benefits__grid">
+                        <div class="benefits__cell">
+                            <div class="benefits__icon icon80">
                                 <span class="icn-tablet-phone-prommu color-green"></span>
                             </div>
-						</div>
-						<div class="benefits__cell">
-							<h2 class="benefits__cell-title">Мобильное приложение PROMMU</h2>
-							<p class="benefits__cell-text">Благодаря мобильному приложению Prommu вы можете без проблем найти работу или персонал с помощью вашего мобильного устройства.<br/>
-								<a href="<?=MainConfig::$LINK_TO_PLAYMARKET?>" rel="nofollow" target="_blank"><ins>Скачать приложение</ins></a></p>
-							</div>
-						</div>
-						<div class="benefits__grid">
-							<div class="benefits__cell">
-								<div class="benefits__icon icon80">
-                                    <span class="icn-stars-ten-prommu color-green"></span>
-                                </div>
-							</div>
-							<div class="benefits__cell">
-								<h2 class="benefits__cell-title">Участие в рейтингах</h2>
-								<p class="benefits__cell-text">Вы можете участвовать в системе рейтингов и получить статус лучший работодатель или лучший соискатель</p>
-							</div>
-						</div>
-						<div class="clearfix"></div>
-						<div class="benefits__grid">
-							<div class="benefits__cell">
-								<div class="benefits__icon icon80">
-                                    <span class="icn-mail-phone-prommu color-green"></span>
-                                </div>
-							</div>
-							<div class="benefits__cell">
-								<h2 class="benefits__cell-title">Push - уведомления</h2>
-								<p class="benefits__cell-text">Вы можете получать следующие уведомления о новой вакансии, отвечающей вашим требованиям, о приглашении от работодателя, об изменении рейтинга или добавлении отзыва и многое другое<br/>
-                                <a href="https://prommu.com/services/push-notification"><ins>Подробнее</ins></a></p>
+                        </div>
+                        <div class="benefits__cell">
+                            <h2 class="benefits__cell-title">Мобильное приложение PROMMU</h2>
+                            <p class="benefits__cell-text">Благодаря мобильному приложению Prommu вы можете без проблем найти работу или персонал с помощью вашего мобильного устройства.<br/>
+                                <a href="<?=MainConfig::$LINK_TO_PLAYMARKET?>" rel="nofollow" target="_blank"><ins>Скачать приложение</ins></a></p>
+                        </div>
+                    </div>
+                    <div class="benefits__grid">
+                        <div class="benefits__cell">
+                            <div class="benefits__icon icon80">
+                                <span class="icn-stars-ten-prommu color-green"></span>
                             </div>
                         </div>
-                        <div class="benefits__grid">
-								<div class="benefits__cell">
-									<div class="benefits__icon icon80">
-                                        <span class="icn-net-prommu color-green"></span>
-                                    </div>
-								</div>
-								<div class="benefits__cell">
-									<h2 class="benefits__cell-title">Публикация вакансий в соц. сетях</h2>
-									<p class="benefits__cell-text">Когда вы размещаете вакансии на нашем портале, мы автоматически дополнительно публикуем вакансии в нашей группе Вконтакте, тем самым увеличивая количество просмотров и обращений</p>
-								</div>
+                        <div class="benefits__cell">
+                            <h2 class="benefits__cell-title">Участие в рейтингах</h2>
+                            <p class="benefits__cell-text">Вы можете участвовать в системе рейтингов и получить статус лучший работодатель или лучший соискатель</p>
                         </div>
-							<div class="clearfix"></div>
-							<div class="benefits__grid">
-								<div class="benefits__cell">
-									<div class="benefits__icon icon80">
-                                        <span class="icn-globe-pointer-prommu color-green"></span>
-                                    </div>
-								</div>
-								<div class="benefits__cell">
-									<h2 class="benefits__cell-title">Геолокация</h2>
-									<p class="benefits__cell-text">Вы не знаете где сейчас нанятый специалист? Воспользуйтесь геолокацией в мобильном приложении Prommu и вы всегда сможете отследить его местоположение</p>
-								</div>
-							</div>
-							<div class="benefits__grid">
-								<div class="benefits__cell">
-									<div class="benefits__icon icon80">
-                                        <span class="icn-wi-fi-prommu color-green"></span>
-                                    </div>
-								</div>
-								<div class="benefits__cell">
-									<h2 class="benefits__cell-title">Подписка на вакансии</h2>
-									<p class="benefits__cell-text">Вы можете создать подписки на интересующие вакансии и регулярно получать на email уведомления о новых вакансиях.</p>
-								</div>
-							</div>
-							<div class="clearfix"></div>
-							<div class="benefits__grid">
-								<div class="benefits__cell">
-									<div class="benefits__icon icon80">
-                                        <span class="icn-save-clouds-prommu color-green"></span>
-                                    </div>
-								</div>
-								<div class="benefits__cell">
-									<h2 class="benefits__cell-title">Отзывы и комментарии</h2>
-									<p class="benefits__cell-text">Специалист некачественно выполнил свою работу? Или работодатель вам не доплатил? Оставьте отзыв и это поможет отслеживать недобросоветсных исполнителей и заказчиков.</p>
-								</div>  
-							</div>
-							<div class="benefits__grid">
-								<div class="benefits__cell">
-									<div class="benefits__icon icon80">
-                                        <span class="icn-file-plus-prommu color-green"></span>
-                                    </div>
-								</div>
-								<div class="benefits__cell">
-									<h2 class="benefits__cell-title">Комплекс дополнительных услуг</h2>
-									<p class="benefits__cell-text">Дополнительно вы можете воспользоваться услугами: <br/>
-										-персональный менеджер и аутсорсинг <br/>
-										-премиум вакансии <br/>
-										-корпоративная карта Prommu <br/>
-										-аутстаффинг <br/>
-										<a href="https://prommu.com/services"><ins>Подробнее</ins></a>
-									</p>
-								</div>
-							</div>
-						</div>    
-						<div class="clearfix"></div>
-					</div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="benefits__grid">
+                        <div class="benefits__cell">
+                            <div class="benefits__icon icon80">
+                                <span class="icn-mail-phone-prommu color-green"></span>
+                            </div>
+                        </div>
+                        <div class="benefits__cell">
+                            <h2 class="benefits__cell-title">Push - уведомления</h2>
+                            <p class="benefits__cell-text">Вы можете получать следующие уведомления о новой вакансии, отвечающей вашим требованиям, о приглашении от работодателя, об изменении рейтинга или добавлении отзыва и многое другое<br/>
+                                <a href="https://prommu.com/services/push-notification"><ins>Подробнее</ins></a></p>
+                        </div>
+                    </div>
+                    <div class="benefits__grid">
+                        <div class="benefits__cell">
+                            <div class="benefits__icon icon80">
+                                <span class="icn-net-prommu color-green"></span>
+                            </div>
+                        </div>
+                        <div class="benefits__cell">
+                            <h2 class="benefits__cell-title">Публикация вакансий в соц. сетях</h2>
+                            <p class="benefits__cell-text">Когда вы размещаете вакансии на нашем портале, мы автоматически дополнительно публикуем вакансии в нашей группе Вконтакте, тем самым увеличивая количество просмотров и обращений</p>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="benefits__grid">
+                        <div class="benefits__cell">
+                            <div class="benefits__icon icon80">
+                                <span class="icn-globe-pointer-prommu color-green"></span>
+                            </div>
+                        </div>
+                        <div class="benefits__cell">
+                            <h2 class="benefits__cell-title">Геолокация</h2>
+                            <p class="benefits__cell-text">Вы не знаете где сейчас нанятый специалист? Воспользуйтесь геолокацией в мобильном приложении Prommu и вы всегда сможете отследить его местоположение</p>
+                        </div>
+                    </div>
+                    <div class="benefits__grid">
+                        <div class="benefits__cell">
+                            <div class="benefits__icon icon80">
+                                <span class="icn-wi-fi-prommu color-green"></span>
+                            </div>
+                        </div>
+                        <div class="benefits__cell">
+                            <h2 class="benefits__cell-title">Подписка на вакансии</h2>
+                            <p class="benefits__cell-text">Вы можете создать подписки на интересующие вакансии и регулярно получать на email уведомления о новых вакансиях.</p>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="benefits__grid">
+                        <div class="benefits__cell">
+                            <div class="benefits__icon icon80">
+                                <span class="icn-save-clouds-prommu color-green"></span>
+                            </div>
+                        </div>
+                        <div class="benefits__cell">
+                            <h2 class="benefits__cell-title">Отзывы и комментарии</h2>
+                            <p class="benefits__cell-text">Специалист некачественно выполнил свою работу? Или работодатель вам не доплатил? Оставьте отзыв и это поможет отслеживать недобросоветсных исполнителей и заказчиков.</p>
+                        </div>
+                    </div>
+                    <div class="benefits__grid">
+                        <div class="benefits__cell">
+                            <div class="benefits__icon icon80">
+                                <span class="icn-file-plus-prommu color-green"></span>
+                            </div>
+                        </div>
+                        <div class="benefits__cell">
+                            <h2 class="benefits__cell-title">Комплекс дополнительных услуг</h2>
+                            <p class="benefits__cell-text">Дополнительно вы можете воспользоваться услугами: <br/>
+                                -персональный менеджер и аутсорсинг <br/>
+                                -премиум вакансии <br/>
+                                -корпоративная карта Prommu <br/>
+                                -аутстаффинг <br/>
+                                <a href="https://prommu.com/services"><ins>Подробнее</ins></a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
 
 					<div class="services">
 						<div class="clearfix"></div>
@@ -447,48 +457,48 @@
                                 <span>услуги</span>
                             </a>
 						</h2>
-						<ul class="services__list">
-							<li class="services__item">
+                        <ul class="services__list">
+                            <li class="services__item">
                                 <i class="icon30 icn-briliant-prommu color-white"></i>
                                 <a href="<?=MainConfig::$PAGE_SERVICES_PREMIUM?>">Премиум вакансии</a>
                             </li>
-							<li class="services__item">
+                            <li class="services__item">
                                 <i class="icon30 icn-people-connect-prommu color-white"></i>
                                 <a href="<?=MainConfig::$PAGE_SERVICES_SHARES?>">Приглашение персонала на акции</a>
                             </li>
-							<li class="services__item">
+                            <li class="services__item">
                                 <i class="icon30 icn-bell-prommu color-white"></i>
                                 <a href="<?=MainConfig::$PAGE_SERVICES_PUSH?>">Пуш уведомления</a>
                             </li>
-							<li class="services__item">
+                            <li class="services__item">
                                 <i class="icon30 icn-net-smbl-prommu color-white"></i>
                                 <a href="<?=MainConfig::$PAGE_SERVICES_SOCIAL?>">Дублирование вакансии в группах Промму Соц сетей</a>
                             </li>
-							<li class="services__item">
+                            <li class="services__item">
                                 <i class="icon30 icn-sms-sq-two-prommu color-white"></i>
                                 <a href="<?=MainConfig::$PAGE_SERVICES_SMS?>">СМС информирование персонала</a>
                             </li>
-							<li class="services__item">
+                            <li class="services__item">
                                 <i class="icon30 icn-globe-cheked-prommu color-white"></i>
                                 <a href="<?=MainConfig::$PAGE_SERVICES_GEO?>">Геолокация</a>
                             </li>
-							<li class="services__item">
+                            <li class="services__item">
                                 <i class="icon30 icn-man-busines-prommu color-white"></i>
                                 <a href="<?=MainConfig::$PAGE_SERVICES_OUTSOURCING?>">Личный менеджер / Аутсорсинг</a>
                             </li>
-							<li class="services__item">
+                            <li class="services__item">
                                 <i class="icon30 icn-bell-globe-prommu color-white"></i>
                                 <a href="<?=MainConfig::$PAGE_SERVICES_OUTSTAFFING?>">Аутстаффинг</a>
                             </li>
-							<li class="services__item">
+                            <li class="services__item">
                                 <i class="icon30 icn-cards-visa-prommu color-white"></i>
                                 <a href="<?=MainConfig::$PAGE_SERVICES_CARD_PROMMU?>">Получение корпоративной карты Промму</a>
                             </li>
-							<li class="services__item">
+                            <li class="services__item">
                                 <i class="icon30 icn-api-prommu color-white"></i>
                                 <a href="<?=MainConfig::$PAGE_SERVICES_API?>">Получение API ключа</a>
                             </li>
-						</ul>
+                        </ul>
 					</div>
 
 					<div class="articles-news">
@@ -527,13 +537,13 @@
 						<div style="  border-left: 1px solid #a9bc10; height: 440px;" class="col-xs-12 col-sm-4 col-md-4">
 							<div class="vacancy">
 								<h2>НОВОСТИ ПОРТАЛА PROMMU</h2>
-								<?php 
+								<?php
 								for($i = 0; $i < 4; $i++){
 									if(empty($content['news'][$i])){
 										break;
 									}
 									else {
-										echo  '<div style="padding-top: 5px;">'; 
+										echo  '<div style="padding-top: 5px;">';
 										$image = $content['news'][$i]['img'];
 										$url = $content['news'][$i]['link'];
 										$title = $content['news'][$i]['name'];
@@ -562,9 +572,9 @@
 							<div class="header h-indent about-block__title">
 								<hr class="line">
 								<h2>
-                                    <i class="icon80 icn-table-prommu color-green"></i>
-                                    <span>О нас</span>
-                                </h2>
+									<i class="icon80 icn-table-prommu color-green"></i>
+									<span>О нас</span>
+								</h2>
 							</div>
 							<div class="italic-non about-block__text" style="text-align: justify;"><?php echo $this->ViewModel->getViewData()->pageMetaKeywords; ?></div>
 						</div>
@@ -587,9 +597,9 @@
 		<script type="text/javascript">
 			jQuery(function($){
 				setInterval(function (e){
-					<?php 
+					<?php
 					$vac = new Vacancy();
-					$posts = $vac->getPost();  
+					$posts = $vac->getPost();
 					foreach ($posts as $key => $value):?>
 						function ucFirst(str)
 						{
@@ -609,7 +619,7 @@
 	  *
 	  */ // ввод нового города
 	  selectCities({
-	  	'main' : '#multyselect-cities', 
+	  	'main' : '#multyselect-cities',
 	  	'arCity' : <?=json_encode($city)?>,
 	  	'inputName' : 'cities[]'
 	  });
@@ -627,13 +637,13 @@
 
 	    // добавляем уже выбранный город
 	    if(obj.arCity != undefined) {
-	    	content = '<li data-id="' + obj.arCity.id + '">' + 
+	    	content = '<li data-id="' + obj.arCity.id + '">' +
 	    	obj.arCity.name + '<i></i><input type="hidden" name="' +
-	    	obj.inputName + '" value="' + obj.arCity.id + '">' + 
+	    	obj.inputName + '" value="' + obj.arCity.id + '">' +
 	    	'</li>';
 	    	$select.prepend(content);
 	    }
-	    // при клике по блоку фокусируем на поле ввода 
+	    // при клике по блоку фокусируем на поле ввода
 	    $select.click(function(e){ if(!$(e.target).is('i')) $input.focus() });
 	    $input.click(function(e){ if(!$(e.target).is('i')) $input.focus() })
 	    // обработка событий поля ввода
@@ -690,30 +700,30 @@
 	                	word = this.value.toLowerCase();
 	                  // если введен именно город полностью
 	                  if(
-	                  	word===piece 
-	                  	&& 
-	                  	$.inArray(this.data, arSelectId)<0 
+	                  	word===piece
+	                  	&&
+	                  	$.inArray(this.data, arSelectId)<0
 	                  	&&
 	                  	this.data!=='man'
 	                  	){
-	                  	html =  '<li data-id="' + this.data + '">' + this.value + 
-	                  '<i></i><input type="hidden" name="' + 
+	                  	html =  '<li data-id="' + this.data + '">' + this.value +
+	                  '<i></i><input type="hidden" name="' +
 	                  obj.inputName + '" value="' + this.data + '"/>' +
 	                  '</li>';
 	                  $select.find('[data-id="0"]').before(html);
 	                  bShowCityList = false;
 	                }
 	                else if(
-	                	word.indexOf(piece)>=0 
-	                	&& 
-	                	$.inArray(this.data, arSelectId)<0 
-	                	&& 
+	                	word.indexOf(piece)>=0
+	                	&&
+	                	$.inArray(this.data, arSelectId)<0
+	                	&&
 	                	this.data!=='man'
 	                	)
 	                	arResult.push( {'id':this.data, 'name':this.value} );
 	              });
 	                arResult.length>0
-	                ? $.each(arResult, function(){ 
+	                ? $.each(arResult, function(){
 	                	content += '<li data-id="' + this.id + '">' + this.name + '</li>'
 	                })
 	                : content = '<li class="emp">Список пуст</li>';
@@ -736,22 +746,22 @@
 	    // Закрываем список
 	    $(document).on('click', function(e){
 	    	if(
-	    		$(e.target).is('li') 
-	    		&& 
-	    		$(e.target).closest($list).length 
-	    		&& 
+	    		$(e.target).is('li')
+	    		&&
+	    		$(e.target).closest($list).length
+	    		&&
 	    		!$(e.target).hasClass('emp')
-	      ) { // если кликнули по списку && если это не "Список пуст" && 
+	      ) { // если кликнули по списку && если это не "Список пуст" &&
 	    		$(e.target).remove();
-	    	html =  '<li data-id="' + $(e.target).data('id') + 
-	    	'">' + $(e.target).text() + 
-	    	'<i></i><input type="hidden" name="' + obj.inputName + 
+	    	html =  '<li data-id="' + $(e.target).data('id') +
+	    	'">' + $(e.target).text() +
+	    	'<i></i><input type="hidden" name="' + obj.inputName +
 	    	'" value="' + $(e.target).data('id') + '"/>' + '</li>';
 	    	$select.find('[data-id="0"]').before(html);
 	    	$list.fadeOut();
 	    }
 	      // удаление выбраного города из списка
-	      if($(e.target).is('i') && $(e.target).closest($select).length){ 
+	      if($(e.target).is('i') && $(e.target).closest($select).length){
 	      	$(e.target).closest('li').remove();
 	      	l = getSelectedCities($select).length;
 	      }
@@ -770,7 +780,7 @@
 	  		if($(this).data('id')!=0)
 	  			arId.push(String($(this).data('id')));
 	  	});
-	  	return arId; 
+	  	return arId;
 	  }
 	  // делаем каждое слово в городе с большой
 	  function setFirstUpper(e) {

@@ -6,8 +6,8 @@
 
 class Articles extends Model
 {
-  public static $SMALL_IMG = '350.jpg';
-  public static $BIG_IMG = '000.jpg';
+    public static $SMALL_IMG = '350.jpg';
+    public static $BIG_IMG = '000.jpg';
     /**
      * Получаем новости
      */
@@ -121,7 +121,7 @@ class Articles extends Model
         /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);
         $data = $res->queryRow();
-        self::setImgAttributes($data['html']); // устанавливаем атрибуты для картинок
+        //self::setImgAttributes($data['html']); // устанавливаем атрибуты для картинок
         return array('data' => $data);
     }
 
