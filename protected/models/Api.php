@@ -1069,8 +1069,7 @@ class Api
             } else return $auth->registerUser($inData);
             
         } elseif($provider == 'vkontakte'){
-
-            $ch = curl_init("https://api.vk.com/method/users.get.json?user_ids=$userid&fields=nickname,sex,bdate,city,country,timezone,photo,photo_medium,photo_big,photo_rec,email&access_token=$code&v=5.74"); 
+            $ch = curl_init("https://api.vk.com/method/users.get.json?user_ids=$userid&fields=nickname,sex,bdate,city,country,timezone,photo,photo_medium,photo_big,photo_rec,email&access_token=857781ce857781ce857781ce038519c37d88577857781ced8a82354c1fa51eec1b88cad&v=5.103"); 
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
             curl_setopt($ch, CURLOPT_POST, 0); 
             $responses = curl_exec($ch); 
