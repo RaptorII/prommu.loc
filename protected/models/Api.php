@@ -4410,7 +4410,7 @@ public function vac(){
 //
             if( $accessToken )
             {
-                list($idus, $Profile, $data) = $this->checkAccessToken($accessToken, compact('idus'));
+                list($idus, $Profile, $idus) = $this->checkAccessToken($accessToken, compact('idus'));
             }
             else
             {
@@ -4418,6 +4418,9 @@ public function vac(){
                 $Profile = (new ProfileFactory())->makeProfile(['id' => $idus]);
                 $this->Profile = $Profile;
             } // endif
+                
+            var_dump($idus);
+            var_dump($data);
             
 
             if(!$Profile->error){
