@@ -38,7 +38,7 @@ class ProfileFactory
 //                $props->type = $res['type'];
             } // endif
         
-            // var_dump($props->type);
+            var_dump($props->type);
             if( $props->type == 2 ) $Profile = new UserProfileApplic($props);
             elseif( $props->type == 3 ) $Profile = new UserProfileEmpl($props);
             else $Profile = (object)array('error' => -101, 'message' => 'Нет данных для такого пользователя');
