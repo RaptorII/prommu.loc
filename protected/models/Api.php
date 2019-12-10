@@ -4420,7 +4420,7 @@ public function vac(){
             } // endif
                 
             var_dump($idus);
-            var_dump($data);
+            var_dump($profile);
             
 
             if(!$Profile->error){
@@ -4512,7 +4512,7 @@ public function vac(){
     {
         // ПРоверка домена на актуальность, получение всех данных авторизации
         $data = (new UserTokens())->getUserTokens(['token' => $accessToken]);
-        var_dump($data);
+        
         unset($data['tokens']['uid']);
        
         $idus = $inProps['idus'] ?: $data['tokens']['id_user'];
