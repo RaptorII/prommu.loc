@@ -19,14 +19,14 @@ class ProfileFactory
     public function makeProfile($inProps)
     {
         $props = (object)$inProps;
-
+        var_dump($inProps);
         if( $props->id )
         {
             // если id текущего пользователя - его и возвращаем
             if( Share::$UserProfile instanceof UserProfile )
                 if( $props->id == Share::$UserProfile->id ) return Share::$UserProfile;
 
-
+                    
             // если тип не определен
 //            if( !isset($props->type) )
             if( !$props->type )
