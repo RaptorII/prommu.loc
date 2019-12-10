@@ -1029,10 +1029,10 @@ class Api
             
         } elseif($provider == 'google'){
 
-            $url = "https://www.googleapis.com/oauth2/v1/userinfo";
-            $params = "access_token=$code";
+            $url = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=".$code;
+           
         
-            $ch = curl_init($url . '?' . $params);
+            $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  
             if (!empty($headers)) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             curl_setopt($ch, CURLOPT_POST, false);
