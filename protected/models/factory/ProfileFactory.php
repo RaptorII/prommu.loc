@@ -1,6 +1,5 @@
 <?php
 /**
- * Created by Vlasakh
  * Date: 09.09.16
  * Time: 17:41
  */
@@ -32,7 +31,7 @@ class ProfileFactory
             if( !$props->type )
             {
                 list($props->idProfile, $props->type) = array_values(UserProfile::getUserType($props->id));
-                var_dump($props);
+               
 //                $res = UserProfile::getUserType($props->id);
 //                $props->idProfile = $res['id'];
 //                $props->type = $res['type'];
