@@ -4512,6 +4512,7 @@ public function vac(){
     {
         // ПРоверка домена на актуальность, получение всех данных авторизации
         $data = (new UserTokens())->getUserTokens(['token' => $accessToken]);
+        var_dump($data);
         unset($data['tokens']['uid']);
        
         $idus = $inProps['idus'] ?: $data['tokens']['id_user'];
