@@ -4419,8 +4419,8 @@ public function vac(){
                 $this->Profile = $Profile;
             } // endif
                 
-            var_dump($idus);
-            var_dump($Profile);
+            // var_dump($idus);
+            // var_dump($Profile);
             
 
             if(!$Profile->error){
