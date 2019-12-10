@@ -32,13 +32,13 @@ class ProfileFactory
             if( !$props->type )
             {
                 list($props->idProfile, $props->type) = array_values(UserProfile::getUserType($props->id));
-                
+                var_dump($props);
 //                $res = UserProfile::getUserType($props->id);
 //                $props->idProfile = $res['id'];
 //                $props->type = $res['type'];
             } // endif
         
-            var_dump($props->type);
+            
             if( $props->type == 2 ) $Profile = new UserProfileApplic($props);
             elseif( $props->type == 3 ) $Profile = new UserProfileEmpl($props);
             else $Profile = (object)array('error' => -101, 'message' => 'Нет данных для такого пользователя');
