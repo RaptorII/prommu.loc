@@ -19,7 +19,7 @@ class ProfileFactory
     public function makeProfile($inProps)
     {
         $props = (object)$inProps;
-        var_dump($inProps);
+       
         if( $props->id )
         {
             // если id текущего пользователя - его и возвращаем
@@ -32,6 +32,7 @@ class ProfileFactory
             if( !$props->type )
             {
                 list($props->idProfile, $props->type) = array_values(UserProfile::getUserType($props->id));
+                 var_dump(array_values(UserProfile::getUserType($props->id)));
 //                $res = UserProfile::getUserType($props->id);
 //                $props->idProfile = $res['id'];
 //                $props->type = $res['type'];
