@@ -1438,10 +1438,8 @@ class Auth
         } // endif
     }
 
-
-    private function registerUserFirsStep($inData)
+private function registerUserFirsStep($inData)
     {
-        
         $res = $this->userSelect("email = '{$inData['inputData']['email']}'");
         $idUs = $res['id_user'];
         $admin = filter_var(Yii::app()->getRequest()->getParam('admin'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -1453,24 +1451,12 @@ class Auth
         $keywords = filter_var(Yii::app()->getRequest()->getParam('keywords'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $point = filter_var(Yii::app()->getRequest()->getParam('point'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $last_referer = filter_var(Yii::app()->getRequest()->getParam('last_referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $robot = Yii::app()->getRequest()->getParam('lastname');
         $ip = Yii::app()->getRequest()->getParam('ip');
+        $robot = Yii::app()->getRequest()->getParam('lastname');
         $pm = Yii::app()->getRequest()->getParam('pm_source');
         if($pm == '') $pm = 'none';
-        $ips  = @$_SERVER['HTTP_CLIENT_IP'];
-        $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
-        $remote  = @$_SERVER['REMOTE_ADDR'];
-        
-        if(filter_var($ips, FILTER_VALIDATE_IP)) $ip = $ips;
-        elseif(filter_var($forward, FILTER_VALIDATE_IP)) $ip = $forward;
-        else $ip = $remote;
-    
-        $clients = Yii::app()->db->createCommand()
-                ->select("a.client, a.ip")
-                ->from('user_client a')
-                ->where('a.ip = :ip', array(':ip' => $ip))
-                ->queryRow();
-        $client = $clients['client'];
+        $client = Yii::app()->getRequest()->getParam('client');
+        $client = substr($client, 6, 100);
 
         $agreement = filter_var(Yii::app()->getRequest()->getParam('agreement'), FILTER_SANITIZE_NUMBER_INT);
 
@@ -1484,7 +1470,7 @@ class Auth
         {
             $this->userUpdate(array('email' => $inData['inputData']['email'],
                 'passw' => $inData['inputData']['pass'],
-                'isblocked' => 3,
+                'isblocked' => 2,
                 'ismoder' => 0,
                 'status' => $inData['type'],
              
@@ -1494,32 +1480,15 @@ class Auth
 
 
         } else {
+             if(!empty($inData['inputData']['phone'])) $inData['inputData']['email'] = $inData['inputData']['phone'];
             $idUs = $this->userInsert(array('email' => $inData['inputData']['email'],
                 'passw' => $inData['inputData']['pass'],
-                'isblocked' => 3,
-                'ismoder' => 0,
+                'login' => $inData['inputData']['email'],
+                'isblocked' => 2,
+                'ismoder' => 1,
                 'status' => $inData['type'],
                 'agreement' => $agreement
             ), 1);
-            
-            ///create mailing event
-            $Mailing = new Mailing();
-            $template = new MailingTemplate;
-            $template = $template->getActiveTemplate();
-        
-            $receiver = $inData['inputData']['email'];
-            $title = 'Активация аккаунта';
-            for($i = 10; $i < 15; $i = $i + 5){
-                $rdate = date('Y-m-d H:i', strtotime(" +{$i} minutes"));
-                $body = str_replace(
-                        MailingTemplate::$CONTENT,
-                        'Активируйте профиль',
-                        $template->body
-                    );
-                // $set = $Mailing->setToMailingNotActive($receiver,$title,$body,$isUrgent=false, $rdate);
-            }
-             ///create mailing event
-
 
             $idUser = 0;
                $token = md5($inData['inputData']['email'] . date("d.m.Y H:i:s") . md5($inData['inputData']['pass']));
@@ -1540,9 +1509,9 @@ class Auth
 
         $sex = $inData['inputData']['sex'];
         $smart = $inData['inputData']['smart'];
-        
-        $sex = $this->SexOnder($inData['inputData']['name']); 
-     
+        // if($smart) {
+        //  // $sex = $this->SexOnder($inData['inputData']['name']); 
+        // }
 
 
         $analytData = array('id_us' => $idUs,
@@ -1559,16 +1528,24 @@ class Auth
                         'last_referer' => $last_referer,
                         'active' => 0,
                         'subdomen' => 0,
-                        'client' => $client,
-                        'ip' => $ip, 
-                        'source' => $pm
+                        'client' => $client ? $client : " ",
+                        'ip' => $ip ? $ip : " ", 
+                        'source' => $pm ? $pm : " ", 
                     );
 
         $res = Yii::app()->db->createCommand()
                         ->insert('analytic', $analytData);
                         
-        if( $inData['type'] == 2 )
-        {
+        if($inData['type'] == 2) {
+            
+            $res = Yii::app()->db->createCommand()
+                        ->insert('resume', array('id_user' => $idUs,
+                                'firstname' => $inData['inputData']['name'],
+                                'lastname' => $inData['inputData']['lname'],
+                                'date_public' => date('Y-m-d H:i:s'),
+                                'mdate' => date('Y-m-d H:i:s'),
+                            ));
+                            
             $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=2&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin."&sex=".$sex."&smart=".$smart."&ip=".$ip."&client=".$client."&pm=".$pm;
             $message = '<p style="font-size:16px">Наш портал <b>Prommu.com</b> позволяет найти работу в России и странах СНГ совершенно бесплатно.</p>'
             .'<br/>'
@@ -1608,7 +1585,16 @@ class Auth
                 .'<br/>Ваш пароль для входа на портал:'.$inData['inputData']['pass'].'</p>'
             .'</div>';
             Share::sendmail($inData['inputData']['email'], "Prommu.com. Подтверждение регистрации на портале поиска временной работы!", $message);
-        } elseif( $inData['type'] == 3 && empty($robot)) {
+        } elseif($inData['type'] == 3 && empty($robot)){
+            
+            $res = Yii::app()->db->createCommand()
+                        ->insert('employer', array('id_user' => $idUs,
+                                'name' => $inData['inputData']['name'],
+                                'crdate' => date('Y-m-d H:i:s'),
+                                'type' => 102 // устанавливаем по умолчанию "Прямой работодатель"
+                            ));
+
+
             $link = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=3&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin."&ip=".$ip."&client=".$client."&pm=".$pm;
             $message = '<p style="font-size:16px;">Наш портал <b>Prommu.com</b> позволяет найти квалифицированный персонал в России и странах СНГ совершенно бесплатно.</p>'
             .'<br/>'
@@ -1653,6 +1639,8 @@ class Auth
 
         return array('error' => 0);
     }
+
+
 
 
 
