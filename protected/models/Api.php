@@ -4420,7 +4420,7 @@ public function vac(){
             } // endif
                 
             var_dump($idus);
-            var_dump($profile);
+            var_dump($Profile);
             
 
             if(!$Profile->error){
