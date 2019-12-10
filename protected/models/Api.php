@@ -1029,15 +1029,30 @@ class Api
             
         } elseif($provider == 'google'){
 
-            $url = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=".$code;
+          
            
         
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  
-            if (!empty($headers)) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_POST, false);
-            curl_setopt($ch, CURLOPT_VERBOSE, true);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+           $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://www.googleapis.com/oauth2/v1/userinfo?access_token=".$code,
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "GET",
+              CURLOPT_HTTPHEADER => array(
+                "Accept: */*",
+                "Accept-Encoding: gzip, deflate",
+                "Cache-Control: no-cache",
+                "Connection: keep-alive",
+                "Host: www.googleapis.com",
+                "User-Agent: PostmanRuntime/7.20.1",
+                "cache-control: no-cache"
+              ),
+            ));
+            
             $response = curl_exec($curl);
             $err = curl_error($curl);
             
@@ -1050,8 +1065,8 @@ class Api
             $pass = md5($inData['inputData']['pass']);
             $inData['inputData']['sex'] = 1; 
             
-            $inData['inputData']['name'] = $response->email; 
-            $inData['inputData']['lname'] =  $response->email;
+            $inData['inputData']['name'] = $response->family_name; 
+            $inData['inputData']['lname'] =  $response->given_name;
             
             $inData['type'] = $promo;
             
