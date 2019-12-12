@@ -1094,7 +1094,7 @@ class Api
             $inData['type'] = $promo;
             
             
-            var_dump($auth->registerUser($inData)['error']);
+            
             if($auth->registerUser($inData)['error'] == 0){
                 $res = $auth->doAPIAuth($email, $pass);
         
@@ -1174,18 +1174,12 @@ class Api
             
             
             
-            if($auth->registerUser($inData)['error'] == 0){
-                $res = $auth->doAPIAuth($response->default_email, $pass);
-        
-        
-                Yii::app()->db->createCommand()
-                ->update('user', array(
-                    'isblocked' => 0,
-                ), 'id_user=:id_user', array(':id_user' => $res['id']));
+            $pass = $this->checkUser($email);
+            $res = $auth->doAPIAuth($email, $pass);
+            
+            
 
-                return $res;
-          
-            } else return $auth->registerUser($inData);
+            return $res;
         } elseif($provider == 'facebook'){
             $curl = curl_init();
             curl_setopt_array($curl, array(
@@ -1224,18 +1218,13 @@ class Api
             
             $inData['type'] = $promo;
             
-            if($auth->registerUser($inData)['error'] == 0){
-                $res = $auth->doAPIAuth($response->email, $pass);
-        
-        
-                Yii::app()->db->createCommand()
-                ->update('user', array(
-                    'isblocked' => 0,
-                ), 'id_user=:id_user', array(':id_user' => $res['id']));
+            
+            $pass = $this->checkUser($email);
+            $res = $auth->doAPIAuth($email, $pass);
+            
+            
 
-                return $res;
-          
-            } else return $auth->registerUser($inData);
+            return $res;
             
         } elseif($provider == 'google'){
 
@@ -1280,18 +1269,12 @@ class Api
             
             $inData['type'] = $promo;
             
-            if($auth->registerUser($inData)['error'] == 0){
-                $res = $auth->doAPIAuth($response->email, $pass);
-        
-        
-                Yii::app()->db->createCommand()
-                ->update('user', array(
-                    'isblocked' => 0,
-                ), 'id_user=:id_user', array(':id_user' => $res['id']));
+            $pass = $this->checkUser($email);
+            $res = $auth->doAPIAuth($email, $pass);
+            
+            
 
-                return $res;
-          
-            } else return $auth->registerUser($inData);
+            return $res;
             
         } elseif($provider == 'vkontakte'){
             $ch = curl_init("https://api.vk.com/method/users.get.json?user_ids=$userid&fields=nickname,sex,bdate,city,country,timezone,photo,photo_medium,photo_big,photo_rec,email&access_token=857781ce857781ce857781ce038519c37d88577857781ced8a82354c1fa51eec1b88cad&v=5.103"); 
@@ -1312,23 +1295,27 @@ class Api
             $inData['inputData']['lname'] =  $data['last_name'];
             
             $inData['type'] = $promo;
+            $pass = $this->checkUser($email);
+            $res = $auth->doAPIAuth($email, $pass);
             
-            if($auth->registerUser($inData)['error'] == 0){
-                $res = $auth->doAPIAuth($email, $pass);
-        
-        
-                Yii::app()->db->createCommand()
-                ->update('user', array(
-                    'isblocked' => 0,
-                ), 'id_user=:id_user', array(':id_user' => $res['id']));
+            
 
-                return $res;
+            return $res;
           
-            } else return $auth->registerUser($inData);
+          
             
         }
     }
+    
+    public function checkUser($email){
+        $res = Yii::app()->db->createCommand()
+            ->select("password")
+            ->from('user')
+            ->where('email = :email', array(':email' => $email))
+            ->queryRow();
 
+        return $res;
+    }
     public function testLog(){
         $section = file_get_contents('https://prommu.com/protected/runtime/application.log');
         $section = explode("---", $section);
