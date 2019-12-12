@@ -1174,7 +1174,7 @@ class Api
             
             
             
-            $pass = $this->checkUser($response->default_email);
+            $pass = $this->checkUser($email)['passw'];
             $res = $auth->doAPIAuth($response->default_email, $pass);
             return $res;
             
@@ -1217,7 +1217,7 @@ class Api
             $inData['type'] = $promo;
             
             
-            $pass = $this->checkUser($response->email);
+            $pass = $this->checkUser($email)['passw'];
             $res = $auth->doAPIAuth($response->email, $pass);
             
             return $res;
@@ -1265,7 +1265,7 @@ class Api
             
             $inData['type'] = $promo;
             
-            $pass = $this->checkUser($response->email);
+            $pass = $this->checkUser($email)['passw'];
             $res = $auth->doAPIAuth($response->email, $pass);
             
             return $res;
@@ -1289,8 +1289,7 @@ class Api
             $inData['inputData']['lname'] =  $data['last_name'];
             
             $inData['type'] = $promo;
-            $pass = $this->checkUser($email);
-            var_dump($pass);
+            $pass = $this->checkUser($email)['passw'];
             $res = $auth->doAPIAuth($email, $pass);
             
             return $res;
