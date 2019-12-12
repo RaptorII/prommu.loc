@@ -1847,13 +1847,13 @@ class UserProfileApplic extends UserProfile
     public function getEfficiencyData() {
 
         $data['usrInfo'] = $this->getUserInfo($this->id);
-//      display($data['usrInfo']);
+        //display($data['usrInfo']);
         //die();
 
         $efficiency = 0;
 
         /*main*/
-        If (isset($data['usrInfo']['userAttribs']['1']['photo'])) {
+        If (($data['usrInfo']['userAttribs']['1']['photo'])) {
             $efficiency = $efficiency + 10;
 
             $id_user = $this->id;
@@ -1865,26 +1865,28 @@ class UserProfileApplic extends UserProfile
                 WHERE 
                     id_user=${id_user}
             ")->queryRow();
+
             If ($cntFoto['cnt']>=2) {
                 $efficiency = $efficiency + 10;
             }
         }
-        If (isset($data['usrInfo']['userAttribs']['1']['firstname'])) {
+        If (($data['usrInfo']['userAttribs']['1']['firstname'])) {
             $efficiency = $efficiency + 1;
         }
-        If (isset($data['usrInfo']['userAttribs']['1']['lastname'])) {
+        If (($data['usrInfo']['userAttribs']['1']['lastname'])) {
             $efficiency = $efficiency + 1;
         }
-        If (isset($data['usrInfo']['userAttribs']['1']['bday'])) {
+        If (($data['usrInfo']['userAttribs']['1']['bday'])) {
             $efficiency = $efficiency + 1;
         }
-        If (isset($data['usrInfo']['userAttribs']['1']['isman'])) {
+        If (($data['usrInfo']['userAttribs']['1']['isman']==1)||
+            ($data['usrInfo']['userAttribs']['1']['isman']==0)) {
             $efficiency = $efficiency + 1;
         }
-        if (isset($data['usrInfo']['userAttribs']['1']['ismed']) ||
-            isset($data['usrInfo']['userAttribs']['1']['smart']) ||
-            isset($data['usrInfo']['userAttribs']['1']['card']) ||
-            isset($data['usrInfo']['userAttribs']['1']['ishasavto'])) {
+        if (!empty($data['usrInfo']['userAttribs']['1']['ismed']) ||
+            !empty($data['usrInfo']['userAttribs']['1']['smart']) ||
+            !empty($data['usrInfo']['userAttribs']['1']['card']) ||
+            !empty($data['usrInfo']['userAttribs']['1']['ishasavto'])) {
             $efficiency = $efficiency + 1;
         }
 
@@ -1895,94 +1897,106 @@ class UserProfileApplic extends UserProfile
         If (isset($data['usrInfo']['userAttribs']['1']['email'])) {
             $efficiency = $efficiency + 5;
         }
-        if (isset($data['usrInfo']['userAttribs']['4']['val'])   || //messangers
-            isset($data['usrInfo']['userAttribs']['157']['val']) ||
-            isset($data['usrInfo']['userAttribs']['156']['val']) ||
-            isset($data['usrInfo']['userAttribs']['5']['val'])) {
+        if (!empty($data['usrInfo']['userAttribs']['4']['val'])   || //messangers
+            !empty($data['usrInfo']['userAttribs']['157']['val']) ||
+            !empty($data['usrInfo']['userAttribs']['156']['val']) ||
+            !empty($data['usrInfo']['userAttribs']['158']['val']) ||
+            !empty($data['usrInfo']['userAttribs']['5']['val'])) {
             $efficiency = $efficiency + 5;
         }
-        if (isset($data['usrInfo']['userAttribs']['6']['val']) || //social networks
-            isset($data['usrInfo']['userAttribs']['160']['val']) ||
-            isset($data['usrInfo']['userAttribs']['161']['val']) ||
-            isset($data['usrInfo']['userAttribs']['162']['val']) ||
-            isset($data['usrInfo']['userAttribs']['7']['val'])) {
+        if (!empty($data['usrInfo']['userAttribs']['6']['val'])   || //social networks
+            !empty($data['usrInfo']['userAttribs']['160']['val']) ||
+            !empty($data['usrInfo']['userAttribs']['161']['val']) ||
+            !empty($data['usrInfo']['userAttribs']['162']['val']) ||
+            !empty($data['usrInfo']['userAttribs']['7']['val'])) {
             $efficiency = $efficiency + 5;
         }
 
-        If (count($data['usrInfo']['userDolj']['0']) ) { //заполнены поля должностей
+        If (sizeof($data['usrInfo']['userDolj']['0']) > 0 )  { //заполнены поля должностей
             $efficiency = $efficiency + 5;
         }
-        If (isset($data['usrInfo']['userCities']['0'])) {
+        If (sizeof($data['usrInfo']['userCities']['0'])>0) {
             $efficiency = $efficiency + 1;
         }
-        If (isset($data['usrInfo']['userWdays'])) {
+        If (sizeof($data['usrInfo']['userWdays'])>0) {
             $efficiency = $efficiency + 4;
         }
 
         /*look*/
-        If (isset($data['usrInfo']['userAttribs']['9']['val'])) {
+        If (($data['usrInfo']['userAttribs']['9']['val'])) {
             $efficiency = $efficiency + 3;
         }
-        If (isset($data['usrInfo']['userAttribs']['10']['val'])) {
+        If (($data['usrInfo']['userAttribs']['10']['val'])) {
             $efficiency = $efficiency + 3;
         }
-        If (isset($data['usrInfo']['userAttribs']['11']['val'])) {
+        If (($data['usrInfo']['userAttribs']['17']['name']) ||
+            ($data['usrInfo']['userAttribs']['18']['name']) ||
+            ($data['usrInfo']['userAttribs']['19']['name']) ||
+            ($data['usrInfo']['userAttribs']['20']['name']) ||
+            ($data['usrInfo']['userAttribs']['21']['name']) ||
+            ($data['usrInfo']['userAttribs']['22']['name']) ) {
             $efficiency = $efficiency + 3;
         }
-        If (isset($data['usrInfo']['userAttribs']['12']['val'])) {
+        If (($data['usrInfo']['userAttribs']['75']['name']) ||
+            ($data['usrInfo']['userAttribs']['76']['name']) ||
+            ($data['usrInfo']['userAttribs']['77']['name']) ||
+            ($data['usrInfo']['userAttribs']['78']['name']) ||
+            ($data['usrInfo']['userAttribs']['79']['name']) ) {
             $efficiency = $efficiency + 3;
         }
-        If (isset($data['usrInfo']['userAttribs']['13']['val'])) {
+        If (($data['usrInfo']['userAttribs']['23']['name']) ||
+            ($data['usrInfo']['userAttribs']['24']['name']) ||
+            ($data['usrInfo']['userAttribs']['25']['name']) ||
+            ($data['usrInfo']['userAttribs']['26']['name']) ||
+            ($data['usrInfo']['userAttribs']['27']['name']) ||
+            ($data['usrInfo']['userAttribs']['28']['name']) ||
+            ($data['usrInfo']['userAttribs']['29']['name']) ||
+            ($data['usrInfo']['userAttribs']['30']['name']) ) {
             $efficiency = $efficiency + 3;
         }
-        If (isset($data['usrInfo']['userAttribs']['14']['val'])) {
+        If (($data['usrInfo']['userAttribs']['80']['name']) ||
+            ($data['usrInfo']['userAttribs']['81']['name']) ||
+            ($data['usrInfo']['userAttribs']['82']['name']) ||
+            ($data['usrInfo']['userAttribs']['83']['name']) ||
+            ($data['usrInfo']['userAttribs']['84']['name']) ||
+            ($data['usrInfo']['userAttribs']['85']['name']) ) {
             $efficiency = $efficiency + 3;
         }
-        If (isset($data['usrInfo']['userAttribs']['15']['val'])) {
+        If (($data['usrInfo']['userAttribs']['86']['name']) ||
+            ($data['usrInfo']['userAttribs']['87']['name']) ||
+            ($data['usrInfo']['userAttribs']['88']['name']) ||
+            ($data['usrInfo']['userAttribs']['89']['name']) ||
+            ($data['usrInfo']['userAttribs']['90']['name']) ||
+            ($data['usrInfo']['userAttribs']['91']['name']) ) {
             $efficiency = $efficiency + 3;
         }
-        If (isset($data['usrInfo']['userAttribs']['16']['val'])) {
-            $efficiency = $efficiency + 3;
-        }
-        If (isset($data['usrInfo']['userAttribs']['39']['val'])) {
+        If (($data['usrInfo']['userAttribs']['92']['name']) ||
+            ($data['usrInfo']['userAttribs']['93']['name']) ||
+            ($data['usrInfo']['userAttribs']['94']['name']) ||
+            ($data['usrInfo']['userAttribs']['95']['name']) ||
+            ($data['usrInfo']['userAttribs']['96']['name']) ||
+            ($data['usrInfo']['userAttribs']['97']['name']) ) {
             $efficiency = $efficiency + 3;
         }
 
         /*more info*/
-        If (isset($data['usrInfo']['userAttribs']['70']['val'])) {
+        If (($data['usrInfo']['userAttribs']['70']['name']) ||
+            ($data['usrInfo']['userAttribs']['71']['name']) ||
+            ($data['usrInfo']['userAttribs']['72']['name']) ||
+            ($data['usrInfo']['userAttribs']['73']['name']) ) { //obrazovanie
             $efficiency = $efficiency + 5;
         }
-        If (isset($data['usrInfo']['userAttribs']['1']['aboutme']))  {
+        If (($data['usrInfo']['userAttribs']['1']['aboutme']))  {
             $efficiency = $efficiency + 11;
         }
-        if (isset($data['usrInfo']['userAttribs']['41']['name']) || //language
-            isset($data['usrInfo']['userAttribs']['42']['name']) ||
-            isset($data['usrInfo']['userAttribs']['43']['name']) ||
-            isset($data['usrInfo']['userAttribs']['44']['name']) ||
-            isset($data['usrInfo']['userAttribs']['45']['name']) ||
-            isset($data['usrInfo']['userAttribs']['46']['name']) ||
-            isset($data['usrInfo']['userAttribs']['47']['name']) ||
-            isset($data['usrInfo']['userAttribs']['49']['name']) ||
-            isset($data['usrInfo']['userAttribs']['50']['name']) ||
-            isset($data['usrInfo']['userAttribs']['51']['name']) ||
-            isset($data['usrInfo']['userAttribs']['52']['name']) ||
-            isset($data['usrInfo']['userAttribs']['53']['name']) ||
-            isset($data['usrInfo']['userAttribs']['54']['name']) ||
-            isset($data['usrInfo']['userAttribs']['55']['name']) ||
-            isset($data['usrInfo']['userAttribs']['56']['name']) ||
-            isset($data['usrInfo']['userAttribs']['57']['name']) ||
-            isset($data['usrInfo']['userAttribs']['58']['name']) ||
-            isset($data['usrInfo']['userAttribs']['59']['name']) ||
-            isset($data['usrInfo']['userAttribs']['60']['name']) ||
-            isset($data['usrInfo']['userAttribs']['61']['name']) ||
-            isset($data['usrInfo']['userAttribs']['62']['name']) ||
-            isset($data['usrInfo']['userAttribs']['63']['name']) ||
-            isset($data['usrInfo']['userAttribs']['64']['name']) ||
-            isset($data['usrInfo']['userAttribs']['65']['name']) ||
-            isset($data['usrInfo']['userAttribs']['66']['name']) ||
-            isset($data['usrInfo']['userAttribs']['67']['name']) ||
-            isset($data['usrInfo']['userAttribs']['68']['name'])) {
-            $efficiency = $efficiency + 5;
+
+        for($i=41; $i<69; $i++){
+            $isLang = false;
+            if ($data['usrInfo']['userAttribs'][$i]['name']){  //language
+                $efficiency = $efficiency + 5;
+                $isLang = true;
+            }
+            If ($isLang) { break; }
         }
 
         return $efficiency;

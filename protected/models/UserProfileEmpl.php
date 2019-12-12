@@ -1850,7 +1850,7 @@ class UserProfileEmpl extends UserProfile
      */
     public function getEfficiencyData() {
 
-        $id_user = $this->exInfo->id;
+        $id_user = $this->exInfo->id ;
         //$id = Share::$UserProfile->exInfo->eid;
 
         $data['userInfo'] = $this->getUserInfo($id_user);
@@ -1859,7 +1859,7 @@ class UserProfileEmpl extends UserProfile
         $efficiency = 0;
 
         /*main*/
-        If (isset($data['userInfo']['logo'])) {
+        if (!empty($data['userInfo']['logo'])) {
             $efficiency = $efficiency + 10;
 
             $cntFoto = Yii::app()->db->createCommand("
@@ -1870,57 +1870,62 @@ class UserProfileEmpl extends UserProfile
                 WHERE 
                     id_user=${id_user}
             ")->queryRow();
-            If ($cntFoto['cnt']>=2) {
+
+            if ($cntFoto['cnt']>=2) {
                 $efficiency = $efficiency + 10;
             }
         }
 
-        if (isset($data['usrInfo']['emplInfo']['name'])) {
+        if (!empty($data['usrInfo']['emplInfo']['name'])) {
             $efficiency = $efficiency + 5;
         }
-        if (isset($data['usrInfo']['emplInfo']['type'])) {
+        if (!empty($data['usrInfo']['emplInfo']['type'])) {
             $efficiency = $efficiency + 5;
         }
-        if (isset($data['usrInfo']['userCities']['0']['name'])) {
+        if (!empty($data['usrInfo']['userCities']['0']['name'])) {
             $efficiency = $efficiency + 5;
         }
-        if (isset($data['usrInfo']['userAttribs']['99']['val'])) {
+        if (!empty($data['usrInfo']['userAttribs']['99']['val'])) {
             $efficiency = $efficiency + 5;
         }
 
         /*contact*/
-        if (isset($data['usrInfo']['emplInfo']['firstname'])) {
+        if (!empty($data['usrInfo']['emplInfo']['firstname'])) {
             $efficiency = $efficiency + 5;
         }
-        if (isset($data['usrInfo']['emplInfo']['lastname'])) {
+        if (!empty($data['usrInfo']['emplInfo']['lastname'])) {
             $efficiency = $efficiency + 5;
         }
-        if (isset($data['usrInfo']['emplInfo']['contact'])) {
+        if (!empty($data['usrInfo']['emplInfo']['contact'])) {
             $efficiency = $efficiency + 5;
         }
-        if (isset($data['usrInfo']['userAttribs']['176']['val'])) {
+        if (!empty($data['usrInfo']['userAttribs']['176']['val'])) {
             $efficiency = $efficiency + 5;
         }
-        if (isset($data['usrInfo']['userAttribs']['177']['val'])) {
+        if (!empty($data['usrInfo']['userAttribs']['177']['val'])) {
             $efficiency = $efficiency + 5;
         }
-        if (isset($data['usrInfo']['emplInfo']['email'])) {
+        if (!empty($data['usrInfo']['emplInfo']['email'])) {
             $efficiency = $efficiency + 5;
         }
-        if (isset($data['usrInfo']['userAttribs']['1']['val'])) {
+        if (!empty($data['usrInfo']['userAttribs']['1']['val'])) {
             $efficiency = $efficiency + 5;
         }
-        if (isset($data['usrInfo']['userAttribs']['175']['val'])) {
+        if (!empty($data['usrInfo']['userAttribs']['175']['val'])) {
             $efficiency = $efficiency + 5;
         }
-        if (isset($data['usrInfo']['userAttribs']['100']['val'])) {
+        if (!empty($data['usrInfo']['userAttribs']['100']['val'])) {
             $efficiency = $efficiency + 5;
         }
-
-        if (isset($data['usrInfo']['userAttribs']['157']['val']) ||
-            isset($data['usrInfo']['userAttribs']['156']['val']) ||
-            isset($data['usrInfo']['userAttribs']['158']['val'])) {
+        if (!empty($data['usrInfo']['userAttribs']['157']['val']) ||
+            !empty($data['usrInfo']['userAttribs']['4']['val']) ||
+            !empty($data['usrInfo']['userAttribs']['5']['val']) ||
+            !empty($data['usrInfo']['userAttribs']['156']['val']) ||
+            !empty($data['usrInfo']['userAttribs']['158']['val'])) {
             $efficiency = $efficiency + 5;
+        }
+        if (!empty($data['usrInfo']['emplInfo']['aboutme'])) {
+            $efficiency = $efficiency + 10;
         }
 
         return $efficiency;
