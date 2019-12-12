@@ -1301,7 +1301,7 @@ class Api
     
     public function checkUser($email){
         $res = Yii::app()->db->createCommand()
-            ->select("password")
+            ->select("passw")
             ->from('user')
             ->where('email = :email', array(':email' => $email))
             ->queryRow();
