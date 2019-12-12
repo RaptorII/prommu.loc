@@ -84,7 +84,7 @@
   background: #ff6500;
   color: #FFFFFF;
   text-transform: uppercase;
-  font-size: 14px;
+  font-size: 14px!important;
   cursor: pointer;
   text-align: center;
   position: relative;
@@ -127,7 +127,7 @@
 .ppp__logo {
   width: 100%;
   max-width: 300px;
-  margin: 0 auto 30px auto;
+  margin: 0 auto 30px;
 }
 
 .ppp__logo-main {
@@ -1552,4 +1552,46 @@ a.upp__project-info {
 #self_employed_message ul {
   font-size: 16px;
   text-align: left;
+}
+
+.question_popup.prmu-btn.prmu-btn_normal {
+  width: 35px;
+  height: 35px;
+  margin: 0;
+}
+.fancybox-is-open .popup__msg ul{
+  text-align: initial;
+}
+.fancybox-is-open .popup__msg p{
+  font-size: 16px;
+  text-align: justify;
+}
+.affective__wrap {
+
+}
+
+.question_popup.prmu-btn{
+    background-color: rgba(255, 146, 28, .5);
+}
+.question_popup.prmu-btn:hover{
+    background-color: rgba(171,184,32,.5);
+}
+.question_popup.prmu-btn.prmu-btn_normal:after,
+.question_popup.prmu-btn.prmu-btn_normal:before {
+    background: #ff921d;
+}
+.question_popup.prmu-btn.prmu-btn_normal:hover:after,
+.question_popup.prmu-btn.prmu-btn_normal:hover:before {
+    background: rgba(171,184,32, 1);
+}
+
+@media screen and (min-width: 768px) {
+  /* custom popup */
+  .fancybox-is-open .popup__msg {
+    max-width: 680px;
+  }
+  .affective__wrap {
+    display: flex;
+    align-items: center;
+  }
 }

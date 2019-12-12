@@ -15,7 +15,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page_pr
 </div>
 
 <div class="static__paralax static__promo parallax">
-    <img src="/theme/pic/static-page/peoples.jpg" alt="">
+    <img class="static__img-d" src="/theme/pic/static-page/students-h-up.jpg" alt="">
     <div class="container">
         <div class="row flex768up">
             <div class="col-xs-12 col-sm-7 col-md-6 mark-block">
@@ -77,6 +77,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page_pr
                 </div>
             </div>
             <div class="col-xs-12 col-sm-5 col-md-6 flex768up">
+                <!--                <img class="static__img" src="/theme/pic/static-page/ma-up.png" alt="">-->
                 <? if(Share::isApplicant()): ?>
                     <a class="btn__orange btn__ads" href="<?=MainConfig::$PAGE_VACPUB?>">Разместить анкету<br>бесплатно</a>
                 <? elseif(Share::isEmployer()): ?>
@@ -171,7 +172,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page_pr
                     </div>
                     <span class="box__txt center">
                         Получайте уведомления онлайн о новых вакансиях и других событиях на портале. Будьте первым,
-                        кто откликнется на интересую вакансию.
+                        кто откликнется на интересную вакансию.
                     </span>
 
                 </div>
@@ -296,7 +297,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page_pr
                             <span class="consultant__icon green centered-elem"></span>
                         </div>
                         <div class="box__name center text-uppercase">
-                          Консультант
+                            Консультант
                         </div>
                         <span class="box__txt center">
                           от 40 000 рублей в месяц
@@ -307,35 +308,48 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page_pr
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12  col-sm-6 col-sm-offset-3  col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3" >
-                <div class="btn__orange-rnd btn__sized center text-uppercase">
+            <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3" >
+                <a class="center text-uppercase" href="/#specialties" style="display: block; text-decoration: underline;">
+                    Смотреть все специальности
+                </a>
+            </div>
+        </div>
+
+        <div class="row flex768up flex-center">
+
+            <div class="col-xs-12 col-sm-6 col-md-3" >
+                <div  class="btn__orange-rnd  center text-uppercase ">
                     Средний заработок
                 </div>
             </div>
 
-            <div class="col-xs-12 col-sm-6 col-sm-offset-3 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2" >
-                <div class="btn__orange-rnd btn__sized center text-uppercase">
-                    <p class="center">в месяц от <span style="color: red">30000</span> тысяч рублей</p>
-                    <p class="center">в час от <span style="color: red">300</span> рублей</p>
+            <div class="col-xs-12 col-sm-6 col-md-3" >
+                <div  class="btn__orange-rnd  center text-uppercase ">
+                    В час от <span style="color: red">300</span>&nbsp;P
                 </div>
             </div>
-        </div>
-        <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-            <a class="btn__orange btn__sized center text-uppercase" href="/#specialties">
-                Смотреть все специальности
-            </a>
-        </div>
-        <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-            <? if(Share::isApplicant()): ?>
-                <a class="btn__orange btn__sized center text-uppercase" href="<?=MainConfig::$PAGE_VACPUB?>">Начать зарабатывать</a>
-            <? elseif(Share::isEmployer()): ?>
-                <a class="btn__orange btn__sized center text-uppercase employer_public_anc" href="javascript:void(0)">Начать зарабатывать</a>
-            <? else: ?>
-                <a class="btn__orange btn__sized center text-uppercase" href="<?=MainConfig::$PAGE_REGISTER?>">Начать зарабатывать</a>
-            <? endif; ?>
+
+            <div class="col-xs-12 col-sm-6 col-md-3" >
+                <div  class="btn__orange-rnd  center text-uppercase ">
+                    В месяц от <span style="color: red">30 000</span> Р
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-md-3">
+                <? if(Share::isApplicant()): ?>
+                    <a class="btn__orange  center text-uppercase" href="<?=MainConfig::$PAGE_VACPUB?>">Начать зарабатывать</a>
+                <? elseif(Share::isEmployer()): ?>
+                    <a class="btn__orange  center text-uppercase employer_public_anc" href="javascript:void(0)">Начать зарабатывать</a>
+                <? else: ?>
+                    <a class="btn__orange  center text-uppercase" href="<?=MainConfig::$PAGE_REGISTER?>">Начать зарабатывать</a>
+                <? endif; ?>
+            </div>
+
         </div>
     </div>
 </div>
+
+<div class="separator"></div>
 
 <div class="static__map">
     <div class="container">
@@ -382,7 +396,7 @@ $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'site_template/static_page_pr
                             2 тыс
                         </div>
                         <div class="box__txt grey">
-                            надёжных работодателей Prommu.com
+                            надежных работодателей Prommu.com
                         </div>
                     </div>
                 </div>

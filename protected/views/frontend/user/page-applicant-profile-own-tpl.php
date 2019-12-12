@@ -205,12 +205,256 @@
       <?php if( $flagOwnProfile ): ?>
         <div class='affective-block'>
           <div class='affective-perc'>
-            <div class='progr' style="width: <?= $viData['profileEffect'] ?>%">
-              <div class='text'><?= $viData['profileEffect'] ?>%</div>
+            <div class='progr' style="width: <?= $viData['efficiency'] ?>%">
+              <div class='text'><?= $viData['efficiency'] ?>%</div>
             </div>
           </div>
-          <div class='affective'>Эффективность<br/>размещения</div>
+
+          <div class="affective__wrap">
+            <div class='affective'>Эффективность<br/>размещения</div>
+
+            <?php
+
+             if  ($viData['efficiency'] != 100) {
+                 ?>
+                 <span class="question_popup prmu-btn prmu-btn_normal"><span>?</span></span>
+                 <div class="prmu__popup popup__msg" >
+                    <h3>Уважаемый соискатель!</h3>
+                    <p>Для эффективного размещения профиля необходимо заполнить его в полном объёме.</p>
+                    <p>Информация по незаполнению данных в личном профиле для 100% эффективности.</p>
+                    <ul>
+                        <? if (empty($viData['userInfo']['userAttribs']['1']['photo']) ||
+                              (count($info['userPhotos']) <= 1)) { ?>
+                            <h4>Фото</h4>
+                        <? }
+                        if (empty($viData['userInfo']['userAttribs']['1']['photo'])) { ?>
+                            <li> Основное фото - 10% </li>
+                        <? }
+                        if ( count($info['userPhotos']) <= 1) {
+                            echo '<li> Дополнительные фото - 10% </li>';
+                         }
+                        If (empty($viData['userInfo']['userAttribs']['1']['firstname']) ||
+                            empty($viData['userInfo']['userAttribs']['1']['lastname'])  ||
+                            empty($viData['userInfo']['userAttribs']['1']['bday'])      ||
+                            empty($viData['userInfo']['userAttribs']['1']['isman'])    ) {
+                            echo "<h4>Основная информация</h4>";
+                        }
+                        If (empty($viData['userInfo']['userAttribs']['1']['firstname'])) {
+                            echo '<li> Имя - 1% </li>';
+                        }
+                        If (empty($viData['userInfo']['userAttribs']['1']['lastname'])) {
+                            echo '<li> Фамилия - 1% </li>';
+                        }
+                        If (empty($viData['userInfo']['userAttribs']['1']['bday'])) {
+                            echo '<li> Дата рождения - 1% </li>';
+                        }
+                        If (empty($viData['userInfo']['userAttribs']['1']['isman'])) {
+                            echo '<li> Пол - 1% </li>';
+                        }
+                        if (($viData['userInfo']['userAttribs']['1']['ismed'] != '0' ) ||
+                            ($viData['userInfo']['userAttribs']['1']['smart'] != '0' ) ||
+                            ($viData['userInfo']['userAttribs']['1']['card']  != '0' ) ||
+                            ($viData['userInfo']['userAttribs']['1']['ishasavto']) != '0' ) {
+                        } else {
+                            echo '<li> Доп. данные (авто / мед книга / смартфон / наличие банк карт) - 1%</li>';
+                        }
+                        ?>
+                        <?
+                        If (empty($viData['userInfo']['userAttribs']['1']['phone']) ||
+                            empty($viData['userInfo']['userAttribs']['1']['email'])
+
+                            ) {
+                            echo'<h4>Контактная информация</h4>';
+                            }
+
+                        If (empty($viData['userInfo']['userAttribs']['1']['phone'])) {
+                            echo '<li> Телефон -5% </li>';
+                        }
+                        If (empty($viData['userInfo']['userAttribs']['1']['email'])) {
+                            echo '<li> Е-меил - 5% </li>';
+                        }
+                        if (!empty($viData['userInfo']['userAttribs']['4']['val'])   || //messangers
+                            !empty($viData['userInfo']['userAttribs']['157']['val']) ||
+                            !empty($viData['userInfo']['userAttribs']['156']['val']) ||
+                            !empty($viData['userInfo']['userAttribs']['158']['val']) ||
+                            !empty($viData['userInfo']['userAttribs']['5']['val'])) {
+                        } else {
+                            echo '<li> Мессенджеры - 5% </li>';
+                        }
+                        if (!empty($viData['userInfo']['userAttribs']['6']['val'])   || //social networks
+                            !empty($viData['userInfo']['userAttribs']['160']['val']) ||
+                            !empty($viData['userInfo']['userAttribs']['161']['val']) ||
+                            !empty($viData['userInfo']['userAttribs']['162']['val']) ||
+                            !empty($viData['userInfo']['userAttribs']['7']['val'])) {
+                        } else {
+                            echo '<li> Социальные сети  - 5% </li>';
+                        }
+                        ?>
+                        <?
+                        //echo sizeof($viData['userInfo']['userDolj']['0']);
+                        If (sizeof($viData['userInfo']['userDolj']['0']) == 0 ) { //заполнены поля должностей
+                            echo '<h4>Целевая вакансия - 5%</h4>';
+                            echo '<li> Должность </li>';
+                            echo '<li> Ожидаемая оплата </li>';
+                            echo '<li> Опыт работы </li>';
+                        }
+
+                        If ((sizeof($viData['userInfo']['userCities']['0']) == 0) ||
+                            (sizeof($viData['userInfo']['userWdays']) == 0) ) {
+                            echo '<h4>Удобное место и время работы</h4>';
+                        }
+                        If ((sizeof($viData['userInfo']['userCities']['0']) == 0)) {
+                            echo '<li> Город - 1% </li>';
+                        }
+                        If (sizeof($viData['userInfo']['userWdays']) == 0) {
+                            echo '<li> Удобное время работы - 4% </li>';
+                        }
+                        If (isset($viData['userInfo']['userAttribs']['9']['val'])  ||
+                            isset($viData['userInfo']['userAttribs']['10']['val']) ||
+                            isset($viData['userInfo']['userAttribs']['17']['name'])||
+                            isset($viData['userInfo']['userAttribs']['18']['name'])||
+                            isset($viData['userInfo']['userAttribs']['19']['name'])||
+                            isset($viData['userInfo']['userAttribs']['20']['name'])||
+                            isset($viData['userInfo']['userAttribs']['21']['name'])||
+                            isset($viData['userInfo']['userAttribs']['22']['name'])||
+                            isset($viData['userInfo']['userAttribs']['23']['name'])||
+                            isset($viData['userInfo']['userAttribs']['24']['name'])||
+                            isset($viData['userInfo']['userAttribs']['25']['name'])||
+                            isset($viData['userInfo']['userAttribs']['26']['name'])||
+                            isset($viData['userInfo']['userAttribs']['27']['name'])||
+                            isset($viData['userInfo']['userAttribs']['28']['name'])||
+                            isset($viData['userInfo']['userAttribs']['29']['name'])||
+                            isset($viData['userInfo']['userAttribs']['30']['name'])||
+                            isset($viData['userInfo']['userAttribs']['75']['name'])||
+                            isset($viData['userInfo']['userAttribs']['76']['name'])||
+                            isset($viData['userInfo']['userAttribs']['77']['name'])||
+                            isset($viData['userInfo']['userAttribs']['78']['name'])||
+                            isset($viData['userInfo']['userAttribs']['79']['name'])||
+                            isset($viData['userInfo']['userAttribs']['80']['name'])||
+                            isset($viData['userInfo']['userAttribs']['81']['name'])||
+                            isset($viData['userInfo']['userAttribs']['82']['name'])||
+                            isset($viData['userInfo']['userAttribs']['83']['name'])||
+                            isset($viData['userInfo']['userAttribs']['84']['name'])||
+                            isset($viData['userInfo']['userAttribs']['85']['name'])||
+                            isset($viData['userInfo']['userAttribs']['86']['name'])||
+                            isset($viData['userInfo']['userAttribs']['87']['name'])||
+                            isset($viData['userInfo']['userAttribs']['88']['name'])||
+                            isset($viData['userInfo']['userAttribs']['89']['name'])||
+                            isset($viData['userInfo']['userAttribs']['90']['name'])||
+                            isset($viData['userInfo']['userAttribs']['91']['name'])||
+                            isset($viData['userInfo']['userAttribs']['92']['name'])||
+                            isset($viData['userInfo']['userAttribs']['93']['name'])||
+                            isset($viData['userInfo']['userAttribs']['94']['name'])||
+                            isset($viData['userInfo']['userAttribs']['95']['name'])||
+                            isset($viData['userInfo']['userAttribs']['96']['name'])||
+                            isset($viData['userInfo']['userAttribs']['97']['name']) ) {
+                        }else{
+                            echo '<h4>Внешние данные</h4>';
+                        }
+                        If (empty($viData['userInfo']['userAttribs']['9']['val'])) {
+                            echo '<li>Рост - 3% </li>';
+                        }
+                        If (empty($viData['userInfo']['userAttribs']['10']['val'])) {
+                            echo '<li>Вес - 3% </li>';
+                        }
+                        If (isset($viData['userInfo']['userAttribs']['17']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['18']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['19']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['20']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['21']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['22']['name']) ) {
+                        } else {
+                            echo '<li>Цвет волос - 3% </li>';
+                        }
+                        If (isset($viData['userInfo']['userAttribs']['75']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['76']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['77']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['78']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['79']['name'])) {
+                        }else{
+                            echo '<li>Длина волос - 3% </li>';
+                        }
+                        If (isset($viData['userInfo']['userAttribs']['23']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['24']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['25']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['26']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['27']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['28']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['29']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['30']['name']) ) { //8
+                        }else{
+                            echo '<li>Цвет глаз  - 3% </li>';
+                        }
+                        If (isset($viData['userInfo']['userAttribs']['80']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['81']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['82']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['83']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['84']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['85']['name']) ) { //6
+                        }else{
+                            echo '<li>Размер груди - 3% </li>';
+                        }
+                        If (isset($viData['userInfo']['userAttribs']['86']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['87']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['88']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['89']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['90']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['91']['name']) ) { //6
+                        }else{
+                            echo '<li>Объем талии  - 3% </li>';
+                        }
+                        If (isset($viData['userInfo']['userAttribs']['92']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['93']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['94']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['95']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['96']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['97']['name']) ) { //6
+                        }else{
+                            echo '<li>Объем бедер  - 3% </li>';
+                        }
+                        ?>
+                        <?
+                        If (empty($viData['userInfo']['userAttribs']['1']['aboutme'])) {
+                            echo '<h4>Дополнительная информация</h4>';
+                        }
+                        If (isset($viData['userInfo']['userAttribs']['70']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['71']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['72']['name']) ||
+                            isset($viData['userInfo']['userAttribs']['73']['name']) ) { //obrazovanie
+                        } else {
+                            echo '<li>Образование - 5%</li>';
+                        }
+                        If (empty($viData['userInfo']['userAttribs']['1']['aboutme']))  {
+                            echo '<li>О себе - 11%</li>';
+                        }
+
+                        for($i=41; $i<69; $i++){ //language
+                            $isLang = false;
+                            if ($viData['userInfo']['userAttribs'][$i]['name']){
+                                $isLang = true;
+                            }
+                            If ($isLang) {
+                                break;
+                            }else {
+                                If ($i==68){
+                                    echo '<li>Иностранные языки - 5%</li>';
+                                    break;
+                                }
+                            }
+                        }
+                        ?>
+                    </ul>
+                </div>
+             <? } ?>
+
+          </div>
         </div>
+
+        <div class='affective-block'>
+            <div class='affective'>Инструкция пользования сервисом PROMMU</div>
+            <a class='ppp__btn btn__orange' href='/theme/pdf/Instruction-PROMMU-com.pdf' style="margin-bottom: 10px" target="_blank">Скачать</a>
+        </div>
+
       <?php endif; ?>
       <div class="clearfix"></div>
     </div>

@@ -55,4 +55,12 @@ jQuery(function($){
       touch: false
     });
 	});
+	//
+	$('.question_popup').on('click',function(){
+		$.fancybox.open({
+			src: '.popup__msg',
+			type: 'inline',
+			touch: false
+		});
+	});
 });
