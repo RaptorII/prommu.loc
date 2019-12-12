@@ -1290,6 +1290,7 @@ class Api
             
             $inData['type'] = $promo;
             $pass = $this->checkUser($email);
+            var_dump($pass);
             $res = $auth->doAPIAuth($email, $pass);
             
             return $res;
