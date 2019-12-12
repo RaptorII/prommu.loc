@@ -99,7 +99,7 @@ class Api
                 case 'nicola' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getNicolaDay(); break;
                 case 'mailer' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->mailBox(); break;
                 case 'vacmon' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->vacancyMonitoring(); break;
-                case 'social_auth' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->apiSocialAuth(); break;
+                case 'social_auth' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->apiSocialAuth(); break;
                 case 'social_reg' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->apiSocial(); break;
                 case 'log' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testLog(); break;
                 case 'tect' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->teSt(); break;
@@ -1174,12 +1174,10 @@ class Api
             
             
             
-            $pass = $this->checkUser($email);
-            $res = $auth->doAPIAuth($email, $pass);
-            
-            
-
+            $pass = $this->checkUser($response->default_email);
+            $res = $auth->doAPIAuth($response->default_email, $pass);
             return $res;
+            
         } elseif($provider == 'facebook'){
             $curl = curl_init();
             curl_setopt_array($curl, array(
@@ -1219,11 +1217,9 @@ class Api
             $inData['type'] = $promo;
             
             
-            $pass = $this->checkUser($email);
-            $res = $auth->doAPIAuth($email, $pass);
+            $pass = $this->checkUser($response->email);
+            $res = $auth->doAPIAuth($response->email, $pass);
             
-            
-
             return $res;
             
         } elseif($provider == 'google'){
@@ -1269,11 +1265,9 @@ class Api
             
             $inData['type'] = $promo;
             
-            $pass = $this->checkUser($email);
-            $res = $auth->doAPIAuth($email, $pass);
+            $pass = $this->checkUser($response->email);
+            $res = $auth->doAPIAuth($response->email, $pass);
             
-            
-
             return $res;
             
         } elseif($provider == 'vkontakte'){
@@ -1298,8 +1292,6 @@ class Api
             $pass = $this->checkUser($email);
             $res = $auth->doAPIAuth($email, $pass);
             
-            
-
             return $res;
           
           
