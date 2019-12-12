@@ -769,7 +769,6 @@ class Auth
      */
     public function Authorize($inParams)
     {
-        var_dump($inParams);
         $login = $inParams['login'];
         $passw = $inParams['passw'];
         $remember = $inParams['remember'];
