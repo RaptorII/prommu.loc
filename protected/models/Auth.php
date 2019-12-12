@@ -769,6 +769,7 @@ class Auth
      */
     public function Authorize($inParams)
     {
+        var_dump($inParams);
         $login = $inParams['login'];
         $passw = $inParams['passw'];
         $remember = $inParams['remember'];
@@ -795,19 +796,6 @@ class Auth
             ));            
         }
 
-        /*
-            $user = User::model()->find(array(
-                'select' => 'id_user, status, passw, isblocked',
-                'condition' => "email = :email OR id_user = :idus OR login = :email",
-                'params'=>array(':email' => $login, ':idus' => $usId),
-            ));
-        */
-
-         //'condition' => "email = :email OR id_user = :idus OR login = :login",
-                //'params'=>array(':email' => $login, ':idus' => $usId, ':login' => $login),
-//        $sql = "select id_user, status, email, passw from user where email = '$login' and passw = md5('$passw') OR id_user = {$usId} limit 1;";
-//        $res = Yii::app()->db->createCommand($sql)->queryAll();
-
         // проверяем пароль и блокировку
         if( $user && $user->id_user )
         {
@@ -820,7 +808,6 @@ class Auth
                 if( $user->passw != $passMd5 ) throw new Exception('', -102);
                 elseif( (int)$user->isblocked === 1 ) throw new Exception('', -104);
                 elseif( (int)$user->isblocked === 2 ) throw new Exception('', -105);
-//                elseif( (int)$user->isblocked === 3 ) throw new Exception('', -106);
                 elseif( !in_array((int)$user->isblocked, [0,3]) ) throw new Exception('', -103);
             } // endif
         }
