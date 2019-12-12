@@ -99,7 +99,7 @@ class Api
                 case 'nicola' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getNicolaDay(); break;
                 case 'mailer' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->mailBox(); break;
                 case 'vacmon' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->vacancyMonitoring(); break;
-                case 'social_auth' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->apiVK(); break;
+                case 'social_auth' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->apiSocialAuth(); break;
                 case 'social_reg' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->apiSocial(); break;
                 case 'log' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testLog(); break;
                 case 'tect' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->teSt(); break;
@@ -893,13 +893,6 @@ class Api
             return $res;
         }
         
-        if(empty($promo)){
-            
-            $res['error'] = -101;
-            $res['message'] = 'Отсутствует параметр promo';
-            
-            return $res;
-        }
         
         if(empty($email)){
             
@@ -960,6 +953,226 @@ class Api
             $birthday = $response->birthday; 
             
             $inData['type'] = $promo;
+            
+            if($auth->registerUser($inData)['error'] == 0){
+                $res = $auth->doAPIAuth($response->default_email, $pass);
+        
+        
+                Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'isblocked' => 0,
+                ), 'id_user=:id_user', array(':id_user' => $res['id']));
+
+                return $res;
+          
+            } else return $auth->registerUser($inData);
+        } elseif($provider == 'facebook'){
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://graph.facebook.com/v2.8/me/?access_token=$code&fields=gender,id,email,%20name,last_name,first_name",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "GET",
+              CURLOPT_HTTPHEADER => array(
+                "Accept: */*",
+                "Accept-Encoding: gzip, deflate",
+                "Cache-Control: no-cache",
+                "Connection: keep-alive",
+                "Host: graph.facebook.com",
+                "Postman-Token: e9d3367e-197c-49d3-83ca-f1a088cdd8f0,2e2ecf1f-8d41-4307-b408-696573b0e3b4",
+                "User-Agent: PostmanRuntime/7.19.0",
+                "cache-control: no-cache"
+              ),
+            ));
+            
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            
+            $response = json_decode($response);
+            
+            $auth = new Auth();
+            $inData['inputData']['email'] = $response->email;
+            $inData['inputData']['pass'] = rand(11111,99999);
+            $inData['inputData']['passrep'] = $inData['inputData']['pass'];
+            $pass = md5($inData['inputData']['pass']);
+            $inData['inputData']['sex'] = 1; 
+            $inData['inputData']['name'] = $response->last_name; 
+            $inData['inputData']['lname'] =  $response->first_name;
+            
+            $inData['type'] = $promo;
+            
+            if($auth->registerUser($inData)['error'] == 0){
+                $res = $auth->doAPIAuth($response->email, $pass);
+        
+        
+                Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'isblocked' => 0,
+                ), 'id_user=:id_user', array(':id_user' => $res['id']));
+
+                return $res;
+          
+            } else return $auth->registerUser($inData);
+            
+        } elseif($provider == 'google'){
+
+          
+           
+        
+           $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://www.googleapis.com/oauth2/v1/userinfo?access_token=".$code,
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "GET",
+              CURLOPT_HTTPHEADER => array(
+                "Accept: */*",
+                "Accept-Encoding: gzip, deflate",
+                "Cache-Control: no-cache",
+                "Connection: keep-alive",
+                "Host: www.googleapis.com",
+                "User-Agent: PostmanRuntime/7.20.1",
+                "cache-control: no-cache"
+              ),
+            ));
+            
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            
+            $response = json_decode($response);
+            
+            $auth = new Auth();
+            $inData['inputData']['email'] = $response->email;
+            $inData['inputData']['pass'] = rand(11111,99999);
+            $inData['inputData']['passrep'] = $inData['inputData']['pass'];
+            $pass = md5($inData['inputData']['pass']);
+            $inData['inputData']['sex'] = 1; 
+            
+            $inData['inputData']['name'] = $response->family_name; 
+            $inData['inputData']['lname'] =  $response->given_name;
+            
+            $inData['type'] = $promo;
+            
+            if($auth->registerUser($inData)['error'] == 0){
+                $res = $auth->doAPIAuth($response->email, $pass);
+        
+        
+                Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'isblocked' => 0,
+                ), 'id_user=:id_user', array(':id_user' => $res['id']));
+
+                return $res;
+          
+            } else return $auth->registerUser($inData);
+            
+        } elseif($provider == 'vkontakte'){
+            $ch = curl_init("https://api.vk.com/method/users.get.json?user_ids=$userid&fields=nickname,sex,bdate,city,country,timezone,photo,photo_medium,photo_big,photo_rec,email&access_token=857781ce857781ce857781ce038519c37d88577857781ced8a82354c1fa51eec1b88cad&v=5.103"); 
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+            curl_setopt($ch, CURLOPT_POST, 0); 
+            $responses = curl_exec($ch); 
+            $responses = json_decode($responses, true);
+            $data = $responses['response'][0];
+            
+            $auth = new Auth();
+            $inData['inputData']['email'] = $email;
+            $inData['inputData']['pass'] = rand(11111,99999);
+            $inData['inputData']['passrep'] = $inData['inputData']['pass'];
+            $pass = md5($inData['inputData']['pass']);
+            $inData['inputData']['sex'] = 1; 
+            
+            $inData['inputData']['name'] = $data['first_name']; 
+            $inData['inputData']['lname'] =  $data['last_name'];
+            
+            $inData['type'] = $promo;
+            
+            
+            var_dump($auth->registerUser($inData)['error']);
+            if($auth->registerUser($inData)['error'] == 0){
+                $res = $auth->doAPIAuth($email, $pass);
+        
+        
+                Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'isblocked' => 0,
+                ), 'id_user=:id_user', array(':id_user' => $res['id']));
+
+                return $res;
+          
+            } else return $auth->registerUser($inData);
+            
+        }
+    }
+    
+    public function apiSocialAuth(){
+         $code = Yii::app()->getRequest()->getParam('code');
+         $email = Yii::app()->getRequest()->getParam('email');
+         $userid =  Yii::app()->getRequest()->getParam('userid');
+         $provider =  Yii::app()->getRequest()->getParam('provider');
+    
+        if(empty($code)){
+            
+            $res['error'] = -101;
+            $res['message'] = 'Отсутствует параметр code';
+            
+            return $res;
+        }
+        
+        if(empty($email)){
+            
+            $res['error'] = -101;
+            $res['message'] = 'Отсутствует параметр email';
+            
+            return $res;
+        }
+        
+        if(empty($userid)){
+            
+            $res['error'] = -101;
+            $res['message'] = 'Отсутствует параметр userid';
+            
+            return $res;
+        }
+        
+        if(empty($provider)){
+            
+            $res['error'] = -101;
+            $res['message'] = 'Отсутствует параметр provider';
+            
+            return $res;
+        }
+        
+        if($provider == "yandex"){
+            
+            // Получаем информацию о пользователе
+            if ( ! $content = @file_get_contents( 'https://login.yandex.ru/info?format=json&with_openid_identity=1&oauth_token=' . $code ) ) {
+              $error = error_get_last();
+              throw new Exception( 'HTTP request failed. Error: ' . $error['message'] );
+            }
+             
+            $response = json_decode( $content );
+             
+            // Если возникла ошибка
+            if ( isset( $response->error ) ) {
+              throw new Exception( 'При отправке запроса к API возникла ошибка. Error: ' . $response->error . '. Error description: ' . $response->error_description );
+            }
+             
+        
+            $auth = new Auth();
+            
+            
+            $userId    = $response->id;
+            $inData['inputData']['email'] = $response->default_email;
+            $pass = md5($inData['inputData']['pass']);
+            
+            
             
             if($auth->registerUser($inData)['error'] == 0){
                 $res = $auth->doAPIAuth($response->default_email, $pass);
