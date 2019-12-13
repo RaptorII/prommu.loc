@@ -450,9 +450,9 @@
           </div>
         </div>
 
-        <div class='affective-block'>
-            <div class='affective'>Инструкция пользования сервисом PROMMU</div>
-            <a class='ppp__btn btn__orange' href='/theme/pdf/Instruction-PROMMU-com.pdf' style="margin-bottom: 10px" target="_blank">Скачать</a>
+        <div class="affective-block">
+            <div class="affective-block__instruction">Скачать иструкцию пользования сервисом <b>PROMMU.com</b></div>
+            <a class="download__btn" href='/theme/pdf/Instruction-PROMMU-com.pdf' target="_blank"></a>
         </div>
 
       <?php endif; ?>

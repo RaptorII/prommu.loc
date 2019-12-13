@@ -908,6 +908,36 @@ a.upp__project-info {
     text-align: justify;
 }
 
+.affective__wrap {}
+.download__btn{
+  display: block;
+  border: 3px solid transparent;
+  width: 45px;
+  height: 45px;
+  margin: 0 auto;
+  line-height: 43px;
+  position: relative;
+}
+.download__btn:hover{
+  border: 3px solid rgba(171,184,32,.5);
+  border-radius: 50%;
+
+}
+.download__btn:before{
+  content: '\e9cb';
+  font-family: 'PrommuFont';
+  font-size: 50px;
+  color: var(--color-orange);
+  transition: var(--main-trans);
+  position: absolute;
+  top: -6px;
+  left: -4.5px;
+  line-height: 50px;
+}
+.download__btn:hover:before{
+  color: var(--color-green);
+  transition: var(--main-trans);
+}
 
 .question_popup.prmu-btn{
   background-color: rgba(255, 146, 28, .5);
@@ -923,7 +953,6 @@ a.upp__project-info {
 .question_popup.prmu-btn.prmu-btn_normal:hover:before {
   background: rgba(171,184,32, 1);
 }
-
 
 @media (max-width: 450px) {
     #DiContent.page-ankety .affective-perc,

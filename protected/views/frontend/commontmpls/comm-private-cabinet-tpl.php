@@ -1,18 +1,29 @@
-<?php if( $this->breadcrumbs ):
-    if( Yii::app()->controller->route !== 'site/index' )
-        $this->breadcrumbs = array_merge(array(Yii::t('zii','Главная')=>Yii::app()->homeUrl), $this->breadcrumbs);
+<?php
 
-    $this->widget('zii.widgets.CBreadcrumbs', array(
-        'links'=>$this->breadcrumbs,
-        'homeLink'=>false,
-        'tagName'=>'div',
-        'separator'=>' &gt; ',
+$route = Yii::app()->controller->action->getId().'/'.ContentPlus::getActionID();
+
+if ($route !== "about/empl" &&
+    $route !== "about/prom") {
+
+    if ($this->breadcrumbs):
+        if( Yii::app()->controller->route !== 'site/index' )
+            $this->breadcrumbs = array_merge(array(Yii::t('zii','Главная')=>Yii::app()->homeUrl), $this->breadcrumbs);
+
+        $this->widget('zii.widgets.CBreadcrumbs', array(
+            'links'=>$this->breadcrumbs,
+            'homeLink'=>false,
+            'tagName'=>'div',
+            'separator'=>' &gt; ',
 //        'activeLinkTemplate'=>'<a href="{url}">{label}</a> <span class="divider">/</span>',
-        'activeLinkTemplate'=>'<a href="{url}">{label}</a>',
-        'inactiveLinkTemplate'=>'<span>{label}</span>',
-        'htmlOptions'=>array ('class'=>'container breadcrumbs')
-    )); ?>
-<?php endif; ?>
+            'activeLinkTemplate'=>'<a href="{url}">{label}</a>',
+            'inactiveLinkTemplate'=>'<span>{label}</span>',
+            'htmlOptions'=>array ('class'=>'container breadcrumbs')
+        ));
+    endif;
+
+}
+
+?>
 
 <?php if( ($action = $this->action->getId()) == 'profile' ) $action = 'company-profile-own' ?>
 
