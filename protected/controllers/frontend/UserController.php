@@ -779,8 +779,8 @@ class UserController extends AppController
 
             $data['viData'] = $model->getEmpVacanciesList('active');
             $data['viData']['user'] = Share::$UserProfile->getProfileDataView();
-            $model = new ProjectConvertVacancy(); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            $data['viData']['projects'] = $model->findRelatedProjects($data['viData']['active']);
+            //$model = new ProjectConvertVacancy(); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //$data['viData']['projects'] = $model->findRelatedProjects($data['viData']['active']);
             $title = 'Мои вакансии';
             $this->setBreadcrumbs($title, MainConfig::$PAGE_VACANCIES);
         }

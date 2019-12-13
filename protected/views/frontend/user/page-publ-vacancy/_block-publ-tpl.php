@@ -27,7 +27,12 @@
   var arPosts = <?=json_encode($viData['posts'])?>;
   var arSelectCity = <?=json_encode($viData['usercity'])?>;
 </script>
-<h2 class="add-vacancy__title">Добавить вакансию</h2>
+
+<h2 class="add-vacancy__title">
+    Добавить вакансию
+    <a class="download__btn download__btn-flt-right" href='/theme/pdf/Instruction-PROMMU-com.pdf' target="_blank" title="Скачать иструкцию пользования сервисом PROMMU.com"></a>
+</h2>
+
 <hr class="add-vacancy__line">
 <form action="" method="post" id="F1vacancy" class="form-add-vacancy">
     <span class="fav-b1__title fav-b1__title-who"><h3>Какой специалист нужен и с какими параметрами?</h3></span>

@@ -10,7 +10,11 @@ $arGuest = ['prommu_card','medical-record']; // для гостя
 $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
 ?>
 <div class="row">
+    <div class="col-xs-12">
+        <a class="download__btn download__btn-flt-right" href='/theme/pdf/Instruction-PROMMU-com.pdf' target="_blank" title="Скачать иструкцию пользования сервисом PROMMU.com"></a>
+    </div>
   <div class="col-xs-12 services">
+
     <?
     // user
     ?>
