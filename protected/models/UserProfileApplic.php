@@ -1160,7 +1160,9 @@ class UserProfileApplic extends UserProfile
         $data['data'] = $this->getProfileEditPageData($data['userInfo']);
 
         //for efficiency profile of applicant
-        $data['efficiency'] = $this->getEfficiencyData();
+        if ( $inID == $this->exInfo->id  ) {
+            $data['efficiency'] = $this->getEfficiencyData();
+        }
 
         return $data;
     }

@@ -887,8 +887,10 @@ class UserProfileEmpl extends UserProfile
         $data['lastComments'] = $this->getLastComments($inEID);
         $data['userPhotos'] = $this->getUserPhotos($inEID);
 
-        //for efficiency profile of applicant
-        $data['efficiency'] = $this->getEfficiencyData();
+        //for efficiency profile of empl
+        if ( $inID == $this->exInfo->id  ) {
+            $data['efficiency'] = $this->getEfficiencyData();
+        }
 
         return $data;
     }
