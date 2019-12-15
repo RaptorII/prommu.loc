@@ -11,6 +11,11 @@ class UserProfileApplic extends UserProfile
     private $profileFillMax;
     private $wDays;
     private $idCities; // ID городов из блоков интерфейса
+    private static $AR_SELF_EMPLOYED_REGIONS = [
+      1307, // Мос. область
+      797, // Калужская область
+      2127 // Республика татарстан
+    ];
 
     function __construct($inProps)
     {
@@ -1230,6 +1235,9 @@ class UserProfileApplic extends UserProfile
     {
         $id = $inID ?: $this->id;
 
+        $data = [];
+        $data['self_employed_region'] = false;
+
         // считываем характеристики пользователя
         $sql = "SELECT DATE_FORMAT(r.birthday,'%d.%m.%Y') as bday, r.id
               , r.id_user,u.mdate, r.isman , r.ismed , r.smart,  r.ishasavto , r.aboutme , r.firstname , r.lastname , r.photo
@@ -1311,24 +1319,29 @@ class UserProfileApplic extends UserProfile
         if( count($data['userPhotos']) == 1 && !$data['userPhotos'][0]['id'] ) $data['userPhotos'] = array();
 
         // read cities
-        $sql = "SELECT ci.id_city id, ci.name, co.id_co, co.name coname, ci.ismetro, uc.street, uc.addinfo
+        $sql = "SELECT ci.id_city id, ci.name, co.id_co, co.name coname, ci.ismetro, uc.street, uc.addinfo, ci.region
                 FROM user_city uc
                 LEFT JOIN city ci ON uc.id_city = ci.id_city
                 LEFT JOIN country co ON co.id_co = ci.id_co
                 WHERE uc.id_user = {$id}";
         $res = Yii::app()->db->createCommand($sql)->queryAll();
 
-        foreach ($res as $key => $val):
-            $cityPrint[$val['id']] = $val['name'];
-            $city[$val['id']] = array(
-                'id' => $val['id'], 
-                'name' => $val['name'], 
-                'ismetro' => $val['ismetro'],
-                'street' => $val['street'], 
-                'addinfo' => $val['addinfo'],
-                'region' => $val['region']
-            );
-        endforeach;
+        foreach ($res as $key => $val)
+        {
+          $cityPrint[$val['id']] = $val['name'];
+          $city[$val['id']] = array(
+            'id' => $val['id'],
+            'name' => $val['name'],
+            'ismetro' => $val['ismetro'],
+            'street' => $val['street'],
+            'addinfo' => $val['addinfo'],
+            'region' => $val['region']
+          );
+          if(in_array($val['region'],self::$AR_SELF_EMPLOYED_REGIONS))
+          {
+            $data['self_employed_region'] = true;
+          }
+        }
 
         $data['userCities'] = array($city, array('id' => $res[0]['id_co'], 'name' => $res[0]['coname']), $cityPrint);
         if( count($city) ) $this->profileFill++;

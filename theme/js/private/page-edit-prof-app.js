@@ -1,3 +1,92 @@
+'use strict'
+/**
+ *
+ * @type {RegisterPage}
+ */
+var ApplicantEditPage = (function () {
+  //
+  function ApplicantEditPage()
+  {
+    this.init();
+  }
+  //
+  ApplicantEditPage.prototype.init = function ()
+	{
+    let self = this;
+
+		$('#main-module [name="name"]')
+			.on(
+				'input',
+				function(){self.checkName(this)}
+			)
+			.on(
+				'change',
+				function(){
+          $(this).val($(this).val().trim());
+          self.checkName(this);
+				}
+			);
+    $('#main-module [name="lastname"]')
+			.on(
+				'input',
+				function(){self.checkName(this)}
+      )
+			.on(
+				'change',
+				function(){
+					$(this).val($(this).val().trim());
+					self.checkName(this);
+				}
+			);
+
+
+  };
+  // маска для имени и фамилии
+  ApplicantEditPage.prototype.checkName = function (input) {
+    if(!$(input).is('*'))
+      return true;
+
+    let v = $(input).val().replace(/[^ a-zA-ZА-Яа-яЁё]/gi,''),
+				parent = $(input).closest('.profile__field');
+
+    $(input).val((v.charAt(0).toUpperCase() + v.slice(1).toLowerCase()));
+
+    return this.error(parent, !$(input).val().trim().length);
+	};
+  // утсановка поля
+  ApplicantEditPage.prototype.error = function (e, error)
+  {
+    if(error)
+    {
+      $(e).addClass('error');
+      return false;
+    }
+    else
+    {
+      $(e).removeClass('error');
+      return true;
+    }
+  };
+  //
+  return ApplicantEditPage;
+}());
+/*
+*
+*/
+$(document).ready(function () {
+  new ApplicantEditPage();
+});
+
+
+
+
+
+
+
+
+
+
+
 jQuery(function($){
 	var strYear = 4, // год - 4 цифры
 		strAbout = 2000, // ограничение для поля "О себе"
@@ -15,26 +104,26 @@ jQuery(function($){
 		mainM = '#main-module',
 		emailTimer = null,
 		arSelectPhones = [],
-		arErrorsFields = [];
-		arIdCities = [];
-		arNewPosts = [];
-		arSelectMetroes = [];
-		arSelect = ['messenger',
-				'hcolor',
-				'hlen',
-				'ycolor',
-				'chest',
-				'waist',
-				'thigh',
-            	//'posts', // list of vacancy <ul id="epa-list-posts"> in
-				'education',
-				'language'];
-		cropOptions = {};
-		cropperObj = null,
+		arErrorsFields = [],
+		arIdCities = [],
+		arNewPosts = [],
+		arSelectMetroes = [],
+		arSelect = [
+			'messenger',
+			'hcolor',
+			'hlen',
+			'ycolor',
+			'chest',
+			'waist',
+			'thigh',
+						//'posts', // list of vacancy <ul id="epa-list-posts"> in
+			'education',
+			'language'
+		],
 		oldPhone = $('#phone-code').val(),
 		oldFlag = '',
 		keyCode = false,
-		confirmEmail = $('#conf-email').hasClass('complete') ? true : false;
+		confirmEmail = $('#conf-email').hasClass('complete') ? true : false,
 		confirmPhone = $('#conf-phone').hasClass('complete') ? true : false;
 
 	$(document).keydown(function(e){ keyCode = e.keyCode });
@@ -980,7 +1069,7 @@ jQuery(function($){
 			val = $it.val(),
 			id = $it.prop('id'),
 			label = $it.closest('.epa__label'),
-			epattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i;
+			epattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i,
 			res = false;
 
 		if(id=='epa-email'){ // email
@@ -1088,7 +1177,7 @@ jQuery(function($){
   	//
 	function errorFieldName(e,show){
 		var name = $(e).data('name'),
-		flag = $.inArray(name, arErrorsFields)<0 ? false : true;
+		flag = $.inArray(name, arErrorsFields)<0 ? false : true,
 		strErr = '<b>';
 
 		if(flag && !show)
@@ -1104,7 +1193,7 @@ jQuery(function($){
 	//
 	//
 	//
-	getFlagTimer = setInterval(function(){ // ищем флаг страны
+	var getFlagTimer = setInterval(function(){ // ищем флаг страны
 		if($('.country-phone-selected>img').is('*')){
 			oldFlag = $('.country-phone-selected>img').attr('class');
 			clearInterval(getFlagTimer);

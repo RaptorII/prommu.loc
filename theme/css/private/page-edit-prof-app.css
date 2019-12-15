@@ -209,7 +209,7 @@
 
 .epa__content-module {
   position: relative;
-  margin-bottom: 30px;
+    margin: 0 -5px 30px;
 }
 
 #city-module.epa__content-module {
@@ -246,9 +246,6 @@
 
 #DiContent .edit-profile-applicant .epa__label.epa__select {
   padding: 0 30px 0 10px;
-}
-
-#DiContent .edit-profile-applicant .epa__label.off { /*display: none*/
 }
 
 #DiContent .edit-profile-applicant .epa__label.epa__soc-other,
@@ -344,49 +341,6 @@
   top: 0;
   left: 110px;
 }
-
-/*
-#DiContent .epa__firstname .epa__input{ padding-left: 35px }
-#DiContent .epa__lastname .epa__input{ padding-left: 65px }
-#DiContent .epa__date .epa__input{ padding-left: 100px }
-#DiContent .epa__gender .epa__input{ padding-left: 35px }
-#DiContent .epa__email .epa__input{ width: auto }
-#DiContent .epa__skype .epa__input{ padding-left: 45px }
-
-#DiContent .epa__soc-vk .epa__input{ padding-left: 180px }
-#DiContent .epa__soc-fb .epa__input{ padding-left: 180px }
-#DiContent .epa__soc-ok .epa__input{ padding-left: 210px }
-#DiContent .epa__soc-mail .epa__input{ padding-left: 155px }
-#DiContent .epa__soc-google .epa__input{ padding-left: 160px }
-#DiContent .epa__messenger .epa__input{ padding-left: 95px }
-#DiContent .epa__soc-other .epa__input{ padding-left: 50px }
-
-#DiContent .epa__app-manh .epa__input{ padding-left: 40px }
-#DiContent .epa__app-weig .epa__input{ padding-left: 35px }
-#DiContent .epa__app-hcolor .epa__input{ padding-left: 75px }
-#DiContent .epa__app-hlen .epa__input{ padding-left: 85px }
-#DiContent .epa__app-ycolor .epa__input{ padding-left: 65px }
-#DiContent .epa__app-chest .epa__input{ padding-left: 90px }
-#DiContent .epa__app-waist .epa__input{ padding-left: 85px }
-#DiContent .epa__app-thigh .epa__input{ padding-left: 85px }
-
-#DiContent .epa__posts .epa__input{ padding-left: 75px }
-#DiContent .epa__payment .epa__input{ padding-left: 145px }
-#DiContent .epa__post-experience .epa__input{ padding-left: 85px }
-
-#DiContent .epa__education .epa__input{ padding-left: 85px }
-#DiContent .epa__language .epa__input{ padding-left: 130px }
-#DiContent .epa__period .epa__input{
-	padding-left: 95px;
-	padding-right: 25px;
-}
-#DiContent .epa__city .epa__input{ padding-left: 45px }
-#DiContent .epa__metro .epa__input{ padding-left: 45px }
-#DiContent .epa__metro-item .epa__input{ 
-	padding-left: 45px;
-	padding-right: 25px;
-}
-*/
 .epa__date {
   cursor: pointer
 }
@@ -610,31 +564,13 @@
   display: none
 }
 
-.epa__attr-block1 {
-  width: 45%;
-  float: left;
-  display: flex;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  padding-right: 10px;
-}
-
-.epa__attr-block2 {
-  width: 55%;
-  float: right;
-  display: flex;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  text-align: right;
-}
-
 #DiContent .edit-profile-applicant .epa__checkbox {
-  padding-right: 34px;
-  margin-bottom: 22px;
+  display: block;
+  padding-left: 25px;
+  margin-bottom: 15px;
   position: relative;
-  float: left;
   line-height: 20px;
-  font-size: 14px;
+  font-size: 15px;
   color: #343434;
   font-family: "RobotoCondensedBold", sans-serif, verdana;
   cursor: pointer;
@@ -647,7 +583,7 @@
   display: block;
   position: absolute;
   top: 0;
-  right: 1px;
+  left: 0;
   border: 1px solid #EBEBEB;
   text-align: center;
   line-height: 18px;
@@ -1314,8 +1250,8 @@ input:checked + .epa__checkbox:after {
   width: 29px;
   height: 29px;
   position: absolute;
-  top: 2px;
-  right: 2px;
+  top: 3px;
+  right: 8px;
   background-color: rgba(52, 52, 52, 0.6);
   border-radius: 3px;
   color: #FFFFFF;
@@ -1413,13 +1349,6 @@ input:checked + .epa__checkbox:after {
 *		MEDIA
 */
 @media (min-width: 450px) {
-  .epa__attr-block1 {
-    width: 35%;
-  }
-
-  .epa__attr-block2 {
-    width: 65%;
-  }
 }
 
 @media (min-width: 500px) {
@@ -1473,24 +1402,13 @@ input:checked + .epa__checkbox:after {
     width: initial;
   }
 
-  #DiContent .edit-profile-applicant .epa__checkbox {
-    float: right;
-    /*width: 100%;*/
-  }
-
   .epa__attr-block2 {
     width: 50%;
   }
 }
 
 @media (min-width: 650px) {
-  .epa__attr-block1 {
-    width: 25%;
-  }
 
-  .epa__attr-block2 {
-    width: 45%;
-  }
 }
 
 @media (min-width: 768px) {
@@ -1522,20 +1440,6 @@ input:checked + .epa__checkbox:after {
     text-align: center;
     line-height: normal;
   }
-
-  .epa__attr-block1 {
-    width: 30%;
-    float: left;
-    display: block;
-    padding-right: 0;
-  }
-
-  .epa__attr-block2 {
-    width: 70%;
-    float: right;
-    display: block;
-    text-align: left;
-  }
 }
 
 @media (min-width: 992px) {
@@ -1550,18 +1454,11 @@ input:checked + .epa__checkbox:after {
 
   .epa__content-module {
     max-width: 630px;
-    padding-right: 100px;
   }
 
   #DiContent input[type=text] {
     width: auto;
   }
-
-  #DiContent .edit-profile-applicant .epa__checkbox.epa__checkbox-famale {
-    width: 100%;
-    text-align: right;
-  }
-
 }
 
 @media (min-width: 1200px) {
@@ -1703,12 +1600,12 @@ input:checked + .epa__checkbox:after {
 *		verification fields
 */
 .epa__confirm {
-  width: 30px;
-  height: 30px;
+  width: 29px;
+  height: 29px;
   display: block;
   position: absolute;
-  right: 2px;
-  top: 2px;
+  right: 8px;
+  top: 3px;
   background: rgba(171, 184, 55, 0.5);
   line-height: 16px;
   text-align: center;
@@ -1721,8 +1618,8 @@ input:checked + .epa__checkbox:after {
   cursor: default;
 }
 
-#conf-phone.epa__confirm {
-  right: 32px
+#phone-field .epa__confirm {
+  right: 39px
 }
 
 .epa__confirm:hover {
@@ -1987,8 +1884,8 @@ input:checked + .epa__checkbox:after {
 */
 .country-phone-selected {
   height: 33px;
-  line-height: 33px;
-  padding: 0px 2px 0px 20px;
+  line-height: 32px;
+  padding: 0px;
   background-position: 10px 50%;
   margin-right: 0px;
 }
@@ -2016,7 +1913,7 @@ input:checked + .epa__checkbox:after {
   border: none;
   background: transparent;
   height: 33px;
-  padding-right: 0;
+  padding: 0 62px 0 0;
   position: static;
 }
 
@@ -2108,11 +2005,49 @@ input:checked + .epa__checkbox:after {
 .epa__period.error .epa__period-error {
   display: flex;
 }
-
-#DiContent .edit-profile-applicant .epa__checkbox.epa__checkbox-news {
-  display: block;
-  float: none;
-}
 .ppp__content > .edit-profile-applicant {
   padding: 0;
 }
+/*
+* 05-12-2019
+ */
+#DiContent .width-2{ width:50%; }
+#DiContent .width-3{ width:33.3333%; }
+#DiContent .width-4{ width:25%; }
+#DiContent .width-4{ width:20%; }
+#DiContent .profile__field{
+  width: 100%;
+  height: 35px;
+  border: 1px solid #EBEBEB;
+  margin: 0 0 15px;
+  display: flex;
+  -webkit-transition: box-shadow .3s ease-out;
+  -moz-transition: box-shadow .3s ease-out;
+  -o-transition: box-shadow .3s ease-out;
+  transition: box-shadow .3s ease-out;
+}
+#DiContent .profile__field-name{
+  line-height: 33px;
+  font-size: 15px;
+  padding: 0 5px;
+  white-space: nowrap;
+}
+#DiContent input[type=text].profile__field-input{
+  width: 99%;
+  height: 33px;
+  line-height: 33px;
+  font-size: 15px;
+  color: #343434;
+  background-color: transparent;
+  border: none;
+  margin: 0;
+  padding: 0 5px;
+}
+.profile__col{ padding: 0 5px; }
+@media (min-width: 992px){
+  .epa__content-module {
+    max-width: 640px;
+  }
+}
+#DiContent #phone-code.profile__field-input{ padding: 0; }
+#conf-phone .prmu-btn.prmu-btn_normal{ max-width: initial; }

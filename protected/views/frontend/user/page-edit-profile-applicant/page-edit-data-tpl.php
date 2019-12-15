@@ -18,16 +18,9 @@
     ->limit(10000);
   $arCities = $Q1->queryAll();
   $arTemp = array();
-  //$_GET['city'] = urldecode($_GET['city']);
-  //$_GET['city'] = urldecode($_GET['city']);
-  foreach ($arCities as $city){
-    /*if($_GET['city'] == $city['name']){
-      $arUserCities[$city['id']] = $city;
-      $res = Yii::app()->db->createCommand()
-        ->update('user_city', array('id_city' => $city['id']), 
-        'id_user=:id_user', array(':id_user' => Share::$UserProfile->exInfo->id));
-        break;
-    }*/
+
+  foreach ($arCities as $city)
+  {
     $arTemp[$city['id']] = $city['name'];
   }
   // оптимизируем массив городов для JS
@@ -46,75 +39,32 @@
   }
 
   $arMetroes = $arTemp;
-  //  birthday
-  /*if($_GET['birthday']){
-    $birthday = explode(".", $_GET['birthday']);
-    $bday = $birthday[0];
-    $bmon = $birthday[1];
-    $byear = $birthday[2];
-
-    $dateBirth = "{$bday}-{$bmon}-{$byear}";
-    $dates = date('Y-m-d', strtotime($dateBirth));
-    $res = Yii::app()->db->createCommand()
-      ->update('resume', array(
-      'birthday' =>  $dates,
-      'mdate' => date('Y-m-d H:i:s'),     
-    ), 'id_user=:id_user', array(':id_user' => $attr['id_user']));
-
-    $res = Yii::app()->db->createCommand()
-      ->update('promo', array(
-        'birthday' =>  $dates,
-    ), 'user_id=:id', array(':id' => $attr['id_user']));
-  }
-  else{
-    $bday = date("d", $date = strtotime($attr['bday']));
-    $bmon = date("m", $date);
-    $byear = date("Y", $date);
-  }*/
   // posotions
   $arPosts = array();
   $strPosts = '';
-  foreach($viData['posts'] as $val){
+  foreach($viData['posts'] as $val)
+  {
     $arPosts[$val['id']] = $val;
     $arPosts[$val['id']]['newname'] = ($val['key']=='custpo' ? ('- '.$val['val'].' -') : $val['val']);
     
     $arPosts[$val['id']]['checked'] = '';
-    if($_GET['position'] == $val['id']){
-      /*$res = Yii::app()->db->createCommand()
-        ->update('user_mech', array(
-                'crdate' => date('Y-m-d H:i:s'),
-                'id_mech' => $val['id'],
-                'isshow' => 0, 
-            ), 'id_us=:id', array(':id' =>  $attr['id_user']));*/
-      $arPosts[$val['id']]['checked'] = "checked";
-    } 
-    elseif($val['isshow1'] && !$_GET['npopup']) // если это не после модального окна, то проверяем
+    if($val['isshow1'] && !$_GET['npopup']) // если это не после модального окна, то проверяем
       $arPosts[$val['id']]['checked'] = "checked";
 
-    if($arPosts[$val['id']]['checked']!=''){
+    if($arPosts[$val['id']]['checked']!='')
       $strPosts .= ($strPosts==''? '' : ',') . $arPosts[$val['id']]['newname'];
-    }
   }
   $arPayment = array();
-  foreach ($viData['userInfo']['userDolj'][0] as $val) {
-    if($_GET['npopup'] && $_GET['position']) {
-      foreach ($arPosts as $k => $v) {
-        if($v['checked'] === 'checked') {
-          $arPayment[$_GET['position']]['pt'] = 0;
-          $arPayment[$_GET['position']]['type'] = 'Час';
-        }
-      }
-    }
-    else {
-      if($val['pay']>0)
-        $arPayment[$val['idpost']]['pay'] = round($val['pay']);
-      $arPayment[$val['idpost']]['pt'] = $val['pt'];
-      switch ($val['pt']) {
-        case 0: $arPayment[$val['idpost']]['type'] = 'Час'; break;
-        case 1: $arPayment[$val['idpost']]['type'] = 'Неделя'; break;
-        case 2: $arPayment[$val['idpost']]['type'] = 'Месяц'; break;
-        case 3: $arPayment[$val['idpost']]['type'] = 'Посещение'; break;
-      }
+  foreach ($viData['userInfo']['userDolj'][0] as $val)
+  {
+    if($val['pay']>0)
+      $arPayment[$val['idpost']]['pay'] = round($val['pay']);
+    $arPayment[$val['idpost']]['pt'] = $val['pt'];
+    switch ($val['pt']) {
+      case 0: $arPayment[$val['idpost']]['type'] = 'Час'; break;
+      case 1: $arPayment[$val['idpost']]['type'] = 'Неделя'; break;
+      case 2: $arPayment[$val['idpost']]['type'] = 'Месяц'; break;
+      case 3: $arPayment[$val['idpost']]['type'] = 'Посещение'; break;
     }
   }
   // appearance
@@ -122,39 +72,28 @@
   $arAppearName = array(11=>'Цвет волос',12=>'Длина волос',13=>'Цвет глаз',14=>'Размер груди',15=>'Объем талии',16=>'Объем бедер');
   $arDays = array(1=>'ПН', 2=>'ВТ', 3=>'СР', 4=>'ЧВ', 5=>'ПТ', 6=>'СБ', 7=>'ВС');
   // Телефон
-  if(!$_GET['phone'] && !$attr['phone-code']){ // закрыли попап не сохранив
+  if(!$_GET['phone'] && !$attr['phone-code'])
+  { // закрыли попап не сохранив
     $city = (new Geo())->getUserGeo();   
     foreach($viData['countries'] as $c)
       if($c['id_co']==$city['country'])
         $attr['phone-code'] = $c['phone'];
-
   }
-  else if($_GET['phone']){  // пошли через попап
+  else if($_GET['phone'])
+  {  // пошли через попап
     $attr['phone'] = urldecode($_GET['phone']);
     $attr['phone'] = urldecode($_GET['phone']);
     $attr['phone-code'] = $_GET['__phone_prefix'];
   }
   //  email
   $attr['email'] = filter_var($attr['email'], FILTER_VALIDATE_EMAIL);
-  // messangers
-  $arMess = array(); 
-  $idViber = $this->ViewModel->isInArray($attrAll, 'key', 'viber');
-  empty($attrAll[$idViber]['val']) ? : $arMess[] = 'Viber';
-  $idWhatsApp = $this->ViewModel->isInArray($attrAll, 'key', 'whatsapp');
-  empty($attrAll[$idWhatsApp]['val']) ? : $arMess[] = 'WhatsApp';
-  $idTelegram = $this->ViewModel->isInArray($attrAll, 'key', 'telegram');
-  empty($attrAll[$idTelegram]['val']) ? : $arMess[] = 'Telegram';
-  $idGoogleAllo = $this->ViewModel->isInArray($attrAll, 'key', 'googleallo');
-  empty($attrAll[$idGoogleAllo]['val']) ? : $arMess[] = 'Google Allo';
   // additional phones
   $arAdPhones = array();
   foreach($attrAll as $p)
+  {
     if(strpos($p['name'], 'admob')!==false && !empty($p['val']))
       $arAdPhones[] = $p;
-
-//    echo '<pre>';
-//    print_r($viData);
-//    echo '</pre>';
+  }
 ?>
   <?php if( $viErrorData['err'] ): ?>
     <div class="err-msg-block">При сохранении данных профиля произошла ошибка. <?= $viErrorData['msg'] ?></div>
@@ -210,46 +149,75 @@
         <form action='' method='post' id="epa-edit-form">
           <div class="epa__content-title"><h2>Основная информация</h2></div>
           <div class="epa__content-module" id="main-module">
-            <label class="epa__label epa__firstname">
-              <span class="epa__label-name">Имя:</span>
-              <input type="text" name="name" value="<?=trim($attr['firstname'])?>" class="epa__input epa__required" data-name="Имя">
-            </label>    
-            <label class="epa__label epa__lastname">
-              <span class="epa__label-name">Фамилия:</span>
-              <input type="text" name="lastname" value="<?=trim($attr['lastname'])?>" class="epa__input epa__required" data-name="Фамилия">
-            </label>
-            <div class="epa__label epa__date epa__select <?=((($attr['bday']=='01.01.1970')||($attr['bday']==''))?' error':'')?>">
-              <span class="epa__label-name">Дата рождения:</span>
-              <input 
-                type="text" 
-                name="bdate" 
-                id="birthday" 
-                autocomplete="off" 
-                value="<?=($attr['bday']=='01.01.1970'?'':$attr['bday'])?>"
-                class="epa__input">
+            <div class="col-xs-12 col-sm-6 col-lg-4 profile__col">
+              <label class="profile__field">
+                <b class="profile__field-name">Имя:</b>
+                <input type="text" name="name" value="<?=trim($attr['firstname'])?>" class="profile__field-input epa__required" data-name="Имя" autocomplete="off">
+              </label>
             </div>
-            <?php $gender = (!empty($_GET['sex']) ? $_GET['sex'] : $attr['isman']) ?>
-            <div class="epa__attr-block">
-              <div class="epa__attr-block1">
-                <input type="radio" name="sex" id="epa-male" class="epa__hidden" value="1" <?=($gender ? 'checked' : '')?>>
-                <label class="epa__checkbox" for="epa-male">Мужчина</label>
-                <input type="checkbox" name="hasmedbook" id="epa-med" class="epa__hidden" value="1" <?=($attr['ismed'] ? 'checked' : '')?>>
-                <label class="epa__checkbox" for="epa-med">Медкнижка</label>
-                <input type="checkbox" name="hasavto" id="epa-auto" class="epa__hidden" value="1" <?=($attr['ishasavto'] ? 'checked' : '')?>>
-                <label class="epa__checkbox" for="epa-auto">Автомобиль</label>
-                <input type="checkbox" name="smart" id="epa-smart" class="epa__hidden" value="1" <?=($attr['smart'] ? 'checked' : '')?>>
-                <label class="epa__checkbox" for="epa-smart">Смартфон</label>
-              </div>
-              <div class="epa__attr-block2">
-                <input type="radio" name="sex" id="epa-female" class="epa__hidden" value="0" <?=($gender ? '' : 'checked')?>>
-                <label class="epa__checkbox epa__checkbox-famale" for="epa-female">Женщина</label>
-                <input type="checkbox" name="promm" id="epa-pcard" class="epa__hidden" value="1" <?=($attr['cardPrommu'] ? 'checked' : '')?>>
-                <label class="epa__checkbox" for="epa-pcard">Наличие банковской карты Prommu</label>
-                <input type="checkbox" name="card" id="epa-card" class="epa__hidden" value="1" <?=($attr['card'] ? 'checked' : '')?>>
-                <label class="epa__checkbox" for="epa-card">Наличие другой банковской карты</label>             
-              </div>
-              <div class="clearfix"></div>
+            <div class="col-xs-12 col-sm-6 col-lg-4 profile__col">
+              <label class="profile__field">
+                <b class="profile__field-name">Фамилия:</b>
+                <input type="text" name="lastname" value="<?=trim($attr['lastname'])?>" class="profile__field-input epa__required" data-name="Фамилия" autocomplete="off">
+              </label>
             </div>
+            <div class="col-xs-12 col-sm-6 col-lg-4 profile__col">
+              <div class="profile__field epa__date epa__select <?=((($attr['bday']=='01.01.1970')||($attr['bday']==''))?' error':'')?>">
+                <b class="profile__field-name">Дата рождения:</b>
+                <input
+                  type="text"
+                  name="bdate"
+                  id="birthday"
+                  autocomplete="off"
+                  value="<?=($attr['bday']=='01.01.1970'?'':$attr['bday'])?>"
+                  class="profile__field-input">
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-xs-12 col-lg-7">
+              <div class="row">
+                <div class="col-xs-12 col-sm-4 profile__col">
+                  <div class="row">
+                    <div class="col-xs-6 col-sm-12">
+                      <input type="radio" name="sex" id="epa-male" class="epa__hidden" value="1" <?=($attr['isman'] ? 'checked' : '')?>>
+                      <label class="epa__checkbox" for="epa-male">Мужчина</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-12">
+                      <input type="radio" name="sex" id="epa-female" class="epa__hidden" value="0" <?=($attr['isman'] ? '' : 'checked')?>>
+                      <label class="epa__checkbox epa__checkbox-famale" for="epa-female">Женщина</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 profile__col">
+                  <div class="row">
+                    <div class="col-xs-6 col-sm-12">
+                      <input type="checkbox" name="hasmedbook" id="epa-med" class="epa__hidden" value="1" <?=($attr['ismed'] ? 'checked' : '')?>>
+                      <label class="epa__checkbox" for="epa-med">Медкнижка</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-12">
+                      <input type="checkbox" name="smart" id="epa-smart" class="epa__hidden" value="1" <?=($attr['smart'] ? 'checked' : '')?>>
+                      <label class="epa__checkbox" for="epa-smart">Смартфон</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-4 profile__col">
+                  <input type="checkbox" name="hasavto" id="epa-auto" class="epa__hidden" value="1" <?=($attr['ishasavto'] ? 'checked' : '')?>>
+                  <label class="epa__checkbox" for="epa-auto">Автомобиль</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12 col-lg-5">
+              <div class="row">
+                <div class="col-xs-12 profile__col">
+                  <input type="checkbox" name="promm" id="epa-pcard" class="epa__hidden" value="1" <?=($attr['cardPrommu'] ? 'checked' : '')?>>
+                  <label class="epa__checkbox" for="epa-pcard">Наличие банковской карты Prommu</label>
+                  <input type="checkbox" name="card" id="epa-card" class="epa__hidden" value="1" <?=($attr['card'] ? 'checked' : '')?>>
+                  <label class="epa__checkbox" for="epa-card">Наличие другой банковской карты</label>
+                </div>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <br>
             <div class="center">
               <button type="submit" class="epa__save-btn prmu-btn prmu-btn_normal">
                 <span>СОХРАНИТЬ ИЗМЕНЕНИЯ</span>
@@ -261,173 +229,170 @@
           ?>
           <div class="epa__content-title"><h2>Контактная информация</h2></div>
           <div class="epa__content-module" id="contacts-module">
-            <div class="epa__label">
-              <span class="epa__label-name epa__phone-name">Телефон:</span>
-                <input type='text' name='user-attribs[mob]' value="<?=$attr['phone']?>" class="epa__input epa__phone" id="phone-code">
+            <div class="col-xs-12 col-sm-6 profile__col">
+              <div class="profile__field" id="phone-field">
+                <b class="profile__field-name">Телефон:</b>
+                <input type='text' name='user-attribs[mob]' value="<?=$attr['phone']?>" class="profile__field-input" id="phone-code">
                 <span class="epa__add-phone-btn js-g-hashint" title="Добавить еще телефон">+</span>
-                <span class="epa__confirm<?=($attr['confirmPhone']?' complete':'')?>" id="conf-phone">
-                  <?php if(!$attr['confirmPhone']): ?>
-                    <p>Телефон не подтвержден. <em>Подтвердить</em></p>
-                  <?php else: ?>
-                    <p>Телефон подтвержден.</p>
-                  <?php endif; ?>
-                </span>
-            </div>
-            <div class="epa__confirm-block" id="conf-phone-block">
-              <span class="epa__confirm-text">На Ваш телефон выслан код для подтверждения. Введите его в это поле!</span>
-              <label class="epa__label">
-                <span class="epa__label-name">Код:</span>
-                <input type='text' name='confirm-code' value="" class="epa__input" id="conf-phone-inp" maxlength="4">
-              </label>
-              <div class="epa__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
-              <div class="clearfix"></div>
-            </div>
-            <?php 
-              if(sizeof($arAdPhones) && !empty($attr['phone'])): 
-                foreach ($arAdPhones as $phone):
-            ?>        
-              <label class="epa__label epa__add-phone">
-                <span class="epa__label-name epa__phone-name">Доп. Телефон:</span>
-                <input type="text" name="user-attribs[<?=$phone['name']?>]" value="<?=$phone['val']?>" class="epa__input epa__phone" autocomplete="off">
-              </label>
-            <?php 
-                endforeach;
-              endif; 
-            ?>
-            <div class="epa__label epa__email" data-error="Указанный e-mail адрес уже используется в системе">
-              <span class="epa__label-name">Email:</span>
-              <input type="text" name="email" value="<?=$attr['email']?>" class="epa__input epa__required" placeholder="your@email.com" id="epa-email" data-name="Электронная почта">
-              <span class="epa__confirm<?=($attr['confirmEmail'] && !empty($attr['email'])?' complete':'')?>" id="conf-email">
-                <?php if($attr['confirmEmail'] && !empty($attr['email'])): ?>
-                  <p>Почта подтверждена.</p>
-                <?php else: ?>
-                  <p>Почта не подтверждена. <em>Подтвердить</em></p>
-                <?php endif; ?>
-              </span>
-            </div>
-            <div class="epa__confirm-block" id="conf-email-block">
-              <span class="epa__confirm-text">На Вашу почту выслан код для подтверждения. Введите его в это поле!</span>
-              <label class="epa__label">
-                <span class="epa__label-name">Код:</span>
-                <input type='text' name='confirm-code' value="" class="epa__input" id="conf-email-inp" maxlength="4">
-              </label>
-              <div class="epa__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
-              <div class="clearfix"></div>
-            </div>
-
-            <span class="epa__label-name">Мессенджеры:</span>
-<!--              skype-->
-            <label class="epa__label epa__skype">
-              <span class="epa__label-name">Skype:</span>
-              <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'skype') ?>
-              <input type="text" name="user-attribs[skype]" value="<?=($id ? $attrAll[$id]['val'] : '')?>" class="epa__input">
-            </label>
-
-<!-- Other messengers-->
-            <label class="epa__label epa__mess-viber <?=empty($attrAll[$idViber]['val'])?'off':''?>">
-              <span class="epa__label-name epa__phone-name">Viber:</span>
-              <input type="text" name="user-attribs[viber]" value="<?=$attrAll[$idViber]['val']?>" class="epa__input epa__phone phone-input" autocomplete="off">
-              <ul class="phone-list"></ul>
-            </label>
-            <label class="epa__label epa__mess-wapp <?=empty($attrAll[$idWhatsApp]['val'])?'off':''?>">
-              <span class="epa__label-name epa__phone-name">WhatsApp:</span>
-              <input type="text" name="user-attribs[whatsapp]" value="<?=$attrAll[$idWhatsApp]['val']?>" class="epa__input epa__phone phone-input" autocomplete="off">
-              <ul class="phone-list"></ul>
-            </label>
-            <label class="epa__label epa__mess-tele <?=empty($attrAll[$idTelegram]['val'])?'off':''?>">
-              <span class="epa__label-name epa__phone-name">Telegram:</span>
-              <input type="text" name="user-attribs[telegram]" value="<?=$attrAll[$idTelegram]['val']?>" class="epa__input epa__phone phone-input" autocomplete="off">
-              <ul class="phone-list"></ul>
-            </label>
-            <label class="epa__label epa__mess-allo <?=empty($attrAll[$idGoogleAllo]['val'])?'off':''?>">
-              <span class="epa__label-name epa__phone-name">Google Allo:</span>
-              <input type="text" name="user-attribs[googleallo]" value="<?=$attrAll[$idGoogleAllo]['val']?>" class="epa__input epa__phone phone-input" autocomplete="off">
-              <ul class="phone-list"></ul>
-            </label>
-
-<!-- Social netvorks-->
-            <span class="epa__label-name">Социальные сети:</span>
-            <label class="epa__label epa__soc-vk">
-              <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'vk') ?>
-              <span class="epa__label-name">Страница ВКонтакте (сылка):</span>
-              <input type="text" name="user-attribs[vk]" value="<?=($id ? $attrAll[$id]['val'] : '')?>" class="epa__input" placeholder="vk.com/">
-            </label>
-            <label class="epa__label epa__soc-fb">
-              <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'fb') ?>
-              <span class="epa__label-name">Страница Facebook (ссылка):</span>
-              <input type="text" name="user-attribs[fb]" value="<?=($id ? $attrAll[$id]['val'] : '')?>" class="epa__input" placeholder="fb.com/">
-            </label>
-            <label class="epa__label epa__soc-ok">
-              <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'ok') ?>
-              <span class="epa__label-name">Страница Одноклассники (сылка):</span>
-              <input type="text" name="user-attribs[ok]" value="<?=($id ? $attrAll[$id]['val'] : '')?>" class="epa__input" placeholder="ok.ru/">
-            </label>
-            <label class="epa__label epa__soc-mail">
-              <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'mail') ?>
-              <span class="epa__label-name">Страница Mail.ru (почта):</span>
-              <input type="text" name="user-attribs[mail]" value="<?=($id ? $attrAll[$id]['val'] : '')?>" class="epa__input" placeholder="your@mail.com" id="epa-mail">
-            </label>
-            <label class="epa__label epa__soc-google">
-              <span class="epa__label-name">Страница Google+ (почта):</span>
-              <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'google') ?>  
-              <input type="text" name="user-attribs[google]" value="<?=($id ? $attrAll[$id]['val'] : '')?>" class="epa__input" placeholder="your@gmail.com" id="epa-gmail">
-            </label>
-            <?php
-            /**
-             * shut down Messenger list
-             * 4.06.2019
-             */
-            if(!empty($attr['phone'])&&(1==2)): ?>
-              <div class="epa__label epa__messenger epa__select">
-                <span class="epa__label-name">Мессенджеры:</span>
-                <input type="text" name="epa-str-mess" value="<?=implode(',',$arMess)?>" class="epa__input" id="epa-str-messenger" disabled>
-                <div class="epa__label-veil" id="epa-veil-messenger"></div>
-                <ul class="epa__select-list" id="epa-list-messenger">
-                    <i class="epa__select-list-icon">OK</i>
-                    <li>
-                        <input type="checkbox" name="epa-mess-viber" value="1" id="epa-mess-viber" data-mess="viber" <?=empty($attrAll[$idViber]['val'])?'':'checked'?>>
-                        <label for="epa-mess-viber">Viber<b></b></label>
-                    </li>
-                    <li>
-                        <input type="checkbox" name="epa-mess-wapp" value="1" id="epa-mess-wapp" data-mess="wapp" <?=empty($attrAll[$idWhatsApp]['val'])?'':'checked'?>>
-                        <label for="epa-mess-wapp">WhatsApp<b></b></label>
-                    </li>
-                    <li>
-                        <input type="checkbox" name="epa-mess-tele" value="1" id="epa-mess-tele" data-mess="tele" <?=empty($attrAll[$idTelegram]['val'])?'':'checked'?>>
-                        <label for="epa-mess-tele">Telegram<b></b></label>
-                    </li>
-                    <li>
-                        <input type="checkbox" name="epa-mess-allo" value="1" id="epa-mess-allo" data-mess="allo" <?=empty($attrAll[$idGoogleAllo]['val'])?'':'checked'?>>
-                        <label for="epa-mess-allo">Google Allo<b></b></label>
-                    </li>
-                </ul>
-                <div class="epa__mess-hint <?=(sizeof($arMess)?'':'off')?>" style="display:none">Этот номер используете? Если нет - впишите пожалуйста нужный!</div>
+                <? if($attr['confirmPhone']): ?>
+                  <span class="epa__confirm complete js-g-hashint" title="Телефон подтвержден"></span>
+                <? else: ?>
+                  <span class="epa__confirm js-g-hashint" title="Телефон не подтвержден"></span>
+                <? endif; ?>
               </div>
-              <label class="epa__label epa__mess-viber <?=empty($attrAll[$idViber]['val'])?'off':''?>">
-                <span class="epa__label-name epa__phone-name">Viber:</span>
-                <input type="text" name="user-attribs[viber]" value="<?=$attrAll[$idViber]['val']?>" class="epa__input epa__phone phone-input" autocomplete="off">
-                <ul class="phone-list"></ul>
-              </label>
-              <label class="epa__label epa__mess-wapp <?=empty($attrAll[$idWhatsApp]['val'])?'off':''?>">
-                <span class="epa__label-name epa__phone-name">WhatsApp:</span>
-                <input type="text" name="user-attribs[whatsapp]" value="<?=$attrAll[$idWhatsApp]['val']?>" class="epa__input epa__phone phone-input" autocomplete="off">
-                <ul class="phone-list"></ul>
-              </label>
-              <label class="epa__label epa__mess-tele <?=empty($attrAll[$idTelegram]['val'])?'off':''?>">
-                <span class="epa__label-name epa__phone-name">Telegram:</span>
-                <input type="text" name="user-attribs[telegram]" value="<?=$attrAll[$idTelegram]['val']?>" class="epa__input epa__phone phone-input" autocomplete="off">
-                <ul class="phone-list"></ul>
-              </label>
-              <label class="epa__label epa__mess-allo <?=empty($attrAll[$idGoogleAllo]['val'])?'off':''?>">
-                <span class="epa__label-name epa__phone-name">Google Allo:</span>
-                <input type="text" name="user-attribs[googleallo]" value="<?=$attrAll[$idGoogleAllo]['val']?>" class="epa__input epa__phone phone-input" autocomplete="off">
-                <ul class="phone-list"></ul>
-              </label>
+            </div>
+            <?php if(!$attr['confirmPhone']): ?>
+              <div class="col-xs-12 col-sm-6 profile__col" id="conf-phone">
+                <div class="prmu-btn prmu-btn_normal">
+                  <span>Подтвердить телефон</span>
+                </div>
+              </div>
             <?php endif; ?>
-            <label class="epa__label epa__soc-other">
-              <span class="epa__label-name">Другое:</span>
-              <input type="text" name="user-attribs[custcont]" value="<?=$attrAll[39]['val']?>" class="epa__input">
-            </label>
+            <div class="col-xs-12 col-sm-6 profile__col">
+              <div class="profile__field" id="email-field" data-error="Указанный e-mail адрес уже используется в системе">
+                <b class="profile__field-name">Email:</b>
+                <input type="text" name="email" value="<?=$attr['email']?>" class="profile__field-input epa__required" placeholder="your@email.com" id="epa-email" data-name="Электронная почта">
+                <? if($attr['confirmEmail']): ?>
+                  <span class="epa__confirm complete js-g-hashint" title="Email подтвержден"></span>
+                <? else: ?>
+                  <span class="epa__confirm js-g-hashint" title="Email не подтвержден"></span>
+                <? endif; ?>
+              </div>
+            </div>
+            <?php if(!$attr['confirmEmail']): ?>
+              <div class="col-xs-12 col-sm-6 profile__col" id="conf-email">
+                <div class="prmu-btn prmu-btn_normal">
+                  <span>Подтвердить email</span>
+                </div>
+              </div>
+            <?php endif; ?>
+
+
+
+
+ <?/*?>
+              <div class="epa__confirm-block" id="conf-phone-block">
+                <span class="epa__confirm-text">На Ваш телефон выслан код для подтверждения. Введите его в это поле!</span>
+                <label class="epa__label">
+                  <span class="epa__label-name">Код:</span>
+                  <input type='text' name='confirm-code' value="" class="epa__input" id="conf-phone-inp" maxlength="4">
+                </label>
+                <div class="epa__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
+                <div class="clearfix"></div>
+              </div>
+              <?php
+              if(sizeof($arAdPhones) && !empty($attr['phone'])):
+                foreach ($arAdPhones as $phone):
+                  ?>
+                  <label class="epa__label epa__add-phone">
+                    <span class="epa__label-name epa__phone-name">Доп. Телефон:</span>
+                    <input type="text" name="user-attribs[<?=$phone['name']?>]" value="<?=$phone['val']?>" class="epa__input epa__phone" autocomplete="off">
+                  </label>
+                  <?php
+                endforeach;
+              endif;
+              ?>
+
+              <div class="epa__confirm-block" id="conf-email-block">
+                <span class="epa__confirm-text">На Вашу почту выслан код для подтверждения. Введите его в это поле!</span>
+                <label class="epa__label">
+                  <span class="epa__label-name">Код:</span>
+                  <input type='text' name='confirm-code' value="" class="epa__input" id="conf-email-inp" maxlength="4">
+                </label>
+                <div class="epa__confirm-btn hvr-sweep-to-right btn__orange">ПРОВЕРИТЬ</div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+<?*/?>
+
+
+
+
+            <div class="col-xs-12 col-sm-6 profile__col"></div>
+            <div class="clearfix"></div>
+
+            <b class="profile__field-name">Мессенджеры:</b><br>
+            <div class="col-xs-6 col-md-4 profile__col">
+              <label class="profile__field">
+                <b class="profile__field-name">Skype:</b>
+                <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'skype') ?>
+                <input type="text" name="user-attribs[skype]" value="<?=($id ? $attrAll[$id]['val'] : '')?>" class="profile__field-input" autocomplete="off">
+              </label>
+            </div>
+            <div class="col-xs-6 col-md-4 profile__col">
+              <label class="profile__field">
+                <b class="profile__field-name">Viber:</b>
+                <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'viber') ?>
+                <input type="text" name="user-attribs[viber]" value="<?=$attrAll[$id]['val']?>" class="profile__field-input" autocomplete="off">
+              </label>
+            </div>
+            <div class="col-xs-6 col-md-4 profile__col">
+              <label class="profile__field">
+                <b class="profile__field-name">WhatsApp:</b>
+                <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'whatsapp') ?>
+                <input type="text" name="user-attribs[whatsapp]" value="<?=$attrAll[$id]['val']?>" class="profile__field-input" autocomplete="off">
+              </label>
+            </div>
+            <div class="col-xs-6 col-md-4 profile__col">
+              <label class="profile__field">
+                <b class="profile__field-name">Telegram:</b>
+                <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'telegram') ?>
+                <input type="text" name="user-attribs[telegram]" value="<?=$attrAll[$id]['val']?>" class="profile__field-input" autocomplete="off">
+              </label>
+            </div>
+            <div class="col-xs-6 col-md-4 profile__col">
+              <label class="profile__field">
+                <b class="profile__field-name">Google Allo:</b>
+                <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'googleallo') ?>
+                <input type="text" name="user-attribs[googleallo]" value="<?=$attrAll[$id]['val']?>" class="profile__field-input" autocomplete="off">
+              </label>
+            </div>
+            <div class="clearfix"></div>
+
+            <b class="profile__field-name">Социальные сети:</b><br>
+            <div class="col-xs-12 col-sm-6 profile__col">
+              <label class="profile__field">
+                <b class="profile__field-name">ВКонтакте (сылка):</b>
+                <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'vk') ?>
+                <input type="text" name="user-attribs[vk]" value="<?=$attrAll[$id]['val']?>" class="profile__field-input" autocomplete="off" placeholder="vk.com/">
+              </label>
+            </div>
+            <div class="col-xs-12 col-sm-6 profile__col">
+              <label class="profile__field">
+                <b class="profile__field-name">Facebook (ссылка):</b>
+                <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'fb') ?>
+                <input type="text" name="user-attribs[fb]" value="<?=$attrAll[$id]['val']?>" class="profile__field-input" autocomplete="off" placeholder="fb.com/">
+              </label>
+            </div>
+            <div class="col-xs-12 col-sm-6 profile__col">
+              <label class="profile__field">
+                <b class="profile__field-name">Одноклассники (сылка):</b>
+                <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'ok') ?>
+                <input type="text" name="user-attribs[ok]" value="<?=$attrAll[$id]['val']?>" class="profile__field-input" autocomplete="off" placeholder="ok.ru/">
+              </label>
+            </div>
+            <div class="col-xs-12 col-sm-6 profile__col">
+              <label class="profile__field">
+                <b class="profile__field-name">Mail.ru (почта):</b>
+                <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'mail') ?>
+                <input type="text" name="user-attribs[mail]" value="<?=$attrAll[$id]['val']?>" class="profile__field-input" autocomplete="off" placeholder="your@mail.com">
+              </label>
+            </div>
+            <div class="col-xs-12 col-sm-6 profile__col">
+              <label class="profile__field">
+                <b class="profile__field-name">Google+ (почта):</b>
+                <?php $id = $this->ViewModel->isInArray($attrAll, 'key', 'google') ?>
+                <input type="text" name="user-attribs[google]" value="<?=$attrAll[$id]['val']?>" class="profile__field-input" autocomplete="off" placeholder="your@gmail.com">
+              </label>
+            </div>
+            <div class="col-xs-12 col-sm-6 profile__col">
+              <label class="profile__field">
+                <b class="profile__field-name">Другое:</b>
+                <input type="text" name="user-attribs[custcont]" value="<?=$attrAll[39]['val']?>" class="profile__field-input" autocomplete="off">
+              </label>
+            </div>
+            <div class="clearfix"></div>
+            <br>
             <div class="center">
               <button type="submit" class="epa__save-btn prmu-btn prmu-btn_normal">
                 <span>СОХРАНИТЬ ИЗМЕНЕНИЯ</span>

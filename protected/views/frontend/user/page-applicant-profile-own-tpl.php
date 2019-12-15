@@ -1,4 +1,6 @@
+<?/*?>
 <script src="https://www.google.com/jsapi"></script>
+<?*/?>
 <?php
   $attr = array_values($viData['userInfo']['userAttribs'])[0];
   $idPromo = $attr['id'];
@@ -476,7 +478,7 @@
           <ul class="ppp__star-block"><li class="full"></li></ul>
           <span class="ppp__subtitle"><?=Share::getRating($attr['rate'],$attr['rate_neg'])?></span>
         </div>
-        <? if(!$info['self_employed']): ?>
+        <? if(!$info['self_employed'] && $info['self_employed_region']): ?>
           <div class="ppp__self-employed">
               <a href="<?=MainConfig::$VIEW_SELF_EMPLOYED?>" class="prmu-btn prmu-btn_normal">
                 <span>Стать самозанятым</span>
