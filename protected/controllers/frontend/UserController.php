@@ -240,201 +240,203 @@ class UserController extends AppController
 
     }
 
-    public function actionMessenger($cloud)
+  public function actionMessenger($cloud)
+  {
+    empty($cloud) && $cloud=$_GET;
+    $fName = $cloud['fname'] ? $cloud['fname'] : explode(" ", $cloud['name'])[0];
+    $lName = $cloud['lname'] ? $cloud['lname'] : explode(" ", $cloud['name'])[1];
+    $Auth = new Auth();
+    $id_user = $Auth->registerAuth([
+      'email' => $cloud['email'],
+      'fname' => $fName,
+      'lname' => $lName,
+      'name' => "$fName $lName",
+      'gender' => $cloud['gender'],
+      'birthday' => $cloud['birthday'],
+      'gender' => $cloud['gender'],
+      'messenger' => $cloud['id'],
+      'type' => $cloud['type']
+    ]);
+    $subdomainId = Yii::app()->request->cookies['ursd'];
+    if(!empty($subdomainId)) // при попытке регистрации возвращаем юзера на страницу профиля поддомена(и там авторизуем)
     {
-      empty($cloud) && $cloud=$_GET;
-
-      $analyt = Yii::app()->request->cookies['sbjs_current'];
-      $analy = explode("|||", $analyt);
-      $point = $_GET['point'];
-      $last_referer =  $_GET['last_referer'];
-      if(!empty($analyt))
-      {
-        $data = [
-          'canal' => explode("=",$analy[2])[1],
-          'referer' => explode("=",$analy[0])[1],
-          'transition' => explode("=",$analy[1])[1],
-          'campaign' => explode("=",$analy[3])[1],
-          'content' => explode("=",$analy[4])[1],
-          'keywords' => explode("=",$analy[5])[1],
-          'point' => $point,
-          'last_referer' => $last_referer
-        ];
-      }
-      else
-      {
-        $data = [
-          'referer' => '(none)',
-          'transition' => '(none)',
-          'canal' => '(none)',
-          'campaign' => '(none)',
-          'content' => '(none)',
-          'keywords' => '(none)',
-          'point' => '(none)',
-          'last_referer' => '(none)'
-        ];
-      }
-
-      $data['email'] = $cloud['email'];
-      $data['fname'] = $cloud['fname'] ? $cloud['fname'] : explode(" ", $cloud['name'])[0];
-      $data['lname'] = $cloud['lname'] ? $cloud['lname'] : explode(" ", $cloud['name'])[1];
-      $data['name'] = $data['fname'].' '.$data['lname'];
-      $data['gender'] = $cloud['gender'];
-      $data['birthday'] = $cloud['birthday'];
-      $data['gender'] = $cloud['gender'];
-      $data['messenger'] = $cloud['id'];
-      $data['type'] = $cloud['type'];
-
-      $Auth = new Auth();
-      $Auth->registerAuth($data);
+      Subdomain::setRedirectInRegister($subdomainId, MainConfig::$PAGE_AFTER_REGISTER, $id_user);
+    }
+    else // авторизуем здесь
+    {
+      $model = new Auth();
+      $model->AuthorizeNet(['id' => $id_user]);
+      UserRegister::clearRegister();
       $this->redirect(MainConfig::$PAGE_AFTER_REGISTER);
     }
+  }
 
-    public function actionMessnotemail()
+  public function actionMessnotemail()
+  {
+    $Auth = new Auth();
+    $id_user = $Auth->registerAuth([
+      'email' => $_GET['email'],
+      'fname' => $_GET['fname'],
+      'lname' => $_GET['lname'],
+      'name' => $_GET['name'],
+      'gender' => $_GET['gender'],
+      'birthday' => $_GET['birthday'],
+      'messenger' => $_GET['messenger'],
+      'type' => $_GET['type']
+    ]);
+    $subdomainId = Yii::app()->request->cookies['ursd'];
+    if($id_user) // регистрация удалась
     {
-      $data['ip'] = $_GET['ip'];
-      $data['client'] = substr(Yii::app()->request->cookies['_ga'], -5, 0);
-      $pm_source = Yii::app()->request->cookies['pm_source'];
-      $data['email'] = $_GET['email'];
-      $data['fname'] = $_GET['fname'];
-      $data['lname'] = $_GET['lname'];
-      $data['name'] = $_GET['name'];
-      $data['gender'] = $_GET['gender'];
-      $data['birthday'] = $_GET['birthday'];
-      $data['messenger'] = $_GET['messenger'];
-      $data['type'] = $_GET['type'];
-      $data['referer'] = $_GET['referer'];
-      $data['transition'] = $_GET['transition'];
-      $data['canal'] = $_GET['canal'];
-      $data['campaign'] = $_GET['campaign'];
-      $data['content'] = $_GET['content'];
-      $data['keywords'] = $_GET['keywords'];
-      $data['point'] = $_GET['point'];
-      $data['last_referer'] = $_GET['last_referer'];
-        
-      $model = new User();
-      $id_user = $model->checkLogin($data['email']);
-
-      if($id_user)
+      if(!empty($subdomainId)) // при попытке регистрации возвращаем юзера на страницу профиля поддомена(и там авторизуем)
       {
-        $this->redirect(Subdomain::site() . MainConfig::$PAGE_SITE_MESSAGE);
+        Subdomain::setRedirectInRegister($subdomainId, MainConfig::$PAGE_AFTER_REGISTER, $id_user);
       }
-      else
+      else // авторизуем здесь
       {
-        $Auth = new Auth();
-        $Auth->registerAuth($data);
+        $model = new Auth();
+        $model->AuthorizeNet(['id' => $id_user]);
+        UserRegister::clearRegister();
         $this->redirect(MainConfig::$PAGE_AFTER_REGISTER);
       }
     }
-
-
-
-    public function actionLogin()
+    else // регистрация не удалась
     {
-        $serviceName = Yii::app()->request->getQuery('service');
-        $type =  Yii::app()->request->getQuery('type');
-
-        if (isset($serviceName)) {
-            /** @var $eauth EAuthServiceBase */
-            $eauth = Yii::app()->eauth->getIdentity($serviceName);
-            $eauth->redirectUrl = Yii::app()->user->returnUrl;
-            $eauth->cancelUrl = $this->createAbsoluteUrl('user/login');
-
-            try {
-                if ($eauth->authenticate()) {
-                    // var_dump($eauth->getAttributes());//$eauth->getIsAuthenticated(),
-                    $identity = new EAuthUserIdentity($eauth);
-
-                    // successful authentication
-                    if ($identity->authenticate()) {
-                        Yii::app()->user->login($identity);
-                        if($eauth->getIsAuthenticated()){
-                             // var_dump($eauth->getAttributes());
-                            $auth = new Auth();
-                            $cloud = $auth->authChekin($eauth->getAttributes()['id']);
-                           if($cloud) {
-                            $auth->AuthorizeNet(['id' => $cloud['id']]);
-                            $this->redirect(MainConfig::$PAGE_PROFILE);
-                           }
-                           else {
-                            $data = $eauth->getAttributes();
-                            
-                            $usData = Yii::app()->db->createCommand()
-                            ->select("u.email")
-                            ->from('user u')
-                            ->where('u.email = :email', array(':email' => $data['email']))
-                            ->queryRow();
-                            if(!empty($usData)) {
-                                $link  = Subdomain::site() . '/message';
-                                $this->redirect( $link);
-                            } else {
-
-                                if($type==3) {
-
-                                    //$pth = $auth->loadLogoEmpl($eauth->getAttributes()['photo']);
-                                    $view = MainConfig::$VIEWS_REGISTER_FB;
-                                    //$data['photo'] = $pth;
-                                    $data['type'] = 3;
-                                     ///$data[0] = $pth;
-                                     
-                                    
-                                      if($data['email'] == ""){
-                                        $data['email'] = rand(11111111,99999999)."@prommu.com";
-                                    }
-                                    
-                                        $this->actionMessenger($data);
-                                    
-
-                                } else {
-
-                                   /// $pth = $auth->loadLogo($eauth->getAttributes()['photo']);
-                                    $view = MainConfig::$VIEWS_REGISTER_FB;
-                                    ///$data['photo'] = $pth;
-                                     ///$data[0] = $pth;
-                                    $data['type'] = 2;
-                                    if($data['email'] == ""){
-                                        $data['email'] = rand(11111111,99999999)."@prommu.com";
-                                    }
-                                    
-                                    $this->actionMessenger($data);
-                                    
-
-                                }
-                                $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
-                            }
-
-                           }
-                        }
+      if(!empty($subdomainId)) // при попытке регистрации возвращаем юзера на страницу профиля поддомена(и там авторизуем)
+      {
+        Subdomain::setRedirectInRegister($subdomainId, MainConfig::$PAGE_SITE_MESSAGE);
+      }
+      else
+      {
+        $this->redirect(MainConfig::$PAGE_SITE_MESSAGE);
+      }
+    }
+  }
 
 
+
+  public function actionLogin()
+  {
+    $rq = Yii::app()->request;
+    $serviceName = $rq->getQuery('service');
+    $type =  $rq->getQuery('type');
+
+    if (isset($serviceName)) {
+
+      /** @var $eauth EAuthServiceBase */
+      $eauth = Yii::app()->eauth->getIdentity($serviceName);
+      $eauth->redirectUrl = Yii::app()->user->returnUrl;
+      $eauth->cancelUrl = $this->createAbsoluteUrl('user/login');
+      // если редиректимся с поддоменов - обновляем регистрационное куки и убираем из урла urh
+      $userRegisterHash =  $rq->getQuery('urh');
+      $subdomainId =  $rq->getQuery('ursd');
+      if(Share::isSocialNetwork() && !empty($userRegisterHash) && !empty($subdomainId))
+      {
+        $rq->cookies['urh'] = new CHttpCookie('urh', $userRegisterHash);
+        $rq->cookies['ursd'] = new CHttpCookie('ursd', $subdomainId);
+        $this->redirect( MainConfig::$PAGE_LOGIN . '?service=' . $serviceName);
+      }
+
+      try {
+        if ($eauth->authenticate()) {
+
+          // var_dump($eauth->getAttributes());//$eauth->getIsAuthenticated(),
+          $identity = new EAuthUserIdentity($eauth);
+
+          // successful authentication
+          if ($identity->authenticate()) {
+            Yii::app()->user->login($identity);
+            if($eauth->getIsAuthenticated()){
+              // var_dump($eauth->getAttributes());
+              $auth = new Auth();
+              $cloud = $auth->authChekin($eauth->getAttributes()['id']);
+              $subdomainId = Yii::app()->request->cookies['ursd'];
+              if ($cloud) // если по этому ID соцсети уже регались - простая авторизация
+              {
+                if(!empty($subdomainId)) // при попытке регистрации возвращаем юзера на страницу профиля поддомена(и там авторизуем)
+                {
+                  Subdomain::setRedirectInRegister($subdomainId, MainConfig::$PAGE_PROFILE, $cloud['id']);
+                }
+                else // авторизуем здесь
+                {
+                  $auth->AuthorizeNet(['id' => $cloud['id']]);
+                  $this->redirect(MainConfig::$PAGE_PROFILE);
+                }
+              }
+              else
+              {
+                $data = $eauth->getAttributes();
+                if((new User())->checkLogin($data['email'])) // юзер с таким email же существует
+                {
+                  if(!empty($subdomainId))
+                  {
+                    Subdomain::setRedirectInRegister($subdomainId, MainConfig::$PAGE_SITE_MESSAGE);
+                  }
+                  else
+                  {
+                    $this->redirect(MainConfig::$PAGE_SITE_MESSAGE);
+                  }
+                }
+                else
+                {
+                  if(Share::isEmployer($type))
+                  {
+                    $data['type'] = UserProfile::$EMPLOYER;
+                    if(!empty($data['email']))
+                    {
+                      $this->actionMessenger($data);
                     }
-                    else {
-                        // close popup window and redirect to cancelUrl
-                        $eauth->cancel();
+                    else
+                    {
+                      $this->render(MainConfig::$VIEWS_REGISTER_FB, ['viData'=>$data], ['nobc'=>'1']);
                     }
+                  }
+                  else
+                  {
+                    /// $pth = $auth->loadLogo($eauth->getAttributes()['photo']);
+                    $view = MainConfig::$VIEWS_REGISTER_FB;
+                    ///$data['photo'] = $pth;
+                    ///$data[0] = $pth;
+                    $data['type'] = UserProfile::$APPLICANT;
+                    if($data['email'] != ""){
+                      $this->actionMessenger($data);
+                    } else $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
+
+                  }
+                  $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
                 }
 
-                // Something went wrong, redirect to login page
-                $this->redirect(array('user/login'));
+              }
             }
-            catch (EAuthException $e) {
-                // save authentication error to session
-                Yii::app()->user->setFlash('error', 'EAuthException: '.$e->getMessage());
 
-                // close popup window and redirect to cancelUrl
-                $eauth->redirect($eauth->getCancelUrl());
-            }
+
+          }
+          else {
+            // close popup window and redirect to cancelUrl
+            $eauth->cancel();
+          }
         }
 
-        Share::$isBreadcrumbs = 0;
+        // Something went wrong, redirect to login page
+        $this->redirect(array('user/login'));
+      }
+      catch (EAuthException $e) {
+        // save authentication error to session
+        Yii::app()->user->setFlash('error', 'EAuthException: '.$e->getMessage());
 
-        if( Share::$UserProfile->type == 2 || Share::$UserProfile->type == 3 ) $this->redirect(MainConfig::$PAGE_PROFILE);
-        else{
-            $this->setBreadcrumbs($title = 'Авторизация', MainConfig::$PAGE_LOGIN);
-            $this->setPageTitle($title);
-            $this->render(MainConfig::$VIEWS_LOGIN, null, array('nobc' => 1));
-        }
+        // close popup window and redirect to cancelUrl
+        $eauth->redirect($eauth->getCancelUrl());
+      }
     }
+
+    Share::$isBreadcrumbs = 0;
+
+    if( Share::$UserProfile->type == 2 || Share::$UserProfile->type == 3 ) $this->redirect(MainConfig::$PAGE_PROFILE);
+    else{
+      $this->setBreadcrumbs($title = 'Авторизация', MainConfig::$PAGE_LOGIN);
+      $this->setPageTitle($title);
+      $this->render(MainConfig::$VIEWS_LOGIN, null, array('nobc' => 1));
+    }
+  }
 
 
 

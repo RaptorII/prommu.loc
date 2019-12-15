@@ -104,6 +104,13 @@ var RegisterPage = (function () {
         '#register_form .input-name, #register_form .input-surname',
         function(){ self.checkName(this) })
       .on(
+        'change',
+        '#register_form .input-name, #register_form .input-surname',
+        function(){
+          $(this).val($(this).val().trim());
+          self.checkName(this);
+        })
+      .on(
         'input',
         '#register_form .input-company',
         function(){ self.checkCompany(this) })
@@ -412,7 +419,7 @@ var RegisterPage = (function () {
     if(!$(input).is('*'))
       return true;
 
-    let v = $(input).val().replace(/[^a-zA-ZА-Яа-яЁё]/gi,'');
+    let v = $(input).val().replace(/[^ a-zA-ZА-Яа-яЁё]/gi,'');
 
     $(input).val((v.charAt(0).toUpperCase() + v.slice(1).toLowerCase()));
 

@@ -445,5 +445,39 @@ class Subdomain
 		}
 		return $arRes['data'];
 	}
+  /**
+   * @param $id_subdomain - integer (subdomains => id)
+   * @param $url - string
+   * @param bool $id_user - integer (user => id_user)
+   * Если есть id_user, значит делаем редирект с авторизацией
+   */
+  public static function setRedirectInRegister($id_subdomain, $url, $id_user=false)
+  {
+    if($id_subdomain==self::getCacheData()->id)
+      return;
+
+    $site = Yii::app()->db->createCommand()
+      ->select('url')
+      ->from('subdomains')
+      ->where('id=:id',[':id'=>$id_subdomain])
+      ->queryScalar();
+
+    if($id_user)
+    {
+      substr($url,0,1)==="/" && $url=substr($url, 1);
+      $header = 'Location: https://'
+        . $site
+        . str_replace('#ID#', $id_user, self::$REDIRECT)
+        . $url;
+    }
+    else
+    {
+      $header = 'Location: https://' . $site . $url;
+    }
+
+    unset(Yii::app()->request->cookies['ursd']);
+    header($header);
+    exit();
+  }
 }
 ?>

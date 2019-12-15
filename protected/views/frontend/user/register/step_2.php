@@ -54,14 +54,26 @@
       <button type="submit" class="btn-green" data-step="2">Продолжить</button>
     </p>
 
-    <?php
-      if(!Share::isEmployer($model->data['type'])) {
-          ?>
+    <?php if(!Share::isEmployer($model->data['type'])): ?>
+      <?
+        if(Subdomain::isDomain())
+        {
+          $url = MainConfig::$PAGE_LOGIN . '?service=';
+        }
+        else
+        {
+          $arGet = [
+            'urh' => $model->user,
+            'ursd' => Subdomain::getCacheData()->id
+          ];
+          $url = 'https://' . Subdomain::getCacheData()->domain->url . MainConfig::$PAGE_LOGIN . '?' . http_build_query($arGet) . '&service=';
+        }
+      ?>
           <div class="login__social-container">
               <span class="register__preview"><b>Войти через социальные сети:</b></span>
               <div class="reg-social__link-block">
                   <a
-                          href="<?= $this->createUrl(MainConfig::$PAGE_LOGIN, ['service' => 'facebook']) ?>"
+                          href="<?=$url . 'facebook'?>"
                           class="reg-social__link fb js-g-hashint"
                           title="facebook">
                 <span class="mob-hidden">
@@ -69,23 +81,15 @@
                 </span>
                   </a>
                   <a
-                          href="<?= $this->createUrl(MainConfig::$PAGE_LOGIN, ['service' => 'vkontakte']) ?>"
+                          href="<?=$url . "vkontakte"?>"
                           class="reg-social__link vk js-g-hashint"
                           title="vkontakte.ru">
                 <span class="mob-hidden">
                     vkontakte.ru
                 </span>
                   </a>
-                  <!--<a
-          href="<?/*=$this->createUrl(MainConfig::$PAGE_LOGIN,['service'=>'mailru'])*/ ?>"
-          class="reg-social__link ml js-g-hashint"
-          title="mail.ru">
-                <span class="mob-hidden">
-                    mail.ru
-                </span>
-        </a>-->
                   <a
-                          href="<?= $this->createUrl(MainConfig::$PAGE_LOGIN, ['service' => 'odnoklassniki']) ?>"
+                          href="<?=$url . "odnoklassniki"?>"
                           class="reg-social__link od js-g-hashint"
                           title="odnoklasniki.ru"
                   >
@@ -94,7 +98,7 @@
                 </span>
                   </a>
                   <a
-                          href="<?= $this->createUrl(MainConfig::$PAGE_LOGIN, ['service' => 'google_oauth']) ?>"
+                          href="<?=$url . "google_oauth"?>"
                           class="reg-social__link go js-g-hashint"
                           title="google">
                 <span class="mob-hidden">
@@ -102,7 +106,7 @@
                 </span>
                   </a>
                   <a
-                          href="<?= $this->createUrl(MainConfig::$PAGE_LOGIN, ['service' => 'yandex_oauth']) ?>"
+                          href="<?=$url . "yandex_oauth"?>"
                           class="reg-social__link ya js-g-hashint"
                           title="yandex">
                 <span class="mob-hidden">
@@ -111,9 +115,7 @@
                   </a>
               </div>
           </div>
-          <?php
-      }
-    ?>
+    <? endif; ?>
     <? if(!$model->data['id_user']): ?>
       <p class="separator">
         <a class="back__away back-away" href="javascript:void(0)">

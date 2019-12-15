@@ -1762,9 +1762,7 @@ private function registerUserFirsStep($inData)
       'password' => "DdUu19221922SuSaNnAa", // загадочная константа пароля для всех юзеров из соцсетей)
       'messenger' => $data['messenger']
     ]);
-    // авторизация
-    $this->AuthorizeNet(['id' => $arRegister['id_user']]);
-    $model::clearRegister();
+    return $arRegister['id_user'];
   }
 
     public function loadLogo($photo)

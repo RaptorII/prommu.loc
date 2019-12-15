@@ -65,7 +65,7 @@ class UserRegisterAdmin extends CActiveRecord
         if(Share::isApplicant($type))
         {
           $criteria->join = "LEFT JOIN resume r ON r.id_user=t.id_user";
-          $arCondition[] = "((t.social=0 AND r.photo!='') OR (t.social=1 AND r.photo='')) "
+          $arCondition[] = "((t.social=0 AND t.avatar IS NOT NULL) OR (t.social=1 AND t.avatar IS NULL)) "
             . "AND r.isblocked=" . User::$ISBLOCKED_NOT_FULL_ACTIVE;
         }
         if(Share::isEmployer($type))
