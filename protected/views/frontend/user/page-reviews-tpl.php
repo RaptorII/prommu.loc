@@ -108,7 +108,7 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/pag
 					<div class="responses__header">
 						<h1 class="responses__header-title">
                             Выставить оценку / Оставить отзыв персоналу, который работал на моих вакансиях
-                            <a class="download__btn download__btn-flt-right" href='/theme/pdf/Instruction-PROMMU-com.pdf' target="_blank" title="Скачать иструкцию пользования сервисом PROMMU.com"></a>
+                            <a class="download__btn download__btn-flt-right download__btn-inst" href='/theme/pdf/Instruction-PROMMU-com-rating.pdf' target="_blank" title="Скачать иструкцию пользования сервисом PROMMU.com"></a>
                         </h1>
 					</div>
 					<div class="responses__list">

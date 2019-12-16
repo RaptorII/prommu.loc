@@ -201,8 +201,8 @@ $this->pageTitle = $title;
                         </div>
 
                         <div class="affective-block">
-                            <div class="affective-block__instruction">Скачать иструкцию пользования сервисом <b>PROMMU.com</b></div>
-                            <a class="download__btn" href='/theme/pdf/Instruction-PROMMU-com.pdf' target="_blank"></a>
+                            <div class="affective-block__instruction">Скачать иструкцию пользования сервисом <b>PROMMU.com </b></div>
+                            <a class="download__btn" href='/theme/pdf/Instruction-PROMMU-com-all.pdf' target="_blank"></a>
                         </div>
 
                         <?/**/?>

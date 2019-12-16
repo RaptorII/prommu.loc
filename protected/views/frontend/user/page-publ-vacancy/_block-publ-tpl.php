@@ -30,7 +30,7 @@
 
 <h2 class="add-vacancy__title">
     Добавить вакансию
-    <a class="download__btn download__btn-flt-right" href='/theme/pdf/Instruction-PROMMU-com.pdf' target="_blank" title="Скачать иструкцию пользования сервисом PROMMU.com"></a>
+    <a class="download__btn download__btn-flt-right download__btn-inst" href='/theme/pdf/Instruction-PROMMU-com-vac.pdf' target="_blank" title="Скачать иструкцию пользования сервисом PROMMU.com"></a>
 </h2>
 
 <hr class="add-vacancy__line">
