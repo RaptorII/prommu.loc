@@ -52,53 +52,54 @@ class Feedback extends Model
     }
 
     public function getDatAdmin()
-		{
-			$arRes = ['cnt'=>0,'items'=>[]];
-			$arCId = array();
-			$arMess = Yii::app()->db->createCommand()
-								->select("id, id_theme")
-								->from('chat')
-								->where('(id_usp=2054 
-								    AND is_read=0)
-								    OR' // 2054 - ID админстратора для Р,
-                                    .'(id_use=1766
-                                    AND is_resp=0
-                                    AND is_read=0)') // 1766 - ID админстратора для С,
-								->order('id desc')
-								->queryAll();
+    {
+      $arRes = ['cnt'=>0,'items'=>[]];
+      $arCId = array();
+      $arMess = Yii::app()->db->createCommand()
+        ->select("id, id_theme")
+        ->from('chat')
+        ->where('(id_usp=:app_admin AND is_resp=1 AND is_read=0) ' // 2054 - ID админстратора для Р
+          . 'OR'
+          . '(id_use=:emp_admin AND is_resp=0 AND is_read=0)', // 1766 - ID админстратора для С
+          [
+            ':app_admin' => Im::$ADMIN_APPLICANT,
+            ':emp_admin' => Im::$ADMIN_EMPLOYER
+          ])
+        ->order('id desc')
+        ->queryAll();
 
-			$arRes['cnt'] = sizeof($arMess);
-			foreach ($arMess as $v)
-				!in_array($v['id_theme'], $arCId) && $arCId[] = $v['id_theme'];
-			$strCId = implode(',', $arCId);
-			$where = 'is_smotr=0' . (strlen($strCId) ? ' OR chat IN(' . $strCId . ')' : '');
+      $arRes['cnt'] = sizeof($arMess);
+      foreach ($arMess as $v)
+        !in_array($v['id_theme'], $arCId) && $arCId[] = $v['id_theme'];
+      $strCId = implode(',', $arCId);
+      $where = 'is_smotr=0' . (strlen($strCId) ? ' OR chat IN(' . $strCId . ')' : '');
 
-			$arFeedback = Yii::app()->db->createCommand()
-								->select("id, theme, chat, is_smotr, type")
-								->from('feedback')
-								->where($where)
-								->order('id desc')
-								->queryAll();
+      $arFeedback = Yii::app()->db->createCommand()
+        ->select("id, theme, chat, is_smotr, type")
+        ->from('feedback')
+        ->where($where)
+        ->order('id desc')
+        ->queryAll();
 
-			foreach ($arFeedback as $v) {
-				$arF = $arRes['items'][$v['id']];
-				$arF['title'] = $v['theme'];
-				$arF['type'] = $v['type'];
-				$arF['chat'] = $v['chat'];
-				!isset($arF['cnt']) && $arF['cnt'] = 0;
-				if(!$v['is_smotr']) {
-					//$arRes['cnt']++;
-					$arF['cnt']++;
-				}
+      foreach ($arFeedback as $v) {
+        $arF = $arRes['items'][$v['id']];
+        $arF['title'] = $v['theme'];
+        $arF['type'] = $v['type'];
+        $arF['chat'] = $v['chat'];
+        !isset($arF['cnt']) && $arF['cnt'] = 0;
+        if(!$v['is_smotr']) {
+          //$arRes['cnt']++;
+          $arF['cnt']++;
+        }
 
-				foreach ($arMess as $m)
-					$m['id_theme']==$v['chat'] && $arF['cnt']++;
-						
-				$arRes['items'][$v['id']] = $arF;
-			}
-            $arRes['cnt'] = count($arRes['items']);
+        foreach ($arMess as $m)
+          $m['id_theme']==$v['chat'] && $arF['cnt']++;
 
-			return  $arRes;
+        $arRes['items'][$v['id']] = $arF;
+      }
+      $arRes['cnt'] = count($arRes['items']);
+
+      return  $arRes;
     }
 
     public function getData()
