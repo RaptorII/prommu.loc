@@ -201,27 +201,34 @@
 // Initialisation
 // window.onresize = function(e) {
 
-    if (screen.width >= 768) {
+if (screen.width >= 768) {
 
-        var canvasDiv = document.getElementById("particle-canvas");
-        var options = {
-            particleColor: "#888",
-            // background: "https://raw.githubusercontent.com/JulianLaval/canvas-particle-network/master/img/demo-bg.jpg",
-            interactive: true,
-            speed: "medium",
-            density: "high"
-        };
-        var particleCanvas = new ParticleNetwork(canvasDiv, options);
+    var canvasDiv = document.getElementById("particle-canvas");
+    var options = {
+        particleColor: "#888",
+        // background: "https://raw.githubusercontent.com/JulianLaval/canvas-particle-network/master/img/demo-bg.jpg",
+        interactive: true,
+        speed: "medium",
+        density: "high"
+    };
+    var particleCanvas = new ParticleNetwork(canvasDiv, options);
 
-        //size particle block
+    //size particle block
 
-    }
+}
 // }
 
 $(function() {
+
+    var hParticle = $("#particle-canvas").height() - 50;
+
+    if (screen.width >= 768) {
+        $("div.static__outs.grey-bg").height(hParticle);
+    }
+
     $(window).resize(function(){
         if (screen.width >= 768) {
-            $("div.static__outs.grey-bg").height($("#particle-canvas").height());
+            $("div.static__outs.grey-bg").height(hParticle);
         }
     });
 });
@@ -230,7 +237,11 @@ $(function() {
 //
 //
 $(function(){
-  //
+    /**
+     * parallax
+     * */
+    //
+    /*
   $(window).on('resize scroll',scrollImage);
   scrollImage();
 
@@ -251,18 +262,15 @@ $(function(){
       ( (bPosBottom > wNewPos) && (bPosBottom < wPosBottom ) )
     ) // функционал работает только в поле зрения юзера
     {
-      var offset = -200 + (bPos - wNewPos)/4;
-
-      console.log(offset);
-
-      /*if(offset>=0)
-      {
-
-      }
-      else
-      {
-
-      }*/
+        var offset;
+        if ((screen.width >= 1680) && (screen.width <= 1900) )  {
+            offset = -430 + (bPos - wNewPos)/4;
+        } else if (screen.width >= 1900) {
+            offset = -470 + (bPos - wNewPos)/4;
+        } else {
+            offset = -300 + (bPos - wNewPos)/4;
+        }
+//      console.log(offset);
 
       if( (bPos + hImage + offset) >= bPosBottom )
       {
@@ -274,44 +282,46 @@ $(function(){
       }
     }
   }
-  //
-  function showMessage(string) {
-    $('body').append('<div class="prmu__popup"><p>' + string + '</p></div>'),
-      $.fancybox.open({
-        src: "body>div.prmu__popup",
-        type: 'inline',
-        touch: false,
-        afterClose: function(){ $('body>div.prmu__popup').remove() }
-      })
-  }
-  //
-  $('.applicant_create_vac').click(function(){
-    showMessage('Нам очень жаль :( но Вы зарегистрированы как соискатель и не можете публиковать вакансии');
-  });
-  //
-  $('.geo_message').click(function(){
-    showMessage('<span style="display: block; text-transform: uppercase; text-align: center; font-size: 13px;">Извините, данная услуга еще в разработке.</span> ' +
-        '<span style="display: block; text-transform: uppercase; text-align: center; font-size: 13px;">Как только она активизируется - мы</span>' +
-        '<span style="display: block; text-transform: uppercase; text-align: center; font-size: 13px;">обязательно оповестим Вас</span>' +
-        '<br>' +
-        '<span style="display: block; font-size: 12px; text-align: right; font-style: italic">С уважением, Администрация Prommu</span>');
-  });
-  //
-  $('.applicant_service').click(function(){
-    showMessage('Нам очень жаль :( но Вы зарегистрированы как соискатель и не можете воспользоваться данной услугой');
-  });
-  //
-  $('.guest__reg').click(function(){
-      showMessage('<p class="center"> Уважаемый пользователь! <br> ' +
-          'Что бы заказать данную услугу, необходимо </p>' +
-          '<a class="btn__orange center text-uppercase" href="/user/register/type">зарегистрироваться</a>' +
-          '<hr>'+
-          '<p class="center">После регистрации необходимо создать вакансию и пройти модерацию. После этой процедуры все услуги <b>станут доступны</b>.</p>'
-      );
-  });
-  //
-  $('.guest__reg-applic').click(function(){
-      showMessage('Нам очень жаль :( но Вы зарегистрированы как соискатель и дааная услуга вам недоступна');
-  });
+
+  /* end parallax */
+    //
+    function showMessage(string) {
+        $('body').append('<div class="prmu__popup"><p>' + string + '</p></div>'),
+            $.fancybox.open({
+                src: "body>div.prmu__popup",
+                type: 'inline',
+                touch: false,
+                afterClose: function(){ $('body>div.prmu__popup').remove() }
+            })
+    }
+    //
+    $('.applicant_create_vac').click(function(){
+        showMessage('Нам очень жаль :( но Вы зарегистрированы как соискатель и не можете публиковать вакансии');
+    });
+    //
+    $('.geo_message').click(function(){
+        showMessage('<span style="display: block; text-transform: uppercase; text-align: center; font-size: 13px;">Извините, данная услуга еще в разработке.</span> ' +
+            '<span style="display: block; text-transform: uppercase; text-align: center; font-size: 13px;">Как только она активизируется - мы</span>' +
+            '<span style="display: block; text-transform: uppercase; text-align: center; font-size: 13px;">обязательно оповестим Вас</span>' +
+            '<br>' +
+            '<span style="display: block; font-size: 12px; text-align: right; font-style: italic">С уважением, Администрация Prommu</span>');
+    });
+    //
+    $('.applicant_service').click(function(){
+        showMessage('Нам очень жаль :( но Вы зарегистрированы как соискатель и не можете воспользоваться данной услугой');
+    });
+    //
+    $('.guest__reg').click(function(){
+        showMessage('<p class="center"> Уважаемый пользователь! <br> ' +
+            'Что бы заказать данную услугу, необходимо </p>' +
+            '<a class="btn__orange center text-uppercase" href="/user/register/type">зарегистрироваться</a>' +
+            '<hr>'+
+            '<p class="center">После регистрации необходимо создать вакансию и пройти модерацию. После этой процедуры все услуги <b>станут доступны</b>.</p>'
+        );
+    });
+    //
+    $('.guest__reg-applic').click(function(){
+        showMessage('Нам очень жаль :( но Вы зарегистрированы как соискатель и дааная услуга вам недоступна');
+    });
 
 });

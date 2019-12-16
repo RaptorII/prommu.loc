@@ -10,8 +10,27 @@ p {
 .prmu__popup a.btn__orange {
     text-decoration: none;
 }
+.static__favorite-job a.btn__orange {
+    display: block;
+    /*color: var(--color-dark)!important;*/
+    font-size: 20px!important;
+    margin-top: 20px;
+}
+
+@media (max-width: 767px) {
+    #DiTopMenuWrapp {
+        min-height: 68px;
+    }
+    #DiTopMenuWrapp>.container {
+        padding: 20px 30px;
+    }
+}
 #DiTop {
-    overflow: auto;
+    /*overflow: auto;*/
+}
+
+#DiContent a {
+    color: var(--color-dark);
 }
 h1.static {
     text-align: center;
@@ -85,10 +104,10 @@ h3.static {
     margin: 30px 0 50px 0;
 }
 .map__rus {
-    width: 110%;
+    width: 100%;
     position: relative;
     right: 0;
-    top: 0;
+    top: 25px;
 }
 
 .box_wrap {
@@ -113,8 +132,8 @@ h3.static {
 
 .static__brand-pic {
     text-align: center;
-    filter: grayscale(100%);
-    filter: gray; /* iE9 MS mast die */
+    /*filter: grayscale(100%);*/
+    /*filter: gray; !* iE9 MS mast die *!*/
     transition: var(--main-trans);
     transform: scale(0.8);
 }
@@ -130,7 +149,7 @@ h3.static {
 }
 
 .static__outs {
-    margin: 25px 0;
+    margin: 25px 0 0 0;
     /*padding: 25px 0;*/
 }
 
@@ -150,7 +169,8 @@ h3.static {
     width: 100%;
     height: 100%;
     z-index: 1;
-    background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+    /*background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);*/
+    background: radial-gradient(ellipse at bottom, #08c 0%, #090a0f 100%);
 }
 
 .static__outs .box__rnd {
@@ -170,18 +190,18 @@ h3.static {
 .static__outs .box__txt{
     display: block;
     padding: 20px 5px;
-    margin-bottom: 30px;
+    /*margin-bottom: 30px;*/
 }
 
 .static__job{
     background: #f4f4f4;
     /*margin-bottom: 50px;*/
-    padding: 50px 0 0 0;
+    padding: 20px 0 0 0;
 }
 .static__service {
     background: #f4f4f4;
-    margin-bottom: 50px;
-    padding: 50px 0;
+    margin-bottom: 30px;
+    padding: 15px 0 20px 0;
 }
 
 .static__job .box__txt,
@@ -200,6 +220,7 @@ h3.static {
 }
 .static__service .box__rnd{
     background: var(--color-white);
+    margin: 15px auto;
 }
 .static__service .btn__orange {
     margin-bottom: 20px;
@@ -211,13 +232,13 @@ h3.static {
 }
 
 .static__job .btn__sized {
-    margin: 0px 15% 50px 15%;
+    margin: 30px 10% 50px 10%;
 }
 
 .static__favorite-job {
-    padding: 50px 0;
-    margin-bottom: 50px;
-    background: radial-gradient(ellipse at bottom, transparent 0%, var(--color-green) 200%);
+    padding: 30px 0 0 0;
+    margin-bottom: 30px;
+    /*background: radial-gradient(ellipse at bottom, transparent 0%, var(--color-green) 200%);*/
 }
 
 .static__favorite-job .box__txt{
@@ -225,13 +246,13 @@ h3.static {
 }
 
 .static__favorite-job .btn__orange.btn__sized{
-    margin-top: 10px;
+    /*margin-top: 10px;*/
 }
 
 .favorite-job__wrap {
-    background: var(--color-white);
+    /*background: var(--color-white);*/
     border-radius: 20px;
-    border: 2px solid var(--color-orange);
+    /*border: 2px solid var(--color-orange);*/
     width: 100%;
     padding: 0 0 30px 0;
     margin: 20px 0 10px 0;
@@ -239,13 +260,14 @@ h3.static {
 
 .static__favorite-job .btn__orange-rnd {
     background: var(--color-white);
-    color: var(--color-orange);
+    /*color: var(--color-orange);*/
     font-size: 20px;
-    margin: 10px 0;
+    /*margin: 10px 15%;*/
+    padding: 4px;
 }
 
 .static__favorite-job .box__rnd {
-    margin: 30px auto;
+    margin: 15px auto;
 }
 
 .btn__ads {
@@ -260,6 +282,7 @@ h3.static {
     transform: none;
     align-items: center;
     width: auto;
+    font-weight: 600;
 }
 
 .btn__sized {
@@ -275,6 +298,10 @@ h3.static {
     margin: 10px 0%;
 }
 
+
+.static__vac .btn__orange-rnd{
+    margin: 0;
+}
 .static__vac .btn__orange-rnd.static__drop {
     border: 2px solid transparent;
     font-weight: 600;
@@ -298,22 +325,31 @@ h3.static {
 }
 .static__paralax,
 .static__paralax.static__promo {
-    margin: 25px 0 0 0;
-    background: var(--color-grey);
+    margin: 0;
+    background: var(--color-white);
 }
 .parallax img {
     position: absolute;
     max-width: 100%;
     display: none;
 }
+/*.static__paralax .static__img { display: none; }*/
+
 .favorite-job__wrap{
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
 @media screen and (min-width: 768px){
+    .static__paralax .static__img-d {
+        transform: translate(-50%,-50%);
+        left: 50%;
+        top: 60%;
+    }
+
+    .static__paralax,
     .static__paralax.static__promo {
-        /*height: 660px;*/
+        margin: 25px 0 0 0;
         background: none;
     }
     .parallax img {
@@ -395,6 +431,12 @@ h3.static {
 .box__about{
     display: inline-block;
 }
+.static__paralax .box__txt{
+    color: var(--color-grey);
+}
+.static__paralax .box__head {
+    color: var(--color-dark);
+}
 .btn__orange {
     cursor: pointer;
 }
@@ -427,6 +469,11 @@ h3.static {
     border: 1px solid var(--color-green);
 }
 
+.flex-center {
+    align-items: center;
+    margin-top: 30px;
+}
+
 @media screen and (min-width: 768px) {
     .flex768up{
         display: flex;
@@ -454,10 +501,9 @@ h3.static {
 .image__big {
     position: absolute;
     bottom: -25px;
-
 }
 .image__big img {
-    max-width: 110%;
+    max-width: 100%;
     position: relative;
     z-index: 21;
     display: none;
@@ -834,12 +880,12 @@ h3.static {
     left: 18px;
 }
 .controller__icon:before{
-    content: '\e9bf';
+    content: '\e9ca';
     font-family: "PrommuFont";
-    font-size: 65px;
+    font-size: 75px;
     position: absolute;
-    top: 5px;
-    left: 18px;
+    top: 0px;
+    left: 15px;
 }
 .consultant__icon:before{
     content: '\e951';
@@ -909,7 +955,7 @@ h3.static {
     transition: var(--main-trans);
 }
 .static__drop:before {
-    content: '\e984';
+    content: '';
     font-family: "PrommuFont";
     position: absolute;
     right: 15px;
@@ -941,7 +987,7 @@ h3.static {
  */
 .mark-block{ padding: 15px; }
 .box-mark{
-    padding: 20px 0;
+    padding: 10px 0;
     margin: 0;
     align-items: center;
 }
@@ -974,6 +1020,9 @@ h3.static {
         position: relative;
         z-index: 1;
     }
+    #DiContent h1.static__title.static__legasy{
+        margin: 20px 0 30px 0;
+    }
 
     .static_head {
         font-size: 25px;
@@ -997,6 +1046,8 @@ h3.static {
     }
     .map__rus {
         position: absolute;
+        width: 99%;
+        top: 0;
     }
     .image__big img {
         display: block;
@@ -1004,9 +1055,14 @@ h3.static {
     .static__paralax .box__about {
         display: inline-block;
         width: 100%;
-        background: rgba(0,0,0,0.3);
+        background: rgba(0,0,0,0.6);
         padding: 5px 15px;
         border-radius: 4px;
+        color: var(--color-white);
+    }
+
+    .static__paralax .box__txt{
+        /*text-align: justify;*/
     }
     .static__job .box__txt,
     .static__service .box__txt {
@@ -1017,7 +1073,7 @@ h3.static {
         z-index: 21;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translate(-50%, -49%);
     }
     .grey-bg {
         height: 688px;
@@ -1099,16 +1155,17 @@ h3.static {
     /* end drop */
 
     .static__service {
-        padding-top: 50px;
+        margin-bottom: 50px;
+        padding: 50px 0;
     }
     .box {
-        margin: 30px 0 0 25px;
+        margin: 10px 0 0 25px;
     }
     .width-fix {
         width: 50%;
     }
     .box-mark {
-        padding: 20px 0 20px 25px;
+        padding: 0px 0 20px 25px;
     }
     .box__head {
         font-size: 18px;
@@ -1166,8 +1223,43 @@ h3.static {
         top: 0px;
         left: 7px;
     }
+    .static__job{
+        padding: 50px 0 0 0;
+    }
     .static__job .btn__sized {
         margin: 0 20% 50px 20%;
+    }
+    /*.static__paralax .static__img {*/
+    /*display: unset;*/
+    /*bottom: -4%;*/
+    /*left: 50%;*/
+    /*transform: translateX(-50%);*/
+    /*}*/
+    .static__paralax .box__txt,
+    .static__paralax .box__head {
+        color: var(--color-white);
+    }
+    .static__favorite-job a.btn__orange {
+        margin-top: unset;
+    }
+    .box-mark{
+        padding: 20px 0;
+    }
+    .static__outs .box__txt {
+        margin-bottom: 30px;
+    }
+    .static__outs + .static__outs {
+        margin: 30px 0 0 0;
+    }
+    .static__favorite-job .box__rnd {
+        margin: 30px auto;
+    }
+    .static__favorite-job {
+        padding: 50px 0 0 0;
+        margin-bottom: 50px;
+    }
+    .static__vac {
+        margin-bottom: 50px;
     }
 
 }
@@ -1178,6 +1270,17 @@ h3.static {
 
     }
     .static__vac .btn__sized {
-        margin: 10px 20%;
+        margin: 0 20%;
+    }
+    /*.static__paralax .static__img {*/
+    /*bottom: -8%;*/
+    /*transform: translateX(-50%);*/
+    /*}*/
+}
+
+@media screen and (min-width: 1200px) {
+    .static__paralax .static__img {
+        bottom: -20%;
+        transform: translateX(-50%);
     }
 }
