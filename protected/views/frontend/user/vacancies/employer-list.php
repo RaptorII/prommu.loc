@@ -39,7 +39,7 @@
 			<? endif; ?>
             <div class="affective-block">
                 <div class="affective-block__instruction">Скачать иструкцию пользования сервисом <b>PROMMU.com </b></div>
-                <a class="download__btn" href='/theme/pdf/Instruction-PROMMU-com-all.pdf' target="_blank"></a>
+                <a class="download__btn" href='/theme/pdf/Instruction-PROMMU-com-vac.pdf' target="_blank"></a>
             </div>
 		</div>
 	</div>

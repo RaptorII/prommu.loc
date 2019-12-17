@@ -28,7 +28,6 @@ if ($route !== "about/empl" &&
 <?php Yii::app()->getClientScript()->registerCssFile('/theme/css/private/private-menu.css'); ?>
 <div id="DiContent" class="page-<?= $action ?> <?= $this->ViewModel->getViewData()->addContentClass ?><?= ContentPlus::getActionID() ? ' action-' . ContentPlus::getActionID() : '' ?>">
 
-
     <?php
 
     if ((strcasecmp($route, 'about/empl') == 0) ||
