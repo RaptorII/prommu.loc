@@ -598,7 +598,9 @@ class Auth
     }
 
     public function registerUser($inParam)
-    {
+    {   
+        
+    
         // регистрация соискателя
         if( in_array($inParam, ['1', 'vk', 'fb']) || $inParam['type'] == 2 )
         {
@@ -628,6 +630,8 @@ class Auth
         // *** Регистрация работодателя ***
         } else {
             // проверка полей
+            
+            var_dump($inParam);
             $res = $this->checkFieldsEmpl($inParam['inputData']);
 
 
