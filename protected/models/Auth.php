@@ -605,6 +605,7 @@ class Auth
         if( in_array($inParam, ['1', 'vk', 'fb']) || $inParam['type'] == 2 )
         {
             // проверка полей
+            if(empty($inParam['inputData'])) $inParam['inputData'] = $inParam;
             $res = $this->checkFieldsApplicant($inParam['inputData']);
 
             if( $res['error'] )
