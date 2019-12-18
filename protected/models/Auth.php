@@ -631,7 +631,8 @@ class Auth
         } else {
             // проверка полей
             
-            var_dump($inParam);
+            
+            if(empty($inParam['inputData'])) $inParam['inputData'] = $inParam;
             $res = $this->checkFieldsEmpl($inParam['inputData']);
 
 
