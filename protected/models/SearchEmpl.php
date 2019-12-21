@@ -100,7 +100,9 @@ class SearchEmpl extends Model
     public function searchEmployersCount($props = [])
     {
         $filter = $this->renderSQLFilter(['filter' => $props['filter']]);
-
+    
+        var_dump($filter);
+    
         $sql = "SELECT COUNT(e.id_user)
               FROM employer e
               INNER JOIN user_city uc ON e.id_user = uc.id_user
