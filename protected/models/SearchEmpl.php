@@ -115,6 +115,25 @@ class SearchEmpl extends Model
 
         return $res->queryScalar();
     }
+    
+    public function searchEmployersCountAPI($props = [])
+    {
+        $filter = $this->renderSQLFilterAPI(['filter' => $props['filter']]);
+    
+        
+    
+        $sql = "SELECT COUNT(e.id_user)
+              FROM employer e
+              INNER JOIN user_city uc ON e.id_user = uc.id_user
+              INNER JOIN user u ON u.id_user = e.id_user
+
+              {$filter} AND u.ismoder = 1
+              ORDER BY e.id DESC";
+
+        $res = Yii::app()->db->createCommand($sql);
+
+        return $res->queryScalar();
+    }
 
 
 
