@@ -186,7 +186,7 @@ class SearchEmpl extends Model
         $param = $inProps['filter']['qs'] ? $inProps['filter']['qs']: $param = Yii::app()->getRequest()->getParam('qs');
         if( $param ) { $data['qs'] = filter_var(trim($param), FILTER_SANITIZE_FULL_SPECIAL_CHARS); }
 
-        var_dump($inProps);
+        var_dump($data);
         // default
         $filter = [];
 
