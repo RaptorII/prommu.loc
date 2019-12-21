@@ -3844,11 +3844,11 @@ public function vac(){
         // получаем данные страницы
         $SearchEmpl = new SearchEmpl();
         
-        $pages = new CPagination($SearchEmpl->searchEmployersCount($filter));
+        $pages = new CPagination($SearchEmpl->searchEmployersCountPI($filter));
         $pages->pageSize = 50;
         $pages->applyLimit($SearchEmpl);
         
-        var_dump($filter);
+    
         // отсеивать из ответа работодателей
         $data = array_values($SearchEmpl->getEmployersAPI(0, $filter)['empls']);
         $data = array_merge(['employers' => $data, 'pageCount' => $pages->pageCount,'currentPage' => (int)$page ? (int)$page : 1]);
