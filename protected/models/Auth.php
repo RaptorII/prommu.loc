@@ -1463,7 +1463,7 @@ private function registerUserFirsStep($inData)
             $this->userUpdate(array('email' => $inData['inputData']['email'],
                 'passw' => $inData['inputData']['pass'],
                 'isblocked' => 2,
-                'ismoder' => 0,
+                'ismoder' => 1,
                 'status' => $inData['type'],
              
             ), 'id_user = ' . $res['id_user']);
