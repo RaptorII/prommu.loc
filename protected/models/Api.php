@@ -3844,7 +3844,7 @@ public function vac(){
         // получаем данные страницы
         $SearchEmpl = new SearchEmpl();
         
-        $pages = new CPagination($SearchEmpl->searchEmployersCountPI($filter));
+        $pages = new CPagination($SearchEmpl->searchEmployersCountAPI($filter));
         $pages->pageSize = 50;
         $pages->applyLimit($SearchEmpl);
         
