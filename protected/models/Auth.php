@@ -1375,12 +1375,14 @@ class Auth
         if( $inData['email'] ) $data['email'] = ($inData['email']);
         if( $inData['messenger'] ) $data['messenger'] = ($inData['messenger']);
         if( $inData['status'] ) $data['status'] = ($inData['status']);
-        if( $inData['isblocked'] ) $data['isblocked'] = 3;
+        if( $inData['isblocked'] ) $data['isblocked'] = $inData['isblocked'];
         $data['access_time'] = $inData['access_time'] ? $inData['access_time'] : date('Y-m-d H:i:s');
         $data['crdate'] = date('Y-m-d H:i:s');
         $data['mdate'] = date('Y-m-d H:i:s');
         $data['ismoder'] = '0';
         !empty($inData['agreement']) && $data['agreement'] = $inData['agreement'];
+        
+
 
 
         $res = Yii::app()->db->createCommand()
@@ -1472,7 +1474,7 @@ private function registerUserFirsStep($inData)
 
 
         } else {
-             if(!empty($inData['inputData']['phone'])) $inData['inputData']['email'] = $inData['inputData']['phone'];
+              if(!empty($inData['inputData']['phone'])) $inData['inputData']['email'] = $inData['inputData']['phone'];
             $idUs = $this->userInsert(array('email' => $inData['inputData']['email'],
                 'passw' => $inData['inputData']['pass'],
                 'login' => $inData['inputData']['email'],
@@ -1486,6 +1488,7 @@ private function registerUserFirsStep($inData)
                $token = md5($inData['inputData']['email'] . date("d.m.Y H:i:s") . md5($inData['inputData']['pass']));
         $uid = md5($idUs);
         $password = $inData['inputData']['pass'];
+
 
         } // endif
         // Generate TOKEN
