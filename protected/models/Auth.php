@@ -773,8 +773,10 @@ class Auth
      * @return array
      * @throws Exception
      */
-    public function Authorize($inParams)
-    {
+       public function Authorize($inParams)
+    {   
+        
+      
         $login = $inParams['login'];
         $passw = $inParams['passw'];
         $remember = $inParams['remember'];
@@ -801,6 +803,8 @@ class Auth
             ));            
         }
 
+
+
         // проверяем пароль и блокировку
         if( $user && $user->id_user )
         {
@@ -812,8 +816,9 @@ class Auth
             {
                 if( $user->passw != $passMd5 ) throw new Exception('', -102);
                 elseif( (int)$user->isblocked === 1 ) throw new Exception('', -104);
-                elseif( (int)$user->isblocked === 2 ) throw new Exception('', -105);
-                elseif( !in_array((int)$user->isblocked, [0,3]) ) throw new Exception('', -103);
+                // elseif( (int)$user->isblocked === 2 ) throw new Exception('', -105);
+//                elseif( (int)$user->isblocked === 3 ) throw new Exception('', -106);
+                // elseif( !in_array((int)$user->isblocked, [0,3]) ) throw new Exception('', -103);
             } // endif
         }
         else
@@ -847,21 +852,22 @@ class Auth
             ->where('u.id_user=:id_user', array(':id_user' => $user->id_user))
             ->queryRow();
 
-//        if ($usRes['wid'] > 0)
-//        {
-//            $res = Yii::app()->db->createCommand()
-//                ->update('user_work', array(
-//                    'token' => $token,
-//                    'date_login' => date('Y-m-d H:i:s'),
-//                ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
-//
-//            $res = Yii::app()->db->createCommand()
-//                ->update('user', array(
-//                    'mdate' => date('Y-m-d H:i:s'),
-//                    'is_online' => 1,
-//                ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
-//
-//        } else {
+        if ($usRes['wid'] > 0)
+        {
+            $res = Yii::app()->db->createCommand()
+                ->update('user_work', array(
+                    'token' => $token,
+                    'date_login' => date('Y-m-d H:i:s'),
+                ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
+                
+            $res = Yii::app()->db->createCommand()
+                ->update('user', array(
+                    'mdate' => date('Y-m-d H:i:s'),
+                    'is_online' => 1,
+                ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
+        
+        
+        } else {
             $res = Yii::app()->db->createCommand()
                 ->insert('user_work', array(
                     'token' => $token,
@@ -869,13 +875,15 @@ class Auth
                     'id_user' => $usRes['id'],
                     'date_login' => date('Y-m-d H:i:s'),
                 ));
-            
+                
             $res = Yii::app()->db->createCommand()
                 ->update('user', array(
                     'mdate' => date('Y-m-d H:i:s'),
                     'is_online' => 1,
                 ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
-//        }
+        
+                
+        }
 
 
         $usData = (object)$usRes;
@@ -892,12 +900,14 @@ class Auth
             "uid" => $uid, // not used
             "idus" => $usData->id, // not used
             "type" => $usData->status,
+            "status" => $usData->isblocked,
 //            "login" => $login,
 //            "rating" => 0,
 //            "count_resp" => 0,
 //            "user_data" => $usData,
         );
     }
+
 
     public function AuthorizeNet($inParams)
     {
@@ -1401,7 +1411,7 @@ class Auth
         if( $inData['passw'] ) $data['passw'] = md5($inData['passw']);
         if( $inData['email'] ) $data['email'] = ($inData['email']);
         if( $inData['status'] ) $data['status'] = ($inData['status']);
-        if( $inData['isblocked'] ) $data['isblocked'] = 3;
+        if( $inData['isblocked'] ) $data['isblocked'] = $inData['isblocked'];
         $data['access_time'] = $inData['access_time'] ? $inData['access_time'] : date('Y-m-d H:i:s');
 
         $res = Yii::app()->db->createCommand()
@@ -1457,7 +1467,8 @@ private function registerUserFirsStep($inData)
         if( $idUs && $res['isblocked'] != 2 )
         {
             return array('error' => 1, 'message' => 'Пользователь с таким email адресом уже есть', 'inputData' => $inData['inputData']);
-        } // endif
+        } // end
+
 
         // пользователь уже есть
         if($idUs)
@@ -1465,7 +1476,7 @@ private function registerUserFirsStep($inData)
             $this->userUpdate(array('email' => $inData['inputData']['email'],
                 'passw' => $inData['inputData']['pass'],
                 'isblocked' => 2,
-                'ismoder' => 1,
+                'ismoder' => 0,
                 'status' => $inData['type'],
              
             ), 'id_user = ' . $res['id_user']);
@@ -1474,7 +1485,7 @@ private function registerUserFirsStep($inData)
 
 
         } else {
-              if(!empty($inData['inputData']['phone'])) $inData['inputData']['email'] = $inData['inputData']['phone'];
+             if(!empty($inData['inputData']['phone'])) $inData['inputData']['email'] = $inData['inputData']['phone'];
             $idUs = $this->userInsert(array('email' => $inData['inputData']['email'],
                 'passw' => $inData['inputData']['pass'],
                 'login' => $inData['inputData']['email'],
@@ -1489,8 +1500,8 @@ private function registerUserFirsStep($inData)
         $uid = md5($idUs);
         $password = $inData['inputData']['pass'];
 
-
         } // endif
+
         // Generate TOKEN
 
         $token = md5($inData['inputData']['email'] . date("d.m.Y H:i:s") . md5($inData['inputData']['pass']));
