@@ -487,6 +487,7 @@ class Api
     }
     
     public function error_refuse($data){
+        var_dump($data);
         if(!$data['error']){
              $status = 200;
         } else {
