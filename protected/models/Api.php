@@ -114,9 +114,6 @@ class Api
                 case 'import' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->testInfo(); break;
                 case 'rest_one_day': $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getRestOneDay(); break;
                 
-                
-                 
-                
 
                 default: throw new ExceptionApi('No such method', 1001);
 
@@ -141,7 +138,7 @@ class Api
        
         $status = $this->error_refuse($data);
         
-        header("Content-type: application/json;charset=utf-8';HTTP/1.1 " . $status . " " . $this->requestStatus($status));
+        header("HTTP/1.1 " . $status . " " . $this->requestStatus($status));
         return $data;
     }
     
