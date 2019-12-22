@@ -4534,7 +4534,7 @@ public function vac(){
         $email = filter_var(Yii::app()->getRequest()->getParam('param'), FILTER_SANITIZE_EMAIL);
 
         $RestorePass = new RestorePass();
-        $res = $RestorePass->passRestoreRequest(compact('email'));
+        $res = $RestorePass->passRestoreRequestAPI(compact('email'));
         if( $res['error'] == 1 ) return ['success' => 1] ;
         else return $res;
     }
