@@ -1446,8 +1446,7 @@ class Api
             500 => 'Internal Server Error',
         );
         
-        echo $status[$code];
-        return ($status[$code])?$status[$code]:$status[500];
+        return $status[$code];
     }
     
     public function authUsers()
