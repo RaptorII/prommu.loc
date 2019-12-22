@@ -138,7 +138,8 @@ class Api
        
         $status = $this->error_refuse($data);
         
-        header("HTTP/1.1 " . $status . " " . $this->requestStatus($status).";Content-type: 'application/json'");
+        header("HTTP/1.1 " . $status . " " . $this->requestStatus($status));
+        header("Content-type: 'application/json'");
         return $data;
     }
     
