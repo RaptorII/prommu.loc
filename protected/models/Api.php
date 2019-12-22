@@ -487,11 +487,11 @@ class Api
     }
     
     public function error_refuse($data){
-        var_dump($data);
-        if(!$data['error']){
-             $status = 200;
-        } else {
+       
+        if($data['error']){
              $status = 500;
+        } else {
+             $status = 200;
         }
         
         return $status;
