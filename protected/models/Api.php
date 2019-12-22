@@ -495,7 +495,6 @@ class Api
              $status = 200;
         }
         
-        echo $status;
         return $status;
     }
     
@@ -1446,6 +1445,8 @@ class Api
             405 => 'Method Not Allowed',
             500 => 'Internal Server Error',
         );
+        
+        echo $status[$code];
         return ($status[$code])?$status[$code]:$status[500];
     }
     
