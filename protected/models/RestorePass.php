@@ -87,6 +87,88 @@ class RestorePass
     }
 
 
+    public function passRestoreRequestAPI($props = [])
+    {
+        $error = '-101';
+        try
+        {
+            $email = $props['email'] ?: Yii::app()->getRequest()->getParam('email');
+            // if( !$email ) throw new Exception('', -102);
+
+            $sql = "SELECT e.id_user
+            FROM user e
+            WHERE e.email = '{$email}' AND e.isblocked = 2";
+             $res = Yii::app()->db->createCommand($sql)->queryRow();
+            if( $res ) throw new Exception('', -104);
+
+            if(strpos($email, "@") === false && !empty($email)){
+                
+                $sql = "SELECT id_user
+                    FROM user
+                    WHERE login LIKE '%{$email}%' 
+                    ";
+                $res = Yii::app()->db->createCommand($sql)->queryRow();
+                
+                $User->id_user = $res['id_user'];
+
+                $message = "На указанный вами телефон отправлено письмо со ссылкой для восстановления пароля";
+            }
+            else{
+                $User = User::model()->find('email=:email', [':email' => $email]);
+                if( !$User ) throw new Exception('', -103); 
+                $message = "На указанный вами email адрес отправлено письмо со ссылкой для восстановления пароля";
+            }
+           
+            // получаем hash для ссылки восстановления
+            $token = md5($User->id_user . rand(100000, 1000000) . $User->passw . time());
+
+            $res = Yii::app()->db->createCommand()
+                ->insert('user_activate', array(
+                    'id_user' => $User->id_user,
+                    'token' => $token,
+                    'type' => 1,
+                    'dt_create' => date("Y-m-d H:i:s"),
+                ));
+           
+            $link = Subdomain::site() . DS . MainConfig::$PAGE_NEW_PASS . '/?t=' . $token;
+            if(strripos($email, "@"))
+            {
+                $link .= "&uid=" . $User->id_user;
+                Mailing::set(
+                            6,
+                            array(
+                                'email_user' => $email,
+                                'link_restore_pass' => $link
+                            )
+                        );
+            }
+            else
+            {
+                file_get_contents("https://prommu.com/api.teles/?phone=$email&code=$link");
+            }
+            
+            Yii::app()->user->setFlash('Result', ['error' => 1, 'message' => $message]);
+            $data = ['error' => 1, 'message' => ""];
+
+
+        } catch (Exception $e)
+        {
+            $error = abs($e->getCode());
+            switch( $e->getCode() )
+            {
+                case -102 : $message = 'Введите корректный email адрес'; break; // invalid email
+                case -103 : $message = 'Таких учетных данных не обнаружено среди зарегистрированных пользователей'; break; // token expired
+                case -104 : $message = 'Пользователь не найден - либо вы не подтвердили свой email'; break; // token expired
+                default: $error = 101; $message = 'Ошибка восстановления пароля '.$e->getMessage();
+            }
+
+            $data = ['error' => $error, 'message' => $message];
+        } // endtry
+
+        return $data;
+    }
+
+
 
     /**
      * Поверяем токен смены пароля
