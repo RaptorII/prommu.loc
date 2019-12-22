@@ -140,6 +140,7 @@ class Api
         
        
         $status = $this->error_refuse($data);
+        
         header("Content-type: application/json;charset=utf-8';HTTP/1.1 " . $status . " " . $this->requestStatus($status));
         return $data;
     }
@@ -494,6 +495,7 @@ class Api
              $status = 200;
         }
         
+        echo $status;
         return $status;
     }
     
