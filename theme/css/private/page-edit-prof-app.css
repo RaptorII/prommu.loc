@@ -142,10 +142,10 @@
 }
 
 .epa__logo-name-list {
-  padding: 15px 3px;
+  padding: 15px 3px 15px 20px;
   border-top: 1px solid #D8DEA2;
   border-bottom: 1px solid #D8DEA2;
-  list-style: none;
+  list-style: decimal;
   background-color: #ffffff;
 }
 
@@ -155,8 +155,7 @@
 }
 
 .epa__logo-name {
-  padding-left: 20px;
-  color: #6A6A6A;
+  color: #abb837;
   cursor: pointer;
   font-size: 14px;
   line-height: 24px;

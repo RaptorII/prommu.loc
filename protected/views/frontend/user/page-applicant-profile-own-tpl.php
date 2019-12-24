@@ -740,7 +740,9 @@
     <div class="ppp__module">
       <div class="ppp__city-list">
         <?php foreach($info['userCities'][0] as $city): ?>
+          <?/*?>
           <div class="ppp__city-title"><b>ГОРОД </b></div>
+           <?*/?>
           <div class="ppp__field">
             <span class="ppp__field-name">Город:</span>
             <span class="ppp__field-val"><?=$city['name']?></span>
@@ -759,6 +761,7 @@
               <span class="ppp__field-val"><?=implode(', ', $arMetroes)?></span>
             </div>
           <? endif; ?>
+          <?/*?>
           <h3 class="ppp__cities-title">Дни недели:</h3>
           <div class="ppp__days-checkboxes">
             <?php foreach($arDays as $idDay => $name): ?>
@@ -767,6 +770,7 @@
               </div>
             <?php endforeach; ?>
           </div>
+          <?*/?>
           <div class="ppp__period-list">
             <?php
               if(sizeof($info['userWdays'][$city['id']]))
@@ -782,6 +786,7 @@
         <?php endforeach; ?>
       </div>
     </div>
+    <br>
     <?
     // ADDITIONAL INFO
     ?>

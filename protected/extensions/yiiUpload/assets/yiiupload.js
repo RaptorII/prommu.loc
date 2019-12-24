@@ -318,13 +318,27 @@ var YiiUpload = (function () {
     let self = this,
       result = arguments[0];
 
+    console.log(self.params);
+
     if(typeof result!=='string')
     {
-      result = 'Загрузка файлов' + (self.params.fileFormat.length
-        ? ' (' + self.params.fileFormat.join(', ') + ')' : '');
+      /*result = 'Загрузка файлов' + (self.params.fileFormat.length
+        ? ' (' + self.params.fileFormat.join(', ') + ')' : '');*/
+      result = 'Загрузка файлов';
+      result += (self.params.fileFormat.length
+        ? '<br><small>Допустимые форматы - ' + self.params.fileFormat.join(', ') + '</small>': '');
+      if(self.params.minImageSize > 0)
+      {
+        result += '<br><small>Минимальное разрешение - ' + self.params.minImageSize + 'px</small>';
+      }
+      if(self.params.maxImageSize > 0)
+      {
+        result += '<br><small>Максимальное разрешение - ' + self.params.maxImageSize + 'px</small>';
+      }
+      result += '<br><small>Допустимый размер - до ' + self.params.maxFileSize + 'Мб</small>';
     }
-    $('.YiiUpload__form-title').text(result);
-  }
+    $('.YiiUpload__form-title').html(result);
+  };
   //
   // get stream from webcam
   YiiUpload.prototype.getStream = function (stream)

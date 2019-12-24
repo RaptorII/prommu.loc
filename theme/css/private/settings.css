@@ -395,6 +395,7 @@
   text-align: center;
   line-height: 35px;
   color: #adadad;
+  color: var(--color-black);
 }
 
 .settings-priv__field b {
@@ -481,19 +482,23 @@
 }
 
 #DiContent .settings-page .set-priv__input::-webkit-input-placeholder {
-  color: #dadada
+  color: #dadada;
+  color: var(--color-black);
 }
 
 #DiContent .settings-page .set-priv__input::-moz-placeholder {
-  color: #dadada
+  color: #dadada;
+  color: var(--color-black);
 }
 
 #DiContent .settings-page .set-priv__input:-moz-placeholder {
-  color: #dadada
+  color: #dadada;
+  color: var(--color-black);
 }
 
 #DiContent .settings-page .set-priv__input:-ms-input-placeholder {
-  color: #dadada
+  color: #dadada;
+  color: var(--color-black);
 }
 
 #DiContent .settings-page .set-priv__input:focus {

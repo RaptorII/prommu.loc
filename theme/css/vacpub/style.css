@@ -346,17 +346,17 @@
 }
 
 #DiContent.page-vacpub #F1vacancy .fav__input.fav__input-mini {
-  width: 20px;
+  width: 50px;
   height: 20px;
   padding: 0 2px;
   display: inline-block;
   vertical-align: middle;
 }
-
+/*
 .fav__left-block,
 .fav__right-block {
   float: left
-}
+}*/
 
 .fav__left-block {
   margin-bottom: 20px
@@ -443,7 +443,7 @@ input:checked + .fav__label-checkbox:after {
 }
 
 #DiContent.page-vacpub #F1vacancy .fav__input.fav__input-salary {
-  width: 38px;
+  width: 50px;
   height: 20px;
   padding: 0 1px;
   display: inline-block;
@@ -1469,7 +1469,7 @@ input:checked + .fav__label-checkbox:after {
     right: -200px;
     left: inherit;
   }
-
+/*
   .fav__left-block {
     margin: 0
   }
@@ -1477,7 +1477,7 @@ input:checked + .fav__label-checkbox:after {
   .fav__right-block {
     float: right
   }
-
+*/
   .fav__both-item .fav__label-checkbox {
     margin: 0
   }

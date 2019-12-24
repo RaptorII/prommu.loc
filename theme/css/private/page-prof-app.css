@@ -453,6 +453,11 @@
   padding: 0 15px;
   position: relative;
   display: table;
+  /* */
+  border: 1px solid transparent;
+  margin: 0 0 5px;
+  height: 24px;
+  font-size: 15px;
 }
 
 .ppp__field.error {
@@ -470,6 +475,10 @@
   font-size: 14px;
   font-family: "RobotoCondensedBold", sans-serif, verdana;
   white-space: nowrap;
+  /* */
+  line-height: 24px;
+  font-size: 15px;
+  vertical-align: middle;
 }
 
 .ppp__field-val {
@@ -478,6 +487,9 @@
   line-height: 33px;
   font-size: 14px;
   color: #343434;
+  /* */
+  line-height: 24px;
+  font-size: 15px;
 }
 
 .ppp__checkboxes {

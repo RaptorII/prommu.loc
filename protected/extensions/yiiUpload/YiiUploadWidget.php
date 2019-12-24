@@ -92,7 +92,10 @@ class YiiUploadWidget extends CWidget
 				'reloadAfterUpload' => $this->reloadAfterUpload,
 				'instanceId' => $this->instanceId,
         'arEditImage' => $this->arEditImage,
-        'jsMethodAfterUpload' => $this->jsMethodAfterUpload
+        'jsMethodAfterUpload' => $this->jsMethodAfterUpload,
+        'minImageSize' => $this->minImageSize,
+        'maxImageSize' => $this->maxImageSize,
+        'maxFileSize' => $this->maxFileSize
 			));
 		$s = Yii::app()->session['yiiUpload'];
 		$s[$this->instanceId] = [

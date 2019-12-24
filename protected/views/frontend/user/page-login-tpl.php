@@ -47,7 +47,7 @@
         </label>
         <label class='auth-form__label remember js-g-hashint' title="Запомнить меня">
           <span class="auth-form__label-name">Запомнить меня</span>
-          <input id='ChkRemember' name='remember' type='checkbox' value="1">
+          <input id='ChkRemember' name='remember' type='checkbox' value="1" checked>
           <span class="auth-form__checkbox"></span>
         </label>
         <div class='btn-auth btn-orange-wr'>
