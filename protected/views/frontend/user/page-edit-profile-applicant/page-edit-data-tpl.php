@@ -702,9 +702,10 @@ foreach($attrAll as $p)
             <div class="profile__field epa__language epa__select">
               <b class="profile__field-name">Иностранные языки:</b>
               <?php
-                $arRes = array();
-                $name = '';
-                foreach($viData['langs'] as $val)
+              $arRes = [];
+              $name = '';
+              foreach($viData['userDictionaryAttrs'] as $val)
+                if($val['idpar'] == 40)
                 {
                   $arRes[$val['id']] = $val;
                   if($this->ViewModel->isInArray($attrAll, 'id_attr', $val['id']))
@@ -717,13 +718,16 @@ foreach($attrAll as $p)
               <input type="text" name="epa-str-language" value="<?=$name?>" class="profile__field-input" id="epa-str-language" disabled>
               <div class="epa__label-veil" id="epa-veil-language"></div>
               <ul class="epa__select-list" id="epa-list-language">
-                  <i class="epa__select-list-icon">OK</i>
-                  <?php foreach($arRes as $lang): ?>
-                    <li>
-                      <input type="checkbox" name="langs[]" value="<?=$lang['id']?>" id="epa-language-<?=$lang['id']?>" data-name="Иностранные языки" <?=$lang['checked']?>>
-                      <label for="epa-language-<?=$lang['id']?>"><?=$lang['name']?><b></b></label>
-                    </li>
-                  <?php endforeach; ?>
+                <i class="epa__select-list-icon">OK</i>
+                <li>
+                  <input type="text" name="select-lang" placeholder="поиск языка" value="" class="sel-lang" id="sel-lang">
+                </li>
+                <?php foreach($arRes as $lang): ?>
+                  <li>
+                    <input type="checkbox" name="langs[]" value="<?=$lang['id']?>" id="epa-language-<?=$lang['id']?>" data-name="Иностранные языки" <?=$lang['checked']?>>
+                    <label for="epa-language-<?=$lang['id']?>"><?=$lang['name']?><b></b></label>
+                  </li>
+                <?php endforeach; ?>
               </ul>
             </div>
           </div>

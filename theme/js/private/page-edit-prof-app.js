@@ -16,6 +16,7 @@ var ApplicantEditPage = (function () {
   ApplicantEditPage.prototype.CONTENT_POSITION = $('.epa__logo-name-list').offset().top - 15;
   ApplicantEditPage.prototype.ABOUT_LEN = 2000;
   ApplicantEditPage.prototype.KEY = false;
+  ApplicantEditPage.prototype.LANGS = $('#epa-list-language label').get();
 	//
   function ApplicantEditPage()
   {
@@ -205,6 +206,31 @@ var ApplicantEditPage = (function () {
       '.epa__period input',
       function(){ self.checkPeriod(this) }
     );
+    //  выбор языка
+    $('#sel-lang').on('input', function () {
+      let msg = $(this).val();
+
+      $.each(
+      	self.LANGS,
+				function( key, value )
+				{
+					msg = msg.toLowerCase();
+					value = (value.firstChild.data).toLowerCase();
+
+					if (value.search(msg)==(-1))
+					{
+						$(this).parent().hide();
+					}
+					else if (!msg.toLowerCase().length)
+					{
+						$(this).parent().show();
+					}
+				});
+    });
+		//
+    $('#epa-veil-language').click( function(){
+      $('#sel-lang').focus();
+    });
   };
   //
   // маска для имени и фамилии
