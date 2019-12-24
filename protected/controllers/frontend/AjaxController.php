@@ -66,13 +66,15 @@ class AjaxController extends AppController
     $code = rand(1000, 9999);
     $phone = Yii::app()->getRequest()->getParam('phone');
     $email = Yii::app()->getRequest()->getParam('email');
-    $arInsert = ['code' => $code];
+    $arInsert = ['code' => $code, 'date' => date('Y-m-d H:i:s')];
 
     if(!empty($email))
     {
-      $arInsert['phone'] = $email;
+      $arInsert['email'] = $email;
       // Письмо с кодом для пользователя
       Mailing::set(24, ['email_user'=>$email, 'code'=>$code]);
+      $delCond = 'email=:type';
+      $arDelParams = [':type'=>$email];
     }
     elseif(!empty($phone))
     {
@@ -85,18 +87,14 @@ class AjaxController extends AppController
       curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
       $response = curl_exec($ch);
       curl_close($ch);
-
       echo CJSON::encode($response);
+      $delCond = 'phone=:type';
+      $arDelParams = [':type'=>$phone];
     }
 
-    if(isset($arInsert['phone']))
+    if(isset($arInsert['email']) || isset($arInsert['phone']))
     {
-      Yii::app()->db->createCommand()->delete(
-        'activate',
-        'phone=:phone',
-        [':phone'=> $arInsert['phone']]
-      );
-
+      Yii::app()->db->createCommand()->delete('activate', $delCond, $arDelParams);
       Yii::app()->db->createCommand()->insert('activate', $arInsert);
     }
   }

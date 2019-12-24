@@ -5,15 +5,30 @@
  */
 var ApplicantEditPage = (function () {
   //
+  ApplicantEditPage.prototype.EMAIL = $('#email_input').val();
+  ApplicantEditPage.prototype.PHONE = $('#phone-code').val();
+  ApplicantEditPage.prototype.EMAIL_CONFIRM = $('#email-block .d-none').is('*');
+  //ApplicantEditPage.prototype.PHONE_CONFIRM = $('#phone-block .d-none').is('*');
+  ApplicantEditPage.prototype.URL_CODE_REQUEST = '/ajax/restorecode';
+  ApplicantEditPage.prototype.URL_CODE_CHECK = '/ajax/confirm';
+  ApplicantEditPage.prototype.URL_EMAIL_CHECK = '/ajax/emailVerification';
+  ApplicantEditPage.prototype.RUSSIAN_PHONE_LEN = 10;
+  ApplicantEditPage.prototype.CONTENT_POSITION = $('.epa__logo-name-list').offset().top - 15;
+  ApplicantEditPage.prototype.ABOUT_LEN = 2000;
+  ApplicantEditPage.prototype.KEY = false;
+	//
   function ApplicantEditPage()
   {
     this.init();
   }
   //
+  //
   ApplicantEditPage.prototype.init = function ()
 	{
     let self = this;
-
+    // код клавиши
+    $(document).keydown(function(e){ self.KEY = e.keyCode });
+		// проверка имени
 		$('#main-module [name="name"]')
 			.on(
 				'input',
@@ -26,6 +41,7 @@ var ApplicantEditPage = (function () {
           self.checkName(this);
 				}
 			);
+		// проверка фамилии
     $('#main-module [name="lastname"]')
 			.on(
 				'input',
@@ -38,36 +54,505 @@ var ApplicantEditPage = (function () {
 					self.checkName(this);
 				}
 			);
+		// проверка телефона
+    $('#phone-code')
+			.on(
+				'input focus change paste',
+				function(e){ self.checkPhone(e.type) }
+			);
+    // проверка email
+    $('#email_input')
+      .on(
+        'input focus change paste',
+        function(e){ self.checkEmail(e.type) }
+      );
+    // проверка копипаста
+    $('#main-module [name="name"]').bind('paste',function() {
+      $(this).val($(this).val().trim());
+    	self.checkName(this);
+    });
+    $('#main-module [name="lastname"]').bind('paste',function() {
+      $(this).val($(this).val().trim());
+    	self.checkName(this);
+    });
+    // подтверждение контакта
+		$('#phone-block .prmu-btn, .confirm-user.phone').click(function(){
+			self.confirmCodeRequest('phone');
+		});
+    $('#email-block .prmu-btn, .confirm-user.email').click(function(){
+      self.confirmCodeRequest('email');
+    });
+    $('#phone-confirm .prmu-btn').click(function(){
+      self.confirmCodeCheck('phone');
+    });
+    $('#email-confirm .prmu-btn').click(function(){
+      self.confirmCodeCheck('email');
+    });
+    // добавление нового телефона
+    $('#add_phone').click(function(){
+      let len = $('#contacts-module .epa__add-phone').length,
+        	html = $('#add-additional-phone').html().replace(/NEWNUM/g, len),
+					block = (len ? '#contacts-module .epa__add-phone:eq(-1)' : '#email-confirm');
 
+      if(len>9)
+			{
+				$(this).hide();
+			}
+      $(block).after(html);
+    });
+    // перемещение содержания
+		$(window).on('resize scroll', self.scrollContentList);
+    self.scrollContentList();
+    // ввод данных 'О себе'
+    $('.epa__textarea').on('input', function(){
+			let v = $(this).val();
+      if(v.length>self.ABOUT_LEN)
+			{
+        $(this).val(val.substr(0, self.ABOUT_LEN));
+			}
+		});
+    // проверка доп телефона
+    $(document).on(
+      'input',
+      '.epa__phone',
+      function(){
+        let v = $(this).val().replace(/[^0-9-)(+]/gi,'');
+        $(this).val(v);
+      });
+    // проверка периода времени работы
+    $(document).click(function(e){
+      if(
+      	$(e.target).closest('.epa__period-error').length
+				||
+				$(e.target).is('.epa__period-error')
+			)
+      {
+        let main = $(e.target).closest('.epa__period'),
+						input = $(main).find('.profile__field-input');
 
+				$(input).focus();
+				self.error(main, false);
+      }
+    });
+    $(document).on(
+    	'blur',
+			'.epa__period .profile__field-input',
+			function(e){
+				let v = $(e.target).val().trim();
+
+				setTimeout(function(){ // поле установки подходящего времени в дни недели
+					if(v.length>8)
+					{ // 8 минимум
+						let arVals = v.split('до');
+						if(arVals.length==2)
+						{
+							let from = Number(self.getNum(arVals[0])),
+									to = Number(self.getNum(arVals[1]));
+
+							self.error(e.target, (from>23 || to>24 || from>=to)); // проверяем правильность временного промежутка
+						}
+					}
+					else if(!v.length)
+					{
+						self.error(e.target, true);
+					}
+					else
+					{
+						self.error(e.target, false);
+					}
+				},100);
+    });
+    // инициализация календаря
+    $("#birthday").datepicker({
+      maxDate: '-14y',
+      changeYear: true,
+      yearRange: "1970:2005",
+      beforeShow: function(){ $('#ui-datepicker-div').addClass('custom-calendar') }
+    });
+    // проверка корректности даты
+		$('#birthday').change(function(){
+			if(this.value.length)
+			{
+				let objDate = $(this).datepicker('getDate'),
+						checkYear = new Date().getFullYear() - 14,
+						d = String(objDate.getDate()),
+						m = String(objDate.getMonth()+1),
+						y = objDate.getFullYear();
+
+				d = d.length<2 ? ('0'+d) : d;
+				m = m.length<2 ? ('0'+m) : m;
+				y = checkYear<y ? checkYear : y;
+
+				this.value = d + '.' + m + '.' + y;
+				if(this.value=='01.01.1970')
+				{
+					self.error(this, true);
+					this.value='';
+				}
+				else
+				{
+          self.error(this, false);
+				}
+			}
+			else
+			{
+        self.error(this, true);
+			}
+		});
+    //	устанавливаем маски
+    $(document).on(
+      'input',
+      '.epa__period input',
+      function(){ self.checkPeriod(this) }
+    );
   };
+  //
   // маска для имени и фамилии
   ApplicantEditPage.prototype.checkName = function (input) {
     if(!$(input).is('*'))
       return true;
 
-    let v = $(input).val().replace(/[^ a-zA-ZА-Яа-яЁё]/gi,''),
-				parent = $(input).closest('.profile__field');
+    let v = $(input).val().replace(/[^ a-zA-ZА-Яа-яЁё]/gi,'');
 
     $(input).val((v.charAt(0).toUpperCase() + v.slice(1).toLowerCase()));
 
-    return this.error(parent, !$(input).val().trim().length);
+    return this.error(input, !$(input).val().trim().length);
 	};
+  //
+	// Проверка телефона
+  ApplicantEditPage.prototype.checkPhone = function (event)
+	{
+    let self = this,
+				$inp = $('#phone-code'),
+				v = $inp.val(),
+				isPhone = self.getNum(v).length == self.RUSSIAN_PHONE_LEN;
+
+    if(event!='input')
+    {
+      self.error($inp, !isPhone);
+      if(event=='focus' && !isPhone)
+      {
+        $inp.val('');
+      }
+      else if(event=='change' && v!==self.PHONE && isPhone)
+			{
+        self.setConfirmMark('phone',true);
+				$('#phone-block .profile__col').eq(1).show();
+        self.EMAIL_CONFIRM
+          ? $('#phone-block .clearfix').hide()
+          : $('#phone-block .clearfix').show();
+      }
+      else if(event=='paste')
+			{
+				setTimeout(function(){
+					if($('#phone-code').val()!==self.PHONE && isPhone)
+					{
+            self.setConfirmMark('phone',true);
+            $('#phone-block .profile__col').eq(1).show();
+            self.EMAIL_CONFIRM
+              ? $('#phone-block .clearfix').hide()
+              : $('#phone-block .clearfix').show();
+					}
+				},50);
+			}
+    }
+    else
+    {
+      self.error($inp, !isPhone);
+    }
+  };
+  //
+	// Запрос на уникальность email
+  ApplicantEditPage.prototype.checkEmail = function (event)
+  {
+    let self = this,
+      	$inp = $('#email_input'),
+      	v = $inp.val().trim(),
+      	pattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i,
+				error = false;
+
+    if(event=='input')
+		{
+      self.error($inp, !v.length);
+		}
+		else if(event=='focus')
+		{
+			if(!$('#email-field').hasClass('erroremail'))
+			{
+        self.error($inp, !pattern.test(v));
+			}
+		}
+		else
+    {
+      error = !pattern.test(v);
+			if(!error) // похоже на почту
+			{
+				if(v!=self.EMAIL) // проверка на уникальность
+				{
+					MainScript.stateLoading(true);
+					$.ajax({
+						type: 'POST',
+						url: self.URL_EMAIL_CHECK,
+						data: 'nemail='+v+'&oemail='+self.EMAIL,
+						dataType: 'json',
+						success: function(ajaxError)
+						{
+							MainScript.stateLoading(false);
+							self.error($inp, ajaxError);
+							if(ajaxError)
+							{
+								$('#email-field').addClass('erroremail');
+                self.setConfirmMark('email',false);
+                $('#email-block .profile__col').eq(1).hide();
+							}
+							else
+							{
+								$('#email-field').removeClass('erroremail');
+                self.setConfirmMark('email',true);
+                $('#email-block .profile__col').eq(1).show();
+								self.EMAIL = v;
+                self.EMAIL_CONFIRM = false;
+                $('#phone-block .clearfix').show();
+							}
+							//errorFieldName('#epa-email',r);
+						}
+					});
+				}
+				else // введена текущая почта
+				{
+          $('#email-field').removeClass('erroremail');
+          self.error($inp, error);
+				}
+			}
+			else // ошибка по шаблону
+			{
+        self.error($inp, error);
+        $('#email-field').removeClass('erroremail');
+			}
+		}
+  };
+  //
+  // Запрос кода для подтверждения
+  ApplicantEditPage.prototype.confirmCodeRequest = function (e)
+  {
+    let self = this,
+				v = e==='email'
+					? $('#email_input').val()
+					: ($('[name="__phone_prefix"]').val() + $('#phone-code').val()),
+				input = e==='email' ? $('#email_input') : $('#phone-code'),
+				parent = $(input).closest('.profile__field'),
+      	check = e==='email'
+					? $('#email_input').val().trim()
+					: $('#phone-code').val().trim();
+
+		if(check.length && !$(parent).hasClass('error'))
+		{
+      MainScript.stateLoading(true);
+			$.ajax({
+				type: 'POST',
+				url: self.URL_CODE_REQUEST,
+				data: e + '='+ v,
+				success: function(){
+          MainScript.stateLoading(false);
+					self.showMessage('На ' + (e==='email' ? 'почту' : 'телефон')
+						 + ' выслан код для подтверждения. Введите его в поле "Проверочный код"');
+          $('#' + e + '-block').hide();
+          $('#' + e + '-confirm').fadeIn();
+				}
+			});
+		}
+		else
+		{
+			self.error(input);
+		}
+  };
+  //
+	// проверка введенного кода
+  ApplicantEditPage.prototype.confirmCodeCheck = function (e)
+  {
+    let self = this,
+				p = e==='email',
+      	value = p
+					? $('#email_input').val()
+					: ($('[name="__phone_prefix"]').val() + $('#phone-code').val()),
+      	code = $('#' + e + '-confirm input').val(),
+				btnBlock = $('#' + e + '-block .profile__col').eq(1);
+
+    if(code.length)
+    {
+			MainScript.stateLoading(true);
+      $('#' + e + '-confirm').hide();
+      $.ajax({
+        type: 'POST',
+        url: self.URL_CODE_CHECK,
+        data: 'code='+ code + '&' + e + '=' + value,
+        dataType: 'json',
+        success: function(r)
+				{
+          MainScript.stateLoading(false);
+
+          if(r.code==200)
+          {
+            if(p)
+            {
+            	self.showMessage('Электронная почта подтверждена');
+              self.EMAIL = value;
+              self.setConfirmMark(e, false);
+              self.EMAIL_CONFIRM
+                ? $('#phone-block .clearfix').hide()
+                : $('#phone-block .clearfix').show();
+            }
+            else
+						{
+              self.showMessage('Номер телефона подтвержден');
+              self.PHONE = $('#phone-code').val();
+              self.setConfirmMark(e, false);
+              self.EMAIL_CONFIRM
+								? $('#phone-block .clearfix').hide()
+								: $('#phone-block .clearfix').show();
+            }
+            $(btnBlock).hide();
+          }
+          else
+					{
+            self.showMessage('Введен некорректный код');
+            p ? $('#email_input').val(self.EMAIL) : $('#phone-code').val(self.PHONE);
+            $(btnBlock).show();
+          }
+          $('#' + e + '-confirm input').val('');
+          $('#' + e + '-block').fadeIn();
+        }
+      });
+    }
+  };
+  //
+  // вывод сообщений
+  ApplicantEditPage.prototype.showMessage = function (message)
+	{
+    $("body").append('<div class="prmu__popup" id="edit_profile_popup"><p>' + message + "</p></div>");
+    $.fancybox.open({
+      src: "#edit_profile_popup",
+      type: "inline",
+      touch: false,
+      afterClose: function() { $("body>div.prmu__popup").remove() }
+    })
+	};
+  //
   // утсановка поля
   ApplicantEditPage.prototype.error = function (e, error)
   {
+    let block = ($(e).hasClass('.profile__field')
+      	? e : $(e).closest('.profile__field'));
+
     if(error)
     {
-      $(e).addClass('error');
+      $(block).addClass('error');
       return false;
     }
     else
     {
-      $(e).removeClass('error');
+      $(block).removeClass('error');
       return true;
     }
   };
   //
+  // получаем строку чисел
+  ApplicantEditPage.prototype.getNum = function (value)
+	{
+    return value.replace(/\D+/g,'')
+	};
+  //
+	// установка маркера "Не подтверждено"
+  ApplicantEditPage.prototype.setConfirmMark = function (type, setBlock)
+	{
+		if(setBlock==false)
+		{
+			$('.confirm-user.'+type).remove();
+			type==='email' ? this.EMAIL_CONFIRM = true : this.PHONE_CONFIRM = true;
+		}
+		else
+		{
+      if(type==='phone' && !$('.confirm-user.phone').is('*'))
+      {
+        $('.epa__logo-name-list').before('<div class="confirm-user phone">Необходимо подтвердить телефон</div>');
+        this.PHONE_CONFIRM = false;
+      }
+      if(type==='email' && !$('.confirm-user.email').is('*'))
+      {
+        $('.epa__logo-name-list').before('<div class="confirm-user email">Необходимо подтвердить почту</div>');
+        this.EMAIL_CONFIRM = false;
+      }
+		}
+	};
+  // Позиция содержания
+  ApplicantEditPage.prototype.scrollContentList = function ()
+  {
+    (
+      $(document).scrollTop() > ApplicantEditPage.prototype.CONTENT_POSITION
+      &&
+      $(window).width() > 767
+    )
+      ? $('.epa__logo-name-list').addClass('fixed')
+      : $('.epa__logo-name-list').removeClass('fixed');
+  };
+  // Проверка периода
+  ApplicantEditPage.prototype.checkPeriod = function (e)
+  {
+    let self=this, v=e.value, l=v.length;
+
+    if(self.KEY==8)
+    { //backspace
+      if(l==8 || l==7)
+      {
+        let arV = v.split(' до ');
+        if(arV[0]===v)
+          v = 'С ' + self.getNum(v).substr(0,2);
+        else if(!self.getNum(arV[1]).length)
+          v = 'С ' + self.getNum(v);
+      }
+      if(l==2)
+			{
+        v = '';
+			}
+    }
+    else
+		{
+      if(!self.getNum(v).length)
+        v = 'С ';
+      if(l==1 && self.getNum(v).length==1)
+        v = 'С ' + self.getNum(v);
+      if(l==4 && self.getNum(v).length==2 )
+        v = 'С ' + self.getNum(v) + ' до ';
+      if(l==4 && self.getNum(v).length==1)
+        v = (v.substr(-1)==' ' ? 'С ' + self.getNum(v)
+							+ ' до ' : 'С ' + self.getNum(v));
+      if(l==5)
+      {
+        let s = v.substr(-1);
+        if(self.getNum(s).length==1)
+          v = 'С ' + self.getNum(v).substr(0,2) + ' до ' + s;
+        else if(s==' ')
+          v = 'С ' + self.getNum(v) + ' до ';
+        else
+          v = 'С ' + self.getNum(v);
+      }
+      if(l>=7)
+      {
+        let arV = v.split(' до ');
+        if(arV[0]===v)
+        {
+          v = 'С ' + self.getNum(v).substr(0,2) + ' до ' + self.getNum(v).substr(2,4);
+        }
+        else
+				{
+          v = 'С ' + self.getNum(arV[0]).substr(0,2) + ' до ' + self.getNum(arV[1]).substr(0,2);
+        }
+      }
+    }
+
+    e.value = v;
+  };
+	//
   return ApplicantEditPage;
 }());
 /*
@@ -88,47 +573,32 @@ $(document).ready(function () {
 
 
 jQuery(function($){
-	var strYear = 4, // год - 4 цифры
-		strAbout = 2000, // ограничение для поля "О себе"
-		hwLen = 3, // Вес-рост - 3 цифры
-		phoneLen = 10, // нормальное кол-во цифр в телефоне
-		curDate = new Date(),
-		curYear = curDate.getFullYear(),
-		curDay = Number(curDate.getDate()),
-		bYear = Number($('#epa-byear').val()),
-		bMonth = Number($('#epa-bmonth').val())-1,
-		bDay = Number($('#epa-bday').val()),
-		oldEmail = $('#epa-email').val(),
-		cityM = '#city-module',
-		cntctM = '#contacts-module',
-		mainM = '#main-module',
-		emailTimer = null,
-		arSelectPhones = [],
-		arErrorsFields = [],
-		arIdCities = [],
-		arNewPosts = [],
-		arSelectMetroes = [],
-		arSelect = [
-			'messenger',
-			'hcolor',
-			'hlen',
-			'ycolor',
-			'chest',
-			'waist',
-			'thigh',
-						//'posts', // list of vacancy <ul id="epa-list-posts"> in
-			'education',
-			'language'
-		],
-		oldPhone = $('#phone-code').val(),
-		oldFlag = '',
-		keyCode = false,
-		confirmEmail = $('#conf-email').hasClass('complete') ? true : false,
-		confirmPhone = $('#conf-phone').hasClass('complete') ? true : false;
+	var hwLen = 3, // Вес-рост - 3 цифры
+			oldEmail = $('#epa-email').val(),
+			cityM = '#city-module',
+			cntctM = '#contacts-module',
+			mainM = '#main-module',
+			emailTimer = null,
+			arErrorsFields = [],
+			arIdCities = [],
+			arNewPosts = [],
+			arSelectMetroes = [],
+			arSelect = [
+				'messenger',
+				'hcolor',
+				'hlen',
+				'ycolor',
+				'chest',
+				'waist',
+				'thigh',
+							//'posts', // list of vacancy <ul id="epa-list-posts"> in
+				'education',
+				'language'
+			],
+			keyCode = false;
 
 	$(document).keydown(function(e){ keyCode = e.keyCode });
 
-	curDate.setFullYear(curYear-14); // ограничение по возрасту от 14 лет
 	// прокрутка по содержанию
 	$('.epa__logo-name').click(function(){
 		var num = $(this).index();
@@ -144,8 +614,6 @@ jQuery(function($){
 	$.each($(cityM+' .epa__metro-item [type=hidden]'), function(){
 		arSelectMetroes.push($(this).val());
 	});
-	// собираем выбранные телефоны
-	updateArSelectPhones();
 	//
 	$(document).on('click', function(e){
 		var it = e.target;
@@ -167,26 +635,6 @@ jQuery(function($){
 		}
 		else if($(it).is('.epa__post-btn') || !$(it).closest('.epa__post-list').length)
 			$('.epa__post-list').fadeOut();
-	});
-	// события выбора мессенджера
-	$('#epa-list-messenger input').on('change', function(){
-		var arInputs = $('#epa-list-messenger input'),
-			arMess = [];
-			showHint = false;
-		$.each(arInputs, function(){
-			mess = $(this).data('mess');
-			if($(this).is(':checked')){
-				arMess.push($(this).siblings('label').text());
-				$('.epa__mess-'+mess).removeClass('off');
-				showHint = true;
-			}
-			else{
-				$('.epa__mess-'+mess).addClass('off');
-				$('.epa__mess-'+mess+' input').val('');
-			}
-		});
-		$('#epa-str-messenger').val(arMess);
-		showHint ? $('.epa__mess-hint').removeClass('off') : $('.epa__mess-hint').addClass('off');
 	});
 	// события изменения внешности
 	$('#epa-list-hcolor input').on('change', function(){ changeRadio('hcolor') }); 
@@ -250,9 +698,9 @@ jQuery(function($){
 	});
 	// установка параметров должности
 	$('.epa__post-detail').on('change', '[type=radio]', function(e){
-		var newVal = $(e.target.nextElementSibling).text(),
-			list = $(e.target).closest('ul');
-			input = $(list).siblings('input');
+		let newVal = $(e.target.nextElementSibling).text(),
+				list = $(e.target).closest('ul'),
+				input = $(list).siblings('input');
 
 		$(input).val(newVal);
 		$(list).fadeOut();
@@ -277,64 +725,6 @@ jQuery(function($){
 			confirm('Должна быть установлена хотя бы одна вакансия');
 		}
 	});
-	// ввода данных 'О себе'
-	$('.epa__textarea').keyup(function(){
-		var val = $(this).val();
-		if(val.length>strAbout)
-			$(this).val(val.substr(0,strAbout));
-	});
-	//	устанавливаем маски
-	$("#city-module .epa__period .epa__input").on(
-			'input',
-			function(){ checkPeriod(this) }
-		);
-
-	function checkPeriod (e){
-		var v = e.value,
-				l = v.length;
-
-		if(keyCode==8) { //backspace
-			if(l==8 || l==7) {
-				var arV = v.split(' до ');
-				if(arV[0]===v)
-					v = 'С ' + getNum(v).substr(0,2);
-				else if(!getNum(arV[1]).length)
-					v = 'С ' + getNum(v);
-			}
-			if(l==2)
-				v = '';
-		}
-		else {
-			if(!getNum(v).length)
-				v = 'С ';
-			if(l==1 && getNum(v).length==1) 
-				v = 'С ' + getNum(v);
-			if(l==4 && getNum(v).length==2 )
-				v = 'С ' + getNum(v) + ' до ';
-			if(l==4 && getNum(v).length==1)
-				v = (v.substr(-1)==' ' ? 'С ' + getNum(v) + ' до ' : 'С ' + getNum(v));
-			if(l==5) {
-				var s = v.substr(-1);
-				if(getNum(s).length==1) 
-					v = 'С ' + getNum(v).substr(0,2) + ' до ' + s;
-				else if(s==' ') 
-					v = 'С ' + getNum(v) + ' до ';
-				else 
-					v = 'С ' + getNum(v);
-			}
-			if(l>=7) {
-				var arV = v.split(' до ');
-				if(arV[0]===v) {
-					v = 'С ' + getNum(v).substr(0,2) + ' до ' + getNum(v).substr(2,4);
-				}
-				else {
-					v = 'С ' + getNum(arV[0]).substr(0,2) + ' до ' + getNum(arV[1]).substr(0,2);
-				}
-			}
-		}
-
-		e.value = v;
-	}
 	//
 	//  блок для создания города
 	//
@@ -515,8 +905,8 @@ jQuery(function($){
 	//
 	//		Ввод телефона
 	//
-	$(document).on('click',function(e){ checkPhone(e) });
-	$('#phone-code').on('input',function(e){ checkPhone(e) });
+	//$(document).on('click',function(e){ checkPhone(e) });
+	//$('#phone-code').on('input',function(e){ checkPhone(e) });
 	//$(cntctM).on('focus', '.phone-input', function(){ findPhones(this) });  // рлеп выкдючили поиск телефона
 	//$(cntctM).on('keyup', '.phone-input', function(){ findPhones(this) });
 	//  выбор телефона из списка
@@ -544,7 +934,7 @@ jQuery(function($){
 	// добавление/удаление периода
 	$(cityM).on('change', '.epa__day-input', function(){
 		var main = $(this).closest('.epa__city-item'),
-			perList = $(main).find('.epa__period-list'),
+			perList = $(main).find('.epa__period-list>.row'),
 			content = $('#add-day-period').html(),
 			idDay = $(this).val(),
 			dayName = $(this).data('day'),
@@ -601,7 +991,7 @@ jQuery(function($){
         //addErr(label);
 
 		if(val!=='') {
-            arVals = val.split('до');
+            let arVals = val.split('до');
             if (arVals.length == 1) {
                 $(this).val('');
                 addErr(label);
@@ -718,9 +1108,10 @@ jQuery(function($){
 
 							$.each(arTimeItems, function(){ 	// преображаем время в достойный вид
 								var val = $(this).val();
-								if(val!=''){
-									arVals = val.split('до');
-									newVal = getNum(arVals[0]) + '-' + getNum(arVals[1]);
+								if(val!='')
+								{
+									let arVals = val.split('до');
+                  let newVal = getNum(arVals[0]) + '-' + getNum(arVals[1]);
 									$(this).val(newVal)
 								}
 							});
@@ -803,8 +1194,8 @@ jQuery(function($){
 				$.each(arTimeItems, function(){ 	// преображаем время в достойный вид
 					var val = $(this).val();
 					if(val!=''){
-						arVals = val.split('до');
-						newVal = getNum(arVals[0]) + '-' + getNum(arVals[1]);
+						let arVals = val.split('до');
+						let newVal = getNum(arVals[0]) + '-' + getNum(arVals[1]);
 						$(this).val(newVal)
 					}
 				});
@@ -830,18 +1221,7 @@ jQuery(function($){
 	//
 	//	добавить еще один номер
 	//
-	$('.epa__add-phone-btn').click(function(){
-		var label = $(this).closest('.epa__label'),
-			arItems = $(cntctM+' .epa__add-phone'),
-			html = $('#add-additional-phone').html();
 
-		html = html.replace(/NEWNUM/g, arItems.length);
-
-		if(arItems.length>0)
-			$(cntctM+' .epa__add-phone:eq(-1)').after(html);
-		else
-			$(label).after(html);
-	});
 	//
 	$('.epa__req-list').on('click', 'b', function(){
 		var name = $(this).text();
@@ -921,8 +1301,8 @@ jQuery(function($){
 			}
 		});
 		$.each(arTemp, function(){
-			newId = id>0 ? id : this.id;
-			temp = postBlock.replace(/NEWID/g,newId);
+			var newId = id>0 ? id : this.id;
+      var temp = postBlock.replace(/NEWID/g,newId);
 			temp = temp.replace('NEWNAME',this.name);
 			htmlBlock += temp;
 		});
@@ -1089,32 +1469,11 @@ jQuery(function($){
 							}
 							else{
 								$('.epa__email').removeClass('erroremail error');
-								$('#conf-email').removeClass('complete')
-									.html('<p>Почта не подтверждена. <em>Подтвердить</em></p>');
-								confirmEmail = false;
 							}
 						}
 					});
 				}, 500);
 			}	
-		}
-		else
-			if($(label).hasClass('epa__period')){ // поле установки подходящего времени в дни недели
-
-			if(val.length>8){ // 8 минимум
-				var arVals = val.split('до');
-				if(arVals.length==2)
-				{
-					var from = Number(getNum(arVals[0])),
-							to = Number(getNum(arVals[1]));
-
-					res = (from>23 || to>24 || from>=to) ? addErr(label) : remErr(label); // проверяем правильность временного промежутка
-				}
-			}
-			else if(val=='')
-				res = addErr(label);
-			else
-				res = remErr(label);
 		}
 		else if($(label).hasClass('epa__education')) { // образование
 			var selected = false;
@@ -1141,37 +1500,6 @@ jQuery(function($){
 		errorFieldName(e,!res);
 		return res;
 	};
-	//	Поиск телефона
-	function findPhones(e){ 
-		var newV = getNum($(e).val()),
-			newL = newV.length,
-			arResult = [],
-			content = '';
-
-		updateArSelectPhones();
-		$.each(arSelectPhones, function(){
-			var oldV = getNum(this),
-				oldL = oldV.length
-			if(oldV.indexOf(newV)>=0 && newL<oldL) 
-				arResult.push(this);
-		});
-
-		arResult.length>0  
-		? $.each(arResult, function(){ content += '<li>'+this+'</li>' })
-		: content = '';
-
-		$(e).siblings('.phone-list').empty().append(content).fadeIn();
-	}
-	// собираем введенные телефоны
-	function updateArSelectPhones(){ 
-		arSelectPhones = [];
-		$.each($(cntctM+' .epa__phone'), function(){
-			var val = $(this).val(),
-				clearVal = getNum(val);
-			if(clearVal!='' && clearVal.length==phoneLen && $.inArray(val, arSelectPhones)<0) 
-				arSelectPhones.push($(this).val());
-		});
-	}
 	// получаем номер
 	function getNum(value){ return value.replace(/\D+/g,'') }
   	//
@@ -1190,159 +1518,7 @@ jQuery(function($){
 		$('.epa__req-list div').html(strErr);
 		arErrorsFields.length>0 ? $('.epa__req-list').show() : $('.epa__req-list').hide();
 	}
-	//
-	//
-	//
-	var getFlagTimer = setInterval(function(){ // ищем флаг страны
-		if($('.country-phone-selected>img').is('*')){
-			oldFlag = $('.country-phone-selected>img').attr('class');
-			clearInterval(getFlagTimer);
-		}
-	},500);
-	// события верикации
-	$('#conf-email').on('click','em',function(){ restoreCode('email') });
-	$('#conf-phone').on('click','em',function(){ restoreCode('phone') });
-	$('#conf-email-block .epa__confirm-btn').click(function(){ confirmContact('email') });
-	$('#conf-phone-block .epa__confirm-btn').click(function(){ confirmContact('phone') });
 
-	function confirmContact(e){
-		var val = e=='email' ? $('#epa-email').val() : ($('[name="__phone_prefix"]').val() + $('#phone-code').val()),
-			$btn = $('#conf-' + e),
-			$code = $('#conf-' + e + '-inp'),
-			code = $code.val(),
-			$hint = $('.confirm-user.' + e),
-			$block = $('#conf-' + e + '-block'),
-			main = $btn.closest('.epa__label');
-
-		if(code!=''){
-			$btn.addClass('loading').show();
-			$('#conf-email-block').fadeOut();
-			$.ajax({
-				type: 'POST',
-				url: '/ajax/confirm',
-				data: 'code='+ code + '&' + e + '=' + val,
-				dataType: 'json',
-				success: function(r){
-					$btn.removeClass('loading');
-					if(r.code==200){
-						$btn.addClass('complete');
-						$hint.fadeOut(); // спрятали подсказку под лого
-						if(e=='email'){
-							showPopupMess('E-mail подтвержден','Электронная почта подтверждена');
-							$btn.find('p').text('Почта подтверждена');
-							oldEmail = val;
-							confirmEmail = true;
-						}
-						else{
-							showPopupMess('Телефон подтвержден','Номер телефона подтвержден');
-							$btn.find('p').text('Телефон подтвержден');
-							oldPhone = $('#phone-code').val();
-							selectPhoneCode = $('[name="__phone_prefix"]').val();
-							oldFlag = $('.country-phone-selected>img').attr('class');
-							confirmPhone = true;
-						}
-					}
-					else{
-						$hint.fadeIn(); // показали подсказку под лого
-						if(e=='email'){
-							showPopupMess('Ошибка','Электронная почта не подтверждена');
-							$('#epa-email').val(oldEmail);
-							confirmEmail = false;
-						}
-						else{
-							showPopupMess('Ошибка','Номер телефона не подтвержден');
-							$('#phone-code').val(oldPhone);
-							$('[name="__phone_prefix"]').val(selectPhoneCode);
-							$('.country-phone-selected>img').attr('class',oldFlag);
-							$('.country-phone-selected>span').text('+' + selectPhoneCode);
-							confirmPhone = false;
-						}
-					}
-					$code.val('');
-					$block.fadeOut();
-					$(main).fadeIn();
-				}
-			});
-		}
-	}
-	//
-	function restoreCode(e){
-		var val = e==='email' ? $('#epa-email').val() : ($('[name="__phone_prefix"]').val() + $('#phone-code').val()),
-			check = e==='email' ? $('#epa-email').val() : $('#phone-code').val(),
-			$btn = $('#conf-' + e),
-			$block = $('#conf-' + e + '-block'),
-			main = $btn.closest('.epa__label');
-
-		if(!$btn.hasClass('complete') && !$btn.hasClass('loading')){
-			if(check!=='' && !$(main).hasClass('error')){
-
-
-
-				$btn.fadeOut();
-				$.ajax({
-					type: 'POST',
-					url: '/ajax/restorecode',
-					data: e + '='+ val,
-					success: function(r){ 
-						if(e==='email')
-							showPopupMess('Проверка почты','На почту выслан код для подтверждения. Введите его в поле "Проверочный код"');
-						else
-							showPopupMess('Проверка телефона','На телефон выслан код для подтверждения. Введите его в поле "Проверочный код"');
-						$block.fadeIn();
-						$(main).fadeOut();
-					}
-				});				
-			}
-			else{
-				if(e==='email'){
-					addErr($('#epa-email').closest('.epa__label'));
-				}
-				else{
-					addErr($('#phone-code').closest('.epa__label'));
-				}
-			}
-		}		
-	}
-	//
-	$('.confirm-user.email').click(function(){
-		$(this).fadeOut();
-		$('#conf-email em').click();
-	});
-	//
-	$('.confirm-user.phone').click(function(){
-		$(this).fadeOut();
-		$('#conf-phone em').click();
-	});
-	//
-	//
-	//
-	//
-	var timerHintEmail, timerHintPhone;
-	$(document).mousemove(function(e){	// подсказка для подтверждения почты
-		if($(e.target).closest('#conf-email').length || $(e.target).is('#conf-email')){
-			$('#conf-email p').fadeIn(300);
-			clearTimeout(timerHintEmail);
-		};
-		if($(e.target).closest('#conf-phone').length || $(e.target).is('#conf-phone')){
-			$('#conf-phone p').fadeIn(300);
-			clearTimeout(timerHintPhone);
-		}
-	})
-	.mouseout(function(e){	// подсказка для подтверждения телефона
-		if(!$(e.target).closest('#conf-email').length && !$(e.target).is('#conf-email')){
-			clearTimeout(timerHintEmail);
-			timerHintEmail = setTimeout(function(){ $('#conf-email p').fadeOut(300) },500);
-		}
-		if(!$(e.target).closest('#conf-phone').length && !$(e.target).is('#conf-phone')){
-			clearTimeout(timerHintPhone);
-			timerHintPhone = setTimeout(function(){ $('#conf-phone p').fadeOut(300) },500);
-		}
-	});
-	//
-	function showPopupMess(t, m){
-		var html = "<form data-header='" + t + "'>" + m + "</form>";
-		ModalWindow.open({ content: html, action: { active: 0 }, additionalStyle:'dark-ver' });
-	}
 	// проверка номера
 	function checkPhone(e){
 		var $inp = $('#phone-code'),
@@ -1355,12 +1531,7 @@ jQuery(function($){
 				$inp.val('');
 			}
 			else{
-				remErr($inp.closest('.epa__label')); 
-				if($inp.val()!==oldPhone){
-					$('#conf-phone').removeClass('complete')
-						.html('<p>Телефон не подтвержден. <em>Подтвердить</em></p>');
-					confirmPhone = false;
-				}
+				remErr($inp.closest('.epa__label'));
 			}
 		}
 		if(e.type=='input'){
@@ -1369,33 +1540,9 @@ jQuery(function($){
 			}
 			else{
 				remErr($inp.closest('.epa__label'));
-				if($inp.val()!==oldPhone){
-					$('#conf-phone').removeClass('complete')
-						.html('<p>Телефон не подтвержден. <em>Подтвердить</em></p>');
-					confirmPhone = false;
-				}
 			}
 		}
 	}
-    if (window.screen.width < 768) {
-        //
-        //
-        // управляем позицией блока содержания
-        var posContentList = $('.epa__logo-name-list').offset().top - 15;
-        $(window).on('resize scroll', scrollContentList);
-        scrollContentList();
-
-        function scrollContentList() {
-            (
-                $(document).scrollTop() > posContentList
-                &&
-                $(window).width() > 767
-            )
-                ? $('.epa__logo-name-list').addClass('fixed')
-                : $('.epa__logo-name-list').removeClass('fixed');
-        }
-    }
-
     //fixed menu in personal account
     var posAccMenu = $('.personal-acc__menu').offset().top - 100;
     $(window).on('resize scroll',scrollAccMenu);
@@ -1422,65 +1569,5 @@ jQuery(function($){
 	checkField('[name="user-attribs[edu]"]');
 	checkField('[name="langs[]"]');
 	checkPhone({type:'input'});
-
-	// console.log('test');
-
 	//
-	//
-	// инициализация календаря
-	$("#birthday").datepicker({
-		maxDate: '-14y',
-		changeYear: true,
-		yearRange: "1970:2005",
-		beforeShow: function(){
-			$('#ui-datepicker-div').addClass('custom-calendar');
-		}
-	});
-	// проверка корректности даты
-	if($('#birthday').is('*'))
-	{
-		$('#birthday').change(function(){
-			if(this.value.length)
-			{
-				let objDate = $(this).datepicker('getDate'),
-						checkYear = new Date().getFullYear() - 14,
-						d = String(objDate.getDate()),
-						m = String(objDate.getMonth()+1),
-						y = objDate.getFullYear();
-
-				d = d.length<2 ? ('0'+d) : d;
-				m = m.length<2 ? ('0'+m) : m;
-				y = checkYear<y ? checkYear : y;
-
-				this.value = d + '.' + m + '.' + y;
-				if(this.value=='01.01.1970')
-				{
-					addErr('.epa__label.epa__date');
-					this.value='';
-				}
-				else
-				{
-					remErr('.epa__label.epa__date');
-				}
-			}
-			else
-			{
-				addErr('.epa__label.epa__date');
-			}
-		});
-	}
-	//
-	$(document).click(function(e){
-		if($(e.target).closest('.epa__period-error').length || $(e.target).is('.epa__period-error'))
-		{
-			var main = $(e.target).closest('.epa__period')[0],
-					input = $(main).find('.epa__input');
-			$(input).focus();
-			remErr(main);
-		}
-	});
-	//
-	$(cityM).on('blur','.epa__period .epa__input',function(e){
-		setTimeout(function(){ checkField(e.target) },100);
-	});
 });

@@ -261,15 +261,14 @@
   box-shadow: inset 0px 0px 3px red;
   border: 1px solid red;
 }
-
-#DiContent .edit-profile-applicant .epa__email:before {
+#email-field:before {
   content: attr(data-error);
-  width: 300px;
+  width: 200px;
   margin-left: 50%;
   padding: 0 3px;
   position: absolute;
   top: -9px;
-  left: -150px;
+  left: -100px;
   background: #FFFFFF;
   border: 1px solid red;
   border-radius: 5px;
@@ -283,8 +282,7 @@
   transition: opacity .3s ease-out;
   opacity: 0;
 }
-
-#DiContent .edit-profile-applicant .erroremail:before {
+#email-field.erroremail:before {
   opacity: 1
 }
 
@@ -293,7 +291,7 @@
   top: 0;
   left: 0;
   line-height: 33px;
-  font-size: 14px;
+  font-size: 15px;
   font-family: "RobotoCondensedBold", sans-serif, verdana;
 }
 
@@ -312,6 +310,7 @@
   width: 100%;
   position: relative;
   text-align: right;
+  font-size: 15px;
 }
 
 #DiContent .epa__input.epa__post-period {
@@ -327,7 +326,7 @@
   width: auto;
   height: 33px;
   line-height: 33px;
-  font-size: 14px;
+  font-size: 15px;
   display: inline-block;
   color: #343434;
   background-color: transparent;
@@ -1036,7 +1035,10 @@ input:checked + .epa__checkbox:after {
   min-height: 125px;
   font-size: 14px;
 }
-
+#DiContent .epa__about .epa__textarea{
+  max-width: initial;
+  padding: 0 15px 15px;
+}
 #DiContent .epa__about .epa__textarea:focus {
   outline: none
 }
@@ -1182,8 +1184,8 @@ input:checked + .epa__checkbox:after {
 #DiContent .edit-profile-applicant .epa__day-input {
   position: absolute;
   opacity: 0;
-  left: 10%;
-  width: 90%;
+  left: 0;
+  width: 100%;
   height: 20px;
   z-index: 1;
   cursor: pointer;
@@ -1250,8 +1252,8 @@ input:checked + .epa__checkbox:after {
   width: 29px;
   height: 29px;
   position: absolute;
-  top: 3px;
-  right: 8px;
+  top: 2px;
+  right: 2px;
   background-color: rgba(52, 52, 52, 0.6);
   border-radius: 3px;
   color: #FFFFFF;
@@ -1595,265 +1597,9 @@ input:checked + .epa__checkbox:after {
 .epa-logo__webcam:after {
   background-position: 50% 6px;
 }
-
-/*
-*		verification fields
-*/
-.epa__confirm {
-  width: 29px;
-  height: 29px;
-  display: block;
-  position: absolute;
-  right: 8px;
-  top: 3px;
-  background: rgba(171, 184, 55, 0.5);
-  line-height: 16px;
-  text-align: center;
-  z-index: 2;
-  border-radius: 50%;
-  -webkit-transition: all 0.3s ease-out;
-  -moz-transition: all 0.3s ease-out;
-  -o-transition: all 0.3s ease-out;
-  transition: all 0.3s ease-out;
-  cursor: default;
-}
-
-#phone-field .epa__confirm {
-  right: 39px
-}
-
-.epa__confirm:hover {
-  background: rgba(171, 184, 55, 1)
-}
-
-.epa__confirm.complete {
-  background: rgba(171, 184, 55, 0.5)
-}
-
-.epa__confirm:before {
-  content: '?';
-  display: block;
-  position: absolute;
-  top: 7px;
-  right: 7px;
-  bottom: 7px;
-  left: 7px;
-  /*background: url(/theme/pic/private/not-confirm.png) 1px 0px no-repeat;*/
-  z-index: 0;
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--color-red);
-}
-
-.epa__confirm.complete:before {
-  content: '\2714';
-  background-image: none;
-}
-
-.epa__confirm.loading {
-  opacity: 1;
-  background: #FFFFFF;
-  cursor: default;
-}
-
-.epa__confirm.loading:before {
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: url(/theme/pic/loading1.gif) no-repeat;
-  background-size: cover;
-}
-
-.epa__confirm-block {
-  display: none;
-  width: 100%;
-  font-size: 12px;
-  margin: 0 0 10px;
-  position: relative;
-}
-
-#DiContent .edit-profile-applicant .epa__confirm-block .epa__label {
-  width: 55%;
-  float: left;
-  height: 30px;
-}
-
-#DiContent .edit-profile-applicant .epa__confirm-block .epa__input {
-  padding-left: 45px;
-  line-height: 28px;
-  height: 28px;
-}
-
-.epa__confirm-btn {
-  display: block;
-  width: 43%;
-  float: right;
-  margin: 0;
-  line-height: 30px;
-  padding: 0 5px;
-  text-align: center;
-  color: #FFFFFF;
-  font-size: 14px;
-  background: #ff8300;
-  cursor: pointer;
-}
-
-.epa__confirm-block .epa__label-name {
-  line-height: 28px;
-}
-
-.epa__confirm-text {
-  display: block;
-  margin: 5px;
-}
-
-.epa__confirm p {
-  position: absolute;
-  top: 40px;
-  right: -15px;
-  padding: 10px;
-  margin: 0;
-  background-color: #abb820;
-  color: #ffffff;
-  font-weight: normal;
-  text-align: center;
-  line-height: 14px;
-  border: 1px solid #ffffff;
-  border-radius: 5px;
-  z-index: 2;
-  cursor: default;
-  display: none;
-  font-size: 12px;
-}
-
-#conf-phone.epa__confirm p {
-  bottom: 42px;
-  top: initial;
-}
-
-.epa__confirm p:before,
-.epa__confirm p:after {
-  content: '';
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  position: absolute;
-  right: 18px;
-}
-
-#conf-mail.epa__confirm p:before {
-  border-bottom: 10px solid #ffffff;
-  top: -11px;
-}
-
-#conf-mail.epa__confirm p:after {
-  border-bottom: 10px solid #abb820;
-  top: -10px;
-}
-
-#conf-phone.epa__confirm p:before {
-  border-top: 10px solid #ffffff;
-  bottom: -11px;
-}
-
-#conf-phone.epa__confirm p:after {
-  border-top: 10px solid #abb820;
-  bottom: -10px;
-}
-
-.epa__confirm em {
-  font-style: normal;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-/*
-*		popup
-*/
-#DiSiteWrapp #DiContent #MWwrapper .mw-win.dark-ver {
-  width: 350px;
-  left: -175px;
-}
-
-#DiSiteWrapp #DiContent #MWwrapper .mw-win.dark-ver {
-  background: #5aad17;
-  background: -moz-linear-gradient(-45deg, #5aad17 0%, #0f4801 100%);
-  background: -webkit-linear-gradient(-45deg, #5aad17 0%, #0f4801 100%);
-  background: linear-gradient(135deg, #5aad17 0%, #0f4801 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#5aad17', endColorstr='#0f4801', GradientType=1);
-  padding: 40px;
-  border: none;
-  color: #FFFFFF;
-  border-radius: 10px;
-}
-
-#DiSiteWrapp #DiContent #MWwrapper .header {
-  border: none;
-  margin: 0;
-  font-size: 24px;
-  font-weight: normal;
-}
-
-#DiSiteWrapp #DiContent #MWwrapper .header div {
-  padding: 0 0 10px;
-  position: static;
-  background: transparent;
-  font-size: 24px;
-  font-weight: normal;
-}
-
-#DiSiteWrapp #DiContent #MWwrapper .mw-close {
-  width: 29px;
-  height: 29px;
-  background: none;
-  border-radius: 15px;
-  top: 11px;
-  right: 11px;
-}
-
-#DiSiteWrapp #DiContent #MWwrapper .mw-close:before {
-  content: '\e97d';
-  font-family: "PrommuFont";
-  width: 28px;
-  line-height: 28px;
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  color: var(--color-l2-grey);
-  font-size: 18px;
-  text-align: center;
-  transition: background-color .25s;
-  border-radius: 50%
-}
-
-#DiSiteWrapp #DiContent #MWwrapper .mw-close:hover:before {
-  color: #555;
-  background: #eee;
-  transition: background-color .25s;
-  border-radius: 50%
-}
-
-#MWwrapper form {
-  font-size: 18px;
-  text-align: center;
-}
-
 /*
 *
 */
-.epa__phone-name {
-  width: 1%;
-  display: table-cell;
-  vertical-align: top;
-  position: static;
-  padding: 0;
-  padding-right: 5px;
-  white-space: nowrap;
-}
-
 .country-phone {
   width: 99%;
   display: table;
@@ -1913,7 +1659,7 @@ input:checked + .epa__checkbox:after {
   border: none;
   background: transparent;
   height: 33px;
-  padding: 0 62px 0 0;
+  padding: 0 33px 0 0;
   position: static;
 }
 
@@ -1947,10 +1693,8 @@ input:checked + .epa__checkbox:after {
 }
 
 #DiContent .epa__payment .epa__label-name {
-  position: absolute;
-  top: 0;
-  left: 10px;
   white-space: nowrap;
+  font-size: 15px;
 }
 
 #DiContent .epa__date .epa__input {
@@ -1969,24 +1713,25 @@ input:checked + .epa__checkbox:after {
 #DiContent .epa__payment .epa__input.error {
   box-shadow: inset 0px 0px 3px red;
   border: 1px solid red;
-  margin-left: 130px;
+  /*margin-left: 130px;*/
 }
 
 .epa__payment em {
   line-height: 33px;
   font-weight: bold;
   font-style: normal;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .epa__period-error {
   position: absolute;
-  left: 115px;
+  left: 109px;
   right: 40px;
   top: 0;
   line-height: 33px;
   color: red;
   display: none;
+  font-size: 15px;
 }
 
 .epa__period-error b {
@@ -1997,7 +1742,7 @@ input:checked + .epa__checkbox:after {
   border: 1px solid red;
 }
 
-#DiContent .edit-profile-applicant .epa__label.epa__period.error {
+#DiContent .edit-profile-applicant .profile__field.epa__period.error {
   box-shadow: none;
   border: 1px solid #EBEBEB;
 }
@@ -2021,10 +1766,19 @@ input:checked + .epa__checkbox:after {
   border: 1px solid #EBEBEB;
   margin: 0 0 15px;
   display: flex;
+  position: relative;
   -webkit-transition: box-shadow .3s ease-out;
   -moz-transition: box-shadow .3s ease-out;
   -o-transition: box-shadow .3s ease-out;
   transition: box-shadow .3s ease-out;
+}
+#DiContent .profile__field.epa__about{
+  height: initial;
+  flex-wrap: wrap;
+}
+#DiContent .profile__field.error{
+  box-shadow: inset 0px 0px 3px red;
+  border: 1px solid red;
 }
 #DiContent .profile__field-name{
   line-height: 33px;
@@ -2044,10 +1798,45 @@ input:checked + .epa__checkbox:after {
   padding: 0 5px;
 }
 .profile__col{ padding: 0 5px; }
+#DiContent #phone-code.profile__field-input{ padding: 0; }
+#conf-phone .prmu-btn.prmu-btn_normal{ max-width: initial; }
+.profile__col .prmu-btn.prmu-btn_normal{
+  max-width: initial;
+}
+.d-none{ display: none }
+#DiContent .edit-profile-applicant .epa__label.epa__select.epa__posts{
+  padding: 0;
+}
+.epa__posts.epa__label-name{
+  padding: 0 15px;
+}
+.epa__select-list.epa__select-lst-vsbl{
+  padding: 0;
+  column-count: 1;
+  display: block;
+  position: static;
+}
+.epa__posts .epa__select-list li{
+  padding: 0 27px 0 15px;
+}
+.epa__select-list.epa__select-lst-vsbl li b{ left: 0; }
+.epa__select-list.epa__select-lst-vsbl li span{
+  background-color: #ffffff;
+  padding-right: 5px;
+  position: relative;
+  z-index: 1;
+  font-size: 15px;
+}
+.epa__posts .epa__label-name{ padding-left: 15px; }
+/* */
+@media (min-width: 768px){
+
+}
 @media (min-width: 992px){
   .epa__content-module {
     max-width: 640px;
   }
+  .epa__select-list.epa__select-lst-vsbl{
+    column-count: 2;
+  }
 }
-#DiContent #phone-code.profile__field-input{ padding: 0; }
-#conf-phone .prmu-btn.prmu-btn_normal{ max-width: initial; }
