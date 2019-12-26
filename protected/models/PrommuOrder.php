@@ -735,12 +735,6 @@ class PrommuOrder {
         if(!array_key_exists('podnyatie-vacansyi-vverh', $arNewPrices))
             $arNewPrices['podnyatie-vacansyi-vverh'] = $arPrice['podnyatie-vacansyi-vverh'];
 
-//        display($arPrice);
-//        die('$arPrice');
-
-//        display($bin);
-//        die('$arNewPrices');
-
         return $arNewPrices;
     }
 }

@@ -167,6 +167,7 @@ class MainConfig
     public static $VIEWS_SERVICES = 'services/list';
     public static $VIEWS_SERVICE_VIEW = 'services/page-service-view';
     public static $VIEWS_SERVICE_PREMIUM_VIEW = 'services/page-premium-view';
+    public static $VIEWS_SERVICES_VACUP_VIEW = 'services/page-vacup-view';
     public static $VIEWS_SERVICE_PUSH_VIEW = 'services/page-push-view';
     public static $VIEWS_SERVICE_SMS_VIEW = 'services/page-sms-view';
     public static $VIEWS_SERVICE_OUTSTAFFING_VIEW = 'services/page-outstaffing-view';
