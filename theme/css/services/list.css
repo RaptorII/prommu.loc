@@ -71,6 +71,11 @@
   content: '\e949';
 }
 
+.services__item-icon.podnyatie-vacansyi-vverh:after {
+  content: '\e9cc';
+  font-size: 45px;
+}
+
 .services__item-icon.premium-vacancy:after {
   content: '\e920';
   font-size: 48px;

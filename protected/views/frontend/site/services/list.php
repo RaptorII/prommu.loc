@@ -9,6 +9,11 @@ $arCustom = ['outstaffing','personal-manager-outsourcing','medical-record']; // 
 $arGuest = ['prommu_card','medical-record']; // для гостя
 $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
 ?>
+<?php
+//display($viData['menu'][0]);
+
+//display($prices);
+?>
 <div class="row">
     <div class="col-xs-12">
         <a class="download__btn download__btn-flt-right download__btn-inst" href='/theme/pdf/Instruction-PROMMU-com-service.pdf' target="_blank" title="Скачать иструкцию пользования сервисом PROMMU.com">
@@ -122,6 +127,9 @@ $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
             continue;
         ?>
         <? if($m['parent_id']==0 && !is_array($viData['menu'][$m['id']])): ?>
+          <?php
+          //display($m['id']);
+          ?>
           <div class="row services__item">
             <div class="col-xs-12 col-sm-6 services__prev">
               <div class="services__item-icon <?=$m['icon']?>"></div>

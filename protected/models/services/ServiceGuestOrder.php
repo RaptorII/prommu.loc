@@ -151,6 +151,7 @@ class ServiceGuestOrder extends CActiveRecord
       '' => 'Все услуги',
       'creation-vacancy' => 'Создание вакансии',
       'premium-vacancy' => 'Премиум вакансия',
+      'podnyatie-vacansyi-vverh' => 'Поднятие вакансии вверх',
       'email-invitation' => 'Электронная почта',
       'push-notification' => 'PUSH уведомления',
       'sms-informing-staff' => 'SMS информирование',

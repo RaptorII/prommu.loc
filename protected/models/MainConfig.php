@@ -151,6 +151,7 @@ class MainConfig
 
     /* SERVICES */
     public static $PAGE_SERVICES_PREMIUM = '/services/premium-vacancy';
+    public static $PAGE_SERVICES_VAC_UP = '/services/podnyatie-vacansyi-vverh';
     public static $PAGE_SERVICES_SHARES = '/services/#';
     public static $PAGE_SERVICES_PUSH = '/services/push-notification';
     public static $PAGE_SERVICES_SOCIAL = '/services/publication-vacancy-social-net';

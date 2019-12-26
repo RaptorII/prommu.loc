@@ -1618,6 +1618,14 @@ class UserController extends AppController
                 $data = $vac->getModerVacs();
                 break;
 
+            case 'podnyatie-vacansyi-vverh':
+                !Share::isEmployer() && $this->redirect(MainConfig::$PAGE_SERVICES);
+
+                $view = MainConfig::$VIEWS_SERVICE_PREMIUM_VIEW;
+                $vac = new Vacancy();
+                $data = $vac->getModerVacs();
+                break;
+
             case 'email-invitation':
                 !Share::isEmployer() && $this->redirect(MainConfig::$PAGE_SERVICES);
 

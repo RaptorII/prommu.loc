@@ -17,6 +17,10 @@
   background-image: url(/theme/pic/services-page/publish-vacancy.jpg)
 }
 
+.service__img.podnyatie-vacansyi-vverh {
+  background-image: url(/theme/pic/services-page/podnyatie-vacansyi-vverh.jpg)
+}
+
 .service__img.premium-vacancy {
   background-image: url(/theme/pic/services-page/premium-vacancy.jpg)
 }
@@ -88,6 +92,11 @@
 
 .premium-vacancy .service__title:before {
   content: '\e920';
+}
+
+.podnyatie-vacansyi-vverh .service__title:before {
+  content: '\e9cc';
+  font-size: 65px;
 }
 
 .geolocation-staff .service__title:before {

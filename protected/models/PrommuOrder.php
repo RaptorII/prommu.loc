@@ -667,7 +667,9 @@ class PrommuOrder {
     */
     private function getRegionalPrice($service, $bin) {
         $arReg = [4];
-        if($service=='premium-vacancy' || $service=='email-invitation') {
+        if($service=='premium-vacancy'  ||
+           $service=='email-invitation' ||
+           $service=='podnyatie-vacansyi-vverh' ){
             switch ($bin) {
                 case 1: $arReg = [1]; break;// МО
                 case 2: $arReg = [2]; break;// ЛО
@@ -688,6 +690,14 @@ class PrommuOrder {
                 case 7: $arReg = [1,2]; break;// МО + ЛО + др.рег.
                 case 5: $arReg = [1,3]; break;// МО + др.рег.
                 case 6: $arReg = [2,3]; break;// ЛО + др.рег.
+            }
+        }
+        if($service=='podnyatie-vacansyi-vverh') {
+            switch ($bin) {
+                case 3: // МО + ЛО
+                case 7: $arReg = [1,3]; break;// МО + ЛО + др.рег.
+                case 5: $arReg = [1]; break;// МО + др.рег.
+                case 6: $arReg = [2]; break;// ЛО + др.рег.
             }
         }
         return $arReg;
@@ -722,6 +732,14 @@ class PrommuOrder {
             $arNewPrices['premium-vacancy'] = $arPrice['premium-vacancy'];
         if(!array_key_exists('email-invitation', $arNewPrices))
             $arNewPrices['email-invitation'] = $arPrice['email-invitation'];
+        if(!array_key_exists('podnyatie-vacansyi-vverh', $arNewPrices))
+            $arNewPrices['podnyatie-vacansyi-vverh'] = $arPrice['podnyatie-vacansyi-vverh'];
+
+//        display($arPrice);
+//        die('$arPrice');
+
+//        display($bin);
+//        die('$arNewPrices');
 
         return $arNewPrices;
     }
