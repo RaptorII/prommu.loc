@@ -38,6 +38,7 @@ class Api
                 
                 ///PROFILE BLOCK
                 case 'profile' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getProfile(); break;
+                case 'setting' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->setSetting(); break;
                 case 'user_get' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->getUserData(); break;
                 case 'edit_prof' : $this->checkMethodHeader(self::$HEADER_POST); $data = $this->updateProf(); break;
                 case 'attrib_get' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->getAttrib(); break;
@@ -143,10 +144,23 @@ class Api
         return $data;
     }
     
-     /**
-     * Получаем список вакансий c фильтрацией
-     * @return array
-     */
+     
+    public function setSetting(){
+        $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+         $data = Yii::app()->request->getRawBody();
+            var_dump($data);
+        if($accessToken){
+           
+            $res['message'] = 'Изменения сохранены';
+        } else {
+            $res['error'] = -101;
+            $res['message'] = 'Отсутствует параметр code';
+            
+        }
+        
+        return $res;
+        
+    }
     
     public function getProfile(){
     
