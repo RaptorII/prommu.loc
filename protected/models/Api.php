@@ -153,7 +153,7 @@ class Api
            
             $res['message'] = 'Изменения сохранены';
         } else {
-            $res['error'] = -101;
+            // $res['error'] = -101;
             $res['message'] = 'Отсутствует параметр code';
             
         }
