@@ -149,16 +149,16 @@ class Api
         $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
          $data = Yii::app()->request->getRawBody();
             var_dump($data);
-        if($accessToken){
+        // if($accessToken){
            
-            $res['message'] = 'Изменения сохранены';
-        } else {
-            // $res['error'] = -101;
-            $res['message'] = 'Отсутствует параметр code';
+        //     $res['message'] = 'Изменения сохранены';
+        // } else {
+        //     // $res['error'] = -101;
+        //     $res['message'] = 'Отсутствует параметр code';
             
-        }
+        // }
         
-        return $res;
+        // return $res;
         
     }
     
