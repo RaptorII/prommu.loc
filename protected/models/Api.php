@@ -147,7 +147,7 @@ class Api
      
     public function setSetting(){
         $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-         $data = Yii::app()->request->getRawBody();
+         $data = json_decode(Yii::app()->request->getRawBody(), true);
             var_dump($data);
         // if($accessToken){
            
