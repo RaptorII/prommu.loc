@@ -89,7 +89,7 @@ class UserRegister
       }
       else
       {
-        $this->user = md5(time() . rand(1111111,9999999) . self::$SALT);
+        $this->user = self::setUser();
         $rq->cookies['urh'] = new CHttpCookie('urh', $this->user);
       }
       // data
@@ -126,6 +126,13 @@ class UserRegister
     $this->view = self::$VIEW_TEMPLATE . $step;
     $value = intval($step) * 1000;
     Yii::app()->request->cookies['urs'] = new CHttpCookie('urs', md5($value . self::$SALT));
+  }
+  /**
+   * создаем значение urh для куки
+   */
+  public static function setUser()
+  {
+    return md5(time() . rand(1111111,9999999) . self::$SALT);
   }
   /**
    * @param $step - int
@@ -247,8 +254,6 @@ class UserRegister
         ];
         // transition
         $arData['transition'] = explode(",", $arData['transition'])[0];
-        // canal
-        $arData['canal'] = explode(",", $arData['canal'])[0];
         // campaign
         $arData['campaign'] = explode(",", $arData['campaign'])[0];
         // content
@@ -259,14 +264,8 @@ class UserRegister
         // pm_source
         empty($arData['pm_source']) && $arData['pm_source']='none';
         // client
-   
-        $arData['client'] = Yii::app()->session['client'];
+        $arData['client'] = substr($arData['client'], 6, 100);
         empty($arData['client']) && $arData['client'] = ' ';
-        // $arData['client'] = substr($arData['client'], 6, 100);
-        // empty($arData['client']) && $arData['client'] = ' ';
-
-        
-    
         // ip
         $ips  = @$_SERVER['HTTP_CLIENT_IP'];
         $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
@@ -287,19 +286,21 @@ class UserRegister
         //
         //
         // правила от Кутишевского
-        /*if(!empty($arData['transition'])) // utm_source - empty
+        if(!empty($arData['transition'])) // utm_source - not empty
         {
           if(
-            strripos($arData['transition'],'facebook_smm')!==false
+            strripos($arData['transition'],'facebook')!==false
             ||
-            strripos($arData['transition'],'vk_smm')!==false
+            strripos($arData['transition'],'vk')!==false
             ||
             strripos($arData['transition'],'smm_mytarget')!==false
             ||
             strripos($arData['transition'],'smm_yellowjob')!==false
+            ||
+            strripos($arData['transition'],'instagram')!==false
           )
           {
-            $arData['referer'] = 'smm';
+            $arData['canal'] = 'smm';
           }
           else if(
             strripos($arData['transition'],'yandex')!==false
@@ -307,14 +308,14 @@ class UserRegister
             strripos($arData['transition'],'google')!==false
           )
           {
-            $arData['referer'] = 'ppc';
+            $arData['canal'] = 'ppc';
           }
         }
-        else  // utm_source - not empty
+        else  // utm_source - empty
         {
-          if (empty($arData['last_referer']))
+          if (empty($arData['last_referer']) || $arData['last_referer']=='(none)')
           {
-            $arData['referer'] = 'direct';
+            $arData['canal'] = 'direct';
           }
           else if (
               strripos($arData['last_referer'], 'yandex') !== false
@@ -322,13 +323,54 @@ class UserRegister
               strripos($arData['last_referer'], 'google') !== false
             )
           {
-            $arData['referer'] = 'organic';
+            $arData['canal'] = 'organic';
           }
           else
           {
-            $arData['referer'] = $arData['last_referer'];
+            $arData['canal'] = 'referal';
           }
-        }*/
+        }
+        // Продолжение
+        empty($arData['canal']) && $arData['canal'] = 'direct';
+        // устанавливаем Тип трафика
+        switch ($arData['canal'])
+        {
+          case 'smm': $arData['referer']='cpc'; break;
+          case 'direct': $arData['referer']='typein'; break;
+          case 'referal': $arData['referer']='referal'; break;
+          case 'organic': $arData['referer']='search'; break;
+          default: break;
+        }
+        // устанавливаем Источник
+        $arData['transition']=='https:' && $arData['transition']='direct';
+        if(empty($arData['transition']))
+        {
+          if($arData['canal']=='direct')
+          {
+            $arData['transition']='direct';
+          }
+          elseif ($arData['canal']=='referal')
+          {
+            if(empty($arData['last_referer']) || $arData['last_referer']=='(none)')
+            {
+              $arData['transition']='direct';
+            }
+            else // вытягиваем домен
+            {
+              $uri = strtolower(trim($arData['last_referer']));
+              $uri = preg_replace('%^(https:\/\/)*(www.)*%usi','',$uri);
+              $arData['transition'] = preg_replace('%\/.*$%usi','',$uri);
+            }
+          }
+          elseif ($arData['canal']=='organic')
+          {
+            $arData['transition']='search';
+          }
+          else
+          {
+            $arData['transition']='(none)';
+          }
+        }
         //
         foreach ($arData as $k => $v)
         {
@@ -528,9 +570,15 @@ class UserRegister
         $this->sendCode();
       }
       // переход на следующую ступень(или выход)
-      $this->step==self::$STEP_AVATAR
-        ? self::clearRegister()
-        : $this->setStep($this->step + 1);
+      if($this->step==self::$STEP_AVATAR)
+      {
+        self::clearRegister();
+        $this->step = false;
+      }
+      else
+      {
+        $this->setStep($this->step + 1);
+      }
     }
   }
   /**
@@ -595,6 +643,8 @@ class UserRegister
     if($arData['login_type']==self::$LOGIN_TYPE_PHONE)
     {
       $arGet = ['phone' => $arData['login'], 'code' => $arData['code']];
+      //$log = date('d.m.Y H:i') . ' id=' . $arData['id'] . ' phone=' . $arData['login'] . ' code=' . $arData['code'] . '   ';
+      //file_put_contents(__DIR__ . "/_log_UserRegister_phone.txt", print_r($log, true), FILE_APPEND);
       file_get_contents(Subdomain::site() . MainConfig::$PAGE_SEND_SMS_CODE . '?' . http_build_query($arGet));
     }
   }
@@ -725,6 +775,12 @@ class UserRegister
       : $arUser['name']);
     // user
     $model = new User();
+    $is_user = $model->checkLogin($arUser['login']);
+    if($is_user>0 && $arUser['id_user']==$is_user)
+    {
+      return;
+    }
+    //
     $id_user = $model->registerUser([
       'login' => $arUser['login'],
       'passw' => $arUser['password'],
@@ -1276,5 +1332,22 @@ class UserRegister
     unlink($oldUserImagePath . $fullImage);
     // сохраняем в профиле новое фото
     $this->profile->saveRegisterPhoto($this->data['avatar']);
+  }
+  /**
+   * @param $arr
+   * @return array|CDbDataReader
+   * лиды для АБ тестирования
+   */
+  public static function getLeadByHashArray($arr)
+  {
+    return Yii::app()->db->createCommand()
+      ->select('user')
+      ->from('user_register')
+      ->where([
+        'and',
+        'id_user IS NOT NULL',
+        ['in','user',$arr]
+      ])
+      ->queryColumn();
   }
 }

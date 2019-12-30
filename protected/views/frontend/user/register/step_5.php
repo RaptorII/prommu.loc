@@ -12,9 +12,6 @@
   <? if(!Yii::app()->getRequest()->isAjaxRequest): ?>
     var pageCondition = <?=json_encode($model->data['condition']['html'])?>;
   <? endif; ?>
-  // yandex metric
-  //setGoal();
-  function setGoal(){ typeof yaCounter23945542 === 'object' ? yaCounter23945542.reachGoal(4) : setTimeout(function(){ setGoal() },1000); }
 </script>
 <div class="login-wrap">
 
@@ -78,40 +75,6 @@
         <span class="input"><input type="file" name="upload" class="input-upload"></span>
       </p>
     </div>
-<?/*?>
-    <div class="login__social-container five">
-      <span class="register__preview"><b>или загрузи из социальных сетей:</b></span>
-      <div class="reg-social__link-block" >
-        <a href="/user/login?service=facebook" class="reg-social__link fb js-g-hashint" title="facebook" >
-                      <span class="mob-hidden">
-                          facebook
-                      </span>
-        </a>
-        <a href="/user/login?service=vkontakte" class="reg-social__link vk js-g-hashint" title="vkontakte.ru" >
-                      <span class="mob-hidden">
-                          vkontakte.ru
-                      </span>
-        </a>
-        <!--<a href="/user/login?service=mailru" class="reg-social__link ml js-g-hashint" title="mail.ru">
-                      <span class="mob-hidden">
-                          mail.ru
-                      </span>
-        </a>-->
-        <a href="/user/login?service=odnoklassniki" class="reg-social__link od js-g-hashint" title="odnoklasniki.ru">
-                      <span class="mob-hidden">
-                          odnoklasniki.ru
-                      </span>
-        </a>
-        <a href="/user/login?service=google_oauth" class="reg-social__link go js-g-hashint" title="google">
-                      <span class="mob-hidden">
-                          google
-                      </span>
-        </a>
-
-        </a>
-      </div>
-    </div>
-<?*/?>
     <p class="input">
       <button type="submit" class="btn-green" data-step="5">Завершить регистрацию</button>
     </p>
@@ -121,9 +84,5 @@
         Вернуться назад и отредактировать данные
       </a>
     </p>
-
   </div>
-
-
 </div>
-<input type="hidden" name="href" value="<?=MainConfig::$PAGE_AFTER_REGISTER?>">

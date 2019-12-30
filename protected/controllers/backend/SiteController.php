@@ -2157,7 +2157,7 @@ class SiteController extends Controller
     $this->render($model->view, ['model'=>$model]);
   }
   /**
-   *
+   *  страница статистики подсчета заходов на страницы регистраций
    */
   public function actionSeo_registers()
   {
@@ -2172,6 +2172,26 @@ class SiteController extends Controller
     else
     {
       $this->render('seo/list-registers');
+    }
+  }
+  /**
+   *
+   */
+  public function actionAb_testing()
+  {
+    $this->checkAccess();
+    $title = 'Alpha-Beta тестирование';
+    $this->setPageTitle($title);
+    $this->breadcrumbs = [1 => $title];
+    $model = new AbTesting();
+    $data = ['data'=>$model->getData()];
+    if(Yii::app()->request->isAjaxRequest)
+    {
+      $this->renderPartial('seo/ab_testing-ajax', $data);
+    }
+    else
+    {
+      $this->render('seo/ab_testing', $data);
     }
   }
 }

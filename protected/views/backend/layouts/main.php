@@ -727,7 +727,7 @@ else
                 // СЕО
                 ?>
                 <?php
-                $enable = in_array($curId, ['articlespages', 'seo']);
+                $enable = in_array($curId, ['articlespages', 'seo', 'seo_registers', 'ab_testing']);
                 $enable = ($curId == 'vacancy' && $_GET['seo'] == 1) ? true : $enable;
                 $enable = ($curId == 'PageUpdate' && $_GET['pagetype'] == 'articles') ? true : $enable;
                 $enable = ($curId == 'sect' && $_GET['p'] == 'seo') ? true : $enable;
@@ -761,6 +761,12 @@ else
                           <a href="<?= $hUrl ?>seo_registers">
                             <i class="glyphicon glyphicon-registration-mark"></i>
                             <span>Регистрации</span>
+                          </a>
+                        </li>
+                        <li class="<?= ($curId == 'ab_testing' ? 'active' : '') ?>">
+                          <a href="<?= $hUrl ?>ab_testing">
+                            <i class="glyphicon glyphicon-font"></i>
+                            <span>AB тестирование</span>
                           </a>
                         </li>
                     </ul>

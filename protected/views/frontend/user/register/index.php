@@ -17,13 +17,13 @@
   $gcs->registerCoreScript('jquery');
   $gcs->registerCssFile($bUrl . MainConfig::$CSS  . 'register/style.css');
   $gcs->registerCssFile($bUrl . MainConfig::$CSS  . 'dist/cropper.min.css');
-  $gcs->registerScriptFile($bUrl . '/jslib/sourcebuster.min.js', CClientScript::POS_END);
+  $gcs->registerCssFile($bUrl . MainConfig::$JS . 'dist/fancybox/jquery.fancybox.css');
+
+  $gcs->registerScriptFile($bUrl . '/jslib/sourcebuster.min.js', CClientScript::POS_HEAD);
+  $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'register/script.js', CClientScript::POS_HEAD);
   $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'snap/snap.svg-min.js', CClientScript::POS_END);
   $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/cropper.min.js', CClientScript::POS_END);
-  $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'register/script.js', CClientScript::POS_END);
-  // FANCYBOX
-  $gcs->registerScriptFile(MainConfig::$JS . 'dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
-  $gcs->registerCssFile(MainConfig::$JS . 'dist/fancybox/jquery.fancybox.css');
+  $gcs->registerScriptFile($bUrl . MainConfig::$JS . 'dist/fancybox/jquery.fancybox.js', CClientScript::POS_END);
   ?>
 </head>
   <body>
@@ -80,7 +80,7 @@
                 </a>
             </span>
         </div>
-        <form id="register_form"><?php echo $content; ?></form>
+        <form id="register_form" method="post"><?php echo $content; ?><input type="hidden" id="data_input" name="data"></form>
         <div class="login__txt">
             <p>
                 <a href="javascript:void(0)" id="my_fancybox" >ПРАВИЛА ИСПОЛЬЗОВАНИЯ САЙТА</a>

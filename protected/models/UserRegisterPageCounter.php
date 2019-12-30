@@ -201,4 +201,42 @@ class UserRegisterPageCounter extends CActiveRecord
 
     return $arRes;
   }
+  /**
+   * @param id_user - User => id_user
+   * @return boolean
+   * Проверяем заход на страницу формирования лида
+   */
+  public static function isSetData($id_user)
+  {
+    // отрабатывает только на /user/lead
+    if(Yii::app()->request->url!==MainConfig::$PAGE_AFTER_REGISTER)
+    {
+      return -1;
+    }
+
+    $user = Yii::app()->db->createCommand()
+      ->select('user')
+      ->from('user_register')
+      ->where('id_user=:id_user', [':id_user' => $id_user])
+      ->queryScalar();
+    // и только если есть регистрация с данным id_user
+    if($user)
+    {
+      Yii::app()->request->cookies['urh'] = new CHttpCookie('urh', $user);
+      $query = Yii::app()->db->createCommand()
+        ->select('count(id)')
+        ->from('user_register_page_cnt')
+        ->where(
+          'user=:user and page=:page',
+          [
+            ':user' => $user,
+            ':page' => UserRegister::$PAGE_USER_LEAD
+          ]
+        )
+        ->queryScalar();
+      return intval($query);
+    }
+
+    return 1;
+  }
 }

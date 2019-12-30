@@ -152,6 +152,9 @@ return array(
                 'api' => 'api/index',
                 'cron.<cron:[a-z_]+>' => 'cron/cron',
                 'cron' => 'cron/index',
+                // alpha beta testing
+                'ab/<type:(soiskatel|rabotodatel)>' => 'site/ab',
+                //
                 '<controller:service>' => 'service/index',
                 '<controller:service>/<action:[\w-]+>'=>'<controller>/<action>',
                 '<controller:service>/<action:(service_order|card_request|med_request)>/<id:\d+>'=>'<controller>/<action>',

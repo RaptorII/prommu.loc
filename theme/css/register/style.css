@@ -166,11 +166,10 @@ h6.login__header {
 }
 .login__error {
     font-size: 13px;
-    position: absolute;
     color: red;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
+    display: block;
+    margin-bottom: -15px;
+    padding: 0 5px;
 }
 
 .center {

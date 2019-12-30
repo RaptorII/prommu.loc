@@ -569,6 +569,7 @@ class UserController extends AppController
       !Share::isGuest() && $this->redirect(MainConfig::$PAGE_PROFILE);
 
       $model = new UserRegister();
+      $step = $model->step;
       $redirect = $model->checkEmailLink();
       if($redirect) // проверка на подтверждающаю ссылку из email
       {
@@ -577,21 +578,25 @@ class UserController extends AppController
       $rq = Yii::app()->getRequest();
       $urlStep = Yii::app()->getRequest()->getParam('step');
 
-      if($rq->isAjaxRequest)
+      if(empty($urlStep) || ($urlStep!=UserRegister::$URL_STEPS[$model->step])) // редиректим на урл со ступенью
+      {
+        $link = MainConfig::$PAGE_REGISTER . DS . UserRegister::$URL_STEPS[$model->step];
+        $this->redirect($link);
+      }
+      else
       {
         $post = $rq->getParam('data');
         $post = json_decode($post, true, 5, JSON_BIGINT_AS_STRING);
-        if(isset($_FILES['upload']) && $model->step==$model::$STEP_AVATAR) // только загрузка файлов
+        if($rq->isAjaxRequest && isset($_FILES['upload']) && $model->step==$model::$STEP_AVATAR) // только загрузка файлов
         {
           $data = $model->saveImage();
           echo CJSON::encode($data);
           Yii::app()->end();
         }
-        elseif(!count($post)) // не пропускаем запрос без данных
+        elseif($rq->isPostRequest && !count($post)) // не пропускаем запрос без данных
         {
           throw new CHttpException(404, 'Error');
         }
-
         if(isset($post['step'])) // особые запросы
         {
           // return button
@@ -606,18 +611,23 @@ class UserController extends AppController
             $post['redirect']==='back'
           )
           {
-            $model->setStep($post['step'] - 1);
+            $model->setStep(intval($post['step']) - 1);
+            $link = MainConfig::$PAGE_REGISTER . DS . UserRegister::$URL_STEPS[$model->step];
+            $this->redirect($link);
           }
           // редирект на авторизацию
           elseif (in_array($post['step'],[$model::$STEP_LOGIN]) && $post['redirect']==='auth')
           {
             $model::clearRegister();
             $model->deleteData();
+            $this->redirect(MainConfig::$PAGE_LOGIN);
           }
           // повтор отправки кода
           elseif (in_array($post['step'],[$model::$STEP_CODE]) && $post['send_code']==='Y')
           {
             $model->repeatSendCode();
+            $link = MainConfig::$PAGE_REGISTER . DS . UserRegister::$URL_STEPS[$model->step];
+            $this->redirect($link);
           }
           // редактирование аватара
           elseif ($post['step']==$model::$STEP_AVATAR && isset($post['width']) && isset($post['height']))
@@ -635,25 +645,23 @@ class UserController extends AppController
             Yii::app()->end();
           }
         }
-        else // отправка текущей формы
+        elseif(count($post)) // отправка текущей формы
         {
           $model->setDataByStep($post);
+          if($step!=$model->step)
+          {
+            $link = MainConfig::$PAGE_REGISTER . DS . UserRegister::$URL_STEPS[$model->step];
+            $this->redirect($link);
+          }
         }
-
-        $this->renderPartial($model->view, ['model'=>$model]);
       }
-      else // не AJAX
+
+      if($step==$model::$STEP_AVATAR && !$model->step)
       {
-        if(empty($urlStep)) // редиректим на урл со ступенью
-        {
-          $link = MainConfig::$PAGE_REGISTER . DS . UserRegister::$URL_STEPS[$model->step];
-          $this->redirect($link);
-        }
-        elseif($urlStep != UserRegister::$URL_STEPS[$model->step])
-        {
-          $link = MainConfig::$PAGE_REGISTER . DS . UserRegister::$URL_STEPS[$model->step];
-          $this->redirect($link);
-        }
+        $this->redirect(MainConfig::$PAGE_AFTER_REGISTER);
+      }
+      else
+      {
         $this->renderRegister($model->view, ['model'=>$model]);
       }
     }

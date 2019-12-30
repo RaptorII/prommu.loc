@@ -56,11 +56,11 @@ var RegisterPage = (function () {
       domain: domainName,
       lifetime: 3,
       callback: function () {
-        if($('[name="referer"]').is('*') && !$('[name="referer"]').val().length)
+        /*if($('[name="referer"]').is('*') && !$('[name="referer"]').val().length)
         {
           $('[name="referer"]').val(sbjs.get.current.typ);
         }
-        if($('[name="transition"]').is('*') && !$('[name="transition"]').val().length)
+        /*if($('[name="transition"]').is('*') && !$('[name="transition"]').val().length)
         {
           $('[name="transition"]').val(sbjs.get.current.src);
         }
@@ -83,7 +83,7 @@ var RegisterPage = (function () {
         if($('[name="point"]').is('*') && !$('[name="point"]').val().length)
         {
           $('[name="point"]').val(sbjs.get.current_add.ep);
-        }
+        }*/
         if($('[name="last_referer"]').is('*') && !$('[name="last_referer"]').val().length)
         {
           $('[name="last_referer"]').val(sbjs.get.current_add.rf);
@@ -96,8 +96,7 @@ var RegisterPage = (function () {
         'change',
         '#register_form .input-type',
         function(){
-          let data = self.getFormData();
-          self.send(data);
+          $('#register_form').submit();
         })
       .on( // step 2
         'input',
@@ -124,33 +123,36 @@ var RegisterPage = (function () {
         function(e){
           e.preventDefault();
           let btn = $('#register_form').find('button'),
-            step = $(btn).data('step');
+              data = {step:$(btn).data('step'), redirect:'auth'},
+              url = window.location.pathname + '?data=' + JSON.stringify(data);
 
-          self.send({step:step,redirect:'auth',href:this.href});
+          document.location.href = url;
         })
       .on(
         'click',
         '#register_form .reg-social__link',
         function(){ $('body').addClass('prmu-load') })
-      .on( // step 3 | 4
+      .on( // step 2 | 3 | 4 | 5
         'click',
         '#register_form .back-away',
         function(){
           let btn = $('#register_form').find('button'),
-            step = $(btn).data('step');
+              data = {step:$(btn).data('step'), redirect:'back'},
+              url = window.location.pathname + '?data=' + JSON.stringify(data);
 
-          self.send({step:step,redirect:'back'});
+          document.location.href = url;
         })
       .on(
         'click',
         '#register_form .repeat-code',
         function(){
           let btn = $('#register_form').find('button'),
-            step = $(btn).data('step');
+              data = {step:$(btn).data('step'), send_code:'Y'},
+              url = window.location.pathname + '?data=' + JSON.stringify(data);
 
           if(!$('.repeat-code').hasClass('grey'))
           {
-            self.send({step:step,send_code:'Y'});
+            document.location.href = url;
           }
         })
       .on(
@@ -306,9 +308,8 @@ var RegisterPage = (function () {
     // отправка формы
     $('#register_form').submit(function(e){
       let btn = $(this).find('button'),
-        step = Number($(btn).data('step'));
+          step = Number($(btn).data('step'));
 
-      e.preventDefault();
       if(step==2)
       {
         self.firstInputCompany = false;
@@ -334,7 +335,12 @@ var RegisterPage = (function () {
       if(!$('#register_form .input__error').length)
       {
         let data = self.getFormData();
-        self.send(data);
+        $('#data_input').val(JSON.stringify(data));
+        $('body').addClass('prmu-load');
+      }
+      else
+      {
+        return false;
       }
     });
     // установка таймера
@@ -352,9 +358,15 @@ var RegisterPage = (function () {
     $('.input-code').bind('paste',function() { self.checkCode(this) });
     $('.input-password').bind('paste',function() { self.checkPassword() });
     $('.input-r-password').bind('paste',function() { self.checkPassword() });
-  },
+  };
+  // обычная отправка
+  RegisterPage.prototype.send = function (data)
+  {
+    $('#register_form').submit();
+  };
   // отправляем аяксом
-  RegisterPage.prototype.send = function (data) {
+  RegisterPage.prototype.sendAjax = function (data)
+  {
     let self = this;
 
     if(self.bAjax)
@@ -947,3 +959,19 @@ var RegisterPage = (function () {
 $(document).ready(function () {
   new RegisterPage();
 });
+/*
+* yandex metric
+*/
+function setGoal(e, p)
+{
+  if(typeof yaCounter23945542 === 'object')
+  {
+    typeof p!=='undefined'
+      ? yaCounter23945542.reachGoal(e, {params:p})
+      : yaCounter23945542.reachGoal(e);
+  }
+  else
+  {
+    setTimeout(function(){ setGoal(e,p) },1000);
+  }
+}

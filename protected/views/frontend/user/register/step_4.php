@@ -7,11 +7,6 @@
     UserRegisterPageCounter::set($model->step);
   }
 ?>
-<script>
-  // yandex metric
-  setGoal();
-  function setGoal(){ typeof yaCounter23945542 === 'object' ? yaCounter23945542.reachGoal(3) : setTimeout(function(){ setGoal() },1000); }
-</script>
 <div class="login-wrap">
 
   <svg x="0" y="0" class="svg-bg" />

@@ -76,14 +76,8 @@ class AppController extends CController
         $this->ViewModel = $view;
         //
         // если запущен механизм регистрации - то отправляем на регу, пока не зарегается
-        $service = Yii::app()->getRequest()->getParam('service');
-        $bSocialNetwork = in_array($service,[
-            'facebook',
-            'vkontakte',
-            'odnoklassniki',
-            'google_oauth',
-            'yandex_oauth'
-          ])
+        $bSocialNetwork =
+          Share::isSocialNetwork()
           ||
           strripos($_SERVER['REQUEST_URI'],MainConfig::$PAGE_MESSENGER)!==false
           ||
@@ -118,14 +112,13 @@ class AppController extends CController
         {
           Yii::app()->session['utm'] = (object)[
             'transition' => '',
-            'canal' => '',
+            'referer' => '',
             'campaign' => '',
             'content' => '',
             'keywords' => '',
             'pm_source' => '',
             'last_referer' => '',
-            'point' => '',
-            'referer' => '', // !!!!!!!!!!!!!!!!!!!!!
+            'point' => ''
           ];
         }
         $rq = Yii::app()->getRequest();
@@ -133,7 +126,7 @@ class AppController extends CController
         !empty($v) && Yii::app()->session['utm']->transition = $v;
 
         $v = filter_var($rq->getParam('utm_medium'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        !empty($v) && Yii::app()->session['utm']->canal = $v;
+        !empty($v) && Yii::app()->session['utm']->referer = $v;
 
         $v = filter_var($rq->getParam('utm_campaign'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         !empty($v) && Yii::app()->session['utm']->campaign = $v;
@@ -146,9 +139,6 @@ class AppController extends CController
 
         $v = filter_var($rq->getParam('pm_source'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         !empty($v) && Yii::app()->session['utm']->pm_source = $v;
-
-        $v = filter_var($rq->getParam('referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        !empty($v) && Yii::app()->session['utm']->referer = $v;
 
         Yii::app()->session['utm']->last_referer = $_SERVER['HTTP_REFERER'];
 
@@ -321,6 +311,11 @@ class AppController extends CController
   protected function renderRegisterGTM()
   {
     $this->layout = '//layouts/after_register';
+    // делаем заход на /user/lead лишь один раз. Иначе сразу на профиль
+    if(UserRegisterPageCounter::isSetData(Share::$UserProfile->id) > 0)
+    {
+      $this->redirect(MainConfig::$PAGE_PROFILE);
+    }
     parent::render('index');
   }
 }

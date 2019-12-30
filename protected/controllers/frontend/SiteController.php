@@ -1561,4 +1561,17 @@ class SiteController extends AppController
         $result = $model->generateFile();
         echo intval($result);
     }
+    /**
+     *    Альфа/бета тестирование
+     */
+    public function actionAb()
+    {
+      $model = new AbTesting();
+      $link = $model->getLink();
+      if(!$link)
+      {
+        Yii::app()->end();
+      }
+      $this->redirect($link);
+    }
 }
