@@ -692,6 +692,7 @@ var RegisterPage = (function () {
         self.bAjax = false;
         $('body').removeClass('prmu-load');
         r = JSON.parse(r);
+        $('.login__error').remove();
         if(r.error.length) // если есть ошибки
         {
           $('.upload-block').append('<span class="login__error">');
@@ -699,7 +700,6 @@ var RegisterPage = (function () {
         }
         else // есть успешно загруженные файлы
         {
-          $('.login__error').remove();
           let image = '<img src="' + r.success.path
             + '" alt="' + r.success.oldname + '" data-name="'
             + r.success.name + '"/>';

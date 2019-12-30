@@ -1040,49 +1040,52 @@ class UserRegister
     {
       $arRes['error'][] = "Ошибка передачи файла на сервер";
     }
-    if($_FILES['upload']['size']>$mSize) // ошибка передачи файла на сервер
-    {
-      $arRes['error'][] = "Размер файла больше допустимого значения ("
-        . UserProfile::$MAX_FILE_SIZE . "Мб)";
-    }
-
-    if(!in_array($type,UserProfile::$AR_FILE_FORMAT)) // проверяем формат на корректность
-    {
-      $arRes['error'][] = "У файла некорректный формат";
-    }
-
-    $newName = date('YmdHis') . rand(1000,9999) . '.' . $type;
-    $filePath = $this->filesRoot . DS . $newName;
-    $src = $this->filesUrl . DS . $newName;
-    $result = move_uploaded_file($_FILES['upload']["tmp_name"], $filePath);
-    if($result) // файл успешно перемещен
-    {
-      $fSize = getimagesize($filePath);
-      if($fSize)
-      {
-        $size = UserProfile::$MIN_IMAGE_SIZE; // проверяем на минимальную ширину/высоту
-        if($size>0 && ($fSize[0]<$size || $fSize[1]<$size))
-        {
-          $arRes['error'][] = "Файл меньше допустимого значения ({$size}x{$size})";
-          unlink($filePath);
-        }
-        $size = UserProfile::$MAX_IMAGE_SIZE; // проверяем на максимальную ширину/высоту
-        if($size>0 && ($fSize[0]>$size || $fSize[1]>$size))
-        {
-          $arRes['error'][] = "Файл больше допустимого значения ({$size}x{$size})";
-          unlink($filePath);
-        }
-        $this->resizeImage($filePath, $filePath, self::$DEFAULT_IMAGE_SIZE); // сжимаем до допустимых размеров
-      }
-      $arRes['success'] = [
-        'name' => $newName,
-        'oldname' => $fName,
-        'path' => $src
-      ];
-    }
     else
     {
-      $arRes['error'][] = "Ошибка загрузки файла на сервер";
+      if($_FILES['upload']['size']>$mSize) // ошибка передачи файла на сервер
+      {
+        $arRes['error'][] = "Размер файла больше допустимого значения ("
+          . UserProfile::$MAX_FILE_SIZE . "Мб)";
+      }
+
+      if(!in_array($type,UserProfile::$AR_FILE_FORMAT)) // проверяем формат на корректность
+      {
+        $arRes['error'][] = "У файла некорректный формат";
+      }
+
+      $newName = date('YmdHis') . rand(1000,9999) . '.' . $type;
+      $filePath = $this->filesRoot . DS . $newName;
+      $src = $this->filesUrl . DS . $newName;
+      $result = move_uploaded_file($_FILES['upload']["tmp_name"], $filePath);
+      if($result) // файл успешно перемещен
+      {
+        $fSize = getimagesize($filePath);
+        if($fSize)
+        {
+          $size = UserProfile::$MIN_IMAGE_SIZE; // проверяем на минимальную ширину/высоту
+          if($size>0 && ($fSize[0]<$size || $fSize[1]<$size))
+          {
+            $arRes['error'][] = "Файл меньше допустимого значения ({$size}x{$size})";
+            unlink($filePath);
+          }
+          $size = UserProfile::$MAX_IMAGE_SIZE; // проверяем на максимальную ширину/высоту
+          if($size>0 && ($fSize[0]>$size || $fSize[1]>$size))
+          {
+            $arRes['error'][] = "Файл больше допустимого значения ({$size}x{$size})";
+            unlink($filePath);
+          }
+          $this->resizeImage($filePath, $filePath, self::$DEFAULT_IMAGE_SIZE); // сжимаем до допустимых размеров
+        }
+        $arRes['success'] = [
+          'name' => $newName,
+          'oldname' => $fName,
+          'path' => $src
+        ];
+      }
+      else
+      {
+        $arRes['error'][] = "Ошибка загрузки файла на сервер";
+      }
     }
 
     return $arRes;
