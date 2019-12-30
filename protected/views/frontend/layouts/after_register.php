@@ -36,7 +36,6 @@
             setTimeout(function(){ setGoal() },100);
           }
         }
-      }
       });
     </script>
   </head>

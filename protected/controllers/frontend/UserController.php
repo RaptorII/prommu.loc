@@ -648,7 +648,11 @@ class UserController extends AppController
         elseif(count($post)) // отправка текущей формы
         {
           $model->setDataByStep($post);
-          if($step!=$model->step)
+          if($step==$model::$STEP_AVATAR && !$model->step)
+          {
+            $this->redirect(MainConfig::$PAGE_AFTER_REGISTER);
+          }
+          elseif($step!=$model->step)
           {
             $link = MainConfig::$PAGE_REGISTER . DS . UserRegister::$URL_STEPS[$model->step];
             $this->redirect($link);
@@ -656,14 +660,7 @@ class UserController extends AppController
         }
       }
 
-      if($step==$model::$STEP_AVATAR && !$model->step)
-      {
-        $this->redirect(MainConfig::$PAGE_AFTER_REGISTER);
-      }
-      else
-      {
-        $this->renderRegister($model->view, ['model'=>$model]);
-      }
+      $this->renderRegister($model->view, ['model'=>$model]);
     }
 
 
