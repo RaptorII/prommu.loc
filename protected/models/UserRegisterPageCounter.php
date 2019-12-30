@@ -204,7 +204,7 @@ class UserRegisterPageCounter extends CActiveRecord
   /**
    * @param id_user - User => id_user
    * @return boolean
-   * Проверяем заход на страницу формирования лида
+   * Проверяем заход на страницу формирования лида (если <=0 - переходим на /user/lead)
    */
   public static function isSetData($id_user)
   {
