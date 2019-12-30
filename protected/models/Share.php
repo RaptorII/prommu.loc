@@ -1044,4 +1044,21 @@ public static function getUserID()
 
     return $arResult;
   }
+  /**
+   * @param bool $network
+   * @return bool
+   * верификация названия соцсети
+   */
+  public static function isSocialNetwork($network=false)
+  {
+    !$network && $network=Yii::app()->request->getQuery('service');
+
+    return in_array($network,[
+      'facebook',
+      'vkontakte',
+      'odnoklassniki',
+      'google_oauth',
+      'yandex_oauth'
+    ]);
+  }
 }
