@@ -11,7 +11,8 @@
 <html lang="ru">
   <head>
     <? $this->renderPartial('../layouts/header_partial/' . Subdomain::getCacheData()->id); // data for every site ?>
-    <script type="text/javascript">
+    <?/*?><meta http-equiv="refresh" content="1;<?=Subdomain::site() . MainConfig::$PAGE_PROFILE?>"><?*/?>
+    <script>
       document.addEventListener("DOMContentLoaded", function(){
         var yaParams = [{id_user:<?=Share::$UserProfile->id?>,type:"<?=$sType?>"}];
         var link = "<?=MainConfig::$PAGE_PROFILE?>";
@@ -28,7 +29,6 @@
           }
           if(typeof yaCounter23945542 === 'object')
           {
-            yaCounter23945542.reachGoal(goal,{params:yaParams});
             location.href=link;
           }
           else
@@ -36,6 +36,7 @@
             setTimeout(function(){ setGoal() },100);
           }
         }
+      }
       });
     </script>
   </head>
