@@ -805,13 +805,26 @@
         </div>
         <? $empty = false; ?>
       <? endif;
-      $arRes = array();
-      foreach($info['userAttribs'] as $val)
-        if($val['idpar'] == 40) $arRes[] = $val['name'];
-      if(sizeof($arRes)): ?>
-        <div class="ppp__field">
+      $arLangSmall = $arLangBig = [];
+      $cnt=0;
+      foreach($info['userAttribs'] as $v)
+      {
+        if($v['idpar'] == 40)
+        {
+          $cnt++;
+          $cnt>3 ? $arLangBig[]=$v['name'] : $arLangSmall[]=$v['name'];
+        }
+      }
+      if(sizeof($arLangSmall)): ?>
+        <div class="ppp__field ppp__field-lang">
           <span class="ppp__field-name">Иностранные языки:</span>
-          <span class="ppp__field-val"><?=implode(', ', $arRes)?></span>
+          <div class="ppp__field-val">
+            <span><?=implode(', ', $arLangSmall)?></span>
+            <? if(count($arLangBig)): ?>
+              <em>...</em>
+              <span style="display:none"><?=implode(', ', $arLangBig)?></span>
+            <? endif; ?>
+          </div>
         </div>
         <? $empty = false; ?>
       <? endif; ?>

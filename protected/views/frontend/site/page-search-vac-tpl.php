@@ -78,12 +78,15 @@ $this->renderPartial('../site/page-search-vac-tpl_css');
                                 <label class='psv__checkbox-label' for="psv-posts-<?=$val['id']?>"><?= $val['name'] ?></label>
                             <?php endforeach; ?>
                         </div>
+                        <?/*?>
                         <div class='self-dolj'>
                             <label>Свой вариант</label>
                             <input name='poself' type='text' value="<?= $viData['poself'] ?>" class="psv__input">
                             <div class="psv__filter-btn btn__orange">ОК</div>
                             <div class="clearfix"></div>
                         </div>
+                        <?*/?>
+                        <div class="clearfix"></div>
                         <span class="more-posts">Показать все</span>
                     </div>
                 </div>

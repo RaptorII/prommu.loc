@@ -233,7 +233,9 @@ foreach($attrAll as $p)
               <div class="profile__field" id="phone-field">
                 <b class="profile__field-name">Телефон:</b>
                 <input type='text' name='user-attribs[mob]' value="<?=$attr['phone']?>" class="profile__field-input" id="phone-code" autocomplete="off">
-                <span class="epa__add-phone-btn js-g-hashint" title="Добавить еще телефон" id="add_phone">+</span>
+                <? if(count($arAdPhones)<10): ?>
+                  <span class="epa__add-phone-btn js-g-hashint" title="Добавить еще телефон" id="add_phone">+</span>
+                <? endif; ?>
                 <? /*if($attr['confirmPhone']): ?>
                   <span class="epa__confirm complete js-g-hashint" title="Телефон подтвержден"></span>
                 <? else: ?>
@@ -299,8 +301,16 @@ foreach($attrAll as $p)
               </div>
             </div>
           </div>
-
-          <div class="col-xs-12 col-sm-6 profile__col"></div>
+          <? if(count($arAdPhones)): ?>
+            <? foreach ($arAdPhones as $k => $v): ?>
+              <div class="col-xs-12 col-sm-6 epa__add-phone profile__col">
+                <label class="profile__field">
+                  <b class="profile__field-name">Доп. Телефон:</b>
+                  <input type="text" name="user-attribs[admob<?=$k?>]" value="<?=$v['val']?>" class="profile__field-input epa__phone" autocomplete="off">
+                </label>
+              </div>
+            <? endforeach; ?>
+          <? endif; ?>
           <div class="clearfix"></div>
 
           <b class="profile__field-name">Мессенджеры:</b><br>
@@ -711,7 +721,7 @@ foreach($attrAll as $p)
                   if($this->ViewModel->isInArray($attrAll, 'id_attr', $val['id']))
                   {
                     $arRes[$val['id']]['checked'] = 'checked';
-                    $name .= ($name=='' ? '' : ',') . $val['name'];
+                    $name .= ($name=='' ? '' : ', ') . $val['name'];
                   }
                 }
               ?>

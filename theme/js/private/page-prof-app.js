@@ -33,20 +33,6 @@ jQuery(function($){
 			timerHint = setTimeout(function(){ $('.ppp__rating-block p').fadeOut(300) },500);
 		}
 	});
-	//fixed menu in personal account
-	var posAccMenu = $('.personal-acc__menu').offset().top - 100;
-	$(window).on('resize scroll',scrollAccMenu);
-	scrollAccMenu();
-	function scrollAccMenu()
-	{
-		(
-			$(document).scrollTop() > posAccMenu
-			&&
-			$(window).width() < 768
-		)
-			? $('.personal-acc__menu').addClass('fixed')
-			: $('.personal-acc__menu').removeClass('fixed');
-	}
 	//
 	$('.ppp__self-employed-question').on('click',function(){
     $.fancybox.open({
@@ -62,5 +48,9 @@ jQuery(function($){
 			type: 'inline',
 			touch: false
 		});
+	});
+	// вывод всех языков
+	$('.ppp__field-lang em').click(function(){
+		$(this).hide().siblings('span').show();
 	});
 });

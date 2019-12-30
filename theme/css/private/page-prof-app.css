@@ -491,7 +491,7 @@
   line-height: 24px;
   font-size: 15px;
 }
-
+.ppp__field-lang .ppp__field-val em{ cursor: pointer }
 .ppp__checkboxes {
   margin: 24px 0 10px;
 }
@@ -536,7 +536,7 @@
 }
 
 .ppp__about {
-  margin: 25px 15px 35px
+  margin: 0 15px 35px;
 }
 
 .ppp__about.error {
@@ -1624,7 +1624,9 @@ a.upp__project-info {
 .question_popup.prmu-btn.prmu-btn_normal:hover:before {
     background: rgba(171,184,32, 1);
 }
-
+.ppp__field-lang .ppp__field-name{
+  vertical-align: top;
+}
 @media screen and (min-width: 768px) {
   /* custom popup */
   .fancybox-is-open .popup__msg {

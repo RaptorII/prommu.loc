@@ -95,7 +95,7 @@ var ApplicantEditPage = (function () {
         	html = $('#add-additional-phone').html().replace(/NEWNUM/g, len),
 					block = (len ? '#contacts-module .epa__add-phone:eq(-1)' : '#email-confirm');
 
-      if(len>9)
+      if(len==9)
 			{
 				$(this).hide();
 			}
@@ -112,13 +112,18 @@ var ApplicantEditPage = (function () {
         $(this).val(val.substr(0, self.ABOUT_LEN));
 			}
 		});
+    $('.epa__textarea').on('change', function(){
+      let v = $(this).val().trim().substr(0, self.ABOUT_LEN);
+      self.error(this,!v.length)
+    });
     // проверка доп телефона
     $(document).on(
       'input',
       '.epa__phone',
       function(){
         let v = $(this).val().replace(/[^0-9-)(+]/gi,'');
-        $(this).val(v);
+
+        $(this).val(v.substr(0, self.RUSSIAN_PHONE_LEN));
       });
     // проверка периода времени работы
     $(document).click(function(e){
@@ -315,7 +320,7 @@ var ApplicantEditPage = (function () {
 			{
 				if(v!=self.EMAIL) // проверка на уникальность
 				{
-					MainScript.stateLoading(true);
+          MainScript.stateLoading(true);
 					$.ajax({
 						type: 'POST',
 						url: self.URL_EMAIL_CHECK,
@@ -323,7 +328,7 @@ var ApplicantEditPage = (function () {
 						dataType: 'json',
 						success: function(ajaxError)
 						{
-							MainScript.stateLoading(false);
+              MainScript.stateLoading(false);
 							self.error($inp, ajaxError);
 							if(ajaxError)
 							{
@@ -406,7 +411,7 @@ var ApplicantEditPage = (function () {
 
     if(code.length)
     {
-			MainScript.stateLoading(true);
+      MainScript.stateLoading(true);
       $('#' + e + '-confirm').hide();
       $.ajax({
         type: 'POST',
@@ -684,7 +689,7 @@ jQuery(function($){
 			if($(this).is(':checked'))
 				arLang.push($(this).siblings('label').text());
 		});
-		$('#epa-str-language').val(arLang);
+		$('#epa-str-language').val(arLang.join(', '));
 	});
 	// события выбора вакансии
 	$('#epa-list-posts').on('change', 'input', function(e){
@@ -1055,10 +1060,7 @@ jQuery(function($){
 
 		e.preventDefault();
 
-		if(MainScript.isButtonLoading(self))
-			return false;
-		else
-			MainScript.buttonLoading(self,true);
+    MainScript.stateLoading(true);
 
 		resEmail = epattern.test(nemail) ? remErr('.epa__email') : addErr('.epa__email');
 		$('.epa__email').removeClass('erroremail');
@@ -1107,7 +1109,7 @@ jQuery(function($){
 						var arErrors = $('.error');
 						if(arErrors.length>0)
 						{
-							MainScript.buttonLoading(self,false);
+              MainScript.stateLoading(false);
 							$.fancybox.open({
 								src: '.prmu__popup',
 								type: 'inline',
@@ -1192,7 +1194,7 @@ jQuery(function($){
 			var arErrors = $('.error');
 			if(arErrors.length>0)
 			{
-				MainScript.buttonLoading(self,false);
+        MainScript.stateLoading(false);
         $.fancybox.open({
           src: '.prmu__popup',
           type: 'inline',
@@ -1472,11 +1474,11 @@ jQuery(function($){
 	// check fields
 	function checkField(e){
 		var $it = $(e),
-			val = $it.val(),
-			id = $it.prop('id'),
-			label = $it.closest('.epa__label'),
-			epattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i,
-			res = false;
+        val = $it.val(),
+        id = $it.prop('id'),
+        label = $it.closest('.profile__field'),
+        epattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i,
+        res = false;
 
 		if(id=='epa-email'){ // email
 			res = epattern.test(val) ? remErr(label) : addErr(label);

@@ -223,7 +223,6 @@ class SiteController extends AppController
         $this->directToCompleteRegistration();
         //
         $id = filter_var(Yii::app()->getRequest()->getParam('id'), FILTER_SANITIZE_NUMBER_INT);
-        var_dump($id);
         if(!empty($id))
         {
             if( $id < 1 ) 
