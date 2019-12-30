@@ -254,9 +254,10 @@ class Mailing extends CActiveRecord
       if($isUrgent) // срочные отправляем сразу
       {
         $SM = Yii::app()->swiftMailer; // swiftMailer !!!!!!!!!!!!!!!!!!!!!!!
-        $Transport = $SM->smtpTransport('ssl://smtp.gmail.com', 465, 'ssl')
-                            ->setUsername('automailerprommu@gmail.com')
-                            ->setPassword('O9Igvv6YZhOX');
+        $Transport = $SM->smtpTransport('mail.companyreport.net', 25, 'null')
+          ->setUsername('noreply@prommu.com')
+          ->setPassword('1I1OD6iL');
+
 
         $Mailer = $SM->mailer($Transport);
 
@@ -306,9 +307,10 @@ class Mailing extends CActiveRecord
 			return $arRes;
 
 		$SM = Yii::app()->swiftMailer; // swiftMailer !!!!!!!!!!!!!!!!!!!!!!!
-	 $Transport = $SM->smtpTransport('ssl://smtp.gmail.com', 465, 'ssl')
-                            ->setUsername('automailerprommu@gmail.com')
-                            ->setPassword('O9Igvv6YZhOX');
+	 $Transport = $SM->smtpTransport('mail.companyreport.net', 25, 'null')
+          ->setUsername('noreply@prommu.com')
+          ->setPassword('1I1OD6iL');
+
 
 		$Mailer = $SM->mailer($Transport);
 
