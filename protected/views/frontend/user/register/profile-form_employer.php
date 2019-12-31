@@ -74,6 +74,14 @@ $userInfo = $viData['userAllInfo']['emplInfo'];
                         class="ppe__logo-main__img<?=(!empty($photo)?' active-logo':'')?>">
             </div>
         </div>
+        <p class="center">
+          <small>
+            Допустимые форматы: <?=implode(', ', UserProfile::$AR_FILE_FORMAT);?><br>
+            Минимальное разрешение: <?=UserProfile::$MIN_IMAGE_SIZE?>px<br>
+            Максимальное разрешение: <?=UserProfile::$MAX_IMAGE_SIZE?>px<br>
+            Допустимый размеh: до <?=UserProfile::$MAX_FILE_SIZE?> Мб.
+          </small>
+        </p>
         <p class="upload-block">
             <span class="prmu-btn prmu-btn_normal btn-upload"><span>Загрузить фото</span></span>
             <span class="input"><input type="file" name="upload" class="input-upload hide"></span>

@@ -19,6 +19,7 @@ var YiiUpload = (function () {
   YiiUpload.prototype.signatureLen = 50; // допустимая длина подписи
   YiiUpload.prototype.ajaxResult;
   YiiUpload.prototype.bWebCam;
+  YiiUpload.prototype.video;
 
   function YiiUpload()
   {
@@ -27,7 +28,7 @@ var YiiUpload = (function () {
   //
   YiiUpload.prototype.init = function ()
   {
-    let self = this;
+    var self = this;
 
     self.bWebCam = arguments[0].useWebcam;
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
@@ -214,7 +215,7 @@ var YiiUpload = (function () {
       self.objCropper.rotate(-90)
     });
     $('.YiiUpload__editor').fadeIn();
-  }
+  };
   //
   //
   YiiUpload.prototype.setSuccess = function ()
@@ -266,19 +267,19 @@ var YiiUpload = (function () {
     self.addButtons(['close']);
     self.bComplete = true;
     self.bFinish = true;
-  }
+  };
   //
   //
   YiiUpload.prototype.changeCropField = function ()
   {
     this.cropOptions[this.cropperCnt]=arguments[0];
-  }
+  };
   //
   // set errors
   YiiUpload.prototype.setError = function ()
   {
     $(this.errors).html(arguments[0]!=null ? arguments[0] : '');
-  }
+  };
   //
   // set buttons
   YiiUpload.prototype.addButtons = function ()
@@ -303,22 +304,20 @@ var YiiUpload = (function () {
       $(self.btns).append('<div class="YiiUpload__form-btn YiiUpload__'
         + this + '">' + objBtns[this] + '</div>');
     });
-  }
+  };
   //
   // add inputs
   YiiUpload.prototype.addInput = function ()
   {
     let self = this;
     $(self.inputs).append('<input type="file" name="upload[]" class="YiiUpload__form-input">');
-  }
+  };
   //
   // set popup title
   YiiUpload.prototype.setTitle = function ()
   {
     let self = this,
-      result = arguments[0];
-
-    console.log(self.params);
+        result = arguments[0];
 
     if(typeof result!=='string')
     {
@@ -343,24 +342,25 @@ var YiiUpload = (function () {
   // get stream from webcam
   YiiUpload.prototype.getStream = function (stream)
   {
-    let browser,
-      self = this,
-      video = document.querySelector('.YiiUpload__camera video'),
-      dataBrowser = [
-        { string:navigator.userAgent, subString:"Chrome", identity:"Chrome" },
-        { string:navigator.userAgent, subString:"OmniWeb", versionSearch:"OmniWeb/", identity:"OmniWeb" },
-        { string:navigator.vendor, subString:"Apple", identity:"Safari", versionSearch:"Version" },
-        { prop:window.opera, identity:"Opera", versionSearch:"Version" },
-        { string:navigator.vendor, subString:"iCab", identity:"iCab" },
-        { string:navigator.vendor, subString:"KDE", identity:"Konqueror" },
-        { string:navigator.userAgent, subString:"Firefox", identity:"Firefox" },
-        { string:navigator.vendor, subString:"Camino", identity:"Camino" },
-        { string:navigator.userAgent, subString:"Netscape", identity:"Netscape" },
-        { string:navigator.userAgent, subString:"MSIE", identity:"Internet Explorer", versionSearch:"MSIE" },
-        { string:navigator.userAgent, subString:"Gecko", identity:"Mozilla", versionSearch:"rv" },
-        { string:navigator.userAgent, subString:"Mozilla", identity:"Netscape", versionSearch: "Mozilla" },
-        { string:navigator.vendor, subString:"Apple", identity:"Safari", versionSearch:"Version" }
-      ];
+    var self = this,
+        browser,
+        dataBrowser = [
+          { string:navigator.userAgent, subString:"Chrome", identity:"Chrome" },
+          { string:navigator.userAgent, subString:"OmniWeb", versionSearch:"OmniWeb/", identity:"OmniWeb" },
+          { string:navigator.vendor, subString:"Apple", identity:"Safari", versionSearch:"Version" },
+          { prop:window.opera, identity:"Opera", versionSearch:"Version" },
+          { string:navigator.vendor, subString:"iCab", identity:"iCab" },
+          { string:navigator.vendor, subString:"KDE", identity:"Konqueror" },
+          { string:navigator.userAgent, subString:"Firefox", identity:"Firefox" },
+          { string:navigator.vendor, subString:"Camino", identity:"Camino" },
+          { string:navigator.userAgent, subString:"Netscape", identity:"Netscape" },
+          { string:navigator.userAgent, subString:"MSIE", identity:"Internet Explorer", versionSearch:"MSIE" },
+          { string:navigator.userAgent, subString:"Gecko", identity:"Mozilla", versionSearch:"rv" },
+          { string:navigator.userAgent, subString:"Mozilla", identity:"Netscape", versionSearch: "Mozilla" },
+          { string:navigator.vendor, subString:"Apple", identity:"Safari", versionSearch:"Version" }
+        ];
+
+    self.video = document.querySelector('.YiiUpload__camera video');
 
     for (let i=0;i<dataBrowser.length;i++)
     {
@@ -376,12 +376,12 @@ var YiiUpload = (function () {
 
     if(browser=='Safari')
     {
-      video.srcObject = stream;
-      video.play();
+      self.video.srcObject = stream;
+      self.video.play();
     }
     else
     {
-      video.srcObject = stream;
+      self.video.srcObject = stream;
     }
 
     setTimeout(function(){
@@ -440,13 +440,13 @@ var YiiUpload = (function () {
       .off('click','.YiiUpload__crop')
       .off('input','.YiiUpload__editor-field>input')
       .off('blur','.YiiUpload__editor-field>input');
-  }
+  };
   //
   // event popup
   //
   YiiUpload.prototype.createEvents = function ()
   {
-    let self = this;
+    var self = this;
 
     $('body').on('click','.YiiUpload__block',function(e){
       //
@@ -549,17 +549,18 @@ var YiiUpload = (function () {
       //
       if($(e.target).hasClass('YiiUpload__wc_shoot')) // get snapshot
       {
-        let canvas = document.querySelector('.YiiUpload__camera canvas'),
-          video = document.querySelector('.YiiUpload__camera video'),
-          width = video.videoWidth,
-          height = video.videoHeight,
-          context = canvas.getContext('2d'); // Объект для работы с canvas
+        let width, height,
+            canvas = document.querySelector('.YiiUpload__camera canvas'),
+            context = canvas.getContext('2d'); // Объект для работы с canvas
 
+        self.video = document.querySelector('.YiiUpload__camera video');
+        width = self.video.videoWidth;
+        height = self.video.videoHeight;
         // Установка размеров canvas идентичных с video
         canvas.width = width;
         canvas.height = height;
         // Отрисовка текущего кадра с video в canvas
-        context.drawImage(video, 0, 0, width, height);
+        context.drawImage(self.video, 0, 0, width, height);
         // Преобразование кадра в изображение dataURL
         let imageDataURL = canvas.toDataURL('image/png');
         if(imageDataURL.length>6)
@@ -586,6 +587,7 @@ var YiiUpload = (function () {
         { u8arr[n] = bstr.charCodeAt(n); };
         file = new File([u8arr], name, {type:mime});
         self.snapshots.push(file);
+        self.video.srcObject.getTracks()[0].stop(); // выключаем поток
 
         $(image).hide();
         $(self.camera).hide();
@@ -781,7 +783,7 @@ var YiiUpload = (function () {
         let value = $(this).val().trim();
         $(this).val(value);
       });
-  }
+  };
   //
   return YiiUpload;
 }());

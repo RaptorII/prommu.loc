@@ -64,12 +64,11 @@
       <?php endif; ?>
 
       <p class="separator center">
-        Допустимые форматы файлов <?=implode(', ', UserProfile::$AR_FILE_FORMAT);?>
+        Допустимые форматы - <?=implode(', ', UserProfile::$AR_FILE_FORMAT);?><br>
+        Минимальное разрешение - <?=UserProfile::$MIN_IMAGE_SIZE?>px<br>
+        Максимальное разрешение - <?=UserProfile::$MAX_IMAGE_SIZE?>px<br>
+        Допустимый размер - до <?=UserProfile::$MAX_FILE_SIZE?> Мб.
       </p>
-      <p class="separator center pad0">
-        Размер не более <?=UserProfile::$MAX_FILE_SIZE?> Мб.
-      </p>
-
       <p class="separator center upload-block">
         <span class="btn-orange btn-upload">Загрузить фото</span>
         <span class="input"><input type="file" name="upload" class="input-upload"></span>
