@@ -1567,6 +1567,9 @@ input:checked + .fav__label-checkbox:after {
   flex-wrap: wrap;
   margin: 0 -15px;
 }
+.fav__flex-list.av__flex-list-full{
+  justify-content: initial;
+}
 
 .fav__flex-item {
   padding: 0 15px 20px;

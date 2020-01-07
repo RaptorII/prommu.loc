@@ -70,7 +70,31 @@
 #DiContent .edit-profile-applicant .epa__label {
     border: 1px solid var(--color-grey);
 }
+.epa__attr-block {
+    margin: 0 0 10px 0;
+}
+.epa__attr-block2,
+.epa__attr-block1 {
+    width: 50%;
+    float: left;
+}
+#DiContent #main-module .epa__attr-block2 label,
+#DiContent #main-module .epa__attr-block1 label{
+    margin: 8px 0px 7px 0;
+    line-height: 20px;
+}
+#DiContent .edit-profile-applicant .epa__checkbox {
+    left: 15px;
+}
+#DiContent #contacts-module .epa__label:first-child{
+    display: flex;
+}
+.epa__select-list.epa__select-lst-vsbl li span{
+    background-color: #f7f7f7;
+}
+#DiContent .edit-profile-applicant .epa__label.epa__select{
 
+}
 @media screen and (min-width: 768px){
     #DiContent .edit-profile-applicant .epa__checkbox.epa__checkbox-famale:after {
         right: 10px;
@@ -141,9 +165,6 @@ padding-left: 100px;
 width: 100%;
 flex: 0 1 100%;
 }
-.epa__attr-block1 {
-width: 35%;
-}
 }
 
 @media (min-width: 768px) {
@@ -160,6 +181,7 @@ flex: 0 1 50%;
 
     #DiContent .edit-profile-applicant .epa__label.epa__select {
         padding: 0 10px 0 10px;
+        vertical-align: middle;
     }
     #DiContent .epa__date .epa__input {
         padding: 0 0 0 10px ;
@@ -173,21 +195,10 @@ flex: 0 1 50%;
     }
 
     .epa__attr-block {
-        margin: 0;
         width: 49%;
         display: inline-block;
+        vertical-align: middle;
     }
-    .epa__attr-block2,
-    .epa__attr-block1 {
-        width: 50%;
-    }
-    #DiContent #main-module .epa__attr-block2 label,
-    #DiContent #main-module .epa__attr-block1 label{
-        margin: 0;
-        line-height: 14px;
-    }
-
-
 }
 
 @media (min-width: 990px) {
@@ -196,9 +207,9 @@ flex: 0 1 50%;
         width: 95px;
     }
 
-    .epa__content-module {
+   /* .epa__content-module {
         padding-right: 65px;
-    }
+    }*/
 }
 /*.complete__prof-list li{*/
     /*position: relative;*/
@@ -1003,4 +1014,8 @@ flex: 0 1 50%;
 #avatar_form .prmu-btn.prmu-btn_normal{
     max-width: 100%;
     margin: 0 auto 15px;
+}
+.epa__attr-block.error:before {
+    height: initial;
+    margin: 0;
 }

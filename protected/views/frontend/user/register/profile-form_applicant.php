@@ -268,7 +268,7 @@ asort($arCities);
                                     <li>
                                         <input type="checkbox" name="donjnost[]" value="<?= $post['id'] ?>"
                                                id="epa-post-<?= $post['id'] ?>" <?= $post['checked'] ?>>
-                                        <label for="epa-post-<?= $post['id'] ?>"><?= $post['newname'] ?><b></b></label>
+                                        <label for="epa-post-<?= $post['id'] ?>"><span><?= $post['newname'] ?></span><b></b></label>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>

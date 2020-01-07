@@ -1153,7 +1153,15 @@ a.upp__project-info {
   padding: 7px 0;
   line-height: normal;
 }
-
+.ppp__field.ppp__post-field.ppp__post-field-pay .ppp__field-val,
+.ppp__field.ppp__post-field.ppp__post-field-pay em{
+  width: 3%;
+  text-align: left;
+}
+.ppp__field.ppp__post-field.ppp__post-field-pay em{
+  width: 20%;
+  text-align: left;
+}
 /*
 *   MEDIA
 */
@@ -1253,7 +1261,9 @@ a.upp__project-info {
   .ppp__module {
     padding-right: 100px;
   }
-
+  .ppp__module.ppp__module-posts{
+    padding-right: 0px;
+  }
   .for-guest .ppp__post-list .ppp__clear-two {
     clear: initial
   }

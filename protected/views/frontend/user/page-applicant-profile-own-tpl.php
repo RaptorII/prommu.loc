@@ -658,7 +658,7 @@
     //    VACANCIES
     ?>
     <div class="ppp__module-title"><h2>ЦЕЛЕВАЯ ВАКАНСИЯ </h2></div>
-    <div class="ppp__module">
+    <div class="ppp__module ppp__module-posts">
         <?php
         /**
         * Shut down  viewed Target Vacancy
@@ -679,7 +679,7 @@
           <?php foreach ($arPosts as $post): ?>
             <div class="ppp__post-item">
               <div class="ppp__post-name"><b>Должность: </b><span><?=$post['val']?></span></div>
-              <div class="ppp__field ppp__post-field">
+              <div class="ppp__field ppp__post-field ppp__post-field-pay">
                 <span class="ppp__field-name">Ожидаемая оплата: </span>
                 <span class="ppp__field-val"><?=$post['pay']?></span>
                 <em>руб</em>
