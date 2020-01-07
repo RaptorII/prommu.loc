@@ -633,13 +633,23 @@
       </div>
       <div class="ppp__checkboxes">
         <div class="ppp__attr-block1">
-          <span class="ppp__checkbox <?=($attr['ismed'] ? 'active' : '')?>">Медкнижка</span>
-          <span class="ppp__checkbox <?=($attr['ishasavto'] ? 'active' : '')?>">Автомобиль</span>
-          <span class="ppp__checkbox <?=($attr['smart'] ? 'active' : '')?>">Смартфон</span>
+          <? if($attr['ismed']): ?>
+            <span class="ppp__checkbox <?=($attr['ismed'] ? 'active' : '')?>">Медкнижка</span>
+          <? endif; ?>
+          <? if($attr['ishasavto']): ?>
+            <span class="ppp__checkbox <?=($attr['ishasavto'] ? 'active' : '')?>">Автомобиль</span>
+          <? endif; ?>
+          <? if($attr['smart']): ?>
+            <span class="ppp__checkbox <?=($attr['smart'] ? 'active' : '')?>">Смартфон</span>
+          <? endif; ?>
         </div>
         <div class="ppp__attr-block2">
-          <span class="ppp__checkbox <?=($attr['cardPrommu'] ? 'active' : '')?>">Наличие банковской карты Prommu</span>
-          <span class="ppp__checkbox <?=($attr['card'] ? 'active' : '')?>">Наличие другой банковской карты</span>
+          <? if($attr['cardPrommu']): ?>
+            <span class="ppp__checkbox <?=($attr['cardPrommu'] ? 'active' : '')?>">Наличие банковской карты Prommu</span>
+          <? endif; ?>
+          <? if($attr['card']): ?>
+            <span class="ppp__checkbox <?=($attr['card'] ? 'active' : '')?>">Наличие другой банковской карты</span>
+          <? endif; ?>
         </div>
         <div class="clearfix"></div>
       </div>
