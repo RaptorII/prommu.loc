@@ -97,27 +97,32 @@ class MailingLetter extends Mailing
 		$this->text = $obj->getParam('text');
 		// in_template
 		$this->in_template = $obj->getParam('in_template');
-		
+
 		if(
 			(!count($arParams['status']) && !count($arParams['moder']) && empty($arParams['subscribe']))
-			&& 
+			&&
 			!count($arReceiver)
-		)
+		) {
 			$arRes['messages'][] = 'необходимо задать параметры для выборки пользователей или ввести корректный Email';
-		if(empty($this->title) || empty($this->text))
+			Yii::app()->user->setFlash('danger', $arRes['messages'][0]);
+			$arRes['error'] = true;
+			$arRes['redirect'] = true;
+			$arRes['item'] = $this;
+			return $arRes;
+		}
+		if(empty($this->title) || empty($this->text)) {
 			$arRes['messages'][] = 'поля "Заголовок" и "Текст письма" должны быть заполнены';
+			Yii::app()->user->setFlash('danger', $arRes['messages'][0]);
+			$arRes['error'] = true;
+			$arRes['redirect'] = true;
+			$arRes['item'] = $this;
+			return $arRes;
+		}
 
 		$this->params = serialize($arParams);
 		$template = new MailingTemplate;
 		$arRes['template'] = $template->getActiveTemplate();
 
-		if(count($arRes['messages'])) // error
-		{
-			$arRes['error'] = true;
-			$arRes['item'] = $this;
-			return $arRes;
-		}
-		
 		$event = $obj->getParam('event_type');
 
 		// Сохраняем в любом случае
