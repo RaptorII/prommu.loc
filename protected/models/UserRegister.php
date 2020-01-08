@@ -240,7 +240,7 @@ class UserRegister
           'type' => $post['type'],
           'referer' => filter_var($post['referer'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
           'transition' => filter_var($post['transition'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-          'canal' => filter_var($post['canal'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+          'canal' => '',//filter_var($post['canal'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
           'campaign' => filter_var($post['campaign'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
           'content' => filter_var($post['content'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
           'keywords' => filter_var($post['keywords'], FILTER_SANITIZE_FULL_SPECIAL_CHARS),
@@ -301,6 +301,7 @@ class UserRegister
           )
           {
             $arData['canal'] = 'smm';
+            $arData['transition']=='facebook_smm' && $arData['transition']='facebook';
           }
           else if(
             strripos($arData['transition'],'yandex')!==false
@@ -318,12 +319,16 @@ class UserRegister
             $arData['canal'] = 'direct';
           }
           else if (
-              strripos($arData['last_referer'], 'yandex') !== false
-              ||
-              strripos($arData['last_referer'], 'google') !== false
-            )
+            strripos($arData['last_referer'], 'yandex') !== false
+            ||
+            strripos($arData['last_referer'], 'google') !== false
+          )
           {
             $arData['canal'] = 'organic';
+          }
+          elseif(strripos($arData['last_referer'],'away.vk.com')!==false)
+          {
+            $arData['canal'] = 'smm';
           }
           else
           {
@@ -342,7 +347,7 @@ class UserRegister
           default: break;
         }
         // устанавливаем Источник
-        $arData['transition']=='https:' && $arData['transition']='direct';
+        ($arData['transition']=='https:' || $arData['transition']=='http:') && $arData['transition']='direct';
         if(empty($arData['transition']))
         {
           if($arData['canal']=='direct')
@@ -358,13 +363,31 @@ class UserRegister
             else // вытягиваем домен
             {
               $uri = strtolower(trim($arData['last_referer']));
-              $uri = preg_replace('%^(https:\/\/)*(www.)*%usi','',$uri);
+              if(strripos($uri,'https')!==false)
+              {
+                $uri = preg_replace('%^(https:\/\/)*(www.)*%usi','',$uri);
+              }
+              else
+              {
+                $uri = preg_replace('%^(http:\/\/)*(www.)*%usi','',$uri);
+              }
               $arData['transition'] = preg_replace('%\/.*$%usi','',$uri);
             }
           }
           elseif ($arData['canal']=='organic')
           {
-            $arData['transition']='search';
+            if(strripos($arData['last_referer'], 'yandex') !== false)
+            {
+              $arData['transition'] = 'yandex';
+            }
+            elseif(strripos($arData['last_referer'], 'google') !== false)
+            {
+              $arData['transition'] = 'google';
+            }
+            else
+            {
+              $arData['transition']='search';
+            }
           }
           else
           {
@@ -601,7 +624,7 @@ class UserRegister
     $arr['user'] = $this->user;
 
     return Yii::app()->db->createCommand()
-              ->insert('user_register',$arr);
+      ->insert('user_register',$arr);
   }
   /**
    * @return bool
@@ -769,6 +792,13 @@ class UserRegister
   private function saveNewUser($messenger='')
   {
     $arUser = $this->getData();
+
+    $arUser['client'] = Yii::app()->db->createCommand()
+      ->select("client")
+      ->from('user_client a')
+      ->where('a.ip=:ip', [':ip'=>$arUser['ip']])
+      ->queryScalar();
+
     $date = date('Y-m-d H:i:s');
     $name = (Share::isApplicant($arUser['type'])
       ? $arUser['name'] . ' ' . $arUser['surname']
@@ -908,7 +938,7 @@ class UserRegister
       ->where(
         'date BETWEEN :date1 AND :date2',
         [':date1'=>$d1, ':date2'=>$d2]
-        )
+      )
       ->queryAll();
 
     if(!count($query))
@@ -1023,8 +1053,8 @@ class UserRegister
   public function saveImage()
   {
     $arRes = ['error'=>[]];
-		$result = $this->existenceDir($this->filesRoot);
-		if(!$result)
+    $result = $this->existenceDir($this->filesRoot);
+    if(!$result)
     {
       $arRes['error'][] = 'Ошибка сохранения, обратитесь к администратору';
       return $arRes;
