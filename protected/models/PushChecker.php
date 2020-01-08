@@ -25,33 +25,42 @@ class PushChecker extends Model
      */
     public function getNewUerMessages()
     {
-        $id = $this->Profile->id;
+      $data = [];
+      $id = $this->Profile->id;
 
-        if( $this->Profile->type == 2 )
-        {
-            $resp = 1;
-            $where = 'id_usp';
-        }
-        else
-        {
-            $resp = 0;
-            $where = 'id_use';
-        } // endif
+      if( $this->Profile->type == 2 )
+      {
+        $resp = 1;
+        $where = 'id_usp';
+      }
+      else
+      {
+        $resp = 0;
+        $where = 'id_use';
+      } // endif
 
+      if($id>0)
+      {
         $sql = "SELECT ct.id
-              , coun.countn count
-              -- , em.name, em.logo, em.firstname nnn, em.lastname fff
-            FROM chat_theme ct
-            INNER JOIN (
-                SELECT ca.id_theme, COUNT(*) countn FROM chat ca WHERE ca.is_read = 0 AND ca.is_resp = {$resp} GROUP BY ca.id_theme 
-            ) coun ON coun.id_theme = ct.id
-            WHERE ct.{$where} = {$id}";
+                , coun.countn count
+                -- , em.name, em.logo, em.firstname nnn, em.lastname fff
+              FROM chat_theme ct
+              INNER JOIN (
+                  SELECT ca.id_theme, COUNT(*) countn FROM chat ca WHERE ca.is_read = 0 AND ca.is_resp = {$resp} GROUP BY ca.id_theme 
+              ) coun ON coun.id_theme = ct.id
+              WHERE ct.{$where} = {$id}";
         /** @var $res CDbCommand */
         $res = Yii::app()->db->createCommand($sql);
         $data['newmessages'] = $res->queryAll();
-        $data['vacancy_public_mess_cnt'] = VacDiscuss::publicVacChatCnt();
+      }
+      else
+      {
+        $data['newmessages'] = [];
+      }
 
-        return $data;
+      $data['vacancy_public_mess_cnt'] = VacDiscuss::publicVacChatCnt();
+
+      return $data;
     }
 
 
