@@ -49,6 +49,10 @@
 						<span class="pa-service__item-name premium">Премиум-вакансии</span>
 						<span class="pa-service__item-cnt"><b><?=$viData['services']['vacancy']?></b></span>
 					</div>
+                    <div class="pa-service__item">
+                        <span class="pa-service__item-name premium">Вверх вакансию</span>
+                        <span class="pa-service__item-cnt"><b><?=$viData['services']['upvacancy']?></b></span>
+                    </div>
 					<div class="pa-service__item">
 						<span class="pa-service__item-name email">Электронная почта</span>
 						<span class="pa-service__item-cnt"><b><?=$viData['services']['email']?></b></span>

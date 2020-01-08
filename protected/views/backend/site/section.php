@@ -139,6 +139,12 @@
 				</a>
 			</li>
 			<li>
+				<a href="<?=$hUrl?>services?type=upvacancy">
+                	<i class="glyphicon glyphicon-level-up"></i>
+					<span>Вверх вакансию</span>
+				</a>
+			</li>
+			<li>
 				<a href="<?=$hUrl?>services?type=email">
 					<i class="glyphicon">@</i>
 					<span>Электронная почта</span>

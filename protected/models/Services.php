@@ -363,6 +363,7 @@ class Services extends Model
       {
         case 'creation-vacancy': $name = 'Создание вакансии'; break;
         case 'vacancy': $name = 'Премиум вакансия'; break;
+        case 'upvacancy': $name = 'Вверх вакансию'; break;
         case 'repost': $name = 'Публикация в соцсетях'; break;
         case 'email': $name = 'Электронная почта'; break;
         case 'push': $name = 'PUSH уведомления'; break;
@@ -388,7 +389,7 @@ class Services extends Model
       if($cnt>0)
       {
         $arRes['items'][] = [
-          'name' => 'Заказ услаг гостями',
+          'name' => 'Заказ услуг гостями',
           'link' => '/admin/service/service_order',
           'icon' => 'glyphicon-envelope',
           'cnt' => $cnt
@@ -406,6 +407,15 @@ class Services extends Model
             'link' => '/admin/service/service_cloud/vacancy',
             'icon' => 'glyphicon-star-empty',
             'cnt' => $arOrder['vacancy']
+          ];
+        }
+        if($arOrder['upvacancy']>0) // upvacancy
+        {
+          $arRes['items'][] = [
+              'name' => Services::getServiceName('upvacancy'),
+              'link' => '/admin/service/service_cloud/upvacancy',
+              'icon' => 'glyphicon-level-up',
+              'cnt' => $arOrder['upvacancy']
           ];
         }
         if($arOrder['email']>0) // email

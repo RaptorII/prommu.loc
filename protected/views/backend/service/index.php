@@ -18,6 +18,12 @@
       </a>
     </li>
     <li>
+      <a href="<?=$this->createUrl('service/service_cloud/upvacancy')?>">
+        <i class="glyphicon glyphicon-level-up"></i>
+        <span><?=Services::getServiceName('upvacancy')?></span>
+      </a>
+    </li>
+    <li>
       <a href="<?=$this->createUrl('service/service_cloud/email')?>">
         <i class="glyphicon">@</i>
         <span><?=Services::getServiceName('email')?></span>

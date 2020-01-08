@@ -563,6 +563,12 @@ else
                                 <span><?=Services::getServiceName('vacancy')?></span>
                             </a>
                         </li>
+                        <li class="<?=($action=='service_cloud' && $service=='upvacancy' ? 'active' : '')?>">
+                            <a href="<?= $hUrl ?>service/service_cloud/upvacancy">
+                                <i class="glyphicon glyphicon-level-up"></i>
+                                <span><?=Services::getServiceName('upvacancy')?></span>
+                            </a>
+                        </li>
                         <li class="<?=($action=='service_cloud' && $service=='email' ? 'active' : '')?>">
                             <a href="<?= $hUrl ?>service/service_cloud/email">
                                 <i class="glyphicon">@</i>
