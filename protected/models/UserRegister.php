@@ -850,8 +850,8 @@ class UserRegister
       $model = new Promo();
       $model->registerUser([
         'id_user' => $id_user,
-        'firstname' => $arUser['name'],
-        'lastname' => $arUser['surname'],
+        'firstname' => (!empty($arUser['name']) ? $arUser['name'] : ''),
+        'lastname' => (!empty($arUser['surname']) ? $arUser['surname'] : ''),
         'date_public' => $date,
         'mdate' => $date,
         'isblocked' => User::$ISBLOCKED_NOT_FULL_ACTIVE
