@@ -1045,17 +1045,20 @@ class UserController extends AppController
                     $data = $model->orderUpVacancy($vac, $price, $emp);
                     if($rq->getParam('personal')==='individual') // физ лица
                     {
+                        die('normal employer prise');
                         $link = $model->createPayLink($data['account'], $data['strVacancies'], $data['cost']);
                         $link && $this->redirect($link);
                     }
                     if($rq->getParam('personal')==='legal') // юр лица
                     {
+                        die('urist-employer prise');
                         $model->setLegalEntityReceipt($data['id']);
                         $this->redirect(MainConfig::$PAGE_SERVICES);
                     }
                 }
                 else
                 { // бесплатно или без цены
+                    die('clear prise');
                     $this->redirect(MainConfig::$PAGE_SERVICES);
                 }
                 break;
