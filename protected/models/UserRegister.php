@@ -786,10 +786,10 @@ class UserRegister
     }
   }
   /**
-   * @param $messenger - string (user => messenger)
+   * @param $arSocial - array ([messenger => user>messenger, birthday => birthday])
    * доведение до состояния старой регистрации
    */
-  private function saveNewUser($messenger='')
+  private function saveNewUser($arSocial=['messenger'=>'','birthday'=>null,'gender'=>0])
   {
     $arUser = $this->getData();
 
@@ -823,7 +823,7 @@ class UserRegister
       'mdate' => $date,
       'confirmEmail' => $arUser['login_type']==self::$LOGIN_TYPE_EMAIL,
       'confirmPhone' => $arUser['login_type']==self::$LOGIN_TYPE_PHONE,
-      'messenger' => $messenger,
+      'messenger' => $arSocial['messenger'],
       'ip' => $arUser['ip'] // чтоб при выгрузке не перекрывались поля
     ]);
     //
@@ -864,7 +864,7 @@ class UserRegister
       'fname' => $arUser['name'],
       'lname' => $arUser['surname'],
       'name'  => $arUser['name'],
-      'messenger' => $messenger,
+      'messenger' => $arSocial['messenger'],
       'type' => $arUser['type']
     ];
 
@@ -877,6 +877,20 @@ class UserRegister
     // resume
     if(Share::isApplicant($arUser['type']))
     {
+      if($arSocial['birthday']!=null)
+      {
+        $d1 = DateTime::createFromFormat('Y-m-d', $arSocial['birthday']);
+        $d2 = DateTime::createFromFormat('j.n.Y', $arSocial['birthday']);
+        if($d1 && $d1->format('Y-m-d') === $arSocial['birthday'])
+        {
+          $arSocial['birthday'] = $d1->format('Y-m-d');
+        }
+        elseif($d2 && $d2->format('j.n.Y') === $arSocial['birthday'])
+        {
+          $arSocial['birthday'] = $d2->format('Y-m-d');
+        }
+      }
+
       $model = new Promo();
       $model->registerUser([
         'id_user' => $id_user,
@@ -884,7 +898,8 @@ class UserRegister
         'lastname' => (!empty($arUser['surname']) ? $arUser['surname'] : ''),
         'date_public' => $date,
         'mdate' => $date,
-        'isblocked' => User::$ISBLOCKED_NOT_FULL_ACTIVE
+        'isblocked' => User::$ISBLOCKED_NOT_FULL_ACTIVE,
+        'birthday' => $arSocial['birthday']
       ]);
     }
     // employer
@@ -1040,7 +1055,11 @@ class UserRegister
       'password' => md5($arr['password']) // !!!!!! небезопасно
     ]);
 
-    $this->saveNewUser($arr['messenger']);
+    $this->saveNewUser([
+      'messenger' => $arr['messenger'],
+      'birthday' => $arr['birthday'],
+      'gender' => $arr['gender']
+    ]);
     return $this->getData();
   }
   //

@@ -1781,7 +1781,9 @@ private function registerUserFirsStep($inData)
       'name' => $data['fname'],
       'surname' => $data['lname'],
       'password' => "DdUu19221922SuSaNnAa", // загадочная константа пароля для всех юзеров из соцсетей)
-      'messenger' => $data['messenger']
+      'messenger' => $data['messenger'],
+      'gender' => $data['gender'],
+      'birthday' => $data['birthday']
     ]);
     return $arRegister['id_user'];
   }

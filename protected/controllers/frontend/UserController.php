@@ -253,7 +253,6 @@ class UserController extends AppController
       'name' => "$fName $lName",
       'gender' => $cloud['gender'],
       'birthday' => $cloud['birthday'],
-      'gender' => $cloud['gender'],
       'messenger' => $cloud['id'],
       'type' => $cloud['type']
     ]);
