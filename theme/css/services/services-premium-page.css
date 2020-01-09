@@ -55,6 +55,47 @@
   font-family: "RobotoCondensedBold", sans-serif, verdana;
 }
 
+.ps-vacancies__item.ps-vacancies__up {
+  position: relative;
+  top: 1px;
+  font-family: 'Glyphicons Halflings';
+}
+
+.ps-vacancies__item.ps-vacancies__up:before {
+  content: '';
+  width: 100px;
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -100px;
+  background: #FF8300;
+  transition: var(--main-trans);
+}
+.ps-vacancies__item.ps-vacancies__up.active:before {
+  right: 0;
+  transition: var(--main-trans);
+}
+
+.ps-vacancies__item.ps-vacancies__up:after {
+  content: "\e204";
+  position: absolute;
+  color: var(--color-white);
+  width: 100px;
+  right: -100px;
+  /*transform: translateX(-50%);*/
+  font-size: 40px;
+  background: none;
+}
+
+.ps-vacancies__item.ps-vacancies__up.active:after {
+  right: 5px;
+  transform: translateX(-50%);
+  position: absolute;
+  width: auto;
+  transition: var(--main-trans);
+}
+
 #DiContent .ps-vacancies__item-input {
   display: none;
 }

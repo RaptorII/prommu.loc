@@ -19,7 +19,11 @@ class PrommuOrder {
         $price = 0;
         $bin = $this->convertedRegion($arBD);
         
-        if($service=='premium-vacancy' || $service=='email-invitation') {
+        if(
+            $service=='premium-vacancy' ||
+            $service=='email-invitation'||
+            $service=='podnyatie-vacansyi-vverh'
+        ) {
             $arReg = $this->getRegionalPrice($service,$bin);
             $arPrices = Yii::app()->db->createCommand()
                 ->select("price")
@@ -457,6 +461,44 @@ class PrommuOrder {
       }
 
       return $arRes;
+    }
+
+    /**
+     * @param $arVacs
+     * @param $vacPrice
+     * @param $employer
+     * @return array|bool
+     */
+    public function orderUpVacancy($arVacs, $vacPrice, $employer)
+    {
+
+        display($employer);
+        display($vacPrice);
+        display($arVacs);
+//        display($_POST);
+
+        //die('orderUpVacancy 1');
+
+        //$employer = Share::$UserProfile->id;
+
+        if(!isset($employer))
+            return false;
+
+        $arRes = [];
+        $arRes['strVacancies'] = implode('.', $arVacs);
+        $arRes['account'] = $employer . '.' . $arRes['strVacancies'];
+
+        $arRes['cost'] = 0;
+        $arRes['id'] = [];
+        $arBDate = 'start data format';
+        $arEDate = 'end data format';
+        $day = 60 * 60 * 24;
+
+        $arRes['cost'] = $vacPrice * count($arVacs);
+
+        die('orderUpVacancy 2');
+
+        return $arRes;
     }
     /**
      * @param $arServices

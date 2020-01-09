@@ -22,7 +22,7 @@
 				</div>
 				<div class="ps-vacancies__list">
 					<?php foreach ($viData['vacs'] as $key => $val): ?>
-						<label class="ps-vacancies__item">
+						<label class="ps-vacancies__item ps-vacancies__up">
 							<div class="ps-vacancies__item-bg">
 								<span class="ps-vacancies__item-title"><?=$val['title'] ?></span>
 							</div>
@@ -30,7 +30,7 @@
 						</label>		
 					<?php endforeach; ?>
 				</div>
-				<input type="hidden" name="service" value="premium-vacancy">
+				<input type="hidden" name="service" value="podnyatie-vacansyi-vverh">
 				<br>
 				<button class="service__btn pull-right prmu-btn prmu-btn_normal"><span>ОПЛАТИТЬ</span></button>
 			</form>

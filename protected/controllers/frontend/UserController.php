@@ -1010,6 +1010,11 @@ class UserController extends AppController
         $emp = $rq->getParam('employer');
         $price = $model->servicePrice($vac, $service);
 
+        $priceUpVac = $rq->getParam('priceUpVac');
+        $personal = $rq->getParam('personal');
+
+        //display($_POST);
+
         switch ($service)
         {
             case 'premium-vacancy':
@@ -1032,6 +1037,28 @@ class UserController extends AppController
                 $this->redirect(MainConfig::$PAGE_SERVICES);
               }
               break;
+
+            // upvacancy
+            case 'podnyatie-vacansyi-vverh':
+                if($price>0)
+                { // оплата услуги
+                    $data = $model->orderUpVacancy($vac, $price, $emp);
+                    if($rq->getParam('personal')==='individual') // физ лица
+                    {
+                        $link = $model->createPayLink($data['account'], $data['strVacancies'], $data['cost']);
+                        $link && $this->redirect($link);
+                    }
+                    if($rq->getParam('personal')==='legal') // юр лица
+                    {
+                        $model->setLegalEntityReceipt($data['id']);
+                        $this->redirect(MainConfig::$PAGE_SERVICES);
+                    }
+                }
+                else
+                { // бесплатно или без цены
+                    $this->redirect(MainConfig::$PAGE_SERVICES);
+                }
+                break;
 
             case 'email-invitation':
                 if($price > 0)

@@ -287,7 +287,10 @@ var Payment = (function (){
             return false;
           else
             MainScript.buttonLoading(this,true);
+
+          //console.log( $('#payment-form').serializeArray() );
           $('#payment-form').submit();
+
         }
       });
     }

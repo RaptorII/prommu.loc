@@ -8,6 +8,9 @@
 	$this->ViewModel->addContentClass('page-payment');
 	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'page-payment.css');
 	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'payment-page.js', CClientScript::POS_END);
+
+
+	//display($viData);
 ?>
 <div class="row">
 	<div class="col-xs-12 payment">
@@ -90,12 +93,24 @@
 				<?php $result = $viData['app_count'] * $viData['mes_count'] * $viData['price']; ?>
 				<span id="payment-result"><?=$result?>рублей</span>			
 			<?endif;?>
+
+            <?if($viData['service']=='podnyatie-vacansyi-vverh'):?>
+                <?php $result = count($viData['vacancy']) * $viData['price']; ?>
+                <span id="payment-result"><?=$result?>рублей</span>
+                <input type="hidden" name="prise" value="<?=$viData['price']?>">
+                <input type="hidden" name="priseUpVac" value="<?=$result?>">
+                <input type="hidden" name="service" value="podnyatie-vacansyi-vverh">
+            <?endif;?>
+
       <? $this->renderPartial('../site/services/legal-fields',['viData'=>$viData]); ?>
+
+            <input type="hidden" name="employer" value="<?= Share::$UserProfile->id?>">
+
 			<div class="center">
 				<br>
 				<button type="submit" class="payment-form__btn prmu-btn prmu-btn_normal" id="payment-btn"><span>СФОРМИРОВАТЬ СЧЕТ</span></button>
 			</div>
-			<input type="hidden" name="employer" value="<?= Share::$UserProfile->id?>">
+
 		</form>
 	</div>
 </div>
