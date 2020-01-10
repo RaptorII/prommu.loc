@@ -1,3 +1,39 @@
+<?php
+//
+//  достижение цели для нового пользователя (после активации профиля)
+//
+if($flagOwnProfile && UserRegisterPageCounter::isSetData(Share::$UserProfile->id, UserRegister::$PAGE_ACTIVE_PROFILE) <= 0):
+?>
+  <? UserRegisterPageCounter::setByIdUser(Share::$UserProfile->id, UserRegister::$PAGE_ACTIVE_PROFILE); ?>
+  <script>
+    document.addEventListener("DOMContentLoaded", function(){
+      var yaParams = [{id_user:<?=Share::$UserProfile->id?>,type:"applicant"}];
+      var cnt = 0;
+      setGoal();
+      function setGoal()
+      {
+        cnt++;
+        if(cnt>10)
+        {
+          return;
+        }
+        if(typeof yaCounter23945542 === 'object')
+        {
+          yaCounter23945542.reachGoal(6,{params:yaParams});
+        }
+        else
+        {
+          setTimeout(function(){ setGoal() },500);
+        }
+      }
+    });
+  </script>
+<?
+endif;
+//
+//
+//
+?>
 <?/*?>
 <script src="https://www.google.com/jsapi"></script>
 <?*/?>

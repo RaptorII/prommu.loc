@@ -259,14 +259,16 @@ class UserController extends AppController
     $subdomainId = Yii::app()->request->cookies['ursd'];
     if(!empty($subdomainId)) // при попытке регистрации возвращаем юзера на страницу профиля поддомена(и там авторизуем)
     {
-      Subdomain::setRedirectInRegister($subdomainId, MainConfig::$PAGE_AFTER_REGISTER, $id_user);
+      //Subdomain::setRedirectInRegister($subdomainId, MainConfig::$PAGE_AFTER_REGISTER, $id_user);
+      Subdomain::setRedirectInRegister($subdomainId, MainConfig::$PAGE_PROFILE, $id_user);
     }
     else // авторизуем здесь
     {
       $model = new Auth();
       $model->AuthorizeNet(['id' => $id_user]);
       UserRegister::clearRegister();
-      $this->redirect(MainConfig::$PAGE_AFTER_REGISTER);
+      //$this->redirect(MainConfig::$PAGE_AFTER_REGISTER);
+      $this->redirect(MainConfig::$PAGE_PROFILE);
     }
   }
 
@@ -288,14 +290,16 @@ class UserController extends AppController
     {
       if(!empty($subdomainId)) // при попытке регистрации возвращаем юзера на страницу профиля поддомена(и там авторизуем)
       {
-        Subdomain::setRedirectInRegister($subdomainId, MainConfig::$PAGE_AFTER_REGISTER, $id_user);
+        //Subdomain::setRedirectInRegister($subdomainId, MainConfig::$PAGE_AFTER_REGISTER, $id_user);
+        Subdomain::setRedirectInRegister($subdomainId, MainConfig::$PAGE_PROFILE, $id_user);
       }
       else // авторизуем здесь
       {
         $model = new Auth();
         $model->AuthorizeNet(['id' => $id_user]);
         UserRegister::clearRegister();
-        $this->redirect(MainConfig::$PAGE_AFTER_REGISTER);
+        //$this->redirect(MainConfig::$PAGE_AFTER_REGISTER);
+        $this->redirect(MainConfig::$PAGE_PROFILE);
       }
     }
     else // регистрация не удалась
@@ -483,14 +487,14 @@ class UserController extends AppController
             if(!$arResult['err'])
             {
               // после регистрации на секунду заходим на /user/lead для GTM
-              if(Yii::app()->getRequest()->getParam('register_complete')=='Y')
+              /*if(Yii::app()->getRequest()->getParam('register_complete')=='Y')
               {
                 $this->redirect(MainConfig::$PAGE_AFTER_ACTIVATE_PROFILE);
               }
               else
-              {
+              {*/
                 $this->redirect(MainConfig::$PAGE_PROFILE);
-              }
+              //}
             }
         } 
         elseif( Yii::app()->getRequest()->getParam('del') ) // del photo
@@ -649,7 +653,8 @@ class UserController extends AppController
           $model->setDataByStep($post);
           if($step==$model::$STEP_AVATAR && !$model->step)
           {
-            $this->redirect(MainConfig::$PAGE_AFTER_REGISTER);
+            //$this->redirect(MainConfig::$PAGE_AFTER_REGISTER);
+            $this->redirect(MainConfig::$PAGE_PROFILE);
           }
           elseif($step!=$model->step)
           {

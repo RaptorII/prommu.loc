@@ -206,13 +206,13 @@ class UserRegisterPageCounter extends CActiveRecord
    * @return boolean
    * Проверяем заход на страницу формирования лида (если <=0 - переходим на /user/lead)
    */
-  public static function isSetData($id_user)
+  public static function isSetData($id_user, $page)
   {
     // отрабатывает только на /user/lead
-    if(Yii::app()->request->url!==MainConfig::$PAGE_AFTER_REGISTER)
+    /*if(Yii::app()->request->url!==MainConfig::$PAGE_AFTER_REGISTER)
     {
       return -1;
-    }
+    }*/
 
     $user = Yii::app()->db->createCommand()
       ->select('user')
@@ -230,7 +230,7 @@ class UserRegisterPageCounter extends CActiveRecord
           'user=:user and page=:page',
           [
             ':user' => $user,
-            ':page' => UserRegister::$PAGE_USER_LEAD
+            ':page' => $page
           ]
         )
         ->queryScalar();

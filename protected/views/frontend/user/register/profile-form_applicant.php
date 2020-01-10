@@ -1,4 +1,30 @@
-<?php
+<?php if(UserRegisterPageCounter::isSetData(Share::$UserProfile->id, UserRegister::$PAGE_USER_LEAD) <= 0): ?>
+  <? UserRegisterPageCounter::setByIdUser(Share::$UserProfile->id, UserRegister::$PAGE_USER_LEAD); ?>
+  <script>
+    document.addEventListener("DOMContentLoaded", function(){
+      var yaParams = [{id_user:<?=Share::$UserProfile->id?>,type:"applicant"}];
+      var cnt = 0;
+      setGoal();
+      function setGoal()
+      {
+        cnt++;
+        if(cnt>10)
+        {
+          return;
+        }
+        if(typeof yaCounter23945542 === 'object')
+        {
+          yaCounter23945542.reachGoal(5,{params:yaParams});
+        }
+        else
+        {
+          setTimeout(function(){ setGoal() },500);
+        }
+      }
+    });
+  </script>
+<? endif; ?>
+<?
 $bUrl = Yii::app()->baseUrl;
 $gcs = Yii::app()->getClientScript();
 
