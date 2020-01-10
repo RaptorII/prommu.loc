@@ -16,7 +16,14 @@ $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
 ?>
 <div class="row">
     <div class="col-xs-12">
-        <a class="download__btn download__btn-flt-right download__btn-inst" href='/theme/pdf/Instruction-PROMMU-com-service.pdf' target="_blank" title="Скачать иструкцию пользования сервисом PROMMU.com">
+
+        <? if(Share::isEmployer()): ?>
+            <a class="download__btn download__btn-flt-right download__btn-inst" href='/theme/pdf/Instruction-PROMMU-com-service.pdf' target="_blank" title="Скачать иструкцию пользования сервисом PROMMU.com">
+        <? endif; ?>
+
+        <? if(Share::isApplicant()): ?>
+            <a class="download__btn download__btn-flt-right download__btn-inst" href='/theme/pdf/Instruction-PROMMU-com-app-service.pdf' target="_blank" title="Скачать иструкцию пользования сервисом PROMMU.com">
+        <? endif; ?>
             <span class="btn-inst__txt">
                 Инструкция <br> по пользованию услугами
             </span>

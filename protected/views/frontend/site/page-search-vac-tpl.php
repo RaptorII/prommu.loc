@@ -252,6 +252,17 @@ $this->renderPartial('../site/page-search-vac-tpl_css');
         <?php if( !count($viData['vacs']) ): ?>
             <div class="psv__nothing">Нет подходящих вакансий</div>
         <?php else: ?>
+
+        <a class="download__btn download__btn-flt-left download__btn-inst"
+           href='/theme/pdf/Instruction-PROMMU-com-app-vac.pdf'
+           target="_blank"
+           title="Скачать иструкцию пользования сервисом PROMMU.com">
+            <span class="btn-inst__txt">
+                Инструкция <br> по поиску вакансий
+            </span>
+        </a>
+        <div class="clearfix"></div>
+
         <div class='psv__view-block hidden-xs'>
             <a class='psv__view-table <?=($cookieView=='table'?'active':'')?> js-g-hashint' href='<?=$this->ViewModel->replaceInUrl(Yii::app()->request->url, 'view', 'table') ?>' title='Отображать таблицей'></a>
             <a class="psv__view-list <?=($cookieView=='list'?'active':'')?> js-g-hashint" href='<?=$this->ViewModel->replaceInUrl(Yii::app()->request->url, 'view', 'list') ?>' title='Отображать списком'></a>

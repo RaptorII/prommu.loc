@@ -11,7 +11,14 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/pag
 			<? if(count($viData['items'])): ?>
 				<div class="responses">
 					<div class="responses__header">
-						<h1 class="responses__header-title">Выставить оценку / Оставить отзыв работодателю, у которого работали на вакансиях</h1>
+						<h1 class="responses__header-title">
+                            Выставить оценку / Оставить отзыв работодателю, у которого работали на вакансиях
+                            <a class="download__btn download__btn-flt-right download__btn-inst" href='/theme/pdf/Instruction-PROMMU-com-app-rating.pdf' target="_blank" title="Скачать иструкцию пользования сервисом PROMMU.com">
+                                <span class="btn-inst__txt">
+                                    Инструкция <br> по выставлению рейтинга
+                                </span>
+                            </a>
+                        </h1>
 					</div>
 					<div class="responses__list">
 						<? foreach($viData['items'] as $idus => $arEmp): ?>
