@@ -401,13 +401,13 @@
       // Дата начала работ
       ?>     
       <div class="fav__label fav__select col-xs-6">
-        <input type="text" name="cibdate" id="calendar_cibdate" class="fav__input fav__calendar fav__required" autocomplete="off">
+        <input type="text" name="cibdate" id="calendar_cibdate" class="fav__input fav__calendar fav__required" onfocus="this.removeAttribute('readonly');" readonly autocomplete="off">
       </div>
       <?
       // Дата окончания работ
       ?>
       <div class="fav__label fav__select col-xs-6">
-          <input type="text" name="ciedate" id="calendar_ciedate" class="fav__input fav__calendar fav__required" autocomplete="off">
+          <input type="text" name="ciedate" id="calendar_ciedate" class="fav__input fav__calendar fav__required" onfocus="this.removeAttribute('readonly');" readonly autocomplete="off">
       </div>
     </div>
     <?

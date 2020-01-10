@@ -690,6 +690,7 @@
                 <em>руб</em>
               </div>
               <div class="ppp__field ppp__post-field">
+                <span class="ppp__field-name">Оплата за: </span>
                 <span class="ppp__field-val"><?=$post['pt']?></span>
               </div>
               <div class="ppp__field ppp__post-field ppp__post-exp">

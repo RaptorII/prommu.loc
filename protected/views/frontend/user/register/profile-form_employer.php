@@ -37,12 +37,12 @@ $userInfo = $viData['userAllInfo']['emplInfo'];
             $exInfo = Share::$UserProfile->exInfo;
             $photo = Share::isApplicant() ? $exInfo->photo : $exInfo->logo;
             ?>
-            <? if(empty($photo)): ?>
+            <? /*if(empty($photo)): ?>
                 <p class="center">
                     Допустимые форматы файлов <?=implode(', ', Share::$UserProfile->arYiiUpload['fileFormat']);?><br>
                     Размер не более <?=Share::$UserProfile->arYiiUpload['maxFileSize']?> Мб.
                 </p>
-            <? endif; ?>
+            <? endif;*/ ?>
             <div class="upp__img-block-main avatar__logo-main<?=(empty($photo) ? ' input__error' : '')?>">
                 <?
                 if(!empty($photo))

@@ -92,9 +92,6 @@
 .epa__select-list.epa__select-lst-vsbl li span{
     background-color: #f7f7f7;
 }
-#DiContent .edit-profile-applicant .epa__label.epa__select{
-
-}
 @media screen and (min-width: 768px){
     #DiContent .edit-profile-applicant .epa__checkbox.epa__checkbox-famale:after {
         right: 10px;
@@ -1018,4 +1015,7 @@ flex: 0 1 50%;
 .epa__attr-block.error:before {
     height: initial;
     margin: 0;
+}
+#DiContent .epa__post-block .epa__label.epa__select{
+    padding: 0 25px 0 10px;
 }

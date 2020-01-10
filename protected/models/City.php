@@ -141,7 +141,9 @@ class City extends CActiveRecord
         $name = stripslashes($name);
         $inID = intval($inID);
 
-        $sql = "SELECT id_city id, name, ismetro, id_co
+        if(!empty($name))
+        {
+          $sql = "SELECT id_city id, name, ismetro, id_co
                 FROM city
                 WHERE name LIKE '%{$name}%' AND (id_co={$inID} OR {$inID}=0)
                 ORDER BY CASE 
@@ -150,6 +152,15 @@ class City extends CActiveRecord
                 WHEN name LIKE '%{$name}%' THEN 2
                 ELSE 3 END
                 LIMIT {$limit}";
+        }
+        else
+        {
+          $sql = "SELECT id_city id, name, ismetro, id_co
+                FROM city
+                WHERE id_co={$inID} OR {$inID}=0
+                ORDER BY sort ASC
+                LIMIT {$limit}";
+        }
 
         $res = Yii::app()->db->createCommand($sql)->queryAll();
 

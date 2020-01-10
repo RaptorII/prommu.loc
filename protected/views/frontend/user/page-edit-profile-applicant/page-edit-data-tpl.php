@@ -407,7 +407,7 @@ foreach($attrAll as $p)
         <div class="epa__content-title"><h2>Целевая вакансия</h2></div>
         <div class="epa__content-module">
           <b class="profile__field-name">Выберите должности, на которых желаете работать</b>
-          <div class="epa__label epa__posts epa__select">
+          <div class="epa__label epa__posts">
             <b class="epa__label-name profile__field-name">Должность:</b>
             <ul id="epa-list-posts" class="epa__select-list epa__select-lst-vsbl" >
               <?php foreach($arPosts as $post):?>
@@ -430,6 +430,7 @@ foreach($attrAll as $p)
                     <em>руб</em>
                   </label>
                   <label class="epa__label epa__select">
+                    <span class="epa__label-name">Оплата за:</span>
                     <input type="text" name="epa-str-period" value="<?=$arPayment[$post['id']]['type']?>" class="epa__input epa__post-period" disabled>
                     <div class="epa__label-veil epa__post-veil"></div>
                     <ul class="epa__select-list epa__post-list">
@@ -793,6 +794,7 @@ foreach($attrAll as $p)
       <em>руб</em>
     </label>
     <label class="epa__label epa__select">
+      <span class="epa__label-name">Оплата за:</span>
       <input type="text" name="epa-str-period" value="Час" class="epa__input epa__post-period" disabled>
       <div class="epa__label-veil epa__post-veil"></div>
       <ul class="epa__select-list epa__post-list">

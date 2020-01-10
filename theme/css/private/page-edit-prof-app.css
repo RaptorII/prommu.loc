@@ -402,17 +402,21 @@
   position: relative;
 }
 
-/*.epa__select:after{
-	content: '';
-	display: block;
-	position: absolute;
-	width: 35px;
-	height: 33px;
-	top: 0;
-	right: 0;
-	background: url(/theme/pic/private/add-vac-select.png) 50% no-repeat;
-	z-index: 0;
-}*/
+.epa__select:after{
+  content: '\e984';
+  font-family: "PrommuFont";
+  display: block;
+  position: absolute;
+  width: 25px;
+  height: 33px;
+  top: 0;
+  right: 0;
+  line-height: 33px;
+  color: #646464;
+  font-size: 12px;
+  text-align: center;
+  z-index: 0;
+}
 /*.epa__calendar-select.epa__select:after{ right: 5% }*/
 .epa__select.white:after {
   background: url(/theme/pic/private/add-vac-select-white.png) 50% no-repeat
@@ -1841,6 +1845,29 @@ input:checked + .epa__checkbox:after {
   width: 50%;
   border: 0;
   border-radius: 4px;
+}
+#DiContent .epa__date input[type=text].profile__field-input{
+  position: relative;
+  z-index: 1;
+  padding: 0 18px 0 0;
+}
+.epa__date.epa__select:after{
+  width: 18px;
+}
+#DiContent .epa__post-block .epa__label.epa__select{
+  padding: 0 25px 0 10px;
+  display: table;
+}
+#DiContent .epa__post-block .epa__label-name{
+  display: table-cell;
+  width: 5%;
+  white-space: nowrap;
+}
+#DiContent .epa__post-block .epa__post-period{
+  display: table-cell;
+  position: static;
+  width: 99%;
+  text-align: right;
 }
 /* */
 @media (min-width: 768px){

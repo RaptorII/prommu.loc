@@ -60,12 +60,12 @@ asort($arCities);
                 $exInfo = Share::$UserProfile->exInfo;
                 $photo = Share::isApplicant() ? $exInfo->photo : $exInfo->logo;
                 ?>
-                <? if(empty($photo)): ?>
+                <? /*if(empty($photo)): ?>
                     <p class="center">
                         Допустимые форматы файлов <?=implode(', ', Share::$UserProfile->arYiiUpload['fileFormat']);?><br>
                         Размер не более <?=Share::$UserProfile->arYiiUpload['maxFileSize']?> Мб.
                     </p>
-                <? endif; ?>
+                <? endif;*/ ?>
                 <div class="ppp__logo-main avatar__logo-main<?=(empty($photo) ? ' input__error' : '')?>">
                     <?
                     if(!empty($photo))
@@ -167,11 +167,11 @@ asort($arCities);
                     <div class="epa__content-title"><h2>Место работы</h2></div>
                     <div class="epa__content-module" id="city-module">
                         <div class="epa__cities-block-list">
-                            <div class="epa__city-item" data-idcity="<?= $arUserCity['id'] ?>">
-                                <div class="epa__label epa__select epa__city">
+                            <div class="epa__city-item" data-idcity="<?//= $arUserCity['id'] ?>">
+                                <div class="epa__label epa__select epa__city error">
                                     <span class="epa__label-name">Город:</span>
                                     <span class="epa__city-err">Такой город уже выбран</span>
-                                    <input type="text" name="cityname[]" value="<?= $arUserCity['name'] ?>"
+                                    <input type="text" name="cityname[]" value="<?//= $arUserCity['name'] ?>"
                                            class="epa__input city-input" autocomplete="off">
                                     <ul class="city-list"></ul>
                                 </div>
@@ -261,7 +261,7 @@ asort($arCities);
                     <div class="epa__content-title"><h2>Целевая вакансия</h2></div>
                     <div class="epa__content-module">
                         <h3 class="epa__posts-title">Выберите должности, на которых желаете работать</h3>
-                        <div class="epa__label epa__posts epa__select">
+                        <div class="epa__label epa__posts">
                             <span class="epa__label-name">Должность:</span>
                             <ul id="epa-list-posts" class="epa__select-list epa__select-lst-vsbl">
                                 <?php foreach ($arPosts2 as $post): ?>
@@ -288,6 +288,7 @@ asort($arCities);
                                             <em>руб</em>
                                         </label>
                                         <label class="epa__label epa__select">
+                                            <span class="epa__label-name">Оплата за:</span>
                                             <input type="text" name="epa-str-period"
                                                    value="<?= $arPayment2[$post['id']]['type'] ?>"
                                                    class="epa__input epa__post-period" disabled>
@@ -395,6 +396,7 @@ asort($arCities);
             <em>руб</em>
         </label>
         <label class="epa__label epa__select">
+            <span class="epa__label-name">Оплата за:</span>
             <input type="text" name="epa-str-period" value="Час" class="epa__input epa__post-period" disabled>
             <div class="epa__label-veil epa__post-veil"></div>
             <ul class="epa__select-list epa__post-list">
