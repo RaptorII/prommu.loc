@@ -452,6 +452,11 @@
           </div>
         </div>
 
+        <div class="affective-block">
+            <div class="affective-block__instruction">Скачать иструкцию пользования сервисом <b>PROMMU.com </b></div>
+            <a class="download__btn" href='/theme/pdf/Instruction-PROMMU-com-all-app.pdf' target="_blank"></a>
+        </div>
+
       <?php endif; ?>
       <div class="clearfix"></div>
     </div>
