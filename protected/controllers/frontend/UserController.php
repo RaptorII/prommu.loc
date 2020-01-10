@@ -1015,11 +1015,6 @@ class UserController extends AppController
         $emp = $rq->getParam('employer');
         $price = $model->servicePrice($vac, $service);
 
-        $priceUpVac = $rq->getParam('priceUpVac');
-        $personal = $rq->getParam('personal');
-
-        //display($_POST);
-
         switch ($service)
         {
             case 'premium-vacancy':
@@ -1045,25 +1040,22 @@ class UserController extends AppController
 
             // upvacancy
             case 'podnyatie-vacansyi-vverh':
-                if($price>0)
-                { // оплата услуги
+
+                if ($price > 0) { // pay service
                     $data = $model->orderUpVacancy($vac, $price, $emp);
-                    if($rq->getParam('personal')==='individual') // физ лица
+                    if ($rq->getParam('personal') === 'individual') // people
                     {
-                        die('normal employer prise');
+                        //die('normal employer price');
                         $link = $model->createPayLink($data['account'], $data['strVacancies'], $data['cost']);
                         $link && $this->redirect($link);
                     }
-                    if($rq->getParam('personal')==='legal') // юр лица
+                    if ($rq->getParam('personal') === 'legal') // company
                     {
-                        die('urist-employer prise');
+                        //die('urist-employer price');
                         $model->setLegalEntityReceipt($data['id']);
                         $this->redirect(MainConfig::$PAGE_SERVICES);
                     }
-                }
-                else
-                { // бесплатно или без цены
-                    die('clear prise');
+                } else { // free or no price
                     $this->redirect(MainConfig::$PAGE_SERVICES);
                 }
                 break;

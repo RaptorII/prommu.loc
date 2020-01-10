@@ -97,8 +97,9 @@
             <?if($viData['service']=='podnyatie-vacansyi-vverh'):?>
                 <?php $result = count($viData['vacancy']) * $viData['price']; ?>
                 <span id="payment-result"><?=$result?>рублей</span>
-                <input type="hidden" name="prise" value="<?=$viData['price']?>">
-                <input type="hidden" name="priseUpVac" value="<?=$result?>">
+                <?php foreach ($viData['vacancy'] as $id): ?>
+                    <input type="hidden" name="vacancy[]" value="<?=$id?>">
+                <?php endforeach; ?>
                 <input type="hidden" name="service" value="podnyatie-vacansyi-vverh">
             <?endif;?>
 

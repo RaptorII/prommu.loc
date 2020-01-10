@@ -471,35 +471,25 @@ class PrommuOrder {
      */
     public function orderUpVacancy($arVacs, $vacPrice, $employer)
     {
-
-        display($employer);
-        display($vacPrice);
-        display($arVacs);
-//        display($_POST);
-
-        //die('orderUpVacancy 1');
-
-        //$employer = Share::$UserProfile->id;
-
         if(!isset($employer))
             return false;
 
         $arRes = [];
         $arRes['strVacancies'] = implode('.', $arVacs);
         $arRes['account'] = $employer . '.' . $arRes['strVacancies'];
-
         $arRes['cost'] = 0;
         $arRes['id'] = [];
-        $arBDate = 'start data format';
-        $arEDate = 'end data format';
-        $day = 60 * 60 * 24;
-
+        $arBDate = date("m.d.Y");
+        $arEDate = date('d.m.Y', strtotime("+30 days"));
         $arRes['cost'] = $vacPrice * count($arVacs);
 
-        die('orderUpVacancy 2');
+//        display($arBDate);display($arEDate);
+
+//        die('orderUpVacancy 2');
 
         return $arRes;
     }
+
     /**
      * @param $arServices
      * @return code
