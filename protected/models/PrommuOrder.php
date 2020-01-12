@@ -484,8 +484,22 @@ class PrommuOrder {
         $arRes['cost'] = $vacPrice * count($arVacs);
 
 //        display($arBDate);display($arEDate);
-
 //        die('orderUpVacancy 2');
+
+        for($i=0, $n=sizeof($arVacs); $i<$n; $i++)
+        {
+            $arRes['id'][] = $this->serviceOrder(
+                $employer,
+                $vacPrice,
+                0,
+                0,
+                $arBDate[$i],
+                $arEDate[$i],
+                $arVacs[$i],
+                'upvacancy'
+            );
+//            $arRes['cost'] += $vacPrice;
+        }
 
         return $arRes;
     }
