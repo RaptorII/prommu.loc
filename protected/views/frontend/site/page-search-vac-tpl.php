@@ -7,6 +7,7 @@ foreach ($viData['posts'] as $p)
         break;
     }
 
+display($viData);
 //if(!(MOBILE_DEVICE && !SHOW_APP_MESS)):
 
 Yii::app()->getClientScript()->registerScriptFile('/theme/js/page-vac-search.min.js', CClientScript::POS_END);
@@ -271,6 +272,7 @@ $this->renderPartial('../site/page-search-vac-tpl_css');
         <?php // BM: list view ?>
         <?php if ($cookieView == 'list'): ?>
         <div class='psv__list-list hidden-xs hidden-sm'>
+
             <?php foreach ($viData['vacs'] as $key => $vac): ?>
                 <div class="psv__list-item <?=($vac['ispremium']?'psv__list-item-premium':'')?>">
                     <div class="psv-list__logo">

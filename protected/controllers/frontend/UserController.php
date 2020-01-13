@@ -146,11 +146,9 @@ class UserController extends AppController
 
 
 
-
             for ($i = $count; $i > 0; $i--)
             {
               $name = $arr[$i];
-
 
 
               Yii::app()->db->createCommand()

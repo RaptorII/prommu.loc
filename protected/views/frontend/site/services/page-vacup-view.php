@@ -6,10 +6,11 @@
 	<div class="col-xs-12 premium-service">
 		<?php if( $viData['vacs'] ): ?>
 			<h2 class="premium-service__title">КАКИЕ ВАКАНСИИ НЕОБХОДИМО ПОДНЯТЬ В ВЫДАЧЕ?</h2>
-			<p>Трам-пам-пам</p>
-            <p>Трам-пам-пам</p>
-            <p>Трам-пам-пам</p>
-            <p>Трам-пам-пам<br>
+			<p>
+                Эта услуга поможет найти дополнительно подходящих соискателей на Вашу вакансию,
+                так как поднимет её вверх и отобразит, как новую.
+            </p>
+           <br>
 			<form action="<?=MainConfig::$PAGE_PAYMENT?>" method="POST" id="premium-form">		
 				<div class="premium-service__choose-all">
 					<span class="ps-choose-all__name">Выбрать все вакансии</span>

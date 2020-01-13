@@ -479,8 +479,8 @@ class PrommuOrder {
         $arRes['account'] = $employer . '.' . $arRes['strVacancies'];
         $arRes['cost'] = 0;
         $arRes['id'] = [];
-        $arBDate = date("m.d.Y");
-        $arEDate = date('d.m.Y', strtotime("+30 days"));
+        $arBDate = date("Y.m.d");
+        $arEDate = date('Y.m.d', strtotime("+30 days"));
         $arRes['cost'] = $vacPrice * count($arVacs);
 
 //        display($arBDate);display($arEDate);
@@ -498,7 +498,6 @@ class PrommuOrder {
                 $arVacs[$i],
                 'upvacancy'
             );
-//            $arRes['cost'] += $vacPrice;
         }
 
         return $arRes;

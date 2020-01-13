@@ -684,6 +684,7 @@ class Vacancy extends ARModel
             $data['age_to'] = (int)$val['ageto'];
             
             $data['is_premium'] = (boolean)$val['ispremium'];
+            $data['is_upvacancy'] = (boolean)$val['is_upvacancy'];
             $data['is_active'] = true;
             $data['is_med'] = (boolean)$val['ismed'];
             $data['is_hasavto'] = (boolean)$val['isavto'];
@@ -786,6 +787,7 @@ class Vacancy extends ARModel
             
             
             $data[$val['id']]['is_premium'] = (boolean)$val['ispremium'];
+            $data[$val['id']]['is_upvacancy'] = (boolean)$val['is_upvacancy'];
             $data[$val['id']]['is_active'] = true;
             $data[$val['id']]['is_med'] = (boolean)$val['ismed'];
             $data[$val['id']]['is_hasavto'] = (boolean)$val['isavto'];
@@ -995,6 +997,7 @@ class Vacancy extends ARModel
             $data['ismoder'] = intval($data['ismoder']);
             $data['status'] = intval($data['status']);
             $data['ispremium'] = intval($data['ispremium']);
+            $data['is_upvacancy'] = intval($data['is_upvacancy']);
             $data['isman'] = intval($data['isman']);
             $data['iswoman'] = intval($data['iswoman']);
             $data['istemp'] = intval($data['istemp']);
