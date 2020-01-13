@@ -175,23 +175,27 @@ class Api
     
     $data['profile'] = $Profile->getProfileDataAPI(['id' => $idus]);
     
-    var_dump($data['profile']);
+    var_dump($data['profile']['applicInfo']);
         
-    $res['user']['id'] = 12345;
-    $res['user']['first_name'] = "Test";
-    $res['user']['last_name'] = "api";
-    $res['user']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
-    
-    $res['overall_rating']['sum'] = 20;
-    $res['overall_rating']['positive'] = 30;
-    $res['overall_rating']['negative'] = 10;
-    
-    
-    $res['photos'][0]['id'] = 234234243;
-    $res['photos'][0]['is_avatar'] = true;
-    $res['photos'][0]['url'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+
     
     if($profile->type == 2){
+        
+        $res['user']['id'] = $idus;
+        $res['user']['first_name'] = $data['profile']['applicInfo']['firstname'];
+        $res['user']['last_name'] = $data['profile']['applicInfo']['lastname'];
+        $res['user']['avatar'] = $data['profile']['applicInfo']['photo'];
+        
+        $res['overall_rating']['sum'] = 20;
+        $res['overall_rating']['positive'] = 30;
+        $res['overall_rating']['negative'] = 10;
+        
+        
+        $res['photos'][0]['id'] = 234234243;
+        $res['photos'][0]['is_avatar'] = true;
+        $res['photos'][0]['url'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+        
+    
         $res['overall_rating']['applicant_summary']['punctuality'] = 10;
         $res['overall_rating']['applicant_summary']['contact'] = 10;
         $res['overall_rating']['applicant_summary']['quality'] = 30;
@@ -243,6 +247,21 @@ class Api
     
     
     } elseif($profile->type == 3){
+        
+        $res['user']['id'] = $idus;
+        $res['user']['first_name'] = $data['profile']['applicInfo']['firstname'];
+        $res['user']['last_name'] = $data['profile']['applicInfo']['lastname'];
+        $res['user']['avatar'] = $data['profile']['applicInfo']['photo'];
+        
+        $res['overall_rating']['sum'] = 20;
+        $res['overall_rating']['positive'] = 30;
+        $res['overall_rating']['negative'] = 10;
+        
+        
+        $res['photos'][0]['id'] = 234234243;
+        $res['photos'][0]['is_avatar'] = true;
+        $res['photos'][0]['url'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+        
         $res['overall_rating']['employer_summary']['payment_deadlines'] = 30;
         $res['overall_rating']['employer_summary']['payment_amount'] = 30;
         $res['overall_rating']['employer_summary']['clarity_requirements'] = 30;
