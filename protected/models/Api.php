@@ -168,12 +168,14 @@ class Api
     $id = Yii::app()->getRequest()->getParam('id');
         
     if($accessToken){
-        list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
+        list($idus, $Profile, $data) = $this->checkAccessToken($accessToken);
     } else {
-        $profile = (new ProfileFactory())->makeProfile(['id' => $id]);
+        $Profile = (new ProfileFactory())->makeProfile(['id' => $id]);
     }
     
-    var_dump($data);
+    $data['profile'] = $Profile->getProfileDataAPI(['id' => $idus]);
+    
+    var_dump($data['profile']);
         
     $res['user']['id'] = 12345;
     $res['user']['first_name'] = "Test";
