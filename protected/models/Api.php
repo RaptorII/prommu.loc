@@ -175,11 +175,8 @@ class Api
     
     $data['profile'] = $Profile->getProfileDataAPI(['id' => $idus]);
     
-    var_dump($data['profile']['applicInfo']);
-        
-
     
-    if($profile->type == 2){
+    if($Profile->type == 2){
         
         $res['user']['id'] = $idus;
         $res['user']['first_name'] = $data['profile']['applicInfo']['firstname'];
@@ -246,7 +243,7 @@ class Api
         $res['vacancies'][0]['updated_at'] = "1995-09-07T10:40:52Z";
     
     
-    } elseif($profile->type == 3){
+    } elseif($Profile->type == 3){
         
         $res['user']['id'] = $idus;
         $res['user']['first_name'] = $data['profile']['applicInfo']['firstname'];
