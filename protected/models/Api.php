@@ -175,7 +175,7 @@ class Api
     
     $data['profile'] = $Profile->getProfileDataAPI(['id' => $idus]);
     
-    var_dump($data['profile']);
+    var_dump($data['profile']['firsname']);
         
     $res['user']['id'] = 12345;
     $res['user']['first_name'] = "Test";
@@ -192,34 +192,34 @@ class Api
     $res['photos'][0]['url'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
     
     if($profile->type == 2){
-        // $res['overall_rating']['applicant_summary']['punctuality'] = 10;
-        // $res['overall_rating']['applicant_summary']['contact'] = 10;
-        // $res['overall_rating']['applicant_summary']['quality'] = 30;
+        $res['overall_rating']['applicant_summary']['punctuality'] = 10;
+        $res['overall_rating']['applicant_summary']['contact'] = 10;
+        $res['overall_rating']['applicant_summary']['quality'] = 30;
         
-        // $res['rating_applicant'][0]['vacancy']['id'] = 234234243;
-        // $res['rating_applicant'][0]['vacancy']['owner']['id'] = 12345;
-        // $res['rating_applicant'][0]['vacancy']['owner']['first_name'] = "TEST";
-        // $res['rating_applicant'][0]['vacancy']['owner']['last_name'] = "api";
-        // $res['rating_applicant'][0]['vacancy']['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+        $res['rating_applicant'][0]['vacancy']['id'] = 234234243;
+        $res['rating_applicant'][0]['vacancy']['owner']['id'] = 12345;
+        $res['rating_applicant'][0]['vacancy']['owner']['first_name'] = "TEST";
+        $res['rating_applicant'][0]['vacancy']['owner']['last_name'] = "api";
+        $res['rating_applicant'][0]['vacancy']['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
         
-        // $res['rating_applicant'][0]['vacancy']['city']['id'] = 1307;
-        // $res['rating_applicant'][0]['vacancy']['city']['name'] = "Москва";
+        $res['rating_applicant'][0]['vacancy']['city']['id'] = 1307;
+        $res['rating_applicant'][0]['vacancy']['city']['name'] = "Москва";
         
-        // $res['rating_applicant'][0]['vacancy']['title'] = "Промоутер";
-        // $res['rating_applicant'][0]['vacancy']['description'] = "Ты должен раздавать листовкy";
-        // $res['rating_applicant'][0]['vacancy']['is_active'] = true;
-        // $res['rating_applicant'][0]['vacancy']['is_premium'] = true;
-        // $res['rating_applicant'][0]['vacancy']['salary_hour'] = 13000;
-        // $res['rating_applicant'][0]['vacancy']['salary_week'] = 13000;
-        // $res['rating_applicant'][0]['vacancy']['salary_month'] = 130000;
-        // $res['rating_applicant'][0]['vacancy']['salary_visit'] = 000;
-        // $res['rating_applicant'][0]['vacancy']['created_at'] = "1995-09-07T10:40:52Z";
-        // $res['rating_applicant'][0]['vacancy']['updated_at'] = "1995-09-07T10:40:52Z";
+        $res['rating_applicant'][0]['vacancy']['title'] = "Промоутер";
+        $res['rating_applicant'][0]['vacancy']['description'] = "Ты должен раздавать листовкy";
+        $res['rating_applicant'][0]['vacancy']['is_active'] = true;
+        $res['rating_applicant'][0]['vacancy']['is_premium'] = true;
+        $res['rating_applicant'][0]['vacancy']['salary_hour'] = 13000;
+        $res['rating_applicant'][0]['vacancy']['salary_week'] = 13000;
+        $res['rating_applicant'][0]['vacancy']['salary_month'] = 130000;
+        $res['rating_applicant'][0]['vacancy']['salary_visit'] = 000;
+        $res['rating_applicant'][0]['vacancy']['created_at'] = "1995-09-07T10:40:52Z";
+        $res['rating_applicant'][0]['vacancy']['updated_at'] = "1995-09-07T10:40:52Z";
         
-        // $res['rating_applicant'][0]['rating'] = 1;
-        // $res['rating_applicant'][0]['punctuality'] = 1;
-        // $res['rating_applicant'][0]['contact'] = 1;
-        // $res['rating_applicant'][0]['quality'] = 1;
+        $res['rating_applicant'][0]['rating'] = 1;
+        $res['rating_applicant'][0]['punctuality'] = 1;
+        $res['rating_applicant'][0]['contact'] = 1;
+        $res['rating_applicant'][0]['quality'] = 1;
         
         $res['vacancies'][0]['id'] = 234234243;
         $res['vacancies'][0]['owner']['id'] = 12345;
@@ -243,49 +243,49 @@ class Api
     
     
     } elseif($profile->type == 3){
-        // $res['overall_rating']['employer_summary']['payment_deadlines'] = 30;
-        // $res['overall_rating']['employer_summary']['payment_amount'] = 30;
-        // $res['overall_rating']['employer_summary']['clarity_requirements'] = 30;
-        // $res['overall_rating']['employer_summary']['clarity_tasks'] = 30;
-        // $res['overall_rating']['employer_summary']['contact'] = 30;
+        $res['overall_rating']['employer_summary']['payment_deadlines'] = 30;
+        $res['overall_rating']['employer_summary']['payment_amount'] = 30;
+        $res['overall_rating']['employer_summary']['clarity_requirements'] = 30;
+        $res['overall_rating']['employer_summary']['clarity_tasks'] = 30;
+        $res['overall_rating']['employer_summary']['contact'] = 30;
         
-        // $res['rating_employer'][0]['vacancy']['id'] = 234234243;
-        // $res['rating_employer'][0]['vacancy']['owner']['id'] = 12345;
-        // $res['rating_employer'][0]['vacancy']['owner']['first_name'] = "TEST";
-        // $res['rating_employer'][0]['vacancy']['owner']['last_name'] = "api";
-        // $res['rating_employer'][0]['vacancy']['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+        $res['rating_employer'][0]['vacancy']['id'] = 234234243;
+        $res['rating_employer'][0]['vacancy']['owner']['id'] = 12345;
+        $res['rating_employer'][0]['vacancy']['owner']['first_name'] = "TEST";
+        $res['rating_employer'][0]['vacancy']['owner']['last_name'] = "api";
+        $res['rating_employer'][0]['vacancy']['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
         
-        // $res['rating_employer'][0]['vacancy']['city']['id'] = 1307;
-        // $res['rating_employer'][0]['vacancy']['city']['name'] = "Москва";
+        $res['rating_employer'][0]['vacancy']['city']['id'] = 1307;
+        $res['rating_employer'][0]['vacancy']['city']['name'] = "Москва";
         
-        // $res['rating_employer'][0]['vacancy']['title'] = "Промоутер";
-        // $res['rating_employer'][0]['vacancy']['description'] = "Ты должен раздавать листовкy";
-        // $res['rating_employer'][0]['vacancy']['is_active'] = true;
-        // $res['rating_employer'][0]['vacancy']['is_premium'] = true;
-        // $res['rating_employer'][0]['vacancy']['salary_hour'] = 13000;
-        // $res['rating_employer'][0]['vacancy']['salary_week'] = 13000;
-        // $res['rating_employer'][0]['vacancy']['salary_month'] = 130000;
-        // $res['rating_employer'][0]['vacancy']['salary_visit'] = 000;
-        // $res['rating_employer'][0]['vacancy']['created_at'] = "1995-09-07T10:40:52Z";
-        // $res['rating_employer'][0]['vacancy']['updated_at'] = "1995-09-07T10:40:52Z";
+        $res['rating_employer'][0]['vacancy']['title'] = "Промоутер";
+        $res['rating_employer'][0]['vacancy']['description'] = "Ты должен раздавать листовкy";
+        $res['rating_employer'][0]['vacancy']['is_active'] = true;
+        $res['rating_employer'][0]['vacancy']['is_premium'] = true;
+        $res['rating_employer'][0]['vacancy']['salary_hour'] = 13000;
+        $res['rating_employer'][0]['vacancy']['salary_week'] = 13000;
+        $res['rating_employer'][0]['vacancy']['salary_month'] = 130000;
+        $res['rating_employer'][0]['vacancy']['salary_visit'] = 000;
+        $res['rating_employer'][0]['vacancy']['created_at'] = "1995-09-07T10:40:52Z";
+        $res['rating_employer'][0]['vacancy']['updated_at'] = "1995-09-07T10:40:52Z";
         
-        // $res['rating_employer'][0]['rating'] = 1;
-        // $res['rating_employer'][0]['payment_deadlines'] = 1;
-        // $res['rating_employer'][0]['payment_deadlines'] = 1;
-        // $res['rating_employer'][0]['payment_amount'] = 1;
-        // $res['rating_employer'][0]['clarity_requirements'] = 1;
-        // $res['rating_employer'][0]['clarity_tasks'] = 1;
-        // $res['rating_employer'][0]['contact'] = 1;
+        $res['rating_employer'][0]['rating'] = 1;
+        $res['rating_employer'][0]['payment_deadlines'] = 1;
+        $res['rating_employer'][0]['payment_deadlines'] = 1;
+        $res['rating_employer'][0]['payment_amount'] = 1;
+        $res['rating_employer'][0]['clarity_requirements'] = 1;
+        $res['rating_employer'][0]['clarity_tasks'] = 1;
+        $res['rating_employer'][0]['contact'] = 1;
     
     }
     
-        // $res['reviews'][0]['owner']['id'] = 12345;
-        // $res['reviews'][0]['owner']['first_name'] = "TEST";
-        // $res['reviews'][0]['owner']['last_name'] = "api";
-        // $res['reviews'][0]['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
-        // $res['reviews'][0]['data'] = "Lorem ipsum bla bla bla this is a review bla bla bla";
-        // $res['reviews'][0]['created_at'] = "1995-09-07T10:40:52Z";
-        // $res['reviews'][0]['updated_at'] = "1995-09-07T10:40:52Z";
+        $res['reviews'][0]['owner']['id'] = 12345;
+        $res['reviews'][0]['owner']['first_name'] = "TEST";
+        $res['reviews'][0]['owner']['last_name'] = "api";
+        $res['reviews'][0]['owner']['avatar'] = "https://i.pinimg.com/originals/c5/f9/74/c5f974ac144391a830196f97a9130141.jpg";
+        $res['reviews'][0]['data'] = "Lorem ipsum bla bla bla this is a review bla bla bla";
+        $res['reviews'][0]['created_at'] = "1995-09-07T10:40:52Z";
+        $res['reviews'][0]['updated_at'] = "1995-09-07T10:40:52Z";
     
         return $res;
     }
