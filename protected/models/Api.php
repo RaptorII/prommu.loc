@@ -175,7 +175,7 @@ class Api
     
     $data['profile'] = $Profile->getProfileDataAPI(['id' => $idus]);
     
-    var_dump($data['profile']['firstname']);
+    var_dump($data['profile']);
         
     $res['user']['id'] = 12345;
     $res['user']['first_name'] = "Test";
