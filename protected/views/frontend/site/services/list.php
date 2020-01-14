@@ -19,15 +19,20 @@ $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
 
         <? if(Share::isEmployer()): ?>
             <a class="download__btn download__btn-flt-right download__btn-inst" href='/theme/pdf/Instruction-PROMMU-com-service.pdf' target="_blank" title="Скачать иструкцию пользования сервисом PROMMU.com">
+                <span class="btn-inst__txt">
+                    Инструкция <br> по пользованию услугами
+                </span>
+            </a>
         <? endif; ?>
 
         <? if(Share::isApplicant()): ?>
             <a class="download__btn download__btn-flt-right download__btn-inst" href='/theme/pdf/Instruction-PROMMU-com-app-service.pdf' target="_blank" title="Скачать иструкцию пользования сервисом PROMMU.com">
+                <span class="btn-inst__txt">
+                    Инструкция <br> по пользованию услугами
+                </span>
+            </a>
         <? endif; ?>
-            <span class="btn-inst__txt">
-                Инструкция <br> по пользованию услугами
-            </span>
-        </a>
+
     </div>
   <div class="col-xs-12 services">
 
