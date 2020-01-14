@@ -464,6 +464,7 @@ class PrommuOrder {
     }
 
     /**
+     * Service Upvacancy
      * @param $arVacs
      * @param $vacPrice
      * @param $employer

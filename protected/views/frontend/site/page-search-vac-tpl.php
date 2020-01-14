@@ -7,7 +7,8 @@ foreach ($viData['posts'] as $p)
         break;
     }
 
-display($viData);
+//display($viData);
+
 //if(!(MOBILE_DEVICE && !SHOW_APP_MESS)):
 
 Yii::app()->getClientScript()->registerScriptFile('/theme/js/page-vac-search.min.js', CClientScript::POS_END);

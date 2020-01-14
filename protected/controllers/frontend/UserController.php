@@ -112,6 +112,7 @@ class UserController extends AppController
             $model->autoOrder($serviceType, $transaction, $id_user, $id_vacancy);
           }
           else // услуга Премиум
+          if (in_array($serviceType, ['vacancy']))
           {
             $arIdVacs = $queryVacs = [];
             for ($i=1, $n=count($arParams); $i<$n; $i++)
@@ -163,6 +164,56 @@ class UserController extends AppController
                   [':id' => $id_vacancy]
                 );
             }
+          }
+          else
+          if (in_array($serviceType, ['upvacancy']))
+          {
+              $arIdVacs = $queryVacs = [];
+              for ($i=1, $n=count($arParams); $i<$n; $i++)
+              {
+                  $arIdVacs[] = $arParams[$i];
+                  $queryVacs[] = 'name like ' . $arParams[$i];
+              }
+
+              $query = Yii::app()->db->createCommand()
+                  ->select('count(*)')
+                  ->from('empl_vacantions')
+                  ->where(
+                      'and',
+                      ['in','id',$arIdVacs],
+                      ['id_user=:id',[':id'=>$id_user]]
+                  )
+                  ->queryScalar();
+
+              if($query==count($arIdVacs)) // все вакансии данного Р
+              {
+                  Yii::app()->db->createCommand()
+                      ->update(
+                          'service_cloud',
+                          ['status' => 1],
+                          'id_user like :id AND name=:name',
+                          [':id' => "$id_user", ':name' => "$id_vacancy"]
+                      );
+
+                  //$queryVacs
+              }
+
+              for ($i = $count; $i > 0; $i--)
+              {
+                  $name = $arr[$i];
+
+                  Yii::app()->db->createCommand()
+                      ->update(
+                          'empl_vacations',
+                          [
+                              'is_upvacancy' => 1,
+                              'crdate' => date("Y-m-d"),
+                              'mdate' => date("Y-m-d"),
+                          ],
+                          'id=:id',
+                          [':id' => $id_vacancy]
+                      );
+              }
           }
           echo json_encode(['result'=>['message'=>'Запрос успешно обработан']]);
         }

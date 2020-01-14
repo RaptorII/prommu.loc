@@ -60,6 +60,9 @@ class SearchVac extends Model
         $data = $this->searchVacations($filter, $props['profile']);
         $data = array_merge($data, $this->getFilterData());
 
+//        display($data);
+//        die();
+
         return $data;
     }
     
@@ -810,7 +813,7 @@ class SearchVac extends Model
         if(isset($data['cities']) && sizeof($data['cities'])==1 && $data['cities'][0]!=$id_city){
             $sql = "SELECT ci.seo_url FROM city ci WHERE ci.id_city = '".$data['cities'][0]."'";
             $city = Yii::app()->db->createCommand($sql)->queryRow();
-            $url .= '/' . $city['seo_url'];    
+            $url .= '/' . $city['seo_url'];
         }
         $url = (sizeof($data['cities'])>1 || sizeof($data['post'])>1 ? '' : $base . $url);
 

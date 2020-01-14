@@ -612,7 +612,7 @@ class Vacancy extends ARModel
 
         if( $inId )
         {
-        $sql = "SELECT e.id, e.ispremium, e.title, e.requirements, e.duties, e.conditions, e.istemp,
+        $sql = "SELECT e.id, e.ispremium, e.is_upvacancy, e.title, e.requirements, e.duties, e.conditions, e.istemp,
                    DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
                    e.shour,
                    e.sweek,
@@ -721,7 +721,7 @@ class Vacancy extends ARModel
 
         if( $inId )
         {
-        $sql = "SELECT e.id, e.ispremium, e.title, e.requirements, e.duties, e.conditions, e.istemp,
+        $sql = "SELECT e.id, e.ispremium, e.is_upvacancy, e.title, e.requirements, e.duties, e.conditions, e.istemp,
                    DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
                    e.shour,
                    e.sweek,
@@ -2686,7 +2686,7 @@ WHERE id_vac = {$inVacId}";
          $filter = $inParams['filter'];
         $limit = (int)$inParams['limit'] > 0 ? "LIMIT {$inParams['offset']}, {$inParams['limit']}" : '';
        // var_dump($limit);
-        $sql = "SELECT e.id, e.ispremium, e.title, e.requirements, e.duties, e.conditions, e.istemp,
+        $sql = "SELECT e.id, e.ispremium, e.is_upvacancy, e.title, e.requirements, e.duties, e.conditions, e.istemp,
                    DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
                    e.shour,
                    e.sweek,
@@ -2723,7 +2723,7 @@ WHERE id_vac = {$inVacId}";
             JOIN empl_attribs ea ON ea.id_vac = e.id
             JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
             JOIN employer em ON em.id_user = e.id_user
-            ORDER BY e.ispremium DESC, e.mdate DESC
+            ORDER BY e.ispremium DESC, e.is_upvacancy DESC, e.mdate DESC
             LIMIT 100";
         $res = Yii::app()->db->createCommand($sql);
         $data= $res->queryAll();
@@ -2778,7 +2778,7 @@ WHERE id_vac = {$inVacId}";
    private function getVacanciesIndexPage()
     {
         $strCities = Subdomain::getCacheData()->strCitiesIdes;
-        $sql = "SELECT e.id, e.ispremium, e.istemp,
+        $sql = "SELECT e.id, e.ispremium, e.is_upvacancy, e.istemp,
               DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
               e.shour,
               e.sweek,
