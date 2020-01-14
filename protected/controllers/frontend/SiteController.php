@@ -608,8 +608,8 @@ class SiteController extends AppController
                     exit();
                 }
 
-//                $data = Cache::getData();
-//                if($data['data']===false) {
+                $data = Cache::getData();
+                if($data['data']===false) {
                     // cities for select
                     $sql = Yii::app()->db->createCommand()
                         ->select('t.id_city id, t.name, t.seo_url')
@@ -623,8 +623,8 @@ class SiteController extends AppController
                     $data['data']['pages']->applyLimit($SearchVac);
                     $data['data']['viData'] = $SearchVac->getVacations(); //take vacancions to page /vacancy
 
-//                    Cache::setData($data);
-//                }
+                    Cache::setData($data);
+                }
 
                 // search seo data
                 $data['data']['seo'] = $SearchVac->getVacancySeo(

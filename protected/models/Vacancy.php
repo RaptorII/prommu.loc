@@ -2723,7 +2723,10 @@ WHERE id_vac = {$inVacId}";
             JOIN empl_attribs ea ON ea.id_vac = e.id
             JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
             JOIN employer em ON em.id_user = e.id_user
-            ORDER BY e.ispremium DESC, e.is_upvacancy DESC, e.mdate DESC
+            ORDER BY 
+              e.ispremium DESC, 
+              e.is_upvacancy DESC, 
+              e.mdate DESC
             LIMIT 100";
         $res = Yii::app()->db->createCommand($sql);
         $data= $res->queryAll();
