@@ -40,6 +40,7 @@ class AbTesting extends CActiveRecord
     Yii::app()->request->cookies['urh'] = new CHttpCookie('urh', $this->user);
 
     $type = Yii::app()->getRequest()->getParam('type');
+    $yagla = Yii::app()->getRequest()->getParam('yagla');
     if(in_array($type,['soiskatel','rabotodatel']))
     {
       $this->type = ($type=='soiskatel' ? UserProfile::$APPLICANT : UserProfile::$EMPLOYER);
@@ -78,6 +79,10 @@ class AbTesting extends CActiveRecord
       $this->date = time();
       $this->setIsNewRecord(true);
       $this->save();
+    }
+    if(!empty($yagla) && strripos($result,'/user/register/type')===false)
+    {
+      $result .= "?yagla=$yagla";
     }
     return $result;
   }
