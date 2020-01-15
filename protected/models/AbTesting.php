@@ -100,13 +100,21 @@ class AbTesting extends CActiveRecord
         'link' => '/ab/rabotodatel',
         'cnt' => 0
       ],
-      'all' => [
+      'applicant_all' => [
         self::$LINK_APPLICANT => [
           'page' => self::$AR_LINKS[self::$LINK_APPLICANT],
           'cnt' => 0,
           'cnt_lead' => 0,
           'conversion' => 0,
         ],
+        self::$LINK_REGISTER => [
+          'page' => self::$AR_LINKS[self::$LINK_REGISTER],
+          'cnt' => 0,
+          'cnt_lead' => 0,
+          'conversion' => 0,
+        ],
+      ],
+      'employer_all' => [
         self::$LINK_EMPLOYER => [
           'page' => self::$AR_LINKS[self::$LINK_EMPLOYER],
           'cnt' => 0,
@@ -118,7 +126,7 @@ class AbTesting extends CActiveRecord
           'cnt' => 0,
           'cnt_lead' => 0,
           'conversion' => 0,
-        ],
+        ]
       ]
     ];
     //
@@ -158,13 +166,14 @@ class AbTesting extends CActiveRecord
         if($v->type==UserProfile::$APPLICANT)
         {
           $arResult['applicant']['cnt']++; // таблица 1
+          $arResult['applicant_all'][$v->url]['cnt']++; // таблица 3
         }
         else
         {
           $arResult['employer']['cnt']++; // таблица 2
+          $arResult['employer_all'][$v->url]['cnt']++; // таблица 4
         }
-        // таблица 3
-        $arResult['all'][$v->url]['cnt']++;
+        // таблица 3 и 4
         $arUser[] = $v->user;
       }
 
@@ -175,17 +184,32 @@ class AbTesting extends CActiveRecord
         {
           if(in_array($v->user, $arRegisters))
           {
-            $arResult['all'][$v->url]['cnt_lead']++;
+            if($v->type==UserProfile::$APPLICANT)
+            {
+              $arResult['applicant_all'][$v->url]['cnt_lead']++; // таблица 3
+            }
+            else
+            {
+              $arResult['employer_all'][$v->url]['cnt_lead']++; // таблица 4
+            }
           }
         }
       }
 
-      foreach ($arResult['all'] as $url => $v)
+      foreach ($arResult['applicant_all'] as $url => $v)
       {
         if($v['cnt']>0 && $v['cnt_lead']>0)
         {
-          $arResult['all'][$url]['conversion'] = $v['cnt_lead'] / $v['cnt'] * 100;
-          $arResult['all'][$url]['conversion'] = round($arResult['all'][$url]['conversion'], 2);
+          $result = $v['cnt_lead'] / $v['cnt'] * 100;
+          $arResult['applicant_all'][$url]['conversion'] = round($result, 2);
+        }
+      }
+      foreach ($arResult['employer_all'] as $url => $v)
+      {
+        if($v['cnt']>0 && $v['cnt_lead']>0)
+        {
+          $result = $v['cnt_lead'] / $v['cnt'] * 100;
+          $arResult['employer_all'][$url]['conversion'] = round($result, 2);
         }
       }
     }
