@@ -42,7 +42,7 @@ class SiteController extends AppController
     public function actionIndex()
     {
         Share::$isHomePage = 1;
-        $city = Subdomain::getCity(Share::$UserProfile->type,Share::$UserProfile->id);  
+        $city = Subdomain::getCity(Share::$UserProfile->type,Share::$UserProfile->id); 
         $model = new PagesContent;
         $news = new News;
         $articles = new Articles;
@@ -50,9 +50,10 @@ class SiteController extends AppController
         $lang = Yii::app()->session['lang'];
         //
         $data = Cache::getData();
-        if($data['data']===false) {
+
+        if($data['data']===false)
+        {
             $data['data']['content'] = $content = $model->getPageContent('about', $lang);
-            $data['data']['vacancies'] = $model->getVacanies($lang);
             $data['data']['vacs'] = $model->getVacaniesAppointments($lang);     
             $data['data']['applicants'] = $model->getApplicants($lang);
             $data['data']['companies'] = $model->getCompanies($lang);
@@ -61,7 +62,9 @@ class SiteController extends AppController
             $data['data']['couArt'] = $articles->getArticlesCount();
             Cache::setData($data);
         }
-       
+        // вакансии работают в рамках своей логики кэширования
+        $data['data']['vacancies'] = $model->getVacanies($lang);
+        //
         $this->render(
           'index', 
           array('content' => $data['data'], 'city'=>$city)

@@ -167,7 +167,8 @@
 
 .epa__logo-name:hover,
 .epa__logo-name.active {
-  color: #ABB820
+  color: #ABB820;
+  text-decoration: underline;
 }
 
 #DiContent .epa__logo-btn {

@@ -27,7 +27,17 @@ class Vacancy extends ARModel
 
     public $company_search;
     public $responses;
-
+    // empl_vacations.status
+    static public $STATUS_ACTIVE = 1;
+    static public $STATUS_NO_ACTIVE = 0;
+    // empl_vacations.ismoder
+    static public $ISMODER_NEW = 0;
+    static public $ISMODER_APPROVED = 100;
+    static public $ISMODER_REJECTED = 200;
+    // кол-во вакансий на главной странице
+    static private $VACANCIES_IN_MAIN_PAGE = 12;
+    // ID атрибута - должности
+    static public $ID_POSTS_ATTRIBUTE = 110;
     /** @var UserProfile */
     private $Profile;
     /**
@@ -2777,67 +2787,209 @@ WHERE id_vac = {$inVacId}";
         $data= $res->queryAll();
         return $data;
     }
-
-   private function getVacanciesIndexPage()
+    /**
+     * @return список вакансий для главной страницы
+     */
+    private function getVacanciesIndexPage()
     {
-        $strCities = Subdomain::getCacheData()->strCitiesIdes;
-        $sql = "SELECT e.id, e.ispremium, e.is_upvacancy, e.istemp,
-              DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
-              e.shour,
-              e.sweek,
-              e.smonth,
-              e.isman,
-              e.iswoman,
-              DATE_FORMAT(e.crdate, '%d.%m.%Y') crdate,
-              c1.id_city, c2.name AS ciname, c1.citycu,
-              ea.id_attr,
-              d.name AS pname,
-              em.name coname,
-              ifnull(em.logo, '') logo,
-              e.id_user
-            FROM empl_vacations e 
-            INNER JOIN (
-              SELECT DISTINCT e.id
-              FROM empl_vacations e
-              INNER JOIN empl_city c ON c.id_vac = e.id AND c.id_city IN({$strCities})
-              INNER JOIN empl_attribs ea ON ea.id_vac = e.id
-              INNER JOIN user u ON e.id_user = u.id_user
-              WHERE e.status = 1
-                AND e.ismoder = 100
-              ORDER BY e.ispremium DESC, e.id DESC 
-              LIMIT 12
-            ) t1 ON t1.id = e.id
-            
-            LEFT JOIN empl_city c1 ON c1.id_vac = e.id 
-            LEFT JOIN city c2 ON c2.id_city = c1.id_city
-            JOIN empl_attribs ea ON ea.id_vac = e.id
-            JOIN user_attr_dict d ON (d.id = ea.id_attr) AND (d.id_par = 110)
-            JOIN employer em ON em.id_user = e.id_user
-            ORDER BY e.ispremium DESC, e.id DESC";
-        $res = Yii::app()->db->createCommand($sql);
-        $data= $res->queryAll();
+      $cacheId = Subdomain::site() . DS . Yii::app()->controller->id . Yii::app()->request->requestUri;
+      $arCitiesIdes = Subdomain::getCacheData()->arCitiesIdes;
 
-        foreach ($data as $key => &$vac) {
-            $vac['detail_url'] = MainConfig::$PAGE_VACANCY . DS . $vac['id'];
-            $vac['payment'] = '';
-
-            if(($pay = round($vac['shour'],0)) > 0)
-                $vac['payment'] = $pay . ' руб/час';
-            elseif(($pay = round($vac['sweek'],0)) > 0)
-                $vac['payment'] = $pay . ' руб/нед';
-            elseif(($pay = round($vac['smonth'],0)) > 0)
-                $vac['payment'] = $pay . ' руб/мес';
-            elseif(($pay = round($vac['svisit'],0)) > 0)
-                $vac['payment'] = $pay . ' руб/пос';
-
-            $vac['logo_src'] = Share::getPhoto($vac['id_user'], 3, $vac['logo'], 'xsmall');
-            $vac['period'] = ' с ' . $vac['crdate'] 
-                . ($vac['remdate'] ? ' по ' . $vac['remdate'] : '');
-            $vac['work_type'] = $vac['istemp'] ? 'Постоянная' : 'Временная';
+      $queryLight = Cache::getData($cacheId . 'index/vacancies_light'); // короткий запрос
+      if($queryLight['data']===false) // обновляем кэш
+      {
+        $queryLight['data'] = Yii::app()->db->createCommand()
+          ->select('distinct(ev.id)')
+          ->from('empl_vacations ev')
+          ->join('empl_city ec','ec.id_vac=ev.id')
+          ->where(
+            [
+              'and',
+              'status=:status AND ismoder=:ismoder',
+              ['in','ec.id_city',$arCitiesIdes]
+            ],
+            [
+              ':status' => self::$STATUS_ACTIVE,
+              ':ismoder' => self::$ISMODER_APPROVED
+            ]
+          )
+          ->limit(self::$VACANCIES_IN_MAIN_PAGE)
+          ->order('ev.ispremium DESC, ev.id DESC')
+          ->queryColumn();
+        Cache::setData($queryLight, 300); // короткий запрос кэшируем на 5 минут(300сек.)
+      }
+      $arId = $queryLight['data'];
+      $arRes = Cache::getData($cacheId . 'index/vacancies'); // главный запрос
+      $hasChanged = false;
+      if(count($arRes['data'])) // проверяем большой запрос на совпадение с маленьким запросом
+      {
+        if(count($arRes['data'])!=count($arId)) // по кол-ву
+        {
+          $hasChanged = true;
         }
-        unset($vac);
+        else // по ID вакансий и их порядку
+        {
+          foreach ($arRes['data'] as $v)
+          {
+            if(!in_array($v['id'],$arId))
+            {
+              $hasChanged = true;
+              break;
+            }
+          }
+        }
+      }
+      // полная выборка по вакансиям
 
-        return $data;
+      $arRes['data'] = false;
+
+
+      if($arRes['data']===false || $hasChanged)
+      {
+        $arVacancies = Yii::app()->db->createCommand()
+          ->select("id,
+            id_user,
+            ispremium, 
+            istemp,
+            DATE_FORMAT(remdate, '%d.%m.%Y') remdate,
+            DATE_FORMAT(crdate, '%d.%m.%Y') crdate,
+            shour,
+            sweek,
+            smonth,
+            svisit
+            isman,
+            iswoman")
+          ->from(self::tableName())
+          ->where(['in','id',$arId])
+          ->queryAll();
+
+        if(count($arVacancies))
+        {
+          $arIdUsers = $arAssocVacancies = $arPremiumId = [];
+          foreach ($arVacancies as $k => $v)
+          {
+            $arIdUsers[] = $v['id_user'];
+            $arAssocVacancies[$v['id']] = $v;
+            $v['ispremium'] && $arPremiumId[]=$v['id'];
+          }
+
+          if(count($arPremiumId)) // перепроверяем сортировку премиум
+          {
+            $arPremiumIdSort = Yii::app()->db->createCommand()
+              ->select("name")
+              ->from('service_cloud')
+              ->where([
+                "and",
+                "type like 'vacancy' and bdate<=CURDATE() and edate>=CURDATE()",
+                ['in','name',$arPremiumId]
+              ])
+              ->order('bdate desc, date desc')
+              ->queryColumn();
+
+            if(count($arPremiumIdSort)==count($arPremiumId)) // исправляем сортировку, если кол-ва соответствуют
+            {
+              foreach ($arId as $k1 => $v1)
+              {
+                foreach ($arPremiumIdSort as $k2 => $v2)
+                {
+                  ($k1==$k2 && $v1!=$v2) && $arId[$k1] = $v2;
+                }
+              }
+            }
+          }
+          $arUsers = Share::getUsers($arIdUsers);
+          $arCities = Yii::app()->db->createCommand()
+            ->select("ec.id_vac, c.name")
+            ->from('empl_city ec')
+            ->join('city c','c.id_city=ec.id_city')
+            ->where(['in','id_vac',$arId])
+            ->queryAll();
+          $arAttribs  = Yii::app()->db->createCommand()
+            ->select('ea.id_vac, uad.name')
+            ->from('empl_attribs ea')
+            ->join('user_attr_dict uad','uad.id=ea.id_attr')
+            ->where(
+              [
+                'and',
+                'uad.id_par=:id_posts',
+                ['in','ea.id_vac',$arId],
+              ],
+              [':id_posts'=>self::$ID_POSTS_ATTRIBUTE]
+            )
+            ->queryAll();
+
+          foreach ($arId as $id)
+          {
+            $arV = $arAssocVacancies[$id];
+            $arV['cities'] = $arV['posts'] = [];
+            $arV['str_cities'] = $arV['str_cities_all'] = $arV['str_posts'] = $arV['payment'] = '';
+            //
+            $arV['user'] = $arUsers[$arV['id_user']];
+            $arV['user']['small_src'] = Share::getPhoto($arV['id_user'], 3, $arV['user']['photo'], 'xsmall');
+            //
+            $arV['detail_url'] = MainConfig::$PAGE_VACANCY . DS . $id;
+            if(($pay = round($arV['payment']['shour'],0)) > 0)
+            {
+              $arV['payment']['payment'] = $pay . ' руб/час';
+            }
+            elseif(($pay = round($arV['payment']['sweek'],0)) > 0)
+            {
+              $arV['payment']['payment'] = $pay . ' руб/нед';
+            }
+            elseif(($pay = round($arV['payment']['smonth'],0)) > 0)
+            {
+              $arV['payment']['payment'] = $pay . ' руб/мес';
+            }
+            elseif(($pay = round($arV['payment']['svisit'],0)) > 0)
+            {
+              $arV['payment']['payment'] = $pay . ' руб/пос';
+            }
+            $arV['period'] = ' с ' . $arV['crdate']
+                . ($arV['remdate'] ? ' по ' . $arV['remdate'] : '');
+            $arV['work_type'] = $arV['istemp'] ? 'Постоянная' : 'Временная';
+            //
+            foreach ($arCities as $v)
+            {
+              $v['id_vac']==$id && $arV['cities'][]=$v['name'];
+            }
+            if(count($arV['cities']))
+            {
+              $cnt = 0;
+              $arT1 = $arT2 = [];
+              foreach ($arV['cities'] as $v)
+              {
+                $cnt<2 ? $arT1[]=$v : $arT2[]=$v;
+                $cnt++;
+              }
+              if(count($arT1))
+              {
+                $arV['str_cities'] = join(', ', $arT1);
+              }
+              if(count($arT2))
+              {
+                $arV['str_cities_all'] = join(', ', $arT2);
+              }
+            }
+            //
+            foreach ($arAttribs as $v)
+            {
+              $v['id_vac']==$id && $arV['posts'][]=$v['name'];
+            }
+            if(count($arV['posts']))
+            {
+              $arV['str_posts'] = join(', ', $arV['posts']);
+            }
+            //
+            $arRes['data'][] = $arV;
+          }
+          Cache::setData($arRes); // Записуем все данные в кэш
+        }
+        else
+        {
+          $arRes['data'] = false;
+        }
+      }
+        return $arRes['data'];
     }
 
     public function VkRepost($id, $repost)

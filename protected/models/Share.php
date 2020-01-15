@@ -702,20 +702,20 @@ public static function getUserID()
    * @return array
    * получить данные пользователей по массиву
    */
-  public static function getUsers($arr)
-  {
-    $arRes = $arT = array();
-    $arr = array_unique($arr);
+    public static function getUsers($arr) 
+    {
+        $arRes = $arT = array();
+        $arr = array_unique($arr);
 
-    foreach ($arr as $v)
-      !empty($v) && $arT[] = $v;
-    $arr = $arT;
+        foreach ($arr as $v)
+            !empty($v) && $arT[] = $v;
+        $arr = $arT;
 
-    if(!count($arr) || !array_filter($arr))
-      return $arRes;
+        if(!count($arr) || !array_filter($arr))
+            return $arRes;
 
-    $sql = Yii::app()->db->createCommand()
-      ->select("
+        $sql = Yii::app()->db->createCommand()
+                ->select("
                     u.id_user,
                     u.email,
                     u.status,
@@ -726,58 +726,59 @@ public static function getUserID()
                     e.name emp_name,    
                     CONCAT(e.firstname,' ',e.lastname) emp_fio,  
                     e.logo emp_photo")
-      ->from('user u')
-      ->leftjoin('resume r','r.id_user=u.id_user')
-      ->leftjoin('employer e','e.id_user=u.id_user')
-      ->where(array('in','u.id_user',$arr))
-      ->queryAll();
+                ->from('user u')
+                ->leftjoin('resume r','r.id_user=u.id_user')
+                ->leftjoin('employer e','e.id_user=u.id_user')
+                ->where(array('in','u.id_user',$arr))
+                ->queryAll();
 
-    foreach ($sql as $v)
-    {
-      if($v['status']==UserProfile::$APPLICANT)
-      {
-        $arRes[$v['id_user']] = array(
-          'id' => $v['id_user'],
-          'email' => $v['email'],
-          'status' => $v['status'],
-          'is_online' => $v['is_online'],
-          'name' => $v['app_name'],
-          'src' => self::getPhoto($v['id_user'],2,$v['app_photo'],'small',$v['isman']),
-          'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user'],
-          'profile_admin' => '/admin/PromoEdit/' . $v['id_user'],
-          'fio' => $v['app_name'],
-        );
-      }
-      if($v['status']==UserProfile::$EMPLOYER)
-      {
-        $arRes[$v['id_user']] = array(
-          'id' => $v['id_user'],
-          'email' => $v['email'],
-          'status' => $v['status'],
-          'is_online' => $v['is_online'],
-          'name' => $v['emp_name'],
-          'src' => self::getPhoto($v['id_user'],3,$v['emp_photo']),
-          'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user'],
-          'profile_admin' => '/admin/EmplEdit/' . $v['id_user'],
-          'fio' => (!empty(trim($v['emp_fio']))
-            ? trim($v['emp_fio']) : '(без имени)')
-        );
-      }
+        foreach ($sql as $v)
+        {
+            if($v['status']==UserProfile::$APPLICANT)
+            {
+                $arRes[$v['id_user']] = array(
+                        'id' => $v['id_user'],
+                        'email' => $v['email'],
+                        'status' => $v['status'],
+                        'is_online' => $v['is_online'],
+                        'name' => $v['app_name'],
+                        'photo' => $v['app_photo'],
+                        'src' => self::getPhoto($v['id_user'],2,$v['app_photo'],'small',$v['isman']),
+                        'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user'],
+                        'profile_admin' => '/admin/PromoEdit/' . $v['id_user'],
+                        'fio' => $v['app_name'],
+                    );
+            }
+            if($v['status']==UserProfile::$EMPLOYER)
+            {
+                $arRes[$v['id_user']] = array(
+                        'id' => $v['id_user'],
+                        'email' => $v['email'],
+                        'status' => $v['status'],
+                        'is_online' => $v['is_online'],
+                        'name' => $v['emp_name'],
+                        'photo' => $v['emp_photo'],
+                        'src' => self::getPhoto($v['id_user'],3,$v['emp_photo']),
+                        'profile' => MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user'],
+                        'profile_admin' => '/admin/EmplEdit/' . $v['id_user'],
+                        'fio' => (!empty(trim($v['emp_fio']))
+                        ? trim($v['emp_fio']) : '(без имени)')
+                    );
+            }
 
-      if(isset($arRes[$v['id_user']]) && empty($arRes[$v['id_user']]['name']))
-      {
-        $arRes[$v['id_user']]['name'] = '(безымянный)';
-      }
-      if(in_array($v['id_user'], [1766,2054]))
-      {
-        $arRes[$v['id_user']]['name'] = 'Администрация Prommu';
-        $arRes[$v['id_user']]['src'] = '/theme/pic/prommu-adm.jpg';
-        unset($arRes[$v['id_user']]['profile']);
-      }
+            if(isset($arRes[$v['id_user']]) && empty($arRes[$v['id_user']]['name']))
+            {
+                $arRes[$v['id_user']]['name'] = '(безымянный)';
+            }
+            if(in_array($v['id_user'], [1766,2054]))
+            {
+                $arRes[$v['id_user']]['name'] = 'Администрация Prommu';
+                $arRes[$v['id_user']]['src'] = '/theme/pic/prommu-adm.jpg';
+                unset($arRes[$v['id_user']]['profile']);
+            }
+        }
+        return $arRes;
     }
-    return $arRes;
-  }
-
   /**
    * @param $arr array id_user`s
    * @return array

@@ -314,31 +314,15 @@ class PagesContent extends CActiveRecord
 
 	public function getVacanies($inLang)
 	{
-        try
-        {
-            $res = (new Vacancy())->getVacanciesQueries(array('page' => 'index'));
-        }
-        catch (Exception $e) {
-            return array('error' => $e->getMessage());
-        } // endtry
-
-
-
-        $data['vacs'] = array();
-        foreach ($res as $key => $val)
-        {
-            if( !isset($data['vacs'][$val['id']])) $data['vacs'][$val['id']] = array('city' => array(), 'posts' => array(), 'metroes' => array()) ;
-            $data['vacs'][$val['id']]['city'][$val['id_city']] = $val['id_city'] > 0 ? $val['ciname'] : $val['citycu'];
-            $data['vacs'][$val['id']]['posts'][$val['id_attr']] = $val['pname'];
-            if( $val['mid'] ) $data['vacs'][$val['id']]['metroes'][$val['mid']] = $val['mname'];
-            $data['vacs'][$val['id']] = array_merge($data['vacs'][$val['id']], $val);
-        } // end foreach
-
-        $i = 1;
-        $ret['vacs'] = array();
-        foreach ($data['vacs'] as $key => $val) { $ret['vacs'][$i] = $val; $i++; }
-
-    	return $ret['vacs'];
+    try
+    {
+        return (new Vacancy())->getVacanciesQueries(['page' => 'index']);
+    }
+    catch (Exception $e)
+    {
+        //return ['error' => $e->getMessage()];
+        return [];
+    }
 	}
 
 

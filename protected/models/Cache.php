@@ -21,7 +21,7 @@ class Cache
     }
     /**
      * @param $data array - ['id','data']
-     * @param $time number - time cache (default - 1 hour )
+     * @param $time number - time cache (default - 0.5 hour )
      * Устанавливаем кеш страницы
      */
     public static function setData($data, $time = 1800)

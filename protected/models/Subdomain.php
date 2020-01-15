@@ -398,7 +398,7 @@ class Subdomain
 	{
 		$id = self::getSiteName() . '/Subdomain/All';
 		$arRes = Cache::getData($id);
-		if($arRes['data']===false)
+		if($arRes['data']===false || empty($arRes['data']->strCitiesIdes) || !count($arRes['data']->arCitiesIdes))
 		{
 			$sql = Yii::app()->db->createCommand()
 								->select("*")
@@ -443,6 +443,24 @@ class Subdomain
 
 			Cache::setData($arRes, 604800); // кеш на неделю
 		}
+		//
+    // аварийный запрос(если баг с кэшем всетки проявляется)
+		if(empty($arRes['data']->strCitiesIdes) || !count($arRes['data']->arCitiesIdes))
+    {
+      $arRes['data']->arCitiesIdes = Yii::app()->db->createCommand()
+        ->select('c.id_city')
+        ->from('subdomains s')
+        ->join('city c','c.region=s.id')
+        ->where(['like', 's.url', self::getSiteName()])
+        ->queryColumn();
+
+      if(!count($arRes['data']->arCitiesIdes)) // если даже в БД нет данных - устанавливаем МСК
+      {
+        $arRes['data']->arCitiesIdes = [1307];
+      }
+      $arRes['data']->strCitiesIdes = implode(',', $arRes['data']->arCitiesIdes);
+    }
+
 		return $arRes['data'];
 	}
   /**
