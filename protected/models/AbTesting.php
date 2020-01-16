@@ -35,11 +35,6 @@ class AbTesting extends CActiveRecord
   {
     $result = false;
 
-    if(Yii::app()->crawlerDetect->isBot())
-    {
-      return $result;
-    }
-
     UserRegister::clearUser();
     $this->user = UserRegister::setUser();
     Yii::app()->request->cookies['urh'] = new CHttpCookie('urh', $this->user);
@@ -81,9 +76,12 @@ class AbTesting extends CActiveRecord
         }
       }
 
-      $this->date = time();
-      $this->setIsNewRecord(true);
-      $this->save();
+      if(!Yii::app()->crawlerDetect->isBot())
+      {
+        $this->date = time();
+        $this->setIsNewRecord(true);
+        $this->save();
+      }
     }
     if(!empty($yagla) && strripos($result,'/user/register/type')===false)
     {
