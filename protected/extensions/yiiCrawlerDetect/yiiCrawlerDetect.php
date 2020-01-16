@@ -21,8 +21,6 @@ class yiiCrawlerDetect extends CApplicationComponent
   public function isBot()
   {
     $CrawlerDetect = new CrawlerDetect;
-
-var_dump($CrawlerDetect->isCrawler('AdsBot-Google-Mobile-Apps'));
-
+    return $CrawlerDetect->isCrawler();
   }
 }
