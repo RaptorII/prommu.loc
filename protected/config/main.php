@@ -238,6 +238,7 @@ return array(
                 ),
             ),
         ),
+      'crawlerDetect' => ['class' => 'ext.yiiCrawlerDetect.yiiCrawlerDetect'],
     ),
 
     'params' => array(

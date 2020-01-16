@@ -35,6 +35,11 @@ class AbTesting extends CActiveRecord
   {
     $result = false;
 
+    if(Yii::app()->crawlerDetect->isBot())
+    {
+      return $result;
+    }
+
     UserRegister::clearUser();
     $this->user = UserRegister::setUser();
     Yii::app()->request->cookies['urh'] = new CHttpCookie('urh', $this->user);
