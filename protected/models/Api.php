@@ -92,7 +92,7 @@ class Api
                 case 'kew' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->kew(); break;
                 case 'rest' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->rest(); break;
                 case 'vac' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->vac(); break;
-                case 'delete' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->delete(); break;
+                case 'delets' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->delets(); break;
                 case 'firebase' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->firebase(); break;
                 case 'tele' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->teleProm(); break;
                 case 'teles' : $this->checkMethodHeader(self::$HEADER_GET); $data = $this->teleProms(); break;
@@ -2752,7 +2752,7 @@ public function vac(){
 
 }
 
-    public function delete(){
+    public function delets(){
         $email = filter_var(Yii::app()->getRequest()->getParam('email'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     
         $sql = "SELECT id_user
@@ -2762,12 +2762,10 @@ public function vac(){
         $res = Yii::app()->db->createCommand($sql)->queryRow();
 
         
-    
-
         Yii::app()->db->createCommand()
             ->delete('user', 'id_user=:id_user', array(':id_user' => $res['id_user']));
 
-                        
+                      
            
     }
             
