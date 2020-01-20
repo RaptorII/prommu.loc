@@ -2767,12 +2767,12 @@ public function vac(){
         Yii::app()->db->createCommand()
             ->delete('user', 'id_user=:id_user', array(':id_user' => $res['id_user']));
 
-                            return "I'll be back";
+                        
            
-                }
+    }
             
             
-                public function neWorkDay(){
+    public function neWorkDay(){
         
         $sql = "SELECT DATEDIFF(s.bdate , NOW()) date, v.id_promo promo
             FROM empl_vacations e 
