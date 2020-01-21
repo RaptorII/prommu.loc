@@ -26,6 +26,13 @@
       'value' => 'AdminView::getLink("/admin/EmplEdit/".$data->id_user, $data->company_search)',
       'type' => 'raw',
       'htmlOptions' => ['style'=>'width:10%']
+    ],
+    [
+      'header' => 'ID_USER работодателя',
+      'name' => 'id_user',
+      'value' => '$data->id_user',
+      'type' => 'raw',
+      'htmlOptions' => ['style'=>'width:2%']
     ]
   ];
   //
@@ -37,6 +44,16 @@
       'value' => 'AdminView::getLink("/admin/VacancyEdit/{$data->name}",$data->vacancy_search)',
       'type' => 'raw',
       'htmlOptions' => ['style'=>'width:10%']
+    ];
+  }
+  if(in_array($service,['vacancy','upvacancy']))
+  {
+    $arColumns[] = [
+      'header' => 'ID вакансии',
+      'name' => 'name',
+      'value' => '$data->name',
+      'type' => 'raw',
+      'htmlOptions' => ['style'=>'width:2%']
     ];
   }
   //

@@ -93,25 +93,20 @@
 				<?php $result = $viData['app_count'] * $viData['mes_count'] * $viData['price']; ?>
 				<span id="payment-result"><?=$result?>рублей</span>			
 			<?endif;?>
-
-            <?if($viData['service']=='podnyatie-vacansyi-vverh'):?>
-                <?php $result = count($viData['vacancy']) * $viData['price']; ?>
-                <span id="payment-result"><?=$result?>рублей</span>
-                <?php foreach ($viData['vacancy'] as $id): ?>
-                    <input type="hidden" name="vacancy[]" value="<?=$id?>">
-                <?php endforeach; ?>
-                <input type="hidden" name="service" value="podnyatie-vacansyi-vverh">
-            <?endif;?>
-
+      <?if($viData['service']=='podnyatie-vacansyi-vverh'):?>
+        <span id="payment-result"><?=$viData['price']?>рублей</span>
+        <?php foreach ($viData['vacancy'] as $id): ?>
+          <input type="hidden" name="vacancy[]" value="<?=$id?>">
+        <?php endforeach; ?>
+        <input type="hidden" name="service" value="podnyatie-vacansyi-vverh">
+      <?endif;?>
       <? $this->renderPartial('../site/services/legal-fields',['viData'=>$viData]); ?>
-
-            <input type="hidden" name="employer" value="<?= Share::$UserProfile->id?>">
+      <input type="hidden" name="employer" value="<?= Share::$UserProfile->id?>">
 
 			<div class="center">
 				<br>
 				<button type="submit" class="payment-form__btn prmu-btn prmu-btn_normal" id="payment-btn"><span>СФОРМИРОВАТЬ СЧЕТ</span></button>
 			</div>
-
 		</form>
 	</div>
 </div>

@@ -36,11 +36,19 @@
                   </td>
                 </tr>
                 <tr>
+                  <td><b>ID_USER работодателя</b></td>
+                  <td><?=$order->id_user?></td>
+                </tr>
+                <tr>
                   <td><b>Работодатель</b></td>
                   <td>
                     <?=AdminView::getLink($viData['employer']['profile_admin'],$viData['employer']['name'])?>
                     <input type="hidden" name="Service_cloud[id_user]" value="<?=$order->id_user?>">
                   </td>
+                </tr>
+                <tr>
+                  <td><b>ID вакансии</b></td>
+                  <td><?=$order->name?></td>
                 </tr>
                 <tr>
                   <td><b>Вакансия</b></td>

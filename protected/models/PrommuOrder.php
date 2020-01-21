@@ -1,57 +1,68 @@
 <?php
 
 class PrommuOrder {
-    //Определение цены использования услуги
-     public function servicePrice($arId, $service)
+  //Определение цены использования услуги
+  public function servicePrice($arId, $service)
+  {
+     if(!sizeof($arId) || empty($service))
+       return -1;
+
+     $price = 0;
+     $db = Yii::app()->db;
+
+     $query = $db->createCommand()
+       ->select('ec.id_vac, c.region')
+       ->from('empl_city ec')
+       ->join('city c', 'c.id_city=ec.id_city')
+       ->where(['in','id_vac',$arId])
+       ->queryAll();
+
+     if(!sizeof($query))
      {
-        if(!sizeof($arId) || empty($service))
-            return -1;
+       return -1;
+     }
 
-        $query = Yii::app()->db->createCommand()
-            ->select("c.region")
-            ->from('empl_city ec')
-            ->leftjoin('city c', 'c.id_city=ec.id_city')
-            ->where(array('in','id_vac',$arId))
-            ->queryColumn();
+     $arTemp = $arRegions = [];
+     foreach ($query as $v)
+     {
+       $arTemp[$v['id_vac']]['regions'][] = $v['region'];
+     }
+     foreach ($arTemp as $id => $v)
+     {
+       $arTemp[$id]['bin'] = $this->convertedRegion($v['regions']);
+     }
 
-        if(!sizeof($query))
-            return -1;
+     if(in_array(
+       $service,
+       ['premium-vacancy','podnyatie-vacansyi-vverh','email-invitation'])
+     ) // цену формируем лишь для платных услуг
+     {
+       foreach ($arTemp as $id => $v)
+       {
+         $arRegions = $this->getRegionalPrice($service,$v['bin'],false);
+display($arRegions);
 
-        $price = 0;
-        $bin = $this->convertedRegion($query);
-        
-        if(
-            $service=='premium-vacancy' ||
-            $service=='email-invitation'||
-            $service=='podnyatie-vacansyi-vverh'
-        ) {
-            $arReg = $this->getRegionalPrice($service,$bin, false);
-            $arPrices = Yii::app()->db->createCommand()
-                ->select("price")
-                ->from('service_prices')
-                ->where(
-                        'service=:service AND region IN('.join(',',$arReg).')',
-                        array(':service' => $service)
-                    )
-                ->queryAll();
-
-            foreach ($arPrices as $v)
-                $price += $v['price'];
-        }
-        else {
-            $arPrices = Yii::app()->db->createCommand()
-                ->select("price")
-                ->from('service_prices')
-                ->where(
-                        'service=:service',
-                        array(':service' => $service)
-                    )
-                ->queryRow();  
-            $price = $arPrices['price'];
-        }
-
-        return $price;
-    }
+         $price += $db->createCommand() // запрос в цикле чтоб не сумировались одинаковые регионы
+           ->select('SUM(price)')
+           ->from('service_prices')
+           ->where([
+             'and',
+             "service='$service'",
+             ['in','region',$arRegions]
+           ])
+           ->queryScalar();
+       }
+     }
+     else
+     {
+       $price = $db->createCommand()
+        ->select("price")
+        ->from('service_prices')
+        ->where('service=:service', [':service'=>$service])
+        ->queryScalar();
+     }
+     return $price;
+  }
 
 
     public function getPricesData(){
@@ -483,7 +494,7 @@ class PrommuOrder {
         $arRes['id'] = [];
         $arBDate = date("Y.m.d");
         $arEDate = date('Y.m.d', strtotime("+30 days"));
-        $arRes['cost'] = $vacPrice * count($arVacs);
+        $arRes['cost'] = $vacPrice;
 
 //        display($arBDate);display($arEDate);
 //        die('orderUpVacancy 2');
@@ -735,10 +746,10 @@ class PrommuOrder {
         switch ($bin)
         {
           case 0:
-          case 4: $arReg = [0]; break;
           case 1: $arReg = [1]; break;
           case 2: $arReg = [2]; break;
           case 3: $arReg = ($list ? [1,2,7] : [7]); break;
+          case 4: $arReg = [3]; break;
           case 5: $arReg = ($list ? [1,3,5] : [5]); break;
           case 6: $arReg = ($list ? [2,3,6] : [6]); break;
           case 7: $arReg = ($list ? [0,1,2,3,4,5,6,7] : [0]); break;

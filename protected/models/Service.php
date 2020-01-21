@@ -150,11 +150,15 @@ class Service extends CActiveRecord
       $this->sum = $get['sum'];
       $this->status = $get['status'];
       $this->is_new = $get['is_new'];
+      $this->id_user = $get['id_user'];
+      $this->name = $get['name'];
       $criteria->compare('t.id', $this->id, true);
       $criteria->compare('t.type', $this->type, true);
       $criteria->compare('t.sum', $this->sum, true);
       $criteria->compare('t.status', $this->status, true);
       $criteria->compare('t.is_new', $this->is_new, true);
+      $criteria->compare('t.id_user', $this->id_user);
+      $criteria->compare('t.name', $this->name);
 
       return new CActiveDataProvider($this, array(
         'criteria' => $criteria,
