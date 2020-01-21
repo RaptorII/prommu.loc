@@ -1,7 +1,6 @@
 <div class='row'>
   <div class='col-xs-12 register-wrapp'>
 <?php 
-var_dump($viData);
 Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl.'/theme/css/register-form.css');
 Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl.'/theme/js/private/page-register-fb.js', CClientScript::POS_END);
 $this->setBreadcrumbs($title = 'Регистрация', $this->createUrl(MainConfig::$PAGE_REGISTER, array('p' => '1')));
