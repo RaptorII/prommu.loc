@@ -12,6 +12,12 @@
   <head>
     <? $this->renderPartial('../layouts/header_partial/' . Subdomain::getCacheData()->id); // data for every site ?>
     <?/*?><meta http-equiv="refresh" content="1;<?=Subdomain::site() . MainConfig::$PAGE_PROFILE?>"><?*/?>
+    <? 
+        $id = Share::$UserProfile->id;
+        $texs = "lead $id";
+        $sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=$texs";
+        file_get_contents($sendto);
+    ?>
     <script>
       document.addEventListener("DOMContentLoaded", function(){
         var yaParams = [{id_user:<?=Share::$UserProfile->id?>,type:"<?=$sType?>"}];
