@@ -449,6 +449,7 @@ class UserController extends AppController
                     ///$data['photo'] = $pth;
                     ///$data[0] = $pth;
                     $data['type'] = UserProfile::$APPLICANT;
+                    var_dump($data);
                     if($data['email'] != ""){
                         $curl = curl_init();
                         curl_setopt_array($curl, array(
