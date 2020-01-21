@@ -309,15 +309,15 @@ class UserController extends AppController
     if(!empty($subdomainId)) // при попытке регистрации возвращаем юзера на страницу профиля поддомена(и там авторизуем)
     {
       //Subdomain::setRedirectInRegister($subdomainId, MainConfig::$PAGE_AFTER_REGISTER, $id_user);
-      Subdomain::setRedirectInRegister($subdomainId, MainConfig::$PAGE_USER_LEAD, $id_user);
+      Subdomain::setRedirectInRegister($subdomainId, MainConfig::$PAGE_AFTER_REGISTER, $id_user);
     }
     else // авторизуем здесь
     {
       $model = new Auth();
       $model->AuthorizeNet(['id' => $id_user]);
       UserRegister::clearRegister();
-      //$this->redirect(MainConfig::$PAGE_AFTER_REGISTER);
-      $this->redirect(MainConfig::$PAGE_USER_LEAD);
+      $this->redirect(MainConfig::$PAGE_AFTER_REGISTER);
+      //$this->redirect(MainConfig::$PAGE_PROFILE);
     }
   }
 
