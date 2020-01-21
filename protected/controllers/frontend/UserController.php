@@ -449,8 +449,10 @@ class UserController extends AppController
                     ///$data['photo'] = $pth;
                     ///$data[0] = $pth;
                     $data['type'] = UserProfile::$APPLICANT;
-                    var_dump($data);
-                    if($data['email'] != ""){
+                    
+                    if(!empty($data['email'])){
+                        $name = $data['name'];
+                        $email = $data['email'];
                         $curl = curl_init();
                         curl_setopt_array($curl, array(
                           CURLOPT_URL => "https://dev.prommu.com/user/register/login",
@@ -461,7 +463,7 @@ class UserController extends AppController
                           CURLOPT_FOLLOWLOCATION => true,
                           CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                           CURLOPT_CUSTOMREQUEST => "POST",
-                          CURLOPT_POSTFIELDS => "name=Denis&surname=Denis&login=denisgresk@sgmail.com&data=%7B%22name%22%3A%22De%22%2C%22surname%22%3A%22De%22%2C%22login%22%3A%22denisgresk@sgmail.com%22%2C%22data%22%3A%22%22%7D",
+                          CURLOPT_POSTFIELDS => 'name='.$name.'&surname='.$name.'&login='.$email.'&data={"name":"'.$name.'","surname":"'.$name.'","login":"'.$email.'","data":""}',
                           CURLOPT_HTTPHEADER => array(
                             "Content-Type: application/x-www-form-urlencoded"
                           ),
