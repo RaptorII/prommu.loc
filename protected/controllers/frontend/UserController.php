@@ -450,7 +450,26 @@ class UserController extends AppController
                     ///$data[0] = $pth;
                     $data['type'] = UserProfile::$APPLICANT;
                     if($data['email'] != ""){
-                      $this->actionMessenger($data);
+                        $curl = curl_init();
+                        curl_setopt_array($curl, array(
+                          CURLOPT_URL => "https://dev.prommu.com/user/register/login",
+                          CURLOPT_RETURNTRANSFER => true,
+                          CURLOPT_ENCODING => "",
+                          CURLOPT_MAXREDIRS => 10,
+                          CURLOPT_TIMEOUT => 0,
+                          CURLOPT_FOLLOWLOCATION => true,
+                          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                          CURLOPT_CUSTOMREQUEST => "POST",
+                          CURLOPT_POSTFIELDS => "name=Denis&surname=Denis&login=denisgresk@sgmail.com&data=%7B%22name%22%3A%22De%22%2C%22surname%22%3A%22De%22%2C%22login%22%3A%22denisgresk@sgmail.com%22%2C%22data%22%3A%22%22%7D",
+                          CURLOPT_HTTPHEADER => array(
+                            "Content-Type: application/x-www-form-urlencoded"
+                          ),
+                        ));
+                        
+                        $response = curl_exec($curl);
+                        
+                        curl_close($curl);
+                        //$this->actionMessenger($data);
                     } else $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
 
                   }
