@@ -309,7 +309,7 @@ class UserController extends AppController
     if(!empty($subdomainId)) // при попытке регистрации возвращаем юзера на страницу профиля поддомена(и там авторизуем)
     {
       //Subdomain::setRedirectInRegister($subdomainId, MainConfig::$PAGE_AFTER_REGISTER, $id_user);
-      Subdomain::setRedirectInRegister($subdomainId, MainConfig::$PAGE_PROFILE, $id_user);
+      Subdomain::setRedirectInRegister($subdomainId, MainConfig::$PAGE_USER_LEAD, $id_user);
     }
     else // авторизуем здесь
     {
@@ -317,7 +317,7 @@ class UserController extends AppController
       $model->AuthorizeNet(['id' => $id_user]);
       UserRegister::clearRegister();
       //$this->redirect(MainConfig::$PAGE_AFTER_REGISTER);
-      $this->redirect(MainConfig::$PAGE_PROFILE);
+      $this->redirect(MainConfig::$PAGE_USER_LEAD);
     }
   }
 
@@ -451,28 +451,28 @@ class UserController extends AppController
                     $data['type'] = UserProfile::$APPLICANT;
                     
                     if(!empty($data['email'])){
-                        $name = $data['name'];
-                        $email = $data['email'];
-                        $curl = curl_init();
-                        curl_setopt_array($curl, array(
-                          CURLOPT_URL => "https://dev.prommu.com/user/register/login",
-                          CURLOPT_RETURNTRANSFER => true,
-                          CURLOPT_ENCODING => "",
-                          CURLOPT_MAXREDIRS => 10,
-                          CURLOPT_TIMEOUT => 0,
-                          CURLOPT_FOLLOWLOCATION => true,
-                          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                          CURLOPT_CUSTOMREQUEST => "POST",
-                          CURLOPT_POSTFIELDS => 'name='.$name.'&surname='.$name.'&login='.$email.'&data={"name":"'.$name.'","surname":"'.$name.'","login":"'.$email.'","data":""}',
-                          CURLOPT_HTTPHEADER => array(
-                            "Content-Type: application/x-www-form-urlencoded"
-                          ),
-                        ));
+                        // $name = $data['name'];
+                        // $email = $data['email'];
+                        // $curl = curl_init();
+                        // curl_setopt_array($curl, array(
+                        //   CURLOPT_URL => "https://dev.prommu.com/user/register/login",
+                        //   CURLOPT_RETURNTRANSFER => true,
+                        //   CURLOPT_ENCODING => "",
+                        //   CURLOPT_MAXREDIRS => 10,
+                        //   CURLOPT_TIMEOUT => 0,
+                        //   CURLOPT_FOLLOWLOCATION => true,
+                        //   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        //   CURLOPT_CUSTOMREQUEST => "POST",
+                        //   CURLOPT_POSTFIELDS => 'name='.$name.'&surname='.$name.'&login='.$email.'&data={"name":"'.$name.'","surname":"'.$name.'","login":"'.$email.'","data":""}',
+                        //   CURLOPT_HTTPHEADER => array(
+                        //     "Content-Type: application/x-www-form-urlencoded"
+                        //   ),
+                        // ));
                         
-                        $response = curl_exec($curl);
+                        // $response = curl_exec($curl);
                         
-                        curl_close($curl);
-                        //$this->actionMessenger($data);
+                        // curl_close($curl);
+                        $this->actionMessenger($data);
                     } else $this->render($view, array('viData' => $data, 'photodata' => $pht), array('nobc' => '1'));
 
                   }
