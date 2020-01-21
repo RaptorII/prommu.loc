@@ -162,10 +162,6 @@ class Services extends Model
         }
         unset($v);
       }
-
-//      display( $arRes['menu'] );
-//      die();
-
       return $arRes;
     }
 

@@ -41,7 +41,7 @@ class UserController extends AppController
       public function actionPostback(){
           
        
-        
+        $db = Yii::app()->db;
         $method = $_GET['method'];
         $account = $_GET['params']['account'];
         $orderSum = (int)$_GET['params']['orderSum'];
@@ -55,7 +55,7 @@ class UserController extends AppController
                
                 $name = $arr[1];
                 $user = $arr[3];
-               $res = Yii::app()->db->createCommand()
+               $res = $db->createCommand()
                 ->update('service_cloud', array(
                     'key'=> $unitpayId,
                 ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
@@ -64,7 +64,7 @@ class UserController extends AppController
                 
                 $name = $arr[1];
                 $user = $arr[3];
-               $res = Yii::app()->db->createCommand()
+               $res = $db->createCommand()
                 ->update('service_cloud', array(
                     'key'=> $unitpayId,
                 ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
@@ -73,7 +73,7 @@ class UserController extends AppController
              
                 $name = $arr[1];
                 $user = $arr[3];
-               $res = Yii::app()->db->createCommand()
+               $res = $db->createCommand()
                 ->update('service_cloud', array(
                     'key'=> $unitpayId,
                 ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
@@ -82,7 +82,7 @@ class UserController extends AppController
 
             for ($i = $count; $i > 0 ; $i --) {
                 $name = $arr[$i];
-               $res = Yii::app()->db->createCommand()
+               $res = $db->createCommand()
                 ->update('service_cloud', array(
                     'key'=> $unitpayId,
                 ), 'id_user=:id_user AND name=:name', array(':id_user' => "$account", ':name' => "$name"));
@@ -99,7 +99,7 @@ class UserController extends AppController
           $serviceType = $arParams[2]; // service_cloud => type
           $transaction = $arParams[3]; // service_cloud => stack
 
-          $email = Yii::app()->db->createCommand()
+          $email = $db->createCommand()
             ->select('email')
             ->from('user')
             ->where('id_user=:id',[':id'=>$id_user])
@@ -111,18 +111,15 @@ class UserController extends AppController
           {
             $model->autoOrder($serviceType, $transaction, $id_user, $id_vacancy);
           }
-          else // услуга Премиум
-          if (in_array($serviceType, ['vacancy']))
+          elseif (in_array($serviceType, ['vacancy'])) // услуга Премиум
           {
-            $arIdVacs = $queryVacs = [];
+            $arIdVacs = [];
             for ($i=1, $n=count($arParams); $i<$n; $i++)
             {
               $arIdVacs[] = $arParams[$i];
-              $queryVacs[] = 'name like ' . $arParams[$i];
             }
 
-
-            $query = Yii::app()->db->createCommand()
+            $query = $db->createCommand()
               ->select('count(*)')
               ->from('empl_vacantions')
               ->where(
@@ -134,86 +131,70 @@ class UserController extends AppController
 
             if($query==count($arIdVacs)) // все вакансии данного Р
             {
-              Yii::app()->db->createCommand()
-                ->update(
-                  'service_cloud',
-                  ['status' => 1],
-                  'id_user like :id AND name=:name',
-                  [':id' => "$id_user", ':name' => "$id_vacancy"]
-                );
+              $date = date("Y-m-d");
+              foreach ($arIdVacs as $v)
+              {
+                $db->createCommand()
+                  ->update(
+                    'service_cloud',
+                    ['status' => 1],
+                    'id_user=:id AND name like :name',
+                    [':id'=>$id_user, ':name'=>$v]
+                  );
+              }
 
-              //$queryVacs
-            }
-
-
-
-            for ($i = $count; $i > 0; $i--)
-            {
-              $name = $arr[$i];
-
-
-              Yii::app()->db->createCommand()
+              $db->createCommand()
                 ->update(
                   'empl_vacations',
-                  [
-                    'ispremium' => 1,
-                    'crdate' => date("Y-m-d"),
-                    'mdate' => date("Y-m-d"),
-                  ],
-                  'id=:id',
-                  [':id' => $id_vacancy]
+                  ['ispremium'=>1, 'crdate'=>$date, 'mdate'=>$date],
+                  ['in','id',$arIdVacs]
                 );
             }
           }
-          else
-          if (in_array($serviceType, ['upvacancy']))
+          elseif (in_array($serviceType, ['upvacancy'])) // Поднятие вакансии
           {
-              $arIdVacs = $queryVacs = [];
-              for ($i=1, $n=count($arParams); $i<$n; $i++)
+            $arIdVacs = [];
+            for ($i=1, $n=count($arParams); $i<$n; $i++)
+            {
+              $arIdVacs[] = $arParams[$i];
+            }
+
+            $query = $db->createCommand()
+                ->select('count(*)')
+                ->from('empl_vacantions')
+                ->where(
+                    'and',
+                    ['in','id',$arIdVacs],
+                    ['id_user=:id',[':id'=>$id_user]]
+                )
+                ->queryScalar();
+            // берем последний ID вакансий
+            $lastId = $db->createCommand()
+              ->select('id')
+              ->from('empl_vacations')
+              ->order('id desc')
+              ->queryScalar();
+            $date = date("Y-m-d");
+            // если все вакансии и оплаты найдены
+            if($query==count($arIdVacs))
+            {
+              foreach ($arIdVacs as $v)
               {
-                  $arIdVacs[] = $arParams[$i];
-                  $queryVacs[] = 'name like ' . $arParams[$i];
+                $db->createCommand()->update(
+                    'service_cloud',
+                    ['status' => 1],
+                    'id_user=:id AND name like :name',
+                    [':id'=>$id_user, ':name'=>$v]
+                  );
+
+                $db->createCommand()->update(
+                    'empl_vacations',
+                    ['sort'=>$lastId, 'crdate'=>$date, 'mdate'=>$date],
+                    'id=:id',
+                    [':id'=>$v]
+                  );
               }
-
-              $query = Yii::app()->db->createCommand()
-                  ->select('count(*)')
-                  ->from('empl_vacantions')
-                  ->where(
-                      'and',
-                      ['in','id',$arIdVacs],
-                      ['id_user=:id',[':id'=>$id_user]]
-                  )
-                  ->queryScalar();
-
-              if($query==count($arIdVacs)) // все вакансии данного Р
-              {
-                  Yii::app()->db->createCommand()
-                      ->update(
-                          'service_cloud',
-                          ['status' => 1],
-                          'id_user like :id AND name=:name',
-                          [':id' => "$id_user", ':name' => "$id_vacancy"]
-                      );
-
-                  //$queryVacs
-              }
-
-              for ($i = $count; $i > 0; $i--)
-              {
-                  $name = $arr[$i];
-
-                  Yii::app()->db->createCommand()
-                      ->update(
-                          'empl_vacations',
-                          [
-                              'is_upvacancy' => 1,
-                              'crdate' => date("Y-m-d"),
-                              'mdate' => date("Y-m-d"),
-                          ],
-                          'id=:id',
-                          [':id' => $id_vacancy]
-                      );
-              }
+            }
           }
           echo json_encode(['result'=>['message'=>'Запрос успешно обработан']]);
         }

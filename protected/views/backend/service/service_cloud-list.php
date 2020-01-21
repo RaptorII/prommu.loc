@@ -5,6 +5,7 @@
         $('.grid_date').datepicker(jQuery.extend(jQuery.datepicker.regional['ru'],{changeMonth:true}));
       }");
   $service = Yii::app()->getRequest()->getParam('service');
+
   $title = Services::getServiceName($service);
   $this->setPageTitle($title);
   $this->breadcrumbs = ['Все услуги'=>['/service'], $title];
@@ -39,7 +40,7 @@
     ];
   }
   //
-  if(in_array($service,['vacancy','email','sms'])) // платные услуги
+  if(in_array($service,['vacancy','email','sms','upvacancy'])) // платные услуги
   {
     if($service=='vacancy') // только для премиум
     {

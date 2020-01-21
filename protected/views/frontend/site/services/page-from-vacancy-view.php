@@ -1,5 +1,14 @@
 <?php Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array()); ?>
 <?php
+//	upvacancy
+?>
+<?php if($viData['service']=='upvacancy'): ?>
+  <form action="<?=MainConfig::$PAGE_PAYMENT?>" method="POST" id="order-form">
+    <input type="hidden" name="vacancy[]" value="<?=Yii::app()->getRequest()->getParam('id')?>">
+    <input type="hidden" name="service" value="podnyatie-vacansyi-vverh">
+  </form>
+<?php endif; ?>
+<?php
 //	premium
 ?>
 <?php if($viData['service']=='premium'): ?>

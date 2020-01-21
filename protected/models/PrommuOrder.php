@@ -2,29 +2,30 @@
 
 class PrommuOrder {
     //Определение цены использования услуги
-     public function servicePrice($arId, $service) {
+     public function servicePrice($arId, $service)
+     {
         if(!sizeof($arId) || empty($service))
             return -1;
 
-        $arBD = Yii::app()->db->createCommand()
+        $query = Yii::app()->db->createCommand()
             ->select("c.region")
             ->from('empl_city ec')
             ->leftjoin('city c', 'c.id_city=ec.id_city')
             ->where(array('in','id_vac',$arId))
-            ->queryAll();
+            ->queryColumn();
 
-        if(!sizeof($arBD))
+        if(!sizeof($query))
             return -1;
 
         $price = 0;
-        $bin = $this->convertedRegion($arBD);
+        $bin = $this->convertedRegion($query);
         
         if(
             $service=='premium-vacancy' ||
             $service=='email-invitation'||
             $service=='podnyatie-vacansyi-vverh'
         ) {
-            $arReg = $this->getRegionalPrice($service,$bin);
+            $arReg = $this->getRegionalPrice($service,$bin, false);
             $arPrices = Yii::app()->db->createCommand()
                 ->select("price")
                 ->from('service_prices')
@@ -697,91 +698,96 @@ class PrommuOrder {
       return $arRes;
     }
     /*
-    *       Конвертация регионов таблиц city и service_prices
+    *   Конвертация регионов таблиц city и service_prices
+    *   @return int (Возвращаеи число от 0 до 7и, в котором значение устанавливается и проверяется побитно)
+    *  1)001 - Московская область(МСК)
+    *  2)010 - Ленинградская область(СПБ)
+    *  3)011 - Московская + Ленинградская область
+    *  4)100 - прочие города
+    *  5)101 - прочие города + Московская область
+    *  6)110 - прочие города + Ленинградская область
+    *  7)111 - прочие города + Московская область + Ленинградская область
     */
-    private function convertedRegion($arr) {
+    private function convertedRegion($arr)
+    {
         $bin = 0;
-        foreach ($arr as $c) {
-            if($c['region']==1307) $bin|=1; // определяем МО
-            elseif($c['region']==1838) $bin|=2; // определяем ЛО
-            else $bin|=4;
+        foreach ($arr as $v)
+        {
+          if($v==1307) $bin|=1; // определяем МО
+          elseif($v==1838) $bin|=2; // определяем ЛО
+          else $bin|=4;
         }
         return $bin;
     }
-    /*
-    *       Подбор подходящего региона
-    */
-    private function getRegionalPrice($service, $bin) {
-        $arReg = [4];
-        if($service=='premium-vacancy'  ||
-           $service=='email-invitation' ||
-           $service=='podnyatie-vacansyi-vverh' ){
-            switch ($bin) {
-                case 1: $arReg = [1]; break;// МО
-                case 2: $arReg = [2]; break;// ЛО
-                case 4: $arReg = [3]; break;// др.рег.
-            }
+    /**
+     * @param $service - string
+     * @param $bin - integer (0-7)
+     * @return array (0=>Вся РФ, 1=>МСК, 2=>СПБ, 3=>регионы, 4=>Бесплатно, 5=>МСК+регионы, 6=>СПБ+регионы, 7=>МСК+СПБ)
+     */
+    private function getRegionalPrice($service, $bin, $list=true)
+    {
+      $arReg = [4]; // по умолчанию бесплатно
+      if(in_array(
+        $service,
+        ['premium-vacancy','podnyatie-vacansyi-vverh','email-invitation'])
+      )
+      {
+        switch ($bin)
+        {
+          case 0:
+          case 4: $arReg = [0]; break;
+          case 1: $arReg = [1]; break;
+          case 2: $arReg = [2]; break;
+          case 3: $arReg = ($list ? [1,2,7] : [7]); break;
+          case 5: $arReg = ($list ? [1,3,5] : [5]); break;
+          case 6: $arReg = ($list ? [2,3,6] : [6]); break;
+          case 7: $arReg = ($list ? [0,1,2,3,4,5,6,7] : [0]); break;
         }
-        if($service=='premium-vacancy') {
-            switch ($bin) {
-                case 3: // МО + ЛО
-                case 7: $arReg = [1,3]; break;// МО + ЛО + др.рег.
-                case 5: $arReg = [1]; break;// МО + др.рег.
-                case 6: $arReg = [2]; break;// ЛО + др.рег.
-            }
-        }
-        if($service=='email-invitation') {
-            switch ($bin) {
-                case 3: // МО + ЛО
-                case 7: $arReg = [1,2]; break;// МО + ЛО + др.рег.
-                case 5: $arReg = [1,3]; break;// МО + др.рег.
-                case 6: $arReg = [2,3]; break;// ЛО + др.рег.
-            }
-        }
-        if($service=='podnyatie-vacansyi-vverh') {
-            switch ($bin) {
-                case 3: // МО + ЛО
-                case 7: $arReg = [1,3]; break;// МО + ЛО + др.рег.
-                case 5: $arReg = [1]; break;// МО + др.рег.
-                case 6: $arReg = [2]; break;// ЛО + др.рег.
-            }
-        }
-        return $arReg;
+      }
+
+      return $arReg;
     }
     /*
     *       ПОлучение данных о вакансиях работодателя
     */
-    public function getVacRegions($arPrice) {
-        if(Share::$UserProfile->type!=3)
-            return $arPrice;
+    public function getVacRegions($arPrice)
+    {
+      if(!Share::isEmployer())
+        return $arPrice;
 
-        $arRes = array();
-        $id = Share::$UserProfile->id;
-        $arBD = Yii::app()->db->createCommand()
-            ->select("c.region")
-            ->from('empl_city ec')
-            ->leftjoin('empl_vacations ev', 'ev.id=ec.id_vac AND ev.status=1 AND ev.in_archive=0')
-            ->leftjoin('city c', 'c.id_city=ec.id_city')
-            ->where('ev.id_user=:id',array(':id'=>$id))
-            ->queryAll();
+      $query = Yii::app()->db->createCommand()
+        ->select("c.region, ec.id_vac")
+        ->from('empl_city ec')
+        ->leftjoin(
+          'empl_vacations ev',
+          'ev.id=ec.id_vac AND ev.status=:status AND ev.in_archive=:archive',
+          [
+            ':status' => Vacancy::$STATUS_ACTIVE,
+            ':archive' => Vacancy::$INARCHIVE_FALSE
+          ]
+        )
+        ->leftjoin('city c', 'c.id_city=ec.id_city')
+        ->where('ev.id_user=:id',[':id'=>Share::$UserProfile->id])
+        ->queryColumn();
 
-
-        $bin = $this->convertedRegion($arBD);
-        $arNewPrices = array();
-        foreach ($arPrice as $s => $arP) {
-            $arReg = $this->getRegionalPrice($s, $bin);
-            foreach ($arP as $v)
-                if(in_array($v['region'], $arReg))
-                    $arNewPrices[$s][] = $v;
+      $bin = $this->convertedRegion($query); // целое число с конкретным значением каждого бита
+      $arRes = [];
+      foreach ($arPrice as $serviceCode => $arP)
+      {
+        $arReg = $this->getRegionalPrice($serviceCode, $bin);
+        foreach ($arP as $v)
+        {
+          in_array($v['region'], $arReg) && $arRes[$serviceCode][]=$v;
         }
-        if(!array_key_exists('premium-vacancy', $arNewPrices))
-            $arNewPrices['premium-vacancy'] = $arPrice['premium-vacancy'];
-        if(!array_key_exists('email-invitation', $arNewPrices))
-            $arNewPrices['email-invitation'] = $arPrice['email-invitation'];
-        if(!array_key_exists('podnyatie-vacansyi-vverh', $arNewPrices))
-            $arNewPrices['podnyatie-vacansyi-vverh'] = $arPrice['podnyatie-vacansyi-vverh'];
+      }
+      if(!array_key_exists('premium-vacancy', $arRes))
+        $arRes['premium-vacancy'] = $arPrice['premium-vacancy'];
+      if(!array_key_exists('email-invitation', $arRes))
+        $arRes['email-invitation'] = $arPrice['email-invitation'];
+      if(!array_key_exists('podnyatie-vacansyi-vverh', $arRes))
+        $arRes['podnyatie-vacansyi-vverh'] = $arPrice['podnyatie-vacansyi-vverh'];
 
-        return $arNewPrices;
+      return $arRes;
     }
 }
 ?>

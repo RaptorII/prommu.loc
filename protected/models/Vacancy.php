@@ -34,6 +34,9 @@ class Vacancy extends ARModel
     static public $ISMODER_NEW = 0;
     static public $ISMODER_APPROVED = 100;
     static public $ISMODER_REJECTED = 200;
+    // empl_vacations.in_archive
+    static public $INARCHIVE_FALSE = 0;
+    static public $INARCHIVE_NO_TRUE = 1;
     // кол-во вакансий на главной странице
     static private $VACANCIES_IN_MAIN_PAGE = 12;
     // ID атрибута - должности
@@ -622,7 +625,7 @@ class Vacancy extends ARModel
 
         if( $inId )
         {
-        $sql = "SELECT e.id, e.ispremium, e.is_upvacancy, e.title, e.requirements, e.duties, e.conditions, e.istemp,
+        $sql = "SELECT e.id, e.ispremium, e.sort, e.title, e.requirements, e.duties, e.conditions, e.istemp,
                    DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
                    e.shour,
                    e.sweek,
@@ -694,7 +697,7 @@ class Vacancy extends ARModel
             $data['age_to'] = (int)$val['ageto'];
             
             $data['is_premium'] = (boolean)$val['ispremium'];
-            $data['is_upvacancy'] = (boolean)$val['is_upvacancy'];
+            $data['sort'] = (boolean)$val['sort'];
             $data['is_active'] = true;
             $data['is_med'] = (boolean)$val['ismed'];
             $data['is_hasavto'] = (boolean)$val['isavto'];
@@ -731,7 +734,7 @@ class Vacancy extends ARModel
 
         if( $inId )
         {
-        $sql = "SELECT e.id, e.ispremium, e.is_upvacancy, e.title, e.requirements, e.duties, e.conditions, e.istemp,
+        $sql = "SELECT e.id, e.ispremium, e.sort, e.title, e.requirements, e.duties, e.conditions, e.istemp,
                    DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
                    e.shour,
                    e.sweek,
@@ -797,7 +800,7 @@ class Vacancy extends ARModel
             
             
             $data[$val['id']]['is_premium'] = (boolean)$val['ispremium'];
-            $data[$val['id']]['is_upvacancy'] = (boolean)$val['is_upvacancy'];
+            $data[$val['id']]['sort'] = (boolean)$val['sort'];
             $data[$val['id']]['is_active'] = true;
             $data[$val['id']]['is_med'] = (boolean)$val['ismed'];
             $data[$val['id']]['is_hasavto'] = (boolean)$val['isavto'];
@@ -1007,7 +1010,6 @@ class Vacancy extends ARModel
             $data['ismoder'] = intval($data['ismoder']);
             $data['status'] = intval($data['status']);
             $data['ispremium'] = intval($data['ispremium']);
-            $data['is_upvacancy'] = intval($data['is_upvacancy']);
             $data['isman'] = intval($data['isman']);
             $data['iswoman'] = intval($data['iswoman']);
             $data['istemp'] = intval($data['istemp']);
@@ -1296,6 +1298,9 @@ class Vacancy extends ARModel
 
             $flagNew = 1;
             $idvac = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
+            // Сортировка
+            Yii::app()->db->createCommand()
+              ->update('empl_vacations', ['sort'=>$idvac],'id=:id',[':id'=>$idvac]);
             // сохраняем должности
             $postt = $this->saveVacPosts($idvac);
             // сохраняем атрибуты вакансии
@@ -2696,7 +2701,7 @@ WHERE id_vac = {$inVacId}";
          $filter = $inParams['filter'];
         $limit = (int)$inParams['limit'] > 0 ? "LIMIT {$inParams['offset']}, {$inParams['limit']}" : '';
        // var_dump($limit);
-        $sql = "SELECT e.id, e.ispremium, e.is_upvacancy, e.title, e.requirements, e.duties, e.conditions, e.istemp,
+        $sql = "SELECT e.id, e.ispremium, e.sort, e.title, e.requirements, e.duties, e.conditions, e.istemp,
                    DATE_FORMAT(e.remdate, '%d.%m.%Y') remdate,
                    e.shour,
                    e.sweek,
@@ -2735,7 +2740,7 @@ WHERE id_vac = {$inVacId}";
             JOIN employer em ON em.id_user = e.id_user
             ORDER BY 
               e.ispremium DESC, 
-              e.is_upvacancy DESC, 
+              e.sort DESC, 
               e.mdate DESC
             LIMIT 100";
         $res = Yii::app()->db->createCommand($sql);
@@ -3999,6 +4004,7 @@ WHERE id_vac = {$inVacId}";
                         status,
                         repost,
                         ispremium,
+                        sort,
                         if(ismoder=100,1,0) ismoder,
                         DATE_FORMAT(remdate,'%d.%m.%Y') remdate,
                         if(remdate>=CURRENT_DATE(),0,1) archive_date")

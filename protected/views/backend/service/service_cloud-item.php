@@ -54,7 +54,7 @@
                   <tr><td><b>Дата начала</b></td><td><?=Share::getDate(strtotime($order->bdate),"d.m.Y")?></td></tr>
                   <tr><td><b>Дата окончания</b></td><td><?=Share::getDate(strtotime($order->bdate),"d.m.Y")?></td></tr>
                 <? endif; ?>
-                <? if(in_array($service,['vacancy','email','sms'])): ?>
+                <? if(in_array($service,['vacancy','email','sms','upvacancy'])): ?>
                   <tr><td><b>Cумма</b></td><td><?=$order->sum?></td></tr>
                   <tr>
                     <td>
@@ -120,7 +120,7 @@
               </tbody>
             </table>
             <div class="pull-right">
-              <? if(in_array($service,['vacancy','email','sms']) && !empty($order->legal)): ?>
+              <? if(in_array($service,['vacancy','email','sms','upvacancy']) && !empty($order->legal)): ?>
                 <? if(!$order->status): ?>
                   <span class="btn btn-success d-indent" id="start_service">Запустить услугу</span>
                 <? endif; ?>

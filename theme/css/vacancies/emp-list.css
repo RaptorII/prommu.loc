@@ -615,6 +615,10 @@ span.evl__tabs-link.enable {
   line-height: 33px;
 }
 
+.evl__service-popup .evl-vacancies__upvacancy:before {
+  content: '\e9cc';
+}
+
 .evl__service-popup .evl-vacancies__premium:before {
   content: '\e920';
 }

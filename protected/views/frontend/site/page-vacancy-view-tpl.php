@@ -301,6 +301,8 @@ Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'dist/jquery
                                     <a href='<?= MainConfig::$PAGE_ORDER_SERVICE . "$link=push"?>'
                                        class="erv__services-soc prmu-btn"><span>PUSH информирование</span></a>   
                                     <span>Платные услуги</span>
+                                    <a href='<?= MainConfig::$PAGE_ORDER_SERVICE . "$link=upvacancy"?>'
+                                      class="erv__services-soc prmu-btn"><span>Поднятие вакансии</span></a>
                                     <? if (!$viData['vac']['ispremium']): // если вакансия НЕ премиум ?>
                                         <a href='<?= MainConfig::$PAGE_ORDER_SERVICE . "$link=premium"?>'
                                            class="erv__services-soc prmu-btn"><span>Премиум</span></a>

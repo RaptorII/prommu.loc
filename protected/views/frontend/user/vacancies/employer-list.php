@@ -117,6 +117,7 @@
 	                <div class="evl-vacancies__item-btns">
 	                  <div class="evl__service-btn">Услуги для вакансии</div>
 	                  <div class="evl__service-popup tmpl" data-id="<?=$v['id']?>" data-header="Выбор услуги">
+                      <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$v['id']}&service=upvacancy"?>" class="evl-vacancies__upvacancy">Поднятие вакансии вверх</a>
 	                    <? if(!$v['ispremium']): // если не установлен ?>
 	                      <a href="<?=MainConfig::$PAGE_ORDER_SERVICE."?id={$v['id']}&service=premium"?>" class="evl-vacancies__premium">Установить Премиум статус</a>
 	                    <? endif; ?>
