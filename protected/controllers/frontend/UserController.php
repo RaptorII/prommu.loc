@@ -1065,7 +1065,7 @@ class UserController extends AppController
         $service = $rq->getParam('service');
         $vac = $rq->getParam('vacancy');
         $emp = $rq->getParam('employer');
-        $price = $model->servicePrice($vac, $service);
+        $price = $model->servicePrice($vac, $service, $service=='premium-vacancy');
 
         switch ($service)
         {

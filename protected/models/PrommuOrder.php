@@ -2,12 +2,12 @@
 
 class PrommuOrder {
   //Определение цены использования услуги
-  public function servicePrice($arId, $service)
+  public function servicePrice($arId, $service, $isArray=false)
   {
      if(!sizeof($arId) || empty($service))
        return -1;
 
-     $price = 0;
+     $result = (!$isArray ? 0 : []);
      $db = Yii::app()->db;
 
      $query = $db->createCommand()
@@ -26,6 +26,7 @@ class PrommuOrder {
      foreach ($query as $v)
      {
        $arTemp[$v['id_vac']]['regions'][] = $v['region'];
+       $arTemp[$v['id_vac']]['price'] = 0;
      }
      foreach ($arTemp as $id => $v)
      {
@@ -40,9 +41,8 @@ class PrommuOrder {
        foreach ($arTemp as $id => $v)
        {
          $arRegions = $this->getRegionalPrice($service,$v['bin'],false);
-display($arRegions);
 
-         $price += $db->createCommand() // запрос в цикле чтоб не сумировались одинаковые регионы
+         $price = $db->createCommand() // запрос в цикле чтоб не сумировались одинаковые регионы
            ->select('SUM(price)')
            ->from('service_prices')
            ->where([
@@ -51,17 +51,21 @@ display($arRegions);
              ['in','region',$arRegions]
            ])
            ->queryScalar();
+
+         $isArray
+         ? $result[$id]=$price
+         : $result+=$price;
        }
      }
      else
      {
-       $price = $db->createCommand()
+       $result = $db->createCommand()
         ->select("price")
         ->from('service_prices')
         ->where('service=:service', [':service'=>$service])
         ->queryScalar();
      }
-     return $price;
+     return $result;
   }
 
 
@@ -446,7 +450,6 @@ display($arRegions);
       $arRes = [];
       $arRes['strVacancies'] = implode('.', $arVacs);
       $arRes['account'] = $employer . '.' . $arRes['strVacancies'];
-
       $arRes['cost'] = 0;
       $arRes['id'] = [];
       $arBDate = Yii::app()->getRequest()->getParam('from');
@@ -458,7 +461,7 @@ display($arRegions);
         $from = strtotime($arBDate[$i]);
         $to = strtotime($arEDate[$i]);
         $days = ($to - $from) / $day;
-        $price = intval($vacPrice * $days);
+        $price = intval($vacPrice[$arVacs[$i]] * $days);
         $arRes['id'][] = $this->serviceOrder(
           $employer,
           $price,

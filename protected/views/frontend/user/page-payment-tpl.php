@@ -8,9 +8,6 @@
 	$this->ViewModel->addContentClass('page-payment');
 	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'page-payment.css');
 	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'payment-page.js', CClientScript::POS_END);
-
-
-	//display($viData);
 ?>
 <div class="row">
 	<div class="col-xs-12 payment">
@@ -69,22 +66,21 @@
 								<tr><td>Дата начала</td><td class="payment-begin"></td></tr>
 								<tr><td>Дата окончания</td><td class="payment-end"></td></tr>
 								<tr><td>Период работы услуги</td><td class="payment-period">0 дней</td></tr>
+                <tr><td>Стоимость услуги</td><td class="payment-cost"><span><?=$viData['price'][$id]?></span> руб/день</td>
 							</tbody>
 						</table>
 						<input type="hidden" name="vacancy[]" value="<?=$id?>">					
 						<input type="hidden" name="from[]" class="payment-begin-inp">
 						<input type="hidden" name="to[]" class="payment-end-inp">
-						<input type="hidden" name="period[]" class="payment-period-inp">
-						<input type="hidden" name="service" value="premium-vacancy">
+            <input type="hidden" name="period[]" class="payment-period-inp">
+            <input type="hidden" name="cost[]" class="payment-cost-inp">
 					</div>
 				<?php endforeach; ?>
+        <input type="hidden" name="service" value="premium-vacancy">
 				<span class="payment-form__type-name">РЕЗУЛЬТАТ</span>		
 				<table class="payment-form__table">
 					<tbody>
-						<tr><td>Стоимость услуги</td><td><span id="payment-price"><?=$viData['price']?></span> руб/день</td>
-						</tr>
 						<tr><td>Выбраных вакансий</td><td id="payment-count"><?=count($viData['vacancy'])?></td></tr>
-						<tr><td>Итоговый период работы услуги </td><td id="payment-period">0 дней</td></tr>
 						<tr><td colspan="2" id="payment-result"></td></tr>
 					</tbody>
 				</table>

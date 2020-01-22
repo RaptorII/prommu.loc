@@ -190,11 +190,22 @@ var Payment = (function (){
         $(parent).find('.payment-period').text(ending(dayCount[i]));
         $(parent).find('.payment-period-inp').val(dayCount[i]);
         allDayCount = 0;
-        for(var i=0; i<index; i++){ allDayCount+=dayCount[i] }
-        $('#payment-period').text(ending(allDayCount));
-        if(allDayCount){
-          str = price + ' * ' + allDayCount + ' = ' + price*allDayCount + 'руб'; 
-          $('#payment-result').text(str);
+        str = '';
+        sum = 0;
+        for(var i=0; i<index; i++)
+        {
+          allDayCount+=dayCount[i];
+          if(dayCount[i]>0)
+          {
+            var cost = $('.payment-cost span:eq('+i+')').text();
+            str+= (str.length ? ' + ' : '');
+            str+= '(' + cost + ' * ' + dayCount[i] + ')';
+            sum+= (Number(cost) * dayCount[i]);
+          }
+        }
+        if(allDayCount)
+        {
+          $('#payment-result').text(str + ' = ' + sum + ' руб');
         }
       }
       //
