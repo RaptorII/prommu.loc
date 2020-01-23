@@ -191,6 +191,7 @@ class SearchPromo extends Model
                 INNER JOIN user_city uc ON r.id_user = uc.id_user  
                     {$filter['table']}
                 INNER JOIN user_mech a ON a.id_us = r.id_user
+                INNER JOIN user_attribs ua ON ua.id_us = r.id_user
                     {$filter['filter']}
                 ORDER BY r.mdate DESC ";
         /** @var $res CDbCommand */
