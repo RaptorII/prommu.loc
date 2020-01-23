@@ -52,6 +52,8 @@ class SearchPromo extends Model
         {
             // if( !isset($data['promo'][$val['id']])) $data['promo'][$val['id']] = array('city' => array(), 'posts' => array()) ;
             
+            if((int)$res[$val['id_user']]['city']['id']){
+                
             
             ///attribs
             $data['promo'][$val['id']]['id'] = (int)$val['id'];
@@ -101,7 +103,7 @@ class SearchPromo extends Model
             $data['promo'][$val['id']]['moder_at'] = $val['mdates'];
             
             
-            
+            }
             
             //
           
