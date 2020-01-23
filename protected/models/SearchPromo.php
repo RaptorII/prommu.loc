@@ -185,7 +185,7 @@ class SearchPromo extends Model
     
         $filter = $this->renderSQLFilterAPI(['filter' => $props['filter']]);
         
-        $sql = "SELECT  r.id_user
+        $sql = "SELECT DISTINCT r.id_user
                 FROM resume r
                 INNER JOIN user u ON u.id_user = r.id_user 
                 INNER JOIN user_city uc ON r.id_user = uc.id_user  
@@ -194,7 +194,7 @@ class SearchPromo extends Model
                     {$filter['filter']}
                 ORDER BY r.mdate DESC ";
         /** @var $res CDbCommand */
-        $query = Yii::app()->db->createCommand($sql)->queryAll();
+        $query = Yii::app()->db->createCommand($sql)->queryColumn();
 
         return $query;
     }
