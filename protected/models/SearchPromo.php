@@ -182,7 +182,8 @@ class SearchPromo extends Model
     
     public function searchPromosCountAPI($props = [])
     {
-        $filter = $this->renderSQLFilter(['filter' => $props['filter']]);
+        var_dump($props);
+        $filter = $this->renderSQLFilterAPI(['filter' => $props['filter']]);
         var_dump($filter);
         $sql = "SELECT COUNT(DISTINCT r.id_user)
                 FROM resume r
