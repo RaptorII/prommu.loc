@@ -542,7 +542,7 @@ class SearchPromo extends Model
       $filter = count($filter) ? 'WHERE ' . join(' and ', $filter) : '';
     
         $res = array('filter' => $filter, 'table' => join(' ', $tables));
-        var_dump($res);
+       
       return $res;
     }
 
