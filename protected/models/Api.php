@@ -3832,7 +3832,7 @@ public function vac(){
         
         // получаем данные страницы
         $SearchPromo = new SearchPromo();
-        $arAllId = $SearchPromo->searchPromosCountAPI($filter);
+        $arAllId = $SearchPromo->searchPromosCount($filter);
       
         $cnt = sizeof($arAllId);
         $pages = new CPagination($cnt);
