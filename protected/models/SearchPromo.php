@@ -53,8 +53,6 @@ class SearchPromo extends Model
             // if( !isset($data['promo'][$val['id']])) $data['promo'][$val['id']] = array('city' => array(), 'posts' => array()) ;
             
             
-                
-            
             ///attribs
             $data['promo'][$val['id']]['id'] = (int)$val['id'];
             $data['promo'][$val['id']]['id_user'] = (int)$val['id_user'];
@@ -103,7 +101,7 @@ class SearchPromo extends Model
             $data['promo'][$val['id']]['moder_at'] = $val['mdates'];
             
             
-        
+            
             
             //
           
@@ -166,7 +164,7 @@ class SearchPromo extends Model
 
     public function searchPromosCount($props = [])
     {
-        $filter = $this->renderSQLFilterAPI(['filter' => $props['filter']]);
+        $filter = $this->renderSQLFilter(['filter' => $props['filter']]);
         $sql = "SELECT DISTINCT r.id_user
                 FROM resume r
                 INNER JOIN user u ON u.id_user = r.id_user 
@@ -184,7 +182,7 @@ class SearchPromo extends Model
     
     public function searchPromosCountAPI($props = [])
     {
-        $filter = $this->renderSQLFilterAPI(['filter' => $props['filter']]);
+        $filter = $this->renderSQLFilter(['filter' => $props['filter']]);
         $sql = "SELECT COUNT(DISTINCT r.id_user)
                 FROM resume r
                 INNER JOIN user u ON u.id_user = r.id_user 
@@ -468,7 +466,10 @@ class SearchPromo extends Model
         {
             $filter[] = 'uc.id_city IN ('.join(',',$data['cities']).')';
         }
-        
+        else
+        {
+            $filter[] = 'uc.id_city IN ('.Subdomain::getCacheData()->strCitiesIdes.')';
+        }
 
         if( !empty($data['ph']) )
         {
@@ -540,10 +541,8 @@ class SearchPromo extends Model
       !empty($data['self_employed']) && $filter[]=" (ua.key='self_employed' AND ua.val IS NOT NULL)";
 
       $filter = count($filter) ? 'WHERE ' . join(' and ', $filter) : '';
-    
-        $res = array('filter' => $filter, 'table' => join(' ', $tables));
-       
-      return $res;
+
+      return array('filter' => $filter, 'table' => join(' ', $tables));
     }
 
     private function searchPromos($arAllId, $filter)
