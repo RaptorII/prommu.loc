@@ -3823,10 +3823,12 @@ public function vac(){
             $filter = [];
         } // endif
     
-       
+        
         // получаем данные страницы
         $SearchPromo = new SearchPromo();
         $arAllId = $SearchPromo->searchPromosCountAPI($filter);
+        var_dump($filter);
+        var_dump($arAllId);
         $cnt = sizeof($arAllId);
         $pages = new CPagination($cnt);
         $pages->pageSize = $limit;
