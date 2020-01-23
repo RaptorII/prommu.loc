@@ -671,7 +671,6 @@ class Promo extends ARModel
 
         return $arP;
         
-        var_dump($arP);
     }
 
 
