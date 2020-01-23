@@ -3759,6 +3759,7 @@ public function vac(){
         $filter = [];
         $filter['api'] = Yii::app()->getRequest()->getParam('api');
               ///
+        $sm = Yii::app()->getRequest()->getParam('is_man');
         $sphf = Yii::app()->getRequest()->getParam('salary_hour_from');
         $spht = Yii::app()->getRequest()->getParam('salary_hour_to');
         $spwf = Yii::app()->getRequest()->getParam('salary_week_from');
@@ -3843,7 +3844,7 @@ public function vac(){
             // $card = $filter['card'] ?: null;
             // $cardPrommu = $filter['cardPrommu'] ?: null;
             // $self_employed = $filter['self_employed'] ?: null;
-            $filter = ['filter' => compact('posts', 'cities', 'qs','smart', 'sphf', 'spht','spwf','spwt','spmf','spmt','spvf','spvt', 'mb', 'isavto', 'ismde', 'af','at', 'api', 'card', 'cardPrommu', 'self_employed')];
+            $filter = ['filter' => compact('posts', 'cities', 'qs','smart', 'sphf', 'spht','spwf','spwt','spmf','spmt','spvf','spvt', 'sm', 'mb', 'isavto', 'ismed', 'af','at', 'api', 'card', 'cardPrommu', 'self_employed')];
         }
         else
         {
