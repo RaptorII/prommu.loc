@@ -467,7 +467,7 @@ class SearchPromo extends Model
         // city filter
         if( !empty($data['cities']) )
         {
-            $filter[] = 'uc.id_city IN ('.join(',',$data['cities']).')';
+            $filter[] = 'uc.id_city IN ('.$data['cities'].')';
         }
         else
         {
@@ -482,7 +482,7 @@ class SearchPromo extends Model
         // posts
         if( !empty($data['posts']) )
         {
-            $filter[] = 'a.id_mech IN ('.join(',',$data['posts']).')';
+            $filter[] = 'a.id_mech IN ('.$data['posts'].')';
         }
         
         if( isset($data['salHourF']) ) $filter[] = "a.pay >= {$data['salHourF']}";
