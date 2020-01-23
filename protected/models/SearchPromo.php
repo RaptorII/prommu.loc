@@ -15,11 +15,11 @@ class SearchPromo extends Model
         return $data;
     }
     
-    public function getPromosAPI($arAllId, $isEmplOnly = 0,$props = [])
+    public function getPromosAPI($isEmplOnly = 0,$props = [])
     {
         $filter = $this->renderSQLFilterAPI(['filter' => $props['filter']]);
 
-        $data = $this->searchPromosAPI($arAllId,$filter);
+        $data = $this->searchPromosAPI($filter);
         if( !$isEmplOnly ) $data = array_merge($data, $this->getFilterData());
 
         return $data;
@@ -27,19 +27,18 @@ class SearchPromo extends Model
 
 
     
-    private function searchPromosAPI($arAllId, $filter)
+    private function searchPromosAPI($filter)
     {
         $limit = $this->limit;
         $offset = $this->offset;
         $arId = array();
         // находим нужные ID по пагинации
         
-        for( $i=$offset, $n=sizeof($arAllId); $i<$n; $i++ )
-            ( $i < ($offset + $limit) ) && $arId[] = $arAllId[$i];
+       
 
 
         try {
-            $res = (new Promo())->getApplicantsQueries(array('page' => 'searchpromo', 'table' => $filter['table'], 'filter' => $filter['filter'], 'offset' => $offset, 'limit' => $limit,'arId' => $arId));
+            $res = (new Promo())->getApplicantsQueries(array('page' => 'searchpromoapi', 'table' => $filter['table'], 'filter' => $filter['filter'], 'offset' => $offset, 'limit' => $limit));
 
         }
         catch (Exception $e) {
