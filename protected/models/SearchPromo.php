@@ -540,8 +540,10 @@ class SearchPromo extends Model
       !empty($data['self_employed']) && $filter[]=" (ua.key='self_employed' AND ua.val IS NOT NULL)";
 
       $filter = count($filter) ? 'WHERE ' . join(' and ', $filter) : '';
-
-      return array('filter' => $filter, 'table' => join(' ', $tables));
+    
+        $res = array('filter' => $filter, 'table' => join(' ', $tables));
+        var_dump($res);
+      return $res;
     }
 
     private function searchPromos($arAllId, $filter)
