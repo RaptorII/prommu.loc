@@ -166,7 +166,7 @@ class SearchPromo extends Model
 
     public function searchPromosCount($props = [])
     {
-        $filter = $this->renderSQLFilter(['filter' => $props['filter']]);
+        $filter = $this->renderSQLFilterAPI(['filter' => $props['filter']]);
         $sql = "SELECT DISTINCT r.id_user
                 FROM resume r
                 INNER JOIN user u ON u.id_user = r.id_user 
