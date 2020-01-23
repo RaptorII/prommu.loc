@@ -414,6 +414,7 @@ class SearchPromo extends Model
       $data = array();
       $rq = Yii::app()->getRequest();
       $arFilter = $inProps['filter'];
+      var_dump($arFilter);
       $filter = ["u.ismoder = 1 AND u.isblocked = 0"];
       $tables = [];
 
