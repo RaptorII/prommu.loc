@@ -418,20 +418,20 @@ class SearchPromo extends Model
       $tables = [];
 
         // города
-        if( $rq->getParam('cities') || $arFilter['cities'] ) $data['cities'] = $arFilter['cities'] ?: $rq->getParam('cities');
+        if( $rq->getParam('cities') || $arFilter['cities'] ) $data['cities'] = $arFilter['cities'];
         // posts
-        if($rq->getParam('posts') || $arFilter['posts'] ) $data['posts'] = $arFilter['posts'] ?: $rq->getParam('posts');
+        if($rq->getParam('posts') || $arFilter['posts'] ) $data['posts'] = $arFilter['posts'];
         // sex
-        if( $rq->getParam('sm') || $arFilter['sm']  ) $data['sm'] = $arFilter['sm'] ?: $rq->getParam('sm');
-        if( $rq->getParam('ph') || $arFilter['ph']  ) $data['ph'] = $arFilter['ph'] ?: $rq->getParam('ph');
+        if( $rq->getParam('sm') || $arFilter['sm']  ) $data['sm'] = $arFilter['sm'];
+        if( $rq->getParam('ph') || $arFilter['ph']  ) $data['ph'] = $arFilter['ph'];
 
-        if( $rq->getParam('sf') || $arFilter['sf']  ) $data['sf'] = $arFilter['sf'] ?: $rq->getParam('sf');
+        if( $rq->getParam('sf') || $arFilter['sf']  ) $data['sf'] = $arFilter['sf'];
         // medbook n avto
-        if( $rq->getParam('mb') || $arFilter['mb']  ) $data['mb'] = $arFilter['mb'] ?: $rq->getParam('mb');
-        if( $rq->getParam('avto') || $arFilter['avto']  ) $data['avto'] = $arFilter['avto'] ?: $rq->getParam('avto');
-         if( $rq->getParam('smart') || $arFilter['smart']  ) $data['smart'] = $arFilter['smart'] ?: $rq->getParam('smart');
-        if( $rq->getParam('card') || $arFilter['card']  ) $data['card'] = $arFilter['card'] ?: $rq->getParam('card');
-        if( $rq->getParam('cardPrommu') || $arFilter['cardPrommu']  ) $data['cardPrommu'] = $arFilter['cardPrommu'] ?: $rq->getParam('cardPrommu');
+        if( $rq->getParam('mb') || $arFilter['mb']  ) $data['mb'] = $arFilter['mb'];
+        if( $rq->getParam('avto') || $arFilter['avto']  ) $data['avto'] = $arFilter['avto'];
+         if( $rq->getParam('smart') || $arFilter['smart']  ) $data['smart'] = $arFilter['smart'];
+        if( $rq->getParam('card') || $arFilter['card']  ) $data['card'] = $arFilter['card'];
+        if( $rq->getParam('cardPrommu') || $arFilter['cardPrommu']  ) $data['cardPrommu'] = $arFilter['cardPrommu'];
         // self_employed
         $rq->getParam('self_employed') && $data['self_employed'] = $rq->getParam('self_employed');
         $arFilter['self_employed'] && $data['self_employed'] = $arFilter['self_employed'];
