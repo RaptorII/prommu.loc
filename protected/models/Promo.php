@@ -604,26 +604,29 @@ class Promo extends ARModel
                     ->where(array('in', 'uc.id_user', $arId))
                     ->queryAll();
 
-        for ( $i=0, $n=sizeof($sqlC); $i<$n; $i++ )
-        {
-          !empty($sqlC[$i]['name'])
-          &&
-          $arP[$sqlC[$i]['id_user']]['city'][$sqlC[$i]['id']] = $sqlC[$i]['name'];
+
+        for ( $i=0, $n=sizeof($sqlC); $i<$n; $i++ ){
+            !empty($sqlC[$i]['name'])
+            &&
+            $arP[$sqlC[$i]['id_user']]['city']['name'] = $sqlC[$i]['name'];
+            $arP[$sqlC[$i]['id_user']]['city']['id'] = $sqlC[$i]['id'];
         }
 
-        $sqlM = Yii::app()->db->createCommand()
+         $sqlM = Yii::app()->db->createCommand()
                     ->select("um.id_us id_user, m.id, m.name")
                     ->from('user_metro um')
                     ->leftjoin('metro m', 'm.id=um.id_metro')
                     ->where(array('in', 'um.id_us', $arId))
                     ->queryAll();
 
-        for ( $i=0, $n=sizeof($sqlM); $i<$n; $i++ )
-        {
-          !empty($sqlM[$i]['name'])
-          &&
-          $arP[$sqlM[$i]['id_user']]['metroes'][$sqlM[$i]['id']] = $sqlM[$i]['name'];
+        for ( $i=0, $n=sizeof($sqlM); $i<$n; $i++ ) {
+            if(!empty($sqlM[$i]['name'])){
+                $arP[$sqlM[$i]['id_user']]['metroes']['id'] = $sqlM[$i]['id'];
+                $arP[$sqlM[$i]['id_user']]['metroes']['name'] = $sqlM[$i]['name'];   
+            }
+            
         }
+
 
         $where = 'vs.id_promo IN(' . implode(',', $arIdPromo) . ') AND ' 
             . Vacancy::getScopesCustom(Vacancy::$SCOPE_APPLIC_WORKING, 'vs');
