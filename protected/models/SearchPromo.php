@@ -468,10 +468,7 @@ class SearchPromo extends Model
         {
             $filter[] = 'uc.id_city IN ('.join(',',$data['cities']).')';
         }
-        else
-        {
-            $filter[] = 'uc.id_city IN ('.Subdomain::getCacheData()->strCitiesIdes.')';
-        }
+        
 
         if( !empty($data['ph']) )
         {
