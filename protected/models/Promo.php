@@ -604,7 +604,6 @@ class Promo extends ARModel
                     ->where(array('in', 'uc.id_user', $arId))
                     ->queryAll();
 
-
         for ( $i=0, $n=sizeof($sqlC); $i<$n; $i++ ){
             !empty($sqlC[$i]['name'])
             &&
@@ -612,7 +611,7 @@ class Promo extends ARModel
             $arP[$sqlC[$i]['id_user']]['city']['id'] = $sqlC[$i]['id'];
         }
 
-         $sqlM = Yii::app()->db->createCommand()
+        $sqlM = Yii::app()->db->createCommand()
                     ->select("um.id_us id_user, m.id, m.name")
                     ->from('user_metro um')
                     ->leftjoin('metro m', 'm.id=um.id_metro')
@@ -626,7 +625,6 @@ class Promo extends ARModel
             }
             
         }
-
 
         $where = 'vs.id_promo IN(' . implode(',', $arIdPromo) . ') AND ' 
             . Vacancy::getScopesCustom(Vacancy::$SCOPE_APPLIC_WORKING, 'vs');
@@ -669,26 +667,14 @@ class Promo extends ARModel
             $diff = $d2->diff($d1);
             $arP[$idus]['age'] = $diff->y;
             $arP[$idus]['sex'] = $p['isman'];
-            // время на сайте
-            $d2 = new DateTime($p['date_public']);
-            $diff = $d2->diff($d1);
-            $months = ($diff->y * 12) + $diff->m;
-            if($months < 6)
-            {
-              $arP[$idus]['time_on_site'] = 'Новичок';
-            }
-            else if($months < 12)
-            {
-              $arP[$idus]['time_on_site'] = 'Скоро 1 год';
-            }
-            else
-            {
-              $arP[$idus]['time_on_site'] = "Уже {$diff->y} год";
-            }
         }
 
         return $arP;
     }
+
+
+
+
 
 
 
