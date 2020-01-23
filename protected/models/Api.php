@@ -3815,7 +3815,7 @@ public function vac(){
         // читаем фильтр
         if($sphf || $spht || $spwf || $spwt || $spmf || $spmt || $spvf ||
            $spvt || $ismed || $smart || $isavto || $posts || $cities ||
-           $qs || $af || $at || $card || $cardPrommu || $self_employed)
+           $qs || $af || $at || $card || $cardPrommu || $self_employed || $sm) 
         {
             // $api = $filter['api'] ?: null;
             // // фильтр по типу
