@@ -3838,8 +3838,6 @@ public function vac(){
         $pages = new CPagination($cnt);
         $pages->pageSize = $limit;
         $pages->applyLimit($SearchPromo);
-    
-        var_dump($filter);
         
         // отсеивать из ответа работодателей
         $data = array_values($SearchPromo->getPromosAPI($arAllId, 0, $filter)['promo']);
