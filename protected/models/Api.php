@@ -3761,20 +3761,13 @@ public function vac(){
         ///
         $sphf = Yii::app()->getRequest()->getParam('salary_hour_from');
         $spht = Yii::app()->getRequest()->getParam('salary_hour_to');
-        
         $spwf = Yii::app()->getRequest()->getParam('salary_week_from');
         $spwt = Yii::app()->getRequest()->getParam('salary_week_from');
-        
         $spmf  = Yii::app()->getRequest()->getParam('salary_month_from');
         $spmt = Yii::app()->getRequest()->getParam('salary_month_from');
-        
         $spvf = Yii::app()->getRequest()->getParam('salary_visit_from');
         $spvt = Yii::app()->getRequest()->getParam('salary_visit_from');
-        
-        
-        //
         $ismed = Yii::app()->getRequest()->getParam('is_med');
-        
         $smart = Yii::app()->getRequest()->getParam('smart');
         $isavto = Yii::app()->getRequest()->getParam('is_hasavto');
         $posts = Yii::app()->getRequest()->getParam('posts');
@@ -3791,7 +3784,9 @@ public function vac(){
         $limit = $limit == 0 || $limit > MainConfig::$DEF_PAGE_API_LIMIT ? MainConfig::$DEF_PAGE_API_LIMIT : $limit;
 
         // читаем фильтр
-        if($filter)
+        if($sphf || $spht || $spwf || $spwt || $spmf || $spmt || $spvf ||
+           $spvt || $ismed || $smart || $isavto || $posts || $cities ||
+           $qs || $af || $at || $card || $cardPrommu || $self_employed)
         {
             // $api = $filter['api'] ?: null;
             // // фильтр по типу
