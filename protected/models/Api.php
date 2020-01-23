@@ -3857,10 +3857,10 @@ public function vac(){
         $SearchPromo = new SearchPromo();
         $arAllId = $SearchPromo->searchPromosCountAPI($filter);
       
-        $cnt = sizeof($arAllId);
-        $pages = new CPagination($cnt);
-        $pages->pageSize = $limit;
-        $pages->applyLimit($SearchPromo);
+        $pages = new CPagination($SearchPromo->searchPromosCountAPI($filter));
+        $pages->pageSize = 50;
+        $pages->applyLimit($SearchEmpl);
+        
         
         // отсеивать из ответа работодателей
         $data = array_values($SearchPromo->getPromosAPI($arAllId, 0, $filter)['promo']);
