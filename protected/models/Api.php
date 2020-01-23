@@ -350,7 +350,7 @@ class Api
             // фильтр должностей
             $posts = $filter['posts'] ?: null;
             // фильтр городов
-            $city = $filter['city'] ?: null;
+            $cities = $filter['city'] ?: null;
             $sr = $filter['sr'] ?: null;
             $istemp = $filter['is_temp'] ?: null;
             $ismed = $filter['is_med'] ?: null;
@@ -374,7 +374,7 @@ class Api
             $qs = $filter['qs'] ?: null;
             
             
-            $filter = ['filter' => compact('posts', 'istemp', 'ismed', 'isavto', 'city', 'sr','qs', 'sphf', 'spht', 'spwf', 'spwt', 'spmf', 'spmt', 'af', 'at', 'is_man','is_woman', 'smart', 'card', 'cardPrommu','self_employed')];
+            $filter = ['filter' => compact('posts', 'istemp', 'ismed', 'isavto', 'cities', 'sr','qs', 'sphf', 'spht', 'spwf', 'spwt', 'spmf', 'spmt', 'af', 'at', 'is_man','is_woman', 'smart', 'card', 'cardPrommu','self_employed')];
         }
         else
         {
@@ -387,7 +387,7 @@ class Api
         $pages = new CPagination($SearchVac->searchVacationsCount($filter));
         $pages->pageSize = $limit;
         $pages->applyLimit($SearchVac);
-
+        
         $data = array_values($SearchVac->getVacationsAPI($filter)['vacs']);
         // отсеивать из ответа вакансии
             if(!empty($id))
