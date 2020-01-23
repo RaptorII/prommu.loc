@@ -182,9 +182,9 @@ class SearchPromo extends Model
     
     public function searchPromosCountAPI($props = [])
     {
-        var_dump($props);
+    
         $filter = $this->renderSQLFilterAPI(['filter' => $props['filter']]);
-        var_dump($filter);
+        
         $sql = "SELECT COUNT(DISTINCT r.id_user)
                 FROM resume r
                 INNER JOIN user u ON u.id_user = r.id_user 
@@ -415,7 +415,7 @@ class SearchPromo extends Model
       $data = array();
       $rq = Yii::app()->getRequest();
       $arFilter = $inProps['filter'];
-      var_dump($arFilter);
+      
       $filter = ["u.ismoder = 1 AND u.isblocked = 0"];
       $tables = [];
 
