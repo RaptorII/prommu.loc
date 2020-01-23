@@ -3857,7 +3857,7 @@ public function vac(){
         $SearchPromo = new SearchPromo();
         $arAllId = $SearchPromo->searchPromosCountAPI($filter);
       
-        $pages = new CPagination($SearchPromo->searchPromosCountAPI($filter));
+        $pages = new CPagination(count($arAllId));
         $pages->pageSize = 50;
         $pages->applyLimit($SearchEmpl);
         
