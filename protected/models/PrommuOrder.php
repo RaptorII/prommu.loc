@@ -439,86 +439,78 @@ class PrommuOrder {
 
       return Yii::app()->db->createCommand()->insert('outstaffing', $arInsert);
     }
-    /*
-    *       Заказ услуги Премиум
-    */
-    public function orderPremium($arVacs, $vacPrice, $employer)
+  /*
+  *       Заказ услуги Премиум
+  */
+  public function orderPremium($arVacs, $vacPrice, $employer)
+  {
+    if(!isset($employer))
+      return false;
+
+    $arRes = [];
+    $arRes['cost'] = 0;
+    $arRes['id'] = [];
+    $arBDate = Yii::app()->getRequest()->getParam('from');
+    $arEDate = Yii::app()->getRequest()->getParam('to');
+    $day = 60 * 60 * 24;
+
+    for($i=0, $n=sizeof($arVacs); $i<$n; $i++)
     {
-      if(!isset($employer))
-        return false;
-
-      $arRes = [];
-      $arRes['strVacancies'] = implode('.', $arVacs);
-      $arRes['account'] = $employer . '.' . $arRes['strVacancies'];
-      $arRes['cost'] = 0;
-      $arRes['id'] = [];
-      $arBDate = Yii::app()->getRequest()->getParam('from');
-      $arEDate = Yii::app()->getRequest()->getParam('to');
-      $day = 60 * 60 * 24;
-
-      for($i=0, $n=sizeof($arVacs); $i<$n; $i++)
-      {
-        $from = strtotime($arBDate[$i]);
-        $to = strtotime($arEDate[$i]);
-        $days = ($to - $from) / $day;
-        $price = intval($vacPrice[$arVacs[$i]] * $days);
-        $arRes['id'][] = $this->serviceOrder(
-          $employer,
-          $price,
-          0,
-          0,
-          $arBDate[$i],
-          $arEDate[$i],
-          $arVacs[$i],
-          'vacancy'
-        );
-        $arRes['cost'] += $price;
-      }
-
-      return $arRes;
+      $from = strtotime($arBDate[$i]);
+      $to = strtotime($arEDate[$i]);
+      $days = ($to - $from) / $day;
+      $price = intval($vacPrice[$arVacs[$i]] * $days);
+      $arRes['id'][] = $this->serviceOrder(
+        $employer,
+        $price,
+        0,
+        0,
+        $arBDate[$i],
+        $arEDate[$i],
+        $arVacs[$i],
+        'vacancy'
+      );
+      $arRes['cost'] += $price;
     }
+    $arRes['account'] = $employer . '.' . implode('.', $arRes['id']) . '.vacancy.' . time();
+    return $arRes;
+  }
+  /**
+   * Service Upvacancy
+   * @param $arVacs
+   * @param $vacPrice
+   * @param $employer
+   * @return array|bool
+   */
+  public function orderUpVacancy($arVacs, $vacPrice, $employer)
+  {
+    if(!isset($employer))
+      return false;
 
-    /**
-     * Service Upvacancy
-     * @param $arVacs
-     * @param $vacPrice
-     * @param $employer
-     * @return array|bool
-     */
-    public function orderUpVacancy($arVacs, $vacPrice, $employer)
+    $arRes = [];
+    $arRes['cost'] = 0;
+    $arRes['id'] = [];
+    $arBDate = date("Y.m.d");
+    $arEDate = date('Y.m.d', strtotime("+30 days"));
+    $arRes['cost'] = 0;
+
+    for($i=0, $n=sizeof($arVacs); $i<$n; $i++)
     {
-        if(!isset($employer))
-            return false;
-
-        $arRes = [];
-        $arRes['strVacancies'] = implode('.', $arVacs);
-        $arRes['account'] = $employer . '.' . $arRes['strVacancies'];
-        $arRes['cost'] = 0;
-        $arRes['id'] = [];
-        $arBDate = date("Y.m.d");
-        $arEDate = date('Y.m.d', strtotime("+30 days"));
-        $arRes['cost'] = $vacPrice;
-
-//        display($arBDate);display($arEDate);
-//        die('orderUpVacancy 2');
-
-        for($i=0, $n=sizeof($arVacs); $i<$n; $i++)
-        {
-            $arRes['id'][] = $this->serviceOrder(
-                $employer,
-                $vacPrice,
-                0,
-                0,
-                $arBDate[$i],
-                $arEDate[$i],
-                $arVacs[$i],
-                'upvacancy'
-            );
-        }
-
-        return $arRes;
+      $arRes['id'][] = $this->serviceOrder(
+        $employer,
+        $vacPrice[$arVacs[$i]],
+        0,
+        0,
+        $arBDate[$i],
+        $arEDate[$i],
+        $arVacs[$i],
+        'upvacancy'
+      );
+      $arRes['cost'] += $vacPrice[$arVacs[$i]];
     }
-
+    $arRes['account'] = $employer . '.' . implode('.', $arRes['id']) . '.upvacancy.' . time();
+    return $arRes;
+  }
     /**
      * @param $arServices
      * @return code
@@ -761,47 +753,47 @@ class PrommuOrder {
 
       return $arReg;
     }
-    /*
-    *       ПОлучение данных о вакансиях работодателя
-    */
-    public function getVacRegions($arPrice)
+  /*
+  *       ПОлучение данных о вакансиях работодателя
+  */
+  public function getVacRegions($arPrice)
+  {
+    if(!Share::isEmployer())
+      return $arPrice;
+
+    $query = Yii::app()->db->createCommand()
+      ->select("c.region")
+      ->from('empl_city ec')
+      ->leftjoin(
+        'empl_vacations ev',
+        'ev.id=ec.id_vac AND ev.status=:status AND ev.in_archive=:archive AND ev.remdate>=CURDATE()',
+        [
+          ':status' => Vacancy::$STATUS_ACTIVE,
+          ':archive' => Vacancy::$INARCHIVE_FALSE
+        ]
+      )
+      ->leftjoin('city c', 'c.id_city=ec.id_city')
+      ->where('ev.id_user=:id',[':id'=>Share::$UserProfile->id])
+      ->queryColumn();
+
+    $bin = $this->convertedRegion($query); // целое число с конкретным значением каждого бита
+    $arRes = [];
+    foreach ($arPrice as $serviceCode => $arP)
     {
-      if(!Share::isEmployer())
-        return $arPrice;
-
-      $query = Yii::app()->db->createCommand()
-        ->select("c.region, ec.id_vac")
-        ->from('empl_city ec')
-        ->leftjoin(
-          'empl_vacations ev',
-          'ev.id=ec.id_vac AND ev.status=:status AND ev.in_archive=:archive',
-          [
-            ':status' => Vacancy::$STATUS_ACTIVE,
-            ':archive' => Vacancy::$INARCHIVE_FALSE
-          ]
-        )
-        ->leftjoin('city c', 'c.id_city=ec.id_city')
-        ->where('ev.id_user=:id',[':id'=>Share::$UserProfile->id])
-        ->queryColumn();
-
-      $bin = $this->convertedRegion($query); // целое число с конкретным значением каждого бита
-      $arRes = [];
-      foreach ($arPrice as $serviceCode => $arP)
+      $arReg = $this->getRegionalPrice($serviceCode, $bin);
+      foreach ($arP as $v)
       {
-        $arReg = $this->getRegionalPrice($serviceCode, $bin);
-        foreach ($arP as $v)
-        {
-          in_array($v['region'], $arReg) && $arRes[$serviceCode][]=$v;
-        }
+        in_array($v['region'], $arReg) && $arRes[$serviceCode][]=$v;
       }
-      if(!array_key_exists('premium-vacancy', $arRes))
-        $arRes['premium-vacancy'] = $arPrice['premium-vacancy'];
-      if(!array_key_exists('email-invitation', $arRes))
-        $arRes['email-invitation'] = $arPrice['email-invitation'];
-      if(!array_key_exists('podnyatie-vacansyi-vverh', $arRes))
-        $arRes['podnyatie-vacansyi-vverh'] = $arPrice['podnyatie-vacansyi-vverh'];
-
-      return $arRes;
     }
+    if(!array_key_exists('premium-vacancy', $arRes))
+      $arRes['premium-vacancy'] = $arPrice['premium-vacancy'];
+    if(!array_key_exists('email-invitation', $arRes))
+      $arRes['email-invitation'] = $arPrice['email-invitation'];
+    if(!array_key_exists('podnyatie-vacansyi-vverh', $arRes))
+      $arRes['podnyatie-vacansyi-vverh'] = $arPrice['podnyatie-vacansyi-vverh'];
+
+    return $arRes;
+  }
 }
 ?>

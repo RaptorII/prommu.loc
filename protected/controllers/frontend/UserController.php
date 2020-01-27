@@ -22,7 +22,7 @@ class UserController extends AppController
             ),
         );
     }
-    
+
       public function actionProCreate(){
         $project = new Project();
         $result = $project->createProject($_POST);
@@ -36,169 +36,162 @@ class UserController extends AppController
         Yii::app()->user->setFlash('success', '1');
         $this->redirect(MainConfig::$PAGE_SERVICES);
       }
+  /**
+   *
+   */
+  public function actionPostback()
+  {
+    $db = Yii::app()->db;
+    $method = $_GET['method'];
+    $account = $_GET['params']['account'];
+    $orderSum = (int)$_GET['params']['orderSum'];
+    $unitpayId = $_GET['params']['unitpayId'];
+    if($method == "check"){
+      $data['result']['message'] = "Запрос успешно обработан";
+      $data = json_encode($data);
+      echo $data;
+      $account = $_GET['params']['account'];
+      $arr = explode(".", $account);
+      $account = $arr[0];
+      $count = count($arr);
+      if($arr[2] == "sms"){
 
+        $name = $arr[1];
+        $user = $arr[3];
+        $res = $db->createCommand()
+          ->update('service_cloud', array(
+            'key'=> $unitpayId,
+          ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
 
-      public function actionPostback(){
-          
-       
-        $db = Yii::app()->db;
-        $method = $_GET['method'];
-        $account = $_GET['params']['account'];
-        $orderSum = (int)$_GET['params']['orderSum'];
-        $unitpayId = $_GET['params']['unitpayId'];
-        if($method == "check"){
-            $account = $_GET['params']['account'];
-            $arr = explode(".", $account);
-            $account = $arr[0];
-            $count = count($arr);
-            if($arr[2] == "sms"){
-               
-                $name = $arr[1];
-                $user = $arr[3];
-               $res = $db->createCommand()
-                ->update('service_cloud', array(
-                    'key'=> $unitpayId,
-                ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
-              
-            }elseif($arr[2] == "push"){
-                
-                $name = $arr[1];
-                $user = $arr[3];
-               $res = $db->createCommand()
-                ->update('service_cloud', array(
-                    'key'=> $unitpayId,
-                ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
-              
-            } elseif($arr[2] == "email"){
-             
-                $name = $arr[1];
-                $user = $arr[3];
-               $res = $db->createCommand()
-                ->update('service_cloud', array(
-                    'key'=> $unitpayId,
-                ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
-               
-            } else {
+      }elseif($arr[2] == "push"){
 
-            for ($i = $count; $i > 0 ; $i --) {
-                $name = $arr[$i];
-               $res = $db->createCommand()
-                ->update('service_cloud', array(
-                    'key'=> $unitpayId,
-                ), 'id_user=:id_user AND name=:name', array(':id_user' => "$account", ':name' => "$name"));
-                }
-            }
+        $name = $arr[1];
+        $user = $arr[3];
+        $res = $db->createCommand()
+          ->update('service_cloud', array(
+            'key'=> $unitpayId,
+          ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
 
-        }
-        if ($method == "pay")
-        {
-          $model = new PrommuOrder();
-          $arParams = explode(".", $_GET['params']['account']);
-          $id_user = $arParams[0]; // service_cloud => id_user
-          $id_vacancy = $arParams[1]; // service_cloud => name
-          $serviceType = $arParams[2]; // service_cloud => type
-          $transaction = $arParams[3]; // service_cloud => stack
+      } elseif($arr[2] == "email"){
 
-          $email = $db->createCommand()
-            ->select('email')
-            ->from('user')
-            ->where('id_user=:id',[':id'=>$id_user])
-            ->queryScalar();
-          // уведомление для работодателя
-          Mailing::set(20, ['email_user' => $email]);
+        $name = $arr[1];
+        $user = $arr[3];
+        $res = $db->createCommand()
+          ->update('service_cloud', array(
+            'key'=> $unitpayId,
+          ), 'id_user=:id_user AND name=:name AND stack=:stack', array(':id_user' => "$account", ':name' => "$name", ':stack' => $user));
 
-          if (in_array($serviceType, ['email', 'sms', 'push']))
-          {
-            $model->autoOrder($serviceType, $transaction, $id_user, $id_vacancy);
-          }
-          elseif (in_array($serviceType, ['vacancy'])) // услуга Премиум
-          {
-            $arIdVacs = [];
-            for ($i=1, $n=count($arParams); $i<$n; $i++)
-            {
-              $arIdVacs[] = $arParams[$i];
-            }
-
-            $query = $db->createCommand()
-              ->select('count(*)')
-              ->from('empl_vacantions')
-              ->where(
-                'and',
-                ['in','id',$arIdVacs],
-                ['id_user=:id',[':id'=>$id_user]]
-              )
-              ->queryScalar();
-
-            if($query==count($arIdVacs)) // все вакансии данного Р
-            {
-              $date = date("Y-m-d");
-              foreach ($arIdVacs as $v)
-              {
-                $db->createCommand()
-                  ->update(
-                    'service_cloud',
-                    ['status' => 1],
-                    'id_user=:id AND name like :name',
-                    [':id'=>$id_user, ':name'=>$v]
-                  );
-              }
-
-              $db->createCommand()
-                ->update(
-                  'empl_vacations',
-                  ['ispremium'=>1, 'crdate'=>$date, 'mdate'=>$date],
-                  ['in','id',$arIdVacs]
-                );
-            }
-          }
-          elseif (in_array($serviceType, ['upvacancy'])) // Поднятие вакансии
-          {
-            $arIdVacs = [];
-            for ($i=1, $n=count($arParams); $i<$n; $i++)
-            {
-              $arIdVacs[] = $arParams[$i];
-            }
-
-            $query = $db->createCommand()
-                ->select('count(*)')
-                ->from('empl_vacantions')
-                ->where(
-                    'and',
-                    ['in','id',$arIdVacs],
-                    ['id_user=:id',[':id'=>$id_user]]
-                )
-                ->queryScalar();
-            // берем последний ID вакансий
-            $lastId = $db->createCommand()
-              ->select('id')
-              ->from('empl_vacations')
-              ->order('id desc')
-              ->queryScalar();
-            $date = date("Y-m-d");
-            // если все вакансии и оплаты найдены
-            if($query==count($arIdVacs))
-            {
-              foreach ($arIdVacs as $v)
-              {
-                $db->createCommand()->update(
-                    'service_cloud',
-                    ['status' => 1],
-                    'id_user=:id AND name like :name',
-                    [':id'=>$id_user, ':name'=>$v]
-                  );
-
-                $db->createCommand()->update(
-                    'empl_vacations',
-                    ['sort'=>$lastId, 'crdate'=>$date, 'mdate'=>$date],
-                    'id=:id',
-                    [':id'=>$v]
-                  );
-              }
-            }
-          }
-          echo json_encode(['result'=>['message'=>'Запрос успешно обработан']]);
-        }
       }
+      else
+      {
+        $arIdOrder = [];
+        for ($i=1, $n=count($arr); $i<($n-2); $i++)
+        {
+          $arIdOrder[] = $arr[$i];
+        }
+        $db->createCommand()
+          ->update(
+            'service_cloud',
+            ['key'=>$unitpayId],
+            ['and','id_user=:id',['in','id',$arIdOrder]],
+            [':id'=>$account]
+          );
+      }
+
+    }
+    if ($method == "pay")
+    {
+      $model = new PrommuOrder();
+      $arParams = explode(".", $_GET['params']['account']);
+      if(count($arParams)<4)
+      {
+        return false;
+      }
+      $id_user = reset($arParams); // service_cloud => id_user
+      $id_vacancy = next($arParams); // service_cloud => name
+      $transaction = end($arParams); // service_cloud => stack
+      $serviceType = prev($arParams); // service_cloud => type
+
+      $email = $db->createCommand()
+        ->select('email')
+        ->from('user')
+        ->where('id_user=:id',[':id'=>$id_user])
+        ->queryScalar();
+      // уведомление для работодателя
+      Mailing::set(20, ['email_user' => $email]);
+
+      if (in_array($serviceType, ['email', 'sms', 'push']))
+      {
+        $model->autoOrder($serviceType, $transaction, $id_user, $id_vacancy);
+      }
+      elseif ($serviceType=='vacancy') // услуга Премиум
+      {
+        $arIdOrder = [];
+        for ($i=1, $n=count($arParams); $i<($n-2); $i++)
+        {
+          $arIdOrder[] = $arParams[$i];
+        }
+        $arIdVacs = $db->createCommand()
+          ->select('name')
+          ->from('service_cloud')
+          ->where(['in','id',$arIdOrder])
+          ->queryColumn();
+
+        $db->createCommand()
+          ->update(
+            'service_cloud',
+            ['status' => 1],
+            ['and', 'id_user=:id', ['in','id',$arIdOrder]],
+            [':id'=>$id_user]
+          );
+
+        $date = date("Y-m-d");
+        $db->createCommand()
+          ->update(
+            'empl_vacations',
+            ['ispremium'=>1, 'crdate'=>$date, 'mdate'=>$date],
+            ['in','id',$arIdVacs]
+          );
+      }
+      elseif ($serviceType=='upvacancy') // Поднятие вакансии
+      {
+        $arIdOrder = [];
+        for ($i=1, $n=count($arParams); $i<($n-2); $i++)
+        {
+          $arIdOrder[] = $arParams[$i];
+        }
+        // берем последний ID вакансий
+        $lastId = $db->createCommand()
+          ->select('id')
+          ->from('empl_vacations')
+          ->order('id desc')
+          ->queryScalar();
+
+        $arIdVacs = $db->createCommand()
+          ->select('name')
+          ->from('service_cloud')
+          ->where(['in','id',$arIdOrder])
+          ->queryColumn();
+
+        $db->createCommand()
+          ->update(
+            'service_cloud',
+            ['status' => 1],
+            ['and', 'id_user=:id', ['in','id',$arIdOrder]],
+            [':id'=>$id_user]
+          );
+
+        $date = date("Y-m-d");
+        $db->createCommand()
+          ->update(
+            'empl_vacations',
+            ['sort'=>$lastId, 'crdate'=>$date, 'mdate'=>$date],
+            ['in','id',$arIdVacs]
+          );
+      }
+      echo json_encode(['result'=>['message'=>'Запрос успешно обработан']]);
+    }
+  }
 
 
 
@@ -1065,7 +1058,8 @@ class UserController extends AppController
         $service = $rq->getParam('service');
         $vac = $rq->getParam('vacancy');
         $emp = $rq->getParam('employer');
-        $price = $model->servicePrice($vac, $service, $service=='premium-vacancy');
+        $isArr = in_array($service,['premium-vacancy','podnyatie-vacansyi-vverh']);
+        $price = $model->servicePrice($vac, $service, $isArr);
 
         switch ($service)
         {

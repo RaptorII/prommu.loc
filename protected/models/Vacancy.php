@@ -36,7 +36,7 @@ class Vacancy extends ARModel
     static public $ISMODER_REJECTED = 200;
     // empl_vacations.in_archive
     static public $INARCHIVE_FALSE = 0;
-    static public $INARCHIVE_NO_TRUE = 1;
+    static public $INARCHIVE_TRUE = 1;
     // кол-во вакансий на главной странице
     static private $VACANCIES_IN_MAIN_PAGE = 12;
     // ID атрибута - должности
@@ -2797,7 +2797,8 @@ WHERE id_vac = {$inVacId}";
      */
     private function getVacanciesIndexPage()
     {
-      $cacheId = Subdomain::site() . DS . Yii::app()->controller->id . Yii::app()->request->requestUri;
+      $cacheId = Subdomain::site() . DS
+        . Yii::app()->controller->id . Yii::app()->request->requestUri;
       $arCitiesIdes = Subdomain::getCacheData()->arCitiesIdes;
 
       $queryLight = Cache::getData($cacheId . 'index/vacancies_light'); // короткий запрос
@@ -2810,12 +2811,14 @@ WHERE id_vac = {$inVacId}";
           ->where(
             [
               'and',
-              'status=:status AND ismoder=:ismoder',
+              'ev.status=:status AND ev.ismoder=:ismoder 
+              AND ev.in_archive=:archive AND ev.remdate>=CURDATE()',
               ['in','ec.id_city',$arCitiesIdes]
             ],
             [
               ':status' => self::$STATUS_ACTIVE,
-              ':ismoder' => self::$ISMODER_APPROVED
+              ':ismoder' => self::$ISMODER_APPROVED,
+              ':archive' => self::$INARCHIVE_FALSE
             ]
           )
           ->limit(self::$VACANCIES_IN_MAIN_PAGE)
@@ -2845,12 +2848,9 @@ WHERE id_vac = {$inVacId}";
         }
       }
       // полная выборка по вакансиям
-
-      $arRes['data'] = false;
-
-
       if($arRes['data']===false || $hasChanged)
       {
+        $arRes['data'] = [];
         $arVacancies = Yii::app()->db->createCommand()
           ->select("id,
             id_user,
@@ -2933,24 +2933,24 @@ WHERE id_vac = {$inVacId}";
             $arV['user']['small_src'] = Share::getPhoto($arV['id_user'], 3, $arV['user']['photo'], 'xsmall');
             //
             $arV['detail_url'] = MainConfig::$PAGE_VACANCY . DS . $id;
-            if(($pay = round($arV['payment']['shour'],0)) > 0)
+            if(($pay = round($arV['shour'],0)) > 0)
             {
-              $arV['payment']['payment'] = $pay . ' руб/час';
+              $arV['payment'] = $pay . ' руб/час';
             }
-            elseif(($pay = round($arV['payment']['sweek'],0)) > 0)
+            elseif(($pay = round($arV['sweek'],0)) > 0)
             {
-              $arV['payment']['payment'] = $pay . ' руб/нед';
+              $arV['payment'] = $pay . ' руб/нед';
             }
-            elseif(($pay = round($arV['payment']['smonth'],0)) > 0)
+            elseif(($pay = round($arV['smonth'],0)) > 0)
             {
-              $arV['payment']['payment'] = $pay . ' руб/мес';
+              $arV['payment'] = $pay . ' руб/мес';
             }
-            elseif(($pay = round($arV['payment']['svisit'],0)) > 0)
+            elseif(($pay = round($arV['svisit'],0)) > 0)
             {
-              $arV['payment']['payment'] = $pay . ' руб/пос';
+              $arV['payment'] = $pay . ' руб/пос';
             }
             $arV['period'] = ' с ' . $arV['crdate']
-                . ($arV['remdate'] ? ' по ' . $arV['remdate'] : '');
+              . ($arV['remdate'] ? ' по ' . $arV['remdate'] : '');
             $arV['work_type'] = $arV['istemp'] ? 'Постоянная' : 'Временная';
             //
             foreach ($arCities as $v)
