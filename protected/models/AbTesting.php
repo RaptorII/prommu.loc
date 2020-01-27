@@ -62,16 +62,18 @@ class AbTesting extends CActiveRecord
       {
         if($query->type==UserProfile::$APPLICANT) // соискатель
         {
-          $this->url = $query->url==self::$LINK_APPLICANT
+          /*$this->url = $query->url==self::$LINK_APPLICANT
             ? self::$LINK_REGISTER
-            : self::$LINK_APPLICANT;
+            : self::$LINK_APPLICANT;*/
+          $this->url = self::$LINK_REGISTER;
           $result = self::$AR_LINKS[$this->url];
         }
         else // работодатель
         {
-          $this->url = $query->url==self::$LINK_EMPLOYER
+          /*$this->url = $query->url==self::$LINK_EMPLOYER
             ? self::$LINK_REGISTER
-            : self::$LINK_EMPLOYER;
+            : self::$LINK_EMPLOYER;*/
+          $this->url = self::$LINK_REGISTER;
           $result = self::$AR_LINKS[$this->url];
         }
       }
