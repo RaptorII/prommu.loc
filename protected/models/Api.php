@@ -3378,7 +3378,7 @@ public function vac(){
         $fileData = base64_decode($d);
 
         $res = file_put_contents("/var/www/files_prommu".$path.$file, $fileData);
-
+        echo $res;
         if($res===false){
             $data = array('error' => 1, 'message' => $message);
         }
