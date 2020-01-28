@@ -3375,13 +3375,13 @@ public function vac(){
             $file = $name . ".jpg";
             var_dump($file);
             $path = "/users/".$id."/";
-                
+              
             file_put_contents("/var/www/files_prommu".$path.$file, $current);
             
-            if(!@getimagesize("https://files.prommu.com/users/".$id."/".$file)){
+            /*if(!@getimagesize("https://files.prommu.com/users/".$id."/".$file)){
                 // unlink("/var/www/files_prommu".$path.$file);
                 return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
-            }
+            }*/
             
             
         
