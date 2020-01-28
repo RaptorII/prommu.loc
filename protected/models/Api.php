@@ -3372,7 +3372,14 @@ public function vac(){
         $file = $name . ".jpg";
         $path = "/users/".$id."/";
         
-        $res = file_put_contents("/var/www/files_prommu".$path.$file, $current);
+        $d = str_replace('data:image/png;base64,', '', $photo);
+        $d = str_replace(' ', '+', $d);
+        $fileData = base64_decode($d);
+
+        $res = file_put_contents("/var/www/files_prommu".$path.$file, $fileData);
+
+
+        // $res = file_put_contents("/var/www/files_prommu".$path.$file, $current);
         var_dump("https://files.prommu.com/users/".$id."/".$file); 
         // if(!@getimagesize("https://files.prommu.com/users/".$id."/".$file)){
         //     unlink("/var/www/files_prommu".$path.$file);
