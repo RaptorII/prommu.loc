@@ -3359,6 +3359,7 @@ public function vac(){
      try
      {
 
+        $message = "Ошибка загрузки файла, обновите страницу и попробуйте еще раз";
         $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $photo = Yii::app()->getRequest()->getParam('photo');
           
@@ -3378,6 +3379,17 @@ public function vac(){
 
         $res = file_put_contents("/var/www/files_prommu".$path.$file, $fileData);
 
+        if($res===false){
+            $data = array('error' => 1, 'message' => $message);
+        }
+        else{
+            if($res>5242880 || $res==0){
+                $data = array('error' => 1, 'message' => 'Неправильный размер файла!');
+            }
+        }
+        
+        return $data;
+        
 
         // $res = file_put_contents("/var/www/files_prommu".$path.$file, $current);
         var_dump("https://files.prommu.com/users/".$id."/".$file); 
