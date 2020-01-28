@@ -1,4 +1,4 @@
-<?php
+ча<?php
 /**
  * Работа с API
  * Date: 26.04.19
@@ -3365,10 +3365,9 @@ public function vac(){
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         $id = $idus;
  
-        
-        
-       $current =  base64_decode($photo);
+            $current =  base64_decode($photo);
             
+            echo $current;
             mkdir("/var/www/files_prommu/users/".$id, 0700);
             mkdir("/var/www/files_prommu/users/".$id."/tmp/", 0700);
             $name = date('YmdHis').rand(100,1000);
