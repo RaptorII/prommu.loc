@@ -3387,8 +3387,7 @@ public function vac(){
                 $data = array('error' => 1, 'message' => 'Неправильный размер файла!');
             }
         }
-        
-        return $data;
+       
         
 
         // $res = file_put_contents("/var/www/files_prommu".$path.$file, $current);
