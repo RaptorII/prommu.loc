@@ -3372,9 +3372,10 @@ public function vac(){
             mkdir("/var/www/files_prommu/users/".$id."/tmp/", 0700);
             $name = date('YmdHis').rand(100,1000);
             $file = $name . ".jpg";
-            var_dump($file);
+            
             $path = "/users/".$id."/";
               
+            var_dump("/var/www/files_prommu".$path.$file, $current);
             file_put_contents("/var/www/files_prommu".$path.$file, $current);
             
             /*if(!@getimagesize("https://files.prommu.com/users/".$id."/".$file)){
