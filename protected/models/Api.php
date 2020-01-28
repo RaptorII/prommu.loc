@@ -3373,11 +3373,11 @@ public function vac(){
         $path = "/users/".$id."/";
         
         $res = file_put_contents("/var/www/files_prommu".$path.$file, $current);
-        var_dump($res); 
-        if(!@getimagesize("https://files.prommu.com/users/".$id."/".$file)){
-            unlink("/var/www/files_prommu".$path.$file);
-            return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
-        }
+        var_dump("https://files.prommu.com/users/".$id."/".$file); 
+        // if(!@getimagesize("https://files.prommu.com/users/".$id."/".$file)){
+        //     unlink("/var/www/files_prommu".$path.$file);
+        //     return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
+        // }
             
         if($profile->type == 2){
             $types = 'resume';
