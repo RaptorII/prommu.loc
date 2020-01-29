@@ -3471,7 +3471,7 @@ public function vac(){
                 
             file_put_contents( Settings::getFilesRoot().$path.$file, $current);
             
-            if(!@getimagesize("https://filesapp.prommu.com/users/".$id."/".$file)){
+            if(!@getimagesize("https://dev.prommu.com/files_prommu/users/".$id."/".$file)){
                 // unlink("/var/www/files_prommu".$path.$file);
                 return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
             }
@@ -3494,7 +3494,7 @@ public function vac(){
                     ), 'id_user = :id', array(':id' => $id));  
 
     
-        $message = "https://filesapp.prommu.com/users/".$id."/".$file;
+        $message = "https://dev.prommu.com/files_prommu/users/".$id."/".$file;
         $error = '0';
                
                 
@@ -3595,7 +3595,7 @@ public function vac(){
                 
             file_put_contents("/var/www/files_prommu".$path.$file, $current);
             
-            if(!@getimagesize("https://filesapp.prommu.com/users/".$id."/".$file)){
+            if(!@getimagesize("https://dev.prommu.com/files_prommu/users/".$id."/".$file)){
                 unlink("/var/www/files_prommu".$path.$file);
                 return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
             }
@@ -3623,7 +3623,7 @@ public function vac(){
                     ));
                     
                     
-                $message[] = "https://filesapp.prommu.com/users/".$id."/".$file;
+                $message[] = "https://dev.prommu.com/files_prommu/users/".$id."/".$file;
                 $error = '0';
     
     
@@ -3647,7 +3647,7 @@ public function vac(){
                         'photo' => $name,
                     ));
                     
-                $message[] = "https://filesapp.prommu.com/users/".$id."/".$file;
+                $message[] = "https://dev.prommu.com/files_prommu/users/".$id."/".$file;
                 $error = '0';
     
             }
