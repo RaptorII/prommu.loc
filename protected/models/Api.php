@@ -3367,8 +3367,9 @@ public function vac(){
         $id = $idus;
         $current =  base64_decode($photo);
             
-        mkdir("/var/www/files_prommu/users/".$id, 0777);
-        mkdir("/var/www/files_prommu/users/".$id."/tmp/", 0777);
+        mkdir("/var/www/files_prommu/test/".$id, 0777);
+        mkdir("/var/www/files_prommu/test/".$id."/tmp/", 0777);
+        
         $name = date('YmdHis').rand(100,1000);
         $file = $name . ".jpg";
         // $path = "/users/".$id."/";
