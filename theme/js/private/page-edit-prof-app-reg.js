@@ -878,7 +878,7 @@ jQuery(function($){
   $("#birthday").datepicker({
     maxDate: '-14y',
     changeYear: true,
-    yearRange: "1970:2005",
+    yearRange: "1950:2005",
     beforeShow: function(){
       $('#ui-datepicker-div').addClass('custom-calendar');
     }
