@@ -913,8 +913,8 @@ class UserController extends AppController
             $res = (new Vacancy())->saveVacpubData();
             if( $res['err'] ) {
             } else {
-                $project = new ProjectConvertVacancy();
-                $project->synphronization($res['idvac'],'vacancy');
+//                $project = new ProjectConvertVacancy();
+//                $project->synphronization($res['idvac'],'vacancy');
                 $this->redirect(MainConfig::$PAGE_VACANCY . DS . $res['idvac']);
             } // endif
         } // endif
@@ -1692,7 +1692,7 @@ class UserController extends AppController
 
                 $view = MainConfig::$VIEWS_SERVICE_PREMIUM_VIEW;
                 $vac = new Vacancy();
-                $data = $vac->getModerVacs();
+                $data = $vac->getMVacsForPayService();
                 break;
 
             case 'podnyatie-vacansyi-vverh':
@@ -1700,7 +1700,7 @@ class UserController extends AppController
 
                 $view = MainConfig::$VIEWS_SERVICES_VACUP_VIEW;
                 $vac = new Vacancy();
-                $data = $vac->getModerVacs();
+                $data = $vac->getMVacsForPayService();
 
                 break;
 

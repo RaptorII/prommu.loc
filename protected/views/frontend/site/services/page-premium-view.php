@@ -17,16 +17,27 @@
 						</label>
 					</div>
 				</div>
-				<div class="ps-vacancies__list">
-					<?php foreach ($viData['vacs'] as $key => $val): ?>
-						<label class="ps-vacancies__item">
-							<div class="ps-vacancies__item-bg">
-								<span class="ps-vacancies__item-title"><?=$val['title'] ?></span>
-							</div>
-							<input type="checkbox" name="vacancy[]" value="<?=$val['id']?>" class="ps-vacancies__item-input">
-						</label>		
-					<?php endforeach; ?>
-				</div>
+                <div class="ps-vacancies__list">
+                    <?php foreach ($viData['vacs'] as $key => $val): ?>
+                        <label class="ps-vacancies__item">
+                            <div class="ps-vacancies__item-bg">
+                                <span class="ps-vacancies__item-title"><?=$val['title'] ?></span>
+                                <span class="ps-vacancies__item-about"><strong>Завершение:</strong><?=' '.$val['remdate'] ?></span>
+                                <span class="ps-vacancies__item-about"><strong>Город:</strong><?=' '.$val['name'] ?></span>
+                                <span class="ps-vacancies__item-about"><strong>Domen:</strong>
+                                    <?php
+                                    if ($val['id_city']=='1307')//moskov
+                                    { echo ' '.'prommu.com'; }
+                                    else
+                                    { echo ' ' . $val['seo_url'] . '.prommu.com'; }
+                                    ?>
+                                </span>
+
+                            </div>
+                            <input type="checkbox" name="vacancy[]" value="<?=$val['id']?>" class="ps-vacancies__item-input">
+                        </label>
+                    <?php endforeach; ?>
+                </div>
 				<input type="hidden" name="service" value="premium-vacancy">
 				<br>
 				<button class="service__btn pull-right prmu-btn prmu-btn_normal"><span>ОПЛАТИТЬ</span></button>

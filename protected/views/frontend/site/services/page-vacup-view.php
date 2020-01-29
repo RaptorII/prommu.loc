@@ -1,6 +1,8 @@
 <?
 	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'services/services-premium-page.css');
 	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'services/services-premium-page.js', CClientScript::POS_END);
+
+	display($viData);
 ?>
 <div class="row">
 	<div class="col-xs-12 premium-service">
@@ -26,6 +28,17 @@
 						<label class="ps-vacancies__item ps-vacancies__up">
 							<div class="ps-vacancies__item-bg">
 								<span class="ps-vacancies__item-title"><?=$val['title'] ?></span>
+                                <span class="ps-vacancies__item-about"><strong>Завершение:</strong><?=' '.$val['remdate'] ?></span>
+								<span class="ps-vacancies__item-about"><strong>Город:</strong><?=' '.$val['name'] ?></span>
+                                <span class="ps-vacancies__item-about"><strong>Domen:</strong>
+                                    <?php
+                                        if ($val['id_city']=='1307')//moskov
+                                        { echo ' '.'prommu.com'; }
+                                        else
+                                        { echo ' ' . $val['seo_url'] . '.prommu.com'; }
+                                    ?>
+                                </span>
+
 							</div>
 							<input type="checkbox" name="vacancy[]" value="<?=$val['id']?>" class="ps-vacancies__item-input">
 						</label>		

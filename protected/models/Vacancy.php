@@ -3402,19 +3402,97 @@ WHERE id_vac = {$inVacId}";
 
         $limit = $this->limit > 0 ? "LIMIT {$this->offset}, {$this->limit}" : '';
 
-        $sql = "SELECT v.id, v.title, v.repost
-            FROM empl_vacations v
-            INNER JOIN ( SELECT v.id FROM empl_vacations v WHERE v.id_user = {$idus} ORDER BY v.id DESC 
-                {$limit} ) t1 ON t1.id = v.id 
-            WHERE v.id_user = {$idus} AND (v.status=1) AND (v.ismoder=100) AND v.in_archive=0
+         $sql = "
+            SELECT 
+                v.id, 
+                v.title, 
+                v.repost
+            FROM 
+                empl_vacations v
+            INNER JOIN ( 
+                    SELECT v.id FROM empl_vacations v
+                    WHERE v.id_user = {$idus} ORDER BY v.id DESC 
+                    {$limit} 
+                ) t1
+            ON 
+                t1.id = v.id
+            WHERE 
+                v.id_user = {$idus} 
+                AND (v.status=1) 
+                AND (v.ismoder=100) 
+                AND v.in_archive=0
             ORDER BY v.id DESC
-            ";
+        ";
+
         $data = Yii::app()->db->createCommand($sql)->queryAll();
         $arRes = array();
         foreach ($data as $v) $arRes[$v['id']] = $v;
 
         return array('vacs'=>$arRes);
     }
+
+    /**
+     * Get Moderating Vacansions For Pay-Services
+     * @return array
+     * @throws CException
+     */
+    public function getMVacsForPayService()
+    {
+        $idus = $this->Profile->id ?: Share::$UserProfile->exInfo->id;
+
+        // good views
+        $arVacs = Yii::app()->db->createCommand()
+            ->select('
+                ev.id,
+                ev.title,
+                ev.repost,
+                ev.remdate,
+                ec.id_city,
+                c.name,
+                c.seo_url
+            ')
+            ->from('empl_vacations ev')
+            ->join('empl_city ec','ec.id_vac=ev.id')
+            ->join('city c','c.id_city=ec.id_city')
+            ->where(
+                'ev.id_user=:id_user AND ev.status=:status AND ev.ismoder=:ismoder AND ev.in_archive=:archive',
+                [
+                    ':id_user'=> $idus,
+                    ':status'=>Vacancy::$STATUS_ACTIVE,
+                    ':ismoder'=>Vacancy::$ISMODER_APPROVED,
+                    ':archive'=>Vacancy::$INARCHIVE_FALSE
+                ]
+            )
+            ->order('ev.id desc')
+            ->queryAll();
+
+        //display($arVacs);
+
+        // sql testing
+        /*$sql = "
+            SELECT
+                v.id,
+                v.title,
+                v.repost,
+                v.remdate,
+                ec.id_city
+            FROM
+                empl_vacations v
+            LEFT JOIN empl_city ec ON ec.id_vac = v.id
+            WHERE
+                v.id_user = {$idus}
+                AND (v.status=1)
+                AND (v.ismoder=100)
+                AND v.in_archive=0
+            ORDER BY
+                v.id
+            DESC
+                {$limit}
+        ";*/
+
+        return array('vacs'=>$arVacs);
+    }
+
     /**
      * @param $user - profile object
      * @param $isFull - bool all columns or ID only

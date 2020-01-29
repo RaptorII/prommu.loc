@@ -49,10 +49,25 @@
 }
 
 .ps-vacancies__item-title {
+  display: block;
   font-size: 14px;
   color: #646464;
   text-transform: uppercase;
   font-family: "RobotoCondensedBold", sans-serif, verdana;
+  margin-bottom: 10px;
+}
+
+.ps-vacancies__item-about {
+  font-size: 14px;
+  color: #646464;
+  text-transform: none;
+  font-family: "RobotoCondensed", sans-serif, verdana;
+  font-weight: 400;
+}
+@media (max-width: 768px) {
+  .ps-vacancies__item-about {
+    display: block;
+  }
 }
 
 .ps-vacancies__item.ps-vacancies__up {
@@ -90,6 +105,7 @@
 
 .ps-vacancies__item.ps-vacancies__up.active:after {
   right: 5px;
+  top: calc( 50% - 30px );
   transform: translateX(-50%);
   position: absolute;
   width: auto;
