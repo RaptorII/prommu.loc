@@ -3370,7 +3370,7 @@ public function vac(){
         $id = $idus;
         $current =  base64_decode($photo);
             
-       
+        echo $_SERVER['DOCUMENT_ROOT'];
         if (!mkdir("/var/www/prommu.dev/files_prommu/test/ted",  0700)) {
             $error = error_get_last();
             var_dump($error);
