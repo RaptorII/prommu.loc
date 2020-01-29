@@ -60,12 +60,12 @@ if(Share::isApplicant())
       if(!empty($v['photo']))
       {
         $value+=10;
-        $flag=false;
+        $cnt=0;
         foreach ($arPhotos as $p)
         {
-          $v['id_user']==$p['id_user'] && $flag=true;
+          $v['id_user']==$p['id_user'] && $cnt++;
         }
-        $flag && $value+=10;
+        $cnt>1 && $value+=10;
       }
       // общая инфа
       $v['firstname'] && $value++;
@@ -215,12 +215,12 @@ if(Share::isEmployer())
       if(!empty($v['logo']))
       {
         $value+=10;
-        $flag=false;
+        $cnt=0;
         foreach ($arPhotos as $p)
         {
-          $v['id_user']==$p['id_user'] && $flag=true;
+          $v['id_user']==$p['id_user'] && $cnt++;
         }
-        $flag && $value+=10;
+        $cnt>1 && $value+=10;
       }
       // общая инфа
       $v['name'] && $value+=5;
