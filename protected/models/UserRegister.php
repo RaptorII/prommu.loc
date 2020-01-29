@@ -1152,6 +1152,7 @@ class UserRegister
       $dirPath .= $arPath[$i] . '/';
       if(!is_dir($dirPath))
       {
+        var_dump($dirPath);
         $arRes = mkdir($dirPath, self::$DIR_PERMISSIONS);
       }
       if(!$arRes)
