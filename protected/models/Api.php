@@ -162,6 +162,9 @@ class Api
         
     }
     
+      
+
+
     public function getProfile(){
     
     $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -3368,11 +3371,11 @@ public function vac(){
         $current =  base64_decode($photo);
             
        
-        if (!mkdir("/var/www/files_prommu/test/".$id,  0700)) {
+        if (!mkdir("/files_prommu/test/".$id,  0700)) {
             die('Не удалось создать директории...');
         }
         
-        if (!mkdir("/var/www/files_prommu/test/".$id."/tmp/",  0700)) {
+        if (!mkdir("/files_prommu/test/".$id."/tmp/",  0700)) {
             die('Не удалось создать директории...');
         }
         
