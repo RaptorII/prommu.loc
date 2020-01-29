@@ -131,7 +131,7 @@ $this->pageTitle = $title;
                         <?/*efficiency*/?>
                         <div class='affective-block'>
                             <div class='affective-perc'>
-                                <div class='progr' style="width: <?= $viData['efficiency'] ?>%">
+                                <div class='progr' style="width: <?= $viData['profile_filling'] ?>%">
                                     <div class='text'><?= $viData['profile_filling'] ?>%</div>
                                 </div>
                             </div>
