@@ -3472,7 +3472,7 @@ public function vac(){
             file_put_contents( Settings::getFilesRoot().$path.$file, $current);
             
             if(!@getimagesize("https://dev.prommu.com/files_prommu/users/".$id."/".$file)){
-                // unlink("/var/www/files_prommu".$path.$file);
+                unlink("/var/www/files_prommu".$path.$file);
                 return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
             }
             
