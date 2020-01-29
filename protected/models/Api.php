@@ -3371,12 +3371,14 @@ public function vac(){
         $current =  base64_decode($photo);
             
        
-        if (!mkdir("/files_prommu/test/".$id,  0700)) {
-            die('Не удалось создать директории...');
+        if (!mkdir("/var/www/files_prommu/test/".$id,  0700)) {
+            $error = error_get_last();
+            die('Не удалось создать директории...'.$error);
         }
         
-        if (!mkdir("/files_prommu/test/".$id."/tmp/",  0700)) {
-            die('Не удалось создать директории...');
+        if (!mkdir("/var/www/files_prommu/test/".$id."/tmp/",  0700)) {
+            $error = error_get_last();
+            die('Не удалось создать директории...'.$error);
         }
         
         
