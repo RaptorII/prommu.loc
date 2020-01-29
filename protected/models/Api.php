@@ -3373,8 +3373,8 @@ public function vac(){
         echo $_SERVER['DOCUMENT_ROOT'];
         
         $URa = new UserRegister();
-        $URa =  existenceDir("/var/www/prommu.dev/files_prommu/test/ted");
-        
+        $res =  $URa->existenceDir("/var/www/prommu.dev/files_prommu/test/ted");
+        var_dump($res);
         
         if (!mkdir("$photo",  0750)) {
             $error = error_get_last();
