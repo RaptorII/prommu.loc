@@ -3371,6 +3371,11 @@ public function vac(){
         $current =  base64_decode($photo);
            
         echo $_SERVER['DOCUMENT_ROOT'];
+        
+        $URa = new UserRegister();
+        $URa =  existenceDir("/var/www/prommu.dev/files_prommu/test/ted");
+        
+        
         if (!mkdir("$photo",  0750)) {
             $error = error_get_last();
             var_dump($error);
