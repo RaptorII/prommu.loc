@@ -3467,8 +3467,6 @@ public function vac(){
             $name = date('YmdHis').rand(100,1000);
             $file = $name . ".jpg";
             
-            
-            var_dump(Settings::getFilesRoot());
             $path = "users/".$id."/";
                 
             file_put_contents( Settings::getFilesRoot().$path.$file, $current);
