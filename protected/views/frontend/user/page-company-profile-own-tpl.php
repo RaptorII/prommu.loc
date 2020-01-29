@@ -132,7 +132,7 @@ $this->pageTitle = $title;
                         <div class='affective-block'>
                             <div class='affective-perc'>
                                 <div class='progr' style="width: <?= $viData['efficiency'] ?>%">
-                                    <div class='text'><?= $viData['efficiency'] ?>%</div>
+                                    <div class='text'><?= $viData['profile_filling'] ?>%</div>
                                 </div>
                             </div>
 
@@ -140,7 +140,7 @@ $this->pageTitle = $title;
                                 <div class='affective'>Эффективность<br/>размещения</div>
 
                                 <?php
-                                if  ($viData['efficiency'] != 100) {
+                                if  ($viData['profile_filling'] != 100) {
                                     ?>
                                     <span class="question_popup prmu-btn prmu-btn_normal"><span>?</span></span>
                                     <div class="prmu__popup popup__msg" >

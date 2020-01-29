@@ -95,13 +95,14 @@ function ShowView($id_user, $id, $index, $status, $isblocked){
     $Prommo = new UserProfileApplic(['idProfile' => $id]);
     $res = $Prommo->getProfileData($id_user, $id);
 
-       
-    if($index == 0 && $status == 1 && $res['profileEffect'] > 40) {
+    if($index == 0 && $status == 1 && $res['profile_filling'] > UserProfileApplic::$INDEX_PROFILE_FILLING)
+    {
         return "<span class='label label-success'><i class='icon-star icon-white'></i></span>index";
     }
-    else return "<span class='label label-warning'><i class='icon-star icon-white'></i></span> no index";
-
-   
+    else
+    {
+      return $res['profile_effect'] . "<span class='label label-warning'><i class='icon-star icon-white'></i></span> no index";
+    }
 }
 
 function ShowBlocked($blocked, $id_user, $ismoder)

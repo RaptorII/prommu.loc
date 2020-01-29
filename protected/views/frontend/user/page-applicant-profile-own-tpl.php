@@ -86,7 +86,8 @@ endif;
     );
     $arSeo = Seo::getMetaForApp($arSeoParams);
     // закрываем от индексации
-    if($attr['index'] || $viData['profileEffect']<40 || !$ismoder){
+    if($attr['index'] || $viData['profile_filling']<UserProfileApplic::$INDEX_PROFILE_FILLING || !$ismoder)
+    {
       Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
     }
     // устанавливаем title
@@ -243,8 +244,8 @@ endif;
       <?php if( $flagOwnProfile ): ?>
         <div class='affective-block'>
           <div class='affective-perc'>
-            <div class='progr' style="width: <?= $viData['efficiency'] ?>%">
-              <div class='text'><?= $viData['efficiency'] ?>%</div>
+            <div class='progr' style="width: <?= $viData['profile_filling'] ?>%">
+              <div class='text'><?= $viData['profile_filling'] ?>%</div>
             </div>
           </div>
 
@@ -253,7 +254,7 @@ endif;
 
             <?php
 
-             if  ($viData['efficiency'] != 100) {
+             if  ($viData['profile_filling'] != 100) {
                  ?>
                  <span class="question_popup prmu-btn prmu-btn_normal"><span>?</span></span>
                  <div class="prmu__popup popup__msg" >

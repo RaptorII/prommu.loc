@@ -405,61 +405,172 @@ class Employer extends ARModel
         ->limit('1000')
         ->queryAll();
     }
-
+  /**
+   * @return array
+   * Поиск работодателей для главной страницы
+   */
     private function getEmployersIndexPage()
     {
-        $strCities = Subdomain::getCacheData()->strCitiesIdes;
-        // достаем работодателей
-        $filter = Employer::getScopesCustom(Employer::$SCOPE_HAS_LOGO, 'r');
-        $sql = "SELECT r.id, r.id_user idus, u.is_online, 
-                    name, r.firstname, r.lastname,
-                    r.logo, r.rate, r.rate_neg, 
-                    cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate,
-                    (SELECT COUNT(id) 
-                    FROM comments mm 
-                    WHERE mm.iseorp = 0 AND mm.id_empl = r.id) comment_count,
-                    (SELECT COUNT(id) FROM comments mm
-                    WHERE mm.isneg = 1 AND mm.id_empl = r.id) comment_neg     
-                FROM employer r
-                INNER JOIN user u ON u.id_user = r.id_user 
-                    AND u.ismoder = 1 AND u.isblocked = 0
-                INNER JOIN user_city ci ON r.id_user = ci.id_user 
-                    AND ci.id_city IN({$strCities})
-                WHERE {$filter} 
-                ORDER BY avg_rate DESC
-                LIMIT 6";
-        $arEmp = Yii::app()->db->createCommand($sql)->queryAll();
-        //
-        $nEmp = sizeof($arEmp);
-        if(!$nEmp)
-            return false;
-        // достаем должности соискателей
-        $arIdies = array();
-        for ($i=0; $i < $nEmp; $i++)
-            $arIdies[] = $arEmp[$i]['idus'];
-
-        $sql = "SELECT ci.id_city id, ci.name name, uc.id_user idus
-                    FROM user_city uc
-                    LEFT JOIN city ci ON uc.id_city = ci.id_city
-                    WHERE uc.id_user IN(".implode(",", $arIdies).")";
-        $arCities = Yii::app()->db->createCommand($sql)->queryAll();
-        // формируем массив
-        foreach($arEmp as &$i){
-            foreach($arCities as $j => $city)
-                if($city['idus']==$i['idus'])
-                    $i['cities'] .= (isset($i['cities']) 
-                        ? ', '.$city['name'] 
-                        : $city['name']);
-
-            $i['datail-url'] = MainConfig::$PAGE_PROFILE_COMMON . DS . $i['idus'];
-            $i['logo'] = Share::getPhoto($i['idus'], 3, $i['logo']);
-            $i['fullname'] = $i['name'] . ' (№' . $i['idus'] . ')';
-            $i['comment-url'] = MainConfig::$PAGE_COMMENTS . DS . $i['idus'];
-            $i['rate_count'] = $i['rate'] + $i['rate_neg'];
+      $cacheId = Subdomain::site() . DS
+        . Yii::app()->controller->id . Yii::app()->request->requestUri;
+      $arCitiesIdes = Subdomain::getCacheData()->arCitiesIdes;
+      $queryLight = Cache::getData($cacheId . 'index/employers_light'); // короткий запрос
+      if($queryLight['data']===false) // обновляем кэш
+      {
+        $queryLight['data'] = Yii::app()->db->createCommand()
+          ->select('distinct(e.id_user), cast(e.rate AS signed) - ABS(cast(e.rate_neg as signed)) sum_rating')
+          ->from('employer e')
+          ->join('user u','u.id_user=e.id_user')
+          ->join('user_city uc','uc.id_user=e.id_user')
+          ->where(
+            [
+              'and',
+              "u.isblocked=:isblocked AND u.ismoder=:ismoder AND e.logo is not null",
+              ['in','uc.id_city',$arCitiesIdes]
+            ],
+            [
+              ':isblocked' => User::$ISBLOCKED_FULL_ACTIVE,
+              ':ismoder' => User::$ISMODER_ACTIVE
+            ]
+          )
+          ->limit(30) // берем с запасом, чтобы исключить неподходящих после проверки
+          ->order('u.profile_filling DESC, sum_rating DESC')
+          ->queryColumn();
+        Cache::setData($queryLight, 300); // короткий запрос кэшируем на 5 минут(300сек.)
+      }
+      $arIdUser = $queryLight['data'];
+      $arRes = Cache::getData($cacheId . 'index/employers'); // главный запрос
+      $hasChanged = false;
+      if(count($arRes['data']['id_compare'])) // проверяем большой запрос на совпадение с маленьким запросом
+      {
+        if(count($arRes['data']['id_compare'])!=count($arIdUser)) // по кол-ву
+        {
+          $hasChanged = true;
         }
-        unset($i, $arCities, $arIdies);
+        else // по ID вакансий и их порядку
+        {
+          foreach ($arRes['data']['id_compare'] as $k1 => $v1) // по порядку
+          {
+            foreach ($arIdUser as $k2 => $v2)
+            {
+              if($k1==$k2 && $v1!=$v2)
+              {
+                $hasChanged = true;
+                break;
+              }
+            }
+          }
+        }
+      }
+      // полная выборка по вакансиям
+      if($arRes['data']===false || $hasChanged)
+      {
+        $arRes['data'] = ['id_compare' => $arIdUser];
+        $arEmpls = Yii::app()->db->createCommand()
+          ->select("e.id,
+            e.id_user,
+            e.name,
+            e.logo,
+            e.rate,
+            e.rate_neg,
+            u.is_online")
+          ->from('employer e')
+          ->join('user u','u.id_user=e.id_user')
+          ->where(['in','e.id_user',$arIdUser])
+          ->queryAll();
 
-        return $arEmp;
+        if(count($arEmpls))
+        {
+          $arData = $arIdEmpls = [];
+          foreach ($arEmpls as $v)
+          {
+            $path = Settings::getFilesRoot() . 'users/' . $v['id_user']
+              . DS . $v['logo'] . '169.jpg';
+
+            $fileInfo = getimagesize($path);
+            if(!is_array($fileInfo))
+            {
+              continue;
+            }
+
+            $v['fullname'] = $v['name'] . ' (№' . $v['id_user'] . ')';
+            $v['logo'] = Share::getPhoto(
+              $v['id_user'],
+              UserProfile::$EMPLOYER,
+              $v['logo']
+            );
+            $v['cities'] = [];
+            $v['str_cities'] = '';
+            $v['rate_count'] = $v['rate'] + $v['rate_neg'];
+            $v['comments_count'] = 0;
+            $v['comments_negative'] = 0;
+            $arData[] = $v;
+
+            $arIdEmpls[] = $v['id'];
+          }
+
+          $arComments = Yii::app()->db->createCommand()
+            ->select('id_empl, isneg')
+            ->from('comments')
+            ->where([
+              'and',
+              'iseorp=0 AND isactive=1',
+              ['in','id_empl',$arIdEmpls]
+            ])
+            ->queryAll();
+
+          $arCities = Yii::app()->db->createCommand()
+            ->select('uc.id_user, c.name')
+            ->from('user_city uc')
+            ->join('city c','c.id_city=uc.id_city')
+            ->where(['in','uc.id_user',$arIdUser])
+            ->queryAll();
+
+          foreach ($arData as &$v)
+          {
+            foreach ($arComments as $j) // собираем комменты
+            {
+              if($v['id']==$j['id_empl'])
+              {
+                $v['comments_count']++;
+                $j['isneg']==1 && $v['comments_negative']++;
+              }
+            }
+            //
+            foreach ($arCities as $j) // собираем должности
+            {
+              $v['id_user']==$j['id_user'] && $v['cities'][]=$j['name'];
+            }
+            count($v['cities']) && $v['str_cities']=join(', ', $v['cities']);
+          }
+          unset($v);
+          // возвращаем сортировку
+          $arRes['data']['items'] = [];
+          $cnt = 0;
+          foreach ($arIdUser as $id_user)
+          {
+            if($cnt>6)
+            {
+              break;
+            }
+            foreach ($arData as $v)
+            {
+              if($v['id_user']==$id_user)
+              {
+                $arRes['data']['items'][]=$v;
+                $cnt++;
+              }
+            }
+          }
+          Cache::setData($arRes,86400); // Записуем все данные в кэш
+        }
+        else
+        {
+          $arRes['data']['items'] = false;
+        }
+      }
+
+      return $arRes['data']['items'];
     }
 
     public static function getUserAttrib($id_user) {

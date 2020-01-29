@@ -2793,7 +2793,8 @@ WHERE id_vac = {$inVacId}";
         return $data;
     }
     /**
-     * @return список вакансий для главной страницы
+     * @return array
+     * Поиск вакансий для главной страницы
      */
     private function getVacanciesIndexPage()
     {
@@ -2861,7 +2862,7 @@ WHERE id_vac = {$inVacId}";
             shour,
             sweek,
             smonth,
-            svisit
+            svisit,
             isman,
             iswoman")
           ->from(self::tableName())
@@ -2987,7 +2988,7 @@ WHERE id_vac = {$inVacId}";
             //
             $arRes['data'][] = $arV;
           }
-          Cache::setData($arRes); // Записуем все данные в кэш
+          Cache::setData($arRes,86400); // Записуем все данные в кэш
         }
         else
         {

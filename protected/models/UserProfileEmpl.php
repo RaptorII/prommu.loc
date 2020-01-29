@@ -886,10 +886,11 @@ class UserProfileEmpl extends UserProfile
         $data['lastResp'] = $this->getLastResponses($inID);
         $data['lastComments'] = $this->getLastComments($inEID);
         $data['userPhotos'] = $this->getUserPhotos($inEID);
-
         //for efficiency profile of empl
-        if ( $inID == $this->exInfo->id  ) {
-            $data['efficiency'] = $this->getEfficiencyData();
+        $data['profile_filling'] = $data['userInfo']['profile_filling'];
+        if ( $inID == $this->exInfo->id  )
+        {
+            $data['profile_filling'] = $this->getEfficiencyData($data);
         }
 
         return $data;
@@ -1434,6 +1435,7 @@ class UserProfileEmpl extends UserProfile
                 e.rate_neg,
                 u.mdate,
                 u.is_online,
+                u.profile_filling,
                 DATE_FORMAT(e.crdate, '%d.%m.%Y') date_public
             FROM employer e
             LEFT JOIN user u ON u.id_user = e.id_user
@@ -1441,6 +1443,7 @@ class UserProfileEmpl extends UserProfile
         $res = Yii::app()->db->createCommand($sql)->queryRow();
 
         // время на сайте
+        $d1 = new DateTime(date("Y-m-d H:i:s"));
         $d2 = new DateTime($res['date_public']);
         $diff = $d2->diff($d1);
         $months = ($diff->y * 12) + $diff->m;
@@ -1847,89 +1850,53 @@ class UserProfileEmpl extends UserProfile
     }
 
     /**
-     * get Efficiency Applicant profile
+     * get Efficiency Employer profile
      * @return int
      */
-    public function getEfficiencyData() {
+    public function getEfficiencyData($data)
+    {
+      $efficiency = 0;
+      $arInfo = $this->getProfileMainData($this->id);
 
-        $id_user = $this->exInfo->id ;
-        //$id = Share::$UserProfile->exInfo->eid;
+      if(!empty($data['userInfo']['logo']))
+      {
+        $efficiency+= (count($data['userPhotos']) ? 20 : 10);
+      }
+      !empty($arInfo['emplInfo']['name']) && $efficiency+=5;
+      !empty($arInfo['emplInfo']['type']) && $efficiency+=5;
+      !empty($arInfo['userCities']['0']['name']) && $efficiency+=5;
+      !empty($arInfo['userAttribs']['99']['val']) && $efficiency+=5;
+      /*contact*/
+      !empty($arInfo['emplInfo']['firstname']) && $efficiency+=5;
+      !empty($arInfo['emplInfo']['lastname']) && $efficiency+=5;
+      !empty($arInfo['emplInfo']['contact']) && $efficiency+=5;
+      !empty($arInfo['userAttribs']['176']['val']) && $efficiency+=5;
+      !empty($arInfo['userAttribs']['177']['val']) && $efficiency+=5;
+      !empty($arInfo['emplInfo']['email']) && $efficiency+=5;
+      !empty($arInfo['userAttribs']['1']['val']) && $efficiency+=5;
+      !empty($arInfo['userAttribs']['175']['val']) && $efficiency+=5;
+      !empty($arInfo['userAttribs']['100']['val']) && $efficiency+=5;
+      if (!empty($arInfo['userAttribs']['157']['val']) ||
+          !empty($arInfo['userAttribs']['4']['val']) ||
+          !empty($arInfo['userAttribs']['5']['val']) ||
+          !empty($arInfo['userAttribs']['156']['val']) ||
+          !empty($arInfo['userAttribs']['158']['val']))
+      {
+          $efficiency+=5;
+      }
+      !empty($arInfo['emplInfo']['aboutme']) && $efficiency+=10;
 
-        $data['userInfo'] = $this->getUserInfo($id_user);
-        $data['usrInfo'] = $this->getProfileMainData($id_user);
-
-        $efficiency = 0;
-
-        /*main*/
-        if (!empty($data['userInfo']['logo'])) {
-            $efficiency = $efficiency + 10;
-
-            $cntFoto = Yii::app()->db->createCommand("
-                SELECT 
-                    count(id) as cnt
-                FROM 
-                    user_photos
-                WHERE 
-                    id_user=${id_user}
-            ")->queryRow();
-
-            if ($cntFoto['cnt']>=2) {
-                $efficiency = $efficiency + 10;
-            }
-        }
-
-        if (!empty($data['usrInfo']['emplInfo']['name'])) {
-            $efficiency = $efficiency + 5;
-        }
-        if (!empty($data['usrInfo']['emplInfo']['type'])) {
-            $efficiency = $efficiency + 5;
-        }
-        if (!empty($data['usrInfo']['userCities']['0']['name'])) {
-            $efficiency = $efficiency + 5;
-        }
-        if (!empty($data['usrInfo']['userAttribs']['99']['val'])) {
-            $efficiency = $efficiency + 5;
-        }
-
-        /*contact*/
-        if (!empty($data['usrInfo']['emplInfo']['firstname'])) {
-            $efficiency = $efficiency + 5;
-        }
-        if (!empty($data['usrInfo']['emplInfo']['lastname'])) {
-            $efficiency = $efficiency + 5;
-        }
-        if (!empty($data['usrInfo']['emplInfo']['contact'])) {
-            $efficiency = $efficiency + 5;
-        }
-        if (!empty($data['usrInfo']['userAttribs']['176']['val'])) {
-            $efficiency = $efficiency + 5;
-        }
-        if (!empty($data['usrInfo']['userAttribs']['177']['val'])) {
-            $efficiency = $efficiency + 5;
-        }
-        if (!empty($data['usrInfo']['emplInfo']['email'])) {
-            $efficiency = $efficiency + 5;
-        }
-        if (!empty($data['usrInfo']['userAttribs']['1']['val'])) {
-            $efficiency = $efficiency + 5;
-        }
-        if (!empty($data['usrInfo']['userAttribs']['175']['val'])) {
-            $efficiency = $efficiency + 5;
-        }
-        if (!empty($data['usrInfo']['userAttribs']['100']['val'])) {
-            $efficiency = $efficiency + 5;
-        }
-        if (!empty($data['usrInfo']['userAttribs']['157']['val']) ||
-            !empty($data['usrInfo']['userAttribs']['4']['val']) ||
-            !empty($data['usrInfo']['userAttribs']['5']['val']) ||
-            !empty($data['usrInfo']['userAttribs']['156']['val']) ||
-            !empty($data['usrInfo']['userAttribs']['158']['val'])) {
-            $efficiency = $efficiency + 5;
-        }
-        if (!empty($data['usrInfo']['emplInfo']['aboutme'])) {
-            $efficiency = $efficiency + 10;
-        }
-
-        return $efficiency;
+      // обновляем базу только если значение поменялось
+      if($data['profile_filling']!=$efficiency)
+      {
+        Yii::app()->db->createCommand()
+          ->update(
+            'user',
+            ['profile_filling'=>$efficiency],
+            'id_user=:id_user',
+            [':id_user'=>$this->id]
+          );
+      }
+      return $efficiency;
     }
 }

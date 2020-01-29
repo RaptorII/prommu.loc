@@ -7,8 +7,6 @@
 
 class UserProfileApplic extends UserProfile
 {
-    private $profileFill;
-    private $profileFillMax;
     private $wDays;
     private $idCities; // ID городов из блоков интерфейса
     private static $AR_SELF_EMPLOYED_REGIONS = [
@@ -16,6 +14,7 @@ class UserProfileApplic extends UserProfile
       797, // Калужская область
       2127 // Республика татарстан
     ];
+    public static $INDEX_PROFILE_FILLING = 40; // уровень заполнения профиля, который подходит для индексирования анкеты
 
     function __construct($inProps)
     {
@@ -28,8 +27,6 @@ class UserProfileApplic extends UserProfile
 
         $this->viewTpl = MainConfig::$VIEWS_APPLICANT_PROFILE_OWN;
 
-        $this->profileFillMax = 24;//MainConfig::$PROFILE_FILL_MAX; // считаем кол-во и прописываем
-        $this->profileFill = 0;
         $this->photosMax = MainConfig::$APPLICANT_MAX_PHOTOS;
 
         $this->wDays = (object)[];
@@ -1149,27 +1146,25 @@ class UserProfileApplic extends UserProfile
 
     public function getProfileData($inID = 0, $inIDpromo = 0)
     {
-        $data['rating'] = $this->getPointRate($inID);
-        $data['lastJobs'] = $this->getLastJobs($inIDpromo);
-        $data['userInfo'] = $this->getUserInfo($inID);
-        if( $data['userInfo']['userMetro'] ) {
-            foreach ($data['userInfo']['userMetro'] as $val) { $metro[] = $val['name']; }
-            $data['userInfo']['userMetro'] = array($data['userInfo']['userMetro'], join(', ', $metro));
-        }
+      $data['rating'] = $this->getPointRate($inID);
+      $data['lastJobs'] = $this->getLastJobs($inIDpromo);
+      $data['userInfo'] = $this->getUserInfo($inID);
+      if( $data['userInfo']['userMetro'] )
+      {
+        foreach ($data['userInfo']['userMetro'] as $val) { $metro[] = $val['name']; }
+        $data['userInfo']['userMetro'] = array($data['userInfo']['userMetro'], join(', ', $metro));
+      }
+      $data['lastComments'] = $this->getLastComments($inIDpromo);
+      //for regForm
+      $data['data'] = $this->getProfileEditPageData($data['userInfo']);
+      //for efficiency profile of applicant
+      $data['profile_filling'] = reset($data['userInfo']['userAttribs'])['profile_filling'];
+      if ( $inID==$this->exInfo->id  )
+      {
+        $data['profile_filling'] = $this->getEfficiencyData($data['userInfo']);
+      }
 
-        $data['lastComments'] = $this->getLastComments($inIDpromo);
-        $data['profileEffect'] = floor($this->profileFill / $this->profileFillMax * 100);
-        $data['profileEffect'] = $data['profileEffect']>100 ? 100 : $data['profileEffect'];
-
-        //for regForm
-        $data['data'] = $this->getProfileEditPageData($data['userInfo']);
-
-        //for efficiency profile of applicant
-        if ( $inID == $this->exInfo->id  ) {
-            $data['efficiency'] = $this->getEfficiencyData();
-        }
-
-        return $data;
+      return $data;
     }
 
 
@@ -1245,7 +1240,7 @@ class UserProfileApplic extends UserProfile
               , d.name , d.type , d.id_par idpar , d.key
               , u.email, card, cardPrommu, u.is_online
               , r.index, r.meta_h1, r.meta_title, r.meta_description, r.rate, r.rate_neg,
-              DATE_FORMAT(r.date_public, '%d.%m.%Y') date_public
+              DATE_FORMAT(r.date_public, '%d.%m.%Y') date_public, u.profile_filling
             FROM resume r
             LEFT JOIN user u ON u.id_user = r.id_user
             LEFT JOIN user_attribs a ON r.id_user = a.id_us
@@ -1263,17 +1258,6 @@ class UserProfileApplic extends UserProfile
 
         foreach ($attr as $k => $attrib)
         {
-            if( 
-                ($attrib['id_attr'] <> 0 // без общего 
-                && $attrib['key'] <> 'icq' // без ICQ 
-                && $attrib['idpar'] <> 40 // без языков
-                && strpos($attrib['key'],'dmob')===false // без доп телефонов
-                && !empty($attrib['val'])) // и чтобы значение было заполнено
-                ||
-                in_array($attrib['idpar'], [11,12,13,14,15,16,69]) // для параметров с выбором
-            )
-                $this->profileFill++;
-            //
             $data['self_employed'] = false;
             $attrib['key']=='self_employed' && $data['self_employed']=$attrib['val'];
         }
@@ -1290,6 +1274,7 @@ class UserProfileApplic extends UserProfile
         }
         if(!empty($attr[1]['date_public']))
         {
+            $d1 = new DateTime(date("Y-m-d H:i:s"));
             $d2 = new DateTime($attr[1]['date_public']);
             $diff = $d2->diff($d1);
             $months = ($diff->y * 12) + $diff->m;
@@ -1344,7 +1329,6 @@ class UserProfileApplic extends UserProfile
         }
 
         $data['userCities'] = array($city, array('id' => $res[0]['id_co'], 'name' => $res[0]['coname']), $cityPrint);
-        if( count($city) ) $this->profileFill++;
 
         // read metro
         $sql = "SELECT m.id, m.id_city idcity, m.name FROM user_metro um
@@ -1388,7 +1372,6 @@ class UserProfileApplic extends UserProfile
         $res = Yii::app()->db->createCommand($sql)->queryAll();
 
         $exp = array();
-        $flagPF = 0;
         foreach ($res as $key => $val)
         {
             if( $val['pay_type'] == 1 ) $res[$key]['pay_type'] ='руб/неделю';
@@ -1396,14 +1379,8 @@ class UserProfileApplic extends UserProfile
             else $res[$key]['pay_type'] ='руб/час';
 
             if( $val['isshow'] ) $exp[] = $val['val'];
-
-            if( !$val['isshow'] ) $flagPF || $flagPF = 1;
         } // end foreach
         $data['userDolj'] = array($res, join(', ', $exp));
-        if( $flagPF ) $this->profileFill++;
-        if( count($exp) ) $this->profileFill++;
-
-
 
         // просмотры
         if( $this->exInfo->id_resume )
@@ -1412,7 +1389,6 @@ class UserProfileApplic extends UserProfile
             $res = Yii::app()->db->createCommand($sql)->queryScalar();
             $data['viewCount'] = $res;
         } // endif
-
 
         return $data;
     }
@@ -1857,163 +1833,140 @@ class UserProfileApplic extends UserProfile
 
     /**
      * get Efficiency Applicant profile
+     * @param $data - array (userAttribs=>[...], userPhotos=>[...], userDolj=>[...], userCities=>[...], userWdays=>[...])
      * @return int
      */
-    public function getEfficiencyData() {
+    public function getEfficiencyData($data)
+    {
+      //display($data);
 
-        $data['usrInfo'] = $this->getUserInfo($this->id);
-        //display($data['usrInfo']);
-        //die();
+      $efficiency = 0;
+      $arAttr = $data['userAttribs'];
+      $arInfo = reset($arAttr);
 
-        $efficiency = 0;
+      if(count($data['userPhotos']))
+      {
+        $efficiency+= (count($data['userPhotos'])>1 ? 20 : 10);
+      }
+      !empty($arInfo['firstname']) && $efficiency++;
+      !empty($arInfo['lastname']) && $efficiency++;
+      !empty($arInfo['bday']) && $efficiency++;
+      $efficiency++; // пол в любом случае 0 или 1
+      if (!empty($arInfo['ismed']) ||
+          !empty($arInfo['smart']) ||
+          !empty($arInfo['card']) ||
+          !empty($arInfo['ishasavto'])
+      )
+      {
+        $efficiency++;
+      }
+      /*contact*/
+      isset($arInfo['phone']) && $efficiency+=5;
+      isset($arInfo['email']) && $efficiency+=5;
 
-        /*main*/
-        If (($data['usrInfo']['userAttribs']['1']['photo'])) {
-            $efficiency = $efficiency + 10;
+      if (!empty($arAttr['4']['val'])   || //messangers
+          !empty($arAttr['157']['val']) ||
+          !empty($arAttr['156']['val']) ||
+          !empty($arAttr['158']['val']) ||
+          !empty($arAttr['5']['val'])) {
+          $efficiency = $efficiency + 5;
+      }
+      if (!empty($arAttr['6']['val'])   || //social networks
+          !empty($arAttr['160']['val']) ||
+          !empty($arAttr['161']['val']) ||
+          !empty($arAttr['162']['val']) ||
+          !empty($arAttr['7']['val'])) {
+          $efficiency = $efficiency + 5;
+      }
 
-            $id_user = $this->id;
-            $cntFoto = Yii::app()->db->createCommand("
-                SELECT 
-                    count(id) as cnt
-                FROM 
-                    user_photos
-                WHERE 
-                    id_user=${id_user}
-            ")->queryRow();
+      count($data['userDolj']['0']) && $efficiency+=5; // заполнены поля должностей
+      count($data['userCities']['0']) && $efficiency+=1; // города по должностям
+      count($data['userWdays']) && $efficiency+=4; // дни работы по должносятм
 
-            If ($cntFoto['cnt']>=2) {
-                $efficiency = $efficiency + 10;
-            }
-        }
-        If (($data['usrInfo']['userAttribs']['1']['firstname'])) {
-            $efficiency = $efficiency + 1;
-        }
-        If (($data['usrInfo']['userAttribs']['1']['lastname'])) {
-            $efficiency = $efficiency + 1;
-        }
-        If (($data['usrInfo']['userAttribs']['1']['bday'])) {
-            $efficiency = $efficiency + 1;
-        }
-        If (($data['usrInfo']['userAttribs']['1']['isman']==1)||
-            ($data['usrInfo']['userAttribs']['1']['isman']==0)) {
-            $efficiency = $efficiency + 1;
-        }
-        if (!empty($data['usrInfo']['userAttribs']['1']['ismed']) ||
-            !empty($data['usrInfo']['userAttribs']['1']['smart']) ||
-            !empty($data['usrInfo']['userAttribs']['1']['card']) ||
-            !empty($data['usrInfo']['userAttribs']['1']['ishasavto'])) {
-            $efficiency = $efficiency + 1;
-        }
+      /*look*/
+      $arAttr['9']['val'] && $efficiency+=3;
+      $arAttr['10']['val'] && $efficiency+=3;
 
-        /*contact*/
-        If (isset($data['usrInfo']['userAttribs']['1']['phone'])) {
-            $efficiency = $efficiency + 5;
-        }
-        If (isset($data['usrInfo']['userAttribs']['1']['email'])) {
-            $efficiency = $efficiency + 5;
-        }
-        if (!empty($data['usrInfo']['userAttribs']['4']['val'])   || //messangers
-            !empty($data['usrInfo']['userAttribs']['157']['val']) ||
-            !empty($data['usrInfo']['userAttribs']['156']['val']) ||
-            !empty($data['usrInfo']['userAttribs']['158']['val']) ||
-            !empty($data['usrInfo']['userAttribs']['5']['val'])) {
-            $efficiency = $efficiency + 5;
-        }
-        if (!empty($data['usrInfo']['userAttribs']['6']['val'])   || //social networks
-            !empty($data['usrInfo']['userAttribs']['160']['val']) ||
-            !empty($data['usrInfo']['userAttribs']['161']['val']) ||
-            !empty($data['usrInfo']['userAttribs']['162']['val']) ||
-            !empty($data['usrInfo']['userAttribs']['7']['val'])) {
-            $efficiency = $efficiency + 5;
-        }
+      If (($arAttr['17']['name']) ||
+          ($arAttr['18']['name']) ||
+          ($arAttr['19']['name']) ||
+          ($arAttr['20']['name']) ||
+          ($arAttr['21']['name']) ||
+          ($arAttr['22']['name']) ) {
+          $efficiency = $efficiency + 3;
+      }
+      If (($arAttr['75']['name']) ||
+          ($arAttr['76']['name']) ||
+          ($arAttr['77']['name']) ||
+          ($arAttr['78']['name']) ||
+          ($arAttr['79']['name']) ) {
+          $efficiency = $efficiency + 3;
+      }
+      If (($arAttr['23']['name']) ||
+          ($arAttr['24']['name']) ||
+          ($arAttr['25']['name']) ||
+          ($arAttr['26']['name']) ||
+          ($arAttr['27']['name']) ||
+          ($arAttr['28']['name']) ||
+          ($arAttr['29']['name']) ||
+          ($arAttr['30']['name']) ) {
+          $efficiency = $efficiency + 3;
+      }
+      If (($arAttr['80']['name']) ||
+          ($arAttr['81']['name']) ||
+          ($arAttr['82']['name']) ||
+          ($arAttr['83']['name']) ||
+          ($arAttr['84']['name']) ||
+          ($arAttr['85']['name']) ) {
+          $efficiency = $efficiency + 3;
+      }
+      If (($arAttr['86']['name']) ||
+          ($arAttr['87']['name']) ||
+          ($arAttr['88']['name']) ||
+          ($arAttr['89']['name']) ||
+          ($arAttr['90']['name']) ||
+          ($arAttr['91']['name']) ) {
+          $efficiency = $efficiency + 3;
+      }
+      If (($arAttr['92']['name']) ||
+          ($arAttr['93']['name']) ||
+          ($arAttr['94']['name']) ||
+          ($arAttr['95']['name']) ||
+          ($arAttr['96']['name']) ||
+          ($arAttr['97']['name']) ) {
+          $efficiency = $efficiency + 3;
+      }
+      /*more info*/
+      If (($arAttr['70']['name']) ||
+          ($arAttr['71']['name']) ||
+          ($arAttr['72']['name']) ||
+          ($arAttr['73']['name']) ){ //obrazovanie
+          $efficiency = $efficiency + 5;
+      }
+      $arInfo['aboutme'] && $efficiency+=11;
 
-        If (sizeof($data['usrInfo']['userDolj']['0']) > 0 )  { //заполнены поля должностей
-            $efficiency = $efficiency + 5;
+      for($i=41; $i<69; $i++)
+      {
+        $isLang = false;
+        if ($arAttr[$i]['name']) //language
+        {
+          $efficiency = $efficiency + 5;
+          $isLang = true;
         }
-        If (sizeof($data['usrInfo']['userCities']['0'])>0) {
-            $efficiency = $efficiency + 1;
-        }
-        If (sizeof($data['usrInfo']['userWdays'])>0) {
-            $efficiency = $efficiency + 4;
-        }
+        If ($isLang) { break; }
+      }
+      // обновляем базу только если значение поменялось
+      if($arInfo['profile_filling']!=$efficiency)
+      {
+        Yii::app()->db->createCommand()
+          ->update(
+            'user',
+            ['profile_filling'=>$efficiency],
+            'id_user=:id_user',
+            [':id_user'=>$this->id]
+          );
+      }
 
-        /*look*/
-        If (($data['usrInfo']['userAttribs']['9']['val'])) {
-            $efficiency = $efficiency + 3;
-        }
-        If (($data['usrInfo']['userAttribs']['10']['val'])) {
-            $efficiency = $efficiency + 3;
-        }
-        If (($data['usrInfo']['userAttribs']['17']['name']) ||
-            ($data['usrInfo']['userAttribs']['18']['name']) ||
-            ($data['usrInfo']['userAttribs']['19']['name']) ||
-            ($data['usrInfo']['userAttribs']['20']['name']) ||
-            ($data['usrInfo']['userAttribs']['21']['name']) ||
-            ($data['usrInfo']['userAttribs']['22']['name']) ) {
-            $efficiency = $efficiency + 3;
-        }
-        If (($data['usrInfo']['userAttribs']['75']['name']) ||
-            ($data['usrInfo']['userAttribs']['76']['name']) ||
-            ($data['usrInfo']['userAttribs']['77']['name']) ||
-            ($data['usrInfo']['userAttribs']['78']['name']) ||
-            ($data['usrInfo']['userAttribs']['79']['name']) ) {
-            $efficiency = $efficiency + 3;
-        }
-        If (($data['usrInfo']['userAttribs']['23']['name']) ||
-            ($data['usrInfo']['userAttribs']['24']['name']) ||
-            ($data['usrInfo']['userAttribs']['25']['name']) ||
-            ($data['usrInfo']['userAttribs']['26']['name']) ||
-            ($data['usrInfo']['userAttribs']['27']['name']) ||
-            ($data['usrInfo']['userAttribs']['28']['name']) ||
-            ($data['usrInfo']['userAttribs']['29']['name']) ||
-            ($data['usrInfo']['userAttribs']['30']['name']) ) {
-            $efficiency = $efficiency + 3;
-        }
-        If (($data['usrInfo']['userAttribs']['80']['name']) ||
-            ($data['usrInfo']['userAttribs']['81']['name']) ||
-            ($data['usrInfo']['userAttribs']['82']['name']) ||
-            ($data['usrInfo']['userAttribs']['83']['name']) ||
-            ($data['usrInfo']['userAttribs']['84']['name']) ||
-            ($data['usrInfo']['userAttribs']['85']['name']) ) {
-            $efficiency = $efficiency + 3;
-        }
-        If (($data['usrInfo']['userAttribs']['86']['name']) ||
-            ($data['usrInfo']['userAttribs']['87']['name']) ||
-            ($data['usrInfo']['userAttribs']['88']['name']) ||
-            ($data['usrInfo']['userAttribs']['89']['name']) ||
-            ($data['usrInfo']['userAttribs']['90']['name']) ||
-            ($data['usrInfo']['userAttribs']['91']['name']) ) {
-            $efficiency = $efficiency + 3;
-        }
-        If (($data['usrInfo']['userAttribs']['92']['name']) ||
-            ($data['usrInfo']['userAttribs']['93']['name']) ||
-            ($data['usrInfo']['userAttribs']['94']['name']) ||
-            ($data['usrInfo']['userAttribs']['95']['name']) ||
-            ($data['usrInfo']['userAttribs']['96']['name']) ||
-            ($data['usrInfo']['userAttribs']['97']['name']) ) {
-            $efficiency = $efficiency + 3;
-        }
-
-        /*more info*/
-        If (($data['usrInfo']['userAttribs']['70']['name']) ||
-            ($data['usrInfo']['userAttribs']['71']['name']) ||
-            ($data['usrInfo']['userAttribs']['72']['name']) ||
-            ($data['usrInfo']['userAttribs']['73']['name']) ) { //obrazovanie
-            $efficiency = $efficiency + 5;
-        }
-        If (($data['usrInfo']['userAttribs']['1']['aboutme']))  {
-            $efficiency = $efficiency + 11;
-        }
-
-        for($i=41; $i<69; $i++){
-            $isLang = false;
-            if ($data['usrInfo']['userAttribs'][$i]['name']){  //language
-                $efficiency = $efficiency + 5;
-                $isLang = true;
-            }
-            If ($isLang) { break; }
-        }
-
-        return $efficiency;
+      return $efficiency;
     }
 }

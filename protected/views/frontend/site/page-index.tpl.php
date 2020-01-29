@@ -222,7 +222,7 @@
                             <div class="item applicants__item">
                                 <div class="m-applicants__item">
                                     <a href="<?=$item['datail-url']?>" class="applicants__item-ilink" >
-                                        <img src="<?=$item['logo']?>" alt="" class="applicants__item-img js-g-hashint" title="<?= $item['firstname'].' '.$item['lastname'] ?>"/>
+                                        <img src="<?=$item['logo']?>" alt="" class="applicants__item-img js-g-hashint" title="<?=$item['fullname']?>"/>
                                         <?php if($item['is_online']): ?>
                                         <span class="promo__item-onl"><span>В сети</span>
                                             <?php endif; ?>
@@ -232,32 +232,26 @@
                                         <a class="applicants__item-name applicants__item-lastname" href="<?=$item['datail-url']?>"><?=$item['lastname']?></a>
                                         <a class="applicants__item-name bold" href="<?=$item['datail-url']?>"><?=$item['birthday']?></a>
                                         <div class="applicants__item-line"></div>
-                                        <?php
-                                        if (count(explode(", ", $item['positions'])) > 2) {
-                                            ?>
-                                            <div class="applicants__item-pos applicants__item-open" data-itempos="<?=$item['positions'];?>">
-                                                <?=implode( array_slice((explode(", ", $item['positions'])), 0, 2), ', ') . '...';?>
+                                        <?php if (!empty($item['str_posts_all'])): ?>
+                                            <div class="applicants__item-pos applicants__item-open" data-itempos="<?=$item['str_posts_all'];?>">
+                                                <?= $item['str_posts'] . '...';?>
                                             </div>
-                                        <?php } else { ?>
-                                            <div class="applicants__item-pos">
-                                                <?=$item['positions'] . '.';?>
-                                            </div>
-                                        <?php } ?>
+                                        <?php else: ?>
+                                            <div class="applicants__item-pos"><?=$item['str_posts']?></div>
+                                        <?php endif; ?>
                                         <div class="companies__item-com-rate">
-                                            <?if($item['rate_count']>0):?>
+                                            <?if($item['rate_count']):?>
                                                 <div class="companies__item-rating">
                                                     <span class="rating-count js-g-hashint" title="Всего"><?=$item['rate_count']?></span>
                                                     ( <span class="rating-positive js-g-hashint" title="Положительный"><?=$item['rate']?></span>
                                                     / <span class="rating-negative js-g-hashint" title="Отрицательный"><?=$item['rate_neg']?></span> )
                                                 </div>
                                             <?endif;?>
-                                            <?if($item['comment_count']>0):?>
+                                            <?if($item['comments_count']):?>
                                                 <div class="companies__item-com">
-<!--                                                    <a href="--><?//=$item['comment-url']?><!--" class="com-count js-g-hashint" title="Всего">-->
-                                                        <?=$item['comment_count']?>
-<!--                                                    </a>-->
-                                                    ( <span class="com-positive js-g-hashint" title="Положительный"><?php echo (integer)($item['comment_count'] - $item['comment_neg'])?></span>
-                                                    / <span class="com-negative js-g-hashint" title="Отрицательный"><?php  echo (integer) $item['comment_neg']; ?></span> )
+                                                  <?=$item['comment_count']?>
+                                                  ( <span class="com-positive js-g-hashint" title="Положительный"><?php echo (integer)($item['comments_count'] - $item['comments_negative'])?></span>
+                                                  / <span class="com-negative js-g-hashint" title="Отрицательный"><?php  echo (integer) $item['comments_negative']; ?></span> )
                                                 </div>
                                             <?endif;?>
                                         </div>
@@ -288,15 +282,15 @@
                                     <a href="<?=$item['datail-url']?>" class="companies__item-ilink">
                                         <img src="<?=$item['logo']?>" alt="" class="js-g-hashint companies__item-img" title="<?=$item['name']?>"/>
                                         <?php if($item['is_online']): ?>
-                                        <span class="promo__item-onl"><span>В сети</span>
-                                            <?php endif; ?>
+                                          <span class="promo__item-onl"><span>В сети</span>
+                                        <?php endif; ?>
                                     </a>
                                     <div class="companies__item-info">
                                         <a class="companies__item-name" href="<?=$item['datail-url']?>"><?=$item['fullname'];?></a>
 
                                         <div class="companies__item-line"></div>
-                                        <?if(!empty($item['cities'])):?>
-                                            <div class="companies__item-cities">Город: <?=$item['cities']?></div>
+                                        <?if(!empty($item['str_cities'])):?>
+                                            <div class="companies__item-cities">Город: <?=$item['str_cities']?></div>
                                         <?endif;?>
                                         <div class="companies__item-com-rate">
                                             <?if($item['rate_count']>0):?>
@@ -306,13 +300,11 @@
                                                     / <span class="rating-negative js-g-hashint" title="Отрицательный"><?=$item['rate_neg']?></span> )
                                                 </div>
                                             <?endif;?>
-                                            <?if($item['comment_count']>0):?>
+                                            <?if($item['comments_count']>0):?>
                                                 <div class="companies__item-com">
-<!--                                                    <a href="--><?//=$item['comment-url']?><!--" class="com-count js-g-hashint" title="Всего">-->
-                                                        <?=$item['comment_count']?>
-<!--                                                    </a>-->
-                                                    ( <span class="com-positive js-g-hashint" title="Положительный"><?php echo (integer)($item['comment_count'] - $item['comment_neg'])?></span>
-                                                    / <span class="com-negative js-g-hashint" title="Отрицательный"><?php  echo $item['comment_neg']; ?></span> )
+                                                  <?=$item['comments_count']?>
+                                                  ( <span class="com-positive js-g-hashint" title="Положительный"><?php echo (integer)($item['comments_count'] - $item['comments_negative'])?></span>
+                                                  / <span class="com-negative js-g-hashint" title="Отрицательный"><?php  echo $item['comments_negative']; ?></span> )
                                                 </div>
                                             <?endif;?>
                                         </div>

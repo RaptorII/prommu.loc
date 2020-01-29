@@ -316,12 +316,11 @@ class PagesContent extends CActiveRecord
 	{
     try
     {
-        return (new Vacancy())->getVacanciesQueries(['page' => 'index']);
+      return (new Vacancy())->getVacanciesQueries(['page' => 'index']);
     }
     catch (Exception $e)
     {
-        //return ['error' => $e->getMessage()];
-        return [];
+      return [];
     }
 	}
 
@@ -341,12 +340,26 @@ class PagesContent extends CActiveRecord
 
 	public function getApplicants($inLang)
 	{
-    	return (new Promo())->getApplicantsQueries(array('page' => 'index'));
+    try
+    {
+      return (new Promo())->getApplicantsQueries(['page' => 'index']);
+    }
+    catch (Exception $e)
+    {
+      return [];
+    }
 	}
 
 
 	public function getCompanies($inLang)
 	{
-        return (new Employer())->getEmployersQueries(array('page' => 'index'));
+    try
+    {
+      return (new Employer())->getEmployersQueries(['page' => 'index']);
+    }
+    catch (Exception $e)
+    {
+      return [];
+    }
 	}
 }

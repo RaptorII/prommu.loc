@@ -54,16 +54,17 @@ class SiteController extends AppController
         if($data['data']===false)
         {
             $data['data']['content'] = $content = $model->getPageContent('about', $lang);
-            $data['data']['vacs'] = $model->getVacaniesAppointments($lang);     
-            $data['data']['applicants'] = $model->getApplicants($lang);
-            $data['data']['companies'] = $model->getCompanies($lang);
+            $data['data']['vacs'] = $model->getVacaniesAppointments($lang);
+
             $data['data']['news'] = $news->getNews();
             $data['data']['articles'] = $articles->getArticles();
             $data['data']['couArt'] = $articles->getArticlesCount();
             Cache::setData($data);
         }
-        // вакансии работают в рамках своей логики кэширования
+        // вакансии, соискатели и работодатели работают в рамках своей логики кэширования
         $data['data']['vacancies'] = $model->getVacanies($lang);
+        $data['data']['companies'] = $model->getCompanies($lang);
+        $data['data']['applicants'] = $model->getApplicants($lang);
         //
         $this->render(
           'index', 

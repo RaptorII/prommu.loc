@@ -1,4 +1,281 @@
 <?
+if(Share::isApplicant())
+{
+  // Applicants
+  $arUsers = Yii::app()->db->createCommand()
+    ->select('r.*, u.email')
+    ->from('user u')
+    ->join('resume r','r.id_user=u.id_user')
+    ->where(
+      'u.status=:status and u.id_user='.Share::$UserProfile->id,
+      [':status'=>UserProfile::$APPLICANT]
+    )
+    ->offset('0') // +100
+    ->limit('100')
+    ->queryAll();
+
+  if(count($arUsers))
+  {
+    $arIdUsers = [];
+    foreach ($arUsers as $v)
+    {
+      $arIdUsers[] = $v['id_user'];
+    }
+
+    $arAttr = Yii::app()->db->createCommand()
+      ->select('id_us id_user, id_attr, val')
+      ->from('user_attribs')
+      ->where(['in','id_us',$arIdUsers])
+      ->queryAll();
+
+    $arPhotos = Yii::app()->db->createCommand()
+      ->select('id_user, photo')
+      ->from('user_photos')
+      ->where(['in','id_user',$arIdUsers])
+      ->queryAll();
+
+    $arPosts = Yii::app()->db->createCommand()
+      ->select('id_us id_user, id_mech')
+      ->from('user_mech')
+      ->where(['in','id_us',$arIdUsers])
+      ->queryAll();
+
+    $arCities = Yii::app()->db->createCommand()
+      ->select('id_user, id_city')
+      ->from('user_city')
+      ->where(['in','id_user',$arIdUsers])
+      ->queryAll();
+
+    $arTime = Yii::app()->db->createCommand()
+      ->select('id_us id_user, id_city')
+      ->from('user_wtime')
+      ->where(['in','id_us',$arIdUsers])
+      ->queryAll();
+
+    $arResult = [];
+    foreach ($arUsers as $v)
+    {
+      $value=0;
+      // фото
+      if(!empty($v['photo']))
+      {
+        $value+=10;
+        $flag=false;
+        foreach ($arPhotos as $p)
+        {
+          $v['id_user']==$p['id_user'] && $flag=true;
+        }
+        $flag && $value+=10;
+      }
+      // общая инфа
+      $v['firstname'] && $value++;
+      $v['lastname'] && $value++;
+      $v['birthday'] && $value++;
+      $value++; // пол в любом случае 0 или 1
+      ($v['ismed'] || $v['smart'] || $v['card'] || $v['ishasavto']) && $value++;
+      $v['aboutme'] && $value+=11;
+      // атрибуты
+      isset($v['email']) && $value+=5; // email
+      $bMess = $bSoc = $flag1 = $flag2 = $flag3 = $flag4 = $flag5 = $flag6 = $flag7 = $bLang = false;
+      foreach ($arAttr as $a)
+      {
+        if($a['id_user']==$v['id_user'])
+        {
+          $a['id_attr']==1 && $value+=5; // телефон
+          if(in_array($a['id_attr'],[4,157,156,158,5]) && !empty($a['val']))
+          {
+            $bMess=true;
+          }
+          if(in_array($a['id_attr'],[6,160,161,162,7]) && !empty($a['val']))
+          {
+            $bSoc=true;
+          }
+          // внешность
+          $a['id_attr']==9 && !empty($a['val']) && $value+=3;
+          $a['id_attr']==10 && !empty($a['val']) && $value+=3;
+          in_array($a['id_attr'],[17,18,19,20,21,22]) && $flag1=true;
+          in_array($a['id_attr'],[75,76,77,78,79]) && $flag2=true;
+          in_array($a['id_attr'],[23,24,25,26,27,28,29,30]) && $flag3=true;
+          in_array($a['id_attr'],[80,81,82,83,84,85]) && $flag4=true;
+          in_array($a['id_attr'],[86,87,88,89,90,91]) && $flag5=true;
+          in_array($a['id_attr'],[92,93,94,95,96,97]) && $flag6=true;
+          in_array($a['id_attr'],[70,71,72,73]) && $flag7=true;
+          ($a['id_attr']>=41 && $a['id_attr']<=69) && $bLang=true;
+        }
+      }
+      $bMess && $value+=5;
+      $bSoc && $value+=5;
+      $flag1 && $value+=3;
+      $flag2 && $value+=3;
+      $flag3 && $value+=3;
+      $flag4 && $value+=3;
+      $flag5 && $value+=3;
+      $flag6 && $value+=3;
+      $flag7 && $value+=5;
+      $bLang && $value+=5;
+      // должности
+      $flag=false;
+      foreach ($arPosts as $p)
+      {
+        $p['id_user']==$v['id_user'] && $flag=true;
+      }
+      $flag && $value+=5;
+      // города
+      $flag=false;
+      foreach ($arCities as $c)
+      {
+        $c['id_user']==$v['id_user'] && $flag=true;
+      }
+      $flag && $value+=1;
+      // период работы
+      $flag=false;
+      foreach ($arTime as $t)
+      {
+        $t['id_user']==$v['id_user'] && $flag=true;
+      }
+      $flag && $value+=4;
+      //
+      $arResult[$v['id_user']] = $value;
+    }
+
+    display(reset($arResult));
+    /*if(count($arResult))
+    {
+      foreach ($arResult as $id_user => $v)
+      {
+        Yii::app()->db->createCommand()
+          ->update(
+            'user',
+            ['profile_filling'=>$v],
+            'id_user=:id_user',
+            [':id_user'=>$id_user]
+          );
+      }
+    }*/
+  }
+}
+if(Share::isEmployer())
+{
+  // employers
+  $arUsers = Yii::app()->db->createCommand()
+    ->select('e.*, u.email')
+    ->from('user u')
+    ->join('employer e','e.id_user=u.id_user')
+    ->where(
+      'u.status=:status AND u.id_user='.Share::$UserProfile->id,
+      [':status'=>UserProfile::$EMPLOYER]
+    )
+    ->offset('0') // +100
+    ->limit('100')
+    ->queryAll();
+
+  if(count($arUsers))
+  {
+    $arIdUsers = [];
+    foreach ($arUsers as $v)
+    {
+      $arIdUsers[] = $v['id_user'];
+    }
+
+    $arAttr = Yii::app()->db->createCommand()
+      ->select('id_us id_user, id_attr, val')
+      ->from('user_attribs')
+      ->where(['in','id_us',$arIdUsers])
+      ->queryAll();
+
+    $arPhotos = Yii::app()->db->createCommand()
+      ->select('id_user, photo')
+      ->from('user_photos')
+      ->where(['in','id_user',$arIdUsers])
+      ->queryAll();
+
+    $arPosts = Yii::app()->db->createCommand()
+      ->select('id_us id_user, id_mech')
+      ->from('user_mech')
+      ->where(['in','id_us',$arIdUsers])
+      ->queryAll();
+
+    $arCities = Yii::app()->db->createCommand()
+      ->select('id_user, id_city')
+      ->from('user_city')
+      ->where(['in','id_user',$arIdUsers])
+      ->queryAll();
+
+    $arTime = Yii::app()->db->createCommand()
+      ->select('id_us id_user, id_city')
+      ->from('user_wtime')
+      ->where(['in','id_us',$arIdUsers])
+      ->queryAll();
+
+    $arResult = [];
+    foreach ($arUsers as $v)
+    {
+      $value=0;
+      // фото
+      if(!empty($v['logo']))
+      {
+        $value+=10;
+        $flag=false;
+        foreach ($arPhotos as $p)
+        {
+          $v['id_user']==$p['id_user'] && $flag=true;
+        }
+        $flag && $value+=10;
+      }
+      // общая инфа
+      $v['name'] && $value+=5;
+      $v['type'] && $value+=5;
+      $v['firstname'] && $value+=5;
+      $v['lastname'] && $value+=5;
+      $v['contact'] && $value+=5;
+      $v['email'] && $value+=5;
+      $v['aboutme'] && $value+=10;
+      // города
+      $flag=false;
+      foreach ($arCities as $c)
+      {
+        $c['id_user']==$v['id_user'] && $flag=true;
+      }
+      $flag && $value+=5;
+      // атрибуты
+      $flag = false;
+      foreach ($arAttr as $a)
+      {
+        if($a['id_user']==$v['id_user'])
+        {
+          $a['id_attr']==99 && !empty($a['val']) && $value+=5;
+          $a['id_attr']==176 && !empty($a['val']) && $value+=5;
+          $a['id_attr']==177 && !empty($a['val']) && $value+=5;
+          $a['id_attr']==1 && !empty($a['val']) && $value+=5;
+          $a['id_attr']==175 && !empty($a['val']) && $value+=5;
+          $a['id_attr']==100 && !empty($a['val']) && $value+=5;
+          if(in_array($a['id_attr'],[4,157,156,158,5]) && !empty($a['val']))
+          {
+            $flag=true;
+          }
+        }
+      }
+      $flag && $value+=5;
+      //
+      $arResult[$v['id_user']] = $value;
+    }
+
+    display(reset($arResult));
+    /*if(count($arResult))
+    {
+      foreach ($arResult as $id_user => $v)
+      {
+        Yii::app()->db->createCommand()
+          ->update(
+            'user',
+            ['profile_filling'=>$v],
+            'id_user=:id_user',
+            [':id_user'=>$id_user]
+          );
+      }
+    }*/
+  }
+}
 	header('Content-Type: text/html; charset=utf-8');
 	$baseUrl = Yii::app()->baseUrl;
 	$curUrl = Yii::app()->request->requestUri;

@@ -426,104 +426,17 @@ class Promo extends ARModel
 
     private function getApplicantsSitemap()
     {
-        $sql = "SELECT DISTINCT r.id_user id, CONCAT(r.firstname, ' ', r.lastname) fio, r.mdate 
-            FROM resume r
-            INNER JOIN user_mech m ON r.id_user = m.id_us
-            INNER JOIN user_city ci ON r.id_user = ci.id_user
-            INNER JOIN user u ON r.id_user = u.id_user AND u.ismoder = 1 AND u.isblocked = 0
-            WHERE r.birthday IS NOT NULL
-            ORDER BY id DESC";
-        /** @var $res CDbCommand */
-        $res = Yii::app()->db->createCommand($sql)->queryAll();
-        $count = count($res);
-        for($i = 0; $i < $count; $i++){
-            $profileFillMax = 24;
-            $profileFill = $this->getUserInfo($res[$i]['id']); // id_user пользователя
-
-            $profileEffect = floor($profileFill / $profileFillMax * 100);
-            if($profileEffect<40){
-               unset($res[$i]);
-            }
-        }
-        return $res;
-    }
-
-    public function getUserInfo($id)
-    {
-    $profileFill = 0;
-    // считываем характеристики пользователя
-    $sql = "SELECT DATE_FORMAT(r.birthday,'%d.%m.%Y') as bday, r.id
-          , r.id_user, r.isman , r.ismed , r.smart,  r.ishasavto , r.aboutme , r.firstname , r.lastname , r.photo
-          , a.val , a.id_attr
-          , d.name , d.type , d.id_par idpar , d.key
-          , u.email, card, cardPrommu, u.mdate
+      $level = UserProfileApplic::$INDEX_PROFILE_FILLING;
+      $sql = "SELECT DISTINCT r.id_user id, CONCAT(r.firstname, ' ', r.lastname) fio, r.mdate 
         FROM resume r
-        LEFT JOIN user u ON u.id_user = r.id_user
-        LEFT JOIN user_attribs a ON r.id_user = a.id_us
-        LEFT JOIN user_attr_dict d ON a.id_attr = d.id
-        WHERE r.id_user = {$id}
-        ORDER BY a.id_attr";
-    $res = Yii::app()->db->createCommand($sql)->queryAll();
-
-    foreach ($res as $key => $val){
-        $attr[$val['id_attr']] = $val;
+        INNER JOIN user_mech m ON r.id_user = m.id_us
+        INNER JOIN user_city ci ON r.id_user = ci.id_user
+        INNER JOIN user u ON r.id_user = u.id_user AND u.ismoder = 1 AND u.isblocked = 0 AND u.profile_filling>=$level
+        WHERE r.birthday IS NOT NULL
+        ORDER BY id DESC";
+      /** @var $res CDbCommand */
+      return Yii::app()->db->createCommand($sql)->queryAll();
     }
-
-    foreach ($attr as $k => $attrib){
-        if( 
-            ($attrib['id_attr'] <> 0 // без общего 
-            && $attrib['key'] <> 'icq' // без ICQ 
-            && $attrib['idpar'] <> 40 // без языков
-            && strpos($attrib['key'],'dmob')===false // без доп телефонов
-            && !empty($attrib['val'])) // и чтобы значение было заполнено
-            ||
-            in_array($attrib['idpar'], [11,12,13,14,15,16,69]) // для параметров с выбором
-        )
-            $profileFill++;
-    }
-
-    // read cities
-    $sql = "SELECT ci.id_city id, ci.name, co.id_co, co.name coname, ci.ismetro, uc.street, uc.addinfo
-            FROM user_city uc
-            LEFT JOIN city ci ON uc.id_city = ci.id_city
-            LEFT JOIN country co ON co.id_co = ci.id_co
-            WHERE uc.id_user = {$id}";
-    $res = Yii::app()->db->createCommand($sql)->queryAll();
-
-    foreach ($res as $key => $val):
-        $cityPrint[$val['id']] = $val['name'];
-        $city[$val['id']] = array('id' => $val['id'], 'name' => $val['name'], 'ismetro' => $val['ismetro'], 'street' => $val['street'], 'addinfo' => $val['addinfo'], );
-    endforeach;
-
-    if( count($city) ) $profileFill++;
-
-    // должности, отработанные и желаемые
-    $sql = "SELECT r.id
-          , um.isshow, um.pay, um.id_attr, um.mech
-          , d1.name pname
-          , d.name val, d.id idpost
-        FROM resume r
-        INNER JOIN user_mech um ON um.id_us = r.id_user
-        LEFT JOIN user_attr_dict d1 ON d1.id = um.id_attr
-        INNER JOIN user_attr_dict d ON d.id = um.id_mech 
-        WHERE r.id_user = {$id}
-        ORDER BY um.isshow, val";
-    $res = Yii::app()->db->createCommand($sql)->queryAll();
-
-    $exp = array();
-    $flagPF = 0;
-    foreach ($res as $key => $val)
-    {
-        if( $val['isshow'] ) $exp[] = $val['val'];
-        if( !$val['isshow'] ) $flagPF || $flagPF = 1;
-    }
-    $data['userDolj'] = array($res, join(', ', $exp));
-    if( $flagPF ) $profileFill++;
-    if( count($exp) ) $profileFill++;
-
-    return $profileFill;
-}
-
 
     public function getApplicantsSearchpromo($inParams)
     {  
@@ -698,72 +611,198 @@ class Promo extends ARModel
 
         return $result;
     }
-
+    /**
+     * @return array
+     * Поиск соискателей для главной страницы
+     */
     private function getApplicantsIndexPage()
     {
-        $strCities = Subdomain::getCacheData()->strCitiesIdes;
-        // достаем соискателей
-        $filter = Promo::mergeScopes([
-                'scope' => Promo::$SCOPE_HAS_PHOTO, 
-                'alias' => 'r'
-            ]);
-        $sql = "SELECT DISTINCT r.id, u.is_online, 
-                    r.id_user idus, 
-                    r.photo, r.firstname, r.lastname, 
-                    r.isman, DATE_FORMAT(r.birthday,'%d.%m.%Y') as birthday,
-                    cast(r.rate AS SIGNED) - ABS(cast(r.rate_neg as signed)) avg_rate,
-                    r.rate, r.rate_neg, photo, 
-                    (SELECT COUNT(id) FROM comments mm 
-                    WHERE mm.iseorp = 1 AND mm.id_promo = r.id) comment_count,
-                    (SELECT COUNT(id) FROM comments mm
-                    WHERE mm.isneg = 1 AND mm.id_promo = r.id) comment_neg
-                FROM resume r
-                INNER JOIN user_mech m ON r.id_user = m.id_us
-                INNER JOIN user_city ci ON r.id_user = ci.id_user 
-                    AND ci.id_city IN({$strCities})
-                INNER JOIN user u ON r.id_user = u.id_user 
-                    AND u.ismoder = 1 AND (u.isblocked = 0)
-                WHERE r.birthday IS NOT NULL AND {$filter}
-                ORDER BY avg_rate DESC, id DESC
-                LIMIT 6";
-        $arApp = Yii::app()->db->createCommand($sql)->queryAll();
-        //
-        $nApp = sizeof($arApp);
-        if(!$nApp)
-            return false;
-        // достаем должности соискателей
-        $arIdies = array();
-        for ($i=0; $i < $nApp; $i++)
-            $arIdies[] = $arApp[$i]['idus'];
+      $cacheId = Subdomain::site() . DS
+        . Yii::app()->controller->id . Yii::app()->request->requestUri;
+      $arCitiesIdes = Subdomain::getCacheData()->arCitiesIdes;
 
-        $sql = "SELECT r.id_user idus, d.name name
-                    FROM resume r
-                    INNER JOIN user_mech um 
-                        ON um.id_us = r.id_user AND um.isshow = 0
-                    INNER JOIN user_attr_dict d ON d.id = um.id_mech 
-                    WHERE r.id_user IN(".implode(",", $arIdies).")";
-        $arPosts = Yii::app()->db->createCommand($sql)->queryAll();
-        // формируем массив
-        foreach ($arApp as &$i) {
-            foreach($arPosts as $j => $pos)
-                if($pos['idus']==$i['idus'])
-                    $i['positions'] .= (isset($i['positions']) 
-                        ? ', ' . $pos['name'] 
-                        : $pos['name']);
-
-            $i['rate_count'] = $i['rate'] + $i['rate_neg'];
-            $i['comment-url'] = MainConfig::$PAGE_COMMENTS . DS . $i['idus'];
-            $i['datail-url'] = MainConfig::$PAGE_PROFILE_COMMON . DS . $i['idus'];
-            $i['logo'] = Share::getPhoto($i['idus'], 2, $i['photo'], 'small', $i['isman']);
-            $i['birthday'] = date('Y') - date('Y', strtotime($i['birthday']));
-            $i['birthday'] = $i['birthday'] . ' ' 
-                . Share::endingYears($i['birthday']);
-            $i['fullname'] = trim($i['firstname']) . ' ' 
-                .  trim($i['lastname']) . ', ' . $i['birthday'];
+      $queryLight = Cache::getData($cacheId . 'index/applicants_light'); // короткий запрос
+      if($queryLight['data']===false) // обновляем кэш
+      {
+        $queryLight['data'] = Yii::app()->db->createCommand()
+          ->select('distinct(r.id_user), cast(r.rate AS signed) - ABS(cast(r.rate_neg as signed)) sum_rating')
+          ->from('resume r')
+          ->join('user u','u.id_user=r.id_user')
+          ->join('user_city uc','uc.id_user=r.id_user')
+          ->where(
+            [
+              'and',
+              "u.isblocked=:isblocked AND u.ismoder=:ismoder AND r.photo<>''",
+              ['in','uc.id_city',$arCitiesIdes]
+            ],
+            [
+              ':isblocked' => User::$ISBLOCKED_FULL_ACTIVE,
+              ':ismoder' => User::$ISMODER_ACTIVE
+            ]
+          )
+          ->limit(30) // берем с запасом, чтобы исключить неподходящих после проверки
+          ->order('u.profile_filling DESC, sum_rating DESC')
+          ->queryColumn();
+        Cache::setData($queryLight, 300); // короткий запрос кэшируем на 5 минут(300сек.)
+      }
+      $arIdUser = $queryLight['data'];
+      $arRes = Cache::getData($cacheId . 'index/applicants'); // главный запрос
+      $hasChanged = false;
+      if(count($arRes['data']['id_compare'])) // проверяем большой запрос на совпадение с маленьким запросом
+      {
+        if(count($arRes['data']['id_compare'])!=count($arIdUser)) // по кол-ву
+        {
+          $hasChanged = true;
         }
-        unset($arIdies, $i, $arPosts);
+        else // по ID вакансий и их порядку
+        {
+          foreach ($arRes['data']['id_compare'] as $k1 => $v1) // по порядку
+          {
+            foreach ($arIdUser as $k2 => $v2)
+            {
+              if($k1==$k2 && $v1!=$v2)
+              {
+                $hasChanged = true;
+                break;
+              }
+            }
+          }
+        }
+      }
+      // полная выборка по вакансиям
+      if($arRes['data']===false || $hasChanged)
+      {
+        $arRes['data'] = ['id_compare' => $arIdUser];
+        $arApps = Yii::app()->db->createCommand()
+          ->select("r.id,
+            r.id_user,
+            r.firstname,
+            r.lastname,
+            r.birthday,
+            r.photo,
+            r.rate,
+            r.rate_neg,
+            u.is_online")
+          ->from('resume r')
+          ->join('user u','u.id_user=r.id_user')
+          ->where(['in','r.id_user',$arIdUser])
+          ->queryAll();
 
-        return $arApp;      
+        if(count($arApps))
+        {
+          $arData = $arIdPromo = [];
+          foreach ($arApps as $v)
+          {
+            $path = Settings::getFilesRoot() . 'users/' . $v['id_user']
+              . DS . $v['photo'] . '169.jpg';
+
+            $fileInfo = getimagesize($path);
+            if(!is_array($fileInfo))
+            {
+              continue;
+            }
+            $v['logo'] = Share::getPhoto(
+              $v['id_user'],
+              UserProfile::$APPLICANT,
+              $v['photo']
+            );
+            $d1 = new DateTime(date('Y-m-d'));
+            $d2 = new DateTime($v['birthday']);
+            $diff = $d2->diff($d1);
+            $v['birthday'] = $diff->y . ' ' . Share::endingYears($diff->y);
+            $v['fullname'] = trim($v['firstname']) . ' '
+              .  trim($v['lastname']) . ', ' . $v['birthday'];
+            $v['rate_count'] = $v['rate'] + $v['rate_neg'];
+
+            $v['posts'] = $v['posts_all'] = [];
+            $v['str_posts'] = $v['str_posts_all'] = '';
+            $v['comments_count'] = 0;
+            $v['comments_negative'] = 0;
+            $arData[] = $v;
+
+            $arIdPromo[] = $v['id'];
+          }
+
+          $arComments = Yii::app()->db->createCommand()
+            ->select('id_promo, isneg')
+            ->from('comments')
+            ->where([
+              'and',
+              'iseorp=1 AND isactive=1',
+              ['in','id_promo',$arIdPromo]
+            ])
+            ->queryAll();
+
+          $arPosts = Yii::app()->db->createCommand()
+            ->select('um.id_us, uad.name')
+            ->from('user_mech um')
+            ->join('user_attr_dict uad','uad.id=um.id_mech')
+            ->where([
+              'and',
+              'um.isshow=0',
+              ['in','um.id_us',$arIdUser]
+            ])
+            ->queryAll();
+
+          foreach ($arData as &$v)
+          {
+            foreach ($arComments as $j) // собираем комменты
+            {
+              if($v['id']==$j['id_promo'])
+              {
+                $v['comments_count']++;
+                $j['isneg']==1 && $v['comments_negative']++;
+              }
+            }
+            //
+            foreach ($arPosts as $j) // собираем должности
+            {
+              if($v['id_user']==$j['id_us'])
+              {
+                if(count($v['posts'])<2)
+                {
+                  $v['posts'][] = $j['name'];
+                }
+                $v['posts_all'][] = $j['name'];
+              }
+            }
+            if(count($v['posts']))
+            {
+              $v['str_posts'] = join(', ', $v['posts']);
+            }
+            if(count($v['posts_all']))
+            {
+              $v['str_posts_all'] = join(', ', $v['posts_all']);
+            }
+          }
+          unset($v);
+          // возвращаем сортировку
+          $arRes['data']['items'] = [];
+          $cnt = 0;
+          foreach ($arIdUser as $id_user)
+          {
+            if($cnt>6)
+            {
+              break;
+            }
+            foreach ($arData as $v)
+            {
+              if($v['id_user']==$id_user)
+              {
+                $arRes['data']['items'][]=$v;
+                $cnt++;
+              }
+            }
+          }
+          Cache::setData($arRes,86400); // Записуем все данные в кэш
+        }
+        else
+        {
+          $arRes['data']['items'] = false;
+        }
+      }
+
+      return $arRes['data']['items'];
     }
     
             /**
