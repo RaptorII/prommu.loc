@@ -3371,7 +3371,7 @@ public function vac(){
         mkdir("/var/www/files_prommu/users/".$id."/tmp/", 0777);
         $name = date('YmdHis').rand(100,1000);
         $file = $name . ".jpg";
-        $path = "/users/".$id."/";
+        // $path = "/users/".$id."/";
         
         $d = str_replace('data:image/png;base64,', '', $photo);
         $d = str_replace(' ', '+', $d);
