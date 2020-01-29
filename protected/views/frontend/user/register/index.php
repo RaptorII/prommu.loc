@@ -82,9 +82,7 @@
         </div>
         <form id="register_form" method="post"><?php echo $content; ?><input type="hidden" id="data_input" name="data"></form>
         <div class="login__txt">
-            <p>
-                <a href="javascript:void(0)" id="my_fancybox" >ПРАВИЛА ИСПОЛЬЗОВАНИЯ САЙТА</a>
-            </p>
+            <p>Регистрируясь вы принипаете <a href="javascript:void(0)" id="my_fancybox" >Политику использования данных</a></p>
         </div>
     </div>
     <script>

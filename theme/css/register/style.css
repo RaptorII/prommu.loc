@@ -457,7 +457,7 @@ h6.login__header {
 .login__txt {
     position: absolute;
     width: 400px;
-    bottom: 0;
+    bottom: 15px;
 }
 .login__txt p{
     padding: 0 1rem;
@@ -468,6 +468,7 @@ h6.login__header {
     text-align: center;
     font-size: 13px;
 }
+.login__txt a{ text-decoration: underline; }
 .login__txt a{
     cursor: pointer;
 }
@@ -869,9 +870,6 @@ h6.login__header {
 }
 
 .YiiUpload__editor-field img{ max-width:100%; }
-#my_fancybox{
-    text-decoration: none;
-}
 #my_fancybox:hover{
     text-decoration: underline;
 }
