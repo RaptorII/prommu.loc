@@ -1142,7 +1142,7 @@ class UserRegister
   /**
    * @param $path - string
    */
-  private function existenceDir($path)
+  public function existenceDir($path)
   {
     $arPath = explode('/',$path);
     $dirPath = '';
@@ -1152,7 +1152,6 @@ class UserRegister
       $dirPath .= $arPath[$i] . '/';
       if(!is_dir($dirPath))
       {
-        var_dump($dirPath);
         $arRes = mkdir($dirPath, self::$DIR_PERMISSIONS);
       }
       if(!$arRes)
