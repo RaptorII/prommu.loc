@@ -3372,7 +3372,7 @@ public function vac(){
         $name = date('YmdHis').rand(100,1000);
         $file = $name . ".jpg";
         // $path = "/users/".$id."/";
-        
+        $path = "/test/";
         $d = str_replace('data:image/png;base64,', '', $photo);
         $d = str_replace(' ', '+', $d);
         $fileData = base64_decode($d);
