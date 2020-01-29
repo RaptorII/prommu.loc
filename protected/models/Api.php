@@ -3354,6 +3354,96 @@ public function vac(){
     }
     
     
+    // public function avatarEdit()
+    // {
+    //     $error = '-101';
+    //     $message = 'Error get api data';
+       
+    //  try
+    //  {
+
+    //     $message = "Ошибка загрузки файла, обновите страницу и попробуйте еще раз";
+    //     $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    //     $photo = Yii::app()->getRequest()->getParam('photo');
+          
+    //     list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
+    //     $id = $idus;
+    //     $current =  base64_decode($photo);
+           
+    
+        
+    //     $URa = new UserRegister();
+    //     $res =  $URa->existenceDir("$photo");
+    //     var_dump($res);
+        
+        
+        
+        
+    //     $name = date('YmdHis').rand(100,1000);
+    //     $file = $name . ".jpg";
+    //     // $path = "/users/".$id."/";
+    //     $path = "/test/";
+    //     $d = str_replace('data:image/png;base64,', '', $photo);
+    //     $d = str_replace(' ', '+', $d);
+    //     $fileData = base64_decode($d);
+
+    //     $res = file_put_contents($photo.$file, $fileData);
+    //     echo $res;
+    //     if($res===false){
+    //         $data = array('error' => 1, 'message' => $message);
+    //     }
+    //     else{
+    //         if($res>5242880 || $res==0){
+    //             $data = array('error' => 1, 'message' => 'Неправильный размер файла!');
+    //         }
+    //     }
+       
+        
+
+    //     // $res = file_put_contents("/var/www/files_prommu".$path.$file, $current);
+    //     var_dump("https://files.prommu.com/users/".$id."/".$file); 
+    //     // if(!@getimagesize("https://files.prommu.com/users/".$id."/".$file)){
+    //     //     unlink("/var/www/files_prommu".$path.$file);
+    //     //     return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
+    //     // }
+            
+    //     if($profile->type == 2){
+    //         $types = 'resume';
+    //         $value = 'photo';
+    //         $rest = $file;
+    //     } else {
+    //         $types = 'employer'; 
+    //         $value = 'logo';
+    //         $rest = $name;
+    //     }
+        
+    //     Yii::app()->db->createCommand()
+    //                 ->update($types, array(
+    //                     $value => $rest,
+    //                 ), 'id_user = :id', array(':id' => $id));  
+
+    
+    //     $message = "https://files.prommu.com/users/".$id."/".$file;
+    //     $error = '0';
+               
+                
+    //     } catch (Exception $e)
+    //         {
+    //         $error = abs($e->getCode());
+    //         switch( $e->getCode() )
+    //         {
+    //             case -102 : // token invalid
+    //             case -103 : $message = $e->getMessage(); break; // token expired
+    //             case -104 : $message = 'Error while getting chat data'; break;
+    //             default: $error = 101; $message = 'Error get api data';
+    //         }
+
+    //         $data = ['error' => $error, 'message' => $message];
+    //     } 
+
+    //     return $data = ['error' => $error, 'message' => $message];
+    // }
+    
     public function avatarEdit()
     {
         $error = '-101';
@@ -3362,51 +3452,32 @@ public function vac(){
      try
      {
 
-        $message = "Ошибка загрузки файла, обновите страницу и попробуйте еще раз";
         $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $photo = Yii::app()->getRequest()->getParam('photo');
           
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         $id = $idus;
-        $current =  base64_decode($photo);
-           
-    
-        
-        $URa = new UserRegister();
-        $res =  $URa->existenceDir("$photo");
-        var_dump($res);
+ 
         
         
-        
-        
-        $name = date('YmdHis').rand(100,1000);
-        $file = $name . ".jpg";
-        // $path = "/users/".$id."/";
-        $path = "/test/";
-        $d = str_replace('data:image/png;base64,', '', $photo);
-        $d = str_replace(' ', '+', $d);
-        $fileData = base64_decode($d);
-
-        $res = file_put_contents($photo.$file, $fileData);
-        echo $res;
-        if($res===false){
-            $data = array('error' => 1, 'message' => $message);
-        }
-        else{
-            if($res>5242880 || $res==0){
-                $data = array('error' => 1, 'message' => 'Неправильный размер файла!');
-            }
-        }
-       
-        
-
-        // $res = file_put_contents("/var/www/files_prommu".$path.$file, $current);
-        var_dump("https://files.prommu.com/users/".$id."/".$file); 
-        // if(!@getimagesize("https://files.prommu.com/users/".$id."/".$file)){
-        //     unlink("/var/www/files_prommu".$path.$file);
-        //     return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
-        // }
+       $current =  base64_decode($photo);
             
+            mkdir("/var/www/files_prommu/users/".$id, 0700);
+            mkdir("/var/www/files_prommu/users/".$id."/tmp/", 0700);
+            $name = date('YmdHis').rand(100,1000);
+            $file = $name . ".jpg";
+            var_dump($file);
+            $path = "/users/".$id."/";
+                
+            file_put_contents("/var/www/files_prommu".$path.$file, $current);
+            
+            if(!@getimagesize("https://files.prommu.com/users/".$id."/".$file)){
+                // unlink("/var/www/files_prommu".$path.$file);
+                return $data = ['error' => '100', 'message' => 'Неверный формат изображения'];
+            }
+            
+            
+        
         if($profile->type == 2){
             $types = 'resume';
             $value = 'photo';
@@ -3443,6 +3514,7 @@ public function vac(){
 
         return $data = ['error' => $error, 'message' => $message];
     }
+
     
     public function avatarDelete()
     {
