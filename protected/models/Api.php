@@ -3371,7 +3371,7 @@ public function vac(){
         $current =  base64_decode($photo);
             
        
-        if (!mkdir("/var/www/files_prommu/test/".$id,  0700)) {
+        if (!mkdir("/var/www/files_prommu/test/ted",  0700)) {
             $error = error_get_last();
             var_dump($error);
             die('Не удалось создать директории...'.$error);
