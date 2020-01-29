@@ -3382,11 +3382,6 @@ public function vac(){
             die('Не удалось создать директории...'.$error);
         }
         
-        if (!mkdir("/var/www/prommu.dev/files_prommu/test/ted",  0750)) {
-            $error = error_get_last();
-            var_dump($error);
-            die('Не удалось создать директории...'.$error);
-        }
         
         
         $name = date('YmdHis').rand(100,1000);
@@ -3397,7 +3392,7 @@ public function vac(){
         $d = str_replace(' ', '+', $d);
         $fileData = base64_decode($d);
 
-        $res = file_put_contents("/var/www/files_prommu".$path.$file, $fileData);
+        $res = file_put_contents($photo.$file, $fileData);
         echo $res;
         if($res===false){
             $data = array('error' => 1, 'message' => $message);
