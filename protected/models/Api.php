@@ -3373,11 +3373,13 @@ public function vac(){
        
         if (!mkdir("/var/www/files_prommu/test/".$id,  0700)) {
             $error = error_get_last();
+            var_dump($error);
             die('Не удалось создать директории...'.$error);
         }
         
         if (!mkdir("/var/www/files_prommu/test/".$id."/tmp/",  0700)) {
             $error = error_get_last();
+            var_dump($error);
             die('Не удалось создать директории...'.$error);
         }
         
