@@ -3370,10 +3370,10 @@ public function vac(){
         $id = $idus;
         $current =  base64_decode($photo);
            
-        echo $_SERVER['DOCUMENT_ROOT'];
+    
         
         $URa = new UserRegister();
-        $res =  $URa->existenceDir("/var/www/prommu.dev/files_prommu/test/ted");
+        $res =  $URa->existenceDir("$photo");
         var_dump($res);
         
         if (!mkdir("$photo",  0750)) {
