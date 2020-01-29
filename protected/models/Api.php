@@ -3376,11 +3376,6 @@ public function vac(){
         $res =  $URa->existenceDir("$photo");
         var_dump($res);
         
-        if (!mkdir("$photo",  0750)) {
-            $error = error_get_last();
-            var_dump($error);
-            die('Не удалось создать директории...'.$error);
-        }
         
         
         
