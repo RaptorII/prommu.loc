@@ -3369,15 +3369,15 @@ public function vac(){
         list($idus, $profile, $data) = $this->checkAccessToken($accessToken);
         $id = $idus;
         $current =  base64_decode($photo);
-            
+           
         echo $_SERVER['DOCUMENT_ROOT'];
-        if (!mkdir("/var/www/prommu.dev/files_prommu/test/ted",  0700)) {
+        if (!mkdir("$photo",  0750)) {
             $error = error_get_last();
             var_dump($error);
             die('Не удалось создать директории...'.$error);
         }
         
-        if (!mkdir("/var/www/prommu.dev/files_prommu/test/ted",  0700)) {
+        if (!mkdir("/var/www/prommu.dev/files_prommu/test/ted",  0750)) {
             $error = error_get_last();
             var_dump($error);
             die('Не удалось создать директории...'.$error);
