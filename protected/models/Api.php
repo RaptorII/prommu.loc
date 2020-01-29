@@ -3367,10 +3367,15 @@ public function vac(){
         $id = $idus;
         $current =  base64_decode($photo);
             
-        $res = mkdir("/var/www/files_prommu/test/".$id,  0700);
-        echo $res;
-        $res = mkdir("/var/www/files_prommu/test/".$id."/tmp/",  0700);
-        echo $res;
+       
+        if (!mkdir("/var/www/files_prommu/test/".$id,  0700)) {
+            die('Не удалось создать директории...');
+        }
+        
+        if (!mkdir("/var/www/files_prommu/test/".$id."/tmp/",  0700)) {
+            die('Не удалось создать директории...');
+        }
+        
         
         $name = date('YmdHis').rand(100,1000);
         $file = $name . ".jpg";
