@@ -59,15 +59,13 @@ class PrommuOrder {
 
        if (is_array($vacCity))
        {
-           $arRes = [];
-           $sumPrise = 0;
+            $arRes = [];
             for ($i=0; $i<count($arId); $i++)
             {
                 //find array for regional prises
                 $region[] = $vacCity[$i];
                 $arRegPrise = $this->getRegionalPrice($service, $this->convertedRegion($region), false);
 
-                //display($arRegPrise);
                 $price = $db->createCommand()
                     ->select('price')
                         ->from('service_prices')
@@ -80,15 +78,10 @@ class PrommuOrder {
 
                 $arRes[$i]['id_vac'] = $arId[$i];
                 $arRes[$i]['region'] = $vacCity[$i];
-                $arRes[$i]['prise']  = $price;
-
-                $sumPrise = $sumPrise + $price;
+                $arRes[$i]['price']  = $price;
             }
 
-           $arRes['sumprise'] = $sumPrise;
-
-           display($arRes);
-           return $arRes;
+           $result = $arRes;
        }
 
      }
@@ -100,8 +93,7 @@ class PrommuOrder {
         ->where('service=:service', [':service'=>$service])
         ->queryScalar();
      }
-//display($result);
-//     die();
+
      return $result;
   }
 
@@ -519,15 +511,10 @@ class PrommuOrder {
    * @param $employer
    * @return array|bool
    */
-  public function orderUpVacancy($arVacs, $vacPrice, $employer)
+  public function orderUpVacancy($arVacs, $employer, $vacPrc=false)
   {
     if(!isset($employer))
       return false;
-
-//      display($arVacs);
-      display($vacPrice);
-//      display(sizeof($arVacs));
-//      die();
 
     $arRes = [];
     $arRes['id'] = [];
@@ -539,7 +526,7 @@ class PrommuOrder {
     {
       $arRes['id'][] = $this->serviceOrder(
         $employer,
-        $vacPrice[$arVacs[$i]],
+        $vacPrc[$i],
         0,
         0,
         $arBDate[$i],
@@ -547,7 +534,7 @@ class PrommuOrder {
         $arVacs[$i],
         'upvacancy'
       );
-      $arRes['cost'] += $vacPrice[$arVacs[$i]];
+      $arRes['cost'] += $vacPrc[$i];
     }
     $arRes['account'] = $employer . '.' . implode('.', $arRes['id']) . '.upvacancy.' . time();
     return $arRes;

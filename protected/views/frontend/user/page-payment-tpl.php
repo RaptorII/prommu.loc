@@ -90,9 +90,16 @@ Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConf
         <span id="payment-result"><?=$result?>рублей</span>
       <?endif;?>
       <?if($viData['service']=='podnyatie-vacansyi-vverh'):?>
-        <span id="payment-result"><?=array_sum($viData['price'])?> рублей</span>
-        <?php foreach ($viData['vacancy'] as $id): ?>
-          <input type="hidden" name="vacancy[]" value="<?=$id?>">
+        <?php
+          $priceAll = 0;
+          foreach ($viData['price'] as $item):
+            $priceAll = $priceAll + $item['price'];
+          endforeach;
+        ?>
+        <span id="payment-result"><?=$priceAll.' '?> рублей</span>
+        <?php foreach ($viData['price'] as $id): ?>
+          <input type="hidden" name="vacancy[]" value="<?=$id['id_vac']?>">
+          <input type="hidden" name="vacancy_price[]" value="<?=$id['price']?>">
         <?php endforeach; ?>
         <input type="hidden" name="service" value="podnyatie-vacansyi-vverh">
       <?endif;?>
