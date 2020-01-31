@@ -79,7 +79,8 @@ class PrommuOrder {
                 $arRes[$i]['id_vac'] = $arId[$i];
                 $arRes[$i]['region'] = $vacCity[$i];
                 $arRes[$i]['price']  = $price;
-              $region = [];
+
+                $region = [];
             }
 
            $result = $arRes;
