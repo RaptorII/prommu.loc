@@ -1057,9 +1057,10 @@ class UserController extends AppController
         $view = MainConfig::$PAGE_PAYMENT_VIEW;
         $service = $rq->getParam('service');
         $vac = $rq->getParam('vacancy');
+        $vacCity = $rq->getParam('vacancy_city');
         $emp = $rq->getParam('employer');
         $isArr = in_array($service,['premium-vacancy','podnyatie-vacansyi-vverh']);
-        $price = $model->servicePrice($vac, $service, $isArr);
+        $price = $model->servicePrice($vac, $service, $isArr, $vacCity);
 
         switch ($service)
         {
@@ -1088,11 +1089,16 @@ class UserController extends AppController
             case 'podnyatie-vacansyi-vverh':
 
                 if ($price > 0) { // pay service
+
+                    display($prise);
+
                     $data = $model->orderUpVacancy($vac, $price, $emp);
                     if ($rq->getParam('personal') === 'individual') // people
                     {
                         //die('normal employer price');
                         $link = $model->createPayLink($data['account'], $data['strVacancies'], $data['cost']);
+                        display($data);
+                        die('normal employer price');
                         $link && $this->redirect($link);
                     }
                     if ($rq->getParam('personal') === 'legal') // company

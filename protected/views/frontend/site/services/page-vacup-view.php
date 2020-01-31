@@ -2,6 +2,8 @@
 	Yii::app()->getClientScript()->registerCssFile(Yii::app()->baseUrl . MainConfig::$CSS . 'services/services-premium-page.css');
 	Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConfig::$JS . 'services/services-premium-page.js', CClientScript::POS_END);
 
+	//display($viData);
+
 ?>
 <div class="row">
 	<div class="col-xs-12 premium-service">
@@ -40,7 +42,11 @@
 
 							</div>
 							<input type="checkbox" name="vacancy[]" value="<?=$val['id']?>" class="ps-vacancies__item-input">
-						</label>		
+							<input type="checkbox"
+                                   name="vacancy_city[]"
+                                   value="<?=$val['id_city']?>"
+                                   class="ps-vacancies__item-input-city">
+						</label>
 					<?php endforeach; ?>
 				</div>
 				<input type="hidden" name="service" value="podnyatie-vacansyi-vverh">

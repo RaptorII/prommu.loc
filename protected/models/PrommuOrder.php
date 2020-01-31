@@ -2,7 +2,7 @@
 
 class PrommuOrder {
   //Определение цены использования услуги
-  public function servicePrice($arId, $service, $isArray=false)
+  public function servicePrice($arId, $service, $isArray=false, $vacCity=false)
   {
      if(!sizeof($arId) || empty($service))
        return -1;
@@ -56,6 +56,41 @@ class PrommuOrder {
          ? $result[$id]=$price
          : $result+=$price;
        }
+
+       if (is_array($vacCity))
+       {
+           $arRes = [];
+           $sumPrise = 0;
+            for ($i=0; $i<count($arId); $i++)
+            {
+                //find array for regional prises
+                $region[] = $vacCity[$i];
+                $arRegPrise = $this->getRegionalPrice($service, $this->convertedRegion($region), false);
+
+                //display($arRegPrise);
+                $price = $db->createCommand()
+                    ->select('price')
+                        ->from('service_prices')
+                        ->where([
+                            'and',
+                            "service='$service'",
+                            ['in','region',$arRegPrise]
+                        ])
+                    ->queryScalar();
+
+                $arRes[$i]['id_vac'] = $arId[$i];
+                $arRes[$i]['region'] = $vacCity[$i];
+                $arRes[$i]['prise']  = $price;
+
+                $sumPrise = $sumPrise + $price;
+            }
+
+           $arRes['sumprise'] = $sumPrise;
+
+           display($arRes);
+           return $arRes;
+       }
+
      }
      else
      {
@@ -65,6 +100,8 @@ class PrommuOrder {
         ->where('service=:service', [':service'=>$service])
         ->queryScalar();
      }
+//display($result);
+//     die();
      return $result;
   }
 
@@ -487,8 +524,12 @@ class PrommuOrder {
     if(!isset($employer))
       return false;
 
+//      display($arVacs);
+      display($vacPrice);
+//      display(sizeof($arVacs));
+//      die();
+
     $arRes = [];
-    $arRes['cost'] = 0;
     $arRes['id'] = [];
     $arBDate = date("Y.m.d");
     $arEDate = date('Y.m.d', strtotime("+30 days"));

@@ -112,7 +112,8 @@
   transition: var(--main-trans);
 }
 
-#DiContent .ps-vacancies__item-input {
+#DiContent .ps-vacancies__item-input,
+#DiContent .ps-vacancies__item-input-city {
   display: none;
 }
 
