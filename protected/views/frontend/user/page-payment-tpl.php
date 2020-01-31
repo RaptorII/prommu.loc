@@ -19,9 +19,10 @@ Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConf
       id="payment-form"
       data-leg="<?=MainConfig::$PAGE_PAYMENT?>"
       data-ind="<?=MainConfig::$PAGE_PAYMENT?>">
+<?php display($viData); ?>
       <?php if($viData['service']=='premium-vacancy'): ?>
         <span class="payment-form__type-name">ПЕРИОД РАБОТЫ ПРЕМИУМ УСЛУГИ</span>
-        <?php foreach ($viData['vacancy'] as $id): ?>
+        <?php foreach ($viData['price'] as $id): ?>
           <div class="payment-date">
             <div class="payment__date-id">Для вакансии <?=$id?></div>
             <div class="payment__date-calendar begin">
@@ -66,14 +67,16 @@ Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConf
               <tr><td>Дата начала</td><td class="payment-begin"></td></tr>
               <tr><td>Дата окончания</td><td class="payment-end"></td></tr>
               <tr><td>Период работы услуги</td><td class="payment-period">0 дней</td></tr>
-              <tr><td>Стоимость услуги</td><td class="payment-cost"><span><?=$viData['price'][$id]?></span> руб/день</td>
+              <tr><td>Стоимость услуги</td><td class="payment-cost"><span><?=$id['price']?></span> руб/день</td>
               </tbody>
             </table>
-            <input type="hidden" name="vacancy[]" value="<?=$id?>">
+            <input type="hidden" name="vacancy[]" value="<?=$id['id_vac']?>">
             <input type="hidden" name="from[]" class="payment-begin-inp">
             <input type="hidden" name="to[]" class="payment-end-inp">
             <input type="hidden" name="period[]" class="payment-period-inp">
             <input type="hidden" name="cost[]" class="payment-cost-inp">
+            <input type="hidden" name="vacancy_price[]" value="<?=$id['price']?>">
+            <input type="hidden" name="vacancy_city[]" value="<?=$id['region']?>">
           </div>
         <?php endforeach; ?>
         <input type="hidden" name="service" value="premium-vacancy">
@@ -100,6 +103,7 @@ Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConf
         <?php foreach ($viData['price'] as $id): ?>
           <input type="hidden" name="vacancy[]" value="<?=$id['id_vac']?>">
           <input type="hidden" name="vacancy_price[]" value="<?=$id['price']?>">
+          <input type="hidden" name="vacancy_city[]" value="<?=$id['region']?>">
         <?php endforeach; ?>
         <input type="hidden" name="service" value="podnyatie-vacansyi-vverh">
       <?endif;?>

@@ -130,6 +130,7 @@ class ServiceCloud
             'name' => Services::getServiceName($v['type']),
             'date' => $v['date'],
             'cost' => $v['sum'],
+            'city' => $v['city'],
             'status' => ($v['status'] ? 'Выполнено' : 'Ожидает оплаты'),
             'data' => [
               'bdate' => $v['bdate'],

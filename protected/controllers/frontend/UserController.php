@@ -1068,7 +1068,7 @@ class UserController extends AppController
             case 'premium-vacancy':
               if($price>0)
               { // оплата услуги
-                $data = $model->orderPremium($vac, $price, $emp);
+                $data = $model->orderPremium($vac, $emp, $vacPrc, $vacCity);
                 if($rq->getParam('personal')==='individual') // физ лица
                 {
                   $link = $model->createPayLink($data['account'], $data['strVacancies'], $data['cost']);
@@ -1090,7 +1090,7 @@ class UserController extends AppController
             case 'podnyatie-vacansyi-vverh':
 
                 if ($price > 0) { // pay service
-                    $data = $model->orderUpVacancy($vac, $emp, $vacPrc);
+                    $data = $model->orderUpVacancy($vac, $emp, $vacPrc, $vacCity);
                     if ($rq->getParam('personal') === 'individual') // people
                     {
                         //die('normal employer price');

@@ -348,8 +348,8 @@ class PrommuOrder {
       return $result;
     }
 
-	public function serviceOrder($id_user,$sum, $status, $postback, $from, $to, $name,$type)
-  {
+	public function serviceOrder($id_user,$sum, $city, $status, $postback, $from, $to, $name,$type)
+    {
     if($postback == 0)
     {
       $to = date( 'Y-m-d', strtotime($to));
@@ -366,6 +366,7 @@ class PrommuOrder {
                   'edate' => $to,
                   'status' => $status,
                   'sum' => $sum,
+                  'city' => $city,
                   'date' => date("Y-m-d H:i:s")
                 ]
               );
@@ -473,7 +474,7 @@ class PrommuOrder {
   /*
   *       Заказ услуги Премиум
   */
-  public function orderPremium($arVacs, $vacPrice, $employer)
+  public function orderPremium($arVacs, $employer, $vacPrc, $vacCity)
   {
     if(!isset($employer))
       return false;
@@ -485,6 +486,7 @@ class PrommuOrder {
     $arEDate = Yii::app()->getRequest()->getParam('to');
     $day = 60 * 60 * 24;
 
+    /*
     for($i=0, $n=sizeof($arVacs); $i<$n; $i++)
     {
       $from = strtotime($arBDate[$i]);
@@ -503,6 +505,30 @@ class PrommuOrder {
       );
       $arRes['cost'] += $price;
     }
+    */
+
+//    display($vacPrc);
+
+    for($i=0, $n=sizeof($arVacs); $i<$n; $i++)
+    {
+        $from = strtotime($arBDate[$i]);
+        $to = strtotime($arEDate[$i]);
+        $days = ($to - $from) / $day;
+        $price = intval($vacPrc[$i] * $days);
+        $arRes['id'][] = $this->serviceOrder(
+            $employer,
+            $price,
+            $vacCity[$i],
+            0,
+            0,
+            $arBDate[$i],
+            $arEDate[$i],
+            $arVacs[$i],
+            'vacancy'
+        );
+        $arRes['cost'] += $price;
+    }
+
     $arRes['account'] = $employer . '.' . implode('.', $arRes['id']) . '.vacancy.' . time();
     return $arRes;
   }
@@ -513,7 +539,7 @@ class PrommuOrder {
    * @param $employer
    * @return array|bool
    */
-  public function orderUpVacancy($arVacs, $employer, $vacPrc=false)
+  public function orderUpVacancy($arVacs, $employer, $vacPrc=false, $vacCity=false)
   {
     if(!isset($employer))
       return false;
@@ -529,6 +555,7 @@ class PrommuOrder {
       $arRes['id'][] = $this->serviceOrder(
         $employer,
         $vacPrc[$i],
+        $vacCity[$i],
         0,
         0,
         $arBDate[$i],

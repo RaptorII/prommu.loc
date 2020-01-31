@@ -812,4 +812,25 @@ class City extends CActiveRecord
 
         return $res;
     }
+
+    /**
+     * @param $id
+     * @return array|CDbDataReader
+     * @throws CException
+     */
+    public static function getCityNameById($id)
+    {
+        $city = Yii::app()->db->createCommand("
+            SELECT 
+                name
+            FROM 
+                city
+            WHERE 
+                id_city={$id}
+        ")->queryAll();
+
+        $city = $city[0]['name'];
+
+        return $city;
+    }
 }

@@ -35,6 +35,10 @@
 
                             </div>
                             <input type="checkbox" name="vacancy[]" value="<?=$val['id']?>" class="ps-vacancies__item-input">
+                            <input type="checkbox"
+                                   name="vacancy_city[]"
+                                   value="<?=$val['id_city']?>"
+                                   class="ps-vacancies__item-input-city">
                         </label>
                     <?php endforeach; ?>
                 </div>

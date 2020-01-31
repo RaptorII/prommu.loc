@@ -60,6 +60,9 @@ $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
               <span>Назад</span>
             </div>
           </div>
+        <?php
+//            display($viData['history']['items']);
+        ?>
           <? foreach($viData['history']['items'] as $v): ?>
             <div class="history__item">
               <div class="history__item-icon <?=$v['type']?>"></div>
@@ -81,6 +84,11 @@ $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
               ?>
               <? if($v['cost']>0): ?>
                 Стоимость: <?=$v['cost']?> руб.<br>
+              <? endif; ?>
+              <?
+              // City
+              if(isset($v['city'])):?>
+                  Город: <?=City::getCityNameById( $v['city'] )?><br>
               <? endif; ?>
               <?
               //
