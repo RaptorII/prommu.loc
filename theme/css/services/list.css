@@ -502,6 +502,11 @@
   content: '\e920';
 }
 
+.history__item-icon.upvacancy:after {
+  content: '\e9cc';
+  font-size: 45px;
+}
+
 .history__item-icon.outsourcing:after {
   content: '\e927';
 }
