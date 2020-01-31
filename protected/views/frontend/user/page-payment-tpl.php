@@ -19,7 +19,6 @@ Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConf
       id="payment-form"
       data-leg="<?=MainConfig::$PAGE_PAYMENT?>"
       data-ind="<?=MainConfig::$PAGE_PAYMENT?>">
-<?php display($viData); ?>
       <?php if($viData['service']=='premium-vacancy'): ?>
         <span class="payment-form__type-name">ПЕРИОД РАБОТЫ ПРЕМИУМ УСЛУГИ</span>
         <?php foreach ($viData['price'] as $id): ?>
