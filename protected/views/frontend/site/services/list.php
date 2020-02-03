@@ -60,9 +60,6 @@ $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
               <span>Назад</span>
             </div>
           </div>
-        <?php
-//            display($viData['history']['items']);
-        ?>
           <? foreach($viData['history']['items'] as $v): ?>
             <div class="history__item">
               <div class="history__item-icon <?=$v['type']?>"></div>

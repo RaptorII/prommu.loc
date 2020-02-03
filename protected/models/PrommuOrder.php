@@ -486,29 +486,6 @@ class PrommuOrder {
     $arEDate = Yii::app()->getRequest()->getParam('to');
     $day = 60 * 60 * 24;
 
-    /*
-    for($i=0, $n=sizeof($arVacs); $i<$n; $i++)
-    {
-      $from = strtotime($arBDate[$i]);
-      $to = strtotime($arEDate[$i]);
-      $days = ($to - $from) / $day;
-      $price = intval($vacPrice[$arVacs[$i]] * $days);
-      $arRes['id'][] = $this->serviceOrder(
-        $employer,
-        $price,
-        0,
-        0,
-        $arBDate[$i],
-        $arEDate[$i],
-        $arVacs[$i],
-        'vacancy'
-      );
-      $arRes['cost'] += $price;
-    }
-    */
-
-//    display($vacPrc);
-
     for($i=0, $n=sizeof($arVacs); $i<$n; $i++)
     {
         $from = strtotime($arBDate[$i]);

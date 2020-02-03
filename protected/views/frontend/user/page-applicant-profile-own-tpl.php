@@ -237,9 +237,25 @@ endif;
           <a class='hvr-sweep-to-right btn__orange' href='#'>Невозможно отправить сообщение</a>
           <h3 class='unpubl'>Отправлять сообщения и приглашения на вакансию можно только при успешном прохождении модерации</h3>
         </div>
-
       <?php endif; ?>
 
+      <?php
+        $idCity = array_keys($viData['userInfo']['userCities'][0]);
+        $arLocation = (new Geo)->getCity( $idCity[0] );
+
+        if ($arLocation['region'] == 1307): ?>
+        <div class="messenger">
+            <span class="messenger__txt">
+                Узнавай о самых свежих вакансиях самым первым
+            </span>
+            <div class="messenger__item">
+                  <a href="https://t.me/prommucom" target="_blank" class="messenger__item--link">
+                      <span class="icn-telegram-icon"></span>
+                      <span class="messenger__name">Telegram</span>
+                  </a>
+            </div>
+        </div>
+      <?php endif; ?>
 
       <?php if( $flagOwnProfile ): ?>
         <div class='affective-block'>

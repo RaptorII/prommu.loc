@@ -1647,3 +1647,51 @@ a.upp__project-info {
     align-items: center;
   }
 }
+
+.messenger {
+  margin: 20px 0;
+  border: 1px var(--color-green) solid;
+  border-radius: 4px;
+  padding: 10px 0 0;
+}
+
+.messenger__txt {
+  display: block;
+}
+
+.messenger__item {
+  position: relative;
+  /*background: var(--color-green);*/
+}
+
+.messenger__item--link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.messenger__name {
+  font-size: 18px;
+  color: #0088cc;
+  padding-left: 10px;
+  text-transform: uppercase;
+}
+
+.icn-telegram-icon {
+  position: unset;
+  padding-left: 10px;
+  left: unset;
+  transform: unset;
+}
+
+.icn-telegram-icon:before {
+  content: "\e834";
+  font-size: 38px;
+  color: #0088cc;
+  transition: var(--main-trans);
+}
+
+.icn-telegram-icon:hover:before {
+  color: #ff7733;
+  transition: var(--main-trans);
+}
