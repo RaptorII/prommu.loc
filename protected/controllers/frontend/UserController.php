@@ -1061,6 +1061,23 @@ class UserController extends AppController
         $vacCity = $rq->getParam('vacancy_city');
         $emp = $rq->getParam('employer');
         $isArr = in_array($service,['premium-vacancy','podnyatie-vacansyi-vverh']);
+
+        // get prise parameters if redirect from "my vacancy" page
+        if (empty($vacCity) && isset($vac[0]))
+        {
+            $vacCity = Yii::app()->db->createCommand()
+                ->select("id_city")
+                ->from("empl_city")
+                ->where("id_vac=:id", [":id"=>$vac[0]])
+                ->queryColumn();
+
+            if (count($vacCity)>0)
+            {
+                for ($i=0; $i<=count($vacCity); $i++)
+                    $vac[$i] = $vac[0];
+            }
+        }
+
         $price = $model->servicePrice($vac, $service, $isArr, $vacCity);
 
         switch ($service)
