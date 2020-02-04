@@ -9,11 +9,6 @@ $arCustom = ['outstaffing','personal-manager-outsourcing','medical-record']; // 
 $arGuest = ['prommu_card','medical-record']; // для гостя
 $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
 ?>
-<?php
-//display($viData['menu'][0]);
-
-//display($prices);
-?>
 <div class="row">
     <div class="col-xs-12">
 
@@ -144,9 +139,6 @@ $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
             continue;
         ?>
         <? if($m['parent_id']==0 && !is_array($viData['menu'][$m['id']])): ?>
-          <?php
-          //display($m['id']);
-          ?>
           <div class="row services__item">
             <div class="col-xs-12 col-sm-6 services__prev">
               <div class="services__item-icon <?=$m['icon']?>"></div>
@@ -158,8 +150,8 @@ $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
               <a href="<?=$m['link']?>">Подробнее</a>
             </div>
             <div class="services__price-order">
+              <div class="services__price-haf">
               <? foreach ($prices['prices'][$m['icon']] as $price): ?>
-                <div>
                   <div class="services__price">
                     <? if(in_array($m['icon'], $arCustom)): ?>
                       <div class="services__price-item">По запросу</div>
@@ -171,31 +163,32 @@ $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
                       </div>
                     <? endif; ?>
                   </div>
-                  <div
-                    class="services__order order-service"
-                    data-id="<?=$m['icon']?>"
-                    data-type="<?=$m['icon']?>"
-                  >
-                    <? if(Share::isEmployer() && $m['icon']=='creation-vacancy'): ?>
-                      <a href="<?=MainConfig::$PAGE_VACPUB?>" class="user">Разместить Вакансию</a>
-                    <? elseif(Share::isGuest() && $m['icon']=='creation-vacancy'): ?>
-                      <a href="javascript:void(0)">Заказать</a>
-                    <? elseif($m['icon']=='geolocation-staff'): ?>
-                      <a href="javascript:void(0)" class="disable">В разработке</a>
-                    <? elseif(!Share::isGuest() || in_array($m['icon'], $arGuest)): ?>
-                      <?
-                        sizeof($prices['prices'][$m['icon']]) > 1
-                        ? $link = '/user' . $m['link'] //. '?type=' . $price['id']
-                        : $link = '/user' . $m['link'];
-                      ?>
-                      <a href="<?=$link?>" class="user">Заказать</a>
-                    <? else: ?>
-                      <a href="javascript:void(0)">Заказать</a>
-                    <? endif; ?>
-                  </div>
-                  <div class="clearfix"></div>
-                </div>
               <? endforeach; ?>
+              </div>
+                <div class="services__price-haf">
+                    <div
+                            class="services__order order-service"
+                            data-id="<?=$m['icon']?>"
+                            data-type="<?=$m['icon']?>"
+                    >
+                        <? if(Share::isEmployer() && $m['icon']=='creation-vacancy'): ?>
+                            <a href="<?=MainConfig::$PAGE_VACPUB?>" class="user">Разместить Вакансию</a>
+                        <? elseif(Share::isGuest() && $m['icon']=='creation-vacancy'): ?>
+                            <a href="javascript:void(0)">Заказать</a>
+                        <? elseif($m['icon']=='geolocation-staff'): ?>
+                            <a href="javascript:void(0)" class="disable">В разработке</a>
+                        <? elseif(!Share::isGuest() || in_array($m['icon'], $arGuest)): ?>
+                            <?
+                            sizeof($prices['prices'][$m['icon']]) > 1
+                                ? $link = '/user' . $m['link'] //. '?type=' . $price['id']
+                                : $link = '/user' . $m['link'];
+                            ?>
+                            <a href="<?=$link?>" class="user">Заказать</a>
+                        <? else: ?>
+                            <a href="javascript:void(0)">Заказать</a>
+                        <? endif; ?>
+                    </div>
+                </div>
             </div>
           </div>
         <? else: ?>
@@ -219,8 +212,8 @@ $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
                   <a href="<?=$s['link']?>">Подробнее</a>
                 </div>
                 <div class="services__price-order">
-                  <? foreach ($prices['prices'][$s['icon']] as $price): ?>
-                    <div>
+                  <div class="services__price-haf">
+                    <? foreach ($prices['prices'][$s['icon']] as $price): ?>
                       <div class="services__price">
                         <? if(in_array($m['icon'], $arCustom)): ?>
                           <div class="services__price-item">По запросу</div>
@@ -232,25 +225,26 @@ $hasHistory = (!Share::isGuest() && $viData['history']['cnt']>0);
                           </div>
                         <? endif; ?>
                       </div>
-                      <div
+                    <? endforeach; ?>
+                  </div>
+                  <div class="services__price-haf">
+                    <div
                         class="services__order order-service"
                         data-id="<?=$s['icon']?>"
                         data-type="<?=$s['icon']?>"
-                      >
+                    >
                         <? if(!Share::isGuest() || in_array($s['icon'], $arGuest)): ?>
-                          <?
+                            <?
                             sizeof($prices['prices'][$s['icon']]) > 1
-                            ? $link = '/user' . $s['link'] //. '?type=' . $price['id']
-                            : $link = '/user' . $s['link'];
-                          ?>
-                          <a href="<?=$link?>" class="user">Заказать</a>
+                                ? $link = '/user' . $s['link'] //. '?type=' . $price['id']
+                                : $link = '/user' . $s['link'];
+                            ?>
+                            <a href="<?=$link?>" class="user">Заказать</a>
                         <? else: ?>
-                          <a href="javascript:void(0)">Заказать</a>
+                            <a href="javascript:void(0)">Заказать</a>
                         <? endif; ?>
                       </div>
-                      <div class="clearfix"></div>
                     </div>
-                  <? endforeach; ?>
                 </div>
                 <div class="clearfix"></div>
               </div>

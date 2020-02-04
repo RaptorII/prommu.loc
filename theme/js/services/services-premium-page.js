@@ -39,3 +39,24 @@ $(function(){
 		bAllTrue ? $button.fadeIn() : $button.fadeOut();
 	});
 });
+
+"use_strict";
+window.onload = function() {
+	let arInputs = $('.ps-vacancies__item-input'),
+		$button = $('.service__btn'),
+		$all = $('#choose-all'),
+		bAllTrue = false,
+		bAllFalse = false;
+
+	$.each(arInputs, function(){
+
+		if($(this).is(':checked')) {
+			$(this).parent('.ps-vacancies__item').addClass('active');
+		}
+
+		$(this).is(':checked') ? bAllTrue=true : bAllFalse=true;
+	});
+
+	!bAllFalse ? $all.prop('checked',true) : $all.prop('checked',false);
+	bAllTrue ? $button.fadeIn() : $button.fadeOut();
+};

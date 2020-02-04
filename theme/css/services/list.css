@@ -306,12 +306,17 @@
   content: '';
   display: block;
   height: 1px;
-  background-color: #dedede;
+  /*background-color: #dedede;*/
   margin: 0 30px 5px;
 }
 
 .services__price-order > div:last-child:after {
   content: initial;
+}
+
+.services__price-haf {
+  float: left;
+  width: 100%;
 }
 
 /*
@@ -338,17 +343,22 @@
     width: 47%
   }
 
-  .services__price {
-    width: 60%
-  }
+  /*.services__price {*/
+    /*width: 60%*/
+  /*}*/
 
-  .services__order {
-    width: 40%
-  }
+  /*.services__order {*/
+    /*width: 40%*/
+  /*}*/
 
   #DiContent .services__detail a {
     width: 120px
   }
+
+  .services__price-haf {
+    width: 50%;
+  }
+
 }
 
 /*
