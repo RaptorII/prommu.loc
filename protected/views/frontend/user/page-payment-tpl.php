@@ -23,7 +23,7 @@ Yii::app()->getClientScript()->registerScriptFile(Yii::app()->baseUrl . MainConf
         <span class="payment-form__type-name">ПЕРИОД РАБОТЫ ПРЕМИУМ УСЛУГИ</span>
         <?php foreach ($viData['price'] as $id): ?>
           <div class="payment-date">
-            <div class="payment__date-id">Для вакансии <?=$id?></div>
+            <div class="payment__date-id">Для вакансии <?=$id['id_vac']?></div>
             <div class="payment__date-calendar begin">
               <div class="payment__date-error">Дата начала не корректна</div>
               <div class="payment__date-border">

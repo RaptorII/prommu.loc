@@ -1677,21 +1677,21 @@ a.upp__project-info {
   text-transform: uppercase;
 }
 
-.icn-telegram-icon {
+.messenger .icn-telegram-icon {
   position: unset;
   padding-left: 10px;
   left: unset;
   transform: unset;
 }
 
-.icn-telegram-icon:before {
+.messenger .icn-telegram-icon:before {
   content: "\e834";
   font-size: 38px;
   color: #0088cc;
   transition: var(--main-trans);
 }
 
-.icn-telegram-icon:hover:before {
+.messenger .icn-telegram-icon:hover:before {
   color: #ff7733;
   transition: var(--main-trans);
 }
