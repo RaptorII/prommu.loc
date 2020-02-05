@@ -24,15 +24,6 @@
                                 <span class="ps-vacancies__item-title"><?=$val['title'] ?></span>
                                 <span class="ps-vacancies__item-about"><strong>Завершение:</strong><?=' '.$val['remdate'] ?></span>
                                 <span class="ps-vacancies__item-about"><strong>Город:</strong><?=' '.$val['name'] ?></span>
-                                <span class="ps-vacancies__item-about"><strong>Сайт:</strong>
-                                    <?php
-                                    if ($val['id_city']=='1307')//moskov
-                                    { echo ' '.'prommu.com'; }
-                                    else
-                                    { echo ' ' . $val['seo_url'] . '.prommu.com'; }
-                                    ?>
-                                </span>
-
                             </div>
                             <input type="checkbox" name="vacancy[]" value="<?=$val['id']?>" class="ps-vacancies__item-input">
                             <input type="checkbox"
