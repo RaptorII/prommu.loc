@@ -90,6 +90,9 @@
 
 				<a href="<?=MainConfig::$LINK_TO_PLAYMARKET?>" rel="nofollow" class="app-top-mob-link" target="_blank"></a>
 				<div class="header h-indent first"><hr class="line"><h2><span>Как найти работу или персонал<br/> на нашем портале</span></h2></div>
+            </div>
+
+            <div class="how-block how-block--extend">
 
 				<div class="col-xs-12 col-sm-4 col-md-3 how-block__item" id='reg-how-block'>
 					<div class="vacancy" >
@@ -97,12 +100,14 @@
                             <span class="icn-note-page-prommu color-green "></span>
                         </div>
 						<h2 class="how-block__title">Зарегистрируйтесь на портале</h2>
-						<p class="how-block__text">Чтобы начать искать работу или размещать вакансии своей компании, вам необходимо зарегистрироваться на портале и заполнить свой профиль.</p>
-						<br/>
+                        <div class="how-block__info">
+                            <p class="how-block__text">Чтобы начать искать работу или размещать вакансии своей компании, вам необходимо зарегистрироваться на портале и заполнить свой профиль.</p>
+                            <br/>
 
-                        <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>" class="reg btn__orange">
-                            <ins>Регистрация</ins>
-                        </a>
+                            <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>" class="reg btn__orange">
+                                <ins>Регистрация</ins>
+                            </a>
+                        </div>
 						<?/*if(Share::isGuest()):?>
               <div class="m-how-block__reg-block">
                 <a href="<?=MainConfig::$PAGE_REGISTER?>" class="m-wrapper__btn m-wrapper__white-btn">Регистрация для работодателя</a>
@@ -120,7 +125,9 @@
                             <span class="icn-beidg-prommu color-green "></span>
                         </div>
 						<h2 class="how-block__title">Разместите анкету или опубликуйте вакансию</h2>
-						<p class="how-block__text">Если вы соискатель - разместите анкету по специальности, которая вам интересна. Если вы работодатель - опубликуйте одну или несколько вакансий.</p>
+                        <div class="how-block__info">
+						    <p class="how-block__text">Если вы соискатель - разместите анкету по специальности, которая вам интересна. Если вы работодатель - опубликуйте одну или несколько вакансий.</p>
+                        </div>
 					</div>
 				</div>
 
@@ -132,10 +139,12 @@
                             <span class="icn-heads-circle-prommu color-green "></span>
                         </div>
 						<h2 class="how-block__title">Найдите интересную работу или квалифицированный персонал</h2>
-						<p class="how-block__text">Откликайтесь на вакансии, которые вас заинтересовали, получайте push-уведомления о новых вакансиях.</p>
-						<p class="how-block__text">Оставляйте отзывы и участвуйте в рейтинге.</p>
-						<br/>
-						<p class="how-block__text">Также рекламодатели при необходимости могут воспользоваться гибким фильтром для поиска персонала.</p>
+                        <div class="how-block__info">
+						    <p class="how-block__text">Откликайтесь на вакансии, которые вас заинтересовали, получайте push-уведомления о новых вакансиях.</p>
+						    <p class="how-block__text">Оставляйте отзывы и участвуйте в рейтинге.</p>
+						    <br/>
+						    <p class="how-block__text">Также рекламодатели при необходимости могут воспользоваться гибким фильтром для поиска персонала.</p>
+                        </div>
 					</div>
 				</div>
 				<div class="clearfix"></div>
