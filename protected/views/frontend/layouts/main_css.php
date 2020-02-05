@@ -20,7 +20,7 @@
       flex-basis: 220px;
   }
   @media screen and ( min-width: 768px ) {
-      .vacancy,
+      .how-block--extend .vacancy,
       .how-block.how-block--extend {
           display: flex;
       }
