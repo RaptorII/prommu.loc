@@ -1,281 +1,4 @@
 <?
-if(Share::isApplicant())
-{
-  // Applicants
-  $arUsers = Yii::app()->db->createCommand()
-    ->select('r.*, u.email')
-    ->from('user u')
-    ->join('resume r','r.id_user=u.id_user')
-    ->where(
-      'u.status=:status and u.id_user='.Share::$UserProfile->id,
-      [':status'=>UserProfile::$APPLICANT]
-    )
-    ->offset('0') // +100
-    ->limit('100')
-    ->queryAll();
-
-  if(count($arUsers))
-  {
-    $arIdUsers = [];
-    foreach ($arUsers as $v)
-    {
-      $arIdUsers[] = $v['id_user'];
-    }
-
-    $arAttr = Yii::app()->db->createCommand()
-      ->select('id_us id_user, id_attr, val')
-      ->from('user_attribs')
-      ->where(['in','id_us',$arIdUsers])
-      ->queryAll();
-
-    $arPhotos = Yii::app()->db->createCommand()
-      ->select('id_user, photo')
-      ->from('user_photos')
-      ->where(['in','id_user',$arIdUsers])
-      ->queryAll();
-
-    $arPosts = Yii::app()->db->createCommand()
-      ->select('id_us id_user, id_mech')
-      ->from('user_mech')
-      ->where(['in','id_us',$arIdUsers])
-      ->queryAll();
-
-    $arCities = Yii::app()->db->createCommand()
-      ->select('id_user, id_city')
-      ->from('user_city')
-      ->where(['in','id_user',$arIdUsers])
-      ->queryAll();
-
-    $arTime = Yii::app()->db->createCommand()
-      ->select('id_us id_user, id_city')
-      ->from('user_wtime')
-      ->where(['in','id_us',$arIdUsers])
-      ->queryAll();
-
-    $arResult = [];
-    foreach ($arUsers as $v)
-    {
-      $value=0;
-      // фото
-      if(!empty($v['photo']))
-      {
-        $value+=10;
-        $cnt=0;
-        foreach ($arPhotos as $p)
-        {
-          $v['id_user']==$p['id_user'] && $cnt++;
-        }
-        $cnt>1 && $value+=10;
-      }
-      // общая инфа
-      $v['firstname'] && $value++;
-      $v['lastname'] && $value++;
-      $v['birthday'] && $value++;
-      $value++; // пол в любом случае 0 или 1
-      ($v['ismed'] || $v['smart'] || $v['card'] || $v['ishasavto']) && $value++;
-      $v['aboutme'] && $value+=11;
-      // атрибуты
-      isset($v['email']) && $value+=5; // email
-      $bMess = $bSoc = $flag1 = $flag2 = $flag3 = $flag4 = $flag5 = $flag6 = $flag7 = $bLang = false;
-      foreach ($arAttr as $a)
-      {
-        if($a['id_user']==$v['id_user'])
-        {
-          $a['id_attr']==1 && $value+=5; // телефон
-          if(in_array($a['id_attr'],[4,157,156,158,5]) && !empty($a['val']))
-          {
-            $bMess=true;
-          }
-          if(in_array($a['id_attr'],[6,160,161,162,7]) && !empty($a['val']))
-          {
-            $bSoc=true;
-          }
-          // внешность
-          $a['id_attr']==9 && !empty($a['val']) && $value+=3;
-          $a['id_attr']==10 && !empty($a['val']) && $value+=3;
-          in_array($a['id_attr'],[17,18,19,20,21,22]) && $flag1=true;
-          in_array($a['id_attr'],[75,76,77,78,79]) && $flag2=true;
-          in_array($a['id_attr'],[23,24,25,26,27,28,29,30]) && $flag3=true;
-          in_array($a['id_attr'],[80,81,82,83,84,85]) && $flag4=true;
-          in_array($a['id_attr'],[86,87,88,89,90,91]) && $flag5=true;
-          in_array($a['id_attr'],[92,93,94,95,96,97]) && $flag6=true;
-          in_array($a['id_attr'],[70,71,72,73]) && $flag7=true;
-          ($a['id_attr']>=41 && $a['id_attr']<=69) && $bLang=true;
-        }
-      }
-      $bMess && $value+=5;
-      $bSoc && $value+=5;
-      $flag1 && $value+=3;
-      $flag2 && $value+=3;
-      $flag3 && $value+=3;
-      $flag4 && $value+=3;
-      $flag5 && $value+=3;
-      $flag6 && $value+=3;
-      $flag7 && $value+=5;
-      $bLang && $value+=5;
-      // должности
-      $flag=false;
-      foreach ($arPosts as $p)
-      {
-        $p['id_user']==$v['id_user'] && $flag=true;
-      }
-      $flag && $value+=5;
-      // города
-      $flag=false;
-      foreach ($arCities as $c)
-      {
-        $c['id_user']==$v['id_user'] && $flag=true;
-      }
-      $flag && $value+=1;
-      // период работы
-      $flag=false;
-      foreach ($arTime as $t)
-      {
-        $t['id_user']==$v['id_user'] && $flag=true;
-      }
-      $flag && $value+=4;
-      //
-      $arResult[$v['id_user']] = $value;
-    }
-
-    display(reset($arResult));
-    /*if(count($arResult))
-    {
-      foreach ($arResult as $id_user => $v)
-      {
-        Yii::app()->db->createCommand()
-          ->update(
-            'user',
-            ['profile_filling'=>$v],
-            'id_user=:id_user',
-            [':id_user'=>$id_user]
-          );
-      }
-    }*/
-  }
-}
-if(Share::isEmployer())
-{
-  // employers
-  $arUsers = Yii::app()->db->createCommand()
-    ->select('e.*, u.email')
-    ->from('user u')
-    ->join('employer e','e.id_user=u.id_user')
-    ->where(
-      'u.status=:status AND u.id_user='.Share::$UserProfile->id,
-      [':status'=>UserProfile::$EMPLOYER]
-    )
-    ->offset('0') // +100
-    ->limit('100')
-    ->queryAll();
-
-  if(count($arUsers))
-  {
-    $arIdUsers = [];
-    foreach ($arUsers as $v)
-    {
-      $arIdUsers[] = $v['id_user'];
-    }
-
-    $arAttr = Yii::app()->db->createCommand()
-      ->select('id_us id_user, id_attr, val')
-      ->from('user_attribs')
-      ->where(['in','id_us',$arIdUsers])
-      ->queryAll();
-
-    $arPhotos = Yii::app()->db->createCommand()
-      ->select('id_user, photo')
-      ->from('user_photos')
-      ->where(['in','id_user',$arIdUsers])
-      ->queryAll();
-
-    $arPosts = Yii::app()->db->createCommand()
-      ->select('id_us id_user, id_mech')
-      ->from('user_mech')
-      ->where(['in','id_us',$arIdUsers])
-      ->queryAll();
-
-    $arCities = Yii::app()->db->createCommand()
-      ->select('id_user, id_city')
-      ->from('user_city')
-      ->where(['in','id_user',$arIdUsers])
-      ->queryAll();
-
-    $arTime = Yii::app()->db->createCommand()
-      ->select('id_us id_user, id_city')
-      ->from('user_wtime')
-      ->where(['in','id_us',$arIdUsers])
-      ->queryAll();
-
-    $arResult = [];
-    foreach ($arUsers as $v)
-    {
-      $value=0;
-      // фото
-      if(!empty($v['logo']))
-      {
-        $value+=10;
-        $cnt=0;
-        foreach ($arPhotos as $p)
-        {
-          $v['id_user']==$p['id_user'] && $cnt++;
-        }
-        $cnt>1 && $value+=10;
-      }
-      // общая инфа
-      $v['name'] && $value+=5;
-      $v['type'] && $value+=5;
-      $v['firstname'] && $value+=5;
-      $v['lastname'] && $value+=5;
-      $v['contact'] && $value+=5;
-      $v['email'] && $value+=5;
-      $v['aboutme'] && $value+=10;
-      // города
-      $flag=false;
-      foreach ($arCities as $c)
-      {
-        $c['id_user']==$v['id_user'] && $flag=true;
-      }
-      $flag && $value+=5;
-      // атрибуты
-      $flag = false;
-      foreach ($arAttr as $a)
-      {
-        if($a['id_user']==$v['id_user'])
-        {
-          $a['id_attr']==99 && !empty($a['val']) && $value+=5;
-          $a['id_attr']==176 && !empty($a['val']) && $value+=5;
-          $a['id_attr']==177 && !empty($a['val']) && $value+=5;
-          $a['id_attr']==1 && !empty($a['val']) && $value+=5;
-          $a['id_attr']==175 && !empty($a['val']) && $value+=5;
-          $a['id_attr']==100 && !empty($a['val']) && $value+=5;
-          if(in_array($a['id_attr'],[4,157,156,158,5]) && !empty($a['val']))
-          {
-            $flag=true;
-          }
-        }
-      }
-      $flag && $value+=5;
-      //
-      $arResult[$v['id_user']] = $value;
-    }
-
-//    display(reset($arResult));
-    /*if(count($arResult))
-    {
-      foreach ($arResult as $id_user => $v)
-      {
-        Yii::app()->db->createCommand()
-          ->update(
-            'user',
-            ['profile_filling'=>$v],
-            'id_user=:id_user',
-            [':id_user'=>$id_user]
-          );
-      }
-    }*/
-  }
-}
 	header('Content-Type: text/html; charset=utf-8');
 	$baseUrl = Yii::app()->baseUrl;
 	$curUrl = Yii::app()->request->requestUri;
@@ -745,36 +468,57 @@ if(Share::isEmployer())
   
 // }
 ?>
-<script>
-$(document).ready(function(){
-    setTimeout(function(){
-        var name = "_ga"
-        var matches = document.cookie.match(new RegExp(
-            name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-        ));
-        matches = decodeURIComponent(matches);
-        var tmp = matches.split('.');
-        var cid = tmp[2] + '.' + tmp[3];
-        cid = cid.split(',');
-        cid = cid[0];
-
-        if (cid == "undefined.undefined") {
-            var tracker = ga.getAll()[0];
-            cid = tracker.get('clientId');
-            console.log("cid from gtm!");
-        } else {
-            console.log("cid from cookie!");
+<? if(Yii::app()->session['is_set_client']!=true): ?>
+  <script>
+    $(document).ready(function(){
+      var clientCnt = 0;
+      setClient();
+      function setClient()
+      {
+        clientCnt++;
+        if(clientCnt>20)
+        {
+          return;
         }
+        if((typeof ga==='function') && (typeof yaCounter23945542==='object'))
+        {
+          var name = "_ga", tmp, gaClient, tracker,
+            matches = document.cookie.match(new RegExp(
+              name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            )),
+            yaClient = yaCounter23945542.getClientID();
 
-        $.ajax({
-            type: 'GET',
-            url: '/ajax/createclient/?client='+cid,
-            data: cid,
-            success: function(res){
-            }
-        });
+          matches = decodeURIComponent(matches);
+          tmp = matches.split('.');
+          gaClient = tmp[2] + '.' + tmp[3];
+          gaClient = gaClient.split(',');
+          gaClient = gaClient[0];
 
-    }, 3000);
-});
-</script>
+          if (gaClient === "undefined.undefined")
+          {
+            tracker = ga.getAll()[0];
+            gaClient = tracker.get('clientId');
+          }
+
+          if(!gaClient.length)
+          {
+            setTimeout(function(){ setClient() },2500);
+          }
+          else
+          {
+            $.ajax({
+              type: 'GET',
+              url: '/ajax/createclient',
+              data: 'ga=' + gaClient + '&ym=' + yaClient
+            });
+          }
+        }
+        else
+        {
+          setTimeout(function(){ setClient() },500);
+        }
+      }
+    });
+  </script>
+<? endif; ?>
 
