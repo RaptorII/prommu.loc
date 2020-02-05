@@ -4,13 +4,11 @@
   .how-block.how-block--extend {
       display: block;
   }
-  .vacancy {
+  .how-block--extend .vacancy {
       display: block;
       flex-direction: column;
       /*height: 1px;*/
       min-height: 100%;
-      justify-content: flex-start;
-      align-items: flex-start;
   }
   .how-block__title {
       flex: 1 0 auto;
