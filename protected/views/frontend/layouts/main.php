@@ -260,7 +260,7 @@ if(Share::isEmployer())
       $arResult[$v['id_user']] = $value;
     }
 
-    display(reset($arResult));
+//    display(reset($arResult));
     /*if(count($arResult))
     {
       foreach ($arResult as $id_user => $v)

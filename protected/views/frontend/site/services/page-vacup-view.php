@@ -31,7 +31,7 @@
 								<span class="ps-vacancies__item-title"><?=$val['title'] ?></span>
                                 <span class="ps-vacancies__item-about"><strong>Завершение:</strong><?=' '.$val['remdate'] ?></span>
 								<span class="ps-vacancies__item-about"><strong>Город:</strong><?=' '.$val['name'] ?></span>
-                                <span class="ps-vacancies__item-about"><strong>Domen:</strong>
+                                <span class="ps-vacancies__item-about"><strong>Сайт:</strong>
                                     <?php
                                         if ($val['id_city']=='1307')//moskov
                                         { echo ' '.'prommu.com'; }
