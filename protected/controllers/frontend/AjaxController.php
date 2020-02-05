@@ -14,10 +14,59 @@ class AjaxController extends AppController
 
         Share::$isAjaxRequest = 1;
     }
-
-
-    function actionCreateclient(){
+    /**
+     * фиксируем в БД клиент ID гугл и яндекса
+     */
+    public function actionCreateClient()
+    {
+      $rq = Yii::app()->getRequest();
+      $ips  = @$_SERVER['HTTP_CLIENT_IP'];
+      $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+      $remote  = @$_SERVER['REMOTE_ADDR'];
         
+      if(filter_var($ips, FILTER_VALIDATE_IP)) $ip = $ips;
+      elseif(filter_var($forward, FILTER_VALIDATE_IP)) $ip = $forward;
+      else $ip = $remote;
+
+      $arRes = [
+        'ip'=>$ip,
+        'client'=>$rq->getParam('ga') ? $rq->getParam('ga') : $rq->getParam('client')
+      ];
+      if(!empty($rq->getParam('ym')))
+      {
+        $arRes['ym_client'] = $rq->getParam('ym');
+      }
+      $urh = Yii::app()->request->cookies['urh']->value;
+      if(!empty($urh))
+      {
+        $arRes['user'] = $urh;
+      }
+      if(empty($arRes['client'])) // каким-то непонятным образом проскакивают юзеры без клиента
+      {
+        Yii::app()->end();
+        return;
+      }
+
+      file_put_contents('client.txt', date('d.m.Y H:i')."\t".' client - '.$arRes['client'].' ip - '.$ip."\n", FILE_APPEND | LOCK_EX);
+        
+      $query = Yii::app()->db->createCommand()
+        ->select("ip")
+        ->from('user_client')
+        ->where('ip=:ip', [':ip'=>$ip])
+        ->queryScalar();
+                
+      if(!$query)
+      {
+         Yii::app()->db->createCommand()
+           ->insert('user_client', $arRes);
+      }
+      else
+      {
+        Yii::app()->db->createCommand()
+          ->update('user_client', $arRes, 'ip like :ip', [':ip'=>$ip]);
+      }
+      Yii::app()->session['is_set_client'] = true;
+      Yii::app()->end();
     }
     // actionIndex вызывается всегда, когда action не указан явно.
     function actionIndex()

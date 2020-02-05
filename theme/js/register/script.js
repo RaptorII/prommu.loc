@@ -15,6 +15,7 @@ var RegisterPage = (function () {
   RegisterPage.prototype.codeTimer;
   RegisterPage.prototype.video;
   RegisterPage.prototype.bAjax;
+  RegisterPage.prototype.clientCnt = 0;
   //
   function RegisterPage()
   {
@@ -358,6 +359,8 @@ var RegisterPage = (function () {
     $('.input-code').bind('paste',function() { self.checkCode(this) });
     $('.input-password').bind('paste',function() { self.checkPassword() });
     $('.input-r-password').bind('paste',function() { self.checkPassword() });
+    // фиксируем клиентов метрики и аналитики
+    self.setClient();
   };
   // обычная отправка
   RegisterPage.prototype.send = function (data)
@@ -949,7 +952,55 @@ var RegisterPage = (function () {
       });
     }
     self.createPopup(false,false);
-  }
+  },
+  //
+  RegisterPage.prototype.setClient = function ()
+  {
+    var self = this;
+
+    self.clientCnt++;
+    if(self.clientCnt>20)
+    {
+      return;
+    }
+    if((typeof ga==='function') && (typeof yaCounter23945542==='object'))
+    {
+      var name = "_ga", tmp, gaClient, tracker,
+          matches = document.cookie.match(new RegExp(
+            name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+          )),
+          yaClient = yaCounter23945542.getClientID();
+
+      matches = decodeURIComponent(matches);
+      tmp = matches.split('.');
+      gaClient = tmp[2] + '.' + tmp[3];
+      gaClient = gaClient.split(',');
+      gaClient = gaClient[0];
+
+      if (gaClient === "undefined.undefined")
+      {
+        tracker = ga.getAll()[0];
+        gaClient = tracker.get('clientId');
+      }
+
+      if(!gaClient.length)
+      {
+        setTimeout(function(){ setClient() },2500);
+      }
+      else
+      {
+        $.ajax({
+          type: 'GET',
+          url: '/ajax/createclient',
+          data: 'ga=' + gaClient + '&ym=' + yaClient
+        });
+      }
+    }
+    else
+    {
+      setTimeout(function(){ self.setClient() },500);
+    }
+  };
   //
   return RegisterPage;
 }());
@@ -959,19 +1010,3 @@ var RegisterPage = (function () {
 $(document).ready(function () {
   new RegisterPage();
 });
-/*
-* yandex metric
-*/
-function setGoal(e, p)
-{
-  if(typeof yaCounter23945542 === 'object')
-  {
-    typeof p!=='undefined'
-      ? yaCounter23945542.reachGoal(e, {params:p})
-      : yaCounter23945542.reachGoal(e);
-  }
-  else
-  {
-    setTimeout(function(){ setGoal(e,p) },1000);
-  }
-}

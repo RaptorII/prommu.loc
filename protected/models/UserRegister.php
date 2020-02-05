@@ -624,7 +624,7 @@ class UserRegister
     $arr['user'] = $this->user;
 
     return Yii::app()->db->createCommand()
-      ->insert('user_register',$arr);
+              ->insert('user_register',$arr);
   }
   /**
    * @return bool
@@ -666,8 +666,6 @@ class UserRegister
     if($arData['login_type']==self::$LOGIN_TYPE_PHONE)
     {
       $arGet = ['phone' => $arData['login'], 'code' => $arData['code']];
-      //$log = date('d.m.Y H:i') . ' id=' . $arData['id'] . ' phone=' . $arData['login'] . ' code=' . $arData['code'] . '   ';
-      //file_put_contents(__DIR__ . "/_log_UserRegister_phone.txt", print_r($log, true), FILE_APPEND);
       file_get_contents(Subdomain::site() . MainConfig::$PAGE_SEND_SMS_CODE . '?' . http_build_query($arGet));
     }
   }
@@ -939,6 +937,18 @@ class UserRegister
       'pm_source_seo' => $arUser['pm_source'],
       'subdomain_seo' => Subdomain::getSiteName(),
     ],$arUser['type']);
+    // Postback для GA
+    $arGA = [
+      'v' => 1,
+      't' => 'event',
+      'tid' => MainConfig::$GOOGLE_ANALYTICS_ID,
+      'cid' => $arUser['client'],
+      'ec' => 'lead',
+      'ea' => 'registration'
+    ];
+    $url = MainConfig::$GOOGLE_ANALYTICS . '?' . http_build_query($arGA);
+    $result = file_get_contents($url);
+    unset($result);
   }
   /**
    * Метод для крона, для отправки писем юзерам с незавершенной регистрацией
@@ -953,7 +963,7 @@ class UserRegister
       ->where(
         'date BETWEEN :date1 AND :date2',
         [':date1'=>$d1, ':date2'=>$d2]
-      )
+        )
       ->queryAll();
 
     if(!count($query))
@@ -1072,8 +1082,8 @@ class UserRegister
   public function saveImage()
   {
     $arRes = ['error'=>[]];
-    $result = $this->existenceDir($this->filesRoot);
-    if(!$result)
+		$result = $this->existenceDir($this->filesRoot);
+		if(!$result)
     {
       $arRes['error'][] = 'Ошибка сохранения, обратитесь к администратору';
       return $arRes;
@@ -1142,7 +1152,7 @@ class UserRegister
   /**
    * @param $path - string
    */
-  public function existenceDir($path)
+  private function existenceDir($path)
   {
     $arPath = explode('/',$path);
     $dirPath = '';
