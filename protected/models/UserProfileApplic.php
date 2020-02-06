@@ -196,7 +196,7 @@ class UserProfileApplic extends UserProfile
             'aboutme' => $val['aboutme'],
             'firstname' => $val['firstname'],
             'lastname' => $val['lastname'],
-            'photo' => $val['photo'],
+            'photo' => 'https://filesapp.dev.prommu.com/users/'.$id.'/'.$val['photo'],
             'email' => $val['email'],
         ];
 
@@ -209,7 +209,11 @@ class UserProfileApplic extends UserProfile
             ORDER BY npp DESC";
         $data['userPhotos'] = Yii::app()->db->createCommand($sql)->queryAll();
         if( count($data['userPhotos']) == 1 && !$data['userPhotos'][0]['id'] ) $data['userPhotos'] = array();
-
+            
+        foreach($data['userPhotos'] as $key => $value){
+                $value['photo'] = 'https://filesapp.dev.prommu.com/users/'.$id.'/'.$value['photo'];
+        }
+        
         return $data;
     }
 
