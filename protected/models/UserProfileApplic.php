@@ -211,7 +211,7 @@ class UserProfileApplic extends UserProfile
         if( count($data['userPhotos']) == 1 && !$data['userPhotos'][0]['id'] ) $data['userPhotos'] = array();
             
         foreach($data['userPhotos'] as $key => $value){
-                $value['photo'] = 'https://filesapp.dev.prommu.com/users/'.$id.'/'.$value['photo'];
+                $data['userPhotos'][$key]['photo'] = 'https://filesapp.dev.prommu.com/users/'.$id.'/'.$value['photo'];
         }
         
         return $data;
