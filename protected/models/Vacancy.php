@@ -2607,32 +2607,89 @@ WHERE id_vac = {$inVacId}";
 
         return $res;
     }
+    /**
+     * @return array
+     * поиск вакансий по поиску
+     */
+    public function getVacanciesSearch()
+    {
+      $arRes = [];
+      $search = filter_var(
+        Yii::app()->getRequest()->getParam('search'),
+        FILTER_SANITIZE_FULL_SPECIAL_CHARS
+      );
+      $arCitiesId = Yii::app()->getRequest()->getParam('cities');
+      if(count($arCitiesId)) // если выбран город(а) - фильтруем по выбраным городам
+      {
+        $arT = [];
+        foreach ($arCitiesId as $v)
+        { $arT[] = intval($v); }
+        $arCitiesId = $arT;
+      }
+      if(!count($arCitiesId)) // иначе фильтруем
+      {
+        $arCitiesId = Subdomain::getCacheData()->arCitiesIdes;
+      }
 
-     public function getPosts()
-    {   
-        $searchWord = filter_var(Yii::app()->getRequest()->getParam('search'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+      if(empty(trim($search)))
+      {
+        return $arRes;
+      }
 
-        $sql = "SELECT d.id, d.type, d.comment, d.name, d.postself
-            FROM (
-                  SELECT d.id, d.type, d.comment, d.name, d.postself FROM user_attr_dict d
-                    WHERE d.id_par = 110
-                    AND d.name LIKE '{$searchWord}%' 
-                  ORDER BY npp, name
-                ) d
-                ORDER BY name
-            ";
-        $res = Yii::app()->db->createCommand($sql)->queryAll();
-        $obj = (object)[];
-            foreach ($res as $key => &$val)
-            {
-                $obj->name = $val['name'];
-                $obj->code = $val['comment'];
-                $val = clone $obj;
-            } // end foreach
-       
-        return $res;
+      $arPosts = Yii::app()->db->createCommand()
+        ->select('id, name, comment')
+        ->from('user_attr_dict')
+        ->where(
+          "name LIKE :search and id_par=:id_post",
+          [':search'=>$search.'%',':id_post'=>self::$ID_POSTS_ATTRIBUTE]
+        )
+        ->order('npp desc, name desc')
+        ->queryAll();
 
+      if(!count($arPosts))
+      {
+        return $arRes;
+      }
 
+      $arId = [];
+      foreach ($arPosts as $v)
+      {
+        $arId[] = $v['id'];
+      }
+
+      $query = Yii::app()->db->createCommand()
+        ->select('DISTINCT(ea.id_attr)')
+        ->from('empl_vacations ev')
+        ->join('empl_attribs ea','ea.id_vac=ev.id')
+        ->join('empl_city ec','ec.id_vac=ev.id')
+        ->where([
+          'and',
+          'ev.status=:status',
+          'ev.ismoder=:ismoder',
+          'ev.in_archive=:archive',
+          'ev.remdate>=CURDATE()',
+          ['in','ea.id_attr',$arId],
+          ['in','ec.id_city',$arCitiesId]
+        ],
+          [
+            ':status' => self::$STATUS_ACTIVE,
+            ':ismoder' => self::$ISMODER_APPROVED,
+            ':archive' => self::$INARCHIVE_FALSE
+          ])
+        ->queryColumn();
+
+      if(count($query))
+      {
+        foreach ($arPosts as $v)
+        {
+          if(in_array($v['id'],$query))
+          {
+            $arRes[] = ['name'=>$v['name'], 'code'=>$v['comment']];
+          }
+        }
+      }
+
+      return $arRes;
     }
     
     public function getVacancySearchAPI($inParams)

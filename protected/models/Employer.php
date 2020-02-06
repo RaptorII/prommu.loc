@@ -183,34 +183,57 @@ class Employer extends ARModel
 
         return $result;
     }
-
-    public function employers()
+    /**
+     * @return array
+     * поиск работодателей по поиску
+     */
+    public function getEmployersSearch()
     {
+      $arRes = [];
+      $search = filter_var(
+        Yii::app()->getRequest()->getParam('search'),
+        FILTER_SANITIZE_FULL_SPECIAL_CHARS
+      );
+      $arCitiesId = Yii::app()->getRequest()->getParam('cities');
+      if(count($arCitiesId)) // если выбран город(а) - фильтруем по выбраным городам
+      {
+        $arT = [];
+        foreach ($arCitiesId as $v)
+        { $arT[] = intval($v); }
+        $arCitiesId = $arT;
+      }
+      if(!count($arCitiesId)) // иначе фильтруем
+      {
+        $arCitiesId = Subdomain::getCacheData()->arCitiesIdes;
+      }
 
-           $searchWord = filter_var(Yii::app()->getRequest()->getParam('search'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-           $sql = "SELECT r.id id_ra, r.id_user idus, r.name 
-            FROM (
-                  SELECT r.id, r.id_user, r.name FROM employer r, user u 
-                  WHERE r.id_user = u.id_user 
-                    AND u.ismoder = 1 AND u.isblocked = 0
-                    AND r.name LIKE '%{$searchWord}%' 
-                  ORDER BY r.id DESC LIMIT 10
-                ) r
-                ORDER BY name
-            ";
-        $res = Yii::app()->db->createCommand($sql)->queryAll();
+      if(empty(trim($search)))
+      {
+        return $arRes;
+      }
 
-         $obj = (object)[];
-            foreach ($res as $key => &$val)
-            {       
-                // $test = $this->get_string_between($val['name'],"[","]");
-                
-                $obj->name =$val['name'];
-                $obj->code = $val['idus'];
-                $val = clone $obj;
-            }
+      $query = Yii::app()->db->createCommand()
+        ->select('e.name, e.id_user code')
+        ->from('employer e')
+        ->join('user u','u.id_user=e.id_user')
+        ->join('user_city uc','uc.id_user=e.id_user')
+        ->where([
+            'and',
+            'u.isblocked=:isblocked',
+            'u.ismoder=:ismoder',
+            'e.name like :search',
+            ['in','uc.id_city',$arCitiesId]
+          ],
+          [
+            ':isblocked' => User::$ISBLOCKED_FULL_ACTIVE,
+            ':ismoder' => User::$ISMODER_ACTIVE,
+            ':search' => '%'.$search.'%'
+          ])
+        ->order('name')
+        ->limit(10)
+        ->queryAll();
 
-        return $res;
+      return $query;
     }
 
     public function searchempl()

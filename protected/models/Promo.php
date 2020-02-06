@@ -1233,4 +1233,87 @@ class Promo extends ARModel
 
     return ($result ? Yii::app()->db->getLastInsertID() : $result);
   }
+  /**
+   * @return array
+   * поиск вакансий по поиску
+   */
+  public function getApplicantsSearch()
+  {
+    $arRes = [];
+    $search = filter_var(
+      Yii::app()->getRequest()->getParam('search'),
+      FILTER_SANITIZE_FULL_SPECIAL_CHARS
+    );
+    $arCitiesId = Yii::app()->getRequest()->getParam('cities');
+    if(count($arCitiesId)) // если выбран город(а) - фильтруем по выбраным городам
+    {
+      $arT = [];
+      foreach ($arCitiesId as $v)
+      { $arT[] = intval($v); }
+      $arCitiesId = $arT;
+    }
+    if(!count($arCitiesId)) // иначе фильтруем
+    {
+      $arCitiesId = Subdomain::getCacheData()->arCitiesIdes;
+    }
+
+    if(empty(trim($search)))
+    {
+      return $arRes;
+    }
+
+    $arPosts = Yii::app()->db->createCommand()
+      ->select('id, name, comment')
+      ->from('user_attr_dict')
+      ->where(
+        "name LIKE :search and id_par=:id_post",
+        [':search'=>$search.'%',':id_post'=>Vacancy::$ID_POSTS_ATTRIBUTE]
+      )
+      ->order('npp desc, name desc')
+      ->queryAll();
+
+    if(!count($arPosts))
+    {
+      return $arRes;
+    }
+
+    $arId = [];
+    foreach ($arPosts as $v)
+    {
+      $arId[] = $v['id'];
+    }
+
+    $query = Yii::app()->db->createCommand()
+      ->select('DISTINCT(um.id_mech)')
+      ->from('resume r')
+      ->join('user u','u.id_user=r.id_user')
+      ->join('user_city uc','uc.id_user=r.id_user')
+      ->join('user_mech um','um.id_us=r.id_user')
+      ->where([
+        'and',
+        'u.isblocked=:isblocked',
+        'u.ismoder=:ismoder',
+        'um.isshow=0',
+        ['in','um.id_mech',$arId],
+        ['in','uc.id_city',$arCitiesId]
+      ],
+        [
+          ':isblocked' => User::$ISBLOCKED_FULL_ACTIVE,
+          ':ismoder' => User::$ISMODER_ACTIVE
+        ])
+      ->queryColumn();
+
+    if(count($query))
+    {
+      foreach ($arPosts as $v)
+      {
+        if(in_array($v['id'],$query))
+        {
+          $arRes[] = ['name'=>$v['name'], 'code'=>$v['comment']];
+        }
+      }
+    }
+
+    return $arRes;
+  }
 }

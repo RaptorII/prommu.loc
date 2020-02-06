@@ -42,7 +42,8 @@ class SiteController extends AppController
     public function actionIndex()
     {
         Share::$isHomePage = 1;
-        $city = Subdomain::getCity(Share::$UserProfile->type,Share::$UserProfile->id); 
+        // уже не надо
+        //$city = Subdomain::getCity(Share::$UserProfile->type,Share::$UserProfile->id);
         $model = new PagesContent;
         $news = new News;
         $articles = new Articles;
@@ -68,7 +69,7 @@ class SiteController extends AppController
         //
         $this->render(
           'index', 
-          array('content' => $data['data'], 'city'=>$city)
+          array('content' => $data['data']/*, 'city'=>$city*/)
         );
     }
 

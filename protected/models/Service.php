@@ -153,7 +153,7 @@ class Service extends CActiveRecord
       $this->id_user = $get['id_user'];
       $this->name = $get['name'];
       $criteria->compare('t.id', $this->id, true);
-      $criteria->compare('t.type', $this->type, true);
+      $criteria->compare('t.type', $this->type);
       $criteria->compare('t.sum', $this->sum, true);
       $criteria->compare('t.status', $this->status, true);
       $criteria->compare('t.is_new', $this->is_new, true);

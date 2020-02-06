@@ -389,42 +389,35 @@ class AjaxController extends AppController
       }
       Yii::app()->end();
     }
-
-
-
     /**
-     * @deprecated
+     * получаем работодателей в поиске на главной
      */
     public function actionGetEmpls()
     {
-        $res = (new Employer())->employers();
-        header('Content-type: application/json');
-        echo CJSON::encode($res);
-        Yii::app()->end();
+      $result = (new Employer())->getEmployersSearch();
+      header('Content-type: application/json');
+      echo CJSON::encode($result);
+      Yii::app()->end();
     }
-
-
-
-    // получаем соискателей в поиске на главной
+    /**
+     * получаем соискателей в поиске на главной
+     */
     public function actionGetApplic()
     {
-         $res = (new Vacancy())->getPosts();
-
-        header('Content-type: application/json');
-        echo CJSON::encode($res);
-        Yii::app()->end();
+      $result = (new Promo())->getApplicantsSearch('applicants');
+      header('Content-type: application/json');
+      echo CJSON::encode($result);
+      Yii::app()->end();
     }
-
-
-
-    // получаем вакансии для поиска на главной
+    /**
+     * получаем вакансии для поиска на главной
+     */
     public function actionGetSearchVacs()
     {
-        $res = (new Vacancy())->getPosts();
-
-        header('Content-type: application/json');
-        echo CJSON::encode($res);
-        Yii::app()->end();
+      $result = (new Vacancy())->getVacanciesSearch('vacancies');
+      header('Content-type: application/json');
+      echo CJSON::encode($result);
+      Yii::app()->end();
     }
 
 

@@ -49,7 +49,9 @@
 												<input type="hidden" id="NamePromo" name='qs' value=""/>
 												<input type="hidden" id="EdSearchPromo" name='posts[]' value=""/>
 												<div class="text"><input type="text" id="EdSearch" name='post[<?$posts?>]' placeholder="Введите название вакансии..." data-ph1="Введите название вакансии..." data-ph2="Введите название резюме..." data-ph3="Введите название компании..." style='background: rgb(245, 245, 245); width: 97%; border: 0; font-size: 16px; line-height: 17px;' /></div>
-												<div id="multyselect-cities"></div>
+												<div id="multyselect-cities">
+                          <span class="search__search-city">Введите город</span>
+                        </div>
 												<button type="submit">Найти</button>
 											</div>
 										</form>
@@ -87,68 +89,48 @@
             </div>
 */?>
 			<div class="how-block">
-
 				<a href="<?=MainConfig::$LINK_TO_PLAYMARKET?>" rel="nofollow" class="app-top-mob-link" target="_blank"></a>
 				<div class="header h-indent first"><hr class="line"><h2><span>Как найти работу или персонал<br/> на нашем портале</span></h2></div>
+        <div class="how-block__list">
+          <div class="col-xs-12 col-sm-4 col-md-3 how-block__item">
+            <div class="how-block__icon icon100" title="Зарегистрируйтесь">
+              <span class="icn-note-page-prommu color-green "></span>
             </div>
-
-            <div class="how-block how-block--extend">
-
-				<div class="col-xs-12 col-sm-4 col-md-3 how-block__item" id='reg-how-block'>
-					<div class="vacancy" >
-						<div class="how-block__icon icon100" title="Зарегистрируйтесь">
-                            <span class="icn-note-page-prommu color-green "></span>
-                        </div>
-						<h2 class="how-block__title">Зарегистрируйтесь на портале</h2>
-                        <div class="how-block__info">
-                            <p class="how-block__text">Чтобы начать искать работу или размещать вакансии своей компании, вам необходимо зарегистрироваться на портале и заполнить свой профиль.</p>
-                            <br/>
-
-                            <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>" class="reg btn__orange">
-                                <ins>Регистрация</ins>
-                            </a>
-                        </div>
-						<?/*if(Share::isGuest()):?>
-              <div class="m-how-block__reg-block">
-                <a href="<?=MainConfig::$PAGE_REGISTER?>" class="m-wrapper__btn m-wrapper__white-btn">Регистрация для работодателя</a>
-                <a href="<?=MainConfig::$PAGE_REGISTER?>" class="m-wrapper__btn m-wrapper__whiteo-btn">Регистрация для соискателя</a>
-              </div>
-						<?endif*/?>
-					</div>
-				</div>
-
-				<div class="hidden-xs hidden-sm indent-block"></div>
-
-				<div class="col-xs-12 col-sm-4 col-md-3 how-block__item locate">
-					<div class="vacancy">
-						<div class="how-block__icon icon100" title="Разместите анкету">
-                            <span class="icn-beidg-prommu color-green "></span>
-                        </div>
-						<h2 class="how-block__title">Разместите анкету или опубликуйте вакансию</h2>
-                        <div class="how-block__info">
-						    <p class="how-block__text">Если вы соискатель - разместите анкету по специальности, которая вам интересна. Если вы работодатель - опубликуйте одну или несколько вакансий.</p>
-                        </div>
-					</div>
-				</div>
-
-				<div class="hidden-xs hidden-sm indent-block"></div>
-
-				<div class="col-xs-12 col-sm-4 col-md-3 how-block__item">
-					<div class="vacancy">
-						<div class="how-block__icon icon100" title="Найдите интересную работу">
-                            <span class="icn-heads-circle-prommu color-green "></span>
-                        </div>
-						<h2 class="how-block__title">Найдите интересную работу или квалифицированный персонал</h2>
-                        <div class="how-block__info">
-						    <p class="how-block__text">Откликайтесь на вакансии, которые вас заинтересовали, получайте push-уведомления о новых вакансиях.</p>
-						    <p class="how-block__text">Оставляйте отзывы и участвуйте в рейтинге.</p>
-						    <br/>
-						    <p class="how-block__text">Также рекламодатели при необходимости могут воспользоваться гибким фильтром для поиска персонала.</p>
-                        </div>
-					</div>
-				</div>
-				<div class="clearfix"></div>
-			</div>
+            <h2 class="how-block__title">Зарегистрируйтесь на портале</h2>
+            <div class="how-block__info">
+              <p class="how-block__text">Чтобы начать искать работу или размещать вакансии своей компании, вам необходимо зарегистрироваться на портале и заполнить свой профиль.</p>
+              <br/>
+              <a href="<?=Yii::app()->createUrl(MainConfig::$PAGE_REGISTER)?>" class="reg btn__orange">
+                <ins>Регистрация</ins>
+              </a>
+            </div>
+          </div>
+          <div class="hidden-xs hidden-sm indent-block"></div>
+          <div class="col-xs-12 col-sm-4 col-md-3 how-block__item locate">
+            <div class="how-block__icon icon100" title="Разместите анкету">
+              <span class="icn-beidg-prommu color-green "></span>
+            </div>
+            <h2 class="how-block__title">Разместите анкету или опубликуйте вакансию</h2>
+            <div class="how-block__info">
+              <p class="how-block__text">Если вы соискатель - разместите анкету по специальности, которая вам интересна. Если вы работодатель - опубликуйте одну или несколько вакансий.</p>
+            </div>
+          </div>
+          <div class="hidden-xs hidden-sm indent-block"></div>
+          <div class="col-xs-12 col-sm-4 col-md-3 how-block__item">
+            <div class="how-block__icon icon100" title="Найдите интересную работу">
+              <span class="icn-heads-circle-prommu color-green "></span>
+            </div>
+            <h2 class="how-block__title">Найдите интересную работу или квалифицированный персонал</h2>
+            <div class="how-block__info">
+              <p class="how-block__text">Откликайтесь на вакансии, которые вас заинтересовали, получайте push-уведомления о новых вакансиях.</p>
+              <p class="how-block__text">Оставляйте отзывы и участвуйте в рейтинге.</p>
+              <br/>
+              <p class="how-block__text">Также рекламодатели при необходимости могут воспользоваться гибким фильтром для поиска персонала.</p>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
             <?php if( count($content['vacancies']) ): ?>
                 <div class="vacancies">
                     <div class="header h-indent vacancies__title">
@@ -384,23 +366,11 @@
                             </div>
                         </div>
                         <div class="benefits__cell">
-                            <h2 class="benefits__cell-title">Push - уведомления</h2>
+                            <h2 class="benefits__cell-title">Удобные уведомления</h2>
                             <p class="benefits__cell-text">Вы можете получать следующие уведомления о новой вакансии, отвечающей вашим требованиям, о приглашении от работодателя, об изменении рейтинга или добавлении отзыва и многое другое<br/>
                                 <a href="https://prommu.com/services/push-notification"><ins>Подробнее</ins></a></p>
                         </div>
                     </div>
-                    <div class="benefits__grid">
-                        <div class="benefits__cell">
-                            <div class="benefits__icon icon80">
-                                <span class="icn-net-prommu color-green"></span>
-                            </div>
-                        </div>
-                        <div class="benefits__cell">
-                            <h2 class="benefits__cell-title">Публикация вакансий в соц. сетях</h2>
-                            <p class="benefits__cell-text">Когда вы размещаете вакансии на нашем портале, мы автоматически дополнительно публикуем вакансии в нашей группе Вконтакте, тем самым увеличивая количество просмотров и обращений</p>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
                     <div class="benefits__grid">
                         <div class="benefits__cell">
                             <div class="benefits__icon icon80">
@@ -412,6 +382,7 @@
                             <p class="benefits__cell-text">Вы не знаете где сейчас нанятый специалист? Воспользуйтесь геолокацией в мобильном приложении Prommu и вы всегда сможете отследить его местоположение</p>
                         </div>
                     </div>
+                    <div class="clearfix"></div>
                     <div class="benefits__grid">
                         <div class="benefits__cell">
                             <div class="benefits__icon icon80">
@@ -423,7 +394,6 @@
                             <p class="benefits__cell-text">Вы можете создать подписки на интересующие вакансии и регулярно получать на email уведомления о новых вакансиях.</p>
                         </div>
                     </div>
-                    <div class="clearfix"></div>
                     <div class="benefits__grid">
                         <div class="benefits__cell">
                             <div class="benefits__icon icon80">
@@ -435,6 +405,7 @@
                             <p class="benefits__cell-text">Специалист некачественно выполнил свою работу? Или работодатель вам не доплатил? Оставьте отзыв и это поможет отслеживать недобросоветсных исполнителей и заказчиков.</p>
                         </div>
                     </div>
+                    <div class="clearfix"></div>
                     <div class="benefits__grid">
                         <div class="benefits__cell">
                             <div class="benefits__icon icon80">
@@ -601,209 +572,3 @@
 				</div>
 			</div>
 		</div>
-		<script type="text/javascript">
-			jQuery(function($){
-				setInterval(function (e){
-					<?php
-					$vac = new Vacancy();
-					$posts = $vac->getPost();
-					foreach ($posts as $key => $value):?>
-						function ucFirst(str)
-						{
-							if(!str)
-								return str;
-							return str[0].toUpperCase() + str.slice(1);
-						}
-						if(ucFirst($("#EdSearch").val()) == "<?= $value['name']; ?>")
-						{
-							$("#EdSearch").attr("name","post[<?= $value['id']; ?>]");
-							$("#EdSearchPromo").attr("value", "<?= $value['id']?>");
-						}
-					<?php endforeach;?>
-				}, 500);
-
- 	  /*
-	  *
-	  */ // ввод нового города
-	  selectCities({
-	  	'main' : '#multyselect-cities',
-	  	'arCity' : <?=json_encode($city)?>,
-	  	'inputName' : 'cities[]'
-	  });
-	  //
-	  function selectCities(obj) {
-	  	var $main = $(obj.main).append('<ul class="cities-select">'+
-	  		'<li data-id="0"><input type="text" name="c"></li></ul>'+
-	      	'<ul class="cities-list"></ul><b></b>'), // родитель
-	        $select = $main.find('ul').eq(0), // список ввода
-	        $input = $select.find('input'), // ввод города
-	        $list = $main.find('ul').eq(1), // список выбора
-	        $load = $main.find('b'), // тег загрузки
-	        bShowCityList = true, // флаг отображения списка городов
-	        cityTimer = false; // таймер обращения к серверу для поиска городов
-
-	    // добавляем уже выбранный город
-	    if(obj.arCity != undefined) {
-	    	content = '<li data-id="' + obj.arCity.id + '">' +
-	    	obj.arCity.name + '<i></i><input type="hidden" name="' +
-	    	obj.inputName + '" value="' + obj.arCity.id + '">' +
-	    	'</li>';
-	    	$select.prepend(content);
-	    }
-	    // при клике по блоку фокусируем на поле ввода
-	    $select.click(function(e){ if(!$(e.target).is('i')) $input.focus() });
-	    $input.click(function(e){ if(!$(e.target).is('i')) $input.focus() })
-	    // обработка событий поля ввода
-	    $input.bind('input focus blur', function(e){
-	    	setFirstUpper($input);
-
-	    	var val = $input.val(),
-	    	sec = e.type==='focus' ? 1 : 1000;
-
-	      // делаем ширину поля по содержимому, чтобы не занимало много места
-	      $input.val(val).css({width:(val.length * 10 + 5)+'px'});
-	      bShowCityList = true;
-	      clearTimeout(cityTimer);
-	      cityTimer = setTimeout(function(){
-	      	setFirstUpper($input);
-
-	      	var arResult = [],
-	      	content = '',
-	      	val = $input.val(),
-	      	piece = $input.val().toLowerCase();
-
-	        arSelectId = getSelectedCities($select);// находим выбранные города
-
-	        if(e.type!=='blur'){ // если мы не потеряли фокус
-	          if(val===''){ // если ничего не введено
-	            $load.show(); // показываем загрузку
-	            $.ajax({
-	            	url: MainConfig.AJAX_GET_VE_GET_CITIES,
-	            	data: 'idco=' + obj.arCity.country + '&query=' + val,
-	            	dataType: 'json',
-	            	success: function(res){
-	                $.each(res.suggestions, function(){ // список городов если ничего не введено
-	                	if($.inArray(this.data, arSelectId)<0)
-	                		content += '<li data-id="' + this.data + '">' + this.value + '</li>';
-	                });
-	                if(bShowCityList)
-	                	$list.empty().append(content).fadeIn();
-	                else{
-	                	$list.empty().append(content).fadeOut();
-	                	$input.val('');
-	                }
-	                $load.hide();
-	              }
-	            });
-	          }
-	          else{
-	          	$load.show();
-	          	$.ajax({
-	          		url: MainConfig.AJAX_GET_VE_GET_CITIES,
-	          		data: 'idco=' + obj.arCity.country + '&query=' + val,
-	          		dataType: 'json',
-	          		success: function(res){
-	                $.each(res.suggestions, function(){ // список городов если что-то введено
-	                	word = this.value.toLowerCase();
-	                  // если введен именно город полностью
-	                  if(
-	                  	word===piece
-	                  	&&
-	                  	$.inArray(this.data, arSelectId)<0
-	                  	&&
-	                  	this.data!=='man'
-	                  	){
-	                  	html =  '<li data-id="' + this.data + '">' + this.value +
-	                  '<i></i><input type="hidden" name="' +
-	                  obj.inputName + '" value="' + this.data + '"/>' +
-	                  '</li>';
-	                  $select.find('[data-id="0"]').before(html);
-	                  bShowCityList = false;
-	                }
-	                else if(
-	                	word.indexOf(piece)>=0
-	                	&&
-	                	$.inArray(this.data, arSelectId)<0
-	                	&&
-	                	this.data!=='man'
-	                	)
-	                	arResult.push( {'id':this.data, 'name':this.value} );
-	              });
-	                arResult.length>0
-	                ? $.each(arResult, function(){
-	                	content += '<li data-id="' + this.id + '">' + this.name + '</li>'
-	                })
-	                : content = '<li class="emp">Список пуст</li>';
-	                if(bShowCityList)
-	                	$list.empty().append(content).fadeIn();
-	                else{
-	                	$list.empty().append(content).fadeOut();
-	                	$input.val('');
-	                }
-	                $load.hide();
-	              }
-	            });
-	          }
-	        }
-	        else{ // если потерян фокус раньше времени
-	        	$input.val('');
-	        }
-	      },sec);
-	    });
-	    // Закрываем список
-	    $(document).on('click', function(e){
-	    	if(
-	    		$(e.target).is('li')
-	    		&&
-	    		$(e.target).closest($list).length
-	    		&&
-	    		!$(e.target).hasClass('emp')
-	      ) { // если кликнули по списку && если это не "Список пуст" &&
-	    		$(e.target).remove();
-	    	html =  '<li data-id="' + $(e.target).data('id') +
-	    	'">' + $(e.target).text() +
-	    	'<i></i><input type="hidden" name="' + obj.inputName +
-	    	'" value="' + $(e.target).data('id') + '"/>' + '</li>';
-	    	$select.find('[data-id="0"]').before(html);
-	    	$list.fadeOut();
-	    }
-	      // удаление выбраного города из списка
-	      if($(e.target).is('i') && $(e.target).closest($select).length){
-	      	$(e.target).closest('li').remove();
-	      	l = getSelectedCities($select).length;
-	      }
-	      // закрытие списка
-	      if(!$(e.target).is($select) && !$(e.target).closest($select).length){
-	      	bShowCityList = false;
-	      	$list.fadeOut();
-	      }
-	    });
-	  }
-	  function getSelectedCities(ul) {
-	  	var arId = [],
-	  	arSelected = $(ul).find('li');
-
-	  	$.each(arSelected, function(){
-	  		if($(this).data('id')!=0)
-	  			arId.push(String($(this).data('id')));
-	  	});
-	  	return arId;
-	  }
-	  // делаем каждое слово в городе с большой
-	  function setFirstUpper(e) {
-	  	var split = $(e).val().split(' '),
-	  	len=split.length;
-
-	  	for(var i=0; i<len; i++)
-	  		split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1).toLowerCase();
-	  	$(e).val(split.join(' '));
-
-	  	split = $(e).val().split('-');
-	  	len=split.length;
-
-	  	for(var i=0; i<len; i++)
-	  		split[i] = split[i].charAt(0).toUpperCase() + split[i].slice(1).toLowerCase();
-	  	$(e).val(split.join('-'));
-	  }
-	});
-</script>
