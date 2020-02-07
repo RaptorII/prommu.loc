@@ -106,7 +106,7 @@ class SearchVac extends Model
              ///owner
             $data['vacs'][$val['id']]['owner']['id'] = (int)$val['uid'];
             $data['vacs'][$val['id']]['owner']['name'] = $val['coname'];
-            $data['vacs'][$val['id']]['owner']['logo'] = "https://filesapp.dev.prommu.com/users/".$val['uid']."/".$val['logo'].".jpg";
+            $data['vacs'][$val['id']]['owner']['logo'] = $val['logo'] ? "https://filesapp.dev.prommu.com/users/".$val['uid']."/".$val['logo'].".400jpg" : NULL;
             ///
             
             ///city
