@@ -441,10 +441,12 @@ class UserProfileEmpl extends UserProfile
         
         
         // считываем фото пользователя
+        
+        $id_empl = $res['id'];
         $sql = "SELECT p.id, p.photo
             FROM employer e
             LEFT JOIN user_photos p ON p.id_promo = e.id
-            WHERE e.id_user = {$id}
+            WHERE e.id_empl = {$id_empl}
             ORDER BY npp DESC";
         $data['userPhotos'] = Yii::app()->db->createCommand($sql)->queryAll();
         if( count($data['userPhotos']) == 1 && !$data['userPhotos'][0]['id'] ) $data['userPhotos'] = array();
