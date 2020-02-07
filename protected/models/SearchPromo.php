@@ -59,7 +59,7 @@ class SearchPromo extends Model
             
             $data['promo'][$val['id']]['first_name'] = $val['firstname'];
             $data['promo'][$val['id']]['last_name'] = $val['lastname'];
-            $data['promo'][$val['id']]['photo'] = $val['photo'] ? "https://dev.prommu.com/files_prommu/users/".$val['id_user']."/".$val['photo'].".jpg" : NULL;
+            $data['promo'][$val['id']]['photo'] = $val['photo'] ? "https://filesapp.dev.prommu.com/users/".$val['id_user']."/".$val['photo'].".jpg" : NULL;
             
              ///owner
             $data['promo'][$val['id']]['birthday'] = $val['birthday'];
