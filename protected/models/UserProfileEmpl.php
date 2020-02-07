@@ -437,6 +437,20 @@ class UserProfileEmpl extends UserProfile
             WHERE e.id_user = {$id}";
         $res = Yii::app()->db->createCommand($sql)->queryRow();
         $data['emplInfo'] = $res;
+        
+        // считываем фото пользователя
+        $sql = "SELECT p.id, p.photo
+            FROM employer e
+            LEFT JOIN user_photos p ON p.id_promo = e.id
+            WHERE e.id_user = {$id}
+            ORDER BY npp DESC";
+        $data['userPhotos'] = Yii::app()->db->createCommand($sql)->queryAll();
+        if( count($data['userPhotos']) == 1 && !$data['userPhotos'][0]['id'] ) $data['userPhotos'] = array();
+            
+        foreach($data['userPhotos'] as $key => $value){
+                $data['userPhotos'][$key]['photo'] = 'https://filesapp.dev.prommu.com/users/'.$id.'/'.$value['photo'].'.jpg';
+        }
+        
         $rest = "SELECT ci.id_city id, ci.name, co.id_co, co.name coname
             FROM user_city uc
             LEFT JOIN city ci ON uc.id_city = ci.id_city
