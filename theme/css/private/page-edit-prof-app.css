@@ -334,6 +334,11 @@
   margin: 0;
   padding: 0 0 0 5px;
 }
+@media screen and (min-width: 990px) {
+  #DiContent .edit-profile-applicant .epa__input.hasDatepicker {
+    width: 57%;
+  }
+}
 
 #DiContent .edit-profile-applicant .epa__period-list .epa__input {
   position: absolute;
