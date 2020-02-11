@@ -1695,3 +1695,84 @@ a.upp__project-info {
   color: #ff7733;
   transition: var(--main-trans);
 }
+
+/* pop-up for selfemployer
+*/
+.money-check-alt:before {
+  font-family: "PrommuFont";
+  content: "\e9d6";
+  font-size: 40px;
+}
+.home-heart:before {
+  font-family: "PrommuFont";
+  content: "\e9d5";
+  font-size: 40px;
+}
+.handshake:before {
+  font-family: "PrommuFont";
+  content: "\e9d4";
+  font-size: 40px;
+}
+.envelop-open-dollar:before {
+  font-family: "PrommuFont";
+  content: "\e9d3";
+  font-size: 40px;
+}
+.cut:before {
+  font-family: "PrommuFont";
+  content: "\e9d2";
+  font-size: 40px;
+}
+.credit-card:before {
+  font-family: "PrommuFont";
+  content: "\e9d1";
+  font-size: 40px;
+}
+.box-check:before {
+  font-family: "PrommuFont";
+  content: "\e9d0";
+  font-size: 40px;
+}
+.biking:before {
+  font-family: "PrommuFont";
+  content: "\e9cf";
+  font-size: 40px;
+}
+
+.ppp__self--inner-row {
+  display: flex;
+}
+
+.ppp__self--inner-row:hover .ppp__self--img{
+  color: var(--color-white);
+  transition: var(--main-trans);
+  cursor: default;
+}
+
+.ppp__self--img {
+  flex: 1 0 70px;
+  align-items: center;
+  display: flex;
+  color: var(--color-l2-grey);
+}
+
+.ppp__self--txt {
+  margin-bottom: 20px;
+  width: 100%;
+  cursor: default;
+}
+
+.ppp__self--txt-head {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  text-align: left;
+}
+.ppp__self--txt-about {
+  text-align: justify;
+  display: block;
+  border-left: 1px solid var(--color-white);
+  padding-left: 20px;
+}

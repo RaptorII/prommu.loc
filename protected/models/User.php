@@ -1504,7 +1504,42 @@ class User extends CActiveRecord
    */
   public function checkSelfEmployed(&$arRes)
   {
-    $arProxy = array(
+      $arProxy = [
+          '188.170.233.113:3128',
+          '217.113.122.142:3128',
+          '62.173.145.48:3128',
+          '83.220.170.169:3128',
+          '194.67.92.81:3128',
+          '84.201.254.47:3128',
+          '95.66.151.10:8080',
+          '46.235.53.26:3128',
+          '85.26.146.169:80',
+          '62.33.207.202:3128',
+          '83.219.149.199:4145',
+          '178.218.58.234:4145',
+          '109.111.155.103:4145',
+          '95.163.141.221:4145',
+          '46.28.227.78:4145',
+          '89.207.92.107:4145',
+          '188.32.145.79:4145',
+          '95.165.164.170:32116',
+          '95.165.160.46:52165',
+          '109.167.249.41:4145',
+          '95.163.141.85:4145',
+          '31.10.110.132:4145',
+          '37.18.79.41:3128',
+          '212.109.213.11:4145',
+          '88.84.212.14:4145',
+          '80.72.121.179:4145',
+          '84.16.129.46:4145',
+          '89.249.247.209:4145',
+          '94.247.241.70:51006',
+          '194.186.168.50:44550',
+          '91.216.66.70:47658',
+
+      ];
+
+    /*$arProxy = array(
       '84.201.254.47:3128',
       '188.170.233.99:3128',
       '188.170.233.107:3128',
@@ -1520,7 +1555,8 @@ class User extends CActiveRecord
       '93.171.164.251:8080',
       '217.113.122.142:3128',
       '188.170.233.101:3128'
-    );
+    );*/
+
     $inn = filter_var(Yii::app()->getRequest()->getParam('inn'), FILTER_SANITIZE_NUMBER_INT);
     $date = date('Y-m-d');
     $sData = "{\n \"inn\": \"$inn\",\n\"requestDate\": \"$date\"\n}";
@@ -1555,8 +1591,15 @@ class User extends CActiveRecord
       $arRes['response'] = json_decode($arRes['response']);
       $error = curl_error($ch);
       $arRes['error'] = ($error ?: false);
-      //$arRes['headers'] = curl_getinfo($ch);
-      curl_close($ch);
+      $arRes['headers'] = curl_getinfo($ch);
+
+//      display( $arRes['response'] );
+//      display( $arRes['error'] );
+//      display( $arRes['headers'] );
+//      die('asd');
+
+
+        curl_close($ch);
     }while($arRes['error']!=false || $cnt>=3);
 
     if($cnt>=3 && $arRes['error']!=false)

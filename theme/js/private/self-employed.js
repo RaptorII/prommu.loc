@@ -42,6 +42,10 @@ $(function(){
             data: 'inn=' + $('#inn_input').val(),
             success: function(r)
             {
+
+                console.log('input in ajaxs');
+                console.log(r);
+
                 r = JSON.parse(r);
                 let message = '';
 
