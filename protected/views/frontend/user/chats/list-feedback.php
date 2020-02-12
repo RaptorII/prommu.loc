@@ -20,6 +20,7 @@
 			<? endif; ?>
 		</h2>
         <div class="chat-list__wrap">
+            <div class="chat-list__wrap-scroll-ico">
             <? foreach ($viData['items'] as $id => $item): ?>
                 <a href="<?=MainConfig::$PAGE_CHATS_LIST_FEEDBACK . DS . $id?>" class="chat__item">
                     <span class="chat__item-user">
@@ -44,6 +45,7 @@
                     </span>
                 </a>
             <? endforeach ?>
+            </div>
         </div>
 		<? // display pagination
 			$this->widget('CLinkPager', array(

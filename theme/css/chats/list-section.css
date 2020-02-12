@@ -82,7 +82,7 @@
 .chat__item {
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 10px 10px 10px 40px;
   margin-bottom: 15px;
   border-bottom: 1px solid #dadada;
 }
@@ -385,10 +385,37 @@
 
 .chat-list__wrap {
   overflow-x: scroll;
+  position: relative;
+}
+
+.chat-list__wrap-scroll-ico {
+  border-top: 1px solid var(--color-l-grey);
+  display: table;
+}
+
+.chat-list__wrap-scroll-ico:before {
+  content: '\e9cd';
+  font-family: "PrommuFont";
+  color: var(--color-l-grey);
+  font-size: 35px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 @media ( min-width: 768px) {
   .chat-list__wrap {
     overflow-x: unset;
   }
+  .chat-list__wrap-scroll-ico:before {
+    content: unset;
+  }
+  .chat-list__wrap-scroll-ico {
+    border-top: none;
+    border-bottom: none;
+  }
+  .chat__item {
+    padding: 10px;
+  }
+
 }

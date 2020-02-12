@@ -1007,7 +1007,7 @@
   display: block;
   min-height: 23px;
   margin-top: 5px;
-  text-align: right;
+  text-align: unset;
   font-size: 14px;
 }
 
@@ -1025,6 +1025,12 @@
 
 #DiContent.page-responses .responses .controls span {
   display: block
+}
+
+@media (min-width: 768px) {
+  #DiContent.page-responses .responses .controls.controls {
+    text-align: right;
+  }
 }
 
 .app-responses__bdate {
