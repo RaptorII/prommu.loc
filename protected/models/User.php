@@ -1504,7 +1504,7 @@ class User extends CActiveRecord
    */
   public function checkSelfEmployed(&$arRes)
   {
-      $arProxy = [
+    /*  $arProxy = [
           '188.170.233.113:3128',
           '217.113.122.142:3128',
           '62.173.145.48:3128',
@@ -1536,9 +1536,36 @@ class User extends CActiveRecord
           '94.247.241.70:51006',
           '194.186.168.50:44550',
           '91.216.66.70:47658',
+      ];*/
 
-      ];
 
+    $arProxy = [
+        '104.220.227.154:80',
+        '78.24.101.86:8080',
+        '107.152.35.97:8080',
+        '123.231.226.114:47562',
+        '104.43.244.233:80',
+        '103.111.182.44:80',
+        '171.6.166.10:8213',
+        '154.72.63.84:38657',
+        '176.106.186.99:43750',
+        '193.242.151.43:8080',
+        '89.43.6.114:8080',
+        '178.33.150.97:3128',
+        '171.100.13.246:56050',
+        '125.27.119.161:8213',
+        '62.213.14.166:8080',
+        '190.12.95.170:36002',
+        '179.108.169.71:8080',
+        '163.172.28.22:80',
+        '139.99.105.186:80',
+        '122.2.37.38:38261',
+        '124.219.176.139:39589',
+        '51.255.20.138:80',
+        '193.193.71.178:43857',
+        '185.37.211.222:50330',
+        '213.226.11.149:41878',
+    ];
     /*$arProxy = array(
       '84.201.254.47:3128',
       '188.170.233.99:3128',
@@ -1564,8 +1591,8 @@ class User extends CActiveRecord
       CURLOPT_USERAGENT => "Mozilla/4.0 (Windows; U; Windows NT 5.0; En; rv:1.8.0.2) Gecko/20070306 Firefox/1.0.0.4",
       CURLINFO_HEADER_OUT => true,
       CURLOPT_RETURNTRANSFER => true,
-      CURLOPT_TIMEOUT => 20,
-      CURLOPT_CONNECTTIMEOUT => 20,
+      CURLOPT_TIMEOUT => 60,
+      CURLOPT_CONNECTTIMEOUT => 60,
       CURLOPT_POST => true,
       CURLOPT_POSTFIELDS => $sData,
       CURLOPT_HTTPPROXYTUNNEL => true,
@@ -1584,7 +1611,8 @@ class User extends CActiveRecord
     $cnt = 0;
     do{
       $cnt++;
-      $options[CURLOPT_PROXY] = $arProxy[array_rand($arProxy)];
+      //$options[CURLOPT_PROXY] = $arProxy[array_rand($arProxy)];
+      $options[CURLOPT_PROXY] = $arProxy[$_SERVER["REMOTE_ADDR"]];
       $ch = curl_init(MainConfig::$RESOURCE_SELF_EMPLOYED);
       curl_setopt_array($ch, $options);
       $arRes['response'] = curl_exec($ch);
@@ -1596,8 +1624,9 @@ class User extends CActiveRecord
 //      display( $arRes['response'] );
 //      display( $arRes['error'] );
 //      display( $arRes['headers'] );
-//      die('asd');
 
+//        echo $_SERVER["REMOTE_ADDR"].'</br>';
+//        die('in proxy');
 
         curl_close($ch);
     }while($arRes['error']!=false || $cnt>=3);

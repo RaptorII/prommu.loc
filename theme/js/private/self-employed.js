@@ -35,6 +35,9 @@ $(function(){
             return false;
         }
 
+
+        //console.log('input point to ajaxs');
+
         $('.content-block').addClass('load');
         $.ajax({
             type: 'POST',
@@ -43,8 +46,8 @@ $(function(){
             success: function(r)
             {
 
-                console.log('input in ajaxs');
-                console.log(r);
+                // console.log('return to ajaxs');
+                // console.log(r);
 
                 r = JSON.parse(r);
                 let message = '';

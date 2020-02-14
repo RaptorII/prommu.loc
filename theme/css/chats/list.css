@@ -1,5 +1,6 @@
 .chat__all {
   overflow-x: scroll;
+  position: relative;
 }
 
 .chat__all h1 {
@@ -9,7 +10,7 @@
 
 .chat__all .chat__item {
   position: relative;
-  padding: 10px 0;
+  padding: 10px 0 10px 20px;
   min-height: 55px;
   border-bottom: 1px solid #dadada;
   font-size: 12px;
@@ -59,12 +60,39 @@
   display: block;
 }
 
+.chat-list__wrap-scroll-ico {
+  border-top: 1px solid var(--color-l-grey);
+  display: table;
+  position: relative;
+}
+
+.chat-list__wrap-scroll-ico:before {
+  content: '\e9cd';
+  font-family: "PrommuFont";
+  color: var(--color-l-grey);
+  font-size: 35px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
 @media (min-width: 767px) {
   .chat__all {
     overflow-x: hidden;
+    position: relative;
   }
 
   .chat__all .chat__item {
     display: flex;
   }
+  .chat-list__wrap-scroll-ico {
+    border-top: 1px solid var(--color-l-grey);
+    display: table;
+  }
+
+  .chat-list__wrap-scroll-ico:before {
+    content: none;
+  }
+
 }
+

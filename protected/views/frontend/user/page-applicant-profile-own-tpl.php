@@ -164,7 +164,7 @@ endif;
         <a href="<?=MainConfig::$PAGE_EDIT_PROFILE . '?ep=1'?>" class="ppp-logo-main__change">Изменить аватар</a>
       <?endif;?>
     </div>
-    <? if(!$flagOwnProfile): ?>
+    <? if($flagOwnProfile): ?>
       <div class="ppp-logo-main__active">
         <span class="disable"><b>На сайте:</b> <?=$info['time_on_site']?></span>
       </div>
@@ -197,6 +197,7 @@ endif;
         </div>
       <?php endif; ?>
     <?endif;?>
+
     <div class="ppp__logo-more">
       <? $i=0; ?>
       <? foreach($info['userPhotos'] as $v): ?>
@@ -243,7 +244,7 @@ endif;
         $idCity = array_keys($viData['userInfo']['userCities'][0]);
         $arLocation = (new Geo)->getCity( $idCity[0] );
 
-        if ($arLocation['region'] == 1307): ?>
+         if ( ($arLocation['region'] == 1307) && (Share::isEmployer()) ): ?>
         <div class="messenger">
             <span class="messenger__txt">
                 Узнавай о самых свежих вакансиях самым первым

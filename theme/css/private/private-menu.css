@@ -1,49 +1,70 @@
-#DiContent .row.mt20 .submenu-block{ margin: 0 }
+#DiContent .row.mt20 .submenu-block {
+    margin: 0;
+    overflow: hidden;
+    transition: max-height .5s;
+    max-height: 300px;
+}
+
+#DiContent .row.mt20 .submenu-block.toggle {
+    transition: max-height .5s;
+    max-height: 0;
+}
+
 .personal-acc__menu{
     width: 100%;
     display: block;
     border-bottom: 1px solid #212121;
-}
-/*Fixed*/
-.personal-acc__menu.fixed {
-    position: fixed;
-    top: 0;
-    left: 0;
     background: #fff;
-    z-index: 10;
-    border-bottom: 1px solid transparent;
-    filter: drop-shadow(0 0 0.15rem #3e3e3e);
-}
-.personal-acc__menu.fixed .personal-acc__menu-wrap {
-    display: flex;
-    max-width: 320px;
-    margin: 0 auto;
-}
-#DiContent .personal-acc__menu.fixed .pa__menu-link {
-    font-size: 0;
-}
-#DiContent .personal-acc__menu.fixed .pa__menu-link i {
-    width: 30px;
 }
 
-#DiContent .personal-acc__menu.fixed .pa__menu-item-icon {
-    width: 34px;
-    background: #fff;
-    height: 34px;
-    border-radius: 50%;
-    border: 1px solid #abb820;
-    transition: all .3s ease-out;
-}
-#DiContent .personal-acc__menu.fixed .pa__menu-link:before,
-#DiContent .personal-acc__menu.fixed .pa__menu-link:after {
-    content: none;
-}
+@media screen and (max-width:768px) {
+    /*Fixed*/
+    .personal-acc__menu.fixed {
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: #fff;
+        z-index: 21;
+        border-bottom: 1px solid transparent;
+        filter: drop-shadow(0 0 0.15rem #3e3e3e);
+        transition: var(--main-trans);
+    }
 
-.personal-acc__menu.fixed .applicant i:before,
-.personal-acc__menu.fixed .applicant i:after{
-    transition: all .3s ease-out;
+    .personal-acc__menu .personal-acc__menu-wrap {
+        display: flex;
+        max-width: 320px;
+        margin: 0 auto;
+    }
+
+    #DiContent .personal-acc__menu .pa__menu-link {
+        font-size: 0;
+    }
+
+    #DiContent .personal-acc__menu .pa__menu-link i {
+        width: 30px;
+    }
+
+    #DiContent .personal-acc__menu .pa__menu-item-icon {
+        width: 34px;
+        background: #fff;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid #abb820;
+        transition: all .3s ease-out;
+    }
+
+    #DiContent .personal-acc__menu .pa__menu-link:before,
+    #DiContent .personal-acc__menu .pa__menu-link:after {
+        content: none;
+    }
+
+    .personal-acc__menu.fixed .applicant i:before,
+    .personal-acc__menu.fixed .applicant i:after {
+        transition: all .3s ease-out;
+    }
+
+    /*End Fixed*/
 }
-/*End Fixed*/
 
 #DiContent .pa__menu-link{
     display: block;
@@ -70,11 +91,11 @@
     border: none;
 }
 .pa__menu-link:before{
-    right: 100%;     
+    right: 100%;
     left: -1px;
 }
 .pa__menu-link:after{
-    right: -1px;     
+    right: -1px;
     left: 100%;
 }
 .personal-acc__menu-icon{
@@ -82,12 +103,12 @@
     display: block;
     left: -17px;
 }
-.pa__menu-item{ 
+.pa__menu-item{
     display: table;
     width: 100%;
 }
 .pa__menu-item-icon,
-.pa__menu-item-text{ 
+.pa__menu-item-text{
     display: table-cell;
     vertical-align: middle;
 }
@@ -139,10 +160,10 @@
 *   MEDIA
 */
 @media(min-width:768px){
-    .personal-acc__menu{ 
+    .personal-acc__menu{
         display:table;
     }
-    #DiContent .pa__menu-link{ 
+    #DiContent .pa__menu-link{
         display:table-cell;
         padding: 10px 3px;
     }
@@ -151,7 +172,14 @@
         bottom: 8px;
     }
     .pa__menu-link:before,
-    .pa__menu-link:last-child:after{ display: none }
+    .pa__menu-link:last-child:after {
+        display: none
+    }
+
+    .pa__menu-item-icon,
+    .pa__menu-item-text{
+        display: unset;
+    }
 
 }
 @media (min-width: 992px){
@@ -159,11 +187,15 @@
         display: table;
         width: 100%;
     }
+    .pa__menu-item-icon,
+    .pa__menu-item-text{
+        display: table-cell;
+    }
 }
 @media (min-width: 1200px){
     .pa__menu-item-icon{ width: 30px }
     .pa__menu-link i{ margin: 0 auto }
-    .pa__menu-item-text{ text-align: left } 
+    .pa__menu-item-text{ text-align: left }
 }
 /*
 *
