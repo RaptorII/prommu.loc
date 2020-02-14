@@ -1512,12 +1512,6 @@ input:checked + .fav__label-checkbox:after {
   }
 }
 
-@media (max-width: 767px) {
-  #DiContent.page-vacpub .container {
-    max-width: 485px;
-  }
-}
-
 @media (min-width: 992px) {
   .fav__hint-vacname,
   .fav__select-hint .fav__hint-vacname {

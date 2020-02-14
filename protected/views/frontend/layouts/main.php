@@ -305,7 +305,27 @@
                         }
                         else{
                             $title = (!empty($this->ViewModel->getViewData()->htmlTitle) ? $this->ViewModel->getViewData()->htmlTitle : '<span class="top-menu-wr__logo"></span>');
+
+                            $route = Yii::app()->controller->action->getId();
+
+                            if ($route == "profile" )
+                            { $title = 'Личный кабинет'; }
+                            if ($route == "editprofile" && $_GET['ep'] == "1" )
+                            { $title = 'Редактирование фото'; }
+
+                            if ( $route == "reviews" && Share::isEmployer() )
+                            { $title = 'Оценка персонала'; }
+
                         }
+                        ?>
+                        <?php
+                            $route = Yii::app()->controller->action->getId().'/'.ContentPlus::getActionID();
+                            if ((strcasecmp($route, 'about/empl') == 0) ||
+                                (strcasecmp($route, 'about/prom') == 0)) {
+                                echo '<div class="mob-header__title"> Prommu.com </div>';
+                            } else {
+                                echo '<div class="mob-header__title">'. $title .'</div>';
+                            }
                         ?>
                         <div class="mob-header__title"><?=$title?></div>
                     </div>
