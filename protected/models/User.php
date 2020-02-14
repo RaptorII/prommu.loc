@@ -1538,7 +1538,7 @@ class User extends CActiveRecord
           '91.216.66.70:47658',
       ];*/
 
-
+    /*
     $arProxy = [
         '104.220.227.154:80',
         '78.24.101.86:8080',
@@ -1566,6 +1566,7 @@ class User extends CActiveRecord
         '185.37.211.222:50330',
         '213.226.11.149:41878',
     ];
+    */
     /*$arProxy = array(
       '84.201.254.47:3128',
       '188.170.233.99:3128',
@@ -1583,6 +1584,8 @@ class User extends CActiveRecord
       '217.113.122.142:3128',
       '188.170.233.101:3128'
     );*/
+
+    $arProxy = [];
 
     $inn = filter_var(Yii::app()->getRequest()->getParam('inn'), FILTER_SANITIZE_NUMBER_INT);
     $date = date('Y-m-d');
@@ -1621,14 +1624,8 @@ class User extends CActiveRecord
       $arRes['error'] = ($error ?: false);
       $arRes['headers'] = curl_getinfo($ch);
 
-//      display( $arRes['response'] );
-//      display( $arRes['error'] );
-//      display( $arRes['headers'] );
+      curl_close($ch);
 
-//        echo $_SERVER["REMOTE_ADDR"].'</br>';
-//        die('in proxy');
-
-        curl_close($ch);
     }while($arRes['error']!=false || $cnt>=3);
 
     if($cnt>=3 && $arRes['error']!=false)

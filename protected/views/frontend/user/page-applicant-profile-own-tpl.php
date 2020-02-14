@@ -164,7 +164,7 @@ endif;
         <a href="<?=MainConfig::$PAGE_EDIT_PROFILE . '?ep=1'?>" class="ppp-logo-main__change">Изменить аватар</a>
       <?endif;?>
     </div>
-    <? if($flagOwnProfile): ?>
+    <? if(!$flagOwnProfile): ?>
       <div class="ppp-logo-main__active">
         <span class="disable"><b>На сайте:</b> <?=$info['time_on_site']?></span>
       </div>
@@ -177,12 +177,6 @@ endif;
         <ul class="ppp__star-block"><li class="full"></li></ul>
         <span class="ppp__subtitle"><?=Share::getRating($attr['rate'],$attr['rate_neg'])?></span>
       </div>
-      <?php if($attr['confirmPhone'] || $attr['confirmEmail']): ?>
-        <div class="confirmed-user js-g-hashint" title="Личность соискателя является подлинной">ПРОВЕРЕН</div>
-      <?php endif; ?>
-      <? if(!empty($info['self_employed'])): ?>
-        <div class="self_employed-user js-g-hashint" title="Налоговый статус соискателя">САМОЗАНЯТЫЙ</div>
-      <? endif; ?>
       <?php if($cntComments): ?>
         <div class="ppp__logo-comm">
           <span class="ppp__subtitle">Отзывы:</span>
@@ -223,6 +217,14 @@ endif;
       <? endforeach; ?>
       <div class="clearfix"></div>
     </div>
+
+    <?php if($attr['confirmPhone'] || $attr['confirmEmail']): ?>
+      <div class="confirmed-user js-g-hashint" title="Личность соискателя является подлинной">ПРОВЕРЕН</div>
+    <?php endif; ?>
+    <? if(!empty($info['self_employed'])): ?>
+      <div class="self_employed-user js-g-hashint" title="Налоговый статус соискателя">САМОЗАНЯТЫЙ</div>
+    <? endif; ?>
+
     <div class='center-box'>
       <?php if( $flagOwnProfile ): ?>
         <a class='ppp__btn btn__orange' href='<?= MainConfig::$PAGE_EDIT_PROFILE ?>' style="margin-bottom: 10px">Редактировать профиль</a>
