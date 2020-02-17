@@ -22,8 +22,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php endif;?>
     <?
-			$title = $curUrl=='/' 
-				? $arSeo['meta_title'] 
+			$title = $curUrl=='/'
+				? $arSeo['meta_title']
 				: CHtml::encode($this->pageTitle);
     ?>
     <title><?php echo $title?></title>
@@ -50,11 +50,11 @@
         	$arOptimizPages = array(DS, MainConfig::$PAGE_WORK_FOR_STUDENTS, MainConfig::$PAGE_SEARCH_EMPL, MainConfig::$PAGE_VACANCY, MainConfig::$PAGE_SEARCH_PROMO, MainConfig::$PAGE_SERVICES);
         		// array with optimization
             $script->registerScriptFile($baseUrl . '/theme/js/dist/libs.js', CClientScript::POS_HEAD);
-            $script->registerScriptFile($baseUrl . '/jslib/sourcebuster.min.js', in_array($action, $arOptimizPages) 
-            	? CClientScript::POS_END 
+            $script->registerScriptFile($baseUrl . '/jslib/sourcebuster.min.js', in_array($action, $arOptimizPages)
+            	? CClientScript::POS_END
             	: CClientScript::POS_HEAD);
-            $script->registerScriptFile($baseUrl . '/theme/js/dev/index.min.js', in_array($action, $arOptimizPages) 
-            	? CClientScript::POS_END 
+            $script->registerScriptFile($baseUrl . '/theme/js/dev/index.min.js', in_array($action, $arOptimizPages)
+            	? CClientScript::POS_END
             	: CClientScript::POS_BEGIN);
 
 					// FANCYBOX
@@ -72,8 +72,8 @@
             if( ($action = $this->action->getId()) == 'profile' && Share::$UserProfile->type == 3 )
 
                 $action = 'company-profile-own';
-            $G_PAGE = isset($this->ViewModel->getViewData()->pageKind) 
-            ? $this->ViewModel->getViewData()->pageKind 
+            $G_PAGE = isset($this->ViewModel->getViewData()->pageKind)
+            ? $this->ViewModel->getViewData()->pageKind
             : $action;
 
             $setup = ContentPlus::getActionInfo('ModSite');
@@ -85,7 +85,7 @@
             {
                 $result = false;
                 foreach ($res as $row)
-                    if ($row['parent_id'] == $id) 
+                    if ($row['parent_id'] == $id)
                         $result = true;
 
                 return $result;
@@ -156,9 +156,9 @@
             var G_LOCALE = 'ru';
             var G_SITE = '<?= Subdomain::getSiteName() ?>';
         </script>
-		<?php 
+		<?php
 			// если не моб устройство
-			//endif; 
+			//endif;
 		?>
     <? $this->renderPartial('../layouts/header_partial/' . $SubdomainCache->id); // data for every site ?>
 </head>
@@ -309,10 +309,12 @@
                             $route = Yii::app()->controller->action->getId();
 
                             if ($route == "profile" )
-                            { $title = 'Личный кабинет'; }
+                            { $title = 'Мой профиль'; }
                             if ($route == "editprofile" && $_GET['ep'] == "1" )
                             { $title = 'Редактирование фото'; }
 
+                            if ( $route == "searchempl" && Share::isApplicant() )
+                            { $title = 'Поиск компаний'; }
                             if ( $route == "reviews" && Share::isEmployer() )
                             { $title = 'Оценка персонала'; }
 
@@ -327,7 +329,6 @@
                                 echo '<div class="mob-header__title">'. $title .'</div>';
                             }
                         ?>
-                        <div class="mob-header__title"><?=$title?></div>
                     </div>
                 </div>
                 <?php
@@ -335,7 +336,7 @@
                     else { include_once __DIR__ . '/../' . MainConfig::$VIEWS_COMM_CONTENT_TPL . '.php'; } // endif
                 ?>
             </div>
-            
+
             <div id="DiFooter">
                 <div id="footer-head" class="container">
                   <!--Header of footer-->
@@ -433,11 +434,11 @@
                   <!--noindex--><p class="footer__slogan">&copy; PROMMU <br><span>-</span> Сервис №1 в поиске временной работы и персонала для BTL и Event-мероприятий, <?=date('Y')?></p><!--/noindex-->
                 </div>
             </div>
-        </div>    
+        </div>
     <?
     //
     ?>
-    <? 
+    <?
     if(Yii::app()->user->hasFlash('prommu_flash'))
         foreach(Yii::app()->user->getFlashes() as $key => $message)
             if($key==='prommu_flash')
@@ -446,7 +447,7 @@
     ?>
 </body>
 </html>
-<?  
+<?
 //  $sql = "SELECT odate, id_user
 //          FROM user
 //          WHERE is_online = 1";
@@ -454,7 +455,7 @@
 
 // $count = count($users);
 
-// for ($i=0; $i < $count ; $i++) { 
+// for ($i=0; $i < $count ; $i++) {
 // 	$to_time = strtotime(date("Y-m-d h-i-s"));
 //  $from_time = $users[$i]['odate'];
 //  $odate =  round(abs($to_time - $from_time) / 60,2);
@@ -465,7 +466,7 @@
 //             ->update('user', array(
 //     	'is_online' => 0,),
 // 		'id_user=:id', array(':id'=>$users[$i]['id_user']));
-        
+
 //     }
 //     else {
 
@@ -485,7 +486,7 @@
 //     		'odate'=>date("Y-m-d h-i-s"),
 //     		'is_online' => 1,),
 // 			'id_user=:id', array(':id'=>Share::$UserProfile->id));
-  
+
 // }
 ?>
 <? if(Yii::app()->session['is_set_client']!=true): ?>

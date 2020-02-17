@@ -13,11 +13,15 @@
 .personal-acc__menu{
     width: 100%;
     display: block;
-    border-bottom: 1px solid #212121;
+    /*border-bottom: 1px solid #212121;*/
     background: #fff;
+    transition: var(--main-trans);
 }
 
 @media screen and (max-width:768px) {
+    .mobile-none {
+        display: none;
+    }
     /*Fixed*/
     .personal-acc__menu.fixed {
         position: fixed;
