@@ -95,7 +95,7 @@
                                         <div class="ico ico-med js-g-hashint" title="Есть медкнижка"></div>
                                     <?php endif; ?>
                                     <? if(!empty($val['attribs']['self_employed'])): ?>
-                                      <div class="ico ico-self-employed js-g-hashint" title="Самозанятый"></div>
+                                      <div class="ico self-employer-prommu js-g-hashint" title="Самозанятый"></div>
                                     <? endif; ?>
                                 </div>
                             <?php endif; ?>
@@ -194,7 +194,7 @@
                                         <div class="ico ico-med js-g-hashint" title="Есть медкнижка"></div>
                                     <?endif;?>
                                     <? if(!empty($val['attribs']['self_employed'])): ?>
-                                      <div class="ico ico-self-employed js-g-hashint" title="Самозанятый"></div>
+                                      <div class="ico self-employer-prommu js-g-hashint" title="Самозанятый"></div>
                                     <? endif; ?>
                                 </div>
                             </div>
