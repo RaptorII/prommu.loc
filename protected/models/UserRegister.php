@@ -489,9 +489,9 @@ class UserRegister
         if($isPhone)
         {
           $model = new User();
-          $is_user = $model->checkLogin($value,$isPhone);
+          $user = $model->checkLogin($value,$isPhone);
           $prettyPhone = Share::getPrettyPhone($value);
-          if($is_user)
+          if($user['id_user'])
           {
             $this->errors['login'] = "Данный телефон уже используется. <a href=\""
               . MainConfig::$PAGE_LOGIN . "\">Авторизоваться</a>";
@@ -522,8 +522,8 @@ class UserRegister
       {
         $value = filter_var($post['login'],FILTER_SANITIZE_EMAIL);
         $model = new User();
-        $is_user = $model->checkLogin($value);
-        if($is_user)
+        $user = $model->checkLogin($value);
+        if($user['id_user'])
         {
           $this->errors['login'] = "Данный эл. адрес уже используется. <a href=\""
             . MainConfig::$PAGE_LOGIN . "\">Авторизоваться</a>";
@@ -685,11 +685,10 @@ class UserRegister
         'posts_list' => '<li>' . implode('</li><li>', Vacancy::getPostsList()) . '</li>'
       ]);
     }
-    // email
+    // phone
     if($arData['login_type']==self::$LOGIN_TYPE_PHONE)
     {
-      $arGet = ['phone' => $arData['login'], 'code' => $arData['code']];
-      file_get_contents(Subdomain::site() . MainConfig::$PAGE_SEND_SMS_CODE . '?' . http_build_query($arGet));
+      Share::sendSMSCode($arData['login'],$arData['code']);
     }
   }
   /**
@@ -826,8 +825,8 @@ class UserRegister
       : $arUser['name']);
     // user
     $model = new User();
-    $is_user = $model->checkLogin($arUser['login']);
-    if($is_user>0 && $arUser['id_user']==$is_user)
+    $user = $model->checkLogin($arUser['login']);
+    if($user['id_user']>0 && $arUser['id_user']==$user['id_user'])
     {
       return;
     }

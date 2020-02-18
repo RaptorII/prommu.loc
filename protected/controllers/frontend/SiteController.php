@@ -1400,35 +1400,22 @@ class SiteController extends AppController
      */
     public function actionPass_restore()
     {
-        !in_array(Share::$UserProfile->type, [2,3]) ?: $this->redirect(MainConfig::$PAGE_PROFILE);
+      !Share::isGuest() && $this->redirect(MainConfig::$PAGE_PROFILE);
 
-        $email = Yii::app()->getRequest()->getParam('email');
+      $data = (new RestorePass())->passRestoreRequest();
+      if(Yii::app()->getRequest()->isPostRequest && !$data['error'])
+      {
+        $this->redirect(MainConfig::$PAGE_PASS_RESTORE);
+      }
 
-        if( Yii::app()->getRequest()->getPost('email') )
-        {
-            $res = (new RestorePass())->passRestoreRequest();
+      $title = 'Восстановление пароля';
+      $this->setBreadcrumbsEx([$title, MainConfig::$PAGE_PASS_RESTORE]);
 
-            $error = $res['error'];
-           // $message = $res['message'];
-
-            if( $error == 1 )
-            {
-                $this->redirect(Yii::app()->createAbsoluteUrl(MainConfig::$PAGE_PASS_RESTORE));
-            }
-            else
-            {
-            } // endif
-        }
-        else
-        {
-        } // endif
-
-        $this->setBreadcrumbsEx(array($title = 'Восстановление пароля', MainConfig::$PAGE_PASS_RESTORE));
-
-        $this->render(MainConfig::$VIEWS_PASS_RESTORE_FORM,
-            ['viData' => compact(['email', 'message', 'error'])],
-            ['pageTitle' => $title, 'htmlTitle' => $title, 'css' => 'pass-restore.css']
-        );
+      $this->render(
+        MainConfig::$VIEWS_PASS_RESTORE_FORM,
+        ['viData' => $data],
+        ['pageTitle' => $title, 'htmlTitle' => $title]
+      );
     }
 
 

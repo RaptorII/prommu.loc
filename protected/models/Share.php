@@ -1062,4 +1062,15 @@ public static function getUserID()
       'yandex_oauth'
     ]);
   }
+  /**
+   * @param $phone - string
+   * @param $code - code
+   * Отправка кода на телефон для верификации юзера
+   */
+  public static function sendSMSCode($phone, $code)
+  {
+    $arGet = ['phone' => $phone, 'code' => $code];
+    $url = /*'https://prommu.com'*/Subdomain::domainSite() . MainConfig::$PAGE_SEND_SMS_CODE . '?' . http_build_query($arGet);
+    file_get_contents($url);
+  }
 }

@@ -12,78 +12,116 @@ class RestorePass
      */
     public function passRestoreRequest($props = [])
     {
-        $error = '-101';
-        try
+      $arRes = ['error' => false, 'message' => ''];
+      $login = $props['email']
+        ? $props['email']
+        : filter_var(
+          Yii::app()->getRequest()->getParam('email'),
+          FILTER_SANITIZE_FULL_SPECIAL_CHARS
+        );
+
+      if(!Yii::app()->getRequest()->isPostRequest)
+      {
+        return $arRes;
+      }
+
+      try
+      {
+        $model = new User();
+        $isPhone = false;
+        $isEmail = false;
+        if(filter_var($login,FILTER_VALIDATE_EMAIL)) // Email
         {
-            $email = $props['email'] ?: Yii::app()->getRequest()->getParam('email');
-            // if( !$email ) throw new Exception('', -102);
-
-            $sql = "SELECT e.id_user
-            FROM user e
-            WHERE e.email = '{$email}' AND e.isblocked = 2";
-             $res = Yii::app()->db->createCommand($sql)->queryRow();
-            if( $res ) throw new Exception('', -104);
-
-            if(strpos($email, "@") === false && !empty($email)){
-                
-                $sql = "SELECT id_user
-                    FROM user
-                    WHERE login LIKE '%{$email}%' 
-                    ";
-                $res = Yii::app()->db->createCommand($sql)->queryRow();
-                
-                $User->id_user = $res['id_user'];
-
-                $message = "На указанный вами телефон отправлено письмо со ссылкой для восстановления пароля";
-            }
-            else{
-                $User = User::model()->find('email=:email', [':email' => $email]);
-                if( !$User ) throw new Exception('', -103); 
-                $message = "На указанный вами email адрес отправлено письмо со ссылкой для восстановления пароля";
-            }
-           
-            // получаем hash для ссылки восстановления
-            $token = md5($User->id_user . rand(100000, 1000000) . $User->passw . time());
-
-            $res = Yii::app()->db->createCommand()
-                ->insert('user_activate', array(
-                    'id_user' => $User->id_user,
-                    'token' => $token,
-                    'type' => 1,
-                    'dt_create' => date("Y-m-d H:i:s"),
-                ));
-           
-            $link = Subdomain::site() . DS . MainConfig::$PAGE_NEW_PASS . '/?t=' . $token;
-            if(strripos($email, "@"))
-            {
-                $link .= "&uid=" . $User->id_user;
-                // письмо юзеру для воссановления пароля
-                Mailing::set(6, ['email_user'=>$email, 'link_restore_pass'=>$link]);
-            }
-            else
-            {
-                file_get_contents("https://prommu.com/api.teles/?phone=$email&code=$link");
-            }
-            
-            Yii::app()->user->setFlash('Result', ['error' => 1, 'message' => $message]);
-            $data = ['error' => 1, 'message' => ""];
-
-
-        } catch (Exception $e)
+          $isEmail = true;
+        }
+        else // Телефон
         {
-            $error = abs($e->getCode());
-            switch( $e->getCode() )
-            {
-                case -102 : $message = 'Введите корректный email адрес'; break; // invalid email
-                case -103 : $message = 'Таких учетных данных не обнаружено среди зарегистрированных пользователей'; break; // token expired
-                case -104 : $message = 'Пользователь не найден - либо вы не подтвердили свой email'; break; // token expired
-                default: $error = 101; $message = 'Ошибка восстановления пароля '.$e->getMessage();
-            }
+          $login = preg_replace("/[^0-9]/", '', $login);
+          if(strlen($login)==10) // RF
+          {
+            $login = '7' . $login;
+            $isPhone = true;
+          }
+          elseif (strlen($login)==11 && in_array(substr($login,0,1), ['7','8'])) // RF
+          {
+            $isPhone = true;
+          }
+          elseif(
+            strlen($login)==13
+            &&
+            in_array(substr($login,0,3),['380','375'])
+          ) // Ukraine | Belarus
+          {
+            $isPhone = true;
+          }
+        }
+        //
+        if(!$isEmail && !$isPhone)
+        {
+          throw new Exception('', -102); // некорректный ввод
+        }
+        //
+        $user = $model->checkLogin($login,$isPhone);
+        if(!$user)
+        {
+          throw new Exception('', -103); // не найден юзер
+        }
 
-            $data = ['error' => $error, 'message' => $message];
-        } // endtry
+        if($user['isblocked']==User::$ISBLOCKED_BLOCKED) // юзер заблокирован
+        {
+          throw new Exception('', -104);
+        }
 
-        return $data;
+        // получаем hash для ссылки восстановления
+        $token = md5($user['id_user'] . rand(100000, 1000000) . $user['passw'] . time());
+        Yii::app()->db->createCommand()
+            ->insert(
+              'user_activate',
+              [
+                'id_user' => $user['id_user'],
+                'token' => $token,
+                'type' => 1,
+                'dt_create' => date("Y-m-d H:i:s"),
+              ]
+            );
+
+        $link = Subdomain::site() . DS . MainConfig::$PAGE_NEW_PASS . '/?t=' . $token;
+        if($isPhone)
+        {
+          Share::sendSMSCode($login, $link);
+        }
+        else
+        {
+          $link .= "&uid=" . $user['id_user'];
+          // письмо юзеру для воссановления пароля
+          Mailing::set(
+            6,
+            ['email_user'=>$login, 'link_restore_pass'=>$link]
+          );
+        }
+
+        Yii::app()->user->setFlash(
+          'success',
+           $isPhone
+            ? "На указанный телефон отправлено письмо со ссылкой для восстановления пароля"
+            : "На указанный email адрес отправлено письмо со ссылкой для восстановления пароля"
+        );
+      }
+      catch (Exception $e)
+      {
+        $error = abs($e->getCode());
+        switch( $e->getCode() )
+        {
+          case -102 : $message = 'Необходимо ввести корректный E-mail или Мобильный номер телефона'; break;
+          case -103 : $message = 'Таких учетных данных не обнаружено среди зарегистрированных пользователей'; break;
+          case -104 : $message = 'Пользователь заблокирован'; break;
+          default: $error = 101; $message = 'Ошибка восстановления пароля '.$e->getMessage();
+        }
+
+        $arRes = ['error' => $error, 'message' => $message];
+      }
+
+      return $arRes;
     }
 
 
@@ -97,7 +135,7 @@ class RestorePass
 
             $sql = "SELECT e.id_user
             FROM user e
-            WHERE e.email = '{$email}' AND e.isblocked = 2";
+            WHERE e.login = '{$email}' AND e.isblocked = ".User::$ISBLOCKED_BLOCKED;
              $res = Yii::app()->db->createCommand($sql)->queryRow();
             if( $res ) throw new Exception('', -104);
 
@@ -114,7 +152,7 @@ class RestorePass
                 $message = "На указанный вами телефон отправлено письмо со ссылкой для восстановления пароля";
             }
             else{
-                $User = User::model()->find('email=:email', [':email' => $email]);
+                $User = User::model()->find('login=:email', [':email' => $email]);
                 if( !$User ) throw new Exception('', -103); 
                 $message = "На указанный вами email адрес отправлено письмо со ссылкой для восстановления пароля";
             }
@@ -268,7 +306,10 @@ class RestorePass
 
 
                     $data = ['error' => 1];
-                    Yii::app()->user->setFlash('Result', ['error' => 1, 'message' => "Пароль успешно изменён теперь можете авторизироваться используя новый пароль, перейти на страницу <a href='" . MainConfig::$PAGE_LOGIN . "'>авторизации</a>"]);
+                    Yii::app()->user->setFlash(
+                      'success',
+                      'Пароль успешно изменён теперь можете авторизироваться используя новый пароль, перейти на страницу <a href="' . MainConfig::$PAGE_LOGIN . '">авторизации</a>'
+                    );
                 }
                 else
                 {

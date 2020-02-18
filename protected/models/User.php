@@ -1774,7 +1774,7 @@ class User extends CActiveRecord
 
     if(isset($query['id_user']))
     {
-      return $query['id_user'];
+      return $query;
     }
     return false;
   }
