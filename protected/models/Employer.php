@@ -517,6 +517,9 @@ class Employer extends ARModel
             }
 
             $v['fullname'] = $v['name'] . ' (№' . $v['id_user'] . ')';
+            $v['detail_url'] = MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user'];
+
+
             $v['logo'] = Share::getPhoto(
               $v['id_user'],
               UserProfile::$EMPLOYER,
@@ -572,7 +575,7 @@ class Employer extends ARModel
           $cnt = 0;
           foreach ($arIdUser as $id_user)
           {
-            if($cnt>6)
+            if($cnt>5)
             {
               break;
             }

@@ -790,7 +790,7 @@ class Promo extends ARModel
             $v['fullname'] = trim($v['firstname']) . ' '
               .  trim($v['lastname']) . ', ' . $v['birthday'];
             $v['rate_count'] = $v['rate'] + $v['rate_neg'];
-
+            $v['detail_url'] = MainConfig::$PAGE_PROFILE_COMMON . DS . $v['id_user'];
             $v['posts'] = $v['posts_all'] = [];
             $v['str_posts'] = $v['str_posts_all'] = '';
             $v['comments_count'] = 0;
@@ -858,7 +858,7 @@ class Promo extends ARModel
           $cnt = 0;
           foreach ($arIdUser as $id_user)
           {
-            if($cnt>6)
+            if($cnt>5)
             {
               break;
             }
@@ -882,7 +882,7 @@ class Promo extends ARModel
       return $arRes['data']['items'];
     }
     
-            /**
+    /**
      * экспорт соискателей в админке
      */
     public function exportPromos()
