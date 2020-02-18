@@ -230,9 +230,16 @@ foreach($attrAll as $p)
         <div class="epa__content-module" id="contacts-module">
           <div id="phone-block">
             <div class="col-xs-12 col-sm-6 profile__col">
-              <div class="profile__field" id="phone-field">
+              <div class="profile__field" id="phone-field" data-error="Телефон уже используется в системе">
                 <b class="profile__field-name">Телефон:</b>
-                <input type='text' name='user-attribs[mob]' value="<?=$attr['phone']?>" class="profile__field-input" id="phone-code" autocomplete="off">
+                <input
+                  type='text'
+                  name='user-attribs[mob]'
+                  value="<?=$attr['phone']?>"
+                  class="profile__field-input epa__required"
+                  id="phone-code"
+                  autocomplete="off"
+                >
                 <? if(count($arAdPhones)<10): ?>
                   <span class="epa__add-phone-btn js-g-hashint" title="Добавить еще телефон" id="add_phone">+</span>
                 <? endif; ?>

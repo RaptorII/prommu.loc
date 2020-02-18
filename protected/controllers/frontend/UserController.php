@@ -528,31 +528,30 @@ class UserController extends AppController
 
         if( Yii::app()->getRequest()->isPostRequest) // save data
         {
-            $arResult = Share::$UserProfile->saveProfileData();
-            if(!$arResult['err'])
+          $arErrors = Share::$UserProfile->saveProfileData();
+          if(count($arErrors))
+          {
+            if(Yii::app()->getRequest()->getParam('register_complete')=='Y')
             {
-              // после регистрации на секунду заходим на /user/lead для GTM
-              /*if(Yii::app()->getRequest()->getParam('register_complete')=='Y')
-              {
-                $this->redirect(MainConfig::$PAGE_AFTER_ACTIVATE_PROFILE);
-              }
-              else
-              {*/
-                $this->redirect(MainConfig::$PAGE_PROFILE);
-              //}
+              $this->directToCompleteRegistration($arErrors);
             }
+          }
+          else
+          {
+            $this->redirect(MainConfig::$PAGE_PROFILE);
+          }
         } 
         elseif( Yii::app()->getRequest()->getParam('del') ) // del photo
         {
-            $res = Share::$UserProfile->delProfilePhoto();
-            $s1 = $this->ViewModel->replaceInUrl('', 'del', null);
-            $this->redirect($_SERVER['HTTP_REFERER']);
+          $arResult = Share::$UserProfile->delProfilePhoto();
+          $this->ViewModel->replaceInUrl('', 'del', null);
+          $this->redirect($_SERVER['HTTP_REFERER']);
         } 
         elseif( Yii::app()->getRequest()->getParam('dm') ) // сделать фото главным
         {
-            $res = Share::$UserProfile->setPhotoAsLogo();
-            $s1 = $this->ViewModel->replaceInUrl('', 'dm', null);
-            $this->redirect($_SERVER['HTTP_REFERER']);
+          $arResult = Share::$UserProfile->setPhotoAsLogo();
+          $this->ViewModel->replaceInUrl('', 'dm', null);
+          $this->redirect($_SERVER['HTTP_REFERER']);
         }
 
         $this->setBreadcrumbsEx(array('Мой профиль', MainConfig::$PAGE_PROFILE), array($title = 'Редактирование профиля', MainConfig::$PAGE_EDIT_PROFILE));
@@ -567,7 +566,7 @@ class UserController extends AppController
         }
 
         $this->render($this->ViewModel->pageEditProfile,
-                array('viData' => Share::$UserProfile->getProfileDataEdit(), 'viErrorData' => $res),
+                array('viData' => Share::$UserProfile->getProfileDataEdit(), 'viErrorData' => $arResult),
                 array('htmlTitle' => 'Редактирование профиля')
             );
     }
@@ -591,23 +590,22 @@ class UserController extends AppController
 
     public function actionAuth()
     {
-        //$res = $this->doAuth();
-
-
-        // auth ok
-        //if( $res['auth'] )
-        if( Share::$UserProfile->id )
+      if( Share::$UserProfile->id )
+      {
+        if(Share::isGuest())
         {
-            $type = Share::$UserProfile->type;
-            if( $type == 2 || $type == 3 ) $this->redirect(MainConfig::$PAGE_PROFILE);
-            else $this->redirect(Yii::app()->createUrl('index.php'));
-
-        // auth fail
-        } else {
-            //Yii::app()->user->setFlash('auErrMess', $res['message']);
-            Yii::app()->user->setFlash('auErrMess', 'Неверный логин или пароль!');
-            $this->redirect(MainConfig::$PAGE_LOGIN);
-        } // endif
+          $this->redirect(Yii::app()->createUrl('index.php'));
+        }
+        else
+        {
+          $this->redirect(MainConfig::$PAGE_PROFILE);
+        }
+      }
+      else
+      {
+        Yii::app()->user->setFlash('auErrMess', 'Неверный логин или пароль!');
+        $this->redirect(MainConfig::$PAGE_LOGIN);
+      }
     }
 
 
@@ -731,38 +729,6 @@ class UserController extends AppController
         $this->render($view, array('viData', $data));
     }
 
-
-
-    /**
-     * Активация пользователя
-     */
-    public function actionActivate()
-    {
-        //$data = (new Auth())->activateUser();
-        //Share::$UserProfile->type<1 && $this->redirect($data); // no profile for guest
-
-        /*$isPopup = Yii::app()->getRequest()->getParam('npopup');
-        if($isPopup){
-            $city = Yii::app()->getRequest()->getParam('city');
-            Subdomain::popupRedirect($city,Share::$UserProfile->id);
-        }
-    
-        // save data
-        if( Yii::app()->getRequest()->isPostRequest && Yii::app()->getRequest()->getParam('email') )
-        {
-            $res = Share::$UserProfile->saveProfileData();
-            if(!$res['err']) $this->redirect(MainConfig::$PAGE_PROFILE);
-        }
-        
-        $this->setBreadcrumbsEx(
-            array('Мой профиль', MainConfig::$PAGE_PROFILE), 
-            array($title = 'Редактирование профиля', MainConfig::$PAGE_EDIT_PROFILE)
-        );
-        $this->setPageTitle('Регистрация успешно завершена');
-        $arResult = Share::$UserProfile->getProfileDataEdit();*/
-        //$this->redirect(MainConfig::$PAGE_PROFILE);
-        //$this->render($this->ViewModel->pageEditProfile, array('viData'=>$arResult, 'viErrorData'=>$res));
-    }
 
 
     public function actionVacpub()

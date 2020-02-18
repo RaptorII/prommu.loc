@@ -1309,7 +1309,7 @@ class Promo extends ARModel
       {
         if(in_array($v['id'],$query))
         {
-          $arRes[] = ['name'=>$v['name'], 'code'=>$v['comment']];
+          $arRes[] = ['name'=>$v['name'], 'code'=>$v['comment'], 'id'=>$v['id']];
         }
       }
     }

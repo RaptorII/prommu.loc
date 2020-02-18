@@ -1540,24 +1540,6 @@ class UserProfileEmpl extends UserProfile
         return $data;       
     }
     /*
-    *   Проверка уникальности почты. Вызывается в ajaxController
-    */
-    public function emailVerification(){
-        $oldEmail = Yii::app()->getRequest()->getParam('oemail');
-        $newEmail = Yii::app()->getRequest()->getParam('nemail');
-        $result = false;
-
-        $res = Yii::app()->db->createCommand()
-            ->select("email")
-            ->from('user')
-            ->where('email = :n AND email <> :o', array(':n' => $newEmail, ':o' => $oldEmail))
-            ->queryRow();
-
-        if($res['email']) $result = true;
-
-        return $result;
-    }
-    /*
     *   Сохранение настроек
     */
     public function saveSettings($idus){

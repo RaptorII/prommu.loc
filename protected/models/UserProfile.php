@@ -336,6 +336,64 @@ abstract class UserProfile extends CModel
                         ]
                     );
     }
+  /**
+   * @param $newEmail - string
+   * @param $oldEmail - string | bool
+   * @return bool (true => already exists)
+   * Проверка уникальности почты. Вызывается в ajaxController
+   */
+  public static function emailVerification($newEmail, $oldEmail=false)
+  {
+    if(!filter_var($oldEmail,FILTER_VALIDATE_EMAIL))
+    {
+      return true;
+    }
+
+    $condition = "email=:n";
+    $arParams = [':n'=>$newEmail];
+    if($oldEmail)
+    {
+      $condition .= " AND email<>:o";
+      $arParams[':o'] = $oldEmail;
+    }
+
+    $query = Yii::app()->db->createCommand()
+      ->select('email')
+      ->from('user')
+      ->where($condition, $arParams)
+      ->queryScalar();
+
+    return boolval($query);
+  }
+  /**
+   * @param $newPhone - string
+   * @param $oldPhone - string | bool
+   * @return bool (true => already exists)
+   * Проверка уникальности телефона. Вызывается в ajaxController
+   */
+  public static function phoneVerification($newPhone, $oldPhone=false)
+  {
+    if(strlen($newPhone)!=16)
+    {
+      return true;
+    }
+
+    $condition = "t.key=:key AND t.val=:n";
+    $arParams = [':key'=>'mob', ':n'=>$newPhone];
+    if($oldPhone)
+    {
+      $condition .= " AND t.val<>:o";
+      $arParams[':o'] = $oldPhone;
+    }
+
+    $query = Yii::app()->db->createCommand()
+      ->select('t.val')
+      ->from('user_attribs t')
+      ->where($condition, $arParams)
+      ->queryScalar();
+
+    return boolval($query);
+  }
 }
 
 

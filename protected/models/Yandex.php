@@ -2,7 +2,7 @@
 class Yandex //extends CActiveRecord
 {
   public $filename = 'yandex_job.yvl';
-  public $csvMetricFile = 'uploads/yandex_metric.csv';
+  public static $csvMetricFile = 'uploads/yandex_metric.csv';
 
 	public function generateFile()
 	{
@@ -194,32 +194,50 @@ class Yandex //extends CActiveRecord
         return $str;
     }
   /*
-   * @param $beginDate - date (format - 'Y-m-d')
-   * @param $endDate - date (format - 'Y-m-d')
+   * @param $beginDate - date (format - 'Y-m-d H:i:s')
+   * @param $endDate - date (format - 'Y-m-d H:i:s')
    * Создает файл для отправки в метрику. Если период не указан - тащит данные за вчера
    */
-  public function generateCSVForMetric($beginDate=false, $endDate=false)
+  public static function generateCSVForMetric($beginDate=false, $endDate=false)
   {
-    $model = new UserRegisterPageCounter();
-    $arRes = $model->getYandexGoals($beginDate, $endDate);
-
-    if(!count($arRes))
+    $bDate = strtotime('yesterday');
+    $eDate = $bDate + 86400;
+    if($beginDate && $endDate)
     {
-      file_put_contents(__DIR__ . "/_YM_offline_conversions_log.txt", date('Y.m.d H:i:s') . ' result_error' . PHP_EOL, FILE_APPEND);
-      return false;
+      $bDate = strtotime($beginDate);
+      $eDate = strtotime($endDate) + 86400;
     }
 
-    $content = "ClientId,Target,DateTime" . PHP_EOL;
-    $bResult = false;
+    $bDate = date('Y-m-d H:i:s',$bDate);
+    $eDate = date('Y-m-d H:i:s',$eDate);
+
+    $arRes = Yii::app()->db->createCommand()
+      ->select('ur.user, UNIX_TIMESTAMP(u.crdate) time')
+      ->from('user u')
+      ->join('user_register ur','ur.id_user=u.id_user')
+      ->where(
+        'u.crdate between :bdate and :edate',
+        [':bdate'=>$bDate, ':edate'=>$eDate]
+      )
+      ->queryAll();
+
+    $arUser = [];
     foreach ($arRes as $v)
     {
-      if($v['page']!=UserRegister::$PAGE_USER_LEAD || intval($v['time'])<1580738300)
-      {
-        continue;
-      }
+      $arUser[] = $v['user'];
+    }
 
-      $goal='offline';
-      $bResult = true;
+    $query = Yii::app()->db->createCommand()
+      ->select('ym_client, user')
+      ->from('user_client')
+      ->where(['in','user',$arUser])
+      ->queryAll();
+
+    $content = "ClientId,Target,DateTime";
+    $bResult = false;
+    $goal='offline';
+    foreach ($arRes as $v)
+    {
       /*switch ($v['page'])
       {
         case UserRegister::$STEP_TYPE: $goal=1; break;
@@ -230,26 +248,42 @@ class Yandex //extends CActiveRecord
         case UserRegister::$PAGE_USER_LEAD: $goal=5; break;
         default: $goal=6; break;
       }*/
-      $content .= $v['ym_client'] . "," . $goal . "," . $v['time'] . PHP_EOL;
+
+      foreach ($query as $j)
+      {
+        if($v['user']==$j['user'])
+        {
+          $content .= PHP_EOL . $j['ym_client'] . "," . $goal . "," . $v['time'];
+          $bResult = true;
+        }
+      }
     }
 
     if(!$bResult)
     {
-      file_put_contents(__DIR__ . "/_YM_offline_conversions_log.txt", date('Y.m.d H:i:s') . ' filter_error' . PHP_EOL . PHP_EOL, FILE_APPEND);
+      file_put_contents(
+        __DIR__ . "/_YM_offline_conversions_log.txt",
+        date('Y.m.d H:i:s') . ' search_error user=' . count($arRes) . ' clients=' . count($query) . PHP_EOL,
+        FILE_APPEND
+      );
       return false;
     }
 
-    $result = file_put_contents($this->csvMetricFile, $content);
-    if(!file_exists($_SERVER['DOCUMENT_ROOT'] . DS . $this->csvMetricFile) || !$result)
+    $result = file_put_contents(self::$csvMetricFile, $content);
+    if(!file_exists($_SERVER['DOCUMENT_ROOT'] . DS . self::$csvMetricFile) || !$result)
     {
-      file_put_contents(__DIR__ . "/_YM_offline_conversions_log.txt", date('Y.m.d H:i:s') . ' file_error' . PHP_EOL . PHP_EOL, FILE_APPEND);
+      file_put_contents(
+        __DIR__ . "/_YM_offline_conversions_log.txt",
+        date('Y.m.d H:i:s') . ' file_error' . PHP_EOL,
+        FILE_APPEND
+      );
       return false;
     }
 
     $curl = curl_init(MainConfig::$YANDEX_METRIC_OFFLINE_CONVERSIONS);
 
     curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, ['file' => new CurlFile(realpath($this->csvMetricFile))]);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, ['file' => new CurlFile(realpath(self::$csvMetricFile))]);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt(
@@ -260,7 +294,12 @@ class Yandex //extends CActiveRecord
 
     $result = curl_exec($curl);
     curl_close($curl);
-    file_put_contents(__DIR__ . "/_YM_offline_conversions_log.txt", date('Y.m.d H:i:s') . ' ' . print_r($result, true) . PHP_EOL . PHP_EOL, FILE_APPEND);
+
+    file_put_contents(
+      __DIR__ . "/_YM_offline_conversions_log.txt",
+      date('Y.m.d H:i:s') . ' success user=' . count($arRes) . ' clients=' . count($query) . PHP_EOL,
+      FILE_APPEND
+    );
     return $result;
   }
 }

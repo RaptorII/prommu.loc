@@ -44,11 +44,9 @@
 								<div class="row">
 									<div class="col-xs-12">
 										<div class="search__search-line clearfix" ></div>
-										<form action="/vacancy" method="GET" id="FmSearch">
+										<form action="<?=MainConfig::$PAGE_VACANCY?>" method="GET" id="FmSearch">
 											<div class="search__search-line clearfix">
-												<input type="hidden" id="NamePromo" name='qs' value=""/>
-												<input type="hidden" id="EdSearchPromo" name='posts[]' value=""/>
-												<div class="text"><input type="text" id="EdSearch" name='post[<?$posts?>]' placeholder="Введите название вакансии..." data-ph1="Введите название вакансии..." data-ph2="Введите название резюме..." data-ph3="Введите название компании..." style='background: rgb(245, 245, 245); width: 97%; border: 0; font-size: 16px; line-height: 17px;' /></div>
+												<div class="text"><input type="text" id="EdSearch" name='srch_post' placeholder="Введите название вакансии..." data-ph1="Введите название вакансии..." data-ph2="Введите название резюме..." data-ph3="Введите название компании..." style='background: rgb(245, 245, 245); width: 97%; border: 0; font-size: 16px; line-height: 17px;' /></div>
 												<div id="multyselect-cities">
                           <span class="search__search-city">Введите город</span>
                         </div>
@@ -63,8 +61,8 @@
 						<?php if(!Share::isEmployer()): ?>
 							<div class="search__right">
 								<p class="search__wrd-module">Например:  
-									<a  class="selectInd search__small" id="#prom" href="javascript:void(0)"><ins class='search-word'>промоутер</ins></a>
-									<a  class="selectInd search__small" id="#mench" href="javascript:void(0)"><ins class='search-word'> мерчендайзер</ins></a>
+									<a  class="selectInd search__small" data-id="111" href="javascript:void(0)"><ins class='search-word'>промоутер</ins></a>
+									<a  class="selectInd search__small" data-id="114" href="javascript:void(0)"><ins class='search-word'> мерчендайзер</ins></a>
 								</p>
 							</div>
 						<?php endif;?>
@@ -212,16 +210,16 @@
                         <?foreach($content['applicants'] as $key => $item):?>
                             <div class="item applicants__item">
                                 <div class="m-applicants__item">
-                                    <a href="<?=$item['datail-url']?>" class="applicants__item-ilink" >
+                                    <a href="<?=$item['detail_url']?>" class="applicants__item-ilink" >
                                         <img src="<?=$item['logo']?>" alt="" class="applicants__item-img js-g-hashint" title="<?=$item['fullname']?>"/>
                                         <?php if($item['is_online']): ?>
                                         <span class="promo__item-onl"><span>В сети</span>
                                             <?php endif; ?>
                                     </a>
                                     <div class="applicants__item-info">
-                                        <a class="applicants__item-name" href="<?=$item['datail-url']?>"><?=$item['firstname']?></a>
-                                        <a class="applicants__item-name applicants__item-lastname" href="<?=$item['datail-url']?>"><?=$item['lastname']?></a>
-                                        <a class="applicants__item-name bold" href="<?=$item['datail-url']?>"><?=$item['birthday']?></a>
+                                        <a class="applicants__item-name" href="<?=$item['detail_url']?>"><?=$item['firstname']?></a>
+                                        <a class="applicants__item-name applicants__item-lastname" href="<?=$item['detail_url']?>"><?=$item['lastname']?></a>
+                                        <a class="applicants__item-name bold" href="<?=$item['detail_url']?>"><?=$item['birthday']?></a>
                                         <div class="applicants__item-line"></div>
                                         <?php if (!empty($item['str_posts_all'])): ?>
                                             <div class="applicants__item-pos applicants__item-open" data-itempos="<?=$item['str_posts_all'];?>">
@@ -270,14 +268,14 @@
                         <?foreach($content['companies'] as $key => $item):?>
                             <div class="item companies__item">
                                 <div class="m-companies__item">
-                                    <a href="<?=$item['datail-url']?>" class="companies__item-ilink">
+                                    <a href="<?=$item['detail_url']?>" class="companies__item-ilink">
                                         <img src="<?=$item['logo']?>" alt="" class="js-g-hashint companies__item-img" title="<?=$item['name']?>"/>
                                         <?php if($item['is_online']): ?>
                                           <span class="promo__item-onl"><span>В сети</span>
                                         <?php endif; ?>
                                     </a>
                                     <div class="companies__item-info">
-                                        <a class="companies__item-name" href="<?=$item['datail-url']?>"><?=$item['fullname'];?></a>
+                                        <a class="companies__item-name" href="<?=$item['detail_url']?>"><?=$item['fullname'];?></a>
 
                                         <div class="companies__item-line"></div>
                                         <?if(!empty($item['str_cities'])):?>
@@ -355,7 +353,7 @@
                         </div>
                         <div class="benefits__cell">
                             <h2 class="benefits__cell-title">Участие в рейтингах</h2>
-                            <p class="benefits__cell-text">Вы можете участвовать в системе рейтингов и получить статус лучший работодатель или лучший соискатель</p>
+                            <p class="benefits__cell-text">Вы можете участвовать в системе рейтингов и получить статус лучший работодатель или лучший соискатель.</p>
                         </div>
                     </div>
                     <div class="clearfix"></div>
@@ -367,7 +365,7 @@
                         </div>
                         <div class="benefits__cell">
                             <h2 class="benefits__cell-title">Удобные уведомления</h2>
-                            <p class="benefits__cell-text">Вы можете получать следующие уведомления о новой вакансии, отвечающей вашим требованиям, о приглашении от работодателя, об изменении рейтинга или добавлении отзыва и многое другое<br/>
+                            <p class="benefits__cell-text">Вы можете получать следующие уведомления: о новой вакансии, отвечающей вашим требованиям, о приглашении от работодателя, об изменении рейтинга или добавлении отзыва и многое другое.<br/>
                                 <a href="https://prommu.com/services/push-notification"><ins>Подробнее</ins></a></p>
                         </div>
                     </div>
@@ -379,7 +377,7 @@
                         </div>
                         <div class="benefits__cell">
                             <h2 class="benefits__cell-title">Геолокация</h2>
-                            <p class="benefits__cell-text">Вы не знаете где сейчас нанятый специалист? Воспользуйтесь геолокацией в мобильном приложении Prommu и вы всегда сможете отследить его местоположение</p>
+                            <p class="benefits__cell-text">Вы не знаете где сейчас нанятый специалист? Воспользуйтесь геолокацией в мобильном приложении Prommu и вы всегда сможете отследить его местоположение.</p>
                         </div>
                     </div>
                     <div class="clearfix"></div>

@@ -125,9 +125,8 @@ class Cron
                 UserRegister::setRegisterNotificetions(); // отправляем напоминающие письма товарищам, незавершившим регистрацию
                 break;
             case '5':
-              //$yandex = new Yandex();
-              //$yandex->generateCSVForMetric(); // формируем CSV с офлайн конверсиями для Яндекс метрики и отправляем сразу в ЯМ
-              break;
+                Yandex::generateCSVForMetric(); // формируем CSV с офлайн конверсиями для Яндекс метрики и отправляем сразу в ЯМ
+                break;
             case '12':
                     $model = new Yandex();
                     $model->generateFile(); // формируем вакансии для Яндекс Работа 2 раза в день

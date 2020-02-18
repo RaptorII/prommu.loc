@@ -606,10 +606,12 @@ $(document).ready(function () {
 jQuery(function($){
 	var hwLen = 3, // Вес-рост - 3 цифры
 			oldEmail = $('#epa-email').val(),
+      oldPhone = $('#phone-code').val(),
 			cityM = '#city-module',
 			cntctM = '#contacts-module',
 			mainM = '#main-module',
 			emailTimer = null,
+      phoneTimer = null,
 			arErrorsFields = [],
 			arIdCities = [],
 			arNewPosts = [],
@@ -1053,198 +1055,91 @@ jQuery(function($){
 	//
 	$('.epa__save-btn').click(function(e){
 		var self = this,
-				epattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i,
-				nemail = $('#epa-email').val(),
-				resEmail = false,
+        bEmail = $('#email-field').hasClass('erroremail'),
+        bPhone = $('#phone-field').hasClass('errorphone'),
 				errors = false;
 
 		e.preventDefault();
 
     MainScript.stateLoading(true);
 
-		resEmail = epattern.test(nemail) ? remErr('.epa__email') : addErr('.epa__email');
-		$('.epa__email').removeClass('erroremail');
+    $.each($(cityM+' .epa__required'), function(){
+      if(!checkField(this)) errors = true;
+    });
+    $.each($(cityM+' .epa__days-checkboxes'), function(){
+      var checked = false,
+          $p = $(this);
 
-		if(resEmail && nemail!=oldEmail){
-			clearTimeout(emailTimer);
-			emailTimer = setTimeout(function(){
-				$.ajax({
-					type: 'POST',
-					url: '/ajax/emailVerification',
-					data: 'nemail='+nemail+'&oemail='+oldEmail,
-					dataType: 'json',
-					success: function(res){
-						res
-						? $('.epa__email').addClass('erroremail error')
-						: $('.epa__email').removeClass('erroremail error');
+      $.each($p.find('.epa__day-input'), function(){
+        if($(this).is(':checked')) checked=true;
+      });
+      if(!checked) {
+        $.each($p.find('.epa__checkbox'), function(){ addErr(this) })
+        errors = true;
+      }
+    });
 
-						errorFieldName('#epa-email',res);
+    if(!checkField('[name="about-mself"]')) errors = true;
 
-						$.each($(cityM+' .epa__required'), function(){
-							if(!checkField(this)) errors = true; 
-						});
-						$.each($(cityM+' .epa__days-checkboxes'), function(){
-							var checked = false,
-									$p = $(this);
+    if(!checkField($('[name="user-attribs[edu]"]'))) errors = true;
+    if(!checkField($('[name="langs[]"]'))) errors = true;
+    $.each($('.epa__post-detail .epa__required'), function(){
+      if(!checkField(this)) errors = true;
+    });
 
-							$.each($p.find('.epa__day-input'), function(){ 
-								if($(this).is(':checked')) checked=true;
-							});
-							if(!checked) {
-								$.each($p.find('.epa__checkbox'), function(){ addErr(this) })
-								errors = true; 
-							}
-						});
+    checkPhone({'type':'input'});
 
-						if(!checkField('[name="about-mself"]')) errors = true;
+    if($('.error').length>0 || errors || bEmail || bPhone)
+    {
+      MainScript.stateLoading(false);
+      $.fancybox.open({
+        src: '.prmu__popup',
+        type: 'inline',
+        touch: false,
+        afterClose: function(){
+          $('html, body').animate({ scrollTop: $($('.error')[0]).offset().top-20 }, 1000);
+        }
+      });
+    }
+    else
+    {
+      var arPosts = $('#epa-list-posts input'),
+        arCityItems = $('#city-module .epa__city-item'),
+        arTimeItems = $('#city-module .epa__period input'),
+        addInputs = '';
+      $.each(arPosts, function(){ // добавляем массив опыта вакансий
+        if($(this).is(':checked'))
+          addInputs += '<input type="hidden" name="donjnost-exp[]" value="'+$(this).val()+'">';
+      });
+      $.each(arCityItems, function(){ // добавляем ID городов
+        addInputs += '<input type="hidden" name="city[]" value="'+this.dataset.idcity+'">';
+      });
+      $('#epa-edit-form').append(addInputs);
 
-						if(!checkField($('[name="user-attribs[edu]"]'))) errors = true;
-						if(!checkField($('[name="langs[]"]'))) errors = true;
-						$.each($('.epa__post-detail .epa__required'), function(){
-							if(!checkField(this)) errors = true; 
-						});
+      $.each(arTimeItems, function(){ 	// преображаем время в достойный вид
+        var val = $(this).val();
+        if(val!=''){
+          let arVals = val.split('до');
+          let newVal = getNum(arVals[0]) + '-' + getNum(arVals[1]);
+          $(this).val(newVal)
+        }
+      });
 
-						checkPhone({'type':'input'});
+      var arAllInputs = $('.epa__cities-block-list input');
+      $.each(arAllInputs, function(){
+        var main = $(this).closest('.epa__city-item'),
+          idCity = main[0].dataset.idcity;
 
-						var arErrors = $('.error');
-						if(arErrors.length>0)
-						{
-              MainScript.stateLoading(false);
-							$.fancybox.open({
-								src: '.prmu__popup',
-								type: 'inline',
-								touch: false,
-								afterClose: function(){
-									$('html, body').animate({ scrollTop: $($('.error')[0]).offset().top-20 }, 1000);
-								}
-							});
-						}
-
-						if(!errors && !arErrors.length){
-							var arPosts = $('#epa-list-posts input'),
-								arCityItems = $('#city-module .epa__city-item'),
-								arTimeItems = $('#city-module .epa__period input'),
-								addInputs = '';
-							$.each(arPosts, function(){ // добавляем массив опыта вакансий
-								if($(this).is(':checked'))
-									addInputs += '<input type="hidden" name="donjnost-exp[]" value="'+$(this).val()+'">';
-							});
-							$.each(arCityItems, function(){ // добавляем ID городов
-								addInputs += '<input type="hidden" name="city[]" value="'+this.dataset.idcity+'">';
-							});
-							$('#epa-edit-form').append(addInputs);	
-
-							$.each(arTimeItems, function(){ 	// преображаем время в достойный вид
-								var val = $(this).val();
-								if(val!='')
-								{
-									let arVals = val.split('до');
-                  let newVal = getNum(arVals[0]) + '-' + getNum(arVals[1]);
-									$(this).val(newVal)
-								}
-							});
-							
-							var arAllInputs = $('.epa__cities-block-list input');
-							$.each(arAllInputs, function(){
-								var main = $(this).closest('.epa__city-item'),
-									idCity = main[0].dataset.idcity;
-
-								if($(this).closest('.epa__days-checkboxes').length){
-									$(this).attr('name', 'days['+idCity+']');
-								}
-								if($(this).closest('.epa__period-list').length){
-									var day = $(this).attr('name').slice(-3);
-									$(this).attr('name', 'time['+idCity+']'+day);
-								}					
-							});
-							$('#epa-edit-form').submit();
-							//console.log($('#epa-edit-form').serializeArray());
-						}
-					}
-				});
-			}, 500);
-		}
-		else{
-			$.each($(cityM+' .epa__required'), function(){
-				if(!checkField(this)) errors = true; 
-			});
-			$.each($(cityM+' .epa__days-checkboxes'), function(){
-				var checked = false,
-						$p = $(this);
-
-				$.each($p.find('.epa__day-input'), function(){ 
-					if($(this).is(':checked')) checked=true;
-				});
-				if(!checked) {
-					$.each($p.find('.epa__checkbox'), function(){ addErr(this) })
-					errors = true; 
-				}
-			});
-
-			if(!checkField('[name="about-mself"]')) errors = true; 
-
-			if(!checkField($('[name="user-attribs[edu]"]'))) errors = true;
-			if(!checkField($('[name="langs[]"]'))) errors = true;
-			$.each($('.epa__post-detail .epa__required'), function(){
-				if(!checkField(this)) errors = true; 
-			});
-
-			checkPhone({'type':'input'});
-
-			var arErrors = $('.error');
-			if(arErrors.length>0)
-			{
-        MainScript.stateLoading(false);
-        $.fancybox.open({
-          src: '.prmu__popup',
-          type: 'inline',
-          touch: false,
-          afterClose: function(){
-            $('html, body').animate({ scrollTop: $($('.error')[0]).offset().top-20 }, 1000);
-          }
-        });
-			}
-		//console.log(arErrors);
-			if(!errors && !arErrors.length){
-				var arPosts = $('#epa-list-posts input'),
-					arCityItems = $('#city-module .epa__city-item'),
-					arTimeItems = $('#city-module .epa__period input'),
-					addInputs = '';
-				$.each(arPosts, function(){ // добавляем массив опыта вакансий
-					if($(this).is(':checked'))
-						addInputs += '<input type="hidden" name="donjnost-exp[]" value="'+$(this).val()+'">';
-				});
-				$.each(arCityItems, function(){ // добавляем ID городов
-					addInputs += '<input type="hidden" name="city[]" value="'+this.dataset.idcity+'">';
-				});
-				$('#epa-edit-form').append(addInputs);	
-
-				$.each(arTimeItems, function(){ 	// преображаем время в достойный вид
-					var val = $(this).val();
-					if(val!=''){
-						let arVals = val.split('до');
-						let newVal = getNum(arVals[0]) + '-' + getNum(arVals[1]);
-						$(this).val(newVal)
-					}
-				});
-				
-				var arAllInputs = $('.epa__cities-block-list input');
-				$.each(arAllInputs, function(){
-					var main = $(this).closest('.epa__city-item'),
-						idCity = main[0].dataset.idcity;
-
-					if($(this).closest('.epa__days-checkboxes').length){
-						$(this).attr('name', 'days['+idCity+']');
-					}
-					if($(this).closest('.epa__period-list').length){
-						var day = $(this).attr('name').slice(-3);
-						$(this).attr('name', 'time['+idCity+']'+day);
-					}
-				});
-				$('#epa-edit-form').submit();
-				//console.log($('#epa-edit-form').serializeArray());
-			}
-		}
+        if($(this).closest('.epa__days-checkboxes').length){
+          $(this).attr('name', 'days['+idCity+']');
+        }
+        if($(this).closest('.epa__period-list').length){
+          var day = $(this).attr('name').slice(-3);
+          $(this).attr('name', 'time['+idCity+']'+day);
+        }
+      });
+      $('#epa-edit-form').submit();
+    }
 	});
 	//
 	//	добавить еще один номер
@@ -1503,6 +1398,37 @@ jQuery(function($){
 				}, 500);
 			}	
 		}
+    else if(id=='phone-code')
+    {
+      if(!$(label).hasClass('error'))
+      {
+        if(val!=oldPhone)
+        {
+          var code = $('[name="__phone_prefix"]').val();
+          clearTimeout(phoneTimer);
+          phoneTimer = setTimeout(function(){
+            $.ajax({
+              type: 'POST',
+              url: '/ajax/phoneVerification',
+              data: 'nphone=' + code + val + '&ophone=' + code + oldPhone,
+              dataType: 'json',
+              success: function(res){
+                if(res){
+                  $('#phone-field').addClass('errorphone error');
+                }
+                else{
+                  $('#phone-field').removeClass('errorphone error');
+                }
+              }
+            });
+          }, 500);
+        }
+        else
+        {
+          $('#phone-field').removeClass('errorphone error');
+        }
+      }
+    }
 		else if($(label).hasClass('epa__education')) { // образование
 			var selected = false;
 			$.each($(label).find('[type="radio"]'),

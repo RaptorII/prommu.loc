@@ -10,23 +10,54 @@ class GoogleAnalytics
 {
   public static function MeasurementProtocol()
   {
-    $model = new UserRegisterPageCounter();
-    $arRes = $model->getGoogleGoals();
+    $hour = date('G');
+    $min = date('i');
+    if(intval($hour)==0 && intval($min)<5) // из-за неточностей крона проверяем реги в последние минуты предыдущего дня
+    {
+      $date = strtotime('yesterday');
+    }
+    else
+    {
+      $date = strtotime('today');
+    }
+
+    $bDate = date('Y-m-d H:i:s',$date);
+    $eDate = date('Y-m-d H:i:s',($date + 86400));
+
+    $arUser = Yii::app()->db->createCommand()
+      ->select('ur.user')
+      ->from('user u')
+      ->join('user_register ur','ur.id_user=u.id_user')
+      ->where(
+        'u.crdate between :bdate and :edate',
+        [':bdate'=>$bDate, ':edate'=>$eDate]
+      )
+      ->queryColumn();
+
+    $arRes = Yii::app()->db->createCommand()
+      ->select('client')
+      ->from('user_client')
+      ->where([
+        'and',
+        'is_send_to_ga=0',
+        ['in','user',$arUser]
+      ])
+      ->queryColumn();
 
     if(!count($arRes))
     {
       file_put_contents(
         __DIR__ . "/_GA_measurement_protocol_log.txt",
-        date('Y.m.d H:i:s') . ' result_error' . PHP_EOL,
+        date('Y.m.d H:i:s') . ' search_error' . PHP_EOL,
         FILE_APPEND
       );
       return false;
     }
 
-    $arRequest = $arId = [];
-    foreach ($arRes as $v)
+    $arRequest = $arUpdate = [];
+    foreach ($arRes as $client)
     {
-      if($v['page']!=UserRegister::$PAGE_USER_LEAD || count($arRequest)>=20) // не более 20и обращений в одном запросе
+      if(count($arRequest)>=20) // не более 20и обращений в одном запросе
       {
         continue;
       }
@@ -35,7 +66,7 @@ class GoogleAnalytics
         'v' => '1',
         't' => 'event',
         'tid' => MainConfig::$GOOGLE_ANALYTICS_ID, // ID счетчика
-        'cid' => $v['client'], // client ID
+        'cid' => $client, // client ID
         'ec' => 'offline', // Категория
         'ea' => 'user' // Действие
       ];
@@ -44,7 +75,7 @@ class GoogleAnalytics
       if((strlen($str) / 1000) < 16) // общий размер запроса не может превышать 16 Кб
       {
         $arRequest[] = http_build_query($arr);
-        $arId[] = $v['id'];
+        $arUpdate[] = $client;
       }
     }
 
@@ -52,8 +83,7 @@ class GoogleAnalytics
     {
       file_put_contents(
         __DIR__ . "/_GA_measurement_protocol_log.txt",
-        date('Y.m.d H:i:s') . ' filter_error'
-        . PHP_EOL . print_r($arRequest, true) . PHP_EOL,
+        date('Y.m.d H:i:s') . ' filter_error' . PHP_EOL,
         FILE_APPEND
       );
       return false;
@@ -78,7 +108,12 @@ class GoogleAnalytics
     curl_close($curl);
     $result = json_decode($result,3);
 
-    $model->updateByPkArray(['is_send'=>1], $arId);
+    Yii::app()->db->createCommand()
+      ->update(
+        'user_client',
+        ['is_send_to_ga'=>1],
+        ['in','client',$arUpdate]
+      );
     /*if(count($result['hitParsingResult']))
     {
       $arT = [];
@@ -107,8 +142,8 @@ class GoogleAnalytics
 
     file_put_contents(
       __DIR__ . "/_GA_measurement_protocol_log.txt",
-      date('Y.m.d H:i:s') . ' ' . $url . PHP_EOL . $query
-      . PHP_EOL . print_r($result, true) . PHP_EOL,
+      date('Y.m.d H:i:s') . ' ' . $url . PHP_EOL . print_r($arUpdate,true)
+      . PHP_EOL,
       FILE_APPEND
     );
     return $result;

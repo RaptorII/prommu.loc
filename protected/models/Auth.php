@@ -6,607 +6,13 @@
  */
 class Auth
 {
-    /**
-     * Активация пользователя
-     */
-    public function activateUser()
-    {
-        $idUs = Yii::app()->getRequest()->getParam('uid');
-        $network = Yii::app()->getRequest()->getParam('network');
-
-        ///ANALITYCS DATA
-        $referer = filter_var(Yii::app()->getRequest()->getParam('referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $transition = filter_var(Yii::app()->getRequest()->getParam('transition'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $admin  = filter_var(Yii::app()->getRequest()->getParam('admin'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $canal = filter_var(Yii::app()->getRequest()->getParam('canal'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $sex = filter_var(Yii::app()->getRequest()->getParam('sex'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $smart = filter_var(Yii::app()->getRequest()->getParam('smart'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $campaign = filter_var(Yii::app()->getRequest()->getParam('campaign'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $content = filter_var(Yii::app()->getRequest()->getParam('content'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $keywords = Yii::app()->getRequest()->getParam('keywords');
-        $point = filter_var(Yii::app()->getRequest()->getParam('point'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $last_referer = filter_var(Yii::app()->getRequest()->getParam('last_referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        ///ANALITYCS DATA 
-        $type = filter_var(Yii::app()->getRequest()->getParam('type'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $birthday = filter_var(Yii::app()->getRequest()->getParam('birthday'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $photos = filter_var(Yii::app()->getRequest()->getParam('photos'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        
-         $pm = Yii::app()->getRequest()->getParam('pm');
-        if($pm == '') $pm = 'none';
-        
-        $ips  = @$_SERVER['HTTP_CLIENT_IP'];
-        $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
-        $remote  = @$_SERVER['REMOTE_ADDR'];
-        
-        if(filter_var($ips, FILTER_VALIDATE_IP)) $ip = $ips;
-        elseif(filter_var($forward, FILTER_VALIDATE_IP)) $ip = $forward;
-        else $ip = $remote;
-    
-        $clients = Yii::app()->db->createCommand()
-                ->select("a.client, a.ip")
-                ->from('user_client a')
-                ->where('a.ip = :ip', array(':ip' => $ip))
-                ->queryRow();
-        $client = $clients['client'];
-    
-        ///DOUBLE NULL
-        $transition = explode(",", $transition);
-        $transition = $transition[0];
-
-        $content = explode(",", $content);
-        $content = $content[0];
-
-        $campaign = explode(",", $campaign);
-        $campaign = $campaign[0];
-
-        $canal = explode(",", $canal);
-        $canal = $canal[0];
-        
-        $usu = Yii::app()->db->createCommand()
-                ->select("a.keywords, a.point, a.last_referer, a.transition")
-                ->from('analytic a')
-                ->where('id_us = :t', array(':t' => $idUs))
-                ->queryRow();
-        
-        $keywords = $usu['keywords'];
-        $keywords = $this->encoderSys($keywords);
-
-         $point = $usu['point'];
-         $last_referer = $usu['last_referer'];
-         
-        $transition = $usu['transition'];
-
-         
-
-
-        
-        if ( $token = Yii::app()->getRequest()->getParam('t') ) 
-        {
-            $usData = Yii::app()->db->createCommand()
-                ->select("u.id_user, u.status, a.token, a.data")
-                ->from('user_activate a')
-                ->join('user u', 'u.id_user = a.id_user')
-                ->where('a.token = :t', array(':t' => $token))
-                ->queryRow();
-
-
-            $id = $usData['id_user'];
-            $idUs = $usData['id_user'];
-
-            if($usData['status'] == 3){
-                $usDataTest = Yii::app()->db->createCommand()
-                ->select("u.id_user")
-                ->from('employer u')
-                ->where('u.id_user = :t', array(':t' => $idUs))
-                ->queryRow();
-            } elseif($usData['status'] == 2){
-                $usDataTest = Yii::app()->db->createCommand()
-                ->select("u.id_user")
-                ->from('resume u')
-                ->where('u.id_user = :t', array(':t' => $idUs))
-                ->queryRow();
-            }
-
-            if ($id > 0) {
-              
-                if ($usData['status'] == 3 && empty($usDataTest['id_user']))
-                {   
-
-                    $data = json_decode($usData['data']);
-                    $res = Yii::app()->db->createCommand()
-                        ->insert('employer', array('id_user' => $usData['id_user'],
-                                'name' => ucfirst($data->name),
-                                'firstname' => $data->fname, 
-                                'lastname' => $data->lname,
-                                'logo' => $data->photos,
-                                'crdate' => date('Y-m-d H:i:s'),
-                                'admin' => $admin,
-                                'type' => 102 // устанавливаем по умолчанию "Прямой работодатель"
-                            ));
-
-                    $res = Yii::app()->db->createCommand()
-                        ->insert('user_city', array('id_user' => $usData['id_user'],
-                                'id_city' => 1307,
-                            ));
-
-                    $analytData = array('id_us' => $usData['id_user'],
-                        'name' => ucfirst($data->lname),
-                        'type' => 3,
-                        'date' =>  date('Y-m-d H:i:s'),
-                        'referer' => $referer,
-                        'canal' => $canal,
-                        'campaign' => $campaign,
-                        'content' => $content, 
-                        'keywords' => $keywords,
-                        'point' => $point, 
-                        'transition' => $transition,
-                        'last_referer' => $last_referer,
-                        'admin' => $admin,
-                        'subdomen' => 0,
-                        'client' => $client,
-                        'ip' => $ip, 
-                        'source' => $pm
-                    );
-
-                     $res = Yii::app()->db->createCommand()
-                        ->insert('analytic', $analytData);
-
-                   
-                        $pid = Yii::app()->db->createCommand("SELECT u.id  FROM  employer u WHERE u.id = (SELECT MAX(u.id)  FROM employer u)")->queryScalar();
-                    $pid+1;
-
-                     if($photos)
-                    {
-                        $res = Yii::app()->db->createCommand()
-                            ->insert('user_photos', array('id_promo' => '0',
-                                'id_user' => $usData['id_user'],
-                                'photo' => $photos,
-                                'npp' => 1,
-                                'id_empl' => $pid,
-                            ));
-                    }
-                    else
-                    {
-                    } // endif
-
-
-                // соискатель
-                } elseif ($usData['status'] == 2 && empty($usDataTest['id_user']))
-                {   
-                    
-                    
-                    $data = json_decode($usData['data']);
-                    
-
-                    $pid = Yii::app()->db->createCommand("SELECT u.id  FROM  resume u WHERE u.id = (SELECT MAX(u.id)  FROM resume u)")->queryScalar();
-                    $pid+1;
-
-
-                    if(empty($sex)) $data->sex = $this->SexOnder(ucfirst($data->fname ? $data->fname : $data->name ));
-                    $insData = array('id_user' => $usData['id_user'],
-                        'firstname' => ucfirst($data->fname ? $data->fname : $data->name ),
-                        'lastname' =>  ucfirst($data->lname),
-                        'isman' => $sex,
-                        'smart' => $smart,
-                        'date_public' => date('Y-m-d H:i:s'),
-                        'mdate' => date('Y-m-d H:i:s'),
-                        'admin' => $admin,
-                        'birthday' => date("Y-m-d", strtotime($data->birthday)),
-                    );
-
-                    
-                    if($sex = 1) {
-                        $male = 'MALE';
-                    }
-                    else $male = 'FEMALE';
-                                     
-
-                    if($data->photos) {
-                         $insData = array('id_user' => $usData['id_user'],
-                        'firstname' => ucfirst($data->fname ? $data->fname : $data->name ),
-                        'lastname' =>  ucfirst($data->lname),
-                        'isman' => $sex,
-                        'smart' => $smart,
-                        'date_public' => date('Y-m-d H:i:s'),
-                        'mdate' => date('Y-m-d H:i:s'),
-                        'admin' => $admin,
-                        'birthday' => date("Y-m-d", strtotime($data->birthday)),
-                        'photo' => $data->photos
-                    );
-                    }
-
-                    $res = Yii::app()->db->createCommand()
-                        ->insert('user_mech', array('id_us' => $usData['id_user'],
-                                'crdate' => date('Y-m-d H:i:s'),
-                                'id_mech' => 111,
-                                'isshow' => 0, 
-                                ));
-
-                    $analytData = array('id_us' => $usData['id_user'],
-                        'name' => ucfirst($data->name),
-                        'date' =>  date('Y-m-d H:i:s'),
-                        'type' => 2,
-                        'referer' => $referer,
-                        'canal' => $canal,
-                        'campaign' => $campaign,
-                        'content' => $content, 
-                        'keywords' => $keywords,
-                        'point' => $point, 
-                        'transition' => $transition,
-                        'last_referer' => $last_referer,
-                        'admin' => $admin,
-                        'subdomen' => 0,
-                        'client' => $client,
-                        'ip' => $ip, 
-                        'source' => $pm
-                    );
-
-                    $res = Yii::app()->db->createCommand()
-                        ->insert('user_city', array('id_user' => $usData['id_user'],
-                            'id_resume' => $pid,
-                                'id_city' => 1307,
-                            ));
-
-                     $res = Yii::app()->db->createCommand()
-                        ->insert('analytic', $analytData);
-
-                     
-                    // дата рождения
-                    if( $data->bdate ) {
-                        $data->bdate = date("Y-m-d", strtotime($data->bdate));
-                        $insData['birthday'] = $data->bdate;
-                    }
-                    else
-                    {
-                        $insData['birthday'] = '1970-01-01';
-                    }
-
-                    // загрузка фото ВК
-                    if( $data->photo_200 && ($fid = $this->loadVKLogo($data)) )
-                    {
-                        $insData['photo'] = $fid;
-
-                    // загрузка фото ВК
-                    } elseif( $data->fb && ($fid = $this->loadFBLogo($data)) )
-                    {
-                        $insData['photo'] = $fid;
-                    } // endif
-
-                    $insData['isman'] = $data->isman ? $data->isman : $data->sex;
-
-                    $res = Yii::app()->db->createCommand()
-                        ->insert('resume', $insData);
-
-
-                    // если есть фото
-                    if( $fid )
-                    {
-                        $pid = Yii::app()->db->createCommand('SELECT LAST_INSERT_ID()')->queryScalar();
-                        $res = Yii::app()->db->createCommand()
-                            ->insert('user_photos', array('id_promo' => $pid,
-                                'id_user' => $usData['id_user'],
-                                'photo' => $fid,
-                            ));
-                    }
-                    else
-                    {
-                    } // endif
-
-
-                }
-
-                $this->userUpdate(array('isblocked' => 3), 'id_user='.$usData['id_user']);
-
-                
-
-                $this->AuthorizeNet(['id' => $usData['id_user']]);
-
-                $link = Subdomain::site() . "/user/activate/?type=$type&uid=".$usData['id_user']."&sex=".$sex."&smart=".$smart."&birthday=".$birthday."&photos=".$photos."&referer=".$referer."&keywords=".$keywords."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&point=".$point."&last_referer=".$last_referer;
-                $usData = Yii::app()->db->createCommand()
-                ->select("u.email, u.status")
-                ->from('user u')
-                ->where('u.id_user = :id', array(':id' => $usData['id_user']))
-                ->queryRow();
-
-                $emails = $usData['email'];
-                // $emails = filter_var($emails,FILTER_VALIDATE_EMAIL);
-
-                if( $usData['status'] == 2 && empty($usDataTest['id_user']))
-                {   
-                    $types = "Соискатель";
-                    $message = "<tr><td>Ваш пользователь успешно активирован. Нажмите на кнопку ниже, чтобы перейти к форме заполнения данных. После того, как вы заполните все необходимые данные о себе - ваш профиль будет виден в общем списке соискателей и поиске на сайте, а также вы сможете откликаться на понравившиеся вакансии.";
-                    $nam = $data->name ? $data->name : $data->fname;
-                    $names = ucfirst($data->fname ? $data->fname : $data->name ).' '.ucfirst($data->lname);
-
-                    if(!empty($emails)) // отправка сообщения клиенту
-                        Share::sendmail($emails, "Prommu: активация прошла успешно", $message);
-
-                    $messages = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден)
-                        <br/>
-                        <br/>
-                        Пользователь: <b>%s</b>, 
-                        Тип:<b>%s</b>,
-                        Имя:<b>%s</b>, Email: <b>%s</b>,
-                        <br/>
-                        ----------------------------------------------------------
-                        <br/>
-                        Тип трафика:<b>%s</b> 
-                        <br/>
-                        Источник: <b>%s</b> 
-                        <br/>
-                        Канал: <b>%s</b>  
-                        <br/>
-                        Кампания: <b>%s</b>  
-                        <br/>
-                        Контент: <b>%s</b>  
-                        <br/>
-                        Ключевые слова: <b>%s</b> 
-                        <br/>
-                        Точка входа: <b>%s</b> 
-                        <br/>
-                        Реферер: <b>%s</b>
-                        <br/>
-                        IP: <b>%s</b>
-                         <br/>
-                        GA: <b>%s</b>
-                         <br/>
-                        Площадка: <b>%s</b>",
-                        Subdomain::getSiteName(), $idUs,$types,$names, $emails, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
-                    $email[0] = "denisgresk@gmail.com";
-                    $email[1] = "prommu.servis@gmail.com";
-                    $email[2] = "e.market.easss@gmail.com"; 
-                    /*
-                    $email[1] = "man.market2@gmail.com";
-                    $email[2] = "susgresk@gmail.com";
-                    $email[3] = "e.market.easss@gmail.com"; 
-                    $email[4] = "code@code.code";
-                    $email[5] = "manag_reports@euro-asian.ru";
-                    $email[6] = "e.marketing@euro-asian.ru";
-                    */
-                    for($i = 0; $i <3; $i++)
-                    {
-                        Share::sendmail($email[$i], "Prommu: зарегистрирован новый пользователь", trim($messages));
-                    }
-                    /*
-                    $message = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден) Требуется модерация администратора сайта!
-                        <br/>
-                        <br/>
-                        Пользователь: <b>%s</b>,
-                        Тип:<b>%s</b>,
-                        Имя:<b>%s</b>,
-                        <br/>
-                        ----------------------------------------------------------
-                        <br/>
-                        Тип трафика:<b>%s</b> 
-                        <br/>
-                        Источник: <b>%s</b> 
-                        <br/>
-                        Канал: <b>%s</b>  
-                        <br/>
-                        Кампания: <b>%s</b>  
-                        <br/>
-                        Контент: <b>%s</b>  
-                        <br/>
-                        Ключевые слова: <b>%s</b> 
-                        <br/>
-                        Точка входа: <b>%s</b> 
-                        <br/>
-                        Реферер: <b>%s</b> 
-                        <br/>
-                        IP: <b>%s</b>
-                        <br/>
-                        GA: <b>%s</b>
-                        <br/>
-                        Площадка: <b>%s</b>",
-                        Subdomain::getSiteName(), $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
-                    Share::sendmail("prommu.servis@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
-                    */
-                }
-                elseif($usData['status'] == 3 && empty($usDataTest['id_user']))
-                {   
-                    $types ="Работодатель";
-                    $message = "<tr><td>Ваш пользователь успешно активирован. Нажмите на кнопку ниже, чтобы перейти к форме заполнения данных. После того, как вы заполните все необходимые данные о себе - ваш профиль будет виден в общем списке работодателей и поиске на сайте, а также вы сможете размещать вакансии.";
-                    $names = ucfirst($data->name);
-
-                    if(!empty($emails)) // отправка сообщения клиенту
-                        Share::sendmail($emails, "Prommu: активация прошла успешно", $message);
-
-                    $messages = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден)
-                        <br/>
-                        <br/>
-                        Пользователь: <b>%s</b>, 
-                        Тип:<b>%s</b>,
-                        Имя:<b>%s</b>, Email: <b>%s</b>,
-                        <br/>
-                        ----------------------------------------------------------
-                        <br/>
-                        Тип трафика:<b>%s</b> 
-                        <br/>
-                        Источник: <b>%s</b> 
-                        <br/>
-                        Канал: <b>%s</b>  
-                        <br/>
-                        Кампания: <b>%s</b>  
-                        <br/>
-                        Контент: <b>%s</b>  
-                        <br/>
-                        Ключевые слова: <b>%s</b> 
-                        <br/>
-                        Точка входа: <b>%s</b> 
-                        <br/>
-                        Реферер: <b>%s</b>
-                        <br/>
-                        IP: <b>%s</b>
-                        <br/>
-                        GA: <b>%s</b>
-                        <br/>
-                        Площадка: <b>%s</b>",
-                        Subdomain::getSiteName(), $idUs,$types,$names, $emails, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client, $pm);
-
-                    $email[0] = "denisgresk@gmail.com";
-                    $email[1] = "prommu.servis@gmail.com";
-                    $email[2] = "e.market.easss@gmail.com"; 
-
-                    /*
-                    $email[1] = "man.market2@gmail.com";
-                    $email[2] = "susgresk@gmail.com";
-                    $email[3] = "e.market.easss@gmail.com"; 
-                    $email[4] = "code@code.code";
-                    $email[5] = "manag_reports@euro-asian.ru";
-                    $email[6] = "e.marketing@euro-asian.ru";
-                    */
-                    for($i = 0; $i <3; $i++)
-                    {
-                        Share::sendmail($email[$i], "Prommu: зарегистрирован новый пользователь", trim($messages));
-                    }
-                    /*
-                    $message = sprintf("На сайте <a href='https://%s'>https://%1$01s</a> зарегистрирован новый пользователь (почтовый ящик подтвержден) Требуется модерация администратора сайта!
-                        <br/>
-                        <br/>
-                        Пользователь: <b>%s</b>,
-                        Тип:<b>%s</b>,
-                        Имя:<b>%s</b>,
-                        <br/>
-                        ----------------------------------------------------------
-                        <br/>
-                        Тип трафика:<b>%s</b> 
-                        <br/>
-                        Источник: <b>%s</b> 
-                        <br/>
-                        Канал: <b>%s</b>  
-                        <br/>
-                        Кампания: <b>%s</b>  
-                        <br/>
-                        Контент: <b>%s</b>  
-                        <br/>
-                        Ключевые слова: <b>%s</b> 
-                        <br/>
-                        Точка входа: <b>%s</b> 
-                        <br/>
-                        Реферер: <b>%s</b>
-                        <br/>
-                        IP: <b>%s</b>
-                        <br/>
-                        GA: <b>%s</b>
-                        <br/>
-                        Площадка: <b>%s</b>",
-                        Subdomain::getSiteName(), $usData['id_user'],$types,$names, $referer, $transition, $canal, $campaign, $content, $keywords, $point, $last_referer, $ip, $client,$pm);
-                    Share::sendmail("prommu.servis@gmail.com", "Prommu: зарегистрирован новый пользователь", trim($messages));
-                    */
-                } // endif
-
-                 
-                return $link;
-
-            } else {
-                $flagError = 2;
-                return $link;
-            }
-
-
-        } else {
-            $flagError = 1;
-            return $link;
-        }
-
-
-        if( $flagError > 0 )
-        {
-            return $link;
-        }
-        else
-        {
-            return $link;
-        } // endif
-    }
-
-    public function SexOnder($lastname){
-       
-        $sql = "SELECT  r.firstname
-                    FROM resume r
-                    WHERE r.isman = 1";
-                $result = Yii::app()->db->createCommand($sql)->queryAll();
-                $sex= 0;
-                    $count = count($result);
-                   for($i = 0; $i < $count; $i++){
-                        
-                        if(strpos($result[$i]['firstname'], $lastname) !== false) {
-                            $sex++;
-               
-                        }
-                        
-                    }
-                if($sex > 0){
-                    $sex = 1;
-                } else $sex = 0;
-                        return $sex;
-    }
-
-    public function encoderSys($eco){
-        
-        $eco = urldecode($eco);
-        $eco = $this->json_fix_cyr($eco);
-        return $eco;
-
-    }
-
-    function json_fix_cyr($json_str) {
-         $cyr_chars = array (
-        '\u0430' => 'а', '\u0410' => 'А',
-        '\u0431' => 'б', '\u0411' => 'Б',
-        '\u0432' => 'в', '\u0412' => 'В',
-        '\u0433' => 'г', '\u0413' => 'Г',
-        '\u0434' => 'д', '\u0414' => 'Д',
-        '\u0435' => 'е', '\u0415' => 'Е',
-        '\u0451' => 'ё', '\u0401' => 'Ё',
-        '\u0436' => 'ж', '\u0416' => 'Ж',
-        '\u0437' => 'з', '\u0417' => 'З',
-        '\u0438' => 'и', '\u0418' => 'И',
-        '\u0439' => 'й', '\u0419' => 'Й',
-        '\u043a' => 'к', '\u041a' => 'К',
-        '\u043b' => 'л', '\u041b' => 'Л',
-        '\u043c' => 'м', '\u041c' => 'М',
-        '\u043d' => 'н', '\u041d' => 'Н',
-        '\u043e' => 'о', '\u041e' => 'О',
-        '\u043f' => 'п', '\u041f' => 'П',
-        '\u0440' => 'р', '\u0420' => 'Р',
-        '\u0441' => 'с', '\u0421' => 'С',
-        '\u0442' => 'т', '\u0422' => 'Т',
-        '\u0443' => 'у', '\u0423' => 'У',
-        '\u0444' => 'ф', '\u0424' => 'Ф',
-        '\u0445' => 'х', '\u0425' => 'Х',
-        '\u0446' => 'ц', '\u0426' => 'Ц',
-        '\u0447' => 'ч', '\u0427' => 'Ч',
-        '\u0448' => 'ш', '\u0428' => 'Ш',
-        '\u0449' => 'щ', '\u0429' => 'Щ',
-        '\u044a' => 'ъ', '\u042a' => 'Ъ',
-        '\u044b' => 'ы', '\u042b' => 'Ы',
-        '\u044c' => 'ь', '\u042c' => 'Ь',
-        '\u044d' => 'э', '\u042d' => 'Э',
-        '\u044e' => 'ю', '\u042e' => 'Ю',
-        '\u044f' => 'я', '\u042f' => 'Я',
- 
-        '\r' => '',
-        '\n' => '<br />',
-        '\t' => ''
-    );
- 
-        foreach ($cyr_chars as $cyr_char_key => $cyr_char) {
-            $json_str = str_replace($cyr_char_key, $cyr_char, $json_str);
-        }
-        return $json_str;
-    }
-
     public function registerUser($inParam)
-    {   
-        
-    
+    {
         // регистрация соискателя
-        if( in_array($inParam, ['1', 'vk', 'fb']) || $inParam['type'] == 2 )
+        if( in_array($inParam, ['1', 'vk', 'fb']) )
         {
             // проверка полей
-            if(empty($inParam['inputData'])) $inParam['inputData'] = $inParam;
-            $res = $this->checkFieldsApplicant($inParam['inputData']);
+            $res = $this->checkFieldsApplicant();
 
             if( $res['error'] )
             {
@@ -631,10 +37,7 @@ class Auth
         // *** Регистрация работодателя ***
         } else {
             // проверка полей
-            
-            
-            if(empty($inParam['inputData'])) $inParam['inputData'] = $inParam;
-            $res = $this->checkFieldsEmpl($inParam['inputData']);
+            $res = $this->checkFieldsEmpl();
 
 
             if( $res['error'] )
@@ -708,13 +111,13 @@ class Auth
      *          pass - md5 пароля
      * @return array
      */
-    public function doAPIAuth($login, $pass)
+    public function doAPIAuth()
     {
         $error = -101;
         try
         {
-            $login = $login ? $login : filter_var(Yii::app()->getRequest()->getParam('login'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $pass = $pass ? $pass : filter_var(Yii::app()->getRequest()->getParam('pass'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $login = filter_var(Yii::app()->getRequest()->getParam('login'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $pass = filter_var(Yii::app()->getRequest()->getParam('pass'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
             // *** ПРоверка параметров ***
             if(  !empty($login)
                     && !empty($pass)
@@ -758,10 +161,9 @@ class Auth
             }
         } // endtry
 
-        if( $error < 0 ) return array('error' => abs($error), 'message' => $message);
-        else return array('access_token' => $data['data']['token'], 'id' => $data['data']['idus'], 'type' => $data['data']['type'],'status' => $data['data']['status'], 'exp_date' => strtotime('+1 day'));
+        if( $error < 0 ) return array('error_code' => abs($error), 'message' => $message);
+        else return array('access_token' => $data['data']['token'], 'id' => $data['data']['idus'], 'type' => $data['data']['type'], 'exp_date' => strtotime('+1 day'));
     }
-
 
 
 
@@ -774,10 +176,8 @@ class Auth
      * @return array
      * @throws Exception
      */
-       public function Authorize($inParams)
-    {   
-        
-      
+    public function Authorize($inParams)
+    {
         $login = $inParams['login'];
         $passw = $inParams['passw'];
         $remember = $inParams['remember'];
@@ -804,7 +204,18 @@ class Auth
             ));            
         }
 
+        /*
+            $user = User::model()->find(array(
+                'select' => 'id_user, status, passw, isblocked',
+                'condition' => "email = :email OR id_user = :idus OR login = :email",
+                'params'=>array(':email' => $login, ':idus' => $usId),
+            ));
+        */
 
+         //'condition' => "email = :email OR id_user = :idus OR login = :login",
+                //'params'=>array(':email' => $login, ':idus' => $usId, ':login' => $login),
+//        $sql = "select id_user, status, email, passw from user where email = '$login' and passw = md5('$passw') OR id_user = {$usId} limit 1;";
+//        $res = Yii::app()->db->createCommand($sql)->queryAll();
 
         // проверяем пароль и блокировку
         if( $user && $user->id_user )
@@ -817,9 +228,9 @@ class Auth
             {
                 if( $user->passw != $passMd5 ) throw new Exception('', -102);
                 elseif( (int)$user->isblocked === 1 ) throw new Exception('', -104);
-                // elseif( (int)$user->isblocked === 2 ) throw new Exception('', -105);
+                //elseif( (int)$user->isblocked === 2 ) throw new Exception('', -105);
 //                elseif( (int)$user->isblocked === 3 ) throw new Exception('', -106);
-                // elseif( !in_array((int)$user->isblocked, [0,3]) ) throw new Exception('', -103);
+                elseif( !in_array((int)$user->isblocked, [0,2,3,5]) ) throw new Exception('', -103);
             } // endif
         }
         else
@@ -853,22 +264,21 @@ class Auth
             ->where('u.id_user=:id_user', array(':id_user' => $user->id_user))
             ->queryRow();
 
-        if ($usRes['wid'] > 0)
-        {
-            $res = Yii::app()->db->createCommand()
-                ->update('user_work', array(
-                    'token' => $token,
-                    'date_login' => date('Y-m-d H:i:s'),
-                ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
-                
-            $res = Yii::app()->db->createCommand()
-                ->update('user', array(
-                    'mdate' => date('Y-m-d H:i:s'),
-                    'is_online' => 1,
-                ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
-        
-        
-        } else {
+//        if ($usRes['wid'] > 0)
+//        {
+//            $res = Yii::app()->db->createCommand()
+//                ->update('user_work', array(
+//                    'token' => $token,
+//                    'date_login' => date('Y-m-d H:i:s'),
+//                ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
+//
+//            $res = Yii::app()->db->createCommand()
+//                ->update('user', array(
+//                    'mdate' => date('Y-m-d H:i:s'),
+//                    'is_online' => 1,
+//                ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
+//
+//        } else {
             $res = Yii::app()->db->createCommand()
                 ->insert('user_work', array(
                     'token' => $token,
@@ -876,15 +286,13 @@ class Auth
                     'id_user' => $usRes['id'],
                     'date_login' => date('Y-m-d H:i:s'),
                 ));
-                
+            
             $res = Yii::app()->db->createCommand()
                 ->update('user', array(
                     'mdate' => date('Y-m-d H:i:s'),
                     'is_online' => 1,
                 ), 'id_user=:id_user', array(':id_user' => $usRes['id']));
-        
-                
-        }
+//        }
 
 
         $usData = (object)$usRes;
@@ -901,14 +309,12 @@ class Auth
             "uid" => $uid, // not used
             "idus" => $usData->id, // not used
             "type" => $usData->status,
-            "status" => $usData->isblocked,
 //            "login" => $login,
 //            "rating" => 0,
 //            "count_resp" => 0,
 //            "user_data" => $usData,
         );
     }
-
 
     public function AuthorizeNet($inParams)
     {
@@ -943,9 +349,9 @@ class Auth
             {
                 if( $user->passw != $passMd5 ) throw new Exception('', -102);
                 elseif( (int)$user->isblocked === 1 ) throw new Exception('', -104);
-//                 elseif( (int)$user->isblocked === 2 ) throw new Exception('', -105);
-// //                elseif( (int)$user->isblocked === 3 ) throw new Exception('', -106);
-//                 elseif( !in_array((int)$user->isblocked, [0,3]) ) throw new Exception('', -103);
+                //elseif( (int)$user->isblocked === 2 ) throw new Exception('', -105);
+//                elseif( (int)$user->isblocked === 3 ) throw new Exception('', -106);
+                elseif( !in_array((int)$user->isblocked, [0,2,3,5]) ) throw new Exception('', -103);
             } // endif
         }
         else
@@ -1244,9 +650,9 @@ class Auth
         return ['error' => $error, 'message' => $message];
     }
 
-    private function checkFieldsApplicant($inputData)
+    private function checkFieldsApplicant()
     {
-       
+        $inputData = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
         $key = 'name';
         if( empty($inputData[$key]) )
@@ -1289,7 +695,7 @@ class Auth
 
 
         $key = 'pass';
-        $data = Yii::app()->getRequest()->getParam('pass') ? Yii::app()->getRequest()->getParam('pass') : $inputData['pass'];
+        $data = Yii::app()->getRequest()->getParam('pass');
         if( !$flag_error )
         {
             $element = $key;
@@ -1299,12 +705,12 @@ class Auth
                 $hint = 'введите пароль';
                 $flag_error = 1;
             }
-            // elseif( $data != Yii::app()->getRequest()->getParam('passrep')  )
-            // {
-            //     $message = "Ошибки заполнения формы";
-            //     $hint = 'пароль и его повтор не совпадают';
-            //     $flag_error = 1;
-            // } // endif
+            elseif( $data != Yii::app()->getRequest()->getParam('passrep') )
+            {
+                $message = "Ошибки заполнения формы";
+                $hint = 'пароль и его повтор не совпадают';
+                $flag_error = 1;
+            } // endif
         } // endif
 
 
@@ -1358,8 +764,8 @@ class Auth
                 'message' => $message,
                 'hint' => $hint,
                 'error' => $flag_error,
-                'inputData' => $inputData,
                 'element' => $flag_error ? $element : '',
+                'inputData' => $inputData,
                 'use_recaptcha' => $use_recaptcha
             );
     }
@@ -1386,7 +792,7 @@ class Auth
         if( $inData['email'] ) $data['email'] = ($inData['email']);
         if( $inData['messenger'] ) $data['messenger'] = ($inData['messenger']);
         if( $inData['status'] ) $data['status'] = ($inData['status']);
-        if( $inData['isblocked'] ) $data['isblocked'] = $inData['isblocked'];
+        if( $inData['isblocked'] ) $data['isblocked'] = 3;
         $data['access_time'] = $inData['access_time'] ? $inData['access_time'] : date('Y-m-d H:i:s');
         $data['crdate'] = date('Y-m-d H:i:s');
         $data['mdate'] = date('Y-m-d H:i:s');
@@ -1408,7 +814,7 @@ class Auth
         if( $inData['passw'] ) $data['passw'] = md5($inData['passw']);
         if( $inData['email'] ) $data['email'] = ($inData['email']);
         if( $inData['status'] ) $data['status'] = ($inData['status']);
-        if( $inData['isblocked'] ) $data['isblocked'] = $inData['isblocked'];
+        if( $inData['isblocked'] ) $data['isblocked'] = 3;
         $data['access_time'] = $inData['access_time'] ? $inData['access_time'] : date('Y-m-d H:i:s');
 
         $res = Yii::app()->db->createCommand()
@@ -1439,7 +845,8 @@ class Auth
         } // endif
     }
 
-private function registerUserFirsStep($inData)
+
+    private function registerUserFirsStep($inData)
     {
         $res = $this->userSelect("email = '{$inData['inputData']['email']}'");
         $idUs = $res['id_user'];
@@ -1452,25 +859,36 @@ private function registerUserFirsStep($inData)
         $keywords = filter_var(Yii::app()->getRequest()->getParam('keywords'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $point = filter_var(Yii::app()->getRequest()->getParam('point'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $last_referer = filter_var(Yii::app()->getRequest()->getParam('last_referer'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $ip = Yii::app()->getRequest()->getParam('ip');
         $robot = Yii::app()->getRequest()->getParam('lastname');
+        $ip = Yii::app()->getRequest()->getParam('ip');
         $pm = Yii::app()->getRequest()->getParam('pm_source');
         if($pm == '') $pm = 'none';
-        $client = Yii::app()->getRequest()->getParam('client');
-        $client = substr($client, 6, 100);
+        $ips  = @$_SERVER['HTTP_CLIENT_IP'];
+        $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+        $remote  = @$_SERVER['REMOTE_ADDR'];
+        
+        if(filter_var($ips, FILTER_VALIDATE_IP)) $ip = $ips;
+        elseif(filter_var($forward, FILTER_VALIDATE_IP)) $ip = $forward;
+        else $ip = $remote;
+                
+        $clients = Yii::app()->db->createCommand()
+                ->select("*")
+                ->from('user_client a')
+                ->where('a.ip = :ip', array(':ip' => $ip))
+                ->queryRow();
+        $client = $clients['client'];
 
         if( $idUs && $res['isblocked'] != 2 )
         {
             return array('error' => 1, 'message' => 'Пользователь с таким email адресом уже есть', 'inputData' => $inData['inputData']);
-        } // end
-
+        } // endif
 
         // пользователь уже есть
         if($idUs)
         {
             $this->userUpdate(array('email' => $inData['inputData']['email'],
                 'passw' => $inData['inputData']['pass'],
-                'isblocked' => 2,
+                'isblocked' => 3,
                 'ismoder' => 0,
                 'status' => $inData['type'],
              
@@ -1480,14 +898,31 @@ private function registerUserFirsStep($inData)
 
 
         } else {
-             if(!empty($inData['inputData']['phone'])) $inData['inputData']['email'] = $inData['inputData']['phone'];
             $idUs = $this->userInsert(array('email' => $inData['inputData']['email'],
                 'passw' => $inData['inputData']['pass'],
-                'login' => $inData['inputData']['email'],
-                'isblocked' => 2,
-                'ismoder' => 1,
+                'isblocked' => 3,
+                'ismoder' => 0,
                 'status' => $inData['type']
             ), 1);
+            
+            ///create mailing event
+            $Mailing = new Mailing();
+            $template = new MailingTemplate;
+            $template = $template->getActiveTemplate();
+        
+            $receiver = $inData['inputData']['email'];
+            $title = 'Активация аккаунта';
+            for($i = 10; $i < 15; $i = $i + 5){
+                $rdate = date('Y-m-d H:i', strtotime(" +{$i} minutes"));
+                $body = str_replace(
+                        MailingTemplate::$CONTENT,
+                        'Активируйте профиль',
+                        $template->body
+                    );
+                $set = $Mailing->setToMailingNotActive($receiver,$title,$body,$isUrgent=false, $rdate);
+            }
+             ///create mailing event
+
 
             $idUser = 0;
                $token = md5($inData['inputData']['email'] . date("d.m.Y H:i:s") . md5($inData['inputData']['pass']));
@@ -1495,7 +930,6 @@ private function registerUserFirsStep($inData)
         $password = $inData['inputData']['pass'];
 
         } // endif
-
         // Generate TOKEN
 
         $token = md5($inData['inputData']['email'] . date("d.m.Y H:i:s") . md5($inData['inputData']['pass']));
@@ -1509,10 +943,6 @@ private function registerUserFirsStep($inData)
 
         $sex = $inData['inputData']['sex'];
         $smart = $inData['inputData']['smart'];
-        // if($smart) {
-        //  // $sex = $this->SexOnder($inData['inputData']['name']); 
-        // }
-
 
         $analytData = array('id_us' => $idUs,
                         'name' => 'NO ACTIVE',
@@ -1528,24 +958,16 @@ private function registerUserFirsStep($inData)
                         'last_referer' => $last_referer,
                         'active' => 0,
                         'subdomen' => 0,
-                        'client' => $client ? $client : " ",
-                        'ip' => $ip ? $ip : " ", 
-                        'source' => $pm ? $pm : " ", 
+                        'client' => $client,
+                        'ip' => $ip, 
+                        'source' => $pm
                     );
 
         $res = Yii::app()->db->createCommand()
                         ->insert('analytic', $analytData);
                         
-        if($inData['type'] == 2) {
-            
-            $res = Yii::app()->db->createCommand()
-                        ->insert('resume', array('id_user' => $idUs,
-                                'firstname' => $inData['inputData']['name'],
-                                'lastname' => $inData['inputData']['lname'],
-                                'date_public' => date('Y-m-d H:i:s'),
-                                'mdate' => date('Y-m-d H:i:s'),
-                            ));
-                            
+        if( $inData['type'] == 2 )
+        {
             $link  = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=2&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin."&sex=".$sex."&smart=".$smart."&ip=".$ip."&client=".$client."&pm=".$pm;
             $message = '<p style="font-size:16px">Наш портал <b>Prommu.com</b> позволяет найти работу в России и странах СНГ совершенно бесплатно.</p>'
             .'<br/>'
@@ -1585,16 +1007,7 @@ private function registerUserFirsStep($inData)
                 .'<br/>Ваш пароль для входа на портал:'.$inData['inputData']['pass'].'</p>'
             .'</div>';
             Share::sendmail($inData['inputData']['email'], "Prommu.com. Подтверждение регистрации на портале поиска временной работы!", $message);
-        } elseif($inData['type'] == 3 && empty($robot)){
-            
-            $res = Yii::app()->db->createCommand()
-                        ->insert('employer', array('id_user' => $idUs,
-                                'name' => $inData['inputData']['name'],
-                                'crdate' => date('Y-m-d H:i:s'),
-                                'type' => 102 // устанавливаем по умолчанию "Прямой работодатель"
-                            ));
-
-
+        } elseif( $inData['type'] == 3 && empty($robot)) {
             $link = 'http://' . $_SERVER['HTTP_HOST'] . MainConfig::$PAGE_ACTIVATE . '/?type=3&t=' . $token . "&uid=" . $idUs."&referer=".$referer."&transition=".$transition."&canal=".$canal."&campaign=".$campaign."&content=".$content."&keywords=".$keywords."&point=".$point."&last_referer=".$last_referer."&admin=".$admin."&ip=".$ip."&client=".$client."&pm=".$pm;
             $message = '<p style="font-size:16px;">Наш портал <b>Prommu.com</b> позволяет найти квалифицированный персонал в России и странах СНГ совершенно бесплатно.</p>'
             .'<br/>'
@@ -1642,12 +1055,10 @@ private function registerUserFirsStep($inData)
 
 
 
-
-
-    private function checkFieldsEmpl($inputData)
+    private function checkFieldsEmpl()
     {
         $key = 'name';
-        
+        $inputData[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         if( empty($inputData[$key]) )
         {
             $message = "Ошибки заполнения формы";
@@ -1691,9 +1102,9 @@ private function registerUserFirsStep($inData)
 
 
         $key = 'pass';
-        $inputData[$key] = $inputData[$key] ? $inputData[$key] : Yii::app()->getRequest()->getParam($key);
+        $inputData[$key] = Yii::app()->getRequest()->getParam($key);
         $key2 = 'passrep';
-        $inputData[$key2] = $inputData[$key] ? $inputData[$key] : Yii::app()->getRequest()->getParam($key2);
+        $inputData[$key2] = Yii::app()->getRequest()->getParam($key2);
         if( !$flag_error )
         {
             $element = $key;
@@ -1703,12 +1114,12 @@ private function registerUserFirsStep($inData)
                 $hint = 'введите пароль';
                 $flag_error = 1;
             }
-            // elseif( $inputData[$key] != Yii::app()->getRequest()->getParam($key2) )
-            // {
-            //     $message = "Ошибки заполнения формы";
-            //     $hint = 'пароль и его повтор не совпадают';
-            //     $flag_error = 1;
-            // } // endif
+            elseif( $inputData[$key] != Yii::app()->getRequest()->getParam($key2) )
+            {
+                $message = "Ошибки заполнения формы";
+                $hint = 'пароль и его повтор не совпадают';
+                $flag_error = 1;
+            } // endif
         } // endif
 
         // CAPTCHA
@@ -1754,8 +1165,8 @@ private function registerUserFirsStep($inData)
                 'message' => $message,
                 'hint' => $hint,
                 'error' => $flag_error,
-                'inputData' => $inputData,
                 'element' => $flag_error ? $element : '',
+                'inputData' => $inputData,
                 'use_recaptcha' => $use_recaptcha
             );
     }

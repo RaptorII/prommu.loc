@@ -1750,7 +1750,7 @@ class User extends CActiveRecord
    */
   public function checkLogin($login, $isPhone=false)
   {
-    $condition = 'email like :login';
+    $condition = 'login like :login';
     $arParams = [':login'=>$login];
     if($isPhone)
     {
@@ -1762,7 +1762,7 @@ class User extends CActiveRecord
       $phone1 = '+7' . $v;
       $phone2 = '+8' . $v;
 
-      $condition .= ' or email like :phone1 or email like :phone2';
+      $condition .= ' or login like :phone1 or login like :phone2';
       $arParams[':phone1'] = $phone1;
       $arParams[':phone2'] = $phone2;
     }
@@ -1772,7 +1772,7 @@ class User extends CActiveRecord
       ->where($condition, $arParams)
       ->queryRow();
 
-    if(isset($query['id_user']) && $query['isblocked']!=self::$ISBLOCKED_EXPECT)
+    if(isset($query['id_user']))
     {
       return $query['id_user'];
     }

@@ -123,7 +123,15 @@ class AppController extends CController
         }
         $rq = Yii::app()->getRequest();
         $v = filter_var($rq->getParam('utm_source'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        !empty($v) && Yii::app()->session['utm']->transition = $v;
+        $yaRabota = $rq->getParam('_openstat');
+        if(strripos($yaRabota,'rabota.yandex.ru')!==false)
+        {
+          Yii::app()->session['utm']->transition = 'rabota.yandex.ru';
+        }
+        elseif(!empty($v))
+        {
+          Yii::app()->session['utm']->transition = $v;
+        }
 
         $v = filter_var($rq->getParam('utm_medium'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         !empty($v) && Yii::app()->session['utm']->referer = $v;
@@ -291,7 +299,7 @@ class AppController extends CController
   /**
    * перенаправление на вьюху с завершением регистрации
    */
-  protected function directToCompleteRegistration()
+  protected function directToCompleteRegistration($arError = [])
   {
     $bSendToRegister = (Share::isGuest()
       ? false
@@ -302,7 +310,7 @@ class AppController extends CController
       $this->setPageTitle('Завершение регистрации');
       $this->render(
         $this->ViewModel->lastRegisterForm,
-        ['viData' => Share::$UserProfile->getProfileDataView()]
+        ['viData' => Share::$UserProfile->getProfileDataView(),'arError'=>$arError]
       );
       Yii::app()->end();
     }

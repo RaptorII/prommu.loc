@@ -259,8 +259,7 @@ class UserRegister
         // content
         $arData['content'] = explode(",", $arData['content'])[0];
         // keywords
-        $model = new Auth();
-        $arData['keywords'] = $model->encoderSys($arData['keywords']);
+        $arData['keywords'] = encoderSys($arData['keywords']);
         // pm_source
         empty($arData['pm_source']) && $arData['pm_source']='none';
         // client
@@ -288,7 +287,11 @@ class UserRegister
         // правила от Кутишевского
         if(!empty($arData['transition'])) // utm_source - not empty
         {
-          if(
+          if($arData['transition']=='rabota.yandex.ru')
+          {
+            $arData['canal'] = 'referal';
+          }
+          elseif(
             strripos($arData['transition'],'facebook')!==false
             ||
             strripos($arData['transition'],'vk')!==false
@@ -329,6 +332,17 @@ class UserRegister
           elseif(strripos($arData['last_referer'],'away.vk.com')!==false)
           {
             $arData['canal'] = 'smm';
+            $arData['transition'] = 'away.vk.com';
+          }
+          elseif(strripos($arData['last_referer'],'m.vk.com')!==false)
+          {
+            $arData['canal'] = 'smm';
+            $arData['transition'] = 'm.vk.com';
+          }
+          elseif(strripos($arData['last_referer'],'instagram.com')!==false)
+          {
+            $arData['canal'] = 'smm';
+            $arData['transition'] = 'instagram.com';
           }
           else
           {
@@ -476,10 +490,15 @@ class UserRegister
         {
           $model = new User();
           $is_user = $model->checkLogin($value,$isPhone);
+          $prettyPhone = Share::getPrettyPhone($value);
           if($is_user)
           {
             $this->errors['login'] = "Данный телефон уже используется. <a href=\""
               . MainConfig::$PAGE_LOGIN . "\">Авторизоваться</a>";
+          }
+          elseif(UserProfile::phoneVerification($prettyPhone['code'].$prettyPhone['phone']))
+          {
+            $this->errors['login'] = "Данный телефон уже используется";
           }
           else
           {
@@ -508,6 +527,10 @@ class UserRegister
         {
           $this->errors['login'] = "Данный эл. адрес уже используется. <a href=\""
             . MainConfig::$PAGE_LOGIN . "\">Авторизоваться</a>";
+        }
+        elseif(UserProfile::emailVerification($value))
+        {
+          $this->errors['login'] = "Данный эл. адрес уже используется";
         }
         else
         {

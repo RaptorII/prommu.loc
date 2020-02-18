@@ -185,15 +185,7 @@ flex: 0 1 50%;
         width: 85px;
     }
 
-    /*.edit-profile-applicant #contacts-module .epa__label,*/
-    .edit-profile-applicant #main-module .epa__label {
-        width: 49%;
-        display: inline-block;
-    }
-
     .epa__attr-block {
-        width: 49%;
-        display: inline-block;
         vertical-align: middle;
     }
 }
@@ -1018,4 +1010,62 @@ flex: 0 1 50%;
 }
 #DiContent .epa__post-block .epa__label.epa__select{
     padding: 0 25px 0 10px;
+}
+
+.epa__posts .epa__select-list li{
+    padding: 0 12px 0 0;
+}
+.epa__posts .epa__label-name{
+    padding-left: 0;
+}
+#DiContent .epa__label.epa__label{
+    width: 100%;
+    height: 35px;
+    margin: 0 0 15px;
+    display: flex;
+    position: relative;
+    padding: 0;
+}
+.epa__label-name{
+    line-height: 33px;
+    font-size: 15px;
+    padding: 0 5px;
+    white-space: nowrap;
+}
+#DiContent .edit-profile-applicant .epa__input{
+    width: 99%;
+    height: 33px;
+    line-height: 33px;
+    font-size: 15px;
+    color: #343434;
+    background-color: transparent;
+    border: none;
+    margin: 0;
+    padding: 0 5px 0 0;
+    position: relative;
+}
+.epa__date{  cursor:default; }
+#DiContent .epa__label.epa__label.epa__select{
+    padding: 0;
+}
+#DiContent .epa__label.epa__select .epa__input{
+    position: relative;
+    z-index: 1;
+    padding: 0 18px 0 0;
+}
+#DiContent .epa__date .epa__label-name{
+    padding: 0 5px;
+}
+#DiContent .epa__label.epa__posts.epa__posts{
+    display: table;
+    margin: 0 0 10px;
+    padding: 0 15px;
+}
+#email-field:before{
+    width: 276px;
+    left: -138px;
+}
+#phone-field#phone-field:before{
+    width: 270px;
+    left: -135px;
 }

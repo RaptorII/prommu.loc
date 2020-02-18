@@ -1,4 +1,11 @@
 <?php if(UserRegisterPageCounter::isSetData(Share::$UserProfile->id, UserRegister::$PAGE_USER_LEAD) <= 0): ?>
+    <? 
+        $id = Share::$UserProfile->id;
+        $texs = "Лид $id";
+        $sendto ="https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@metrikaprommu&text=$texs";
+        file_get_contents($sendto);
+    ?>
+    
   <? UserRegisterPageCounter::setByIdUser(Share::$UserProfile->id, UserRegister::$PAGE_USER_LEAD); ?>
   <script>
     document.addEventListener("DOMContentLoaded", function(){
@@ -8,7 +15,7 @@
       function setGoal()
       {
         cnt++;
-        if(cnt>10)
+        if(cnt>20)
         {
           return;
         }
@@ -19,6 +26,24 @@
         else
         {
           setTimeout(function(){ setGoal() },500);
+        }
+      }
+      //
+      setGA();
+      function setGA()
+      {
+        cnt++;
+        if(cnt>20)
+        {
+          return;
+        }
+        if(typeof dataLayer === 'object')
+        {
+          dataLayer.push({'event': 'registration_success'});
+        }
+        else
+        {
+          setTimeout(function(){ setGA() },500);
         }
       }
     });
@@ -64,7 +89,6 @@ asort($arCities);
 <script type="text/javascript">
     let arCities = <?=json_encode($arCities)?>;
 </script>
-
 <div class="private-profile-page">
     <?php if( $viData['error'] ): ?>
         <div class="comm-mess-box"><?= $viData['message'] ?></div>
@@ -86,13 +110,7 @@ asort($arCities);
                 $exInfo = Share::$UserProfile->exInfo;
                 $photo = Share::isApplicant() ? $exInfo->photo : $exInfo->logo;
                 ?>
-                <? /*if(empty($photo)): ?>
-                    <p class="center">
-                        Допустимые форматы файлов <?=implode(', ', Share::$UserProfile->arYiiUpload['fileFormat']);?><br>
-                        Размер не более <?=Share::$UserProfile->arYiiUpload['maxFileSize']?> Мб.
-                    </p>
-                <? endif;*/ ?>
-                <div class="ppp__logo-main avatar__logo-main<?=(empty($photo) ? ' input__error' : '')?>">
+                <div class="ppp__logo-main avatar__logo-main<?=((empty($photo)||isset($arError['photo'])) ? ' input__error' : '')?>">
                     <?
                     if(!empty($photo))
                     {
@@ -120,7 +138,7 @@ asort($arCities);
                             data-name="<?=$photo?>"
                             data-big="<?=$bigSrc?>"
                             id="login-img"
-                            class="ppp-logo-main__img<?=(!empty($photo)?' active-logo':'')?>">
+                            class="ppp-logo-main__img<?=((!empty($photo)&&!isset($arError['photo']))?' active-logo':'')?>">
                 </div>
                 <p class="center">
                   <small>
@@ -155,49 +173,68 @@ asort($arCities);
 
                     <div class="epa__content-title"><h2>Основная информация</h2></div>
                     <div class="epa__content-module" id="main-module">
-                        <label class="epa__label epa__firstname">
-                            <span class="epa__label-name">Имя:</span>
-                            <input type="text" name="name" value="<?= trim($attr['firstname']) ?>"
-                                   class="epa__input epa__required" data-name="Имя">
+                      <div class="col-xs-12 col-sm-6 profile__col">
+                        <label class="epa__label epa__firstname<?=(isset($arError['name'])?' error':'')?>">
+                          <span class="epa__label-name">Имя:</span>
+                          <?
+                            $v1 = trim($_POST['name']);
+                            $v2 = trim($attr['firstname']);
+                          ?>
+                          <input type="text" name="name" value="<?=(!empty($v1) ? $v1 : $v2)?>"
+                                 class="epa__input epa__required" data-name="Имя" autocomplete="off">
                         </label>
-                        <label class="epa__label epa__lastname">
-                            <span class="epa__label-name">Фамилия:</span>
-                            <input type="text" name="lastname" value="<?= trim($attr['lastname']) ?>"
-                                   class="epa__input epa__required" data-name="Фамилия">
+                      </div>
+                      <div class="col-xs-12 col-sm-6 profile__col">
+                        <label class="epa__label epa__lastname<?=(isset($arError['lastname'])?' error':'')?>">
+                          <span class="epa__label-name">Фамилия:</span>
+                          <? $value = trim($attr['lastname']); ?>
+                          <?
+                          $v1 = trim($_POST['lastname']);
+                          $v2 = trim($attr['lastname']);
+                          ?>
+                          <input type="text" name="lastname" value="<?=(!empty($v1) ? $v1 : $v2)?>"
+                                 class="epa__input epa__required" data-name="Фамилия" autocomplete="off">
                         </label>
-                        <div class="epa__label epa__date epa__select <?=((($attr['bday']=='01.01.1970')||($attr['bday']==''))?' error':'')?>">
-                            <span class="epa__label-name">Дата рождения:</span>
-                            <input
-                                    type="text"
-                                    name="bdate"
-                                    id="birthday"
-                                    autocomplete="off"
-                                    value="<?= ($attr['bday'] == '01.01.1970' ? '' : $attr['bday']) ?>"
-                                    class="epa__input">
+                      </div>
+                      <div class="col-xs-12 col-sm-6 profile__col">
+                        <div class="epa__label epa__date epa__select <?=((($attr['bday']=='01.01.1970') || ($attr['bday']=='') || isset($arError['bdate']))?' error':'')?>">
+                          <span class="epa__label-name">Дата рождения:</span>
+                          <?
+                          $v1 = $_POST['bday'];
+                          $v2 = $attr['bday'] == '01.01.1970' ? '' : $attr['bday'];
+                          ?>
+                          <input
+                            type="text"
+                            name="bdate"
+                            id="birthday"
+                            autocomplete="off"
+                            value="<?=((!empty($v1) && !isset($arError['bdate'])) ? $v1 : $v2)?>"
+                            class="epa__input">
                         </div>
-
+                      </div>
+                      <div class="col-xs-12 col-sm-6 profile__col">
                         <div class="epa__attr-block">
-                            <div class="epa__attr-block1">
-                                <input type="radio" name="sex" id="epa-male" class="epa__hidden" value="1" >
-                                <label class="epa__checkbox" for="epa-male">Мужчина</label>
-                            </div>
-                            <div class="epa__attr-block2">
-                                <input type="radio" name="sex" id="epa-female" class="epa__hidden" value="0" >
-                                <label class="epa__checkbox epa__checkbox-famale" for="epa-female">Женщина</label>
-                            </div>
-                            <div class="clearfix"></div>
+                          <div class="epa__attr-block1">
+                            <input type="radio" name="sex" id="epa-male" class="epa__hidden" value="1" <?=($attr['isman'] ? 'checked' : '')?>>
+                            <label class="epa__checkbox" for="epa-male">Мужчина</label>
+                          </div>
+                          <div class="epa__attr-block2">
+                            <input type="radio" name="sex" id="epa-female" class="epa__hidden" value="0" >
+                            <label class="epa__checkbox epa__checkbox-famale" for="epa-female">Женщина</label>
+                          </div>
+                          <div class="clearfix"></div>
                         </div>
-
+                      </div>
+                      <div class="clearfix"></div>
                     </div>
-
                     <div class="epa__content-title"><h2>Место работы</h2></div>
                     <div class="epa__content-module" id="city-module">
                         <div class="epa__cities-block-list">
-                            <div class="epa__city-item" data-idcity="<?//= $arUserCity['id'] ?>">
-                                <div class="epa__label epa__select epa__city error">
+                            <div class="epa__city-item" data-idcity="<?=(!empty($_POST['city'])?$_POST['city']:'')?>">
+                                <div class="epa__label epa__select epa__city<?=(isset($arError['city'])?' error':(empty($_POST['city'])?' error':''))?>">
                                     <span class="epa__label-name">Город:</span>
                                     <span class="epa__city-err">Такой город уже выбран</span>
-                                    <input type="text" name="cityname[]" value="<?//= $arUserCity['name'] ?>"
+                                    <input type="text" name="cityname[]" value="<?=(!empty($_POST['cityname'][0])?$_POST['cityname'][0]:'')?>"
                                            class="epa__input city-input" autocomplete="off">
                                     <ul class="city-list"></ul>
                                 </div>
@@ -209,22 +246,31 @@ asort($arCities);
 
                     <div class="epa__content-title"><h2>Контактная информация</h2></div>
                     <div class="epa__content-module" id="contacts-module">
-                        <div class="epa__label">
+                        <div id="phone-field" class="epa__label<?=(isset($arError['mob'])?' error':'')?>"
+                             data-error="Указанный телефон уже используется в системе">
                             <span class="epa__label-name epa__phone-name">Телефон:</span>
+                            <?
+                            $v1 = $_POST['user-attribs']['mob'];
+                            $v2 = Share::getPrettyPhone($attr['phone'])['phone'];
+                            ?>
                             <input type='text'
                                    name='user-attribs[mob]'
-                                   value="<?=Share::getPrettyPhone($attr['phone'])['phone']?>"
-                                   class="epa__input epa__phone"
+                                   value="<?=((!empty($v1) && !isset($arError['mob'])) ? $v1 : $v2)?>"
+                                   class="epa__input epa__phone epa__required"
                                    id="phone-code"
                                    autocomplete="off">
-                            <span class="epa__add-phone-btn js-g-hashint" title="Добавить еще телефон">+</span>
+                            <span class="epa__add-phone-btn js-g-hashint" title="Добавить еще телефон" id="add_phone">+</span>
                         </div>
-                        <div class="epa__label epa__email"
+                        <div id="email-field" class="epa__label epa__email<?=(isset($arError['email'])?' error':'')?>"
                              data-error="Указанный e-mail адрес уже используется в системе">
                             <span class="epa__label-name">Email:</span>
+                            <?
+                            $v1 = $_POST['email'];
+                            $v2 = filter_var($attr['email'], FILTER_VALIDATE_EMAIL);
+                            ?>
                             <input type="text"
                                    name="email"
-                                   value="<?=filter_var($attr['email'], FILTER_VALIDATE_EMAIL)?>"
+                                   value="<?=((!empty($v1) && !isset($arError['email'])) ? $v1 : $v2)?>"
                                    class="epa__input epa__required"
                                    placeholder="your@email.com"
                                    id="epa-email"
@@ -235,62 +281,50 @@ asort($arCities);
                     <?php
 
                     // positions
-                    $arPosts2 = array();
-                    $strPosts = '';
-                    foreach ($viData['data']['posts'] as $val) {
-                        $arPosts2[$val['id']] = $val;
-                        $arPosts2[$val['id']]['newname'] = ($val['key'] == 'custpo' ? ('- ' . $val['val'] . ' -') : $val['val']);
+                    $arPosts = [];
+                    $bPosts = false;
+                    foreach ($viData['data']['posts'] as $val)
+                    {
+                      $arPosts[$val['id']] = $val;
+                      $arPosts[$val['id']]['newname'] = ($val['key'] == 'custpo' ? ('- ' . $val['val'] . ' -') : $val['val']);
+                      $arPosts[$val['id']]['checked'] = '';
 
-                        $arPosts2[$val['id']]['checked'] = '';
-
-                        if ($_GET['position'] == $val['id']) {
-                            $arPosts2[$val['id']]['checked'] = "checked";
-                        } elseif ($val['isshow1'] && !$_GET['npopup']) {// если это не после модального окна, то проверяем
-                            $arPosts2[$val['id']]['checked'] = "checked";
-                        }
-
-                        if ($arPosts2[$val['id']]['checked'] != '') {
-                            $strPosts .= ($strPosts == '' ? '' : ',') . $arPosts[$val['id']]['newname'];
-                        }
+                      if($val['isshow1'])
+                      {
+                        $arPosts[$val['id']]['checked']="checked";
+                        $bPosts = true;
+                      }
                     }
                     $arPayment2 = array();
-                    foreach ($viData['userInfo']['userDolj'][0] as $val) {
-                        if ($_GET['npopup'] && $_GET['position']) {
-                            foreach ($arPosts as $k => $v) {
-                                if ($v['checked'] === 'checked') {
-                                    $arPayment2[$_GET['position']]['pt'] = 0;
-                                    $arPayment2[$_GET['position']]['type'] = 'Час';
-                                }
-                            }
-                        } else {
-                            if ($val['pay'] > 0)
-                                $arPayment2[$val['idpost']]['pay'] = round($val['pay']);
-                            $arPayment2[$val['idpost']]['pt'] = $val['pt'];
-                            switch ($val['pt']) {
-                                case 0:
-                                    $arPayment2[$val['idpost']]['type'] = 'Час';
-                                    break;
-                                case 1:
-                                    $arPayment2[$val['idpost']]['type'] = 'Неделя';
-                                    break;
-                                case 2:
-                                    $arPayment2[$val['idpost']]['type'] = 'Месяц';
-                                    break;
-                                case 3:
-                                    $arPayment2[$val['idpost']]['type'] = 'Посещение';
-                                    break;
-                            }
-                        }
+                    foreach ($viData['userInfo']['userDolj'][0] as $val)
+                    {
+                      if ($val['pay'] > 0)
+                          $arPayment2[$val['idpost']]['pay'] = round($val['pay']);
+                      $arPayment2[$val['idpost']]['pt'] = $val['pt'];
+                      switch ($val['pt']) {
+                          case 0:
+                              $arPayment2[$val['idpost']]['type'] = 'Час';
+                              break;
+                          case 1:
+                              $arPayment2[$val['idpost']]['type'] = 'Неделя';
+                              break;
+                          case 2:
+                              $arPayment2[$val['idpost']]['type'] = 'Месяц';
+                              break;
+                          case 3:
+                              $arPayment2[$val['idpost']]['type'] = 'Посещение';
+                              break;
+                      }
                     }
 
                     ?>
                     <div class="epa__content-title"><h2>Целевая вакансия</h2></div>
                     <div class="epa__content-module">
                         <h3 class="epa__posts-title">Выберите должности, на которых желаете работать</h3>
-                        <div class="epa__label epa__posts">
+                        <div class="epa__label epa__posts<?=(!$bPosts||isset($arError['donjnost']))?' error':''?>">
                             <span class="epa__label-name">Должность:</span>
                             <ul id="epa-list-posts" class="epa__select-list epa__select-lst-vsbl">
-                                <?php foreach ($arPosts2 as $post): ?>
+                                <?php foreach ($arPosts as $post): ?>
                                     <li>
                                         <input type="checkbox" name="donjnost[]" value="<?= $post['id'] ?>"
                                                id="epa-post-<?= $post['id'] ?>" <?= $post['checked'] ?>>
@@ -301,7 +335,7 @@ asort($arCities);
                         </div>
 
                         <div class="epa__post-detail">
-                            <?php foreach ($arPosts2 as $post): ?>
+                            <?php foreach ($arPosts as $post): ?>
                                 <?php if ($post['checked'] != ''): ?>
                                     <div class="epa__post-block" data-id="<?= $post['id'] ?>">
                                         <div class="epa__post-name"><?= $post['newname'] ?></div>
@@ -310,7 +344,7 @@ asort($arCities);
                                             <span class="epa__label-name">Ожидаемая оплата:</span>
                                             <input type="text" name="post[<?= $post['id'] ?>][payment]"
                                                    value="<?= isset($arPayment2[$post['id']]['pay']) ? $arPayment2[$post['id']]['pay'] : '' ?>"
-                                                   class="epa__input epa__required" data-name="Ожидаемая оплата">
+                                                   class="epa__input epa__required<?=(isset($arResult['post'])?' error':'')?>" data-name="Ожидаемая оплата">
                                             <em>руб</em>
                                         </label>
                                         <label class="epa__label epa__select">

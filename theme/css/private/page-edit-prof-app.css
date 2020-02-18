@@ -254,14 +254,15 @@
 }
 
 #DiContent .edit-profile-applicant .epa__label.epa__payment {
-  padding-right: 5px
+  padding-right: 5px;
+  display: table;
 }
 
 #DiContent .edit-profile-applicant .epa__label.error {
   box-shadow: inset 0px 0px 3px red;
   border: 1px solid red;
 }
-#email-field:before {
+#email-field:before, #phone-field:before{
   content: attr(data-error);
   width: 200px;
   margin-left: 50%;
@@ -282,7 +283,11 @@
   transition: opacity .3s ease-out;
   opacity: 0;
 }
-#email-field.erroremail:before {
+#phone-field:before{
+  width: 200px;
+  left: -100px;
+}
+#email-field.erroremail:before, #phone-field.errorphone:before{
   opacity: 1
 }
 
@@ -311,6 +316,8 @@
   position: relative;
   text-align: right;
   font-size: 15px;
+  margin: 0;
+  padding: 0 5px 0 0;
 }
 
 #DiContent .epa__input.epa__post-period {
@@ -1738,6 +1745,7 @@ input:checked + .epa__checkbox:after {
   font-weight: bold;
   font-style: normal;
   font-size: 15px;
+  display: table-cell;
 }
 
 .epa__period-error {

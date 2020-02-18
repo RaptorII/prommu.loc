@@ -517,11 +517,11 @@ class UserProfileApplic extends UserProfile
     {
         $id = $this->exInfo->id;
         $idresume = $this->exInfo->id_resume;
-        $res = $this->checkFieldsProfile();
+        $arErrors = $this->checkFieldsProfile();
      
-        if($res['err']) // неправильно заполнены поля
+        if(count($arErrors)) // неправильно заполнены поля
         {
-            return $res;
+            return $arErrors;
         } 
         else // *** Сохраняем данные пользователя ***
         {
@@ -1090,60 +1090,116 @@ class UserProfileApplic extends UserProfile
 
     private function checkFieldsProfile()
     {
-        $ret = array('err' => 0,);
+      $rq = Yii::app()->getRequest();
+      $arResult = [];
+      // имя
+      $value = $rq->getParam('name');
+      if(!strlen(trim($value)))
+      {
+        $arResult['name']='- введите Имя';
+      }
+      // фамилия
+      $value = $rq->getParam('lastname');
+      if(!strlen(trim($value)))
+      {
+        $arResult['lastname']='- введите Фамилию';
+      }
+      // дата рождения
+      $value = $rq->getParam('bdate');
+      if(!Share::checkFormatDate($value))
+      {
+        $arResult['bdate']='- введите корректную Дату рождения';
+      }
+      // город
+      $value = $rq->getParam('city');
+      if(!count($value) || empty($value[0]))
+      {
+        $arResult['city']='- необходимо указать город';
+      }
+      // email
+      $value = $rq->getParam('email');
+      $value = trim($value);
+      if(!filter_var($value,FILTER_VALIDATE_EMAIL))
+      {
+        $arResult['email']='- введите корректный Email';
+      }
+      elseif(!count($arResult))
+      {
+        $query = Yii::app()->db->createCommand()
+          ->select('email')
+          ->from('user')
+          ->where(
+            'email=:email AND id_user<>:id',
+            [':email'=>$value, ':id'=>$this->exInfo->id]
+          )
+          ->queryScalar();
 
-        $val = Yii::app()->getRequest()->getParam('name');
-        if( trim($val) == '' )
+        if($query)
         {
-            $ret = array('err' => 1,
-                'item' => 'name',
-                'msg' => 'Введите Имя',
-                );
-        } // endif
+          $arResult['email']='- указанный Email уже используется в системе';
+        }
+      }
+      // телефон
+      $code = $rq->getParam('__phone_prefix');
+      $arAttr = $rq->getParam('user-attribs');
+      $value = '+' . $code . $arAttr['mob'];
+      if(strlen($value)!=16) // 16 символов вместе со скобками, тире и знаком плюса
+      {
+        $arResult['mob']='- введите корректный Телефон';
+      }
+      else
+      {
+        $query = Yii::app()->db->createCommand()
+          ->select('val')
+          ->from('user_attribs t')
+          ->where(
+            "t.val=:val AND t.key=:key AND t.id_us<>:id",
+            [':val'=>$value, ':key'=>'mob', ':id'=>$this->exInfo->id]
+          )
+          ->queryScalar();
 
-
-        $val = Yii::app()->getRequest()->getParam('lastname');
-        if( !$ret['err'] && trim($val) == '' )
+        if($query)
         {
-            $ret = array('err' => 1,
-                'item' => 'lastname',
-                'msg' => 'Введите Фамилию',
-                );
-        } // endif
-
-
-        $val = Yii::app()->getRequest()->getParam('email');
-        if( !$ret['err'] )
+          $arResult['mob']='- указанный Телефон уже используется в системе';
+        }
+      }
+      // должность
+      $value = $rq->getParam('donjnost');
+      if(!count($value))
+      {
+        $arResult['donjnost']='- необходимо указать Должность';
+        $arResult['post']='- необходимо указать параметры должности';
+      }
+      else // оплата
+      {
+        $value = $rq->getParam('post');
+        $value = reset($value);
+        if(!intval($value['payment']))
         {
-            $res = Yii::app()->db->createCommand()
-                ->select("email")
-                ->from('user')
-                ->where('email = :t AND id_user <> :id', array(':t' => $val, ':id' => $this->exInfo->id))
-                ->queryRow();
+          $arResult['post']='- необходимо указать параметры должности';
+        }
+      }
+      // фото
+      $query = Yii::app()->db->createCommand()
+        ->select('photo')
+        ->from('resume')
+        ->where(
+          "id_user=:id_user",
+          [':id_user'=>$this->exInfo->id]
+        )
+        ->queryScalar();
+      if(!$query)
+      {
+        $arResult['photo']='- необходимо добавить фото';
+      }
 
-            if( $res['email'] )
-                $ret = array('err' => 1,
-                    'item' => 'email',
-                    'msg' => 'Указанный e-mail адрес уже используется в системе',
-                    );
+      if(count($arResult))
+      {
+        $mess = '<b>При сохранении возникли ошибки</b><br>' . implode('<br>',$arResult);
+        Yii::app()->user->setFlash('prommu_flash', $mess);
+      }
 
-            if( trim($val) == '' )
-                $ret = array('err' => 1,
-                    'item' => 'email',
-                    'msg' => 'Введите Email адрес',
-                    );
-        } // endif
-
-        $val = Yii::app()->getRequest()->getParam('bdate');
-        if( !$ret['err'] && ($val['y'] == 'aa' || $val['m'] == 'aa' || $val['d'] == 'aa' ) )
-        {
-            $ret = array('err' => 1,
-                'item' => 'bdate',
-                'msg' => 'Введите правильно Дату рождения',
-                );
-        } // endif
-
-        return $ret;
+      return $arResult;
     }
 
 
@@ -1484,24 +1540,6 @@ class UserProfileApplic extends UserProfile
             $command = Yii::app()->db->schema->commandBuilder->createMultipleInsertCommand('user_wtime', $insData);
             $res = $command->execute();
         }
-    }
-    /*
-    *   Проверка уникальности почты. Вызывается в ajaxController
-    */
-    public function emailVerification(){
-        $oldEmail = Yii::app()->getRequest()->getParam('oemail');
-        $newEmail = Yii::app()->getRequest()->getParam('nemail');
-        $result = false;
-
-        $res = Yii::app()->db->createCommand()
-            ->select("email")
-            ->from('user')
-            ->where('email = :n AND email <> :o', array(':n' => $newEmail, ':o' => $oldEmail))
-            ->queryRow();
-
-        if($res['email']) $result = true;
-
-        return $result;
     }
     /*
     *   Сохранение настроек

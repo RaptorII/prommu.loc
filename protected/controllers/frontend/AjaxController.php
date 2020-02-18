@@ -44,16 +44,17 @@ class AjaxController extends AppController
       if(empty($arRes['client'])) // каким-то непонятным образом проскакивают юзеры без клиента
       {
         Yii::app()->end();
+        file_put_contents('client2.txt', date('d.m.Y H:i')."\n".print_r($arRes,true)."\n", FILE_APPEND | LOCK_EX);
         return;
       }
 
       file_put_contents('client.txt', date('d.m.Y H:i')."\t".' client - '.$arRes['client'].' ip - '.$ip."\n", FILE_APPEND | LOCK_EX);
         
       $query = Yii::app()->db->createCommand()
-        ->select("ip")
+        ->select("*")
         ->from('user_client')
         ->where('ip=:ip', [':ip'=>$ip])
-        ->queryScalar();
+        ->queryRow();
                 
       if(!$query)
       {
@@ -62,6 +63,10 @@ class AjaxController extends AppController
       }
       else
       {
+        if($arRes['client']!=$query['client'])
+        {
+          $arRes['is_send_to_ga'] = 0;
+        }
         Yii::app()->db->createCommand()
           ->update('user_client', $arRes, 'ip like :ip', [':ip'=>$ip]);
       }
@@ -404,7 +409,7 @@ class AjaxController extends AppController
      */
     public function actionGetApplic()
     {
-      $result = (new Promo())->getApplicantsSearch('applicants');
+      $result = (new Promo())->getApplicantsSearch();
       header('Content-type: application/json');
       echo CJSON::encode($result);
       Yii::app()->end();
@@ -414,7 +419,7 @@ class AjaxController extends AppController
      */
     public function actionGetSearchVacs()
     {
-      $result = (new Vacancy())->getVacanciesSearch('vacancies');
+      $result = (new Vacancy())->getVacanciesSearch();
       header('Content-type: application/json');
       echo CJSON::encode($result);
       Yii::app()->end();
@@ -794,7 +799,18 @@ class AjaxController extends AppController
     */
     public function actionEmailVerification()
     {
-        echo CJSON::encode(Share::$UserProfile->emailVerification());
+      $rq = Yii::app()->getRequest();
+      $oldEmail = $rq->getParam('oemail');
+      $newEmail = $rq->getParam('nemail');
+      echo CJSON::encode(UserProfile::emailVerification($newEmail,$oldEmail));
+    }
+
+    public function actionPhoneVerification()
+    {
+      $rq = Yii::app()->getRequest();
+      $oldPhone = '+' . $rq->getParam('ophone');
+      $newPhone = '+' . $rq->getParam('nphone');
+      echo CJSON::encode(UserProfile::phoneVerification($newPhone,$oldPhone));
     }
     /*
     *   отправка снимка с камеры на сервер

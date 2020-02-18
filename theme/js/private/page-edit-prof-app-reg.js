@@ -2,10 +2,12 @@ jQuery(function($){
   var strAbout = 2000, // ограничение для поля "О себе"
     phoneLen = 10, // нормальное кол-во цифр в телефоне
     oldEmail = $('#epa-email').val(),
+    oldPhone = $('#phone-code').val(),
     cityM = '#city-module',
     cntctM = '#contacts-module',
     mainM = '#main-module',
     emailTimer = null,
+    phoneTimer = null,
     arSelectPhones = [],
     arErrorsFields = [];
 
@@ -25,7 +27,6 @@ jQuery(function($){
 	];
 	cropOptions = {};
 	cropperObj = null;
-	oldPhone = $('#phone-code').val();
 	oldFlag = '';
 	keyCode = false;
 
@@ -266,10 +267,10 @@ jQuery(function($){
   //
   $('.epa__save-btn').click(function(e){
     var self = this,
-      epattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i,
-      nemail = $('#epa-email').val(),
-      bAvatar = $('#login-img').hasClass('active-logo'),
-      errors = false;
+        bAvatar = $('#login-img').hasClass('active-logo'),
+        bEmail = $('#email-field').hasClass('erroremail'),
+        bPhone = $('#phone-field').hasClass('errorphone'),
+        errors = false;
 
     e.preventDefault();
 
@@ -278,153 +279,54 @@ jQuery(function($){
     else
       MainScript.buttonLoading(self,true);
 
-    resEmail = epattern.test(nemail) ? remErr('.epa__email') : addErr('.epa__email');
-    $('.epa__email').removeClass('erroremail');
+    $.each($(cityM+' .epa__required'), function(){
+      if(!checkField(this)) {errors = true; }
+    });
 
-    if(resEmail && nemail!=oldEmail){
-      clearTimeout(emailTimer);
-      emailTimer = setTimeout(function(){
-        $.ajax({
-          type: 'POST',
-          url: '/ajax/emailVerification',
-          data: 'nemail='+nemail+'&oemail='+oldEmail,
-          dataType: 'json',
-          success: function(res){
-            res
-              ? $('.epa__email').addClass('erroremail error')
-              : $('.epa__email').removeClass('erroremail error');
-
-            errorFieldName('#epa-email',res);
-
-            $.each($(cityM+' .epa__required'), function(){
-              if(!checkField(this)) errors = true;
-            });
-            $.each($(cityM+' .epa__days-checkboxes'), function(){
-              var checked = false,
-                $p = $(this);
-
-              $.each($p.find('.epa__day-input'), function(){
-                if($(this).is(':checked')) checked=true;
-              });
-              if(!checked) {
-                $.each($p.find('.epa__checkbox'), function(){ addErr(this) })
-                errors = true;
-              }
-            });
-
-            $.each($('.epa__post-detail .epa__required'), function(){
-              if(!checkField(this)) errors = true;
-            });
-
-            checkPhone({'type':'input'});
-            // роверка наличия аватара
-            if(!bAvatar)
-            {
-              $('.avatar__logo-main').addClass('input__error');
-            }
-            var arErrors = $('.error');
-            if(arErrors.length>0 || !bAvatar)
-            {
-              var scrollItem = (!bAvatar ? $('.input__error')[0] : $('.error')[0]);
-              MainScript.buttonLoading(self,false);
-              $.fancybox.open({
-                src: '.prmu__popup',
-                type: 'inline',
-                touch: false,
-                afterClose: function(){
-                  $('html, body').animate({ scrollTop: $(scrollItem).offset().top-20 }, 1000);
-                }
-              });
-            }
-
-            if(!errors && !arErrors.length && bAvatar){
-              var arPosts = $('#epa-list-posts input'),
-                arCityItems = $('#city-module .epa__city-item'),
-                arTimeItems = $('#city-module .epa__period input'),
-                addInputs = '';
-              $.each(arPosts, function(){ // добавляем массив опыта вакансий
-                if($(this).is(':checked'))
-                  addInputs += '<input type="hidden" name="donjnost-exp[]" value="'+$(this).val()+'">';
-              });
-              $.each(arCityItems, function(){ // добавляем ID городов
-                addInputs += '<input type="hidden" name="city[]" value="'+this.dataset.idcity+'">';
-              });
-              $('#epa-edit-form').append(addInputs);
-
-              $.each(arTimeItems, function(){ 	// преображаем время в достойный вид
-                var val = $(this).val();
-                if(val!=''){
-                  arVals = val.split('до');
-                  newVal = getNum(arVals[0]) + '-' + getNum(arVals[1]);
-                  $(this).val(newVal)
-                }
-              });
-
-              var arAllInputs = $('.epa__cities-block-list input');
-              $.each(arAllInputs, function(){
-                var main = $(this).closest('.epa__city-item'),
-                  idCity = main[0].dataset.idcity;
-              });
-              $('#epa-edit-form').submit();
-              //console.log($('#epa-edit-form').serializeArray());
-            }
-          }
-        });
-      }, 500);
+    $.each($('.epa__post-detail .epa__required'), function(){
+      if(!checkField(this)) errors = true;
+    });
+    // роверка наличия аватара
+    if(!bAvatar)
+    {
+      $('.avatar__logo-main').addClass('input__error');
     }
-    else{
-      $.each($(cityM+' .epa__required'), function(){
-        if(!checkField(this)) {errors = true; };
+
+    var arErrors = $('.error');
+    if(arErrors.length>0 || errors || !bAvatar || bEmail || bPhone)
+    {
+      var scrollItem = (!bAvatar ? $('.input__error')[0] : $('.error')[0]);
+      MainScript.buttonLoading(self,false);
+      $.fancybox.open({
+        src: '.prmu__popup',
+        type: 'inline',
+        touch: false,
+        afterClose: function(){
+          $('html, body').animate({ scrollTop: $(scrollItem).offset().top-20 }, 1000);
+        }
       });
-
-      $.each($('.epa__post-detail .epa__required'), function(){
-        if(!checkField(this)) errors = true;
+    }
+    else
+    {
+      var arPosts = $('#epa-list-posts input'),
+        arCityItems = $('#city-module .epa__city-item'),
+        //arTimeItems = $('#city-module .epa__period input'),
+        addInputs = '';
+      $.each(arPosts, function(){ // добавляем массив опыта вакансий
+        if($(this).is(':checked'))
+          addInputs += '<input type="hidden" name="donjnost-exp[]" value="'+$(this).val()+'">';
       });
+      $.each(arCityItems, function(){ // добавляем ID городов
+        addInputs += '<input type="hidden" name="city[]" value="'+this.dataset.idcity+'">';
+      });
+      $('#epa-edit-form').append(addInputs);
 
-      checkPhone({'type':'input'});
-
-      // роверка наличия аватара
-      if(!bAvatar)
-      {
-        $('.avatar__logo-main').addClass('input__error');
-      }
-
-      var arErrors = $('.error');
-      if(arErrors.length>0 || !bAvatar)
-      {
-        var scrollItem = (!bAvatar ? $('.input__error')[0] : $('.error')[0]);
-        MainScript.buttonLoading(self,false);
-        $.fancybox.open({
-          src: '.prmu__popup',
-          type: 'inline',
-          touch: false,
-          afterClose: function(){
-            $('html, body').animate({ scrollTop: $(scrollItem).offset().top-20 }, 1000);
-          }
-        });
-      }
-
-      if(!errors && !arErrors.length && bAvatar){
-        var arPosts = $('#epa-list-posts input'),
-          arCityItems = $('#city-module .epa__city-item'),
-          //arTimeItems = $('#city-module .epa__period input'),
-          addInputs = '';
-        $.each(arPosts, function(){ // добавляем массив опыта вакансий
-          if($(this).is(':checked'))
-            addInputs += '<input type="hidden" name="donjnost-exp[]" value="'+$(this).val()+'">';
-        });
-        $.each(arCityItems, function(){ // добавляем ID городов
-          addInputs += '<input type="hidden" name="city[]" value="'+this.dataset.idcity+'">';
-        });
-        $('#epa-edit-form').append(addInputs);
-
-        var arAllInputs = $('.epa__cities-block-list input');
-        $.each(arAllInputs, function(){
-          var main = $(this).closest('.epa__city-item'),
-            idCity = main[0].dataset.idcity;
-        });
-        $('#epa-edit-form').submit();
-      }
+      var arAllInputs = $('.epa__cities-block-list input');
+      $.each(arAllInputs, function(){
+        var main = $(this).closest('.epa__city-item'),
+          idCity = main[0].dataset.idcity;
+      });
+      $('#epa-edit-form').submit();
     }
   });
   //
@@ -438,7 +340,13 @@ jQuery(function($){
     html = html.replace(/NEWNUM/g, arItems.length);
 
     if(arItems.length>0)
+    {
+      if(arItems.length==9)
+      {
+        $(this).hide();
+      }
       $(cntctM+' .epa__add-phone:eq(-1)').after(html);
+    }
     else
       $(label).after(html);
   });
@@ -616,7 +524,8 @@ jQuery(function($){
       epattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,4}\.)?[a-z]{2,4}$/i;
     res = false;
 
-    if(id=='epa-email'){ // email
+    if(id=='epa-email')
+    { // email
       res = epattern.test(val) ? remErr(label) : addErr(label);
       $('.epa__email').removeClass('erroremail');
       if(res && val!=oldEmail){
@@ -633,6 +542,30 @@ jQuery(function($){
               }
               else{
                 $('.epa__email').removeClass('erroremail error');
+              }
+            }
+          });
+        }, 500);
+      }
+    }
+    else if(id=='phone-code')
+    {
+      if(!$(label).hasClass('error') && val!=oldPhone)
+      {
+        var code = $('[name="__phone_prefix"]').val();
+        clearTimeout(phoneTimer);
+        phoneTimer = setTimeout(function(){
+          $.ajax({
+            type: 'POST',
+            url: '/ajax/phoneVerification',
+            data: 'nphone=' + code + val + '&ophone=' + code + oldPhone,
+            dataType: 'json',
+            success: function(res){
+              if(res){
+                $('#phone-field').addClass('errorphone error');
+              }
+              else{
+                $('#phone-field').removeClass('errorphone error');
               }
             }
           });
@@ -748,63 +681,40 @@ jQuery(function($){
   // проверка номера
   function checkPhone(e){
     var $inp = $('#phone-code'),
-      len = getNum($inp.val()).length,
-      code = $('[name="__phone_prefix"]').val().length;
+        len = getNum($inp.val()).length,
+        code = $('[name="__phone_prefix"]').val().length,
+        label = $inp.closest('.epa__label');
 
-    if(e.type=='click' && !$(e.target).is('.country-phone') && !$(e.target).closest('.country-phone').length){
-      if((code==3 && len<9) || (code==1 && len<10)){ // UKR || RF
-        addErr($inp.closest('.epa__label'));
+    if(
+      e.type=='click'
+      &&
+      !$(e.target).is('.country-phone')
+      &&
+      !$(e.target).closest('.country-phone').length
+    )
+    {
+      if((code==3 && len<9) || (code==1 && len<10))
+      { // UKR || RF
+        addErr(label);
         $inp.val('');
       }
-      else{
-        remErr($inp.closest('.epa__label'));
+      else if(!$(label).hasClass('errorphone'))
+      {
+        remErr(label);
       }
     }
-    if(e.type=='input'){
-      if((code==3 && len<9) || (code==1 && len<10) || len==0){
-        addErr($inp.closest('.epa__label'));
+    if(e.type=='input')
+    {
+      if((code==3 && len<9) || (code==1 && len<10) || len==0)
+      {
+        addErr(label);
       }
-      else{
-        remErr($inp.closest('.epa__label'));
+      else
+      {
+        remErr(label);
       }
     }
   }
-  if (window.screen.width < 768) {
-    //
-    //
-    // управляем позицией блока содержания
-    /*var posContentList = $('.epa__logo-name-list').offset().top - 15;
-    $(window).on('resize scroll', scrollContentList);
-    scrollContentList();
-
-    function scrollContentList() {
-      (
-        $(document).scrollTop() > posContentList
-        &&
-        $(window).width() > 767
-      )
-        ? $('.epa__logo-name-list').addClass('fixed')
-        : $('.epa__logo-name-list').removeClass('fixed');
-    }*/
-  }
-
-  if ($(window).width() < 768) {
-    //fixed menu in personal account
-    var posAccMenu = $('.personal-acc__menu').offset().top - 100;
-    $(window).on('resize scroll', scrollAccMenu);
-    scrollAccMenu();
-
-    function scrollAccMenu() {
-      (
-        $(document).scrollTop() > posAccMenu
-        &&
-        $(window).width() < 768
-      )
-        ? $('.personal-acc__menu').addClass('fixed')
-        : $('.personal-acc__menu').removeClass('fixed');
-    }
-  }
-
   //
   // начальное выделение полей
   //
@@ -817,7 +727,6 @@ jQuery(function($){
   checkField('[name="user-attribs[edu]"]');
   checkField('[name="langs[]"]');
   checkPhone({type:'input'});
-
   /**
    * Checked Gender
    */
