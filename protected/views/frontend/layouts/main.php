@@ -12,6 +12,14 @@
 	if(isset($arSeo['data']['id']) && !$arSeo['data']['index'])
 		Yii::app()->clientScript->registerMetaTag('noindex,nofollow','robots', null, array());
 	$arSeo = $arSeo['data'];
+	//
+  //
+  //
+	if(empty($SubdomainCache->id))
+  {
+    $str = date('Y-m-d H:i:s') . ' ' . Yii::app()->request->hostInfo . PHP_EOL;
+    file_put_contents(__DIR__ . "/_hostInfo_log.txt", $str, FILE_APPEND);
+  }
 ?>
 <!DOCTYPE html>
 <html lang="ru">

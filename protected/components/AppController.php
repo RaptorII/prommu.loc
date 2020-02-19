@@ -38,7 +38,17 @@ class AppController extends CController
         // read config
         MainConfig::$DOC_ROOT = $_SERVER['DOCUMENT_ROOT'];
 
-        $options = (new Options)->getByGroup('sitebase');
+        try
+        {
+          $options = (new Options)->getByGroup('sitebase');
+        }
+        catch (Exception $e)
+        {
+          Share::sendToTelegramBug("Внимание!!! Проблема с подключением к БД\n" . $e->getMessage());
+          parent::renderFile(Yii::app()->getViewPath() . '/layouts/db_error.php');
+          die();
+        }
+
         MainConfig::$DEF_PAGE_LIMIT = $options['DEF_PAGE_LIMIT']->val;
         MainConfig::$DEF_PAGE_API_LIMIT = $options['DEF_API_PAGE_LIMIT']->val;
         //MainConfig::$AUTH_EXPIRE_TIME = $options['AUTH_EXPIRE_TIME']->val;
@@ -47,18 +57,13 @@ class AppController extends CController
 
 
         // mobile version
-        //define("FLAG_ISMOBILE", isset($_COOKIE['mobileVer']) && ($_COOKIE['mobileVer'] == 1 || $_COOKIE['mobileVer'] == 3) ? 1 : 0);
         require_once 'Mobile_Detect.php';// for PHP detect device type
         $detect = new Mobile_Detect;
         define('MOBILE_DEVICE', $detect->isMobile());
-/*
-        if(!isset(Yii::app()->request->cookies['show_mob_mess']->value))
-            Yii::app()->request->cookies['show_mob_mess'] = new CHttpCookie('show_mob_mess', 0);
-        define('SHOW_APP_MESS', Yii::app()->request->cookies['show_mob_mess']->value);
-*/
         // set lang
         $lang = Yii::app()->session['lang'];
-        if (empty($lang)) {
+        if (empty($lang))
+        {
             $lang = 'ru';
             Yii::app()->session['lang'] = 'ru';
         }

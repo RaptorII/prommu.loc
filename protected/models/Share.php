@@ -1073,4 +1073,14 @@ public static function getUserID()
     $url = /*'https://prommu.com'*/Subdomain::domainSite() . MainConfig::$PAGE_SEND_SMS_CODE . '?' . http_build_query($arGet);
     file_get_contents($url);
   }
+  /**
+   * @param $text - string
+   * Отправка сообщения в багчат Телеграм
+   */
+  public static function sendToTelegramBug($text)
+  {
+    $text = urlencode($text);
+    $sendto = "https://api.telegram.org/bot525649107:AAFWUj7O8t6V-GGt3ldzP3QBEuZOzOz-ij8/sendMessage?chat_id=@prommubag&text=$text";
+    file_get_contents($sendto);
+  }
 }
