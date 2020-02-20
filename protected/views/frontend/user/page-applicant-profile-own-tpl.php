@@ -246,7 +246,10 @@ endif;
         $idCity = array_keys($viData['userInfo']['userCities'][0]);
         $arLocation = (new Geo)->getCity( $idCity[0] );
 
-         if ( ($arLocation['region'] == 1307) && (Share::isEmployer()) ): ?>
+         if ( $arLocation['region'] == 1307
+            && !Share::isGuest()
+            && Share::isApplicant()
+            ): ?>
         <div class="messenger">
             <span class="messenger__txt">
                 Узнавай о самых свежих вакансиях самым первым
