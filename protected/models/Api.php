@@ -2771,6 +2771,31 @@ public function vac(){
                       
            
     }
+    
+    public function vacancyDelete(){
+        $id = Yii::app()->getRequest()->getParam('id');
+        $accessToken = filter_var(Yii::app()->getRequest()->getParam('access_token'), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        list($idus, $profile, $datas) = $this->checkAccessToken($accessToken);
+        
+        $sql = "SELECT id
+            FROM empl_vacations
+            WHERE id_user = {$idus}
+            ";
+        $res = Yii::app()->db->createCommand($sql)->queryRow();
+        
+        if(count($res)){
+             Yii::app()->db->createCommand()
+            ->delete('empl_vacations', 'id=:id', array(':id' => $id));
+            $data = ['error' => '0', 'message' => 'Успешно удалена'];
+        } else {
+            $data = ['error' => '-100', 'message' => 'Вы не являетесь собственником вакансии'];
+        }   
+        
+        
+      
+        return $data;
+
+    }
             
             
     public function neWorkDay(){
