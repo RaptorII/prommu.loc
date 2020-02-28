@@ -77,6 +77,9 @@
                 $script->registerScriptFile($baseUrl . '/theme/js/dist/jquery.maskedinput.min.js', CClientScript::POS_HEAD);
             }
 
+            // menu
+            $script->registerCssFile($baseUrl.'/theme/css/menu/menu.css');
+
             if( ($action = $this->action->getId()) == 'profile' && Share::$UserProfile->type == 3 )
 
                 $action = 'company-profile-own';
@@ -282,6 +285,8 @@
                                         </div>
                                         <div class="small-menu__profile">
                                             <?php $user = Yii::app()->session['au_us_data']; ?>
+
+                                            <?php /* ?>
                                             <a class="small-menu__username" href="<?=MainConfig::$PAGE_PROFILE?>" data-id="<?=$user->id?>"><span><?php
                                                 if($user->firstname || $user->lastname):
                                                     echo $user->firstname . ' ' . $user->lastname;
@@ -292,6 +297,99 @@
                                             <a class="small-menu__btn" href="<?=MainConfig::$PAGE_LOGOUT?>"><b>ВЫХОД</b></a>
                                         </div>
                                         <div class="clearfix"></div>
+                                        <?php */ ?>
+
+                                            <?php
+                                            $userId = Share::$UserProfile->id;
+                                            $arUser = Share::getUsers(array($userId));
+                                            $arUser = $arUser[$userId];
+                                            ?>
+
+                                            <div class="small-menu__wrap">
+                                                <img src="<?=$arUser['src']?>" alt="<?=$arUser['name']?>" class="user__info-logo"/>
+                                                <div class="small-menu__drop">
+
+                                                    <ul class="small-menu__section">
+                                                        <li class="small-menu__section-item">
+                                                            <span style="color: var(--color-grey)">
+                                                                <? if (share::isEmployer()) echo 'Профиль работодателя'; ?>
+                                                                <? if (share::isApplicant()) echo 'Профиль соискателя'; ?>
+
+                                                            </span>
+                                                        </li>
+                                                        <li class="small-menu__section-item">
+                                                            <?
+                                                            if($user->firstname || $user->lastname):
+                                                                echo '<strong>'.$user->firstname . ' ' . $user->lastname.'</strong>';
+                                                            else:
+                                                                echo '<strong>'.$user->name.'</strong>';
+                                                            endif;
+                                                            ?>
+                                                        </li>
+                                                    </ul>
+
+                                                    <ul class="small-menu__section">
+
+                                                        <?php $mactive = ContentPlus::getActionID(); ?>
+                                                        <?php foreach (Share::$viewData['menu'] as $key => $val): ?>
+                                                            <?php if(!$val['hidden']): ?>
+                                                                <?
+                                                                $ep = filter_var(Yii::app()->getRequest()->getParam('ep'), FILTER_SANITIZE_NUMBER_INT);
+                                                                $active ='';
+                                                                if(strpos($val['link'], 'ep=1')>0)
+                                                                    $ep ? $active='active' : $active='';
+                                                                else
+                                                                    $active = strpos($val['link'], $mactive) === false ? '' : 'active';
+                                                                ?>
+                                                                <li class="small-menu__section-item">
+                                                                    <a href="/<?= $val['link'] ?>"
+                                                                       class="pa__menu-link pa__menu-<?=$val['id']?>
+                                                                       <? if (share::isEmployer()) echo 'employer'; ?>
+                                                                       <? if (share::isApplicant()) echo 'applicant'; ?>
+                                                                       <?= $active ?>
+                                                                       to-green
+                                                                    ">
+                                                                        <span class="pa__menu-item">
+                                                                            <span class="pa__menu-item-icon"><i></i></span>
+                                                                            <span class="pa__menu-item-text"><?= $val['name'] ?></span>
+                                                                        </span>
+                                                                    </a>
+                                                                </li>
+                                                            <?php endif; ?>
+                                                        <?php endforeach; ?>
+
+                                                    </ul>
+
+                                                    <ul class="small-menu__section">
+                                                        <li class="small-menu__section-item">
+                                                            <a href="#" class="small-menu__section-link to-green">
+                                                                <span class="icn-telegram-icon"></span>
+                                                                Telegram-канал
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+
+                                                    <ul class="small-menu__section">
+                                                        <li class="small-menu__section-item">
+                                                            <a href="#" class="small-menu__section-link to-green">
+                                                                <span class="icn-download-st"></span>
+                                                                Инструкция
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+
+                                                    <ul class="small-menu__section">
+                                                        <li class="small-menu__section-item">
+                                                            <a href="<?=MainConfig::$PAGE_LOGOUT?>" class="small-menu__section-link to-orange">
+                                                                <span class="icn-exit-icon-prommu"></span>
+                                                                Выход
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 <?php endif; ?>
                             </div>

@@ -1,0 +1,129 @@
+.small-menu__profile {
+
+}
+
+.small-menu__profile .user__info-logo {
+    width: 65px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 50%;
+    border: 2px solid #CBD880;
+    transition: var(--main-trans);
+}
+
+.small-menu__profile .user__info-logo:hover {
+    border-color: var(--color-orange);
+    transition: var(--main-trans);
+}
+
+.small-menu__wrap {
+    position: relative;
+}
+
+.small-menu__profile .small-menu__drop {
+    background: var(--color-white);
+    padding: 0 20px;
+    position: absolute;
+    border: 2px solid var(--color-green);
+    width: 250px;
+    right: 0;
+    opacity: 0;
+    visibility: hidden;
+    top: 85px;
+    transition: var(--main-trans);
+    z-index: -1;
+}
+
+.small-menu__wrap:hover .small-menu__drop {
+    display: block;
+    top: 65px;
+    overflow: unset;
+    opacity: 1;
+    visibility: visible;
+    transition: var(--main-trans);
+    z-index: 10;
+}
+
+.small-menu__section {
+    display: block;
+    list-style: none;
+    margin: 10px 0;
+    padding: 0;
+}
+
+.small-menu__section + .small-menu__section {
+    border-top: 1px solid var(--color-green);
+    padding: 10px 0 0 0;
+}
+
+.small-menu__section-item {
+    position: relative;
+    padding: 3px 0;
+}
+
+/* icons */
+.small-menu__section [class*=" icn-"],
+.small-menu__section [class^=icn-] {
+    width: 36px;
+    left: 15px;
+}
+
+.icn-exit-icon-prommu {
+    font-size: 16px;
+    padding: 0 10px;
+    top: 2px;
+}
+
+.icn-exit-icon-prommu:before {
+    content: "\e9dc";
+}
+
+.icn-download-st {
+    font-size: 25px;
+    padding: 0 5px;
+    top: -3px;
+}
+
+.icn-download-st:before {
+    content: "\e9cb";
+}
+
+.icn-telegram-icon {
+    font-size: 18px;
+    padding: 0 9px;
+    top: 0;
+}
+.icn-telegram-icon:before {
+    content: "\e834";
+}
+
+#DiLogoWrapp .small-menu__section-link {
+    transition: var(--main-trans);
+    text-decoration: none;
+    font-size: 16px;
+    padding-left: 30px;
+}
+
+#DiLogoWrapp .to-orange {
+    transition: var(--main-trans);
+}
+#DiLogoWrapp .to-orange:hover {
+    color: var(--color-orange);
+    transition: var(--main-trans);
+}
+
+#DiLogoWrapp .to-green {
+    transition: var(--main-trans);
+}
+#DiLogoWrapp .to-green:hover {
+    color: var(--color-green);
+    transition: var(--main-trans);
+}
+
+.small-menu__wrap .pa__menu-item-icon {
+    display: table-cell;
+}
+
+#DiLogoWrapp .pa__menu-link.active {
+    color: var(--color-green);
+}
