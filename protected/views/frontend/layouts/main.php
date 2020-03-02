@@ -360,6 +360,14 @@
 
                                                     </ul>
 
+                                                    <?php
+                                                    $idCity = array_keys($viData['userInfo']['userCities'][0]);
+                                                    $arLocation = (new Geo)->getCity( $idCity[0] );
+
+                                                    if ( $arLocation['region'] == 1307
+                                                        && !Share::isGuest()
+                                                        && Share::isApplicant()
+                                                    ): ?>
                                                     <ul class="small-menu__section">
                                                         <li class="small-menu__section-item">
                                                             <a href="#" class="small-menu__section-link to-green">
@@ -368,13 +376,31 @@
                                                             </a>
                                                         </li>
                                                     </ul>
+                                                    <?php endif; ?>
 
                                                     <ul class="small-menu__section">
                                                         <li class="small-menu__section-item">
-                                                            <a href="#" class="small-menu__section-link to-green">
+
+                                                        <? if (share::isApplicant()) : ?>
+                                                            <a href='/theme/pdf/Instruction-PROMMU-com-all-app.pdf'
+                                                               target="_blank"
+                                                               class="small-menu__section-link to-green"
+                                                            >
                                                                 <span class="icn-download-st"></span>
                                                                 Инструкция
                                                             </a>
+                                                        <? endif; ?>
+
+                                                        <? if (share::isEmployer()) : ?>
+                                                            <a href='/theme/pdf/Instruction-PROMMU-com-vac.pdf'
+                                                               target="_blank"
+                                                               class="small-menu__section-link to-green"
+                                                            >
+                                                                <span class="icn-download-st"></span>
+                                                                Инструкция
+                                                            </a>
+                                                        <? endif; ?>
+
                                                         </li>
                                                     </ul>
 
