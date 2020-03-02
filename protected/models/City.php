@@ -833,4 +833,24 @@ class City extends CActiveRecord
 
         return $city;
     }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public static function getCityIdByUserId($id)
+    {
+        $city = Yii::app()->db->createCommand("
+            SELECT 
+                id_city
+            FROM 
+                user_city
+            WHERE 
+                id_user={$id}
+        ")->queryAll();
+
+        $city = $city[0]['id_city'];
+
+        return $city;
+    }
 }
