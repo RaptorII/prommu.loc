@@ -2,7 +2,7 @@
 /* personal__area */
 
 
-@media screen and (min-width:768px) {
+@media screen and (min-width: 768px) {
     .personal__area.personal__area-flex {
         display: flex;
         flex-wrap: wrap;
@@ -14,7 +14,12 @@
     flex-direction: column;
     align-content: flex-end;
     justify-content: flex-end;
-    /*flex: 1 0 auto;*/
+}
+
+@media screen and (min-width: 989px) {
+    .personal__area--item {
+        flex: 1 0 auto;
+    }
 }
 
 .personal__area--item + .personal__area--item {
