@@ -53,6 +53,7 @@ endif;
 <?php endif; ?>
 <?
   Yii::app()->getClientScript()->registerCssFile('/theme/css/private/page-prof-app.css');
+//  Yii::app()->getClientScript()->registerCssFile('/theme/css/private/page-prof-personal-area.css');
   Yii::app()->getClientScript()->registerScriptFile("/theme/js/private/page-prof-app.js", CClientScript::POS_END);
   Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'dist/magnific-popup-min.css');
   Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . Share::$cssAsset['modalwindow.css']);

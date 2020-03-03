@@ -37,6 +37,10 @@ if ($route !== "about/empl" &&
         echo $content;
     } else { ?>
         <div class="container">
+
+            <?php //off old employer profile
+            if (!Share::isEmployer()):
+            ?>
             <!--menu            -->
             <div class="row content-menu-box mt20">
                 <div class="col-xs-12 mobile-none">
@@ -71,6 +75,9 @@ if ($route !== "about/empl" &&
                 </div>
             </div>
             <!--end menu            -->
+            <?php
+            endif;
+             ?>
 
             <div class="row content-header-box mt20">
                 <div class="col-xs-12">
@@ -133,7 +140,7 @@ if ($route !== "about/empl" &&
                                     <b class="small-menu__cnt">0</b>
                                     <i class="small-menu__icon icn-trend-prommu color-white"></i>
                                 </span>
-                                <span class="small-menu__name">ОТЗЫВЫ И РЕЙТИНГИ</span>
+                                <span class="small-menu__name">ОТЗЫВЫ И РЕЙТИНГИ </span>
                             </a>
 
                             <!--                    -->
@@ -174,7 +181,10 @@ if ($route !== "about/empl" &&
             </div>
 
             <div class="content-block">
-                <?= $content ?>
+                <?php
+                    // page content data
+                    echo $content;
+                ?>
             </div>
         </div>
     <?php } ?>

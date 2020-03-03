@@ -37,7 +37,8 @@ endif;
 <meta name="robots" content="noindex,nofollow">
 <?
 $id = $viData['userInfo']['id_user'];
-Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-prof-emp.css');
+//Yii::app()->getClientScript()->registerCssFile(MainConfig::$CSS . 'private/page-prof-emp.css');
+Yii::app()->getClientScript()->registerCssFile('/theme/css/private/page-prof-personal-area.css');
 Yii::app()->getClientScript()->registerScriptFile(MainConfig::$JS . 'private/page-prof-emp.js', CClientScript::POS_END);
 
 if(!in_array(Share::$UserProfile->type, [2,3])): ?>
@@ -53,6 +54,11 @@ $this->pageTitle = $title;
     <div class="content-block">
         <? endif; ?>
         <div class='row'>
+
+            <?php
+            //start
+                /*
+            ?>
             <div class='col-xs-12 col-sm-4 col-lg-3 no-md-relat ppe__logo'>
                 <div class="upp__img-block">
                     <div class="upp__img-block-main">
@@ -83,7 +89,7 @@ $this->pageTitle = $title;
                             <a href="/user/editprofile?ep=1" class="upp__change-logo">Изменить аватар</a>
                         <?php elseif($viData['userInfo']['is_online']): ?>
                         <span class="upp-logo__item-onl"><span>В сети</span>
-              <?php endif; ?>
+                    <?php endif; ?>
                     </div>
                 </div>
                 <div class="upp__logo-more">
@@ -128,7 +134,7 @@ $this->pageTitle = $title;
                         <a class='ppe__logo-btn prmu-btn' href='<?= MainConfig::$PAGE_SETTINGS ?>'><span>Настройки профиля</span></a>
                         <a class='ppe__logo-btn prmu-btn' href='<?= MainConfig::$PAGE_CHATS_LIST ?>'><span>Мои сообщения</span></a>
 
-                        <?/*efficiency*/?>
+                        <?//efficiency?>
                         <div class='affective-block'>
                             <div class='affective-perc'>
                                 <div class='progr' style="width: <?= $viData['profile_filling'] ?>%">
@@ -241,7 +247,7 @@ $this->pageTitle = $title;
                             <a class="download__btn" href='/theme/pdf/Instruction-PROMMU-com-all.pdf' target="_blank"></a>
                         </div>
 
-                        <?/**/?>
+                        <?//?>
 
                     <? endif; ?>
                     <? if(Share::isApplicant()): ?>
@@ -259,9 +265,7 @@ $this->pageTitle = $title;
                 </div>
             </div>
             <?
-            /*
-            *     parameters
-            */
+             //    parameters
             ?>
             <div class='col-xs-12 col-sm-8 col-lg-9 ppe__content'>
                 <h2 class="upp__title"><?=$viData['userInfo']['name']?></h2>
@@ -508,3 +512,332 @@ $this->pageTitle = $title;
                     </div>
                 <? endif; ?>
             </div>
+            */
+            ?>
+
+            <div class="col-xs-12">
+                <div class="personal__area personal__area-flex">
+                    <div class="personal__area--item">
+                        <div class="upp__img-block-main">
+                            <?
+                            $cookieView = Yii::app()->request->cookies['popup_photo']->value;
+                            $bigSrc = Share::getPhoto($id, 3, $viData['userInfo']['logo'], 'big');
+                            $src = Share::getPhoto($id, 3, $viData['userInfo']['logo'], 'small');
+                            ?>
+                            <? if($viData['userInfo']['logo'] && $bigSrc): ?>
+                                <a
+                                        href="<?=$bigSrc?>"
+                                        class="js-g-hashint upp__img-block-main-link profile__logo-full"
+                                        title="<?=$viData['userInfo']['name']?>">
+                                    <img src="<?=$src?>" alt="Работодатель <?=$viData['userInfo']['name']?> prommu.com">
+                                </a>
+                            <? else: ?>
+                                <img src="<?=$src?>" alt="Работодатель <?=$viData['userInfo']['name']?> prommu.com">
+                                <?
+                                if($flagOwnProfile && !$cookieView) // предупреждение, что нет фоток
+                                {
+                                    Yii::app()->request->cookies['popup_photo'] = new CHttpCookie('popup_photo', 1);
+                                    $message = '<p>У вас не загружено еще ни одной фотографии.<br>
+                                                    Добавляйте пожалуйста логотип своей компании или личные фото. 
+                                                    В случае несоответствия фотографий Вы не сможете пройти модерацию! 
+                                                    Спасибо за понимание!</p>';
+                                    Yii::app()->user->setFlash('prommu_flash', $message);
+                                }
+                                ?>
+                            <? endif; ?>
+                            <?if( $flagOwnProfile ):?>
+                                <a href="/user/editprofile?ep=1" class="upp__change-logo">Изменить аватар</a>
+                            <?php elseif($viData['userInfo']['is_online']): ?>
+                            <span class="upp-logo__item-onl"><span>В сети</span>
+                        <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="personal__area--item">
+                        <span class="upp__title"><?=$viData['userInfo']['name']?></span>
+                        <div class="upp__rating-block">
+                            <span class="upp__subtitle">Общий рейтинг:</span>
+                            <div class="upp__subtitle">
+                                <?=Share::getRating($viData['userInfo']['rate'],$viData['userInfo']['rate_neg'])?>
+                                <span class="upp__info">
+                                    <i class="icn-info-three"></i>
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="personal__area--item">
+                        <div class="upp__rating-block">
+                            <span class="upp__subtitle">Вакансии:</span>
+                            <div class="upp__subtitle">
+                                <?=Share::getRating($viData['userInfo']['rate'],$viData['userInfo']['rate_neg'])?>
+                                <span class="upp__info">
+                                    <i class="icn-info-three"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="personal__area--item">
+                        <div class="upp__rating-block">
+                            <span class="upp__subtitle">Отзывы:</span>
+                            <div class="upp__subtitle">
+                                <?=Share::getRating($viData['userInfo']['rate'],$viData['userInfo']['rate_neg'])?>
+                                <span class="upp__info">
+                                    <i class="icn-info-three"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="personal__area--item">
+                        <div class="upp__rating-block">
+                            <span class="upp__subtitle">Оценки:</span>
+                            <div class="upp__subtitle">
+                                <?=Share::getRating($viData['userInfo']['rate'],$viData['userInfo']['rate_neg'])?>
+                                <span class="upp__info">
+                                    <i class="icn-info-three"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="personal__area--item">
+                        <div class="upp__rating-affective">
+                            <div class="upp__subtitle">
+                                <span class="upp__subtitle">Эффективность размещения:</span>
+                                <span class="upp__info">
+                                    <i class="icn-info-three"></i>
+                                </span>
+                            </div>
+                            <div class="personal__area--affective">
+                                <div class="personal__area--indicator" style="width: <?= $viData['profile_filling'] ?>%"></div>
+                                <div class="personal__area--number"><?= $viData['profile_filling'] ?>%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+            <div class="col-xs-12 col-sm-4">
+                <div class="personal__area">
+
+                    <?
+                    // main info
+                    ?>
+                    <div class="personal__area--capacity">
+                        <div class="personal__area--capacity-name">
+                            Основная информация
+                        </div>
+
+                        <form>
+
+                            <div class="group">
+                                <input type="text" required>
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>Название компании</label>
+                            </div>
+
+                            <div class="group">
+                                <input type="text" required>
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>Тип компании</label>
+                            </div>
+
+                            <div class="group">
+                                <input type="text" required>
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>Город</label>
+                            </div>
+
+                            <div class="group">
+                                <input type="text" required>
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>Сайт компании</label>
+                            </div>
+
+                        </form>
+                    </div>
+
+                    <?
+                    // grades
+                    ?>
+                    <div class="personal__area--capacity">
+                        <div class="personal__area--capacity-name">
+                            Оценки
+                        </div>
+                        <div class="personal__area--capacity-data">
+                            Some Data
+                        </div>
+                        <div class="group">
+                            тут инфо про оценки
+                        </div>
+                        <div class="personal__area--button">
+                            подробнее
+                        </div>
+                    </div>
+
+                    <?
+                    // feedback
+                    ?>
+                    <div class="personal__area--capacity">
+                        <div class="personal__area--capacity-name">
+                            Отзывы
+                        </div>
+                        <div class="personal__area--capacity-data">
+                            Some Data
+                        </div>
+                        <div class="group">
+                            тут два отзыва
+                        </div>
+                        <div class="personal__area--button">
+                            подробнее
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-4">
+                <div class="personal__area">
+                    <?
+                    // contact info
+                    ?>
+                    <div class="personal__area--capacity">
+                        <div class="personal__area--capacity-name">
+                            Контактная информация
+                        </div>
+
+                        <form>
+
+                            <div class="group">
+                                <input type="text" required>
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>Имя</label>
+                            </div>
+
+                            <div class="group">
+                                <input type="text" required>
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>Фамилия</label>
+                            </div>
+
+                            <div class="group">
+                                <input type="text" required>
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>Контактное лицо</label>
+                            </div>
+
+                            <div class="group">
+                                <input type="text" required>
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>ИНН</label>
+                            </div>
+
+                            <div class="group">
+                                <input type="text" required>
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>E-mail</label>
+                            </div>
+
+                            <div class="group">
+                                <input type="text" required>
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>Телефон</label>
+                            </div>
+
+                            <div class="group">
+                                <input type="text" required>
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>Дополнительный телнефон</label>
+                            </div>
+
+                            <div class="group">
+                                <input type="text" required>
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>Viber</label>
+                            </div>
+
+                            <div class="group">
+                                <input type="text" required>
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>Skype</label>
+                            </div>
+
+                            <div class="group">
+                                <input type="text" required>
+                                <span class="highlight"></span>
+                                <span class="bar"></span>
+                                <label>Whatsapp</label>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-4">
+                <div class="personal__area">
+                    <div class="personal__area--capacity">
+                        <div class="personal__area--capacity-name">
+                            Опубликованные вакансии
+                        </div>
+
+                        <?php if(sizeof($viData['lastJobs']['jobs'])>0): ?>
+                            <div class="personal__area--capacity-data">
+                                <?=$viData['lastJobs']['count']?>
+                            </div>
+                            <?php foreach ($viData['lastJobs']['jobs'] as $vacancy): ?>
+                                <div class='upp__project-item'>
+                                    <div class="upp__project-info">
+                                        <a class='upp__project-vacancy'
+                                           href='<?= MainConfig::$PAGE_VACANCY . DS . $vacancy['id'] ?>'>
+                                            <?= $vacancy['title'] ?>
+                                        </a>
+                                        <span class="dates">(<?= $vacancy['crdate'] . ' - ' . $vacancy['remdate'] ?>)</span>
+                                    </div>
+                                    <a href="<?=MainConfig::$PAGE_CHATS_LIST_VACANCIES . DS . $vacancy['id'] ?>"
+                                       class="upp__project-item-messages js-g-hashint" title="Обратная связь"
+                                       >
+                                        <?=$vacancy['discuss_cnt']?>
+                                    </a>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+
+                        <div class='vacancies-block'>
+                            <div class='vacancies'>
+                                <?php foreach ($viData['lastResp']['jobs'] as $val): ?>
+                                    <b>
+                                        <span><?= $val['cou'] ?></span>
+                                        <a class='black-green' href='?p=company-response-list&id=<?= $val['id'] ?>'><?= $val['name'] ?></a>
+                                    </b>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
