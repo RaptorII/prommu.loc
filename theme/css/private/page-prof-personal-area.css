@@ -99,8 +99,8 @@
 
 .upp__info {
     transition: var(--main-trans);
-    position: unset;
-    /* right: 0; */
+    position: absolute;
+    right: 0;
     text-align: right;
 }
 .upp__info:hover {
