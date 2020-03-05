@@ -174,6 +174,9 @@ $arUser = $arUser[$userId];
 
 
             </div>
+            <?
+            display($viData);
+            ?>
 
             <?php if( $IS_OWN && $viData['rateByUser'] ): ?>
                 <?/*<div class='header-021 -green'>
